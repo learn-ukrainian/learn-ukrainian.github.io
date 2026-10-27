@@ -12,7 +12,7 @@ from pathlib import Path
 
 from scripts.common.repo_root import project_interpreter
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import git, providers, store
+from scripts.dispatcher import admission, git, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 
@@ -57,21 +57,22 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
             try:
-                process = subprocess.Popen(
+                process, launch = admission.spawn_supervisor(
                     [str(project_interpreter()), "-m", "scripts.dispatcher.worker", str(path)],
-                    cwd=Path(__file__).resolve().parents[2],
-                    stdin=subprocess.PIPE,
-                    stdout=subprocess.DEVNULL,
-                    stderr=err,
-                    start_new_session=True,
+                    task_id=spec.task_id, run_nonce=record["run_nonce"], cwd=Path(__file__).resolve().parents[2],
+                    stderr=err, stderr_log=logs / f"{spec.task_id}.stderr.log",
                 )
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
-        record.update(pid=process.pid, process_start=_identity(process.pid))
+        record.update(pid=process.pid, process_start=_identity(process.pid), **launch)
         store.replace(record, path)
         payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
         process.stdin.write(payload)
         process.stdin.close()
+    except admission.LaunchRefused as exc:
+        record.update(exc.fields, finished_at=store.now())
+        store.replace(record, path)
+        raise
     except Exception:
         record.update(status="crashed", finished_at=store.now(), error="supervisor launch failed")
         store.replace(record, path)
@@ -196,6 +197,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
     record = json.loads(path.read_text())
     spec = _spec(record, options)
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
+    slots = None
     resolved_model = None
     started = time.monotonic()
 
@@ -225,6 +227,12 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 return
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
+        slots, slots_record = admission.hold_review_test_slots(
+            agent=spec.agent, mode=spec.mode, review_typed=admission.review_typed(record),
+            sealed_attempt=bool(record.get("review_attempt")), task_id=spec.task_id,
+        )
+        if slots_record is not None:
+            record["review_test_slots"] = slots_record
         with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
             child = subprocess.Popen(
                 invocation.argv,
@@ -232,7 +240,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 stdout=out,
                 stderr=err,
                 cwd=spec.worktree,
-                env=invocation.env,
+                # The CLI's governed test runs join this hold through its marker (#11230).
+                env={**invocation.env, **slots.environment()} if slots else invocation.env,
                 start_new_session=True,
             )
             record.update(status="running")
@@ -283,6 +292,9 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
             terminate()
             returncode = child.returncode
+        if slots is not None:
+            # Every exit returns the hold; a killed supervisor's locks end with its process.
+            slots.release()
         if text is not None:
             spec.final_file.write_text(text)
             spec.final_file.chmod(0o600)

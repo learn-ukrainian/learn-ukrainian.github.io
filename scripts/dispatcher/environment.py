@@ -33,6 +33,12 @@ def npm_shim_dir() -> Path | None:
     return None
 
 
+def claude_config_dir(account: str, home: str | None = None) -> str:
+    """The login directory a Claude account runs in; admission checks the verified binding against it."""
+    suffix = "" if account == "a" else "-b"
+    return str(Path(home or os.environ.get("HOME") or str(Path.home())) / f".claude{suffix}")
+
+
 def child_env(spec: TaskSpec) -> dict[str, str]:
     names = _CONTEXT + _AUTH[spec.agent]
     if spec.provider == "openrouter" and spec.agent == "opencode":
@@ -46,8 +52,7 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         if file_key:
             env["CURSOR_API_KEY"] = file_key
     if spec.agent == "claude" and spec.claude_account:
-        suffix = "" if spec.claude_account == "a" else "-b"
-        env["CLAUDE_CONFIG_DIR"] = str(Path(env.get("HOME", str(Path.home()))) / f".claude{suffix}")
+        env["CLAUDE_CONFIG_DIR"] = claude_config_dir(spec.claude_account, env.get("HOME"))
     shims = npm_shim_dir()
     if shims is not None:
         original_path = os.pathsep.join(

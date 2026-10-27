@@ -1695,3 +1695,184 @@ def test_aliases_and_all_retained_metadata_flags_parse():
     )
     assert args.owned_path == ["scripts"]
     assert args.research_owned_path == ["tests"]
+
+
+# ---- ported from tests/test_delegate_review_test_slots.py and tests/test_delegate.py (C-2188 unit D) ----
+
+
+def _slot_pool(tmp_path, monkeypatch):
+    from scripts.common import test_slots
+
+    path = tmp_path / "pool"
+    monkeypatch.setenv(test_slots.ENABLE_ENV, "on")
+    monkeypatch.setenv(test_slots.DIR_ENV, str(path))
+    monkeypatch.setenv(test_slots.COUNT_ENV, "4")
+    monkeypatch.setenv(test_slots.WAIT_ENV, "5")
+    monkeypatch.delenv(test_slots.HOLDER_ENV, raising=False)
+    monkeypatch.delenv(test_slots.SESSION_ENV, raising=False)
+    monkeypatch.delenv("CI", raising=False)
+    return path
+
+
+def _review_slot_hold(**overrides):
+    from scripts.dispatcher import admission
+
+    arguments = {"agent": "codex", "mode": "read-only", "review_typed": True, "sealed_attempt": False,
+                 "task_id": "review-11230-worker-fixture"}
+    arguments.update(overrides)
+    return admission.hold_review_test_slots(**arguments)
+
+
+def test_a_codex_read_only_review_holds_review_slots_for_its_task(tmp_path, monkeypatch) -> None:
+    from scripts.common import test_slots
+    from scripts.dispatcher import admission
+
+    _slot_pool(tmp_path, monkeypatch)
+    hold, record = _review_slot_hold()
+    try:
+        assert hold is not None and record == {"outcome": "held", "slots": 2, "waited_s": record["waited_s"]}
+        holders = test_slots.status()["holders"]
+        assert [(entry["task_id"], entry["kind"], entry["slots"]) for entry in holders] == [
+            ("review-11230-worker-fixture", "review", 2)
+        ]
+        env = {**os.environ, **hold.environment(), test_slots.TASK_ENV: "review-11230-worker-fixture"}
+        assert test_slots.inherited_hold(env) == admission.REVIEW_TEST_SLOTS
+    finally:
+        if hold is not None:
+            hold.release()
+    assert test_slots.status()["slots_in_use"] == 0
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"agent": "claude"},
+        {"agent": "agy"},
+        {"mode": "workspace-write"},
+        {"review_typed": False},
+        {"sealed_attempt": True},
+    ],
+    ids=["claude", "agy", "workspace-write", "not-a-review", "sealed-attempt"],
+)
+def test_every_other_route_takes_its_own_slots_or_none(tmp_path, monkeypatch, overrides) -> None:
+    """No double counting: a seat that can prepare the pool, or runs no tests, holds nothing up front."""
+    pool = _slot_pool(tmp_path, monkeypatch)
+    assert _review_slot_hold(**overrides) == (None, None)
+    assert not pool.exists()
+
+
+def test_a_disabled_pool_holds_nothing(tmp_path, monkeypatch) -> None:
+    from scripts.common import test_slots
+
+    pool = _slot_pool(tmp_path, monkeypatch)
+    monkeypatch.setenv(test_slots.ENABLE_ENV, "off")
+    assert _review_slot_hold() == (None, {"outcome": "disabled"})
+    assert not pool.exists()
+
+
+def test_a_refused_hold_is_recorded_and_the_review_runs_on(tmp_path, monkeypatch, capsys) -> None:
+    from scripts.common import test_slots
+
+    _slot_pool(tmp_path, monkeypatch)
+    shared = tmp_path / "shared"
+    shared.mkdir(mode=0o777)
+    shared.chmod(0o777)  # another user could redirect a pool below it
+    monkeypatch.setenv(test_slots.DIR_ENV, str(shared / "pool"))
+
+    assert _review_slot_hold() == (None, {"outcome": "refused", "reason": "pool_unavailable"})
+    assert "review test slots refused" in capsys.readouterr().err
+    assert not (shared / "pool").exists()
+
+
+def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeypatch) -> None:
+    from scripts.common import test_slots
+
+    monkeypatch.setenv(test_slots.HOLDER_ENV, "2:/elsewhere/holders/x.ticket")
+    monkeypatch.setenv(test_slots.SESSION_ENV, "/s")
+    env = child_env(dataclasses.replace(spec, agent="codex"))
+    assert test_slots.HOLDER_ENV not in env and test_slots.SESSION_ENV not in env
+
+
+@pytest.mark.parametrize(
+    "extra,code",
+    [
+        (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
+        (["--agent", "claude", "--claude-account", "b"], "claude_account_ambient_conflict"),
+    ],
+)
+def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkeypatch, capsys, extra, code):
+    from scripts.dispatcher import cli
+
+    tasks = tmp_path / "tasks"
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", "fixture-ambient-" + "e" * 30)
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(tmp_path / "absent.json"))
+    for target, name in ((git, "create_worktree"), (git, "resolve_repo"), (worker, "start")):
+        monkeypatch.setattr(target, name, lambda *_a, _name=name, **_k: pytest.fail(f"{_name} ran before refusal"))
+
+    assert cli.main(["dispatch", "--task-id", "claude-account-refused", "--prompt", "test", "--model", "m", *extra]) == 2
+
+    err = capsys.readouterr().err
+    assert f"CLAUDE_ACCOUNT_REFUSED: {code}\n" in err
+    assert "fixture-ambient" not in err
+    assert not tasks.exists()
+
+
+def _spawn_refused_record(tmp_path, monkeypatch, task_id):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    path = store.record_path(task_id)
+    record = {"task_id": task_id, "run_nonce": "n" * 32, "status": "spawning", "pid": None,
+              "prompt_file": str(path.with_suffix(".prompt"))}
+    spec = TaskSpec(task_id, "codex", "m", None, "read-only", tmp_path, path.with_suffix(".prompt"),
+                    path.with_suffix(".result"))
+    return spec, record, path
+
+
+def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_path, monkeypatch) -> None:
+    from scripts.dispatcher import admission
+    from scripts.orchestration import dispatch_isolation
+
+    spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "ambiguous-scope")
+
+    def explode(*_args, **_kwargs):
+        raise dispatch_isolation.DispatchIsolationError(
+            "systemd-run: worker start marker arrived after the startup timeout (2s) "
+            "for unit lu-worker-ambiguous-scope; the scope was stopped and will not be relaunched"
+        )
+
+    monkeypatch.setattr(dispatch_isolation, "spawn_detached_worker", explode)
+    with pytest.raises(admission.LaunchRefused):
+        worker.start(spec, record, b"prompt", 60)
+
+    state = json.loads(path.read_text())
+    assert state["status"] == "failed"
+    assert state["pid"] is None
+    assert state["error"].startswith("dispatch_isolation_failed: ")
+    assert "will not be relaunched" in state["error"]
+
+
+@pytest.mark.parametrize(
+    "reason",
+    ["inside-driver-scope; systemd-run unavailable", "caller-cgroup-unavailable", "caller-cgroup-unverifiable"],
+)
+def test_dispatch_fallback_refusal_records_no_worker_started(tmp_path, monkeypatch, reason) -> None:
+    from scripts.dispatcher import admission
+    from scripts.orchestration import dispatch_isolation
+
+    spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "fallback-refusal")
+    refusal = f"fallback-refused: {reason}"
+    spawn = Mock(side_effect=dispatch_isolation.DispatchIsolationError(refusal))
+    popen = Mock()
+    monkeypatch.setattr(dispatch_isolation, "spawn_detached_worker", spawn)
+    monkeypatch.setattr(subprocess, "Popen", popen)
+    with pytest.raises(admission.LaunchRefused):
+        worker.start(spec, record, b"prompt", 60)
+
+    spawn.assert_called_once()
+    popen.assert_not_called()
+    state = json.loads(path.read_text())
+    assert state["status"] == "failed"
+    assert state["pid"] is None
+    assert state["error"].startswith("dispatch_fallback_refused: ")
+    assert refusal in state["error"]
+    assert "ambiguous" not in state["error"]
