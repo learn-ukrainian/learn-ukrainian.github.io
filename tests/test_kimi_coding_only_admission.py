@@ -465,7 +465,7 @@ def test_finalize_refuses_a_kimi_diff_that_adds_cyrillic(kimi_worktree, committe
     if committed:
         _git(kimi_worktree, "add", "-A")
         _git(kimi_worktree, "commit", "-m", "worker commit")
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    message = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")[0]
     assert message and _TOKEN in message and "site/Label.tsx" in message
 
 
@@ -484,25 +484,25 @@ def test_finalize_refuses_content_that_is_not_plain_text(kimi_worktree, committe
     _git(kimi_worktree, "add", "-A")
     if committed:
         _git(kimi_worktree, "commit", "-m", "worker commit")
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    message = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")[0]
     assert message and _TOKEN in message and f"{_NOT_TEXT} ('Label.tsx')" in message
 
 
 def test_finalize_refuses_an_undecodable_addition(kimi_worktree):
     (kimi_worktree / "blob.bin").write_bytes(b"\x89PNG\r\n\x1a\n\xff\xfe\xfd")
-    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    message = delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")[0]
     assert message and _NOT_TEXT in message and "blob.bin" in message and "binary files are refused" in message
 
 
 def test_finalize_admits_a_cyrillic_free_kimi_diff(kimi_worktree):
     (kimi_worktree / "Button.tsx").write_text("export const Button = () => null;\n", encoding="utf-8")
     (kimi_worktree / "legacy.py").write_text("GREETING = 'hello'\n", encoding="utf-8")  # a removal
-    assert delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi") is None
+    assert delegate._kimi_diff_refusal_detail(kimi_worktree, "base", "kimi")[0] is None
     assert _git(kimi_worktree, "status", "--porcelain").splitlines() == [" M legacy.py", "?? Button.tsx"]
 
 
 def test_finalize_fails_closed_when_the_base_is_unknown(kimi_worktree):
-    message = delegate._kimi_diff_refusal(kimi_worktree, "origin/missing", "kimi")
+    message = delegate._kimi_diff_refusal_detail(kimi_worktree, "origin/missing", "kimi")[0]
     assert message and "could not be read" in message
 
 

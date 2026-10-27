@@ -5500,20 +5500,8 @@ def _fallback_base_candidates(worktree: Path, base_sha: str | None) -> list[tupl
     return candidates
 
 
-def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
-    """``(merge_base_sha, base_missing)`` for ``git merge-base <base> HEAD`` (#9489).
-
-    ``base_missing`` is True only when git ran and rejected ``base`` (the ref or
-    SHA does not resolve): the one case where trying another base candidate is
-    sound. A present base that has no common ancestor with HEAD or whose
-    computation failed fails closed ((None, False)).
-    """
-    sha, base_missing, _why = _run_merge_base_detail(worktree, base)
-    return sha, base_missing
-
-
 def _run_merge_base_detail(worktree: Path, base: str) -> tuple[str | None, bool, _TypedCause | None]:
-    """:func:`_run_merge_base` plus why it failed, typed, with git's own error from this run (#9878)."""
+    """Return ``(merge_base_sha, base_missing, cause)`` with git's own error from this run (#9878)."""
     command = ["git", "merge-base", base, "HEAD"]
     try:
         proc = subprocess.run(
@@ -7713,24 +7701,10 @@ def _kimi_worker_refusal(
     return None, target
 
 
-def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str, *, base_sha: str | None = None) -> str | None:
-    """The refusal when a Kimi worker's changed files are not plain UTF-8 text or hold Cyrillic text; None otherwise.
-
-    The changes run from the merge base with ``base_ref`` to the working tree,
-    so they cover the worker's own commits and its uncommitted and untracked
-    files. Each changed path's post-image is read in full, so git's binary
-    classification cannot hide text. When ``base_ref`` was deleted after
-    merging, falls back to the recorded ``base_sha`` and then the default-branch
-    merge base (#9489). Fails closed: changes that cannot be read are a refusal
-    that names only its typed cause (#9878); see :func:`_kimi_diff_refusal_detail`.
-    """
-    return _kimi_diff_refusal_detail(worktree, base_ref, agent, base_sha=base_sha)[0]
-
-
 def _kimi_diff_refusal_detail(
     worktree: Path, base_ref: str, agent: str, *, base_sha: str | None = None
 ) -> tuple[str | None, _TypedCause | None]:
-    """``(refusal, cause)`` for :func:`_kimi_diff_refusal`; ``cause`` is set when the changes could not be read.
+    """Return ``(refusal, cause)`` for a Kimi content check; ``cause`` is set when changes could not be read.
 
     The caller records ``cause`` with :func:`_record_diagnostic`: its raw
     diagnostic never enters the refusal.

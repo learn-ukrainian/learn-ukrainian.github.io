@@ -91,7 +91,7 @@ def test_the_kimi_content_check_reads_the_changes_after_the_worker_reaps_its_tmp
 
     assert reap["tmp_reap_error"] is None
     assert not lease.exists()
-    assert delegate._kimi_diff_refusal(clean_kimi_worktree, "base", "kimi") is None
+    assert delegate._kimi_diff_refusal_detail(clean_kimi_worktree, "base", "kimi")[0] is None
     assert delegate._auto_finalize_additions_deletions(clean_kimi_worktree) == (("Button.tsx",), ())
 
 

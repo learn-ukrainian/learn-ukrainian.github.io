@@ -533,11 +533,11 @@ def test_kimi_diff_refusal_resolves_clean_diff_when_fallback_available(repo, sta
         base_sha = UNREACHABLE_SHA
 
     # Clean diff without Cyrillic content -> None
-    assert delegate._kimi_diff_refusal(repo.worktree, BASE_BRANCH, "kimi", base_sha=base_sha) is None
+    assert delegate._kimi_diff_refusal_detail(repo.worktree, BASE_BRANCH, "kimi", base_sha=base_sha)[0] is None
 
 
 def test_kimi_diff_refusal_fails_closed_when_nothing_resolves(isolated_repo):
-    refusal = delegate._kimi_diff_refusal(isolated_repo, "origin/deleted-base", "kimi", base_sha=UNREACHABLE_SHA)
+    refusal = delegate._kimi_diff_refusal_detail(isolated_repo, "origin/deleted-base", "kimi", base_sha=UNREACHABLE_SHA)[0]
     assert refusal is not None
     assert "could not be read" in refusal
 
@@ -551,7 +551,7 @@ def test_kimi_diff_refusal_with_deleted_base_refuses_cyrillic(repo):
     _git(repo.worktree, "commit", "-q", "-m", "cyrillic commit")
     repo.delete_base_branch(merged_into_main=False)
 
-    refusal = delegate._kimi_diff_refusal(repo.worktree, BASE_BRANCH, "kimi", base_sha=repo.base_sha)
+    refusal = delegate._kimi_diff_refusal_detail(repo.worktree, BASE_BRANCH, "kimi", base_sha=repo.base_sha)[0]
     assert refusal is not None
     assert "site/ua.txt" in refusal
 
@@ -682,8 +682,8 @@ def test_present_unrelated_base_fails_closed_across_all_checks(tmp_path):
     _git(worktree, "config", "user.email", "test@example.com")
     _git(worktree, "config", "user.name", "Test")
 
-    # 1. _run_merge_base must report (None, False): base is present, not missing!
-    sha, base_missing = delegate._run_merge_base(worktree, "origin/unrelated-base")
+    # 1. _run_merge_base_detail must report (None, False) in its first two fields: base is present, not missing!
+    sha, base_missing = delegate._run_merge_base_detail(worktree, "origin/unrelated-base")[:2]
     assert sha is None
     assert base_missing is False
 
@@ -702,8 +702,8 @@ def test_present_unrelated_base_fails_closed_across_all_checks(tmp_path):
     assert check["measured"] is False
     assert check["error"] == "merge-base with the base branch is unknown"
 
-    # 5. _kimi_diff_refusal refuses diff
-    refusal = delegate._kimi_diff_refusal(worktree, "origin/unrelated-base", "kimi", base_sha=None)
+    # 5. _kimi_diff_refusal_detail refuses diff
+    refusal = delegate._kimi_diff_refusal_detail(worktree, "origin/unrelated-base", "kimi", base_sha=None)[0]
     assert refusal is not None
     assert "could not be read" in refusal
 
@@ -722,8 +722,8 @@ def test_git_computation_failure_fails_closed_across_all_checks(repo, monkeypatc
 
     monkeypatch.setattr(subprocess, "run", mock_run)
 
-    # 1. _run_merge_base returns (None, False)
-    sha, base_missing = delegate._run_merge_base(repo.worktree, BASE_BRANCH)
+    # 1. _run_merge_base_detail returns (None, False) in its first two fields
+    sha, base_missing = delegate._run_merge_base_detail(repo.worktree, BASE_BRANCH)[:2]
     assert sha is None
     assert base_missing is False
 
@@ -739,7 +739,7 @@ def test_git_computation_failure_fails_closed_across_all_checks(repo, monkeypatc
     assert check["measured"] is False
 
     # 5. Kimi diff refusal fails closed
-    refusal = delegate._kimi_diff_refusal(repo.worktree, BASE_BRANCH, "kimi", base_sha=repo.base_sha)
+    refusal = delegate._kimi_diff_refusal_detail(repo.worktree, BASE_BRANCH, "kimi", base_sha=repo.base_sha)[0]
     assert refusal is not None
 
 
@@ -788,8 +788,8 @@ def test_ref_verification_failures_permit_no_fallback_across_all_checks(tmp_path
     assert count is None
     assert count_missing is False
 
-    # 2. _run_merge_base returns (None, False) - NOT (None, True)
-    sha, mb_missing = delegate._run_merge_base(worktree, "some-base")
+    # 2. _run_merge_base_detail returns (None, False) in its first two fields - NOT (None, True)
+    sha, mb_missing = delegate._run_merge_base_detail(worktree, "some-base")[:2]
     assert sha is None
     assert mb_missing is False
 
@@ -809,7 +809,7 @@ def test_ref_verification_failures_permit_no_fallback_across_all_checks(tmp_path
     assert check["error"] == "merge-base with the base branch is unknown"
 
     # 6. Kimi diff refusal fails closed
-    refusal = delegate._kimi_diff_refusal(worktree, "some-base", "kimi", base_sha=None)
+    refusal = delegate._kimi_diff_refusal_detail(worktree, "some-base", "kimi", base_sha=None)[0]
     assert refusal is not None
     assert "could not be read" in refusal
 
