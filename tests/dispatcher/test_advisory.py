@@ -106,7 +106,8 @@ def test_driver_brief_exception_requires_acceptance_command(launch, complete, ca
                "--mode", "workspace-write"]
     if complete:
         (tmp_path / "docs/example.md").write_text("Assigned document")
-        for command in (("init",), ("-c", "user.name=Stub", "-c", "user.email=stub@example.invalid",
+        for command in (("init",), ("remote", "add", "origin", "git@github.com:example/public.git"),
+                        ("-c", "user.name=Stub", "-c", "user.email=stub@example.invalid",
                                     "commit", "--allow-empty", "-m", "fixture")):
             subprocess.run(["git", "-C", str(tmp_path), *command], check=True, capture_output=True, timeout=30)
         launch += ["--verify-command", "test -f docs/example.md"]

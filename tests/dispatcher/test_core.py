@@ -36,6 +36,7 @@ def run_git(repo, *args):
 @pytest.fixture
 def sandbox(tmp_path):
     repo, tasks = tmp_path / "public", tmp_path / "tasks"
+    remote = tmp_path / "remote.git"
     repo.mkdir()
     run_git(repo, "init", "-b", "main")
     run_git(repo, "config", "user.email", "stub@example.invalid")
@@ -52,7 +53,9 @@ def sandbox(tmp_path):
     with resolver.open("a") as stream:
         stream.write(f"\n\ndef project_interpreter(root=None):\n    return Path({sys.executable!r})\n")
     shutil.copy(SOURCE / "scripts/dispatch.py", repo / "scripts/dispatch.py")
-    (repo / "scripts/__init__.py").touch()
+    (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
+    (repo / "scripts/fleet").mkdir()
+    (repo / "scripts/fleet/__init__.py").touch()
     config = repo / "scripts/config"
     config.mkdir()
     (config / "fleet_repos.yaml").write_text(
@@ -62,7 +65,8 @@ def sandbox(tmp_path):
                     "public": {
                         "default": True,
                         "local_name": "public",
-                        "github": "example/public",
+                        "github": str(remote),
+                        "transport": "file",
                         "role": "public-monorepo",
                     },
                     "private": {"local_name": "private", "github": "example/private", "role": "private-product"},
@@ -74,7 +78,6 @@ def sandbox(tmp_path):
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
-    remote = tmp_path / "remote.git"
     run_git(repo, "init", "--bare", str(remote))
     run_git(repo, "remote", "add", "origin", str(remote))
     run_git(repo, "push", "-u", "origin", "main")
@@ -125,7 +128,7 @@ def await_file(path):
 
 def stub_common_reaper(box):
     fleet = box.repo / "scripts/fleet"
-    fleet.mkdir()
+    fleet.mkdir(exist_ok=True)
     (fleet / "post_task_reap.py").write_text('''import json, os, sys
 from pathlib import Path
 from scripts.dispatcher.worker import _identity
@@ -251,7 +254,7 @@ def test_settled_clean_read_only_task_worktree_is_reaped_through_the_common_reap
 def test_dirty_or_unpushed_worktree_is_never_reaped(sandbox, mode, model):
     stub_common_reaper(sandbox)
     task = sandbox.dispatch(model, "--mode", mode)
-    record = sandbox.settle(task)
+    record = sandbox.settle(task, expected=0 if mode == "read-only" else 1)
     deadline = time.monotonic() + 5
     while worker._identity(record["pid"]):
         assert time.monotonic() < deadline
@@ -364,7 +367,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
         "--branch",
         "review-source",
     )
-    record = sandbox.settle(dispatched.stdout.splitlines())
+    record = sandbox.settle(dispatched.stdout.splitlines(), expected=0 if mode == "read-only" else 1)
     known = len(models) == 1
     assert record["schema_version"] == 2
     assert record["model"] == "requested-model-is-not-proof"
@@ -438,6 +441,7 @@ def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     """Defect class: scanner exceptions lose terminal failure or expose exception contents."""
     review = sandbox.repo / "scripts/review"
     review.mkdir(exist_ok=True)
+    (review / "__init__.py").touch()
     (review / "verdict_parser.py").write_text(
         "def recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
     )
@@ -519,7 +523,7 @@ def test_concurrent_dispatches_use_distinct_records(sandbox):
     ],
 )
 def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push_state, ahead, dirty):
-    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write"))
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write"), expected=0 if model == "pushed" else 1)
     assert record["push_state"] == push_state
     assert record["commits_ahead"] == ahead
     assert record["worktree_dirty_on_exit"] is dirty
@@ -548,6 +552,352 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
             git.snapshot_delivery(probe, record)["push_state"]
             == "unknown"
         )
+
+
+@pytest.mark.parametrize("model,mode,owned,state,cause", [
+    ("pushed", "workspace-write", ["other/"], "no_deliverable", "outside_owned_paths: delivered.txt"),
+    ("pushed", "workspace-write", ["delivered.txt"], "done", None),
+    ("pushed-nested", "workspace-write", ["src/*.txt"], "done", None),
+    ("pushed", "workspace-write", ["delivered"], "no_deliverable", "outside_owned_paths: delivered.txt"),
+    ("pushed-nested", "workspace-write", ["src/"], "done", None),
+    ("pushed-dirty", "workspace-write", [], "no_deliverable", "worktree_dirty_or_unknown"),
+    ("echo", "read-only", ["other/"], "done", None),
+    ("dirty", "read-only", ["other/"], "done", None),
+    ("pushed", "read-only", ["other/"], "done", None),
+])
+def test_settle_rejects_out_of_scope_or_unpublished_write_delivery(sandbox, model, mode, owned, state, cause):
+    """A provider's successful response cannot hide scope violations or undelivered work."""
+    flags = [flag for path in owned for flag in ("--owned-path", path)]
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", mode, *flags), expected=0 if state == "done" else 1)
+    assert record["status"] == state
+    assert record["owned_paths"] == owned
+    assert record["research_owned_paths"] == []
+    assert record["error"] == cause
+    assert record.get("no_deliverable_reason") == cause
+    assert record["returncode"] == 0
+    assert Path(record["result_file"]).read_text() == "literal final response"
+
+
+def test_v2_record_without_owned_paths_remains_readable(sandbox):
+    record = sandbox.settle(sandbox.dispatch())
+    record.pop("owned_paths", None)
+    (sandbox.tasks / f"{record['task_id']}.json").write_text(json.dumps(record))
+    assert json.loads(sandbox.cli("status", record["task_id"]).stdout)["status"] == "done"
+
+
+@pytest.fixture
+def delivery_settle(sandbox):
+    run_git(sandbox.repo, "push", "origin", "main:release")
+    record = sandbox.settle(sandbox.dispatch("echo", "--base", "origin/release"))
+    # Finish the initial reaper's record write before reusing this run for settle probes.
+    deadline = time.monotonic() + 10
+    path = sandbox.tasks / f"{record['task_id']}.json"
+    while "reap_note" not in json.loads(path.read_text()):
+        assert time.monotonic() < deadline, "initial reaper did not finish"
+        time.sleep(0.02)
+    # Synthetic write records need the trusted remote omitted from read-only dispatches.
+    record["worktree_remote_url"] = str(sandbox.remote)
+    def settle(model="echo", owned=("delivered.txt",)):
+        record.update(mode="workspace-write", model=model, status="running", owned_paths=list(owned or []))
+        if owned is None:
+            record.pop("owned_paths")
+        path = sandbox.tasks / f"{record['task_id']}.json"
+        path.write_text(json.dumps(record))
+        subprocess.run([
+            sys.executable, "-c", "import sys; from pathlib import Path; "
+            "from scripts.dispatcher.worker import supervise; "
+            "supervise(Path(sys.argv[1]), {}, 0.2 if sys.argv[2] == 'blocked' else 10)", str(path), model,
+        ], cwd=sandbox.repo, env=sandbox.env, check=True, timeout=30)
+        return json.loads(path.read_text())
+    return record, settle
+
+
+@pytest.mark.parametrize("owned", [None, []])
+@pytest.mark.parametrize("model,cause", [
+    ("pushed", None), ("dirty", "worktree_dirty_or_unknown"),
+    ("unpushed", "work_not_pushed_or_unknown"), ("echo", "no_commits_or_unknown"),
+])
+def test_write_settle_without_ownership(delivery_settle, owned, model, cause):
+    _, settle = delivery_settle
+    result = settle(model, owned)
+    assert result["status"] == ("no_deliverable" if cause else "done")
+    assert result["error"] == cause
+    assert ("owned_paths" in result) is (owned is not None)
+
+
+@pytest.mark.parametrize("model,status,error", [
+    ("fail", "failed", "provider exited unsuccessfully"),
+    ("cancel", "cancelled", "cancelled by client"),
+    ("blocked", "timeout", "process deadline exceeded"),
+    ("crash", "crashed", "provider exited unsuccessfully"),
+])
+def test_unsuccessful_settle_preserves_cause_with_outside_commit(delivery_settle, model, status, error):
+    record, settle = delivery_settle
+    tree = Path(record["cwd"])
+    (tree / "outside.txt").write_text("outside\n")
+    run_git(tree, "add", "outside.txt")
+    run_git(tree, "commit", "-m", "outside scope")
+    result = settle(model)
+    assert (result["status"], result["error"]) == (status, error)
+    assert "no_deliverable_reason" not in result
+
+
+@pytest.mark.parametrize("history", ["merged", "restored", "rename-in", "rename-out", "deleted"])
+def test_scope_checks_each_own_commit(sandbox, delivery_settle, history, monkeypatch):
+    record, settle = delivery_settle
+    tree = Path(record["cwd"])
+    if history == "merged":
+        run_git(tree, "commit", "--allow-empty", "-m", "worker before upstream")
+    if history != "restored":
+        source = "delivered.txt" if history == "rename-out" else "outside.txt"
+        (sandbox.repo / source).write_text("upstream\n")
+        run_git(sandbox.repo, "add", source)
+        run_git(sandbox.repo, "commit", "-m", "upstream")
+        run_git(sandbox.repo, "push", "origin", "main:release")
+        run_git(tree, "merge", "--no-edit", "main")
+    if history.startswith("rename"):
+        run_git(tree, "mv", source, "delivered.txt" if history == "rename-in" else "outside.txt")
+    elif history == "deleted":
+        run_git(tree, "rm", "outside.txt")
+    else:
+        (tree / "delivered.txt").write_text("delivery\n")
+        if history == "restored":
+            (tree / "outside.txt").write_text("outside\n")
+            run_git(tree, "add", ".")
+            run_git(tree, "commit", "-m", "temporary outside path")
+            run_git(tree, "rm", "outside.txt")
+    run_git(tree, "add", ".")
+    run_git(tree, "commit", "-m", "worker delivery")
+    run_git(tree, "push", "origin", "HEAD")
+    result = settle()
+    if history == "rename-in":
+        # Force rename detection before the guard's explicit --no-renames override.
+        original = git._verification_git
+        monkeypatch.setattr(git, "_verification_git", lambda path, command, *args, **kw:
+                            original(path, command, *(("-M",) if command == "log" else ()), *args, **kw))
+        result["status"] = "done"
+        worker._enforce_delivery(result)
+    assert result["status"] == ("done" if history == "merged" else "no_deliverable")
+    assert result["error"] == (None if history == "merged" else "outside_owned_paths: outside.txt")
+
+
+@pytest.mark.parametrize("status", ["done", "failed", "cancelled", "timeout", "crashed"])
+@pytest.mark.parametrize("command", ["fetch", "merge-base", "version", "rev-list", "log"])
+def test_scope_verification_failure_only_rejects_success(delivery_settle, monkeypatch, status, command):
+    record, settle = delivery_settle
+    record = settle("pushed")
+    record.update(status=status, error="original cause")
+    original = git._verification_git
+    def broken(path, *args, **kwargs):
+        if args[0] == command:
+            raise subprocess.CalledProcessError(1, ["git", command])
+        return original(path, *args, **kwargs)
+    monkeypatch.setattr(git, "_verification_git", broken)
+    worker._enforce_delivery(record)
+    assert record["status"] == ("no_deliverable" if status == "done" else status)
+    assert record["error"] == ("owned_paths_verification_failed" if status == "done" else "original cause")
+
+
+@pytest.mark.parametrize("history", ["conflict", "no-commit", "unrelated", "parentless", "clean"])
+def test_merge_resolution_and_root_paths_cannot_escape_scope(sandbox, delivery_settle, history, monkeypatch):
+    record, settle = delivery_settle
+    tree = Path(record["cwd"])
+    branch = record["worktree_branch"]
+    if history in {"unrelated", "parentless"}:
+        run_git(tree, "checkout", "--orphan", "new-root")
+        run_git(tree, "read-tree", "--empty")
+        (tree / "outside.txt").write_text("root addition\n")
+        run_git(tree, "add", "outside.txt")
+        run_git(tree, "commit", "-m", "parentless outside addition")
+        if history == "unrelated":
+            run_git(tree, "checkout", branch)
+            run_git(tree, "merge", "--allow-unrelated-histories", "--no-edit", "new-root")
+        else:
+            # Keep the parentless commit as HEAD's first-parent ancestor.
+            run_git(tree, "merge", "--allow-unrelated-histories", "--no-edit", branch)
+            run_git(tree, "branch", "-f", branch, "HEAD")
+            run_git(tree, "checkout", branch)
+    else:
+        (sandbox.repo / "outside.txt").write_text("upstream\n")
+        run_git(sandbox.repo, "add", "outside.txt")
+        run_git(sandbox.repo, "commit", "-m", "upstream outside path")
+        if history == "conflict":
+            (tree / "outside.txt").write_text("worker conflict\n")
+            run_git(tree, "add", "outside.txt")
+            run_git(tree, "commit", "-m", "worker side")
+            # This models a commit already present at dispatch. Only the merge is new.
+            record["worktree_base_sha"] = run_git(tree, "rev-parse", "HEAD")
+        else:
+            run_git(tree, "commit", "--allow-empty", "-m", "worker side")
+        merge = subprocess.run(["git", "-C", str(tree), "merge", "--no-commit", "main"],
+                               capture_output=True, text=True, timeout=30)
+        assert merge.returncode == (1 if history == "conflict" else 0)
+        if history != "clean":
+            (tree / "outside.txt").write_text("worker merge edit\n")
+            run_git(tree, "add", "outside.txt")
+        run_git(tree, "commit", "--no-edit")
+    run_git(sandbox.repo, "push", "origin", "main:release")
+    # A new owned commit makes the supervisor exercise delivery after the merge.
+    result = settle("pushed")
+    assert result["status"] == ("done" if history == "clean" else "no_deliverable")
+    assert result["error"] == (None if history == "clean" else "outside_owned_paths: outside.txt")
+    original = git._verification_git
+    monkeypatch.setattr(git, "_verification_git", lambda path, command, *args, **kw:
+                        "git version 2.35.0" if command == "version" else original(path, command, *args, **kw))
+    result.update(status="done", error=None)
+    worker._enforce_delivery(result)
+    assert (result["status"], result["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+
+
+@pytest.mark.parametrize("reuse_cwd", [False, True])
+def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reuse_cwd, monkeypatch):
+    if reuse_cwd:
+        initial = sandbox.settle(sandbox.dispatch())
+        tree = Path(initial["cwd"])
+        flags = ["--cwd", str(tree)]
+    else:
+        tree = sandbox.repo
+        run_git(tree, "checkout", "-b", "feature-x")
+        flags = ["--branch", "feature-x"]
+    (tree / "outside.txt").write_text("previous task\n")
+    run_git(tree, "add", "outside.txt")
+    run_git(tree, "commit", "-m", "preexisting outside scope")
+    starting_head = run_git(tree, "rev-parse", "HEAD")
+    result = sandbox.settle(sandbox.dispatch("pushed", "--mode", "workspace-write",
+                                            "--owned-path", "delivered.txt", *flags))
+    assert result["worktree_base_sha"] == starting_head
+    assert (result["status"], result["error"]) == ("done", None)
+    original = git._verification_git
+    monkeypatch.setattr(git, "_verification_git", lambda path, command, *args, **kw:
+                        "git version 2.35.0" if command == "version" else original(path, command, *args, **kw))
+    worker._enforce_delivery(result)
+    assert (result["status"], result["error"]) == ("done", None)
+
+
+def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
+    record, settle = delivery_settle
+    record = settle("pushed")
+    original = git._verification_git
+    monkeypatch.setattr(git, "_verification_git", lambda path, command, *args, **kw:
+                        "\0".join(f"outside-{n:04d}.txt" for n in range(200)) if command == "log"
+                        else original(path, command, *args, **kw))
+    worker._enforce_delivery(record)
+    assert record["status"] == "no_deliverable"
+    assert record["error"].startswith("outside_owned_paths: outside-0000.txt")
+    assert len(record["error"]) <= 1024
+    assert record["error"].endswith("... (truncated)")
+    record.update(status="done", worktree_base_ref="main")
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+
+
+def test_prior_worker_origin_poisoning_refuses_dispatch_and_fails_closed(sandbox):
+    """Shared config poisoned before dispatch cannot certify a forged empty range."""
+    earlier = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    fake = sandbox.repo.parent / "forged.git"
+    tree = Path(earlier["cwd"])
+    run_git(tree, "clone", "--bare", str(sandbox.remote), str(fake))
+    run_git(tree, "remote", "set-url", "origin", str(fake))
+    result = sandbox.cli(
+        "dispatch", "--agent", "sol", "--model", "pushed", "--prompt", "deliver",
+        "--task-id", "poisoned", "--mode", "workspace-write", "--owned-path", "delivered.txt", expected=2,
+    )
+    assert "origin must match the registered canonical repository URL" in result.stderr
+    assert not (sandbox.tasks / "poisoned.json").exists()
+    assert not (sandbox.tasks / "poisoned.started").exists()
+    # Read-only admission still records missing trust; even a later write settle fails closed.
+    record = sandbox.settle(sandbox.dispatch())
+    assert record["worktree_remote_url"] is None
+    tree = Path(record["cwd"])
+    for name in ("outside.txt", "delivered.txt"):
+        (tree / name).write_text("forged delivery\n")
+    run_git(tree, "add", "outside.txt", "delivered.txt")
+    run_git(tree, "commit", "-m", "forged delivery")
+    run_git(tree, "push", "origin", "HEAD", "HEAD:main")
+    record.update(
+        mode="workspace-write", owned_paths=["delivered.txt"], head_sha=run_git(tree, "rev-parse", "HEAD"),
+        push_state="pushed", commits_ahead=1, worktree_dirty_on_exit=False,
+    )
+    assert run_git(fake, "rev-parse", "main") == record["head_sha"]
+    assert run_git(sandbox.remote, "rev-parse", "main") == record["worktree_base_sha"]
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+
+
+@pytest.mark.parametrize("attack", ["alias-shell", "alias-empty", "replace", "origin", "insteadOf", "pushInsteadOf"])
+def test_worker_git_state_cannot_hide_outside_commit(sandbox, delivery_settle, attack):
+    """Worker aliases, replacements and remote rewrites cannot certify owned delivery."""
+    record, settle = delivery_settle
+    tree = Path(record["cwd"])
+    (tree / "outside.txt").write_text("outside scope\n")
+    run_git(tree, "add", "outside.txt")
+    run_git(tree, "commit", "-m", "outside scope")
+    record = settle("pushed")
+    assert record["error"] == "outside_owned_paths: outside.txt"
+    if attack.startswith("alias"):
+        run_git(tree, "config", "alias.log", "!true" if attack == "alias-shell" else "log -n 0")
+    elif attack == "replace":
+        clean_tree = run_git(tree, "rev-parse", f"{record['worktree_base_sha']}^{{tree}}")
+        replacement = run_git(tree, "commit-tree", clean_tree, "-p", record["worktree_base_sha"], "-m", "clean")
+        run_git(tree, "replace", record["head_sha"], replacement)
+        assert run_git(tree, "log", "-1", "--format=", "--name-only") == ""
+    else:
+        fake = sandbox.repo.parent / "forged.git"
+        run_git(tree, "clone", "--bare", str(tree), str(fake))
+        run_git(fake, "update-ref", "refs/heads/release", record["head_sha"])
+        if attack == "origin":
+            run_git(tree, "remote", "set-url", "origin", str(fake))
+        else:
+            run_git(tree, "config", f"url.{fake}.{attack}", str(sandbox.remote))
+    record.update(status="done", error=None)
+    worker._enforce_delivery(record)
+    expected = "outside_owned_paths: outside.txt" if attack == "replace" else "owned_paths_verification_failed"
+    assert (record["status"], record["error"]) == ("no_deliverable", expected)
+
+
+def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandbox, delivery_settle, monkeypatch):
+    """Local/worktree includes and injected process config cannot alter the private walk."""
+    record, settle = delivery_settle
+    record = settle("pushed")
+    tree = Path(record["cwd"])
+    included = sandbox.repo.parent / "included.config"
+    included.write_text("[worker]\n included = untrusted\n")
+    for scope in ("--local", "--worktree"):
+        run_git(tree, "config", scope, "worker.marker", "untrusted")
+        run_git(tree, "config", scope, "include.path", str(included))
+    global_config = sandbox.repo.parent / "global.config"
+    global_config.write_text("[worker]\n global = untrusted\n[alias]\n log = !true\n")
+    for key, value in {
+        "GIT_CONFIG_GLOBAL": str(global_config), "GIT_CONFIG_SYSTEM": str(global_config),
+        "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "alias.log", "GIT_CONFIG_VALUE_0": "!true",
+        "GIT_CONFIG_PARAMETERS": "'alias.log=log -n 0'", "GIT_DIR": str(sandbox.remote),
+        "GIT_CONFIG": str(global_config), "GIT_REPLACE_REF_BASE": "refs/heads/",
+    }.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.delenv("TMPDIR", raising=False)
+    with git.ownership_git(record) as run:
+        config = run("config", "--list", "--includes")
+        assert "worker." not in config
+        assert "alias." not in config
+        assert run("rev-parse", "refs/heads/delivery") == record["head_sha"]
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("done", None)
+
+
+@pytest.mark.parametrize("missing", ["worktree_remote_url", "git-binary", "scratch", "remote-tip"])
+def test_missing_ownership_protection_fails_closed(delivery_settle, monkeypatch, missing):
+    record, settle = delivery_settle
+    record = settle("pushed")
+    if missing == "git-binary":
+        monkeypatch.setattr(git, "GIT_BINARY", None)
+    elif missing == "scratch":
+        monkeypatch.setattr(git, "allocate", Mock(side_effect=worker.TaskScratchError("unavailable")))
+    elif missing == "remote-tip":
+        record["head_sha"] = "0" * 40
+    else:
+        record.pop(missing)
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
 
 
 @pytest.mark.parametrize("remote_available", [True, False])
@@ -625,8 +975,14 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
         os.killpg(child, signal.SIGKILL)
     else:
         Path(record["prompt_file"]).with_suffix(".release").touch()
-    observed = sandbox.settle(task, expected=1 if crash else 0)
-    assert observed["status"] == ("crashed" if crash else "done")
+    delivery_error = (
+        "worktree_dirty_or_unknown" if dirty else "no_commits_or_unknown" if not commits
+        else "work_not_pushed_or_unknown" if expected != "pushed" else None
+    )
+    observed = sandbox.settle(task, expected=1 if crash or delivery_error else 0)
+    assert observed["status"] == ("crashed" if crash else "no_deliverable" if delivery_error else "done")
+    if not crash:
+        assert observed.get("no_deliverable_reason") == delivery_error
     head = run_git(worktree, "rev-parse", "HEAD")
     matched = remote_branch if target in {"pinned", "own"} else None
     assert observed["push_state"] == expected
@@ -647,7 +1003,7 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(sandbox, target
 
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     task = sandbox.dispatch("unpushed", "--mode", "workspace-write")
-    first = sandbox.settle(task)
+    first = sandbox.settle(task, expected=1)
     result = sandbox.cli(
         "dispatch",
         "--agent",
