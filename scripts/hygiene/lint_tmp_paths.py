@@ -2122,11 +2122,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "fe54ed63ad57a104dd80a0143609b55c18347047a1c3a0b1282f925120662b09:1",
     ),
     (
-        "tests/test_sparse_collection_guard.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "b90a76b36e032fb7eaeca121ad693795cc2adb7d0b0ddc79e12f96a2b7c0bf70:1",
-    ),
-    (
         "tests/test_status_cache.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "3cfef27c84a34dd2ecaa7d91e3e2d4e209073a6640d9628b05a969b854cc86d0:4",

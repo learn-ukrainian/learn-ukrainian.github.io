@@ -253,8 +253,6 @@ deletions (16%).
 | unanimous | `test_mcp_sources_server.py::TestHealthEndpoint::test_git_commit_failure_is_unknown` | delete | diagnostic fallback string; /health contract kept in test_handle_health_response |
 | unanimous | `orchestration/test_tmp_leak_sweep.py::test_name_patterns_match_known_leaks` | restore | only test that unrelated old self-owned /tmp names are not sweep candidates; both covering siblings are deleted too |
 | unanimous | `test_mcp_sources_load.py::test_health_stays_under_one_second_while_saturated` | delete | wall-clock latency bound; concurrency cap kept in tests/rag/test_call_governor.py |
-| unanimous | `test_sparse_collection_guard.py::test_citation_module_skip_is_a_reported_outcome` | delete | tests the test-only collection harness, not production code |
-| unanimous | `test_sparse_collection_guard.py::test_guarded_open_without_mode_matches_umask` | delete | tests the test-only audit plugin's os.open hook |
 | unanimous | `test_pg_skip_guard.py::test_postgres_files_are_found_in_the_repo` | restore | the whole file is deleted, leaving the CI postgres skip guard's file discovery with no test |
 | unanimous | `test_guard_branch_switch_in_main.py::test_issue_9479_r7_missing_terminator_fails_closed` | delete | same unterminated-heredoc fail-closed path as kept test_issue_9479_r6_unknown_repository_branch_variants |
 | unanimous | `test_lexicon_enrich_manifest.py::test_homonym_fixture_samples_expand_from_zero` | delete | same loop and VESUM gate as kept test_homonym_relations_require_numbering_and_an_exact_vesum_lemma |
@@ -309,7 +307,6 @@ deletions (16%).
 | recheck-sample | `test_secret_redaction.py::test_conftest_redacts_warning_source_line` | only test of secret redaction on a warning's source line; the kept test has the secret only in the message |
 | doc-cited-enforcement | `test_source_clis_entrypoint.py` | agents_extensions/shared/rules/workflow.md names this file as the test that enforces it; deleting it would leave that claim false, and this PR edits no rules or contracts |
 | tooling-reference | `test_source_db_write_guard.py::test_unrelated_audit_events_pass` | scripts/hygiene/store_access_baseline.json records this test's store access; the source-db lint fails on a baseline row whose test is gone |
-| tooling-reference | `test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent` | the required Checks job in .github/workflows/ci.yml runs this unchanged test by node id |
 | tooling-reference | `test_ua_eval_model_runner.py` | the ua_eval v0.1.1 release freeze (scripts/projects/ua_eval_harness/verify_release_freeze_v011.py) pins this file's sha256 |
 | tooling-reference | `test_ua_eval_public_v011.py` | the ua_eval v0.1.1 release freeze (scripts/projects/ua_eval_harness/verify_release_freeze_v011.py) pins this file's sha256 |
 | recheck-sample | `test_wiki_enrichment.py::TestSourceBudgeting::test_limits_background_sources_before_primary` | only test of the background-source caps in _cap_source_chunks |

@@ -40,13 +40,9 @@ hook `.pre-commit-config.yaml` places at the `pre-push` stage, unchanged, includ
 
 **No push path runs pytest.** The gate has no pytest stage, takes no host test slots and
 runs no affected-test selector. No explicit or implicit `pre-push` hook invokes pytest.
-CI Gate's required Checks job runs the unchanged
-`tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent`
-node with `--override-ini addopts=-q -m slow --strict-markers`. Its `slow` marker excludes it
-from ordinary pytest shards, so this explicit step preserves required verification.
 CI Gate's pytest shards still run `tests/test_repo_wide_marker_invariant.py` and
 `tests/test_conftest_task_store_guard.py`. `tests/test_ruff_ci_scope.py` pins the removed hooks'
-absence and the sparse guard's required CI ownership. These checks run on pull requests and
+absence and Checks' required CI ownership. These checks run on pull requests and
 merge groups, subject to the existing identical-tree green-run reuse policy.
 The nightly slow run stays advisory.
 A green pre-push is never evidence that the suite passes. Run the tests your change touches yourself

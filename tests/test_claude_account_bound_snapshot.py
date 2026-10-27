@@ -492,7 +492,7 @@ def test_credit_lane_reads_credit_lanes_from_a_snapshot_bound_to_no_account(monk
         original(raw, "claude")
 
 
-def test_bench_health_binds_injected_and_produced_snapshots(monkeypatch, tmp_path):
+def test_reviewer_inventory_binds_injected_and_produced_snapshots(monkeypatch, tmp_path):
     for default_file, claude_eligible in ((None, True), (b"b\n", False)):
         _route_key_for(tmp_path, monkeypatch, default_file)
         eligible, excluded = bench_health._bench_inventory(

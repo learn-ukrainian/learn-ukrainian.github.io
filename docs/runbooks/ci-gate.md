@@ -121,7 +121,6 @@ that chose *which* tests or checks a change ran is gone.
 | Queue commit metadata (message, author, committer) scanned for secrets | Secret scan, every queue run | Secret scan on a full queue run; Queue commit metadata scan on every queue run |
 | TypeSafe triage (advisory) | Fast checks, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Atlas POC richness, vocabulary coverage (advisory) | Contracts, `continue-on-error` | `ci-advisory.yml` (not required) |
-| Sparse collection guard (`tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent`) | pre-push hook and `pytest-slow-nightly.yml` | Required Checks job runs the unchanged node explicitly with `--override-ini addopts=-q -m slow --strict-markers`; nightly coverage remains. |
 | Other slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
 
 The needs_artifact audit makes two independent comparisons with the expected

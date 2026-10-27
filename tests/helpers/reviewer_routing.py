@@ -35,7 +35,6 @@ _REVIEW_ROUTING_TEST_MODULES = frozenset({
     "test_agy_review_profile.py",
     "test_ask_review_admission_floor.py",
     "test_authoring_review_feasibility.py",
-    "test_bench_health.py",
     "test_cursor_cf_identity.py",
     "test_delegate_admission.py",
     "test_delegate_bounded_advisory.py",

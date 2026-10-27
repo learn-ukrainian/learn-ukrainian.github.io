@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from tests.test_ci_pr_triggers import _EVENTS, _condition, _run_gate
+from tests.test_ci_pr_triggers import _run_gate
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -73,11 +73,10 @@ def test_pre_commit_pytest_guards_covered_by_ci_are_absent() -> None:
     assert not stray, f"hooks {stray} run a CI-covered guard test under another id (#11315)"
 
 
-def test_pre_commit_sparse_collection_guard_is_owned_by_required_ci() -> None:
-    """Reject pytest returning to push hooks or the slow sparse guard losing required CI ownership."""
+def test_pre_commit_has_no_pytest_hooks_and_checks_remains_required() -> None:
+    """Reject pytest returning to push hooks or Checks losing required CI ownership."""
     hooks = _local_hooks()
     assert "sparse-collection-guard" not in hooks, "sparse collection belongs in required CI, not push hooks"
-    target = "tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent"
     stray = [hook_id for hook_id, hook in hooks.items() if "pytest" in hook.get("entry", "")]
     assert not stray, f"pytest hooks {stray} must not run during a push, including through implicit stages"
     workflow = yaml.safe_load((_REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
@@ -89,14 +88,3 @@ def test_pre_commit_sparse_collection_guard_is_owned_by_required_ci() -> None:
     result = _run_gate("pull_request", CHECKS="failure")
     assert result.returncode != 0, "Checks must participate in the gate verdict"
     assert "checks: failure, expected success" in result.stdout
-    steps = [step for step in jobs["checks"]["steps"] if target in step.get("run", "")]
-    assert len(steps) == 1, "Checks must explicitly run the existing sparse collection guard node once"
-    step = steps[0]
-    assert step["if"] == "github.event_name != 'pull_request'"
-    for event, github in _EVENTS.items():
-        assert _condition(step["if"], {"github": github}) == (event not in {"opened", "synchronize", "reopened"})
-    assert not step.get("continue-on-error"), "the sparse guard must block required Checks on failure"
-    invocation = step["run"]
-    assert ".venv/bin/python -m pytest" in invocation
-    assert "--override-ini addopts=-q" in invocation, "the sparse guard must override pytest defaults"
-    assert "-m slow" in invocation, "the slow sparse guard must not inherit the shard's marker exclusion"

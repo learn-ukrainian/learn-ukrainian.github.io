@@ -5,7 +5,6 @@ https://github.com/MoonshotAI/Kimi-K2/blob/main/docs/tool_call_guidance.md
 https://ai.google.dev/gemma/docs/capabilities/text/function-calling-gemma4
 https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma
 https://github.com/NousResearch/Hermes-Function-Calling/blob/main/prompt_assets/sys_prompt.yml
-DeepSeek legacy syntax also reproduces the existing test_ask_contract fixture.
 """
 
 from __future__ import annotations
