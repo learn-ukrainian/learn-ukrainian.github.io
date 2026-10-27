@@ -520,7 +520,7 @@ parser.add_argument("--result-file", required=True)
 parser.add_argument("--effort", default=None)
 args = parser.parse_args()
 result = Path(args.result_file)
-# Mirror delegate.py: a task ID that already has a result is never run again.
+# Mirror dispatch.py: a task ID that already has a result is never run again.
 if result.exists():
     sys.exit(f"task_id {{args.task_id!r}} is already done")
 with Path({str(executions)!r}).open("a", encoding="utf-8") as log:

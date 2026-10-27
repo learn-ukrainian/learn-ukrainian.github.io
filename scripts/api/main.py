@@ -1253,9 +1253,8 @@ def _primary_integrity_canary(ctx: MonitorContext | None = None) -> bool:
 def _node_modules_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     """Read-only diagnostic for symlink corruption of the primary's node_modules.
 
-    #6818 follow-up: `_provision_data_symlinks` (`scripts/delegate.py`)
-    symlinks the primary's `node_modules`/`site/node_modules` directly into
-    every dispatch worktree, so a worktree write lands in the primary's real
+    #6818 follow-up: sharing the primary's `node_modules`/`site/node_modules`
+    with dispatch worktrees lets worktree writes reach the primary's real
     files (#6805 incident). ALERT-only, same posture as
     `_primary_integrity_canary` — detects and records, never repairs. Never
     raises: the canary must not break health collection.

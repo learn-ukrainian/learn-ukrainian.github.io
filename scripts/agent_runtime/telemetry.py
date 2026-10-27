@@ -12,9 +12,7 @@ built the exact subprocess argv, so the telemetry reflects what we are
 actually about to invoke rather than a guessed default.
 
 ``resolve_dispatch_start_telemetry()`` is a best-effort preflight variant
-used by ``delegate.py dispatch`` so the task state file already contains the
-fields while the task is still spawning/running. The worker backfills the
-runtime-resolved values on completion. These are request-side routing metadata,
+for callers that need telemetry before invoking the runtime. These are request-side routing metadata,
 not proof of the backend model or reasoning effort observed by the provider.
 """
 

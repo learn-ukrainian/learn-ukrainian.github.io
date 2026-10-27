@@ -5,6 +5,7 @@ Part of the routing-budget guard (epic #4707).
 
 import json
 import logging
+import math
 import os
 import re
 from dataclasses import dataclass, field
@@ -298,10 +299,17 @@ def scan_lane_health(
         observed_outcome = False
         for record in reversed(tasks):
             # Active or incomplete records provide no settled lane outcome.
+            duration = record.get("duration_s")
             if (
-                record.get("status") in ("running", "spawning", None, "")
-                or record.get("returncode") is None
-                or record.get("duration_s") is None
+                record.get("status") not in (
+                    "done", "complete", "failed", "error", "crashed", "timeout", "cancelled",
+                    "rate_limited", "needs_finalize", "no_deliverable", "dry_run",
+                )
+                or type(record.get("returncode")) is not int
+                or isinstance(duration, bool)
+                or not isinstance(duration, (int, float))
+                or not math.isfinite(duration)
+                or duration < 0
             ):
                 continue
             observed_outcome = True

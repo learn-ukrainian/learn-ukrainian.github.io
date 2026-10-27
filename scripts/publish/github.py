@@ -467,32 +467,6 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
     return path, number, head, action, evidence
 
 
-def reconcile_enqueue_cleanup(*, cwd, repository, number, head, queue_probe):
-    """Return the separate durable common receipt; never change publication status."""
-    from scripts.fleet.post_task_reap import reap_enqueued_worktrees
-
-    try:
-        try:
-            current = queue_probe()
-        except Exception:
-            current = {}
-        branch = current.get("headRefName") or ""
-        receipt = reap_enqueued_worktrees(
-            repo_root=Path(cwd), repository=repository, number=number, head=head,
-            branch=branch, queue_probe=queue_probe,
-        )
-    except Exception as exc:
-        # No removal can precede the common intent receipt. An unavailable
-        # receipt is explicit and cannot be interpreted as cleanup completion.
-        receipt = {"schema": "enqueue-cleanup.v1", "state": "retained", "removed": 0,
-                   "retained": 1, "receipt": "unavailable", "rows": [{
-                       "action": "retained", "reason": f"cleanup unavailable ({type(exc).__name__})",
-                       "owner": "infra lane", "next_condition": "restore common receipt storage and reconcile cleanup"}]}
-    print(f"enqueue-cleanup removed={receipt['removed']} retained={receipt['retained']} receipt={receipt['receipt']}",
-          file=sys.stderr)
-    return receipt
-
-
 @github_client.rate_limited_command
 def publish(
     verb: str,
@@ -788,11 +762,6 @@ def publish(
             stdout=stdout,
             stderr=stderr,
         )
-        if verb == "pr-merge" and recovery_queue and result.returncode == 0:
-            result.enqueue_cleanup = reconcile_enqueue_cleanup(
-                cwd=cwd, repository=gh_repo, number=fields["number"], head=fields["match_head"],
-                queue_probe=queue_probe,
-            )
         return result
 
 

@@ -4392,8 +4392,10 @@ def test_muse_task_budget_controls_reach_invocation(tmp_path, monkeypatch):
     from scripts.agent_runtime.adapters import muse
     from scripts.secret_redactor import REDACTION
 
+    # Delimit the assignment so opaque-token redaction of random tmp/xdist paths
+    # cannot consume the password key that this test checks below.
     adapter, workspace, scratch, probes = _muse_planning_fixture(
-        tmp_path / f"password={TOKEN}", monkeypatch, "Muse Code 1.4.11 (1.4.11-R6667.1)",
+        tmp_path / f"workspace password={TOKEN}", monkeypatch, "Muse Code 1.4.11 (1.4.11-R6667.1)",
     )
     fixture_plan, records = _muse_stream_fixture(workspace)
     monkeypatch.setattr(muse, "uuid4", lambda: fixture_plan.metadata["provider_session_id"])

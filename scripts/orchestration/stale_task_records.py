@@ -1,59 +1,8 @@
-"""Settle orphaned ``needs_finalize`` task records and archive old terminal ones (#8625).
+"""Read legacy task evidence and archive old terminal records (#8625).
 
-``batch_state/tasks/`` is the hot directory every claim scan, Monitor view and
-reaper reads. Records that settled ``needs_finalize`` before the #8468 fix, and
-whose worktree, local branch and remote branch are all gone, can never be
-finalized; they only inflate every scan and read as open attention items.
-
-``settle-stale`` classifies each ``needs_finalize`` record older than
-``--min-age-days``:
-
-* **A** report only: the dispatch branch, or a commit the record names, is
-  still on ``origin`` under any branch (no finalizer publishes a branch
-  without its worktree);
-* **B** possible unpushed work (never modified): the local branch still exists,
-  the worktree exists and is dirty, or a local ref (a renamed branch) or a
-  worktree HEAD still holds a commit the record names;
-* **C** orphaned: the worktree path, the local branch and the remote branch are
-  all gone, and so is the work. Either the record names a commit
-  (``final_branch_head_commit``, or legacy ``auto_finalize.commit_sha``) that no ref
-  reaches, every remote branch freshly fetched, or the task exited with no
-  commits and a clean tree, leaving nothing to lose;
-* **D** anything else (never modified): evidence unavailable, a failed fetch
-  (``fetch_failed``: stale remote refs cannot prove the work gone),
-  commits or a dirty exit without a recorded commit id (a renamed branch cannot be ruled
-  out), a recorded commit missing from the object store, or a merged pull
-  request that shares the branch name but none of the record's commits.
-
-Only class C is written. A record with any #9275 completion gate beyond
-delivery (:func:`delegate.applicable_completion_gates`: an exit scan that did
-not clear, a review verdict, an advisory envelope or content exemption) is
-never settled ``done`` (operator decision 2026-09-30, option A): those gates
-run only in the worker, so :func:`delegate.recovery_requires_rerun` settles it
-``failed`` with ``recovery_requires_rerun``, or with the failure it already
-carries, and the report lists it for the driver to re-run or finalize by hand;
-no pull request is looked up for it. For any other record ``done`` needs a
-merged pull request tied to the task by commit identity: its head or merge
-commit is a recorded commit, or its head descends from one, and
-:func:`delegate.completion_gate_recovery_failure` passes: a failure the record
-already carries stands, and delivery counts a pull request merged since the
-task started (a failing delivery gate settles ``no_deliverable``). A pull
-request that only reuses the branch name may belong to a later task, so that
-record moves to D instead. A clean exit with no commits settles
-``no_deliverable``; anything else settles ``failed``. Evidence
-comes from one fetch per repository of every remote branch into the private
-namespace ``refs/lu-stale-scan/<repo-key>/`` (dry runs too: it writes only that
-namespace), from the allowlisted ``https://github.com/<slug>.git`` with an
-explicit refspec and config injection scrubbed from the environment (see
-:func:`_fetch_scan_refs`), and one ``for-each-ref`` over that namespace and
-the local branches; one ``git cat-file --batch-check`` and one
-``git rev-list --all`` per repository when records name commits (one walk into
-a set beats ~425 per-commit ``for-each-ref --contains`` walks); worktree probes
-for checkouts that still exist; and one paged REST pull list per repository (never GraphQL, never
-a per-record GitHub call). Per-record git calls happen only to name the refs
-holding a commit or to test a same-branch pull request head's ancestry. Git and
-``gh`` error text reaches the report only with URL userinfo stripped and
-secrets redacted (:func:`_scrub`).
+Legacy v1 recovery and finalization are retired (C-2188). ``settle-stale``
+reports evidence only, including when called with ``--apply``; record contents
+are never rewritten.
 
 ``archive`` moves terminal records (statuses that no longer claim a worktree,
 :data:`worktree_claims.RELEASED_TASK_STATUSES`) older than ``--min-age-days``
@@ -65,13 +14,13 @@ branch-holder release and ``post_task_reap`` read the hot record as the
 ownership proof. ``restore`` moves an archived record back. Which readers see
 the archive is documented in :mod:`scripts.orchestration.task_record_store`.
 
-Settle and archive both hold the record's lock while they write or move it:
-``delegate.worktree_lock`` for its checkout, the lock dispatch holds while it
+Archive holds the record's lock while moving it:
+``worktree_lock`` for its checkout, the lock dispatch holds while it
 publishes a record naming that checkout (a record naming no checkout locks its
 own file). The lock is taken even for a missing path, because dispatch takes it
 before it attaches a checkout. Under the lock the record is re-read; one whose
 mtime or status changed since selection is skipped, because a live writer
-touched it. Settle writes through ``delegate._write_state_atomic``. Archive
+touched it. Archive
 first renames the record to a private staging name, verifies that the file it
 took is the one it checked, and puts it back if a writer replaced it in
 between. No move ever replaces a file: archive, put-back and ``restore`` place
@@ -101,31 +50,32 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-# delegate imports ``agent_runtime`` as a top-level package (see reconcile_sweep.py).
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from scripts import delegate, secret_redactor
+from scripts import secret_redactor
 from scripts.common import github_client
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration import fleet_repos, task_record_store, worktree_claims
 from scripts.orchestration.dead_worker_state import task_state_lock
 
-SETTLED_BY = "settle-stale"
 ARCHIVE_DIR_NAME = task_record_store.ARCHIVE_DIR_NAME
 NEEDS_FINALIZE = "needs_finalize"
 DEFAULT_SETTLE_MIN_AGE_DAYS = 7.0
 DEFAULT_ARCHIVE_MIN_AGE_DAYS = 14.0
 DEFAULT_MAX_PR_PAGES = 40
 DEFAULT_LOCK_TIMEOUT_S = 5.0
+DEFAULT_GIT_TIMEOUT_S = 30.0
+DEFAULT_NETWORK_GIT_TIMEOUT_S = 180.0
+DEFAULT_GH_CLI_TIMEOUT_S = 180.0
 PR_PAGE_SIZE = 100
-# Delegate-owned sidecars that travel with a record: ``<stem>.result`` and the
-# read-only checkout snapshot directory (see delegate._read_only_snapshot_dir_for).
+# Legacy sidecars: ``<stem>.result`` and the read-only checkout snapshot directory.
 _SNAPSHOT_SUFFIX = ".snapshots"
-# ``delegate._archive_task_artifacts`` renames a re-dispatched record to
+# Re-dispatch archived records use
 # ``<stem>.<stamp>[.<pid>].archived.json`` and its snapshot directory to
 # ``<stem>.snapshots.<stamp>[.<pid>].archived``.
 _REDISPATCH_ARCHIVED_STEM_RE = task_record_store._REDISPATCH_ARCHIVED_STEM_RE
@@ -141,6 +91,33 @@ PullPager = Callable[[str, int], list[dict[str, Any]]]
 # ---------------------------------------------------------------------------
 # Shared helpers
 # ---------------------------------------------------------------------------
+
+
+def _read_state_json(path: Path) -> dict[str, Any] | None:
+    """Read legacy JSON without hydrating snapshot sidecars."""
+    try:
+        loaded = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return loaded if isinstance(loaded, dict) else None
+
+
+def worktree_lock(path: Path | str, timeout_s: float = DEFAULT_LOCK_TIMEOUT_S):
+    """Use the canonical repository-wide lock shared with task owners."""
+    return worktree_claims.worktree_lock(
+        path, lock_dir=worktree_claims.repository_lock_dir(PROJECT_ROOT), timeout_s=timeout_s
+    )
+
+
+def _archive_stamp() -> str:
+    return datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
+
+
+def _archived_artifact_path(path: Path, stamp: str) -> Path:
+    dest = path.with_name(f"{path.stem}.{stamp}.archived{path.suffix}")
+    if dest.exists():
+        dest = path.with_name(f"{path.stem}.{stamp}.{os.getpid()}.archived{path.suffix}")
+    return dest
 
 
 def _parse_ts(value: Any) -> datetime | None:
@@ -292,7 +269,7 @@ def default_repo_checkouts() -> dict[str, Path]:
     checkouts: dict[str, Path] = {}
     for key, repo in fleet_repos.load_fleet_repos().items():
         try:
-            _repo, checkout = fleet_repos.resolve_fleet_repo(key, primary_root=delegate._REPO_ROOT)
+            _repo, checkout = fleet_repos.resolve_fleet_repo(key, primary_root=main_checkout_root(PROJECT_ROOT))
         except fleet_repos.FleetRepoError:
             continue
         checkouts[repo.github] = checkout
@@ -310,7 +287,7 @@ def _fetch_scan_refs(checkout: Path, target: FetchTarget) -> str | None:
     ``url.<base>.insteadOf`` in the checkout's own config could still rewrite
     the URL, so the effective URL is checked first.
     """
-    resolved = _git(["ls-remote", "--get-url", target.url], cwd=checkout, timeout=delegate.DEFAULT_GIT_TIMEOUT_S)
+    resolved = _git(["ls-remote", "--get-url", target.url], cwd=checkout, timeout=DEFAULT_GIT_TIMEOUT_S)
     if resolved is None or resolved.returncode != 0:
         return f"git ls-remote --get-url failed: {_failure_detail(resolved) if resolved else 'did not finish'}"
     effective = resolved.stdout.strip()
@@ -326,10 +303,10 @@ def _fetch_scan_refs(checkout: Path, target: FetchTarget) -> str | None:
             f"+refs/heads/*:{target.ref_prefix}/*",
         ],
         cwd=checkout,
-        timeout=delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S,
+        timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
     )
     if proc is None:
-        return f"git fetch {target.url} did not finish within {delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S:g}s"
+        return f"git fetch {target.url} did not finish within {DEFAULT_NETWORK_GIT_TIMEOUT_S:g}s"
     if proc.returncode != 0:
         return f"git fetch {target.url} failed: {_failure_detail(proc)}"[:300]
     return None
@@ -350,7 +327,7 @@ def collect_repo_facts(slug: str, checkout: Path | None, target: FetchTarget | N
     listing = _git(
         ["for-each-ref", "--format=%(objectname) %(refname)", "refs/heads/", f"{target.ref_prefix}/"],
         cwd=checkout,
-        timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
+        timeout=DEFAULT_GIT_TIMEOUT_S,
     )
     if listing is None or listing.returncode != 0:
         facts.error = "git for-each-ref failed"
@@ -372,7 +349,7 @@ def _commits_ahead_of_base(checkout: Path, base_ref: str, branch: str) -> int | 
     proc = _git(
         ["rev-list", "--count", f"{base_ref}..refs/heads/{branch}"],
         cwd=checkout,
-        timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
+        timeout=DEFAULT_GIT_TIMEOUT_S,
     )
     if proc is None or proc.returncode != 0:
         return None
@@ -392,8 +369,8 @@ _SHA_RE = re.compile(r"^[0-9a-f]{7,64}$")
 def recorded_work_commits(record: Mapping[str, Any]) -> list[str]:
     """Commit ids a record names as its work.
 
-    New delegate records name the final branch head. Older records may only
-    name the commit delegate made from a dirty tree at exit. The base SHA is
+    Newer legacy records name the final branch head. Older records may only
+    name the commit made from a dirty tree at exit. The base SHA is
     the task's starting point, not its work.
     """
     auto_finalize = record.get("auto_finalize")
@@ -439,7 +416,7 @@ def collect_commit_facts(checkout: Path, shas: Iterable[str]) -> CommitFacts:
     lookup = _git(
         ["cat-file", "--batch-check=%(objectname) %(objecttype)"],
         cwd=checkout,
-        timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
+        timeout=DEFAULT_GIT_TIMEOUT_S,
         stdin="".join(f"{sha}^{{commit}}\n" for sha in wanted),
     )
     lines = lookup.stdout.splitlines() if lookup is not None and lookup.returncode == 0 else []
@@ -451,7 +428,7 @@ def collect_commit_facts(checkout: Path, shas: Iterable[str]) -> CommitFacts:
         facts.resolved[sha] = parts[0] if len(parts) == 2 and parts[1] == "commit" else None
     if not any(facts.resolved.values()):
         return facts
-    walk = _git(["rev-list", "--all"], cwd=checkout, timeout=delegate.DEFAULT_GIT_TIMEOUT_S)
+    walk = _git(["rev-list", "--all"], cwd=checkout, timeout=DEFAULT_GIT_TIMEOUT_S)
     if walk is None or walk.returncode != 0:
         facts.error = "git rev-list --all failed"
         return facts
@@ -463,19 +440,9 @@ def _refs_containing(checkout: Path, sha: str) -> list[str]:
     proc = _git(
         ["for-each-ref", "--format=%(refname)", "--contains", sha],
         cwd=checkout,
-        timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
+        timeout=DEFAULT_GIT_TIMEOUT_S,
     )
     return proc.stdout.split() if proc is not None and proc.returncode == 0 else []
-
-
-def _is_ancestor(checkout: Path, ancestor: str, descendant: str) -> bool:
-    """True only when git proves ``ancestor`` is in ``descendant``'s history."""
-    proc = _git(
-        ["merge-base", "--is-ancestor", ancestor, descendant],
-        cwd=checkout,
-        timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
-    )
-    return proc is not None and proc.returncode == 0
 
 
 # ---------------------------------------------------------------------------
@@ -509,7 +476,7 @@ def gh_pull_page(slug: str, page: int) -> list[dict[str, Any]]:
         capture_output=True,
         text=True,
         check=False,
-        timeout=delegate.DEFAULT_GH_CLI_TIMEOUT_S,
+        timeout=DEFAULT_GH_CLI_TIMEOUT_S,
         fresh=True,
     )
     observation = getattr(proc, "github_result", None)
@@ -591,11 +558,6 @@ class Candidate:
     age_days: float
     klass: str = "D"
     evidence: dict[str, Any] = dataclasses.field(default_factory=dict)
-    outcome: str | None = None
-    settle_reason: str | None = None
-    merged_pr: dict[str, Any] | None = None
-    # The typed cause a ``failed`` settlement records, when it has one.
-    failure_reason: str | None = None
     skip_reason: str | None = None
     action: str = "report"
     # Full shas of the recorded commits, set once no ref is proven to hold them.
@@ -625,13 +587,6 @@ class Candidate:
             "age_days": round(self.age_days, 1),
             "action": self.action,
         }
-        if self.outcome is not None:
-            entry["outcome"] = self.outcome
-            entry["settle_reason"] = self.settle_reason
-            if self.failure_reason is not None:
-                entry["failure_reason"] = self.failure_reason
-        if self.merged_pr is not None:
-            entry["merged_pr"] = self.merged_pr
         if self.skip_reason is not None:
             entry["skip_reason"] = self.skip_reason
         entry["evidence"] = self.evidence
@@ -647,7 +602,7 @@ def select_needs_finalize(tasks_dir: Path, *, min_age_days: float, now: datetime
             mtime_ns = path.stat().st_mtime_ns
         except OSError:
             continue
-        record = delegate._read_state_json(path)
+        record = _read_state_json(path)
         if record is None or record.get("status") != NEEDS_FINALIZE:
             continue
         age = _record_age_days(record, mtime_ns, now)
@@ -785,103 +740,12 @@ def _apply_commit_facts(candidate: Candidate, commits: CommitFacts, facts: RepoF
         candidate.skip_reason = "recorded commit still on origin under " + ", ".join(published or refs)
 
 
-def _merged_since(pull: Mapping[str, Any], start: datetime | None) -> bool:
-    if start is None:
-        return True
-    merged_at = _parse_ts(pull.get("merged_at"))
-    return merged_at is not None and merged_at >= start
-
-
-def _decide_outcome(candidate: Candidate, index: PullIndex | None, checkout: Path | None) -> None:
-    """Pick the terminal status of an orphaned (class C) record.
-
-    ``done`` needs a merged pull request tied to this task by commit identity:
-    its head or merge commit is a recorded commit, or its head descends from
-    one. A merged pull request that only shares the branch name may be a later
-    task reusing the ref, so that record moves to class D rather than being
-    guessed.
-    """
-    if index is None or index.error is not None:
-        candidate.skip_reason = f"pull request list unavailable: {index.error if index else 'not fetched'}"
-        return
-    start = candidate.task_start
-    if index.covered_since is not None and (start is None or start < index.covered_since):
-        candidate.skip_reason = "pull request list does not reach back to the task start; raise --max-pr-pages"
-        return
-    branch = candidate.evidence.get("branch")
-    same_branch = [pull for pull in index.merged_by_branch.get(branch or "", []) if _merged_since(pull, start)]
-    tied = [pull for sha in candidate.work_commits for pull in index.merged_by_sha.get(sha, [])]
-    if not tied and checkout is not None:
-        tied = [
-            pull
-            for pull in same_branch
-            if isinstance(pull.get("head_sha"), str)
-            and any(_is_ancestor(checkout, sha, pull["head_sha"]) for sha in candidate.work_commits)
-        ]
-    record = candidate.record
-    if tied:
-        pull = max(tied, key=lambda item: str(item.get("merged_at") or ""))
-        candidate.merged_pr = pull
-        candidate.settle_reason = f"orphaned: PR #{pull.get('number')} merged this task's recorded commit"
-        # #9275: a delivery-only record (gated ones never get here) keeps a
-        # failure it carries; a pull request merged since the task started is its
-        # delivery evidence (one that merged earlier holds only the base the
-        # worker started from).
-        gate_failure = delegate.completion_gate_recovery_failure(
-            record,
-            response=delegate.saved_task_response(record, candidate.path),
-            commits_ahead=1 if _merged_since(pull, start) else record.get("commits_ahead"),
-        )
-        if gate_failure is None:
-            candidate.outcome = "done"
-        else:
-            candidate.outcome = gate_failure.status
-            candidate.failure_reason = gate_failure.failure
-            candidate.evidence["completion_gate"] = {"gate": gate_failure.gate, "failure": gate_failure.failure}
-            candidate.settle_reason += (
-                f", but its {gate_failure.gate} completion gate refuses done ({gate_failure.failure})"
-            )
-    elif same_branch:
-        candidate.klass = "D"
-        candidate.evidence["untied_merged_prs"] = [pull.get("number") for pull in same_branch]
-        numbers = ", ".join(f"#{pull.get('number')}" for pull in same_branch)
-        candidate.skip_reason = f"ambiguous: merged PR {numbers} reuses branch {branch} but " + (
-            "carries none of this task's recorded commits"
-            if candidate.work_commits
-            else "the record names no commit that ties it to this task"
-        )
-    elif not candidate.work_commits and _is_zero(record.get("commits_ahead")) and record.get("returncode") == 0:
-        candidate.outcome = delegate._NO_DELIVERABLE_STATUS
-        candidate.settle_reason = "orphaned: clean exit with no commits; worktree and branch gone"
-    else:
-        candidate.outcome = "failed"
-        candidate.settle_reason = (
-            f"orphaned: returncode={record.get('returncode')} commits_ahead={record.get('commits_ahead')}, "
-            "no merged pull request carries its work; worktree and branch gone"
-            + ("; no ref holds the recorded commit" if candidate.work_commits else "")
-        )
-
-
-def _refuse_gated(candidate: Candidate) -> bool:
-    """Settle an orphaned record with a completion gate beyond delivery ``failed``; False for any other record."""
-    refusal = delegate.recovery_requires_rerun(candidate.record)
-    if refusal is None:
-        return False
-    candidate.outcome = refusal.status
-    candidate.failure_reason = refusal.failure
-    candidate.evidence["completion_gate"] = {"gate": refusal.gate, "failure": refusal.failure}
-    candidate.settle_reason = f"orphaned: worktree and branch gone; {refusal.detail} ({refusal.failure})"
-    return True
-
-
 def classify(
     candidates: list[Candidate],
     *,
     repo_checkouts: Mapping[str, Path],
-    pager: PullPager,
-    max_pr_pages: int,
-) -> dict[str, PullIndex]:
-    """Classify every candidate in place; return the pull index built per repository."""
+) -> None:
+    """Classify candidates from repository evidence without changing their records."""
     facts_by_slug: dict[str, RepoFacts] = {}
     for candidate in candidates:
         slug = candidate.record.get("repository")
@@ -904,69 +768,6 @@ def classify(
         for candidate in group:
             _apply_commit_facts(candidate, commit_facts, facts)
 
-    orphaned_by_slug: dict[str, list[Candidate]] = defaultdict(list)
-    for candidate in candidates:
-        if candidate.klass == "C" and not _refuse_gated(candidate):
-            orphaned_by_slug[str(candidate.record.get("repository"))].append(candidate)
-    indexes: dict[str, PullIndex] = {}
-    for slug, orphaned in orphaned_by_slug.items():
-        starts = [candidate.task_start for candidate in orphaned]
-        oldest = None if any(start is None for start in starts) else min(s for s in starts if s is not None)
-        indexes[slug] = build_pull_index(slug, oldest_start=oldest, pager=pager, max_pages=max_pr_pages)
-        for candidate in orphaned:
-            _decide_outcome(candidate, indexes[slug], facts_by_slug[slug].checkout)
-    return indexes
-
-
-def _settled_record(candidate: Candidate, current: dict[str, Any], settled_at: str) -> dict[str, Any]:
-    updated = {
-        **current,
-        "status": candidate.outcome,
-        "needs_finalize": False,
-        "settled_by": SETTLED_BY,
-        "settled_at": settled_at,
-        "settle_reason": candidate.settle_reason,
-        "settle_previous_status": NEEDS_FINALIZE,
-        "settle_evidence": candidate.evidence,
-    }
-    if candidate.merged_pr is not None:
-        updated["merged_pr"] = candidate.merged_pr
-    if candidate.failure_reason is not None:
-        updated["failure_reason"] = candidate.failure_reason
-        updated["last_error"] = candidate.settle_reason
-    if candidate.outcome == delegate._NO_DELIVERABLE_STATUS and not updated.get("no_deliverable_reason"):
-        updated["no_deliverable_reason"] = candidate.failure_reason or candidate.settle_reason
-    return updated
-
-
-def apply_settlement(candidate: Candidate, *, lock_timeout_s: float, now: datetime) -> None:
-    """Write one class C record's terminal status, or record why it was skipped."""
-    try:
-        with delegate.worktree_lock(_record_lock_target(candidate.record, candidate.path), timeout_s=lock_timeout_s):
-            try:
-                mtime_ns = candidate.path.stat().st_mtime_ns
-            except FileNotFoundError:
-                candidate.action, candidate.skip_reason = "skipped", "record moved since classification"
-                return
-            if mtime_ns != candidate.mtime_ns:
-                candidate.action, candidate.skip_reason = "skipped", "record changed since classification"
-                return
-            current = delegate._read_state_json(candidate.path)
-            if current is None or current.get("status") != NEEDS_FINALIZE:
-                candidate.action, candidate.skip_reason = "skipped", "record no longer needs_finalize"
-                return
-            if os.path.lexists(str(candidate.evidence["worktree_path"])):
-                candidate.action, candidate.skip_reason = "skipped", "worktree path reappeared since classification"
-                return
-            delegate._write_state_atomic(candidate.path, _settled_record(candidate, current, now.isoformat()))
-    except worktree_claims.WorktreeLockError as exc:
-        candidate.action, candidate.skip_reason = "skipped", worktree_claims.lock_refusal(exc)
-        return
-    except OSError as exc:
-        candidate.action, candidate.skip_reason = "error", f"write failed: {type(exc).__name__}: {exc}"
-        return
-    candidate.action = "settled"
-
 
 def settle_stale(
     tasks_dir: Path,
@@ -978,49 +779,29 @@ def settle_stale(
     max_pr_pages: int = DEFAULT_MAX_PR_PAGES,
     lock_timeout_s: float = DEFAULT_LOCK_TIMEOUT_S,
     now: datetime | None = None,
-    before_apply: Callable[[list[Candidate]], None] | None = None,
 ) -> dict[str, Any]:
-    """Classify stale ``needs_finalize`` records and, with ``apply``, settle class C.
+    """Report stale records without rewriting legacy state.
 
-    ``before_apply`` is a test seam called between classification and writes.
+    ``apply``, ``pager``, ``max_pr_pages`` and ``lock_timeout_s`` remain accepted
+    for existing callers; legacy recovery and finalization are retired.
     """
     now = now or datetime.now(UTC)
     candidates, younger = select_needs_finalize(tasks_dir, min_age_days=min_age_days, now=now)
-    indexes = classify(
+    classify(
         candidates,
         repo_checkouts=default_repo_checkouts() if repo_checkouts is None else repo_checkouts,
-        pager=pager,
-        max_pr_pages=max_pr_pages,
     )
-    settleable = [candidate for candidate in candidates if candidate.klass == "C" and candidate.outcome]
-    for candidate in settleable:
-        candidate.action = "would_settle"
-    if apply:
-        if before_apply is not None:
-            before_apply(candidates)
-        for candidate in settleable:
-            apply_settlement(candidate, lock_timeout_s=lock_timeout_s, now=now)
-
     by_class = Counter(candidate.klass for candidate in candidates)
     order = {"B": 0, "A": 1, "D": 2, "C": 3}
     return {
         "command": "settle-stale",
-        "mode": "apply" if apply else "dry-run",
+        "mode": "read-only",
         "tasks_dir": str(tasks_dir),
         "min_age_days": min_age_days,
         "selected": len(candidates),
         "younger_left_alone": younger,
         "classes": {klass: by_class.get(klass, 0) for klass in ("A", "B", "C", "D")},
-        "outcomes": dict(Counter(c.outcome for c in candidates if c.klass == "C" and c.outcome)),
         "actions": dict(Counter(candidate.action for candidate in candidates)),
-        "pull_lists": {
-            slug: {
-                "pages": index.pages,
-                "error": index.error,
-                "covered_since": index.covered_since.isoformat() if index.covered_since else None,
-            }
-            for slug, index in indexes.items()
-        },
         "records": [
             candidate.as_report()
             for candidate in sorted(candidates, key=lambda item: (order[item.klass], item.path.name))
@@ -1042,7 +823,7 @@ def _sidecar_names(stem: str) -> tuple[str, str]:
 
 
 def sidecar_paths(record_path: Path) -> list[Path]:
-    """Delegate-owned sidecars of a record: ``<stem>.result`` and its snapshot directory."""
+    """Legacy sidecars of a record: ``<stem>.result`` and its snapshot directory."""
     candidates = (record_path.with_name(name) for name in _sidecar_names(record_path.stem))
     return [path for path in candidates if path.exists()]
 
@@ -1148,7 +929,7 @@ def _stage(path: Path, staging_dir: Path) -> Path:
 def _place(staged: Path, dest_dir: Path, name: str, stamp: str) -> Path:
     """Move a staged file into ``dest_dir`` as ``name``, else its stamped name; never overwrite."""
     first = dest_dir / name
-    for dest in (first, delegate._archived_artifact_path(first, stamp)):
+    for dest in (first, _archived_artifact_path(first, stamp)):
         try:
             _move_no_replace(staged, dest)
         except FileExistsError:
@@ -1258,7 +1039,7 @@ def _archive_one(
 ) -> None:
     """Move one record under its lock after re-checking it, or record why not."""
     try:
-        with delegate.worktree_lock(lock_target, timeout_s=lock_timeout_s):
+        with worktree_lock(lock_target, timeout_s=lock_timeout_s):
             if before_move is not None:
                 before_move(path)
             current, stat = _read_pinned(path)
@@ -1308,7 +1089,7 @@ def archive_terminal(
     """
     now = now or datetime.now(UTC)
     archive_dir = tasks_dir / ARCHIVE_DIR_NAME
-    stamp = delegate._archive_stamp()
+    stamp = _archive_stamp()
     rows: list[dict[str, Any]] = []
     kept: Counter[str] = Counter()
     younger = 0
@@ -1317,7 +1098,7 @@ def archive_terminal(
             mtime_ns = path.stat().st_mtime_ns
         except OSError:
             continue
-        record = delegate._read_state_json(path)
+        record = _read_state_json(path)
         if record is None or record.get("status") not in worktree_claims.RELEASED_TASK_STATUSES:
             continue
         age = _record_age_days(record, mtime_ns, now)
@@ -1440,7 +1221,7 @@ def restore_archived(tasks_dir: Path, names: Iterable[str], *, apply: bool = Fal
 
 _PROG = "python -m scripts.orchestration.stale_task_records"
 _RELATED = (
-    "Related: scripts/delegate.py (record writer _write_state_atomic, worktree_lock),\n"
+    "Related: scripts/dispatch.py (current dispatcher),\n"
     "  scripts/orchestration/worktree_claims.py (claim scan, RELEASED_TASK_STATUSES),\n"
     "  scripts/orchestration/task_record_store.py (hot/archive layout; which readers see the archive),\n"
     "  batch_state/tasks/report-8625.result (classification report), issue #8625."
@@ -1451,9 +1232,9 @@ def _print_summary(report: dict[str, Any]) -> None:
     head = {key: value for key, value in report.items() if key != "records"}
     print(json.dumps(head, indent=2, default=str))
     for row in report["records"]:
-        if row.get("class") in (None, "C") and row.get("action") in ("would_settle", "would_archive"):
+        if row.get("class") is None and row.get("action") == "would_archive":
             continue
-        reason = row.get("skip_reason") or row.get("error") or row.get("settle_reason") or ""
+        reason = row.get("skip_reason") or row.get("error") or ""
         label = row.get("class") or row.get("status")
         print(f"  [{label}] {row.get('action')}: {row['file']}  {reason}")
     if report["mode"] == "dry-run":
@@ -1464,13 +1245,13 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog=_PROG,
         description=(
-            "Settle orphaned needs_finalize delegate task records and archive old terminal ones (#8625).\n"
-            "Use it to clear pre-#8468 bookkeeping out of batch_state/tasks/; never to finalize live\n"
-            "work (class A/B/D records are only reported). Every command is a dry run without --apply."
+            "Report legacy task evidence and archive old terminal records (#8625).\n"
+            "Recovery and finalization are retired. settle-stale is read-only; archive and restore\n"
+            "are dry runs without --apply."
         ),
         epilog=(
             "Commands:\n"
-            "  settle-stale   Classify old needs_finalize records (A/B/C/D) and settle class C.\n"
+            "  settle-stale   Report old needs_finalize records (A/B/C/D) without changing state.\n"
             "  archive        Move old terminal records into batch_state/tasks/archive/.\n"
             "  restore        Move archived records back into batch_state/tasks/.\n"
             "\n"
@@ -1482,7 +1263,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "\n"
             "Outputs:\n"
             "  stdout: a summary (or with --json the full report with per-record evidence).\n"
-            "  --apply rewrites settled records in place / moves archived records; nothing else.\n"
+            "  --apply moves archived records; settle-stale never rewrites record contents.\n"
             "\n"
             "Exit codes:\n"
             "  0  finished (dry run, or every write succeeded or was safely skipped)\n"
@@ -1508,45 +1289,29 @@ def _build_parser() -> argparse.ArgumentParser:
                 default=min_age_default,
                 help=f"Only records whose finished_at is at least this many days old (default: {min_age_default:g}).",
             )
-        sub.add_argument("--apply", action="store_true", help="Write the changes (default: dry run, writes nothing).")
+        sub.add_argument(
+            "--apply",
+            action="store_true",
+            help=(
+                "Legacy compatibility flag; settle-stale always reports without rewriting records."
+                if sub.prog.endswith(" settle-stale")
+                else "Write the changes (default: dry run, writes nothing)."
+            ),
+        )
         sub.add_argument("--json", action="store_true", help="Print the full JSON report instead of a summary.")
 
     settle = commands.add_parser(
         "settle-stale",
-        help="Classify old needs_finalize records and settle orphaned (class C) ones.",
+        help="Report old needs_finalize records without changing their contents.",
         description=(
-            "Classify needs_finalize records older than --min-age-days and settle class C records.\n"
-            "Use it for records whose worktree, local branch and remote branch are all gone."
+            "Classify legacy needs_finalize records older than --min-age-days.\n"
+            "Recovery and finalization are retired; --apply does not rewrite records."
         ),
         epilog=(
-            "Classes (evidence: one git fetch per repository of every branch of the allowlisted\n"
-            "https://github.com/<slug>.git into refs/lu-stale-scan/<repo-key>/ (dry run too; it writes\n"
-            "only that namespace), a ref listing and, for records naming a commit, one cat-file + one\n"
-            "rev-list --all per repository; worktree probes; one paged REST pull list per repository;\n"
-            "never GraphQL or per-record GitHub calls):\n"
-            "  A  branch, or a recorded commit, still on origin          report only\n"
-            "  B  local branch or a ref holding a recorded commit, or    never modified\n"
-            "     worktree dirty\n"
-            "  C  worktree, branches and the work all gone: a recorded   settled\n"
-            "     commit no ref holds, or a clean exit with no commits\n"
-            "  D  anything else: evidence unavailable, a failed fetch    never modified\n"
-            "     (fetch_failed), commits or a dirty exit with no\n"
-            "     recorded commit, a PR that only reuses the branch name\n"
-            "Class C settles to: done (+merged_pr) only for delivery-only records when a merged\n"
-            "same-repository PR carries a recorded commit (head, merge commit, or a head descending\n"
-            "from it). A gated orphaned record (verdict, ceiling, exemption or leftovers gate) settles\n"
-            "failed with recovery_requires_rerun (or the failure it already carries). Other records\n"
-            "settle no_deliverable for a clean exit with no commits; failed otherwise.\n"
-            "Each write adds settled_by='settle-stale', settled_at,\n"
-            "settle_reason, settle_previous_status and settle_evidence, holds the record's lock, and is\n"
-            "skipped if the record's mtime or status changed since classification.\n"
-            "\n"
             "Examples:\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records settle-stale --json | head -c 3000\n"
-            "  .venv/bin/python -m scripts.orchestration.stale_task_records settle-stale --min-age-days 14 --apply\n"
-            "\n"
-            "Outputs: rewrites settled records in batch_state/tasks/ (with --apply only).\n"
-            "Exit codes: 0 finished, 1 a write failed, 2 bad arguments.\n" + _RELATED
+            "  .venv/bin/python -m scripts.orchestration.stale_task_records settle-stale --json\n"
+            "Outputs: repository evidence report; fetch updates only the private scan refs.\n"
+            "Exit codes: 0 reported, 2 bad arguments.\n" + _RELATED
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -1555,10 +1320,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--max-pr-pages",
         type=int,
         default=DEFAULT_MAX_PR_PAGES,
-        help=(
-            f"Cap on {PR_PAGE_SIZE}-item REST pages of closed PRs per repository (default: {DEFAULT_MAX_PR_PAGES}); "
-            "records older than the pages reached are skipped, never guessed."
-        ),
+        help=(f"Legacy compatibility option (default: {DEFAULT_MAX_PR_PAGES}); no pull list is fetched."),
     )
 
     def lock_timeout(sub: argparse.ArgumentParser) -> None:

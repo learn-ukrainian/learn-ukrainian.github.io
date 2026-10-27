@@ -28,7 +28,10 @@ if __package__ in {None, ""}:
 from scripts.rag.source_query import GRAC_BASE, GRAC_CORPUS, grac_db_path
 from scripts.storage.topology import is_network_filesystem_path
 
-USER_AGENT = "learn-ukrainian-grac-frequency/1.0 (noncommercial educational; resumable wordlist snapshot)"
+USER_AGENT = (
+    "learn-ukrainian-grac-frequency/1.0 (noncommercial educational; resumable wordlist snapshot; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS items (
     attr TEXT NOT NULL, str TEXT NOT NULL, frq INTEGER NOT NULL, relfreq REAL NOT NULL, page INTEGER NOT NULL,
