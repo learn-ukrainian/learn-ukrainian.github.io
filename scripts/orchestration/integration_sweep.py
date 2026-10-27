@@ -30,6 +30,8 @@ A marker the parser rejects can still be read one of three ways:
 A forger with the fleet identity can therefore still hold a PR (fail closed), but
 can no longer revoke one through an unrelated malformed marker, and every
 ``unknown`` verdict names a typed reason from ``UNKNOWN_REASONS`` and the comment.
+Every valid current-head rejection stands regardless of later same-head approvals.
+A different head requires its own review; old-head rejections do not decide it.
 """
 
 from __future__ import annotations
@@ -273,7 +275,7 @@ def lookup_verdict(
 ) -> Verdict:
     """Resolve one SHA's verdict; malformed or edited evidence for it poisons it.
 
-    A rejection stands until an approval both started and was posted after it (#10973).
+    A valid rejection stands for this exact SHA regardless of later approvals.
     A malformed marker poisons this SHA unless it is attributable to another head; see
     the module docstring for the threat model (#11127).
     """
@@ -355,14 +357,9 @@ def lookup_verdict(
         state = "CF-unrecorded" if legacy else "CF-stale" if other_head else "needs-CF"
         return Verdict(state, untrusted_markers=tuple(untrusted), superseded_markers=tuple(superseded))
     approvals = [item for item in candidates if item[2]["verdict"] not in REJECTED]
-    # A rejection posted after an approval wins even when its review started first (#10973), and a
-    # late-posted approval of an older review start cannot overwrite it; a start tie also keeps it.
-    standing = [
-        item
-        for item in candidates
-        if item[2]["verdict"] in REJECTED
-        and not any(approval[0] > item[0] and approval[1] > item[1] for approval in approvals)
-    ]
+    # Same-head approvals cannot clear a rejection, including when started and posted later.
+    # Keep the latest rejection by review start, then posting time for stalled-work reporting.
+    standing = [item for item in candidates if item[2]["verdict"] in REJECTED]
     if standing:
         winner = max(standing, key=lambda item: (item[0], item[1]))
     else:
