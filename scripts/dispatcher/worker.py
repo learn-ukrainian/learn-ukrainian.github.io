@@ -28,6 +28,38 @@ def _identity(pid: int | None) -> str | None:
         return None
 
 
+# Bound on each stop step for a provider whose supervisor is gone: SIGTERM, then SIGKILL.
+PROVIDER_STOP_GRACE_S = 5.0
+
+
+def _stop_provider(record: dict) -> None:
+    """Terminate the process group of a provider that outlived its supervisor.
+
+    The provider inherits the review test-slot locks and has no timeout enforcer once its supervisor
+    is gone, so its slots return only when its group ends. The group is signalled only while its leader
+    still has the start identity recorded at launch; its id stays reserved while any member lives, so a
+    vanished leader still names the provider's group, and a different process at that pid is never
+    signalled.
+    """
+    pid, pgid, start = record.get("provider_pid"), record.get("provider_pgid"), record.get("provider_start")
+    if not pid or not pgid or not start or _identity(pid) != start:
+        return
+    for sig in (signal.SIGTERM, signal.SIGKILL):
+        if _identity(pid) not in (start, None):
+            return
+        try:
+            os.killpg(pgid, sig)
+        except (ProcessLookupError, PermissionError):
+            return
+        deadline = time.monotonic() + PROVIDER_STOP_GRACE_S
+        while time.monotonic() < deadline:
+            try:
+                os.killpg(pgid, 0)
+            except (ProcessLookupError, PermissionError):
+                return
+            time.sleep(0.05)
+
+
 def _observe(record: dict) -> dict:
     if (
         record.get("schema_version") == 2
@@ -38,6 +70,7 @@ def _observe(record: dict) -> dict:
         current = store.read(record["task_id"], record["run_nonce"])
         if current["status"] not in store.ACTIVE:
             return current
+        _stop_provider(current)
         record.update(status="crashed", finished_at=store.now(), error="supervisor exited without a result")
         record["duration_s"] = (
             datetime.fromisoformat(record["finished_at"]) - datetime.fromisoformat(record["started_at"])
@@ -251,7 +284,11 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 pass_fds=slots.descriptors if slots else (),
                 start_new_session=True,
             )
-            record.update(status="running")
+            # Recovery needs the provider's identity: it outlives a killed supervisor (start_new_session).
+            record.update(
+                status="running", provider_pid=child.pid, provider_pgid=child.pid,
+                provider_start=_identity(child.pid),
+            )
             store.replace(record, path)
             child.communicate(invocation.stdin, timeout=hard_timeout if hard_timeout else None)
         returncode = child.returncode
@@ -300,7 +337,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             terminate()
             returncode = child.returncode
         if slots is not None:
-            # Every exit returns the hold; after a killed supervisor the locks end with the provider.
+            # Every exit returns the hold; after a killed supervisor the locks end with the provider,
+            # which _observe and cancel stop through its recorded identity.
             slots.release()
         if text is not None:
             spec.final_file.write_text(text)
@@ -357,6 +395,8 @@ def cancel(task_id: str, nonce: str | None = None) -> dict:
         except ProcessLookupError:
             return _observe(record)
         return wait(task_id, nonce, timeout=10, poll_interval=0.05)[0]
+    # A settled record can still name a live provider whose earlier stop was interrupted.
+    _stop_provider(record)
     return record
 
 

@@ -506,6 +506,40 @@ def test_supervisor_crash_is_reconciled_without_claiming_success(sandbox):
     assert record["finished_at"]
 
 
+def test_killed_supervisor_review_slots_return_only_after_its_orphaned_provider_is_stopped(sandbox, tmp_path):
+    """Defect class: a SIGKILLed supervisor frees, or strands forever, the review slots of a live provider."""
+    from scripts.common import test_slots
+
+    for name in (test_slots.HOLDER_ENV, test_slots.SESSION_ENV, "CI"):
+        sandbox.env.pop(name, None)
+    sandbox.env.update({test_slots.ENABLE_ENV: "on", test_slots.DIR_ENV: str(tmp_path / "pool"),
+                        test_slots.COUNT_ENV: "4", test_slots.WAIT_ENV: "5"})
+
+    def taken():
+        report = test_slots.status(sandbox.env)
+        assert report["error"] is None, report
+        return report["slots_in_use"] + report["slots_draining"]
+
+    task = sandbox.dispatch("blocked", "--require-review-verdict")
+    child = int(await_file(sandbox.tasks / f"{task[0]}.started"))
+    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    assert record["review_test_slots"]["outcome"] == "held"
+    assert (record["provider_pid"], record["provider_pgid"]) == (child, child)
+    os.kill(record["pid"], signal.SIGKILL)
+    deadline = time.monotonic() + 10
+    while worker._identity(record["pid"]) == record["process_start"]:
+        assert time.monotonic() < deadline, "supervisor survived SIGKILL"
+        time.sleep(0.02)
+
+    assert worker._identity(child) == record["provider_start"]
+    assert taken() == worker.admission.REVIEW_TEST_SLOTS
+
+    cancelled = json.loads(sandbox.cli("cancel", task[0], "--run-nonce", task[1]).stdout)
+    assert cancelled["status"] == "crashed"
+    assert worker._identity(child) is None
+    assert taken() == 0
+
+
 def test_concurrent_dispatches_use_distinct_records(sandbox):
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
         tasks = list(pool.map(lambda _: sandbox.dispatch(), range(2)))
@@ -1879,3 +1913,26 @@ def test_dispatch_fallback_refusal_records_no_worker_started(tmp_path, monkeypat
     assert state["error"].startswith("dispatch_fallback_refused: ")
     assert refusal in state["error"]
     assert "ambiguous" not in state["error"]
+
+
+def test_dispatch_popen_failure_records_worktree_head(tmp_path, monkeypatch) -> None:
+    """Ported from tests/test_delegate.py::test_dispatch_popen_failure_records_worktree_head.
+
+    v2 records the worktree head (``head_sha``) when the record is created; a failed spawn keeps it.
+    """
+    from scripts.dispatcher import admission
+    from scripts.orchestration import dispatch_isolation
+
+    spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "popen-head")
+    record["head_sha"] = "a" * 40
+    monkeypatch.setattr(
+        dispatch_isolation, "spawn_detached_worker", Mock(side_effect=FileNotFoundError("no such file"))
+    )
+    with pytest.raises(admission.LaunchRefused):
+        worker.start(spec, record, b"prompt", 60)
+
+    state = json.loads(path.read_text())
+    assert state["status"] == "failed"
+    assert state["pid"] is None
+    assert state["error"] == "worker_spawn_failed: Popen failed: FileNotFoundError: no such file"
+    assert state["head_sha"] == "a" * 40

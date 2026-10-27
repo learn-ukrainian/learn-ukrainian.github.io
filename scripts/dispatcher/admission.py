@@ -196,4 +196,8 @@ def spawn_supervisor(cmd: list[str], *, task_id: str, run_nonce: str, cwd: Path,
         code = "dispatch_fallback_refused" if refused else "dispatch_isolation_failed"
         message = f"dispatch isolation: {exc}"[:500]
         raise LaunchRefused(message, {"status": "failed", "error": f"{code}: {message}"}) from None
+    except (OSError, ValueError) as exc:
+        # No supervisor process exists: fail like the legacy spawn instead of reporting a crash.
+        message = f"Popen failed: {type(exc).__name__}: {exc}"[:500]
+        raise LaunchRefused(message, {"status": "failed", "error": f"worker_spawn_failed: {message}"}) from None
     return process, launch.as_state()
