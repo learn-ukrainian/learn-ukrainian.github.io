@@ -1,4 +1,4 @@
-"""Five-command interface for the minimal dispatcher."""
+"""Command interface for the minimal dispatcher."""
 
 import argparse
 import json
@@ -6,11 +6,23 @@ import re
 import subprocess
 import sys
 import uuid
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.dispatcher import admission, authoring, checks, git, prompt_context, providers, store, worker, write_intent
+from scripts.dispatcher import (
+    admission,
+    authoring,
+    checks,
+    git,
+    host_admission,
+    prompt_context,
+    providers,
+    store,
+    worker,
+    write_intent,
+)
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.prompt_context import _PromptPath
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
@@ -26,7 +38,8 @@ def build_parser() -> argparse.ArgumentParser:
         epilog="Examples:\n  .venv/bin/python -m scripts.dispatcher.cli dispatch --agent sol --model gpt-6.1-sol --prompt 'Explain X'\n"
         "  .venv/bin/python scripts/dispatch.py wait TASK --run-nonce NONCE --timeout 60\n"
         "Outputs: task JSON, prompt, result and logs; new branch/worktree on dispatch.\n"
-        "Exit codes: 0 success, 1 terminal failure, 2 invalid/refused request, 124 client timeout.\n"
+        "Exit codes: 0 success, 1 terminal failure, 2 invalid/refused request,\n"
+        "  3 host admission refused (retryable), 4 worktree disk full, 124 client timeout.\n"
         "Related: docs/design/dispatch-v2.md (C-2188).",
     )
     subs = parser.add_subparsers(dest="command", required=True)
@@ -40,7 +53,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--prompt 'Explain X' --contributor-mode on --dry-run\n"
         "Outputs: task ID and nonce; task JSON, prompt, result, logs and dispatch worktree.\n"
         "  Muse task JSON records the effective contributor_mode. --dry-run prints a plan and creates nothing.\n"
-        "Exit codes: 0 task started or plan printed, 2 invalid/refused request.\n"
+        "Exit codes: 0 task started or plan printed, 1 hold publication failed, 2 invalid/refused request,\n"
+        "  3 host admission refused (retryable), 4 worktree disk full.\n"
         "Related: docs/design/dispatch-v2.md.",
     )
     for flag, default, help_text in (
@@ -103,6 +117,10 @@ def build_parser() -> argparse.ArgumentParser:
                           help='Authoring review plan for frozen historical commits (default: cross_family)')
     dispatch.add_argument('--max-budget-usd', type=float,
                           help='Claude print-mode API spend cap in USD (default: no cap)')
+    dispatch.add_argument(
+        "--force-admission", metavar="REASON",
+        help="Override host admission with a recorded non-empty reason; never overrides a full worktree disk (default: off)",
+    )
     dispatch.add_argument("--dry-run", action="store_true", help="Print plan; create nothing (default: off)")
     dispatch.add_argument("--print-advisory-binding", action="store_true",
                           help="Print this request's envelope binding; needs --task-id, creates nothing (default: off)")
@@ -131,6 +149,22 @@ def build_parser() -> argparse.ArgumentParser:
         if name == "wait":
             sub.add_argument("--timeout", type=float, default=0, help="Wait seconds; 0 is unlimited (default: 0)")
             sub.add_argument("--poll-interval", type=float, default=1, help="Read interval in seconds (default: 1)")
+    sof = subs.add_parser(
+        "status-or-fail",
+        help="Exit 0 only for a confirmed running task",
+        description="Verify task state and supervisor process identity.\n"
+        "Use for liveness guardrails; use status to inspect terminal records.",
+        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py status-or-fail TASK\n"
+        "  .venv/bin/python scripts/dispatch.py status-or-fail TASK --run-nonce NONCE --verbose\n"
+        "Outputs: quiet by default; --verbose prints legacy-shaped status JSON. No records changed.\n"
+        "Exit codes: 0 confirmed running; 1 not running, missing, stale or nonce mismatch; "
+        "2 unavailable or invalid state.\n"
+        "Related: status; docs/design/dispatch-v2.md (C-2188).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    sof.add_argument("task_id", help="Task ID to verify, e.g. review-123")
+    sof.add_argument("--run-nonce", help="Expected run identity (default: omit nonce check)")
+    sof.add_argument("--verbose", action="store_true", help="Print structured status JSON (default: quiet)")
     return parser
 
 
@@ -188,7 +222,14 @@ def _dispatch(args) -> int:
     except ValueError as exc:
         print(f'❌ {exc}', file=sys.stderr)
         return 2
+    host_admission.precheck(args.mode, force_reason=args.force_admission)
+    host_admission.check_credit(agent, args.model)
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
+    force_reason = args.force_admission
+    if force_reason is not None:
+        force_reason = str(force_reason).strip()
+        if not force_reason:
+            raise host_admission.Refused("❌ --force-admission requires a non-empty reason", 2)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
     if args.pinned_head and not re.fullmatch(r"[0-9a-fA-F]{40}", args.pinned_head):
@@ -236,7 +277,10 @@ def _dispatch(args) -> int:
             (args.review_profile or "").strip().casefold() == "ukrainian" or args.language_lane
         ):
             raise ValueError("protected subject scope needs a code-profile review without --language-lane")
-    checks.check_resources((worktree, path.parent))
+    decision = host_admission.check(
+        args.mode, dry_run=args.dry_run, disk_guard=not (args.worktree is not None and (worktree / ".git").exists()),
+        force_reason=force_reason,
+    )
     if args.dry_run:
         authoring_admission = authoring.recheck(args, authoring_admission, agent, task_id, repo, info, worktree)
         # The real run re-checks child_env after worktree creation in worker.py.
@@ -247,43 +291,96 @@ def _dispatch(args) -> int:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
         return 0
-    if binding:
-        store.check_review_attempt(binding, claim=True)
-    with authoring.locked_target(repo, worktree):
-        authoring_admission = authoring.recheck(args, authoring_admission, agent, task_id, repo, info, worktree)
-        if authoring_admission is not None:
-            sha = authoring_admission.creation_sha or authoring_admission.head_sha
-            if authoring_admission.kind == 'new-branch':
-                branch = authoring_admission.head_branch
-        if not args.cwd or (authoring_admission is not None and authoring_admission.kind == 'new-branch'):
-            git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
-        record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
-        if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
-            raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
-        record.update(advisory_fields, **account_fields)
-        record.update(authoring._authoring_review_state_fields(args, authoring_admission))
-        record.update(prompt_fields)
-        record['prompt_sha256'] = store.digest(prompt)
-        record['effective_prompt_file'] = str(path.with_suffix('.effective.prompt'))
-        if lifecycle_carrier is not None:
-            record['task_lifecycle'] = lifecycle_carrier
-        if args.max_budget_usd is not None:
-            record['max_budget_usd'] = args.max_budget_usd
-        if agent == "muse":
-            record["contributor_mode"] = spec.options.get("contributor_mode", "off")
-        try:
-            worker.start(spec, record, prompt, args.hard_timeout)
-        except admission.LaunchRefused as exc:
-            # The record is terminal; never relaunch after a supervisor refusal.
-            print(f"dispatcher: failed to spawn worker for {task_id!r}: {exc}", file=sys.stderr)
-            return 1
+    with host_admission.reserve(
+        task_id, args.mode, decision, agent=agent, force_reason=force_reason,
+        disk_guard=lambda: not (args.worktree is not None and (worktree / ".git").exists()),
+    ) as hold:
+        if binding:
+            store.check_review_attempt(binding, claim=True)
+        with authoring.locked_target(repo, worktree):
+            authoring_admission = authoring.recheck(args, authoring_admission, agent, task_id, repo, info, worktree)
+            if authoring_admission is not None:
+                sha = authoring_admission.creation_sha or authoring_admission.head_sha
+                if authoring_admission.kind == 'new-branch':
+                    branch = authoring_admission.head_branch
+            if not args.cwd or (authoring_admission is not None and authoring_admission.kind == 'new-branch'):
+                git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
+            record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
+            if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
+                raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
+            record.update(advisory_fields, **account_fields)
+            record.update(authoring._authoring_review_state_fields(args, authoring_admission))
+            record.update(prompt_fields)
+            record['prompt_sha256'] = store.digest(prompt)
+            record['effective_prompt_file'] = str(path.with_suffix('.effective.prompt'))
+            if lifecycle_carrier is not None:
+                record['task_lifecycle'] = lifecycle_carrier
+            if args.max_budget_usd is not None:
+                record['max_budget_usd'] = args.max_budget_usd
+            if agent == "muse":
+                record["contributor_mode"] = spec.options.get("contributor_mode", "off")
+            try:
+                worker.start(spec, record, prompt, args.hard_timeout)
+            except admission.LaunchRefused as exc:
+                # The record is terminal: preserve the account/placement port's no-relaunch refusal.
+                print(f"dispatcher: failed to spawn worker for {task_id!r}: {exc}", file=sys.stderr)
+                return 1
     print(task_id, record["run_nonce"], sep="\n")
     return 0
+
+
+def _status_or_fail_payload(task_id: str, *, run_nonce: str | None = None) -> dict:
+    try:
+        record = store.read(task_id, run_nonce or None)
+    except ValueError as exc:
+        if str(exc) == "task not found":
+            return dict(task_id=task_id, status="task not found", age_s=0)
+        if str(exc) != "run nonce mismatch":
+            raise
+        # The legacy Monitor's 409 response exposes no conflicting run identity.
+        record = dict(task_id=task_id, status="stale_run_nonce")
+    if not isinstance(record, dict):
+        raise ValueError("invalid task record")
+    status = str(record.get("status") or "unknown")
+    identity = worker._identity(record.get("pid"))
+    alive = identity is not None and identity == record.get("process_start")
+    if status == "running" and not alive:
+        status = "stale"
+    try:
+        started = datetime.fromisoformat(str(record.get("started_at")).replace("Z", "+00:00"))
+        if started.tzinfo is None:
+            started = started.replace(tzinfo=UTC)
+        age = max(0, round((datetime.now(UTC) - started.astimezone(UTC)).total_seconds()))
+    except (TypeError, ValueError):
+        age = 0
+    result = dict(task_id=record.get("task_id") or task_id, status=status, age_s=age, alive=alive)
+    if run_nonce is not None:
+        result["run_nonce"] = record.get("run_nonce")
+    return result
+
+
+def _status_or_fail(args: argparse.Namespace) -> int:
+    try:
+        status = _status_or_fail_payload(args.task_id, run_nonce=args.run_nonce)
+    except (OSError, ValueError, TypeError, AttributeError) as exc:
+        print(f"Dispatcher state unavailable: {type(exc).__name__}", file=sys.stderr)
+        return 2
+    if args.verbose:
+        print(json.dumps(status, indent=2))
+    if status["status"] == "running":
+        return 0
+    print(
+        f"task {args.task_id} is not running (status={status['status']}, age={status['age_s']}s)",
+        file=sys.stderr,
+    )
+    return 1
 
 
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        if args.command == "status-or-fail":
+            return _status_or_fail(args)
         if args.command == "dispatch":
             return _dispatch(args)
         code = 0
@@ -308,6 +405,9 @@ def main(argv=None) -> int:
     except authoring._AuthoringReviewRefused as exc:
         print(exc.render(), file=sys.stderr)
         return 2
+    except host_admission.Refused as exc:
+        print(str(exc), file=sys.stderr)
+        return exc.code
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         message = str(exc).splitlines()[0] if isinstance(exc, ValueError) else type(exc).__name__
         print(f"dispatcher: {message}", file=sys.stderr)

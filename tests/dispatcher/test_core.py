@@ -18,7 +18,7 @@ from unittest.mock import Mock
 import pytest
 import yaml
 
-from scripts.dispatcher import checks, git, store, worker
+from scripts.dispatcher import checks, cli, git, store, worker
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.providers import muse
@@ -36,7 +36,7 @@ def run_git(repo, *args):
 
 
 @pytest.fixture
-def sandbox(tmp_path):
+def sandbox(tmp_path, hermetic_monitor):
     repo, tasks = tmp_path / "public", tmp_path / "tasks"
     remote = tmp_path / "remote.git"
     repo.mkdir()
@@ -58,6 +58,10 @@ def sandbox(tmp_path):
     shutil.copy(SOURCE / "scripts/dispatch.py", repo / "scripts/dispatch.py")
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     (repo / "scripts/fleet").mkdir()
+    (repo / "scripts/fleet/__init__.py").touch()
+    # D5: expose only the credit reader, keeping the common reaper stub isolated.
+    for name in ("credit_lane.py", "claude_account_lane.py"):
+        shutil.copy(SOURCE / "scripts/fleet" / name, repo / "scripts/fleet" / name)
     (repo / "scripts/fleet/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts/fleet')!r})\n")
     config = repo / "scripts/config"
     config.mkdir()
@@ -78,6 +82,7 @@ def sandbox(tmp_path):
         )
     )
     shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
+    shutil.copy(SOURCE / "scripts/config/credit_lanes.yaml", config / "credit_lanes.yaml")
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
@@ -1059,6 +1064,108 @@ def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandb
     assert (record["status"], record["error"]) == ("done", None)
 
 
+def test_isolated_private_https_fetch_credentials_never_escape_exact_registered_remote(
+    sandbox, delivery_settle, monkeypatch, tmp_path,
+):
+    """Missing private HTTPS auth rejected pushed work; host-wide auth could leak to another repo.
+
+    Real Git and a fake gh helper exercise credential selection on both production
+    fetch paths. Only the network transport is replaced by the disposable remote
+    after credential fill succeeds. No live credentials or network are used.
+    """
+    import shlex
+
+    from scripts.common import git_credentials
+    from scripts.orchestration import merge_closeout
+
+    record, settle = delivery_settle
+    record = settle("pushed")
+    tree = Path(record["cwd"])
+    remote = "https://github.com/fixture/private.git"
+    run_git(sandbox.repo, "update-ref", "refs/pull/42/head", record["head_sha"])
+    run_git(tree, "push", "origin", "HEAD:refs/pull/42/head")
+    run_git(tree, "config", "remote.origin.url", remote)
+    record["worktree_remote_url"] = remote
+    registry = tmp_path / "registry.yaml"
+    registry.write_text(yaml.safe_dump({"repos": {"fixture": {"github": "fixture/private", "transport": "https"}}}))
+    monkeypatch.setattr(git_credentials, "CONFIG", registry)
+    log = tmp_path / "helper-contexts"
+    marker = tmp_path / "untrusted-helper-ran"
+    fake_gh = tmp_path / "fake gh"
+    fake_gh.write_text(
+        '#!/bin/sh\n[ "$*" = "auth git-credential get" ] || exit 1\n'
+        f"cat >> {shlex.quote(str(log))}\n"
+        "printf 'username=fixture-user\\npassword=fixture-password\\n'\n"
+    )
+    fake_gh.chmod(0o700)
+    monkeypatch.setenv("AGENT_REAL_GH", str(fake_gh))
+    home = tmp_path / "home"
+    home.mkdir()
+    included = tmp_path / "untrusted.config"
+    included.write_text(f"[credential]\n helper = !touch {shlex.quote(str(marker))}\n[worker]\n global = consulted\n")
+    (home / ".gitconfig").write_text(f"[include]\n path = {included}\n")
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(included))
+    monkeypatch.setenv("GIT_CONFIG_SYSTEM", str(included))
+    # The cleanup runner also has to reset URL-scoped primary-repo helpers.
+    run_git(tree, "config", f"credential.{remote}.helper", f"!touch {shlex.quote(str(marker))}")
+    real_run = subprocess.run
+    prefixes = []
+    local_imports = []
+
+    def local_transport(argv, **kwargs):
+        if "fetch" not in argv:
+            return real_run(argv, **kwargs)
+        index = argv.index("fetch")
+        prefix = argv[:index]
+        env = kwargs["env"]
+        assert env["GIT_CONFIG_GLOBAL"] == env["GIT_CONFIG_SYSTEM"] == os.devnull
+        assert env["GIT_TERMINAL_PROMPT"] == "0" and env["PATH"] == os.defpath
+        credentials = real_run(
+            [*prefix, "credential", "fill"], cwd=kwargs.get("cwd"), env=env,
+            input=f"url={remote}\n\n", capture_output=True, text=True, check=False, timeout=10,
+        )
+        if any(arg.startswith("file://") for arg in argv[index:]):
+            assert env["GIT_ALLOW_PROTOCOL"] == "file"
+            assert credentials.returncode != 0
+            assert "fixture-password" not in credentials.stdout
+            assert not any(".helper=!" in arg for arg in prefix)
+            local_imports.append(argv)
+            return real_run(argv, **kwargs)
+        assert Path(kwargs.get("cwd") or argv[argv.index("-C") + 1]) != sandbox.repo
+        assert credentials.returncode == 0
+        assert "username=fixture-user\npassword=fixture-password\n" in credentials.stdout
+        before = log.read_text()
+        config = real_run([*prefix, "config", "--list", "--includes"], cwd=kwargs.get("cwd"), env=env,
+                          capture_output=True, text=True, check=True, timeout=10).stdout
+        assert "worker.global" not in config
+        for other in (
+            "https://github.com/fixture/other.git", "https://github.com/other/private.git",
+            remote + "/child", remote + "-suffix", remote.removesuffix(".git"),
+            "https://other.invalid/fixture/private.git", "http://github.com/fixture/private.git",
+        ):
+            result = real_run([*prefix, "credential", "fill"], cwd=kwargs.get("cwd"), env=env,
+                              input=f"url={other}\n\n", capture_output=True, text=True, check=False, timeout=10)
+            assert result.returncode != 0 and "fixture-password" not in result.stdout
+        assert log.read_text() == before
+        prefixes.append((prefix, kwargs.get("cwd"), env))
+        fetch_args = [str(sandbox.remote) if arg == "origin" else arg for arg in argv[index:]]
+        return real_run([*prefix, *fetch_args], **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", local_transport)
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("done", None)
+    assert merge_closeout._fetch_live_pr_head(sandbox.repo, 42) == (record["head_sha"], None)
+    assert len(prefixes) >= 3  # ownership's bounded fetches and closeout's live PR fetch
+    assert len(local_imports) == 1
+    expected_contexts = log.read_text()
+    assert expected_contexts.count("protocol=https\nhost=github.com\npath=fixture/private.git\n") == len(prefixes)
+    assert not marker.exists()
+    for other in ("https://github.com/fixture/other.git", "https://user@github.com/fixture/private.git",
+                  "git@github.com:fixture/private.git", str(sandbox.remote)):
+        assert git_credentials.verification_credentials(other) == []
+
+
 @pytest.mark.parametrize("shape", ["linear", "merge"])
 def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch, shape):
     """A multi-gigabyte remote must not be fetched whole: only blob-less history since the task base.
@@ -1878,6 +1985,157 @@ def test_delegate_rules_seat_flag_and_env(sandbox):
         assert prompt.startswith(rules_core.core_block('content') + '\n\n')
 
 
+# Ports of the legacy status-or-fail and child identity contracts in tests/test_delegate.py.
+def test_status_or_fail_running_task_exits_zero_quiet(tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_running_task_exits_zero_quiet."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "sleep-task.json").write_text(json.dumps(dict(
+        task_id="sleep-task", status="running", started_at=store.now(),
+        pid=os.getpid(), process_start=worker._identity(os.getpid()),
+    )))
+
+    rc = cli.main(["status-or-fail", "sleep-task"])
+
+    assert rc == 0
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+
+
+@pytest.mark.parametrize("case, expected_status, nonce", [
+    ("dead-pid", "stale", "record-nonce"),
+    ("mismatched-process-start", "stale", "record-nonce"),
+    ("missing-process-start", "stale", "record-nonce"),
+    ("nonce-mismatch", "stale_run_nonce", "wrong-nonce"),
+])
+def test_status_or_fail_dead_supervisor_never_reported_alive(
+    tmp_path, monkeypatch, capsys, case, expected_status, nonce,
+):
+    """Reject stale supervisor identities and nonces without rewriting the record."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    record = dict(
+        task_id="sleep-task", status="running", started_at=store.now(),
+        run_nonce="record-nonce", pid=os.getpid(), process_start=worker._identity(os.getpid()),
+    )
+    if case == "dead-pid":
+        with subprocess.Popen([sys.executable, "-c", "pass"]) as process:
+            process.wait(timeout=10)
+        record["pid"] = process.pid
+    elif case == "mismatched-process-start":
+        record["process_start"] = "different-process-start"
+    elif case == "missing-process-start":
+        record.pop("process_start")
+    path = tmp_path / "sleep-task.json"
+    original = json.dumps(record).encode()
+    path.write_bytes(original)
+
+    rc = cli.main(["status-or-fail", "sleep-task", "--verbose", "--run-nonce", nonce])
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out)
+    assert payload["status"] == expected_status
+    assert payload["alive"] is False
+    assert payload["run_nonce"] == (None if case == "nonce-mismatch" else "record-nonce")
+    assert f"task sleep-task is not running (status={expected_status}, age=" in captured.err
+    assert path.read_bytes() == original
+
+
+@pytest.mark.parametrize("status", [
+    "done", "failed", "timeout", "rate_limited", "cancelled", "crashed", "dry_run",
+    "needs_finalize", "no_deliverable",
+])
+def test_status_or_fail_completed_task_exits_one(tmp_path, monkeypatch, capsys, status):
+    """Ported from tests/test_delegate.py::test_status_or_fail_completed_task_exits_one."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "sleep-task.json").write_text(json.dumps(dict(
+        task_id="sleep-task", status=status, started_at=store.now(),
+    )))
+
+    rc = cli.main(["status-or-fail", "sleep-task"])
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert f"task sleep-task is not running (status={status}, age=" in captured.err
+    assert captured.err.rstrip().endswith("s)")
+
+
+def test_status_or_fail_unknown_task_exits_one(tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_unknown_task_exits_one."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+
+    rc = cli.main(["status-or-fail", "missing"])
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "task missing is not running" in captured.err
+    assert "task not found" in captured.err
+
+
+def test_status_or_fail_monitor_api_down_exits_two(monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_monitor_api_down_exits_two.
+
+    V2's unavailable authority is its task store, rather than the Monitor API.
+    """
+    monkeypatch.setattr(store, "read", Mock(side_effect=OSError("unavailable")))
+
+    rc = cli.main(["status-or-fail", "sleep-task"])
+
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "Dispatcher state unavailable" in captured.err
+
+
+def test_status_or_fail_verbose_byte_compatible_without_run_nonce(tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_verbose_byte_compatible_without_run_nonce."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "test-sof-task.json").write_text(json.dumps(dict(
+        task_id="test-sof-task", status="running", started_at="2026-08-20T10:00:00Z",
+        run_nonce="sof-nonce-12345", pid=os.getpid(), process_start=worker._identity(os.getpid()),
+    )))
+
+    rc = cli.main(["status-or-fail", "test-sof-task", "--verbose"])
+    assert rc == 0
+    data_no_nonce = json.loads(capsys.readouterr().out)
+    assert list(data_no_nonce.keys()) == ["task_id", "status", "age_s", "alive"]
+    assert "run_nonce" not in data_no_nonce
+
+    rc2 = cli.main(["status-or-fail", "test-sof-task", "--verbose", "--run-nonce", "sof-nonce-12345"])
+    assert rc2 == 0
+    data_with_nonce = json.loads(capsys.readouterr().out)
+    assert data_with_nonce["run_nonce"] == "sof-nonce-12345"
+
+
+@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy", "muse", "opencode", "hermes"])
+def test_dispatch_worker_env_carries_dispatch_identity_markers(spec, monkeypatch, agent):
+    """Ported from tests/test_delegate.py::test_dispatch_worker_env_carries_dispatch_identity_markers."""
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "parent-task")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "parent-agent")
+
+    env = child_env(dataclasses.replace(spec, task_id="dispatch-marker-check", agent=agent))
+
+    assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-marker-check"
+    assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == agent
+    assert os.environ["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "parent-task"
+    assert os.environ["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "parent-agent"
+
+    process = SimpleNamespace(pid=os.getpid(), stdin=SimpleNamespace(write=Mock(), close=Mock()))
+    launch = Mock(return_value=process)
+    monkeypatch.setattr(worker.subprocess, "Popen", launch)
+    monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
+    monkeypatch.setattr(worker.admission.dispatch_isolation, "_caller_in_driver_scope", lambda: False)
+    monkeypatch.setattr(worker, "project_interpreter", Mock(return_value=Path(sys.executable)))
+    monkeypatch.setattr(store, "create", Mock(return_value=spec.worktree / "record.json"))
+    monkeypatch.setattr(store, "replace", Mock())
+
+    worker.start(dataclasses.replace(spec, task_id="dispatch-marker-check", agent=agent),
+                 {"run_nonce": "n" * 32}, b"test", 3600)
+
+    supervisor_env = launch.call_args.kwargs["env"]
+    assert supervisor_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-marker-check"
+    assert supervisor_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == agent
+
+
 # ---- ported from tests/test_delegate_review_test_slots.py and tests/test_delegate.py (C-2188 unit D) ----
 
 
@@ -2088,3 +2346,326 @@ def test_dispatch_popen_failure_records_worktree_head(tmp_path, monkeypatch) -> 
     assert state["pid"] is None
     assert state["error"] == "worker_spawn_failed: Popen failed: FileNotFoundError: no such file"
     assert state["head_sha"] == "a" * 40
+
+
+def _fake_pool(directory, *, current, file_cache, high=21 * 1024**3):
+    """Ported from tests/test_dispatch_admission.py::_fake_pool."""
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "memory.current").write_text(f"{current}\n", encoding="ascii")
+    (directory / "memory.high").write_text(f"{high}\n", encoding="ascii")
+    (directory / "memory.max").write_text(f"{23 * 1024**3}\n", encoding="ascii")
+    (directory / "memory.stat").write_text(f"active_file {file_cache}\ninactive_file 0\n", encoding="ascii")
+    return directory
+
+
+def _full_disk(monkeypatch, *readings):
+    """Ported from tests/test_delegate_admission.py::_full_disk."""
+    from scripts.orchestration import dispatch_admission
+
+    seen = {"readings": list(readings), "reaper": [], "alerts": []}
+
+    def probe():
+        values = seen["readings"]
+        used = values.pop(0) if len(values) > 1 else values[0]
+        used_bytes = int(400 * 1024**3 * used / 100)
+        return dispatch_admission.DiskProbe(used_bytes=used_bytes, free_bytes=400 * 1024**3 - used_bytes)
+
+    def reaper(repo_root, _timeout_s=None):
+        seen["reaper"].append(repo_root)
+        return dispatch_admission.ReaperOutcome(ran=True, detail="reaper removed 0 worktree(s)")
+
+    monkeypatch.setattr(dispatch_admission, "probe_disk", probe)
+    monkeypatch.setattr(dispatch_admission, "run_disk_reaper", reaper)
+    monkeypatch.setattr(dispatch_admission, "post_disk_alert", lambda body, _key: seen["alerts"].append(body))
+    return seen
+
+
+def _credit_balance_snapshot():
+    """Inlined ports of test_credit_lane::_credit_balance_snapshot, _budget, _live and _codex."""
+    from datetime import UTC, datetime
+
+    codex = {
+        "status": "near_cap", "remaining_pct": 1.0, "burn_pct_7d": 99.0,
+        "freshness": "fresh", "age_s": 60.0, "eligible": True, "health": {"healthy": True},
+        "credit_balance": 62500.0, "reset_credits": None,
+        "runtime": {"headroom_blocked": False, "rate_limited": 0},
+        "codexbar": {
+            "weekly_used_pct": 99.0, "weekly_remaining_pct": 1.0,
+            "weekly_resets_at": "2026-10-03T17:00:00+00:00", "will_last_to_reset": False,
+            "pace_summary": "13% in deficit", "freshness": "fresh", "age_s": 60.0, "stale": False,
+            "fetched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        },
+    }
+    return {
+        "agents": {"codex": codex}, "api_accounts": {}, "diagnostics": {"stale": False},
+        "recommendation": {"primary_agent_for_code": "codex", "rationale": "", "warnings": []},
+    }
+
+
+# D5 ports of legacy admission contracts; originals remain untouched.
+@pytest.fixture
+def admission_dispatch(sandbox, monkeypatch):
+    """Ported setup from test_delegate_admission::_stub_worktree and credit_lane::dispatch_env."""
+    from scripts.dispatcher import cli
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(git, "ROOT", sandbox.repo)
+    monkeypatch.setattr(git, "CONFIG", sandbox.repo / "scripts/config/fleet_repos.yaml")
+    spawned = []
+
+    def start(spec, record, prompt, hard_timeout):
+        store.create(record, prompt)
+        record.update(pid=os.getpid(), process_start=worker._identity(os.getpid()))
+        store.replace(record)
+        spawned.append(record)
+
+    monkeypatch.setattr(worker, "start", start)
+
+    def dispatch(*flags, model="echo", mode="workspace-write", task_id="adm-worker"):
+        return cli.main(["dispatch", "--agent", "sol", "--model", model, "--mode", mode,
+                         "--task-id", task_id, "--prompt", "Map the parser flags.", *flags])
+
+    yield SimpleNamespace(dispatch=dispatch, box=sandbox, spawned=spawned)
+    # The fake supervisor is this test process; release its records before sandbox cancellation.
+    for path in sandbox.tasks.glob("*.json"):
+        record = json.loads(path.read_text())
+        if record.get("pid") == os.getpid():
+            record["status"] = "done"
+            store.replace(record, path)
+
+
+def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line."""
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
+    assert admission_dispatch.dispatch("--dry-run") == 3
+    refusal = [line for line in capsys.readouterr().err.splitlines() if "admission" in line]
+    assert refusal == [
+        "❌ dispatch admission refused for a workspace-write worker: live write workers 0/0 reached the cap "
+        "(DISPATCH_MAX_LIVE_WRITE_WORKERS=0). Wait for a worker to finish or for the host to recover, raise the "
+        'threshold through the named environment variable, or pass --force-admission "<reason>" to override.'
+    ]
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+def test_read_only_dispatch_is_exempt(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_read_only_dispatch_is_exempt."""
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
+    assert admission_dispatch.dispatch(mode="read-only") == 0
+    assert "admission" not in capsys.readouterr().err
+    assert "admission" not in store.read("adm-worker")
+
+
+def test_full_shared_pool_refuses_a_write_worker(admission_dispatch, tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_dispatch_admission.py::test_full_shared_pool_refuses_a_write_worker."""
+
+    pool = _fake_pool(tmp_path / "lu.slice", current=21 * 1024**3, file_cache=1024**3 // 2)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    assert admission_dispatch.dispatch() == 3
+    assert ("lu.slice non-cache use 20.5 GiB plus a 2.5 GiB worker reserve exceeds MemoryHigh 21.0 GiB "
+            "(DISPATCH_WORKER_MEM_RESERVE_GIB=2.5)") in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.repo / ".worktrees").exists()
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+def test_file_cache_does_not_count_against_the_pool(admission_dispatch, tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_dispatch_admission.py::test_file_cache_does_not_count_against_the_pool."""
+
+    pool = _fake_pool(tmp_path / "lu.slice", current=28 * 1024**3, file_cache=14 * 1024**3)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    assert admission_dispatch.dispatch() == 0
+    assert "lu.slice 14.0/21.0 GiB non-cache (+14.0 GiB file cache; worker reserve 2.5 GiB)" in capsys.readouterr().err
+    record = store.read("adm-worker")
+    assert record["admission"]["pool_nonreclaimable_gib"] == 14.0
+    assert record["admission"]["pool_file_cache_gib"] == 14.0
+    assert record["admission"]["pool_limit_gib"] == 21.0
+
+
+def test_locked_recheck_refuses_a_dispatch_that_lost_the_race(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_locked_recheck_refuses_a_dispatch_that_lost_the_race."""
+    from scripts.dispatcher import host_admission as admission
+    from scripts.orchestration import dispatch_admission
+
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "1")
+    real_evaluate = admission.evaluate
+    calls = []
+
+    def evaluate_after_competitor(mode, **kwargs):
+        calls.append(kwargs)
+        if len(calls) == 2:
+            record = dict(schema_version=2, task_id="competitor", status="running", mode="workspace-write",
+                          pid=os.getpid(), process_start=worker._identity(os.getpid()))
+            store.replace(record)
+        return real_evaluate(mode, **kwargs)
+
+    monkeypatch.setattr(admission, "evaluate", evaluate_after_competitor)
+    monkeypatch.setattr(git, "create_worktree", lambda *_a, **_k: pytest.fail("must not create a worktree"))
+    assert admission_dispatch.dispatch() == 3
+    assert len(calls) == 2
+    assert "live write workers 1/1 reached the cap" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+    assert dispatch_admission.scan_task_records(admission_dispatch.box.tasks).live_task_ids == ("competitor",)
+
+
+def test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created(admission_dispatch, monkeypatch):
+    """Ported from tests/test_delegate_admission.py::test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created."""
+    from scripts.guardrails.delegate_ownership import _task_still_active
+    from scripts.orchestration import dispatch_admission
+
+    seen = {}
+    create = git.create_worktree
+
+    def create_worktree(*args, **kwargs):
+        held = store.read("adm-worker")
+        seen["record"] = held
+        seen["live"] = dispatch_admission.scan_task_records(admission_dispatch.box.tasks).live_task_ids
+        assert _task_still_active("adm-worker", os.getpid(), admission_dispatch.box.tasks, created_at=0)
+        assert [state["task_id"] for _, state in dispatch_admission.iter_active_records(
+            admission_dispatch.box.tasks)] == ["adm-worker"]
+        return create(*args, **kwargs)
+
+    monkeypatch.setattr(git, "create_worktree", create_worktree)
+    assert admission_dispatch.dispatch() == 0
+    held = seen["record"]
+    assert held["status"] == "spawning" and held["pid"] is None and held["mode"] == "workspace-write"
+    assert held[dispatch_admission.ADMISSION_HOLD_KEY]["owner_pid"] == os.getpid()
+    assert seen["live"] == ("adm-worker",)
+    final = store.read("adm-worker")
+    assert dispatch_admission.ADMISSION_HOLD_KEY not in final
+    assert final["run_nonce"] == held["run_nonce"]
+    assert final["admission"] == held["admission"]
+
+
+def test_dispatch_that_stops_after_admission_drops_its_hold(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_dispatch_that_stops_after_admission_drops_its_hold."""
+    def disappear(*_args, **_kwargs):
+        assert store.read("adm-worker")["admission_hold"]
+        raise ValueError("worktree disappeared before its task record was published")
+
+    monkeypatch.setattr(git, "create_worktree", disappear)
+    assert admission_dispatch.dispatch() == 2
+    assert "disappeared before its task record was published" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+def test_admission_marks_a_record_whose_dispatcher_died_crashed(admission_dispatch):
+    """Ported from tests/test_delegate_admission.py::test_admission_marks_a_record_whose_dispatcher_died_crashed."""
+    from scripts.dispatcher import host_admission as admission
+    from scripts.orchestration import dispatch_admission
+    from tests.worktree_prep_helpers import exited_process_identity
+
+    pid, start = exited_process_identity()
+    record = dict(schema_version=2, task_id="orphan", run_nonce="nonce-orphan", status="spawning", pid=None,
+                  mode="workspace-write", started_at=store.now(),
+                  admission_hold=dict(run_nonce="nonce-orphan", owner_pid=pid, owner_start=start))
+    admission_dispatch.box.tasks.mkdir(exist_ok=True)
+    store.replace(record)
+    decision = admission.evaluate("workspace-write", sweep=True)
+    assert decision.live_task_ids == ()
+    assert decision.dead_task_ids == ("orphan",)
+    healed = store.read("orphan")
+    assert healed["status"] == "crashed"
+    assert healed["returncode_reason"] == dispatch_admission.ORPHANED_HOLD_REASON
+    assert "marked crashed by admission probe" in healed["stderr_excerpt"]
+    assert "admission_hold" not in healed
+
+
+@pytest.mark.parametrize("model", ["gpt-6-astra", "gpt-5-codex", "claude-opus-5-5"])
+def test_admission_refuses_off_allowlist_model_on_credit_balance_lane(admission_dispatch, monkeypatch, capsys, model):
+    """Ported from tests/test_credit_lane.py::test_admission_refuses_off_allowlist_model_on_credit_balance_lane."""
+    from scripts.fleet import credit_lane
+
+    monkeypatch.setattr(credit_lane, "read_routing_budget", _credit_balance_snapshot)
+    assert admission_dispatch.dispatch(model=model, mode="read-only") == 2
+    err = capsys.readouterr().err
+    assert "❌ dispatch refused: CREDIT_PERIOD_MODEL_REFUSED: lane codex is credit_balance_present" in err
+    assert f"model {model} is outside the credit-period allowlist [gpt-6.1-sol, gpt-6-luna]" in err
+    assert "credit_lanes.yaml" in err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.repo / ".worktrees").exists()
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+@pytest.mark.parametrize("model", ["gpt-6.1-sol", "gpt-6-luna", "codex:gpt-6-luna", "GPT-6.1-Sol", None])
+def test_admission_accepts_allowlisted_and_default_models_without_reading_state(monkeypatch, model):
+    """Ported from tests/test_credit_lane.py::test_admission_accepts_allowlisted_and_default_models_without_reading_state."""
+    from scripts.dispatcher import host_admission as admission
+    from scripts.fleet import credit_lane
+
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_k: pytest.fail("must not read state"))
+    assert admission.credit_period_refusal("codex", model) is None
+
+
+def test_force_admission_records_the_reason(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_force_admission_records_the_reason."""
+    monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
+    assert admission_dispatch.dispatch("--force-admission", "hotfix #1234 while one worker drains") == 0
+    assert "overridden by --force-admission ('hotfix #1234 while one worker drains')" in capsys.readouterr().err
+    decision = store.read("adm-worker")["admission"]
+    assert decision["admitted"] is False
+    assert decision["forced"] is True
+    assert decision["force_reason"] == "hotfix #1234 while one worker drains"
+    assert decision["max_live_write_workers"] == 0
+
+
+def test_force_admission_requires_a_reason(admission_dispatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_force_admission_requires_a_reason."""
+    assert admission_dispatch.dispatch("--force-admission", "   ") == 2
+    assert "--force-admission requires a non-empty reason" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+
+
+def test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate."""
+
+    disk = _full_disk(monkeypatch, 90.0)
+    assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
+    assert len(disk["reaper"]) == 1
+    assert "--force-admission cannot override a full disk" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+    assert not (admission_dispatch.box.repo / ".worktrees").exists()
+
+
+def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_locked_recheck_holds_a_disk_refusal_against_a_force_reason."""
+
+    disk = _full_disk(monkeypatch, 60.0, 90.0)
+    monkeypatch.setattr(git, "create_worktree", lambda *_a, **_k: pytest.fail("must not create a worktree"))
+    assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
+    assert disk["reaper"] == []
+    err = capsys.readouterr().err
+    assert "disk 90.0% used" in err and "--force-admission cannot override a full disk" in err
+    assert not admission_dispatch.spawned
+    assert not (admission_dispatch.box.tasks / "adm-worker.json").exists()
+
+
+def test_force_admission_skips_the_early_refusal(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_force_admission_skips_the_early_refusal."""
+    from scripts.orchestration import dispatch_admission
+
+    overloaded = dispatch_admission.HostProbe(mem_available_bytes=1024**3, load1=40.0, cpu_count=8, proc_available=True)
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: overloaded)
+    assert admission_dispatch.dispatch("--force-admission", "drain one worker") == 0
+    assert "overridden by --force-admission ('drain one worker'): MemAvailable 1.0 GiB" in capsys.readouterr().err
+    assert store.read("adm-worker")["admission"]["forced"] is True
+
+
+def test_early_refusal_reports_an_invalid_threshold_as_an_invalid_request(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_early_refusal_reports_an_invalid_threshold_as_an_invalid_request."""
+    monkeypatch.setenv("DISPATCH_MIN_MEM_AVAILABLE_GIB", "-1")
+    assert admission_dispatch.dispatch() == 2
+    assert "invalid dispatch admission threshold: DISPATCH_MIN_MEM_AVAILABLE_GIB='-1' must be zero or more" in capsys.readouterr().err
+    assert not admission_dispatch.spawned
+
+
+def test_read_only_dispatch_on_an_overloaded_host_is_exempt(admission_dispatch, monkeypatch, capsys):
+    """Ported from tests/test_delegate_admission.py::test_read_only_dispatch_on_an_overloaded_host_is_exempt."""
+    from scripts.orchestration import dispatch_admission
+
+    overloaded = dispatch_admission.HostProbe(mem_available_bytes=1024**3, load1=40.0, cpu_count=8, proc_available=True)
+    monkeypatch.setattr(dispatch_admission, "probe_host", lambda: overloaded)
+    assert admission_dispatch.dispatch(mode="read-only") == 0
+    assert "admission" not in capsys.readouterr().err

@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import os
 import subprocess
 from pathlib import Path
 from unittest.mock import Mock
@@ -20,7 +21,9 @@ def launch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/worker", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
-    monkeypatch.setattr(worker, "start", Mock(side_effect=lambda spec, record, prompt, _: store.create(record, prompt)))
+    monkeypatch.setattr(worker, "start", Mock(side_effect=lambda spec, record, prompt, _: store.create(
+        {**record, "pid": os.getpid(), "process_start": worker._identity(os.getpid())}, prompt,
+    )))
     return ["dispatch", "--agent", "sol", "--model", "gpt-6-luna", "--task-id", "worker",
             "--prompt", "Inspect the assigned document", "--owned-path", "docs/example.md"]
 
@@ -318,7 +321,6 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(launch, m
 
 
 # Consumption ports use v2-created task records and the unchanged record endpoint.
-import os
 
 from scripts.dispatcher.types import TaskSpec
 from tests.test_research_registry_p3 import client
