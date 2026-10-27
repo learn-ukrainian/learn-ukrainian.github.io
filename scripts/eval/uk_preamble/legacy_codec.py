@@ -1,7 +1,8 @@
 """Frozen legacy codec for resume of historical evaluation manifests and adjudications.
 
-Preserves delegate's historical argument defaults, fingerprinting, path strings
-and prompt composition for legacy evidence verification. Never use this module
+Preserves delegate's historical argument defaults, fingerprinting and prompt
+composition for legacy evidence verification, with validated local read-store
+paths. Unavailable or unsafe stores fail verification. Never use this module
 to create or launch legacy tasks. It contains no launcher or dispatch
 implementation. Defaults and prompt strings are evidence
 format bytes: changing them invalidates historical hashes. The sparse reader is
@@ -23,7 +24,7 @@ from typing import Any
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root
 from scripts.common.repo_root import project_interpreter
 from scripts.lib import rules_core
-from scripts.storage.topology import STORE_FILES
+from scripts.storage.topology import StoreRefusal, resolve_store
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_GIT_TIMEOUT_S = 30.0
@@ -269,18 +270,6 @@ def _resolve_primary_root_for_worktree(cwd_or_worktree: Path) -> Path:
     return primary_root
 
 
-def _primary_database_path(primary_root: Path, name: str) -> Path:
-    """Reproduce legacy evidence path bytes without accessing a live store."""
-    store = "sources" if name == STORE_FILES["sources"][0] else "vesum"
-    filename, override_key = STORE_FILES[store]
-    if store == "sources":
-        override = os.environ.get(override_key)
-        if override:
-            path = Path(override).expanduser()
-            return path.resolve() if path.is_absolute() else (primary_root / path).resolve()
-    return (primary_root / "data" / filename).resolve()
-
-
 def _primary_database_connect_code(target: Path) -> str:
     """Return Python connect code opening target read-only via RFC file URI (#9122)."""
     uri = f"{target.resolve().as_uri()}?mode=ro"
@@ -385,10 +374,14 @@ def _augment_prompt_with_worktree(
     db_note = ""
     if worktree_path is not None:
         primary_root = _resolve_primary_root_for_worktree(worktree_path)
-        primary_sources = _primary_database_path(primary_root, "sources.db")
-        primary_vesum = _primary_database_path(primary_root, "vesum.db")
-        sources_code = _primary_database_connect_code(primary_sources)
-        vesum_code = _primary_database_connect_code(primary_vesum)
+        primary_sources = resolve_store("sources", primary_root)
+        if isinstance(primary_sources, StoreRefusal):
+            raise ValueError(f"sources read store refused: {primary_sources.reason}")
+        primary_vesum = resolve_store("vesum", primary_root)
+        if isinstance(primary_vesum, StoreRefusal):
+            raise ValueError(f"vesum read store refused: {primary_vesum.reason}")
+        sources_code = _primary_database_connect_code(primary_sources.path)
+        vesum_code = _primary_database_connect_code(primary_vesum.path)
         db_note = (
             "\n[database access in worktrees]\n"
             "Primary databases (data/sources.db, data/vesum.db) reside in the primary checkout, "

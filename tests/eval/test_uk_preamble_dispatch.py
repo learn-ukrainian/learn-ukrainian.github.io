@@ -719,6 +719,15 @@ def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
 @pytest.mark.parametrize("tamper", [None, "dispatch_args_sha256", "effective_prompt_sha256", "prompt_blocks"])
 def test_legacy_resume_accepts_faithful_record_and_refuses_tampering(linked_worktree, outside_dir, monkeypatch, tamper):
     from scripts.eval.uk_preamble.common import write_private_json
+    from scripts.storage.topology import StoreBinding
+
+    monkeypatch.setattr(
+        dispatch_module.legacy_codec,
+        "resolve_store",
+        lambda store, root: StoreBinding(
+            store, delegate._primary_database_path(root, f"{store}.db"), provenance="injected"
+        ),
+    )
 
     tasks_dir = outside_dir / "tasks"
     tasks_dir.mkdir()
@@ -770,6 +779,56 @@ def test_legacy_resume_accepts_faithful_record_and_refuses_tampering(linked_work
     assert raw["accepted"] is (tamper is None)
     assert summary.accepted == (1 if tamper is None else 0)
     assert not summary.not_run
+
+
+@pytest.mark.parametrize("store", ["sources", "vesum"])
+@pytest.mark.parametrize(
+    ("kind", "reason"),
+    [
+        ("empty", "empty_override"),
+        ("whitespace", "empty_override"),
+        ("relative", "relative_override"),
+        ("uri", "uri_override"),
+        ("missing", "store_missing"),
+        ("unset", "store_missing"),
+        ("directory", "not_a_file"),
+        ("network", "locality_network"),
+        ("unknown", "locality_unknown"),
+    ],
+)
+def test_legacy_resume_refuses_unresolvable_read_stores(linked_worktree, tmp_path, monkeypatch, store, kind, reason):
+    """Historical verification must not accept arbitrary paths or unavailable stores."""
+    from scripts.storage import topology
+
+    local = tmp_path / "fixture.sqlite"
+    local.write_bytes(b"fixture")
+    monkeypatch.setenv("LU_SOURCES_DB", str(local))
+    monkeypatch.setenv("LU_VESUM_DB", str(local))
+    key = f"LU_{store.upper()}_DB"
+    if kind == "unset":
+        monkeypatch.delenv(key)
+    else:
+        override = {
+            "empty": "",
+            "whitespace": " \t",
+            "relative": "relative.sqlite",
+            "uri": local.as_uri(),
+            "missing": str(tmp_path / "missing.sqlite"),
+            "directory": str(tmp_path),
+            "network": str(local),
+            "unknown": str(local),
+        }[kind]
+        monkeypatch.setenv(key, override)
+    if kind in {"network", "unknown"}:
+        monkeypatch.setattr(topology, "_store_locality", lambda _path: kind)
+        # Keep the preceding sources resolution valid when testing VESUM.
+        if store == "vesum":
+            sources = tmp_path / "sources-fixture.sqlite"
+            sources.write_bytes(b"fixture")
+            monkeypatch.setenv("LU_SOURCES_DB", str(sources))
+            monkeypatch.setattr(topology, "_store_locality", lambda path: kind if path == local else "local")
+    with pytest.raises(DispatchError, match=f"{store} read store refused: {reason}"):
+        DelegateComposer(dispatch_module.legacy_codec, linked_worktree).compose(PROMPT)
 
 
 def test_workspace_fingerprint_tracks_commit_changes_and_instruction_files(tmp_path: Path):
