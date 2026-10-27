@@ -42,8 +42,8 @@ from tests.claude_route_accounts import HOST_ACCOUNT
     ("anthropic_authority", "native", "dispatch.py", "claude", "claude-opus-5-5", None),
     ("anthropic_practical", "native", "dispatch.py", "claude", "claude-sonnet-5-5", None),
     ("mechanical_worker", "native", "dispatch.py", "claude", "claude-haiku-5-5", "high"),
-    ("bounded_worker", "native", "delegate.py", "codex", "gpt-6-luna", "high"),
-    ("google_bounded", "native", "delegate.py", "agy", "gemini-3.8-flash-high", "high"),
+    ("bounded_worker", "native", "dispatch.py", "codex", "gpt-6-luna", "high"),
+    ("google_bounded", "native", "dispatch.py", "agy", "gemini-3.8-flash-high", "high"),
 ])
 def test_catalog_invocations_pin_supported_launchers_and_flags(seat, route, launcher, agent, model, effort):
     from scripts.review.role_resolution import resolve_role
