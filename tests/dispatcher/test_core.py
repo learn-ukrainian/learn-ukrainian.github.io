@@ -2066,9 +2066,9 @@ def test_stuck_worktree_lock_fails_writers_fast_without_holding_write_paths(sand
         assert "Traceback" not in stderr and "dispatch-worktree.lock" not in stderr
     # The admission hold leaves only its task_state_lock file; no record, prompt or result.
     assert not [p for p in sandbox.tasks.glob("writer-*") if p.suffix != ".lock"]
-    dispatch_dir = sandbox.repo / ".worktrees" / "dispatch" / "sol"
+    dispatch_dir = sandbox.repo / ".worktrees" / "dispatch" / "codex"
     assert not dispatch_dir.exists() or not any(dispatch_dir.iterdir())
-    assert not run_git(sandbox.repo, "branch", "--list", "sol/writer-*")
+    assert not run_git(sandbox.repo, "branch", "--list", "codex/writer-*")
 
 
 def test_interrupt_after_payload_delivery_keeps_write_paths_with_live_supervisor(sandbox):
@@ -2107,8 +2107,8 @@ def test_interrupt_after_payload_delivery_keeps_write_paths_with_live_supervisor
     assert second.returncode == 2, stderr
     assert "write-path ownership refused for task_id='writer-b'" in stderr
     assert not (sandbox.tasks / "writer-b.json").exists()
-    assert not (sandbox.repo / ".worktrees" / "dispatch" / "sol" / "writer-b").exists()
-    assert not run_git(sandbox.repo, "branch", "--list", "sol/writer-b")
+    assert not (sandbox.repo / ".worktrees" / "dispatch" / "codex" / "writer-b").exists()
+    assert not run_git(sandbox.repo, "branch", "--list", "codex/writer-b")
 
 
 @pytest.mark.parametrize("loss, survivors", [
@@ -2148,6 +2148,88 @@ def test_claim_lost_before_launch_refuses_and_cancels_supervisor(sandbox, loss, 
     assert _claim_rows(sandbox) == survivors
 
 
+def test_claim_loss_refusal_is_not_overwritten_by_a_slow_supervisor(sandbox):
+    """The claim-loss refusal has one terminal writer: a supervisor still finalizing never replaces it."""
+    sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"] = str(sandbox.tasks)
+    with (sandbox.repo / "scripts/dispatcher/git.py").open("a") as stream:
+        stream.write(
+            "\n\n_snapshot_delivery = snapshot_delivery\n\n\n"
+            "def snapshot_delivery(spec, record):\n"
+            "    import time as _time\n\n"
+            "    _time.sleep(2)\n"
+            "    return _snapshot_delivery(spec, record)\n"
+        )
+    run_git(sandbox.repo, "commit", "-qam", "slow delivery snapshot")
+    # The dispatcher's settle wait expires while the supervisor is still in its finalization.
+    reclaim_with_short_settle = (
+        "import os, sqlite3, sys\n"
+        "from scripts.dispatcher import store, worker\n"
+        "create, wait = store.create, worker.wait\n"
+        "def reclaimed(*args, **kwargs):\n"
+        "    path = create(*args, **kwargs)\n"
+        "    with sqlite3.connect(os.environ['LEARN_UKRAINIAN_OWNERSHIP_LEDGER']) as conn:\n"
+        "        conn.execute(\"DELETE FROM write_claims WHERE task_id = 'writer-a'\")\n"
+        "    return path\n"
+        "store.create = reclaimed\n"
+        "worker.wait = lambda task_id, nonce=None, **_kw: wait(task_id, nonce, timeout=0.2, poll_interval=0.05)\n"
+        "from scripts.dispatcher.cli import main\n"
+        "sys.exit(main(sys.argv[1:]))\n"
+    )
+    writer = _overlapping_writer(sandbox, "writer-a", model="blocked", wrapper=reclaim_with_short_settle)
+    _, stderr = writer.communicate(timeout=30)
+    assert writer.returncode == 1, stderr
+    record = json.loads((sandbox.tasks / "writer-a.json").read_text())
+    deadline = time.monotonic() + 30
+    while worker._identity(record["pid"]) == record["process_start"]:
+        assert time.monotonic() < deadline, "supervisor did not exit"
+        time.sleep(0.05)
+    record = json.loads((sandbox.tasks / "writer-a.json").read_text())
+    assert record["status"] == "failed"
+    assert record["error"].startswith("write_claim_lost: ")
+    assert not (sandbox.tasks / "writer-a.started").exists()
+
+
+def test_failed_worktree_preparation_leaves_no_branch_or_worktree_and_retries_cleanly(sandbox):
+    """Preparation failing after ``worktree add`` removes what this dispatch created, so a retry succeeds."""
+    sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"] = str(sandbox.tasks)
+    failing_links = (
+        "import sys\n"
+        "from scripts.dispatcher import git\n"
+        "def failing(*_args):\n"
+        "    raise OSError('link provisioning failed')\n"
+        "git.provision_links = failing\n"
+        "from scripts.dispatcher.cli import main\n"
+        "sys.exit(main(sys.argv[1:]))\n"
+    )
+    failed = _overlapping_writer(sandbox, "writer-a", wrapper=failing_links)
+    _, stderr = failed.communicate(timeout=30)
+    assert failed.returncode == 2, stderr
+    assert not (sandbox.tasks / "writer-a.json").exists()
+    assert not (sandbox.repo / ".worktrees" / "dispatch" / "codex" / "writer-a").exists()
+    assert not run_git(sandbox.repo, "branch", "--list", "codex/writer-a")
+    assert "writer-a" not in run_git(sandbox.repo, "worktree", "list", "--porcelain")
+    assert not _claim_rows(sandbox)
+    retry = _overlapping_writer(sandbox, "writer-a")
+    stdout, stderr = retry.communicate(timeout=30)
+    assert retry.returncode == 0, stderr
+    assert stdout.splitlines()[0] == "writer-a"
+    assert (sandbox.repo / ".worktrees" / "dispatch" / "codex" / "writer-a" / ".git").exists()
+    # What the dispatch did not create survives: an existing path keeps its content, a prior branch stays.
+    existing = sandbox.repo / ".worktrees" / "dispatch" / "codex" / "writer-b"
+    existing.mkdir(parents=True)
+    (existing / "kept.txt").write_text("kept\n")
+    run_git(sandbox.repo, "branch", "codex/writer-c")
+    for task_id in ("writer-b", "writer-c"):
+        refused = _overlapping_writer(sandbox, task_id)
+        _, stderr = refused.communicate(timeout=30)
+        assert refused.returncode == 2, stderr
+        assert not (sandbox.tasks / f"{task_id}.json").exists()
+    assert (existing / "kept.txt").read_text() == "kept\n"
+    assert not run_git(sandbox.repo, "branch", "--list", "codex/writer-b")
+    assert run_git(sandbox.repo, "branch", "--list", "codex/writer-c")
+    assert not (sandbox.repo / ".worktrees" / "dispatch" / "codex" / "writer-c").exists()
+
+
 def test_interrupt_during_claim_admission_releases_committed_claim(sandbox):
     """SIGINT after the ledger commits a claim, before admission returns, still releases that claim."""
     sandbox.env["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"] = str(sandbox.tasks)
@@ -2169,8 +2251,8 @@ def test_interrupt_during_claim_admission_releases_committed_claim(sandbox):
     assert "KeyboardInterrupt" in stderr
     assert not _claim_rows(sandbox)
     assert not (sandbox.tasks / "writer-a.json").exists()
-    assert not (sandbox.repo / ".worktrees" / "dispatch" / "sol" / "writer-a").exists()
-    assert not run_git(sandbox.repo, "branch", "--list", "sol/writer-a")
+    assert not (sandbox.repo / ".worktrees" / "dispatch" / "codex" / "writer-a").exists()
+    assert not run_git(sandbox.repo, "branch", "--list", "codex/writer-a")
 
 
 # Ports of the legacy status-or-fail and child identity contracts in tests/test_delegate.py.

@@ -266,13 +266,27 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
                     ) from None
                 time.sleep(0.05)
         run_git(repo, "config", "--local", "extensions.worktreeConfig", "true")
-        run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
-        if full_checkout:
-            run_git(path, "sparse-checkout", "disable")
-        else:
-            run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
-        run_git(path, "reset", "--hard", sha)
-        provision_links(repo, path)
+        new_branch = not run_git(repo, "for-each-ref", "--format=%(refname)", f"refs/heads/{branch}")
+        added = False
+        try:
+            run_git(repo, "worktree", "add", "--no-checkout", "--no-track", "-b", branch, str(path), sha)
+            added = True
+            if full_checkout:
+                run_git(path, "sparse-checkout", "disable")
+            else:
+                run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
+            run_git(path, "reset", "--hard", sha)
+            provision_links(repo, path)
+        except BaseException:
+            # Remove only what this call created. Git creates the branch before it checks the path, so a
+            # refused add can leave a new branch; a pre-existing branch or path is never touched.
+            if added:
+                with suppress(OSError, subprocess.SubprocessError):
+                    run_git(repo, "worktree", "remove", "--force", str(path))
+            if new_branch:
+                with suppress(OSError, subprocess.SubprocessError):
+                    run_git(repo, "update-ref", "-d", f"refs/heads/{branch}", sha)
+            raise
 
 
 def discard_worktree(repo: Path, path: Path, branch: str) -> None:

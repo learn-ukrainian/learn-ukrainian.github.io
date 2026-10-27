@@ -61,13 +61,16 @@ def start(
 
     Signals stay deferred from the spawn until the payload is delivered, so an interrupt can only land
     before a supervisor exists or after ``on_spawn`` has run for it. When ``on_spawn`` refuses the launch,
-    the supervisor is cancelled before it can start a provider and the record ends failed.
+    the dispatcher is the record's only terminal writer: it publishes the failure while the supervisor still
+    waits for its payload, then withholds the payload, so the supervisor exits without starting a provider
+    or writing the record.
     """
     if spec.agent == "cursor":
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
     path = store.create(record, prompt)
     logs = path.parent / "logs"
     logs.mkdir(exist_ok=True, mode=0o700)
+    refused = None
     try:
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
@@ -82,30 +85,31 @@ def start(
                 )
                 record.update(pid=process.pid, process_start=_identity(process.pid), **launch)
                 store.replace(record, path)
-                payload, refused = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode(), None
+                payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
                 try:
                     if on_spawn:
                         on_spawn(process.pid)
                 except admission.LaunchRefused as exc:
-                    refused = exc
-                    try:
-                        # Its signals are still blocked, so the cancel lands before it can start a provider.
-                        _signal_supervisor(record)
-                    except (OSError, ValueError):
-                        payload = b""  # A supervisor that cannot be cancelled never receives its payload.
+                    refused, payload = exc, b""
+                    # Published before the payload is withheld: the supervisor never sees an active record it owns.
+                    record.update(exc.fields, finished_at=store.now())
+                    store.replace(record, path)
                 if payload:
                     process.stdin.write(payload)
                 process.stdin.close()
             finally:
                 signal.pthread_sigmask(signal.SIG_SETMASK, mask)
         if refused:
-            settled = wait(spec.task_id, record["run_nonce"], timeout=10, poll_interval=0.05)[0]
-            if settled["status"] not in store.ACTIVE:
-                record.update(settled)
+            try:
+                process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                process.kill()  # Still unreaped, so the pid cannot name another process.
+                process.wait()
             raise refused
     except admission.LaunchRefused as exc:
-        record.update(exc.fields, finished_at=store.now())
-        store.replace(record, path)
+        if exc is not refused:
+            record.update(exc.fields, finished_at=store.now())
+            store.replace(record, path)
         raise
     except Exception:
         record.update(status="crashed", finished_at=store.now(), error="supervisor launch failed")
@@ -402,5 +406,6 @@ def _signal_supervisor(record: dict) -> None:
 
 
 if __name__ == "__main__":
-    settings = json.load(sys.stdin)
-    supervise(Path(sys.argv[1]), **settings)
+    # An empty payload is a refused launch whose record the dispatcher already published.
+    if settings := sys.stdin.read():
+        supervise(Path(sys.argv[1]), **json.loads(settings))
