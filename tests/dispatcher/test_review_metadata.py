@@ -1,6 +1,7 @@
 """Review metadata loss and subject self-review must fail before a paid launch."""
 
 import json
+import os
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -18,7 +19,9 @@ def dispatch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
-    start = Mock(side_effect=lambda spec, record, prompt, timeout: store.create(record, prompt))
+    start = Mock(side_effect=lambda spec, record, prompt, timeout: store.create(
+        {**record, "pid": os.getpid(), "process_start": worker._identity(os.getpid())}, prompt,
+    ))
     monkeypatch.setattr(worker, "start", start)
 
     def invoke(*flags, agent="sol", model="gpt-6.1-sol", expected=0):

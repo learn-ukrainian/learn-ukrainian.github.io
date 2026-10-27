@@ -44,18 +44,21 @@ while not Path(sys.argv[2]).exists():
 def main():
     model, prompt, final = sys.argv[1:]
     prompt = Path(prompt)
-    prompt.with_suffix(".started").write_text(str(os.getpid()))
+    prompt.with_suffix(".started.tmp").write_text(str(os.getpid()))
+    prompt.with_suffix(".started.tmp").replace(prompt.with_suffix(".started"))
     if model == "cancel":
         os.kill(os.getppid(), signal.SIGTERM)
         time.sleep(120)
     if model in {"blocked", "tree", "governed"}:
         if model == "tree":
             process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])
-            prompt.with_suffix(".grandchild").write_text(str(process.pid))
+            prompt.with_suffix(".grandchild.tmp").write_text(str(process.pid))
+            prompt.with_suffix(".grandchild.tmp").replace(prompt.with_suffix(".grandchild"))
         if model == "governed":  # a governed test run of this turn, holding its slots until released
             signals = (str(prompt.with_suffix(suffix)) for suffix in (".joined", ".child-release"))
             process = subprocess.Popen([sys.executable, "-c", GOVERNED_RUN, *signals])
-            prompt.with_suffix(".grandchild").write_text(str(process.pid))
+            prompt.with_suffix(".grandchild.tmp").write_text(str(process.pid))
+            prompt.with_suffix(".grandchild.tmp").replace(prompt.with_suffix(".grandchild"))
         while not prompt.with_suffix(".release").exists():
             time.sleep(0.02)
     if model in {"pushed", "unpushed", "dirty", "pushed-dirty", "pushed-nested"}:
