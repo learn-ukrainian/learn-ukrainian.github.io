@@ -550,7 +550,7 @@ def build_parser() -> argparse.ArgumentParser:
             "--host-id host-job -- .venv/bin/python -m pytest tests/orchestration/test_job_host_exec.py\n\n"
             "Outputs:\n"
             "  Runs the remote command in the occupancy checkout. Dispatch argv "
-            "is rewritten so notebook --prompt-file/--lifecycle-file/--output-schema "
+            "is rewritten so notebook --prompt-file/--output-schema "
             "bodies land in remote /tmp. Legacy-only flags (including --lifecycle-file "
             "and --run-nonce) are forwarded unchanged and refused by v2.\n\n"
             "Environment Variables & Precedence:\n"

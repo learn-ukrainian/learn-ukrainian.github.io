@@ -1,4 +1,4 @@
-"""Regenerable cache/build patterns and delegate's scratch taxonomy (#9828, #10061)."""
+"""Regenerable cache/build patterns and scratch preservation (#9828, #10061)."""
 
 from __future__ import annotations
 
@@ -18,13 +18,6 @@ from urllib.parse import quote
 
 from scripts.common.nofollow_walk import ComponentOpenError
 from scripts.orchestration.worktree_artifacts import REGENERABLE_CACHE_DIRECTORIES
-
-# #10227: archive before release; these are never auto-finalize exclusions.
-BRANCH_HOLDER_SCRATCH_PATTERNS = ("*.orig", "*.patch", "pytest_out.txt")
-MAX_BRANCH_HOLDER_FILE_BYTES = 256 * 1024 * 1024
-
-
-
 
 # Directory patterns apply at any depth, only to real directories.
 AUTO_FINALIZE_CACHE_DIRECTORIES = frozenset(

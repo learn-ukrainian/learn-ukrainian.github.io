@@ -528,7 +528,9 @@ def run_ask_review_dispatch(
         state["ok"] = completed and failure is None
         if completed and failure:
             state.update(status="failed", failure_reason=failure)
-        if unsupported and (completed or state.get("failure_reason") == failure):
+        if unsupported and (
+            completed or state.get("error") == "review_missing_verdict_line" or state.get("failure_reason") == failure
+        ):
             detail = (
                 f"{failure}: unsupported verdict identifier {unsupported[-1]!r}; "
                 f"accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"

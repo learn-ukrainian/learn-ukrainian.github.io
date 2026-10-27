@@ -725,12 +725,6 @@ _LIVE_GITHUB_ALLOWED = False
 
 
 @pytest.fixture(autouse=True)
-def _disable_open_pr_freeze(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Keep dispatch tests off the live open-PR count; freeze tests opt back in."""
-    monkeypatch.setenv("LU_OPEN_PR_FREEZE_THRESHOLD", "0")
-
-
-@pytest.fixture(autouse=True)
 def _no_host_claude_default_account(monkeypatch: pytest.MonkeyPatch) -> None:
     """Keep claude dispatch tests off the host's default-account file (#10619); account tests opt in."""
     monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")

@@ -1613,8 +1613,6 @@ def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: s
         raise RecordError("RED_TEAM_REFUSED: task ledger unavailable") from exc
 
 
-
-
 def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
     """Resolve the native review holder and its own runtime attestations."""
     catalog = load_model_catalog()

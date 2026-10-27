@@ -13,9 +13,10 @@ repository's content trees, and drives the product paths through their own comma
                   a lesson the engine itself assembled (``runner.run_lesson``: page, expanded document, provenance).
 ``prepare-real``  renders and checks the prompts of cases (i) plan review, (ii) lesson 2 review and (iv) the settle
                   item, and writes one dispatch card each. It dispatches nothing: the driver does.
-``finish-real``   after the driver recorded the real returns: the remaining assertions of (i), (ii) and (iv)
-                  (every stored finding equals the returned one; the settle seat's dispatch record, ``decided_by``
-                  and receipts belong to the card's task).
+``finish-real``   real-seat cases (i), (ii) and (iv) are unavailable after delegate retirement. V2 dispatch
+                  does not bind the review flags and receipts that finish-real settle validation requires.
+                  ``make_card`` supports only cursor, codex, claude and agy through their configured default
+                  models; other agents raise ValueError. Prepared cards cannot complete these real-seat cases.
 
 This proves the tooling, not reviewer quality (admitting a reviewer is the seeded-defect measurement, R3).
 Stand-ins, named: ``planned_state`` (the engine lesson's assembly run) and ``pack-verify --strict`` (plan review)
@@ -1585,19 +1586,21 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
             "R2b integration check (#8430): drives the review tooling end to end on the three-lesson fixture module.\n"
-            "Use after R2b-A, R2b-B and R2b-C are on main. run-crafted needs no seat; prepare-real writes the dispatch\n"
-            "cards of the three real-seat cases and dispatches nothing; finish-real asserts them after the driver\n"
-            "recorded the returns. Do NOT use it to measure reviewer quality (that is the seeded-defect measurement, R3)."
+            "Use run-crafted after R2b-A, R2b-B and R2b-C are on main; it needs no seat.\n"
+            "Real-seat cases (finish-real) are unavailable after delegate retirement: v2 dispatch does not bind\n"
+            "the review flags and receipts required by settle validation. prepare-real only writes cards; make_card\n"
+            "supports cursor, codex, claude and agy, and raises ValueError for other agents.\n"
+            "Do NOT use it to measure reviewer quality (that is the seeded-defect measurement, R3)."
         ),
         epilog=(
             "Examples:\n"
             '  .venv/bin/python -m scripts.review.integration_check run-crafted --out "$TMPDIR/r2b-crafted"\n'
             '  .venv/bin/python -m scripts.review.integration_check prepare-real --out "$TMPDIR/r2b-real"\n'
-            '  .venv/bin/python -m scripts.review.integration_check finish-real --out "$TMPDIR/r2b-real"\n'
             "\nOutputs: one PASS/FAIL line per case with its evidence (paths, hashes, database row counts); prepare-real\n"
             "also prints the cards and writes cards/*.json, prompts, returns/ and integration-state.json under --out.\n"
             "Exit codes: 0 every case passes; 1 a case fails or prepare-real found a problem; 2 usage or unusable --out.\n"
-            "--out must be an empty directory outside the repository."
+            "--out must be an empty directory outside the repository.\n"
+            "Related: scripts.review.settle; docs/design/dispatch-v2.md (C-2188)."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1608,9 +1611,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     prepare.add_argument("--out", type=Path, required=True)
     for name, default in (("plan", "claude"), ("lesson", "claude"), ("settle", "claude")):
-        prepare.add_argument(f"--{name}-agent", default=default, help=f"harness of the {name} seat (default {default})")
+        prepare.add_argument(f"--{name}-agent", default=default,
+                             help=f"harness of the {name} seat: cursor, codex, claude or agy (default {default})")
     finish = sub.add_parser(
-        "finish-real", help="assert the remaining parts of (i), (ii), (iv) after the returns were recorded"
+        "finish-real", help="unavailable after delegate retirement: real-seat cases need bound review receipts",
+        description="Real-seat cases are unavailable after delegate retirement. V2 dispatch does not bind the "
+                    "review flags and receipts that finish-real settle validation requires.",
     )
     finish.add_argument("--out", type=Path, required=True)
     return parser
