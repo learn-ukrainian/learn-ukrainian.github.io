@@ -68,7 +68,7 @@ def liveness_paths(spec, invocation):
 
 def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
                 initial_response_timeout, liveness, output_sizes):
-    """Keep stdin nonblocking while observing I/O, session files and tree work."""
+    """Wait for a file-fed child while observing I/O, session files and tree work."""
     started = time.monotonic()
     state = WatchdogState(start_time=started, last_activity=started)
     paths = (stdout_path, stderr_path)
@@ -80,7 +80,6 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
         except OSError:
             mtimes[Path(path)] = 0
     next_activity_poll = started
-    payload = invocation.stdin
     while True:
         now = time.monotonic()
         waits = [0.1]
@@ -91,10 +90,10 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
         if silence_timeout > 0:
             waits.append(silence_timeout - (now - state.last_activity))
         try:
-            child.communicate(payload, timeout=max(0, min(waits)))
+            child.wait(timeout=max(0, min(waits)))
             return
         except subprocess.TimeoutExpired:
-            payload = None
+            pass
         now = time.monotonic()
         for path in paths:
             size = path.stat().st_size

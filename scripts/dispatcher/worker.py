@@ -6,11 +6,13 @@ import os
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 from datetime import datetime
 from pathlib import Path
 
 from scripts.common.repo_root import project_interpreter
+from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import git, providers, store
 from scripts.dispatcher.environment import child_env
@@ -49,7 +51,7 @@ def _observe(record: dict) -> dict:
 
 
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
-    if spec.agent in {"cursor", "grok"}:
+    if spec.agent == "cursor":
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
     path = store.create(record, prompt)
     logs = path.parent / "logs"
@@ -204,7 +206,6 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     })
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     resolved_model = None
-    invocation = None
     started = time.monotonic()
 
     def cancelled(_signum, _frame):
@@ -233,11 +234,13 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 return
         provider = providers.load(spec.agent)
         invocation = provider.build(spec, child_env(spec))
-        with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
+        with tempfile.TemporaryFile(dir=ensure_scratch_root()) as stdin, stdout_path.open("wb") as out, stderr_path.open("ab") as err:
+            stdin.write(invocation.stdin or b"")
+            stdin.seek(0)
             output_sizes = out.tell(), err.tell()
             child = subprocess.Popen(
                 invocation.argv,
-                stdin=subprocess.PIPE,
+                stdin=stdin,
                 stdout=out,
                 stderr=err,
                 cwd=spec.worktree,
@@ -251,12 +254,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         returncode = child.returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
-        parsed = getattr(invocation, "parse", provider.parse)(
+        parsed = provider.parse(
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
         text, usage = parsed.text, parsed.usage
-        if spec.agent == "grok":
-            record["failure_code"] = parsed.failure_code
         if schema is not None:
             from scripts.agent_runtime.adapters._output_schema import json_value, structured_result
 
@@ -268,8 +269,6 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 return
         resolved_model = parsed.resolved_model
         status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
-        if getattr(parsed, "rate_limited", False):
-            status = "rate_limited"
         if returncode < 0:
             status = "crashed"
         if status != "done":
@@ -302,12 +301,6 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
             terminate()
             returncode = child.returncode
-        if invocation is not None and (cleanup := getattr(invocation, "cleanup", None)):
-            try:
-                cleanup()
-            except OSError:
-                record["cleanup_error"] = "provider invocation cleanup failed"
-                status, error = "crashed", "provider invocation cleanup failed"
         if text is not None:
             spec.final_file.write_text(text)
             spec.final_file.chmod(0o600)
@@ -322,15 +315,11 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         )
         record.update(git.snapshot_delivery(spec, record))
         _enforce_delivery(record)
-        if spec.agent in {"cursor", "grok"}:
-            source = "grok-model-usage" if spec.agent == "grok" else "cursor-stream-json"
-            unknown = "unattested-harness" if spec.agent == "grok" else "unknown"
+        if spec.agent == "cursor":
             record.update(
-                resolved_model=resolved_model if resolved_model is not None else unknown,
+                resolved_model=resolved_model if resolved_model is not None else "unknown",
                 resolved_model_known=resolved_model is not None,
-                resolved_model_source=source if resolved_model is not None else (
-                    "unattested-harness" if spec.agent == "grok" else "pending"
-                ),
+                resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
             )
         store.replace(record, path)
 

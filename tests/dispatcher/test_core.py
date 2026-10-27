@@ -357,7 +357,7 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     dispatched = sandbox.cli(
         "dispatch",
         "--agent",
-        "cursor",
+        "grok",
         "--model",
         "requested-model-is-not-proof",
         "--prompt",
@@ -1669,7 +1669,7 @@ def test_cursor_child_env_corrupt_invalid_utf8_file_forwards_no_key_without_rais
 
 
 def test_aliases_and_all_retained_metadata_flags_parse():
-    assert ALIASES == {"sol": "codex", "grok-build": "grok", "gemini": "agy", "deepseek": "opencode", "openrouter": "hermes"}
+    assert dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes") == ALIASES
     args = build_parser().parse_args(
         [
             "dispatch",
@@ -1735,60 +1735,19 @@ def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox)
     assert "--initial-response-timeout" in excerpt
 
 
-
-def native_grok_stub(sandbox, envelope, prelude=""):
-    binary_dir = sandbox.repo.parent / "native-bin"
-    binary_dir.mkdir()
-    executable = binary_dir / "grok"
-    executable.write_text(f"#!{sys.executable}\nimport json, sys, time\n{prelude}\nprint({json.dumps(envelope)!r}, flush=True)\n")
-    executable.chmod(0o755)
-    cursor = binary_dir / "cursor-agent"
-    cursor.write_text(f"#!{sys.executable}\nraise SystemExit('native Grok must not invoke Cursor')\n")
-    cursor.chmod(0o755)
-    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
-    sandbox.env["GROK_HOME"] = str(sandbox.repo.parent / "grok-home")
-
-
-@pytest.mark.parametrize("agent", ["grok", "grok-build"])
-@pytest.mark.parametrize("usage,expected", [
-    ({"grok-4.7-build": {"modelCalls": 1}}, "grok-4.7-build"),
-    ({}, None),
-    ({"grok-4.7-build": {}, "grok-4.7-build-fast": {}}, None),
-])
-def test_native_runtime_identity_comes_only_from_single_model_usage_key(sandbox, monkeypatch, agent, usage, expected):
-    """Ported from tests/test_grok_build_adapter.py with the same test name, through the detached worker."""
-    from scripts.review import record_cf_verdict as recorder
-
-    native_grok_stub(sandbox, {"text": "VERDICT: APPROVE", "stopReason": "end_turn",
-                              "model": "forged", "modelUsage": usage})
-    run_git(sandbox.repo, "branch", "native-review-source")
-    dispatched = sandbox.cli("dispatch", "--agent", agent, "--model", "grok-4.7-high", "--prompt", "review",
-                             "--branch", "native-review-source")
-    record = sandbox.settle(dispatched.stdout.splitlines())
-    assert record["agent"] == "grok"
-    assert record["model"] == "grok-4.7-high"
-    assert record["resolved_model"] == (expected or "unattested-harness")
-    assert record["resolved_model_known"] is (expected is not None)
-    assert record["resolved_model_source"] == ("grok-model-usage" if expected else "unattested-harness")
-
-    def stop_before_forge(*_args):
-        raise recorder.RecordError("synthetic stop before forge")
-
-    monkeypatch.setattr(recorder, "_pr", stop_before_forge)
-    reason = "synthetic stop before forge" if expected else "native Grok reviewer model unattested"
-    with pytest.raises(recorder.RecordError, match=reason):
-        recorder.record(record["task_id"], task_root=sandbox.tasks, lock_root=sandbox.tasks / "locks")
-
-
 @pytest.mark.parametrize("output", ["sys.stdout", "sys.stderr"])
 def test_run_worker_periodic_stdout_avoids_silence_timeout(sandbox, output):
     """Ported from tests/test_delegate.py with the same test name, observing both output streams."""
-    native_grok_stub(sandbox, {"text": "ready", "stopReason": "end_turn"},
-                     f"for i in range(5):\n    print('tick', file={output}, flush=True)\n    time.sleep(0.2)")
-    dispatched = sandbox.cli("dispatch", "--agent", "grok", "--model", "grok-4.7", "--prompt", "review",
-                             "--hard-timeout", "10", "--silence-timeout", "1", "--initial-response-timeout", "1")
-    record = sandbox.settle(dispatched.stdout.splitlines())
+    stub = sandbox.repo / "scripts/dispatcher/providers/codex.py"
+    stub.write_text(stub.read_text().replace(
+        '    model, prompt, final = sys.argv[1:]',
+        f"    for i in range(5):\n        print('tick', file={output}, flush=True)\n        time.sleep(0.2)\n"
+        '    model, prompt, final = sys.argv[1:]',
+    ))
+    task = sandbox.dispatch("echo", "--hard-timeout", "10", "--silence-timeout", "1",
+                            "--initial-response-timeout", "1")
+    record = sandbox.settle(task)
     assert record["status"] == "done"
-    assert Path(record["result_file"]).read_text() == "ready"
+    assert Path(record["result_file"]).read_text().endswith("literal final response")
     assert record["silence_timeout"] == 1
     assert record["initial_response_timeout"] == 1

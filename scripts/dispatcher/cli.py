@@ -15,7 +15,7 @@ from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
 
-ALIASES = {"sol": "codex", "grok-build": "grok", "gemini": "agy", "deepseek": "opencode", "openrouter": "hermes"}
+ALIASES = dict(sol="codex", grok="cursor", gemini="agy", deepseek="opencode", openrouter="hermes")
 
 
 class _PromptPath(type(Path())):
