@@ -1102,10 +1102,13 @@ def test_read_only_task_whose_fetch_advances_a_remote_tracking_ref_settles_done(
     remote = str(tmp_path / "remote.git")
     _git(checkout, "push", "-q", remote, "HEAD:refs/heads/other")
     _git(checkout, "fetch", "-q", "origin")
+    stale = _git(checkout, "rev-parse", "refs/remotes/origin/other")
     advanced = _git(checkout, "commit-tree", _git(checkout, "rev-parse", "HEAD^{tree}"), "-p", "HEAD", "-m", "other")
     _git(checkout, "push", "-q", remote, f"{advanced}:refs/heads/other")
     if tagged:
         _git(checkout, "push", "-q", remote, f"{advanced}:refs/tags/fetched")
+    # Since Git 2.56 a push to origin's URL also moves origin/other; only the task's fetch may advance it.
+    _git(checkout, "update-ref", "refs/remotes/origin/other", stale)
 
     def fetch(repo):
         before = _git(repo, "rev-parse", "refs/remotes/origin/other")
