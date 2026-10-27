@@ -1,8 +1,8 @@
 """Dispatch evaluation prompts verbatim through ``scripts/dispatch.py``.
 
-V2 records attest submitted bytes, not legacy prompt wrappers. Acceptance checks
-those stored bytes, task identity and result digest against the frozen paired
-frame. Caller arguments remain frozen in the existing evaluation manifest;
+V2 records bind the original brief and the effective prompt separately. Acceptance
+checks both stored payloads, task identity and result digest against the frozen
+paired frame. Caller arguments remain frozen in the existing evaluation manifest;
 v2 records do not attest them. Legacy records retain their wrapper and
 argument-attestation checks.
 """
@@ -21,7 +21,7 @@ from scripts.agent_runtime.attribution import resolve_invocation_attribution
 from scripts.common.repo_root import main_checkout_root
 from scripts.dispatcher.cli import build_parser
 from scripts.guardrails import worktree_containment
-from scripts.lib.rules_core import RulesCoreError
+from scripts.lib.rules_core import RulesCoreError, with_core
 
 from .common import Seat, sha256_bytes, sha256_text
 
@@ -59,6 +59,7 @@ CONDITION_FIELDS = (
     "schema_version",
     "prompt_sha256",
     "stored_prompt_sha256",
+    "stored_effective_prompt_sha256",
     "research_task_family",
     "effective_prompt_sha256",
     "prompt_blocks",
@@ -85,6 +86,7 @@ PAIRED_FIELDS = tuple(
         "dispatch_args_sha256",
         "prompt_sha256",
         "stored_prompt_sha256",
+        "stored_effective_prompt_sha256",
     }
 )
 # Instruction and tool-configuration files a seat reads from its working directory.
@@ -169,23 +171,9 @@ def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], 
     """Why the recorded conditions are not the expected composition of the rendered prompt (empty when they are)."""
     problems = []
     if conditions.get("schema_version") == 2:
-        if expected.get("schema_version") != 2:
-            problems.append("v2 task cannot satisfy a legacy composition")
-        for key in ("prompt_sha256", "stored_prompt_sha256"):
-            if conditions.get(key) != expected["effective_prompt_sha256"]:
-                problems.append(f"{key} differs from the exact submitted prompt")
-        # V2 has no engine argument attestation. The caller's manifest checks
-        # its frozen arguments; the record proves the applied prompt and frame.
-        for key in ("cwd", "worktree_path"):
-            if not _same_path(conditions.get(key), expected[key]):
-                problems.append(f"worker {key} differs from the frozen frame")
-        if conditions.get("mode") != READ_ONLY:
-            problems.append("mode is not read-only")
-        if conditions.get("research") is not None:
-            problems.append("research context was injected")
-        if conditions.get("prompt_blocks") or conditions.get("effective_prompt_sha256"):
-            problems.append("v2 task reports unsupported legacy prompt composition")
-        return problems
+        from scripts.dispatcher.eval_contract import condition_problems as v2_problems
+
+        return v2_problems(conditions, expected=expected, same_path=_same_path)
     if conditions.get("effective_prompt_sha256") != expected["effective_prompt_sha256"]:
         problems.append(
             f"worker received effective prompt {conditions.get('effective_prompt_sha256')!r}, "
@@ -462,11 +450,19 @@ class DelegateDispatcher:
         cwd = self.cwd.resolve()
         if not (cwd / ".git").is_file() or _git(cwd, "rev-parse", "--show-toplevel") != f"{cwd}\n":
             raise DispatchError("pass an existing isolated Git worktree root with --worker-cwd")
+        try:
+            composed = with_core(prompt, RULES_SEAT)
+        except RulesCoreError as exc:
+            raise DispatchError(f'cannot compute v2 composition: {exc}') from exc
         return {
             "schema_version": 2,
             "dispatch_root": str(main_checkout_root(cwd) / ".worktrees" / "dispatch"),
             "worker_head": (_git(cwd, "rev-parse", "HEAD") or "").strip(),
-            **composition_of(prompt, prompt, cwd=None, worktree_path=None, blocks=[]),
+            'source_prompt_sha256': sha256_text(prompt),
+            **composition_of(
+                composed, prompt, cwd=None, worktree_path=None,
+                blocks=['rules_core'] if composed != prompt else [],
+            ),
         }
 
     def known(self, task_id: str) -> bool:
@@ -568,6 +564,13 @@ class DelegateDispatcher:
                     conditions["stored_prompt_sha256"] = sha256_bytes(Path(state["prompt_file"]).read_bytes())
                 except OSError as exc:
                     raise DispatchError("cannot read stored v2 prompt bytes") from exc
+            if state.get('effective_prompt_file'):
+                try:
+                    conditions['stored_effective_prompt_sha256'] = sha256_bytes(
+                        Path(state['effective_prompt_file']).read_bytes()
+                    )
+                except OSError as exc:
+                    raise DispatchError('cannot read stored effective v2 prompt bytes') from exc
         detail = {key: state.get(key) for key in ("duration_s", "returncode", "last_error")}
         if state.get("schema_version") == 2:
             detail["error"] = state.get("error")

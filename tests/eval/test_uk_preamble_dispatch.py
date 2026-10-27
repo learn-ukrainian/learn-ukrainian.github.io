@@ -570,7 +570,7 @@ class SimulatedDelegate(DelegateDispatcher):
 def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fresh_id(
     linked_worktree, outside_dir, monkeypatch, status
 ):
-    from scripts.dispatcher import git, store, worker
+    from scripts.dispatcher import git, prompt_context, store, worker
 
     tasks_dir = outside_dir / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
@@ -581,6 +581,7 @@ def test_failed_terminal_v2_is_recorded_as_failed_not_not_run_and_retry_gets_fre
 
     def finish(spec, record, prompt, hard_timeout):
         store.create(record, prompt)
+        prompt_context.persist_effective(spec, record)
         started.append(spec.task_id)
         if len(started) <= 2:
             record.update(status=status, error="provider failure evidence")
@@ -646,7 +647,7 @@ def test_done_with_error_is_refused_and_legacy_error_behavior_is_unchanged(fake,
 def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
     linked_worktree: Path, outside_dir: Path, monkeypatch
 ):
-    from scripts.dispatcher import git, providers, store, worker
+    from scripts.dispatcher import git, prompt_context, providers, store, worker
 
     monkeypatch.setenv("LU_TASKS_DIR", str(outside_dir / "tasks"))
     monkeypatch.setattr(
@@ -660,6 +661,7 @@ def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
             submitted = json.loads(submitted)["message"]["content"][0]["text"].encode()
         assert submitted == prompt
         store.create(record, prompt)
+        prompt_context.persist_effective(spec, record)
         response = json.dumps({"items": [{"id": "W1", "text": "Текст."}]}, ensure_ascii=False)
         spec.final_file.write_text(response, encoding="utf-8")
         record.update(status="done", result_sha256=sha256_text(response))
@@ -700,7 +702,9 @@ def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
         assert "--cwd" not in args
         assert frame(raw["composition"]) == plan_frame
         assert raw["conditions"]["stored_prompt_sha256"] == task.prompt_sha256
-        assert raw["conditions"]["effective_prompt_sha256"] is None
+        assert raw["conditions"]["effective_prompt_sha256"] == task.prompt_sha256
+        assert raw['conditions']['stored_effective_prompt_sha256'] == task.prompt_sha256
+        assert raw['conditions']['prompt_blocks'] == []
         assert raw["conditions"]["dispatch_args_sha256"] is None
         resumed = SimulatedDelegate(linked_worktree).wait(task.task_id, raw["run_nonce"])
         assert resumed.identity_problem(task.seat, task.prompt_sha256) is None
