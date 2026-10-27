@@ -60,7 +60,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("effort", None, "Provider effort, e.g. high (default: provider default)"),
         ("repo", None, "fleet_repos.yaml key (default: public primary)"),
         ("base", "origin/main", "Starting Git ref (default: origin/main)"),
-        ("branch", None, "Plain review source or publish branch, e.g. codex/fix (default: base)"),
+        ("branch", None, "Review source or publish branch; published writes use origin tip, e.g. codex/fix (default: base)"),
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
@@ -188,8 +188,11 @@ def _dispatch(args) -> int:
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
+    start = args.pinned_head or args.branch or args.base
+    if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
+        start = git.publish_start(repo, info, args.branch)
     worktree, branch, sha = git.worktree_plan(
-        repo, agent, task_id, args.pinned_head or args.branch or args.base, args.cwd, args.worktree
+        repo, agent, task_id, start, args.cwd, args.worktree
     )
     if args.pinned_head and not re.fullmatch(r"[0-9a-fA-F]{40}", args.pinned_head):
         raise ValueError("pinned head must be a full commit SHA")

@@ -902,6 +902,47 @@ def test_branch_fix_round_ownership_starts_after_preexisting_commits(sandbox, at
     assert result["remote_head_sha"] == result["head_sha"]
 
 
+@pytest.mark.parametrize("pinned", [False, True])
+@pytest.mark.parametrize("new_path", ["delivered.txt", "new-outside.txt"])
+def test_branch_fix_round_uses_remote_start_when_local_branch_is_stale(sandbox, pinned, new_path):
+    branch = "codex/existing-pr"
+    stale_head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    run_git(sandbox.repo, "branch", branch)
+    earlier = sandbox.settle(sandbox.dispatch())
+    previous_tree = Path(earlier["cwd"])
+    (previous_tree / "earlier-outside.txt").write_text("previous author round\n")
+    run_git(previous_tree, "add", "earlier-outside.txt")
+    run_git(previous_tree, "commit", "-m", "earlier outside-scope delivery")
+    remote_start = run_git(previous_tree, "rev-parse", "HEAD")
+    run_git(previous_tree, "push", "origin", f"HEAD:{branch}")
+    assert run_git(sandbox.repo, "rev-parse", branch) == stale_head
+    flags = ["--branch", branch]
+    if pinned:
+        flags += ["--pinned-head", remote_start]
+    task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--owned-path", "delivered.txt", *flags)
+    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    await_file(Path(record["prompt_file"]).with_suffix(".started"))
+    tree = Path(record["cwd"])
+    # A fix worker synchronizes the already-published PR before adding its own commit.
+    run_git(tree, "fetch", "origin", branch)
+    run_git(tree, "merge", "--ff-only", f"origin/{branch}")
+    (tree / new_path).write_text("fix round\n")
+    run_git(tree, "add", new_path)
+    run_git(tree, "commit", "-m", "current fix round")
+    run_git(tree, "push", "origin", f"HEAD:{branch}")
+    Path(record["prompt_file"]).with_suffix(".release").touch()
+    outside = new_path != "delivered.txt"
+    result = sandbox.settle(task, expected=1 if outside else 0)
+    assert (result["status"], result["error"]) == (
+        ("no_deliverable", "outside_owned_paths: new-outside.txt") if outside else ("done", None)
+    )
+    assert result["worktree_start_sha"] == remote_start
+    assert result["commits_ahead"] == 1
+    assert result["push_state"] == "pushed"
+    assert result["remote_head_sha"] == result["head_sha"]
+    assert run_git(sandbox.repo, "rev-parse", branch) == stale_head
+
+
 def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, monkeypatch):
     record, settle = delivery_settle
     record = settle("pushed")

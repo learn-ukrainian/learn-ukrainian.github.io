@@ -220,6 +220,25 @@ def resolve_repo(key: str | None = None) -> tuple[Path, dict]:
     return (ROOT if item.get("default") else ROOT.parent / item["local_name"]).resolve(), item
 
 
+def publish_start(repo: Path, repository: dict, branch: str) -> str:
+    """Start published fix rounds at origin's tip without moving the local PR branch."""
+    remote = verification_origin(repo)
+    if remote not in canonical_origins(repository):
+        raise ValueError("publish branch origin must match the registered canonical repository URL")
+    source = f"refs/heads/{branch}"
+    try:
+        _verification_git(repo, "ls-remote", "--exit-code", "--heads", "--", remote, source)
+    except subprocess.CalledProcessError as exc:
+        if exc.returncode != 2:
+            raise
+        # An unpublished local branch has no earlier remote rounds to exclude.
+        return _verification_git(repo, "rev-parse", "--verify", f"{source}^{{commit}}")
+    target = f"refs/remotes/origin/{branch}"
+    _verification_git(repo, "fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
+                      f"+{source}:{target}", timeout=VERIFICATION_FETCH_TIMEOUT)
+    return _verification_git(repo, "rev-parse", "--verify", f"{target}^{{commit}}")
+
+
 def worktree_plan(repo: Path, agent: str, task_id: str, base: str, cwd=None, worktree=None):
     branch = f"{agent}/{task_id}"
     parent = repo / ".worktrees" / "dispatch" / agent
