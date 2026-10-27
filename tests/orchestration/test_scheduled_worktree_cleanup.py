@@ -9,6 +9,7 @@ import time
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -737,6 +738,15 @@ def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPat
         if "fetch" in args:
             timeline.append("fetch")
             fetched.append(args)
+            if len(fetched) == 1:
+                return subprocess.CompletedProcess(
+                    args,
+                    1,
+                    "",
+                    "error: cannot lock ref 'refs/remotes/origin/main': is at abc123 but expected def456\n"
+                    " ! def456..abc123 main -> origin/main (unable to update local ref)\n"
+                    "error: fetching ref refs/remotes/origin/main failed: incorrect old value provided\n",
+                )
             before = trace.stat().st_size if trace.exists() else 0
             result = real_run_git(repo_root, *args)
             fetch_traces.append(trace.read_bytes()[before:])
@@ -767,8 +777,9 @@ def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPat
 
     result = cleanup._repo_result(repo, apply=True)
 
-    assert timeline == ["fetch", "reaper", "fetch", "gc"]
-    assert fetched == [("-c", "maintenance.auto=false", "-c", "gc.auto=0", "fetch", "--prune", "origin")] * 2
+    assert timeline == ["fetch", "fetch", "reaper", "fetch", "gc"]
+    assert fetched == [("-c", "maintenance.auto=false", "-c", "gc.auto=0", "fetch", "--prune", "origin")] * 3
+    assert result["fetch"]["ok"] is True
     assert fetch_traces and not any(_maintenance_child(argv) for blob in fetch_traces for argv in _trace_children(blob))
     assert result["maintenance"]["action"] == "ran"
     assert result["maintenance"]["ok"] is True
@@ -1230,6 +1241,34 @@ def test_repo_result_fetch_failure_keeps_and_reports(tmp_path: Path, monkeypatch
     assert row["action"] == "skipped"
     assert "fetch_failed_no_remote_proof" in row["reason"]
     assert _git(repo, "branch", "--list", branch) != ""
+
+    # The same fail-closed result applies to mixed diagnostics and a failed
+    # retry. Returning a successful local ref lookup would hide the fetch error.
+    args = ("-c", "maintenance.auto=false", "-c", "gc.auto=0", "fetch", "--prune", "origin")
+    race = "error: fetching ref refs/remotes/origin/main failed: incorrect old value provided\n"
+    failed = subprocess.CompletedProcess(args, 1, "", "fatal: ordinary fetch failure\n")
+    for diagnostic in (
+        failed.stderr,
+        race + failed.stderr,
+        race + "remote: error: remote failure\n",
+        race + " ! [rejected] other -> origin/other (non-fast-forward)\n",
+        race.replace("origin/main", "origin/other"),
+        "",
+    ):
+        mixed = subprocess.CompletedProcess(args, 1, "", diagnostic)
+        with patch.object(cleanup, "_run_git", return_value=mixed) as fetch:
+            assert cleanup._fetch_origin(repo) is mixed
+            fetch.assert_called_once_with(repo, *args)
+    for diagnostic in (
+        race,
+        "error: cannot lock ref 'refs/remotes/origin/main': is at abc123 but expected def456\n",
+    ):
+        with patch.object(
+            cleanup, "_run_git", side_effect=[subprocess.CompletedProcess(args, 1, "", diagnostic), failed]
+        ) as fetch:
+            assert cleanup._fetch_origin(repo) is failed
+            assert fetch.call_count == 2
+            assert all(call.args == (repo, *args) for call in fetch.call_args_list)
 
 
 def test_origin_scratch_ref_is_not_deleted_for_containing_itself(tmp_path: Path, monkeypatch) -> None:
