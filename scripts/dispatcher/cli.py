@@ -64,7 +64,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("effort", None, "Provider effort, e.g. high (default: provider default)"),
         ("repo", None, "fleet_repos.yaml key (default: public primary)"),
         ("base", "origin/main", "Starting Git ref (default: origin/main)"),
-        ("branch", None, "Plain review source or publish branch, e.g. codex/fix (default: base)"),
+        ("branch", None, "Review source or publish branch; unpinned writes require a remote tip, e.g. codex/fix (default: base)"),
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
@@ -235,8 +235,14 @@ def _dispatch(args) -> int:
             raise host_admission.Refused("❌ --force-admission requires a non-empty reason", 2)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
+    start = args.pinned_head or args.branch or args.base
+    publish_remote = None
+    if args.mode == "workspace-write" and args.branch and not args.pinned_head and not args.dry_run:
+        start, publish_remote = git.publish_start(repo, info, args.branch, task_id)
+    # A published start is created and recorded verbatim, never re-resolved in the shared repository.
+    exact_start = {"exact": True} if publish_remote is not None else {}
     worktree, branch, sha = git.worktree_plan(
-        repo, agent, task_id, args.pinned_head or args.branch or args.base, args.cwd, args.worktree
+        repo, agent, task_id, start, args.cwd, args.worktree, **exact_start
     )
     if args.pinned_head and not re.fullmatch(r"[0-9a-fA-F]{40}", args.pinned_head):
         raise ValueError("pinned head must be a full commit SHA")
@@ -288,8 +294,11 @@ def _dispatch(args) -> int:
         if binding:
             store.check_review_attempt(binding, claim=True)
         if not args.cwd:
-            git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
+            git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout,
+                                sparse_include=args.sparse_include, **exact_start)
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
+        if publish_remote is not None:
+            record["worktree_remote_url"] = publish_remote
         if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
             raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
         record.update(advisory_fields, **account_fields)

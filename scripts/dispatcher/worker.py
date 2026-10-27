@@ -123,7 +123,8 @@ def _enforce_delivery(record: dict) -> None:
             with git.ownership_git(record) as run:
                 base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
                 merge_base = run("merge-base", record["head_sha"], base_sha)
-                revision_range = (record["head_sha"], "--not", merge_base, record["worktree_base_sha"])
+                start_sha = record.get("worktree_start_sha", record["worktree_base_sha"])
+                revision_range = (record["head_sha"], "--not", merge_base, start_sha)
                 if (record["commits_ahead"] or 0) > 0 and not run("rev-list", "--max-count=1", *revision_range):
                     raise ValueError("empty ownership range with recorded commits ahead")
                 version = tuple(int(part) for part in run("version").split()[2].split(".")[:2])
