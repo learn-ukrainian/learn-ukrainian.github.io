@@ -6,15 +6,18 @@ import os
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 from datetime import datetime
 from pathlib import Path
 
 from scripts.common.repo_root import project_interpreter
+from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import admission, git, headroom, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
+from scripts.dispatcher.watchdog import DeadlineExpired, communicate, deadlines, liveness_paths
 
 
 def _identity(pid: int | None) -> str | None:
@@ -104,7 +107,7 @@ def _spec(record: dict, options: dict) -> TaskSpec:
         Path(record["result_file"]),
         record["claude_account"],
         record["provider"],
-        options,
+        {**record.get("options", {}), **options},
     )
 
 
@@ -203,10 +206,16 @@ def _reap_settled(record: dict, path: Path) -> None:
         os._exit(0)
 
 
-def supervise(path: Path, options: dict, hard_timeout: float) -> None:
+def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
-    spec = _spec(record, options)
+    spec = _spec(record, options or {})
+    options = spec.options
+    hard_timeout, silence_timeout, initial_response_timeout = deadlines({
+        **options, **{key: record[key] for key in ("hard_timeout", "silence_timeout", "initial_response_timeout")
+                     if key in record},
+        **({"hard_timeout": hard_timeout} if hard_timeout is not None else {}),
+    })
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     slots = None
     resolved_model = None
@@ -259,10 +268,13 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         )
         if slots_record is not None:
             record["review_test_slots"] = slots_record
-        with stdout_path.open("wb") as out, stderr_path.open("ab") as err:
+        with tempfile.TemporaryFile(dir=ensure_scratch_root()) as stdin, stdout_path.open("wb") as out, stderr_path.open("ab") as err:
+            stdin.write(invocation.stdin or b"")
+            stdin.seek(0)
+            output_sizes = out.tell(), err.tell()
             child = subprocess.Popen(
                 invocation.argv,
-                stdin=subprocess.PIPE,
+                stdin=stdin,
                 stdout=out,
                 stderr=err,
                 cwd=spec.worktree,
@@ -272,7 +284,8 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             )
             record.update(status="running")
             store.replace(record, path)
-            child.communicate(invocation.stdin, timeout=hard_timeout if hard_timeout else None)
+            communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
+                        initial_response_timeout, liveness_paths(spec, invocation), output_sizes)
         returncode = child.returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
@@ -294,7 +307,9 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
         if returncode < 0:
             status = "crashed"
         if status != "done":
-            error = "provider exited unsuccessfully" if returncode else "provider returned no successful final response"
+            error = parsed.error or (
+                "provider exited unsuccessfully" if returncode else "provider returned no successful final response"
+            )
         if status == "done" and record.get("schema_version") == 2 and record.get("require_review_verdict") is True:
             try:
                 from scripts.review.verdict_parser import recognized_verdicts
@@ -308,6 +323,9 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
                 status, error = "failed", "review_gate_error"
     except _Cancelled:
         status, error = "cancelled", "cancelled by client"
+    except DeadlineExpired as exc:
+        status, error = "timeout", exc.diagnostic
+        record.update(kill_reason=exc.kind, stderr_excerpt=exc.diagnostic)
     except subprocess.TimeoutExpired:
         status, error = "timeout", "process deadline exceeded"
     except Exception:
