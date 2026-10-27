@@ -403,7 +403,7 @@ def test_404_is_never_consumption(reg_root, emit_sink, task_store):
 @pytest.mark.parametrize("boundary", ["dry-run", "resources", "family", "target-moved", "canonical-origin", "spawn"])
 def test_research_surfacing_never_precedes_task_creation(reg_root, monkeypatch, boundary):
     """Defect class: refused admissions emit surfaced-pointer events for nonexistent tasks."""
-    from scripts.dispatcher import admission, authoring
+    from scripts.dispatcher import admission, authoring, host_admission
 
     tasks = reg_root / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
@@ -423,7 +423,7 @@ def test_research_surfacing_never_precedes_task_creation(reg_root, monkeypatch, 
     if boundary == "dry-run":
         flags += ["--dry-run"]
     elif boundary == "resources":
-        monkeypatch.setattr(checks, "check_resources", Mock(side_effect=ValueError("fixture resources refusal")))
+        monkeypatch.setattr(host_admission, "check", Mock(side_effect=ValueError("fixture resources refusal")))
     elif boundary == "family":
         flags += ["--review-author-model", "gpt-6.1-sol"]
     elif boundary == "target-moved":

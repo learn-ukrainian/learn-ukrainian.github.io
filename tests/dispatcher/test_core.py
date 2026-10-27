@@ -2411,6 +2411,7 @@ def admission_dispatch(sandbox, monkeypatch):
     monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
     monkeypatch.setattr(git, "ROOT", sandbox.repo)
     monkeypatch.setattr(git, "CONFIG", sandbox.repo / "scripts/config/fleet_repos.yaml")
+    monkeypatch.setenv("PATH", sandbox.env["PATH"])
     spawned = []
 
     def start(spec, record, prompt, hard_timeout):
@@ -2421,7 +2422,9 @@ def admission_dispatch(sandbox, monkeypatch):
 
     monkeypatch.setattr(worker, "start", start)
 
-    def dispatch(*flags, model="echo", mode="workspace-write", task_id="adm-worker"):
+    def dispatch(*flags, model="gpt-6.1-sol", mode="workspace-write", task_id="adm-worker"):
+        if mode == "workspace-write" and "--owned-path" not in flags:
+            flags = (*flags, "--owned-path", "docs/review.md")
         return cli.main(["dispatch", "--agent", "sol", "--model", model, "--mode", mode,
                          "--task-id", task_id, "--prompt", "Map the parser flags.", *flags])
 

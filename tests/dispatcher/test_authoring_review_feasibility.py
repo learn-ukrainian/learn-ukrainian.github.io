@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 
 from scripts.dispatcher import authoring as delegate
-from scripts.dispatcher import checks, cli, git, worker
+from scripts.dispatcher import checks, cli, git, host_admission, worker
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.model_catalog import ModelCatalogError
 from tests.claude_route_accounts import HOST_ACCOUNT
@@ -335,10 +335,13 @@ def boundary(repo, tasks, monkeypatch, github):
 @contextmanager
 def _admitted_host(monkeypatch, on_admission=None):
     # This is v2's post-admission, pre-lock observation boundary.
-    def resources(_):
+    check = host_admission.check
+    def resources(*args, **kwargs):
+        decision = check(*args, **kwargs)
         if on_admission is not None:
             on_admission()
-    monkeypatch.setattr(checks, 'check_resources', resources)
+        return decision
+    monkeypatch.setattr(host_admission, 'check', resources)
     yield
 
 

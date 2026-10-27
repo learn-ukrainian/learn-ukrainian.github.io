@@ -291,18 +291,18 @@ def _dispatch(args) -> int:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
         return 0
-    with host_admission.reserve(
-        task_id, args.mode, decision, agent=agent, force_reason=force_reason,
-        disk_guard=lambda: not (args.worktree is not None and (worktree / ".git").exists()),
-    ) as hold:
-        if binding:
-            store.check_review_attempt(binding, claim=True)
-        with authoring.locked_target(repo, worktree):
-            authoring_admission = authoring.recheck(args, authoring_admission, agent, task_id, repo, info, worktree)
-            if authoring_admission is not None:
-                sha = authoring_admission.creation_sha or authoring_admission.head_sha
-                if authoring_admission.kind == 'new-branch':
-                    branch = authoring_admission.head_branch
+    with authoring.locked_target(repo, worktree):
+        authoring_admission = authoring.recheck(args, authoring_admission, agent, task_id, repo, info, worktree)
+        if authoring_admission is not None:
+            sha = authoring_admission.creation_sha or authoring_admission.head_sha
+            if authoring_admission.kind == 'new-branch':
+                branch = authoring_admission.head_branch
+        with host_admission.reserve(
+            task_id, args.mode, decision, agent=agent, force_reason=force_reason,
+            disk_guard=lambda: not (args.worktree is not None and (worktree / ".git").exists()),
+        ) as hold:
+            if binding:
+                store.check_review_attempt(binding, claim=True)
             if not args.cwd or (authoring_admission is not None and authoring_admission.kind == 'new-branch'):
                 git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout, sparse_include=args.sparse_include)
             record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
