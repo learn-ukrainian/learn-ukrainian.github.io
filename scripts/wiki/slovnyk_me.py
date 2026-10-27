@@ -36,7 +36,8 @@ except ModuleNotFoundError as exc:
 SLOVNYK_ME_BASE = "https://slovnyk.me"
 DEFAULT_USER_AGENT = (
     "learn-ukrainian-slovnyk-me/1.0 "
-    "(noncommercial educational verification; issue 1715)"
+    "(noncommercial educational verification; issue 1715; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
 )
 
 # Canonical slugs are taken from https://slovnyk.me/ direct dictionary links.

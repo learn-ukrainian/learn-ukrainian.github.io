@@ -29,6 +29,18 @@ def parse(stdout, stderr, returncode, final_text):
     )
 
 
+# The provider environment carries no pool override, so the run selects the pool its marker names.
+GOVERNED_RUN = """import os, sys, time
+from pathlib import Path
+from scripts.common import test_slots
+pool = Path(os.environ[test_slots.HOLDER_ENV].split(":", 2)[2]).parent.parent
+hold = test_slots.join_inherited({**os.environ, test_slots.DIR_ENV: str(pool)}, wait_s=5)
+Path(sys.argv[1]).write_text("joined" if hold is not None else "refused")
+while not Path(sys.argv[2]).exists():
+    time.sleep(0.02)
+"""
+
+
 def main():
     model, prompt, final = sys.argv[1:]
     prompt = Path(prompt)
@@ -36,9 +48,13 @@ def main():
     if model == "cancel":
         os.kill(os.getppid(), signal.SIGTERM)
         time.sleep(120)
-    if model in {"blocked", "tree"}:
+    if model in {"blocked", "tree", "governed"}:
         if model == "tree":
             process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])
+            prompt.with_suffix(".grandchild").write_text(str(process.pid))
+        if model == "governed":  # a governed test run of this turn, holding its slots until released
+            signals = (str(prompt.with_suffix(suffix)) for suffix in (".joined", ".child-release"))
+            process = subprocess.Popen([sys.executable, "-c", GOVERNED_RUN, *signals])
             prompt.with_suffix(".grandchild").write_text(str(process.pid))
         while not prompt.with_suffix(".release").exists():
             time.sleep(0.02)

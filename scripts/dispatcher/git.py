@@ -149,7 +149,11 @@ def ownership_git(record: dict):
     # Ignore unrecorded branch names so an observed ref cannot widen delivery trust.
     if record.get("remote_ref") in allowed_refs:
         delivery_ref = record["remote_ref"]
-    refspecs = (f"+refs/heads/{base.removeprefix('origin/')}:refs/heads/base",
+    base_ref = f"refs/heads/{base.removeprefix('origin/')}"
+    # Distinct refs are required to keep the base independent of the delivery.
+    if delivery_ref == base_ref:
+        raise ValueError("delivery ref must differ from base ref")
+    refspecs = (f"+{base_ref}:refs/heads/base",
                 f"+{delivery_ref}:refs/heads/delivery")
     scratch = allocate(record["task_id"] + "-ownership")
     try:
