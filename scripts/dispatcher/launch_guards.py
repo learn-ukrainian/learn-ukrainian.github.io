@@ -1,4 +1,6 @@
-"""Legacy launch refusals for dispatch v2: PR freeze, host, model pause, DoR, primary checkout, write claims.
+"""Legacy launch refusals for dispatch v2: PR freeze, model pause, DoR, primary checkout, write claims.
+
+Host and credit admission live in ``host_admission``.
 
 Each guard is a mechanical copy of the legacy ``scripts/delegate.py`` function it names, adapted only to v2's
 argument names and repository root. Refusals keep the legacy stderr text and exit code (``Refused``); all
@@ -19,9 +21,8 @@ from scripts.dispatcher import admission, git
 
 _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 _CANONICAL_GITHUB_REPO = "learn-ukrainian/learn-ukrainian.github.io"
-# delegate.py _ADMISSION_REFUSED_EXIT / _ADMISSION_DISK_REFUSED_EXIT (5122-5125).
+# delegate.py _ADMISSION_REFUSED_EXIT (5122).
 _ADMISSION_REFUSED_EXIT = 3
-_ADMISSION_DISK_REFUSED_EXIT = 4
 CURSOR_AUTO_IMPLEMENTATION_ROLE = "implementation"
 _BLOCKQUOTE_LINE_RE = re.compile(r"^\s*>.*$", re.MULTILINE)
 _DOR_ISSUE_RE = re.compile(
@@ -84,28 +85,6 @@ def check_open_pr_freeze(args, repository: dict) -> None:
         print(f"⚠️  {decision.warning}", file=sys.stderr)
     if decision.refused:
         raise Refused(f"❌ {decision.refusal_line(repository['github'])}", _ADMISSION_REFUSED_EXIT)
-
-
-def check_early_host(mode: str) -> None:
-    """delegate.py _early_host_refusal (5235) + _report_dispatch_admission (5170) with no force reason.
-
-    v2 never forwards to another host and has no ``--force-admission``, so the precheck always applies.
-    """
-    from scripts.orchestration import dispatch_admission
-
-    try:
-        decision = dispatch_admission.precheck(mode)
-    except ValueError as exc:
-        raise Refused(f"❌ invalid dispatch admission threshold: {exc}") from None
-    if decision is None or decision.exempt:
-        return
-    if decision.admitted:
-        print(f"🚦 dispatch admission: admitted — {decision.summary()}", file=sys.stderr)
-        return
-    raise Refused(
-        f"❌ {decision.refusal_line()}",
-        _ADMISSION_DISK_REFUSED_EXIT if decision.disk_refused else _ADMISSION_REFUSED_EXIT,
-    )
 
 
 def check_model_pause(args) -> None:
