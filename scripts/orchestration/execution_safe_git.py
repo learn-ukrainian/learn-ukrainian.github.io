@@ -604,6 +604,15 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
         # Also bind FETCH_HEAD, which closeout and reaper callers read next.
         if heads and probe(["rev-parse", "--verify", "FETCH_HEAD"], path=cwd).stdout.strip() != heads[0]:
             return GitRefusal(args, "remote_import_head_mismatch", text=bool(kwargs.get("text")))
+        observed = {ref: sha for sha, ref in (
+            line.split(" ", 1) for line in
+            probe(["for-each-ref", "--format=%(objectname) %(refname)"], path=cwd).stdout.splitlines()
+        )}
+        expected = {ref: sha for sha, ref in refs}
+        if (any(observed.get(ref) != sha for ref, sha in expected.items()) or
+                (prune and any(ref not in expected for ref in observed
+                               if any(fnmatchcase(ref, pattern) for pattern in pruned)))):
+            return GitRefusal(args, "remote_import_ref_mismatch", text=bool(kwargs.get("text")))
         return result
     finally:
         try:

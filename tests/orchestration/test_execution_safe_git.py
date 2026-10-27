@@ -98,8 +98,8 @@ def test_transport_config_toctou_never_delivers_credential(boundary_tree, tmp_pa
         assert result.stdout.strip() == f"{head}\trefs/heads/main"
 
 
-@pytest.mark.parametrize("case", ["refs", "redirect", "nonfastforward"])
-def test_local_file_import_ref_and_transport_substitution(boundary_tree, monkeypatch, case):
+@pytest.mark.parametrize("case", ["refs", "redirect", "nonfastforward", "objects"])
+def test_local_file_import_ref_and_transport_substitution(boundary_tree, tmp_path, monkeypatch, case):
     """Local imports must pin objects/refs and refuse a rewrite to a network transport."""
     from scripts.orchestration import execution_safe_git as safe
 
@@ -117,6 +117,13 @@ def test_local_file_import_ref_and_transport_substitution(boundary_tree, monkeyp
         expected = _git(tree, "rev-parse", "HEAD")
         _git(repo, "update-ref", "refs/heads/proof", expected)
         args = ["fetch", "--no-tags", "origin", "refs/heads/main:refs/heads/proof"]
+    if case == "objects":
+        substitute = tmp_path / "substitute.git"
+        _git(tmp_path, "clone", "--bare", _git(repo, "remote", "get-url", "origin"), str(substitute))
+        (tree / "substitute.txt").write_text("wrong tracking tip\n")
+        _git(tree, "add", "substitute.txt")
+        _git(tree, "commit", "-m", "substitute tip")
+        _git(tree, "push", str(substitute), "HEAD:refs/remotes/origin/main")
     real_run = subprocess.run
     imports = []
 
@@ -125,16 +132,18 @@ def test_local_file_import_ref_and_transport_substitution(boundary_tree, monkeyp
             imports.append(argv)
             assert kwargs["env"]["GIT_ALLOW_PROTOCOL"] == "file"
             assert not any(".helper=!" in arg for arg in argv)
-            if case == "redirect":
+            if case in {"redirect", "objects"}:
                 source = next(arg for arg in argv if arg.startswith("file://"))
-                real_run([safe.GIT, "config", "url.https://poison.invalid/.insteadOf", source],
-                         cwd=repo, check=True)
+                replacement = "https://poison.invalid/" if case == "redirect" else substitute.as_uri()
+                real_run([safe.GIT, "config", f"url.{replacement}.insteadOf", source], cwd=repo, check=True)
         return real_run(argv, **kwargs)
 
     monkeypatch.setattr(subprocess, "run", import_hook)
     result = safe.run_git(args, cwd=tree, profile="remote", capture_output=True, text=True)
     assert len(imports) == 1
-    if case == "nonfastforward":
+    if case == "objects":
+        assert result.returncode != 0, "local rewrite substituted tracking refs outside authenticated snapshot"
+    elif case == "nonfastforward":
         assert result.returncode != 0
         assert _git(repo, "rev-parse", "refs/heads/proof") == expected
     elif case == "redirect":
