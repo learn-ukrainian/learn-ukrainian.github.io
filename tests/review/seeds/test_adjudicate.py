@@ -61,11 +61,18 @@ def _dispatch_args_hash(
     return delegate.dispatch_args_sha256(parsed)
 
 
-def _v2_dispatch(case: Case, monkeypatch: pytest.MonkeyPatch, *, task_id: str | None = None) -> dict:
+def _v2_dispatch(
+    case: Case,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    task_id: str | None = None,
+    agent: str = "agy",
+    model: str = "gemini-3.1-pro-preview",
+) -> dict:
     """Exercise the real producer against a stubbed v2 launcher, without a paid worker."""
     task_id = task_id or case.task_id
     (case.env.tasks / f"{task_id}.json").unlink(missing_ok=True)  # a v2 task starts without historical evidence
-    prepared = adj.prepare_dispatch(case.task_file, task_id, "agy", model="gemini-3.1-pro-preview")
+    prepared = adj.prepare_dispatch(case.task_file, task_id, agent, model=model)
     argv = prepared["dispatch"]
     request = adj._execution_request(argv, case.task_file.read_bytes())
     prompt_file = case.env.tasks / f"{task_id}.prompt"
@@ -1037,6 +1044,38 @@ def test_the_task_and_record_commands(
         )
         == 2
     )
+
+
+def test_v2_claude_resolved_account_mismatch_is_refused(seeded: Case, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Accept dispatcher-resolved Claude accounts and refuse execution under a different account."""
+    default_file = seeded.env.root / "claude-default-account"
+    monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", str(default_file))
+    binding = (seeded.unit_id, seeded.review_id, seeded.attempt_id, seeded.task_id, seeded.env.tasks, seeded.env.root)
+    identity = {"model": "claude-opus-5-5", "harness": "claude", "family": "anthropic"}
+    canonical_argv = adj.dispatch_argv
+
+    def explicit_account_argv(*args, **kwargs):
+        return [*canonical_argv(*args, **kwargs), "--claude-account", "b"]
+
+    for source, label in (("builtin", "a"), ("default-file", "b"), ("explicit", "b")):
+        if source == "default-file":
+            default_file.write_text("b\n", encoding="utf-8")
+            default_file.chmod(0o600)
+        elif source == "explicit":
+            default_file.write_text("a\n", encoding="utf-8")
+            monkeypatch.setattr(adj, "dispatch_argv", explicit_account_argv)
+        for kind in ("request", "started", "execution"):
+            adj._binding_path(seeded.task_file, kind).unlink(missing_ok=True)
+        dispatched = _v2_dispatch(seeded, monkeypatch, agent="claude", model=identity["model"])
+        path = seeded.env.tasks / f"{seeded.task_id}.json"
+        dispatched["claude_account"] = label
+        path.write_text(json.dumps(dispatched), encoding="utf-8")
+        assert adj.check_dispatch_binding(*binding) == identity, source
+        dispatched["claude_account"] = "b" if label == "a" else "a"
+        path.write_text(json.dumps(dispatched), encoding="utf-8")
+        with pytest.raises(adj.AdjudicationError, match="execution claude_account differs") as error:
+            adj.check_dispatch_binding(*binding)
+        assert error.value.code == adj.TASK_MISMATCH
 
 
 def test_the_canonical_v2_record_is_accepted(seeded: Case, monkeypatch: pytest.MonkeyPatch) -> None:

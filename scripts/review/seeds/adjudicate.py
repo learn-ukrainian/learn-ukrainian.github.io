@@ -83,6 +83,7 @@ except ModuleNotFoundError as exc:
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.agent_runtime.attempt_boundary import resolve_dispatch_claude_account
 from scripts.common.repo_root import main_checkout_root, project_interpreter
 from scripts.dispatcher.cli import ALIASES
 from scripts.dispatcher.cli import build_parser as v2_parser
@@ -514,6 +515,8 @@ def _check_v2_binding(dispatched: dict, task_file: Path, task_id: str, record_pa
         ):
             raise ValueError("execution nonce or request digest differs")
         expected = {name: options[name] for name in ("model", "effort", "mode", "provider", "claude_account")}
+        if request["agent"] == "claude":
+            expected["claude_account"], _ = resolve_dispatch_claude_account(options["claude_account"])
         expected.update(
             owned_paths=options["owned_path"],
             research_owned_paths=options["research_owned_path"],
