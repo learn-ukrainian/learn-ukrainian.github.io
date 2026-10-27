@@ -976,6 +976,8 @@ def _seed_pushed_checkout(tmp_path: Path) -> tuple[Path, str]:
         _git(checkout, "init", "-q", "--bare", str(tmp_path / name))
         _git(checkout, "push", "-q", str(tmp_path / name), f"HEAD:{branch}")
     _git(checkout, "remote", "add", "origin", str(tmp_path / "remote.git"))
+    for alias in ("refs/heads/alias-a", "refs/heads/alias-b"):
+        _git(checkout, "symbolic-ref", alias, branch)
     return checkout, branch
 
 
@@ -988,6 +990,7 @@ def _add_empty_push_url(repo: Path, tmp: Path) -> None:
     ("mutate", "expected"),
     [
         (lambda repo, tmp: _git(repo, "tag", "review-leak", "HEAD"), lambda repo: ["refs/tags/review-leak"]),
+        (lambda repo, tmp: _git(repo, "branch", "review-leak"), lambda repo: ["refs/heads/review-leak"]),
         (lambda repo, tmp: _git(repo, "notes", "add", "-m", "unauthorized", "HEAD"), lambda repo: ["refs/notes/commits"]),
         (
             lambda repo, tmp: _git(
@@ -998,8 +1001,16 @@ def _add_empty_push_url(repo: Path, tmp: Path) -> None:
         (lambda repo, tmp: _git(repo, "update-ref", "refs/worktree/leak", "HEAD"), lambda repo: ["refs/worktree/leak"]),
         (_add_empty_push_url, lambda repo: ["config"]),
         (lambda repo, tmp: _git(repo, "config", "core.hooksPath", str(tmp)), lambda repo: ["config"]),
+        (
+            lambda repo, tmp: _git(repo, "symbolic-ref", "HEAD", "refs/heads/alias-b"),
+            lambda repo: ["HEAD immediate symbolic-ref"],
+        ),
+        (
+            lambda repo, tmp: _git(repo, "symbolic-ref", "refs/heads/alias-b", "refs/heads/alias-a"),
+            lambda repo: ["refs/heads/alias-b"],
+        ),
     ],
-    ids=["tag", "notes", "replace", "worktree-ref", "pushurl", "config"],
+    ids=["tag", "heads", "notes", "replace", "worktree-ref", "pushurl", "config", "head-alias", "symref-alias"],
 )
 def test_read_only_task_that_writes_any_ref_or_config_settles_failed(
     tmp_tasks_dir, tmp_path, monkeypatch, mutate, expected
@@ -1023,11 +1034,29 @@ def test_read_only_task_that_writes_any_ref_or_config_settles_failed(
     assert state["error"] == "read_only_ref_mutation"
 
 
-def test_read_only_task_that_pushes_to_a_separate_push_url_settles_failed(tmp_tasks_dir, tmp_path, monkeypatch):
+def _plain_push_url(repo: Path, tmp: Path) -> str:
+    push_url = str(tmp / "push.git")
+    _git(repo, "remote", "set-url", "--push", "origin", push_url)
+    return push_url
+
+
+def _rewritten_push_url(repo: Path, tmp: Path) -> str:
+    """``alias:`` rewrites to ``B/`` and ``B/`` to ``C/``; a push reaches ``B/`` after one rewrite."""
+    for name in ("B", "C"):
+        _git(repo, "clone", "-q", "--bare", str(tmp / "push.git"), str(tmp / name / "push.git"))
+    _git(repo, "config", f"url.{tmp}/B/.insteadOf", "alias:")
+    _git(repo, "config", f"url.{tmp}/C/.insteadOf", f"{tmp}/B/")
+    _git(repo, "remote", "set-url", "--push", "origin", "alias:push.git")
+    return "origin"
+
+
+@pytest.mark.parametrize("configure", [_plain_push_url, _rewritten_push_url], ids=["plain", "rewritten-twice"])
+def test_read_only_task_that_pushes_to_a_separate_push_url_settles_failed(
+    tmp_tasks_dir, tmp_path, monkeypatch, configure
+):
     """A configured push URL is probed as well as the fetch URL it differs from."""
     checkout, branch = _seed_pushed_checkout(tmp_path)
-    push_url = str(tmp_path / "push.git")
-    _git(checkout, "remote", "set-url", "--push", "origin", push_url)
+    push_url = configure(checkout, tmp_path)
 
     def push(repo):
         tree = _git(repo, "rev-parse", "HEAD^{tree}")
@@ -1045,3 +1074,28 @@ def test_read_only_task_that_pushes_to_a_separate_push_url_settles_failed(tmp_ta
     assert state["read_only_mutation_paths"] == []
     assert state["read_only_ref_mutations"] == [f"ls-remote origin push {branch}"]
     assert state["error"] == "read_only_remote_push"
+
+
+def test_read_only_task_whose_fetch_advances_a_remote_tracking_ref_settles_done(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A fetch writes only remote-tracking refs and FETCH_HEAD, which read-only work may do."""
+    checkout, _branch = _seed_pushed_checkout(tmp_path)
+    remote = str(tmp_path / "remote.git")
+    _git(checkout, "push", "-q", remote, "HEAD:refs/heads/other")
+    _git(checkout, "fetch", "-q", "origin")
+    advanced = _git(checkout, "commit-tree", _git(checkout, "rev-parse", "HEAD^{tree}"), "-p", "HEAD", "-m", "other")
+    _git(checkout, "push", "-q", remote, f"{advanced}:refs/heads/other")
+
+    def fetch(repo):
+        before = _git(repo, "rev-parse", "refs/remotes/origin/other")
+        _git(repo, "fetch", "-q", "origin")
+        assert _git(repo, "rev-parse", "refs/remotes/origin/other") != before
+        assert _status(repo) == ""
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=fetch,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["read_only_ref_mutations"] == []

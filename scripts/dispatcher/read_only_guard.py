@@ -723,13 +723,15 @@ def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[
     """Record the repository state a read-only worker could write without touching the tree.
 
     The checkout snapshot cannot see a commit, tag, note or config edit, which
-    leave the tree clean. This records HEAD, every ref ``git for-each-ref``
-    lists (branches, tags, notes, replace refs, the stash, remote-tracking refs
-    and this worktree's own refs, packed or loose), a digest of the effective
+    leave the tree clean. This records HEAD and its immediate symbolic target,
+    every ref ``git for-each-ref`` lists except remote-tracking refs (branches,
+    tags, notes, replace refs, the stash and this worktree's own refs, packed or
+    loose, with each symbolic ref's immediate target), a digest of the effective
     configuration with each value's origin, and the task branch's tip at the
-    fetch URL and at every distinct push URL of every configured remote. Any
-    difference fails the task. ``branch`` pins the branch observed at the
-    baseline, so a later checkout cannot move the remote comparison.
+    fetch URL and at every distinct push URL of every configured remote, each
+    probed exactly as push or fetch would rewrite it. Any difference fails the
+    task. ``branch`` pins the branch observed at the baseline, so a later
+    checkout cannot move the remote comparison.
 
     Boundary: a push to a destination that is not a configured remote — a URL
     typed on the command line or a remote defined only through ``git -c`` —
@@ -754,26 +756,51 @@ def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[
             raise _RefSnapshotFailed(f"{args[0]} failed: {_format_process_failure(proc)}")
         return proc.stdout
 
+    def immediate_target(ref: str) -> str | None:
+        # Both ``symbolic-ref`` and ``%(symref)`` resolve chains, which hides a
+        # retarget between two aliases of one branch.
+        return git("symbolic-ref", "-q", "--no-recurse", ref, ok=(0, 1)).strip() or None
+
+    def probe_for(url: str, candidates: list[str]) -> str:
+        # ``remote get-url`` has already applied insteadOf (or pushInsteadOf) once
+        # and ``ls-remote`` applies insteadOf again, so probe a value whose
+        # single expansion is exactly ``url``.
+        for candidate in candidates:
+            if git("ls-remote", "--get-url", candidate).strip() == url:
+                return candidate
+        raise _RefSnapshotFailed("a configured remote URL cannot be probed without rewriting it")
+
     try:
         symbolic = git("symbolic-ref", "-q", "HEAD", ok=(0, 1)).strip() or None
         refs: dict[str, str | None] = {
             "HEAD": git("rev-parse", "--verify", "HEAD^{commit}").strip(),
             "HEAD symbolic-ref": symbolic,
+            "HEAD immediate symbolic-ref": immediate_target("HEAD"),
             "config": hashlib.sha256(git("config", "--list", "--show-origin", "-z").encode()).hexdigest(),
         }
+        # Remote-tracking refs are excluded: a legitimate fetch, the task's or a
+        # concurrent lane's, writes only those and FETCH_HEAD.
         listing = git("for-each-ref", "--format=%(refname)%00%(objectname) %(symref)")
-        refs.update(line.split("\0", 1) for line in listing.splitlines())
+        for line in listing.splitlines():
+            ref, value = line.split("\0", 1)
+            if ref.startswith("refs/remotes/"):
+                continue
+            refs[ref] = value if value.endswith(" ") else f"{value.split(' ', 1)[0]} {immediate_target(ref)}"
         branch = branch or symbolic
         if branch is None:
             return refs, None
         for remote in sorted(set(git("remote").split())):
             fetch_url = git("remote", "get-url", remote).strip()
             pushes = git("remote", "get-url", "--push", "--all", remote).splitlines()
+            raw = [
+                *git("config", "--get-all", f"remote.{remote}.pushurl", ok=(0, 1)).splitlines(),
+                *git("config", "--get-all", f"remote.{remote}.url", ok=(0, 1)).splitlines(),
+            ]
             urls = {fetch_url: remote}
             for url in pushes:
                 urls.setdefault(url, f"{remote} push" + (f" {len(urls)}" if len(urls) > 1 else ""))
             for url, label in urls.items():
-                tips = git("ls-remote", "--heads", url, branch)
+                tips = git("ls-remote", "--heads", probe_for(url, [*raw, url]), branch)
                 heads = {ref: sha for sha, ref in (line.split("\t", 1) for line in tips.splitlines())}
                 refs[f"ls-remote {label} {branch}"] = heads.get(branch)
     except _RefSnapshotFailed as exc:
