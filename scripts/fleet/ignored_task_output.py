@@ -367,7 +367,7 @@ def _matching_worktree_records_once(
         resolved_worktree = worktree.resolve(strict=True)
     except (OSError, ValueError, RuntimeError):
         resolved_worktree = None
-    claim_paths: dict[str, Path] = {}
+    claim_paths: dict[str, Path | None] = {}
     cache_path = _identity_cache_path(tasks_dir)
     cached = _read_identity_cache(cache_path)
     identities = {}
@@ -1362,7 +1362,7 @@ def _record_matches_worktree(
     *,
     repo_root: Path,
     resolved_worktree: Path | None = None,
-    claim_paths: dict[str, Path] | None = None,
+    claim_paths: dict[str, Path | None] | None = None,
 ) -> bool:
     """Task names are hints; only resolved filesystem identity binds a record."""
     from scripts.orchestration.worktree_claims import resolve_claim_path
@@ -1380,11 +1380,21 @@ def _record_matches_worktree(
         if not isinstance(location, str) or not location:
             continue
         try:
-            claimed = claim_paths.get(location) if claim_paths is not None else None
-            if claimed is None:
+            if claim_paths is None:
                 claimed = resolve_claim_path(location, repo_root=repo_root)
-                if claim_paths is not None:
-                    claim_paths[location] = claimed
+            elif location in claim_paths:
+                claimed = claim_paths[location]
+            else:
+                # This memo belongs to one current-byte inventory. Cache
+                # failures too, and leave the uncached locked reread above intact.
+                claim_paths[location] = None
+                path = Path(location).expanduser()
+                if not path.is_absolute():
+                    path = repo_root / path
+                # Kernel lookup follows aliases without walking every historic
+                # path in Python. Equal inodes still need canonical binding.
+                claimed = resolve_claim_path(location, repo_root=repo_root) if path.samefile(resolved_worktree) else None
+                claim_paths[location] = claimed
             if claimed == resolved_worktree:
                 return True
         except (OSError, ValueError, RuntimeError):

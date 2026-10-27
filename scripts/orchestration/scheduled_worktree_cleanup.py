@@ -94,7 +94,26 @@ def _fetch_origin(repo_root: Path) -> subprocess.CompletedProcess[str]:
     ``gc --auto`` before this process reaches the reaper (#10856). The
     explicit ``git gc --auto`` after the reaper stays the only maintenance.
     """
-    return _run_git(repo_root, *reap_worktrees.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
+    args = (*reap_worktrees.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
+    fetched = _run_git(repo_root, *args)
+    old_value = r"error: fetching ref refs/remotes/origin/main failed: incorrect old value provided"
+    lock_race = r"error: cannot lock ref 'refs/remotes/origin/main': is at [0-9a-f]+ but expected [0-9a-f]+"
+    diagnostics = [
+        line.strip()
+        for line in (fetched.stderr or "").splitlines()
+        if re.search(r"\b(?:error|fatal):", line) or line.lstrip().startswith("!")
+    ]
+    update_failed = r"!\s+(?:[0-9a-f]+\.{2,3}[0-9a-f]+|\[new branch\])\s+main\s+-> origin/main\s+\(unable to update local ref\)"
+    if (
+        fetched.returncode
+        and any(re.fullmatch(f"(?:{old_value}|{lock_race})", line) for line in diagnostics)
+        and all(re.fullmatch(f"(?:{old_value}|{lock_race}|{update_failed})", line) for line in diagnostics)
+    ):
+        # Fetch again against current refs; never reset a ref or accept the
+        # failed attempt as remote-containment proof. The retry may fail too.
+        print("Origin/main fetch compare-and-swap race; retrying fetch once", file=sys.stderr)
+        return _run_git(repo_root, *args)
+    return fetched
 
 
 def _failure(proc: subprocess.CompletedProcess[str]) -> str:
