@@ -20,7 +20,9 @@ Operator decision 2026-10-25 (C-1949): Grok 4.7 may give critical-risk final sig
 transport under those attestation, cross-family and subject-seat limits. Opus 5.5 and Sol 6.1 remain
 eligible. Security final sign-off (catalog `security_review` role) stays Opus 5.5 or Sol 6.1.
 Designated approval remains Opus 5.5 + Sol 6.1. Kimi models are retired (OO-58, #11327).
-Muse Wonder Full is a review seat under measurement (operator 2026-10-24, C-1518; 2026-10-25, C-1949); its verdicts count as review of record only after measured results are recorded.
+Muse Wonder Full may be chosen explicitly as the formal reviewer for low-risk or medium-risk code review.
+It has no critical, security, Ukrainian or driver authority and is not in the automatic review ladders yet.
+Private inputs require contributor mode off (C-2401).
 The 2026-10-08 approval admits Gemini as a formal reviewer of low-risk and medium-risk code, and of
 Ukrainian work when the reviewer uses the Sources MCP. High-risk and critical review use Opus 5.5,
 Sol 6.1, or Grok 4.7. Gemini code review runs directly through native AGY in the exact-head dispatch
@@ -346,7 +348,7 @@ or count as a formal review.
 * **Current subscriptions:** Codex Sol 6.1 and Luna, native/ Cursor Grok 4.7,
   AGY Gemini 3.8 Flash High, OpenCode DeepSeek V4.1 Flash on OpenCode credit,
   and native Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5.
-  Muse is subscribed but has no delegate adapter yet. Do not add a route.
+  Muse uses the native dispatch route under the review limits above.
   Fable 5.1 stays parked, explicit pin only, with its existing restrictions.
 * **OpenRouter:** no general fleet routing. Existing DeepSeek compatibility
   remains subject to the named US provider allow-list and data restrictions.

@@ -724,6 +724,8 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
         if not candidate.participant or not candidate.sealed_executable:
             return "sealed ACP participant or review executable identity is missing"
         native_agy = candidate.route == "agy" and candidate.adapter_transport == "native_agy"
+        native_muse = candidate.route == "muse" and candidate.adapter_transport == "native_muse"
+        native_review = native_agy or native_muse
         if candidate.route == "agy" and not native_agy:
             return "native AGY review endpoint identity is required; ACP wrapper is not a formal review route"
         if native_agy:
@@ -736,14 +738,22 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
                 or candidate.sealed_executable != "scripts/delegate.py"
             ):
                 return "native AGY review endpoint identity is invalid"
+        elif native_muse:
+            if (
+                candidate.participant != "muse"
+                or candidate.catalog_transport != "native_muse"
+                or candidate.transport != "native_muse"
+                or candidate.sealed_executable != "scripts/dispatch.py"
+            ):
+                return "native Muse review endpoint identity is invalid"
         elif candidate.adapter_transport != "acp":
             return "formal-review candidate is not bound to the ACP adapter transport"
-        if not native_agy and candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
+        if not native_review and candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
             return "candidate is not bound to the sealed ACP executable"
-        if not native_agy and candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
+        if not native_review and candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
             return "candidate ACP participant is not enabled by the runner-owned adapter registry"
         if (
-            not native_agy
+            not native_review
             and ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport
         ):
             return "candidate catalog transport does not match its runner-owned ACP participant"

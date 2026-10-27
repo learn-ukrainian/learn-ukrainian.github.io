@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 
 from scripts.common.repo_root import project_interpreter
+from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import git, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
@@ -95,6 +96,49 @@ def _spec(record: dict, options: dict) -> TaskSpec:
         record["provider"],
         options,
     )
+
+
+def _enforce_delivery(record: dict) -> None:
+    if record["mode"] == "read-only" or record["status"] != "done":
+        return
+    cause = None
+    if owned := record.get("owned_paths"):
+        from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
+        from scripts.secret_redactor import redact_text
+
+        try:
+            with git.ownership_git(record) as run:
+                base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
+                merge_base = run("merge-base", record["head_sha"], base_sha)
+                revision_range = (record["head_sha"], "--not", merge_base, record["worktree_base_sha"])
+                version = tuple(int(part) for part in run("version").split()[2].split(".")[:2])
+                remerge = version >= (2, 36)
+                # Remerge diffs isolate edits made during a merge from clean upstream changes.
+                # Older Git and octopus merges cannot prove the absence of resolution edits.
+                paths = run(
+                    "log", "--format=", "--name-only", "-z", "-r", "--no-renames", "--root",
+                    "--remerge-diff" if remerge else "--cc", *revision_range, strip=False,
+                ).split("\0")
+                if run("rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
+                    raise ValueError("merge resolution paths cannot be verified")
+            outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
+            if outside:
+                cause = "outside_owned_paths: " + ", ".join(
+                    sanitize_for_display(redact_text(path)) for path in outside
+                )
+                if len(cause) > 1024:
+                    cause = cause[:1009] + "... (truncated)"
+        except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError):
+            cause = "owned_paths_verification_failed"
+    if cause is None:
+        if record["worktree_dirty_on_exit"] is not False:
+            cause = "worktree_dirty_or_unknown"
+        elif record["commits_ahead"] is None or record["commits_ahead"] == 0:
+            cause = "no_commits_or_unknown"
+        elif record["push_state"] != "pushed":
+            cause = "work_not_pushed_or_unknown"
+    if cause:
+        record.update(status="no_deliverable", error=cause, no_deliverable_reason=cause)
 
 
 def _reap_settled(record: dict, path: Path) -> None:
@@ -252,6 +296,7 @@ def supervise(path: Path, options: dict, hard_timeout: float) -> None:
             result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
         )
         record.update(git.snapshot_delivery(spec, record))
+        _enforce_delivery(record)
         if spec.agent == "cursor":
             record.update(
                 resolved_model=resolved_model if resolved_model is not None else "unknown",

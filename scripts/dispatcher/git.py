@@ -4,9 +4,11 @@ import errno
 import fcntl
 import logging
 import os
+import re
+import shutil
 import stat
 import subprocess
-from contextlib import ExitStack, suppress
+from contextlib import ExitStack, contextmanager, suppress
 from functools import partial
 from pathlib import Path
 
@@ -14,6 +16,7 @@ import yaml
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import resolve_repo_root
+from scripts.common.task_scratch import allocate
 from scripts.dispatcher.environment import npm_shim_dir
 from scripts.dispatcher.types import TaskSpec
 from scripts.storage.topology import STORE_FILES
@@ -26,6 +29,87 @@ SPARSE_EXCLUDE_DEFAULT = frozenset({
     "registry/projects", "registry/lexicon/source-inventory",
     "registry/lexicon/source-inventory-review-decisions", "site/src/content", "site/src/data",
 })
+GIT_BINARY = shutil.which("git", path=os.defpath)
+
+
+def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path | None = None) -> str:
+    """Use the system Git with no inherited Git configuration or process redirects."""
+    if not GIT_BINARY:
+        raise ValueError("system Git unavailable")
+    env = {key: os.environ[key] for key in ("HOME", "SSH_AUTH_SOCK") if key in os.environ}
+    env.update(PATH=os.defpath, GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_SYSTEM=os.devnull,
+               GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0", LC_ALL="C")
+    output = subprocess.run(
+        [GIT_BINARY, "--no-replace-objects", "-c", "core.alternateRefsCommand=",
+         "-c", f"core.hooksPath={os.devnull}", "-c", "protocol.ext.allow=never",
+         *([f"--git-dir={git_dir}"] if git_dir else []), "-C", str(path), *args],
+        capture_output=True, text=True, check=True, timeout=30, env=env,
+    ).stdout
+    return output.strip() if strip else output
+
+
+def canonical_origins(repository: dict) -> tuple[str, ...]:
+    """Derive exact destinations from the registry, never shared Git config.
+
+    The registry ``transport`` is sibling clone policy, not repository identity:
+    any host may clone the same GitHub repository over HTTPS or SSH, so both
+    standard spellings of the registered identity are accepted for ``ssh`` and
+    ``https`` entries. Callers compare the full URL string against this tuple.
+    """
+    github = repository["github"]
+    transport = repository.get("transport", "ssh")
+    if transport == "file" and Path(github).is_absolute():
+        return (github,)
+    if not re.fullmatch(r"[A-Za-z0-9_-][A-Za-z0-9_.-]*/[A-Za-z0-9_-][A-Za-z0-9_.-]*", github):
+        raise ValueError("invalid registered repository identity")
+    if transport not in ("https", "ssh"):
+        raise ValueError("unsupported registered transport")
+    bases = (f"https://github.com/{github}", f"git@github.com:{github}", f"ssh://git@github.com/{github}")
+    return tuple(base + suffix for base in bases for suffix in (".git", ""))
+
+
+def verification_origin(path: Path) -> str:
+    entries = [entry.partition("\n") for entry in
+               _verification_git(path, "config", "--null", "--includes", "--list", strip=False).split("\0") if entry]
+    if any(key.startswith("alias.") or (key.startswith("url.") and
+           key.endswith((".insteadof", ".pushinsteadof"))) for key, _, _ in entries):
+        raise ValueError("worker Git aliases or URL rewrites cannot be verified")
+    urls = [value for key, _, value in entries if key == "remote.origin.url"]
+    if len(urls) != 1 or not urls[0] or urls[0].startswith("-"):
+        raise ValueError("ownership verification requires one origin URL")
+    return urls[0]
+
+
+@contextmanager
+def ownership_git(record: dict):
+    """Walk trusted remote objects in a private config/ref namespace.
+
+    A command-line include.path override is not a local-config sandbox. A fresh
+    bare Git directory excludes both worker config and config.worktree,
+    their includes, grafts and replacement refs. Objects and refs come only from
+    the remote URL recorded before provider execution. No local objects are reused.
+    """
+    remote = record["worktree_remote_url"]
+    if verification_origin(Path(record["worktree_path"])) != remote:
+        raise ValueError("origin URL changed since dispatch")
+    base = record["worktree_base_ref"].removeprefix("refs/remotes/")
+    if not base.startswith("origin/"):
+        raise ValueError("ownership verification requires an origin base")
+    scratch = allocate(record["task_id"] + "-ownership")
+    try:
+        run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir)
+        run("init", "--bare", "--template=")
+        run("fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
+            f"+refs/heads/{base.removeprefix('origin/')}:refs/heads/base",
+            f"+refs/heads/{record['worktree_branch']}:refs/heads/delivery")
+        if run("rev-parse", "--verify", "refs/heads/delivery^{commit}") != record["head_sha"]:
+            raise ValueError("remote delivery tip does not match snapshot")
+        yield run
+    finally:
+        try:
+            scratch.remove()
+        finally:
+            scratch.preserve()
 
 
 def sparse_excludes(includes=()) -> list[str]:
@@ -35,15 +119,16 @@ def sparse_excludes(includes=()) -> list[str]:
     return sorted(SPARSE_EXCLUDE_DEFAULT - includes)
 
 
-def _git(path: Path, *args: str, isolate: bool = False) -> str:
-    return subprocess.run(
+def _git(path: Path, *args: str, isolate: bool = False, strip: bool = True) -> str:
+    output = subprocess.run(
         ["git", "-C", str(path), *args],
         capture_output=True,
         text=True,
         check=True,
         timeout=30,
         env={**(sanitized_git_env(strip_config_injection=True) if isolate else os.environ), "GIT_TERMINAL_PROMPT": "0"},
-    ).stdout.strip()
+    ).stdout
+    return output.strip() if strip else output
 
 
 def resolve_repo(key: str | None = None) -> tuple[Path, dict]:

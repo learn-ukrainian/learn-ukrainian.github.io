@@ -33,19 +33,26 @@ def main():
     model, prompt, final = sys.argv[1:]
     prompt = Path(prompt)
     prompt.with_suffix(".started").write_text(str(os.getpid()))
+    if model == "cancel":
+        os.kill(os.getppid(), signal.SIGTERM)
+        time.sleep(120)
     if model in {"blocked", "tree"}:
         if model == "tree":
             process = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])
             prompt.with_suffix(".grandchild").write_text(str(process.pid))
         while not prompt.with_suffix(".release").exists():
             time.sleep(0.02)
-    if model in {"pushed", "unpushed", "dirty"}:
-        Path("delivered.txt").write_text("literal delivered value\n")
+    if model in {"pushed", "unpushed", "dirty", "pushed-dirty", "pushed-nested"}:
+        delivered = Path("src/delivered.txt" if model == "pushed-nested" else "delivered.txt")
+        delivered.parent.mkdir(exist_ok=True)
+        delivered.write_text("literal delivered value\n")
         if model != "dirty":
-            subprocess.run(["git", "add", "delivered.txt"], check=True, stdout=subprocess.DEVNULL, timeout=30)
+            subprocess.run(["git", "add", str(delivered)], check=True, stdout=subprocess.DEVNULL, timeout=30)
             subprocess.run(["git", "commit", "-m", "stub delivery"], check=True, stdout=subprocess.DEVNULL, timeout=30)
-        if model == "pushed":
+        if model.startswith("pushed"):
             subprocess.run(["git", "push", "origin", "HEAD"], check=True, stdout=subprocess.DEVNULL, timeout=30)
+        if model == "pushed-dirty":
+            delivered.write_text("uncommitted delivery\n")
     if model == "crash":
         os.kill(os.getpid(), signal.SIGKILL)
     text = sys.stdin.buffer.read().decode()
