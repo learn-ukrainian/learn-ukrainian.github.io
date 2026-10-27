@@ -46,6 +46,8 @@ from urllib.parse import urljoin
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from rag.config import CHUNK_MAX_TOKENS, CHUNK_MIN_TOKENS, LITERARY_DIR
 
+USER_AGENT = "learn-ukrainian-litopys/1.0 (+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+
 
 class HTMLTextExtractor(HTMLParser):
     """Extract text from HTML, handling parallel text tables.
@@ -202,6 +204,7 @@ def fetch_page(url: str) -> str:
     try:
         result = subprocess.run(
             ["curl", "-sL", "--max-time", "30",
+             "-A", USER_AGENT,  # public project contact for the site operator
              "-e", "http://litopys.org.ua/",  # Referer header (some sections block without it)
              url],
             capture_output=True,

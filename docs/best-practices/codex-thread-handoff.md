@@ -706,7 +706,6 @@ Dispatch a worker and record it in that run:
   --model gpt-6.1-sol \
   --mode workspace-write \
   --owned-path scripts/orchestration/ \
-  --silence-timeout 0 --initial-response-timeout 0 \
   --worktree \
   --prompt-file /tmp/a1-gate-policy-worker.md
 ```

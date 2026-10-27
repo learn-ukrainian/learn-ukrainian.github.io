@@ -130,8 +130,8 @@ Context size never licenses omitting these obligations.
 For a change task, the worker's deliverable is a pushed branch with verification
 and an honest report of unresolved gaps. It is not full task completion. The
 [merge and cleanup recipe](../../agents_extensions/shared/rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450)
-requires independent exact-head cross-family approval before any PR, same-head
-green CI before enqueue, confirmed merge, and common-reaper cleanup. A changed
+requires independent exact-head cross-family approval and same-head green CI before
+enqueue (a PR may open earlier so CI runs), confirmed merge, and common-reaper cleanup. A changed
 head voids approval and CI. The accountable driver owns those steps and the
 [acceptance and completion evidence](../../agents_extensions/shared/rules/core.md#p3--definition-of-ready-and-definition-of-done).
 Author checks are ordinary verification, not independent held-out proof.
