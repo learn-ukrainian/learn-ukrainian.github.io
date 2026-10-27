@@ -80,8 +80,9 @@ never fine.
    Before restarting a lane or ordering an item, check its latest state and linked PR or
    issue state. Honor stops; send stale-open items with merged PRs to the tracker owner.
 9. **Chase delivery.** Lanes deliver; the CTO does not take over their work. For each
-   priority deliverable, the owning lane reports one line every cycle:
-   state | exact blocker | who fixes it | next step | ETA. Treat any of these as
+   priority deliverable, the owning lane reports one blocker line every cycle, and every
+   lane answers the hourly check-in; format and CTO duties are in
+   [lane-report](../../drive-epic/references/lane-report.md). Treat any of these as
    foot-dragging: no report by the deadline, a passed ETA, the same blocker in two
    cycles, unexplained inactivity, or other work displacing the priority deliverable or
    its blockers. An authorized hold (drive-epic §2c), an operator stop, and other ready

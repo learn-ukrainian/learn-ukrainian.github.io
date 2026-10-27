@@ -194,6 +194,9 @@ warning `review_brief_no_dispositions` on stderr and in the task record's
 The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09-03).
 OO-53 (#11226) supersedes the 2026-09-18 "CF review-fix before CI" order: a PR may
 be opened before approval so CI exists; merge still needs both gates below.
+This section holds the gates, trials and red-team policy. The step-by-step delivery is
+the `full-send` skill (accountable driver, to MERGED) or `full-stop` (to ready-to-merge),
+with `review-loop` for review rounds and the budget.
 
 0. **CF review on the branch (binding).** Push the implementation branch.
    Run independent exact-head cross-family CF on that branch (`ask-<lane>
@@ -584,8 +587,9 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    User-visible ACs require typed `behavior_proof` evidence referencing the
    canonical #5302 receipt path/digest, target-input fingerprint, and exact
    reviewed SHA; never copy a `behavior_proof_status` string.
-6. **Pass the independent review and CI gates** — ONE cross-family review round:
-   qualified toolful reviewer outside the author model family. A PR may be opened
+6. **Pass the independent review and CI gates** — cross-family review within the
+   [`review-loop` budget](../skills/review-loop/references/policy.md): qualified toolful
+   reviewer outside the author model family. A PR may be opened
    before approval so CI exists; merge still needs exact-head cross-family APPROVE
    and same-head green CI. `record_cf_verdict.py` binds verdict + findings to
    the PR head (drive-epic §6–§7). The
