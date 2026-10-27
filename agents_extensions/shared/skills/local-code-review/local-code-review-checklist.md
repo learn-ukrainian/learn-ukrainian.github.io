@@ -96,7 +96,7 @@ warning `review_brief_no_dispositions` (stderr and task record), not a refusal.
 For round 2 and later, the reviewer brief states DELTA scope and names the last
 reviewed head, the new exact head, the fix diff between them, and resolution
 evidence for each earlier blocker. Apply the canonical
-[review stopping rule](../drive-epic/references/review-merge-cleanup.md#review-stopping-rule).
+[review budget](../review-loop/references/policy.md).
 
 Learner-content semantic review is unsupported here. A normal BIO request uses
 `$curriculum-lifecycle` / `$track-completion`, with `$post-build-review` as its
@@ -218,13 +218,13 @@ elsewhere in the codebase, only widen the *look* to sibling instances of
 that exact bug class within the frozen touched surfaces — not a general
 audit of the owning module, and not files outside `frozen_files` unless a
 sibling instance is actually found there. Its disposition follows this round's
-scope under the review stopping rule and the Step 6 breakers.
+scope under the review budget and the Step 6 breakers.
 
 **Class-level findings (#10665)**: the reviewer reports one finding per input
 class, with one reproducer and every sibling spelling found in this round, not
 one spelling per round. In round 1, a discovery outside the stated classes still
 blocks or escalates when it exposes a material defect. Later rounds apply the
-review stopping rule. Reviewers keep their own
+review budget. Reviewers keep their own
 independent adversarial cases; the author's matrix narrows nothing.
 
 ---
@@ -242,7 +242,7 @@ For every finding, raise it, then adjudicate it:
   --rationale "<why this disposition>"
 ```
 
-Disposition guide, subject to this round's scope under the review stopping rule:
+Disposition guide, subject to this round's scope under the review budget:
 
 - **`in_scope_blocker`** — a real, verified bug inside the frozen scope
   that must be fixed before this closes out: it violates the stated
@@ -266,7 +266,7 @@ corrected behaviour; a code-level fix is a suggestion, not the requirement. A
 delta review (round 2 onwards) attests the new exact head and checks only the fix
 diff since the last reviewed head and resolution of earlier blockers. Checking
 the fix's interactions includes weakened or deleted tests in that diff. A new
-blocker must satisfy the canonical review stopping rule, including its security
+blocker must satisfy the canonical review budget, including its security
 FAIL exception; other findings are tracked follow-ups with owners.
 A reviewer that lacks a capability the brief requires (shell, diff access,
 hashing, the `sources` tools) returns INCONCLUSIVE: the verdict line uses the
@@ -345,13 +345,13 @@ Then record the cycle:
 ```
 
 Apply the canonical
-[review stopping rule](../drive-epic/references/review-merge-cleanup.md#review-stopping-rule)
+[review budget](../review-loop/references/policy.md)
 before another fix or review. Its round limit applies even when findings shrink;
 the security FAIL exception never permits landing without approval and green CI.
 
 Stop and reclassify (treat as `stop_and_escalate`, do not keep patching) when:
 
-- the review stopping rule requires a split, an approach change, or escalation;
+- the review budget requires a split, an approach change, or escalation;
 - `check-expansion` triggers — review-triggered files or non-test LOC
   exceed 2x the frozen baseline;
 - `record-cycle` triggers — two review-triggered patch cycles in a row
@@ -363,11 +363,11 @@ Stop and reclassify (treat as `stop_and_escalate`, do not keep patching) when:
 For the expansion and finding-count breakers only, these justify proceeding: active
 data loss, a crash, a broken install/upgrade, a release blocker, or a
 concrete security exposure. "It would be nice to fix this too" is never
-one of them. None overrides the review stopping rule or the security FAIL block.
+one of them. None overrides the review budget or the security FAIL block.
 
 Security code (hooks, launchers, credentials, admission, sandbox, guards)
 also follows `drive-epic` `references/routing-and-dispatch.md` §4 (#10665),
-subject to the same review stopping rule.
+subject to the same review budget.
 
 ---
 

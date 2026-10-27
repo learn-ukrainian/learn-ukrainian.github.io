@@ -1,4 +1,4 @@
-"""Legacy launch refusals for dispatch v2: PR freeze, model pause, DoR, primary checkout, write claims.
+"""Legacy launch refusals for dispatch v2: PR freeze, DoR, primary checkout, write claims.
 
 Host and credit admission live in ``host_admission``.
 
@@ -85,26 +85,6 @@ def check_open_pr_freeze(args, repository: dict) -> None:
         print(f"⚠️  {decision.warning}", file=sys.stderr)
     if decision.refused:
         raise Refused(f"❌ {decision.refusal_line(repository['github'])}", _ADMISSION_REFUSED_EXIT)
-
-
-def check_model_pause(args) -> None:
-    """Operator model pauses and plan-headroom stops (target_admission._refuse_paused, new_dispatch=True).
-
-    v2 pins ``--model`` and never substitutes, so the requested and selected models are the same one.
-    No Claude account is passed (the claude lane's headroom reads as unknown) until v2 resolves one.
-    As in legacy (delegate.py 19069 ``review=_dispatch_is_review_typed(args)``), only the claude lane's
-    headroom holds a review dispatch; operator pauses bind every dispatch.
-    """
-    from scripts.agent_runtime.model_pause import ModelPausedRefused, account_used_pct, refuse_paused_models
-
-    review = _dispatch_is_review_typed(args)
-    used_pct = account_used_pct(None)
-    try:
-        refuse_paused_models(
-            [args.model], used_pct=lambda lane: used_pct(lane) if not review or lane == "claude" else None
-        )
-    except ModelPausedRefused as exc:
-        raise Refused(f"❌ {exc}") from None
 
 
 def _strip_quoted_content(prompt: str) -> str:
