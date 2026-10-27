@@ -1011,13 +1011,20 @@ def token_of(out: Path) -> str:
 
 
 def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review_id: str, attempt_id: str) -> list[str]:
-    """Dispatch the plan, lesson and settle content attempts with their Ukrainian profile."""
+    """Build the v2 bound-review command; runtime isolation is unavailable until v2 supports it."""
+    from scripts.review.model_catalog import substitution_default_model
+
+    model = substitution_default_model(agent)
+    if not model:
+        raise ValueError(f"no configured v2 review model for {agent!r}")
     return [
         str(PYTHON),
-        str(PRIMARY / "scripts" / "delegate.py"),
+        str(PRIMARY / "scripts" / "dispatch.py"),
         "dispatch",
         "--agent",
         agent,
+        "--model",
+        model,
         "--mode",
         "read-only",
         "--task-id",
@@ -1162,7 +1169,7 @@ def render_card(out: Path, card: dict[str, Any]) -> str:
     card["dispatch_cmd"] = shlex.join(card["dispatch"])
     card["record_cmd"] = f"cd {shlex.quote(str(REPO_ROOT))} && {shlex.join(card['record'])}"
     (cards / f"{card['case']}.json").write_text(json.dumps(card, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    wait = shlex.join([str(PYTHON), str(PRIMARY / "scripts" / "delegate.py"), "wait", card["task_id"]])
+    wait = shlex.join([str(PYTHON), str(PRIMARY / "scripts" / "dispatch.py"), "wait", card["task_id"]])
     finish = shlex.join([str(PYTHON), "-m", "scripts.review.integration_check", "finish-real", "--out", str(out)])
     lines = [
         f"=== DISPATCH CARD ({card['case']}) {card['title']} ===",

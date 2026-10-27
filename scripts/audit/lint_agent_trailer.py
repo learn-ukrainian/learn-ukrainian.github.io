@@ -126,7 +126,7 @@ def locate_record_for_trailer(tasks_dir: Path, agent: str, task: str) -> tuple[P
     """Locate task record for a trailer agent/task, normalization-aware.
 
     For trailer ``agent/task``, accepts a record named ``{agent}-task``,
-    ``{agent}_task``, or ``task`` (the inverse of ``_x_agent_task_id`` in delegate.py).
+    ``{agent}_task``, or ``task``.
     Prefers a candidate whose record agent matches the trailer agent.
     """
     normalized = task

@@ -380,7 +380,7 @@ def build_packet(
             },
             {
                 "name": "live_workers",
-                "locator": ".venv/bin/python scripts/dispatch.py list",
+                "locator": ".venv/bin/python scripts/dispatch.py list --status running",
                 "observed_at": None,
                 "freshness": "unknown",
             },

@@ -263,7 +263,6 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
             (
                 *reviewer_resolver.REVIEW_LADDERS["critical"],
                 (
-                    reviewer_resolver.GROK_4_7,
                     reviewer_resolver.GROK_4_7_CURSOR_FALLBACK,
                 ),
             ),
@@ -287,13 +286,13 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
     assert payload["resolved_risk"] == "critical"
     grok_entries = [entry for entry in payload["trace"] if entry["family"] == "xai"]
     if injected_grok:
-        assert {entry["name"] for entry in grok_entries} == {"grok-4.7", "grok-4.7-cursor-fallback"}
+        assert {entry["name"] for entry in grok_entries} == {"grok-4.7-cursor-fallback"}
         for grok in grok_entries:
             assert grok["status"] == "excluded"
             assert "subject exclusion" in grok["reason"]
             assert "grok_build.py" in grok["reason"]
     else:
-        assert [entry["name"] for entry in grok_entries] == ["grok-4.7", "grok-4.7-cursor-fallback"]
+        assert [entry["name"] for entry in grok_entries] == ["grok-4.7-cursor-fallback"]
         assert grok_entries[0]["status"] == "excluded"
         assert "subject exclusion" in grok_entries[0]["reason"]
         assert "grok_build.py" in grok_entries[0]["reason"]
@@ -1061,17 +1060,17 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
         assert "missing explicit X-Agent" in body["fail_closed_reason"]
 
 
-# Re-pinned for #11756: Muse is explicit-only and absent from automatic traces.
+# Re-pinned after native Grok dispatch retirement; Cursor remains in automatic traces.
 @pytest.mark.parametrize(
     "author,risk,path,digest",
     [
-        ("gpt-6.1-sol", "medium", "ordinary.py", "bc63b5ab47d97180b6607c35bab159d63d6a96fe2ba86f59f793b2d6660013fc"),
-        ("claude-opus-5-5", "low", "ordinary.py", "2068b1fcaa90e52578401d6bfea32f37ebf34461c318fa6d0df64a1d6145c1cf"),
+        ("gpt-6.1-sol", "medium", "ordinary.py", "9fab692ab2d3d8e831b04181542e65d4fb59a4b492372450c0680257f47884ff"),
+        ("claude-opus-5-5", "low", "ordinary.py", "5007c0c64051006d4b6e5305c3ed14e69d4fd020763dc9c30bb2d2e34973adc2"),
         (
             "gpt-6.1-sol",
             "low",
             "scripts/agent_runtime/target_admission.py",
-            "fd2e5d083650eaf92378c1caae2f5ff061fbfb0c6ed7dc6db08f53a0ec8e0274",
+            "677129727293fbb4bc95db4ceb2bd43be3f8a7ad4fb1f611fdd39412e0a2d67b",
         ),
     ],
 )

@@ -657,7 +657,7 @@ def test_pair_check_catches_checkout_and_prompt_differences(full_env):
     reframed = {**raw["composition"], "prefix_sha256": "f" * 64}
     path.write_text(json.dumps({**raw, "composition": reframed}), encoding="utf-8")
     problems = {p["variant_task"]: p["problem"] for p in pair_checks(results, plan, slots) if p["problem"]}
-    assert problems == {victim: "delegate framed the arms differently or not as frozen"}
+    assert problems == {victim: "dispatcher framed the arms differently or not as frozen"}
     # A prompt that differs in more than the preamble (attested, so the stored file matches the record).
     path.write_text(json.dumps(raw), encoding="utf-8")
     prompt_file = full_env["results"] / "prompts" / f"{victim}.md"

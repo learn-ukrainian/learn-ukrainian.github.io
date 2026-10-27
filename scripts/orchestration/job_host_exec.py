@@ -504,7 +504,7 @@ def forward_dispatch(
     if len(argv) < 2:
         raise ValueError("dispatch argv is empty")
     entrypoint = Path(argv[0]).name
-    if entrypoint not in {"delegate.py", "dispatch.py"}:
+    if entrypoint not in {"dispatch.py"}:
         raise ValueError("unsupported dispatch entry point")
     alias = ssh_alias_for_host_id(host_id)
     repo = repo_for_host_id(host_id)
@@ -580,7 +580,7 @@ def build_ssh_argv(host: str, remote_command: str) -> list[str]:
 
 def _dispatch_argv(remote_argv: list[str]) -> list[str] | None:
     """Recognize both current and legacy dispatch entry-point basenames."""
-    idx = next((i for i, arg in enumerate(remote_argv) if Path(arg).name in {"dispatch.py", "delegate.py"}), None)
+    idx = next((i for i, arg in enumerate(remote_argv) if Path(arg).name in {"dispatch.py"}), None)
     if idx is None:
         return None
     rest = remote_argv[idx:]

@@ -2,7 +2,7 @@
 
 On 2026-09-24 a global OOM on the dispatch host killed the infra driver
 and eight workers; nothing read memory or CPU before admitting a worker
-(``docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md``). ``delegate.py
+(``docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md``). ``dispatch.py
 dispatch`` and ``scripts.fleet.capacity_pick`` both call :func:`evaluate`, so
 the admission line an operator reads is the decision dispatch makes.
 
@@ -389,7 +389,7 @@ class AdmissionDecision:
         slice_use = slice_usage_clause()
         if slice_use:
             parts.append(slice_use)
-        # A skipped pool check is shown with its reason: delegate.py configures
+        # A skipped pool check is shown with its reason: dispatch.py configures
         # no logging, so this line is the operator's only visible trace (#9975).
         if self.pool is not None:
             parts.append(self.pool.clause())
@@ -1691,7 +1691,7 @@ def evaluate(
     failures.extend(host_failures(probe, limits))
     pool = probe_pool(limits.worker_mem_reserve_gib)
     if pool.skipped is not None:
-        # WARNING, not INFO: callers such as delegate.py configure no logging,
+        # WARNING, not INFO: callers such as dispatch.py configure no logging,
         # so only WARNING and above reach stderr. The admitted line also
         # carries the reason through summary().
         log = _logger.debug if pool.skipped == TEST_HOST_POOL_SKIP else _logger.warning

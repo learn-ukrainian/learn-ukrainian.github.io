@@ -22,7 +22,8 @@ if str(_local_repo_root) not in sys.path:
 
 from scripts.common import github_client
 from scripts.common.repo_root import resolve_repo_root
-from scripts.review.verdict_parser import ACCEPTED_VERDICT_TOKENS
+from scripts.review.verdict_parser import ACCEPTED_VERDICT_TOKENS, recognized_verdicts, unsupported_verdict_tokens
+from scripts.secret_redactor import redact_text
 
 if TYPE_CHECKING:
     from agent_runtime.target_admission import AdmittedTarget
@@ -319,13 +320,15 @@ def build_ask_review_dispatch_command(
     ``target`` is the ``AdmittedTarget`` ``resolve_and_admit`` produced for
     the review seat; the command carries its seat and model.
     """
-    from agent_runtime.target_admission import require_admitted
+    from agent_runtime.target_admission import _seat_default_model, require_admitted
 
     target = require_admitted(target)
-    model = target.model
+    model = target.model or _seat_default_model(target.recipient)
+    if not model:
+        raise ValueError(f"no default dispatch model for {target.recipient!r}")
     cmd = [
         PYTHON,
-        "scripts/delegate.py",
+        "scripts/dispatch.py",
         "dispatch",
         "--agent",
         target.recipient,
@@ -358,7 +361,7 @@ def build_ask_review_dispatch_command(
 
 
 def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
-    return [PYTHON, "scripts/delegate.py", "wait", task_id, "--timeout", str(timeout)]
+    return [PYTHON, "scripts/dispatch.py", "wait", task_id, "--timeout", str(timeout)]
 
 
 _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
@@ -425,9 +428,9 @@ def run_ask_review_dispatch(
 ) -> dict[str, Any]:
     """Dispatch one review-intent ask-* to the headless native CLI and block for it.
 
-    Fires `delegate.py dispatch --agent <agent> --worktree --mode read-only`
+    Fires `dispatch.py dispatch --agent <agent> --worktree --mode read-only`
     (a real TUI agent with tools in an isolated worktree), then
-    `delegate.py wait` to block for the terminal state. Returns the terminal
+    `dispatch.py wait` to block for the terminal state. Returns the terminal
     state dict plus the read-back ``response`` text and a normalized ``ok``.
     Raises ``RuntimeError`` if dispatch itself could not be started or the
     wait output could not be parsed — callers turn that into a hard failure,
@@ -473,12 +476,12 @@ def run_ask_review_dispatch(
             )
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError(
-                f"delegate.py dispatch timed out after {DISPATCH_COMMAND_TIMEOUT_SECONDS}s: "
+                f"dispatch.py dispatch timed out after {DISPATCH_COMMAND_TIMEOUT_SECONDS}s: "
                 f"Command: {' '.join(dispatch_command)}"
             ) from exc
         if dispatch_proc.returncode != 0:
             raise RuntimeError(
-                f"delegate.py dispatch failed rc={dispatch_proc.returncode}: "
+                f"dispatch.py dispatch failed rc={dispatch_proc.returncode}: "
                 f"{(dispatch_proc.stderr or dispatch_proc.stdout).strip()}\n"
                 f"Command: {' '.join(dispatch_command)}"
             )
@@ -494,14 +497,14 @@ def run_ask_review_dispatch(
             )
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError(
-                f"delegate.py wait timed out at process level after {timeout + ASK_REVIEW_WAIT_GRACE_SECONDS}s: "
+                f"dispatch.py wait timed out at process level after {timeout + ASK_REVIEW_WAIT_GRACE_SECONDS}s: "
                 f"Command: {' '.join(wait_command)}"
             ) from exc
         try:
             state = json.loads(wait_proc.stdout or "{}")
         except json.JSONDecodeError as exc:
             raise RuntimeError(
-                f"delegate.py wait produced non-JSON output (rc={wait_proc.returncode}): "
+                f"dispatch.py wait produced non-JSON output (rc={wait_proc.returncode}): "
                 f"stdout={wait_proc.stdout!r} stderr={wait_proc.stderr!r}"
             ) from exc
 
@@ -513,43 +516,24 @@ def run_ask_review_dispatch(
             except OSError:
                 response = ""
         state["response"] = response
-        # #8786: a read-only review has no branch deliverable by design, so a
-        # completed run is judged by its verdict line. Only a terminal
-        # ``done`` (clean wait) or legacy ``no_deliverable`` (the worker's
-        # read-only "nothing pushed" outcome, which exits non-zero) can be
-        # promoted, and only with a real verdict. ``timeout``, ``failed``,
-        # ``crashed``, ``rate_limited``, ``cancelled`` etc. never become
-        # success, verdict text or not. A reply with no verdict can never
-        # surface as successful (#8421).
-        from scripts import delegate as _delegate
-
-        status = state.get("status")
-        completed = (status == "done" and wait_proc.returncode == 0) or (status == _delegate._NO_DELIVERABLE_STATUS)
-        # #9275: success is judged by the shared completion-gate definition for the
-        # read-only, verdict-required dispatch this wrapper launched: the verdict
-        # gate is the only one that applies, and it runs on the read-back response.
-        review_record = {**state, "mode": "read-only", "require_review_verdict": True}
-        gate_failure = _delegate.first_completion_gate_failure(
-            review_record, response=response, commits_ahead=None, worktree=None
-        )
-        verdict_failure = gate_failure.failure if gate_failure is not None else None
-        if completed and verdict_failure is None:
-            state["ok"] = True
-            state["status"] = "done"
-        else:
-            state["ok"] = False
-            if completed:
-                state["status"] = "failed"
-                state["failure_reason"] = verdict_failure
-            # A native dispatch may already have failed this same verdict gate.
-            # Reuse its safe diagnostic for legacy and current wait results,
-            # without replacing other terminal failures or promoting them.
-            if (
-                gate_failure is not None
-                and verdict_failure == _delegate._REVIEW_UNSUPPORTED_VERDICT_REASON
-                and (completed or state.get("failure_reason") == verdict_failure)
-            ):
-                state["stderr_excerpt"] = gate_failure.detail
+        # Only a successful v2 wait can complete the review.
+        completed = state.get("status") == "done" and wait_proc.returncode == 0
+        verdicts = set(recognized_verdicts(response))
+        unsupported = unsupported_verdict_tokens(response) if not verdicts else []
+        failure = None
+        if not verdicts:
+            failure = "review_unsupported_verdict_token" if unsupported else "review_missing_verdict_line"
+        elif len(verdicts) > 1:
+            failure = "review_ambiguous_verdict"
+        state["ok"] = completed and failure is None
+        if completed and failure:
+            state.update(status="failed", failure_reason=failure)
+        if unsupported and (completed or state.get("failure_reason") == failure):
+            detail = (
+                f"{failure}: unsupported verdict identifier {unsupported[-1]!r}; "
+                f"accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}"
+            )
+            state["stderr_excerpt"] = redact_text(detail) or ""
         if not state["ok"] and not state.get("stderr_excerpt"):
             state["stderr_excerpt"] = f"ask-{agent} review dispatch did not complete: status={state.get('status')!r}"
         return state

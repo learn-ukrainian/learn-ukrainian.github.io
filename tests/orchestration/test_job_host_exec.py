@@ -220,7 +220,7 @@ def test_main_dispatch_preserves_session_initiator(tmp_path: Path, monkeypatch: 
     assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script
 
 
-@pytest.mark.parametrize("entrypoint", ["scripts/dispatch.py", "scripts/delegate.py", "/local/scripts/delegate.py"])
+@pytest.mark.parametrize("entrypoint", ["scripts/dispatch.py", "scripts/dispatch.py", "/local/scripts/dispatch.py"])
 @pytest.mark.parametrize("prompt_flag", ["--prompt-file", "--prompt"])
 def test_main_dispatch_copies_local_prompt_file(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, entrypoint, prompt_flag
@@ -579,8 +579,8 @@ def test_main_missing_ssh_dispatch_returns_255(tmp_path: Path, monkeypatch: pyte
     [
         "scripts/dispatch.py",
         "/local/checkout/scripts/dispatch.py",
-        "scripts/delegate.py",
-        "/local/checkout/scripts/delegate.py",
+        "scripts/dispatch.py",
+        "/local/checkout/scripts/dispatch.py",
     ],
 )
 def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(

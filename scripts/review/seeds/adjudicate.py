@@ -2,8 +2,8 @@
 
 A seat that is neither the lesson writer's nor the reviewer's family reads the private record of the
 measurement lesson and the reviewer's findings and maps **every** finding to one class. The task is an ordinary
-``delegate.py`` dispatch: ``task`` renders the prompt into a task file (``batch_state/review-measurement/
-adjudication/``, ``0o600``) and prints the ``delegate.py dispatch`` command; ``record`` validates the reply and
+``dispatch.py`` dispatch: ``task`` renders the prompt into a task file (``batch_state/review-measurement/
+adjudication/``, ``0o600``) and prints the ``dispatch.py dispatch`` command; ``record`` validates the reply and
 writes the result.
 
 * seeded lesson (``seed-adjudication-v1``): each finding is ``planted`` (it names the planted defect),
@@ -22,21 +22,13 @@ from its dispatch record (``batch_state/tasks/<task-id>.json``, falling back to 
 the reply's self-report, and the reply is
 refused when its family is the lesson writer's or the reviewer's. The record must be this adjudication's own: its
 task id is the one derived for this unit and attempt, its ``prompt_sha256`` is that of the task file rendered here,
-and delegate appended nothing caller-controlled to that prompt (``adjudication_task_mismatch`` otherwise), so an
+and the stored prompt bytes equal that task file (``adjudication_task_mismatch`` otherwise), so an
 unrelated independent dispatch cannot stand in. The lesson text and the findings are data, not instructions.
 
-**Dispatch contract.** The printed command is read-only, with the primary checkout as the requested
-``--cwd`` and ``--full-checkout``. Delegate redirects that request to the exact automatic detached worktree
-for the agent and task. Full checkout keeps the available trees equivalent to the former primary-root run
-and makes the worktree prompt independent of sparse exclusions. No caller-selected ``--worktree``, lifecycle,
-research or advisory flags are permitted. The checker recomputes the complete effective prompt using delegate's
-composer and that canonical worktree path, including the rules core and worktree instructions.
-
-**The recorded dispatch must equal the canonical dispatch.** The argument hash binds every requested flag;
-``cwd``, ``worktree_path`` and the detached/read-only markers bind the execution after automatic redirection.
-The adjudicator's identity comes from the same parsed record, never a second read. Caller-chosen checkout or
-prompt changes are refused. Instructions read from a runtime's home remain outside this binding; scoped review
-homes (#8618, #8623) bound those. Repository instruction files in the canonical checkout are accepted fleet context.
+**Dispatch contract.** The printed command uses dispatch v2 in read-only mode with a full checkout.
+The record binds the task id, stored prompt bytes, model identity and automatic worktree path.
+Dispatch v2 does not provide the legacy composed-prompt or dispatch-argument hash attestations.
+Instructions read from a runtime's home and repository instruction files remain outside this binding.
 
 **What a valid reply is.** The reply matches its schema; it names this unit and attempt; the attempt is an accepted
 first-seat attempt of that unit; the mapping names every finding id of the attempt exactly once and no other;
@@ -73,7 +65,6 @@ from jsonschema import Draft202012Validator
 
 from scripts.common.repo_root import main_checkout_root
 from scripts.orchestration.task_record_store import locate_task_record
-from scripts.orchestration.worktree_paths import automatic_worktree_path
 from scripts.review import findings_db, record, second_seat
 from scripts.review.seeds import manifest as seed_manifest
 
@@ -83,28 +74,8 @@ SCHEMAS = {
     "clean": REPO_ROOT / "schemas" / "clean-adjudication-v1.schema.json",
 }
 TASKS_SUBDIR = "adjudication"
-DELEGATE = REPO_ROOT / "scripts" / "delegate.py"
+DISPATCH = REPO_ROOT / "scripts" / "dispatch.py"
 READ_ONLY_MODE = "read-only"
-
-
-def _delegate_module():
-    """Import ``scripts.delegate`` lazily, on the same ``sys.path`` delegate.py itself needs.
-
-    ``delegate.py`` imports ``agent_runtime.routes`` (``scripts/agent_runtime/``) as a bare top-level
-    package before it does any ``sys.path`` setup of its own; that only resolves today because delegate.py
-    is always *executed* as a script file, so Python auto-adds its own directory (``scripts/``) to
-    ``sys.path[0]``. Importing ``scripts.delegate`` eagerly at this module's import time broke
-    ``python -m scripts.review.seeds.adjudicate`` (whose own ``sys.path[0]`` is the repo root, not
-    ``scripts/``) with ``ModuleNotFoundError: agent_runtime``. Importing it lazily here, with ``scripts/``
-    added to ``sys.path`` first, fixes every caller — script or ``-m`` — the same way, and means a plain
-    ``--help`` (which never checks a dispatch binding) never even needs it.
-    """
-    scripts_dir = str(DELEGATE.parent)
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    from scripts import delegate
-
-    return delegate
 
 
 FINDING_ID_RE = re.compile(r"F-[0-9]+\Z")
@@ -323,20 +294,12 @@ def write_task(subject: Subject, lesson_text: str, *, review_id: str, root: Path
 
 
 def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> list[str]:
-    """The ``delegate.py dispatch`` command that runs the task read-only on ``agent``.
-
-    The primary ``--cwd`` redirects to a canonical detached worktree. ``--full-checkout``
-    preserves primary-root tree availability and makes its prompt wrapper deterministic.
-
-    ``model`` is required: a task dispatched without an explicit model resolves to a provider default before
-    delegate records ``model``, and ``check_dispatch_binding`` cannot reconstruct that resolution byte-for-byte
-    from the recorded value alone — such a task could never be adjudicated (#8430 R3-A r9 BLOCKER 1).
-    """
+    """Build a read-only dispatch v2 command with an explicit model and full checkout."""
     if not model:
-        raise ValueError("dispatch_argv requires an explicit model (delegate.py dispatch's --model)")
+        raise ValueError("dispatch_argv requires an explicit model (dispatch.py dispatch's --model)")
     return [
         sys.executable,
-        str(DELEGATE),
+        str(DISPATCH),
         "dispatch",
         "--agent",
         agent,
@@ -347,13 +310,9 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> l
         "--mode",
         READ_ONLY_MODE,
         "--full-checkout",
-        "--cwd",
-        str(main_checkout_root(REPO_ROOT)),
         "--model",
         model,
         "--review-mode",
-        "cross_family",
-        "--authoring-review-plan",
         "cross_family",
     ]
 
@@ -480,56 +439,13 @@ def adjudicator_identity(dispatched: dict[str, Any], task_id: str, record_path: 
         raise AdjudicationError(str(error), ADJUDICATOR_UNKNOWN) from error
 
 
-def _expected_dispatch_args_sha256(delegate: Any, dispatched: dict[str, Any], task_file: Path, task_id: str) -> str:
-    """The ``dispatch_args_sha256`` a canonical dispatch of this record's own ``agent``/``model`` would carry.
-
-    ``dispatch_argv`` takes exactly four free inputs: the task file and task id (both already pinned above by
-    the task-id and prompt-hash checks) and the agent and model — every other flag it builds is fixed.
-    Reconstructing with the record's own ``agent``/``model`` and parsing the result through
-    ``delegate.build_parser()`` yields the one ``dispatch`` Namespace a canonical dispatch of *this* record could
-    have parsed to; hashing it the same way delegate does and comparing against the recorded
-    ``dispatch_args_sha256`` catches any additional or altered flag (e.g. a caller-supplied ``--output-schema``)
-    without naming each field one at a time — and automatically covers a flag added to ``dispatch`` later.
-
-    ``adjudicate.py task`` requires ``--model`` (#8430 R3-A r9 BLOCKER 1), so a record from this codebase's own
-    dispatch always names one; a record naming none cannot be reconstructed byte-for-byte and is refused here.
-    """
-    agent = dispatched.get("agent")
-    if not isinstance(agent, str) or not agent:
-        raise AdjudicationError(f"the dispatch record of {task_id} names no agent", TASK_MISMATCH)
-    model = dispatched.get("model")
-    if not isinstance(model, str) or not model:
-        raise AdjudicationError(f"the dispatch record of {task_id} names no model", TASK_MISMATCH)
-    argv = dispatch_argv(task_file, task_id, agent, model=model)
-    try:
-        parsed = delegate.build_parser().parse_args(argv[2:])
-    except SystemExit as error:
-        raise AdjudicationError(
-            f"the dispatch record of {task_id} (agent={agent!r}, model={dispatched.get('model')!r}) cannot be "
-            "reconstructed by delegate's own dispatch parser",
-            TASK_MISMATCH,
-        ) from error
-    return delegate.dispatch_args_sha256(parsed)
-
-
 def check_dispatch_binding(
     unit_id: str, review_id: str, attempt_id: str, task_id: str, tasks_dir: Path, root: Path | None = None
 ) -> dict[str, str]:
-    """The dispatch record is this adjudication's own task, dispatched exactly as ``dispatch_argv`` builds it.
+    """Bind a v2 record to this task's prompt, read-only worktree and adjudicator identity.
 
-    ``dispatch_argv`` is the only way an adjudication task is dispatched. The task id and the prompt hashes pin
-    the task file; ``dispatch_args_sha256`` (R3-A r8) pins every parsed ``dispatch`` argument at once — mode,
-    cwd, worktree, output-schema, lifecycle and research flags, and anything added to ``dispatch`` later — against
-    the one Namespace a canonical dispatch of this record's own agent/model could have parsed to (see
-    :func:`_expected_dispatch_args_sha256`); any difference, present or future, is ``adjudication_task_mismatch``.
-    ``prompt_blocks`` is checked directly because it covers the *prompt* delegate built, not an argument.
-
-    The execution cwd must be the exact automatic detached worktree for the recorded agent and task.
-    Recompose the canonical full-checkout prompt, rather than trusting the recorded blocks or sparse telemetry.
-    This remains verifiable after delegate reaps the checkout.
-
-    Returns the adjudicator's identity read from this same parsed record (its ``agent`` and ``model`` must resolve);
-    nothing rereads the file.
+    V2 records carry prompt bytes and execution metadata, but no argument-hash or
+    composed-prompt attestation. Legacy records cannot satisfy this binding.
     """
     expected = task_id_for(unit_id, review_id, attempt_id)
     if task_id != expected:
@@ -547,7 +463,7 @@ def check_dispatch_binding(
     task_file = seed_manifest.measurement_dir(root) / TASKS_SUBDIR / f"{expected}.task.md"
     try:
         task_bytes = task_file.read_bytes()
-        task_prompt = task_bytes.decode("utf-8")
+        task_bytes.decode("utf-8")
         rendered = hashlib.sha256(task_bytes).hexdigest()
     except (OSError, UnicodeError) as error:
         raise AdjudicationError(
@@ -559,62 +475,31 @@ def check_dispatch_binding(
             f"(recorded prompt sha256 {dispatched.get('prompt_sha256')!r}, rendered {rendered})",
             TASK_MISMATCH,
         )
-    delegate = _delegate_module()
+    if dispatched.get("schema_version") != 2:
+        raise AdjudicationError("adjudication requires a dispatch v2 task record", TASK_MISMATCH)
     agent = dispatched.get("agent")
     if not isinstance(agent, str) or not agent:
         raise AdjudicationError(f"the dispatch record of {task_id} names no agent", TASK_MISMATCH)
-    canonical_worktree = automatic_worktree_path(agent, task_id, repo_root=main_checkout_root(REPO_ROOT))
+    canonical_worktree = main_checkout_root(REPO_ROOT) / ".worktrees" / "dispatch" / agent / task_id
     canonical_cwd = str(canonical_worktree)
     if (
         dispatched.get("cwd") != canonical_cwd
         or dispatched.get("worktree_path") != canonical_cwd
-        or dispatched.get("worktree_branch") is not None
-        or dispatched.get("read_only_primary_cwd") is not True
+        or dispatched.get("worktree_branch") != f"{agent}/{task_id}"
         or dispatched.get("mode") != READ_ONLY_MODE
     ):
         raise AdjudicationError(
-            f"the dispatch of {task_id} did not run read-only in its canonical automatic detached worktree "
-            f"{canonical_cwd!r}",
+            f"the dispatch of {task_id} did not run read-only in its automatic worktree {canonical_cwd!r}",
             TASK_MISMATCH,
         )
-    expected_blocks: list[str] = []
-    effective_prompt = delegate._compose_dispatch_prompt(
-        task_prompt,
-        worktree_path=canonical_worktree,
-        mode=READ_ONLY_MODE,
-        sparse_telemetry={"full_checkout": True},
-        delegate_commits=False,
-        research_block="",
-        advisory_block="",
-        advisory_block_kind=None,
-        rules_seat=None,
-        blocks=expected_blocks,
-        agent=agent,
-        evidence_dir=dispatched.get("evidence_dir") or None,
-    )
-    if dispatched.get("prompt_blocks") != expected_blocks:
-        raise AdjudicationError(
-            f"the dispatch of {task_id} recorded prompt blocks {dispatched.get('prompt_blocks')!r}, "
-            f"expected canonical blocks {expected_blocks!r}",
-            TASK_MISMATCH,
-        )
-    effective_sha256 = hashlib.sha256(effective_prompt.encode("utf-8")).hexdigest()
-    if dispatched.get("effective_prompt_sha256") != effective_sha256:
-        raise AdjudicationError(
-            f"the seat of {task_id} received a prompt other than the canonical composition "
-            f"(effective sha256 {dispatched.get('effective_prompt_sha256')!r}, expected {effective_sha256})",
-            TASK_MISMATCH,
-        )
-    expected_args_hash = _expected_dispatch_args_sha256(delegate, dispatched, task_file, task_id)
-    actual_args_hash = dispatched.get("dispatch_args_sha256")
-    if not isinstance(actual_args_hash, str) or actual_args_hash != expected_args_hash:
-        raise AdjudicationError(
-            f"the dispatch of {task_id} does not match the arguments dispatch_argv builds for {unit_id} / "
-            f"{attempt_id} (recorded dispatch_args_sha256 {actual_args_hash!r}, expected {expected_args_hash!r}): an "
-            "extra or altered dispatch flag (e.g. --output-schema, --worktree, or a non-read-only --mode) would "
-            "show up here",
-            TASK_MISMATCH,
-        )
+    try:
+        stored_prompt = Path(dispatched["prompt_file"]).read_bytes()
+    except (KeyError, TypeError, OSError) as error:
+        raise AdjudicationError("the stored adjudication prompt is unreadable", TASK_MISMATCH) from error
+    if stored_prompt != task_bytes:
+        raise AdjudicationError("the stored adjudication prompt differs from the rendered task", TASK_MISMATCH)
+    if dispatched.get("output_schema_sha256") or dispatched.get("output_schema_path"):
+        raise AdjudicationError("the adjudication dispatch supplied an output schema", TASK_MISMATCH)
     return adjudicator_identity(dispatched, task_id, record_path)
 
 
@@ -721,7 +606,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
             "Blinded adjudication of one review of a seeded lesson (seed-<id>) or of a lesson meant to be clean\n"
-            "(clean-<id>) (#8430 R3). `task` renders the prompt into a task file and prints the delegate.py command\n"
+            "(clean-<id>) (#8430 R3). `task` renders the prompt into a task file and prints the dispatch.py command\n"
             "that runs it; `record` validates the adjudicator's reply and writes seed_results / clean_results.\n"
             "Do NOT use it on a failed or rejected attempt (there is nothing to map: the scorer counts it as not\n"
             "detected) or to judge a review by hand."
@@ -745,12 +630,12 @@ def build_parser() -> argparse.ArgumentParser:
         command.add_argument("--db", type=Path, default=None, help="findings database (default: the unit's level)")
         if name == "task":
             command.add_argument("--lesson", type=Path, required=True, help="the expanded measurement lesson")
-            command.add_argument("--agent", required=True, help="the adjudicating harness (delegate.py --agent)")
+            command.add_argument("--agent", required=True, help="the adjudicating harness (dispatch.py --agent)")
             command.add_argument(
                 "--model",
                 required=True,
                 help=(
-                    "the adjudicating model (delegate.py dispatch's --model); required so "
+                    "the adjudicating model (dispatch.py dispatch's --model); required so "
                     "check_dispatch_binding can reconstruct the canonical dispatch byte-for-byte"
                 ),
             )

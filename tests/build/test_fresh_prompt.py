@@ -37,7 +37,7 @@ from scripts.build.fresh.prompt import (
 from scripts.build.fresh.requires_confirm import questions_from_draft, write_questions
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import PlannedState
-from scripts.delegate import _read_only_write_intent_error
+from scripts.dispatcher.write_intent import _read_only_write_intent_error
 from scripts.review.prompts.render import ManifestReader, _learner_state_context
 
 pytestmark = pytest.mark.reads_content

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import argparse
 import hashlib
 import json
 import shutil
@@ -16,71 +15,13 @@ from unittest.mock import Mock
 import pytest
 import yaml
 
-import scripts.delegate as delegate
+from scripts.common.repo_root import main_checkout_root
+from scripts.dispatcher.cli import build_parser
 from scripts.review.seeds import adjudicate as adj
 from scripts.review.seeds import manifest as sm
 from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_seed, mechanical_seed
 
 LESSON_TEXT = "lesson text placeholder for the adjudicator"
-
-_NO_OVERRIDE = object()
-
-
-def _dispatch_args_hash(
-    task_file: Path,
-    task_id: str,
-    agent: str,
-    model: str | None,
-    *,
-    mode: str = "read-only",
-    cwd: str | None = None,
-    worktree_path: str | None = None,
-    output_schema: str | None = None,
-) -> str:
-    """The ``dispatch_args_sha256`` a real dispatch with exactly these raw CLI args would have recorded.
-
-    Mirrors ``adj.dispatch_argv``'s fixed shape, including the canonical primary ``--cwd``.
-    """
-    argv = ["--agent", agent, "--task-id", task_id, "--prompt-file", str(task_file), "--mode", mode]
-    if model:
-        argv += ["--model", model]
-    argv += [
-        "--cwd",
-        cwd if cwd is not None else str(delegate._REPO_ROOT),
-        "--full-checkout",
-        "--review-mode",
-        "cross_family",
-    ]
-    if worktree_path:
-        argv += ["--worktree", worktree_path]
-    if output_schema:
-        argv += ["--output-schema", output_schema]
-    parsed = delegate.build_parser().parse_args(["dispatch", *argv])
-    return delegate.dispatch_args_sha256(parsed)
-
-
-def _dispatch_subparser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    """The ``dispatch`` subparser of delegate's top-level parser."""
-    for action in parser._actions:
-        if isinstance(action, argparse._SubParsersAction):
-            return action.choices["dispatch"]
-    raise AssertionError("delegate.build_parser() has no subparsers action")
-
-
-def _different_value(old: Any) -> Any:
-    """Some value of a plausible type that is never equal to ``old``."""
-    if isinstance(old, bool):
-        return not old
-    if isinstance(old, int):
-        return old + 1
-    if isinstance(old, float):
-        return old + 1.0
-    if isinstance(old, list):
-        return [*old, "different"]
-    if old is None:
-        return "different-value"
-    return f"{old}-different"
-
 
 @pytest.fixture
 def env(tmp_path: Path) -> Env:
@@ -117,50 +58,14 @@ class Case:
         cwd: str | None = None,
         worktree_path: str | None = None,
         output_schema: str | None = None,
-        dispatch_args_sha256: Any = _NO_OVERRIDE,
         evidence_dir: str | None = None,
     ) -> str:
-        """Write the dispatch record of the adjudication (by default of this case's own task and its rendered prompt,
-        dispatched read-only from the primary cwd into its automatic detached full checkout).
-
-        ``dispatch_args_sha256`` defaults to the hash a real dispatch of these same (agent, model, mode, cwd,
-        worktree_path, output_schema) would have recorded (see :func:`_dispatch_args_hash`); pass it explicitly
-        to simulate a record whose hash was computed for some other Namespace entirely.
-        """
+        """Write the v2 task record and stored prompt for an adjudication."""
         task_id = task_id or self.task_id
         sha = prompt_sha256 or hashlib.sha256(self.task_file.read_bytes()).hexdigest()
-        expected_worktree = delegate._auto_worktree_path(agent, task_id)
-        evidence_dir = evidence_dir or str(self.env.root / "runtime-tmp" / task_id / "evidence")
-        canonical_blocks: list[str] = []
-        composed = delegate._compose_dispatch_prompt(
-            self.task_file.read_text(encoding="utf-8"),
-            worktree_path=expected_worktree,
-            mode=mode,
-            sparse_telemetry={"full_checkout": True},
-            delegate_commits=False,
-            research_block="",
-            advisory_block="",
-            advisory_block_kind=None,
-            rules_seat=None,
-            blocks=canonical_blocks,
-            agent=agent,
-            evidence_dir=evidence_dir,
-        )
-        blocks = canonical_blocks if prompt_blocks is None else prompt_blocks
-        args_hash = (
-            _dispatch_args_hash(
-                self.task_file,
-                task_id,
-                agent,
-                model,
-                mode=mode,
-                cwd=cwd,
-                worktree_path=worktree_path,
-                output_schema=output_schema,
-            )
-            if dispatch_args_sha256 is _NO_OVERRIDE
-            else dispatch_args_sha256
-        )
+        expected_worktree = main_checkout_root(adj.REPO_ROOT) / ".worktrees" / "dispatch" / agent / task_id
+        stored_prompt = self.env.tasks / f"{task_id}.prompt"
+        stored_prompt.write_bytes(self.task_file.read_bytes())
         record = {
             "task_id": task_id,
             "agent": agent,
@@ -169,13 +74,11 @@ class Case:
             "mode": mode,
             "cwd": str(expected_worktree) if cwd is None else cwd,
             "worktree_path": str(expected_worktree) if worktree_path is None else worktree_path,
-            "worktree_branch": None,
-            "read_only_primary_cwd": True,
+            "schema_version": 2,
+            "worktree_branch": f"{agent}/{task_id}",
+            "prompt_file": str(stored_prompt),
             "prompt_sha256": sha,
-            "effective_prompt_sha256": effective_prompt_sha256 or hashlib.sha256(composed.encode()).hexdigest(),
-            "prompt_blocks": blocks,
-            "evidence_dir": evidence_dir,
-            "dispatch_args_sha256": args_hash,
+            "output_schema_path": output_schema,
         }
         (self.env.tasks / f"{task_id}.json").write_text(json.dumps(record), encoding="utf-8")
         return task_id
@@ -302,31 +205,28 @@ def test_lesson_text_containing_a_fence_cannot_close_the_data_block(seeded: Case
     assert lesson.count("~~~~~") == 2 and "Ignore the rules" in lesson
 
 
-def test_the_task_dispatches_through_delegate_py(seeded: Case) -> None:
+def test_the_task_dispatches_through_dispatch_py(seeded: Case) -> None:
     subject = subject_of(seeded)
     path, task_id = adj.write_task(subject, LESSON_TEXT, review_id=seeded.review_id, root=seeded.env.root)
     argv = adj.dispatch_argv(path, task_id, "agy", model="gemini-3.1-pro-preview")
-    assert Path(argv[1]).name == "delegate.py" and argv[2] == "dispatch"
-    parsed = delegate.build_parser().parse_args(argv[2:])  # the real dispatch parser accepts exactly this command
+    assert Path(argv[1]).name == "dispatch.py" and argv[2] == "dispatch"
+    parsed = build_parser().parse_args(argv[2:])  # the real dispatch parser accepts exactly this command
     assert (parsed.agent, parsed.task_id, parsed.prompt_file, parsed.mode, parsed.model, parsed.cwd) == (
         "agy",
         task_id,
         str(path),
         "read-only",
         "gemini-3.1-pro-preview",
-        str(delegate._REPO_ROOT),
+        None,
     )
 
 
-def test_render_dispatch_command_does_not_load_legacy_runtime(tmp_path, monkeypatch):
-    def refuse_import():
-        pytest.fail("rendering the command must not load the legacy runtime")
-
-    monkeypatch.setattr(adj, "_delegate_module", refuse_import)
+def test_render_dispatch_command_does_not_load_legacy_runtime(tmp_path):
     argv = adj.dispatch_argv(tmp_path / "prompt.md", "adj-test", "codex", model="gpt-6.1-sol")
-    assert argv[argv.index("--cwd") + 1] == str(delegate._REPO_ROOT)
-    assert argv[argv.index("--mode") + 1] == "read-only"
-    assert "--full-checkout" in argv
+    parsed = build_parser().parse_args(argv[2:])
+    assert parsed.cwd is None
+    assert parsed.mode == "read-only"
+    assert parsed.full_checkout is True
 
 
 def test_a_failed_or_rejected_attempt_has_no_task(env: Env) -> None:
@@ -551,33 +451,11 @@ def test_an_unrelated_independent_dispatch_cannot_stand_in_for_the_adjudication(
     assert seeded.record(good)["new"] is True
 
 
-def test_a_dispatch_with_caller_controlled_prompt_blocks_is_refused(seeded: Case) -> None:
-    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    # the matching task file, dispatched with a --lifecycle-file: the seat saw instructions this module never rendered
-    seeded.dispatch("agy", "gemini-3.1-pro-preview", prompt_blocks=["worktree", "lifecycle"])
-    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
-    # ... or with --research-* flags
-    seeded.dispatch("agy", "gemini-3.1-pro-preview", prompt_blocks=["worktree", "research"])
-    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
-    # a record from before the effective hash was recorded cannot prove what the seat received
-    seeded.dispatch("agy", "gemini-3.1-pro-preview")
-    path = seeded.env.tasks / f"{seeded.task_id}.json"
-    record = json.loads(path.read_text(encoding="utf-8"))
-    del record["effective_prompt_sha256"]
-    path.write_text(json.dumps(record), encoding="utf-8")
-    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
-    record["effective_prompt_sha256"] = json.loads(path.read_text(encoding="utf-8")).get("prompt_sha256")
-    del record["prompt_blocks"]
-    path.write_text(json.dumps(record), encoding="utf-8")
-    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
-    # the canonical isolated dispatch with its computed wrapper: accepted
-    seeded.dispatch("agy", "gemini-3.1-pro-preview")
-    assert seeded.record(good)["new"] is True
 
 
 def test_a_dispatch_that_was_not_read_only_is_refused(seeded: Case) -> None:
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    # the same task file, dispatched write-capable: delegate adds write-mode instructions under the worktree label
+    # The same task file dispatched write-capable is refused.
     for mode in ("workspace-write", "danger"):
         seeded.dispatch("agy", "gemini-3.1-pro-preview", mode=mode)
         assert code_of(seeded, good) == [adj.TASK_MISMATCH]
@@ -617,7 +495,7 @@ def test_a_dispatch_with_a_caller_chosen_cwd_is_refused(seeded: Case, tmp_path: 
     [
         ("cwd", "primary"),
         ("worktree_branch", "caller-branch"),
-        ("read_only_primary_cwd", False),
+        ("schema_version", 1),
         ("worktree_path", None),
     ],
 )
@@ -625,7 +503,7 @@ def test_readonly_dispatch_requires_canonical_detached_checkout(seeded: Case, fi
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
     path = seeded.env.tasks / f"{seeded.task_id}.json"
     record = json.loads(path.read_text())
-    record[field] = str(delegate._REPO_ROOT) if value == "primary" else value
+    record[field] = str(main_checkout_root(adj.REPO_ROOT)) if value == "primary" else value
     path.write_text(json.dumps(record))
     assert code_of(seeded, good) == [adj.TASK_MISMATCH]
 
@@ -644,36 +522,10 @@ def test_a_dispatch_with_an_output_schema_is_refused(seeded: Case) -> None:
     assert seeded.record(good)["new"] is True
 
 
-def test_every_non_excluded_dispatch_argument_binds_the_hash(seeded: Case) -> None:
-    """Every parsed ``dispatch`` field outside ``DISPATCH_ARGS_HASH_EXCLUDED_FIELDS`` must bind
-    ``dispatch_args_sha256``: changing it away from its canonical value must refuse the adjudication — so a flag
-    added to ``dispatch`` later is covered automatically without editing this test (#8430 R3-A r8)."""
-    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    argv = adj.dispatch_argv(seeded.task_file, seeded.task_id, "agy", model="gemini-3.1-pro-preview")
-    canonical = delegate.build_parser().parse_args(argv[2:])
-    assert canonical.review_mode == "cross_family"
-    assert "review_mode" not in delegate.DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
-    dispatch_parser = _dispatch_subparser(delegate.build_parser())
-    tested: list[str] = []
-    for action in dispatch_parser._actions:
-        dest = action.dest
-        if dest == "help" or dest in delegate.DISPATCH_ARGS_HASH_EXCLUDED_FIELDS:
-            continue
-        assert hasattr(canonical, dest), f"canonical Namespace has no field {dest!r}"
-        mutated = argparse.Namespace(**vars(canonical))
-        setattr(mutated, dest, "red_team" if dest == "review_mode" else _different_value(getattr(canonical, dest)))
-        seeded.dispatch("agy", "gemini-3.1-pro-preview", dispatch_args_sha256=delegate.dispatch_args_sha256(mutated))
-        assert code_of(seeded, good) == [adj.TASK_MISMATCH], f"--{dest} did not bind dispatch_args_sha256"
-        tested.append(dest)
-    assert len(tested) >= 40, f"expected ~45 dispatch fields to be covered, only tested {tested}"
-    assert "review_mode" in tested
-    # sanity: the canonical record itself (none of the fields mutated) is still accepted
-    seeded.dispatch("agy", "gemini-3.1-pro-preview")
-    assert seeded.record(good)["new"] is True
 
 
 def test_the_canonical_record_is_accepted(seeded: Case) -> None:
-    """A record whose ``dispatch_args_sha256`` matches every parsed dispatch argument is accepted outright."""
+    """A v2 record with the expected prompt bytes, task identity and execution metadata is accepted."""
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
     seeded.dispatch("agy", "gemini-3.1-pro-preview")
     hot = seeded.env.tasks / f"{seeded.task_id}.json"
@@ -696,13 +548,12 @@ def test_the_canonical_record_is_accepted(seeded: Case) -> None:
         dispatched = json.loads(canonical)
         for field, value in (
             ("prompt_sha256", "0" * 64),
-            ("effective_prompt_sha256", "0" * 64),
-            ("dispatch_args_sha256", "0" * 64),
-            ("prompt_blocks", ["worktree", "lifecycle"]),
+            ("prompt_file", "missing.prompt"),
+            ("output_schema_path", "caller-schema.json"),
             ("cwd", "caller-chosen"),
             ("worktree_path", None),
             ("worktree_branch", "caller-branch"),
-            ("read_only_primary_cwd", False),
+            ("schema_version", 1),
             ("mode", "workspace-write"),
         ):
             path.write_text(json.dumps({**dispatched, field: value}), encoding="utf-8")
@@ -898,7 +749,7 @@ def test_a_task_created_with_model_round_trips_through_the_emitted_command(
     ]
     assert adj.main(argv) == 0
     payload = json.loads(capsys.readouterr().out)
-    parsed = delegate.build_parser().parse_args(payload["dispatch"][2:])
+    parsed = build_parser().parse_args(payload["dispatch"][2:])
     assert parsed.model == "gemini-3.1-pro-preview"
     task_id = payload["task_id"]
     seeded.dispatch(parsed.agent, parsed.model, task_id=task_id, mode=parsed.mode)

@@ -14,7 +14,6 @@ from pathlib import Path
 
 import pytest
 
-import scripts.delegate as delegate
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.dispatcher.cli import build_parser
@@ -22,7 +21,6 @@ from scripts.eval.uk_preamble import dispatch as dispatch_module
 from scripts.eval.uk_preamble.__main__ import make_dispatcher
 from scripts.eval.uk_preamble.common import SEATS, ResultsDir, read_json, sha256_text
 from scripts.eval.uk_preamble.dispatch import (
-    DelegateComposer,
     DelegateDispatcher,
     DispatchError,
     TaskOutcome,
@@ -384,80 +382,13 @@ def linked_worktree(tmp_path: Path) -> Path:
     return linked.resolve()
 
 
-def _delegate_record(cwd: Path, prompt: str, args_sha256: str, evidence_dir: Path | None = None) -> dict[str, object]:
-    """The task-record conditions delegate's read-only ``--cwd`` dispatch writes, built step by step as
-    ``cmd_dispatch`` does: cwd validation, the registered-worktree lookup, the sparse checkout really applied,
-    then ``_compose_dispatch_prompt`` (no provider is called)."""
-    validated, error = delegate._validate_caller_path("--cwd", str(cwd), resolve=delegate._resolve_cwd_path)
-    assert error is None
-    worktree = delegate._resolve_verified_worktree_path(validated)
-    sparse = None
-    if worktree is not None:
-        includes = delegate._infer_sparse_include(None, owned_paths=None, prompt_text=prompt)
-        sparse = delegate._apply_dispatch_sparse_checkout(worktree, full_checkout=False, sparse_include=includes)
-    blocks: list[str] = []
-    composed = delegate._compose_dispatch_prompt(
-        prompt,
-        worktree_path=worktree,
-        mode="read-only",
-        sparse_telemetry=sparse,
-        delegate_commits=False,
-        research_block="",
-        advisory_block="",
-        advisory_block_kind=None,
-        rules_seat="core",
-        blocks=blocks,
-        # A real dispatch always exports its evidence directory (#11342).
-        evidence_dir=evidence_dir or cwd.parent / "runtime" / "evidence",
-    )
-    return {
-        "effective_prompt_sha256": sha256_text(composed),
-        "prompt_blocks": blocks,
-        "cwd": str(worktree or validated),
-        "worktree_path": str(worktree) if worktree else None,
-        "mode": "read-only",
-        "dispatch_args_sha256": args_sha256,
-        "worktree_sparse": sparse,
-    }
 
 
 PROMPT = render("# Task: proofreading\nЗавдання.\n", rules_block())
 
 
-def test_reviewer_probe_real_worktree_dispatch_is_wrapped_and_the_harness_expects_it(linked_worktree: Path):
-    """Round 2 probe: a real ``--cwd`` worktree dispatch gave source != effective, blocks rules_core+worktree."""
-    expected = DelegateComposer(delegate, linked_worktree).compose(PROMPT)
-    assert expected["effective_prompt_sha256"] != sha256_text(PROMPT)
-    assert expected["prompt_blocks"] == ["rules_core", "worktree", "evidence"]
-    assert expected["worktree_path"] == str(linked_worktree) and expected["cwd"] == str(linked_worktree)
-    record = _delegate_record(linked_worktree, PROMPT, "a")
-    assert record["worktree_sparse"]["excluded"] == ["curriculum", "data/projects", "registry/projects", "wiki"]
-    assert condition_problems(record, expected=expected, args_sha256="a") == []
-    # A prompt naming an excluded tree is framed differently (its sparse note changes): never paired.
-    named = render("# Task: proofreading\nДив. curriculum/l2-uk-en.\n", rules_block())
-    assert frame(DelegateComposer(delegate, linked_worktree).compose(named)) != frame(expected)
-    assert condition_problems(_delegate_record(linked_worktree, named, "a"), expected=expected, args_sha256="a")
 
 
-def test_eval_composer_accepts_a_real_dispatch_composition_with_the_evidence_block(linked_worktree: Path):
-    """#11342 R3: the live evaluation caller must accept the block delegate now always appends.
-
-    A real ``cmd_dispatch`` records ``['rules_core', 'worktree', 'evidence']`` and a
-    prompt hash that includes the evidence block. The evaluation composer predicts
-    the same because the block is path-free, so ``condition_problems`` accepts it.
-    """
-    expected = DelegateComposer(delegate, linked_worktree).compose(PROMPT)
-    assert expected["prompt_blocks"] == ["rules_core", "worktree", "evidence"]
-    for evidence_dir in (
-        linked_worktree.parent / "lease-one" / "evidence",
-        linked_worktree.parent / "other" / "evidence",
-    ):
-        record = _delegate_record(linked_worktree, PROMPT, "a", evidence_dir=evidence_dir)
-        assert condition_problems(record, expected=expected, args_sha256="a") == []
-        # A task-specific evidence directory does not change the prompt suffix, so
-        # paired arms still share one frozen frame.
-        assert record["effective_prompt_sha256"] == expected["effective_prompt_sha256"]
-        assert record["prompt_blocks"] == expected["prompt_blocks"]
 
 
 @pytest.mark.parametrize("spelling", ["absolute", "relative"])
@@ -473,54 +404,14 @@ def test_primary_readonly_cwd_is_refused_before_dispatch(tmp_path: Path, monkeyp
         dispatcher.compose(PROMPT)
 
 
-@pytest.mark.parametrize("relative", [False, True])
-def test_legacy_composer_resolves_registered_worktree_without_cli_helpers(linked_worktree, monkeypatch, relative):
-    nested = linked_worktree / "scripts"
-    monkeypatch.chdir(linked_worktree)
-    composer = DelegateComposer(object(), Path("scripts") if relative else nested)
-    assert composer.cwd == str(linked_worktree)
-    assert composer.worktree == linked_worktree
 
 
-@pytest.mark.parametrize("char", ["\n", "\u202e", "\ud800", "\u2028", "\u2029"])
-def test_legacy_composer_refuses_unsafe_raw_paths(tmp_path, char):
-    with pytest.raises(DispatchError, match="control or format"):
-        DelegateComposer(object(), tmp_path / f"unsafe{char}path")
 
 
-def test_legacy_composer_refuses_unsafe_symlink_target(tmp_path):
-    link = tmp_path / "safe-name"
-    link.symlink_to(tmp_path / "unsafe\u202epath")
-    with pytest.raises(DispatchError, match="control or format"):
-        DelegateComposer(object(), link)
 
 
-def test_legacy_composer_does_not_fall_back_from_first_acp_match(linked_worktree, monkeypatch):
-    candidate = linked_worktree / ".worktrees" / "dispatch" / "acp" / "nested"
-    candidate.parent.mkdir(parents=True)
-    _git(linked_worktree, "worktree", "add", "-q", "-b", "nested-acp", str(candidate))
-    main = linked_worktree.parents[3]
-    monkeypatch.setattr(
-        dispatch_module.worktree_containment, "registered_worktrees", lambda _root: [main, candidate, linked_worktree]
-    )
-    assert delegate._resolve_verified_worktree_path(candidate) is None
-    with pytest.raises(DispatchError, match="isolated Git worktree"):
-        DelegateComposer(object(), candidate)
 
 
-@pytest.mark.parametrize("kind", ["primary", "unregistered", "acp"])
-def test_legacy_composer_refuses_unowned_worktrees(linked_worktree, kind):
-    main = linked_worktree.parents[3]
-    candidate = main
-    if kind != "primary":
-        candidate = main / ".worktrees" / "dispatch" / ("acp" if kind == "acp" else "codex") / kind
-        candidate.parent.mkdir(parents=True, exist_ok=True)
-        if kind == "acp":
-            _git(main, "worktree", "add", "-q", "-b", "acp", str(candidate))
-        else:
-            candidate.mkdir()
-    with pytest.raises(DispatchError, match="isolated Git worktree"):
-        DelegateComposer(object(), candidate)
 
 
 def test_v2_eval_arguments_keep_manifest_hash_without_loading_legacy_runtime(linked_worktree, tmp_path):
@@ -716,60 +607,6 @@ def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
         )
 
 
-@pytest.mark.parametrize("tamper", [None, "dispatch_args_sha256", "effective_prompt_sha256", "prompt_blocks"])
-def test_legacy_resume_accepts_faithful_record_and_refuses_tampering(linked_worktree, outside_dir, monkeypatch, tamper):
-    from scripts.eval.uk_preamble.common import write_private_json
-
-    tasks_dir = outside_dir / "tasks"
-    tasks_dir.mkdir()
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
-    dispatcher = SimulatedDelegate(linked_worktree)
-    results = ResultsDir(outside_dir / "results")
-    seat = SEATS["gpt-6.1-sol"]
-    task = TaskSpec("legacy-resume", seat, "review", "none", 1, ("W1",), PROMPT)
-    path = prompt_path(results, task.task_id)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(PROMPT)
-    argv = ["dispatch", "--agent", seat.agent, "--model", seat.model, "--task-id", task.task_id]
-    argv += ["--prompt-file", str(path), "--mode", "read-only", "--language-lane", "--cwd", str(linked_worktree)]
-    argv += ["--rules-seat", "core", "--hard-timeout", "3600", "--research-task-family", "ukrainian-review"]
-    argv += ["--effort", "high"]
-    args_hash = delegate.dispatch_args_sha256(delegate.build_parser().parse_args(argv))
-    record = _delegate_record(linked_worktree, PROMPT, args_hash)
-    dispatcher.legacy_resume = True
-    assert dispatcher.expected_args_sha256(task.task_id, seat, task.kind, path) == args_hash
-    assert dispatcher.compose(PROMPT)["effective_prompt_sha256"] == record["effective_prompt_sha256"]
-    result = tasks_dir / "legacy.result"
-    result.write_text('{"items": []}')
-    record.update(
-        task_id=task.task_id,
-        status="done",
-        run_nonce="n1",
-        agent=seat.agent,
-        model=seat.model,
-        prompt_sha256=task.prompt_sha256,
-        result_file=str(result),
-        result_sha256=sha256_text(result.read_text()),
-    )
-    if tamper:
-        record[tamper] = ["unexpected"] if tamper == "prompt_blocks" else "tampered"
-    write_private_json(tasks_dir / f"{task.task_id}.json", record)
-    write_private_json(
-        results.path("raw", f"{task.task_id}.pending.json"),
-        {
-            "run_nonce": "n1",
-            "prompt_sha256": task.prompt_sha256,
-            "workspace": workspace_fingerprint(linked_worktree),
-        },
-    )
-    executor = Executor(
-        dispatcher, results, worker_cwd=linked_worktree, workspace=workspace_probe(linked_worktree), spawn_interval=0
-    )
-    summary = executor.run([task])
-    raw = read_json(raw_path(results, task.task_id))
-    assert raw["accepted"] is (tamper is None)
-    assert summary.accepted == (1 if tamper is None else 0)
-    assert not summary.not_run
 
 
 def test_workspace_fingerprint_tracks_commit_changes_and_instruction_files(tmp_path: Path):

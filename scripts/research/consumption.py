@@ -147,7 +147,7 @@ def _persist_200_evidence(task_id: str, research_id: str, etag: str) -> None:
     """Record ``{research_id: etag}`` in the task's own state file (best-effort).
 
     Reuses the existing delegate task-state JSON — no third store — via the same
-    write-rename atomic pattern ``delegate.py`` already uses for that file. Never
+    write-rename atomic pattern ``dispatch.py`` already uses for that file. Never
     raises: a lost write under a concurrent worker update just means a later `304`
     for this record isn't attributable, which is the safe (fail-closed) direction.
     """

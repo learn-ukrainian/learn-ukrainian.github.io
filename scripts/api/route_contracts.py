@@ -529,7 +529,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Per-agent soft-cap burn and routing recommendation.",
         "scripts/config/agent_budgets.yaml, cost records, delegate in-flight state, and the process-local CodexBar snapshot.",
         "No route cache for ledger/runtime; CodexBar allotment is a 12-minute TTL snapshot refreshed in the background. HTTP ?fresh_codexbar=true kicks a refresh and still returns cache/LKG — it never waits for the CLI.",
-        ("routing.html", "delegate.py", "agents"),
+        ("routing.html", "agents"),
         "Overlaps runtime usage and cost summaries but adds routing recommendation.",
         "low",
         "keep canonical for routing guidance",

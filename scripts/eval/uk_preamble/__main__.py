@@ -101,7 +101,6 @@ def make_dispatcher(args: argparse.Namespace, worker_cwd: Path) -> Dispatcher:
         hard_timeout=args.hard_timeout,
         review_profile=getattr(args, "review_profile", None),
     )
-    dispatcher.legacy_resume = getattr(args, "legacy_resume", False)
     return dispatcher
 
 
@@ -358,9 +357,6 @@ def _cmd_run(args: argparse.Namespace) -> int:
     if plan["protocol_shortfalls"] and not args.smoke:
         raise HarnessError("plan below Protocol v2: " + "; ".join(plan["protocol_shortfalls"]) + " (--smoke to test)")
     tasks = plan_candidate_tasks(eval_set, variants, plan, block)
-    args.legacy_resume = results.path("manifest.json").is_file() and bool(
-        load_manifest(results)["frozen"]["composition"]["prompt_blocks"]
-    )
     dispatcher = make_dispatcher(args, worker_cwd)
     plan["composition"] = composition_frame(dispatcher, tasks)
     plan["dispatch_args_sha256"] = dispatch_args_frame(dispatcher, tasks, results)
@@ -415,7 +411,6 @@ def _cmd_score(args: argparse.Namespace) -> int:
     results = ResultsDir(args.results)
     manifest = load_manifest(results)
     plan = manifest["frozen"]
-    args.legacy_resume = bool(plan["composition"]["prompt_blocks"])
     eval_set = _set_for(args, manifest)
     slots = candidate_slots(plan)
     exit_code = 0
