@@ -533,65 +533,6 @@ def test_bootstrap_role_only_routes_to_cold_start_never_and_manifest(monkeypatch
 # --------------------------------------------------------------------------- #
 # 5. Delegate: flag validation, pointer-only injection, privacy-safe persistence
 # --------------------------------------------------------------------------- #
-def _delegate():
-    import sys
-
-    sys.path.insert(0, str(Path(reg.__file__).resolve().parents[2] / "scripts"))
-    import delegate
-
-    return delegate
-
-
-def test_delegate_state_never_persists_research_null():
-    # ADR-011 P3 default compatibility: a no-flags dispatch, a disabled registry,
-    # or a degraded injection all resolve research_state to None; the persisted
-    # state dict must OMIT the "research" key entirely — never "research": null.
-    delegate = _delegate()
-    base_state = {"task_id": "t", "status": "spawning"}
-
-    no_flags = delegate._with_optional_research_state(dict(base_state), None)
-    assert "research" not in no_flags
-    assert no_flags == base_state
-
-    with_context = delegate._with_optional_research_state(
-        dict(base_state), {"pointer_ids": ["r1"], "filtered_etag": "e", "dropped_ids": [], "context_fingerprint": "f"}
-    )
-    assert with_context["research"] == {
-        "pointer_ids": ["r1"], "filtered_etag": "e", "dropped_ids": [], "context_fingerprint": "f",
-    }
-
-
-def test_delegate_injection_is_pointer_only_and_persists_safely(reg_root, monkeypatch):
-    delegate = _delegate()
-    monkeypatch.setattr(reg, "_ROOT_OVERRIDE", reg_root)
-    monkeypatch.setattr(delegate, "_REPO_ROOT", reg_root)
-    _write_registry(
-        reg_root,
-        [
-            _make_record(
-                reg_root,
-                "cefr",
-                routing={"roles": ["quality"], "task_families": ["difficulty-gate"]},
-            )
-        ],
-    )
-    surfaced: list[tuple[str, dict]] = []
-    monkeypatch.setattr(consumption, "emit_event", lambda t, p, **k: surfaced.append((t, p)))
-
-    ctx = reg.normalize_context("quality", "difficulty-gate", None, [])
-    block, state = delegate._resolve_research_injection(ctx, "task-9")
-
-    # pointer-only prompt block: ids + fetch instruction, never a digest body
-    assert "cefr" in block and "/api/knowledge/record/{id}" in block
-    assert "Paraphrase-only" not in block
-    # persistence allowlist: ids / etag / dropped / fingerprint only
-    assert set(state) == {"pointer_ids", "filtered_etag", "dropped_ids", "context_fingerprint"}
-    assert state["pointer_ids"] == ["cefr"]
-    assert "owned_paths" not in state and "role" not in state
-    # a surface (not consumption) event was emitted for the injected pointer
-    assert surfaced == [
-        (consumption.SURFACED_EVENT, {"task_id": "task-9", "research_id": "cefr", "surface": "dispatch"})
-    ]
 
 
 # --------------------------------------------------------------------------- #

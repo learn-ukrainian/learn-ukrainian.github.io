@@ -23,7 +23,6 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-import delegate as delegate_mod
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter
@@ -69,84 +68,9 @@ def _stub_primary_integrity_sweep(monkeypatch):
 # ---------------------------------------------------------------------------
 
 
-def test_delegate_dispatch_rejects_invalid_effort_level():
-    """Only the documented choices are accepted."""
-    parser = delegate_mod.build_parser()
-    with pytest.raises(SystemExit):
-        parser.parse_args([
-            "dispatch",
-            "--agent", "claude",
-            "--task-id", "t1",
-            "--prompt", "hi",
-            "--effort", "ultra",
-        ])
-
-
-@pytest.mark.parametrize("level", ["low", "medium", "high", "xhigh", "max"])
-def test_delegate_dispatch_accepts_all_documented_effort_levels(level):
-    parser = delegate_mod.build_parser()
-    args = parser.parse_args([
-        "dispatch",
-        "--agent", "claude",
-        "--task-id", f"t-{level}",
-        "--prompt", "hi",
-        "--effort", level,
-    ])
-    assert args.effort == level
-
-
-def test_delegate_worker_parser_accepts_effort():
-    """The internal `_worker` subcommand also accepts --effort so the parent
-    can propagate the value into the detached child's argv."""
-    parser = delegate_mod.build_parser()
-    args = parser.parse_args([
-        "_worker",
-        "--task-id", "t1",
-        "--agent", "claude",
-        "--mode", "read-only",
-        "--cwd", "/tmp",
-        "--effort", "xhigh",
-    ])
-    assert args.effort == "xhigh"
-
-
 # ---------------------------------------------------------------------------
 # AC5.2 — _run_worker forwards effort to runtime.invoke
 # ---------------------------------------------------------------------------
-
-def test_run_worker_forwards_effort_to_runtime_invoke(tmp_path):
-    """_run_worker must pass effort= straight through to runner.invoke."""
-    mock_result = MagicMock(
-        ok=True,
-        response="ok",
-        stderr_excerpt=None,
-        returncode=0,
-        rate_limited=False,
-    )
-    # The state file must exist so _run_worker's read returns a dict.
-    state_path = delegate_mod._state_path("t-effort")
-    delegate_mod._write_state_atomic(state_path, {"task_id": "t-effort"})
-
-    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
-        rc = delegate_mod._run_worker(
-            task_id="t-effort",
-            agent="claude",
-            prompt="hi",
-            mode="read-only",
-            cwd_str=str(tmp_path),
-            model="claude-opus-4-7",
-            hard_timeout=60,
-            effort="xhigh",
-        )
-
-    assert rc == 0
-    assert mock_invoke.called, "runner.invoke should have been called"
-    kwargs = mock_invoke.call_args.kwargs
-    assert kwargs["effort"] == "xhigh", (
-        f"_run_worker must forward effort='xhigh'; kwargs={kwargs}"
-    )
-    assert kwargs["model"] == "claude-opus-4-7"
-    assert kwargs["entrypoint"] == "delegate"
 
 
 # ---------------------------------------------------------------------------
@@ -408,7 +332,6 @@ def test_gemini_adapter_accepts_effort_without_crashing(tmp_path, caplog):
         for rec in caplog.records
     ), f"expected the constant gemini effort DEBUG note; records={[r.message for r in caplog.records]}"
     assert not any("xhigh" in rec.getMessage() for rec in caplog.records)
-
 
 
 # ---------------------------------------------------------------------------

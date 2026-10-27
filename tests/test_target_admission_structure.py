@@ -45,7 +45,6 @@ def _scanned_files() -> list[Path]:
     files: list[Path] = []
     for package in ("ai_agent_bridge", "fleet_comms", "agent_runtime"):
         files.extend(sorted((REPO_ROOT / "scripts" / package).rglob("*.py")))
-    files.append(REPO_ROOT / "scripts" / "delegate.py")
     return files
 
 
@@ -83,9 +82,6 @@ ADMITTERS = frozenset(
         "_admitted_subscribers",
         "_resolve_quota_substitution",
         "_substitute_seat_for_decision",
-        "_admit_dispatch_target",
-        "_kimi_dispatch_gate",
-        "_kimi_worker_refusal",
     }
 )
 # ``require_admitted(x)`` is admitted exactly when ``x`` is.
@@ -99,7 +95,6 @@ REQUIRED_SINKS = {
     "_run_single_acp_job": "target",  # ACP job enqueue and invocation
     "maybe_forward_compat_ask": "target",  # job-host ask forward
     "build_ask_review_dispatch_command": "target",  # headless review launch argv
-    "_worker_route_argv": "target",  # delegate worker launch argv
     "_subscribe_tx": "target",  # fleet-comms subscriber row
     "_publish_message_tx": "targets",  # fleet-comms message and delivery rows
 }

@@ -69,27 +69,21 @@ import json
 import subprocess
 import urllib.request
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from scripts import delegate
 from scripts.api import state_router
-from scripts.fleet import capacity_pick, credit_lane, idle_settle, reset_reserve
-from scripts.fleet.reset_reserve import RESERVE_RELATIVE_PATH, SCHEMA_VERSION, load_reset_reserve
-from scripts.orchestration import curriculum_coordinator as coordinator
-from scripts.review import reviewer_scheduler
-from scripts.review.reviewer_resolver import OPENAI_FRONTIER, ResolverInputs, evaluate_candidate
+from scripts.fleet import credit_lane, reset_reserve
+from scripts.fleet.reset_reserve import RESERVE_RELATIVE_PATH, SCHEMA_VERSION
 from tests.api.test_routing_budget import _configure_base
-from tests.claude_route_accounts import HOST_ACCOUNT, bound
 
 NOW = datetime(2026, 10, 5, 12, 0, tzinfo=UTC)
 FETCHED = "2026-10-05T11:59:30Z"
 RESETS = "2026-10-09T12:00:00Z"
 ROUTE_MODEL = "gpt-6.1-sol"
-OFF_ALLOWLIST_MODEL = "gpt-5-codex"
 
 
 def _codex(**overrides: Any) -> dict[str, Any]:
@@ -323,15 +317,9 @@ CASES: tuple[Case, ...] = (
 )
 
 # Credit relief the producer published, contradicted after publication by the record it rests on.
-RELIEF_CONTRADICTIONS = {
-    "probe_relabelled_stale_after_publication": credit_lane.CREDITS_UNVERIFIED,
-    "raw_balance_zero_after_publication": credit_lane.CREDITS_EXHAUSTED,
-    "runtime_blocked_after_publication": credit_lane.CREDIT_USE_UNCONFIRMED,
-}
 # Freshness inputs a control drops: the probe's age, the probe's own freshness label (read as
 # unknown), the snapshot's ``diagnostics.stale``. Probe fields live on the record and its codexbar.
 REMOVED_INPUTS = {"probe_age": "age_s", "probe_freshness": "freshness", "snapshot_staleness": "stale"}
-CASE_PARAMS = [pytest.param(case, id=case.name) for case in CASES]
 
 
 class ProviderCalls(list):
@@ -452,16 +440,6 @@ def produce(
     return json.loads(json.dumps(budget))  # the JSON boundary every consumer reads across
 
 
-def owner(budget: dict[str, Any], lane: str = "codex", *, model: str | None = None) -> credit_lane.RoutingFacts:
-    return credit_lane.routing_facts(
-        lane,
-        budget["agents"].get(lane),
-        model=model,
-        snapshot_metadata=budget["diagnostics"],
-        now=NOW,
-    )
-
-
 class _FixtureClock(datetime):
     """The reserve module's wall clock pinned to :data:`NOW` (consumers that pass no ``now``)."""
 
@@ -470,581 +448,28 @@ class _FixtureClock(datetime):
         return NOW if tz is None else NOW.astimezone(tz)
 
 
-@pytest.fixture
-def snapshot(request, monkeypatch, tmp_path, provider_calls):
-    """One producer snapshot; every consumer reads the real operator reserve the producer read.
-
-    The picker and the delegate guard load the reserve through the real loader from this case's
-    root (absent file: unavailable), on the fixture clock; none is stubbed unavailable.
-    """
-    monkeypatch.setattr(reset_reserve, "datetime", _FixtureClock)
-    budget = produce(request.param, monkeypatch, tmp_path)
-
-    def real_reserve(_repo_root: Path, **kwargs: Any) -> dict[str, Any]:
-        return load_reset_reserve(tmp_path, **kwargs)
-
-    monkeypatch.setattr(capacity_pick, "load_reset_reserve", real_reserve)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", real_reserve)
-    yield request.param, budget
-    assert list(provider_calls) == [], "a routing consumer reached a provider"
-
-
 # --- shared facts in the producer ---------------------------------------------------
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_producer_publishes_the_owner_facts(snapshot):
-    case, budget = snapshot
-    # The published copy is the producer's at publication; consumers recompute and never trust it.
-    published = budget["agents"]["codex"]["routing_facts"]
-    if case.mutate == "snapshot_staleness_removed":
-        assert published["observation_freshness"] == credit_lane.FRESH
-        assert owner(budget).observation_freshness == credit_lane.UNKNOWN
-        return
-    if case.removed is not None:
-        # Published before the hot label and the removal: the owner now keeps the label hot.
-        assert published["capacity"] == credit_lane.CAPACITY_VERIFIED
-        assert owner(budget).capacity == credit_lane.CAPACITY_AVOID
-        return
-    if case.mutate in RELIEF_CONTRADICTIONS:
-        assert published["credit_state"] == credit_lane.CREDIT_BALANCE_PRESENT
-        assert owner(budget).credit["state"] == RELIEF_CONTRADICTIONS[case.mutate]
-        return
-    # A weekly-pace hot label is read by the owner to the producer's own capacity from the pace.
-    for lane in ("codex", "claude"):
-        published = dict(budget["agents"][lane]["routing_facts"])
-        facts = owner(budget, lane)
-        assert published.pop("credit_state") == facts.credit.get("state")
-        assert published["capacity"] == facts.capacity, lane
-        assert published["health"] == facts.health, lane
-        assert published["observation_freshness"] == facts.observation_freshness, lane
-        assert published["plan_remaining_pct"] == facts.plan_remaining_pct, lane
-
-
-def recommend(budget: dict[str, Any], *, is_stale: bool | None = None) -> dict[str, Any]:
-    """The producer's recommendation recomputed over the snapshot as consumers now read it.
-
-    A missing ``diagnostics.stale`` is carried through as None (unknown), never coerced to fresh;
-    ``is_stale`` overrides it only to show what a coercion would decide.
-    """
-    diagnostics = budget["diagnostics"]
-    return state_router._recommend_agent(
-        copy.deepcopy(budget["agents"]),
-        [],
-        current_time=NOW,
-        is_stale=diagnostics.get("stale") if is_stale is None else is_stale,
-        records_loaded=diagnostics.get("records_loaded", 0),
-        authoritative_data_available=True,
-    )
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_recommendation_agrees_with_owner_capacity(snapshot):
-    case, budget = snapshot
-    rec = budget["recommendation"]
-    facts = owner(budget)
-    recomputed = recommend(budget)
-    if recomputed["primary_agent_for_code"] == "codex":
-        if case.name == "unavailable_telemetry":
-            # Shared static order can choose Codex as an advisory fallback;
-            # it must still report missing capacity and health honestly.
-            assert facts.capacity == credit_lane.CAPACITY_UNKNOWN
-            assert "partly blind" in recomputed["rationale"]
-            assert any("not health-verified" in warning for warning in recomputed["warnings"])
-        else:
-            assert facts.capacity == credit_lane.CAPACITY_VERIFIED
-    # The published recommendation predates a case's mutation; only the recomputed one reads it.
-    if case.mutate is None and rec["primary_agent_for_code"] == "codex":
-        assert facts.capacity == credit_lane.CAPACITY_VERIFIED
-    stale_label = any(f"lane codex: {credit_lane.STALE_ADVISORY_LABEL}" in w for w in rec["warnings"])
-    assert stale_label is (facts.capacity == credit_lane.CAPACITY_UNKNOWN_STALE)
-    if facts.health == credit_lane.UNKNOWN:
-        assert not any("skipped for recommendation" in w for w in rec["warnings"])
 
 
 # --- picker rows, order and CLI -------------------------------------------------------
 
 
-def _rows(budget: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    rows = capacity_pick.build_lane_rows(budget, now=NOW)
-    return {row["lane"]: row for row in rows}
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_picker_rows_agree_with_owner_facts(snapshot):
-    _case, budget = snapshot
-    rows = _rows(budget)
-    for lane in ("codex", "claude"):
-        row, facts = rows[lane], owner(budget, lane)
-        assert row["remaining_pct"] == facts.plan_remaining_pct
-        assert row["health"] == facts.health
-        assert row["capacity"]["state"] == facts.capacity, lane
-        assert row["avoid"] is (facts.capacity == credit_lane.CAPACITY_AVOID)
-        assert (lane in capacity_pick.cooler_lanes(list(rows.values()))) is (
-            facts.capacity == credit_lane.CAPACITY_VERIFIED
-        )
-    # Legitimate picker-local restriction: retired aliases stay AVOID with their own reason.
-    for retired, target in (("gemini", "agy"), ("glm", "cursor")):
-        assert rows[retired]["avoid"] is True
-        assert f"retired→{target}" in rows[retired]["notes"]
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_picker_cli_reports_the_same_rows(snapshot, monkeypatch, capsys):
-    _case, budget = snapshot
-    from scripts.fleet import usage
-
-    monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: budget)
-    monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: None)
-    monkeypatch.setattr(capacity_pick, "admission_status", lambda: {"admitted": None, "line": "admission: fixture"})
-    rc = capacity_pick.main(["--json", "--strict"])
-    report = json.loads(capsys.readouterr().out)
-    expected = _rows(budget)
-    for row in report["rows"]:
-        assert row["capacity"] == expected[row["lane"]]["capacity"]
-        assert row["status"] == expected[row["lane"]]["status"]
-    assert rc == (0 if report["cooler_lanes"] else 2)
-    verified = [r["lane"] for r in report["pick_order"] if r["capacity"]["state"] == credit_lane.CAPACITY_VERIFIED]
-    stale = [r["lane"] for r in report["pick_order"] if r["capacity"]["state"] == credit_lane.CAPACITY_UNKNOWN_STALE]
-    order = [r["lane"] for r in report["pick_order"]]
-    # A5: an UNKNOWN — stale/advisory row never ranks ahead of fresh verified capacity.
-    for lane in stale:
-        assert all(order.index(lane) > order.index(other) for other in verified)
-
-
 # --- budget guard and final admission ------------------------------------------------
-
-
-def _guard(budget: dict[str, Any], monkeypatch: pytest.MonkeyPatch, model: str) -> str:
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    return delegate._resolve_agent_with_budget_guard("codex", requested_model=model, fallbacks={"codex": "claude"}, claude_account=HOST_ACCOUNT)
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_budget_guard_agrees_with_owner_route_facts(snapshot, monkeypatch):
-    _case, budget = snapshot
-    facts = owner(budget, model=ROUTE_MODEL)
-    chosen = _guard(budget, monkeypatch, ROUTE_MODEL)
-    if budget["diagnostics"].get("stale"):
-        # Legitimate restriction (A2): a stale snapshot is advisory in delegate; never a hard substitution.
-        assert chosen == "codex"
-    elif facts.capacity == credit_lane.CAPACITY_AVOID:
-        assert chosen == "claude"
-    else:
-        assert chosen == "codex"
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_budget_guard_honours_the_hot_label_source(snapshot, monkeypatch):
-    """F3 source restriction: only a weekly-pace hot label may be cleared by hidden pace (A3)."""
-    _case, budget = snapshot
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    facts = owner(budget, "cursor")
-    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"}, claude_account=HOST_ACCOUNT)
-    if budget["diagnostics"].get("stale") or facts.capacity != credit_lane.CAPACITY_AVOID:
-        assert chosen == "cursor"
-    else:
-        assert chosen == "claude", facts.capacity_reason
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_final_admission_refuses_off_allowlist_models_exactly_when_the_owner_does(snapshot, monkeypatch):
-    """A4/F7: an off-allowlist model with credit present ends in CREDIT_PERIOD_MODEL_REFUSED, never a substitution."""
-    _case, budget = snapshot
-    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: budget)
-    refusal = credit_lane.dispatch_refusal("codex", OFF_ALLOWLIST_MODEL)
-    facts = owner(budget, model=OFF_ALLOWLIST_MODEL)
-    assert (refusal is not None) is (facts.model_permission is False)
-    if refusal is not None:
-        assert refusal.startswith(credit_lane.REFUSAL_CODE)
-    assert credit_lane.dispatch_refusal("codex", ROUTE_MODEL) is None
 
 
 # --- reviewer resolver and scheduler ------------------------------------------------
 
 
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_resolver_agrees_with_owner_route_facts(snapshot):
-    case, budget = snapshot
-    result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
-    )
-    # Reviews ignore usage and credit relief for non-Claude seats. Observed
-    # runtime blocks still exclude reviewers; writer capacity gates stay below.
-    excludes = case.name in {
-        "f3_hidden_pace_runtime_blocked", "f6_relief_runtime_blocked",
-    }
-    assert (result.status == "excluded") is excludes, result.reason
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_scheduler_metrics_are_the_owner_readings(snapshot):
-    _case, budget = snapshot
-    facts = owner(budget)
-    metrics = reviewer_scheduler.metrics_for(OPENAI_FRONTIER, budget)
-    assert metrics.quota_remaining_pct == facts.plan_remaining_pct
-    expected_fresh = {credit_lane.FRESH: True, credit_lane.STALE: False}.get(facts.observation_freshness)
-    assert metrics.quota_fresh is expected_fresh
-    observed = isinstance(budget.get("in_flight"), dict)
-    assert (metrics.inflight is None) is not observed
-
-
 # --- wave gate and idle assembly -----------------------------------------------------------
 
 
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_wave_gate_counts_only_what_the_owner_establishes(snapshot):
-    _case, budget = snapshot
-    config = coordinator.load_config()["health"]
-    passed, assessment = coordinator._health_assessment(bound(budget), config, now=NOW)
-    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
-    [lane] = group["lanes"]
-    facts = owner(budget)
-    available = group["available"] == 1
-    if available:
-        assert facts.health == credit_lane.HEALTHY
-        assert facts.status in config["acceptable_statuses"] or facts.credit_relief
-        assert not lane["stale"]
-    # Unknown health is never counted, and the receipt says unknown (null with
-    # its basis), distinct from an established unhealthy lane.
-    if facts.health != credit_lane.HEALTHY:
-        assert not available
-    if facts.health == credit_lane.UNHEALTHY:
-        assert lane["healthy"] is False and "health_basis" not in lane
-    if facts.health == credit_lane.UNKNOWN:
-        assert lane["healthy"] is None and lane["health_basis"] == facts.health_basis
-    # Legitimate restriction: the wave's freshness requirement refuses any stale snapshot.
-    if budget["diagnostics"].get("stale"):
-        assert not passed and assessment["fresh"] is False
-    # Freshness is the owner's qualifier: anything short of established fresh never admits a wave.
-    assert lane["freshness"] == facts.observation_freshness
-    if facts.observation_freshness != credit_lane.FRESH:
-        assert not passed and assessment["fresh"] is False
-    if passed:
-        assert facts.observation_freshness == credit_lane.FRESH
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_idle_assembly_requires_established_capacity_and_load(snapshot):
-    _case, budget = snapshot
-    rows = list(_rows(budget).values())
-    snap = idle_settle.assemble_snapshot(capacity_rows=rows, work_next_queue=[{"work_id": "issue:9740"}])
-    lanes = {lane.lane: lane for lane in snap.lanes}
-    for name in ("codex", "claude"):
-        facts = owner(budget, name)
-        lane = lanes[name]
-        if lane.is_healthy_available():
-            assert facts.capacity == credit_lane.CAPACITY_VERIFIED
-            assert lane.in_flight == 0
-        if facts.capacity == credit_lane.CAPACITY_VERIFIED and facts.status in {"cool", "warm"}:
-            assert lane.is_healthy_available() is (budget.get("in_flight") is not None)
-    decision = idle_settle.evaluate_settle(snap)
-    assert set(decision.eligible_lanes) <= {
-        name for name, lane in lanes.items() if lane.quota_ok is True and lane.in_flight == 0
-    }
-
-
 # --- per-case expectations: the owner facts themselves ---------------------------------------
-
-EXPECTED_CODEX = {
-    "healthy": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "covered_deficit": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "uncovered_deficit": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-    "stale_relief": (credit_lane.CAPACITY_UNKNOWN_STALE, credit_lane.HEALTHY, credit_lane.STALE),
-    "unavailable_telemetry": (credit_lane.CAPACITY_UNKNOWN, credit_lane.UNKNOWN, credit_lane.FRESH),
-    "catalog_disallowed": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f1_conflicting_windows": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f2_stale_near_cap_credit": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.STALE),
-    "f3_hidden_pace": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f3_hidden_pace_runtime_blocked": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f3_conflicting_aliases": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f4_scan_error_health": (credit_lane.CAPACITY_VERIFIED, credit_lane.UNKNOWN, credit_lane.FRESH),
-    "f3_hidden_pace_non_pace_source": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f6_contradictory_relief": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.STALE),
-    "f7_near_cap_credit": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f7_credit_only_seat": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f6_relief_raw_balance_zero": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f6_relief_runtime_blocked": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f9040_cursor_auto_hot_on_pace": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "missing_snapshot_staleness": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.UNKNOWN),
-    "f9040_weekly_hot_on_pace": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f9040_weekly_hot_deficit": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-    # The observation helper reads a fresh snapshot as fresh whatever the probe; the clearance does not.
-    "f9040_weekly_hot_probe_age_missing": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f9040_weekly_hot_probe_freshness_missing": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-    "f9040_weekly_hot_snapshot_staleness_missing": (
-        credit_lane.CAPACITY_AVOID,
-        credit_lane.HEALTHY,
-        credit_lane.UNKNOWN,
-    ),
-    "reset_covered_deficit": (credit_lane.CAPACITY_VERIFIED, credit_lane.HEALTHY, credit_lane.FRESH),
-    "reset_covered_deficit_health_unknown": (credit_lane.CAPACITY_VERIFIED, credit_lane.UNKNOWN, credit_lane.FRESH),
-    "reset_before_runout": (credit_lane.CAPACITY_AVOID, credit_lane.HEALTHY, credit_lane.FRESH),
-}
-
-
-@pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
-def test_owner_facts_per_case(snapshot):
-    case, budget = snapshot
-    facts = owner(budget)
-    assert (facts.capacity, facts.health, facts.observation_freshness) == EXPECTED_CODEX[case.name], (
-        facts.capacity_reason
-    )
-    if case.name == "f1_conflicting_windows":
-        assert (facts.plan_remaining_pct, facts.remaining_source) == (3.0, "codexbar.primary_remaining_pct")
-    if case.name == "unavailable_telemetry":
-        assert facts.plan_remaining_pct is None and budget["in_flight"] is None
-    if case.name in {"covered_deficit", "f7_near_cap_credit"}:
-        route = owner(budget, model=ROUTE_MODEL)
-        off = owner(budget, model=OFF_ALLOWLIST_MODEL)
-        assert route.capacity == credit_lane.CAPACITY_VERIFIED
-        assert off.capacity == credit_lane.CAPACITY_AVOID
-        assert facts.credit_models == ("gpt-6.1-sol", "gpt-6-luna")
-    if case.name == "f3_hidden_pace":
-        assert (facts.pace_visible, facts.raw_deficit) == (False, None)
-
-
-@pytest.mark.parametrize("snapshot", [pytest.param(CASES[0], id="healthy")], indirect=True)
-def test_snapshot_served_later_than_the_credit_age_limit_loses_relief(snapshot, monkeypatch):
-    """Control: the same healthy snapshot read past ``credit_max_age_s`` keeps plan capacity (no credit involved)."""
-    _case, budget = snapshot
-    later = NOW + timedelta(seconds=credit_lane.load_policy().credit_max_age_s + 1)
-    facts = credit_lane.routing_facts(
-        "codex", budget["agents"]["codex"], model=None, snapshot_metadata=budget["diagnostics"], now=later
-    )
-    assert facts.capacity == credit_lane.CAPACITY_VERIFIED
 
 
 # --- held-out round-3 controls: owner, resolver, wave, recommendation and delegate agree ---------
 
 
-def _held_out(name: str) -> Any:
-    return next(pytest.param(case, id=case.name) for case in CASES if case.name == name)
-
-
-@pytest.mark.parametrize("snapshot", [_held_out("f7_credit_only_seat")], indirect=True)
-def test_credit_relief_control_is_granted_by_every_consumer(snapshot, monkeypatch):
-    """Positive control for the contradictions below: an uncontradicted credit lane is the pick everywhere."""
-    _case, budget = snapshot
-    facts = owner(budget, model=ROUTE_MODEL)
-    assert facts.capacity == credit_lane.CAPACITY_VERIFIED and facts.credit_relief
-    result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
-    )
-    assert result.status != "excluded", result.reason
-    _passed, assessment = coordinator._health_assessment(bound(budget), coordinator.load_config()["health"], now=NOW)
-    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
-    assert group["available"] == 1 and group["lanes"][0]["credit"]["state"] == credit_lane.CREDIT_BALANCE_PRESENT
-    assert recommend(budget)["primary_agent_for_code"] == "codex"
-    assert budget["recommendation"]["primary_agent_for_code"] == "codex"
-    assert _guard(budget, monkeypatch, ROUTE_MODEL) == "codex"
-
-
-@pytest.mark.parametrize(
-    "snapshot",
-    [pytest.param(case, id=case.name) for case in CASES if case.mutate in RELIEF_CONTRADICTIONS],
-    indirect=True,
-)
-def test_contradicted_credit_relief_is_avoided_by_every_consumer(snapshot, monkeypatch):
-    """A published ``credit_balance_present`` leaf never outlives its record's balance, probe or runtime evidence."""
-    case, budget = snapshot
-    assert budget["agents"]["codex"]["credit"]["state"] == credit_lane.CREDIT_BALANCE_PRESENT
-    facts = owner(budget, model=ROUTE_MODEL)
-    assert facts.capacity == credit_lane.CAPACITY_AVOID and not facts.credit_relief
-    assert facts.credit["state"] == RELIEF_CONTRADICTIONS[case.mutate]
-
-    result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
-    )
-    if case.mutate != "runtime_blocked_after_publication":
-        assert result.status == "eligible" and result.credit is None
-    else:
-        assert result.status == "excluded", result.reason
-        if result.credit is not None:
-            assert result.credit["state"] == facts.credit["state"]
-
-    passed, assessment = coordinator._health_assessment(bound(budget), coordinator.load_config()["health"], now=NOW)
-    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
-    assert not passed and group["available"] == 0
-    [lane] = group["lanes"]
-    assert lane["credit"]["state"] == facts.credit["state"]
-
-    assert recommend(budget)["primary_agent_for_code"] != "codex"
-    assert _rows(budget)["codex"]["avoid"] is True
-    assert _guard(budget, monkeypatch, ROUTE_MODEL) == "claude"
-
-
-@pytest.mark.parametrize("snapshot", [_held_out("f9040_cursor_auto_hot_on_pace")], indirect=True)
-def test_cursor_auto_hot_label_is_not_cleared_by_an_on_pace_weekly_window(snapshot, monkeypatch):
-    """#9040 restriction (A8): the real producer's fresh hot/cursor_auto label stays hot in delegate too."""
-    _case, budget = snapshot
-    assert budget["diagnostics"]["stale"] is False
-    record = budget["agents"]["cursor"]
-    assert (record["status"], record["status_source"]) == ("hot", "cursor_auto")
-    facts = owner(budget, "cursor")
-    assert facts.raw_deficit is False and facts.status == "hot"
-    assert facts.capacity == credit_lane.CAPACITY_AVOID
-    assert _rows(budget)["cursor"]["avoid"] is True
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    chosen = delegate._resolve_agent_with_budget_guard("cursor", requested_model=None, fallbacks={"cursor": "claude"}, claude_account=HOST_ACCOUNT)
-    assert chosen == "claude"
-
-
-@pytest.mark.parametrize("snapshot", [_held_out("missing_snapshot_staleness")], indirect=True)
-def test_missing_snapshot_staleness_is_unknown_in_the_wave_gate(snapshot):
-    """``diagnostics.stale`` removed from a healthy producer snapshot: owner unknown, wave not fresh, no admission."""
-    _case, budget = snapshot
-    assert "stale" not in budget["diagnostics"]
-    assert owner(budget).observation_freshness == credit_lane.UNKNOWN
-    passed, assessment = coordinator._health_assessment(bound(budget), coordinator.load_config()["health"], now=NOW)
-    assert assessment["fresh"] is False and not passed
-    [lane] = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")["lanes"]
-    assert lane["freshness"] == credit_lane.UNKNOWN and lane["stale"] is False
-
-
-@pytest.mark.parametrize(
-    "snapshot", [_held_out("f9040_weekly_hot_on_pace"), _held_out("f9040_weekly_hot_deficit")], indirect=True
-)
-def test_weekly_pace_hot_label_is_decided_by_the_owner_for_every_consumer(snapshot, monkeypatch):
-    """#9040 (A8) in the owner: a fresh weekly-pace hot label with no deficit is cleared by the owner and
-    every consumer admits the lane; the same label over a real deficit is AVOID in every capacity consumer
-    (delegate too) and stays ``hot`` in the wave receipt."""
-    case, budget = snapshot
-    assert budget["diagnostics"]["stale"] is False
-    record = budget["agents"]["codex"]
-    assert (record["status"], record["status_source"]) == ("hot", "weekly_pace")
-    facts = owner(budget, model=ROUTE_MODEL)
-    assert facts.observation_freshness == credit_lane.FRESH
-    clears = case.name == "f9040_weekly_hot_on_pace"
-    if clears:
-        assert facts.raw_deficit is False and facts.status == "cool"
-        assert facts.capacity == credit_lane.CAPACITY_VERIFIED, facts.capacity_reason
-    else:
-        assert facts.raw_deficit is True and facts.uncovered is True
-        assert facts.capacity == credit_lane.CAPACITY_AVOID, facts.capacity_reason
-
-    rows = _rows(budget)
-    assert rows["codex"]["avoid"] is not clears
-    assert ("codex" in capacity_pick.cooler_lanes(list(rows.values()))) is clears
-
-    result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
-    )
-    assert result.status == "eligible", result.reason
-
-    # The wave reads the owner's status; counting it is the wave's own acceptable-statuses rule
-    # (the shipped config accepts ``hot``, a legitimate wave-local restriction).
-    config = coordinator.load_config()["health"]
-    _passed, assessment = coordinator._health_assessment(bound(budget), config, now=NOW)
-    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
-    [lane] = group["lanes"]
-    assert lane["status"] == facts.status == ("cool" if clears else "hot")
-    assert (group["available"] == 1) is (facts.status in config["acceptable_statuses"])
-
-    assert (recommend(budget)["primary_agent_for_code"] == "codex") is clears
-    assert _guard(budget, monkeypatch, ROUTE_MODEL) == ("codex" if clears else "claude")
-
-
 RESET_CONTROLS = [pytest.param(case, id=case.name) for case in CASES if case.reserve]
-
-
-@pytest.mark.parametrize("snapshot", RESET_CONTROLS, indirect=True)
-def test_reset_covered_deficit_is_decided_by_the_owner_for_every_consumer(snapshot, monkeypatch, tmp_path):
-    """A pace deficit covered by free full resets (#9615) is cool for every consumer exactly when the owner
-    covers it, whatever the lane health; an operator reserve on file never outvotes the owner.
-
-    Claude is near cap, so the recommendation picks Codex exactly when the owner verifies its capacity:
-    the published one (which applies the operator reserve) and the recomputed one alike.
-    """
-    case, budget = snapshot
-    assert budget["diagnostics"]["stale"] is False
-    record = budget["agents"]["codex"]
-    facts = owner(budget, model=ROUTE_MODEL)
-    assert facts.raw_deficit is True and facts.observation_freshness == credit_lane.FRESH
-    assert not facts.credit_relief and "credits" not in facts.covered_by
-    covered = case.name != "reset_before_runout"
-    if covered:
-        assert facts.covered_by == ("free full reset",) and facts.uncovered is False
-        assert facts.status == record["status"] == "cool"
-        assert record["pace_deficit"]["covered_by"] == ["free full reset"]
-        assert facts.capacity == credit_lane.CAPACITY_VERIFIED, facts.capacity_reason
-    else:
-        assert facts.covered_by == () and facts.uncovered is True
-        assert facts.capacity == credit_lane.CAPACITY_AVOID, facts.capacity_reason
-    # The operator reserve is valid on file in every control; only the owner's verdict differs.
-    assert budget["reset_reserve"]["available"] is True
-
-    rows = _rows(budget)
-    assert rows["codex"]["avoid"] is not covered
-    assert ("codex" in capacity_pick.cooler_lanes(list(rows.values()))) is covered
-
-    result = evaluate_candidate(
-        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget, claude_account=HOST_ACCOUNT)
-    )
-    assert result.status == "eligible", result.reason
-
-    config = coordinator.load_config()["health"]
-    _passed, assessment = coordinator._health_assessment(bound(budget), config, now=NOW)
-    group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
-    [lane] = group["lanes"]
-    assert lane["status"] == facts.status
-    # Legitimate wave restriction: only established health is counted.
-    assert (group["available"] == 1) is (
-        facts.health == credit_lane.HEALTHY and facts.status in config["acceptable_statuses"]
-    )
-
-    assert (recommend(budget)["primary_agent_for_code"] == "codex") is covered
-    assert (budget["recommendation"]["primary_agent_for_code"] == "codex") is covered
-    reserve_applied = any("Codex reset reserve active" in w for w in budget["recommendation"]["warnings"])
-    # The reserve is applied only over owner-verified capacity on an established-healthy lane.
-    applies = covered and facts.health == credit_lane.HEALTHY
-    assert reserve_applied is applies
-    assert _guard(budget, monkeypatch, ROUTE_MODEL) == ("codex" if covered else "claude")
-
-    # Every reserve consumer reads the real reserve (none stubbed unavailable) and defers to the owner.
-    # Discrimination: on an established-healthy lane every reserve precondition except the owner's
-    # verdict holds, so a consumer that skipped the owner would apply it in ``reset_before_runout``.
-    reserve = load_reset_reserve(tmp_path, now=NOW, codex_info=record)
-    assert reserve["available"] is True
-    assert reset_reserve.codex_is_threatened(record)
-    assert reset_reserve.codex_reset_reserve_eligible(
-        reserve, record, owner_capacity=credit_lane.CAPACITY_VERIFIED, now=NOW
-    ) is (facts.health == credit_lane.HEALTHY)
-    assert rows["codex"]["reset_reserve_eligible"] is applies
-    assert rows["codex"]["capacity"]["state"] == owner(budget).capacity
-    report = capacity_pick.build_report(budget, now=NOW)
-    assert (report["pick_order"][0]["lane"] == "codex") is covered
-    assert ("codex" in report["cooler_lanes"]) is covered
-    delegate_reserve = delegate._load_reset_reserve(delegate._REPO_ROOT, codex_info=record)
-    assert delegate_reserve == reserve
-    assert (
-        delegate._codex_reset_reserve_eligible(
-            delegate_reserve,
-            record,
-            owner_capacity=delegate._budget_owner_facts(
-                "codex", record, model=ROUTE_MODEL, is_stale=False, snapshot_metadata=budget["diagnostics"]
-            ).capacity,
-        )
-        is applies
-    )
-
-    def language_walk() -> str:
-        # Claude is near cap here, so the language-lane walk ends at Codex or refuses.
-        return delegate._language_lane_substitute(
-            "codex",
-            {"codex": "claude"},
-            budget["agents"],
-            is_stale=False,
-            snapshot_metadata=budget["diagnostics"],
-            reset_reserve=delegate_reserve,
-            requested_model=ROUTE_MODEL,
-        )
-
-    if covered:
-        assert language_walk() == "codex"
-    else:
-        with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
-            language_walk()
 
 
 @pytest.mark.parametrize("case", RESET_CONTROLS)

@@ -3,57 +3,10 @@
 import json
 import os
 from pathlib import Path
-from unittest.mock import Mock
 
 import pytest
 
-from scripts import delegate
 from scripts.agent_runtime.adapters import agy
-from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
-
-
-@pytest.mark.parametrize("with_core", [False, True])
-@pytest.mark.parametrize("with_worktree", [False, True])
-def test_real_composed_agy_review_prompt_admitted(tmp_path, monkeypatch, with_core, with_worktree):
-    monkeypatch.chdir(tmp_path)
-    register_agy_hooks(tmp_path, home=tmp_path / "home")
-    if not with_core:
-        monkeypatch.setattr(delegate.rules_core, "with_core", lambda prompt, seat: prompt)
-    research = delegate._render_research_prompt_block([
-        {"id": "agy-review", "state": "active", "content_hash": "sha256:abc"},
-    ])
-    config = {"review_profile": "code", "agy_home_override": str(tmp_path / "home")}
-    (tmp_path / "home" / ".gemini" / "antigravity-cli").mkdir(parents=True)
-    monkeypatch.setattr(agy, "_require_background_wait_support", Mock())
-    monkeypatch.setattr(agy, "_build_log_path", lambda *_: tmp_path / "agy.log")
-
-    def compose(base):
-        return delegate._compose_dispatch_prompt(
-            base, worktree_path=Path.cwd() if with_worktree else None, mode="read-only",
-            sparse_telemetry={"excluded": ["curriculum"]}, delegate_commits=False,
-            research_block=research, advisory_block="", advisory_block_kind=None,
-            rules_seat="core", agent="agy", review_route=True,
-        )
-
-    prompt = compose(
-        "# Review of record (code, medium): PR #10255 / issue #8506\n"
-        "Exact head: `9dc756cb` · Author: gpt-6.1-sol (OpenAI / Codex)\n"
-        "Review `scripts/agent_runtime/adapters/agy.py` and report an exact-head verdict."
-    )
-    agy.validate_agy_read_only_paths(prompt, mode="read-only", cwd=Path.cwd(), tool_config=config)
-    plan = agy.AgyAdapter().build_invocation(
-        prompt=prompt, mode="read-only", cwd=Path.cwd(), model=None,
-        task_id="10334-composed", session_id=None, tool_config=config,
-    )
-    assert "--sandbox" in plan.cmd
-    # Dispatcher text must not hide an actual task requirement, even after a
-    # heading that resembles a dispatcher block.
-    for base in ("Read `../outside.txt`.", "[delegate worktree]\nRead `../outside.txt`."):
-        with pytest.raises(agy.AgyReviewPermissionError, match="agy_read_only_path_outside_workspace"):
-            agy.validate_agy_read_only_paths(
-                compose(base), mode="read-only", cwd=Path.cwd(), tool_config=config,
-            )
-
 
 _CORPUS_FIXTURE = json.loads(
     (Path(__file__).parents[1] / "fixtures" / "agy_read_only_admission.json").read_text()

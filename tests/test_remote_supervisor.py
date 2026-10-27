@@ -8,11 +8,9 @@ from pathlib import Path
 
 import pytest
 
-import scripts.delegate  # noqa: F401  (loaded before isolated_finalization_context binds it)
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from scripts.session_supervisor import main
 from scripts.session_supervisor.remote import RemoteEpicClient, RemoteSupervisorError, RemoteUnreachableError
-from tests.test_delegate import isolated_finalization_context  # noqa: F401  (driver-pinned origin.git)
 
 
 class _Response:
@@ -640,143 +638,6 @@ def test_supervisory_wake_refuses_event_file_database_drift(supervisory_cycle, d
     # Cross a second boundary in the backing clock: the projection must stay pinned.
     now += timedelta(seconds=1)
     assert supervisor.remote.stream("epic:7178") == before  # allow-hardcoded-epic: remote supervisor request fixture
-
-
-def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_path, monkeypatch):
-    import signal
-    import subprocess
-    import sys
-    from datetime import UTC, datetime, timedelta
-    from types import SimpleNamespace
-
-    from scripts import delegate
-    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event
-    from scripts.fleet_comms.authority import AuthorityService
-
-    repo = tmp_path / "worker"
-    repo.mkdir()
-    for args in (
-        ["init", "-b", "main"],
-        [
-            "-c",
-            "user.name=Fixture",
-            "-c",
-            "user.email=fixture@example.invalid",
-            "commit",
-            "--allow-empty",
-            "-m",
-            "fixture",
-        ],
-        ["update-ref", "refs/remotes/origin/main", "HEAD"],
-        # The driver-pinned destination settlement counts against.
-        ["init", "--bare", "-q", "-b", "main", str(tmp_path / "origin.git")],
-        ["push", "-q", str(tmp_path / "origin.git"), "main"],
-    ):
-        subprocess.run(
-            ["git", *args], cwd=repo, env=delegate._sanitized_git_env(), check=True, capture_output=True, timeout=10
-        )
-    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **kwargs: None)
-    # Host diagnostics are outside this fixture; settlement and Git checks stay real.
-    for module in ("primary", "node_modules", "venv", "worktree_cleanup"):
-        monkeypatch.setattr(
-            f"scripts.audit.check_{module}_integrity.check_{module}_integrity",
-            lambda *args, **kwargs: (True, "fixture-only"),
-        )
-    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
-
-    def synthetic_provider(_agent, _prompt, **kwargs):
-        # Execute a child that really leaves work uncommitted. The lifecycle
-        # result comes from its exit code; no worker completion result is mocked.
-        child = subprocess.run(
-            [sys.executable, "-c", "from pathlib import Path; Path('work.txt').write_text('retain me')"],
-            cwd=kwargs["cwd"],
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-        return SimpleNamespace(
-            ok=child.returncode == 0,
-            returncode=child.returncode,
-            response=child.stdout,
-            stderr_excerpt=child.stderr,
-            rate_limited=False,
-        )
-
-    monkeypatch.setattr("agent_runtime.runner.invoke", synthetic_provider)
-    state_path = delegate._state_path("held-out-worker")
-    delegate._write_state_atomic(
-        state_path,
-        {
-            "task_id": "held-out-worker",
-            "worktree_path": str(repo),
-            "worktree_base": "main",
-            "cli_version": "synthetic",
-        },
-    )
-    service, supervisor = supervisory_cycle
-    job = service.enqueue_request(recipient="worker", body="synthetic work", idempotency_key="held-out-worker")
-    job_lease = service.claim_job(job.job_id, "fixture-worker")
-    predecessor = _open_supervisory_driver(supervisor)
-    did = _supervisory_event(service)
-    now = datetime.now(UTC)
-    request = consume_supervisory_event(service, supervisor, predecessor, now=now.isoformat())
-    assert request is not None
-    previous_handler = signal.getsignal(signal.SIGTERM)
-    try:
-        assert (
-            delegate._run_worker(
-                task_id="held-out-worker",
-                agent="codex",
-                prompt="synthetic work",
-                mode="workspace-write",
-                cwd_str=str(repo),
-                model="gpt-6.1-sol",
-                hard_timeout=10,
-            )
-            == 1
-        )
-    finally:
-        signal.signal(signal.SIGTERM, previous_handler)
-    settled = json.loads(state_path.read_text())
-    assert settled["status"] == "needs_finalize"
-    assert settled["worktree_dirty_on_exit"] is True
-    assert settled["commits_ahead"] == 0
-    assert settled["returncode"] == 0
-    before = state_path.read_bytes()
-    # Publish measured settlement, not a fabricated worker "done" response.
-    # Transport completion must retain the distinct needs_finalize outcome.
-    service.finish_job(
-        job.job_id, worker_id="fixture-worker", fence_token=job_lease.fence_token, state="complete", result=before
-    )
-
-    assert supervisor.close_driver(role="driver", lease=predecessor) == "closed"
-    successor = _open_supervisory_driver(
-        supervisor,
-        instance="successor",
-        session_id=request.successor_session_id,
-    )
-    # Reopen the message database as a successor would, then consume the delayed
-    # delivery. Its restart acknowledgment must not finalize the worker's work.
-    with AuthorityService(root=service.store.root) as reopened:
-        assert (
-            consume_supervisory_event(
-                reopened,
-                supervisor,
-                successor,
-                now=(now + timedelta(seconds=61)).isoformat(),
-            )
-            is None
-        )
-        assert reopened.supervisory_delivery_status(did) == "acted_on"
-        assert reopened.read_job_result(job.job_id) == before
-        assert json.loads(reopened.read_job_result(job.job_id))["needs_finalize"] is True
-    assert state_path.read_bytes() == before
-    assert (repo / "work.txt").read_text() == "retain me"
-    assert delegate._worktree_is_dirty(repo) is True
-    assert supervisor.close_driver(role="driver", lease=successor) == "closed"
 
 
 def test_delayed_event_after_successor_exit_cannot_restart_again(supervisory_cycle):

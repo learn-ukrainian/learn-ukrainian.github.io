@@ -161,35 +161,6 @@ def test_end_turn_still_completes(tmp_path, structured):
     assert result.ok and result.stderr_excerpt is None
 
 
-def test_stop_detail_reaches_task_diagnostic_file(tmp_path, monkeypatch):
-    from scripts import delegate
-
-    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
-    task = "grok-stop-test"
-    record = tmp_path / f"{task}.json"
-    result = _parse(
-        {
-            "stopReason": "cancelled",
-            "cancellationCategory": "permission_cancelled",
-            "text": "partial report",
-        }
-    )
-    record.write_text(json.dumps({"stderr_excerpt": result.stderr_excerpt}), encoding="utf-8")
-    delegate._worker_last_error(
-        task,
-        stderr_excerpt=result.stderr_excerpt,
-        failure_cause=None,
-        final_status="failed",
-        returncode=0,
-        runtime_failure_code=result.failure_code,
-        worker_exception=None,
-    )
-    entry = json.loads((tmp_path / f"{task}.diag").read_text())
-    for diagnostic in (json.loads(record.read_text())["stderr_excerpt"], entry["diagnostic"]):
-        assert 'stopReason="cancelled"' in diagnostic
-        assert "permission_cancelled" in diagnostic
-
-
 @pytest.mark.parametrize("structured", [False, True])
 @pytest.mark.parametrize("key,category", [
     ("cancellation_category", "permission_cancelled"),

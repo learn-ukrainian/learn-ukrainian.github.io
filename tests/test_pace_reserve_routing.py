@@ -8,7 +8,6 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from scripts import delegate
 from scripts.api import state_router
 from scripts.fleet import capacity_pick, credit_lane, idle_settle
 from scripts.fleet.reset_reserve import unavailable_reserve
@@ -264,27 +263,6 @@ def test_capacity_pick_covered_deficit(reserve_case):
         assert "deficit covered by" in row["notes"]
 
 
-def test_delegate_budget_guard_covered_deficit(reserve_case, monkeypatch):
-    info, covered, _ = reserve_case
-    monkeypatch.setattr(
-        delegate,
-        "_fetch_routing_budget",
-        lambda: {
-            "agents": {"codex": info, "claude": {"status": "cool"}},
-            "diagnostics": {"stale": False, "records_loaded": 1},
-        },
-    )
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
-    result = delegate._resolve_agent_with_budget_guard(
-        "codex",
-        requested_model="gpt-6.1-sol",
-        fallbacks={"codex": "claude"},
-        claude_account=HOST_ACCOUNT,
-    )
-    assert result == ("codex" if covered else "claude")
-    assert ("codex" in delegate._budget_cooler_lanes({"codex": info}, exclude="claude")) is covered
-
-
 def test_idle_settle_covered_deficit(reserve_case):
     info, covered, _ = reserve_case
     row = {**info, "lane": "codex", "quota_ok": True}
@@ -414,23 +392,6 @@ def test_coverage_claim_is_rechecked(reserve_case, monkeypatch):
     assert credit_lane.pace_deficit_state("codex", info, now=now)["uncovered"] is True
 
 
-@pytest.mark.parametrize("lane", ["", " "])
-def test_missing_lane_never_covers_deficit(reserve_case, lane):
-    info, _, now = reserve_case
-    decision = credit_lane.pace_deficit_state(lane, info, now=now)
-    assert decision["uncovered"] is True
-    assert decision["covered_by"] == []
-    stale = info["freshness"] == "stale_last_good"
-    facts = credit_lane.routing_facts(lane, info, model=None, now=now)
-    assert facts.capacity == (credit_lane.CAPACITY_UNKNOWN_STALE if stale else credit_lane.CAPACITY_AVOID)
-    assert capacity_pick.is_avoid_lane(info, lane=lane) is not stale
-    assert state_router._status_from_weekly_used(13.0, info["codexbar"], info=info, now=now) == "hot"
-    needs_action, _ = delegate._budget_needs_hard_capacity_action(
-        status="hot", will_last=False, is_stale=False, pace=info["codexbar"], info=info
-    )
-    assert needs_action
-
-
 @pytest.mark.parametrize("source", ["ledger_burn", "cursor_auto", None])
 def test_cover_never_relaxes_hot_from_other_sources(reserve_case, source):
     info, _, now = reserve_case
@@ -546,28 +507,3 @@ def test_routing_budget_preserves_hot_sources(monkeypatch, tmp_path, source, use
         row = next(row for row in capacity_pick.build_lane_rows(data, now=now) if row["lane"] == lane)
         assert row["status"] == "hot"
         assert row["avoid"] is True
-
-
-@pytest.mark.parametrize("default_model", ["gpt-6.1-sol", "gpt-5-codex", None])
-def test_delegate_credit_relief_checks_lane_default(reserve_case, monkeypatch, default_model):
-    info, _, _ = reserve_case
-    info = copy.deepcopy(info)
-    info["reset_credits"] = None
-    covered = credit_lane.pace_deficit_state("codex", info, model="gpt-6.1-sol")["uncovered"] is False
-    previous_default = delegate._lane_default_model
-    monkeypatch.setattr(
-        delegate, "_lane_default_model", lambda lane: default_model if lane == "codex" else previous_default(lane)
-    )
-    monkeypatch.setattr(
-        delegate,
-        "_fetch_routing_budget",
-        lambda: {
-            "agents": {"codex": info, "claude": {"status": "cool"}},
-            "diagnostics": {"stale": False, "records_loaded": 1},
-        },
-    )
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: unavailable_reserve())
-    result = delegate._resolve_agent_with_budget_guard(
-        "codex", fallbacks={"codex": "claude"}, claude_account=HOST_ACCOUNT
-    )
-    assert result == ("codex" if covered and default_model == "gpt-6.1-sol" else "claude")

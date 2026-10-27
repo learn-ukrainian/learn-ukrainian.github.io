@@ -6,13 +6,10 @@ import os
 import shutil
 import tempfile
 import time
-import traceback
-from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
 
-import scripts.delegate as delegate
 from scripts.common import scratch
 
 # The host constant, bound before any per-test patch of the module attribute.
@@ -21,29 +18,6 @@ _HOST_DEFAULT_SCRATCH_ROOT = scratch.DEFAULT_SCRATCH_ROOT
 
 def _resolved(path: Path) -> Path:
     return path.resolve()
-
-
-def test_delegate_lease_is_not_created_under_the_real_default_scratch_root(tmp_path: Path) -> None:
-    """A delegate lease uses the per-test override, never the host default namespace.
-
-    The first assertion is the tripwire: with the isolation fixture disabled,
-    ``LU_SCRATCH_ROOT`` is unset and this fails before a lease is created.
-    """
-    override = os.environ.get(scratch.SCRATCH_ROOT_ENV_VAR, "").strip()
-    assert override, "LU_SCRATCH_ROOT was not set; a delegate lease would use the host scratch root"
-    root = Path(override)
-    assert _resolved(root).is_relative_to(_resolved(tmp_path))
-    assert _resolved(root) != _resolved(_HOST_DEFAULT_SCRATCH_ROOT)
-
-    lease, namespace = delegate._create_runtime_tmp_lease("scratch-isolation-guard")
-    real_namespace = _HOST_DEFAULT_SCRATCH_ROOT / "learn-ukrainian"
-    fallback_namespace = Path(tempfile.gettempdir()) / scratch.FALLBACK_SCRATCH_DIRNAME / "learn-ukrainian"
-    assert _resolved(namespace) == _resolved(root / "learn-ukrainian")
-    assert _resolved(lease.parent) == _resolved(namespace)
-    assert _resolved(namespace) != _resolved(real_namespace)
-    assert _resolved(namespace) != _resolved(fallback_namespace)
-    assert lease.is_dir()
-    assert delegate._read_runtime_tmp_task_id_marker(lease) == "scratch-isolation-guard"
 
 
 def _assert_scan_stays_inside(boundary: Path, found: list[Path]) -> list[Path]:
@@ -60,66 +34,6 @@ def _assert_deletion_target_inside(boundary: Path, root: Path, *, deletions: int
     assert resolved.is_relative_to(boundary), (
         f"review-root deletion target left the per-test root before removal (deletions={deletions})"
     )
-
-
-def test_orphan_sweep_scans_and_deletes_only_inside_the_per_test_root(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """The real orphan sweeps never see a path outside this test's tmp dir.
-
-    The per-test scratch root is created first, so a confined scan has a
-    root to return and the sweep has a lease to reap. With confinement
-    removed, the system temp directory is always a candidate and is not
-    under ``tmp_path``. The assertion runs on the scan result before that
-    result is handed back to the sweep, so the failure deletes nothing.
-    """
-    override = os.environ.get(scratch.SCRATCH_ROOT_ENV_VAR, "").strip()
-    assert override, "LU_SCRATCH_ROOT was not set; a sweep would scan the host scratch roots"
-    root = Path(override)
-    root.mkdir(parents=True)
-    boundary = _resolved(tmp_path)
-    assert _resolved(root).is_relative_to(boundary)
-    host_temp = _resolved(Path(tempfile.gettempdir()))
-    assert not host_temp.is_relative_to(boundary)
-
-    namespace = root / "learn-ukrainian"
-    lease = namespace / "confinement-orphan"
-    lease.mkdir(parents=True)
-    (lease / "payload").write_text("orphan", encoding="utf-8")
-    now = time.time()
-    old = now - delegate._RUNTIME_TMP_ORPHAN_MAX_AGE_S - 5
-    os.utime(lease, (old, old))
-
-    from scripts.review import isolation
-
-    original = scratch.scratch_scan_roots
-    seen: list[Path] = []
-
-    def guarded_scan() -> list[Path]:
-        found = original()
-        resolved = _assert_scan_stays_inside(boundary, found)
-        seen.extend(resolved)
-        return found
-
-    monkeypatch.setattr(scratch, "scratch_scan_roots", guarded_scan)
-    monkeypatch.setattr(delegate, "scratch_scan_roots", guarded_scan)
-    monkeypatch.setattr(isolation, "scratch_scan_roots", guarded_scan)
-
-    review = isolation.sweep_review_temp_orphans(now=now)
-    assert review["roots_reaped"] == 0
-    assert review["errors"] == 0
-    assert lease.is_dir()
-
-    swept = delegate._sweep_runtime_tmp_orphans(now=now)
-    assert swept["leases_reaped"] == 1
-    assert swept["errors"] == 0
-    assert not lease.exists()
-    assert seen, "sweep did not scan"
-    assert _resolved(root) in seen
-    assert host_temp not in seen
-    assert _resolved(_HOST_DEFAULT_SCRATCH_ROOT) not in seen
-    assert all(path.is_relative_to(boundary) for path in seen)
 
 
 def test_scan_root_override_drops_roots_outside_the_boundary(
@@ -279,139 +193,6 @@ def test_review_sweep_refuses_an_outside_review_root_before_deletion(
         assert all(path.is_relative_to(boundary) for path in seen)
     finally:
         shutil.rmtree(sentinel, ignore_errors=True)
-
-
-_CALLER_MISCONFIGURATIONS = (
-    scratch.SCAN_ROOT_REASON_RELATIVE,
-    scratch.SCAN_ROOT_REASON_OUTSIDE,
-    scratch.SCAN_ROOT_REASON_SYMLINK,
-    scratch.SCAN_ROOT_REASON_NOT_A_DIRECTORY,
-)
-
-
-@pytest.fixture
-def misconfigured_scan_root(
-    request: pytest.FixtureRequest,
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-    _isolate_runtime_scratch_root: Path,
-) -> Iterator[str]:
-    """Point ``LU_SCRATCH_SCAN_ROOT`` at one misconfiguration and clean up after it.
-
-    Depends on the autouse scratch fixture so this override runs after it.
-    """
-    reason = request.param
-    leftovers: list[Path] = []
-    variable = scratch.SCRATCH_SCAN_ROOT_ENV_VAR
-    if reason == scratch.SCAN_ROOT_REASON_RELATIVE:
-        monkeypatch.setenv(variable, "relative-scan-root")
-    elif reason == scratch.SCAN_ROOT_REASON_NOT_A_DIRECTORY:
-        monkeypatch.setenv(variable, str(tmp_path / "missing-scan-root"))
-    elif reason == scratch.SCAN_ROOT_REASON_OUTSIDE:
-        monkeypatch.setenv(variable, str(tmp_path / ".." / f"outside-{tmp_path.name}"))
-    elif reason == scratch.SCAN_ROOT_REASON_SYMLINK:
-        target = tmp_path.parent / f"symlink-target-{tmp_path.name}"
-        target.mkdir()
-        leftovers.append(target)
-        link = tmp_path / "escaping-scan-link"
-        link.symlink_to(target, target_is_directory=True)
-        monkeypatch.setenv(variable, str(link))
-    else:
-        raise AssertionError(reason)
-    try:
-        yield reason
-    finally:
-        for path in leftovers:
-            shutil.rmtree(path)
-
-
-def _keep_misconfigured_scans_inside_tmp(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    """If a bad setting falls open, the historical candidates are still this test's tmp dir."""
-    private = tmp_path / "fake-default"
-    private.mkdir()
-    monkeypatch.setattr(scratch, "DEFAULT_SCRATCH_ROOT", private)
-    monkeypatch.setattr(delegate, "DEFAULT_SCRATCH_ROOT", private)
-    monkeypatch.setattr(tempfile, "gettempdir", lambda: str(tmp_path))
-
-
-def _assert_typed_scan_root_error(caught: pytest.ExceptionInfo[scratch.ScratchScanRootError], reason: str) -> None:
-    """The caller boundary raised the documented error and no host path."""
-    assert caught.value.reason == reason
-    assert str(caught.value) == f"LU_SCRATCH_SCAN_ROOT is misconfigured: {reason}"
-    assert "/" not in str(caught.value)
-    assert caught.value.__cause__ is None
-    assert not isinstance(caught.value, OSError)
-    frames = traceback.extract_tb(caught.tb)
-    assert frames[-1].name == "_scratch_scan_roots"
-
-
-@pytest.mark.parametrize("misconfigured_scan_root", _CALLER_MISCONFIGURATIONS, indirect=True)
-def test_runtime_tmp_sweep_refuses_a_misconfigured_scan_root(
-    misconfigured_scan_root: str,
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    """Dispatch orphan sweep fails closed before it can delete a lease."""
-    _keep_misconfigured_scans_inside_tmp(monkeypatch, tmp_path)
-
-    def refuse_delete(*_args: object, **_kwargs: object) -> None:
-        raise AssertionError("misconfigured scan root reached lease deletion")
-
-    monkeypatch.setattr(delegate, "_remove_runtime_tmp_lease", refuse_delete)
-    with pytest.raises(scratch.ScratchScanRootError) as caught:
-        delegate._sweep_runtime_tmp_orphans()
-    _assert_typed_scan_root_error(caught, misconfigured_scan_root)
-    assert traceback.extract_tb(caught.tb)[-1].filename.endswith("delegate.py")
-
-
-@pytest.mark.parametrize("misconfigured_scan_root", _CALLER_MISCONFIGURATIONS, indirect=True)
-def test_runtime_tmp_reap_refuses_a_misconfigured_scan_root(
-    misconfigured_scan_root: str,
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    """Dispatch lease reap fails closed instead of recording a raw filesystem error."""
-    _keep_misconfigured_scans_inside_tmp(monkeypatch, tmp_path)
-    namespace = tmp_path / "learn-ukrainian"
-    lease = namespace / "misconfigured-lease"
-    lease.mkdir(parents=True)
-    (lease / "payload").write_text("keep", encoding="utf-8")
-
-    def refuse_delete(*_args: object, **_kwargs: object) -> None:
-        raise AssertionError("misconfigured scan root reached lease deletion")
-
-    monkeypatch.setattr(delegate, "_remove_runtime_tmp_lease", refuse_delete)
-    with pytest.raises(scratch.ScratchScanRootError) as caught:
-        delegate._reap_runtime_tmp_lease(lease, namespace)
-    _assert_typed_scan_root_error(caught, misconfigured_scan_root)
-    assert traceback.extract_tb(caught.tb)[-1].filename.endswith("delegate.py")
-    assert lease.is_dir()
-    assert (lease / "payload").read_text(encoding="utf-8") == "keep"
-
-
-@pytest.mark.parametrize("misconfigured_scan_root", _CALLER_MISCONFIGURATIONS, indirect=True)
-def test_review_sweep_refuses_a_misconfigured_scan_root(
-    misconfigured_scan_root: str,
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    """Review orphan sweep fails closed before it can delete a review root."""
-    from scripts.review import isolation
-
-    _keep_misconfigured_scans_inside_tmp(monkeypatch, tmp_path)
-    review_root = tmp_path / "lu-review-snap-misconfigured"
-    review_root.mkdir()
-    (review_root / "payload").write_text("keep", encoding="utf-8")
-
-    def refuse_delete(*_args: object, **_kwargs: object) -> None:
-        raise AssertionError("misconfigured scan root reached review-root deletion")
-
-    monkeypatch.setattr(isolation, "_remove_review_temp_orphan", refuse_delete)
-    with pytest.raises(scratch.ScratchScanRootError) as caught:
-        isolation.sweep_review_temp_orphans()
-    _assert_typed_scan_root_error(caught, misconfigured_scan_root)
-    assert traceback.extract_tb(caught.tb)[-1].filename.endswith("isolation.py")
-    assert review_root.is_dir()
 
 
 def test_scan_root_symlink_inside_its_parent_remains_the_boundary(

@@ -1011,7 +1011,12 @@ def token_of(out: Path) -> str:
 
 
 def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review_id: str, attempt_id: str) -> list[str]:
-    """Build the v2 bound-review command; runtime isolation is unavailable until v2 supports it."""
+    """Build a plain read-only v2 review command.
+
+    The manifest and review/attempt IDs remain caller-side card metadata. V2
+    does not wire protected review isolation or Sources receipts into this
+    command. The existing finish validation still requires its bound receipts.
+    """
     from scripts.review.model_catalog import substitution_default_model
 
     model = substitution_default_model(agent)
@@ -1031,16 +1036,8 @@ def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review
         task_id,
         "--prompt-file",
         str(prompt),
-        "--review-access",
-        "isolated",
         "--review-profile",
         "ukrainian",
-        "--review-attempt",
-        str(manifest),
-        "--review-id",
-        review_id,
-        "--attempt-id",
-        attempt_id,
     ]
 
 

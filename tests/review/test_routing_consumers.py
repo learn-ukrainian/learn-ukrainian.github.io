@@ -177,7 +177,6 @@ def test_legacy_allowlist_cannot_expand_from_injected_cursor_candidates():
     catalog["models"][new_id]["aliases"] = []
     candidate = deepcopy(catalog["review_candidates"]["grok-4.7-cursor-fallback"])
     candidate["model_id"] = new_id
-    candidate.pop("transport_fallback_for")
     candidate["invocation"] = candidate["invocation"].replace("grok-4.7", new_id)
     catalog["review_candidates"][new_id] = candidate
     catalog["orchestrator_seats"]["cursor"]["auto_allowlist"].append(new_id)
@@ -235,7 +234,6 @@ def test_shared_author_independence_and_advisory_outcomes():
         family_exclusion(**params, author_family="openai", advisory_only_for_author_families=frozenset({"openai"}))[0]
         == "advisory_only"
     )
-
 
 
 @pytest.mark.parametrize(

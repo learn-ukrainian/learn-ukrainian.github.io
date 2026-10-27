@@ -40,9 +40,9 @@ def test_generated_bytecode_does_not_weaken_literal_pins(tmp_path: Path) -> None
 def test_changed_pinned_bytes_still_fail(tmp_path: Path) -> None:
     root = _fixture_with_bytecode(tmp_path)
     assert_frozen_routing_fixture_pinned(root)
-    capture = root / "capture.py"
+    capture = root / "v2-baseline.json.gz"
     capture.write_bytes(capture.read_bytes() + b"\n")
-    with pytest.raises(AssertionError, match=_pin_failure("capture.py pinned digest mismatch")):
+    with pytest.raises(AssertionError, match=_pin_failure("v2-baseline.json.gz pinned digest mismatch")):
         assert_frozen_routing_fixture_pinned(root)
 
 

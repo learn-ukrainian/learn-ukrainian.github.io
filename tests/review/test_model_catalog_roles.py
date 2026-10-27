@@ -26,12 +26,6 @@ from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.role_resolution import expanded_legacy_view
 from tests.claude_route_accounts import HOST_ACCOUNT
 from tests.review.test_model_catalog import (
-    CAPTURE,
-    MUSE_REVIEW_CANDIDATE,
-    approved_muse_review_receipt,
-    assert_frozen_surfaces,
-)
-from tests.review.test_model_catalog import (
     CURRENT_BASELINE as APPROVED_BASELINE,
 )
 from tests.review.test_model_catalog import (
@@ -39,6 +33,13 @@ from tests.review.test_model_catalog import (
 )
 from tests.review.test_model_catalog import (
     CURRENT_INPUTS as APPROVED_INPUTS,
+)
+from tests.review.test_model_catalog import (
+    FIXED_NOW,
+    MUSE_REVIEW_CANDIDATE,
+    assert_frozen_surfaces,
+    encode,
+    observed,
 )
 
 
@@ -86,10 +87,11 @@ def test_authorities_have_one_native_holder_per_family():
 def test_wire_ids_belong_to_identity_and_transport_and_opus_has_native_and_agy_pins(catalog):
     """Opus has native and AGY wire IDs; its authority seat remains native-only."""
     result = resolve_role("legacy_reviewers", purpose="launch", transport="cursor")
-    native, cursor = (row for row in result.candidates if row.seat == "xai_reviewer")
-    assert native.wire_id == "grok-4.7"
+    (cursor,) = (row for row in result.candidates if row.seat == "xai_reviewer")
+    assert catalog["models"]["grok-4.7"]["routing_wire_ids"] == {
+        "native_grok": "grok-4.7", "cursor": "grok-4.7-high",
+    }
     assert cursor.wire_id == "grok-4.7-high"
-    assert native.exclusion_reasons == ("transport_mismatch",)
     assert not cursor.exclusion_reasons
     assert cursor.argv[-1] == cursor.wire_id
     assert catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"].get("last_resort", False) is False
@@ -186,11 +188,9 @@ def test_family_capability_isolation_subject_and_explicit_pin_exclusions():
         "excluded_seats": ["xai_reviewer"], "excluded_families": ["xai"],
         "pinned_model": "gpt-6.1-sol",
     })
-    native, cursor = (row for row in result.candidates if row.seat == "xai_reviewer")
-    for row in (native, cursor):
-        assert {"family_mismatch", "subject_seat_excluded", "subject_family_excluded",
-                "required_capability_missing", "explicit_pin_mismatch"} <= set(row.exclusion_reasons)
-    assert "isolation_required" not in native.exclusion_reasons
+    (cursor,) = (row for row in result.candidates if row.seat == "xai_reviewer")
+    assert {"family_mismatch", "subject_seat_excluded", "subject_family_excluded",
+            "required_capability_missing", "explicit_pin_mismatch"} <= set(cursor.exclusion_reasons)
     assert "isolation_required" in cursor.exclusion_reasons
 
 
@@ -330,7 +330,7 @@ def test_duplicate_routes_labels_and_missing_legacy_coverage(catalog):
     with pytest.raises(ModelCatalogError, match="legacy receipt labels"):
         validate_catalog(catalog)
     catalog = deepcopy(load_model_catalog())
-    del catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]
+    del catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["legacy_name"]
     with pytest.raises(ModelCatalogError, match="cover every legacy"):
         validate_catalog(catalog)
 
@@ -414,10 +414,8 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
     if "owned_paths" in case:
         case["owned_paths"] = tuple(case["owned_paths"])
     monkeypatch.setattr(credit_lane, "routing_facts", partial(credit_lane.routing_facts,
-                        now=CAPTURE["FIXED_NOW"], usage_dir=tmp_path / "usage"))
+                        now=FIXED_NOW, usage_dir=tmp_path / "usage"))
     monkeypatch.setattr(credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief,
-                        now=CAPTURE["FIXED_NOW"]))
-    actual = CAPTURE["observed"](lambda: resolve_reviewer(ResolverInputs(**case, claude_account=HOST_ACCOUNT)))
-    assert json.loads(CAPTURE["encode"](actual)) == approved_muse_review_receipt(
-        APPROVED_BASELINE["reviewer"][index], APPROVED_INPUTS["reviewer"][index]
-    )
+                        now=FIXED_NOW))
+    actual = observed(lambda: resolve_reviewer(ResolverInputs(**case, claude_account=HOST_ACCOUNT)))
+    assert json.loads(encode(actual)) == APPROVED_BASELINE["reviewer"][index]

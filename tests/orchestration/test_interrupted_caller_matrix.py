@@ -6,14 +6,12 @@ qualify interruption handling; they do not supply AC-03's independent controls.
 
 from __future__ import annotations
 
-import argparse
 import json
 import subprocess
 from pathlib import Path
 
 import pytest
 
-import delegate
 from scripts.fleet import post_task_reap
 from scripts.orchestration import dispatch_settle as ds
 from scripts.orchestration import merge_closeout
@@ -21,7 +19,8 @@ from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import stale_task_records as stale
 from scripts.orchestration import worktree_claims as wc
 from scripts.orchestration.task_family import git_safety
-from tests.helpers.interrupted_checkout import hashes, make_interrupted_checkout
+from tests.helpers.interrupted_checkout import hashes
+from tests.helpers.interrupted_checkout import interrupted_checkout as interrupted_checkout
 from tests.orchestration.test_worktree_artifacts import assert_record_only
 
 CASES = ("cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late")
@@ -35,15 +34,6 @@ def git(repo: Path, *args: str) -> str:
         text=True,
         timeout=30,
     ).stdout.strip()
-
-
-@pytest.fixture
-def interrupted_checkout(tmp_path, monkeypatch):
-    shared_interrupted_checkout = make_interrupted_checkout(tmp_path, monkeypatch)
-    repo, _tree, tasks, *_rest = shared_interrupted_checkout
-    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-    monkeypatch.setattr(delegate, "tasks_dir", lambda: tasks)
-    return shared_interrupted_checkout
 
 
 def test_guarded_remove_non_utf8_result_retains_and_reports(interrupted_checkout):
@@ -122,14 +112,12 @@ def test_missing_tree_caller_matrix(interrupted_checkout, monkeypatch, writer, c
 @pytest.mark.parametrize(
     "caller",
     [
-        "cancel",
         "claim_scan",
         "husk_sweep",
         "archive",
         "merge_closeout",
         "dead_worker_healer",
         "push_settle",
-        "worker_exit_settle",
         "guarded_remove",
         "post_task_reap",
         "scheduled_reaper",
@@ -171,18 +159,7 @@ def test_interrupted_caller_preserves_bytes_on_repeated_call(interrupted_checkou
     hint = {**state, "run_nonce": "stale"} if case == "late" else state.copy()
     first_disposition = None
     for _ in range(2):
-        if caller == "cancel":
-            assert (
-                delegate.cmd_cancel(
-                    argparse.Namespace(
-                        task_id="interrupted",
-                        run_nonce="stale" if case == "late" else "current",
-                    )
-                )
-                == 1
-            )
-            assert "refusing" in capsys.readouterr().err
-        elif caller == "claim_scan":
+        if caller == "claim_scan":
             refusal = wc.active_worktree_claim_refusal(tree, tasks_dir=tasks, repo_root=repo)
             assert (refusal is not None) == (status == "needs_finalize" or case == "unknown")
         elif caller == "husk_sweep":
@@ -204,14 +181,6 @@ def test_interrupted_caller_preserves_bytes_on_repeated_call(interrupted_checkou
         elif caller == "push_settle":
             report = ds.settle_task("interrupted", task_dir=tasks, repo_root=repo, release_stale=False)
             assert report.status == state["status"]
-        elif caller == "worker_exit_settle":
-            row = delegate._settle_worktree_reap(
-                tree,
-                created_by_this_dispatch=True,
-                settling_task_id="interrupted",
-                task_record=hint,
-            )
-            assert row["action"] == "skipped" and "owner interrupted" in row["reason"], row
         elif caller == "guarded_remove":
             row = wc.remove_unclaimed_worktree(
                 tree,

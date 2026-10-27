@@ -296,7 +296,6 @@ def test_only_fallback_skips_the_probe(tmp_path: Path, value: str):
     assert result.reason is None
 
 
-_GRANDCHILD_READY_DEADLINE_S = 5.0
 _GRANDCHILD_SYSTEMCTL = """
 import os, time
 from pathlib import Path
@@ -307,12 +306,6 @@ if os.fork() == 0:
     Path(os.environ["FAKE_GRANDCHILD_PID"]).write_text(str(os.getpid()), encoding="ascii")
 time.sleep(30)
 """
-_GRANDCHILD_HELPER_CODE = (
-    "import json, runpy, sys\n"
-    "ns = runpy.run_path(sys.argv[1])\n"
-    "report = ns['_grandchild_probe_helper'](ns['Path'](sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]))\n"
-    "print(json.dumps(report))\n"
-)
 
 
 def _wait_for_child_ready(pidfile: Path, deadline_s: float) -> int:
@@ -466,6 +459,16 @@ def _grandchild_probe_helper(tmp_path: Path, start_delay_s: float, ready_deadlin
         report["probe_pids"] = [proc.pid for proc in held]
         report["probe_returncodes"] = [proc.returncode for proc in held]
     return report
+
+
+
+_GRANDCHILD_READY_DEADLINE_S = 5.0
+_GRANDCHILD_HELPER_CODE = (
+    "import json, runpy, sys\n"
+    "ns = runpy.run_path(sys.argv[1])\n"
+    "report = ns['_grandchild_probe_helper'](ns['Path'](sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]))\n"
+    "print(json.dumps(report))\n"
+)
 
 
 def _run_grandchild_probe_helper(
@@ -1052,39 +1055,6 @@ def test_scope_start_failure_reads_a_bounded_stderr_excerpt(tmp_path: Path, monk
     assert reads
     assert sum(reads) <= iso._STDERR_EXCERPT_BYTES
     assert fallback == [[_PY, "-c", "print('should-not-run')"]]
-
-
-def test_launch_fields_remain_beside_peak_rss(monkeypatch: pytest.MonkeyPatch):
-    import resource
-
-    import scripts.delegate as delegate
-
-    class _Usage:
-        ru_maxrss = 3 * 1024 * 1024 if sys.platform == "darwin" else 3 * 1024
-
-    monkeypatch.setattr(resource, "getrusage", lambda _who: _Usage())
-    state = {"launch_mode": iso.LAUNCH_SCOPE, "launch_unit": "lu-worker-t-n-1"}
-    merged = {
-        **state,
-        **delegate._core_terminal_fields(
-            status="done",
-            duration_s=1.0,
-            response="ok",
-            result_file=None,
-            stderr_excerpt=None,
-            returncode=0,
-            returncode_reason=None,
-            dirty_on_exit=False,
-            commits_ahead=0,
-            needs_finalize=False,
-            finalize_error=None,
-            last_error=None,
-        ),
-    }
-
-    assert merged["launch_mode"] == "scope"
-    assert merged["launch_unit"] == "lu-worker-t-n-1"
-    assert merged["peak_rss_mib"] == 3.0
 
 
 @pytest.mark.parametrize(

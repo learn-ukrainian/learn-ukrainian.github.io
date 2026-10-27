@@ -936,26 +936,6 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
     assert jobs["job-2"]["state"] == "complete"
 
 
-def test_delegate_dispatch_fallbacks_use_the_same_shared_table() -> None:
-    """delegate.py's launch route and the ACP ask path read one loader, not two copies."""
-    import argparse
-
-    import delegate
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
-
-    received: list[object] = []
-
-    def route(request):
-        received.append(request.fallbacks)
-        return request.seat, request.model, "explicit"
-
-    args = argparse.Namespace(agent="codex", model=None, mode="read-only")
-    refusal, _target = delegate._admit_dispatch_target(args, agent="codex", trees=(), route=route)
-    assert refusal is None
-    assert received == [load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)]
-    assert received[0]["codex"] == "cursor"
-
-
 def test_quota_hop_replays_real_durable_fleet_jobs_without_execution(monkeypatch, tmp_path):
     """Fresh authority connections replay both terminal seats from SQLite, without a provider call."""
     import hashlib

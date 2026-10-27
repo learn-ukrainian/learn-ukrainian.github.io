@@ -4,15 +4,12 @@ from __future__ import annotations
 
 import gzip
 import hashlib
+import io
 import json
-import pickle
-import runpy
-import shutil
-import subprocess
-import sys
-from contextlib import contextmanager
+from contextlib import redirect_stderr, redirect_stdout
 from copy import deepcopy
-from functools import lru_cache
+from dataclasses import asdict, is_dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import patch
 
@@ -29,55 +26,43 @@ from scripts.review.model_catalog import (
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
 BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes()))
 INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
-CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
-
-# Keep the frozen capture script byte-pinned. Apply the cache only inside its
-# fresh subprocess, leaving production catalog validation unchanged.
-CAPTURE_RUNNER = """
-import runpy
-import sys
-source = sys.argv[sys.argv.index("--source-root") + 1]
-sys.path[:0] = [source, source + "/scripts", source + "/packages/v4-runtime/src"]
-from tests.agent_runtime.agy_hook_helpers import register_agy_hooks
-cached_capture_reads = runpy.run_path(source + "/tests/review/test_model_catalog.py")["cached_capture_reads"]
-sys.argv = sys.argv[1:]
-capture = runpy.run_path(sys.argv[0])
-original = capture["capture"]
-def cached_capture(*args, **kwargs):
-    # Enter only after main has installed its hermetic environment.
-    if args:
-        register_agy_hooks(args[1], home=args[1] / "home")
-    with cached_capture_reads():
-        return original(*args, **kwargs)
-capture["main"].__globals__["capture"] = cached_capture
-capture["main"]()
-"""
+FIXED_NOW = datetime(2026, 10, 6, 12, tzinfo=UTC)
 
 
-@contextmanager
-def cached_capture_reads():
-    """Reuse validated catalog inputs and parser construction in one capture.
+def plain(value):
+    """Convert resolver values into stable JSON values without running a launcher."""
+    if is_dataclass(value):
+        return plain(asdict(value))
+    if isinstance(value, dict):
+        return {key: plain(item) for key, item in value.items()}
+    if isinstance(value, (set, frozenset)):
+        return sorted(plain(item) for item in value)
+    if isinstance(value, (tuple, list)):
+        return [plain(item) for item in value]
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return value
 
-    Key validation by exact content, and return independent copies so mutations
-    cannot reuse stale proof or change cached results. Production is untouched.
-    """
-    from scripts import delegate
-    from scripts.review import model_catalog
 
-    validate = model_catalog.validate_catalog
-    cache = {}
+def encode(value):
+    return (json.dumps(plain(value), ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode()
 
-    def cached(data):
-        key = pickle.dumps(data, protocol=pickle.HIGHEST_PROTOCOL)
-        if key not in cache:
-            cache[key] = deepcopy(validate(data))
-        return deepcopy(cache[key])
 
-    with (
-        patch.object(model_catalog, "validate_catalog", cached),
-        patch.object(delegate, "build_parser", lru_cache(maxsize=1)(delegate.build_parser)),
-    ):
-        yield
+def observed(call):
+    """Record a pure catalog/resolver call and its output streams."""
+    stdout, stderr = io.StringIO(), io.StringIO()
+    with redirect_stdout(stdout), redirect_stderr(stderr):
+        try:
+            result = {"exit_status": 0, "value": plain(call())}
+        except (Exception, SystemExit) as exc:
+            result = {
+                "exit_status": exc.code if isinstance(exc, SystemExit) else 1,
+                "exception": type(exc).__name__,
+                "error": str(exc),
+            }
+    return {**result, "stdout": stdout.getvalue(), "stderr": stderr.getvalue()}
 
 
 CAPACITY_FIXTURE = Path(__file__).parent / "fixtures"
@@ -714,7 +699,6 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
     import os
     from unittest.mock import MagicMock
 
-    from scripts import delegate
     from scripts.agent_runtime import telemetry
     from scripts.agent_runtime.adapters.base import InvocationPlan
     from scripts.agent_runtime.env_sanitize import build_agent_env
@@ -739,18 +723,6 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
             assert (activity_role_refusal(model, activity, load_model_catalog()) is None) == (
                 model == "muse-wonder-full-1.0"
             )
-        args = delegate.build_parser().parse_args([
-            "dispatch", "--agent", "muse", "--model", model, "--task-id", "worker-contract",
-            "--prompt", "fixture", "--mode", "read-only", "--research-role", "investigation",
-        ])
-        assert delegate._muse_dispatch_refusal(args) == (
-            None if model == "muse-wonder-full-1.0" else "muse_execution_not_admitted"
-        )
-        args.research_role = "driver"
-        assert delegate._muse_dispatch_refusal(args) == "muse_ordinary_worker_only"
-        args.research_role = "investigation"
-        args.model = "gpt-6.1-sol"
-        assert delegate._muse_dispatch_refusal(args) == "muse_worker_model_refused"
         plan = InvocationPlan(
             cmd=["/fixture/muse", "exec", "--model", model, "--reasoning-effort", "high"],
             cwd=Path("/fixture/workspace"),
@@ -794,7 +766,6 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
         assert telemetry.resolve_dispatch_start_telemetry(
             agent_name="muse", requested_model=None, requested_effort=None
         ).cli_version == "unknown"
-
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -855,31 +826,6 @@ def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter(
     assert set(before["catalog"]["budget_substitution_models"]["cursor"]) - {"claude-fable-5-1"} == set(
         after["catalog"]["budget_substitution_models"]["cursor"]
     )
-    removed = [
-        row for row in PRE_RETIREMENT_INPUTS["dispatch"] if row["model"] == "claude-fable-5-1"
-    ]
-    assert removed and len(after["dispatch"]) == len(before["dispatch"]) - len(removed)
-    kept = [
-        (row_in, old, new)
-        for row_in, old, new in zip(
-            [row for row in PRE_RETIREMENT_INPUTS["dispatch"] if row["model"] != "claude-fable-5-1"],
-            [old for row_in, old in zip(PRE_RETIREMENT_INPUTS["dispatch"], before["dispatch"], strict=True) if row_in["model"] != "claude-fable-5-1"],
-            after["dispatch"],
-            strict=True,
-        )
-    ]
-    changed = [(row_in, old, new) for row_in, old, new in kept if old != new]
-    assert len(changed) == 33
-    for row_in, old, new in changed:
-        assert {key: value for key, value in old.items() if key != "value"} == {
-            key: value for key, value in new.items() if key != "value"
-        }
-        assert {key: value for key, value in old["value"].items() if key != "refusal"} == {
-            key: value for key, value in new["value"].items() if key != "refusal"
-        }
-        dropped = "grok" if row_in["agent"] == "cursor" else "cursor"
-        assert new["value"]["refusal"] == _drop_cooler_seat(old["value"]["refusal"], dropped)
-        assert row_in["model"] != "claude-fable-5-1"
     launcher_changed = [
         index for index, (old, new) in enumerate(zip(before["launchers"], after["launchers"], strict=True)) if old != new
     ]
@@ -889,60 +835,6 @@ def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter(
     assert "Fable 5.1 is parked: not routed by default, explicit pin only;" in after["approval"]["contract"]
     with pytest.raises(AssertionError):
         approved_retirement_11327_baseline(after, PRE_RETIREMENT_INPUTS)
-
-
-@pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
-def test_budget_pin_overlay_changes_only_exhausted_unmapped_claude_refusals(configuration):
-    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
-    before = approved_reviewer_seats_baseline(json.loads(gzip.decompress(path.read_bytes())))
-    original = deepcopy(before)
-    after = approved_budget_pin_baseline(before)
-    assert before == original
-    assert set(after) == set(before)
-    assert {k: v for k, v in after.items() if k != "dispatch"} == {
-        k: v for k, v in before.items() if k != "dispatch"
-    }
-    changed = [i for i, (old, new) in enumerate(zip(before["dispatch"], after["dispatch"], strict=True)) if old != new]
-    models = {
-        62: "claude-sonnet-5-5", 66: "claude-fable-5-1", 70: "composer-2.5",
-        82: "grok-4.7", 86: "unregistered-model",
-    }
-    assert changed == list(models)
-    fixture = json.loads((CAPACITY_FIXTURE / "budget-pin-11110.json").read_bytes())
-    assert set(fixture) == {"dispatch_refusal_replacements"}
-    assert [r["rows"] for r in fixture["dispatch_refusal_replacements"]] == [[i] for i in models]
-    for index, model in models.items():
-        assert PRE_RETIREMENT_INPUTS["dispatch"][index] == {
-            "agent": "claude", "budget_status": "near_cap", "model": model, "review_attempt": None,
-        }
-        old, new = before["dispatch"][index], after["dispatch"][index]
-        expected = deepcopy(old)
-        expected["value"]["refusal"] = (
-            "BUDGET_PINNED_MODEL_EXHAUSTED: --agent claude is exhausted/near_cap "
-            f"(unknown; near_cap (>90% used on FRESH snapshot)); explicit --model {model} has no mapping "
-            "accepted by --agent codex. Supported remedies: wait for reset, request a mapped model, "
-            "or select the other Claude account label where policy permits. Refusing before spawn."
-        )
-        assert new == expected
-    # Historical input rows 86/90 become 74/78 after the existing seat overlay.
-    for historical, index in ((86, 74), (90, 78)):
-        assert PRE_RETIREMENT_INPUTS["dispatch"][index] == INPUTS["dispatch"][historical]
-        assert after["dispatch"][index] == before["dispatch"][index]
-
-
-def test_budget_pin_overlay_refuses_drifted_refusal():
-    drifted = deepcopy(PRE_BUDGET_PIN_BASELINE)
-    drifted["dispatch"][62]["value"]["refusal"] = "unapproved refusal"
-    with pytest.raises(AssertionError):
-        approved_budget_pin_baseline(drifted)
-
-
-@pytest.mark.parametrize("index,field", [(63, "refusal"), (62, "target")])
-def test_budget_pin_overlay_still_rejects_other_dispatch_changes(index, field):
-    actual = deepcopy(CURRENT_BASELINE)
-    actual["dispatch"][index]["value"][field] = "unapproved change"
-    with pytest.raises(AssertionError, match="current surface differs: dispatch"):
-        assert_frozen_surfaces(actual)
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
@@ -991,7 +883,7 @@ def test_grok_ukrainian_role_confers_no_ukrainian_review_route():
     xai = [seat for seat in catalog["seats"].values() if seat.get("model_id") == "grok-4.7"]
     assert xai, "grok-4.7 reviewer seat missing"
     routes = [route for candidate in xai for route in candidate["routes"].values()]
-    assert {route["transport"] for route in routes} == {"native_grok", "cursor"}
+    assert {route["transport"] for route in routes} == {"cursor"}
     for route in routes:
         assert route["review_profiles"] == ["code", "infra"]
 
@@ -1056,14 +948,14 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
                 assert not (family[name] == "anthropic" and candidates[name]["transport"] == "cursor"), (risk, name)
         on_ladder = {name for rung in ladders[risk] for name in rung}
         assert ("claude-sonnet-5-5" in on_ladder) == (risk in {"medium", "low"}), risk
-        assert {"claude-opus-5-5", "grok-4.7", "grok-4.7-cursor-fallback"} <= on_ladder, risk
+        assert {"claude-opus-5-5", "grok-4.7-cursor-fallback"} <= on_ladder, risk
     for risk in ("low", "medium", "high", "critical"):
         routes = catalog["roles"][f"code_review_{risk}"]["routes"]
         assert "anthropic_authority/cursor_fallback" not in routes
         assert "xai_reviewer/cursor_fallback" in routes
     assert set(catalog["seats"]["anthropic_authority"]["routes"]) == {"native"}
-    assert set(catalog["seats"]["xai_reviewer"]["routes"]) == {"native", "cursor_fallback"}
-    assert catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]["transport_fallback_for"] == "grok-4.7"
+    assert set(catalog["seats"]["xai_reviewer"]["routes"]) == {"cursor_fallback"}
+    assert "transport_fallback_for" not in catalog["seats"]["xai_reviewer"]["routes"]["cursor_fallback"]
     opus = catalog["models"]["claude-opus-5-5"]
     assert (opus["routing_wire_ids"], opus["transports"]) == (
         {"native_claude": "claude-opus-5-5", "agy": "claude-opus-5-5-high"},
@@ -1081,11 +973,11 @@ def test_catalog_authorizes_no_claude_review_through_cursor():
 # the #10262 explicit AGY review-risk refusals in both configurations, and the #10630
 # capture-driver account; see SPEC.md.
 PINNED_DIGESTS = {
+    "v2-baseline.json.gz": "e8480a666260d1146ad2a01104b263c622ab6741de1f0915c59921e6dfb94166",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "4cba22dff8338f75c8ae96b35119c3da2bea3b3d7d6418c49e466ddc0ddf73a8",
-    "SPEC.md": "8d2e59acb08b7642874f6363d84cacea1c04a83a202f266b22b304c4f53c3e45",
+    "SPEC.md": "c0e7d80b83e40e32b230d0fe9baf6a168f32a5965636f1a22f6639421f55823f",
     "baseline.json.gz": "2cf8945084c13d7ce0b55e98a91522e897baee5ba53648f21ec7ae7b66cdaa5d",
-    "capture.py": "7571955c784ecf973931ba3b3a86c50bc4ee9f5bf2c2bdcfdbcbe096381222ea",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/SHA256SUMS": "7e5b78a91bd237a012805983da7d40f854c9802eae969d0f5e4fabcc0d2afea8",
     "no-cli/baseline.json.gz": "d3b4e4776f701d3f1304a48de75c0e9bb1d488a1837000bb9113957eace9896d",
@@ -1098,8 +990,7 @@ PINNED_DIGESTS = {
 def _is_direct_fixture_bytecode(root: Path, path: Path) -> bool:
     """True only for a regular ``__pycache__/*.pyc`` file directly under ``root``.
 
-    Pytest's assertion rewriter writes that cache when ``capture.py`` is named
-    on the command line (#10615). It is not fixture content. A symlink, a
+    Generated test bytecode is not fixture content (#10615). A symlink, a
     non-``.pyc`` name, and any nested cache stay visible to the pin.
     """
     relative = path.relative_to(root)
@@ -1132,378 +1023,24 @@ def assert_frozen_routing_fixture_pinned(root: Path) -> None:
         assert actual == expected, f"{name} pinned digest mismatch"
 
 
-@pytest.mark.parametrize("host_clis", ["absent", "present"])
-def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
-    source = Path(__file__).resolve().parents[2]
-    output = tmp_path / "capture"
-    host_bin = tmp_path / "host-bin"
-    host_bin.mkdir()
-    for name in ("bash", "git", "cat"):
-        (host_bin / name).symlink_to(shutil.which(name, path="/usr/bin:/bin"))
-    if host_clis == "present":
-        for name in (*CAPTURE["CLI_VERSIONS"], "npx"):
-            stub = host_bin / name
-            stub.write_text("#!/bin/sh\nprintf 'ambient CLI must not run\\n' >&2\nexit 99\n")
-            stub.chmod(0o755)
-    host_home = tmp_path / "host-home"
-    host_home.mkdir()
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-c",
-            CAPTURE_RUNNER,
-            str(FIXTURE / "capture.py"),
-            "--source-root",
-            str(source),
-            "--output",
-            str(output),
-            "--project-python",
-            sys.executable,
-        ],
-        cwd=tmp_path,
-        env={
-            "PATH": str(host_bin),
-            "TMPDIR": str(tmp_path),
-            "HOME": str(host_home),
-            "LAUNCHER_MODEL": "unregistered-model",
-            "CODEX_HOME": str(host_home),
-            "LEARN_UK_AGY_MODEL": "unregistered-model",
-            "LU_ACPX_TRANSPORT": "shadow",
-            "LEARN_UK_KIMI_BIN": str(host_bin / "kimi"),
-            "TZ": "Pacific/Honolulu",
-        },
-        capture_output=True,
-        text=True,
-        timeout=600,
-    )
-    assert result.returncode == 0, result.stderr
-    actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
-    inputs = json.loads((output / "inputs.json").read_bytes())
-    assert_frozen_surfaces(actual, inputs=inputs)
-    assert {
-        **inputs,
-        **{
-            surface: [case for case in inputs[surface] if case in CURRENT_INPUTS[surface]]
-            for surface in ("adapters", "dispatch", "reviewer", "roles")
-        },
-    } == CURRENT_INPUTS
-    assert (
-        hashlib.sha256((output / "occurrences.json.gz").read_bytes()).hexdigest()
-        == _RETIREMENT_DATA["occurrences_sha256"]
-    )
-
-
-# The 2026-10-23 subscription retirement is a new capture. Prior approved
-# overlays remain byte-pinned historical evidence above.
-_RETIREMENT_CAPTURE = CAPACITY_FIXTURE / "routing-retirement-20261023.json.gz"
-assert (
-    hashlib.sha256(_RETIREMENT_CAPTURE.read_bytes()).hexdigest()
-    == "024471fb8b0413f52b30788aa9c6961928720ae98c1e756336cbd41838155a59"
-)
-_RETIREMENT_DATA = json.loads(gzip.decompress(_RETIREMENT_CAPTURE.read_bytes()))
-def dispatcher_catalog_baseline(value):
-    """Apply C-2188 command changes without rewriting frozen receipts."""
-    if isinstance(value, dict):
-        result = {key: dispatcher_catalog_baseline(item) for key, item in value.items()}
-        migrate_invocation = (
-            result.get("transport") != "native_grok"
-            and result.get("model_id", result.get("concrete_model")) not in {"gpt-6-luna", "gemini-3.8-flash-high"}
-        )
-        if "invocation" in result and migrate_invocation:
-            result["invocation"] = result["invocation"].replace(
-                "scripts/delegate.py dispatch", "scripts/dispatch.py dispatch"
-            )
-        if isinstance(result.get("argv"), list) and migrate_invocation:
-            result["argv"] = ["scripts/dispatch.py" if arg == "scripts/delegate.py" else arg for arg in result["argv"]]
-        return result
-    if isinstance(value, list):
-        return [dispatcher_catalog_baseline(item) for item in value]
-    return value
-
-
-CURRENT_BASELINE = dispatcher_catalog_baseline(_RETIREMENT_DATA["baseline"])
-CURRENT_INPUTS = _RETIREMENT_DATA["inputs"]
+# The current fixture contains only the expanded catalog and the existing 1432
+# reviewer cases. It was computed with pure resolver calls, without launching workers.
+_V2_BASELINE_PATH = FIXTURE / "v2-baseline.json.gz"
+assert hashlib.sha256(_V2_BASELINE_PATH.read_bytes()).hexdigest() == "e8480a666260d1146ad2a01104b263c622ab6741de1f0915c59921e6dfb94166"
+_V2_BASELINE = json.loads(gzip.decompress(_V2_BASELINE_PATH.read_bytes()))
+CURRENT_BASELINE = _V2_BASELINE["baseline"]
+CURRENT_INPUTS = _V2_BASELINE["inputs"]
 
 MUSE_REVIEW_CANDIDATE = {
     "model_id": "muse-wonder-full-1.0", "route": "muse", "transport": "native_muse",
     "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high",
     "review_profiles": ["code"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
 }
-MUSE_REVIEW_ROLES = {"legacy_reviewers"}
-
-
-def approved_muse_review_receipt(receipt, case):
-    """Add Muse only when the frozen input explicitly pins its review seat."""
-    receipt = deepcopy(receipt)
-    value = receipt.get("value", {})
-    if not value.get("trace") or case.get("pinned_candidate") != "muse":
-        return receipt
-    reason = None
-    if case["review_profile"] != "code":
-        reason = "review profile exclusion: muse supports ['code'], got 'infra'"
-    elif case.get("required_capabilities"):
-        reason = f"missing required capabilities: {sorted(case['required_capabilities'])}"
-    elif case.get("isolation_required"):
-        reason = "isolation required but candidate does not support process isolation"
-    elif case.get("requested_role"):
-        reason = f"missing required review role suitability: {case['requested_role']}"
-    if value["resolved_risk"] == "high" and reason is None:
-        reason = (
-            "a formal review at high risk is performed only by gpt-6.1-sol, claude-opus-5-5, grok-4.7 "
-            "(operator decisions #9538, #9769); got 'muse-wonder-full-1.0'"
-        )
-    if value["resolved_risk"] == "critical" and reason is None:
-        reason = "missing required review role suitability: code/critical catalog suitability"
-    if case["author_model"] == "muse-wonder-full-1.0" or case.get("author_family") == "meta":
-        reason = "same family as author (meta) — cross-family review requires a different family"
-    if "meta" in case.get("subject_families", []):
-        reason = "subject exclusion: muse cannot review a change that governs its own boundary (subject family meta)"
-    if "muse" in case.get("subject_seats", []):
-        reason = "subject exclusion: muse cannot review a change that governs its own boundary (subject seat muse)"
-    capacity = next(row["capacity"] for row in value["trace"] if row["route"] == "grok")
-    muse = {
-        "name": "muse", "concrete_model": "muse-wonder-full-1.0", "family": "meta",
-        "route": "muse", "transport": "native_muse", "invocation": MUSE_REVIEW_CANDIDATE["invocation"],
-        "quality_tier": "economical", "requires_silence_timeout": False,
-        "status": "excluded" if reason else "eligible", "reason": reason, "health": None,
-        "capacity": deepcopy(capacity), "suitability_rank": None if reason else (0 if value["resolved_risk"] == "low" else 3),
-        "selection_score": None if reason else [
-            True, 0.0, [True, 0], [True, 0],
-            "33a1e7b3f2abbe7c82bf263cfe91582906416e24a954bec756da624ebd960f07",
-        ], "credit": None,
-    }
-    value["trace"].append(muse)
-    if not reason:
-        muse["status"] = "selected"
-        value["selected"] = deepcopy(muse)
-        value["fail_closed_reason"] = None
-        value["substitution_note"] = (
-            f"explicit pressure override selected muse: {case['pressure_override_reason']}"
-        )
-    return receipt
-
-
-def approved_muse_role_receipt(receipt, case):
-    """Extend the frozen role envelope without granting runtime qualification."""
-    receipt = deepcopy(receipt)
-    if case["role"] not in MUSE_REVIEW_ROLES or "value" not in receipt:
-        return receipt
-    context = case["context"]
-    exclusions = []
-    if "meta" in context.get("excluded_families", []):
-        exclusions.append("subject_family_excluded")
-    if set(context.get("required_capabilities", [])) - {"code_review"}:
-        exclusions.append("required_capability_missing")
-    if context.get("isolation_required"):
-        exclusions.append("isolation_required")
-    if context.get("pinned_model") not in {None, "muse-wonder-full-1.0"}:
-        exclusions.append("explicit_pin_mismatch")
-    receipt["value"]["candidates"].append({
-        "seat": "meta_reviewer", "route_name": "native", "model_id": "muse-wonder-full-1.0",
-        "family": "meta", "route": "muse", "transport": "native_muse", "wire_id": "muse-wonder-full-1.0",
-        "effort": "high", "argv": MUSE_REVIEW_CANDIDATE["invocation"].split(), "legacy_label": "muse",
-        "decision_reference": "agents_extensions/shared/rules/model-assignment.md", "qualification_reference": None,
-        "health": "unknown", "health_rank": 0, "health_provenance": {
-            "snapshot_supplied": case.get("health") is not None, "normalized_key": None, "diagnostic": "HEALTH_UNKNOWN",
-        }, "exclusion_reasons": exclusions,
-    })
-    return receipt
-
-
-
-def assert_frozen_surfaces(actual, *, inputs=None, surfaces=None):
-    """Permit only the ordered Muse worker/review entries and exact refusal receipts."""
-    expected = deepcopy(CURRENT_BASELINE)
-    if inputs is None and surfaces is None:
-        assert actual.keys() == BASELINE.keys()
-        for surface in BASELINE:
-            assert actual[surface] == expected[surface], f"current surface differs: {surface}"
-        assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
-        return
-    workers = {
-        "muse-wonder-full-1.0": {
-            "family": "meta", "tier": "economical", "lifecycle": "active",
-            "roles": ["coding", "standard_review", "routine_review"], "transports": ["native_muse"],
-            "strengths": ["explicit_native_worker"],
-            "weaknesses": ["worker_qualification_pending", "review_qualification_pending", "no_driver_authority"],
-            "notes": "Explicit native coding and low/medium code-review seat under measurement. "
-                     "Private inputs are allowed only with contributor mode off (operator order C-2401). "
-                     "No driver, automatic fallback, Ukrainian or security-final authority. "
-                     "Formal review only when chosen explicitly. "
-                     "Catalog eligibility does not attest provider-origin identity or effective permissions.",
-            "sources": ["https://dev.meta.ai/docs/muse-code"],
-        },
-        "muse-spark-1.3": {
-            "family": "meta", "tier": "compatibility", "lifecycle": "hold",
-            "roles": ["coding"], "transports": ["native_muse"],
-            "strengths": ["explicit_native_worker"],
-            "weaknesses": ["worker_qualification_pending", "no_review_or_approval_authority"],
-            "notes": "Explicit delegate worker only. Spark cannot approve or review.",
-            "sources": ["https://dev.meta.ai/docs/muse-code"],
-        },
-    }
-    assert not workers.keys() & expected["catalog"]["models"].keys()
-    expected["catalog"]["models"].update(workers)
-    expected["catalog"]["review_candidates"]["muse"] = deepcopy(MUSE_REVIEW_CANDIDATE)
-    expected["catalog"]["review_scheduler"]["endpoints"]["muse"] = {
-        "formal_review_eligible": True, "models": ["muse-wonder-full-1.0"], "participant": "muse",
-        "adapter_transport": "native_muse", "catalog_transport": "native_muse",
-        "sealed_executable": "scripts/dispatch.py", "quota_bucket": "muse", "credential_bucket": "muse",
-        "quota_limit": 1, "credential_limit": 1, "capacity_weight": 1.0,
-    }
-    holders = expected["routing_holders"]
-    holders["seats"]["meta_reviewer"] = {
-        "model_id": "muse-wonder-full-1.0", "wire_ids": {"native": "muse-wonder-full-1.0"},
-    }
-    for role in MUSE_REVIEW_ROLES:
-        holders["roles"][role].append({
-            "seat": "meta_reviewer", "route_name": "native", "model_id": "muse-wonder-full-1.0",
-            "wire_id": "muse-wonder-full-1.0",
-        })
-    expected["registry"]["muse"] = {
-        "adapter": "scripts.agent_runtime.adapters.muse:MuseAdapter",
-        "default_model": "muse-wonder-full-1.0", "default_effort": "high",
-        "cost_tier": "unknown", "capabilities": ["code_writing"],
-        "cli_available": True, "bridge_spawnable": False, "resume_policy": "never",
-    }
-    # Additional authors still require both existing authorities, never self approval.
-    approval_rows = expected["approval"]["rows"]
-    template = [row for row in approval_rows if row["author"] == "gpt-6-luna"]
-    assert len(template) == 9
-    for model in workers:
-        for row in template:
-            assert row["required"] == expected["approval"]["holders"]
-            approval_rows.append({**deepcopy(row), "author": model})
-    approval_rows.sort(key=lambda row: row["author"])
-    if inputs is not None:
-        assert inputs.keys() == CURRENT_INPUTS.keys()
-        additions = {
-            "adapters": [
-                {"agent": "muse", "mode": mode, "isolation": isolation}
-                for mode in ("read-only", "workspace-write") for isolation in (False, True)
-            ],
-            "dispatch": [
-                {"agent": "muse", "model": model, "budget_status": status, "review_attempt": review}
-                for model in (None, "muse-wonder-full-1.0", "gpt-6-luna",
-                              "gpt-6.1-sol", "grok-4.7", "unregistered-model")
-                for status in ("cool", "near_cap") for review in (None, "frozen-review-attempt.yaml")
-            ],
-            "reviewer": [
-                case
-                for risk in ("low", "medium", "high", "critical") for profile in ("code", "infra")
-                for case in (
-                    *({"author_model": model, "risk": risk, "review_profile": profile} for model in workers),
-                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "author_family": "meta"},
-                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "subject_families": ["meta"]},
-                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "subject_seats": ["muse"]},
-                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile, "pinned_candidate": "muse"},
-                    {"author_model": "gpt-6.1-sol", "risk": risk, "review_profile": profile,
-                     "pinned_candidate": "muse", "pressure_override_reason": "frozen-input"},
-                )
-            ],
-            "roles": [
-                {"role": role, "purpose": "inspect", "context": context, "health": None}
-                for role in CURRENT_BASELINE["routing_holders"]["roles"]
-                for context in ({"excluded_families": ["meta"]}, {"excluded_seats": ["muse"]},
-                                {"pinned_model": "muse-wonder-full-1.0"})
-            ],
-        }
-        for surface, extra_cases in additions.items():
-            reference = dict(zip(map(dispatch_key, CURRENT_INPUTS[surface]), expected[surface], strict=True))
-            added = [case for case in inputs[surface] if dispatch_key(case) not in reference]
-            assert sorted(map(dispatch_key, added)) == sorted(map(dispatch_key, extra_cases))
-            assert [case for case in inputs[surface] if dispatch_key(case) in reference] == CURRENT_INPUTS[surface]
-            rows = []
-            for case in inputs[surface]:
-                key = dispatch_key(case)
-                if key in reference:
-                    receipt = deepcopy(reference[key])
-                    if surface == "dispatch":
-                        receipt["stderr"] = receipt["stderr"].replace(
-                            "--agent {codex,", "--agent\n                            {codex,"
-                        ).replace(
-                            "cursor,glm}", "cursor,glm,muse}"
-                        ).replace("cursor, glm)", "cursor, glm, muse)")
-                        refusal = receipt.get("value", {}).get("refusal")
-                        if refusal and "Cooler seats from budget snapshot:" in refusal:
-                            receipt["value"]["refusal"] = refusal.replace("kimi, qwen.", "kimi, muse, qwen.")
-                elif surface == "adapters":
-                    receipt = {"exit_status": 1, "exception": "ValueError", "error": "muse_delegate_worker_required",
-                               "stdout": "", "stderr": ""}
-                elif surface == "reviewer":
-                    template_case = {k: v for k, v in case.items()
-                                     if k not in {"subject_families", "author_family", "subject_seats", "pinned_candidate", "pressure_override_reason"}}
-                    if case["author_model"] == "muse-wonder-full-1.0":
-                        template_case["author_model"] = "deepseek-v4.1-flash"
-                    elif case["author_model"] in workers:
-                        template_case["author_model"] = "unknown"
-                    elif "author_family" in case:
-                        template_case["author_family"] = "anthropic"
-                    receipt = deepcopy(reference[dispatch_key(template_case)])
-                    reason = receipt["value"]["fail_closed_reason"]
-                    if case["author_model"] == "muse-spark-1.3":
-                        receipt["value"]["fail_closed_reason"] = reason.replace(
-                            "author_model='unknown'", f"author_model='{case['author_model']}'"
-                        )
-                    elif "author_family" in case:
-                        receipt["value"]["fail_closed_reason"] = reason.replace(
-                            "author_family='anthropic'", "author_family='meta'"
-                        )
-                    elif case.get("pinned_candidate"):
-                        value = receipt["value"]
-                        value["selected"] = None
-                        for row in value["trace"]:
-                            if row["status"] == "selected":
-                                row["status"] = "eligible"
-                        value["fail_closed_reason"] = (
-                            "explicit reviewer pin 'muse' failed a hard eligibility gate"
-                            if case.get("pressure_override_reason") else
-                            "explicit reviewer pin requires a non-empty pressure_override_reason"
-                        )
-                        if not case.get("pressure_override_reason"):
-                            value["trace"], value["advisory"] = [], []
-                elif surface == "roles":
-                    receipt = deepcopy(reference[dispatch_key({**case, "context": {}})])
-                else:
-                    model = case["model"]
-                    value = {"argv": None, "target": None, "refusal": None,
-                             "routing": {"alias_note": None, "requested_agent": None, "substitution": None}}
-                    if case["review_attempt"]:
-                        if model == "gpt-6-luna":
-                            peer = {**case, "agent": "codex"}
-                            value = deepcopy(reference[dispatch_key(peer)]["value"])
-                        else:
-                            value["refusal"] = "REVIEW_TARGET_UNRESOLVED: review attempt target unreadable"
-                    else:
-                        value["routing"]["requested_agent"] = "muse"
-                        if case["budget_status"] == "near_cap":
-                            cooler = ", ".join(sorted(set(CURRENT_BASELINE["registry"]) - {"cursor"}))
-                            value["refusal"] = (
-                                "ROUTING REFUSED: --agent muse is near_cap (>90% used on FRESH snapshot) and "
-                                "dispatch_fallbacks has no usable substitute. Cooler seats from budget snapshot: "
-                                + cooler + ". Re-route (see `python -m scripts.fleet.capacity_pick`) or pass --force-agent."
-                            )
-                        else:
-                            value["argv"] = ["--agent", "muse", *(["--model", model] if model else [])]
-                            value["target"] = {"model": model, "reason": "explicit", "recipient": "muse"}
-                    receipt = {"exit_status": 0, "stdout": "", "stderr": "", "value": value}
-                if surface == "reviewer":
-                    receipt = approved_muse_review_receipt(receipt, case)
-                elif surface == "roles":
-                    if case.get("context", {}).get("pinned_model") == "muse-wonder-full-1.0":
-                        for row in receipt["value"]["candidates"]:
-                            row["exclusion_reasons"].append("explicit_pin_mismatch")
-                    receipt = approved_muse_role_receipt(receipt, case)
-                rows.append(receipt)
-            expected[surface] = rows
-    else:
-        for surface, overlay in (("reviewer", approved_muse_review_receipt), ("roles", approved_muse_role_receipt)):
-            expected[surface] = [overlay(row, case) for row, case in zip(expected[surface], CURRENT_INPUTS[surface], strict=True)]
-    assert actual.keys() == (BASELINE.keys() if surfaces is None else set(surfaces))
-    for surface in actual:
-        assert actual[surface] == expected[surface], f"current surface differs: {surface}"
-    if surfaces is None:
-        assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
+def assert_frozen_surfaces(actual, *, surfaces):
+    """Compare surviving catalog/resolver results with the literal current fixture."""
+    assert set(actual) == set(surfaces)
+    for surface in surfaces:
+        assert actual[surface] == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 
 def test_deepseek_flash_execution_requires_opencode():

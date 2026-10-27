@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-import argparse
 import json
-import sys
 import time
 from pathlib import Path
-from types import SimpleNamespace
 from urllib.parse import parse_qs
 
 import pytest
@@ -174,41 +171,6 @@ def test_only_new_public_implementation_jobs_gated(kwargs, expected) -> None:
     assert pr_freeze.opens_new_pr(**base) is expected
 
 
-def test_dispatch_refuses_before_any_side_effect(monkeypatch, capsys, tmp_path) -> None:
-    """End-to-end: a frozen new-PR dispatch exits 3 and leaves no task record."""
-    from scripts import delegate
-
-    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
-    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
-    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
-    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path / "tasks")
-
-    def no_side_effects(*a, **k):
-        raise AssertionError("side effect reached before the freeze check")
-
-    monkeypatch.setattr(delegate, "_state_path", no_side_effects)
-    monkeypatch.setattr(delegate, "_archive_task_artifacts", no_side_effects)
-    argv = [
-        "delegate.py",
-        "dispatch",
-        "--agent",
-        "codex",
-        "--task-id",
-        "freeze-probe",
-        "--mode",
-        "workspace-write",
-        "--worktree",
-        "--prompt",
-        "implement a thing",
-    ]
-    monkeypatch.setattr(sys, "argv", argv)
-    rc = delegate.main()
-    err = capsys.readouterr().err
-    assert rc == 3, err
-    assert "Land your own open PRs first" in err
-    assert not (tmp_path / "tasks").exists()
-
-
 def test_branch_lookup_encodes_head(monkeypatch) -> None:
     seen = []
 
@@ -219,101 +181,6 @@ def test_branch_lookup_encodes_head(monkeypatch) -> None:
     monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
     assert pr_freeze.branch_has_open_pr(REPO, "codex/fix+123&x#y%z")
     assert seen[0].endswith("head=example%3Acodex%2Ffix%2B123%26x%23y%25z")
-
-
-def test_force_new_without_prior_record_is_still_refused(monkeypatch, capsys, tmp_path) -> None:
-    from scripts import delegate
-
-    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
-    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
-    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
-    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path / "tasks")
-    repo = SimpleNamespace(github=REPO, role="public-monorepo")
-    args = argparse.Namespace(
-        mode="workspace-write", branch=None, pr=None, cwd=None, worktree="auto", force_new=True, task_id="fresh-id"
-    )
-    assert delegate._check_open_pr_freeze(args, repo) == 3
-    assert not (tmp_path / "tasks").exists()
-
-    (tmp_path / "tasks").mkdir()
-    (tmp_path / "tasks" / "fresh-id.json").write_text("{}")
-    assert delegate._check_open_pr_freeze(args, repo) == 3
-
-
-@pytest.mark.parametrize("failure", ["count", "branch", "client_cache"])
-def test_dispatch_warning_omits_raw_diagnostics(monkeypatch, capsys, tmp_path, failure) -> None:
-    from scripts import delegate
-
-    sentinel = "SYNTHETIC_PRIVATE_DIAGNOSTIC"
-
-    def broken(*a, **k):
-        raise OSError(sentinel)
-
-    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
-    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
-    if failure == "count":
-        monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", broken)
-    elif failure == "client_cache":
-        # Exercise the actual count-fetch path through the client boundary.
-        from scripts.common import github_client
-
-        monkeypatch.setattr(github_client, "run", broken)
-    else:
-        monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
-        monkeypatch.setattr(pr_freeze, "branch_has_open_pr", broken)
-    repo = SimpleNamespace(github=REPO, role="public-monorepo")
-    args = argparse.Namespace(
-        mode="workspace-write",
-        branch=sentinel if failure == "branch" else None,
-        pr=None,
-        cwd=None,
-        worktree="auto",
-    )
-    assert delegate._check_open_pr_freeze(args, repo) is None
-    output = capsys.readouterr()
-    reason = "branch_pr_lookup_unavailable" if failure == "branch" else "open_pr_count_unavailable"
-    assert reason in output.err
-    assert sentinel not in output.err + output.out
-
-
-def test_fresh_explicit_worktree_path_is_still_refused(monkeypatch, tmp_path) -> None:
-    from scripts import delegate
-
-    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
-    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
-    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
-    repo = SimpleNamespace(github=REPO, role="public-monorepo")
-    fresh = tmp_path / "dispatch" / "codex" / "fresh-name"
-    args = argparse.Namespace(mode="workspace-write", branch=None, pr=None, cwd=None, worktree=str(fresh))
-    assert delegate._check_open_pr_freeze(args, repo) == 3
-    assert not fresh.exists()
-
-    fresh.mkdir(parents=True)
-    (fresh / ".git").write_text("gitdir: elsewhere\n")
-    assert delegate._check_open_pr_freeze(args, repo) is None
-
-
-def test_relative_worktree_resolves_against_target_repo(monkeypatch, tmp_path) -> None:
-    from scripts import delegate
-
-    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
-    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
-    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
-    repo = SimpleNamespace(github=REPO, role="public-monorepo")
-    target_root = tmp_path / "target"
-    target_root.mkdir()
-    other_cwd = tmp_path / "elsewhere"
-    decoy = other_cwd / "wt" / "new-target"
-    decoy.mkdir(parents=True)
-    (decoy / ".git").write_text("gitdir: x\n")
-    monkeypatch.chdir(other_cwd)
-    args = argparse.Namespace(mode="workspace-write", branch=None, pr=None, cwd=None, worktree="wt/new-target")
-    assert delegate._check_open_pr_freeze(args, repo, target_root) == 3
-
-    real = target_root / "wt" / "new-target"
-    real.mkdir(parents=True)
-    (real / ".git").write_text("gitdir: x\n")
-    assert delegate._check_open_pr_freeze(args, repo, target_root) is None
 
 
 def _issued_search_query(endpoint: str) -> str:

@@ -385,3 +385,117 @@ def test_pause_lifts_by_itself_after_until(headroom_box):
     """Ported from tests/test_model_pause.py::test_pause_lifts_by_itself_after_until."""
     headroom_box.policy({"pauses": [{"pattern": "claude-*", "until": "2000-01-01T00:00:00Z"}]})
     assert headroom_box.dispatch() == 0
+
+
+def test_strip_quoted_content_handles_tilde_fences_and_unclosed_fence():
+    prompt = "~~~\nFix the thing.\n~~~\nReview only."
+    assert "Fix the thing." not in write_intent._strip_quoted_content(prompt)
+    unclosed = "Critique this:\n```\nAdd a CLI."
+    # An unclosed fence is not quoted content; the scan still sees it.
+    assert "Add a CLI." in write_intent._strip_quoted_content(unclosed)
+
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+def test_commonmark_removed_fence_preserves_write_intent_paragraph_boundary(fence):
+    prompt = f"Context without punctuation\n{fence}\nExample\n{fence}\nFix the parser.\n"
+    assert write_intent._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "```example`\n- Fix the parser.\n```\n",
+        "    ```\n    - Fix the parser.\n    ```\n",
+        "- ```\n    - Fix the parser.\n    ```\n",
+        "> ```\n- Fix the parser.\n> ```\n",
+    ],
+)
+def test_commonmark_invalid_opener_and_containers_do_not_hide_write_intent(block):
+    assert write_intent._read_only_write_intent_error(mode="read-only", prompt=block) is not None
+
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+@pytest.mark.parametrize("items,indent", [(("1.", "2.", "3."), 3), (("-", "-", "-"), 2)])
+def test_commonmark_list_item_escape_does_not_hide_visible_write_intent(fence, items, indent):
+    prompt = (
+        "Review only; report findings.\n"
+        f"{items[0]} Old example:\n"
+        f"{' ' * indent}{fence}py\n"
+        f"{' ' * indent}x = 1\n"
+        f"{items[1]} Fix the parser.\n"
+        f"{items[2]} New example:\n"
+        f"{' ' * indent}{fence}\n"
+    )
+    assert "Fix the parser." in write_intent._strip_quoted_content(prompt)
+    assert write_intent._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+
+@pytest.mark.parametrize(
+    "container",
+    ["- item\n  ```\n  example\n", "> ```\n> example\n"],
+    ids=["list", "blockquote"],
+)
+def test_parser_spans_container_exit_preserves_write_refusal(container):
+    # Second Opus CF reproduction, with an equivalent blockquote exit.
+    prompt = (
+        "Review the brief below.\n\n"
+        + container
+        + "```\nquoted data\n```\nAdd a CLI flag to scripts/foo.py.\n```\ntrailing\n"
+    )
+    stripped = write_intent._strip_quoted_content(prompt)
+    assert "Add a CLI flag to scripts/foo.py.\n" in stripped
+    assert "quoted data" not in stripped
+    assert "trailing\n" in stripped  # The final top-level fence is unclosed.
+    error = write_intent._read_only_write_intent_error(mode="read-only", prompt=prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+def test_read_only_question_to_reviewer_is_not_refused():
+    """A line ending in '?' is a question to the reviewer, not a directive (#8703).
+
+    Real brief from review-8663-r1: 'remove a worktree it did not create? Is the branch ref always kept?'
+    """
+    prompt = "Can a crashed dispatcher\nremove a worktree it did not create? Is the branch ref always kept?\n"
+    assert write_intent._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+
+    standalone_question = "remove a worktree it did not create? Is the branch ref always kept?\n"
+    assert write_intent._read_only_write_intent_error(mode="read-only", prompt=standalone_question) is None
+
+    question_verb = "Fix the bug in the parser?\n"
+    assert write_intent._read_only_write_intent_error(mode="read-only", prompt=question_verb) is None
+
+    bulleted_question = "- Remove the worktree it did not create?\n"
+    assert write_intent._read_only_write_intent_error(mode="read-only", prompt=bulleted_question) is None
+
+@pytest.mark.parametrize(
+    "directive_prompt",
+    [
+        "Fix the bug in X.\n",
+        "Please fix the bug in X.\n",
+        "1. Fix the parser\n",
+        "1) Fix the parser\n",
+        "- Update docs\n",
+        "* Update docs\n",
+        "+ Fix the parser\n",
+        "# Fix the parser\n",
+        "Tasks:\nFix the bug in X.\n",
+        "Previous step.\nFix the bug in X.\n",
+        "Why is this broken!\nFix the bug in X.\n",
+        "Why is this broken?\nFix the bug in X.\n",
+        "# Work\nFix the bug in X.\n",
+        "- Step 1\nFix the bug in X.\n",
+        "Context\n\nFix the bug in foo.\n",
+    ],
+)
+def test_read_only_write_directive_cases_are_still_refused(directive_prompt):
+    """Genuine write directives (numbered, bulleted, first-line, or after sentence boundaries) are refused (#8703)."""
+    error = write_intent._read_only_write_intent_error(mode="read-only", prompt=directive_prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+def test_read_only_blank_line_starts_new_sentence_refused():
+    """A blank line ends the paragraph, so a subsequent imperative verb is a directive (#8703).
+
+    A directive that opens a new paragraph after an unpunctuated line
+    (e.g., 'Context', 'Task', 'Background') must be refused.
+    """
+    prompt = "Context\n\nFix the bug in foo."
+    error = write_intent._read_only_write_intent_error(mode="read-only", prompt=prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error

@@ -33,7 +33,6 @@ from typing import Any
 
 import pytest
 
-from scripts import delegate
 from scripts.agent_runtime import model_pause, target_admission
 from scripts.fleet import claude_account_lane, credit_lane
 from scripts.fleet.claude_account_lane import AccountRequired, AccountSnapshot, bind_snapshot, select_account
@@ -308,18 +307,6 @@ def _held_by_resolver_runtime_state(raw, monkeypatch, tmp_path, capsys):
     return held
 
 
-def _held_by_delegate_guard(raw, monkeypatch, tmp_path, capsys):
-    held: list[Any] = []
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: raw)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
-
-    def review_select(snapshot, _seat):
-        held.append(snapshot)
-        return "claude", None
-
-    with pytest.raises(delegate.BudgetGuardRefuseError, match=r"near_cap \(0\.5% remaining\)"):
-        delegate._resolve_agent_with_budget_guard("claude", fallbacks={}, review_select=review_select, claude_account=B)
-    return held
 
 
 def _held_by_closeout(source: str):
@@ -396,7 +383,6 @@ def _held_by_model_pause(raw, monkeypatch, tmp_path, capsys):
 CONSUMERS = {
     "resolver_inputs": _held_by_resolver_inputs,
     "resolver_runtime_state": _held_by_resolver_runtime_state,
-    "delegate_budget_guard": _held_by_delegate_guard,
     "closeout_live_fetch": _held_by_closeout("live"),
     "closeout_snapshot_file": _held_by_closeout("file"),
     "bench_health": _held_by_bench,
@@ -469,34 +455,6 @@ def test_resolver_inputs_bind_on_construction_and_refuse_another_accounts_view()
         ResolverInputs(author_model="gpt-6.1-sol", routing_snapshot=bound(raw, B), claude_account=HOST_ACCOUNT)
     with pytest.raises(AccountRequired):
         reviewer_resolver.replace(inputs, claude_account=HOST_ACCOUNT)
-
-
-@pytest.mark.parametrize(
-    ("route_account", "seat", "missing_agents"),
-    [(HOST_ACCOUNT, "claude", False), (B, "codex", False), (B, "codex", True)],
-)
-def test_the_dispatch_guard_judges_the_bound_accounts_meter(monkeypatch, capsys, route_account, seat, missing_agents):
-    """An agents-less review snapshot must not raise AccountRequired for a bound account."""
-    raw = {} if missing_agents else _reversed()
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: raw)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
-    sink: dict = {}
-
-    chosen = delegate._resolve_agent_with_budget_guard(
-        "codex" if missing_agents else "claude",
-        fallbacks={"claude": "codex"},
-        review_select=(lambda _snapshot, _seat: ("codex", None)) if missing_agents else None,
-        diagnostic_sink=sink,
-        claude_account=route_account,
-    )
-
-    assert chosen == seat
-    if not missing_agents:
-        assert sink["claude_account"]["label"] == route_account.label
-    err = capsys.readouterr().err
-    assert "preferred" not in err
-    if missing_agents:
-        assert "ROUTING CHECK UNKNOWN" in err
 
 
 def test_model_pause_binds_the_fetched_snapshot_and_lets_account_required_through(monkeypatch):
@@ -1012,7 +970,6 @@ def test_a_candidate_reaching_any_claude_record_reads_only_a_bound_snapshot():
 DECISION_MODULES = (
     "scripts/agent_runtime/model_pause.py",
     "scripts/agent_runtime/target_admission.py",
-    "scripts/delegate.py",
     "scripts/fleet/credit_lane.py",
     "scripts/lib/claude_weekly_used.py",
     "scripts/orchestration/curriculum_coordinator.py",
@@ -1026,12 +983,6 @@ BINDERS = frozenset({"bind_snapshot", "select_account", "account_weekly_used_pct
 # (module, function) -> how the raw snapshot it receives is bound. ``None`` marks a fetch helper
 # whose callers are listed here too, or a reader that selects its account itself.
 RAW_SNAPSHOT_SOURCES: dict[tuple[str, str], str | None] = {
-    ("scripts/delegate.py", "_fetch_routing_budget"): None,
-    ("scripts/delegate.py", "_admit_dispatch_target"): "red-team initial snapshot: select_account",
-    ("scripts/delegate.py", "_resolve_agent_with_budget_guard"): (
-        "select_account as the dispatch's account; the raw payload is bound again only for the "
-        "cooler-seat advice, as the account a re-routed claude dispatch would resolve"
-    ),
     ("scripts/fleet/credit_lane.py", "read_routing_budget"): None,
     ("scripts/fleet/credit_lane.py", "dispatch_refusal"): "bind_snapshot to no account (credit lanes only)",
     ("scripts/review/closeout_cli.py", "_cmd_resolve_reviewer"): "live fetch or JSON file: select_account",

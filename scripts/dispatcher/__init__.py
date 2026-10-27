@@ -1,1 +1,1 @@
-"""Minimal task dispatcher that replaces scripts/dispatch.py (tracker C-2188)."""
+"""Detached task dispatch and supervision."""

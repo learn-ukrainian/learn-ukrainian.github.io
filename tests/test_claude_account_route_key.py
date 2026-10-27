@@ -14,18 +14,12 @@ Three properties, each against the real code paths:
 
 from __future__ import annotations
 
-import io
-import json
-from pathlib import Path
-
 import pytest
 
-from scripts import delegate
-from scripts.agent_runtime import attempt_boundary, model_pause, target_admission
+from scripts.agent_runtime import target_admission
 from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
 from scripts.fleet import claude_account_lane
 from scripts.fleet.claude_account_lane import HEALTHY, HOT, UNKNOWN, ClaudeAccount
-from scripts.review import closeout_cli
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT, account, unresolved
 from tests.helpers.claude_account_fixtures import UNVERIFIED_ROW as _UNVERIFIED_ROW
@@ -35,10 +29,6 @@ from tests.helpers.claude_account_fixtures import bind_claude_account_b as _bind
 from tests.helpers.claude_account_fixtures import default_account_file as _default_account_file
 from tests.helpers.claude_account_fixtures import default_claude_lane as _default_claude_lane
 from tests.helpers.claude_account_fixtures import fresh_lane as _fresh_lane
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-HEADROOM_CAP = 90
-
 
 # --- row 1: the snapshot read API requires a named account ----------------------------------
 
@@ -140,50 +130,6 @@ def test_the_account_view_is_a_fixed_point(route_account):
 # --- row 5: every final claude route resolves and binds its account before admission ----------
 
 
-def _dispatch_args(*argv: str):
-    return delegate.build_parser().parse_args(["dispatch", "--task-id", "route-key", "--prompt", "x", *argv])
-
-
-def _review_args(agent: str):
-    return _dispatch_args(
-        "--agent", agent, "--mode", "read-only", "--require-review-verdict", "--review-author-model", "gpt-6.1-sol"
-    )
-
-
-def test_a_claude_request_on_an_unresolvable_account_is_refused(tmp_path, monkeypatch):
-    _default_account_file(tmp_path, monkeypatch, b"c\n")
-    with pytest.raises(attempt_boundary.ClaudeAccountRefused, match="claude_account_default_file_invalid"):
-        delegate._resolve_dispatch_claude_account(_dispatch_args("--agent", "claude"))
-
-
-@pytest.mark.parametrize("agent", ["codex", "agy", "cursor"])
-def test_another_seats_review_resolves_the_account_a_claude_reviewer_would_run_as(tmp_path, monkeypatch, agent):
-    _default_account_file(tmp_path, monkeypatch, b"c\n")
-    assert delegate._resolve_dispatch_claude_account(_review_args(agent)) == unresolved(
-        "claude_account_default_file_invalid"
-    )
-    _default_account_file(tmp_path, monkeypatch, b"b\n")
-    for bound, expected in (
-        (False, unresolved("claude_account_binding_missing")),
-        (True, account("b", "default-file")),
-    ):
-        login = tmp_path / ("bound" if bound else "unbound")
-        login.mkdir(mode=0o700)
-        _bind_claude_account_b(login, monkeypatch, bound=bound)
-        assert delegate._resolve_dispatch_claude_account(_review_args(agent)) == expected
-
-
-def test_another_seats_ordinary_dispatch_reaches_no_claude_route_and_reads_no_account(tmp_path, monkeypatch):
-    _default_account_file(tmp_path, monkeypatch, b"c\n")
-    monkeypatch.setattr(
-        attempt_boundary, "resolve_dispatch_claude_account", lambda *_a, **_k: pytest.fail("read the account file")
-    )
-    resolved = delegate._resolve_dispatch_claude_account(_dispatch_args("--agent", "codex"))
-    assert resolved == claude_account_lane.no_claude_account()
-    with pytest.raises(attempt_boundary.ClaudeAccountRefused, match="claude_account_seat_unsupported"):
-        delegate._resolve_dispatch_claude_account(_dispatch_args("--agent", "codex", "--claude-account", "b"))
-
-
 def test_admission_refuses_any_final_claude_route_on_an_unresolved_account():
     """The backstop: whatever step chose claude, admission refuses it on an unresolved account."""
 
@@ -209,19 +155,6 @@ def test_admission_refuses_any_final_claude_route_on_an_unresolved_account():
     assert target.recipient == "codex"
 
 
-def test_no_record_names_an_unresolved_account():
-    args = _dispatch_args("--agent", "codex")
-    code = "claude_account_default_file_invalid"
-    with pytest.raises(attempt_boundary.ClaudeAccountRefused, match=code):
-        delegate._claude_account_state(args, unresolved(code), "claude")
-    assert delegate._claude_account_state(args, unresolved(code), "codex") == {}
-    assert delegate._claude_account_state(args, account("b", "default-file"), "claude") == {
-        "claude_account": "b",
-        "claude_account_source": "default-file",
-        "claude_account_user_scope_omitted": True,
-    }
-
-
 # --- row 3: the five decision consumers agree on one snapshot and one account -----------------
 
 
@@ -241,20 +174,6 @@ def _agreement_snapshot(a_state: str, b_row: dict | None) -> dict:
 
 
 # case: (lane row state of account a, account b's row, default-account file, owner verdict)
-AGREEMENT_CASES = {
-    "a_hot": ("near_cap", _account_row(89.0), b"a\n", HOT),
-    "a_healthy": ("healthy", _account_row(0.5), b"a\n", HEALTHY),
-    "a_unknown": ("unknown", _account_row(89.0), None, UNKNOWN),
-    "b_healthy_while_a_is_hot": ("near_cap", _account_row(89.0), b"b\n", HEALTHY),
-    "b_hot_while_a_is_healthy": ("healthy", _account_row(0.5), b"b\n", HOT),
-    "b_unknown_meter": ("healthy", _UNVERIFIED_ROW, b"b\n", UNKNOWN),
-    "b_without_a_row": ("healthy", None, b"b\n", UNKNOWN),
-    # A stale meter is advisory whatever it reads: only a fresh reading is hot or healthy.
-    "b_stale_near_cap": ("healthy", _account_row(0.5, status="stale"), b"b\n", UNKNOWN),
-    "b_stale_with_headroom": ("near_cap", _account_row(89.0, status="stale"), b"b\n", UNKNOWN),
-    "unresolved_default_file": ("healthy", _account_row(89.0), b"c\n", UNKNOWN),
-    "unbound_b": ("near_cap", _account_row(89.0), b"unbound-b", UNKNOWN),
-}
 
 
 @pytest.mark.parametrize(
@@ -285,143 +204,3 @@ def _route_key_for(tmp_path, monkeypatch, default_file: bytes | None) -> ClaudeA
     else:
         _default_account_file(tmp_path, monkeypatch, default_file)
     return claude_account_lane.resolve_route_account(None, strict=False)
-
-
-def _guard_verdict(monkeypatch, capsys, budget: dict, route_account: ClaudeAccount) -> str:
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
-    sink: dict = {}
-    try:
-        seat = delegate._resolve_agent_with_budget_guard(
-            "claude", fallbacks={"claude": "codex"}, diagnostic_sink=sink, claude_account=route_account
-        )
-    except delegate.BudgetGuardRefuseError as exc:
-        # Only an unresolved account refuses before any reading: the claude seat is removed.
-        assert "CLAUDE_ACCOUNT_REFUSED" in str(exc) and not route_account.resolved
-        return UNKNOWN
-    err = capsys.readouterr().err
-    assert sink["claude_account"]["label"] == route_account.label
-    if seat != "claude":
-        assert "HARD AUTO-SUBSTITUTE" in err
-        return HOT
-    if f"ROUTING CHECK ADVISORY (stale claude account {route_account.label} meter" in err:
-        # A stale account meter keeps the seat with no hard substitution: the guard's advisory verdict.
-        return UNKNOWN
-    if sink["capacity"] == "verified":
-        assert "ROUTING CHECK UNKNOWN" not in err
-        return HEALTHY
-    assert sink["capacity"] in {"unknown", "unknown_stale"}
-    if route_account.label != "a":
-        assert f"ROUTING CHECK UNKNOWN: claude account {route_account.label} meter unavailable" in err
-    return UNKNOWN
-
-
-def _headroom_verdict(tmp_path, monkeypatch, budget: dict, route_account: ClaudeAccount) -> str:
-    policy = {"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": HEADROOM_CAP}]}
-    monkeypatch.setattr(model_pause.urllib.request, "urlopen", lambda *a, **k: io.StringIO(json.dumps(budget)))
-    used = model_pause.routing_budget_used_pct("claude", account=route_account)
-    held = model_pause.refusal_reason(
-        "claude-opus-5-5", policy=policy, used_pct=model_pause.account_used_pct(route_account)
-    )
-    assert (held is not None) == (used is not None and used >= HEADROOM_CAP)
-    return UNKNOWN if used is None else HOT if held else HEALTHY
-
-
-def _admission_selects_claude(budget: dict, route_account: ClaudeAccount) -> bool:
-    """Reviewer admission for a GPT author at critical risk, given the raw snapshot: does it keep claude?"""
-    seat, _model = target_admission._resolve_review_target(
-        "claude",
-        "claude-opus-5-5",
-        author_model="gpt-6.1-sol",
-        risk="critical",
-        profile="code",
-        attempt=False,
-        snapshot=budget,
-        budget_seat="claude",
-        owned_paths=("ordinary.py",),
-        claude_account=route_account,
-    )
-    return seat == "claude"
-
-
-def _closeout_selects_claude(tmp_path, capsys, budget: dict, route_account: ClaudeAccount) -> bool:
-    path = tmp_path / "snapshot.json"
-    path.write_text(json.dumps(budget))
-    closeout_cli.main(
-        [
-            "--state-file",
-            str(tmp_path / "state.json"),
-            "resolve-reviewer",
-            "--author-model",
-            "gpt-6.1-sol",
-            "--risk",
-            "critical",
-            "--owned-path",
-            "ordinary.py",
-            "--routing-snapshot-file",
-            str(path),
-        ]
-    )
-    result = json.loads(capsys.readouterr().out)
-    if not route_account.resolved:
-        assert result["claude_account_unresolved"] == route_account.refusal
-    elif route_account.label != "a":
-        assert result["claude_account"]["label"] == route_account.label
-    return (result["selected"] or {}).get("route") == "claude"
-
-
-@pytest.mark.parametrize("case", sorted(AGREEMENT_CASES))
-def test_the_five_decision_consumers_agree_on_one_snapshot_and_account(case, tmp_path, monkeypatch, capsys):
-    a_state, b_row, default_file, expected = AGREEMENT_CASES[case]
-    budget = _agreement_snapshot(a_state, b_row)
-    route_account = _route_key_for(tmp_path, monkeypatch, default_file)
-    if case.startswith("unresolved") or case.startswith("unbound"):
-        assert not route_account.resolved
-    else:
-        assert route_account.label == ("b" if default_file == b"b\n" else "a")
-
-    verdicts = {
-        "claude_account_lane": claude_account_lane.capacity_verdict(budget, account=route_account),
-        "delegate budget guard": _guard_verdict(monkeypatch, capsys, budget, route_account),
-        "model_pause headroom": _headroom_verdict(tmp_path, monkeypatch, budget, route_account),
-    }
-    admitted = _admission_selects_claude(budget, route_account)
-    selected = _closeout_selects_claude(tmp_path, capsys, budget, route_account)
-
-    assert verdicts == dict.fromkeys(verdicts, expected)
-    # Reviewer selection keeps a claude seat exactly when its account is resolved and not hot:
-    # a hot meter excludes it for capacity, an unknown one is advisory, an unresolved account removes it.
-    keeps_claude = route_account.resolved and expected != HOT
-    assert {"target_admission": admitted, "closeout_cli": selected} == dict.fromkeys(
-        ("target_admission", "closeout_cli"), keeps_claude
-    )
-
-
-@pytest.mark.parametrize(("default_file", "lists_claude"), [(None, True), (b"c\n", False)])
-def test_another_seats_refusal_lists_claude_as_a_rerouted_claude_dispatch_would_run(
-    tmp_path, monkeypatch, default_file, lists_claude
-):
-    """Parity with main: an ordinary dispatch reaches no claude seat, but its re-route advice still reads claude.
-
-    The advice reads the claude lane as the account a claude dispatch would resolve and bind: the
-    default account's lane row lists claude as before, and an unresolvable default account does not.
-    """
-    budget = _agreement_snapshot("healthy", _account_row(89.0))
-    budget["agents"]["grok"] = _fresh_lane(
-        status="near_cap", remaining_pct=0.5, codexbar={"weekly_remaining_pct": 0.5, "will_last_to_reset": False}
-    )
-    if default_file is None:
-        monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
-    else:
-        _default_account_file(tmp_path, monkeypatch, default_file)
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
-
-    with pytest.raises(delegate.BudgetGuardRefuseError, match="Cooler seats from budget snapshot") as refused:
-        delegate._resolve_agent_with_budget_guard(
-            "grok", fallbacks={}, claude_account=claude_account_lane.no_claude_account()
-        )
-
-    listed = str(refused.value).split("Cooler seats from budget snapshot: ", 1)[1].split(". Re-route", 1)[0]
-    assert ("claude" in listed.split(", ")) is lists_claude
-    assert "codex" in listed.split(", ")

@@ -21,7 +21,6 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 # item 3 / #6898 — the exemption rests on fleet consumers never reading
 # scripts/projects/open_model_data pins (they use model_catalog instead).
 _FLEET_ROUTING_SURFACES: tuple[str, ...] = (
-    "scripts/delegate.py",
     "scripts/agent_runtime",
     "scripts/ai_agent_bridge",
     # Launcher shell scripts call these Python helpers (scripts/lib/*.py).

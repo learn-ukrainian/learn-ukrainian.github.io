@@ -18,8 +18,6 @@ from scripts.agent_runtime.adapters.kimi import (
 )
 from scripts.agent_runtime.adapters.kimicc import KimiccHarness
 from scripts.agent_runtime.tool_config import build_mcp_tool_config
-from scripts.audit.lint_agent_trailer import _TRAILER_RE
-from scripts.delegate import build_parser
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 
@@ -388,23 +386,6 @@ def test_parse_gh_auth_prompt_is_not_rate_limited():
     )
     assert parsed.ok is False
     assert parsed.rate_limited is False
-
-
-def test_dispatch_parser_and_commit_trailer_accept_kimi():
-    args = build_parser().parse_args(
-        [
-            "dispatch",
-            "--agent",
-            "kimi",
-            "--task-id",
-            "kimi-smoke",
-            "--prompt",
-            "probe",
-            "--dry-run",
-        ]
-    )
-    assert args.agent == "kimi"
-    assert _TRAILER_RE.search("X-Agent: kimi/kimi-smoke")
 
 
 def test_kimi_mcp_request_fails_closed_without_per_call_selector():

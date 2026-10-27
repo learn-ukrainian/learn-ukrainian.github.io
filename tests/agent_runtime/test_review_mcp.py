@@ -12,7 +12,6 @@ import stat
 import subprocess
 import threading
 import tomllib
-import uuid
 from collections.abc import Iterator
 from dataclasses import replace
 from pathlib import Path
@@ -22,7 +21,6 @@ import pytest
 
 import scripts.agent_runtime.review_mcp as review_mcp_module
 import scripts.common.safe_open as safe_open_module
-import scripts.delegate as delegate_cli
 from scripts.agent_runtime.adapters.claude import ClaudeAdapter
 from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.agent_runtime.adapters.cursor import CursorAdapter
@@ -53,7 +51,6 @@ from scripts.review.receipts import ledger as ledger_module
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 from scripts.review.render_contract import ReviewContractError
 from tests.helpers.review_scope import ordinary_review_scope as ordinary_review_scope
-from tests.helpers.review_scope import write_code_review_manifest
 
 
 @pytest.fixture(autouse=True)
@@ -340,32 +337,6 @@ def _host_independent_umask() -> Iterator[None]:
 
 
 @pytest.fixture(autouse=True)
-def _isolate_dispatch_worktrees(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Refusal regressions must fail before provisioning a real dispatch tree."""
-    ensure_worktree = delegate_cli._ensure_worktree
-
-    def ensure_fixture_worktree(**kwargs):
-        assert delegate_cli._REPO_ROOT.resolve().is_relative_to(tmp_path.resolve()), (
-            "dispatch reached real worktree provisioning"
-        )
-        return ensure_worktree(**kwargs)
-
-    monkeypatch.setattr(delegate_cli, "_ensure_worktree", ensure_fixture_worktree)
-
-
-@pytest.fixture(autouse=True)
-def _skip_advisory_dispatch_probes(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Dispatch tests here are about review-attempt refusals, not host health.
-
-    Each dispatch otherwise runs the advisory venv and node_modules integrity
-    probes (about two seconds). They never block a dispatch and are covered by
-    tests/test_check_venv_integrity.py and tests/test_check_node_modules_integrity.py.
-    """
-    for name in ("_warn_venv_integrity", "_warn_node_modules_integrity"):
-        monkeypatch.setattr(delegate_cli, name, lambda: None)
-
-
-@pytest.fixture(autouse=True)
 def _matched_review_contract(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Dispatch tests here dispatch literal prompts with no render record; the contract checks have their own tests
     (#9163), here and in test_review_contract.py. Like a real contract it names an input root (#9597)."""
@@ -380,63 +351,11 @@ def _matched_review_contract(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) ->
     monkeypatch.setattr(review_mcp_module, "check_launch_contract", lambda *_args: None)
 
 
-def _cool_routing_budget() -> dict[str, object]:
-    """Fresh snapshot: every dispatch seat is cool and above the review near-cap threshold."""
-    agents: dict[str, object] = {}
-    for seat in ("claude", "codex", "cursor", "agy"):
-        agents[seat] = {
-            "status": "cool",
-            "remaining_pct": 60.0,
-            "burn_pct_7d": 10.0,
-            "will_last_to_reset": True,
-            "interactive": {"status": "cool", "burn_pct_7d": 10.0},
-        }
-    return {
-        "diagnostics": {"records_loaded": len(agents), "stale": False},
-        "recommendation": {"primary_agent_for_code": "claude"},
-        "agents": agents,
-    }
-
-
-def _absent_routing_budget() -> dict[str, object]:
-    """Empty ledger: the guard reports budget unknown and does not hard-substitute."""
-    return {"agents": {}, "diagnostics": {"records_loaded": 0, "stale": False}}
-
-
-@pytest.fixture(autouse=True)
-def _host_independent_routing_budget(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Review dispatches must not read the host's live budget snapshot (#10429).
-
-    A deficit lane substitutes the requested seat before the assertion under test.
-    Inject a cool snapshot, or an empty ledger when ``LU_REVIEW_MCP_BUDGET_SNAPSHOT=absent``.
-    A later patch of ``_fetch_routing_budget`` in the test body still owns that case.
-    """
-    mode = os.environ.get("LU_REVIEW_MCP_BUDGET_SNAPSHOT", "neutral").strip().lower()
-    if mode not in {"neutral", "absent"}:
-        raise AssertionError(f"LU_REVIEW_MCP_BUDGET_SNAPSHOT must be 'neutral' or 'absent', not {mode!r}")
-    payload = _absent_routing_budget if mode == "absent" else _cool_routing_budget
-    monkeypatch.setattr(delegate_cli, "_fetch_routing_budget", payload)
-
-
 @pytest.fixture
 def manifest_file(tmp_path: Path) -> Path:
     manifest = tmp_path / "manifest.yaml"
     manifest.write_text("review_id: rev-test-001\nattempt_id: att-test-001\n", encoding="utf-8")
     return manifest
-
-
-@pytest.fixture
-def code_review_manifest(ordinary_review_scope, tmp_path, monkeypatch):
-    monkeypatch.setattr(delegate_cli, "_local_repo_root", ordinary_review_scope)
-    return write_code_review_manifest(ordinary_review_scope, tmp_path / "code-review.json")
-
-
-def _attempt_prompt(review_id: str, attempt_id: str) -> str:
-    """A --review-attempt prompt must print the ids its seat echoes (#8996)."""
-    return (
-        "### Return Schema Template:\n```yaml\nreview_schema: 1\nkind: lesson\nattempt:\n"
-        f'  review_id: "{review_id}"\n  attempt_id: "{attempt_id}"\n```\n'
-    )
 
 
 @pytest.mark.parametrize("harness", sorted(SUPPORTED_HARNESSES))
@@ -571,92 +490,6 @@ def test_prepare_review_attempt_refuses_reused_attempt_id(manifest_file: Path, t
         )
 
 
-def test_delegate_dispatch_refusal_for_grok(code_review_manifest: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    rc = delegate_cli.main(
-        [
-            "dispatch",
-            "--review-profile",
-            "code",
-            "--agent",
-            "grok",
-            "--task-id",
-            "review-task-grok",
-            "--prompt",
-            _attempt_prompt("rev-001", "att-001"),
-            "--review-access",
-            "isolated",
-            "--review-attempt",
-            str(code_review_manifest),
-            "--review-id",
-            "rev-001",
-            "--attempt-id",
-            "att-001",
-        ]
-    )
-    assert rc == 2
-    captured = capsys.readouterr()
-    assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
-    assert "review attempt refused for grok: not yet proven (#8517)" in captured.err
-
-
-def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    rc = delegate_cli.main(
-        [
-            "dispatch",
-            "--agent",
-            "kimi",
-            "--harness",
-            "kimicc",
-            "--task-id",
-            "review-task-kimicc",
-            "--prompt",
-            _attempt_prompt("rev-001", "att-001"),
-            "--review-access",
-            "isolated",
-            "--review-attempt",
-            str(manifest_file),
-            "--review-id",
-            "rev-001",
-            "--attempt-id",
-            "att-001",
-        ]
-    )
-    assert rc == 2
-    captured = capsys.readouterr()
-    # Kimi admission refuses before the review-attempt harness check.
-    assert "retired in the model catalog (kimi-code/k3-256k)" in captured.err
-    assert "use an active catalog model" in captured.err
-    assert not delegate_cli._state_path_no_create("review-task-kimicc").exists()
-
-
-def test_delegate_dispatch_incomplete_review_attempt_flags(
-    manifest_file: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    rc = delegate_cli.main(
-        [
-            "dispatch",
-            "--review-profile",
-            "ukrainian",
-            "--agent",
-            "claude",
-            "--model",
-            "claude-opus-5-5",
-            "--task-id",
-            "review-task-partial",
-            "--prompt",
-            "perform review",
-            "--review-access",
-            "isolated",
-            "--review-attempt",
-            str(manifest_file),
-            # Missing --review-id and --attempt-id
-        ]
-    )
-    assert rc == 2
-    captured = capsys.readouterr()
-    assert "--review-attempt, --review-id, and --attempt-id must be used together" in captured.err
-
-
 def test_claude_adapter_command_line_contains_review_grant(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -714,204 +547,6 @@ def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> No
                     "strict_mcp_config": True,
                 },
             )
-
-
-@pytest.mark.parametrize("seat", ["cursor", "claude"])
-def test_delegate_dispatch_review_refuses_primary_checkout(
-    code_review_manifest: Path,
-    ordinary_review_scope: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-    seat: str,
-) -> None:
-    # Cursor identity admission now precedes its dispatch worktree guard.
-    # Keep that refusal covered, and exercise primary-checkout protection with
-    # an eligible write-capable review seat. The Cursor adapter guard is tested above.
-    # Write-dispatch review admission (#9739) reads the target checkout's branch
-    # first, so the dispatch declares its scope and targets the fixture primary,
-    # which is on main in sync with origin/main.
-    primary = ordinary_review_scope
-    subprocess.run(
-        ["git", "-C", str(primary), "update-ref", "refs/remotes/origin/main", "HEAD"],
-        check=True,
-        capture_output=True,
-        env=delegate_cli._sanitized_git_env(),
-        timeout=30,
-    )
-    monkeypatch.setattr(delegate_cli, "_REPO_ROOT", primary)
-    rc = delegate_cli.main(
-        [
-            "dispatch",
-            "--review-profile",
-            "code",
-            "--agent",
-            seat,
-            "--mode",
-            "workspace-write",
-            "--task-id",
-            "review-task-primary",
-            "--cwd",
-            str(primary),
-            "--owned-path",
-            "ordinary.py",
-            "--prompt",
-            _attempt_prompt("rev-001", "att-001"),
-            "--review-access",
-            "isolated",
-            "--review-attempt",
-            str(code_review_manifest),
-            "--review-id",
-            "rev-001",
-            "--attempt-id",
-            "att-001",
-        ]
-    )
-    assert rc == 2
-    captured = capsys.readouterr()
-    if seat == "cursor":
-        assert "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for cursor:" in captured.err
-        assert "formal attempts require a proven manifest filesystem boundary" in captured.err
-        assert "Cursor is not admitted (#9251)" in captured.err
-    else:
-        assert "resolves inside the primary checkout; write-capable dispatch may not run there" in captured.err
-
-
-@pytest.mark.parametrize("remaining_pct", [None, 54.0, 10.0, 5.0])
-def test_delegate_dispatch_attempt_budget_guard_uses_allowance_reserve(
-    manifest_file: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-    remaining_pct: float | None,
-) -> None:
-    monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
-    fake_budget = {
-        "diagnostics": {"records_loaded": 10, "stale": False},
-        "recommendation": {"primary_agent_for_code": "codex"},
-        "agents": {
-            "claude": {
-                "interactive": {"status": "near_cap", "burn_pct_7d": 95.0},
-                "status": "near_cap",
-                "burn_pct_7d": 95.0,
-                "will_last_to_reset": False,
-            },
-            "codex": {
-                "status": "cool",
-                "burn_pct_7d": 20.0,
-                "will_last_to_reset": True,
-            },
-        },
-    }
-    if remaining_pct is not None:
-        fake_budget["agents"]["claude"]["remaining_pct"] = remaining_pct
-    # Owns the snapshot over ``_host_independent_routing_budget``. remaining_pct <= 10
-    # is the proof that a real deficit still refuses substitution (#10429).
-    monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: fake_budget)
-    monkeypatch.setattr(
-        "scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: {"claude": "codex"}
-    )
-
-    rc = delegate_cli.main(
-        [
-            "dispatch",
-            "--review-profile",
-            "ukrainian",
-            "--agent",
-            "claude",
-            "--model",
-            "claude-opus-5-5",
-            "--task-id",
-            "review-task-budget-sub",
-            "--prompt",
-            _attempt_prompt("rev-001", "att-001"),
-            "--review-access",
-            "isolated",
-            "--review-attempt",
-            str(manifest_file),
-            "--review-id",
-            "rev-001",
-            "--attempt-id",
-            "att-001",
-            "--dry-run",
-        ]
-    )
-    captured = capsys.readouterr()
-    if remaining_pct is not None and remaining_pct <= 10:
-        assert rc == 2
-        assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
-        assert (
-            "review attempt refused: agent substitution from claude to codex (budget guard) is not allowed (#8517)"
-            in captured.err
-        )
-    else:
-        # #10016 AC-01 items 1, 2 and 5: burn/pace alone cannot exclude
-        # the selected reviewer, including immutable review attempts.
-        assert rc == 0
-        assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" not in captured.err
-        assert "REVIEW_IDENTITY_SUBSTITUTED" not in captured.err
-        state = json.loads(delegate_cli._state_path("review-task-budget-sub").read_bytes())
-        assert state["agent"] == "claude" and state["substitution"] is None
-
-
-def test_delegate_dispatch_refuses_reused_attempt_id(
-    manifest_file: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
-) -> None:
-    from tests.helpers.git_checkouts import (
-        add_local_bare_origin as _add_local_bare_origin,
-    )
-    from tests.helpers.git_checkouts import (
-        init_repo_with_worktree as _init_repo_with_worktree,
-    )
-    from tests.helpers.git_checkouts import (
-        sanitize_git_env_for_test as _sanitize_git_env_for_test,
-    )
-
-    main, reviewer = _init_repo_with_worktree(tmp_path)
-    _add_local_bare_origin(main)
-    _sanitize_git_env_for_test(monkeypatch)
-    monkeypatch.setattr(delegate_cli, "_REPO_ROOT", main)
-    monkeypatch.setattr(delegate_cli, "_local_repo_root", reviewer)
-    monkeypatch.setattr(delegate_cli, "_resolve_invocation_git_root", lambda *_args: main)
-    receipts_root = tmp_path / "batch_state" / "review-receipts"
-    attempt_dir = receipts_root / "rev-dup-001"
-    attempt_dir.mkdir(parents=True, exist_ok=True)
-    (attempt_dir / "att-dup-001.jsonl").write_bytes(b"prior-receipts\n")
-
-    task_id = f"review-task-dup-{uuid.uuid4().hex[:8]}"
-    import agent_runtime.review_mcp
-
-    with (
-        patch("scripts.agent_runtime.review_mcp.resolve_repo_root", return_value=tmp_path),
-        patch.object(agent_runtime.review_mcp, "resolve_repo_root", return_value=tmp_path),
-    ):
-        rc = delegate_cli.main(
-            [
-                "dispatch",
-                "--review-profile",
-                "ukrainian",
-                "--agent",
-                "claude",
-                "--model",
-                "claude-opus-5-5",
-                "--task-id",
-                task_id,
-                "--prompt",
-                _attempt_prompt("rev-dup-001", "att-dup-001"),
-                "--review-access",
-                "isolated",
-                "--review-attempt",
-                str(manifest_file),
-                "--review-id",
-                "rev-dup-001",
-                "--attempt-id",
-                "att-dup-001",
-            ]
-        )
-    assert rc == 2
-    captured = capsys.readouterr()
-    assert "review attempt 'att-dup-001' already exists for review 'rev-dup-001'" in captured.err
-    assert "'action': 'removed'" in captured.err
-    assert not (main / ".worktrees/dispatch/claude" / task_id).exists()
-    assert (attempt_dir / "att-dup-001.jsonl").read_bytes() == b"prior-receipts\n"
 
 
 def test_cursor_adapter_mirrors_config_and_drops_daemon_fallback(tmp_path: Path) -> None:

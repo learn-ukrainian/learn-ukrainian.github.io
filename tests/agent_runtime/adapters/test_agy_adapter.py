@@ -514,40 +514,6 @@ def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> 
     assert "Gemini Pro is retired; use `--model gemini-3.8-flash-high`." in str(error.value)
 
 
-def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, capsys) -> None:
-    from scripts import delegate
-
-    real_popen = delegate.subprocess.Popen
-
-    def unexpected_dispatch(*args, **kwargs):
-        command = args[0]
-        if isinstance(command, list) and "_worker" in command:
-            pytest.fail("unknown AGY model reached worker dispatch")
-        return real_popen(*args, **kwargs)
-
-    monkeypatch.setattr(delegate.subprocess, "Popen", unexpected_dispatch)
-    args = delegate.build_parser().parse_args(
-        [
-            "dispatch",
-            "--task-id",
-            "unknown-agy-model",
-            "--agent",
-            "agy",
-            "--model",
-            "gemini-9.9-pro-preview",
-            "--prompt",
-            "test",
-        ]
-    )
-
-    result = delegate.cmd_dispatch(args)
-
-    assert result == 2
-    err = capsys.readouterr().err
-    assert "Gemini Pro is retired; use `--model gemini-3.8-flash-high`." in err
-    assert "gemini-3.1-pro-high" not in err
-
-
 @pytest.mark.parametrize(
     ("requested", "selector"),
     [

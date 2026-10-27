@@ -74,15 +74,17 @@ def discuss_bridge(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_delegate_dispatch_accepts_agy_agent():
-    """``delegate.py dispatch --agent agy ...`` must parse without error."""
+    """``dispatch.py dispatch --agent agy ...`` must parse without error."""
     task_id = f"test-agy-argparse-probe-{uuid.uuid4().hex}"
     result = subprocess.run(
         [
             _TEST_PYTHON,
-            str(_REPO_ROOT / "scripts" / "delegate.py"),
+            str(_REPO_ROOT / "scripts" / "dispatch.py"),
             "dispatch",
             "--agent",
             "agy",
+            "--model",
+            "gemini-3.8-flash-high",
             "--task-id",
             task_id,
             "--prompt",

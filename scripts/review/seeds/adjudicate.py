@@ -63,7 +63,7 @@ except ModuleNotFoundError as exc:
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts.common.repo_root import main_checkout_root
+from scripts.common.repo_root import main_checkout_root, project_interpreter
 from scripts.orchestration.task_record_store import locate_task_record
 from scripts.review import findings_db, record, second_seat
 from scripts.review.seeds import manifest as seed_manifest
@@ -298,7 +298,7 @@ def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> l
     if not model:
         raise ValueError("dispatch_argv requires an explicit model (dispatch.py dispatch's --model)")
     return [
-        sys.executable,
+        str(project_interpreter(REPO_ROOT)),
         str(DISPATCH),
         "dispatch",
         "--agent",
