@@ -103,7 +103,7 @@ def test_reconcile_sweep_dry_run_default(tmp_path: Path) -> None:
 @pytest.mark.parametrize("apply", [False, True])
 @pytest.mark.parametrize(
     "identity",
-    ["absent_pid", "pid_reuse", "alive", "unpublished", "null_start", "empty_start", "unreadable", "eperm", "zombie"],
+    ["absent_pid", "pid_reuse", "alive", "unpublished", "null_start", "null_dead", "empty_start", "empty_dead", "unreadable", "eperm", "zombie"],
 )
 def test_reconcile_sweep_requires_proven_death_before_crashing_v2(tmp_path: Path, monkeypatch, apply, identity) -> None:
     task_dir = tmp_path / "tasks"
@@ -112,25 +112,26 @@ def test_reconcile_sweep_requires_proven_death_before_crashing_v2(tmp_path: Path
     state = _v2_record(dead_task_id, 999_999_999, tmp_path / "missing-worktree")
     if identity == "unpublished":
         state.update(pid=None, process_start=None, status="spawning")
-    elif identity == "null_start":
+    elif identity in ("null_start", "null_dead"):
         state["process_start"] = None
-    elif identity == "empty_start":
+    elif identity in ("empty_start", "empty_dead"):
         state["process_start"] = ""
     readable = identity in ("pid_reuse", "alive", "null_start", "empty_start")
     actual = "exited-process" if identity == "alive" else "live-process"
     monkeypatch.setattr(reconcile_sweep.worker, "_identity", lambda pid: actual if readable else None)
-    monkeypatch.setattr(reconcile_sweep, "process_is_zombie", lambda pid: identity == "zombie")
+    monkeypatch.setattr(dead_worker_state, "process_is_zombie", lambda pid: identity == "zombie")
 
     def probe(pid, sig):
         assert (pid, sig) == (999_999_999, 0)
-        if identity == "absent_pid":
+        if identity in ("absent_pid", "null_dead", "empty_dead"):
             raise ProcessLookupError
         if identity == "eperm":
             raise PermissionError
 
     monkeypatch.setattr(reconcile_sweep.os, "kill", probe)
-    dead = identity in ("absent_pid", "pid_reuse", "zombie")
-    unknown = not dead and identity != "alive"
+    dead = identity in ("absent_pid", "pid_reuse", "zombie", "null_dead", "empty_dead")
+    live = identity in ("alive", "null_start")
+    unknown = not dead and not live
     task_file = task_dir / f"{dead_task_id}.json"
     task_file.write_text(json.dumps(state), encoding="utf-8")
     before = task_file.read_bytes()
@@ -148,7 +149,7 @@ def test_reconcile_sweep_requires_proven_death_before_crashing_v2(tmp_path: Path
     assert report.mode == ("apply" if apply else "dry_run")
     assert report.scanned_tasks == 1
     assert report.zombie_tasks == ([dead_task_id] if dead else [])
-    assert report.live_tasks == ([dead_task_id] if identity == "alive" else [])
+    assert report.live_tasks == ([dead_task_id] if live else [])
     assert report.unknown_tasks == ([dead_task_id] if unknown else [])
     assert report.to_dict()["unknown_tasks"] == ([dead_task_id] if unknown else [])
     assert report.unparseable_tasks == []

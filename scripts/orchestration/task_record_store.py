@@ -1,4 +1,4 @@
-"""Where delegate task records live: the hot directory and its archive (#8625).
+"""Task-record persistence and where legacy records live: the hot directory and its archive (#8625).
 
 ``batch_state/tasks/*.json`` is the hot directory. Dispatch, the worktree claim
 scan, reapers and every active view read it. ``scripts/orchestration/
@@ -15,14 +15,19 @@ Readers pick one of three contracts:
   :func:`iter_task_records` with ``include_archive=True``, or state in their
   output that their history is bounded to the hot directory.
 
-This module is stdlib-only so any reader can import it cheaply.
+Readers remain stdlib-only; writers load cause and dispatcher support lazily.
 """
 
 from __future__ import annotations
 
+import fcntl
+import json
+import os
 import re
 from collections.abc import Iterable, Iterator
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Any
 
 ARCHIVE_DIR_NAME = "archive"
 _REDISPATCH_ARCHIVED_STEM_RE = re.compile(r"^(?P<base>.+)\.(?P<tag>\d{8}T\d{6}\d*Z(?:\.\d+)?)\.archived$")
@@ -99,3 +104,43 @@ def relocated_result_file(record_path: Path, result_file: str | None) -> str | N
         return result_file
     moved = record_path.with_name(Path(result_file).name)
     return str(moved) if moved.is_file() else result_file
+
+
+@contextmanager
+def task_state_lock(path: Path) -> Iterator[None]:
+    """Use a stable adjacent lock file; locking the replaced JSON inode is unsafe.
+
+    Lock files (<task>.json.lock) are permanent stable anchors: deleting or moving
+    a lock file while a writer holds or waits on its descriptor breaks mutual exclusion
+    by letting subsequent callers open a new, distinct inode (#8659).
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(path.with_suffix(path.suffix + ".lock"), os.O_CREAT | os.O_RDWR, 0o600)
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        yield
+    finally:
+        fcntl.flock(descriptor, fcntl.LOCK_UN)
+        os.close(descriptor)
+
+
+def write_state_unlocked(path: Path, state: dict[str, Any]) -> None:
+    """Replace state while the caller holds its per-task lock."""
+    tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
+    tmp.write_text(json.dumps(state, indent=2, default=str), encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def write_record_unlocked(path: Path, state: dict[str, Any]) -> None:
+    """Preserve the legacy public-cause sink and use dispatcher persistence for v2."""
+    from scripts.orchestration.task_record_causes import _append_diagnostics, _public_record
+
+    public, recorded = _public_record(state)
+    if state.get("schema_version") == 2:
+        from scripts.dispatcher import store
+
+        store.replace(public, path)
+    else:
+        write_state_unlocked(path, public)
+    if recorded:
+        _append_diagnostics(path, recorded, source="record")
