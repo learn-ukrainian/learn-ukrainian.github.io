@@ -749,13 +749,17 @@ def verify_claude_account(label: str, *, environ: Mapping[str, str] | None = Non
 
 
 def _claude_access_token(path: Path, *, dir_fd: int | None = None) -> str | None:
-    """A fresh access token from a Claude credentials file; ``None`` when absent."""
+    """An access token from fresh or refreshable credentials; ``None`` when absent."""
     selected = _claude_oauth_record(path, dir_fd=dir_fd)
     return None if selected is None else selected[0]
 
 
 def _claude_oauth_record(path: Path, *, dir_fd: int | None = None) -> tuple[str, dict] | None:
-    """A fresh access token and its whole ``claudeAiOauth`` record; ``None`` when absent."""
+    """Read fresh or refreshable credentials; live authentication still needs proof.
+
+    ``expiresAt`` describes the access token, not the refresh credential. Its
+    timestamp alone cannot establish that the account's login has expired.
+    """
     from scripts.review.isolation import ReviewIsolationError
 
     try:
@@ -771,12 +775,21 @@ def _claude_oauth_record(path: Path, *, dir_fd: int | None = None) -> tuple[str,
         raw = os.read(fd, 65537)
         if len(raw) > 65536:
             raise ReviewIsolationError("attempt_claude_auth_oversized")
-        oauth = json.loads(raw)["claudeAiOauth"]
+        oauth = json.loads(raw, object_pairs_hook=_unique_json_keys)["claudeAiOauth"]
         token, expires = oauth["accessToken"], oauth["expiresAt"]
-        if not isinstance(expires, int) or isinstance(expires, bool) or expires / 1000 <= time.time() + 60:
-            raise ReviewIsolationError("attempt_claude_auth_expired")
+        if not isinstance(expires, int) or isinstance(expires, bool):
+            raise ReviewIsolationError("attempt_claude_auth_invalid")
         if not isinstance(token, str) or not 20 <= len(token) <= 8192 or any(c in token for c in "\n\r\0"):
             raise ReviewIsolationError("attempt_claude_auth_invalid")
+        refresh = oauth.get("refreshToken")
+        refreshable = (
+            isinstance(refresh, str)
+            and 0 < len(refresh) <= 8192
+            and bool(refresh.strip())
+            and not any(c in refresh for c in "\n\r\0")
+        )
+        if expires <= (time.time() + 60) * 1000 and not refreshable:
+            raise ReviewIsolationError("attempt_claude_auth_expired")
         return token, oauth
     except (ValueError, KeyError, TypeError) as exc:
         raise ReviewIsolationError("attempt_claude_auth_invalid") from exc
@@ -785,10 +798,10 @@ def _claude_oauth_record(path: Path, *, dir_fd: int | None = None) -> tuple[str,
 
 
 def linux_claude_auth(account: str | None = None) -> dict[str, str]:
-    """Select only a fresh access token; --bare ignores file-backed login.
+    """Select an access token from fresh or refreshable credentials.
 
-    The existing auth staging supports keychain selection on Darwin. Linux
-    needs equivalent selection from its credential file, never a home grant,
+    ``--bare`` ignores file-backed login. Auth staging supports keychain selection
+    on Darwin. Linux needs equivalent selection from its credential file, never a home grant,
     refresh token, login mutation or copied credential store.
 
     ``account`` is the run's label. The default label (or none) keeps the

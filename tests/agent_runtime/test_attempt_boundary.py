@@ -957,7 +957,8 @@ def test_namespace_and_forwarder_failure_have_no_fallback(world, tmp_path, monke
         boundary.cleanup()
 
 
-def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
+def test_linux_claude_auth_selects_fresh_or_refreshable_credentials(world, monkeypatch):
+    """Access-token expiry alone does not expire a refreshable account's login."""
     from scripts.agent_runtime.attempt_boundary import linux_claude_auth
 
     _, home = world
@@ -970,12 +971,26 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
     )
     credential.chmod(0o600)
     assert linux_claude_auth() == {"CLAUDE_CODE_OAUTH_TOKEN": access}
+    credential.write_text(
+        json.dumps({"claudeAiOauth": {"accessToken": access, "refreshToken": refresh, "expiresAt": 0}})
+    )
+    assert linux_claude_auth() == {"CLAUDE_CODE_OAUTH_TOKEN": access}
     credential.chmod(0o644)
     with pytest.raises(ReviewIsolationError, match="not_private"):
         linux_claude_auth()
     credential.chmod(0o600)
     credential.write_text(json.dumps({"claudeAiOauth": {"accessToken": access, "expiresAt": 0}}))
     with pytest.raises(ReviewIsolationError, match="expired"):
+        linux_claude_auth()
+    credential.write_text(
+        json.dumps({"claudeAiOauth": {"accessToken": access, "refreshToken": {}, "expiresAt": 0}})
+    )
+    with pytest.raises(ReviewIsolationError, match="expired"):
+        linux_claude_auth()
+    credential.write_text(
+        json.dumps({"claudeAiOauth": {"accessToken": access, "refreshToken": refresh, "expiresAt": True}})
+    )
+    with pytest.raises(ReviewIsolationError, match="invalid"):
         linux_claude_auth()
     credential.write_text("not json")
     with pytest.raises(ReviewIsolationError, match="invalid"):

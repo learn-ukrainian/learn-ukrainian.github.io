@@ -265,8 +265,12 @@ def _row(snapshot, label):
 
 
 # Fails on origin/main: the per-account module does not exist (no rows at all).
-def test_two_healthy_accounts_publish_reference_numbers(fake_probe):
+def test_two_healthy_accounts_publish_reference_numbers(fake_probe, account_dirs):
     outputs, _ = fake_probe
+    _write_private(
+        account_dirs["b"] / ".credentials.json",
+        {"claudeAiOauth": {"accessToken": _token(_ACCOUNT_B), "refreshToken": "synthetic-refresh", "expiresAt": 0}},
+    )
     updated = _iso(datetime.now(UTC) - timedelta(seconds=30))
     outputs["a"] = _payload_a(updated=updated)
     outputs["b"] = _payload_b(updated=updated)
@@ -1586,6 +1590,12 @@ def test_answer_without_provider_proof_is_withheld(bound, identity):
 )
 def test_unprovable_credentials_withhold_the_row(bound, provider, break_proof, reason):
     break_proof(bound, provider)
+    if reason == "identity_unavailable":
+        # A refresh credential never substitutes for the provider's proof.
+        _write_private(
+            bound.dirs["b"] / ".credentials.json",
+            {"claudeAiOauth": {"accessToken": _token(_ACCOUNT_B), "refreshToken": "synthetic-refresh", "expiresAt": 0}},
+        )
     cau.refresh_claude_account_usage()
     code = f"claude_account_{reason}" if reason == "identity_unavailable" else f"claude_account_credentials_{reason}"
     _assert_not_published(cau.routing_budget_fields(), "b", reason=code)
