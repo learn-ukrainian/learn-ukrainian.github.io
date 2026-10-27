@@ -8,7 +8,9 @@ task. Function bodies are copied unchanged except where they named delegate's
 task store, which now resolves through the v2 record location, and in two
 places where legacy failed open: any unacquired checkout snapshot now fails the
 task, and AGY's guard registration is validated here because the v2 provider
-does not run the adapter's check.
+does not run the adapter's check. Three checks are added beyond legacy, each
+failing closed: a sibling result that cannot be read, the content of files
+that stay dirty or untracked, and the task's HEAD, branch and remote tips.
 """
 
 import contextlib
@@ -138,17 +140,6 @@ def discard_read_only_snapshot_phases(snapshot_dir: Path) -> None:
             path.unlink()
 
 
-def _read_state_json(path: Path) -> dict[str, Any] | None:
-    """Read a state file without hydrating read-only snapshot sidecars."""
-    if not path.exists():
-        return None
-    try:
-        loaded = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
-    return loaded if isinstance(loaded, dict) else None
-
-
 _GIT_ENV_DENYLIST = {
     "GIT_DIR",
     "GIT_WORK_TREE",
@@ -216,6 +207,8 @@ def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[
     rewrite, so with ``agy_hook`` its bytes are fingerprinted the same way
     and an acquisition failure fails the snapshot (#10727). Only AGY
     executes that guard; other agents keep the snapshot without it.
+    Dirty and untracked files keep their status through a rewrite, so their
+    content is hashed within a bound that fails the snapshot when exceeded.
     """
     commands = (
         (
@@ -246,6 +239,7 @@ def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[
         outputs[label] = proc.stdout or ""
 
     entries: dict[str, str] = {}
+    status_paths: list[str] = []
     status_records = outputs["status"].split("\0")
     index = 0
     while index < len(status_records):
@@ -270,8 +264,18 @@ def _read_only_checkout_snapshot(cwd: Path, *, agy_hook: bool = False) -> tuple[
         # out of snapshot scope.
         if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = state
+            status_paths.append(path)
         if rename_source is not None and not _is_read_only_snapshot_excluded_path(rename_source):
             entries[rename_source] = f"{state}:source"
+    # A path that is already dirty or untracked keeps its status through a
+    # rewrite, so the status alone cannot show it; its content is recorded too.
+    try:
+        for path, fingerprint in _read_only_content_fingerprints(cwd, entries, status_paths).items():
+            entries[path] += ":" + fingerprint
+    except OSError as exc:
+        return None, f"content snapshot failed: {type(exc).__name__}"
+    except _ContentBudgetExceeded as exc:
+        return None, f"content snapshot failed: {exc}"
     # ``git status`` without ``--ignored`` omits ignored paths entirely. The
     # second status invocation makes those paths observable as ``!!`` while
     # retaining porcelain's tracked/untracked classification for the first
@@ -384,6 +388,64 @@ def _read_only_opencode_fingerprints(cwd: Path) -> dict[str, str]:
         visit(root_fd, ".opencode", ".opencode")
     finally:
         os.close(root_fd)
+    return fingerprints
+
+
+# The content snapshot reads every dirty or untracked file twice per task, so
+# it is bounded; a checkout beyond either limit has no evidence and fails closed.
+_READ_ONLY_CONTENT_MAX_FILES = 4096
+_READ_ONLY_CONTENT_MAX_BYTES = 256 * 1024 * 1024
+
+
+class _ContentBudgetExceeded(Exception):
+    """The dirty and untracked files exceed what the content snapshot reads."""
+
+
+def _read_only_content_fingerprints(cwd: Path, entries: dict[str, str], paths: list[str]) -> dict[str, str]:
+    """Hash the dirty and untracked files Git status lists, never following links.
+
+    Untracked runtime state is skipped because its exemption holds whatever its
+    content; ``.opencode`` has its own fingerprint. A path that is gone records
+    its absence, a link its text, and anything but a regular file only its type,
+    so a FIFO or device is never opened. Any other error, a file changing while
+    it is read, or a checkout beyond the limits raises.
+    """
+    fingerprints: dict[str, str] = {}
+    files = size = 0
+    for path in paths:
+        normalized = _normalize_read_only_relpath(path)
+        if normalized == ".opencode" or normalized.startswith(".opencode/"):
+            continue
+        if entries[path][:2] == "??" and _is_read_only_runtime_state_path(path):
+            continue
+        try:
+            info = os.lstat(cwd / path)
+        except (FileNotFoundError, NotADirectoryError):
+            fingerprints[path] = json.dumps(None)
+            continue
+        value: list[Any] = [stat.S_IFMT(info.st_mode)]
+        if stat.S_ISLNK(info.st_mode):
+            value.append(os.readlink(cwd / path))
+        elif stat.S_ISREG(info.st_mode):
+            files, size = files + 1, size + info.st_size
+            if files > _READ_ONLY_CONTENT_MAX_FILES or size > _READ_ONLY_CONTENT_MAX_BYTES:
+                raise _ContentBudgetExceeded(
+                    f"more than {_READ_ONLY_CONTENT_MAX_FILES} files or {_READ_ONLY_CONTENT_MAX_BYTES} bytes"
+                )
+            fd = os.open(cwd / path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
+            with os.fdopen(fd, "rb") as handle:
+                acquired = os.fstat(handle.fileno())
+                if (acquired.st_dev, acquired.st_ino, acquired.st_mode) != (info.st_dev, info.st_ino, info.st_mode):
+                    raise OSError("content entry changed during snapshot")
+                value.append(hashlib.file_digest(handle, "sha256").hexdigest())
+                after = os.fstat(handle.fileno())
+                if (acquired.st_mtime_ns, acquired.st_ctime_ns, acquired.st_size) != (
+                    after.st_mtime_ns,
+                    after.st_ctime_ns,
+                    after.st_size,
+                ):
+                    raise OSError("content entry changed during snapshot")
+        fingerprints[path] = json.dumps(value)
     return fingerprints
 
 
@@ -610,20 +672,104 @@ def _read_only_task_record_snapshot(
     for path in paths:
         if path.stem == own_stem:
             continue
-        state = _read_state_json(path.with_suffix(".json"))
-        if baseline is None and (state is None or state.get("status") not in _TERMINAL_STATUSES):
-            continue
         name = f"batch_state/tasks/{path.name}"
-        nonce = state.get("run_nonce") if state else None
-        if baseline is not None and nonce != baseline[name][1]:
-            continue
         try:
+            state = _read_task_record_state(path.with_suffix(".json"), baselined=baseline is not None)
+            if baseline is None and (state is None or state.get("status") not in _TERMINAL_STATUSES):
+                continue
+            nonce = state.get("run_nonce") if state else None
+            if baseline is not None and nonce != baseline[name][1]:
+                continue
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
-        except OSError:
+        except (FileNotFoundError, NotADirectoryError):
             # The task may have been archived or reaped during the scan.
             continue
+        except (OSError, ValueError) as exc:
+            # Anything else is an unread result, never absence: the task cannot settle done.
+            return None, f"task record snapshot failed: {name}: {type(exc).__name__}"
         snapshot[name] = (digest, nonce)
     return snapshot, None
+
+
+def _read_task_record_state(path: Path, *, baselined: bool) -> dict[str, Any] | None:
+    """Read a sibling record; only its absence is ``None`` once its result is baselined.
+
+    Before the baseline an undecodable record is not known to be terminal and is
+    skipped, as legacy did. After it, a record that cannot be
+    decoded hides whether the baselined result was replaced, so it raises.
+    """
+    try:
+        raw = path.read_bytes()
+    except FileNotFoundError:
+        return None
+    try:
+        loaded = json.loads(raw)
+    except ValueError:
+        if baselined:
+            raise
+        return None
+    if not isinstance(loaded, dict):
+        if baselined:
+            raise ValueError("task record is not an object")
+        return None
+    return loaded
+
+
+class _RefSnapshotFailed(Exception):
+    """A Git command the ref snapshot needs did not answer."""
+
+
+def _read_only_ref_snapshot(cwd: Path, branch: str | None = None) -> tuple[dict[str, str | None] | None, str | None]:
+    """Record the refs a read-only worker could commit or push to.
+
+    The checkout snapshot cannot see a commit, which leaves the tree clean. This
+    records HEAD, the branch it names, that branch's tip and remote-tracking
+    refs, the configured remotes, and the branch's tip on every remote, as
+    ``git ls-remote`` reports it. Every dispatch task owns its branch, so a
+    change to any of these is the worker's; refs of other branches are shared
+    with concurrent lanes and stay out. ``branch`` pins the branch observed at
+    the baseline, so a later checkout cannot move the remote comparison.
+    """
+
+    def git(*args: str, ok: tuple[int, ...] = (0,)) -> str:
+        try:
+            proc = subprocess.run(
+                ["git", *args],
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise _RefSnapshotFailed(f"{args[0]} could not start: {type(exc).__name__}") from exc
+        if proc.returncode not in ok:
+            raise _RefSnapshotFailed(f"{args[0]} failed: {_format_process_failure(proc)}")
+        return proc.stdout
+
+    try:
+        symbolic = git("symbolic-ref", "-q", "HEAD", ok=(0, 1)).strip() or None
+        refs: dict[str, str | None] = {
+            "HEAD": git("rev-parse", "--verify", "HEAD^{commit}").strip(),
+            "HEAD symbolic-ref": symbolic,
+            "remote config": hashlib.sha256(git("remote", "-v").encode()).hexdigest(),
+        }
+        branch = branch or symbolic
+        if branch is None:
+            return refs, None
+        name = branch.removeprefix("refs/heads/")
+        local = git("for-each-ref", "--format=%(objectname) %(refname)", branch, f"refs/remotes/*/{name}")
+        refs.update((ref, sha) for sha, ref in (line.split(" ", 1) for line in local.splitlines()))
+        for remote in sorted(set(git("remote").split())):
+            tips = git("ls-remote", "--heads", remote, branch)
+            heads = {ref: sha for sha, ref in (line.split("\t", 1) for line in tips.splitlines())}
+            refs[f"ls-remote {remote} {branch}"] = heads.get(branch)
+    except _RefSnapshotFailed as exc:
+        return None, f"ref snapshot failed: {exc}"
+    except ValueError:
+        return None, "ref snapshot failed: unparseable ref listing"
+    return refs, None
 
 
 # Harness-owned Entire residue under the checkout (ADR-018 capture). These paths
@@ -967,6 +1113,8 @@ class ReadOnlyGuard:
         self.records_pre: dict[str, tuple[str, str | None]] | None = None
         self.records_error: str | None = None
         self.snapshot_error: str | None = None
+        self.refs_pre: dict[str, str | None] | None = None
+        self.refs_error: str | None = None
         # The provider starts only after begin returns, so until then there is nothing to guard.
         self.begun = False
 
@@ -989,6 +1137,7 @@ class ReadOnlyGuard:
         self.records_pre, self.records_error = _read_only_task_record_snapshot(self.task_id)
         if self.snapshot_error is None:
             self.snapshot_error = self.records_error
+        self.refs_pre, self.refs_error = _read_only_ref_snapshot(self.cwd)
         _write_read_only_snapshot_sidecar(self.task_id, "pre", self.pre)
         self.begun = True
 
@@ -1006,6 +1155,10 @@ class ReadOnlyGuard:
             self.records_error = records_error
         if post_error is None:
             post_error = records_error
+        branch = self.refs_pre.get("HEAD symbolic-ref") if self.refs_pre is not None else None
+        refs_post, refs_error = _read_only_ref_snapshot(self.cwd, branch)
+        if self.refs_error is None:
+            self.refs_error = refs_error
         _write_read_only_snapshot_sidecar(self.task_id, "post", post)
         if self.snapshot_error is None and post_error is not None:
             self.snapshot_error = post_error
@@ -1019,10 +1172,17 @@ class ReadOnlyGuard:
                 set(mutations)
                 | {path for path, fingerprint in records_post.items() if fingerprint[0] != self.records_pre[path][0]}
             )
+        ref_mutations: list[str] = []
+        if self.refs_pre is not None and refs_post is not None:
+            ref_mutations = sorted(
+                ref for ref in set(self.refs_pre) | set(refs_post) if self.refs_pre.get(ref) != refs_post.get(ref)
+            )
         fields: dict[str, Any] = {
             "read_only_checkout_snapshot_error": self.snapshot_error,
             "read_only_ignored_mutation_paths": ignored,
             "read_only_mutation_paths": mutations,
+            "read_only_ref_snapshot_error": self.refs_error,
+            "read_only_ref_mutations": ref_mutations,
         }
         discard = None
         if read_only_snapshot_keep_full(mutations, self.snapshot_error):
@@ -1042,4 +1202,11 @@ class ReadOnlyGuard:
         # remains in ``read_only_checkout_snapshot_error``.
         if self.pre is None or post is None:
             causes.append("read_only_checkout_snapshot_failed")
+        # A commit or push leaves the checkout clean, so the refs settle it on their own.
+        if any(not ref.startswith("ls-remote ") for ref in ref_mutations):
+            causes.append("read_only_ref_mutation")
+        if any(ref.startswith("ls-remote ") for ref in ref_mutations):
+            causes.append("read_only_remote_push")
+        if self.refs_pre is None or refs_post is None:
+            causes.append("read_only_ref_snapshot_failed")
         return fields, "; ".join(causes) or None, discard

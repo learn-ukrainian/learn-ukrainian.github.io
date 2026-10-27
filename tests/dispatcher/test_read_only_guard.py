@@ -849,3 +849,119 @@ def test_early_provisioning_never_writes_outside_a_dispatch_worktree(primary):
     """The primary checkout is left to the adapter's refusal; nothing is created there."""
     read_only_guard._provision_agy_read_only_guard(primary)
     assert not (primary / ".agents").exists()
+
+
+# --- Beyond legacy: evidence the snapshots above could not see --------------
+
+
+def _seed_terminal_sibling(tmp_tasks_dir: Path) -> Path:
+    (tmp_tasks_dir / "impl-task.json").write_text(
+        json.dumps({"task_id": "impl-task", "status": "done", "run_nonce": "first"}), encoding="utf-8"
+    )
+    result_path = tmp_tasks_dir / "impl-task.result"
+    result_path.write_text("original\n", encoding="utf-8")
+    return result_path
+
+
+def test_unreadable_terminal_result_settles_failed_with_task_records_snapshot_failed(
+    tmp_tasks_dir, tmp_path, monkeypatch
+):
+    """A baselined result that cannot be read again is no evidence, never an archival."""
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout)
+    result_path = _seed_terminal_sibling(tmp_tasks_dir)
+    original_read_bytes = Path.read_bytes
+
+    def denied(path):
+        if path == result_path:
+            raise PermissionError(13, "private diagnostic", str(path))
+        return original_read_bytes(path)
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=lambda _checkout: monkeypatch.setattr(Path, "read_bytes", denied),
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["error"] == "task_records_snapshot_failed"
+    assert "private diagnostic" not in state["error"]
+
+
+def test_unchanged_status_content_rewrite_is_detected(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A file already dirty or untracked keeps its status through a rewrite; its content must not."""
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout)
+    (checkout / "tracked.txt").write_text("dirty before the task\n", encoding="utf-8")
+    (checkout / "notes.txt").write_text("untracked before the task\n", encoding="utf-8")
+    before = _status(checkout)
+
+    def rewrite(repo):
+        (repo / "tracked.txt").write_text("rewritten by the worker\n", encoding="utf-8")
+        (repo / "notes.txt").write_text("rewritten by the worker\n", encoding="utf-8")
+        assert _status(repo) == before
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=rewrite,
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == ["notes.txt", "tracked.txt"]
+    assert state["error"] == "read_only_checkout_mutation, count 2"
+
+
+def test_read_only_task_that_commits_settles_failed(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A commit leaves the checkout clean, so HEAD and the task branch settle it."""
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout)
+    branch = _git(checkout, "symbolic-ref", "HEAD")
+
+    def commit(repo):
+        (repo / "tracked.txt").write_text("committed by the worker\n", encoding="utf-8")
+        _git(repo, "commit", "-qam", "worker commit")
+        assert _status(repo) == ""
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=commit,
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ref_mutations"] == ["HEAD", branch]
+    assert state["error"] == "read_only_ref_mutation"
+
+
+def test_read_only_task_that_pushes_settles_failed(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A push by URL moves no local ref, so the task branch's remote tip settles it."""
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    _seed_read_only_checkout_fixture(checkout)
+    branch = _git(checkout, "symbolic-ref", "HEAD")
+    remote = tmp_path / "remote.git"
+    _git(checkout, "init", "-q", "--bare", str(remote))
+    _git(checkout, "remote", "add", "origin", str(remote))
+    _git(checkout, "push", "-q", "origin", f"HEAD:{branch}")
+
+    def push(repo):
+        tree = _git(repo, "rev-parse", "HEAD^{tree}")
+        unseen = _git(repo, "commit-tree", tree, "-p", "HEAD", "-m", "worker push")
+        _git(repo, "push", "-q", str(remote), f"{unseen}:{branch}")
+        assert _status(repo) == ""
+
+    rc, state, _ = _supervise(
+        monkeypatch, checkout, "review-task", agent="codex", model="gpt-6.1-sol",
+        provider=_stub_provider("done"), mutation=push,
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_ref_mutations"] == [f"ls-remote origin {branch}"]
+    assert state["error"] == "read_only_remote_push"

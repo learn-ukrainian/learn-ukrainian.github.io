@@ -647,7 +647,7 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
     ("pushed-dirty", "workspace-write", [], "no_deliverable", "worktree_dirty_or_unknown"),
     ("echo", "read-only", ["other/"], "done", None),
     ("dirty", "read-only", ["other/"], "failed", "read_only_checkout_mutation, count 1"),
-    ("pushed", "read-only", ["other/"], "done", None),
+    ("pushed", "read-only", ["other/"], "failed", "read_only_ref_mutation; read_only_remote_push"),
 ])
 def test_settle_rejects_out_of_scope_or_unpublished_write_delivery(sandbox, model, mode, owned, state, cause):
     """A provider's successful response cannot hide scope violations or undelivered work."""
