@@ -101,6 +101,9 @@ def test_invalid_schema_result_cannot_settle_done(dispatch, monkeypatch, output,
     monkeypatch.setattr(worker.signal, "pthread_sigmask", lambda *a: None)
     monkeypatch.setattr(git, "snapshot_delivery", lambda *a: {})
     monkeypatch.setattr(worker, "_reap_settled", lambda *a: None)
+    # The fake Popen below stands in for the provider only; the read-only guard's Git snapshots are not under test.
+    monkeypatch.setattr(worker.read_only_guard.ReadOnlyGuard, "begin", lambda self, timeout: None)
+    monkeypatch.setattr(worker.read_only_guard.ReadOnlyGuard, "finish", lambda self: ({}, None, None))
 
     def popen(*a, **kw):
         kw["stdout"].write(b'{"type":"turn.completed"}\n')
