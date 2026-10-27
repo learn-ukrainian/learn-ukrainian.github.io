@@ -15,6 +15,8 @@ from pathlib import Path
 import yaml
 
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.git_credentials import canonical_origins as canonical_origins
+from scripts.common.git_credentials import verification_credentials
 from scripts.common.repo_root import resolve_repo_root
 from scripts.common.task_scratch import allocate
 from scripts.dispatcher.environment import npm_shim_dir
@@ -40,40 +42,31 @@ HISTORY_SLACK_SECONDS = 86400
 
 
 def _verification_git(path: Path, *args: str, strip: bool = True, git_dir: Path | None = None,
-                      timeout: float = 30) -> str:
+                      timeout: float = 30, credential_remote: str | None = None) -> str:
     """Use the system Git with no inherited Git configuration or process redirects."""
     if not GIT_BINARY:
         raise ValueError("system Git unavailable")
-    env = {key: os.environ[key] for key in ("HOME", "SSH_AUTH_SOCK") if key in os.environ}
+    env = {key: os.environ[key] for key in ("HOME", "SSH_AUTH_SOCK", "GH_CONFIG_DIR", "XDG_CONFIG_HOME")
+           if key in os.environ}
     env.update(PATH=os.defpath, GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_SYSTEM=os.devnull,
                GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0", LC_ALL="C")
-    output = subprocess.run(
-        [GIT_BINARY, "--no-replace-objects", "-c", "core.alternateRefsCommand=",
-         "-c", f"core.hooksPath={os.devnull}", "-c", "protocol.ext.allow=never",
-         *([f"--git-dir={git_dir}"] if git_dir else []), "-C", str(path), *args],
-        capture_output=True, text=True, check=True, timeout=timeout, env=env,
-    ).stdout
+    credentials = verification_credentials(credential_remote) if credential_remote else []
+    try:
+        output = subprocess.run(
+            [GIT_BINARY, "--no-replace-objects", "-c", "core.alternateRefsCommand=",
+             "-c", f"core.hooksPath={os.devnull}", "-c", "protocol.ext.allow=never",
+             *(arg for setting in credentials for arg in ("-c", setting)),
+             *([f"--git-dir={git_dir}"] if git_dir else []), "-C", str(path), *args],
+            capture_output=True, text=True, check=True, timeout=timeout, env=env,
+        ).stdout
+    except subprocess.CalledProcessError as exc:
+        # Neither transport/helper output nor a credential-bearing URL may
+        # become a delivery error, traceback, or durable task record.
+        raise subprocess.CalledProcessError(exc.returncode, [GIT_BINARY, args[0]],
+                                            output="", stderr="isolated Git command failed") from None
+    except subprocess.TimeoutExpired as exc:
+        raise subprocess.TimeoutExpired([GIT_BINARY, args[0]], exc.timeout) from None
     return output.strip() if strip else output
-
-
-def canonical_origins(repository: dict) -> tuple[str, ...]:
-    """Derive exact destinations from the registry, never shared Git config.
-
-    The registry ``transport`` is sibling clone policy, not repository identity:
-    any host may clone the same GitHub repository over HTTPS or SSH, so both
-    standard spellings of the registered identity are accepted for ``ssh`` and
-    ``https`` entries. Callers compare the full URL string against this tuple.
-    """
-    github = repository["github"]
-    transport = repository.get("transport", "ssh")
-    if transport == "file" and Path(github).is_absolute():
-        return (github,)
-    if not re.fullmatch(r"[A-Za-z0-9_-][A-Za-z0-9_.-]*/[A-Za-z0-9_-][A-Za-z0-9_.-]*", github):
-        raise ValueError("invalid registered repository identity")
-    if transport not in ("https", "ssh"):
-        raise ValueError("unsupported registered transport")
-    bases = (f"https://github.com/{github}", f"git@github.com:{github}", f"ssh://git@github.com/{github}")
-    return tuple(base + suffix for base in bases for suffix in (".git", ""))
 
 
 def verification_origin(path: Path) -> str:
@@ -119,7 +112,7 @@ def _private_remote_git(task_id: str, remote: str):
     """Use one recorded URL in the ownership verifier's private Git namespace."""
     scratch = allocate(task_id + "-ownership")
     try:
-        run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir)
+        run = partial(_verification_git, scratch.payload_dir, git_dir=scratch.payload_dir, credential_remote=remote)
         run("init", "--bare", "--template=")
         for key, value in (("remote.origin.url", remote), ("remote.origin.promisor", "true"),
                            ("remote.origin.partialCloneFilter", "blob:none"),
@@ -247,7 +240,7 @@ def publish_start(repo: Path, repository: dict, branch: str, task_id: str) -> tu
     # Materialize the immutable advertised object, never a worker-writable ref.
     # Shared URL rewrites can make this transfer fail, but cannot change its SHA.
     _verification_git(repo, "fetch", "--no-tags", "--no-write-fetch-head", "--", remote,
-                      sha, timeout=VERIFICATION_FETCH_TIMEOUT)
+                      sha, timeout=VERIFICATION_FETCH_TIMEOUT, credential_remote=remote)
     return sha, remote
 
 
