@@ -180,7 +180,6 @@ def _dispatch(args) -> int:
     launch_guards.check_open_pr_freeze(args, info)
     launch_guards.check_early_host(args.mode)
     launch_guards.check_model_pause(args.model)
-    guard_fields = launch_guards.check_dor(args, agent, prompt.decode("utf-8"), info)
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
     if args.branch is not None:
         args.branch = validate_plain_branch_name(args.branch, repo_root=repo)
@@ -218,6 +217,8 @@ def _dispatch(args) -> int:
             (args.review_profile or "").strip().casefold() == "ukrainian" or args.language_lane
         ):
             raise ValueError("protected subject scope needs a code-profile review without --language-lane")
+    # Legacy runs the DoR and Cursor Auto gates after route and review-subject admission.
+    guard_fields = launch_guards.check_dor(args, agent, prompt.decode("utf-8"), info)
     checks.check_resources((worktree, path.parent))
     launch_guards.check_primary(args.mode)
     if args.dry_run:

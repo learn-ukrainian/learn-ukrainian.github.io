@@ -77,7 +77,7 @@ def sandbox(tmp_path):
     shutil.copy(SOURCE / "scripts/config/model_catalog.yaml", config / "model_catalog.yaml")
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     # Ignore what the real primary ignores, so the dirty-primary refusal sees only test-made dirt.
-    (repo / ".gitignore").write_text("__pycache__/\n.worktrees/\n")
+    (repo / ".gitignore").write_text("__pycache__/\n.worktrees/\ndata/telemetry/\n")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
     run_git(repo, "init", "--bare", str(remote))
@@ -768,6 +768,9 @@ def test_preexisting_branch_commits_are_not_attributed_to_new_task(sandbox, reus
     run_git(tree, "add", "outside.txt")
     run_git(tree, "commit", "-m", "preexisting outside scope")
     starting_head = run_git(tree, "rev-parse", "HEAD")
+    if not reuse_cwd:
+        # The primary-integrity refusal admits writes only while the primary checkout is on main.
+        run_git(tree, "checkout", "main")
     result = sandbox.settle(sandbox.dispatch("pushed", "--mode", "workspace-write",
                                             "--owned-path", "delivered.txt", *flags))
     assert result["worktree_base_sha"] == starting_head
