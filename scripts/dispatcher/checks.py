@@ -81,9 +81,10 @@ def check_private_input(spec: TaskSpec, repo_key: str) -> None:
     roots = [git.resolve_repo(key)[0] for key in private]
     if git.resolve_repo(repo_key)[0] in roots:
         return _handle_private_input(spec, "private input is not permitted for this agent")
-    origin = spec.options.get("prompt_file")
-    if origin and origin != "-" and any(Path(origin).resolve().is_relative_to(root) for root in roots):
-        return _handle_private_input(spec, "private prompt file is not permitted for this agent")
+    for field, label in (("prompt_file", "prompt"), ("lifecycle_file", "lifecycle")):
+        origin = spec.options.get(field)
+        if origin and origin != "-" and any(Path(origin).expanduser().resolve().is_relative_to(root) for root in roots):
+            return _handle_private_input(spec, f"private {label} file is not permitted for this agent")
     # The content contract is lexical: decode once, then compare without changing provider input.
     text = unquote(spec.prompt_file.read_text()).casefold()
     identifiers = [str(root) for root in roots]

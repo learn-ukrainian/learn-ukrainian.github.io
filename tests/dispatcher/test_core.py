@@ -1478,6 +1478,40 @@ def test_private_repo_and_prompt_origin_cannot_bypass_private_policy(spec, priva
         )
 
 
+@pytest.mark.parametrize("source", ["private-root", "symlink", "carrier-text"])
+def test_lifecycle_input_cannot_bypass_private_policy(sandbox, source):
+    """Lifecycle sources and effective carrier text must pass dispatch admission."""
+    from tests.dispatcher.test_advisory import _lifecycle_file
+
+    shutil.copy(Path(__file__).with_name("stub_provider.py"), sandbox.repo / "scripts/dispatcher/providers/opencode.py")
+    private = sandbox.repo.parent / "private"
+    private.mkdir()
+    if source == "carrier-text":
+        lifecycle = _lifecycle_file(sandbox.repo)
+        config = sandbox.repo / "scripts/config/fleet_repos.yaml"
+        repos = yaml.safe_load(config.read_text())
+        repos["repos"]["private"]["github"] = "org/repo"
+        config.write_text(yaml.safe_dump(repos))
+        expected = "private path input"
+    else:
+        lifecycle = _lifecycle_file(private)
+        if source == "symlink":
+            alias = sandbox.repo / "carrier.json"
+            alias.symlink_to(lifecycle)
+            lifecycle = alias
+        expected = "private lifecycle file"
+
+    result = sandbox.cli(
+        "dispatch", "--agent", "opencode", "--model", "deepseek-v4.1-flash",
+        "--prompt", "Inspect the task", "--task-id", "lifecycle-refused",
+        "--lifecycle-file", str(lifecycle), expected=2,
+    )
+
+    assert expected in result.stderr
+    assert not list(sandbox.tasks.glob("*.json"))
+    assert not (sandbox.repo / ".worktrees").exists()
+
+
 @pytest.fixture
 def classification():
     return {"role": "private-product"}
