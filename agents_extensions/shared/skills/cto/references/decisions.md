@@ -35,7 +35,7 @@ Practices used:
 - Probe a claimed limit, outage or impossibility before routing around it.
 - Use the [CI recovery recipe](recipes.md#ci-recovery) before the single rerun.
 - For review scope and repeated findings, apply the canonical
-  [review stopping rule](../../drive-epic/references/review-merge-cleanup.md#review-stopping-rule).
+  [review budget](../../review-loop/references/policy.md).
 - Apply OO-99 through the binding [native usage pace/reserve rule](../../../rules/model-assignment.md).
   Read each pool's CodexBar pace line, used minus expected. A pool is short only when
   it will not last to reset; reset credits cover a deficit. Use capacity before reset,

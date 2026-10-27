@@ -42,22 +42,12 @@ A dispatch, a branch, an open PR, green CI, or "Next:" is **not** done. The driv
 its own lane's PRs; never ask the operator to merge. Source: `/api/rules` →
 `operator-expectations.md` §3a.
 
-The sole ordered recipe is `agents_extensions/shared/rules/workflow.md` § Merge
-policy. This checklist summarizes its evidence gates. Per PR, in this order:
-
-- [ ] Exact-head cross-family `VERDICT: APPROVE` (attested `resolved_model` and SHA)
-      posted on the PR. No PR, draft or ready, is opened before that APPROVE (§7 step 0).
-      A new head makes the APPROVE stale; re-review before enqueueing.
-- [ ] CI Gate green on that same head.
-- [ ] Enqueued with `.venv/bin/python -m scripts.publish pr-merge --number <N>` — never `--auto`, never `--delete-branch`.
-- [ ] `gh pr view <N>` shows `MERGED`.
-- [ ] `.venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply` exits 0
-      (worktrees reaped, remote and local branch gone). A non-zero exit is a blocker,
-      never a reason to retry with `--force`.
-- [ ] **Every issue the PR names is closed with evidence, or has a comment posted after
-      the merge that names exactly what remains and what it waits on** (a date, a run
-      count, an event, or a work item).
-- [ ] A user-visible API or UI change has local proof (§7-rollout).
+**Deliver every change with the delivery skills:** `full-send` (you, to MERGED and closeout),
+`full-stop` (workers, or ready-to-merge for another driver), `review-loop` (review rounds and
+the budget), entered through `takeover` or `modernize` when the work is inherited or old.
+Per PR, `full-send` is the ordered checklist and `workflow.md` § Merge policy holds the gates.
+A PR may open before approval so CI runs; it is done only at `MERGED` with a clean
+`merge_closeout` receipt and every linked issue disposed of.
 
 Per turn and at session end:
 
@@ -110,8 +100,8 @@ requires an operator reference. The item lifecycle is in
    [orient](references/orient.md).
 2. **§0a Inbox drain — cycle start.** A CTO demand (an URGENT delivery order or a
    blocker-report request) outranks all other lane work. Answer within its deadline, by
-   default 10 minutes, with one line per named deliverable:
-   state | exact blocker | who fixes it | next step | ETA. Then work the named
+   default 10 minutes, with one blocker line per named deliverable
+   ([lane-report](references/lane-report.md)). Then work the named
    deliverables and their blockers first, until they land or the CTO releases them. Fix
    any blocker you can fix; name the owner of any you cannot. Other ready work may fill
    only the worker slots the demanded deliverables cannot use. Report again on every
@@ -141,15 +131,20 @@ requires an operator reference. The item lifecycle is in
    tracker item. When the wait returns, act on the result. After a terminal status,
    run `post_task_reap`.
 10. **§5a Inbox drain — after settle.**
-11. **§6 Cross-family review, §7 merge, §7a closeout, §7-rollout proof** — in the order of
-    the Definition of done above. The mechanics (review commands, merge-queue status,
-    queue kicks, red main, junit diagnosis, launcher tests, rollout authority):
+11. **§6 Cross-family review, §7 merge, §7a closeout, §7-rollout proof** — through the
+    delivery skills named in the Definition of done above. The mechanics (review commands,
+    merge-queue status, queue kicks, red main, junit diagnosis, launcher tests, rollout
+    authority):
     [review-merge-cleanup](references/review-merge-cleanup.md).
 12. **§8a Inbox drain — before handoff.**
 13. **§8 Handoff.** Reconcile the lane tracker and add one `handoff_note` item.
     Keep `DRIVER-STATE.md` under 4 KB as a pointer with pinned provider facts and the
     render/check instructions. Preserve the Entire dual-write and Fleet receipt:
     [handoff](references/handoff.md).
+
+Write the brief for a new multi-PR outcome as a [decision report](references/decision-report.md).
+
+Report to the CTO hourly, and every 30 minutes while an operator-priority outcome is open, in the [lane-report](references/lane-report.md) format.
 
 Seat-specific adjustments for your model and for the seats you route to:
 [model-deltas](references/model-deltas.md).

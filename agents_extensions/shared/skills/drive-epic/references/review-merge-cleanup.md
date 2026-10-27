@@ -1,8 +1,8 @@
 # Review, merge, rollout, cleanup (drive-epic §6, §7, §7-rollout, §7a)
 
 Read before asking for a review, before enqueueing, on any red CI or merge-queue kick,
-and after every merge. The ordered checklist itself is the core `SKILL.md` Definition of
-done; this file holds the mechanics behind each box.
+and after every merge. The ordered steps are the `full-send` and `full-stop` skills, with
+`review-loop` for review rounds; this file holds the mechanics behind them.
 
 ## §6. Cross-family review gate (load-bearing — discussion ≠ review)
 
@@ -57,7 +57,9 @@ remote-tracking target and sets `pinned_head` before routing; checkout preparati
 and refuses a different head. After settlement compare task `pinned_head` and actual
 `worktree_base_sha` with the current pushed branch tip; the recorder uses `worktree_base_sha`.
 
-Resolve via `closeout_cli resolve-reviewer`; use its reviewer/model, author model, and risk.
+Resolve via `closeout_cli resolve-reviewer`; use its reviewer/model, author model, and risk,
+and pass the same `REVIEW_PROFILE` (`code` or `infra`, derived from the target as in
+`review-loop` step 2) to both the resolver and the dispatch.
 `requires_silence_timeout` is boolean; if true, use documented seat/runtime seconds,
 pass `--silence-timeout <seconds>` explicitly (default 3600), and confirm `silence_timeout`
 in the task record. Never infer duration or reuse stale routing. `REVIEW_BRIEF` names branch/SHA
@@ -76,7 +78,7 @@ dispatch_result="$("$PY" scripts/delegate.py dispatch \
   --mode read-only --worktree --task-id "$REVIEW_TASK" \
   --prompt-file "$REVIEW_BRIEF" --branch "$AUTHOR_BRANCH" \
   --pinned-head "$HEAD_SHA" --require-review-verdict \
-  --review-profile code --review-author-model "$AUTHOR_MODEL" \
+  --review-profile "$REVIEW_PROFILE" --review-author-model "$AUTHOR_MODEL" \
   --review-risk "$REVIEW_RISK")"
 mapfile -t dispatch_lines <<<"$dispatch_result"
 REVIEW_TASK="${dispatch_lines[0]}"
@@ -122,7 +124,8 @@ Only terminal task-record `timeout` (stdout record) is settled failure. Settleme
 identity, attested model/family, unchanged branch/SHA, and complete reply; failure, missing/malformed
 evidence, unknown identity, or moved head is not approval.
 
-Exact-head cross-family `VERDICT: APPROVE` permits opening the PR. Then publish
+The PR may already be open, since it may open before approval so CI runs
+(`workflow.md` § Merge policy). After exact-head cross-family `VERDICT: APPROVE`, publish
 the verdict as a **PR comment bound to the reviewed head SHA**, with reviewer
 model/family/harness provenance. GitHub rejects API approval reviews from the
 shared bot identity when it also authored the PR; `gh pr review --approve`
@@ -148,19 +151,9 @@ Review briefs must ask reviewers to cite files with repository-relative paths, i
 
 ### Review stopping rule
 
-Every reviewer and driver follows this rule:
-
-1. Round 1 is a full review of the change.
-2. From round 2 on, the review is a DELTA review: only the fix diff since the last
-   reviewed head, plus whether each earlier blocker is resolved. A new blocker
-   must be a concrete failure introduced by that fix diff, or an earlier blocker
-   still unresolved. Everything else is a tracked follow-up with an owner.
-3. At most two fix rounds. If still blocked after round 2, the driver does not
-   start round 3 on the same approach. The driver splits the PR, changes the
-   approach, or escalates to the advisors (Opus 5.5 + Sol 6.1) or the operator.
-4. A security FAIL (`SECURITY_VERDICT FAIL`) always blocks and is never downgraded
-   to a follow-up. The quality bar and gates are unchanged: exact-head
-   cross-family APPROVE and green CI remain required.
+The review budget, delta scope, ledger and severity rules live only in the
+[`review-loop` policy](../../review-loop/references/policy.md); every reviewer and driver
+follows it.
 
 ### Review brief template (#10665)
 
@@ -168,7 +161,7 @@ Every review brief, code or Ukrainian, uses these sections. Round 1 freezes sect
 later rounds reuse them unchanged. From round 2 on, section 1 names both the last
 reviewed head and the new exact head, the fix diff, and each earlier blocker's
 resolution evidence. The reviewer brief states DELTA scope under the
-[review stopping rule](#review-stopping-rule). A review-typed
+[review budget](../../review-loop/references/policy.md). A review-typed
 dispatch whose brief has no heading naming the dispositions is still dispatched, with the
 typed warning `review_brief_no_dispositions` on stderr and in the task record. Phrase
 reviewer asks as questions or statements: a line that starts with a write verb refuses a
@@ -188,14 +181,14 @@ read-only dispatch (#8703, above).
    - `stop_and_escalate` — material contract ambiguity, or a fix that would trip a breaker.
 5. **Reviewer duties** — one class-level finding per input class, with a concrete example and every
    sibling found within this round's scope. In round 1, a material defect outside the stated
-   classes still blocks or escalates. Later rounds use the review stopping rule to decide
+   classes still blocks or escalates. Later rounds use the review budget to decide
    blockers and follow-ups. Each blocker states the demonstrated failure, its impact and the required
    corrected behaviour; a code fix is a suggestion. APPROVE with tracked follow-ups is allowed.
    A delta-review brief asks the reviewer to probe every fallback or fail-open path changed
    by the fix diff and check listed fixes, interactions and weakened tests at the new exact
    head. A missing required capability is INCONCLUSIVE: the verdict line uses `BLOCKED` and
    names the capability; it still blocks.
-6. **Breakers** — the review stopping rule above and `local-code-review` checklist
+6. **Breakers** — the review budget and `local-code-review` checklist
    Step 6 apply, even when the outstanding-finding count shrinks.
 
 Every review brief names the supported evidence directory: write the report, archives,
@@ -216,7 +209,8 @@ rows): the contract is the unit's plan or acceptance (learning goals, CEFR level
 sources). Blocking, class reporting and evidence follow
 `agents_extensions/shared/rules/ukrainian-linguistics.md` §8: every Ukrainian error in added
 or edited text blocks, one finding per error class lists every occurrence with a
-source-verified correction, and an unsourced blocker is INCONCLUSIVE.
+source-verified correction, and an unsourced blocker is INCONCLUSIVE. Seats and finding
+verification: the `review-loop` [ukrainian profile](../../review-loop/references/ukrainian.md).
 
 Reviewers do not re-run test suites that the PR's CI runs: review the diff, run at
 most the specific existing tests that cover a finding you are checking, and cite CI run
@@ -224,13 +218,10 @@ ids for suite results. Add no test and repeat no run.
 
 ## §7. Landing order
 
-The sole ordered landing and cleanup recipe is
-`agents_extensions/shared/rules/workflow.md` § Merge policy. Follow it after
-§6's toolful exact-head cross-family settlement: approval before opening any
-PR, same-head CI before enqueue, non-draft PR, no `--auto`, `--delete-branch`
-or `--admin`, common-reaper cleanup at successful enqueue, then confirm MERGED
-and complete the separate merged closeout. A moved head voids
-both gates; missing evidence never grants approval.
+The gates are `agents_extensions/shared/rules/workflow.md` § Merge policy; the
+step-by-step delivery is the `full-send` skill (accountable driver, to MERGED) or
+`full-stop` (anyone, to ready-to-merge). This section keeps the queue and CI mechanics
+those skills point to.
 
 Immediately before enqueue, run the [core inbox drain](../SKILL.md#the-loop--run-it-every-cycle)
 and reconcile its messages with the approved head and landing decision.
