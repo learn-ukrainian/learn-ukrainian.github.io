@@ -87,6 +87,30 @@ _ARTICLE = '<section id="dictionary-article"><article><h1>вода</h1><p>Рід
 _CHALLENGE = "<title>Just a moment...</title>" + _ARTICLE
 
 
+@pytest.mark.parametrize("request_kwargs,expected_agent,expected_timeout", [
+    ({}, "learn-ukrainian-word-atlas/1.0 (+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)", 15),
+    ({"user_agent": filler.USER_AGENT},
+     "learn-ukrainian-word-atlas/1.0 (+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)", 15),
+    ({"user_agent": "caller-agent/2.0", "timeout": 7}, "caller-agent/2.0", 7),
+], ids=["default", "explicit-project-agent", "caller-override"])
+def test_curl_missing_public_contact_or_browser_impersonation(
+    monkeypatch, request_kwargs, expected_agent, expected_timeout,
+):
+    """Missing public contact or browser impersonation hides the project identity."""
+    def run(cmd, **kwargs):
+        assert cmd == [
+            "curl", "-s", "-w", "\n%{http_code}", "-A", expected_agent,
+            "--max-time", str(expected_timeout),
+            "https://slovnyk.me/dict/newsum/%D0%B2%D0%BE%D0%B4%D0%B0",
+        ]
+        assert kwargs == {"capture_output": True, "text": True, "timeout": expected_timeout + 5}
+        return SimpleNamespace(returncode=0, stdout="body\nunchanged\n\n200")
+
+    monkeypatch.setattr(filler.subprocess, "run", run)
+
+    assert filler.fetch_newsum_curl("вода", **request_kwargs) == (200, "body\nunchanged\n")
+
+
 @pytest.fixture
 def curl_queue(monkeypatch, tmp_path):
     """Keep subprocesses, clock, sleeps and all cache bytes in a hermetic fixture."""
@@ -134,7 +158,9 @@ def test_filler_stops_access_denial_continuation_before_second_request(
 
     assert len(curl_queue.calls) == 1
     assert curl_queue.calls[0][-1] == "https://slovnyk.me/dict/newsum/%D0%B2%D0%BE%D0%B4%D0%B0"
-    assert curl_queue.calls[0][4:6] == ["-A", "learn-ukrainian-word-atlas/1.0"]
+    assert curl_queue.calls[0][4:6] == [
+        "-A", "learn-ukrainian-word-atlas/1.0 (+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)",
+    ]
     assert stats == {
         "total": 2, "already_cached": 0, "fetched_ok": 0, "not_found_404": 0,
         "cf_challenge_403": int(code != 429), "rate_limited_429": int(code == 429), "other_error": 0,
