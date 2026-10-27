@@ -1,6 +1,7 @@
 """Exercise the real dispatcher with stub processes and real disposable Git remotes."""
 
 import concurrent.futures
+import contextlib
 import dataclasses
 import hashlib
 import json
@@ -506,38 +507,87 @@ def test_supervisor_crash_is_reconciled_without_claiming_success(sandbox):
     assert record["finished_at"]
 
 
-def test_killed_supervisor_review_slots_return_only_after_its_orphaned_provider_is_stopped(sandbox, tmp_path):
-    """Defect class: a SIGKILLed supervisor frees, or strands forever, the review slots of a live provider."""
+def _killed_review_supervisor(sandbox, tmp_path, model):
+    """Dispatch a held Codex read-only review on ``model``, SIGKILL its supervisor once gone; the provider pid."""
     from scripts.common import test_slots
 
     for name in (test_slots.HOLDER_ENV, test_slots.SESSION_ENV, "CI"):
         sandbox.env.pop(name, None)
     sandbox.env.update({test_slots.ENABLE_ENV: "on", test_slots.DIR_ENV: str(tmp_path / "pool"),
                         test_slots.COUNT_ENV: "4", test_slots.WAIT_ENV: "5"})
-
-    def taken():
-        report = test_slots.status(sandbox.env)
-        assert report["error"] is None, report
-        return report["slots_in_use"] + report["slots_draining"]
-
-    task = sandbox.dispatch("blocked", "--require-review-verdict")
+    task = sandbox.dispatch(model, "--require-review-verdict")
     child = int(await_file(sandbox.tasks / f"{task[0]}.started"))
+    if model == "governed":
+        assert await_file(sandbox.tasks / f"{task[0]}.joined") == "joined"
     record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
     assert record["review_test_slots"]["outcome"] == "held"
-    assert (record["provider_pid"], record["provider_pgid"]) == (child, child)
     os.kill(record["pid"], signal.SIGKILL)
     deadline = time.monotonic() + 10
     while worker._identity(record["pid"]) == record["process_start"]:
         assert time.monotonic() < deadline, "supervisor survived SIGKILL"
         time.sleep(0.02)
+    assert worker._identity(child) is not None, "the provider must outlive its supervisor here"
+    return task, child
 
-    assert worker._identity(child) == record["provider_start"]
-    assert taken() == worker.admission.REVIEW_TEST_SLOTS
 
-    cancelled = json.loads(sandbox.cli("cancel", task[0], "--run-nonce", task[1]).stdout)
-    assert cancelled["status"] == "crashed"
-    assert worker._identity(child) is None
-    assert taken() == 0
+def _pool_report(sandbox):
+    from scripts.common import test_slots
+
+    report = test_slots.status(sandbox.env)
+    assert report["error"] is None, report
+    return report
+
+
+def _provider_environment(pid, sandbox):
+    """The provider's own environment, on the test's pool (the provider environment carries no override)."""
+    from scripts.common import test_slots
+
+    entries = Path(f"/proc/{pid}/environ").read_bytes().split(b"\0")
+    environment = dict(entry.decode().split("=", 1) for entry in entries if b"=" in entry)
+    return {**environment, test_slots.DIR_ENV: sandbox.env[test_slots.DIR_ENV]}
+
+
+def test_a_killed_supervisors_review_hold_ends_with_it_and_its_provider_holds_no_pool_descriptor(sandbox, tmp_path):
+    """Defect class: a provider that outlives its supervisor keeps the review hold, so slots strand without bound."""
+    from scripts.common import test_slots
+
+    task, child = _killed_review_supervisor(sandbox, tmp_path, "blocked")
+    try:
+        pool = os.path.realpath(tmp_path / "pool")
+        links = [os.readlink(entry) for entry in Path(f"/proc/{child}/fd").iterdir()]
+        assert not [link for link in links if link == pool or link.startswith(pool + os.sep)]
+        report = _pool_report(sandbox)
+        assert report["slots_in_use"] + report["slots_draining"] == 0
+        environment = _provider_environment(child, sandbox)
+        assert environment[test_slots.HOLDER_ENV]
+        assert test_slots.inherited_hold(environment) is None
+        assert worker._identity(child) is not None
+        assert sandbox.settle(task, expected=1)["status"] == "crashed"
+    finally:
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(child, signal.SIGKILL)
+
+
+def test_a_governed_turn_in_flight_keeps_its_slots_past_a_killed_supervisor_and_nothing_new_joins(sandbox, tmp_path):
+    """Defect class: a killed supervisor frees slots a running test still uses, or lets a new run join its hold."""
+    from scripts.common import test_slots
+
+    task, child = _killed_review_supervisor(sandbox, tmp_path, "governed")
+    try:
+        governed = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
+        report = _pool_report(sandbox)
+        assert (report["slots_in_use"], report["slots_draining"]) == (0, worker.admission.REVIEW_TEST_SLOTS)
+        assert test_slots.join_inherited(_provider_environment(child, sandbox), wait_s=0.3) is None
+        (sandbox.tasks / f"{task[0]}.child-release").touch()
+        deadline = time.monotonic() + 10
+        while worker._identity(governed) is not None:
+            assert time.monotonic() < deadline, "the governed run did not end once released"
+            time.sleep(0.02)
+        report = _pool_report(sandbox)
+        assert report["slots_in_use"] + report["slots_draining"] == 0
+    finally:
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(child, signal.SIGKILL)
 
 
 def test_concurrent_dispatches_use_distinct_records(sandbox):

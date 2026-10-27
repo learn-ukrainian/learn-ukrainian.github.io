@@ -147,9 +147,9 @@ def hold_review_test_slots(
     returns; the CLI's governed runs check the holder marker read-only. Other routes, and sealed
     attempts whose inputs carry no pool, take their own slots or none. A refusal is recorded and the
     review runs on; its governed runs are then refused, typed. Returns the hold (or ``None``) and the
-    record for the task's ``review_test_slots`` field. The supervisor passes the hold's descriptors
-    to the provider (``Hold.descriptors``), so the locks end only when both have exited: a killed
-    supervisor no longer frees the slots of a provider that still runs.
+    record for the task's ``review_test_slots`` field. As in legacy, the hold ends with the supervisor
+    process, so a crash or kill releases it; governed runs in flight keep their slots through their own
+    shared locks until they exit.
     """
     if agent != "codex" or mode != "read-only" or not review_typed or sealed_attempt:
         return None, None
