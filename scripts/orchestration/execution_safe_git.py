@@ -455,7 +455,7 @@ def _execution_keys(prefix, roots, env, timeout):
             continue
         seen.add(resolved)
         config = subprocess.run(
-            [*prefix, "config", "--null", "--name-only", "--list"],
+            [*prefix, "config", "--null", "--show-scope", "--name-only", "--list"],
             cwd=root,
             env=env,
             capture_output=True,
@@ -465,7 +465,11 @@ def _execution_keys(prefix, roots, env, timeout):
         )
         if config.returncode:
             return keys, config
-        keys.update(os.fsdecode(raw) for raw in config.stdout.split(b"\0") if raw)
+        fields = config.stdout.split(b"\0")
+        # Command rows are our own controls, including core.gitProxy=.
+        # Keep repository/worktree rows even when those controls override them.
+        keys.update(os.fsdecode(key) for scope, key in zip(fields[::2], fields[1::2], strict=False)
+                    if scope != b"command" and key)
         if not inspect_index:
             continue
         # ls-files --stage reads index metadata, never clean/smudge/process
@@ -693,7 +697,15 @@ def run_git(
             )
             urls = origin.stdout.splitlines() if origin.returncode == 0 else []
             destination = urls[0] if len(urls) == 1 else None
-        for setting in verification_credentials(destination) if destination else ():
+        # Linked workers can poison the primary's shared transport config.
+        # Preserve anonymous proofs, but never attach a credential to that channel.
+        untrusted_transport = any(
+            re.fullmatch(
+                r"http\..*|remote\..+\.(?:proxy|proxyauthmethod)|url\..+\.insteadof|core\.gitproxy", key, re.I,
+            )
+            for key in keys
+        )
+        for setting in verification_credentials(destination) if destination and not untrusted_transport else ():
             prefix.extend(["-c", setting])
         args = [args[0], "--upload-pack=git-upload-pack", *args[1:]]
         if args[0] == "fetch":

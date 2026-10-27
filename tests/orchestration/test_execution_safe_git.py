@@ -31,6 +31,65 @@ from tests.orchestration.test_worktree_output_chokepoint import (
 CALLERS = ["scheduled", "closeout", "post-task", "delegate", "task-family", "sibling", "stale-record"]
 
 
+@pytest.mark.parametrize("poison", [
+    None,
+    ("http.proxy", "http://proxy.invalid"),
+    ("http.sslVerify", "false"),
+    ("http.https://github.com/fixture/private.git.sslCAInfo", "/untrusted/ca.pem"),
+    ("http.https://github.com/fixture/private.git.proxy", "http://proxy.invalid"),
+    ("http.curloptResolve", "github.com:443:proxy.invalid"),
+    ("remote.origin.proxy", "http://proxy.invalid"),
+    ("remote.origin.proxyAuthMethod", "basic"),
+    ("url.https://proxy.invalid/.insteadOf", "https://github.com/"),
+    ("core.gitProxy", "untrusted-proxy"),
+])
+def test_primary_transport_config_poisoning_withholds_credentials(boundary_tree, tmp_path, monkeypatch, poison):
+    from unittest.mock import Mock
+
+    from scripts.common import git_credentials
+    from scripts.orchestration import execution_safe_git as safe
+
+    repo, tree, _tasks, _record = boundary_tree
+    remote = "https://github.com/fixture/private.git"
+    _git(repo, "config", "remote.origin.url", remote)
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({"repos": {"fixture": {"github": "fixture/private", "transport": "https"}}}))
+    monkeypatch.setattr(git_credentials, "CONFIG", registry)
+    marker = tmp_path / "credential-helper-ran"
+    fake_gh = tmp_path / "fake-gh"
+    fake_gh.write_text(
+        "#!/bin/sh\ncat >/dev/null\n"
+        f"touch {shlex.quote(str(marker))}\n"
+        "printf 'username=fixture-user\\npassword=fixture-password\\n'\n"
+    )
+    fake_gh.chmod(0o700)
+    monkeypatch.setenv("AGENT_REAL_GH", str(fake_gh))
+    if poison:
+        # A linked checkout writes transport settings into the primary's shared config.
+        _git(tree, "config", *poison)
+        assert _git(repo, "config", "--get", poison[0]) == poison[1]
+    real_run = subprocess.run
+    observed = Mock(wraps=real_run)
+    monkeypatch.setattr(subprocess, "run", observed)
+    probe = safe.run_git(["ls-remote", "--get-url", "origin"], cwd=tree, profile="remote",
+                         capture_output=True, text=True, timeout=10)
+    assert probe.returncode == 0
+    argv = observed.call_args.args[0]
+    kwargs = observed.call_args.kwargs
+    assert Path(kwargs["cwd"]) == repo
+    prefix = argv[:argv.index("ls-remote")]
+    credentials = real_run([*prefix, "credential", "fill"], cwd=kwargs["cwd"], env=kwargs["env"],
+                           input=f"url={remote}\n\n", capture_output=True, text=True, check=False, timeout=10)
+    if poison:
+        assert credentials.returncode != 0
+        assert "fixture-password" not in credentials.stdout + credentials.stderr
+        assert not marker.exists()
+    else:
+        assert credentials.returncode == 0
+        assert "username=fixture-user\npassword=fixture-password\n" in credentials.stdout
+        assert marker.exists()
+
+
 @pytest.fixture(autouse=True)
 def _real_git_observations(boundary_tree, monkeypatch):
     """Stub GitHub observations without replacing subprocess.run for Git.
