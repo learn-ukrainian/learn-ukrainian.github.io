@@ -998,6 +998,7 @@ def test_isolated_private_https_fetch_credentials_never_escape_exact_registered_
     run_git(tree, "config", f"credential.{remote}.helper", f"!touch {shlex.quote(str(marker))}")
     real_run = subprocess.run
     prefixes = []
+    local_imports = []
 
     def local_transport(argv, **kwargs):
         if "fetch" not in argv:
@@ -1011,6 +1012,14 @@ def test_isolated_private_https_fetch_credentials_never_escape_exact_registered_
             [*prefix, "credential", "fill"], cwd=kwargs.get("cwd"), env=env,
             input=f"url={remote}\n\n", capture_output=True, text=True, check=False, timeout=10,
         )
+        if any(arg.startswith("file://") for arg in argv[index:]):
+            assert env["GIT_ALLOW_PROTOCOL"] == "file"
+            assert credentials.returncode != 0
+            assert "fixture-password" not in credentials.stdout
+            assert not any(".helper=!" in arg for arg in prefix)
+            local_imports.append(argv)
+            return real_run(argv, **kwargs)
+        assert Path(kwargs["cwd"]) != sandbox.repo
         assert credentials.returncode == 0
         assert "username=fixture-user\npassword=fixture-password\n" in credentials.stdout
         before = log.read_text()
@@ -1035,6 +1044,7 @@ def test_isolated_private_https_fetch_credentials_never_escape_exact_registered_
     assert (record["status"], record["error"]) == ("done", None)
     assert merge_closeout._fetch_live_pr_head(sandbox.repo, 42) == (record["head_sha"], None)
     assert len(prefixes) >= 3  # ownership's bounded fetches and closeout's live PR fetch
+    assert len(local_imports) == 1
     expected_contexts = log.read_text()
     assert expected_contexts.count("protocol=https\nhost=github.com\npath=fixture/private.git\n") == len(prefixes)
     assert not marker.exists()
