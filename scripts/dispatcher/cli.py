@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.dispatcher import authoring, checks, git, prompt_context, providers, store, worker
+from scripts.dispatcher import admission, authoring, checks, git, prompt_context, providers, store, worker, write_intent
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.prompt_context import _PromptPath
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
@@ -153,8 +153,19 @@ def _dispatch(args) -> int:
         else (args.prompt.encode() if args.prompt is not None else Path(source).read_bytes())
     )
     prompt.decode("utf-8")
+    # Every worker and review seat needs the rules core: without it nothing is dispatched, and this
+    # runs before any check, worktree or task record (delegate.py cmd_dispatch, rules_core.require_core).
+    from scripts.lib import rules_core
+
+    try:
+        rules_core.require_core()
+    except rules_core.RulesCoreMissing as exc:
+        raise ValueError(f"dispatch refused: {exc}; the rules core is required.") from None
+    if write_intent_error := write_intent._read_only_write_intent_error(mode=args.mode, prompt=prompt.decode()):
+        raise ValueError(write_intent_error)
     agent = ALIASES.get(args.agent, args.agent)
-    if agent not in providers.PROVIDERS or args.claude_account not in {None, "a", "b"}:
+    # An unknown Claude account label reaches admission, which refuses it typed (claude_account_unknown).
+    if agent not in providers.PROVIDERS:
         raise ValueError("unknown agent or Claude account")
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
@@ -162,6 +173,8 @@ def _dispatch(args) -> int:
         raise ValueError("--output-schema is supported only with the effective codex agent")
     if args.hard_timeout < 0 or (args.cwd and (args.branch or args.pinned_head or args.worktree is not None)):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
+    account_fields = admission.claude_account(agent, args.claude_account)
+    args.claude_account = account_fields.get("claude_account", args.claude_account)
     if args.print_advisory_binding:
         if not args.task_id or source == "-":
             raise ValueError("--print-advisory-binding requires --task-id and a non-stdin prompt")
@@ -249,7 +262,7 @@ def _dispatch(args) -> int:
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding)
         if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
             raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
-        record.update(advisory_fields)
+        record.update(advisory_fields, **account_fields)
         record.update(authoring._authoring_review_state_fields(args, authoring_admission))
         record.update(prompt_fields)
         record['prompt_sha256'] = store.digest(prompt)
@@ -260,7 +273,12 @@ def _dispatch(args) -> int:
             record['max_budget_usd'] = args.max_budget_usd
         if agent == "muse":
             record["contributor_mode"] = spec.options.get("contributor_mode", "off")
-        worker.start(spec, record, prompt, args.hard_timeout)
+        try:
+            worker.start(spec, record, prompt, args.hard_timeout)
+        except admission.LaunchRefused as exc:
+            # The record is terminal; never relaunch after a supervisor refusal.
+            print(f"dispatcher: failed to spawn worker for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
     print(task_id, record["run_nonce"], sep="\n")
     return 0
 
