@@ -69,6 +69,11 @@ def test_every_registered_lane_packet_fits(epic, tmp_path, monkeypatch):
     assert "markdown" not in packet["session"]
     assert packet["freshness"] == "live"
     assert packet["complete"] is True
+    live_workers = next(source for source in packet["sources"] if source["name"] == "live_workers")
+    assert live_workers == {
+        "name": "live_workers", "locator": ".venv/bin/python scripts/dispatch.py list",
+        "observed_at": None, "freshness": "unknown",
+    }
     names = {source["name"] for source in packet["sources"]}
     assert {"driver_state", "orders", "session", "open_prs", "live_workers", "plane"} <= names
 

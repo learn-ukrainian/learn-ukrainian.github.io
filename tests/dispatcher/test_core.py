@@ -18,7 +18,7 @@ from unittest.mock import Mock
 import pytest
 import yaml
 
-from scripts.dispatcher import checks, git, store, worker
+from scripts.dispatcher import checks, cli, git, store, worker
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.providers import muse
@@ -1035,6 +1035,108 @@ def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandb
     assert (record["status"], record["error"]) == ("done", None)
 
 
+def test_isolated_private_https_fetch_credentials_never_escape_exact_registered_remote(
+    sandbox, delivery_settle, monkeypatch, tmp_path,
+):
+    """Missing private HTTPS auth rejected pushed work; host-wide auth could leak to another repo.
+
+    Real Git and a fake gh helper exercise credential selection on both production
+    fetch paths. Only the network transport is replaced by the disposable remote
+    after credential fill succeeds. No live credentials or network are used.
+    """
+    import shlex
+
+    from scripts.common import git_credentials
+    from scripts.orchestration import merge_closeout
+
+    record, settle = delivery_settle
+    record = settle("pushed")
+    tree = Path(record["cwd"])
+    remote = "https://github.com/fixture/private.git"
+    run_git(sandbox.repo, "update-ref", "refs/pull/42/head", record["head_sha"])
+    run_git(tree, "push", "origin", "HEAD:refs/pull/42/head")
+    run_git(tree, "config", "remote.origin.url", remote)
+    record["worktree_remote_url"] = remote
+    registry = tmp_path / "registry.yaml"
+    registry.write_text(yaml.safe_dump({"repos": {"fixture": {"github": "fixture/private", "transport": "https"}}}))
+    monkeypatch.setattr(git_credentials, "CONFIG", registry)
+    log = tmp_path / "helper-contexts"
+    marker = tmp_path / "untrusted-helper-ran"
+    fake_gh = tmp_path / "fake gh"
+    fake_gh.write_text(
+        '#!/bin/sh\n[ "$*" = "auth git-credential get" ] || exit 1\n'
+        f"cat >> {shlex.quote(str(log))}\n"
+        "printf 'username=fixture-user\\npassword=fixture-password\\n'\n"
+    )
+    fake_gh.chmod(0o700)
+    monkeypatch.setenv("AGENT_REAL_GH", str(fake_gh))
+    home = tmp_path / "home"
+    home.mkdir()
+    included = tmp_path / "untrusted.config"
+    included.write_text(f"[credential]\n helper = !touch {shlex.quote(str(marker))}\n[worker]\n global = consulted\n")
+    (home / ".gitconfig").write_text(f"[include]\n path = {included}\n")
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(included))
+    monkeypatch.setenv("GIT_CONFIG_SYSTEM", str(included))
+    # The cleanup runner also has to reset URL-scoped primary-repo helpers.
+    run_git(tree, "config", f"credential.{remote}.helper", f"!touch {shlex.quote(str(marker))}")
+    real_run = subprocess.run
+    prefixes = []
+    local_imports = []
+
+    def local_transport(argv, **kwargs):
+        if "fetch" not in argv:
+            return real_run(argv, **kwargs)
+        index = argv.index("fetch")
+        prefix = argv[:index]
+        env = kwargs["env"]
+        assert env["GIT_CONFIG_GLOBAL"] == env["GIT_CONFIG_SYSTEM"] == os.devnull
+        assert env["GIT_TERMINAL_PROMPT"] == "0" and env["PATH"] == os.defpath
+        credentials = real_run(
+            [*prefix, "credential", "fill"], cwd=kwargs.get("cwd"), env=env,
+            input=f"url={remote}\n\n", capture_output=True, text=True, check=False, timeout=10,
+        )
+        if any(arg.startswith("file://") for arg in argv[index:]):
+            assert env["GIT_ALLOW_PROTOCOL"] == "file"
+            assert credentials.returncode != 0
+            assert "fixture-password" not in credentials.stdout
+            assert not any(".helper=!" in arg for arg in prefix)
+            local_imports.append(argv)
+            return real_run(argv, **kwargs)
+        assert Path(kwargs.get("cwd") or argv[argv.index("-C") + 1]) != sandbox.repo
+        assert credentials.returncode == 0
+        assert "username=fixture-user\npassword=fixture-password\n" in credentials.stdout
+        before = log.read_text()
+        config = real_run([*prefix, "config", "--list", "--includes"], cwd=kwargs.get("cwd"), env=env,
+                          capture_output=True, text=True, check=True, timeout=10).stdout
+        assert "worker.global" not in config
+        for other in (
+            "https://github.com/fixture/other.git", "https://github.com/other/private.git",
+            remote + "/child", remote + "-suffix", remote.removesuffix(".git"),
+            "https://other.invalid/fixture/private.git", "http://github.com/fixture/private.git",
+        ):
+            result = real_run([*prefix, "credential", "fill"], cwd=kwargs.get("cwd"), env=env,
+                              input=f"url={other}\n\n", capture_output=True, text=True, check=False, timeout=10)
+            assert result.returncode != 0 and "fixture-password" not in result.stdout
+        assert log.read_text() == before
+        prefixes.append((prefix, kwargs.get("cwd"), env))
+        fetch_args = [str(sandbox.remote) if arg == "origin" else arg for arg in argv[index:]]
+        return real_run([*prefix, *fetch_args], **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", local_transport)
+    worker._enforce_delivery(record)
+    assert (record["status"], record["error"]) == ("done", None)
+    assert merge_closeout._fetch_live_pr_head(sandbox.repo, 42) == (record["head_sha"], None)
+    assert len(prefixes) >= 3  # ownership's bounded fetches and closeout's live PR fetch
+    assert len(local_imports) == 1
+    expected_contexts = log.read_text()
+    assert expected_contexts.count("protocol=https\nhost=github.com\npath=fixture/private.git\n") == len(prefixes)
+    assert not marker.exists()
+    for other in ("https://github.com/fixture/other.git", "https://user@github.com/fixture/private.git",
+                  "git@github.com:fixture/private.git", str(sandbox.remote)):
+        assert git_credentials.verification_credentials(other) == []
+
+
 @pytest.mark.parametrize("shape", ["linear", "merge"])
 def test_ownership_walk_does_not_fetch_full_history(tmp_path, monkeypatch, shape):
     """A multi-gigabyte remote must not be fetched whole: only blob-less history since the task base.
@@ -1796,6 +1898,157 @@ def test_aliases_and_all_retained_metadata_flags_parse():
     )
     assert args.owned_path == ["scripts"]
     assert args.research_owned_path == ["tests"]
+
+
+# Ports of the legacy status-or-fail and child identity contracts in tests/test_delegate.py.
+def test_status_or_fail_running_task_exits_zero_quiet(tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_running_task_exits_zero_quiet."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "sleep-task.json").write_text(json.dumps(dict(
+        task_id="sleep-task", status="running", started_at=store.now(),
+        pid=os.getpid(), process_start=worker._identity(os.getpid()),
+    )))
+
+    rc = cli.main(["status-or-fail", "sleep-task"])
+
+    assert rc == 0
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == ""
+
+
+@pytest.mark.parametrize("case, expected_status, nonce", [
+    ("dead-pid", "stale", "record-nonce"),
+    ("mismatched-process-start", "stale", "record-nonce"),
+    ("missing-process-start", "stale", "record-nonce"),
+    ("nonce-mismatch", "stale_run_nonce", "wrong-nonce"),
+])
+def test_status_or_fail_dead_supervisor_never_reported_alive(
+    tmp_path, monkeypatch, capsys, case, expected_status, nonce,
+):
+    """Reject stale supervisor identities and nonces without rewriting the record."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    record = dict(
+        task_id="sleep-task", status="running", started_at=store.now(),
+        run_nonce="record-nonce", pid=os.getpid(), process_start=worker._identity(os.getpid()),
+    )
+    if case == "dead-pid":
+        with subprocess.Popen([sys.executable, "-c", "pass"]) as process:
+            process.wait(timeout=10)
+        record["pid"] = process.pid
+    elif case == "mismatched-process-start":
+        record["process_start"] = "different-process-start"
+    elif case == "missing-process-start":
+        record.pop("process_start")
+    path = tmp_path / "sleep-task.json"
+    original = json.dumps(record).encode()
+    path.write_bytes(original)
+
+    rc = cli.main(["status-or-fail", "sleep-task", "--verbose", "--run-nonce", nonce])
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out)
+    assert payload["status"] == expected_status
+    assert payload["alive"] is False
+    assert payload["run_nonce"] == (None if case == "nonce-mismatch" else "record-nonce")
+    assert f"task sleep-task is not running (status={expected_status}, age=" in captured.err
+    assert path.read_bytes() == original
+
+
+@pytest.mark.parametrize("status", [
+    "done", "failed", "timeout", "rate_limited", "cancelled", "crashed", "dry_run",
+    "needs_finalize", "no_deliverable",
+])
+def test_status_or_fail_completed_task_exits_one(tmp_path, monkeypatch, capsys, status):
+    """Ported from tests/test_delegate.py::test_status_or_fail_completed_task_exits_one."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "sleep-task.json").write_text(json.dumps(dict(
+        task_id="sleep-task", status=status, started_at=store.now(),
+    )))
+
+    rc = cli.main(["status-or-fail", "sleep-task"])
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert f"task sleep-task is not running (status={status}, age=" in captured.err
+    assert captured.err.rstrip().endswith("s)")
+
+
+def test_status_or_fail_unknown_task_exits_one(tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_unknown_task_exits_one."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+
+    rc = cli.main(["status-or-fail", "missing"])
+
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "task missing is not running" in captured.err
+    assert "task not found" in captured.err
+
+
+def test_status_or_fail_monitor_api_down_exits_two(monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_monitor_api_down_exits_two.
+
+    V2's unavailable authority is its task store, rather than the Monitor API.
+    """
+    monkeypatch.setattr(store, "read", Mock(side_effect=OSError("unavailable")))
+
+    rc = cli.main(["status-or-fail", "sleep-task"])
+
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "Dispatcher state unavailable" in captured.err
+
+
+def test_status_or_fail_verbose_byte_compatible_without_run_nonce(tmp_path, monkeypatch, capsys):
+    """Ported from tests/test_delegate.py::test_status_or_fail_verbose_byte_compatible_without_run_nonce."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    (tmp_path / "test-sof-task.json").write_text(json.dumps(dict(
+        task_id="test-sof-task", status="running", started_at="2026-08-20T10:00:00Z",
+        run_nonce="sof-nonce-12345", pid=os.getpid(), process_start=worker._identity(os.getpid()),
+    )))
+
+    rc = cli.main(["status-or-fail", "test-sof-task", "--verbose"])
+    assert rc == 0
+    data_no_nonce = json.loads(capsys.readouterr().out)
+    assert list(data_no_nonce.keys()) == ["task_id", "status", "age_s", "alive"]
+    assert "run_nonce" not in data_no_nonce
+
+    rc2 = cli.main(["status-or-fail", "test-sof-task", "--verbose", "--run-nonce", "sof-nonce-12345"])
+    assert rc2 == 0
+    data_with_nonce = json.loads(capsys.readouterr().out)
+    assert data_with_nonce["run_nonce"] == "sof-nonce-12345"
+
+
+@pytest.mark.parametrize("agent", ["codex", "claude", "cursor", "agy", "muse", "opencode", "hermes"])
+def test_dispatch_worker_env_carries_dispatch_identity_markers(spec, monkeypatch, agent):
+    """Ported from tests/test_delegate.py::test_dispatch_worker_env_carries_dispatch_identity_markers."""
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "parent-task")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "parent-agent")
+
+    env = child_env(dataclasses.replace(spec, task_id="dispatch-marker-check", agent=agent))
+
+    assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-marker-check"
+    assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == agent
+    assert os.environ["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "parent-task"
+    assert os.environ["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "parent-agent"
+
+    process = SimpleNamespace(pid=os.getpid(), stdin=SimpleNamespace(write=Mock(), close=Mock()))
+    launch = Mock(return_value=process)
+    monkeypatch.setattr(worker.subprocess, "Popen", launch)
+    monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
+    monkeypatch.setattr(worker.admission.dispatch_isolation, "_caller_in_driver_scope", lambda: False)
+    monkeypatch.setattr(worker, "project_interpreter", Mock(return_value=Path(sys.executable)))
+    monkeypatch.setattr(store, "create", Mock(return_value=spec.worktree / "record.json"))
+    monkeypatch.setattr(store, "replace", Mock())
+
+    worker.start(dataclasses.replace(spec, task_id="dispatch-marker-check", agent=agent),
+                 {"run_nonce": "n" * 32}, b"test", 3600)
+
+    supervisor_env = launch.call_args.kwargs["env"]
+    assert supervisor_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-marker-check"
+    assert supervisor_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == agent
 
 
 # ---- ported from tests/test_delegate_review_test_slots.py and tests/test_delegate.py (C-2188 unit D) ----
