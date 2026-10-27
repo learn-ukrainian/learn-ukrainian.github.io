@@ -239,8 +239,29 @@ def _merge_proof_object_store(start: Path | None = None) -> Path:
     raise OSError("Git checkout unavailable")
 
 
+CLEAN_BASE_MERGE = "clean-base-merge"
+CLEAN_SYNC_MERGE = "clean-sync-merge"
+
+
 def _is_clean_base_merge(entry: dict[str, Any], base_sha: str, *, checkout: Path | None = None) -> bool:
-    """Bind a conflict-free base merge to commit metadata and raw local objects.
+    """Whether ``entry`` is a Git-proven conflict-free merge of the base into the branch."""
+    return _clean_merge_source(entry, base_sha, checkout=checkout) == CLEAN_BASE_MERGE
+
+
+def _clean_merge_source(
+    entry: dict[str, Any],
+    base_sha: str,
+    *,
+    checkout: Path | None = None,
+    range_shas: frozenset[str] = frozenset(),
+) -> str | None:
+    """Bind a conflict-free merge to commit metadata and raw local objects.
+
+    Returns ``CLEAN_BASE_MERGE`` when the second parent is a base ancestor, or
+    ``CLEAN_SYNC_MERGE`` when every parent is a base ancestor or one of
+    ``range_shas``, the PR's own commits, each attributed on its own. In both
+    cases the tree must equal Git's merge of the two parents, so the merge adds
+    no content. Anything else returns None.
 
     ``checkout`` locates the object store; the default is the current directory.
     """
@@ -250,10 +271,10 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str, *, checkout: Path
     tree = tree_data.get("sha") if isinstance(tree_data, dict) else None
     parent_data = entry.get("parents")
     if not isinstance(parent_data, list) or len(parent_data) != 2:
-        return False
+        return None
     parents = [parent.get("sha") if isinstance(parent, dict) else None for parent in parent_data]
     if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in [commit_sha, base_sha, tree, *parents]):
-        return False
+        return None
     git = ["git"]
     try:
         objects = _merge_proof_object_store(checkout)
@@ -291,9 +312,9 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str, *, checkout: Path
             )
             headers = commit.stdout.partition("\n\n")[0].splitlines()
             if [line[5:] for line in headers if line.startswith("tree ")] != [tree]:
-                return False
+                return None
             if [line[7:] for line in headers if line.startswith("parent ")] != parents:
-                return False
+                return None
             base = subprocess.run(
                 [*git, "cat-file", "-e", f"{base_sha}^{{commit}}"],
                 env=env,
@@ -304,14 +325,26 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str, *, checkout: Path
             )
             if base.returncode:
                 raise RecordError("base object not available locally; fetch and retry")
-            subprocess.run(
-                [*git, "merge-base", "--is-ancestor", parents[1], base_sha],
-                env=env,
-                capture_output=True,
-                text=True,
-                check=True,
-                timeout=30,
-            )
+
+            def in_base(sha: str) -> bool:
+                probe = subprocess.run(
+                    [*git, "merge-base", "--is-ancestor", sha, base_sha],
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=30,
+                )
+                if probe.returncode not in (0, 1):
+                    raise subprocess.SubprocessError("ancestry unavailable")
+                return probe.returncode == 0
+
+            source = CLEAN_BASE_MERGE
+            if not in_base(parents[1]):
+                # A sync merge of the PR's own commits: each is attributed on its own.
+                if not all(sha in range_shas or in_base(sha) for sha in parents):
+                    return None
+                source = CLEAN_SYNC_MERGE
             merged = subprocess.run(
                 [*git, "merge-tree", "--write-tree", "--no-messages", *parents],
                 env=env,
@@ -322,15 +355,15 @@ def _is_clean_base_merge(entry: dict[str, Any], base_sha: str, *, checkout: Path
             )
     except (OSError, subprocess.SubprocessError, UnicodeError):
         # Missing objects, conflicts, unsupported Git, and timeouts prove no exemption.
-        return False
-    return merged.stdout.strip() == tree
+        return None
+    return source if merged.stdout.strip() == tree else None
 
 
 @dataclass(frozen=True)
 class CommitAttribution:
     """One author contribution to a branch commit, with its proven family.
 
-    ``family`` is None only for a Git-proven clean base merge, which authors nothing.
+    ``family`` is None only for a Git-proven clean base or sync merge, which authors nothing.
     """
 
     sha: str | None
@@ -374,13 +407,15 @@ def _attribute_commit(
     checkout: Path | None = None,
     unknown_history: Iterable[str] = (),
     app_bot_login: Callable[[str], str | None] | None = None,
+    range_shas: frozenset[str] = frozenset(),
 ) -> CommitAttribution:
     """Resolve one commit's author family, retaining unresolvable authors as Unknown.
 
     ``entry`` has the GitHub commit-listing shape (``sha``, ``commit.message``,
     ``commit.tree.sha``, ``parents``). ``base_sha`` is called only when an
-    untrailered commit needs the clean-merge proof. ``app_bot_login`` is called
-    only for an untrailered commit that is neither a clean base merge nor
+    untrailered commit needs the clean-merge proof; ``range_shas`` are the PR's
+    own commits, which a clean sync merge may join. ``app_bot_login`` is called
+    only for an untrailered commit that is neither a clean merge nor
     admitted unknown history; a login is GitHub's live proof that an
     allowlisted app bot authored it (#10531), recorded as ``verified_app_bot``
     without any model.
@@ -395,9 +430,10 @@ def _attribute_commit(
         and not re.search(r"(?m)^X-Agent:", message)
         and isinstance(commit_sha, str)
         and SHA.fullmatch(commit_sha)
-        and _is_clean_base_merge(entry, base_sha(), checkout=checkout)
     ):
-        return CommitAttribution(commit_sha, None, "clean-base-merge")
+        merge_source = _clean_merge_source(entry, base_sha(), checkout=checkout, range_shas=range_shas)
+        if merge_source is not None:
+            return CommitAttribution(commit_sha, None, merge_source)
     if not trailers and not re.search(r"(?m)^X-Agent:", message) and commit_sha in unknown_history:
         return CommitAttribution(
             commit_sha, UNKNOWN_AUTHOR_FAMILY, "unknown_historical", authorship="unknown_historical"
@@ -513,6 +549,7 @@ def _attribute_commit_authors(
     checkout: Path | None = None,
     unknown_history: Iterable[str] = (),
     app_bot_login: Callable[[str], str | None] | None = None,
+    range_shas: frozenset[str] = frozenset(),
 ) -> tuple[CommitAttribution, ...]:
     """Resolve every declared writer atomically; keep legacy zero/one admission."""
     message = (entry.get("commit") or {}).get("message")
@@ -527,6 +564,7 @@ def _attribute_commit_authors(
                 checkout=checkout,
                 unknown_history=unknown_history,
                 app_bot_login=app_bot_login,
+                range_shas=range_shas,
             ),
         )
     authors = []
@@ -567,6 +605,7 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
         return base[0]
 
     families = set()
+    range_shas = frozenset(entry["sha"] for entry in commits if isinstance(entry.get("sha"), str))
     for entry in commits:
         authors = _attribute_commit_authors(
             entry,
@@ -574,6 +613,7 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
             task_root=task_root,
             base_sha=base_sha,
             app_bot_login=listing_app_bot_login(commits, repository),
+            range_shas=range_shas,
         )
         families.update(author.family for author in authors if author.family is not None)
     if not families:
@@ -668,8 +708,8 @@ class BranchReviewFacts:
             for _sha, model in dict.fromkeys(
                 (commit.sha, model)
                 for commit in self.commits
-                # A clean merge authors nothing; a verified app bot has no model.
-                if commit.source not in {"clean-base-merge", VERIFIED_APP_BOT}
+                # A clean (base or sync) merge authors nothing; a verified app bot has no model.
+                if commit.source not in {CLEAN_BASE_MERGE, CLEAN_SYNC_MERGE, VERIFIED_APP_BOT}
                 for model in (commit.author_models or (None,))
             )
         )
@@ -842,8 +882,8 @@ def collect_branch_review_facts(
 
     Commit membership is ``git rev-list <base>..<head>`` (A1), attributed by the
     recorder's own per-commit rules (trailer, hot or archived task record,
-    Cursor attestation, single-family harness, Git-proven clean base merge,
-    GitHub-proven app bot).
+    Cursor attestation, single-family harness, Git-proven clean base or sync
+    merge, GitHub-proven app bot).
     ``incoming_agent``/``incoming_model`` name the writer about to be
     dispatched, after any substitution. Scope is the literal diff against the
     merge-base (both rename sides and deletions) plus ``owned_paths``, with the
@@ -880,6 +920,7 @@ def collect_branch_review_facts(
     commits: list[CommitAttribution] = []
     unknown_history = frozenset(unknown_history)
     app_bot_login = app_bot_login or partial(live_app_bot_login, repository)
+    range_shas = frozenset(shas)
     for entry in _read_commit_entries(repo_root, shas, deadline=deadline):
         try:
             commits.extend(
@@ -893,6 +934,7 @@ def collect_branch_review_facts(
                     checkout=repo_root,
                     unknown_history=unknown_history,
                     app_bot_login=app_bot_login,
+                    range_shas=range_shas,
                 )
             )
         except RecordError as exc:

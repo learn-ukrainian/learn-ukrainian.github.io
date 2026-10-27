@@ -1036,23 +1036,70 @@ def real_commit_set(monkeypatch, tmp_path):
 
 
 @pytest.mark.parametrize(
-    "case,accepted",
+    "case,families",
     [
-        ("all_trailered", True),
-        ("clean_update_merge", True),
-        ("conflict_resolution", False),
-        ("nonbase_merge", False),
-        ("ordinary_untrailered", False),
-        ("dirty_merge", False),
-        ("reversed_parents", False),
-        ("octopus_merge", False),
-        ("older_base_merge", True),
+        ("all_trailered", {"openai"}),
+        ("clean_update_merge", {"openai"}),
+        ("conflict_resolution", None),
+        # A clean merge of two commits of the PR's own range authors nothing.
+        ("nonbase_merge", {"openai", "google"}),
+        ("ordinary_untrailered", None),
+        ("dirty_merge", None),
+        ("reversed_parents", {"openai"}),
+        ("octopus_merge", None),
+        ("older_base_merge", {"openai"}),
     ],
 )
-def test_author_commit_sets_with_real_git(real_commit_set, tmp_path, case, accepted):
+def test_author_commit_sets_with_real_git(real_commit_set, tmp_path, case, families):
     real_commit_set(case)
-    if accepted:
-        assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"openai"}
+    if families is not None:
+        assert recorder.author_families(REPOSITORY, 42, tmp_path) == families
+    else:
+        with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+            recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+@pytest.mark.parametrize(
+    "case,families",
+    [
+        ("clean", {"openai", "anthropic"}),
+        ("hand_edit", None),
+        ("parent_outside_range", None),
+    ],
+)
+def test_sync_merge_of_range_commits_needs_no_attribution(real_commit_set, monkeypatch, tmp_path, case, families):
+    git, _, head, base = real_commit_set("all_trailered")
+
+    def round_commit(branch, path, trailer):
+        git("checkout", "-b", branch, head)
+        Path(path).write_text(f"{branch}\n")
+        git("add", path)
+        git("commit", "-m", f"{branch}\n\nX-Agent: {trailer}")
+        return git("rev-parse", "HEAD").stdout.strip()
+
+    outside = round_commit("round-a", "a.txt", "claude/claude-opus-5-5")
+    round_commit("round-b", "b.txt", "codex/gpt-6.1-sol")
+    git("merge", "--no-ff", "--no-commit", "round-a")
+    if case == "hand_edit":
+        Path("extra.txt").write_text("authored during the merge\n")
+        git("add", "extra.txt")
+    git("commit", "-m", "sync PR branch")
+    listing = [
+        {
+            "sha": sha,
+            "commit": {
+                "message": git("show", "--no-patch", "--format=%B", sha).stdout,
+                "tree": {"sha": git("show", "--no-patch", "--format=%T", sha).stdout.strip()},
+            },
+            "parents": [{"sha": parent} for parent in git("show", "--no-patch", "--format=%P", sha).stdout.split()],
+        }
+        for sha in git("rev-list", "--reverse", f"{base}..HEAD").stdout.splitlines()
+    ]
+    if case == "parent_outside_range":
+        listing = [entry for entry in listing if entry["sha"] != outside]
+    monkeypatch.setattr(recorder, "_pages", lambda args: listing)
+    if families is not None:
+        assert recorder.author_families(REPOSITORY, 42, tmp_path) == families
     else:
         with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
             recorder.author_families(REPOSITORY, 42, tmp_path)
@@ -1346,8 +1393,12 @@ def test_git_grafts_cannot_hide_authored_or_nonbase_merges(real_commit_set, monk
         # A listing forged to agree with grafted parents still fails raw binding.
         entry["parents"] = [{"sha": helper}, {"sha": base}]
         assert not recorder._is_clean_base_merge(entry, base)
-    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
-        recorder.author_families(REPOSITORY, 42, tmp_path)
+    if target == "merge":
+        with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+            recorder.author_families(REPOSITORY, 42, tmp_path)
+    else:
+        # Base ancestry stays unproven; the merge is exempt only as a sync merge of range commits.
+        assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"openai", "google"}
 
 
 def test_hash_mismatched_loose_object_cannot_hide_authored_merge_changes(real_commit_set):
@@ -1402,8 +1453,7 @@ def test_git_commit_graph_cannot_fake_base_ancestry(real_commit_set, monkeypatch
     graph_path.write_bytes(graph)
     assert git("merge-base", "--is-ancestor", second_parent, base_tip, check=False).returncode == 0
     assert not recorder._is_clean_base_merge(commits[-1], base_tip)
-    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
-        recorder.author_families(REPOSITORY, 42, tmp_path)
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"openai", "google"}
 
 
 @pytest.mark.parametrize("field", ["first_parent", "second_parent", "parent_order", "tree"])
