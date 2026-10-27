@@ -1056,3 +1056,172 @@ def test_github_unreachable_fails_closed(repo, tasks, monkeypatch, tmp_path):
     # The recorder's PR listing without author data (GitHub returned no proof) refuses too.
     with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
         record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol")
+
+
+def listing_with_authors(repo: MiniRepo, authors: dict[str, dict]) -> list[dict]:
+    """GitHub's live PR commit listing, carrying each listed commit's GitHub author data."""
+    listing = github_listing(repo, repo.sha("origin/main"), repo.sha("feature"))
+    for entry in listing:
+        github = authors.get(entry["sha"], {})
+        entry.update({key: github[key] for key in ("author", "committer", "url", "html_url") if key in github})
+        entry["commit"].update({key: value for key, value in github.get("commit", {}).items()})
+    return listing
+
+
+def test_verified_dependabot_branch_is_attributed_reviewed_and_recorded_without_a_model(
+    repo, tasks, monkeypatch, tmp_path
+):
+    head = repo.commit(None, message=BUMP)
+    repo.publish()
+    requested = serve_github_commits(monkeypatch, {head: github_commit(head)})
+
+    fact = facts(repo, tasks)
+
+    assert requested == [head]
+    (commit,) = fact.commits
+    assert (commit.sha, commit.source, commit.authorship) == (head, "verified_app_bot", "verified_app_bot")
+    assert commit.author_models == () and commit.task_id is None
+    assert fact.existing_families == {"verified_app_bot"} and fact.app_bot_commits == (head,)
+    assert fact.receipt()["app_bot_commits"] == [head] and "authorship" not in fact.receipt()
+    # A bot has no model and no model family: no reviewer family is excluded, the risk floor still binds.
+    inputs = fact.resolver_inputs(risk="critical", claude_account=HOST_ACCOUNT)
+    assert inputs.author_models == ()
+    trace = {entry.name: entry for entry in recorder.structural_review_route(fact, risk="critical", claude_account=HOST_ACCOUNT).trace}
+    assert {trace["claude-opus-5-5"].status, trace["openai_frontier"].status} <= {"selected", "eligible"}
+    assert "same family" not in " ".join(str(entry.reason) for entry in trace.values())
+    assert selected(fact, "critical") is not None
+
+    listing = listing_with_authors(repo, {head: github_commit(head)})
+    for agent, model in (("codex", "gpt-6.1-sol"), ("claude", "claude-opus-5-5")):
+        posted: list[dict] = []
+        receipt = record_verdict(
+            monkeypatch,
+            tmp_path,
+            repo,
+            agent=agent,
+            model=model,
+            review_risk="critical",
+            listing=listing,
+            comments=posted,
+        )
+        assert receipt["verdict"] == "APPROVED" and receipt["head"] == head
+        assert receipt["authorship"] == "verified_app_bot" and receipt["app_bot_commits"] == [head]
+        body = posted[0]["body"]
+        family = recorder.resolve_family(model)
+        assert body.rstrip().endswith(f"model={model} family={family} authorship=verified_app_bot -->")
+        assert "Authorship: verified_app_bot\nNo author model assumed.\n" in body
+        marker = recorder.parse_marker(body)
+        assert marker["authorship"] == "verified_app_bot" and marker["model"] == model
+        # The unchanged head's marker is consumed again rather than re-posted.
+        again = record_verdict(
+            monkeypatch,
+            tmp_path,
+            repo,
+            agent=agent,
+            model=model,
+            review_risk="critical",
+            listing=listing,
+            comments=posted,
+        )
+        assert again["comment"] == "existing" and len(posted) == 1
+    # The risk floor and qualification still apply to a bot-authored head.
+    with pytest.raises(recorder.RecordError, match="not qualified"):
+        record_verdict(
+            monkeypatch,
+            tmp_path,
+            repo,
+            agent="claude",
+            model="claude-sonnet-5-5",
+            review_risk="critical",
+            listing=listing,
+        )
+
+
+def test_human_commit_without_trailer_keeps_its_refusal(repo, tasks, monkeypatch, tmp_path):
+    head = repo.commit(None)
+    repo.publish()
+    requested = serve_github_commits(monkeypatch, {head: human_commit(head)})
+    with pytest.raises(recorder.BranchFactsError, match="missing explicit X-Agent") as refused:
+        facts(repo, tasks)
+    assert refused.value.code == recorder.FACTS_AUTHORSHIP_UNKNOWN and requested == [head]
+    listing = listing_with_authors(repo, {head: human_commit(head)})
+    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+        record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol", listing=listing)
+
+
+@pytest.mark.parametrize(
+    "github",
+    [
+        pytest.param({}, id="github-reports-the-human"),
+        pytest.param({"committer": "maintainer", "verified": False}, id="spoofed-email-pushed-from-a-checkout"),
+        pytest.param({"committer": "maintainer"}, id="signed-by-the-human-not-github"),
+        pytest.param({"verified": False}, id="unsigned"),
+        pytest.param({"kind": "User"}, id="user-account-type"),
+        pytest.param({"account_id": 1}, id="other-account-id"),
+        pytest.param({"login": "dependabot-preview[bot]"}, id="login-off-allowlist"),
+        pytest.param({"name": "Dependabot"}, id="author-name-mismatch"),
+        pytest.param({"email": "dependabot@example.invalid"}, id="author-email-mismatch"),
+    ],
+)
+def test_human_commit_claiming_to_be_dependabot_keeps_its_refusal(repo, tasks, monkeypatch, tmp_path, github):
+    """The message and the local Git identity both claim Dependabot; only GitHub's full proof could attribute it."""
+    (repo.root / "docs/a.md").write_text("bumped\n", encoding="utf-8")
+    repo.git("add", "-A")
+    repo.git(
+        "-c",
+        "user.name=dependabot[bot]",
+        "-c",
+        f"user.email={DEPENDABOT_EMAIL}",
+        "commit",
+        "-q",
+        "-m",
+        f"{BUMP}\n\nSigned-off-by: dependabot[bot] <{DEPENDABOT_EMAIL}>\n",
+    )
+    head = repo.sha("HEAD")
+    repo.publish()
+    data = human_commit(head) if not github else github_commit(head, **github)
+    requested = serve_github_commits(monkeypatch, {head: data})
+    with pytest.raises(recorder.BranchFactsError, match="missing explicit X-Agent"):
+        facts(repo, tasks)
+    # Refused because GitHub's live data for this SHA proves no bot, never because it went unchecked.
+    assert requested == [head]
+    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+        record_verdict(
+            monkeypatch,
+            tmp_path,
+            repo,
+            agent="codex",
+            model="gpt-6.1-sol",
+            listing=listing_with_authors(repo, {head: data}),
+        )
+
+
+def test_bot_commit_then_human_commit_applies_the_human_rule(repo, tasks, monkeypatch, tmp_path):
+    bot = repo.commit(None, message=BUMP)
+    human = repo.commit(None, path="src/app.py", message="fix the workflow")
+    repo.publish()
+    authors = {bot: github_commit(bot), human: human_commit(human)}
+    requested = serve_github_commits(monkeypatch, authors)
+    with pytest.raises(recorder.BranchFactsError, match=f"commit {human[:12]}: author model unknown"):
+        facts(repo, tasks)
+    assert human in requested
+    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+        record_verdict(
+            monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol", listing=listing_with_authors(repo, authors)
+        )
+
+
+def test_bot_commit_then_agent_commit_keeps_the_agent_family(repo, tasks, monkeypatch, tmp_path):
+    bot = repo.commit(None, message=BUMP)
+    repo.commit(OPUS, path="src/app.py", message="fix the workflow")
+    repo.publish()
+    serve_github_commits(monkeypatch, {bot: github_commit(bot)})
+    fact = facts(repo, tasks)
+    assert {commit.source for commit in fact.commits} == {"verified_app_bot", "trailer-model"}
+    assert fact.existing_families == {"verified_app_bot", "anthropic"} and fact.app_bot_commits == (bot,)
+    assert selected(fact, "critical") == "openai_frontier"
+    listing = listing_with_authors(repo, {bot: github_commit(bot)})
+    with pytest.raises(recorder.RecordError, match="equals an author family"):
+        record_verdict(monkeypatch, tmp_path, repo, agent="claude", model="claude-opus-5-5", listing=listing)
+    receipt = record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="gpt-6.1-sol", listing=listing)
+    assert receipt["verdict"] == "APPROVED" and receipt["app_bot_commits"] == [bot]

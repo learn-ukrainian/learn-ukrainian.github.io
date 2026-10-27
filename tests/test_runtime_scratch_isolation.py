@@ -6,6 +6,8 @@ import os
 import shutil
 import tempfile
 import time
+import traceback
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
@@ -207,3 +209,92 @@ def test_scan_root_symlink_inside_its_parent_remains_the_boundary(
     link.symlink_to(real, target_is_directory=True)
     monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, str(link))
     assert scratch.resolve_confined_scan_root() == real.resolve()
+
+
+_CALLER_MISCONFIGURATIONS = (
+    scratch.SCAN_ROOT_REASON_RELATIVE,
+    scratch.SCAN_ROOT_REASON_OUTSIDE,
+    scratch.SCAN_ROOT_REASON_SYMLINK,
+    scratch.SCAN_ROOT_REASON_NOT_A_DIRECTORY,
+)
+
+
+@pytest.fixture
+def misconfigured_scan_root(
+    request: pytest.FixtureRequest,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    _isolate_runtime_scratch_root: Path,
+) -> Iterator[str]:
+    """Point ``LU_SCRATCH_SCAN_ROOT`` at one misconfiguration and clean up after it.
+
+    Depends on the autouse scratch fixture so this override runs after it.
+    """
+    reason = request.param
+    leftovers: list[Path] = []
+    variable = scratch.SCRATCH_SCAN_ROOT_ENV_VAR
+    if reason == scratch.SCAN_ROOT_REASON_RELATIVE:
+        monkeypatch.setenv(variable, "relative-scan-root")
+    elif reason == scratch.SCAN_ROOT_REASON_NOT_A_DIRECTORY:
+        monkeypatch.setenv(variable, str(tmp_path / "missing-scan-root"))
+    elif reason == scratch.SCAN_ROOT_REASON_OUTSIDE:
+        monkeypatch.setenv(variable, str(tmp_path / ".." / f"outside-{tmp_path.name}"))
+    elif reason == scratch.SCAN_ROOT_REASON_SYMLINK:
+        target = tmp_path.parent / f"symlink-target-{tmp_path.name}"
+        target.mkdir()
+        leftovers.append(target)
+        link = tmp_path / "escaping-scan-link"
+        link.symlink_to(target, target_is_directory=True)
+        monkeypatch.setenv(variable, str(link))
+    else:
+        raise AssertionError(reason)
+    try:
+        yield reason
+    finally:
+        for path in leftovers:
+            shutil.rmtree(path)
+
+
+def _keep_misconfigured_scans_inside_tmp(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """If a bad setting falls open, the historical candidates are still this test's tmp dir."""
+    private = tmp_path / "fake-default"
+    private.mkdir()
+    monkeypatch.setattr(scratch, "DEFAULT_SCRATCH_ROOT", private)
+    monkeypatch.setattr(tempfile, "gettempdir", lambda: str(tmp_path))
+
+
+def _assert_typed_scan_root_error(caught: pytest.ExceptionInfo[scratch.ScratchScanRootError], reason: str) -> None:
+    """The caller boundary raised the documented error and no host path."""
+    assert caught.value.reason == reason
+    assert str(caught.value) == f"LU_SCRATCH_SCAN_ROOT is misconfigured: {reason}"
+    assert "/" not in str(caught.value)
+    assert caught.value.__cause__ is None
+    assert not isinstance(caught.value, OSError)
+    frames = traceback.extract_tb(caught.tb)
+    assert frames[-1].name == "_scratch_scan_roots"
+
+
+
+@pytest.mark.parametrize("misconfigured_scan_root", _CALLER_MISCONFIGURATIONS, indirect=True)
+def test_review_sweep_refuses_a_misconfigured_scan_root(
+    misconfigured_scan_root: str,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """Review orphan sweep fails closed before it can delete a review root."""
+    from scripts.review import isolation
+
+    _keep_misconfigured_scans_inside_tmp(monkeypatch, tmp_path)
+    review_root = tmp_path / "lu-review-snap-misconfigured"
+    review_root.mkdir()
+    (review_root / "payload").write_text("keep", encoding="utf-8")
+
+    def refuse_delete(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("misconfigured scan root reached review-root deletion")
+
+    monkeypatch.setattr(isolation, "_remove_review_temp_orphan", refuse_delete)
+    with pytest.raises(scratch.ScratchScanRootError) as caught:
+        isolation.sweep_review_temp_orphans()
+    _assert_typed_scan_root_error(caught, misconfigured_scan_root)
+    assert traceback.extract_tb(caught.tb)[-1].filename.endswith("isolation.py")
+    assert review_root.is_dir()
