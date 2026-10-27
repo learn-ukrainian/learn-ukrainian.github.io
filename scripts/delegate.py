@@ -7116,15 +7116,6 @@ def _write_record_unlocked(path: Path, state: dict[str, Any]) -> None:
         _append_diagnostics(path, recorded, source="record")
 
 
-def _is_repo_relative(path: str) -> bool:
-    """Whether ``path`` reads as a repository-relative path: no root, home, parent step or control character."""
-    if not path or path.startswith(("/", "~", "\\")) or re.match(r"[A-Za-z]:", path):
-        return False
-    if any(unicodedata.category(char).startswith("C") for char in path):
-        return False
-    return ".." not in re.split(r"[/\\]", path) and "://" not in path
-
-
 def _git_subcommand(args: Sequence[str] | str | None) -> str | None:
     """The subcommand of a ``git [options] <subcommand> ...`` argv, skipping global options and their values."""
     if not isinstance(args, (list, tuple)):
