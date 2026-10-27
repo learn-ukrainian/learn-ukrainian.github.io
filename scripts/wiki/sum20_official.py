@@ -45,7 +45,10 @@ SUM20_ATTRIBUTION_LABEL = (
 )
 PARSER_VERSION = "sum20_official_v4"
 QUARANTINE_COLUMN = "quarantine_reason"
-DEFAULT_USER_AGENT = "learn-ukrainian-sum20-ingest/1.0 (noncommercial educational corpus; issue 5228)"
+DEFAULT_USER_AGENT = (
+    "learn-ukrainian-sum20-ingest/1.0 (noncommercial educational corpus; issue 5228; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 
 _ARTICLE_RE = re.compile(r"<article\b[^>]*>.*?</article\s*>", re.IGNORECASE | re.DOTALL)
 _ACUTE_RE = re.compile("[\u0300\u0301]")

@@ -1550,3 +1550,60 @@ def test_marked_phrase_presence_prevents_word_reference_fallback() -> None:
     source = MARKED_PHRASE_HTML.replace('class="PHRTXT"', 'class="OTHER"').replace("</article>", LINKED + "</article>")
     with pytest.raises(Sum20ParseError, match="no definition senses"):
         parse_sum20_article(source, 2354)
+
+
+_PUBLIC_CONTACT = "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues"
+
+
+def _capture_adapter_requests(monkeypatch: pytest.MonkeyPatch, status_code: int) -> list[requests.PreparedRequest]:
+    """Capture real PreparedRequests at the HTTPAdapter boundary; no socket is opened."""
+    sent: list[requests.PreparedRequest] = []
+
+    def fake_send(self: object, request: requests.PreparedRequest, **_kwargs: object) -> requests.Response:
+        sent.append(request)
+        response = requests.Response()
+        response.status_code = status_code
+        response._content = b""
+        response.url = request.url
+        return response
+
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", fake_send)
+    return sent
+
+
+def test_fetch_default_prepared_request_carries_public_contact_and_original_identity(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    sent = _capture_adapter_requests(monkeypatch, 404)
+
+    outcome = fetch_sum20_wordid(1, session=requests.Session(), retries=0)
+
+    assert outcome.status == "not_found"
+    (request,) = sent
+    agent = request.headers["User-Agent"]
+    assert agent == DEFAULT_USER_AGENT
+    assert _PUBLIC_CONTACT in agent
+    assert agent.startswith("learn-ukrainian-sum20-ingest/1.0 ")
+    assert "noncommercial educational corpus; issue 5228" in agent
+
+
+def test_fetch_prepared_request_keeps_caller_supplied_user_agent(monkeypatch: pytest.MonkeyPatch) -> None:
+    sent = _capture_adapter_requests(monkeypatch, 404)
+    session = requests.Session()
+    session.headers["User-Agent"] = "caller-agent/2.0"
+
+    fetch_sum20_wordid(1, session=session, retries=0)
+
+    (request,) = sent
+    assert request.headers["User-Agent"] == "caller-agent/2.0"
+
+
+def test_fetch_prepared_request_on_refusal_stays_terminal_and_identified(monkeypatch: pytest.MonkeyPatch) -> None:
+    sent = _capture_adapter_requests(monkeypatch, 403)
+
+    outcome = fetch_sum20_wordid(1, session=requests.Session(), retries=3, sleep=lambda _s: None)
+
+    assert outcome.status == "transient_error"
+    assert outcome.terminal
+    (request,) = sent
+    assert _PUBLIC_CONTACT in request.headers["User-Agent"]
