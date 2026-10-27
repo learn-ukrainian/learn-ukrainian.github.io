@@ -8,7 +8,9 @@ reach diff.external and diff.*.command/textconv. Disable these at command scope,
 including named drivers discovered by non-executing `config --name-only`.
 
 Remote proofs, preservation and restore require explicit ``remote``, ``commit``
-and ``checkout`` profiles. Remote commands run in the primary checkout, never the linked worker;
+and ``checkout`` profiles. Credentialed remote commands run in a private bare
+repository, then import objects over file transport without credentials. Anonymous
+remote commands run in the primary checkout, never the linked worker;
 SSH uses the system executable, helpers/askpass and arbitrary protocols are off.
 Preservation refuses attribute transformations before staging and disables
 signing and editors. Restore admits only worktree-add, refuses transforming
@@ -40,9 +42,14 @@ import re
 import shutil
 import subprocess
 from dataclasses import dataclass
+from fnmatch import fnmatchcase
 from pathlib import Path
 from typing import Any
 
+import yaml
+
+from scripts.common.git_credentials import verification_credentials
+from scripts.common.task_scratch import TaskScratchError, allocate
 from scripts.orchestration.safe_git_context import SafeGitContext, SnapshotRefusal
 
 GIT = shutil.which("git", path=os.defpath) or "/usr/bin/git"
@@ -454,7 +461,7 @@ def _execution_keys(prefix, roots, env, timeout):
             continue
         seen.add(resolved)
         config = subprocess.run(
-            [*prefix, "config", "--null", "--name-only", "--list"],
+            [*prefix, "config", "--null", "--show-scope", "--name-only", "--list"],
             cwd=root,
             env=env,
             capture_output=True,
@@ -464,7 +471,11 @@ def _execution_keys(prefix, roots, env, timeout):
         )
         if config.returncode:
             return keys, config
-        keys.update(os.fsdecode(raw) for raw in config.stdout.split(b"\0") if raw)
+        fields = config.stdout.split(b"\0")
+        # Command rows are our own controls, including core.gitProxy=.
+        # Keep repository/worktree rows even when those controls override them.
+        keys.update(os.fsdecode(key) for scope, key in zip(fields[::2], fields[1::2], strict=False)
+                    if scope != b"command" and key)
         if not inspect_index:
             continue
         # ls-files --stage reads index metadata, never clean/smudge/process
@@ -506,6 +517,121 @@ def _execution_keys(prefix, roots, env, timeout):
             if (child / ".git").exists():
                 pending.append((child, True))
     return keys, None
+
+
+def _isolated_remote(args, *, executable, cwd, remote, destination, credentials, env, timeout, kwargs):
+    """Transfer with runner-owned config, then import exact objects without credentials.
+
+    The primary's config is used only by the anonymous local import. Even a
+    config swap at transfer time cannot influence the credentialed subprocess.
+    """
+    try:
+        scratch = allocate("remote-git-verification")
+    except (OSError, TaskScratchError):
+        # Allocation failure must never move a helper into the primary.
+        return None
+    private = scratch.payload_dir
+    prefix = [executable, "--no-pager", "--no-lazy-fetch"]
+    for setting in (*_SETTINGS, *_REMOTE_SETTINGS):
+        prefix.extend(["-c", setting])
+
+    def probe(command, *, path=private):
+        return subprocess.run([*prefix, *command], cwd=path, env=env, timeout=timeout,
+                              capture_output=True, text=True, check=True)
+
+    try:
+        probe(["init", "--bare", "--template="])
+        probe(["config", "remote.origin.url", destination])
+        fetchspecs = []
+        if remote == "origin" and args[0] == "fetch":
+            config = subprocess.run([*prefix, "config", "--get-all", "remote.origin.fetch"],
+                                    cwd=cwd, env=env, timeout=timeout,
+                                    capture_output=True, text=True, check=False)
+            if config.returncode not in (0, 1):
+                return GitRefusal(args, "remote_fetch_config_unreadable", text=bool(kwargs.get("text")))
+            fetchspecs = config.stdout.splitlines()
+            for spec in fetchspecs:
+                probe(["config", "--add", "remote.origin.fetch", spec])
+        # Replace the operand, never resolve it again through primary config.
+        transfer = list(args)
+        operand = transfer.index(remote, 1)
+        transfer[operand] = "origin"
+        credential_prefix = [*prefix, *(arg for setting in credentials for arg in ("-c", setting))]
+        result = subprocess.run([*credential_prefix, *transfer], cwd=private, env=env,
+                                timeout=timeout, check=False, **kwargs)
+        if result.returncode or args[0] != "fetch":
+            return result
+        # The private refs and FETCH_HEAD are snapshots of the authenticated
+        # transfer. Import by full object ID, never by a worker-controlled ref.
+        heads = [line.split("\t", 1)[0] for line in (private / "FETCH_HEAD").read_text().splitlines()]
+        refs = [line.split(" ", 1) for line in probe(["for-each-ref", "--format=%(objectname) %(refname)"]).stdout.splitlines()]
+        if any(not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", sha) for sha in heads + [row[0] for row in refs]):
+            return GitRefusal(args, "remote_object_id_invalid", text=bool(kwargs.get("text")))
+        # Preserve forced updates and pruning for the existing origin refspecs.
+        # The private repository contains only refs produced by this transfer.
+        explicit = [spec for spec in args[operand + 1:] if not spec.startswith("-")]
+        mappings = [spec for spec in [*fetchspecs, *explicit] if ":" in spec and not spec.startswith("-")]
+        forced = [spec.partition(":")[2] for spec in mappings if spec.startswith("+")]
+        pruned = [spec.partition(":")[2] for spec in (explicit or fetchspecs)
+                  if ":" in spec and not spec.startswith(("-", "^"))]
+        prune = "--prune" in args and "--no-prune" not in args
+        refspecs = list(dict.fromkeys(heads))
+        for sha, ref in refs:
+            if prune and any(fnmatchcase(ref, pattern) for pattern in pruned):
+                continue
+            force = "+" if any(fnmatchcase(ref, pattern) for pattern in forced) else ""
+            refspecs.append(f"{force}{sha}:{ref}")
+        if prune:
+            refspecs.extend(f"+{pattern}:{pattern}" for pattern in pruned)
+        if not refspecs:
+            return result
+        # File transport is the only allowed protocol here. The helper list is
+        # empty, including URL-scoped helpers discovered in primary config.
+        local_env = safe_git_env({key: env[key] for key in ("HOME", "XDG_CONFIG_HOME") if key in env})
+        local_env["GIT_ALLOW_PROTOCOL"] = "file"
+        local_prefix = [*prefix, "-c", "protocol.https.allow=never", "-c", "protocol.ssh.allow=never"]
+        keys, failure = _execution_keys(local_prefix, [(Path(cwd), False)], local_env, timeout)
+        if failure is not None:
+            return failure
+        # These multi-valued settings cannot all be reset with command-scope
+        # config. Only the named origin's identity/ref mapping is needed here.
+        if any(key.lower().startswith(("remote.", "url.")) and key.lower() not in
+               {"remote.origin.url", "remote.origin.fetch"} for key in keys):
+            return GitRefusal(args, "remote_import_config_unsupported", text=bool(kwargs.get("text")))
+        for key in sorted(keys):
+            if re.fullmatch(r"credential(?:\..+)?\.helper", key, re.I):
+                local_prefix.extend(["-c", f"{key}="])
+        uri = private.as_uri()
+        for setting in (f"remote.{uri}.uploadpack=git-upload-pack",
+                        f"remote.{uri}.receivepack=git-receive-pack", f"remote.{uri}.proxy=",
+                        f"remote.{uri}.url=", f"remote.{uri}.url={uri}"):
+            local_prefix.extend(["-c", setting])
+        imported = subprocess.run(
+            [*local_prefix, "fetch", "--no-tags", "--no-recurse-submodules", "--no-auto-maintenance",
+             "--upload-pack=git-upload-pack", *(["--prune"] if prune else []), "--", uri, *refspecs],
+            cwd=cwd, env=local_env, timeout=timeout, check=False, **kwargs,
+        )
+        if imported.returncode:
+            return imported
+        # Full SHA operands make Git verify object identity during the import.
+        # Also bind FETCH_HEAD, which closeout and reaper callers read next.
+        if heads and probe(["rev-parse", "--verify", "FETCH_HEAD"], path=cwd).stdout.strip() != heads[0]:
+            return GitRefusal(args, "remote_import_head_mismatch", text=bool(kwargs.get("text")))
+        observed = {ref: sha for sha, ref in (
+            line.split(" ", 1) for line in
+            probe(["for-each-ref", "--format=%(objectname) %(refname)"], path=cwd).stdout.splitlines()
+        )}
+        expected = {ref: sha for sha, ref in refs}
+        if (any(observed.get(ref) != sha for ref, sha in expected.items()) or
+                (prune and any(ref not in expected for ref in observed
+                               if any(fnmatchcase(ref, pattern) for pattern in pruned)))):
+            return GitRefusal(args, "remote_import_ref_mismatch", text=bool(kwargs.get("text")))
+        return result
+    finally:
+        try:
+            scratch.remove()
+        finally:
+            scratch.preserve()
 
 
 def run_git(
@@ -684,6 +810,20 @@ def run_git(
             return refusal
         if any(arg.startswith(("--upload-pack", "--exec")) or arg == "-u" for arg in args[1:]):
             raise ValueError("remote upload-pack override is unsupported")
+        destination = remote
+        if remote == "origin":
+            origin = subprocess.run(
+                [*prefix, "config", "--get-all", "remote.origin.url"], cwd=cwd, env=safe_env,
+                capture_output=True, text=True, check=False, timeout=timeout,
+            )
+            urls = origin.stdout.splitlines() if origin.returncode == 0 else []
+            destination = urls[0] if len(urls) == 1 else None
+        # Credential eligibility does not confer trust on repository config.
+        # Only the private transfer below can receive these settings.
+        try:
+            credentials = verification_credentials(destination) if destination else []
+        except (OSError, ValueError, LookupError, TypeError, yaml.YAMLError):
+            credentials = []
         args = [args[0], "--upload-pack=git-upload-pack", *args[1:]]
         if args[0] == "fetch":
             args = [args[0], "--no-recurse-submodules", "--no-auto-maintenance", *args[1:]]
@@ -714,4 +854,32 @@ def run_git(
             return failure
     if args[0] in {"diff", "diff-tree", "diff-index"}:
         args = [args[0], "--no-ext-diff", "--no-textconv", *args[1:]]
-    return subprocess.run([*prefix, *args], cwd=cwd, env=safe_env, timeout=timeout, **kwargs)
+    if profile != "remote":
+        return subprocess.run([*prefix, *args], cwd=cwd, env=safe_env, timeout=timeout, **kwargs)
+    check = kwargs.pop("check", False)
+    try:
+        result = None
+        if credentials:
+            result = _isolated_remote(
+                args, executable=executable, cwd=cwd, remote=remote, destination=destination,
+                credentials=credentials, env=safe_env, timeout=timeout, kwargs=kwargs,
+            )
+        if result is None:
+            result = subprocess.run([*prefix, *args], cwd=cwd, env=safe_env, timeout=timeout, check=False, **kwargs)
+    except subprocess.TimeoutExpired as exc:
+        raise subprocess.TimeoutExpired([executable, args[0]], exc.timeout) from None
+    except (subprocess.CalledProcessError, OSError, ValueError):
+        result = GitRefusal([executable, args[0]], "remote_verification_failed", text=bool(kwargs.get("text")))
+    if isinstance(result, GitRefusal):
+        result = GitRefusal([executable, args[0]], result.code, text=bool(kwargs.get("text")))
+    if result.returncode and not isinstance(result, GitRefusal):
+        # Closeout persists diagnostics. Keep raw transport/helper output and
+        # remote URLs out of that evidence, including check=True exceptions.
+        result = subprocess.CompletedProcess(
+            [executable, args[0]], result.returncode,
+            "" if kwargs.get("text") else b"",
+            "remote Git command failed" if kwargs.get("text") else b"remote Git command failed",
+        )
+    if check:
+        result.check_returncode()
+    return result

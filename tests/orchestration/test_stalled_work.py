@@ -281,7 +281,7 @@ def test_rejection_owner_prefers_author_over_newer_review_task(host, review_fiel
         "recent_repair",
     ],
 )
-def test_rejection_exclusions(host, case):
+def test_rejection_exclusions_and_standing_same_head_rejection(host, case):
     host.record(status="done")
     p = pr(host)
     rejection(
@@ -307,12 +307,21 @@ def test_rejection_exclusions(host, case):
         )
     elif case == "recent_repair":
         host.record("repair", status="failed", finished_at=(NOW - timedelta(minutes=5)).isoformat())
-    assert host.scan()["rows"] == []
+    rows = host.scan()["rows"]
+    if case == "new_approval":
+        assert len(rows) == 1
+        assert (rows[0]["kind"], rows[0]["task_id"], rows[0]["lane"]) == (
+            "changes_requested", "one", "codex-devops"
+        )
+        assert rows[0]["pr"] == 42
+        assert rows[0]["age_hours"] == 3
+    else:
+        assert rows == []
     archive = host.tasks / "archive"
     archive.mkdir()
     for path in host.tasks.glob("*.json"):
         path.rename(archive / path.name)
-    assert host.scan()["rows"] == []
+    assert host.scan()["rows"] == rows
 
 
 def test_unowned_pr_goes_to_cto(host):

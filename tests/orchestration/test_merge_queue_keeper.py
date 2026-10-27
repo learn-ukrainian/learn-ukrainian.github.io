@@ -401,6 +401,9 @@ def test_queued_recorded_rejection_revokes(tmp_path: Path) -> None:
         recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00"),
         recorded("CHANGES_REQUESTED", "2026-09-23T12:00:01.000001+00:00"),
     ]
+    approval = recorded("APPROVED", "2026-09-23T12:00:02.000001+00:00")
+    approval.update(created_at="2026-09-23T13:10:00Z", updated_at="2026-09-23T13:10:00Z")
+    fake.comments_rows.append(approval)
     lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
     assert ("dequeue", "PR_node_42") in fake.actions
@@ -637,12 +640,13 @@ def test_base_without_queue_is_report_only(tmp_path: Path, monkeypatch: pytest.M
     assert "reason=no-merge-queue" in lines[0]
 
 
-def test_new_head_resets_drop_count(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_new_head_resets_drop_count(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(headRefOid=HEAD_B))
     fake.check_rows = checks(HEAD_B)
+    fake.comments_rows.append(recorded("CHANGES_REQUESTED", "2026-09-23T12:00:01.000001+00:00", HEAD_A))
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {}, "drops": {f"42:{HEAD_A}": 3}}))
-    run(fake, path, monkeypatch)
+    keeper.run(fake, path, apply=True)
     assert mutations(fake) == ["enqueue"]
 
 
@@ -830,7 +834,7 @@ def test_drop_at_old_head_does_not_block_new_head(tmp_path: Path, monkeypatch: p
     assert f"42:{HEAD_B}" not in state["drops"]
 
 
-def test_recent_rejection_overrides_approval_in_keeper(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_fresh_rejection_overrides_later_same_head_approval_in_keeper(tmp_path: Path) -> None:
     from scripts.review.record_cf_verdict import build_comment
 
     fake = FakeGitHub()
@@ -852,13 +856,24 @@ def test_recent_rejection_overrides_approval_in_keeper(tmp_path: Path, monkeypat
             "updated_at": "2026-09-23T13:00:00Z",
         }
 
-    fake.comments_rows = [
+    fresh_comments = [
         comment("APPROVED", "2026-09-23T12:00:00.000001+00:00"),
         comment("CHANGES_REQUESTED", "2026-09-23T12:00:01.000001+00:00"),
+        comment("APPROVED", "2026-09-23T12:00:02.000001+00:00"),
     ]
-    lines, _ = keeper.run(fake, tmp_path / "state.json", apply=True)
+    fresh_comments[-1].update(created_at="2026-09-23T13:10:00Z", updated_at="2026-09-23T13:10:00Z")
+    fake.comments_rows = fresh_comments[:1]
+
+    def current(number: int) -> dict[str, Any]:
+        fake.comments_rows = fresh_comments
+        return fake.fresh
+
+    fake.current = current  # type: ignore[method-assign]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "reason=ready" in lines[0]
+    assert fake.comments_rows is fresh_comments
     assert "enqueue" not in mutations(fake)
-    assert "CF-changes_requested" in lines[0]
 
 
 @pytest.mark.parametrize("granted", [False, True])
