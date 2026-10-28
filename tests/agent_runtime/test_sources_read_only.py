@@ -58,7 +58,7 @@ def test_shared_tool_set_equals_wire_annotations():
     tools = asyncio.run(server.list_tools())
     assert set(SOURCES_READ_ONLY_TOOLS) == {t.name for t in tools if t.annotations.read_only_hint is True}
     assert set(SOURCES_PERSISTING_TOOLS) == {t.name for t in tools if t.annotations.read_only_hint is not True}
-    assert len(SOURCES_PERSISTING_TOOLS) == 5
+    assert SOURCES_PERSISTING_TOOLS == ("query_wikipedia",)
     assert REVIEW_TOOLS <= FULL_REVIEW_TOOLS <= set(SOURCES_READ_ONLY_TOOLS)
 
 

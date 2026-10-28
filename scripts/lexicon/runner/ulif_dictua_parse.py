@@ -1,7 +1,7 @@
 """Offline ULIF DictUA envelope → structured lemma artifact (#5230 reduce).
 
 Consumes the durable network-cache raw body shape written by the fetch-only
-phase (``fetch_ulif_20k.py`` / ``scripts.lexicon.runner.fetch_ulif_20k``):
+phase (``fetch_ulif_20k.py``, retired 2026-10-28; its cache remains readable):
 
 ```json
 {
@@ -14,9 +14,9 @@ phase (``fetch_ulif_20k.py`` / ``scripts.lexicon.runner.fetch_ulif_20k``):
 }
 ```
 
-HTML helpers mirror ``scripts.rag.source_query`` DictUA parsers so the reduce
-path stays free of the live-query / sources.db import graph (network + offline
-workers must not open sources.db).
+These are the only DictUA HTML parsers; the register walk and the reduce path
+share them. The module stays free of the sources.db import graph (network and
+offline workers must not open sources.db).
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ from bs4 import BeautifulSoup, Tag
 
 # Structured reduce schema (independent of fetch status stubs).
 ULIF_STRUCTURED_SCHEMA_VERSION = "ulif-structured-v1"
-# Keep in lockstep with scripts.rag.source_query.ULIF_PARSER_VERSION.
+# The parser version of every DictUA entry the register walk stores.
 ULIF_PARSER_VERSION = "ulif-dictua-v2"
 ULIF_FORMS_PARSER_VERSION = "ulif-forms-v4"
 ULIF_NORMALIZER_VERSION = "ulif-strip-raw-html-v1"

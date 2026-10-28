@@ -1682,11 +1682,21 @@ def test_ulif_records_receipt_requires_complete_verified_evidence(state):
     assert facts["status"] == ("hits_found" if state == "ok" else "unavailable")
 
 
-def test_ulif_cached_live_negative_is_distinct_from_an_unharvested_word():
+def test_ulif_leftover_live_negative_is_not_source_absence():
     negative = {"status": "not_found", "retrieved_at": "2026-10-01T00:00:00Z"}
-    result = json.dumps({"records": [{"status": "unverified", "entries": [negative]}]})
-    assert classify_outcome("query_ulif_records", "ok", result)["status"] == "no_hits"
+    for local_copy in ({"state": "building", "complete": False}, {"state": "complete", "complete": True}):
+        result = json.dumps({"local_copy": local_copy, "records": [{"status": "unverified", "entries": [negative]}]})
+        assert classify_outcome("query_ulif_records", "ok", result)["status"] == "unavailable"
     assert classify_outcome("query_ulif_records", "ok", "Sources database not found.")["status"] == "unavailable"
+
+
+@pytest.mark.parametrize("complete", [True, False])
+def test_ulif_records_miss_is_a_negative_only_on_a_complete_local_copy(complete):
+    miss = {"status": "not_found", "authoritative": complete, "verified": False, "entries": []}
+    result = json.dumps({"local_copy": {"state": "complete" if complete else "building", "complete": complete}, "records": [miss]})
+    assert classify_outcome("query_ulif_records", "ok", result)["status"] == ("no_hits" if complete else "unavailable")
+    # A record-level flag without the response's complete-copy receipt proves nothing.
+    assert classify_outcome("query_ulif_records", "ok", json.dumps({"records": [{**miss, "authoritative": True}]}))["status"] == "unavailable"
 
 
 def test_ulif_good_word_cannot_launder_an_unverified_quote():
