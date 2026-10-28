@@ -5,11 +5,11 @@
     "e5d74a7d442e3b5ed3e663c234c19d16da3882de"
   ],
   "counts": {
-    "hints_found": 79,
+    "hints_found": 86,
     "merged_hints_removed": 48,
     "earlier_finale_hint_removed": 1,
-    "older_prompts_reworded": 30,
-    "items_reworded": 79,
+    "older_prompts_reworded": 37,
+    "items_reworded": 86,
     "items_replaced": 0
   },
   "items": [
@@ -54,9 +54,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Address plus command"
     },
     {
       "id": "please-do-this/workbook/0/2",
@@ -99,9 +102,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Address plus command"
     },
     {
       "id": "please-do-this/inline/act-2/0",
@@ -160,9 +166,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
     },
     {
       "id": "please-do-this/inline/act-2/1",
@@ -221,9 +230,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
     },
     {
       "id": "please-do-this/inline/act-2/2",
@@ -282,9 +294,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
     },
     {
       "id": "please-do-this/inline/act-2/3",
@@ -343,9 +358,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
     },
     {
       "id": "please-do-this/inline/act-2/4",
@@ -404,9 +422,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
     },
     {
       "id": "please-do-this/inline/act-2/5",
@@ -465,9 +486,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
     },
     {
       "id": "please-do-this/inline/act-2/6",
@@ -526,9 +550,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
     },
     {
       "id": "please-do-this/inline/act-2/7",
@@ -587,9 +614,12 @@
         "G7",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
     },
     {
       "id": "linking-ideas/inline/act-1/7",
@@ -630,9 +660,12 @@
         "D1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Pick the connector"
     },
     {
       "id": "when-and-where/inline/act-1/0",
@@ -675,9 +708,12 @@
         "D4",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
     },
     {
       "id": "when-and-where/inline/act-1/2",
@@ -720,9 +756,12 @@
         "D4",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
     },
     {
       "id": "when-and-where/inline/act-1/4",
@@ -765,9 +804,12 @@
         "D4",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
     },
     {
       "id": "when-and-where/inline/act-1/5",
@@ -810,9 +852,12 @@
         "D4",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
     },
     {
       "id": "when-and-where/inline/act-1/6",
@@ -855,9 +900,12 @@
         "D4",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
     },
     {
       "id": "when-and-where/workbook/1/1",
@@ -866,7 +914,7 @@
       "activity_index": 1,
       "item_index": 1,
       "type": "fill-in",
-      "instruction": "Choose що, де, or коли for each short apartment-direction sentence.",
+      "instruction": "Choose the word that completes each sentence.",
       "before": {
         "sentence": "(Tell me when you are by the fountain.) Скажи, ___ ти біля фонтану.",
         "answer": "коли",
@@ -900,9 +948,12 @@
         "D4",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Guest conversation frames"
     },
     {
       "id": "when-and-where/workbook/1/2",
@@ -911,7 +962,7 @@
       "activity_index": 1,
       "item_index": 2,
       "type": "fill-in",
-      "instruction": "Choose що, де, or коли for each short apartment-direction sentence.",
+      "instruction": "Choose the word that completes each sentence.",
       "before": {
         "sentence": "(I see that the building is close.) Я бачу, ___ будинок близько.",
         "answer": "що",
@@ -945,9 +996,12 @@
         "D4",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Guest conversation frames"
     },
     {
       "id": "when-and-where/workbook/1/5",
@@ -956,7 +1010,7 @@
       "activity_index": 1,
       "item_index": 5,
       "type": "fill-in",
-      "instruction": "Choose що, де, or коли for each short apartment-direction sentence.",
+      "instruction": "Choose the word that completes each sentence.",
       "before": {
         "sentence": "(Tell me when the meeting in the cafe is.) Скажи, ___ зустріч у кафе.",
         "answer": "коли",
@@ -990,9 +1044,12 @@
         "D4",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Guest conversation frames"
     },
     {
       "id": "when-and-where/inline/act-4/0",
@@ -1049,9 +1106,12 @@
         "G5",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Where does the comma go?"
     },
     {
       "id": "when-and-where/inline/act-4/1",
@@ -1108,9 +1168,12 @@
         "G5",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Where does the comma go?"
     },
     {
       "id": "when-and-where/inline/act-4/2",
@@ -1167,9 +1230,12 @@
         "G5",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Where does the comma go?"
     },
     {
       "id": "when-and-where/inline/act-4/3",
@@ -1226,9 +1292,12 @@
         "G5",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Where does the comma go?"
     },
     {
       "id": "checkpoint-communication/inline/act-2/2",
@@ -1290,9 +1359,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Which connector?"
     },
     {
       "id": "checkpoint-communication/inline/act-2/3",
@@ -1354,9 +1426,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Which connector?"
     },
     {
       "id": "checkpoint-communication/inline/act-2/4",
@@ -1418,9 +1493,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Which connector?"
     },
     {
       "id": "checkpoint-communication/inline/act-3/1",
@@ -1466,9 +1544,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the conversation"
     },
     {
       "id": "checkpoint-communication/inline/act-3/2",
@@ -1514,9 +1595,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the conversation"
     },
     {
       "id": "checkpoint-communication/inline/act-3/4",
@@ -1562,9 +1646,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the conversation"
     },
     {
       "id": "checkpoint-communication/inline/act-3/5",
@@ -1610,9 +1697,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the conversation"
     },
     {
       "id": "checkpoint-communication/workbook/4/1",
@@ -1658,9 +1748,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Holiday table mini-dialogue"
     },
     {
       "id": "checkpoint-communication/workbook/4/2",
@@ -1706,9 +1799,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Holiday table mini-dialogue"
     },
     {
       "id": "checkpoint-communication/workbook/4/3",
@@ -1754,9 +1850,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Holiday table mini-dialogue"
     },
     {
       "id": "checkpoint-communication/workbook/4/4",
@@ -1802,9 +1901,12 @@
         "D26",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Holiday table mini-dialogue"
     },
     {
       "id": "yesterday/inline/act-2/0",
@@ -1849,9 +1951,12 @@
         "D9",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
     },
     {
       "id": "yesterday/inline/act-2/1",
@@ -1896,9 +2001,12 @@
         "D9",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
     },
     {
       "id": "yesterday/inline/act-2/2",
@@ -1943,9 +2051,12 @@
         "D9",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
     },
     {
       "id": "yesterday/inline/act-2/3",
@@ -1990,9 +2101,12 @@
         "D9",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
     },
     {
       "id": "yesterday/inline/act-2/4",
@@ -2020,7 +2134,7 @@
           "Вдень",
           "Зранку"
         ],
-        "explanation": "Нарешті marks reaching rest after the stated delay. Вдень and зранку conflict with другою ночі."
+        "explanation": "Нарешті marks reaching rest after the stated delay. Вдень and зранку conflict with the clock expression о другій ночі."
       },
       "disposition": "reworded",
       "key": "Нарешті",
@@ -2028,7 +2142,7 @@
         "Вдень",
         "Зранку"
       ],
-      "reason": "Нарешті marks reaching rest after the stated delay. Вдень and зранку conflict with другою ночі.",
+      "reason": "Нарешті marks reaching rest after the stated delay. Вдень and зранку conflict with the clock expression о другій ночі.",
       "sources": [
         "D5",
         "D6",
@@ -2037,9 +2151,13 @@
         "D9",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "R2W",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
     },
     {
       "id": "yesterday/inline/act-4/1",
@@ -2068,7 +2186,7 @@
         "explanation": "Both verbs stay feminine."
       },
       "after": {
-        "prompt": "Олена розповідає про вчорашній день. Обери її речення.",
+        "prompt": "Анна розповідає про вчорашній день. Обери її речення.",
         "options": [
           {
             "text": "Я пішла. Я повернулася.",
@@ -2091,14 +2209,18 @@
         "Я пішла. Я повернувся.",
         "Я пішов. Я повернулася."
       ],
-      "reason": "Олена supplies a named female referent. Both verbs in the key agree with her; the second alternative has masculine повернувся and the third masculine пішов.",
+      "reason": "Анна supplies the named female referent consistent with the activity instruction. Both verbs in the key agree with her; the second alternative has masculine повернувся and the third masculine пішов.",
       "sources": [
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "R2W",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Keep the speaker consistent"
     },
     {
       "id": "my-plans/inline/act-1/4",
@@ -2139,9 +2261,12 @@
         "D10",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Build a dated plan"
     },
     {
       "id": "my-plans/workbook/3/0",
@@ -2182,9 +2307,12 @@
         "G2",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the week schedule"
     },
     {
       "id": "my-plans/workbook/3/1",
@@ -2225,9 +2353,12 @@
         "G2",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the week schedule"
     },
     {
       "id": "my-plans/workbook/3/2",
@@ -2268,9 +2399,12 @@
         "G2",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the week schedule"
     },
     {
       "id": "my-story/workbook/2/3",
@@ -2279,7 +2413,7 @@
       "activity_index": 2,
       "item_index": 3,
       "type": "fill-in",
-      "instruction": "Choose the form that fits the time word.",
+      "instruction": "Choose the form that completes the story.",
       "before": {
         "sentence": "(Use the compound future: бути + infinitive.) Далі я ___ українську щодня.",
         "answer": "буду вчити",
@@ -2311,9 +2445,12 @@
         "G2",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the mini biography"
     },
     {
       "id": "a1-finale/inline/act-1/3",
@@ -2354,9 +2491,12 @@
         "G2",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
     },
     {
       "id": "my-plans/inline/act-3/0",
@@ -2414,9 +2554,12 @@
         "G2",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Planning pattern"
     },
     {
       "id": "my-plans/inline/act-3/1",
@@ -2474,9 +2617,12 @@
         "D11",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Planning pattern"
     },
     {
       "id": "my-plans/inline/act-3/2",
@@ -2533,9 +2679,12 @@
         "D12",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Planning pattern"
     },
     {
       "id": "my-plans/inline/act-3/3",
@@ -2594,9 +2743,12 @@
         "D13",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Planning pattern"
     },
     {
       "id": "my-story/inline/act-1/0",
@@ -2639,9 +2791,12 @@
         "D15",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Choose the time signal"
     },
     {
       "id": "my-story/inline/act-1/1",
@@ -2684,9 +2839,12 @@
         "D15",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Choose the time signal"
     },
     {
       "id": "my-story/inline/act-1/3",
@@ -2729,9 +2887,12 @@
         "D15",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Choose the time signal"
     },
     {
       "id": "my-story/workbook/2/0",
@@ -2740,7 +2901,7 @@
       "activity_index": 2,
       "item_index": 0,
       "type": "fill-in",
-      "instruction": "Choose the form that fits the time word.",
+      "instruction": "Choose the form that completes the story.",
       "before": {
         "sentence": "(Past tense, female speaker.) Я ___ у Львові.",
         "answer": "народилася",
@@ -2774,9 +2935,12 @@
         "D15",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the mini biography"
     },
     {
       "id": "my-story/workbook/2/1",
@@ -2785,7 +2949,7 @@
       "activity_index": 2,
       "item_index": 1,
       "type": "fill-in",
-      "instruction": "Choose the form that fits the time word.",
+      "instruction": "Choose the form that completes the story.",
       "before": {
         "sentence": "(Use past tense.) Раніше я ___ в Одесі.",
         "answer": "жила",
@@ -2819,9 +2983,12 @@
         "D15",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the mini biography"
     },
     {
       "id": "my-story/workbook/2/2",
@@ -2830,7 +2997,7 @@
       "activity_index": 2,
       "item_index": 2,
       "type": "fill-in",
-      "instruction": "Choose the form that fits the time word.",
+      "instruction": "Choose the form that completes the story.",
       "before": {
         "sentence": "(Use present tense.) Зараз я ___ в офісі.",
         "answer": "працюю",
@@ -2864,9 +3031,12 @@
         "D15",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the mini biography"
     },
     {
       "id": "my-story/workbook/3/0",
@@ -2924,9 +3094,12 @@
         "G2",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Repair the story"
     },
     {
       "id": "my-story/workbook/3/1",
@@ -2984,9 +3157,12 @@
         "G2",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Repair the story"
     },
     {
       "id": "what-happened/inline/act-3/1",
@@ -3043,9 +3219,12 @@
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Gender, not person"
     },
     {
       "id": "what-happened/inline/act-3/2",
@@ -3102,9 +3281,12 @@
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Gender, not person"
     },
     {
       "id": "what-will-happen/inline/act-3/0",
@@ -3161,9 +3343,12 @@
         "G2",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Future pattern check"
     },
     {
       "id": "health/inline/act-1/2",
@@ -3204,9 +3389,12 @@
         "D16",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the health phrase"
     },
     {
       "id": "health/inline/act-4/0",
@@ -3263,9 +3451,12 @@
         "D17",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the clear A1 phrase"
     },
     {
       "id": "health/inline/act-4/1",
@@ -3322,9 +3513,12 @@
         "D18",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the clear A1 phrase"
     },
     {
       "id": "health/inline/act-4/2",
@@ -3381,9 +3575,12 @@
         "D19",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the clear A1 phrase"
     },
     {
       "id": "emergencies/inline/act-4/0",
@@ -3440,9 +3637,12 @@
         "D20",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the emergency phrase"
     },
     {
       "id": "emergencies/inline/act-4/1",
@@ -3499,9 +3699,12 @@
         "D21",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the emergency phrase"
     },
     {
       "id": "emergencies/inline/act-4/2",
@@ -3558,9 +3761,12 @@
         "D22",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the emergency phrase"
     },
     {
       "id": "emergencies/inline/act-4/3",
@@ -3617,9 +3823,12 @@
         "D23",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the emergency phrase"
     },
     {
       "id": "a1-finale/inline/act-1/0",
@@ -3660,9 +3869,12 @@
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "bdd5f82a"
+      "origin": "bdd5f82a",
+      "activity_title": "Complete the A1 line"
     },
     {
       "id": "a1-finale/inline/act-1/1",
@@ -3703,9 +3915,12 @@
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
     },
     {
       "id": "a1-finale/inline/act-1/2",
@@ -3746,9 +3961,12 @@
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
     },
     {
       "id": "a1-finale/inline/act-1/4",
@@ -3789,9 +4007,12 @@
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
     },
     {
       "id": "a1-finale/inline/act-1/5",
@@ -3832,9 +4053,12 @@
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
     },
     {
       "id": "a1-finale/inline/act-1/6",
@@ -3875,9 +4099,12 @@
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
     },
     {
       "id": "a1-finale/workbook/3/1",
@@ -3918,9 +4145,12 @@
         "G1",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "e5d74a7d"
+      "origin": "e5d74a7d",
+      "activity_title": "Final story frame"
     },
     {
       "id": "a1-finale/workbook/0/0",
@@ -3929,7 +4159,7 @@
       "activity_index": 0,
       "item_index": 0,
       "type": "quiz",
-      "instruction": "Choose the answer that completes the dialogue.",
+      "instruction": "Choose the best answer.",
       "before": {
         "prompt": "How do you ask about the price of a ticket?",
         "options": [
@@ -3978,9 +4208,12 @@
         "D24",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the A1 response"
     },
     {
       "id": "a1-finale/workbook/0/1",
@@ -3989,7 +4222,7 @@
       "activity_index": 0,
       "item_index": 1,
       "type": "quiz",
-      "instruction": "Choose the answer that completes the dialogue.",
+      "instruction": "Choose the best answer.",
       "before": {
         "prompt": "You invite a friend to a cafe.",
         "options": [
@@ -4038,9 +4271,12 @@
         "D24",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the A1 response"
     },
     {
       "id": "a1-finale/workbook/0/2",
@@ -4049,7 +4285,7 @@
       "activity_index": 0,
       "item_index": 2,
       "type": "quiz",
-      "instruction": "Choose the answer that completes the dialogue.",
+      "instruction": "Choose the best answer.",
       "before": {
         "prompt": "How do you say: My head hurts?",
         "options": [
@@ -4097,9 +4333,344 @@
         "D17",
         "W2",
         "T1",
-        "P1"
+        "P1",
+        "W3",
+        "P2"
       ],
-      "origin": "older prompt"
+      "origin": "older prompt",
+      "activity_title": "Choose the A1 response"
+    },
+    {
+      "id": "what-will-happen/inline/act-3/3",
+      "module": "what-will-happen",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "type": "quiz",
+      "instruction": "Choose the answer that keeps the A1 compound future.",
+      "before": {
+        "prompt": "Which question asks about tomorrow?",
+        "options": [
+          {
+            "text": "Що ти будеш робити завтра?",
+            "correct": true
+          },
+          {
+            "text": "Що ти робиш учора?",
+            "correct": false
+          },
+          {
+            "text": "Що ти робив зараз?",
+            "correct": false
+          }
+        ],
+        "explanation": "Будеш робити завтра is the future question."
+      },
+      "after": {
+        "prompt": "— ___ — Завтра я буду читати книжку.",
+        "options": [
+          {
+            "text": "Що ти будеш робити завтра?",
+            "correct": true
+          },
+          {
+            "text": "Що ти робиш учора?",
+            "correct": false
+          },
+          {
+            "text": "Що ти робив зараз?",
+            "correct": false
+          }
+        ],
+        "explanation": "Будеш робити завтра is the future question."
+      },
+      "disposition": "reworded",
+      "key": "Що ти будеш робити завтра?",
+      "distractors": [
+        "Що ти робиш учора?",
+        "Що ти робив зараз?"
+      ],
+      "reason": "The reply supplies a plan for tomorrow, answering Що ти будеш робити завтра? The second question робиш учора mismatches its time expression; the third робив зараз asks about a recent action rather than the stated tomorrow plan.",
+      "sources": [
+        "G1",
+        "G2",
+        "W2",
+        "R2W",
+        "W3",
+        "P2"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Future pattern check"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/0",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Я вчу українську, ___ люблю Україну.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "а",
+          "але"
+        ],
+        "explanation": "Бо gives the reason."
+      },
+      "after": {
+        "sentence": "Я вчу українську, ___ люблю Україну.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "бо",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/1",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Ми не гуляємо, ___ йде дощ.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "чи",
+          "і"
+        ],
+        "explanation": "Тому що gives the reason."
+      },
+      "after": {
+        "sentence": "Ми не гуляємо, ___ йде дощ.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "тому що",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/2",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Олена читає, ___ має іспит.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "або",
+          "та"
+        ],
+        "explanation": "Бо answers why Olena is reading."
+      },
+      "after": {
+        "sentence": "Олена читає, ___ має іспит.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "бо",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/3",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Я вдома, ___ я хворий.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "а",
+          "чи"
+        ],
+        "explanation": "Тому що means because."
+      },
+      "after": {
+        "sentence": "Я вдома, ___ я хворий.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "тому що",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/4",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 4,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Марко купує воду, ___ хоче пити.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "але",
+          "й"
+        ],
+        "explanation": "Бо introduces the reason."
+      },
+      "after": {
+        "sentence": "Марко купує воду, ___ хоче пити.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "бо",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/5",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 5,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Вони чекають, ___ автобус спізнюється.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "або",
+          "та"
+        ],
+        "explanation": "Тому що introduces the reason."
+      },
+      "after": {
+        "sentence": "Вони чекають, ___ автобус спізнюється.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "тому що",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2"
+      ],
+      "origin": "older shared instruction"
     }
   ],
   "modules": [
@@ -4116,5 +4687,64 @@
     "health",
     "emergencies",
     "a1-finale"
-  ]
+  ],
+  "activity_metadata_repairs": [
+    {
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 0,
+      "after": {
+        "title": "Complete the sentence"
+      }
+    },
+    {
+      "module": "when-and-where",
+      "section": "workbook",
+      "activity_index": 1,
+      "after": {
+        "title": "Guest conversation frames",
+        "instruction": "Choose the word that completes each sentence."
+      }
+    },
+    {
+      "module": "checkpoint-communication",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Complete the conversation"
+      }
+    },
+    {
+      "module": "my-story",
+      "section": "workbook",
+      "activity_index": 2,
+      "after": {
+        "instruction": "Choose the form that completes the story."
+      }
+    },
+    {
+      "module": "a1-finale",
+      "section": "workbook",
+      "activity_index": 0,
+      "after": {
+        "instruction": "Choose the best answer."
+      }
+    },
+    {
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Complete the sentence",
+        "instruction": "Choose the connector that completes the sentence."
+      }
+    }
+  ],
+  "review_fixes": {
+    "F1": "Neutral activity headings/instructions no longer single out the key. The same visible-label scan found a shared legacy instruction naming the key in six linking items. Its labels are neutral and its alternatives now fit only the key.",
+    "F2": "Feedback uses о другій ночі.",
+    "F3": "The remaining tomorrow gloss becomes a Ukrainian dialogue reply.",
+    "F4": "Анна matches the activity speaker.",
+    "F5": "Instruction parity is checked per component; the unrelated Translate instruction is restored."
+  }
 }

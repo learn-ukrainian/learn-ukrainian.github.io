@@ -1,7 +1,7 @@
 inline:
   - id: act-1
     type: fill-in
-    title: Choose що, де, or коли
+    title: "Complete the sentence"
     instruction: Complete each A1 sentence with the right connector.
     items:
       - sentence: "Я знаю, ___ це кафе."
@@ -225,8 +225,8 @@ workbook:
       - left: 'Скажи, коли...'
         right: 'Tell me when...'
   - type: fill-in
-    title: Guest directions frames
-    instruction: Choose що, де, or коли for each short apartment-direction sentence.
+    title: "Guest conversation frames"
+    instruction: "Choose the word that completes each sentence."
     items:
       - sentence: 'Я знаю, ___ парк.'
         answer: 'де'

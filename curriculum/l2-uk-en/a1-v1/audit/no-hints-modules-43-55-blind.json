@@ -2,6 +2,7 @@
   {
     "id": "please-do-this/workbook/0/0",
     "type": "fill-in",
+    "activity_title": "Address plus command",
     "instruction": "Choose the command form that matches the address.",
     "prompt": "Олено, ти вже тут? ___ мені книжку, будь ласка.",
     "options": [
@@ -13,6 +14,7 @@
   {
     "id": "please-do-this/workbook/0/2",
     "type": "fill-in",
+    "activity_title": "Address plus command",
     "instruction": "Choose the command form that matches the address.",
     "prompt": "Тарасе, ти вже готовий? ___ в кафе зі мною.",
     "options": [
@@ -24,6 +26,7 @@
   {
     "id": "please-do-this/inline/act-2/0",
     "type": "quiz",
+    "activity_title": "Ti or vy?",
     "instruction": "Choose the form that fits the situation.",
     "prompt": "Олено, ти вже тут? Ось текст. ___",
     "options": [
@@ -35,6 +38,7 @@
   {
     "id": "please-do-this/inline/act-2/1",
     "type": "quiz",
+    "activity_title": "Ti or vy?",
     "instruction": "Choose the form that fits the situation.",
     "prompt": "Пане Іване, ви вже тут? Ось текст. ___",
     "options": [
@@ -46,6 +50,7 @@
   {
     "id": "please-do-this/inline/act-2/2",
     "type": "quiz",
+    "activity_title": "Ti or vy?",
     "instruction": "Choose the form that fits the situation.",
     "prompt": "Пане офіціанте, ви можете підійти? Ми вже поїли. ___",
     "options": [
@@ -57,6 +62,7 @@
   {
     "id": "please-do-this/inline/act-2/3",
     "type": "quiz",
+    "activity_title": "Ti or vy?",
     "instruction": "Choose the form that fits the situation.",
     "prompt": "Тарасе, ти вже тут? Ось наш столик. ___",
     "options": [
@@ -68,6 +74,7 @@
   {
     "id": "please-do-this/inline/act-2/4",
     "type": "quiz",
+    "activity_title": "Ti or vy?",
     "instruction": "Choose the form that fits the situation.",
     "prompt": "Діти, ви вже готові? ___",
     "options": [
@@ -79,6 +86,7 @@
   {
     "id": "please-do-this/inline/act-2/5",
     "type": "quiz",
+    "activity_title": "Ti or vy?",
     "instruction": "Choose the form that fits the situation.",
     "prompt": "Олено, ти бачиш он той будинок? ___",
     "options": [
@@ -90,6 +98,7 @@
   {
     "id": "please-do-this/inline/act-2/6",
     "type": "quiz",
+    "activity_title": "Ti or vy?",
     "instruction": "Choose the form that fits the situation.",
     "prompt": "Пане Іване, я не все почув. ___",
     "options": [
@@ -101,6 +110,7 @@
   {
     "id": "please-do-this/inline/act-2/7",
     "type": "quiz",
+    "activity_title": "Ti or vy?",
     "instruction": "Choose the form that fits the situation.",
     "prompt": "Друзі, тут дуже душно. ___",
     "options": [
@@ -112,6 +122,7 @@
   {
     "id": "linking-ideas/inline/act-1/7",
     "type": "fill-in",
+    "activity_title": "Pick the connector",
     "instruction": "Choose the connector that completes the A1 sentence.",
     "prompt": "Ви студент ___ лікар?",
     "options": [
@@ -123,6 +134,7 @@
   {
     "id": "when-and-where/inline/act-1/0",
     "type": "fill-in",
+    "activity_title": "Complete the sentence",
     "instruction": "Complete each A1 sentence with the right connector.",
     "prompt": "Я знаю, ___ це кафе.",
     "options": [
@@ -134,6 +146,7 @@
   {
     "id": "when-and-where/inline/act-1/2",
     "type": "fill-in",
+    "activity_title": "Complete the sentence",
     "instruction": "Complete each A1 sentence with the right connector.",
     "prompt": "— Скажи, ___ урок. — О десятій.",
     "options": [
@@ -145,6 +158,7 @@
   {
     "id": "when-and-where/inline/act-1/4",
     "type": "fill-in",
+    "activity_title": "Complete the sentence",
     "instruction": "Complete each A1 sentence with the right connector.",
     "prompt": "— Я знаю, ___ ти живеш. — Так, ти вже був у мене вдома.",
     "options": [
@@ -156,6 +170,7 @@
   {
     "id": "when-and-where/inline/act-1/5",
     "type": "fill-in",
+    "activity_title": "Complete the sentence",
     "instruction": "Complete each A1 sentence with the right connector.",
     "prompt": "— Ти знаєш, ___ зустріч? — О другій.",
     "options": [
@@ -167,6 +182,7 @@
   {
     "id": "when-and-where/inline/act-1/6",
     "type": "fill-in",
+    "activity_title": "Complete the sentence",
     "instruction": "Complete each A1 sentence with the right connector.",
     "prompt": "Я думаю, ___ це правильно.",
     "options": [
@@ -178,7 +194,8 @@
   {
     "id": "when-and-where/workbook/1/1",
     "type": "fill-in",
-    "instruction": "Choose що, де, or коли for each short apartment-direction sentence.",
+    "activity_title": "Guest conversation frames",
+    "instruction": "Choose the word that completes each sentence.",
     "prompt": "— Скажи, ___ ти будеш біля фонтану. — О третій.",
     "options": [
       "коли",
@@ -189,7 +206,8 @@
   {
     "id": "when-and-where/workbook/1/2",
     "type": "fill-in",
-    "instruction": "Choose що, де, or коли for each short apartment-direction sentence.",
+    "activity_title": "Guest conversation frames",
+    "instruction": "Choose the word that completes each sentence.",
     "prompt": "Я бачу, ___ будинок близько.",
     "options": [
       "що",
@@ -200,7 +218,8 @@
   {
     "id": "when-and-where/workbook/1/5",
     "type": "fill-in",
-    "instruction": "Choose що, де, or коли for each short apartment-direction sentence.",
+    "activity_title": "Guest conversation frames",
+    "instruction": "Choose the word that completes each sentence.",
     "prompt": "— Скажи, ___ зустріч у кафе. — О пів на шосту.",
     "options": [
       "коли",
@@ -211,6 +230,7 @@
   {
     "id": "when-and-where/inline/act-4/0",
     "type": "quiz",
+    "activity_title": "Where does the comma go?",
     "instruction": "Choose the sentence with correct punctuation.",
     "prompt": "Обери речення з правильною пунктуацією.",
     "options": [
@@ -222,6 +242,7 @@
   {
     "id": "when-and-where/inline/act-4/1",
     "type": "quiz",
+    "activity_title": "Where does the comma go?",
     "instruction": "Choose the sentence with correct punctuation.",
     "prompt": "Обери речення з правильною пунктуацією.",
     "options": [
@@ -233,6 +254,7 @@
   {
     "id": "when-and-where/inline/act-4/2",
     "type": "quiz",
+    "activity_title": "Where does the comma go?",
     "instruction": "Choose the sentence with correct punctuation.",
     "prompt": "Обери речення з правильною пунктуацією.",
     "options": [
@@ -244,6 +266,7 @@
   {
     "id": "when-and-where/inline/act-4/3",
     "type": "quiz",
+    "activity_title": "Where does the comma go?",
     "instruction": "Choose the sentence with correct punctuation.",
     "prompt": "Обери речення з правильною пунктуацією.",
     "options": [
@@ -255,6 +278,7 @@
   {
     "id": "checkpoint-communication/inline/act-2/2",
     "type": "quiz",
+    "activity_title": "Which connector?",
     "instruction": "Choose the connector that fits the checkpoint sentence.",
     "prompt": "Тарас ставить стіл, ___ людей багато.",
     "options": [
@@ -266,6 +290,7 @@
   {
     "id": "checkpoint-communication/inline/act-2/3",
     "type": "quiz",
+    "activity_title": "Which connector?",
     "instruction": "Choose the connector that fits the checkpoint sentence.",
     "prompt": "Марія пише, ___ Тарас ставить стіл.",
     "options": [
@@ -277,6 +302,7 @@
   {
     "id": "checkpoint-communication/inline/act-2/4",
     "type": "quiz",
+    "activity_title": "Which connector?",
     "instruction": "Choose the connector that fits the checkpoint sentence.",
     "prompt": "Я беру маркер, ___ пишу листівку.",
     "options": [
@@ -288,6 +314,7 @@
   {
     "id": "checkpoint-communication/inline/act-3/1",
     "type": "fill-in",
+    "activity_title": "Complete the conversation",
     "instruction": "Complete each short detail frame.",
     "prompt": "Я думаю, ___ все готово.",
     "options": [
@@ -299,6 +326,7 @@
   {
     "id": "checkpoint-communication/inline/act-3/2",
     "type": "fill-in",
+    "activity_title": "Complete the conversation",
     "instruction": "Complete each short detail frame.",
     "prompt": "— Скажи, ___ зустріч. — О третій.",
     "options": [
@@ -310,6 +338,7 @@
   {
     "id": "checkpoint-communication/inline/act-3/4",
     "type": "fill-in",
+    "activity_title": "Complete the conversation",
     "instruction": "Complete each short detail frame.",
     "prompt": "— Я не знаю, ___ писати. — Напиши: «З Новим роком!»",
     "options": [
@@ -321,6 +350,7 @@
   {
     "id": "checkpoint-communication/inline/act-3/5",
     "type": "fill-in",
+    "activity_title": "Complete the conversation",
     "instruction": "Complete each short detail frame.",
     "prompt": "— Скажіть, ___ ви вільні. — У суботу після обіду.",
     "options": [
@@ -332,6 +362,7 @@
   {
     "id": "checkpoint-communication/workbook/4/1",
     "type": "fill-in",
+    "activity_title": "Holiday table mini-dialogue",
     "instruction": "Choose the checkpoint word that completes each line.",
     "prompt": "Тарасе, постав столи, ___ людей багато.",
     "options": [
@@ -343,6 +374,7 @@
   {
     "id": "checkpoint-communication/workbook/4/2",
     "type": "fill-in",
+    "activity_title": "Holiday table mini-dialogue",
     "instruction": "Choose the checkpoint word that completes each line.",
     "prompt": "Я думаю, ___ все готово.",
     "options": [
@@ -354,6 +386,7 @@
   {
     "id": "checkpoint-communication/workbook/4/3",
     "type": "fill-in",
+    "activity_title": "Holiday table mini-dialogue",
     "instruction": "Choose the checkpoint word that completes each line.",
     "prompt": "Марія пише привітання, ___ Тарас ставить стіл.",
     "options": [
@@ -365,6 +398,7 @@
   {
     "id": "checkpoint-communication/workbook/4/4",
     "type": "fill-in",
+    "activity_title": "Holiday table mini-dialogue",
     "instruction": "Choose the checkpoint word that completes each line.",
     "prompt": "— Скажіть, ___ ви вільні. — У неділю о другій.",
     "options": [
@@ -376,6 +410,7 @@
   {
     "id": "yesterday/inline/act-2/0",
     "type": "fill-in",
+    "activity_title": "Time words for yesterday",
     "instruction": "Choose the time word that fits each part of the day.",
     "prompt": "___ я прокинулася о сьомій.",
     "options": [
@@ -387,6 +422,7 @@
   {
     "id": "yesterday/inline/act-2/1",
     "type": "fill-in",
+    "activity_title": "Time words for yesterday",
     "instruction": "Choose the time word that fits each part of the day.",
     "prompt": "Я поснідала о восьмій. ___, о дев’ятій, я пішла на роботу.",
     "options": [
@@ -398,6 +434,7 @@
   {
     "id": "yesterday/inline/act-2/2",
     "type": "fill-in",
+    "activity_title": "Time words for yesterday",
     "instruction": "Choose the time word that fits each part of the day.",
     "prompt": "___ я обідала в кафе о першій годині дня.",
     "options": [
@@ -409,6 +446,7 @@
   {
     "id": "yesterday/inline/act-2/3",
     "type": "fill-in",
+    "activity_title": "Time words for yesterday",
     "instruction": "Choose the time word that fits each part of the day.",
     "prompt": "___, о дев’ятій вечора, я повернулася додому.",
     "options": [
@@ -420,6 +458,7 @@
   {
     "id": "yesterday/inline/act-2/4",
     "type": "fill-in",
+    "activity_title": "Time words for yesterday",
     "instruction": "Choose the time word that fits each part of the day.",
     "prompt": "Я довго не мала часу відпочити. ___ о другій ночі я лягла спати.",
     "options": [
@@ -431,8 +470,9 @@
   {
     "id": "yesterday/inline/act-4/1",
     "type": "quiz",
+    "activity_title": "Keep the speaker consistent",
     "instruction": "Choose the line that keeps Анна's story in the same speaker pattern.",
-    "prompt": "Олена розповідає про вчорашній день. Обери її речення.",
+    "prompt": "Анна розповідає про вчорашній день. Обери її речення.",
     "options": [
       "Я пішла. Я повернулася.",
       "Я пішла. Я повернувся.",
@@ -442,6 +482,7 @@
   {
     "id": "my-plans/inline/act-1/4",
     "type": "fill-in",
+    "activity_title": "Build a dated plan",
     "instruction": "Choose the word that completes the plan.",
     "prompt": "У п'ятницю ввечері буде ___.",
     "options": [
@@ -453,6 +494,7 @@
   {
     "id": "my-plans/workbook/3/0",
     "type": "fill-in",
+    "activity_title": "Complete the week schedule",
     "instruction": "Choose the future form or planning phrase.",
     "prompt": "Наступного вівторка я ___ українську.",
     "options": [
@@ -464,6 +506,7 @@
   {
     "id": "my-plans/workbook/3/1",
     "type": "fill-in",
+    "activity_title": "Complete the week schedule",
     "instruction": "Choose the future form or planning phrase.",
     "prompt": "Наступної середи ми ___ вечерю.",
     "options": [
@@ -475,6 +518,7 @@
   {
     "id": "my-plans/workbook/3/2",
     "type": "fill-in",
+    "activity_title": "Complete the week schedule",
     "instruction": "Choose the future form or planning phrase.",
     "prompt": "Наступного четверга вона ___ допізна.",
     "options": [
@@ -486,7 +530,8 @@
   {
     "id": "my-story/workbook/2/3",
     "type": "fill-in",
-    "instruction": "Choose the form that fits the time word.",
+    "activity_title": "Complete the mini biography",
+    "instruction": "Choose the form that completes the story.",
     "prompt": "Від завтра я ___ українську щодня.",
     "options": [
       "буду вчити",
@@ -497,6 +542,7 @@
   {
     "id": "a1-finale/inline/act-1/3",
     "type": "fill-in",
+    "activity_title": "Complete the A1 line",
     "instruction": "Choose the word or phrase that fits the time and situation.",
     "prompt": "Завтра я ___ по Україні.",
     "options": [
@@ -508,6 +554,7 @@
   {
     "id": "my-plans/inline/act-3/0",
     "type": "quiz",
+    "activity_title": "Planning pattern",
     "instruction": "Choose the sentence that stays in the A1 planning pattern.",
     "prompt": "— Що ти будеш робити наступної суботи? — ___",
     "options": [
@@ -519,6 +566,7 @@
   {
     "id": "my-plans/inline/act-3/1",
     "type": "quiz",
+    "activity_title": "Planning pattern",
     "instruction": "Choose the sentence that stays in the A1 planning pattern.",
     "prompt": "— У мене два квитки на фільм. — ___",
     "options": [
@@ -530,6 +578,7 @@
   {
     "id": "my-plans/inline/act-3/2",
     "type": "quiz",
+    "activity_title": "Planning pattern",
     "instruction": "Choose the sentence that stays in the A1 planning pattern.",
     "prompt": "— Ходімо завтра о третій в кафе! — ___ О третій у мене іспит.",
     "options": [
@@ -541,6 +590,7 @@
   {
     "id": "my-plans/inline/act-3/3",
     "type": "quiz",
+    "activity_title": "Planning pattern",
     "instruction": "Choose the sentence that stays in the A1 planning pattern.",
     "prompt": "— ___ — Так, у суботу я не буду працювати.",
     "options": [
@@ -552,6 +602,7 @@
   {
     "id": "my-story/inline/act-1/0",
     "type": "fill-in",
+    "activity_title": "Choose the time signal",
     "instruction": "Pick the word that matches the time of the sentence.",
     "prompt": "П’ять років тому я був студентом. ___ я жив у Торонто, а тепер живу в Києві.",
     "options": [
@@ -563,6 +614,7 @@
   {
     "id": "my-story/inline/act-1/1",
     "type": "fill-in",
+    "activity_title": "Choose the time signal",
     "instruction": "Pick the word that matches the time of the sentence.",
     "prompt": "___ я живу в Києві.",
     "options": [
@@ -574,6 +626,7 @@
   {
     "id": "my-story/inline/act-1/3",
     "type": "fill-in",
+    "activity_title": "Choose the time signal",
     "instruction": "Pick the word that matches the time of the sentence.",
     "prompt": "Тепер мені тридцять років. ___ я ходила в школу.",
     "options": [
@@ -585,7 +638,8 @@
   {
     "id": "my-story/workbook/2/0",
     "type": "fill-in",
-    "instruction": "Choose the form that fits the time word.",
+    "activity_title": "Complete the mini biography",
+    "instruction": "Choose the form that completes the story.",
     "prompt": "Олена: Я ___ у Львові тридцять років тому.",
     "options": [
       "народилася",
@@ -596,7 +650,8 @@
   {
     "id": "my-story/workbook/2/1",
     "type": "fill-in",
-    "instruction": "Choose the form that fits the time word.",
+    "activity_title": "Complete the mini biography",
+    "instruction": "Choose the form that completes the story.",
     "prompt": "Олена: Раніше я ___ в Одесі.",
     "options": [
       "жила",
@@ -607,7 +662,8 @@
   {
     "id": "my-story/workbook/2/2",
     "type": "fill-in",
-    "instruction": "Choose the form that fits the time word.",
+    "activity_title": "Complete the mini biography",
+    "instruction": "Choose the form that completes the story.",
     "prompt": "Зараз я ___ в офісі.",
     "options": [
       "працюю",
@@ -618,6 +674,7 @@
   {
     "id": "my-story/workbook/3/0",
     "type": "quiz",
+    "activity_title": "Repair the story",
     "instruction": "Choose the better A1 sentence.",
     "prompt": "— Де ти живеш? — ___",
     "options": [
@@ -629,6 +686,7 @@
   {
     "id": "my-story/workbook/3/1",
     "type": "quiz",
+    "activity_title": "Repair the story",
     "instruction": "Choose the better A1 sentence.",
     "prompt": "— Що ти будеш робити далі? — ___",
     "options": [
@@ -640,6 +698,7 @@
   {
     "id": "what-happened/inline/act-3/1",
     "type": "quiz",
+    "activity_title": "Gender, not person",
     "instruction": "Choose the statement that matches the A1 past-tense rule.",
     "prompt": "Олена: Учора я була вдома. ___",
     "options": [
@@ -651,6 +710,7 @@
   {
     "id": "what-happened/inline/act-3/2",
     "type": "quiz",
+    "activity_title": "Gender, not person",
     "instruction": "Choose the statement that matches the A1 past-tense rule.",
     "prompt": "Олена і Тарас: ___",
     "options": [
@@ -662,6 +722,7 @@
   {
     "id": "what-will-happen/inline/act-3/0",
     "type": "quiz",
+    "activity_title": "Future pattern check",
     "instruction": "Choose the answer that keeps the A1 compound future.",
     "prompt": "— Що ти будеш робити завтра? — ___",
     "options": [
@@ -673,6 +734,7 @@
   {
     "id": "health/inline/act-1/2",
     "type": "fill-in",
+    "activity_title": "Complete the health phrase",
     "instruction": "Choose the word that completes the A1 phrase.",
     "prompt": "У мене ___ 39 градусів.",
     "options": [
@@ -684,6 +746,7 @@
   {
     "id": "health/inline/act-4/0",
     "type": "quiz",
+    "activity_title": "Choose the clear A1 phrase",
     "instruction": "Choose the phrase that communicates the problem clearly.",
     "prompt": "— Де болить? — ___",
     "options": [
@@ -695,6 +758,7 @@
   {
     "id": "health/inline/act-4/1",
     "type": "quiz",
+    "activity_title": "Choose the clear A1 phrase",
     "instruction": "Choose the phrase that communicates the problem clearly.",
     "prompt": "— Що вам потрібно? — ___",
     "options": [
@@ -706,6 +770,7 @@
   {
     "id": "health/inline/act-4/2",
     "type": "quiz",
+    "activity_title": "Choose the clear A1 phrase",
     "instruction": "Choose the phrase that communicates the problem clearly.",
     "prompt": "— Ви розумієте українську? — ___",
     "options": [
@@ -717,6 +782,7 @@
   {
     "id": "emergencies/inline/act-4/0",
     "type": "quiz",
+    "activity_title": "Choose the emergency phrase",
     "instruction": "Pick the clearest A1 phrase.",
     "prompt": "— Що сталося? — ___",
     "options": [
@@ -728,6 +794,7 @@
   {
     "id": "emergencies/inline/act-4/1",
     "type": "quiz",
+    "activity_title": "Choose the emergency phrase",
     "instruction": "Pick the clearest A1 phrase.",
     "prompt": "У мене вкрали сумку з грошима. ___",
     "options": [
@@ -739,6 +806,7 @@
   {
     "id": "emergencies/inline/act-4/2",
     "type": "quiz",
+    "activity_title": "Choose the emergency phrase",
     "instruction": "Pick the clearest A1 phrase.",
     "prompt": "— У мене немає телефона. ___ — Добре, зараз подзвоню.",
     "options": [
@@ -750,6 +818,7 @@
   {
     "id": "emergencies/inline/act-4/3",
     "type": "quiz",
+    "activity_title": "Choose the emergency phrase",
     "instruction": "Pick the clearest A1 phrase.",
     "prompt": "— Тут людині дуже погано. ___ — Добре, зараз викличу.",
     "options": [
@@ -761,6 +830,7 @@
   {
     "id": "a1-finale/inline/act-1/0",
     "type": "fill-in",
+    "activity_title": "Complete the A1 line",
     "instruction": "Choose the word or phrase that fits the time and situation.",
     "prompt": "Адам: Учора зранку я ___ у кафе.",
     "options": [
@@ -772,6 +842,7 @@
   {
     "id": "a1-finale/inline/act-1/1",
     "type": "fill-in",
+    "activity_title": "Complete the A1 line",
     "instruction": "Choose the word or phrase that fits the time and situation.",
     "prompt": "Зараз я ___ по Хрещатику.",
     "options": [
@@ -783,6 +854,7 @@
   {
     "id": "a1-finale/inline/act-1/2",
     "type": "fill-in",
+    "activity_title": "Complete the A1 line",
     "instruction": "Choose the word or phrase that fits the time and situation.",
     "prompt": "Адам: Учора я ___ квиток.",
     "options": [
@@ -794,6 +866,7 @@
   {
     "id": "a1-finale/inline/act-1/4",
     "type": "fill-in",
+    "activity_title": "Complete the A1 line",
     "instruction": "Choose the word or phrase that fits the time and situation.",
     "prompt": "Учора ввечері ми ___ в кіно.",
     "options": [
@@ -805,6 +878,7 @@
   {
     "id": "a1-finale/inline/act-1/5",
     "type": "fill-in",
+    "activity_title": "Complete the A1 line",
     "instruction": "Choose the word or phrase that fits the time and situation.",
     "prompt": "Зараз Олена ___ борщ і салат.",
     "options": [
@@ -816,6 +890,7 @@
   {
     "id": "a1-finale/inline/act-1/6",
     "type": "fill-in",
+    "activity_title": "Complete the A1 line",
     "instruction": "Choose the word or phrase that fits the time and situation.",
     "prompt": "Учора була гарна погода, і ми ___ в парку.",
     "options": [
@@ -827,6 +902,7 @@
   {
     "id": "a1-finale/workbook/3/1",
     "type": "fill-in",
+    "activity_title": "Final story frame",
     "instruction": "Choose the phrase that completes the ten-sentence story frame.",
     "prompt": "Адам: Учора зранку я ___ у кафе.",
     "options": [
@@ -838,7 +914,8 @@
   {
     "id": "a1-finale/workbook/0/0",
     "type": "quiz",
-    "instruction": "Choose the answer that completes the dialogue.",
+    "activity_title": "Choose the A1 response",
+    "instruction": "Choose the best answer.",
     "prompt": "— ___ — Квиток коштує сто гривень.",
     "options": [
       "Скільки коштує квиток?",
@@ -849,7 +926,8 @@
   {
     "id": "a1-finale/workbook/0/1",
     "type": "quiz",
-    "instruction": "Choose the answer that completes the dialogue.",
+    "activity_title": "Choose the A1 response",
+    "instruction": "Choose the best answer.",
     "prompt": "— У мене є година. — ___ — Добре, я теж хочу кави.",
     "options": [
       "Ходімо в кафе!",
@@ -860,12 +938,97 @@
   {
     "id": "a1-finale/workbook/0/2",
     "type": "quiz",
-    "instruction": "Choose the answer that completes the dialogue.",
+    "activity_title": "Choose the A1 response",
+    "instruction": "Choose the best answer.",
     "prompt": "— Де болить? — ___",
     "options": [
       "У мене болить голова.",
       "У мене болить головою.",
       "У мене болить голові."
+    ]
+  },
+  {
+    "id": "what-will-happen/inline/act-3/3",
+    "type": "quiz",
+    "activity_title": "Future pattern check",
+    "instruction": "Choose the answer that keeps the A1 compound future.",
+    "prompt": "— ___ — Завтра я буду читати книжку.",
+    "options": [
+      "Що ти будеш робити завтра?",
+      "Що ти робиш учора?",
+      "Що ти робив зараз?"
+    ]
+  },
+  {
+    "id": "linking-ideas/inline/act-3/0",
+    "type": "fill-in",
+    "activity_title": "Complete the sentence",
+    "instruction": "Choose the connector that completes the sentence.",
+    "prompt": "Я вчу українську, ___ люблю Україну.",
+    "options": [
+      "бо",
+      "якого",
+      "котрому"
+    ]
+  },
+  {
+    "id": "linking-ideas/inline/act-3/1",
+    "type": "fill-in",
+    "activity_title": "Complete the sentence",
+    "instruction": "Choose the connector that completes the sentence.",
+    "prompt": "Ми не гуляємо, ___ йде дощ.",
+    "options": [
+      "тому що",
+      "якого",
+      "котрому"
+    ]
+  },
+  {
+    "id": "linking-ideas/inline/act-3/2",
+    "type": "fill-in",
+    "activity_title": "Complete the sentence",
+    "instruction": "Choose the connector that completes the sentence.",
+    "prompt": "Олена читає, ___ має іспит.",
+    "options": [
+      "бо",
+      "якого",
+      "котрому"
+    ]
+  },
+  {
+    "id": "linking-ideas/inline/act-3/3",
+    "type": "fill-in",
+    "activity_title": "Complete the sentence",
+    "instruction": "Choose the connector that completes the sentence.",
+    "prompt": "Я вдома, ___ я хворий.",
+    "options": [
+      "тому що",
+      "якого",
+      "котрому"
+    ]
+  },
+  {
+    "id": "linking-ideas/inline/act-3/4",
+    "type": "fill-in",
+    "activity_title": "Complete the sentence",
+    "instruction": "Choose the connector that completes the sentence.",
+    "prompt": "Марко купує воду, ___ хоче пити.",
+    "options": [
+      "бо",
+      "якого",
+      "котрому"
+    ]
+  },
+  {
+    "id": "linking-ideas/inline/act-3/5",
+    "type": "fill-in",
+    "activity_title": "Complete the sentence",
+    "instruction": "Choose the connector that completes the sentence.",
+    "prompt": "Вони чекають, ___ автобус спізнюється.",
+    "options": [
+      "тому що",
+      "якого",
+      "котрому"
     ]
   }
 ]

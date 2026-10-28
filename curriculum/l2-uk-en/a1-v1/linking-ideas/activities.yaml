@@ -121,51 +121,51 @@ inline:
         explanation: 'Тому що means because.'
   - id: act-3
     type: fill-in
-    title: Reason answers
-    instruction: Complete the reason with бо or тому що.
+    title: "Complete the sentence"
+    instruction: "Choose the connector that completes the sentence."
     items:
       - sentence: 'Я вчу українську, ___ люблю Україну.'
         answer: 'бо'
         options:
           - 'бо'
-          - 'а'
-          - 'але'
-        explanation: 'Бо gives the reason.'
+          - "якого"
+          - "котрому"
+        explanation: "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
       - sentence: 'Ми не гуляємо, ___ йде дощ.'
         answer: 'тому що'
         options:
           - 'тому що'
-          - 'чи'
-          - 'і'
-        explanation: 'Тому що gives the reason.'
+          - "якого"
+          - "котрому"
+        explanation: "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
       - sentence: 'Олена читає, ___ має іспит.'
         answer: 'бо'
         options:
           - 'бо'
-          - 'або'
-          - 'та'
-        explanation: 'Бо answers why Olena is reading.'
+          - "якого"
+          - "котрому"
+        explanation: "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
       - sentence: 'Я вдома, ___ я хворий.'
         answer: 'тому що'
         options:
           - 'тому що'
-          - 'а'
-          - 'чи'
-        explanation: 'Тому що means because.'
+          - "якого"
+          - "котрому"
+        explanation: "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
       - sentence: 'Марко купує воду, ___ хоче пити.'
         answer: 'бо'
         options:
           - 'бо'
-          - 'але'
-          - 'й'
-        explanation: 'Бо introduces the reason.'
+          - "якого"
+          - "котрому"
+        explanation: "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
       - sentence: 'Вони чекають, ___ автобус спізнюється.'
         answer: 'тому що'
         options:
           - 'тому що'
-          - 'або'
-          - 'та'
-        explanation: 'Тому що introduces the reason.'
+          - "якого"
+          - "котрому"
+        explanation: "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
   - id: act-4
     type: group-sort
     title: Connector shelves

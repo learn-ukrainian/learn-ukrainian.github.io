@@ -50,7 +50,7 @@ inline:
           - 'Нарешті'
           - 'Вдень'
           - "Зранку"
-        explanation: "Нарешті marks reaching rest after the stated delay. Вдень and зранку conflict with другою ночі."
+        explanation: "Нарешті marks reaching rest after the stated delay. Вдень and зранку conflict with the clock expression о другій ночі."
   - id: act-3
     type: group-sort
     title: Sort story words
@@ -91,7 +91,7 @@ inline:
           - text: 'Потім я поснідали.'
             correct: false
         explanation: 'Анна keeps the feminine form поснідала.'
-      - prompt: "Олена розповідає про вчорашній день. Обери її речення."
+      - prompt: "Анна розповідає про вчорашній день. Обери її речення."
         options:
           - text: 'Я пішла. Я повернулася.'
             correct: true

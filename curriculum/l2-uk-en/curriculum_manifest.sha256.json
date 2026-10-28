@@ -2,7 +2,7 @@
   "files": [
     {
       "path": "curriculum/l2-uk-en/a1-v1/a1-finale/activities.yaml",
-      "sha256": "9a4d793f4decac7f2a8e98132fc6d86af0c74f65ad24e57a3340b86fc8d8a4b9"
+      "sha256": "c651cf56aea1d74785a19da94746d95b0893c1727dd870026236e6ff0480e908"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/a1-finale/module.md",
@@ -66,7 +66,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-communication/activities.yaml",
-      "sha256": "cdba9eba77a0cef4cb8f630cfd31be415b21416969322950ab23fe2aef257b54"
+      "sha256": "921077c1b0198e37dffd26686fbc6b65a78069e890367e83e25989620641d77f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-communication/module.md",
@@ -354,7 +354,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/linking-ideas/activities.yaml",
-      "sha256": "60c58553082a7e80fcdeea3ecd8c18f0d1b4a7509b93398d270fe29bfa1a4199"
+      "sha256": "62e8c9568807a927842b369fbceaf2b8ad8c678b99c4d1fc82320fef02441096"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/linking-ideas/module.md",
@@ -466,7 +466,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-story/activities.yaml",
-      "sha256": "ca105fa9ef25be2e054f322da699def7689d4c2d6b15a9aa7d3e6448d9e3c634"
+      "sha256": "1a6c1dde7f6cf11cf2b893d0eb260e6dbbb6cf1c1b1f725f21b918583e539976"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-story/module.md",
@@ -770,7 +770,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-will-happen/activities.yaml",
-      "sha256": "d13d35385f53006cb280b9e82889585c05ccb9489abb205f8ddaa25bf50c015e"
+      "sha256": "b9cdb08201db5ef8b1cda0ab610136e36ffb7e84952407559b8dd0ea1c6275f5"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-will-happen/module.md",
@@ -786,7 +786,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/when-and-where/activities.yaml",
-      "sha256": "e7db0b240054ffc8c17032f297dc597f387302e45148f732e166d40ee397aede"
+      "sha256": "605105bec57d0f2fddef4cc3bc7b4a87b114f33b9645be89c6c94c963cbba833"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/when-and-where/module.md",
@@ -866,7 +866,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/yesterday/activities.yaml",
-      "sha256": "c20e9efd70c97d44897ce6f3982ce93eafec690a1814cf9e84f23ce499dcfb42"
+      "sha256": "934a60e247ab12a31f03afadfc8669ac6efe4cf2217a9f41c9cc2aeb1e8dca2a"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/yesterday/module.md",
@@ -13686,7 +13686,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/a1-finale.mdx",
-      "sha256": "13b99b7f70e15f3e82762bb845fc11b4d47363ea04b92ee24ff4e13436d8ddd8"
+      "sha256": "d33fcb10df75fee686f819f5d794740cfdf136fd62dec84b318a2172262512cd"
     },
     {
       "path": "site/src/content/docs/a1-v1/around-the-city.mdx",
@@ -13702,7 +13702,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-communication.mdx",
-      "sha256": "e673db53638e7425f9a2f0c1e858d5bba48a71c488310286052762bd21609f21"
+      "sha256": "1192cc1e5a12124397c8b1cb89ab17214985daf69dd31b0cfd31d09c8d28c1c9"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-first-contact.mdx",
@@ -13778,7 +13778,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/linking-ideas.mdx",
-      "sha256": "b727b1d0924a03ccc19a91acdb8e8d97f43babdde46bee5d67b0fca55f8ca2a1"
+      "sha256": "8d12ef5d3d4b4919b90c7f31d51396f20012f74d0b0c45395241db5c11bf906f"
     },
     {
       "path": "site/src/content/docs/a1-v1/many-things.mdx",
@@ -13806,7 +13806,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/my-story.mdx",
-      "sha256": "817a4d3f9ae641a1c94f58c77677dac16c9a43e8ad453a26e650ce2a21f3854a"
+      "sha256": "1ae78491072942b0076fc673f2ec1bee7f2764d58da550af0778292180f5c887"
     },
     {
       "path": "site/src/content/docs/a1-v1/people-around-me.mdx",
@@ -13882,11 +13882,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/what-will-happen.mdx",
-      "sha256": "60007a4a7bbf1dabdaeb07df1587282967f6926736afe93f109c07723788ebbb"
+      "sha256": "210448d0c65f73ea84c43874b6df9deca308c34499146321d759f42e9b34872a"
     },
     {
       "path": "site/src/content/docs/a1-v1/when-and-where.mdx",
-      "sha256": "7c883046fbe916a38713b479e07ba84923093bcbec32c87be983ca69a941d0d0"
+      "sha256": "34b2aef0ff376bcc059dc24252ade7a9dc78644d4ce71a61e12838c268e82e3a"
     },
     {
       "path": "site/src/content/docs/a1-v1/where-from.mdx",
@@ -13906,7 +13906,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/yesterday.mdx",
-      "sha256": "063173ad213762152c340f533af067f50ad4d0879c40c33ca57e512d6f93691c"
+      "sha256": "4e59a4a96b30f3b4754ce12bc2d50f6ef2f01682b20fb126e81df47fe0c1e55a"
     },
     {
       "path": "site/src/content/docs/a1/a1-finale/index.mdx",

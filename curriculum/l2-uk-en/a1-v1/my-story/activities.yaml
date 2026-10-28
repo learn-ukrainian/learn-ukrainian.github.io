@@ -117,7 +117,7 @@ workbook:
         answer: 'Мене звати Софія.'
   - type: fill-in
     title: Complete the mini biography
-    instruction: Choose the form that fits the time word.
+    instruction: "Choose the form that completes the story."
     items:
       - sentence: "Олена: Я ___ у Львові тридцять років тому."
         answer: 'народилася'

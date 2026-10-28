@@ -125,7 +125,7 @@ inline:
 workbook:
   - type: quiz
     title: Choose the A1 response
-    instruction: "Choose the answer that completes the dialogue."
+    instruction: "Choose the best answer."
     items:
       - prompt: "— ___ — Квиток коштує сто гривень."
         options:

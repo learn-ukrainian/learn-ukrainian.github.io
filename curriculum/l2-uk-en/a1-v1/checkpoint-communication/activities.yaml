@@ -98,7 +98,7 @@ inline:
         explanation: "Тому що introduces the reason. Якого and котрому have no compatible antecedent or syntactic role in this clause."
   - id: act-3
     type: fill-in
-    title: Що, де, коли review
+    title: "Complete the conversation"
     instruction: Complete each short detail frame.
     items:
       - sentence: 'Я знаю, ___ маркери.'

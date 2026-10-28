@@ -95,7 +95,7 @@ inline:
           - text: 'Ми будеш робити.'
             correct: false
         explanation: 'Ми takes будемо.'
-      - prompt: 'Which question asks about tomorrow?'
+      - prompt: "— ___ — Завтра я буду читати книжку."
         options:
           - text: 'Що ти будеш робити завтра?'
             correct: true
