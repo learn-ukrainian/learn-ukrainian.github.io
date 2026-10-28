@@ -34,6 +34,8 @@ REVIEW_ROOT_MISMATCH = getattr(
 )
 repository_target_error = getattr(target_resolution, "repository_target_error", None)
 MissingReviewCommit = getattr(target_resolution, "MissingReviewCommit", None)
+
+
 def _git(repo, *args, check=True):
     return subprocess.run(
         ["git", *args],
