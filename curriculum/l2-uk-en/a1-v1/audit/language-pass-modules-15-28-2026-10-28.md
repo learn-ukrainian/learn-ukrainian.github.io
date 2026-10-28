@@ -2,7 +2,7 @@
 
 Refs #8893. Source snapshot: `dbd43f98c0a2a429b84a165a9a970fc32e794fd9`.
 
-This is one bounded Method step 2 slice. It checks 288 items: every fill-in and quiz item in every inline/root and workbook section of manifest modules 15 through 28. The workbook sections were inspected; they contain zero fill-in or quiz items in this batch. There are 214 checked-clean items and 74 confirmed defects, all repaired: 73 ambiguities and one wrong-key context. Every original key, learning target and activity type is retained.
+This is one bounded Method step 2 slice. It checks 288 items: every fill-in and quiz item in every inline/root and workbook section of manifest modules 15 through 28. The workbook sections were inspected; they contain zero fill-in or quiz items in this batch. There are 212 checked-clean items and 76 confirmed defects, all repaired: 72 ambiguities and four wrong-key contexts. Every original key, learning target and activity type is retained.
 
 The order comes from `levels.a1-v1.modules` in `curriculum/l2-uk-en/curriculum.yaml`, continuing the arc order used by the modules 1 through 14 report. It includes the complete Actions and Time and Nature arcs and the first Places module. No authorized usage ranking was supplied.
 
@@ -16,9 +16,9 @@ The order comes from `levels.a1-v1.modules` in `curriculum/l2-uk-en/curriculum.y
 | 20 | `my-morning` | 27 | 18 | 9 |
 | 21 | `checkpoint-actions` | 24 | 17 | 7 |
 | 22 | `what-time` | 22 | 16 | 6 |
-| 23 | `days-and-months` | 13 | 12 | 1 |
+| 23 | `days-and-months` | 13 | 11 | 2 |
 | 24 | `weather` | 10 | 5 | 5 |
-| 25 | `my-day` | 18 | 5 | 13 |
+| 25 | `my-day` | 18 | 4 | 14 |
 | 26 | `free-time` | 10 | 2 | 8 |
 | 27 | `checkpoint-time-nature` | 13 | 4 | 9 |
 | 28 | `euphony` | 30 | 27 | 3 |
@@ -35,7 +35,7 @@ Not checked: other activity types without a structural flag; module prose, plans
 
 The Sources MCP supplied the evidence on 2026-10-28. VESUM verifies forms and grammatical analyses, ULIF supplies stress readings, and `check_text` screens for diagnostics. None of these tools decides answer ambiguity by itself. The per-item verdicts are linguistic inferences from the stated task and these results. Usage-dependent judgments also cite the U locators below.
 
-Each module batch sends distinct Ukrainian tokens from instructions and every item field, including every option, to `verify_words`, lowercased with acute accents removed. `verify_stresses` receives the original polysyllabic tokens. `check_text` receives full item text with item ids and acute accents removed, using vesum and ua_gec checks. Titles are additionally included in the post-repair screens. K checks all reconstructed fill-in completions, including suffix completions. POSTFIX checks replacement-context forms and capitalized proper names, plus stresses, and screens the first 150 final rows. POSTSCREEN2 screens the remaining 138 final rows. U50 rechecks replacement contexts in lowercase.
+Each module batch sends distinct Ukrainian tokens from instructions and every item field, including every option, to `verify_words`, lowercased with acute accents removed. `verify_stresses` receives the original polysyllabic tokens. `check_text` receives full item text with item ids and acute accents removed, using vesum and ua_gec checks. Titles are additionally included in the post-repair screens. K checks all reconstructed fill-in completions, including suffix completions. POSTFIX checks replacement-context forms and capitalized proper names, plus stresses, and screens the first 150 final rows. POSTSCREEN2 screens the remaining 138 final rows. U50 rechecks replacement contexts in lowercase. Revised final contexts, forms and stresses are additionally checked in U62/U63; U64/U65 supersede the earlier full-row screens after the review corrections.
 
 Case-sensitive screen misses are not lexical errors. Proper names were rechecked with capitalization. Isolated endings, stem fragments, deliberately malformed options, the quoted letter п and explanation metalanguage чанк are distinguished from target vocabulary. Unmarked stress heteronyms and pending stress readings of fragments or unmarked words are not stress defects. No repair adds or changes an acute accent. The full -ся forms in my-morning remain clean because the activity title explicitly requests -ся, even though K and U16 verify some contracted alternatives as Ukrainian.
 
@@ -64,6 +64,16 @@ The companion [machine-readable Sources evidence](language-pass-modules-15-28-ev
 
 ### Usage and orthography locators
 
+- U56: search_heritage positively attests покушати in Hrinchenko 1907 and in codified rare SUM-20 usage, meaning to taste and allowing no expressed object. It carries no Russianism warning. The open evening-desire stem does not exclude that meaning.
+- U57: The structured Antonenko query for кушати returned no result. The miss is not a Russianism or invalidity verdict.
+- U58: The full-book Antonenko query for кушати returned no result. The positive heritage and modern attestation U56 decides this item.
+- U59: GRAC directly attests двічі на тижні, so the initial replacement was not exclusive. The final options use incompatible genitive and instrumental case forms after на.
+- U60: GRAC directly attests о сьомій рано in two Ukrainian contexts. The final repair removes рано as well as вранці.
+- U61: VTS рано sense I.1 means during the morning. It can complete the original morning-time stem as well as ранку.
+- U62: Final revised-context VESUM check of all changed-item tokens, including тижнем, ранки, ходимо and поїла. Proper-name case and explanation fragments are distinguished from targets.
+- U63: Final revised-context stress oracle check of all polysyllabic changed-item tokens. Unmarked ambiguities and quoted or malformed options are not stress defects.
+- U64: Final revised post-repair text screen, items 1 through 150, with titles, instructions and all item fields.
+- U65: Final revised post-repair text screen, items 151 through 288, with titles, instructions and all item fields. UA-GEC suspicions are contextual diagnostics, not defect verdicts.
 - U01: Official Pravopys 2019 §23, pp.25-28: у between consonants and before specified clusters; в after a vowel before most consonants. Initial В before a consonant is explicitly permitted. Literary variation is distinguished from the neutral euphony patterns.
 - U02: Official Pravopys 2019 §24, pp.28-29: і between consonants, at a pause or beginning, before й/є/ї/ю/я, and after й/я/ю/є/ї; й normally after other vowel letters. This specifically supports Я і Максим. Literary variation does not erase the task asking for the smoother neutral pattern.
 - U03: Official Pravopys 2019 §25, pp.29-31: z variants depend on the neighboring sounds; із and зі are interchangeable before some clusters. The text explicitly gives зі школи and зі/зо мною.
@@ -82,7 +92,7 @@ The companion [machine-readable Sources evidence](language-pass-modules-15-28-ev
 - U16: GRAC supplies two concordances of вмиваюсь, independently attesting the contracted reflexive form. The original activity title nevertheless explicitly requests -ся.
 - U17: GRAC supplies a modern concordance of двічі у тиждень for twice-weekly rehearsals. Another returned line has у тижні and is not evidence for the exact requested form.
 - U18: VTS дощити recognizes impersonal дощить as falling rain. Its colloquial label does not exclude it from a general A1 weather description.
-- U19: VTS покушати lookup missed. This miss is not a defect finding; the original distractor stays unchanged.
+- U19: VTS покушати lookup missed. This miss supports no finding. The later positive heritage result U56 confirms the competing rare reading.
 - U20: VTS просинатися redirects to просипатися I.
 - U21: VTS просипатися I explicitly lists perfective проснутися and defines waking from sleep. This is the relevant sense, distinct from the second homonym.
 - U22: VTS іти includes going and uses in appeals or invitations. The finite plural invitation can compete with ходімо in an unrestricted invitation task.
@@ -370,7 +380,7 @@ C means checked-clean in the original task. D means a confirmed second defensibl
 | `act-1/5` | inline | четвер, п'ятниця, ___ | субота | C | M23; U01. The specified chronological order or calendar case selects субота; the offered alternatives do not complete that sequence/construction. |
 | `act-1/6` | inline | субота, ___, понеділок | неділя | C | M23; U01. The specified chronological order or calendar case selects неділя; the offered alternatives do not complete that sequence/construction. |
 | `act-3/0` | inline | Я працюю ___. | у понеділок | D | M23; U01. Both у понеділок and в понеділок are grammatical variants; the original preceding vowel favors в rather than the key у. |
-| `act-3/1` | inline | Мій день народження ___. | у березні | C | M23; U01. The specified chronological order or calendar case selects у березні; the offered alternatives do not complete that sequence/construction. |
+| `act-3/1` | inline | Мій день народження ___. | у березні | D | M23; U01. The original preceding vowel in народження favors в березні. An explicit pause now licenses the retained key у березні. |
 | `act-3/2` | inline | Ми гуляємо ___. | в суботу | C | M23; U01. The specified chronological order or calendar case selects в суботу; the offered alternatives do not complete that sequence/construction. |
 | `act-3/3` | inline | ___ холодно. | Взимку | C | M23; U01. The specified chronological order or calendar case selects Взимку; the offered alternatives do not complete that sequence/construction. |
 | `act-3/4` | inline | Я вивчаю українську ___. | у вівторок | C | M23; U01. The specified chronological order or calendar case selects у вівторок; the offered alternatives do not complete that sequence/construction. |
@@ -411,7 +421,7 @@ C means checked-clean in the original task. D means a confirmed second defensibl
 | `act-4/3` | inline | ___ в парк після обіду! | Ходімо | C | M25; U07/U08/U11/U12/U21/U30/U31/U33/U34/U36/U37/U38/U48. The normative-form instruction and lexical/morphological evidence support Ходімо; the other original form does not satisfy that specified register or construction. |
 | `act-4/4` | inline | О восьмій годині я їм ___. | сніданок | C | M25; U07/U08/U11/U12/U21/U30/U31/U33/U34/U36/U37/U38/U48. The normative-form instruction and lexical/morphological evidence support сніданок; the other original form does not satisfy that specified register or construction. |
 | `act-4/5` | inline | Мама готує дуже ___ обід. | смачний | C | M25; U07/U08/U11/U12/U21/U30/U31/U33/U34/U36/U37/U38/U48. The normative-form instruction and lexical/morphological evidence support смачний; the other original form does not satisfy that specified register or construction. |
-| `act-4/6` | inline | Ввечері я хочу ___. | поїсти | C | M25; U07/U08/U11/U12/U21/U30/U31/U33/U34/U36/U37/U38/U48. The normative-form instruction and lexical/morphological evidence support поїсти; the other original form does not satisfy that specified register or construction. |
+| `act-4/6` | inline | Ввечері я хочу ___. | поїсти | D | M25; U56/U57/U58. Heritage lookup positively identifies покушати as Ukrainian, including rare codified SUM-20 usage meaning to taste, with no required object. The open desire stem does not exclude that reading. The replacement finite past form cannot follow хочу. |
 | `act-4/7` | inline | О сьомій я ___ і встав. | прокинувся | D | M25; U08/U20/U21. Проснувся is an attested waking-up form. The retained встав fixes masculine agreement and excludes the feminine replacement. |
 
 ### 26. free-time
@@ -419,7 +429,7 @@ C means checked-clean in the original task. D means a confirmed second defensibl
 | Item | Section | Original stem | Key | Verdict | Evidence and assessment |
 | --- | --- | --- | --- | --- | --- |
 | `act-2/0` | inline | Я ___ працюю у неділю. | ніколи не | D | M26; U42/U43/U44. The sentence does not specify frequency strongly enough to rule out another offered frequency. The gloss selects the intended frequency. |
-| `act-2/1` | inline | Вона грає у теніс двічі ___. | на тиждень | D | M26; U17. У тиждень is attested for frequency. The replacement forms do not express the requested twice-per-week phrase. |
+| `act-2/1` | inline | Вона грає у теніс двічі ___. | на тиждень | D | M26; U17/U59. Both у тиждень and the first replacement на тижні are attested frequency expressions. The final genitive/instrumental distractors do not complete the на plus accusative period. |
 | `act-2/2` | inline | — ___ в кіно у суботу! — Добре! | Ходімо | D | M26; U22/U30/U31/U51. Ідемо can function as an invitation. Person-mismatched statements replace the competing invitation forms. |
 | `act-2/3` | inline | Я люблю спорт, тому ___ граю у баскетбол. | часто | D | M26; U42/U43/U44. The sentence does not specify frequency strongly enough to rule out another offered frequency. The gloss selects the intended frequency. |
 | `act-2/4` | inline | Я не маю часу, тому ___ читаю книги. | рідко | D | M26; U42/U43/U44. The sentence does not specify frequency strongly enough to rule out another offered frequency. The gloss selects the intended frequency. |
@@ -427,7 +437,7 @@ C means checked-clean in the original task. D means a confirmed second defensibl
 | `act-3/0` | inline | Він грає ___ піаніно. | на | C | M26; U01/U17/U22/U29/U42/U43/U44/U49. The instrument or concert object requires the keyed preposition на; the other offered prepositions do not fit that phrase. |
 | `act-3/1` | inline | Ми граємо ___ футбол. | у | D | M26; U01/U49. У and в are variants of the same preposition. The competing valid variant is replaced with a preposition incompatible with the stated object case. |
 | `act-3/2` | inline | Я хочу ходити ___ концерт. | на | C | M26; U01/U17/U22/U29/U42/U43/U44/U49. The instrument or concert object requires the keyed preposition на; the other offered prepositions do not fit that phrase. |
-| `act-3/3` | inline | Вони ходять ___ театр раз на місяць. | в | D | M26; U01/U49. У and в are variants of the same preposition. The competing valid variant is replaced with a preposition incompatible with the stated object case. |
+| `act-3/3` | inline | Вони ходять ___ театр раз на місяць. | в | D | M26; U01/U49. Original ходять ends in a consonant and favors у before театр. The cue now uses ходимо, so the retained key в follows the vowel-to-consonant pattern. |
 
 ### 27. checkpoint-time-nature
 
@@ -438,7 +448,7 @@ C means checked-clean in the original task. D means a confirmed second defensibl
 | `act-1/2` | inline | Мій день народження ___. | у січні | C | M27; U18/U33/U34/U36/U37/U38/U39/U40. The time/calendar case or з...до range selects у січні; the other offered forms do not express that construction. |
 | `act-1/3` | inline | Сьогодні ___ і холодно. | іде дощ | D | M27; U18. Дощить means that rain is falling and also completes the stem. The replacement mismatches singular дощ. |
 | `act-1/4` | inline | Взимку дуже ___. | холодно | D | M27; U39/U40. Winter alone does not exclude warm weather. The cue supplies the intended weather meaning. |
-| `act-1/5` | inline | Я прокидаюся о сьомій ___. | ранку | D | M27; U36. О сьомій вранці is also a defensible morning-time expression; the new nominative distractor does not complete the time expression. |
+| `act-1/5` | inline | Я прокидаюся о сьомій ___. | ранку | D | M27; U36/U60/U61. Both вранці and рано are defensible after о сьомій. The final nominative/accusative forms do not complete this morning-time expression. |
 | `act-3/0` | inline | ___ я прокидаюся і снідаю. | Спочатку | D | M27; U11/U12/U33/U34/U36/U37/U38/U39/U40. Another offered sequence, period or weather can describe the day. The explicit cue fixes the intended meaning. |
 | `act-3/1` | inline | ___ я йду на роботу. | Потім | D | M27; U11/U12/U33/U34/U36/U37/U38/U39/U40. Another offered sequence, period or weather can describe the day. The explicit cue fixes the intended meaning. |
 | `act-3/2` | inline | Я працюю з дев'ятої ___ п'ятої. | до | C | M27; U18/U33/U34/U36/U37/U38/U39/U40. The time/calendar case or з...до range selects до; the other offered forms do not express that construction. |
@@ -484,7 +494,7 @@ C means checked-clean in the original task. D means a confirmed second defensibl
 
 ## Confirmed defects and repairs
 
-The following 74 rows preserve their original keys. Their final replacement/context tokens are checked in POSTFIX/U50. One original euphony context favored the distractor instead of its key; its cue is repaired rather than changing the target. The remaining repairs exclude a confirmed second defensible answer.
+The following 76 rows preserve their original keys. Their final replacement/context tokens are checked in POSTFIX/U50 and the revised U62/U63 evidence. Four original contexts favored the other у/в variant rather than their keys; their cues are repaired rather than changing the targets. The remaining 72 repairs exclude a confirmed second defensible answer.
 
 | Item | Usage evidence | Source YAML repair |
 | --- | --- | --- |
@@ -524,6 +534,7 @@ The following 74 rows preserve their original keys. Their final replacement/cont
 | `what-time/act-4/4` | U36/U37/U38 | prompt: "(19:00.) Я вечеряю о сьомій ___." |
 | `what-time/act-4/5` | U36/U37/U38 | prompt: "(23:00.) Фільм об одинадцятій ___." |
 | `days-and-months/act-3/0` | U01 | sentence: "Урок ___."; explanation: "After the consonant in урок and before п, у понеділок follows the consonant-to-consonant pattern." |
+| `days-and-months/act-3/1` | U01 | sentence: "Мій день народження — ___."; explanation: "The dash marks a pause. Before the consonant б after a pause, use у березні." |
 | `weather/act-2/0` | U18/U39/U40/U41 | sentence: "(It snows.) Взимку часто ___." |
 | `weather/act-2/1` | U18/U39/U40/U41 | sentence: "(Hot.) Влітку дуже ___." |
 | `weather/act-2/2` | U18/U39/U40/U41 | sentence: "(It rains.) Восени часто ___." |
@@ -541,18 +552,19 @@ The following 74 rows preserve their original keys. Their final replacement/cont
 | `my-day/act-3/3` | U34/U36/U37/U38 | sentence: "(After lunch.) Вони гуляють у парку ___." |
 | `my-day/act-4/0` | U07/U27/U28 | options: ["беру душ", "бере душ"]; explanation: "With я, use беру. Бере is the third-person form." |
 | `my-day/act-4/1` | U07/U48 | options: ["п'ю ліки", "п'є ліки"]; explanation: "With я, use п'ю. П'є goes with він or вона." |
+| `my-day/act-4/6` | U56/U57/U58 | options: ["поїсти", "поїла"]; explanation: "After хочу, use the infinitive поїсти. Поїла is a feminine past-tense form." |
 | `my-day/act-4/7` | U08/U20/U21 | options: ["прокинувся", "прокинулася"]; explanation: "Встав is masculine past, so pair it with прокинувся. Прокинулася is feminine." |
 | `free-time/act-2/0` | U42/U43/U44 | sentence: "(Never.) Я ___ працюю у неділю." |
-| `free-time/act-2/1` | U17 | options: ["на тиждень", "на тижня", "на тижні"]; explanation: "Двічі на тиждень means twice a week. На тиждень names the frequency period." |
+| `free-time/act-2/1` | U17/U59 | options: ["на тиждень", "на тижня", "на тижнем"]; explanation: "Двічі на тиждень means twice a week. На тиждень names the frequency period." |
 | `free-time/act-2/2` | U22/U30/U31/U51 | options: ["Ходімо", "Ходжу", "Ходиш"]; explanation: "Ходімо invites us to go together. Ходжу and ходиш describe who goes." |
 | `free-time/act-2/3` | U42/U43/U44 | sentence: "(Often.) Я люблю спорт, тому ___ граю у баскетбол." |
 | `free-time/act-2/4` | U42/U43/U44 | sentence: "(Rarely.) Я не маю часу, тому ___ читаю книги." |
 | `free-time/act-2/5` | U29/U52 | options: ["у вихідні", "вихідні", "у вихідних"]; explanation: "У вихідні means on weekends. Here у takes the plural accusative вихідні." |
 | `free-time/act-3/1` | U01/U49 | options: ["у", "на", "з"] |
-| `free-time/act-3/3` | U01/U49 | options: ["в", "на", "із"] |
+| `free-time/act-3/3` | U01/U49 | options: ["в", "на", "із"]; sentence: "Ми ходимо ___ театр раз на місяць."; explanation: "Ходимо ends in a vowel. Before the consonant т in театр, use в." |
 | `checkpoint-time-nature/act-1/3` | U18 | options: ["іде дощ", "іде дощова", "ідуть дощ"] |
 | `checkpoint-time-nature/act-1/4` | U39/U40 | sentence: "(Cold.) Взимку дуже ___." |
-| `checkpoint-time-nature/act-1/5` | U36 | options: ["ранку", "рано", "ранок"] |
+| `checkpoint-time-nature/act-1/5` | U36/U60/U61 | options: ["ранку", "ранок", "ранки"] |
 | `checkpoint-time-nature/act-3/0` | U11/U12/U33/U34/U36/U37/U38/U39/U40 | sentence: "(First.) ___ я прокидаюся і снідаю." |
 | `checkpoint-time-nature/act-3/1` | U11/U12/U33/U34/U36/U37/U38/U39/U40 | sentence: "(Then.) ___ я йду на роботу." |
 | `checkpoint-time-nature/act-3/3` | U11/U12/U33/U34/U36/U37/U38/U39/U40 | sentence: "(After lunch.) ___ я гуляю в парку." |
@@ -567,12 +579,22 @@ The following 74 rows preserve their original keys. Their final replacement/cont
 
 - Structural scanner: `scripts/audit/scan_activity_errors.py --track a1-v1`, 55/55 files, zero findings, exit 0 before and after source repairs.
 - Existing affected suite: `pytest -n 2 tests/test_scan_activity_errors.py tests/test_a1_activity_schema_parser_drift.py tests/test_yaml_activities_a1_payload.py tests/test_activity_renderer.py tests/test_generate_mdx.py tests/test_generate_mdx_parsers.py tests/test_generate_mdx_unit_map.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_curriculum_manifest_canary.py`: 329 passed in 11.26 seconds. No new test case was added.
-- The existing ActivityParser, `yaml_activities_to_jsx` and `dump_json_for_jsx` regenerate only the 74 repaired tracked page item objects. Bytes outside those objects remain unchanged. Existing unaccented page conventions are retained. The integrity manifest updates the corresponding 11 YAML and 11 MDX hashes.
+- The existing ActivityParser, `yaml_activities_to_jsx` and `dump_json_for_jsx` regenerate only the 76 repaired tracked page item objects. Bytes outside those objects remain unchanged. Existing unaccented page conventions are retained. The integrity manifest updates the corresponding 11 YAML and 11 MDX hashes.
 - Source/page matching accounts for pre-existing omitted fill-in feedback fields. Only repaired objects receive the current serializer result. This does not certify unrelated source/page equality.
-- Chromium used the 74 changed tracked MDX payloads with the existing FillInQuestion and QuizQuestion components: 74 keys accepted, 74 wrong options rejected, zero browser errors. The runtime was copied into this worktree after both lockfiles were verified identical.
+- Chromium used the 76 changed tracked MDX payloads with the existing FillInQuestion and QuizQuestion components: 76 keys accepted, 76 wrong options rejected, zero browser errors. The runtime was copied into this worktree after both lockfiles were verified identical.
 - Ruff passed for the scanner, parser and converter modules.
 - Independent Gemini via AGY and Opus 5.5 via Claude Code review, CI and merge receipts are recorded on the PR at its exact pushed head. This report records the author pass and does not claim independent approval or deployment.
 
-The full-section inventory was recorded at 2026-10-28T19:27:21.754745+00:00. The author report was prepared at 2026-10-28T19:44:55.042781+00:00. This interval includes source verification, diagnosis, repairs and local checks; it is not pure model throughput. There are 288 checked items, fewer than the preceding batch, and the item types and usage complexity differ. Review and CI time are reported separately in the delivery receipt. The CTO should size remaining batches by complete section/item censuses, not module count alone.
+The full-section inventory was recorded at 2026-10-28T19:27:21.754745+00:00. The author report was prepared at 2026-10-28T19:58:48.411647+00:00. This interval includes source verification, diagnosis, repairs and local checks; it is not pure model throughput. There are 288 checked items, fewer than the preceding batch, and the item types and usage complexity differ. Review and CI time are reported separately in the delivery receipt. The CTO should size remaining batches by complete section/item censuses, not module count alone.
 
 Residual owner: CTO curriculum coordinator, #8893. The remaining modules, unchecked activity types, broader independent evaluation and production delivery are outside this slice.
+
+## Review corrections and tracked follow-ups
+
+Round 1 Gemini approved the original head. Opus requested four source-backed corrections. F1 removes the still-valid на тижні replacement; F2 removes the still-valid рано option; F3 supplies vowel-final ходимо for the retained в key; F4 repairs the second calendar context and reclassifies it as a defect. F8 is resolved by retaining block-style YAML lists. A separate positive heritage check found покушати codified as a rare tasting verb, so my-day/act-4/6 is also reclassified and repaired. The revised denominator is 288 checked, 212 clean and 76 defects repaired, including four wrong-key contexts. All original keys remain.
+
+F5-F7 remain non-blocking follow-ups with the CTO curriculum coordinator on #8893: adjacent у/в preferences without a competing option, euphony workbook contradictions outside the declared choice-item scope, and the diagnostic contrast or feedback language of the three normative-form repairs. In particular, the untouched euphony workbook still marks initial В місті цікаво false, contrary to the §23 exception used in the repaired quiz. This slice does not certify those workbook true-false or error-correction items. Gemini also recommends later -ся/-сь alternation practice; that future-level pedagogy is a non-blocking follow-up.
+
+The initial author report preceded independent review. The interval above now includes source-backed review corrections and the final heritage check. Round-2 exact-head verdicts and the final end-to-end wall-clock interval are recorded on the PR and issue; this report does not count the author as an independent reviewer.
+
+The initial inventory-to-report interval was 17.6 minutes for 288 items, ending at 2026-10-28T19:44:55.042781+00:00. That is the initial author pass, before independent review corrections. It is not an end-to-end delivery duration; merge timing is reported separately.

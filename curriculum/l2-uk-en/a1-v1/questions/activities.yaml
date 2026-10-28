@@ -52,7 +52,12 @@ inline:
         explanation: Коли asks for time.
       - prompt: "(Ask why.) ___ ти не працюєш?"
         options:
-          [{"text": "Чому", "correct": true}, {"text": "Куди", "correct": false}, {"text": "Хто", "correct": false}]
+          - text: Чому
+            correct: true
+          - text: Куди
+            correct: false
+          - text: Хто
+            correct: false
         explanation: Чому asks for a reason.
       - prompt: ___ справи?
         options:

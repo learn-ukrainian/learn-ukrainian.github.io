@@ -109,12 +109,14 @@ inline:
       - sentence: 'Вранці я ___.'
         answer: беру душ
         options:
-          ["беру душ", "бере душ"]
+          - беру душ
+          - бере душ
         explanation: "With я, use беру. Бере is the third-person form."
       - sentence: 'Коли я хворий, я ___.'
         answer: "п'ю ліки"
         options:
-          ["п'ю ліки", "п'є ліки"]
+          - п'ю ліки
+          - п'є ліки
         explanation: "With я, use п'ю. П'є goes with він or вона."
       - sentence: '___ зараз? — Восьма.'
         answer: Котра година
@@ -144,10 +146,11 @@ inline:
         answer: поїсти
         options:
           - поїсти
-          - покушати
-        explanation: У нейтральній українській природно сказати поїсти.
+          - поїла
+        explanation: "After хочу, use the infinitive поїсти. Поїла is a feminine past-tense form."
       - sentence: 'О сьомій я ___ і встав.'
         answer: прокинувся
         options:
-          ["прокинувся", "прокинулася"]
+          - прокинувся
+          - прокинулася
         explanation: "Встав is masculine past, so pair it with прокинувся. Прокинулася is feminine."

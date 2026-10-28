@@ -36,12 +36,16 @@ inline:
       - sentence: 'Вона грає у теніс двічі ___.'
         answer: на тиждень
         options:
-          ["на тиждень", "на тижня", "на тижні"]
+          - на тиждень
+          - на тижня
+          - на тижнем
         explanation: "Двічі на тиждень means twice a week. На тиждень names the frequency period."
       - sentence: '— ___ в кіно у суботу! — Добре!'
         answer: Ходімо
         options:
-          ["Ходімо", "Ходжу", "Ходиш"]
+          - Ходімо
+          - Ходжу
+          - Ходиш
         explanation: "Ходімо invites us to go together. Ходжу and ходиш describe who goes."
       - sentence: "(Often.) Я люблю спорт, тому ___ граю у баскетбол."
         answer: часто
@@ -60,7 +64,9 @@ inline:
       - sentence: '— Що ти робиш ___? — Відпочиваю.'
         answer: у вихідні
         options:
-          ["у вихідні", "вихідні", "у вихідних"]
+          - у вихідні
+          - вихідні
+          - у вихідних
         explanation: "У вихідні means on weekends. Here у takes the plural accusative вихідні."
   - id: act-3
     type: fill-in
@@ -77,7 +83,9 @@ inline:
       - sentence: 'Ми граємо ___ футбол.'
         answer: у
         options:
-          ["у", "на", "з"]
+          - у
+          - на
+          - з
         explanation: Для спорту уживаємо грати у/в.
       - sentence: 'Я хочу ходити ___ концерт.'
         answer: на
@@ -86,8 +94,10 @@ inline:
           - в
           - у
         explanation: 'Природна фраза: ходити на концерт.'
-      - sentence: 'Вони ходять ___ театр раз на місяць.'
+      - sentence: "Ми ходимо ___ театр раз на місяць."
         answer: в
         options:
-          ["в", "на", "із"]
-        explanation: У цьому уроці вчимо готову фразу ходити в театр.
+          - в
+          - на
+          - із
+        explanation: "Ходимо ends in a vowel. Before the consonant т in театр, use в."

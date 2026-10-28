@@ -146,7 +146,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-time-nature/activities.yaml",
-      "sha256": "103f3529fbfa35c67660e7c4e7d73870e60cae69ed5f66955b1ba1d79e8c3ae6"
+      "sha256": "f8c45d45cee15531087eca9103ab6b6564804cd4f8ac42e83647f7e27cd78de1"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-time-nature/module.md",
@@ -178,7 +178,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/days-and-months/activities.yaml",
-      "sha256": "181b64106b9d0be979d159f3225a9639288fefcb66f9096da7fe0a7913e4cfe3"
+      "sha256": "bb54f48d8e21429a0b93e2aaea623e83c09c76fb5a8f83e700b8db6ae3fa5339"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/days-and-months/module.md",
@@ -210,7 +210,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/euphony/activities.yaml",
-      "sha256": "f2bb5e6025e9bfb5bd34256b54db95775346a2661f1184b4a3cbd488583ca204"
+      "sha256": "8a2e12d3005a7b541e8ea1f3fe3bdfd30c9f46d245d640061fae101df265fdae"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/euphony/module.md",
@@ -242,7 +242,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/free-time/activities.yaml",
-      "sha256": "a0b5e4e67cb2bdc24d493a3be011ef9f2080edd940f61bbf9794bf539c87656d"
+      "sha256": "c36dd711cb93dc2f8bb64ffc3304277435b607c3fb853d9a07fa1f3a680766d5"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/free-time/module.md",
@@ -402,7 +402,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-day/activities.yaml",
-      "sha256": "5bafb9109197626c47fc2312c0a594e1b94fe476211b6f0da43524af68ba827f"
+      "sha256": "314dd8b553a0446e5af47393bddb53dbad5484c6e3e7154fcf186e4eab998aae"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-day/module.md",
@@ -514,7 +514,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/questions/activities.yaml",
-      "sha256": "00c06b4eaf7fa1d83f6f3240f0d2003c41dbb68f817ab5d784dadc9abe671e0b"
+      "sha256": "e189ce9ba1ca56464452a1fa13578876e8e1d797bfc6a7fa922a8e7f2fdce84f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/questions/module.md",
@@ -13722,7 +13722,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-time-nature.mdx",
-      "sha256": "f9aa5fdbee6485096778f7642eff76e5939bdb4f0fead810da57966ebe8b01f6"
+      "sha256": "206f2a7b3791d96350a16bcc66fbec1d657ab64b228372a3db63e9c72bbec5aa"
     },
     {
       "path": "site/src/content/docs/a1-v1/colors.mdx",
@@ -13730,7 +13730,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/days-and-months.mdx",
-      "sha256": "8f944450090c7b122a981e6b21b8ebc8e93de6d46dc90a8777b771a7f2d2af0b"
+      "sha256": "14b00512e2550a533424229e4d4b09a8ada8e44e5bf1c32510a7495c8f8bdda8"
     },
     {
       "path": "site/src/content/docs/a1-v1/emergencies.mdx",
@@ -13746,7 +13746,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/free-time.mdx",
-      "sha256": "d59df9ade4c956ff89cd74b5d945331ce030f8232bc0a3145f0cd8556660cf57"
+      "sha256": "3334dc5e7bd502152085e08834ab0e41c8412538e06efb24b9e17a2212649a55"
     },
     {
       "path": "site/src/content/docs/a1-v1/health.mdx",
@@ -13790,7 +13790,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/my-day.mdx",
-      "sha256": "38181c8cf132bb71c268847a9c69f97a87c3a9e469cd2c3a20777639f355c435"
+      "sha256": "cb2f217501711402d0edadf4c6e29b7741c63399c0c33833568809f088057a75"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-family.mdx",

@@ -60,7 +60,12 @@ inline:
         explanation: "Максим ends in a consonant; before the consonant б, у банку avoids a consonant cluster."
       - prompt: '___ місті цікаво.'
         options:
-          [{"text": "У", "correct": true}, {"text": "З", "correct": false}, {"text": "Й", "correct": false}]
+          - text: У
+            correct: true
+          - text: З
+            correct: false
+          - text: Й
+            correct: false
         explanation: At the start before a consonant, use У.
       - prompt: '___ Одесі тепло.'
         options:
@@ -174,7 +179,9 @@ inline:
       - sentence: 'Я йду ___ школи.'
         answer: зі
         options:
-          ["зі", "з", "на"]
+          - зі
+          - з
+          - на
         explanation: Зі школи is a common smooth A1 phrase.
       - sentence: 'Софія ___ мною.'
         answer: зі
