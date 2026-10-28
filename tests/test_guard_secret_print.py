@@ -101,6 +101,45 @@ def test_redirect_does_not_hide_sensitive_input_or_change_output_descriptor(monk
     assert _run(monkeypatch, command) == expected
 
 
+@pytest.mark.parametrize(
+    "command,expected",
+    [
+        ("env 01>captured 1>&2", 2),
+        ("env 01>captured 1>&2 | wc -l", 2),
+        ("env >captured 1>&2", 2),
+        ("env 1>&2 >captured", 0),
+        ("env 2>captured 1>&2", 0),
+        ("env >captured 1>&1", 0),
+        ("env 3>&1 >captured 1>&3", 2),
+        ("env 3>&1 >captured 1>&3 | wc -l", 0),
+        ("env 01>$UNKNOWN_CAPTURE", 2),
+        ("env >/dev/null >&2", 2),
+        (">/dev/null >&2 env", 2),
+        ("env >/dev/null 1>&2", 2),
+        ("env >/dev/null >&/dev/stderr", 2),
+        ("env >&/dev/null", 0),
+        ("env >captured >&/dev/null", 0),
+    ],
+)
+@pytest.mark.parametrize("source", ["env", "printenv", "declare -p", "export -p"])
+def test_stdout_duplication_cannot_expose_environment_dump(monkeypatch, tmp_path, command, expected, source):
+    """A later descriptor duplication must not turn a capture into a value leak (#9490)."""
+    stub = tmp_path / "env"
+    stub.write_text("#!/bin/sh\nprintf 'synthetic-output\\n'\n")
+    stub.chmod(0o755)
+    if "$" not in command:
+        oracle = subprocess.run(
+            ["bash", "--noprofile", "--norc", "-c", command.replace("env", shlex.quote(str(stub)), 1)],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        assert oracle.returncode == 0, oracle.stderr
+        assert ("synthetic-output" in oracle.stdout + oracle.stderr) == (expected == 2)
+    assert _run(monkeypatch, command.replace("env", source, 1)) == expected
+
+
 ROUND_SEVEN_DENIED = [
     ("bun-bracket", "bun -e 'console.log(import.meta[\"env\"])'"),
     ("bun-optional-bracket", "bun -e 'console.log(import.meta?.[\"env\"])'"),

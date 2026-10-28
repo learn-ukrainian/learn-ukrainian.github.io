@@ -76,6 +76,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
+    from shell_redirects import _redirect_target_dynamic
     from shell_shlex import (
         ShellPreprocessLimit,
         normalize_io_descriptors,
@@ -903,11 +904,32 @@ def _without_redirects(args: list[str]) -> list[str]:
 
 
 def _stdout_target(args: list[str]) -> str | None:
-    target = None
+    destinations: dict[str, str | None] = {"1": None, "2": "/dev/stderr"}
     for index, token in enumerate(args[:-1]):
-        if re.fullmatch(r"(?:0*1)?(?:>|>>|>\|)|&>>?", token):
-            target = _strip_quotes(args[index + 1])
-    return target
+        raw = args[index + 1]
+        target = "/dev/stderr" if _redirect_target_dynamic(raw) else _strip_quotes(raw)
+        if token in {"&>", "&>>"}:
+            destinations["1"] = destinations["2"] = target
+            continue
+        match = re.fullmatch(r"([0-9]*)(>&|<&|>>?|>\|)", token)
+        if not match:
+            continue
+        spelling, operator = match.groups()
+        descriptor = (spelling or ("0" if operator == "<&" else "1")).lstrip("0") or "0"
+        if operator in {">&", "<&"}:
+            # Bash's descriptor-less >&file redirects both output streams.
+            if operator == ">&" and not spelling and not re.fullmatch(r"[0-9]+-?|\-", target):
+                destinations["1"] = destinations["2"] = target
+                continue
+            if re.fullmatch(r"[0-9]+-?", target):
+                source = target.rstrip("-").lstrip("0") or "0"
+                target = destinations.get(source, "/dev/stderr")
+                if _strip_quotes(raw).endswith("-"):
+                    destinations[source] = "/dev/null"
+            else:
+                target = "/dev/null" if target == "-" else "/dev/stderr"
+        destinations[descriptor] = target
+    return destinations["1"]
 
 
 _SECRET_FILTER_RE = re.compile(r"(?i)(?:key|token|secret|password)")
