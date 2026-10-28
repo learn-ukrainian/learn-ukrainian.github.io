@@ -502,3 +502,19 @@ def test_what_the_module_verdict_keeps_after_a_settle_outcome(
 
 
 # --- no Ukrainian typed --------------------------------------------------------------------------------
+
+
+def test_dispatch_card_never_requests_a_refused_read_only_agy_run(capsys):
+    """Dispatch refuses read-only AGY (C-2970): the card builder and the seat options must not offer it."""
+    prompt, manifest = Path("p.md"), Path("m.yaml")
+    with pytest.raises(ValueError, match="read_only_unenforceable: agy cannot run --mode read-only"):
+        ic.dispatch_argv("agy", "t", prompt, manifest, "r", "a")
+    for flag in ("--plan-agent", "--lesson-agent", "--settle-agent"):
+        with pytest.raises(SystemExit) as exit_info:
+            ic.main(["prepare-real", "--out", "unused", flag, "agy"])
+        assert exit_info.value.code == 2
+        assert "invalid choice: 'agy'" in capsys.readouterr().err
+    for agent in ("cursor", "codex", "claude"):
+        argv = ic.dispatch_argv(agent, "t", prompt, manifest, "r", "a")
+        assert argv[argv.index("--mode") + 1] == "read-only"
+        assert argv[argv.index("--agent") + 1] == agent

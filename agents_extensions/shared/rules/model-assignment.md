@@ -6,7 +6,7 @@
 Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. It is never routed or selected by a resolver, substitution or ladder and holds no advisory, approval or review role (operator decision 2026-10-21). Operator decision 2026-10-05 (#9769):
 Grok 4.7 is a regular code/infra reviewer at every risk, including critical, through
 Cursor `--agent cursor --model grok-4.7-high`. Native Grok dispatch is retired;
-`dispatch.py` maps the `grok` alias to Cursor.
+`dispatch.py` has no `grok` agent: dispatch Grok as `--agent cursor --model grok-4.7-high`.
 Operator decision 2026-10-07 (#9987): Grok reviewers have no sandbox and are
 read-only: tracked-file reads only, with no shell, tests or scripts. Route
 execution-dependent reviews to Opus 5.5 or Sol 6.1. Grok review briefs supply
@@ -494,7 +494,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | --- | --- | --- | --- |
   | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes hard Claude-lane coding, architecture, and deep code review where relevant | **`gpt-6.1-sol` @ high** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Opus / Sol take advice and Ukrainian judgment. Orchestration alone does not confer approval authority |
   | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | GPT-6.1 Sol orchestrates, does advanced work, and handles ordinary advice (#9275 envelope unchanged). Luna @ high scouts. Never co-owns a live lease |
-  | **grok** | `grok-4.7` @ high | same SKU | Native interactive/bridge callers retain their interfaces; detached dispatch aliases Cursor at `grok-4.7-high` |
+  | **grok** | `grok-4.7` @ high | same SKU | Native interactive/bridge callers retain their interfaces; detached dispatch runs `--agent cursor --model grok-4.7-high` (`grok` is not a dispatch agent) |
   | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Driver seat through `start-gemini-driver.sh` (2026-10-08 approval): the driver defaults to and accepts only `gemini-3.8-flash-high`. As a worker it is not a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is the worker default and deep pin (2026-09-22: 3.8 Flash High outperforms 3.1 Pro) |
   | **cursor** | `grok-4.7` @ high (launcher pin `grok-4.7-high`; Auto only for a well-defined coding dispatch, operator decision 2026-09-30) | **`gpt-6.1-sol` @ high** | Driver seat never runs Auto; driver-of-record requires attested `resolved_model`; Auto authors use the Cursor family (#9951); concurrency 1 |
 
@@ -853,7 +853,7 @@ several models are reachable through more than one. Know both axes before routin
 | --- | --- | --- | --- |
 | **hermes** — REMOVED from this host (operator order 2026-08-16); row kept for history only | (was: SOUL.md persona · `sources` MCP · 16 toolsets · session store) | (was: deepseek · zai/GLM · OpenRouter catalog) | DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first. `ab ask-deepseek` is consult-only for non-language work (opencode ACP seat, #6805); Pro is retired |
 | **opencode** | Tool-capable coding transport | `deepseek-v4.1-flash` on OpenCode credit | No private-repository content or secrets. Review-of-record and Ukrainian work need measured evidence first. |
-| **native CLIs** (codex, cursor, agy, grok, claude) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes or opencode. Native Grok dispatch is retired; `dispatch.py --agent grok` aliases Cursor at `grok-4.7-high`. The native Grok CLI remains available to its other callers; `kimi` is retired (OO-58) and is not a worker bus | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `dispatch.py dispatch --model <catalog-model> --agent <a> --mode workspace-write --worktree` (Kimi is retired, OO-58; do not dispatch it; no `ask-kimi`) · orchestrator grok via `ab ask-grok-build` / native `grok` CLI — never `ab ask-opencode --model xai/grok-*` |
+| **native CLIs** (codex, cursor, agy, grok, claude) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes or opencode. Native Grok dispatch is retired; `dispatch.py` has no `grok` agent; dispatch Grok as `--agent cursor --model grok-4.7-high`. The native Grok CLI remains available to its other callers; `kimi` is retired (OO-58) and is not a worker bus | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `dispatch.py dispatch --model <catalog-model> --agent <a> --mode workspace-write --worktree` (Kimi is retired, OO-58; do not dispatch it; no `ask-kimi`) · orchestrator grok via `ab ask-grok-build` / native `grok` CLI — never `ab ask-opencode --model xai/grok-*` |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —

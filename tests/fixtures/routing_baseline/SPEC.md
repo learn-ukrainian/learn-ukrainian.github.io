@@ -6,6 +6,15 @@
 > resolver functions; it launched no worker. Live tests compare those functions
 > against the literal fixture. Native Grok dispatch and budget admission are retired.
 
+## No AGY review candidate (decision C-2970)
+
+Dispatch refuses `--mode read-only` on AGY (`read_only_unenforceable`), so the
+catalog no longer lists `google_bounded` as a review candidate. `v2-baseline.json.gz`
+was regenerated with the same pure catalog and resolver calls and the same 1,432
+inputs. The catalog loses the `gemini-3.8-flash-high` review candidate and ladder
+rung; 576 reviewer receipts change: the AGY candidate row leaves the low and medium
+code-review lists, and an explicit Gemini pin fails closed as an unknown pin.
+
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
 ## Pinned Claude model on a shed lane (#11110)

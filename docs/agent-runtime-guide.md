@@ -1062,7 +1062,7 @@ checks before removing a worktree.
 Budget/cost/pricing guards, preflight triage, lifecycle-file propagation,
 keep/force-worktree switches, repository backfill, Cursor self-dispatch and DoR
 checks, dirty-primary admission, open-PR freeze, Kimi boundary hooks, danger
-mode and RB2 are retired. Native Grok dispatch is retired; `grok` aliases Cursor.
+mode and RB2 are retired. Native Grok dispatch is retired; `grok` is not a dispatch agent (use `--agent cursor --model grok-4.7-high`).
 No additional worker exports beyond `scripts/dispatcher/environment.py` are
 promised. The provider adapter layer still serves its other callers.
 

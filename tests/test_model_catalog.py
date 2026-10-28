@@ -56,8 +56,9 @@ def test_catalog_invocations_pin_supported_launchers_and_flags(seat, route, laun
     assert argv == expected
     from scripts.dispatcher.cli import build_parser
 
+    mode = "workspace-write" if seat == "google_bounded" else "read-only"  # dispatch refuses read-only AGY (C-2970)
     args = build_parser().parse_args([*argv[2:],
-        "--worktree", "--mode", "read-only", "--task-id", "catalog-review", "--prompt-file", "prompt.md",
+        "--worktree", "--mode", mode, "--task-id", "catalog-review", "--prompt-file", "prompt.md",
     ])
     assert (args.agent, args.model, args.effort, args.task_id) == (agent, model, effort, "catalog-review")
     if seat == "google_bounded":
@@ -340,7 +341,7 @@ def test_catalog_requires_activity_roles_for_reviewers_and_the_advisor(mutate, m
         validate_catalog(catalog)
 
 
-@pytest.mark.parametrize("candidate", ["claude-sonnet-5-5", "gemini-3.8-flash-high"])
+@pytest.mark.parametrize("candidate", ["claude-sonnet-5-5"])
 def test_catalog_rejects_a_high_ladder_seat_outside_risk_reviewer_models(candidate):
     """#9538: the high ladder can list only the models risk_reviewer_models.high names."""
     broken = deepcopy(load_model_catalog())

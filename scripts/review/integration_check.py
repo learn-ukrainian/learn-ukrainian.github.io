@@ -15,8 +15,8 @@ repository's content trees, and drives the product paths through their own comma
                   item, and writes one dispatch card each. It dispatches nothing: the driver does.
 ``finish-real``   real-seat cases (i), (ii) and (iv) are unavailable after delegate retirement. V2 dispatch
                   does not bind the review flags and receipts that finish-real settle validation requires.
-                  ``make_card`` supports only cursor, codex, claude and agy through their configured default
-                  models; other agents raise ValueError. Prepared cards cannot complete these real-seat cases.
+                  ``make_card`` supports only cursor, codex and claude through their configured default
+                  models; other agents, and agy (dispatch refuses its read-only run), raise ValueError. Prepared cards cannot complete these real-seat cases.
 
 This proves the tooling, not reviewer quality (admitting a reviewer is the seeded-defect measurement, R3).
 Stand-ins, named: ``planned_state`` (the engine lesson's assembly run) and ``pack-verify --strict`` (plan review)
@@ -1018,8 +1018,11 @@ def dispatch_argv(agent: str, task_id: str, prompt: Path, manifest: Path, review
     does not wire protected review isolation or Sources receipts into this
     command. The existing finish validation still requires its bound receipts.
     """
+    from scripts.dispatcher import providers
     from scripts.review.model_catalog import substitution_default_model
 
+    if refusal := providers.read_only_refusal(agent):
+        raise ValueError(refusal)
     model = substitution_default_model(agent)
     if not model:
         raise ValueError(f"no configured v2 review model for {agent!r}")
@@ -1581,6 +1584,8 @@ def finish_real(out: Path) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    from scripts.dispatcher import providers
+
     parser = argparse.ArgumentParser(
         prog="python -m scripts.review.integration_check",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1589,7 +1594,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Use run-crafted after R2b-A, R2b-B and R2b-C are on main; it needs no seat.\n"
             "Real-seat cases (finish-real) are unavailable after delegate retirement: v2 dispatch does not bind\n"
             "the review flags and receipts required by settle validation. prepare-real only writes cards; make_card\n"
-            "supports cursor, codex, claude and agy, and raises ValueError for other agents.\n"
+            "supports cursor, codex and claude, and raises ValueError for other agents.\n"
             "Do NOT use it to measure reviewer quality (that is the seeded-defect measurement, R3)."
         ),
         epilog=(
@@ -1610,9 +1615,10 @@ def build_parser() -> argparse.ArgumentParser:
         "prepare-real", help="render and check the prompts of (i), (ii), (iv); write dispatch cards"
     )
     prepare.add_argument("--out", type=Path, required=True)
+    seats = [agent for agent in ("cursor", "codex", "claude") if not providers.read_only_refusal(agent)]
     for name, default in (("plan", "claude"), ("lesson", "claude"), ("settle", "claude")):
-        prepare.add_argument(f"--{name}-agent", default=default,
-                             help=f"harness of the {name} seat: cursor, codex, claude or agy (default {default})")
+        prepare.add_argument(f"--{name}-agent", default=default, choices=seats,
+                             help=f"harness of the {name} seat: {', '.join(seats)} (default {default})")
     finish = sub.add_parser(
         "finish-real", help="unavailable after delegate retirement: real-seat cases need bound review receipts",
         description="Real-seat cases are unavailable after delegate retirement. V2 dispatch does not bind the "

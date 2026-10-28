@@ -942,7 +942,10 @@ disposition. The briefed worker runs its chain to the end and nobody arms auto-m
 `agents_extensions/shared/rules/workflow.md`.
 
 The dispatcher requires the local rules core to exist. It does not inject rules
-or research pointers into the worker prompt. Put the required instructions and
+or research pointers into the worker prompt, with one exception: a read-only
+Claude run (`scripts/dispatcher/providers/claude.py` `build`) passes the rules
+core to `claude` as an appended system prompt (`--append-system-prompt-file`),
+because `--restricted` skips `CLAUDE.md`. Put the required instructions and
 source locators in the brief. Research flags record metadata; they do not fetch
 or deliver registry records. `--owned-path` records scope without a path-claim
 queue. Check disjoint ownership before launch.

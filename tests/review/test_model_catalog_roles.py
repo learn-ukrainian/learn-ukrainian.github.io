@@ -118,13 +118,32 @@ def test_launch_explicitly_pins_current_review_models():
         "grok-4.7",
         "claude-opus-5-5",
         "claude-sonnet-5-5",
-        "gemini-3.8-flash-high",
         "muse-wonder-full-1.0",
     }
     for row in launched.candidates:
         assert row.argv.count("--model") == 1
         assert row.argv[row.argv.index("--model") + 1] == row.wire_id
         assert canonical_model_id(row.wire_id) == row.model_id
+
+
+def test_no_review_candidate_asks_dispatch_for_a_refused_read_only_run():
+    """Dispatch refuses read-only AGY (C-2970): no review role, candidate or ladder may route to it."""
+    from scripts.dispatcher import providers
+
+    catalog = load_model_catalog()
+    assert "agy" in providers.READ_ONLY_REFUSALS
+    launched = resolve_role("legacy_reviewers", purpose="launch")
+    for row in launched.candidates:
+        agent = row.argv[row.argv.index("--agent") + 1]
+        assert providers.read_only_refusal(agent) is None, row.model_id
+    for role, spec in catalog["roles"].items():
+        if "routes" not in spec:
+            continue
+        for ref in spec["routes"]:
+            seat, route = ref.split("/")
+            agent = catalog["seats"][seat]["routes"][route]["route"]
+            assert agent not in providers.READ_ONLY_REFUSALS, f"{role} routes {ref} to read-only {agent}"
+    assert "gemini-3.8-flash-high" not in catalog["review_candidates"]
 
 
 def test_implicit_bridge_wire_ids_match_existing_provider_defaults():
