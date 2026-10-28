@@ -26,8 +26,13 @@ from scripts.lib import rules_core
 _READ_TOOLSET = "Read,Grep,Glob,Bash,WebFetch,WebSearch"
 _READ_TOOLS = (
     "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
-    "Bash(gh issue view *),Bash(gh run view *)"
+    "Bash(gh issue view *),Bash(gh run view *),mcp__sources__*"
 )
+# --restricted also skips the project settings that approve .mcp.json servers, so a read-only run gets
+# the Sources MCP server (read-only lookups) explicitly: from the dispatcher's own checkout, never the
+# reviewed worktree, whose .mcp.json the change under review could turn into a command, and alone, as
+# --strict-mcp-config drops every other server (#10074).
+_SOURCES_SERVER = "sources"
 _WRITE_TOOLS = "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch"
 _READ_DENIES = (
     "Edit,Write,NotebookEdit,Bash(git push *),Bash(git commit *),Bash(git merge *),"
@@ -98,6 +103,11 @@ def managed_policy(env: Mapping[str, str]) -> str | None:
     return None
 
 
+def _sources_mcp_config() -> str:
+    servers = json.loads(rules_core.source_path(".mcp.json").read_text(encoding="utf-8"))["mcpServers"]
+    return json.dumps({"mcpServers": {_SOURCES_SERVER: servers[_SOURCES_SERVER]}}, separators=(",", ":"))
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["claude", "-p", "--model", spec.model]
     if spec.effort is not None:
@@ -112,6 +122,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.mode == "read-only":
         core = rules_core.source_path(rules_core.CORE_REL)
         argv += ["--restricted", "--tools", _READ_TOOLSET, "--append-system-prompt-file", str(core)]
+        argv += ["--mcp-config", _sources_mcp_config(), "--strict-mcp-config"]
     argv += ["--allowedTools", allowed_tools]
     argv += ["--disallowedTools", denies]
     if spec.claude_account not in (None, "a"):
@@ -122,6 +133,8 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     result, error, overloaded = {}, None, False
     stream_clean, terminals = True, 0
+    # Runtime evidence for Ukrainian reviews: Sources tool calls whose result came back without error.
+    sources_calls, completed = set(), set()
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
@@ -146,6 +159,14 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             overloaded = event.get("is_error") is True and event.get("api_error_status") == 529
         elif event.get("type") == "error":
             error = "claude: terminal error"
+        elif event.get("type") in ("assistant", "user"):
+            for item in _content(event):
+                name, call_id, result_id = item.get("name"), item.get("id"), item.get("tool_use_id")
+                if item.get("type") == "tool_use" and isinstance(name, str) and isinstance(call_id, str):
+                    if name.startswith(f"mcp__{_SOURCES_SERVER}__"):
+                        sources_calls.add(call_id)
+                elif item.get("type") == "tool_result" and isinstance(result_id, str) and item.get("is_error") is not True:
+                    completed.add(result_id)
     text = result.get("result")
     text = text if isinstance(text, str) and text.strip() else None
     usage = result.get("usage")
@@ -154,5 +175,12 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
     if returncode:
         error = f"claude: exited with status {returncode}"
     return ParsedResult(
-        text, usage if isinstance(usage, dict) else None, error or (None if text else "claude: missing final text")
+        text, usage if isinstance(usage, dict) else None, error or (None if text else "claude: missing final text"),
+        sources_mcp_call_count=len(sources_calls & completed),
     )
+
+
+def _content(event: dict) -> list[dict]:
+    message = event.get("message")
+    content = message.get("content") if isinstance(message, dict) else None
+    return [item for item in content if isinstance(item, dict)] if isinstance(content, list) else []
