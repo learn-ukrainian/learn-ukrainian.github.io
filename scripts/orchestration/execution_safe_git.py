@@ -592,7 +592,10 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
                                   if kind == "commit" and any(fnmatchcase(ref, pattern) for pattern in destinations))
             # A destination that could land in the seed namespace would be
             # hidden from the import, so such a fetch negotiates without seeds.
-            targets = [spec.partition(":")[2] for spec in [*fetchspecs, *args[args.index(remote, 1) + 1:]]
+            # Every argument counts, including --refmap; a false match only
+            # costs the seeds.
+            targets = [spec.partition(":")[2] for spec in
+                       [*fetchspecs, *(arg.removeprefix("--refmap=") for arg in args[1:])]
                        if ":" in spec and not spec.startswith(("-", "^"))]
             seeded = bool(haves) and not any(
                 _HAVES.startswith(target.split("*")[0]) or target.startswith(_HAVES) for target in targets)
