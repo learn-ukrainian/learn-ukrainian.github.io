@@ -32,7 +32,7 @@ inline:
           - 'відпочиває'
           - 'відпочивав'
         explanation: 'After буде, use the infinitive.'
-      - sentence: "У п'ятницю ввечері буде ___."
+      - sentence: "(There will be a party.) У п'ятницю ввечері буде ___."
         answer: 'вечірка'
         options:
           - 'вечірка'
@@ -86,7 +86,7 @@ inline:
           - text: 'Звичайно буду!'
             correct: false
         explanation: 'На жаль, не можу is a polite refusal.'
-      - prompt: 'Which phrase asks about availability?'
+      - prompt: "Which phrase asks about future availability?"
         options:
           - text: 'Ти будеш вільна у суботу?'
             correct: true
@@ -174,21 +174,21 @@ workbook:
     title: Complete the week schedule
     instruction: Choose the future form or planning phrase.
     items:
-      - sentence: 'У вівторок я ___ українську.'
+      - sentence: "(Use the compound future: бути + infinitive.) У вівторок я ___ українську."
         answer: 'буду вчити'
         options:
           - 'буду вчити'
           - 'вчив'
           - 'вчу'
         explanation: 'Use буду + infinitive for a future plan.'
-      - sentence: 'У середу ми ___ вечерю.'
+      - sentence: "(Use the compound future: бути + infinitive.) У середу ми ___ вечерю."
         answer: 'будемо готувати'
         options:
           - 'будемо готувати'
           - 'готували'
           - 'готуємо'
         explanation: 'Use будемо + infinitive.'
-      - sentence: 'У четвер вона ___ допізна.'
+      - sentence: "(Use the compound future: бути + infinitive.) У четвер вона ___ допізна."
         answer: 'буде працювати'
         options:
           - 'буде працювати'

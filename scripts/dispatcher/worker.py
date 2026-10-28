@@ -8,7 +8,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 from scripts.agent_runtime import bounded_advisory
@@ -51,6 +51,15 @@ def _identity(pid: int | None) -> str | None:
 
 
 def _observe(record: dict) -> dict:
+    if _spawn_expired(record):
+        path = store.record_path(record["task_id"])
+        with store.task_state_lock(path):
+            current = store.read(record["task_id"], record["run_nonce"])
+            if current.get("started_at") == record.get("started_at") and _spawn_expired(current):
+                current.update(status="crashed", finished_at=store.now(),
+                               returncode_reason="spawn_process_missing", error="spawn never produced a supervisor")
+                store.replace(current, path)
+            record = current
     if (record.get("schema_version") == 2 and record.get("status") in store.ACTIVE
             and record.get("pid") is None and record.get("admission_hold")):
         from scripts.dispatcher.host_admission import heal_dead
@@ -75,13 +84,34 @@ def _observe(record: dict) -> dict:
     return record
 
 
+def _spawn_expired(record: dict) -> bool:
+    """Recover old pid-less launches, preserving a live or unprovable setup owner."""
+    from scripts.orchestration import dispatch_admission
+
+    if (record.get("schema_version") != 2 or record.get("status") != "spawning"
+            or record.get("pid") is not None or record.get("admission_hold") or record.get("worktree_prep")
+            or any(name.startswith("launch_") for name in record)):
+        return False
+    try:
+        started = datetime.fromisoformat(record["started_at"].replace("Z", "+00:00"))
+        age = (datetime.now(UTC) - started.replace(tzinfo=started.tzinfo or UTC)).total_seconds()
+    except (KeyError, TypeError, ValueError, AttributeError):
+        return False
+    return age > dispatch_admission.PIDLESS_SPAWNING_GRACE_S
+
+
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
+    from scripts.orchestration.dispatch_admission import new_admission_hold
+
     if spec.agent == "cursor":
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
-    path = store.create(record, prompt)
+    if not record.get("admission_hold"):
+        record["admission_hold"] = new_admission_hold(record["run_nonce"])
+    path = store.record_path(spec.task_id)
     logs = path.parent / "logs"
-    logs.mkdir(exist_ok=True, mode=0o700)
     try:
+        store.create(record, prompt)
+        logs.mkdir(exist_ok=True, mode=0o700)
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
             try:
@@ -103,13 +133,22 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
         payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
         process.stdin.write(payload)
         process.stdin.close()
-    except admission.LaunchRefused as exc:
-        record.update(exc.fields, finished_at=store.now())
-        store.replace(record, path)
-        raise
-    except Exception:
-        record.update(status="crashed", finished_at=store.now(), error="supervisor launch failed")
-        store.replace(record, path)
+    except BaseException as exc:
+        # create() can publish the record before prompt/log setup fails. Never
+        # overwrite another run, or a supervisor that has already settled.
+        with store.task_state_lock(path):
+            current = store.read(spec.task_id, missing_ok=True)
+            if (current is not None and current.get("run_nonce") == record["run_nonce"]
+                    and current.get("status") in store.ACTIVE):
+                fields = (exc.fields if isinstance(exc, admission.LaunchRefused) else
+                          dict(status="failed" if current.get("pid") is None else "crashed",
+                               error="supervisor launch failed"))
+                reason = (fields["error"].split(":", 1)[0] if isinstance(exc, admission.LaunchRefused) else
+                          "spawn_setup_failed" if current.get("pid") is None else "supervisor_launch_failed")
+                if not isinstance(exc, admission.LaunchRefused):
+                    fields["error"] = f"{reason}: {type(exc).__name__}"
+                current.update(fields, finished_at=store.now(), returncode_reason=reason)
+                store.replace(current, path)
         raise
 
 
@@ -234,11 +273,13 @@ def _borrowed(record: dict) -> bool:
         for other in store.list_tasks())
 
 
-# Dispositions that can change once other processes end, the work is published (pushed or merged
-# after the task ended), or a transient Git, lock or claim refusal clears; the next dispatch's crash
-# recovery settles these again and still removes only with the proof.
-RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
-                           "unpublished", "remote_mismatch", "unknown", "removal_refused"})
+# Dispositions that can change once other processes end, the tree is committed or reverted, the work is
+# published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
+# clears; the next dispatch's crash recovery settles these again, in a fresh process, and still removes
+# only with the proof. A tree that is still dirty is kept again, so only a changed tree is removed.
+RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
+                           "unpublished", "remote_mismatch", "unknown", "removal_refused",
+                           "worktree_remove_failed", "settlement_failed"})
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
 SETTLE_PATIENCE = 10
 
@@ -521,5 +562,8 @@ def cancel(task_id: str, nonce: str | None = None) -> dict:
 
 
 if __name__ == "__main__":
+    # Run as -m, this module is __main__; a later `import scripts.dispatcher.worker` (the removal chokepoint's
+    # liveness proof) must get this running copy, not a second one loaded from a checkout that has moved since.
+    sys.modules.setdefault("scripts.dispatcher.worker", sys.modules[__name__])
     settings = json.load(sys.stdin)
     supervise(Path(sys.argv[1]), **settings)

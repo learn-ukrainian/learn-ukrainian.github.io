@@ -50,7 +50,7 @@ Compare the built content against the plan YAML:
 - [ ] **Russianisms scan** -- Read through all Ukrainian text in the module. Flag any Russian-specific vocabulary or grammar. Use `mcp__sources__verify_word` for suspicious words and `mcp__sources__query_r2u` for words that might have Ukrainian alternatives.
 - [ ] **Grammar correctness** -- Check case endings, verb conjugations, gender agreement in Ukrainian examples. Use `mcp__sources__query_ulif` for morphological verification when in doubt.
 - [ ] **Ghost word check** -- Verify any Ukrainian word you haven't seen before with `mcp__sources__verify_word`. Focus on words in example sentences, vocabulary tables, and activities.
-- [ ] **Stress marks** -- If the module uses stress marks, verify they're on the correct syllable. Use `mcp__sources__query_grac` (mode: concordance) to check stress patterns.
+- [ ] **Stress marks** -- If the module uses stress marks, verify them with `mcp__sources__verify_stress` / `mcp__sources__verify_stresses` (ULIF-first oracle) and `mcp__sources__query_sum20` for accented headwords. Pass lemma/POS/tags to resolve homonyms; keep unmatched or ambiguous readings unresolved. GRAC supplies usage and frequency evidence only, never stress verification.
 - [ ] **False friend claims** -- If the module claims a word is a "false friend" or Russicism, verify the claim. False Russicism claims are **HIGH** severity.
 
 ### 3. PEDAGOGICAL QUALITY

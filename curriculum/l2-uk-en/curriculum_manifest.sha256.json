@@ -2,7 +2,7 @@
   "files": [
     {
       "path": "curriculum/l2-uk-en/a1-v1/a1-finale/activities.yaml",
-      "sha256": "9f0e4f486e4f70285d7a08cdd0744b3bef59db2f47db6a357403ad21304a8a28"
+      "sha256": "fd61a15c8215ac4983d933bdaec9bbd4864f9ab1d282701db94e2f6427b1a28d"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/a1-finale/module.md",
@@ -66,7 +66,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-communication/activities.yaml",
-      "sha256": "bdc8dc52aab06a9b826fc18ed3ee55939cb5becc3496323ccc6160c113f9d23f"
+      "sha256": "321804a1d8ed765bff1de1e7aff48adc62ef2f9f6933a1f3f9308920d4a2227c"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-communication/module.md",
@@ -258,7 +258,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/health/activities.yaml",
-      "sha256": "02500289f3bebe75a0492c3641c9d346fd140f76548d4f1eca0722b2d5d7ad82"
+      "sha256": "e503245f04c30fc8b50f7c55a53c47af3ccdb28fd315ef3c972d63f34127261e"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/health/module.md",
@@ -354,7 +354,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/linking-ideas/activities.yaml",
-      "sha256": "f04e6c09d6b467fef9d05b6d8bbe89d65eccbf8543f6a0f5809d5dc4120399d9"
+      "sha256": "1517d3d38b297a2456a92d23ca02ccc6afea1d5ec28855a18a80eeec883fcc14"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/linking-ideas/module.md",
@@ -450,7 +450,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-plans/activities.yaml",
-      "sha256": "d88ced2cafcb6115319b5d4cc6d5a1d9bb756a1d766a4629840790129c62d5d8"
+      "sha256": "1a4429e91b4dd950f7ec6423b26ff2de17c11db65ef5bfa095a3a77f0f84b40f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-plans/module.md",
@@ -466,7 +466,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-story/activities.yaml",
-      "sha256": "a5a4dabc08fdc7dd94cbdfea7c9926456fdc597deaa88aded7ba9740f4a9595f"
+      "sha256": "3b6c00f8db4e85451817e9df9f08e67f222179e6af0090b93502df714332be10"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-story/module.md",
@@ -498,7 +498,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/please-do-this/activities.yaml",
-      "sha256": "2e2e3ab6cf4f36834dea9a5ff47980a2127c9b6e07908142b0b3cf62b420b796"
+      "sha256": "e2d964878e4ba3e650f2cacd03211e6c19628f0e74bfe7fab2b4cd27b1eeb166"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/please-do-this/module.md",
@@ -786,7 +786,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/when-and-where/activities.yaml",
-      "sha256": "c69cf8bfd63dcf649c5381c51128bdb2720ddc4a235546199ae16d442a46bea0"
+      "sha256": "5bc241f664767ecec67f245ddf8da6933a0d5ecb296f602b152cbeec100ec9b2"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/when-and-where/module.md",
@@ -866,7 +866,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/yesterday/activities.yaml",
-      "sha256": "945b2b0465dbe20ba07b1c33420f3fcdf2d9d08787124e115ab37b3063b295bc"
+      "sha256": "e3331849f14b20bb5ccda92855affc5a913a82c8534100c1af42b6c16c2b720a"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/yesterday/module.md",
@@ -13686,7 +13686,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/a1-finale.mdx",
-      "sha256": "8245a085f5e751dba43e72a9a47aef8f575bae004f01d8915b1ed5d78e873098"
+      "sha256": "afd0df0f20d5da5d50cb8e0d0de639a239ef57c8893ed590ab9d0bfbe10795ef"
     },
     {
       "path": "site/src/content/docs/a1-v1/around-the-city.mdx",
@@ -13702,7 +13702,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-communication.mdx",
-      "sha256": "9dfc0046320ff58b9a75bc8d244c26e31e4eca0567041754b13b3e6e435bf406"
+      "sha256": "a429de69a6d16d48f30b1679961c84aa1c30c238309803c19fb23af06e562845"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-first-contact.mdx",
@@ -13750,7 +13750,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/health.mdx",
-      "sha256": "e30e91b3f3a1045a9886e23e9b9b7951ec3ec733c5656fe863f5654372c5396d"
+      "sha256": "10db47d220d0782be6f0db68b8ce8199212c64cca5536e442f826cf59e01b877"
     },
     {
       "path": "site/src/content/docs/a1-v1/hey-friend.mdx",
@@ -13778,7 +13778,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/linking-ideas.mdx",
-      "sha256": "42e367987ef550a8daa5f45e56875bf3cead229d1bb54177589fbbba98ea59c2"
+      "sha256": "6dbd7547351b4a8c63dab0a4c0bfd97aced13178de5bf82f8f5b45f260f97653"
     },
     {
       "path": "site/src/content/docs/a1-v1/many-things.mdx",
@@ -13802,11 +13802,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/my-plans.mdx",
-      "sha256": "0dfba23e01015c639ab11e91faf55aa3b47dd636569d8bdb23d472a86e1e978a"
+      "sha256": "427a5f4cbdf2a782f4ec80fd96909690423616b99c30b692cad1d4029b3a7782"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-story.mdx",
-      "sha256": "558c010e67462d769059adaad3947eeaf78adc2cff4693a4deb466d40be0291d"
+      "sha256": "b98f4df8d224e2fbe4c15646bfaa43a6a48ac380e8b914ad4ca5794cd7dab99b"
     },
     {
       "path": "site/src/content/docs/a1-v1/people-around-me.mdx",
@@ -13814,7 +13814,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/please-do-this.mdx",
-      "sha256": "8e7b03fca095d6e83f748fd250c37ffbb1d895bcc198cc466f1b7008c0490f08"
+      "sha256": "8b3cdbc10c60516cbaa46ada6077321288dfe3cb220f4e3fcee296e93e969e2f"
     },
     {
       "path": "site/src/content/docs/a1-v1/questions.mdx",
@@ -13886,7 +13886,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/when-and-where.mdx",
-      "sha256": "70c85987ae1a00fa448115c592317381355b044aca8d5489ac951f82ee7398f8"
+      "sha256": "b9bbf0b5e73448beeccdfcbbc31388386c20cdb3abe17d0c3d1ffc81b20af4c5"
     },
     {
       "path": "site/src/content/docs/a1-v1/where-from.mdx",
@@ -13906,7 +13906,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/yesterday.mdx",
-      "sha256": "3e4ac371e6684911f565731609f034b667208fe57cb169c947a3595b350477c2"
+      "sha256": "89b25062cd6a589af96a6b3eba5f384078f699713a556aa9ef953004bfa849cb"
     },
     {
       "path": "site/src/content/docs/a1/a1-finale/index.mdx",

@@ -398,6 +398,28 @@ def test_dirty_or_unpublished_write_task_keeps_worktree_with_reason(sandbox, mod
     assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
 
 
+def test_dirty_worktree_is_retried_and_removed_once_its_changes_are_gone(sandbox):
+    """Defect: a tree retained as dirty was never looked at again, even after only ignored files were left."""
+    record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert record["worktree_disposition_detail"]
+    tree = Path(record["worktree_path"])
+    sandbox.settle(sandbox.dispatch())  # the retry finds the same change and keeps the tree
+    kept = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (kept["worktree_disposition"], kept["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert tree.is_dir()
+    run_git(tree, "reset", "--hard")
+    run_git(tree, "clean", "-fd")
+    (tree / ".pytest_cache").mkdir()
+    (tree / ".pytest_cache/ignored.txt").write_text("ignored output\n")
+    (sandbox.repo / ".git/info/exclude").write_text("/.pytest_cache/\n")
+    sandbox.settle(sandbox.dispatch())
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert "worktree_disposition_detail" not in settled
+    assert not tree.exists()
+
+
 def preserved_copy(sandbox, record, relative):
     """The bytes settlement copied out of the task's worktree before removing it."""
     receipt = record["branch_holder_archive"]
@@ -3300,3 +3322,120 @@ def test_read_only_dispatch_on_an_overloaded_host_is_exempt(admission_dispatch, 
     monkeypatch.setattr(dispatch_admission, "probe_host", lambda: overloaded)
     assert admission_dispatch.dispatch(mode="read-only") == 0
     assert "admission" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("failure", ["prompt-collision", "log-directory", "interrupted-setup"])
+def test_spawn_setup_failure_never_strands_published_record(tmp_path, monkeypatch, failure):
+    """Setup can fail after record publication but before any supervisor exists."""
+    spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "setup-failure")
+    path.parent.mkdir()
+    if failure == "prompt-collision":
+        spec.prompt_file.write_bytes(b"original prompt")
+        expected = FileExistsError
+    elif failure == "log-directory":
+        (path.parent / "logs").touch()
+        expected = FileExistsError
+    else:
+        create = store.create
+
+        def interrupted(*args):
+            create(*args)
+            raise KeyboardInterrupt
+
+        monkeypatch.setattr(store, "create", interrupted)
+        expected = KeyboardInterrupt
+    with pytest.raises(expected):
+        worker.start(spec, record, b"submitted prompt", 60)
+    state = store.read(spec.task_id)
+    assert state["status"] == "failed"
+    assert state["returncode_reason"] == "spawn_setup_failed"
+    assert state["pid"] is None
+    assert state["finished_at"]
+    assert "admission_hold" not in state
+    if failure == "prompt-collision":
+        assert spec.prompt_file.read_bytes() == b"original prompt"
+
+
+def test_spawn_setup_failure_does_not_overwrite_existing_run(tmp_path, monkeypatch):
+    spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "duplicate-run")
+    other = {**record, "run_nonce": "other-run"}
+    store.create(other, b"original")
+    before = path.read_bytes()
+    with pytest.raises(ValueError, match="task id already exists"):
+        worker.start(spec, record, b"duplicate", 60)
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("command", ["list", "status", "wait", "list-active"])
+def test_cli_recovers_old_spawn_without_process(sandbox, command):
+    """Existing ownerless records settle through the actual dispatcher entry point."""
+    sandbox.tasks.mkdir(exist_ok=True)
+    path = sandbox.tasks / "old-spawn.json"
+    path.write_text(json.dumps(dict(schema_version=2, task_id="old-spawn", run_nonce="old-nonce",
+                                   status="spawning", pid=None, started_at="2026-01-01T00:00:00Z")))
+    args = {"list": ["list"], "status": ["status", "old-spawn"],
+            "wait": ["wait", "old-spawn", "--run-nonce", "old-nonce", "--timeout", "0.1"],
+            "list-active": ["list", "--status", "spawning"]}[command]
+    response = json.loads(sandbox.cli(*args, expected=1 if command == "wait" else 0).stdout)
+    if command == "list-active":
+        assert response == []
+    else:
+        state = response[0] if command == "list" else response
+        assert state["status"] == "crashed"
+        assert state["returncode_reason"] == "spawn_process_missing"
+        assert state["finished_at"]
+    saved = json.loads(path.read_text())
+    assert saved["status"] == "crashed"
+    assert saved["run_nonce"] == "old-nonce"
+
+
+@pytest.mark.parametrize("case", ["recent", "live-owner", "unknown-owner", "pid", "terminal", "legacy"])
+def test_stale_spawn_recovery_preserves_unproven_or_live_records(tmp_path, monkeypatch, case):
+    from scripts.orchestration.dispatch_admission import new_admission_hold
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    record = dict(schema_version=2, task_id="preserved", run_nonce="same-run", status="spawning",
+                  pid=None, started_at="2026-01-01T00:00:00Z")
+    if case == "recent":
+        record["started_at"] = store.now()
+    elif case == "live-owner":
+        record["admission_hold"] = new_admission_hold("same-run")
+    elif case == "unknown-owner":
+        record["admission_hold"] = {"run_nonce": "same-run", "owner_pid": os.getpid(), "owner_identity": "unverifiable"}
+    elif case == "pid":
+        record.update(pid=os.getpid(), process_start=worker._identity(os.getpid()))
+    elif case == "terminal":
+        record["status"] = "failed"
+    else:
+        record.pop("schema_version")
+    store.replace(record)
+    before = store.record_path("preserved").read_bytes()
+    assert worker._observe(record)["status"] == record["status"]
+    assert store.record_path("preserved").read_bytes() == before
+
+
+def test_stale_spawn_recovery_rechecks_process_before_terminalizing(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    stale = dict(schema_version=2, task_id="racing-spawn", run_nonce="same-run", status="spawning",
+                 pid=None, started_at="2026-01-01T00:00:00Z")
+    current = {**stale, "status": "running", "pid": os.getpid(),
+               "process_start": worker._identity(os.getpid())}
+    store.replace(current)
+    assert worker._observe(stale)["status"] == "running"
+    assert store.read("racing-spawn")["status"] == "running"
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_dispatch_prompt_destination_collision_settles_failed_spawn(sandbox, mode):
+    """The submitted prompt can already occupy the exclusive task-prompt destination."""
+    sandbox.tasks.mkdir(exist_ok=True)
+    prompt = sandbox.tasks / "prompt-collision.prompt"
+    prompt.write_text("the operator's submitted prompt")
+    sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--task-id", "prompt-collision",
+                "--mode", mode, "--prompt-file", str(prompt), expected=2)
+    state = json.loads(sandbox.cli("status", "prompt-collision").stdout)
+    assert state["status"] == "failed"
+    assert state["returncode_reason"] == "spawn_setup_failed"
+    assert state["pid"] is None
+    assert state["finished_at"]
+    assert prompt.read_text() == "the operator's submitted prompt"

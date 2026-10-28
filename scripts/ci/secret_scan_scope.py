@@ -14,6 +14,9 @@ a fixed first-parent ancestry window, or the whole branch when history is
 shorter, and never the same base and head.  Commit dates are not consulted.
 A scheduled run widens the window to the last successfully scanned head.
 Missing or invalid coverage and git failures exit non-zero.
+
+``materialize`` prepares a blobless checkout for the scan; see
+:func:`materialize_scan_objects`.
 """
 
 from __future__ import annotations
@@ -26,6 +29,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from scripts.ci.check_large_files import prefetch_missing_blobs
 from scripts.common import github_client
 
 _SHA_RE = re.compile(r"[0-9a-fA-F]{40}\Z")
@@ -47,6 +51,11 @@ SCHEDULE_FIRST_PARENT_STEPS = 400
 GIT_CAT_FILE_TIMEOUT_SECONDS = 10
 GIT_IS_ANCESTOR_TIMEOUT_SECONDS = 30
 GIT_REV_LIST_TIMEOUT_SECONDS = 30
+# Listing, fetching and re-reading a whole history's blobs; the job's own
+# timeout-minutes is the real bound.
+GIT_SCAN_OBJECTS_TIMEOUT_SECONDS = 3600
+# Blobs per fetch request, the batch size `git backfill` uses.
+_FETCH_BATCH = 50_000
 _COVERAGE_RECOVERY = "coverage unknown; run full-history-audit on the default branch to establish coverage"
 _COVERAGE_ARTIFACT = "secret-scan-covered-head-v1"
 
@@ -391,6 +400,123 @@ def resolve_scan_scope(
     )
 
 
+def _trufflehog_log_args(head: str, excluded: str) -> list[str]:
+    """The ``git log`` TruffleHog 3.99.0 runs for a scan (``gitparse.prepGitArgs``).
+
+    A scan without a base skips deletions (``--diff-filter=AM``); with no head
+    TruffleHog walks every ref.
+    """
+    args = ["log", "--patch", "--date=iso-strict", "--pretty=fuller", "--notes"]
+    if not excluded:
+        args.append("--diff-filter=AM")
+    args += ["--full-history", head or "--all"]
+    if excluded:
+        args.append(f"^{excluded}")
+    return args
+
+
+def _range_blobs(repo_root: Path, head: str, excluded: str) -> list[str]:
+    """Blobs on either side of every diff ``git log --patch`` prints for the range."""
+
+    text = _require_git_stdout(
+        repo_root,
+        ["log", "--format=", "--raw", "-r", "--no-renames", "--no-abbrev", head or "--all", f"^{excluded}"],
+        GIT_SCAN_OBJECTS_TIMEOUT_SECONDS,
+    )
+    blobs: dict[str, None] = {}
+    for line in text.splitlines():
+        if not line.startswith(":"):
+            continue
+        old_mode, new_mode, old_sha, new_sha = line[1:].split("\t", 1)[0].split()[:4]
+        for mode, sha in ((old_mode, old_sha), (new_mode, new_sha)):
+            # 160000 is a submodule commit, which the diff names but never reads.
+            if mode != "160000" and sha != _ZERO_SHA:
+                blobs[sha] = None
+    return list(blobs)
+
+
+def materialize_scan_objects(base: str, head: str, repo_root: Path | None = None) -> str:
+    """Download every blob the TruffleHog scan reads, then prove each one is local.
+
+    CI checks out a blobless partial clone and TruffleHog scans it in place
+    (``--trust-local-git-config``), because its default ``git clone`` of a
+    partial clone fails. In place, a blob that is missing and cannot be fetched
+    makes TruffleHog exit 0 having scanned nothing. This fetches, in batches,
+    the blobs on both sides of every diff in the range (every blob of the
+    history without a base), then re-runs TruffleHog's own ``git log`` with lazy
+    fetching disabled; a missing object raises. TruffleHog scans
+    ``head ^merge-base(head, base)`` and go-git may pick any of several merge
+    bases, so each one is covered. A full clone holds every blob and is left as is.
+    """
+
+    root = repo_root or Path.cwd()
+    head, base = head.strip(), base.strip()
+    # The marks git sets on a partial clone (git 2.53 writes only the promisor remote).
+    marks = subprocess.run(
+        ["git", "config", "--get-regexp", r"^(remote\..*\.promisor|extensions\.partialclone)$"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=GIT_CAT_FILE_TIMEOUT_SECONDS,
+    ).stdout.split("\n")
+    if not any(
+        value.lower() not in ("", "false", "no", "off", "0") for _, _, value in (line.partition(" ") for line in marks)
+    ):
+        return "full clone; every object is local"
+    if base and head:
+        merge_bases = _require_git_stdout(
+            root, ["merge-base", "--all", head, base], GIT_IS_ANCESTOR_TIMEOUT_SECONDS
+        ).split()
+        if not merge_bases:
+            raise SecretScanScopeError(f"no merge base of {head} and {base}; refusing to scan an unknown range")
+    else:
+        merge_bases = [base]
+
+    candidates: dict[str, None] = {}
+    for excluded in merge_bases:
+        if excluded:
+            candidates.update(dict.fromkeys(_range_blobs(root, head, excluded)))
+        else:
+            listed = _require_git_stdout(
+                root, ["rev-list", "--objects", "--missing=print", head or "--all"], GIT_SCAN_OBJECTS_TIMEOUT_SECONDS
+            )
+            candidates.update(dict.fromkeys(line[1:] for line in listed.splitlines() if line.startswith("?")))
+    wanted = list(candidates)
+    fetched = 0
+    try:
+        for start in range(0, len(wanted), _FETCH_BATCH):
+            fetched += prefetch_missing_blobs(
+                wanted[start : start + _FETCH_BATCH], root, timeout=GIT_SCAN_OBJECTS_TIMEOUT_SECONDS
+            )
+    except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
+        raise SecretScanScopeError(f"blob prefetch failed; refusing to scan a partial range: {exc}") from exc
+
+    no_lazy_fetch = {**os.environ, "GIT_NO_LAZY_FETCH": "1"}
+    commits = 0
+    for excluded in merge_bases:
+        try:
+            result = subprocess.run(
+                ["git", *_trufflehog_log_args(head, excluded)],
+                cwd=root,
+                env=no_lazy_fetch,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False,
+                timeout=GIT_SCAN_OBJECTS_TIMEOUT_SECONDS,
+            )
+        except (OSError, subprocess.SubprocessError) as exc:
+            raise SecretScanScopeError("git log --patch over the scan range failed; refusing to scan") from exc
+        if result.returncode != 0:
+            detail = (result.stderr or "").strip().splitlines()
+            suffix = f": {detail[-1][:200]}" if detail else ""
+            raise SecretScanScopeError(f"scan range is not fully local{suffix}; refusing to scan")
+        count = ["rev-list", "--count", head or "--all"] + ([f"^{excluded}"] if excluded else [])
+        commits = max(commits, int(_require_git_stdout(root, count, GIT_REV_LIST_TIMEOUT_SECONDS).strip()))
+    return f"commits={commits} merge_bases={len(merge_bases)} blobs_listed={len(wanted)} blobs_fetched={fetched}"
+
+
 def _write_outputs(scope: ScanScope, output_path: Path | None) -> None:
     lines = (
         f"trufflehog_base={scope.trufflehog_base}",
@@ -408,7 +534,22 @@ def _write_outputs(scope: ScanScope, output_path: Path | None) -> None:
             output.write(f"{line}\n")
 
 
-def main() -> int:
+def _materialize_main() -> int:
+    try:
+        summary = materialize_scan_objects(os.environ.get("SCAN_BASE", ""), os.environ.get("SCAN_HEAD", ""))
+    except SecretScanScopeError as exc:
+        print(f"secret-scan-objects: {exc}", file=sys.stderr)
+        return 1
+    print(f"secret-scan-objects: {summary}")
+    return 0
+
+
+def main(argv: list[str] | tuple[str, ...] = ()) -> int:
+    if list(argv) == ["materialize"]:
+        return _materialize_main()
+    if argv:
+        print(f"secret-scan-scope: unknown arguments {list(argv)}", file=sys.stderr)
+        return 2
     try:
         last_scanned_head = ""
         if os.environ.get("EVENT_NAME", "").strip() == "schedule":
@@ -441,4 +582,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))

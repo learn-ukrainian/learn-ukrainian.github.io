@@ -16,35 +16,35 @@ inline:
     title: Time words for yesterday
     instruction: Choose the time word that fits each part of the day.
     items:
-      - sentence: '___ я прокинулася о сьомій.'
+      - sentence: "(In the morning.) ___ я прокинулася о сьомій."
         answer: 'Зранку'
         options:
           - 'Зранку'
           - 'Ввечері'
           - 'Нарешті'
         explanation: 'Зранку marks the morning.'
-      - sentence: '___ я пішла на роботу.'
+      - sentence: "(Then, after breakfast.) ___ я пішла на роботу."
         answer: 'Потім'
         options:
           - 'Потім'
           - 'Учора'
           - 'Вночі'
         explanation: 'Потім moves the story to the next action.'
-      - sentence: '___ я обідала в кафе.'
+      - sentence: "(During the daytime.) ___ я обідала в кафе."
         answer: 'Вдень'
         options:
           - 'Вдень'
           - 'Зранку'
           - 'Нарешті'
         explanation: 'Вдень fits lunch or the middle of the day.'
-      - sentence: '___ я повернулася додому.'
+      - sentence: "(In the evening.) ___ я повернулася додому."
         answer: 'Ввечері'
         options:
           - 'Ввечері'
           - 'Спочатку'
           - 'Зранку'
         explanation: 'Ввечері marks the evening.'
-      - sentence: '___ я лягла спати.'
+      - sentence: "(Finally, at the end of the day.) ___ я лягла спати."
         answer: 'Нарешті'
         options:
           - 'Нарешті'

@@ -400,7 +400,9 @@ def main(argv=None) -> int:
             return _dispatch(args)
         code = 0
         if args.command == "list":
-            result = store.list_tasks(args.status, args.all)
+            result = [worker._observe(record) for record in store.list_tasks(include_archive=args.all)]
+            if args.status is not None:
+                result = [record for record in result if record.get("status") == args.status]
         elif args.command == "wait":
             if args.timeout < 0 or args.poll_interval <= 0:
                 raise ValueError("timeout must be nonnegative and poll interval positive")
