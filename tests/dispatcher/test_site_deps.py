@@ -31,7 +31,11 @@ def repo(tmp_path, monkeypatch):
     root = tmp_path / "repo"
     package = tmp_path / "pkg"
     (package / "bin").mkdir(parents=True)
-    (package / "package.json").write_text(json.dumps({"name": "localdep", "version": "1.0.0", "bin": "bin/run.js"}))
+    # The install script records an ambient variable to show what the install could see.
+    seen = "require('fs').writeFileSync('seen', process.env.AMBIENT_INSTALL_INPUT || 'none')"
+    (package / "package.json").write_text(json.dumps({
+        "name": "localdep", "version": "1.0.0", "bin": "bin/run.js", "scripts": {"postinstall": f'node -e "{seen}"'},
+    }))
     (package / "bin/run.js").write_text("#!/usr/bin/env node\nconsole.log('one')\n")
     (package / "bin/run.js").chmod(0o755)
     (package / "index.js").write_text("module.exports = 'one'\n")
@@ -110,10 +114,35 @@ def test_every_install_input_changes_the_key(tmp_path, repo, monkeypatch):
         base = key
 
 
-def test_npm_environment_changes_the_key(repo, monkeypatch):
+@pytest.mark.parametrize("name,value", [
+    ("npm_config_ignore_scripts", "true"), ("npm_config_script_shell", "/bin/false"), ("NODE_OPTIONS", "--no-warnings"),
+])
+def test_npm_settings_and_node_options_change_the_key(repo, monkeypatch, name, value):
     base = site_deps.install_key(repo / "site")[0]
-    monkeypatch.setenv("npm_config_ignore_scripts", "true")
+    monkeypatch.setenv(name, value)
     assert site_deps.install_key(repo / "site")[0] != base
+
+
+def test_ambient_variables_never_reach_the_install(tmp_path, repo, monkeypatch):
+    """A variable an install script reads cannot change the stored bytes behind an unchanged key."""
+    base = site_deps.install_key(repo / "site")[0]
+    monkeypatch.setenv("AMBIENT_INSTALL_INPUT", "leaked")
+    target = worktree(tmp_path, repo, "a")
+    site_deps.ensure(repo, target)
+    assert (target / "site/node_modules/localdep/seen").read_text() == "none"
+    assert "AMBIENT_INSTALL_INPUT" not in site_deps._install_env()
+    assert site_deps.install_key(repo / "site")[0] == base
+
+
+def test_store_file_edited_in_place_never_reaches_a_new_worktree(tmp_path, repo):
+    first, second = worktree(tmp_path, repo, "a"), worktree(tmp_path, repo, "b")
+    site_deps.ensure(repo, first)
+    edited = first / "site/node_modules/localdep/index.js"
+    edited.chmod(0o644)
+    edited.write_text("module.exports = 'tampered'\n")
+    assert site_deps.ensure(repo, second)["state"] == "installed"
+    assert (second / "site/node_modules/localdep/index.js").read_text() == "module.exports = 'one'\n"
+    assert (second / "site/node_modules/localdep/index.js").stat().st_ino != edited.stat().st_ino
 
 
 def test_tree_linking_outside_itself_is_not_shared(tmp_path):

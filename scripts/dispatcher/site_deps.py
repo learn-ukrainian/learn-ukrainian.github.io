@@ -40,11 +40,16 @@ SITE = "site"
 INSTALL_INPUTS = ("package.json", "package-lock.json", ".npmrc")
 INSTALL_TIMEOUT = 900
 KEEP_TREES = 3
-# npm settings that decide which bytes `npm ci` writes.
-NPM_SETTINGS = (
-    "registry", "omit", "include", "ignore-scripts", "install-strategy", "legacy-peer-deps", "strict-peer-deps",
-    "package-lock", "os", "cpu", "libc", "node-options", "global-style", "install-links", "bin-links", "before",
-)
+# The install runs in a controlled environment, so ambient variables an install script might read
+# (a custom esbuild binary path, a compiler override) cannot change its bytes behind the key. These
+# only let node, npm and node-gyp run and reach the registry; they carry no install semantics.
+PASSTHROUGH_ENV = frozenset({
+    "PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "SSL_CERT_FILE", "SSL_CERT_DIR", "NODE_EXTRA_CA_CERTS",
+    "HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY", "http_proxy", "https_proxy", "no_proxy",
+})
+# Everything else that is passed on decides what is installed, so it is part of the key.
+KEYED_ENV_PREFIX = "npm_config_"
+KEYED_ENV = frozenset({"NODE_OPTIONS"})
 # Tool caches npm scripts write under node_modules at run time; never part of an install.
 RUNTIME_CACHES = frozenset({".cache", ".vite", ".vite-temp", ".astro"})
 # Rewritten by npm itself, so it is copied rather than shared.
@@ -101,9 +106,19 @@ def _local_inputs(site: Path) -> dict[str, str]:
     return inputs
 
 
+def _keyed_env() -> dict[str, str]:
+    return {name: value for name, value in sorted(os.environ.items())
+            if name.lower().startswith(KEYED_ENV_PREFIX) or name in KEYED_ENV}
+
+
+def _install_env() -> dict[str, str]:
+    """The only environment node and npm see: the passthrough names plus the variables the key covers."""
+    return {**{name: os.environ[name] for name in PASSTHROUGH_ENV if name in os.environ}, **_keyed_env()}
+
+
 def _run(argv, cwd, **kwargs) -> subprocess.CompletedProcess:
     return subprocess.run(argv, cwd=cwd, check=True, capture_output=True, text=True, timeout=kwargs.pop("timeout", 60),
-                          **kwargs)
+                          env=_install_env(), **kwargs)
 
 
 def _runtime(site: Path) -> dict:
@@ -115,9 +130,8 @@ def _runtime(site: Path) -> dict:
     return runtime
 
 
-def _npm_config(site: Path) -> dict:
-    configured = json.loads(_run(["npm", "config", "ls", "-l", "--json"], site).stdout)
-    return {name: configured.get(name) for name in NPM_SETTINGS}
+def _digest(value) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
 
 
 def install_key(site: Path) -> tuple[str, dict]:
@@ -125,7 +139,9 @@ def install_key(site: Path) -> tuple[str, dict]:
     facts = {
         "layout": LAYOUT,
         "runtime": _runtime(site),
-        "npm_config": _npm_config(site),
+        # Digests only: user npm configuration can hold registry credentials, and facts are stored.
+        "npm_config": _digest(json.loads(_run(["npm", "config", "ls", "-l", "--json"], site).stdout)),
+        "env": {name: _digest(value) for name, value in _keyed_env().items()},
         "inputs": {name: _sha256(site / name) for name in INSTALL_INPUTS if (site / name).is_file()},
         "local": _local_inputs(site),
     }
@@ -226,6 +242,29 @@ def populate(repo: Path, site: Path, key: str, facts: dict) -> None:
         shutil.rmtree(staging, ignore_errors=True)
 
 
+def _altered(store: Path, manifest: Path) -> list[Path] | None:
+    """None when the tree is stored and every store file still has the content its name says.
+
+    Otherwise the store files that do not (an empty list when the tree was never stored).
+
+    Hard links share one inode, so a tool that edits a package file in place changes it for every worktree
+    and for the store. The check runs before each reuse, so such a file never reaches a new worktree.
+    """
+    if not manifest.is_file():
+        return []
+    altered = []
+    for name in sorted({e[2] for e in json.loads(manifest.read_text(encoding="utf-8"))["entries"]
+                        if e[0] in ("f", "c")}):
+        blob = _blob(store, name)
+        try:
+            intact = _sha256(blob) == name[:64]
+        except OSError:
+            intact = False
+        if not intact:
+            altered.append(blob)
+    return altered or None
+
+
 def materialize(repo: Path, site: Path, key: str) -> dict:
     """Give the worktree its own real node_modules of hard links; never replaces an existing install."""
     store = store_root(repo)
@@ -275,10 +314,16 @@ def ensure(repo: Path, worktree: Path) -> dict:
         return {"state": "present"}
     store = store_root(repo)
     key, facts = install_key(site)
+    manifest = store / "trees" / f"{key}.json"
     with _locked(store / "prune.lock", fcntl.LOCK_SH):
-        if not (store / "trees" / f"{key}.json").is_file():
+        if _altered(store, manifest) is not None:
             with _locked(store / "locks" / f"{key}.lock", fcntl.LOCK_EX):
-                if not (store / "trees" / f"{key}.json").is_file():
+                altered = _altered(store, manifest)
+                if altered is not None:
+                    # Unlinking leaves worktrees that still hold the old inode as they are; only new ones differ.
+                    for blob in altered:
+                        blob.unlink(missing_ok=True)
+                    manifest.unlink(missing_ok=True)
                     populate(repo, site, key, facts)
         result = materialize(repo, site, key)
     prune(repo, keep=KEEP_TREES, blocking=False)
