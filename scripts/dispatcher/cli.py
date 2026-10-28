@@ -272,6 +272,8 @@ def _dispatch(args) -> int:
         **fields,
     )
     checks.check_private_input(spec, info["key"])
+    if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent, child_env(spec))):
+        raise ValueError(refusal)
     checks.check_review_family(args.review_author_model, args.model)
     if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
         exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,

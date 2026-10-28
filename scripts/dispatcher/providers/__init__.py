@@ -6,6 +6,7 @@ parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> Pars
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from types import ModuleType
 
 PROVIDERS = ("codex", "claude", "cursor", "agy", "muse", "opencode", "hermes")
@@ -20,12 +21,19 @@ READ_ONLY_REFUSALS = {
 }
 
 
-def read_only_refusal(name: str) -> str | None:
-    """The typed refusal for read-only on ``name``, or None when its read-only argv carries a write lock."""
+def read_only_refusal(name: str, env: Mapping[str, str] | None = None) -> str | None:
+    """The typed refusal for read-only on ``name``, or None when its read-only argv carries a write lock.
+
+    With the run's environment, Claude is also refused while any managed policy could widen its lock.
+    """
     reason = READ_ONLY_REFUSALS.get(name)
+    if reason is None and name == "claude" and env is not None:
+        from scripts.dispatcher.providers import claude
+
+        reason = claude.managed_policy(env)
     if reason is None:
         return None
-    usable = ", ".join(provider for provider in PROVIDERS if provider not in READ_ONLY_REFUSALS)
+    usable = ", ".join(provider for provider in PROVIDERS if provider not in READ_ONLY_REFUSALS and provider != name)
     return f"read_only_unenforceable: {name} cannot run --mode read-only: {reason}; use {usable}"
 
 

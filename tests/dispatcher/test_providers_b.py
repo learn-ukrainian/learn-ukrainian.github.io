@@ -10,6 +10,7 @@ import pytest
 
 from scripts.dispatcher.providers import load
 from scripts.dispatcher.types import ParsedResult, TaskSpec
+from scripts.lib import rules_core
 
 # Small recorded event shapes from the old adapters' stream contracts.
 SUCCESS = {
@@ -109,7 +110,8 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
             expected += ["--effort", "high"]
         expected += ["--output-format", "stream-json", "--verbose", "--permission-mode", "dontAsk"]
         if mode == "read-only":
-            expected += ["--restricted", "--tools", "Read,Grep,Glob,Bash,WebFetch,WebSearch"]
+            expected += ["--restricted", "--tools", "Read,Grep,Glob,Bash,WebFetch,WebSearch",
+                         "--append-system-prompt-file", str(rules_core.source_path(rules_core.CORE_REL))]
         expected += ["--allowedTools"]
         expected += [
             "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"

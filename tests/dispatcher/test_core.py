@@ -23,6 +23,7 @@ from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.providers import muse
 from scripts.dispatcher.types import TaskSpec
+from scripts.lib import rules_core
 from scripts.review.record_cf_verdict import _review_branch
 
 SOURCE = Path(__file__).resolve().parents[2]
@@ -2275,7 +2276,7 @@ def test_grok_is_no_alias_and_an_unknown_agent_names_the_supported_agents(sandbo
 
 
 @pytest.mark.parametrize("agent", providers.PROVIDERS)
-def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, agent):
+def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkeypatch, agent):
     """C-2916 P6 removed the lexical refusal; read-only is now held by each CLI's own write lock or refused."""
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("Fix the bug in X.\n")
@@ -2304,9 +2305,27 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, agent)
         # dontAsk still runs what a loaded settings file allows, and a worktree loads the main checkout's
         # local file (Grok F4). Lists merge across sources, so no source's write allow may take effect.
         write_rule = "Bash(touch *)"
+        policy = json.dumps({"permissions": {"allow": [write_rule]}})
+        # --restricted still loads managed settings (Sol F5): a managed file or a server-managed cache refuses.
+        managed, config = tmp_path / "etc-claude-code", tmp_path / "config"
+        monkeypatch.setattr("scripts.agent_runtime.env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR", managed)
+        config.mkdir()
+        run_env = {"PATH": os.environ["PATH"], "HOME": str(tmp_path), "CLAUDE_CONFIG_DIR": str(config)}
+        for source, expected in ((managed / "managed-settings.json", "managed policy in /etc/claude-code is present"),
+                                 (config / "remote-settings.json", "the server-managed settings cache holds a policy")):
+            source.parent.mkdir(exist_ok=True)
+            source.write_text(policy)
+            assert providers.read_only_refusal(agent, run_env) == (
+                f"read_only_unenforceable: claude cannot run --mode read-only: {expected}; "
+                "use codex, cursor, muse, opencode"
+            )
+            source.unlink()
+        assert providers.read_only_refusal(agent, run_env) is None
         for account in ("a", "b"):
-            argv = providers.load(agent).build(dataclasses.replace(spec, claude_account=account), {}).argv
-            if "--restricted" in argv:  # loads only managed settings and --settings
+            argv = providers.load(agent).build(dataclasses.replace(spec, claude_account=account), run_env).argv
+            assert argv[argv.index("--append-system-prompt-file") + 1] == str(
+                rules_core.source_path(rules_core.CORE_REL))  # --restricted skips CLAUDE.md (Sol F6)
+            if "--restricted" in argv:  # loads only managed settings, absent above, and --settings
                 sources = []
             elif "--setting-sources" in argv:
                 sources = argv[argv.index("--setting-sources") + 1].split(",")
@@ -2319,6 +2338,8 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, agent)
                 allows |= set(json.loads(argv[argv.index("--settings") + 1]).get("permissions", {}).get("allow", []))
             assert write_rule not in allows, account
             assert argv[argv.index("--tools") + 1] == "Read,Grep,Glob,Bash,WebFetch,WebSearch"
+        plan = sandbox.cli("dispatch", "--agent", agent, "--model", "vendor/model", "--prompt", "Fix X", "--dry-run")
+        assert "--restricted" in json.loads(plan.stdout)["argv"]
     else:
         assert agent == "opencode" and "--auto" not in argv
         permission = json.loads(invocation.env["OPENCODE_PERMISSION"])
