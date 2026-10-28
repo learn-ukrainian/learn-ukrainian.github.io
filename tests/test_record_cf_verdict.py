@@ -3620,3 +3620,15 @@ def test_queue_repair_refuses_non_base_import_and_empty_or_long_history(monkeypa
     monkeypatch.setattr(ext, "MAX_REPAIR_COMMITS", 0)
     with pytest.raises(ext.ExtensionRefused, match=r"\[repair\]"):
         ext.queue_repair_diff(repo, approved=approved, head=head, base_tip="main")
+
+
+@pytest.mark.parametrize("login,association", [("outsider", "NONE"), ("fleet", "NONE"), ("outsider", "MEMBER")])
+def test_untrusted_copied_marker_cannot_block_elevated_classification(monkeypatch, tmp_path, login, association):
+    tasks, comments, calls = classified_budget_case(monkeypatch, tmp_path)
+    copied = recorded_verdict("3" * 40, "CHANGES_REQUESTED", task_id="round-3")
+    copied.update(user={"login": login}, author_association=association)
+    comments.append(copied)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "APPROVED"
+    assert result["budget_classification"]["finding_id"] == "F2"
+    assert calls["posts"] == 1
