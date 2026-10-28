@@ -2,11 +2,15 @@
   role: textbook
   source_ref: Захарійчук, 1 клас (НУШ 2025), p. 97
   notes: 'Plan reference: basic apostrophe rule before я, ю, є, ї.'
-- title: Большакова, 2 клас, p. 58-59
+- title: Український правопис (2019), § 7, § 26, § 138
+  role: reference
+  url: https://www.ulif.org.ua/system/files/pravopus-new.pdf
+  notes: Apostrophe and soft-sign spelling, including the contrasts буряк / бур’ян and свято / цвях.
+- title: Заболотний, 5 клас (2023), printed p. 84
   role: textbook
-  source_ref: Большакова, 2 клас, p. 58-59
-  notes: 'Apostrophe as hard consonant + [йа], and transfer models Мар''-яна / Дере-в''яний.'
-- title: Вашуленко, 3 клас, p. 90
+  source_ref: 5-klas-ukrmova-zabolotnyi-2023_s0063
+  notes: Positional sound values of я, ю, є, ї and the silent soft sign.
+- title: Авраменко, 5 клас (2022), p. 75
   role: textbook
-  source_ref: Вашуленко, 3 клас, p. 90
-  notes: 'Line-break rule: apostrophe is not separated from the previous letter.'
+  source_ref: 5-klas-ukrmova-avramenko-2022_s0076
+  notes: Soft and partly softened consonants.
