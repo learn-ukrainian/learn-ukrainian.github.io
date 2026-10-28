@@ -1036,6 +1036,8 @@ def get_ulif_word_records(
             else:
                 global_forms_state = "complete"
 
+        # A miss decides "not in ULIF" only on a complete local copy.
+        copy_complete = ulif_local_copy(conn)["complete"]
         records: list[dict] = []
         for word in word_list:
             normalized = normalize_ulif_dictua_query(word)
@@ -1050,18 +1052,22 @@ def get_ulif_word_records(
                 })
                 continue
 
-            rows = _load_ulif_dictua_rows(conn, normalized) or _load_ulif_dictua_rows(conn, ulif_lookup_key(word))
+            # The register key first: a leftover per-query row stored under a
+            # stress-marked spelling must not hide the checked register entry.
+            rows = _load_ulif_dictua_rows(conn, ulif_lookup_key(word)) or _load_ulif_dictua_rows(conn, normalized)
             if not rows:
-                records.append({
+                miss = {
                     "word": word,
                     "normalized_query": normalized,
-                    "status": "not_found",
-                    # The walk's register is the whole dictionary once the forms build is complete.
-                    "authoritative": global_forms_state == "complete",
+                    "status": "not_found" if copy_complete else "unavailable",
+                    "authoritative": copy_complete,
                     "verified": False,
                     "entry_count": 0,
                     "entries": [],
-                })
+                }
+                if not copy_complete:
+                    miss["reason"] = "local_copy_incomplete"
+                records.append(miss)
                 continue
 
             entries: list[dict] = []
@@ -1637,14 +1643,22 @@ def ulif_lookup_key(word: str) -> str:
     return normalize_ulif_dictua_query(word.replace("́", "").translate(_ULIF_APOSTROPHES))
 
 
+_ULIF_LOCAL_COPY_TABLES = ("ulif_dictua_entries", "ulif_dictua_sections", "ulif_forms", "ulif_forms_failures")
+
+
 def ulif_local_copy(conn: sqlite3.Connection) -> dict[str, Any]:
     """Identity of the local DictUA copy, from the forms build receipt.
 
-    ``complete`` is true only for a finished build of the current parser with
-    a source fingerprint; only then is a miss a statement about ULIF itself.
+    ``complete`` is true only when every table of the copy is present, the
+    entries table has its register flag, and the receipt is a finished build of
+    the current parser with a source fingerprint. Only then is a miss a
+    statement about ULIF itself.
     """
-    if not _ulif_table_exists(conn, "ulif_forms_build"):
-        return {"state": "missing_table", "complete": False}
+    missing = [name for name in (*_ULIF_LOCAL_COPY_TABLES, "ulif_forms_build") if not _ulif_table_exists(conn, name)]
+    if missing:
+        return {"state": "missing_table", "missing_tables": missing, "complete": False}
+    if "homonym_checked" not in _ulif_entry_columns(conn):
+        return {"state": "unmigrated_entries", "complete": False}
     row = conn.execute("SELECT * FROM ulif_forms_build WHERE id = 1").fetchone()
     if row is None:
         return {"state": "unbuilt", "complete": False}
@@ -1658,9 +1672,9 @@ def ulif_local_copy(conn: sqlite3.Connection) -> dict[str, Any]:
         if key in columns
     }
     identity["complete"] = (
-        row["state"] == "complete"
-        and row["parser_version"] == ULIF_FORMS_PARSER_VERSION
-        and bool(row["source_fingerprint"])
+        identity.get("state") == "complete"
+        and identity.get("parser_version") == ULIF_FORMS_PARSER_VERSION
+        and bool(identity.get("source_fingerprint"))
     )
     return identity
 

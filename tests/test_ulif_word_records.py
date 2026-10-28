@@ -335,7 +335,9 @@ def test_batch_query_returns_ordered_records(tmp_path):
     assert [r["word"] for r in records] == query_words
     assert records[0]["status"] == "ok"
     assert records[1]["status"] == "ok"
-    assert records[2]["status"] == "not_found"
+    # No forms build receipt: the copy cannot decide a miss.
+    assert records[2]["status"] == "unavailable"
+    assert records[2]["reason"] == "local_copy_incomplete"
 
 
 def test_missing_tables_reported_explicitly(tmp_path):

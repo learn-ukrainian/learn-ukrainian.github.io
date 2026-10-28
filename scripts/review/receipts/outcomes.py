@@ -409,15 +409,12 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
                 )
                 entries = [e for r in records for e in r["entries"]] if populated else []
                 local_copy = parsed.get("local_copy")
-                stored_negative = populated and entries and all(
-                    e.get("status") == "not_found" and e.get("retrieved_at") for e in entries
-                )
-                # A miss on the complete local DictUA copy is a statement about ULIF itself.
-                authoritative_miss = (
+                # Only a miss on the complete local DictUA copy is a statement about
+                # ULIF itself; a leftover per-query negative row is not.
+                if (
                     isinstance(local_copy, dict) and local_copy.get("complete") is True
                     and all(r.get("status") == "not_found" and r.get("authoritative") is True for r in records)
-                )
-                if stored_negative or authoritative_miss:
+                ):
                     outcome = "no_hits"
                 elif (
                     populated

@@ -366,6 +366,21 @@ class TestUlifHandlers:
         assert miss["reason"] == "local_copy_incomplete"
         hit = json.loads(_run(server_module.handle_query_ulif({"word": "великий", "sections": ["paradigm"]}))[0].text)
         assert hit["status"] == "ok"
+        records = json.loads(_run(server_module.handle_query_ulif_records({"words": ["пилосмок"]}))[0].text)
+        assert records["local_copy"]["complete"] is False
+        assert records["records"][0]["status"] == "unavailable"
+        assert records["records"][0]["authoritative"] is False
+
+    @pytest.mark.parametrize("table", ["ulif_forms", "ulif_forms_failures", "ulif_dictua_sections"])
+    def test_complete_receipt_without_a_copy_table_cannot_decide_a_miss(self, server_module, ulif_local, table):
+        conn = sqlite3.connect(ulif_local)
+        conn.execute(f"DROP TABLE {table}")
+        conn.commit()
+        conn.close()
+        miss = json.loads(_run(server_module.handle_query_ulif({"word": "пилосмок", "sections": ["paradigm"]}))[0].text)
+        assert miss["status"] == "unavailable"
+        assert miss["local_copy"]["complete"] is False
+        assert table in miss["local_copy"]["missing_tables"]
 
     @pytest.mark.parametrize("kind", ["synonyms", "antonyms", "phraseology"])
     def test_relation_tools_answer_locally(self, server_module, ulif_local, kind):
@@ -386,6 +401,9 @@ class TestUlifHandlers:
         assert response["local_copy"]["complete"] is True
         assert response["records"][0]["status"] == "not_found"
         assert response["records"][0]["authoritative"] is True
+        # A stress-marked query reaches the checked register entry.
+        stressed = json.loads(_run(server_module.handle_query_ulif_records({"words": ["вели́кий"]}))[0].text)
+        assert stressed["records"][0]["entries"][0]["canonical_headword"] == "вели́кий"
 
 
 class TestQueryUlifRecordsHandler:

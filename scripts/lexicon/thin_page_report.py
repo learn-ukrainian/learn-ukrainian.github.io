@@ -603,7 +603,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=DEFAULT_ULIF_DB,
         help=(
-            "Path to the growing ULIF dump DB (opened mode=ro, safe while dump_ulif.py writes; "
+            "Path to the ULIF dump DB left by the retired crawler (opened mode=ro; "
             f"default: {DEFAULT_ULIF_DB})."
         ),
     )
