@@ -209,11 +209,13 @@ guidance. No word, activity, item or time quota applies; legacy `word_target` is
 
 **The immersion payload and counting contract (#10105).** Fresh A1 selects the approved
 R-30 editorial bands from cumulative core vocabulary, or explicit `a1-orientation`.
-Its payload has permitted field languages and an advisory share (none for orientation),
+Every fresh lesson payload has permitted field languages and an advisory share (none for orientation),
 no `min_uk_dialogue_lines`, `min_uk_example_sentences` or `min_vocab_entries`;
 `lesson_structural_minimums_not_calibrated` remains. No replacement content quota or
 promise to calibrate A1 per-lesson floors is made. Legacy module overrides remain untouched.
-A2+ payloads and counting remain unchanged; module-to-lesson residual is #10132.
+#10132 removes module targets from A2+ lesson payloads. A2+ immersion shares, field languages
+and counting remain unchanged. Any lesson-minimum calibration remains separately owned by
+curriculum-upgrade and requires scoped approval.
 Share is Ukrainian tokens over all tokens of the expanded Урок tab, including quoted terms
 as Ukrainian and gloss/translation support as English, excluding Словник/Ресурси.
 The assembler prints the approved plan-step practical task directly after its supporting

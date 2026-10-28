@@ -2,7 +2,7 @@
 
 Reads compute_lesson_immersion_band and returns the structured immersion payload:
 - advisory Ukrainian share (min %, max %)
-- structural minimums / targets
+- empty structural targets; module minima do not apply to individual lessons
 - permitted languages per field role:
   narration, dialogue_line, activity_instruction, activity_item, gloss, quote, resource_line
 - source and not_checked tracking
@@ -125,7 +125,7 @@ def compute_immersion_payload(
 
     One function consumes compute_lesson_immersion_band and returns the payload:
     - permitted languages per field role (sourced from immersion_table.yaml)
-    - structural targets (dialogue lines, example sentences, vocab entries)
+    - empty structural targets (lesson minima are not calibrated)
     - advisory Ukrainian share
     """
     if lesson_band is None:
@@ -148,7 +148,7 @@ def compute_immersion_payload(
     return ImmersionPayload(
         band_key=lesson_band.band_key,
         advisory_uk_share=lesson_band.advisory_uk_share,
-        structural_targets={} if track.lower().split("-")[0] == "a1" else dict(lesson_band.module_structural),
+        structural_targets={},
         permitted_languages=permitted,
         source=lesson_band.source,
         not_checked=list(lesson_band.not_checked),

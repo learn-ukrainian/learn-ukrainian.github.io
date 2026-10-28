@@ -35,7 +35,7 @@ A1_ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
 # All 55 generated rows after the #10108 floor ownership amendment, with duplicate line refs removed.
 A1_POSITIONS_BLOCK_SHA256 = "9c8aa2641676e87c42bdd9eee8ada09baa105ddcb7d62a2322768915ba400e9f"
 NON_A1_ARC_SHA256 = {
-    "a2": "d9419ea84a8f3bac3d1ba9159061e25ffd8a126813986c5e5efbd8e164db03aa",
+    "a2": "1ef2873d9643e70a5fec13a5240bbad0e3375977bc81429201c2d33a3f53fb30",
     "b1": "274cbfdf28f7c7193d5efd4b4cd623d4ebb0933fd20e391303d3cd36bcf5390f",
     "b2": "01fadc3e6528146b231d0bea562a48c80b263b76c0f9fa3cd047fbb711234fbc",
 }

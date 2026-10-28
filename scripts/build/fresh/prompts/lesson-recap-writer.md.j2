@@ -136,12 +136,8 @@ No prior built lessons provided.
 - **Band Key**: {{ immersion.band_key }}
 {% if immersion.advisory_uk_share %}- **Advisory Ukrainian Share**: {{ immersion.advisory_uk_share[0] }}-{{ immersion.advisory_uk_share[1] }}%
 {% else %}- **English orientation**: no advisory-share target; overview exemplars only; zero new core words.
-{% endif %}{% if level != "a1" %}- **Module Structural Minimums**:
-  - min_uk_dialogue_lines: {{ immersion.structural_targets.min_uk_dialogue_lines }}
-  - min_uk_example_sentences: {{ immersion.structural_targets.min_uk_example_sentences }}
-  - min_vocab_entries: {{ immersion.structural_targets.min_vocab_entries }}
-{% endif %}{% if level == "a1" %}- **Not checked**: lesson_structural_minimums_not_calibrated
-{% endif %}- **Permitted Languages Per Field Role**:
+{% endif %}- **Not checked**: lesson_structural_minimums_not_calibrated
+- **Permitted Languages Per Field Role**:
 {% for role, langs in immersion.permitted_languages.items() %}
   - {{ role }}: {{ langs | join(', ') }}
 {% endfor %}
