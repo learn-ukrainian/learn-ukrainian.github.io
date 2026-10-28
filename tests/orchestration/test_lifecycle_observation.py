@@ -7,7 +7,6 @@ import shutil
 import pytest
 
 from scripts.orchestration import merge_closeout as mc
-from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import task_lifecycle as tl
 from tests.orchestration.test_merge_closeout import add_worktree, git, init_repo
 from tests.orchestration.test_task_lifecycle import NOW, _body, _ledger, _observation
@@ -320,29 +319,6 @@ def test_capture_after_fast_forward_merge_keeps_commits(observation_case):
     git(repo, "update-ref", "refs/remotes/origin/main", head)
     lo.before_reap(repo, worktree)
     assert tl._latest_premerge_local(tl.load_lifecycle(ledger))["commits"][0]["sha"] == head
-
-
-def test_post_task_reap_capture_failure_and_explicit_bypass(observation_case, monkeypatch):
-    from scripts.fleet import post_task_reap as post
-
-    repo, worktree, _, task, _, _, _ = observation_case
-    monkeypatch.setattr(tl, "write_lifecycle", lambda *a, **k: (_ for _ in ()).throw(OSError("disk full")))
-    calls = []
-    monkeypatch.setattr(
-        rw,
-        "reap_worktrees",
-        lambda **k: calls.append(k) or [rw.ReapResult(str(worktree), "codex/42-closeout", "removed", "merged", False)],
-    )
-    kwargs = dict(
-        repo_root=repo, bound_path=worktree, apply=True, include_terminal_dispatches=True, tasks_dir=task.parent
-    )
-    result = post._reap_via_canonical(**kwargs)
-    assert result["action"] == "retained"
-    assert result["error"] == "disk full"
-    assert calls == []
-    result = post._reap_via_canonical(**kwargs, no_lifecycle_observation="operator recovery")
-    assert len(calls) == 1
-    assert result["lifecycle_observations"] == [{"status": "bypassed", "reason": "operator recovery"}]
 
 
 def test_recovery_cli_appends_without_network(observation_case, capsys):

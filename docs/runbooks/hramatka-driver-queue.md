@@ -106,8 +106,8 @@ handoff:
   (`.worktrees/dispatch/` vs. `batch_state/tasks/`), or local disk use is at
   or above the configured high-water mark (default 95%, `--high-water-percent`).
   A terminal-task worktree whose branch still has an **open PR** is not
-  counted: `post_task_reap` deliberately retains that worktree, so counting it
-  would hold the gate at `stale` for as long as any lane has a PR in flight.
+  counted: counting it would hold the gate at `stale` for as long as any lane
+  has a PR in flight.
   The exemption is deliberately narrow and fails closed — the worktree stays
   counted unless the PR is *provably* open, in this repository, on exactly
   that branch head, and not a fork. An unreachable `gh`, a non-zero exit, or
@@ -118,9 +118,9 @@ handoff:
 - **unknown** (exit 2) — GitHub was unreachable for the public epic or the
   private board. This is never a pass.
 
-The gate does not reap orphan worktrees or gate new scope itself — that is
-`post_task_reap` (PR-3) and `hramatka_scope_gate` (PR-2) respectively. It only
-reports.
+The gate does not remove worktrees (the dispatcher removes each task's own
+worktree at settlement) or gate new scope itself (`hramatka_scope_gate`). It
+only reports.
 
 ## Production cutover and host access/security — escalate, never action solo
 

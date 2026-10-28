@@ -31,7 +31,8 @@ def alert_message(probe: admission.DiskProbe, limits: admission.Thresholds, now:
         f"[{alerts.SENDER}] {probe.text()} on the .worktrees filesystem at {now}, still at or above the reap "
         f"watermark of {limits.disk_reap_used_percent:g}% after the scheduled worktree cleanup. New write "
         f"dispatches are refused at {limits.disk_refuse_used_percent:g}%.\n"
-        "Act: reap settled dispatch worktrees with the common reaper and clear other disk use.\n"
+        "Act: remove settled dispatch worktrees with "
+        "`python -m scripts.orchestration.worktree_claims remove` and clear other disk use.\n"
         f"Change-only: no further alert until usage falls below {limits.disk_reap_used_percent:g}% and crosses again.\n"
     )
 

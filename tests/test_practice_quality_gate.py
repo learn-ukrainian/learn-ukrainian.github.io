@@ -1160,3 +1160,279 @@ def test_audit_error_correction_flags_reviewed_withheld_pairs(tmp_path: Path):
     ]
     violations = _audit_error_corrections(tmp_path, drills)
     assert [(v["type"], v["item"]) for v in violations] == [("REVIEWED_WITHHELD_PAIR", "err_contested")]
+
+
+_ATTESTATION_FIELDS = (
+    "shard.answer",
+    "shard.form",
+    "shard.target",
+    "shard.correctForm",
+    "shard.acceptedAnswers",
+    "teacher.form",
+    "correction.correctForm",
+    "correction.correctTarget",
+)
+
+
+def _audit_attestation_target(tmp_path, field, target, vesum_db, *, vesum_only=True):
+    """Exercise the aggregate gate with opaque synthetic targets and explicit wrong-option roles."""
+    consumer, key = field.split(".")
+    teacher = {"cloze": []}
+    drills = []
+    shard = {"paronym": []}
+    if consumer == "shard":
+        item = {
+            "paronymId": "probe",
+            "prompt": "___",
+            "options": [{"label": target, "kind": "answer"}, {"label": "жжжп", "kind": "distractor"}],
+            "distinction_gloss_uk": "Synthetic fixture",
+            key: target,
+        }
+        if key == "acceptedAnswers":
+            item.update(answer="ґґґа", acceptedAnswers=[target])
+        shard["paronym"].append(item)
+    elif consumer == "teacher":
+        teacher["cloze"].append(
+            {
+                "clozeId": "probe",
+                "sentence": "___",
+                "form": target,
+                "options": [{"label": target, "kind": "answer"}, {"label": "жжжп", "kind": "distractor"}],
+            }
+        )
+    else:
+        drill = _drill("probe", "жжжп", target)
+        if key == "correctTarget":
+            drill["correctTarget"] = drill.pop("correctForm")
+        drills.append(drill)
+    for name, data in (("teacher", teacher), ("inventory", {"rows": []}), ("practice-paronym.A1", shard)):
+        (tmp_path / f"{name}.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    # Preserve the normal snapshot schema even when testing the correction alias.
+    snapshot_drills = [{**d, "correctForm": target} for d in drills]
+    deck = _error_correction_deck(tmp_path, snapshot_drills)
+    deck.write_text(json.dumps({"drills": drills}, ensure_ascii=False), encoding="utf-8")
+    results = run_all_practice_audits(
+        teacher_cloze=tmp_path / "teacher.json",
+        error_corrections=deck,
+        sentence_inventory=tmp_path / "inventory.json",
+        sources_db=None,
+        vesum_db=vesum_db,
+        all_modes=True,
+        shards_dir=tmp_path,
+        verify_vesum=True,
+    )
+    return [v for rows in results.values() for v in rows if not vesum_only or v["type"].startswith("VESUM_")]
+
+
+@pytest.mark.parametrize("field", _ATTESTATION_FIELDS)
+@pytest.mark.parametrize(
+    ("target", "lookups"),
+    [
+        ("жжж'а", ["жжж'а"]),
+        ("жжж’а", ["жжж'а"]),
+        ("жжжʼа", ["жжж'а"]),
+        ("жжж`а", ["жжж'а"]),
+        ("жжжа\u0301", ["жжжа"]),
+        ("жжжа\u0300", ["жжжа"]),
+        ("жжжа\u0341", ["жжжа"]),
+        ("жжжа жжжб", ["жжжа", "жжжб"]),
+        ("жжжа/жжжб", ["жжжа", "жжжб"]),
+        ("жжжа\tжжжб\nжжжв", ["жжжа", "жжжб", "жжжв"]),
+        ("ж-ж", ["ж-ж", "жж", "ж", "ж"]),
+        ("жжжа-ж", ["жжжа-ж", "жжжаж", "жжжа", "ж"]),
+        ("ЖЖЖА", ["ЖЖЖА", "жжжа"]),
+        ("ж", ["ж"]),
+    ],
+)
+def test_target_attestation_no_analyses(tmp_path, monkeypatch, field, target, lookups):
+    """No target spelling or short compound part may bypass morphology lookup (#10697)."""
+    from scripts.audit import practice_quality_gate
+
+    calls = []
+    db = _fixture_vesum(tmp_path, [])
+
+    def no_analyses(word, db_path=None):
+        assert db_path == db
+        calls.append(word)
+        return []
+
+    monkeypatch.setattr(practice_quality_gate, "verify_word", no_analyses)
+    findings = _audit_attestation_target(tmp_path, field, target, db)
+    expected_calls = ["ґґґа", *lookups] if field == "shard.acceptedAnswers" else lookups
+    assert calls == expected_calls
+    assert [v["type"] for v in findings] == ["VESUM_UNATTESTED"] * (2 if field == "shard.acceptedAnswers" else 1)
+    assert all("probe" in v["item"] for v in findings)
+
+
+@pytest.mark.parametrize("field", _ATTESTATION_FIELDS)
+@pytest.mark.parametrize("target", ["", "   ", "!!!", "/", "жжжа—жжжб", "Latin", "жжжа123"])
+def test_target_attestation_unsupported_is_not_success(tmp_path, monkeypatch, field, target):
+    from scripts.audit import practice_quality_gate
+
+    calls = []
+    db = _fixture_vesum(tmp_path, [])
+
+    def no_analyses(word, db_path=None):
+        calls.append(word)
+        return []
+
+    monkeypatch.setattr(practice_quality_gate, "verify_word", no_analyses)
+    all_findings = _audit_attestation_target(tmp_path, field, target, db, vesum_only=False)
+    findings = [v for v in all_findings if v["type"].startswith("VESUM_")]
+    assert calls == (["ґґґа"] if field == "shard.acceptedAnswers" else [])
+    # Empty corrections already have EMPTY_CORRECT_TARGET, rather than lexical attestation.
+    if field.startswith("correction.") and not target:
+        assert "EMPTY_CORRECT_TARGET" in [v["type"] for v in all_findings]
+        assert findings == []
+    else:
+        assert [v["type"] for v in findings] == ["VESUM_UNATTESTED"] * (2 if field == "shard.acceptedAnswers" else 1)
+
+
+@pytest.mark.parametrize("field", _ATTESTATION_FIELDS)
+@pytest.mark.parametrize(
+    ("target", "forms", "lookups", "unattested"),
+    [
+        ("жжж’а", {"жжж'а"}, ["жжж'а"], False),
+        ("жжжʼа", {"жжж'а"}, ["жжж'а"], False),
+        ("«жжжа\u0301!»", {"жжжа"}, ["жжжа"], False),
+        ("Жжжа", {"жжжа"}, ["Жжжа", "жжжа"], False),
+        ("жжжа жжжб", {"жжжа", "жжжб"}, ["жжжа", "жжжб"], False),
+        ("жжжа жжжб", {"жжжа"}, ["жжжа", "жжжб"], True),
+        ("жжжа жжжб", {"жжжб"}, ["жжжа", "жжжб"], True),
+        ("жжжа/жжжб", {"жжжа", "жжжб"}, ["жжжа", "жжжб"], False),
+        ("жжжа/жжжб", {"жжжа"}, ["жжжа", "жжжб"], True),
+        ("жжжа/жжжб", {"жжжб"}, ["жжжа", "жжжб"], True),
+        ("ж-ж", {"ж-ж"}, ["ж-ж"], False),
+        ("ж-ж", {"жж"}, ["ж-ж", "жж"], False),
+        ("ж-ж", {"ж"}, ["ж-ж", "жж", "ж", "ж"], False),
+        ("жжжа-ж", {"жжжа"}, ["жжжа-ж", "жжжаж", "жжжа", "ж"], True),
+        ("жжжа-ж", {"ж"}, ["жжжа-ж", "жжжаж", "жжжа", "ж"], True),
+    ],
+)
+def test_target_attestation_positive_evidence(tmp_path, monkeypatch, field, target, forms, lookups, unattested):
+    from scripts.audit import practice_quality_gate
+
+    calls = []
+    # Fixture rows and dictionaries are synthetic controls, not linguistic claims.
+    positive_forms = forms | ({"ґґґа"} if field == "shard.acceptedAnswers" else set())
+    db = _fixture_vesum(tmp_path, [(form, "noun") for form in sorted(positive_forms)])
+
+    def recorded_analyses(word, db_path=None):
+        calls.append(word)
+        return [{"lemma": word, "pos": "noun", "tags": "noun"}] if word in positive_forms else []
+
+    monkeypatch.setattr(practice_quality_gate, "verify_word", recorded_analyses)
+    findings = _audit_attestation_target(tmp_path, field, target, db)
+    assert calls == (["ґґґа", *lookups] if field == "shard.acceptedAnswers" else lookups)
+    assert [v["type"] for v in findings] == (["VESUM_UNATTESTED"] if unattested else [])
+
+
+@pytest.mark.parametrize("field", _ATTESTATION_FIELDS)
+def test_target_attestation_real_lookup_fixture(tmp_path, field):
+    """The public gate uses actual read-only SQLite analyses, including phrase and apostrophe normalization."""
+    db = _fixture_vesum(tmp_path, [("жжж'а", "noun"), ("жжжа", "noun"), ("ж", "noun"), ("ґґґа", "noun")])
+    assert _audit_attestation_target(tmp_path, field, "жжж’а ж-ж", db) == []
+    assert [v["type"] for v in _audit_attestation_target(tmp_path, field, "жжж’а жжжб", db)] == ["VESUM_UNATTESTED"]
+
+
+@pytest.mark.parametrize("field", _ATTESTATION_FIELDS)
+@pytest.mark.parametrize("missing_path", [True, False])
+def test_target_attestation_missing_source(tmp_path, monkeypatch, field, missing_path):
+    from scripts.audit import practice_quality_gate
+
+    def unexpected_lookup(*args, **kwargs):
+        pytest.fail("missing source must not yield target lookup evidence")
+
+    monkeypatch.setattr(practice_quality_gate, "verify_word", unexpected_lookup)
+    db = tmp_path / "missing.db" if missing_path else None
+    findings = _audit_attestation_target(tmp_path, field, "жжжа", db)
+    assert [v["type"] for v in findings] == ["VESUM_DB_MISSING"] * (3 if missing_path else 1)
+
+
+@pytest.mark.parametrize("field", _ATTESTATION_FIELDS)
+def test_target_attestation_source_error_is_not_no_analyses(tmp_path, monkeypatch, field):
+    import sqlite3
+
+    from scripts.audit import practice_quality_gate
+
+    db = _fixture_vesum(tmp_path, [])
+
+    def unavailable_source(*args, **kwargs):
+        raise sqlite3.OperationalError("synthetic source unavailable")
+
+    monkeypatch.setattr(practice_quality_gate, "verify_word", unavailable_source)
+    with pytest.raises(sqlite3.OperationalError, match="synthetic source unavailable"):
+        _audit_attestation_target(tmp_path, field, "жжжа", db)
+
+
+def test_target_attestation_correction_answers_keep_source_reading_requirement(tmp_path):
+    db = _fixture_vesum(tmp_path, [("жжжа", "noun")])
+    findings = _audit_error_corrections(
+        tmp_path, [_drill("probe", "жжжп", "жжжа", answers=["жжжа", "жжжб"])], vesum_db=db
+    )
+    assert [v["type"] for v in findings if v["type"].startswith("ANSWER")] == ["ANSWER_NOT_A_SOURCE_READING"]
+    assert not [v for v in findings if v["type"].startswith("VESUM_")]
+
+
+@pytest.mark.parametrize("field", _ATTESTATION_FIELDS)
+@pytest.mark.parametrize(
+    ("target", "unattested"),
+    [
+        ("жжжа ХХ жжжб", False),
+        ("жжжа XX жжжб", False),
+        ("жжжа ХХ жжжв", True),
+        ("жжжв ХХ жжжа", True),
+        ("ХХ", True),
+        ("XX", True),
+        ("ХХ !!!", True),
+        ("жжжа ХХХХ", True),
+    ],
+)
+def test_target_attestation_numeral_notation_cannot_supply_lexical_evidence(tmp_path, field, target, unattested):
+    """Numeral notation must neither reject source phrases nor hide an unattested word."""
+    db = _fixture_vesum(tmp_path, [("жжжа", "noun"), ("жжжб", "noun"), ("ґґґа", "noun")])
+    findings = _audit_attestation_target(tmp_path, field, target, db)
+    assert [v["type"] for v in findings] == (["VESUM_UNATTESTED"] if unattested else [])
+
+
+@pytest.mark.parametrize(
+    ("mode", "target_fields", "expected"),
+    [
+        ("classify", {"lemma": "жжжа"}, []),
+        ("classify", {"lemma": "жжжб"}, ["VESUM_UNATTESTED"]),
+        ("stress", {"stressed": "жжжа́", "unstressed": "жжжа"}, []),
+        ("stress", {"stressed": "жжжб́", "unstressed": "жжжб"}, ["VESUM_UNATTESTED", "VESUM_UNATTESTED"]),
+        ("stress", {"stressed": "жжжа́", "unstressed": "жжжб"}, ["VESUM_UNATTESTED"]),
+        ("stress", {"stressed": "жжжб́", "unstressed": "жжжа"}, ["VESUM_UNATTESTED"]),
+    ],
+)
+def test_target_attestation_uses_stress_and_classify_lexical_fields(tmp_path, mode, target_fields, expected):
+    """Generated modes must attest their lexical fields, never a nonexistent answer field."""
+    db = _fixture_vesum(tmp_path, [("жжжа", "noun")])
+    item = {f"{mode}Id": "probe", **target_fields}
+    shard = tmp_path / f"practice-{mode}.A1.json"
+    shard.write_text(json.dumps({mode: [item]}, ensure_ascii=False), encoding="utf-8")
+    counts, findings = audit_practice_shards(
+        shards_dir=tmp_path, vesum_db=db, check_volume=False, modes=[mode]
+    )
+    assert counts[mode] == 1
+    assert [v["type"] for v in findings] == expected
+
+
+@pytest.mark.parametrize("field", ["correction.correctForm", "correction.correctTarget"])
+@pytest.mark.parametrize("target", ["жжжа / жжжб", "жжжа/жжжб"])
+@pytest.mark.parametrize("positive", [True, False])
+def test_target_attestation_supported_correction_notation(tmp_path, monkeypatch, field, target, positive):
+    from scripts.audit import practice_quality_gate
+
+    calls = []
+    db = _fixture_vesum(tmp_path, [("жжжа", "noun"), ("жжжб", "noun")] if positive else [])
+
+    def recorded_lookup(word, db_path=None):
+        calls.append(word)
+        return [{"lemma": word, "pos": "noun", "tags": "noun"}] if positive else []
+
+    monkeypatch.setattr(practice_quality_gate, "verify_word", recorded_lookup)
+    findings = _audit_attestation_target(tmp_path, field, target, db)
+    assert calls == ["жжжа", "жжжб"]
+    assert [v["type"] for v in findings] == ([] if positive else ["VESUM_UNATTESTED"])

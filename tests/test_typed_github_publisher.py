@@ -1005,7 +1005,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
     if consumer == "verdict":
         expected = (
             f"### Cross-family review\nhead: {'a' * 40}\nReviewer family: openai\nVERDICT: APPROVED\n"
-            "Reviewer model: gpt-6.1-sol\nTask id: unit-review\n\nWithheld findings: unknown\n"
+            "Reviewer model: gpt-6.1-sol\nReview score: absent\nTask id: unit-review\n\nWithheld findings: unknown\n"
             "Findings are held privately.\n\n"
             f"<!-- cf-verdict v1 sha={'a' * 40} task=unit-review started=2026-01-01T00:00:00.000000+00:00 "
             "verdict=APPROVED model=gpt-6.1-sol family=openai -->"
@@ -1320,9 +1320,8 @@ def test_keeper_issue_search_includes_unlabelled_open_issues():
 
 def test_enqueue_returns_without_global_cleanup_inventory(synthetic_opsec, tmp_path, monkeypatch, capsys):
     """Global cleanup must not delay fresh enqueue or already-queued reconciliation."""
-    from scripts.fleet import post_task_reap
+    from tests.orchestration.test_worktree_git import _init_repo
     from tests.test_ci_recovery import HEAD, Transport
-    from tests.test_fleet_post_task_reap import _init_repo
 
     # Exercise the production closed read encoder and client, not an invented gh PR field.
     from tests.test_github_client import client, response
@@ -1348,7 +1347,6 @@ def test_enqueue_returns_without_global_cleanup_inventory(synthetic_opsec, tmp_p
         sender = Transport()
         sender.removed = False
         sender.queued = case == "already-queued"
-        reads = []
 
         def transport(argv, sender=sender, case=case, **kwargs):
             if argv[1:3] == ["pr", "merge"]:
@@ -1364,22 +1362,16 @@ def test_enqueue_returns_without_global_cleanup_inventory(synthetic_opsec, tmp_p
                     sender.head = "b" * 40
             return result
 
-        def broken_cleanup(reads=reads, **kwargs):
-            reads.append(kwargs)
-            raise AssertionError("publisher invoked global cleanup inventory")
-
-        with monkeypatch.context() as patch:
-            patch.setattr(post_task_reap, "reap_enqueued_worktrees", broken_cleanup)
-            if case == "unknown":
-                with pytest.raises(subprocess.TimeoutExpired):
-                    pub.publish("pr-merge", repo="unit/public", number=42, match_head=HEAD,
-                                cwd=root, runner=transport)
-                assert len(sender.writes) == 1 and not reads
-                assert not (root / "batch_state/enqueue-cleanup").exists()
-                assert "enqueue-cleanup" not in capsys.readouterr().err
-                continue
-            result = pub.publish("pr-merge", repo="unit/public", number=42, match_head=HEAD,
-                                 cwd=root, runner=transport)
+        if case == "unknown":
+            with pytest.raises(subprocess.TimeoutExpired):
+                pub.publish("pr-merge", repo="unit/public", number=42, match_head=HEAD,
+                            cwd=root, runner=transport)
+            assert len(sender.writes) == 1
+            assert not (root / "batch_state/enqueue-cleanup").exists()
+            assert "enqueue-cleanup" not in capsys.readouterr().err
+            continue
+        result = pub.publish("pr-merge", repo="unit/public", number=42, match_head=HEAD,
+                             cwd=root, runner=transport)
         if case == "failed":
             assert result.returncode == 1
             assert (result.stdout, result.stderr) == ("raw refusal", "raw error")
@@ -1391,7 +1383,6 @@ def test_enqueue_returns_without_global_cleanup_inventory(synthetic_opsec, tmp_p
                 assert (result.stdout, result.stderr) == (b"", b"")
             else:
                 assert (result.stdout, result.stderr) == ("raw enqueue success", "raw transport note")
-        assert not reads
         assert not hasattr(result, "enqueue_cleanup")
         assert not (root / "batch_state/enqueue-cleanup").exists()
         assert "enqueue-cleanup" not in capsys.readouterr().err

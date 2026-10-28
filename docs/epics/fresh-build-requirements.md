@@ -186,10 +186,11 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
   no advisory share, overview exemplars only, zero new core words, English practical recap
   with no Ukrainian production requirement. Normal zero-core lessons select the first band.
   Module position never selects orientation. #10108 owns the arc declaration/generation.
-  Fresh A1 payloads carry no dialogue/example/vocabulary minimums and no replacement quota;
+  Fresh lesson payloads at every level carry no dialogue/example/vocabulary minimums or replacement quota;
   the uncalibrated marker remains. Legacy structural overrides are unchanged.
   A2 remains 75–100% bridge, 85–100% ramp/first 20, 90–100% through 50, 95–100% thereafter;
-  B1+ remains full immersion. A2+ module-to-lesson minimums are residual #10132.
+  B1+ remains full immersion. #10132 removes module targets from A2+ lesson payloads;
+  any lesson-minimum calibration remains separately owned by curriculum-upgrade and requires scoped approval.
   Accepted legacy `a1-v1` audit range drift and top-band reachability at the plan milestone
   belong to the curriculum-upgrade driver; no second policy is introduced. No automated
   a1-v1 audit consumer was found in workflows. #10110 owns learner pilot proof/calibration.

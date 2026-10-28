@@ -273,6 +273,31 @@ def prior_worktree(sandbox, name="prior-round", start="origin/main"):
     return tree
 
 
+def linked_entry(sandbox, tree, *command):
+    return subprocess.run([sys.executable, *command], cwd=tree, env=sandbox.env, text=True,
+                          capture_output=True, timeout=30)
+
+
+@pytest.mark.parametrize("entry", [("scripts/dispatch.py",), ("-m", "scripts.dispatcher.cli")])
+def test_linked_worktree_entry_runs_the_primary_checkout_dispatcher(sandbox, entry):
+    """Defect: a worktree on an older branch supervised its tasks with its own stale dispatcher (FR-43)."""
+    tree = prior_worktree(sandbox, "older-branch")
+    primary_entry = sandbox.repo.resolve() / "scripts/dispatch.py"
+    primary_entry.write_text("import json, os, sys\nprint(json.dumps([sys.argv, os.getcwd()]))\n")
+    result = linked_entry(sandbox, tree, *entry, "list", "--status", "running")
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == [[str(primary_entry), "list", "--status", "running"], str(tree.resolve())]
+
+
+@pytest.mark.parametrize("metadata", [b"gitdir: /nonexistent/metadata\n", b"gitdir: \xff\n", b"gitdir: /a\0b\n"])
+def test_linked_worktree_entry_refuses_an_unresolvable_primary(sandbox, metadata):
+    tree = prior_worktree(sandbox, "detached-metadata")
+    (tree / ".git").write_bytes(metadata)
+    result = linked_entry(sandbox, tree, "scripts/dispatch.py", "list")
+    assert result.returncode == 2
+    assert "cannot resolve the primary checkout of linked worktree" in result.stderr
+
+
 def local_branches(repo):
     return run_git(repo, "for-each-ref", "--format=%(refname:short)", "refs/heads").split()
 
@@ -612,6 +637,23 @@ def test_nonzero_error_empty_and_signal_cannot_report_done(sandbox, model, state
     record = sandbox.settle(sandbox.dispatch(model), expected=1)
     assert record["status"] == state
     assert record["returncode"] == code
+
+
+def test_provider_capacity_ends_rate_limited_and_keeps_the_dirty_worktree(sandbox):
+    """Defect (FR-39): a provider out of capacity is a retryable condition, not a failed task."""
+    record = sandbox.settle(sandbox.dispatch("capacity"), expected=1)
+    assert (record["status"], record["returncode"]) == ("rate_limited", 1)
+    record = sandbox.settle(sandbox.dispatch("capacity-dirty", "--mode", "workspace-write"), expected=1)
+    assert record["status"] == "rate_limited"
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert (Path(record["worktree_path"]) / "delivered.txt").exists()
+
+
+def test_provider_capacity_is_rate_limited_when_an_output_schema_is_bound(sandbox):
+    schema = sandbox.repo / "schema.json"
+    schema.write_text('{"type":"object","required":["verdict"]}')
+    record = sandbox.settle(sandbox.dispatch("capacity", "--output-schema", str(schema)), expected=1)
+    assert (record["status"], record["returncode"]) == ("rate_limited", 1)
 
 
 def test_provider_final_file_and_exact_stdin_bytes(sandbox):
@@ -2834,7 +2876,7 @@ def _full_disk(monkeypatch, *readings):
     """Ported from tests/test_delegate_admission.py::_full_disk."""
     from scripts.orchestration import dispatch_admission
 
-    seen = {"readings": list(readings), "reaper": [], "alerts": []}
+    seen = {"readings": list(readings), "alerts": []}
 
     def probe():
         values = seen["readings"]
@@ -2842,12 +2884,7 @@ def _full_disk(monkeypatch, *readings):
         used_bytes = int(400 * 1024**3 * used / 100)
         return dispatch_admission.DiskProbe(used_bytes=used_bytes, free_bytes=400 * 1024**3 - used_bytes)
 
-    def reaper(repo_root, _timeout_s=None):
-        seen["reaper"].append(repo_root)
-        return dispatch_admission.ReaperOutcome(ran=True, detail="reaper removed 0 worktree(s)")
-
     monkeypatch.setattr(dispatch_admission, "probe_disk", probe)
-    monkeypatch.setattr(dispatch_admission, "run_disk_reaper", reaper)
     monkeypatch.setattr(dispatch_admission, "post_disk_alert", lambda body, _key: seen["alerts"].append(body))
     return seen
 
@@ -3095,7 +3132,6 @@ def test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate(admission_d
     disk = _full_disk(monkeypatch, 90.0)
     assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
     # Disk admission measures, alerts and refuses; only each task's creator removes its worktree.
-    assert disk["reaper"] == []
     assert disk["alerts"]
     assert "--force-admission cannot override a full disk" in capsys.readouterr().err
     assert not admission_dispatch.spawned
@@ -3109,7 +3145,6 @@ def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(admission_di
     disk = _full_disk(monkeypatch, 60.0, 90.0)
     monkeypatch.setattr(git, "create_worktree", lambda *_a, **_k: pytest.fail("must not create a worktree"))
     assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
-    assert disk["reaper"] == []
     err = capsys.readouterr().err
     assert "disk 90.0% used" in err and "--force-admission cannot override a full disk" in err
     assert not admission_dispatch.spawned

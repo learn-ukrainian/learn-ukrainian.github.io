@@ -12,9 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.fleet import post_task_reap
 from scripts.orchestration import dispatch_settle as ds
-from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import stale_task_records as stale
 from scripts.orchestration import worktree_claims as wc
 from scripts.orchestration.task_family import git_safety
@@ -112,14 +110,10 @@ def test_missing_tree_caller_matrix(interrupted_checkout, monkeypatch, writer, c
     "caller",
     [
         "claim_scan",
-        "husk_sweep",
         "archive",
         "dead_worker_healer",
         "push_settle",
         "guarded_remove",
-        "post_task_reap",
-        "scheduled_reaper",
-        "success_reaper",
         "task_family_cleanup",
         "stale_settle",
     ],
@@ -160,17 +154,6 @@ def test_interrupted_caller_preserves_bytes_on_repeated_call(interrupted_checkou
         if caller == "claim_scan":
             refusal = wc.active_worktree_claim_refusal(tree, tasks_dir=tasks, repo_root=repo)
             assert (refusal is not None) == (status == "needs_finalize" or case == "unknown")
-        elif caller == "husk_sweep":
-            assert (
-                rw._reap_dispatch_husks(
-                    repo,
-                    registered={tree},
-                    apply=True,
-                    live_cwds=set(),
-                    targets={tree},
-                )
-                == []
-            )
         elif caller == "archive":
             report = stale.archive_terminal(tasks, min_age_days=0, apply=True)
             assert not report["records"]
@@ -188,40 +171,12 @@ def test_interrupted_caller_preserves_bytes_on_repeated_call(interrupted_checkou
                 task_record=hint,
             )
             assert row.action in {"removed", "skipped"}, row
-        elif caller == "post_task_reap":
-            report = post_task_reap.post_task_reap(
-                "interrupted",
-                tasks_dir=tasks,
-                repo_root=repo,
-                apply=True,
-                include_acp_runtime=False,
-            )
-            assert report["main_worktree"]["action"] in {"retained", "skipped"}, report
-            assert report["main_worktree"]["reason"]
-        elif caller == "scheduled_reaper":
-            rows = rw.reap_worktrees(
-                repo_root=repo,
-                target_paths=[tree],
-                apply=True,
-                include_terminal_dispatches=True,
-                live_cwds=set(),
-            )
-            row = next(row for row in rows if row.path == str(tree))
-            assert row.action == "skipped" and row.reason and row.owner, row
         elif caller == "task_family_cleanup":
             if not tree.exists() or state["status"] in {"needs_finalize", "unknown"} or state["keep_worktree"]:
                 with pytest.raises(git_safety.GitSafetyError):
                     git_safety.remove_unclaimed_worktree(repo, tree)
             else:
                 git_safety.remove_unclaimed_worktree(repo, tree)
-        elif caller == "success_reaper":
-            row = rw.reap_success_worktree(
-                repo_root=repo,
-                worktree_path=tree,
-                reason="settled dispatch qualification",
-                apply=True,
-            )
-            assert row.action == "skipped" and row.reason and row.owner, row
         elif caller == "stale_settle":
             report = stale.settle_stale(tasks, min_age_days=0, apply=True, repo_checkouts={}, pager=lambda *_a: [])
             assert all(row["action"] == "report" for row in report["records"]), report

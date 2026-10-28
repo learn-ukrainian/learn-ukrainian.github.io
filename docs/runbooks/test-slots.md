@@ -110,7 +110,7 @@ a turn token) runs as before and is never refused.
 
 Other commands a test starts without the governor are not counted on their own. They run inside their
 governed run's slots and end with it in the normal case. If their governed run is killed first, they can
-outlive it until they end or `post_task_reap` stops the task's leftover processes.
+outlive it until they end.
 
 ## Settings
 

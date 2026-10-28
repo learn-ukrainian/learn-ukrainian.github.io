@@ -50,6 +50,8 @@ try:
         check_unique_answer_evidence,
         identity_blank_case,
         index_from_generator_candidates,
+        match_cases,
+        verified_surface_matches,
     )
     from scripts.audit.practice_linguistic import plain as linguistic_plain
     from scripts.lexicon.curated_membership import (
@@ -1949,12 +1951,130 @@ def _make_no_pair_options(
     return options
 
 
+# Ruling D (#8724, advisor Astra 2026-09-28): a case-labelled card whose case
+# comes from a reviewed source becomes form practice.  Same-case decoys of
+# other lemmas are a second fitting answer («Я бачу офіціантку»), so every
+# distractor is a form whose VESUM analyses carry exactly one case that the
+# slot cannot take.  The sourced case then selects one option, which
+# check_unique_answer_evidence verifies; a card without such forms keeps the
+# same-case builder and stays withheld.
+CROSS_CASE_DISTRACTOR_CASES = {
+    # A bare object slot also takes the genitive (negation, partitive) and,
+    # with some verbs, a dative or instrumental argument.
+    "accusative": frozenset({"nominative", "locative"}),
+    # After в/у/на the slot also takes the accusative (direction) and, after
+    # у, the genitive.
+    "locative": frozenset({"nominative", "dative", "instrumental"}),
+}
+
+
+def _cross_case_forms(
+    lexeme: dict[str, Any],
+    allowed_cases: frozenset[str],
+    verifier: VesumVerifier,
+) -> list[tuple[str, str, str]]:
+    """Return ``(form, case, number)`` paradigm forms with one VESUM case, all in ``allowed_cases``."""
+    forms: list[tuple[str, str, str]] = []
+    seen: set[str] = set()
+    for case_name in CASE_LABELS_UA:
+        for number in NUMBER_KEYS:
+            form = _case_form(lexeme.get("paradigm", {}), case_name, number)
+            if not form or _plain(form) in seen:
+                continue
+            cases: set[str] = set()
+            for match in verified_surface_matches(form, verifier):
+                cases |= match_cases(match)
+            if len(cases) == 1 and cases <= allowed_cases:
+                seen.add(_plain(form))
+                forms.append((form, next(iter(cases)), number))
+    return forms
+
+
+def _make_cross_case_options(
+    cloze: dict[str, Any],
+    answer: dict[str, Any],
+    lexemes: list[dict[str, Any]],
+    rng: random.Random,
+    verifier: VesumVerifier,
+) -> list[dict[str, str]]:
+    """Two-pair option set (answer + its lemma, decoy + decoy) with no distractor in the blank case."""
+    allowed = CROSS_CASE_DISTRACTOR_CASES[cloze["blankCase"]]
+    answer_plain = _plain(cloze["form"])
+    own_forms = [form for form in _cross_case_forms(answer, allowed, verifier) if _plain(form[0]) != answer_plain]
+    if not own_forms:
+        return []
+    # Prefer the answer's number so the contrast is the case ending alone.
+    same_number = [form for form in own_forms if form[2] == cloze["number"]]
+    own_form, own_case, _number = rng.choice(same_number or own_forms)
+    decoys = _eligible_decoys(answer, lexemes, "nominative", "singular")
+    rng.shuffle(decoys)
+    for decoy_lexeme, _decoy_nominative in decoys:
+        decoy_forms = _cross_case_forms(decoy_lexeme, allowed, verifier)
+        for first_index, first in enumerate(decoy_forms):
+            for second in decoy_forms[first_index + 1 :]:
+                labels = [cloze["form"], own_form, first[0], second[0]]
+                cases = {own_case, first[1], second[1]}
+                # validate_option_set needs one oblique distractor and a bounded length spread.
+                if cases <= {"nominative"} or max(map(len, labels)) - min(map(len, labels)) > 12:
+                    continue
+                options = [
+                    _option(
+                        cloze["clozeId"],
+                        "answer",
+                        cloze["form"],
+                        answer["lemmaId"],
+                        "answer",
+                        cloze["blankCase"],
+                        answer.get("pos"),
+                    ),
+                    _option(
+                        cloze["clozeId"],
+                        "lemma",
+                        own_form,
+                        answer["lemmaId"],
+                        "same-root-lemma" if own_case == "nominative" else "decoy-oblique",
+                        own_case,
+                        answer.get("pos"),
+                    ),
+                    *(
+                        _option(
+                            cloze["clozeId"],
+                            f"decoy-{index}",
+                            form,
+                            decoy_lexeme["lemmaId"],
+                            "decoy-lemma" if case_name == "nominative" else "decoy-oblique",
+                            case_name,
+                            decoy_lexeme.get("pos"),
+                        )
+                        for index, (form, case_name, _number) in enumerate((first, second), start=1)
+                    ),
+                ]
+                rng.shuffle(options)
+                return options
+    return []
+
+
 def _make_options(
     cloze: dict[str, Any],
     answer: dict[str, Any],
     lexemes: list[dict[str, Any]],
     rng: random.Random,
+    verifier: VesumVerifier | None = None,
 ) -> list[dict[str, str]]:
+    provenance = cloze.get("provenance")
+    if (
+        verifier is not None
+        and cloze.get("blankCase") in CROSS_CASE_DISTRACTOR_CASES
+        and isinstance(provenance, dict)
+        and provenance.get("status") != "sentence_inventory"
+    ):
+        # Only reviewed-source case rules are source-supported constraints
+        # (ruling D); inventory cases are inferred and stay with the old builder.
+        options = _make_cross_case_options(cloze, answer, lexemes, rng, verifier)
+        for option in options:
+            option["strategy"] = "cross-case"
+        if options:
+            return options
     # A nominative-identification cloze has the lemma itself as its answer.
     # A two-pair set would therefore repeat that label as the same-root lemma
     # distractor.  Use four distinct roots instead of constructing an invalid
@@ -6539,7 +6659,7 @@ def build_practice_shards(
             lemma_levels=cloze_lemma_levels,
         )
         for item in items:
-            item["options"] = _make_options(item, lexeme, all_lexemes, rng)
+            item["options"] = _make_options(item, lexeme, all_lexemes, rng, verifier)
             option_errors = validate_option_set(item)
             if option_errors:
                 continue

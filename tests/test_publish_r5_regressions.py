@@ -23,14 +23,13 @@ def catalog(monkeypatch):
 
 
 # The actual REST/search argv families from every refused caller in the review,
-# plus the fresh inventory. GET fields in reap_worktrees are now query parameters.
+# plus the fresh inventory. GET fields in worktree_git are now query parameters.
 READ_CALLERS = [
     ("scripts/dispatch.py", ["api", "repos/unit/public/issues/1"]),
     ("scripts/build/cf_preflight.py", ["api", "repos/{owner}/{repo}/issues/1/comments", "--paginate"]),
     ("scripts/build/cf_preflight.py", ["api", "repos/unit/public/pulls/1/reviews", "--paginate"]),
-    ("scripts/orchestration/reap_worktrees.py", ["api", "repos/unit/public/pulls?head=unit%3Abranch&state=all&per_page=100", "-X", "GET", "--paginate", "--slurp"]),
-    ("scripts/orchestration/reap_worktrees.py", ["api", "-X", "GET", "repos/unit/public/pulls/1"]),
-    ("scripts/orchestration/reap_worktrees.py", ["search", "prs", "a" * 40, "--json", "number,state"]),
+    ("scripts/orchestration/worktree_git.py", ["api", "repos/unit/public/pulls?head=unit%3Abranch&state=all&per_page=100", "-X", "GET", "--paginate", "--slurp"]),
+    ("scripts/orchestration/worktree_git.py", ["api", "-X", "GET", "repos/unit/public/pulls/1"]),
     ("scripts/orchestration/merge_closeout.py", ["api", "-X", "GET", "repos/unit/public/pulls/1"]),
     ("scripts/gh_merge_queue_status.py", ["api", "repos/unit/public/actions/runs?event=merge_group&per_page=100"]),
     ("scripts/github_rest_cache.py", ["api", "--method", "GET", "-i", "https://api.github.com/repos/unit/public/pulls/1", "-H", 'If-None-Match: "fixture"']),

@@ -2,8 +2,12 @@
 
 import json
 
+from scripts.agent_runtime.adapters.codex_events import classify_provider_message
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+
+# Failure codes (agent_runtime) for a provider that cannot take the run now: usage limits and no capacity.
+_OUT_OF_CAPACITY = frozenset({"rate_limited", "provider_overloaded"})
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
@@ -26,7 +30,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     usage, error, completed = None, None, False
-    terminal_seen = False
+    terminal_seen, capacity, stream_clean = False, None, True
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
@@ -34,12 +38,15 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             event = json.loads(line)
         except ValueError:
             error = error or "codex: invalid JSON stream"
+            stream_clean = False
             continue
         if not isinstance(event, dict):
             error = error or "codex: invalid event"
+            stream_clean = False
             continue
         if terminal_seen:
             error = error or "codex: event after terminal outcome"
+            stream_clean = False
             continue
         kind = event.get("type", "")
         if kind == "turn.completed":
@@ -51,6 +58,11 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         elif kind == "turn.failed":
             terminal_seen = True
             error = error or "codex: terminal error"
+            # Only the terminal event's own message classifies the run, never agent text or notices.
+            failure = event.get("error")
+            message = failure.get("message") if isinstance(failure, dict) else None
+            if isinstance(message, str) and classify_provider_message(message) in _OUT_OF_CAPACITY:
+                capacity = message
         elif isinstance(kind, str) and kind.startswith("turn.") and kind != "turn.started":
             terminal_seen = True
             error = error or "codex: unknown terminal outcome"
@@ -61,6 +73,8 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             if isinstance(tokens, dict):
                 usage = tokens
     text = final_text if isinstance(final_text, str) and final_text.strip() else None
+    if capacity is not None and stream_clean:
+        return ParsedResult(text, usage, f"codex: {capacity}", rate_limited=True)
     if returncode:
         error = f"codex: exited with status {returncode}"
     return ParsedResult(

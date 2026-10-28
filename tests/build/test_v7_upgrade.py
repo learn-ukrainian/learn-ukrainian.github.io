@@ -218,7 +218,7 @@ def test_upgrade_cli_real_subprocess(tmp_path):
 
     root = Path(__file__).resolve().parents[2]
     # Exercise the real CLI guard in an isolated primary checkout, including on CI.
-    env = v7_build.reap_worktrees.sanitized_git_env()
+    env = v7_build.worktree_git.sanitized_git_env()
     env.pop(v7_build.run_archive.ENV_KEY, None)
     subprocess.run(
         ["git", "init", str(tmp_path)],

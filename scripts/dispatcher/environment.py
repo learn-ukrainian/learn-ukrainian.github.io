@@ -71,4 +71,7 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         LEARN_UKRAINIAN_DISPATCH_TASK_ID=spec.task_id,
         LEARN_UKRAINIAN_DISPATCH_AGENT=spec.agent,
     )
+    if spec.mode == "read-only":
+        # Restrict explicit URLs too; a worktree or ref snapshot cannot observe an arbitrary remote push.
+        env["GIT_ALLOW_PROTOCOL"] = "file"
     return env

@@ -2,10 +2,9 @@
 
 No live `gh` or network calls: the gh subprocess boundary is always faked, and
 git runs only against throwaway repos under tmp_path.  Includes the #7127
-identity-agreement contract: for the SAME gh answer, the reaper
-(``post_task_reap._no_open_pr_for_branch``) and the gate
-(``hramatka_hygiene_check._branch_has_open_pr``) must derive from one binding
-and differ only in their fail-closed direction.
+identity-agreement contract for the gate
+(``hramatka_hygiene_check._branch_has_open_pr``): it derives from the one
+binding and fails closed on every answer that is not a proven open PR.
 """
 
 from __future__ import annotations
@@ -21,7 +20,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.fleet import hramatka_hygiene_check as hygiene
-from scripts.fleet import post_task_reap, pr_identity
+from scripts.fleet import pr_identity
 
 BRANCH = "kimi/some-task"
 REPO = "octo/fleet"
@@ -218,61 +217,19 @@ def test_resolve_repo_slug_fails_closed_without_a_checkout(tmp_path) -> None:
 
 
 @pytest.mark.parametrize(
-    ("probe_answer", "gate_expected", "reaper_no_open_expected", "reaper_error_expected"),
+    ("probe_answer", "gate_expected"),
     [
-        ((True, None), True, False, None),
-        ((False, None), False, True, None),
-        ((None, "gh pr list failed (exit 1)"), False, False, "PR guard unavailable"),
+        ((True, None), True),
+        ((False, None), False),
+        ((None, "gh pr list failed (exit 1)"), False),
     ],
 )
-def test_directions_fail_closed_per_caller(
-    monkeypatch, probe_answer, gate_expected: bool, reaper_no_open_expected: bool, reaper_error_expected
-) -> None:
-    """The probe's answer maps onto each caller's own fail-closed direction:
-    only a PROVEN absence permits the reaper to proceed; the gate exempts a
-    worktree only on a PROVEN open PR."""
+def test_gate_fails_closed_on_every_answer_but_a_proven_open_pr(monkeypatch, probe_answer, gate_expected: bool) -> None:
+    """The gate exempts a worktree only on a PROVEN open PR."""
     monkeypatch.setattr(pr_identity, "resolve_repo_slug", lambda _root: REPO)
     monkeypatch.setattr(pr_identity, "probe_open_pr_for_branch", lambda **_kwargs: probe_answer)
 
     assert hygiene._branch_has_open_pr(Path("/nonexistent"), BRANCH) is gate_expected
-
-    no_open, error = post_task_reap._no_open_pr_for_branch(
-        repo_root=Path("/nonexistent"), branch=BRANCH
-    )
-    assert no_open is reaper_no_open_expected
-    if reaper_error_expected is None:
-        assert error is None
-    else:
-        assert reaper_error_expected in error
-
-
-def test_reaper_treats_unresolvable_repository_identity_as_unknown(monkeypatch) -> None:
-    monkeypatch.setattr(pr_identity, "resolve_repo_slug", lambda _root: None)
-
-    no_open, error = post_task_reap._no_open_pr_for_branch(
-        repo_root=Path("/nonexistent"), branch=BRANCH
-    )
-
-    assert no_open is False
-    assert "PR guard unavailable" in error
-    assert "no explicit repository" in error
-
-
-def _drive_both_over_one_gh_answer(monkeypatch, result: Any):
-    """Run the REAL reaper and gate predicates over ONE shared gh answer."""
-    def _fake_run(*_args: Any, **_kwargs: Any):
-        if isinstance(result, BaseException):
-            raise result
-        return result
-
-    monkeypatch.setattr(pr_identity, "_run_gh", _fake_run)
-    monkeypatch.setattr(pr_identity, "resolve_repo_slug", lambda _root: REPO)
-
-    gate_has_open = hygiene._branch_has_open_pr(Path("/nonexistent"), BRANCH)
-    reaper_no_open, reaper_error = post_task_reap._no_open_pr_for_branch(
-        repo_root=Path("/nonexistent"), branch=BRANCH
-    )
-    return gate_has_open, reaper_no_open, reaper_error
 
 
 @pytest.mark.parametrize(
@@ -287,31 +244,16 @@ def _drive_both_over_one_gh_answer(monkeypatch, result: Any):
     ],
 )
 def test_identity_agreement_on_one_gh_answer(monkeypatch, label: str, payload: str, outcome: str) -> None:
-    """The #7127 contract: both predicates derive from one binding.  A proven
-    open PR exempts (gate) and retains (reaper); a proven absence is the ONLY
-    answer under which the reaper may proceed; everything else — including
-    malformed `{}` rows — fails closed in BOTH directions at once."""
-    gate_has_open, reaper_no_open, reaper_error = _drive_both_over_one_gh_answer(
-        monkeypatch, _gh_result(payload)
-    )
+    """The #7127 contract over one real gh answer: only a proven open PR
+    exempts; everything else — including malformed `{}` rows — fails closed."""
+    monkeypatch.setattr(pr_identity, "_run_gh", lambda *_args, **_kwargs: _gh_result(payload))
+    monkeypatch.setattr(pr_identity, "resolve_repo_slug", lambda _root: REPO)
 
-    if outcome == "proven_open":
-        assert gate_has_open is True, label
-        assert reaper_no_open is False, label
-        assert reaper_error is None, label
-    elif outcome == "proven_absent":
-        assert gate_has_open is False, label
-        assert reaper_no_open is True, label
-        assert reaper_error is None, label
-    else:
-        assert gate_has_open is False, label
-        assert reaper_no_open is False, label
-        assert "PR guard unavailable" in (reaper_error or ""), label
+    assert hygiene._branch_has_open_pr(Path("/nonexistent"), BRANCH) is (outcome == "proven_open"), label
 
 
-def test_each_caller_binds_its_own_explicit_repository(monkeypatch) -> None:
-    """The gate pins the public repo; the reaper binds the checkout's own
-    origin.  Both flow into the probe's --repo scope, never gh's cwd guess."""
+def test_gate_binds_the_public_repository(monkeypatch) -> None:
+    """The gate pins the public repo in the probe's --repo scope, never gh's cwd guess."""
     seen: list[dict[str, Any]] = []
 
     def _fake_probe(**kwargs: Any):
@@ -322,7 +264,6 @@ def test_each_caller_binds_its_own_explicit_repository(monkeypatch) -> None:
     monkeypatch.setattr(pr_identity, "resolve_repo_slug", lambda _root: REPO)
 
     hygiene._branch_has_open_pr(Path("/nonexistent"), BRANCH)
-    post_task_reap._no_open_pr_for_branch(repo_root=Path("/nonexistent"), branch=BRANCH)
 
-    assert [call["repo"] for call in seen] == [hygiene.PUBLIC_REPOSITORY, REPO]
+    assert [call["repo"] for call in seen] == [hygiene.PUBLIC_REPOSITORY]
     assert all(call["branch"] == BRANCH for call in seen)

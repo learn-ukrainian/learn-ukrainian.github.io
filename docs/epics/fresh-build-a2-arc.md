@@ -288,9 +288,11 @@ Positions are unchanged, so each position keeps the band of the same module numb
 | 21–50 | `a2-m21-50` | 90–100 % |
 | 51–69 | `a2-m51-70` | 95–100 % |
 
-A module split or merged later inherits the band of the position range it replaces. Lesson-level
-structural minimums wait for `compute_lesson_immersion_band` (#8414); until then the module-level
-minimums are checked on the module as a whole.
+A module split or merged later inherits the band of the position range it replaces.
+Fresh lesson writer and review payloads omit module structural minimums (#10132).
+Fresh builds do not check numeric structural minimums at either lesson or module grain;
+legacy module workflows retain their minimums. Lesson-level equivalents remain a separate
+calibration task owned by curriculum-upgrade, requiring scoped approval and built-module evidence.
 
 **A measured fact for whoever next revises the ULP pattern document, not a re-tune:** the step
 change in the Ukrainian share of ULP's lesson notes is between Season 3 and Season 4 (51.0 % →

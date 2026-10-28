@@ -143,7 +143,6 @@ def test_task_store_consumers_use_call_time_resolver() -> None:
 
     consumers = (
         ("scripts/dispatcher/store.py", "tasks_dir"),
-        ("scripts/fleet/post_task_reap.py", "default_tasks_dir"),
         ("scripts/fleet/hramatka_hygiene_check.py", "default_tasks_dir"),
         ("scripts/fleet/capacity_pick.py", "default_tasks_dir"),
         ("scripts/guardrails/delegate_ownership.py", "tasks_dir"),

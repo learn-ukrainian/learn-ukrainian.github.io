@@ -556,13 +556,12 @@ form for that word; a writer held to listed forms cannot write natural Ukrainian
 - A2 keeps its module-indexed ramp (`compute_immersion_band` returns the module band for A2 today);
   the arc maps each new module to the band of the old module range it replaces, so a split module
   inherits, not shifts, its band. That mapping table is part of the arc deliverable.
-- A2+ structural minimums (`min_uk_dialogue_lines`, `min_uk_example_sentences`, `min_vocab_entries`,
-  …) are **module-level today**. They need lesson-level equivalents, defined by dividing through a
-  calibrated built module rather than by guess, in a new
-  `compute_lesson_immersion_band(track, arc_position, lesson_n, cumulative_vocab)`. Until that is
-  calibrated, the module-level minimums are checked on the module as a whole. A1 fresh
-  payloads remove these fields without a replacement quota (#10105); their uncalibrated
-  marker remains. The A2+ module-to-lesson residual belongs to #10132.
+- Structural minimums (`min_uk_dialogue_lines`, `min_uk_example_sentences`, `min_vocab_entries`)
+  belong to legacy module workflows. Fresh lesson writer and review payloads omit these
+  minima at every level (#10105, #10132), retaining `lesson_structural_minimums_not_calibrated`.
+  Fresh builds do not check numeric structural minimums at either lesson or module grain.
+  Lesson-level equivalents remain a separate calibration task owned by curriculum-upgrade,
+  requiring scoped approval and evidence from a built module before introducing any minima.
 
 ## 5. What the lesson writer receives (R-26)
 

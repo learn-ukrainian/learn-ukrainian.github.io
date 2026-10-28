@@ -672,6 +672,34 @@ def test_publish_refuses_missing_vesum_before_gzip(tmp_path: Path, monkeypatch: 
     assert not gzip_path.exists()
 
 
+@pytest.mark.parametrize(
+    ("mode", "id_field", "field", "text"),
+    [("classify", "classifyId", "lemma", "писати"),
+     ("imperative", "id", "cueSentence", "Пиши тут.")],
+)
+def test_publish_linguistic_gate_rejects_classify_and_imperative_quiz_markers(
+    tmp_path: Path, mode: str, id_field: str, field: str, text: str,
+) -> None:
+    # Sources MCP / VESUM verified писати, пиши and тут. This rule needs no DB lookup.
+    vesum = tmp_path / "vesum.db"
+    vesum.touch()
+    practice = tmp_path / "lexicon"
+    shard = practice / f"practice-{mode}.A1.json"
+    good = {id_field: f"good:{mode}", field: text}
+    bad = {id_field: f"bad:{mode}", field: f"Д {text}"}
+    _write_json(shard, {mode: [good, bad]})
+    with pytest.raises(PracticeDeckPublishError) as exc:
+        run_linguistic_gate(practice, vesum_db_path=vesum,
+                            cloze_sources_path=None, sentence_inventory_path=None)
+    assert str(exc.value) == (
+        f"Practice linguistic gate v1 failed (1): leading_quiz_marker [bad:{mode}]: "
+        f"learner-facing text starts with a quiz letter marker: {bad[field]!r}"
+    )
+    _write_json(shard, {mode: [good]})
+    run_linguistic_gate(practice, vesum_db_path=vesum,
+                        cloze_sources_path=None, sentence_inventory_path=None)
+
+
 @pytest.fixture(autouse=True)
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""

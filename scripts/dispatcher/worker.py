@@ -277,7 +277,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     })
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     slots = None
-    resolved_model = None
+    resolved_model = sources_calls = None
     started = time.monotonic()
 
     def cancelled(_signum, _frame):
@@ -357,7 +357,11 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         parsed = provider.parse(
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
-        text, usage = parsed.text, parsed.usage
+        text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
+        if parsed.rate_limited and returncode >= 0:
+            # Before the schema check, which would record the same terminal failure as invalid output.
+            status, error = "rate_limited", parsed.error
+            return
         if schema is not None:
             from scripts.agent_runtime.adapters._output_schema import json_value, structured_result
 
@@ -421,6 +425,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 duration_s=round(time.monotonic() - started, 3),
                 result_sha256=store.digest(spec.final_file.read_bytes()) if spec.final_file.exists() else None,
             )
+            if sources_calls is not None:
+                record["sources_mcp_call_count"] = sources_calls
             record.update(git.snapshot_delivery(spec, record))
             _enforce_delivery(record)
             if spec.agent == "cursor":

@@ -9,7 +9,9 @@ including named drivers discovered by non-executing `config --name-only`.
 
 Remote proofs, preservation and restore require explicit ``remote``, ``commit``
 and ``checkout`` profiles. Credentialed remote commands run in a private bare
-repository, then import objects over file transport without credentials. Anonymous
+repository, then import objects over file transport without credentials. An origin
+fetch borrows the primary's object store read-only and keeps its partial-clone
+filter, so only new objects transfer and every delta base is held locally. Anonymous
 remote commands run in the primary checkout, never the linked worker;
 SSH uses the system executable, helpers/askpass and arbitrary protocols are off.
 Preservation refuses attribute transformations before staging and disables
@@ -519,6 +521,13 @@ def _execution_keys(prefix, roots, env, timeout):
     return keys, None
 
 
+_HAVES = "refs/safe-git-haves/"
+
+
+class _ConfigUnreadable(Exception):
+    pass
+
+
 def _isolated_remote(args, *, executable, cwd, remote, destination, credentials, env, timeout, kwargs):
     """Transfer with runner-owned config, then import exact objects without credentials.
 
@@ -543,20 +552,63 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
         probe(["init", "--bare", "--template="])
         probe(["config", "remote.origin.url", destination])
         fetchspecs = []
+        partial_filter = None
+        seeded = False
         if remote == "origin" and args[0] == "fetch":
-            config = subprocess.run([*prefix, "config", "--get-all", "remote.origin.fetch"],
-                                    cwd=cwd, env=env, timeout=timeout,
-                                    capture_output=True, text=True, check=False)
-            if config.returncode not in (0, 1):
+            def primary_config(*key):
+                config = subprocess.run([*prefix, "config", *key], cwd=cwd, env=env, timeout=timeout,
+                                        capture_output=True, text=True, check=False)
+                if config.returncode not in (0, 1):
+                    raise _ConfigUnreadable
+                return config.stdout
+
+            try:
+                fetchspecs = primary_config("--get-all", "remote.origin.fetch").splitlines()
+                # Fetch exactly what a plain fetch of the primary's origin
+                # would: a partial clone keeps its filter, so every delta base
+                # the server may use is an object the primary already holds.
+                if (primary_config("--type=bool", "--get", "remote.origin.promisor").strip() == "true"
+                        or primary_config("--get", "extensions.partialClone").strip() == "origin"):
+                    partial_filter = primary_config("--get", "remote.origin.partialclonefilter").strip() or None
+            except _ConfigUnreadable:
                 return GitRefusal(args, "remote_fetch_config_unreadable", text=bool(kwargs.get("text")))
-            fetchspecs = config.stdout.splitlines()
             for spec in fetchspecs:
                 probe(["config", "--add", "remote.origin.fetch", spec])
+            if partial_filter:
+                probe(["config", "remote.origin.promisor", "true"])
+                probe(["config", "remote.origin.partialclonefilter", partial_filter])
+                probe(["config", "uploadpack.allowFilter", "true"])
+            # Borrow the primary's object store read-only instead of downloading
+            # its history again. Git writes new objects only to the private
+            # store; unpackLimit=1 below keeps every received object in a pack,
+            # so Git never refreshes the timestamps of borrowed files. The primary's tracking
+            # tips, seeded under a private namespace, are the haves the
+            # negotiation and the connectivity check stop at; they are never
+            # imported. Alternate refs stay off, so no Git runs in the primary.
+            (private / "objects" / "info" / "alternates").write_text(f"{Path(cwd) / '.git' / 'objects'}\n")
+            destinations = [spec.partition(":")[2] for spec in fetchspecs if ":" in spec and not spec.startswith("^")]
+            tips = probe(["for-each-ref", "--format=%(objectname) %(objecttype) %(refname)"], path=cwd)
+            haves = dict.fromkeys(sha for sha, kind, ref in (line.split(" ", 2) for line in tips.stdout.splitlines())
+                                  if kind == "commit" and any(fnmatchcase(ref, pattern) for pattern in destinations))
+            # A destination that could land in the seed namespace would be
+            # hidden from the import, so such a fetch negotiates without seeds.
+            # Every argument counts, including --refmap; a false match only
+            # costs the seeds.
+            targets = [spec.partition(":")[2] for spec in
+                       [*fetchspecs, *(arg.removeprefix("--refmap=") for arg in args[1:])]
+                       if ":" in spec and not spec.startswith(("-", "^"))]
+            seeded = bool(haves) and not any(
+                _HAVES.startswith(target.split("*")[0]) or target.startswith(_HAVES) for target in targets)
+            if seeded:
+                subprocess.run([*prefix, "update-ref", "--stdin"], cwd=private, env=env, timeout=timeout,
+                               input="".join(f"create {_HAVES}{index} {sha}\n" for index, sha in enumerate(haves)),
+                               capture_output=True, text=True, check=True)
         # Replace the operand, never resolve it again through primary config.
         transfer = list(args)
         operand = transfer.index(remote, 1)
         transfer[operand] = "origin"
-        credential_prefix = [*prefix, *(arg for setting in credentials for arg in ("-c", setting))]
+        credential_prefix = [*prefix, "-c", f"core.alternateRefsCommand={_FALSE}", "-c", "fetch.unpackLimit=1",
+                             *(arg for setting in credentials for arg in ("-c", setting))]
         result = subprocess.run([*credential_prefix, *transfer], cwd=private, env=env,
                                 timeout=timeout, check=False, **kwargs)
         if result.returncode or args[0] != "fetch":
@@ -564,7 +616,9 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
         # The private refs and FETCH_HEAD are snapshots of the authenticated
         # transfer. Import by full object ID, never by a worker-controlled ref.
         heads = [line.split("\t", 1)[0] for line in (private / "FETCH_HEAD").read_text().splitlines()]
-        refs = [line.split(" ", 1) for line in probe(["for-each-ref", "--format=%(objectname) %(refname)"]).stdout.splitlines()]
+        refs = [row for row in (line.split(" ", 1) for line in probe(
+            ["for-each-ref", "--format=%(objectname) %(refname)"]).stdout.splitlines())
+            if not (seeded and row[1].startswith(_HAVES))]
         if any(not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", sha) for sha in heads + [row[0] for row in refs]):
             return GitRefusal(args, "remote_object_id_invalid", text=bool(kwargs.get("text")))
         # Preserve forced updates and pruning for the existing origin refspecs.
@@ -616,6 +670,12 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
                         f"remote.{uri}.receivepack=git-receive-pack", f"remote.{uri}.proxy=",
                         f"remote.{uri}.url=", f"remote.{uri}.url={uri}"):
             local_prefix.extend(["-c", setting])
+        if partial_filter:
+            # Command-scope only: the import applies origin's filter and marks
+            # its pack as a promisor pack, as a plain origin fetch would. Lazy
+            # fetch stays off, so this URI never serves a missing object.
+            local_prefix.extend(["-c", f"remote.{uri}.promisor=true",
+                                 "-c", f"remote.{uri}.partialclonefilter={partial_filter}"])
         imported = subprocess.run(
             [*local_prefix, "fetch", "--no-tags", "--no-recurse-submodules", "--no-auto-maintenance",
              "--upload-pack=git-upload-pack", *(["--prune"] if prune else []), "--", uri, *refspecs],
@@ -850,7 +910,7 @@ def run_git(
         args == ["add", "-A"] or (len(args) == 4 and args[:3] == ["commit", "--no-verify", "-m"])
     ):
         # Interactive add and commit trailers reach more configured programs.
-        # This profile is solely the reaper's noninteractive preservation pair.
+        # This profile is solely the noninteractive preservation pair.
         raise ValueError("unsupported preservation operation")
     if profile == "commit" and args[0] == "add":
         failure = _preserve_attributes(prefix, cwd, safe_env, timeout)

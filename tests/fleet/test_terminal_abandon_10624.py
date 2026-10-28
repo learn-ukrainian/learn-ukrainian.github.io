@@ -8,7 +8,7 @@ import pytest
 
 from scripts.fleet import ignored_task_output as output
 from scripts.fleet import terminal_abandon
-from scripts.orchestration import reap_worktrees as rw
+from scripts.orchestration import worktree_git as rw
 from tests.fleet.test_terminal_abandon import _recorded, _refused_removal, invoke
 from tests.fleet.test_terminal_abandon import succession as succession
 from tests.fleet.test_terminal_abandon import writer_fixture as writer_fixture
@@ -21,17 +21,10 @@ from tests.test_reused_worktree_retention import save
 
 
 def _remove(fixture):
+    """Lose the tree outright, so only the preserved copies can restore it."""
     repo, tree, *_ = fixture
-    row = next(
-        r
-        for r in rw.reap_worktrees(
-            repo_root=repo, apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
-        )
-        if r.path == str(tree)
-    )
-    assert row.action in {"removed", "preserved_then_removed"}, row
+    _git(repo, "worktree", "remove", "--force", str(tree))
     assert not tree.exists()
-    return row
 
 
 def test_detached_head_bundle_restores_after_removal(succession, tmp_path, capsys):
@@ -97,7 +90,6 @@ def test_retained_merged_head_records_and_removes(succession, monkeypatch, capsy
     record, receipt, _ = _recorded(fixture)
     assert record["keep_worktree"] is True
     assert receipt["merged_pr"]["head_sha"] == head
-    _remove(fixture)
 
 
 @pytest.mark.parametrize("bad", ["unmerged_head", "open_pr", "live_pid", "unknown"])
@@ -162,7 +154,6 @@ def test_merged_containment_or_patch_equivalence_with_output(succession, monkeyp
     _, receipt, _ = _recorded(fixture)
     assert receipt["merged_pr"]["relation"] == relation
     assert (tree / "untracked.txt").exists()
-    _remove(fixture)
 
 
 def test_merged_proof_changes_before_publication_refuses(succession, monkeypatch, capsys):
@@ -316,7 +307,6 @@ def test_creator_recovery_uses_verified_archived_attempt(succession, capsys):
     assert _recover(fixture) == 0
     assert json.loads(capsys.readouterr().out)["outcome"] == "already_recorded"
     assert source.read_bytes() == before
-    _remove(fixture)
 
 
 @pytest.mark.parametrize("bad", ["nonce", "directory", "initiator", "missing", "missing_task"])

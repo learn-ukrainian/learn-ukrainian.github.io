@@ -200,7 +200,6 @@ Counting rules:
 | `scripts.orchestration.issue_stream_audit.read_cache` | setattr | 1 |
 | `scripts.orchestration.issue_stream_audit.read_refresh_state` | setattr | 1 |
 | `scripts.orchestration.issue_stream_audit.schedule_refresh` | setattr | 1 |
-| `scripts.orchestration.reap_worktrees._run` | setattr | 1 |
 | `scripts.telemetry.legacy_bridge._DB_PATH` | setattr | 1 |
 | `socket.create_connection` | setattr | 1 |
 | `sqlite3.connect` | setattr | 1 |
@@ -454,8 +453,9 @@ global. `LEVELS` is track-id config, not a filesystem root.
 `Depends(get_ctx)`. The 15 Path and router-local subprocess seams this row listed
 (`site_router` 4 Path globals + `_run` stub, `worktrees_router` 2 Path globals +
 `_run` stub, `telemetry_router` 3 Path globals, `wiki_router` 4 router-local Path
-globals) are deleted. `reap_worktrees._run`, `scripts.telemetry.legacy_bridge._DB_PATH`,
-and `wiki.{config,state}.WIKI_STATE_DIR` (2) remain for external store redirection.
+globals) are deleted. `scripts.telemetry.legacy_bridge._DB_PATH` and
+`wiki.{config,state}.WIKI_STATE_DIR` (2) remain for external store redirection
+(the worktree reaper's `_run` seam was deleted with it).
 The unused `wiki.sources_db.SOURCES_DB_PATH` and dense rerank defaults (4) are deleted.
 
 ### Step 12e — work / epics

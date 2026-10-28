@@ -32,8 +32,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.common import github_client
 from scripts.orchestration import lifecycle_observation
-from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import scheduled_worktree_cleanup as swc
+from scripts.orchestration import worktree_git as rw
 from scripts.orchestration.fleet_repos import canonical_repository, pull_request_repository
 from scripts.publish.github import Request, request_run
 

@@ -653,17 +653,15 @@ def git_worktree_remove(
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
-    Only :func:`remove_unclaimed_worktree` and the scheduled reaper's guarded
-    pipeline call this; ``tests/orchestration/test_worktree_removal_invariant.py``
-    fails on any other caller. Forced targets pass the delete-target guard;
-    the reaper explicitly guards non-force continuation-cohort targets.
+    Only :func:`remove_unclaimed_worktree` calls this;
+    ``tests/orchestration/test_worktree_removal_invariant.py`` fails on any
+    other caller. Forced targets pass the delete-target guard.
     ``force`` runs ``git worktree remove --force``, which a clean porcelain tree
     still needs when it holds ignored residue such as a worker ``.venv``.
     Without ``force`` git itself refuses a checkout with modified or untracked
     files, and a locked one. The removal is bounded by ``timeout`` when the
     caller passes one, otherwise by :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`.
-    The reaper does not pass a timeout: removal keeps that 120s bound and is
-    not clipped to the locked-region deadline. A timeout is an error, never a
+    A timeout is an error, never a
     removal, since the killed git may leave a half-deleted checkout behind.
     A caller may supply ``SafeGitRunner`` to pin an executable; mandatory
     execution controls cannot be replaced by a callback.
@@ -881,9 +879,11 @@ def owner_release_refusal(
     The owner's record must identify the requested task and run with a
     non-empty ``run_nonce``, be finished (its status is in
     :data:`RELEASED_TASK_STATUSES`), name ``worktree`` as its
-    ``worktree_path`` (or fallback ``cwd``), and record ``worktree_reused: false``, the proof that
-    its dispatch created the checkout. A reused checkout belongs to its
-    creator, which reaps it. Only a ``needs_finalize`` creator may use the
+    ``worktree_path`` (or fallback ``cwd``), and prove that its dispatch created the
+    checkout: ``worktree_reused: false`` or, for a dispatcher record (``schema_version`` 2, which
+    never writes that flag), a ``worktree_start_sha`` with no borrowed ``options.cwd`` and a provider
+    process tree the dispatcher's own check proves gone (live or unknown refuses). A reused
+    checkout belongs to its creator, which reaps it. Only a ``needs_finalize`` creator may use the
     caller's independently proven ``settled_claim``; other unfinished statuses
     remain refused.
     """
@@ -918,9 +918,32 @@ def owner_release_refusal(
         return f"owner task {owner_task_id} worktree_path unresolvable; refusing worktree removal"
     if claimed != target:
         return f"owner task {owner_task_id} records a different worktree_path; refusing worktree removal"
-    if record.get("worktree_reused") is not False:
+    if not _created_worktree(record):
         return f"owner task {owner_task_id} did not create this worktree; its creator reaps"
+    if record.get("worktree_reused") is None and _provider_alive(record) is not False:
+        return f"owner task {owner_task_id} provider processes are live or unknown; refusing worktree removal"
     return None
+
+
+def _provider_alive(record: Mapping[str, Any]) -> bool | None:
+    """The dispatcher's own proof that the provider's process tree ended; ``None`` when unknown."""
+    # Deferred: the dispatcher imports this module's neighbours, so import it only on this path.
+    from scripts.dispatcher.worker import _provider_alive as provider_alive
+
+    return provider_alive(dict(record))
+
+
+def _created_worktree(record: Mapping[str, Any]) -> bool:
+    """Whether the record's dispatch created its checkout rather than borrowing one."""
+    if record.get("worktree_reused") is not None:
+        return record["worktree_reused"] is False
+    options = record.get("options")
+    return (
+        record.get("schema_version") == 2
+        and isinstance(record.get("worktree_start_sha"), str)
+        and isinstance(options, Mapping)
+        and not options.get("cwd")
+    )
 
 
 EXIT_REMOVED = 0
@@ -956,7 +979,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  3  refused: a guard failed and nothing was removed\n"
             "\n"
             "Related: dispatch holds the same per-worktree lock,\n"
-            "  scripts/orchestration/reap_worktrees.py (scheduled reaper),\n"
+            "  scripts/dispatcher/git.py (settlement removal),\n"
             "  tests/orchestration/test_worktree_removal_invariant.py, issue #8610."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -980,7 +1003,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "Guards, all checked while holding <public git common dir>/lu-worktree-locks/<key>.lock:\n"
             "  1. PATH is a registered linked worktree of its repository, never the primary checkout.\n"
             "  2. With --owner-task-id: that task's record is finished, names PATH as its\n"
-            "     worktree_path, and records worktree_reused: false (its dispatch created PATH).\n"
+            "     worktree_path, and proves its dispatch created PATH (worktree_reused: false, or a dispatcher record).\n"
             "  3. No other unfinished task record in <public primary>/batch_state/tasks names PATH\n"
             "     (the public primary also holds the records and locks of --repo sibling worktrees, #8624).\n"
             "  4. Plain `git worktree remove`: git refuses modified, untracked, or locked checkouts.\n"

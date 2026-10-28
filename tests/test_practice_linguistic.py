@@ -20,6 +20,7 @@ from scripts.audit.practice_linguistic import (
     RULE_PROMPT_LEVEL,
     RULE_STRESS,
     RULE_UNIQUE_ANSWER,
+    audit_practice_payloads,
     check_cloze_blank_count,
     check_cloze_item,
     check_homograph_oblique,
@@ -230,6 +231,36 @@ def test_leading_quiz_marker_rejected() -> None:
     findings = check_leading_quiz("x", "Д Це речення.")
     assert any(f.rule_id == RULE_LEADING_QUIZ for f in findings)
     assert check_leading_quiz("x", "Це речення.") == []
+
+
+@pytest.mark.parametrize(
+    ("mode", "id_field", "field", "text"),
+    [
+        ("classify", "classifyId", "lemma", "писати"),
+        ("classify", "classifyId", "prompt", "Це речення."),
+        ("classify", "classifyId", "sentence", "Це речення."),
+        ("classify", "classifyId", "sentence_with_slot", "Це ___."),
+        ("imperative", "id", "cueSentence", "Пиши тут."),
+        ("imperative", "id", "prompt", "Пиши тут."),
+        ("imperative", "id", "sentence", "Пиши тут."),
+        ("imperative", "id", "sentence_with_slot", "___ тут."),
+    ],
+)
+def test_classify_and_imperative_quiz_markers(
+    mode: str, id_field: str, field: str, text: str,
+) -> None:
+    # Forms verified with Sources MCP / VESUM, including пиши = писати, impr:s:2.
+    good = {id_field: f"good:{mode}", field: text}
+    bad = {id_field: f"bad:{mode}", field: f"Д {text}"}
+    findings = audit_practice_payloads(
+        **{f"{mode}_items": [good, bad]}, verifier=_verifier(),
+    )
+    assert [(finding.rule_id, finding.item_id) for finding in findings] == [
+        (RULE_LEADING_QUIZ, f"bad:{mode}"),
+    ]
+    assert audit_practice_payloads(
+        **{f"{mode}_items": [good]}, verifier=_verifier(),
+    ) == []
 
 
 def test_stress_recompute_is_not_noop() -> None:

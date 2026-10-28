@@ -151,7 +151,8 @@ OPTIONS_MODES = ("antonym", "cloze", "heritage", "homonym", "imperative", "parad
 
 _BLANK_RE = re.compile(r"_{3,}")
 _INTENTIONAL_ERROR_PATTERNS = INTENTIONAL_ERROR_PATTERNS
-_CYRILLIC_WORD_RE = re.compile(r"^[а-яіїєґА-ЯІЇЄҐ'\-]+$")
+_CYRILLIC_WORD_RE = re.compile(r"[а-яіїєґА-ЯІЇЄҐ]+(?:['-][а-яіїєґА-ЯІЇЄҐ]+)*")
+_ROMAN_NUMERAL_RE = re.compile(r"(?=.)M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})")
 
 
 def _normalize_plain(text: str) -> str:
@@ -164,28 +165,37 @@ def _normalize_plain(text: str) -> str:
 
 
 def check_word_in_vesum(word: str, db_path: Path | str | None = None) -> bool:
-    """Check if word form exists in VESUM with normalization."""
-    clean = word.strip().strip(".,!?:;—…\"'«»`()[]")
-    clean = clean.replace("\u0301", "").replace("\u0300", "").replace("\u0341", "")
-    if not clean or not _CYRILLIC_WORD_RE.match(clean):
-        return True  # Skip Latin words, abbreviations, symbols
+    """Require lexical evidence; Roman numeral notation supplies no word attestation."""
+    if "/" in word:
+        alternatives = [check_word_in_vesum(part, db_path=db_path) for part in word.split("/")]
+        return all(alternatives)
 
-    clean = clean.replace("’", "'").replace("ʼ", "'").replace("`", "'")
-    # Exact check
-    if verify_word(clean, db_path=db_path) or verify_word(clean.lower(), db_path=db_path):
-        return True
+    def attested(form: str) -> bool:
+        return bool(verify_word(form, db_path=db_path)) or (
+            form.lower() != form and bool(verify_word(form.lower(), db_path=db_path))
+        )
 
-    # Check hyphenated syllable breakdown: ро-бот -> робот
-    if "-" in clean:
-        dehyphen = clean.replace("-", "")
-        if verify_word(dehyphen, db_path=db_path) or verify_word(dehyphen.lower(), db_path=db_path):
-            return True
-        # Compound words (e.g. бізнес-леді, слово-асоціація): check individual parts
-        parts = clean.split("-")
-        if all(verify_word(p, db_path=db_path) or verify_word(p.lower(), db_path=db_path) for p in parts if len(p) > 2):
-            return True
-
-    return False
+    results = []
+    for token in word.split():
+        clean = token.replace("\u0301", "").replace("\u0300", "").replace("\u0341", "")
+        clean = clean.replace("’", "'").replace("ʼ", "'").replace("`", "'")
+        clean = clean.strip(".,!?:;—…\"'«»`()[]")
+        lexical = bool(_CYRILLIC_WORD_RE.fullmatch(clean))
+        if lexical and attested(clean):
+            results.append(True)
+        elif _ROMAN_NUMERAL_RE.fullmatch(clean.translate(str.maketrans("ІХСМ", "IXCM"))):
+            # Source phrases include numeral notation such as ХХ. It is not morphology evidence.
+            continue
+        elif lexical and "-" in clean:
+            if attested(clean.replace("-", "")):
+                results.append(True)
+            else:
+                # Inspect every part, including short parts, even after a failed lookup.
+                parts = [attested(part) for part in clean.split("-") if part]
+                results.append(bool(parts) and all(parts))
+        else:
+            results.append(False)
+    return bool(results) and all(results)
 
 
 def audit_teacher_cloze_deck(path: Path | str, vesum_db: Path | str | None = DEFAULT_VESUM_DB) -> list[dict[str, Any]]:
@@ -285,7 +295,7 @@ def audit_teacher_cloze_deck(path: Path | str, vesum_db: Path | str | None = DEF
                 )
 
         form = item.get("form", "")
-        if vesum_db and form and Path(vesum_db).exists() and not check_word_in_vesum(form, db_path=vesum_db):
+        if vesum_db and Path(vesum_db).exists() and not check_word_in_vesum(form, db_path=vesum_db):
             violations.append(
                 {
                     "type": "VESUM_UNATTESTED",
@@ -674,12 +684,10 @@ def audit_error_correction_deck(
 
         if vesum_db and correct_target and Path(vesum_db).exists():
             clean_correct = correct_target.strip().strip(".,!?:;—…\"'«»`")
-            if (
-                " " not in clean_correct
-                and not clean_correct.isupper()
-                and len(clean_correct) > 2
-                and not check_word_in_vesum(clean_correct, db_path=vesum_db)
-            ):
+            readings = correction_answers(clean_correct, pair_vesum) or [clean_correct]
+            # The first entry is source notation; subsequent entries are its supported typed readings.
+            attested = [check_word_in_vesum(reading, db_path=vesum_db) for reading in (readings[1:] or readings)]
+            if not all(attested):
                 violations.append(
                     {
                         "type": "VESUM_UNATTESTED",
@@ -966,15 +974,22 @@ def audit_practice_shards(
 
             # 5. Morphological attestation in VESUM
             if verify_vesum and vesum_db and Path(vesum_db).exists():
-                ans = item.get("answer") or item.get("form") or item.get("target")
-                if ans and not check_word_in_vesum(ans, db_path=vesum_db):
-                    violations.append(
-                        {
-                            "type": "VESUM_UNATTESTED",
-                            "item": f"{name}:{cid}",
-                            "message": f"Target form {ans!r} is not attested in VESUM morphological dictionary",
-                        }
-                    )
+                ans = item.get("answer") or item.get("form") or item.get("target") or item.get("correctForm", "")
+                if mode == "stress":
+                    targets = [item.get("stressed", ""), item.get("unstressed", "")]
+                elif mode == "classify":
+                    targets = [item.get("lemma", "")]
+                else:
+                    targets = [ans]
+                for target in [*targets, *item.get("acceptedAnswers", [])]:
+                    if not check_word_in_vesum(target, db_path=vesum_db):
+                        violations.append(
+                            {
+                                "type": "VESUM_UNATTESTED",
+                                "item": f"{name}:{cid}",
+                                "message": f"Target form {target!r} is not attested in VESUM morphological dictionary",
+                            }
+                        )
 
     # Volume Thresholds check
     if check_volume:

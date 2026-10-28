@@ -18,11 +18,16 @@ Add a **Reply format** section:
 
 ```text
 VERDICT: <one of APPROVE, REQUEST_CHANGES, or BLOCKED plus the missing capability>
+SCORE: <n>/10 <one-line rationale>
 F1 [P0|P1|P2|P3] <path>:<line> <demonstrated failure>. Impact: <impact>. Required behaviour: <behaviour>.
 ```
 
 Ids are stable: a later round reuses `F1` rather than renaming it. Paths are
-repository-relative with line suffixes.
+repository-relative with line suffixes. The `SCORE` line uses the council's anchored rubric
+([decision report](../../drive-epic/references/decision-report.md#council-optional-independent-panel),
+"Findings and score"); it never gates a merge. The recorder stores it with the verdict, or
+records it as absent when it is missing or malformed, and `scripts/fleet/agent_success.py`
+reports it per reviewer and author model.
 
 ## Delta rounds (round 2 and later)
 
@@ -34,8 +39,9 @@ Freeze sections 2 to 4 of the template from round 1; do not edit them. Section 1
   test evidence;
 - the budget state (`round 2 of 3`, or `round 4 of 5` with the open blocker id that justifies it).
 
-The reviewer marks every earlier id `resolved` or `still open: <reason>` and reviews only the
-delta scope in [policy](policy.md#delta-scope).
+The reviewer marks every earlier id `resolved` or `still open: <reason>`, reviews only the
+delta scope in [policy](policy.md#delta-scope), and replies in the round 1 reply format,
+`SCORE` line included.
 
 ## Wording that read-only admission accepts
 

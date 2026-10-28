@@ -13,11 +13,12 @@ import pytest
 from scripts.common import github_client
 from scripts.fleet import ignored_task_output as output
 from scripts.fleet import regenerable_output as patterns
-from tests import test_fleet_post_task_reap as reap_fixtures
+from scripts.orchestration import worktree_claims
 from tests.orchestration import test_worktree_artifacts as fixtures
+from tests.orchestration import test_worktree_git as repo_fixtures
 
 checkout = fixtures.checkout
-hermetic_reap = reap_fixtures.hermetic_reap
+hermetic_repo = repo_fixtures.hermetic_repo
 MANIFEST = "site/src/data/lexicon-manifest.json"
 PRACTICE = "site/public/lexicon/practice-index.A1.json"
 POINTER = "site/src/data/lexicon-manifest.pointer.json"
@@ -503,11 +504,11 @@ def test_skip_worktree_cannot_conceal_modified_release_proof(checkout, part):
     assert not patterns.is_regenerable_ignored_path(MANIFEST, worktree=repo, tracked=tracked)
 
 
-def test_reap_pinned_hardlinks_leaves_outside_names_and_bytes_intact(hermetic_reap, monkeypatch, tmp_path):
-    repo, tasks = hermetic_reap
+def test_removal_of_pinned_hardlinks_leaves_outside_names_and_bytes_intact(hermetic_repo, monkeypatch, tmp_path):
+    repo, tasks = hermetic_repo
     payload, shard = pinned_checkout((repo, repo, tasks))
-    reap_fixtures._run(["git", "push", "origin", "main"], cwd=repo)
-    tree = reap_fixtures._add_dispatch_worktree(repo, "codex", "pinned-hardlink-9828")
+    repo_fixtures._run(["git", "push", "origin", "main"], cwd=repo)
+    tree = repo_fixtures._add_dispatch_worktree(repo, "codex", "pinned-hardlink-9828")
     (tree.parent / "release-store.json").write_bytes((repo.parent / "release-store.json").read_bytes())
     outside = tmp_path / "other-manifest.json"
     os.link(repo / MANIFEST, outside)
@@ -516,19 +517,13 @@ def test_reap_pinned_hardlinks_leaves_outside_names_and_bytes_intact(hermetic_re
     target.parent.mkdir(parents=True)
     target.write_bytes(shard)
     assert outside.stat().st_nlink == 3
-    reap_fixtures._write_task_state(tasks, "pinned-hardlink-9828", "done", tree, agent="codex")
+    repo_fixtures._write_task_state(tasks, "pinned-hardlink-9828", "done", tree, agent="codex")
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-    dry = reap_fixtures.post_task_reap.post_task_reap(
-        "pinned-hardlink-9828", tasks_dir=tasks, repo_root=repo, apply=False, include_acp_runtime=False
-    )
-    assert tree.exists() and not dry["apply"]
-    report = reap_fixtures.post_task_reap.post_task_reap(
-        "pinned-hardlink-9828", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False
-    )
-    assert report["main_worktree"]["action"] == "removed", report
-    assert set(dry) == set(report)
-    assert set(dry["main_worktree"]) == set(report["main_worktree"])
+    row = worktree_claims.remove_unclaimed_worktree(
+        tree, repo_root=repo, reason="fixture", owner_task_id=None, force=True, tasks_dir=tasks
+    ).as_record()
+    assert row["action"] == "removed", row
     assert not tree.exists()
-    assert not report["main_worktree"].get("preserved_artifacts")
+    assert not row.get("preserved_artifacts")
     assert outside.read_bytes() == (repo / MANIFEST).read_bytes() == payload
     assert outside.stat().st_nlink == 2

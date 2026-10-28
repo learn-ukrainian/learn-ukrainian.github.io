@@ -37,7 +37,7 @@ from scripts.build.phases.implementation_map import (
     write_implementation_map,
 )
 from scripts.common.thresholds import QG_DIMS, terminal_dims_for
-from scripts.orchestration import reap_worktrees
+from scripts.orchestration import worktree_git
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
 
@@ -212,7 +212,7 @@ def _run_git(
         text=True,
         check=False,
         timeout=timeout,
-        env=reap_worktrees.sanitized_git_env(),
+        env=worktree_git.sanitized_git_env(),
     )
 
 
@@ -445,7 +445,7 @@ def _persist_artifact_paths(
 
 def _ensure_persist_target_is_not_primary_checkout(worktree: BuildWorktree) -> None:
     target_top_level = _git_top_level(worktree.path)
-    primary_checkout = reap_worktrees.primary_checkout_root(worktree.repo_root).resolve()
+    primary_checkout = worktree_git.primary_checkout_root(worktree.repo_root).resolve()
     if target_top_level == primary_checkout:
         raise PrimaryCheckoutPersistError(
             "Refusing to persist v7_build artifacts in the primary checkout; "
@@ -456,7 +456,7 @@ def _ensure_persist_target_is_not_primary_checkout(worktree: BuildWorktree) -> N
 
 def _ensure_top_level_invocation_is_not_primary_checkout() -> None:
     cwd_top_level = _git_top_level(Path.cwd())
-    primary_checkout = reap_worktrees.primary_checkout_root(cwd_top_level).resolve()
+    primary_checkout = worktree_git.primary_checkout_root(cwd_top_level).resolve()
     if cwd_top_level == primary_checkout:
         raise PrimaryCheckoutBuildError(
             "Refusing to run v7_build in the primary checkout; pass --worktree "
@@ -682,7 +682,7 @@ def _persist_build_artifacts(
                 capture_output=True,
                 text=True,
                 timeout=GIT_ARTIFACT_TIMEOUT_S,
-                env=reap_worktrees.sanitized_git_env(),
+                env=worktree_git.sanitized_git_env(),
             )
         # --allow-empty so empty builds (rare, e.g. dry-run paths or
         # failed-before-writer setups) still leave a commit on the branch
@@ -702,7 +702,7 @@ def _persist_build_artifacts(
             capture_output=True,
             text=True,
             timeout=GIT_ARTIFACT_TIMEOUT_S,
-            env=reap_worktrees.sanitized_git_env(),
+            env=worktree_git.sanitized_git_env(),
         )
         return True
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError) as exc:

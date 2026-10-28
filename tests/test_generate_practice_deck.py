@@ -356,9 +356,9 @@ def test_fixture_build_emits_sharded_schema() -> None:
         assert a1[mode]["schema"] == f"atlas-practice-{mode}"
     assert a1["index"]["fixtureNote"] == "fixture sample"
     assert a1["index"]["counts"]["lexemes"] == 7
-    assert a1["index"]["counts"]["cloze"] == 0
-    assert a1["index"]["counts"]["clozeCoverage"] == 0
-    assert a1["index"]["counts"]["modeCounts"]["cloze"] == 0
+    assert a1["index"]["counts"]["cloze"] == 1
+    assert a1["index"]["counts"]["clozeCoverage"] == 0.1429
+    assert a1["index"]["counts"]["modeCounts"]["cloze"] == 1
 
     lexeme = next(item for item in a1["lexemes"]["lexemes"] if item["lemmaId"] == "knyha")
     assert lexeme["lemma"] == "книга"
@@ -366,7 +366,20 @@ def test_fixture_build_emits_sharded_schema() -> None:
     assert lexeme["paradigm"]["cases"]["accusative"]["singular"] == "книгу"
     assert lexeme["heritage"] == "inherited"
     assert lexeme["severity"] == "standard"
-    assert a1["cloze"]["cloze"] == []
+    # Ruling D (#8724): the reviewed accusative card is form practice; only
+    # the answer has an accusative VESUM analysis.  «Я живу у ___» has no
+    # fixture form outside the locative's alternates, so it stays withheld.
+    [cloze] = a1["cloze"]["cloze"]
+    assert cloze["lemmaId"] == "knyha"
+    assert {option["strategy"] for option in cloze["options"]} == {"cross-case"}
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    accusative = [
+        option["kind"]
+        for option in cloze["options"]
+        if any("v_zna" in match["tags"] for match in verifier.verify_words([option["label"]])[option["label"]])
+    ]
+    assert accusative == ["answer"]
+    assert validate_option_set(cloze) == []
 
 
 def test_reviewed_allowlist_and_vesum_ambiguity_fail_closed() -> None:
@@ -374,7 +387,7 @@ def test_reviewed_allowlist_and_vesum_ambiguity_fail_closed() -> None:
     cloze = shards["A1"]["cloze"]["cloze"]
     cloze_lemma_ids = {item["lemmaId"] for item in cloze}
 
-    assert cloze_lemma_ids == set()
+    assert cloze_lemma_ids == {"knyha"}
     assert "robota" not in cloze_lemma_ids
 
     entries = read_manifest(MANIFEST)
@@ -401,10 +414,8 @@ def test_curated_cloze_derives_missing_target_form_from_paradigm() -> None:
     assert candidates[0]["form"] == "книгу"
     withheld: list[dict[str, str]] = []
     shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=withheld)
-    assert shards["A1"]["cloze"]["cloze"] == []
-    assert any(
-        row["clozeId"] == candidates[0]["clozeId"] and row["reason"] == "no_unique_answer_evidence" for row in withheld
-    )
+    assert [item["form"] for item in shards["A1"]["cloze"]["cloze"]] == ["книгу"]
+    assert not any(row["clozeId"] == candidates[0]["clozeId"] for row in withheld)
 
 
 def test_deck_version_changes_when_any_deck_input_changes() -> None:
@@ -1836,8 +1847,8 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
     shards = build_practice_shards(
         entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=after_withheld
     )
-    assert shards["A1"]["cloze"]["cloze"] == []
-    assert any(row["lemma"] == "книга" and row["reason"] == "no_unique_answer_evidence" for row in after_withheld)
+    assert "knyha" in {item["lemmaId"] for item in shards["A1"]["cloze"]["cloze"]}
+    assert not any(row["lemma"] == "книга" for row in after_withheld)
 
 
 def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
@@ -2534,7 +2545,8 @@ def test_tatoeba_cloze_preserves_attribution_metadata() -> None:
         [source],
         BuildConfig(),
     )
-    assert shards["A1"]["cloze"]["cloze"] == []
+    [emitted] = shards["A1"]["cloze"]["cloze"]
+    assert emitted["attribution"] == cloze["attribution"]
 
     assert cloze["provenance"]["license"] == "CC-BY 2.0 FR"
     assert cloze["provenance"]["author"] == "uk-author"
@@ -2571,7 +2583,8 @@ def test_tatoeba_cloze_uses_path_sentence_id_when_field_missing() -> None:
         [source],
         BuildConfig(),
     )
-    assert shards["A1"]["cloze"]["cloze"] == []
+    [emitted] = shards["A1"]["cloze"]["cloze"]
+    assert emitted["provenance"]["sentenceId"] == 101
     assert cloze["provenance"]["sentenceId"] == 101
     assert cloze["attribution"]["uk"]["sentenceId"] == 101
 

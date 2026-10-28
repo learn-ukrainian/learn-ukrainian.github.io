@@ -57,6 +57,9 @@ never fine.
    owning tracker item and removal condition; clear it when that condition is met.
    Measure stage time across dispatch, review, PR admission CI, queue CI, merge and closeout
    in both repositories. Act on the slowest stage this cycle, with an owner and next check.
+   Run `.venv/bin/python -m scripts.fleet.pr_owner_check` (exit 1 lists unowned PRs, 2 is unknown):
+   dispatch an owner for every unowned PR, replacing any owner that ended failed, timed out or
+   was cancelled; ownership is the live task record, never the author or branch prefix.
 5. **Live workers.** Active dispatches from the Monitor API, then
    `.venv/bin/python scripts/dispatch.py status <task-id> --run-nonce <nonce>` for each task
    the handoff or the view names; task files outrank a partial view. Every running worker

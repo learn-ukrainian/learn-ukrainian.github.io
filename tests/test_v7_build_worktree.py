@@ -62,7 +62,7 @@ def _install_fake_subprocess_run(
         assert kwargs["text"] is True
         return fake_run(["git", *args], **kwargs)
 
-    monkeypatch.setattr(v7_build.reap_worktrees, "safe_git", fake_safe_git)
+    monkeypatch.setattr(v7_build.worktree_git, "safe_git", fake_safe_git)
     return calls
 
 
