@@ -979,14 +979,11 @@ def _run_gc(repo_root: Path, lock_fd: int) -> subprocess.CompletedProcess[str]:
     try:
         stdout, stderr = proc.communicate(timeout=GC_DEADLINE_SECONDS)
     except subprocess.TimeoutExpired:
-        for sig in (signal.SIGTERM, signal.SIGKILL):
-            with contextlib.suppress(ProcessLookupError):
-                os.killpg(proc.pid, sig)
-            try:
-                proc.communicate(timeout=5)
-                break
-            except subprocess.TimeoutExpired:
-                continue
+        # A child can close its pipes while handling SIGTERM, so reaping Git
+        # alone would leave that child running. Kill the entire owned group.
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(proc.pid, signal.SIGKILL)
+        proc.communicate(timeout=5)
         raise _GCDeadlineExceeded from None
     return subprocess.CompletedProcess(command, proc.returncode, stdout, stderr)
 
@@ -1026,7 +1023,7 @@ def _git_maintenance(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     except (_GitHygieneBusy, BlockingIOError):
         return {"action": "deferred", "ok": True, "detail": "Git hygiene or validation holds admission"}
     except _GCDeadlineExceeded:
-        return {"action": "timeout", "ok": False, "detail": "foreground GC exceeded its deadline; process group terminated"}
+        return {"action": "timeout", "ok": False, "detail": "foreground GC exceeded its deadline; process group sent SIGKILL"}
     except subprocess.TimeoutExpired:
         return {"action": "timeout", "ok": False, "detail": "Git metadata query exceeded its timeout"}
     except (OSError, RuntimeError) as exc:

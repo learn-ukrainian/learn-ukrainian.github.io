@@ -839,7 +839,12 @@ def test_maintenance_timeout_terminates_git_tree_and_recovers(tmp_path: Path, mo
     refs = _git(repo, "show-ref")
     hook = repo / ".git/hooks/pre-auto-gc"
     pid_path = tmp_path / "hook.pid"
-    hook.write_text(f"#!/bin/sh\necho $$ > {str(pid_path)!r}\nexec sleep 60\n")
+    hook.write_text(
+        f"#!{sys.executable}\nimport os, signal, time\nfrom pathlib import Path\n"
+        "def delay_term(*args):\n os.close(1)\n os.close(2)\n time.sleep(10)\n"
+        "signal.signal(signal.SIGTERM, delay_term)\n"
+        f"Path({str(pid_path)!r}).write_text(str(os.getpid()))\nsignal.pause()\n"
+    )
     hook.chmod(0o700)
     monkeypatch.setattr(cleanup, "GC_DEADLINE_SECONDS", 0.5)
     receipt = cleanup.build_receipt([repo], apply=True, git_maintenance=True)
@@ -847,7 +852,16 @@ def test_maintenance_timeout_terminates_git_tree_and_recovers(tmp_path: Path, mo
     assert receipt["summary"]["errors"] == 1
     pid = int(pid_path.read_text())
     stat_path = Path(f"/proc/{pid}/stat")
-    assert not stat_path.exists() or stat_path.read_text().split(") ", 1)[1][0] == "Z"
+    deadline = time.monotonic() + 5
+    while True:
+        try:
+            state = stat_path.read_text().split(") ", 1)[1][0]
+        except FileNotFoundError:
+            state = None
+        if state in {None, "Z"}:
+            break
+        assert time.monotonic() < deadline, f"GC child survived timeout: {state}"
+        time.sleep(0.01)
     hook.write_text("#!/bin/sh\nexit 0\n")
     monkeypatch.setattr(cleanup, "GC_DEADLINE_SECONDS", 30)
     result = cleanup._git_maintenance(repo, apply=True)
