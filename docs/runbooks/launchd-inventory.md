@@ -61,12 +61,10 @@ dispatch worktree.
   `.venv/bin/python`. `Program` must stay `/bin/bash` so a venv rebuild
   cannot invalidate launchd LWCR (exit 78; #6937).
 - Schedule: at load and every 4 hours (`StartInterval=14400`).
-- Delete authority: removes only clean worktrees with exact merged-PR head
-  evidence, the separately guarded terminal-dispatch class, and gone branches
-  proven merged. Every removal is preceded by an append-only journal entry and
-  a `refs/reaper-rescue/...` ref. Kill switches: `LU_REAPER_DISABLED=1` stops
-  all reaps; `LU_REAPER_TERMINAL_DISPATCHES=0` disables only the
-  terminal-dispatch class.
+- Delete authority: deletes only gone or merged branches proven contained; it
+  removes no worktree (the dispatcher removes each task's own worktree when the
+  task settles). Kill switch: `LU_REAPER_DISABLED=1` skips every branch
+  deletion.
 - Receipts and logs: `~/.codex/worktree-cleanup/receipts/v2/` and
   `~/.codex/worktree-cleanup/logs/` — outside the repository.
 - Manage: `.venv/bin/python

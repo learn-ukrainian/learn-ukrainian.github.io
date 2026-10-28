@@ -149,9 +149,9 @@ runner, and orchestrator hosts).
 
 - **Install**: The collector sweeps both repository roots. Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service template before installing it.
 - **Frequency**: The shipped systemd timer schedules cleanup hourly (`OnCalendar=hourly`, `RandomizedDelaySec=0`), retaining `OnBootSec=15min` and `Persistent=true`.
-- **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and run automatic git maintenance with receipt logging.
-- **Default mode**: Apply. The shipped unit still passes both repository roots and `--apply` to the existing wrapper. Cleanup eligibility, retention, and protections for live, dirty, unpublished, OPEN-PR, or unknown state are unchanged.
-- **Disable automatic reaping**: Set `LU_REAPER_DISABLED=1` in the user unit environment to stop automatic reaps, or `LU_REAPER_TERMINAL_DISPATCHES=0` to disable only the optional terminal-dispatch class. Reload systemd after changing the unit:
+- **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, sweep temp and session scratch, and run automatic git maintenance with receipt logging. It removes no worktree: the dispatcher removes each task's own worktree when the task settles.
+- **Default mode**: Apply. The shipped unit passes both repository roots and `--apply` to the wrapper. Protections for live, dirty, unpublished, OPEN-PR, or unknown state are unchanged.
+- **Disable branch cleanup**: Set `LU_REAPER_DISABLED=1` in the user unit environment to skip the terminal-worktree inventory and every branch deletion. Reload systemd after changing the unit:
   ```bash
   systemctl --user daemon-reload
   ```
@@ -159,13 +159,6 @@ runner, and orchestrator hosts).
   ```bash
   systemctl --user enable --now learn-ukrainian-worktree-gc.timer
   ```
-
-### 2b. Clean, Fully Pushed Worktree Reaper (`learn-ukrainian-worktree-reaper.service` + `.timer`)
-
-- **Install**: Use the manual install recipe in `docs/runbooks/worktree-cleanup.md`. It checks that the sibling `learn-ukrainian-infra-private` checkout exists and requires a successful both-root dry run before writing units. It replaces both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service template and its data-volume drop-in, then verifies the units before reloading and enabling the timer.
-- **Frequency**: every 30 minutes (`OnCalendar=*:00/30`, `Persistent=false`); `TimeoutStartSec=1200`.
-- **What it does**: runs `reap_worktrees --clean-pushed --repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply` with both placeholders replaced, which removes only `.worktrees/dispatch/<agent>/<task>/` checkouts that are clean, have no untracked files, have every commit on origin, are used by no process or live task, and were idle for 60 minutes (#10778). It never forces and never deletes branches. A oneshot unit never overlaps itself, and the reaper lock makes any other concurrent run a no-op. Its only network use is one bounded `git fetch --prune origin` and one bounded `git ls-remote --heads --tags origin` census before the run; if either fails, the run does nothing.
-- **Install, verify and disable**: `docs/runbooks/worktree-cleanup.md` § "Clean, fully pushed, idle dispatch worktrees". The templates do not install or enable themselves.
 
 ### 3. Project State Reporter (`learn-ukrainian-project-state-reporter.service` + `.timer`)
 

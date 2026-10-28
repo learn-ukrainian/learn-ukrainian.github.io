@@ -20,6 +20,28 @@ from tests.test_reused_worktree_retention import cohort as cohort
 from tests.test_reused_worktree_retention import save
 
 
+def merged_pr_reap(repo, pr_number, *, apply=True):
+    """Run the reaper's merged-PR target pass on the PR's worktrees.
+
+    merge_closeout made this call until FR-01b PR-1; post_task_reap still makes
+    it, so the cohort decisions below keep their coverage until the reaper goes.
+    """
+    rw = reap.reap_worktrees
+    pr = merge_closeout.fetch_pr_info(repo, pr_number)
+    targets = [info.path for info in merge_closeout.find_matching_worktrees(repo, pr)]
+    rows = rw.reap_worktrees(
+        repo_root=repo,
+        apply=apply,
+        target_paths=targets,
+        merged_pr_only=True,
+        prune_merged_branches=True,
+        safe_only=True,
+        live_cwds=set(),
+        require_activity_probe=apply,
+    )
+    return [rw._result_payload(row) for row in rows]
+
+
 def assert_record_only_receipt(receipt, expected):
     assert receipt["mode"] == "record_only"
     assert receipt["copied_bytes"] == 0
@@ -275,8 +297,8 @@ def test_merged_continuations_closeout_without_force(cohort, monkeypatch, case, 
     assert path == tasks / "boundary.json" and owner == creator
     expected_head = _git(tree, "rev-parse", "HEAD")
     before = {p: p.read_bytes() for p in tasks.glob("*.json")}
-    dry = merge_closeout.run_merge_closeout(repo, 9645, apply=False, live_cwds=set())
-    assert dry.reap_results[0]["action"] == "would_remove", dry
+    dry = merged_pr_reap(repo, 9645, apply=False)
+    assert dry[0]["action"] == "would_remove", dry
     assert {p: p.read_bytes() for p in before} == before
     calls = []
     original = claims.git_worktree_remove
@@ -286,8 +308,7 @@ def test_merged_continuations_closeout_without_force(cohort, monkeypatch, case, 
         return original(*args, **kwargs)
 
     monkeypatch.setattr(claims, "git_worktree_remove", remove)
-    result = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set())
-    row = result.reap_results[0]
+    row = merged_pr_reap(repo, 9645)[0]
     assert row["action"] == "removed", row
     assert calls == [False] and not tree.exists()
     record = json.loads(path.read_text())
@@ -524,8 +545,7 @@ def test_H1_force_new_archive_retention_survives_closeout(cohort, archived_reuse
             dict(successor, status="failed", run_nonce="old-run", keep_worktree=True, worktree_reused=archived_reuse)
         )
     )
-    result = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set())
-    row = result.reap_results[0]
+    row = merged_pr_reap(repo, 9645)[0]
     assert row["action"] == "skipped", row
     assert "keep_worktree" in row["reason"]
     assert tree.exists() and source.read_bytes() == b"current output"
@@ -534,7 +554,7 @@ def test_H1_force_new_archive_retention_survives_closeout(cohort, archived_reuse
     # Retention remains releasable only through the existing verified receipt.
     assert reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
     assert json.loads(archive.read_text())["keep_worktree"] is False
-    row = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
+    row = merged_pr_reap(repo, 9645)[0]
     assert row["action"] == "removed" and not tree.exists(), row
 
 
@@ -544,7 +564,7 @@ def test_H7_single_needs_finalize_owner_keeps_main_behavior(boundary_tree):
         status="needs_finalize", pid=999_999_999, final_branch_head_commit="a" * 40, worktree_branch="codex/boundary"
     )
     save(tasks, creator)
-    row = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
+    row = merged_pr_reap(repo, 9645)[0]
     assert row["action"] == "removed" and not tree.exists(), row
 
 
@@ -593,7 +613,7 @@ def test_nonforce_cohort_removal_runs_delete_target_guard(cohort, monkeypatch):
         raise ValueError("held-out delete-target refusal")
 
     monkeypatch.setattr(reap.reap_worktrees, "assert_delete_target", refuse)
-    row = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
+    row = merged_pr_reap(repo, 9645)[0]
     assert row["action"] == "error", row
     assert "delete guard refused" in row["error"]
     assert calls == [(tree, repo)]
@@ -745,8 +765,8 @@ def test_switched_branch_cohort_is_reaped_with_branch_deleted(cohort, monkeypatc
         cohort, monkeypatch, head_status=head_status
     )
     source.unlink()
-    result = merge_closeout.run_merge_closeout(repo, 10548, apply=True, live_cwds=set())
-    row = result.reap_results[0]
+    result = merged_pr_reap(repo, 10548)
+    row = result[0]
     assert row["action"] == "removed", result
     assert not tree.exists()
     proof = json.loads((tasks / "boundary.json").read_text())["worktree_reap_proof"]
@@ -807,8 +827,8 @@ def test_switched_branch_cohort_uncertainty_retains_checkout(cohort, monkeypatch
         creator["keep_worktree"] = True
         save(tasks, creator)
     before = {path: path.read_bytes() for path in tasks.glob("*.json")}
-    result = merge_closeout.run_merge_closeout(repo, 10548, apply=True, live_cwds=set())
-    row = result.reap_results[0]
+    result = merged_pr_reap(repo, 10548)
+    row = result[0]
     assert row["action"] == "skipped", result
     assert tree.exists() and source.read_bytes() == b"current output"
     local = subprocess.run(
@@ -976,8 +996,8 @@ def test_public_task_records_reap_private_clone_at_its_merged_head(tmp_path, mon
         "gemini-creator", tasks_dir=tasks, repo_root=sibling, apply=False, include_acp_runtime=False
     )
     assert "outside .worktrees/dispatch/" not in report["main_worktree"]["reason"]
-    result = merge_closeout.run_merge_closeout(sibling, 878, apply=True, live_cwds=set())
-    assert result.reap_results[0]["action"] == "removed", result
+    result = merged_pr_reap(sibling, 878)
+    assert result[0]["action"] == "removed", result
     assert not tree.exists()
     assert any("acme/private-clone" in " ".join(call) for call in calls)
     assert not any(

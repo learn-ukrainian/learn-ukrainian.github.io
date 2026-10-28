@@ -28,10 +28,6 @@ from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle, worktree_claims
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SYSTEMD = PROJECT_ROOT / "packaging" / "systemd"
-SERVICE = SYSTEMD / "learn-ukrainian-worktree-reaper.service"
-TIMER = SYSTEMD / "learn-ukrainian-worktree-reaper.timer"
-DROPIN = SYSTEMD / "dropins" / "learn-ukrainian-worktree-reaper.service.d" / "data-volume.conf"
 TWO_HOURS = 2 * 3600
 _TEMPLATE: Path | None = None
 
@@ -1102,39 +1098,6 @@ def test_cli_dry_run_by_default_and_apply(repo: Path, free_fuser: Path, capsys: 
     assert "REMOVED .worktrees/dispatch/codex/task-a" in out
     assert str(repo) not in out  # repository-relative paths only
     assert not worktree.exists()
-
-
-def test_systemd_service_and_timer_text() -> None:
-    service = SERVICE.read_text(encoding="utf-8")
-    timer = TIMER.read_text(encoding="utf-8")
-    lines = service.splitlines()
-    starts = [line for line in lines if line.startswith("ExecStart=")]
-    assert starts == [
-        "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed "
-        "--repo-root @REPO_ROOT@ --repo-root @PRIVATE_ROOT@ --apply"
-    ]
-    assert "--force" not in service
-    assert "Type=oneshot" in lines
-    assert "WorkingDirectory=@REPO_ROOT@" in lines
-    timeout = [line for line in lines if line.startswith("TimeoutStartSec=")]
-    assert timeout and 0 < int(timeout[0].split("=", 1)[1]) < 1800  # finishes inside one cadence
-    # Network only for the bounded `git fetch --prune origin`; no other socket
-    # family. Enforced in user managers (seccomp).
-    assert "RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6" in lines
-    timer_lines = timer.splitlines()
-    assert "OnCalendar=*:00/30" in timer_lines
-    assert "Persistent=false" in timer_lines
-    assert "Unit=learn-ukrainian-worktree-reaper.service" in timer_lines
-    assert "WantedBy=timers.target" in timer_lines
-    # Overlap: a oneshot unit never starts twice, and the reaper lock makes a
-    # second process a no-op (test_concurrent_second_process_is_a_no_op).
-    dropin = DROPIN.read_text(encoding="utf-8")
-    assert dropin.splitlines()[1:3] == [
-        "ExecStart=",
-        "ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/storage/data_volume_guard.sh -- "
-        + starts[0].removeprefix("ExecStart="),
-    ]
-    assert "--force" not in dropin
 
 
 # Round 2 (#10778): the five data-loss reproducers of the exact-head review of
