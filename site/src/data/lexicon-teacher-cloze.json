@@ -211,48 +211,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_6",
-      "lemmaId": "абсурд",
-      "sentenceFrameId": "teacher_frame_6",
-      "lemma": "абсурд",
-      "form": "абсурд-",
-      "sentence": "Автор іноді яскраво гіперболізує зображене, наголошуючи на _____\nності системи, яка нищить цілі народи, культури, країни.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for абсурд",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "абсурд",
-          "label": "абсурд-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "фінанси",
-          "label": "фінанси",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "вступник",
-          "label": "вступник",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "сейм",
-          "label": "сейм",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_7",
       "lemmaId": "авантюрист",
       "sentenceFrameId": "teacher_frame_7",
@@ -1550,48 +1508,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "інший",
           "label": "інший",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_38",
-      "lemmaId": "азов",
-      "sentenceFrameId": "teacher_frame_38",
-      "lemma": "азов",
-      "form": "азов’я",
-      "sentence": "Боспорське царство розташовувалося на \nКерченському й  Таманському півостровах, \nу пониззі Кубані та Східного При­_____.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for азов",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "азов",
-          "label": "азов’я",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "припинити",
-          "label": "припинити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "програти",
-          "label": "програти",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "вірус",
-          "label": "вірус",
           "kind": "distractor"
         }
       ]
@@ -7981,48 +7897,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_192",
-      "lemmaId": "блювати, ригати (vulgar)",
-      "sentenceFrameId": "teacher_frame_192",
-      "lemma": "vulgar",
-      "form": "vulgar",
-      "sentence": "Ключове слово для вивчення в цьому розділі: «_____».",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for блювати, ригати (vulgar)",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "блювати, ригати (vulgar)",
-          "label": "vulgar",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "пляма",
-          "label": "пляма",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "налетіти",
-          "label": "налетіти",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "відвикнути",
-          "label": "відвикнути",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_193",
       "lemmaId": "блідий",
       "sentenceFrameId": "teacher_frame_193",
@@ -10748,48 +10622,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "віросповідання",
           "label": "віросповідання",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_258",
-      "lemmaId": "бухгалтер",
-      "sentenceFrameId": "teacher_frame_258",
-      "lemma": "бухгалтер",
-      "form": "бухгалтер-",
-      "sentence": "Пора і час бувають листопадні, а дощ, сонце і _____\nський звіт — листопадові.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for бухгалтер",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "бухгалтер",
-          "label": "бухгалтер-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "водій",
-          "label": "водій",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "ейфорія",
-          "label": "ейфорія",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "суперечка",
-          "label": "суперечка",
           "kind": "distractor"
         }
       ]
@@ -13814,48 +13646,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "виграшний",
           "label": "виграшний",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_331",
-      "lemmaId": "веб",
-      "sentenceFrameId": "teacher_frame_331",
-      "lemma": "веб",
-      "form": "веб-",
-      "sentence": "Авіа-, авто-, аква-, арт-, астро-, аудіо-, біо-, _____, гео-, еко-, економ-, \nетно-, зоо-, кібер-, метео-, мото-, поп-, псевдо-, смарт-, соціо-, теле-.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for веб",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "веб",
-          "label": "веб-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "нинішній",
-          "label": "нинішній",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "задзвонити",
-          "label": "задзвонити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "криза",
-          "label": "криза",
           "kind": "distractor"
         }
       ]
@@ -21337,48 +21127,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_512",
-      "lemmaId": "виставити + instr",
-      "sentenceFrameId": "teacher_frame_512",
-      "lemma": "instr",
-      "form": "instr",
-      "sentence": "Ключове слово для вивчення в цьому розділі: «_____».",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for виставити + instr",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "виставити + instr",
-          "label": "instr",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "безкоштовний",
-          "label": "безкоштовний",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "психологія",
-          "label": "психологія",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "дорога",
-          "label": "дорога",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_513",
       "lemmaId": "виставка",
       "sentenceFrameId": "teacher_frame_513",
@@ -21458,48 +21206,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "змінювати",
           "label": "змінювати",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_515",
-      "lemmaId": "виставляти + instr",
-      "sentenceFrameId": "teacher_frame_515",
-      "lemma": "instr",
-      "form": "instr",
-      "sentence": "Ключове слово для вивчення в цьому розділі: «_____».",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for виставляти + instr",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "виставляти + instr",
-          "label": "instr",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "заарештувати",
-          "label": "заарештувати",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "мелатонін",
-          "label": "мелатонін",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "мотивація",
-          "label": "мотивація",
           "kind": "distractor"
         }
       ]
@@ -38053,48 +37759,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_913",
-      "lemmaId": "годинний",
-      "sentenceFrameId": "teacher_frame_913",
-      "lemma": "годинний",
-      "form": "-годинний",
-      "sentence": "Щодо економічних питань… а) 8_____ робочий день; б) державну пен-\nсію немічним, калікам і  всім робітникам, що дожили до 60 років.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for годинний",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "годинний",
-          "label": "-годинний",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "рішення",
-          "label": "рішення",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "балістичний",
-          "label": "балістичний",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "різноманітний",
-          "label": "різноманітний",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_914",
       "lemmaId": "годинник",
       "sentenceFrameId": "teacher_frame_914",
@@ -43592,48 +43256,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "склад",
           "label": "склад",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_1047",
-      "lemmaId": "демон",
-      "sentenceFrameId": "teacher_frame_1047",
-      "lemma": "демон",
-      "form": "демон-",
-      "sentence": "Сіла на диван і _____\nстративно відвернулася до стіни.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for демон",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "демон",
-          "label": "демон-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "маслу",
-          "label": "маслу",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "лихоманка",
-          "label": "лихоманка",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "побігти",
-          "label": "побігти",
           "kind": "distractor"
         }
       ]
@@ -50648,48 +50270,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "глузувати",
           "label": "глузувати",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_1219",
-      "lemmaId": "дума",
-      "sentenceFrameId": "teacher_frame_1219",
-      "lemma": "дума",
-      "form": "дума-",
-      "sentence": "Як _____\nєш, про який фонтан ітиметься в тексті?",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for дума",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "дума",
-          "label": "дума-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "струс",
-          "label": "струс",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "подорож",
-          "label": "подорож",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "золотий",
-          "label": "золотий",
           "kind": "distractor"
         }
       ]
@@ -63631,48 +63211,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_1528",
-      "lemmaId": "засмага",
-      "sentenceFrameId": "teacher_frame_1528",
-      "lemma": "засмага",
-      "form": "засмага-",
-      "sentence": "5\nЗразок: Діти (що робили?) купалися, _____\nли, розважалися.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for засмага",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "засмага",
-          "label": "засмага-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "париж",
-          "label": "париж",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "світловий",
-          "label": "світловий",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "командувати",
-          "label": "командувати",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_1529",
       "lemmaId": "засмагати",
       "sentenceFrameId": "teacher_frame_1529",
@@ -67700,48 +67238,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "світати",
           "label": "світати",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_1625",
-      "lemmaId": "звичай",
-      "sentenceFrameId": "teacher_frame_1625",
-      "lemma": "звичай",
-      "form": "звичай-",
-      "sentence": "Найбільше \nКатерина любила малювати квіти, рідну домівку чи _____\nні предмети.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for звичай",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "звичай",
-          "label": "звичай-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "обмежити",
-          "label": "обмежити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "куратор",
-          "label": "куратор",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "травма",
-          "label": "травма",
           "kind": "distractor"
         }
       ]
@@ -80977,48 +80473,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_1947",
-      "lemmaId": "комбінувати",
-      "sentenceFrameId": "teacher_frame_1947",
-      "lemma": "комбінувати",
-      "form": "комбінувати-",
-      "sentence": "У складносурядному реченні, яке має три й більше частин, можуть _____\nся різні смислові зв’язки.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for комбінувати",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "комбінувати",
-          "label": "комбінувати-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "холоду",
-          "label": "холоду",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "швидкість",
-          "label": "швидкість",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "витирати",
-          "label": "витирати",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_1948",
       "lemmaId": "коментар",
       "sentenceFrameId": "teacher_frame_1948",
@@ -81518,48 +80972,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "більшовицький",
           "label": "більшовицький",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_1960",
-      "lemmaId": "консерва",
-      "sentenceFrameId": "teacher_frame_1960",
-      "lemma": "консерва",
-      "form": "Консерва-",
-      "sentence": "_____\nтивні \nпогляди, \nпоганий \nстан \nздоров’я \nкерівників держави суттєво впливали на її \nполітику.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for консерва",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "консерва",
-          "label": "Консерва-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "мати",
-          "label": "мати",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "поговорити",
-          "label": "поговорити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "обігнати",
-          "label": "обігнати",
           "kind": "distractor"
         }
       ]
@@ -93745,48 +93157,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_2256",
-      "lemmaId": "мета",
-      "sentenceFrameId": "teacher_frame_2256",
-      "lemma": "мета",
-      "form": "мета-",
-      "sentence": "Усередині — нитка з  _____\nлу.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for мета",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "мета",
-          "label": "мета-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "тетеря",
-          "label": "тетеря",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "імовірно",
-          "label": "імовірно",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "учасник",
-          "label": "учасник",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_2257",
       "lemmaId": "метаболізм",
       "sentenceFrameId": "teacher_frame_2257",
@@ -96092,48 +95462,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "сільський",
           "label": "сільський",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_2313",
-      "lemmaId": "москаль",
-      "sentenceFrameId": "teacher_frame_2313",
-      "lemma": "москаль",
-      "form": "москаль-",
-      "sentence": "Саме через \nце «єднання» народів на своїй землі господарює не українець, а _____\nокупант.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for москаль",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "москаль",
-          "label": "москаль-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "підкреслити",
-          "label": "підкреслити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "середина",
-          "label": "середина",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "впоратися",
-          "label": "впоратися",
           "kind": "distractor"
         }
       ]
@@ -102061,48 +101389,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_2458",
-      "lemmaId": "налічувати",
-      "sentenceFrameId": "teacher_frame_2458",
-      "lemma": "налічувати",
-      "form": "налічувати-",
-      "sentence": "Називали, був, полюблятимуть, пригощали, _____\nмуть, будуть, приймати.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for налічувати",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "налічувати",
-          "label": "налічувати-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "заплатити",
-          "label": "заплатити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "уніан",
-          "label": "уніан",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "відзнака",
-          "label": "відзнака",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_2459",
       "lemmaId": "намагатися",
       "sentenceFrameId": "teacher_frame_2459",
@@ -103946,48 +103232,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "легенда",
           "label": "легенда",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_2503",
-      "lemmaId": "наступ",
-      "sentenceFrameId": "teacher_frame_2503",
-      "lemma": "наступ",
-      "form": "наступ-",
-      "sentence": "На _____\nному уроці ми їх обговоримо, складемо у скриньку.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for наступ",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "наступ",
-          "label": "наступ-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "незнайомець",
-          "label": "незнайомець",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "спільнота",
-          "label": "спільнота",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "полюбити",
-          "label": "полюбити",
           "kind": "distractor"
         }
       ]
@@ -119995,48 +119239,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_2892",
-      "lemmaId": "пасажир",
-      "sentenceFrameId": "teacher_frame_2892",
-      "lemma": "пасажир",
-      "form": "пасажир-",
-      "sentence": "У Миколаєві\nбудують різні судна: _____\nські, військові, риболовецькі,\nнауково-дослідні.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for пасажир",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "пасажир",
-          "label": "пасажир-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "православ'я",
-          "label": "православ'я",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "витирати",
-          "label": "витирати",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "овоч",
-          "label": "овоч",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_2893",
       "lemmaId": "пасивний",
       "sentenceFrameId": "teacher_frame_2893",
@@ -122762,48 +121964,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "залишити",
           "label": "залишити",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_2958",
-      "lemmaId": "переймати (звичай)",
-      "sentenceFrameId": "teacher_frame_2958",
-      "lemma": "звичай",
-      "form": "звичай-",
-      "sentence": "Найбільше \nКатерина любила малювати квіти, рідну домівку чи _____\nні предмети.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for переймати (звичай)",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "переймати (звичай)",
-          "label": "звичай-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "періодичність",
-          "label": "періодичність",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "газета",
-          "label": "газета",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "померти",
-          "label": "померти",
           "kind": "distractor"
         }
       ]
@@ -126416,48 +125576,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "собака",
           "label": "собака",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_3046",
-      "lemmaId": "пласт",
-      "sentenceFrameId": "teacher_frame_3046",
-      "lemma": "пласт",
-      "form": "пласт-",
-      "sentence": "Хотіла отримати маленький триногий _____\nмасовий столик, який притримував верхню частину \nкоробки, щоб вона не приклеїлася до піци.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for пласт",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "пласт",
-          "label": "пласт-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "безпека",
-          "label": "безпека",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "питати",
-          "label": "питати",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "гармата",
-          "label": "гармата",
           "kind": "distractor"
         }
       ]
@@ -130789,48 +129907,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_3150",
-      "lemmaId": "подразнений (body part), роздратований (person)",
-      "sentenceFrameId": "teacher_frame_3150",
-      "lemma": "person",
-      "form": "person",
-      "sentence": "Ключове слово для вивчення в цьому розділі: «_____».",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for подразнений (body part), роздратований (person)",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "подразнений (body part), роздратований (person)",
-          "label": "person",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "злочин",
-          "label": "злочин",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "пустити",
-          "label": "пустити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "гігабайт",
-          "label": "гігабайт",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_3151",
       "lemmaId": "подробиця",
       "sentenceFrameId": "teacher_frame_3151",
@@ -134480,48 +133556,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "готель",
           "label": "готель",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_3240",
-      "lemmaId": "поперед",
-      "sentenceFrameId": "teacher_frame_3240",
-      "lemma": "поперед",
-      "form": "поперед-",
-      "sentence": "Які з них характеризують мураша з _____ \nньої вправи?",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for поперед",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "поперед",
-          "label": "поперед-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "пустити",
-          "label": "пустити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "король",
-          "label": "король",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "мартин",
-          "label": "мартин",
           "kind": "distractor"
         }
       ]
@@ -172285,48 +171319,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_4155",
-      "lemmaId": "спалах",
-      "sentenceFrameId": "teacher_frame_4155",
-      "lemma": "спалах",
-      "form": "спалах-",
-      "sentence": "На заході небо _____\nнуло червоним вогнем (М.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for спалах",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "спалах",
-          "label": "спалах-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "позбутися",
-          "label": "позбутися",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "розчаруватися",
-          "label": "розчаруватися",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "спотворити",
-          "label": "спотворити",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_4156",
       "lemmaId": "спалах захворювання",
       "sentenceFrameId": "teacher_frame_4156",
@@ -175640,48 +174632,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "сваритися",
           "label": "сваритися",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_4235",
-      "lemmaId": "спільно",
-      "sentenceFrameId": "teacher_frame_4235",
-      "lemma": "спільно",
-      "form": "спільно-",
-      "sentence": "Спиши ряд, у якому подано _____\nкореневі слова.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for спільно",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "спільно",
-          "label": "спільно-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "зателефонувати",
-          "label": "зателефонувати",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "карамель",
-          "label": "карамель",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "бруд",
-          "label": "бруд",
           "kind": "distractor"
         }
       ]
@@ -185977,48 +184927,6 @@
       ]
     },
     {
-      "clozeId": "teacher_cloze_4484",
-      "lemmaId": "тисячний",
-      "sentenceFrameId": "teacher_frame_4484",
-      "lemma": "тисячний",
-      "form": "-тисячний",
-      "sentence": "Порядкові числівники на -сотий, _____, -мільйонний, -мі-\nльярдний пишемо разом: трьохсотий, тридцятип’ятитисячний, \nшестимільйонний.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for тисячний",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "тисячний",
-          "label": "-тисячний",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "обійняти",
-          "label": "обійняти",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "волонтер",
-          "label": "волонтер",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "порічка",
-          "label": "порічка",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
       "clozeId": "teacher_cloze_4485",
       "lemmaId": "титул",
       "sentenceFrameId": "teacher_frame_4485",
@@ -189710,48 +188618,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "педіатр",
           "label": "педіатр",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_4574",
-      "lemmaId": "у шоці з (gen)",
-      "sentenceFrameId": "teacher_frame_4574",
-      "lemma": "gen",
-      "form": "gen",
-      "sentence": "Ключове слово для вивчення в цьому розділі: «_____».",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for у шоці з (gen)",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "у шоці з (gen)",
-          "label": "gen",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "значний",
-          "label": "значний",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "злочин",
-          "label": "злочин",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "мишка",
-          "label": "мишка",
           "kind": "distractor"
         }
       ]
@@ -193952,48 +192818,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "весільний",
           "label": "весільний",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_4676",
-      "lemmaId": "формально",
-      "sentenceFrameId": "teacher_frame_4676",
-      "lemma": "формально",
-      "form": "формально-",
-      "sentence": "Пригадайте структуру _____\nго есе.",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for формально",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "формально",
-          "label": "формально-",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "посилити",
-          "label": "посилити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "герб",
-          "label": "герб",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "блимати",
-          "label": "блимати",
           "kind": "distractor"
         }
       ]
@@ -200672,48 +199496,6 @@
           "optionId": "opt_dec_2",
           "lemmaId": "залежність",
           "label": "залежність",
-          "kind": "distractor"
-        }
-      ]
-    },
-    {
-      "clozeId": "teacher_cloze_4840",
-      "lemmaId": "чий",
-      "sentenceFrameId": "teacher_frame_4840",
-      "lemma": "чий",
-      "form": "-чий",
-      "sentence": "Дитя_____, ди-тячий … .",
-      "blankCase": "context",
-      "caseRule": {
-        "code": "teacher-lesson",
-        "labelUk": "Відібрана добірка",
-        "labelEn": "Teacher Lesson Context",
-        "caseLabel": "знахідний"
-      },
-      "clozeEn": "Context sentence for чий",
-      "options": [
-        {
-          "optionId": "opt_ans",
-          "lemmaId": "чий",
-          "label": "-чий",
-          "kind": "answer"
-        },
-        {
-          "optionId": "opt_dec_0",
-          "lemmaId": "провал/фіаско",
-          "label": "провал/фіаско",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_1",
-          "lemmaId": "побачити",
-          "label": "побачити",
-          "kind": "distractor"
-        },
-        {
-          "optionId": "opt_dec_2",
-          "lemmaId": "сухожилля",
-          "label": "сухожилля",
           "kind": "distractor"
         }
       ]

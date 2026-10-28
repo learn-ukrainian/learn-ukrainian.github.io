@@ -5326,5 +5326,14 @@
     "ffe1440bed8c4ff26ea10f48147b8982d76b33bba4f7e69b01be378fe9161120",
     "fff2aa69552b75bfc58e8badaaa3b86aec094ecbd8f1076d1f401920db3aab57"
   ],
-  "receipts": {}
+  "receipts": {
+    "37c2c4422732ee68f44279f5a7ff78affae00597347e7a910a80192373c6be60": {
+      "agent": "codex",
+      "resolved_model": "gpt-6.1-sol",
+      "verdict": "fail",
+      "reviewed_at": "2026-10-28T13:09:20Z",
+      "frame_sha": "096cf454626f55f288cf10ad452a6d73c0123f07a1f860814dbb36bf82838a7b",
+      "reason": "Withheld after strict candidate ambiguity audit her_8039ceb9abc6. The free cloze prompt does not state the normative correction task. Sources evidence supports the correction, not an unrestricted claim that the foil is impossible. A rewritten frame requires an independent creation-review PASS."
+    }
+  }
 }

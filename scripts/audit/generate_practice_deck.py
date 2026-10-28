@@ -2521,6 +2521,7 @@ def _build_cloze_items(
 def _stress_payload(
     entry: dict[str, Any],
     *,
+    verifier: VesumVerifier,
     end_dictionary_stress: dict[str, dict[str, str]] | None = None,
 ) -> dict[str, Any] | None:
     stress = entry.get("enrichment", {}).get("stress") if isinstance(entry.get("enrichment"), dict) else None
@@ -2548,6 +2549,8 @@ def _stress_payload(
         return None
     lemma = _clean_text(entry.get("lemma")) or ""
     if lemma and _plain(unstressed) != _plain(lemma):
+        return None
+    if not _verified_surface_matches(unstressed, verifier):
         return None
     return {
         "stressed": form,
@@ -6685,7 +6688,7 @@ def build_practice_shards(
                 continue
             cloze_by_level[lexeme["cefr"]].append(item)
             cloze_ids_by_lemma.setdefault(lexeme["lemmaId"], []).append(item["clozeId"])
-        stress = _stress_payload(_entry, end_dictionary_stress=end_dictionary_stress)
+        stress = _stress_payload(_entry, verifier=verifier, end_dictionary_stress=end_dictionary_stress)
         if stress:
             stress_item = {
                 "stressId": f"{lexeme['lemmaId']}:stress",
