@@ -5,14 +5,13 @@ import os
 import signal
 import subprocess
 import tempfile
-import time
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from scripts.ai_agent_bridge._review_worktree import _hardened_review_signal_handler
-from scripts.orchestration import reap_worktrees, scheduled_worktree_cleanup
+from scripts.orchestration import scheduled_worktree_cleanup
 from scripts.review import isolation
 from scripts.review.isolation import (
     REVIEW_TEMP_ROOT_MANIFEST_NAME,
@@ -166,67 +165,6 @@ def test_fetch_failure_degrades_gracefully(tmp_path: Path, monkeypatch: pytest.M
     assert res["maintenance"] is not None
 
 
-@pytest.mark.parametrize("task_status", ["done", "failed", "no_deliverable"])
-def test_terminal_task_reaped_with_known_inactive_ids(tmp_path: Path, task_status: str) -> None:
-    """Guard 7: A terminal task excluded by a known activity set qualifies immediately."""
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    tasks_dir = repo / "batch_state" / "tasks"
-    tasks_dir.mkdir(parents=True)
-
-    task_id = "task-123"
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"task_id": task_id, "status": task_status}), encoding="utf-8"
-    )
-
-    wt = repo / ".worktrees" / "dispatch" / "lane-1" / "task-123"
-    wt.mkdir(parents=True)
-
-    info = reap_worktrees.WorktreeInfo(
-        path=wt,
-        head="1234567890abcdef1234567890abcdef12345678",
-        branch=None,
-        detached=True,
-    )
-
-    with (
-        patch.object(reap_worktrees, "_worktree_clean", return_value=True),
-        patch.object(reap_worktrees, "_is_ancestor_of_origin_main", return_value=False),
-        patch.object(reap_worktrees, "_is_head_reachable_from_remote", return_value=True),
-    ):
-        reason = reap_worktrees._qualifying_reason(
-            repo_root=repo,
-            info=info,
-            pr_state=None,
-            build_age_hours=24.0,
-            now=time.time(),
-            active_ids={"another-task"},
-            safe_only=False,
-            merged_pr_only=False,
-        )
-
-    assert reason is not None
-    assert "settled dispatch task-id=task-123" in reason
-
-    # Unpushed head must not be reaped under the reachability guard contract
-    with (
-        patch.object(reap_worktrees, "_worktree_clean", return_value=True),
-        patch.object(reap_worktrees, "_is_ancestor_of_origin_main", return_value=False),
-        patch.object(reap_worktrees, "_is_head_reachable_from_remote", return_value=False),
-    ):
-        unpushed_reason = reap_worktrees._qualifying_reason(
-            repo_root=repo,
-            info=info,
-            pr_state=None,
-            build_age_hours=24.0,
-            now=time.time(),
-            active_ids={"another-task"},
-            safe_only=False,
-            merged_pr_only=False,
-        )
-    assert unpushed_reason is None
-
-
 def test_sweep_preserves_non_esrch_dead_owner_during_grace_window(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -309,63 +247,6 @@ def test_review_resource_cleanup_is_idempotent(tmp_path: Path) -> None:
 
         # Second invocation must be silent and raise no exception
         _cleanup_review_resources(state=state_mock, roots=(root_mock,))
-
-
-@pytest.mark.parametrize("task_status", ["done", "failed", "no_deliverable"])
-def test_terminal_task_retained_when_activity_probe_unavailable(tmp_path: Path, task_status: str) -> None:
-    """Guard / F5: A terminal record cannot establish Class B settlement without an activity probe."""
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    tasks_dir = repo / "batch_state" / "tasks"
-    tasks_dir.mkdir(parents=True)
-
-    task_id = "task-789"
-    (tasks_dir / f"{task_id}.json").write_text(
-        json.dumps({"task_id": task_id, "status": task_status}), encoding="utf-8"
-    )
-
-    wt = repo / ".worktrees" / "dispatch" / "lane-1" / "task-789"
-    wt.mkdir(parents=True)
-
-    info = reap_worktrees.WorktreeInfo(
-        path=wt,
-        head="1234567890abcdef1234567890abcdef12345678",
-        branch=None,
-        detached=True,
-    )
-
-    with (
-        patch.object(reap_worktrees, "_worktree_clean", return_value=True),
-        patch.object(reap_worktrees, "_is_ancestor_of_origin_main", return_value=False),
-        patch.object(reap_worktrees, "_is_head_reachable_from_remote", return_value=True),
-    ):
-        reason = reap_worktrees._qualifying_reason(
-            repo_root=repo,
-            info=info,
-            pr_state=None,
-            build_age_hours=24.0,
-            now=time.time(),
-            active_ids=None,
-            safe_only=False,
-            merged_pr_only=False,
-        )
-
-    assert reason is None
-
-    # The caller's contained-checkout fallback also retains the tree and
-    # reports why; an unavailable probe must not look like a known empty set.
-    attention: list[str] = []
-    fallback_reason = reap_worktrees._detached_clean_contained_reason(
-        repo_root=repo,
-        info=info,
-        active_ids=None,
-        attention=attention,
-    )
-    assert fallback_reason is None
-    assert attention == ["active-task probe unavailable; detached clean contained checkout preserved"]
-    result = reap_worktrees.ReapResult(path=str(wt), branch=None, action="skipped", reason=attention[0], dirty=False)
-    assert reap_worktrees.classify_preservation(result) == "detached_unknown"
-    assert wt.exists()
 
 
 def test_create_review_temp_root_defaults_to_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -8,11 +8,12 @@ import pytest
 
 from scripts.fleet import ignored_task_output as output
 from scripts.fleet import regenerable_output as patterns
-from tests import test_fleet_post_task_reap as reap_fixtures
+from scripts.orchestration import worktree_claims
 from tests.orchestration import test_worktree_artifacts as fixtures
+from tests.orchestration import test_worktree_git as repo_fixtures
 
 checkout = fixtures.checkout
-hermetic_reap = reap_fixtures.hermetic_reap
+hermetic_repo = repo_fixtures.hermetic_repo
 
 # Independent concrete examples from the writers cited by the classifier.
 BUILD_OUTPUTS = [
@@ -212,29 +213,27 @@ def test_nonregular_build_output_is_refused(checkout):
         "site/public/lexicon/practice-imperative.A1.json",
     ],
 )
-def test_common_reaper_removes_only_regenerable_build_output(hermetic_reap, monkeypatch, remaining):
-    repo, tasks = hermetic_reap
+def test_guarded_removal_preserves_only_non_regenerable_build_output(hermetic_repo, monkeypatch, remaining):
+    repo, tasks = hermetic_repo
     ignore_site(repo)
-    reap_fixtures._run(["git", "add", ".gitignore"], cwd=repo)
-    reap_fixtures._run(["git", "commit", "-m", "fixture build ignores"], cwd=repo)
-    reap_fixtures._run(["git", "push", "origin", "main"], cwd=repo)
-    tree = reap_fixtures._add_dispatch_worktree(repo, "codex", "site-build-10061")
+    repo_fixtures._run(["git", "add", ".gitignore"], cwd=repo)
+    repo_fixtures._run(["git", "commit", "-m", "fixture build ignores"], cwd=repo)
+    repo_fixtures._run(["git", "push", "origin", "main"], cwd=repo)
+    tree = repo_fixtures._add_dispatch_worktree(repo, "codex", "site-build-10061")
     for name in [*BUILD_OUTPUTS, *([remaining] if remaining else [])]:
         path = tree / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(b"x" * 64)
-    reap_fixtures._write_task_state(tasks, "site-build-10061", "done", tree, agent="codex")
+    repo_fixtures._write_task_state(tasks, "site-build-10061", "done", tree, agent="codex")
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-    report = reap_fixtures.post_task_reap.post_task_reap(
-        "site-build-10061", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False
-    )
-    row = report["main_worktree"]
+    row = worktree_claims.remove_unclaimed_worktree(
+        tree, repo_root=repo, reason="fixture", owner_task_id=None, force=True, tasks_dir=tasks
+    ).as_record()
+    assert row["action"] == "removed" and not tree.exists(), row
     if remaining:
-        assert row["action"] == "removed" and not tree.exists(), report
         fixtures.assert_record_only(row["preserved_artifacts"], {remaining: b"x" * 64})
         assert [entry["path"] for entry in row["preserved_artifacts"]["paths"]] == [remaining]
     else:
-        assert row["action"] == "removed" and not tree.exists(), report
         assert not row.get("preserved_artifacts")
     assert not (repo / "batch_state/preserved").exists()
 

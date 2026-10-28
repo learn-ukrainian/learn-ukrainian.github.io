@@ -40,7 +40,7 @@ from scripts.hygiene.lane_disk_retention import (
     scan_dispatch_worktrees,
     scan_home_session_hints,
 )
-from scripts.orchestration.reap_worktrees import primary_checkout_root, resolve_repo_root
+from scripts.orchestration.worktree_git import primary_checkout_root, resolve_repo_root
 from scripts.path_safety import assert_delete_target
 
 EXIT_OK = 0
@@ -233,8 +233,9 @@ def record_gate5_observation(
 ) -> dict[str, Any]:
     """Append Gate 5 dry-run evidence. One calendar day (UTC) per unique day label.
 
-    Does **not** arm apply. ``apply_armed`` stays false until an explicit operator
-    GO after ``target_days`` *contiguous* observation days (Sol Gate 5).
+    Does **not** arm apply: the engine has no apply command, so ``apply_armed``
+    is always false. ``ready_for_apply_go`` still reports ``target_days``
+    *contiguous* observation days (Sol Gate 5).
     """
     day = str(plan.get("created_at") or _utc_now())[:10]
     entry = {
@@ -286,8 +287,8 @@ def record_gate5_observation(
                 "schema": "fleet-comms.retention.gate5-observation.v1",
                 "updated_at": now,
                 "policy_note": (
-                    f"{target_days}d contiguous observation before scheduled apply; "
-                    "apply OFF until contiguous days + recent sample + operator GO"
+                    f"{target_days}d contiguous dry-run observation; the engine has no apply "
+                    "command, so apply stays off"
                 ),
                 "apply_armed": False,
                 "observation_days_recorded": days,

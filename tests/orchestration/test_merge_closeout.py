@@ -9,7 +9,7 @@ from typing import Any
 import pytest
 
 from scripts.orchestration import merge_closeout as mc
-from scripts.orchestration import reap_worktrees as rw
+from scripts.orchestration import worktree_git as rw
 
 _REAL_RUN = subprocess.run
 
@@ -987,7 +987,7 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
     assert all(call[call.index("--repo") + 1] == repository for call in lookups)
 
     # Requests are repository restricted; a foreign row makes their proof unknown.
-    for transport in ("rest", "graphql", "search"):
+    for transport in ("rest", "graphql"):
         with monkeypatch.context() as scoped:
             rows = [opened, merged]
             if transport == "rest":
@@ -1010,38 +1010,31 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
             )
             if transport == "rest":
                 states, error = rw._query_pr_states_rest(repo, branch)
-            elif transport == "graphql":
-                states, error = rw._query_pr_states_graphql(repo, branch)
             else:
-                states, error = rw._query_prs_by_head_sha(repo, head)
+                states, error = rw._query_pr_states_graphql(repo, branch)
             assert states == []
             assert "repository does not match" in (error or "")
-            if transport in {"rest", "graphql"}:
+            if transport == "rest":
                 scoped.setattr(
                     rw, "_run_gh",
                     lambda *args, row=rows[1], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
                 )
-                if transport == "rest":
-                    states, error = rw._query_pr_by_number_rest(repo, 42)
-                else:
-                    states, error = rw._query_pr_by_number_graphql(repo, 42)
+                states, error = rw._query_pr_by_number_rest(repo, 42)
                 assert error is None and len(states) == 1
                 assert states[0].repository == repository and states[0].head_sha == head
                 scoped.setattr(
                     rw, "_run_gh",
                     lambda *args, row=rows[0], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
                 )
-                states, error = (rw._query_pr_by_number_rest(repo, 42) if transport == "rest"
-                                 else rw._query_pr_by_number_graphql(repo, 42))
+                states, error = rw._query_pr_by_number_rest(repo, 42)
                 assert states == [] and "repository does not match" in (error or "")
-                if transport == "rest":
-                    scoped.setattr(
-                        mc, "_run_gh",
-                        lambda *args, row=rows[1], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
-                    )
-                    own_pr, error = mc._fetch_pr_info_rest(repo, 42, repo=repository)
-                    assert error == "" and own_pr is not None
-                    assert own_pr.repository == repository and own_pr.head_sha == head
+                scoped.setattr(
+                    mc, "_run_gh",
+                    lambda *args, row=rows[1], **kwargs: subprocess.CompletedProcess([], 0, json.dumps(row), ""),
+                )
+                own_pr, error = mc._fetch_pr_info_rest(repo, 42, repo=repository)
+                assert error == "" and own_pr is not None
+                assert own_pr.repository == repository and own_pr.head_sha == head
 
     # A foreign row also invalidates the entire batched branch snapshot.
     from scripts.hygiene import branch_sweep

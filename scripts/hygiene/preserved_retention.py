@@ -20,8 +20,8 @@ if __package__ in (None, ""):
 from scripts.common.nofollow_walk import ComponentOpenError, open_directory_component
 from scripts.common.task_scratch import ContainmentError, _remove_invocation_dir, fd_mount_id
 from scripts.fleet import ignored_task_output, pr_identity
-from scripts.fleet.post_task_reap import _TERMINAL_STATUSES
 from scripts.hygiene.batch_state_retention import default_batch_root
+from scripts.orchestration.worktree_git import _TERMINAL_DISPATCH_STATUSES
 
 RELEASE_AGE_DAYS = 3
 
@@ -173,7 +173,7 @@ def eligible(fd: int, name: str, batch: Path, cutoff: datetime, release_cutoff: 
         task, archived = task_record(batch, name)
     except (OSError, ValueError, ComponentOpenError):
         return "task_unreadable"
-    if not isinstance(task, dict) or task.get("task_id") != name or task.get("status") not in _TERMINAL_STATUSES:
+    if not isinstance(task, dict) or task.get("task_id") != name or task.get("status") not in _TERMINAL_DISPATCH_STATUSES:
         return "task_state"
     pin = task.get("preserved_artifacts") or {}
     if not isinstance(pin, dict):

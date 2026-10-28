@@ -50,12 +50,11 @@ def make_interrupted_checkout(tmp_path, monkeypatch):
     output = tree / ".cache/output.bin"
     output.parent.mkdir()
     output.write_bytes(b"ignored output\x00\xff")
-    from scripts.orchestration import reap_worktrees as rw
+    from scripts.orchestration import worktree_git as rw
 
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(rw, "_query_pr_states", lambda *_args: ([], None))
-    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda *_args, **_kw: ([], None))
     return repo, tree, tasks, record, result, output
 
 

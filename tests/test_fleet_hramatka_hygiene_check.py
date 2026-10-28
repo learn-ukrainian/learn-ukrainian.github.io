@@ -284,11 +284,9 @@ def test_not_zombie_when_task_still_running(hermetic_repo) -> None:
 
 
 def test_terminal_worktree_with_open_pr_is_not_a_zombie(hermetic_repo) -> None:
-    """post_task_reap deliberately RETAINS a terminal-task worktree whose
-    branch still has an open PR ("open PR present for bound worktree branch").
-    Counting it here would demand a state the sanctioned reaper refuses to
-    produce, holding the gate at `stale` for as long as any lane has a PR in
-    flight."""
+    """A terminal-task worktree whose branch still has an open PR is kept on
+    purpose. Counting it here would hold the gate at `stale` for as long as
+    any lane has a PR in flight."""
     repo_root, tasks_dir = hermetic_repo
     worktree = _add_dispatch_worktree(repo_root, "kimi", "pr-open-task")
     _write_task_state(tasks_dir, "pr-open-task", "done", worktree)

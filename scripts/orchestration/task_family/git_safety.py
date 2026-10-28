@@ -518,7 +518,7 @@ def query_pr_by_head(
     pr_number: int | None = None,
     timeout: float = 30.0,
 ) -> dict[str, Any]:
-    from scripts.orchestration.reap_worktrees import _pr_repository, _scope_pr_rows
+    from scripts.orchestration.worktree_git import _pr_repository, _scope_pr_rows
 
     repository = _pr_repository(repo_root)
     repo_args = ["--repo", repository] if repository else []

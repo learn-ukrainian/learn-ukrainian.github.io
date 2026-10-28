@@ -87,8 +87,8 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
 
 
 def _full_disk(monkeypatch, *readings: float) -> dict[str, list]:
-    """Disk readings in order (the last repeats); a fake reaper and alert publisher (#10776)."""
-    seen: dict[str, list] = {"readings": list(readings), "reaper": [], "alerts": []}
+    """Disk readings in order (the last repeats) and a fake alert publisher (#10776)."""
+    seen: dict[str, list] = {"readings": list(readings), "alerts": []}
 
     def probe():
         values = seen["readings"]
@@ -96,12 +96,7 @@ def _full_disk(monkeypatch, *readings: float) -> dict[str, list]:
         used_bytes = int(400 * _GIB * used / 100)
         return dispatch_admission.DiskProbe(used_bytes=used_bytes, free_bytes=400 * _GIB - used_bytes)
 
-    def reaper(repo_root, _timeout_s=None):
-        seen["reaper"].append(repo_root)
-        return dispatch_admission.ReaperOutcome(ran=True, detail="reaper removed 0 worktree(s)")
-
     monkeypatch.setattr(dispatch_admission, "probe_disk", probe)
-    monkeypatch.setattr(dispatch_admission, "run_disk_reaper", reaper)
     monkeypatch.setattr(dispatch_admission, "post_disk_alert", lambda body, _key: seen["alerts"].append(body))
     return seen
 
@@ -125,7 +120,7 @@ def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeyp
 
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1].endswith(
-        "disk 82.0% used, 72.0 GiB free (reap at 85%, refuse at 90%, alert at 75%) [epics alert posted], "
+        "disk 82.0% used, 72.0 GiB free (refuse at 90%, alert at 75%) [epics alert posted], "
         "PSI shadow unknown (calibration only; unknown: test journal not configured; "
         "CPU ownership unknown, unattributed load unknown)"
     )
@@ -136,12 +131,10 @@ def test_capacity_pick_shows_the_disk_decision_without_reaping(tmp_path, monkeyp
     assert admission["admitted"] is False
     assert admission["line"].startswith(
         "admission (write dispatch): would REFUSE now: disk 91.0% used, 36.0 GiB free on the .worktrees "
-        "filesystem is at or above the refuse threshold of 90% (DISPATCH_DISK_REFUSE_USED_PERCENT=90); "
-        "reaper not run in this check"
+        "filesystem is at or above the refuse threshold of 90% (DISPATCH_DISK_REFUSE_USED_PERCENT=90)"
     )
     assert admission["disk_used_percent"] == 91.0
     assert admission["disk_free_gib"] == 36.0
-    assert disk["reaper"] == []  # capacity_pick only reports
     assert len(disk["alerts"]) == 1  # rate-limited across both calls
 
 

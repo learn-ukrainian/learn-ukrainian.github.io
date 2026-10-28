@@ -26,8 +26,7 @@ from typing import Any
 
 import pytest
 
-from scripts.fleet import post_task_reap
-from scripts.orchestration import reap_worktrees, worktree_prep
+from scripts.orchestration import worktree_prep
 
 # --- the real ``git`` Popen path -------------------------------------------------------------
 
@@ -37,11 +36,9 @@ from scripts.orchestration import reap_worktrees, worktree_prep
 
 # --- no automatic removal of a registered worktree ------------------------------------------
 
-# Every function on the worktree-prep path and the reaper's ``initializing``
-# class. None may run a removal, unlock or prune of a registered worktree.
+# Every function on the worktree-prep path. None may run a removal, unlock or
+# prune of a registered worktree.
 _REPORT_ONLY_FUNCTIONS = [
-    reap_worktrees._initializing_leftover_result,
-    post_task_reap._reap_main_worktree,
     *(
         obj
         for _name, obj in inspect.getmembers(worktree_prep, inspect.isfunction)

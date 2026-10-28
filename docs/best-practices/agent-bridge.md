@@ -215,24 +215,21 @@ or merge-base…HEAD) — never two-dot `base-tip..HEAD` against a moved base
 
 ### Worktree cleanup (post-merge painpoint)
 
-After a PR merges, do **not** leave dispatch worktrees forever:
+The dispatcher removes each task's own worktree when the task settles, and
+only when nothing in it can be lost; a kept tree records why in
+`worktree_disposition_reason`. After a PR merges, run the closeout from the
+primary checkout:
 
 ```bash
-# Safe default (dry-run):
-.venv/bin/python -m scripts.orchestration.reap_worktrees
-
-# Recommended post-merge cleanup (dirty worktrees are preserved):
-.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged
+.venv/bin/python -m scripts.orchestration.merge_closeout <PR> --apply
 ```
 
-`--merged` restricts cleanup to exact merged-PR heads and enables branch
-pruning. Dirty trees remain untouched unless a human explicitly adds
-`--preserve-then-reap`. Open PRs are never reaped just because HEAD matches
-`origin/<branch>`.
+It proves the PR merged and its branches gone, and reports any worktree still
+tied to it; it removes no worktree.
 
-Every worktree remover (settle, dispatch's superseded-review and
-stale-branch-holder release, this reaper, task-family cleanup, ACP runtime
-cleanup, `scripts/wt.sh clean`, and the RB2 trail's cleanup step) goes through
+Apart from the dispatcher's own settlement removal, every worktree remover
+(dispatch's superseded-review and stale-branch-holder release, task-family
+cleanup, ACP runtime cleanup, `scripts/wt.sh clean`, and the RB2 trail's cleanup step) goes through
 one chokepoint in `scripts/orchestration/worktree_claims.py` (#8610). It takes
 the per-worktree lock in `<git common dir>/lu-worktree-locks/` that dispatch
 holds from attach until its task record is published, and under that lock it

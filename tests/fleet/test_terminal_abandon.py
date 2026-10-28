@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.fleet import ignored_task_output as output
-from scripts.orchestration import reap_worktrees as rw
+from scripts.orchestration import worktree_git as rw
 from tests.orchestration.test_worktree_output_chokepoint import boundary_tree as boundary_tree
 from tests.test_continuation_worktree_reap import abandon_cohort as abandon_cohort
 from tests.test_continuation_worktree_reap import same_branch_pending_cohort as same_branch_pending_cohort
@@ -56,7 +56,7 @@ def invoke(fixture, **overrides):
     )
 
 
-def test_written_record_passes_both_existing_readers(writer_fixture, capsys):
+def test_written_record_passes_the_existing_reader(writer_fixture, capsys):
     repo, tree, tasks, creator, _, _, head = writer_fixture
     assert invoke(writer_fixture) == 0
     result = json.loads(capsys.readouterr().out)
@@ -66,7 +66,6 @@ def test_written_record_passes_both_existing_readers(writer_fixture, capsys):
     assert path == tasks / "boundary.json"
     assert record == dict(creator, worktree_abandon=record["worktree_abandon"])
     assert record["worktree_abandon"]["schema"] == "terminal-abandon.v1"
-    assert rw._terminal_abandon_matches(repo, tree) == matches
     preservation = record["worktree_abandon"]["preservation"]
     manifest_bytes = (repo / preservation["path"]).read_bytes()
     assert hashlib.sha256(manifest_bytes).hexdigest() == preservation["sha256"]
@@ -425,12 +424,12 @@ def test_same_stream_successor_records_bound_succession_receipt(succession, caps
     assert (copy / "untracked.txt").read_bytes() == b"untracked unique bytes"
 
 
-def test_successor_preservation_restores_and_reaper_removes(succession, tmp_path, capsys):
+def test_successor_preservation_restores_the_head_tree(succession, tmp_path, capsys):
     fixture, _ = succession
-    repo, tree, _, _, _, _, head = fixture
+    repo, _, _, _, _, _, head = fixture
     assert invoke(fixture) == 0
     capsys.readouterr()
-    _, receipt, manifest = _recorded(fixture)
+    _, _, manifest = _recorded(fixture)
     environment = dict(os.environ, GIT_INDEX_FILE=str(tmp_path / "restore.index"))
     subprocess.run(["git", "read-tree", manifest["base_sha"]], cwd=repo, env=environment, check=True, timeout=30)
     subprocess.run(
@@ -447,18 +446,6 @@ def test_successor_preservation_restores_and_reaper_removes(succession, tmp_path
         ["git", "rev-parse", f"{head}^{{tree}}"], cwd=repo, check=True, capture_output=True, text=True, timeout=30
     ).stdout.strip()
     assert restored == tree_of_head
-    row = next(
-        r
-        for r in rw.reap_worktrees(
-            repo_root=repo, apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
-        )
-        if r.path == str(tree)
-    )
-    assert row.action == "preserved_then_removed", row
-    assert not tree.exists()
-    # The removal gate reused the successor's verified copy, which outlives the tree.
-    assert row.preserved_artifacts["location"] == manifest["output"]["location"]
-    assert row.preserved_artifacts["abandon_proof"]["succession"] == receipt["succession"]
     copy = repo / manifest["output"]["location"]
     assert output.verify_retrieval(repo, manifest["output"]) == manifest["output"]["content_sha256"]
     assert (copy / "ignored/output.txt").read_bytes() == b"current output"
@@ -642,28 +629,15 @@ def test_successor_record_is_revalidated_at_removal(succession, monkeypatch, tmp
     matches = output.matching_worktree_records(tree, tasks, repo_root=repo, publish_cache=False)
     with pytest.raises(ValueError, match="succession"):
         output.terminal_abandon_creator(matches, tree, primary=repo, tasks_dir=tasks)
-    row = next(
-        r
-        for r in rw.reap_worktrees(
-            repo_root=repo, apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
-        )
-        if r.path == str(tree)
-    )
-    assert row.action not in {"removed", "preserved_then_removed"}, row
     assert tree.exists()
 
 
 def _refused_removal(fixture, reason):
-    repo, tree, *_ = fixture
-    row = next(
-        r
-        for r in rw.reap_worktrees(
-            repo_root=repo, apply=True, live_cwds=set(), preserve_then_reap=True, merged_pr_only=False
-        )
-        if r.path == str(tree)
-    )
-    assert row.action not in {"removed", "preserved_then_removed"}, row
-    assert reason in row.reason, row
+    """The proof every removal reads (``preserve_worktree_artifacts``) is refused."""
+    repo, tree, tasks, *_ = fixture
+    matches = output.matching_worktree_records(tree, tasks, repo_root=repo, publish_cache=False)
+    with pytest.raises(ValueError, match=reason):
+        output.terminal_abandon_creator(matches, tree, primary=repo, tasks_dir=tasks)
     assert tree.exists()
 
 

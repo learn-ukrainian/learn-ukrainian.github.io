@@ -198,30 +198,22 @@ def _real_git_observations(boundary_tree, monkeypatch):
     Restore the standard subprocess implementation before any marker setup
     or production call here, and move those observations to their API seams.
     """
-    from scripts.fleet import post_task_reap
-    from scripts.orchestration import merge_closeout, reap_worktrees
+    from scripts.orchestration import merge_closeout, worktree_git
 
     monkeypatch.setattr(subprocess, "run", _REAL_RUN)
     _repo, tree, _tasks, _record = boundary_tree
     head = _git(tree, "rev-parse", "HEAD")
-    pr = reap_worktrees.PullRequestState(number=9645, state="MERGED", head_sha=head)
+    pr = worktree_git.PullRequestState(number=9645, state="MERGED", head_sha=head)
     monkeypatch.setattr(
-        reap_worktrees,
+        worktree_git,
         "_query_pr_states",
         lambda _repo, branch: ([pr] if branch == "codex/boundary" else [], None),
     )
-    monkeypatch.setattr(
-        reap_worktrees,
-        "_query_pr_by_number",
-        lambda _repo, number: ([pr] if number == 9645 else [], None),
-    )
-    monkeypatch.setattr(reap_worktrees, "_query_prs_by_head_sha", lambda *_args, **_kwargs: ([], None))
     monkeypatch.setattr(
         merge_closeout,
         "fetch_pr_info",
         lambda *_args, **_kwargs: merge_closeout.PullRequestInfo(9645, "MERGED", "codex/boundary", head),
     )
-    monkeypatch.setattr(post_task_reap.pr_identity, "probe_open_pr_for_branch", lambda **_kwargs: (False, None))
     assert subprocess.run is _REAL_RUN
 
 
@@ -527,48 +519,15 @@ def test_scoped_preparation_never_imports_execution_inventory(boundary_tree, tmp
     assert message.count("X-Agent:") == 1 and "X-Agent: codex/scoped" in message
 
 
-PROOF_CALLERS = ["origin-gone", "live-heads", "closeout-fetch", "preserve-then-reap"]
+PROOF_CALLERS = ["closeout-fetch"]
 
 
 def proof_call(caller, fixture):
     from scripts.orchestration import merge_closeout as mc
-    from scripts.orchestration import reap_worktrees as rw
 
-    repo, tree, _tasks, _record = fixture
-    # Metadata probes here are also production runner calls, never raw Git
-    # reading configured programs after tripwire installation.
-    head = rw._run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
-    info = rw.WorktreeInfo(path=tree, branch="codex/boundary", head=head)
-    pr = rw.PullRequestState(number=9645, state="MERGED", head_sha=head)
-    if caller == "origin-gone":
-        proved, reason = rw._merged_origin_gone_proof(info, pr)
-        if not proved:
-            return ("kept", reason)
-        result = worktree_claims.remove_unclaimed_worktree(
-            tree, repo_root=repo, reason="proof fixture", owner_task_id=None
-        )
-        return (result.action, "")
-    if caller == "live-heads":
-        return rw._live_origin_heads_present(tree, "codex/boundary")
-    if caller == "closeout-fetch":
-        return mc._fetch_live_pr_head(tree, 9645)
-    result = rw._reap_qualified_worktree(
-        repo_root=repo,
-        info=info,
-        reason="PR #9645 MERGED",
-        dirty=True,
-        pr_state=pr,
-        apply=True,
-        preserve_then_reap=True,
-        prune_merged_branches=False,
-        require_terminal_dispatch_guards=False,
-    )
-    if result.action == "preserved_then_removed":
-        from scripts.orchestration.execution_safe_git import run_git
-
-        stored = run_git(["cat-file", "blob", "codex/boundary:payload.bin"], cwd=repo, capture_output=True)
-        assert stored.stdout == b"preserve\x00exact\r\n"
-    return (result.action, result.error)
+    _repo, tree, _tasks, _record = fixture
+    assert caller == "closeout-fetch"
+    return mc._fetch_live_pr_head(tree, 9645)
 
 
 @pytest.mark.parametrize("scope", ["common", "worker", "both"])
@@ -578,15 +537,7 @@ def test_proof_and_preserve_config_markers(boundary_tree, tmp_path, scope, calle
     origin = _git(repo, "remote", "get-url", "origin")
     head = _git(tree, "rev-parse", "HEAD")
     _git(repo, "push", "origin", f"{head}:refs/pull/9645/head")
-    if caller == "origin-gone":
-        _git(repo, "push", "origin", "--delete", "codex/boundary")
-    if caller == "preserve-then-reap":
-        (tree / "payload.bin").write_bytes(b"preserve\x00exact\r\n")
     expected = proof_call(caller, boundary_tree)
-    if not tree.exists():
-        _git(repo, "worktree", "add", "-B", "codex/boundary", str(tree), head)
-        if caller == "preserve-then-reap":
-            (tree / "payload.bin").write_bytes(b"preserve\x00exact\r\n")
     markers = install_full_markers(repo, tree, tmp_path, scope)
     # The primary origin is local, while the worker tries to redirect proofs
     # to SSH. A primary-cwd proof must still return the same successful result.
@@ -596,11 +547,9 @@ def test_proof_and_preserve_config_markers(boundary_tree, tmp_path, scope, calle
     finally:
         assert not any(marker.exists() for marker in markers), "repository configuration executed a marker"
     assert actual == expected
-    if caller in {"origin-gone", "preserve-then-reap"}:
-        assert not tree.exists()
 
 
-@pytest.mark.parametrize("caller", ["origin-gone", "live-heads", "closeout-fetch"])
+@pytest.mark.parametrize("caller", PROOF_CALLERS)
 @pytest.mark.parametrize("scope", ["common", "worker", "both"])
 def test_remote_ssh_failure_never_executes_config(boundary_tree, tmp_path, caller, scope):
     repo, tree, _tasks, _record = boundary_tree
@@ -618,7 +567,6 @@ def test_remote_ssh_failure_never_executes_config(boundary_tree, tmp_path, calle
 @pytest.mark.parametrize("source", ["worktree", "cached", "info", "external"])
 def test_preserve_refuses_filter_before_staging(boundary_tree, tmp_path, source):
     from scripts.orchestration import execution_safe_git as safe
-    from scripts.orchestration import reap_worktrees as rw
 
     repo, tree, _tasks, _record = boundary_tree
     (tree / "payload.bin").write_bytes(b"original\r\n")
@@ -641,8 +589,8 @@ def test_preserve_refuses_filter_before_staging(boundary_tree, tmp_path, source)
     payload = b"changed\x00bytes\r\n"
     (tree / "payload.bin").write_bytes(payload)
     markers = install_full_markers(repo, tree, tmp_path, "both")
-    error = rw._preserve_dirty_worktree(rw.WorktreeInfo(path=tree, head=head, branch="codex/boundary"))
-    assert error is not None and "preserve_filter_attribute" in error
+    refusal = safe.run_git(["add", "-A"], cwd=tree, profile="commit", capture_output=True, text=True)
+    assert refusal.returncode != 0 and "preserve_filter_attribute" in refusal.stderr
     assert not any(marker.exists() for marker in markers)
     assert tree.exists() and (tree / "payload.bin").read_bytes() == payload
     assert safe.run_git(["ls-files", "--stage", "-z"], cwd=tree, capture_output=True).stdout == index
@@ -740,7 +688,6 @@ def test_remote_and_signing_execution_overrides_are_refused(boundary_tree, tmp_p
 )
 def test_round_c_preserve_transform_refusal_is_nonmutating(boundary_tree, tmp_path, source, attribute):
     from scripts.orchestration import execution_safe_git as safe
-    from scripts.orchestration import reap_worktrees as rw
 
     repo, tree, _tasks, _record = boundary_tree
     attrs = f"payload.bin {attribute}\n"
@@ -760,20 +707,9 @@ def test_round_c_preserve_transform_refusal_is_nonmutating(boundary_tree, tmp_pa
     head = _git(tree, "rev-parse", "HEAD")
     index_path = Path(_git(tree, "rev-parse", "--path-format=absolute", "--git-path", "index"))
     index = index_path.read_bytes()
-    info = rw.WorktreeInfo(tree, "codex/boundary", head)
-    result = rw._reap_qualified_worktree(
-        repo_root=repo,
-        info=info,
-        reason="PR #9645 MERGED",
-        dirty=True,
-        pr_state=rw.PullRequestState(number=9645, state="MERGED", head_sha=head),
-        apply=True,
-        preserve_then_reap=True,
-        prune_merged_branches=False,
-        require_terminal_dispatch_guards=False,
-    )
-    assert result.action == "error"
-    assert "preserve_transform_attribute" in result.error
+    result = safe.run_git(["add", "-A"], cwd=tree, profile="commit", capture_output=True, text=True)
+    assert result.returncode != 0
+    assert "preserve_transform_attribute" in result.stderr
     assert tree.exists() and (tree / "payload.bin").read_bytes() == payload
     assert index_path.read_bytes() == index
     assert safe.run_git(["rev-parse", "HEAD"], cwd=tree, capture_output=True, text=True).stdout.strip() == head
@@ -786,7 +722,6 @@ def test_round_c_preserve_transform_refusal_is_nonmutating(boundary_tree, tmp_pa
 @pytest.mark.parametrize("macro", ["custom", "binary"])
 def test_round_c_preserve_refuses_expanded_macros(boundary_tree, source, attribute, macro):
     from scripts.orchestration import execution_safe_git as safe
-    from scripts.orchestration import reap_worktrees as rw
 
     _repo, tree, _tasks, _record = boundary_tree
     (tree / ".gitattributes").write_text(f"[attr]{macro} {attribute}\n[attr]nested {macro}\npayload.bin nested\n")
@@ -798,9 +733,9 @@ def test_round_c_preserve_refuses_expanded_macros(boundary_tree, source, attribu
     head = _git(tree, "rev-parse", "HEAD")
     index_path = Path(_git(tree, "rev-parse", "--path-format=absolute", "--git-path", "index"))
     index = index_path.read_bytes()
-    error = rw._preserve_dirty_worktree(rw.WorktreeInfo(tree, "codex/boundary", head))
+    refusal = safe.run_git(["add", "-A"], cwd=tree, profile="commit", capture_output=True, text=True)
     code = "preserve_filter_attribute" if attribute.startswith("filter") else "preserve_transform_attribute"
-    assert error is not None and code in error
+    assert refusal.returncode != 0 and code in refusal.stderr
     assert (tree / "payload.bin").read_bytes() == payload
     assert index_path.read_bytes() == index
     assert safe.run_git(["rev-parse", "HEAD"], cwd=tree, capture_output=True, text=True).stdout.strip() == head
@@ -809,28 +744,25 @@ def test_round_c_preserve_refuses_expanded_macros(boundary_tree, source, attribu
 @pytest.mark.parametrize("attribute", ["-crlf", "!crlf", "-text", "binary", "custom"])
 def test_round_c_preserve_nontransforming_attributes_are_byte_exact(boundary_tree, attribute):
     from scripts.orchestration import execution_safe_git as safe
-    from scripts.orchestration import reap_worktrees as rw
 
     _repo, tree, _tasks, _record = boundary_tree
     (tree / ".gitattributes").write_text(f"[attr]custom -text -crlf\npayload.bin {attribute}\n")
     payload = b"a\r\nb\r\n$Id: expanded $\r\n"
     (tree / "payload.bin").write_bytes(payload)
-    head = _git(tree, "rev-parse", "HEAD")
-    assert rw._preserve_dirty_worktree(rw.WorktreeInfo(tree, "codex/boundary", head)) is None
+    for command in (["add", "-A"], ["commit", "--no-verify", "-m", "preserve fixture"]):
+        assert safe.run_git(command, cwd=tree, profile="commit", capture_output=True).returncode == 0
     assert safe.run_git(["cat-file", "blob", "HEAD:payload.bin"], cwd=tree, capture_output=True).stdout == payload
     assert (tree / "payload.bin").read_bytes() == payload
 
 
-@pytest.mark.parametrize("caller", ["origin-gone", "live-heads", "closeout-fetch"])
+@pytest.mark.parametrize("caller", PROOF_CALLERS)
 @pytest.mark.parametrize("remote", ["mirror", "origin"])
-def test_round_c_remote_helper_proof_scope(boundary_tree, capsys, caller, remote):
+def test_round_c_remote_helper_proof_scope(boundary_tree, caller, remote):
     from scripts.orchestration import execution_safe_git as safe
 
     repo, tree, _tasks, _record = boundary_tree
     head = _git(tree, "rev-parse", "HEAD")
     _git(repo, "push", "origin", f"{head}:refs/pull/9645/head")
-    if caller == "origin-gone":
-        _git(repo, "push", "origin", "--delete", "codex/boundary")
     _git(repo, "config", "remote.mirror.url", _git(repo, "remote", "get-url", "origin"))
     _git(repo, "config", f"remote.{remote}.vcs", "hg")
     probe = safe.run_git(["ls-remote", "--heads", "origin"], cwd=tree, profile="remote", capture_output=True, text=True)
@@ -841,16 +773,10 @@ def test_round_c_remote_helper_proof_scope(boundary_tree, capsys, caller, remote
         assert probe.returncode == 0 and not isinstance(probe, safe.GitRefusal)
     result = proof_call(caller, boundary_tree)
     if remote == "mirror":
-        assert result == {"origin-gone": ("removed", ""), "live-heads": True, "closeout-fetch": (head, None)}[caller]
+        assert result == (head, None)
     else:
-        if caller == "live-heads":
-            assert result is None
-            assert "remote_vcs_helper_unsupported" in capsys.readouterr().err
-        else:
-            assert result[0] == ("kept" if caller == "origin-gone" else None)
-            assert "remote_vcs_helper_unsupported" in result[1]
-            if caller == "origin-gone":
-                assert "unproven commits" in result[1]
+        assert result[0] is None
+        assert "remote_vcs_helper_unsupported" in result[1]
         assert tree.exists()
         assert _git(tree, "rev-parse", "HEAD") == head
 
@@ -887,34 +813,6 @@ def test_round_c_remote_ref_pattern_is_not_a_remote(boundary_tree, command):
         assert isinstance(refused, safe.GitRefusal) and refused.code == "remote_vcs_helper_unsupported"
 
 
-def test_round_c_origin_helper_refusal_sweep_continues(boundary_tree, monkeypatch):
-    from scripts.orchestration import reap_worktrees as rw
-
-    repo, tree, _tasks, _record = boundary_tree
-    head = _git(tree, "rev-parse", "HEAD")
-    _git(tree, "commit", "--allow-empty", "-m", "unproven local commit")
-    unproven = _git(tree, "rev-parse", "HEAD")
-    _git(repo, "push", "origin", "--delete", "codex/boundary")
-    next_tree = repo / ".worktrees/dispatch/codex/next"
-    _git(repo, "worktree", "add", "-b", "codex/next", str(next_tree), head)
-    monkeypatch.setattr(
-        rw,
-        "_query_pr_states",
-        lambda _repo, _branch: (
-            [rw.PullRequestState(number=9645, state="MERGED", head_sha=head)],
-            None,
-        ),
-    )
-    _git(repo, "config", "remote.origin.vcs", "hg")
-    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
-    blocked = next(result for result in results if Path(result.path) == tree)
-    assert blocked.action == "skipped"
-    assert "remote_vcs_helper_unsupported" in blocked.reason and unproven in blocked.reason
-    assert tree.exists() and _git(tree, "rev-parse", "HEAD") == unproven
-    following = next(result for result in results if Path(result.path) == next_tree)
-    assert following.action == "removed" and not next_tree.exists()
-
-
 @pytest.mark.parametrize("command", [["add", "-A"], ["commit", "--no-verify", "-m", "preserve fixture"]])
 def test_preserve_disables_initialized_submodule_filter(boundary_tree, tmp_path, command):
     from scripts.orchestration import execution_safe_git as safe
@@ -945,3 +843,19 @@ def test_preserve_disables_initialized_submodule_filter(boundary_tree, tmp_path,
     # Both staging and committing retain the same blob bytes.
     blob = ":preserve.txt" if command[0] == "add" else "HEAD:preserve.txt"
     assert safe.run_git(["cat-file", "blob", blob], cwd=tree, capture_output=True, check=True).stdout == b"exact\r\n"
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["worktree", "move", "relative", "/abs"],
+        ["worktree", "move", "/abs"],
+        ["worktree", "move", "--force", "/a", "/b"],
+        ["worktree", "move", "-f", "/b"],
+    ],
+)
+def test_safe_git_admits_only_a_plain_absolute_worktree_move(tmp_path: Path, args: list[str]) -> None:
+    from scripts.orchestration import execution_safe_git as safe
+
+    with pytest.raises(ValueError, match="unsupported worktree move operation"):
+        safe.run_git(args, cwd=tmp_path)

@@ -303,20 +303,17 @@ Use <strong>three-dot</strong> evidence only (<code>gh pr diff</code>, <code>gh 
 or merge-base…HEAD) — never two-dot <code>base-tip..HEAD</code> against a moved base
 (#5802). Prefer exact-head cross-family review through <code>ask-&lt;lane&gt; --type review</code> (headless dispatch) for ordinary formal CF review (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520).</p>
 <h3>Worktree cleanup (post-merge painpoint)</h3>
-<p>After a PR merges, do <strong>not</strong> leave dispatch worktrees forever:</p>
-<pre><code class="language-bash"># Safe default (dry-run):
-.venv/bin/python -m scripts.orchestration.reap_worktrees
-
-# Recommended post-merge cleanup (dirty worktrees are preserved):
-.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged
+<p>The dispatcher removes each task's own worktree when the task settles, and
+only when nothing in it can be lost; a kept tree records why in
+<code>worktree_disposition_reason</code>. After a PR merges, run the closeout from the
+primary checkout:</p>
+<pre><code class="language-bash">.venv/bin/python -m scripts.orchestration.merge_closeout &lt;PR&gt; --apply
 </code></pre>
-<p><code>--merged</code> restricts cleanup to exact merged-PR heads and enables branch
-pruning. Dirty trees remain untouched unless a human explicitly adds
-<code>--preserve-then-reap</code>. Open PRs are never reaped just because HEAD matches
-<code>origin/&lt;branch&gt;</code>.</p>
-<p>Every worktree remover (settle, dispatch's superseded-review and
-stale-branch-holder release, this reaper, task-family cleanup, ACP runtime
-cleanup, <code>scripts/wt.sh clean</code>, and the RB2 trail's cleanup step) goes through
+<p>It proves the PR merged and its branches gone, and reports any worktree still
+tied to it; it removes no worktree.</p>
+<p>Apart from the dispatcher's own settlement removal, every worktree remover
+(dispatch's superseded-review and stale-branch-holder release, task-family
+cleanup, ACP runtime cleanup, <code>scripts/wt.sh clean</code>, and the RB2 trail's cleanup step) goes through
 one chokepoint in <code>scripts/orchestration/worktree_claims.py</code> (#8610). It takes
 the per-worktree lock in <code>&lt;git common dir&gt;/lu-worktree-locks/</code> that dispatch
 holds from attach until its task record is published, and under that lock it

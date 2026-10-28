@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from scripts.orchestration import execution_safe_git as safe
-from scripts.orchestration import reap_worktrees, worktree_artifacts
+from scripts.orchestration import worktree_artifacts, worktree_git
 from tests.orchestration.test_worktree_claims_cli import _git, _primary
 
 
@@ -59,13 +59,13 @@ def test_runner_binary_probes_and_caller_output_contract(tmp_path, monkeypatch, 
         assert any("check-attr" in argv for argv, _kwargs, _result in probes)
 
 
-def test_reaper_text_and_artifact_binary_inventory_callers(tmp_path):
+def test_worktree_git_text_and_artifact_binary_inventory_callers(tmp_path):
     repo = _primary(tmp_path)
     filename = "with\nnewline.txt"
     (repo / filename).write_bytes(b"exact\r\n")
     _git(repo, "add", filename)
 
-    status = reap_worktrees._run(["git", "status", "--porcelain"], cwd=repo)
+    status = worktree_git._run(["git", "status", "--porcelain"], cwd=repo)
     assert status.returncode == 0
     assert isinstance(status.stdout, str)
     assert "with\\nnewline.txt" in status.stdout

@@ -795,11 +795,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "1c57c0f6ac43dd4fc0b4f4baba7647ce4221086b52f0e6b4700ff406bee6dcb6:1 27aa61ac8f66a6b34cfed0dd8cf8e12e93aeb31cdea4813f6f09c6062576c8fa:1 3569f08b00e9114418242100f1b22462198be378022613efeef593b3ff6fd02e:1",
     ),
     (
-        "scripts/orchestration/reap_worktrees.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "0dcce25a917de4c2c234ba2ec7fa119d1bb494c4609c1d60ae2b809d2aa99a7f:1 1c645b1bad7e40942972c88ee9e6651705e7fbaa0630e1dca853591282c76717:1 8f174b2012420c05fdf6b5be01655955a3931731bd4619272f3f06424f5536e8:1",
-    ),
-    (
         "scripts/orchestration/red_ci_known_failures.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "6fc1251070848cb64ab73fce1f4d6fbe71bda1e8ace49bd1d5c2d933895f9f64:1",
@@ -1705,11 +1700,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "tests/orchestration/test_job_host_exec.py",
         "Existing test literal; migration outside this bounded packet (#9702).",
         "169d4511743538b9be608c16cfd4a86ccd75de5d018d4cffc3f6bca40b8eda67:1 35eef957e7ac6dfb323982b5acdb0d4c5ac6bc3e41dba5a3f06a0d4ed8ad76c5:1 3cac3970d6434c27592340c8750dfe8c885f88ad6d33a46e20e461d810482bb5:1 6d0a3a07137da113db85eadf897776f58b8104244fa38a91b62e2d6e12fb9290:1 78a2828693382f4e53c60d70ea534f892706f2cdc6a74b1e3ff1f4a888c3f0af:1 9668994dd3e78910e686248664fb372b4ceb8c3b3c73f7394d646d27ca2e5199:3",
-    ),
-    (
-        "tests/orchestration/test_reap_worktrees.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "f4e010fa5c91d855fc50abbc07ceaa32713537e3dc4db75bdc6b6c240d198a3a:1",
     ),
     (
         "tests/orchestration/test_scheduled_worktree_cleanup.py",

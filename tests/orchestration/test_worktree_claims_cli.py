@@ -517,3 +517,50 @@ def test_namespace_other_live_worker_keeps_terminal_claim(tmp_path):
     finally:
         process.terminate()
         process.wait(timeout=10)
+
+
+def test_archived_needs_finalize_record_never_claims_even_for_another_task(tmp_path):
+    repo = _primary(tmp_path)
+    worktree = _linked(repo, "codex/archived-claim")
+    tasks = repo / "batch_state" / "tasks"
+    tasks.mkdir(parents=True)
+    (tasks / "old.20260930T022748759089Z.archived.json").write_text(
+        json.dumps({"task_id": "old", "status": "running", "worktree_path": str(worktree)}), encoding="utf-8"
+    )
+    (tasks / "live.json").write_text(
+        json.dumps({"task_id": "live", "status": "running", "worktree_path": str(worktree)}), encoding="utf-8"
+    )
+
+    assert worktree_claims.active_worktree_claim_refusal(worktree, tasks_dir=tasks, repo_root=repo) == (
+        "worktree claimed by active task live"
+    )
+    (tasks / "live.json").unlink()
+    assert worktree_claims.active_worktree_claim_refusal(worktree, tasks_dir=tasks, repo_root=repo) is None
+
+
+@pytest.mark.parametrize("record_task_id", ["owner", "different-task"])
+def test_unfinished_owner_record_without_proven_identity_still_claims_worktree(tmp_path, record_task_id):
+    """An unfinished owner or mislabelled record still claims without a valid nonce."""
+    repo = _primary(tmp_path)
+    worktree = _linked(repo, "codex/mislabelled")
+    _record(repo, "owner", status="running", worktree_path=str(worktree))
+    record = repo / "batch_state" / "tasks" / "owner.json"
+    record.write_text(
+        json.dumps({"task_id": record_task_id, "status": "running", "worktree_path": str(worktree)}),
+        encoding="utf-8",
+    )
+
+    refusal = worktree_claims.active_worktree_claim_refusal(
+        worktree, tasks_dir=record.parent, repo_root=repo, owner_task_id="owner"
+    )
+
+    assert refusal == f"worktree claimed by active task {record_task_id}"
+
+
+def test_final_worktree_delete_hand_refuses_the_repository_root(tmp_path):
+    """The last deletion boundary cannot turn a bad path into a root removal."""
+    repo = _primary(tmp_path)
+
+    error = worktree_claims.git_worktree_remove(repo, repo, force=True)
+
+    assert error == "delete guard refused worktree target: delete target is the repository root"

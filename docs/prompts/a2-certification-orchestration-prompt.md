@@ -458,21 +458,21 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
     curl -sI https://learn-ukrainian.github.io/a2/<slug>/ | head
     ```
 
-    Then clean up **after** `gh pr view` shows `MERGED`. Leave the target
-    worktree first; run cleanup from a separate shell whose cwd is the primary
-    checkout (reaper self-protects if invoked from inside the target):
+    Then close out **after** `gh pr view` shows `MERGED`, from a shell whose
+    cwd is the primary checkout. The dispatcher already removed the task's
+    worktree when the task settled, unless it recorded a reason to keep it
+    (`worktree_disposition_reason` in the task record):
 
     ```bash
     # primary checkout shell — absolute interpreter via primary .venv
-    .venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged \
-      --worktree .worktrees/dispatch/codex/a2-mXX-<slug>-certify
-    git ls-remote --heads origin "codex/a2-mXX-<slug>-certify"   # must be empty
-    # if remote still exists:
-    # git push origin --delete codex/a2-mXX-<slug>-certify
-    git branch -d codex/a2-mXX-<slug>-certify 2>/dev/null || true
+    .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
     git fetch --prune origin
-    git worktree prune
     ```
+
+    `merge_closeout` proves the PR merged, deletes the remote and local
+    branch once proven, and reports any worktree still tied to the PR. It
+    removes no worktree: resolve a kept one per
+    `docs/runbooks/worktree-cleanup.md`, never with `--force`.
 
 13. Move to the next module only after the previous module is merged and live.
 

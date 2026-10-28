@@ -7,8 +7,8 @@ import pytest
 
 from scripts.fleet import ignored_task_output as output
 from scripts.orchestration.task_record_store import archived_task_record_path, task_record_path
-from tests.test_fleet_post_task_reap import _reuse_cohort
-from tests.test_fleet_post_task_reap import hermetic_reap as hermetic_reap
+from tests.orchestration.test_worktree_git import _reuse_cohort
+from tests.orchestration.test_worktree_git import hermetic_repo as hermetic_repo
 
 
 @pytest.mark.parametrize(
@@ -48,8 +48,8 @@ def test_archive_filter_requires_inventory_backed_current_creator(tmp_path, has_
 
 @pytest.mark.parametrize("archived", [False, True], ids=["hot", "archived"])
 @pytest.mark.parametrize("status", ["failed", "done", "running"])
-def test_false_record_without_inventory_is_never_cohort_creator(hermetic_reap, archived, status):
-    repo, tasks = hermetic_reap
+def test_false_record_without_inventory_is_never_cohort_creator(hermetic_repo, archived, status):
+    repo, tasks = hermetic_repo
     task_id = "codex-shared-leaf"
     tree = _reuse_cohort(repo, tasks, creator_task=task_id, successor_task="codex-reuser-r2")
     path = task_record_path(tasks, task_id)
@@ -71,8 +71,8 @@ def test_false_record_without_inventory_is_never_cohort_creator(hermetic_reap, a
 
 
 @pytest.mark.parametrize("archived", [False, True], ids=["hot", "archived"])
-def test_inventory_backed_creator_with_settled_reuser_is_resolved(hermetic_reap, archived):
-    repo, tasks = hermetic_reap
+def test_inventory_backed_creator_with_settled_reuser_is_resolved(hermetic_repo, archived):
+    repo, tasks = hermetic_repo
     task_id = "codex-creator-r1"
     tree = _reuse_cohort(repo, tasks, creator_task=task_id, successor_task="codex-reuser-r2")
     path = task_record_path(tasks, task_id)
