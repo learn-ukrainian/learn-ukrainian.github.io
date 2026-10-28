@@ -330,13 +330,8 @@ def test_review_scores_aggregate_by_reviewer_and_author_model(tmp_path):
     scores = collect_agent_success(tasks_dir=tmp_path, until=NOW)["review_scores"]
     assert scores["by_reviewer_model"]["gpt-6.1-terra"] == {
         "rounds": 2, "scored": 2, "absent": 0, "mean": 9, "median": 9.0,
-        # Free prose cannot establish zero findings, so the clean 10/10 has no band to compare.
-        "rubric_agreement": {"numerator": 1, "denominator": 1, "percent": 100.0},
     }
-    assert scores["by_reviewer_model"]["gpt-6.1-sol"] == {
-        "rounds": 2, "scored": 1, "absent": 1, "mean": 9, "median": 9,
-        "rubric_agreement": {"numerator": 0, "denominator": 1, "percent": 0.0},
-    }
+    assert scores["by_reviewer_model"]["gpt-6.1-sol"] == {"rounds": 2, "scored": 1, "absent": 1, "mean": 9, "median": 9}
     assert scores["by_reviewer_model"]["muse-wonder-full-1.0"]["absent"] == 1
     assert scores["by_reviewer_model"]["muse-wonder-full-1.0"]["mean"] == "unknown"
     opus = scores["by_author_model"]["claude-opus-5-5"]

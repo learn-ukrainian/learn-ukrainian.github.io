@@ -216,30 +216,16 @@ def _review(path: Path, record: dict) -> dict | None:
     }
 
 
-# The review rubric's score band for the worst finding (C-3020); "wrong approach" has no finding.
-SCORE_BANDS = {None: (10, 10), "P3": (7, 9), "P2": (7, 9), "P1": (4, 6), "P0": (1, 3)}
-
-
 def _scores(reviews: list[dict]) -> dict:
     """Advisory review scores for rounds with a verdict; a missing or malformed SCORE stays absent."""
     rounds = [r for r in reviews if r["verdict"] != "unknown"]
     scores = [r["score"] for r in rounds if r["score"] is not None]
-    banded = []
-    for review in rounds:
-        if review["score"] is None or review["findings"] is None:
-            continue
-        priorities = set(review["severities"])
-        if priorities - {"P0", "P1", "P2", "P3"}:
-            continue
-        low, high = SCORE_BANDS[min(priorities, default=None)]
-        banded.append(low <= review["score"] <= high)
     return {
         "rounds": len(rounds),
         "scored": len(scores),
         "absent": len(rounds) - len(scores),
         "mean": round(mean(scores), 2) if scores else "unknown",
         "median": median(scores) if scores else "unknown",
-        "rubric_agreement": _rate(sum(banded), len(banded)),
     }
 
 

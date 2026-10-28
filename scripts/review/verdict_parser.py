@@ -245,9 +245,15 @@ def _findings_json_verdicts(response: str) -> list[str]:
 
 # The review-loop reply's advisory ``SCORE: n/10`` line (C-3020), with the same
 # line-start rules as a verdict line; the colon is optional, as in the council's
-# ``SCORE n/10``. The rubric is 1 to 10.
+# ``SCORE n/10``. The rubric is 1 to 10. Any line that starts with the label
+# declares a score, so one malformed declaration (``SCORE: 8/10e2``,
+# ``SCORE: high``) makes the whole reply's score absent.
+_REVIEW_SCORE_LABEL_RE = re.compile(
+    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?SCORE(?:[*_`\s]*:|[*_`\s]+\d)", re.IGNORECASE
+)
 _REVIEW_SCORE_LINE_RE = re.compile(
-    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?SCORE(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)(\d{1,2})[*_`]* */ *10(?!\d|\.\d)",
+    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?SCORE(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)(\d{1,2})[*_`]* */ *10[*_`]*"
+    r"(?=$|\s|[.,;:!?)][*_`]*(?:\s|$))",
     re.IGNORECASE,
 )
 
@@ -261,7 +267,14 @@ def review_score(response: str) -> int | None:
         lines = _commonmark_lines(_without_code_fences(response, keep_unclosed=False))
     except (ValueError, ImportError):
         return None
-    scores = {int(match.group(1)) for line in lines if (match := _REVIEW_SCORE_LINE_RE.match(line))}
+    scores = set()
+    for line in lines:
+        if not _REVIEW_SCORE_LABEL_RE.match(line):
+            continue
+        match = _REVIEW_SCORE_LINE_RE.match(line)
+        if match is None:
+            return None
+        scores.add(int(match.group(1)))
     score = scores.pop() if len(scores) == 1 else None
     return score if score is not None and 1 <= score <= 10 else None
 
