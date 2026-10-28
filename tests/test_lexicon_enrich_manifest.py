@@ -3927,7 +3927,7 @@ def test_query_e2u_sends_public_contact(monkeypatch, status_code) -> None:
 
     calls = []
 
-    def fake_send(request, **kwargs):
+    def fake_send(self, request, **kwargs):
         calls.append((request.url, request.headers["User-Agent"], kwargs["timeout"]))
         response = source_query.requests.Response()
         response.status_code = status_code
@@ -3937,7 +3937,9 @@ def test_query_e2u_sends_public_contact(monkeypatch, status_code) -> None:
 
     monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: False)
     monkeypatch.setattr(enrich_manifest_module, "_polite_e2u_delay", lambda: None)
-    monkeypatch.setattr(source_query._SESSION, "send", fake_send)
+    # Patch the class: undoing an instance patch leaves a bound ``send`` on the
+    # shared session that shadows later class-level stubs.
+    monkeypatch.setattr(source_query.requests.Session, "send", fake_send)
     enrich_manifest_module.query_e2u_uk_en.cache_clear()
     try:
         result = enrich_manifest_module.query_e2u_uk_en("sample")
@@ -6574,8 +6576,8 @@ def test_query_wikidata_sends_public_contact(monkeypatch, refused_action) -> Non
 
     calls = []
 
-    def fake_send(request, **kwargs):
-        action = "wbsearchentities" if "action=wbsearchentities&" in request.url else "wbgetentities"
+    def fake_send(self, request, **kwargs):
+        action ="wbsearchentities" if "action=wbsearchentities&" in request.url else "wbgetentities"
         calls.append((request.url, request.headers["User-Agent"], request.headers["Accept"], kwargs["timeout"]))
         response = source_query.requests.Response()
         response.status_code = 403 if action == refused_action else 200
@@ -6586,7 +6588,7 @@ def test_query_wikidata_sends_public_contact(monkeypatch, refused_action) -> Non
 
     monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: False)
     monkeypatch.setattr(enrich_manifest_module, "_polite_wikidata_delay", lambda: None)
-    monkeypatch.setattr(source_query._SESSION, "send", fake_send)
+    monkeypatch.setattr(source_query.requests.Session, "send", fake_send)
     enrich_manifest_module.query_wikidata_uk_en.cache_clear()
     try:
         result = enrich_manifest_module.query_wikidata_uk_en("sample")
