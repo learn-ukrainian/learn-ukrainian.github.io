@@ -58,9 +58,9 @@ def catalog(monkeypatch):
     monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
 
 
-def spy(calls):
+def spy(calls, *, comment_edit=False):
     def send(args, **kwargs):
-        if args[:4] == ["gh", "api", "--method", "GET"]:
+        if comment_edit and args[:4] == ["gh", "api", "--method", "GET"]:
             endpoint = args[4].split("?", 1)[0]
             if endpoint == "user" or endpoint == "repos/unit/public/issues/comments/7":
                 document = {"login": "unit"} if endpoint == "user" else {"id": 7, "body": "previous", "user": {"login": "unit"}}
@@ -248,7 +248,7 @@ def test_body_inputs_are_frozen_and_transport_paths_not_scanned(
     if verb == "pr-review":
         fields["verdict"] = "approve"
     calls = []
-    pub.publish(verb, repo="unit/public", cwd=tmp_path, stdin=expected, runner=spy(calls), **fields)
+    pub.publish(verb, repo="unit/public", cwd=tmp_path, stdin=expected, runner=spy(calls, comment_edit=verb == "comment-edit"), **fields)
     flag = "--input" if verb == "comment-edit" else "--body-file"
     sent = calls[0][flag]
     if verb == "comment-edit":
