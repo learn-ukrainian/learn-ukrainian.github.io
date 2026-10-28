@@ -1776,8 +1776,11 @@ def _counted_pages(client, endpoint, key, *, incomplete, timeout, fresh):
     """Every page of a ``{total_count, key: [...]}`` collection as one result, else ``incomplete``.
 
     A head can carry more than one page of check runs; ``gh``'s own rollup reads them all.
-    Across pages ``total_count`` must hold still and every record must keep a distinct
-    integer id, so a record repeated by a shifting walk cannot stand in for a missed one.
+    A walk of several pages must be exact: every page carries the collection and the same
+    integer ``total_count``, the collected records number exactly that total, and every
+    record keeps a distinct integer id, so a record repeated by a shifting walk cannot
+    stand in for a missed one. A single page keeps the established rule: incomplete when
+    its total is not an integer or exceeds the records it holds.
     """
     pages = _pages(client, endpoint, timeout=timeout, fresh=fresh, paginate=True)
     if isinstance(pages, Result):
@@ -1786,12 +1789,14 @@ def _counted_pages(client, endpoint, key, *, incomplete, timeout, fresh):
         return Result(error=incomplete)
     total = pages[0].value.get("total_count", 0)
     rows = [row for page in pages for row in page.value.get(key, [])]
-    if total > len(rows):
+    if type(total) is not int or total > len(rows):
         return Result(error=incomplete)
     if len(pages) > 1:
         ids = [row.get("id") if isinstance(row, dict) else None for row in rows]
         if (
-            any(page.value.get("total_count") != total for page in pages)
+            total != len(rows)
+            or any(key not in page.value or page.value.get("total_count") != total for page in pages)
+            or any(type(page.value["total_count"]) is not int for page in pages)
             or any(type(value) is not int for value in ids)
             or len(set(ids)) != len(ids)
         ):

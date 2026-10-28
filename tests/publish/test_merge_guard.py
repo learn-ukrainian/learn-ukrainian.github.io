@@ -353,6 +353,25 @@ def test_publisher_transport_refusal_names_the_read_that_failed(tmp_path, monkey
         "OPSEC: merge refused: cannot establish check state (pr view rollup: github_checks_incomplete).")
 
 
+@pytest.mark.parametrize("second", [
+    {"total_count": 101, "check_runs": [_check_run(101), _check_run(102)]},
+    {"total_count": True, "check_runs": [_check_run(101)]},
+    {"total_count": 101.0, "check_runs": [_check_run(101)]},
+    {"total_count": 101},
+])
+def test_publisher_transport_refuses_an_inexact_multi_page_walk(tmp_path, monkeypatch, second):
+    """More rows than the total, a non-integer total or a page without its collection is incomplete."""
+    runs = [_check_run(n) for n in range(1, 101)]
+    documents = _multi_page_head([*runs, _check_run(101)])
+    for endpoint in [path for path in documents if path.endswith("&page=2")]:
+        documents[endpoint] = (second, None)
+    checks = [{"name": row["name"], "bucket": "pass", "state": "SUCCESS", "workflow": ""} for row in runs]
+    runner, _ = _publisher_transport(tmp_path, monkeypatch, documents, checks)
+    environment = {"GH_HOST": "github.com", "GH_TOKEN": "fixture-only"}
+    with pytest.raises(PublishBlocked, match=r"pr view rollup: github_checks_incomplete"):
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=tmp_path, environment=environment)
+
+
 def test_publisher_transport_refuses_a_repeated_check_run_across_pages(tmp_path, monkeypatch):
     runs = [_check_run(n) for n in range(1, 137)]
     runs[120] = runs[5]
@@ -396,3 +415,58 @@ def test_refusal_names_a_failed_actions_run_read_with_gh_http_status():
         ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
     assert str(refused.value) == (
         "OPSEC: merge refused: cannot establish check state (actions run: exit 1 HTTP 404).")
+
+
+def test_refusal_names_a_read_that_raised():
+    base = entire_runner({"id": 2626939, "slug": "entire"}, [])
+
+    def runner(args, **kwargs):
+        if "headRefOid,statusCheckRollup" in args:
+            raise subprocess.TimeoutExpired(args, 15)
+        return base(args, **kwargs)
+
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == "OPSEC: merge readiness unverifiable (pr view rollup: TimeoutExpired)."
+
+
+@pytest.mark.parametrize("returncode,stdout,stderr,named", [
+    (1, "", "gh: Not Found (HTTP 404)", "pr checks: exit 1 HTTP 404"),
+    (0, "{}", "", "pr checks: invalid shape"),
+    (0, "not JSON", "", "pr checks: malformed JSON"),
+    (1, "[]", "", "pr checks: empty failing list"),
+])
+def test_refusal_names_how_the_checks_read_failed(returncode, stdout, stderr, named):
+    def runner(args, **kwargs):
+        if args[2] == "checks":
+            return subprocess.CompletedProcess(args, returncode, stdout, stderr)
+        return subprocess.CompletedProcess(args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD}), "")
+
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == f"OPSEC: merge refused: cannot establish check state ({named})."
+
+
+@pytest.mark.parametrize("bound,named", [
+    ({"headRefOid": HEAD, "statusCheckRollup": None}, "pr view rollup: invalid shape"),
+    (None, "no read failed; check rows unverifiable"),
+])
+def test_refusal_names_an_invalid_shape_or_says_no_read_failed(bound, named):
+    rollup = {"headRefOid": "b" * 40, "statusCheckRollup": BOUND_ROLLUP} if bound is None else bound
+    runner = entire_runner({"id": 2626939, "slug": "entire"}, [], bound=rollup)
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == f"OPSEC: merge refused: cannot establish check state ({named})."
+
+
+def test_refusal_names_a_status_read_of_the_wrong_shape():
+    base = entire_runner({"id": 2626939, "slug": "entire"}, [])
+
+    def runner(args, **kwargs):
+        if args[1] == "api" and args[4] == STATUS:
+            return subprocess.CompletedProcess(args, 0, json.dumps({"statuses": []}), "")
+        return base(args, **kwargs)
+
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == "OPSEC: merge refused: cannot establish check state (commit statuses: invalid shape)."

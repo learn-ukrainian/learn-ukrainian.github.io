@@ -399,6 +399,18 @@ def _read_failure(result) -> str:
     return f"exit {result.returncode}" + (f" HTTP {status[1] or status[2]}" if status else "")
 
 
+def _collection_shape(label: str) -> Callable[[object], bool]:
+    """Whether a decoded guard REST read has its class's shape (the walk judges the content)."""
+    key = {"check runs": "check_runs", "named check runs": "check_runs", "commit statuses": "statuses"}.get(
+        label.split(" page ")[0]
+    )
+    if key is None:
+        return lambda value: isinstance(value, dict)
+    return lambda value: (
+        isinstance(value, dict) and type(value.get("total_count")) is int and isinstance(value.get(key), list)
+    )
+
+
 def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=None):
     """Read current metadata and checks before any merge write, including private repos.
 
@@ -411,41 +423,42 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
     env.update(NO_COLOR="1", CLICOLOR="0")
     failed: list[str] = []
 
-    def get(args):
-        return runner(
-            ["gh", "pr", *args, "--repo", repo],
-            cwd=cwd,
-            env=env,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=15,
-        )
+    def read(label, argv):
+        try:
+            return runner(argv, cwd=cwd, env=env, capture_output=True, text=True, check=False, timeout=15)
+        except (PublishBlocked, GitHubRateLimited):
+            raise
+        except Exception as exc:
+            failed.append(f"{label}: {type(exc).__name__}")
+            raise
 
-    def decoded(label, result):
+    def get(label, args):
+        return read(label, ["gh", "pr", *args, "--repo", repo])
+
+    def decoded(label, result, valid=lambda value: True):
         if result.returncode != 0:
             failed.append(f"{label}: {_read_failure(result)}")
             return None
         try:
-            return json.loads(result.stdout)
+            value = json.loads(result.stdout)
         except (TypeError, ValueError):
             failed.append(f"{label}: malformed JSON")
             return None
+        if not valid(value):
+            failed.append(f"{label}: invalid shape")
+        return value
 
     def get_json(endpoint):
-        result = runner(
-            ["gh", "api", "--method", "GET", endpoint],
-            cwd=cwd,
-            env=env,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=15,
-        )
-        return decoded(_read_label(endpoint), result)
+        label = _read_label(endpoint)
+        return decoded(label, read(label, ["gh", "api", "--method", "GET", endpoint]), _collection_shape(label))
 
     def bound_view():
-        return decoded("pr view rollup", get(["view", str(number), "--json", "headRefOid,statusCheckRollup"]))
+        return decoded(
+            "pr view rollup",
+            get("pr view rollup", ["view", str(number), "--json", "headRefOid,statusCheckRollup"]),
+            lambda value: isinstance(value, dict) and isinstance(value.get("headRefOid"), str)
+            and isinstance(value.get("statusCheckRollup"), list),
+        )
 
     def bound_states(bound):
         return bound_rollup_states(bound, meta["headRefOid"], repo, get_json)
@@ -454,7 +467,9 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
         return f" ({failed[0]})" if failed else f" ({fallback})"
 
     try:
-        meta = decoded("pr view metadata", get(["view", str(number), "--json", "number,isDraft,headRefOid"]))
+        meta = decoded(
+            "pr view metadata", get("pr view metadata", ["view", str(number), "--json", "number,isDraft,headRefOid"])
+        )
         if (
             not isinstance(meta, dict)
             or type(meta.get("number")) is not int
@@ -463,15 +478,16 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
             or not re.fullmatch(r"[0-9a-fA-F]{40}", meta["headRefOid"])
         ):
             raise PublishBlocked("OPSEC: merge readiness unverifiable" + detail("pr view metadata: invalid") + ".")
-        checks = get(["checks", str(number), "--json", "name,bucket,state,workflow"])
+        checks = get("pr checks", ["checks", str(number), "--json", "name,bucket,state,workflow"])
         if _checks_json_unsupported(checks):
             bound = bound_view()
             states = bound_states(bound)
         else:
             try:
                 raw_checks = json.loads(checks.stdout)
+                parsed = True
             except (json.JSONDecodeError, TypeError):
-                raw_checks = None
+                raw_checks, parsed = None, False
             states = None
             # gh exits 0, 1 (failing) or 8 (pending) after a complete read; any other
             # code is an error or cancellation even when stdout parses.
@@ -482,13 +498,15 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
                 # headless buckets cannot prove workflow/app isolation, even
                 # when the returned names are unique. Judge the bound snapshot.
                 states = bound_states(bound_view()) if raw_checks else parse_checks(raw_checks)
-            elif checks.returncode not in {0, 1, 8}:
+            elif checks.returncode not in {0, 1, 8} or (checks.returncode and not parsed):
                 failed.append(f"pr checks: {_read_failure(checks)}")
             else:
-                failed.append("pr checks: " + ("empty failing list" if raw_checks == [] else "malformed JSON"))
+                failed.append("pr checks: " + (
+                    "malformed JSON" if not parsed else "empty failing list" if raw_checks == [] else "invalid shape"
+                ))
         if states is None:
             raise PublishBlocked(
-                "OPSEC: merge refused: cannot establish check state" + detail("check rows unverifiable") + "."
+                "OPSEC: merge refused: cannot establish check state" + detail("no read failed; check rows unverifiable") + "."
             )
         reason = readiness_reason(meta, states)
         if match_head is not None and meta["headRefOid"].lower() != match_head.lower():
