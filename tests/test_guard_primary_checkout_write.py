@@ -441,12 +441,14 @@ def outside_dir() -> Iterator[Path]:
         shutil.rmtree(path)
 
 
-def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
+def _run(
+    repo: Path, payload: dict, env_extra: dict[str, str] | None = None, process_cwd: Path | None = None
+) -> subprocess.CompletedProcess[str]:
     # Drive the actual hook entry point with the same stdin, cwd, and env as
     # the subprocess cases below. No parsed decision or Git state is cached.
     stdout, stderr = io.StringIO(), io.StringIO()
     with (
-        chdir(repo),
+        chdir(process_cwd or repo),
         patch.dict(os.environ, {**_clean_env(), **(env_extra or {})}, clear=True),
         patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
         redirect_stdout(stdout),
@@ -1243,13 +1245,14 @@ def _bash(
     command: str,
     cwd: Path | None = None,
     env: dict[str, str] | None = None,
+    process_cwd: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
     payload = {
         "tool_name": "Bash",
         "cwd": str(cwd or repo),
         "tool_input": {"command": command},
     }
-    return _run(repo, payload, env)
+    return _run(repo, payload, env, process_cwd)
 
 
 @pytest.mark.parametrize(
@@ -1751,14 +1754,33 @@ def test_bash_variable_git_dash_c_primary_still_blocked(repo: Path, command: str
         pytest.param("echo x > /*/$X/f", False, id="glob-prefix"),
         pytest.param("tee {outside}/$X", False, id="argv-word-may-split"),
         pytest.param("git -C {outside}/$X add f", False, id="git-dash-c"),
+        # Defect (#11814 review F1): with $X empty, literal ``..`` after the
+        # unknown climbs from the external directory into the primary.
+        pytest.param("echo x > {outside}/$X/{up}{repo_rel}/pwned", False, id="climb-after-unknown"),
+        pytest.param("echo x >> {outside}/$X/{up}{repo_rel}/pwned", False, id="climb-after-unknown-append"),
+        pytest.param("echo x 2> {outside}/$X/{up}{repo_rel}/pwned", False, id="climb-after-unknown-fd"),
+        pytest.param("echo x &> {outside}/$X/{up}{repo_rel}/pwned", False, id="climb-after-unknown-both"),
+        pytest.param('echo x > {outside}/"$X"/{up}{repo_rel}/pwned', False, id="climb-after-quoted-unknown"),
+        pytest.param("S={outside}; echo x > $S/$X/{up}{repo_rel}/pwned", False, id="climb-after-known-prefix"),
+        pytest.param("echo x > {outside}/$X../{up}{repo_rel}/pwned", False, id="climb-glued-to-unknown"),
+        # Defect (#11814 review F3): /proc/self/cwd is the shell's cwd (the
+        # primary) but resolves to the guard process's cwd (outside).
+        pytest.param("echo x > /proc/self/cwd/$X", False, id="proc-self-cwd"),
     ],
 )
-def test_unresolved_leaf_under_external_absolute_prefix_is_allowed(
+def test_unresolved_redirect_leaf_is_allowed_only_under_external_absolute_prefix(
     repo: Path, outside_dir: Path, template: str, allowed: bool
 ):
     (outside_dir / "link").symlink_to(repo)
-    command = template.format(outside=outside_dir, repo=repo, top=repo.parts[1])
-    result = _bash(repo, command)
+    command = template.format(
+        outside=outside_dir,
+        repo=repo,
+        top=repo.parts[1],
+        up="../" * (len(outside_dir.parts) - 1),
+        repo_rel=str(repo).lstrip("/"),
+    )
+    # The shell runs in the primary; the guard process does not.
+    result = _bash(repo, command, process_cwd=outside_dir)
     if allowed:
         assert result.returncode == 0, result.stderr
     else:
