@@ -34,6 +34,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common import github_client
+from scripts.common.github_client import GitHubRateLimited
 from scripts.common.task_store_paths import tasks_dir
 
 GRACE = timedelta(minutes=15)
@@ -76,7 +77,28 @@ def load(path: Path) -> dict[str, Any]:
         isinstance(data.get(name), dict) for name in ("episodes", "handoffs")
     ):
         raise OwnershipError("ownership state malformed")
-    data.setdefault("history", [])
+    try:
+        for key, episode in data["episodes"].items():
+            _at(episode["since"])
+            for name in ("alerted_at", "notified_at"):
+                if episode[name] is not None:
+                    _at(episode[name])
+            if type(episode.get("reminders", 0)) is not int:
+                raise TypeError(key)
+        for key, handoff in data["handoffs"].items():
+            int(key.rpartition("#")[2])
+            _at(handoff["accepted_at"])
+            if not all(isinstance(handoff[name], str) and handoff[name] for name in ("successor", "head")):
+                raise TypeError(key)
+        last = data.get("last_tick")
+        if last is not None:
+            _at(last["at"])
+            if not isinstance(last.get("ok"), bool):
+                raise TypeError("last_tick")
+        if not isinstance(data.setdefault("history", []), list):
+            raise TypeError("history")
+    except (AttributeError, KeyError, TypeError, ValueError) as exc:
+        raise OwnershipError(f"ownership state malformed: {type(exc).__name__}") from exc
     return data
 
 
@@ -115,7 +137,10 @@ def accepted_handoffs(path: Path | None = None) -> dict[tuple[str, int], str]:
 
 
 def _at(value: str) -> datetime:
-    return datetime.fromisoformat(value)
+    moment = datetime.fromisoformat(value)
+    if moment.tzinfo is None:
+        raise ValueError("naive timestamp")
+    return moment
 
 
 def step(
@@ -143,12 +168,14 @@ def step(
         finding = findings.get(key)
         episode = episodes.get(key)
         if finding is not None and finding.unknown:
+            if episode is not None and not episode["alerted_at"]:
+                episodes.pop(key)  # unknown time never counts toward the grace period
             continue
         if finding is not None:
             if episode is None:
                 episodes[key] = {
                     "since": stamp, "branch": finding.branch, "reason": finding.reason,
-                    "last_task": finding.last_task, "alerted_at": None, "notified_at": None,
+                    "last_task": finding.last_task, "alerted_at": None, "notified_at": None, "reminders": 0,
                 }
                 continue
             episode.update(reason=finding.reason, last_task=finding.last_task)
@@ -158,6 +185,7 @@ def step(
                 data["history"].append({"pr": key, "event": "alerted", "at": stamp, "reason": finding.reason})
             elif episode["alerted_at"] and now - _at(episode["notified_at"]) >= REMINDER:
                 episode["notified_at"] = stamp
+                episode["reminders"] = episode.get("reminders", 0) + 1
                 notices["reminder"].append({"pr": key, **episode})
             continue
         if episode is None:
@@ -193,23 +221,25 @@ def _message(kind: str, rows: list[dict[str, Any]]) -> str:
     return "\n".join(body)
 
 
-def notify(notices: Mapping[str, list[dict[str, Any]]], service: Any, now: datetime) -> list[str]:
-    """One supervisory request per notice kind; the key makes a retried tick idempotent."""
+def notify(notices: Mapping[str, list[dict[str, Any]]], service: Any) -> list[str]:
+    """One supervisory request per notice kind.
+
+    The idempotency key is the notices' logical identity (PR, episode start, reminder
+    number), never the clock, so a tick retried after an unsaved delivery sends nothing new.
+    """
     ids = []
     for kind in ("alert", "reminder", "cleared"):
         rows = notices.get(kind) or []
         if not rows:
             continue
-        digest = hashlib.sha256(
-            json.dumps([[row["pr"], row["since"]] for row in rows], sort_keys=True).encode()
-        ).hexdigest()[:16]
-        stamp = now.strftime("%Y%m%dT%H%M")
+        identity = [[row["pr"], row["since"], row.get("reminders", 0) if kind == "reminder" else 0] for row in rows]
+        digest = hashlib.sha256(json.dumps(sorted(identity)).encode()).hexdigest()[:24]
         message = service.enqueue_supervisory_request(
             sender=SENDER,
             recipient=CTO_INBOX,
             body=_message(kind, rows),
             correlation_id=f"pr-ownership:{kind}",
-            idempotency_key=f"pr-ownership:{kind}:{stamp}:{digest}",
+            idempotency_key=f"pr-ownership:{kind}:{digest}",
         )
         ids.append(message.message_id)
     return ids
@@ -234,8 +264,15 @@ def liveness(record: Mapping[str, Any] | None) -> bool | None:
 
     if record is None or record.get("status") not in _ACTIVE:
         return False
-    if not record.get("pid") or not record.get("process_start") or not Path("/proc/self/stat").exists():
+    pid = record.get("pid")
+    if not pid or not record.get("process_start") or not Path("/proc/self/stat").exists():
         return None
+    try:
+        Path(f"/proc/{int(pid)}/stat").read_bytes()
+    except FileNotFoundError:
+        return False  # provably gone
+    except (OSError, ValueError, TypeError):
+        return None  # unreadable is unobservable, never gone
     return _supervisor_alive(dict(record))
 
 
@@ -308,12 +345,27 @@ def keeper_tick(
     """Run one throttled ownership check; returns (log lines, failed)."""
     now = now or datetime.now(UTC)
     path = path or state_path()
+    try:
+        return _tick(now, path, observe, service_factory)
+    except (OwnershipError, OSError) as exc:
+        return [f"pr ownership: state unusable ({display(exc)}); alerts unchanged"], True
+
+
+def display(exc: BaseException) -> str:
+    return f"{type(exc).__name__}: {str(exc)[:200]}" if str(exc) else type(exc).__name__
+
+
+def _tick(now, path, observe, service_factory) -> tuple[list[str], bool]:
     with locked(path) as data:
         last = data.get("last_tick") or {}
         if last.get("ok") and now - _at(last["at"]) < TICK_INTERVAL:
             return [], False
         try:
             keys, findings = observe(_handoff_map(data))
+        except GitHubRateLimited:
+            # The queue pass reports this as a skip; so does the ownership check.
+            data["last_tick"] = {"at": now.isoformat(), "ok": False, "error": "GitHubRateLimited"}
+            return ["pr ownership: skipped (GitHub rate limited); alerts unchanged"], False
         except Exception as exc:  # any unreadable source is unknown: change no alert
             data["last_tick"] = {"at": now.isoformat(), "ok": False, "error": type(exc).__name__}
             return [f"pr ownership: UNKNOWN ({type(exc).__name__}); alerts unchanged"], True
@@ -321,7 +373,7 @@ def keeper_tick(
         notices = step(work, keys, findings, now)
         try:
             with service_factory() as service:
-                notify(notices, service, now)
+                notify(notices, service)
         except Exception as exc:  # commit nothing, so the next tick sends the same notices
             data["last_tick"] = {"at": now.isoformat(), "ok": False, "error": type(exc).__name__}
             return [f"pr ownership: CTO inbox write failed ({type(exc).__name__}); alerts unchanged"], True
@@ -342,7 +394,7 @@ def keeper_tick(
 def _gh_pr(repo: str, number: int) -> dict[str, Any]:
     proc = github_client.run(
         ["gh", "pr", "view", str(number), "--repo", repo, "--json",
-         "state,headRefOid,headRefName,isCrossRepository"],
+         "state,headRefOid,headRefName,baseRefName,isCrossRepository"],
         capture_output=True, text=True, check=False, timeout=60,
     )
     try:
@@ -352,6 +404,21 @@ def _gh_pr(repo: str, number: int) -> dict[str, Any]:
     if not isinstance(pr, dict) or not isinstance(pr.get("headRefOid"), str):
         raise OwnershipError(f"cannot read {repo}#{number}")
     return pr
+
+
+def _queued_at(repo: str, number: int, head: str, base: str) -> bool | None:
+    """Queue membership from one GitHub observation that also shows the PR head is ``head``.
+
+    None when the head differs in that observation or the read fails: never queued.
+    """
+    from scripts.orchestration.integration_sweep import GitHubAdapter, SweepError
+
+    try:
+        return GitHubAdapter(Path.cwd()).queue_membership(
+            repo, {"number": number, "headRefOid": head, "baseRefName": base}
+        )
+    except SweepError:
+        return None
 
 
 def _rerun_allowance(repo: str, number: int, head: str) -> str:
@@ -378,9 +445,14 @@ def accept(
     custody: bool,
     now: datetime,
     rerun: str,
+    repos: Mapping[str, Any],
     live: Callable[[Mapping[str, Any] | None], bool | None] | None = None,
 ) -> dict[str, Any]:
-    """Record ``successor`` as the PR's one owner; refuse while another live owner remains."""
+    """Record ``successor`` as the PR's one owner; refuse while another live owner remains.
+
+    Who owns the PR follows the owner check exactly (repository, legacy records, forks,
+    accepted handoffs), so a same-named branch elsewhere never counts.
+    """
     live = live or liveness
     if pr.get("state") != "OPEN":
         raise OwnershipError(f"PR is {pr.get('state')}, not open")
@@ -390,25 +462,22 @@ def accept(
     if (state := live(by_id.get(successor))) is not True:
         raise OwnershipError(f"successor {successor} is {'unknown' if state is None else 'not live'}")
     key = pr_key(repo, number)
-    branch = pr.get("headRefName")
     previous = data["handoffs"].get(key)
-    if custody:
-        owners = {record.get("task_id") for record in records if record.get("worktree_branch") == branch}
-        if previous:
-            owners.add(previous["successor"])
-        if predecessor not in owners or live(by_id.get(predecessor)) is not True:
-            raise OwnershipError("queue custody needs the PR's live owner that is waiting in the queue (--from)")
-    others = {
+    seated = {(repo.casefold(), number): previous["successor"]} if previous else {}
+
+    def owns(record: Mapping[str, Any]) -> bool:
+        target = {repo: [{**pr, "number": number}]}
+        return not findings(target, [dict(record)], repos, seated, live=lambda _record: True)
+
+    if custody and not (
+        (record := by_id.get(predecessor)) is not None and owns(record) and live(record) is True
+    ):
+        raise OwnershipError("queue custody needs the PR's live owner that is waiting in the queue (--from)")
+    blocking = sorted(
         record["task_id"] for record in records
-        if record.get("worktree_branch") == branch and not pr.get("isCrossRepository")
-        and str(record.get("repository") or repo).casefold() == repo.casefold()
-        and record.get("task_id") not in {successor, predecessor}
-    }
-    if previous:
-        others.add(previous["successor"])
-    others.discard(successor)
-    others.discard(predecessor)
-    blocking = sorted(task for task in others if live(by_id.get(task)) is not False)
+        if record.get("task_id") not in {successor, predecessor}
+        and live(record) is not False and owns(record)
+    )
     if blocking:
         raise OwnershipError(f"one owner at a time: {', '.join(blocking)} may still own this PR")
     handoff = {
@@ -454,7 +523,7 @@ def queue_exit(
     if pr.get("state") != "OPEN":
         reasons.append(f"PR is {pr.get('state')}: finish the closeout yourself")
     if queued is not True:
-        reasons.append("the PR is not verifiably in the merge queue")
+        reasons.append("the PR is not verifiably in the merge queue at the custody head")
     return reasons
 
 
@@ -532,6 +601,7 @@ def main(argv: list[str] | None = None) -> int:
                     receipt = accept(
                         data, repo=repo, number=args.pr, pr=pr, successor=me, records=records,
                         predecessor=args.predecessor, custody=args.custody, now=now, rerun=rerun,
+                        repos=load_fleet_repos(),
                     )
                 except OwnershipError as exc:
                     print(json.dumps({"accepted": False, "reason": str(exc)}))
@@ -539,14 +609,15 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"accepted": True, "pr": pr_key(repo, args.pr), **receipt,
                               "review_budget": "carried by the PR's review ledger; read it before acting"}))
             return 0
-        from scripts.gh_merge_queue_status import fetch_live_status
-
-        queued = fetch_live_status(args.pr, repo).queued
-        reasons = queue_exit(load(path), repo=repo, number=args.pr, pr=pr, queued=queued,
+        data = load(path)
+        handoff = data["handoffs"].get(pr_key(repo, args.pr))
+        # Membership is read together with the head, bound to the custody head.
+        queued = _queued_at(repo, args.pr, handoff["head"], pr.get("baseRefName") or "main") if handoff else None
+        reasons = queue_exit(data, repo=repo, number=args.pr, pr=pr, queued=queued,
                              me=me, records=records, now=now)
         print(json.dumps({"may_exit": not reasons, "reasons": reasons}))
         return 1 if reasons else 0
-    except (OwnershipError, RuntimeError, ValueError, OSError, KeyError, TypeError) as exc:
+    except (OwnershipError, GitHubRateLimited, RuntimeError, ValueError, OSError, KeyError, TypeError) as exc:
         print(f"UNKNOWN: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 2
 

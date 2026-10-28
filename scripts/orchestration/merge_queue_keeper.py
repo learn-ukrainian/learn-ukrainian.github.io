@@ -1329,8 +1329,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             lines, failed = [f"merge queue keeper: skipped reset_at={exc.reset_at}"], False
         except KeeperError as exc:
             lines, failed = [f"merge queue keeper failed: {exc}"], True
-        # The ownerless-PR alert runs on its own cadence, whatever the queue pass did.
-        ownership_lines, ownership_failed = pr_ownership.keeper_tick()
+        # The ownerless-PR alert runs on its own cadence, whatever the queue pass did, and
+        # never hides the queue pass's result.
+        try:
+            ownership_lines, ownership_failed = pr_ownership.keeper_tick()
+        except Exception as exc:
+            ownership_lines, ownership_failed = [f"pr ownership: FAILED ({type(exc).__name__})"], True
         for line in [*lines, *ownership_lines]:
             print(line)
         return int(failed or ownership_failed)

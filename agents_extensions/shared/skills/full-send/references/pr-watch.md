@@ -40,8 +40,8 @@ the accountable driver's cycle.
 - Classify every failed job before acting. It is either a failure of the change's own
   checks, an evidenced infrastructure failure, or unknown.
 - A failure of the change's own checks gets a fix through the authoring lane. A second such
-  failure on the same head means stop and report. These are the only failures counted as
-  "CI fails a second time".
+  failure on this PR means stop and report, whatever the head: fix commits and owner changes
+  do not reset the count. These are the only failures counted as "CI fails a second time".
 - An **evidenced infrastructure failure** names its cause from the job log: a runner lost or
   shut down, a checkout or network failure before the change's code ran, or a provider
   capacity or outage error. A cancelled job alone is not evidence. Treat an evidenced

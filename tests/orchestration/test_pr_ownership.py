@@ -221,7 +221,8 @@ def test_keeper_apply_runs_the_ownership_tick(tmp_path, monkeypatch):
 def do_accept(data, records, *, successor="succ", predecessor=None, custody=False, pr=None, rerun="unspent"):
     pr = pr or {"state": "OPEN", "headRefOid": HEAD, "headRefName": "codex/x", "isCrossRepository": False}
     return own.accept(data, repo=REPO, number=42, pr=pr, successor=successor, records=records,
-                      predecessor=predecessor, custody=custody, now=at(30), rerun=rerun, live=is_live)
+                      predecessor=predecessor, custody=custody, now=at(30), rerun=rerun, live=is_live,
+                      repos=FLEET)
 
 
 def test_accept_records_one_owner_and_refuses_a_second():
@@ -242,7 +243,7 @@ def test_accept_refuses_while_a_live_task_owns_the_branch_or_successor_is_not_li
         do_accept(own._empty(), records, successor="dead")
     with pytest.raises(own.OwnershipError, match="unknown"):
         own.accept(own._empty(), repo=REPO, number=42, successor="succ", records=records, predecessor=None,
-                   custody=False, now=at(30), rerun="unspent", live=lambda record: None,
+                   custody=False, now=at(30), rerun="unspent", live=lambda record: None, repos=FLEET,
                    pr={"state": "OPEN", "headRefOid": HEAD, "headRefName": "codex/x"})
     with pytest.raises(own.OwnershipError, match="MERGED"):
         do_accept(own._empty(), records, pr={"state": "MERGED", "headRefOid": HEAD, "headRefName": "codex/x"})
@@ -328,9 +329,7 @@ def test_cli_accept_then_queue_exit(world, monkeypatch, capsys):
     assert own.main(["accept", "--pr", "42", "--custody", "--from", "waiter"]) == 0
     assert json.loads(capsys.readouterr().out.splitlines()[-1])["accepted"] is True
     assert own.accepted_handoffs(world) == {(REPO.casefold(), 42): "integration"}
-    from scripts import gh_merge_queue_status
-
-    monkeypatch.setattr(gh_merge_queue_status, "fetch_live_status", lambda n, repo: type("S", (), {"queued": True}))
+    monkeypatch.setattr(own, "_queued_at", lambda repo, n, head, base: head == HEAD)
     monkeypatch.setenv(own.TASK_ENV, "waiter")
     with own.locked(world) as data:
         data["last_tick"] = {"at": datetime.now(UTC).isoformat(), "ok": True}
@@ -348,3 +347,100 @@ def test_documented_module_invocation_shows_help():
                           capture_output=True, text=True, timeout=60, check=False,
                           cwd=Path(__file__).resolve().parents[2])
     assert proc.returncode == 0 and "Exit codes:" in proc.stdout
+
+
+# --- round-1 review regressions -----------------------------------------------------
+
+
+def test_unreadable_process_is_unknown_and_blocks_takeover(monkeypatch):
+    real = own.Path.read_bytes
+
+    def denied(self):
+        if str(self).startswith("/proc/4242"):
+            raise PermissionError(str(self))
+        return real(self)
+
+    monkeypatch.setattr(own.Path, "read_bytes", denied)
+    owner = {**task("owner"), "pid": 4242, "process_start": "boot:1"}
+    assert own.liveness(owner) is None
+    live = lambda r: own.liveness(r) if r and r["task_id"] == "owner" else is_live(r)  # noqa: E731
+    with pytest.raises(own.OwnershipError, match="one owner at a time: owner"):
+        own.accept(own._empty(), repo=REPO, number=42, successor="succ", predecessor=None, custody=False,
+                   records=[owner, task("succ", "claude/q")], now=at(30), rerun="unspent", repos=FLEET, live=live,
+                   pr={"state": "OPEN", "headRefOid": HEAD, "headRefName": "codex/x", "isCrossRepository": False})
+
+
+def test_unknown_interval_restarts_the_grace_clock():
+    data = own._empty()
+    own.step(data, {KEY}, {KEY: ownerless()}, at(0))
+    own.step(data, {KEY}, {KEY: ownerless(unknown=True)}, at(5))
+    assert own.step(data, {KEY}, {KEY: ownerless()}, at(60))["alert"] == []
+    assert [row["pr"] for row in own.step(data, {KEY}, {KEY: ownerless()}, at(75))["alert"]] == [KEY]
+
+
+def test_custody_predecessor_must_own_this_pr_by_the_owner_check():
+    other_repo = {**task("waiter"), "repository": "someone/else"}
+    with pytest.raises(own.OwnershipError, match="live owner"):
+        do_accept(own._empty(), [other_repo, task("integration", "claude/q")],
+                  successor="integration", predecessor="waiter", custody=True)
+    fork = {"state": "OPEN", "headRefOid": HEAD, "headRefName": "codex/x", "isCrossRepository": True}
+    with pytest.raises(own.OwnershipError, match="live owner"):
+        do_accept(own._empty(), [task("waiter"), task("integration", "claude/q")],
+                  successor="integration", predecessor="waiter", custody=True, pr=fork)
+    # An accepted successor on another branch is the PR's owner and may hand over custody.
+    data = own._empty()
+    accepted(data, 0, successor="waiter")
+    receipt = do_accept(data, [task("waiter", "claude/w"), task("integration", "claude/q")],
+                        successor="integration", predecessor="waiter", custody=True)
+    assert receipt["predecessor"] == "waiter"
+
+
+def test_queue_membership_is_bound_to_the_custody_head(monkeypatch):
+    from scripts.orchestration import integration_sweep
+
+    def membership(self, repo, pr):
+        if pr["headRefOid"] != "b" * 40:  # the same observation shows the head moved to B
+            raise integration_sweep.SweepError("merge queue head moved or membership unavailable")
+        return True
+
+    monkeypatch.setattr(integration_sweep.GitHubAdapter, "queue_membership", membership)
+    assert own._queued_at(REPO, 42, HEAD, "main") is None
+    assert own._queued_at(REPO, 42, "b" * 40, "main") is True
+    assert "custody head" in exit_reasons(custody_state(), queued=None)[0]
+
+
+def test_notice_identity_ignores_the_clock(tmp_path):
+    notices = {"alert": [{"pr": KEY, "since": at(0).isoformat(), "branch": "codex/x", "reason": "r"}],
+               "reminder": [], "cleared": []}
+    with AuthorityService(root=tmp_path / "fleet") as service:
+        first = own.notify(notices, service)
+        assert own.notify(notices, service) == first
+    assert len(inbox(tmp_path)) == 1
+
+
+def test_malformed_nested_state_fails_the_tick_without_raising(tmp_path):
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({**own._empty(), "episodes": {KEY: None}}))
+    lines, failed = own.keeper_tick(now=at(0), path=path, observe=lambda h: pytest.fail("observed"),
+                                    service_factory=fleet(tmp_path))
+    assert failed and "state unusable" in lines[0]
+
+
+def test_keeper_keeps_its_queue_result_when_the_ownership_tick_raises(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(keeper, "GitHub", lambda *args: object())
+    monkeypatch.setattr(keeper, "run", lambda *a, **k: (["#42 enqueued"], False))
+    monkeypatch.setattr(own, "keeper_tick", lambda: (_ for _ in ()).throw(AttributeError("boom")))
+    assert keeper.main(["--apply", "--repo-root", str(tmp_path)]) == 1
+    assert "#42 enqueued" in capsys.readouterr().out
+
+
+def test_rate_limit_is_a_skip_for_the_ownership_tick(tmp_path):
+    from scripts.common.github_client import GitHubRateLimited
+
+    def limited(handoffs):
+        raise GitHubRateLimited("2026-10-28T13:00:00Z")
+
+    lines, failed = own.keeper_tick(now=at(0), path=tmp_path / "s.json", observe=limited,
+                                    service_factory=fleet(tmp_path))
+    assert not failed and "skipped" in lines[0]
+    assert own.load(tmp_path / "s.json")["last_tick"]["ok"] is False  # queue-exit stays closed
