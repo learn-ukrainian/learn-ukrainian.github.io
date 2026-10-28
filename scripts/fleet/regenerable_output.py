@@ -19,13 +19,6 @@ from urllib.parse import quote
 from scripts.common.nofollow_walk import ComponentOpenError
 from scripts.orchestration.worktree_artifacts import REGENERABLE_CACHE_DIRECTORIES
 
-# Directory patterns apply at any depth, only to real directories.
-AUTO_FINALIZE_CACHE_DIRECTORIES = frozenset(
-    {
-        "__pycache__",  # Python regenerates bytecode when importing source modules.
-        ".pytest_cache",  # Pytest regenerates its cache on the next test run.
-    }
-)
 DEPENDENCY_DIRECTORY = "node_modules"  # npm ci recreates dependencies from the tracked sibling package-lock.json.
 
 # #10061: only ignored build-written files, never whole public/src/data trees.
@@ -640,14 +633,3 @@ def _matches_regenerable_pattern(
         and not _DATABASE_SUFFIXES.intersection(suffix.casefold() for suffix in relative.suffixes)
         and _SITE_BUILD_OUTPUT.fullmatch(relative.as_posix()) is not None
     )
-
-
-def is_disposable_auto_finalize_path(path: str) -> bool:
-    """Keep delegate's existing scratch semantics; removal needs stronger proof."""
-    parts = tuple(part for part in path.replace("\\", "/").split("/") if part and part != ".")
-    if not parts:
-        return True
-    # Auto-finalize historically excludes these two caches, not every cache.
-    if any(part in {".venv", DEPENDENCY_DIRECTORY, *AUTO_FINALIZE_CACHE_DIRECTORIES} for part in parts):
-        return True
-    return parts[-1].endswith(".pyc")

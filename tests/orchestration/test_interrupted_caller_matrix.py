@@ -14,7 +14,6 @@ import pytest
 
 from scripts.fleet import post_task_reap
 from scripts.orchestration import dispatch_settle as ds
-from scripts.orchestration import merge_closeout
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import stale_task_records as stale
 from scripts.orchestration import worktree_claims as wc
@@ -115,7 +114,6 @@ def test_missing_tree_caller_matrix(interrupted_checkout, monkeypatch, writer, c
         "claim_scan",
         "husk_sweep",
         "archive",
-        "merge_closeout",
         "dead_worker_healer",
         "push_settle",
         "guarded_remove",
@@ -228,11 +226,7 @@ def test_interrupted_caller_preserves_bytes_on_repeated_call(interrupted_checkou
             report = stale.settle_stale(tasks, min_age_days=0, apply=True, repo_checkouts={}, pager=lambda *_a: [])
             assert all(row["action"] == "report" for row in report["records"]), report
         else:
-            info = next(info for info in rw.list_git_worktrees(repo) if info.path == tree)
-            rows = merge_closeout.reap_matched_worktrees(repo, [info], apply=True, live_cwds=set())
-            row = next(row for row in rows if row.path == str(tree))
-            assert row.action == "skipped", row
-            assert row.reason and row.owner
+            raise AssertionError(f"unhandled caller {caller}")
         current = json.loads(record.read_text())
         receipt = current.pop("preserved_artifacts", None)
         assert current == state

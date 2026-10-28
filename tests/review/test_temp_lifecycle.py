@@ -148,14 +148,6 @@ def test_fetch_failure_degrades_gracefully(tmp_path: Path, monkeypatch: pytest.M
     )
     monkeypatch.setattr(scheduled_worktree_cleanup, "_run_git", lambda r, *a: fake_fetch_proc)
     monkeypatch.setattr(scheduled_worktree_cleanup, "_worktree_prune", lambda r, apply: {"ok": True})
-    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda r: set())
-    monkeypatch.setattr(reap_worktrees, "reap_worktrees", lambda **kw: [])
-    monkeypatch.setattr(
-        reap_worktrees,
-        "adopt_dispatch_worktrees",
-        lambda r: (_ for _ in ()).throw(RuntimeError("adoption probe failed")),
-    )
-    monkeypatch.setattr(reap_worktrees, "find_needs_finalize_worktrees", lambda r: [])
     monkeypatch.setattr(scheduled_worktree_cleanup, "cleanup_gone_local_branches", lambda r, apply, **_: [])
     monkeypatch.setattr(scheduled_worktree_cleanup, "cleanup_stale_origin_branches", lambda r, apply, **_: [])
     monkeypatch.setattr(scheduled_worktree_cleanup, "cleanup_untracked_local_branches", lambda r, apply, **_: [])
@@ -170,8 +162,6 @@ def test_fetch_failure_degrades_gracefully(tmp_path: Path, monkeypatch: pytest.M
 
     res = scheduled_worktree_cleanup._repo_result_unlocked(repo, apply=True)
     assert any("fetch failed" in err for err in res["errors"])
-    assert res["adopted"] == []
-    assert "adoption skipped: adoption probe failed" in res["errors"]
     assert res["worktree_prune"] is not None
     assert res["maintenance"] is not None
 

@@ -566,10 +566,14 @@ function renderGlanceEpics(data) {
 }
 
 function renderGlanceHosts(data) {
-  return glanceTable(['Host', 'Observation', 'Occupancy'], glanceHosts(data).map(([id, host]) => {
+  return glanceTable(['Host', 'Observation', 'Source age', 'Occupancy', 'Error'], glanceHosts(data).map(([id, host]) => {
     const fresh = host.status === 'fresh';
+    const status = ['fresh', 'stale', 'unavailable'].includes(host.status) ? host.status : 'unknown';
+    // Unavailable probes can carry a placeholder age of zero; it is not an observation.
+    const age = ['fresh', 'stale'].includes(status) && Number.isFinite(host.age_seconds) && host.age_seconds >= 0
+      ? `${host.age_seconds}s at lookup` : 'unknown';
     const burn = ['active', 'idle', 'unknown'].includes(host.burn_state) ? host.burn_state : 'unknown';
-    return [id, ['fresh', 'stale', 'unavailable'].includes(host.status) ? host.status : 'unknown', fresh ? burn : 'unknown'];
+    return [id, status, age, fresh ? burn : 'unknown', host.error || '—'];
   }));
 }
 

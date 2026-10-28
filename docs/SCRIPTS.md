@@ -940,7 +940,7 @@ specific run. Read the returned task ID and nonce before arming a wait.
 A write task must produce a pushed branch to satisfy delivery. Dispatch v2 terminal
 statuses are `done`, `failed`, `timeout`, `rate_limited`, `cancelled`, `crashed`, and
 `no_deliverable`. Only `done` is success; other terminal statuses require driver
-disposition. Workers do not merge. Landing and common-reaper cleanup follow
+disposition. The briefed worker runs its chain to the end and nobody arms auto-merge. Landing and merge closeout follow
 `agents_extensions/shared/rules/workflow.md`.
 
 The dispatcher requires the local rules core to exist. It does not inject rules

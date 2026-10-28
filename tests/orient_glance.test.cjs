@@ -36,13 +36,26 @@ test('epic driver and opaque host with expired and malformed lease health', () =
   assert.doesNotMatch(render({state:'active',expires_at:'bad',holder:{host_id:'private.example'}}), /private.example|<td>active/);
   assert.match(render(null), /no lease/);
 });
-test('Mac stays visible and unknown cannot become idle', () => {
+test('host payload nulls and errors stay unknown; source age and stale state remain visible', () => {
   const {context:c} = setup();
   for (const status of ['stale','unavailable',undefined]) {
     const out=c.renderGlanceHosts({hosts:{'host-teacher':{status,burn_state:'idle'}}});
     assert.match(out,/mac-operator/); assert.doesNotMatch(out, /<td>idle<\/td>/);
   }
   assert.match(c.renderGlanceHosts({hosts:{'host-teacher':{status:'fresh',burn_state:'idle'}}}), /<td>idle<\/td>/);
+  const render = host => c.renderGlanceHosts({hosts:{'host-teacher':host}});
+  assert.match(render({status:'fresh',burn_state:'active',age_seconds:0}), /<td>0s at lookup<\/td>/);
+  const stale = render({status:'stale',burn_state:'idle',age_seconds:600.5});
+  assert.match(stale, /<td>stale<\/td><td>600.5s at lookup<\/td><td>unknown<\/td>/);
+  for (const age_seconds of [null, undefined, -1, '0', Infinity]) {
+    assert.match(render({status:'fresh',burn_state:null,age_seconds}), /<td>unknown<\/td><td>unknown<\/td>/);
+  }
+  assert.match(render(null), /<td>unknown<\/td><td>unknown<\/td><td>unknown<\/td>/);
+  const unavailable = render({status:'unavailable',age_seconds:0,error:'unreachable',burn_state:'idle'});
+  assert.match(unavailable, /<td>unavailable<\/td><td>unknown<\/td><td>unknown<\/td><td>unreachable<\/td>/);
+  const escaped = render({status:'unavailable',error:'<img src=x onerror=alert(1)>'});
+  assert.match(escaped, /&lt;img/);
+  assert.doesNotMatch(escaped, /<img/);
 });
 test('canonical worker rows appear once, distinct runs survive, stale seats are not live', () => {
   const {context:c} = setup();

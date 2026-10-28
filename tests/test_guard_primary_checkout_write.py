@@ -1425,14 +1425,12 @@ def _ansi_c_shape(repo: Path, shape: str) -> str:
         # Bash removes backslash-newline before tokenizing: still ANSI-C quoting.
         pytest.param("echo x > $\\\n'\\457{tail}'", id="line-continued-octal-wrap"),
         pytest.param("echo x > $\\\n\\\n'\\457{tail}'", id="two-line-continuations"),
-        # Presence alone decides: embedded, benign-looking, read-only, quoted.
+        # Presence alone decides: embedded, benign-looking, read-only.
         pytest.param("echo x > {repo}/curriculum/tra$'c'ked.md", id="embedded-mid-word"),
         pytest.param("tee $'\\164racked.md'", id="dispatch-relative-name"),
         pytest.param("echo x > $'\\457tmp/scratch-10633.txt'", id="outside-repo-path"),
         pytest.param("printf x > $'\\xc3\\xa9.md'", id="byte-escape-name"),
         pytest.param("printf '%s\\n' $'a\\tb'", id="no-write-target"),
-        pytest.param("grep -c 'end$' notes.txt", id="single-quoted-regex-anchor"),
-        pytest.param("echo \"$'\\x41'\" > notes.txt", id="inside-double-quotes"),
     ],
 )
 def test_issue_10633_ansi_c_quoting_refused_on_presence(repo: Path, shape: str):
@@ -1539,6 +1537,36 @@ def test_issue_10633_plain_quoting_controls_allowed(repo: Path, command: str):
     dispatch = repo / ".worktrees/dispatch/claude/task-1"
     result = _hook_subprocess(repo, command, cwd=dispatch)
     assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "shape, cwd, refused",
+    [
+        # Defects: Bash performs no ANSI-C quoting inside single or double quotes.
+        pytest.param("tmux capture-pane -p -t infra | grep -v '^\\s*$' | tail -25", "primary", False, id="tmux-grep"),
+        pytest.param("grep -v '^\\s*$' notes.txt", "primary", False, id="single-quoted-anchor"),
+        pytest.param("grep -c 'end$' notes.txt", "dispatch", False, id="single-quoted-closing-quote"),
+        pytest.param("grep \"end$'\" notes.txt", "primary", False, id="double-quoted-marker"),
+        pytest.param("echo \"$'\\x41'\" > notes.txt", "dispatch", False, id="double-quoted-span-write"),
+        # Controls: an unquoted marker, joined or nested, is still refused.
+        pytest.param("echo x > {octal}", "dispatch", True, id="unquoted-write-target"),
+        pytest.param("printf changed | $'\\564ee' {target}", "dispatch", True, id="unquoted-command-word"),
+        pytest.param("grep -c 'end$' notes.txt; tee $'\\164racked.md'", "dispatch", True, id="quoted-then-unquoted"),
+        pytest.param("echo '$'$'\\x41' > notes.txt", "dispatch", True, id="adjacent-unquoted-span"),
+        pytest.param("echo x > $\\\n'\\457{tail}'", "dispatch", True, id="line-continued"),
+        pytest.param(r"eval echo x \> \$\'\\457{tail}\'", "dispatch", True, id="eval-joined"),
+        pytest.param("bash -c \"printf x > \\$'\\\\457{tail}'\"", "dispatch", True, id="sh-c-unquoted"),
+        # Bash's default extquote decodes $'...' inside "${...}".
+        pytest.param("x=; echo \"${{x:-$'\\x41'}}\" > notes.txt", "dispatch", True, id="extquote-parameter"),
+    ],
+)
+def test_ansi_c_marker_inside_quotes_is_not_ansi_c_quoting(repo: Path, shape: str, cwd: str, refused: bool):
+    where = repo if cwd == "primary" else repo / ".worktrees/dispatch/claude/task-1"
+    result = _hook_subprocess(repo, _ansi_c_shape(repo, shape), cwd=where)
+    if refused:
+        _assert_ansi_c_refused(result)
+    else:
+        assert result.returncode == 0, result.stderr
 
 
 @pytest.mark.parametrize(

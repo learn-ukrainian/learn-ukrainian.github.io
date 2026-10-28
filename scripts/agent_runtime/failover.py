@@ -352,8 +352,6 @@ def classify_failover_trigger(
     """Map one failed attempt to an eligible failover trigger, if any."""
     if parse.ok:
         return None
-    if parse.failure_code == "github_secondary_rate_limited":
-        return None
     if parse.provider_error_text is not None:
         # The adapter classified this attempt from its provider's typed
         # evidence. Its raw streams carry agent and tool text, so neither they

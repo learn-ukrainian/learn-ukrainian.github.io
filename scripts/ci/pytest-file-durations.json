@@ -168,7 +168,6 @@
   "tests/api/test_status_endpoint_latency.py": 1.737,
   "tests/api/test_test_slots_route.py": 0.217,
   "tests/api/test_usage_probe_extras.py": 5.0,
-  "tests/api/test_worktree_gc_sweep.py": 0.893,
   "tests/audit/test_4627_rights_matrix.py": 0.058,
   "tests/audit/test_activity_case_drill_gate.py": 0.685,
   "tests/audit/test_antonenko_prose_narrowing.py": 0.001,
