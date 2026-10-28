@@ -1,11 +1,77 @@
-"""Unit tests for CI test timeout attribution and per-worker breadcrumb hooks."""
+"""CI test timeout attribution and cancellation survival of worker breadcrumbs."""
 
+import contextlib
+import os
+import signal
+import subprocess
+import sys
+import time
 from pathlib import Path
+
+import pytest
+import yaml
 
 from scripts.ci.stall_watch import (
     StallWatcher,
 )
 from tests.conftest import pytest_runtest_logfinish, pytest_runtest_logstart
+
+
+@pytest.mark.parametrize("cancel_signal", [signal.SIGINT, signal.SIGKILL])
+def test_cancelled_shard_keeps_running_test_evidence(tmp_path: Path, cancel_signal: int) -> None:
+    root = Path(__file__).resolve().parents[1]
+    job = yaml.safe_load((root / ".github/workflows/ci.yml").read_text())["jobs"]["pytest"]
+    diagnostic = next(step for step in job["steps"] if step.get("name") == "Show pytest cancellation diagnostics")
+    upload = next(step for step in job["steps"] if step.get("name") == "Upload pytest JUnit report")
+    assert diagnostic["if"] == "${{ failure() || cancelled() }}"
+    assert upload["if"] == "${{ always() }}"
+    assert "ci-artifacts/pytest-shard-*-breadcrumbs/" in upload["with"]["path"]
+    breadcrumb_dir = job["env"]["PYTEST_BREADCRUMB_DIR"].replace("${{ matrix.shard }}", "15")
+    env = {key: value for key, value in os.environ.items() if not key.startswith(("PYTEST_", "LU_"))}
+    env.update(
+        PYTHONPATH=str(root),
+        PYTEST_DISABLE_PLUGIN_AUTOLOAD="1",
+        PYTEST_BREADCRUMB_DIR=str(tmp_path / breadcrumb_dir),
+    )
+    (tmp_path / "pytest.ini").write_text("[pytest]\n")
+    (tmp_path / "conftest.py").write_text(
+        "from tests.conftest import pytest_runtest_logstart, pytest_runtest_logfinish\n"
+    )
+    (tmp_path / "test_cancel.py").write_text(
+        "import time\ndef test_running_when_cancelled():\n    time.sleep(60)\n"
+    )
+    log = tmp_path / "pytest.log"
+    with log.open("w") as output:
+        child = subprocess.Popen(
+            [sys.executable, "-m", "pytest", "-p", "xdist.plugin", "-n", "2", "-q"],
+            cwd=tmp_path, env=env, stdout=output, stderr=subprocess.STDOUT, start_new_session=True,
+        )
+        try:
+            deadline = time.monotonic() + 30
+            while time.monotonic() < deadline:
+                crumbs = list((tmp_path / breadcrumb_dir).glob("breadcrumb_gw*.txt"))
+                if any("START test_cancel.py::test_running_when_cancelled\n" in p.read_text() for p in crumbs):
+                    break
+                assert child.poll() is None, log.read_text()
+                time.sleep(0.02)
+            else:
+                pytest.fail(f"child did not start its test:\n{log.read_text()}")
+            os.killpg(child.pid, cancel_signal)
+            assert child.wait(timeout=15) != 0
+        finally:
+            # A hard cancellation must leave no xdist worker behind, even on an assertion failure.
+            with contextlib.suppress(ProcessLookupError):
+                os.killpg(child.pid, signal.SIGKILL)
+            child.wait(timeout=15)
+
+    result = subprocess.run(
+        ["bash", "-e", "-o", "pipefail", "-c", diagnostic["run"]],
+        cwd=tmp_path, env=env, capture_output=True, text=True, timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "breadcrumb_gw" in result.stdout
+    assert "START test_cancel.py::test_running_when_cancelled" in result.stdout
+    assert "FINISH test_cancel.py::test_running_when_cancelled" not in result.stdout
 
 
 def test_breadcrumb_logstart_and_logfinish(tmp_path: Path, monkeypatch) -> None:
