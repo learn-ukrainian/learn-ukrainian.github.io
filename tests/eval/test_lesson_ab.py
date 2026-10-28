@@ -261,6 +261,7 @@ def test_stress_marks_are_stripped_and_classified() -> None:
     assert marked_words("Я живу́ в Ки́єві, пам'ять") == ["живу́", "Ки́єві"]
     # NFC would fold these marks into one letter (ѐ, ѝ, ѓ); each stays a combining mark.
     assert marked_words("сѐла сѝла ѓрати") == ["се\u0300ла", "си\u0300ла", "г\u0301рати"]
+    assert marked_words("café, Ки́єві") == ["Ки́єві"]
     metrics = stress_metrics("Ви живе́те. Ро́стик.", "Ви живете. Ростик.", FakeChecks())
     assert metrics["stress_wrong"] == 1 and metrics["stress_wrong_forms"][0]["form"] == "живе́те"
     assert metrics["stress_unverified"] == 1 and metrics["stress_attested"] == 0

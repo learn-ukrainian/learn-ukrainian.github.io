@@ -179,7 +179,10 @@ def load_key(path: Path, manifest: Manifest) -> dict[str, Any]:
 
 _STRESS_MARKS = frozenset("́̀")
 _VOWELS = frozenset("аеєиіїоуюяАЕЄИІЇОУЮЯ")
-_MARKABLE_WORD = re.compile(r"[А-Яа-яІіЇїЄєҐґ̀́]+(?:['’ʼ-][А-Яа-яІіЇїЄєҐґ̀́]+)*")
+_LETTERS = "А-Яа-яІіЇїЄєҐґ"
+_PART = rf"[{_LETTERS}][{_LETTERS}\u0300\u0301]*"
+# A word starts with a Cyrillic letter, so a mark left by a Latin letter (``café``) is never a word of its own.
+_MARKABLE_WORD = re.compile(rf"{_PART}(?:['’ʼ-]{_PART})*")
 
 
 def strip_stress(text: str) -> str:
