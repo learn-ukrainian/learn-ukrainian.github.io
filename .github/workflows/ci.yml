@@ -371,6 +371,7 @@ jobs:
     env:
       LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
       LU_PYTEST_TMP_BUDGET_GB: "5"
+      PYTEST_BREADCRUMB_DIR: ci-artifacts/pytest-shard-${{ matrix.shard }}-breadcrumbs
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -471,16 +472,31 @@ jobs:
         env:
           SHARD: ${{ matrix.shard }}
         run: python3 -m scripts.ci.junit_results ci-artifacts/pytest-shard-*.xml --title "pytest (${SHARD})" >> "$GITHUB_STEP_SUMMARY"
+      - name: Show pytest cancellation diagnostics
+        if: ${{ failure() || cancelled() }}
+        timeout-minutes: 1
+        run: |
+          # Breadcrumbs are flushed during each test, even if JUnit never finishes.
+          # A final START without FINISH names the test interrupted on that worker.
+          shopt -s nullglob
+          for breadcrumb in "$PYTEST_BREADCRUMB_DIR"/breadcrumb_*.txt; do
+            printf '%s: ' "${breadcrumb##*/}"
+            tail -n 1 "$breadcrumb"
+          done
       - name: Upload pytest JUnit report
-        if: ${{ !cancelled() }}
+        if: ${{ always() }}
+        timeout-minutes: 2
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-junit-shard-${{ matrix.shard }}
+          # A retry replaces the cancelled attempt's incomplete shard artifact.
+          overwrite: true
           path: |
             ci-artifacts/pytest-shard-*.xml
             ci-artifacts/pytest-shard-*-files.txt
             ci-artifacts/pytest-shard-*-needs-artifact.txt
             ci-artifacts/pytest-shard-*-weights.json
+            ci-artifacts/pytest-shard-*-breadcrumbs/
           if-no-files-found: error
           retention-days: 14
 
