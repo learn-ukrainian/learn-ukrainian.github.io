@@ -30,6 +30,9 @@ publish_order() {
 publish_order "$TMPDIR/order.txt" "<registered-slot>" "<unique-order-key>"
 ```
 
+`$LU_INBOX_WORKER` is the sender (your consumer identity), never a recipient; the CTO's own
+recipient is `claude-cto`.
+
 Preserve required message references per `docs/runbooks/driver-seat-cli-move.md` § 5.
 
 ## CI recovery
