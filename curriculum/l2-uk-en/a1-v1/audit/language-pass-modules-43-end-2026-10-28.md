@@ -2,13 +2,13 @@
 
 Refs #8893. Source snapshot: `7e3ee13f582798f409ea85df9ce2d827b4ef2d7a`.
 
-This is one bounded Method step 2 slice. It checks all 234 fill-in and quiz items in inline/root and workbook sections of manifest modules 43-55, excluding only `a1-finale/act-1/0`, already covered by #11911. There are 179 checked-clean items and 55 confirmed ambiguous items, all repaired. No wrong key was confirmed. Every original key, learning target and activity type is retained.
+This is one bounded Method step 2 slice. It checks all 234 fill-in and quiz items in inline/root and workbook sections of manifest modules 43-55, excluding only `a1-finale/act-1/0`, already covered by #11911. There are 182 checked-clean items and 52 confirmed ambiguous items, all repaired. No wrong key was confirmed. Every original key, learning target and activity type is retained.
 
 The order comes from `levels.a1-v1.modules` in `curriculum/l2-uk-en/curriculum.yaml`, using the same arc-order fallback as #11911. This batch covers the rest of the communication arc and the final past/future/graduation arc. The workbook denominator is 77 items; the inline denominator is 157.
 
 | Position | Module | Items checked | Clean | Defects fixed |
 | --- | --- | ---: | ---: | ---: |
-| 43 | `please-do-this` | 22 | 17 | 5 |
+| 43 | `please-do-this` | 22 | 20 | 2 |
 | 44 | `linking-ideas` | 26 | 22 | 4 |
 | 45 | `when-and-where` | 30 | 22 | 8 |
 | 46 | `holidays` | 23 | 23 | 0 |
@@ -128,6 +128,8 @@ POST1 and POST2 screen all 234 final items in batches of 150 and 84. These diagn
 | U50 | `verify_stresses` {"words": ["Учора", "тому"]} | Stress oracle checks the final cue and replacement compound-connective component. |
 | U51 | `query_slovnyk_me` {"word": "вечірка", "dict": "vts"} | VTS вечірка: an evening gathering or party. |
 | U52 | `query_slovnyk_me` {"word": "температура", "dict": "vts"} | VTS температура: body temperature, also its elevation in illness. |
+| U53 | `get_chunk_context` {"chunk_id": "6-klas-ukrmova-golub-2023_s0180"} | Golub, grade 6, p.177: ти addresses well-known peers or younger people; ви addresses unfamiliar or older people, with plural predicate agreement. |
+| U54 | `get_chunk_context` {"chunk_id": "8-klas-ukrmova-avramenko-2025_s0179"} | Avramenko, grade 8, p.135: conversational address etiquette, including the inappropriate familiar address to an unknown person. |
 
 ## please-do-this
 
@@ -141,9 +143,9 @@ POST1 and POST2 screen all 234 final items in batches of 150 and 84. These diagn
 | `act-1/5` | inline | Друзі, ___ мене. | слухайте | C | M43; U41; U44. The command task and stated address/register select the keyed imperative; other displayed forms fail that task. |
 | `act-1/6` | inline | ___ меню, будь ласка. | Дайте | C | M43; U41; U44. The command task and stated address/register select the keyed imperative; other displayed forms fail that task. |
 | `act-1/7` | inline | ___, що ти хочеш. | Скажи | C | M43; U41; U44. The command task and stated address/register select the keyed imperative; other displayed forms fail that task. |
-| `act-2/0` | inline | You ask one friend to read. | Читай, будь ласка. | D | M43; U41; U44. Both singular and polite-plural commands can address one person; the original situation did not state the required address form. |
-| `act-2/1` | inline | You ask a teacher to read. | Читайте, будь ласка. | D | M43; U41; U44. Both singular and polite-plural commands can address one person; the original situation did not state the required address form. |
-| `act-2/2` | inline | You ask a server for the bill. | Дайте рахунок, будь ласка. | D | M43; U41; U44. Both singular and polite-plural commands can address one person; the original situation did not state the required address form. |
+| `act-2/0` | inline | You ask one friend to read. | Читай, будь ласка. | C | M43; U41; U44. U53; U54; please-do-this/module.md. The activity explicitly tests social register: the friend takes ти, the teacher/server takes polite ви. U41 alone did not establish a competing appropriate answer; the three extra hints were restored after independent review. |
+| `act-2/1` | inline | You ask a teacher to read. | Читайте, будь ласка. | C | M43; U41; U44. U53; U54; please-do-this/module.md. The activity explicitly tests social register: the friend takes ти, the teacher/server takes polite ви. U41 alone did not establish a competing appropriate answer; the three extra hints were restored after independent review. |
+| `act-2/2` | inline | You ask a server for the bill. | Дайте рахунок, будь ласка. | C | M43; U41; U44. U53; U54; please-do-this/module.md. The activity explicitly tests social register: the friend takes ти, the teacher/server takes polite ви. U41 alone did not establish a competing appropriate answer; the three extra hints were restored after independent review. |
 | `act-2/3` | inline | You ask one close friend for the menu. | Дай меню, будь ласка. | C | M43; U41; U44. The command task and stated address/register select the keyed imperative; other displayed forms fail that task. |
 | `act-2/4` | inline | A teacher gives a class instruction. | Пишіть речення. | C | M43; U41; U44. The command task and stated address/register select the keyed imperative; other displayed forms fail that task. |
 | `act-2/5` | inline | A friend asks you to look. | Подивись! | C | M43; U41; U44. The command task and stated address/register select the keyed imperative; other displayed forms fail that task. |
@@ -432,9 +434,6 @@ POST1 and POST2 screen all 234 final items in batches of 150 and 84. These diagn
 
 | Item | Evidence | Source repair, with original key unchanged |
 | --- | --- | --- |
-| `please-do-this/act-2/0` | U41; U44 | prompt: You ask one friend to read. (Use the ти imperative.) |
-| `please-do-this/act-2/1` | U41; U44 | prompt: You ask a teacher to read. (Use the polite ви imperative.) |
-| `please-do-this/act-2/2` | U41; U44 | prompt: You ask a server for the bill. (Use the polite ви imperative.) |
 | `please-do-this/workbook[0]/0` | U41; U44 | sentence: (Use the ти command form.) Олено, ___ книжку! |
 | `please-do-this/workbook[0]/2` | U41; U44 | sentence: (Use the ти command form.) Тарасе, ___ в кафе. |
 | `linking-ideas/act-1/1` | U25; U26; U27 | ['options', 1]: тому що |
@@ -492,9 +491,15 @@ POST1 and POST2 screen all 234 final items in batches of 150 and 84. These diagn
 
 - Structural scanner: `scripts/audit/scan_activity_errors.py --track a1-v1`, 55/55 files, zero structural findings before and after changes.
 - Existing affected activity/parser/generator/manifest tests: 329 passed in 11.25 seconds, using `pytest -n 2 tests/test_scan_activity_errors.py tests/test_a1_activity_schema_parser_drift.py tests/test_yaml_activities_a1_payload.py tests/test_activity_renderer.py tests/test_generate_mdx.py tests/test_generate_mdx_parsers.py tests/test_generate_mdx_unit_map.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_curriculum_manifest_canary.py`. Ruff on those test files and the scanner/parser/converter passed. No test case is added.
-- The existing `ActivityParser`, `yaml_activities_to_jsx` and `dump_json_for_jsx` regenerate only the 55 changed item objects in nine tracked MDX pages. Unchanged item objects and bytes outside those objects are preserved. The integrity manifest updates only the corresponding source/page hashes.
-- Chromium exercised all 55 changed tracked MDX payloads through the existing FillInQuestion and QuizQuestion components: 55 keys accepted, 55 wrong choices rejected, zero browser errors. The runtime was copied into this worktree after lockfile equality was verified. Independent Gemini via read-only AGY and Opus 5.5 with Sources, browser proof and exact-head CI/merge receipts are recorded on the PR. This document records the author pass, not deployment or independent approval.
+- The existing `ActivityParser`, `yaml_activities_to_jsx` and `dump_json_for_jsx` regenerate only the 52 changed item objects in nine tracked MDX pages. Unchanged item objects and bytes outside those objects are preserved. The integrity manifest updates only the corresponding source/page hashes. Regeneration also exposes the existing YAML explanation strings on changed FillIn objects where the archived MDX had omitted them. Some generalizations in those source explanations are tracked as F2 below; the repair brief permits cue/distractor changes, not explanation rewrites.
+- Chromium exercised all 52 changed tracked MDX payloads through the existing FillInQuestion and QuizQuestion components: 52 keys accepted, 52 wrong choices rejected, zero browser errors. The runtime was copied into this worktree after lockfile equality was verified. The PR is the record for independent Gemini via read-only AGY and Opus 5.5 with Sources, browser proof, and exact-head CI/merge receipts. All required gates must pass on the current head before landing. This document records the author pass, not deployment or independent approval.
 
-The counted denominator is 234, including 77 workbook items. Source inventory started at 2026-10-28T20:11:08.061423+00:00. This report was prepared at 2026-10-28T20:25:27.491267+00:00, an elapsed 14.3 minutes. That interval includes inventory, Sources calls, dictionary fallback, analysis, repairs and generation; it is not pure model throughput. Review, CI and queue time are reported separately on the PR. Later batches should be sized by their full item census rather than module count.
+The counted denominator is 234, including 77 workbook items. Source inventory started at 2026-10-28T20:11:08.061423+00:00. The initial author pass/report interval was 14.3 minutes before independent review. This revised report was prepared at 2026-10-28T20:39:20.767355+00:00, an elapsed 28.2 minutes from inventory, including review waiting, the source-backed F1 correction and regeneration. Neither interval is pure model throughput. Review, CI and queue time are reported separately on the PR. Later batches should be sized by their full item census rather than module count.
 
 Residual owner: CTO curriculum coordinator, #8893. The other module slices, unchecked activity types, prose, broader held-out evaluation and deployed behavior remain outside this slice.
+
+## Review corrections and tracked follow-ups
+
+Round 1 Opus F1 was accepted. The three Ti or vy? quiz prompts are restored and checked-clean against Golub p.177, Avramenko p.135 and the module rule. Their situation already fixes the register; adding the requested pronoun would change that learning target. The two bare-vocative workbook repairs remain. The revised count is 182 checked-clean and 52 repaired.
+
+Non-blocking follow-ups remain with the CTO curriculum coordinator on #8893: F2, existing explanation generalizations newly exposed by FillIn regeneration; F3, other activity types that reject narrative present or past-time далі; F4, final review/CI/merge receipts belong on the PR, with no premature completion claim here; F5, the reviewer considers some retained cues over-cautious under the original context. Gemini G1 records the same already-declared unchecked scope. None expands this slice into prose or other activity types.
