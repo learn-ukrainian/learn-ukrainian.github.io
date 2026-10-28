@@ -50,6 +50,17 @@ Final results must be adjacent `.result` regular files, without symlinks, under 
 
 Finding counts and severities use structured finding metadata or explicit `F<n>` finding headers with P0 through P3 priorities in brackets, parentheses, or after dashes or periods. Repeated finding IDs count once; conflicting priorities become unknown. Anonymous bracketed priority headers are also supported in review results. Quoted and fenced examples do not count. Free prose cannot establish zero findings. `confirmed_findings` counts explicit boolean `confirmed` flags on recorded findings; no approval or fix is treated as confirmation. `confirmation_rate` uses only findings with explicit confirmation flags. `unobserved_finding_reviews` exposes reviews whose findings were not recorded in a supported form.
 
+## Review scores
+
+`review_scores` has two groups, `by_reviewer_model` and `by_author_model`, keyed by the reviewing model and by the reviewed PR's author model. Each key reports `rounds`, `scored`, `absent`, `mean`, `median`, and `rubric_agreement`.
+
+- **What is recorded.** The advisory `SCORE: <n>/10` line of a done review that has a verdict. `rounds` counts such reviews; `absent` counts those with a missing, malformed, or ambiguous score. Mean and median cover scored rounds only, and `unknown` means none were scored.
+- **Rubric.** The score uses the council's anchored rubric ([review-loop reply format](../../agents_extensions/shared/skills/review-loop/references/brief.md#round-1-full-review), "Findings and score" in the [decision report](../../agents_extensions/shared/skills/drive-epic/references/decision-report.md#council-optional-independent-panel)). The recorder uses its bands: 10 with no open finding, 7 to 9 for a worst open P2 or P3, 4 to 6 for P1, 1 to 3 for P0.
+- **Scores never gate.** They affect no verdict, merge, or routing decision.
+- **Reading `rubric_agreement`.** It is the share of judged rounds whose score sits in the band of their worst open finding. A low rate suggests a reviewer scores inconsistently with its own findings; it does not rank models, because review mixes differ.
+- **Unjudged rounds.** A round is left out of the rate, not counted as a miss, when the comparison is uncertain: no score, no recorded findings (free prose cannot establish zero findings), a score of 1 to 3 without an open P0 (it may mean "wrong approach"), or findings whose state is unknown.
+- **Finding state.** An open finding comes from structured state only: a `resolved` flag on recorded findings. Prose findings carry no state, so a finding line that mentions "resolved" or "still open" is unjudged and never read as closed. A prose finding with no such mention is open.
+
 ## API and exit status
 
 The existing `/api/comms/v1/metrics` and `/api/fleet/facade/metrics` routes accept `include_agent_success=true`. The additive `agent_success` field reports the default three-day cohort from that API context's task store, independently of comms-store availability. Ordinary metrics requests do not scan task records. The async comms route offloads the scan to a thread.

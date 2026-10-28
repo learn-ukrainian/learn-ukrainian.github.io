@@ -317,7 +317,7 @@ def test_review_scores_aggregate_by_reviewer_and_author_model(tmp_path):
         ("sol-1", "codex", "gpt-6.1-sol", "claude-opus-5-5", "VERDICT: REQUEST_CHANGES\nSCORE: 9/10\nF1 [P1] b.py:2 bug."),
         ("sol-2", "codex", "gpt-6.1-sol", "claude-opus-5-5", "VERDICT: REQUEST_CHANGES\nSCORE: 9.5/10\nF1 [P0] c.py:3"),
         ("muse-1", "muse", "muse-wonder-full-1.0", "gpt-6.1-terra", "VERDICT: APPROVE\nNo score line."),
-        # Delta round: the resolved P1 no longer bounds the score; only the open P3 does.
+        # Prose that mentions resolution is not a structured state: unjudged, never closed or open.
         ("grok-1", "cursor", "grok-4.7", "claude-sonnet-5-5", "VERDICT: APPROVE\nSCORE: 9/10\n"
          "F1 [P1] a.py:1 resolved.\nF2 [P3] b.py:2 still open: not resolved, nit."),
         # 1-3 without a P0 may be the rubric's wrong-approach case, so it is not compared.
@@ -345,7 +345,7 @@ def test_review_scores_aggregate_by_reviewer_and_author_model(tmp_path):
         "rubric_agreement": {"numerator": 0, "denominator": 1, "percent": 0.0},
     }
     assert scores["by_reviewer_model"]["grok-4.7"]["rubric_agreement"] == {
-        "numerator": 1, "denominator": 1, "percent": 100.0,
+        "numerator": 0, "denominator": 0, "percent": "unknown",
     }
     assert scores["by_reviewer_model"]["muse-wonder-full-1.0"]["absent"] == 1
     assert scores["by_reviewer_model"]["muse-wonder-full-1.0"]["mean"] == "unknown"
@@ -353,3 +353,34 @@ def test_review_scores_aggregate_by_reviewer_and_author_model(tmp_path):
     assert (opus["rounds"], opus["scored"], opus["absent"], opus["mean"]) == (3, 2, 1, 8.5)
     assert scores["by_author_model"]["gpt-6.1-sol"]["median"] == 10
     assert scores["by_author_model"]["gpt-6.1-terra"]["scored"] == 0
+
+
+def _agreement(tmp_path, result, **extra):
+    _write(tmp_path, {
+        "task_id": "r1", "agent": "codex", "model": "gpt-6.1-sol", "status": "done", "mode": "read-only",
+        "started_at": "2026-10-28T01:00:00Z", "review_author_model": "claude-opus-5-5", "result": result,
+        "resolved_model": "gpt-6.1-sol", "resolved_model_known": True, "resolved_model_source": "test", **extra,
+    })
+    scores = collect_agent_success(tasks_dir=tmp_path, until=NOW)["review_scores"]
+    return scores["by_reviewer_model"]["gpt-6.1-sol"]["rubric_agreement"]
+
+
+def test_prose_resolution_words_do_not_close_a_finding(tmp_path):
+    """The P1 'has never been resolved' is not closed; without a structured state the case is unjudged."""
+    prose = "VERDICT: APPROVE\nSCORE: 9/10\nF1 [P1] a.py:1 this race has never been resolved upstream."
+    assert _agreement(tmp_path, prose) == {"numerator": 0, "denominator": 0, "percent": "unknown"}
+
+
+def test_unmarked_prose_finding_stays_open(tmp_path):
+    # An open P1 bounds the score to 4-6, so 9 disagrees.
+    assert _agreement(tmp_path, "VERDICT: REQUEST_CHANGES\nSCORE: 9/10\nF1 [P1] a.py:1 bug.") == {
+        "numerator": 0, "denominator": 1, "percent": 0.0,
+    }
+
+
+def test_structured_resolved_flag_decides_agreement(tmp_path):
+    result = "VERDICT: APPROVE\nSCORE: 9/10"
+    closed = [{"priority": "P1", "resolved": True}, {"priority": "P3", "resolved": False}]
+    assert _agreement(tmp_path, result, findings=closed)["numerator"] == 1
+    still_open = [{"priority": "P1", "resolved": False}]
+    assert _agreement(tmp_path, result, findings=still_open)["numerator"] == 0

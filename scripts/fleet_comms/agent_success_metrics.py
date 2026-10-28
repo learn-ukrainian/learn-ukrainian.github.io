@@ -88,9 +88,9 @@ _FINDING_ID = re.compile(
     r"[\s:.(\[—–-]*(?:severity[:\s]+)?(P[0-3])\b",
     re.IGNORECASE,
 )
-# A delta-round reply marks each earlier id `resolved` or `still open: <reason>` (review-loop brief).
-_RESOLVED = re.compile(r"\bresolved\b", re.IGNORECASE)
-_STILL_OPEN = re.compile(r"\bstill open\b|\bnot (?:yet )?resolved\b", re.IGNORECASE)
+# Prose that talks about a finding's resolution ("resolved", "still open", "never been resolved") is
+# not a structured state, so such a finding is unjudged rather than read as closed or open.
+_STATE_MENTION = re.compile(r"\bresolved\b|\bstill open\b|\bunresolved\b", re.IGNORECASE)
 
 
 def _label(value: object) -> str:
@@ -184,20 +184,20 @@ def _review(path: Path, record: dict) -> dict | None:
             if isinstance(payload, dict) and isinstance(payload.get("findings"), list) and verdict != "unknown":
                 findings = payload["findings"]
             elif verdict != "unknown":
-                identified, anonymous, resolved = {}, [], set()
+                identified, anonymous, unjudged = {}, [], set()
                 for line in _commonmark_lines(_without_code_fences(text, keep_unclosed=False)):
-                    closed = bool(_RESOLVED.search(line)) and not _STILL_OPEN.search(line)
+                    unclear = bool(_STATE_MENTION.search(line))
                     match = _FINDING_ID.match(line)
                     if match:
                         identity, priority = match[1].upper(), match[2].upper()
                         earlier = identified.get(identity, priority)
                         identified[identity] = priority if earlier == priority else "unknown"
-                        if closed:
-                            resolved.add(identity)
+                        if unclear:
+                            unjudged.add(identity)
                     elif match := _FINDING.match(line):
-                        anonymous.append({"priority": match[1], "resolved": closed})
+                        anonymous.append({"priority": match[1], "state_unjudged": unclear})
                 findings = [
-                    *({"priority": p, "resolved": i in resolved} for i, p in identified.items()),
+                    *({"priority": p, "state_unjudged": i in unjudged} for i, p in identified.items()),
                     *anonymous,
                 ] or None
         else:
@@ -213,7 +213,9 @@ def _review(path: Path, record: dict) -> dict | None:
             priority = finding.get("priority", finding.get("severity"))
             priority = priority if isinstance(priority, str) and priority in SEVERITIES else "unknown"
             severities[priority] += 1
-            if finding.get("resolved") is not True:
+            if finding.get("state_unjudged") is True:
+                open_priorities = None
+            elif open_priorities is not None and finding.get("resolved") is not True:
                 open_priorities.append(priority)
             if type(finding.get("confirmed")) is bool:
                 confirmations.append(int(finding["confirmed"]))
