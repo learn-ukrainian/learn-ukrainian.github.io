@@ -99,8 +99,9 @@ UKRAINIAN_REVIEW_SEATS = 2
 NEEDS_SEAT = "needs-seat"
 # Recorder headings; a body that opens with one is a verdict record, never informal prose.
 RECORD_HEADINGS = ("### Cross-family review\n", "### Adversarial red-team review\n")
-# A review-profile statement however spelled (FR-55).
-PROFILE_STATEMENT = re.compile(r"review[\W_]*profile", re.IGNORECASE)
+# Since #11127 the publisher posts only the recorder's typed record, which never carries a
+# raw APPROVE trailer, so only a comment GitHub created before then can be such a legacy record.
+LEGACY_TRAILER_CUTOFF = datetime(2026, 10, 20, 6, 0, 20, tzinfo=UTC)
 # Readable record lines whose value the trailer does not carry.
 FREE_RECORD_LINES = re.compile(
     r"Review score: (?:\d+/10|absent)|Authored by: [^\s,]+(?:, [^\s,]+)*|Withheld findings: (?:\d+|unknown)"
@@ -370,10 +371,13 @@ def lookup_verdict(
                 and trailer["verdict"] == "APPROVE"
                 and not is_ukrainian_review(trailer.groupdict())
                 and not body.startswith(RECORD_HEADINGS)
-                and not PROFILE_STATEMENT.search(body.split("<details>", 1)[0])
+                and (created := _timestamp(_field(comment, "created_at", "createdAt"))) is not None
+                and created < LEGACY_TRAILER_CUTOFF
             ):
-                # An approval trailer outside the keeper format cannot hide a rejection, so it neither
-                # poisons the head nor counts as approval; an edited one still poisons it (#10119).
+                # A legacy approval trailer outside the keeper format cannot hide a rejection, so it
+                # neither poisons the head nor counts as approval; an edited one still poisons it
+                # (#10119). A newer one is no legacy record and poisons the head like any malformed
+                # marker, so it cannot hide a Ukrainian seat however it is spelled (FR-55).
                 if trailer["sha"] == sha and _edited(comment):
                     return unknown(MARKER_EDITED, index, comment)
                 if re.search(r"(?im)^\s*VERDICT:", body):

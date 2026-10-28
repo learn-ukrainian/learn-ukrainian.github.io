@@ -272,6 +272,14 @@ def test_unformatted_approve_trailer_neither_poisons_nor_approves():
     assert sweep.lookup_verdict([unformatted(edited=True), readable], PR_10095_SHA, "fleet").state == "unknown"
 
 
+def test_unformatted_approve_trailer_posted_after_the_typed_publisher_poisons_the_head():
+    # FR-55: only a legacy comment can carry a raw APPROVE trailer outside the record format.
+    item = {**unformatted(), "created_at": "2026-10-28T08:40:00Z", "updated_at": "2026-10-28T08:40:00Z"}
+    readable = comment(sha=PR_10095_SHA, task="later-review", started="2026-10-08T09:00:00.000001+00:00")
+    verdict = sweep.lookup_verdict([item, readable], PR_10095_SHA, "fleet")
+    assert verdict.state == "unknown" and verdict.reason == sweep.MARKER_MALFORMED_CURRENT_HEAD
+
+
 @pytest.mark.parametrize("token", ["APPROVES", "approve", "MAYBE", "BLOCKED", "CHANGES_REQUESTED"])
 def test_unformatted_non_approve_trailer_still_poisons_the_head(token):
     item = unformatted(PR_10095_TRAILER.replace("verdict=APPROVE", f"verdict={token}"))

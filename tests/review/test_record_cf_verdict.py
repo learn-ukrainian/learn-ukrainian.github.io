@@ -581,7 +581,10 @@ def test_altered_profile_statement_never_downgrades_a_seat(statement):
     assert recorder.parse_marker(body) is None
 
 
-@pytest.mark.parametrize("statement", ALTERED_PROFILES)
+@pytest.mark.parametrize("statement", [
+    *ALTERED_PROFILES, "Review<br>profile: ukrainian", "Review<br/>profile: ukrainian",
+    "Review&#32;profile: ukrainian", "Review&nbsp;profile: ukrainian", "",
+])
 @pytest.mark.parametrize("form", ["record", "other-field-malformed", "heading-removed"])
 def test_altered_profile_on_a_raw_approve_trailer_poisons_the_head(statement, form):
     # FR-55: the legacy APPROVE fallback must not ignore an altered Ukrainian marker.
@@ -600,7 +603,9 @@ def test_altered_profile_on_a_raw_approve_trailer_poisons_the_head(statement, fo
         sha=SHA, task_id="review-one", started="2026-09-23T12:00:00.000001+00:00",
         verdict="APPROVED", model="gpt-6.1-sol", family="openai", reply="VERDICT: APPROVE",
     )
-    verdict = sweep.lookup_verdict([seat_comment(code, 1), seat_comment(altered, 2)], SHA, "fleet")
+    # Posted after the publisher admitted only recorder records, it is no legacy trailer.
+    forged = {**seat_comment(altered, 2), "created_at": "2026-10-28T13:00:02Z", "updated_at": "2026-10-28T13:00:02Z"}
+    verdict = sweep.lookup_verdict([seat_comment(code, 1), forged], SHA, "fleet")
     assert verdict.state == "unknown" and verdict.reason == sweep.MARKER_MALFORMED_CURRENT_HEAD
 
 
