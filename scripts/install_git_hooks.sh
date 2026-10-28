@@ -170,6 +170,28 @@ if ((${#symlinked[@]} > 0)); then
     done
     exit 1
 fi
+
+# Refuse before any mutation when an Entire wrapper still chains to a hook this installer
+# did not write: Entire kept a pre-existing user hook at <name>.pre-entire (or
+# <name>.legacy.pre-entire), and replacing the wrapper would silently stop running it.
+# The operator moves that hook into .githooks (or deletes it) and reruns.
+foreign_chained=()
+for hook_name in "${entire_managed_hooks[@]}"; do
+    wrapper="$hooks_dir/$hook_name"
+    [[ -f "$wrapper" ]] && grep -qF "$entire_marker" "$wrapper" || continue
+    for chained in "$wrapper.pre-entire" "$hooks_dir/$hook_name.legacy.pre-entire"; do
+        [[ -e "$chained" || -L "$chained" ]] || continue
+        if [[ -L "$chained" ]] || ! grep -qF "$marker" "$chained" 2>/dev/null; then
+            foreign_chained+=("$chained")
+        fi
+    done
+done
+if ((${#foreign_chained[@]} > 0)); then
+    for destination in "${foreign_chained[@]}"; do
+        echo "REFUSED: $destination is chained by an Entire wrapper but was not written by this installer; move it into .githooks or delete it, then rerun (nothing was changed)" >&2
+    done
+    exit 1
+fi
 mkdir -p "$hooks_dir"
 
 # 1. Unset core.hooksPath if set to .githooks (leave any other explicit value alone)
