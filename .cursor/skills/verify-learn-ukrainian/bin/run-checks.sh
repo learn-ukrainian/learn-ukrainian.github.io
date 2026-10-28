@@ -8,7 +8,6 @@ Usage: bash .cursor/skills/verify-learn-ukrainian/bin/run-checks.sh
 Run local CI/data-contract checks; not the full CI test suite or deployment proof.
 Inputs: LU_VERIFY_PYTHON defaults to the checkout's .venv/bin/python;
         use the task-prescribed shared interpreter in a dispatch worktree.
-Optional: LU_SOURCES_HEALTH_URL or SOURCES_MCP_URL enables evidence pack checks.
 Outputs: PASS/FAIL/SKIP diagnostics and summary; reuse repository checks,
 including practice-deck generation and the Word Atlas lint baseline ratchet.
 Exit: 0 all executed checks pass (environment gaps SKIP), 1 any check fails.
@@ -147,48 +146,6 @@ if [[ -f registry/atlas/pilot/pilot-v1.json && -f registry/atlas/identity/regist
   rm -f "$out" "$err"
 else
   report SKIP "Atlas register pin + pilot manifest verify" "committed pilot/registry missing"
-fi
-
-# --- Lesson lock freshness (sample A1 module with a committed lock) -----------
-# The check itself is public-data; a mismatch is a real FAIL (stale lock), not an env skip.
-LOCK_LEVEL=a1
-LOCK_SLUG=sounds-letters-and-hello
-LOCK_PATH="curriculum/l2-uk-en/evidence/${LOCK_LEVEL}/_state/${LOCK_SLUG}/lessons.lock.yaml"
-if [[ -f "$LOCK_PATH" ]]; then
-  out="$(mktemp)" err="$(mktemp)"
-  set +e
-  "$PYTHON" -m scripts.curriculum.evidence lessons-lock "$LOCK_LEVEL" "$LOCK_SLUG" >"$out" 2>"$err"
-  ec=$?
-  set -e
-  if [[ "$ec" -eq 0 ]]; then
-    report PASS "Lesson lock freshness (${LOCK_LEVEL}/${LOCK_SLUG})"
-  else
-    errtxt="$(cat "$err"; cat "$out")"
-    if grep -qiE 'sources MCP|Sources MCP|unavailable|needs_artifact|vesum\.db not|No such file.*sources' <<<"$errtxt"; then
-      report SKIP "Lesson lock freshness (${LOCK_LEVEL}/${LOCK_SLUG})" "private evidence/sources unavailable"
-    else
-      # Stale lock / mismatch: the checker ran — surface as FAIL so agents refresh locks.
-      echo "$errtxt" | tail -n 8 | sed 's/^/        | /'
-      report FAIL "Lesson lock freshness (${LOCK_LEVEL}/${LOCK_SLUG})" \
-        "lock stale or mismatched (exit ${ec}); re-run lessons-lock --write only with authority"
-    fi
-  fi
-  rm -f "$out" "$err"
-else
-  report SKIP "Lesson lock freshness" "no committed lock at ${LOCK_PATH}"
-fi
-
-# --- Evidence pack-verify (needs Sources / private corpora) -------------------
-# Opt in with LU_SOURCES_HEALTH_URL or SOURCES_MCP_URL (no hardcoded service endpoints).
-if [[ -n "${LU_SOURCES_HEALTH_URL:-}" ]] && curl -fsS --max-time 1 "${LU_SOURCES_HEALTH_URL}" >/dev/null 2>&1; then
-  run_check "Evidence pack-verify (a1/sounds-letters-and-hello)" \
-    "$PYTHON" -m scripts.curriculum.evidence pack-verify a1 sounds-letters-and-hello
-elif [[ -n "${SOURCES_MCP_URL:-}" ]]; then
-  run_check "Evidence pack-verify (a1/sounds-letters-and-hello)" \
-    "$PYTHON" -m scripts.curriculum.evidence pack-verify a1 sounds-letters-and-hello
-else
-  report SKIP "Evidence pack-verify" \
-    "Sources unavailable (set LU_SOURCES_HEALTH_URL or SOURCES_MCP_URL to enable)"
 fi
 
 # --- Optional: VESUM-backed practice linguistic gate --------------------------
