@@ -11,6 +11,7 @@ VESUM is a static file and keeps its metadata/file identity.
 """
 
 import hashlib
+import http.client
 import json
 import os
 import re
@@ -1579,9 +1580,11 @@ def _url_retry_delay(retry_after: str | None, attempt: int) -> float:
 def _ascii_url(url: str) -> str:
     """IRI to URI (RFC 3987 §3.1): urllib cannot send non-ASCII bytes in a request line."""
     parts = urllib.parse.urlsplit(url)
-    host = parts.netloc.encode("idna").decode("ascii") if not parts.netloc.isascii() else parts.netloc
+    userinfo, at, hostport = parts.netloc.rpartition("@")
+    host, colon, port = hostport.partition(":")
+    netloc = f"{userinfo}{at}{host.encode('idna').decode('ascii')}{colon}{port}"
     quoted = (urllib.parse.quote(part, safe="/?&=+,;:@!$'()*~%[]") for part in (parts.path, parts.query, parts.fragment))
-    return urllib.parse.urlunsplit((parts.scheme, host, *quoted))
+    return urllib.parse.urlunsplit((parts.scheme, netloc, *quoted))
 
 
 def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
@@ -1615,7 +1618,7 @@ def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
                 retry_after = exc.headers.get("Retry-After") if exc.headers else None
             finally:
                 exc.close()
-        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException) as exc:
             if attempt == URL_CHECK_ATTEMPTS - 1:
                 raise ConnectionError(f"Failed to check URL {url} after {URL_CHECK_ATTEMPTS} attempts: {exc}") from exc
             time.sleep(_url_retry_delay(None, attempt))

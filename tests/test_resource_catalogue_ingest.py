@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import http.client
 import importlib.util
 import json
 import sqlite3
@@ -232,6 +233,17 @@ def test_link_check_classifies_outcome_with_the_shared_honest_checker(
     assert check["checked_at"]
     assert len(seen) == requests_made
     assert all(agent == sources.LINKCHECK_USER_AGENT for agent in seen)
+
+
+def test_malformed_http_response_is_unverifiable_and_does_not_abort_ingest(monkeypatch):
+    monkeypatch.setattr(sources.time, "sleep", lambda delay: None)
+
+    def not_http(*args, **kwargs):
+        raise http.client.BadStatusLine("NOT HTTP")
+
+    monkeypatch.setattr(sources.urllib.request, "urlopen", not_http)
+    check = catalogue.check_link("https://example.org/", timeout=1)
+    assert (check["link_check"], check["http_status"]) == ("unverifiable", None)
 
 
 def test_unreachable_host_is_unverifiable_and_internal_link_is_not_applicable(monkeypatch):

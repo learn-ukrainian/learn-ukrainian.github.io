@@ -77,7 +77,24 @@ def test_non_ascii_url_is_sent_as_a_uri(monkeypatch):
     assert sources._ascii_url("https://приклад.укр/а?б=в#г") == (
         "https://xn--80aikifvh.xn--j1amh/%D0%B0?%D0%B1=%D0%B2#%D0%B3"
     )
+    assert sources._ascii_url("https://приклад.укр:443/а") == "https://xn--80aikifvh.xn--j1amh:443/%D0%B0"
     assert sources._ascii_url("https://example.org/a%20b?x=1&y=2") == "https://example.org/a%20b?x=1&y=2"
+
+
+def test_malformed_http_response_is_a_bounded_connection_failure(monkeypatch):
+    """A non-HTTP reply (BadStatusLine) is retried and surfaces as ConnectionError, like a refused connection."""
+    import http.client
+
+    delays = []
+    monkeypatch.setattr(sources.time, "sleep", delays.append)
+
+    def not_http(*args, **kwargs):
+        raise http.client.BadStatusLine("NOT HTTP")
+
+    monkeypatch.setattr(sources.urllib.request, "urlopen", not_http)
+    with pytest.raises(ConnectionError, match="after 3 attempts"):
+        sources.check_url("http://127.0.0.1:9/x", timeout=1)
+    assert delays == [0.5, 1.0]
 
 
 def test_retry_after_is_capped(monkeypatch):
