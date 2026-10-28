@@ -22,7 +22,8 @@ NoNewPrivileges=yes
 SystemCallFilter=~@debug
 RestrictSUIDSGID=yes
 LockPersonality=yes
-# Both V4 switches default off; a private deployment drop-in enables them.
+# Both V4 switches default off; a private deployment drop-in may turn on
+# execution, admission or both.
 Environment=HRAMATKA_V4_EXECUTION_ENABLED=0
 Environment=HRAMATKA_V4_ADMISSION_ENABLED=0
 WorkingDirectory=@REPO_ROOT@
