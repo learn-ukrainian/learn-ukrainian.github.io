@@ -219,6 +219,52 @@ def test_owner_exemption_covers_only_the_owner_record(tmp_path, capsys):
     assert not worktree.exists()
 
 
+_DISPATCHER_RECORD = {"schema_version": 2, "worktree_start_sha": "a" * 40, "options": {}}
+
+
+def test_dispatcher_record_proves_creation_without_the_reused_flag(tmp_path, capsys):
+    """A dispatcher (schema 2) record never writes ``worktree_reused``; its start sha is the proof."""
+    primary = _primary(tmp_path)
+    worktree = _linked(primary, "claude/impl-5")
+    (worktree / ".venv").mkdir()
+    (worktree / ".venv" / "ignored").write_text("ignored", encoding="utf-8")
+    _record(
+        primary, "impl-5", status="timeout", run_nonce="owner-run-5", worktree_path=str(worktree),
+        worktree_branch="claude/impl-5", **_DISPATCHER_RECORD,
+    )
+
+    code, out, _err = _remove(capsys, str(worktree), "--owner-task-id", "impl-5")
+
+    assert code == worktree_claims.EXIT_REMOVED
+    assert out.startswith(f"removed: {worktree}")
+    assert not worktree.exists()
+    assert _git(primary, "branch", "--list", "claude/impl-5")
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"options": {"cwd": "/borrowed"}},
+        {"worktree_start_sha": None},
+        {"schema_version": 1},
+        {"worktree_reused": True},
+    ],
+)
+def test_dispatcher_record_proof_refuses_a_borrowed_or_unproven_checkout(tmp_path, capsys, overrides):
+    primary = _primary(tmp_path)
+    worktree = _linked(primary, "claude/impl-6")
+    _record(
+        primary, "impl-6", status="timeout", run_nonce="owner-run-6", worktree_path=str(worktree),
+        **{**_DISPATCHER_RECORD, **overrides},
+    )
+
+    code, _out, err = _remove(capsys, str(worktree), "--owner-task-id", "impl-6")
+
+    assert code == worktree_claims.EXIT_REFUSED
+    assert "did not create this worktree" in err
+    assert worktree.exists()
+
+
 @pytest.mark.parametrize(
     ("owner", "refusal"),
     [

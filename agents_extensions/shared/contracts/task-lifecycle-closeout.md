@@ -163,10 +163,12 @@ is `BLOCKED_WITH_RECEIPT` with an owner, reason, evidence, and next action.
 
 ## Git and review gates
 
-`merge_closeout` and `post_task_reap` append local observations through the
-lifecycle API while the task's dispatch worktree is still present;
-`post_task_reap` does so before it removes the worktree, and `merge_closeout`
-removes none. A valid earlier observation makes capture a no-op. Capture
+`merge_closeout` appends local observations through the lifecycle API while
+the task's dispatch worktree is still present, and removes none. The
+dispatcher settles its own worktree (`_reap_settled` in
+`scripts/dispatcher/worker.py`); a worktree it retained is removed with
+`python -m scripts.orchestration.worktree_claims remove PATH --owner-task-id ID`,
+which never forces. A valid earlier observation makes capture a no-op. Capture
 failure retains the worktree; an explicit `--no-lifecycle-observation REASON`
 is logged in the cleanup report. Tasks without a lifecycle ledger retain their
 existing cleanup path.
