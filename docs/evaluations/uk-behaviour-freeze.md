@@ -440,10 +440,10 @@ a silent denominator reduction, relaxed threshold or budget extension.
 
 At most 32 Sources calls per tool-enabled candidate, primary judge, second
 judge, dispute invocation and deterministic scoring pass are allowed. There
-are at most 778 tool-enabled candidate calls: 10 canary, 384 development and
-selection, and 384 final. The 98 fresh-writer calls have zero Sources calls.
+are at most 776 tool-enabled candidate calls: eight canary, 384 development and
+selection, and 384 final. The 100 fresh-writer calls have zero Sources calls.
 With 876 primary, 102 second/dispute judgments and 876 deterministic passes,
-the Sources ceiling is `32 * (778 + 876 + 102 + 876) = 84224` calls.
+the Sources ceiling is `32 * (776 + 876 + 102 + 876) = 84160` calls.
 Qualification and label adjudication must already be sealed and are not extra
 paid calls hidden in this budget. No retries, replacement generations or
 reflection are allowed. Timeouts, refusals and rate limits are typed outcomes;

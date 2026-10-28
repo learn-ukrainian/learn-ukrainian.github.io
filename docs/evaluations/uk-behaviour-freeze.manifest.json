@@ -247,13 +247,25 @@
     "execution_wall_seconds_sum": 2224800,
     "concurrency": 2,
     "per_provider_concurrency": 1,
-    "tool_enabled_candidate_calls": 778,
-    "fresh_writer_calls": 98,
+    "tool_enabled_candidate_calls": 776,
+    "fresh_writer_calls": 100,
     "sources_calls_per_pass": 32,
     "deterministic_scoring_passes": 876,
-    "sources_calls_total_ceiling": 84224,
+    "sources_calls_total_ceiling": 84160,
     "retry_calls": 0,
-    "selection_consultations_max": 3
+    "selection_consultations_max": 3,
+    "tool_enabled_candidate_calls_by_phase": {
+      "development_canary": 8,
+      "development": 192,
+      "selection_baseline": 192,
+      "deferred_final": 384
+    },
+    "fresh_writer_calls_by_phase": {
+      "development_canary": 4,
+      "development": 24,
+      "selection_baseline": 24,
+      "deferred_final": 48
+    }
   },
   "judge": {
     "model": "claude-opus-5-5",
@@ -270,8 +282,10 @@
       "model_role": "Opus or Sonnet",
       "enabled": false,
       "judge_family_exclusions": [
+        "openai",
         "anthropic"
-      ]
+      ],
+      "exclude_all_scored_families": true
     },
     {
       "family": "google",
@@ -279,8 +293,10 @@
       "model_role": "Gemini",
       "enabled": false,
       "judge_family_exclusions": [
+        "openai",
         "google"
-      ]
+      ],
+      "exclude_all_scored_families": true
     }
   ],
   "assets": [
@@ -294,7 +310,7 @@
     },
     {
       "path": "docs/evaluations/uk-behaviour-freeze.md",
-      "sha256": "be7a0c3ddf3db7544ab9900815e109c6d9fb894611258eb0b4b27a5538d76def"
+      "sha256": "fa5fe238d61d271f58b59f4e0cade29f9c4ce4560158f20018931e0e893c799d"
     },
     {
       "path": "docs/projects/ua-eval-harness/V0_2_EVIDENCE_PLAN.md",
