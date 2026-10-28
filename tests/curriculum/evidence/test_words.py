@@ -1034,17 +1034,31 @@ def _shadow_everything(monkeypatch):
 def test_heritage_hits_carry_the_identity_of_the_rows_they_were_read_from(
     synthetic_vesum, synthetic_sources, tmp_path, monkeypatch
 ):
+    """Source use-role metadata must survive building and validating the store."""
+    from scripts.wiki import slovnyk_me
+
     _oracle(monkeypatch)
     _shadow_everything(monkeypatch)
+    with sqlite3.connect(synthetic_sources) as conn:
+        slovnyk_me.ensure_slovnyk_me_schema(conn)
+        conn.execute(
+            "INSERT INTO slovnyk_me_entries "
+            "(word, normalized_word, dictionary_slug, text, use_role) VALUES (?, ?, ?, ?, ?)",
+            ("synthetic", "synthetic", "newsum", "synthetic discovery text", "candidate-discovery"),
+        )
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
         res = words.build_words("a1", _request(tmp_path, [SYNTHETIC_NOUN]), evidence_dir=tmp_path, sources_instance=api)
     word = res["store"]["words"][0]
     assert word["shadow"]["russian_shadow"] is True
     hits = word["heritage"]
-    assert hits and hits[0]["source_family"] == "style_guide"  # the synthetic style-guide row contains the lemma
-    assert hits[0]["text"] == "synthetic note explanation text"
+    style = next(hit for hit in hits if hit["source_family"] == "style_guide")
+    assert style["text"] == "synthetic note explanation text"
+    discovery = next(hit for hit in hits if hit["source_family"] == "slovnyk_me")
+    assert discovery["text"] == "synthetic discovery text"
+    assert discovery["use_role"] == "candidate-discovery"
     assert all(sources.heritage_hit_digest(hit) == hit["row_sha256"] for hit in hits)
     assert ("heritage:synthetic:0", hits[0]["row_sha256"]) in words.cited_rows(word)
+    assert res["store"]["built_with"]["sources_db"] == sources.aggregate_digest(words.cited_rows(word))
     words.validate_store_data(res["store"])
 
 
