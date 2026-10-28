@@ -173,26 +173,44 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert pytest_job["if"] == full
     assert pytest_job["timeout-minutes"] == 15
     assert pytest_job["strategy"]["matrix"]["shard"] == list(range(1, 25))
-    assert pytest_job["permissions"] == {"contents": "read", "actions": "read"}
-    download = next(step for step in pytest_job["steps"] if step.get("name") == "Download pytest duration snapshot")
-    assert "pytest-duration-input" in download["run"]
-    assert "matrix" not in download["run"]
-    assert "::notice::" in download["run"]
-    assert f'[ "$decision" = "{split.SOURCE_COMMITTED}" ]' in download["run"]
-    assert f'[ "$decision" != "{split.SOURCE_SNAPSHOT}" ]' in download["run"]
-    assert "duration-source --refresh-result" in download["run"]
-    assert "--decide" in download["run"]
-    assert '[ "$attempt" -ge 3 ]' in download["run"]
-    run_pytest = next(step for step in pytest_job["steps"] if step.get("name") == "Run pytest")
+    # The same-run snapshot comes through actions/download-artifact, which needs no token scope.
+    assert pytest_job["permissions"] == {"contents": "read"}
+    steps = pytest_job["steps"]
+    decide = next(step for step in steps if step.get("name") == "Decide pytest duration source")
+    download = next(step for step in steps if step.get("name") == "Download pytest duration snapshot")
+    validate = next(step for step in steps if step.get("name") == "Validate pytest duration snapshot")
+    run_pytest = next(step for step in steps if step.get("name") == "Run pytest")
+    assert "matrix" not in decide["run"] + validate["run"]
+    assert "::notice::" in decide["run"]
+    assert "committed) echo" in decide["run"] and f"{split.SOURCE_SNAPSHOT})" in decide["run"]
+    assert "duration-source --refresh-result" in decide["run"]
+    assert "--decide" in decide["run"]
+    only_snapshot = f"steps.duration-source.outputs.decision == '{split.SOURCE_SNAPSHOT}'"
+    assert decide["id"] == "duration-source"
+    assert download["if"] == only_snapshot
+    assert validate["if"] == only_snapshot
+    # REST-free: a same-run artifact through the action, never `gh run download` (a 403 rate limit
+    # on 24 shards x 3 attempts failed CI). The action pin matches the report job's.
+    assert str(download["uses"]).startswith("actions/download-artifact@")
+    assert download["uses"] == next(
+        step["uses"] for step in jobs["pytest-report"]["steps"] if str(step.get("uses", "")).startswith("actions/download-artifact@")
+    )
+    assert download["with"] == {"name": "pytest-duration-input", "path": "ci-artifacts/pytest-duration-input"}
+    assert not {"github-token", "run-id", "repository"} & set(download["with"])
+    for step in steps:
+        assert "gh run download" not in step.get("run", "")
+        assert "GH_TOKEN" not in step.get("env", {})
+    for step in (decide, download, validate):
+        assert "continue-on-error" not in step
+    assert validate["env"]["REFRESH_RESULT"] == "${{ needs.refresh-pytest-durations.result }}"
+    assert decide["env"]["REFRESH_RESULT"] == "${{ needs.refresh-pytest-durations.result }}"
     old_fallback = "duration snapshot unavailable or invalid; using committed weights"
-    assert old_fallback not in download["run"]
+    assert old_fallback not in decide["run"] + validate["run"]
     assert old_fallback not in run_pytest["run"]
     assert "duration-source" in run_pytest["run"]
     assert 'validate "$snapshot"' not in run_pytest["run"]
-    assert download["env"]["GH_TOKEN"] == "${{ github.token }}"
-    assert download["env"]["REFRESH_RESULT"] == "${{ needs.refresh-pytest-durations.result }}"
     assert "GH_TOKEN" not in run_pytest["env"]
-    assert pytest_job["steps"].index(download) < pytest_job["steps"].index(run_pytest)
+    assert steps.index(decide) < steps.index(download) < steps.index(validate) < steps.index(run_pytest)
     report = jobs["pytest-report"]
     assert report["needs"] == ["pytest"]
     assert report["if"] == "${{ !cancelled() && needs.pytest.result == 'success' }}"
@@ -359,85 +377,92 @@ def test_refresh_job_shell_notices_a_lookup_fallback(tmp_path: Path) -> None:
     assert json.loads((work / "ci-artifacts/pytest-file-durations.json").read_text()) == {"tests/test_a.py": 1}
 
 
-def _download_script() -> str:
-    script = next(
-        step["run"]
-        for step in _workflow_jobs()["pytest"]["steps"]
-        if step.get("name") == "Download pytest duration snapshot"
-    )
+def _pytest_step_script(name: str) -> str:
+    script = next(step["run"] for step in _workflow_jobs()["pytest"]["steps"] if step.get("name") == name)
     return script.replace("python3", shlex.quote(sys.executable))
 
 
-def _duration_env(refresh_result: str, *, sleep: str = "0") -> dict[str, str]:
+def _duration_env(refresh_result: str, output: Path) -> dict[str, str]:
     root = Path(__file__).resolve().parents[2]
-    return {
-        "GITHUB_RUN_ID": "1",
-        "REFRESH_RESULT": refresh_result,
-        "PYTHONPATH": str(root),
-        "LU_DURATION_RETRY_SLEEP": sleep,
-    }
+    return {"REFRESH_RESULT": refresh_result, "PYTHONPATH": str(root), "GITHUB_OUTPUT": str(output)}
 
 
-def _install_gh(directory: Path, program: str) -> Path:
-    directory.mkdir()
-    fake = directory / "gh"
-    fake.write_text(program)
-    fake.chmod(0o755)
-    return directory
+def _shard_snapshot(work: Path, refresh_result: str, artifact: str | None) -> tuple[subprocess.CompletedProcess[str], ...]:
+    """Run the three workflow steps in order, standing in for the action by writing its artifact.
+
+    The download action extracts the one-file artifact into its ``path``; a real action failure
+    stops the job before validation, which the caller models by passing ``artifact=None``.
+    """
+    output = work / "github-output"
+    env = _duration_env(refresh_result, output)
+    decided = _run_script(_pytest_step_script("Decide pytest duration source"), work, extra_env=env)
+    results = [decided]
+    if decided.returncode != 0 or "decision=snapshot" not in output.read_text():
+        return tuple(results)
+    if artifact is not None:
+        target = work / "ci-artifacts/pytest-duration-input"
+        target.mkdir(parents=True)
+        (target / "pytest-file-durations.json").write_text(artifact)
+    results.append(_run_script(_pytest_step_script("Validate pytest duration snapshot"), work, extra_env=env))
+    return tuple(results)
 
 
-def test_download_shell_shares_one_snapshot_across_shards(tmp_path: Path) -> None:
+def test_snapshot_steps_share_one_snapshot_across_shards(tmp_path: Path) -> None:
     """A successful refresh plus a successful download gives every shard the same bytes."""
-    script = _download_script()
     body = '{"tests/test_a.py": 4}\n'
-    nested = _install_gh(
-        tmp_path / "nested",
-        "#!/bin/sh\nmkdir -p ci-artifacts/pytest-duration-input\n"
-        f"printf '%s' '{body}' > ci-artifacts/pytest-duration-input/pytest-file-durations.json\n",
-    )
-    direct = _install_gh(
-        tmp_path / "direct",
-        f"#!/bin/sh\nmkdir -p ci-artifacts\nprintf '%s' '{body}' > ci-artifacts/pytest-file-durations.json\n",
-    )
     digests = []
-    for label, prefix in (("nested", nested), ("direct", direct)):
-        work = tmp_path / f"work-{label}"
+    for number in range(1, 25):
+        work = tmp_path / f"shard-{number}"
         work.mkdir()
-        result = _run_script(script, work, extra_env=_duration_env("success"), path_prefix=prefix)
-        assert result.returncode == 0, result.stderr
+        decided, validated = _shard_snapshot(work, "success", body)
+        assert decided.returncode == 0, decided.stderr
+        assert validated.returncode == 0, validated.stderr
         produced = work / "ci-artifacts/pytest-file-durations.json"
         assert produced.read_text() == body
         digests.append(hashlib.sha256(produced.read_bytes()).hexdigest())
-    assert digests[0] == digests[1]
-    shard_digests = []
-    for number in range(1, 17):
-        work = tmp_path / f"shard-{number}"
-        work.mkdir()
-        result = _run_script(script, work, extra_env=_duration_env("success"), path_prefix=direct)
-        assert result.returncode == 0, result.stderr
-        shard_digests.append(hashlib.sha256((work / "ci-artifacts/pytest-file-durations.json").read_bytes()).hexdigest())
-    assert shard_digests == [digests[1]] * 16
+    assert len(set(digests)) == 1
 
 
-def test_refresh_success_fails_the_shard_whose_download_fails(tmp_path: Path) -> None:
+@pytest.mark.parametrize("result", ["failure", "skipped", "cancelled"])
+def test_unsuccessful_refresh_uses_committed_weights_without_a_download(tmp_path: Path, result: str) -> None:
+    (decided,) = _shard_snapshot(tmp_path, result, None)
+    assert decided.returncode == 0, decided.stderr
+    assert "::notice::duration refresh did not succeed; using committed weights" in decided.stdout
+    assert (tmp_path / "github-output").read_text().strip() == f"decision={split.SOURCE_COMMITTED}"
+    assert not (tmp_path / "ci-artifacts/pytest-file-durations.json").exists()
+
+
+def test_unexpected_decision_fails_closed(tmp_path: Path) -> None:
+    (decided,) = _shard_snapshot(tmp_path, "success\ncommitted", None)
+    assert decided.returncode != 0
+    assert not (tmp_path / "github-output").exists() or "decision=" not in (tmp_path / "github-output").read_text()
+
+
+def test_refresh_success_fails_the_shard_whose_snapshot_is_missing(tmp_path: Path) -> None:
     """Old behaviour exited 0 and let this shard split on the committed weights."""
-    calls = tmp_path / "calls"
-    missing = _install_gh(
-        tmp_path / "missing",
-        "#!/bin/sh\nprintf x >> " + shlex.quote(str(calls)) + "\nexit 1\n",
+    results = _shard_snapshot(tmp_path, "success", None)
+    assert results[0].returncode == 0
+    # The action step fails when the artifact is missing, so the job stops before validation.
+    # A validation that does run without a file must also fail rather than fall back.
+    missing = _run_script(
+        _pytest_step_script("Validate pytest duration snapshot"),
+        tmp_path,
+        extra_env=_duration_env("success", tmp_path / "github-output"),
     )
-    work = tmp_path / "shard-7"
-    work.mkdir()
-    result = _run_script(_download_script(), work, extra_env=_duration_env("success"), path_prefix=missing)
-    assert result.returncode != 0, result.stdout
-    assert "using committed weights" not in result.stdout
-    assert "shared duration snapshot unavailable after 3 attempts" in result.stdout
-    assert calls.read_text() == "xxx"
-    assert not (work / "ci-artifacts/pytest-file-durations.json").exists()
+    assert missing.returncode != 0, missing.stdout
+    assert "using committed weights" not in missing.stdout
+    assert not (tmp_path / "ci-artifacts/pytest-file-durations.json").exists()
     # The shard stops here. It does not assign files from the committed weights.
-    missing_snapshot = tmp_path / "missing.json"
     with pytest.raises(split.DurationSnapshotRequired):
-        split.resolve_duration_path("success", missing_snapshot)
+        split.resolve_duration_path("success", tmp_path / "missing.json")
+
+
+@pytest.mark.parametrize("body", ["{", '{"tests/test_a.py": true}', "[]"])
+def test_invalid_snapshot_fails_the_shard(tmp_path: Path, body: str) -> None:
+    decided, validated = _shard_snapshot(tmp_path, "success", body)
+    assert decided.returncode == 0
+    assert validated.returncode != 0
+    assert "using committed weights" not in validated.stdout
 
 
 @pytest.mark.parametrize("failure", [b"not a zip", b"bad json", "download error"])
@@ -597,22 +622,12 @@ def test_refresh_did_not_succeed_uses_committed_weights_on_every_shard(
     snapshot.write_text(json.dumps({"tests/test_a.py": 999999}) + "\n")
     chosen = [split.resolve_duration_path(refresh_result, snapshot) for _shard in range(16)]
     assert chosen == [split.COMMITTED_DURATION_PATH] * 16
-    calls = tmp_path / "calls"
-    prefix = _install_gh(
-        tmp_path / "gh",
-        "#!/bin/sh\nprintf x >> " + shlex.quote(str(calls)) + "\nexit 0\n",
-    )
+    # The decision step announces the committed weights; the download and validate steps are skipped.
     work = tmp_path / "shard"
     work.mkdir()
-    # Seed a different snapshot. A refresh that did not succeed must ignore it.
-    seeded = work / "ci-artifacts"
-    seeded.mkdir()
-    (seeded / "pytest-file-durations.json").write_text('{"tests/test_a.py": 999999}\n')
-    downloaded = _run_script(_download_script(), work, extra_env=_duration_env(refresh_result), path_prefix=prefix)
-    assert downloaded.returncode == 0, downloaded.stderr
-    assert "duration refresh did not succeed; using committed weights" in downloaded.stdout
-    assert not calls.exists()
-    assert not (seeded / "pytest-file-durations.json").exists()
+    (decided,) = _shard_snapshot(work, refresh_result, None)
+    assert decided.returncode == 0, decided.stderr
+    assert "duration refresh did not succeed; using committed weights" in decided.stdout
     result = _run_pytest_duration_selection(snapshot, refresh_result)
     assert result.returncode == 0, result.stderr
     assert result.stdout == split.COMMITTED_DURATION_PATH.as_posix()

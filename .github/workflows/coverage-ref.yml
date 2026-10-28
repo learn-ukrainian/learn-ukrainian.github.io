@@ -111,7 +111,6 @@ jobs:
     timeout-minutes: 90
     permissions:
       contents: read
-      actions: read
     strategy:
       fail-fast: false
       matrix:
@@ -193,45 +192,41 @@ jobs:
       # patch=subprocess uses interpreter startup, so this must also reach
       # children that deliberately clear PYTHONPATH or change their cwd.
       run: .venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref_environment.py"
-    - name: Download pytest duration snapshot
+    # Same-run artifact through the Actions artifact service, not the REST core quota.
+    - name: Decide pytest duration source
+      id: duration-source
       env:
-        GH_TOKEN: ${{ github.token }}
         REFRESH_RESULT: ${{ needs.prepare.result }}
       run: |
         set -euo pipefail
-        mkdir -p ci-artifacts
-        snapshot=ci-artifacts/pytest-file-durations.json
-        rm -f "$snapshot"
         decision=$(python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --decide)
-        if [ "$decision" = "committed" ]; then
-          echo "::notice::duration refresh did not succeed; using committed weights"
-          exit 0
-        fi
-        if [ "$decision" != "snapshot" ]; then
-          echo "::error::unexpected duration source decision"
+        case "$decision" in
+          committed) echo "::notice::duration refresh did not succeed; using committed weights" ;;
+          snapshot) ;;
+          *)
+            echo "::error::unexpected duration source decision"
+            exit 1
+            ;;
+        esac
+        echo "decision=$decision" >> "$GITHUB_OUTPUT"
+    - name: Download pytest duration snapshot
+      if: steps.duration-source.outputs.decision == 'snapshot'
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+      with:
+        name: pytest-duration-input
+        path: ci-artifacts/pytest-duration-input
+    - name: Validate pytest duration snapshot
+      if: steps.duration-source.outputs.decision == 'snapshot'
+      env:
+        REFRESH_RESULT: ${{ needs.prepare.result }}
+      run: |
+        set -euo pipefail
+        snapshot=ci-artifacts/pytest-file-durations.json
+        mv ci-artifacts/pytest-duration-input/pytest-file-durations.json "$snapshot"
+        if ! python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot" >/dev/null; then
+          echo "::error::shared duration snapshot is invalid"
           exit 1
         fi
-        attempt=1
-        while true; do
-          rm -f "$snapshot"
-          rm -rf ci-artifacts/pytest-duration-input
-          if gh run download "$GITHUB_RUN_ID" --name pytest-duration-input --dir ci-artifacts; then
-            nested=$(find ci-artifacts -name pytest-file-durations.json -type f ! -path "$snapshot" -print -quit || true)
-            if [ -n "$nested" ]; then
-              mv "$nested" "$snapshot"
-            fi
-          fi
-          if python3 -m scripts.ci.split_tests duration-source --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot" >/dev/null; then
-            exit 0
-          fi
-          if [ "$attempt" -ge 3 ]; then
-            echo "::error::shared duration snapshot unavailable after 3 attempts"
-            exit 1
-          fi
-          attempt=$((attempt + 1))
-          # Tests set LU_DURATION_RETRY_SLEEP=0. The pause is not the retry bound.
-          sleep "${LU_DURATION_RETRY_SLEEP:-1}"
-        done
     - name: Run CI pytest suite with branch coverage
       env:
         SHARD: ${{ matrix.shard }}
