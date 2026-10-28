@@ -48,7 +48,7 @@ Keep these outcomes separate:
    route and capability, including operator-policy clearance where required.
 5. **Delivery:** independently reviewed changes land with same-head green CI,
    representative real-route proof and required hygiene. Merge, deployment and
-   certification are distinct. A worker that stops at a pushed branch is on `full-stop`.
+   certification are distinct. A worker's pushed branch is a milestone, not delivery.
 
 The denominator is **all protocol gates and requested capability tracks**,
 including clean cases, failed cases, tools and isolation; provider-call success

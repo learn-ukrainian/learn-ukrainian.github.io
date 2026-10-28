@@ -48,7 +48,7 @@ blocker: <none or one line + tool proof>
 - Do **not** self-approve: the review of record is the resolver-picked cross-family reviewer.
 
 ## Time / size hygiene
-- Hard timeout is real. Sequence: implement → test → publish → commit → push → handoff.
+- Hard timeout is real. Sequence: implement → test → publish → commit → push → deliver (`full-send`, or `full-stop` hand-off).
 - If approaching timeout: stop new features and report measured residual and the blocker.
 - Keep PR evidence under size limits: tables + samples, not full regenerated corpora in body.
 

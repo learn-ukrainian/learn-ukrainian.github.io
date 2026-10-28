@@ -871,7 +871,7 @@ When a worker leaves commits without a PR, or dies with `status=running` and a d
 .venv/bin/python -m scripts.orchestration.dispatch_settle release-stale
 ```
 
-Formal CF and auto-merge stay with the orchestrator.
+Nobody arms auto-merge; the formal CF verdict is recorded with `review-loop`, and the owner of the delivery enqueues.
 
 ### Formal CF budget rotation (Codex-authored PRs)
 Current formal reviewer endpoints are `codex|claude|glm|grok|cursor`; the canonical
