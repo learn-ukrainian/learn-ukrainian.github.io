@@ -31,6 +31,23 @@ reuse `scripts.lexicon.enrich_manifest`. For `sum20_official`, supply both
 inclusive integer bounds, at least 1. The denominator is every integer in that
 finite range. Neither denominator measures the full upstream dictionary.
 
+Source indexes can use `"source_headwords": true` at the manifest's top level.
+In this mode, `entries[].lemma` is the exact decoded article URL suffix, including
+case, underscores and closing parentheses. The request preserves that suffix;
+positive validation uses the existing dictionary normalization. Omit the field
+for learner-lemma normalization. An explicit value other than `true` is invalid.
+Source-headword mode refuses `--seed-cache`, because legacy cache locators use
+learner-lemma normalization. The lookup mode is part of the frozen specification.
+
+Before review, verify every source suffix against its original index URL after
+URL decoding. Source suffixes must have no slash, query or fragment characters,
+leading or trailing whitespace, or control and format characters. Keep the
+manifest bytes and their SHA-256 with the acquisition record. Do not substitute
+an estimated print word count for an enumerated article denominator.
+
+The [ВТС source snapshot](../sources/admissions/2026-10-28-vts-acquisition.md)
+records the full sitemap denominator and the СУМ-20 import boundary.
+
 Choose an operator-owned **local filesystem** staging root, outside live stores.
 All companion jobs on the same machine and upstream host must use this **same
 root**. Do not place SQLite on network storage. Source/archive placement follows
@@ -79,7 +96,7 @@ tmux new-session -d -s acquisition-vts -c "$ACQ_CHECKOUT" \
 tmux new-session -d -s acquisition-official -c "$ACQ_CHECKOUT" \
   "$ACQ_PY" -m scripts.ingest.dictionary_acquisition supervise \
   --root "$ACQ_ROOT" --dictionary sum20_official --start-wordid 5 --end-wordid 12 \
-  --delay 4 --timeout 30 --backoff 4 --max-attempts 4 --max-restarts 3
+  --delay 10 --timeout 30 --backoff 4 --max-attempts 4 --max-restarts 3
 
 "$ACQ_PY" -m scripts.ingest.dictionary_acquisition status \
   --root "$ACQ_ROOT" --dictionary vts
@@ -88,10 +105,12 @@ tmux new-session -d -s acquisition-official -c "$ACQ_CHECKOUT" \
 The examples use the approved detached tmux pattern and the CLI's own supervisor;
 do not wrap them in an unconditional shell restart loop. Start only the reviewed
 explicit jobs. Initially allow at most two slovnyk dictionaries and one official
-job, all sharing the root and using delay 4 or greater. The host lock serializes
-GETs across dictionaries and reserves a minimum four-second quiet interval
-**after** each completed request: aggregate companion starts are at most one per
-four seconds per host, rather than that rate multiplied by the process count.
+job, all sharing the root. Use delay 4 or greater for slovnyk.me and 10 or greater
+for official СУМ-20. The host lock serializes GETs across dictionaries and reserves
+the quiet interval **after** each completed request. Official СУМ-20 always uses
+at least ten seconds, including retries and jobs with a lower saved delay. This
+implements the recorded `sum20_robots` crawl-delay in the
+[permissions register](../sources/permissions-register.yaml), tracked by #8999.
 Other clients outside this root are not coordinated; the driver must account for
 their traffic before launching. Multiple machines require coordinated operational
 scheduling; this is a local coordination helper, not a distributed limiter.
@@ -257,8 +276,10 @@ Use the companion for durable proven-404 records and isolated resumable staging.
 Default enrichment cache callers retain their tolerant row/null contract and do
 not receive new strict access/acquisition/parse exceptions.
 
-The official legacy ingest defaults to 100 wordids, a two-second delay, three
-retries and two-second initial exponential backoff. `--start-wordid` overrides
+The official legacy ingest defaults to 100 wordids, a ten-second delay, three
+retries and two-second initial exponential backoff. Both article spacing and
+retry sleeps enforce a ten-second minimum; larger delays and `Retry-After`
+values are preserved. `--start-wordid` overrides
 the stored resume point; `--db` selects the destination (default `data/sources.db`).
 `--limit 0` means **unbounded foreground work**, preserving the existing flag
 semantics. It directly writes articles, crawl outcomes and the checkpoint, and

@@ -157,42 +157,42 @@ inline:
     title: Порядок ранку
     instruction: Choose the sequence word that fits the routine.
     items:
-      - sentence: ___ я прокидаюся о сьомій.
+      - sentence: "(First.) ___ я прокидаюся о сьомій."
         answer: Спочатку
         options:
           - Спочатку
           - Після цього
           - Нарешті
         explanation: Спочатку starts the story.
-      - sentence: ___ я вмиваюся.
+      - sentence: "(Then.) ___ я вмиваюся."
         answer: Потім
         options:
           - Потім
           - Нарешті
           - Спочатку
         explanation: Потім gives the next action.
-      - sentence: ___ я одягаюся.
+      - sentence: "(After this.) ___ я одягаюся."
         answer: Після цього
         options:
           - Після цього
           - Спочатку
           - Нарешті
         explanation: Після цього means after that.
-      - sentence: ___ я снідаю.
+      - sentence: "(Then.) ___ я снідаю."
         answer: Потім
         options:
           - Потім
           - Нарешті
           - Спочатку
         explanation: Потім can introduce another middle step.
-      - sentence: ___ я йду на роботу.
+      - sentence: "(Finally.) ___ я йду на роботу."
         answer: Нарешті
         options:
           - Нарешті
           - Спочатку
           - Після цього
         explanation: Нарешті marks the final step.
-      - sentence: Спочатку я прокидаюся. ___ я вмиваюся.
+      - sentence: "(Then: use the single word.) Спочатку я прокидаюся. ___ я вмиваюся."
         answer: Потім
         options:
           - Потім
@@ -204,21 +204,21 @@ inline:
     title: Три речення про ранок
     instruction: Complete the three-sentence morning story.
     items:
-      - sentence: ___ я прокидаюся о восьмій.
+      - sentence: "(First.) ___ я прокидаюся о восьмій."
         answer: Спочатку
         options:
           - Спочатку
           - Нарешті
           - Після цього
         explanation: Start the story with Спочатку.
-      - sentence: ___ я вмиваюся і снідаю.
+      - sentence: "(Then.) ___ я вмиваюся і снідаю."
         answer: Потім
         options:
           - Потім
           - Нарешті
           - Спочатку
         explanation: Потім gives the next action.
-      - sentence: ___ я йду в університет.
+      - sentence: "(Finally.) ___ я йду в університет."
         answer: Нарешті
         options:
           - Нарешті

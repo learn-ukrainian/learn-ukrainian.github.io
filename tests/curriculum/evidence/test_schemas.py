@@ -75,8 +75,13 @@ def test_synthetic_request():
 
 def test_synthetic_store_and_pending_stress_contract():
     store = synthetic_store()
+    store["words"][0]["heritage"] = [{"use_role": "candidate-discovery", "row_sha256": "e" * 64}]
     checker = validator("")
     checker.validate(store)
+    for invalid in ({"use_role": 1}, {"use_role": "reference", "synthetic_extra": "unexpected"}):
+        bad = deepcopy(store)
+        bad["words"][0]["heritage"] = [invalid]
+        assert not checker.is_valid(bad)
     form = store["words"][0]["forms"][0]
     form["stressed"] = "synthetic-stressed"
     assert not checker.is_valid(store)

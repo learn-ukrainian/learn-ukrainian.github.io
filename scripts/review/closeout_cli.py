@@ -448,7 +448,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     }
     state = _load_state(args.state_file)
     target = _target_from_dict(state["target"]) if state.get("target") is not None else None
-    if args.review_profile == "code" and target is None and not args.owned_path:
+    if args.review_profile.strip().casefold() in {"code", "infra"} and target is None and not args.owned_path:
         raise CloseoutStateError("review_target_required: resolve the target first or supply --owned-path")
     changed_paths = target.changed_paths if target else ()
     facts = None
@@ -575,7 +575,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             )
     # Persist the durable receipt: drivers downstream expect the resolution on
     # disk, not just on stdout. Merge with any prior state; without a target,
-    # code-profile resolution needs explicit owned paths.
+    # code/infra resolution needs explicit owned paths.
     if args.review_mode == "red_team" and isinstance(resolution, RedTeamResolution):
         payload.update(review_mode=resolution.review_mode, limitation=resolution.limitation)
     state["resolved_reviewer"] = payload
@@ -870,8 +870,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "\n"
             "Outputs:\n"
             "  stdout JSON (selected, quorum, advisory, trace, fail_closed_reason) and the\n"
-            "  same object stored at resolved_reviewer in --state-file. Code-profile\n"
-            "  resolution requires a target or owned path; security paths raise risk to critical.\n"
+            "  same object stored at resolved_reviewer in --state-file. Code\n"
+            "  and infra resolution require a target or owned path; security paths raise risk to critical.\n"
             "  A governed seat is excluded and the trace records why. Claude seats are judged\n"
             "  on the account a claude dispatch would run as (the default-account file, else\n"
             "  a); another account than a is named in claude_account.\n"

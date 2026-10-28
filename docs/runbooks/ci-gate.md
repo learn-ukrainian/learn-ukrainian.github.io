@@ -6,6 +6,13 @@ guard, attribution, lint and content contracts, dependency-audit scoping, and
 `pytest --collect-only`. Its summary states plainly that full pytest was not run.
 The parallel required `pr-affected` job executes literal changed existing
 `tests/**/test_*.py` files plus every path in `scripts/ci/pr-affected-guards.txt`.
+The same job also runs `pytest tests -m 'repo_wide and not atlas_release and not slow and not site_toolchain'`
+in a separate required step.
+This selects marked tests only, including marked functions in otherwise
+unmarked files. Its traversal includes `tests/build/`, which pytest normally
+excludes. It uses the same candidate identity and checkout-integrity checks.
+The invariant step runs even if changed tests defer or fail, unless the run
+is cancelled. Changed-file duration estimates never defer invariants.
 It verifies the checked-out candidate against `GITHUB_SHA` and the event's PR
 merge ref. The candidate must have two Git parents and its second parent must
 match the event's PR head. Its first parent supplies the actual tested base for
@@ -30,8 +37,8 @@ unique merge-base with the public default branch, as the pre-push gate does;
 an initial default-branch push scans all ancestry. Unresolved ranges refuse.
 No green-run receipt skips code checks or publication checks.
 
-The job has a ten-minute timeout and targets under five minutes on hosted
-runners. The committed serial file-duration sum plus 60 seconds for setup and
+The changed-test subprocess retains its 480-second timeout. The committed
+serial file-duration sum plus 60 seconds for setup and
 collection is the conservative estimate; a selected file with no recorded time
 (a new test file) counts at the median recorded file and still runs. If the
 estimate exceeds 600 seconds or pytest infrastructure changes, all guards still run
@@ -49,6 +56,22 @@ markers, quarantine and governor apply. Hosted duration and the independent
 30-day original-failed-head replay remain driver-owned proof requirements.
 The initial list includes all six runtime/catalog/global suites from the
 original failed group; later PR changes cannot establish old coverage.
+
+The `pr-affected-proof` artifact also contains `pr-repo-wide.json` and
+`pr-repo-wide.xml`. The JSON records the exact candidate, marker expression,
+requested paths, worker count, subprocess timeout, elapsed wall time,
+logical CPU count and initial load average, plus reported cases, failures and
+skips. The marker expression requires `repo_wide` and retains the supported
+tier's `atlas_release`, `slow` and `site_toolchain` exclusions. It does not
+broaden execution to unmarked tests or move nightly or release tests into PR CI.
+An empty selection, failed execution, stale report or missing JUnit fails CI.
+Both invocations use two pytest workers with work stealing. Invariants have
+a 1,500-second subprocess timeout; the combined job has a 40-minute timeout.
+The budget uses the hosted measurements on [PR #11922](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/11922):
+twice the initial superset's observed marker wall time, rounded up to five minutes, plus the
+existing 480-second changed-test ceiling, twice the observed setup time and
+one minute for report publication, again rounded up to five minutes.
+The same job runs both selections without additional PR jobs or shards.
 
 Every `merge_group` candidate runs the full supported non-slow pytest suite,
 frontend toolchain tests and partition audits.
@@ -84,7 +107,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
 | Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
-| PR changed tests and guards | PRs execute changed test files and all explicit guards; full tiers exit without duplicate execution. |
+| PR changed tests and guards | PRs execute changed test files, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
 | Frontend | Full tier only. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
 | Refresh pytest durations | Full tier only. Freezes one file-weight snapshot for every shard (below). |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
@@ -296,7 +319,8 @@ commit, a frozen base commit, and `origin/main` ancestry. Two run a
 GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
 s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
 and balances the other files around them. Shard 1 is the only shard checked out
-with full history (`fetch-depth: 0`). Shards 2..N check out only the tested
+with full history (`fetch-depth: 0`), a full clone with every blob (see
+"Full-history checkouts are blobless" below). Shards 2..N check out only the tested
 commit (`fetch-depth: 1`) and run pytest with `GIT_ALLOW_PROTOCOL=file`. A
 listed file that is no longer tracked fails the split.
 
@@ -319,6 +343,32 @@ run of each were in flight. It does not model overlapping runs, such as
 several merge-queue builds next to PR CI and other workflows. A passing
 inventory is therefore not proof of capacity for a build-concurrency change;
 see D3 in [`ci-speed-program.md`](../epics/ci-speed-program.md).
+
+### Full-history checkouts are blobless (FR-58)
+
+The public pack is about 8 GB, nearly all of it old file contents. Commits and
+trees for the whole history are about 30 MB. A `fetch-depth: 0` checkout in
+`.github/workflows/` therefore also sets `filter: blob:none`: it downloads all
+commits and trees, plus the blobs of the checked-out tree. Ancestry checks,
+merge bases and changed-file lists read commits and trees only. A step that
+reads an old file's content (`git show <rev>:<path>`, a content diff) makes git
+fetch the missing blobs from GitHub; `git diff` and `git log --patch` fetch
+them in one batch per command. CI Gate gets the same filter from its sparse
+checkout. Before this change, one checkout took 16 s to 424 s, and the
+5-minute jobs were cancelled at their limit.
+
+Jobs that run test files keep a full clone: pytest shard 1, coverage-ref shard
+1, pytest-slow-nightly, and PR changed tests and guards on `pull_request`.
+`tests/test_storage_classification_table.py` sizes 1,706 `data/` blobs (about
+1 GB) at a frozen base with one `git cat-file -s` each. In a blobless clone each
+is a separate fetch, and in run 40762542278 the test hit its 120 s timeout. In
+a merge group, PR changed tests and guards runs no tests, so it is blobless there.
+
+TruffleHog cannot use this checkout as before: its own `git clone` of a partial
+clone fails. Both scan jobs fetch and verify the blobs of their range first and
+scan in place; see
+[secret-scanning.md](secret-scanning.md#blobless-ci-checkout-fr-58). The
+`full-history-audit` dispatch keeps a full clone.
 
 ## Shard setup
 

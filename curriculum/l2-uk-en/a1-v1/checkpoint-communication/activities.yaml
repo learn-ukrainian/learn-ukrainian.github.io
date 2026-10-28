@@ -64,12 +64,12 @@ inline:
         options:
           - text: 'але'
             correct: true
-          - text: 'і'
+          - text: "щоб"
             correct: false
           - text: 'де'
             correct: false
         explanation: 'Use але for contrast.'
-      - prompt: 'Тарас ставить стіл, ___ людей багато.'
+      - prompt: "(Give the reason for putting out a table.) Тарас ставить стіл, ___ людей багато."
         options:
           - text: 'бо'
             correct: true
@@ -78,7 +78,7 @@ inline:
           - text: 'що'
             correct: false
         explanation: 'Use бо for a reason.'
-      - prompt: 'Марія пише, ___ Тарас ставить стіл.'
+      - prompt: "(Compare the two people; do not give a time or a choice.) Марія пише, ___ Тарас ставить стіл."
         options:
           - text: 'а'
             correct: true
@@ -87,7 +87,7 @@ inline:
           - text: 'або'
             correct: false
         explanation: 'Use а to compare two people or actions.'
-      - prompt: 'Я беру маркер, ___ пишу листівку.'
+      - prompt: "(Give the reason for taking the marker.) Я беру маркер, ___ пишу листівку."
         options:
           - text: 'тому що'
             correct: true
@@ -108,14 +108,14 @@ inline:
           - 'що'
           - 'коли'
         explanation: 'Use де for a place.'
-      - sentence: 'Я думаю, ___ все готово.'
+      - sentence: "(I think that everything is ready.) Я думаю, ___ все готово."
         answer: 'що'
         options:
           - 'що'
           - 'де'
           - 'коли'
         explanation: 'Use що for a fact.'
-      - sentence: 'Скажи, ___ зустріч.'
+      - sentence: "(Tell me when the meeting is.) Скажи, ___ зустріч."
         answer: 'коли'
         options:
           - 'коли'
@@ -129,14 +129,14 @@ inline:
           - 'куди'
           - 'що'
         explanation: 'A static place uses де.'
-      - sentence: 'Я не знаю, ___ писати.'
+      - sentence: "(I do not know what to write.) Я не знаю, ___ писати."
         answer: 'що'
         options:
           - 'що'
           - 'де'
           - 'коли'
         explanation: 'Use що for what to write.'
-      - sentence: 'Скажіть, ___ ви вільні.'
+      - sentence: "(Tell us when you are free.) Скажіть, ___ ви вільні."
         answer: 'коли'
         options:
           - 'коли'
@@ -261,28 +261,28 @@ workbook:
           - 'приносити'
           - 'приносить'
         explanation: 'Use the command form принеси.'
-      - sentence: 'Тарасе, постав столи, ___ людей багато.'
+      - sentence: "(Give the reason for putting out the tables.) Тарасе, постав столи, ___ людей багато."
         answer: 'бо'
         options:
           - 'бо'
           - 'де'
           - 'а'
         explanation: 'Use бо for a reason.'
-      - sentence: 'Я думаю, ___ все готово.'
+      - sentence: "(I think that everything is ready.) Я думаю, ___ все готово."
         answer: 'що'
         options:
           - 'що'
           - 'коли'
           - 'але'
         explanation: 'Use що for a fact.'
-      - sentence: 'Марія пише привітання, ___ Тарас ставить стіл.'
+      - sentence: "(Compare the two people; do not describe a location.) Марія пише привітання, ___ Тарас ставить стіл."
         answer: 'а'
         options:
           - 'а'
           - 'що'
           - 'де'
         explanation: 'Use а to compare two actions.'
-      - sentence: 'Скажіть, ___ ви вільні.'
+      - sentence: "(Tell us WHEN you are free.) Скажіть, ___ ви вільні."
         answer: 'коли'
         options:
           - 'коли'

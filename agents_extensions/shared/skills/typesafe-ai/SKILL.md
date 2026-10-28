@@ -54,8 +54,9 @@ routing; RAG keep/drop; citation checks; skill pick; any prompt-and-parse.
 
 - **Credentials:** never commit or paste the API key
   (`export TYPESAFE_API_KEY="$(tr -d '\r\n' < ~/.secrets/typesafe-ai.key)"`).
-- **Do not fake attested morphology:** if you need a VESUM-grade lemma/stress
-  paradigm as *fact*, still call VESUM/`sources`. Labeling with TypeSafe first
+- **Do not fake attested morphology or stress:** call VESUM for lemmas and
+  morphology, `verify_stress` / `verify_stresses` for stress, and `query_sum20`
+  for accented headwords through `sources`. Labeling with TypeSafe first
   is encouraged; treating Jev as a replacement dictionary is not.
 - **Do not rewrite human source text** to “fix” Ukrainian in dataset pipelines —
   label and route instead.

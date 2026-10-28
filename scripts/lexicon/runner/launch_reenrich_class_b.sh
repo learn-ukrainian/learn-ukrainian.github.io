@@ -257,8 +257,10 @@ printf '{"service_result":"%s","exit_code":"%s","exit_status":"%s"}\n' \
 EOS
   chmod +x "$WORK_DIR/write-exit-status.sh"
   SYSTEMD_PROPS=(
+    --slice=lu.slice
     --property=MemoryHigh="${JOB_MEMORY_HIGH_MIB}M"
     --property=MemoryMax="${JOB_MEMORY_MAX_MIB}M"
+    --property=MemorySwapMax=0
     --property=Environment=LU_LEXICON_JOB_MEMORY_HIGH_MIB="${JOB_MEMORY_HIGH_MIB}"
     --property=Environment=LU_LEXICON_JOB_MEMORY_MAX_MIB="${JOB_MEMORY_MAX_MIB}"
     --property=Restart="${ATLAS_RE_ENRICH_RESTART:-no}"
@@ -271,6 +273,7 @@ EOS
   nohup systemd-run --user --wait --collect --unit="${UNIT%.service}" \
     --working-directory="$REPO" \
     "${SYSTEMD_PROPS[@]}" \
+    /bin/bash "$CODE_ROOT/scripts/lib/job_memory_scope.sh" "$((JOB_MEMORY_MAX_MIB * 1024 * 1024))" -- \
     /bin/bash -c "$WRAPPED" >> "$LOG" 2>&1 &
   wrapper_pid=$!
   printf '%s\n' "$wrapper_pid" > "$WRAPPER_PID_FILE"
@@ -292,7 +295,5 @@ EOS
   exit 1
 fi
 
-rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
-nohup /bin/bash -c "$WRAPPED" >> "$LOG" 2>&1 &
-printf '%s\n' "$!" > "$PID_FILE"
-printf 'pid=%s log=%s\n' "$(cat "$PID_FILE")" "$LOG"
+echo 'JOB_SCOPE_REFUSED reason=user-manager-unavailable' >&2
+exit 6
