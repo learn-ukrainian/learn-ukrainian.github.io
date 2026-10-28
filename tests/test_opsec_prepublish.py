@@ -984,9 +984,10 @@ def test_synthetic_normalization_fullwidth_and_decimal_digits(synthetic_opsec, r
         "ghp_1234\ufe0f567890abcdefghijklmnopqrstuvwxyz12",
     ],
 )
-def test_credential_tokens_are_blocked_even_with_synthetic_rules(synthetic_opsec, token):
+@pytest.mark.parametrize("prefix,suffix", [("", ""), ("prefix", "suffix"), ("префікс", "суфікс"), ("cred_", "_suffix")])
+def test_credential_tokens_are_blocked_even_with_synthetic_rules(synthetic_opsec, token, prefix, suffix):
     with pytest.raises(gate.PublishBlocked) as error:
-        gate.check_texts("github.com/unit/public", [token])
+        gate.check_texts("github.com/unit/public", [prefix + token + suffix])
     assert "class=5" in str(error.value)
     assert "rule=5-credential-token" in str(error.value)
     assert "field=text[1] line=1" in str(error.value)
