@@ -959,7 +959,7 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
     await page.waitForFunction(() =>
       document.querySelectorAll('.work-row').length > 0 && window.__testPrivateTimeoutCount === 1,
       {{ timeout: 2000 }});
-    abortFiredAt = Date.now();
+    abortFiredAt = performance.now();
     const fired = await page.evaluate(() => window.__firePrivateTimeout());
     if (!fired) throw new Error('private abort timer was not pending');
   }}
@@ -982,7 +982,7 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
 
   // Abort-to-typed-timeout interval only: browser launch, navigation and
   // teardown are deliberately outside it.
-  const abortToSettleMs = abortFiredAt === null ? null : Date.now() - abortFiredAt;
+  const abortToSettleMs = abortFiredAt === null ? null : performance.now() - abortFiredAt;
 
   for (const action of ACTIONS) {{
     if (action.type === 'select') {{
