@@ -355,6 +355,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
         text, usage = parsed.text, parsed.usage
+        if parsed.rate_limited and returncode >= 0:
+            # Before the schema check, which would record the same terminal failure as invalid output.
+            status, error = "rate_limited", parsed.error
+            return
         if schema is not None:
             from scripts.agent_runtime.adapters._output_schema import json_value, structured_result
 
@@ -368,8 +372,6 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
         if returncode < 0:
             status = "crashed"
-        if parsed.rate_limited and status == "failed":
-            status = "rate_limited"
         if status != "done":
             error = parsed.error or (
                 "provider exited unsuccessfully" if returncode else "provider returned no successful final response"

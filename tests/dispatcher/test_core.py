@@ -603,6 +603,13 @@ def test_provider_capacity_ends_rate_limited_and_keeps_the_dirty_worktree(sandbo
     assert (Path(record["worktree_path"]) / "delivered.txt").exists()
 
 
+def test_provider_capacity_is_rate_limited_when_an_output_schema_is_bound(sandbox):
+    schema = sandbox.repo / "schema.json"
+    schema.write_text('{"type":"object","required":["verdict"]}')
+    record = sandbox.settle(sandbox.dispatch("capacity", "--output-schema", str(schema)), expected=1)
+    assert (record["status"], record["returncode"]) == ("rate_limited", 1)
+
+
 def test_provider_final_file_and_exact_stdin_bytes(sandbox):
     result = sandbox.cli(
         "dispatch", "--agent", "codex", "--model", "file", "--prompt-file", "-", stdin="exact\nbytes\n"
