@@ -1,7 +1,11 @@
 {
   "freeze_commit": "1497ad6a729ecdf97031bbd9d44059528a354608",
   "sources": {
+    "build_heldout_manifest.py": "d4774721fb1b7fdc750bbc9dea0c9aa193b9c9d9b203568146dd3bd3e557e47b",
     "build_scoring_dispositions.py": "c4627a0c038248c4d63b273475ed4e505b3df88ad7e134d2d8651df60fc5c5df",
+    "evaluate_model.py": "358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a",
+    "run_model_batch.py": "bf8a471a1a68295444a697ac5fd252a48695e57d561b82d70a8e65b672c29b32",
+    "smoke_public_v011.py": "572e9e500ed725800c9a3732947f9ad5a698de6b0c62bfa4c20ba3dae90f0609",
     "vesum_reingest.py": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477",
     "vesum_source.lock.json": "27362c3112579cbd8378314189c6c2032ac1d3db5f89f155f5557bb31a3d0fa6"
   }

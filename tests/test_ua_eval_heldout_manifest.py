@@ -159,3 +159,23 @@ def test_committed_manifest_is_internally_valid_and_held_out() -> None:
     assert manifest["counts"]["included_sentences"] == 677
     assert manifest["counts"]["excluded_sentences"] == 2013
     assert manifest["predicate"]["partition"] == "test"
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"])
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r", ""])
+def test_m2_preserves_unicode_separators_in_source_and_edits(separator, ending, tmp_path):
+    from scripts.projects.ua_eval_harness.build_heldout_manifest import parse_m2
+
+    boundary = ending or "\n"
+    path = tmp_path / "input.m2"
+    source = f"before{separator}after"
+    replacement = f"new{separator}text"
+    path.write_bytes(boundary.join([
+        "S # 0001", "", f"S {source}",
+        f"A 0 1|||G/Test|||{replacement}|||REQUIRED|||-NONE-|||0",
+        "", f"S final{separator}",
+    ]).encode() + ending.encode())
+    sentences = parse_m2(path)
+    assert [row.source for row in sentences] == [source, f"final{separator}"]
+    assert sentences[0].edits[0].replacement == replacement
+    assert [row.sentence_index for row in sentences] == [1, 2]

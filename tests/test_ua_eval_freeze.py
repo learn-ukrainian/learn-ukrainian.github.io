@@ -143,7 +143,12 @@ def test_historical_runner_resolution_does_not_certify_active_code():
     assert freeze_module._frozen_artifact_path(freeze_module.RUNNER) == (
         freeze_module.ROOT / freeze_module.HISTORICAL_RUNNER_SOURCE
     )
-    assert freeze_module._frozen_artifact_path(freeze_module.EVALUATOR) == freeze_module.ROOT / freeze_module.EVALUATOR
+    assert freeze_module._frozen_artifact_path(freeze_module.EVALUATOR) == (
+        freeze_module.ROOT / "data/projects/ua_eval_harness/releases/v0.1.1/evaluate_model.py"
+    )
+    assert freeze_module._sha256(freeze_module.ROOT / freeze_module.EVALUATOR) != freeze_module._sha256(
+        freeze_module._frozen_artifact_path(freeze_module.EVALUATOR)
+    )
     assert freeze_module._sha256(freeze_module.ROOT / freeze_module.RUNNER) != freeze_module._sha256(
         freeze_module.ROOT / freeze_module.HISTORICAL_RUNNER_SOURCE
     )

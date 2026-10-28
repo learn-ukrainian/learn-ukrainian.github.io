@@ -8,8 +8,7 @@ This is a bounded syntactic guard, not a complete call-graph analysis: parser
 callbacks (including map), assigned parser aliases, JSONDecoder.decode,
 self/cls method calls, imported wrappers, nested/lambda closures, and helpers
 returning split output are not followed. Inventory review covers those limits.
-The exceptions identify reviewed byte readers, non-record diagnostic text,
-and frozen sources whose release receipts prohibit byte changes.
+The exceptions identify reviewed byte readers and non-record diagnostic text. Release snapshots live outside scripts/.
 """
 
 from __future__ import annotations
@@ -21,6 +20,12 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
+FORMERLY_FROZEN_READERS = [
+    ("scripts/projects/open_model_data/gemma_hardware_probe.py", "collect_job"),
+    ("scripts/projects/ua_eval_harness/evaluate_model.py", "_read_jsonl"),
+    ("scripts/projects/ua_eval_harness/run_model_batch.py", "_read_jsonl"),
+    ("scripts/projects/ua_eval_harness/run_model_batch.py", "_ndjson_assistant_text"),
+]
 # (repository-relative path, qualified function): reviewed disposition and exact call(s).
 ALLOWLIST: dict[tuple[str, str], tuple[str, str | tuple[str, ...]]] = {
     ("scripts/agent_runtime/adapters/agy.py", "_read_transcript_events"): (
@@ -89,35 +94,6 @@ ALLOWLIST: dict[tuple[str, str], tuple[str, str | tuple[str, ...]]] = {
     ("scripts/agent_runtime/failure_codes.py", "provider_stderr_error"): (
         "Diagnostic lines locate an API Error wrapper; raw_decode receives a slice of the original stderr, not split lines.",
         "stderr.splitlines(keepends=True)",
-    ),
-    # Release-frozen bindings below name the actual pin and its source file.
-    ("scripts/projects/open_model_data/gemma_hardware_probe.py", "collect_job"): (
-        "hash-pinned frozen source; "
-        "scripts/projects/open_model_data/paths.py: "
-        "GEMMA_PROBE_RUNNER_SHA256=7d3e12dfb114ce96f14a195c8d8515964c77e125df4b649b9b31989b2e5c8ab6; existing "
-        "runner_sha256 receipts require this pin",
-        "logs_result.stdout.splitlines()",
-    ),
-    ("scripts/projects/ua_eval_harness/evaluate_model.py", "_read_jsonl"): (
-        "hash-pinned frozen source; "
-        "data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json and "
-        "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json: "
-        "scorer_sha256=358ee1419533577fb185615c8a80b15688214a89fe3003d9fe9425954511402a",
-        "path.read_text(encoding='utf-8').splitlines()",
-    ),
-    ("scripts/projects/ua_eval_harness/run_model_batch.py", "_read_jsonl"): (
-        "hash-pinned frozen source; "
-        "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json: "
-        "scripts/projects/ua_eval_harness/run_model_batch.py "
-        "sha256=bf8a471a1a68295444a697ac5fd252a48695e57d561b82d70a8e65b672c29b32",
-        "path.read_text(encoding='utf-8').splitlines()",
-    ),
-    ("scripts/projects/ua_eval_harness/run_model_batch.py", "_ndjson_assistant_text"): (
-        "hash-pinned frozen source; "
-        "data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json: "
-        "scripts/projects/ua_eval_harness/run_model_batch.py "
-        "sha256=bf8a471a1a68295444a697ac5fd252a48695e57d561b82d70a8e65b672c29b32",
-        "raw_text.splitlines()",
     ),
 }
 
@@ -394,9 +370,9 @@ def test_byte_exception_does_not_allow_decode_before_splitting():
 
 @pytest.mark.parametrize(
     "path, function",
-    [key for key, (reason, _) in ALLOWLIST.items() if reason.startswith("hash-pinned frozen source;")],
+    FORMERLY_FROZEN_READERS,
 )
 def test_frozen_exception_does_not_admit_unreviewed_split(path, function):
-    assert "sha256=" in ALLOWLIST[path, function][0] or "SHA256=" in ALLOWLIST[path, function][0]
+    assert (path, function) not in ALLOWLIST
     source = f"import json\ndef {function}(unreviewed_text):\n    return json.loads(unreviewed_text.splitlines()[-1])"
     assert violations(path, source)

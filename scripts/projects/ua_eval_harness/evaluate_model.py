@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.jsonl import physical_lines
 from scripts.projects.ua_eval_harness.build_heldout_manifest import validate_manifest
 from scripts.projects.ua_eval_harness.build_scoring_dispositions import (
     ROW_LAYOUT as DISPOSITION_ROW_LAYOUT,
@@ -41,7 +42,7 @@ DEFAULT_PROMPT = ROOT / "data/projects/ua_eval_harness/minimal_edit_prompt_v1.tx
 SAVED_RESPONSE_SCHEMA = "ua_eval_saved_responses.v1"
 REQUEST_SCHEMA = "ua_eval_generation_requests.v1"
 REPORT_SCHEMA = "ua_eval_score_report.v1"
-SCORER_ID = "ua_eval_exact_token_edits.v1"
+SCORER_ID = "ua_eval_exact_token_edits.v2"
 RUNNER_ID = "ua_eval_saved_response_runner.v1"
 UNLP_SCORER_REFERENCE = {
     "repository": "https://github.com/asivokon/unlp-2023-shared-task",
@@ -107,7 +108,7 @@ def _read_json(path: Path) -> dict[str, Any]:
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = physical_lines(path.read_text(encoding="utf-8"))
     except OSError as exc:
         raise EvaluationError(f"cannot read JSONL {path}: {exc}") from exc
     for line_number, line in enumerate(lines, 1):
