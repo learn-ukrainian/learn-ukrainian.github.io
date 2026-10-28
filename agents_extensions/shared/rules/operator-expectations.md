@@ -55,8 +55,9 @@ are the tie-breakers.
      posted on the PR + CI Gate green on that **same** head + merged by the accountable
      driver — never ask the operator to merge. A PR may open before approval so CI
      runs (OO-53). Gates: `workflow.md` § Merge policy; steps: the `full-send` skill.
-   - **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s) reaped
-     (`merge_closeout` / `reap_worktrees.py`); no zombie refs for that PR.
+   - **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s) gone
+     (the dispatcher removes each task's own worktree at settlement; `merge_closeout` proves no
+     worktree still holds the PR and removes none); no zombie refs for that PR.
    - **GitHub hygiene:** issue updated with evidence; closed when acceptance criteria
      are met (or left open only with named residual + owner). Linked PRs not abandoned.
    - **Residual** named with owner, or explicit "none".

@@ -513,7 +513,7 @@ The knowledge-monopoly + quota-burn cycle (only the Anthropic frontier seat hold
 system; letting it drive daily exhausts the weekly in ~2 days; cheaper drivers then degrade
 the system until it returns) is broken by ROLE SPLIT, not by a better single driver:
 
-* **Daily driver: `grok-4.7`** — owns the epic loops (dispatch, babysit, settle, reap,
+* **Daily driver: `grok-4.7`** — owns the epic loops (dispatch, babysit, settle,
   re-fire) under the mechanical rails (evidence-mandatory reviews, lease lifecycle,
   merge/stamp guards, delegate origin-sync). Operator-rated the best price/quality
   orchestrator currently available.
@@ -695,7 +695,7 @@ free disk. **Never convert a timed pause into permanent neglect of that seat.**
 | **DeepSeek first-party** (`deepseek` via OpenCode) | latest `deepseek-v4.1-flash` coding; no private-repository content or secrets | Review-of-record and Ukrainian work need measured evidence first; `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named US provider allow-list exists |
 | **Cursor multi-model pin** | mechanical work: `grok-4.7-high`; `auto` only for a well-defined coding dispatch | review of record by a Claude model (D-129, #10464); `auto` outside a well-defined coding dispatch, Fast, `grok-4.6`, `grok-4.5`; formal CF as `auto` |
 
-After merge: reap worktrees and free branch holds so the next free lane can attach (`reap_worktrees`,
+After merge: run `merge_closeout` and free branch holds so the next free lane can attach (the dispatcher removes each settled task's worktree;
 no multi-GB shielded `lu-review-*` trees — formal CF is direct `ask-*` only).
 
 ### Worker priority ladder — first pick per work type (user standing order 2026-07-11: stop re-deriving this)

@@ -189,9 +189,9 @@ first, then check the worktree for finished-but-unpushed work. **After terminal 
 read the task record's `worktree_disposition` and `worktree_disposition_reason`. The
 dispatcher removes the task's own worktree at settlement: read-only trees always, write
 trees when clean and published on the canonical remote. A `retained` tree (dirty,
-unpublished, borrowed, unknown) or an `error` is resolved by its reason through the common
-reaper (`docs/runbooks/worktree-cleanup.md`); never a
-direct Git removal.
+unpublished, borrowed, unknown) or an `error` is resolved by its reason: remove it only
+after confirming its content is published (`workflow.md` § Post-merge cleanup,
+`docs/runbooks/worktree-cleanup.md`); never a direct Git removal.
 
 **Wait-loop hygiene (2026-09-24).** Before arming a wait on a tool's output, grep the
 tool's source or one real output for the exact string — a loop on text the tool never

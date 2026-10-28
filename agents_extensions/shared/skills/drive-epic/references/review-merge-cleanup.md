@@ -308,15 +308,15 @@ cutover. Claiming prod HA without the operator or advisor GO is out of scope.
 
 The shared publisher returns after authenticated enqueue or already-queued
 reconciliation and the existing publication gates. Neither path runs the global
-cleanup inventory or common reaper, creates a cleanup receipt, or emits an
+cleanup inventory or any worktree removal, creates a cleanup receipt, or emits an
 `enqueue-cleanup` line. Known enqueue success keeps its return code and raw
 transport output. Already-queued unchanged heads return without another enqueue.
 The keeper uses the same publisher path. Failed or unknown publication never
 authorizes cleanup.
 
-The existing common reaper timer and standard post-task and post-merge lifecycle
-own cleanup and its durable receipts. All common ownership, liveness,
-preservation and branch guards still apply. Publisher queue success does not
+The dispatcher's removal of each task's own worktree at settlement and the
+post-merge `merge_closeout` own cleanup and its durable receipts. All ownership,
+liveness, preservation and branch guards still apply. Publisher queue success does not
 prove cleanup complete. Retained, pending or unavailable cleanup blocks full
 delivery; it does not authorize another enqueue. Post-merge common closeout
 remains mandatory.
@@ -326,14 +326,14 @@ and publication is proven. Remote branches remain until `MERGED`.
 
 
 Follow `agents_extensions/shared/rules/workflow.md` § Merge policy /
-Post-merge cleanup. Worker exit, MERGED and the actual merge SHA, common-reaper
+Post-merge cleanup. Worker exit, MERGED and the actual merge SHA, `merge_closeout`
 exit 0 and residue-free receipts are required before the next large dispatch.
-Non-zero or SKIPPED receipts block closeout; never use `--force`. The only
-manual fallback is the one in `docs/runbooks/worktree-cleanup.md` when the
-common reaper cannot run. A squash-merge alone is not done: the merging lane
-runs the common-reaper closeout for the PR's own worktrees and branches and
-needs a clean receipt before reporting it done. Any PR-scoped worktree claim is
-settled only by that reaper's guarded removal. Stream leases are launcher-owned;
+Non-zero or SKIPPED receipts block closeout; never use `--force`. `merge_closeout`
+keeps the branch-gone proof and removes no worktree: the dispatcher removes each
+task's own worktree at settlement and records `worktree_disposition`. The driver or
+worker checks that disposition and removes a retained worktree only after confirming
+its content is published. A squash-merge alone is not done: the merging lane runs
+`merge_closeout` for the PR and needs a clean receipt before reporting it done. Stream leases are launcher-owned;
 a driver never opens, resumes, claims, renews, releases or replaces one.
 
 **After a suspected secret leak:** run `scripts/audit/secret_scan_local.py tree` and `history`

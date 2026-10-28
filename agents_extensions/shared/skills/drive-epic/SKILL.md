@@ -53,11 +53,13 @@ A PR may open before approval so CI runs; it is done only at `MERGED` with a cle
 
 Per turn and at session end:
 
-- [ ] No worktree of a settled dispatch remains:
-      `.venv/bin/python -m scripts.orchestration.reap_worktrees apply --terminal-dispatches --merged --preserve-then-reap`.
+- [ ] No worktree of a settled dispatch remains: the dispatcher removes each task's own
+      worktree at settlement, so check each settled task's `worktree_disposition`. Remove a
+      `retained` or `error` worktree only after confirming its content is published, with
+      `.venv/bin/python -m scripts.orchestration.worktree_claims remove <path> --owner-task-id <task> --reason <why>`.
 - [ ] `.venv/bin/python -m scripts.hygiene.branch_sweep --json` reviewed and its
       proven-safe deletions applied (`--apply`), then `git fetch --prune`.
-- [ ] Every SKIPPED row from the reaper or `branch_sweep` gets a decision: remove it
+- [ ] Every SKIPPED row from `merge_closeout` or `branch_sweep` gets a decision: remove it
       safely or record a verified reason to keep it (a live process, a running task,
       unpushed or unique work). Exit 0 with skips is not done. Never force removal.
 - [ ] Remove a review worktree as soon as its verdict is posted and the reviewer process

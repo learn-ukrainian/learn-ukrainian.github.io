@@ -274,15 +274,15 @@ cross-family.
 
 The shared publisher returns after authenticated enqueue or already-queued
 reconciliation and the existing publication gates. Neither path runs the global
-cleanup inventory or common reaper, creates a cleanup receipt, or emits an
+cleanup inventory or any worktree removal, creates a cleanup receipt, or emits an
 `enqueue-cleanup` line. Known enqueue success keeps its return code and raw
 transport output. Already-queued unchanged heads return without another enqueue.
 The keeper uses the same publisher path. Failed or unknown publication never
 authorizes cleanup.
 
-The existing common reaper timer and standard post-task and post-merge lifecycle
-own cleanup and its durable receipts. All common ownership, liveness,
-preservation and branch guards still apply. Publisher queue success does not
+The dispatcher's removal of each task's own worktree at settlement and the
+post-merge `merge_closeout` own cleanup and its durable receipts. All ownership,
+liveness, preservation and branch guards still apply. Publisher queue success does not
 prove cleanup complete. Retained, pending or unavailable cleanup blocks full
 delivery; it does not authorize another enqueue. Post-merge common closeout
 remains mandatory.
@@ -300,19 +300,24 @@ with the task-prescribed project interpreter:
 .venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply
 ```
 
-Require exit 0 and the receipt proving the PR's worktrees, temporary residue,
-and local and remote branches are gone before the next large dispatch. A
-non-zero exit or `SKIPPED` blocks closeout: record its evidence and owner and
-resolve safely, never retry with `--force`. Remote branches may be deleted only
-after `MERGED`; queued is not merged. The common reaper owns removal, never a
-second deletion path. If it cannot run, use only the rescue restore and narrowly
-allowlisted fallback in `docs/runbooks/worktree-cleanup.md`.
+Require exit 0 and the receipt proving that no dispatch worktree still holds the
+PR and that its temporary residue and local and remote branches are gone before
+the next large dispatch. `merge_closeout` keeps the branch-gone proof and removes
+no worktree; a worktree still registered is a residual it reports. A non-zero
+exit or `SKIPPED` blocks closeout: record its evidence and owner and resolve
+safely, never retry with `--force`. Remote branches may be deleted only after
+`MERGED`; queued is not merged.
 
 At settlement the dispatcher removes each task's own worktree, review trees
 included (read-only trees always; write trees when clean and published on the
-canonical remote) and records `worktree_disposition` in the task record. A
-`retained` or `error` disposition is resolved by its reason through the common
-reaper, never by hand. Before a branch sweep, inspect
+canonical remote) and records `worktree_disposition` in the task record. The
+driver, or the worker that owns the task, reads that disposition. A `retained` or
+`error` worktree is removed only after confirming its content is published (its
+HEAD is on the canonical remote, a pull-request head or `main`) and no live
+process uses it, with the guarded
+`scripts.orchestration.worktree_claims remove`; never by direct Git removal, and
+if the content is not published, publish it or record the owner and reason it
+stays. Before a branch sweep, inspect
 `scripts.hygiene.branch_sweep --json` receipts; then apply only safe dispositions
 and prove no residue. Close linked issues only with all acceptance criteria
 verified on the delivered artifact; name any residual, owner and dependency.
@@ -322,8 +327,8 @@ command above for that PR's own worktrees and branches, and the PR is not done
 until the receipt is clean (exit 0, residue-free). A briefed worker runs it from its
 own worktree, which is still in use, so its receipt reports that worktree and its
 local branch as residual; the dispatcher removes both when the task settles, and the
-driver confirms the recorded `worktree_disposition`. Any PR-scoped worktree claim
-is settled only through the common reaper's guarded removal, never by hand.
+driver confirms the recorded `worktree_disposition`. Any other PR-scoped worktree
+is removed only as the disposition paragraph above describes, never by hand.
 Cleanup does not wait for a central sweep. This is not a stream lease: launchers
 own stream leases, and no driver opens, resumes, claims, renews, releases or
 replaces one. The non-zero and `SKIPPED` stop conditions above are unchanged.

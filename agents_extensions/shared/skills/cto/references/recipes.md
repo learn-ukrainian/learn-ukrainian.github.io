@@ -60,10 +60,12 @@ Classify each granted case before the grant is sent:
 The PR body lists which cases are defect cases and which are controls, with the before and
 after result of each. Never require a control case to fail before the fix.
 
-## Reap before re-dispatch
+## Worktree disposition before re-dispatch
 
-A finished task holds its worktree and branch lease, so reap it before dispatching the same
-branch again (`workflow.md` § Post-merge cleanup, `docs/runbooks/worktree-cleanup.md`).
+A finished task's worktree and branch lease end when the dispatcher settles it and removes the
+worktree. Before dispatching the same branch again, read its `worktree_disposition`; if the
+worktree was retained, remove it only after confirming its content is published
+(`workflow.md` § Post-merge cleanup, `docs/runbooks/worktree-cleanup.md`).
 
 ## Dispatch helpers
 
