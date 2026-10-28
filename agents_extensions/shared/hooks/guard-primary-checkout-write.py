@@ -92,13 +92,18 @@ directories and git pathspecs follow the same rule. Inherited variables that the
 command never assigns (other than ``HOME``) are unknown too.
 
 ANSI-C quoting is refused, not decoded (#10633). This guard does not model how
-Bash expands ``$'...'`` escapes, so a Bash command whose text contains the marker
+Bash expands ``$'...'`` escapes, so a Bash command holding an unquoted marker
 ``$'`` — raw, or after backslash-newline removal (Bash joins ``$\\<newline>'``
 into ``$'``) — is blocked before parsing, target inference or any allowlisted
 early return, and so is every nested command string the parser re-reads
-(``eval`` / ``sh -c``). The check is literal and quote-blind: a ``$`` right
-before a ``'`` inside quotes (the regex anchor in ``grep 'end$'``) is refused
-too; ``"end$"`` is the same pattern. Every command string this hook parses has
+(``eval`` / ``sh -c``). Bash performs ANSI-C quoting only for an unquoted
+``$'``: inside single quotes every character is literal and inside double quotes
+``'`` is literal (bash(1), QUOTING), so ``grep -v '^\\s*$'`` and ``"end$'"`` are
+plain text and allowed. Quotes are tracked only when the command holds none of
+the constructs the check does not model — a backslash-newline, ``#``, ``<<``,
+backticks, ``$(``, ``${`` (Bash's default ``extquote`` decodes ``$'`` inside
+``"${...}"``), ``$[`` or ``((`` — and when no quote is left open; otherwise the
+marker alone decides, as before. Every command string this hook parses has
 passed that check first. Nothing in this module decodes ANSI-C escapes: a direct
 caller of the parser (``bash_write_targets``, ``guard-reviewer-publish.py``)
 gets each ``$'...'`` span as undecoded literal text whose value is unknown (the
@@ -107,7 +112,7 @@ word keeps ``unresolved_at`` set), so a path containing one is
 a span spelled as a plain path keeps naming that program (``$'/usr/bin/tee'``
 reads as ``tee``), while one holding escapes stays undecoded text that names no
 known program (``$'\\564ee'`` reads as ``$\\564ee``). Because nothing is
-decoded, ``guard-reviewer-publish.py`` refuses the marker itself as well.
+decoded, ``guard-reviewer-publish.py`` applies the same refusal check as well.
 
 Coverage limitations (documented, by design)
 --------------------------------------------
@@ -433,24 +438,54 @@ class _AnsiCQuotingRefused(Exception):
     """A nested command string holds ANSI-C ``$'...'`` quoting (#10633)."""
 
 
-def _has_ansi_c_quoting(command: str) -> bool:
-    """Whether ``command`` contains the ANSI-C quoting marker ``$'`` (#10633).
+# Constructs whose quoting this check does not model: inside them an apostrophe
+# may not quote (comments, here-document bodies, arithmetic), a new quoting
+# context opens (command substitution, backticks), Bash decodes ``$'`` even
+# within double quotes (``"${x:-$'...'}"`` under the default ``extquote``), or a
+# backslash-newline joins ``$`` and ``'``. With any of them present, the marker
+# alone still decides.
+_ANSI_C_UNMODELED = ("\\\n", "#", "<<", "`", "$(", "${", "$[", "((")
 
-    Presence alone decides; nothing is decoded and no quotes are tracked. The
-    raw text is checked, then the text with every backslash-newline pair removed
-    — including pairs that a removal brings together — because Bash deletes
-    those pairs before tokenizing, so ``$\\<newline>'...'`` is still ANSI-C
-    quoting. The stack keeps the removal linear on any input.
+
+def _has_ansi_c_quoting(command: str) -> bool:
+    """Whether ``command`` may hold Bash ANSI-C quoting ``$'...'`` (#10633).
+
+    Nothing is decoded. Without the marker ``$'`` — in the raw text, or after
+    every backslash-newline pair is removed, including pairs that a removal
+    brings together, since Bash deletes those pairs before tokenizing — there is
+    none. Bash performs ANSI-C quoting only for an unquoted ``$'``: inside
+    single quotes every character is literal and inside double quotes ``'`` is
+    literal (bash(1), QUOTING). When the command holds none of
+    ``_ANSI_C_UNMODELED``, single quotes, double quotes and backslash escapes
+    are tracked and only an unquoted marker counts; otherwise, or when a quote
+    is left open, the marker alone decides. The stack keeps the removal linear
+    on any input.
     """
-    if "$'" in command:
-        return True
     joined: list[str] = []
     for char in command:
         if char == "\n" and joined and joined[-1] == "\\":
             joined.pop()
         else:
             joined.append(char)
-    return "$'" in "".join(joined)
+    if "$'" not in command and "$'" not in "".join(joined):
+        return False
+    if any(construct in command for construct in _ANSI_C_UNMODELED):
+        return True
+    quote = ""
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and quote != "'":
+            i += 2
+            continue
+        if char == "'" and quote != '"':
+            quote = "" if quote else "'"
+        elif char == '"' and quote != "'":
+            quote = "" if quote else '"'
+        elif char == "$" and not quote and command.startswith("'", i + 1):
+            return True
+        i += 1
+    return bool(quote)
 
 
 def _refuse_nested_ansi_c_quoting(command: str, depth: int) -> None:
@@ -1069,7 +1104,7 @@ def _command_word(segment: list[str]) -> tuple[str, int]:
     a ``tee``. The word is reduced to its basename without decoding, so an
     ANSI-C span spelled as a plain path (``$'/usr/bin/tee'``) yields ``tee``
     while the token keeps ``unresolved_at`` set; the hook entry refuses every
-    ``$'`` command before this parser runs (#10633).
+    unquoted ``$'`` command before this parser runs (#10633).
     """
     i = 0
     while i < len(segment):
@@ -2473,10 +2508,12 @@ def _block_ansi_c_quoting() -> int:
         "BLOCKED by guard-primary-checkout-write: Bash ANSI-C quoting ($'...') is refused "
         "[ansi_c_quoting] (issue #10633).\n\n"
         "This guard does not model how Bash decodes $'...' escapes, so it cannot tell which file "
-        "such a command writes. The check is literal: any $ directly followed by ' is refused, "
-        "also across a backslash-newline, inside quotes, and in nested eval / sh -c strings.\n\n"
-        "Write command words, options and paths as plain literal text (a regex anchor such as "
-        "'end$' can be written \"end$\").\n"
+        "such a command writes. An unquoted $ directly followed by ' is refused, also across a "
+        "backslash-newline and in nested eval / sh -c strings. Inside single or double quotes "
+        "$' is plain text, unless the command also holds a backslash-newline, a comment (#), a "
+        "here-document (<<), a command substitution ($( or backticks), $[, (( or ${...}; then "
+        "any $' is refused.\n\n"
+        "Write command words, options and paths as plain literal text.\n"
         "Only to generate escape-decoded file CONTENT inside your dispatch worktree, printf %b "
         "is available there:\n\n"
         "  cd .worktrees/dispatch/<agent>/<task> && printf '%b' 'a\\tb\\n' > data.txt\n\n"
