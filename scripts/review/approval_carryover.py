@@ -13,7 +13,8 @@ typed reason):
    generated-path registry as merged on the base branch
    (``scripts/config/generated_paths.yaml``).
 3. ``reproduction``: each such path's generator, run on N in a clean temporary
-   worktree, reproduces N's committed bytes exactly and writes nothing else.
+   worktree, reproduces N's committed bytes exactly and writes nothing else: it
+   runs under bubblewrap with every file read-only except its targets.
 4. ``lineage``: every review task of the PR is terminal, every review verdict is
    published, and A's APPROVE is the latest verdict of every reviewer seat.
 5. ``ci``: same-head CI on N is green.
@@ -31,6 +32,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 from collections.abc import Mapping, Sequence
@@ -239,28 +241,57 @@ def _committed_blob(repo_root: Path, head: str, path: str) -> bytes:
     return _git(repo_root, "cat-file", "blob", fields[2].decode("ascii"))
 
 
-def _snapshot(tree: Path) -> dict[str, tuple[int, ...] | None]:
+def _snapshot(tree: Path) -> dict[str, tuple[Any, ...]]:
     """Every path under ``tree``, ignored ones included, with its ``lstat`` identity.
 
     A write, a replacement or a restored mtime all change a file's ctime, which
-    no process can set back, so comparing snapshots detects any write.
-    Directories are recorded by presence only: regenerating a target touches its parent.
+    no process can set back. Symlinks, to directories too, are recorded with
+    their targets, and directories with their mode, so comparing snapshots
+    detects any change that outlives the run.
     """
-    entries: dict[str, tuple[int, ...] | None] = {}
+    entries: dict[str, tuple[Any, ...]] = {}
     for root, dirs, files in os.walk(tree):
-        for name in dirs:
-            entries[os.path.relpath(os.path.join(root, name), tree)] = None
-        for name in files:
+        for name in (*dirs, *files):
             path = os.path.join(root, name)
             info = os.lstat(path)
-            entries[os.path.relpath(path, tree)] = (
-                info.st_mode,
-                info.st_ino,
-                info.st_size,
-                info.st_mtime_ns,
-                info.st_ctime_ns,
-            )
+            if stat.S_ISLNK(info.st_mode):
+                identity: tuple[Any, ...] = ("link", os.readlink(path), info.st_ino, info.st_ctime_ns)
+            elif stat.S_ISDIR(info.st_mode):
+                identity = ("dir", info.st_mode, info.st_ino)
+            else:
+                identity = ("file", info.st_mode, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+            entries[os.path.relpath(path, tree)] = identity
     return entries
+
+
+def _sandboxed(argv: Sequence[str], *, tree: Path, writable: Sequence[Path]) -> list[str]:
+    """``argv`` under bubblewrap: the whole filesystem read-only except ``writable``.
+
+    No write, transient or lasting, can land anywhere but the target files, and
+    the generator has no network.
+    """
+    bwrap = shutil.which("bwrap")
+    if bwrap is None:
+        raise CarryOverRefused(REPRODUCTION, "bubblewrap (bwrap) is required to sandbox generators")
+    binds = [arg for path in writable for arg in ("--bind", str(path), str(path))]
+    return [
+        bwrap,
+        "--ro-bind",
+        "/",
+        "/",
+        "--dev",
+        "/dev",
+        "--proc",
+        "/proc",
+        *binds,
+        "--unshare-all",
+        "--die-with-parent",
+        "--new-session",
+        "--chdir",
+        str(tree),
+        "--",
+        *argv,
+    ]
 
 
 def check_reproduction(
@@ -285,8 +316,6 @@ def check_reproduction(
             head,
             env=env,
         )
-        pointer = tree / ".git"
-        hidden = tree.with_name("git-pointer")
         try:
             committed = {path: _committed_blob(repo_root, head, path) for path in paths}
             for package in sorted({name for path in paths for name in registry[path].node_packages}):
@@ -294,17 +323,29 @@ def check_reproduction(
                 source = repo_root / "node_modules" / package
                 if source.is_symlink() or not source.is_dir():
                     raise CarryOverRefused(REPRODUCTION, f"Node package {package} is not installed in the checkout")
-                shutil.copytree(source, tree / "node_modules" / package, symlinks=True)
+                try:
+                    # Links are dereferenced, so the copy holds no route back to shared files.
+                    shutil.copytree(source, tree / "node_modules" / package, symlinks=False)
+                except (OSError, shutil.Error) as exc:
+                    raise CarryOverRefused(REPRODUCTION, f"Node package {package} could not be copied: {exc}") from None
+            if empty := [path for path in paths if not committed[path]]:
+                raise CarryOverRefused(
+                    REPRODUCTION, "an empty committed file proves no generation: " + ", ".join(empty)
+                )
             for path in paths:
-                (tree / path).unlink()
-            # Generators run without a route into the shared Git directory.
-            pointer.rename(hidden)
+                # Emptied, not removed: each target stays the sandbox's only writable file.
+                (tree / path).write_bytes(b"")
             before = _snapshot(tree)
             for command in dict.fromkeys(registry[path].command for path in paths):
                 argv = [sys.executable, *command[1:]] if command[0] == "python" else list(command)
                 try:
                     result = subprocess.run(
-                        argv, cwd=tree, capture_output=True, check=False, timeout=GENERATOR_TIMEOUT_S, env=env
+                        _sandboxed(argv, tree=tree, writable=[tree / path for path in paths]),
+                        cwd=tree,
+                        capture_output=True,
+                        check=False,
+                        timeout=GENERATOR_TIMEOUT_S,
+                        env=env,
                     )
                 except (OSError, subprocess.TimeoutExpired) as exc:
                     raise CarryOverRefused(REPRODUCTION, f"generator {' '.join(command)} did not run: {exc}") from None
@@ -335,8 +376,6 @@ def check_reproduction(
                 receipts.append({"path": path, "sha256": hashlib.sha256(committed[path]).hexdigest()})
             return receipts
         finally:
-            if hidden.exists() and not pointer.exists():
-                hidden.rename(pointer)
             try:
                 _git(repo_root, "worktree", "remove", "--force", str(tree))
             except CarryOverRefused:

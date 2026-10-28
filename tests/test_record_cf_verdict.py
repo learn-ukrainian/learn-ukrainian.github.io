@@ -2951,16 +2951,18 @@ from pathlib import Path
 
 Path("gen.txt").write_text("".join(f"{n}: {sha256(Path(n).read_bytes()).hexdigest()}\\n" for n in ("a.txt", "b.txt")))
 """
-# Extra writes happen only where the generator runs without a Git pointer, as the
-# carry-over runs it: an ignored log file, or a tracked file rewritten with its mtime restored.
-STRAY_GENERATOR = GENERATOR + 'if not Path(".git").exists():\n    Path("stray.log").write_text("stray\\n")\n'
-RESTORING_GENERATOR = GENERATOR + (
-    'if not Path(".git").exists():\n'
-    "    import os\n"
-    '    stat = os.stat("notes.txt")\n'
-    '    Path("notes.txt").write_text("m\\n")\n'
-    '    os.utime("notes.txt", ns=(stat.st_atime_ns, stat.st_mtime_ns))\n'
-)
+# Extra writes happen only when CARRY_EXTRA is set, as the carry-over tests set it,
+# never in the fixture's own commits.
+EXTRA = 'import os\nif os.environ.get("CARRY_EXTRA"):\n'
+EXTRA_WRITES = {
+    "writes-ignored-path": EXTRA + '    Path("stray.log").write_text("stray\\n")\n',
+    "rewrites-with-restored-mtime": EXTRA
+    + '    stat = os.stat("notes.txt")\n'
+    + '    Path("notes.txt").write_text("m\\n")\n'
+    + '    os.utime("notes.txt", ns=(stat.st_atime_ns, stat.st_mtime_ns))\n',
+    "retargets-directory-symlink": EXTRA + '    os.remove("link")\n    os.symlink("dir-b", "link")\n',
+    "chmods-directory": EXTRA + '    os.chmod("dir-a", 0o711)\n',
+}
 REGISTRY = "schema_version: 1\ngenerated_paths:\n  gen.txt:\n    command: [python, gen.py]\n"
 CARRY_BRANCH = "codex/carry"
 CARRY_MODELS = {"anthropic": "claude-opus-5-5", "openai": "gpt-6.1-sol", "google": "gemini-3.8-flash-high"}
@@ -3002,6 +3004,8 @@ def carry_repo(
     repo.mkdir()
     _carry_git(repo, "init", "-q", "-b", "main")
     files = {"gen.py": generator, "a.txt": "a\n", "b.txt": "b\n", "notes.txt": "n\n", ".gitignore": "*.log\n"}
+    files.update({"dir-a/x": "a\n", "dir-b/x": "b\n"})
+    (repo / "link").symlink_to("dir-a")
     _carry_commit(repo, "root", {**files, "scripts/config/generated_paths.yaml": REGISTRY})
     _carry_git(repo, "checkout", "-qb", CARRY_BRANCH)
     approved = _carry_commit(repo, "pr", {"a.txt": "a2\n", **(pr_files or {})})
@@ -3086,6 +3090,27 @@ def approved_lineage(tmp_path: Path, approved: str) -> list[dict]:
     carry_review(tasks, comments, "review-r1", "c" * 40, "REQUEST_CHANGES", minute=1)
     carry_review(tasks, comments, "review-r2", approved, "APPROVE", minute=2)
     return comments
+
+
+def bwrap_usable() -> bool:
+    try:
+        return subprocess.run(["bwrap", "--ro-bind", "/", "/", "true"], capture_output=True, timeout=30).returncode == 0
+    except OSError:
+        return False
+
+
+def passthrough_sandbox(monkeypatch) -> None:
+    """Run generators unsandboxed, so the snapshot alone must catch their writes."""
+    from scripts.review import approval_carryover
+
+    monkeypatch.setattr(approval_carryover, "_sandboxed", lambda argv, **_kwargs: list(argv))
+
+
+@pytest.fixture(autouse=True)
+def carry_sandbox(request, monkeypatch):
+    """Use real bubblewrap where the host allows it; elsewhere carry-over tests run unsandboxed."""
+    if "carry" in request.node.name and not bwrap_usable():
+        passthrough_sandbox(monkeypatch)
 
 
 def run_carry_over(monkeypatch, tmp_path, repo, approved, head, *, base_tip, comments, ci=("SUCCESS",), readback=True):
@@ -3201,24 +3226,51 @@ def test_carry_over_refuses_hand_authored_change_outside_registry(monkeypatch, t
     )
 
 
-@pytest.mark.parametrize(
-    "case", ["hand-picked-bytes", "writes-ignored-path", "rewrites-with-restored-mtime", "deleted-target"]
-)
+@pytest.mark.parametrize("case", ["hand-picked-bytes", "deleted-target", "emptied-target"])
 def test_carry_over_refuses_unreproduced_generated_paths(monkeypatch, tmp_path, case):
-    generator = {"writes-ignored-path": STRAY_GENERATOR, "rewrites-with-restored-mtime": RESTORING_GENERATOR}
-    repo, approved, base, head = carry_repo(tmp_path, generator=generator.get(case, GENERATOR))
+    repo, approved, base, head = carry_repo(tmp_path)
     if case == "hand-picked-bytes":
         (repo / "gen.txt").write_text("hand-picked side of the conflict\n")
         _carry_git(repo, "commit", "-qa", "--amend", "--no-edit")
     elif case == "deleted-target":
         _carry_git(repo, "rm", "-q", "gen.txt")
         _carry_git(repo, "commit", "-q", "--amend", "--no-edit")
+    else:
+        (repo / "gen.txt").write_text("")
+        _carry_git(repo, "commit", "-qa", "--amend", "--no-edit")
     head = _carry_git(repo, "rev-parse", "HEAD")
     comments = approved_lineage(tmp_path, approved)
     assert refused_reason(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments) == (
         "reproduction"
     )
     assert _carry_git(repo, "worktree", "list", "--porcelain").count("worktree ") == 1
+
+
+@pytest.mark.parametrize("case", sorted(EXTRA_WRITES))
+def test_carry_over_snapshot_catches_lasting_writes_outside_targets(monkeypatch, tmp_path, case):
+    from scripts.review.approval_carryover import CarryOverRefused
+
+    passthrough_sandbox(monkeypatch)
+    repo, approved, base, head = carry_repo(tmp_path, generator=GENERATOR + EXTRA_WRITES[case])
+    monkeypatch.setenv("CARRY_EXTRA", "1")
+    comments = approved_lineage(tmp_path, approved)
+    with pytest.raises(CarryOverRefused, match="wrote outside the registered paths") as refused:
+        run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments)
+    assert refused.value.reason == "reproduction"
+
+
+@pytest.mark.skipif(not bwrap_usable(), reason="bubblewrap cannot create a sandbox on this host")
+def test_carry_over_sandbox_refuses_any_write_but_the_targets(monkeypatch, tmp_path):
+    from scripts.review.approval_carryover import CarryOverRefused
+
+    outside = tmp_path / "outside.txt"
+    writes = EXTRA + f"    Path({str(outside)!r}).write_text('escaped')\n"
+    repo, approved, base, head = carry_repo(tmp_path, generator=GENERATOR + writes)
+    monkeypatch.setenv("CARRY_EXTRA", "1")
+    comments = approved_lineage(tmp_path, approved)
+    with pytest.raises(CarryOverRefused, match="Read-only file system") as refused:
+        run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments)
+    assert refused.value.reason == "reproduction" and not outside.exists()
 
 
 @pytest.mark.parametrize(
