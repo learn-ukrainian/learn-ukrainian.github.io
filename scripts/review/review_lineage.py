@@ -24,6 +24,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.dispatcher.admission import review_typed
 from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
 from scripts.opsec.prepublish import normalize_repository
 from scripts.orchestration.integration_sweep import (
@@ -33,7 +34,7 @@ from scripts.orchestration.integration_sweep import (
     lookup_verdict,
     parse_marker,
 )
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, relocated_result_file
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.reviewer_resolver import resolve_family
@@ -54,13 +55,19 @@ class LineageRefused(recorder.RecordError):
 
 
 def _is_review_task(task: Mapping[str, Any]) -> bool:
-    return bool(
-        task.get("require_review_verdict")
-        or task.get("review_profile")
-        or task.get("review_mode")
-        or task.get("review_attempt")
-        or task.get("type") == "review"
-    )
+    """Whatever dispatch types as a review (``admission.review_typed``), plus legacy review markers.
+
+    An advisory decision (``advisory_role``) is not a review; its consumer checks it.
+    """
+    if task.get("advisory_role") is not None:
+        return False
+    return review_typed(dict(task)) or bool(task.get("review_mode") or task.get("type") == "review")
+
+
+def _review_branches(task: Mapping[str, Any]) -> set[Any]:
+    """The branch identities the recorder reads for this run (``record_cf_verdict._review_branch``)."""
+    fields = ("review_branch",) if task.get("schema_version") == 2 else ("review_branch", "worktree_branch")
+    return {task.get(field) for field in fields if task.get(field) is not None}
 
 
 @dataclass(frozen=True)
@@ -73,20 +80,28 @@ class ReviewRun:
 
 
 def _read_run(path: Path, record: Mapping[str, Any]) -> ReviewRun:
-    """Read one run's reply, refusing a reply its record's digest disowns."""
-    result = path.with_suffix(".result")
+    """Read one run's reply, refusing a reply its record's digest disowns.
+
+    The run is named by its recorded task id, which its published verdict
+    names; an archived record's file name carries an archive stamp, and its
+    reply sits beside it (``relocated_result_file``).
+    """
+    recorded = record.get("task_id")
+    task_id = recorded if isinstance(recorded, str) and recorded else path.stem
+    result_file = relocated_result_file(path, record.get("result_file"))
+    result = Path(result_file) if result_file else path.with_suffix(".result")
     try:
         raw = result.read_bytes() if result.exists() else None
     except OSError as exc:
-        raise LineageRefused(f"review task {path.stem} reply unreadable: {exc}") from None
+        raise LineageRefused(f"review task {task_id} reply unreadable: {exc}") from None
     expected = record.get("result_sha256")
     if raw is not None and expected is not None and hashlib.sha256(raw).hexdigest() != expected:
-        raise LineageRefused(f"review task {path.stem} reply does not match its recorded digest")
+        raise LineageRefused(f"review task {task_id} reply does not match its recorded digest")
     try:
         reply = raw.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n") if raw is not None else None
     except UnicodeDecodeError:
-        raise LineageRefused(f"review task {path.stem} reply is not UTF-8") from None
-    return ReviewRun(path.stem, record, reply)
+        raise LineageRefused(f"review task {task_id} reply is not UTF-8") from None
+    return ReviewRun(task_id, record, reply)
 
 
 def lineage_runs(task_root: Path, *, repository: str, number: int, branch: str) -> list[ReviewRun]:
@@ -111,7 +126,7 @@ def lineage_runs(task_root: Path, *, repository: str, number: int, branch: str) 
             record["repository"]
         ) != normalize_repository(repository):
             continue
-        if record.get("pr") == number or record.get("review_branch") == branch:
+        if record.get("pr") == number or branch in _review_branches(record):
             runs.append(_read_run(path, record))
     return runs
 

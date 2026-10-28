@@ -240,7 +240,7 @@ def _dispatch(args) -> int:
         raise host_admission.Refused(f"❌ {exc}", 2) from None
     host_admission.check_credit(agent, args.model)
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
-    advisory_fields.update(checks.check_advisory_role(args, args.model))
+    advisory_fields.update(checks.check_advisory_role(args, agent, args.model))
     force_reason = args.force_admission
     if force_reason is not None:
         force_reason = str(force_reason).strip()

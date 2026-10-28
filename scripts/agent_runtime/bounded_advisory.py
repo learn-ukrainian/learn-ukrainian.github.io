@@ -111,6 +111,8 @@ _CONTENT_LINGUIST_LANGUAGES = frozenset({"markdown", "mdx", "yaml", "json", "tex
 _LITERAL_EXTENSION_RE = re.compile(r"\.([A-Za-z0-9_-]+)$")
 _GIT_TIMEOUT_S = 60
 SEAL_FIELD = "advisory_seal"
+# Harnesses an advisory_roles decision runs on: each runs the model it records, so the seal names it.
+ADVISORY_AGENTS = frozenset({"codex", "claude"})
 
 # Typed refusal codes.
 ENVELOPE_REQUIRED = "BOUNDED_ENVELOPE_REQUIRED"
@@ -834,6 +836,15 @@ def load_sealed_result(
         raise AdvisoryRefused(
             TASK_WRONG_MODEL,
             f"advisory task {advisor_task_id!r} ran on {recorded_model!r}, not the advisor {model_id}",
+        )
+    runtime_model = record.get("resolved_model")
+    if runtime_model is not None and (
+        record.get("resolved_model_known") is not True or canonical_model_id(runtime_model) != model_id
+    ):
+        # A harness that reports its model at runtime (Cursor) decides the identity, not the requested model.
+        raise AdvisoryRefused(
+            TASK_WRONG_MODEL,
+            f"advisory task {advisor_task_id!r} attests runtime model {runtime_model!r}, not the advisor {model_id}",
         )
     if record.get("advisory_binding_sha256") != binding_sha256:
         raise AdvisoryRefused(

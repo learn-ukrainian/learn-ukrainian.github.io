@@ -3115,6 +3115,9 @@ def test_budget_extension_follows_the_non_author_advisor(monkeypatch, tmp_path):
         ("untyped-approve", r"\[approval\].*holds no ```budget-extension block"),
         ("wrong-role", r"\[approval\].*did not run as 'review_budget_extension'"),
         ("wrong-model", r"\[approval\].*not the advisor gpt-6.1-sol"),
+        # A runtime-reported model decides the identity, and only native harnesses advise (F1).
+        ("runtime-model", r"\[approval\].*attests runtime model 'grok-4.7-high'"),
+        ("cursor-harness", r"\[approval\].*ran on harness 'cursor', not a native one"),
         ("write-mode", r"\[approval\].*did not run read-only"),
         ("unsealed", r"\[approval\].*no finish-time advisory_seal"),
         ("edited-result", r"\[approval\].*result hashes to"),
@@ -3129,6 +3132,9 @@ def test_budget_extension_follows_the_non_author_advisor(monkeypatch, tmp_path):
         ("bad-request", r"\[request\].*grant must be 1"),
         ("no-advisor", r"\[approval\].*no single non-author designated advisor"),
         ("lineage", r"\[lineage\].*round-late finished but its verdict is unpublished"),
+        # Every review the dispatcher or the recorder recognizes is lineage, legacy branch identity included (F2).
+        ("legacy-branch-run", r"\[lineage\].*review task legacy-seat is not terminal"),
+        ("risk-typed-run", r"\[lineage\].*review task risk-seat is not terminal"),
         ("descent", r"\[descent\].*is not a two-parent merge"),
     ],
 )
@@ -3147,6 +3153,8 @@ def test_budget_extension_refuses(monkeypatch, tmp_path, case, reason):
         "untyped-approve": dict(text="VERDICT: APPROVE\n\nApproved: one more round for PR #42 at its approved head.\n"),
         "wrong-role": dict(advisory_role="bounded_advisory_envelope"),
         "wrong-model": dict(agent="claude", model="claude-opus-5-5"),
+        "runtime-model": dict(agent="cursor", resolved_model="grok-4.7-high", resolved_model_known=True),
+        "cursor-harness": dict(agent="cursor", resolved_model="gpt-6.1-sol", resolved_model_known=True),
         "write-mode": dict(mode="workspace-write"),
         "unsealed": dict(seal=False),
         "edited-result": dict(edited=True),
@@ -3164,6 +3172,27 @@ def test_budget_extension_refuses(monkeypatch, tmp_path, case, reason):
         write_extension_approval(tasks, request, task_id="ext-approval-retry")
     if case == "lineage":
         write_task(tasks, task_id="round-late", worktree_base_sha=request["approved_head"], pr=42, review_profile="code")
+    if case == "legacy-branch-run":
+        write_task(tasks, task_id="legacy-seat", worktree_base_sha=request["approved_head"], review_profile="code",
+                   status="running")
+    if case == "risk-typed-run":
+        write_task(tasks, task_id="risk-seat", worktree_base_sha=request["approved_head"], pr=42, review_risk="high",
+                   status="running", schema_version=2)
     with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_EXTENSION_REFUSED" + reason):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_budget_extension_reads_archived_lineage_runs_by_recorded_task_id(monkeypatch, tmp_path):
+    """An archived run keeps its published task id and its reply beside it (F2)."""
+    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path)
+    archive = tasks / recorder.ARCHIVE_DIR_NAME
+    archive.mkdir()
+    record = json.loads((tasks / "round-3.json").read_text())
+    record.update(task_id="round-3", result_file=str(tasks / "round-3.result"))
+    (archive / "round-3.20261028T120000Z.archived.json").write_text(json.dumps(record))
+    (tasks / "round-3.result").rename(archive / "round-3.result")
+    (tasks / "round-3.json").unlink()
+    write_extension_approval(tasks, request)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["budget_extension"]["seats"] == ["anthropic"] and calls["posts"] == 1

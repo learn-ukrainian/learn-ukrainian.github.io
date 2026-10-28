@@ -57,6 +57,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.agent_runtime.bounded_advisory import (
+    ADVISORY_AGENTS,
     AdvisoryRefused,
     canonical_sha256,
     fenced_object,
@@ -213,7 +214,8 @@ def _approval_records(task_root: Path, digest: str) -> list[tuple[str, Path, dic
         except (OSError, UnicodeDecodeError, ValueError) as exc:
             raise ExtensionRefused(APPROVAL, f"task record {path.name} unreadable: {exc}") from None
         if isinstance(record, dict) and record.get("advisory_binding_sha256") == digest:
-            found.append((path.stem, path, record))
+            task_id = record.get("task_id")
+            found.append((task_id if isinstance(task_id, str) and task_id else path.stem, path, record))
     return found
 
 
@@ -246,6 +248,11 @@ def check_approval(item: ExtensionRequest, *, task_root: Path, author_family: st
         sealed = load_sealed_result(
             task_id, state_path=path, role=policy.role, route=policy.route, model_id=advisor, binding_sha256=digest
         )
+        if sealed.record.get("agent") not in ADVISORY_AGENTS:
+            # Only a native harness runs the model it records (dispatcher ``check_advisory_role``).
+            raise ExtensionRefused(
+                APPROVAL, f"advisory task {task_id!r} ran on harness {sealed.record.get('agent')!r}, not a native one"
+            )
         decision = fenced_object(sealed.result_text, policy.fence)
         if set(decision) != set(policy.output_fields):
             raise ExtensionRefused(
