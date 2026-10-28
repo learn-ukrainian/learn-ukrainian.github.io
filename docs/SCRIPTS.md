@@ -1834,7 +1834,7 @@ Use `dispatch.py status-or-fail <task-id>` before reporting async task state fro
 content-addressed store in the primary checkout's `.git/dispatch-dep-store` (about 530 MB once, near zero per
 worktree), so no `npm ci` is needed there. The store key covers the lockfile, `package.json`, project `.npmrc`,
 local inputs, Node/npm versions, platform and the whole npm configuration; a miss installs once with `npm ci`
-in a staging directory and a controlled environment. Store files are read-only and hash-checked before every
+in a staging directory and a controlled environment (fixed locale and `PATH`, no ambient variables). Store files are read-only and hash-checked before every
 reuse, because hard links share one inode: do not edit package files in place (`chmod` and an edit changes them
 for every worktree holding that file). `npm ci` or `rm -r` in a worktree is safe. A failure never blocks the task, and
 `LEARN_UKRAINIAN_SITE_DEPS=off` skips the step. `.venv/bin/python -m scripts.dispatcher.site_deps

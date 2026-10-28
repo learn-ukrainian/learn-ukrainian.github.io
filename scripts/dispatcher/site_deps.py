@@ -41,15 +41,17 @@ INSTALL_INPUTS = ("package.json", "package-lock.json", ".npmrc")
 INSTALL_TIMEOUT = 900
 KEEP_TREES = 3
 # The install runs in a controlled environment, so ambient variables an install script might read
-# (a custom esbuild binary path, a compiler override) cannot change its bytes behind the key. These
-# only let node, npm and node-gyp run and reach the registry; they carry no install semantics.
-PASSTHROUGH_ENV = frozenset({
-    "PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "SSL_CERT_FILE", "SSL_CERT_DIR", "NODE_EXTRA_CA_CERTS",
-    "HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY", "http_proxy", "https_proxy", "no_proxy",
+# (a custom esbuild binary path, a locale, a compiler override) cannot change its bytes behind the key.
+# Everything the install sees is in the key; nothing is passed on unkeyed.
+SYSTEM_PATH = ("/usr/local/bin", "/usr/bin", "/bin")
+PASSED_ENV = frozenset({
+    "HOME", "SSL_CERT_FILE", "SSL_CERT_DIR", "NODE_EXTRA_CA_CERTS",
+    "HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY", "http_proxy", "https_proxy", "no_proxy", "NODE_OPTIONS",
 })
-# Everything else that is passed on decides what is installed, so it is part of the key.
-KEYED_ENV_PREFIX = "npm_config_"
-KEYED_ENV = frozenset({"NODE_OPTIONS"})
+NPM_CONFIG_PREFIX = "npm_config_"
+# Native modules build with these when no prebuilt binary exists, so their identity is part of the key.
+BUILD_TOOLS = ("python3", "make", "cc", "c++")
+SHIM_DIRS = (("scripts", "agent_runtime", "shims"), ("scripts", "dispatcher", "npm_shims"))
 # Tool caches npm scripts write under node_modules at run time; never part of an install.
 RUNTIME_CACHES = frozenset({".cache", ".vite", ".vite-temp", ".astro"})
 # Rewritten by npm itself, so it is copied rather than shared.
@@ -106,19 +108,38 @@ def _local_inputs(site: Path) -> dict[str, str]:
     return inputs
 
 
-def _keyed_env() -> dict[str, str]:
-    return {name: value for name, value in sorted(os.environ.items())
-            if name.lower().startswith(KEYED_ENV_PREFIX) or name in KEYED_ENV}
+def _tool_dirs() -> list[str]:
+    """Directories of the real node and npm, never a dispatch shim directory."""
+    search = os.environ.get("AGENT_ORIGINAL_PATH") or os.environ.get("PATH", os.defpath)
+    entries = [e for e in search.split(os.pathsep) if e and Path(e).resolve().parts[-3:] not in SHIM_DIRS]
+    found = (shutil.which(tool, path=os.pathsep.join(entries)) for tool in ("node", "npm"))
+    return [str(Path(binary).parent) for binary in found if binary]
 
 
 def _install_env() -> dict[str, str]:
-    """The only environment node and npm see: the passthrough names plus the variables the key covers."""
-    return {**{name: os.environ[name] for name in PASSTHROUGH_ENV if name in os.environ}, **_keyed_env()}
+    """The only environment node and npm see; the install key covers every value in it."""
+    env = {"PATH": os.pathsep.join(dict.fromkeys([*_tool_dirs(), *SYSTEM_PATH])), "LANG": "C.UTF-8"}
+    env.update({name: os.environ[name] for name in sorted(os.environ)
+                if name in PASSED_ENV or name.lower().startswith(NPM_CONFIG_PREFIX)})
+    return env
+
+
+def _toolchain(env: dict[str, str]) -> dict:
+    tools = {}
+    for tool in BUILD_TOOLS:
+        binary = shutil.which(tool, path=env["PATH"])
+        try:
+            banner = subprocess.run([binary, "--version"], capture_output=True, text=True, timeout=10,
+                                    env=env).stdout.splitlines()[:1] if binary else []
+        except (OSError, subprocess.SubprocessError):
+            banner = []
+        tools[tool] = [str(Path(binary).resolve()), *banner] if binary else None
+    return tools
 
 
 def _run(argv, cwd, **kwargs) -> subprocess.CompletedProcess:
     return subprocess.run(argv, cwd=cwd, check=True, capture_output=True, text=True, timeout=kwargs.pop("timeout", 60),
-                          env=_install_env(), **kwargs)
+                          env=kwargs.pop("env", None) or _install_env(), **kwargs)
 
 
 def _runtime(site: Path) -> dict:
@@ -136,12 +157,14 @@ def _digest(value) -> str:
 
 def install_key(site: Path) -> tuple[str, dict]:
     """The key and the human-readable facts it covers; any change to them is a different install."""
+    env = _install_env()
     facts = {
         "layout": LAYOUT,
         "runtime": _runtime(site),
         # Digests only: user npm configuration can hold registry credentials, and facts are stored.
         "npm_config": _digest(json.loads(_run(["npm", "config", "ls", "-l", "--json"], site).stdout)),
-        "env": {name: _digest(value) for name, value in _keyed_env().items()},
+        "env": {name: _digest(value) for name, value in env.items()},
+        "toolchain": _toolchain(env),
         "inputs": {name: _sha256(site / name) for name in INSTALL_INPUTS if (site / name).is_file()},
         "local": _local_inputs(site),
     }
@@ -158,6 +181,15 @@ def _locked(path: Path, mode: int):
 
 def _blob(store: Path, name: str) -> Path:
     return store / "blobs" / name[:2] / name
+
+
+def _intact(blob: Path, name: str) -> bool:
+    """True when the store file has the content and the read-only mode its name promises."""
+    try:
+        mode = stat.S_IMODE(blob.stat().st_mode)
+        return mode == (0o555 if name.endswith("x") else 0o444) and _sha256(blob) == name[:64]
+    except OSError:
+        return False
 
 
 def _ingest(store: Path, modules: Path) -> dict:
@@ -189,21 +221,23 @@ def _ingest(store: Path, modules: Path) -> dict:
                 executable = bool(info.st_mode & stat.S_IXUSR)
                 digest = _sha256(path) + ("x" if executable else "")
                 entries.append(["c" if top and name in COPIED else "f", rel, digest])
-                _keep(store, path, digest, executable, info.st_size)
+                _keep(store, path, digest, executable)
             else:
                 raise NotCacheable(f"{rel} is neither a file, directory nor link")
     return {"entries": entries}
 
 
-def _keep(store: Path, path: Path, digest: str, executable: bool, size: int) -> None:
+def _keep(store: Path, path: Path, digest: str, executable: bool) -> None:
     blob = _blob(store, digest)
     blob.parent.mkdir(parents=True, exist_ok=True)
     path.chmod(0o555 if executable else 0o444)
     try:
         os.link(path, blob)
     except FileExistsError:
-        if blob.stat().st_size != size:
-            raise NotCacheable(f"store entry {digest} does not match the installed file") from None
+        if not _intact(blob, digest):
+            # Altered since it was stored: other worktrees keep the old inode, this tree gets a fresh one.
+            blob.unlink()
+            os.link(path, blob)
 
 
 def _write_manifest(store: Path, key: str, facts: dict, tree: dict) -> None:
@@ -255,13 +289,8 @@ def _altered(store: Path, manifest: Path) -> list[Path] | None:
     altered = []
     for name in sorted({e[2] for e in json.loads(manifest.read_text(encoding="utf-8"))["entries"]
                         if e[0] in ("f", "c")}):
-        blob = _blob(store, name)
-        try:
-            intact = _sha256(blob) == name[:64]
-        except OSError:
-            intact = False
-        if not intact:
-            altered.append(blob)
+        if not _intact(_blob(store, name), name):
+            altered.append(_blob(store, name))
     return altered or None
 
 

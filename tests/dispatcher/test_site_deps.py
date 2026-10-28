@@ -134,6 +134,51 @@ def test_ambient_variables_never_reach_the_install(tmp_path, repo, monkeypatch):
     assert site_deps.install_key(repo / "site")[0] == base
 
 
+def test_everything_the_install_sees_is_in_the_key(tmp_path, repo, monkeypatch):
+    site = repo / "site"
+    base = site_deps.install_key(site)[0]
+    # Variables that would otherwise reach install scripts are replaced by fixed values.
+    monkeypatch.setenv("LANG", "C")
+    monkeypatch.setenv("LC_ALL", "C")
+    monkeypatch.setenv("TMPDIR", str(tmp_path / "other-tmp"))
+    monkeypatch.setenv("PATH", f"{tmp_path / 'unrelated'}{os.pathsep}{os.environ['PATH']}")
+    env = site_deps._install_env()
+    assert env["LANG"] == "C.UTF-8" and not {"LC_ALL", "TMPDIR"} & env.keys()
+    assert str(tmp_path / "unrelated") not in env["PATH"]
+    assert site_deps.install_key(site)[0] == base
+    # What is passed on, and the build tools the install would use, change the key.
+    monkeypatch.setenv("HTTPS_PROXY", "http://proxy.invalid:3128")
+    assert site_deps.install_key(site)[0] != base
+    monkeypatch.delenv("HTTPS_PROXY")
+    monkeypatch.setenv("HOME", str(tmp_path / "other-home"))
+    assert site_deps.install_key(site)[0] != base
+    monkeypatch.undo()
+    monkeypatch.setattr(site_deps, "_toolchain", lambda _env: {"cc": ["/usr/bin/cc", "another compiler"]})
+    assert site_deps.install_key(site)[0] != base
+
+
+def test_store_file_with_a_changed_mode_is_replaced(tmp_path, repo):
+    first, second = worktree(tmp_path, repo, "a"), worktree(tmp_path, repo, "b")
+    site_deps.ensure(repo, first)
+    shared = first / "site/node_modules/localdep/index.js"
+    shared.chmod(0o755)
+    site_deps.ensure(repo, second)
+    fresh = (second / "site/node_modules/localdep/index.js").stat()
+    assert stat.S_IMODE(fresh.st_mode) == 0o444 and fresh.st_ino != shared.stat().st_ino
+
+
+def test_altered_store_file_is_not_reused_by_a_new_key(tmp_path, repo):
+    first, second = worktree(tmp_path, repo, "a"), worktree(tmp_path, repo, "b")
+    site_deps.ensure(repo, first)
+    shared = first / "site/node_modules/localdep/index.js"
+    shared.chmod(0o644)
+    shared.write_text("module.exports = 'two'\n")  # same size as the original
+    package = json.loads((second / "site/package.json").read_text())
+    (second / "site/package.json").write_text(json.dumps({**package, "description": "second key"}))
+    assert site_deps.ensure(repo, second)["state"] == "installed"
+    assert (second / "site/node_modules/localdep/index.js").read_text() == "module.exports = 'one'\n"
+
+
 def test_store_file_edited_in_place_never_reaches_a_new_worktree(tmp_path, repo):
     first, second = worktree(tmp_path, repo, "a"), worktree(tmp_path, repo, "b")
     site_deps.ensure(repo, first)
