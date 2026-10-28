@@ -8,7 +8,7 @@ below. The retired backup and retention timers must remain disabled.
 
 ## Dispatch worker slice (`lu-dispatch.slice`)
 
-One slice for every detached worker `scripts/delegate.py` launches (#8645). The
+One slice for every detached worker `scripts/dispatch.py` launches (#8645). The
 driver stays outside it. A runaway worker is killed inside the slice; the driver
 and the host services are not in that cgroup.
 
@@ -136,7 +136,7 @@ runner, and orchestrator hosts).
 - **Frequency**: Every 5 minutes (`OnBootSec=2min`, `OnUnitActiveSec=5min`, `AccuracySec=30s`), so a worker killed by the OOM killer or SIGKILL stops reading `running` within one interval (#8645). Dispatch admission also sweeps dead pids before it counts write workers.
 - **What it does**: Runs `scripts/orchestration/reconcile_sweep.py --apply` which:
   1. Releases write-ownership claims for inactive tasks via `dispatch_settle release-stale` (the same reconciliation every dispatch runs at admission).
-  2. Marks running/spawning task records whose pid is dead as `crashed` via the existing lazy heal path (`scripts/delegate.py status`). The mark re-checks status, pid, run nonce and liveness under the task's writer lock, so it cannot overwrite a worker's own terminal write; a pid owned by another user, or reused, counts as alive.
+  2. Marks running/spawning task records whose pid is dead as `crashed` via the existing lazy heal path (`scripts/dispatch.py list`). The mark re-checks status, pid, run nonce and liveness under the task's writer lock, so it cannot overwrite a worker's own terminal write; a pid owned by another user, or reused, counts as alive.
   3. Logs a one-line summary count (`scanned_tasks`, `zombies_crashed`, `stale_claims_released`) to stdout/journal.
 - **Default mode**: Apply. Run `.venv/bin/python -m scripts.orchestration.reconcile_sweep` by hand (no `--apply`) for a report-only dry run. To make the timer report-only, drop `--apply` from `~/.config/systemd/user/learn-ukrainian-reconcile.service`.
 - **Enable or update** (the unit files are templates; install them with `@REPO_ROOT@` replaced):

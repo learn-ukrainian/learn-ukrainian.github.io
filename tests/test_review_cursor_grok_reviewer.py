@@ -1,4 +1,4 @@
-"""Native and Cursor Grok admission, independence and attestation (#9769)."""
+"""Cursor Grok admission, independence and attestation (#9769)."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ from tests.claude_route_accounts import HOST_ACCOUNT
 
 GROK_SEAT = "grok-4.7-cursor-fallback"
 GROK_PIN = "grok-4.7-high"
-GROK_SEATS = ("grok-4.7", GROK_SEAT)
+GROK_SEATS = (GROK_SEAT,)
 RISKS = ("critical", "high", "medium", "low")
 AUTHORS = ("claude-opus-5-5", "gpt-6.1-sol", "grok-4.7", "cursor:auto")
 SOL_STATES = {"healthy": None, "unavailable": {"codex": "unhealthy"}}
@@ -30,11 +30,9 @@ SOL_STATES = {"healthy": None, "unavailable": {"codex": "unhealthy"}}
 @pytest.mark.parametrize("profile", ["code", "infra"])
 @pytest.mark.parametrize("risk", RISKS)
 @pytest.mark.parametrize("author", ["claude-opus-5-5", "gpt-6.1-sol", "grok-4.7", "composer-2.5", "cursor:auto"])
-@pytest.mark.parametrize("health", ["healthy", "native_dark", "both_dark"])
+@pytest.mark.parametrize("health", ["healthy", "cursor_dark"])
 def test_denominator_admission_and_independence(profile, risk, author, health):
-    snapshot = {"grok": "unhealthy"} if health != "healthy" else {}
-    if health == "both_dark":
-        snapshot["cursor"] = "unhealthy"
+    snapshot = {"cursor": "unhealthy"} if health == "cursor_dark" else {}
     inputs = ResolverInputs(author_model=author, risk=risk, review_profile=profile, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT)
     resolution = resolve_reviewer(inputs)
     assert resolution.selected is not None
@@ -47,9 +45,7 @@ def test_denominator_admission_and_independence(profile, risk, author, health):
         assert resolution.selected.family != "openai"
     for name in GROK_SEATS:
         result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        excluded = author == "grok-4.7" or (author in {"composer-2.5", "cursor:auto"} and name == GROK_SEAT) or health == "both_dark" or (
-            name == "grok-4.7" and health == "native_dark"
-        )
+        excluded = author == "grok-4.7" or (author in {"composer-2.5", "cursor:auto"} and name == GROK_SEAT) or health == "cursor_dark"
         assert result.status == ("excluded" if excluded else "eligible")
         if author == "grok-4.7":
             assert "same family as author" in result.reason or "union" in result.reason
@@ -63,21 +59,17 @@ def test_denominator_admission_and_independence(profile, risk, author, health):
 
 
 @pytest.mark.parametrize("risk", RISKS)
-@pytest.mark.parametrize("native_dark", [False, True])
-def test_grok_transport_fallback_when_opus_unavailable(risk, native_dark):
+def test_cursor_grok_fallback_when_opus_unavailable(risk):
     # Isolate the Grok fallback: AGY precedes it at low/medium risk (#10073).
     snapshot = {"claude": "unhealthy", "agy": "unhealthy"}
-    if native_dark:
-        snapshot["grok"] = "unhealthy"
     result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
-    assert result.selected.name in ({GROK_SEAT} if native_dark else set(GROK_SEATS))
-    assert evaluate_candidate(REVIEW_CANDIDATES["grok-4.7"], ResolverInputs(author_model="gpt-6.1-sol", risk=risk, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT)).status == ("excluded" if native_dark else "eligible")
+    assert result.selected.name == GROK_SEAT
     assert result.selected.family == "xai"
 
 
 @pytest.mark.parametrize("risk", RISKS)
 @pytest.mark.parametrize("subject", [{"subject_seats": ("grok",)}, {"subject_seats": ("cursor",)}, {"subject_families": ("xai",)}])
-def test_both_grok_transports_refuse_subject_seats_and_families(risk, subject):
+def test_cursor_grok_refuses_subject_seats_and_families(risk, subject):
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, **subject, claude_account=HOST_ACCOUNT)
     result = resolve_reviewer(inputs)
     assert result.selected.family != "xai"
@@ -104,15 +96,14 @@ def test_pins_and_custom_ladders_admit_grok(profile, risk, name):
     assert custom.selected.name == name
 
 
-@pytest.mark.parametrize("native_dark", [False, True])
-def test_closeout_cli_selects_grok_transport_with_a_durable_receipt(tmp_path, capsys, native_dark):
+def test_closeout_cli_selects_cursor_grok_with_a_durable_receipt(tmp_path, capsys):
     snapshot = tmp_path / "routing.json"
-    snapshot.write_text(json.dumps({"claude": "unhealthy", "grok": "unhealthy" if native_dark else "healthy"}))
+    snapshot.write_text(json.dumps({"claude": "unhealthy"}))
     state = tmp_path / "state.json"
     code = closeout_cli.main(["--state-file", str(state), "resolve-reviewer", "--author-model", "gpt-6.1-sol", "--review-profile", "code", "--owned-path", "site/src/app.ts", "--risk", "critical", "--routing-snapshot-file", str(snapshot)])
     payload = json.loads(capsys.readouterr().out)
     assert code == 0
-    assert payload["selected"]["name"] in ({GROK_SEAT} if native_dark else set(GROK_SEATS))
+    assert payload["selected"]["name"] == GROK_SEAT
     assert json.loads(state.read_text())["resolved_reviewer"]["selected"] == payload["selected"]
 
 
@@ -121,11 +112,11 @@ def _catalog():
 
 
 @pytest.mark.parametrize("risk", RISKS)
-def test_catalog_admits_both_transports_directly_after_opus(risk):
+def test_catalog_admits_cursor_grok_directly_after_opus(risk):
     catalog = load_model_catalog()
     ladder = [name for rung in catalog["review_ladders"][risk] for name in rung]
     opus = ladder.index("claude-opus-5-5")
-    assert ladder[opus + 1:opus + 3] == list(GROK_SEATS)
+    assert ladder[opus + 1:opus + 2] == list(GROK_SEATS)
     for name in GROK_SEATS:
         candidate = catalog["review_candidates"][name]
         assert candidate.get("last_resort", False) is False
@@ -318,13 +309,8 @@ def test_requested_roles_preserve_author_independence_at_critical(role):
     for author in ("grok-4.7", "cursor:auto"):
         for name in GROK_SEATS:
             result = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", requested_role=role, pinned_candidate=name, pressure_override_reason="self-review probe", claude_account=HOST_ACCOUNT))
-            excluded = author == "grok-4.7" or name == GROK_SEAT or role not in REVIEW_CANDIDATES[name].model_roles
-            if excluded:
-                assert result.selected is None
-                assert next(entry for entry in result.trace if entry.name == name).status == "excluded"
-            else:
-                assert result.selected.name == "grok-4.7"
-                assert result.selected.family == "xai"
+            assert result.selected is None
+            assert next(entry for entry in result.trace if entry.name == name).status == "excluded"
 
 
 @pytest.mark.parametrize("role", _all_catalog_roles())

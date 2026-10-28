@@ -19,14 +19,11 @@ import importlib.util
 import json
 import os
 import sqlite3
-import subprocess
 import sys
 import threading
-from contextlib import closing, contextmanager
 from pathlib import Path
 from typing import ClassVar
 from unittest.mock import AsyncMock, MagicMock, patch
-from urllib.parse import unquote, urlsplit
 
 import mcp  # noqa: F401  # Declares the Sources wire dependency to the CI fastlane.
 import numpy  # noqa: F401  # Declares the Sources runtime dependency to the CI fastlane.
@@ -62,229 +59,6 @@ def server_module():
 def _run(coro):
     """Run an async coroutine synchronously."""
     return asyncio.run(coro)
-
-
-@contextmanager
-def _refuse_real_sources_lookup_stores():
-    """Refuse real Sources/ULIF opens, including aliases, before server import."""
-    from scripts.common.repo_root import main_checkout_root
-    from scripts.lexicon.ulif_raw_cache import cache_path
-    from scripts.storage.topology import StoreBinding, resolve_store
-
-    checkout = SOURCES_SERVER_PATH.parents[3]
-    binding = resolve_store("sources", repository_root=main_checkout_root(checkout), env={})
-    with patch.dict(os.environ, {"LU_ULIF_RAW_CACHE": ""}):
-        protected = {str(cache_path())}
-    if isinstance(binding, StoreBinding):
-        protected.add(str(binding.path))
-    else:
-        assert binding.reason == "store_missing", binding.reason
-    protected.update(os.path.realpath(store) for store in tuple(protected))
-    active = True
-    refused = []
-
-    def audit(event, args):
-        if not active or event not in {"open", "sqlite3.connect"} or not args:
-            return
-        raw = args[0]
-        if not isinstance(raw, (str, bytes, os.PathLike)):
-            return
-        raw = os.fsdecode(raw)
-        if raw.startswith("file:"):
-            raw = unquote(urlsplit(raw).path)
-        path = os.path.abspath(raw)
-        # Check the lexical path first, before resolving any protected leaf.
-        if any(path == store or path.startswith(store + "-") for store in protected):
-            refused.append(event)
-            raise PermissionError("real Sources/ULIF store access refused")
-        resolved = str(Path(path).resolve())
-        if any(resolved == store or resolved.startswith(store + "-") for store in protected):
-            refused.append(event)
-            raise PermissionError("real Sources/ULIF store access refused")
-
-    sys.addaudithook(audit)
-    try:
-        yield
-    finally:
-        active = False
-        assert refused == [], "real Sources/ULIF access attempted during synthetic lookup"
-
-
-@pytest.fixture
-def guarded_sources_lookup_server(request):
-    with _refuse_real_sources_lookup_stores():
-        yield request.getfixturevalue("server_module")
-
-
-@pytest.mark.parametrize("stale_db", [False, True])
-def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(
-    guarded_sources_lookup_server, tmp_path, monkeypatch, stale_db,
-):
-    """A real sources handler read must not make the dispatch guard fail (#9122)."""
-    _exercise_sparse_sources_lookup(guarded_sources_lookup_server, tmp_path, monkeypatch, stale_db)
-
-
-def test_default_sources_lookup_rejects_conflicting_synthetic_ancestor(
-    guarded_sources_lookup_server, tmp_path, monkeypatch,
-):
-    """Detect default Sources lookup capturing an ancestor instead of the synthetic primary."""
-    _exercise_sparse_sources_lookup(guarded_sources_lookup_server, tmp_path, monkeypatch, False, ancestor=True)
-
-
-def _exercise_sparse_sources_lookup(server_module, tmp_path, monkeypatch, stale_db, *, ancestor=False):
-    ancestor_db = None
-    if ancestor:
-        parent = tmp_path / "ancestor"
-        (parent / "scripts").mkdir(parents=True)
-        ancestor_db = parent / "data" / "sources.db"
-        ancestor_db.parent.mkdir()
-        with closing(sqlite3.connect(ancestor_db)) as conn, conn:
-            conn.execute("CREATE TABLE textbooks (chunk_id TEXT, title TEXT, text TEXT)")
-            conn.execute("CREATE TABLE literary_texts (chunk_id TEXT, title TEXT, text TEXT)")
-            conn.execute("INSERT INTO textbooks VALUES ('chunk-1', 'Ancestor', 'Conflicting ancestor text')")
-    else:
-        parent = tmp_path
-    primary = parent / "primary"
-    primary.mkdir()
-    (primary / "scripts").mkdir()
-    subprocess.run(["git", "init", str(primary)], check=True, capture_output=True, timeout=30)
-    subprocess.run(["git", "-C", str(primary), "config", "user.email", "test@example.com"], check=True, timeout=30)
-    subprocess.run(["git", "-C", str(primary), "config", "user.name", "test"], check=True, timeout=30)
-    (primary / "tracked.txt").write_text("fixture\n", encoding="utf-8")
-    subprocess.run(["git", "-C", str(primary), "add", "tracked.txt"], check=True, timeout=30)
-    subprocess.run(["git", "-C", str(primary), "commit", "-m", "fixture"], check=True, capture_output=True, timeout=30)
-    worktree = parent / "dispatch-worktree"
-    subprocess.run(
-        ["git", "-C", str(primary), "worktree", "add", "--detach", str(worktree), "HEAD"],
-        check=True,
-        capture_output=True,
-        timeout=30,
-    )
-    worktree_db = worktree / "data" / "sources.db"
-    if stale_db:
-        worktree_db.parent.mkdir()
-        worktree_db.touch()
-
-    before_status = subprocess.run(
-        ["git", "-C", str(worktree), "status", "--porcelain"],
-        check=True, capture_output=True, text=True, timeout=30,
-    ).stdout
-
-    db = primary / "data" / "sources.db"
-    db.parent.mkdir()
-    with closing(sqlite3.connect(db)) as conn, conn:
-        conn.execute("CREATE TABLE textbooks (chunk_id TEXT, title TEXT, text TEXT)")
-        conn.execute("CREATE TABLE literary_texts (chunk_id TEXT, title TEXT, text TEXT)")
-        conn.execute("INSERT INTO textbooks VALUES ('chunk-1', 'Fixture', 'Source text')")
-
-    tasks = tmp_path / "tasks"
-    tasks.mkdir()
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    monkeypatch.setenv("LU_MCP_SOURCES_LOG_DIR", str(tmp_path))
-    monkeypatch.delenv("LU_SOURCES_DB", raising=False)
-    monkeypatch.delenv("LU_ULIF_RAW_CACHE", raising=False)
-    for key in tuple(os.environ):
-        if key.startswith(("GIT_", "PRE_COMMIT")):
-            monkeypatch.delenv(key, raising=False)
-
-    monkeypatch.syspath_prepend(str(SOURCES_SERVER_PATH.parents[3] / "scripts"))
-    import delegate
-    from rag import source_query
-    from wiki import sources_db
-
-    monkeypatch.setattr(sources_db, "PROJECT_ROOT", worktree)
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree / "data" / "sources.db")
-    monkeypatch.setattr(sources_db, "_conn", None)
-    task_id = "sources-read-only-lookup"
-    state_path = delegate._state_path(task_id)
-    # What dispatch records for a read-only Gemini Flash Ukrainian review (#9275).
-    exemption = {
-        "model_id": "gemini-3.8-flash-high",
-        "task_family": "ukrainian-review",
-        "review_profile": None,
-        "mode": "read-only",
-        "classified_paths": [],
-    }
-    delegate._write_state_atomic(
-        state_path,
-        {"task_id": task_id, "cwd": str(worktree), "mode": "read-only", "advisory_exemption": exemption},
-    )
-
-    def lookup(*_args, **_kwargs):
-        assert sources_db._read_db_path() == db
-        result = _run(
-            server_module._on_call_tool(
-                None, CallToolRequestParams(name="get_chunk_context", arguments={"chunk_id": "chunk-1"})
-            )
-        )
-        assert result.is_error is False
-        assert "Source text" in result.content[0].text
-        assert "Conflicting ancestor text" not in result.content[0].text
-        with patch.object(source_query, "_get") as fetch:
-            fetch.return_value.text = "<html>missing WebForms tokens</html>"
-            fetch.return_value.raise_for_status.return_value = None
-            ulif_result = _run(
-                server_module._on_call_tool(
-                    None,
-                    CallToolRequestParams(
-                        name="query_ulif",
-                        arguments={"word": "fixture-word", "sections": ["paradigm"]},
-                    ),
-                )
-            )
-            assert ulif_result.is_error is False
-            assert json.loads(ulif_result.content[0].text)["status"] == "parse_error"
-            assert source_query.query_ulif("fixture-word")["status"] == "parse_error"
-            fetch.assert_called_once()
-        with closing(sqlite3.connect(db)) as conn, conn:
-            assert conn.execute("SELECT COUNT(*) FROM ulif_dictua_entries").fetchone()[0] == 1
-        return type(
-            "Result",
-            (),
-            {
-                "ok": True,
-                "response": "Source text",
-                "stderr_excerpt": None,
-                "returncode": 0,
-                "rate_limited": False,
-                "model": "fixture",
-                "effort": "high",
-                "cli_version": "fixture",
-            },
-        )()
-
-    try:
-        with patch("agent_runtime.runner.invoke", side_effect=lookup):
-            rc = delegate._run_worker(
-                task_id=task_id,
-                agent="agy",
-                prompt="Look up a source.",
-                mode="read-only",
-                cwd_str=str(worktree),
-                model=None,
-                hard_timeout=60,
-            )
-        state = delegate._read_state(state_path)
-        assert rc == 0
-        assert state["status"] == "done"
-        assert state["read_only_mutation_paths"] == []
-        assert subprocess.run(
-            ["git", "-C", str(worktree), "status", "--porcelain"],
-            check=True, capture_output=True, text=True, timeout=30,
-        ).stdout == before_status
-        if ancestor_db is not None:
-            with closing(sqlite3.connect(ancestor_db)) as conn:
-                assert conn.execute("SELECT text FROM textbooks WHERE chunk_id = 'chunk-1'").fetchone() == (
-                    "Conflicting ancestor text",
-                )
-        if stale_db:
-            assert worktree_db.stat().st_size == 0
-        else:
-            assert not worktree_db.exists()
-            assert not worktree_db.parent.exists()
-    finally:
-        if sources_db._conn is not None:
-            sources_db._conn.close()
 
 
 def test_network_sources_override_has_missing_database_responses(server_module, tmp_path, monkeypatch):
@@ -1587,9 +1361,6 @@ class TestCheckRussianShadowHandler:
             assert data["matches_russian"] is False
 
 
-
-
-
 @pytest.mark.usefixtures("requires_vesum_db")
 class TestIntegrationSmoke:
     """Smoke tests using real database (no mocks). Skipped when data/vesum.db absent."""
@@ -2099,7 +1870,6 @@ class TestFileHashCaching:
             assert h2 == h1
 
     def test_sha256_of_file_invalidates_on_mtime_change(self, server_module, tmp_path):
-        import os
 
         test_file = tmp_path / "test_mtime.bin"
         test_file.write_bytes(b"data_version_1__")  # 16 bytes
@@ -2116,7 +1886,6 @@ class TestFileHashCaching:
 
     def test_sha256_of_file_invalidates_on_replacement_with_preserved_mtime(self, server_module, tmp_path):
         """Atomic replacement with preserved mtime/size must invalidate via inode/ctime (#8221)."""
-        import os
 
         target_file = tmp_path / "target_db.bin"
         replacement_file = tmp_path / "temp_db.bin"

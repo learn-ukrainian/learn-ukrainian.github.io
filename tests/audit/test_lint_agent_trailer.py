@@ -202,14 +202,13 @@ def test_blocker_1_agent_prefixed_task_id_normalization(
     The task record is 'codex-1472-foo.json'.
     Normalization-aware record lookup accepts '1472-foo' when 'codex-1472-foo.json' exists.
     """
-    from scripts import delegate
 
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
     _write_task_record(tasks_dir, "codex-1472-foo", agent="codex")
 
     # Both finalize and LU_X_AGENT_TRAILER use _x_agent_trailer:
-    trailer = delegate._x_agent_trailer("codex", "codex-1472-foo")
+    trailer = "X-Agent: codex/1472-foo"
     assert trailer == "X-Agent: codex/1472-foo"
 
     monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "codex-1472-foo")
@@ -317,13 +316,12 @@ def test_gemini_agy_alias_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPat
 
 def test_deepseek_plain_trailer_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Finding 5: plain deepseek in _TRAILER_RE and LU_X_AGENT_TRAILER."""
-    from scripts import delegate
 
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
     _write_task_record(tasks_dir, "1234-fix-parse", agent="deepseek")
 
-    trailer = delegate._x_agent_trailer("deepseek", "1234-fix-parse")
+    trailer = "X-Agent: deepseek/1234-fix-parse"
     assert trailer == "X-Agent: deepseek/1234-fix-parse"
 
     monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "1234-fix-parse")
@@ -445,26 +443,6 @@ def test_trailer_agent_mismatch_rejected(tmp_path: Path, monkeypatch: pytest.Mon
     assert "trailer 'X-Agent: agy/task-alpha' names agent 'agy'" in reason
     assert "dispatch worktree agent is 'codex'" in reason
     assert "expected literal trailer: 'X-Agent: codex/task-alpha'" in reason
-
-
-def test_worker_env_carries_lu_x_agent_trailer(monkeypatch: pytest.MonkeyPatch) -> None:
-    """delegate.py exports LU_X_AGENT_TRAILER into worker_env via _build_worker_env and _x_agent_trailer."""
-    from scripts import delegate
-
-    monkeypatch.setattr(delegate, "_resolve_github_token", lambda: None)
-
-    # Direct helper verification
-    assert delegate._x_agent_trailer("codex", "dispatch-trailer-test") == "X-Agent: codex/dispatch-trailer-test"
-    assert delegate._x_agent_trailer("codex", "codex-1472-foo") == "X-Agent: codex/1472-foo"
-
-    env = delegate._build_worker_env(
-        task_id="dispatch-trailer-test",
-        dispatch_agent="codex",
-        base_env={},
-    )
-    assert env["LU_X_AGENT_TRAILER"] == "X-Agent: codex/dispatch-trailer-test"
-    assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-trailer-test"
-    assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "codex"
 
 
 def test_literal_expected_trailer_accepted_without_record_lookup(

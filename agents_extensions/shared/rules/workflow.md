@@ -60,7 +60,7 @@ Run Python with the task's prescribed project interpreter.
 
 ### Project Research Registry — orchestrator dispatch duty
 
-Cold-start awareness is not enough. Before **every** `delegate.py dispatch`, the
+Cold-start awareness is not enough. Before **every** `dispatch.py dispatch`, the
 accountable orchestrator must classify the task from its issue/brief and record
 one of these outcomes in the brief or orchestration note:
 
@@ -78,32 +78,28 @@ one of these outcomes in the brief or orchestration note:
 Example scoped dispatch fragment:
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+.venv/bin/python scripts/dispatch.py dispatch --model <catalog-model> \
   --agent codex --task-id quality-4952 \
   --prompt-file docs/dispatch-briefs/quality-4952.md --worktree \
-  --mode danger \
+  --mode workspace-write \
   --research-role quality \
   --research-task-family difficulty-gate \
   --research-track core \
   --research-owned-path scripts/audit/text_difficulty.py
 ```
 
-The injected block contains pointers only. A worker that relies on a record must
-fetch it while the task is active with
-`GET /api/knowledge/record/{id}?task=<task-id>`. A surfaced pointer is not proof
-of consumption: do not claim research was used without attributed fetch evidence,
-and do not fetch an irrelevant record merely to manufacture adoption. Before
-final disposition, the orchestrator checks the task's consumption evidence and
-the privacy-safe aggregate `/api/knowledge/monitor`; any relevant surfaced but
-unconsumed pointer must be explained, not silently counted as adopted.
+Dispatch v2 records research metadata but does not inject registry pointers.
+Put relevant locators in the brief. A worker that relies on a record fetches it
+while active with `GET /api/knowledge/record/{id}?task=<task-id>`. A surfaced
+pointer is not proof of consumption; verify attributed fetch evidence before
+final disposition. Do not fetch irrelevant records to manufacture adoption.
 
-Classification is mandatory; delivery remains fail-open. A disabled or degraded
-registry must not block the delegated task, and it does not justify fabricating
-context or weakening the generic pointer-free contract.
+Classification remains mandatory. Missing registry data is unknown, and does
+not justify fabricating pointers or claiming their delivery.
 
 ### Dispatch brief unit (binding — #5737)
 
-Every `delegate.py dispatch` `--prompt-file` (and equivalent inline prompt) must name
+Every `dispatch.py dispatch` `--prompt-file` (and equivalent inline prompt) must name
 **one shippable unit** and its **acceptance criteria** — not an open-ended objective.
 
 - **Shippable unit: one user-visible outcome, delivered whole, in one PR** (owned paths +
@@ -122,7 +118,7 @@ Every `delegate.py dispatch` `--prompt-file` (and equivalent inline prompt) must
   pattern (~30 micro-PRs through one afternoon). Complete briefs are mandatory for
   that lane; the same unit rule applies to every worker lane.
 - Companion invocation notes: `docs/SCRIPTS.md` § Delegate to background workers;
-  worktree wording: `delegate-must-use-worktree.md`.
+  worktree wording: `dispatch-must-use-worktree.md`.
 
 ### Pre-dispatch outcome adequacy gate
 
@@ -165,29 +161,16 @@ the separate challenge proof and `confirm-started` can unlock cleanup.
 
 ### Review dispatch admission
 
-A `delegate.py dispatch` call is review-typed when it passes any of
-`--require-review-verdict`, `--review-attempt`, `--review-profile`,
-`--review-author-model` or `--review-risk`; every review-typed call passes
-reviewer admission (#9538). For these calls, `--review-author-model` and
-`--review-risk` provide trusted inputs to the code reviewer resolver (code
-profile only). An eligible requested reviewer is retained; necessary admission
-or budget substitutions use the resolver and emit a typed identity-change note.
-Without both inputs, no budget substitution occurs. Ukrainian reviews use
-`--review-profile ukrainian` without these code resolver flags. Existing
-`--review-attempt` identities never change. `--pinned-head` requires `--branch`
-or `--pr` and is checked against the fetched and reused heads before launch.
-`--subject-seat` and `--subject-family` are validated for every dispatch;
-reviewer admission applies them to code and Ukrainian profiles alike. Write
-dispatches use them for authoring review admission without becoming review-typed.
-Other non-review read-only calls refuse these flags instead of ignoring them.
-Review substitutes need no usage snapshot. Usage, pace, near-cap state and usage
-forecasts never exclude direct or substituted review seats. Operational causes
-and the bound-account Claude weekly cap still exclude them.
-A review-typed brief (other than a formal `--review-attempt` prompt) with no
-Markdown heading naming its dispositions is still dispatched, with the typed
-warning `review_brief_no_dispositions` on stderr and in the task record's
-`review_brief_warnings` (#10665). Brief template: `drive-epic`
-`references/review-merge-cleanup.md` §6.
+Resolve the qualified reviewer before dispatch and pass its explicit model,
+`--review-author-model`, `--review-profile` and `--risk` as appropriate. Use
+`read-only` mode and `--require-review-verdict` when a verdict is required.
+Verify the exact pushed head against the task's reviewed head before recording
+the result. Subject-seat and subject-family exclusions remain explicit inputs.
+
+Dispatch v2 refuses protected bound-review execution using `--review-id`,
+`--attempt-id` and `--review-attempt`; these options are dry-run-only. A plain
+read-only dispatch does not provide protected isolation, Sources receipts or
+legacy authoring-review admission. Missing required evidence blocks closeout.
 
 ## Merge policy — ready PRs must not sit (#4703; landing order #7450)
 
@@ -581,8 +564,8 @@ Every task follows this workflow. No exceptions for non-trivial changes.
 3. **Finalize stable ACs** — use `- [ ] **AC-ID** — text`, then snapshot their
    applicability, due state, evidence types, and content hash in
    `task-lifecycle.v1`.
-4. **Implement in the dispatch worktree** — carry the lifecycle ledger with
-   `--lifecycle-file` through delegation, the agent ledger, and coordinator state.
+4. **Implement in the dispatch worktree** — include the lifecycle ledger locator
+   in the brief; dispatch v2 does not propagate a lifecycle file.
 5. **Record typed AC evidence** — checkboxes are a display projection, never proof.
    User-visible ACs require typed `behavior_proof` evidence referencing the
    canonical #5302 receipt path/digest, target-input fingerprint, and exact

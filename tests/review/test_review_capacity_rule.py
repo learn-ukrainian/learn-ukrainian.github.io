@@ -352,7 +352,7 @@ def _default_account(tmp_path, monkeypatch, label: str | None, *, bound: bool = 
         monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")
         return
     if label == "b":
-        from tests.test_delegate import _bind_claude_account_b
+        from tests.helpers.claude_account_fixtures import bind_claude_account_b as _bind_claude_account_b
 
         _bind_claude_account_b(tmp_path, monkeypatch, bound=bound)
     path = tmp_path / "claude-default-account"

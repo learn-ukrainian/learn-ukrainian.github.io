@@ -44,7 +44,7 @@ UNSCOPED_RULE_FILES = (
     "non-negotiable-rules.md",
     "workflow.md",
     "fleet-comms-coordination.md",
-    "delegate-must-use-worktree.md",
+    "dispatch-must-use-worktree.md",
     "cli-help-standard.md",
     "model-assignment.md",
     "fleet-driver-routing.md",

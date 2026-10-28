@@ -1,7 +1,6 @@
 """Offline walkthrough for detached formal review (#9663).
 
-Actual dispatch stdout and task-record producer evidence is covered by
-tests/test_delegate.py::test_dispatch_generates_and_persists_run_nonce.
+Dispatch v2 owns task production, waiting and immutable local checkout selection.
 """
 
 from __future__ import annotations
@@ -18,9 +17,11 @@ from pathlib import Path
 
 import pytest
 
-from scripts import delegate
 from scripts.ai_agent_bridge import _cli
 from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
+from scripts.dispatcher import cli as dispatch_cli
+from scripts.dispatcher import git as dispatch_git
+from scripts.dispatcher import store, worker
 from scripts.review import record_cf_verdict as recorder
 
 REFERENCE = (
@@ -52,14 +53,12 @@ def _canonical_review_asks():
 
 @pytest.mark.parametrize("argv", _canonical_review_asks())
 def test_canonical_review_ask_recipes_reach_branch_pin_admission(argv, monkeypatch, tmp_path, capsys):
-    """Exercise parser → handler → wrapper → delegate admission, with real Git targets."""
+    """Exercise ask and v2 parsers with a real local branch and pinned Git object."""
     from tests.test_authoring_review_feasibility import SOL, mini_repo
 
     repo = mini_repo(tmp_path, monkeypatch)
     head = repo.commit(SOL)
     repo.publish()
-    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
-    monkeypatch.setattr(delegate, "_REPO_ROOT", repo.root)
     argv = ["feature" if arg == "<branch>" else arg for arg in argv]
     args = _cli._build_parser().parse_args(argv)
     assert args.branch == "feature", "formal review must target the pushed author branch"
@@ -78,38 +77,19 @@ def test_canonical_review_ask_recipes_reach_branch_pin_admission(argv, monkeypat
     reply.write_text("VERDICT: APPROVE\n", encoding="utf-8")
 
     def native_boundary(command, **kwargs):
-        if "scripts/delegate.py" not in command:
+        if "scripts/dispatch.py" not in command:
             return real_run(command, **kwargs)
         commands.append(command)
         if "dispatch" in command:
-            launch = delegate.build_parser().parse_args(command[2:])
-            # The wrapper passes no explicit branch pin; the real admission
-            # callback must set it before reviewer route evaluation.
+            launch = dispatch_cli.build_parser().parse_args(command[2:])
             assert launch.pinned_head is None
-            refusal, target = delegate._admit_dispatch_target(launch, agent=launch.agent, trees=None)
-            assert refusal is None and target is not None
-            assert launch.pinned_head == launch._review_target.head_sha == head
-            base = delegate._resolve_worktree_base_sha(
-                agent=launch.agent,
-                task_id=launch.task_id,
-                base="main",
-                branch="feature",
-                pinned_head_sha=launch.pinned_head,
-                validated_path=tmp_path / "checkout",
+            _path, _branch, base = dispatch_git.worktree_plan(
+                repo.root, launch.agent, launch.task_id, launch.pinned_head or launch.branch
             )
             assert base == head
-            # The remote moves AFTER admission while the tracking ref is old.
-            # Actual checkout preparation fetches and refuses the new SHA.
-            repo.advance_remote("feature", SOL)
-            with pytest.raises(RuntimeError, match="differs from the pinned head SHA"):
-                delegate._resolve_worktree_base_sha(
-                    agent=launch.agent,
-                    task_id=launch.task_id,
-                    base="main",
-                    branch="feature",
-                    pinned_head_sha=launch.pinned_head,
-                    validated_path=tmp_path / "checkout",
-                )
+            # V2 does not fetch or enforce a live remote branch freeze.
+            assert repo.advance_remote("feature", SOL) != head
+            assert dispatch_git.worktree_plan(repo.root, launch.agent, launch.task_id, base)[2] == head
             return subprocess.CompletedProcess(command, 0, f"{launch.task_id}\n{NONCE}\n", "")
         assert "wait" in command and "--run-nonce" not in command
         return subprocess.CompletedProcess(
@@ -144,10 +124,10 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
     assert "requires_silence_timeout" in reference
     assert "Only terminal task-record" in reference
 
-    # Parse the documented producer with delegate's real CLI. Its public
+    # Parse the documented producer with the v2 CLI. Its public
     # contract is detached dispatch. Task fixtures below exercise settlement,
     # not production: run the actual cmd_dispatch nonce-producer test separately.
-    launch = delegate.build_parser().parse_args(
+    launch = dispatch_cli.build_parser().parse_args(
         [
             "dispatch",
             "--agent",
@@ -172,20 +152,20 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
             "code",
             "--review-author-model",
             "gpt-6.1-sol",
-            "--review-risk",
+            "--risk",
             "medium",
         ]
     )
-    assert launch.func is delegate.cmd_dispatch
+    assert launch.command == "dispatch"
     assert launch.agent == "claude"
     assert launch.mode == "read-only"
-    assert launch.worktree == "auto"
+    assert launch.worktree == ""
     assert launch.branch == "codex/author"
     assert launch.pinned_head == HEAD
     assert launch.require_review_verdict
     assert launch.review_profile == "code"
     assert launch.review_author_model == "gpt-6.1-sol"
-    assert launch.review_risk == "medium"
+    assert launch.risk == "medium"
 
     task_root = tmp_path / "tasks"
     task_root.mkdir()
@@ -210,21 +190,24 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
 
     # A client wait deadline can expire while task state remains running. Its
     # 124 result is not settlement; re-arm the same parsed wait/nonce.
-    wait = delegate.build_parser().parse_args(["wait", review_task, "--run-nonce", review_nonce, "--timeout", "1"])
+    wait = dispatch_cli.build_parser().parse_args(["wait", review_task, "--run-nonce", review_nonce, "--timeout", "1"])
     assert wait.run_nonce == NONCE
-    assert wait.func is delegate.cmd_wait
+    assert wait.command == "wait"
 
-    def read_task(_task_id):
-        return task_path, json.loads(task_path.read_text(encoding="utf-8"))
+    def read_task(_task_id, nonce=None):
+        state = json.loads(task_path.read_text(encoding="utf-8"))
+        if nonce is not None and state["run_nonce"] != nonce:
+            raise ValueError("run nonce mismatch")
+        return state
 
     clock = [0.0]
-    monkeypatch.setattr(delegate.time, "monotonic", lambda: clock[0])
-    monkeypatch.setattr(delegate, "_read_state_or_archived", read_task)
-    monkeypatch.setattr(delegate, "_heal_dead_task", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: clock.__setitem__(0, 2.0))
-    assert delegate.cmd_wait(wait) == 124
-    expired = json.loads(capsys.readouterr().err)
-    assert expired["last_known_status"] == "running"
+    monkeypatch.setattr(worker.time, "monotonic", lambda: clock[0])
+    monkeypatch.setattr(store, "read", read_task)
+    monkeypatch.setattr(worker, "_observe", lambda record: record)
+    monkeypatch.setattr(worker.time, "sleep", lambda _seconds: clock.__setitem__(0, 2.0))
+    assert dispatch_cli.main(["wait", review_task, "--run-nonce", review_nonce, "--timeout", "1"]) == 124
+    expired = json.loads(capsys.readouterr().out)
+    assert expired["status"] == "running"
     assert json.loads(task_path.read_text(encoding="utf-8"))["run_nonce"] == review_nonce
 
     # Re-arm the same task/run nonce; the worker fixture now reaches terminal
@@ -239,8 +222,8 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
         current["resolved_model"] = "claude-opus-5-5"
         task_path.write_text(json.dumps(current), encoding="utf-8")
 
-    monkeypatch.setattr(delegate.time, "sleep", settle)
-    assert delegate.cmd_wait(wait) == 0
+    monkeypatch.setattr(worker.time, "sleep", settle)
+    assert dispatch_cli.main(["wait", review_task, "--run-nonce", review_nonce, "--timeout", "10"]) == 0
     assert json.loads(capsys.readouterr().out)["status"] == "done"
 
     completed, reply = recorder._task(review_task, task_root)
@@ -296,12 +279,12 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
         ("running_expiry", 0, 2),
         ("spawning_expiry_twice", 0, 3),
         ("done_racing_expiry", 0, 2),
-        ("terminal_timeout", 124, 1),
-        ("terminal_timeout_racing_expiry", 124, 2),
+        ("terminal_timeout", 1, 1),
+        ("terminal_timeout_racing_expiry", 1, 2),
         ("cancelled_racing_expiry", 1, 2),
         ("cancelled", 1, 1),
-        ("stale_nonce", 1, 1),
-        ("nonce_drift_after_expiry", 1, 1),
+        ("stale_nonce", 2, 1),
+        ("nonce_drift_after_expiry", 2, 1),
     ],
 )
 def test_documented_shell_continues_only_same_nonce_wait(tmp_path, scenario, expected_rc, wait_count):
@@ -319,13 +302,15 @@ def test_documented_shell_continues_only_same_nonce_wait(tmp_path, scenario, exp
 from pathlib import Path
 sys.path.insert(0, os.environ['RECIPE_REPO'])
 sys.path.insert(0, str(Path(os.environ['RECIPE_REPO']) / 'scripts'))
-from scripts import delegate
+from scripts.dispatcher import cli as dispatch_cli
+from scripts.dispatcher import git as dispatch_git
+from scripts.dispatcher import store, worker
 
 argv = sys.argv[1:]
 if argv[0] == '-c':
     raise SystemExit(subprocess.run([sys.executable, *argv], check=False).returncode)
-assert argv.pop(0) == 'scripts/delegate.py'
-args = delegate.build_parser().parse_args(argv)
+assert argv.pop(0) == 'scripts/dispatch.py'
+args = dispatch_cli.build_parser().parse_args(argv)
 path = Path(os.environ['RECIPE_CALLS'])
 calls = json.loads(path.read_text()) if path.exists() else []
 calls.append(argv)
@@ -333,7 +318,7 @@ path.write_text(json.dumps(calls))
 nonce = 'run-nonce-fixture'
 if args.command == 'dispatch':
     assert args.pinned_head == 'a' * 40 and args.branch == 'codex/author'
-    assert args.require_review_verdict and args.worktree == 'auto'
+    assert args.require_review_verdict and args.worktree == ''
     print(args.task_id)
     print(nonce)
     raise SystemExit(0)  # launch boundary only; real producer is tested separately
@@ -360,11 +345,15 @@ if args.command == 'status':
     if scenario == 'nonce_drift_after_expiry':
         state['run_nonce'] = 'another-run'
 clock = [0.0]
-delegate._read_state_or_archived = lambda task: (path, state)
-delegate._heal_dead_task = lambda *a, **kw: None
-delegate.time.monotonic = lambda: clock[0]
-delegate.time.sleep = lambda seconds: clock.__setitem__(0, args.timeout + 1)
-raise SystemExit(args.func(args))
+def read_task(task, requested_nonce=None):
+    if requested_nonce is not None and state['run_nonce'] != requested_nonce:
+        raise ValueError('run nonce mismatch')
+    return state
+store.read = read_task
+worker._observe = lambda record: record
+worker.time.monotonic = lambda: clock[0]
+worker.time.sleep = lambda seconds: clock.__setitem__(0, args.timeout + 1)
+raise SystemExit(dispatch_cli.main(argv))
 """,
         encoding="utf-8",
     )
@@ -411,7 +400,7 @@ raise SystemExit(args.func(args))
     elif scenario.startswith("terminal_timeout"):
         assert json.loads(result.stdout)["status"] == "timeout"
     elif scenario in ("stale_nonce", "nonce_drift_after_expiry"):
-        assert "stale_run_nonce" in result.stderr
+        assert "run nonce mismatch" in result.stderr
 
 
 @pytest.mark.parametrize("expiry_kind", ["client", "process"])
@@ -421,9 +410,9 @@ raise SystemExit(args.func(args))
         ("running", 0, 2),
         ("spawning", 0, 2),
         ("done", 0, 1),
-        ("drift_after_lookup", 1, 1),
-        ("drift_after_expiry", 1, 1),
-        ("missing_record", 1, 0),
+        ("drift_after_lookup", 2, 1),
+        ("drift_after_expiry", 2, 1),
+        ("missing_record", 2, 0),
         ("empty_nonce", 1, 0),
         ("non_string_nonce", 1, 0),
         ("wrong_task_id", 1, 0),
@@ -438,12 +427,12 @@ def test_ask_expiry_lookup_and_documented_same_task_continuation(
     task_path = tmp_path / "review-fixture.json"
     call_file = tmp_path / "calls.json"
     calls = []
-    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path)
+    monkeypatch.setattr(store, "tasks_dir", lambda: tmp_path)
     # Test-owned records have no native worker; only its liveness boundary is replaced.
-    monkeypatch.setattr(delegate, "_heal_dead_task", lambda *_a, **_kw: None)
+    monkeypatch.setattr(worker, "_observe", lambda record: record)
     clock = [0.0]
-    monkeypatch.setattr(delegate.time, "monotonic", lambda: clock[0])
-    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: clock.__setitem__(0, 2.0))
+    monkeypatch.setattr(worker.time, "monotonic", lambda: clock[0])
+    monkeypatch.setattr(worker.time, "sleep", lambda _seconds: clock.__setitem__(0, 2.0))
 
     @contextmanager
     def prompt_directory():
@@ -452,8 +441,8 @@ def test_ask_expiry_lookup_and_documented_same_task_continuation(
     monkeypatch.setattr(wrappers, "_prompt_directory", prompt_directory)
 
     def native_boundary(command, **kwargs):
-        assert "scripts/delegate.py" in command
-        args = delegate.build_parser().parse_args(command[2:])
+        assert "scripts/dispatch.py" in command
+        args = dispatch_cli.build_parser().parse_args(command[2:])
         calls.append(command[2:])
         if args.command == "dispatch":
             task_path.write_text(
@@ -465,12 +454,12 @@ def test_ask_expiry_lookup_and_documented_same_task_continuation(
         if expiry_kind == "process":
             assert kwargs["timeout"] == args.timeout + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS
             raise subprocess.TimeoutExpired(command, kwargs["timeout"])
-        monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: clock.__setitem__(0, args.timeout + 1))
+        monkeypatch.setattr(worker.time, "sleep", lambda _seconds: clock.__setitem__(0, args.timeout + 1))
         stdout, stderr = io.StringIO(), io.StringIO()
         with redirect_stdout(stdout), redirect_stderr(stderr):
-            rc = args.func(args)
-        assert rc == 124 and stdout.getvalue() == ""
-        assert json.loads(stderr.getvalue())["last_known_status"] == "running"
+            rc = dispatch_cli.main(command[2:])
+        assert rc == 124 and json.loads(stdout.getvalue())["status"] == "running"
+        assert stderr.getvalue() == ""
         return subprocess.CompletedProcess(command, rc, stdout.getvalue(), stderr.getvalue())
 
     observed = []
@@ -493,15 +482,15 @@ def test_ask_expiry_lookup_and_documented_same_task_continuation(
         with pytest.raises(SystemExit) as expiry:
             _cli._handle_acp_compat(args, "codex")
     if expiry_kind == "client":
-        signal = "ask-codex review dispatch did not complete: status=None"
+        signal = "ask-codex review dispatch did not complete: status='running'"
         assert expiry.value.code == signal  # ask exposes a failure message, not wait's rc 124
-        assert observed == [{"response": "", "ok": False, "stderr_excerpt": signal}]
+        assert observed == [{"task_id": "review-fixture", "run_nonce": NONCE, "status": "running", "result_file": None, "response": "", "ok": False, "stderr_excerpt": signal}]
     else:
-        signal = "delegate.py wait timed out at process level"
+        signal = "dispatch.py wait timed out at process level"
         assert signal in str(expiry.value.code)
         assert observed == []  # the outer timeout raises rather than returning a task result
     recovery_text = REFERENCE.read_text().split("**Synchronous ask expiry:**", 1)[1].split("```bash", 1)[0]
-    assert ("status=None" if expiry_kind == "client" else signal) in recovery_text
+    assert ("status='running'" if expiry_kind == "client" else signal) in recovery_text
     assert json.loads(task_path.read_text())["run_nonce"] == NONCE
     assert [command[0] for command in calls] == ["dispatch", "wait"]
     call_file.write_text(json.dumps(calls), encoding="utf-8")
@@ -525,12 +514,14 @@ def test_ask_expiry_lookup_and_documented_same_task_continuation(
 from pathlib import Path
 sys.path.insert(0, os.environ['RECIPE_REPO'])
 sys.path.insert(0, str(Path(os.environ['RECIPE_REPO']) / 'scripts'))
-from scripts import delegate
+from scripts.dispatcher import cli as dispatch_cli
+from scripts.dispatcher import git as dispatch_git
+from scripts.dispatcher import store, worker
 argv = sys.argv[1:]
 if argv[0] == '-c':
     raise SystemExit(subprocess.run([sys.executable, *argv], check=False).returncode)
-assert argv.pop(0) == 'scripts/delegate.py'
-args = delegate.build_parser().parse_args(argv)
+assert argv.pop(0) == 'scripts/dispatch.py'
+args = dispatch_cli.build_parser().parse_args(argv)
 assert args.command in ('status', 'wait'), 'recovery must never dispatch'
 root = Path(os.environ['RECIPE_ROOT'])
 path = root / 'review-fixture.json'
@@ -538,9 +529,9 @@ call_file = root / 'calls.json'
 calls = json.loads(call_file.read_text())
 calls.append(argv)
 call_file.write_text(json.dumps(calls))
-delegate.tasks_dir = lambda: root
+store.tasks_dir = lambda: root
 # Offline native worker liveness boundary only; record reading/status/wait stay real.
-delegate._heal_dead_task = lambda *a, **kw: None
+worker._observe = lambda record: record
 scenario = os.environ['RECIPE_SCENARIO']
 waits = sum(command[0] == 'wait' for command in calls) - 1
 if args.command == 'wait':
@@ -556,9 +547,9 @@ elif args.run_nonce is not None and scenario == 'drift_after_expiry':
     state['run_nonce'] = 'another-run'
     path.write_text(json.dumps(state))
 clock = [0.0]
-delegate.time.monotonic = lambda: clock[0]
-delegate.time.sleep = lambda seconds: clock.__setitem__(0, args.timeout + 1)
-raise SystemExit(args.func(args))
+worker.time.monotonic = lambda: clock[0]
+worker.time.sleep = lambda seconds: clock.__setitem__(0, args.timeout + 1)
+raise SystemExit(dispatch_cli.main(argv))
 """,
         encoding="utf-8",
     )
@@ -601,9 +592,9 @@ raise SystemExit(args.func(args))
     assert all(command[command.index("--run-nonce") + 1] == NONCE for command in waits)
     if expected_rc == 0:
         settled = json.loads(result.stdout)
-        assert settled == {"task_id": "review-fixture", "run_nonce": NONCE, "status": "done"}
+        assert settled == {"task_id": "review-fixture", "run_nonce": NONCE, "status": "done", "result_file": None}
     elif scenario.startswith("drift_"):
-        assert "stale_run_nonce" in result.stderr
+        assert "run nonce mismatch" in result.stderr
         assert json.loads(task_path.read_text())["run_nonce"] == "another-run"
     elif scenario == "missing_record":
         assert result.stdout == ""

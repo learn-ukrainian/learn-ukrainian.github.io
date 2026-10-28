@@ -59,7 +59,7 @@ except ModuleNotFoundError as exc:
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 # Anchor ledger + task-state to the PRIMARY checkout (not a worktree copy),
-# matching scripts/delegate.py (Claude CF #5649 r12 F001).
+# matching the task-store path encoding.
 try:
     from scripts.common.repo_root import resolve_repo_root
 except ImportError:  # pragma: no cover - flat script path
@@ -680,7 +680,7 @@ def _pid_matches_task(
 
 
 def _safe_task_state_name(task_id: str) -> str:
-    """Match scripts/delegate.py::_state_path sanitization for slashful task ids."""
+    """Sanitize slashful task IDs for flat legacy task records."""
     return task_id.replace("/", "_").replace("\\", "_")
 
 

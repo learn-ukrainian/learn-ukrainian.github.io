@@ -79,73 +79,22 @@ re-labels it as the harness set object; nothing is normalised or repaired.
 
 ## Execution
 
-- The harness renders the complete prompt the worker receives: the rules core
-  block delegate would prepend, then the preamble when present, then the task's
-  fixed instructions, schema and input. Variants of one task kind differ only
-  in the preamble.
-- Every task goes through `scripts/delegate.py dispatch --mode read-only
-  --language-lane --rules-seat core --cwd <worker cwd>` and
-  `--research-task-family` taken from the task kind (`ukrainian-review` for
-  review and judge, `ukrainian-authoring` for writing), for every seat. It
-  requires `--worker-cwd` to resolve inside an existing registered isolated Git
-  worktree. Primary and unregistered checkouts are refused before dispatch: automatic
-  per-task worktrees would invalidate the fixed frame shared by paired arms. It
-  does not pass `--worktree`, `--lifecycle-file`, `--advisory-task` or any
-  other `--research-*` flag. The family classifies a Ukrainian task so a
-  Flash dispatch is not refused as a bounded fallback. Pointer-selecting
-  research flags stay off: those pointers are resolved per dispatch from a
-  changing registry. A record that still carries research state is not
-  accepted.
-- `run --review-profile ukrainian` (off by default) dispatches review-kind tasks
-  with `--review-profile ukrainian --require-review-verdict` added, so delegate's
-  Ukrainian-review AGY permission profile applies as in production. Writing and
-  judge tasks are unchanged. The value is frozen in `manifest.json` (only when
-  set, so a default run's manifest is unchanged); a resume with a different value,
-  or with it added to a default run, is refused. A review-typed dispatch settles
-  as `no_deliverable` unless the reply carries a verdict line, so every review
-  prompt of such a run ends with a short protocol note asking for a final
-  `VERDICT: APPROVE` line after the JSON object. The note is identical across
-  variants and the line is a marker only: it is not scored and is not a judgement
-  of the paragraphs. The digest of the note's text is frozen with the profile, so
-  a resume under an edited note is refused before any dispatch. The note may prime
-  approval, so read variant comparisons under this option with that in mind.
-- A dry run validates each dispatch with `--dry-run` on a distinct
-  `<task-id>-preflight` id. Before that call the harness reads the existing
-  record (`delegate.py status`). It passes `--force-new` only when the record
-  exists, is a terminal `dry_run`, and was written by this caller, so a
-  repeated dry run can replace that record. When no record exists, the dry
-  run omits `--force-new`. Any other state (a real `done`, `running`, another
-  owner, or an unreadable record) refuses that preflight and archives nothing.
-  A real dispatch omits `--force-new` and still refuses to reuse an
-  existing task id.
-- Delegate still wraps the prompt. The worker cwd must lie in a registered
-  Git worktree (the default cwd is this checkout, which is one when the
-  harness runs from a dispatch worktree). Delegate adds its worktree block
-  (paths, interpreter, sparse-checkout note, test scope) and then the rules
-  core again in front of it, and applies its sparse checkout to that
-  worktree. The sparse-checkout note depends on paths the prompt names. The
-  harness computes this composition with delegate's own functions, without
-  spawning anything: the effective prompt, its prompt blocks, the recorded
-  cwd and the worktree path for every prompt.
-- `run` freezes, in `manifest.json`, the frame delegate puts around the
-  prompts (cwd, worktree path, prompt blocks and the hashes of the text
-  before and after the prompt) and the dispatch argument hash of one task
-  per kind and seat. A plan whose prompts would be framed differently is
-  refused before anything is dispatched, for example a preamble naming
-  `curriculum/`, because its arm would then differ in more than the
-  preamble. A task whose frame has changed since the freeze is not
-  dispatched, and a resumed run whose frame or dispatch arguments changed
-  is refused. A manifest frozen under other arguments, or written before
-  `dispatch_args_sha256` existed, is not resumed, including by `score --judge`;
-  a new `--run-tag` (with a new results directory) is the path, so argument
-  sets are never mixed.
-- An answer is accepted only when the task record shows the planned agent and
-  model, no substitution, the rendered prompt as source prompt, delegate's
-  expected composition of it (effective prompt hash, prompt blocks, cwd and
-  worktree path), no research context, read-only mode and the
-  `dispatch_args_sha256` of the arguments the harness built; and when the
-  worker checkout's fingerprint (commit, tracked changes, instruction and
-  tool-configuration files) is the same at dispatch and at collection.
+The harness submits the complete UTF-8 prompt bytes to dispatch v2. It supplies
+an explicit provider/model, `--mode read-only`, `--language-lane ukrainian`,
+`--pinned-head`, and the task-kind research-family metadata. V2 creates its own
+dispatch worktree from that commit. It does not add rules, research pointers or
+legacy worktree prompt blocks; include required instructions in the input.
+
+Dry runs validate the argv with `--dry-run` and create no task record. Real
+launches refuse an existing task ID. There is no force-new replacement path.
+`--review-profile ukrainian` supplies review metadata; it does not activate
+protected review isolation or Sources receipt wiring.
+
+The caller freezes its argv and submitted bytes in the manifest. V2 records do
+not attest the retired argument/prompt-block composition. Legacy evaluation
+runs cannot resume; use a new run tag and results directory. These caller-owned
+fingerprints do not replace runtime or paired-condition evidence.
+
 - Paired arms (same seat, repeat, kind and chunk) must also share every
   recorded condition (CLI version, effort, harness, resolved model, cwd,
   worktree, prompt blocks, worker checkout), the frozen frame, and prompts

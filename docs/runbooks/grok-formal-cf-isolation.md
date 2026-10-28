@@ -1,62 +1,37 @@
-# Grok sealed formal CF isolation (#5557)
+# Grok code and infra review routing
 
-## Status (2026-08-04 — sealed ACP route live)
+Native Grok dispatch and the former sealed formal CF path are retired.
+Grok 4.7 code and infra reviews run through the Cursor seat at `grok-4.7-high`.
+The catalog and reviewer resolver determine eligibility at every risk, including critical.
 
-The earlier Option C residual has been superseded. Grok is a live
-**orchestrator / implement** seat and an eligible sealed formal CF reviewer
-through the hash-pinned ACP profile. The model catalog remains the authority.
+## Dispatch
 
-| Capability | Native Grok CLI | Formal CF sealed path |
-| --- | --- | --- |
-| Authentication | Cached native selector; ambient API-key selectors scrubbed | Auth material is not staged into the sealed snapshot |
-| Sealed evidence | Parent-owned MCP plus hash-pinned `acpx-grok-sealed-review.md` | Only the sealed review tools are exposed |
-| Sealed snapshot cwd + OS sandbox | Active through ACPX confinement | No primary-checkout or general filesystem access |
-| `review-pr --reviewer grok` | Retired (#8520) | Replaced by direct `ask-* --type review` (sealed `review-pr` removed in #8520) |
-| Registry `formal_review_eligible` | `true` for native `grok-4.7` | Catalog endpoint is authoritative |
-| Cursor explicit `grok-4.7` | Live for **orchestrator / implement / advisory** when native dark | Still **not** sealed formal CF |
-
-**Proof command:**
+Use the resolver-selected invocation. The explicit Grok dispatch route is:
 
 ```bash
-.venv/bin/python -m pytest \
-  tests/agent_runtime/test_acpx_adapter.py \
-  -k 'grok and sealed' -q
+.venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high \
+  --mode read-only --task-id <task-id> --prompt-file <brief>
 ```
 
-## Current decision (stream #5512)
+Dispatch v2 maps `--agent grok` to Cursor.
+That alias does not launch the native Grok CLI. Native TUI and bridge callers
+outside detached dispatch retain their own interfaces and do not establish
+eligibility for resolver-selected review.
 
-The native Grok ACP route is eligible only when the runtime selects its
-hash-pinned sealed-review profile and validates the parent-owned MCP config.
-The ordinary no-tool profile remains unchanged for non-review conversations.
-Cursor-pinned `grok-4.7` remains a native-dark implementation/advisory
-fallback and is not an interchangeable formal-review route.
+## Review requirements
 
-## Live lane (non-formal)
+- Pin `grok-4.7-high` and require Cursor's runtime model attestation.
+- Exclude xAI-authored work and the reviewer's own subject seat.
+- Supply the diff and CI evidence. Grok reviewers read tracked files and do not
+  run shell commands, tests or scripts. Use Opus 5.5 or Sol 6.1 for reviews that
+  require execution.
+- Record the exact reviewed head and concrete model, family and transport.
+  Follow `review-loop` and the same-head CI gate before landing.
+- Cursor Grok stays off Ukrainian language seats. Security final sign-off stays
+  with Opus 5.5 or Sol 6.1.
 
-- `delegate.py --agent grok --model grok-4.7`
-- `ai_agent_bridge ask-grok` / `ask-grok-build`
-- Native Grok Build TUI / CLI cold-start
-- Cursor **explicit** `--model grok-4.7` if native path dark (never Cursor `auto` as identity)
-- **Orchestrator seat** (fleet-comms): same pin; requests CF via direct `ask-* --type review` (sealed `review-pr` removed in #8520), does not self-seal
-
-## Substitute formal CF
-
-```bash
-# Direct ask-* cross-family review (replaces removed review-pr):
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --type review --pr <N> --task-id review-<N> < prompt.md
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - --type review --pr <N> --task-id review-<N> < prompt.md
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-grok - --type review --pr <N> --task-id review-<N> < prompt.md
-```
-
-## Invariants
-
-1. Grok review calls use the sealed profile only when a validated sealed MCP
-   config is present; ordinary ACP calls keep the no-tool profile.
-2. Ambient API-key selectors, primary-checkout access, terminal access, and
-   arbitrary filesystem access remain denied.
-3. The reservation and published verdict record the concrete model, xAI
-   family, native Grok participant, source, and exact reviewed head.
-4. Any loss of sealed-tool coverage or catalog eligibility fails closed before
-   publication; it never silently falls back to Cursor.
+The retired sealed path supplies no current isolation or review receipt guarantee.
+See [model assignment](../../agents_extensions/shared/rules/model-assignment.md)
+and [the activity matrix](../best-practices/agent-activity-matrix.md).
 
 Parent: #5557 · stream #4707 · product #5512.

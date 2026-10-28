@@ -126,7 +126,7 @@ def locate_record_for_trailer(tasks_dir: Path, agent: str, task: str) -> tuple[P
     """Locate task record for a trailer agent/task, normalization-aware.
 
     For trailer ``agent/task``, accepts a record named ``{agent}-task``,
-    ``{agent}_task``, or ``task`` (the inverse of ``_x_agent_task_id`` in delegate.py).
+    ``{agent}_task``, or ``task``.
     Prefers a candidate whose record agent matches the trailer agent.
     """
     normalized = task
@@ -477,7 +477,7 @@ def main(argv: list[str] | None = None) -> int:
             "       git commit --amend --trailer 'X-Agent: claude-inline/orchestrator'\n"
             "   For dispatched-agent commits, use the expected literal trailer:\n"
             f"       git commit --amend --trailer '{provenance.expected_trailer or 'X-Agent: <agent>/<task-id>'}'\n"
-            "   See AGENTS.md rule #11 / GEMINI.md / agents_extensions/shared/rules/delegate-must-use-worktree.md."
+            "   See AGENTS.md rule #11 / GEMINI.md / agents_extensions/shared/rules/dispatch-must-use-worktree.md."
         )
         return 1
 

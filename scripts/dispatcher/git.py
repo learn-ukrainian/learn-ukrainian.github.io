@@ -25,7 +25,7 @@ from scripts.storage.topology import STORE_FILES
 
 ROOT = resolve_repo_root(Path(__file__), 2)
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "fleet_repos.yaml"
-# Mirrors scripts/delegate.py::_DISPATCH_SPARSE_EXCLUDE_DEFAULT without importing its runtime.
+# Default trees excluded from dispatch worktrees.
 SPARSE_EXCLUDE_DEFAULT = frozenset({
     "curriculum", "wiki", "data/projects", "data/lexicon", "data/datasets", "data/processed",
     "registry/projects", "registry/lexicon/source-inventory",

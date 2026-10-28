@@ -495,12 +495,6 @@ def test_merged_worktree_claimed_by_another_dispatch_task_is_kept(
     assert not reaper_lifecycle.is_reap_pending(repo, worktree)
 
 
-def _dead_pid() -> int:
-    proc = subprocess.Popen(["true"])
-    proc.wait()
-    return proc.pid
-
-
 def test_superseded_archived_record_no_longer_claims_the_finished_tasks_worktree(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -1405,19 +1399,6 @@ def test_active_probe_reads_working_monitor(monkeypatch):
     response = contextlib.nullcontext(type("Response", (), {"read": lambda _: b'{"tasks": [{"task_id": "live"}]}'})())
     monkeypatch.setattr(urllib.request, "urlopen", lambda *_args, **_kwargs: response)
     assert _REAL_ACTIVE_TASK_IDS() == {"live"}
-
-
-def test_active_probe_failure_releases_settled_delegation_holder(tmp_path, monkeypatch):
-    from scripts import delegate
-
-    repo = init_repo(tmp_path)
-    worktree, _, record = _probe_fixture(repo, monkeypatch, TimeoutError("deadline"))
-    monkeypatch.setattr(delegate, "_bound_task_state_unparseable_reason", lambda _path: None)
-    diagnostics = []
-    monkeypatch.setattr(delegate, "_record_diagnostic", lambda *args, **kwargs: diagnostics.append(args))
-    reason = delegate._branch_holder_activity_reason(worktree, task_id=record["task_id"], task_state=record)
-    assert reason is None
-    assert diagnostics == []
 
 
 @pytest.mark.parametrize("layout", ["dispatch", "legacy"])
@@ -6948,7 +6929,6 @@ def test_reaper_lock_malformed_legacy_pid_is_unknown(tmp_path, monkeypatch, meta
                 pytest.fail("legacy holder was displaced")
         assert not holder.closed
         assert lock.read_bytes() == metadata
-
 
 
 def test_namespace_unknown_worker_is_not_gone():

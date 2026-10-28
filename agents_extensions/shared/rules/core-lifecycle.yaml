@@ -207,7 +207,7 @@ p4-deliver:
   tier: tool_enforced
   enforcement:
     kind: tool
-    name: scripts/delegate.py
+    name: scripts/dispatch.py
   review_by: '2026-11-22'
 
 p4-order:

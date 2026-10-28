@@ -256,7 +256,7 @@ def resolve_repo_root(script_path: Path, parents: int) -> Path:
     relative --cwd) also anchor to the primary checkout — a worktree copy
     of this script lazy-imports the PRIMARY's scripts/* modules, not the
     worktree branch's. Intentional: dispatch infrastructure is ground truth
-    in the primary; cross-cutting changes to delegate.py plus its lazy deps
+    in the primary; cross-cutting changes to dispatch.py plus its lazy deps
     must land on main before they steer live dispatches.
     """
     return main_checkout_root(script_path.resolve().parents[parents])

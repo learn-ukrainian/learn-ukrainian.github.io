@@ -128,8 +128,9 @@ def bypass_checkout(request: pytest.FixtureRequest) -> Path:
 def rules_core_absent_when_marked(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
     """Run a ``rules_core_absent`` test with the rules-core loader bypassed.
 
-    Launchers, ``delegate.py``, ACP calls and bridge builders prepend the rules core
-    (``scripts/lib/rules_core.py``) and refuse without it. Only tests that pin an exact
+    Launchers, ACP calls and bridge builders prepend the rules core
+    (``scripts/lib/rules_core.py``) and refuse without it. Dispatch v2 requires the
+    core to exist without prepending it. Only tests that pin an exact
     argv or prompt block order carry the marker; every other test runs with the
     checkout's real core. In-process, the loader's ``require_core`` and ``with_core``
     become pass-throughs; ``run_launcher`` starts subprocess launchers from the bypass view.

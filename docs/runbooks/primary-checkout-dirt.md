@@ -1,8 +1,7 @@
 # Primary-checkout dirt: audit and self-cleanup (#11253)
 
-Write-capable dispatch refuses to start while the protected primary checkout
-has tracked changes or untracked, non-ignored files (`PRIMARY_DIRTY`,
-`scripts/delegate.py::_resolve_dirty_primary_checkout_error`). The command-text
+Dispatch v2 does not refuse a dirty primary checkout. Agents must still keep
+the primary checkout read-only. The command-text
 guard `guard-primary-checkout-write.py` blocks the writes it can read in a
 shell command, but not what a launched script does: a script that `cd`s into
 the primary checkout and then redirects to a relative path writes there unseen.

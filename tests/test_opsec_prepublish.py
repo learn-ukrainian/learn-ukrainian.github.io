@@ -249,20 +249,6 @@ def test_direct_review_publisher_blocks_before_send(synthetic_opsec):
             call()
 
 
-def test_child_environments_strip_override_and_keep_path(monkeypatch):
-    from scripts import delegate
-    from scripts.agent_runtime import env_sanitize
-
-    monkeypatch.setenv("LU_OPSEC_OVERRIDE", "inherited")
-    env = delegate._pinned_worker_venv_env({"PATH": os.defpath, "LU_OPSEC_OVERRIDE": "inherited"})
-    assert "LU_OPSEC_OVERRIDE" not in env
-    assert Path(env["PATH"].split(os.pathsep)[0]).name == "shims"
-    monkeypatch.setattr(env_sanitize, "_isolated_git_env", lambda *a, **k: {})
-    assert "LU_OPSEC_OVERRIDE" not in env_sanitize.build_agent_env(
-        provider="codex", overrides={"LU_OPSEC_OVERRIDE": "inherited"}
-    )
-
-
 def test_budget_median_20_10kb_bodies(synthetic_opsec):
     timings = []
     for _ in range(20):
@@ -520,7 +506,6 @@ def test_nondefault_public_catalog_entry_is_not_private(monkeypatch):
 @pytest.mark.parametrize(
     "path",
     [
-        "scripts/delegate.py",
         "scripts/review/record_cf_verdict.py",
         "scripts/orchestration/dispatch_settle.py",
         "scripts/orchestration/task_closeout.py",
@@ -644,45 +629,20 @@ def test_cli_block_is_typed_without_traceback(capsys):
     assert capsys.readouterr().err == "publish_blocked: synthetic refusal\n"
 
 
-@pytest.mark.parametrize(
-    "module,function,args,error_type",
-    [
-        ("scripts.orchestration.dispatch_settle", "_run", (["gh", "pr", "merge", "1"],), ValueError),
-        ("scripts.review.record_cf_verdict", "_run_json", (["gh", "pr", "merge", "1"],), RuntimeError),
-        ("scripts.practice_deck.publish", "ensure_release", ("unit", "unit/public"), RuntimeError),
-        ("scripts.open_dataset.publish", "ensure_release", ("unit", "unit/public"), RuntimeError),
-        ("scripts.delegate", "_create_auto_finalize_pr", (), RuntimeError),
-    ],
-)
+@pytest.mark.parametrize('module,function,args,error_type', [('scripts.orchestration.dispatch_settle', '_run', (['gh', 'pr', 'merge', '1'],), ValueError), ('scripts.review.record_cf_verdict', '_run_json', (['gh', 'pr', 'merge', '1'],), RuntimeError), ('scripts.practice_deck.publish', 'ensure_release', ('unit', 'unit/public'), RuntimeError), ('scripts.open_dataset.publish', 'ensure_release', ('unit', 'unit/public'), RuntimeError)])
 def test_publishers_translate_policy_refusals(module, function, args, error_type, monkeypatch, tmp_path):
     import importlib
-
     publisher = importlib.import_module(module)
 
     def refuse(*args, **kwargs):
-        raise gate.PublishBlocked("synthetic refusal")
-
-    monkeypatch.setattr(publisher, "request_run", refuse)
+        raise gate.PublishBlocked('synthetic refusal')
+    monkeypatch.setattr(publisher, 'request_run', refuse)
     kwargs = {}
-    if module == "scripts.delegate":
-        args = (tmp_path,)
-        kwargs = {"branch": "unit", "base_branch": "main", "title": "clean", "body": "clean"}
-    typed_delegate = module == "scripts.delegate"
-    expected = r"^auto_finalize_publish_blocked$" if typed_delegate else r"publish_blocked:.*synthetic refusal"
+    expected = 'publish_blocked:.*synthetic refusal'
     with pytest.raises(error_type, match=expected) as error:
         getattr(publisher, function)(*args, **kwargs)
     assert not isinstance(error.value, gate.PublishBlocked)
     assert error.value.__suppress_context__
-    if typed_delegate:
-        # #9878: the refusal detail stays in the task's private diagnostic, not the public exception.
-        assert isinstance(error.value, publisher._TypedFailure)
-        assert error.value.cause.code == "auto_finalize_publish_blocked"
-        record = tmp_path / "policy-refusal.json"
-        record.write_text("{}\n", encoding="utf-8")
-        assert publisher._append_diagnostics(record, [("auto_finalize.error", error.value.cause)], source="test")
-        entries = [json.loads(line) for line in record.with_suffix(".diag").read_text().splitlines()]
-        assert entries[-1]["code"] == "auto_finalize_publish_blocked"
-        assert "synthetic refusal" in entries[-1]["diagnostic"]
 
 
 def test_keeper_and_closeout_native_refusal_types(monkeypatch, tmp_path, github_transport):
@@ -786,7 +746,6 @@ def test_hook_detects_wrapped_and_newline_gh(command, valid_shell, monkeypatch, 
             updated = json.loads(capsys.readouterr().out)["hookSpecificOutput"]["updatedInput"]["command"]
             assert "export PATH=" in updated
             assert updated.endswith(redirected)
-
 
 
 def test_no_text_override_unclaimed_without_loading_matcher(monkeypatch, tmp_path):

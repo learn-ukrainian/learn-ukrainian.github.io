@@ -111,17 +111,14 @@ def test_every_dispatch_admission_caller_opts_in() -> None:
     import ast
     from pathlib import Path
 
-    tree = ast.parse(Path("scripts/delegate.py").read_text(encoding="utf-8"))
-    funcs = {"_admit_dispatch_target": 0, "_admit_kimi_worker": 0, "_admit_worker": 0}
-    hits = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.FunctionDef):
-            for call in ast.walk(node):
-                if isinstance(call, ast.Call) and getattr(call.func, "id", "") == "resolve_and_admit":
-                    flag = any(k.arg == "new_dispatch" for k in call.keywords)
-                    hits.append((node.name, flag))
-    assert hits and all(flag for _name, flag in hits), hits
-    del funcs
+    for name in ("cli", "worker"):
+        tree = ast.parse(Path(f"scripts/dispatcher/{name}.py").read_text())
+        calls = [
+            node for node in ast.walk(tree)
+            if isinstance(node, ast.Call) and ast.unparse(node.func) == "headroom.check_plan"
+        ]
+        assert calls, name
+        assert all(len(call.args) == 3 and any(k.arg == "review" for k in call.keywords) for call in calls), name
 
 
 def _budget(monkeypatch, payload: dict) -> float | None:
@@ -157,30 +154,6 @@ def test_truncated_response_is_unavailable(monkeypatch) -> None:
 
     monkeypatch.setattr(mp.urllib.request, "urlopen", boom)
     assert mp.routing_budget_used_pct("claude", account=HOST_ACCOUNT) is None
-
-
-def test_kimi_worker_pause_settles_the_existing_task(tmp_path, monkeypatch) -> None:
-    import importlib
-
-    from scripts import delegate
-
-    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    task_id = "kimi-pause-race"
-    state = delegate._state_path_no_create(task_id)
-    state.parent.mkdir(parents=True, exist_ok=True)
-    state.write_text(json.dumps({"task_id": task_id, "status": "spawning"}))
-
-    def paused(*_a, **_k):
-        raise mp.ModelPausedRefused("MODEL_PAUSED: kimi-x is paused by operator policy")
-
-    for name in ("scripts.agent_runtime.target_admission", "agent_runtime.target_admission"):
-        with contextlib.suppress(ImportError):
-            monkeypatch.setattr(importlib.import_module(name), "resolve_and_admit", paused)
-    refusal, target = delegate._kimi_worker_refusal(
-        task_id, agent="kimi", model=None, mode="read-only", cwd=tmp_path, review=False
-    )
-    assert refusal and target is None
-    assert json.loads(state.read_text())["status"] == "failed"
 
 
 def test_native_claude_alias_is_paused_with_its_family() -> None:
@@ -293,31 +266,3 @@ def test_usage_readers_require_a_named_claude_account(monkeypatch) -> None:
             mp.account_used_pct(bare)
     with pytest.raises(TypeError, match="used_pct"):
         mp.refuse_paused_models(["claude-opus-5-5"], policy={"headroom": []}, now=NOW)
-
-
-@pytest.mark.parametrize(("label", "refused"), [("b", False), ("a", True), (None, True)])
-def test_worker_admission_reads_the_records_claude_account(tmp_path, monkeypatch, label, refused) -> None:
-    """The worker's own admission re-checks headroom on the account its task record names."""
-    from scripts import delegate
-
-    policy = tmp_path / "pause.json"
-    policy.write_text(json.dumps({"headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 80}]}))
-    monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
-    _serve(monkeypatch, _accounts_payload(_account(89.0)))
-    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    task_id = "claude-worker-headroom"
-    state = delegate._state_path_no_create(task_id)
-    state.parent.mkdir(parents=True, exist_ok=True)
-    record = {"task_id": task_id, "status": "spawning", "agent": "claude", "mode": "read-only"}
-    state.write_text(json.dumps(record | ({"claude_account": label} if label else {})))
-
-    refusal, target = delegate._kimi_worker_refusal(
-        task_id, agent="claude", model="claude-opus-5-5", mode="read-only", cwd=tmp_path, review=False
-    )
-
-    if refused:
-        assert refusal and target is None
-        assert json.loads(state.read_text())["status"] == "failed"
-    else:
-        assert refusal is None and (target.recipient, target.model) == ("claude", "claude-opus-5-5")
-        assert json.loads(state.read_text())["status"] == "spawning"

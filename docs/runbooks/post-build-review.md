@@ -119,7 +119,7 @@ normalizer never repairs, rounds, clamps, downgrades, or reconciles a score.
 only. A score can be compared only for identical semantic prompt, reviewer
 family, reviewer model, and reviewer effort identities.
 
-Protocol 6.0.6 closes the Codex transport gap: `delegate.py dispatch
+Protocol 6.0.6 closes the Codex transport gap: `dispatch.py dispatch
 --output-schema` validates and hashes the emitted schema before spawn, carries
 its absolute path through the detached worker, and binds it as `codex exec
 --output-schema`. Prompt-only Codex review is a fail-closed orchestration defect,

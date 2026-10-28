@@ -128,8 +128,8 @@ git rev-parse HEAD
 git status --porcelain
 agy --help
 agy models
-"$PROJECT_PYTHON" scripts/delegate.py dispatch --help
-"$PROJECT_PYTHON" scripts/delegate.py wait --help
+"$PROJECT_PYTHON" scripts/dispatch.py dispatch --help
+"$PROJECT_PYTHON" scripts/dispatch.py wait --help
 sha256sum "$QUALIFICATION_ROOT/cases.json" \
   "$QUALIFICATION_ROOT/gold.json" "$QUALIFICATION_ROOT/splits.json" \
   "$QUALIFICATION_ROOT/prompt.txt" "$QUALIFICATION_ROOT/scoring.md" \
@@ -315,7 +315,7 @@ capability before execution; a missing supported path remains blocked.
 
 Where an admitted task dispatch is used, inspect `dispatch --help` as above,
 set explicit model/effort/timeouts and bind the permitted review inputs. Arm
-`"$PROJECT_PYTHON" scripts/delegate.py wait "$TASK_ID"` immediately after
+`"$PROJECT_PYTHON" scripts/dispatch.py wait "$TASK_ID"` immediately after
 dispatch. Do not poll or spawn a substitute on failure. No paid dispatch is
 authorized by the preparation or offline probe commands here.
 

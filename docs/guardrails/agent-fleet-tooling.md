@@ -6,10 +6,10 @@ Use these project entry points for agent fleet work:
 
 - `.venv/bin/python scripts/ai_agent_bridge/__main__.py ...` for bridge
   messages, channel posts, one-shot review requests, and discussion commands.
-- `scripts/delegate.py dispatch ...` for worktree-isolated implementation,
+- `scripts/dispatch.py dispatch ...` for worktree-isolated implementation,
   review, validation, and long-running delegated work.
 - AGY is the current Gemini-family route. Use it through `ai_agent_bridge` for
-  bridge work or through `scripts/delegate.py dispatch --agent agy ...` for
+  bridge work or through `scripts/dispatch.py dispatch --model <catalog-model> --agent agy ...` for
   dispatched work.
 
 Gemini CLI and Gemini Code Assist are unsupported for this project. Do not
@@ -67,9 +67,9 @@ printf '%s\n' "<review prompt>" | \
     --to-model gemini-3.8-flash-high \
     --review
 
-scripts/delegate.py dispatch \
+scripts/dispatch.py dispatch --model <catalog-model> \
   --agent agy \
-  --brief docs/dispatch-briefs/example.md \
+  --prompt-file docs/dispatch-briefs/example.md \
   --worktree
 ```
 

@@ -14,7 +14,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts import delegate
 from scripts.maintenance import batch_state_retention as retention
 from scripts.maintenance.batch_state_retention import DEFAULT_ONE_OFF_MIN_BYTES, plan_retention
 from scripts.maintenance.claude_session_scratch import sweep_sessions
@@ -372,18 +371,6 @@ def test_crash_between_digest_record_and_delete_stays_consistent(tmp_path: Path)
     assert record["read_only_snapshot_retention"] == "digest"
 
 
-def test_stage_digest_keeps_phase_files_until_discard(tmp_path: Path) -> None:
-    snapshot = _write_full_sidecars(tmp_path, "worker", entries=1)
-    pre = {"a.txt": " M"}
-    post = {"a.txt": " M"}
-    delegate.stage_read_only_snapshot_digest(snapshot, pre, post)
-    assert (snapshot / "digest.json").is_file()
-    assert (snapshot / "read_only_checkout_pre.json").is_file()
-    assert (snapshot / "read_only_checkout_post.json").is_file()
-    delegate.discard_read_only_snapshot_phases(snapshot)
-    assert _names(snapshot) == {"digest.json"}
-
-
 def test_hygiene_cadence_dry_run_then_apply_keeps_the_allowlist(tmp_path: Path) -> None:
     root = _batch(tmp_path)
     tasks = root / "tasks"
@@ -507,39 +494,6 @@ def test_help_is_two_lines_and_has_no_host_path() -> None:
     assert "replace explicitly clean terminal snapshot sidecars with a digest." in collapsed
     assert "do not use it to delete any other batch_state subtree." in collapsed
     assert ".venv/bin/python scripts/maintenance/batch_state_retention.py" in text
-
-
-def test_force_new_archive_after_digest_does_not_recreate_the_hot_record(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    root = _batch(tmp_path)
-    tasks = root / "tasks"
-    _write_record(tasks, "moving", status="done", age_days=20, run_nonce="same")
-    _write_full_sidecars(tasks, "moving", entries=2)
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    locked: list[Path] = []
-
-    @contextlib.contextmanager
-    def _record_lock(path: Path):
-        # The sweep already holds this lock. Drop it so the rename lands
-        # between the digest write and the record write.
-        locked.append(path)
-        yield
-
-    monkeypatch.setattr(delegate, "task_state_lock", _record_lock)
-
-    def _archive_midway() -> None:
-        delegate._archive_task_artifacts("moving", stamp="fixed")
-
-    report = plan_retention(root, min_age_days=0, apply=True, now=NOW, on_after_digest=_archive_midway)
-
-    assert locked == [tasks / "moving.json"]
-    assert not (tasks / "moving.json").exists()
-    assert not (tasks / "moving.snapshots").exists()
-    assert report["selected"] == []
-    archived = json.loads((tasks / "moving.fixed.archived.json").read_text(encoding="utf-8"))
-    assert "read_only_snapshot_retention" not in archived
-    assert (tasks / "moving.snapshots.fixed.archived" / "digest.json").is_file()
 
 
 def test_restore_after_digest_does_not_recreate_the_archived_record(

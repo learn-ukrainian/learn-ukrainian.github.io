@@ -3,7 +3,7 @@
 **Audience:** infra/track drivers, operators configuring the Grok Bot app, anyone
 tempted to add `--agent grok-bot`.
 **Status:** operator GO 2026-08-14 — observer contract only; not a fleet seat.
-**Related:** native Grok CLI seat = [`grok-formal-cf-isolation.md`](grok-formal-cf-isolation.md);
+**Related:** Grok review routing = [`grok-formal-cf-isolation.md`](grok-formal-cf-isolation.md);
 roster = [`docs/best-practices/agent-activity-matrix.md`](../best-practices/agent-activity-matrix.md) §2.
 
 ## Role
@@ -13,19 +13,20 @@ observer**. It reads GitHub Actions / site signals and **files GitHub issues or
 comments**. It must **never**:
 
 - merge PRs
-- run `scripts/delegate.py` (no dispatch seat)
+- run `scripts/dispatch.py` (no dispatch seat)
 - act as CF of record
 - write the primary checkout (local-computer: **Never** / **Ask** only)
 
 It is **not** a second Grok orchestrator, not a substitute for cross-family PR
 review, and not Entire-cloud.
 
-## Not the native `grok` CLI seat
+## Grok dispatch seat
 
-Do **not** confuse Grok Bot with the native Grok CLI / Grok Build lane already
-on the roster (`delegate.py --agent grok`, alias `grok-build`).
+Grok dispatch runs through the Cursor seat at `grok-4.7-high`.
+Native Grok dispatch is retired; `dispatch.py --agent grok` aliases Cursor.
+Grok Bot remains a separate external observer.
 
-- No `delegate.py` / registry adapter for Grok Bot
+- No `dispatch.py` / registry adapter for Grok Bot
 - Do **not** add `--agent grok-bot`
 - Do **not** add `ask-grok-bot`
 - Auth is the Cursor account, not `XAI_API_KEY`

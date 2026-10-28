@@ -1,13 +1,8 @@
-"""Contract tests for the RB-2/RB-5 TrailSpec v1.1 migrations."""
+"""Contract tests for the RB-5 TrailSpec v1.1 migration."""
 
 from __future__ import annotations
 
 import copy
-import json
-import os
-import re
-import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -15,26 +10,12 @@ import pytest
 import yaml
 
 from scripts.orchestration.trails.closure import TrailClosureGate
-from scripts.orchestration.trails.executor import DefaultReceiptPredicateEvaluator, TrailExecutor
+from scripts.orchestration.trails.executor import TrailExecutor
 from scripts.orchestration.trails.models import CommandExecution, ExitClass
 from scripts.orchestration.trails.store import TrailStore
 from scripts.orchestration.validate_trailspec import PROJECT_ROOT, validate_trailspec
 
-RB2_PATH = PROJECT_ROOT / "scripts/config/trails/rb2-dispatch-loop.trail.yaml"
 RB5_PATH = PROJECT_ROOT / "scripts/config/trails/rb5-session-close.trail.yaml"
-
-# Mirrors scripts.delegate._RUNTIME_TMP_TERMINAL_STATUSES, the dispatch task-status vocabulary.
-DELEGATE_TERMINAL_STATUSES = {
-    "done",
-    "timeout",
-    "needs_finalize",
-    "no_deliverable",
-    "failed",
-    "crashed",
-    "rate_limited",
-    "cancelled",
-    "dry_run",
-}
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -47,7 +28,7 @@ def _commands(spec: dict[str, Any]) -> list[dict[str, Any]]:
 
 @pytest.mark.parametrize(
     ("path", "trail_id", "steps"),
-    [(RB2_PATH, "rb2-dispatch-loop", 24), (RB5_PATH, "rb5-session-close", 18)],
+    [(RB5_PATH, "rb5-session-close", 18)],
 )
 def test_migrated_trails_validate_v11(path: Path, trail_id: str, steps: int) -> None:
     """Each migration is execution-eligible and has the expected v1.1 identity."""
@@ -60,14 +41,14 @@ def test_migrated_trails_validate_v11(path: Path, trail_id: str, steps: int) -> 
     assert len(result["spec"]["trail_hash"]) == 64
 
 
-@pytest.mark.parametrize("path", [RB2_PATH, RB5_PATH])
+@pytest.mark.parametrize("path", [RB5_PATH])
 def test_every_command_binds_the_runner_invocation(path: Path) -> None:
     """All commands receive the durable invocation ID through their environment."""
     for command in _commands(_load(path)):
         assert command["environment"]["TRAIL_INVOCATION_ID"] == "{invocation_id}"
 
 
-@pytest.mark.parametrize("path", [RB2_PATH, RB5_PATH])
+@pytest.mark.parametrize("path", [RB5_PATH])
 def test_each_transition_has_one_receipt_only_predicate(path: Path) -> None:
     """Every transition identifies one distinct predicate over its command receipt."""
     for step in _load(path)["steps"]:
@@ -80,66 +61,9 @@ def test_each_transition_has_one_receipt_only_predicate(path: Path) -> None:
         assert len(predicate_ids) == len(set(predicate_ids))
 
 
-def test_finalize_settle_matches_delegate_terminal_status_vocabulary() -> None:
-    """The status case arms accept delegate.py's underscore-form terminal states."""
-    spec = _load(RB2_PATH)
-    finalize_settle = next(step for step in spec["steps"] if step["step_id"] == "finalize_settle")
-    command = finalize_settle["command"]["argv"][2]
-    matched_statuses = {
-        status
-        for case_arm in re.findall(r'(?:case "\$S" in|;;)\s*([^)]*)\)\s*echo', command)
-        for status in case_arm.split("|")
-        if status != "*"
-    }
-
-    assert matched_statuses == DELEGATE_TERMINAL_STATUSES
-
-
-def _assert_rb2_cleanup_is_non_force(spec: dict[str, Any]) -> None:
-    command = next(
-        step["command"] for step in spec["steps"] if step["step_id"] == "cleanup_failed_worktree"
-    )
-    argv = command["argv"]
-    assert "--force" not in argv
-    assert "-D" not in argv
-    assert "--force" not in " ".join(argv)
-    assert " branch -D " not in f" {' '.join(argv)} "
-    assert command["mutation_class"] == "local-write"
-
-
-def test_rb2_cleanup_never_force_deletes_or_removes_the_branch() -> None:
-    """Cleanup is non-force worktree removal; failed branches remain for forensics."""
-    spec = _load(RB2_PATH)
-    _assert_rb2_cleanup_is_non_force(spec)
-    cleanup = next(step for step in spec["steps"] if step["step_id"] == "cleanup_failed_worktree")
-    assert cleanup["transitions"]["worktree_removed"]["target"] == "observe_cleanup"
-    assert cleanup["command"]["argv"][:2] == ["sh", "-c"]
-
-
-def test_rb2_cleanup_removes_through_the_guarded_cli_as_the_task_owner() -> None:
-    """#8610 r5: cleanup runs the lock + ownership + claim path, never a raw ``git worktree remove``."""
-    cleanup = _rb2_step(_load(RB2_PATH), "cleanup_failed_worktree")
-    script = cleanup["command"]["argv"][2]
-
-    assert script.startswith(
-        '.venv/bin/python -m scripts.orchestration.worktree_claims remove ".worktrees/dispatch/$LANE/$TASK_ID" '
-        '--owner-task-id "$TASK_ID" '
-    )
-    assert "git worktree remove" not in script
-    # The CLI's own output goes to stderr so stdout stays one outcome token.
-    assert " >&2 && echo worktree-removed || echo removal-failed" in script
-
-
 def test_mutations_always_have_a_distinct_reobservation_step() -> None:
     """Mutating commands never claim state themselves; a different observe step follows."""
     checks = {
-        RB2_PATH: {
-            "drain_slot_inbox": "observe_slot_inbox",
-            "dispatch_worker": "observe_dispatch_state",
-            "override_dispatch": "observe_override_dispatch",
-            "cleanup_failed_worktree": "observe_cleanup",
-            "dispatch_retry": "observe_retry_dispatch",
-        },
         RB5_PATH: {
             "drain_slot_inbox": "observe_slot_inbox",
             "readiness_snapshot": "tree_clean_check",
@@ -163,7 +87,6 @@ def test_mutations_always_have_a_distinct_reobservation_step() -> None:
 def test_former_judgment_and_summon_nodes_are_observe_or_stop() -> None:
     """Former human/judgment nodes only accept a receipt observation or route to STOP."""
     former_judgment_nodes = {
-        RB2_PATH: {"author_brief", "approve_override", "await_settle"},
         RB5_PATH: {"apply_deliveries", "resolve_inflight", "sweep_judgment", "write_handoff"},
     }
     for path, step_ids in former_judgment_nodes.items():
@@ -178,220 +101,6 @@ def test_former_judgment_and_summon_nodes_are_observe_or_stop() -> None:
                 transition["target"].startswith("STOP-")
                 for transition in step["transitions"].values()
             )
-
-
-def _rb2_step(spec: dict[str, Any], step_id: str) -> dict[str, Any]:
-    return next(step for step in spec["steps"] if step["step_id"] == step_id)
-
-
-def _run_rb2_shell_step(
-    step: dict[str, Any], tmp_path: Path, environment: dict[str, str]
-) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        step["command"]["argv"],
-        cwd=tmp_path,
-        env={**os.environ, **environment},
-        check=False,
-        text=True,
-        capture_output=True, timeout=30,
-    )
-
-
-def _matching_transition_labels(
-    step: dict[str, Any], *, actor_outcome: str, exit_code: int
-) -> list[str]:
-    return DefaultReceiptPredicateEvaluator().matching_labels(
-        step, {"actor_outcome": actor_outcome, "exit_code": exit_code}
-    )
-
-
-def _write_fake_delegate(tmp_path: Path) -> None:
-    fake_python = tmp_path / ".venv/bin/python"
-    fake_python.parent.mkdir(parents=True)
-    fake_python.write_text(
-        "#!/bin/sh\nprintf '%s\\n' \"$FAKE_DISPATCH_OUTPUT\"\nexit \"$FAKE_DISPATCH_EXIT\"\n",
-        encoding="utf-8",
-    )
-    fake_python.chmod(0o755)
-
-
-def _write_fake_gh(tmp_path: Path) -> Path:
-    fake_gh = tmp_path / "bin/gh"
-    fake_gh.parent.mkdir(parents=True)
-    fake_gh.write_text(
-        "#!/bin/sh\nprintf '%s\\n' \"$FAKE_GH_OUTPUT\"\nexit \"$FAKE_GH_EXIT\"\n",
-        encoding="utf-8",
-    )
-    fake_gh.chmod(0o755)
-    return fake_gh.parent
-
-
-def _write_fake_tee(tmp_path: Path) -> Path:
-    fake_tee = tmp_path / "bin/tee"
-    fake_tee.parent.mkdir(parents=True)
-    fake_tee.write_text(
-        "#!/bin/sh\nexit \"$FAKE_TEE_EXIT\"\n",
-        encoding="utf-8",
-    )
-    fake_tee.chmod(0o755)
-    return fake_tee.parent
-
-
-def test_rb2_benign_overlap_refusal_reaches_approval_or_concurrency_stop(
-    tmp_path: Path,
-) -> None:
-    """A logged benign refusal reaches approval; missing or denied approval stops safely."""
-    spec = _load(RB2_PATH)
-    dispatch = _rb2_step(spec, "dispatch_worker")
-    observe_dispatch = _rb2_step(spec, "observe_dispatch_state")
-    approve_override = _rb2_step(spec, "approve_override")
-    _write_fake_delegate(tmp_path)
-    environment = {
-        "TASK_ID": "overlap-task",
-        "LANE": "grok",
-        "BRIEF_PATH": "brief.md",
-        "OVERLAP_REASON": "approved-reason",
-        "FAKE_DISPATCH_OUTPUT": "No actual path overlap was found",
-        "FAKE_DISPATCH_EXIT": "1",
-    }
-
-    benign_refusal = _run_rb2_shell_step(dispatch, tmp_path, environment)
-
-    assert benign_refusal.returncode == 0
-    assert benign_refusal.stdout == "dispatched\n"
-    assert (
-        tmp_path / "batch_state/rb2-dispatch-overlap-task.log"
-    ).read_text(encoding="utf-8") == "No actual path overlap was found\n"
-    observed_refusal = _run_rb2_shell_step(observe_dispatch, tmp_path, environment)
-    assert observed_refusal.stdout == "overlap-refused\n"
-    assert observe_dispatch["transitions"]["overlap_refused"]["target"] == "approve_override"
-
-    missing_approval = _run_rb2_shell_step(approve_override, tmp_path, environment)
-    assert missing_approval.stdout == "override-receipt-missing\n"
-    assert (
-        approve_override["transitions"]["override_receipt_missing"]["target"]
-        == "STOP-concurrency-conflict"
-    )
-    receipt = tmp_path / "batch_state/rb2-overlap-overlap-task.receipt"
-    receipt.write_text("task_id=overlap-task\nreason=denied\n", encoding="utf-8")
-    denied_approval = _run_rb2_shell_step(approve_override, tmp_path, environment)
-    assert denied_approval.stdout == "override-receipt-invalid\n"
-    assert (
-        approve_override["transitions"]["override_receipt_invalid"]["target"]
-        == "STOP-concurrency-conflict"
-    )
-
-
-def test_rb2_dispatch_wrappers_log_combined_output_and_route_failure_tokens(
-    tmp_path: Path,
-) -> None:
-    """Both wrappers retain output, and dispatch failure selects its token transition."""
-    spec = _load(RB2_PATH)
-    dispatch = _rb2_step(spec, "dispatch_worker")
-    override = _rb2_step(spec, "override_dispatch")
-    _write_fake_delegate(tmp_path)
-    environment = {
-        "TASK_ID": "failed-task",
-        "LANE": "grok",
-        "BRIEF_PATH": "brief.md",
-        "OVERLAP_REASON": "approved-reason",
-        "FAKE_DISPATCH_OUTPUT": "ordinary failure",
-        "FAKE_DISPATCH_EXIT": "17",
-    }
-
-    failed_dispatch = _run_rb2_shell_step(dispatch, tmp_path, environment)
-    failed_override = _run_rb2_shell_step(override, tmp_path, environment)
-
-    assert failed_dispatch.returncode == 17
-    assert failed_dispatch.stdout == "dispatch-failed\n"
-    assert _matching_transition_labels(
-        dispatch, actor_outcome=failed_dispatch.stdout.strip(), exit_code=failed_dispatch.returncode
-    ) == ["dispatch_failed"]
-    assert failed_override.returncode == 17
-    assert failed_override.stdout == "override-dispatch-failed\n"
-    assert (tmp_path / "batch_state/rb2-dispatch-failed-task.log").read_text(
-        encoding="utf-8"
-    ) == "ordinary failure\n"
-    assert (tmp_path / "batch_state/rb2-override-dispatch-failed-task.log").read_text(
-        encoding="utf-8"
-    ) == "ordinary failure\n"
-
-
-def test_rb2_dispatch_emits_failure_token_for_setup_and_tee_errors(tmp_path: Path) -> None:
-    """Setup and log-capture failures preserve status and select dispatch_failed."""
-    spec = _load(RB2_PATH)
-    dispatch = _rb2_step(spec, "dispatch_worker")
-    environment = {
-        "TASK_ID": "setup-task",
-        "LANE": "grok",
-        "BRIEF_PATH": "brief.md",
-        "FAKE_DISPATCH_OUTPUT": "success",
-        "FAKE_DISPATCH_EXIT": "0",
-    }
-
-    (tmp_path / "batch_state").write_text("not a directory\n", encoding="utf-8")
-    setup_failure = _run_rb2_shell_step(dispatch, tmp_path, environment)
-    assert setup_failure.returncode == 1
-    assert setup_failure.stdout == "dispatch-failed\n"
-    assert _matching_transition_labels(
-        dispatch, actor_outcome=setup_failure.stdout.strip(), exit_code=setup_failure.returncode
-    ) == ["dispatch_failed"]
-
-    tee_tmp_path = tmp_path / "tee-failure"
-    tee_tmp_path.mkdir()
-    _write_fake_delegate(tee_tmp_path)
-    fake_bin = _write_fake_tee(tee_tmp_path)
-    tee_failure = _run_rb2_shell_step(
-        dispatch,
-        tee_tmp_path,
-        {**environment, "PATH": f"{fake_bin}:{os.environ['PATH']}", "FAKE_TEE_EXIT": "2"},
-    )
-    assert tee_failure.returncode == 2
-    assert tee_failure.stdout == "dispatch-failed\n"
-    assert _matching_transition_labels(
-        dispatch, actor_outcome=tee_failure.stdout.strip(), exit_code=tee_failure.returncode
-    ) == ["dispatch_failed"]
-
-
-@pytest.mark.parametrize(
-    ("gh_output", "gh_exit", "expected_outcome"),
-    [
-        ("network unavailable", "1", "deliverable-check-failed"),
-        ("[]", "0", "no-pr"),
-        ("not JSON", "0", "deliverable-check-failed"),
-    ],
-)
-def test_rb2_deliverable_probes_distinguish_pr_absence_from_check_failures(
-    tmp_path: Path, gh_output: str, gh_exit: str, expected_outcome: str
-) -> None:
-    """All settle paths fail closed unless gh returns validated JSON with no PRs."""
-    spec = _load(RB2_PATH)
-    fake_bin = _write_fake_gh(tmp_path)
-    environment = {
-        "TASK_ID": "deliverable-task",
-        "LANE": "grok",
-        "FAKE_GH_OUTPUT": gh_output,
-        "FAKE_GH_EXIT": gh_exit,
-        "PATH": f"{fake_bin}:{os.environ['PATH']}",
-    }
-
-    for step_id in (
-        "verify_deliverable_success",
-        "verify_deliverable_timeout",
-        "verify_deliverable_attention",
-    ):
-        step = _rb2_step(spec, step_id)
-        result = _run_rb2_shell_step(step, tmp_path, environment)
-
-        assert result.returncode == 0
-        assert result.stdout == f"{expected_outcome}\n"
-        selected = _matching_transition_labels(
-            step, actor_outcome=result.stdout.strip(), exit_code=result.returncode
-        )
-        expected_label = expected_outcome.replace("-", "_")
-        assert selected == [expected_label]
-        if expected_outcome == "deliverable-check-failed":
-            assert step["transitions"][expected_label]["target"] == "STOP-precondition-failed"
 
 
 class _TerminalSource:
@@ -560,89 +269,3 @@ def test_rb5_close_parks_invalid_closure_authority_evidence(tmp_path: Path) -> N
     assert result.exit_class == ExitClass.STOP_PARKED
     assert result.outcome == "closure_parked"
     assert executor.store.get_run(run_id).closure_state == "parked"
-
-
-def _git(cwd: Path, *args: str) -> str:
-    return subprocess.run(
-        ["git", *args], cwd=cwd, check=True, capture_output=True, text=True, timeout=30
-    ).stdout.strip()
-
-
-def _rb2_cleanup_fixture(tmp_path: Path, *, owner: dict[str, Any]) -> tuple[Path, dict[str, str]]:
-    """A primary with one dispatch worktree, its owner record, and the project interpreter."""
-    _git(tmp_path, "init", "-b", "main")
-    _git(tmp_path, "config", "user.email", "rb2@example.invalid")
-    _git(tmp_path, "config", "user.name", "RB2 Test")
-    (tmp_path / ".gitignore").write_text(".venv/\n.worktrees/\nbatch_state/\n", encoding="utf-8")
-    _git(tmp_path, "add", ".gitignore")
-    _git(tmp_path, "commit", "-m", "base")
-    worktree = tmp_path / ".worktrees/dispatch/grok/impl-8610"
-    _git(tmp_path, "worktree", "add", "-b", "grok/impl-8610", str(worktree))
-    python = tmp_path / ".venv/bin/python"
-    python.parent.mkdir(parents=True)
-    python.write_text(f'#!/bin/sh\nPYTHONPATH="{PROJECT_ROOT}" exec "{sys.executable}" "$@"\n', encoding="utf-8")
-    python.chmod(0o755)
-    tasks = tmp_path / "batch_state/tasks"
-    tasks.mkdir(parents=True)
-    record = {
-        "task_id": "impl-8610",
-        "run_nonce": "fixture-run-nonce",
-        "worktree_path": str(worktree),
-        **owner,
-    }
-    (tasks / "impl-8610.json").write_text(json.dumps(record), encoding="utf-8")
-    return worktree, {"TASK_ID": "impl-8610", "LANE": "grok"}
-
-
-def test_rb2_cleanup_removes_the_failed_task_worktree_and_keeps_its_branch(tmp_path: Path) -> None:
-    """#8610 r5: the owner's finished record releases the worktree it created."""
-    worktree, environment = _rb2_cleanup_fixture(tmp_path, owner={"status": "failed", "worktree_reused": False})
-    cleanup = _rb2_step(_load(RB2_PATH), "cleanup_failed_worktree")
-
-    result = _run_rb2_shell_step(cleanup, tmp_path, environment)
-
-    assert result.stdout == "worktree-removed\n", result.stderr
-    assert not worktree.exists()
-    assert _git(tmp_path, "branch", "--list", "grok/impl-8610")
-    observe = _run_rb2_shell_step(_rb2_step(_load(RB2_PATH), "observe_cleanup"), tmp_path, environment)
-    assert observe.stdout == "worktree-absent\n"
-
-
-@pytest.mark.parametrize(
-    ("owner", "sibling", "refusal"),
-    [
-        (
-            {"status": "failed", "worktree_reused": False},
-            {"task_id": "review-attached", "status": "running"},
-            "worktree claimed by active task review-attached",
-        ),
-        (
-            {"status": "failed", "worktree_reused": True},
-            None,
-            "owner task impl-8610 did not create this worktree; its creator reaps",
-        ),
-        (
-            {"status": "running", "worktree_reused": False},
-            None,
-            "owner task impl-8610 is not finished (status 'running'); refusing worktree removal",
-        ),
-    ],
-)
-def test_rb2_cleanup_refuses_a_claimed_reused_or_live_worktree(
-    tmp_path: Path, owner: dict[str, Any], sibling: dict[str, Any] | None, refusal: str
-) -> None:
-    """#8610 r5: another task's live claim, a reused checkout, or a live owner stops cleanup."""
-    worktree, environment = _rb2_cleanup_fixture(tmp_path, owner=owner)
-    if sibling is not None:
-        (tmp_path / "batch_state/tasks/review-attached.json").write_text(
-            json.dumps({**sibling, "worktree_path": str(worktree)}), encoding="utf-8"
-        )
-    cleanup = _rb2_step(_load(RB2_PATH), "cleanup_failed_worktree")
-
-    result = _run_rb2_shell_step(cleanup, tmp_path, environment)
-
-    assert result.stdout == "removal-failed\n"
-    assert f"refused: {worktree}: {refusal}" in result.stderr
-    assert worktree.exists()
-    labels = _matching_transition_labels(cleanup, actor_outcome="removal-failed", exit_code=result.returncode)
-    assert labels == ["removal_failed"]

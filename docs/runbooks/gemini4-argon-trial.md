@@ -46,7 +46,7 @@ security, critical-review, or advisor qualification.
 
 This preparation does not implement those defaults. `execution_routing` has
 only `sol_advised_bounded`. `scripts/review/model_catalog.py` validates its fixed
-envelope fields. `scripts/delegate.py::_admit_dispatch_target` admits the supplied
+envelope fields. `scripts/dispatcher/cli.py:_dispatch` admits the supplied
 agent and model but has no CEFR-based author selection. The current catalog has
 no advanced Ukrainian-author role. Adding unused fields or a separate selector
 would not prove a production default. The advanced route stops pending a
@@ -74,7 +74,7 @@ The catalog entry `gemini-4-argon-high` uses lifecycle `hold` and the existing
 role `explicit_bakeoff_only`. Medium and low are aliases of that entry, matching
 the Flash selector convention, while the adapter still emits each listed slug.
 The AGY worker path admits the three listed selectors through the adapter
-allowlist. `delegate.py::_admit_dispatch_target` and `resolve_and_admit` do not
+allowlist. `dispatch.py::_admit_dispatch_target` and `resolve_and_admit` do not
 consult lifecycle for these worker requests. The adapter preserves the requested
 tier and requires the exact provider identity on a successful stream.
 

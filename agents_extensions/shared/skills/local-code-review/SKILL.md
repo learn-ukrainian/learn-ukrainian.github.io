@@ -31,7 +31,7 @@ reviewer; a shared posting identity does not establish independence. See
 Red-team exception (`workflow.md` § Merge policy), for code review only:
 only when no eligible outside-family reviewer exists, resolve with
 `closeout_cli resolve-reviewer --review-mode red_team`, dispatch a
-separate review task with `delegate.py dispatch --review-mode red_team
+separate review task with `dispatch.py dispatch --review-mode red_team
 --prompt-file <file>` whose prompt text names a red team, then publish
 with `record_cf_verdict.py --review-mode red_team --red-team-prompt
 <file>`. The author's task stays refused, and so does every canonical
@@ -83,15 +83,8 @@ the exact shape). Do NOT write a file unless specifically asked.
 
 ## Durable evidence (#11342)
 
-A review whose evidence is not in the result text is unauditable after the
-task ends. Write every artifact a later reader needs (report, archives, logs,
-screenshots, scripts) under `$LU_TASK_EVIDENCE_DIR`, which dispatch creates
-under the task runtime lease and names in the worker preamble. Task cleanup
-copies that directory to `batch_state/preserved/<task>/` with a retrieval
-receipt before it deletes the lease; it is capped at 256 MiB, and an over-cap
-or unreadable directory is a typed refusal that keeps the lease. Ignored files
-written elsewhere in the worktree are not safe: a later dispatch that reuses
-the worktree runs a cone sparse-checkout that removes them, and reuse is now
-refused while a terminal task's worktree evidence has no retrieval receipt.
-Cite preserved evidence by its repository-relative `batch_state/preserved/`
-path, and put the verdict in the result text too.
+Put the verdict and supporting evidence in the result text. Workers write
+additional artifacts under their own worktrees. Dispatch v2 does not preserve
+these artifacts automatically. Explicitly retrieve and verify any required
+artifacts before cleanup or reuse, and cite their verified durable locations
+in the result.

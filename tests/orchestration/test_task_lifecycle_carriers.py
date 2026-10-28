@@ -9,7 +9,6 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-import delegate
 from scripts.api import coordination_router
 from scripts.api.monitor_context import fixture_context
 from scripts.orchestration import agent_ledger, orchestrator_control, task_identity, task_lifecycle
@@ -57,23 +56,6 @@ def _lifecycle_file(tmp_path: Path, *, fresh: bool = False) -> Path:
     path = tmp_path / "task-lifecycle.json"
     task_lifecycle.write_lifecycle(path, ledger)
     return path
-
-
-@pytest.mark.parametrize("fresh", [False, True], ids=["rollover", "fresh"])
-def test_delegate_loads_validated_carrier_and_prompt(tmp_path: Path, fresh: bool) -> None:
-    path = _lifecycle_file(tmp_path, fresh=fresh)
-
-    carrier, prompt = delegate._load_task_lifecycle_carrier(str(path))
-
-    assert carrier is not None
-    assert carrier["state_file"] == str(path.resolve())
-    assert carrier["identity"]["github_issue_number"] == 42
-    assert "authoritative carrier" in prompt
-    assert carrier["lifecycle_id"] in prompt
-    assert carrier["identity"] == task_lifecycle.load_lifecycle(path)["identity"]
-    if fresh:
-        assert carrier["identity"]["task_id"] == "native-driver-42"
-        assert "native-driver-42" in prompt
 
 
 @pytest.mark.parametrize("fresh", [False, True], ids=["rollover", "fresh"])

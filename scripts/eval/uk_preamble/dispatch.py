@@ -3,15 +3,13 @@
 V2 records attest submitted bytes, not legacy prompt wrappers. Acceptance checks
 those stored bytes, task identity and result digest against the frozen paired
 frame. Caller arguments remain frozen in the existing evaluation manifest;
-v2 records do not attest them. Legacy records retain their wrapper and
-argument-attestation checks.
+v2 records do not attest them. Legacy evaluation runs cannot be resumed.
 """
 
 from __future__ import annotations
 
 import json
 import subprocess
-import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -20,8 +18,6 @@ from typing import Any, Protocol
 from scripts.agent_runtime.attribution import resolve_invocation_attribution
 from scripts.common.repo_root import main_checkout_root
 from scripts.dispatcher.cli import build_parser
-from scripts.guardrails import worktree_containment
-from scripts.lib.rules_core import RulesCoreError
 
 from .common import Seat, sha256_bytes, sha256_text
 
@@ -42,12 +38,7 @@ TERMINAL_STATUSES = frozenset(
 CONTROL_TIMEOUT = 120  # seconds for status calls
 SPAWN_TIMEOUT = 900  # seconds for dispatch, which may create a read-only worktree
 WAIT_MARGIN = 900  # seconds a wait may outlast the worker's hard timeout
-RULES_SEAT = "core"
 READ_ONLY = "read-only"
-# Delegate always exports and names the supported evidence directory (#11342).
-# The block is path-free, so this presence marker reproduces delegate's prompt
-# exactly while the real per-task lease path stays out of the paired frame.
-EVIDENCE_BLOCK = "evidence"
 # Classification is a property of the task kind, not the seat. Judge compares Ukrainian writing, so it is review.
 TASK_FAMILIES = {
     "review": "ukrainian-review",
@@ -135,10 +126,7 @@ class DispatchError(Exception):
 
 
 def caller_initiator() -> str:
-    """The initiator delegate records when this process dispatches without ``--initiator``.
-
-    ``unknown`` is not a caller: delegate refuses ``--force-new`` for it, and so does preflight.
-    """
+    """Resolve the caller identity for evaluation provenance."""
     return resolve_invocation_attribution().initiator
 
 
@@ -189,11 +177,11 @@ def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], 
     if conditions.get("effective_prompt_sha256") != expected["effective_prompt_sha256"]:
         problems.append(
             f"worker received effective prompt {conditions.get('effective_prompt_sha256')!r}, "
-            "not delegate's composition of the rendered prompt"
+            "not the expected composition of the rendered prompt"
         )
     if conditions.get("prompt_blocks") != list(expected["prompt_blocks"]):
         problems.append(
-            f"delegate appended prompt blocks {conditions.get('prompt_blocks')!r}, "
+            f"recorded prompt blocks {conditions.get('prompt_blocks')!r}, "
             f"not the expected {list(expected['prompt_blocks'])!r}"
         )
     if conditions.get("research") is not None:
@@ -214,10 +202,10 @@ def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], 
 def composition_of(
     composed: str, prompt: str, *, cwd: str | None, worktree_path: str | None, blocks: list[str]
 ) -> dict:
-    """An expected composition: the record fields delegate would write and the frame around ``prompt``."""
+    """An expected composition: the record fields the dispatcher would write and the frame around ``prompt``."""
     at = composed.find(prompt)
     if at < 0:
-        raise DispatchError("delegate's composition does not contain the rendered prompt")
+        raise DispatchError("the expected composition does not contain the rendered prompt")
     return {
         "cwd": cwd,
         "worktree_path": worktree_path,
@@ -226,100 +214,6 @@ def composition_of(
         "suffix_sha256": sha256_text(composed[at + len(prompt) :]),
         "effective_prompt_sha256": sha256_text(composed),
     }
-
-
-class DelegateComposer:
-    """Delegate's composition of a read-only ``--cwd`` dispatch, computed in-process without spawning anything.
-
-    Mirrors ``cmd_dispatch`` for this harness's flags: the cwd is validated and
-    resolved as delegate does; it must be inside a registered worktree and gets the
-    worktree block, with the sparse-checkout exclusions delegate would apply
-    there (computed from ``git ls-tree`` without changing the checkout); then
-    ``_compose_dispatch_prompt`` builds the final prompt. A record that departs
-    from this is refused, so any drift fails closed.
-    """
-
-    def __init__(self, delegate: Any, cwd: Path, rules_seat: str = RULES_SEAT) -> None:
-        validated = _legacy_cwd(cwd)
-        try:
-            main = worktree_containment.resolve_main_root(validated if validated.exists() else validated.parent)
-        except worktree_containment.NotAGitRepositoryError:
-            main = None
-        if validated == main:
-            raise DispatchError(
-                "primary --worker-cwd would redirect each read-only task to a different automatic worktree; "
-                "pass an existing isolated Git worktree with --worker-cwd to preserve the paired frame"
-            )
-        self.delegate = delegate
-        self.rules_seat = rules_seat
-        self.worktree = (
-            next(
-                (
-                    path
-                    for path in worktree_containment.registered_worktrees(main)
-                    if path != main and validated.is_relative_to(path)
-                ),
-                None,
-            )
-            if main is not None
-            else None
-        )
-        if self.worktree is not None and any(
-            self.worktree.parts[i : i + 3] == (".worktrees", "dispatch", "acp")
-            for i in range(len(self.worktree.parts) - 2)
-        ):
-            self.worktree = None
-        if self.worktree is None:
-            raise DispatchError(
-                "--worker-cwd must resolve inside a registered added Git worktree; "
-                "pass an existing isolated Git worktree with --worker-cwd"
-            )
-        self.cwd = str(self.worktree)
-
-    def _sparse(self, prompt: str) -> dict[str, Any]:
-        """The sparse-checkout telemetry delegate's worktree block reads (exclusions only; nothing applied)."""
-        d, worktree = self.delegate, self.worktree
-        includes = d._infer_sparse_include(None, owned_paths=None, prompt_text=prompt)
-        _, excluded = d._dispatch_sparse_profile(d._worktree_dir_lister(worktree), includes)
-        return {"full_checkout": False, "excluded": excluded}
-
-    def compose(self, prompt: str) -> dict[str, Any]:
-        d = self.delegate
-        blocks: list[str] = []
-        try:
-            composed = d._compose_dispatch_prompt(
-                prompt,
-                worktree_path=self.worktree,
-                mode=READ_ONLY,
-                sparse_telemetry=self._sparse(prompt) if self.worktree is not None else None,
-                delegate_commits=False,  # only read by write modes
-                research_block="",
-                advisory_block="",
-                advisory_block_kind=None,
-                rules_seat=self.rules_seat,
-                blocks=blocks,
-                evidence_dir=EVIDENCE_BLOCK,
-            )
-        except (OSError, RuntimeError, ValueError, RulesCoreError) as exc:
-            raise DispatchError(f"cannot compute delegate's composition: {exc}") from exc
-        worktree = str(self.worktree) if self.worktree is not None else None
-        return composition_of(composed, prompt, cwd=self.cwd, worktree_path=worktree, blocks=blocks)
-
-
-def _legacy_cwd(cwd: Path) -> Path:
-    """Preserve legacy raw/resolved path validation without loading the CLI runtime."""
-
-    def check(value: str) -> None:
-        if any(unicodedata.category(char) in {"Cc", "Cf", "Cs", "Zl", "Zp"} for char in value):
-            raise DispatchError("--cwd refused: path contains control or format characters")
-
-    check(str(cwd))
-    try:
-        resolved = cwd.expanduser().resolve()
-    except (OSError, RuntimeError) as exc:
-        raise DispatchError("--cwd refused: path cannot be resolved") from exc
-    check(str(resolved))
-    return resolved
 
 
 def _git(cwd: Path, *args: str) -> str | None:
@@ -387,7 +281,6 @@ class DelegateDispatcher:
         self.hard_timeout = hard_timeout
         self.review_profile = review_profile
         self.wait_timeout = hard_timeout + WAIT_MARGIN
-        self.legacy_resume = False
 
     def _run(self, *args: str, timeout: int = CONTROL_TIMEOUT) -> subprocess.CompletedProcess[str]:
         """Run one dispatch subcommand; a timeout preserves pending markers for resume."""
@@ -405,38 +298,26 @@ class DelegateDispatcher:
             ) from exc
 
     def _dispatch_args(
-        self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, legacy: bool = False
+        self, task_id: str, seat: Seat, kind: str, prompt_path: Path
     ) -> list[str]:
         args = ["dispatch", "--agent", seat.agent, "--model", seat.model, "--task-id", task_id]
         args += ["--prompt-file", str(prompt_path), "--mode", READ_ONLY, "--language-lane"]
-        if legacy:
-            args += ["--cwd", str(self.cwd), "--rules-seat", RULES_SEAT]
-        else:
-            head = _git(self.cwd, "rev-parse", "HEAD")
-            if not head:
-                raise DispatchError("cannot pin the worker commit")
-            args += ["ukrainian", "--pinned-head", head.strip()]
+        head = _git(self.cwd, "rev-parse", "HEAD")
+        if not head:
+            raise DispatchError("cannot pin the worker commit")
+        args += ["ukrainian", "--pinned-head", head.strip()]
         args += ["--hard-timeout", str(self.hard_timeout)]
         args += ["--research-task-family", task_family(kind)]
         if seat.effort:
             args += ["--effort", seat.effort]
         if self.review_profile and kind == "review":
             args += ["--review-profile", self.review_profile]
-            if legacy:
-                args += ["--require-review-verdict"]
         return args
 
     def expected_args_sha256(
-        self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, legacy: bool = False
+        self, task_id: str, seat: Seat, kind: str, prompt_path: Path
     ) -> str:
         """Schema-specific argument fingerprint for the frozen evaluation."""
-        if legacy or self.legacy_resume:
-            from scripts import delegate
-
-            args = delegate.build_parser().parse_args(
-                self._dispatch_args(task_id, seat, kind, prompt_path, legacy=True)
-            )
-            return delegate.dispatch_args_sha256(args)
         argv = self._dispatch_args(task_id, seat, kind, prompt_path)
         # Keep the caller fingerprint byte-for-byte: manifests persist the argv JSON,
         # not the parser Namespace. Parsing only verifies the replacement CLI contract.
@@ -446,19 +327,7 @@ class DelegateDispatcher:
             raise DispatchError("evaluation arguments are not supported by scripts/dispatch.py") from exc
         return sha256_text(json.dumps(argv, ensure_ascii=False))
 
-    def legacy_inputs(self, task_id: str, seat: Seat, kind: str, path: Path, prompt: str) -> tuple[dict, str]:
-        from scripts import delegate
-
-        return (
-            DelegateComposer(delegate, self.cwd).compose(prompt),
-            self.expected_args_sha256(task_id, seat, kind, path, legacy=True),
-        )
-
     def compose(self, prompt: str) -> dict[str, Any]:
-        if self.legacy_resume:
-            from scripts import delegate
-
-            return DelegateComposer(delegate, self.cwd).compose(prompt)
         cwd = self.cwd.resolve()
         if not (cwd / ".git").is_file() or _git(cwd, "rev-parse", "--show-toplevel") != f"{cwd}\n":
             raise DispatchError("pass an existing isolated Git worktree root with --worker-cwd")
@@ -473,8 +342,6 @@ class DelegateDispatcher:
         return self._run("status", task_id).returncode == 0
 
     def dispatch(self, task_id: str, seat: Seat, kind: str, prompt_path: Path, *, force_new: bool) -> str | None:
-        if self.legacy_resume:
-            raise DispatchError("legacy evaluations support resume only; use a new run tag for new tasks")
         args = self._dispatch_args(task_id, seat, kind, prompt_path)
         if force_new:
             raise DispatchError("v2 refuses task-id replacement; start a new evaluation run tag")

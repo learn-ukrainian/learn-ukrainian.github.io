@@ -11,7 +11,6 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.agent_runtime import mechanical_admission as admission
 from scripts.agent_runtime.adapters import claude
@@ -24,7 +23,6 @@ from scripts.review.model_catalog import (
     validate_catalog,
 )
 from scripts.review.reviewer_resolver import SONNET_5_5, ResolverInputs, resolve_reviewer
-from scripts.telemetry.pricing import compute_cost
 from tests.claude_route_accounts import HOST_ACCOUNT
 
 HAIKU = "claude-haiku-5-5"
@@ -42,32 +40,6 @@ class Tree:
 def scope(**overrides):
     return {"mode": "read-only", "task_family": "routine_mechanical",
             "paths": ("package-lock.json",), "trees": (Tree(),), **overrides}
-
-
-@pytest.mark.parametrize("family", sorted(admission.MECHANICAL_FAMILIES))
-def test_catalog_role_admits_typed_work(family):
-    result = resolve_role(family, purpose="inspect")
-    assert result.candidates[0].model_id == HAIKU
-    inputs = scope(task_family=family)
-    if family == "readonly_recon":
-        inputs.update(task_role="recon", paths=("Ж.txt",), research_track="l2-uk-en/a1",
-                      trees=(Tree({"Ж.txt": "Ж".encode()}),))
-    admission.refuse_mechanical_task((result.candidates[0].model_id,), **inputs)
-    (target,) = resolve_and_admit(("claude",), model=HAIKU, **inputs, claude_account=HOST_ACCOUNT)
-    assert target.model == HAIKU
-    if family == "readonly_recon":
-        import delegate
-
-        args = delegate.build_parser().parse_args([
-            "dispatch", "--agent", "claude", "--model", HAIKU, "--task-id", "haiku-test",
-            "--prompt", "Inspect the declared file as opaque text", "--mode", "read-only",
-            "--research-task-family", family, "--research-role", "recon",
-            "--research-track", inputs["research_track"], "--owned-path", "Ж.txt"])
-        assert delegate._dispatch_is_language_lane(args) is False
-        refusal, target = delegate._admit_dispatch_target(args, agent="claude", trees=inputs["trees"])
-        assert refusal is None and target.model == HAIKU
-        persisted = delegate._mechanical_task_scope(args, admitted=True)
-        assert persisted["language_lane"] is False and persisted["paths"] == ["Ж.txt"]
 
 
 def test_routine_fallback_and_recon_peer_preserve_envelope_routes():
@@ -261,48 +233,6 @@ def test_adapter_accepts_typed_haiku_and_refuses_untyped_without_provider(monkey
             "mechanical_task": {"family": "routine_mechanical", "paths": ["package-lock.json"]}})
 
 
-def test_price_keeps_directional_api_rates_and_subscription_accounting():
-    rates = yaml.safe_load((ROOT / "scripts/config/model_pricing.yaml").read_text())["models"][HAIKU]
-    assert rates["input_usd_per_1m_tokens"] == 0.10
-    assert rates["output_usd_per_1m_tokens"] == 0.50
-    assert rates["cache_read_usd_per_1m_tokens"] == 0.01
-    assert rates["base_price_max_input_tokens"] == 100000
-    assert rates["long_context_input_usd_per_1m_tokens"] == 0.50
-    assert rates["long_context_output_usd_per_1m_tokens"] == 2.50
-    assert rates["long_context_cache_read_usd_per_1m_tokens"] == 0.05
-    result = compute_cost(HAIKU, 1_000_000, agent="claude")
-    assert result.cost_usd is None and result.provenance == "subscription"
-
-
-def test_dispatch_parser_no_spawn_admission_and_persisted_scope():
-    sys.path.insert(0, str(ROOT / "scripts"))
-    import delegate
-    args = delegate.build_parser().parse_args([
-        "dispatch", "--agent", "claude", "--model", HAIKU, "--task-id", "haiku-test",
-        "--prompt", "Inspect package-lock.json", "--mode", "read-only", "--dry-run",
-        "--research-task-family", "routine_mechanical", "--owned-path", "package-lock.json"])
-    refusal, target = delegate._admit_dispatch_target(args, agent="claude", trees=(Tree(),))
-    assert refusal is None and target.model == HAIKU
-    persisted = delegate._mechanical_task_scope(args)
-    assert persisted["family"] == "routine_mechanical" and persisted["paths"] == ["package-lock.json"]
-    args.review_profile = "ukrainian"
-    refusal, target = delegate._admit_dispatch_target(args, agent="claude", trees=(Tree(),))
-    assert target is None and "review" in refusal
-    args.review_profile = None
-    args.owned_path = ["scripts/delegate.py"]
-    refusal, target = delegate._admit_dispatch_target(args, agent="claude", trees=(Tree(),))
-    assert target is None and "security-sensitive" in refusal
-    args.owned_path = ["package-lock.json"]
-    args.prompt = "Напиши текст"
-    refusal, target = delegate._admit_dispatch_target(args, agent="claude", trees=(Tree(),))
-    assert target is None and "task prompt" in refusal
-
-
-def test_unrelated_dispatch_does_not_persist_research_dimensions():
-    from types import SimpleNamespace
-
-    import delegate
-    assert delegate._mechanical_task_scope(SimpleNamespace(research_task_family="unrelated", research_role="private")) == {}
 
 
 def test_unconstrained_models_and_routine_writes_preserve_admission():

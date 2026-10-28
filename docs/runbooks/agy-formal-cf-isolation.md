@@ -38,8 +38,8 @@ Formal CF for AGY-authored work is requested by the driver of record via direct 
 ## Live lane (non-formal / bounded work)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.8-flash-high \
-  --mode danger --worktree --task-id <task> --prompt-file BRIEF
+.venv/bin/python scripts/dispatch.py dispatch --agent agy --model gemini-3.8-flash-high \
+  --mode workspace-write --worktree --task-id <task> --prompt-file BRIEF
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
   --task-id agy-bounded --to-model gemini-3.8-flash-high
 ```

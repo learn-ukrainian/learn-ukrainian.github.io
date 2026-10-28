@@ -2051,7 +2051,6 @@ def _boom(*_args, **_kwargs):
 @pytest.mark.parametrize(
     ("test_name", "target"),
     [
-        ("delegate_admission", "scripts.delegate._publish_admission_hold"),
         ("record_cf_verdict", "scripts.review.record_cf_verdict.main"),
         ("lease_mutation", "agents_extensions.shared.session_streams.handoff.claim_stream"),
         ("closeout_observer", "scripts.orchestration.task_closeout.GhGitHubAdapter.observe"),

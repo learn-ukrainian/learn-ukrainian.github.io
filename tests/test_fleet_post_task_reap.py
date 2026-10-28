@@ -22,13 +22,12 @@ import sys
 import tarfile
 from datetime import UTC, datetime
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import pytest
 
-from tests.orchestration.test_interrupted_caller_matrix import hashes
-from tests.orchestration.test_interrupted_caller_matrix import interrupted_checkout as interrupted_checkout
+from tests.helpers.interrupted_checkout import hashes
+from tests.helpers.interrupted_checkout import interrupted_checkout as interrupted_checkout
 
 
 @pytest.fixture
@@ -1071,56 +1070,6 @@ def test_canonical_derived_path_is_reaped_through_real_reaper(hermetic_reap, tas
 
 
 _OWNERSHIP_MISMATCH = "unknown ownership: task binding does not match dispatch path"
-
-
-@pytest.mark.parametrize("creator_record", ["absent", "hot", "archived"])
-@pytest.mark.parametrize("failure_shape", ["runtime-tmp-lease", "existing-worktree-validation", "legacy-hand-built"])
-def test_prep_failure_record_of_successor_does_not_reap_creator_tree(
-    hermetic_reap, monkeypatch, creator_record, failure_shape
-):
-    """#10486: deployed reapers must reject old prep failures claiming creation."""
-    from scripts import delegate
-
-    repo, tasks = hermetic_reap
-    successor = "codex-shared-leaf"
-    tree = _reuse_cohort(repo, tasks, creator_task="codex-creator-r1", successor_task=successor)
-    creator_path = task_record_path(tasks, "codex-creator-r1")
-    if creator_record == "absent":
-        creator_path.unlink()
-    elif creator_record == "archived":
-        archive = archived_task_record_path(tasks, "codex-creator-r1")
-        archive.parent.mkdir(parents=True, exist_ok=True)
-        creator_path.rename(archive)
-
-    successor_path = task_record_path(tasks, successor)
-    if failure_shape == "legacy-hand-built":
-        state = json.loads(successor_path.read_text())
-        state.update(status="failed", pid=None, worktree_reused=False)
-    else:
-        monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-        monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-        assert delegate._record_worktree_prep_failure(
-            task_id=successor,
-            run_nonce="failed-successor",
-            attribution=SimpleNamespace(initiator="test", source="test"),
-            agent="codex",
-            mode="read-only",
-            prompt="prep failure probe",
-            error=RuntimeError(f"fixture {failure_shape} refusal"),
-            worktree_path=tree,
-            worktree_branch="codex/shared-reused",
-        )
-        state = json.loads(successor_path.read_text())
-        # Preserve the old on-disk writer shape even after the writer is fixed.
-        state["worktree_reused"] = False
-    assert "ignored_output_baseline" not in state
-    successor_path.write_text(json.dumps(state))
-
-    report = post_task_reap.post_task_reap(successor, tasks_dir=tasks, repo_root=repo, apply=True)
-
-    assert report["main_worktree"]["action"] == "retained", report["main_worktree"]
-    assert report["main_worktree"]["reason"] == _OWNERSHIP_MISMATCH
-    assert tree.exists()
 
 
 @pytest.mark.parametrize("baseline", [None, False, "inventory", []], ids=["absent", "false", "string", "list"])

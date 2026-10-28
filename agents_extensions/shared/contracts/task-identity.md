@@ -52,8 +52,8 @@ for both schema-valid forms. `--reuse` preserves an existing ledger and its
 evidence, but a fresh identity must match that ledger's full persisted identity;
 it cannot adopt another thread's ledger even for the same issue.
 
-Pass the returned `state_file` as `--lifecycle-file` to the existing dispatch
-command. Read the carrier or reconcile observations with:
+Dispatch v2 does not propagate a lifecycle file. Include the returned ledger
+locator in the brief. Read the carrier or reconcile observations with:
 
 ```bash
 .venv/bin/python -m scripts.orchestration.task_closeout carrier --state-file "$LEDGER"

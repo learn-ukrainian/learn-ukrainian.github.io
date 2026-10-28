@@ -92,7 +92,7 @@ RULE_SOURCES: tuple[str, ...] = (
     "agents_extensions/shared/rules/workflow.md",
     # Fleet-comms mid-cutover coordination (standalone TUI/UI SSOT; #5512 / #4707).
     "agents_extensions/shared/rules/fleet-comms-coordination.md",
-    "agents_extensions/shared/rules/delegate-must-use-worktree.md",
+    "agents_extensions/shared/rules/dispatch-must-use-worktree.md",
     "agents_extensions/shared/rules/cli-help-standard.md",
     "agents_extensions/shared/rules/model-assignment.md",
     # Driver routing card + breadth floor (operator GO 2026-08-06).

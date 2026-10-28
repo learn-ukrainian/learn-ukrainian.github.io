@@ -31,7 +31,7 @@ _CORPUS_PATHS = [
         "agents_extensions/shared/rules/core-curriculum.md",
         "agents_extensions/shared/rules/core.md",
         "agents_extensions/shared/rules/critical-rules.md",
-        "agents_extensions/shared/rules/delegate-must-use-worktree.md",
+        "agents_extensions/shared/rules/dispatch-must-use-worktree.md",
         "agents_extensions/shared/rules/fleet-comms-coordination.md",
         "agents_extensions/shared/rules/fleet-driver-routing.md",
         "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",

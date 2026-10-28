@@ -36,7 +36,7 @@ The `handoff_note` contains:
   with `thread-rollover`, and the scratch helper path. The keeper restarts the seat.
 - Watcher IDs and what each watched, so the next session can re-arm them.
 
-Copy each worker's `run_nonce` whole: `delegate.py wait --run-nonce` compares it exactly, so a
+Copy each worker's `run_nonce` whole: `dispatch.py wait --run-nonce` compares it exactly, so a
 shortened nonce waits forever.
 
 Keep `.claude/epics-epic/DRIVER-STATE.md` under 4 KB (`wc -c`). Its only content is pinned

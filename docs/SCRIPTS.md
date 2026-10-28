@@ -100,7 +100,7 @@ For the Composer and pool exclusion evidence (AC-01), see [#9423](https://github
 
 `scripts.fleet.credit_lane.routing_facts(lane, record, *, model, snapshot_metadata=None, policy=None, now=None, usage_dir=None)`
 is the one reading of a routing-budget lane record (#9740). `capacity_pick`,
-`idle_settle`, the curriculum wave gate and the `delegate.py` budget guard use its
+`idle_settle` and the curriculum wave gate use its
 facts before adding their own restrictions (role, risk, egress, transport, wave
 config). The reviewer scheduler uses the same plan-window reader.
 Pass `model=None` for lane inventory. It returns the tightest plan window and its
@@ -131,19 +131,9 @@ fresh or healthy.
   `freshness` (`fresh`, `stale` or `unknown`). The wave is `fresh` only when
   `diagnostics.stale` is explicitly `false` and no relevant lane probe is stale;
   missing staleness metadata is unknown, never fresh.
-- **Budget guard (`delegate.py --check-budget`):** on a fresh snapshot it
-  substitutes or refuses a near-cap lane (the `near_cap` status, or a credit lane's
-  tightest plan window at or below the threshold) unless the owner grants credit
-  relief for the model, whether or not the USD cost ledger has records. It
-  substitutes or refuses whenever the owner (`credit_lane.routing_facts`) keeps
-  the lane `hot`; it never clears a label itself. The owner clears a hot label
-  only when its source is weekly pace and no runtime headroom block set it:
-  either its pace is hidden below the visibility floor, or its pace reading on a
-  fresh observation finds no deficit (#9040). The status then comes from
-  remaining allowance, and the picker, reviewer resolver, wave gate and routing
-  recommendation read the same cleared status. A hot label from Cursor Auto, the
-  ledger or no source stays hot. A stale snapshot stays advisory. Lane health warnings print `demoted` for an
-  unhealthy lane and `health unknown (<basis>)` when health is unknown.
+- **Dispatch routing:** the budget substitution guard is retired. Select an
+  explicit provider/model using current capacity evidence.
+
 - **Reviewer resolver and wave gate:** a near-cap candidate keeps credit relief
   only when `credit_lane.published_credit_relief` re-decides it with
   `lane_credit_state` over the complete published lane record: snapshot
@@ -207,11 +197,11 @@ Every launcher starts its seat with the rules core
 runs from; no environment variable moves it. Claude Code routes get `--append-system-prompt`,
 native Codex `-c developer_instructions=…`, Grok `--rules`; AGY, Cursor, OpenCode and Hermes
 receive the core at the head of the initial prompt. A Kimi launcher exits 2 on the catalog
-retirement before rules attachment, so it never starts a coding task. `delegate.py dispatch`
-(`--rules-seat core|content`, default `$LU_RULES_SEAT`), ACP calls and the
-legacy bridge prompts prepend the same block unless the prompt already starts
-with it. An absent, unreadable or empty core (or, for a content seat, addendum) refuses: a launcher exits 1 before
-any adapter check or deploy, `delegate.py dispatch` exits 2 before any check or task record, an ACP call raises
+retirement before rules attachment, so it never starts a coding task. ACP calls
+and legacy bridge prompts prepend the same block unless the prompt already
+starts with it. Dispatch v2 checks core availability but does not prepend the
+core or support rules-seat selection. An absent, unreadable or empty core (or, for a content seat, addendum) refuses: a launcher exits 1 before
+any adapter check or deploy, `dispatch.py dispatch` exits 2 before any check or task record, an ACP call raises
 `InterAgentTransportError`, a discussion raises `AcpxDiscussionError` before admission, an `ask-*` prompt exits, and
 the loader CLI exits 3; each message names the path. `LAUNCHER_DRY_RUN=1` prints the seat
 and size; `LAUNCHER_DRY_RUN_ARGV_FILE=<path>` also writes the exact argv.
@@ -911,7 +901,8 @@ the primary checkout's interpreter, source DB and deck dir via an exported
 .venv/bin/python -m scripts.common.test_slots status [--json]
 ```
 
-Dispatch-worker pytest runs already hold slots, so they need no wrapper; the pre-push gate runs no tests and holds none. A
+Use the test-slot wrapper for dispatch-worker pytest runs: v2 does not inject
+the nested-pytest plugin. The pre-push gate runs no tests and holds none. A
 waiting run prints `TEST SLOTS: waiting ... queue position N/M`. Settings, refusals and the
 long-queue procedure: `docs/runbooks/test-slots.md`.
 
@@ -927,434 +918,68 @@ work uses AGY; the legacy Gemini CLI route is unsupported.
 
 ### Delegate to background workers
 
+Use dispatch v2 for detached execution. Give every task an explicit provider and
+model, a complete brief, and a dispatch worktree:
+
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
-  --agent {codex|claude|agy|grok|grok-build|grok-hermes|deepseek|cursor} \
-  --task-id <id> \
-  --prompt-file <file> \
-  --worktree \
-  --mode danger
+.venv/bin/python scripts/dispatch.py dispatch \
+  --agent codex --model gpt-6.1-sol --effort high \
+  --task-id example-task --prompt-file brief.md \
+  --worktree --mode workspace-write --owned-path scripts/example.py
+.venv/bin/python scripts/dispatch.py status example-task --run-nonce <nonce>
+.venv/bin/python scripts/dispatch.py wait example-task --run-nonce <nonce> --timeout 60
+.venv/bin/python scripts/dispatch.py list --status running
 ```
 
-`kimi` is not in that list. Every Kimi id is retired (OO-58, #11327) and dispatch refuses it.
+Use `read-only` for inspection and review. `--dry-run` prints the invocation
+without starting a worker. `status-or-fail TASK` verifies a running task and its
+supervisor identity; its exit codes are 0 for running, 1 for not running and 2 for
+unavailable state. `cancel TASK --run-nonce NONCE` requests cancellation of that
+specific run. Read the returned task ID and nonce before arming a wait.
 
-Fire-and-forget **execution** with status polling and completion artifacts. This is the right tool when you need another agent to write code, run commands, and commit — not to hold a conversation. For discussion, reviews, or Q&A see [Inter-Agent Communication](#inter-agent-communication) below (`ai_agent_bridge` channel bridge, `ask-*`).
+A write task must produce a pushed branch to satisfy delivery. Dispatch v2 terminal
+statuses are `done`, `failed`, `timeout`, `rate_limited`, `cancelled`, `crashed`, and
+`no_deliverable`. Only `done` is success; other terminal statuses require driver
+disposition. Workers do not merge. Landing and common-reaper cleanup follow
+`agents_extensions/shared/rules/workflow.md`.
 
-**Brief unit (required — #5737):** `--prompt-file` must name **one shippable unit** and its
-**acceptance criteria**, not an open-ended objective. Workers (especially **agy /
-gemini-flash**) must not self-decompose into serial micro-PRs — the orchestrator owns
-sequencing. Canonical wording: `agents_extensions/shared/rules/workflow.md` § Dispatch brief
-unit; routing: `model-assignment.md` § agy/gemini-flash worker briefs.
+The dispatcher requires the local rules core to exist. It does not inject rules
+or research pointers into the worker prompt. Put the required instructions and
+source locators in the brief. Research flags record metadata; they do not fetch
+or deliver registry records. `--owned-path` records scope without a path-claim
+queue. Check disjoint ownership before launch.
 
-**Capacity-first routing (operator 2026-08-12 / #4707):** before implement dispatch,
-`python -m scripts.fleet.usage show` displays subscription capacity and prepaid
-DeepSeek/OpenRouter funding from the Monitor snapshot. Use `json` for the shared
-routing-budget payload, `refresh` (or `--fresh`) for blocking native probes, and
-`doctor` for credential path/env presence without secret values. OpenRouter is a
-funding account, not a default dispatch pick; key cap remaining is not balance.
-`DELEGATE_MONITOR_API` selects the existing Monitor. Offline reads fall back to
-blocking in-process refresh and identify that source. `CODEXBAR_*` naming cleanup
-is a follow-up; compatibility keys remain unchanged. For code pick order, run
-`.venv/bin/python -m scripts.fleet.capacity_pick` and pass `--check-budget` (or set
-`LU_DISPATCH_CHECK_BUDGET=1` in seat launchers). The guard hard-subs hot/near_cap/deficit
-lanes when `scripts/config/agent_fallback_substitutions.yaml` `dispatch_fallbacks` has a
-row (e.g. `codex → cursor`); otherwise it refuses unless `--force-agent`. A hard
-substitution rewrites an explicit `--model` through `model_catalog.yaml`
-`budget_substitution_models`, or drops it for that lane's registry default
-(cursor's dispatch pin is `grok-4.7`) when no `--model` was given or the
-substitute adapter does not reject the explicit model. An explicit `--model`
-with no mapping row that the substitute adapter rejects is refused before
-spawn. If neither the mapped model nor that default is valid for the
-substitute, dispatch refuses before spawn. Flag stays
-opt-in for hermetic tests; launchers should enable the env.
+Resolve capacity with `scripts.fleet.capacity_pick` and `scripts.fleet.usage`.
+Dispatch v2 has no budget substitution guard, pricing/cost telemetry, preflight
+triage, lifecycle-file propagation, keep/force-worktree switches, repository
+backfill, Cursor self-dispatch/DoR/dirty-primary gates, open-PR freeze, or Kimi
+boundary hooks. Native Grok dispatch and the RB2 trail are retired. Use a supported
+provider and model from the current catalog; `grok` is a Cursor alias.
 
-**Credit-balance lanes (#9518):** `scripts/config/credit_lanes.yaml` lists the lanes that can show a
-prepaid credit balance once their plan allowance is used (the router does not verify the provider
-drawing it), and the models each may receive then (Codex: `gpt-6.1-sol`, `gpt-6-luna`). The router sees a credit balance, not the provider
-drawing it, so `scripts/fleet/credit_lane.py` claims no more than that: a lane reads
-`credit_balance_present` (credit balance present; draw not verified by the router) only when its
-tightest plan window has at most `near_cap_remaining_pct` (10%) remaining, the routing-budget record
-carries a positive numeric credit balance from a probe younger than `credit_max_age_s` (900 s; both
-`age_s` and an explicit-UTC `fetched_at`), and the runtime usage records
-(`batch_state/api_usage/usage_<lane>-*.jsonl`, plus the snapshot's own runtime summary) show no
-`rate_limited` outcome for the lane within `rate_limit_window_s` (3600 s). One or more rate limits
-in that window read `credit_use_unconfirmed`. Evidence that cannot be read also reads
-`credits_unverified` (reason names the cause): an unreadable lane file, an unparseable line in one,
-or a `rate_limited` record without an explicit-UTC timestamp; `summarize_lane_runtime` exposes these
-as `unreadable` (`files`, `lines`, `records`, `total`). A missing file is the empty case. The
-recent-rate-limit state reads ("recent rate limit while the plan window is exhausted:
-credit use not confirmed"). These states, a missing, stale, non-numeric or non-positive balance, a
-naive or non-UTC timestamp (parsed by the reset reserve's `utc_datetime`), unreadable usage records
-or a stale snapshot all leave the lane in its plan state (near_cap/AVOID). `capacity_pick` shows
-status `credit_balance_present`, ranks the lane after plan-backed seats, and adds a `credit` object
-to every JSON row (`state`, `reason`, `plan_remaining_pct`, `credit_balance`, `allowed_models`,
-`evidence` with the rate-limit count, window and newest time and the balance with its fetch time,
-`coverage`, `reset_advice`). Lanes without a policy entry carry `{"state": "not_configured"}` and
-are otherwise unchanged. Coverage is reported as unknown because runtime usage records carry no
-per-task credit consumption. `reset_advice.advice` is `use_reset_now`, `hold_reset` or
-`not_applicable`. A free full reset is held while the natural reset is within `reset_hold_hours`
-(48 h) or its time is unknown, because no provider record or repository document says whether a
-full reset re-anchors the window. `delegate.py dispatch` checks the admitted route (after aliases,
-substitution and review selection; no `--model` means the lane default). Admission is a separate
-question from the router recommendation: the allowlist applies whenever the plan window is at or
-below `near_cap_remaining_pct` and a fresh positive balance exists (`credit_balance_present`,
-`credit_use_unconfirmed`, or `credits_unverified` caused by unreadable usage records; the credit
-object carries `allowlist_applies`), so a recent rate limit stops the router recommending the lane
-but never widens the models it may receive. An off-allowlist model then exits 2 with
-`CREDIT_PERIOD_MODEL_REFUSED`. Nothing is gated with a healthy plan window, with a missing, stale
-or non-positive balance (near cap without credits: unchanged), or on other lanes. `--check-budget`
-no longer substitutes away from a lane in `credit_balance_present`. If the policy file is missing, malformed or has an empty
-allowlist, only the built-in default lanes (`credit_lane.DEFAULT_ALLOWED_MODELS`: Codex with the same
-two models, pinned to the shipped yaml by a test) are affected: `capacity_pick` still prints every
-lane, marks Codex `credit.state: policy_error` in its plan state and adds a warning line, and
-admission refuses only off-allowlist Codex dispatches (`allowlist_applies` true), with a stderr warning; every other lane is
-admitted as before. Nothing consumes credits or resets.
+Sparse worktrees use `SPARSE_EXCLUDE_DEFAULT` in `scripts/dispatcher/git.py`.
+Re-include a tree explicitly with `--sparse-include DIR`, or use
+`--full-checkout`. There are no sparse anchors or owned-path re-inclusions.
+The environment contract is `scripts/dispatcher/environment.py`; do not assume
+the retired launcher's extra exports or nested-pytest plugin injection.
 
-**Covered weekly pace deficits (#9615):** `credit_lane.pace_deficit_state` is the shared decision
-for routing-budget, `capacity_pick`, the delegate budget guard, idle-settle and the reviewer
-resolver. A visible pace deficit is uncovered only when neither a fresh positive balance for
-the lane's credit-allowlisted model nor a fresh unexpired free full reset is available. Both
-reserves require readable runtime evidence with no recent rate limits; stale or unreadable
-reserve evidence and expired resets give no relief. Routing-budget publishes `pace_deficit`
-with `raw_deficit`, `uncovered`, `covered_by` and a reason; the raw pace delta stays visible,
-and routing warnings and capacity rows say “pace deficit covered by credits”, “free full reset”,
-or both. Consumers re-check reserve freshness and runtime evidence rather than trusting a
-published coverage flag. Only pace pressure is relaxed: `near_cap` (90% used), runtime
-headroom blocks, login and health gates retain their existing behavior. This does not consume
-a reset, verify provider credit draw, or extend the credit-period admission allowlist gate
-to healthy plan windows.
+For review, pass the exact branch/head, author model, profile and risk selected
+by the reviewer resolver. Protected bound-review execution remains unavailable;
+`--review-id`, `--attempt-id` and `--review-attempt` are dry-run-only. A plain
+read-only dispatch does not supply protected isolation or Sources receipts.
 
-Below `near_cap`, visible allowance lasting to the reset at current pace, including
-a verified covering reserve, is `cool` regardless of weekly used-percent. `warm`
-means at least 50% used with a projected shortfall inside the on-pace band
-(absolute pace delta <= 2 points), or at least 50% used with pace unavailable
-(the fail-safe fallback). Low-use on-pace readings retain their existing `cool`
-tolerance; an uncovered deficit outside the band is still `hot`.
-The reviewer resolver maps `cool` to `healthy` and `warm` to `degraded`;
-`capacity_pick` orders `cool` before `warm`, and routing recommendations prefer
-cool plan-backed lanes before warm ones. These consumers use the shared decision,
-so a covered high-use lane is no longer degraded solely by weekly used-percent.
-
-**Security-sensitive review floor (#9125):** `scripts/review/security_paths.py` holds the approved
-path globs and classifier. For the `code` and `infra` review profiles, any matching changed path raises effective review risk to `critical`,
-including both names of a rename and deleted files; owned paths can add coverage but cannot
-remove it. `closeout_cli resolve-reviewer` collects literal paths from the frozen Git endpoints
-with rename compaction disabled. The floor applies before ladder selection in
-`reviewer_resolver.resolve_reviewer`, inside direct `evaluate_candidate` calls, and before
-review-substitution ladder selection in `target_admission`. Only candidates holding the catalog
-`critical_review` role pass for these targets; pins, custom ladders, lower requested risks and
-caller-owned paths cannot weaken the floor. Cross-family and subject-seat exclusions still bind.
-No qualified available reviewer yields a reasoned refusal. Ordinary targets retain their routing;
-catalog weaknesses remain descriptive. Resolve the target first. Every `code` or `infra` review-typed
-`delegate.py dispatch`, including `ask-* --review`,
-collects literal changes between the base-branch merge-base and the pinned branch/PR head, or
-reads the attempt record's required `target.changed_paths`; an unresolved target refuses with
-`REVIEW_TARGET_UNRESOLVED`. Ukrainian-content attempts use `--review-profile ukrainian` and
-do not collect paths or require a target for this floor. Branch heads are
-pinned before selection and checked again before launch. Admission combines `review_changed_paths`
-with `review_owned_paths`; `./` prefixes are normalized and owned directories add all contained
-security coverage. Code-profile `closeout_cli resolve-reviewer` refuses without a resolved target
-or an owned path; run `closeout_cli target` with the same state file first.
-
-**Credit lanes in routing-budget, the reviewer resolver and `usage show` (#9517):**
-`/api/state/routing-budget` publishes each subscription lane's `credit_lane.lane_credit_state` as the
-additive `agents.<lane>.credit` field; the raw quota `status` keeps its vocabulary (a near-cap Codex
-lane still reads `near_cap`). The recommendation considers a lane in `credit_balance_present` only
-after every cool and warm plan-backed lane (instead of `inline_orchestrator`), says so in its
-rationale and adds a warning naming the credit-period allowlist. `closeout_cli resolve-reviewer`
-(given a full routing-budget snapshot) keeps a near-cap candidate eligible only when that published
-state is `credit_balance_present`, its balance fetch time is still fresh now, and the candidate's
-concrete model is on the lane's allowlist in the local policy (otherwise the exclusion reason names
-the credit state or the allowlist). Such a candidate ranks after plan-backed candidates of equal
-standing, and its receipt carries `credit` (state, evidence, allowlist, `draw`); a flat health map
-or any other credit state keeps the near-cap exclusion. `usage show` appends the published state to
-the Codex `credits:` line (`credit_balance_present: credit balance present; draw not verified by the
-router; usable for … only`, or the fail-closed state with its reason). The curriculum coordinator's
-wave health gate counts a healthy, fresh `near_cap` lane as available under the same re-check
-(`credit_lane.published_credit_relief`); every per-lane diagnostic records `credit_state`, and the re-check's
-`credit` object (on a near-cap lane published as `credit_balance_present`) names the allowlist and notes that health groups configure no
-per-lane models (`wave_models: null`), so dispatch admission enforces the allowlist.
-
-For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
-
-**Read-only isolation (#10025):** without a target, read-only dispatches use a
-detached dispatch worktree. An explicit `--cwd` at the primary root also gets a
-detached worktree. Other `--cwd` targets must resolve inside a registered added
-worktree; unregistered targets are refused before task creation or worker spawn.
-This keeps other drivers' primary-checkout brief edits outside the task's
-mutation snapshot. The known broker runtime log
-`.mcp/servers/message-broker/watcher.log` is exempt only while untracked or ignored.
-Tracked edits there still fail, as do task-created scratch files, `.cache/` output,
-and other ignored MCP files under the #8516 guard.
-
-**Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or
-`danger` worker when any check fails. Read-only dispatches are exempt. Generic, conservative
-defaults live in `scripts/config.py`; the real values are deployment-configured. Each host sets
-them through the environment variable of the same name, or in a deployment env file
-(`NAME=value` lines, `$XDG_CONFIG_HOME/learn-ukrainian/dispatch-admission.env` by default, or the
-file named by `DISPATCH_ADMISSION_ENV_FILE`; empty reads none) that a session started before the
-host set its overrides still picks up. A process environment variable wins over the file (see the
-private operations docs):
-
-| Check | Refused when |
-| --- | --- |
-| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap |
-| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor |
-| `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit |
-| `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) |
-| `DISPATCH_DISK_REAP_USED_PERCENT` | not a refusal: at or above this percent used (default 85, as `df` reports it) the worktree reaper is attempted once; a known reading below the refuse watermark admits (#10871, #10879); must be below the refuse value, else reading the thresholds fails with a configuration error |
-| `DISPATCH_DISK_REFUSE_USED_PERCENT` | the filesystem holding `.worktrees/` is at or above this percent used (default 90) after the worktree reaper has run once (#10776, #10871); a hard stop, exit 4 |
-
-A refusal exits 3 and prints one line that names each failed check with its measured value
-and threshold. Retry once a worker finishes or the host recovers, or override one dispatch
-with `--force-admission "<reason>"`. A full disk is the exception: it exits 4, and no force
-reason overrides it in either the early check or the locked recheck; free space and retry. The reason is required and is recorded in the task record
-under `admission.force_reason`. Nothing is queued silently. Before counting, admission marks
-every `spawning`/`running` record whose pid is dead as `crashed` (source `admission`), so a
-dead worker never holds a slot. The final count, the check, and publication of the new
-`spawning` record happen under one host-wide lock (`batch_state/tasks/dispatch-admission.lock`),
-so concurrent dispatches cannot all take the last slot. `--dry-run` runs the same check but
-only reports dead records. Without `/proc` (macOS) memory and CPU are reported as `unknown`,
-and only the worker cap applies. The pool check reads `memory.current`, `memory.high` and
-`memory.stat` from the `lu.slice` cgroup (or `$LU_SLICE_CGROUP`) and subtracts
-`active_file`/`inactive_file`, so reclaimable page cache does not count. When those files are
-missing (CI, macOS) the check is skipped, logged, and recorded as `admission.pool_check_skipped`. `python -m scripts.fleet.capacity_pick` prints the same
-decision as its last line (JSON key `admission`). The disk check (#10776) runs the reaper (`reap_worktrees.reap_clean_pushed(dry_run=False, lock_timeout_s=5)`, #10778) only for a live dispatch's first check, never under the lock, in `--dry-run` or in `capacity_pick`; those report a full disk as a refusal with "reaper not run in this check". The reaper runs in a child process stopped after `DISPATCH_DISK_REAPER_TIMEOUT_S` (default 90 s; "reaper timed out"). One attempt runs per host at a time (`dispatch-admission-disk-reaper.lock` and `.state` beside the admission lock): a dispatch that does not get the attempt lock, or that arrives within `DISPATCH_DISK_REAPER_COOLDOWN_S` (default 600 s) of an attempt that freed nothing, does not run it and reports the recorded outcome ("reaper attempted N s ago: ..."). A lock miss or cooldown admits a measured usage of at least 85% and below 90%; a reading at or above 90% refuses. A dispatch that reuses an existing worktree skips the disk check. Paths in reaper, probe and alert details are shown as `<path>`. At or above `DISPATCH_DISK_ALERT_USED_PERCENT` (default 75) one alert goes to the epics Fleet Comms channel per 6 hours (state: `dispatch-admission-disk-alert.state` beside the lock). An initially unreadable disk probe or a failed alert never refuses on its own; the reason is shown on the admission line. After a reading at or above the reap watermark, an unknown post-reaper probe is a hard refusal, including when the attempt was skipped for a lock miss or cooldown. The record retains both the initial high reading and the unknown probe reason; retry when usage can be measured again. The refusal cannot be overridden with `--force-admission`. Write task records keep the `admission`
-snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
-process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
-thresholds.
-
-The scheduled cleanup's disk-watermark alert and the backup alerts serialize each full
-read, publish and state-commit transaction with a stable per-state `.lock` file. State
-and `.pending` records use unique mode-0600 temporary files, atomic replacement and
-file/directory flushes. Before publishing, the pending record freezes the message,
-idempotency key and resulting state. A retry replays those exact inputs through Fleet
-Comms' durable publication idempotency and verifies the intended recipient's delivery.
-It commits the state before removing the pending record. This bounds duplicate delivery
-under the existing Fleet contract; it does not claim exactly-once execution across stores.
-An unreadable or malformed pending record prevents a new publication and requires retry
-or driver reconciliation. Do not remove pending records to clear an alert error. An I/O
-failure is recorded in the scheduled hygiene receipt and makes the run exit nonzero;
-receipt writing and the remaining hygiene reporting continue. An unknown alert disk
-probe leaves the crossing state and pending publication unchanged.
-
-**Worker isolation (#8645 part C):** the detached worker runs in the user slice
-`lu-dispatch.slice` (memory, high-water and swap limits set by the deployment) via
-`systemd-run --user --scope --expand-environment=no`. The scope execs the worker in place, so the recorded pid
-is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
-arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
-is `scope` (with `launch_unit`) or `popen-fallback` (with `launch_fallback_reason`).
-A dispatcher started without `XDG_RUNTIME_DIR` (a headless shell, or a worker's sanitized
-environment) still reaches the user manager: `systemd-run` and the probe get
-`XDG_RUNTIME_DIR=/run/user/<uid>` and its `bus` socket when that directory is the
-caller's own and the socket exists. The worker never receives them. `launch_user_bus`
-records `caller`, `derived` (with the variable names), or `unavailable` (with the reason).
-Fallback is the supported path when no user manager is reachable, linger is off, cgroup
-v2 memory is not delegated, or the slice is missing or does not have those limits:
-dispatch prints one warning and uses plain `Popen`. The same fallback is used when
-`systemd-run` exits before the worker writes its start marker, and when the startup
-window ends while `/proc/<pid>` still shows `systemd-run` (the worker never exec'd):
-that process is stopped and plain `Popen` is used. If the process image is already
-the worker, that process is kept and not relaunched. If the start marker arrives only
-as the process is stopped, or `/proc` cannot be read, the task is marked failed and
-is not started again. `LU_DISPATCH_ISOLATION=fallback` forces that path. Install steps
-and the linger/cgroup prerequisites are in
-`packaging/systemd/README.md`. When the slice is active, the admission line adds its
-current memory use against `MemoryMax`. An inactive or missing slice is left off the
-line. `peak_rss_mib` is unchanged.
-
-**Background jobs at exit (#8991):** a headless worker cannot be woken by a
-background-task notification, so when its CLI exits the worker checks for its own
-processes that are still alive: the scope unit's `cgroup.procs` for `launch_mode: scope`,
-or, on `popen-fallback`, processes carrying its `LEARN_UKRAINIAN_DISPATCH_TASK_ID` plus its
-own session. A scope launch is scanned only through its own cgroup; if that cgroup was not
-recorded or is not the unit's, the scan is `unknown` and nothing is signalled later. The
-fallback marker counts whatever the process's real uid, since a job can change it through
-a privileged helper. The record's `leftovers_scan` is `clear`, `live` or `unknown`. `live` adds a
-`background_jobs_alive_at_exit` entry (pids, truncated command lines). `unknown` means the
-scan could not read something it needed (a `cgroup.procs` file, or the environment of a
-process started after the worker that is of this user or shares the worker's cgroup) and adds `leftovers_scan_error`; it is not
-treated as clear. Both set `incomplete_run_reason` (`background_jobs_alive_at_exit` or
-`leftovers_scan_unknown`), record the worker's scope as `leftovers_scope`, and make the run
-`needs_finalize`, never `done`, in every mode, read-only included. Such a run is never
-auto-finalized. Apart from the Cursor server below, detection does not kill anything.
-
-A Cursor dispatch usually leaves one such process: cursor-agent (checked in 2026.09.26 to
-2026.10.01) starts a `worker-server` for the workspace's Git root, inside the CLI's process
-group and with the CLI's environment, and does not stop it when the CLI exits. The server
-exits on its own 300 s after its last request. The Cursor adapter never stops it (#9534).
-In scope mode the worker stops it after the CLI exits and before the exit scan: the server
-is inside this task's own scope cgroup, so it is this task's process, and the reaper would
-stop it with the scope anyway. Each process the scan would report gets a pidfd, and only
-when, read after that pidfd is open, its `/proc/<pid>/exe` sits directly in a version
-directory of the install the resolved `cursor-agent` links into
-(`<install>/versions/<version>/`) with argv exactly `<argv0> <that version dir>/index.js
-worker-server`, and then, read last before each signal, it is still the scanned process
-(same start time), inside this task's scope cgroup, of this user's real uid, does it get
-SIGTERM through that pidfd, then SIGKILL after 3 s. A server that has left the task's scope
-cgroup by that last read is not signalled (SIGTERM or SIGKILL). A pidfd pins the process,
-not its cgroup, so one that migrates between that last read and the kernel's delivery is
-still signalled: no unprivileged call signals a process only while it is in a given cgroup
-(accepted residual). A process that only looks like the server and passes those checks is
-in this task's own cgroup and is stopped the same way. The record lists what was signalled,
-or skipped for leaving the scope, under `leftovers_terminated` (pid, command line, signals
-sent, whether it exited, `left_scope`). The exit scan then runs unchanged:
-anything still alive, the server included when stopping it failed (no pidfd support, a
-refused signal, a survivor), is reported as above and the scope is recorded for the
-reaper. A dispatch that falls back to `popen-fallback` because no user manager is
-reachable signals nothing at exit: the fallback has no cgroup proof, so the server is
-reported as `live` and stopping it is the reaper's job at worktree removal, under the
-checks below. The derived user bus above lets headless dispatches use scope mode.
-
-When that worktree is later removed (settle, `reap_worktrees.py`,
-`fleet/post_task_reap.py`), those processes are stopped first, and only inside the worker's
-own scope. The recorded scope must match the task's launch record (task id, `run_nonce`,
-`launch_mode`, `launch_unit`); a scope unit must carry the name
-`dispatch_isolation.scope_unit_name` derives from that task id and nonce, and its cgroup
-must be that unit's scope under `lu-dispatch.slice` for this user. Anything else is refused
-and nothing is signalled. If any process in the boundary has another real uid, nothing is
-stopped or signalled (not even the scope unit) and removal is refused. Otherwise a scope the
-reaper is not inside is stopped with `systemctl --user stop`. Anything left gets SIGTERM,
-then SIGKILL, each sent through a pidfd opened on the process and re-verified (start time,
-scope membership and real uid) after opening, so a reused pid, or a process that changed
-its uid before that re-check, is never signalled; that re-check is the last read before
-each signal, and a process it finds outside the scope is skipped and reported under
-`left_scope`. Where pidfds are unavailable nothing is signalled. If any process survives or cannot be signalled, removal is refused.
-Guaranteed: a process seen with another user id at the UID scan blocks both the scope unit
-stop and every signal, and each pidfd target's user id is re-checked after its pidfd opens.
-Not guaranteed (accepted residual): a process that changes its identity after the UID scan
-and before the scope unit stop or the pidfd signal lands. That window begins at the UID scan
-and covers both the unit stop and the per-process pidfd path. A unit stop cannot be made
-atomic with the scan; closing the window needs a privileged helper inside the worker's own
-scope.
-
-**Bounded-worker advisory envelope (#9275):** a dispatch that launches `gpt-6-luna`, or
-`gemini-3.8-flash-high` without a Ukrainian authoring/review classification, needs
-`--advisory-task <id>` naming a finished `gpt-6.1-sol` advisor task (`--advisory-role
-bounded_advisory_envelope --advisory-binding <digest>`, digest from the worker command with
-`--print-advisory-binding`). See `docs/agent-runtime-guide.md` § Bounded workers need an
-advisory envelope.
-
-**Auto-finalize owned paths (#8991):** auto-finalize commits only under the task's explicit
-`--owned-path` values (repeatable), recorded verbatim at dispatch as `owned_paths`. It is
-never derived from `--research-owned-path`, which classifies research context. Claims are
-read like the write-path admission guard reads them: `dir/` and `dir/**` own the subtree,
-a plain path owns itself and anything below it, and other wildcards are globs. A claim
-whose only glob syntax is `[...]` (`site/src/pages/[...path].astro`) also owns its literal
-file, as a git pathspec does (#11281). Dispatch
-refuses an empty, `.` or absolute value, any value with a `..` segment, and any glob whose
-first segment is a wildcard (`**`, `./**`, `*`, `*/**`, `*.py`), which would own the whole
-repository or every top-level entry. Without any `--owned-path`, auto-finalize
-commits nothing and the task stays `needs_finalize` (`no_owned_paths_declared`). With them,
-only changed files under those paths are staged and committed. Every other changed file
-stays uncommitted and is listed in `finalize_skipped_paths`. A move across the owned-path
-boundary is never split, whatever Git's 50 % rename similarity would say: while any file
-outside the owned paths is deleted, no owned addition is committed, and while any outside
-file is added, no owned deletion is. Those paths are listed in
-`auto_finalize.cross_boundary_moves`. If any skipped change remains, the task ends
-`needs_finalize`, not `done`. When no change falls under the owned paths, nothing is
-committed (`no_changes_under_owned_paths`).
-
-**Write-path ownership queue (#11281):** before a write-capable dispatch creates anything,
-the ownership ledger (`batch_state/tasks/write-ownership.sqlite3`) compares its
-`--owned-path` claims with every active writer's. Disjoint files admit, also inside one
-shared directory. A concrete overlap (the same file, or a directory claim that covers the
-file) waits in a FIFO queue behind the holder and is admitted once the holder stops
-writing: its task reaches a terminal status or its claim is released explicitly. Opening a
-PR releases nothing; a review-fix dispatch takes the claim again through the same queue.
-The wait is bounded by `DELEGATE_OWNERSHIP_WAIT_S` (default 1800 s, capped at 7200 s;
-`0` answers at once); at the bound dispatch exits 2 with `write-path ownership queue timed
-out … (QUEUE_TIMEOUT)`. A `[...]`-only claim reserves its literal file and every path its
-glob matches; any other glob, a range or negated set, or a claim with no `--owned-path`
-cannot be compared and still refuses beside an active writer (`cannot prove write-path
-disjointness`). `--allow-path-overlap '<reason>'` and `DELEGATE_OWNERSHIP_MODE=warn` admit
-without waiting, as before.
-
-**Explicit auto-finalize PRs (#8508, #8658):** Auto-finalize pushes the branch and
-records `final_branch_head_commit`, but it never opens a pull request implicitly. To
-open a draft PR automatically after a successful dirty-worktree auto-finalize push, pass
-`--finalize-open-pr` at dispatch.
-
-**Dispatch rescue (#8508, #8658):** `delegate.py rescue` inspects or preserves unpushed
-terminal non-success work (crashed, timeout, failed, no_deliverable, needs_finalize) on a
-dedicated `rescue/<agent>/<task>` branch before worktree reaping runs:
-- `python scripts/delegate.py rescue <task_id>` preserves a single task's work immediately.
-- `python scripts/delegate.py rescue --all-stale --older-than 6h` previews candidate tasks without modifying git state.
-- `python scripts/delegate.py rescue --all-stale --older-than 6h --apply` cleans disposable residue, commits uncommitted changes, pushes to `rescue/<agent>/<task>`, and records the rescue ref.
-
-**Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
-`batch_state/tasks/` small. `--apply` enables moves for `archive` and `restore`.
-
-- `settle-stale` reports `needs_finalize` records older than 7 days. Class C means their worktree,
-  local branch, remote branch **and work** are gone. The work counts as gone only when the
-  record names a commit (preferring `final_branch_head_commit`, falling back to `auto_finalize.commit_sha`) that no ref holds under any name, or
-  when the task exited clean with no commits. Each run (dry runs too) first does one
-  fetch into private scan refs per repository; failure leaves class D (`fetch_failed`).
-  Even with `--apply`, it exits 0 with a READ-ONLY report (`action: report`, `mode: read-only`), changes no records and writes no `settled_by` receipt. Classes A, B and D cover a branch or
-  commit still on origin, a local branch or ref still holding the work (even renamed), a
-  dirty worktree, and commits with no recorded commit id.
-- `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`
-  sidecars, into `batch_state/tasks/archive/`. Adjacent `<task>.json.lock` files are intentionally
-  preserved as permanent stable lock anchors to ensure serialization across processes and prevent
-  split-brain inode acquisition (#8659). A record stays hot while its checkout path or
-  an `acp_runtime_paths` entry still exists. Each move holds the record's lock, and it
-  re-checks the record's mtime and status first.
-- `restore` moves an archived record back. No move ever replaces a file: if a writer
-  created the hot record (or a sidecar) first, the writer's file stays and the archived
-  copy is kept and reported.
-
-Readers follow `scripts/orchestration/task_record_store.py`. Active views and the claim scan
-read the hot directory only. Lookups by task id fall back to the archive: `delegate.py
-status`/`wait` (whose `result_file` names the moved sidecar), the task-id reuse guard,
-`GET /api/delegate/tasks/{id}`, `record_cf_verdict` (review and author records) and
-`orchestrator_control` run history. Historical readers use
-`iter_task_records(include_archive=True)`. These are the Monitor `status=all`/terminal listings
-(and the Work projection built on them), bottleneck metrics, the driver-breadth report,
-`delegate.py backfill-repository` and the rate-limit reclassifier. Two views state that their
-history is bounded. `delegate.py list` reads the hot directory, notes on stderr how many
-archived records it left out, and lists them with `--all`. `orchestrator_control inbox
---recent` reads the hot directory and reports `history_scope: "hot"`.
+Shared fixture and caller tests cover the surviving dispatch interface. PR CI
+and merge-group CI provide the broader test proof.
 
 #### Project Research Registry — orchestrator dispatch duty
 
-Before every dispatch, the orchestrator classifies the task by functional role,
-task family, track, and owned paths. Pass every known dimension explicitly; the
-dispatcher never infers research context from the prompt, provider, agent, branch,
-or task ID:
+Classify every task by functional role, task family, track and owned paths.
+Pass known dimensions as `--research-role`, `--research-task-family`,
+`--research-track` and repeatable `--research-owned-path` metadata. Omit unknown
+values. Put relevant record locators in the brief and verify attributed
+consumption separately. A metadata label is not evidence of delivery or use.
 
-```bash
-.venv/bin/python scripts/delegate.py dispatch \
-  --agent codex \
-  --task-id quality-4952 \
-  --prompt-file docs/dispatch-briefs/quality-4952.md \
-  --worktree \
-  --mode danger \
-  --research-role quality \
-  --research-task-family difficulty-gate \
-  --research-track core \
-  --research-owned-path scripts/audit/text_difficulty.py
-```
-
-`--research-role`, `--research-task-family`, and `--research-track` are
-single-valued; repeat `--research-owned-path` when the task owns multiple paths.
-Matching is conjunctive, so omitting a dimension required by a registry record
-safely produces no pointer. Never invent a value to force a match. If the task is
-genuinely generic or unknown, omit all `--research-*` flags and record that
-classification in the brief or orchestration note.
-
-The worker receives bounded pointers, not record bodies. When it relies on one,
-it fetches `GET /api/knowledge/record/{id}?task=<task-id>` while the delegated
-task is active. This creates attributed consumption evidence in the task state;
-`GET /api/knowledge/monitor?window_days=30` exposes only privacy-safe aggregate
-surface/consumption health. A surfaced pointer is not proof of consumption, and
-workers must not fetch irrelevant records merely to inflate adoption metrics.
-Registry delivery is fail-open when disabled or degraded; task classification
-remains an orchestrator responsibility.
-
-Gemini-family work routes through `--agent agy`; the legacy `gemini` dispatcher
-choice remains compatibility-only and should not be used for new work.
-
----
+Task-record maintenance remains available through
+`scripts.orchestration.stale_task_records`; it is separate from dispatch.
 
 ## Build & Validation Workflow
 
@@ -2021,7 +1646,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | --- | --- | --- |
 | Sustained topic-scoped discussion, multi-turn, pinned context | **`ai_agent_bridge post` / `ai_agent_bridge discuss`** (channel bridge) | No (Q&A only; **not** formal CF) |
 | One-off drive-by question to another agent | **Legacy `ask-*` compatibility command** pending single-seat ACP cutover | No by default; opt-in via `--allow-write` only on legacy paths |
-| Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
+| Fire-and-forget execution — run code, commit, push | **`scripts/dispatch.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
 | Formal cross-family PR review | **Direct `ask-* --type review` + PR comment** (sealed `review-pr` / `publish-review-verdict` removed in #8520) | No (review evidence) |
 | Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (never Kimi/K3; retired, OO-58; feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
@@ -2037,7 +1662,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 - `ask-*` remains a temporary compatibility path only until single-seat ACP
   and initiator/quota telemetry land. Do not add new provider launch logic
   there. `ask-gemini` is retired; AGY is the Gemini-family route.
-- `ai_agent_bridge` is for **communication**. `delegate.py dispatch` is for **execution**. Don't confuse them.
+- `ai_agent_bridge` is for **communication**. `dispatch.py dispatch` is for **execution**. Don't confuse them.
 - **`discuss` is not formal review.** Use direct `ask-* --type review` + PR comment for CF (sealed `review-pr` / `publish-review-verdict` removed in #8520).
 - Query `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code a live plane mode.
 - ACPX is the structured transport for supported bounded 2-to-4-seat panels;
@@ -2102,7 +1727,7 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 
 ```bash
 # AGY bridge — Ukrainian content review; bridge code reviews are refused.
-# Native AGY admits low/medium risk code review through delegate.py;
+# Native AGY admits low/medium risk code review through dispatch.py;
 # high/critical, infra and security reviews exclude Gemini.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Перевір наголос і відмінювання в curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
@@ -2149,23 +1774,23 @@ AGY examples:
 
 > **Note.** You rarely call `ask-claude` from inside a Claude session — you already *are* Claude. It's the return path for AGY/Codex or for scripts routing work to Claude.
 
-### Execution via `delegate.py dispatch`
+### Execution via `dispatch.py dispatch`
 
-For write-access work (implement, commit, push). See [Delegate to background workers](#delegate-to-background-workers) above for the full command. **Not** a comms tool — use `ai_agent_bridge` or `ask-*` to discuss, `delegate.py` to have the work done.
+For write-access work (implement, commit, push). See [Delegate to background workers](#delegate-to-background-workers) above for the full command. **Not** a comms tool — use `ai_agent_bridge` or `ask-*` to discuss, `dispatch.py` to have the work done.
 
 When the delegated task may edit files or run git commands:
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+.venv/bin/python scripts/dispatch.py dispatch --model <catalog-model> \
   --agent codex \
   --task-id issue-1383-smoke \
   --prompt-file /tmp/prompt.md \
   --worktree \
-  --mode danger
+  --mode workspace-write
 ```
 
-`delegate.py status <task-id>` will include the `worktree_path` so operators can inspect or clean it up later.
-Use `delegate.py status-or-fail <task-id>` before reporting async task state from memory; it exits 0 only when the Monitor API confirms the task is currently running, exits 1 when the task is done/missing/stale, and exits 2 when the Monitor API is unreachable.
+`dispatch.py status <task-id>` will include the `worktree_path` so operators can inspect or clean it up later.
+Use `dispatch.py status-or-fail <task-id>` before reporting async task state from memory; it exits 0 only when the Monitor API confirms the task is currently running, exits 1 when the task is done/missing/stale, and exits 2 when the Monitor API is unreachable.
 
 ### Monitoring
 

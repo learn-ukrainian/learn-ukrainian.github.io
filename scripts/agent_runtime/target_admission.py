@@ -519,6 +519,11 @@ def resolve_and_admit(
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
 
 
+def seat_default_model(seat: str, harness: str | None = None) -> str | None:
+    """Return the default model used by admission for a seat and optional harness."""
+    return _seat_default_model(seat, harness)
+
+
 def _seat_default_model(seat: str, harness: str | None = None) -> str | None:
     """The model a seat runs when the request pins none.
 
@@ -903,9 +908,6 @@ def describe_slot_holder(slot: str) -> Any:
     return slot_routing.resolve_slot_holder(slot)
 
 
-def launch_seat(agent: str) -> str:
-    """The seat a retired CLI name launches as (its successor), for naming its dispatch worktree only; never a launch target."""
-    return _retired_successor(agent) or agent
 
 
 def _retired_successor(seat: str | None) -> str | None:

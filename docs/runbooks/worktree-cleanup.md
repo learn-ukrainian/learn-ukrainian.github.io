@@ -12,7 +12,7 @@ interpreter instead:
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" -m pytest tests/test_delegate.py
+"$PRIMARY_REPO/.venv/bin/python" -m pytest tests/dispatcher/test_core.py
 ```
 
 Do not substitute `python`, `.venv/bin/python`, or `python -m venv .venv`.
@@ -318,35 +318,14 @@ Git still refuses new ordinary untracked/modified files at non-force removal;
 already archived scratch remains retrievable if removal fails. Unknown state
 always refuses release. This slice adds no probe retry, identity bypass,
 retention release or automatic archive deletion. The reaper's dirty-tree and
-activity refusals and `delegate.py rescue` identity/activity refusals remain
+activity refusals remain
 residuals owned by the accountable driver (`claude-monitor`).
 
-The scheduled job reports terminal non-success dispatches older than six hours
-as rescue candidates in its result and status; it does not commit or push them.
-A clean tree with unpushed commits is flagged at task exit as
-`unpushed work - needs rescue` when the upstream count is known, or
-`unpushed state unknown - needs rescue` otherwise. The driver inspects the
-report and explicitly runs rescue when appropriate. Rescue commits dirty work
-on `rescue/<task-id>`, pushes it, and verifies the remote head with
-`git ls-remote`. A failed push, unverified remote head, or changed file over
-5 MB leaves the worktree in place. To inspect candidates without writing:
-
-```bash
-"$PRIMARY_REPO/.venv/bin/python" scripts/delegate.py rescue --all-stale --older-than 6h
-```
-
-To preserve a reviewed candidate explicitly, run:
-
-```bash
-"$PRIMARY_REPO/.venv/bin/python" scripts/delegate.py rescue TASK_ID --apply
-```
-
-After the driver has inspected a rescue, use `git log origin/rescue/<task-id>`
-to see its commits. Delete an unneeded rescue branch explicitly with
-`git push origin --delete rescue/<task-id>` only after its work is otherwise
-preserved or discarded by the responsible driver. Scheduled branch cleanup
-retains a rescue ref with unique commits; a ref whose tip is proven contained
-in another origin ref may be removed under the existing containment rules.
+The scheduled job reports terminal non-success dispatches as preservation
+candidates; it does not commit or push their work. Dispatch v2 has no rescue
+subcommand. The accountable driver inspects branch/worktree evidence and
+preserves unfinished work before invoking the common reaper. Unknown custody
+or unpushed work remains protected.
 
 ## Branch sweep evidence (#9909)
 
@@ -867,7 +846,7 @@ Callers and their ownership proofs:
   path: its executor repeats frozen-plan, merged-PR, bundle, and candidate
   checks immediately before deletion.
 
-`delegate.py dispatch` refuses a `--cwd` or `--worktree` inside
+`dispatch.py dispatch` refuses a `--cwd` or `--worktree` inside
 `.worktrees/dispatch/acp/`: those runtimes belong to the ACP bridge and are
 never a dispatch target.
 
@@ -990,142 +969,33 @@ record, detached HEAD for the detached classes) before removal, and
 
 ### Interrupted `git worktree add` (#8663)
 
-`delegate.py` bounds `git worktree add` by `DELEGATE_WORKTREE_ADD_*` in
-`scripts/config.py`: a base window, then more time only while the checkout is
-still gaining files, up to a hard ceiling. The add runs in the C locale (so
-git's lock reason is the literal `initializing`) in its own process group.
-
-Stopping a slow add:
-
-1. SIGTERM goes to the add's process group. Git's signal handler deletes the
-   worktree directory and admin directory it was building; the branch ref is
-   kept. Tests prove this on the host git (2.53.0) with SIGTERM before the
-   checkout starts, at its first file, mid-checkout and at its last file.
-2. Dispatch waits up to `_WORKTREE_ADD_STOP_GRACE_S` (30 s) for git to exit.
-   SIGKILL follows only after that grace.
-3. Dispatch worktree preparation removes nothing, not even the empty
-   directory it reserved with `mkdir`. Git 2.53 can write another add's
-   admin registration while that directory is still empty and before its
-   `.git` exists, so an `rmdir` could disrupt that add. The directory stays
-   as it is; `worktree_prep.reserved_dir_left: true` and the failure output
-   record that it was left. An empty, unregistered one is later swept by the
-   reaper's existing zero-file dispatch-husk rule
-   (`reap_worktrees._reap_dispatch_husks`, described at the end of this
-   section, with its one-hour age floor).
-
-Before git starts, dispatch reserves the path with `mkdir`: a path that
-already exists is never passed to git and never removed. Dispatch also
-records the reservation as `worktree_prep` in the task record. The record
-holds the path, `dir_dev`/`dir_ino`, `base_sha`, the dispatcher's
-`owner_pid`/`owner_start`, and git's `git_pid`/`git_start` (start time from
-`/proc/<pid>/stat` field 22). The failed task record keeps `worktree_prep`
-and stores the outcome as `worktree_prep_cleanup`.
-
-**Nothing removes, unlocks or prunes a registered worktree automatically.**
-Dispatch and the reapers both follow this rule. Three review rounds tried to
-prove ownership well enough for automatic removal, and each proof left a race
-in which a foreign or completed worktree could qualify. A leftover can happen
-when git was SIGKILLed, when its cleanup failed, or when the dispatcher died
-mid-add. It stays registered and locked `initializing`, and it is reported as
-`needs_attention: initializing_leftover`:
-
-- dispatch's `worktree_prep_cleanup` and its stderr carry `needs_attention`
-  and the command;
-- `reap_worktrees` reports a dispatch worktree locked `initializing` whose
-  task record carries `worktree_prep` for that path. The row is `skipped`,
-  its reason starts with `needs_attention: initializing_leftover`, and
-  `needs_attention` holds the evidence. The aggregate output lists it under
-  "Needs attention", the Monitor GC sweep summary under `needs_attention`,
-  and every pass appends a `needs_attention` journal event. No other class
-  sees the worktree. While the reserving dispatch may still be running its
-  add, the row says so instead;
-- `post_task_reap` routes such a task's worktree to that report. Its JSON
-  carries a top-level `needs_attention` list.
-
-The evidence (`worktree_prep.leftover_evidence`) covers:
-
-- the `worktree_prep` facts;
-- whether the directory is still the reserved inode;
-- whether the recorded git add (and its process group) and the dispatcher
-  are proven gone;
-- HEAD against `base_sha`;
-- a `git status` summary.
-
-To act on a leftover:
-
-1. Check the evidence. Git and the dispatcher should be gone and nothing
-   should be running inside the worktree. HEAD should be the base commit,
-   and the status should show only a partial checkout (deleted and untracked
-   files).
-2. Only then run the reported command, which starts with `verify first:`:
-   `git -C <repo> worktree unlock <path> && git -C <repo> worktree remove --force <path>`.
-   The branch ref is not touched.
-
-The dispatcher's `owner_pid`/`owner_start` serve one more purpose. While
-`git worktree add` runs, the task record says `spawning` with `pid: null`. If
-the dispatcher dies before writing a terminal record, two paths mark it
-`crashed` with `returncode_reason: dispatch_died_during_worktree_prep` once
-the owner is proven gone (`worktree_prep.is_orphaned_prep_record`): the lazy
-heal in `delegate.py status|wait|list`, and `reconcile_sweep --apply`. The
-ownership ledger stops counting such a record immediately.
-
-Unregistered directories under `.worktrees/dispatch/<agent>/` that contain
-zero files (empty placeholder trees, e.g. only `site/ node_modules/ data/`
-subdirectories) are reported as `would_remove` husks and removed under
-`--apply`. A directory containing any file, symlink, or git metadata is never
-removed by this rule. The rule fails closed on every other guard too: an
-unavailable process-CWD probe skips the directory, a live process cwd inside
-preserves it, and it must be at least one hour old measured by the newest
-mtime anywhere in its subtree — a directory a concurrent `delegate.py` is
-still provisioning (created before `git worktree add` registers it) is never
-"old". Husk removals, dry-run observations, and skips are recorded through
-the same `reaper_lifecycle` journal as every other reaper action.
+Dispatch v2 prepares worktrees through `scripts/dispatcher/git.py`. The legacy
+adaptive `DELEGATE_WORKTREE_ADD_*` timeouts and their launcher recovery path
+are retired. Do not infer that an interrupted checkout is disposable: inspect
+its task record, Git registration, process liveness and custody first. Use the
+common reaper for cleanup; unknown or active ownership preserves the checkout.
 
 ## Before re-firing a task id
 
-A detached `delegate.py dispatch` launcher that is still grinding from a prior
+A detached `dispatch.py dispatch` launcher that is still grinding from a prior
 attempt can finish after you re-fire the same task id, leaving two workers on
 one worktree (the task record points at the newer pid; the older process is an
 orphan). Before re-using a task id, kill any stale detached launcher for it:
 
 ```bash
-/bin/ps -axo pid,etime,command | grep 'delegate.py dispatch .*--task-id <id>'
+/bin/ps -axo pid,etime,command | grep 'dispatch.py dispatch .*--task-id <id>'
 ```
 
 Confirm the match is the stale launcher, then terminate that pid before the
 new dispatch.
 
-### Reusing a worktree with evidence (#11342)
+### Evidence before cleanup or reuse
 
-Dispatch preparation applies a cone sparse-checkout to a reused worktree, and
-`git sparse-checkout set` removes untracked/ignored directories inside a
-tracked cone directory. Because of that, `delegate.py` refuses to reuse a
-worktree while any released task bound to it still has ignored output and no
-retrieval receipt (`worktree_reuse_evidence_unretrieved`). Preserve first:
-
-```bash
-.venv/bin/python -m scripts.fleet.post_task_reap --task-id <task> --apply
-```
-
-That copies the ignored output under `batch_state/preserved/<task>/` with a
-retrieval receipt and then reaps the tree; dispatch into a fresh worktree.
-
-New work should not rely on ignored worktree files surviving at all. Every
-dispatch exposes an empty `$LU_TASK_EVIDENCE_DIR` (`evidence/` in the task's
-runtime lease) and names it in the worker preamble. Task cleanup copies that
-directory to `batch_state/preserved/<task>/` with a retrieval receipt before
-deleting the lease. The copy is capped at 256 MiB; an over-cap, unreadable or
-linked entry is a typed refusal (`runtime_evidence_over_cap`,
-`runtime_evidence_preservation_failed`) that keeps the lease instead of
-deleting bytes silently.
-
-Retrieve the evidence into durable storage and verify its manifest and content
-digests, keeping the original lease until retrieval succeeds.
-Restore the original task record from a trusted recovery copy if it is missing
-or unreadable, and correct the cap, readability or linked-entry condition
-without discarding source data.
-Retry the same cleanup path to publish a verified retrieval receipt before lease
-removal; never delete evidence or the lease just to clear a refusal.
+Workers write artifacts under their own worktrees. Dispatch v2 does not preserve
+these artifacts automatically or require an evidence retrieval receipt before
+worktree reuse. Explicitly retrieve required evidence into durable storage and
+verify its content before cleanup or reuse. Put the verdict and supporting
+evidence in the result text, and cite verified durable artifact locations.
 
 ## Immediate cleanup after merge
 
@@ -1505,31 +1375,12 @@ these files. Scheduled public summaries expose their count and total bytes.
 
 ## Worker-held runtime scratch (#10000)
 
-Keep held patches, handoffs and diagnostics in `$LU_TASK_EVIDENCE_DIR`, the
-task runtime lease's `evidence/` directory, and cite each file in the final
-response. Task cleanup copies that directory to `batch_state/preserved/<task>/`
-with a retrieval receipt before removing the runtime lease. For files elsewhere
-under the runtime temporary root, delegate also preserves
-absolute file citations (including Markdown links, code spans, file URIs and
-line-number suffixes), runtime-root relative code spans or links, and
-`$TMPDIR/<file>` citations, before removing the lease.
-Task records may also declare `held_work` as a list of runtime-root relative or
-absolute file paths. Unreferenced scratch outside `evidence/` remains disposable.
-
-Both worker exit and the terminal orphan sweep copy cited regular files to
-`batch_state/preserved/<task-id>/held-<attempt>/`. The task's
-`preserved_held_work` receipt names that repository-relative `location` and
-each relative file path, size and SHA-256. The adjacent `.manifest.json`
-contains the same receipt, including `retrieval_proof_sha256`; retrieve files
-by joining the primary repository, `location`, and the entry's `path`.
-Preserved copies survive later runtime and worktree reaping.
-
-The existing 256 MiB preservation cap applies. Symlink citations, traversal,
-missing declarations, failed copy or retrieval, and failed manifest or task
-metadata publication refuse runtime deletion with
-`runtime_tmp_held_work_preservation_failed`. The worker records this in
-`tmp_reap_error`; orphan sweeps include the typed reason in `error_details`.
-The original lease remains available for the accountable driver's disposition.
+Dispatch v2 does not automatically preserve cited runtime scratch or
+`held_work`. The legacy launcher preservation module is retired. Preserve required
+evidence explicitly before cleanup, with a
+retrieval receipt where the common reaper requires one. Existing unknown
+custody remains protected. The standalone task-scratch wrapper below retains
+its explicit evidence-directory contract.
 
 ## Task-owned scratch for large ad-hoc runs (#8738)
 
@@ -1641,50 +1492,8 @@ Anything malformed, foreign, symlinked, in use or unknown stays and is counted u
 
 ## Terminal worker publication
 
-A completed write-capable worker can finalize clean unpushed commits, owned
-dirty changes, or both through the existing delegate finalization boundary.
-Kimi retains its content and completion checks. A hard timeout also reaches
-this decision for clean completed commits; publication does not change the
-recorded timeout or invent a subprocess exit code. Live background jobs and
-unknown process scans prevent finalization.
-
-Finalization requires the checked-out branch to match the task's recorded
-branch and refuses protected or unknown branches. Every exposed intermediate
-commit must fit the declared ownership scope, including changes later reverted.
-Replacement objects cannot alter that check. Dirty changes retain the owned-path
-and cross-boundary move checks. Unknown or unowned committed scope blocks publication.
-
-Dirty preparation uses a fresh configuration and a private copy of the source
-index for move detection, scoped staging and trailer commit. Source hooks,
-filters and trailer commands cannot execute. Active attribute transformations
-on the scoped files cause a refusal. The prepared commit and index are installed
-only while the source branch and index still match the captured inputs.
-Staged changes outside the owned paths stay staged and uncommitted.
-
-Publication borrows objects into `SafeGitContext` and uses its own configuration,
-environment and pinned destination. Worker configuration, includes, URL rewrites,
-push URLs, transport programs, implicit tags and inherited `GIT_*` settings
-cannot select the history, destination or published refs. Publication sends one
-explicit object-to-branch refspec without force. Delivery is checked with
-`ls-remote` against that destination; forged tracking refs and a missing upstream
-do not establish or prevent delivery.
-
-The pre-push hook chain comes from the driver's trusted base commit and runs
-in an isolated validation checkout. Worker hook overrides and commits that
-change the validation chain are refused. Validation failure or incomplete
-validation prevents publication. Automatic finalization never disables the hook.
-An unchanged retry also runs validation before confirming the remote tip.
-
-`finalize_delivery` records the branch, commit, verification result, reason,
-owner and next action before the terminal checkpoint. Every `needs_finalize`
-terminal checkpoint includes a typed cause and a recovery action. A push failure
-retains the local commit and current file bytes; it never rewinds HEAD.
-Unowned dirty changes remain in the checkout and keep the task `needs_finalize`,
-even when the owned commit was pushed.
-
-This operation neither deletes worktrees nor turns historical finalization
-failures into success. Existing rescue and common-reaper eligibility rules stay
-in force. The accountable driver owns blocked validation, publication retries,
-independent exact-head review, landing, and deployed behavior proof. See
-[aged finalization reporting](fleet-blocker-reporting.md#report-aged-finalization-work)
-for attention after the finite age threshold.
+Dispatch v2 checks delivery; it does not run the legacy finalize or rescue
+commands. A worker must commit with its required trailer and push its branch.
+Inspect the task's terminal delivery fields and the remote head before claiming
+success. Unpushed commits, dirty work and unknown delivery remain the
+accountable driver's responsibility. Common-reaper custody checks still bind.

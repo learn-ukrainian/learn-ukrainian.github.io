@@ -21,15 +21,12 @@ may only be ``nested-ci``; any other non-empty value exits 99 and runs nothing.
 
 from __future__ import annotations
 
-import ast
-import inspect
 import json
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
-import textwrap
 from pathlib import Path
 
 import pytest
@@ -1075,29 +1072,6 @@ def test_walk_ignores_git_environment(layout, monkeypatch):
     assert npm_guard.protected_links([primary / "site"]) == []
 
 
-def test_protected_paths_match_delegate_provisioning():
-    """The guard's list mirrors the node_modules links delegate creates; fail when they diverge."""
-    from scripts import delegate
-
-    tree = ast.parse(textwrap.dedent(inspect.getsource(delegate._provision_data_symlinks)))
-    loops = [node for node in ast.walk(tree) if isinstance(node, ast.For) and isinstance(node.iter, ast.Tuple)]
-    linked = [element.value for loop in loops for element in loop.iter.elts if isinstance(element, ast.Constant)]
-    assert linked, "could not find the provisioned path tuple in _provision_data_symlinks"
-    assert tuple(path for path in linked if Path(path).name == "node_modules") == npm_guard.PROTECTED_PATHS
-
-
-def test_delegate_provisioned_worktree_is_protected(tmp_path):
-    from scripts import delegate
-
-    primary, worktree = _scratch_checkouts(tmp_path)
-    assert npm_guard.outward_links(worktree) == []
-    delegate._provision_data_symlinks(worktree, primary)
-    assert [link for link, _ in npm_guard.outward_links(worktree)] == [
-        worktree / relative for relative in npm_guard.PROTECTED_PATHS
-    ]
-    assert npm_guard.main(["npm", "ci"], cwd=worktree) == 1
-
-
 # --- the protected worktree is found by walking the filesystem ----------------
 # Each shape below made the a36195414c guard (git's reported root) let `npm ci`
 # through to the fake, which then emptied the shared folder.
@@ -1409,17 +1383,6 @@ def test_real_tool_never_inherits_the_shim_tool_variable(layout, tool, extra_env
 
 
 # --- wiring: dispatched shells resolve npm/npx to the shim ---------------------
-
-
-def test_dispatch_worker_path_resolves_npm_and_npx_to_the_shim(monkeypatch):
-    from scripts import delegate
-
-    # delegate pins the primary checkout; point it at this checkout's shims.
-    monkeypatch.setattr(delegate, "_REPO_ROOT", REPO_ROOT)
-    env = delegate._pinned_worker_venv_env({"PATH": "/usr/bin:/bin"})
-    shim_dir = delegate._REPO_ROOT / "scripts" / "agent_runtime" / "shims"
-    assert shutil.which("npm", path=env["PATH"]) == str(shim_dir / "npm")
-    assert shutil.which("npx", path=env["PATH"]) == str(shim_dir / "npx")
 
 
 def test_runner_merge_guard_path_resolves_npm_to_the_shim():

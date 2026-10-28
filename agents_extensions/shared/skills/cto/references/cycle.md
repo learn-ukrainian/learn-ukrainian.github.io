@@ -58,9 +58,9 @@ never fine.
    Measure stage time across dispatch, review, PR admission CI, queue CI, merge and reap
    in both repositories. Act on the slowest stage this cycle, with an owner and next check.
 5. **Live workers.** Active dispatches from the Monitor API, then
-   `.venv/bin/python scripts/delegate.py status <task-id> --run-nonce <nonce>` for each task
+   `.venv/bin/python scripts/dispatch.py status <task-id> --run-nonce <nonce>` for each task
    the handoff or the view names; task files outrank a partial view. Every running worker
-   has an armed background `delegate.py wait`. Any terminal status but `done` is an
+   has an armed background `dispatch.py wait`. Any terminal status but `done` is an
    attention item; before calling a dispatch dead check open PRs and its worktree for
    unpushed work; reap after terminal status ([recipes](recipes.md#reap-before-re-dispatch)).
    List every task result or lane message awaiting a CTO grant or approval, with its age.

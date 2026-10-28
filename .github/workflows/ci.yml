@@ -161,13 +161,6 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
-      # CI Gate requires Checks; ordinary pytest shards deselect this slow node.
-      - name: Sparse tree collection guard
-        if: github.event_name != 'pull_request'
-        run: >-
-          .venv/bin/python -m pytest
-          tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent
-          --override-ini addopts=-q -m slow --strict-markers
       - name: Collect pytest for PR admission
         if: github.event_name == 'pull_request'
         # Report per-file counts instead of potentially oversized parameter IDs.

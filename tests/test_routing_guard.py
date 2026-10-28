@@ -155,14 +155,6 @@ def test_opencode_transport_is_wired() -> None:
     assert "assert_model_routing_allowed" in src
 
 
-def test_delegate_dispatch_is_wired() -> None:
-    from pathlib import Path
-
-    src = Path("scripts/delegate.py").read_text(encoding="utf-8")
-    assert "assert_agent_routing_allowed" in src
-    assert "assert_model_routing_allowed" in src
-
-
 def test_hermes_transport_is_wired_and_default_model_allowed(monkeypatch: pytest.MonkeyPatch) -> None:
     """ask-hermes is a NON-opencode transport: it needs its own guard.
 
@@ -197,7 +189,7 @@ def test_delegate_help_does_not_advertise_qwen() -> None:
 
     repo_root = Path(__file__).resolve().parent.parent
     result = subprocess.run(
-        [sys.executable, str(repo_root / "scripts" / "delegate.py"), "dispatch", "--help"],
+        [sys.executable, str(repo_root / "scripts" / "dispatch.py"), "dispatch", "--help"],
         capture_output=True,
         text=True,
         cwd=repo_root,
@@ -205,37 +197,3 @@ def test_delegate_help_does_not_advertise_qwen() -> None:
     )
     assert result.returncode == 0, result.stderr
     assert "qwen" not in result.stdout.lower()
-
-
-def test_delegate_dispatch_dry_run_rejects_guarded_model(tmp_path) -> None:
-    """Functional interplay check (deepseek finding 3): a banned --model must
-    exit 2 with the guard message BEFORE the dry-run task_id prints — proving
-    cmd_dispatch actually reaches the guard (late import included)."""
-    import subprocess
-    from pathlib import Path
-
-    repo_root = Path(__file__).resolve().parent.parent
-    result = subprocess.run(
-        [
-            sys.executable,
-            str(repo_root / "scripts" / "delegate.py"),
-            "dispatch",
-            "--agent",
-            "codex",
-            "--model",
-            "openrouter/anthropic/claude-sonnet-5-5",
-            "--task-id",
-            "guard-dry-run-test",
-            "--prompt",
-            "noop",
-            "--dry-run",
-        ],
-        capture_output=True,
-        text=True,
-        cwd=repo_root,
-        env={**__import__("os").environ, "LU_ROUTING_GUARD_OVERRIDE": ""},
-        timeout=120,
-    )
-    assert result.returncode == 2, result.stdout + result.stderr
-    assert "SUBSCRIPTION family" in result.stderr
-    assert "guard-dry-run-test" not in result.stdout

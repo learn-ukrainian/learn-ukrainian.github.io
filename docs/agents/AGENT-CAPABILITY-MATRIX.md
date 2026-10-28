@@ -46,11 +46,11 @@ on 4 of those roles. Headline recommendations:
 
 | # | Family | CLI | Production models | Surface where they live |
 |---|---|---|---|---|
-| 1 | **Claude** | `claude` (Code), `claude` (Desktop) | `claude-sonnet-4.6` (default), `claude-opus-4.7` (xhigh) | `scripts/delegate.py dispatch --agent claude`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude`; inline orchestrator |
-| 2 | **Codex** | `codex` (CLI), `codex` (Desktop) | `gpt-5.5` (xhigh) | `scripts/delegate.py dispatch --agent codex`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`; Codex Desktop UI |
-| 3 | **AGY** | `agy` | `Gemini 3.8 Flash (High)` (routine & deep; 3.1 Pro only on explicit request, operator 2026-09-22) | `scripts/delegate.py dispatch --agent agy`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` |
-| 4 | **Grok** | `hermes -m grok-4.3` | `grok-4.3` | `scripts/delegate.py dispatch --agent grok`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-grok`; uses `hermes_grok.py` adapter |
-| 5 | **DeepSeek v4** | `hermes -z PROMPT -m deepseek-v4-pro\|flash` | `deepseek-v4-pro` (default), `deepseek-v4-flash` (lighter) | LIVE LANE — adapter `scripts/agent_runtime/adapters/hermes_deepseek.py` SHIPPED PR #2107 (2026-05-17, SHA `84ef22455e`). `delegate.py dispatch --agent deepseek` end-to-end smoke validated; first real-world write-mode dispatch landed PR #2112 (artifacts MD support, +192 lines + 10 tests, pytest green). REVERSED from opencode after 33% empty-output flake. Hermes wires `sources` MCP into the model session; model proactively verifies vocab via VESUM + CEFR. |
+| 1 | **Claude** | `claude` (Code), `claude` (Desktop) | `claude-sonnet-4.6` (default), `claude-opus-4.7` (xhigh) | `scripts/dispatch.py dispatch --model <catalog-model> --agent claude`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude`; inline orchestrator |
+| 2 | **Codex** | `codex` (CLI), `codex` (Desktop) | `gpt-5.5` (xhigh) | `scripts/dispatch.py dispatch --model <catalog-model> --agent codex`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`; Codex Desktop UI |
+| 3 | **AGY** | `agy` | `Gemini 3.8 Flash (High)` (routine & deep; 3.1 Pro only on explicit request, operator 2026-09-22) | `scripts/dispatch.py dispatch --model <catalog-model> --agent agy`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` |
+| 4 | **Grok** | `hermes -m grok-4.3` | `grok-4.3` | `scripts/dispatch.py dispatch --model <catalog-model> --agent grok`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-grok`; uses `hermes_grok.py` adapter |
+| 5 | **DeepSeek v4** | `hermes -z PROMPT -m deepseek-v4-pro\|flash` | `deepseek-v4-pro` (default), `deepseek-v4-flash` (lighter) | LIVE LANE — adapter `scripts/agent_runtime/adapters/hermes_deepseek.py` SHIPPED PR #2107 (2026-05-17, SHA `84ef22455e`). `dispatch.py dispatch --model <catalog-model> --agent deepseek` end-to-end smoke validated; first real-world write-mode dispatch landed PR #2112 (artifacts MD support, +192 lines + 10 tests, pytest green). REVERSED from opencode after 33% empty-output flake. Hermes wires `sources` MCP into the model session; model proactively verifies vocab via VESUM + CEFR. |
 | ~~6~~ | ~~Mistral~~ | ~~vibe -p~~ | — | **REMOVED 2026-05-17 (user-cancelled subscription)**. DeepSeek-flash via hermes covers the lane. |
 | 7 | **Gemma local** | REMOVED | `gemma-local` | REMOVED — per user direction 2026-05-17. See PR removing gemma-local. |
 
@@ -238,7 +238,7 @@ prior audits**, **(I)nferred from architecture**.
 | **Architect** | Claude-Opus-xhigh (H) | DeepSeek-pro-max (E) | Opus xhigh for ADRs/decision cards (post-2026-06-15: Opus dispatches dropped → DeepSeek-pro-max takes lead). Pro's grep-then-design pattern is encouraging. |
 | **Coding** | Codex gpt-5.5 (H) | DeepSeek-pro-max (E) | Codex remains incumbent — production-shipped 20+ PRs this month. DeepSeek-pro-max competitive on small tasks; needs validation on cross-file work. |
 | **Code Review** | Codex (H) + DeepSeek-flash (E) | Gemini-3.1-pro (H) | DeepSeek-flash had the highest signal density tonight. Use it as cheap second-opinion alongside Codex on PR reviews. |
-| **Content Writing** | Claude / AGY | DeepSeek-flash (E) | Gemini CLI is unsupported; AGY is the Gemini-family route. Use `scripts/delegate.py dispatch --agent agy` for dispatched content work. |
+| **Content Writing** | Claude / AGY | DeepSeek-flash (E) | Gemini CLI is unsupported; AGY is the Gemini-family route. Use `scripts/dispatch.py dispatch --model <catalog-model> --agent agy` for dispatched content work. |
 | **Content Review** | Claude-Opus-xhigh (H) + Codex (H, green-team) | Gemini-3.1-pro (H), DeepSeek-flash (E) | xhigh-effort review on Opus is gold standard. **DeepSeek-flash is the strongest new entrant — caught the planted Russianism + sharp pedagogical critique + zero false positives.** Mistral medium-3.5 NOT trustworthy for content review without a verifier (produced false positive on `-ся/-сь`). |
 | **Linguistic Verification** | inline Claude with `mcp__sources__*` | DeepSeek-pro / DeepSeek-flash (E) | Sources MCP must run in-process (Claude Code). For OUT-OF-PROCESS verification: DeepSeek (either variant) — both passed `на протязі`. **NEVER devstral-small** (contamination). |
 | **OCR / Vision** | **Gemini Vision** via `scripts/etymology/bulk_ocr_gemini.py` (gemini-2.5-flash default, 691-page ESUM Phase 2 track record) | Apple Vision (untested, on-device option if budget tight) | Mistral OCR was on the list — cancelled with the subscription 2026-05-17. The credential-loader pattern (`scripts/ocr/_credentials.py`) stays for future API key needs. |
@@ -323,22 +323,22 @@ proposed per-area routing for clawpatch scanning. Tonight's data changes one row
 ```bash
 # Claude (Sonnet inline / Opus xhigh dispatch)
 # Inline: just chat. Dispatch (pre-2026-06-15):
-scripts/delegate.py dispatch --agent claude --model claude-opus-4-7 --effort xhigh \
-  --brief docs/dispatch-briefs/foo.md
+scripts/dispatch.py dispatch --agent claude --model claude-opus-4-7 --effort xhigh \
+  --prompt-file docs/dispatch-briefs/foo.md
 
 # Codex
-scripts/delegate.py dispatch --agent codex --model gpt-5.5 --effort xhigh \
-  --brief docs/dispatch-briefs/foo.md
+scripts/dispatch.py dispatch --agent codex --model gpt-5.5 --effort xhigh \
+  --prompt-file docs/dispatch-briefs/foo.md
 
 # AGY (Gemini-family route; direct agy --model uses display labels)
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "QUESTION" --task-id agy-question --to-model gemini-3.8-flash-high
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "DEEP QUESTION" --task-id agy-deep-question --to-model gemini-3.8-flash-high
 # (3.1 Pro only on explicit request, operator 2026-09-22: --to-model gemini-3.1-pro-high)
-scripts/delegate.py dispatch --agent agy --brief docs/dispatch-briefs/foo.md
+scripts/dispatch.py dispatch --model <catalog-model> --agent agy --prompt-file docs/dispatch-briefs/foo.md
 
 # Grok (via hermes)
 hermes -z "QUESTION" -m grok-4.3
-scripts/delegate.py dispatch --agent grok --brief docs/dispatch-briefs/foo.md
+scripts/dispatch.py dispatch --model <catalog-model> --agent grok --prompt-file docs/dispatch-briefs/foo.md
 
 # Mistral (via vibe; NEW lane — adapter PR pending)
 VIBE_ACTIVE_MODEL=mistral-medium-3.5 vibe -p "QUESTION" --output text --trust

@@ -3,7 +3,7 @@
 <critical>
 
 When you dispatch work to Codex, Gemini, or any other agent via
-`scripts/delegate.py dispatch` (or any equivalent), the agent MUST work
+`scripts/dispatch.py dispatch` (or any equivalent), the agent MUST work
 in a git worktree — **not** a feature branch in the main checkout.
 
 ## Why this matters
@@ -23,37 +23,17 @@ Codex ran `git checkout -b feature/gemini-fallback-ladder` inside the
 main checkout. Cleanup was awkward (user had running scripts, couldn't
 switch HEAD). The rule exists so this never happens again.
 
-## Layout: prefer the `dispatch/` subtree (new default)
+## Layout: dispatch subtree
 
-`scripts/delegate.py` supports two worktree layouts:
+Dispatch v2 creates `.worktrees/dispatch/<agent>/<task>/` by default. An explicit
+`--worktree PATH` or `--cwd PATH` must stay inside that agent's dispatch subtree
+and pass the planner's repository and symlink checks. New dispatches do not use
+the deprecated flat layout.
 
-| Layout | Path | How invoked |
-|---|---|---|
-| **Subtree (preferred)** | `.worktrees/dispatch/{agent}/{task}/` | bare `--worktree` (no path) — runtime auto-derives |
-| **Flat (deprecated, back-compat)** | `.worktrees/<task-name>` | existing checkouts only: `--cwd <that-worktree>` |
-
-An explicit `--worktree <explicit-path>` must resolve inside
-`.worktrees/dispatch/{agent}/` for the dispatching agent, and that directory
-and its parents under the repository must be real directories, not symlinks.
-Paths elsewhere, or whose value or resolved path contains a control, format
-(bidi), or line-separator character, are refused (#8775).
-
-Use the **subtree** layout for all new dispatches. The runtime prints a
-`⚠️ DEPRECATED flat worktree layout` warning on the flat form. The
-subtree layout supports task-attributed common-reaper cleanup and aligns the branch name
-(`codex/1657p2-verify-quote`) with the path
-(`.worktrees/dispatch/codex/1657p2-verify-quote/`).
-
-Default sparse checkout: dispatch worktrees exclude `curriculum/`, `wiki/`,
-`site/src/data/`, `site/src/content/`, `registry/projects/`, the
-`registry/lexicon/source-inventory*` trees, `data/projects/`,
-`data/datasets/` and `data/processed/` (about 200 MB of tracked files per
-worktree; the list is `_DISPATCH_SPARSE_EXCLUDE_DEFAULT` in
-`scripts/delegate.py`); re-include with `--sparse-include <dir>`
-(repeatable) or a matching `--owned-path` or `--research-owned-path`; `--full-checkout`
-disables sparse; inside a worktree `git sparse-checkout add <dir>` adds a
-tree later. Workers' mypy, ruff and bytecode caches live in the task's
-scratch lease, not the worktree.
+Sparse exclusions are defined by `SPARSE_EXCLUDE_DEFAULT` in
+`scripts/dispatcher/git.py`. Use `--sparse-include DIR` or `--full-checkout` for
+required inputs. Owned paths do not re-include sparse files, and there are no
+automatic sparse anchors.
 
 ## MANDATORY in every dispatch brief
 
@@ -67,18 +47,18 @@ Work in a git worktree under `.worktrees/dispatch/<agent>/<task>/`
 (auto-created by the runtime when you pass bare `--worktree`). Do NOT
 create a feature branch in the main checkout. Concrete dispatch:
 
-    .venv/bin/python scripts/delegate.py dispatch \
-        --agent codex \
+    .venv/bin/python scripts/dispatch.py dispatch \
+        --agent codex --model gpt-6.1-sol \
         --task-id <task-id> \
-        --mode danger \
+        --mode workspace-write \
         --worktree \
         --base origin/main \
         --prompt-file brief.md
 
     # For dispatches that warrant peak Opus 5.5 reasoning:
-    .venv/bin/python scripts/delegate.py dispatch \
+    .venv/bin/python scripts/dispatch.py dispatch \
         --agent claude --model claude-opus-5-5 --effort xhigh \
-        --task-id <task-id> --mode danger --worktree \
+        --task-id <task-id> --mode workspace-write --worktree \
         --base origin/main --prompt-file brief.md
     # Accepted --effort levels: low | medium | high | xhigh | max
     # (Omit --effort to use the agent's own CLI/config default.)
@@ -104,14 +84,12 @@ policy / Post-merge cleanup, including common-reaper receipts, worker exit,
 branch removal and the fail-closed non-zero/SKIPPED disposition. Never force
 remove a worktree or invent a second removal path.
 
-Clean `read-only` dispatch worktrees are removed automatically on any
-terminal status; clean `workspace-write` and `danger` trees are removed
-only on `done` with exit code 0 (#8548); `--keep-worktree` and dirty trees
-are kept.
+Use the common reaper for terminal worktree cleanup after checking custody and
+delivery evidence. Dispatch v2 has no keep-worktree switch.
 
 ## When YOU (not a delegated agent) need isolation
 
-Same rule — use a worktree. Don't branch in the main checkout. You may start at the repository root and run `git status --short --branch` as a read-only preflight/orientation step, but do not implement there. Any implementation edit, branch work, commit, or PR must happen from a worktree unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is in `scripts/delegate.py` and the common worktree reaper.
+Same rule — use a worktree. Don't branch in the main checkout. You may start at the repository root and run `git status --short --branch` as a read-only preflight/orientation step, but do not implement there. Any implementation edit, branch work, commit, or PR must happen from a worktree unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is in `scripts/dispatch.py` and the common worktree reaper.
 
 Use the subtree layout:
 

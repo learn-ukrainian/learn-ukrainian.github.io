@@ -2414,7 +2414,7 @@ Single task detail plus optional `.result` content.
 ### `GET /api/delegate/active`
 
 List delegate tasks that are currently running or spawning with a live PID.
-Use this, or `delegate.py status-or-fail <task-id>`, before reporting async
+Use this, or `dispatch.py status-or-fail <task-id>`, before reporting async
 task state.
 
 ```json
@@ -2612,7 +2612,7 @@ and never reads the membership cache.
 
 ### Dispatch injection
 
-`delegate.py dispatch` accepts explicit, namespaced context flags — never inferred
+`dispatch.py dispatch` accepts explicit, namespaced context flags — never inferred
 from the prompt, agent, provider, or branch: `--research-role`,
 `--research-task-family`, `--research-track`, and repeatable `--research-owned-path`.
 When set (and the registry is enabled) the dispatch prompt gains a bounded,
@@ -2861,7 +2861,7 @@ re-implement any of them. **P2 exposed the bare `/manifest` + `/record/{id}`
 surface with no automatic caller. P3 (this doc's *Research registry* section
 above) wired it into real task discovery: `GET /api/orient?role=`,
 `MonitorClient.bootstrap()`/`cold_start()`/`research()`, and
-`delegate.py dispatch --research-*` all surface pointers automatically now —
+`dispatch.py dispatch --research-*` all surface pointers automatically now —
 record bodies remain strictly on-demand throughout.**
 
 ### Kill switch (default OFF, instant rollback)
@@ -3023,7 +3023,7 @@ seats; `scope=task:<name>` serves one `task-scoped-reading.md` row
 (`repo-change`, `cli`, `curriculum`, `fresh-build`, `routing`, `driver`,
 `fleet-comms`, `intake`, `review`, `task-family`, `rollover`). Sources and
 assembly come from `scripts/lib/rules_core.py`, the loader launchers,
-`delegate.py` workers and ACP calls use offline, so online and offline
+`dispatch.py` workers and ACP calls use offline, so online and offline
 bytes are identical. `scope=full` retains the reference archive's source order,
 bytes and hash. A core, content or task hash is sha256 over
 `scope=<scope>\n` plus the Markdown, so its `ETag` never matches another

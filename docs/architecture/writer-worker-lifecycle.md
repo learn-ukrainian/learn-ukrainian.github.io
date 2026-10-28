@@ -272,9 +272,9 @@ The local branch ref may remain for recreation while the remote branch exists. I
 The documented single-command recreation and continuation interface reuses the existing dispatch command:
 
 ```bash
-"$PROJECT_PYTHON" scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/dispatch.py dispatch --model <catalog-model> \
   --agent "$WRITER_AGENT" --task-id "$WRITER_TASK" \
-  --branch "$BRANCH" --worktree "$WORKTREE" --mode danger \
+  --branch "$BRANCH" --worktree "$WORKTREE" --mode workspace-write \
   --prompt-file "$CONTINUATION_BRIEF"
 ```
 
@@ -413,7 +413,7 @@ the activation-epoch record, registered dispatch-agent prefixes and complete bra
 Admission records every post-activation writer branch in that ledger index, including explicit `--branch` overrides and
 legacy switches, before publication. Each entry binds admission time, lifecycle identity and the exact activation epoch
 also recorded in the lifecycle ledger. The index retains historical aliases after tree removal, task archival and replacement PR creation.
-Default dispatch branches have `<agent>/<normalized-task>` shape from `scripts/delegate.py:_derive_worktree_branch`.
+Default dispatch branches have `<agent>/<normalized-task>` shape from `scripts/dispatcher/git.py:worktree_plan`.
 A matching prefix, indexed writer branch or writer dispatch provenance triggers classification, not the new precondition by itself.
 
 Registered dispatch provenance means a validated hot/archive dispatch task record attributed to a branch commit,
@@ -601,7 +601,7 @@ Native warm resume from delegate requires a narrowly scoped change to today's br
 
 Each approved task card freezes positive per-attempt hard, silence, and startup timeouts,
 a finite total attempt limit, cumulative execution limit, and a finalization allowance.
-For a card lacking limits, the proposed baseline uses `scripts/delegate.py` defaults:
+For a card lacking limits, the proposed baseline uses `scripts/dispatch.py` defaults:
 `DEFAULT_HARD_TIMEOUT_S = 7200`, `DEFAULT_SILENCE_TIMEOUT_S = 3600`, and
 `DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 600`. Admission snapshots those values rather than reading mutable defaults later.
 The proposed default total is **three attempts**, at most **21600 execution seconds** across them,
@@ -632,7 +632,7 @@ On crash, timeout, cancellation, provider refusal, or unknown completion:
 5. If identity, custody, provider health, gate, or deletion authority remains unknown, record the blocker, owner,
    and concrete event needed for recovery under the 24-hour blocked contract. Do not relabel it as success or terminal `needs_finalize`.
 
-Policy forbids a crashed writer from authorizing deletion of its own tree; the OD-12 same-user limitation still applies. Harness I-01 changes `scripts/delegate.py`'s supervisor exit path
+Policy forbids a crashed writer from authorizing deletion of its own tree; the OD-12 same-user limitation still applies. Harness I-01 changes `scripts/dispatch.py`'s supervisor exit path
 to schedule and await the Infra I-03 common-reaper disposition path after process absence is proved.
 The path accepts verified PUSHED/MERGED cohort receipts instead of requiring `done` with exit code zero
 or refusing every reused tree. Attempt return code alone never licenses removal.
@@ -835,14 +835,14 @@ Live migration remains separately scoped. Authorized migration/prerequisite disp
 ### I-01 Harness: lifecycle custody, constrained review, and supervisor exit
 
 Owner: Harness, accountable driver of #7919. Outcome: each writer exit either proves a disposition or exposes bounded custody.
-Harness owns the supervisor changes in `scripts/delegate.py`, including continuation admission, review reservation,
+Harness owns the supervisor changes in `scripts/dispatch.py`, including continuation admission, review reservation,
 and the exit call to Infra's common reaper. It never adds a second remover.
 Non-goals: implementing runtime resume or physical removal, new provider routes, and crash-rescue identity.
 Dependencies: approved schema, frozen I-02 continuation API and I-03 removal-receipt API. Activation waits for both implementations.
 
 Owned source and template paths:
 
-- `scripts/delegate.py`
+- `scripts/dispatch.py`
 - `scripts/orchestration/task_record_store.py`
 - `scripts/orchestration/dispatch_settle.py`
 - `scripts/orchestration/task_lifecycle.py`
@@ -864,7 +864,6 @@ Owned source and template paths:
 - `scripts/hygiene/tmp_sweep.py`
 - `scripts/session_start.sh`
 - `scripts/config/trails/decision-tables.v0.yaml`
-- `scripts/config/trails/rb2-dispatch-loop.trail.yaml`
 - `scripts/orchestration/integration_sweep.py`
 - `scripts/orchestration/merge_queue_keeper.py`
 - `scripts/review/record_cf_verdict.py`
@@ -876,14 +875,11 @@ Owned test paths:
 
 - `tests/test_writer_lifecycle.py`, new disposition and supervisor integration tests.
 - `tests/test_writer_lifecycle_consumers.py`, new parameterized producer/consumer and board tests.
-- `tests/test_delegate.py`
+- `tests/dispatcher/test_core.py`
 - `tests/test_dispatch_settle.py`
 - `tests/test_delegate_review_admission.py`
-- `tests/test_delegate_review_rounds.py`
-- `tests/test_delegate_timeouts.py`
 - `tests/test_delegate_public_causes.py`
 - `tests/test_delegate_ownership.py`
-- `tests/test_delegate_ownership_dispatch.py`
 - `tests/orchestration/test_task_record_store.py`
 - `tests/orchestration/test_task_lifecycle.py`
 - `tests/orchestration/test_task_closeout.py`
@@ -942,7 +938,7 @@ Owned test paths:
 | I01-AC12 | Schema validates writer/non-writer ledgers; pre-removal local readiness is durable at each H/H' and closeout consumes only the exact current head after removal | `tests/orchestration/test_task_lifecycle.py`, `tests/orchestration/test_task_closeout.py` and supervisor tests, real Git reaped-tree reconcile/AC-sync/review/CI fixtures; H evidence for H', absent/tampered observation and interrupted write all refuse |
 | I01-AC13 | Writer resolver/closeout state uses the canonical durable path; nonwriter debt gates ordinary nonwriter dispatches, bounded prerequisites remain possible, and disputes preserve clocks/counts after PUSHED | `tests/test_review_closeout_cli.py`, `tests/test_delegate_review_admission.py` and `tests/test_writer_lifecycle_consumers.py`, state survives real removal, relative/worktree path refusal, zero/nonzero/UNKNOWN admission, prerequisite bounds and dispute deadline across restart/head/tree changes |
 
-Verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/test_writer_lifecycle.py tests/test_writer_lifecycle_consumers.py tests/test_delegate.py tests/test_dispatch_settle.py tests/test_delegate_review_admission.py tests/test_record_cf_verdict.py tests/orchestration/test_integration_sweep.py tests/orchestration/test_merge_queue_keeper.py`.
+Verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/test_writer_lifecycle.py tests/test_writer_lifecycle_consumers.py tests/dispatcher/test_core.py tests/test_dispatch_settle.py tests/test_delegate_review_admission.py tests/test_record_cf_verdict.py tests/orchestration/test_integration_sweep.py tests/orchestration/test_merge_queue_keeper.py`.
 Also verify with `"$PROJECT_PYTHON" -m pytest -n 2 -q tests/orchestration/test_task_lifecycle.py tests/orchestration/test_task_closeout.py tests/review/test_record_cf_verdict.py tests/test_review_closeout_cli.py tests/test_typed_github_publisher.py tests/test_publish_r5_regressions.py tests/test_publish_diagnostics.py tests/test_publish_hostname.py tests/publish/test_pr_merge_squash_scan.py`.
 The card names the remaining owned test paths and any read-only importer tests explicitly in additional bounded commands.
 Stop on a missing receipt accepted as terminal, review shopping, inconsistent discard attribution, or invisible overdue custody.
@@ -951,7 +947,7 @@ Residual owner: Harness.
 ### I-02 Harness: runtime continuation on the original lifecycle
 
 Owner: Harness, same accountable driver. Outcome: bounded native or stateless continuation consumes the same checkpoint.
-I-01 alone owns changes to the dispatch command and its caller in `scripts/delegate.py`.
+I-01 alone owns changes to the dispatch command and its caller in `scripts/dispatch.py`.
 I-02 supplies the continuation implementation through a frozen helper interface, so the packets cannot edit the same file.
 Non-goals: new routes, broad transcript discovery, other adapter edits, and unbounded budgets. Dependency: I-01's approved interface.
 
@@ -1046,7 +1042,7 @@ Owned source and canonical documentation paths:
 - `tests/orchestration/test_writer_lifecycle_migration.py`, new tests.
 - `docs/runbooks/worktree-cleanup.md`
 - `agents_extensions/shared/rules/critical-rules.md`
-- `agents_extensions/shared/rules/delegate-must-use-worktree.md`
+- `agents_extensions/shared/rules/dispatch-must-use-worktree.md`
 - `agents_extensions/shared/rules/workflow.md`
 - `agents_extensions/shared/contracts/task-lifecycle-closeout.md`
 - `agents_extensions/shared/rules/core.md`
@@ -1186,12 +1182,12 @@ The r4 artifact was cherry-picked from `10bdf2ef1c62a430f6a85fb6a34e03d07a12e586
 | Item | Correction and changed section | Current file/function evidence | Packet acceptance |
 | --- | --- | --- | --- |
 | B1 | Pre-PR verdict recording and publisher gate; I-01 manifest includes the publisher | `scripts/publish/github.py:publish` at line 403 scans/sends pr-create without the pr-merge readiness guard; `scripts/review/record_cf_verdict.py:_pr` at 1309 and `record` at 1507 require an open PR; `collect_branch_review_facts` at 663 provides the branch fact collector | I01-AC04/06/10 |
-| B2 | Review request authority and rejection history distinguishes remediation claims, driver disposition and ineffective candidate approval; D-04 handback precedes approval publication | `scripts/review/closeout_cli.py:_cmd_finding` at 536 persists adjudication; `scripts/delegate.py:_create_auto_finalize_pr` at 7589 is a writer publication caller; neither establishes the proposed driver-only disposition handback | I01-AC11 |
+| B2 | Review request authority and rejection history distinguishes remediation claims, driver disposition and ineffective candidate approval; D-04 handback precedes approval publication | `scripts/review/closeout_cli.py:_cmd_finding` at 536 persists adjudication; the removed auto-finalize PR caller has no v2 replacement; neither establishes the proposed driver-only disposition handback | I01-AC11 |
 | B3 | Dispositions/schema; Exact pushed proof and tree recreation; durable H/H' local readiness before reaping and inode-generation refresh | `scripts/orchestration/task_lifecycle.py:validate_lifecycle` at 746 uses the closed schema; `_latest_premerge_local` at 1380, `_local_readiness` at 1395 and `evaluate` at 1450 consume prior local facts; `scripts/orchestration/task_closeout.py:GhGitHubAdapter.observe` at 457 gathers them; `scripts/fleet/ignored_task_output.py:reused_worktree_creator` at 283 and `_classified_inventory` at 460 require one creator and matching baseline inode | I01-AC12, I02-AC05, I03-AC09 |
 | B4 | Custody release, lifecycle finality and branch protection; explicit hot-record/ref guards and I-03 manifests | `scripts/orchestration/stale_task_records.py:keep_hot_reason` at 1065 and `archive_terminal` at 1292 depend on path/status; `scripts/maintenance/batch_state_retention.py:_eligible` at 370 checks released status/age; `scripts/hygiene/branch_sweep.py:_active_tasks` at 153 skips released tasks; `scripts/orchestration/scheduled_worktree_cleanup.py:_stale_ref_delete_reason` at 312 accepts durable CLOSED heads; cleanup passes at 490/629/781 need lifecycle protection | I01-AC03/09, I03-AC08 |
 | B5 | Writer-PR classifier and keeper scope freezes exemptions and distinguishes MISSING from UNKNOWN; End shapes D-11 has an attributed D-10 exit with residual owner | `scripts/orchestration/merge_queue_keeper.py:run` inspects PR comments/checks at 766-825; `scripts/review/record_cf_verdict.py:pr_review_facts` at 918 and `record` at 1507 resolve exact-head author/task facts; no current classifier proves the proposed exemption boundary | I01-AC06, I03-AC10, I04-AC03/08 |
 | R1 | Review request authority and rejection history pins the durable canonical writer state file explicitly | `scripts/review/closeout_cli.py:_build_parser` requires global --state-file at 689-697; resolver output merges into that file, with a worktree-relative example in the epilog | I01-AC13 |
-| R2 | Packet ownership and delivery order captures bounded activation delta and freezes all pre-activation PR/task identities before enabling producers | `scripts/orchestration/task_record_store.py` is the existing shared task store; `scripts/delegate.py` admits tasks; activation/delta capture is a proposed I-04 helper plus I-01 admission integration, not an existing producer capability | I04-AC08, I01-AC06 |
+| R2 | Packet ownership and delivery order captures bounded activation delta and freezes all pre-activation PR/task identities before enabling producers | `scripts/orchestration/task_record_store.py` is the existing shared task store; `scripts/dispatch.py` admits tasks; activation/delta capture is a proposed I-04 helper plus I-01 admission integration, not an existing producer capability | I04-AC08, I01-AC06 |
 | R3 | Bounded blocked custody defines nonwriter admission and dispute attention/clocks; Read-only and review completion replacement retains separate counts | `scripts/orchestration/worktree_claims.py:RELEASED_TASK_STATUSES` at 65 classifies attempt outcomes; `scripts/work/attention.py` is the existing attention consumer owned by I-01; neither proves the proposed debt/dispute policy | I01-AC05/13 |
 
 Source evidence was read with bounded `sed` ranges and `rg -n` definition checks in the assigned worktree.

@@ -54,7 +54,7 @@ _GIT_ENV_DENYLIST = {
     "GIT_COMMON_DIR",
 }
 
-# Same remote-URL grammar as scripts/delegate.py::_GITHUB_REMOTE_PATTERNS.
+# GitHub remote-URL grammar for task and pull-request identity.
 _GITHUB_REMOTE_PATTERNS = (
     re.compile(r"^https?://(?:[^/@\s]+@)?github\.com/([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),
     re.compile(r"^ssh://git@github\.com/([^/\s]+)/([^/\s]+?)(?:\.git)?/?$", re.IGNORECASE),

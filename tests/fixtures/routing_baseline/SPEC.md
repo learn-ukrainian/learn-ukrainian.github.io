@@ -1,3 +1,11 @@
+> The launcher capture script is retired. Historical commands and receipts below
+> describe the original evidence only. The static `v2-baseline.json.gz` fixture
+> preserves the current expanded catalog and all 1,432 existing reviewer input
+> cases from `tests/review/fixtures/routing-retirement-20261023.json.gz`, with the
+> same frozen clock and test account. Its generator executed only catalog and
+> resolver functions; it launched no worker. Live tests compare those functions
+> against the literal fixture. Native Grok dispatch and budget admission are retired.
+
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
 ## Pinned Claude model on a shed lane (#11110)

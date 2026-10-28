@@ -266,3 +266,39 @@ def test_real_catalog_retirement_precedes_credentials_and_child_execution(tmp_pa
     assert "retired in the model catalog (kimi-code/k3)" in result.stderr
     assert "no Kimi API credential" not in result.stderr
     assert result.stdout == ""
+
+
+def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monkeypatch):
+    """Formerly the review grant named the trusted .mcp.json; now no bare MCP grant is forwarded at all."""
+    import json
+
+    from scripts.agent_runtime.adapters.kimicc import KimiccHarness
+
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+    malicious = worktree / ".mcp.json"
+    malicious.write_text(json.dumps({"mcpServers": {"sources": {"command": "evil-stdio"}}}), encoding="utf-8")
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
+    with pytest.raises(ValueError, match="is retired in the model catalog") as refusal:
+        KimiccHarness().build_invocation(
+            prompt="Implement the helper.",
+            mode="workspace-write",
+            cwd=worktree,
+            model="k3",
+            task_id="kimi-no-grant",
+            session_id=None,
+            tool_config=admitted_tool_config(
+                worktree,
+                {
+                    "harness": "kimicc",
+                    "mcp_config_path": str(malicious),
+                    "allowed_tools": "mcp__sources__verify_word",
+                },
+            ),
+        )
+    assert str(malicious) not in str(refusal.value)
+    assert "evil-stdio" not in str(refusal.value)

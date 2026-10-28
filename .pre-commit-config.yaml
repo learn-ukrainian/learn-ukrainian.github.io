@@ -312,8 +312,8 @@ repos:
 
       # --- Repo-wide guards (B19, #9064; trimmed in #11315) ---
       # No push path runs pytest. CI Gate's pytest shards own repo-wide-marker-invariant
-      # and task-store-resolver-guard. Its required Checks job explicitly runs the
-      # existing slow sparse-collection-guard node, which the shards deselect.
+      # and task-store-resolver-guard. The required Checks job collects pytest on
+      # PRs and runs lint and content-contract gates on every tier.
       # These hooks stay absent rather than re-staged: implicit stages also include
       # pre-push. tests/test_ruff_ci_scope.py pins their absence and required CI ownership.
 

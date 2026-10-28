@@ -203,11 +203,10 @@ def test_prepare_writes_three_cards_with_exact_hashes_and_commands(prepared: tup
         manifest = yaml.safe_load(Path(one["manifest"]).read_bytes())
         assert manifest["kind"] == kind
         argv = one["dispatch"]
-        assert argv[argv.index("--review-access") + 1] == "isolated"
+        assert Path(argv[1]).name == "dispatch.py"
+        assert argv[2:7] == ["dispatch", "--agent", "claude", "--model", "claude-sonnet-5-5"]
         assert argv[argv.index("--review-profile") + 1] == "ukrainian"
-        assert argv[argv.index("--review-attempt") + 1] == one["manifest"]
-        assert argv[argv.index("--review-id") + 1] == one["review_id"]
-        assert argv[argv.index("--attempt-id") + 1] == one["attempt_id"]
+        assert not {"--review-access", "--review-attempt", "--review-id", "--attempt-id"} & set(argv)
         assert (
             argv[argv.index("--task-id") + 1] == one["task_id"]
             and argv[argv.index("--prompt-file") + 1] == one["prompt"]

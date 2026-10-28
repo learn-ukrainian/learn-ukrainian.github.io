@@ -31,7 +31,8 @@ def _git(repo: Path, *args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=repo, text=True, env=sanitized_git_env(), timeout=30)
 
 
-@pytest.mark.parametrize("pattern", SECURITY_SENSITIVE_PATHS)
+# The deleted launcher locator remains classified for historical diffs, but has no tracked witness.
+@pytest.mark.parametrize("pattern", [p for p in SECURITY_SENSITIVE_PATHS if p != "scripts/delegate.py"])
 def test_every_security_glob_matches_a_tracked_file(pattern):
     tracked = _git(REPO_ROOT, "ls-files", "-z").split("\0")
     witnesses = [path for path in tracked if fnmatchcase(path, pattern)]

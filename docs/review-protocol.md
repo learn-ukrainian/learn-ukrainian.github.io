@@ -338,7 +338,7 @@ excluded with that stated reason. Critical security review excludes every Sonnet
 model.
 
 Activity admission reads the catalog roles (#9583). A review, critique or
-approval of record — a review-typed `delegate.py dispatch` of any profile, an
+approval of record — a review-typed `dispatch.py dispatch` of any profile, an
 `ask-* --review`, the review worker, and `record_cf_verdict` — refuses a model
 pin with no `review_scheduler.activity_roles.review` role; an ACP ask, consult
 or discussion refuses one with neither a `review` nor a `consult` role. The

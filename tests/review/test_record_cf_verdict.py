@@ -7,11 +7,9 @@ import os
 import subprocess
 import time
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
-from scripts import delegate
 from scripts.orchestration import integration_sweep as sweep
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.review import record_cf_verdict as recorder
@@ -469,27 +467,6 @@ def test_task_classification_cannot_bypass_sources_gate(tmp_path, count, classif
     write_task(tasks, review_profile="code", sources_mcp_call_count=count, **classification)
     with pytest.raises(recorder.RecordError, match="Ukrainian review"):
         recorder.record("review-one", task_root=tasks, lock_root=tmp_path / "locks")
-
-
-@pytest.mark.parametrize(
-    "runtime,expected",
-    [
-        ({"tool_calls_total": 2, "tool_calls": [{"name": "mcp__sources__verify_words"}, {"name": "shell"}]}, 1),
-        ({"tool_calls_total": 1, "tool_calls": [{"name": "mcp_sources_search_text"}]}, 1),
-        ({"tool_calls_total": 0, "tool_calls": []}, 0),
-        ({"tool_calls_total": 1, "tool_calls": [{"name": "mcp__other__verify_words"}]}, 0),
-        ({"tool_calls_total": 1, "tool_calls": [{"name": "mcp__sources_fake__verify_words"}]}, 0),
-        ({"tool_calls_total": 1, "tool_calls": [{"name": "mcp__sources__"}]}, 0),
-        ({"tool_calls_total": None, "tool_calls": [{"name": "mcp__sources__verify_words"}]}, None),
-        ({"tool_calls_total": 1, "tool_calls": []}, None),
-        ({"tool_calls_total": True, "tool_calls": [{"name": "mcp__sources__verify_words"}]}, None),
-        ({"tool_calls_total": 1, "tool_calls": [None]}, None),
-        ({"tool_calls_total": 1, "tool_calls": [{}]}, None),
-        ({}, None),
-    ],
-)
-def test_sources_count_comes_from_runtime_tool_names(runtime, expected):
-    assert delegate._sources_mcp_call_count(SimpleNamespace(**runtime)) == expected
 
 
 @pytest.mark.parametrize("mode", ["cross_family", "red_team"])

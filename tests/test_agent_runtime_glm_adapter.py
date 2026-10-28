@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -11,7 +10,6 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-import delegate
 from agent_runtime.adapters.glm import (
     _CI_ENV_VARS,
     GlmAdapter,
@@ -137,96 +135,3 @@ def test_glm_runner_refuses_retired_default_before_subprocess(tmp_path, monkeypa
 def test_glm_runner_refuses_retired_explicit_pin_before_subprocess(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="is retired in the model catalog"):
         invoke("glm", "Analyze code", model="glm-5.3", mode="read-only", cwd=tmp_path, entrypoint="runtime")
-
-
-def test_glm_delegate_worker_records_retired_pin_as_failed(tmp_path, monkeypatch, capsys):
-    fake_bin = tmp_path / "bin" / "opencode"
-    fake_bin.parent.mkdir(parents=True, exist_ok=True)
-    fake_bin.write_text("#!/bin/sh\necho 'Completed task analysis'\nexit 0\n")
-    fake_bin.chmod(0o755)
-
-    tasks_dir = tmp_path / "batch_state" / "tasks"
-    tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
-    monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
-
-    # Write initial state file as cmd_dispatch does
-    state_path = delegate._state_path("glm-lifecycle-success")
-    delegate._write_state_atomic(
-        state_path,
-        {
-            "task_id": "glm-lifecycle-success",
-            "agent": "glm",
-            "model": "glm-5.3",
-            "mode": "read-only",
-            "status": "spawning",
-        },
-    )
-
-    rc = delegate._run_worker(
-        task_id="glm-lifecycle-success",
-        agent="glm",
-        prompt="Do analysis",
-        mode="read-only",
-        cwd_str=str(tmp_path),
-        model="glm-5.3",
-        hard_timeout=300,
-        silence_timeout=60,
-    )
-
-    assert rc == 1
-    state = delegate._read_state(state_path)
-    assert state is not None
-    assert state["status"] == "failed"
-    assert state["returncode"] is None
-    assert state["agent"] == "glm"
-    assert state["last_error"] == "adapter_rejected, ValueError"
-    assert "is retired in the model catalog" in capsys.readouterr().err
-
-
-def test_glm_delegate_worker_retirement_has_no_provider_returncode(tmp_path, monkeypatch, capsys):
-    fake_bin = tmp_path / "bin" / "opencode"
-    fake_bin.parent.mkdir(parents=True, exist_ok=True)
-    fake_bin.write_text(
-        '#!/bin/sh\nif [ "$1" = debug ] && [ "$2" = config ]; then exit 0; fi\n'
-        "echo 'CLI internal error' >&2\nexit 1\n"
-    )
-    fake_bin.chmod(0o755)
-
-    tasks_dir = tmp_path / "batch_state" / "tasks"
-    tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
-    monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
-
-    # Write initial state file as cmd_dispatch does
-    state_path = delegate._state_path("glm-lifecycle-failure")
-    delegate._write_state_atomic(
-        state_path,
-        {
-            "task_id": "glm-lifecycle-failure",
-            "agent": "glm",
-            "model": "glm-5.3",
-            "mode": "read-only",
-            "status": "spawning",
-        },
-    )
-
-    rc = delegate._run_worker(
-        task_id="glm-lifecycle-failure",
-        agent="glm",
-        prompt="Do analysis",
-        mode="read-only",
-        cwd_str=str(tmp_path),
-        model="glm-5.3",
-        hard_timeout=300,
-        silence_timeout=60,
-    )
-
-    assert rc == 1
-    state = delegate._read_state(state_path)
-    assert state is not None
-    assert state["status"] == "failed"
-    assert state["returncode"] is None
-    assert state["agent"] == "glm"
-    assert state["last_error"] == "adapter_rejected, ValueError"
-    assert "is retired in the model catalog" in capsys.readouterr().err

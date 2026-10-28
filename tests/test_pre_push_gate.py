@@ -217,264 +217,13 @@ def _receipts(repo: Path) -> list[Path]:
     return sorted((repo / ".git/lu-pre-push-gate/receipts").glob("*.json"))
 
 
-# ---- both push paths run no tests; the kept stages still block (#11276) ----------------------------------
+# ---- git push runs no tests; the kept stages still block (#11276) ----------------------------------
 
 # Committed tripwires: each logs when a push loads it. pytest loads ``tests/conftest.py``; the gate's test
 # stage loaded the host test-slot governor and ran the affected-test selector, both from its own checkout.
-TRIPWIRES = {
-    "tests/conftest.py": "pytest",
-    "scripts/common/test_slots.py": "test_slots",
-    "scripts/ci/pre_push_shadow.py": "selector",
-}
-PUSH_PATHS = ("git-push", "auto-finalize")
-
-
-def _tripwire(name: str, log: Path) -> str:
-    def record(tag: str) -> str:
-        return f"open({str(log)!r}, 'a', encoding='utf-8').write({tag!r} + '\\n')\n"
-
-    if name != "test_slots":
-        return record(name)
-    # Answers "disabled" so a gate that asks for slots goes on to run pytest, where the conftest logs too.
-    return (
-        record(name)
-        + "class SlotError(Exception):\n    pass\n\n\ndef enabled():\n    "
-        + record("test_slots.enabled")
-        + "    return False\n"
-    )
-
-
-def _bind_local_finalization(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Bind the real isolated finalizer to fixture inputs and retain its gate evidence."""
-    from scripts import delegate
-    from scripts.orchestration.safe_git_context import SafeGitContext
-    from tests.test_delegate import _PinnedRemotePublicHead
-
-    origin = tmp_path / "remote.git"
-    base = _git(repo, "rev-parse", "origin/main").stdout.strip()
-    public = _PinnedRemotePublicHead()
-    public.origin = origin
-
-    class GateContext(SafeGitContext):
-        def prepare_validation(self, **kwargs):
-            super().prepare_validation(**kwargs)
-            # The untracked-input case must contaminate the checkout the gate
-            # actually reads, now that validation no longer runs in the source.
-            for name in _git(repo, "ls-files", "--others", "--exclude-standard").stdout.splitlines():
-                destination = self.checkout / name
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(repo / name, destination)
-
-    @contextlib.contextmanager
-    def execution(source, **kwargs):
-        assert source == repo
-        with GateContext(
-            objects=repo / ".git/objects",
-            borrow_objects=kwargs.get("prepare", False),
-            temp_root=tmp_path,
-            origin=str(origin),
-            local_remote=True,
-        ) as context:
-            context.source_git_dir = repo / ".git"
-            context.driver_base = base
-            context.interpreter = Path(PYTHON)
-            for name in ("PATH", "TMPDIR", "XDG_CACHE_HOME", "LU_PRE_PUSH_GATE_STAGE_BUDGET_S"):
-                if name in os.environ:
-                    context.env[name] = os.environ[name]
-            try:
-                yield context
-            finally:
-                measurements = context.git_dir / "lu-pre-push-gate"
-                if measurements.is_dir():
-                    shutil.copytree(measurements, repo / ".git/lu-pre-push-gate", dirs_exist_ok=True)
-
-    @contextlib.contextmanager
-    def no_credentials(**_kwargs):
-        yield []
-
-    monkeypatch.setattr(delegate, "_finalize_execution_context", execution)
-    monkeypatch.setattr(delegate, "_finalize_public_repository", lambda: public)
-    monkeypatch.setattr(delegate, "_finalize_transport_credentials", no_credentials)
-
-
-@pytest.fixture
-def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_opsec) -> Path:
-    """``repo`` with the test-stage tripwires and the real OPSEC scanner hook at the ``pre-push`` stage."""
-    log = tmp_path / "tripwire.log"
-    for relative, name in TRIPWIRES.items():
-        _write(repo, relative, _tripwire(name, log))
-    config = yaml.safe_load((repo / ".pre-commit-config.yaml").read_text())
-    actual = yaml.safe_load((REPO_ROOT / ".pre-commit-config.yaml").read_text())
-    opsec = next(hook for item in actual["repos"] for hook in item.get("hooks", []) if hook["id"] == "lint-opsec-leaks")
-    config["repos"][0]["hooks"].append(opsec)
-    _write(repo, ".pre-commit-config.yaml", yaml.safe_dump(config))
-    _git(repo, "checkout", "-q", "main")
-    _commit(repo, "tripwires", ".")
-    _git(repo, "push", "--no-verify", "origin", "main")
-    _git(repo, "checkout", "-q", "-B", "feature")
-    _git(repo, "config", "core.hooksPath", ".githooks")
-    tools = tmp_path / "push-bin"
-    tools.mkdir()
-    (tools / "git-lfs").write_text("#!/usr/bin/env bash\ncat >/dev/null\nexit 0\n", encoding="utf-8")
-    (tools / "git-lfs").chmod(0o755)
-    real_git = shutil.which(GIT)
-    assert real_git is not None
-    (tools / "git").symlink_to(real_git)  # the auto-finalize path resolves ``git`` on PATH
-    monkeypatch.setenv("PATH", f"{tools}{os.pathsep}{os.environ['PATH']}")
-    monkeypatch.setenv("TMPDIR", str(tmp_path))
-    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))  # the auto-finalize env drops PRE_COMMIT_*
-    for name in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "LU_TEST_SLOTS_HOLDER", "AGENT_NO_MERGE"):
-        monkeypatch.delenv(name, raising=False)
-    _bind_local_finalization(repo, tmp_path, monkeypatch)
-    return repo
-
-
-def _tripwire_log(repo: Path) -> list[str]:
-    log = repo.parent / "tripwire.log"
-    return log.read_text(encoding="utf-8").splitlines() if log.exists() else []
-
-
-def _push(repo: Path, path: str) -> tuple[bool, str]:
-    """Push ``feature`` through the tracked hook by ``path``; ``(accepted, diagnostics)``."""
-    if path == "git-push":
-        result = subprocess.run(
-            [GIT, "push", "-u", "origin", "feature"],
-            capture_output=True,
-            check=False,
-            cwd=repo,
-            env=_env({"PATH": os.environ["PATH"], "PRE_COMMIT_HOME": str(repo.parent / "pc")}),
-            text=True,
-            timeout=180,
-        )
-        return result.returncode == 0, result.stderr
-    from scripts import delegate
-
-    try:
-        delegate._push_auto_finalize_branch(
-            repo,
-            "feature",
-            owned_paths=["tests", "scripts", "docs", "site", "SLOW_PRE_PUSH"],
-            base_sha=_git(repo, "rev-parse", "origin/main").stdout.strip(),
-        )
-    except RuntimeError as error:
-        return False, str(error)
-    return True, ""
-
-
-def test_finalization_context_resolves_the_interpreter_without_a_local_venv(repo: Path, monkeypatch):
-    """Reject sys.executable bypasses and worktree roots in the shared interpreter resolver."""
-    from scripts import delegate
-
-    linked = repo / ".worktrees/dispatch/codex/linked"
-    linked.parent.mkdir(parents=True)
-    _git(repo, "worktree", "add", "-b", "linked", str(linked))
-    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-    sentinel = repo.parent / "sentinel-python"
-    sentinel.touch()
-    assert sentinel != Path(PYTHON)
-
-    def resolve_interpreter(root: Path) -> Path:
-        assert root is delegate._REPO_ROOT
-        return sentinel
-
-    monkeypatch.setattr(delegate, "project_interpreter", resolve_interpreter)
-
-    with delegate._finalize_execution_context(linked) as context:
-        assert context.interpreter == sentinel
-        assert context.interpreter.is_file()
-    assert not (repo / ".venv").exists()
-    assert not (linked / ".venv").exists()
-
-
-def _remote_feature(repo: Path) -> str:
-    return _git(repo, "ls-remote", "origin", "refs/heads/feature").stdout.strip()
-
-
-@pytest.mark.parametrize("path", PUSH_PATHS)
-def test_a_push_runs_no_tests_takes_no_slot_and_calls_no_selector(push_repo: Path, path: str) -> None:
-    """A range with a red test and a Python change reaches the remote: CI Gate is the test evidence."""
-    _write(push_repo, "tests/test_new.py", RED_TEST)
-    _write(push_repo, "scripts/changed.py", "VALUE = 1\n")
-    head = _commit(push_repo, "red test and a python change", "tests/test_new.py", "scripts/changed.py")
-
-    accepted, detail = _push(push_repo, path)
-
-    assert accepted, detail
-    assert _remote_feature(push_repo).startswith(head)
-    assert _tripwire_log(push_repo) == []
-    row = _measurements(push_repo)[-1]
-    assert row["outcome"] == "green"
-    assert set(row["stages"]) == {"pre_commit"}
-    assert not {"pytest", "selection", "test_slots", "slot_wait_s", "nodes"} & set(row)
-
-
-def _intermediate_private_key(repo: Path) -> None:
-    """An OPSEC finding only in an intermediate commit: the net diff of the range is empty."""
-    _write(repo, "docs/push-scan.md", "-----BEGIN " + "PRIVATE KEY-----\n")
-    _commit(repo, "leak", "docs/push-scan.md")
-    _git(repo, "rm", "-q", "docs/push-scan.md")
-    _git(repo, "commit", "-q", "--no-verify", "-m", "revert the leak")
-
-
-def _net_private_key(repo: Path) -> None:
-    _write(repo, "docs/key.md", "-----BEGIN " + "PRIVATE KEY-----\n")
-    _commit(repo, "secret", "docs/key.md")
-
-
-def _internal_id(repo: Path) -> None:
-    _write(repo, "site/src/content/docs/a1/topic.mdx", "Source section S4433 leaked.\n")
-    _commit(repo, "learner surface", "site/src/content/docs/a1/topic.mdx")
-
-
-def _stray_file(repo: Path) -> None:
-    _write(repo, "docs/ok.md", "fine\n")
-    _commit(repo, "docs", "docs/ok.md")
-    _write(repo, "scripts/stray.py", "print('not committed')\n")  # untracked, so outside the validated commit
 
 
 # kept stage -> (how the range trips it, the typed reason, the failing hooks it names)
-KEPT_STAGES = {
-    "per-commit-opsec": (_intermediate_private_key, "pre_commit_failed", ["lint-opsec-leaks"]),
-    "secret-scan": (_net_private_key, "pre_commit_failed", ["check staged and committed files for OPSEC leaks"]),
-    "internal-id": (_internal_id, "pre_commit_failed", ["check-no-internal-ids"]),
-    "stray-file": (_stray_file, "untracked_inputs", []),
-}
-
-
-@pytest.mark.parametrize("path", PUSH_PATHS)
-@pytest.mark.parametrize("stage", list(KEPT_STAGES))
-def test_each_kept_stage_still_blocks_both_push_paths(push_repo: Path, path: str, stage: str) -> None:
-    trip, reason, failing = KEPT_STAGES[stage]
-    trip(push_repo)
-
-    accepted, detail = _push(push_repo, path)
-
-    assert not accepted, detail
-    assert _remote_feature(push_repo) == ""
-    row = _measurements(push_repo)[-1]
-    assert (row["outcome"], row["reason"], row["failing"]) == ("refused", reason, failing)
-    assert _tripwire_log(push_repo) == []
-
-
-@pytest.mark.parametrize("path", PUSH_PATHS)
-def test_a_kept_stage_timeout_is_validation_incomplete_on_both_push_paths(
-    push_repo: Path, path: str, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setenv("LU_PRE_PUSH_GATE_STAGE_BUDGET_S", "3")
-    _write(push_repo, "SLOW_PRE_PUSH", "stall the fixture hook\n")  # the fixture hook sleeps past the budget
-    _commit(push_repo, "slow", "SLOW_PRE_PUSH")
-
-    accepted, detail = _push(push_repo, path)
-
-    assert not accepted, detail
-    assert _remote_feature(push_repo) == ""
-    row = _measurements(push_repo)[-1]
-    assert row["outcome"] == "validation_incomplete"
-    assert row["reason"] in ("timeout", "timeout_under_load")
-    assert row["stages"]["pre_commit"]["outcome"] == "validation_incomplete"
-    if path == "git-push":
-        assert '"outcome": "validation_incomplete"' in detail
-    assert _tripwire_log(push_repo) == []
 
 
 # ---- the gate refuses findings and accepts a clean range ------------------------------------------------
@@ -1217,23 +966,6 @@ def test_admission_wait_covers_one_full_gate_run_of_this_or_the_test_running_ver
     assert gate.ADMISSION_WAIT_S == 1940.0  # version 11: run budget, slot wait, selector, two cleanups
 
 
-def test_auto_finalize_push_timeout_covers_the_queue_ceiling() -> None:
-    from scripts import delegate
-
-    gate_worst_case = gate.ADMISSION_MAX_WAIT_S + gate.ADMISSION_WAIT_S
-    assert gate_worst_case + delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S <= delegate.AUTO_FINALIZE_PUSH_TIMEOUT_S
-
-
-def test_worker_closeout_text_carries_the_gate_and_merge_main_rules() -> None:
-    from scripts import delegate
-
-    source = Path(delegate.__file__).read_text(encoding="utf-8")
-    assert "validation_incomplete" in source and "git merge-tree" in source
-    # Workers are told what the gate runs: no tests since #11276, so a refusal names hooks, not node ids.
-    assert "it runs no tests, CI runs the full suite" in source
-    assert "tests they affect" not in source and "failing node ids" not in source
-
-
 # ---- public material ------------------------------------------------------------------------------------
 
 
@@ -1245,15 +977,6 @@ def test_public_gate_material_omits_operational_measurements() -> None:
     assert not re.search(r"(?i)(?:\d+|two) (?:test |xdist )?workers", text)
     assert not re.search(r"(?i)\b(?:cpu|minutes?|cores?|capacity)\b", text)
     assert not re.search(r"\b\d+(?:\.\d+)? ?s\b", text)
-
-
-def test_auto_finalize_timeout_comment_omits_gate_timings() -> None:
-    from scripts import delegate
-
-    source = Path(delegate.__file__).read_text(encoding="utf-8")
-    comment = re.search(r"# The auto-finalize push runs the pre-push gate.*\n(?:#.*\n)*?(?=\w)", source)
-    assert comment is not None
-    assert not re.search(r"\b\d+(?:\.\d+)? ?s\b", comment.group(0))
 
 
 # ---- review round 1: every ref update, sparse tests, untracked inputs, bounded cleanup -----------------------
@@ -3804,7 +3527,6 @@ def _journal_shaped_push(
 
 
 UPDATE = gate.Update("local", "a" * 40, "remote", ZERO_SHA)
-INSTANT_SCANS = {"per-commit OPSEC scan": [0.0], "learner-surface internal-ID scan": [0.0]}
 
 
 def test_the_stage_still_expires_at_its_own_allowance(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -4507,3 +4229,168 @@ def test_a_listing_is_read_only_when_git_succeeds_and_ends_on_a_record(
     monkeypatch.setattr(gate.subprocess, "run", lambda *_args, **_kwargs: completed)
 
     assert gate.git_records("diff", "--name-status", "-z", cwd=tmp_path) == records
+
+
+TRIPWIRES = {
+    "tests/conftest.py": "pytest",
+    "scripts/common/test_slots.py": "test_slots",
+    "scripts/ci/pre_push_shadow.py": "selector",
+}
+PUSH_PATHS = ("git-push",)
+
+
+def _tripwire(name: str, log: Path) -> str:
+    def record(tag: str) -> str:
+        return f"open({str(log)!r}, 'a', encoding='utf-8').write({tag!r} + '\\n')\n"
+
+    if name != "test_slots":
+        return record(name)
+    # Answers "disabled" so a gate that asks for slots goes on to run pytest, where the conftest logs too.
+    return (
+        record(name)
+        + "class SlotError(Exception):\n    pass\n\n\ndef enabled():\n    "
+        + record("test_slots.enabled")
+        + "    return False\n"
+    )
+
+
+@pytest.fixture
+def push_repo(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_opsec) -> Path:
+    """``repo`` with the test-stage tripwires and the real OPSEC scanner hook at the ``pre-push`` stage."""
+    log = tmp_path / "tripwire.log"
+    for relative, name in TRIPWIRES.items():
+        _write(repo, relative, _tripwire(name, log))
+    config = yaml.safe_load((repo / ".pre-commit-config.yaml").read_text())
+    actual = yaml.safe_load((REPO_ROOT / ".pre-commit-config.yaml").read_text())
+    opsec = next(hook for item in actual["repos"] for hook in item.get("hooks", []) if hook["id"] == "lint-opsec-leaks")
+    config["repos"][0]["hooks"].append(opsec)
+    _write(repo, ".pre-commit-config.yaml", yaml.safe_dump(config))
+    _git(repo, "checkout", "-q", "main")
+    _commit(repo, "tripwires", ".")
+    _git(repo, "push", "--no-verify", "origin", "main")
+    _git(repo, "checkout", "-q", "-B", "feature")
+    _git(repo, "config", "core.hooksPath", ".githooks")
+    tools = tmp_path / "push-bin"
+    tools.mkdir()
+    (tools / "git-lfs").write_text("#!/usr/bin/env bash\ncat >/dev/null\nexit 0\n", encoding="utf-8")
+    (tools / "git-lfs").chmod(0o755)
+    real_git = shutil.which(GIT)
+    assert real_git is not None
+    (tools / "git").symlink_to(real_git)
+    monkeypatch.setenv("PATH", f"{tools}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    for name in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "LU_TEST_SLOTS_HOLDER", "AGENT_NO_MERGE"):
+        monkeypatch.delenv(name, raising=False)
+    return repo
+
+
+def _tripwire_log(repo: Path) -> list[str]:
+    log = repo.parent / "tripwire.log"
+    return log.read_text(encoding="utf-8").splitlines() if log.exists() else []
+
+
+def _push(repo: Path, path: str) -> tuple[bool, str]:
+    """Push ``feature`` through the tracked Git hook."""
+    assert path == "git-push"
+    result = subprocess.run(
+        [GIT, "push", "-u", "origin", "feature"],
+        capture_output=True,
+        check=False,
+        cwd=repo,
+        env=_env({"PATH": os.environ["PATH"], "PRE_COMMIT_HOME": str(repo.parent / "pc")}),
+        text=True,
+        timeout=180,
+    )
+    return result.returncode == 0, result.stderr
+
+
+def _remote_feature(repo: Path) -> str:
+    return _git(repo, "ls-remote", "origin", "refs/heads/feature").stdout.strip()
+
+
+@pytest.mark.parametrize("path", PUSH_PATHS)
+def test_a_push_runs_no_tests_takes_no_slot_and_calls_no_selector(push_repo: Path, path: str) -> None:
+    """A range with a red test and a Python change reaches the remote: CI Gate is the test evidence."""
+    _write(push_repo, "tests/test_new.py", RED_TEST)
+    _write(push_repo, "scripts/changed.py", "VALUE = 1\n")
+    head = _commit(push_repo, "red test and a python change", "tests/test_new.py", "scripts/changed.py")
+
+    accepted, detail = _push(push_repo, path)
+
+    assert accepted, detail
+    assert _remote_feature(push_repo).startswith(head)
+    assert _tripwire_log(push_repo) == []
+    row = _measurements(push_repo)[-1]
+    assert row["outcome"] == "green"
+    assert set(row["stages"]) == {"pre_commit"}
+    assert not {"pytest", "selection", "test_slots", "slot_wait_s", "nodes"} & set(row)
+
+
+def _intermediate_private_key(repo: Path) -> None:
+    """An OPSEC finding only in an intermediate commit: the net diff of the range is empty."""
+    _write(repo, "docs/push-scan.md", "-----BEGIN " + "PRIVATE KEY-----\n")
+    _commit(repo, "leak", "docs/push-scan.md")
+    _git(repo, "rm", "-q", "docs/push-scan.md")
+    _git(repo, "commit", "-q", "--no-verify", "-m", "revert the leak")
+
+
+def _net_private_key(repo: Path) -> None:
+    _write(repo, "docs/key.md", "-----BEGIN " + "PRIVATE KEY-----\n")
+    _commit(repo, "secret", "docs/key.md")
+
+
+def _internal_id(repo: Path) -> None:
+    _write(repo, "site/src/content/docs/a1/topic.mdx", "Source section S4433 leaked.\n")
+    _commit(repo, "learner surface", "site/src/content/docs/a1/topic.mdx")
+
+
+def _stray_file(repo: Path) -> None:
+    _write(repo, "docs/ok.md", "fine\n")
+    _commit(repo, "docs", "docs/ok.md")
+    _write(repo, "scripts/stray.py", "print('not committed')\n")  # untracked, so outside the validated commit
+
+
+# kept stage -> (how the range trips it, the typed reason, the failing hooks it names)
+KEPT_STAGES = {
+    "per-commit-opsec": (_intermediate_private_key, "pre_commit_failed", ["lint-opsec-leaks"]),
+    "secret-scan": (_net_private_key, "pre_commit_failed", ["check staged and committed files for OPSEC leaks"]),
+    "internal-id": (_internal_id, "pre_commit_failed", ["check-no-internal-ids"]),
+    "stray-file": (_stray_file, "untracked_inputs", []),
+}
+
+
+@pytest.mark.parametrize("path", PUSH_PATHS)
+@pytest.mark.parametrize("stage", list(KEPT_STAGES))
+def test_each_kept_stage_still_blocks_git_push(push_repo: Path, path: str, stage: str) -> None:
+    trip, reason, failing = KEPT_STAGES[stage]
+    trip(push_repo)
+
+    accepted, detail = _push(push_repo, path)
+
+    assert not accepted, detail
+    assert _remote_feature(push_repo) == ""
+    row = _measurements(push_repo)[-1]
+    assert (row["outcome"], row["reason"], row["failing"]) == ("refused", reason, failing)
+    assert _tripwire_log(push_repo) == []
+
+
+@pytest.mark.parametrize("path", PUSH_PATHS)
+def test_a_kept_stage_timeout_is_validation_incomplete_on_git_push(
+    push_repo: Path, path: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("LU_PRE_PUSH_GATE_STAGE_BUDGET_S", "3")
+    _write(push_repo, "SLOW_PRE_PUSH", "stall the fixture hook\n")  # the fixture hook sleeps past the budget
+    _commit(push_repo, "slow", "SLOW_PRE_PUSH")
+
+    accepted, detail = _push(push_repo, path)
+
+    assert not accepted, detail
+    assert _remote_feature(push_repo) == ""
+    row = _measurements(push_repo)[-1]
+    assert row["outcome"] == "validation_incomplete"
+    assert row["reason"] in ("timeout", "timeout_under_load")
+    assert row["stages"]["pre_commit"]["outcome"] == "validation_incomplete"
+    if path == "git-push":
+        assert '"outcome": "validation_incomplete"' in detail
+    assert _tripwire_log(push_repo) == []

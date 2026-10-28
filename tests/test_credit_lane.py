@@ -21,11 +21,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-import delegate
 from scripts.fleet import capacity_pick, credit_lane, reset_reserve
 from scripts.fleet.reset_reserve import unavailable_reserve
 from scripts.fleet.routing_policy import projected_unused_pct
-from tests.claude_route_accounts import HOST_ACCOUNT
 
 NOW = datetime(2026, 10, 2, 17, 0, tzinfo=UTC)
 POLICY = credit_lane.load_policy()
@@ -787,46 +785,6 @@ def test_bad_policy_keeps_other_router_rows_and_codex_plan_state(bad_policy):
     assert "grok" not in report["cooler_lanes"]
 
 
-def test_bad_policy_admission_restricts_only_codex(bad_policy, snapshot, capsys):
-    for lane, model in (
-        ("claude", "claude-opus-5-5"),
-        ("cursor", "gpt-6-astra"),
-        ("agy", "gemini-3.8-flash-high"),
-        ("kimi", None),
-        ("codex", "gpt-6.1-sol"),
-        ("codex", "gpt-6-luna"),
-    ):
-        assert delegate._credit_period_refusal(lane, model) is None, (lane, model)
-    refusal = delegate._credit_period_refusal("codex", "gpt-6-astra")
-    assert refusal is not None
-    assert refusal.startswith("CREDIT_PERIOD_MODEL_REFUSED: lane codex is policy_error (credit-lane policy unreadable")
-    assert "model gpt-6-astra is outside the built-in credit-period allowlist [gpt-6.1-sol, gpt-6-luna]" in refusal
-    err = capsys.readouterr().err
-    assert "credit-lane policy unreadable" in err and "only codex dispatches are restricted" in err
-    assert snapshot["reads"] == 0
-
-
-def test_bad_policy_dispatch_of_another_lane_is_admitted(bad_policy, dispatch_env, capsys):
-    argv = ["dispatch", "--agent", "claude", "--task-id", "other-lane", "--prompt", "Map the parser flags."]
-    argv += ["--model", "claude-sonnet-5-5", "--mode", "read-only", "--cwd", str(delegate._REPO_ROOT)]
-    rc = delegate.cmd_dispatch(delegate.build_parser().parse_args(argv))
-    err = capsys.readouterr().err
-    assert rc == 0, err
-    assert "CREDIT_PERIOD_MODEL_REFUSED" not in err
-    assert len(dispatch_env.spawned) == 1
-
-
-def test_bad_policy_dispatch_of_off_allowlist_codex_is_refused(bad_policy, dispatch_env, capsys, monkeypatch):
-    monkeypatch.setattr(delegate, "_lane_default_model", lambda _agent: "gpt-5-codex")
-    rc = _dispatch_codex(None, task_id="bad-policy-codex")
-    err = capsys.readouterr().err
-    assert rc == 2, err
-    assert "CREDIT_PERIOD_MODEL_REFUSED: lane codex is policy_error" in err
-    assert "model gpt-5-codex is outside the built-in credit-period allowlist" in err
-    assert "[gpt-6.1-sol, gpt-6-luna]" in err
-    assert dispatch_env.spawned == []
-
-
 # --- unchanged lanes (denominator lock) --------------------------------------
 
 _SCENARIOS = ("plan_healthy", "near_cap_with_credits", "near_cap_without_credits", "credits_stale")
@@ -948,51 +906,6 @@ def snapshot(monkeypatch):
     return box
 
 
-@pytest.mark.parametrize("model", ["gpt-6-astra", "gpt-5-codex", "claude-opus-5-5"])
-def test_admission_refuses_off_allowlist_model_on_credit_balance_lane(snapshot, model):
-    refusal = delegate._credit_period_refusal("codex", model)
-    assert refusal is not None
-    assert refusal.startswith("CREDIT_PERIOD_MODEL_REFUSED: lane codex is credit_balance_present")
-    assert f"model {model} is outside the credit-period allowlist [gpt-6.1-sol, gpt-6-luna]" in refusal
-    assert "credit_lanes.yaml" in refusal
-
-
-@pytest.mark.parametrize("model", ["gpt-6.1-sol", "gpt-6-luna", "codex:gpt-6-luna", "GPT-6.1-Sol", None])
-def test_admission_accepts_allowlisted_and_default_models_without_reading_state(snapshot, model):
-    assert delegate._credit_period_refusal("codex", model) is None
-    assert snapshot["reads"] == 0
-
-
-def test_admission_judges_a_missing_model_by_the_lane_default(snapshot, monkeypatch):
-    monkeypatch.setattr(delegate, "_lane_default_model", lambda _agent: "gpt-6-astra")
-    refusal = delegate._credit_period_refusal("codex", None)
-    assert refusal is not None and "model gpt-6-astra" in refusal
-
-
-@pytest.mark.parametrize(
-    "mutate",
-    [
-        lambda box: box.update(budget=_budget(_codex(remaining_pct=60.0, codexbar={"weekly_remaining_pct": 60.0}))),
-        lambda box: box.update(budget=_budget(_codex(credit_balance=None))),
-        lambda box: box.update(budget=_budget(_codex(age_s=5000.0))),
-        lambda box: box["budget"]["diagnostics"].update(stale=True),
-        lambda box: box.update(budget=None),
-        lambda box: box["budget"]["agents"]["codex"]["codexbar"].update(fetched_at="2026-10-02T17:00:00"),
-    ],
-    ids=[
-        "plan-healthy",
-        "credits-missing",
-        "credits-stale",
-        "snapshot-stale",
-        "monitor-unreachable",
-        "naive-fetch-time",
-    ],
-)
-def test_admission_keeps_todays_behaviour_without_a_fresh_positive_balance(snapshot, mutate):
-    mutate(snapshot)
-    assert delegate._credit_period_refusal("codex", "gpt-6-astra") is None
-
-
 # The admission gate is separate from the router recommendation: the allowlist
 # holds whenever the plan window is exhausted AND a fresh positive balance exists,
 # whatever the rate-limit evidence says (a recent rate limit only stops the router
@@ -1104,160 +1017,7 @@ def test_allowlist_gate_table(snapshot, monkeypatch, tmp_path, scenario, lane, m
         assert credit_lane.allowlist_applies(row["credit"]) is gated, scenario
 
 
-def test_dispatch_refusal_does_not_depend_on_the_router_recommending_the_lane(snapshot, monkeypatch):
-    _recent_rate_limit(monkeypatch)
-    row = _live_row(snapshot["budget"])
-    assert row["avoid"] is True and row["credit"]["state"] == credit_lane.CREDIT_USE_UNCONFIRMED
-    refusal = delegate._credit_period_refusal("codex", "gpt-5-codex")
-    assert refusal is not None and "lane codex is credit_use_unconfirmed" in refusal
-
-
-def test_admission_ignores_unconfigured_lanes(snapshot):
-    assert delegate._credit_period_refusal("claude", "claude-opus-5-5") is None
-    assert delegate._credit_period_refusal("cursor", "gpt-6-astra") is None
-    assert snapshot["reads"] == 0
-
-
-def _guard_budget(codex: dict) -> dict:
-    return {
-        "agents": {"codex": codex, "cursor": {"status": "cool", "remaining_pct": 90.0}},
-        "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
-        "recommendation": {},
-    }
-
-
-def test_budget_guard_keeps_credit_balance_codex(monkeypatch, capsys):
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _guard_budget(_live(_codex(age_s=10.0))))
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: unavailable_reserve())
-    chosen = delegate._resolve_agent_with_budget_guard(
-        "codex", fallbacks={"codex": "cursor"}, claude_account=HOST_ACCOUNT
-    )
-    assert chosen == "codex"
-    assert "lane codex has a credit balance present; draw not verified by the router" in capsys.readouterr().err
-
-
-def test_budget_guard_substitutes_codex_after_a_recent_rate_limit(monkeypatch):
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _guard_budget(_live(_codex(age_s=10.0))))
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: unavailable_reserve())
-    monkeypatch.setattr(
-        credit_lane, "read_recent_rate_limits", lambda *_a, **_k: {"count": 1, "last_rate_limited_at": None}
-    )
-    assert (
-        delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"}, claude_account=HOST_ACCOUNT)
-        == "cursor"
-    )
-
-
-def test_budget_guard_keeps_todays_guard_on_unreadable_policy(monkeypatch, tmp_path):
-    monkeypatch.setattr(credit_lane, "POLICY_PATH", tmp_path / "absent.yaml")
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _guard_budget(_live(_codex(age_s=10.0))))
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: unavailable_reserve())
-    assert (
-        delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"}, claude_account=HOST_ACCOUNT)
-        == "cursor"
-    )
-
-
-def test_budget_guard_substitutes_codex_without_usable_credits(monkeypatch):
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _guard_budget(_codex(credit_balance=0.0)))
-    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: unavailable_reserve())
-    assert (
-        delegate._resolve_agent_with_budget_guard("codex", fallbacks={"codex": "cursor"}, claude_account=HOST_ACCOUNT)
-        == "cursor"
-    )
-
-
 # --- the gate on the real dispatch path --------------------------------------
-
-
-@pytest.fixture
-def dispatch_env(monkeypatch, tmp_path, snapshot):
-    """Read-only dispatches with recorded worker spawns (same seams as test_delegate_bounded_advisory)."""
-    import subprocess
-
-    import scripts.audit.check_primary_integrity as cpi
-    from tests.helpers.dispatch_checkout import isolate_dispatch_repo
-
-    isolate_dispatch_repo(monkeypatch, tmp_path, delegate)
-
-    tasks = tmp_path / "tasks"
-    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    monkeypatch.setenv("LU_ALLOW_NOTEBOOK_DISPATCH", "1")
-    monkeypatch.delenv("LU_DISPATCH_CHECK_BUDGET", raising=False)
-    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
-    monkeypatch.setattr(cpi, "check_primary_integrity", lambda *_a, **_k: (True, "primary on main (test stub)"))
-    spawned: list[list[str]] = []
-    real_popen = subprocess.Popen
-
-    class _Stdin:
-        def write(self, _data: bytes) -> None:
-            pass
-
-        def close(self) -> None:
-            pass
-
-    def fake_popen(command, *args, **kwargs):
-        if not (isinstance(command, (list, tuple)) and "_worker" in command):
-            return real_popen(command, *args, **kwargs)
-        spawned.append(list(command))
-        return type("_Proc", (), {"pid": 424242, "stdin": _Stdin()})()
-
-    class _Health:
-        status = 200
-
-        def __enter__(self):
-            return self
-
-        def __exit__(self, *_exc):
-            return False
-
-    def health_only(url, *_args, **_kwargs):
-        if "/api/health" in str(url):
-            return _Health()
-        raise AssertionError(f"unexpected urlopen {url}")
-
-    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    monkeypatch.setattr(delegate.urllib.request, "urlopen", health_only)
-    telemetry = type("_Telemetry", (), {"model": "fixture-model", "effort": "high", "cli_version": "fixture"})()
-    monkeypatch.setattr("agent_runtime.telemetry.resolve_dispatch_start_telemetry", lambda **_kwargs: telemetry)
-    return type("_Env", (), {"tasks": tasks, "spawned": spawned, "snapshot": snapshot})()
-
-
-def _dispatch_codex(model: str | None, task_id: str = "credit-worker") -> int:
-    argv = ["dispatch", "--agent", "codex", "--task-id", task_id, "--prompt", "Map the parser flags."]
-    if model is not None:
-        argv += ["--model", model]
-    argv += ["--mode", "read-only", "--cwd", str(delegate._REPO_ROOT)]
-    return delegate.cmd_dispatch(delegate.build_parser().parse_args(argv))
-
-
-def test_dispatch_refuses_off_allowlist_model_before_any_side_effect(dispatch_env, capsys, monkeypatch):
-    monkeypatch.setattr(delegate, "_lane_default_model", lambda _agent: "gpt-5-codex")
-    rc = _dispatch_codex(None)
-    err = capsys.readouterr().err
-    assert rc == 2, err
-    assert "CREDIT_PERIOD_MODEL_REFUSED: lane codex is credit_balance_present" in err
-    assert "model gpt-5-codex is outside the credit-period allowlist" in err
-    assert dispatch_env.spawned == []
-    assert not (dispatch_env.tasks / "credit-worker.json").exists()
-
-
-@pytest.mark.parametrize("model", ["gpt-6.1-sol", None])
-def test_dispatch_admits_allowlisted_and_default_model_on_credit_balance_lane(dispatch_env, capsys, model):
-    rc = _dispatch_codex(model)
-    err = capsys.readouterr().err
-    assert rc == 0, err
-    assert "CREDIT_PERIOD_MODEL_REFUSED" not in err
-    assert len(dispatch_env.spawned) == 1
-
-
-def test_dispatch_of_luna_passes_the_credit_gate(dispatch_env, capsys):
-    rc = _dispatch_codex("gpt-6-luna")
-    err = capsys.readouterr().err
-    # Luna still needs its #9275 advisory envelope; the credit gate itself admits it.
-    assert "CREDIT_PERIOD_MODEL_REFUSED" not in err
-    assert "BOUNDED_ENVELOPE_REQUIRED" in err and rc == 2
-    assert dispatch_env.snapshot["reads"] == 0
 
 
 # --- #9517: explicit usage directory and published-state re-check -----------

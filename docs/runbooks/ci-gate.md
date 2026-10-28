@@ -38,7 +38,7 @@ The initial list includes all six runtime/catalog/global suites from the
 original failed group; later PR changes cannot establish old coverage.
 
 Every `merge_group` candidate runs the full supported non-slow pytest suite,
-frontend toolchain tests, the sparse collection guard and partition audits.
+frontend toolchain tests and partition audits.
 Required full green queue CI gates landing. Nightly `schedule` runs at 03:30 UTC
 on `main` and opt-in `workflow_dispatch` runs also execute the full suite.
 Other slow tests retain `pytest-slow-nightly.yml`.
@@ -70,7 +70,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | --- | --- |
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
-| Checks | PR pytest collection or the full-tier sparse collection guard, then `scripts/ci/checks.sh` for every lint and content-contract gate; fails if any failed. |
+| Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
 | PR changed tests and guards | PRs execute changed test files and all explicit guards; full tiers exit without duplicate execution. |
 | Frontend | Full tier only. Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
@@ -121,7 +121,6 @@ that chose *which* tests or checks a change ran is gone.
 | Queue commit metadata (message, author, committer) scanned for secrets | Secret scan, every queue run | Secret scan on a full queue run; Queue commit metadata scan on every queue run |
 | TypeSafe triage (advisory) | Fast checks, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Atlas POC richness, vocabulary coverage (advisory) | Contracts, `continue-on-error` | `ci-advisory.yml` (not required) |
-| Sparse collection guard (`tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent`) | pre-push hook and `pytest-slow-nightly.yml` | Required Checks job runs the unchanged node explicitly with `--override-ini addopts=-q -m slow --strict-markers`; nightly coverage remains. |
 | Other slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
 
 The needs_artifact audit makes two independent comparisons with the expected
@@ -255,7 +254,7 @@ files; those are imported only with `import type`, which the compiler erases.
 Seven test files are listed in `scripts/ci/history-tests.txt`. Five read old
 commits: `git show`/`git cat-file` of an old SHA, a recorded historical
 commit, a frozen base commit, and `origin/main` ancestry. Two run a
-`--dry-run` `delegate.py dispatch --worktree`, which fetches `main` from
+`--dry-run` `dispatch.py dispatch --worktree`, which fetches `main` from
 GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
 s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
 and balances the other files around them. Shard 1 is the only shard checked out

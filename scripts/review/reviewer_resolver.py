@@ -39,7 +39,6 @@ from typing import Literal
 
 from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
-from scripts.audit import model_families
 from scripts.fleet import credit_lane
 from scripts.fleet.claude_account_lane import ClaudeAccount, bind_snapshot, require_account
 from scripts.review.app_bot_authorship import VERIFIED_APP_BOT
@@ -344,26 +343,11 @@ REVIEW_LADDERS: dict[str, tuple[tuple[ReviewerCandidate, ...], ...]] = {
 # Compatibility constants for direct candidate evaluation and callers that
 # explicitly imported the old default. Medium is the balanced default risk.
 OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
-GROK_4_7 = REVIEW_CANDIDATES["grok-4.7"]
 GROK_4_7_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
 SONNET_5_5 = REVIEW_CANDIDATES["claude-sonnet-5-5"]
 # Medium = practical formal CF default ladder (not authority-first).
 DEFAULT_CODE_LADDER = REVIEW_LADDERS["medium"]
 CRITICAL_CODE_LADDER = REVIEW_LADDERS["critical"]
-
-# Known hard-filtered candidates outside the default ladder — kept here so the
-# fail-closed exclusion logic is directly testable even where model-assignment.md
-# doesn't route code review through them by default.
-QWEN = ReviewerCandidate(
-    name="qwen",
-    family=model_families.Family.QWEN.value,
-    concrete_model="qwen3-max",
-    route="qwen",
-    transport="hermes",
-    invocation=".venv/bin/python scripts/delegate.py dispatch --agent qwen",
-    quality_tier="specialist",
-    always_excluded_reason="excluded from routine/automatic routing (cost) — model-assignment.md",
-)
 
 _HEALTH_RANK: dict[str, int] = {"healthy": 0, "degraded": 1, "near_cap": 2, "degraded_telemetry": 3, "unhealthy": 4}
 _HEALTH_ALIASES: dict[str, str | None] = {
@@ -735,7 +719,7 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
                 candidate.participant != "agy"
                 or candidate.catalog_transport != "agy"
                 or candidate.transport != "agy"
-                or candidate.sealed_executable != "scripts/delegate.py"
+                or candidate.sealed_executable != "scripts/dispatch.py"
             ):
                 return "native AGY review endpoint identity is invalid"
         elif native_muse:

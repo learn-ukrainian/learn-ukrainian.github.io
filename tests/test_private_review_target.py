@@ -12,7 +12,6 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
-import delegate
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import main_checkout_root
 from scripts.orchestration import fleet_repos
@@ -127,88 +126,7 @@ def review_repositories(tmp_path, monkeypatch):
         _init_committed_repo(private, origins[private], "private.py"),
     ]
     assert _git(public, "cat-file", "-e", heads[1], check=False).returncode != 0
-    monkeypatch.setattr(delegate, "_REPO_ROOT", public)
-    monkeypatch.setattr(delegate, "_local_repo_root", public)
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {"agents": {}, "diagnostics": {"stale": False}})
     return public, private, heads
-
-
-def _review_args(repo, head):
-    return delegate.build_parser().parse_args(
-        [
-            "dispatch",
-            "--agent",
-            "claude",
-            "--model",
-            "claude-opus-5-5",
-            "--mode",
-            "read-only",
-            "--task-id",
-            "private-review-fixture",
-            "--repo",
-            repo,
-            "--branch",
-            "review",
-            "--pinned-head",
-            head,
-            "--review-profile",
-            "code",
-            "--prompt",
-            "Review the exact target.",
-        ]
-    )
-
-
-@pytest.mark.parametrize("kind", ["branch", "pr"])
-def test_dispatch_private_only_sha_resolves(review_repositories, monkeypatch, kind):
-    _public, private, heads = review_repositories
-    args = _review_args("infra-private", heads[1])
-    if kind == "pr":
-        args.branch = None
-        args.pr = 42
-        base = _git(private, "rev-parse", "origin/main").stdout.strip()
-
-        def pr_view(gh_args, repo_root, timeout=30.0):
-            assert repo_root == private
-            assert gh_args[gh_args.index("--repo") + 1] == load_fleet_repos()["infra-private"].github
-            return subprocess.CompletedProcess(
-                [],
-                0,
-                json.dumps(
-                    {
-                        "baseRefName": "main",
-                        "baseRefOid": base,
-                        "headRefName": "review",
-                        "headRefOid": heads[1],
-                        "isCrossRepository": False,
-                    }
-                ),
-                "",
-            )
-
-        monkeypatch.setattr(target_resolution, "_run_gh", pr_view)
-    refusal, admitted = delegate._admit_dispatch_target(args, agent="claude", trees=None)
-    assert refusal is None, refusal
-    assert admitted is not None
-    assert args._review_target.head_sha == heads[1]
-    assert args._review_target.changed_paths == ("private.py",)
-    assert args._review_repo_root == private
-    args.review_author_model = "gpt-6.1-sol"
-    args.review_risk = "high"
-    facts = delegate._dispatch_review_facts(args, ())
-    assert facts.head_sha == heads[1]
-
-
-def test_dispatch_command_missing_private_clone_names_trigger(review_repositories, tmp_path, monkeypatch, capsys):
-    _public, private, heads = review_repositories
-    private.rename(tmp_path / "unavailable")
-    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
-    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    assert delegate.cmd_dispatch(_review_args("infra-private", heads[1])) == 2
-    error = capsys.readouterr().err
-    _assert_neutral_private_refusal(error)
-    assert str(tmp_path) not in error
-    assert not (tmp_path / "tasks" / "private-review-fixture.json").exists()
 
 
 def test_closeout_private_only_sha_resolves(review_repositories, tmp_path):
@@ -225,47 +143,29 @@ def test_closeout_private_only_sha_resolves(review_repositories, tmp_path):
 
 
 @pytest.mark.parametrize("failure", ["missing_clone", "unknown_sha", "public_only_sha"])
-@pytest.mark.parametrize("entry", ["dispatch", "closeout"])
-def test_private_target_refusal_names_trigger(review_repositories, tmp_path, failure, entry):
+def test_private_target_refusal_names_trigger(review_repositories, tmp_path, failure):
     public, private, heads = review_repositories
     head = heads[0] if failure == "public_only_sha" else "f" * 40
     if failure == "missing_clone":
         private.rename(tmp_path / "unavailable")
-    if entry == "dispatch":
-        refusal, admitted = delegate._admit_dispatch_target(
-            _review_args("infra-private", head), agent="claude", trees=None
-        )
-        assert admitted is None
-        error = refusal
-    else:
-        state = tmp_path / "refused.json"
-        proc = _run_cli(
-            state, "target", "--mode", "commit", "--commit", head, "--repo-root", str(public), "--repo", "infra-private"
-        )
-        assert proc.returncode == 1
-        error = json.loads(proc.stderr)["error"]
-        assert not state.exists()
+    state = tmp_path / "refused.json"
+    proc = _run_cli(
+        state, "target", "--mode", "commit", "--commit", head, "--repo-root", str(public), "--repo", "infra-private"
+    )
+    assert proc.returncode == 1
+    error = json.loads(proc.stderr)["error"]
+    assert not state.exists()
     _assert_neutral_private_refusal(error)
     assert str(tmp_path) not in error
 
 
-@pytest.mark.parametrize("entry", ["dispatch", "closeout"])
-def test_public_target_still_resolves(review_repositories, tmp_path, entry):
+def test_public_target_still_resolves(review_repositories, tmp_path):
     public, _private, heads = review_repositories
-    if entry == "dispatch":
-        args = _review_args("public", heads[0])
-        refusal, admitted = delegate._admit_dispatch_target(args, agent="claude", trees=None)
-        assert refusal is None, refusal
-        assert admitted is not None
-        target = args._review_target
-        assert target.head_sha == heads[0]
-        assert target.changed_paths == ("public.py",)
-    else:
-        proc = _run_cli(
-            tmp_path / "public.json", "target", "--mode", "commit", "--commit", heads[0], "--repo-root", str(public)
-        )
-        assert proc.returncode == 0, proc.stderr
-        assert json.loads(proc.stdout)["changed_paths"] == ["public.py"]
+    proc = _run_cli(
+        tmp_path / "public.json", "target", "--mode", "commit", "--commit", heads[0], "--repo-root", str(public)
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["changed_paths"] == ["public.py"]
 
 
 def test_typed_missing_commit_neutralizes_and_wrong_base_stays_specific():
@@ -284,108 +184,48 @@ def test_typed_missing_commit_neutralizes_and_wrong_base_stays_specific():
     assert "PRIVATE_REVIEW_TARGET_UNRESOLVED" not in str(kept)
 
 
-def _mock_pr_view(monkeypatch, private, base, head):
-    def pr_view(_args, repo_root, timeout=30.0):
-        assert repo_root == private
-        assert _args[_args.index("--repo") + 1] == load_fleet_repos()["infra-private"].github
-        return subprocess.CompletedProcess(
-            [],
-            0,
-            json.dumps(
-                {
-                    "baseRefName": "main",
-                    "baseRefOid": base,
-                    "headRefName": "review",
-                    "headRefOid": head,
-                    "isCrossRepository": False,
-                }
-            ),
-            "",
-        )
-
-    monkeypatch.setattr(target_resolution, "_run_gh", pr_view)
-
-
-def test_private_moved_pinned_head_keeps_specific_text(review_repositories, monkeypatch):
-    _public, private, heads = review_repositories
-    args = _review_args("infra-private", "a" * 40)
-    args.pr = 42
-    args.branch = "review"
-    _mock_pr_view(monkeypatch, private, _git(private, "rev-parse", "origin/main").stdout.strip(), heads[1])
-    refusal, admitted = delegate._admit_dispatch_target(args, agent="claude", trees=None)
-    assert admitted is None
-    _assert_specific_private_refusal(refusal, "pinned head differs from PR head")
-
-
-def test_private_pinned_head_without_branch_or_pr_keeps_specific_text(review_repositories):
-    _public, _private, heads = review_repositories
-    args = _review_args("infra-private", heads[1])
-    args.branch = None
-    args.pr = None
-    refusal, admitted = delegate._admit_dispatch_target(args, agent="claude", trees=None)
-    assert admitted is None
-    _assert_specific_private_refusal(refusal, "--pinned-head requires --branch or --pr")
-
-
-@pytest.mark.parametrize("entry", ["dispatch", "closeout"])
-def test_private_missing_merge_base_keeps_specific_text(review_repositories, tmp_path, entry):
+def test_private_missing_merge_base_keeps_specific_text(review_repositories, tmp_path):
     public, private, _heads = review_repositories
     unrelated = _unrelated_commit(private)
-    if entry == "dispatch":
-        args = _review_args("infra-private", unrelated)
-        args.branch = "unrelated"
-        args.base = "main"
-        refusal, admitted = delegate._admit_dispatch_target(args, agent="claude", trees=None)
-        assert admitted is None
-        error = refusal
-    else:
-        state = tmp_path / "merge-base.json"
-        proc = _run_cli(
-            state,
-            "target",
-            "--mode",
-            "branch",
-            "--branch",
-            unrelated,
-            "--base",
-            "origin/main",
-            "--repo-root",
-            str(public),
-            "--repo",
-            "infra-private",
-        )
-        assert proc.returncode == 1
-        error = json.loads(proc.stderr)["error"]
-        assert not state.exists()
+    state = tmp_path / "merge-base.json"
+    proc = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        unrelated,
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(public),
+        "--repo",
+        "infra-private",
+    )
+    assert proc.returncode == 1
+    error = json.loads(proc.stderr)["error"]
+    assert not state.exists()
     _assert_specific_private_refusal(error, "no merge-base")
 
 
-@pytest.mark.parametrize("entry", ["dispatch", "closeout"])
-def test_private_wrong_base_keeps_specific_text(review_repositories, tmp_path, entry):
-    public, _private, heads = review_repositories
-    if entry == "dispatch":
-        args = _review_args("infra-private", heads[1])
-        args.base = "no-such-base"
-        refusal, admitted = delegate._admit_dispatch_target(args, agent="claude", trees=None)
-        assert admitted is None
-        error = refusal
-    else:
-        proc = _run_cli(
-            tmp_path / "wrong-base.json",
-            "target",
-            "--mode",
-            "branch",
-            "--branch",
-            "origin/review",
-            "--base",
-            "no-such-base",
-            "--repo-root",
-            str(public),
-            "--repo",
-            "infra-private",
-        )
-        assert proc.returncode == 1, proc.stderr
-        error = json.loads(proc.stderr)["error"]
+def test_private_wrong_base_keeps_specific_text(review_repositories, tmp_path):
+    public, _private, _heads = review_repositories
+    proc = _run_cli(
+        tmp_path / "wrong-base.json",
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "origin/review",
+        "--base",
+        "no-such-base",
+        "--repo-root",
+        str(public),
+        "--repo",
+        "infra-private",
+    )
+    assert proc.returncode == 1, proc.stderr
+    error = json.loads(proc.stderr)["error"]
     _assert_specific_private_refusal(error, "no-such-base")
     assert "cannot resolve ref" in error
 
@@ -630,38 +470,6 @@ def test_missing_or_unparsable_origin_is_not_kept(review_repositories, tmp_path)
     )
     assert unparsable.returncode == 1, unparsable.stderr
     assert json.loads(unparsable.stderr)["error"] == REVIEW_ROOT_MISMATCH
-
-
-def test_dispatch_private_pr_lookup_uses_private_checkout(review_repositories, monkeypatch, tmp_path, capsys):
-    """`--repo infra-private --pr N` looks up that PR in the private checkout."""
-    from tests.test_delegate import _sanitize_git_env_for_test
-
-    public, private, heads = review_repositories
-    _sanitize_git_env_for_test(monkeypatch)
-    monkeypatch.chdir(public)
-    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
-    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    base = _git(private, "rev-parse", "origin/main").stdout.strip()
-    _mock_pr_view(monkeypatch, private, base, heads[1])
-    seen = {}
-
-    def capture(pr_number, *, repo_root):
-        seen["pr"] = pr_number
-        seen["repo_root"] = Path(repo_root).resolve()
-        raise RuntimeError("stop after private PR lookup")
-
-    monkeypatch.setattr("scripts.ai_agent_bridge._agy.resolve_same_repo_pr_head", capture)
-    args = _review_args("infra-private", heads[1])
-    args.pr = 7
-    args.branch = "review"
-    try:
-        rc = delegate.cmd_dispatch(args)
-    except RuntimeError as exc:
-        assert str(exc) == "stop after private PR lookup"
-    else:
-        raise AssertionError(f"dispatch returned {rc} before PR lookup:\n{capsys.readouterr().err}")
-    assert seen["pr"] == 7
-    assert seen["repo_root"] == private.resolve()
 
 
 def test_same_repo_pr_head_pins_catalog_repository(tmp_path, monkeypatch):

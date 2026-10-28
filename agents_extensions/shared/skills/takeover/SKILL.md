@@ -36,8 +36,8 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    "$PY" scripts/dispatch.py status "$TASK" --run-nonce "$NONCE"
    ```
 
-   A task started by `scripts/delegate.py` keeps its own supervisor: query it with
-   `"$PY" scripts/delegate.py status "$TASK"`.
+   Check the record schema before continuation. Dispatch v2 supervises schema-2
+   records; legacy tasks require separate owner disposition.
 2. **Check live ownership before touching anything.** If the source task is still `running` or
    `spawning`, or the PR belongs to another stream (`/api/issues/streams`), stop: report the
    conflict to its owner and the CTO. Check `/api/delegate/active` on the Monitor API too.
