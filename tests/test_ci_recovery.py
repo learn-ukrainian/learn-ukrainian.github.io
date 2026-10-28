@@ -383,7 +383,8 @@ def test_invalid_live_evidence_refuses(setup, action, cause):
         transport.proof["tested_sha"] = HEAD
     else:
         transport.moved = True
-    if action == "run-rerun":
+    # A direct merge never needs recovery evidence, but it refuses a recorded rejection (FR-55).
+    if action == "run-rerun" or cause == "unapproved":
         with pytest.raises(gate.PublishBlocked):
             recover(setup, action)
         assert transport.writes == []

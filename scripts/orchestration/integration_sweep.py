@@ -97,6 +97,8 @@ UKRAINIAN_SEAT_FAMILIES = frozenset({"anthropic", "openai", "google"})
 UKRAINIAN_REVIEW_SEATS = 2
 # A Ukrainian-profile head with fewer approving seat families than that; never approval.
 NEEDS_SEAT = "needs-seat"
+# A review-profile statement however spelled; only the recorder's exact line is admitted (FR-55).
+PROFILE_STATEMENT = re.compile(r"review\W*profile", re.IGNORECASE)
 REQUIRED_CHECKS = ("CI Gate",)
 DEFAULT_GH_TIMEOUT_SECONDS = 60.0
 
@@ -226,8 +228,6 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         "Historical authorship:": "Historical authorship: unknown_historical" if history else None,
         "Unknown history:": f"Unknown history: {history}" if history else None,
         "author model": "No author model assumed." if history or authorship else None,
-        # An altered profile statement must not downgrade a Ukrainian seat to code (FR-55).
-        "Review profile": f"Review profile: {profile}" if profile else None,
     }
     for label, expected in statements.items():
         lines = [
@@ -238,6 +238,10 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         ]
         if lines != ([expected] if expected is not None else []):
             return None
+    # An altered profile statement must not downgrade a Ukrainian seat to code (FR-55).
+    profile_lines = [line for line in prefix.split("\n") if PROFILE_STATEMENT.search(line)]
+    if profile_lines != ([f"Review profile: {profile}"] if profile else []):
+        return None
     if is_ukrainian_review(item) and (item["sources_calls"] is None or item["sources_calls"] <= 0):
         return None
     if sources is not None and f"Sources MCP calls: {item['sources_calls']}\n" not in prefix:
@@ -341,7 +345,7 @@ def lookup_verdict(
                 trailer is not None
                 and trailer["verdict"] == "APPROVE"
                 and not is_ukrainian_review(trailer.groupdict())
-                and "Review profile: ukrainian\n" not in body.split("<details>", 1)[0]
+                and not PROFILE_STATEMENT.search(body.split("<details>", 1)[0])
             ):
                 # An approval trailer outside the keeper format cannot hide a rejection, so it neither
                 # poisons the head nor counts as approval; an edited one still poisons it (#10119).

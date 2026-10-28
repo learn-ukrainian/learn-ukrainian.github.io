@@ -151,25 +151,34 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
     assert len(reads) == (6 if state == "ready" else 3)
 
 
-def ukrainian_seat(family, model, index):
+def ukrainian_seat(family, model, verdict="APPROVED", *, index):
     from scripts.review.record_cf_verdict import build_comment
 
     stamp = f"2026-09-23T13:00:0{index}Z"
+    recorded = "APPROVED" if verdict == "malformed" else verdict
     body = build_comment(
         sha="a" * 40, task_id=f"review-{index}", started=f"2026-09-23T12:00:0{index}.000001+00:00",
-        verdict="APPROVED", model=model, family=family, reply="VERDICT: APPROVE",
+        verdict=recorded, model=model, family=family, reply="VERDICT: " + recorded,
         review_profile="ukrainian", sources_mcp_call_count=3,
     )
+    if verdict == "malformed":
+        body = body.replace(f"Reviewer model: {model}", "Reviewer model: unknown")
     return {"id": index, "body": body, "user": {"login": "unit"}, "author_association": "MEMBER",
             "created_at": stamp, "updated_at": stamp}
 
 
-@pytest.mark.parametrize("seats,merged", [
-    ([("openai", "gpt-6.1-sol")], False),
-    ([("openai", "gpt-6.1-sol"), ("anthropic", "claude-opus-5-5")], True),
-    (None, False),
-], ids=["one-seat", "both-seats", "comments-unreadable"])
-def test_merge_requires_every_ukrainian_seat_whatever_the_checks_say(synthetic_opsec, seats, merged):
+@pytest.mark.parametrize("seats,login,reason", [
+    ([("openai", "gpt-6.1-sol")], "unit", "Ukrainian review seat has not approved"),
+    ([("openai", "gpt-6.1-sol"), ("anthropic", "claude-opus-5-5")], "unit", None),
+    ([], "unit", None),
+    (None, "unit", "seats unverifiable"),
+    ([("openai", "gpt-6.1-sol"), ("anthropic", "claude-opus-5-5", "malformed")], "unit", "verdict is unknown"),
+    ([("openai", "gpt-6.1-sol"), ("anthropic", "claude-opus-5-5", "CHANGES_REQUESTED")], "unit",
+     "verdict is CHANGES_REQUESTED"),
+    ([("openai", "gpt-6.1-sol"), ("anthropic", "claude-opus-5-5")], "", "verdict is unknown"),
+], ids=["one-seat", "both-seats", "no-verdict", "comments-unreadable", "one-seat-then-malformed",
+        "rejected", "identity-empty"])
+def test_merge_requires_every_ukrainian_seat_whatever_the_checks_say(synthetic_opsec, seats, login, reason):
     # FR-55: a pre-fix recorder posted fleet/cross-family-review success after one seat.
     writes = []
 
@@ -185,19 +194,18 @@ def test_merge_requires_every_ukrainian_seat_whatever_the_checks_say(synthetic_o
         elif args[1:4] == ["api", "--method", "GET"] and "/issues/1/comments" in args[4]:
             if seats is None:
                 return subprocess.CompletedProcess(args, 1, "", "HTTP 502")
-            body = [[ukrainian_seat(family, model, index) for index, (family, model) in enumerate(seats, 1)]]
+            body = [[ukrainian_seat(*seat, index=index) for index, seat in enumerate(seats, 1)]]
         elif args[1:4] == ["api", "--method", "GET"]:
-            body = {"login": "unit"}
+            body = {"login": login}
         else:
             writes.append(args)
             return subprocess.CompletedProcess(args, 0, "", "")
         return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
 
-    if merged:
+    if reason is None:
         assert pub.publish("pr-merge", repo="unit/public", number=1, runner=spy, env={}).returncode == 0
         assert len(writes) == 1
     else:
-        reason = "seats unverifiable" if seats is None else "Ukrainian review seat has not approved"
         with pytest.raises(gate.PublishBlocked, match=reason):
             pub.publish("pr-merge", repo="unit/public", number=1, runner=spy, env={})
         assert writes == []

@@ -574,6 +574,27 @@ def test_altered_profile_statement_never_downgrades_a_seat(statement):
     assert recorder.parse_marker(body) is None
 
 
+@pytest.mark.parametrize("statement", [
+    "Review profile: Ukrainian", "Review profile: ukrainian ", "Review profile:  ukrainian",
+    "review profile: ukrainian", "Review  profile: ukrainian",
+])
+def test_altered_profile_on_a_raw_approve_trailer_poisons_the_head(statement):
+    # FR-55 round 2: the legacy APPROVE fallback must not ignore an altered Ukrainian marker.
+    altered = (
+        ukrainian_body(task_id="review-two", started="2026-09-23T12:00:01.000001+00:00",
+                       model="claude-opus-5-5", family="anthropic")
+        .replace(" review_profile=ukrainian", "").replace("verdict=APPROVED", "verdict=APPROVE")
+        .replace("Review profile: ukrainian", statement)
+    )
+    assert recorder.parse_marker(altered) is None
+    code = recorder.build_comment(
+        sha=SHA, task_id="review-one", started="2026-09-23T12:00:00.000001+00:00",
+        verdict="APPROVED", model="gpt-6.1-sol", family="openai", reply="VERDICT: APPROVE",
+    )
+    verdict = sweep.lookup_verdict([seat_comment(code, 1), seat_comment(altered, 2)], SHA, "fleet")
+    assert verdict.state == "unknown" and verdict.reason == sweep.MARKER_MALFORMED_CURRENT_HEAD
+
+
 def seat_comment(body, index):
     stamp = f"2026-09-23T13:00:0{index}Z"
     return {"id": index, "body": body, "user": {"login": "fleet"}, "author_association": "MEMBER",

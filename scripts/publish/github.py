@@ -343,12 +343,13 @@ def _squash_text(gh_repo, fields, dest, temp, runner, cwd, environment):
 
 
 def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
-    """Refuse a head whose recorded Ukrainian seats are incomplete, whatever its checks say (FR-55).
+    """Refuse a head the merge-queue keeper would not land on its recorded verdicts (FR-55).
 
     A recorder before FR-55 posted ``fleet/cross-family-review`` success after one seat,
-    so the check rollup alone cannot prove the seat set.
+    so the check rollup alone cannot prove the seat set. An incomplete seat set, a
+    recorded rejection and unverifiable evidence all refuse; no recorded verdict does not.
     """
-    from scripts.orchestration.integration_sweep import NEEDS_SEAT, lookup_verdict
+    from scripts.orchestration.integration_sweep import NEEDS_SEAT, REJECTED, lookup_verdict
 
     try:
         documents = []
@@ -369,6 +370,8 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
         raise gate.PublishBlocked("OPSEC: merge refused: review seats unverifiable.") from None
     if state == NEEDS_SEAT:
         raise gate.PublishBlocked("OPSEC: merge refused: a Ukrainian review seat has not approved this head.")
+    if state == "unknown" or state in REJECTED:
+        raise gate.PublishBlocked(f"OPSEC: merge refused: recorded review verdict is {state} at this head.")
 
 
 def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
