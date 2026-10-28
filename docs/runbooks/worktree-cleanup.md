@@ -56,10 +56,10 @@ cleanup, sibling Git maintenance, task-family cleanup, and the removal CLI all
 inherit this guard. Preservation runs once, after ownership/claim checks and
 before deletion. A preservation failure returns a typed skipped/refusal result
 and leaves the directory intact. The dispatcher's settlement
-(`scripts/dispatcher/git.py` `settle_worktree`) runs its own non-forced
-`git worktree remove` only when every entry left in the tree is an ignored
-cache or a provisioned link, so it has no output to preserve; anything else
-keeps the tree. `branch_sweep` deletes branch refs only. The legacy temp leak
+(`scripts/dispatcher/git.py` `settle_worktree`) removes through the same
+chokepoint: ignored output is inventoried, and untracked files are copied into
+`batch_state/preserved/<task>/` (receipt `branch_holder_archive`) before a forced
+removal; uncommitted tracked changes keep the tree. `branch_sweep` deletes branch refs only. The legacy temp leak
 sweep and review temporary-tree cleanup refuse a candidate containing a linked
 worktree's `.git` file or a symlinked `.git` anywhere in its directory tree (or
 an unreadable scan).
@@ -72,7 +72,7 @@ retain their existing scratch-cleanup behavior.
 | Entry point / primitive | Disposition |
 | --- | --- |
 | `worktree_claims.git_worktree_remove`: raw Git argv | Preserves once before deletion; failures return a refusal. |
-| `dispatcher.git.settle_worktree`: task settlement | Own non-forced `git worktree remove` under the dispatcher's worktree lock; only trees holding nothing but ignored caches and provisioned links, published (write tasks), with the provider proven gone. |
+| `dispatcher.git.settle_worktree`: task settlement | Shared locked remover under the dispatcher's worktree lock, with the provider proven gone, no uncommitted tracked change, and (a write task that committed) its HEAD published; untracked files are copied before a forced removal. |
 | `_acp_execution._remove_runtime_worktree`: context teardown and dead-runtime sweep | Shared locked remover; no-checkout teardown inventories all untracked non-cache files, even without ignore rules. Dead-runtime sweep retains unexpected files. |
 | `data_tier.remove_test_worktree`: stale and final cleanup | Shared locked remover. |
 | `sibling_git.worktree_remove` | Shared locked remover; preservation uses the public control plane. |
@@ -234,20 +234,25 @@ Cleanup is fail-closed. At settlement the dispatcher keeps the task's worktree
 and records `worktree_disposition: retained` with one of these reasons:
 
 - `borrowed_worktree`: the task ran in a `--cwd` it did not create;
-- `dirty`: an entry is not an ignored cache or a provisioned link;
-- `unknown`: Git state could not be read;
-- `unpublished` or `remote_mismatch`: a write task's HEAD is not on the
-  canonical remote recorded at dispatch (its branch tip, a pull-request head,
-  or already in main);
+- `dirty`: a tracked file has uncommitted changes (untracked and ignored
+  files never keep the tree; the chokepoint preserves them);
+- `unknown`: Git state or the canonical remote could not be read;
+- `unpublished` or `remote_mismatch`: a write task that committed has a HEAD
+  that is not on the canonical remote recorded at dispatch (its branch tip, a
+  pull-request head, or already in main); a task with no commits needs no proof;
 - `borrowed_by_live_task`: another task's provider may still use the tree;
 - `provider_processes_alive` or `provider_liveness_unknown`: the provider's
-  process tree is not proven gone.
+  process tree is not proven gone after settlement's bounded wait
+  (`worker.SETTLE_PATIENCE`, 10 seconds);
+- `removal_refused`: the `worktree_claims` chokepoint refused (lock busy,
+  another unfinished record claims the tree, or artifact preservation failed);
+  `worktree_disposition_detail` carries its reason.
 
-A failed `git worktree remove` is recorded as `error`
-(`worktree_remove_failed`). The next dispatch retries settlement for the
-liveness, borrowed, `unpublished` and `remote_mismatch` reasons
-(`worker.settle_left_worktrees`); a `dirty` or `unknown` tree stays for its
-owner. The guarded removers in `worktree_claims` also refuse while an
+A failed removal is recorded as `error` (`worktree_remove_failed` with
+`worktree_disposition_detail`, or `settlement_failed`). The next dispatch retries
+settlement, in a fresh process, for every reason except `borrowed_worktree` and
+`dirty` (`worker.RETRY_REASONS`, `worker.settle_left_worktrees`); a `dirty` tree
+stays for its owner. The guarded removers in `worktree_claims` also refuse while an
 unfinished task record names the checkout, including a non-terminal review
 attempt that reads from it. The task record claims the deepest registered linked checkout containing each of these inputs, including subdirectories and symlink spellings: its `review_contract.input_root`, and every `review_input_paths` entry, namely the attempt manifest (dispatch resolves its path once at admission, so every later read and the worker use the symlink target, never the supplied spelling) and the worker's own code checkout (it runs from there for the whole attempt). A formal attempt takes no output schema (`--review-attempt` with `--output-schema` is refused). Inputs in the primary checkout, or outside any registered checkout, claim nothing. Before it reserves the attempt id, dispatch refuses a review contract without an `input_root`, and refuses the attempt when the fleet scratch root (`LU_SCRATCH_ROOT`, which holds the worker's runtime tmp lease) lies inside a registered linked checkout (`review_scratch_root_in_worktree`). It holds the shared removal lock of every claimed checkout during input preparation until the task record publishes the claims. Only a terminal task status ends the protection; an owner or settled-claim exemption does not, and a record with an unreadable or malformed claim, or an unavailable worktree registration, refuses removal rather than releasing it.
 

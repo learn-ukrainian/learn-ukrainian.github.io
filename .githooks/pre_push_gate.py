@@ -631,9 +631,14 @@ def scope_cgroup(relative: str) -> Path:
 def scope_supported(relative: str, unit: str) -> bool:
     try:
         group = scope_cgroup(relative)
+        pool = scope_cgroup(relative.split("/lu.slice/", 1)[0] + "/lu.slice")
         return (
-            group.name == unit
+            re.fullmatch(r"/user\.slice/user-\d+\.slice/user@\d+\.service/lu\.slice/[^/]+", relative) is not None
+            and group.name == unit
             and int((group / "memory.max").read_text()) == SCOPE_MEMORY_MAX
+            and int((group / "memory.swap.max").read_text()) == 0
+            and int((pool / "memory.max").read_text()) > 0
+            and int((pool / "memory.swap.max").read_text()) >= 0
             and int((group / "memory.peak").read_text()) >= 0
             and "populated 1" in (group / "cgroup.events").read_text().splitlines()
         )
@@ -753,7 +758,9 @@ class ResourceScope:
                     "--quiet",
                     "--unit",
                     self.unit,
+                    "--slice=lu.slice",
                     "--property=MemoryMax=6G",
+                    "--property=MemorySwapMax=0",
                     "--property=MemoryAccounting=yes",
                     "--description=Protected push validation",
                     "bash",

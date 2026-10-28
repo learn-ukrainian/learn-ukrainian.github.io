@@ -296,7 +296,8 @@ commit, a frozen base commit, and `origin/main` ancestry. Two run a
 GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
 s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
 and balances the other files around them. Shard 1 is the only shard checked out
-with full history (`fetch-depth: 0`). Shards 2..N check out only the tested
+with full history (`fetch-depth: 0`), a full clone with every blob (see
+"Full-history checkouts are blobless" below). Shards 2..N check out only the tested
 commit (`fetch-depth: 1`) and run pytest with `GIT_ALLOW_PROTOCOL=file`. A
 listed file that is no longer tracked fails the split.
 
@@ -319,6 +320,32 @@ run of each were in flight. It does not model overlapping runs, such as
 several merge-queue builds next to PR CI and other workflows. A passing
 inventory is therefore not proof of capacity for a build-concurrency change;
 see D3 in [`ci-speed-program.md`](../epics/ci-speed-program.md).
+
+### Full-history checkouts are blobless (FR-58)
+
+The public pack is about 8 GB, nearly all of it old file contents. Commits and
+trees for the whole history are about 30 MB. A `fetch-depth: 0` checkout in
+`.github/workflows/` therefore also sets `filter: blob:none`: it downloads all
+commits and trees, plus the blobs of the checked-out tree. Ancestry checks,
+merge bases and changed-file lists read commits and trees only. A step that
+reads an old file's content (`git show <rev>:<path>`, a content diff) makes git
+fetch the missing blobs from GitHub; `git diff` and `git log --patch` fetch
+them in one batch per command. CI Gate gets the same filter from its sparse
+checkout. Before this change, one checkout took 16 s to 424 s, and the
+5-minute jobs were cancelled at their limit.
+
+Jobs that run test files keep a full clone: pytest shard 1, coverage-ref shard
+1, pytest-slow-nightly, and PR changed tests and guards on `pull_request`.
+`tests/test_storage_classification_table.py` sizes 1,706 `data/` blobs (about
+1 GB) at a frozen base with one `git cat-file -s` each. In a blobless clone each
+is a separate fetch, and in run 40762542278 the test hit its 120 s timeout. In
+a merge group, PR changed tests and guards runs no tests, so it is blobless there.
+
+TruffleHog cannot use this checkout as before: its own `git clone` of a partial
+clone fails. Both scan jobs fetch and verify the blobs of their range first and
+scan in place; see
+[secret-scanning.md](secret-scanning.md#blobless-ci-checkout-fr-58). The
+`full-history-audit` dispatch keeps a full clone.
 
 ## Shard setup
 

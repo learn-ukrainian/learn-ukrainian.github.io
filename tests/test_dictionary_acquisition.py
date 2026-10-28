@@ -306,11 +306,22 @@ def test_official_positive_payload_and_bounded_range(tmp_path):
     assert result["next_wordid"] is None
     assert result["counts"]["positive"] == result["counts"]["miss"] == 1
     assert http.calls[0][2]["params"] == {"page": 0}
+    assert [call[0] for call in http.calls] == [1000, 1010]
     with database(tmp_path, "sum20_official") as conn:
         payload = json.loads(conn.execute("SELECT payload FROM results WHERE position=0").fetchone()[0])
         assert payload["article"]["wordid"] == 5
         assert payload["parser_version"] == acquisition.PARSER_VERSION
         assert payload["content_sha256"]
+
+
+@pytest.mark.parametrize("retry_after,expected", [("1", 10), ("25", 25)])
+def test_official_retry_spacing_survives_process_restart(tmp_path, retry_after, expected):
+    clock = Clock()
+    argv = arguments(tmp_path, "sum20_official")
+    http = HTTP([response(503, headers={"Retry-After": retry_after}), response(404), response(404)], clock)
+    assert invoke("run", argv, http, clock) == 75
+    assert invoke("run", argv, http, clock) == 0
+    assert [call[0] for call in http.calls] == [1000, 1000 + expected, 1010 + expected]
 
 
 def test_transient_backoff_exhaustion_survives_process_invocations(tmp_path):

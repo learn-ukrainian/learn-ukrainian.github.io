@@ -24,12 +24,15 @@ import fcntl
 import json
 import os
 import re
+import threading
 from collections.abc import Iterable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
 ARCHIVE_DIR_NAME = "archive"
+# Lock-file inodes each thread holds through task_state_lock.
+_HELD_TASK_LOCKS = threading.local()
 _REDISPATCH_ARCHIVED_STEM_RE = re.compile(r"^(?P<base>.+)\.(?P<tag>\d{8}T\d{6}\d*Z(?:\.\d+)?)\.archived$")
 
 
@@ -113,13 +116,26 @@ def task_state_lock(path: Path) -> Iterator[None]:
     Lock files (<task>.json.lock) are permanent stable anchors: deleting or moving
     a lock file while a writer holds or waits on its descriptor breaks mutual exclusion
     by letting subsequent callers open a new, distinct inode (#8659).
+
+    The lock is reentrant within one thread: dispatcher settlement holds it while
+    worktree removal preserves artifacts into the same record, and a second flock on
+    a new descriptor would wait on its own holder forever. Other threads still wait.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor = os.open(path.with_suffix(path.suffix + ".lock"), os.O_CREAT | os.O_RDWR, 0o600)
+    held = _HELD_TASK_LOCKS.__dict__.setdefault("inodes", set())
+    status = os.fstat(descriptor)
+    key = (status.st_dev, status.st_ino)
+    if key in held:
+        os.close(descriptor)
+        yield
+        return
     try:
         fcntl.flock(descriptor, fcntl.LOCK_EX)
+        held.add(key)
         yield
     finally:
+        held.discard(key)
         fcntl.flock(descriptor, fcntl.LOCK_UN)
         os.close(descriptor)
 

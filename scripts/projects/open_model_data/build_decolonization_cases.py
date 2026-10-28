@@ -1011,7 +1011,7 @@ def build_all_cases(*, withheld: list[dict[str, Any]] | None = None) -> list[Dec
     sources_path = _resolve_db_path("sources.db", PROJECT_ROOT)
 
     v_conn = _open_readonly(vesum_path)
-    s_conn = sqlite3.connect(sources_path.resolve().as_uri() + "?mode=ro", uri=True)
+    s_conn = _open_readonly(sources_path, query_only=False)
     validate_source_schema(s_conn.cursor())
     ensure_reproducible_sum20_table(s_conn)
 

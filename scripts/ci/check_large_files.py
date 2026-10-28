@@ -112,12 +112,13 @@ def batch_check_blob_sizes(shas: list[str], cwd: Path, timeout: int = 30) -> dic
     return sizes
 
 
-def prefetch_missing_blobs(shas: list[str], cwd: Path, timeout: int = 60) -> None:
+def prefetch_missing_blobs(shas: list[str], cwd: Path, timeout: int = 60) -> int:
     """Fetch, in one request, the blobs a partial clone does not hold yet.
 
     CI Gate checks out a sparse, blobless clone; ``cat-file --batch-check`` would
     otherwise fetch each missing blob on its own round trip. The command is the one
     git runs for its own promisor fetches. A full clone holds every blob and skips this.
+    Returns the number of blobs fetched.
     """
     promisors = subprocess.run(
         ["git", "config", "--type=bool", "--get-regexp", r"^remote\..*\.promisor$"],
@@ -133,7 +134,7 @@ def prefetch_missing_blobs(shas: list[str], cwd: Path, timeout: int = 60) -> Non
         if value == "true"
     ]
     if len(remotes) != 1 or not shas:
-        return
+        return 0
     remote = remotes[0]
     listed = subprocess.run(
         ["git", "rev-list", "--objects", "--no-walk", "--missing=print", "--stdin"],
@@ -148,7 +149,7 @@ def prefetch_missing_blobs(shas: list[str], cwd: Path, timeout: int = 60) -> Non
         raise RuntimeError(f"Git rev-list --missing=print failed: {listed.stderr.strip()}")
     missing = [line[1:] for line in listed.stdout.splitlines() if line.startswith("?")]
     if not missing:
-        return
+        return 0
     fetched = subprocess.run(
         [
             "git",
@@ -171,6 +172,7 @@ def prefetch_missing_blobs(shas: list[str], cwd: Path, timeout: int = 60) -> Non
     if fetched.returncode != 0:
         err = fetched.stderr.decode("utf-8", errors="replace").strip()
         raise RuntimeError(f"Git fetch of {len(missing)} missing blobs failed: {err}")
+    return len(missing)
 
 
 def resolve_commit(ref: str, cwd: Path) -> str:

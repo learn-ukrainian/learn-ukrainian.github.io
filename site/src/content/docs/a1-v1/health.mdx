@@ -88,7 +88,7 @@ guess what the problem is or tell anyone what to do.
 
 ### Complete the health phrase
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене болить ___.", "answer": "голова", "options": ["голова", "лікар", "аптека"]}, {"sentence": "Мені потрібен ___.", "answer": "лікар", "options": ["лікар", "голова", "кашель"]}, {"sentence": "У мене ___.", "answer": "температура", "options": ["температура", "праворуч", "квиток"]}, {"sentence": "___, будь ласка.", "answer": "Повторіть", "options": ["Повторіть", "Болить", "Нежить"]}]`)} instruction={"Choose the word that completes the A1 phrase."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене болить ___.", "answer": "голова", "options": ["голова", "лікар", "аптека"]}, {"sentence": "Мені потрібен ___.", "answer": "лікар", "options": ["лікар", "голова", "кашель"]}, {"sentence": "(Say that you have a fever.) У мене ___.", "answer": "температура", "options": ["температура", "праворуч", "квиток"], "explanation": "У мене температура is a fixed symptom phrase."}, {"sentence": "___, будь ласка.", "answer": "Повторіть", "options": ["Повторіть", "Болить", "Нежить"]}]`)} instruction={"Choose the word that completes the A1 phrase."} isUkrainian={false} />
 
 ### Що у вас болить?
 

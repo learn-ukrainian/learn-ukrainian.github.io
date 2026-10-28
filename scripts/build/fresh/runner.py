@@ -76,7 +76,13 @@ from scripts.build.fresh.listening import choice_error as listening_choice_error
 from scripts.build.fresh.listening import model_target as listening_model_target
 from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
 from scripts.build.fresh.path_guard import checked_existing_path, public_diagnostic
-from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
+from scripts.build.fresh.regeneration import (
+    invalidate_lesson_resolution,
+    load_ledger,
+    record_failure,
+    record_requires_wait,
+    record_success,
+)
 from scripts.build.fresh.writer import strip_markdown_fence
 from scripts.common.jsonl import jsonl_lines
 from scripts.curriculum.evidence import lock
@@ -699,6 +705,7 @@ def check_7_a1_choices(
         receipts.requirement_receipt_path(state_dir, lesson_n), sources=sources
     )
     completeness: list[dict[str, Any]] = []
+    missing_requirement: tuple[str, int] | None = None
     if vesum_lookup is None:
         from scripts.verification.vesum import verify_words
 
@@ -852,7 +859,10 @@ def check_7_a1_choices(
                     sources=sources,
                 )
                 if status != "confirmed":
-                    return bad(status, aid, index)
+                    if receipt_doc is None:
+                        missing_requirement = missing_requirement or (aid, index)
+                        continue
+                    return bad("requires_receipt_stale" if status == "requires_receipt_missing" else status, aid, index)
                 completeness.append({"activity": aid, "item": index, "requirement": status})
             elif kind == "vocabulary":
                 target = item.get("target_record")
@@ -889,6 +899,10 @@ def check_7_a1_choices(
                     return bad("orthography_distractor_is_word", aid, index)
             elif kind != "comprehension":
                 return bad("choice_kind_invalid", aid, index)
+    if missing_requirement is not None:
+        row = bad("requires_receipt_missing", *missing_requirement)
+        row["details"] = {"awaiting_requires_confirmation": True}
+        return row
     details = {"requirement_receipts": completeness}
     if receipt_doc is not None:
         evidence = receipts.resolve_requirement_evidence(receipt_doc, sources=sources)
@@ -1509,7 +1523,7 @@ def run_lesson(
     gate_path = state_dir / f"lesson-{n}.gates.yaml"
     ledger_path = state_dir / f"lesson-{n}.regeneration.yaml"
 
-    def finish(row: dict[str, Any] | None = None) -> dict[str, Any]:
+    def finish(row: dict[str, Any] | None = None, *, awaiting_requires: bool = False) -> dict[str, Any]:
         if row is not None:
             row = {**row, "reason": public_diagnostic(row["reason"], repo_root)}
             rows[:] = [prior for prior in rows if prior["check"] != row["check"]]
@@ -1535,9 +1549,12 @@ def run_lesson(
         ).validate(doc)
         lock.write(gate_path, lock.yaml_bytes(doc))
         bad = next((r for r in rows if r["status"] == "failed"), None)
-        if bad is not None:
+        if bad is not None and not awaiting_requires:
             record_failure(ledger_path, slug, n, bad, ledger_inputs)
-        return {**doc, "passed_through": bad["check"] if bad else 11, "manifest_sha256": None}
+        result = {**doc, "passed_through": bad["check"] if bad else 11, "manifest_sha256": None}
+        if awaiting_requires:
+            result["awaiting_requires_confirmation"] = True
+        return result
 
     previous = load_ledger(ledger_path, slug, n, ledger_inputs)
     if previous["terminal_layer"] is not None:
@@ -1700,6 +1717,24 @@ def run_lesson(
                         yaml.safe_load((state_dir / f"lesson-{n}.draft.yaml").read_text(encoding="utf-8")),
                     ),
                 )
+                if choice_row.get("details", {}).get("awaiting_requires_confirmation"):
+                    from scripts.build.fresh.requires_confirm import questions_from_draft, write_questions
+
+                    authored_path = state_dir / f"lesson-{n}.draft.yaml"
+                    authored = yaml.safe_load(authored_path.read_text(encoding="utf-8"))
+                    batch = questions_from_draft(
+                        draft,
+                        {"lesson": receipt_doc["lesson"], "activities": lesson["activities"]},
+                        receipts.requirement_inputs(receipt_doc["inputs"], authored),
+                    )
+                    write_questions(state_dir, n, batch)
+                    record_requires_wait(
+                        ledger_path,
+                        slug,
+                        n,
+                        {**ledger_inputs, "draft_sha256": hashlib.sha256(authored_path.read_bytes()).hexdigest()},
+                    )
+                    return finish(choice_row, awaiting_requires=True)
             except OSError as err:
                 return finish(
                     failure(7, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable")

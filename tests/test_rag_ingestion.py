@@ -1153,6 +1153,53 @@ class TestTextbookExtractionReadiness:
 # ── crawl_ulp: extract_topics, get_season_info, get_fmu_level, parse_ulp_itunes ──
 
 
+def test_ulp_episode_catalogue_does_not_scrape_website(monkeypatch, tmp_path):
+    import crawl_ulp
+    import httpx
+    import requests
+
+    website_calls = []
+    api_calls = []
+
+    def website_request(*args, **kwargs):
+        website_calls.append(args)
+        raise AssertionError("website scraping is disabled")
+
+    def api_response(request):
+        api_calls.append(request)
+        assert request.url.host == "itunes.apple.com"
+        return httpx.Response(200, json={"results": [
+            {"kind": "podcast-episode", "trackName": "ULP 2-41 | Sample", "description": ""},
+        ]})
+
+    client = httpx.Client
+    monkeypatch.setattr(requests.Session, "request", website_request)
+    monkeypatch.setattr(crawl_ulp.httpx, "Client", lambda **kwargs: client(
+        transport=httpx.MockTransport(api_response), **kwargs
+    ))
+    output = tmp_path / "catalogue.json"
+    monkeypatch.setattr(sys, "argv", ["crawl_ulp", "--episodes-only", "--output", str(output)])
+    assert crawl_ulp.main() == 0
+    assert website_calls == []
+    result = json.loads(output.read_text())
+    season_one = [row for row in result["articles"] if row.get("season") == 1]
+    assert [row["episode"] for row in season_one] == list(range(1, 41))
+    assert season_one[0]["title"] == "Informal Greetings in Ukrainian"
+    assert [request.headers["User-Agent"] for request in api_calls] == [
+        "learn-ukrainian-resources/1.0 (+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+    ] * 2
+
+
+def test_retired_ulp_debug_probe_never_fetches(monkeypatch, capsys):
+    import runpy
+
+    import requests
+
+    monkeypatch.setattr(requests, "get", lambda *_a, **_k: pytest.fail("retired probe sent a request"))
+    runpy.run_path(str(ROOT / "scripts/debug/fetch_debug.py"), run_name="__main__")
+    assert "disabled" in capsys.readouterr().out.lower()
+
+
 class TestParseUlpItunes:
     def setup_method(self):
         from crawl_ulp import parse_ulp_itunes

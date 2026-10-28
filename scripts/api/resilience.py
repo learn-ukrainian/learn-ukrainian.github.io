@@ -17,6 +17,8 @@ from typing import Any
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_REQUEST_TIMEOUT_S = 10.0
@@ -280,6 +282,7 @@ class TimedSQLiteConnection(sqlite3.Connection):
 
 def connect_sqlite(database: str, *args: Any, **kwargs: Any) -> sqlite3.Connection:
     """Create a sqlite connection whose execute calls are slow-query logged."""
+    refuse_writable_corpus_database(database, uri=bool(kwargs.get("uri")))
     kwargs.setdefault("factory", TimedSQLiteConnection)
     return sqlite3.connect(database, *args, **kwargs)
 
