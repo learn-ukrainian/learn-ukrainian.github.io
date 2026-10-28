@@ -307,6 +307,8 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
                 args = ["gh", "api", "-X", "POST"]
             elif args.verb == "read-comment":
                 args = ["gh", "api", "issues/comments/" + str(args.fields["number"])]
+            elif args.verb == "read-commits":
+                return [[{"sha": sha} for sha in fake_json.pr_commits.get(args.fields["number"], [])]]
             else:
                 raise AssertionError(args.verb)
         if args[:3] == ["gh", "pr", "view"]:
@@ -321,6 +323,9 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
             sha = args[4].split("/commits/", 1)[1].split("/", 1)[0]
             numbers = fake_json.associated.get(sha, [42])
             return [[{"number": n, "base": {"repo": {"full_name": REPOSITORY}}} for n in numbers]]
+        if args[:2] == ["gh", "api"] and "/pulls?state=closed&sort=updated" in args[2]:
+            # The closed-PR listing, newest update first; it is not search-backed.
+            return list(fake_json.closed)
         if args[:4] == ["gh", "api", "-X", "POST"]:
             calls["posts"] += 1
             item = {
@@ -338,6 +343,7 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
         raise AssertionError(args)
 
     fake_json.searched, fake_json.associated, fake_json.branch_prs = {}, {}, []
+    fake_json.closed, fake_json.pr_commits = [], {}
     monkeypatch.setattr(recorder, "_run_json", fake_json)
     monkeypatch.setattr(
         recorder,
@@ -597,6 +603,8 @@ def retargeted_review(monkeypatch, tmp_path):
         # A rejection on the closed PR this one replaced, at the same head, still stands (F7).
         ("cross_family", "replaced-pr"),
         ("red_team", "replaced-pr"),
+        # It stands while the commit search has not yet indexed the closed PR (F12).
+        ("cross_family", "replaced-unindexed"),
         # A red team refuses an unresolved author too; --review-author-model cannot name its model (F9).
         ("red_team", "unresolved-author"),
     ],
@@ -646,13 +654,20 @@ def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch,
             recorder.record("review-one", **kwargs)
         assert comments == [] and calls == {"posts": 0, "statuses": 0}
         return
-    replaced = state == "replaced-pr"
+    replaced = state in {"replaced-pr", "replaced-unindexed"}
     edited = state == "edited"
     verdict = "APPROVED" if edited else "CHANGES_REQUESTED" if replaced else state
-    # A replaced PR #41 was closed at this head; only GitHub's commit search still finds it.
+    # A replaced PR #41 was closed at this head; GitHub's commit search finds it, or, before the search has
+    # indexed it, the closed-PR listing does.
     history = [] if replaced else comments
-    if replaced:
+    if state == "replaced-pr":
         recorder._run_json.searched[SHA] = [{"number": 41, "headRefOid": SHA}]
+    if state == "replaced-unindexed":
+        from datetime import UTC, datetime
+
+        recorder._run_json.closed = [{"number": 41, "updated_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")}]
+        recorder._run_json.pr_commits[41] = [SHA]
+    if replaced:
         monkeypatch.setattr(
             recorder.GitHubAdapter, "comments", lambda self, repository, number: list(history if number == 41 else comments)
         )
@@ -687,23 +702,49 @@ def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch,
         (None, False, 3, "renamed", True),
         (None, False, 3, "fork", True),
         (None, False, 2, "renamed", False),
+        # A renamed replacement whose head is a new commit on top of the reviewed one continues (F11).
+        (None, False, 3, "descendant", True),
+        ("low", True, 5, "descendant", True),
+        # So does one closed too recently for the commit search: the closed-PR listing finds it (F12).
+        (None, False, 3, "descendant-unindexed", True),
+        # A rebased replacement shares no commit; the same-branch listing still finds it.
+        (None, False, 3, "rebased", True),
+        # More closed PRs than one page inside the search-index lag cannot be proved complete.
+        (None, False, 0, "closed-flood", "closed within the search-index lag"),
     ],
 )
 def test_verdict_beyond_review_budget_is_refused(
     monkeypatch, tmp_path, risk, security, prior_heads, replacement, refused
 ):
+    from dataclasses import replace
+    from datetime import UTC, datetime
+
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     write_task(tasks, **({"review_risk": risk, "options": {"risk": risk}} if risk else {}))
     changed = ("scripts/review/record_cf_verdict.py",) if security else ("docs/readme.md",)
-    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts_for({"google"}, changed_paths=changed))
+    facts = facts_for({"google"}, changed_paths=changed)
+    ancestor = "c" * 40
+    if replacement in {"descendant", "descendant-unindexed"}:
+        # This branch is ``ancestor`` (reviewed on #41) plus the new head.
+        facts = replace(facts, commits=tuple(replace(facts.commits[0], sha=sha) for sha in (ancestor, SHA)))
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     prior = [recorded_verdict(f"{index:x}" * 40, "CHANGES_REQUESTED") for index in range(1, prior_heads + 1)]
     # More verdicts at a head already reviewed open no new round.
     prior.append(recorded_verdict("1" * 40, "CHANGES_REQUESTED", task_id="second-seat"))
-    if replacement:
-        # The earlier rounds were recorded on PR #41, closed at this head and replaced by PR #42. GitHub's
-        # commit search finds #41; a head-branch listing finds it only under the same name and repository.
-        recorder._run_json.searched[SHA] = [{"number": 41, "headRefOid": SHA}]
-        if replacement != "renamed":
+    now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if replacement == "closed-flood":
+        recorder._run_json.closed = [{"number": n, "updated_at": now} for n in range(100, 200)]
+    elif replacement:
+        # The earlier rounds were recorded on PR #41, closed and replaced by PR #42. GitHub's commit search
+        # finds #41 at a commit it shares with this branch; a head-branch listing finds it under the same name.
+        if replacement == "descendant":
+            recorder._run_json.searched[ancestor] = [{"number": 41, "headRefOid": ancestor}]
+        elif replacement == "descendant-unindexed":
+            recorder._run_json.closed = [{"number": 41, "updated_at": now}]
+            recorder._run_json.pr_commits[41] = [ancestor]
+        elif replacement != "rebased":
+            recorder._run_json.searched[SHA] = [{"number": 41, "headRefOid": SHA}]
+        if replacement in {"same-branch", "fork", "rebased"}:
             recorder._run_json.branch_prs.append(
                 {"number": 41, "headRefName": BRANCH, "isCrossRepository": replacement == "fork"}
             )
@@ -716,7 +757,8 @@ def test_verdict_beyond_review_budget_is_refused(
         comments.extend(prior)
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     if refused:
-        with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"):
+        reason = refused if isinstance(refused, str) else r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"
+        with pytest.raises(recorder.RecordError, match=reason):
             recorder.record("review-one", **kwargs)
         assert calls == {"posts": 0, "statuses": 0}
     else:

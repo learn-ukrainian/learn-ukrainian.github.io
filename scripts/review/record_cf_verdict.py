@@ -121,7 +121,12 @@ NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
 DEFAULT_REVIEW_ROUNDS = 3
 ELEVATED_REVIEW_ROUNDS = 5
 LINEAGE_PR_LIMIT = 50
+LINEAGE_COMMIT_LIMIT = 100
 PR_SEARCH_LIMIT = 100
+# GitHub's commit search is eventually consistent. A PR closed within this
+# window is read from the closed-PR listing instead, which is not search-backed.
+SEARCH_INDEX_LAG_S = 30 * 60
+CLOSED_PR_PAGE = 100
 
 
 class RecordError(RuntimeError):
@@ -1787,6 +1792,74 @@ def _prs_containing(repository: str, sha: str) -> set[int]:
     return numbers
 
 
+def _recently_closed_commits(repository: str, *, now: datetime | None = None) -> dict[int, frozenset[str]]:
+    """Commits of every PR closed within the search-index lag (C-2902 F12).
+
+    The closed-PR listing is read from GitHub's database, not its search index.
+    Closing a PR updates it and a closed PR takes no new commits, so every PR
+    closed within ``SEARCH_INDEX_LAG_S`` is on the newest page, and every commit
+    of a PR closed earlier was pushed long enough ago for the commit search to
+    find it. A full page that does not reach back that far is refused.
+    """
+    unavailable = "recently closed PRs unavailable; cannot count review rounds"
+    listed = _run_json(
+        ["gh", "api", f"repos/{repository}/pulls?state=closed&sort=updated&direction=desc&per_page={CLOSED_PR_PAGE}"]
+    )
+    if not isinstance(listed, list):
+        raise RecordError(unavailable)
+    cutoff = (now or datetime.now(UTC)).timestamp() - SEARCH_INDEX_LAG_S
+    recent: list[int] = []
+    oldest: float | None = None
+    for pr in listed:
+        updated = pr.get("updated_at") if isinstance(pr, Mapping) else None
+        if not isinstance(updated, str) or not isinstance(pr.get("number"), int):
+            raise RecordError(unavailable)
+        try:
+            stamp = datetime.fromisoformat(updated.replace("Z", "+00:00")).timestamp()
+        except ValueError as exc:
+            raise RecordError(unavailable) from exc
+        oldest = stamp if oldest is None else min(oldest, stamp)
+        if stamp >= cutoff:
+            recent.append(pr["number"])
+    if len(listed) >= CLOSED_PR_PAGE and (oldest is None or oldest >= cutoff):
+        raise RecordError(f"more than {CLOSED_PR_PAGE} PRs closed within the search-index lag; retry later")
+    commits: dict[int, frozenset[str]] = {}
+    for pr_number in recent:
+        entries = _pages(Request("read-commits", repo=repository, number=pr_number))
+        commits[pr_number] = frozenset(entry["sha"] for entry in entries if isinstance(entry.get("sha"), str))
+    return commits
+
+
+def _same_branch_prs(repository: str, branch: str) -> set[int]:
+    """Same-repository PRs from ``branch`` in any state, so a rebased replacement keeps its count."""
+    listed = _run_json(
+        [
+            "gh",
+            "pr",
+            "list",
+            "--repo",
+            repository,
+            "--state",
+            "all",
+            "--head",
+            branch,
+            "--limit",
+            str(PR_SEARCH_LIMIT),
+            "--json",
+            "number,isCrossRepository",
+        ]
+    )
+    if not isinstance(listed, list) or len(listed) >= PR_SEARCH_LIMIT:
+        raise RecordError("branch PR listing unavailable; cannot count review rounds")
+    numbers: set[int] = set()
+    for pr in listed:
+        if not isinstance(pr, Mapping) or not isinstance(pr.get("number"), int):
+            raise RecordError("branch PR listing unavailable; cannot count review rounds")
+        if pr.get("isCrossRepository") is not True:
+            numbers.add(pr["number"])
+    return numbers
+
+
 def review_lineage_comments(
     adapter: GitHubAdapter,
     repository: str,
@@ -1794,32 +1867,47 @@ def review_lineage_comments(
     head_sha: str,
     comments: Sequence[Mapping[str, Any]],
     login: str,
+    *,
+    commits: Iterable[str | None] = (),
+    branch: str | None = None,
 ) -> tuple[list[Mapping[str, Any]], tuple[int, ...]]:
-    """Comments of every PR that contains the head or a commit with a recorded verdict (C-2902 F7, F8).
+    """Comments of every PR that shares a commit with this branch or a recorded verdict (C-2902 F7, F8, F11).
 
     Rounds and rejections are keyed on reviewed commit SHAs, never on a PR
-    number or branch name. Starting from this PR, every PR of the repository
-    that contains the head, or a SHA named by a trusted verdict on a PR already
-    found, joins until no new PR appears. A closed, renamed or fork replacement
-    therefore continues the count and keeps its same-head rejections. The one
-    comment set feeds the budget and the rejection guards.
+    number alone. Starting from this PR, every PR of the repository that
+    contains the head, any other commit of the reviewed range (``commits``),
+    or a SHA named by a trusted verdict on a PR already found, joins until no
+    new PR appears, as does every same-repository PR from ``branch``. A
+    closed, renamed, fork or descendant-head replacement therefore continues
+    the count and keeps its same-head rejections. The one comment set feeds the
+    budget and the rejection guards.
     """
+    seeds = {head_sha, *(sha for sha in commits if sha)}
+    if len(seeds) > LINEAGE_COMMIT_LIMIT:
+        raise RecordError(f"reviewed range exceeds {LINEAGE_COMMIT_LIMIT} commits; cannot count review rounds")
+    recently_closed = _recently_closed_commits(repository)
     by_pr: dict[int, list[Mapping[str, Any]]] = {number: list(comments)}
+
+    def join(numbers: set[int]) -> None:
+        for other in sorted(numbers - by_pr.keys()):
+            if len(by_pr) >= LINEAGE_PR_LIMIT:
+                raise RecordError(f"review lineage exceeds {LINEAGE_PR_LIMIT} PRs; cannot count review rounds")
+            try:
+                by_pr[other] = adapter.comments(repository, other)
+            except SweepError as exc:
+                raise RecordError(f"comment lookup failed for PR #{other}: {exc}") from exc
+
+    if branch:
+        join(_same_branch_prs(repository, branch))
     queried: set[str] = set()
     while True:
         lineage = [item for items in by_pr.values() for item in items]
-        pending = sorted(({head_sha} | _trusted_verdict_shas(lineage, login)) - queried)
+        pending = sorted((seeds | _trusted_verdict_shas(lineage, login)) - queried)
         if not pending:
             return lineage, tuple(sorted(by_pr))
         for sha in pending:
             queried.add(sha)
-            for other in sorted(_prs_containing(repository, sha) - by_pr.keys()):
-                if len(by_pr) >= LINEAGE_PR_LIMIT:
-                    raise RecordError(f"review lineage exceeds {LINEAGE_PR_LIMIT} PRs; cannot count review rounds")
-                try:
-                    by_pr[other] = adapter.comments(repository, other)
-                except SweepError as exc:
-                    raise RecordError(f"comment lookup failed for PR #{other}: {exc}") from exc
+            join(_prs_containing(repository, sha) | {n for n, shas in recently_closed.items() if sha in shas})
 
 
 def require_review_round_within_budget(
@@ -2120,7 +2208,16 @@ def record(
         except SweepError as exc:
             raise RecordError(f"comment lookup failed: {exc}") from exc
         # One comment set, every PR containing a reviewed SHA, feeds the budget and the rejection guards.
-        lineage, numbers = review_lineage_comments(adapter, repository, number, sha, comments, login)
+        lineage, numbers = review_lineage_comments(
+            adapter,
+            repository,
+            number,
+            sha,
+            comments,
+            login,
+            commits=(commit.sha for commit in facts.commits),
+            branch=branch,
+        )
         if review_mode == "red_team":
             require_no_outside_rejection(lineage, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
