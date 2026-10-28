@@ -25,27 +25,30 @@ export function deriveSeed<T>(array: T[]): number {
   return hash;
 }
 
-/** Index permutation of 0..n-1 in source order. */
-function identityPermutation(n: number): number[] {
-  return Array.from({ length: n }, (_, i) => i);
+/** Comparable identity of each item, so duplicate values count as the same option. */
+function itemKeys<T>(list: T[]): string[] {
+  return list.map((item) => JSON.stringify(item));
 }
 
-function samePermutation(a: number[], b: number[]): boolean {
-  return a.length === b.length && a.every((value, i) => value === b[i]);
+function sameKeys(a: string[], b: string[]): boolean {
+  return a.length === b.length && a.every((key, i) => key === b[i]);
 }
 
 /**
- * Fisher-Yates shuffle of 0..n-1 driven by `rand`. For n >= 2 the result never
- * equals `avoid` (default: source order; `null` for no restriction): a draw that
- * does is rotated by one.
+ * Fisher-Yates shuffle of 0..n-1 driven by `rand`. The displayed sequence of
+ * `keys` never equals `avoid` (`null` for no restriction): a draw that does is
+ * rotated until it differs, which is impossible only when every key is equal.
  */
-function permutation(n: number, rand: () => number, avoid: number[] | null = identityPermutation(n)): number[] {
-  const order = identityPermutation(n);
+function permutation(keys: string[], rand: () => number, avoid: string[] | null): number[] {
+  const n = keys.length;
+  const order = Array.from({ length: n }, (_, i) => i);
   for (let i = n - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
     [order[i], order[j]] = [order[j], order[i]];
   }
-  if (n >= 2 && avoid && samePermutation(order, avoid)) order.push(order.shift()!);
+  for (let turns = 1; avoid && turns < n && sameKeys(order.map((i) => keys[i]), avoid); turns++) {
+    order.push(order.shift()!);
+  }
   return order;
 }
 
@@ -53,11 +56,11 @@ function permutation(n: number, rand: () => number, avoid: number[] | null = ide
  * Fisher-Yates shuffle - returns a new shuffled array.
  * Deterministic: uses a seed derived from array content so SSR and client
  * produce the same result (no hydration mismatch). Never returns source order
- * for two or more items, because option lists are authored answer-first.
+ * for two or more distinct items, because option lists are authored answer-first.
  */
 export function shuffle<T>(array: T[]): T[] {
-  const rand = seededRandom(deriveSeed(array));
-  return permutation(array.length, rand).map((i) => array[i]);
+  const keys = itemKeys(array);
+  return permutation(keys, seededRandom(deriveSeed(array)), keys).map((i) => array[i]);
 }
 
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
@@ -87,9 +90,10 @@ export function useShuffledLists<T>(lists: T[][]): { lists: T[][]; reshuffle: ()
     setOrders((previous) => lists.map((list, i) => {
       // The first draw is unrestricted (avoiding the server order would force
       // source order for two-item lists); a retry never repeats the order on screen.
+      const keys = itemKeys(list);
       const shownOrder = previous?.[i];
-      const avoid = shownOrder && shownOrder.length === list.length ? shownOrder : null;
-      return permutation(list.length, Math.random, avoid);
+      const avoid = shownOrder && shownOrder.length === list.length ? shownOrder.map((j) => keys[j]) : null;
+      return permutation(keys, Math.random, avoid);
     }));
   }, [signature]);
   useIsomorphicLayoutEffect(drawFresh, [drawFresh]);

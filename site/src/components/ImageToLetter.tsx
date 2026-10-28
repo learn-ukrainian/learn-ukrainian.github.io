@@ -130,8 +130,12 @@ export default function ImageToLetter({
       if (newWrong >= 2) {
         setShowHint(true);
       }
-      // Clear wrong selection after shake animation
-      setTimeout(() => setSelectedAnswer(null), 400);
+      // Clear wrong selection after shake animation, then offer the next
+      // attempt in a fresh order (the attempted option's feedback stays put).
+      setTimeout(() => {
+        setSelectedAnswer(null);
+        reshuffle();
+      }, 400);
     }
   };
 

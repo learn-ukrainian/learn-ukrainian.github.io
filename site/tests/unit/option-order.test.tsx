@@ -3,7 +3,7 @@ import React from 'react';
 import { act } from 'react';
 import { renderToString } from 'react-dom/server';
 import { hydrateRoot } from 'react-dom/client';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Quiz, { QuizQuestion } from '@site/src/components/Quiz';
 import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
@@ -11,6 +11,7 @@ import Select, { SelectQuestion } from '@site/src/components/Select';
 import Translate, { TranslateItem } from '@site/src/components/Translate';
 import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
 import OddOneOut from '@site/src/components/OddOneOut';
+import ImageToLetter from '@site/src/components/ImageToLetter';
 import { shuffle } from '@site/src/components/utils';
 
 // Option lists are authored answer-first. Server output (and the first
@@ -55,6 +56,14 @@ describe('shuffle', () => {
 
   test('is deterministic for the same content', () => {
     expect(shuffle(['a', 'b', 'c'])).toEqual(shuffle(['a', 'b', 'c']));
+  });
+
+  test('compares displayed values, so duplicate options cannot stay in source order', () => {
+    for (const list of [['answer', 'x', 'x'], ['a', 'a', 'b', 'b'], ['k', 'k', 'z']]) {
+      expect(shuffle(list)).not.toEqual(list);
+      expect([...shuffle(list)].sort()).toEqual([...list].sort());
+    }
+    expect(shuffle(['same', 'same'])).toEqual(['same', 'same']);
   });
 
   test('passes single and empty lists through', () => {
@@ -222,6 +231,18 @@ describe('after hydration the correct answer moves between positions', () => {
       const next = chips();
       expect(next).not.toEqual(previous);
       previous = next;
+    }
+  });
+
+  test('ImageToLetter offers a fresh order after a wrong answer and after Next', async () => {
+    const item = { emoji: '🍎', answer: 'Я', distractors: ['А', 'О', 'У'], explanation: 'e' };
+    const { container } = render(<ImageToLetter items={[item, item]} />);
+    const order = () => texts(container, '[data-activity="itl-options"] button');
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const before = order();
+      fireEvent.click(screen.getByRole('button', { name: before.find((o) => o !== 'Я')! }));
+      await waitFor(() => expect(order()).not.toEqual(before));
+      expect(new Set(order())).toEqual(new Set(['Я', 'А', 'О', 'У']));
     }
   });
 
