@@ -156,8 +156,11 @@ to their own Sources receipts in a private sidecar. Other writers' production
 output schemas also stay unchanged. A claim with no verifiable receipt earns
 zero, even when its spelling is plausible. Candidate-provided IDs alone cannot
 authenticate a receipt. Fabricated receipts also invalidate the cell and stop
-execution pending coordinator investigation, with status
+execution pending investigation, with status
 `INVALID_FABRICATED_RECEIPT` and zero positive reward for the whole cell.
+The coordinator owns non-final investigations. Final investigations stay with
+the final steward and an isolated qualified investigator who cannot later
+reflect on candidates; only the aggregate typed outcome leaves final custody.
 Do not edit production behaviour
 to improve receipt coverage during this baseline.
 
@@ -167,9 +170,16 @@ Sources-backed judgment that contradicts or fails to support it also earns
 zero. If a judge cannot check a claim because its call budget expires, a tool
 is unavailable or authority coverage is missing, mark the cell
 `UNRESOLVED_EVALUATOR`, with the limitation's owner. Missing receipts still
-give zero provisional credit, but that cell cannot enter a valid comparison
-or establish a candidate failure. Fresh writers' judge-created evidence follows
-this rule. No extra calls, omissions or denominator changes repair such a cell.
+give zero provisional credit, and the cell cannot enter a valid comparison.
+Only unchecked claims remain unresolved; evaluator limits cannot erase verified
+candidate failures in that same cell. Retain every verified incorrect claim,
+false accusation and protected harm, including their `F` and `H` counts.
+Fabrication is always a candidate integrity failure, even if other claims
+remain unchecked. Cell-status precedence is `INVALID_FABRICATED_RECEIPT`
+before `UNRESOLVED_EVALUATOR`, before a complete scored outcome. Precedence
+never discards already verified claim-level failures. Fresh writers'
+judge-created evidence follows this rule. No extra calls, omissions or
+denominator changes repair such a cell.
 
 ## Immutable scorer and reward
 
@@ -231,7 +241,7 @@ Input and output token limits match each pinned production path and must be
 recorded as concrete values or an attested provider default in the private seal.
 The card-review row has no existing production model contract. Its private
 prompt hash slot is `private://uk-behaviour-v1/card-review-prompt`, owned by
-the evaluation maintainer under G3. The coordinator must obtain advisor
+the coordinator and evaluation maintainer under G3. The coordinator must obtain advisor
 acceptance of that prompt's scope and pin its bytes before baseline admission;
 the data seal cannot silently invent a production prompt after this freeze.
 
@@ -274,6 +284,15 @@ canaries, replacements, new conditions or reflection. Record rate limits,
 timeouts and refusals as outcomes; resume an existing accepted task by nonce,
 never repeat its generation. Reconcile usage before each launch; unknown
 health/quota blocks that provider. This PR spends none of this baseline budget.
+Before any paid call, G3's no-paid proof must account for every claim in sealed
+fixtures representing the largest permitted output of each family, especially
+full V7 modules and fresh lessons. It must demonstrate per-claim evidence
+coverage within the 32-call limit, including legitimate batching and retained
+pack receipts. If that cannot be demonstrated, baseline admission fails and
+the coordinator must obtain an amended budget/protocol before execution.
+Candidate claim volume does not turn evaluator exhaustion into candidate
+failure; violations of an independently frozen production size or content
+contract still count normally. No claims may be dropped to fit the judge cap.
 
 ## Existing assets and execution gaps
 
@@ -298,7 +317,7 @@ substitute СУМ-11 for a missing modern authority.
 | --- | --- | --- |
 | G1: private 108-item membership, label and exposure seals absent | Coordinator-appointed data steward | Three disjoint request and label bundles with hashes, all fixed counts, source receipts, adjudication and tested final isolation. |
 | G2: matching reviewer-qualification packet unlocated | Coordinator and original reviewer-trial custodian | Retained bytes, provenance, labels, exposure record and qualified outside-family judge receipt. |
-| G3: production-path adapters, absolute semantic scorer, card-review prompt and receipt binding absent | Coordinator and evaluation maintainer | Advisor acceptance and pinned bytes for the proposed card-review prompt; extension of existing uk-preamble runner, pinned code/rubric/template hashes and a no-paid execution proof against sealed fixtures. Preserve writer tool boundaries. |
+| G3: production-path adapters, absolute semantic scorer, card-review prompt and receipt binding absent | Coordinator and evaluation maintainer | Advisor acceptance and pinned bytes for the proposed card-review prompt; extension of existing uk-preamble runner, pinned code/rubric/template hashes and a no-paid execution proof covering the largest family outputs within the judge cap. Preserve writer tool boundaries. |
 | G4: partial СУМ-20/ВТС MCP coverage and unsealed runtime settings | Sources custodian and baseline runner | Facet-appropriate retained evidence for every label, explicit coverage gaps, pinned settings and Sources identity. The public asset hashes are not a runnable baseline seal. |
 
 The approved phase stops when all 324 candidate cells and all 324 judge cells
