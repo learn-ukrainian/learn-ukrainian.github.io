@@ -51,7 +51,8 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         file_key = _load_cursor_api_key_from_env_file()
         if file_key:
             env["CURSOR_API_KEY"] = file_key
-    if spec.agent == "claude" and spec.claude_account:
+    # An API-key label's directory exists only in its private binding, set by ``admission.claude_launch``.
+    if spec.agent == "claude" and spec.claude_account in ("a", "b"):
         env["CLAUDE_CONFIG_DIR"] = claude_config_dir(spec.claude_account, env.get("HOME"))
     shims = npm_shim_dir()
     if shims is not None:

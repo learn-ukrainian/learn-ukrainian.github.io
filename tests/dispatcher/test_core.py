@@ -2823,6 +2823,11 @@ def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeyp
         (["--agent", "claude", "--claude-account", "B"], "claude_account_unknown"),
         (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
         (["--agent", "claude", "--claude-account", "b"], "claude_account_ambient_conflict"),
+        # API-key labels (C-2643): the same guard, and only their exact names.
+        (["--agent", "claude", "--claude-account", "kk"], "claude_account_ambient_conflict"),
+        (["--agent", "claude", "--claude-account", "szb"], "claude_account_ambient_conflict"),
+        (["--agent", "claude", "--claude-account", "KK"], "claude_account_unknown"),
+        (["--agent", "codex", "--claude-account", "szb"], "claude_account_seat_unsupported"),
     ],
 )
 def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkeypatch, capsys, extra, code):

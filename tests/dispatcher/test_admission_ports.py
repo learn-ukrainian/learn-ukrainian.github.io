@@ -3,6 +3,7 @@
 Each test names its legacy source; assertions are adapted to the v2 entry points only.
 """
 
+import dataclasses
 import json
 import os
 import subprocess
@@ -16,7 +17,7 @@ from scripts.dispatcher import admission, cli, git, host_admission, providers, s
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 from scripts.lib import rules_core
-from tests.agent_runtime.test_attempt_boundary import CLAUDE_AMBIENT_AUTH, _private_json
+from tests.agent_runtime.test_attempt_boundary import CLAUDE_AMBIENT_AUTH, _private_json, bind_api_key_label
 from tests.agent_runtime.test_claude_account_worker import _calls, _run, accounts  # noqa: F401  (fixture)
 from tests.test_rules_core_loading import core_without_addendum, missing_core  # noqa: F401  (fixtures)
 
@@ -82,13 +83,13 @@ def _refuse_side_effects(monkeypatch, tmp_path):
 # ----------------------------------------------------------------- Claude account (#10619)
 
 
-def _labelled(accounts, monkeypatch):  # noqa: F811
+def _labelled(accounts, monkeypatch, label="b", mode="workspace-write"):  # noqa: F811
     monkeypatch.setenv("PATH", f"{accounts.binary.parent}{os.pathsep}{os.environ['PATH']}")
     prompt = accounts.workdir / "prompt.txt"
     prompt.write_text("do the task")
     spec = TaskSpec(
-        "labelled", "claude", "m", None, "workspace-write", accounts.workdir, prompt, accounts.workdir / "final",
-        claude_account="b",
+        "labelled", "claude", "m", None, mode, accounts.workdir, prompt, accounts.workdir / "final",
+        claude_account=label,
     )
     # The fixture CLI logs its calls through a variable the v2 environment does not pass on.
     env = {**child_env(spec), "LU_FAKE_CLAUDE_DUMP": str(accounts.dump)}
@@ -142,6 +143,86 @@ def test_bound_label_runs_with_only_the_bound_login_directory(accounts, monkeypa
     argv = seen["argv"]
     assert argv[argv.index("--setting-sources") + 1] == "project,local"
     assert str(accounts.config_dir) not in repr(argv) + repr(launched.argv)
+
+
+@pytest.fixture
+def api_key_accounts(accounts, tmp_path):  # noqa: F811
+    """``accounts`` plus API-key labels kk and szb, each bound to a helper-only directory (C-2643)."""
+    binding = tmp_path / "private-config" / "claude_accounts.json"
+    accounts.api_dirs = {label: bind_api_key_label(binding, tmp_path / f"api-{label}", label) for label in ("kk", "szb")}
+    return accounts
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "read-only"])
+@pytest.mark.parametrize("label", ["kk", "szb"])
+def test_api_key_label_runs_on_its_bound_key_helper(api_key_accounts, monkeypatch, label, mode):
+    """An API-key label's run authenticates through its bound directory's helper and nothing else.
+
+    No ambient CLAUDE_CONFIG_DIR is needed: the binding supplies the directory, the run's one
+    --settings is that directory's helper-only file, and the receipt names the helper.
+    """
+    from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt, reset_claude_account_receipts
+
+    reset_claude_account_receipts()
+    spec, invocation = _labelled(api_key_accounts, monkeypatch, label, mode)
+    settings_file = str(api_key_accounts.api_dirs[label] / "settings.json")
+    launched = admission.claude_launch(spec, invocation)
+
+    completed = subprocess.run(
+        launched.argv, input=launched.stdin, env=launched.env, cwd=spec.worktree, capture_output=True, timeout=60
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    seen = _run(api_key_accounts)
+    env, argv = seen["env"], seen["argv"]
+    assert env["CLAUDE_CONFIG_DIR"] == str(api_key_accounts.api_dirs[label])
+    assert not {name for name in env if name.upper() in CLAUDE_AMBIENT_AUTH or name.upper().startswith("ANTHROPIC_")}
+    assert argv.count("--settings") == 1 and argv[argv.index("--settings") + 1] == settings_file
+    assert argv[argv.index("--setting-sources") + 1] == "project,local"
+    assert "fixture-helper-command" not in repr(argv) + repr(launched.argv)
+    assert api_key_accounts.profile_calls == []  # no login account to ask the provider about
+    for status in _calls(api_key_accounts, "auth_status"):  # JSON, then text
+        assert status["argv"][status["argv"].index("--settings") + 1] == settings_file
+    assert claude_account_auth_receipt(label, source="explicit")["method"] == "api_key_helper"
+    reset_claude_account_receipts()
+
+
+@pytest.mark.parametrize(
+    ("case", "code"),
+    [
+        ("checkout_bedrock", "claude_account_auth_method_conflict"),
+        ("status_endpoint", "claude_account_status_override"),
+        ("settings_changed", "claude_account_settings_changed"),
+    ],
+)
+def test_api_key_label_launch_refuses_a_competing_source(api_key_accounts, monkeypatch, case, code):
+    """Whatever the run would still load must leave the helper the only, unchanged credential."""
+    spec, invocation = _labelled(api_key_accounts, monkeypatch, "kk")
+    local = api_key_accounts.workdir / ".claude" / "settings.local.json"
+    fake = {}
+    if case == "checkout_bedrock":
+        _private_json(local, {"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}})
+    elif case == "status_endpoint":
+        fake["LU_FAKE_CLAUDE_STATUS_MODE"] = "text_endpoint"
+    else:  # a checkout settings file the digest binds changes while it is verified
+        local.parent.mkdir()
+        fake["LU_FAKE_CLAUDE_STATUS_TOUCH"] = str(local)
+    invocation = Invocation(invocation.argv, invocation.stdin, {**invocation.env, **fake}, invocation.final_file)
+
+    with pytest.raises(ValueError) as refused:
+        admission.claude_launch(spec, invocation)
+
+    assert str(refused.value) == f"CLAUDE_ACCOUNT_REFUSED: {code}"
+    assert _calls(api_key_accounts, "run") == []
+
+
+def test_api_key_label_adds_no_placeholder_config_dir(tmp_path, monkeypatch):
+    """Only the binding names an API-key label's directory; a and b keep their legacy placeholders."""
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.delenv("CLAUDE_CONFIG_DIR", raising=False)
+    spec = TaskSpec("t", "claude", "m", None, "read-only", tmp_path, tmp_path / "p", tmp_path / "f")
+    assert "CLAUDE_CONFIG_DIR" not in child_env(dataclasses.replace(spec, claude_account="kk"))
+    assert child_env(dataclasses.replace(spec, claude_account="b"))["CLAUDE_CONFIG_DIR"] == str(tmp_path / ".claude-b")
 
 
 # ----------------------------------------------------------------- rules core
