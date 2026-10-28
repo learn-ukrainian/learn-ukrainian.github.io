@@ -17,6 +17,7 @@ from scripts.build.fresh.preflight import PreflightResult
 from scripts.curriculum.evidence import lock
 from tests.build.test_fresh_e3b2 import _fixture as module_fixture
 from tests.build.test_fresh_runner import _fixture as lesson_fixture
+from tests.curriculum.resolver.evidence_helpers import receipt_sources  # noqa: F401
 
 
 @pytest.fixture
