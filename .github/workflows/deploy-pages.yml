@@ -203,6 +203,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Prepare pinned Atlas search runtime
+        working-directory: .
+        env:
+          ATLAS_TREE_ASSET_ID: ${{ vars.ATLAS_TREE_ASSET_ID }}
+          ATLAS_TREE_SHA256: ${{ vars.ATLAS_TREE_SHA256 }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          .venv/bin/python site/scripts/prepare-atlas-search.py
+          --dest "$RUNNER_TEMP/atlas-search-runtime"
+
       # #5274: normal build leaves BUILD_ETYMOLOGY_ROUTES off (~296 MB). build:full
       # prerenders ~25k standalone etymology pages and blew the 1 GiB Pages budget.
       # Pronunciation audio stays a local Makefile target (gitignored); Pages CI must not invoke TTS.
@@ -210,6 +220,7 @@ jobs:
       # absent here (Vite inlines it); the build refuses to start if it is set.
       - name: Build Site
         env:
+          ATLAS_SEARCH_RUNTIME_TREE: ${{ runner.temp }}/atlas-search-runtime
           ATLAS_WORD_CARD_PREVIEW: '1'
           ATLAS_WORD_CARD_RELEASE_PATH: ${{ steps.word-card-preview.outputs.release-path }}
           ATLAS_WORD_CARD_RELEASE_PIN: ${{ steps.word-card-preview.outputs.pin }}
@@ -237,8 +248,8 @@ jobs:
           printf '%s\n' "$GITHUB_SHA" > "dist/.well-known/learn-ukrainian-deployment-${GITHUB_SHA}.txt"
 
       # PR3 D1/R1/R7: vendor pinned atlas runtime tree into dist/atlas/ (same-origin).
-      # Feature-flagged: unset ATLAS_TREE_ASSET_ID + ATLAS_TREE_SHA256 → skip (deploy
-      # stays green until the 20k publish arc supplies the first immutable pin).
+      # Public Pages preparation above requires the immutable pin. The vendor
+      # library still permits unpinned callers outside this recipe to skip.
       # Pin is asset id + sha256 digest — never a mutable release tag name.
       # Runs AFTER build, BEFORE the size gate so the vendored tree counts.
       - name: Vendor Atlas runtime tree
