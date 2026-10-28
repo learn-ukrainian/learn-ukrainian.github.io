@@ -214,13 +214,6 @@ def _record(monkeypatch, tmp_path, *, resolved_model, families=frozenset({"anthr
             return comments[-1]
         if args[:3] == ["gh", "pr", "view"]:
             return {"number": 42, "headRefOid": task["worktree_base_sha"], "headRefName": task["worktree_branch"], "state": "OPEN"}
-        # The review lineage (C-2902): no other PR contains the reviewed SHA.
-        if args[:3] == ["gh", "pr", "list"]:
-            return []
-        if args[:4] == ["gh", "api", "--paginate", "--slurp"] and args[4].endswith("/pulls?per_page=100"):
-            return [[]]
-        if args[:2] == ["gh", "api"] and "/pulls?state=closed&sort=updated" in args[2]:
-            return []
         raise AssertionError(args)
 
     monkeypatch.setattr(recorder, "_run_json", fake_json)

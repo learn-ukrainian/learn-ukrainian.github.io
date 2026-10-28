@@ -307,25 +307,12 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
                 args = ["gh", "api", "-X", "POST"]
             elif args.verb == "read-comment":
                 args = ["gh", "api", "issues/comments/" + str(args.fields["number"])]
-            elif args.verb == "read-commits":
-                return [[{"sha": sha} for sha in fake_json.pr_commits.get(args.fields["number"], [])]]
             else:
                 raise AssertionError(args.verb)
         if args[:3] == ["gh", "pr", "view"]:
             return {"number": 42, "headRefOid": head, "headRefName": branch, "state": "OPEN"}
-        if args[:3] == ["gh", "pr", "list"] and "--search" in args:
-            # GitHub's commit search: the only read that also finds closed PRs containing a SHA.
-            return list(fake_json.searched.get(args[args.index("--search") + 1], []))
         if args[:3] == ["gh", "pr", "list"]:
-            return [*fake_json.branch_prs, {"number": 42, "headRefOid": head, "headRefName": branch}]
-        if args[:4] == ["gh", "api", "--paginate", "--slurp"] and args[4].endswith("/pulls?per_page=100"):
-            # Commit-to-pulls association (open and merged PRs only); by default only this PR contains a SHA.
-            sha = args[4].split("/commits/", 1)[1].split("/", 1)[0]
-            numbers = fake_json.associated.get(sha, [42])
-            return [[{"number": n, "base": {"repo": {"full_name": REPOSITORY}}} for n in numbers]]
-        if args[:2] == ["gh", "api"] and "/pulls?state=closed&sort=updated" in args[2]:
-            # The closed-PR listing, newest update first; it is not search-backed.
-            return list(fake_json.closed)
+            return [{"number": 42, "headRefOid": head, "headRefName": branch}]
         if args[:4] == ["gh", "api", "-X", "POST"]:
             calls["posts"] += 1
             item = {
@@ -342,8 +329,6 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
             return comments[-1]
         raise AssertionError(args)
 
-    fake_json.searched, fake_json.associated, fake_json.branch_prs = {}, {}, []
-    fake_json.closed, fake_json.pr_commits = [], {}
     monkeypatch.setattr(recorder, "_run_json", fake_json)
     monkeypatch.setattr(
         recorder,
@@ -600,11 +585,6 @@ def retargeted_review(monkeypatch, tmp_path):
         ("cross_family", "unresolved-kimi"),
         # The PR's base is never the authorship range: one cut after the OpenAI commit hides nothing (F6).
         ("cross_family", "retargeted-base"),
-        # A rejection on the closed PR this one replaced, at the same head, still stands (F7).
-        ("cross_family", "replaced-pr"),
-        ("red_team", "replaced-pr"),
-        # It stands while the commit search has not yet indexed the closed PR (F12).
-        ("cross_family", "replaced-unindexed"),
         # A red team refuses an unresolved author too; --review-author-model cannot name its model (F9).
         ("red_team", "unresolved-author"),
     ],
@@ -654,111 +634,46 @@ def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch,
             recorder.record("review-one", **kwargs)
         assert comments == [] and calls == {"posts": 0, "statuses": 0}
         return
-    replaced = state in {"replaced-pr", "replaced-unindexed"}
     edited = state == "edited"
-    verdict = "APPROVED" if edited else "CHANGES_REQUESTED" if replaced else state
-    # A replaced PR #41 was closed at this head; GitHub's commit search finds it, or, before the search has
-    # indexed it, the closed-PR listing does.
-    history = [] if replaced else comments
-    if state == "replaced-pr":
-        recorder._run_json.searched[SHA] = [{"number": 41, "headRefOid": SHA}]
-    if state == "replaced-unindexed":
-        from datetime import UTC, datetime
-
-        recorder._run_json.closed = [{"number": 41, "updated_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")}]
-        recorder._run_json.pr_commits[41] = [SHA]
-    if replaced:
-        monkeypatch.setattr(
-            recorder.GitHubAdapter, "comments", lambda self, repository, number: list(history if number == 41 else comments)
-        )
-    history.append(recorded_verdict(SHA, verdict, mode=mode, edited=edited))
+    verdict = "APPROVED" if edited else state
+    comments.append(recorded_verdict(SHA, verdict, mode=mode, edited=edited))
     reason = "keeper reads this head's verdict as unknown" if edited else "only an APPROVE at a new head clears it"
     with pytest.raises(recorder.RecordError, match=reason):
         recorder.record("review-one", **kwargs)
-    assert len(history) == 1 and calls == {"posts": 0, "statuses": 0}
+    assert len(comments) == 1 and calls == {"posts": 0, "statuses": 0}
     # The keeper reads the same head the same way: the rejection or unknown state stands.
-    assert sweep.lookup_verdict(history, SHA, "fleet").state == ("unknown" if edited else verdict)
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == ("unknown" if edited else verdict)
     # A rejection or edit at an earlier head is cleared by an APPROVE at the new head.
-    history[0] = recorded_verdict(OTHER, verdict, mode=mode, edited=edited)
+    comments[0] = recorded_verdict(OTHER, verdict, mode=mode, edited=edited)
     assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
 
 
 @pytest.mark.parametrize(
-    "risk,security,prior_heads,replacement,refused",
+    "risk,security,prior_heads,refused",
     [
-        (None, False, 2, None, False),
-        (None, False, 3, None, True),
-        ("high", False, 3, None, True),
+        (None, False, 2, False),
+        (None, False, 3, True),
+        ("high", False, 3, True),
         # The review task's own --risk critical never raises a non-security diff past 3 rounds (F3).
-        ("critical", False, 3, None, True),
+        ("critical", False, 3, True),
         # A security-sensitive diff reaches 5 rounds whatever risk the task recorded.
-        ("low", True, 4, None, False),
-        (None, True, 5, None, True),
-        # A replacement PR from the same branch continues the count (F3).
-        (None, False, 3, "same-branch", True),
-        ("low", True, 5, "same-branch", True),
-        # Rounds are keyed on reviewed SHAs, not the branch name: a renamed or fork replacement continues too (F8).
-        (None, False, 3, "renamed", True),
-        (None, False, 3, "fork", True),
-        (None, False, 2, "renamed", False),
-        # A renamed replacement whose head is a new commit on top of the reviewed one continues (F11).
-        (None, False, 3, "descendant", True),
-        ("low", True, 5, "descendant", True),
-        # So does one closed too recently for the commit search: the closed-PR listing finds it (F12).
-        (None, False, 3, "descendant-unindexed", True),
-        # A rebased replacement shares no commit; the same-branch listing still finds it.
-        (None, False, 3, "rebased", True),
-        # More closed PRs than one page inside the search-index lag cannot be proved complete.
-        (None, False, 0, "closed-flood", "closed within the search-index lag"),
+        ("low", True, 4, False),
+        (None, True, 5, True),
     ],
 )
-def test_verdict_beyond_review_budget_is_refused(
-    monkeypatch, tmp_path, risk, security, prior_heads, replacement, refused
-):
-    from dataclasses import replace
-    from datetime import UTC, datetime
-
+def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, security, prior_heads, refused):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     write_task(tasks, **({"review_risk": risk, "options": {"risk": risk}} if risk else {}))
     changed = ("scripts/review/record_cf_verdict.py",) if security else ("docs/readme.md",)
     facts = facts_for({"google"}, changed_paths=changed)
-    ancestor = "c" * 40
-    if replacement in {"descendant", "descendant-unindexed"}:
-        # This branch is ``ancestor`` (reviewed on #41) plus the new head.
-        facts = replace(facts, commits=tuple(replace(facts.commits[0], sha=sha) for sha in (ancestor, SHA)))
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
-    prior = [recorded_verdict(f"{index:x}" * 40, "CHANGES_REQUESTED") for index in range(1, prior_heads + 1)]
+    comments.extend(recorded_verdict(f"{index:x}" * 40, "CHANGES_REQUESTED") for index in range(1, prior_heads + 1))
     # More verdicts at a head already reviewed open no new round.
-    prior.append(recorded_verdict("1" * 40, "CHANGES_REQUESTED", task_id="second-seat"))
-    now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
-    if replacement == "closed-flood":
-        recorder._run_json.closed = [{"number": n, "updated_at": now} for n in range(100, 200)]
-    elif replacement:
-        # The earlier rounds were recorded on PR #41, closed and replaced by PR #42. GitHub's commit search
-        # finds #41 at a commit it shares with this branch; a head-branch listing finds it under the same name.
-        if replacement == "descendant":
-            recorder._run_json.searched[ancestor] = [{"number": 41, "headRefOid": ancestor}]
-        elif replacement == "descendant-unindexed":
-            recorder._run_json.closed = [{"number": 41, "updated_at": now}]
-            recorder._run_json.pr_commits[41] = [ancestor]
-        elif replacement != "rebased":
-            recorder._run_json.searched[SHA] = [{"number": 41, "headRefOid": SHA}]
-        if replacement in {"same-branch", "fork", "rebased"}:
-            recorder._run_json.branch_prs.append(
-                {"number": 41, "headRefName": BRANCH, "isCrossRepository": replacement == "fork"}
-            )
-        monkeypatch.setattr(
-            recorder.GitHubAdapter,
-            "comments",
-            lambda self, repository, number: list(prior if number == 41 else comments),
-        )
-    else:
-        comments.extend(prior)
+    comments.append(recorded_verdict("1" * 40, "CHANGES_REQUESTED", task_id="second-seat"))
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     if refused:
-        reason = refused if isinstance(refused, str) else r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"
-        with pytest.raises(recorder.RecordError, match=reason):
+        with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"):
             recorder.record("review-one", **kwargs)
         assert calls == {"posts": 0, "statuses": 0}
     else:

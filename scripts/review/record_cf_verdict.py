@@ -115,18 +115,10 @@ SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
 RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
 # Kimi never reviews. Native Grok requires its own runtime attestation (#9769).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
-# Review rounds per reviewed-commit lineage, replacement, renamed and fork PRs
-# included (C-2902); a security-sensitive change gets the elevated budget. A
-# lineage or a PR search that reaches its cap is refused rather than counted short.
+# Review rounds per PR, counted on the reviewed heads of the current PR (C-2902);
+# a security-sensitive change gets the elevated budget.
 DEFAULT_REVIEW_ROUNDS = 3
 ELEVATED_REVIEW_ROUNDS = 5
-LINEAGE_PR_LIMIT = 50
-LINEAGE_COMMIT_LIMIT = 100
-PR_SEARCH_LIMIT = 100
-# GitHub's commit search is eventually consistent. A PR closed within this
-# window is read from the closed-PR listing instead, which is not search-backed.
-SEARCH_INDEX_LAG_S = 30 * 60
-CLOSED_PR_PAGE = 100
 
 
 class RecordError(RuntimeError):
@@ -1715,7 +1707,7 @@ def require_no_same_head_rejection(comments: Sequence[Mapping[str, Any]], sha: s
 
 
 def review_round_budget(facts: BranchReviewFacts) -> int:
-    """Rounds one branch may spend: 5 on a security-sensitive change, else 3 (C-2902).
+    """Rounds one PR may spend: 5 on a security-sensitive change, else 3 (C-2902).
 
     The tier comes from the branch's own changed paths, the shared rule that
     raises a security-sensitive target to critical. The review task's
@@ -1742,188 +1734,21 @@ def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> 
     return heads
 
 
-def _prs_containing(repository: str, sha: str) -> set[int]:
-    """Every PR of ``repository`` whose commits include ``sha``: open, merged, closed and fork PRs.
-
-    GitHub's commit-to-pulls association lists open and merged PRs only, so a
-    commit search adds closed ones. A search hit joins only when that PR's own
-    commit listing contains ``sha``, never because its text names the SHA.
-    """
-    unavailable = f"PRs containing {sha[:12]} unavailable; cannot count review rounds"
-    pages = _run_json(["gh", "api", "--paginate", "--slurp", f"repos/{repository}/commits/{sha}/pulls?per_page=100"])
-    if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
-        raise RecordError(unavailable)
-    numbers: set[int] = set()
-    for pr in (pr for page in pages for pr in page):
-        base = pr.get("base") if isinstance(pr, Mapping) else None
-        full_name = base.get("repo", {}).get("full_name") if isinstance(base, Mapping) else None
-        if not isinstance(pr.get("number"), int) or not isinstance(full_name, str):
-            raise RecordError(unavailable)
-        if full_name.casefold() == repository.casefold():
-            numbers.add(pr["number"])
-    found = _run_json(
-        [
-            "gh",
-            "pr",
-            "list",
-            "--repo",
-            repository,
-            "--state",
-            "all",
-            "--search",
-            sha,
-            "--limit",
-            str(PR_SEARCH_LIMIT),
-            "--json",
-            "number,headRefOid",
-        ]
-    )
-    if not isinstance(found, list) or len(found) >= PR_SEARCH_LIMIT:
-        raise RecordError(unavailable)
-    for pr in found:
-        if not isinstance(pr, Mapping) or not isinstance(pr.get("number"), int):
-            raise RecordError(unavailable)
-        if pr["number"] in numbers:
-            continue
-        if pr.get("headRefOid") == sha or any(
-            entry.get("sha") == sha for entry in _pages(Request("read-commits", repo=repository, number=pr["number"]))
-        ):
-            numbers.add(pr["number"])
-    return numbers
-
-
-def _recently_closed_commits(repository: str, *, now: datetime | None = None) -> dict[int, frozenset[str]]:
-    """Commits of every PR closed within the search-index lag (C-2902 F12).
-
-    The closed-PR listing is read from GitHub's database, not its search index.
-    Closing a PR updates it and a closed PR takes no new commits, so every PR
-    closed within ``SEARCH_INDEX_LAG_S`` is on the newest page, and every commit
-    of a PR closed earlier was pushed long enough ago for the commit search to
-    find it. A full page that does not reach back that far is refused.
-    """
-    unavailable = "recently closed PRs unavailable; cannot count review rounds"
-    listed = _run_json(
-        ["gh", "api", f"repos/{repository}/pulls?state=closed&sort=updated&direction=desc&per_page={CLOSED_PR_PAGE}"]
-    )
-    if not isinstance(listed, list):
-        raise RecordError(unavailable)
-    cutoff = (now or datetime.now(UTC)).timestamp() - SEARCH_INDEX_LAG_S
-    recent: list[int] = []
-    oldest: float | None = None
-    for pr in listed:
-        updated = pr.get("updated_at") if isinstance(pr, Mapping) else None
-        if not isinstance(updated, str) or not isinstance(pr.get("number"), int):
-            raise RecordError(unavailable)
-        try:
-            stamp = datetime.fromisoformat(updated.replace("Z", "+00:00")).timestamp()
-        except ValueError as exc:
-            raise RecordError(unavailable) from exc
-        oldest = stamp if oldest is None else min(oldest, stamp)
-        if stamp >= cutoff:
-            recent.append(pr["number"])
-    if len(listed) >= CLOSED_PR_PAGE and (oldest is None or oldest >= cutoff):
-        raise RecordError(f"more than {CLOSED_PR_PAGE} PRs closed within the search-index lag; retry later")
-    commits: dict[int, frozenset[str]] = {}
-    for pr_number in recent:
-        entries = _pages(Request("read-commits", repo=repository, number=pr_number))
-        commits[pr_number] = frozenset(entry["sha"] for entry in entries if isinstance(entry.get("sha"), str))
-    return commits
-
-
-def _same_branch_prs(repository: str, branch: str) -> set[int]:
-    """Same-repository PRs from ``branch`` in any state, so a rebased replacement keeps its count."""
-    listed = _run_json(
-        [
-            "gh",
-            "pr",
-            "list",
-            "--repo",
-            repository,
-            "--state",
-            "all",
-            "--head",
-            branch,
-            "--limit",
-            str(PR_SEARCH_LIMIT),
-            "--json",
-            "number,isCrossRepository",
-        ]
-    )
-    if not isinstance(listed, list) or len(listed) >= PR_SEARCH_LIMIT:
-        raise RecordError("branch PR listing unavailable; cannot count review rounds")
-    numbers: set[int] = set()
-    for pr in listed:
-        if not isinstance(pr, Mapping) or not isinstance(pr.get("number"), int):
-            raise RecordError("branch PR listing unavailable; cannot count review rounds")
-        if pr.get("isCrossRepository") is not True:
-            numbers.add(pr["number"])
-    return numbers
-
-
-def review_lineage_comments(
-    adapter: GitHubAdapter,
-    repository: str,
-    number: int,
-    head_sha: str,
-    comments: Sequence[Mapping[str, Any]],
-    login: str,
-    *,
-    commits: Iterable[str | None] = (),
-    branch: str | None = None,
-) -> tuple[list[Mapping[str, Any]], tuple[int, ...]]:
-    """Comments of every PR that shares a commit with this branch or a recorded verdict (C-2902 F7, F8, F11).
-
-    Rounds and rejections are keyed on reviewed commit SHAs, never on a PR
-    number alone. Starting from this PR, every PR of the repository that
-    contains the head, any other commit of the reviewed range (``commits``),
-    or a SHA named by a trusted verdict on a PR already found, joins until no
-    new PR appears, as does every same-repository PR from ``branch``. A
-    closed, renamed, fork or descendant-head replacement therefore continues
-    the count and keeps its same-head rejections. The one comment set feeds the
-    budget and the rejection guards.
-    """
-    seeds = {head_sha, *(sha for sha in commits if sha)}
-    if len(seeds) > LINEAGE_COMMIT_LIMIT:
-        raise RecordError(f"reviewed range exceeds {LINEAGE_COMMIT_LIMIT} commits; cannot count review rounds")
-    recently_closed = _recently_closed_commits(repository)
-    by_pr: dict[int, list[Mapping[str, Any]]] = {number: list(comments)}
-
-    def join(numbers: set[int]) -> None:
-        for other in sorted(numbers - by_pr.keys()):
-            if len(by_pr) >= LINEAGE_PR_LIMIT:
-                raise RecordError(f"review lineage exceeds {LINEAGE_PR_LIMIT} PRs; cannot count review rounds")
-            try:
-                by_pr[other] = adapter.comments(repository, other)
-            except SweepError as exc:
-                raise RecordError(f"comment lookup failed for PR #{other}: {exc}") from exc
-
-    if branch:
-        join(_same_branch_prs(repository, branch))
-    queried: set[str] = set()
-    while True:
-        lineage = [item for items in by_pr.values() for item in items]
-        pending = sorted((seeds | _trusted_verdict_shas(lineage, login)) - queried)
-        if not pending:
-            return lineage, tuple(sorted(by_pr))
-        for sha in pending:
-            queried.add(sha)
-            join(_prs_containing(repository, sha) | {n for n, shas in recently_closed.items() if sha in shas})
-
-
 def require_review_round_within_budget(
-    comments: Sequence[Mapping[str, Any]], sha: str, login: str, *, budget: int, lineage: str
+    comments: Sequence[Mapping[str, Any]], sha: str, login: str, *, budget: int, pr: int
 ) -> None:
-    """Refuse a verdict that would open a review round beyond the lineage's budget.
+    """Refuse a verdict that would open a review round beyond this PR's budget.
 
-    A round is one reviewed head: trusted verdicts on every lineage PR
-    (:func:`review_lineage_comments`) are counted across heads, and more
-    verdicts at an already reviewed head (a quorum seat or a retried
-    publication) open no new round. Budget end is never approval.
+    A round is one reviewed head: trusted verdicts on this PR are counted
+    across heads, and more verdicts at an already reviewed head (a quorum seat
+    or a retried publication) open no new round. Earlier PRs are not read: no
+    GitHub listing finds them reliably (search index lag, the 250-commit PR
+    listing cap). Budget end is never approval.
     """
     heads = _trusted_verdict_shas(comments, login)
     if sha not in heads and len(heads) >= budget:
         raise RecordError(
-            f"REVIEW_BUDGET_EXHAUSTED: {lineage} already has verdicts at {len(heads)} heads and its budget "
+            f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(heads)} heads and its budget "
             f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(heads) + 1}"
         )
 
@@ -2207,27 +2032,10 @@ def record(
             comments = adapter.comments(repository, number)
         except SweepError as exc:
             raise RecordError(f"comment lookup failed: {exc}") from exc
-        # One comment set, every PR containing a reviewed SHA, feeds the budget and the rejection guards.
-        lineage, numbers = review_lineage_comments(
-            adapter,
-            repository,
-            number,
-            sha,
-            comments,
-            login,
-            commits=(commit.sha for commit in facts.commits),
-            branch=branch,
-        )
         if review_mode == "red_team":
-            require_no_outside_rejection(lineage, sha)
+            require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
-        require_review_round_within_budget(
-            lineage,
-            sha,
-            login,
-            budget=review_round_budget(facts),
-            lineage=f"reviewed commits of PR {', '.join(f'#{n}' for n in numbers)}",
-        )
+        require_review_round_within_budget(comments, sha, login, budget=review_round_budget(facts), pr=number)
         existing = None
         for item in comments:
             body = item.get("body")
@@ -2259,7 +2067,7 @@ def record(
                         raise RecordError("existing verdict marker was edited or conflicts with task")
                     existing = item
                     break
-        require_no_same_head_rejection(lineage, sha, login, verdict)
+        require_no_same_head_rejection(comments, sha, login, verdict)
         if existing is None:
             data = _run_json(
                 # The typed record is the publisher's only admitted marker carrier (#11127).

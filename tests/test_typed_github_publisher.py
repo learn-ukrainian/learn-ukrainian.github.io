@@ -865,13 +865,6 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             if consumer == "verdict":
                 return real_run(args, **kwargs)
             return subprocess.CompletedProcess(args, 0, "https://github.com/unit/public.git", "")
-        # The verdict's review lineage reads (C-2902): no other PR contains the reviewed SHA.
-        if consumer == "verdict" and "repos/unit/public/commits/" + "a" * 40 + "/pulls?per_page=100" in args:
-            return subprocess.CompletedProcess(args, 0, "[[]]", "")
-        if consumer == "verdict" and args[:3] == ["gh", "pr", "list"]:
-            return subprocess.CompletedProcess(args, 0, "[]", "")
-        if consumer == "verdict" and any("/pulls?state=closed&sort=updated" in arg for arg in args):
-            return subprocess.CompletedProcess(args, 0, "[]", "")
         calls.append(args)
         if "--input" in args:
             payload = json.loads(Path(args[args.index("--input") + 1]).read_bytes())

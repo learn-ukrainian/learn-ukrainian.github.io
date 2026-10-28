@@ -284,13 +284,6 @@ def record_verdict(
             raise AssertionError(args.verb)
         if args[:3] == ["gh", "pr", "view"]:
             return {"number": 42, "headRefOid": head, "headRefName": "feature", "state": "OPEN"}
-        # The review lineage: only this PR contains a reviewed SHA.
-        if args[:3] == ["gh", "pr", "list"]:
-            return []
-        if args[:4] == ["gh", "api", "--paginate", "--slurp"] and args[4].endswith("/pulls?per_page=100"):
-            return [[{"number": 42, "base": {"repo": {"full_name": REPOSITORY}}}]]
-        if args[:2] == ["gh", "api"] and "/pulls?state=closed&sort=updated" in args[2]:
-            return []
         raise AssertionError(args)
 
     monkeypatch.setattr(recorder, "_run_json", fake_json)
