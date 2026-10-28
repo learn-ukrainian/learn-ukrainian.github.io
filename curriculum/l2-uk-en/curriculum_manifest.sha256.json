@@ -162,7 +162,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/colors/activities.yaml",
-      "sha256": "4d442d6e6a177a913bdfa47651a01ee3a69be156e1923cf4a85e8975ccf5e726"
+      "sha256": "e7577f02a5d502376fede74b185fa15c8ecf47791d84536a03bacce21cf3697b"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/colors/module.md",
@@ -594,7 +594,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/stress-and-melody/activities.yaml",
-      "sha256": "acce5940811811e4aad0a252ef0ad32ba29c5627aeb288c4bb6534429fc86f2c"
+      "sha256": "4ca3b898e7fd7888aaee61a7161be46920244e826857414f72a12b59c7771b94"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/stress-and-melody/module.md",
@@ -13726,7 +13726,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/colors.mdx",
-      "sha256": "99c4873303aa5dc5f045e6c8ee939e1392003f832384f08dddc63bed4782b863"
+      "sha256": "bd80f524d3474bb5e98cdd3421a7b0cc1085a2cae3a3fccb2a8b7041729b4e9a"
     },
     {
       "path": "site/src/content/docs/a1-v1/days-and-months.mdx",
@@ -13838,7 +13838,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/stress-and-melody.mdx",
-      "sha256": "fdf045eef86aeecd1b4193c1674d45a00af4e71bcee1efd924e9e5038463a30e"
+      "sha256": "bc2d185b45ee1d85577dd298c84b89d927b3faefbc7974569d4b95b93d18c032"
     },
     {
       "path": "site/src/content/docs/a1-v1/things-have-gender.mdx",
