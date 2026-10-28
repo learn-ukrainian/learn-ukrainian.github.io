@@ -1,6 +1,6 @@
 # Writer-worker lifecycle
 
-Normative SHA-256: `dca41dbb929094ab2b9782b3ade202e00c299fda3089916eacef3db2a7d93437`
+Normative SHA-256: `9cadfba7042545eb346b9dbaedb41693f6124205473a0560b5a1da4e1fe515ab`
 
 Status: round-7 proposal, pending new-head independent review and designated approval. No implementation or cleanup is authorized by this document alone.
 Issue: [#10559](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10559).
@@ -41,7 +41,7 @@ Read-only and review tasks use the separate replacement contract below; they can
 The writer commits, passes the pre-push gate, pushes, requests independent cross-family review,
 fixes findings in the same worktree, obtains a durable pre-PR exact-head approval receipt, opens the PR,
 publishes and verifies the PR verdict projection, and waits for CI. Material findings require driver handback as defined below.
-The writer never merges, enqueues, arms auto-merge, or approves its own work.
+Nobody arms auto-merge, and the writer never approves its own work. The briefed worker enqueues only after a recorded exact-head cross-family APPROVE and same-head green CI, then confirms MERGED (rules core P1, P4).
 The review-request actor in that flow depends on the designated choice of Option A or Option B below.
 The merge-queue keeper enqueues only with current exact-head review and green required CI.
 The common reaper proves removal. The lane driver owns any interrupted or blocked lifecycle until disposition.
@@ -67,7 +67,7 @@ PUSHED releases local worktree custody while the lifecycle remains active for re
 | (b) PUSHED | Exact gated head on GitHub; review or PR remains actionable; local tree absent | Writer publishes; common reaper removes after attempt exit; lane driver tracks review and CI | Passed exact-head pre-push gate, remote head equals local head, accounted-for tree contents, no active claimant or process, remote branch still present after removal | `writer-lifecycle.v1` with `disposition: PUSHED`, gate, remote-head, review or PR, and removal receipts |
 | (c) ABANDONED | Issue holds a digest-matched public reason; local tree and every task branch ref absent | Lane driver authorizes abandonment; common reaper removes; lane driver verifies | Identity-checked driver decision and matching issue copy, exact content identity, no active claimant or process, authorized task-only removal | `writer-lifecycle.v1` with `disposition: ABANDONED`, decision digest, issue copy, and removal receipts |
 
-PUSHED is a complete worker handback, not a completed product issue. The driver continues review, CI, and landing.
+PUSHED is a complete worker handback, not a completed product issue. The driver continues review and CI, and the briefed worker lands under the single landing rule above.
 A later merge supersedes PUSHED with MERGED using the same lifecycle identity and append-only history.
 A deliberate cancellation of pushed work supersedes it with ABANDONED after the issue record and branch cleanup.
 A review or CI fix reactivates the same lifecycle and canonical tree. Previous receipts remain historical.
@@ -1079,7 +1079,7 @@ Issue #10559 cannot close with draft packets alone. AC-03 remains owned by the a
 ## What this does not change
 
 Merge authority remains with the existing merge-queue keeper and accountable integration/stream ownership.
-Writers never merge or enqueue. Cleanup does not confer merge authority.
+Landing follows the single rule above: a briefed worker enqueues only after a recorded exact-head cross-family APPROVE and same-head green CI, then confirms MERGED; nobody arms auto-merge. Cleanup does not confer merge authority.
 Review independence remains cross-family and outside the writer-of-the-moment, with attested model/family/harness.
 Self-review is refused through `SELF_REVIEW_DETECTED`. Advice, designated approval, and formal review remain distinct.
 Exact-head review and same-head required CI still bind; moved heads void old approval and CI.

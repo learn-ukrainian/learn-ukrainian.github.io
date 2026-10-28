@@ -291,8 +291,9 @@ Compose only the rows that apply (N/A needs a reason — do not skip silently):
 - [ ] If code/docs change: PR + independent **cross-family exact-head APPROVE**
       with **quality-posture receipt** (best-practice basis, root-cause treatment,
       no unnecessary architecture, no scope creep) + required CI green on that
-      head + **landed** (merge verified, not merely enqueued) by the accountable
-      driver — workers never merge; drivers never ask the operator to merge
+      head + **landed** (merge verified, not merely enqueued) by the worker that
+      received the brief, or the accountable driver when no brief owns it —
+      nobody asks the operator to merge
 - [ ] **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s)
       gone (`merge_closeout` proves all three)
 - [ ] **GitHub hygiene:** issue updated; closed when acceptance criteria are met
