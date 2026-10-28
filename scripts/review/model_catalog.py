@@ -207,9 +207,7 @@ def _advisory_role_holders(models: dict[str, Any], role: str) -> dict[str, tuple
 
 
 def _validate_advisory_roles(raw: Any, models: dict[str, Any]) -> None:
-    if raw is None:
-        # A catalog without the section defines no advisory decision; its consumers refuse.
-        return
+    # Bounded admission reads the envelope role from this section, so it is required.
     roles = _require_mapping(raw, ADVISORY_ROLES_KEY)
     if set(roles) != set(ADVISORY_ROLE_SHAPES):
         raise ModelCatalogError(f"{ADVISORY_ROLES_KEY} must define exactly {sorted(ADVISORY_ROLE_SHAPES)}")
@@ -232,11 +230,8 @@ def _validate_advisory_roles(raw: Any, models: dict[str, Any]) -> None:
 
 def _validate_envelope_role_agrees(catalog: dict[str, Any]) -> None:
     """The bounded advisor's duplicated effort and output fields equal the one ``advisory_roles`` entry."""
-    roles = catalog.get(ADVISORY_ROLES_KEY)
-    if roles is None:
-        return
     advisor = catalog["execution_routing"]["sol_advised_bounded"]["advisor"]
-    entry = roles[BOUNDED_ADVISORY_ENVELOPE_ROLE]
+    entry = catalog[ADVISORY_ROLES_KEY][BOUNDED_ADVISORY_ENVELOPE_ROLE]
     if advisor["role"] != BOUNDED_ADVISORY_ENVELOPE_ROLE or any(
         advisor[field] != entry[field] for field in ("effort", "output_fields")
     ):

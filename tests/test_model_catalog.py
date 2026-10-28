@@ -744,6 +744,8 @@ def test_bounded_policy_reads_the_one_advisory_roles_entry():
     ("mutate", "message"),
     [
         (lambda c: c["advisory_roles"].pop("bounded_advisory_envelope"), "advisory_roles must define exactly"),
+        (lambda c: c.pop("advisory_roles"), "advisory_roles must be a mapping"),
+        (lambda c: c.update(advisory_roles=None), "advisory_roles must be a mapping"),
         (lambda c: c["advisory_roles"]["bounded_advisory_envelope"].update(fence="other"), "fence must be"),
         (
             lambda c: c["advisory_roles"]["bounded_advisory_envelope"].update(effort="medium"),
@@ -754,7 +756,7 @@ def test_bounded_policy_reads_the_one_advisory_roles_entry():
             "advisor must agree with advisory_roles.bounded_advisory_envelope",
         ),
     ],
-    ids=["role-missing", "fence", "entry-effort", "advisor-effort"],
+    ids=["role-missing", "section-missing", "section-null", "fence", "entry-effort", "advisor-effort"],
 )
 def test_catalog_holds_the_bounded_envelope_role_and_advisor_in_agreement(mutate, message):
     broken = deepcopy(load_model_catalog())
