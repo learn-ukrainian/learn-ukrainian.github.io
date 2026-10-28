@@ -2869,10 +2869,16 @@ def test_actual_missing_user_bus_runs_each_serial_check_once(repo, ending, monke
     _assert_queue_released(gate.state_dir(repo))
 
 
+POOL_RELATIVE = "/user.slice/user-4242.slice/user@4242.service/lu.slice"
+
+
 def _fake_cgroup(root, unit):
-    group = root / unit
-    group.mkdir()
+    group = root / POOL_RELATIVE.lstrip("/") / unit
+    group.mkdir(parents=True)
     (group / "memory.max").write_text(str(gate.SCOPE_MEMORY_MAX))
+    (group / "memory.swap.max").write_text("0")
+    (group.parent / "memory.max").write_text(str(2 * gate.SCOPE_MEMORY_MAX))
+    (group.parent / "memory.swap.max").write_text("0")
     (group / "memory.peak").write_text("123456")
     (group / "cgroup.events").write_text("populated 1\n")
     return group
@@ -2893,7 +2899,7 @@ class InjectedScope:
             "mode": "optin_scope",
             "max_concurrent_runs": 2,
             "unit": self.unit,
-            "cgroup": "/" + self.unit,
+            "cgroup": POOL_RELATIVE + "/" + self.unit,
             "effective_workers": 4,
             "ticket_inode": os.fstat(admitted._ticket_fd).st_ino,
         }
@@ -2968,6 +2974,9 @@ def test_legacy_unscoped_holder_forces_optin_exclusive_admission(qualified_cgrou
         "proof_missing",
         "wrong_inode",
         "unbounded",
+        "unbounded_swap",
+        "unbounded_pool",
+        "unbounded_pool_swap",
         "unpopulated",
         "peak_unavailable",
         "proof_symlink",
@@ -2986,6 +2995,12 @@ def test_unknown_holder_proof_never_adds_permission(qualified_cgroups, tmp_path,
             path.write_text(json.dumps(proof))
         elif failure == "unbounded":
             (holder.scope.group / "memory.max").write_text("max")
+        elif failure == "unbounded_swap":
+            (holder.scope.group / "memory.swap.max").write_text("max")
+        elif failure == "unbounded_pool":
+            (holder.scope.group.parent / "memory.max").write_text("max")
+        elif failure == "unbounded_pool_swap":
+            (holder.scope.group.parent / "memory.swap.max").write_text("max")
         elif failure == "unpopulated":
             (holder.scope.group / "cgroup.events").write_text("populated 0\n")
         elif failure == "peak_unavailable":
@@ -3096,16 +3111,20 @@ gate_path = args[index-1]
 child_args = args[index+1:]
 unit = child_args[1]
 root = pathlib.Path({str(qualified_cgroups)!r})
-group = root / unit
-group.mkdir()
+relative = {POOL_RELATIVE!r} + '/' + unit
+group = root / relative.lstrip('/')
+group.mkdir(parents=True)
 (group / 'memory.max').write_text({str(gate.SCOPE_MEMORY_MAX)!r})
+(group / 'memory.swap.max').write_text('0')
+(group.parent / 'memory.max').write_text({str(2 * gate.SCOPE_MEMORY_MAX)!r})
+(group.parent / 'memory.swap.max').write_text('0')
 (group / 'memory.peak').write_text('123456')
 (group / 'cgroup.events').write_text('populated 1\\n')
 (group / 'cgroup.procs').write_text(str(os.getpid()) + '\\n')
 module = runpy.run_path(gate_path)
 module['scope_child'].__globals__['CGROUP_ROOT'] = root
 original = pathlib.Path.read_text
-pathlib.Path.read_text = lambda path,*a,**kw: '0::/' + unit + '\\n' if str(path) == '/proc/self/cgroup' else original(path,*a,**kw)
+pathlib.Path.read_text = lambda path,*a,**kw: '0::' + relative + '\\n' if str(path) == '/proc/self/cgroup' else original(path,*a,**kw)
 try:
     sys.exit(module['scope_child'](child_args))
 finally:
@@ -3143,7 +3162,7 @@ def test_injected_scope_executes_full_stages_once_and_reads_peak_before_exit(
         (injected_systemd / "systemctl").write_text(f"""#!{sys.executable}
 import os,sys,pathlib,signal
 unit=sys.argv[-1]
-group=pathlib.Path({str(injected_systemd.parent / "cgroups")!r})/unit
+group=pathlib.Path({str(injected_systemd.parent / "cgroups")!r})/{POOL_RELATIVE.lstrip('/')!r}/unit
 pid=int((group/'cgroup.procs').read_text().splitlines()[0])
 os.kill(pid,signal.SIGKILL)
 (group/'cgroup.events').write_text('populated 0\\n')
@@ -3385,7 +3404,7 @@ def test_dead_scope_executor_still_requires_own_unit_descendant_cleanup(tmp_path
     head = gate.Admission(tmp_path / "head", 0)
     scope = gate.ResourceScope(tmp_path, "unused", head)
     group = _fake_cgroup(qualified_cgroups, scope.unit)
-    scope.group = "/" + scope.unit
+    scope.group = POOL_RELATIVE + "/" + scope.unit
     scope.process = subprocess.Popen([sys.executable, "-c", "pass"], env=_env())
     scope.process.wait(timeout=10)
     calls = []
@@ -3406,7 +3425,7 @@ def test_unverified_scope_cleanup_names_the_step_that_failed(tmp_path, qualified
     monkeypatch.setattr(gate, "CLEANUP_BUDGET_S", 0.2)
     scope = gate.ResourceScope(tmp_path, "unused", gate.Admission(tmp_path / "head", 0))
     _fake_cgroup(qualified_cgroups, scope.unit)  # stays populated: only the drain step reads it
-    scope.group = "/" + scope.unit
+    scope.group = POOL_RELATIVE + "/" + scope.unit
     scope.completed = step != "unit kill"  # a settled executor is reaped without a kill
     body = _BLOCK_UNTIL_KILLED if step == "executor reap" else "pass"
     scope.process = process = subprocess.Popen([sys.executable, "-c", body], env=_env())
