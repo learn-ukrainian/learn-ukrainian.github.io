@@ -176,9 +176,11 @@ fi
 # <name>.legacy.pre-entire), and replacing the wrapper would silently stop running it.
 # The operator moves that hook into .githooks (or deletes it) and reruns.
 foreign_chained=()
-for hook_name in "${entire_managed_hooks[@]}"; do
-    wrapper="$hooks_dir/$hook_name"
-    [[ -f "$wrapper" ]] && grep -qF "$entire_marker" "$wrapper" || continue
+for wrapper in "$hooks_dir"/*; do
+    [[ -f "$wrapper" && ! -L "$wrapper" ]] || continue
+    hook_name="$(basename "$wrapper")"
+    case "$hook_name" in *.sample|*.pre-entire) continue ;; esac
+    grep -qF "$entire_marker" "$wrapper" 2>/dev/null || continue
     for chained in "$wrapper.pre-entire" "$hooks_dir/$hook_name.legacy.pre-entire"; do
         [[ -e "$chained" || -L "$chained" ]] || continue
         if [[ -L "$chained" ]] || ! grep -qF "$marker" "$chained" 2>/dev/null; then
