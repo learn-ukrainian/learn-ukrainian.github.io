@@ -47,7 +47,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Commits and trees, and only the job's own scripts (FR-58): the ancestry
+          # check and the empty-diff metadata commit read no file content.
           fetch-depth: 0  # verify the original group base is an ancestor of the candidate
+          filter: blob:none
+          sparse-checkout: |
+            scripts/
+            .python-version
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -64,6 +71,11 @@ jobs:
           retention-days: 14
       - id: metadata
         run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
+      - name: Fetch and verify the blobs the scan reads
+        env:
+          SCAN_BASE: ${{ steps.metadata.outputs.parent }}
+          SCAN_HEAD: ${{ steps.metadata.outputs.commit }}
+        run: python3 -m scripts.ci.secret_scan_scope materialize
       # `version` is the scanner image tag. The uses SHA pins this action's
       # script only; omitting version pulls :latest. Bump: set both TruffleHog
       # steps to the newest trufflesecurity/trufflehog release (3.99.0 or
@@ -74,7 +86,9 @@ jobs:
           version: "3.99.0"
           base: ${{ steps.metadata.outputs.parent }}
           head: ${{ steps.metadata.outputs.commit }}
-          extra_args: --results=verified,unknown --exclude-detectors=Lob
+          # Scan the blobless checkout in place; TruffleHog's own clone of a partial clone
+          # fails. In place, a git config go-git cannot read is a scan error, not a pass.
+          extra_args: --results=verified,unknown --exclude-detectors=Lob --trust-local-git-config --fail-on-scan-errors
 
   secret-scan:
     permissions:
@@ -86,10 +100,14 @@ jobs:
     # Only a deliberate manual audit gets the full-history budget.
     timeout-minutes: ${{ github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit' && 60 || 5 }}
     steps:
+      # Full history, blobless (FR-58): the step after the scope fetches the blobs
+      # of the scanned range. The full-history audit reads every blob, so it keeps
+      # a full clone.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           fetch-depth: 0
+          filter: ${{ !(github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit') && 'blob:none' || '' }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -101,8 +119,8 @@ jobs:
       # Schedule scans at least the ancestry window, widening to the last
       # successfully scanned head. Unknown coverage or git failures fail.
       # Manual dispatches use the default-branch merge-base through github.sha;
-      # main refs or equal heads reuse the schedule window. Full checkout above
-      # fetches all branch refs, including origin/main. Resolution errors fail.
+      # main refs or equal heads reuse the schedule window. The full-history
+      # checkout above fetches all branch refs, including origin/main. Resolution errors fail.
       # Only secret_scan_mode=full-history-audit selects the explicit audit scope.
       - name: Resolve secret scan commit scope
         id: secret-scan-scope
@@ -118,6 +136,13 @@ jobs:
           DEFAULT_BRANCH_REF: refs/heads/${{ github.event.repository.default_branch }}
           GH_TOKEN: ${{ github.event_name == 'schedule' && github.token || '' }}
         run: python3 -m scripts.ci.secret_scan_scope
+      # The range TruffleHog scans: the scope above, or the action's own
+      # pull_request base and head. Fails unless every blob it reads is local.
+      - name: Fetch and verify the blobs the scan reads
+        env:
+          SCAN_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || steps.secret-scan-scope.outputs.trufflehog_base }}
+          SCAN_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || steps.secret-scan-scope.outputs.trufflehog_head }}
+        run: python3 -m scripts.ci.secret_scan_scope materialize
       - name: Gate scrubbed public identifiers
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -141,7 +166,9 @@ jobs:
           version: "3.99.0"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
-          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+          extra_args: >-
+            --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+            --trust-local-git-config --fail-on-scan-errors
 
       - name: Record successfully scanned head
         if: >-
@@ -181,6 +208,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0  # origin/main merge-base diffs
+          filter: blob:none  # git fetches the few old blobs the checks read
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -223,6 +251,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          filter: blob:none
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -348,7 +377,9 @@ jobs:
           persist-credentials: false
           # Shard 1 alone gets full history for the files in
           # scripts/ci/history-tests.txt (split_tests.py pins them there);
-          # every other shard is shallow. Never fetched lazily (#9062).
+          # every other shard is shallow. Never fetched lazily (#9062): one
+          # history test sizes ~1 GB of old data/ blobs, one fetch per blob
+          # in a blobless clone (FR-58).
           fetch-depth: ${{ matrix.shard != 1 && 1 || 0 }}
       # PostgreSQL 16/bubblewrap and npm ci run in the background during the Python install.
       - run: bash scripts/ci/test_env.sh start postgres
@@ -507,6 +538,10 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          # Changed test files may be history tests (scripts/ci/history-tests.txt),
+          # which read old blobs, so PR runs keep a full clone. Other events run no
+          # tests here and fetch commits and trees only (FR-58).
+          filter: ${{ github.event_name != 'pull_request' && 'blob:none' || '' }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -546,6 +581,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          filter: blob:none
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
