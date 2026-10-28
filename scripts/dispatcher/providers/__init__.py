@@ -13,10 +13,9 @@ PROVIDERS = ("codex", "claude", "cursor", "agy", "muse", "opencode", "hermes")
 
 # Read-only must be unable to edit. These CLIs give a dispatched run no enforceable write lock, so
 # read-only is refused before launch instead of trusting the model not to edit (probed 2026-10-28).
+# AGY has none either; its read-only runs inside the dispatcher's bubblewrap boundary (agy_sandbox,
+# C-3027) and is refused only where that boundary cannot start.
 READ_ONLY_REFUSALS = {
-    "agy": "agy has no per-run write lock: --sandbox only restricts its terminal, and where the terminal "
-    "sandbox is unavailable (this host) agy continues in its default mode and edits; its deny rules "
-    "live only in a scoped-home settings file this dispatcher does not provision",
     "hermes": "hermes -z bypasses approvals, and its file toolset grants write_file and patch with read_file",
 }
 
@@ -24,9 +23,14 @@ READ_ONLY_REFUSALS = {
 def read_only_refusal(name: str, env: Mapping[str, str] | None = None) -> str | None:
     """The typed refusal for read-only on ``name``, or None when its read-only argv carries a write lock.
 
-    With the run's environment, Claude is also refused while any managed policy could widen its lock.
+    AGY is refused where its bubblewrap boundary cannot start. With the run's environment, Claude is
+    also refused while any managed policy could widen its lock.
     """
     reason = READ_ONLY_REFUSALS.get(name)
+    if reason is None and name == "agy":
+        from scripts.dispatcher import agy_sandbox
+
+        reason = agy_sandbox.unavailable()
     if reason is None and name == "claude" and env is not None:
         from scripts.dispatcher.providers import claude
 

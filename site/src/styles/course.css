@@ -21,7 +21,7 @@
   --lu-red-light: #FFEBEE;
   --lu-purple: #6A1B9A;
   --lu-purple-light: #F3E5F5;
-  --lu-orange: #E65100;
+  --lu-orange: #BF360C;
   --lu-orange-light: #FFF3E0;
   --lu-teal: #00695C;
   --lu-teal-light: #E0F2F1;
@@ -31,7 +31,7 @@
   --lu-gray-100: #F5F5F5;
   --lu-gray-200: #EEEEEE;
   --lu-gray-300: #E0E0E0;
-  --lu-gray-600: #757575;
+  --lu-gray-600: #666666;
   --lu-gray-800: #424242;
   --lu-gray-900: #212121;
   --lu-page-bg: #FAFAFA;
@@ -568,7 +568,7 @@ body {
   text-decoration: none;
 }
 
-.lu-breadcrumbs span {
+.lu-breadcrumbs-sep {
   margin: 0 6px;
   opacity: 0.5;
 }
@@ -670,6 +670,11 @@ body {
   border-radius: 8px;
   overflow-x: auto;
   box-shadow: var(--lu-shadow);
+}
+
+.lu-content table:focus-visible {
+  outline: 3px solid var(--lu-blue);
+  outline-offset: 2px;
 }
 
 .lu-content th {

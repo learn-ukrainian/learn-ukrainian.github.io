@@ -510,7 +510,7 @@ a {
 }
 
 .admonition-title {
-  color: var(--admonition-accent);
+  color: color-mix(in srgb, var(--admonition-accent) 45%, var(--lu-text));
   font-weight: 700;
   margin: 0 0 0.65rem;
 }

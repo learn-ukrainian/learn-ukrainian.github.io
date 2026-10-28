@@ -378,7 +378,6 @@ def build_zno_shards(
         deck_receipts: dict[str, Any] = {}
         deck_drops: dict[str, list[dict[str, str]]] = {}
         emitted_ids: set[int] = set()
-        emitted_total = 0
         quarantined_markup = 0
         for definition in DECKS:
             rows = conn.execute(definition.predicate_sql).fetchall()
@@ -426,7 +425,6 @@ def build_zno_shards(
                     item["explanation"] = explanation
                 items.append(item)
                 emitted_ids.add(int(row["id"]))
-            emitted_total += len(items)
             shards[definition.key] = {
                 "schema": "zno-practice-deck",
                 "schemaVersion": 1,
@@ -447,7 +445,7 @@ def build_zno_shards(
             "schema": "zno-practice-residual-report",
             "schemaVersion": 1,
             "decks": deck_receipts,
-            "namedResidual": _residual_counts(conn, emitted_total),
+            "namedResidual": _residual_counts(conn, len(emitted_ids)),
             "servingExcluded": [
                 {"znoTaskId": task_id, "reason": reason}
                 for task_id, reason in sorted(excluded_by_id.items())

@@ -4,6 +4,7 @@ import json
 import re
 
 from scripts.common.jsonl import jsonl_lines
+from scripts.dispatcher import agy_sandbox
 from scripts.dispatcher.providers import read_only_refusal
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
@@ -14,12 +15,18 @@ _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in pr
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["agy", "--mode", "auto", "--input-format", "stream-json", "--output-format", "stream-json"]
     argv += ["--model", spec.model]
-    if spec.mode != "workspace-write":
-        raise ValueError(
-            read_only_refusal("agy") if spec.mode == "read-only" else f"agy: unsupported mode {spec.mode!r}"
-        )
-    argv += ["--dangerously-skip-permissions"]
-    argv += ["--print-timeout", "120m", "--log-file", str(spec.final_file.with_suffix(".log"))]
+    argv += ["--dangerously-skip-permissions", "--print-timeout", "120m"]
+    if spec.mode == "workspace-write":
+        argv += ["--log-file", str(spec.final_file.with_suffix(".log"))]
+    elif spec.mode == "read-only":
+        # AGY has no write lock of its own: read-only runs only inside the dispatcher's bubblewrap
+        # boundary, which is the argv returned here, so no caller can launch it unwrapped (C-3027).
+        if refusal := read_only_refusal("agy"):
+            raise ValueError(refusal)
+        argv += ["--add-dir", str(spec.worktree), "--log-file", str(agy_sandbox.log_file(spec.task_id))]
+        argv = agy_sandbox.launcher(spec, argv)
+    else:
+        raise ValueError(f"agy: unsupported mode {spec.mode!r}")
     message = {"role": "user", "content": [{"type": "text", "text": spec.prompt_file.read_bytes().decode("utf-8")}]}
     stdin = (json.dumps({"event": "user", "message": message}) + "\n").encode("utf-8")
     return Invocation(argv, stdin, env, None)

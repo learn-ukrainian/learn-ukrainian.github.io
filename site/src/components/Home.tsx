@@ -124,7 +124,7 @@ export default function Home(): ReactNode {
             <div style={{display: 'flex', flexWrap: 'wrap', gap: '20px'}}>
               <LevelCard level="A1" nameKey="level.a1.name" descKey="level.a1.desc" modules={mc('a1')} color="#2E7D32" />
               <LevelCard level="A2" nameKey="level.a2.name" descKey="level.a2.desc" modules={mc('a2')} color="#1565C0" />
-              <LevelCard level="B1" nameKey="level.b1.name" descKey="level.b1.desc" modules={mc('b1')} color="#E65100" />
+              <LevelCard level="B1" nameKey="level.b1.name" descKey="level.b1.desc" modules={mc('b1')} color="#BF360C" />
               <LevelCard level="B2" nameKey="level.b2.name" descKey="level.b2.desc" modules={mc('b2')} color="#C2185B" />
               <LevelCard level="C1" nameKey="level.c1.name" descKey="level.c1.desc" modules={mc('c1')} color="#7B1FA2" />
               <LevelCard level="C2" nameKey="level.c2.name" descKey="level.c2.desc" modules={mc('c2')} color="#C62828" />
