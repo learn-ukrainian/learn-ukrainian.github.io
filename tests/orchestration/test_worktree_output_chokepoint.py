@@ -12,7 +12,7 @@ import pytest
 from scripts.ai_agent_bridge import _acp_execution
 from scripts.ci import data_tier
 from scripts.fleet import ignored_task_output, sibling_git
-from scripts.orchestration import worktree_claims
+from scripts.orchestration import worktree_claims, worktree_git
 from scripts.orchestration.fleet_repos import FleetRepo
 from scripts.orchestration.task_family import git_safety
 from tests.orchestration.test_worktree_claims_cli import _git, _linked, _primary, _record
@@ -296,6 +296,8 @@ def boundary_tree(tmp_path, monkeypatch):
     tasks = repo / "batch_state/tasks"
     tasks.mkdir(parents=True)
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(worktree_git, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(worktree_git, "_active_task_ids", lambda: set())
     head = _git(tree, "rev-parse", "HEAD")
     closeout.patch_gh(
         monkeypatch,
