@@ -98,6 +98,28 @@ def test_non_bounded_model_needs_no_advisory(launch, model):
     assert "advisory_envelope" not in store.read("worker")
 
 
+@pytest.mark.parametrize("mode,profile,family,path,admitted", [
+    ("read-only", "ukrainian", "ukrainian-review", "scripts/audit/generate_practice_deck.py", True),
+    ("read-only", "ukrainian", "practice", "docs/example.md", True),
+    ("workspace-write", "ukrainian", "ukrainian-review", "scripts/audit/generate_practice_deck.py", False),
+    ("read-only", "code", "practice", "scripts/audit/generate_practice_deck.py", False),
+])
+def test_flash_ukrainian_review_of_record_is_admitted_only_read_only(
+    launch, capsys, tmp_path, mode, profile, family, path, admitted,
+):
+    """Defect class: a read-only Ukrainian review of a mixed PR is refused for naming its real family or code paths."""
+    (tmp_path / "scripts/audit").mkdir(parents=True)
+    launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
+    launch[launch.index("--owned-path") + 1] = path
+    launch += ["--mode", mode, "--review-profile", profile, "--research-task-family", family]
+    assert cli.main(launch) == (0 if admitted else 2)
+    if admitted:
+        assert "advisory_envelope" not in store.read("worker")
+    else:
+        assert "BOUNDED_ENVELOPE_REQUIRED" in capsys.readouterr().err
+        worker.start.assert_not_called()
+
+
 @pytest.mark.parametrize("complete", [False, True])
 @pytest.mark.parametrize("model", ["gpt-6-luna", "claude-haiku-5-5", "haiku"])
 def test_driver_brief_exception_requires_acceptance_command(launch, complete, capsys, tmp_path, model):

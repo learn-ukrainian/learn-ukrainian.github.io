@@ -516,12 +516,15 @@ def bounded_requirement(
     ``model_id`` is the canonical catalog id of the model the admitted route
     launches, after aliases, ``--force-agent`` and any substitution. Every
     bounded-worker dispatch needs one unless admitted with a driver brief. A Gemini Flash dispatch is the bounded
-    fallback unless it is explicitly classified non-bounded — a Ukrainian
-    authoring or review task family, or ``--review-profile ukrainian`` for a
-    read-only review — and nothing contradicts that; missing or conflicting
-    classification counts as bounded (fail closed). Either exemption owning a
-    path that is not Ukrainian content only in ``repo_root``
-    (``content_path_problem``) conflicts.
+    fallback unless it is explicitly classified non-bounded. A read-only
+    ``--review-profile ukrainian`` dispatch (a review of record) is exempt
+    whatever its task family and paths: read-only mode writes nothing, and the
+    other review seat covers the code. Otherwise a Ukrainian authoring or review
+    task family exempts it when nothing contradicts that; missing or conflicting
+    classification counts as bounded (fail closed). The family exemption, or a
+    ``--review-profile ukrainian`` outside read-only mode, owning a path that is
+    not Ukrainian content only in ``repo_root`` (``content_path_problem``)
+    conflicts.
     """
     policy = policy or bounded_execution_policy()
     if model_id is None:
@@ -531,6 +534,8 @@ def bounded_requirement(
     ):
         return f"{model_id} is the bounded worker"
     if model_id != policy.bounded_fallback_model_id:
+        return None
+    if review_profile == "ukrainian" and mode == "read-only":
         return None
     family = _normalized(task_family)
     ukrainian_family = family in policy.non_bounded_task_families
@@ -551,8 +556,6 @@ def bounded_requirement(
     if conflicts:
         return f"{model_id} with an ambiguous classification ({'; '.join(conflicts)}) is the bounded fallback"
     if ukrainian_family:
-        return None
-    if review_profile == "ukrainian" and mode == "read-only":
         return None
     if review_profile == "ukrainian":
         return (
