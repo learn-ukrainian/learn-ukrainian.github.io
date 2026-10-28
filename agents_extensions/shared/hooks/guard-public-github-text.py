@@ -13,6 +13,12 @@ from pathlib import Path
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from shell_redirects import _split_scopes
+    from shell_shlex import preprocess_shell_command
+except Exception:
+    print("OPSEC: Bash publishing dependencies unavailable.", file=sys.stderr)
+    raise SystemExit(2) from None
 
 
 def _shell_words(command: str) -> list[str]:
@@ -24,9 +30,6 @@ def _shell_words(command: str) -> list[str]:
 
 
 def _redirect_words(command: str) -> Iterator[str]:
-    from shell_redirects import _split_scopes
-    from shell_shlex import preprocess_shell_command
-
     pending = False
     # Scan the complete command so quotes keep their state across newlines.
     for kind, raw in _split_scopes(preprocess_shell_command(command)):

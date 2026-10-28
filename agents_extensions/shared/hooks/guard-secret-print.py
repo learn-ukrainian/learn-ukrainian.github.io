@@ -78,6 +78,7 @@ sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
         ShellPreprocessLimit,
+        normalize_io_descriptors,
         preprocess_shell_command,
         skippable_heredoc_delimiters,
         split_operator_run,
@@ -87,7 +88,7 @@ try:
     from shell_shlex import (
         _quote_after as shell_quote_after,
     )
-except ImportError as exc:
+except Exception as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
@@ -382,6 +383,15 @@ def _tokenize(command: str) -> list[str]:
     try:
         executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
         protected, parameters = _protect_parameters(_separate_program_flag_quotes(executable))
+
+        def descriptor_word(descriptor: str, operator: str) -> str:
+            marker = f"\ue000{len(parameters)}\ue001"
+            while marker in protected:
+                marker += "\ue002"
+            parameters[marker] = descriptor + operator
+            return marker + " "
+
+        protected = normalize_io_descriptors(protected, descriptor_word)
         tokens = split_quote_preserving(protected, punctuation_chars="();&|<>\n", whitespace=" \t")
         restored = [_restore_parameters(token, parameters) for token in tokens]
         # shlex can combine an arithmetic close and newline as one punctuation
@@ -581,6 +591,7 @@ def _pipelines(command: str) -> list[list[list[str]]]:
 def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
     """Return `(command, raw_args, index)` after simple wrappers/assignments."""
     i = 0
+    redirects: list[str] = []
     # A function body's first command shares its segment with the definition
     # opener; later body commands are split at semicolons as usual.
     if len(seg) >= 3 and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*\(\)", seg[0]) and seg[1] == "{":
@@ -615,6 +626,11 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
             i += 1
         if i >= len(seg):
             return None
+        skip = _redirection_skip_count(seg[i])
+        if skip:
+            redirects.extend(seg[i : i + skip])
+            i += skip
+            continue
         wrapper = _strip_quotes(seg[i]).rsplit("/", 1)[-1]
         if wrapper in {"sudo", "time", "nohup", "exec", "builtin", "command"}:
             i += 1
@@ -641,8 +657,13 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
             j = i + 1
             while j < len(seg):
                 token = _strip_quotes(seg[j])
-                if _redirection_skip_count(token) or token.isdigit():
-                    return "env", seg[i + 1 :], i
+                skip = _redirection_skip_count(seg[j])
+                if skip:
+                    redirects.extend(seg[j : j + skip])
+                    j += skip
+                    continue
+                if token.isdigit():
+                    return "env", redirects + seg[i + 1 :], i
                 if _is_assignment(seg[j]):
                     j += 1
                 elif token in {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"} and j + 1 < len(seg):
@@ -656,7 +677,7 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
                 else:
                     break
             if j >= len(seg):
-                return "env", seg[i + 1 :], i
+                return "env", redirects + seg[i + 1 :], i
             i = j
             continue
         break
@@ -665,8 +686,8 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
 
     cmd = _strip_quotes(seg[i]).rsplit("/", 1)[-1]
     if cmd == "busybox" and i + 1 < len(seg) and _strip_quotes(seg[i + 1]) == "sh":
-        return "sh", seg[i + 2 :], i + 1
-    return cmd, seg[i + 1 :], i
+        return "sh", redirects + seg[i + 2 :], i + 1
+    return cmd, redirects + seg[i + 1 :], i
 
 
 def _has_override(seg: list[str]) -> bool:
@@ -871,10 +892,8 @@ def _without_redirects(args: list[str]) -> list[str]:
     result = []
     index = 0
     while index < len(args):
-        skip = _redirection_skip_count(_strip_quotes(args[index]))
+        skip = _redirection_skip_count(args[index])
         if skip:
-            if result and result[-1].isdigit():
-                result.pop()
             index += skip
         else:
             result.append(_strip_quotes(args[index]))
@@ -885,9 +904,7 @@ def _without_redirects(args: list[str]) -> list[str]:
 def _stdout_target(args: list[str]) -> str | None:
     target = None
     for index, token in enumerate(args[:-1]):
-        if token in {">", ">>", ">|", "&>", "&>>"}:
-            if index and args[index - 1].isdigit() and args[index - 1] != "1":
-                continue
+        if re.fullmatch(r"1?(?:>|>>|>\|)|&>>?", token):
             target = _strip_quotes(args[index + 1])
     return target
 
@@ -1253,8 +1270,8 @@ def _redirection_skip_count(token: str) -> int:
         return 2
     if token.startswith("<<"):
         return 1
-    fd_trimmed = token.lstrip("0123456789")
-    if fd_trimmed in {"<", ">", ">>", "<>", ">|"}:
+    fd_trimmed = re.sub(r"^\{[A-Za-z_][A-Za-z0-9_]*\}", "", token).lstrip("0123456789")
+    if fd_trimmed in {"<", ">", ">>", "<>", ">|", ">&", "<&", "<<", "<<-", "<<<"}:
         return 2
     if fd_trimmed.startswith(("<", ">")):
         return 1
@@ -1468,7 +1485,11 @@ def _sensitive_file_reason(pipeline: list[list[str]], index: int, dumped_files: 
     operands = (
         [] if cmd in {"echo", "printf"} else _grep_file_args(args) if cmd in GREP_COMMANDS else _file_args(cmd, args)
     )
-    operands += [args[i + 1] for i, token in enumerate(args[:-1]) if token in {"<", "<>"}]
+    operands += [
+        args[i + 1]
+        for i, token in enumerate(args[:-1])
+        if re.fullmatch(r"(?:[0-9]+|\{[A-Za-z_][A-Za-z0-9_]*\})?(?:<|<>)", token)
+    ]
     # Named file operands (e.g. dd's if=) and long options carry the same path.
     operands += [_strip_quotes(arg).split("=", 1)[1] for arg in args if "=" in arg and not _redirection_skip_count(arg)]
     paths = [_strip_quotes(arg) for arg in operands]
@@ -1690,7 +1711,7 @@ def _self_test() -> int:
     return 0
 
 
-def main(argv: list[str] | None = None) -> int:
+def _main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     if args == ["--self-test"]:
         return _self_test()
@@ -1716,6 +1737,14 @@ def main(argv: list[str] | None = None) -> int:
         sys.stderr.write(_block_msg(reason))
         return 2
     return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    try:
+        return _main(argv)
+    except Exception:
+        sys.stderr.write(_block_msg("cannot inspect command"))
+        return 2
 
 
 if __name__ == "__main__":

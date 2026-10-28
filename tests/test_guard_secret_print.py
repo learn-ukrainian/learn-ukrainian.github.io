@@ -42,6 +42,51 @@ def _load_hook():
 
 guard = _load_hook()
 
+
+@pytest.mark.parametrize(
+    "redirect", ["", "2>&1", ">/dev/null", ">out", ">>out", "2>/dev/null", "&>out", "<input", "{fd}>out", "true &&>out"]
+)
+@pytest.mark.parametrize(
+    "binary,operand,expected", [("cat", ".env", 2), ("head", ".env", 2), ("cat", "notes.txt", 0), ("wc", "-l .env", 0)]
+)
+def test_redirect_keeps_secret_file_policy(
+    monkeypatch, tmp_path: Path, redirect: str, binary: str, operand: str, expected: int
+):
+    """Redirects must preserve both protected reads and value-free checks (#9490)."""
+    stub = tmp_path / binary
+    stub.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > record\n')
+    stub.chmod(0o755)
+    (tmp_path / "input").touch()
+    command = f"{redirect} {shlex.quote(str(stub))} {operand} | cat"
+    result = subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", command], cwd=tmp_path, capture_output=True, text=True, timeout=10
+    )
+    assert result.returncode == 0, result.stderr
+    assert (tmp_path / "record").read_text().splitlines() == operand.split()
+    assert _run(monkeypatch, command) == expected
+
+
+@pytest.mark.parametrize(
+    "command,expected",
+    [
+        ("<.env cat", 2),
+        ("0<.env cat", 2),
+        ("env <.env cat", 2),
+        (">/dev/null env", 0),
+        ("1>/dev/null env", 0),
+        ("2>/dev/null env", 2),
+        ("{fd}>/dev/null env", 2),
+        ("env 2>/dev/null", 2),
+        ("env 1>/dev/null", 0),
+        ("env 2 > /dev/null", 0),
+        ("'2'>/dev/null wc -l .env", 2),
+    ],
+)
+def test_redirect_does_not_hide_sensitive_input_or_change_output_descriptor(monkeypatch, command, expected):
+    """Prefix input reads and stderr redirects must not become safe stdout sinks (#9490)."""
+    assert _run(monkeypatch, command) == expected
+
+
 ROUND_SEVEN_DENIED = [
     ("bun-bracket", "bun -e 'console.log(import.meta[\"env\"])'"),
     ("bun-optional-bracket", "bun -e 'console.log(import.meta?.[\"env\"])'"),

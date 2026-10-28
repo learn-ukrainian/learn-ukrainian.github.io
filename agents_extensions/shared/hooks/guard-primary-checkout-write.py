@@ -171,17 +171,18 @@ sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
         ShellPreprocessLimit,
+        normalize_io_descriptors,
         preprocess_shell_command,
         skippable_heredoc_delimiters,
         split_operator_run,
         strip_skippable_heredoc_bodies,
     )
-except ImportError as exc:
+except Exception as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 try:
     from tool_names import is_shell_tool
-except ImportError as exc:
+except Exception as exc:
     print(f"guard dependency unavailable: tool_names ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
@@ -713,9 +714,9 @@ def _tokenize(command: str) -> list[str]:
     try:
         lexer = shlex.shlex(
             _mask_quoted_literals(
-                _normalize_quoted_command_substitutions(
-                    _normalize_backtick_substitutions(
-                        preprocess_shell_command(command)
+                normalize_io_descriptors(
+                    _normalize_quoted_command_substitutions(
+                        _normalize_backtick_substitutions(preprocess_shell_command(command))
                     )
                 )
             ),
@@ -1096,6 +1097,20 @@ def _redirect_targets(tokens: list[str]) -> list[str]:
     return targets
 
 
+def _without_redirects(segment: list[str]) -> list[str]:
+    """Return argv while retaining the original words' quote/expansion metadata."""
+    words: list[str] = []
+    index = 0
+    while index < len(segment):
+        token = segment[index]
+        if getattr(token, "shell_redirect", token in _REDIRECT_OPS):
+            index += 2
+        else:
+            words.append(token)
+            index += 1
+    return words
+
+
 def _command_word(segment: list[str]) -> tuple[str, int]:
     """First real command word of a segment and its index, skipping wrappers.
 
@@ -1109,6 +1124,9 @@ def _command_word(segment: list[str]) -> tuple[str, int]:
     i = 0
     while i < len(segment):
         tok = segment[i]
+        if getattr(tok, "shell_redirect", tok in _REDIRECT_OPS):
+            i += 2
+            continue
         if _ASSIGN_RE.match(tok):
             i += 1  # leading environment assignment
             continue
@@ -1682,20 +1700,7 @@ def _writer_targets(
     # A shell redirect is not an argv operand of tee/cp/etc. The redirected
     # file was already classified above; leaving `>` in argv makes a harmless
     # `tee /tmp/file >/dev/null` look like a write to a file named `>`.
-    without_redirects: list[str] = []
-    index = 0
-    while index < len(segment):
-        if (
-            isinstance(segment[index], ShellWord)
-            and segment[index].shell_redirect
-            and segment[index] in _REDIRECT_OPS
-            and index + 1 < len(segment)
-        ):
-            index += 2
-        else:
-            without_redirects.append(segment[index])
-            index += 1
-    segment = without_redirects
+    segment = _without_redirects(segment)
     cmd, idx = _command_word(segment)
     if cmd in _LONG_TAIL_WRITERS:
         targets.extend(_long_tail_targets(segment[idx + 1 :], cmd))
@@ -1827,6 +1832,7 @@ def _names_primary_literal(word: str, cwd: str, main_root: Path) -> bool:
 
 def _env_command_cwd(segment: list[str], cwd: str | None) -> str | None:
     """Apply ``env -C`` / ``--chdir`` before resolving a wrapped writer."""
+    segment = _without_redirects(segment)
     _, command_index = _command_word(segment)
     i = 0
     while i < command_index:
@@ -1888,13 +1894,14 @@ def _segments_with_cwd(command: str, cwd: str | None):
             scope_dirs[scope] = list(scope_dirs.get(scope[:-1], []))
             scope_cdpath_empty[scope] = scope_cdpath_empty.get(scope[:-1], False)
         effective_cwd = scope_cwds[scope]
-        cmd, idx = _command_word(segment)
+        argv = _without_redirects(segment)
+        cmd, idx = _command_word(argv)
         isolated = segment.prev_op in {"|", "|&"} or segment.next_op in {"|", "|&", "&"}
         cdpath_binding = _cdpath_binding(segment)
         cdpath_empty_here = cdpath_binding if cdpath_binding is not None else scope_cdpath_empty[scope]
-        stack_only = cmd in {"pushd", "popd"} and "-n" in segment[idx + 1 :]
+        stack_only = cmd in {"pushd", "popd"} and "-n" in argv[idx + 1 :]
         if cmd in {"cd", "pushd"} and not isolated:
-            args = [word for word in segment[idx + 1 :] if not word.startswith("-")]
+            args = [word for word in argv[idx + 1 :] if not word.startswith("-")]
             path = args[0] if args else None
             if cmd == "pushd":
                 scope_dirs[scope].append(path if stack_only else effective_cwd)
@@ -2084,6 +2091,7 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
         intents.append(intent)
 
     for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
+        segment = _without_redirects(segment)
         cmd, idx = _command_word(segment)
         if cmd == "eval" and depth < _MAX_SHELL_DEPTH:
             args = segment[idx + 1 :]
@@ -2599,7 +2607,7 @@ def _sibling_git_refusal() -> int:
     return 2
 
 
-def main() -> int:
+def _main() -> int:
     payload = _read_payload()
     if payload is None:
         return _block_uncertain("malformed_hook_payload")
@@ -2628,7 +2636,7 @@ def main() -> int:
             words = shlex.split(command)
         except ValueError:
             words = []  # The existing shell parser handles malformed commands.
-        if any(words[i:i + 2] == ["-m", "scripts.fleet.sibling_git"] for i in range(len(words) - 1)):
+        if any(words[i : i + 2] == ["-m", "scripts.fleet.sibling_git"] for i in range(len(words) - 1)):
             return 0 if _sibling_git_invocation(command, cwd) else _sibling_git_refusal()
         raw_targets = []
     else:
@@ -2785,6 +2793,14 @@ def _bypass_agent_shims() -> None:
     )
     if shutil.which("git", path=direct):
         os.environ["PATH"] = direct
+
+
+def main() -> int:
+    try:
+        return _main()
+    except Exception:
+        print("BLOCKED by guard-primary-checkout-write: cannot inspect command.", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

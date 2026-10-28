@@ -11,8 +11,10 @@ fail-open, so a stalled helper never wedges a session.
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -55,6 +57,38 @@ LOADED_P99_MS = {
 # Guards the Claude adapter adds outside the shared settings, with loaded p99
 # measured the same way (sequential, 200 calls, 16 busy loops, load about 23).
 ADAPTER_GUARD_LOADED_P99_MS = {"guard-reviewer-publish.py": 226}
+
+REDIRECT_GUARDS = (
+    "guard-public-github-text.py",
+    "guard-reviewer-publish.py",
+    "guard-secret-print.py",
+    "guard-primary-checkout-write.py",
+)
+
+
+@pytest.mark.parametrize("name", REDIRECT_GUARDS)
+@pytest.mark.parametrize("helper", [None, "def broken(:", "raise RuntimeError('synthetic dependency failure')"])
+def test_redirect_guards_fail_closed_on_unusable_dependency(tmp_path: Path, name: str, helper: str | None):
+    """Missing, syntax-broken and import-raising helpers must refuse execution (#9490)."""
+    for source in HOOKS.glob("*.py"):
+        if source.name != "shell_shlex.py":
+            shutil.copy2(source, tmp_path / source.name)
+    (tmp_path / "scripts/opsec").mkdir(parents=True)
+    if helper is not None:
+        (tmp_path / "shell_shlex.py").write_text(helper)
+    result = subprocess.run(
+        [sys.executable, str(tmp_path / name)],
+        cwd=REPO,
+        env={**os.environ, "PYTHONPATH": str(REPO)},
+        input=json.dumps({"tool_name": "Bash", "tool_input": {"command": "2>&1 gh pr comment 5 -b x"}}),
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 2, result.stderr
+    assert "Traceback" not in result.stderr
+
+
 TIMEOUT_FLOOR_S = 10
 NETWORK_GUARDS = frozenset({"guard-admin-merge.py", "guard-pr-merge.py"})
 NETWORK_TIMEOUT_S = 30
@@ -80,6 +114,31 @@ def _load(name: str, path: Path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+@pytest.mark.parametrize(
+    "name,dependency",
+    [
+        ("guard-public-github-text.py", "invokes_gh"),
+        ("guard-reviewer-publish.py", "blocked"),
+        ("guard-secret-print.py", "_read_payload"),
+        ("guard-primary-checkout-write.py", "_read_payload"),
+    ],
+)
+def test_redirect_guards_refuse_midrun_exceptions(monkeypatch, capsys, name, dependency):
+    """An inspection exception after successful import must exit 2 (#9490)."""
+    module = _load("failure_" + name.replace("-", "_"), HOOKS / name)
+
+    def failed(*args, **kwargs):
+        raise AttributeError("synthetic inspection failure")
+
+    monkeypatch.setattr(module, dependency, failed)
+    monkeypatch.delenv("LEARN_UK_SECRETS_OK", raising=False)
+    monkeypatch.setattr(
+        sys, "stdin", io.StringIO(json.dumps({"tool_name": "Bash", "tool_input": {"command": "gh pr comment 5 -b x"}}))
+    )
+    assert module.main() == 2
+    assert "Traceback" not in capsys.readouterr().err
 
 
 def test_guard_list_matches_the_wired_guards() -> None:
@@ -585,3 +644,30 @@ def test_tracked_cursor_guard_hooks_fail_closed() -> None:
         if path.is_file():
             config = json.loads(path.read_text(encoding="utf-8"))
             assert _cursor_fail_open_guards(config) == [], path
+
+
+@pytest.mark.parametrize(
+    "redirect", ["", "2>&1", ">/dev/null", ">out", ">>out", "2>/dev/null", "&>out", "<input", "{fd}>out", "true &&>out"]
+)
+@pytest.mark.parametrize(
+    "command,blocked",
+    [("git push origin x", True), ("gh pr comment 5 -b x", True), ("gh pr view 5", False), ("git status", False)],
+)
+def test_redirect_cannot_hide_reviewer_publish(tmp_path: Path, redirect: str, command: str, blocked: bool) -> None:
+    """Bash's actual argv must remain subject to the publishing policy (#9490)."""
+    record = tmp_path / "record"
+    (tmp_path / "input").touch()
+    binary, *args = command.split()
+    stub = tmp_path / binary
+    stub.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > record\n')
+    stub.chmod(0o755)
+    shell_command = f"{redirect} {shlex.quote(str(stub))} {' '.join(args)} | cat"
+    oracle = subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", shell_command], cwd=tmp_path, capture_output=True, text=True, timeout=10
+    )
+    assert oracle.returncode == 0, oracle.stderr
+    assert record.read_text().splitlines() == args
+    hook = HOOKS / "guard-reviewer-publish.py"
+    payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": shell_command}})
+    result = subprocess.run([sys.executable, str(hook)], input=payload, capture_output=True, text=True, timeout=30)
+    assert result.returncode == (2 if blocked else 0), result.stderr
