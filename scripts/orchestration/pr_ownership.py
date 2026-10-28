@@ -231,8 +231,9 @@ def outbox_entries(notices: Mapping[str, list[dict[str, Any]]]) -> list[dict[str
     """Freeze one CTO inbox request per notice kind, body and key together.
 
     The key is the notices' logical identity (PR, episode start, reminder number), never
-    the clock. The entry is saved before delivery and retried byte for byte, so a retry
-    after an unsaved delivery is a no-op, never a different payload under the same key.
+    the clock. The entry is saved before delivery and retried unchanged, so a retry after
+    an unsaved delivery is a no-op or a reconciled key reuse (``deliver``), never a
+    second alert.
     """
     entries = []
     for kind in ("alert", "reminder", "cleared"):
@@ -246,7 +247,16 @@ def outbox_entries(notices: Mapping[str, list[dict[str, Any]]]) -> list[dict[str
 
 
 def deliver(outbox: list[dict[str, str]], service: Any) -> list[str]:
-    """Send every outbox entry; returns the errors. Sent entries leave the outbox."""
+    """Send every outbox entry; returns the errors. Sent entries leave the outbox.
+
+    The authority adds the channel's current context revision to each payload, so a
+    retry after a lost save can differ from the delivered payload. The authority stores
+    the key in the same transaction as the message, and only this module mints these
+    keys, from the notice's identity: a "key reused" refusal proves this notice was
+    already published, so the entry is reconciled as delivered.
+    """
+    from scripts.fleet_comms.authority import AuthorityServiceError
+
     errors = []
     for entry in list(outbox):
         try:
@@ -262,6 +272,10 @@ def deliver(outbox: list[dict[str, str]], service: Any) -> list[str]:
                 provenance={"Source": "merge-queue-keeper", "Agent": SENDER, "Via": "pr-ownership"},
                 idempotency_key=entry["key"],
             )
+        except AuthorityServiceError as exc:
+            if str(exc) != "idempotency_key_reused_with_different_payload":
+                errors.append(f"{entry['key']}: {exc}")
+                continue
         except Exception as exc:  # one entry never blocks the others
             errors.append(f"{entry['key']}: {type(exc).__name__}")
             continue

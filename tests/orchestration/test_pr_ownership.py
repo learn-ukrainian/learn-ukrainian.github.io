@@ -484,3 +484,18 @@ def test_rate_limit_is_a_skip_for_the_ownership_tick(tmp_path):
     state = own.load(path)
     assert state["last_tick"]["ok"] is False  # queue-exit stays closed
     assert state["episodes"] == {}  # rate-limited time never counts toward grace
+
+
+def test_retry_after_a_channel_context_change_reconciles_instead_of_stalling(tmp_path):
+    entry = own.outbox_entries({"alert": [{"pr": KEY, "since": at(0).isoformat(), "branch": "b", "reason": "r"}]})
+    fleet(tmp_path)
+    with AuthorityService(root=tmp_path / "fleet") as service:
+        assert own.deliver(list(entry), service) == []
+        # The save after delivery is lost, then the channel's context revision moves on.
+        service.set_channel_context(own.CTO_CHANNEL, "new channel context")
+        outbox = list(entry)
+        assert own.deliver(outbox, service) == [] and outbox == []
+        broken = [{**entry[0], "key": "pr-ownership:alert:other"}]
+        service.close()
+        assert own.deliver(broken, service) and broken  # a real failure stays queued
+    assert len(inbox(tmp_path)) == 1
