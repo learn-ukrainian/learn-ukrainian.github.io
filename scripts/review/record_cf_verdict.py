@@ -55,6 +55,7 @@ from scripts.orchestration.integration_sweep import (
     TRUSTED_ASSOCIATIONS,
     GitHubAdapter,
     SweepError,
+    lookup_verdict,
     parse_marker,
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
@@ -83,7 +84,7 @@ from scripts.review.reviewer_resolver import (
     review_task_id_comparison_keys,
 )
 from scripts.review.role_resolution import resolve_routing_reference
-from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
+from scripts.review.security_paths import effective_review_risk, git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
 from scripts.review.verdict_parser import (
@@ -114,6 +115,10 @@ SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
 RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
 # Kimi never reviews. Native Grok requires its own runtime attestation (#9769).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
+# Review rounds per PR (C-2902): security, permissions, auth, data-loss and
+# state/concurrency changes record risk critical or touch security paths.
+DEFAULT_REVIEW_ROUNDS = 3
+ELEVATED_REVIEW_ROUNDS = 5
 
 
 class RecordError(RuntimeError):
@@ -1594,6 +1599,62 @@ def require_no_outside_rejection(comments: Any, sha: str) -> None:
             raise RecordError("RED_TEAM_REFUSED: outside-family rejection exists for this head")
 
 
+def require_no_same_head_rejection(comments: Sequence[Mapping[str, Any]], sha: str, login: str, verdict: str) -> None:
+    """Refuse an APPROVE at a head with a recorded rejection, in every review mode (FR-06).
+
+    The keeper's own reading decides: a same-head approval never clears a
+    same-head rejection (``integration_sweep.lookup_verdict``), so the recorder
+    never posts an approval the keeper would ignore.
+    """
+    if verdict == "APPROVED" and lookup_verdict(comments, sha, login).state in REJECTED:
+        raise RecordError(
+            "APPROVE_REFUSED: a CHANGES_REQUESTED or BLOCKED verdict is recorded at this head; "
+            "only an APPROVE at a new head clears it"
+        )
+
+
+def review_round_budget(task: Mapping[str, Any], facts: BranchReviewFacts) -> int:
+    """Rounds one PR may spend: 5 at critical risk or on a security-sensitive change, else 3 (C-2902).
+
+    The tier comes from the review task's recorded risk (``review_risk``, stored
+    from ``options.risk``) raised by the shared security-path rule.
+    """
+    options = task.get("options")
+    risk = task.get("review_risk") or (options.get("risk") if isinstance(options, Mapping) else None) or "medium"
+    profile = str(task.get("review_profile") or "code")
+    effective = effective_review_risk(
+        str(risk).strip().casefold(), facts.changed_paths, facts.scope_paths, profile=profile
+    )
+    return ELEVATED_REVIEW_ROUNDS if effective == "critical" else DEFAULT_REVIEW_ROUNDS
+
+
+def require_review_round_within_budget(
+    comments: Sequence[Mapping[str, Any]], sha: str, login: str, *, budget: int, number: int
+) -> None:
+    """Refuse a verdict that would open a review round beyond the PR's budget.
+
+    A round is one reviewed head: trusted verdicts on the PR are counted
+    across heads, and more verdicts at an already reviewed head (a quorum
+    seat or a retried publication) open no new round. Budget end is never
+    approval.
+    """
+    heads: set[str] = set()
+    for item in comments:
+        body = item.get("body")
+        if not isinstance(body, str) or MARKER_PREFIX not in body:
+            continue
+        if item.get("user", {}).get("login") != login or item.get("author_association") not in TRUSTED_ASSOCIATIONS:
+            continue
+        marker = parse_marker(body)
+        if marker is not None:
+            heads.add(marker["sha"])
+    if sha not in heads and len(heads) >= budget:
+        raise RecordError(
+            f"REVIEW_BUDGET_EXHAUSTED: PR #{number} already has verdicts at {len(heads)} heads and its budget "
+            f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(heads) + 1}"
+        )
+
+
 def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: str) -> None:
     """Read the active task ledger before red-team admission or publication."""
     try:
@@ -1874,6 +1935,8 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
+        require_no_same_head_rejection(comments, sha, login, verdict)
+        require_review_round_within_budget(comments, sha, login, budget=review_round_budget(task, facts), number=number)
         existing = None
         for item in comments:
             body = item.get("body")

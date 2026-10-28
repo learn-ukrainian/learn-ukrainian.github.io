@@ -1,6 +1,7 @@
 """Dispatch input, review independence and resource admission checks."""
 
 import shutil
+import subprocess
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -113,6 +114,43 @@ def check_review_family(author_model: str | None, reviewer_model: str) -> None:
     author, reviewer = families.get(author_model), families.get(reviewer_model)
     if not author or not reviewer or author == reviewer:
         raise ValueError("review independence requires two known, different model families")
+
+
+def check_branch_author_families(args, repo: Path, repository: dict, head_sha: str, reviewer_model: str) -> None:
+    """Keep a branch review outside every author family committed on the branch (FR-23).
+
+    ``--review-author-model`` names one author; the branch's own X-Agent trailers
+    name all of them, read with the facts the verdict recorder accepts. A
+    red-team review is bound by the recorder's own seat rules instead.
+    """
+    if (args.review_mode or "").strip().casefold() == "red_team":
+        return
+    try:
+        base_sha = git._git(repo, "rev-parse", "--verify", f"{args.base}^{{commit}}")
+        if not git._git(repo, "rev-list", "-n", "1", f"{base_sha}..{head_sha}"):
+            return  # No commit of the branch's own: nothing to exclude.
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise ValueError(f"review independence: reviewed range unavailable ({exc})") from None
+    from scripts.review.record_cf_verdict import (
+        BranchFactsError,
+        authorship_exclude_sha,
+        collect_branch_review_facts,
+    )
+
+    try:
+        facts = collect_branch_review_facts(
+            repository=repository["github"], repo_root=repo, base_tip_sha=base_sha, head_sha=head_sha,
+            task_root=store.tasks_dir(), authorship_exclude_sha=authorship_exclude_sha(repo, base_branch=args.base),
+        )
+    except (BranchFactsError, OSError, subprocess.SubprocessError) as exc:
+        raise ValueError(f"review independence: branch author families unavailable ({exc})") from None
+    reviewer = _model_families().get(reviewer_model)
+    # A branch without authored commits excludes nothing; any author makes an unknown reviewer unprovable.
+    if facts.excluded_families and (not reviewer or reviewer in facts.excluded_families):
+        raise ValueError(
+            f"review independence: reviewer family {reviewer or 'unknown'} is not outside the branch's author "
+            f"families {sorted(facts.excluded_families)}; choose a reviewer from another family"
+        )
 
 
 def check_review_subjects(agent, model, seats, families, owned_paths, *, review=False):

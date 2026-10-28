@@ -518,6 +518,67 @@ def test_red_team_outside_rejection_publication_guard(monkeypatch, tmp_path, ver
         assert calls == {"posts": 1, "statuses": 1}
 
 
+def recorded_verdict(sha, verdict, *, task_id="prior-review", mode="cross_family"):
+    """A trusted, unedited verdict comment the keeper reads, as the recorder posts it."""
+    body = recorder.build_comment(
+        sha=sha,
+        task_id=task_id,
+        started="2026-09-23T11:00:00.000001+00:00",
+        verdict=verdict,
+        model="claude-opus-5-5",
+        family="anthropic",
+        reply=f"VERDICT: {verdict}",
+        review_mode=mode,
+    )
+    stamp = "2026-09-23T11:30:00Z"
+    return {
+        "body": body,
+        "user": {"login": "fleet"},
+        "author_association": "MEMBER",
+        "created_at": stamp,
+        "updated_at": stamp,
+    }
+
+
+@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
+@pytest.mark.parametrize("rejection", ["CHANGES_REQUESTED", "BLOCKED"])
+def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch, tmp_path, mode, rejection):
+    from scripts.orchestration import integration_sweep as sweep
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    prompt = red_team_task(tasks, tmp_path) if mode == "red_team" else None
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    comments.append(recorded_verdict(SHA, rejection, mode=mode))
+    with pytest.raises(recorder.RecordError, match="only an APPROVE at a new head clears it"):
+        recorder.record("review-one", **kwargs)
+    assert len(comments) == 1 and calls == {"posts": 0, "statuses": 0}
+    # The keeper reads the same head the same way: the rejection stands.
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == rejection
+    # A rejection at an earlier head is cleared by an APPROVE at the new head.
+    comments[0] = recorded_verdict(OTHER, rejection, mode=mode)
+    assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+
+
+@pytest.mark.parametrize(
+    "risk,prior_heads,refused",
+    [(None, 2, False), (None, 3, True), ("high", 3, True), ("critical", 4, False), ("critical", 5, True)],
+)
+def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, prior_heads, refused):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, **({"review_risk": risk} if risk else {}))
+    comments.extend(recorded_verdict(f"{index:x}" * 40, "CHANGES_REQUESTED") for index in range(1, prior_heads + 1))
+    # More verdicts at a head already reviewed open no new round.
+    comments.append(recorded_verdict("1" * 40, "CHANGES_REQUESTED", task_id="second-seat"))
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    if refused:
+        with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"):
+            recorder.record("review-one", **kwargs)
+        assert calls == {"posts": 0, "statuses": 0}
+    else:
+        assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
+
+
 @pytest.mark.parametrize("body", [None, "<!-- cf-verdict v1 unreadable -->"])
 def test_red_team_unreadable_marker_history_refused(monkeypatch, tmp_path, body):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)

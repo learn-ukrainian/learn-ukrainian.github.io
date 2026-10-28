@@ -2,6 +2,7 @@
 
 import json
 import os
+import subprocess
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -11,6 +12,8 @@ from scripts.dispatcher import checks, cli, git, store, worker
 from scripts.review import record_cf_verdict as cf
 from scripts.review.subject_seat import classify_owned_path
 
+BRANCH_AUTHOR_FAMILIES = checks.check_branch_author_families
+
 
 @pytest.fixture
 def dispatch(tmp_path, monkeypatch):
@@ -19,6 +22,8 @@ def dispatch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    # The synthetic head has no Git history; branch authorship is exercised against a real repository below.
+    monkeypatch.setattr(checks, "check_branch_author_families", lambda *a: None)
     start = Mock(side_effect=lambda spec, record, prompt, timeout: store.create(
         {**record, "pid": os.getpid(), "process_start": worker._identity(os.getpid())}, prompt,
     ))
@@ -159,3 +164,30 @@ def test_missing_review_metadata_legacy_readers_do_not_rewrite_records(tmp_path,
 def test_v2_subject_provider_paths_inferred_from_absolute_and_windows_paths():
     for path in ("/checkout/scripts/dispatcher/providers/claude.py", r"scripts\dispatcher\providers\claude.py"):
         assert classify_owned_path(path).seats == frozenset({"claude"})
+
+
+def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp_path, capsys):
+    repo = tmp_path / "repo"
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@example.invalid", GIT_COMMITTER_NAME="t",
+               GIT_COMMITTER_EMAIL="t@example.invalid")
+
+    def run(*args):
+        command = ["git", "-C", str(repo), *args]
+        return subprocess.run(command, check=True, capture_output=True, text=True, env=env, timeout=30).stdout.strip()
+
+    repo.mkdir()
+    run("init", "-q")
+    run("commit", "-q", "--allow-empty", "-m", "base")
+    base = run("rev-parse", "HEAD")
+    for trailer in ("claude/claude-opus-5-5", "codex/gpt-6.1-sol"):
+        run("commit", "-q", "--allow-empty", "-m", f"work\n\nX-Agent: {trailer}")
+    head = run("rev-parse", "HEAD")
+    monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
+    monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "claude/branch", head))
+    monkeypatch.setattr(checks, "check_branch_author_families", BRANCH_AUTHOR_FAMILIES)
+    review = ("--base", base, "--review-author-model", "claude-opus-5-5", "--risk", "high")
+    # Sol is outside the declared author's family but authored a commit on the branch.
+    dispatch(*review, agent="sol", model="gpt-6.1-sol", expected=2)
+    assert "['anthropic', 'openai']" in capsys.readouterr().err
+    assert dispatch(*review, agent="cursor", model="grok-4.7-high")["model"] == "grok-4.7-high"

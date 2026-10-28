@@ -273,6 +273,8 @@ def _dispatch(args) -> int:
     )
     checks.check_private_input(spec, info["key"])
     checks.check_review_family(args.review_author_model, args.model)
+    if args.mode == "read-only" and (admission.review_typed(vars(args)) or args.risk):
+        checks.check_branch_author_families(args, repo, info, sha, args.model)
     if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
         exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,
                                                 args.owned_path, review=any((args.review_profile, args.language_lane,

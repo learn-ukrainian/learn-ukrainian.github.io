@@ -1791,8 +1791,6 @@ def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
         "echo",
         "--prompt",
         "review",
-        "--pr",
-        "42",
         "--branch",
         first["worktree_branch"],
         "--pinned-head",
