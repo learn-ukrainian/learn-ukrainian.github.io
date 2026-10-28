@@ -389,6 +389,18 @@ def test_reviewed_allowlist_and_vesum_ambiguity_fail_closed() -> None:
 
     assert cloze_lemma_ids == {"knyha"}
     assert "robota" not in cloze_lemma_ids
+    # #9160: blank public glosses must not erase the same-meaning exclusion.
+    # Plant the answer's gloss on every candidate to make every decoy unsafe.
+    entries = read_manifest(MANIFEST)
+    for entry in entries:
+        entry["gloss"] = "same meaning"
+        entry.get("enrichment", {}).pop("translation", None)
+    blocked = build_practice_shards(
+        entries, ReviewedSourceAllowlist.from_path(ALLOWLIST),
+        JsonVesumVerifier.from_path(VESUM), read_cloze_sources(CLOZE_SOURCES),
+        BuildConfig(), heritage_pairs=[], paronym_pairs=[],
+    )
+    assert blocked["A1"]["cloze"]["cloze"] == []
 
     entries = read_manifest(MANIFEST)
     empty_allowlist = ReviewedSourceAllowlist.from_payload([])

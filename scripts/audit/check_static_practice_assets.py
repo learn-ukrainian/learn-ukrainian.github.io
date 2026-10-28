@@ -27,6 +27,7 @@ try:
         sys.path.insert(0, str(PROJECT_ROOT))
     from scripts.audit.daily_cefr import CEFR_LEVELS
     from scripts.audit.generate_practice_deck import (
+        PRIVATE_MEANING_FIELDS,
         THIN_WARN_THRESHOLDS,
         UNKNOWN_CEFR_TRANSPORT_LEVEL,
         WITHDRAWN_MEANING_MODES,
@@ -34,7 +35,6 @@ try:
         validate_classify_session_cap,
         validate_heritage_item,
         validate_imperative_item,
-        validate_meaning_withdrawal,
         validate_paradigm_item,
         validate_synonym_item,
         validate_synonym_option_sets,
@@ -497,11 +497,12 @@ def _check_level(
         for field in ("lemmaId", "lemma", "lemmaPlain"):
             if not _has_text(lexeme.get(field)):
                 errors.append(f"{prefix} missing {field}")
+        if not isinstance(lexeme.get("gloss"), str):
+            errors.append(f"{prefix} gloss must be a string")
+        if PRIVATE_MEANING_FIELDS.intersection(lexeme):
+            errors.append(f"{prefix} contains private meaning fields")
         if not _cefr_matches_transport(lexeme.get("cefr"), level):
             errors.append(f"{prefix} cefr {lexeme.get('cefr')!r} != {level!r}")
-
-    for kind in ("index", "lexemes"):
-        errors.extend(f"{paths[kind]}: {error}" for error in validate_meaning_withdrawal(kind, shards[kind]))
 
     for index, item in enumerate(cloze_items):
         _check_cloze_item(
@@ -585,10 +586,13 @@ def _check_level(
             continue
         rows = cloze_items if kind == "cloze" else mode_items[kind]
         assert isinstance(rows, list)
-        expected_count = 0 if kind in WITHDRAWN_MEANING_MODES else len(rows)
+        # Audit stored inventory faithfully: old pinned releases still advertise
+        # modes that the client withdraws. New shards omit those advertisements.
+        withdrawn = kind in WITHDRAWN_MEANING_MODES and kind not in advertised
+        expected_count = 0 if withdrawn else len(rows)
         expected_mode_coverage = (
             round(len({item.get("lemmaId") for item in rows if isinstance(item, dict)}) / len(lexemes), 4)
-            if lexemes and kind not in WITHDRAWN_MEANING_MODES
+            if lexemes and not withdrawn
             else 0.0
         )
         if type(mode_counts.get(kind)) is not int or mode_counts.get(kind) != expected_count:

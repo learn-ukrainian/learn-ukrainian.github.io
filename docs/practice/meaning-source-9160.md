@@ -14,9 +14,12 @@ cards show a localized unavailability notice and retain their independent exampl
 
 The generator preserves its existing lexeme membership decision, then emits empty
 `gloss` and `glossClean` fields with `meaningMcEligible: false`. Its historical
-article cleaner remains only for that membership decision. Its output is never
-admitted as a learner meaning. Publication and static-asset validation refuse
-nonempty meaning fields or advertisements for a withdrawn mode.
+article cleaner preserves that membership decision and private distractor
+exclusion keys. Those keys prevent same-meaning decoys and are removed before
+serialization. Publication refuses private keys, nonempty meanings and withdrawn
+mode advertisements. Static-asset validation checks the identity and inventory
+of stored packages, including the unchanged legacy release. Its raw gloss fields
+are consumed only through the client withdrawal boundary.
 
 ## Frozen input and local reproduction
 

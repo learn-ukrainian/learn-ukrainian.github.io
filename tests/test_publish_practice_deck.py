@@ -284,6 +284,12 @@ def test_withdrawal_repackages_only_pinned_source_and_removes_cards(
     assert lexeme["meaningMcEligible"] is False
     for mode in generator.WITHDRAWN_MEANING_MODES:
         assert index["counts"]["modeCounts"][mode] == 0
+    lexeme["_meaningExclusionHead"] = "unverified"
+    leaked = json.loads((output_dir / "practice-lexemes.A1.json").read_text())
+    leaked["lexemes"] = [lexeme]
+    _write_json(output_dir / "practice-lexemes.A1.json", leaked)
+    with pytest.raises(PracticeDeckPublishError, match="withdrawn meaning"):
+        collect_shards(output_dir)
     assert index["counts"]["modeCounts"]["flashcards"] == 0
 
     with pytest.raises(PracticeDeckPublishError, match="not the pinned"):

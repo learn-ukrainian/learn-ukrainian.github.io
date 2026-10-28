@@ -257,6 +257,7 @@ SYNONYM_DEFAULT_AVAILABILITY = "B1"
 # Advisor ruling A on #8714: withhold the mode until #8984 has per-card sense binding.
 SYNONYM_MODE_ENABLED = False
 WITHDRAWN_MEANING_MODES = frozenset({"flashcards", "matching", "choice", "antonym", "homonym"})
+PRIVATE_MEANING_FIELDS = frozenset({"_meaningExclusionHead", "_synonymExclusionHead"})
 HERITAGE_OPTION_LEAK_PATTERN = re.compile(
     r"(?:⚠|кальк|calque|русизм|russianism|суржик|рос\.)",
     re.IGNORECASE,
@@ -1648,7 +1649,7 @@ def _eligible_decoys(
     case_name: str,
     number: str,
 ) -> list[tuple[dict[str, Any], str]]:
-    answer_head = _headword(answer["gloss"])
+    answer_head = answer.get("_meaningExclusionHead", _headword(answer["gloss"]))
     answer_bucket = _option_pos_bucket(answer.get("pos"))
     if not answer_bucket:
         return []
@@ -1664,7 +1665,7 @@ def _eligible_decoys(
             continue
         if CEFR_RANK[lexeme["cefr"]] > CEFR_RANK[answer["cefr"]]:
             continue
-        if answer_head and _headword(lexeme["gloss"]) == answer_head:
+        if lexeme.get("_meaningExclusionHead", _headword(lexeme["gloss"])) == answer_head:
             continue
         decoy_form = _case_form(lexeme.get("paradigm", {}), case_name, number)
         if decoy_form and (case_name == "nominative" or _plain(decoy_form) != _plain(lexeme["lemma"])):
@@ -1705,7 +1706,7 @@ def _eligible_dictionary_decoys(
     answer_bucket = _option_pos_bucket(answer.get("pos"))
     if not answer_bucket:
         return []
-    answer_head = _headword(answer["gloss"])
+    answer_head = answer.get("_meaningExclusionHead", _headword(answer["gloss"]))
     answer_label = _plain(answer["lemma"])
     candidates: list[tuple[dict[str, Any], str]] = []
     seen_labels: set[str] = {answer_label}
@@ -1718,7 +1719,7 @@ def _eligible_dictionary_decoys(
             continue
         if CEFR_RANK[lexeme["cefr"]] > CEFR_RANK[answer["cefr"]]:
             continue
-        if answer_head and _headword(lexeme["gloss"]) == answer_head:
+        if lexeme.get("_meaningExclusionHead", _headword(lexeme["gloss"])) == answer_head:
             continue
         label = _clean_text(lexeme.get("lemma"))
         if not label or _meaning_label_is_phrase(label) or _plain(label) in seen_labels:
@@ -2246,6 +2247,8 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
         "gloss": "",
         "glossClean": "",
         "meaningMcEligible": False,
+        "_meaningExclusionHead": _headword(gloss),
+        "_synonymExclusionHead": _synonym_gloss_head(gloss),
         "pos": pos,
         "cefr": level,
         "heritage": _heritage(entry),
@@ -4225,7 +4228,9 @@ def _valid_synonym_distractors(
     recorded synonym partner, every ULIF synonym-group co-member and every
     lexeme sharing an English sense with the prompt or the answer.
     """
-    blocked_heads = {_synonym_gloss_head(prompt["gloss"]), _synonym_gloss_head(answer["gloss"])} - {""}
+    blocked_heads = {
+        item.get("_synonymExclusionHead", _synonym_gloss_head(item["gloss"])) for item in (prompt, answer)
+    }
     ans_plain = _plain(answer["lemma"])
     prompt_plain = _plain(prompt["lemma"])
     partners: dict[str, set[str]] = context["partners"] if context else {}
@@ -4240,7 +4245,7 @@ def _valid_synonym_distractors(
             continue
         if lexeme.get("pos") != answer.get("pos"):
             continue
-        if _synonym_gloss_head(lexeme["gloss"]) in blocked_heads:
+        if lexeme.get("_synonymExclusionHead", _synonym_gloss_head(lexeme["gloss"])) in blocked_heads:
             continue
         cand_plain = _plain(lexeme["lemma"])
         if (
@@ -6166,7 +6171,9 @@ def validate_meaning_withdrawal(kind: str, payload: dict[str, Any]) -> list[str]
         return [f"{kind} rows must be objects in a list"]
     if kind == "lexemes":
         for item in rows:
-            if any(item.get(field) != "" for field in ("gloss", "glossClean")) or item.get("meaningMcEligible") is not False:
+            if (PRIVATE_MEANING_FIELDS.intersection(item)
+                    or any(item.get(field) != "" for field in ("gloss", "glossClean"))
+                    or item.get("meaningMcEligible") is not False):
                 errors.append(f"{item.get('lemmaId')} contains a withdrawn meaning")
     if kind == "index":
         for item in rows:
@@ -7204,7 +7211,7 @@ def build_practice_shards(
             level,
             config,
             "lexemes",
-            level_lexemes,
+            [{key: value for key, value in item.items() if key not in PRIVATE_MEANING_FIELDS} for item in level_lexemes],
         )
         cloze_payload = _level_payload(
             "atlas-practice-cloze",
