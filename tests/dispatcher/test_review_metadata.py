@@ -2,6 +2,7 @@
 
 import json
 import os
+import subprocess
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -11,6 +12,8 @@ from scripts.dispatcher import checks, cli, git, store, worker
 from scripts.review import record_cf_verdict as cf
 from scripts.review.subject_seat import classify_owned_path
 
+BRANCH_AUTHOR_FAMILIES = checks.check_branch_author_families
+
 
 @pytest.fixture
 def dispatch(tmp_path, monkeypatch):
@@ -19,6 +22,8 @@ def dispatch(tmp_path, monkeypatch):
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
     monkeypatch.setattr(git, "create_worktree", Mock())
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    # The synthetic head has no Git history; branch authorship is exercised against a real repository below.
+    monkeypatch.setattr(checks, "check_branch_author_families", lambda *a: None)
     start = Mock(side_effect=lambda spec, record, prompt, timeout: store.create(
         {**record, "pid": os.getpid(), "process_start": worker._identity(os.getpid())}, prompt,
     ))
@@ -159,3 +164,89 @@ def test_missing_review_metadata_legacy_readers_do_not_rewrite_records(tmp_path,
 def test_v2_subject_provider_paths_inferred_from_absolute_and_windows_paths():
     for path in ("/checkout/scripts/dispatcher/providers/claude.py", r"scripts\dispatcher\providers\claude.py"):
         assert classify_owned_path(path).seats == frozenset({"claude"})
+
+
+SOL = ("sol", "gpt-6.1-sol")
+
+
+@pytest.mark.parametrize(
+    "trailers,flags,reviewer,refusal",
+    [
+        # Sol is outside the declared author's family but authored a commit on the branch.
+        (("claude/claude-opus-5-5", "codex/gpt-6.1-sol"), ("--review-author-model", "claude-opus-5-5", "--risk", "high"),
+         SOL, "['anthropic', 'openai']"),
+        # Any review flag types a read-only review, dry runs included (F2).
+        (("codex/gpt-6.1-sol",), ("--review-mode", "cross_family"), SOL, "['openai']"),
+        (("codex/gpt-6.1-sol",), ("--review-mode", "cross_family", "--dry-run"), SOL, "['openai']"),
+        # An unresolvable trailer excludes no family, so no reviewer is provably outside it (F1).
+        (("claude/cto-not-a-model",), ("--risk", "low"), SOL, "AUTHOR_UNRESOLVED"),
+        # An empty range is a refusal, not a range with nobody to exclude (F2).
+        ((), ("--risk", "low"), SOL, "has no commits"),
+        # A task id without a task record is unresolved on a single-family harness too (F5).
+        (("kimi/cto-not-a-model",), ("--risk", "low"), SOL, "AUTHOR_UNRESOLVED"),
+        # Authorship runs from the default branch: a --base cut after the Claude commit hides nothing (F6).
+        (("claude/claude-opus-5-5", "codex/gpt-6.1-sol"), ("--base", "@1", "--risk", "low"),
+         ("claude", "claude-opus-5-5"), "['anthropic', 'openai']"),
+        # A red team keeps only its seat rule: unresolved authors and an empty range are refused (F9).
+        (("claude/cto-not-a-model",), ("--review-mode", "red_team", "--review-author-model", "claude-opus-5-5"),
+         SOL, "AUTHOR_UNRESOLVED"),
+        ((), ("--review-mode", "red_team"), SOL, "has no commits"),
+        # A review subject or a reviewed --branch types a read-only review (F10).
+        (("codex/gpt-6.1-sol",), ("--subject-seat", "claude"), SOL, "['openai']"),
+        (("codex/gpt-6.1-sol",), ("--branch", "review/target"), SOL, "['openai']"),
+    ],
+)
+def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp_path, capsys, trailers, flags,
+                                                      reviewer, refusal):
+    repo, origin = tmp_path / "repo", tmp_path / "origin.git"
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@example.invalid", GIT_COMMITTER_NAME="t",
+               GIT_COMMITTER_EMAIL="t@example.invalid")
+
+    def run(*args):
+        command = ["git", "-C", str(repo), *args]
+        return subprocess.run(command, check=True, capture_output=True, text=True, env=env, timeout=30).stdout.strip()
+
+    repo.mkdir()
+    run("init", "-q")
+    run("commit", "-q", "--allow-empty", "-m", "base")
+    # Origin's default branch is the base commit; the reviewed commits are the branch's own.
+    run("init", "-q", "--bare", str(origin))
+    run("--git-dir", str(origin), "symbolic-ref", "HEAD", "refs/heads/main")
+    run("remote", "add", "origin", str(origin))
+    run("push", "-q", "origin", "HEAD:refs/heads/main")
+    commits = [run("rev-parse", "HEAD")]
+    for trailer in trailers:
+        run("commit", "-q", "--allow-empty", "-m", f"work\n\nX-Agent: {trailer}")
+        commits.append(run("rev-parse", "HEAD"))
+    head = commits[-1]
+    flags = tuple(commits[int(flag[1:])] if flag.startswith("@") else flag for flag in flags)
+    # The gate guards a reviewed change: a verdict is recorded only for a task pinned with --branch (see below).
+    if "--branch" not in flags:
+        flags = ("--branch", "review/target", *flags)
+    monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
+    monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "claude/branch", head))
+    monkeypatch.setattr(checks, "check_branch_author_families", BRANCH_AUTHOR_FAMILIES)
+    review = ("--mode", "read-only", *flags)
+    dispatch(*review, agent=reviewer[0], model=reviewer[1], expected=2)
+    assert refusal in capsys.readouterr().err
+    grok = ("--agent", "cursor", "--model", "grok-4.7-high")
+    if trailers and refusal.startswith("["):
+        if "--dry-run" in flags:
+            assert cli.main(["dispatch", *grok, "--prompt", "Review this change", *review]) == 0
+        else:
+            assert dispatch(*review, agent="cursor", model="grok-4.7-high")["model"] == "grok-4.7-high"
+    else:
+        # Unresolvable authorship and an empty range refuse every reviewer family.
+        dispatch(*review, agent="cursor", model="grok-4.7-high", expected=2)
+
+
+@pytest.mark.parametrize("flags", [("--language-lane", "ukrainian"), ("--risk", "low"), ("--review-profile", "ukrainian")])
+def test_typed_dispatch_without_a_reviewed_change_checks_no_branch_authorship(dispatch, monkeypatch, flags):
+    # The uk-preamble eval runs --language-lane at a pinned head with no branch or PR. The verdict recorder
+    # refuses such a task ("review was not branch-pinned"), so no authorship range exists to check.
+    def unexpected(*_args):
+        raise AssertionError("branch authorship checked for a dispatch that reviews no change")
+
+    monkeypatch.setattr(checks, "check_branch_author_families", unexpected)
+    dispatch("--mode", "read-only", *flags, "--pinned-head", "a" * 40, agent="codex", model="gpt-6.1-sol")

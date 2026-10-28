@@ -84,7 +84,8 @@ def sandbox(tmp_path, hermetic_monitor):
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
-    run_git(repo, "init", "--bare", str(remote))
+    # Origin advertises main as its default branch: review authorship is read from it (C-2902).
+    run_git(repo, "init", "--bare", "--initial-branch=main", str(remote))
     run_git(repo, "remote", "add", "origin", str(remote))
     run_git(repo, "push", "-u", "origin", "main")
     env = {**os.environ, "LU_TASKS_DIR": str(tasks)}
@@ -115,7 +116,24 @@ def sandbox(tmp_path, hermetic_monitor):
             ).stdout
         )
 
-    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle)
+    def review_models(*models):
+        """File the stub reviewer ``models`` under OpenAI in the sandbox catalog copy only."""
+        catalog = yaml.safe_load((config / "model_catalog.yaml").read_text())
+        catalog["models"]["gpt-6.1-sol"].setdefault("runtime_model_ids", []).extend(models)
+        (config / "model_catalog.yaml").write_text(yaml.safe_dump(catalog, sort_keys=False))
+
+    def review_target(*models):
+        """Arguments for a read-only review of one Anthropic-authored commit by the stub ``models``.
+
+        A review needs a reviewed range and a reviewer family outside its authors (C-2902).
+        """
+        review_models(*models)
+        head = run_git(repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
+                       "authored change\n\nX-Agent: claude/claude-opus-5-5")
+        return "--base", "main", "--pinned-head", head
+
+    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle,
+                          review_models=review_models, review_target=review_target)
     yield box
     # Reap detached test supervisors, including a test interrupted by an assertion.
     for path in tasks.glob("*.json"):
@@ -551,7 +569,9 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     executable.chmod(0o755)
     sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
     sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
-    run_git(sandbox.repo, "branch", "review-source")
+    # A read-only --branch dispatch is a review (C-2902 F10): it needs a reviewed commit outside its family.
+    source = sandbox.review_target("requested-model-is-not-proof")[-1] if mode == "read-only" else "HEAD"
+    run_git(sandbox.repo, "branch", "review-source", source)
     run_git(sandbox.repo, "push", "origin", "review-source")
     dispatched = sandbox.cli(
         "dispatch",
@@ -642,7 +662,7 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
     (sandbox.repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     dispatched = sandbox.cli(
         "dispatch", "--agent", "sol", "--model", model, "--prompt", text,
-        *(["--require-review-verdict"] if required else []),
+        *(["--require-review-verdict", *sandbox.review_target(model)] if required else []),
     )
     task = dispatched.stdout.splitlines()
     record = sandbox.settle(task, expected=1 if error else 0)
@@ -660,10 +680,14 @@ def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     review = sandbox.repo / "scripts/review"
     review.mkdir(exist_ok=True)
     (review / "__init__.py").touch()
-    (review / "verdict_parser.py").write_text(
-        "def recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
+    # Dispatch admission reads branch authorship through the recorder, which imports the rest of the parser.
+    parser = review / "verdict_parser.py"
+    parser.write_text(
+        parser.read_text() + "\n\ndef recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
     )
-    record = sandbox.settle(sandbox.dispatch("echo", "--require-review-verdict"), expected=1)
+    record = sandbox.settle(
+        sandbox.dispatch("echo", "--require-review-verdict", *sandbox.review_target("echo")), expected=1
+    )
     assert record["status"] == "failed"
     assert record["error"] == "review_gate_error"
     assert record["returncode"] == 0
@@ -732,7 +756,7 @@ def _killed_review_supervisor(sandbox, tmp_path, model):
         sandbox.env.pop(name, None)
     sandbox.env.update({test_slots.ENABLE_ENV: "on", test_slots.DIR_ENV: str(tmp_path / "pool"),
                         test_slots.COUNT_ENV: "4", test_slots.WAIT_ENV: "5"})
-    task = sandbox.dispatch(model, "--require-review-verdict")
+    task = sandbox.dispatch(model, "--require-review-verdict", *sandbox.review_target(model))
     child = int(await_file(sandbox.tasks / f"{task[0]}.started"))
     if model == "governed":
         assert await_file(sandbox.tasks / f"{task[0]}.joined") == "joined"
@@ -1784,6 +1808,12 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     task = sandbox.dispatch("unpushed", "--mode", "workspace-write")
     first = sandbox.settle(task, expected=1)
+    # A read-only --branch dispatch is a review (C-2902 F10): attribute the stub delivery to a family
+    # outside the stub reviewer's, keeping its tree and parent.
+    sandbox.review_models("echo")
+    head = run_git(sandbox.repo, "commit-tree", f"{first['head_sha']}^{{tree}}", "-p", f"{first['head_sha']}^",
+                   "-m", "stub delivery\n\nX-Agent: claude/claude-opus-5-5")
+    run_git(sandbox.repo, "update-ref", f"refs/heads/{first['worktree_branch']}", head)
     result = sandbox.cli(
         "dispatch",
         "--agent",
@@ -1792,16 +1822,14 @@ def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
         "echo",
         "--prompt",
         "review",
-        "--pr",
-        "42",
         "--branch",
         first["worktree_branch"],
         "--pinned-head",
-        first["head_sha"],
+        head,
     )
     review = sandbox.settle(result.stdout.splitlines())
-    assert review["worktree_base_sha"] == first["head_sha"]
-    assert review["pinned_head"] == first["head_sha"]
+    assert review["worktree_base_sha"] == head
+    assert review["pinned_head"] == head
     assert review["review_branch"] == first["worktree_branch"]
     assert _review_branch(review) == first["worktree_branch"]
     assert review["worktree_branch"] != first["worktree_branch"]
