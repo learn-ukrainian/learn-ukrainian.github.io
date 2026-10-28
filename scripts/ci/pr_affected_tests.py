@@ -7,6 +7,7 @@ import json
 import math
 import os
 import re
+import statistics
 import subprocess
 import sys
 import unicodedata
@@ -82,8 +83,13 @@ def plan(base: str, candidate: str) -> dict:
         value = durations.get(p)
         if p not in unknown and (type(value) not in {int, float} or not math.isfinite(value) or value < 0):
             raise ValueError("invalid recorded duration")
-    # Sum recorded serial times with a minute reserved for setup and collection.
-    estimate = None if unknown else 60 + sum(durations[p] for p in selected)
+    # A file with no recorded time (new in this PR) is weighted like the median
+    # recorded file, as split_tests does, and still runs. Dropping it here left
+    # new tests unexecuted until merge-group CI.
+    recorded = [v for v in durations.values() if type(v) in {int, float} and math.isfinite(v) and v >= 0]
+    default = statistics.median(recorded) if recorded else 1.0
+    # Sum serial times with a minute reserved for setup and collection.
+    estimate = 60 + sum(durations.get(p, default) for p in selected)
     infrastructure = any(
         p in INFRA
         or Path(p).name == "conftest.py"
@@ -94,8 +100,6 @@ def plan(base: str, candidate: str) -> dict:
     reason = (
         "pytest infrastructure changed"
         if infrastructure
-        else "recorded duration unknown"
-        if unknown
         else "recorded estimate exceeds 600 second cap"
         if estimate > CAP_SECONDS
         else None

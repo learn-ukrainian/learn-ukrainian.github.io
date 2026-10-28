@@ -20,8 +20,9 @@ component inventory chooses tests.
 
 The job has a ten-minute timeout and targets under five minutes on hosted
 runners. The committed serial file-duration sum plus 60 seconds for setup and
-collection is the conservative estimate. If it exceeds 600 seconds, a selected
-file lacks timing data, or pytest infrastructure changes, all guards still run
+collection is the conservative estimate; a selected file with no recorded time
+(a new test file) counts at the median recorded file and still runs. If the
+estimate exceeds 600 seconds or pytest infrastructure changes, all guards still run
 and changed files outside the guards defer to merge-group pytest. Infrastructure
 includes conftest, pytest configuration, dependency locks, the CI workflow, CI Python setup,
 CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
