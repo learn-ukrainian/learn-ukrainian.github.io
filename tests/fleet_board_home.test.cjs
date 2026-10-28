@@ -255,6 +255,82 @@ const agentsEnvelope = {
   },
 };
 
+const rosterEnvelope = {
+  schema: "fleet.v1.roster", sources: [source("roster_snapshot", "ok")],
+  data: { layers: [{ layer: 0, kind: "foundations", epics: [
+    { epic: "cedar", state: "working", depends_on: ["birch"], restart_condition: "after publish", flags: [] },
+  ] }] },
+};
+const capacity = {
+  generated_at: "2026-10-09T09:31:52Z", diagnostics: { stale: false },
+  claude_accounts: {
+    "claude:a": { status: "ok", age_s: 12, updated: "2026-10-09T09:31:40Z",
+      session5h: { left_pct: 0 }, weekly: { left_pct: 37, leftover_pct: 8, pace: "ahead", resets_at: "2026-10-12T00:00:00Z" } },
+    "claude:b": { status: "unknown", age_s: null, reason: "not_probed", session5h: {}, weekly: {} },
+  },
+};
+
+test("home renders roster and per-account capacity with source age and unknowns", () => {
+  const rendered = FB.renderHome(FB.homeModel(nowEnvelope, epicsEnvelope, rosterEnvelope, capacity), new URLSearchParams());
+  const panels = queryAll(parseHtml(rendered), "fb-panel");
+  const roster = textContent(panels.find(el => textContent(el).startsWith("Roster")));
+  const budget = textContent(panels.find(el => textContent(el).startsWith("Routing budget")));
+  assert.match(roster, /foundations/);
+  assert.match(roster, /cedar/);
+  assert.match(roster, /birch/);
+  assert.match(roster, /after publish/);
+  assert.match(roster, /4 s/);
+  assert.doesNotMatch(roster, /later slice/);
+  assert.match(budget, /claude:a/);
+  assert.match(budget, /0%/);
+  assert.match(budget, /37%/);
+  assert.match(budget, /8%/);
+  assert.match(budget, /12 s/);
+  assert.match(budget, /claude:b/);
+  assert.match(budget, /not_probed/);
+  assert.match(budget, /unknown/);
+  assert.doesNotMatch(budget, /later slice/);
+});
+
+test("home distinguishes stale, failed, unavailable, unconfigured, and empty sources", () => {
+  const render = (roster, budget, options) => FB.renderHome(
+    FB.homeModel(nowEnvelope, epicsEnvelope, roster, budget), new URLSearchParams(), options,
+  );
+  const empty = { ...rosterEnvelope, data: { layers: [{ kind: "foundations", epics: [] }] } };
+  assert.match(render(empty, capacity), /No epics in this layer/);
+  const stale = { ...rosterEnvelope, sources: [source("roster_snapshot", "stale")] };
+  const staleCapacity = { ...capacity, diagnostics: { stale: true } };
+  const doc = parseHtml(render(stale, staleCapacity, { capacityAgeMs: 30000 }));
+  const panels = queryAll(doc, "fb-panel");
+  assert.match(textContent(panels[0]), /stale/);
+  const accounts = textContent(panels.find(el => textContent(el).startsWith("Routing budget")));
+  assert.match(accounts, /claude:astale/);
+  assert.match(accounts, /claude:bunknown/);
+  assert.match(accounts, /42 s old/);
+  for (const status of ["not_configured", "unavailable"]) {
+    const unavailable = { ...rosterEnvelope, sources: [source("roster_snapshot", status)] };
+    const roster = queryAll(parseHtml(render(unavailable, null)), "fb-panel")[0];
+    assert.match(textContent(roster), new RegExp(status === "not_configured" ? "not installed" : status));
+    assert.doesNotMatch(textContent(roster), /cedar|No epics/);
+  }
+  const missing = render(null, null);
+  assert.match(missing, /Per-account capacity unavailable/);
+  assert.match(missing, /age unknown/);
+  const failed = render(rosterEnvelope, capacity, { rosterFailed: true, capacityFailed: true });
+  assert.equal((failed.match(/stale · refresh failed/g) || []).length, 2);
+  assert.match(failed, /37%/);
+});
+
+test("home escapes roster and account text", () => {
+  const hostile = { ...rosterEnvelope, data: { layers: [{ kind: "<script>", epics: [
+    { epic: '<img src=x onerror="alert(1)">', depends_on: ["<bad>"], flags: [], restart_condition: "<bad>" },
+  ] }] } };
+  const budget = { ...capacity, claude_accounts: { '<script>': { ...capacity.claude_accounts['claude:a'], reason: '<bad>' } } };
+  const rendered = FB.renderHome(FB.homeModel(nowEnvelope, epicsEnvelope, hostile, budget), new URLSearchParams());
+  assert.doesNotMatch(rendered, /<script>|<img|<bad>/);
+  assert.match(rendered, /&lt;script&gt;/);
+});
+
 function homeHtml(params, options) {
   const model = FB.homeModel(nowEnvelope, epicsEnvelope);
   return FB.renderHome(model, params || new URLSearchParams(), options || { ageMs: 1000 });
@@ -474,7 +550,7 @@ test("epic detail uses agents and keeps phase 2 controls disabled", () => {
   assert.match(missing, /not on the board/);
 });
 
-test("untrusted text is escaped and fetches stay on the fleet v1 paths", () => {
+test("untrusted text is escaped and fetches stay on the allowed read paths", () => {
   const model = FB.homeModel(nowEnvelope, epicsEnvelope);
   model.attention = [{
     severity: "bad",
@@ -489,6 +565,9 @@ test("untrusted text is escaped and fetches stay on the fleet v1 paths", () => {
   assert.doesNotMatch(rendered, /<img/);
   assert.equal(FB.attentionHref({ target: { type: "alert", id: "x" } }), "#/home");
   assert.equal(FB.isFleetPath("/api/fleet/v1/now"), true);
+  assert.equal(FB.isFleetPath("/api/fleet/v1/roster"), true);
+  assert.equal(FB.isFleetPath("/api/state/routing-budget"), true);
+  assert.equal(FB.isFleetPath("/api/state/routing-budget?fresh_codexbar=true"), false);
   assert.equal(FB.isFleetPath("/api/fleet/v1/epics"), true);
   assert.equal(FB.isFleetPath("/api/fleet/v1/epics/cedar"), true);
   assert.equal(FB.isFleetPath("/api/fleet/v1/agents/driver-cedar"), true);
@@ -745,8 +824,12 @@ function mountedBoard() {
         "/api/fleet/v1/now": nowEnvelope, "/api/fleet/v1/epics": epicsEnvelope,
         "/api/fleet/v1/epics/cedar": { schema: "fleet.v1.epic", sources, data: cedar },
         "/api/fleet/v1/agents": agentsEnvelope,
+        "/api/fleet/v1/roster": rosterEnvelope,
+        "/api/state/routing-budget": capacity,
       };
-      return { ok: mode !== "bad", status: mode === "bad" ? 500 : 200, async json() {
+      const bad = mode === "bad" || (mode === "bad-capacity" && url === "/api/state/routing-budget")
+        || (mode === "bad-roster" && url === "/api/fleet/v1/roster");
+      return { ok: !bad, status: bad ? 500 : 200, async json() {
         if (mode === "invalid-json") throw new Error("synthetic JSON failure");
         return bodies[url] || null;
       } };
@@ -772,7 +855,19 @@ test("mounted board refreshes, filters, preserves failure state, and recovers", 
   assert.equal(board.nav[0].attrs["aria-current"], "page");
   assert.ok(board.intervals.has(30000));
   assert.ok(board.intervals.has(1000));
-  assert.ok(board.requests.every(({ url, init }) => url.startsWith("/api/fleet/v1/") && init.cache === "no-store"));
+  assert.deepEqual(board.requests.map(({ url }) => url).sort(), [
+    "/api/fleet/v1/epics", "/api/fleet/v1/now", "/api/fleet/v1/roster", "/api/state/routing-budget",
+  ]);
+  assert.ok(board.requests.every(({ init }) => init.cache === "no-store"));
+  assert.match(app.innerHTML, /37%/);
+  for (const failure of ["bad-capacity", "bad-roster"]) {
+    board.setMode(failure); board.key("r"); await board.settle();
+    assert.match(app.innerHTML, /37%/);
+    assert.match(app.innerHTML, /after publish/);
+    assert.match(app.innerHTML, /stale · refresh failed/);
+  }
+  board.setMode("ok"); board.key("r"); await board.settle();
+  assert.doesNotMatch(app.innerHTML, /refresh failed/);
   const filter = { getAttribute: () => "state", value: "working" };
   app.events.change({ target: filter });
   assert.match(board.location.hash, /state=working/);
