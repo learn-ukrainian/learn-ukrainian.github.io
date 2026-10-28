@@ -864,6 +864,10 @@ def test_maintenance_timeout_terminates_git_tree_and_recovers(tmp_path: Path, mo
     ("2147483648", "0", "max", "100000 100000", False),
     ("2147483648", "0", "32", "max 100000", False),
     ("garbled", "0", "32", "100000 100000", False),
+    ("3221225472", "0", "32", "100000 100000", False),
+    ("2147483648", "0", "64", "100000 100000", False),
+    ("2147483648", "0", "32", "200000 100000", False),
+    (None, "0", "32", "100000 100000", False),
 ])
 def test_maintenance_requires_effective_kernel_bounds(tmp_path: Path, monkeypatch, memory, swap, tasks, cpu, expected) -> None:
     """Missing, unlimited and malformed controller limits cannot admit a repack."""
@@ -871,12 +875,44 @@ def test_maintenance_requires_effective_kernel_bounds(tmp_path: Path, monkeypatc
     group = root / "maintenance"
     group.mkdir(parents=True)
     for name, value in {"memory.max": memory, "memory.swap.max": swap, "pids.max": tasks, "cpu.max": cpu}.items():
-        (group / name).write_text(value)
+        if value is not None:
+            (group / name).write_text(value)
     proc = tmp_path / "self-cgroup"
     proc.write_text("0::/maintenance\n")
     monkeypatch.setattr(cleanup, "CGROUP_ROOT", root)
     monkeypatch.setattr(cleanup, "SELF_CGROUP", proc)
     assert (cleanup._maintenance_limits() is not None) is expected
+
+
+def test_maintenance_uses_stricter_ancestor_limits(tmp_path: Path, monkeypatch) -> None:
+    """An unlimited leaf can run only when every resource is bounded by an ancestor."""
+    root = tmp_path / "cgroup"
+    parent = root / "bounded"
+    leaf = parent / "leaf"
+    leaf.mkdir(parents=True)
+    for name, limit in {"memory.max": "2147483648", "memory.swap.max": "0", "pids.max": "32", "cpu.max": "100000 100000"}.items():
+        (parent / name).write_text(limit)
+        (leaf / name).write_text("max 100000" if name == "cpu.max" else "max")
+    proc = tmp_path / "self-cgroup"
+    proc.write_text("0::/bounded/leaf\n")
+    monkeypatch.setattr(cleanup, "CGROUP_ROOT", root)
+    monkeypatch.setattr(cleanup, "SELF_CGROUP", proc)
+    assert cleanup._maintenance_limits() == {"memory": 2147483648, "swap": 0, "tasks": 32, "cpu": 1}
+
+
+def test_metadata_query_timeout_does_not_claim_gc_was_killed(tmp_path: Path, monkeypatch) -> None:
+    """Failure before GC must describe the metadata timeout rather than invented GC termination."""
+    repo = _maintenance_repo(tmp_path, monkeypatch)
+    real_run = cleanup._run_git
+
+    def slow_metadata(root, *args):
+        if args[0] == "count-objects":
+            raise subprocess.TimeoutExpired("git count-objects", 120)
+        return real_run(root, *args)
+
+    monkeypatch.setattr(cleanup, "_run_git", slow_metadata)
+    result = cleanup._git_maintenance(repo, apply=True)
+    assert result == {"action": "timeout", "ok": False, "detail": "Git metadata query exceeded its timeout"}
 
 
 def test_receipt_write_is_atomic_and_private(tmp_path: Path) -> None:

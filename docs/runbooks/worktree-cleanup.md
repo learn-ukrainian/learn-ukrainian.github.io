@@ -700,6 +700,8 @@ thresholds with Git's defaults of 6700 loose objects and 50 packs, disables
 detachment, and sets `pack.threads=1`, `pack.windowMemory=64m` and
 `pack.deltaCacheSize=64m`. Existing expiry settings remain in effect. An exit-zero
 GC can be a no-op; the receipt reports `changed` from before/after object counts.
+Concurrent ordinary Git writes can also change those counts. This observation
+does not prove that GC performed a repack.
 
 Maintenance takes the existing Git-hygiene lock and the validation gate's global
 admission lock exclusively and nonblockingly. Active serial or parallel validation,

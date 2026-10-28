@@ -6,12 +6,13 @@ deletes origin and local branches only with
 exact merged-PR, a closed PR whose head GitHub still publishes at
 ``refs/pull/<N>/head``, origin/main-ancestry, or (scratch names only)
 another-origin-ref proof re-verified against the live remote with
-``git ls-remote``, runs bounded Git maintenance, and writes an immutable
+``git ls-remote``, and writes an immutable
 JSON receipt. When this run's ``fetch --prune`` fails, every deletion that
 relies on remote containment is skipped as ``fetch_failed_no_remote_proof``.
 Orphaned ``.worktrees/**`` directories are reported but never deleted, and
 no worktree is removed: the dispatcher removes each task's own worktree when
 the task settles (FR-01b).
+The separate ``--git-maintenance`` mode runs only bounded foreground GC.
 """
 
 from __future__ import annotations
@@ -90,7 +91,7 @@ def _fetch_origin(repo_root: Path) -> subprocess.CompletedProcess[str]:
     A fetch whose loose-object count trips ``maintenance.auto`` runs
     ``maintenance run --auto``, which expires every reflog and can run
     ``gc --auto`` before the branch cleanup below has run (#10856). The
-    bounded explicit GC at the end of the run stays the only maintenance.
+    separate bounded GC service stays the only maintenance path.
     """
     args = (*worktree_git.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
     fetched = _run_git(repo_root, *args)
@@ -962,6 +963,10 @@ def _maintenance_limits() -> dict[str, int | float] | None:
     return None
 
 
+class _GCDeadlineExceeded(TimeoutError):
+    pass
+
+
 def _run_gc(repo_root: Path, lock_fd: int) -> subprocess.CompletedProcess[str]:
     command = [
         GIT, "-c", "gc.autoDetach=false", "-c", "gc.auto=6700", "-c", "gc.autoPackLimit=50",
@@ -982,7 +987,7 @@ def _run_gc(repo_root: Path, lock_fd: int) -> subprocess.CompletedProcess[str]:
                 break
             except subprocess.TimeoutExpired:
                 continue
-        raise
+        raise _GCDeadlineExceeded from None
     return subprocess.CompletedProcess(command, proc.returncode, stdout, stderr)
 
 
@@ -1020,8 +1025,10 @@ def _git_maintenance(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 os.close(fd)
     except (_GitHygieneBusy, BlockingIOError):
         return {"action": "deferred", "ok": True, "detail": "Git hygiene or validation holds admission"}
-    except subprocess.TimeoutExpired:
+    except _GCDeadlineExceeded:
         return {"action": "timeout", "ok": False, "detail": "foreground GC exceeded its deadline; process group terminated"}
+    except subprocess.TimeoutExpired:
+        return {"action": "timeout", "ok": False, "detail": "Git metadata query exceeded its timeout"}
     except (OSError, RuntimeError) as exc:
         return {"action": "error", "ok": False, "detail": f"bounded GC unavailable: {type(exc).__name__}"}
 
