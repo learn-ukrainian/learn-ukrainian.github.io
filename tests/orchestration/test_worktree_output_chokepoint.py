@@ -17,7 +17,7 @@ from scripts.orchestration.fleet_repos import FleetRepo
 from scripts.orchestration.task_family import git_safety
 from tests.orchestration.test_worktree_claims_cli import _git, _linked, _primary, _record
 
-BOUNDARIES = ['claims', 'claims-force', 'scheduled', 'closeout', 'post-task']
+BOUNDARIES = ['claims', 'claims-force', 'scheduled', 'post-task']
 
 CALLERS = ["acp", "data-tier", "sibling", "task-family", "cli"]
 
@@ -327,7 +327,7 @@ def boundary_tree(tmp_path, monkeypatch):
 
 def boundary_remove(boundary, fixture, monkeypatch):
     from scripts.fleet import post_task_reap
-    from scripts.orchestration import merge_closeout, reap_worktrees
+    from scripts.orchestration import reap_worktrees
 
     repo, tree, tasks, _record = fixture
     if boundary.startswith("claims"):
@@ -341,8 +341,6 @@ def boundary_remove(boundary, fixture, monkeypatch):
     if boundary == "scheduled":
         results = reap_worktrees.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
         return next(result for result in results if Path(result.path) == tree).__dict__
-    if boundary == "closeout":
-        return merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
     return post_task_reap.post_task_reap("boundary", tasks_dir=tasks, repo_root=repo, apply=True)["main_worktree"]
 
 

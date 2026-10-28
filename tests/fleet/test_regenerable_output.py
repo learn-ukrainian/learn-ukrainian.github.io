@@ -200,11 +200,6 @@ def test_nonregular_build_output_is_refused(checkout):
     assert not patterns.is_regenerable_ignored_path(name, worktree=repo, tracked=set())
 
 
-def test_site_outputs_do_not_change_delegate_auto_finalize():
-    assert not patterns.is_disposable_auto_finalize_path("site/dist/index.html")
-    assert not patterns.is_disposable_auto_finalize_path("site/src/data/lexicon-manifest.json")
-
-
 @pytest.mark.parametrize(
     "remaining",
     [

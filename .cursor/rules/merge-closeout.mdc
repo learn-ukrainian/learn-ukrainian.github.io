@@ -24,7 +24,7 @@ facts must hold before claiming the merge closed:
 
 1. **Remote branch gone** — `git ls-remote --heads origin <branch>` empty.
 2. **Local branch gone** — no leftover `refs/heads/<branch>` (including worktree-linked refs).
-3. **Worktree reaped** — no registered worktree left for that PR's head.
+3. **Worktree gone** — no registered worktree left for that PR's head (the dispatcher removes it at settlement; `merge_closeout` reports one it kept).
 
 `merge_closeout` exits non-zero on any residual. Canonical:
 `docs/runbooks/worktree-cleanup.md` § Immediate cleanup after merge. A non-zero exit is

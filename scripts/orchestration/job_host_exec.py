@@ -523,7 +523,7 @@ def build_ssh_argv(host: str, remote_command: str) -> list[str]:
 
 
 def _dispatch_argv(remote_argv: list[str]) -> list[str] | None:
-    """Recognize both current and legacy dispatch entry-point basenames."""
+    """Return the argv from a ``dispatch.py dispatch`` invocation, else None."""
     idx = next((i for i, arg in enumerate(remote_argv) if Path(arg).name in {"dispatch.py"}), None)
     if idx is None:
         return None

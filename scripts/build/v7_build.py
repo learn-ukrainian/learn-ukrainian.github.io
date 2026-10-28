@@ -604,19 +604,11 @@ def _print_worktree_summary(
     level: str,
     slug: str,
     result: str,
-    cleanup_result: reap_worktrees.ReapResult | None = None,
 ) -> None:
     print(f"BUILD_WORKTREE={worktree.path}")
     print(f"BUILD_BRANCH={worktree.branch}")
     print(f"BUILD_BASE={worktree.base_sha}")
     print(f"BUILD_RESULT={result}")
-    if cleanup_result is not None:
-        print(f"BUILD_WORKTREE_CLEANUP={cleanup_result.action}: {cleanup_result.reason}")
-        if cleanup_result.error:
-            print(f"BUILD_WORKTREE_CLEANUP_ERROR={cleanup_result.error}")
-    if cleanup_result is not None and cleanup_result.action == "removed":
-        print("Build worktree removed after artifact commit; branch retained for recovery.")
-        return
     print("Next steps if successful:")
     print(f"  cd {worktree.path}")
     print("  git status")
@@ -808,14 +800,13 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
             extra_paths=[mdx_path],
         )
         archive.write_commit_diff_summary(worktree_path=worktree.path)
-        cleanup_result: reap_worktrees.ReapResult | None = None
         # Persist artifacts BEFORE printing the summary so the summary can
         # include the commit-status line. Even if the build crashed, the
         # writer_prompt + partial writer_output remain queryable via the
         # build branch SHA. Without this, `git worktree remove` silently
         # destroys forensic evidence.
         try:
-            persisted = _persist_build_artifacts(
+            _persist_build_artifacts(
                 worktree,
                 level=level,
                 slug=slug,
@@ -826,20 +817,7 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
         except PrimaryCheckoutSafetyError as exc:
             print(f"v7_build: error — {exc}", file=sys.stderr)
             return exc.exit_code
-        if result == "success" and persisted and not args.keep_worktree:
-            cleanup_result = reap_worktrees.reap_success_worktree(
-                repo_root=worktree.repo_root,
-                worktree_path=worktree.path,
-                reason="build success after artifact commit",
-                apply=True,
-            )
-        _print_worktree_summary(
-            worktree,
-            level=level,
-            slug=slug,
-            result=result,
-            cleanup_result=cleanup_result,
-        )
+        _print_worktree_summary(worktree, level=level, slug=slug, result=result)
     return exit_code
 
 
@@ -1817,8 +1795,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--keep-worktree",
         action="store_true",
         help=(
-            "When --worktree succeeds, keep the build worktree instead of "
-            "reaping it after artifact persistence. Incompatible with "
+            "Accepted for compatibility: a --worktree build always keeps its "
+            "worktree (FR-01b removed the success reap). Incompatible with "
             "--dry-run (usage error) — a dry run creates no worktree to keep."
         ),
     )

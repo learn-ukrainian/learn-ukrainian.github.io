@@ -419,28 +419,13 @@ def cmd_broker_report(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
-def cmd_fleet_reap_report(args: argparse.Namespace) -> int:
-    """Run the established reaper with its normal P0 guards, dry by default."""
-    from scripts.orchestration import reap_worktrees
-
-    command = ["--merged", "--apply" if args.apply else "--dry-run"]
-    if args.repo_root:
-        command.extend(["--repo-root", args.repo_root])
-    if args.json:
-        command.append("--json")
-    return int(reap_worktrees.main(command))
-
-
 def fleet_help_payload() -> dict[str, Any]:
-    """Map the seat-facing facade to the existing Truth, Hand, and Eyes surfaces."""
+    """Map the seat-facing facade to the existing Truth and Eyes surfaces."""
     return {
         "truth": {
             "status": "fleet status (plane-status plus compact health)",
             "metrics": "fleet metrics (durable authority metrics)",
             "broker_report": "fleet broker-report (legacy retirement evidence)",
-        },
-        "hand": {
-            "reap_report": "fleet reap-report --apply (existing merged-head reaper guards)",
         },
         "eyes": {
             "board": "fleet board (cold-start driver board)",
@@ -456,7 +441,7 @@ def fleet_help_payload() -> dict[str, Any]:
 
 
 def cmd_fleet_help(_args: argparse.Namespace) -> int:
-    """Map the facade to existing Truth, Hand, and Eyes surfaces."""
+    """Map the facade to existing Truth and Eyes surfaces."""
     sys.stdout.write(
         _json_dump(fleet_help_payload())
     )
@@ -1247,15 +1232,6 @@ def build_parser() -> argparse.ArgumentParser:
     fleet_dead.add_argument("--legacy", action="store_true", help="Force legacy broker source")
     fleet_dead.set_defaults(func=cmd_dead_letters)
 
-    fleet_reap = fleet_sub.add_parser(
-        "reap-report",
-        help="Dry-run merged worktree reap report; --apply keeps established guards",
-    )
-    fleet_reap.add_argument("--repo-root", default=None, help="Repository root to inspect")
-    fleet_reap.add_argument("--apply", action="store_true", help="Apply only existing reaper safeguards")
-    fleet_reap.add_argument("--json", action="store_true", help="Emit reaper JSON")
-    fleet_reap.set_defaults(func=cmd_fleet_reap_report)
-
     fleet_broker = fleet_sub.add_parser(
         "broker-report",
         help="Read-only #6106 legacy Broker Ops usage report",
@@ -1265,7 +1241,7 @@ def build_parser() -> argparse.ArgumentParser:
     fleet_broker.add_argument("--bridge-db", default=None, help="Optional legacy bridge SQLite path")
     fleet_broker.set_defaults(func=cmd_broker_report)
 
-    fleet_help = fleet_sub.add_parser("help", help="Map Truth, Hand, and Eyes")
+    fleet_help = fleet_sub.add_parser("help", help="Map Truth and Eyes")
     fleet_help.set_defaults(func=cmd_fleet_help)
 
     formal = sub.add_parser(

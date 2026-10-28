@@ -55,7 +55,7 @@ using `scripts/fleet/ignored_task_output.py`. The dispatch exit and post-task
 reapers, ACP execution teardown, data-tier cleanup, sibling Git maintenance,
 task-family cleanup, and removal CLI all inherit this guard. The common P0
 reaper calls the same boundary under its own ownership/liveness lock;
-`merge_closeout` and scheduled cleanup invoke that reaper. Preservation runs
+`post_task_reap` invokes that reaper. Preservation runs
 once, after ownership/claim checks and before deletion. A preservation failure
 returns a typed skipped/refusal result and leaves the directory intact.
 `branch_sweep` deletes branch refs only. The separate husk removal accepts
@@ -79,7 +79,7 @@ retain their existing scratch-cleanup behavior.
 | `sibling_git.worktree_remove` | Shared locked remover; preservation uses the public control plane. |
 | `task_family.git_safety.remove_unclaimed_worktree`: executor cleanup | Shared locked remover. |
 | `worktree_claims remove`, `wt.sh`, RB2 failed-dispatch cleanup | Guarded CLI, then shared locked remover. |
-| `reap_worktrees._reap_qualified_worktree`; `merge_closeout`; scheduled cleanup | Locked reaper pipeline, then guarded raw Git. |
+| `reap_worktrees._reap_qualified_worktree`; `post_task_reap` | Locked reaper pipeline, then guarded raw Git. |
 | `reap_worktrees._remove_dispatch_husk_locked`: `shutil.rmtree` | Only unregistered, file-free and symlink-free husks; rechecked under the shared lock. |
 | `tmp_leak_sweep._remove_path`: `shutil.rmtree` | Refuses linked worktree markers, including nested checkouts and unreadable scans. |
 | `review.isolation._remove_review_temp_tree`: `shutil.rmtree` | Repairs review permissions without following symlinks, then refuses linked worktree markers, nested checkouts and unreadable scans before deletion. Root symlinks are refused; the orphan sweep reports refusals as errors. Plain temporary trees and disposable clones remain eligible. |
@@ -431,16 +431,11 @@ The dual-repo reaper and scheduler categorize all worktrees into strict canonica
 
 Public stdout emissions from both `scheduled_worktree_cleanup.py` and `reap_worktrees.py --aggregate` emit strictly aggregate summaries containing counts, owners, and retained exceptions with **zero host path dumps**. Full diagnostic receipts containing individual filesystem paths are written only to private local storage (`~/.codex/worktree-cleanup/receipts/v2/`) with strict owner-only permissions (`0600`/`0700`) for recovery.
 
-P0 automatic reaping includes clean `.worktrees/` checkouts whose GitHub PR is
+P0 reaping includes clean `.worktrees/` checkouts whose GitHub PR is
 `MERGED` at the exact local head, or whose PR is `MERGED` and origin branch is
 gone despite extra local reconcile commits after a squash merge. All P0 guards
-still apply. The scheduled job also enables a separately
-guarded terminal-dispatch class: only worktrees below `.worktrees/dispatch/`
-whose task record is explicitly `done`, `failed`, or `no_deliverable`, whose PID
-is dead, whose active-task and live-CWD probes are available and clear, and
-whose GitHub query confirms no open PR. Set `LU_REAPER_TERMINAL_DISPATCHES=0`
-to disable only this optional scheduled class during an incident; merged-clean
-reaping remains enabled. Before removal the reaper writes an
+still apply. No scheduled job reaps any more (FR-01b); the reaper runs only when
+a caller such as `post_task_reap` invokes it. Before removal the reaper writes an
 append-only local journal, reserves the path as reap-pending, and creates a
 `refs/reaper-rescue/...` ref. Set `LU_REAPER_DISABLED=1` to stop automatic
 reaps immediately. Apply mode also recovers interrupted reap reservations:
@@ -729,70 +724,24 @@ private_root="$(dirname "$repo_root")/learn-ukrainian-infra-private"
 # dry run (default): what would be removed, and why each other tree stays
 .venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
   --repo-root "$repo_root" --repo-root "$private_root"
-# apply (what the timer runs)
+# apply
 .venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
   --repo-root "$repo_root" --repo-root "$private_root" --apply
 ```
 
-### Timer: install and verify
+### Timer retired (FR-01b)
 
-`packaging/systemd/learn-ukrainian-worktree-reaper.service` runs the apply
-command every 30 minutes from
-`learn-ukrainian-worktree-reaper.timer` (`OnCalendar=*:00/30`,
-`Persistent=false`). The service is a oneshot, so systemd never starts a
-second run while one is active, and `TimeoutStartSec=1200` bounds each run
-inside the cadence. Its only network use is the bounded `git fetch` and
-`git ls-remote` census above (the address-family filter allows Unix and IP
-sockets only). Install it on the dispatch host
-from the primary checkout on `main`, after the change is merged.
-The sibling `learn-ukrainian-infra-private` checkout must exist before installation.
-Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service and drop-in:
+The `learn-ukrainian-worktree-reaper` service and timer are gone: the
+dispatcher removes each task's own worktree when the task settles. The
+`--clean-pushed` mode above stays a manual command until the reaper itself is
+deleted. On a host that still has the units installed:
 
 ```bash
-(
-set -eu
-repo_root=$(pwd -P)
-private_root="$(dirname "$repo_root")/learn-ukrainian-infra-private"
-if [ ! -d "$private_root" ]; then
-  printf 'Required sibling checkout is missing: %s\n' "$private_root" >&2
-  exit 1
-fi
-# review the dry run for both roots before writing units
-.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
-  --repo-root "$repo_root" --repo-root "$private_root"
-unit_dir="$HOME/.config/systemd/user"
-mkdir -p "$unit_dir/learn-ukrainian-worktree-reaper.service.d"
-sed -e "s|@REPO_ROOT@|$repo_root|g" -e "s|@PRIVATE_ROOT@|$private_root|g" \
-  packaging/systemd/learn-ukrainian-worktree-reaper.service \
-  > "$unit_dir/learn-ukrainian-worktree-reaper.service"
-cp packaging/systemd/learn-ukrainian-worktree-reaper.timer "$unit_dir/"
-sed -e "s|@REPO_ROOT@|$repo_root|g" -e "s|@PRIVATE_ROOT@|$private_root|g" \
-  packaging/systemd/dropins/learn-ukrainian-worktree-reaper.service.d/data-volume.conf \
-  > "$unit_dir/learn-ukrainian-worktree-reaper.service.d/data-volume.conf"
-systemd-analyze --user verify "$unit_dir/learn-ukrainian-worktree-reaper.service" \
-  "$unit_dir/learn-ukrainian-worktree-reaper.timer"
-systemctl --user daemon-reload
-systemctl --user enable --now learn-ukrainian-worktree-reaper.timer
-)
+systemctl --user disable --now learn-ukrainian-worktree-reaper.timer
+rm -f ~/.config/systemd/user/learn-ukrainian-worktree-reaper.{service,timer}
+rm -rf ~/.config/systemd/user/learn-ukrainian-worktree-reaper.service.d
+systemctl --user daemon-reload && systemctl --user reset-failed
 ```
-
-Verify:
-
-```bash
-repo_root=$(pwd -P)
-private_root="$(dirname "$repo_root")/learn-ukrainian-infra-private"
-systemctl --user list-timers learn-ukrainian-worktree-reaper.timer
-journalctl --user -u learn-ukrainian-worktree-reaper.service -n 50
-# no clean, fully pushed dispatch worktree idle for over an hour should remain:
-.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
-  --repo-root "$repo_root" --repo-root "$private_root"
-```
-
-After a timer run, the dry run reports `0 would remove`; every remaining
-dispatch tree is listed as `SKIPPED` with the guard that keeps it. To stop
-removals immediately, `systemctl --user disable --now
-learn-ukrainian-worktree-reaper.timer`, or set `LU_REAPER_DISABLED=1` in a
-drop-in.
 
 ## Deletion ownership
 
@@ -1001,8 +950,9 @@ evidence in the result text, and cite verified durable artifact locations.
 
 On apply, `merge_closeout` and `post_task_reap` first capture local Git facts
 through the lifecycle API for each task carrying a lifecycle ledger. Capture
-runs while the dispatch worktree still exists, before invoking the common
-reaper. Existing valid local observations are reused. Tasks without a ledger
+runs while the dispatch worktree still exists; `post_task_reap` then invokes
+the common reaper, and `merge_closeout` removes no worktree. Existing valid
+local observations are reused. Tasks without a ledger
 keep their existing cleanup behavior. A capture or ledger-write failure
 retains the worktree and blocks cleanup. The exceptional
 `--no-lifecycle-observation "reason"` option logs its explicit reason in the
@@ -1073,13 +1023,13 @@ typed refusal with no append. The association supplies local observation only;
 review, CI and behavior evidence require their own verification.
 
 The merge owner closes out the exact PR as soon as GitHub reports it `MERGED`, using
-`scripts.orchestration.merge_closeout` — not the P0 reaper directly. This is the one
-command that proves the PR MERGED, finds every worktree tied to it (by branch, by
-exact merged head SHA, or by an earlier commit that exists only on that PR, including
-detached review-checkout siblings), reaps each one
-through the P0 reaper, and proves the remote and local branch are both gone. Run it
-from a separate shell after every agent, editor, server, and terminal has left the
-target worktree(s):
+`scripts.orchestration.merge_closeout`. This is the one command that proves the PR
+MERGED, finds every worktree still tied to it (by branch, by exact merged head SHA,
+or by an earlier commit that exists only on that PR, including detached
+review-checkout siblings), and proves the remote and local branch are both gone. It
+removes no worktree: the dispatcher removes each task's own worktree when the task
+settles, and a worktree it kept (dirty, unpublished, live process ...) is reported as
+a residual.
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
@@ -1095,30 +1045,18 @@ branch, but only when that checkout's HEAD is already an ancestor of
 still-running, or uncontained round is left in place, and its local branch is
 not deleted.
 
-Default is dry-run; pass `--apply` to actually reap and delete. `--json` emits a
-machine-readable payload. `merge_closeout` introduces no second deletion hand for the
-worktree step: it delegates removal to `scripts.orchestration.reap_worktrees` with
-`--merged`/`merged_pr_only` and an exact `--worktree` target per match — never
-`--force`, never a second ad hoc `git worktree remove`. It exits non-zero if the PR
-cannot be proven `MERGED`, if any reap fails, or if the remote or local branch is
-still present after `--apply` ran (residual branches are reported, never
-force-deleted past an exact-head-match proof).
+Default is dry-run; pass `--apply` to delete residual branches. `--json` emits a
+machine-readable payload. It exits non-zero if the PR cannot be proven `MERGED`, if
+a matched worktree is still registered, or if the remote or local branch is still
+present after `--apply` ran (residual branches are reported, never force-deleted
+past an exact-head-match proof). A kept worktree is a blocker for its owner to
+resolve, not permission to remove it with `--force`.
 
-The underlying reap step validates GitHub PR state, PR-head or origin-branch-gone
-evidence, local HEAD, cleanliness, task state, and process activity. A skipped
-worktree is a blocker, not permission to retry with `--force`.
+The canonical PR lifecycle trail (`scripts/config/trails/rb3-pr-lifecycle.trail.yaml`)
+still runs its own merged-worktree step after merge. Other merge owners must invoke the
+exact command above before declaring closeout complete.
 
-The live-process check intentionally includes the invoking process tree. A
-cleanup launched from inside the target worktree therefore self-protects and
-must be retried from the primary checkout after that process exits. If `lsof`
-cannot inspect process working directories, apply mode fails closed; resolve
-the local macOS permission or tooling problem before retrying.
-
-The canonical PR lifecycle trail already performs worktree-first cleanup after
-merge. Other merge owners must invoke the exact command above before declaring
-closeout complete.
-
-Git closeout for **every** merge is exactly three things: worktree reaped,
+Git closeout for **every** merge is exactly three things: worktree gone,
 remote branch gone, local branch gone. If GitHub did not delete the remote
 head, delete it. Then delete the local branch. Host pulls, tunnels, occupancy
 probes, service restarts, and similar proofs are **task remainder**, not this
@@ -1147,12 +1085,9 @@ Each run performs the following in both repository roots:
 
 1. fetches `origin` and prunes deleted remote refs, with automatic
    maintenance disabled on that command (`maintenance.auto=false` and
-   `gc.auto=0`) so the fetch cannot expire reflogs before activity is judged;
+   `gc.auto=0`) so the fetch cannot expire reflogs before branch cleanup runs;
 2. prunes stale Git worktree registrations;
-3. automatically removes only clean, inactive worktrees with exact merged-PR
-   head evidence (including same-tree squash siblings) or MERGED PR evidence with
-   the origin branch gone, plus the terminal-dispatch
-   class described above; open or GitHub-unknown PR state remains a hard skip;
+3. inventories terminal-task worktrees still on disk for rescue (report only);
 4. deletes origin heads that are not checked out, have no open PR, and are not
    `entire/` refs, only when the tip is proven contained: the GitHub PR is
    MERGED or CLOSED at the exact live origin SHA (`ls-remote` +
@@ -1168,19 +1103,18 @@ Each run performs the following in both repository roots:
    on the same containment evidence (`entire/` refs are preserved);
 6. preserves and reports unproven gone branches and orphaned worktree
    directories;
-7. runs `git gc --auto` after the reaper (gc rewrites every worktree
-   `logs/HEAD`);
+7. runs `git gc --auto` last (gc rewrites every worktree `logs/HEAD`);
 8. writes an immutable JSON receipt.
 
-Dirty worktrees, open PRs, active/non-terminal tasks, checked-out branches, and
-unmerged branch heads remain untouched.
+It removes no worktree. Open PRs, checked-out branches, and unmerged branch heads
+remain untouched.
 
 ```text
 ~/.codex/worktree-cleanup/receipts/v2/
 ```
 
-An unavailable fetch or process-activity probe blocks apply for that
-repository. Standard output contains the same summary as the receipt.
+A failed fetch skips every deletion that relies on remote containment.
+Standard output contains the same summary as the receipt.
 
 ## Linux systemd default
 
@@ -1191,7 +1125,7 @@ The shipped `packaging/systemd/learn-ukrainian-worktree-gc.service` passes
 `--apply`, the same as macOS launchd. Its timer fires hourly
 (`OnCalendar=hourly`, `RandomizedDelaySec=0`), retaining `OnBootSec=15min`
 and `Persistent=true`, using the existing
-cleanup wrapper and P0 reaper; this adds no daemon or cleanup class, and the
+cleanup wrapper; this adds no daemon or cleanup class, and the
 denser cadence does not loosen the dirty/open-PR/unreadable-GitHub-state
 guards. See `packaging/systemd/README.md` for enable and disable
 instructions.
@@ -1237,8 +1171,7 @@ Verify the persisted plist and live service:
 .venv/bin/python scripts/orchestration/install_worktree_cleanup_launchd.py status
 ```
 
-After installation, inspect the first receipt and confirm that protected
-worktrees appear as `skipped`, not `removed`. A venv rebuild does not require
+After installation, inspect the first receipt for errors. A venv rebuild does not require
 reinstall anymore; `status` still verifies the plist still binds `Program` to
 `/bin/bash`.
 
