@@ -27,12 +27,12 @@ inline:
     instruction: Обери слово або дію, яка логічно продовжує день.
     items:
       - sentence: "Я снідаю о восьмій, але ___ я прокидаюся о сьомій."
-        answer: Спочатку
+        answer: "спочатку"
         options:
-          - Спочатку
-          - Пізніше
-          - Після цього
-        explanation: "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00."
+          - спочатку
+          - пізніше
+          - після цього
+        explanation: "The waking time comes before breakfast. Спочатку fits this order; пізніше and після цього would reverse it."
       - sentence: "Після того я ___."
         answer: снідаю
         options:
@@ -55,19 +55,19 @@ inline:
           - обідають
         explanation: "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
       - sentence: "Я працюю до п’ятої, а ___ я читаю книгу о шостій."
-        answer: Потім
+        answer: "потім"
         options:
-          - Потім
-          - Перед цим
-          - До цього
-        explanation: "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
       - sentence: "Я читаю книгу до одинадцятої, а ___ я лягаю спати о дванадцятій."
-        answer: "Потім"
+        answer: "потім"
         options:
-          - Потім
-          - Перед цим
-          - До цього
-        explanation: "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step."
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
   - id: act-3
     type: fill-in
     title: Частина доби

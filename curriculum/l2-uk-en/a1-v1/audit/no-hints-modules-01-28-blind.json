@@ -1,0 +1,986 @@
+[
+  {
+    "id": "checkpoint-first-contact/inline/act-1/2",
+    "type": "quiz",
+    "instruction": "Обери безпечний український рядок для ситуації.",
+    "prompt": "Ти називаєш своє ім'я.",
+    "options": [
+      "Мене звати Олена.",
+      "Мені звати Олена.",
+      "Я звати Олена."
+    ]
+  },
+  {
+    "id": "checkpoint-first-contact/inline/act-1/3",
+    "type": "quiz",
+    "instruction": "Обери безпечний український рядок для ситуації.",
+    "prompt": "Ти кажеш, що ти студент.",
+    "options": [
+      "Я студент.",
+      "Я студента.",
+      "Мене студент."
+    ]
+  },
+  {
+    "id": "checkpoint-first-contact/inline/act-3/3",
+    "type": "fill-in",
+    "instruction": "Обери пропущене слово або блок у самопрезентації.",
+    "prompt": "Я ___.",
+    "options": [
+      "студент",
+      "студента",
+      "мене студент"
+    ]
+  },
+  {
+    "id": "checkpoint-first-contact/inline/act-4/0",
+    "type": "quiz",
+    "instruction": "Обери нормативну українську форму.",
+    "prompt": "Представлення імені",
+    "options": [
+      "Мене звати Джон.",
+      "Мені звати Джон."
+    ]
+  },
+  {
+    "id": "checkpoint-first-contact/inline/act-4/1",
+    "type": "quiz",
+    "instruction": "Обери нормативну українську форму.",
+    "prompt": "Речення ідентичності",
+    "options": [
+      "Я студент.",
+      "Я студента."
+    ]
+  },
+  {
+    "id": "checkpoint-first-contact/inline/act-5/7",
+    "type": "fill-in",
+    "instruction": "Доповни діалог на мовних курсах.",
+    "prompt": "— Мене звати Олена. — А мене Марко. Дуже приємно ___!",
+    "options": [
+      "познайомитися",
+      "походження",
+      "познайомився"
+    ]
+  },
+  {
+    "id": "colors/inline/act-1/0",
+    "type": "quiz",
+    "instruction": "Choose the natural question or short answer.",
+    "prompt": "Ось олівець. Обери запитання про нього.",
+    "options": [
+      "Якого кольору олівець?",
+      "Який колір є олівець?",
+      "Якого кольори олівець?"
+    ]
+  },
+  {
+    "id": "my-family/inline/act-1/0",
+    "type": "quiz",
+    "instruction": "Обери український рядок для фото-розмови.",
+    "prompt": "Олег розповідає про свою родину. Ти питаєш, чи є в нього брат.",
+    "options": [
+      "У тебе є брат?",
+      "У мене є брат?",
+      "Це брат?"
+    ]
+  },
+  {
+    "id": "sounds-letters-and-hello/root/act-5/4",
+    "type": "fill-in",
+    "instruction": "Choose the phrase that completes the line.",
+    "prompt": "— До ____! — Бувай!",
+    "options": [
+      "поба́чення",
+      "тебе́",
+      "ма́ма"
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-9/0",
+    "type": "quiz",
+    "instruction": "Обери́ приро́дну фо́рму профе́сії. — Choose the natural profession form.",
+    "prompt": "Це Олена. Обери речення про неї.",
+    "options": [
+      "Вона́ вчи́телька.",
+      "Вона́ вчи́тельку.",
+      "Воно́ вчи́телька."
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-9/1",
+    "type": "quiz",
+    "instruction": "Обери́ приро́дну фо́рму профе́сії. — Choose the natural profession form.",
+    "prompt": "Це Олена. Обери речення про неї.",
+    "options": [
+      "Вона́ лі́карка.",
+      "Вона́ лі́карку.",
+      "Він лі́карка."
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-9/3",
+    "type": "quiz",
+    "instruction": "Обери́ приро́дну фо́рму профе́сії. — Choose the natural profession form.",
+    "prompt": "Це Олена. Обери речення про неї.",
+    "options": [
+      "Вона́ акто́рка.",
+      "Вона́ акто́рку.",
+      "Воно́ акто́рка."
+    ]
+  },
+  {
+    "id": "things-have-gender/workbook/act-w3/3",
+    "type": "fill-in",
+    "instruction": "Допо́вніть ре́чення про предме́ти. — Complete the object sentence.",
+    "prompt": "У кімнаті темно. У мене́ є ___, але воно маленьке.",
+    "options": [
+      "вікно́",
+      "він",
+      "моя́"
+    ]
+  },
+  {
+    "id": "this-and-that/inline/act-5/0",
+    "type": "quiz",
+    "instruction": "Choose the repaired Ukrainian sentence or the clearer variant.",
+    "prompt": "На столі лежить книга. Обери речення про неї.",
+    "options": [
+      "Це цікава книга.",
+      "Це є цікава книгу.",
+      "Цей цікава книга."
+    ]
+  },
+  {
+    "id": "what-is-it-like/workbook/0/0",
+    "type": "quiz",
+    "instruction": "Choose the natural A1 sentence.",
+    "prompt": "Ось книга. Обери речення про неї.",
+    "options": [
+      "Книга нова.",
+      "Книгу нова.",
+      "Книга новий."
+    ]
+  },
+  {
+    "id": "what-is-it-like/workbook/0/1",
+    "type": "quiz",
+    "instruction": "Choose the natural A1 sentence.",
+    "prompt": "Ось стіл. Обери речення про нього.",
+    "options": [
+      "Стіл чистий.",
+      "Стіл чиста.",
+      "Столу чистий."
+    ]
+  },
+  {
+    "id": "what-is-it-like/workbook/1/4",
+    "type": "fill-in",
+    "instruction": "Complete the short room lines.",
+    "prompt": "Книга дорога, ___ листівка дешева.",
+    "options": [
+      "а",
+      "якого",
+      "яке"
+    ]
+  },
+  {
+    "id": "what-is-it-like/workbook/3/6",
+    "type": "fill-in",
+    "instruction": "Choose the standard Ukrainian adjective.",
+    "prompt": "Мені потрібен олівець для вправи. Дай мені, будь ласка, ___ олівець.",
+    "options": [
+      "будь-який",
+      "будь-яку"
+    ]
+  },
+  {
+    "id": "who-am-i/inline/act-1/0",
+    "type": "quiz",
+    "instruction": "Обери фразу для ситуації.",
+    "prompt": "Ти знайомишся з однокурсником свого віку.",
+    "options": [
+      "Як тебе звати?",
+      "Як ти звати?"
+    ]
+  },
+  {
+    "id": "who-am-i/inline/act-1/2",
+    "type": "quiz",
+    "instruction": "Обери фразу для ситуації.",
+    "prompt": "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання.",
+    "options": [
+      "Мене звати Олена. А тебе?",
+      "Мені звати Олена. А тебе?"
+    ]
+  },
+  {
+    "id": "who-am-i/workbook/3/0",
+    "type": "fill-in",
+    "instruction": "Обери фразу, яка завершує рядок першого знайомства.",
+    "prompt": "Привіт! Як ___ звати?",
+    "options": [
+      "тебе",
+      "ти",
+      "це"
+    ]
+  },
+  {
+    "id": "who-am-i/workbook/3/3",
+    "type": "fill-in",
+    "instruction": "Обери фразу, яка завершує рядок першого знайомства.",
+    "prompt": "Добрий день! Як ___ звати?",
+    "options": [
+      "вас",
+      "ви",
+      "я"
+    ]
+  },
+  {
+    "id": "who-am-i/workbook/4/4",
+    "type": "fill-in",
+    "instruction": "Заповни речення українським вибором.",
+    "prompt": "Оксана — ___.",
+    "options": [
+      "інженерка",
+      "інженерку"
+    ]
+  },
+  {
+    "id": "checkpoint-actions/inline/act-2/0",
+    "type": "fill-in",
+    "instruction": "Complete the dialogue with the modal, question word, or verb form.",
+    "prompt": "Олег: ___ готує сьогодні? Анна: Сьогодні готує Марко.",
+    "options": [
+      "Хто",
+      "Коли",
+      "Як"
+    ]
+  },
+  {
+    "id": "checkpoint-actions/inline/act-2/1",
+    "type": "fill-in",
+    "instruction": "Complete the dialogue with the modal, question word, or verb form.",
+    "prompt": "Олег: Коли ти ___?",
+    "options": [
+      "прокидаєшся",
+      "прокидається",
+      "прокидаються"
+    ]
+  },
+  {
+    "id": "checkpoint-actions/inline/act-2/5",
+    "type": "fill-in",
+    "instruction": "Complete the dialogue with the modal, question word, or verb form.",
+    "prompt": "Олег: Я не можу готувати сьогодні й не мушу готувати, але я ___ готувати.",
+    "options": [
+      "хочу",
+      "можу",
+      "мушу"
+    ]
+  },
+  {
+    "id": "checkpoint-actions/inline/act-3/1",
+    "type": "fill-in",
+    "instruction": "Choose the word that completes the short day description.",
+    "prompt": "Потім я ___ і чищу зуби.",
+    "options": [
+      "вмиваюся",
+      "вмиваєшся",
+      "вмивається"
+    ]
+  },
+  {
+    "id": "checkpoint-actions/inline/act-3/2",
+    "type": "fill-in",
+    "instruction": "Choose the word that completes the short day description.",
+    "prompt": "Після цього я ___ вдома.",
+    "options": [
+      "снідаю",
+      "снідаєш",
+      "снідають"
+    ]
+  },
+  {
+    "id": "checkpoint-actions/inline/act-3/3",
+    "type": "fill-in",
+    "instruction": "Choose the word that completes the short day description.",
+    "prompt": "Вдень я ___ в офісі.",
+    "options": [
+      "працюю",
+      "працюєш",
+      "працюють"
+    ]
+  },
+  {
+    "id": "my-day/inline/act-2/1",
+    "type": "fill-in",
+    "instruction": "Обери слово або дію, яка логічно продовжує день.",
+    "prompt": "Після того я ___.",
+    "options": [
+      "снідаю",
+      "снідаєш",
+      "снідають"
+    ]
+  },
+  {
+    "id": "my-day/inline/act-2/2",
+    "type": "fill-in",
+    "instruction": "Обери слово або дію, яка логічно продовжує день.",
+    "prompt": "Вдень я ___ в офісі.",
+    "options": [
+      "працюю",
+      "працюєш",
+      "працюють"
+    ]
+  },
+  {
+    "id": "my-day/inline/act-2/3",
+    "type": "fill-in",
+    "instruction": "Обери слово або дію, яка логічно продовжує день.",
+    "prompt": "О першій годині я ___.",
+    "options": [
+      "обідаю",
+      "обідаєш",
+      "обідають"
+    ]
+  },
+  {
+    "id": "checkpoint-actions/inline/act-3/0",
+    "type": "fill-in",
+    "instruction": "Choose the word that completes the short day description.",
+    "prompt": "Я снідаю о восьмій, але ___ я прокидаюся о сьомій.",
+    "options": [
+      "спочатку",
+      "пізніше",
+      "після цього"
+    ]
+  },
+  {
+    "id": "checkpoint-time-nature/inline/act-3/0",
+    "type": "fill-in",
+    "instruction": "Обери слово або фразу, які завершують опис дня.",
+    "prompt": "Я снідаю о восьмій, але ___ я прокидаюся о сьомій.",
+    "options": [
+      "спочатку",
+      "пізніше",
+      "після цього"
+    ]
+  },
+  {
+    "id": "checkpoint-time-nature/inline/act-3/6",
+    "type": "fill-in",
+    "instruction": "Обери слово або фразу, які завершують опис дня.",
+    "prompt": "Я слухаю музику до одинадцятої, а ___ я лягаю спати о дванадцятій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "my-day/inline/act-2/0",
+    "type": "fill-in",
+    "instruction": "Обери слово або дію, яка логічно продовжує день.",
+    "prompt": "Я снідаю о восьмій, але ___ я прокидаюся о сьомій.",
+    "options": [
+      "спочатку",
+      "пізніше",
+      "після цього"
+    ]
+  },
+  {
+    "id": "my-day/inline/act-2/4",
+    "type": "fill-in",
+    "instruction": "Обери слово або дію, яка логічно продовжує день.",
+    "prompt": "Я працюю до п’ятої, а ___ я читаю книгу о шостій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "my-day/inline/act-2/5",
+    "type": "fill-in",
+    "instruction": "Обери слово або дію, яка логічно продовжує день.",
+    "prompt": "Я читаю книгу до одинадцятої, а ___ я лягаю спати о дванадцятій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "my-morning/inline/act-3/0",
+    "type": "fill-in",
+    "instruction": "Choose the sequence word that fits the routine.",
+    "prompt": "Я снідаю о восьмій, але ___ я прокидаюся о сьомій.",
+    "options": [
+      "спочатку",
+      "пізніше",
+      "після цього"
+    ]
+  },
+  {
+    "id": "my-morning/inline/act-3/1",
+    "type": "fill-in",
+    "instruction": "Choose the sequence word that fits the routine.",
+    "prompt": "Я прокидаюся о сьомій, а ___ я вмиваюся о восьмій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "my-morning/inline/act-3/2",
+    "type": "fill-in",
+    "instruction": "Choose the sequence word that fits the routine.",
+    "prompt": "Я вмиваюся о сьомій, а ___ я одягаюся о восьмій.",
+    "options": [
+      "після цього",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "my-morning/inline/act-3/3",
+    "type": "fill-in",
+    "instruction": "Choose the sequence word that fits the routine.",
+    "prompt": "Я одягаюся о сьомій, а ___ я снідаю о восьмій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "my-morning/inline/act-3/4",
+    "type": "fill-in",
+    "instruction": "Choose the sequence word that fits the routine.",
+    "prompt": "Я снідаю о восьмій, а ___ я йду на роботу о дев’ятій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "my-morning/inline/act-3/5",
+    "type": "fill-in",
+    "instruction": "Choose the sequence word that fits the routine.",
+    "prompt": "Я прокидаюся о шостій, а ___ я вмиваюся о сьомій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "my-morning/inline/act-4/0",
+    "type": "fill-in",
+    "instruction": "Complete the three-sentence morning story.",
+    "prompt": "Я снідаю о дев’ятій, але ___ я прокидаюся о восьмій.",
+    "options": [
+      "спочатку",
+      "пізніше",
+      "після цього"
+    ]
+  },
+  {
+    "id": "my-morning/inline/act-4/1",
+    "type": "fill-in",
+    "instruction": "Complete the three-sentence morning story.",
+    "prompt": "Я прокидаюся о восьмій, а ___ я вмиваюся і снідаю о дев’ятій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "my-morning/inline/act-4/2",
+    "type": "fill-in",
+    "instruction": "Complete the three-sentence morning story.",
+    "prompt": "Я снідаю о восьмій, а ___ я йду в університет о дев’ятій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "checkpoint-time-nature/inline/act-1/4",
+    "type": "fill-in",
+    "instruction": "Обери правильний варіант для повторення A1.4.",
+    "prompt": "На вулиці мінус двадцять градусів. Тут дуже ___.",
+    "options": [
+      "холодно",
+      "спекотно",
+      "тепло"
+    ]
+  },
+  {
+    "id": "checkpoint-time-nature/inline/act-3/1",
+    "type": "fill-in",
+    "instruction": "Обери слово або фразу, які завершують опис дня.",
+    "prompt": "Я снідаю о сьомій, а ___ я йду на роботу о восьмій.",
+    "options": [
+      "потім",
+      "перед цим",
+      "до цього"
+    ]
+  },
+  {
+    "id": "checkpoint-time-nature/inline/act-3/3",
+    "type": "fill-in",
+    "instruction": "Обери слово або фразу, які завершують опис дня.",
+    "prompt": "Я обідаю о першій. Зараз друга година дня. ___ я гуляю в парку.",
+    "options": [
+      "Після обіду",
+      "Вранці",
+      "Вночі"
+    ]
+  },
+  {
+    "id": "checkpoint-time-nature/inline/act-3/4",
+    "type": "fill-in",
+    "instruction": "Обери слово або фразу, які завершують опис дня.",
+    "prompt": "На вулиці двадцять градусів. Я гуляю, тому що сьогодні ___ і сонячно.",
+    "options": [
+      "тепло",
+      "теплий",
+      "тепла"
+    ]
+  },
+  {
+    "id": "checkpoint-time-nature/inline/act-3/5",
+    "type": "fill-in",
+    "instruction": "Обери слово або фразу, які завершують опис дня.",
+    "prompt": "Уже двадцята година. ___ я вечеряю і слухаю музику.",
+    "options": [
+      "Ввечері",
+      "Вдень",
+      "Вранці"
+    ]
+  },
+  {
+    "id": "free-time/inline/act-2/0",
+    "type": "fill-in",
+    "instruction": "Обери слово або фразу, які найкраще завершують речення.",
+    "prompt": "У неділю в офісі нікого немає. Я ___ працюю у неділю.",
+    "options": [
+      "ніколи не",
+      "ніколи",
+      "ніякий"
+    ]
+  },
+  {
+    "id": "free-time/inline/act-2/3",
+    "type": "fill-in",
+    "instruction": "Обери слово або фразу, які найкраще завершують речення.",
+    "prompt": "Я люблю спорт, тому ___ граю у баскетбол.",
+    "options": [
+      "часто",
+      "частий",
+      "часта"
+    ]
+  },
+  {
+    "id": "free-time/inline/act-2/4",
+    "type": "fill-in",
+    "instruction": "Обери слово або фразу, які найкраще завершують речення.",
+    "prompt": "Я не маю часу, тому ___ читаю книги.",
+    "options": [
+      "рідко",
+      "рідкий",
+      "рідка"
+    ]
+  },
+  {
+    "id": "i-want-i-can/inline/act-3/0",
+    "type": "fill-in",
+    "instruction": "Choose хочу, можу, or мушу in the right form.",
+    "prompt": "Я не можу гуляти сьогодні й не мушу гуляти, але я ___ гуляти.",
+    "options": [
+      "хочу",
+      "можу",
+      "мушу"
+    ]
+  },
+  {
+    "id": "i-want-i-can/inline/act-3/1",
+    "type": "fill-in",
+    "instruction": "Choose хочу, можу, or мушу in the right form.",
+    "prompt": "Я хочу піти й мушу піти, але не ___.",
+    "options": [
+      "можу",
+      "хочу",
+      "мушу"
+    ]
+  },
+  {
+    "id": "i-want-i-can/inline/act-3/2",
+    "type": "fill-in",
+    "instruction": "Choose хочу, можу, or мушу in the right form.",
+    "prompt": "Я не хочу працювати й не можу працювати, але ___ працювати.",
+    "options": [
+      "мушу",
+      "можу",
+      "хочу"
+    ]
+  },
+  {
+    "id": "i-want-i-can/inline/act-3/3",
+    "type": "fill-in",
+    "instruction": "Choose хочу, можу, or мушу in the right form.",
+    "prompt": "Оля не може гуляти й не мусить гуляти, але ___ гуляти.",
+    "options": [
+      "хоче",
+      "може",
+      "мусить"
+    ]
+  },
+  {
+    "id": "i-want-i-can/inline/act-3/4",
+    "type": "fill-in",
+    "instruction": "Choose хочу, можу, or мушу in the right form.",
+    "prompt": "Денис хоче піти й мусить піти, але не ___.",
+    "options": [
+      "може",
+      "хоче",
+      "мусить"
+    ]
+  },
+  {
+    "id": "i-want-i-can/inline/act-3/5",
+    "type": "fill-in",
+    "instruction": "Choose хочу, можу, or мушу in the right form.",
+    "prompt": "Вони не хочуть працювати й не можуть працювати, але ___ працювати.",
+    "options": [
+      "мусять",
+      "можуть",
+      "хочуть"
+    ]
+  },
+  {
+    "id": "my-day/inline/act-3/0",
+    "type": "fill-in",
+    "instruction": "Обери правильну частину доби для речення.",
+    "prompt": "На годиннику 07:00. Я п'ю каву ___.",
+    "options": [
+      "вранці",
+      "вночі",
+      "ввечері"
+    ]
+  },
+  {
+    "id": "my-day/inline/act-3/1",
+    "type": "fill-in",
+    "instruction": "Обери правильну частину доби для речення.",
+    "prompt": "На годиннику 20:00. Ми вечеряємо ___.",
+    "options": [
+      "ввечері",
+      "вранці",
+      "вдень"
+    ]
+  },
+  {
+    "id": "my-day/inline/act-3/3",
+    "type": "fill-in",
+    "instruction": "Обери правильну частину доби для речення.",
+    "prompt": "Я обідаю о першій. Зараз друга година дня. Вони гуляють у парку ___.",
+    "options": [
+      "після обіду",
+      "вночі",
+      "вранці"
+    ]
+  },
+  {
+    "id": "questions/inline/act-1/0",
+    "type": "quiz",
+    "instruction": "Choose the question word that completes each short question.",
+    "prompt": "— ___ ти? — Я студент.",
+    "options": [
+      "Хто",
+      "Куди",
+      "Де"
+    ]
+  },
+  {
+    "id": "questions/inline/act-1/1",
+    "type": "quiz",
+    "instruction": "Choose the question word that completes each short question.",
+    "prompt": "— ___ ти вивчаєш? — Українську мову.",
+    "options": [
+      "Що",
+      "Хто",
+      "Коли"
+    ]
+  },
+  {
+    "id": "questions/inline/act-1/2",
+    "type": "quiz",
+    "instruction": "Choose the question word that completes each short question.",
+    "prompt": "— ___ ти живеш? — У Києві.",
+    "options": [
+      "Де",
+      "Куди",
+      "Чому"
+    ]
+  },
+  {
+    "id": "questions/inline/act-1/3",
+    "type": "quiz",
+    "instruction": "Choose the question word that completes each short question.",
+    "prompt": "— ___ ти ходиш після уроків? — У парк.",
+    "options": [
+      "Куди",
+      "Де",
+      "Хто"
+    ]
+  },
+  {
+    "id": "questions/inline/act-1/4",
+    "type": "quiz",
+    "instruction": "Choose the question word that completes each short question.",
+    "prompt": "— ___ ти працюєш? — Щодня з дев’ятої до п’ятої.",
+    "options": [
+      "Коли",
+      "Куди",
+      "Як"
+    ]
+  },
+  {
+    "id": "questions/inline/act-1/5",
+    "type": "quiz",
+    "instruction": "Choose the question word that completes each short question.",
+    "prompt": "— ___ ти не працюєш? — Тому що сьогодні неділя.",
+    "options": [
+      "Чому",
+      "Куди",
+      "Хто"
+    ]
+  },
+  {
+    "id": "questions/inline/act-1/7",
+    "type": "quiz",
+    "instruction": "Choose the question word that completes each short question.",
+    "prompt": "— ___ говорить українською? — Олена.",
+    "options": [
+      "Хто",
+      "Що",
+      "Де"
+    ]
+  },
+  {
+    "id": "weather/inline/act-2/0",
+    "type": "fill-in",
+    "instruction": "Обери логічну погоду для кожної пори року або температури.",
+    "prompt": "Взимку часто ___.",
+    "options": [
+      "іде сніг",
+      "іде снігу",
+      "іде снігом"
+    ]
+  },
+  {
+    "id": "weather/inline/act-2/1",
+    "type": "fill-in",
+    "instruction": "Обери логічну погоду для кожної пори року або температури.",
+    "prompt": "Влітку дуже ___.",
+    "options": [
+      "спекотно",
+      "спекотний",
+      "спекотна"
+    ]
+  },
+  {
+    "id": "weather/inline/act-2/2",
+    "type": "fill-in",
+    "instruction": "Обери логічну погоду для кожної пори року або температури.",
+    "prompt": "Восени часто ___.",
+    "options": [
+      "іде дощ",
+      "іде дощу",
+      "іде дощем"
+    ]
+  },
+  {
+    "id": "weather/inline/act-2/3",
+    "type": "fill-in",
+    "instruction": "Обери логічну погоду для кожної пори року або температури.",
+    "prompt": "Навесні ___ і красиво.",
+    "options": [
+      "тепло",
+      "теплий",
+      "тепла"
+    ]
+  },
+  {
+    "id": "weather/inline/act-3/3",
+    "type": "fill-in",
+    "instruction": "Доповни короткий діалог про погоду.",
+    "prompt": "— Чому ти любиш літо? — Тому що влітку ___.",
+    "options": [
+      "сонячно",
+      "сонячний",
+      "сонячна"
+    ]
+  },
+  {
+    "id": "stress-and-melody/inline/act-4/0",
+    "type": "fill-in",
+    "instruction": "Обери розділовий знак, який відповідає реченню.",
+    "prompt": "Це ка́ва___",
+    "options": [
+      ".",
+      ",",
+      ":"
+    ]
+  },
+  {
+    "id": "stress-and-melody/inline/act-4/1",
+    "type": "fill-in",
+    "instruction": "Обери розділовий знак, який відповідає реченню.",
+    "prompt": "Це метро́ чи апте́ка___",
+    "options": [
+      "?",
+      ",",
+      ":"
+    ]
+  },
+  {
+    "id": "stress-and-melody/inline/act-4/2",
+    "type": "fill-in",
+    "instruction": "Обери розділовий знак, який відповідає реченню.",
+    "prompt": "Де апте́ка___",
+    "options": [
+      "?",
+      ",",
+      ":"
+    ]
+  },
+  {
+    "id": "stress-and-melody/inline/act-4/3",
+    "type": "fill-in",
+    "instruction": "Обери розділовий знак, який відповідає реченню.",
+    "prompt": "Як га́рно___",
+    "options": [
+      "!",
+      ",",
+      ":"
+    ]
+  },
+  {
+    "id": "stress-and-melody/inline/act-4/4",
+    "type": "fill-in",
+    "instruction": "Обери розділовий знак, який відповідає реченню.",
+    "prompt": "Так, це вода́___",
+    "options": [
+      ".",
+      ",",
+      ":"
+    ]
+  },
+  {
+    "id": "my-family/workbook/0/4",
+    "type": "error-correction",
+    "instruction": "Обери безпечніший український рядок.",
+    "prompt": "Це мій батьки.",
+    "options": [
+      "Це мій батько.",
+      "Це моє батько.",
+      "Це моя батько."
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-3/7",
+    "type": "quiz",
+    "instruction": "Обери́ украї́нський займе́нник для переві́рки ро́ду. — Choose the Ukrainian gender-test word.",
+    "prompt": "Мико́ла (Mykola)",
+    "options": [
+      "він",
+      "вона́",
+      "воно́"
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-5/0",
+    "type": "quiz",
+    "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+    "prompt": "стіл",
+    "options": [
+      "він / мій",
+      "вона́ / моя́",
+      "воно́ / моє́"
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-5/1",
+    "type": "quiz",
+    "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+    "prompt": "брат",
+    "options": [
+      "він / мій",
+      "вона́ / моя́",
+      "воно́ / моє́"
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-5/2",
+    "type": "quiz",
+    "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+    "prompt": "кни́га",
+    "options": [
+      "вона́ / моя́",
+      "він / мій",
+      "воно́ / моє́"
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-5/3",
+    "type": "quiz",
+    "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+    "prompt": "сестра́",
+    "options": [
+      "вона́ / моя́",
+      "він / мій",
+      "воно́ / моє́"
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-5/4",
+    "type": "quiz",
+    "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+    "prompt": "вікно́",
+    "options": [
+      "воно́ / моє́",
+      "він / мій",
+      "вона́ / моя́"
+    ]
+  },
+  {
+    "id": "things-have-gender/inline/act-5/5",
+    "type": "quiz",
+    "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+    "prompt": "мі́сто",
+    "options": [
+      "воно́ / моє́",
+      "вона́ / моя́",
+      "він / мій"
+    ]
+  },
+  {
+    "id": "colors/workbook/1/5",
+    "type": "error-correction",
+    "instruction": "Choose the standard Ukrainian correction.",
+    "prompt": "ЧорнИй, білИй",
+    "options": [
+      "ЧОрний, бІлий",
+      "чОрна, бІла",
+      "чОрне, бІле"
+    ]
+  }
+]

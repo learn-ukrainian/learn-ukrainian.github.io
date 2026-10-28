@@ -158,70 +158,70 @@ inline:
     instruction: Choose the sequence word that fits the routine.
     items:
       - sentence: "Я снідаю о восьмій, але ___ я прокидаюся о сьомій."
-        answer: Спочатку
+        answer: "спочатку"
         options:
-          - Спочатку
-          - Пізніше
-          - Після цього
-        explanation: "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00."
+          - спочатку
+          - пізніше
+          - після цього
+        explanation: "The waking time comes before breakfast. Спочатку fits this order; пізніше and після цього would reverse it."
       - sentence: "Я прокидаюся о сьомій, а ___ я вмиваюся о восьмій."
-        answer: Потім
+        answer: "потім"
         options:
-          - Потім
-          - Перед цим
-          - До цього
-        explanation: "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
       - sentence: "Я вмиваюся о сьомій, а ___ я одягаюся о восьмій."
-        answer: Після цього
+        answer: "після цього"
         options:
-          - Після цього
-          - Перед цим
-          - До цього
-        explanation: "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+          - після цього
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
       - sentence: "Я одягаюся о сьомій, а ___ я снідаю о восьмій."
-        answer: Потім
+        answer: "потім"
         options:
-          - Потім
-          - Перед цим
-          - До цього
-        explanation: "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
       - sentence: "Я снідаю о восьмій, а ___ я йду на роботу о дев’ятій."
-        answer: "Потім"
+        answer: "потім"
         options:
-          - Потім
-          - Перед цим
-          - До цього
-        explanation: "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step."
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
       - sentence: "Я прокидаюся о шостій, а ___ я вмиваюся о сьомій."
-        answer: Потім
+        answer: "потім"
         options:
-          - Потім
-          - Перед цим
-          - До цього
-        explanation: "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
   - id: act-4
     type: fill-in
     title: Три речення про ранок
     instruction: Complete the three-sentence morning story.
     items:
       - sentence: "Я снідаю о дев’ятій, але ___ я прокидаюся о восьмій."
-        answer: Спочатку
+        answer: "спочатку"
         options:
-          - Спочатку
-          - Пізніше
-          - Після цього
-        explanation: "Waking at08:00 precedes breakfast at09:00. Спочатку fits; Пізніше and Після цього reverse that time order."
+          - спочатку
+          - пізніше
+          - після цього
+        explanation: "The waking time comes before breakfast. Спочатку fits this order; пізніше and після цього would reverse it."
       - sentence: "Я прокидаюся о восьмій, а ___ я вмиваюся і снідаю о дев’ятій."
-        answer: Потім
+        answer: "потім"
         options:
-          - Потім
-          - Перед цим
-          - До цього
-        explanation: "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
       - sentence: "Я снідаю о восьмій, а ___ я йду в університет о дев’ятій."
-        answer: "Потім"
+        answer: "потім"
         options:
-          - Потім
-          - Перед цим
-          - До цього
-        explanation: "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step."
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."

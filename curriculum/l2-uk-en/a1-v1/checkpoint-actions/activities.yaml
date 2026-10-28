@@ -141,7 +141,7 @@ inline:
           - хочу
           - можу
           - мушу
-        explanation: "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning."
+        explanation: "Хочу or хоче expresses desire. The other choices contradict the earlier statements that the speaker cannot act and has no obligation to act."
       - sentence: 'Олег: Ти ___ допомагати?'
         answer: можеш
         options:
@@ -162,12 +162,12 @@ inline:
     instruction: Choose the word that completes the short day description.
     items:
       - sentence: "Я снідаю о восьмій, але ___ я прокидаюся о сьомій."
-        answer: Спочатку
+        answer: "спочатку"
         options:
-          - Спочатку
-          - Пізніше
-          - Після цього
-        explanation: "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00."
+          - спочатку
+          - пізніше
+          - після цього
+        explanation: "The waking time comes before breakfast. Спочатку fits this order; пізніше and після цього would reverse it."
       - sentence: "Потім я ___ і чищу зуби."
         answer: вмиваюся
         options:
