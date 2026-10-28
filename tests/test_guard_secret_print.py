@@ -74,12 +74,14 @@ def test_redirect_keeps_secret_file_policy(
         ("env <.env cat", 2),
         (">/dev/null env", 0),
         ("1>/dev/null env", 0),
+        ("01>/dev/null env", 0),
         ("2>/dev/null env", 2),
         ("{fd}>/dev/null env", 2),
         ("env 2>/dev/null", 2),
         ("env 1>/dev/null", 0),
         ("env 2 > /dev/null", 0),
         ("'2'>/dev/null wc -l .env", 2),
+        ("$'2'2>/dev/null wc -l .env", 2),
     ],
 )
 def test_redirect_does_not_hide_sensitive_input_or_change_output_descriptor(monkeypatch, command, expected):

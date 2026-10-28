@@ -497,7 +497,8 @@ def _decode_ansi_c_quotes(command: str) -> str:
                     value = codecs.decode(command[i + 2 : end], "unicode_escape")
                 except UnicodeError:
                     value = command[i + 2 : end]
-                out.append(shlex.quote(value))
+                quoted = shlex.quote(value)
+                out.append(quoted if quoted.startswith("'") else "'" + quoted + "'")
                 i = end + 1
                 continue
         if char in {"'", '"'}:
@@ -904,7 +905,7 @@ def _without_redirects(args: list[str]) -> list[str]:
 def _stdout_target(args: list[str]) -> str | None:
     target = None
     for index, token in enumerate(args[:-1]):
-        if re.fullmatch(r"1?(?:>|>>|>\|)|&>>?", token):
+        if re.fullmatch(r"(?:0*1)?(?:>|>>|>\|)|&>>?", token):
             target = _strip_quotes(args[index + 1])
     return target
 
