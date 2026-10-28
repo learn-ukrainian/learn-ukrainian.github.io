@@ -56,7 +56,8 @@ def test_scheduled_scan_uses_a_real_range_and_leaves_pr_and_push_alone(tmp_path:
     assert head == "${{ steps.secret-scan-scope.outputs.trufflehog_head }}"
     assert base != head
     assert scan["with"]["extra_args"] == (
-        "--results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob --trust-local-git-config"
+        "--results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob"
+        " --trust-local-git-config --fail-on-scan-errors"
     )
     checkout = next(step for step in secret_scan["steps"] if str(step.get("uses", "")).startswith("actions/checkout@"))
     assert checkout["with"]["fetch-depth"] == 0

@@ -234,9 +234,10 @@ the root. An audit on another branch does not establish scheduled coverage.
 
 The public pack is about 8 GB, nearly all of it old file contents, so CI no
 longer downloads it. The Secret scan and Queue commit metadata scan jobs check
-out full history without blobs (`filter: blob:none`); only the
-`full-history-audit` dispatch, which reads every blob anyway, keeps a full
-clone. Before TruffleHog runs,
+out full history without blobs (`filter: blob:none`); the queue job's checkout
+is also sparse (`scripts/` and `.python-version`), since it reads no file
+content. Only the `full-history-audit` dispatch, which reads every blob anyway,
+keeps a full clone. Before TruffleHog runs,
 `python3 -m scripts.ci.secret_scan_scope materialize` takes the scan's base
 and head (the scope's outputs, or the pull request's base and head that the
 action uses on its own), then:
@@ -255,6 +256,14 @@ Step 3 is required. TruffleHog's default mode clones the checkout with
 is missing and cannot be fetched does not fail TruffleHog: it exits 0 having
 scanned 0 bytes (reproduced with 3.99.0 against an unreachable promisor). A
 full clone skips both steps.
+
+In place, go-git also reads the checkout's own git config. A setting it does not
+support is a scan error that, by default, still exits 0 with nothing scanned
+(for example `extensions.worktreeConfig`, which `git sparse-checkout set` turns
+on; `actions/checkout` sets `core.sparseCheckout` directly and does not). Both
+steps therefore also pass `--fail-on-scan-errors`, as the local wrapper does. No
+scan errors appeared in the twelve Secret scan and queue jobs checked before this
+change, including two 400-commit schedule windows.
 
 Coverage is unchanged. The same base and head give the same chunk and byte
 counts as the full clone did: 10 chunks and 21,939 bytes for queue run

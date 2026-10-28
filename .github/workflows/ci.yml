@@ -47,10 +47,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          # Commits and trees only (FR-58): the ancestry check and the empty-diff
-          # metadata commit read no file content.
+          # Commits and trees, and only the job's own scripts (FR-58): the ancestry
+          # check and the empty-diff metadata commit read no file content.
           fetch-depth: 0  # verify the original group base is an ancestor of the candidate
           filter: blob:none
+          sparse-checkout: |
+            scripts/
+            .python-version
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -82,8 +86,9 @@ jobs:
           version: "3.99.0"
           base: ${{ steps.metadata.outputs.parent }}
           head: ${{ steps.metadata.outputs.commit }}
-          # Scan the blobless checkout in place; TruffleHog's own clone of a partial clone fails.
-          extra_args: --results=verified,unknown --exclude-detectors=Lob --trust-local-git-config
+          # Scan the blobless checkout in place; TruffleHog's own clone of a partial clone
+          # fails. In place, a git config go-git cannot read is a scan error, not a pass.
+          extra_args: --results=verified,unknown --exclude-detectors=Lob --trust-local-git-config --fail-on-scan-errors
 
   secret-scan:
     permissions:
@@ -161,7 +166,9 @@ jobs:
           version: "3.99.0"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
-          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob --trust-local-git-config
+          extra_args: >-
+            --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+            --trust-local-git-config --fail-on-scan-errors
 
       - name: Record successfully scanned head
         if: >-

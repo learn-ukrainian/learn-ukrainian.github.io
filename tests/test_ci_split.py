@@ -650,7 +650,13 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
     upload = next(step for step in steps if step.get("with", {}).get("name") == "ci-queue-candidate")
     assert upload["with"]["if-no-files-found"] == "error"
     assert steps.index(record) < steps.index(upload) < steps.index(metadata)
-    assert checkout["with"] == {"persist-credentials": False, "fetch-depth": 0, "filter": "blob:none"}
+    assert checkout["with"] == {
+        "persist-credentials": False,
+        "fetch-depth": 0,
+        "filter": "blob:none",
+        "sparse-checkout": "scripts/\n.python-version\n",
+        "sparse-checkout-cone-mode": False,
+    }
     assert metadata["id"] == "metadata"
     assert "python3 -m scripts.ci.metadata_commit --commit HEAD" in metadata["run"]
     full_scan = next(step for step in _jobs_of_ci()["secret-scan"]["steps"] if "trufflehog" in step.get("uses", ""))
@@ -659,7 +665,7 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
         "version": "3.99.0",
         "base": "${{ steps.metadata.outputs.parent }}",
         "head": "${{ steps.metadata.outputs.commit }}",
-        "extra_args": "--results=verified,unknown --exclude-detectors=Lob --trust-local-git-config",
+        "extra_args": "--results=verified,unknown --exclude-detectors=Lob --trust-local-git-config --fail-on-scan-errors",
     }
 
 
