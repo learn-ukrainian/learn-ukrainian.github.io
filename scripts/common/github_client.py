@@ -1355,14 +1355,6 @@ class GitHubClient:
                             "CREATE INDEX ", "CREATE INDEX IF NOT EXISTS "
                         )
                     )
-                if self.cache_dir is not None:
-                    db.execute(
-                        "INSERT OR REPLACE INTO budget (scope, resource, remaining, reset) VALUES ('__probe__', '__probe__', 0, 0)"
-                    )
-                    db.execute("DELETE FROM budget WHERE scope='__probe__'")
-                    # The writability probe must not hold its lock during reads
-                    # or the maintenance check of an already bounded cache.
-                    db.commit()
                 break
             except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
                 if self.cache_dir is not None:

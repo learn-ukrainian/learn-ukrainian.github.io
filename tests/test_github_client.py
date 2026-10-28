@@ -2739,7 +2739,8 @@ def test_cache_maintenance_fallback_keeps_bounded_memory_and_budget(tmp_path, mo
         assert db.execute("SELECT remaining,reset FROM budget").fetchall() == [(0, 2000)]
 
 
-def test_bounded_cache_reads_release_probe_lock_and_budget_writes_do_not_prune(tmp_path, monkeypatch):
+def test_bounded_cache_reads_keep_shared_budget_during_writes_and_do_not_prune(tmp_path, monkeypatch):
+    """A sibling writer must not make admission lose the disk cache and budget."""
     store, _ = client(tmp_path, [response(1)])
     store.request("GET", "user")
     statements = []
@@ -2761,6 +2762,14 @@ def test_bounded_cache_reads_release_probe_lock_and_budget_writes_do_not_prune(t
         gh._store_budget(db, "other", "core", 5, 2000, now=1000)
     assert not any("DELETE FROM cache" in sql for sql in statements)
     assert store.cache_dir == tmp_path
+    # A sibling may hold the writer reservation while readers still have access.
+    # Admission must keep using the persisted budget, without a probe write.
+    with connect(tmp_path / "cache.sqlite3", timeout=0) as sibling:
+        sibling.execute("BEGIN IMMEDIATE")
+        blocked = store.request("GET", "user", fresh=True)
+        assert blocked.error == "github_rate_limited"
+        assert blocked.reset_at == 2000
+        assert store.cache_dir == tmp_path
     with connect(tmp_path / "cache.sqlite3") as db:
         assert db.execute("SELECT remaining FROM budget WHERE scope='other'").fetchone() == (5,)
 
