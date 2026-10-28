@@ -41,6 +41,7 @@ from scripts.common.task_scratch import (
     DEFAULT_MIN_FREE_GB,
     NAMESPACE_DIRNAME,
     SCRATCH_MIN_FREE_ENV,
+    TaskScratchError,
     managed_scratch_paths,
     scratch_min_free_gb,
 )
@@ -113,6 +114,8 @@ class LeakCandidate:
     path: Path
     age_s: float
     size_bytes: int
+    device: int
+    inode: int
     kind: str = CANDIDATE_KIND_PATTERN
 
     @property
@@ -460,6 +463,8 @@ def discover_candidates(
                     path=child,
                     age_s=age,
                     size_bytes=_entry_size_bytes(child),
+                    device=st.st_dev,
+                    inode=st.st_ino,
                     kind=kind,
                 )
             )
@@ -484,17 +489,30 @@ def refuse_git_checkout_removal(target: Path) -> None:
             directories.remove(".git")
 
 
-def _remove_path(path: Path, *, repo_root: Path, approved_temp_roots: tuple[Path, ...]) -> None:
+def _remove_path(
+    path: Path,
+    *,
+    repo_root: Path,
+    approved_temp_roots: tuple[Path, ...],
+    expected_dev: int,
+    expected_ino: int,
+) -> None:
+    from scripts.hygiene.retention_engine import reap_attributed_temp
+
     target = assert_delete_target(
         path,
         repo_root=repo_root,
         approved_temp_roots=approved_temp_roots,
     )
-    if target.is_symlink() or target.is_file():
-        target.unlink(missing_ok=True)
-        return
-    refuse_git_checkout_removal(target)
-    shutil.rmtree(target, ignore_errors=True)
+    if target.is_dir():
+        refuse_git_checkout_removal(target)
+    reap_attributed_temp(
+        target,
+        temp_root=target.parent,
+        repo_root=repo_root,
+        expected_dev=expected_dev,
+        expected_ino=expected_ino,
+    )
 
 
 _SKIP_REASONS = {LIVENESS_LIVE: "live_process", LIVENESS_UNKNOWN: "liveness_unknown"}
@@ -589,6 +607,8 @@ def sweep_tmp_leaks(
                 candidate.path,
                 repo_root=resolved_repo,
                 approved_temp_roots=approved_roots,
+                expected_dev=candidate.device,
+                expected_ino=candidate.inode,
             )
             # Confirm gone; if still present count as error.
             if candidate.path.exists():
@@ -606,7 +626,7 @@ def sweep_tmp_leaks(
                     "action": "reaped",
                 }
             )
-        except ValueError:
+        except (ValueError, TaskScratchError):
             result["errors"] += 1
             result["skipped"].append({"path": str(candidate.path), "reason": "delete_guard_refused"})
         except OSError:
