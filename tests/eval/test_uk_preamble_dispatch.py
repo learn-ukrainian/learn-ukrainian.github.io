@@ -26,6 +26,7 @@ from scripts.eval.uk_preamble.dispatch import (
     TaskOutcome,
     condition_problems,
     frame,
+    seat_mode,
     workspace_fingerprint,
     workspace_probe,
 )
@@ -39,6 +40,7 @@ from scripts.eval.uk_preamble.runner import (
     render,
     rules_block,
 )
+from tests.dispatcher.conftest import install_claude_doctor_stub
 
 CALLER = "harness"
 
@@ -271,6 +273,8 @@ def test_flash_dispatch_carries_no_effort(fake):
     args = _calls(state)[-1]
     assert "--effort" not in args and "--force-new" not in args
     assert args[args.index("--agent") + 1] == "agy"
+    # Dispatch refuses AGY read-only, so the Flash seat runs workspace-write in its own dispatch worktree.
+    assert args[args.index("--mode") + 1] == "workspace-write" and "--cwd" not in args
     assert args[args.index("--research-task-family") + 1] == "ukrainian-authoring"
 
 
@@ -315,7 +319,7 @@ def test_condition_problems_name_every_departure(tmp_path: Path):
         "cwd": str(tmp_path),
         "dispatch_args_sha256": "a",
     }
-    assert condition_problems(good, expected=expected, args_sha256="a") == []
+    assert condition_problems(good, expected=expected, args_sha256="a", mode="read-only") == []
     bad = {
         **good,
         "effective_prompt_sha256": "q",
@@ -326,11 +330,11 @@ def test_condition_problems_name_every_departure(tmp_path: Path):
         "cwd": "/elsewhere",
         "dispatch_args_sha256": "b",
     }
-    assert len(condition_problems(bad, expected=expected, args_sha256="a")) == 7
-    missing = condition_problems({}, expected=expected, args_sha256="a")
+    assert len(condition_problems(bad, expected=expected, args_sha256="a", mode="read-only")) == 7
+    missing = condition_problems({}, expected=expected, args_sha256="a", mode="read-only")
     assert len(missing) == 6  # an old record without the fields is never accepted
     unwrapped = {**expected, "prompt_blocks": [], "worktree_path": None}
-    assert len(condition_problems(good, expected=unwrapped, args_sha256="a")) == 2
+    assert len(condition_problems(good, expected=unwrapped, args_sha256="a", mode="read-only")) == 2
 
     # The same departures fail closed for v2 without inventing legacy attestations.
     v2_expected = {**expected, "schema_version": 2, "prompt_blocks": []}
@@ -343,11 +347,15 @@ def test_condition_problems_name_every_departure(tmp_path: Path):
         "prompt_sha256": "p",
         "stored_prompt_sha256": "p",
     }
-    assert condition_problems(v2_good, expected=v2_expected, args_sha256="a") == []
+    assert condition_problems(v2_good, expected=v2_expected, args_sha256="a", mode="read-only") == []
     v2_bad = {**bad, "schema_version": 2, "prompt_sha256": "q", "stored_prompt_sha256": "q"}
-    assert len(condition_problems(v2_bad, expected=v2_expected, args_sha256="a")) == 7
-    assert condition_problems({"schema_version": 2}, expected=v2_expected, args_sha256="a")
-    assert condition_problems(v2_good, expected=expected, args_sha256="a")
+    assert len(condition_problems(v2_bad, expected=v2_expected, args_sha256="a", mode="read-only")) == 7
+    assert condition_problems({"schema_version": 2}, expected=v2_expected, args_sha256="a", mode="read-only")
+    assert condition_problems(v2_good, expected=expected, args_sha256="a", mode="read-only")
+    # A seat whose provider refuses read-only (AGY) is held to workspace-write, and nothing else.
+    assert condition_problems(v2_good, expected=v2_expected, args_sha256="a", mode="workspace-write") == [
+        "mode is not workspace-write"
+    ]
 
 
 # --------------------------------------------------------------------------- delegate's real composition
@@ -541,6 +549,9 @@ def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
 ):
     from scripts.dispatcher import git, providers, store, worker
 
+    # The Claude seats are read-only, so the real CLI asks `claude doctor` for managed settings first.
+    (outside_dir / "bin").mkdir()
+    install_claude_doctor_stub(outside_dir / "bin", monkeypatch)
     monkeypatch.setenv("LU_TASKS_DIR", str(outside_dir / "tasks"))
     monkeypatch.setattr(
         git, "resolve_repo", lambda key: (linked_worktree.parents[3], {"key": "public", "github": "example/public"})
@@ -604,6 +615,7 @@ def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
                 args_sha256=dispatcher.expected_args_sha256(
                     task.task_id, task.seat, task.kind, prompt_path(results, task.task_id)
                 ),
+                mode=seat_mode(task.seat),
             )
             == []
         )

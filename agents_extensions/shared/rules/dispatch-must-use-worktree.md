@@ -66,7 +66,7 @@ create a feature branch in the main checkout. Concrete dispatch:
 The main checkout (wherever the user is working) stays untouched on
 `main`. After the PR merges, the accountable driver follows the sole landing
 and cleanup recipe in `agents_extensions/shared/rules/workflow.md` § Merge policy.
-Cleanup uses the common reaper; it is not a manual user step.
+The dispatcher removes each task's own worktree at settlement; cleanup is not a manual user step.
 
 If the work truly cannot be done in a worktree (extremely rare —
 usually only repo-wide mass migrations), STOP and ask for approval
@@ -80,16 +80,16 @@ and worktree path from the task-id + agent.
 ## Post-merge cleanup
 
 Post-merge cleanup is mandatory. Follow [`workflow.md`](workflow.md) § Merge
-policy / Post-merge cleanup, including common-reaper receipts, worker exit,
+policy / Post-merge cleanup, including the `merge_closeout` receipt, worker exit,
 branch removal and the fail-closed non-zero/SKIPPED disposition. Never force
 remove a worktree or invent a second removal path.
 
-Use the common reaper for terminal worktree cleanup after checking custody and
-delivery evidence. Dispatch v2 has no keep-worktree switch.
+The dispatcher removes a settled task's own worktree. Resolve a retained one by its
+`worktree_disposition` reason, removing it only after confirming its content is published. Dispatch v2 has no keep-worktree switch.
 
 ## When YOU (not a delegated agent) need isolation
 
-Same rule — use a worktree. Don't branch in the main checkout. You may start at the repository root and run `git status --short --branch` as a read-only preflight/orientation step, but do not implement there. Any implementation edit, branch work, commit, or PR must happen from a worktree unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is in `scripts/dispatch.py` and the common worktree reaper.
+Same rule — use a worktree. Don't branch in the main checkout. You may start at the repository root and run `git status --short --branch` as a read-only preflight/orientation step, but do not implement there. Any implementation edit, branch work, commit, or PR must happen from a worktree unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is in `scripts/dispatch.py` and the dispatcher's settlement.
 
 Use the subtree layout:
 

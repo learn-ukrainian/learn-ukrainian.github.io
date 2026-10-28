@@ -11,9 +11,11 @@ import socket
 import sqlite3
 import sys
 from pathlib import Path
+from urllib.parse import parse_qsl
 
 import pytest
 import requests
+import requests_mock as requests_mock_lib
 from bs4 import BeautifulSoup
 
 from scripts.lexicon import ulif_raw_cache
@@ -71,16 +73,14 @@ def test_canonical_headword_comes_from_the_returned_article():
     assert source_query._ulif_headword(_fixture("privit-paradigm.html"), "привіту") == "приві́т"
 
 
-def test_search_result_requires_exact_stress_insensitive_membership(tmp_path, monkeypatch):
+def test_search_result_requires_exact_stress_insensitive_membership(tmp_path, monkeypatch, requests_mock):
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
     monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
     monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(
         _fixture("privit-paradigm.html")
     ))
-    monkeypatch.setattr(source_query._SESSION, "post", lambda *args, **kwargs: _Response(
-        _fixture("privit-paradigm.html")
-    ))
+    requests_mock.post(requests_mock_lib.ANY, text=_fixture("privit-paradigm.html"))
 
     assert source_query._ulif_search_result_matches(
         _fixture("privit-paradigm.html"), "ПРИВІТ"
@@ -253,7 +253,7 @@ def test_relation_term_explicit_br_is_a_boundary_but_inline_tags_are_not():
 
 
 def test_explicit_br_stale_cache_and_actual_mcp_views_are_corrected_without_io(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, requests_mock
 ):
     scripts_source_query = importlib.import_module("scripts.rag.source_query")
     scripts_sources_db = importlib.import_module("scripts.wiki.sources_db")
@@ -318,7 +318,7 @@ def test_explicit_br_stale_cache_and_actual_mcp_views_are_corrected_without_io(
 
     for query_module in (source_query, scripts_source_query):
         monkeypatch.setattr(query_module, "_get", deny_network)
-        monkeypatch.setattr(query_module._SESSION, "post", deny_network)
+    requests_mock.post(requests_mock_lib.ANY, text=deny_network)
     monkeypatch.setattr(socket.socket, "connect", deny_network)
     monkeypatch.setattr(socket, "create_connection", deny_network)
     monkeypatch.setattr(socket, "getaddrinfo", deny_network)
@@ -526,7 +526,7 @@ def test_cached_materializer_handles_missing_sections_table_without_migration(tm
     conn.close()
 
 
-def test_wrappers_share_one_complete_cached_lookup(tmp_path, monkeypatch):
+def test_wrappers_share_one_complete_cached_lookup(tmp_path, monkeypatch, requests_mock):
     """A first wrapper fetches all available tabs; later ones issue no POST."""
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
@@ -549,7 +549,9 @@ def test_wrappers_share_one_complete_cached_lookup(tmp_path, monkeypatch):
             return _Response(_fixture("dobryi-antonyms.html"))
         raise AssertionError(f"Unexpected DictUA POST: {data}")
 
-    monkeypatch.setattr(source_query._SESSION, "post", post)
+    requests_mock.post(requests_mock_lib.ANY, text=lambda request, context: post(
+        request.url, dict(parse_qsl(request.text, keep_blank_values=True)), request.timeout
+    ).text)
 
     record = source_query.query_ulif("говорити", source_query.ULIF_SECTIONS)
     assert record["status"] == "ok"
@@ -570,7 +572,7 @@ def test_wrappers_share_one_complete_cached_lookup(tmp_path, monkeypatch):
     assert db_path.exists()
 
 
-def test_empty_available_relation_tab_is_not_a_parse_error(tmp_path, monkeypatch):
+def test_empty_available_relation_tab_is_not_a_parse_error(tmp_path, monkeypatch, requests_mock):
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
     monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
@@ -590,14 +592,16 @@ def test_empty_available_relation_tab_is_not_a_parse_error(tmp_path, monkeypatch
             return _Response(_fixture("dobryi-antonyms.html"))
         raise AssertionError(f"Unexpected DictUA POST: {data}")
 
-    monkeypatch.setattr(source_query._SESSION, "post", post)
+    requests_mock.post(requests_mock_lib.ANY, text=lambda request, context: post(
+        request.url, dict(parse_qsl(request.text, keep_blank_values=True)), request.timeout
+    ).text)
 
     record = source_query.query_ulif("говорити", source_query.ULIF_SECTIONS)
     assert record["status"] == "ok"
     assert "phraseology" not in record["sections"]
 
 
-def test_confirmed_relation_only_headword_is_complete_without_paradigm(tmp_path, monkeypatch):
+def test_confirmed_relation_only_headword_is_complete_without_paradigm(tmp_path, monkeypatch, requests_mock):
     """An adverb-like headword must not be failed solely for lacking inflection."""
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
@@ -614,7 +618,9 @@ def test_confirmed_relation_only_headword_is_complete_without_paradigm(tmp_path,
             return _Response(_fixture("privit-phraseology.html"))
         raise AssertionError(f"Unexpected DictUA POST: {data}")
 
-    monkeypatch.setattr(source_query._SESSION, "post", post)
+    requests_mock.post(requests_mock_lib.ANY, text=lambda request, context: post(
+        request.url, dict(parse_qsl(request.text, keep_blank_values=True)), request.timeout
+    ).text)
 
     record = source_query.query_ulif("привіт", ("paradigm", "synonyms"))
     assert record["status"] == "ok"
@@ -624,17 +630,13 @@ def test_confirmed_relation_only_headword_is_complete_without_paradigm(tmp_path,
     assert record["parser_version"] == "ulif-dictua-v2"
 
 
-def test_confirmed_but_content_empty_headword_fails_closed(tmp_path, monkeypatch):
+def test_confirmed_but_content_empty_headword_fails_closed(tmp_path, monkeypatch, requests_mock):
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
     monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
     empty_html = _without_paradigm(_fixture("privit-paradigm.html"))
     monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(empty_html))
-    monkeypatch.setattr(
-        source_query._SESSION,
-        "post",
-        lambda *args, **kwargs: _Response(empty_html),
-    )
+    requests_mock.post(requests_mock_lib.ANY, text=empty_html)
 
     record = source_query.query_ulif("привіт", source_query.ULIF_SECTIONS)
 
@@ -670,7 +672,7 @@ def test_legacy_ulif_paradigm_reports_unavailable_not_no_paradigm(tmp_path, monk
     assert source_query.ulif_paradigm("привіт") == {"status": "unavailable", "word": "привіт"}
 
 
-def test_not_found_and_parse_error_are_distinguishable_and_cached(tmp_path, monkeypatch):
+def test_not_found_and_parse_error_are_distinguishable_and_cached(tmp_path, monkeypatch, requests_mock):
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
     monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
@@ -679,9 +681,7 @@ def test_not_found_and_parse_error_are_distinguishable_and_cached(tmp_path, monk
     ))
     # DictUA returns 200 with an unrelated selected article for a no-match;
     # `ulif_lookup` must use the result list, not cache that article as a hit.
-    monkeypatch.setattr(source_query._SESSION, "post", lambda *args, **kwargs: _Response(
-        _fixture("privit-paradigm.html")
-    ))
+    requests_mock.post(requests_mock_lib.ANY, text=_fixture("privit-paradigm.html"))
 
     not_found = source_query.ulif_lookup("xzxqj")
     assert not_found["status"] == "not_found"
@@ -695,7 +695,7 @@ def test_not_found_and_parse_error_are_distinguishable_and_cached(tmp_path, monk
     assert sources_db.get_ulif_dictua_entry("зламане")["status"] == "parse_error"
 
 
-def test_parse_error_keeps_successful_sections_and_legacy_paradigm(tmp_path, monkeypatch):
+def test_parse_error_keeps_successful_sections_and_legacy_paradigm(tmp_path, monkeypatch, requests_mock):
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
     monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
@@ -713,7 +713,9 @@ def test_parse_error_keeps_successful_sections_and_legacy_paradigm(tmp_path, mon
             return _Response(missing_eventvalidation)
         raise AssertionError(f"Unexpected DictUA POST: {data}")
 
-    monkeypatch.setattr(source_query._SESSION, "post", post)
+    requests_mock.post(requests_mock_lib.ANY, text=lambda request, context: post(
+        request.url, dict(parse_qsl(request.text, keep_blank_values=True)), request.timeout
+    ).text)
 
     record = source_query.query_ulif("привіт", source_query.ULIF_SECTIONS)
 

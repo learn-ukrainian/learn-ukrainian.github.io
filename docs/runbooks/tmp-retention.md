@@ -461,7 +461,55 @@ belong in the system temp area. To keep a path, do one of the following:
 directory with no write for 7 days (`--stale-days`). For each one it shows the
 allocated size and the date of the newest write. It skips `tasks/`,
 `preserved/`, `reports/` and `branch-archive/`. It never deletes anything.
-Cleanup stays a separate, deliberate action.
+Unclassified state is retained. Explicitly declared disposable scratch can
+expire through the existing sweep as described below. Quarantine directories
+are excluded from this staleness report; the sweep ledger owns them.
+
+### Explicit batch_state scratch expiry (#11365)
+
+The scheduled tmp-sweep service runs a final
+`scripts.hygiene.tmp_sweep --batch-state --apply --summary` pass, including
+through the data-volume guard dropin. A failed earlier service command stops
+the later commands and retains scratch. Inspect without changing anything:
+
+```bash
+.venv/bin/python -m scripts.hygiene.tmp_sweep --batch-state --summary
+```
+
+This mode accepts only the repository's shared `batch_state` root. It cannot
+be combined with `--temp-root` or `--unattributed-scratch`. New producers can
+call `scripts.hygiene.batch_state_retention.write_scratch_expiry(directory,
+owner=canonical_task_id, purpose="disposable output")` before writing payloads.
+The helper exclusively creates `.scratch-expiry.json` with a seven-day UTC
+expiry by default. An explicit timezone-aware UTC `delete_after` is supported.
+It never replaces an existing marker. Its record has this shape:
+
+```json
+{"schema":"batch-state-scratch.v1","owner":"exact-task-id","purpose":"disposable output","delete_after":"2026-11-04T00:00:00+00:00"}
+```
+
+Missing, malformed, symlinked or future metadata never authorizes removal.
+The declared owner must match a current canonical task record in a reapable
+terminal state with a valid completion time. Directory names confer no
+authority. Unknown task/process/Git/mount state retains the entry. Holds,
+tracked files, Git metadata, live processes, active task references and the
+existing hard exclusions protect it. Writes or metadata changes after expiry
+also retain it. A malformed hold list refuses the entire batch pass.
+
+Eligible scratch enters the existing recoverable quarantine, then waits its
+seven-day window before purge. Current holds, exact owner record, expiry
+metadata, tracked files, liveness and tree integrity are checked again before
+deletion through the existing guarded remover. The existing ledger commands
+support inspection and restoration. Reports count allocated bytes, not file
+lengths; unknown measurements remain null in item rows. The summary omits
+item names and metadata. This pass does not run pytest cleanup a second time.
+
+No existing producer is migrated by this change, and legacy directories are
+not retroactively marked. The delivered scope is the expiry mechanism and its
+fixture proof. #11365 remains open for producer adoption, archive rotation,
+size/copy alerts, preserved-artifact corrections, recovery-input selection,
+reviewed-unit rollout and operational evidence, owned by DevOps. The separate
+branch-archive retention rule remains in force.
 
 ### Hold evidence in batch_state
 

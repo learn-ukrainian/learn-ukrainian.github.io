@@ -49,7 +49,7 @@ on 4 of those roles. Headline recommendations:
 | 1 | **Claude** | `claude` (Code), `claude` (Desktop) | `claude-sonnet-4.6` (default), `claude-opus-4.7` (xhigh) | `scripts/dispatch.py dispatch --model <catalog-model> --agent claude`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude`; inline orchestrator |
 | 2 | **Codex** | `codex` (CLI), `codex` (Desktop) | `gpt-5.5` (xhigh) | `scripts/dispatch.py dispatch --model <catalog-model> --agent codex`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`; Codex Desktop UI |
 | 3 | **AGY** | `agy` | `Gemini 3.8 Flash (High)` (routine & deep; 3.1 Pro only on explicit request, operator 2026-09-22) | `scripts/dispatch.py dispatch --model <catalog-model> --agent agy`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` |
-| 4 | **Grok** | `hermes -m grok-4.3` | `grok-4.3` | `scripts/dispatch.py dispatch --model <catalog-model> --agent grok`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-grok`; uses `hermes_grok.py` adapter |
+| 4 | **Grok** | `hermes -m grok-4.3` | `grok-4.3` | `scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high` (Cursor TUI; grok-build is the Grok TUI and is not a dispatch v2 provider); `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-grok`; uses `hermes_grok.py` adapter |
 | 5 | **DeepSeek v4** | `hermes -z PROMPT -m deepseek-v4-pro\|flash` | `deepseek-v4-pro` (default), `deepseek-v4-flash` (lighter) | LIVE LANE — adapter `scripts/agent_runtime/adapters/hermes_deepseek.py` SHIPPED PR #2107 (2026-05-17, SHA `84ef22455e`). `dispatch.py dispatch --model <catalog-model> --agent deepseek` end-to-end smoke validated; first real-world write-mode dispatch landed PR #2112 (artifacts MD support, +192 lines + 10 tests, pytest green). REVERSED from opencode after 33% empty-output flake. Hermes wires `sources` MCP into the model session; model proactively verifies vocab via VESUM + CEFR. |
 | ~~6~~ | ~~Mistral~~ | ~~vibe -p~~ | — | **REMOVED 2026-05-17 (user-cancelled subscription)**. DeepSeek-flash via hermes covers the lane. |
 | 7 | **Gemma local** | REMOVED | `gemma-local` | REMOVED — per user direction 2026-05-17. See PR removing gemma-local. |
@@ -338,7 +338,7 @@ scripts/dispatch.py dispatch --model <catalog-model> --agent agy --prompt-file d
 
 # Grok (via hermes)
 hermes -z "QUESTION" -m grok-4.3
-scripts/dispatch.py dispatch --model <catalog-model> --agent grok --prompt-file docs/dispatch-briefs/foo.md
+scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high --prompt-file docs/dispatch-briefs/foo.md
 
 # Mistral (via vibe; NEW lane — adapter PR pending)
 VIBE_ACTIVE_MODEL=mistral-medium-3.5 vibe -p "QUESTION" --output text --trust

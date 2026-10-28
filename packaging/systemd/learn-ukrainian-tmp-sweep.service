@@ -1,5 +1,5 @@
 [Unit]
-Description=Learn Ukrainian daily temp scratch sweep and batch_state staleness report
+Description=Learn Ukrainian temp and explicit batch_state scratch expiry
 
 [Service]
 Type=oneshot
@@ -7,6 +7,7 @@ WorkingDirectory=@REPO_ROOT@
 # Read-only report first; then reap quiet, unreferenced scratch (#9737).
 ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.batch_state_retention
 ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.tmp_sweep --batch-state --apply --summary
 TimeoutStartSec=3600
 TimeoutStopSec=300
 Nice=15

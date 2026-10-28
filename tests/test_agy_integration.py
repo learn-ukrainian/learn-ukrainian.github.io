@@ -90,6 +90,9 @@ def test_delegate_dispatch_accepts_agy_agent(tmp_path, monkeypatch, capsys):
             # #9275: agy without a Ukrainian classification is the bounded fallback.
             "--research-task-family",
             "ukrainian-authoring",
+            # AGY read-only is refused (read_only_unenforceable); write mode is its only mode.
+            "--mode",
+            "workspace-write",
             "--dry-run",
         ],
     )
