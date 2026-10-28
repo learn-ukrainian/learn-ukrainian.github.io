@@ -22,6 +22,32 @@ def _write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 
 
+@pytest.mark.parametrize(
+    ("mode", "id_field", "field", "text"),
+    [("classify", "classifyId", "lemma", "писати"),
+     ("imperative", "id", "cueSentence", "Пиши тут.")],
+)
+def test_linguistic_pack_reports_classify_and_imperative_quiz_markers(
+    tmp_path: Path, mode: str, id_field: str, field: str, text: str,
+) -> None:
+    # Sources MCP / VESUM verified писати, пиши and тут. This rule needs no DB lookup.
+    vesum = tmp_path / "vesum.db"
+    vesum.touch()
+    good = {id_field: f"good:{mode}", field: text}
+    bad = {id_field: f"bad:{mode}", field: f"Д {text}"}
+    for items, expected in (([good, bad], [
+        f"linguistic gate v1 failed (1): leading_quiz_marker [bad:{mode}]: "
+        f"learner-facing text starts with a quiz letter marker: {bad[field]!r}",
+    ]), ([good], [])):
+        errors: list[str] = []
+        check_static_practice_assets._run_linguistic_pack(
+            {"_linguistic_shards": {"A1": {mode: items}}},
+            vesum_db=vesum, cloze_sources_path=None,
+            sentence_inventory_path=None, errors=errors,
+        )
+        assert errors == expected
+
+
 def _budget() -> dict[str, int | bool]:
     return {
         "rawBytes": 100,
