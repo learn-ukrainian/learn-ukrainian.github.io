@@ -1355,6 +1355,7 @@ class GitHubClient:
                             "CREATE INDEX ", "CREATE INDEX IF NOT EXISTS "
                         )
                     )
+                _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
                 break
             except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
                 if self.cache_dir is not None:
@@ -1367,7 +1368,6 @@ class GitHubClient:
                 raise
         try:
             with db:
-                _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
                 changes = db.total_changes
                 yield db
                 if db.total_changes != changes:
@@ -3313,11 +3313,20 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
                 if budget is not None
                 else None
             )
-            with client._db() as db:
-                if resource is not None:
-                    _store_budget(db, client.scope, resource, *budget, now=now)
-                for hold in holds:
-                    _store_budget(db, client.scope, hold, 0, reset, now=now)
+            for persist_attempt in range(2):
+                try:
+                    with client._db() as db:
+                        if resource is not None:
+                            _store_budget(db, client.scope, resource, *budget, now=now)
+                        for hold in holds:
+                            _store_budget(db, client.scope, hold, 0, reset, now=now)
+                    break
+                except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
+                    if client.cache_dir is not None:
+                        client.cache_dir = None
+                        if persist_attempt == 0:
+                            continue
+                    break
             return _result_process(args, _limited(reason, reset), {}, kwargs)
     if client.max_response_bytes is not None and len(output) > client.max_response_bytes:
         return _result_process(args, Result(error="github_response_too_large"), {}, kwargs)
