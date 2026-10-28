@@ -1473,9 +1473,8 @@ def _output_sink_safe(body: str) -> bool:
 
 def _sensitive_file_reason(pipeline: list[list[str]], index: int, dumped_files: set[str]) -> str | None:
     found = _command_at(pipeline[index])
-    if not found:
-        return None
-    cmd, args, _ = found
+    # Compound commands can carry input redirects after their closing keyword.
+    cmd, args = (found[0], found[1]) if found else ("", pipeline[index])
     if cmd == "file" and not _non_printing_command(cmd, _without_redirects(args)):
         return "file-list input could expose sensitive values as filenames"
     # Preserve the explicitly documented source-data-flow residual.

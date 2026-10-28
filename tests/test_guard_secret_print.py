@@ -82,6 +82,8 @@ def test_redirect_keeps_secret_file_policy(
         ("env 2 > /dev/null", 0),
         ("'2'>/dev/null wc -l .env", 2),
         ("$'2'2>/dev/null wc -l .env", 2),
+        ('while read l; do echo "$l"; done < .env', 2),
+        ("while read l; do echo $l; done < .env", 2),
     ],
 )
 def test_redirect_does_not_hide_sensitive_input_or_change_output_descriptor(monkeypatch, command, expected):
