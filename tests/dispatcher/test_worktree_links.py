@@ -16,6 +16,7 @@ from scripts.orchestration.worktree_artifacts import is_disposable_path
 from scripts.storage.topology import STORE_FILES
 
 LINKS = (*(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum")), "node_modules", "site/node_modules")
+SOURCES_LINK = LINKS[0]
 
 
 @pytest.mark.parametrize("relative", ["node_modules", "site/node_modules"])
@@ -136,7 +137,7 @@ def test_missing_targets_are_not_linked(tmp_path):
     assert list(worktree.iterdir()) == []
 
 
-@pytest.mark.parametrize("side,relative", [("source", "data/sources.db"), ("source", "data"), ("destination", "data")])
+@pytest.mark.parametrize("side,relative", [("source", SOURCES_LINK), ("source", "data"), ("destination", "data")])
 def test_symlink_escape_is_refused(layout, tmp_path, side, relative):
     """Source symlinks and destination ancestor links must not escape checkout boundaries."""
     primary, worktree = layout
@@ -159,15 +160,16 @@ def test_atomic_creation_preserves_racing_entry(layout, monkeypatch):
     """A competing creator between inspection and symlink creation must never lose its entry."""
     primary, worktree = layout
     original = git.os.symlink
+    shared, racing = primary / SOURCES_LINK, worktree / SOURCES_LINK
 
     def competing_creator(source, destination, *, dir_fd):
-        if destination == "sources.db" and source == primary / "data/sources.db":
-            (worktree / "data/sources.db").write_text("racing writer")
+        if destination == "sources.db" and source == shared:
+            racing.write_text("racing writer")
         return original(source, destination, dir_fd=dir_fd)
 
     monkeypatch.setattr(git.os, "symlink", competing_creator)
     git.provision_links(primary, worktree)
-    assert (worktree / "data/sources.db").read_text() == "racing writer"
+    assert racing.read_text() == "racing writer"
 
 
 def test_unexpected_io_failure_is_reported(layout, monkeypatch):
