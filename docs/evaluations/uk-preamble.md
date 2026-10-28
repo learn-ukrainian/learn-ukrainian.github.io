@@ -85,6 +85,12 @@ an explicit provider/model, `--mode read-only`, `--language-lane ukrainian`,
 dispatch worktree from that commit. It does not add rules, research pointers or
 legacy worktree prompt blocks; include required instructions in the input.
 
+The Gemini seat runs on AGY, which dispatch refuses in read-only mode because
+AGY's read-only mode cannot be locked against edits. That seat runs
+`--mode workspace-write` instead. Its dispatch worktree is disposable, and the
+seat returns scored text, not repository changes. A run whose tracked checkout
+changed is still refused.
+
 Dry runs validate the argv with `--dry-run` and create no task record. Real
 launches refuse an existing task ID. There is no force-new replacement path.
 `--review-profile ukrainian` supplies review metadata; it does not activate
