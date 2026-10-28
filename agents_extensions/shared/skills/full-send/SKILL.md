@@ -39,7 +39,7 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
   its brief's stream; its brief may name an ordered brief id instead of an issue.
 - **The integration owner and the CTO are not limited to one stream.** The integration owner
   holds cross-stream merge judgment (rules core P1; `workflow.md` § Merge policy, the
-  integration-owner role), and the CTO is the cross-epic lead who lands PRs (`cto` skill).
+  integration-owner role), and the CTO is the cross-epic lead who lands what no brief owns (`cto` skill).
 - If the next step is on the operator-only list (production or public cutover, host access,
   credentials, paid plans), stop and escalate.
 
