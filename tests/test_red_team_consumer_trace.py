@@ -28,6 +28,8 @@ HANDLING = {
     "scripts/lexicon/published_record_dispositions.py": "refuse",
     "scripts/orchestration/integration_sweep.py#CI-blocker-exclusion": "ignore",
     "scripts/review/record_cf_verdict.py": "accept-as-approval",
+    # The lineage rule reads A's APPROVE as each seat's current verdict before an extension or carry-over.
+    "scripts/review/review_lineage.py": "accept-as-approval",
     "scripts/fleet_comms/cli.py": "ignore",
     "scripts/fleet_comms/efficiency_metrics.py": "ignore",
     "scripts/ci/pr20_measurement.py": "ignore",

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date
 from functools import lru_cache
@@ -85,6 +86,16 @@ ADVISOR_OUTPUT_FIELDS = [
     "acceptance_evidence",
     "escalation_triggers",
 ]
+ADVISORY_ROLES_KEY = "advisory_roles"
+ADVISORY_ROLE_KEYS = frozenset({"effort", "fence", "output_fields"})
+REVIEW_BUDGET_EXTENSION_ROLE = "review_budget_extension"
+# Role -> (fence label, exact typed-object fields) the catalog entry must declare.
+ADVISORY_ROLE_SHAPES = {
+    REVIEW_BUDGET_EXTENSION_ROLE: (
+        "budget-extension",
+        ["decision", "pr", "lineage_id", "approved_head", "reason_class", "grant", "request_sha256"],
+    ),
+}
 LUNA_TASK_TYPES = frozenset({"bounded_implementation", "bounded_investigation"})
 LUNA_PROHIBITED_DECISIONS = frozenset(
     {"consequential_architecture", "security", "release", "high_risk_go_no_go"}
@@ -180,6 +191,38 @@ def _require_execution_effort(value: Any, label: str) -> None:
     effort = _require_string(value, label)
     if effort not in VALID_CODEX_EFFORTS:
         raise ModelCatalogError(f"{label} must be one of {sorted(VALID_CODEX_EFFORTS)}")
+
+
+def _advisory_role_holders(models: dict[str, Any], role: str) -> dict[str, tuple[str, ...]]:
+    """Family -> the active models holding ``role``."""
+    holders: dict[str, tuple[str, ...]] = {}
+    for model_id, model in models.items():
+        if model.get("lifecycle") == "active" and role in model.get("roles", []):
+            holders[model["family"]] = (*holders.get(model["family"], ()), model_id)
+    return holders
+
+
+def _validate_advisory_roles(raw: Any, models: dict[str, Any]) -> None:
+    if raw is None:
+        # A catalog without the section defines no advisory decision; its consumers refuse.
+        return
+    roles = _require_mapping(raw, ADVISORY_ROLES_KEY)
+    if set(roles) != set(ADVISORY_ROLE_SHAPES):
+        raise ModelCatalogError(f"{ADVISORY_ROLES_KEY} must define exactly {sorted(ADVISORY_ROLE_SHAPES)}")
+    for role, (fence, fields) in ADVISORY_ROLE_SHAPES.items():
+        label = f"{ADVISORY_ROLES_KEY}.{role}"
+        entry = _require_mapping(roles[role], label)
+        _require_exact_keys(entry, ADVISORY_ROLE_KEYS, label)
+        _require_execution_effort(entry["effort"], f"{label}.effort")
+        if entry["fence"] != fence:
+            raise ModelCatalogError(f"{label}.fence must be {fence!r}")
+        if entry["output_fields"] != fields:
+            raise ModelCatalogError(f"{label}.output_fields must be exactly {fields!r}")
+        if len(_advisory_role_holders(models, role)) < 2:
+            raise ModelCatalogError(
+                f"{label} needs active holders in two families, so a non-author advisor exists "
+                "(operator-expectations item 12)"
+            )
 
 
 def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
@@ -779,8 +822,9 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 raise ModelCatalogError(f"models.{model_id}.replaced_by must reference an active model")
 
     _validate_execution_routing(catalog.get("execution_routing"), models)
+    _validate_advisory_roles(catalog.get(ADVISORY_ROLES_KEY), models)
 
-    candidates = _require_mapping(catalog.get("review_candidates"), "review_candidates")
+    candidates =_require_mapping(catalog.get("review_candidates"), "review_candidates")
     for name, raw in candidates.items():
         candidate = _require_mapping(raw, f"review_candidates.{name}")
         model_id = _require_string(candidate.get("model_id"), f"review_candidates.{name}.model_id")
@@ -1143,6 +1187,47 @@ def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedEx
         bounded_worker_model_id=route["preferred_worker"]["model_id"],
         bounded_fallback_model_id=fallback["model_id"],
         non_bounded_task_families=frozenset(family.strip() for family in fallback["non_bounded_task_families"]),
+    )
+
+
+@dataclass(frozen=True)
+class AdvisoryRolePolicy:
+    """One ``advisory_roles`` entry: the typed object its advisor returns, and who may advise."""
+
+    role: str
+    route: str
+    effort: str
+    fence: str
+    output_fields: tuple[str, ...]
+    # Family -> the active models holding the role in that family.
+    advisors: Mapping[str, tuple[str, ...]]
+
+    @property
+    def advisor_models(self) -> frozenset[str]:
+        return frozenset(model for models in self.advisors.values() for model in models)
+
+    def advisor_outside(self, author_family: str) -> str | None:
+        """The designated advisor for a proposal from ``author_family``: the one holder outside it.
+
+        None unless the author's family holds the role and exactly one model
+        outside it does (operator-expectations item 12: a proposal from any
+        other author needs both advisors; two candidates are no designation).
+        """
+        others = [model for family, models in self.advisors.items() if family != author_family for model in models]
+        return others[0] if len(others) == 1 and author_family in self.advisors else None
+
+
+def advisory_role_policy(role: str, catalog: dict[str, Any] | None = None) -> AdvisoryRolePolicy:
+    """The validated ``advisory_roles.<role>`` entry; KeyError when the catalog has no such role."""
+    catalog = catalog or load_model_catalog()
+    entry = (catalog.get(ADVISORY_ROLES_KEY) or {})[role]
+    return AdvisoryRolePolicy(
+        role=role,
+        route=f"{ADVISORY_ROLES_KEY}.{role}",
+        effort=entry["effort"],
+        fence=entry["fence"],
+        output_fields=tuple(entry["output_fields"]),
+        advisors=_advisory_role_holders(catalog["models"], role),
     )
 
 
