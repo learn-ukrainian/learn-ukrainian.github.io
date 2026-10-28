@@ -63,6 +63,13 @@ logical CPU count and initial load average, plus reported cases, failures and
 skips. The marker expression is exactly `repo_wide`; it does not broaden
 execution to unmarked tests or inherit the changed-test exclusions.
 An empty selection, failed execution, stale report or missing JUnit fails CI.
+Both invocations use two pytest workers with work stealing. Invariants have
+a 1,500-second subprocess timeout; the combined job has a 40-minute timeout.
+The budget uses the hosted measurements on [PR #11922](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/11922):
+twice the observed marker wall time, rounded up to five minutes, plus the
+existing 480-second changed-test ceiling, twice the observed setup time and
+one minute for report publication, again rounded up to five minutes.
+The same job runs both selections without additional PR jobs or shards.
 
 Every `merge_group` candidate runs the full supported non-slow pytest suite,
 frontend toolchain tests and partition audits.

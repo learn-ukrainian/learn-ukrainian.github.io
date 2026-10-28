@@ -501,9 +501,9 @@ jobs:
     name: PR changed tests and guards
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
-    # Measurement envelope: recorded marked-file costs total 1,806s serial.
-    # Final budget is selected from this PR's hosted marker-only measurements.
-    timeout-minutes: 55
+    # PR #11922 measured 660s marker-only with two workers. Its 1,500s
+    # subprocess ceiling plus 480s changed tests and setup fit this job budget.
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

@@ -649,7 +649,7 @@ def test_ci_gate_guard_steps_lack_continue_on_error() -> None:
 def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     """Missing or non-success changed-test proof must never admit a PR."""
     job = _load('ci.yml')['jobs']['pr-affected']
-    assert job['timeout-minutes'] == 55
+    assert job['timeout-minutes'] == 40
     assert 'needs' not in job
     assert 'continue-on-error' not in job
     assert 'pr-affected' in _ci_gate_job()['needs']

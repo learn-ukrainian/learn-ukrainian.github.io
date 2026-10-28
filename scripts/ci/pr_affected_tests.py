@@ -160,7 +160,7 @@ def main() -> int:
         paths = ["tests"] if args.repo_wide else record["run_files"]
         # pytest excludes build/ by default; it contains registered invariants.
         collection = ["--override-ini=norecursedirs=.* node_modules"] if args.repo_wide else []
-        timeout = 2400 if args.repo_wide else 480
+        timeout = 1500 if args.repo_wide else 480
         record.update(selection=marker, requested_paths=paths, workers=2, timeout_seconds=timeout,
                       logical_cpus=os.cpu_count(), load_average=os.getloadavg())
         stage, reason = "fresh_report", "stale_or_unwritable_report"
