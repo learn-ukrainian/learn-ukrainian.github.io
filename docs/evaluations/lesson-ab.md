@@ -62,8 +62,9 @@ The manifest is JSON. Relative paths resolve against the manifest's directory.
   writer is A. Judges in those families are refused.
 - The key is a separate file, read only at the final unblinding step:
   `{"writers": {"terra": "openai", "sol": "openai"}, "tasks": {"a1-at-the-cafe": {"A": "sol", "B": "terra"}, …}}`.
-  When the manifest carries `key_sha256`, any other key file is refused. The
-  report also flags key families that the manifest did not declare.
+  When the manifest carries `key_sha256`, any other key file is refused. A key
+  that names a writer family the manifest did not declare is refused too:
+  judges were admitted against the manifest's families.
 - **Provenance.** The outputs are imported. The harness did not run the
   writers, so it records each output's SHA-256 and the manifest's provenance
   note, and every text is marked `execution_attested: false`. Only judge runs
@@ -128,7 +129,9 @@ in both orders: A first (`AB`) and B first (`BA`).
 - 4–6: at least one P1;
 - 1–3: a P0 or off-task.
 
-The verdict is `preferred`: `1`, `2`, `tie` or `abstain`. Judges verify forms
+The verdict is `preferred`: `1`, `2`, `tie` or `abstain`. Any preference
+other than `abstain` needs a SCORE for both texts; a verdict without one counts
+as failed. Judges verify forms
 with the Sources tools when their harness provides them, and report whether
 they did in `sources_checked`.
 

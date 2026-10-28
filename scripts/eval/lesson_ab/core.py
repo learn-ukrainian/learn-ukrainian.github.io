@@ -160,6 +160,10 @@ def load_key(path: Path, manifest: Manifest) -> dict[str, Any]:
         raise HarnessError(f"{path}: 'writers' must map exactly two writer names to model families")
     if not isinstance(mapping, dict) or set(mapping) != {task.task_id for task in manifest.tasks}:
         raise HarnessError(f"{path}: 'tasks' must cover exactly the manifest's task ids")
+    undeclared = sorted(set(writers.values()) - set(manifest.writer_families))
+    if undeclared:
+        # Judges were admitted against the manifest's families; an undeclared writer family voids that check.
+        raise HarnessError(f"{path}: writer families {undeclared} are not in the manifest's writer_families")
     for task_id, sides in mapping.items():
         if not isinstance(sides, dict) or set(sides) != set(SIDES) or set(sides.values()) != set(writers):
             raise HarnessError(f"{path}: task {task_id} must map A and B to the two different writers")
@@ -185,9 +189,16 @@ def strip_stress(text: str) -> str:
     )
 
 
+# Private-use stand-ins: NFC must not fold a stress mark into its letter (е + grave is ѐ, г + acute is ѓ).
+_HIDE_MARKS = str.maketrans({"\u0301": "\ue001", "\u0300": "\ue000"})
+_SHOW_MARKS = str.maketrans({"\ue001": "\u0301", "\ue000": "\u0300"})
+
+
 def marked_words(text: str) -> list[str]:
-    """Words carrying a stress mark, in text order (NFC keeps a Cyrillic vowel's acute as a combining mark)."""
-    return [w for w in _MARKABLE_WORD.findall(unicodedata.normalize("NFC", text)) if _STRESS_MARKS & set(w)]
+    """Words carrying a stress mark, in text order; letters are NFC and every mark stays a combining mark."""
+    hidden = unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).translate(_HIDE_MARKS))
+    words = _MARKABLE_WORD.findall(hidden.translate(_SHOW_MARKS))
+    return [w for w in words if _STRESS_MARKS & set(w)]
 
 
 class ChecksClient(Protocol):

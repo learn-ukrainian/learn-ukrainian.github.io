@@ -19,8 +19,8 @@ from scripts.eval.lesson_ab.core import (
     stress_metrics,
     strip_stress,
 )
-from scripts.eval.lesson_ab.judge import plan_judge_tasks, resolve_judges, validate_verdict
-from scripts.eval.lesson_ab.report import cohen_kappa, sign_test
+from scripts.eval.lesson_ab.judge import JUDGE_CRITERIA, plan_judge_tasks, resolve_judges, validate_verdict
+from scripts.eval.lesson_ab.report import build_report, cohen_kappa, sign_test
 from scripts.eval.uk_preamble.common import SEATS, HarnessError, sha256_text
 from scripts.eval.uk_preamble.dispatch import TaskOutcome, composition_of, seat_mode
 from scripts.eval.uk_preamble.runner import Executor
@@ -222,12 +222,45 @@ def test_key_must_match_the_commitment_and_cover_every_task(tmp_path: Path) -> N
         load_key(tmp_path / "other.json", manifest)
 
 
+@pytest.mark.parametrize(
+    ("writers", "message"),
+    [
+        ({"alpha": "google", "beta": "openai"}, "not in the manifest's writer_families"),
+        ({"tie": "openai", "beta": "openai"}, None),
+    ],
+)
+def test_key_families_must_be_declared_and_any_writer_name_is_safe(
+    tmp_path: Path, writers: dict[str, str], message: str | None
+) -> None:
+    names = list(writers)
+    key = {"writers": writers, "tasks": {t: {"A": names[0], "B": names[1]} for t in TASKS}}
+    manifest = load_manifest(build_packet(tmp_path, key_sha256=None))
+    path = _write(tmp_path / "custom-key.json", json.dumps(key))
+    if message:
+        with pytest.raises(HarnessError, match=message):
+            load_key(path, manifest)
+        return
+    # Writers named like status values: an abstention and a failure stay what they are.
+    judgements = [
+        {"judge": GEMINI, "judge_family": "google", "task_id": "t1", "order": "AB", "failed": False,
+         "preferred": "abstain", "preferred_position": "abstain", "texts": {s: {"score": None, "criteria": dict.fromkeys(JUDGE_CRITERIA), "errors": []} for s in "AB"}},
+        {"judge": GEMINI, "judge_family": "google", "task_id": "t1", "order": "BA", "failed": True, "preferred": None, "texts": None},
+    ]  # fmt: skip
+    report = build_report(manifest, [], judgements, judges=[GEMINI], key=load_key(path, manifest), iterations=10)
+    t1 = report["tasks"][0]
+    assert t1["outcome"] == {"result": "no verdict", "winner": None}
+    assert t1["votes"] == {"writers": {"beta": 0, "tie": 0}, "tie": 0, "abstain": 1, "failed": 1}
+    assert report["totals"]["wins"] == report["totals"]["ties"] == 0
+
+
 # --------------------------------------------------------------------------- mechanical checks
 
 
 def test_stress_marks_are_stripped_and_classified() -> None:
     assert strip_stress("Ки́єві й ї") == "Києві й ї"
     assert marked_words("Я живу́ в Ки́єві, пам'ять") == ["живу́", "Ки́єві"]
+    # NFC would fold these marks into one letter (ѐ, ѝ, ѓ); each stays a combining mark.
+    assert marked_words("сѐла сѝла ѓрати") == ["се\u0300ла", "си\u0300ла", "г\u0301рати"]
     metrics = stress_metrics("Ви живе́те. Ро́стик.", "Ви живете. Ростик.", FakeChecks())
     assert metrics["stress_wrong"] == 1 and metrics["stress_wrong_forms"][0]["form"] == "живе́те"
     assert metrics["stress_unverified"] == 1 and metrics["stress_attested"] == 0
@@ -270,6 +303,11 @@ def test_every_judge_sees_every_task_in_both_orders(tmp_path: Path) -> None:
 def test_verdicts_must_match_the_schema_and_id() -> None:
     assert validate_verdict("{}", "t1")[1].startswith("schema violation")
     assert validate_verdict(None, "t1") == (None, "no response")
+    text = {"criteria": dict.fromkeys(JUDGE_CRITERIA), "score": None, "errors": []}
+    answer = {"id": "t1", "text_1": text, "text_2": text, "rationale": "", "sources_checked": False}
+    # A preference needs both SCOREs; only an abstention may leave them null.
+    assert "without a SCORE" in validate_verdict(json.dumps({**answer, "preferred": "1"}), "t1")[1]
+    assert validate_verdict(json.dumps({**answer, "preferred": "abstain"}), "t1")[1] is None
 
 
 # --------------------------------------------------------------------------- end to end
@@ -291,7 +329,8 @@ def test_judged_run_keeps_failures_and_abstentions_then_unblinds(env, tmp_path: 
     blind = json.loads((results / "report-blind.json").read_text())
     t1 = next(t for t in blind["tasks"] if t["task_id"] == "t1")
     # Gemini prefers A (GOOD) in both orders; Opus prefers Text 1, so A once and B once.
-    assert t1["votes"] == {"A": 3, "B": 1, "tie": 0, "abstain": 0, "failed": 0} and t1["outcome"] == "A"
+    assert t1["votes"] == {"writers": {"A": 3, "B": 1}, "tie": 0, "abstain": 0, "failed": 0}
+    assert t1["outcome"] == {"result": "win", "winner": "A"}
     t3 = next(t for t in blind["tasks"] if t["task_id"] == "t3")
     assert t3["votes"]["abstain"] == 2
     opus = blind["judges"]["per_judge"][OPUS]

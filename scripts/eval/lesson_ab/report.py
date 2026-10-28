@@ -96,29 +96,42 @@ def _text_values(
     return values
 
 
-def _combined(records: Sequence[dict[str, Any]], orient: dict[str, str]) -> tuple[str | None, bool]:
+def _vote(preferred: str, orient: dict[str, str], labels: Sequence[str]) -> int | str:
+    """A preference as the preferred label's index (0 or 1), or ``tie``/``abstain``.
+
+    Indices keep writer names apart from status values: a writer may be called ``tie``.
+    """
+    return labels.index(orient[preferred]) if preferred in SIDES else preferred
+
+
+def _combined(
+    records: Sequence[dict[str, Any]], orient: dict[str, str], labels: Sequence[str]
+) -> tuple[int | str | None, bool]:
     """(verdict over both orders or None, position-inconsistent)."""
     by_order = {r["order"]: r["preferred"] for r in records if not r["failed"]}
     if set(by_order) != set(ORDERS) or "abstain" in by_order.values():
         return None, False
-    verdicts = {orient.get(v, v) for v in by_order.values()}
+    verdicts = {_vote(v, orient, labels) for v in by_order.values()}
     if len(verdicts) == 1:
         return verdicts.pop(), False
     return "tie", True
 
 
 def _judge_agreement(
-    judgements: Sequence[dict[str, Any]], judges: Sequence[str], orients: dict[str, dict[str, str]]
+    judgements: Sequence[dict[str, Any]],
+    judges: Sequence[str],
+    orients: dict[str, dict[str, str]],
+    labels: Sequence[str],
 ) -> dict[str, Any]:
     by_judge_task: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for record in judgements:
         by_judge_task[(record["judge"], record["task_id"])].append(record)
-    combined: dict[str, dict[str, str]] = {}
+    combined: dict[str, dict[str, int | str]] = {}
     per_judge = {}
     for judge in judges:
         verdicts, inconsistent = {}, 0
         for task_id, orient in orients.items():
-            verdict, flipped = _combined(by_judge_task.get((judge, task_id), []), orient)
+            verdict, flipped = _combined(by_judge_task.get((judge, task_id), []), orient, labels)
             if verdict is not None:
                 verdicts[task_id] = verdict
                 inconsistent += flipped
@@ -208,22 +221,22 @@ def build_report(
         orient = orients[task.task_id]
         side_of = {writer: side for side, writer in orient.items()}
         records = by_task.get(task.task_id, [])
-        votes: Counter[str] = Counter()
-        for record in records:
-            if record["failed"]:
-                votes["failed"] += 1
-            else:
-                votes[orient.get(record["preferred"], record["preferred"])] += 1
-        if votes[first] != votes[second]:
-            outcome = first if votes[first] > votes[second] else second
+        votes: Counter[int | str] = Counter(
+            "failed" if r["failed"] else _vote(r["preferred"], orient, labels) for r in records
+        )
+        if votes[0] != votes[1]:
+            outcome = {"result": "win", "winner": labels[0] if votes[0] > votes[1] else labels[1]}
         else:
-            outcome = "tie" if votes[first] + votes["tie"] else "no verdict"
+            outcome = {"result": "tie" if votes[0] + votes["tie"] else "no verdict", "winner": None}
         tasks.append(
             {
                 "task_id": task.task_id,
                 "level": task.level,
                 "sides": {label: side_of[label] for label in labels},
-                "votes": {k: votes.get(k, 0) for k in (first, second, "tie", "abstain", "failed")},
+                "votes": {
+                    "writers": {label: votes[index] for index, label in enumerate(labels)},
+                    **{status: votes[status] for status in ("tie", "abstain", "failed")},
+                },
                 "outcome": outcome,
                 "values": {label: _text_values(mech, records, human, task.task_id, side_of[label]) for label in labels},
                 "mechanical_failed": [
@@ -232,8 +245,9 @@ def build_report(
             }
         )
 
-    outcomes = Counter(t["outcome"] for t in tasks)
-    wins, losses = outcomes.get(first, 0), outcomes.get(second, 0)
+    outcomes = Counter(t["outcome"]["result"] for t in tasks)
+    winners = Counter(t["outcome"]["winner"] for t in tasks if t["outcome"]["result"] == "win")
+    wins, losses = winners[first], winners[second]
     metrics = {}
     metric_names = (*MECHANICAL_METRICS, *JUDGE_METRICS, *(("human_score",) if human else ()))
     for index, metric in enumerate(metric_names):
@@ -251,8 +265,7 @@ def build_report(
         )
         metrics[metric] = {
             "tasks": len(pairs),
-            first: float(matrix[:, 0].mean()),
-            second: float(matrix[:, 1].mean()),
+            "means": {first: float(matrix[:, 0].mean()), second: float(matrix[:, 1].mean())},
             "difference": point,
             "ci95": [low, high],
         }
@@ -285,20 +298,17 @@ def build_report(
             "writers": sorted(writer_families),
             "judges": judge_families,
             "violations": sorted(writer_families & set(judge_families)),
-            "key_families_outside_manifest": sorted(set(key["writers"].values()) - set(manifest.writer_families))
-            if key
-            else [],
         },
         "totals": {
             "wins": wins,
-            "ties": outcomes.get("tie", 0),
+            "ties": outcomes["tie"],
             "losses": losses,
-            "no_verdict": outcomes.get("no verdict", 0),
+            "no_verdict": outcomes["no verdict"],
             "sign_test_p": sign_test(wins, losses),
         },
         "tasks": tasks,
         "metrics": metrics,
-        "judges": _judge_agreement(judgements, judges, orients),
+        "judges": _judge_agreement(judgements, judges, orients, labels),
         "human": {
             "texts_rated": sum(1 for ratings in human.values() if ratings),
             "pearson_with_judge_score": pearson([h for h, _ in human_pairs], [j for _, j in human_pairs]),
@@ -328,11 +338,6 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"- Key: {'not read (blinded)' if report['blinded'] else prov['key_commitment'] + ', `' + prov['key_sha256'] + '`'}.",
         f"- Writer families: {', '.join(fam['writers'])}; judge families: {', '.join(fam['judges']) or 'none'}"
         + (f"; **FAMILY VIOLATION: {', '.join(fam['violations'])}**" if fam["violations"] else "")
-        + (
-            f"; **key families not declared in the manifest: {', '.join(fam['key_families_outside_manifest'])}**"
-            if fam["key_families_outside_manifest"]
-            else ""
-        )
         + ".",
         "",
         f"## Result: {first} {totals['wins']} wins, {totals['ties']} ties, {totals['losses']} losses"
@@ -346,7 +351,8 @@ def render_markdown(report: dict[str, Any]) -> str:
         v = task["votes"]
         lines.append(
             f"| {task['task_id']} | {task['level']} | {task['sides'][first]} | {task['sides'][second]} |"
-            f" {v[first]}/{v[second]}/{v['tie']}/{v['abstain']}/{v['failed']} | {task['outcome']} |"
+            f" {v['writers'][first]}/{v['writers'][second]}/{v['tie']}/{v['abstain']}/{v['failed']} |"
+            f" {'win: ' + task['outcome']['winner'] if task['outcome']['winner'] else task['outcome']['result']} |"
             f" {_fmt(task['values'][first]['judge_score'])} | {_fmt(task['values'][second]['judge_score'])} |"
         )
     lines += [
@@ -362,7 +368,7 @@ def render_markdown(report: dict[str, Any]) -> str:
             continue
         low, high = metric["ci95"]
         lines.append(
-            f"| {name} | {metric['tasks']} | {_fmt(metric[first])} | {_fmt(metric[second])} |"
+            f"| {name} | {metric['tasks']} | {_fmt(metric['means'][first])} | {_fmt(metric['means'][second])} |"
             f" {_fmt(metric['difference'])} | [{_fmt(low)}, {_fmt(high)}] |"
         )
     lines += [

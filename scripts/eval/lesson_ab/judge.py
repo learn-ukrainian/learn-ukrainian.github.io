@@ -100,7 +100,7 @@ P1 and no P0; 1-3 = a P0 or off-task.
 Requirements for the judgement:
 - Judge quality, not length: a longer or shorter text earns nothing for its length alone.
 - `preferred` is "1", "2" or "tie"; use "abstain" only when you cannot judge, and say why in `rationale`. \
-A score or criterion you cannot judge is null.
+A score or criterion you cannot judge is null; a preference other than "abstain" needs both SCOREs.
 - When your environment provides the Sources tools (VESUM, stress, Russianism checks), verify word forms, \
 stress and suspected Russianisms with them, not from memory, and set `sources_checked` to true; otherwise false.
 - `rationale` is at most three sentences; `id` is the comparison id given below.
@@ -175,6 +175,8 @@ def validate_verdict(response_text: str | None, comparison_id: str) -> tuple[dic
         return None, f"schema violation at {where}: {errors[0].message}"
     if entry["id"] != comparison_id:
         return None, f"answer id {entry['id']!r} is not {comparison_id!r}"
+    if entry["preferred"] != "abstain" and None in (entry["text_1"]["score"], entry["text_2"]["score"]):
+        return None, f"preference {entry['preferred']!r} without a SCORE for both texts"
     return entry, None
 
 
