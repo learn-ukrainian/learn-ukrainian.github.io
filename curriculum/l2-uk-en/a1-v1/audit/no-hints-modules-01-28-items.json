@@ -10,9 +10,9 @@
     "context_only": 4,
     "clock_contexts_kept": 7,
     "merged_hints_removed": 76,
-    "legacy_hints_removed": 14,
-    "items_reworded": 85,
-    "items_replaced": 5
+    "legacy_labels_removed": 17,
+    "items_reworded": 91,
+    "items_replaced": 2
   },
   "items": [
     {
@@ -33,10 +33,13 @@
       ],
       "reason": "The name construction takes мене; мені is dative and я is nominative. The valid Моє ім’я alternative is removed.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D01",
         "D41",
         "V01",
@@ -97,10 +100,13 @@
       ],
       "reason": "Студент is nominative predicate; студента is genitive/accusative and мене cannot be the subject here.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D02",
         "D41",
         "V02",
@@ -161,10 +167,13 @@
       ],
       "reason": "Only студент is a nominative predicate after я. Студента is oblique; мене студент would leave a second, incompatible pronoun.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D02",
         "D41",
         "V02",
@@ -208,10 +217,13 @@
       ],
       "reason": "Accusative мене fits звати; dative мені does not. The grammatical naming alternative is removed.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D01",
         "D41",
         "V01",
@@ -263,10 +275,13 @@
       ],
       "reason": "The identity predicate is nominative студент, not genitive/accusative студента. No claim rejects overt є.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D02",
         "D41",
         "V02",
@@ -319,10 +334,13 @@
       ],
       "reason": "A first introduction licenses познайомитися after приємно. Походження is a noun, and познайомився is a finite past form.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D03",
         "V03"
       ],
@@ -365,10 +383,13 @@
       ],
       "reason": "Якого кольору agrees in genitive singular. Який колір є олівець gives a mismatched noun predicate; якого кольори mixes singular and plural.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "(Do not use є.) You point to a pencil and ask its color.",
@@ -425,10 +446,13 @@
       ],
       "reason": "Тебе addresses Oleg. У мене asks about the questioner, while Це брат asks to identify someone rather than whether Oleg has a brother.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D36",
         "D41",
         "D42",
@@ -491,10 +515,13 @@
       ],
       "reason": "The farewell reply establishes the parting expression До побачення. До тебе is not a farewell; до мама has the wrong case.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D04",
         "D42",
         "V04",
@@ -537,10 +564,13 @@
       ],
       "reason": "Вчителька is nominative; вчительку is accusative. Воно cannot refer to Олена. The valid masculine profession noun is removed.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D05",
         "V05"
       ],
@@ -599,10 +629,13 @@
       ],
       "reason": "Лікарка is nominative, лікарку accusative; він mismatches Олена. Masculine лікар is not labelled wrong.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D06",
         "V06"
       ],
@@ -661,10 +694,13 @@
       ],
       "reason": "Акторка is nominative, акторку accusative; воно mismatches the named person. Masculine актор is not labelled wrong.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D07",
         "V07"
       ],
@@ -723,10 +759,13 @@
       ],
       "reason": "Вікно is the neuter noun compatible with воно маленьке. Він is masculine; моя is feminine and has no matching noun.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D08",
         "V08"
       ],
@@ -769,10 +808,13 @@
       ],
       "reason": "Цікава книга agrees in nominative. Цікава книгу mixes cases; цей is masculine with feminine книга. A valid copula alternative is removed.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D09",
         "V09"
       ],
@@ -831,10 +873,13 @@
       ],
       "reason": "Книга нова agrees in feminine nominative. Книгу cannot be its subject; новий is masculine.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D09",
         "V09"
       ],
@@ -893,10 +938,13 @@
       ],
       "reason": "Стіл чистий agrees in masculine nominative. Чиста is feminine; столу is oblique.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D10",
         "D35",
         "V10",
@@ -957,10 +1005,13 @@
       ],
       "reason": "А joins the two contrasting clauses. Якого and яке cannot agree with feminine книга or serve as conjunctions here; the grammatical і alternative is removed.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D11",
         "V11"
       ],
@@ -998,16 +1049,22 @@
       "disposition": "reworded",
       "key": "будь-який",
       "distractors": [
-        "будь-яку"
+        "любий"
       ],
-      "reason": "Inanimate masculine accusative олівець requires будь-який. Будь-яку is feminine accusative. No assertion condemns любий generally.",
+      "reason": "The speaker has no preference between pencils, so indefinite будь-який fits. Любий means dear/beloved here and does not express unrestricted choice; the contextual meaning is the original planned contrast.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D12",
-        "V12"
+        "D54",
+        "V12",
+        "V56",
+        "N04"
       ],
       "before": {
         "sentence": "(Any pencil, with no particular preference.) Дай мені, будь ласка, ___ олівець.",
@@ -1019,13 +1076,13 @@
         "explanation": "Use the standard Ukrainian form for any."
       },
       "after": {
-        "sentence": "Мені потрібен олівець для вправи. Дай мені, будь ласка, ___ олівець.",
+        "sentence": "Мені все одно, який олівець. Дай мені, будь ласка, ___ олівець.",
         "answer": "будь-який",
         "options": [
           "будь-який",
-          "будь-яку"
+          "любий"
         ],
-        "explanation": "Олівець is masculine and inanimate, so the accusative form is будь-який. Будь-яку is feminine."
+        "explanation": "Будь-який means an unrestricted choice here. Любий means dear or beloved; it does not mean any pencil."
       }
     },
     {
@@ -1041,18 +1098,23 @@
       "disposition": "reworded",
       "key": "Як тебе звати?",
       "distractors": [
-        "Як ти звати?"
+        "Як вас звати?"
       ],
-      "reason": "The name construction takes accusative тебе; nominative ти does not fit. The valid polite-address alternative is removed.",
+      "reason": "The same speaker already uses ти to the one classmate. Тебе maintains that address within the utterance; вас would switch the same addressee to a different register without a contextual reason.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D01",
         "D42",
+        "D43",
         "V01",
-        "V42"
+        "V42",
+        "V43"
       ],
       "before": {
         "prompt": "Ти знайомишся з однокурсником свого віку. (Use informal address.)",
@@ -1069,18 +1131,18 @@
         "explanation": "З одним знайомим або рівним співрозмовником уживай тебе."
       },
       "after": {
-        "prompt": "Ти знайомишся з однокурсником свого віку.",
+        "prompt": "Ти говориш одному однокурснику: «Привіт! Ти теж тут навчаєшся? ___»",
         "options": [
           {
             "text": "Як тебе звати?",
             "correct": true
           },
           {
-            "text": "Як ти звати?",
+            "text": "Як вас звати?",
             "correct": false
           }
         ],
-        "explanation": "Use тебе with звати. Ти is nominative and does not fit this name question."
+        "explanation": "Ти and тебе keep one consistent way of addressing the classmate. Вас would switch the address within this utterance."
       }
     },
     {
@@ -1096,22 +1158,27 @@
       "disposition": "reworded",
       "key": "Мене звати Олена. А тебе?",
       "distractors": [
-        "Мені звати Олена. А тебе?"
+        "Мене звати Олена. А вас?"
       ],
-      "reason": "Only accusative мене fits звати. The alternative with мені has the wrong case, independent of polite-address preferences.",
+      "reason": "The peer has addressed the speaker with тебе in the same exchange. The returned question А тебе maintains that reciprocal address; А вас changes register with the same peer.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D01",
         "D11",
         "D41",
         "D42",
+        "D43",
         "V01",
         "V11",
         "V41",
-        "V42"
+        "V42",
+        "V43"
       ],
       "before": {
         "prompt": "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання. (Use informal address.)",
@@ -1128,18 +1195,18 @@
         "explanation": "Рівна ситуація залишається неформальною."
       },
       "after": {
-        "prompt": "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання.",
+        "prompt": "— Привіт! Я Олег. Як тебе звати? — ___",
         "options": [
           {
             "text": "Мене звати Олена. А тебе?",
             "correct": true
           },
           {
-            "text": "Мені звати Олена. А тебе?",
+            "text": "Мене звати Олена. А вас?",
             "correct": false
           }
         ],
-        "explanation": "Мене звати Олена uses the accusative мене. Мені is dative and does not fit this construction."
+        "explanation": "The peer uses тебе, so А тебе returns the question in the same register."
       }
     },
     {
@@ -1160,10 +1227,13 @@
       ],
       "reason": "Accusative тебе fits the name question; ти and це cannot be its name-bearing accusative argument.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D42",
         "V42"
       ],
@@ -1206,10 +1276,13 @@
       ],
       "reason": "Accusative вас fits звати; ви and я are nominative. The grammatical informal alternative is removed.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D41",
         "D43",
         "V41",
@@ -1253,10 +1326,13 @@
       ],
       "reason": "The profession predicate is nominative інженерка. Інженерку is accusative. Masculine інженер is not declared ungrammatical.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D13",
         "V13"
       ],
@@ -1297,10 +1373,13 @@
       ],
       "reason": "Анна identifies the cook, answering хто. She gives neither a time nor a manner, so коли and як do not fit this exchange.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D14",
         "V14"
       ],
@@ -1343,10 +1422,13 @@
       ],
       "reason": "Ти requires second-person singular прокидаєшся. Both other forms are third person.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "sentence": "(Ask when the person wakes up.) Олег: Коли ти ___?",
@@ -1387,10 +1469,13 @@
       ],
       "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D23",
         "D24",
         "D25",
@@ -1437,10 +1522,13 @@
       ],
       "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D29",
         "V29"
       ],
@@ -1483,10 +1571,13 @@
       ],
       "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D26",
         "V26"
       ],
@@ -1529,10 +1620,13 @@
       ],
       "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D27",
         "V27"
       ],
@@ -1570,15 +1664,18 @@
       "disposition": "reworded",
       "key": "снідаю",
       "distractors": [
-        "снідаєш",
-        "снідають"
+        "вечеряю",
+        "лягаю спати"
       ],
-      "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
+      "reason": "A morning meal after washing fits снідаю. Вечеряю denotes the evening meal; лягаю спати does not fit sitting down with breakfast.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D26",
         "V26"
       ],
@@ -1593,14 +1690,14 @@
         "explanation": "Після ранкового вмивання логічно снідати."
       },
       "after": {
-        "sentence": "Після того я ___.",
+        "sentence": "О восьмій ранку я сідаю за стіл із тарілкою каші. Після вмивання я ___.",
         "answer": "снідаю",
         "options": [
           "снідаю",
-          "снідаєш",
-          "снідають"
+          "вечеряю",
+          "лягаю спати"
         ],
-        "explanation": "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+        "explanation": "A morning meal after washing fits снідаю. Вечеряю denotes the evening meal; лягаю спати does not fit sitting down with breakfast."
       }
     },
     {
@@ -1616,16 +1713,21 @@
       "disposition": "reworded",
       "key": "працюю",
       "distractors": [
-        "працюєш",
-        "працюють"
+        "прокидаюся",
+        "снідаю"
       ],
-      "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
+      "reason": "The full office workday fits працюю. Прокидаюся is waking, not an eight-hour activity; снідаю is a morning meal, not the whole workday.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
+        "D26",
         "D27",
+        "V26",
         "V27"
       ],
       "before": {
@@ -1639,14 +1741,14 @@
         "explanation": "Робота в офісі логічно підходить до вдень."
       },
       "after": {
-        "sentence": "Вдень я ___ в офісі.",
+        "sentence": "З дев’ятої до п’ятої я в офісі. Увесь цей час я ___.",
         "answer": "працюю",
         "options": [
           "працюю",
-          "працюєш",
-          "працюють"
+          "прокидаюся",
+          "снідаю"
         ],
-        "explanation": "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+        "explanation": "The full office workday fits працюю. Прокидаюся is waking, not an eight-hour activity; снідаю is a morning meal, not the whole workday."
       }
     },
     {
@@ -1662,15 +1764,18 @@
       "disposition": "reworded",
       "key": "обідаю",
       "distractors": [
-        "обідаєш",
-        "обідають"
+        "вечеряю",
+        "прокидаюся"
       ],
-      "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
+      "reason": "The midday meal fits обідаю. Вечеряю denotes the evening meal, and прокидаюся is incompatible with already sitting and eating the meal.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D28",
         "V28"
       ],
@@ -1685,14 +1790,14 @@
         "explanation": "О першій зазвичай обідають."
       },
       "after": {
-        "sentence": "О першій годині я ___.",
+        "sentence": "Зараз перша година дня. Я сиджу за столом із тарілкою супу. Я ___.",
         "answer": "обідаю",
         "options": [
           "обідаю",
-          "обідаєш",
-          "обідають"
+          "вечеряю",
+          "прокидаюся"
         ],
-        "explanation": "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+        "explanation": "The midday meal fits обідаю. Вечеряю denotes the evening meal, and прокидаюся is incompatible with already sitting and eating the meal."
       }
     },
     {
@@ -1713,10 +1818,13 @@
       ],
       "reason": "Waking at 07:00 precedes breakfast at 08:00, so Спочатку fits. Пізніше and Після цього would place 07:00 after 08:00.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D16",
         "D49",
         "D51",
@@ -1763,10 +1871,13 @@
       ],
       "reason": "Waking at 07:00 precedes breakfast at 08:00, so Спочатку fits. Пізніше and Після цього would place 07:00 after 08:00.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D16",
         "D49",
         "D51",
@@ -1805,23 +1916,26 @@
       "instruction": "Обери слово або фразу, які завершують опис дня.",
       "type": "fill-in",
       "origin": "6571f339",
-      "disposition": "replaced",
-      "key": "потім",
+      "disposition": "reworded",
+      "key": "нарешті",
       "distractors": [
-        "перед цим",
-        "до цього"
+        "спочатку",
+        "перед цим"
       ],
-      "reason": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step.",
+      "reason": "The final action occurs after the preceding one and ends the routine. Нарешті marks that final step. Спочатку and перед цим reverse the stated clock order.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
-        "D15",
-        "D44",
+        "S05",
+        "S07",
+        "T07",
+        "D16",
+        "D17",
         "D50",
-        "V15",
-        "V44",
+        "V16",
+        "V17",
         "V52"
       ],
       "before": {
@@ -1836,13 +1950,13 @@
       },
       "after": {
         "sentence": "Я слухаю музику до одинадцятої, а ___ я лягаю спати о дванадцятій.",
-        "answer": "потім",
+        "answer": "нарешті",
         "options": [
-          "потім",
-          "перед цим",
-          "до цього"
+          "нарешті",
+          "спочатку",
+          "перед цим"
         ],
-        "explanation": "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+        "explanation": "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."
       }
     },
     {
@@ -1863,10 +1977,13 @@
       ],
       "reason": "Waking at 07:00 precedes breakfast at 08:00, so Спочатку fits. Пізніше and Після цього would place 07:00 after 08:00.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D16",
         "D49",
         "D51",
@@ -1913,10 +2030,13 @@
       ],
       "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D15",
         "D44",
         "D50",
@@ -1955,23 +2075,26 @@
       "instruction": "Обери слово або дію, яка логічно продовжує день.",
       "type": "fill-in",
       "origin": "6571f339",
-      "disposition": "replaced",
-      "key": "потім",
+      "disposition": "reworded",
+      "key": "нарешті",
       "distractors": [
-        "перед цим",
-        "до цього"
+        "спочатку",
+        "перед цим"
       ],
-      "reason": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step.",
+      "reason": "The final action occurs after the preceding one and ends the routine. Нарешті marks that final step. Спочатку and перед цим reverse the stated clock order.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
-        "D15",
-        "D44",
+        "S05",
+        "S07",
+        "T07",
+        "D16",
+        "D17",
         "D50",
-        "V15",
-        "V44",
+        "V16",
+        "V17",
         "V52"
       ],
       "before": {
@@ -1986,13 +2109,13 @@
       },
       "after": {
         "sentence": "Я читаю книгу до одинадцятої, а ___ я лягаю спати о дванадцятій.",
-        "answer": "потім",
+        "answer": "нарешті",
         "options": [
-          "потім",
-          "перед цим",
-          "до цього"
+          "нарешті",
+          "спочатку",
+          "перед цим"
         ],
-        "explanation": "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+        "explanation": "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."
       }
     },
     {
@@ -2013,10 +2136,13 @@
       ],
       "reason": "Waking at 07:00 precedes breakfast at 08:00, so Спочатку fits. Пізніше and Після цього would place 07:00 after 08:00.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D16",
         "D49",
         "D51",
@@ -2063,10 +2189,13 @@
       ],
       "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D15",
         "D44",
         "D50",
@@ -2113,10 +2242,13 @@
       ],
       "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D44",
         "D50",
         "D51",
@@ -2163,10 +2295,13 @@
       ],
       "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D15",
         "D44",
         "D50",
@@ -2205,23 +2340,26 @@
       "instruction": "Choose the sequence word that fits the routine.",
       "type": "fill-in",
       "origin": "6571f339",
-      "disposition": "replaced",
-      "key": "потім",
+      "disposition": "reworded",
+      "key": "нарешті",
       "distractors": [
-        "перед цим",
-        "до цього"
+        "спочатку",
+        "перед цим"
       ],
-      "reason": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step.",
+      "reason": "The final action occurs after the preceding one and ends the routine. Нарешті marks that final step. Спочатку and перед цим reverse the stated clock order.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
-        "D15",
-        "D44",
+        "S05",
+        "S07",
+        "T07",
+        "D16",
+        "D17",
         "D50",
-        "V15",
-        "V44",
+        "V16",
+        "V17",
         "V52"
       ],
       "before": {
@@ -2236,13 +2374,13 @@
       },
       "after": {
         "sentence": "Я снідаю о восьмій, а ___ я йду на роботу о дев’ятій.",
-        "answer": "потім",
+        "answer": "нарешті",
         "options": [
-          "потім",
-          "перед цим",
-          "до цього"
+          "нарешті",
+          "спочатку",
+          "перед цим"
         ],
-        "explanation": "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+        "explanation": "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."
       }
     },
     {
@@ -2263,10 +2401,13 @@
       ],
       "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D15",
         "D44",
         "D50",
@@ -2313,10 +2454,13 @@
       ],
       "reason": "Waking at 08:00 precedes breakfast at 09:00. Спочатку fits; Пізніше and Після цього reverse that time order.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D16",
         "D49",
         "D51",
@@ -2363,10 +2507,13 @@
       ],
       "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D15",
         "D44",
         "D50",
@@ -2405,23 +2552,26 @@
       "instruction": "Complete the three-sentence morning story.",
       "type": "fill-in",
       "origin": "6571f339",
-      "disposition": "replaced",
-      "key": "потім",
+      "disposition": "reworded",
+      "key": "нарешті",
       "distractors": [
-        "перед цим",
-        "до цього"
+        "спочатку",
+        "перед цим"
       ],
-      "reason": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step.",
+      "reason": "The final action occurs after the preceding one and ends the routine. Нарешті marks that final step. Спочатку and перед цим reverse the stated clock order.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
-        "D15",
-        "D44",
+        "S05",
+        "S07",
+        "T07",
+        "D16",
+        "D17",
         "D50",
-        "V15",
-        "V44",
+        "V16",
+        "V17",
         "V52"
       ],
       "before": {
@@ -2435,14 +2585,14 @@
         "explanation": "Нарешті marks the last sentence."
       },
       "after": {
-        "sentence": "Я снідаю о восьмій, а ___ я йду в університет о дев’ятій.",
-        "answer": "потім",
+        "sentence": "Я снідаю о дев’ятій, а ___ я йду в університет о десятій.",
+        "answer": "нарешті",
         "options": [
-          "потім",
-          "перед цим",
-          "до цього"
+          "нарешті",
+          "спочатку",
+          "перед цим"
         ],
-        "explanation": "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+        "explanation": "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."
       }
     },
     {
@@ -2463,10 +2613,13 @@
       ],
       "reason": "Minus twenty establishes cold conditions. Спекотно and тепло contradict the stated temperature.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D18",
         "D19",
         "D31",
@@ -2513,10 +2666,13 @@
       ],
       "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D15",
         "D44",
         "D50",
@@ -2535,7 +2691,7 @@
         "explanation": "Потім продовжує опис після першої дії."
       },
       "after": {
-        "sentence": "Я снідаю о сьомій, а ___ я йду на роботу о восьмій.",
+        "sentence": "Я снідаю о восьмій, а ___ я йду на роботу о дев’ятій.",
         "answer": "потім",
         "options": [
           "потім",
@@ -2563,10 +2719,13 @@
       ],
       "reason": "The lunch has ended and it is14:00, so після обіду fits. Вранці and вночі contradict the stated time.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D51",
         "V53"
       ],
@@ -2604,17 +2763,24 @@
       "disposition": "reworded",
       "key": "тепло",
       "distractors": [
-        "теплий",
-        "тепла"
+        "холодно",
+        "дощ"
       ],
-      "reason": "The impersonal weather clause takes тепло, an adverb. Теплий and тепла are adjectives with no matching subject noun.",
+      "reason": "The stated moderate temperature supports тепло. Холодно conflicts with the temperature; дощ is a noun and cannot coordinate with сонячно as this impersonal predicate.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
+        "D18",
         "D19",
-        "V19"
+        "D32",
+        "V18",
+        "V19",
+        "V32"
       ],
       "before": {
         "sentence": "(Warm.) Я гуляю, тому що сьогодні ___ і сонячно.",
@@ -2631,10 +2797,10 @@
         "answer": "тепло",
         "options": [
           "тепло",
-          "теплий",
-          "тепла"
+          "холодно",
+          "дощ"
         ],
-        "explanation": "Тепло is the adverb used in this weather sentence. Теплий and тепла are adjectives and need a matching noun."
+        "explanation": "Twenty degrees fits тепло. Холодно conflicts with this temperature; дощ is a noun, not an impersonal weather predicate in this frame."
       }
     },
     {
@@ -2655,10 +2821,13 @@
       ],
       "reason": "20:00 fixes the evening; вдень and вранці contradict it.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "sentence": "(In the evening.) ___ я вечеряю і слухаю музику.",
@@ -2694,17 +2863,22 @@
       "disposition": "reworded",
       "key": "ніколи не",
       "distractors": [
-        "ніколи",
-        "ніякий"
+        "завжди",
+        "часто"
       ],
-      "reason": "Negative pronoun ніколи requires не with працюю. Ніколи alone omits the required negative particle; ніякий is an adjective with no matching noun.",
+      "reason": "Every Sunday is a day off in the stated schedule. Ніколи не fits that repeated absence of work; завжди and часто contradict it.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D20",
+        "D21",
         "V20",
+        "V21",
         "G05"
       ],
       "before": {
@@ -2718,14 +2892,14 @@
         "explanation": "Зі словом ніколи потрібна частка не."
       },
       "after": {
-        "sentence": "У неділю в офісі нікого немає. Я ___ працюю у неділю.",
+        "sentence": "Кожна неділя — вихідний. Я ___ працюю у неділю.",
         "answer": "ніколи не",
         "options": [
           "ніколи не",
-          "ніколи",
-          "ніякий"
+          "завжди",
+          "часто"
         ],
-        "explanation": "Use ніколи не with a negative verb: Я ніколи не працюю. Ніколи needs не here; ніякий does not fit this verb phrase."
+        "explanation": "Every Sunday is a day off, so ніколи не fits. Завжди and часто would say there is regular Sunday work."
       }
     },
     {
@@ -2741,17 +2915,24 @@
       "disposition": "reworded",
       "key": "часто",
       "distractors": [
-        "частий",
-        "часта"
+        "ніколи",
+        "рідко"
       ],
-      "reason": "The verb граю takes frequency adverb часто. Частий and часта are adjectives and cannot function as its frequency adjunct.",
+      "reason": "The original stated cause selects the frequency meaning: liking sport supports frequent playing; lack of time supports infrequent reading. The other frequency options contradict that cause or lack required negation.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
+        "D20",
         "D21",
-        "V21"
+        "D22",
+        "V20",
+        "V21",
+        "V22"
       ],
       "before": {
         "sentence": "(Often.) Я люблю спорт, тому ___ граю у баскетбол.",
@@ -2768,10 +2949,10 @@
         "answer": "часто",
         "options": [
           "часто",
-          "частий",
-          "часта"
+          "ніколи",
+          "рідко"
         ],
-        "explanation": "Часто is an adverb that modifies граю. Частий and часта are adjectives."
+        "explanation": "Якщо людина любить спорт, часто логічно підходить."
       }
     },
     {
@@ -2787,16 +2968,21 @@
       "disposition": "reworded",
       "key": "рідко",
       "distractors": [
-        "рідкий",
-        "рідка"
+        "часто",
+        "завжди"
       ],
-      "reason": "The verb читаю takes frequency adverb рідко. Рідкий and рідка are adjectives.",
+      "reason": "The original stated cause selects the frequency meaning: liking sport supports frequent playing; lack of time supports infrequent reading. The other frequency options contradict that cause or lack required negation.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
+        "D21",
         "D22",
+        "V21",
         "V22"
       ],
       "before": {
@@ -2814,10 +3000,10 @@
         "answer": "рідко",
         "options": [
           "рідко",
-          "рідкий",
-          "рідка"
+          "часто",
+          "завжди"
         ],
-        "explanation": "Рідко modifies читаю. Рідкий and рідка are adjectives, so they cannot fill this gap."
+        "explanation": "Коли часу мало, дія відбувається рідко."
       }
     },
     {
@@ -2838,10 +3024,13 @@
       ],
       "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D23",
         "D24",
         "D25",
@@ -2888,10 +3077,13 @@
       ],
       "reason": "The two earlier clauses establish desire and obligation; denying them in the gap would contradict those clauses. The remaining modal expresses inability.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D23",
         "D24",
         "D25",
@@ -2938,10 +3130,13 @@
       ],
       "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D23",
         "D24",
         "D25",
@@ -2988,10 +3183,13 @@
       ],
       "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D23",
         "D24",
         "D25",
@@ -3038,10 +3236,13 @@
       ],
       "reason": "The two earlier clauses establish desire and obligation; denying them in the gap would contradict those clauses. The remaining modal expresses inability.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D23",
         "D24",
         "D25",
@@ -3088,10 +3289,13 @@
       ],
       "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D23",
         "D24",
         "D25",
@@ -3138,10 +3342,13 @@
       ],
       "reason": "07:00 fixes the morning. Вночі and ввечері contradict it.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "sentence": "(In the morning.) Я п'ю каву ___.",
@@ -3182,10 +3389,13 @@
       ],
       "reason": "20:00 fixes the evening. Вранці and вдень contradict it.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "sentence": "(In the evening.) Ми вечеряємо ___.",
@@ -3226,10 +3436,13 @@
       ],
       "reason": "Lunch has ended at14:00; після обіду fits. Вночі and вранці contradict the time.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D51",
         "V53"
       ],
@@ -3272,10 +3485,13 @@
       ],
       "reason": "Я студент identifies the speaker. Куди asks for a destination and де for a location; neither is answered by the identity statement. Potentially identity-like що is removed.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D14",
         "V14"
       ],
@@ -3334,10 +3550,13 @@
       ],
       "reason": "The reply gives the object of study, answering що. Хто cannot agree with second-person вивчаєш; коли asks for time.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D14",
         "V14"
       ],
@@ -3396,10 +3615,13 @@
       ],
       "reason": "У Києві gives a location. Куди requests a destination, чому a reason.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "(Ask where the person lives.) ___ ти живеш?",
@@ -3456,10 +3678,13 @@
       ],
       "reason": "У парк is an accusative destination. Де requires a location answer; хто cannot agree with ходиш.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D14",
         "V14"
       ],
@@ -3518,10 +3743,13 @@
       ],
       "reason": "The reply gives the working schedule, answering коли. Куди asks for destination and як for manner.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "(Ask when the person works.) ___ ти працюєш?",
@@ -3578,10 +3806,13 @@
       ],
       "reason": "Тому що introduces the reason, answering чому. Куди asks destination; хто cannot agree with працюєш.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D14",
         "V14"
       ],
@@ -3640,10 +3871,13 @@
       ],
       "reason": "Олена identifies a human speaker, answering хто. Що asks about a thing; де asks for location.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D14",
         "V14"
       ],
@@ -3697,17 +3931,22 @@
       "disposition": "reworded",
       "key": "іде сніг",
       "distractors": [
-        "іде снігу",
-        "іде снігом"
+        "іде дощ",
+        "світить сонце"
       ],
-      "reason": "The subject of іде is nominative сніг. Снігу is genitive/dative/locative, снігом instrumental; neither can be the subject.",
+      "reason": "The scene is dark and below freezing, and the road is becoming white. Іде сніг fits these observations; rain does not make a white snow-covered road in this scene, and sunlight contradicts the night.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D30",
-        "V30"
+        "D32",
+        "V30",
+        "V32"
       ],
       "before": {
         "sentence": "(It snows.) Взимку часто ___.",
@@ -3720,14 +3959,14 @@
         "explanation": "Сніг first connects with зима."
       },
       "after": {
-        "sentence": "Взимку часто ___.",
+        "sentence": "На вулиці мінус десять. Уже ніч, темно. Дорога стає білою: ___.",
         "answer": "іде сніг",
         "options": [
           "іде сніг",
-          "іде снігу",
-          "іде снігом"
+          "іде дощ",
+          "світить сонце"
         ],
-        "explanation": "Сніг is the nominative subject of іде. Снігу and снігом are different cases."
+        "explanation": "The scene is dark and below freezing, and the road is becoming white. Іде сніг fits these observations; rain does not make a white snow-covered road in this scene, and sunlight contradicts the night."
       }
     },
     {
@@ -3743,16 +3982,21 @@
       "disposition": "reworded",
       "key": "спекотно",
       "distractors": [
-        "спекотний",
-        "спекотна"
+        "холодно",
+        "хмарно"
       ],
-      "reason": "The impersonal weather predicate is adverb спекотно. The other options are adjectives with no subject noun.",
+      "reason": "The stated temperature and thirst establish heat. Холодно contradicts +35; хмарно does not explain the stated heat-related thirst.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
+        "D18",
         "D31",
+        "V18",
         "V31"
       ],
       "before": {
@@ -3766,14 +4010,14 @@
         "explanation": "Спекотно is the safe A1 word for hot weather."
       },
       "after": {
-        "sentence": "Влітку дуже ___.",
+        "sentence": "На термометрі +35 °C. Я весь час хочу пити, тому що надворі ___.",
         "answer": "спекотно",
         "options": [
           "спекотно",
-          "спекотний",
-          "спекотна"
+          "холодно",
+          "хмарно"
         ],
-        "explanation": "Спекотно is an adverb used as an impersonal weather predicate. Спекотний and спекотна are adjectives."
+        "explanation": "The stated temperature and thirst establish heat. Холодно contradicts +35; хмарно does not explain the stated heat-related thirst."
       }
     },
     {
@@ -3789,17 +4033,24 @@
       "disposition": "reworded",
       "key": "іде дощ",
       "distractors": [
-        "іде дощу",
-        "іде дощем"
+        "іде сніг",
+        "сонячно"
       ],
-      "reason": "The subject of іде is nominative дощ. Дощу and дощем are oblique forms.",
+      "reason": "The clothes are getting wet during the walk at+20 °C. Іде дощ explains that situation. Snow conflicts with the warm scene; sunny weather does not explain the ongoing wetting.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
+        "D30",
         "D32",
-        "V32"
+        "D33",
+        "V30",
+        "V32",
+        "V33"
       ],
       "before": {
         "sentence": "(It rains.) Восени часто ___.",
@@ -3812,14 +4063,14 @@
         "explanation": "Осінь often connects with rain in this first weather map."
       },
       "after": {
-        "sentence": "Восени часто ___.",
+        "sentence": "На вулиці +20 °C. Я гуляю, й мій одяг стає мокрим: зараз ___.",
         "answer": "іде дощ",
         "options": [
           "іде дощ",
-          "іде дощу",
-          "іде дощем"
+          "іде сніг",
+          "сонячно"
         ],
-        "explanation": "Дощ is the nominative subject of іде. Дощу and дощем are different cases."
+        "explanation": "The clothes are getting wet during the walk at+20 °C. Іде дощ explains that situation. Snow conflicts with the warm scene; sunny weather does not explain the ongoing wetting."
       }
     },
     {
@@ -3835,17 +4086,24 @@
       "disposition": "reworded",
       "key": "тепло",
       "distractors": [
-        "теплий",
-        "тепла"
+        "холодно",
+        "спекотно"
       ],
-      "reason": "Тепло is the adverb coordinated with красиво. Теплий and тепла are adjectives without a matching noun.",
+      "reason": "The moderate positive temperature fits тепло. Холодно and спекотно describe the contrasting cold/heat extremes in this A1 weather scale.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
+        "D18",
         "D19",
-        "V19"
+        "D31",
+        "V18",
+        "V19",
+        "V31"
       ],
       "before": {
         "sentence": "(Warm.) Навесні ___ і красиво.",
@@ -3858,14 +4116,14 @@
         "explanation": "Навесні тепло is the target season-weather phrase."
       },
       "after": {
-        "sentence": "Навесні ___ і красиво.",
+        "sentence": "На термометрі +18 °C. Навесні ___ і красиво.",
         "answer": "тепло",
         "options": [
           "тепло",
-          "теплий",
-          "тепла"
+          "холодно",
+          "спекотно"
         ],
-        "explanation": "Тепло and красиво are adverbs in this weather sentence. Теплий and тепла are adjectives."
+        "explanation": "The moderate positive temperature fits тепло. Холодно and спекотно describe the contrasting cold/heat extremes in this A1 weather scale."
       }
     },
     {
@@ -3881,16 +4139,21 @@
       "disposition": "reworded",
       "key": "сонячно",
       "distractors": [
-        "сонячний",
-        "сонячна"
+        "холодно",
+        "хмарно"
       ],
-      "reason": "The impersonal weather predicate is adverb сонячно. The masculine/feminine adjectives have no matching subject noun.",
+      "reason": "Daylight and a cloudless warm sky fit сонячно. Холодно contradicts +25; хмарно contradicts the stated absence of clouds.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
+        "D18",
         "D33",
+        "V18",
         "V33"
       ],
       "before": {
@@ -3904,14 +4167,14 @@
         "explanation": "Влітку сонячно fits the plan dialogue."
       },
       "after": {
-        "sentence": "— Чому ти любиш літо? — Тому що влітку ___.",
+        "sentence": "Зараз день, на вулиці +25 °C, на небі немає хмар. Сьогодні ___.",
         "answer": "сонячно",
         "options": [
           "сонячно",
-          "сонячний",
-          "сонячна"
+          "холодно",
+          "хмарно"
         ],
-        "explanation": "Сонячно is an adverb used for the weather. Сонячний and сонячна are adjectives and need a matching noun."
+        "explanation": "Daylight and a cloudless warm sky fit сонячно. Холодно contradicts +25; хмарно contradicts the stated absence of clouds."
       }
     },
     {
@@ -3927,15 +4190,18 @@
       "disposition": "reworded",
       "key": ".",
       "distractors": [
-        ",",
-        ":"
+        "?",
+        "!"
       ],
-      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "reason": "The utterance and native dialogue/speaker context determine its communicative purpose. A factual calm utterance takes a period, the interrogative takes a question mark, and Як гарно expresses admiration with an exclamation mark. The alternatives change the stated communicative purpose.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "G04"
       ],
       "before": {
@@ -3949,14 +4215,14 @@
         "explanation": "Твердження має крапку й спадну мелодику."
       },
       "after": {
-        "sentence": "Це ка́ва___",
+        "sentence": "Олена спокійно каже: «Це ка́ва___ Я п’ю її щодня».",
         "answer": ".",
         "options": [
           ".",
-          ",",
-          ":"
+          "?",
+          "!"
         ],
-        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
       }
     },
     {
@@ -3972,15 +4238,18 @@
       "disposition": "reworded",
       "key": "?",
       "distractors": [
-        ",",
-        ":"
+        ".",
+        "!"
       ],
-      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "reason": "The utterance and native dialogue/speaker context determine its communicative purpose. A factual calm utterance takes a period, the interrogative takes a question mark, and Як гарно expresses admiration with an exclamation mark. The alternatives change the stated communicative purpose.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "G04"
       ],
       "before": {
@@ -3998,10 +4267,10 @@
         "answer": "?",
         "options": [
           "?",
-          ",",
-          ":"
+          ".",
+          "!"
         ],
-        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
       }
     },
     {
@@ -4017,15 +4286,18 @@
       "disposition": "reworded",
       "key": "?",
       "distractors": [
-        ",",
-        ":"
+        ".",
+        "!"
       ],
-      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "reason": "The utterance and native dialogue/speaker context determine its communicative purpose. A factual calm utterance takes a period, the interrogative takes a question mark, and Як гарно expresses admiration with an exclamation mark. The alternatives change the stated communicative purpose.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "G04"
       ],
       "before": {
@@ -4043,10 +4315,10 @@
         "answer": "?",
         "options": [
           "?",
-          ",",
-          ":"
+          ".",
+          "!"
         ],
-        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
       }
     },
     {
@@ -4062,15 +4334,18 @@
       "disposition": "reworded",
       "key": "!",
       "distractors": [
-        ",",
-        ":"
+        ".",
+        "?"
       ],
-      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "reason": "The utterance and native dialogue/speaker context determine its communicative purpose. A factual calm utterance takes a period, the interrogative takes a question mark, and Як гарно expresses admiration with an exclamation mark. The alternatives change the stated communicative purpose.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "G04"
       ],
       "before": {
@@ -4084,14 +4359,14 @@
         "explanation": "Це оклик."
       },
       "after": {
-        "sentence": "Як га́рно___",
+        "sentence": "Олена бачить квіти: «Як га́рно___»",
         "answer": "!",
         "options": [
           "!",
-          ",",
-          ":"
+          ".",
+          "?"
         ],
-        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
       }
     },
     {
@@ -4107,15 +4382,18 @@
       "disposition": "reworded",
       "key": ".",
       "distractors": [
-        ",",
-        ":"
+        "?",
+        "!"
       ],
-      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "reason": "The utterance and native dialogue/speaker context determine its communicative purpose. A factual calm utterance takes a period, the interrogative takes a question mark, and Як гарно expresses admiration with an exclamation mark. The alternatives change the stated communicative purpose.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "G04"
       ],
       "before": {
@@ -4129,14 +4407,14 @@
         "explanation": "Це твердження."
       },
       "after": {
-        "sentence": "Так, це вода́___",
+        "sentence": "Марко спокійно каже: «Так, це вода́___»",
         "answer": ".",
         "options": [
           ".",
-          ",",
-          ":"
+          "?",
+          "!"
         ],
-        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
       }
     },
     {
@@ -4155,12 +4433,15 @@
         "Це моє батько.",
         "Це моя батько."
       ],
-      "reason": "Singular masculine батько agrees with мій. Моє is neuter and моя is feminine, so neither agrees with батько. The explicit meaning-father gloss is replaced with a sentence to repair.",
+      "reason": "Його звати Петро establishes a singular masculine referent, preserving the father/parents distinction. Мій батько agrees; моє and моя do not agree with masculine батько.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D34",
         "V34"
       ],
@@ -4175,7 +4456,7 @@
         "explanation": "Батьки означає маму й тата або кількох батьків, а не одного тата."
       },
       "after": {
-        "sentence": "Це мій батьки.",
+        "sentence": "Це мій батьки. Його звати Петро.",
         "error": "Це мій батьки.",
         "correction": "Це мій батько.",
         "options": [
@@ -4183,7 +4464,7 @@
           "Це моє батько.",
           "Це моя батько."
         ],
-        "explanation": "Батько is masculine singular and agrees with мій. Моє is neuter and моя is feminine."
+        "explanation": "Батьки means parents or several fathers. Його звати Петро establishes one man, so use singular батько with мій. Моє is neuter; моя is feminine."
       }
     },
     {
@@ -4204,10 +4485,13 @@
       ],
       "reason": "VESUM identifies the given name Микола as masculine; feminine/neuter pronouns do not agree. The prompt no longer states the grammatical answer.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "Мико́ла (Mykola - male name)",
@@ -4264,10 +4548,13 @@
       ],
       "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "стіл закі́нчується на при́голосний. — \"Стіл\" ends in a consonant.",
@@ -4324,10 +4611,13 @@
       ],
       "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "брат закі́нчується на при́голосний. — \"Брат\" ends in a consonant.",
@@ -4384,10 +4674,13 @@
       ],
       "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "кни́га закі́нчується на -а. — \"Кни́га\" ends in -а.",
@@ -4444,10 +4737,13 @@
       ],
       "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "сестра́ закі́нчується на -а. — \"Сестра́\" ends in -а.",
@@ -4504,10 +4800,13 @@
       ],
       "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "вікно́ закі́нчується на -о. — \"Вікно́\" ends in -о.",
@@ -4564,10 +4863,13 @@
       ],
       "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04"
+        "S05",
+        "S07",
+        "T07"
       ],
       "before": {
         "prompt": "мі́сто закі́нчується на -о. — \"Мі́сто\" ends in -о.",
@@ -4613,7 +4915,7 @@
       "activity_index": 1,
       "item_index": 5,
       "activity_title": "Виправ кольорові пастки",
-      "instruction": "Choose the standard Ukrainian correction.",
+      "instruction": "Choose the standard Ukrainian correction. Capitals mark the stressed vowel.",
       "type": "error-correction",
       "origin": "legacy",
       "disposition": "reworded",
@@ -4624,10 +4926,13 @@
       ],
       "reason": "Correction keeps the input adjective forms while restoring root stress. The other alternatives change the input gender rather than correct its stress; the prompt no longer names the required gender.",
       "sources": [
-        "W03",
+        "W05",
+        "W06",
+        "W07",
         "W02",
-        "S03",
-        "T04",
+        "S05",
+        "S07",
+        "T07",
         "D39",
         "D40",
         "V39",
@@ -4654,6 +4959,164 @@
           "чОрне, бІле"
         ],
         "explanation": "Keep the masculine forms чорний, білий and stress the root. The other options change the gender."
+      }
+    },
+    {
+      "id": "who-am-i/workbook/0/3",
+      "module": "who-am-i",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 3,
+      "activity_title": "Обери українське речення",
+      "instruction": "Обери безпечніший український рядок про ідентичність.",
+      "type": "error-correction",
+      "origin": "legacy",
+      "disposition": "replaced",
+      "key": "Я лікарка.",
+      "distractors": [
+        "Я лікарку.",
+        "Мене лікарка."
+      ],
+      "reason": "The revised identity error tests the same profession statement without a gender label. Я лікарка is nominative. Я лікарку has an accusative predicate; Мене лікарка has an oblique subject. Masculine лікар is not declared invalid.",
+      "sources": [
+        "W05",
+        "W06",
+        "W07",
+        "W02",
+        "S05",
+        "S07",
+        "T07",
+        "D06",
+        "D41",
+        "V06",
+        "V41"
+      ],
+      "before": {
+        "sentence": "Оксана каже, \"Я (жінка) лікар.\"",
+        "error": "Я (жінка) лікар.",
+        "correction": "Я лікарка.",
+        "options": [
+          "Я лікарка.",
+          "Я (жінка) лікар."
+        ],
+        "explanation": "Лікарка — стандартна жіноча форма для жінки, яка працює лікарем."
+      },
+      "after": {
+        "sentence": "Оксана каже: «Я лікарку».",
+        "error": "Я лікарку",
+        "correction": "Я лікарка.",
+        "options": [
+          "Я лікарка.",
+          "Я лікарку.",
+          "Мене лікарка."
+        ],
+        "explanation": "Я лікарка uses the nominative subject and profession noun. Лікарку is accusative; мене is not the subject form."
+      }
+    },
+    {
+      "id": "things-have-gender/workbook/act-w4/0",
+      "module": "things-have-gender",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 0,
+      "activity_title": "Ви́прав па́стки ро́ду — Fix the gender traps",
+      "instruction": "Обері́ть прави́льне украї́нське ре́чення. — Choose the safer Ukrainian sentence.",
+      "type": "error-correction",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "Моя́ кни́га, моя́ ру́чка.",
+      "distractors": [
+        "Моє кни́га, моє ру́чка."
+      ],
+      "reason": "Книга and ручка are feminine nominative nouns and require моя. Моє is neuter and fails agreement with both nouns. The speaker-gender condition is removed from the prompt.",
+      "sources": [
+        "W05",
+        "W06",
+        "W07",
+        "W02",
+        "S05",
+        "S07",
+        "T07",
+        "D09",
+        "D52",
+        "V09",
+        "V54"
+      ],
+      "before": {
+        "sentence": "Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).",
+        "error": "Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).",
+        "correction": "Моя́ кни́га, моя́ ру́чка.",
+        "options": [
+          "Моя́ кни́га, моя́ ру́чка.",
+          "Мій кни́га, мій ру́чка."
+        ],
+        "explanation": "Присві́йний займе́нник узго́джується з іме́нником (кни́га, ру́чка), а не з мо́вцем. — The possessive follows the nouns кни́га and ру́чка, not the speaker."
+      },
+      "after": {
+        "sentence": "Мій кни́га, мій ру́чка.",
+        "error": "Мій кни́га, мій ру́чка.",
+        "correction": "Моя́ кни́га, моя́ ру́чка.",
+        "options": [
+          "Моя́ кни́га, моя́ ру́чка.",
+          "Моє кни́га, моє ру́чка."
+        ],
+        "explanation": "Присві́йний займе́нник узго́джується з іме́нником (кни́га, ру́чка), а не з мо́вцем. — The possessive follows the nouns кни́га and ру́чка, not the speaker."
+      }
+    },
+    {
+      "id": "how-many/workbook/2/0",
+      "module": "how-many",
+      "section": "workbook",
+      "activity_index": 2,
+      "item_index": 0,
+      "activity_title": "Виправ числові пастки",
+      "instruction": "Choose the standard Ukrainian correction.",
+      "type": "error-correction",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "п'ять столів / п'ять студентів",
+      "distractors": [
+        "п'ять столи / п'ять студенти",
+        "п'ять стола / п'ять студент"
+      ],
+      "reason": "After п’ять, the counted nouns take genitive plural: столів and студентів. Столи and студенти are nominative plurals; стола and студент are not the required genitive plurals. The case label is removed from the prompt.",
+      "sources": [
+        "W05",
+        "W06",
+        "W07",
+        "W02",
+        "S05",
+        "S07",
+        "T07",
+        "D02",
+        "D35",
+        "D53",
+        "V02",
+        "V35",
+        "V55",
+        "G06"
+      ],
+      "before": {
+        "sentence": "п'ять столи / п'ять студентів (якщо вжито як Називний множини)",
+        "error": "п'ять столи",
+        "answer": "п'ять столів / п'ять студентів",
+        "options": [
+          "п'ять столів / п'ять студентів",
+          "п'ять столи / п'ять студенти",
+          "п'ять стола / п'ять студент"
+        ],
+        "explanation": "With 5+, use the memorized phrase п'ять столів."
+      },
+      "after": {
+        "sentence": "п'ять столи / п'ять студентів",
+        "error": "п'ять столи",
+        "answer": "п'ять столів / п'ять студентів",
+        "options": [
+          "п'ять столів / п'ять студентів",
+          "п'ять столи / п'ять студенти",
+          "п'ять стола / п'ять студент"
+        ],
+        "explanation": "With 5+, use the memorized phrase п'ять столів."
       }
     }
   ]

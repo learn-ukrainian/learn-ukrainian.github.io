@@ -26,34 +26,34 @@ inline:
     title: Погода і пора року
     instruction: Обери логічну погоду для кожної пори року або температури.
     items:
-      - sentence: "Взимку часто ___."
+      - sentence: "На вулиці мінус десять. Уже ніч, темно. Дорога стає білою: ___."
         answer: іде сніг
         options:
           - іде сніг
-          - іде снігу
-          - іде снігом
-        explanation: "Сніг is the nominative subject of іде. Снігу and снігом are different cases."
-      - sentence: "Влітку дуже ___."
+          - іде дощ
+          - світить сонце
+        explanation: "The scene is dark and below freezing, and the road is becoming white. Іде сніг fits these observations; rain does not make a white snow-covered road in this scene, and sunlight contradicts the night."
+      - sentence: "На термометрі +35 °C. Я весь час хочу пити, тому що надворі ___."
         answer: спекотно
         options:
           - спекотно
-          - спекотний
-          - спекотна
-        explanation: "Спекотно is an adverb used as an impersonal weather predicate. Спекотний and спекотна are adjectives."
-      - sentence: "Восени часто ___."
+          - холодно
+          - хмарно
+        explanation: "The stated temperature and thirst establish heat. Холодно contradicts +35; хмарно does not explain the stated heat-related thirst."
+      - sentence: "На вулиці +20 °C. Я гуляю, й мій одяг стає мокрим: зараз ___."
         answer: іде дощ
         options:
           - іде дощ
-          - іде дощу
-          - іде дощем
-        explanation: "Дощ is the nominative subject of іде. Дощу and дощем are different cases."
-      - sentence: "Навесні ___ і красиво."
+          - іде сніг
+          - сонячно
+        explanation: "The clothes are getting wet during the walk at+20 °C. Іде дощ explains that situation. Snow conflicts with the warm scene; sunny weather does not explain the ongoing wetting."
+      - sentence: "На термометрі +18 °C. Навесні ___ і красиво."
         answer: тепло
         options:
           - тепло
-          - теплий
-          - тепла
-        explanation: "Тепло and красиво are adverbs in this weather sentence. Теплий and тепла are adjectives."
+          - холодно
+          - спекотно
+        explanation: "The moderate positive temperature fits тепло. Холодно and спекотно describe the contrasting cold/heat extremes in this A1 weather scale."
       - sentence: 'Сьогодні мінус п''ять, дуже ___.'
         answer: холодно
         options:
@@ -94,10 +94,10 @@ inline:
           - любить
           - робить
         explanation: 'Use the phrase тобі подобається.'
-      - sentence: "— Чому ти любиш літо? — Тому що влітку ___."
+      - sentence: "Зараз день, на вулиці +25 °C, на небі немає хмар. Сьогодні ___."
         answer: сонячно
         options:
           - сонячно
-          - сонячний
-          - сонячна
-        explanation: "Сонячно is an adverb used for the weather. Сонячний and сонячна are adjectives and need a matching noun."
+          - холодно
+          - хмарно
+        explanation: "Daylight and a cloudless warm sky fit сонячно. Холодно contradicts +25; хмарно contradicts the stated absence of clouds."

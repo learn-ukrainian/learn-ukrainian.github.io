@@ -104,41 +104,41 @@ inline:
     title: Пунктуація і мелодика
     instruction: Обери розділовий знак, який відповідає реченню.
     items:
-      - sentence: "Це ка́ва___"
+      - sentence: "Олена спокійно каже: «Це ка́ва___ Я п’ю її щодня»."
         answer: .
         options:
           - .
-          - ','
-          - ':'
-        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+          - '?'
+          - '!'
+        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
       - sentence: "Це метро́ чи апте́ка___"
         answer: '?'
         options:
           - '?'
-          - ','
-          - ':'
-        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+          - .
+          - '!'
+        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
       - sentence: "Де апте́ка___"
         answer: '?'
         options:
           - '?'
-          - ','
-          - ':'
-        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
-      - sentence: "Як га́рно___"
+          - .
+          - '!'
+        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+      - sentence: "Олена бачить квіти: «Як га́рно___»"
         answer: '!'
         options:
           - '!'
-          - ','
-          - ':'
-        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
-      - sentence: "Так, це вода́___"
+          - .
+          - '?'
+        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+      - sentence: "Марко спокійно каже: «Так, це вода́___»"
         answer: .
         options:
           - .
-          - ','
-          - ':'
-        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+          - '?'
+          - '!'
+        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
   - id: act-5
     type: fill-in
     title: Типові пастки наголосу

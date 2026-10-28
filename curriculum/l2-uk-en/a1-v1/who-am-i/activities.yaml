@@ -4,13 +4,13 @@ inline:
     title: Ти чи ви?
     instruction: Обери фразу для ситуації.
     items:
-      - prompt: "Ти знайомишся з однокурсником свого віку."
+      - prompt: "Ти говориш одному однокурснику: «Привіт! Ти теж тут навчаєшся? ___»"
         options:
           - text: Як тебе звати?
             correct: true
-          - text: Як ти звати?
+          - text: Як вас звати?
             correct: false
-        explanation: "Use тебе with звати. Ти is nominative and does not fit this name question."
+        explanation: "Ти and тебе keep one consistent way of addressing the classmate. Вас would switch the address within this utterance."
       - prompt: Ти знайомишся з незнайомим дорослим на орієнтації.
         options:
           - text: Як вас звати?
@@ -18,13 +18,13 @@ inline:
           - text: Як тебе звати?
             correct: false
         explanation: З незнайомим дорослим або у формальній ситуації уживай вас.
-      - prompt: "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання."
+      - prompt: "— Привіт! Я Олег. Як тебе звати? — ___"
         options:
           - text: Мене звати Олена. А тебе?
             correct: true
-          - text: Мені звати Олена. А тебе?
+          - text: Мене звати Олена. А вас?
             correct: false
-        explanation: "Мене звати Олена uses the accusative мене. Мені is dative and does not fit this construction."
+        explanation: "The peer uses тебе, so А тебе returns the question in the same register."
       - prompt: Викладач питає твоє ім'я. Ти відповідаєш і повертаєш питання.
         options:
           - text: Мене звати Петро. А вас?
@@ -155,13 +155,14 @@ workbook:
           - А тебе?
           - А у тебе?
         explanation: На A1 уживай короткий відлунний блок А тебе?; форму з у вивчатимемо пізніше.
-      - sentence: Оксана каже, "Я (жінка) лікар."
-        error: Я (жінка) лікар.
+      - sentence: "Оксана каже: «Я лікарку»."
+        error: "Я лікарку"
         correction: Я лікарка.
         options:
           - Я лікарка.
-          - Я (жінка) лікар.
-        explanation: Лікарка — стандартна жіноча форма для жінки, яка працює лікарем.
+          - Я лікарку.
+          - Мене лікарка.
+        explanation: "Я лікарка uses the nominative subject and profession noun. Лікарку is accusative; мене is not the subject form."
       - sentence: Воно мій тато.
         error: Воно
         correction: Це мій тато.

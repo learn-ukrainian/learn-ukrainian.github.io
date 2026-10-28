@@ -243,7 +243,7 @@ workbook:
         right: grey hair
   - type: error-correction
     title: Виправ кольорові пастки
-    instruction: Choose the standard Ukrainian correction.
+    instruction: "Choose the standard Ukrainian correction. Capitals mark the stressed vowel."
     items:
       - sentence: Сукня є червона.
         error: Сукня є червона.

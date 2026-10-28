@@ -377,12 +377,12 @@ workbook:
           - правильна
           - вірна
         explanation: Use правильна відповідь for a correct answer.
-      - sentence: "Мені потрібен олівець для вправи. Дай мені, будь ласка, ___ олівець."
+      - sentence: "Мені все одно, який олівець. Дай мені, будь ласка, ___ олівець."
         answer: будь-який
         options:
           - будь-який
-          - будь-яку
-        explanation: "Олівець is masculine and inanimate, so the accusative form is будь-який. Будь-яку is feminine."
+          - любий
+        explanation: "Будь-який means an unrestricted choice here. Любий means dear or beloved; it does not mean any pencil."
       - sentence: Сергій — ___ хлопчик.
         answer: розумний
         options:

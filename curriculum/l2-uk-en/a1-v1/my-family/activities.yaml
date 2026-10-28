@@ -242,14 +242,14 @@ workbook:
           - Це мій брат.
           - Це є мій брат.
         explanation: У простому фото-реченні є не потрібне.
-      - sentence: "Це мій батьки."
+      - sentence: "Це мій батьки. Його звати Петро."
         error: "Це мій батьки."
         correction: "Це мій батько."
         options:
           - Це мій батько.
           - Це моє батько.
           - Це моя батько.
-        explanation: "Батько is masculine singular and agrees with мій. Моє is neuter and моя is feminine."
+        explanation: "Батьки means parents or several fathers. Його звати Петро establishes one man, so use singular батько with мій. Моє is neuter; моя is feminine."
       - sentence: У мене немає брат.
         error: У мене немає брат.
         correction: Ні.

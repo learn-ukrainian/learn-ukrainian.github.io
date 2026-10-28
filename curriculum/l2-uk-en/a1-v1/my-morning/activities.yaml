@@ -186,12 +186,12 @@ inline:
           - до цього
         explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
       - sentence: "Я снідаю о восьмій, а ___ я йду на роботу о дев’ятій."
-        answer: "потім"
+        answer: "нарешті"
         options:
-          - потім
+          - нарешті
+          - спочатку
           - перед цим
-          - до цього
-        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+        explanation: "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."
       - sentence: "Я прокидаюся о шостій, а ___ я вмиваюся о сьомій."
         answer: "потім"
         options:
@@ -218,10 +218,10 @@ inline:
           - перед цим
           - до цього
         explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
-      - sentence: "Я снідаю о восьмій, а ___ я йду в університет о дев’ятій."
-        answer: "потім"
+      - sentence: "Я снідаю о дев’ятій, а ___ я йду в університет о десятій."
+        answer: "нарешті"
         options:
-          - потім
+          - нарешті
+          - спочатку
           - перед цим
-          - до цього
-        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+        explanation: "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."

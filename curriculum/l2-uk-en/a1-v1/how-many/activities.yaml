@@ -261,7 +261,7 @@ workbook:
     title: Виправ числові пастки
     instruction: Choose the standard Ukrainian correction.
     items:
-      - sentence: п'ять столи / п'ять студентів (якщо вжито як Називний множини)
+      - sentence: "п'ять столи / п'ять студентів"
         error: п'ять столи
         answer: п'ять столів / п'ять студентів
         options:
