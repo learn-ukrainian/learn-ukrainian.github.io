@@ -457,7 +457,7 @@ def publication_sha(value: object) -> str:
 
 def publication_messages(base: object, head: object, *, new_branch: bool = False) -> str:
     base, head = publication_sha(base), publication_sha(head)
-    if head == "0" * 40 or base == head:
+    if head == "0" * 40 or (base == head and not new_branch):
         raise ValueError("empty publication range")
     if publication_git("rev-parse", "--is-shallow-repository").strip() != "false":
         raise ValueError("incomplete publication history")
@@ -517,7 +517,18 @@ def publication_texts(payload: dict, event: str) -> list[tuple[str, str]]:
         if after == "0" * 40 and payload.get("deleted") is True:
             publication_git("cat-file", "-e", f"{before}^{{commit}}")
             return [("branch", ref)]
-        return [("branch", ref), ("commit", publication_messages(before, after, new_branch=True))]
+        new_branch = before == "0" * 40
+        if new_branch:
+            default = payload["repository"]["default_branch"]
+            if not isinstance(default, str) or not default:
+                raise ValueError("invalid default branch")
+            publication_git("check-ref-format", f"refs/heads/{default}")
+            if ref != f"refs/heads/{default}":
+                bases = publication_git("merge-base", "--all", f"refs/remotes/origin/{default}", after).split()
+                if len(bases) != 1:
+                    raise ValueError("new branch range unavailable")
+                before = publication_sha(bases[0])
+        return [("branch", ref), ("commit", publication_messages(before, after, new_branch=new_branch))]
     if event not in {"pull_request", "merge_group"}:
         raise ValueError("unsupported publication event")
     repository = payload["repository"]["full_name"]

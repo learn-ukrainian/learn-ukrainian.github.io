@@ -25,7 +25,9 @@ read every member of the first-parent squash chain and each member's current
 PR metadata and source commits. A missing field, incomplete checkout, unsupported
 event or unreadable range fails closed. Submitted values are never diagnostics
 or workflow environment inputs. The advisory PR-body guard also scans direct
-push branch names and complete commit ranges, including new-branch ancestry.
+push branch names and complete commit ranges. A new topic branch uses its
+unique merge-base with the public default branch, as the pre-push gate does;
+an initial default-branch push scans all ancestry. Unresolved ranges refuse.
 No green-run receipt skips code checks or publication checks.
 
 The job has a ten-minute timeout and targets under five minutes on hosted

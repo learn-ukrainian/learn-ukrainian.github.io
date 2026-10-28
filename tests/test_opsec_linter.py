@@ -151,13 +151,32 @@ def test_push_scans_complete_git_history_instead_of_truncated_payload(publicatio
     assert ("required input" in output.err) if invalid else ("publication: commit " in output.out)
 
 
-def test_new_branch_scans_ancestry_and_shallow_history_is_rejected(publication):
-    run, _payload, _live, git = publication
-    push = {"ref": "refs/heads/topic", "before": "0" * 40, "after": git("rev-parse", "HEAD")}
+def test_new_branch_scans_complete_delta_and_shallow_history_is_rejected(publication):
+    run, payload, _live, git = publication
+    git("update-ref", "refs/remotes/origin/main", payload["pull_request"]["base"]["sha"])
+    push = {"ref": "refs/heads/topic", "before": "0" * 40, "after": git("rev-parse", "HEAD"),
+            "repository": {"default_branch": "main"}}
     assert run(push, "push") == 0
     git_dir = Path(git("rev-parse", "--absolute-git-dir"))
     (git_dir / "shallow").write_text(push["after"] + "\n")
     assert run(push, "push") == 1
+
+
+@pytest.mark.parametrize("kind", ["topic", "initial", "unresolved"])
+def test_new_push_never_omits_earlier_commit_messages(publication, capsys, kind):
+    run, payload, _live, git = publication
+    marker = "10." + "23.45.67"
+    git("update-ref", "refs/remotes/origin/main", payload["pull_request"]["base"]["sha"])
+    git("commit", "--allow-empty", "-m", "subject", "-m", marker)
+    git("commit", "--allow-empty", "-m", "clean tip")
+    if kind == "unresolved":
+        git("update-ref", "-d", "refs/remotes/origin/main")
+    push = {"ref": "refs/heads/main" if kind == "initial" else "refs/heads/topic", "before": "0" * 40,
+            "after": git("rev-parse", "HEAD"), "repository": {"default_branch": "main"}, "commits": []}
+    assert run(push, "push") == 1
+    output = capsys.readouterr()
+    assert marker not in output.out + output.err
+    assert ("required input" in output.err) if kind == "unresolved" else ("publication: commit " in output.out)
 
 
 def test_direct_push_branch_is_scanned_even_when_commit_payload_is_empty(publication, capsys):
