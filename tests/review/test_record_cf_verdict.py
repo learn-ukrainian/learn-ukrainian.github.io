@@ -347,8 +347,10 @@ def test_gemini_verdict_records_and_gate_accepts_exact_head(monkeypatch, tmp_pat
     marker = recorder.parse_marker(comments[0]["body"])
     assert marker["family"] == "google"
     assert marker["sha"] == SHA
-    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
-    assert keeper._recorded_approval_for_head(comments, SHA, "fleet")
+    # A Ukrainian head needs its second seat before the gate accepts it (FR-55).
+    gate = "APPROVED" if profile == "code" else sweep.NEEDS_SEAT
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == gate
+    assert keeper._recorded_approval_for_head(comments, SHA, "fleet") is (profile == "code")
     assert not keeper._recorded_approval_for_head(comments, "b" * 40, "fleet")
     assert calls == {"posts": 1, "statuses": 1}
 
@@ -426,10 +428,48 @@ def test_ukrainian_review_with_sources_calls_accepted(monkeypatch, tmp_path, cou
     assert marker["sources_calls"] == count
     assert marker["review_profile"] == "ukrainian"
     assert f"sources={count}" in statuses[0]["description"]
-    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
-    assert keeper._recorded_approval_for_head(comments, SHA, "fleet")
+    # FR-55: one of the profile's two seats is not approval; the status names the missing seat.
+    assert statuses[0]["state"] == "pending"
+    assert statuses[0]["description"].endswith("; awaiting Ukrainian seat: anthropic")
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_SEAT
+    assert not keeper._recorded_approval_for_head(comments, SHA, "fleet")
     recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 1, "statuses": 2}
+    assert statuses[1]["state"] == "pending"
+
+
+@pytest.mark.parametrize("second,state", [
+    ("VERDICT: APPROVE", "success"),
+    ("VERDICT: REQUEST_CHANGES", "failure"),
+    ("VERDICT: BLOCKED", "failure"),
+])
+def test_ukrainian_status_succeeds_only_when_every_seat_approves(monkeypatch, tmp_path, second, state):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
+    write_task(tasks, review_profile="ukrainian", sources_mcp_call_count=3)
+    write_task(
+        tasks, task_id="review-two", reply=second, review_profile="ukrainian", sources_mcp_call_count=2,
+        agent="claude", model="claude-opus-5-5", started_at="2026-09-23T12:00:01.000001+00:00",
+    )
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    recorder.record("review-two", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert [status["state"] for status in statuses] == ["pending", state]
+    assert "awaiting" not in statuses[1]["description"]
+    expected = "APPROVED" if state == "success" else recorder.normalize_verdict(second)
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == expected
+    assert keeper._recorded_approval_for_head(comments, SHA, "fleet") is (state == "success")
+
+
+def test_code_profile_single_approval_still_succeeds(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert [(status["state"], status["description"]) for status in statuses] == [
+        ("success", "VERDICT: APPROVED openai review-one")
+    ]
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
 
 
 @pytest.mark.parametrize("verdict", ["APPROVE", "REQUEST_CHANGES", "BLOCKED"])

@@ -50,6 +50,7 @@ from scripts.opsec.prepublish import (
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
+    NEEDS_SEAT,
     REJECTED,
     SHA,
     TRUSTED_ASSOCIATIONS,
@@ -116,6 +117,8 @@ SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
 RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
 # Kimi never reviews. Native Grok requires its own runtime attestation (#9769).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
+# review-loop references/ukrainian.md § Seats: the Claude, GPT and Gemini seats.
+UKRAINIAN_SEAT_FAMILIES = frozenset({"anthropic", "openai", "google"})
 # Review rounds per PR, counted on the reviewed heads of the current PR (C-2902);
 # a security-sensitive change gets the elevated budget.
 DEFAULT_REVIEW_ROUNDS = 3
@@ -1381,7 +1384,7 @@ def _require_qualified_reviewer(
     # Seat aliases (``grok-build``) name the canonical route the catalog lists.
     agent = normalize_seat(str(task.get("agent") or "")) or ""
     if profile == "ukrainian":
-        if agent not in {"claude", "codex", "agy"} or family not in {"anthropic", "openai", "google"}:
+        if agent not in {"claude", "codex", "agy"} or family not in UKRAINIAN_SEAT_FAMILIES:
             raise RecordError("reviewer not qualified: Ukrainian review needs a Claude, GPT or Gemini seat")
         if facts.subject_seats or facts.subject_families or is_security_sensitive_change(facts.changed_paths):
             raise RecordError("reviewer not qualified: protected scope needs a code-profile review")
@@ -2108,6 +2111,14 @@ def record(
             ):
                 raise RecordError("comment readback mismatch; publication state unknown")
             posted = True
+            comments = [*comments, readback]
+        state = "success" if verdict == "APPROVED" else "failure"
+        missing_seat = ""
+        if state == "success" and (current := lookup_verdict(comments, sha, login)).state == NEEDS_SEAT:
+            # The keeper's own reading: another Ukrainian seat must approve this head (FR-55).
+            state = "pending"
+            open_seats = sorted(UKRAINIAN_SEAT_FAMILIES - set(current.ukrainian_seats) - facts.excluded_families)
+            missing_seat = f"; awaiting Ukrainian seat: {'/'.join(open_seats) or 'none eligible'}"
         description = (
             f"review_mode=red_team unknown_history={len(facts.unknown_history)} "
             if facts.unknown_history
@@ -2117,13 +2128,15 @@ def record(
             if ukrainian
             else f"VERDICT: {verdict} {family} {task_id}"
         )
+        # The task id can be long; the missing seat must survive the 140-character limit.
+        description = description[: 140 - len(missing_seat)] + missing_seat
         try:
             post_commit_status(
                 repository=repository,
                 head_sha=sha,
-                state="success" if verdict == "APPROVED" else "failure",
+                state=state,
                 context=DEFAULT_STATUS_CONTEXT,
-                description=description[:140],
+                description=description,
             )
             status = "posted"
         except Exception as exc:

@@ -122,7 +122,9 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 Stop, and report `BLOCKED <reason>`, when: the proof cannot be obtained; the review budget is
 exhausted or a dispute is unresolved after two replies (`review-loop`); a breaker trips; ownership
 or stream membership is lost; CI fails a second time or for an unclear reason; another PR makes
-this one obsolete; or the next step is outside your authority or your brief. Escalate to the
+this one obsolete; or the next step is outside your authority or your brief. If the PR stays
+open, first label it so the merge-queue keeper cannot enqueue it:
+`"$PY" -m scripts.publish pr-edit --number "$PR" --add-labels hold`. Escalate to the
 CTO and, for decisions in rules core P6, to the advisors. Reach the operator only for the
 operator-only list and for a review dispute unresolved after two replies.
 

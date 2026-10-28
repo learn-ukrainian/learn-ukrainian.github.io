@@ -40,7 +40,7 @@ import argparse
 import json
 import re
 import subprocess
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -91,6 +91,10 @@ REJECTED = frozenset({"CHANGES_REQUESTED", "BLOCKED"})
 # The recorder normalizes APPROVE to APPROVED, but older trailers carry the reviewer's raw token (#10119).
 VERDICT_ALIASES = {"APPROVE": "APPROVED"}
 SUCCESSFUL = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
+# review-loop references/ukrainian.md § Seats: two reviewer families approve the same head.
+UKRAINIAN_REVIEW_SEATS = 2
+# A Ukrainian-profile head with fewer approving seat families than that; never approval.
+NEEDS_SEAT = "needs-seat"
 REQUIRED_CHECKS = ("CI Gate",)
 DEFAULT_GH_TIMEOUT_SECONDS = 60.0
 
@@ -114,6 +118,8 @@ class Verdict:
     comment_id: str | None = None
     # Trusted malformed markers that name another head; they neither poison nor approve.
     superseded_markers: tuple[str, ...] = ()
+    # Reviewer families of the Ukrainian seats that approved this head, sorted.
+    ukrainian_seats: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if (self.state == "unknown") != (self.reason is not None):
@@ -231,6 +237,9 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     ukrainian = is_ukrainian_review(item) or "Review profile: ukrainian\n" in prefix
     if ukrainian and (item["sources_calls"] is None or item["sources_calls"] <= 0):
         return None
+    if ukrainian:
+        # Either statement makes it a Ukrainian seat; the seat count must not miss it.
+        item["review_profile"] = "ukrainian"
     if profile is not None and f"Review profile: {profile}\n" not in prefix:
         return None
     if sources is not None and f"Sources MCP calls: {item['sources_calls']}\n" not in prefix:
@@ -264,6 +273,11 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         return None
     item["verdict"] = VERDICT_ALIASES.get(item["verdict"], item["verdict"])
     return item
+
+
+def ukrainian_seat_families(markers: Iterable[Mapping[str, Any]]) -> set[str]:
+    """Reviewer families of the Ukrainian-profile markers among ``markers``."""
+    return {marker["family"] for marker in markers if is_ukrainian_review(marker)}
 
 
 def lookup_verdict(
@@ -366,8 +380,13 @@ def lookup_verdict(
         latest_start = max(item[0] for item in approvals)
         winner = next(item for item in approvals if item[0] == latest_start)
     marker = winner[2]
+    state = marker["verdict"]
+    seats = () if standing else tuple(sorted(ukrainian_seat_families(item[2] for item in approvals)))
+    if 0 < len(seats) < UKRAINIAN_REVIEW_SEATS:
+        # A Ukrainian-profile head is approved only once every seat has approved it (FR-55).
+        state = NEEDS_SEAT
     return Verdict(
-        marker["verdict"],
+        state,
         marker["task"],
         marker["model"],
         marker["family"],
@@ -376,6 +395,7 @@ def lookup_verdict(
         marker.get("review_mode", "cross_family"),
         tuple(marker.get("unknown_history", ())),
         superseded_markers=tuple(superseded),
+        ukrainian_seats=seats,
     )
 
 
@@ -469,7 +489,7 @@ def classify_pr(pr: Mapping[str, Any], verdict: Verdict, *, queued: bool | None,
         state = "armed"
     elif verdict.state == "unknown" or queued is None or "CI unknown" in " ".join(blockers):
         state = "CF-unknown" if verdict.state == "unknown" else "unknown"
-    elif verdict.state in {"needs-CF", "CF-unrecorded", "CF-stale"}:
+    elif verdict.state in {"needs-CF", "CF-unrecorded", "CF-stale", NEEDS_SEAT}:
         state = verdict.state
     elif verdict.state in REJECTED:
         state = "CF-rejected"

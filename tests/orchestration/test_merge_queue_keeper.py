@@ -194,17 +194,28 @@ def mutations(fake: FakeGitHub) -> list[str]:
     return [kind for kind, _ in fake.actions if kind not in {"squash-read", "cleanup"}]
 
 
-def recorded(verdict: str, started: str, head: str = HEAD_A, *, review_mode: str = "cross_family") -> dict[str, Any]:
+def recorded(
+    verdict: str,
+    started: str,
+    head: str = HEAD_A,
+    *,
+    review_mode: str = "cross_family",
+    review_profile: str = "code",
+    model: str = "gpt-6.1-sol",
+    family: str = "openai",
+) -> dict[str, Any]:
     return {
         "body": build_comment(
             sha=head,
             task_id="review",
             started=started,
             verdict=verdict,
-            model="gpt-6.1-sol",
-            family="openai",
+            model=model,
+            family=family,
             reply="VERDICT: " + verdict,
             review_mode=review_mode,
+            review_profile=review_profile,
+            sources_mcp_call_count=3 if review_profile == "ukrainian" else None,
         ),
         "user": {"login": "driver"},
         "author_association": "MEMBER",
@@ -231,6 +242,43 @@ def test_red_team_marker_without_mode_is_not_accepted_by_keeper(tmp_path: Path) 
     assert not failed
     assert "enqueue" not in mutations(fake)
     assert "reason=CF-unknown" in lines[0]
+
+
+def ukrainian_seat(verdict: str, family: str = "openai") -> dict[str, Any]:
+    model = {"openai": "gpt-6.1-sol", "anthropic": "claude-opus-5-5"}[family]
+    started = {"openai": "2026-09-23T12:00:00.000001+00:00", "anthropic": "2026-09-23T12:00:01.000001+00:00"}[family]
+    return recorded(verdict, started, review_profile="ukrainian", model=model, family=family)
+
+
+@pytest.mark.parametrize(
+    "seats,reason,enqueued",
+    [
+        ([("APPROVED", "openai")], "needs-CF", False),
+        ([("APPROVED", "openai"), ("APPROVED", "anthropic")], "ready", True),
+        ([("APPROVED", "openai"), ("CHANGES_REQUESTED", "anthropic")], "CF-changes_requested", False),
+    ],
+    ids=["one-seat", "both-seats", "one-rejects"],
+)
+def test_ukrainian_profile_enqueues_only_when_every_seat_approves(
+    tmp_path: Path, seats: list[tuple[str, str]], reason: str, enqueued: bool
+) -> None:
+    # FR-55: #11904 was enqueued after one of its two Ukrainian seats approved.
+    fake = FakeGitHub()
+    fake.comments_rows = [ukrainian_seat(verdict, family) for verdict, family in seats]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert ("enqueue" in mutations(fake)) is enqueued
+    assert f"reason={reason}" in lines[0]
+    assert keeper._recorded_approval_for_head(fake.comments_rows, HEAD_A, "driver") is enqueued
+
+
+def test_queued_ukrainian_profile_with_one_seat_is_revoked(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [ukrainian_seat("APPROVED")]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == ["dequeue", "comment"]
+    assert "#42 revoked: needs-CF" in lines
 
 
 def _keeper_comment(fake: FakeGitHub) -> str:

@@ -34,6 +34,7 @@ from scripts.opsec.prepublish import (
 )
 from scripts.orchestration.integration_sweep import (
     COMMENTS_UNAVAILABLE,
+    NEEDS_SEAT,
     Verdict,
     classify_pr,
     lookup_verdict,
@@ -46,8 +47,9 @@ FLOOR = 500
 MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
 HOLD_TITLE = re.compile(r"\[(?:needs operator go|hold)\]", re.I)
 HOLD_LABELS = {"needs-operator-go", "hold", "do-not-merge", "blocked"}
-# No recorded approval for the head that would merge. All three surface as needs-CF.
-MISSING_CF_STATES = frozenset({"needs-CF", "CF-stale", "CF-unrecorded"})
+# No recorded approval for the head that would merge, or only some of a Ukrainian
+# profile's seats (FR-55). All four surface as needs-CF.
+MISSING_CF_STATES = frozenset({"needs-CF", "CF-stale", "CF-unrecorded", NEEDS_SEAT})
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 # Slow mode: ``--apply`` skips a run that starts within this many seconds of
 # the last recorded run, so a frequent timer can be throttled without a unit edit.
@@ -549,15 +551,21 @@ def _ever_approved(comments: list[dict[str, Any]], login: str) -> bool:
 
 
 def _recorded_approval_for_head(comments: list[dict[str, Any]], head: str, login: str) -> bool:
-    """Find a recorder-approved head even when a later marker changed the verdict."""
-    return any(
-        isinstance(row, dict)
+    """Find a recorder-approved head even when a later marker changed the verdict.
+
+    Each seat's approval is read alone, then together, so a Ukrainian profile counts
+    as approved only once every seat approved this head.
+    """
+    approvals = [
+        row
+        for row in comments
+        if isinstance(row, dict)
         and isinstance(row.get("body"), str)
         and (marker := parse_marker(row["body"])) is not None
         and marker["sha"] == head
-        and lookup_verdict([row], head, login).state == "APPROVED"
-        for row in comments
-    )
+        and lookup_verdict([row], head, login).state in {"APPROVED", NEEDS_SEAT}
+    ]
+    return bool(approvals) and lookup_verdict(approvals, head, login).state == "APPROVED"
 
 
 def _cf_unknown_detail(cause: str, verdict: Verdict) -> str:
