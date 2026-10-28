@@ -1,16 +1,19 @@
 """Source-side rules of pilot word-card assembly: stress readings, paradigm slots, identity matching, and the
 authentication of derived ULIF forms against the held raw page.
 
-Synthetic rows and pages only: placeholder Cyrillic tokens with combining acute and real grammatical-label terms,
-so no dictionary content is committed. Raw pages are minimal ULIF-shaped HTML parsed by the existing parser.
+Most cases use synthetic rows and minimal ULIF-shaped pages parsed by the existing parser.
+The #11627 slot regressions retain verbatim source rows in a separate fixture.
 """
 
 import hashlib
 import json
 import sqlite3
+from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_sources as src
 from scripts.lexicon import ulif_raw_cache
@@ -159,6 +162,72 @@ def test_vesum_slot_adds_implicit_singular_and_drops_gender_for_nouns():
     assert src.vesum_slot(["adj", "m", "v_naz"], keep_gender=True) == ("v_naz", "s", "m")
     assert src.vesum_slot(["verb", "imperf", "past", "m"], keep_gender=True) == ("past", "s", "m")
     assert src.vesum_slot(["adv"], keep_gender=False) is None
+
+
+@pytest.fixture
+def slot_sources():
+    """Authenticated ULIF forms and visible VESUM rows captured on 2026-10-28.
+
+    Each witness retains its row IDs, tags, snapshots and source-page digests.
+    The original pilot build authenticated the ULIF rows against the raw cache.
+    """
+    return json.loads((Path(__file__).parent / "fixtures/word_card_slot_sources_11627.json").read_text())
+
+
+def test_related_verb_forms_have_distinct_display_slots(slot_sources):
+    witness = slot_sources["читати"]
+    paradigm = src.ulif_paradigm(witness["ulif_forms"])
+    slots = {src.slot_name(key): value for key, value in paradigm["slots"].items()}
+    assert "pres" not in slots and "past" not in slots
+    assert {key: slots[key]["rows"] for key in (
+        "pres.advp", "past.adjp.pasv", "past.impers", "past.advp",
+    )} == {"pres.advp": [4542944], "past.adjp.pasv": [4542949],
+          "past.impers": [4542950], "past.advp": [4542951]}
+    assert slots["past.s.m"]["forms"] == ["читав"]
+    # The repair retains every original non-header row, including related forms.
+    assert sorted(row for item in slots.values() for row in item["rows"]) == sorted(
+        row["id"] for row in witness["ulif_forms"] if not row["is_lemma"])
+    vesum = src.vesum_paradigm(witness["vesum_forms"], keep_gender=True)[420694]
+    compared = src.compare_paradigms(paradigm, vesum)
+    assert compared["relation"] == "differs"
+    assert {src.slot_name(key) for key, value in compared["slots"].items() if value == "differs"} == {
+        "inf", "pres.p.1", "pres.s.3"}
+    assert "ulif_only_slot" not in compared["slots"].values()
+
+
+def test_personal_pronoun_case_slots_correspond_without_discarding_variants(slot_sources):
+    witness = slot_sources["я"]
+    entry = witness["ulif_entry"]
+    sources = SimpleNamespace(homonyms=lambda _: [entry], vesum_forms=lambda _: witness["vesum_forms"],
+                              forms=lambda _: witness["ulif_forms"])
+    ulif = assembly.class_homonyms(SimpleNamespace(sources=sources), entry,
+                                   {"literal_head": entry["canonical_headword"]}, False)[entry["id"]]["paradigm"]
+    vesum = src.vesum_paradigm(witness["vesum_forms"], keep_gender=False)[436573]
+    compared = src.compare_paradigms(ulif, vesum)
+    assert compared == {"relation": "differs", "slots": {
+        ("v_naz", "s"): "equal", ("v_rod", "s"): "differs", ("v_dav", "s"): "equal",
+        ("v_zna", "s"): "differs", ("v_oru", "s"): "equal", ("v_mis", "s"): "equal"}}
+    assert ulif["slots"][("v_rod",)]["forms"] == ["до мене", "мене"]
+    assert vesum["slots"][("v_rod", "s")]["forms"] == {"мене", "мя"}
+    # Number inference belongs only to the corresponding personal-pronoun class.
+    assert src.compare_paradigms(src.ulif_paradigm(witness["ulif_forms"]), vesum)["relation"] == "differs"
+    assert src.vesum_slot(["verb", "imperf", "pres", "s", "1"], False) == ("pres", "s", "1")
+
+
+@pytest.mark.parametrize("word,entry_id,slot,ulif_forms,vesum_forms", [
+    ("яскравіший", 442056, ("v_naz", "s", "f"), ["яскравіша"], {"яскравіша", "яскравішая"}),
+    ("баран", 17249, ("v_mis", "s"), ["баранові", "барані"], {"баранові", "барану", "барані"}),
+])
+def test_comparative_and_animacy_remain_faithful_disagreement_controls(
+    slot_sources, word, entry_id, slot, ulif_forms, vesum_forms,
+):
+    witness = slot_sources[word]
+    ulif = src.ulif_paradigm(witness["ulif_forms"])
+    vesum = src.vesum_paradigm(witness["vesum_forms"], keep_gender=word == "яскравіший")[entry_id]
+    assert ulif["slots"][slot]["forms"] == ulif_forms
+    assert vesum["slots"][slot]["forms"] == vesum_forms
+    compared = src.compare_paradigms(ulif, vesum)
+    assert compared["relation"] == "differs" and compared["slots"][slot] == "differs"
 
 
 def test_ulif_paradigm_withholds_asterisk_preposition_and_unmapped_slots():
