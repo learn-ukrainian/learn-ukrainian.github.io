@@ -2,15 +2,16 @@
 """Run fail-closed Git hygiene for an explicit repository set.
 
 The scheduled runner prunes remote refs and stale worktree registrations,
-requires the macOS process-CWD probe in apply mode, delegates safe worktree
-removal to the canonical reaper, deletes origin and local branches only with
+deletes origin and local branches only with
 exact merged-PR, a closed PR whose head GitHub still publishes at
 ``refs/pull/<N>/head``, origin/main-ancestry, or (scratch names only)
 another-origin-ref proof re-verified against the live remote with
 ``git ls-remote``, runs automatic Git maintenance, and writes an immutable
 JSON receipt. When this run's ``fetch --prune`` fails, every deletion that
 relies on remote containment is skipped as ``fetch_failed_no_remote_proof``.
-Orphaned ``.worktrees/**`` directories are reported but never deleted.
+Orphaned ``.worktrees/**`` directories are reported but never deleted, and
+no worktree is removed: the dispatcher removes each task's own worktree when
+the task settles (FR-01b).
 """
 
 from __future__ import annotations
@@ -25,7 +26,6 @@ import stat
 import subprocess
 import sys
 import tempfile
-from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -44,18 +44,8 @@ from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
-SCHEMA_VERSION = "scheduled-git-hygiene.v2"
+SCHEMA_VERSION = "scheduled-git-hygiene.v3"
 DEFAULT_INTERVAL_MINUTES = 240
-
-
-def terminal_dispatch_reaping_enabled() -> bool:
-    """Return whether the scheduled terminal-dispatch class is enabled.
-
-    The class is on by default for disk-pressure recovery.  Setting
-    ``LU_REAPER_TERMINAL_DISPATCHES=0`` disables only this optional class while
-    preserving exact merged-PR cleanup.
-    """
-    return os.environ.get("LU_REAPER_TERMINAL_DISPATCHES", "1") != "0"
 
 
 def default_public_repo() -> Path:
@@ -91,8 +81,8 @@ def _fetch_origin(repo_root: Path) -> subprocess.CompletedProcess[str]:
 
     A fetch whose loose-object count trips ``maintenance.auto`` runs
     ``maintenance run --auto``, which expires every reflog and can run
-    ``gc --auto`` before this process reaches the reaper (#10856). The
-    explicit ``git gc --auto`` after the reaper stays the only maintenance.
+    ``gc --auto`` before the branch cleanup below has run (#10856). The
+    explicit ``git gc --auto`` at the end of the run stays the only maintenance.
     """
     args = (*reap_worktrees.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
     fetched = _run_git(repo_root, *args)
@@ -535,7 +525,7 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
             dirty = len(
                 _inspect_terminal_git(worktree, "status", "--porcelain=v1", "--untracked-files=all").splitlines()
             )
-            # F3 follow-up: squash-merged branches may count as unpushed once before the reaper removes them.
+            # F3 follow-up: a squash-merged branch can count as unpushed until its remote ref is gone.
             unpushed = int(_inspect_terminal_git(worktree, "rev-list", "--count", "HEAD", "--not", "--remotes=origin"))
             if dirty or unpushed:
                 row.update(
@@ -994,89 +984,18 @@ def find_orphaned_worktree_directories(repo_root: Path) -> list[dict[str, Any]]:
     return sorted(orphans, key=lambda item: item["path"])
 
 
-def classify_repo_results(results: list[dict[str, Any]]) -> dict[str, Any]:
-    preservation_classes = {
-        "primary": 0,
-        "active_dispatch": 0,
-        "open_pr": 0,
-        "dirty": 0,
-        "detached_unknown": 0,
-        "permission_error": 0,
-        "foreign": 0,
-        "unmerged": 0,
-    }
-    by_owner: dict[str, int] = {}
-    reaped = 0
-    reaped_by_owner: dict[str, int] = {}
-    retained_exceptions = 0
-
-    for row in results:
-        res = reap_worktrees.ReapResult(
-            path=row.get("path", ""),
-            branch=row.get("branch"),
-            action=row.get("action", ""),
-            reason=row.get("reason", ""),
-            dirty=row.get("dirty"),
-            pr=row.get("pr"),
-            error=row.get("error"),
-            branch_pruned=bool(row.get("branch_pruned")),
-            recovery_ref=row.get("recovery_ref"),
-            owner=row.get("owner"),
-        )
-        owner = res.owner or "unattributed"
-        by_owner[owner] = by_owner.get(owner, 0) + 1
-        cls = reap_worktrees.classify_preservation(res)
-        if cls == "eligible":
-            reaped += 1
-            reaped_by_owner[owner] = reaped_by_owner.get(owner, 0) + 1
-        else:
-            if cls in preservation_classes:
-                preservation_classes[cls] += 1
-            else:
-                preservation_classes[cls] = preservation_classes.get(cls, 0) + 1
-            if cls in {"dirty", "permission_error"}:
-                retained_exceptions += 1
-
-    return {
-        "total": len(results),
-        "reaped": reaped,
-        "retained": len(results) - reaped,
-        "retained_exceptions": retained_exceptions,
-        "by_preservation_class": preservation_classes,
-        "by_owner": dict(sorted(by_owner.items())),
-        "reaped_by_owner": dict(sorted(reaped_by_owner.items())),
-    }
-
-
 def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
     return {
         "repo_root": str(repo_root),
         "fetch": None,
         "fetch_refspecs": None,
         "worktree_prune": None,
-        "activity_probe": None,
-        "results": [],
-        "retained": 0,
-        "retained_exceptions": 0,
-        "by_preservation_class": {
-            "primary": 0,
-            "active_dispatch": 0,
-            "open_pr": 0,
-            "dirty": 0,
-            "detached_unknown": 0,
-            "permission_error": 0,
-            "foreign": 0,
-            "unmerged": 0,
-        },
-        "by_owner": {},
-        "adopted": [],
         "origin_branches": [],
         "branches": [],
         "maintenance": None,
         "orphans": [],
         "errors": [],
         "reaper_disabled": False,
-        "needs_finalize_worktrees": [],
         "rescue": None,
     }
 
@@ -1116,43 +1035,11 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         result["errors"].append("worktree prune failed; cleanup skipped")
         return result
 
-    live_cwds = reap_worktrees._live_cwd_paths(repo_root)
-    result["activity_probe"] = {
-        "available": live_cwds is not None,
-        "cwd_count": len(live_cwds or ()),
-    }
-    if apply and live_cwds is None:
-        result["errors"].append("process-CWD activity probe unavailable; apply skipped")
-        return result
-
     if apply and os.environ.get("LU_REAPER_DISABLED") != "1":
         result["rescue"] = report_terminal_worktrees(repo_root)
         result["errors"].extend(row["error"] for row in result["rescue"]["tasks"] if row["action"] == "error")
 
     try:
-        rows = reap_worktrees.reap_worktrees(
-            repo_root=repo_root,
-            apply=apply,
-            preserve_then_reap=False,
-            prune_merged_branches=True,
-            safe_only=True,
-            live_cwds=live_cwds,
-            # Exact merged PR heads remain the primary class.  The terminal
-            # dispatch class is independently fail-closed and can be disabled
-            # with LU_REAPER_TERMINAL_DISPATCHES=0 for incident containment.
-            merged_pr_only=True,
-            include_terminal_dispatches=terminal_dispatch_reaping_enabled(),
-        )
-        result["results"] = [asdict(row) for row in rows]
-        try:
-            result["adopted"] = reap_worktrees.adopt_dispatch_worktrees(repo_root)
-        except Exception as exc:
-            # Adoption only journals currently mounted dispatch worktrees.  A
-            # broken or incomplete repository must not prevent the remaining
-            # local hygiene steps from running.
-            result["adopted"] = []
-            result["errors"].append(f"adoption skipped: {exc}")
-        result["errors"].extend(f"{row.path}: {row.error or row.reason}" for row in rows if row.action == "error")
         if apply and os.environ.get("LU_REAPER_DISABLED") == "1":
             origin_branches: list[dict[str, Any]] = []
             branches: list[dict[str, Any]] = []
@@ -1183,8 +1070,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         )
         result["orphans"] = find_orphaned_worktree_directories(repo_root)
         # #10856: git gc --auto rewrites every worktree logs/HEAD. Fetch above
-        # runs with automatic maintenance disabled; this explicit gc stays
-        # after the reaper has judged activity.
+        # runs with automatic maintenance disabled; this explicit gc runs last.
         maintenance = _git_maintenance(repo_root, apply=apply)
         result["maintenance"] = maintenance
         if not maintenance["ok"]:
@@ -1230,13 +1116,6 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 result["errors"].append(f"task scratch recovery encountered {scratch_res['errors']} error(s)")
         except Exception as exc:
             result["errors"].append(f"task scratch recovery failed: {exc}")
-
-        result["needs_finalize_worktrees"] = reap_worktrees.find_needs_finalize_worktrees(repo_root)
-        counts = classify_repo_results(result["results"])
-        result["retained"] = counts["retained"]
-        result["retained_exceptions"] = counts["retained_exceptions"]
-        result["by_preservation_class"] = counts["by_preservation_class"]
-        result["by_owner"] = counts["by_owner"]
     except github_client.GitHubRateLimited:
         raise
     except RuntimeError as exc:
@@ -1266,14 +1145,6 @@ def build_receipt(
 ) -> dict[str, Any]:
     timestamp = observed_at or utc_now()
     repositories = [_repo_result(path.resolve(), apply=apply) for path in repo_roots]
-    removed = sum(
-        1
-        for repository in repositories
-        for row in repository["results"]
-        if row["action"] in {"removed", "preserved_then_removed"}
-    )
-    all_results = [row for repository in repositories for row in repository["results"]]
-    aggregate = classify_repo_results(all_results)
     errors = sum(len(repository["errors"]) for repository in repositories)
     orphans = sum(len(repository["orphans"]) for repository in repositories)
     origin_branches_deleted = sum(
@@ -1281,7 +1152,6 @@ def build_receipt(
     )
     branches_deleted = (
         sum(1 for repository in repositories for row in repository["branches"] if row["action"] == "deleted")
-        + sum(1 for repository in repositories for row in repository["results"] if row.get("branch_pruned") is True)
         + origin_branches_deleted
     )
     review_temp_reaped = sum(
@@ -1303,23 +1173,12 @@ def build_receipt(
     task_scratch_preserved = sum(
         (repository.get("task_scratch_recovery") or {}).get("preserved", 0) for repository in repositories
     )
-    needs_finalize_worktrees = [
-        item for repository in repositories for item in repository.get("needs_finalize_worktrees", [])
-    ]
-    if needs_finalize_worktrees:
-        for item in needs_finalize_worktrees:
-            sys.stderr.write(f"WARNING: Worktree '{item.get('path')}' skipped with status 'needs_finalize'\n")
     return {
         "schema_version": SCHEMA_VERSION,
         "observed_at": timestamp,
         "mode": "apply" if apply else "dry_run",
         "summary": {
             "repositories": len(repositories),
-            "removed": removed,
-            "retained": aggregate["retained"],
-            "retained_exceptions": aggregate["retained_exceptions"],
-            "by_preservation_class": aggregate["by_preservation_class"],
-            "by_owner": aggregate["by_owner"],
             "branches_deleted": branches_deleted,
             "origin_branches_deleted": origin_branches_deleted,
             "orphans_reported": orphans,
@@ -1329,7 +1188,6 @@ def build_receipt(
             "task_scratch_reaped": task_scratch_reaped,
             "task_scratch_bytes_freed": task_scratch_bytes_freed,
             "task_scratch_preserved": task_scratch_preserved,
-            "needs_finalize_worktrees": needs_finalize_worktrees,
         },
         "repositories": repositories,
     }
@@ -1386,7 +1244,7 @@ def build_parser() -> argparse.ArgumentParser:
   .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py --repo-root . --apply
 Outputs:
   Private JSON receipt and aggregate JSON on stdout. Dry-run is the default.
-  --apply reaps eligible worktrees/refs, snapshots and proven-ended Claude scratch.
+  --apply deletes proven-merged branches and refs, snapshots and proven-ended Claude scratch.
   Large batch_state files are reported for their owners; they are never auto-deleted.
 Exit codes:
   0 report written without errors; 1 cleanup errors; 2 invalid arguments.
@@ -1445,19 +1303,11 @@ def build_public_summary(
         raw_root = repo_dict.get("repo_root", "")
         repo_name = Path(raw_root).name if raw_root else "unknown"
         repos_summary[repo_name] = {
-            "reaped": sum(
-                1 for row in repo_dict.get("results", []) if row.get("action") in {"removed", "preserved_then_removed"}
-            ),
-            "retained": repo_dict.get("retained", 0),
-            "retained_exceptions": repo_dict.get("retained_exceptions", 0),
-            "by_preservation_class": repo_dict.get("by_preservation_class", {}),
-            "by_owner": repo_dict.get("by_owner", {}),
             "orphans_reported": len(repo_dict.get("orphans", [])),
             "errors": len(repo_dict.get("errors", [])),
             "rescue_candidates": ((repo_dict.get("rescue") or {}).get("summary") or {}).get("candidate", 0),
             "branches_deleted": (
                 sum(1 for row in repo_dict.get("branches", []) if row.get("action") == "deleted")
-                + sum(1 for row in repo_dict.get("results", []) if row.get("branch_pruned") is True)
                 + sum(1 for row in repo_dict.get("origin_branches", []) if row.get("action") == "deleted")
             ),
         }
@@ -1468,11 +1318,6 @@ def build_public_summary(
         "mode": receipt.get("mode"),
         "summary": {
             "repositories": summary.get("repositories", len(repos_summary)),
-            "removed": summary.get("removed", 0),
-            "retained": summary.get("retained", 0),
-            "retained_exceptions": summary.get("retained_exceptions", 0),
-            "by_preservation_class": summary.get("by_preservation_class", {}),
-            "by_owner": summary.get("by_owner", {}),
             "branches_deleted": summary.get("branches_deleted", 0),
             "origin_branches_deleted": summary.get("origin_branches_deleted", 0),
             "orphans_reported": summary.get("orphans_reported", 0),

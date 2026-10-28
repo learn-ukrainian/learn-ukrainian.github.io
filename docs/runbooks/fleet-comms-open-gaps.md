@@ -295,12 +295,7 @@ Use the seat-facing facade from any repository checkout:
 .venv/bin/python -m scripts.fleet_comms fleet backlog
 .venv/bin/python -m scripts.fleet_comms fleet dead
 .venv/bin/python -m scripts.fleet_comms fleet metrics
-.venv/bin/python -m scripts.fleet_comms fleet reap-report
 ```
-
-`fleet reap-report` is a dry run over merged PR heads. It passes through the
-existing reaper's active-worktree, exact-merged-head, and dirty-tree guards.
-`--apply` is available only for the same guarded reaper path.
 
 Before proposing deletion of a Broker Ops page or a legacy route, choose a
 window between 1 and 90 days and run:

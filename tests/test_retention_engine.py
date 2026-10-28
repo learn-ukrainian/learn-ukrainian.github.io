@@ -1,40 +1,20 @@
-"""Sol PR-L retention plan/apply digest gates."""
+"""Sol PR-L retention plan digest and Gate 5 observation."""
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
 from scripts.hygiene.retention_engine import (
-    apply_plan,
     build_plan,
     plan_digest,
     record_gate5_observation,
     write_plan,
 )
-from scripts.orchestration.reap_worktrees import ReapResult
 
 
-def _fake_reap(*, apply: bool = False, **_kwargs):
-    action = "removed" if apply else "would_remove"
-    return [
-        ReapResult(
-            path="/tmp/fake-worktree",
-            branch="grok/fake",
-            action=action,
-            reason="merged PR",
-            dirty=False,
-            pr={"number": 1, "state": "MERGED"},
-        )
-    ]
-
-
-def test_plan_digest_stable_and_apply_rejects_mismatch(tmp_path: Path) -> None:
+def test_plan_digest_is_stable_and_plan_never_mutates(tmp_path: Path) -> None:
     with (
-        patch("scripts.hygiene.retention_engine.reap_worktrees", side_effect=_fake_reap),
         patch("scripts.hygiene.retention_engine.scan_dispatch_worktrees", return_value=[]),
         patch(
             "scripts.hygiene.retention_engine.primary_checkout_root",
@@ -49,7 +29,7 @@ def test_plan_digest_stable_and_apply_rejects_mismatch(tmp_path: Path) -> None:
         )
         assert plan["schema"] == "fleet-comms.retention.plan.v1"
         assert plan["mutations"] == 0
-        assert plan["counts"]["would_reap"] == 1
+        assert set(plan["candidates"]) == {"scanner_stale", "home_sessions"}
         digest = plan["digest"]
         assert digest == plan_digest(plan)
         assert len(digest) == 64
@@ -57,24 +37,6 @@ def test_plan_digest_stable_and_apply_rejects_mismatch(tmp_path: Path) -> None:
         path = write_plan(plan, tmp_path / "plans")
         assert path.is_file()
         assert (tmp_path / "plans" / "latest.json").is_file()
-
-        # Matching digest: dry-run apply ok with zero mutations when dry_run
-        receipt = apply_plan(plan, repo_root=tmp_path, dry_run=True)
-        assert receipt["ok"] is True
-        assert receipt["mutations"] == 0
-
-        # Mutate plan candidates → digest mismatch on re-plan
-        bad = dict(plan)
-        bad["candidates"] = {
-            **plan["candidates"],
-            "worktree_reap": [],
-        }
-        # force wrong stored digest
-        bad["digest"] = "0" * 64
-        receipt2 = apply_plan(bad, repo_root=tmp_path, dry_run=False)
-        assert receipt2["ok"] is False
-        assert receipt2["error"] == "plan_digest_mismatch"
-        assert receipt2["mutations"] == 0
 
 
 def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> None:
@@ -87,7 +49,7 @@ def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> 
         "created_at": "2026-07-24T12:00:00Z",
         "digest": "abc123",
         "mutations": 0,
-        "counts": {"would_reap": 0, "scanner_stale": 0},
+        "counts": {"scanner_stale": 0},
     }
     path = write_plan(plan, plan_dir)
     log1 = record_gate5_observation(plan, plan_path=path, log_path=plan_dir / "gate5-observation-log.json")
@@ -158,31 +120,6 @@ def test_record_gate5_observation_one_day_per_calendar_label(tmp_path: Path) -> 
     assert log4["ready_for_apply_go"] is False
 
 
-def test_apply_runs_reaper_only_when_digest_matches(tmp_path: Path) -> None:
-    calls: list[bool] = []
-
-    def tracking_reap(*, apply: bool = False, **kwargs):
-        calls.append(apply)
-        return _fake_reap(apply=apply, **kwargs)
-
-    with (
-        patch("scripts.hygiene.retention_engine.reap_worktrees", side_effect=tracking_reap),
-        patch("scripts.hygiene.retention_engine.scan_dispatch_worktrees", return_value=[]),
-        patch(
-            "scripts.hygiene.retention_engine.primary_checkout_root",
-            side_effect=lambda p: Path(p),
-        ),
-    ):
-        plan = build_plan(repo_root=tmp_path, archive_root=tmp_path / "a")
-        receipt = apply_plan(plan, repo_root=tmp_path, dry_run=False)
-        assert receipt["ok"] is True
-        assert receipt["mode"] == "apply"
-        assert receipt["mutations"] == 1
-        # build_plan called reap once (False), apply once (True)
-        assert False in calls
-        assert True in calls
-
-
 def test_plan_digest_ignores_volatile_envelope_fields() -> None:
     body = {
         "schema": "fleet-comms.retention.plan.v1",
@@ -190,8 +127,8 @@ def test_plan_digest_ignores_volatile_envelope_fields() -> None:
         "repo_root": "/tmp/repo",
         "archive_root": "/tmp/archives",
         "policy": {"stale_hours": 72.0},
-        "candidates": {"worktree_reap": [], "home_sessions": []},
-        "counts": {"would_reap": 0},
+        "candidates": {"scanner_stale": [], "home_sessions": []},
+        "counts": {"scanner_stale": 0},
         "mutations": 0,
     }
     first = dict(body, created_at="2026-07-24T12:00:00Z", digest="aaa", plan_path="/tmp/plan-aaa.json")
@@ -203,28 +140,3 @@ def test_plan_digest_ignores_volatile_envelope_fields() -> None:
         receipt={"ok": True, "mutations": 0},
     )
     assert plan_digest(first) == plan_digest(second)
-
-
-def test_load_plan_rejects_wrong_schema_and_missing_digest(tmp_path: Path) -> None:
-    from scripts.hygiene.retention_engine import load_plan
-
-    not_object = tmp_path / "not-object.json"
-    not_object.write_text("[]", encoding="utf-8")
-    with pytest.raises(ValueError, match="JSON object"):
-        load_plan(not_object)
-
-    wrong_schema = tmp_path / "wrong-schema.json"
-    wrong_schema.write_text(
-        json.dumps({"schema": "other.v1", "digest": "x"}),
-        encoding="utf-8",
-    )
-    with pytest.raises(ValueError, match="unsupported plan schema"):
-        load_plan(wrong_schema)
-
-    missing_digest = tmp_path / "missing-digest.json"
-    missing_digest.write_text(
-        json.dumps({"schema": "fleet-comms.retention.plan.v1"}),
-        encoding="utf-8",
-    )
-    with pytest.raises(ValueError, match="missing digest"):
-        load_plan(missing_digest)

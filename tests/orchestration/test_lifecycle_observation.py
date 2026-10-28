@@ -86,22 +86,20 @@ def observation_case(tmp_path, monkeypatch):
     return repo, worktree, state_file, task_file, manifest_file, push_file, head
 
 
-def test_closeout_records_local_before_first_removal(observation_case, monkeypatch):
+def test_closeout_records_local_and_keeps_the_worktree(observation_case, monkeypatch):
     repo, worktree, state_file, _, _, _, head = observation_case
     monkeypatch.setattr(
         mc, "fetch_pr_info", lambda *a, **k: mc.PullRequestInfo(77, "MERGED", "codex/42-closeout", head)
     )
     monkeypatch.setattr(mc, "verify_branch_gone", lambda *a, **k: None)
 
-    def remove(**kwargs):
-        local = tl._latest_premerge_local(tl.load_lifecycle(state_file))
-        assert local is not None, "AC-01: lifecycle observation must precede reaping"
-        assert local["commits"][0]["sha"] == head
-        assert worktree.exists()
-        return []
+    result = mc.run_merge_closeout(repo, 77, apply=True)
 
-    monkeypatch.setattr(rw, "reap_worktrees", remove)
-    mc.run_merge_closeout(repo, 77, apply=True)
+    local = tl._latest_premerge_local(tl.load_lifecycle(state_file))
+    assert local is not None and local["commits"][0]["sha"] == head
+    assert worktree.exists()
+    assert not result.ok
+    assert len(result.errors) == 1 and "merge_closeout does not remove worktrees" in result.errors[0]
 
 
 def test_recovery_appends_and_is_idempotent(observation_case):
@@ -244,7 +242,8 @@ def test_recovered_receipt_rechecks_all_digests(observation_case, source):
         lo.recover(repo, state_file=ledger, task_file=task, manifest_file=manifest, push_file=push, now=NOW)
 
 
-def test_recovered_receipt_checks_authoritative_pr_branch_and_ancestry(observation_case, monkeypatch):
+@pytest.mark.parametrize("closeout_shape", ["current", "before_fr01b"])
+def test_recovered_receipt_checks_authoritative_pr_branch_and_ancestry(observation_case, monkeypatch, closeout_shape):
     from scripts.orchestration import lifecycle_observation as lo
     from scripts.orchestration.task_closeout import GhGitHubAdapter
 
@@ -254,12 +253,16 @@ def test_recovered_receipt_checks_authoritative_pr_branch_and_ancestry(observati
     original.pop("worktree_reap_proof")
     bundle = manifest.with_suffix("").with_suffix("")
     closeout = bundle / "closeout.json"
+    # A current closeout removes nothing; one written before FR-01b proves its removal row.
+    worktree_proof = {"matched_worktrees": []} if closeout_shape == "current" else {
+        "matched_worktrees": [str(worktree)],
+        "reap_results": [{"path": str(worktree), "branch": "codex/42-closeout",
+                          "action": "preserved_then_removed", "error": None}],
+    }
     closeout.write_text(json.dumps({
         "pr": {"number": 77, "state": "MERGED", "head_ref_name": "codex/42-closeout", "head_sha": head,
                "repository": tl.load_lifecycle(ledger)["identity"]["repository"]},
-        "apply": True, "ok": True, "errors": [], "matched_worktrees": [str(worktree)],
-        "reap_results": [{"path": str(worktree), "branch": "codex/42-closeout",
-                          "action": "preserved_then_removed", "error": None}],
+        "apply": True, "ok": True, "errors": [], **worktree_proof,
         "branch_status": {"branch": "codex/42-closeout", "remote_gone": True, "local_gone": True},
     }))
     saved_manifest = json.loads(manifest.read_text())
@@ -292,7 +295,6 @@ def test_closeout_retains_everything_when_observation_write_fails(observation_ca
         mc, "fetch_pr_info", lambda *a, **k: mc.PullRequestInfo(77, "MERGED", "codex/42-closeout", head)
     )
     monkeypatch.setattr(tl, "write_lifecycle", lambda *a, **k: (_ for _ in ()).throw(OSError("disk full")))
-    monkeypatch.setattr(mc, "reap_matched_worktrees", lambda *a, **k: pytest.fail("must not reap"))
     monkeypatch.setattr(mc, "verify_branch_gone", lambda *a, **k: pytest.fail("must not remove branches"))
     result = mc.run_merge_closeout(repo, 77, apply=True)
     assert not result.ok

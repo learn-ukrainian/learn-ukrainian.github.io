@@ -103,16 +103,15 @@ This thin, read-only namespace makes the existing `python -m scripts.fleet_comms
 
 | Method | Path | Existing source |
 | --- | --- | --- |
-| GET | `/api/fleet/facade` or `/help` | Truth/Hand/Eyes map and endpoint index |
+| GET | `/api/fleet/facade` or `/help` | Truth/Eyes map and endpoint index |
 | GET | `/api/fleet/facade/status` | `fleet status` plane status plus compact health |
 | GET | `/api/fleet/facade/board` | JSON cold-start board |
 | GET | `/api/fleet/facade/metrics` | Authority metrics collector |
 | GET | `/api/fleet/facade/backlog` | Authority backlog collector |
 | GET | `/api/fleet/facade/dead` | Authority dead-letter collector |
 | GET | `/api/fleet/facade/broker-report?days=7` | Legacy Broker Ops report (`days` is 1–90) |
-| GET | `/api/fleet/facade/reap-report` | Guarded reaper dry-run only; the response always has `"apply": false` |
 
-The facade is fail-open when the plane SQLite file is absent or unavailable: authority collector responses include `db_missing` or `db_error`, while status retains the plane schema diagnostic. Reaper apply remains CLI-only and is never an HTTP option.
+The facade is fail-open when the plane SQLite file is absent or unavailable: authority collector responses include `db_missing` or `db_error`, while status retains the plane schema diagnostic.
 
 ---
 

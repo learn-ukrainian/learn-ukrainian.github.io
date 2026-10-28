@@ -11,7 +11,6 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 import scripts.api.fleet_router as fleet_router
-from scripts.api.config import LIVE_REPO_ROOT
 from scripts.api.monitor_context import MonitorContext, fixture_context
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
@@ -215,17 +214,8 @@ def test_absent_plane_db_returns_deterministic_read_only_empty_states(
     assert not fleet_root.exists(), "observer must not create a missing plane root"
 
 
-def test_facade_routes_reuse_read_only_fleet_projections(
-    client: TestClient,
-    fleet_root: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_facade_routes_reuse_read_only_fleet_projections(client: TestClient, fleet_root: Path) -> None:
     _seed_plane(fleet_root)
-    monkeypatch.setattr(
-        fleet_router,
-        "_facade_reap_report",
-        lambda: {"read_only": True, "apply": False, "report": []},
-    )
 
     help_response = client.get("/api/fleet/facade")
     help_alias = client.get("/api/fleet/facade/help")
@@ -235,7 +225,6 @@ def test_facade_routes_reuse_read_only_fleet_projections(
     backlog = client.get("/api/fleet/facade/backlog", params={"limit": 1})
     dead = client.get("/api/fleet/facade/dead", params={"limit": 1})
     broker = client.get("/api/fleet/facade/broker-report", params={"days": 7})
-    reap = client.get("/api/fleet/facade/reap-report")
 
     for response in (
         help_response,
@@ -246,11 +235,10 @@ def test_facade_routes_reuse_read_only_fleet_projections(
         backlog,
         dead,
         broker,
-        reap,
     ):
         assert response.status_code == 200
 
-    assert help_response.json()["endpoints"]["reap_report"].endswith("/reap-report")
+    assert "reap_report" not in help_response.json()["endpoints"]
     assert help_alias.json()["truth"] == help_response.json()["truth"]
     assert status.json()["health"]["mode"] == "shadow"
     assert status.json()["response_schema_version"] == "comms.v2"
@@ -274,43 +262,6 @@ def test_facade_routes_reuse_read_only_fleet_projections(
     assert broker.json()["response_schema_version"] == "comms.v2"
     assert all("path" not in store for store in broker.json()["stores"])
     assert broker.json()["read_only"] is True
-    assert reap.json() == {"read_only": True, "apply": False, "report": []}
-
-
-def test_facade_reap_report_is_dry_run_only(monkeypatch: pytest.MonkeyPatch) -> None:
-    calls: list[dict[str, object]] = []
-
-    def fake_reap_worktrees(**kwargs: object) -> list:
-        calls.append(kwargs)
-        return [
-            fleet_router.reap_worktrees.ReapResult(
-                path="/repo/.worktrees/dispatch/codex/facade",
-                branch="codex/api-fleet-facade",
-                action="would_remove",
-                reason="PR #1 MERGED",
-                dirty=False,
-            )
-        ]
-
-    monkeypatch.setattr(fleet_router.reap_worktrees, "reap_worktrees", fake_reap_worktrees)
-
-    payload = fleet_router._facade_reap_report()
-
-    assert payload["read_only"] is True
-    assert payload["apply"] is False
-    assert payload["report"][0]["action"] == "would_remove"
-    assert calls == [
-        {
-            "repo_root": fleet_router.reap_worktrees.primary_checkout_root(
-                Path(LIVE_REPO_ROOT)
-            ),
-            "apply": False,
-            "prune_merged_branches": True,
-            "safe_only": True,
-            "merged_pr_only": True,
-            "require_activity_probe": False,
-        }
-    ]
 
 
 def test_plane_health_and_overview_expose_pre_flip_read_only_posture(
