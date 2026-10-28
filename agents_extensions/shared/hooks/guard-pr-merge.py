@@ -249,52 +249,146 @@ def _is_env_assignment(tok: str) -> bool:
 
 _WRAPPERS = frozenset({"env", "sudo", "time", "nice", "stdbuf", "nohup", "command", "exec"})
 
-_WRAPPER_VALUE_OPTIONS = {
-    "env": frozenset({"-u", "--unset", "-C", "--chdir", "-a", "--argv0", "-f", "--file", "-S", "--split-string"}),
-    "sudo": frozenset(
-        {
-            "-u",
-            "--user",
-            "-g",
-            "--group",
-            "-r",
-            "--role",
-            "-t",
-            "--type",
-            "-C",
-            "--close-from",
-            "-c",
-            "--command-timeout",
-            "-T",
-            "-p",
-            "--prompt",
-            "-D",
-            "--chdir",
-            "-R",
-            "--chroot",
-            "-h",
-            "--host",
-            "-U",
-            "--other-user",
-        }
+
+class _WrapperOption(NamedTuple):
+    """One parsed wrapper option: its canonical name and how it takes a value."""
+
+    name: str
+    takes_value: bool
+    attached: str | None
+
+
+class _WrapperGrammar(NamedTuple):
+    short_value: str
+    short_switch: str
+    long_value: frozenset[str]
+    long_switch: frozenset[str]
+
+
+# Each wrapper's COMPLETE option table, as its own parser reads it. The tables are the
+# union of the implementations a host may install: GNU and uutils coreutils (env, nice,
+# stdbuf), GNU sudo and sudo-rs, GNU time, and the bash builtins `exec` and `command`.
+# They must be complete rather than limited to value-taking options, because getopt_long
+# and clap both accept any unambiguous long-option prefix: `env --un FOO gh pr merge 5`
+# runs the merge, and only the full table shows that `--un` is `--unset` and consumes FOO.
+# Long options with an optional argument (`--preserve-env[=list]`, `--ignore-signal[=SIG]`)
+# take a value only when it is attached with `=`, so they are switches here. sudo's `-h`
+# is read as value-taking: it is either help (which runs nothing) or `-h host`.
+_WRAPPER_GRAMMARS = {
+    "env": _WrapperGrammar(
+        short_value="uCSaf",
+        short_switch="i0vhV",
+        long_value=frozenset({"unset", "chdir", "split-string", "argv0", "file"}),
+        long_switch=frozenset(
+            {
+                "ignore-environment",
+                "null",
+                "debug",
+                "ignore-signal",
+                "default-signal",
+                "block-signal",
+                "list-signal-handling",
+                "help",
+                "version",
+            }
+        ),
     ),
-    "time": frozenset({"-f", "--format", "-o", "--output"}),
-    "nice": frozenset({"-n", "--adjustment"}),
-    "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
-    "exec": frozenset({"-a"}),
+    "sudo": _WrapperGrammar(
+        short_value="aCcDghpRrTtUu",
+        short_switch="ABbEeHiKklNnPSsVv",
+        long_value=frozenset(
+            {
+                "auth-type",
+                "close-from",
+                "login-class",
+                "chdir",
+                "group",
+                "host",
+                "prompt",
+                "chroot",
+                "role",
+                "command-timeout",
+                "type",
+                "other-user",
+                "user",
+            }
+        ),
+        long_switch=frozenset(
+            {
+                "askpass",
+                "background",
+                "bell",
+                "preserve-env",
+                "edit",
+                "set-home",
+                "help",
+                "login",
+                "remove-timestamp",
+                "reset-timestamp",
+                "list",
+                "non-interactive",
+                "no-update",
+                "preserve-groups",
+                "stdin",
+                "shell",
+                "version",
+                "validate",
+            }
+        ),
+    ),
+    "time": _WrapperGrammar(
+        short_value="fo",
+        short_switch="apqvhV",
+        long_value=frozenset({"format", "output"}),
+        long_switch=frozenset({"append", "portability", "quiet", "verbose", "help", "version"}),
+    ),
+    "nice": _WrapperGrammar(
+        short_value="n",
+        short_switch="hV",
+        long_value=frozenset({"adjustment"}),
+        long_switch=frozenset({"help", "version"}),
+    ),
+    "stdbuf": _WrapperGrammar(
+        short_value="ioe",
+        short_switch="hV",
+        long_value=frozenset({"input", "output", "error"}),
+        long_switch=frozenset({"help", "version"}),
+    ),
+    "nohup": _WrapperGrammar("", "", frozenset(), frozenset({"help", "version"})),
+    "command": _WrapperGrammar("", "pvV", frozenset(), frozenset({"help"})),
+    "exec": _WrapperGrammar("a", "cl", frozenset(), frozenset({"help"})),
 }
 
+_ENV_SPLIT_OPTIONS = frozenset({"-S", "--split-string"})
 
-def _wrapper_value_option(wrapper: str, token: str) -> tuple[str | None, str | None]:
-    """First value-taking option and its attached value, or None for a switch."""
-    options = _WRAPPER_VALUE_OPTIONS.get(wrapper, frozenset())
+
+def _wrapper_option(wrapper: str, token: str) -> _WrapperOption | None:
+    """Parse one option token the way the wrapper's own parser does, else None.
+
+    None means the guard cannot tell where the wrapped command begins: an unknown
+    option, an ambiguous long prefix, or an unknown letter in a short-option group.
+    Callers treat that as unparsed and fail closed rather than guess a command word.
+    """
+    grammar = _WRAPPER_GRAMMARS[wrapper]
+    if wrapper == "nice" and re.fullmatch(r"--?[-+]?\d+", token):
+        return _WrapperOption(token, False, None)  # legacy `nice -10 cmd`
     if token.startswith("--"):
-        key, sep, value = token.partition("=")
-        return (key, value if sep else None) if key in options else (None, None)
+        key, sep, value = token[2:].partition("=")
+        names = grammar.long_value | grammar.long_switch
+        matches = [key] if key in names else [name for name in names if key and name.startswith(key)]
+        kinds = {name in grammar.long_value for name in matches}
+        if len(kinds) != 1:
+            return None
+        # A prefix shared by options of one kind is an error to the wrapper, which then
+        # runs nothing; the command position is the same either way.
+        name = "--" + matches[0] if len(matches) == 1 else token
+        return _WrapperOption(name, kinds.pop(), value if sep else None)
     for index, char in enumerate(token[1:], 1):
-        if "-" + char in options:
-            return "-" + char, token[index + 1 :] or None
-    return None, None
+        if char in grammar.short_value:
+            return _WrapperOption("-" + char, True, token[index + 1 :] or None)
+        if char not in grammar.short_switch:
+            return None
+    return _WrapperOption(token, False, None)
 
 
 def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
@@ -302,16 +396,28 @@ def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
 
     A missing operand for a recognised value-taking option cannot execute a
     command, so the scan consumes to the end instead of guessing a verb.
+
+    The scan stops ON an option it cannot place, leaving an option token where the
+    command word should be: an unparsed option (see _wrapper_option), and env -S,
+    whose command lives inside its split string. env -S is not transparent, so the
+    words after its value must never be read as this shell's cd or eval; its argv is
+    read by _env_split_payload instead. _merge_args refuses an unparsed position that
+    still mentions a merge.
     """
     while i < len(seg):
         tok = seg[i]
         if tok == "--":
             return i + 1
+        if tok == "-" and wrapper == "env":
+            i += 1  # A lone `-` is env's spelling of -i.
+            continue
         if not tok.startswith("-") or tok == "-":
             return i
+        option = _wrapper_option(wrapper, tok)
+        if option is None or (wrapper == "env" and option.name in _ENV_SPLIT_OPTIONS):
+            return i
         i += 1
-        option, attached = _wrapper_value_option(wrapper, tok)
-        if option and attached is None:
+        if option.takes_value and option.attached is None:
             if i >= len(seg):
                 return len(seg)
             i += 1
@@ -338,7 +444,11 @@ def _skip_command_prefix(seg: list[str], i: int, *, stop_at_env: bool = False) -
 
 
 def _env_split_payload(seg: list[str]) -> str | None:
-    """Read env -S as argv, rather than discarding its executable as an operand."""
+    """Read env -S as argv, rather than discarding its executable as an operand.
+
+    An option env's grammar cannot place ends the expansion; the payload then keeps
+    `env` and that option, so the recursive reading refuses it as unparsed.
+    """
     i, _ = _invoked_start(seg, stop_at_env=True)
     while i < len(seg):
         i = _skip_command_prefix(seg, i, stop_at_env=True)
@@ -346,19 +456,27 @@ def _env_split_payload(seg: list[str]) -> str | None:
             return None
         rest = seg[i + 1 :]
         j = expansions = 0
-        while j < len(rest) and rest[j].startswith("-") and rest[j] != "-":
+        unparsed = False
+        while j < len(rest) and rest[j].startswith("-"):
             if rest[j] == "--":
                 j += 1
                 break
+            if rest[j] == "-":
+                j += 1
+                continue
+            option = _wrapper_option("env", rest[j])
+            if option is None:
+                unparsed = True
+                break
             start = j
-            option, value = _wrapper_value_option("env", rest[j])
+            value = option.attached
             j += 1
-            if option and value is None:
+            if option.takes_value and value is None:
                 if j >= len(rest):
                     return None
                 value = rest[j]
                 j += 1
-            if option not in {"-S", "--split-string"}:
+            if option.name not in _ENV_SPLIT_OPTIONS:
                 continue
             expansions += 1
             if expansions > _MAX_SHELL_DEPTH or any(char in value for char in "\\$`"):
@@ -370,7 +488,7 @@ def _env_split_payload(seg: list[str]) -> str | None:
             rest[start:j] = words
             j = start
         if expansions:
-            return shlex.join([*seg[:i], *rest[j:]])
+            return shlex.join([*seg[:i], *(["env"] if unparsed else []), *rest[j:]])
         i = _skip_wrapper_options("env", seg, i + 1)
     return None
 
@@ -491,9 +609,7 @@ def _may_merge(command: str, depth: int = 0) -> bool:
         payload = " ".join(operands) if is_eval else _shell_c_payload(argv)
         if is_eval and _plain_pr_read(payload):
             continue
-        if is_eval and any(
-            any(char in arg for char in "$`{}[]*?~") or arg == _UNREADABLE_MARKER for arg in operands
-        ):
+        if is_eval and any(any(char in arg for char in "$`{}[]*?~") or arg == _UNREADABLE_MARKER for arg in operands):
             # The candidate pass found merge words, but eval's expansion can
             # change argv. Preserve the existing refusal instead of guessing.
             return True
@@ -659,6 +775,10 @@ def _merge_args(seg: list[str]) -> list[str] | None:
     if _env_split_payload(seg) is not None:
         return None
     i, via_xargs = _invoked_start(seg)
+    if 0 < i < len(seg) and seg[i].startswith("-"):
+        # The prefix scan stopped on a wrapper option it cannot place, so nothing shows
+        # where the command begins. A merge mentioned anywhere after it is refused.
+        return [_UNREADABLE_MARKER] if _merge_candidate(shlex.join(seg[i:])) else None
     if (
         i + 3 < len(seg)
         and re.fullmatch(r"python(?:3(?:\.\d+)?)?", Path(seg[i]).name)
@@ -1136,8 +1256,9 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
     if _UNREADABLE_MARKER in args:
         return _block_msg(
             "this merge's target cannot be read from the command itself",
-            "The target arrives on stdin (`xargs`), is re-evaluated by `eval`, or is buried\n"
-            "under more layers of `bash -c` than this guard unwraps. Judging the current branch's PR\n"
+            "The target arrives on stdin (`xargs`), is re-evaluated by `eval`, follows a wrapper\n"
+            "option this guard cannot parse, or is buried under more layers of `bash -c` than this\n"
+            "guard unwraps. Spell wrapper options in full. Judging the current branch's PR\n"
             "instead would verify one PR while gh merges another. Run the merge with the PR\n"
             "named explicitly (`gh pr merge <number> ...`).",
         )

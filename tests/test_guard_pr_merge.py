@@ -130,6 +130,10 @@ runpy.run_path(sys.argv[1], run_name="__main__")
         "env -S echo gh pr merge 5",
         "env -iS echo gh pr merge 5",
         "xargs env -S echo gh pr merge 5",
+        "env --ignore echo gh pr merge 5",
+        "env --split-string=echo gh pr merge 5",
+        "sudo --non echo gh pr merge 5",
+        "nice -10 echo gh pr merge 5",
     ],
 )
 @pytest.mark.parametrize("wrapper", ["{command}", 'cd "$DIR"; eval \'{command}\''])
@@ -866,6 +870,27 @@ def test_admin_equals_true_is_judged_by_pr_guard(monkeypatch):
         "env -iS 'nice -n 0' gh pr merge 5 --squash",
         "env --split-string='nice -n 0' gh pr merge 5 --squash",
         "xargs env -S 'nice -n 0' gh pr merge 5 --squash",
+        "env - gh pr merge 5 --squash",
+        "nice -10 gh pr merge 5 --squash",
+        # getopt_long and clap accept any unambiguous long-option prefix.
+        "env --un FOO gh pr merge 5 --squash",
+        "env --ch other gh pr merge 5 --squash",
+        "env --arg fixture gh pr merge 5 --squash",
+        "env --fi fixture gh pr merge 5 --squash",
+        "sudo --us bot gh pr merge 5 --squash",
+        "sudo --login-class C gh pr merge 5 --squash",
+        "nice --adj 5 gh pr merge 5 --squash",
+        "stdbuf --out L gh pr merge 5 --squash",
+        "time --out f gh pr merge 5 --squash",
+        "env --sp 'gh pr merge 5 --squash'",
+        "env --split='nice -n 0' gh pr merge 5 --squash",
+        "env -S 'sudo --us bot' gh pr merge 5 --squash",
+        "xargs sudo --us bot gh pr merge 5 --squash",
+        # Options the grammar cannot place fail closed.
+        "sudo --unknown bot gh pr merge 5 --squash",
+        "sudo -xu bot gh pr merge 5 --squash",
+        "env --d gh pr merge 5 --squash",
+        "sudo --us bot bash -c 'gh pr merge 5 --squash'",
     ],
 )
 def test_wrapper_with_options_is_still_judged(monkeypatch, cmd):
@@ -1822,6 +1847,27 @@ def test_shell_c_payload_inherits_cwd_but_does_not_export_it(monkeypatch):
         monkeypatch,
         "cd /outer && bash -c 'cd /inner && gh pr merge 1' && gh pr merge 2",
     ) == [("1", "/inner"), ("2", "/outer")]
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cd /safe; env -S echo cd /wrong; gh pr merge 5",
+        "cd /safe; env --split-string=echo cd /wrong; gh pr merge 5",
+        "cd /safe; env --sp echo cd /wrong; gh pr merge 5",
+        "cd /safe; env -S 'cd /wrong'; gh pr merge 5",
+        "cd /safe; env -S echo eval cd /wrong; gh pr merge 5",
+    ],
+)
+def test_env_split_string_does_not_change_parent_cwd(monkeypatch, command):
+    """env -S runs its split words in a child, so they never move this shell's cwd."""
+    assert _judged_cwds(monkeypatch, command) == [("5", "/safe")]
+
+
+def test_unparsed_wrapper_option_names_the_refusal(monkeypatch, capsys):
+    monkeypatch.setattr(guard, "_pr_snapshot", lambda *a, **kw: pytest.fail("unparsed wrapper reached PR lookup"))
+    assert _run(monkeypatch, "sudo --unknown bot gh pr merge 5 --squash") == 2
+    assert "wrapper\noption this guard cannot parse" in capsys.readouterr().err
 
 
 def test_merge_inside_subshell_is_judged_in_the_subshell_cwd(monkeypatch):
