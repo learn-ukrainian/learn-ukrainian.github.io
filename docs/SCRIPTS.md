@@ -1836,9 +1836,11 @@ worktree), so no `npm ci` is needed there. The store key covers the lockfile, `p
 local inputs, Node/npm versions, platform and the whole npm configuration; a miss installs once with `npm ci`
 in a staging directory and a controlled environment (fixed locale and `PATH`, no ambient variables). Store files are read-only and hash-checked before every
 reuse, because hard links share one inode: do not edit package files in place (`chmod` and an edit changes them
-for every worktree holding that file). `npm ci` or `rm -r` in a worktree is safe. A failure never blocks the task, and
+for every worktree holding that file). Before editing, patching or changing the permissions of package files,
+run `site_deps detach [--path <dir-or-file under site/node_modules>]` to turn them into private copies.
+`npm ci` or `rm -r` in a worktree is safe. A failure never blocks the task, and
 `LEARN_UKRAINIAN_SITE_DEPS=off` skips the step. `.venv/bin/python -m scripts.dispatcher.site_deps
-{ensure|status|prune}` runs it by hand.
+{ensure|status|prune|detach}` runs it by hand.
 
 ### Monitoring
 

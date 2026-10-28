@@ -18,7 +18,7 @@ Node and npm versions and module ABI, platform, architecture and libc, and the e
 configuration. File identity is the SHA-256 of the content plus the executable bit, so two keys
 that differ in a native build share only the files that really are identical.
 
-``python -m scripts.dispatcher.site_deps {ensure|status|prune}``.
+``python -m scripts.dispatcher.site_deps {ensure|status|prune|detach}``.
 """
 
 import argparse
@@ -386,6 +386,33 @@ def prune(repo: Path, keep: int = KEEP_TREES, *, blocking: bool = True) -> dict:
     return {"trees": len(trees[keep:]), "blobs": removed}
 
 
+def detach(worktree: Path, paths=()) -> dict:
+    """Replace hard-linked files of the worktree's install with private writable copies.
+
+    Run this before any workflow that edits, patches or changes the permissions of package files in place:
+    afterwards those files no longer share an inode with the store or with other worktrees. With no paths
+    the whole install is detached; a path is relative to site/node_modules and may name a file or directory.
+    """
+    modules = (Path(worktree) / SITE / "node_modules").resolve()
+    roots = [(modules / path).resolve() for path in paths] or [modules]
+    detached = 0
+    for root in roots:
+        if not root.is_relative_to(modules) or not root.exists():
+            raise ValueError(f"{root} is not inside {modules}")
+        for directory, _subdirs, files in os.walk(root) if root.is_dir() else [(root.parent, [], [root.name])]:
+            for name in files:
+                path = Path(directory) / name
+                info = path.lstat()
+                if not stat.S_ISREG(info.st_mode) or info.st_nlink == 1:
+                    continue
+                private = path.with_name(f".{name}.detach-{os.getpid()}")
+                shutil.copy2(path, private)
+                private.chmod(0o755 if info.st_mode & stat.S_IXUSR else 0o644)
+                os.replace(private, path)
+                detached += 1
+    return {"detached": detached}
+
+
 def status(repo: Path) -> dict:
     store = store_root(repo)
     blobs = [p for p in (store / "blobs").glob("*/*")] if store.is_dir() else []
@@ -405,13 +432,16 @@ def provision(repo: Path, worktree: Path) -> None:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("action", choices=("ensure", "status", "prune"))
+    parser.add_argument("action", choices=("ensure", "status", "prune", "detach"))
+    parser.add_argument("--path", action="append", default=[], help="detach only this path under site/node_modules")
     parser.add_argument("--worktree", type=Path, default=Path.cwd(), help="the dispatch worktree (default: here)")
     args = parser.parse_args(argv)
     common = _run(["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], args.worktree).stdout.strip()
     repo = Path(common).parent
     if args.action == "ensure":
         result = ensure(repo, args.worktree)
+    elif args.action == "detach":
+        result = detach(args.worktree, args.path)
     else:
         result = status(repo) if args.action == "status" else prune(repo)
     print(json.dumps(result, indent=2))

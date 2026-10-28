@@ -179,6 +179,25 @@ def test_altered_store_file_is_not_reused_by_a_new_key(tmp_path, repo):
     assert (second / "site/node_modules/localdep/index.js").read_text() == "module.exports = 'one'\n"
 
 
+def test_detached_files_can_be_edited_without_touching_the_store_or_siblings(tmp_path, repo):
+    first, second = worktree(tmp_path, repo, "a"), worktree(tmp_path, repo, "b")
+    site_deps.ensure(repo, first)
+    site_deps.ensure(repo, second)
+    with pytest.raises(ValueError):
+        site_deps.detach(first, ["../outside"])
+    assert site_deps.detach(first, ["localdep"])["detached"] >= 2
+    edited = first / "site/node_modules/localdep/index.js"
+    assert edited.stat().st_nlink == 1 and edited.stat().st_mode & stat.S_IWUSR
+    edited.write_text("module.exports = 'patched'\n")
+    (first / "site/node_modules/localdep/bin/run.js").chmod(0o700)
+    assert (second / "site/node_modules/localdep/index.js").read_text() == "module.exports = 'one'\n"
+    assert (second / "site/node_modules/localdep/bin/run.js").stat().st_mode & 0o777 == 0o555
+    assert site_deps.detach(first)["detached"] == 0  # nothing left to detach
+    assert site_deps.detach(second)["detached"] > 0  # the whole install, no paths given
+    assert (second / "site/node_modules/localdep/index.js").stat().st_nlink == 1
+    assert site_deps._altered(site_deps.store_root(repo), next((tmp_path / "store/trees").glob("*.json"))) is None
+
+
 def test_store_file_edited_in_place_never_reaches_a_new_worktree(tmp_path, repo):
     first, second = worktree(tmp_path, repo, "a"), worktree(tmp_path, repo, "b")
     site_deps.ensure(repo, first)
