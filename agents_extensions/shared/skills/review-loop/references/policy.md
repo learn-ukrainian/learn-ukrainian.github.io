@@ -22,16 +22,49 @@ rounds are deltas.
   and adds no round.
 - **The end of the budget is never approval.** The author splits the PR, changes the
   approach, or escalates to the CTO and the advisors (rules core P6).
-- When a base conflict follows an approval in the last budgeted round, the recordable outcome
-  of that CTO-and-advisor escalation is one budget extension per lineage: a request committed
-  on the default branch under `batch_state/review-budget-extensions/` plus a sealed
-  `review_budget_extension` APPROVE from the non-author designated advisor, which the recorder
-  checks before it admits exactly one more round (`scripts/review/budget_extension.py`;
-  designated approval: advisory task cto-7eba-adv-extension2).
+- A base conflict or merge-queue failure after the last budgeted approval can admit one
+  extension per lineage, shared across `post-approval-base-conflict` and
+  `post-approval-queue-ejection`. Both require an immutable default-branch request under
+  `batch_state/review-budget-extensions/`, a sealed `review_budget_extension` APPROVE from
+  the non-author designated advisor, and the unchanged lineage checks. Every earlier
+  verdict must be published; an unpublished `BLOCKED` still refuses.
+- A queue request binds the failed `merge_group` run and attempt, its candidate, the exact
+  approved head merged into it, and the repair head. Its `repairs` list binds each commit,
+  kind, paths, exact patch SHA-256, and failure evidence. The advisor checks every hunk
+  against that failure, including tests. Filename overlap never authorizes unrelated hunks.
+  The recorder accounts for verified base imports, then checks conflict resolutions
+  separately through remerge diffs. Missing or changed evidence refuses with a typed reason.
+  See `scripts/review/budget_extension.py` for the schema and patch reader.
+- An extension admits exactly one additional review round. It never grants approval or
+  waives exact-head independent review, same-head green CI, or stopping rules.
 - **The verdict recorder refuses a round beyond the budget**, so an over-budget verdict is
   never recorded.
 - The budget and the ledger follow the work (issue and branch lineage). A new reviewer, a
   replacement PR or a new session does not reset them.
+
+## Recorded elevated classification
+
+For each new round past three, the preceding round's qualified independent reviewer of
+record authorizes that numbered round in a `review-budget-classification` JSON block.
+The result must be finished, read-only, digest-verified, cross-family, and published without
+edits. The recorder verifies the reviewer's identity and qualification against all branch
+authors and subject exclusions. Author-supplied risk and security paths alone cannot grant
+new elevated rounds. Existing published security rounds retain their historical budget for
+the single-use extension check; this grants no new elevated round.
+
+The block has exactly these fields:
+
+```review-budget-classification
+{"category":"data-loss","round":4,"finding_id":"F2","evidence":"tests/test_example.py:42 reproduces deletion of failed-session evidence","head":"<full reviewed head SHA>"}
+```
+
+Categories are `security`, `permissions`, `authentication`, `data-loss`, and
+`state-concurrency`. The stable finding ID and the exact file:line evidence must also appear
+in the review's blocking finding outside the block. Its published blocking verdict and
+classification must match the immutable result. The next head must descend from that
+reviewed head. A round-four classification does not authorize round five. A fixed blocker
+still needs its verification review, with the finding ID preserved. This classification
+admits a review round; the new head still needs its own verdict.
 
 ## Clearing a recorded rejection
 

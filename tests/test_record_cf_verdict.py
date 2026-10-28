@@ -738,8 +738,8 @@ def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch,
         ("high", False, 3, True),
         # The review task's own --risk critical never raises a non-security diff past 3 rounds (F3).
         ("critical", False, 3, True),
-        # A security-sensitive diff reaches 5 rounds whatever risk the task recorded.
-        ("low", True, 4, False),
+        # Security paths alone do not authorize new rounds without an evidenced classification.
+        ("low", True, 4, True),
         (None, True, 5, True),
     ],
 )
@@ -3216,3 +3216,407 @@ def test_budget_extension_never_reads_another_archived_runs_reply(monkeypatch, t
     with pytest.raises(recorder.RecordError, match=r"\[lineage\].*review task seat \(failed\) carries an unpublished verdict"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
+
+
+# Queue extensions bind content, not just filenames. These exercise the real
+# Git object reader, request history, sealed advisor, lineage and publication.
+def queue_extension_case(monkeypatch, tmp_path, *, base_import=False, conflict=False):
+    from scripts.review import budget_extension as ext
+
+    tasks, comments, calls, old, head, run = extension_case(monkeypatch, tmp_path, head_kind="commit")
+    repo = tmp_path / "ext-repo"
+    run("checkout", "-q", "main")
+    run("reset", "--hard", "HEAD^")  # Drop the fixture's old unreferenced request.
+    run("checkout", "-q", "-b", "candidate")
+    run("merge", "-q", "--no-ff", "-m", "candidate", old["approved_head"])
+    candidate = run("rev-parse", "HEAD")
+    run("checkout", "-q", "feature")
+    if conflict:
+        (repo / "shared.txt").write_text("feature repair\n")
+        run("commit", "-q", "-am", "repair\n\nX-Agent: codex/gpt-6.1-sol")
+        with pytest.raises(subprocess.CalledProcessError):
+            run("merge", "--no-ff", "-m", "base", "main")
+        (repo / "shared.txt").write_text("resolved repair\n")
+        run("add", "shared.txt")
+        run("commit", "-q", "-m", "resolve\n\nX-Agent: codex/gpt-6.1-sol")
+    elif base_import:
+        run("merge", "-q", "--no-ff", "-m", "base\n\nX-Agent: codex/gpt-6.1-sol", "main")
+    head = run("rev-parse", "HEAD")
+    _, repairs = ext.queue_repair_diff(repo, approved=old["approved_head"], head=head, base_tip="main")
+    request = {
+        **old,
+        "reason_class": ext.QUEUE_REASON_CLASS,
+        "queue_run_id": 123,
+        "queue_run_attempt": 2,
+        "queue_candidate": candidate,
+        "repair_head": head,
+        "repairs": [
+            {**repair, "failure_evidence": "Failed invariant and regression test; all patch hunks repair it."}
+            for repair in repairs
+        ],
+    }
+    run("checkout", "-q", "main")
+    file = repo / ext.REQUEST_DIR / "pr-42.json"
+    file.parent.mkdir(parents=True, exist_ok=True)
+    file.write_text(json.dumps(request))
+    run("add", str(file.relative_to(repo)))
+    run("commit", "-q", "-m", "request\n\nX-Agent: claude/claude-opus-5-5")
+    run("push", "-q", "origin", "+main:main")
+    run("checkout", "-q", "feature")
+    write_task(tasks, worktree_base_sha=head)
+    prior_json = recorder._run_json
+    workflow = {
+        "databaseId": 123,
+        "attempt": 2,
+        "headSha": candidate,
+        "event": "merge_group",
+        "status": "completed",
+        "conclusion": "failure",
+    }
+
+    def json_read(args, *, input_text=None):
+        if isinstance(args, list) and args[:3] == ["gh", "run", "view"]:
+            assert args[3:8] == ["123", "--repo", REPOSITORY, "--attempt", "2"]
+            return workflow
+        if isinstance(args, list) and args[:3] == ["gh", "pr", "view"]:
+            return {"number": 42, "headRefOid": head, "headRefName": BRANCH, "state": "OPEN"}
+        return prior_json(args, input_text=input_text)
+
+    monkeypatch.setattr(recorder, "_run_json", json_read)
+    return tasks, comments, calls, request, head, run, workflow
+
+
+@pytest.mark.parametrize("base_import,conflict", [(False, False), (True, False), (True, True)])
+def test_queue_extension_admits_exact_repair_and_separate_resolutions(monkeypatch, tmp_path, base_import, conflict):
+    tasks, _, calls, request, _, _, _ = queue_extension_case(
+        monkeypatch, tmp_path, base_import=base_import, conflict=conflict
+    )
+    write_extension_approval(tasks, request)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    receipt = result["budget_extension"]
+    assert result["verdict"] == "APPROVED" and calls["posts"] == 1
+    assert receipt["queue_run_id"] == 123 and receipt["queue_run_attempt"] == 2
+    assert bool(receipt["base_merges"]) == base_import
+    assert ("conflict-resolution" in [item["kind"] for item in receipt["repairs"]]) == conflict
+    assert all("shared.txt" not in item["paths"] for item in receipt["repairs"]) if not conflict else True
+
+
+@pytest.mark.parametrize(
+    "case,reason",
+    [
+        ("event", "queue"),
+        ("attempt", "queue"),
+        ("run", "queue"),
+        ("candidate", "queue"),
+        ("success", "queue"),
+        ("cancelled", "queue"),
+        ("running", "queue"),
+        ("unavailable", "queue"),
+        ("wrong-approved-head", "queue"),
+        ("later-enqueued-head", "queue"),
+        ("repair-head", "repair"),
+        ("same-path-extra-hunk", "repair"),
+        ("wrong-path", "repair"),
+        ("missing-resolution", "repair"),
+        ("wrong-kind", "repair"),
+        ("unapproved", "approval"),
+        ("unpublished", "lineage"),
+        ("second-class", "request"),
+    ],
+)
+def test_queue_extension_refuses_unbound_or_unjustified_repair(monkeypatch, tmp_path, case, reason):
+    from scripts.review import budget_extension as ext
+
+    tasks, _comments, calls, request, head, run, workflow = queue_extension_case(
+        monkeypatch, tmp_path, base_import=case == "missing-resolution", conflict=case == "missing-resolution"
+    )
+    options = {
+        "event": {"event": "pull_request"},
+        "attempt": {"attempt": 1},
+        "run": {"databaseId": 124},
+        "candidate": {"headSha": "d" * 40},
+        "success": {"conclusion": "success"},
+        "cancelled": {"conclusion": "cancelled"},
+        "running": {"status": "in_progress"},
+    }
+    workflow.update(options.get(case, {}))
+    if case == "wrong-approved-head":
+        workflow["headSha"] = request["queue_candidate"] = run("rev-parse", "main~2")
+    if case == "later-enqueued-head":
+        run("checkout", "-q", "candidate")
+        run("reset", "--hard", "main^")
+        run("merge", "-q", "--no-ff", "-m", "later candidate", head)
+        workflow["headSha"] = request["queue_candidate"] = run("rev-parse", "HEAD")
+        run("checkout", "-q", "feature")
+    if case == "repair-head":
+        request["repair_head"] = "d" * 40
+    if case == "same-path-extra-hunk":
+        request["repairs"][0]["patch_sha256"] = "0" * 64
+    if case == "wrong-path":
+        request["repairs"][0]["paths"] = ["unrelated.txt"]
+    if case == "missing-resolution":
+        request["repairs"] = [item for item in request["repairs"] if item["kind"] != "conflict-resolution"]
+    if case == "wrong-kind":
+        request["repairs"][0]["kind"] = "conflict-resolution"
+    # The committed request has one immutable history entry. Amend the fixture
+    # before sealing, then verify the same sealed request at admission.
+    if case in {
+        "wrong-approved-head",
+        "later-enqueued-head",
+        "repair-head",
+        "same-path-extra-hunk",
+        "wrong-path",
+        "missing-resolution",
+        "wrong-kind",
+    }:
+        run("checkout", "-q", "main")
+        file = tmp_path / "ext-repo" / ext.REQUEST_DIR / "pr-42.json"
+        file.write_text(json.dumps(request))
+        run("add", str(file.relative_to(tmp_path / "ext-repo")))
+        run("commit", "--amend", "--no-edit", "-q")
+        run("push", "-q", "origin", "+main:main")
+        run("checkout", "-q", "feature")
+    if case == "second-class":
+        run("checkout", "-q", "main")
+        file = tmp_path / "ext-repo" / ext.REQUEST_DIR / "pr-41.json"
+        other = {key: request[key] for key in ext.REQUEST_FIELDS}
+        other.update(pr=41, reason_class=ext.REASON_CLASS)
+        file.write_text(json.dumps(other))
+        run("add", str(file.relative_to(tmp_path / "ext-repo")))
+        run("commit", "-q", "-m", "other request\n\nX-Agent: claude/claude-opus-5-5")
+        run("push", "-q", "origin", "+main:main")
+        run("checkout", "-q", "feature")
+    if case == "unavailable":
+        original = recorder._run_json
+
+        def unavailable(args, **kwargs):
+            if isinstance(args, list) and args[:3] == ["gh", "run", "view"]:
+                raise recorder.RecordError("lookup unavailable")
+            return original(args, **kwargs)
+
+        monkeypatch.setattr(recorder, "_run_json", unavailable)
+    if case == "unpublished":
+        write_task(
+            tasks,
+            task_id="unpublished-blocker",
+            reply="VERDICT: BLOCKED",
+            worktree_base_sha=request["approved_head"],
+            pr=42,
+            review_profile="code",
+        )
+    if case != "unapproved":
+        write_extension_approval(tasks, request)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_EXTENSION_REFUSED\[" + reason + r"\]"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize(
+    "updates",
+    [
+        {"queue_run_id": True},
+        {"queue_run_attempt": 0},
+        {"queue_candidate": "short"},
+        {"repair_head": "C" * 40},
+        {"repairs": []},
+        {"repairs": [{}]},
+        {"reason_class": "anything"},
+    ],
+)
+def test_queue_request_schema_refuses(monkeypatch, tmp_path, updates):
+    from scripts.review import budget_extension as ext
+
+    _, _, _, request, _, _, _ = queue_extension_case(monkeypatch, tmp_path)
+    with pytest.raises(ext.ExtensionRefused, match=r"\[request\]"):
+        ext.parse_request(json.dumps({**request, **updates}).encode(), "request")
+
+
+def classified_budget_case(
+    monkeypatch, tmp_path, *, round_number=4, category="data-loss", source_updates=None, classification_updates=None
+):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    for index in range(1, round_number):
+        item = recorded_verdict(str(index) * 40, "CHANGES_REQUESTED", task_id=f"round-{index}")
+        item["created_at"] = item["updated_at"] = f"2026-09-23T11:3{index}:00Z"
+        comments.append(item)
+    previous = str(round_number - 1) * 40
+    classification = {
+        "category": category,
+        "round": round_number,
+        "finding_id": "F2",
+        "evidence": "tests/test_unit.py:42 reproduces deletion of failed-session evidence",
+        "head": previous,
+        **(classification_updates or {}),
+    }
+    reply = (
+        "VERDICT: REQUEST_CHANGES\n\nF2: tests/test_unit.py:42 reproduces deletion of failed-session evidence\n\n"
+        + "```review-budget-classification\n"
+        + json.dumps(classification)
+        + "\n```\n"
+    )
+    source = dict(
+        agent="claude",
+        model="claude-opus-5-5",
+        worktree_base_sha=previous,
+        pr=42,
+        mode="read-only",
+        review_profile="code",
+        started_at="2026-09-23T11:00:00.000001+00:00",
+        result_sha256=hashlib.sha256(reply.encode()).hexdigest(),
+    )
+    source.update(source_updates or {})
+    write_task(tasks, task_id=f"round-{round_number - 1}", reply=reply, **source)
+    comments[-1]["body"] = recorder.build_comment(
+        sha=previous,
+        task_id=f"round-{round_number - 1}",
+        started="2026-09-23T11:00:00.000001+00:00",
+        verdict="CHANGES_REQUESTED",
+        model="claude-opus-5-5",
+        family="anthropic",
+        reply=reply,
+        review_mode="cross_family",
+    )
+    # The ancestry call is separately covered by real-Git queue tests. Here
+    # the facts fixture has synthetic heads and no Git object store.
+    monkeypatch.setattr(recorder, "_facts_git", lambda *_a, **_k: b"")
+    return tasks, comments, calls
+
+
+@pytest.mark.parametrize("category", ["data-loss", "state-concurrency", "security", "permissions", "authentication"])
+@pytest.mark.parametrize("round_number", [4, 5])
+def test_independent_recorded_classification_admits_one_numbered_round(monkeypatch, tmp_path, category, round_number):
+    tasks, _, calls = classified_budget_case(monkeypatch, tmp_path, category=category, round_number=round_number)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "APPROVED" and calls["posts"] == 1
+    assert result["budget_classification"]["round"] == round_number
+    assert result["budget_classification"]["finding_id"] == "F2"
+    assert result["budget_classification"]["family"] == "anthropic"
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "unsealed",
+        "edited-result",
+        "author",
+        "unpublished",
+        "edited-comment",
+        "wrong-round",
+        "wrong-head",
+        "wrong-category",
+        "missing-finding",
+        "missing-evidence",
+        "invented-finding",
+        "invented-evidence",
+        "red-team",
+        "write-mode",
+        "running",
+        "published-different",
+        "published-missing",
+        "not-descendant",
+    ],
+)
+def test_elevated_budget_refuses_unauthorized_or_unevidenced_classification(monkeypatch, tmp_path, case):
+    source = {
+        "unsealed": {"result_sha256": None},
+        "author": {"model": "gemini-3.8-flash-high", "agent": "agy"},
+        "red-team": {"review_mode": "red_team"},
+        "write-mode": {"mode": "workspace-write"},
+        "running": {"status": "running"},
+    }.get(case)
+    classification = {
+        "wrong-round": {"round": 5},
+        "wrong-head": {"head": "d" * 40},
+        "wrong-category": {"category": "routine"},
+        "missing-finding": {"finding_id": ""},
+        "missing-evidence": {"evidence": "deletes directories"},
+        "invented-finding": {"finding_id": "F99"},
+        "invented-evidence": {"evidence": "tests/test_elsewhere.py:99 absent"},
+    }.get(case)
+    tasks, comments, calls = classified_budget_case(
+        monkeypatch, tmp_path, source_updates=source, classification_updates=classification
+    )
+    if case == "unpublished":
+        comments[-1]["body"] = recorded_verdict("3" * 40, "CHANGES_REQUESTED", task_id="another-review")["body"]
+    if case == "edited-comment":
+        comments[-1]["updated_at"] = "2026-09-23T11:55:00Z"
+    if case == "edited-result":
+        with (tasks / "round-3.result").open("a") as file:
+            file.write("changed")
+    if case == "published-missing":
+        comments[-1]["body"] = recorded_verdict("3" * 40, "CHANGES_REQUESTED", task_id="round-3")["body"]
+    if case == "published-different":
+        comments[-1]["body"] = comments[-1]["body"].replace('"finding_id": "F2"', '"finding_id": "F3"')
+    if case == "not-descendant":
+
+        def missing(*_a, **_k):
+            raise recorder.BranchFactsError(recorder.FACTS_TARGET_UNKNOWN, "not descendant")
+
+        monkeypatch.setattr(recorder, "_facts_git", missing)
+    with pytest.raises(recorder.RecordError):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_round_four_classification_does_not_authorize_round_five(monkeypatch, tmp_path):
+    tasks, comments, calls = classified_budget_case(monkeypatch, tmp_path)
+    comments.append(recorded_verdict("4" * 40, "CHANGES_REQUESTED", task_id="round-4"))
+    comments[-1]["created_at"] = comments[-1]["updated_at"] = "2026-09-23T11:34:00Z"
+    with pytest.raises(recorder.RecordError, match="REVIEW_BUDGET_EXHAUSTED"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls["posts"] == 0
+
+
+
+@pytest.mark.parametrize("field,value", [
+    ("commit", "short"), ("kind", "unrelated"), ("patch_sha256", "short"),
+    ("paths", []), ("paths", ["../escape"]), ("paths", ["/absolute"]),
+    ("paths", ["file", "file"]), ("paths", [False]), ("paths", ["a\\b"]),
+    ("failure_evidence", " "), ("failure_evidence", None),
+])
+def test_queue_repair_schema_is_closed(field, value):
+    from scripts.review import budget_extension as ext
+    repair = {"commit": "c" * 40, "kind": "repair", "patch_sha256": "d" * 64,
+              "paths": ["tests/test_unit.py"], "failure_evidence": "Failed invariant diagnostic"}
+    request = {"pr": 42, "lineage_id": "same-work", "approved_head": "a" * 40,
+               "reason_class": ext.QUEUE_REASON_CLASS, "grant": 1,
+               "requested_at": "2026-10-28T18:00:00Z", "queue_run_id": 123,
+               "queue_run_attempt": 1, "queue_candidate": "b" * 40, "repair_head": "c" * 40,
+               "repairs": [{**repair, field: value}]}
+    with pytest.raises(ext.ExtensionRefused, match=r"\[request\]"):
+        ext.parse_request(json.dumps(request).encode(), "request")
+
+
+def test_queue_extension_grants_a_round_even_if_it_rejects(monkeypatch, tmp_path):
+    tasks, _, calls, request, head, _, _ = queue_extension_case(monkeypatch, tmp_path)
+    write_extension_approval(tasks, request)
+    write_task(tasks, worktree_base_sha=head, reply="VERDICT: REQUEST_CHANGES")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "CHANGES_REQUESTED" and "budget_extension" in result
+    assert calls["posts"] == 1
+
+
+def test_elevated_round_does_not_grant_approval(monkeypatch, tmp_path):
+    tasks, _, calls = classified_budget_case(monkeypatch, tmp_path)
+    write_task(tasks, reply="VERDICT: BLOCKED")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "BLOCKED" and "budget_classification" in result
+    assert calls["posts"] == 1
+
+
+def test_queue_repair_refuses_non_base_import_and_empty_or_long_history(monkeypatch, tmp_path):
+    from scripts.review import budget_extension as ext
+    repo, approved, head, _, run = extension_repo(tmp_path, head_kind="commit")
+    with pytest.raises(ext.ExtensionRefused, match=r"\[repair\]"):
+        ext.queue_repair_diff(repo, approved=approved, head=approved, base_tip="main")
+    run("checkout", "-q", "-b", "other", approved)
+    (repo / "other.txt").write_text("not imported from base\n")
+    run("add", "other.txt")
+    run("commit", "-q", "-m", "other")
+    run("checkout", "-q", "feature")
+    run("merge", "-q", "--no-ff", "-m", "foreign merge", "other")
+    with pytest.raises(ext.ExtensionRefused, match=r"\[repair\]"):
+        ext.queue_repair_diff(repo, approved=approved, head=run("rev-parse", "HEAD"), base_tip="main")
+    monkeypatch.setattr(ext, "MAX_REPAIR_COMMITS", 0)
+    with pytest.raises(ext.ExtensionRefused, match=r"\[repair\]"):
+        ext.queue_repair_diff(repo, approved=approved, head=head, base_tip="main")

@@ -64,7 +64,12 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
    of that specific test.
 4. **Review with `review-loop`**, which you run yourself. It resolves the reviewer live
    (never from a family that authored the branch), dispatches it at the exact pushed head,
-   keeps the budget and the ledger, and records the verdict.
+   keeps the budget and the ledger, and records the verdict. Follow its
+   [policy](../review-loop/references/policy.md) for independently classified elevated rounds
+   and the single-use post-approval base-conflict or queue-ejection extension. Queue repairs
+   bind the failed run and attempt and exact justified patches, with base imports and conflict
+   resolutions checked separately. An extension admits review, never approval, and retains
+   the unpublished-verdict refusal, exact-head review, same-head CI and stopping rules.
 5. **Open or update the PR** ([pr-body](references/pr-body.md)). The PR may open before
    approval so admission CI runs (`workflow.md:195`); an open PR or green CI is not approval.
 

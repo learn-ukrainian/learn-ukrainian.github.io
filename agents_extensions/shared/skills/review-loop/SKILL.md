@@ -90,7 +90,12 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    Fixes go to the authoring lane (the worker itself when it runs the loop); a driver does not
    patch them in.
 6. **Next round or stop.** Start a delta round only if the budget allows it and an open blocker,
-   a changed behaviour or a moved head needs it. A recorded rejection is cleared only at a new
+   a changed behaviour or a moved head needs it. Rounds beyond three require the independent
+   recorded classification and evidenced finding ID in
+   [policy](references/policy.md#recorded-elevated-classification). A post-approval base
+   conflict or queue ejection can use the sealed, single-use extension described there.
+   It admits one round, never approval; unpublished verdicts still refuse.
+   A recorded rejection is cleared only at a new
    head ([policy](references/policy.md#clearing-a-recorded-rejection)). The delta brief carries
    the ledger and the fix diff ([brief](references/brief.md#delta-rounds-round-2-and-later)).
 7. **Record the verdict once a PR exists** (the PR may already be open, `workflow.md:195`):

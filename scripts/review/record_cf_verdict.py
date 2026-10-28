@@ -1726,17 +1726,150 @@ def require_no_same_head_rejection(comments: Sequence[Mapping[str, Any]], sha: s
         )
 
 
-def review_round_budget(facts: BranchReviewFacts) -> int:
-    """Rounds one PR may spend: 5 on a security-sensitive change, else 3 (C-2902).
+def review_round_budget(
+    facts: BranchReviewFacts, *, classification: Mapping[str, Any] | None = None, historical_rounds: int = 0
+) -> int:
+    """An independently recorded evidenced classification admits rounds 4 and 5.
 
-    The tier comes from the branch's own changed paths, the shared rule that
-    raises a security-sensitive target to critical. The review task's
-    caller-supplied risk never raises it: the dispatcher of a review can be
-    the author.
+    Paths and caller-supplied risk cannot authorize a higher tier alone.
+    ``recorded_budget_classification`` authenticates the classification before
+    this function consumes it.
     """
-    if is_security_sensitive_change(facts.changed_paths, facts.scope_paths):
+    if classification is not None:
+        return ELEVATED_REVIEW_ROUNDS
+    # Preserve already-published rounds admitted by the old security-path
+    # policy. This admits no new elevated round; round 6 still needs A's
+    # single-use extension and all its lineage/approval checks.
+    if historical_rounds >= ELEVATED_REVIEW_ROUNDS and is_security_sensitive_change(
+        facts.changed_paths, facts.scope_paths
+    ):
         return ELEVATED_REVIEW_ROUNDS
     return DEFAULT_REVIEW_ROUNDS
+
+
+def recorded_budget_classification(
+    *,
+    facts: BranchReviewFacts,
+    comments: Sequence[Mapping[str, Any]],
+    login: str,
+    task_root: Path,
+    repository: str,
+    number: int,
+    branch: str,
+    head: str,
+    repo_root: Path,
+) -> dict[str, Any] | None:
+    """Read the previous round's independent authorization for this next round.
+
+    Classification is part of the reviewer's immutable result and published
+    verdict. It cites an open blocker and authorizes one numbered verification
+    round. A new round needs its own classification; a task's risk flag is not
+    one. Red-team dissent cannot independently authorize a budget increase.
+    """
+    from scripts.agent_runtime.bounded_advisory import AdvisoryRefused, fenced_object
+    from scripts.review.review_lineage import _started, _trusted_markers, lineage_runs
+
+    heads = _trusted_verdict_shas(comments, login)
+    # Republishing or seating a second reviewer at a head opens no new round.
+    if head in heads or len(heads) < DEFAULT_REVIEW_ROUNDS:
+        return None
+    markers = [marker for _, marker in sorted(_trusted_markers(comments, login), key=lambda item: item[0])]
+    ordered_heads = list(dict.fromkeys(marker["sha"] for marker in markers))
+    round_number = min(len(heads) + 1, ELEVATED_REVIEW_ROUNDS)
+    previous = ordered_heads[round_number - 2]
+    for run in lineage_runs(task_root, repository=repository, number=number, branch=branch):
+        if not run.reply or "```review-budget-classification" not in run.reply:
+            continue
+        task = run.record
+        published = [
+            marker for marker in markers if marker["task"] == run.task_id and marker["started"] == _started(task)
+        ]
+        if not published or task.get("worktree_base_sha") != previous:
+            continue
+
+        def refuse(detail: str) -> None:
+            raise RecordError(f"REVIEW_BUDGET_CLASSIFICATION_REFUSED: {detail}")
+
+        if (
+            task.get("status") != "done"
+            or task.get("mode") != "read-only"
+            or task.get("review_mode", "cross_family") != "cross_family"
+            or not isinstance(task.get("result_sha256"), str)
+            or not re.fullmatch(r"[0-9a-f]{64}", task["result_sha256"])
+        ):
+            refuse("classification needs a finished, immutable independent review result")
+        model, family = reviewer_identity(dict(task))
+        if family in facts.excluded_families:
+            refuse("classification author is not independent of the change")
+        _require_qualified_reviewer(facts, task=dict(task), model=model, family=family, review_mode="cross_family")
+        verdict = _review_verdict_and_count(run.reply)[0]
+        if verdict not in REJECTED or any(
+            marker["sha"] != previous
+            or marker["model"] != model
+            or marker["family"] != family
+            or marker["verdict"] != verdict
+            or marker.get("review_mode", "cross_family") != "cross_family"
+            for marker in published
+        ):
+            refuse("classification must match a published independent blocking verdict")
+        try:
+            classification = fenced_object(run.reply, "review-budget-classification")
+        except AdvisoryRefused as exc:
+            refuse(str(exc))
+        fields = {"category", "round", "finding_id", "evidence", "head"}
+        if set(classification) != fields:
+            refuse(f"classification must hold exactly {sorted(fields)}")
+        if type(classification["round"]) is not int or classification["round"] != round_number:
+            refuse("classification does not authorize this numbered round")
+        if classification["head"] != previous:
+            refuse("classification is bound to a different reviewed head")
+        if classification["category"] not in (
+            "security",
+            "permissions",
+            "authentication",
+            "data-loss",
+            "state-concurrency",
+        ):
+            refuse("classification category is not elevated")
+        finding, evidence = classification["finding_id"], classification["evidence"]
+        if (
+            not isinstance(finding, str)
+            or not re.fullmatch(r"F[1-9][0-9]*", finding)
+            or not isinstance(evidence, str)
+            or not evidence.strip()
+            or not re.search(r"[A-Za-z0-9_./-]+:[1-9][0-9]*", evidence)
+        ):
+            refuse("classification needs a stable finding id and file:line evidence")
+        visible = _without_code_fences(run.reply, keep_unclosed=False)
+        if not re.search(rf"\b{re.escape(finding)}\b", visible) or evidence not in visible:
+            refuse("finding id and evidence must appear in the published blocking finding")
+        for comment in comments:
+            marker = parse_marker(comment.get("body", ""))
+            if marker not in published:
+                continue
+            try:
+                recorded = fenced_object(comment["body"], "review-budget-classification")
+            except AdvisoryRefused:
+                refuse("classification is absent from its published verdict")
+            if recorded != classification:
+                refuse("published classification differs from its immutable review result")
+        try:
+            _facts_git(
+                repo_root,
+                ["merge-base", "--is-ancestor", previous, head],
+                deadline=time.monotonic() + 60,
+                code=FACTS_TARGET_UNKNOWN,
+            )
+        except BranchFactsError:
+            refuse("current head does not descend from the classifying review head")
+        return {
+            **classification,
+            "task_id": run.task_id,
+            "model": model,
+            "family": family,
+            "result_sha256": task["result_sha256"],
+        }
+    return None
 
 
 def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> set[str]:
@@ -2093,11 +2226,16 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
+        classification = recorded_budget_classification(
+            facts=facts, comments=comments, login=login, task_root=task_root, repository=repository,
+            number=number, branch=branch, head=sha, repo_root=review_root,
+        )
         extension = require_review_round_within_budget(
             comments,
             sha,
             login,
-            budget=review_round_budget(facts),
+            budget=review_round_budget(facts, classification=classification,
+                                       historical_rounds=len(_trusted_verdict_shas(comments, login))),
             pr=number,
             extension=partial(
                 _budget_extension,
@@ -2196,6 +2334,8 @@ def record(
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
     if extension is not None:
         result["budget_extension"] = extension
+    if classification is not None:
+        result["budget_classification"] = classification
     return result
 
 
