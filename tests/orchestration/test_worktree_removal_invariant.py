@@ -45,9 +45,6 @@ ALLOWLIST: dict[tuple[str, str | None], str] = {
     ("scripts/orchestration/worktree_claims.py", "remove_unclaimed_worktree"): (
         "the chokepoint: calls the raw remover only under the lock, ownership proof, and claim scan"
     ),
-    ("scripts/orchestration/reap_worktrees.py", "_reap_qualified_worktree"): (
-        "the reaper pipeline: calls the raw remover only under _enter_dispatch_worktree_guard (same lock and scan)"
-    ),
     ("scripts/dispatcher/git.py", "settle_worktree"): (
         "creator-owned settlement under the task lock: publication proof on the recorded remote, never another task's or a borrowed live tree"
     ),
@@ -294,11 +291,11 @@ def test_every_worktree_removal_goes_through_the_guarded_chokepoint() -> None:
         ('os.system("git -C repo worktree remove x")', "shell string"),
         ('subprocess.run(["sh", "-c", f"git worktree remove {path}"])', "shell -c script"),
         ('subprocess.run(["bash", "-lc", "git worktree remove x && echo ok"])', "shell -c script"),
-        ("reap_worktrees._remove_worktree(root, info)", "low-level remover reference"),
+        ("cleanup_tool._remove_worktree(root, info)", "low-level remover reference"),
         ("worktree_claims.git_worktree_remove(root, path, force=True)", "low-level remover reference"),
         ("safety.remove_worktree(root, path)", "low-level remover reference"),
-        ("cleanup(remover=reap_worktrees._remove_worktree)", "low-level remover reference"),
-        ("from scripts.orchestration.reap_worktrees import _remove_worktree as rm", "low-level remover import"),
+        ("cleanup(remover=cleanup_tool._remove_worktree)", "low-level remover reference"),
+        ("from scripts.orchestration.cleanup_tool import _remove_worktree as rm", "low-level remover import"),
     ],
 )
 def test_scanner_flags_every_python_removal_shape(source: str, kind: str) -> None:

@@ -1056,8 +1056,10 @@ admission and overlap overrides are retired.
 Use `status TASK --run-nonce NONCE` and `wait TASK --run-nonce NONCE` to observe
 the exact run. `list --status running` reports active tasks. Write-task delivery
 requires a pushed branch; inspect the terminal record and Git evidence.
-A dirty or empty deliverable is not success. Follow the common reaper's custody
-checks before removing a worktree.
+A dirty or empty deliverable is not success. The dispatcher removes the task's
+worktree at settlement only when nothing in it can be lost; remove a kept one
+only with `python -m scripts.orchestration.worktree_claims remove`, whose
+custody checks still apply.
 
 Budget/cost/pricing guards, preflight triage, lifecycle-file propagation,
 keep/force-worktree switches, repository backfill, Cursor self-dispatch and DoR

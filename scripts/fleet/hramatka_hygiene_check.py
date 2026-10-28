@@ -8,12 +8,11 @@ tree carries no orphaned worktrees for already-finished tasks; disk headroom
 is above the configured high-water mark. It never mutates GitHub or the
 filesystem — this is PR-4 of the stream-hygiene package
 (`conversation_7b6241377cd44c7ea5265da5c85efb5c`); it does not implement or
-import the PR-2 scope gate (`hramatka_scope_gate.py`) or the PR-3 reaper
-(`post_task_reap.py`) bodies, by design, so this gate has no hard dependency
-on either PR's merge order.  The one deliberate exception is the shared
-open-PR identity probe (`scripts/fleet/pr_identity.py`, #7127): a leaf module
-that imports neither this gate nor the reaper, so both callers express the
-PR-identity binding once without any import cycle.
+import the PR-2 scope gate (`hramatka_scope_gate.py`), by design, so this gate
+has no hard dependency on its merge order.  The one deliberate exception is the
+shared open-PR identity probe (`scripts/fleet/pr_identity.py`, #7127): a leaf
+module that does not import this gate, so the PR-identity binding is expressed
+once without any import cycle.
 
 Usage:
   .venv/bin/python -m scripts.fleet.hramatka_hygiene_check
@@ -60,9 +59,8 @@ GH_TIMEOUT_SECONDS = 15.0
 
 _DISPATCH_WORKTREES_ROOT = REPO_ROOT / ".worktrees" / "dispatch"
 
-# Same terminal-status vocabulary as post_task_reap.py / the drive-epic
-# settle-loop contract, duplicated (not imported) so this gate has no import
-# dependency on the PR-3 reaper module.
+# Same terminal-status vocabulary as the drive-epic settle-loop contract,
+# duplicated (not imported) so this gate stays free of orchestration imports.
 _TERMINAL_STATUSES = frozenset(
     {
         "done",
@@ -219,10 +217,8 @@ def _branch_has_open_pr(
     """Return True only when ``branch`` provably has an OPEN same-repo PR.
 
     PR identity binding lives in one shared probe (scripts.fleet.pr_identity,
-    #7127) — the same binding post_task_reap's reaper uses — so this gate and
-    the reaper cannot drift apart again.  This caller keeps the gate's
-    fail-closed direction, which is the opposite direction from the reaper:
-    ANY unknown (no branch identity, gh failure, malformed row such as
+    #7127), so this gate and the other retention callers cannot drift apart
+    again.  This caller keeps the gate's fail-closed direction: ANY unknown (no branch identity, gh failure, malformed row such as
     ``[{}]``, fork head, mismatched branch) returns False and the worktree
     stays counted.  The gate must never hand out a verified-clean handoff on
     a guess.
@@ -241,9 +237,8 @@ def _branch_has_open_pr(
 def _is_under_dispatch_worktrees(path: Path, dispatch_root: Path) -> bool:
     """True for paths inside dispatch_root but outside the ACP runtime subtree.
 
-    ACP runtime-review worktrees are reaped on process-liveness, not task
-    status (see post_task_reap.py) — they are out of scope for this
-    task-status-driven zombie check.
+    ACP runtime-review worktrees follow process liveness, not task status, so
+    they are out of scope for this task-status-driven zombie check.
     """
     try:
         rel = path.resolve().relative_to(dispatch_root.resolve())

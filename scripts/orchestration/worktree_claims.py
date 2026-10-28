@@ -653,17 +653,15 @@ def git_worktree_remove(
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
-    Only :func:`remove_unclaimed_worktree` and the scheduled reaper's guarded
-    pipeline call this; ``tests/orchestration/test_worktree_removal_invariant.py``
-    fails on any other caller. Forced targets pass the delete-target guard;
-    the reaper explicitly guards non-force continuation-cohort targets.
+    Only :func:`remove_unclaimed_worktree` calls this;
+    ``tests/orchestration/test_worktree_removal_invariant.py`` fails on any
+    other caller. Forced targets pass the delete-target guard.
     ``force`` runs ``git worktree remove --force``, which a clean porcelain tree
     still needs when it holds ignored residue such as a worker ``.venv``.
     Without ``force`` git itself refuses a checkout with modified or untracked
     files, and a locked one. The removal is bounded by ``timeout`` when the
     caller passes one, otherwise by :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`.
-    The reaper does not pass a timeout: removal keeps that 120s bound and is
-    not clipped to the locked-region deadline. A timeout is an error, never a
+    A timeout is an error, never a
     removal, since the killed git may leave a half-deleted checkout behind.
     A caller may supply ``SafeGitRunner`` to pin an executable; mandatory
     execution controls cannot be replaced by a callback.
@@ -956,7 +954,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  3  refused: a guard failed and nothing was removed\n"
             "\n"
             "Related: dispatch holds the same per-worktree lock,\n"
-            "  scripts/orchestration/reap_worktrees.py (scheduled reaper),\n"
+            "  scripts/dispatcher/git.py (settlement removal),\n"
             "  tests/orchestration/test_worktree_removal_invariant.py, issue #8610."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,

@@ -840,7 +840,7 @@ def run_git(
         args == ["add", "-A"] or (len(args) == 4 and args[:3] == ["commit", "--no-verify", "-m"])
     ):
         # Interactive add and commit trailers reach more configured programs.
-        # This profile is solely the reaper's noninteractive preservation pair.
+        # This profile is solely the noninteractive preservation pair.
         raise ValueError("unsupported preservation operation")
     if profile == "commit" and args[0] == "add":
         failure = _preserve_attributes(prefix, cwd, safe_env, timeout)

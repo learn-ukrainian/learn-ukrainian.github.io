@@ -233,7 +233,7 @@ def test_stale_worktree_registration_is_pruned(
     _git(repo, "worktree", "add", "-b", branch, str(worktree), "main")
     shutil.rmtree(worktree)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda *_args, **_kwargs: ([], None),
     )
@@ -242,7 +242,7 @@ def test_stale_worktree_registration_is_pruned(
 
     assert result["errors"] == []
     assert result["worktree_prune"]["ok"] is True
-    registered = cleanup.reap_worktrees.list_git_worktrees(repo)
+    registered = cleanup.worktree_git.list_git_worktrees(repo)
     assert all(item.path != worktree for item in registered)
 
 
@@ -263,11 +263,11 @@ def test_exact_merged_gone_branch_is_deleted(
     branch = "codex/merged-gone"
     head_sha = _gone_branch(repo, branch)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, candidate: (
             [
-                cleanup.reap_worktrees.PullRequestState(
+                cleanup.worktree_git.PullRequestState(
                     number=42,
                     state="MERGED",
                     head_sha=head_sha,
@@ -302,7 +302,7 @@ def test_scratch_review_branch_on_main_is_deleted_for_ancestry(
     branch = "codex/review-8115-r1"
     _gone_branch(repo, branch)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -331,7 +331,7 @@ def test_non_scratch_prefix_is_preserved(
     _git(repo, "branch", "--set-upstream-to", f"origin/{branch}", branch)
     _git(repo, "push", "origin", "--delete", branch)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -378,17 +378,17 @@ def test_squash_parent_is_deleted_and_main_ancestor_is_not_called_contained(
     def _prs(_repo: Path, candidate: str):
         if candidate == contained:
             return (
-                [cleanup.reap_worktrees.PullRequestState(number=7, state="MERGED", head_sha=tip)],
+                [cleanup.worktree_git.PullRequestState(number=7, state="MERGED", head_sha=tip)],
                 None,
             )
         if candidate == on_main:
             return (
-                [cleanup.reap_worktrees.PullRequestState(number=8, state="MERGED", head_sha=tip)],
+                [cleanup.worktree_git.PullRequestState(number=8, state="MERGED", head_sha=tip)],
                 None,
             )
         return [], None
 
-    monkeypatch.setattr(cleanup.reap_worktrees, "_query_pr_states", _prs)
+    monkeypatch.setattr(cleanup.worktree_git, "_query_pr_states", _prs)
 
     result = cleanup.cleanup_gone_local_branches(repo, apply=True)
     by_branch = {item["branch"]: item for item in result}
@@ -415,7 +415,7 @@ def test_unproven_gone_branch_is_preserved(
     _git(repo, "branch", "--set-upstream-to", f"origin/{branch}", branch)
     _git(repo, "push", "origin", "--delete", branch)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -436,7 +436,7 @@ def test_pr_query_failure_preserves_branch_and_reports_error(
     branch = "codex/pr-query-failed"
     _gone_branch(repo, branch)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], "gh pr list failed: offline"),
     )
@@ -463,11 +463,11 @@ def test_open_pr_preserves_gone_branch(
     branch = "codex/open-pr"
     head_sha = _gone_branch(repo, branch)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: (
             [
-                cleanup.reap_worktrees.PullRequestState(
+                cleanup.worktree_git.PullRequestState(
                     number=99,
                     state="OPEN",
                     head_sha=head_sha,
@@ -705,8 +705,7 @@ def test_git_maintenance_failure_is_reported(
     monkeypatch,
 ) -> None:
     repo = _repo(tmp_path)
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    monkeypatch.setattr(cleanup.worktree_git, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
@@ -757,7 +756,7 @@ def test_exact_merged_origin_branch_is_deleted(tmp_path: Path, monkeypatch) -> N
             return [], None
         return (
             [
-                cleanup.reap_worktrees.PullRequestState(
+                cleanup.worktree_git.PullRequestState(
                     number=77,
                     state="MERGED",
                     head_sha=head_sha,
@@ -766,7 +765,7 @@ def test_exact_merged_origin_branch_is_deleted(tmp_path: Path, monkeypatch) -> N
             None,
         )
 
-    monkeypatch.setattr(cleanup.reap_worktrees, "_query_pr_states", _prs)
+    monkeypatch.setattr(cleanup.worktree_git, "_query_pr_states", _prs)
 
     applied = cleanup.cleanup_stale_origin_branches(repo, apply=True)
 
@@ -788,8 +787,8 @@ def _unique_pushed_branch(repo: Path, branch: str) -> str:
     return head_sha
 
 
-def _closed_pr(number: int, head_sha: str) -> cleanup.reap_worktrees.PullRequestState:
-    return cleanup.reap_worktrees.PullRequestState(
+def _closed_pr(number: int, head_sha: str) -> cleanup.worktree_git.PullRequestState:
+    return cleanup.worktree_git.PullRequestState(
         number=number,
         state="CLOSED",
         head_sha=head_sha,
@@ -805,7 +804,7 @@ def test_closed_pr_exact_head_with_matching_pull_ref_is_deleted(
     head_sha = _unique_pushed_branch(repo, branch)
     _git(tmp_path / "origin.git", "update-ref", "refs/pull/88/head", head_sha)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, candidate: ([_closed_pr(88, head_sha)], None) if candidate == branch else ([], None),
     )
@@ -829,7 +828,7 @@ def test_closed_pr_exact_head_with_mismatched_pull_ref_is_kept(
     main_sha = _git(repo, "rev-parse", "main")
     _git(tmp_path / "origin.git", "update-ref", "refs/pull/89/head", main_sha)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, candidate: ([_closed_pr(89, head_sha)], None) if candidate == branch else ([], None),
     )
@@ -852,7 +851,7 @@ def test_closed_pr_exact_head_ls_remote_error_is_kept(
     head_sha = _unique_pushed_branch(repo, branch)
     _git(tmp_path / "origin.git", "update-ref", "refs/pull/90/head", head_sha)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, candidate: ([_closed_pr(90, head_sha)], None) if candidate == branch else ([], None),
     )
@@ -888,7 +887,7 @@ def test_unique_unproven_origin_branch_is_preserved(tmp_path: Path, monkeypatch)
     _git(repo, "push", "-u", "origin", "codex/unique-origin")
     _git(repo, "checkout", "main")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -907,7 +906,7 @@ def test_untracked_ancestor_local_branch_is_deleted(tmp_path: Path, monkeypatch)
     branch = "claude/old-local"
     _git(repo, "branch", branch, "main")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -927,7 +926,7 @@ def test_rescue_ref_with_unique_commit_and_no_pr_is_skipped(tmp_path: Path, monk
     _git(repo, "commit", "-m", "unique rescue")
     _git(repo, "checkout", "main")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -952,7 +951,7 @@ def test_scratch_ref_on_another_origin_ref_is_deleted(tmp_path: Path, monkeypatc
     branch = "rescue/copied"
     _git(repo, "branch", branch, "feature/landed")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -978,7 +977,7 @@ def test_scratch_ref_is_skipped_when_remote_containment_git_errors(
     _git(repo, "commit", "-m", "unreadable containment")
     _git(repo, "checkout", "main")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1018,7 +1017,7 @@ def test_scratch_ref_on_stale_origin_ref_is_kept(tmp_path: Path, monkeypatch) ->
     # refs/remotes/origin/feature/landed is now a stale cache.
     _git(tmp_path / "origin.git", "update-ref", "-d", "refs/heads/feature/landed")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1042,7 +1041,7 @@ def test_scratch_ref_is_kept_when_live_remote_check_errors(tmp_path: Path, monke
     branch = "rescue/copied"
     _git(repo, "branch", branch, "feature/landed")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1083,7 +1082,7 @@ def test_fetch_failure_keeps_remote_containment_deletions(tmp_path: Path, monkey
     contained_branch = "rescue/copied"
     _git(repo, "branch", contained_branch, "feature/landed")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1110,7 +1109,7 @@ def test_fetch_failure_keeps_origin_head_deletions(tmp_path: Path, monkeypatch) 
     _git(repo, "push", "origin", "rescue/copied")
     _git(repo, "branch", "-D", "rescue/copied")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1130,11 +1129,9 @@ def test_repo_result_fetch_failure_keeps_and_reports(tmp_path: Path, monkeypatch
     _git(repo, "branch", branch, "main")
     # Break the remote so this run's `fetch --prune` fails.
     _git(repo, "remote", "set-url", "origin", str(tmp_path / "missing.git"))
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
-    monkeypatch.setattr(cleanup.reap_worktrees, "adopt_dispatch_worktrees", lambda _repo: [])
+    monkeypatch.setattr(cleanup.worktree_git, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1195,7 +1192,7 @@ def test_origin_scratch_ref_is_not_deleted_for_containing_itself(tmp_path: Path,
     _git(repo, "push", "-u", "origin", "rescue/only-here")
     _git(repo, "checkout", "main")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1217,7 +1214,7 @@ def test_review_checkout_unrelated_commit_is_preserved(tmp_path: Path, monkeypat
     _git(repo, "commit", "-m", "review tip")
     _git(repo, "checkout", "main")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1226,7 +1223,7 @@ def test_review_checkout_unrelated_commit_is_preserved(tmp_path: Path, monkeypat
         "_query_pr_by_number",
         lambda _repo, number: (
             [
-                cleanup.reap_worktrees.PullRequestState(
+                cleanup.worktree_git.PullRequestState(
                     number=number,
                     state="MERGED",
                     head_sha="0" * 40,
@@ -1249,7 +1246,7 @@ def test_review_checkout_exact_merged_head_is_deleted(tmp_path: Path, monkeypatc
     _git(repo, "branch", branch, "main")
     head_sha = _git(repo, "rev-parse", branch)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1258,7 +1255,7 @@ def test_review_checkout_exact_merged_head_is_deleted(tmp_path: Path, monkeypatc
         "_query_pr_by_number",
         lambda _repo, number: (
             [
-                cleanup.reap_worktrees.PullRequestState(
+                cleanup.worktree_git.PullRequestState(
                     number=number,
                     state="MERGED",
                     head_sha=head_sha,
@@ -1281,7 +1278,7 @@ def test_origin_entire_checkpoint_is_not_deleted(tmp_path: Path, monkeypatch) ->
     _git(repo, "branch", branch, "main")
     _git(repo, "push", "origin", branch)
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1297,7 +1294,7 @@ def test_entire_checkpoint_branch_is_not_deleted(tmp_path: Path, monkeypatch) ->
     repo = _repo(tmp_path)
     _git(repo, "branch", "entire/checkpoints/v1", "main")
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1335,7 +1332,7 @@ def test_dry_run_zero_repo_mutation(tmp_path: Path, monkeypatch) -> None:
     _git(work_clone, "push", "origin", "remote-feature")
 
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1379,7 +1376,7 @@ def test_report_mode_preserves_review_temp_orphans(tmp_path: Path, monkeypatch) 
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
     monkeypatch.setattr(
-        cleanup.reap_worktrees,
+        cleanup.worktree_git,
         "_query_pr_states",
         lambda _repo, _branch: ([], None),
     )
@@ -1454,8 +1451,7 @@ def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
 
 def _stub_repo_hooks(monkeypatch, *, leak_sweep_calls: list[bool]) -> None:
     monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    monkeypatch.setattr(cleanup.worktree_git, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
@@ -1559,11 +1555,11 @@ def test_origin_branch_deleted_by_someone_else_is_already_absent_not_an_error(tm
         # The merge queue drops its temporary branch while cleanup is running.
         _git(tmp_path / "origin.git", "update-ref", "-d", f"refs/heads/{branch}")
         return (
-            [cleanup.reap_worktrees.PullRequestState(number=1, state="MERGED", head_sha=head_sha)],
+            [cleanup.worktree_git.PullRequestState(number=1, state="MERGED", head_sha=head_sha)],
             None,
         )
 
-    monkeypatch.setattr(cleanup.reap_worktrees, "_query_pr_states", _prs)
+    monkeypatch.setattr(cleanup.worktree_git, "_query_pr_states", _prs)
 
     rows = cleanup.cleanup_stale_origin_branches(repo, apply=True)
 
@@ -1579,7 +1575,7 @@ def rescue_repo(tmp_path: Path, monkeypatch):
     _git(repo, "worktree", "add", "-b", "test/terminal", str(worktree))
     tasks = repo / "batch_state" / "tasks"
     tasks.mkdir(parents=True)
-    monkeypatch.setattr(cleanup.reap_worktrees, "control_plane_root", lambda _repo: repo)
+    monkeypatch.setattr(cleanup.worktree_git, "control_plane_root", lambda _repo: repo)
     return repo, worktree, tasks
 
 
@@ -1660,8 +1656,7 @@ def test_terminal_record_without_worktree_is_skipped(rescue_repo, monkeypatch, s
     (directory / "no-worktree.json").write_text(
         json.dumps({"status": status, "finished_at": None, "worktree_path": None, "cwd": str(repo)})
     )
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    monkeypatch.setattr(cleanup.worktree_git, "_live_cwd_paths", lambda _repo: set())
     result = cleanup._repo_result(repo, apply=True)
     assert result["errors"] == []
     assert result["rescue"] == {"summary": {"candidate": 0}, "tasks": []}
@@ -1701,8 +1696,7 @@ def test_rescue_read_errors_reach_caller_without_crashing(rescue_repo, monkeypat
         monkeypatch.setattr(Path, "read_text", read)
     if failure == "git":
         monkeypatch.setattr(cleanup, "safe_git", lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError()))
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    monkeypatch.setattr(cleanup.worktree_git, "_live_cwd_paths", lambda _repo: set())
     result = cleanup._repo_result(repo, apply=True)
     (row,) = result["rescue"]["tasks"]
     assert row["action"] == "error"
@@ -1732,8 +1726,7 @@ def test_caller_reports_without_delegate_script(rescue_repo, monkeypatch, mode: 
         )
     )
     monkeypatch.setenv("LU_REAPER_DISABLED", "1" if mode == "disabled" else "0")
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    monkeypatch.setattr(cleanup.worktree_git, "_live_cwd_paths", lambda _repo: set())
     result = cleanup._repo_result(repo, apply=mode != "dry_run")
     assert result["errors"] == []
     assert (worktree / "README.md").read_text() == "uncommitted\n"

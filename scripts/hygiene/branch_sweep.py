@@ -34,7 +34,7 @@ from scripts.common import github_client
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
 from scripts.common.jsonl import jsonl_lines, physical_lines
 from scripts.common.scratch import ensure_scratch_root
-from scripts.orchestration import reap_worktrees as reaper
+from scripts.orchestration import worktree_git as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 

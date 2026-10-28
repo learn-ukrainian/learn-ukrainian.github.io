@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from scripts.hygiene import branch_sweep as sweep
-from scripts.orchestration.reap_worktrees import PullRequestState
+from scripts.orchestration.worktree_git import PullRequestState
 
 
 def git(repo: Path, *args: str) -> str:

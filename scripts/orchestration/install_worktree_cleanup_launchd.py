@@ -162,7 +162,7 @@ def _validate_primary(repo_root: Path, *, require_interpreter: bool = False) -> 
         text=True,
         check=False,
         timeout=10,
-        env=scheduled_worktree_cleanup.reap_worktrees.sanitized_git_env(),
+        env=scheduled_worktree_cleanup.worktree_git.sanitized_git_env(),
     )
     if branch.returncode != 0 or branch.stdout.strip() != "main":
         raise LaunchdError(f"repository primary must be on main: {repo_root}")

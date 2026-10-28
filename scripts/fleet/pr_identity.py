@@ -1,10 +1,9 @@
 """The one shared open-PR identity probe for worktree-retention callers (#7127).
 
-``post_task_reap._no_open_pr_for_branch`` (the reaper) and
-``hramatka_hygiene_check._branch_has_open_pr`` (the closeout gate) both answer
-"does this branch still have an open PR?" for the same dispatch worktrees, and
-they must not drift apart again — #7126 found them already disagreeing on
-malformed rows.  This module expresses the PR-identity binding exactly once:
+Callers such as ``hramatka_hygiene_check._branch_has_open_pr`` (the closeout
+gate) answer "does this branch still have an open PR?" for dispatch worktrees,
+and they must not drift apart again — #7126 found two callers already
+disagreeing on malformed rows.  This module expresses the PR-identity binding exactly once:
 
 * an explicit ``--repo`` scope, never gh's cwd fallback;
 * ``state == "OPEN"``;

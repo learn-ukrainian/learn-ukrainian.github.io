@@ -17,9 +17,9 @@ PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir
 
 Do not substitute `python`, `.venv/bin/python`, or `python -m venv .venv`.
 The dispatch launcher records a warning when a local `.venv` is already present;
-do not delete it while a task might be active. After the normal merged-PR guards
-pass, the P0 reaper removes the entire disposable worktree, including ignored
-environment residue.
+do not delete it while a task might be active. A local `.venv` is not
+disposable residue: the dispatcher keeps a worktree that holds one at
+settlement (`dirty`, below).
 
 ## Shared node_modules (npm shim)
 
@@ -37,8 +37,8 @@ transport output. Already-queued unchanged heads return without another enqueue.
 The keeper uses the same publisher path. Failed or unknown publication never
 authorizes cleanup.
 
-The existing common reaper timer and standard post-task and post-merge lifecycle
-own cleanup and its durable receipts. All common ownership, liveness,
+The dispatcher's settlement removal and the post-merge closeout own cleanup and
+its durable receipts. All common ownership, liveness,
 preservation and branch guards still apply. Publisher queue success does not
 prove cleanup complete. Retained, pending or unavailable cleanup blocks full
 delivery; it does not authorize another enqueue. Post-merge common closeout
@@ -51,15 +51,15 @@ and publication is proven. Remote branches remain until `MERGED`.
 
 Every Git-based worktree removal preserves ignored output at the sole raw
 `git worktree remove` boundary in `scripts/orchestration/worktree_claims.py`,
-using `scripts/fleet/ignored_task_output.py`. The dispatch exit and post-task
-reapers, ACP execution teardown, data-tier cleanup, sibling Git maintenance,
-task-family cleanup, and removal CLI all inherit this guard. The common P0
-reaper calls the same boundary under its own ownership/liveness lock;
-`post_task_reap` invokes that reaper. Preservation runs
-once, after ownership/claim checks and before deletion. A preservation failure
-returns a typed skipped/refusal result and leaves the directory intact.
-`branch_sweep` deletes branch refs only. The separate husk removal accepts
-only unregistered directories with no files or symlinks. The legacy temp leak
+using `scripts/fleet/ignored_task_output.py`. ACP execution teardown, data-tier
+cleanup, sibling Git maintenance, task-family cleanup, and the removal CLI all
+inherit this guard. Preservation runs once, after ownership/claim checks and
+before deletion. A preservation failure returns a typed skipped/refusal result
+and leaves the directory intact. The dispatcher's settlement
+(`scripts/dispatcher/git.py` `settle_worktree`) runs its own non-forced
+`git worktree remove` only when every entry left in the tree is an ignored
+cache or a provisioned link, so it has no output to preserve; anything else
+keeps the tree. `branch_sweep` deletes branch refs only. The legacy temp leak
 sweep and review temporary-tree cleanup refuse a candidate containing a linked
 worktree's `.git` file or a symlinked `.git` anywhere in its directory tree (or
 an unreadable scan).
@@ -72,15 +72,12 @@ retain their existing scratch-cleanup behavior.
 | Entry point / primitive | Disposition |
 | --- | --- |
 | `worktree_claims.git_worktree_remove`: raw Git argv | Preserves once before deletion; failures return a refusal. |
-| `delegate._remove_dispatch_worktree`: settle, stale holder and superseded review cleanup | Shared locked remover, then guarded raw Git. |
-| `post_task_reap._remove_acp_runtime_worktree` | Shared locked remover; regular dispatches use the common reaper. |
+| `dispatcher.git.settle_worktree`: task settlement | Own non-forced `git worktree remove` under the dispatcher's worktree lock; only trees holding nothing but ignored caches and provisioned links, published (write tasks), with the provider proven gone. |
 | `_acp_execution._remove_runtime_worktree`: context teardown and dead-runtime sweep | Shared locked remover; no-checkout teardown inventories all untracked non-cache files, even without ignore rules. Dead-runtime sweep retains unexpected files. |
 | `data_tier.remove_test_worktree`: stale and final cleanup | Shared locked remover. |
 | `sibling_git.worktree_remove` | Shared locked remover; preservation uses the public control plane. |
 | `task_family.git_safety.remove_unclaimed_worktree`: executor cleanup | Shared locked remover. |
 | `worktree_claims remove`, `wt.sh`, RB2 failed-dispatch cleanup | Guarded CLI, then shared locked remover. |
-| `reap_worktrees._reap_qualified_worktree`; `post_task_reap` | Locked reaper pipeline, then guarded raw Git. |
-| `reap_worktrees._remove_dispatch_husk_locked`: `shutil.rmtree` | Only unregistered, file-free and symlink-free husks; rechecked under the shared lock. |
 | `tmp_leak_sweep._remove_path`: `shutil.rmtree` | Refuses linked worktree markers, including nested checkouts and unreadable scans. |
 | `review.isolation._remove_review_temp_tree`: `shutil.rmtree` | Repairs review permissions without following symlinks, then refuses linked worktree markers, nested checkouts and unreadable scans before deletion. Root symlinks are refused; the orphan sweep reports refusals as errors. Plain temporary trees and disposable clones remain eligible. |
 
@@ -167,7 +164,7 @@ disposition. Inventory, copy, byte-verification, or task-record write failures
 also retain it, as do manifest or canonical task-receipt write failures. Task terminal
 status never changes preservation eligibility. Existing ownership and liveness
 gates still apply before preservation and removal.
-Existing task records and reap/closeout receipts report `preserved_artifacts`
+Existing task records and removal/closeout receipts report `preserved_artifacts`
 with `count`, `bytes`, repository-relative `location`, `worktree_sha256`,
 `content_sha256`, `retrieval_proof_sha256`, `reused`, and per-path `path`,
 `size`, `sha256` and `class`. Receipts contain no contents or absolute home
@@ -182,16 +179,14 @@ are `task_created`. Missing, malformed, reused or identity-mismatched baselines
 are `unknown_baseline`. All three classes are preserved equally: no timestamp
 or baseline excludes output.
 
-Both removal pipelines honor canonical `keep_worktree` even when Git is clean.
+Every guarded removal honors canonical `keep_worktree` even when Git is clean.
 The gate discovers the bound hot/archive task record itself; caller-supplied
 records cannot hide intent. A kept tree may acquire a passing retrieval receipt
-but remains retained. Only an explicit existing-owner release through
-`post_task_reap --release-retention --apply` clears intent. The command uses
-`owner_release_refusal`, requires an existing passing retrieval receipt for the
-same owner/run, rechecks preserved bytes against current output, and records the
-release before removal. Missing proof, changed output, corrupt copies, a reused
-checkout or mismatched owner refuses release. Dry-run never releases intent.
-No new lock or state authority is introduced.
+but remains retained. No command releases retention intent any more: the
+post-task reaper's `--release-retention` command was deleted with it
+(FR-01b). Every guarded remover, `worktree_claims remove` included, still
+refuses a kept tree. The owner retrieves the output; releasing the tree itself
+has no supported command and is an Infra-owned residual.
 
 Continuation rounds keep the checkout's creator as its owner (#10008). Even
 without retention intent, attribution requires exactly one creator and settled
@@ -207,28 +202,18 @@ missing replacement evidence, two current creators, or a running successor
 remain ambiguous.
 All matching records, including excluded history, remain visible to retention
 checks and verified receipt release. A historical `keep_worktree` claim must
-be retrieved and released; it is never dropped by attribution filtering.
+be retrieved; it is never dropped by attribution filtering.
 In a continuation cohort, failed-preparation records with null PID, base SHA
 and branch do not prove that no checkout was created: the failure writer also
 runs after add attempts and can snapshot an existing HEAD. Without explicit
 no-creation evidence they remain ambiguous and never grant ownership.
 Infra owns this attribution residual.
 
-For a keep-false continuation cohort, merged-PR-head containment plus a
-clean checkout permits the common reaper to record `worktree_reap_proof`
-(`merged-reuse-reap.v1`) on the creator and `merged_head_proof` in its removal
-receipt. The proof records the PR, checkout head, PR head, their relation,
-creator/run and cohort identities. The worktree lock precedes task-state locks
-and all identities are rechecked.
-The head must come from a branch or PR-number lookup; a commit-search hit
-only proves commit membership and is refreshed by number before taking locks.
-A `needs_finalize` creator additionally requires a done successor whose
-recorded head is the checkout head, with every recorded process proven absent.
-An earlier checkout head qualifies only when detached and proven to be an
-ancestor of the authoritative merged PR head. Every current cohort record must
-have a complete task/run/process identity and a commit contained in the checkout
-head. Unknown Git objects, divergent commits, unmerged PRs and live or unknown
-processes retain the tree. This proof does not release retention intent.
+Task records written by the retired reaper may carry `worktree_reap_proof`
+(`merged-reuse-reap.v1`) for a keep-false continuation cohort. Preservation and
+lifecycle recovery still read and verify that proof against current identities
+(`scripts/orchestration/worktree_git.py`); nothing writes new ones. The proof
+does not release retention intent.
 A switched-branch proof identifies the checkout using Git's raw common-directory
 and configured-origin output, then checks Git's porcelain registration list in
 the primary. The candidate must be inside that primary's cleanup root. The
@@ -236,35 +221,35 @@ resolver never reads Git pointer files or normalizes identity output. Unknown
 identity refuses the proof before any pull-request query or removal; malformed
 origins retain their checkout without aborting the sweep.
 This extra owner proof applies only to cohorts of at least two current records;
-single-record trees retain their existing behavior. Its status remains unchanged.
-Removal uses no force flag for this cohort and still checks the delete target;
-ignored non-cache bytes still require verified preservation and retrieval.
-Retention intent continues to require the receipt-based retrieve/release
-sequence above; merged-head proof never clears it.
-
-```bash
-.venv/bin/python -m scripts.fleet.post_task_reap --task-id <task-id> --release-retention --apply
-```
+single-record trees retain their existing behavior. Ignored non-cache bytes
+still require verified preservation and retrieval, and merged-head proof never
+clears retention intent.
 
 Infra owns legacy-tree and disk-use residuals and retention of
 `batch_state/preserved/`. This change adds no automatic deletion policy for
 preserved copies. Off-repository historical recovery remains unknown until the
 open-model-data owner verifies it.
 
-Cleanup is fail-closed. A worktree is preserved when any of these is true:
+Cleanup is fail-closed. At settlement the dispatcher keeps the task's worktree
+and records `worktree_disposition: retained` with one of these reasons:
 
-- its pull request is open (`open_pr`);
-- its pull-request head does not exactly match the worktree HEAD, unless the PR
-  is `MERGED` and the origin branch is gone, or it lacks merge proof (`unmerged`);
-- its task is active or non-terminal, a live process has a working directory inside it,
-  or an active task lease, rollover lease, write-ownership claim, or reap reservation exists (`active_dispatch`);
-- a non-terminal review attempt reads from it. The task record claims the deepest registered linked checkout containing each of these inputs, including subdirectories and symlink spellings: its `review_contract.input_root`, and every `review_input_paths` entry, namely the attempt manifest (dispatch resolves its path once at admission, so every later read and the worker use the symlink target, never the supplied spelling) and the worker's own code checkout (it runs from there for the whole attempt). A formal attempt takes no output schema (`--review-attempt` with `--output-schema` is refused). Inputs in the primary checkout, or outside any registered checkout, claim nothing. Before it reserves the attempt id, dispatch refuses a review contract without an `input_root`, and refuses the attempt when the fleet scratch root (`LU_SCRATCH_ROOT`, which holds the worker's runtime tmp lease) lies inside a registered linked checkout (`review_scratch_root_in_worktree`). It holds the shared removal lock of every claimed checkout during input preparation until the task record publishes the claims. Only a terminal task status ends the protection; an owner or settled-claim exemption does not, and a record with an unreadable or malformed claim, or an unavailable worktree registration, refuses removal rather than releasing it;
-- it is the repository's primary checkout (`primary`);
-- it has uncommitted changes or untracked files (`dirty`), which are retained as exceptions and never force-deleted;
-- it is in a detached HEAD or unresolvable state and does not meet the
-  `detached_clean_contained` proof below (`detached_unknown`);
-- it encountered filesystem permission errors during evaluation or removal (`permission_error`), which are retained as exceptions;
-- it is outside the repository's `.worktrees/` directory or not a registered worktree (`foreign`).
+- `borrowed_worktree`: the task ran in a `--cwd` it did not create;
+- `dirty`: an entry is not an ignored cache or a provisioned link;
+- `unknown`: Git state could not be read;
+- `unpublished` or `remote_mismatch`: a write task's HEAD is not on the
+  canonical remote recorded at dispatch (its branch tip, a pull-request head,
+  or already in main);
+- `borrowed_by_live_task`: another task's provider may still use the tree;
+- `provider_processes_alive` or `provider_liveness_unknown`: the provider's
+  process tree is not proven gone.
+
+A failed `git worktree remove` is recorded as `error`
+(`worktree_remove_failed`). The next dispatch retries settlement for the
+liveness, borrowed, `unpublished` and `remote_mismatch` reasons
+(`worker.settle_left_worktrees`); a `dirty` or `unknown` tree stays for its
+owner. The guarded removers in `worktree_claims` also refuse while an
+unfinished task record names the checkout, including a non-terminal review
+attempt that reads from it. The task record claims the deepest registered linked checkout containing each of these inputs, including subdirectories and symlink spellings: its `review_contract.input_root`, and every `review_input_paths` entry, namely the attempt manifest (dispatch resolves its path once at admission, so every later read and the worker use the symlink target, never the supplied spelling) and the worker's own code checkout (it runs from there for the whole attempt). A formal attempt takes no output schema (`--review-attempt` with `--output-schema` is refused). Inputs in the primary checkout, or outside any registered checkout, claim nothing. Before it reserves the attempt id, dispatch refuses a review contract without an `input_root`, and refuses the attempt when the fleet scratch root (`LU_SCRATCH_ROOT`, which holds the worker's runtime tmp lease) lies inside a registered linked checkout (`review_scratch_root_in_worktree`). It holds the shared removal lock of every claimed checkout during input preparation until the task record publishes the claims. Only a terminal task status ends the protection; an owner or settled-claim exemption does not, and a record with an unreadable or malformed claim, or an unavailable worktree registration, refuses removal rather than releasing it.
 
 ### Finished branch-holder scratch hand-off (#10227, first slice)
 
@@ -317,14 +302,14 @@ does not exclude unrelated writers from those windows.
 Git still refuses new ordinary untracked/modified files at non-force removal;
 already archived scratch remains retrievable if removal fails. Unknown state
 always refuses release. This slice adds no probe retry, identity bypass,
-retention release or automatic archive deletion. The reaper's dirty-tree and
-activity refusals remain
-residuals owned by the accountable driver (`claude-monitor`).
+retention release or automatic archive deletion. Dirty-tree and activity
+refusals remain residuals owned by the accountable driver (`claude-monitor`).
 
 The scheduled job reports terminal non-success dispatches as preservation
 candidates; it does not commit or push their work. Dispatch v2 has no rescue
 subcommand. The accountable driver inspects branch/worktree evidence and
-preserves unfinished work before invoking the common reaper. Unknown custody
+preserves unfinished work before removing the tree with
+`worktree_claims remove`. Unknown custody
 or unpushed work remains protected.
 
 ## Branch sweep evidence (#9909)
@@ -403,338 +388,21 @@ with Git refs. Expected-SHA checks abort the whole transaction on head moves;
 `--no-deref` prevents deletion through a symbolic target. The accountable sweep
 driver owns assessment of this residual window before live use.
 
-The scheduled job uses
-`git worktree remove --force` only as the final deletion step after all P0
-guards and their final TOCTOU checks have passed; this removes disposable
-ignored residue such as a worker `.venv`, not a bypass for cleanliness, PR,
-task, or live-process guards. Unregistered directories with broken `.git`
-pointers are reported as recovery candidates and are never deleted
-automatically.
-
-### Canonical preservation classes
-
-The dual-repo reaper and scheduler categorize all worktrees into strict canonical preservation classes:
-
-| Preservation class | Description | Default disposition |
-| --- | --- | --- |
-| `primary` | Primary repository checkout root | Preserved |
-| `active_dispatch` | Live process CWD, active task, active worker/rollover lease, write claim, or reap reservation | Preserved |
-| `open_pr` | Worktree branch has an OPEN pull request | Preserved |
-| `dirty` | Uncommitted modifications or untracked changes | Preserved as exception |
-| `detached_unknown` | Detached HEAD or unverifiable branch state, and not `detached_clean_contained` | Preserved |
-| `detached_clean_contained` | Clean, unlocked, detached `.worktrees/dispatch/<agent>/<task>/` checkout whose HEAD is already on origin, with only ignored caches or verified provisioned links (see below) | **Reaped** by `--safe-only` |
-| `permission_error` | Filesystem permission denied during inspection or removal | Retained as exception |
-| `foreign` | Outside repository `.worktrees/` subtree | Preserved |
-| `unmerged` | Unpushed commits or lacking exact merged-PR / origin-main ancestry proof | Preserved |
+The scheduled job removes no worktree. Unregistered directories with broken
+`.git` pointers are reported as orphans and are never deleted automatically.
 
 ### Aggregate-only public reporting
 
-Public stdout emissions from both `scheduled_worktree_cleanup.py` and `reap_worktrees.py --aggregate` emit strictly aggregate summaries containing counts, owners, and retained exceptions with **zero host path dumps**. Full diagnostic receipts containing individual filesystem paths are written only to private local storage (`~/.codex/worktree-cleanup/receipts/v2/`) with strict owner-only permissions (`0600`/`0700`) for recovery.
+`scheduled_worktree_cleanup.py` prints one JSON summary (`build_public_summary`) with **zero host path dumps**: per repository, the counts of orphans reported, errors, rescue candidates and branches deleted; overall branch, review-temp and task-scratch counts; the session-scratch and batch-state retention summaries; and the receipt id. Full diagnostic receipts containing individual filesystem paths are written only to private local storage (`~/.codex/worktree-cleanup/receipts/v2/`) with strict owner-only permissions (`0600`/`0700`) for recovery.
 
-P0 reaping includes clean `.worktrees/` checkouts whose GitHub PR is
-`MERGED` at the exact local head, or whose PR is `MERGED` and origin branch is
-gone despite extra local reconcile commits after a squash merge. All P0 guards
-still apply. No scheduled job reaps any more (FR-01b); the reaper runs only when
-a caller such as `post_task_reap` invokes it. Before removal the reaper writes an
-append-only local journal, reserves the path as reap-pending, and creates a
-`refs/reaper-rescue/...` ref. Set `LU_REAPER_DISABLED=1` to stop automatic
-reaps immediately. Apply mode also recovers interrupted reap reservations:
-new reservations record the holding PID, and recovery requires that PID to be
-absent plus acquisition of the worktree attachment lock. Live or unverifiable
-PIDs are retained regardless of age. Legacy reservations without a PID require
-a timestamp at least one hour old, the exclusive sweep lock, and the attachment
-lock. Malformed or future legacy timestamps remain reserved. A stable sidecar lock
-serializes pending-state replacements so concurrent writers cannot lose entries.
-Recovery journals `reservation-recovery` before releasing a reservation, then
-reruns the normal safety proofs; dirty, active, or unmerged trees remain refused.
-Dry runs and disabled reapers never release reservations. To recover one target,
-use the existing `reap_worktrees --apply --merged --worktree <path>` command;
-never edit `reap-pending.json` manually. Reservations for already removed trees
-can also be released; no second deletion path is used.
-The first seven days are capped by
-`LU_REAPER_MAX_REAPS_PER_DAY` (default 25); when the eligible backlog of
-fully safety-qualified worktrees exceeds the remaining daily budget, the cap
-may expand up to a hard ceiling of 2x the configured base (journaled as
-`cap-expansion` with the justifying backlog size; the ceiling is not
-env-expandable). An approved policy lift uses
-`LU_REAPER_LIFT_FIRST_CLASS_CAP=1`. Restore only to a new path under
-`.worktrees/`:
+### Reaper retired (FR-01b)
 
-```bash
-PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" scripts/orchestration/reap_worktrees.py restore \
-  --restore-ref refs/reaper-rescue/<timestamp>/<branch>-<sha> \
-  --restore-branch <branch> \
-  --restore-worktree .worktrees/dispatch/<agent>/<task>
-```
-
-For regular dispatch worktrees, `post_task_reap` delegates automatic removal
-to this same P0 reaper rather than maintaining a second deletion path.
-
-## Clean, fully pushed, inactive dispatch worktrees (#10778)
-
-The classes above retain many finished dispatch checkouts that hold nothing
-Git does not already keep (`unknown ownership`, `needs_finalize`), and they
-filled the dispatch host's disk. `reap_worktrees --clean-pushed` removes
-exactly those. It is a mode of the common reaper, not a second remover: it
-holds the reaper lock for the whole run and removes through
-`worktree_claims.remove_unclaimed_worktree`, so delegate's per-worktree lock,
-the shared claim scan and the ignored-output preservation gate all apply.
-
-Each run first refreshes local objects with `git fetch --no-tags origin
---prune` (60 s bound, no submodules) and then takes a census of what origin
-advertises now, `git ls-remote --heads --tags origin` (60 s bound), both before
-it takes the reaper lock: no remote read happens under the lock. Publication
-is proven only from that census: an advertised branch or tag (annotated tags
-peeled to their commit) whose object is present locally and of which the
-commit is an ancestor or equal. Local remote-tracking refs are never used as
-proof, because a narrowed `remote.origin.fetch` refspec leaves them stale while
-the fetch succeeds. If the fetch or the census fails, times out or prints an
-unexpected line, the run does nothing and reports `refs_stale` (exit 0). A
-commit the census does not prove while some advertised object is missing
-locally may still be on origin; that tree is kept as `refs_stale: publication
-unproven`. The proof holds at census time; it cannot guarantee that origin
-keeps the commit afterwards.
-
-A registered checkout is removed only when all of these hold. Each one is
-checked to select the candidate, again under the per-worktree lock, and a
-third time after the checkout is moved into the quarantine (below):
-
-- it is exactly `.worktrees/dispatch/<agent>/<task>/`, not an ACP runtime, not
-  the primary checkout, with no symlink anywhere in its registered path, and
-  it is a directory;
-- it is not `git worktree lock`ed and has no reap reservation, active rollover
-  lease or live write claim;
-- HEAD is unchanged since the listing, `git status --porcelain
-  --untracked-files=all` is empty (no change, no untracked file) and HEAD is
-  proven published by the origin census; a detached HEAD at a commit
-  contained in a currently advertised branch counts as pushed. A tag alone
-  does not establish HEAD eligibility;
-- no file flagged `assume-unchanged` or `skip-worktree` differs from the index.
-  `git status` and `git worktree remove` both trust those flags, so the reaper
-  hashes each flagged file that exists on disk (its raw bytes, or its symlink
-  target) and compares type, exec bit and blob. A sparse checkout's excluded
-  entries have no file on disk and pass;
-- every object the checkout's private git directory (found with `git
-  rev-parse --git-dir`, `.git/worktrees/<name>/`) records is a commit present
-  locally and proven published by the origin census. Removal deletes that
-  directory, and its records may be the last reference to a commit that was
-  reset away. The reaper reads all of it: HEAD and every per-worktree ref
-  (`refs/worktree/`, `refs/bisect/`, `refs/rewritten/`), the whole `logs/`
-  tree (the reflog of HEAD and of each per-worktree ref, both the old and the
-  new side of every entry), and the top-level pseudorefs (`ORIG_HEAD`,
-  `MERGE_HEAD`, `CHERRY_PICK_HEAD`, `REVERT_HEAD`, `REBASE_HEAD`,
-  `AUTO_MERGE`, each object line of `FETCH_HEAD`, and any other all-caps file
-  that holds one object id). An unpublished commit, an object missing
-  locally, an object that is not a commit (such as the tree `AUTO_MERGE`
-  names), or a record that cannot be read or parsed keeps the tree as
-  `unpublished_reflog_commit`. A reftable ref store is not inspected and
-  keeps the tree too. The stash is shared by every checkout and survives
-  removal. A tree whose history was amended or rebased after a push keeps the
-  superseded commits in its reflog and therefore stays;
-- no Git operation is pending in that private git directory. A stopped
-  rebase, merge, cherry-pick, revert or bisect leaves its state there
-  (`rebase-merge/`, `rebase-apply/`, `sequencer/`, `MERGE_HEAD`,
-  `CHERRY_PICK_HEAD`, `REVERT_HEAD`, `REBASE_HEAD`, `BISECT_LOG`,
-  `BISECT_START` ...), and `git rebase --autostash` keeps the only pointer to
-  the stashed edits in `rebase-merge/autostash`, so a clean status proves
-  nothing. The reaper accepts only the entries a finished checkout has:
-  the regular files `HEAD`, `index`, `commondir`, `gitdir`, `ORIG_HEAD`,
-  `FETCH_HEAD`, `COMMIT_EDITMSG` and `config.worktree`, the directories
-  `logs/` and `refs/` (read by the history check above) without any `*.lock`
-  file, and `info/` holding only the regular file `sparse-checkout`. Any
-  other entry, an expected name of the wrong kind (a symbolic link, say), a
-  lock file such as `index.lock`, or a directory that cannot be read keeps
-  the tree as `pending_operation_state: <entries>`. Finish or abort the
-  operation (`git rebase --abort` restores an autostash) to clear this
-  reason;
-- no process uses it: `fuser -s <path>` (10 s bound) reports no user, and no
-  process visible in `/proc` has its working directory (by path or by the
-  tree's inode), root, executable, an open file or a mapped file inside it. A
-  missing, failing or timed-out `fuser`, or an unlistable process table,
-  counts as in use. A live process of this user that denies inspection might
-  be using any tree, so a currently denied, non-allowlisted process keeps
-  the candidate and its pid is reported as `uninspectable_process`. Each
-  candidate gets a fresh bounded scan. Zombies (state `Z` in
-  `/proc/<pid>/stat`) and kernel threads (the `PF_KTHREAD` bit in that file's `flags` field) are
-  ignored; a pid number proves nothing, because in a PID namespace pid 2 and
-  its children are ordinary processes. A process of this user whose `stat`
-  cannot be read or parsed counts as uninspectable. The existing kernel-fact
-  exceptions remain: members of the user's exact
-  `user@<uid>.service/init.scope` cgroup, and `sshd-session`/`sshd` with a
-  root-owned `sshd-session`/`sshd` parent. Additionally, same-uid `ssh-agent`
-  and `gpg-agent` qualify only in their exact
-  `user@<uid>.service/app.slice/ssh-agent.service` or `gpg-agent.service`
-  cgroup, with a same-uid `systemd` parent in that user's `init.scope`.
-  Missing required kernel facts fail closed. Command lines never establish
-  eligibility. The shared `scripts/common/session_daemons.py` helper also
-  serves pytest retention. The reaper journals each excused pid and kernel
-  `identity`; pytest retention records those pairs in `allowed_session_daemons`
-  in its receipt, including the deletion recheck. Readable holder evidence
-  still preserves a candidate. These checks establish unit membership and
-  ancestry, not executable attestation. A user who controls their systemd
-  units can change what those units execute.
-  Other users' processes are invisible, as they are to `fuser`;
-- no task record in `batch_state/tasks/` whose `worktree_path` or `cwd` names
-  it is `spawning` or `running`, has any other unsettled status, or has a
-  worker that is live or unknown. `needs_finalize` and finished records pass
-  once their worker is proven gone. A record that cannot be read, or cannot be
-  parsed and may name the checkout, refuses;
-- a canonical creator and settled reuse cohort bind the actual directory,
-  recorded path and branch, creation inventory and run nonce. Missing or
-  conflicting creator proof retains the tree. No PR state or minimum idle
-  interval is required once positive inactivity is proven;
-- the checkout's `HEAD` and `index` mtimes, the newest
-  committer timestamp among every `logs/HEAD` entry (seconds since the
-  epoch, the field before the timezone), the time a change in that file's
-  bytes was last observed, and every claiming task record, including
-  `<task>.json`, must be inspectable. The reflog read is bounded at
-  1 MiB; a larger file is activity unknown. The file's mtime is not
-  activity: `git gc` rewrites it without changing entries. A missing,
-  empty, unreadable, non-regular, unparseable, or out-of-range `logs/HEAD`
-  is activity unknown and the tree is kept. The observation record is
-  `batch_state/worktree-reaper/head-reflog-watch.json` (a digest and an
-  entry count per checkout). A rewrite that leaves the bytes identical is
-  not activity. The first observation has no record and uses the entry
-  times only. Apply runs record an observation; a dry run does not write it.
-
-Under the per-worktree lock, once the re-check passes and before artifact
-preservation, the reaper records a manifest of the checkout and of its
-`.git/worktrees/<name>/` admin directory: the type, mode, inode, link count,
-size, mtime and ctime of every entry (only the `.git` pointer, `gitdir` and
-`index`, which Git itself rewrites, are compared by type alone). Then, after
-the claim scan and artifact preservation, right before Git removes it:
-
-1. A record is written durably (written, fsynced, renamed, directory fsynced)
-   into a fresh holder `.worktrees/.reaping/<agent>-<128 random bits>/`:
-   `.reaper-quarantine.json` with the original repository-relative path, the
-   checkout's directory identity (device and inode) and `stage: intent`. The
-   quarantine root and every holder are 0700 and owned by the reaper's user.
-2. The checkout is moved with `git worktree move` (an atomic rename) into the
-   holder, and every guard runs again on the quarantined path. Nothing reaches
-   the tree by its known path any more, and a process already inside it now
-   shows the quarantine path in `/proc`.
-3. The record turns `stage: removing`, and one final re-check runs: the tree
-   and its admin directory must equal the manifest (so an edit behind
-   `assume-unchanged`, new ignored output written after preservation, a commit
-   or a new per-worktree ref refuses), and the process-table scan must show no
-   user and no uninspectable process of this user. The reaper holds no handle
-   inside the tree at that moment.
-4. The common non-forced `git worktree remove <quarantined path>` runs.
-
-If any guard or the final re-check refuses, the record returns to `intent`
-and the checkout is moved back and reported as `late_change`. If Git fails
-and no manifest entry is gone, it is moved back too and the failure is
-reported as `error`. If Git fails or times out after deleting some entries,
-the remains stay in the quarantine with `stage: removing` and the run reports
-`git removal stopped partway`. The checkout is never moved over a path that
-exists again. Removal never passes `--force`, so Git itself also refuses a
-changed or locked checkout. Ignored output follows the existing preservation
-rules: it is copied to `batch_state/preserved/` within the 256 MiB cap, and a
-tree over the cap or without canonical attribution for its output is retained
-and reported. A failed removal is reported as `error` and never retried. The
-per-worktree lock (the claim and removal reservation) and the reaper lock
-are held from the re-check through the quarantine, the re-checks and the
-removal. Each removal is
-journalled as intent (`clean-pushed-remove`, `stage: intent`) before it runs,
-as confirmed (`clean-pushed-removed`, `stage: confirmed`) once Git removed the
-tree, and then appended to `batch_state/worktree-abandon-log.jsonl` with
-`ts`, `actor`, repository-relative `path`, `head`, `branch`, `task_status`,
-`reason` and `size_mb`.
-
-Recovery. A journal intent without a confirmation means the run stopped
-between the two; a confirmation with no abandon-log line means the log append
-failed after the removal, and the journal row is the record. Every apply run
-first judges each holder under `.worktrees/.reaping/` (a dry run reports what
-it would do and changes nothing):
-
-- a record with `stage: intent` (Git removal never started) is restored to its
-  original path only when every restore guard passes: the record is valid,
-  the quarantined directory is a real directory with the recorded device and
-  inode, it is a registered, unlocked worktree, the original path does not
-  exist (a replacement there is never overwritten) and its parent
-  `.worktrees/dispatch/<agent>/` is a real directory. A restored tree is
-  reported as `restored from the reaper quarantine` and is not removed in the
-  same run;
-- a record with `stage: removing` (Git removal may have started, so the tree
-  may be partially deleted), a missing, unreadable or invalid record, an
-  identity mismatch, an occupied original path, or unexpected entries are
-  kept and reported as `quarantine: … inspect it (runbook)`; later runs never
-  remove them. Any entry in the holder other than the record and the
-  recorded checkout is unexpected: the holder is neither restored nor
-  cleared, and the record stays;
-- a record whose checkout is gone (Git removed it, or it was moved back) is
-  cleared with its empty holder. A record is never deleted while anything
-  else is in its holder.
-
-A plain move back is not enough for a kept entry. Inspect it by hand:
-compare the record's `dev`/`ino` with `stat -c '%d %i'` of the quarantined
-directory; check `git -C <quarantined path> status --porcelain
---untracked-files=all` for deleted (`D`) entries, which mean a partial removal;
-look for missing ignored output against `batch_state/preserved/`; and make
-sure nothing exists at the original path. Only for an intact tree with a
-matching identity and a free original path, `git worktree move
-.worktrees/.reaping/<holder>/<task> .worktrees/dispatch/<agent>/<task>`, then
-delete the record and the empty holder. Recover the rest of a partially
-deleted tree from its pushed commits and from `batch_state/preserved/`.
-Branches are never deleted; `branch_sweep` owns branch retirement (#10763).
-`LU_REAPER_DISABLED=1` turns apply into a no-op. A run that waits 30 s for the
-reaper lock without getting it does nothing and reports `lock_busy`.
-
-Dispatch admission calls the same rule through
-`reap_clean_pushed(repo_root=..., dry_run=..., actor=..., lock_timeout_s=...)`,
-which returns a `CleanPushedReport` (`removed`, `skipped` with reasons,
-`freed_mb`, `lock_busy`, `refusal`, `refs_stale`, `uninspectable` pids,
-`late_change` and `unpublished_reflog_commit` paths, and `census_refs` and
-`census_missing`, the advertised heads and tags and how many of their objects
-are missing locally).
-
-### Residual risk: arrivals during the Git removal call
-
-The quarantine, the re-checks and the final re-check narrow the window in
-which a late change can be lost; they do not close it. No privilege-free
-mechanism excludes an uncooperative writer running as the same user: it can
-change permissions back, and a held file descriptor, a hard link or a bind
-mount reaches the tree under another name. What remains:
-
-- an actor of the same user that discovers the quarantine name (it is listed
-  by `git worktree list`, and the 0700 root is listable by that user) or
-  that holds an alias (a hard link, a bind mount, an open handle) can lose
-  the bytes it writes between the final re-check and the end of the Git call;
-- the non-forced `git worktree remove` deletes, without refusing, an edit
-  behind `assume-unchanged` or `skip-worktree` and ignored output written in
-  that interval, and it does not look at processes, so a process that starts
-  inside the tree then keeps running in a deleted directory;
-- a manifest taken before removal cannot detect bytes that arrive after it;
-- the Git call has no hard time bound short of its 120 s timeout. The
-  maximum observed duration is 16.5 s, over 3 runs on a private checkout of
-  163,524 entries (40,000 tracked files, 120,000 ignored files and a 1 GiB
-  file; 2026-10-16). The final re-check took about 1 s on it.
-
-`test_arrival_during_the_git_removal_call_is_lost_documented_residual`
-records this behaviour. The reaper targets trees that cooperating agents
-guard with task records, write claims, leases and delegate's per-worktree
-lock; protecting a tree against an uncooperative writer of the same user
-would need isolation (another user or a mount namespace), which this mode
-does not provide.
-
-```bash
-repo_root=$(pwd -P)
-private_root="$(dirname "$repo_root")/learn-ukrainian-infra-private"
-# dry run (default): what would be removed, and why each other tree stays
-.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
-  --repo-root "$repo_root" --repo-root "$private_root"
-# apply
-.venv/bin/python -m scripts.orchestration.reap_worktrees --clean-pushed \
-  --repo-root "$repo_root" --repo-root "$private_root" --apply
-```
-
-### Timer retired (FR-01b)
-
-The `learn-ukrainian-worktree-reaper` service and timer are gone: the
-dispatcher removes each task's own worktree when the task settles. The
-`--clean-pushed` mode above stays a manual command until the reaper itself is
-deleted. On a host that still has the units installed:
+The worktree reaper (the common reaper, the post-task reaper and the
+dispatch-admission disk reaper) and its `learn-ukrainian-worktree-reaper`
+service and timer are gone: the dispatcher removes each task's own worktree
+when the task settles. Remove one leftover worktree by hand with
+`python -m scripts.orchestration.worktree_claims remove <path> --owner-task-id <id> --reason '<why>'`.
+On a host that still has the units installed:
 
 ```bash
 systemctl --user disable --now learn-ukrainian-worktree-reaper.timer
@@ -757,12 +425,11 @@ callers use `python -m scripts.orchestration.worktree_claims remove PATH`
 the per-worktree lock dispatch holds from attach until its task record is
 published, it runs the caller's ownership proof, proves a forced target clean,
 refuses while another task's unfinished record names the checkout, and only
-then calls `worktree_claims.git_worktree_remove`, the repository's one raw
-`git worktree remove`. The P0 reaper's `_reap_qualified_worktree` calls that
-raw remover directly, under the same lock and claim scan.
-The shared remover checks approved deletion roots for forced removals. The
-reaper also checks them explicitly for non-force continuation cohorts, including
-approved scratch roots. Other non-force callers retain Git's ordinary removal
+then calls `worktree_claims.git_worktree_remove`, the shared raw
+`git worktree remove`. The dispatcher's settlement runs its own non-forced
+removal (see the audit table above).
+The shared remover checks approved deletion roots for forced removals. Non-force
+callers retain Git's ordinary removal
 rules, including sibling worktrees created by `wt.sh` and task-family cleanup
 when `TMPDIR` is unset.
 `tests/orchestration/test_worktree_removal_invariant.py` fails on any other
@@ -770,9 +437,8 @@ removal call site under `scripts/`.
 
 Callers and their ownership proofs:
 
-- Regular dispatch worktrees: the P0 reaper. `post_task_reap`'s main path and
-  `delegate`'s completed-worktree cleanup call it rather than removing
-  anything themselves.
+- Regular dispatch worktrees: the dispatcher at settlement
+  (`worker._reap_settled` → `git.settle_worktree`).
 - `delegate` settle and superseded-review cleanup remove only a checkout the
   dispatch created. `delegate._release_stale_branch_holders` performs a
   non-force release after clean, synced, terminal-owner checks so a blocked
@@ -781,9 +447,6 @@ Callers and their ownership proofs:
   failed or timed-out `git worktree add`, dispatch leaves the directory it
   reserved with `mkdir` as it is, empty or not, and reports it (see
   "Interrupted `git worktree add`" below).
-- `post_task_reap._remove_acp_runtime_worktree` removes only task-state-bound
-  ACP runtime paths below `.worktrees/dispatch/acp/`, after its own terminal,
-  clean, and liveness checks; it forces for ignored runtime residue.
 - `_acp_execution.acp_execution_cwd` force-removes only the detached,
   no-checkout ACP workspace it created, on setup failure or context teardown.
 - `_acp_execution.sweep_dead_acp_runtime_worktrees` proves the recorded lock
@@ -799,130 +462,35 @@ Callers and their ownership proofs:
 `.worktrees/dispatch/acp/`: those runtimes belong to the ACP bridge and are
 never a dispatch target.
 
-### ACP runtime worktree ownership and abandoned-runtime reaping (#8344)
+### ACP runtime worktree ownership and abandoned-runtime removal (#8344)
 
 Every ACP runtime worktree is locked at creation with a reason of the form
 `active ACP execution <label> (owner pid=<pid> start=<start>)`, where the
 start time is field 22 of `/proc/<pid>/stat`. Any later process can prove the
 owner dead without the owner's cooperation: pid absent, or pid recycled with
 a different start time. Hosts without `/proc` record `start=unknown` and are
-treated as unknown, never as dead. The proof assumes the ask and the reaper
+treated as unknown, never as dead. The proof assumes the ask and the sweep
 share one PID namespace; a live owner inside a container or private namespace
 can read as absent, so do not rely on it across namespace boundaries.
 
-`reap_worktrees` reaps a `.worktrees/dispatch/acp/runtime-*` worktree under
-`--apply` and `--safe-only` when it is detached, locked by an ACP reason, and:
-
-- the lock carries owner information and the owner is provably dead; or
-- the lock is a legacy owner-less ACP lock **and** the worktree is older than
-  24h **and** the process-CWD probe is available and shows no live process
-  inside.
-
-The directory must hold exactly its `.git` pointer (no-checkout residue); any
-other file preserves it. The class never consults PR state and re-proves
-every precondition immediately before deletion. `acp_execution_cwd` also runs
-the same dead-owner sweep on entry, before creating its own workspace, so a
+`_acp_execution.sweep_dead_acp_runtime_worktrees` removes a
+`.worktrees/dispatch/acp/runtime-*` worktree only when its lock carries owner
+information, the owner is provably dead, and the directory holds exactly its
+`.git` pointer (no-checkout residue); any other file preserves it. A legacy
+owner-less ACP lock is left alone. `acp_execution_cwd` runs this dead-owner
+sweep on entry, before creating its own workspace, so a
 killed ask's stub is gone by the next ACP call at the latest. As defence in
 depth, the ask entry path converts SIGTERM into an orderly unwind
 (`SystemExit(143)`) so the context `finally` cleans up when it can.
-
-### Clean detached dispatch checkouts (`detached_clean_contained`)
-
-A worker's baseline or scratch checkout (`git worktree add --detach`) holds
-nothing unique once its commit is pushed, so it must not pile up on a
-disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
-(and in the default merged mode) when **all** of these hold:
-
-- it is exactly `.worktrees/dispatch/<agent>/<task>/` with a detached HEAD,
-  and is not an ACP runtime worktree;
-- `git status --porcelain=v1 -z --ignored --untracked-files=all` succeeds and
-  every entry is an **ignored** (`!!`) regenerable cache or verified
-  provisioned link. The public `worktree_artifacts.is_disposable_path` interface
-  owns the cache taxonomy at any depth outside real environments. Any staged,
-  modified, renamed or untracked
-  entry preserves the checkout. The only provisioned link paths are
-  `data/sources.db`, `data/vesum.db`, `node_modules` and `site/node_modules`;
-  each must be a symlink resolving to the same relative path in the primary
-  checkout. Regular files, directories, links elsewhere, broken or looping
-  links, and any additional non-disposable residue preserve the checkout.
-  Removal unlinks these symlinks without removing their targets. Cache paths
-  with a `.venv` or `node_modules` segment (even inside a `__pycache__/`) and
-  loose `*.pyc` files outside `__pycache__/` preserve it. The allowlists are fixed and never consult
-  `.gitignore` or `info/exclude`; a git failure preserves. Documented residual:
-  a hand-made file placed inside an ignored known cache directory
-  is treated as disposable;
-- HEAD is an ancestor of `origin/main` or contained in some
-  `refs/remotes/origin/*` ref (no age threshold, no task record needed);
-- it is not locked, no live process has its working directory inside it, and
-  no non-terminal task (`queued`, `starting`, `running`, ...) is bound to it;
-  an unavailable active-task probe fails closed (preserved, reported as
-  `active-task probe unavailable`), at qualification and again before removal;
-- its PR state is not `OPEN`, consulted only as the same guard every class
-  honours; the class's own proof never depends on PR state.
-
-It goes through the same qualified-reap path as the other safe classes
-(reap reservation, per-worktree lock, recovery ref, journal, daily cap) and
-re-proves the conditions under the lock before removal. Everything else stays
-in `detached_unknown` / `dirty` / `unmerged` and is preserved. Reason string:
-`detached clean contained: HEAD <sha12> is <an ancestor of origin/main | contained in an origin/* ref>`.
-
-### Review checkouts (#9129)
-
-Native `codex exec` reviews and agent scratchpads leave clean checkouts that
-no task record or branch ties to a settled task. Three further classes reap
-them. Every one requires a tree holding only regenerable ignored caches or
-verified provisioned links (the detached-class residue guard). The only
-provisioned link paths are `data/sources.db`, `data/vesum.db`, `node_modules`
-and `site/node_modules`; each must be an ignored symlink resolving to the same
-relative path in the primary checkout. Removal unlinks these symlinks without
-removing their targets. Regular files, directories, links elsewhere, broken
-or looping links, staged, modified, renamed or untracked entries, and any
-additional non-disposable residue preserve the checkout. Cache paths with a
-`.venv` or `node_modules` segment (even inside a `__pycache__/`) and loose
-`*.pyc` files outside `__pycache__/` preserve it too. Each class also requires
-HEAD contained in a `refs/remotes/origin/*` ref, no lock, no live process cwd inside, no
-unfinished task, and a known active-task probe. Under the per-worktree lock
-each class is proved again from fresh state (residue, PR heads, age and task
-record, detached HEAD for the detached classes) before removal, and
-`--preserve-then-reap` keeps its rescue ref as for every other class.
-
-- **Superseded PR checkout.** Detached HEAD is a commit of an open PR (named by
-  the `review-<N>` path or found by commit search) but not that PR's current
-  head. Reason `superseded PR #N head <old12> (current <new12>)`. A checkout
-  AT an open PR's current head stays, and an unreadable PR head keeps it too.
-- **Unrecorded detached checkout.** Detached, no task record, and no file
-  changed in the last 2 h. Reason `unrecorded detached checkout`.
-- **Foreign registration.** A registered worktree of this repo outside
-  `.worktrees/`, strictly under `/tmp`, `/var/tmp`, `$TMPDIR` or a
-  `scratchpad` directory. Reason `foreign registered checkout`. Any other
-  outside path is still reported as `outside repo .worktrees/`.
-  Qualification and the locked removal recheck also require a bounded
-  `lsof +D` probe with no open file descriptors or mapped files inside the
-  checkout, including nested mount points. An unavailable probe, warning,
-  error or timeout preserves the checkout. An empty selection also requires
-  readable process FD and mapping entries in procfs; partial visibility or
-  a platform without that proof preserves it. Negative proof additionally
-  requires the initial PID namespace and an unrestricted procfs mount;
-  nested namespaces, filtered procfs mounts and process-entry overmounts
-  preserve the checkout. Unprivileged runs that cannot inspect every process
-  retain all foreign checkouts, including idle ones. Infra owns this cleanup
-  residual until a complete process view is available through an authorized
-  execution context; this check never changes host permissions.
-  Its refusal reason contains no
-  file paths. This probe complements the existing cwd and lock checks.
-  Long readers such as backups should take `git worktree lock --reason
-  "long reader" <checkout>` before reading and `git worktree unlock
-  <checkout>` after they finish. Hold the lock for the entire read, including
-  gaps between opened files: a point-in-time activity probe cannot protect
-  future reads. Unlock only the lock that the reader owns.
 
 ### Interrupted `git worktree add` (#8663)
 
 Dispatch v2 prepares worktrees through `scripts/dispatcher/git.py`. The legacy
 adaptive `DELEGATE_WORKTREE_ADD_*` timeouts and their launcher recovery path
 are retired. Do not infer that an interrupted checkout is disposable: inspect
-its task record, Git registration, process liveness and custody first. Use the
-common reaper for cleanup; unknown or active ownership preserves the checkout.
+its task record, Git registration, process liveness and custody first. Remove
+it with `worktree_claims remove`; unknown or active ownership preserves the
+checkout.
 
 ## Before re-firing a task id
 
@@ -948,15 +516,13 @@ evidence in the result text, and cite verified durable artifact locations.
 
 ## Immediate cleanup after merge
 
-On apply, `merge_closeout` and `post_task_reap` first capture local Git facts
-through the lifecycle API for each task carrying a lifecycle ledger. Capture
-runs while the dispatch worktree still exists; `post_task_reap` then invokes
-the common reaper, and `merge_closeout` removes no worktree. Existing valid
-local observations are reused. Tasks without a ledger
-keep their existing cleanup behavior. A capture or ledger-write failure
-retains the worktree and blocks cleanup. The exceptional
+On apply, `merge_closeout` first captures local Git facts through the lifecycle
+API for each matched task carrying a lifecycle ledger, while its worktree still
+exists; it removes no worktree. Existing valid local observations are reused.
+Tasks without a ledger keep their existing cleanup behavior. A capture or
+ledger-write failure blocks closeout. The exceptional
 `--no-lifecycle-observation "reason"` option logs its explicit reason in the
-cleanup report; it does not waive any common-reaper guard.
+cleanup report.
 
 For a merged task already removed without that observation, use the supported
 append-only recovery command. Rehearse on private copies of the ledger, task
@@ -1053,8 +619,10 @@ past an exact-head-match proof). A kept worktree is a blocker for its owner to
 resolve, not permission to remove it with `--force`.
 
 The canonical PR lifecycle trail (`scripts/config/trails/rb3-pr-lifecycle.trail.yaml`)
-still runs its own merged-worktree step after merge. Other merge owners must invoke the
-exact command above before declaring closeout complete.
+runs its own post-merge step: it deletes the merged remote branch when no open PR
+uses it, prunes origin, and removes no worktree; a worktree still on disk stops the
+trail at `STOP-hygiene-failed`. Other merge owners must invoke the exact command
+above before declaring closeout complete.
 
 Git closeout for **every** merge is exactly three things: worktree gone,
 remote branch gone, local branch gone. If GitHub did not delete the remote
@@ -1087,7 +655,9 @@ Each run performs the following in both repository roots:
    maintenance disabled on that command (`maintenance.auto=false` and
    `gc.auto=0`) so the fetch cannot expire reflogs before branch cleanup runs;
 2. prunes stale Git worktree registrations;
-3. inventories terminal-task worktrees still on disk for rescue (report only);
+3. reports terminal-task worktrees finished more than six hours ago that are
+   still on disk and dirty or hold commits absent from `origin` (rescue
+   candidates; report only, clean published trees are not listed);
 4. deletes origin heads that are not checked out, have no open PR, and are not
    `entire/` refs, only when the tip is proven contained: the GitHub PR is
    MERGED or CLOSED at the exact live origin SHA (`ls-remote` +
@@ -1114,7 +684,8 @@ remain untouched.
 ```
 
 A failed fetch skips every deletion that relies on remote containment.
-Standard output contains the same summary as the receipt.
+Standard output carries the path-free public summary described under
+"Aggregate-only public reporting"; the receipt holds the full detail.
 
 ## Linux systemd default
 
@@ -1311,7 +882,7 @@ these files. Scheduled public summaries expose their count and total bytes.
 Dispatch v2 does not automatically preserve cited runtime scratch or
 `held_work`. The legacy launcher preservation module is retired. Preserve required
 evidence explicitly before cleanup, with a
-retrieval receipt where the common reaper requires one. Existing unknown
+retrieval receipt where a guarded remover requires one. Existing unknown
 custody remains protected. The standalone task-scratch wrapper below retains
 its explicit evidence-directory contract.
 
@@ -1429,4 +1000,4 @@ Dispatch v2 checks delivery; it does not run the legacy finalize or rescue
 commands. A worker must commit with its required trailer and push its branch.
 Inspect the task's terminal delivery fields and the remote head before claiming
 success. Unpushed commits, dirty work and unknown delivery remain the
-accountable driver's responsibility. Common-reaper custody checks still bind.
+accountable driver's responsibility. Guarded-remover custody checks still bind.

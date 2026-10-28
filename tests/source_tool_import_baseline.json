@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 409,
-    "probe_count": 818,
+    "cli_count": 407,
+    "probe_count": 814,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/kimi_boundary.py",
@@ -212,7 +212,6 @@
       "scripts/fleet/capacity_pick.py",
       "scripts/fleet/driver_breadth_report.py",
       "scripts/fleet/idle_settle.py",
-      "scripts/fleet/post_task_reap.py",
       "scripts/fleet/sibling_git.py",
       "scripts/fleet/usage.py",
       "scripts/fleet_comms/cli.py",
@@ -311,7 +310,6 @@
       "scripts/orchestration/merge_closeout.py",
       "scripts/orchestration/observer_heartbeat.py",
       "scripts/orchestration/precompact_handoff_check.py",
-      "scripts/orchestration/reap_worktrees.py",
       "scripts/orchestration/reconcile_sweep.py",
       "scripts/orchestration/rollover_registry_cli.py",
       "scripts/orchestration/scheduled_worktree_cleanup.py",
@@ -414,7 +412,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "2bc834f4208aa8b75749d3397aa82da847b675bdf3e42266e62e5b64965db5f6"
+    "cli_paths_sha256": "2ce216ae6072fdd0be3865f93326e214bc09d7e7bed2d75be4def1a76942bc8e"
   },
   "failures": [
     {

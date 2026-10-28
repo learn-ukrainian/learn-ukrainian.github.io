@@ -1033,9 +1033,44 @@ def test_preserved_overlong_symlink_target_is_refused(checkout, monkeypatch):
     assert link.is_symlink() and os.readlink(link) == target
 
 
+def _write_legacy_merged_reuse_proof(repo, tree, tasks, head):
+    """Write the ``merged-reuse-reap.v1`` proof the retired reaper left on creator records."""
+    from scripts.orchestration import worktree_git as wg
+
+    matches = output.matching_worktree_records(tree, tasks, repo_root=repo, publish_cache=False)
+    cohort = output._current_reuse_records(matches, tasks)
+    info = wg.WorktreeInfo(tree, "codex/boundary", head)
+    pr = wg.PullRequestState(9645, "MERGED", head)
+    path = tasks / "boundary.json"
+    creator = json.loads(path.read_text())
+    proof = {
+        "schema": "merged-reuse-reap.v1",
+        "owner": creator["task_id"],
+        "run_nonce": creator["run_nonce"],
+        "head_sha": head,
+        "pr_head_sha": head,
+        "head_relation": wg._merged_head_relation(info, pr),
+        "pr_number": pr.number,
+        "pr_repository": pr.repository,
+        "pr_state": pr.state,
+        "pr_head_source": "merged_pr_record",
+        "clean": True,
+        "members": [
+            {
+                "task_id": member["task_id"],
+                "run_nonce": member["run_nonce"],
+                "branch": member.get("worktree_branch"),
+                "head_sha": member.get("final_branch_head_commit"),
+                "pid": member["pid"],
+            }
+            for _, member in cohort
+        ],
+    }
+    path.write_text(json.dumps(dict(creator, worktree_reap_proof=proof)))
+
+
 @pytest.mark.parametrize("failure", [None, "missing", "head", "member", "pid", "keep"])
 def test_10303_preservation_consumes_current_merged_cohort_proof(same_branch_pending_cohort, failure):
-    from scripts.orchestration import reap_worktrees as rw
     from scripts.orchestration import worktree_claims as claims
     from tests.orchestration.test_worktree_claims_cli import _git
     from tests.test_reused_worktree_retention import save
@@ -1043,12 +1078,7 @@ def test_10303_preservation_consumes_current_merged_cohort_proof(same_branch_pen
     repo, tree, tasks, _, successor, source = same_branch_pending_cohort
     head = _git(tree, "rev-parse", "HEAD")
     with claims.worktree_lock(tree, lock_dir=claims.repository_lock_dir(repo)):
-        rw._record_merged_reuse_proof(
-            repo,
-            rw.WorktreeInfo(tree, "codex/boundary", head),
-            rw.PullRequestState(9645, "MERGED", head),
-            tasks_dir=tasks,
-        )
+        _write_legacy_merged_reuse_proof(repo, tree, tasks, head)
         path = tasks / "boundary.json"
         creator = json.loads(path.read_text())
         if failure == "missing":

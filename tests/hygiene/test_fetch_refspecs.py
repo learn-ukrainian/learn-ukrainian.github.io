@@ -206,7 +206,7 @@ def test_origin_head_delete_also_drops_matching_refspec(tmp_path: Path, monkeypa
             return [], None
         return (
             [
-                cleanup.reap_worktrees.PullRequestState(
+                cleanup.worktree_git.PullRequestState(
                     number=77,
                     state="MERGED",
                     head_sha=head_sha,
@@ -215,7 +215,7 @@ def test_origin_head_delete_also_drops_matching_refspec(tmp_path: Path, monkeypa
             None,
         )
 
-    monkeypatch.setattr(cleanup.reap_worktrees, "_query_pr_states", _prs)
+    monkeypatch.setattr(cleanup.worktree_git, "_query_pr_states", _prs)
 
     applied = cleanup.cleanup_stale_origin_branches(repo, apply=True)
 
@@ -245,9 +245,7 @@ def test_scheduled_hygiene_heals_stale_refspec_before_fetch(tmp_path: Path, monk
     repo = _narrow_clone(tmp_path)
     spec = _add_stale_refspec(repo, "kimi/infra-7080-audit-dashboard-r2")
     monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
-    monkeypatch.setattr(cleanup.reap_worktrees, "adopt_dispatch_worktrees", lambda _repo: [])
+    monkeypatch.setattr(cleanup.worktree_git, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_a, **_k: [])
     monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_a, **_k: [])
     monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_a, **_k: [])

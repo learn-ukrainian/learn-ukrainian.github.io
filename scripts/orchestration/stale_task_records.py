@@ -9,9 +9,8 @@ are never rewritten.
 into ``batch_state/tasks/archive/`` with their ``.result`` and read-only
 snapshot sidecars. A record stays hot while its checkout path (``worktree_path``,
 else a ``cwd`` that is not a primary checkout) exists at all, with or without a
-``.git`` file, or while any ``acp_runtime_paths`` entry exists: the reaper, the
-branch-holder release and ``post_task_reap`` read the hot record as the
-ownership proof. ``restore`` moves an archived record back. Which readers see
+``.git`` file, or while any ``acp_runtime_paths`` entry exists: the
+branch-holder release reads the hot record as the ownership proof. ``restore`` moves an archived record back. Which readers see
 the archive is documented in :mod:`scripts.orchestration.task_record_store`.
 
 Archive holds the record's lock while moving it:
@@ -846,10 +845,9 @@ def _owned_checkout(record: Mapping[str, Any]) -> str | None:
 def keep_hot_reason(record: Mapping[str, Any]) -> str | None:
     """Why a terminal record must stay in the hot directory, or ``None``.
 
-    The reaper and the branch-holder release read the hot record as the
-    ownership proof for its checkout, and ``post_task_reap`` finds a task's ACP
-    runtime worktrees only through ``acp_runtime_paths`` in the hot record. A
-    path that still exists keeps the record hot whether or not it holds a
+    The branch-holder release reads the hot record as the ownership proof for
+    its checkout, and a task's ACP runtime worktrees are found only through
+    ``acp_runtime_paths`` in the hot record. A path that still exists keeps the record hot whether or not it holds a
     ``.git`` file.
     """
     checkout = _owned_checkout(record)

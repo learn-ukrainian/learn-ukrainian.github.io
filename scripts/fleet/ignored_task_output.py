@@ -72,7 +72,7 @@ class PreservationLimit(ValueError):
 
 def merged_abandon_proof(worktree: Path, creator: Mapping[str, Any], head: str) -> dict[str, Any]:
     """Require an authoritative MERGED PR containing every checkout commit."""
-    from scripts.orchestration import reap_worktrees as rw
+    from scripts.orchestration import worktree_git as rw
     from scripts.orchestration.worktree_claims import checked_out_branch
 
     branch = checked_out_branch(worktree) or creator.get("worktree_branch")
@@ -103,7 +103,7 @@ def merged_abandon_proof(worktree: Path, creator: Mapping[str, Any], head: str) 
 
 def _abandon_merged_equivalent(info: Any, pr: Any) -> bool:
     """Committed patch equivalence, with dirty bytes separately bound to the abandon manifest."""
-    from scripts.orchestration import reap_worktrees as rw
+    from scripts.orchestration import worktree_git as rw
 
     if not info.head or not pr.head_sha:
         return False
@@ -122,7 +122,7 @@ def _abandon_merged_equivalent(info: Any, pr: Any) -> bool:
 
 def abandon_task_is_terminal(member: Mapping[str, Any], *, successor: bool, merged: bool) -> bool:
     """Merge evidence substitutes only for terminal status and retention, never liveness."""
-    from scripts.orchestration import reap_worktrees as rw
+    from scripts.orchestration import worktree_git as rw
 
     return bool(
         member.get("status") in rw._TERMINAL_DISPATCH_STATUSES
@@ -917,7 +917,7 @@ def terminal_abandon_creator(
     A successor's receipt adds ``succession`` and a manifest ``output`` copy;
     both are revalidated here, at removal (#10617).
     """
-    from scripts.orchestration import reap_worktrees as rw
+    from scripts.orchestration import worktree_git as rw
 
     recovery = _recovery_source(matches, worktree, primary=primary, tasks=tasks_dir)
     creators = [item for item in matches if item[0] != recovery and record_created_worktree(item[1])]
@@ -1251,8 +1251,8 @@ def unretrieved_reuse_refusal(
     removes untracked/ignored directories inside a tracked cone directory, and a
     later dispatch into the same checkout runs exactly that. A task that finished
     without a *verified* retrieval receipt has evidence only in this tree, so reuse
-    is refused until the owner preserves it (``scripts.fleet.post_task_reap``) or
-    retrieves it; a forged or stale receipt is refused the same way.
+    is refused until the owner retrieves it; a forged or stale receipt is refused
+    the same way.
 
     Returns a typed, actionable refusal, or ``None`` when reuse may proceed. An
     unknown task identity or an unreadable output inventory also refuses: missing
@@ -1273,11 +1273,7 @@ def unretrieved_reuse_refusal(
             problem = retrieval_receipt_problem(worktree, primary, record, files)
             if problem is None:
                 continue
-            remedy = (
-                "preserve them first with "
-                f"`.venv/bin/python -m scripts.fleet.post_task_reap --task-id {task_id} --apply` "
-                "and dispatch into a fresh worktree"
-            )
+            remedy = "retrieve them first and dispatch into a fresh worktree"
             if problem == "no retrieval receipt":
                 return (
                     "worktree_reuse_evidence_unretrieved: terminal task "
@@ -1558,7 +1554,7 @@ def preserve_worktree_artifacts(
             for _, member in _current_reuse_records(matches, tasks_dir)
         )
         if merged_preservation:
-            from scripts.orchestration.reap_worktrees import _preservation_merged_creator
+            from scripts.orchestration.worktree_git import _preservation_merged_creator
 
             _preservation_merged_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
         if any("worktree_abandon" in member for _, member in matches):
@@ -1582,7 +1578,7 @@ def preserve_worktree_artifacts(
             # branch, so strict attribution refuses. Preservation may use that
             # creator only after the merged-head proof; resolve itself stays strict
             # so branch-holder release and retention release do not (#10548).
-            from scripts.orchestration.reap_worktrees import (
+            from scripts.orchestration.worktree_git import (
                 _preservation_merged_creator,
                 _switched_branch_merge_proven,
                 _switched_branch_structural_cohort,
@@ -1713,9 +1709,7 @@ def preserve_worktree_artifacts(
                 inventory_sha256=hashlib.sha256(json.dumps(_byte_identity(paths)).encode()).hexdigest(),
             )
         if kept:
-            metadata["next_condition"] = (
-                "existing owner releases retention via post_task_reap --release-retention"
-            )
+            metadata["next_condition"] = "existing owner releases retention"
         else:
             metadata.update({"retention_disposition": "retrieved" if copy_required else "recorded", "next_condition": "none"})
         if metadata["retention_disposition"] != "retained":
@@ -1745,7 +1739,7 @@ def preserve_worktree_artifacts(
                 metadata.update(
                     {
                         "retention_disposition": "retained",
-                        "next_condition": "existing owner releases retention via post_task_reap --release-retention",
+                        "next_condition": "existing owner releases retention",
                     }
                 )
             prior_receipt = current.get("preserved_artifacts", {})

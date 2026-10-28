@@ -38,7 +38,7 @@ from scripts.common import github_client
 from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.maintenance.claude_session_scratch import sweep_sessions
-from scripts.orchestration import backup_failure_alert, disk_watermark_alert, reap_worktrees
+from scripts.orchestration import backup_failure_alert, disk_watermark_alert, worktree_git
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
@@ -72,7 +72,7 @@ def _run_git(repo_root: Path, *args: str) -> subprocess.CompletedProcess[str]:
         text=True,
         check=False,
         timeout=120,
-        env=reap_worktrees.sanitized_git_env(),
+        env=worktree_git.sanitized_git_env(),
     )
 
 
@@ -84,7 +84,7 @@ def _fetch_origin(repo_root: Path) -> subprocess.CompletedProcess[str]:
     ``gc --auto`` before the branch cleanup below has run (#10856). The
     explicit ``git gc --auto`` at the end of the run stays the only maintenance.
     """
-    args = (*reap_worktrees.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
+    args = (*worktree_git.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
     fetched = _run_git(repo_root, *args)
     old_value = r"error: fetching ref refs/remotes/origin/main failed: incorrect old value provided"
     lock_race = r"error: cannot lock ref 'refs/remotes/origin/main': is at [0-9a-f]+ but expected [0-9a-f]+"
@@ -113,7 +113,7 @@ def _failure(proc: subprocess.CompletedProcess[str]) -> str:
 
 class _GitHygieneLock:
     def __init__(self, repo_root: Path) -> None:
-        common_git_dir = reap_worktrees._common_git_dir(repo_root)
+        common_git_dir = worktree_git._common_git_dir(repo_root)
         self.path = common_git_dir / "scheduled-git-hygiene.lock"
         self.handle: Any = None
 
@@ -150,7 +150,7 @@ _REVIEW_CHECKOUT_RE = re.compile(r"^(?:pr|review)-(\d+)(?:-review|-tmp)?$")
 
 
 def _checked_out_branches(repo_root: Path) -> set[str]:
-    return {item.branch for item in reap_worktrees.list_git_worktrees(repo_root) if item.branch is not None}
+    return {item.branch for item in worktree_git.list_git_worktrees(repo_root) if item.branch is not None}
 
 
 def _is_protected_local_branch(branch: str) -> bool:
@@ -293,8 +293,8 @@ def _tip_on_other_origin_ref(repo_root: Path, head_sha: str, branch: str) -> boo
 def _merged_pr_contains_head(
     repo_root: Path,
     head_sha: str,
-    prs: list[reap_worktrees.PullRequestState],
-) -> reap_worktrees.PullRequestState | None:
+    prs: list[worktree_git.PullRequestState],
+) -> worktree_git.PullRequestState | None:
     """A squash merge is not an ancestor of main. The old tip is still on the PR."""
     for pr in prs:
         if pr.state != "MERGED" or not pr.head_sha:
@@ -335,7 +335,7 @@ def _stale_ref_delete_reason(
     repo_root: Path,
     *,
     branch: str,
-    prs: list[reap_worktrees.PullRequestState],
+    prs: list[worktree_git.PullRequestState],
     head_sha: str,
     kind: str,
     fetch_ok: bool = True,
@@ -493,7 +493,7 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
     """Inventory old terminal work without preserving or changing the worktrees."""
     rows: list[dict[str, Any]] = []
     root = repo_root.resolve()
-    tasks_dir = reap_worktrees.control_plane_root(root) / "batch_state" / "tasks"
+    tasks_dir = worktree_git.control_plane_root(root) / "batch_state" / "tasks"
     now = datetime.now(UTC)
     for path in iter_task_records(tasks_dir, include_archive=True):
         row = {"task_id": path.stem, "action": "error"}
@@ -501,7 +501,7 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
             record = json.loads(path.read_text(encoding="utf-8"))
             if not isinstance(record, dict):
                 raise ValueError("invalid task record")
-            if record.get("status") not in reap_worktrees._TERMINAL_DISPATCH_STATUSES:
+            if record.get("status") not in worktree_git._TERMINAL_DISPATCH_STATUSES:
                 continue
             raw_path = record.get("worktree_path")
             if raw_path is None:
@@ -562,7 +562,7 @@ def cleanup_stale_origin_branches(
                 }
             )
             continue
-        prs, pr_error = reap_worktrees._query_pr_states(repo_root, branch)
+        prs, pr_error = worktree_git._query_pr_states(repo_root, branch)
         if pr_error is not None:
             results.append(
                 {
@@ -603,7 +603,7 @@ def cleanup_stale_origin_branches(
                 }
             )
             continue
-        prs_now, pr_error_now = reap_worktrees._query_pr_states(repo_root, branch)
+        prs_now, pr_error_now = worktree_git._query_pr_states(repo_root, branch)
         if pr_error_now is not None:
             results.append(
                 {
@@ -673,7 +673,7 @@ def _delete_local_branch(
         return "branch HEAD changed during cleanup"
     if branch in _checked_out_branches(repo_root):
         return "branch became checked out during cleanup"
-    return reap_worktrees._prune_branch(
+    return worktree_git._prune_branch(
         repo_root,
         branch,
         force=True,
@@ -702,7 +702,7 @@ def cleanup_gone_local_branches(
             )
             continue
 
-        prs, pr_error = reap_worktrees._query_pr_states(repo_root, branch)
+        prs, pr_error = worktree_git._query_pr_states(repo_root, branch)
         if pr_error is not None:
             results.append(
                 {
@@ -787,8 +787,8 @@ def _untracked_local_branches(repo_root: Path) -> list[tuple[str, str]]:
 def _query_pr_by_number(
     repo_root: Path,
     number: int,
-) -> tuple[list[reap_worktrees.PullRequestState], str | None]:
-    states, rest_error = reap_worktrees._query_pr_by_number_rest(repo_root, number)
+) -> tuple[list[worktree_git.PullRequestState], str | None]:
+    states, rest_error = worktree_git._query_pr_by_number_rest(repo_root, number)
     if rest_error is None:
         return states, None
     try:
@@ -800,7 +800,7 @@ def _query_pr_by_number(
                 str(number),
                 "--json",
                 "number,state,headRefOid,url",
-                *(["--repo", repository] if (repository := reap_worktrees._pr_repository(repo_root)) else []),
+                *(["--repo", repository] if (repository := worktree_git._pr_repository(repo_root)) else []),
             ],
             capture_output=True,
             text=True,
@@ -814,17 +814,17 @@ def _query_pr_by_number(
     if observation is not None and observation.error == "github_rate_limited":
         raise github_client.GitHubRateLimited(observation.reset_at)
     if proc.returncode != 0:
-        return [], f"{rest_error}; gh pr view failed: {reap_worktrees._format_failure(proc)}"
+        return [], f"{rest_error}; gh pr view failed: {worktree_git._format_failure(proc)}"
     try:
         item = json.loads(proc.stdout or "{}")
     except json.JSONDecodeError as exc:
         return [], f"gh pr view returned invalid JSON: {exc}"
     if not isinstance(item, dict):
         return [], "gh pr view returned invalid JSON"
-    rows, error = reap_worktrees._scope_pr_rows([item], reap_worktrees._pr_repository(repo_root), number=number)
+    rows, error = worktree_git._scope_pr_rows([item], worktree_git._pr_repository(repo_root), number=number)
     if error or not rows:
         return [], error
-    parsed, error = reap_worktrees._parse_pr_item(rows[0])
+    parsed, error = worktree_git._parse_pr_item(rows[0])
     return ([parsed] if parsed is not None else []), error
 
 
@@ -848,7 +848,7 @@ def cleanup_untracked_local_branches(
                 }
             )
             continue
-        prs, pr_error = reap_worktrees._query_pr_states(repo_root, branch)
+        prs, pr_error = worktree_git._query_pr_states(repo_root, branch)
         if pr_error is not None:
             results.append(
                 {
@@ -933,7 +933,7 @@ def _git_maintenance(repo_root: Path, *, apply: bool) -> dict[str, Any]:
 
 
 def _registered_paths(repo_root: Path) -> set[Path]:
-    return {item.path.resolve() for item in reap_worktrees.list_git_worktrees(repo_root)}
+    return {item.path.resolve() for item in worktree_git.list_git_worktrees(repo_root)}
 
 
 def find_orphaned_worktree_directories(repo_root: Path) -> list[dict[str, Any]]:

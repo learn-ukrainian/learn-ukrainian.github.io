@@ -269,7 +269,7 @@ lookups:
      expect: [scripts/build/cf_preflight.py],
      verify: [{path: scripts/build/cf_preflight.py, contains: class CfPreflightResult}]}
   - {id: P05, question: 'What proves a merged PR left no dispatch worktree behind?', kind: process, query: reap dispatch worktrees after merge,
-     expect: [scripts/orchestration/merge_closeout.py, scripts/fleet/post_task_reap.py],
+     expect: [scripts/orchestration/merge_closeout.py],
      verify: [{path: scripts/orchestration/merge_closeout.py, contains: prove no dispatch worktree still}]}
   - {id: P06, question: 'Where does the reviewer resolver pick a ladder seat?', kind: process, query: reviewer resolver ladder selection,
      expect: [scripts/review/reviewer_resolver.py],

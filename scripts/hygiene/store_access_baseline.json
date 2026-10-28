@@ -2437,20 +2437,6 @@
       "occurrence": 0
     },
     {
-      "path": "tests/orchestration/test_reap_worktrees.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/orchestration/test_reap_worktrees.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
-      "occurrence": 0
-    },
-    {
       "path": "tests/projects/open_model_data/review_build/components/test_c5.py",
       "kind": "store_path",
       "scope": "test_register_alias_and_paragraph_placeholder_are_authenticated",

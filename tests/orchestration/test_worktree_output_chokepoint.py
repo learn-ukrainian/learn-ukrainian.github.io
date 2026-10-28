@@ -17,7 +17,7 @@ from scripts.orchestration.fleet_repos import FleetRepo
 from scripts.orchestration.task_family import git_safety
 from tests.orchestration.test_worktree_claims_cli import _git, _linked, _primary, _record
 
-BOUNDARIES = ['claims', 'claims-force', 'scheduled', 'post-task']
+BOUNDARIES = ['claims', 'claims-force']
 
 CALLERS = ["acp", "data-tier", "sibling", "task-family", "cli"]
 
@@ -284,7 +284,6 @@ def test_claims_remove_preserves_earlier_attempt_output_in_reused_checkout(tmp_p
 
 @pytest.fixture
 def boundary_tree(tmp_path, monkeypatch):
-    from scripts.fleet import post_task_reap
     from tests.orchestration import test_merge_closeout as closeout
 
     repo = closeout.init_repo(tmp_path)
@@ -297,9 +296,6 @@ def boundary_tree(tmp_path, monkeypatch):
     tasks = repo / "batch_state/tasks"
     tasks.mkdir(parents=True)
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    monkeypatch.setattr(post_task_reap, "_DISPATCH_WORKTREES_ROOT", repo / ".worktrees/dispatch")
-    monkeypatch.setattr(post_task_reap.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(post_task_reap.reap_worktrees, "_active_task_ids", lambda: set())
     head = _git(tree, "rev-parse", "HEAD")
     closeout.patch_gh(
         monkeypatch,
@@ -326,22 +322,14 @@ def boundary_tree(tmp_path, monkeypatch):
 
 
 def boundary_remove(boundary, fixture, monkeypatch):
-    from scripts.fleet import post_task_reap
-    from scripts.orchestration import reap_worktrees
-
-    repo, tree, tasks, _record = fixture
-    if boundary.startswith("claims"):
-        return worktree_claims.remove_unclaimed_worktree(
-            tree,
-            repo_root=repo,
-            reason="fixture",
-            owner_task_id=None,
-            force=boundary.endswith("force"),
-        ).as_record()
-    if boundary == "scheduled":
-        results = reap_worktrees.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
-        return next(result for result in results if Path(result.path) == tree).__dict__
-    return post_task_reap.post_task_reap("boundary", tasks_dir=tasks, repo_root=repo, apply=True)["main_worktree"]
+    repo, tree, _tasks, _record = fixture
+    return worktree_claims.remove_unclaimed_worktree(
+        tree,
+        repo_root=repo,
+        reason="fixture",
+        owner_task_id=None,
+        force=boundary.endswith("force"),
+    ).as_record()
 
 
 @pytest.mark.parametrize("caller", CALLERS)
@@ -506,52 +494,6 @@ def test_kept_record_path_spellings_refuse_removal(boundary_tree, monkeypatch, s
 
 
 @pytest.mark.parametrize("spelling", ["relative", "tilde"])
-@pytest.mark.parametrize("has_output", [False, True], ids=["empty", "output"])
-def test_release_retention_cli_matches_record_path_spellings(boundary_tree, monkeypatch, capsys, spelling, has_output):
-    from scripts.fleet import post_task_reap
-
-    repo, tree, tasks, record = boundary_tree
-    monkeypatch.setenv("HOME", str(repo.parent))
-    # The real CLI must remove the tree after release from an unrelated cwd.
-    monkeypatch.chdir(repo.parent)
-    location = (
-        tree.relative_to(repo).as_posix() if spelling == "relative" else "~/" + tree.relative_to(repo.parent).as_posix()
-    )
-    record.update({"worktree_path": location, "keep_worktree": True})
-    path = tasks / "boundary.json"
-    path.write_text(json.dumps(record))
-    if has_output:
-        source = tree / "ignored/output.txt"
-        source.parent.mkdir()
-        source.write_bytes(b"released output")
-    first = worktree_claims.remove_unclaimed_worktree(tree, repo_root=repo, reason="fixture", owner_task_id=None)
-    assert first.action == "skipped" and tree.exists()
-    receipt = first.preserved_artifacts
-    argv = [
-        "--task-id",
-        "boundary",
-        "--tasks-dir",
-        str(tasks),
-        "--repo-root",
-        str(repo),
-        "--release-retention",
-        "--apply",
-    ]
-    assert post_task_reap.main(argv) == 0
-    report = json.loads(capsys.readouterr().out)
-    assert report["main_worktree"]["action"] == "removed", report
-    assert not tree.exists()
-    saved = json.loads(path.read_text())
-    assert saved["keep_worktree"] is False
-    release = saved["preserved_artifacts"]["retention_release"]
-    assert release["owner"] == "boundary"
-    assert release == {"owner": "boundary", "run_nonce": record["run_nonce"], "mode": "record_only"}
-    if has_output:
-        assert receipt["paths"][0]["sha256"] == hashlib.sha256(b"released output").hexdigest()
-    assert not (repo / "batch_state/preserved").exists()
-
-
-@pytest.mark.parametrize("spelling", ["relative", "tilde"])
 def test_record_path_spellings_publish_copy_failure(boundary_tree, monkeypatch, spelling):
     repo, tree, tasks, record = boundary_tree
     monkeypatch.setenv("HOME", str(repo.parent))
@@ -585,25 +527,6 @@ def test_record_path_spellings_publish_copy_failure(boundary_tree, monkeypatch, 
     assert saved["preserved_artifacts"] == result.preserved_artifacts
     assert result.preserved_artifacts["owner"] == "boundary"
     assert source.read_bytes() == b"uncopied output"
-
-
-def seed_legacy_retrieval(repo, worktree, receipt):
-    names = [entry["path"] for entry in receipt["paths"]]
-    location = repo / "batch_state/preserved/boundary/legacy"
-    location.mkdir(parents=True)
-    for name in names:
-        ignored_task_output.artifacts._copy_verified(
-            worktree / name,
-            location / name,
-            source_root=worktree,
-            destination_root=location,
-        )
-    receipt.pop("mode", None)
-    receipt.pop("copied_bytes", None)
-    receipt["location"] = location.relative_to(repo).as_posix()
-    receipt["content_sha256"] = ignored_task_output._content_digest(location, names)
-    receipt["retrieval_proof_sha256"] = ignored_task_output.verify_retrieval(repo, receipt)
-    return location
 
 
 @pytest.mark.parametrize("boundary", BOUNDARIES)
@@ -702,91 +625,3 @@ def test_actual_boundaries_preserve_or_retain(boundary_tree, monkeypatch, bounda
         assert not (repo / "batch_state/preserved").exists()
     assert str(repo) not in json.dumps(receipt)
     assert str(tree) not in json.dumps(receipt)
-
-
-@pytest.mark.parametrize("boundary", BOUNDARIES)
-def test_existing_owner_release_after_retrieval_allows_removal(boundary_tree, monkeypatch, boundary):
-    from scripts.fleet import post_task_reap
-
-    repo, tree, tasks, record = boundary_tree
-    source = tree / "ignored/corpus.yaml"
-    source.parent.mkdir()
-    source.write_bytes(b"retrieved corpus bytes")
-    record["keep_worktree"] = True
-    (tasks / "boundary.json").write_text(json.dumps(record))
-    # Release cannot manufacture a passing receipt.
-    refusal = post_task_reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True)
-    assert "existing passing retrieval receipt" in refusal
-    first = boundary_remove(boundary, boundary_tree, monkeypatch)
-    assert first["action"] in {"retained", "skipped"} and tree.exists()
-    saved = json.loads((tasks / "boundary.json").read_text())
-    receipt = saved["preserved_artifacts"]
-    assert_record_only(receipt, [{"path": "ignored/corpus.yaml", "size": 22, "sha256": hashlib.sha256(b"retrieved corpus bytes").hexdigest(), "class": "task_created"}])
-    assert post_task_reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
-    released = json.loads((tasks / "boundary.json").read_text())
-    assert released["keep_worktree"] is False
-    assert released["preserved_artifacts"]["retention_release"]["owner"] == "boundary"
-    result = boundary_remove(boundary, boundary_tree, monkeypatch)
-    assert result["action"] == "removed" and not tree.exists(), result
-    assert result["preserved_artifacts"]["retention_release"]["owner"] == "boundary"
-
-
-@pytest.mark.parametrize("failure", [None, "corrupt_copy", "changed_source", "reused", "wrong_nonce", "dry_run"])
-def test_post_task_release_cli_requires_owner_and_current_retrieval(boundary_tree, monkeypatch, capsys, failure):
-    from scripts.fleet import post_task_reap
-
-    repo, tree, tasks, record = boundary_tree
-    source = tree / "ignored/output.json"
-    source.parent.mkdir()
-    source.write_bytes(b"retrieval proof bytes")
-    record["keep_worktree"] = True
-    (tasks / "boundary.json").write_text(json.dumps(record))
-    result = boundary_remove("scheduled", boundary_tree, monkeypatch)
-    assert result["action"] == "skipped" and tree.exists()
-    saved = json.loads((tasks / "boundary.json").read_text())
-    receipt = saved["preserved_artifacts"]
-    archive = seed_legacy_retrieval(repo, tree, receipt)
-    if failure == "changed_source":
-        source.write_bytes(b"new unretrieved output")
-    elif failure == "corrupt_copy":
-        (archive / "ignored/output.json").write_bytes(b"corrupt retrieval")
-    elif failure == "reused":
-        saved["worktree_reused"] = True
-    elif failure == "wrong_nonce":
-        saved["run_nonce"] = "other-owner-run"
-    saved["preserved_artifacts"] = receipt
-    (tasks / "boundary.json").write_text(json.dumps(saved))
-    argv = ["--task-id", "boundary", "--tasks-dir", str(tasks), "--repo-root", str(repo), "--release-retention"]
-    if failure != "dry_run":
-        argv += ["--apply"]
-    code = post_task_reap.main(argv)
-    report = json.loads(capsys.readouterr().out)
-    state = json.loads((tasks / "boundary.json").read_text())
-    if failure is None:
-        assert code == 0 and report["main_worktree"]["action"] == "removed", report
-        assert not tree.exists() and state["keep_worktree"] is False
-        current = state["preserved_artifacts"]
-        assert_record_only(current, [{"path": "ignored/output.json", "size": 21, "sha256": hashlib.sha256(b"retrieval proof bytes").hexdigest(), "class": "task_created"}])
-        assert current["retention_release"] == {"owner": "boundary", "run_nonce": "creation-nonce", "mode": "record_only"}
-        assert "retrieval_proof_sha256" not in current
-        assert ignored_task_output.verify_retrieval(repo, receipt) == receipt["retrieval_proof_sha256"]
-        assert (archive / "ignored/output.json").read_bytes() == b"retrieval proof bytes"
-    else:
-        assert code == 1 and report["main_worktree"]["action"] == "retained"
-        assert tree.exists() and state["keep_worktree"] is True
-        assert "retention_release" not in state["preserved_artifacts"]
-
-
-def test_empty_kept_tree_still_requires_explicit_retrieved_owner_release(boundary_tree, monkeypatch):
-    from scripts.fleet import post_task_reap
-
-    repo, tree, tasks, record = boundary_tree
-    record["keep_worktree"] = True
-    (tasks / "boundary.json").write_text(json.dumps(record))
-    first = boundary_remove("claims", boundary_tree, monkeypatch)
-    assert first["action"] == "skipped" and tree.exists()
-    assert first["preserved_artifacts"]["count"] == 0
-    assert_record_only(first["preserved_artifacts"], [])
-    assert post_task_reap._release_retention("boundary", tasks_dir=tasks, repo_root=repo, apply=True) is None
-    result = boundary_remove("claims", boundary_tree, monkeypatch)
-    assert result["action"] == "removed" and not tree.exists()

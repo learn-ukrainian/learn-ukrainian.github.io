@@ -22,9 +22,9 @@ if str(_ROOT) not in sys.path:
 from scripts.agent_runtime.attribution import resolve_invocation_attribution
 from scripts.common import task_store_paths
 from scripts.fleet import ignored_task_output as output
-from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import worktree_artifacts as artifacts
 from scripts.orchestration import worktree_claims as claims
+from scripts.orchestration import worktree_git as rw
 from scripts.orchestration.task_record_store import locate_task_record
 
 
