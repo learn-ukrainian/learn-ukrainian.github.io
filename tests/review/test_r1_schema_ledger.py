@@ -1645,3 +1645,52 @@ def test_facet_vesum_structured_results(tool, key, has_hits):
     for payload in ({key: [{}] if has_hits else []}, {"result": {key: [{}] if has_hits else []}}):
         facts = classify_outcome(tool, "ok", json.dumps(payload))
         assert facts["status"] == ("hits_found" if has_hits else "no_hits")
+
+
+@pytest.mark.parametrize("state", ["hit", "miss", "stale", "negative", "unavailable"])
+def test_cached_wikipedia_receipt_uses_status_not_prose(state):
+    result = json.dumps({"status": state, "response": "An article about unavailable services." if state == "hit" else None})
+    facts = classify_outcome("query_wikipedia_cached", "ok", result)
+    assert facts["hits"] == (1 if state == "hit" else 0)
+    assert facts["status"] == {"hit": "hits_found", "negative": "no_hits"}.get(state, "unavailable")
+
+
+@pytest.mark.parametrize("state", ["ok", "not_found", "unavailable", "unverified", "partial_unverified", "stale_forms", "missing_sections", "missing_provenance", "bad_entry", "corrupt_section", "bad_identity", "raw_error", "missing_identity"])
+def test_ulif_records_receipt_requires_complete_verified_evidence(state):
+    entry = {"status": "ok", "verified": True, "forms_state": "complete", "sections_state": "complete", "retrieved_at": "2026-10-01T00:00:00Z", "content_sha256": "a" * 64, "identity_from_raw": {"stored_matches_raw": True}, "sections": {"paradigm": [{"rows": [["fixture"]]}]}}
+    record = {"status": "ok", "verified": True, "entries": [entry]}
+    if state in {"not_found", "unavailable", "unverified", "partial_unverified"}:
+        record.update(status=state, verified=False, entries=[])
+    elif state == "stale_forms":
+        entry["forms_state"] = "stale_parser_version"
+    elif state == "missing_sections":
+        entry["sections_state"] = "missing_table"
+    elif state == "missing_provenance":
+        entry["content_sha256"] = ""
+    elif state == "bad_entry":
+        entry["status"] = "parse_error"
+    elif state == "corrupt_section":
+        entry["sections"]["paradigm"] = [{"error": "malformed_stored_json", "raw_payload_json": "broken"}]
+    elif state == "bad_identity":
+        entry["identity_from_raw"]["stored_matches_raw"] = False
+    elif state == "raw_error":
+        entry["identity_from_raw"]["error"] = "raw_entry_page_absent"
+    elif state == "missing_identity":
+        entry.pop("identity_from_raw")
+    facts = classify_outcome("query_ulif_records", "ok", json.dumps({"records": [record]}))
+    assert facts["hits"] == (1 if state == "ok" else 0)
+    assert facts["status"] == ("hits_found" if state == "ok" else "unavailable")
+
+
+def test_ulif_cached_live_negative_is_distinct_from_an_unharvested_word():
+    negative = {"status": "not_found", "retrieved_at": "2026-10-01T00:00:00Z"}
+    result = json.dumps({"records": [{"status": "unverified", "entries": [negative]}]})
+    assert classify_outcome("query_ulif_records", "ok", result)["status"] == "no_hits"
+    assert classify_outcome("query_ulif_records", "ok", "Sources database not found.")["status"] == "unavailable"
+
+
+def test_ulif_good_word_cannot_launder_an_unverified_quote():
+    good = {"status": "ok", "verified": True, "entries": [{"status": "ok", "verified": True, "forms_state": "complete", "sections_state": "complete", "retrieved_at": "2026-10-01T00:00:00Z", "content_sha256": "a" * 64, "identity_from_raw": {"stored_matches_raw": True}, "sections": {"paradigm": [{"rows": [["fixture"]]}]}}]}
+    bad = {"status": "unverified", "verified": False, "entries": [{"canonical_headword": "bad quote", "verified": False}]}
+    facts = classify_outcome("query_ulif_records", "ok", json.dumps({"records": [good, bad]}))
+    assert facts == {"call_status": "ok", "hits": 0, "status": "unavailable", "unavailable": True}

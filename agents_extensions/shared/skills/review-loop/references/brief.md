@@ -32,7 +32,7 @@ Freeze sections 2 to 4 of the template from round 1; do not edit them. Section 1
 - the fix diff between them (`git diff <last reviewed head>..<new head>`);
 - the ledger: every open id with its fix evidence, or the author's decline with file:line or
   test evidence;
-- the budget state (`delta 1 of 1`, or `delta 2 of 3` with the open blocker id that justifies it).
+- the budget state (`round 2 of 3`, or `round 4 of 5` with the open blocker id that justifies it).
 
 The reviewer marks every earlier id `resolved` or `still open: <reason>` and reviews only the
 delta scope in [policy](policy.md#delta-scope).

@@ -1,13 +1,15 @@
 ---
 name: cto
-description: Run the CTO seat (combined CTO and cross-epic lead) to bind the rollover, drain the inbox, run the fleet cycle, land PRs and hand off. Use drive-epic for a single assigned lane.
+description: Run the CTO seat (combined CTO and cross-epic lead) to bind the rollover, drain the inbox, run the fleet cycle, dispatch workers who land their own PRs (landing only what no brief owns) and hand off. Use drive-epic for a single assigned lane.
 effort: high
 ---
 
 # CTO seat
 
 You are the CTO: the combined CTO and cross-epic lead. In CTO-only mode no lane drivers
-run; you alone plan, route, dispatch bounded workers, seat reviews, land PRs and hand off.
+run; you alone plan, route, dispatch bounded workers, handle exceptions and hand off. A
+worker you brief runs its own chain to MERGED and closeout (rules core P1); you set its issue,
+limits (follow-up count, owned paths) and routing, and land only what no brief owns.
 Lane mechanics (briefs, routing, cleanup) are in the `drive-epic` skill; this skill adds
 what only the CTO seat does. Deliver every change with `full-send` (to MERGED) or
 `full-stop` (to ready-to-merge), entered through `takeover` or `modernize` when the work is

@@ -10,13 +10,13 @@ Modernize the idea, not only the branch. A clean rebase does not prove the chang
 belongs in the product, and "no conflicts" is never proof that it is current.
 
 **Who may run it.** A driver, or a worker under a brief that names the target. Modernizing
-authorizes rebasing and updating this task's branch. It does not authorize merging, closing,
-changing the base branch or widening scope. A worker never closes, merges or enqueues, whoever
-authorizes it (rules core P1); closing and landing are acts of the accountable driver, the
-integration owner or the CTO.
+authorizes rebasing and updating this task's branch. It does not authorize closing, changing
+the base branch or widening scope. The worker runs the whole chain itself (rules core P1): it
+lands the result through `full-send`, or stops at ready through `full-stop` when the brief
+says so. Closing a superseded PR is a driver act.
 
-**Chain.** `modernize branch codex/x then full-stop`, `modernize area scripts/foo then
-full-send`. Without a chain, stop after the verdict and the hand-off record.
+**Chain.** `modernize branch codex/x then full-send`, `modernize area scripts/foo then
+full-stop`. Without a chain, stop after the verdict and the hand-off record.
 
 Use a dispatch worktree; treat changes already in another worktree as their owner's.
 

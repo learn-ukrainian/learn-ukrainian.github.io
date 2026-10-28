@@ -21,6 +21,56 @@ from tests.agent_runtime.test_claude_account_worker import _calls, _run, account
 from tests.test_rules_core_loading import core_without_addendum, missing_core  # noqa: F401  (fixtures)
 
 
+@pytest.mark.parametrize("agent", providers.PROVIDERS)
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_worker_git_transport_restricts_network_only_in_read_only_mode(tmp_path, monkeypatch, agent, mode):
+    """#11797: an explicit push URL must not escape the read-only worker's transport policy."""
+    monkeypatch.setenv("GIT_ALLOW_PROTOCOL", "https:ssh:ext")
+    spec = TaskSpec("transport", agent, "m", None, mode, tmp_path, tmp_path / "prompt", tmp_path / "final")
+    env = child_env(spec)
+    subprocess.run(["git", "init", "--quiet", str(tmp_path)], env=env, check=True, timeout=10)
+    subprocess.run(
+        ["git", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+         "-c", "core.hooksPath=/dev/null", "commit", "--quiet", "--allow-empty", "-m", "fixture"],
+        cwd=tmp_path, env=env, check=True, timeout=10,
+    )
+    # A disposable helper makes transport admission observable without contacting a host.
+    marker = tmp_path / "transport-started"
+    helper = tmp_path / "git-remote-https"
+    helper.write_text(f"#!{sys.executable}\nfrom pathlib import Path\nPath({str(marker)!r}).touch()\n")
+    helper.chmod(0o755)
+    env["GIT_EXEC_PATH"] = str(tmp_path)
+    result = subprocess.run(
+        ["git", "-c", "protocol.https.allow=always", "push", "https://example.invalid/repo.git", "HEAD"],
+        cwd=tmp_path, env=env, capture_output=True, text=True, timeout=10,
+    )
+    if mode == "read-only":
+        assert result.returncode != 0
+        assert "transport 'https' not allowed" in result.stderr
+        assert not marker.exists()
+        for protocol, url in (("ssh", "ssh://example.invalid/repo.git"),
+                              ("git", "git://example.invalid/repo.git"),
+                              ("ext", "ext::unused-helper")):
+            refused = subprocess.run(
+                ["git", "-c", f"protocol.{protocol}.allow=always", "push", url, "HEAD"],
+                cwd=tmp_path, env=env, capture_output=True, text=True, timeout=10,
+            )
+            assert refused.returncode != 0
+            assert f"transport '{protocol}' not allowed" in refused.stderr
+    else:
+        assert marker.exists(), result.stderr
+    # The issue's local-protocol alternative preserves local Git operations in both modes.
+    remote = tmp_path / "local.git"
+    subprocess.run(["git", "init", "--quiet", "--bare", str(remote)], env=env, check=True, timeout=10)
+    subprocess.run(["git", "push", remote.as_uri(), "HEAD:refs/heads/proof"], cwd=tmp_path,
+                   env=env, capture_output=True, check=True, timeout=10)
+    local_head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=tmp_path, env=env,
+                                capture_output=True, text=True, check=True, timeout=10).stdout.strip()
+    remote_head = subprocess.run(["git", "--git-dir", str(remote), "rev-parse", "refs/heads/proof"], env=env,
+                                 capture_output=True, text=True, check=True, timeout=10).stdout.strip()
+    assert remote_head == local_head
+
+
 def _refuse_side_effects(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))

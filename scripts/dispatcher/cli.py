@@ -275,6 +275,16 @@ def _dispatch(args) -> int:
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent, child_env(spec))):
         raise ValueError(refusal)
     checks.check_review_family(args.review_author_model, args.model)
+    # Every read-only review of a change, dry runs included, whichever review flag types it (F10). A change is
+    # named by --branch (stored as review_branch, the only identity the verdict recorder publishes for), a PR, or a
+    # bound review attempt. A typed dispatch with none of them (the uk-preamble eval's --language-lane run at a
+    # pinned head) reviews no branch: the recorder refuses it ("review was not branch-pinned"), so there is no
+    # authorship range to check.
+    if args.mode == "read-only" and (args.branch or args.pr or binding) and (
+        admission.review_typed(vars(args))
+        or any((args.risk, args.review_mode, args.language_lane, args.subject_seat, args.subject_family, args.branch))
+    ):
+        checks.check_branch_author_families(args, repo, info, sha, args.model)
     if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
         exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,
                                                 args.owned_path, review=any((args.review_profile, args.language_lane,

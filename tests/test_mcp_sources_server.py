@@ -46,6 +46,74 @@ def test_session_fixture_isolates_request_log(server_module, sources_log_dir: Pa
     assert entries[-1]["tool"] == "session-isolation-probe"
 
 
+@pytest.mark.parametrize("query", ["Мова", "мова"])
+def test_cached_wikipedia_curated_extract_is_usable_without_transient_cache(server_module, tmp_path, monkeypatch, query):
+    from rag import wiki_cache
+    from tests.mcp.sources_probe_fixture import STAMP, TEXT, build
+    from wiki import sources_db
+
+    path, _ = build(tmp_path)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", path)
+    monkeypatch.setattr(wiki_cache, "_DEFAULT_DB", tmp_path / "absent-cache.db")
+    monkeypatch.setattr("requests.sessions.Session.request", lambda *a, **kw: pytest.fail("cached reader reached network"))
+    before = path.read_bytes()
+    content, error, _ = _run(server_module._dispatch_tool_call("query_wikipedia_cached", {"query": query, "mode": "extract"}))
+    assert not error
+    result = json.loads(content[0].text)
+    assert result["status"] == "hit"
+    assert result["store"] == "sources.db"
+    assert result["matched_title"] == "Мова"
+    assert result["source_url"] == "https://uk.wikipedia.org/wiki/Мова"
+    assert result["fetched_at"] == STAMP
+    assert TEXT in result["response"]
+    assert not (tmp_path / "absent-cache.db").exists()
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("args", [{}, {"query": ""}, {"query": "Мова", "mode": "invalid"}, {"query": "Мова", "mode": "section"}, {"query": "Мова", "mode": "search", "limit": False}])
+def test_cached_wikipedia_rejects_invalid_requests(server_module, args):
+    result = json.loads(_run(server_module.handle_query_wikipedia_cached(args))[0].text)
+    assert result["status"] == "invalid_input"
+
+
+@pytest.mark.parametrize("mode", ["summary", "search", "extract", "sections", "section"])
+def test_cached_wikipedia_dispatch_reads_existing_mode_key(server_module, tmp_path, monkeypatch, mode):
+    from rag import wiki_cache
+
+    path = tmp_path / "cache.db"
+    monkeypatch.setattr(wiki_cache, "_DEFAULT_DB", path)
+    cache = wiki_cache.WikiCache(path)
+    response = "# Мова\n**URL**: https://uk.wikipedia.org/wiki/Мова\n\nCached article."
+    section = "q=Мова&limit=3" if mode == "search" else "2" if mode == "section" else ""
+    cache.put(mode, "Мова", response, section)
+    cache.close()
+    monkeypatch.setattr("requests.sessions.Session.request", lambda *a, **kw: pytest.fail("cached reader reached network"))
+    content, error, _ = _run(server_module._dispatch_tool_call("query_wikipedia_cached", {"query": "Мова", "mode": mode, "limit": 3, "section": 2}))
+    assert not error
+    result = json.loads(content[0].text)
+    assert result["status"] == "hit"
+    assert "Cached article." in result["response"]
+    assert result["key"]["section"] == section
+    assert result["response_sha256"] == hashlib.sha256(result["response"].encode()).hexdigest()
+
+
+@pytest.mark.parametrize("offset", [9999, 11])
+def test_cached_wikipedia_empty_page_cannot_supply_evidence(server_module, tmp_path, monkeypatch, offset):
+    from rag import wiki_cache
+    from scripts.review.receipts.outcomes import classify_outcome
+
+    path = tmp_path / "cache.db"
+    monkeypatch.setattr(wiki_cache, "_DEFAULT_DB", path)
+    cache = wiki_cache.WikiCache(path)
+    cache.put("extract", "Мова", "# Мова\n**URL**: https://uk.wikipedia.org/wiki/Мова\n\nShort body.   ")
+    cache.close()
+    content = _run(server_module.handle_query_wikipedia_cached({"query": "Мова", "mode": "extract", "offset": offset}))
+    result = json.loads(content[0].text)
+    assert result["status"] == "unavailable"
+    assert result["response"] is None
+    assert classify_outcome("query_wikipedia_cached", "ok", content[0].text)["hits"] == 0
+
+
 @pytest.fixture
 def server_module():
     """Import the server module fresh."""
@@ -117,6 +185,7 @@ class TestListTools:
             "verify_stresses",
             "check_text",
             "query_wikipedia",
+            "query_wikipedia_cached",
             "query_grac",
             "query_ulif",
             "query_ulif_synonyms",

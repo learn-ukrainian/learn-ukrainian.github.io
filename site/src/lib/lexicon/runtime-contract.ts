@@ -163,6 +163,20 @@ function asString(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value : null;
 }
 
+function generatedAt(input: BuildRuntimeStatusInput, pointer: JsonObject): string {
+  const epoch = process.env.SOURCE_DATE_EPOCH;
+  if (epoch !== undefined) {
+    const milliseconds = Number(epoch) * 1000;
+    if (!/^-?\d+$/.test(epoch) || !Number.isSafeInteger(milliseconds) || !Number.isFinite(new Date(milliseconds).getTime())) {
+      throw new Error("Invalid SOURCE_DATE_EPOCH");
+    }
+    return new Date(milliseconds).toISOString();
+  }
+  const timestamp = asString(input.generatedAt) ?? asString(pointer.generated_at);
+  if (!timestamp) throw new Error("Missing committed lexicon timestamp");
+  return timestamp;
+}
+
 function manifestEntries(manifest: unknown): JsonObject[] | null {
   const payload = asObject(manifest);
   const entries = asArray(payload.entries);
@@ -258,7 +272,7 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
   return {
     schema: "atlas-runtime-status",
     schemaVersion: 1,
-    generatedAt: input.generatedAt ?? new Date().toISOString(),
+    generatedAt: generatedAt(input, pointer),
     status,
     endpoints: {
       // Meta/status stay under /api/lexicon. Learner artifacts match the URLs

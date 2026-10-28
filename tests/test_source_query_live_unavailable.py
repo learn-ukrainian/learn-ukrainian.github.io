@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import pytest
 import requests
+import requests_mock as requests_mock_lib
 
 from scripts.rag.source_query import (
     E2ULookupStatus,
@@ -55,23 +56,18 @@ def _patch_get(monkeypatch: pytest.MonkeyPatch, respond):
     monkeypatch.setattr(requests.Session, "get", fake_get)
 
 
-def test_shared_requests_identify_project_without_browser_impersonation(monkeypatch):
+def test_shared_requests_identify_project_without_browser_impersonation(requests_mock):
     import scripts.rag.source_query as sq
 
-    outgoing_headers = []
-
-    def fake_send(self, request, **kwargs):
-        outgoing_headers.append(dict(request.headers))
-        return DummyResponse(403)
-
-    monkeypatch.setattr(requests.Session, "send", fake_send)
+    requests_mock.get(requests_mock_lib.ANY, status_code=403)
 
     assert sq._get("https://dictionary.invalid/entry").status_code == 403
     result = sq.slovnyk_me_lookup("fixture", "vts")
     assert result["status"] == "unavailable"
     assert result["http_status"] == 403
-    assert len(outgoing_headers) == 2
-    for headers in outgoing_headers:
+    assert len(requests_mock.request_history) == 2
+    for request in requests_mock.request_history:
+        headers = request.headers
         assert headers["User-Agent"] == (
             "learn-ukrainian-word-atlas/1.0 "
             "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
@@ -79,21 +75,15 @@ def test_shared_requests_identify_project_without_browser_impersonation(monkeypa
 
 
 @pytest.mark.parametrize("status", [200, 403])
-def test_wiktionary_outgoing_headers_identify_project_with_contact(monkeypatch, status):
+def test_wiktionary_outgoing_headers_identify_project_with_contact(requests_mock, status):
     import scripts.rag.source_query as sq
 
-    outgoing_requests = []
-
-    def fake_send(self, request, **kwargs):
-        outgoing_requests.append(request)
-        assert kwargs["timeout"] == 15
-        return DummyResponse(status, data={"parse": {"wikitext": {"*": "==Ukrainian==\n# [[house]]\n"}}})
-
-    monkeypatch.setattr(requests.Session, "send", fake_send)
+    requests_mock.get(requests_mock_lib.ANY, status_code=status, json={"parse": {"wikitext": {"*": "==Ukrainian==\n# [[house]]\n"}}})
 
     assert sq.wiktionary_translate("FIXTURE") == ("house" if status == 200 else "")
-    assert len(outgoing_requests) == 1
-    request = outgoing_requests[0]
+    assert len(requests_mock.request_history) == 1
+    request = requests_mock.request_history[0]
+    assert request.timeout == 15
     assert request.url == (
         "https://en.wiktionary.org/w/api.php"
         "?action=parse&page=fixture&format=json&prop=wikitext"
