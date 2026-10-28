@@ -84,7 +84,7 @@ from scripts.review.reviewer_resolver import (
     review_task_id_comparison_keys,
 )
 from scripts.review.role_resolution import resolve_routing_reference
-from scripts.review.security_paths import effective_review_risk, git_changed_paths, is_security_sensitive_change
+from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
 from scripts.review.verdict_parser import (
@@ -115,10 +115,12 @@ SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
 RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
 # Kimi never reviews. Native Grok requires its own runtime attestation (#9769).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
-# Review rounds per PR (C-2902): security, permissions, auth, data-loss and
-# state/concurrency changes record risk critical or touch security paths.
+# Review rounds per branch lineage, replacement PRs included (C-2902); a
+# security-sensitive change gets the elevated budget. A lineage listing that
+# reaches the cap is refused rather than counted short.
 DEFAULT_REVIEW_ROUNDS = 3
 ELEVATED_REVIEW_ROUNDS = 5
+BRANCH_LINEAGE_LIMIT = 100
 
 
 class RecordError(RuntimeError):
@@ -699,6 +701,15 @@ class BranchReviewFacts:
         if any(commit.source in {"unknown_historical", "suspect_historical"} for commit in self.commits):
             return self.author_families | _VALID_CONCRETE_FAMILIES
         return self.author_families
+
+    @property
+    def unresolved_authors(self) -> tuple[str, ...]:
+        """Commits whose author family is unknown, so no reviewer can be proved outside it."""
+        return tuple(
+            commit.sha or "(unknown commit)"
+            for commit in self.commits
+            if commit.family == UNKNOWN_AUTHOR_FAMILY or commit.source == "unresolved-author"
+        )
 
     @property
     def scope_paths(self) -> tuple[str, ...]:
@@ -1599,44 +1610,106 @@ def require_no_outside_rejection(comments: Any, sha: str) -> None:
             raise RecordError("RED_TEAM_REFUSED: outside-family rejection exists for this head")
 
 
+def require_resolved_branch_authors(facts: BranchReviewFacts) -> None:
+    """Refuse a cross-family review when any branch commit's author family is unknown (C-2902 F1).
+
+    An unknown author excludes no family, so no reviewer can be proved
+    independent of it. The family is read from the commit's ``X-Agent``
+    trailer (or the task record it names), never from the git author: the
+    trailer is author-controlled, so a readable catalog trailer is trusted as
+    that family. This refuses unresolvable attribution; it does not detect a
+    forged catalog trailer. A red-team review keeps its own seat rules.
+    """
+    if facts.unresolved_authors:
+        raise RecordError(
+            "AUTHOR_UNRESOLVED: branch commits have no resolvable author family "
+            f"({', '.join(facts.unresolved_authors)}); no reviewer can be proved outside them"
+        )
+
+
 def require_no_same_head_rejection(comments: Sequence[Mapping[str, Any]], sha: str, login: str, verdict: str) -> None:
-    """Refuse an APPROVE at a head with a recorded rejection, in every review mode (FR-06).
+    """Refuse an APPROVE the keeper would not land at this head, in every review mode (FR-06).
 
     The keeper's own reading decides: a same-head approval never clears a
-    same-head rejection (``integration_sweep.lookup_verdict``), so the recorder
+    same-head rejection, and an unknown head (an edited or unattested marker,
+    ``integration_sweep.lookup_verdict``) admits no approval, so the recorder
     never posts an approval the keeper would ignore.
     """
-    if verdict == "APPROVED" and lookup_verdict(comments, sha, login).state in REJECTED:
+    if verdict != "APPROVED":
+        return
+    current = lookup_verdict(comments, sha, login)
+    if current.state in REJECTED:
         raise RecordError(
             "APPROVE_REFUSED: a CHANGES_REQUESTED or BLOCKED verdict is recorded at this head; "
             "only an APPROVE at a new head clears it"
         )
+    if current.state == "unknown":
+        raise RecordError(
+            f"APPROVE_REFUSED: the merge-queue keeper reads this head's verdict as unknown ({current.reason}) "
+            "and would not land an APPROVE; escalate the verdict record or review a new head"
+        )
 
 
-def review_round_budget(task: Mapping[str, Any], facts: BranchReviewFacts) -> int:
-    """Rounds one PR may spend: 5 at critical risk or on a security-sensitive change, else 3 (C-2902).
+def review_round_budget(facts: BranchReviewFacts) -> int:
+    """Rounds one branch may spend: 5 on a security-sensitive change, else 3 (C-2902).
 
-    The tier comes from the review task's recorded risk (``review_risk``, stored
-    from ``options.risk``) raised by the shared security-path rule.
+    The tier comes from the branch's own changed paths, the shared rule that
+    raises a security-sensitive target to critical. The review task's
+    caller-supplied risk never raises it: the dispatcher of a review can be
+    the author.
     """
-    options = task.get("options")
-    risk = task.get("review_risk") or (options.get("risk") if isinstance(options, Mapping) else None) or "medium"
-    profile = str(task.get("review_profile") or "code")
-    effective = effective_review_risk(
-        str(risk).strip().casefold(), facts.changed_paths, facts.scope_paths, profile=profile
+    if is_security_sensitive_change(facts.changed_paths, facts.scope_paths):
+        return ELEVATED_REVIEW_ROUNDS
+    return DEFAULT_REVIEW_ROUNDS
+
+
+def branch_lineage_comments(
+    adapter: GitHubAdapter, repository: str, branch: str, number: int, comments: Sequence[Mapping[str, Any]]
+) -> tuple[list[Mapping[str, Any]], tuple[int, ...]]:
+    """Comments of every same-repository PR from ``branch``, so a replacement PR continues the count."""
+    listed = _run_json(
+        [
+            "gh",
+            "pr",
+            "list",
+            "--repo",
+            repository,
+            "--state",
+            "all",
+            "--head",
+            branch,
+            "--limit",
+            str(BRANCH_LINEAGE_LIMIT),
+            "--json",
+            "number,headRefName,isCrossRepository",
+        ]
     )
-    return ELEVATED_REVIEW_ROUNDS if effective == "critical" else DEFAULT_REVIEW_ROUNDS
+    if not isinstance(listed, list) or len(listed) >= BRANCH_LINEAGE_LIMIT:
+        raise RecordError("branch PR lineage unavailable; cannot count review rounds")
+    numbers = {number}
+    for pr in listed:
+        if not isinstance(pr, Mapping) or not isinstance(pr.get("number"), int):
+            raise RecordError("branch PR lineage unavailable; cannot count review rounds")
+        if pr.get("headRefName") == branch and pr.get("isCrossRepository") is not True:
+            numbers.add(pr["number"])
+    lineage = list(comments)
+    for other in sorted(numbers - {number}):
+        try:
+            lineage.extend(adapter.comments(repository, other))
+        except SweepError as exc:
+            raise RecordError(f"comment lookup failed for PR #{other}: {exc}") from exc
+    return lineage, tuple(sorted(numbers))
 
 
 def require_review_round_within_budget(
-    comments: Sequence[Mapping[str, Any]], sha: str, login: str, *, budget: int, number: int
+    comments: Sequence[Mapping[str, Any]], sha: str, login: str, *, budget: int, lineage: str
 ) -> None:
-    """Refuse a verdict that would open a review round beyond the PR's budget.
+    """Refuse a verdict that would open a review round beyond the branch's budget.
 
-    A round is one reviewed head: trusted verdicts on the PR are counted
-    across heads, and more verdicts at an already reviewed head (a quorum
-    seat or a retried publication) open no new round. Budget end is never
-    approval.
+    A round is one reviewed head: trusted verdicts on every PR of the branch
+    are counted across heads, and more verdicts at an already reviewed head (a
+    quorum seat or a retried publication) open no new round. Budget end is
+    never approval.
     """
     heads: set[str] = set()
     for item in comments:
@@ -1650,7 +1723,7 @@ def require_review_round_within_budget(
             heads.add(marker["sha"])
     if sha not in heads and len(heads) >= budget:
         raise RecordError(
-            f"REVIEW_BUDGET_EXHAUSTED: PR #{number} already has verdicts at {len(heads)} heads and its budget "
+            f"REVIEW_BUDGET_EXHAUSTED: {lineage} already has verdicts at {len(heads)} heads and its budget "
             f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(heads) + 1}"
         )
 
@@ -1891,8 +1964,10 @@ def record(
         )
         if refusal:
             raise RecordError(refusal)
-    if family in facts.excluded_families and review_mode != "red_team":
-        raise RecordError("reviewer family equals an author family")
+    if review_mode != "red_team":
+        require_resolved_branch_authors(facts)
+        if family in facts.excluded_families:
+            raise RecordError("reviewer family equals an author family")
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
@@ -1935,8 +2010,14 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
-        require_no_same_head_rejection(comments, sha, login, verdict)
-        require_review_round_within_budget(comments, sha, login, budget=review_round_budget(task, facts), number=number)
+        lineage, numbers = branch_lineage_comments(adapter, repository, branch, number, comments)
+        require_review_round_within_budget(
+            lineage,
+            sha,
+            login,
+            budget=review_round_budget(facts),
+            lineage=f"branch {branch} (PR {', '.join(f'#{n}' for n in numbers)})",
+        )
         existing = None
         for item in comments:
             body = item.get("body")
@@ -1968,6 +2049,7 @@ def record(
                         raise RecordError("existing verdict marker was edited or conflicts with task")
                     existing = item
                     break
+        require_no_same_head_rejection(comments, sha, login, verdict)
         if existing is None:
             data = _run_json(
                 # The typed record is the publisher's only admitted marker carrier (#11127).

@@ -117,24 +117,32 @@ def check_review_family(author_model: str | None, reviewer_model: str) -> None:
 
 
 def check_branch_author_families(args, repo: Path, repository: dict, head_sha: str, reviewer_model: str) -> None:
-    """Keep a branch review outside every author family committed on the branch (FR-23).
+    """Keep a branch review outside every author family committed on the branch (FR-23, C-2902).
 
-    ``--review-author-model`` names one author; the branch's own X-Agent trailers
-    name all of them, read with the facts the verdict recorder accepts. A
-    red-team review is bound by the recorder's own seat rules instead.
+    Families are derived from the branch itself, read with the facts the
+    verdict recorder accepts, whether or not ``--review-author-model`` is
+    given. An empty ``base..head`` range, a branch without attributed authors
+    and a commit with an unresolvable author are refusals. The family comes
+    from each commit's ``X-Agent`` trailer, which is author-controlled (the git
+    author is not read): a readable catalog trailer is trusted as that family.
+    A red-team review is bound by the recorder's own seat rules instead.
     """
     if (args.review_mode or "").strip().casefold() == "red_team":
         return
     try:
         base_sha = git._git(repo, "rev-parse", "--verify", f"{args.base}^{{commit}}")
         if not git._git(repo, "rev-list", "-n", "1", f"{base_sha}..{head_sha}"):
-            return  # No commit of the branch's own: nothing to exclude.
+            raise ValueError(
+                f"review independence: reviewed range {args.base}..{head_sha} has no commits; "
+                "review a branch against the base it was cut from"
+            )
     except (OSError, subprocess.SubprocessError) as exc:
         raise ValueError(f"review independence: reviewed range unavailable ({exc})") from None
     from scripts.review.record_cf_verdict import (
-        BranchFactsError,
+        RecordError,
         authorship_exclude_sha,
         collect_branch_review_facts,
+        require_resolved_branch_authors,
     )
 
     try:
@@ -142,11 +150,13 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
             repository=repository["github"], repo_root=repo, base_tip_sha=base_sha, head_sha=head_sha,
             task_root=store.tasks_dir(), authorship_exclude_sha=authorship_exclude_sha(repo, base_branch=args.base),
         )
-    except (BranchFactsError, OSError, subprocess.SubprocessError) as exc:
+        require_resolved_branch_authors(facts)
+    except (RecordError, OSError, subprocess.SubprocessError) as exc:
         raise ValueError(f"review independence: branch author families unavailable ({exc})") from None
+    if not facts.existing_families:
+        raise ValueError("review independence: the reviewed range has no attributed author commits")
     reviewer = _model_families().get(reviewer_model)
-    # A branch without authored commits excludes nothing; any author makes an unknown reviewer unprovable.
-    if facts.excluded_families and (not reviewer or reviewer in facts.excluded_families):
+    if not reviewer or reviewer in facts.excluded_families:
         raise ValueError(
             f"review independence: reviewer family {reviewer or 'unknown'} is not outside the branch's author "
             f"families {sorted(facts.excluded_families)}; choose a reviewer from another family"

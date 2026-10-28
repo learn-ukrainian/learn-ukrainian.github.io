@@ -114,7 +114,21 @@ def sandbox(tmp_path, hermetic_monitor):
             ).stdout
         )
 
-    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle)
+    def review_target(*models):
+        """Arguments for a read-only review of one Anthropic-authored commit by the stub ``models``.
+
+        A review needs a reviewed range and a reviewer family outside its authors (C-2902); the
+        sandbox catalog files the stub models under OpenAI.
+        """
+        catalog = yaml.safe_load((config / "model_catalog.yaml").read_text())
+        catalog["models"]["gpt-6.1-sol"].setdefault("runtime_model_ids", []).extend(models)
+        (config / "model_catalog.yaml").write_text(yaml.safe_dump(catalog, sort_keys=False))
+        head = run_git(repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
+                       "authored change\n\nX-Agent: claude/claude-opus-5-5")
+        return "--base", "main", "--pinned-head", head
+
+    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle,
+                          review_target=review_target)
     yield box
     # Reap detached test supervisors, including a test interrupted by an assertion.
     for path in tasks.glob("*.json"):
@@ -641,7 +655,7 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
     (sandbox.repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     dispatched = sandbox.cli(
         "dispatch", "--agent", "sol", "--model", model, "--prompt", text,
-        *(["--require-review-verdict"] if required else []),
+        *(["--require-review-verdict", *sandbox.review_target(model)] if required else []),
     )
     task = dispatched.stdout.splitlines()
     record = sandbox.settle(task, expected=1 if error else 0)
@@ -659,10 +673,14 @@ def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     review = sandbox.repo / "scripts/review"
     review.mkdir(exist_ok=True)
     (review / "__init__.py").touch()
-    (review / "verdict_parser.py").write_text(
-        "def recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
+    # Dispatch admission reads branch authorship through the recorder, which imports the rest of the parser.
+    parser = review / "verdict_parser.py"
+    parser.write_text(
+        parser.read_text() + "\n\ndef recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
     )
-    record = sandbox.settle(sandbox.dispatch("echo", "--require-review-verdict"), expected=1)
+    record = sandbox.settle(
+        sandbox.dispatch("echo", "--require-review-verdict", *sandbox.review_target("echo")), expected=1
+    )
     assert record["status"] == "failed"
     assert record["error"] == "review_gate_error"
     assert record["returncode"] == 0
@@ -731,7 +749,7 @@ def _killed_review_supervisor(sandbox, tmp_path, model):
         sandbox.env.pop(name, None)
     sandbox.env.update({test_slots.ENABLE_ENV: "on", test_slots.DIR_ENV: str(tmp_path / "pool"),
                         test_slots.COUNT_ENV: "4", test_slots.WAIT_ENV: "5"})
-    task = sandbox.dispatch(model, "--require-review-verdict")
+    task = sandbox.dispatch(model, "--require-review-verdict", *sandbox.review_target(model))
     child = int(await_file(sandbox.tasks / f"{task[0]}.started"))
     if model == "governed":
         assert await_file(sandbox.tasks / f"{task[0]}.joined") == "joined"

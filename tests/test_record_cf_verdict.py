@@ -518,8 +518,8 @@ def test_red_team_outside_rejection_publication_guard(monkeypatch, tmp_path, ver
         assert calls == {"posts": 1, "statuses": 1}
 
 
-def recorded_verdict(sha, verdict, *, task_id="prior-review", mode="cross_family"):
-    """A trusted, unedited verdict comment the keeper reads, as the recorder posts it."""
+def recorded_verdict(sha, verdict, *, task_id="prior-review", mode="cross_family", edited=False):
+    """A trusted verdict comment the keeper reads, as the recorder posts it (``edited`` changes it later)."""
     body = recorder.build_comment(
         sha=sha,
         task_id=task_id,
@@ -536,40 +536,100 @@ def recorded_verdict(sha, verdict, *, task_id="prior-review", mode="cross_family
         "user": {"login": "fleet"},
         "author_association": "MEMBER",
         "created_at": stamp,
-        "updated_at": stamp,
+        "updated_at": "2026-09-23T11:45:00Z" if edited else stamp,
     }
 
 
-@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
-@pytest.mark.parametrize("rejection", ["CHANGES_REQUESTED", "BLOCKED"])
-def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch, tmp_path, mode, rejection):
+@pytest.mark.parametrize(
+    "mode,state",
+    [
+        *((mode, rejection) for mode in ("cross_family", "red_team") for rejection in ("CHANGES_REQUESTED", "BLOCKED")),
+        # The keeper reads an edited marker at this head as unknown and lands no APPROVE (F4).
+        ("cross_family", "edited"),
+        ("red_team", "edited"),
+        # An unresolvable X-Agent trailer excludes no family, so no reviewer is provably outside it (F1).
+        ("cross_family", "unresolved-author"),
+    ],
+)
+def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch, tmp_path, mode, state):
+    from dataclasses import replace
+
     from scripts.orchestration import integration_sweep as sweep
 
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     prompt = red_team_task(tasks, tmp_path) if mode == "red_team" else None
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
-    comments.append(recorded_verdict(SHA, rejection, mode=mode))
-    with pytest.raises(recorder.RecordError, match="only an APPROVE at a new head clears it"):
+    if state == "unresolved-author":
+        author = recorder._attribute_commit(
+            {"sha": SHA, "commit": {"message": "change\n\nX-Agent: claude/cto-not-a-model"}},
+            repository=REPOSITORY,
+            task_root=tasks,
+            base_sha=lambda: OTHER,
+        )
+        facts = replace(facts_for({"unknown"}), commits=(author,))
+        monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+        with pytest.raises(recorder.RecordError, match=r"AUTHOR_UNRESOLVED.*no reviewer can be proved outside"):
+            recorder.record("review-one", **kwargs)
+        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+        return
+    edited = state == "edited"
+    verdict = "APPROVED" if edited else state
+    comments.append(recorded_verdict(SHA, verdict, mode=mode, edited=edited))
+    reason = "keeper reads this head's verdict as unknown" if edited else "only an APPROVE at a new head clears it"
+    with pytest.raises(recorder.RecordError, match=reason):
         recorder.record("review-one", **kwargs)
     assert len(comments) == 1 and calls == {"posts": 0, "statuses": 0}
-    # The keeper reads the same head the same way: the rejection stands.
-    assert sweep.lookup_verdict(comments, SHA, "fleet").state == rejection
-    # A rejection at an earlier head is cleared by an APPROVE at the new head.
-    comments[0] = recorded_verdict(OTHER, rejection, mode=mode)
+    # The keeper reads the same head the same way: the rejection or unknown state stands.
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == ("unknown" if edited else state)
+    # A rejection or edit at an earlier head is cleared by an APPROVE at the new head.
+    comments[0] = recorded_verdict(OTHER, verdict, mode=mode, edited=edited)
     assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
 
 
 @pytest.mark.parametrize(
-    "risk,prior_heads,refused",
-    [(None, 2, False), (None, 3, True), ("high", 3, True), ("critical", 4, False), ("critical", 5, True)],
+    "risk,security,prior_heads,replacement,refused",
+    [
+        (None, False, 2, False, False),
+        (None, False, 3, False, True),
+        ("high", False, 3, False, True),
+        # The review task's own --risk critical never raises a non-security diff past 3 rounds (F3).
+        ("critical", False, 3, False, True),
+        # A security-sensitive diff reaches 5 rounds whatever risk the task recorded.
+        ("low", True, 4, False, False),
+        (None, True, 5, False, True),
+        # A replacement PR from the same branch continues the count (F3).
+        (None, False, 3, True, True),
+        ("low", True, 5, True, True),
+    ],
 )
-def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, prior_heads, refused):
+def test_verdict_beyond_review_budget_is_refused(
+    monkeypatch, tmp_path, risk, security, prior_heads, replacement, refused
+):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
-    write_task(tasks, **({"review_risk": risk} if risk else {}))
-    comments.extend(recorded_verdict(f"{index:x}" * 40, "CHANGES_REQUESTED") for index in range(1, prior_heads + 1))
+    write_task(tasks, **({"review_risk": risk, "options": {"risk": risk}} if risk else {}))
+    changed = ("scripts/review/record_cf_verdict.py",) if security else ("docs/readme.md",)
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts_for({"google"}, changed_paths=changed))
+    prior = [recorded_verdict(f"{index:x}" * 40, "CHANGES_REQUESTED") for index in range(1, prior_heads + 1)]
     # More verdicts at a head already reviewed open no new round.
-    comments.append(recorded_verdict("1" * 40, "CHANGES_REQUESTED", task_id="second-seat"))
+    prior.append(recorded_verdict("1" * 40, "CHANGES_REQUESTED", task_id="second-seat"))
+    if replacement:
+        # The earlier rounds were recorded on PR #41, closed and replaced by PR #42 from the same branch.
+        listed = recorder._run_json
+
+        def lineage(args, **kwargs):
+            if isinstance(args, list) and args[:3] == ["gh", "pr", "list"]:
+                return [{"number": 41, "headRefName": BRANCH, "isCrossRepository": False}, *listed(args, **kwargs)]
+            return listed(args, **kwargs)
+
+        monkeypatch.setattr(recorder, "_run_json", lineage)
+        monkeypatch.setattr(
+            recorder.GitHubAdapter,
+            "comments",
+            lambda self, repository, number: list(prior if number == 41 else comments),
+        )
+    else:
+        comments.extend(prior)
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     if refused:
         with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*budget end is never approval"):

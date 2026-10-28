@@ -166,7 +166,23 @@ def test_v2_subject_provider_paths_inferred_from_absolute_and_windows_paths():
         assert classify_owned_path(path).seats == frozenset({"claude"})
 
 
-def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp_path, capsys):
+@pytest.mark.parametrize(
+    "trailers,flags,refusal",
+    [
+        # Sol is outside the declared author's family but authored a commit on the branch.
+        (("claude/claude-opus-5-5", "codex/gpt-6.1-sol"), ("--review-author-model", "claude-opus-5-5", "--risk", "high"),
+         "['anthropic', 'openai']"),
+        # Any review flag types a read-only review, dry runs included (F2).
+        (("codex/gpt-6.1-sol",), ("--review-mode", "cross_family"), "['openai']"),
+        (("codex/gpt-6.1-sol",), ("--review-mode", "cross_family", "--dry-run"), "['openai']"),
+        # An unresolvable trailer excludes no family, so no reviewer is provably outside it (F1).
+        (("claude/cto-not-a-model",), ("--risk", "low"), "AUTHOR_UNRESOLVED"),
+        # An empty base..head range is a refusal, not a range with nobody to exclude (F2).
+        ((), ("--risk", "low"), "has no commits"),
+    ],
+)
+def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp_path, capsys, trailers, flags,
+                                                      refusal):
     repo = tmp_path / "repo"
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env.update(GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@example.invalid", GIT_COMMITTER_NAME="t",
@@ -180,14 +196,21 @@ def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp
     run("init", "-q")
     run("commit", "-q", "--allow-empty", "-m", "base")
     base = run("rev-parse", "HEAD")
-    for trailer in ("claude/claude-opus-5-5", "codex/gpt-6.1-sol"):
+    for trailer in trailers:
         run("commit", "-q", "--allow-empty", "-m", f"work\n\nX-Agent: {trailer}")
     head = run("rev-parse", "HEAD")
     monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "claude/branch", head))
     monkeypatch.setattr(checks, "check_branch_author_families", BRANCH_AUTHOR_FAMILIES)
-    review = ("--base", base, "--review-author-model", "claude-opus-5-5", "--risk", "high")
-    # Sol is outside the declared author's family but authored a commit on the branch.
+    review = ("--base", base, "--mode", "read-only", *flags)
     dispatch(*review, agent="sol", model="gpt-6.1-sol", expected=2)
-    assert "['anthropic', 'openai']" in capsys.readouterr().err
-    assert dispatch(*review, agent="cursor", model="grok-4.7-high")["model"] == "grok-4.7-high"
+    assert refusal in capsys.readouterr().err
+    grok = ("--agent", "cursor", "--model", "grok-4.7-high")
+    if trailers and refusal.startswith("["):
+        if "--dry-run" in flags:
+            assert cli.main(["dispatch", *grok, "--prompt", "Review this change", *review]) == 0
+        else:
+            assert dispatch(*review, agent="cursor", model="grok-4.7-high")["model"] == "grok-4.7-high"
+    else:
+        # Unresolvable authorship and an empty range refuse every reviewer family.
+        dispatch(*review, agent="cursor", model="grok-4.7-high", expected=2)
