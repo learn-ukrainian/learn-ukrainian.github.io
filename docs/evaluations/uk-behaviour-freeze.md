@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-Protocol `uk-behaviour/1` extends [uk-preamble](uk-preamble.md), harness version
+Protocol `uk-behaviour/2` extends [uk-preamble](uk-preamble.md), harness version
 `uk-preamble-harness/3` and review scorer `uk-preamble-scoring/2`. This freezes
 the measurement contract for Sol and Terra through Codex on identical sets,
 before a bounded baseline. Terra is a measured candidate under this protocol,
@@ -32,9 +32,10 @@ Each split has exactly these slots. Every item has a unique opaque identifier.
 | Exercise review | A1 existing exercise requests, including one complete ordered exercise block for the answer-position case. Findings cover the stem, gloss, options, key and accepted alternatives. The adapter and prompt require G3 acceptance. | 12 | 12 | 12 |
 | Card review | `word_card_assembly.py`, `word_card_contrasts.py` and `golden-set-spec.md` supply deterministic production artifacts, not a model-review prompt. The G3 adapter reviews A1 meaning, stress and form assertions; it cannot replace deterministic assembly or invent source values. | 7 | 7 | 7 |
 | Passage review | `content-review-prompt.md`, applied to planted-error and clean A1/A2 passages; preserve source text except evidence-supported repairs. The harness captures corrected text and findings. | 12 | 12 | 12 |
-| Total independent items | Each family remains a separate report. | 36 | 36 | 36 |
+| Pedagogy review | One lesson, plan or exercise snippet with its target, learner state, prerequisites and available listening resources. The G3 adapter assesses pedagogy in the labelled mode against the three norms below. No production lesson is rewritten by this review. | 16 | 16 | 16 |
+| Total independent items | Each family remains a separate report. | 52 | 52 | 52 |
 
-Each split has 30 A1 requests and six A2 requests. The 31 review requests
+Each split has 46 A1 requests and six A2 requests. The 47 review requests
 serve the A1 sweep first. Fresh lessons have one A1 and one A2 request,
 fresh activities have one A1 fill-in and one A1 quiz request, and V7 has one
 A2 module. B1–C1 authoring belongs to the later build phase and requires a
@@ -74,8 +75,9 @@ protected spans. All remaining correct tokens still enter false-alarm scoring.
 
 Every non-passage item also has exactly three protected opportunities, one
 per stratum. The per-split family counts are six fresh-lesson, six fresh-activity,
-three V7, 36 exercise, 21 card and 48 passage opportunities, totaling 120, or
-40 per stratum. Every card and exercise request includes all three strata. These are contextual
+three V7, 36 exercise, 21 card, 48 passage and 48 pedagogy opportunities,
+totaling 168, or 56 per stratum. Every card, exercise and pedagogy request
+includes all three strata. These are contextual
 source assertions, cited references or permitted displays; they do not license
 out-of-inventory forms in scored activities or new vocabulary teaching. Fresh
 writers preserve the required reference and avoid false accusations; the
@@ -84,15 +86,160 @@ must be source-adjudicated in G1, including clean no-change expectations.
 
 The 64 seeds per split cover the existing scorer's 17 error types: three per
 type, with a fourth seed for the first 13 types in `common.ERROR_TYPES` order.
-No optional style preference is a planted error. The three splits total 108
-items, 192 seeds, 144 passage protected spans and 360 protected opportunities
-across all families. Three repeats give 324 candidate outcomes, including 576
-seed opportunities and 1,080 protected opportunities, of which 432 are passage spans.
+No optional style preference is a planted error. The three splits total 156
+items, 192 passage seeds, 144 passage protected spans and 504 protected
+opportunities across all families. Three repeats give 468 candidate outcomes,
+including 576 passage seed opportunities and 1,512 protected opportunities,
+of which 432 are passage spans.
 Those are per-row totals across all splits, not authorization to run final now.
 Sol and Terra each use the same items and repeats. Exercise defects and card
-facets have their own labelled counts in addition to the 192 passage seeds.
+facets and pedagogy defects have their own labelled counts in addition to the
+192 passage seeds. The existing six families keep every earlier slot.
 These are small exploratory denominators, not evidence of general Ukrainian
 competence. Safety results report raw counts and intervals per stratum.
+
+## Pedagogy, learner and judging modes
+
+Pedagogy is a separate judged dimension grounded in Ukrainian pedagogy, not
+English-language-teaching norms. Its dedicated review requests and judgments
+remain separate from language-review requests. These three norms bind its
+labels, qualification and rubric:
+
+| Norm | Role and frozen evidence |
+| --- | --- |
+| State Standard 2024 | Sets minimum coverage, including the A1 floor in [the mapping](../l2-uk-en/state-standard-2024-mapping.yaml) and [Standard text](../l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt), A1 lines 221–747. Use the sources table in [the A1 arc](../epics/fresh-build-a1-arc.md). The Standard is a floor, not a rigid lesson order or a ceiling; earlier teaching needs the arc's ULP evidence. A coverage omission is a defect at the point the plan promises that coverage. |
+| Ukrainian school textbooks | Show how a point is taught. Read corpus pages through Sources, with [textbook reading notes](../l2-uk-direct/textbook-reading-notes/) as navigation. Retain the printed page, source file, chunk locator, exact relevant span and content hash. A chunk's title or a reading-note summary alone cannot prove a teaching claim. |
+| Anna Ohoiko's method | Sets adult presentation and progression, grounded in ULP Seasons 1–2 and [the presentation pattern](../best-practices/ulp-presentation-pattern.md). Apply all seven practices with that document's fresh-A1 adaptations: Ukrainian before its English gloss; aligned bilingual passages; displayed stress supplied by the engine; Ukrainian dialogue before its breakdown; comprehension or practical recap with the prescribed early-A1 English support; translation practice in the workbook; direct teaching with Ukrainian cultural context and no borrowed narrator persona. Track the S1 through S6 progression without imposing later-season immersion on a beginner. S5–S6 trends described as unsampled in the reference are not calibrated thresholds. Use the method; never copy her text, scripts or persona. |
+
+Where these disagree, the Standard sets coverage and Ohoiko sets presentation
+and schedule. Textbook methods inform teaching, adapted to the learner.
+They do not override adult presentation. This precedence and the arc's
+chunk-first permission prevent a judge from treating any early case chunk or
+different school-book ordering as an automatic error.
+
+The learner in [north-star](../north-star.md) is a self-driven adult or older
+teen who reads English and may know no Ukrainian or Cyrillic. Keep sound
+before letter, Cyrillic decoding, a case first as a meaningful chunk and
+later as a system, explicit prerequisites, manageable sequencing and load.
+Do not import a primer's assumption that the learner is a six- or
+seven-year-old learning literacy itself. Pre-literacy drills, handwriting
+motor drills and childish framing are defects for this audience. Recognising
+printed or handwritten Cyrillic and learning Ukrainian sound-letter relations
+remain useful; merely being simple or appearing in a primer is not a defect.
+For example, Захарійчук 2025 part 1, printed p. 13, chunk
+`1-klas-bukvar-zaharijchuk-2025-1_s0012`, models identifying sounds. The
+Большакова reading notes place sounds on pp. 14–18 before letters on p. 19.
+Літвінова 2023 grade 6, p. 138, chunk
+`6-klas-ukrmova-litvinova-2023_s0143`, moves from contextual forms to the case
+system. These are teaching evidence, not instructions to copy child-facing
+exercises or to teach all seven cases as A1 systems.
+
+Every item, including existing families and clean controls, carries exactly
+one candidate-visible `judging_mode`, `repair` or `authoring`, and a matching
+private label. No judge infers mode from the candidate's output.
+The accepted G3 adapter carries mode in request metadata within permitted
+inputs. It adds no fifth fresh-writer input or production output field.
+
+- `repair` applies to the published `/a1-v1/` course, which was not built on
+  Ohoiko's method. Flag harm to the learner now: a wrong or ambiguous key,
+  answer leakage, an incomplete or unsuitable section, child-level material,
+  wrong stress or form, or contradiction of the Standard. A prerequisite or
+  load finding needs the supplied learner state and a concrete learning
+  failure. Deviation from Ohoiko's sequence alone is not a defect and cannot
+  justify rewriting the course into her method.
+- `authoring` applies to new-format `/a1/` and later levels. All three norms
+  bind under the precedence above, with the learner's level and production
+  contract. An approved chunk before its later grammatical system is valid.
+  New V7 and fresh-writer requests are authoring even when their prompts use
+  different production contracts.
+
+| Family per split | Repair | Authoring |
+| --- | ---: | ---: |
+| Fresh lesson | 0 | 2 |
+| Fresh activities | 0 | 2 |
+| V7 module | 0 | 1 |
+| Exercise review | 12 | 0 |
+| Card review | 7 | 0 |
+| Passage review | 8 | 4 |
+| Pedagogy review | 6 | 10 |
+| Total | 33 | 19 |
+
+The eight A1 passage requests use repair; the four A2 requests use authoring.
+All 16 pedagogy requests are A1. Each split therefore has 33 A1 repair
+requests and 19 authoring requests, 13 A1 and six A2. Mode is fixed before
+labels and identical for both candidates. Report completion, correctness,
+false corrections, preservation and pedagogy results by family and mode.
+Keep mode failures visible alongside aggregates. G1 freezes applicable pedagogy obligations
+for authoring outputs and concrete learner harms for repair outputs.
+
+### Listening input and video
+
+Collected video is listening input to plan into lessons, as the published A1
+does with its alphabet videos. Authoring-mode plans name each chosen video,
+its listening skill and where it is used. Lessons execute that plan. Ignoring
+an available, level-appropriate video for the stated listening skill is a
+pedagogy defect. Available means a retained resource with verified content,
+level, access and skill suitability in the sealed bundle. A catalogue tag or
+HTTP success alone is insufficient. No available suitable video means no
+missing-video accusation; an evidence gap remains explicit.
+
+The [2026-10-04 decision on the pilot](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8425#issuecomment-5977822358)
+requires videos shown whole with sound and picture. No hidden player,
+audio-only extraction, blocked or overlaid player, or hiding title, captions,
+thumbnail or letter until an answer. Use an unscored watch, listen and repeat
+activity where that is the approved format. This is a project presentation
+decision, not a linguistic inference. The immutable evidence bundle retains
+the decision bytes and locator; live video fetching during evaluation is
+forbidden. A missing-video item provides the candidate the relevant resource
+inventory and learner state, without revealing the planted label.
+
+### Frozen pedagogy item roster
+
+One row below can allocate several independent requests; each planted request
+has exactly one primary defect. Controls have zero defects. Every snippet
+includes enough lesson or plan context to judge the claimed target and
+prerequisites. The counts apply independently to development, selection and
+final; sources and alias clusters remain disjoint between splits.
+
+| Defect kind or control | Repair | Authoring | Snippet and required source anchor |
+| --- | ---: | ---: | --- |
+| Standard coverage or sequencing contradiction | 1 | 0 | Plan that omits or defers promised A1 coverage beyond its completion. Cite the exact Standard lines, for example 678–699 for case functions, plus the coverage map. A different order alone is not sufficient. |
+| Textbook sequencing failure | 0 | 1 | Lesson requiring letter decoding before the sound-letter preparation. Cite the actual primer pages and explain the prerequisite, using Большакова pp. 14–19 or corresponding Sources pages. |
+| Point before prerequisite or excessive load | 1 | 1 | Repair lesson and authoring plan. Cite learner-state evidence and the textbook page or Ohoiko chunk-to-system pattern that establishes the missing step. The repair case must demonstrate present learner harm. |
+| Child-level material | 1 | 1 | Repair lesson and authoring exercise. Cite the primer page from which the pre-literacy, motor drill or childish framing was imported, and the adult adaptation rule above. Do not label Cyrillic decoding itself as childish. |
+| Exercise does not practise stated target | 1 | 1 | Exercises whose required action bypasses the declared Ukrainian skill. Cite the target's Standard lines or textbook teaching page and explain the mismatch. |
+| Incomplete or unsuitable section | 1 | 0 | Lesson section missing the explanation or practice needed for its promised point. Cite its Standard or textbook anchor and the missing learner action. |
+| Answer given away | 0 | 1 | Exercise with its answer exposed before the attempt. Cite the Ohoiko practice 6 separation of teaching and workbook recall, the stated task and the exact leak. The existing repair exercise family retains all five leakage cases. |
+| Missing planned video | 0 | 1 | Plan ignoring a supplied suitable video for its listening skill. Cite Standard listening lines 233–277, the Ohoiko exposure-before-breakdown pattern, the retained video and the decision above. |
+| Hidden-player audio-only video use | 0 | 1 | Plan using a supplied video contrary to the decision. Cite the same pedagogy anchor and the retained decision and video locators. |
+| Ohoiko presentation failure | 0 | 1 | Lesson suppressing the supported Ukrainian encounter in favour of an English-first explanation or premature loss of English scaffolding. Cite the applicable numbered practice and S1/S2 progression, with the learner-state adaptation. |
+| Clean control | 1 | 2 | Repair lesson with harmless non-Ohoiko sequencing; authoring plan with a whole visible listening video; authoring exercise practising its target without leakage. Each carries positive source anchors and a no-change expectation. |
+| Total requests | 6 | 10 | Six lesson, five plan and five exercise snippets. |
+
+Thus each split has 13 planted pedagogy defects, five repair and eight
+authoring, plus three controls. Across three splits these are 39 defects and
+nine controls; three repeats yield 117 defect and 27 control opportunities
+per candidate row. Across the roster, controls also demonstrate useful
+teaching of sounds before letters and permitted chunk-before-system use.
+Keep false-correction counts on controls, including attempts to impose the
+Ohoiko sequence on repair material. Kind counts never replace request counts.
+Overlapping tags, such as leakage, remain secondary; do not double-count
+the same request as an existing exercise-family case.
+
+Every planted defect needs a source-entailing anchor before G1 can seal it:
+Standard file/hash and exact lines, textbook source/hash and printed page
+with retained Sources span, or Ohoiko numbered pattern/season and retained
+ULP S1–S2 evidence. The table fixes scenarios and required anchor types, not
+already-adjudicated gold. Record why the source entails the finding, its
+pedagogical role, mode applicability and adult adaptation. Video cases also
+retain the decision and resource locators. A reading note, model preference
+or corpus occurrence alone is insufficient. Unresolved source support blocks
+admission, with no replacement after outputs. Private Ohoiko text remains
+grounding-only and never enters candidate-authored lessons or public gold.
+The public examples above can seed development only. Selection and final use
+unexposed snippet clusters and source-entailing anchors. Shared normative
+references such as the Standard are evidence, not evaluated snippet clusters;
+reusing a norm never permits reusing an evaluated lesson, plan or exercise.
 
 ## Split custody and labels
 
@@ -138,7 +285,9 @@ development. Final reuse after disclosure needs a new sealed evaluation and
 approval; silent replacement, denominator reduction and post-output relabeling
 are forbidden. Contaminated slots remain invalid outcomes in the frozen report.
 
-Each private label records item and claim IDs, family, split, source cluster,
+Each private label records item and claim IDs, family, split, judging mode,
+learner state, stated target, prerequisites, primary defect kind or clean
+status, pedagogy norm and source-entailment/adaptation rationale, source cluster,
 exact Unicode span offsets, context, facet, acceptable answers or abstention,
 protection stratum, evidence locators, underlying dictionary identity, receipt
 IDs and ledger digest, source-content digests, adjudicator identity/family,
@@ -171,6 +320,9 @@ facet coverage for their assigned labels. G1 retains their qualification receipt
 Before any labels are adjudicated, the Sources custodian seals one immutable,
 read-only Sources snapshot for the whole programme, including VESUM, ULIF,
 СУМ-20, ВТС, corpus/textbook evidence and tool implementations/configuration.
+Include the Standard, mapping, arc, learner profile, Ohoiko patterns and S1–S2
+evidence, reading notes, video catalogue, retained video content evidence and
+the dated public video decision. Seal all evidence used for pedagogy labels.
 The private seal records content hashes for every backing data artifact,
 source unit, tool code and index, plus snapshot ID and access-isolation proof.
 Every label, candidate tool call, pack receipt and judge uses that snapshot.
@@ -189,6 +341,7 @@ separately and never attributed to improved Sources coverage.
 | Meaning | СУМ-20, ВТС or ULIF senses tied to the exact contextual sense. The full СУМ-20 staging collection has 164,838 articles under the operator's supplied inventory; MCP import is partial. ВТС import is partial and full acquisition is in progress. A missing MCP hit is a coverage gap, not a negative label. |
 | Historical usage | Грінченко as authentic historical attestation, with era/register retained. It does not alone establish a modern neutral teaching norm. |
 | Naturalness, teaching and history | Literary corpus, GRAC, textbooks and primary sources with context, provenance and pedagogical role. Frequency alone does not establish correctness or CEFR suitability. |
+| Pedagogy | Standard coverage, Sources textbook pages and Ohoiko method/progression under the learner and mode rules above. Retain the target, prerequisites, adult adaptation and source-entailment rationale; a sequence preference alone cannot establish repair harm. Video judgments also require the sealed decision and suitable resource evidence. |
 | Spelling, calques and style | Правопис 2019; both structured Антоненко-Давидович lookup and prose search, with facet-specific evidence. A lexical membership test cannot certify these facets. |
 
 `search_definitions` is СУМ-11. It is never a positive authority for meaning,
@@ -248,7 +401,7 @@ denominator changes repair such a cell.
 
 ## Immutable scorer and reward
 
-Scorer identity is `uk-behaviour-score/1`, the rules in this document plus the
+Scorer identity is `uk-behaviour-score/2`, the rules in this document plus the
 manifest's exact inherited scorer and receipt-code hashes. The semantic
 sidecar scorer and claim-binding integration are not yet implemented; their
 code, rubric, judge template and qualification bytes must be pinned before
@@ -257,7 +410,17 @@ normalization, judge setting or weight changes during later optimization.
 A defect voids comparisons and requires a separately approved version; it
 never permits rescoring selected failures under new rules.
 
-The report retains four independent primary scores for each family and split:
+The report retains four independent primary scores for each family and split.
+Pedagogy findings enter the same frozen assertion-slot, receipt and penalty
+rules as linguistic findings; missed planted defects reduce required-claim
+coverage, invented defects enter false corrections, and unsupported method
+claims earn no credit. A correct clean pedagogy review earns full credit.
+The dedicated pedagogy dimension also reports detection numerator/denominator
+by defect kind and mode, control false alarms and source-entailment coverage.
+No additional blended pedagogy average can offset a failed primary gate.
+Applicable pedagogy obligations also bind authoring completion labels; repair
+completion cannot require an Ohoiko rewrite. This changes no production
+reviewer prompts or dimension-call boundaries.
 
 | Score | Frozen rule |
 | --- | --- |
@@ -272,7 +435,7 @@ one erroneous answer does not become an omission. A source-verified clean or
 gap response can satisfy every slot without emitting a positive claim.
 
 The reward is computed per item, then averaged within each family before an
-equal-weight macro-average of the six families. Let `C` be contextual
+equal-weight macro-average of the seven families. Let `C` be contextual
 correctness, `T` binary task completion and `P` the fraction of protected
 opportunities preserved, or 1 when none were prescribed. `F` counts false
 corrections, including unsupported accusations; `S` counts positive-authority
@@ -326,7 +489,7 @@ baseline harms remain failures, not approved teaching. Use the inherited
 paired item bootstrap with 10,000 draws and 95% intervals, stratified within
 each family, then macro-averaged with equal family weights. Repeats are nested
 within items, never independent samples. Later acceptance requires the lower
-bound of the equal-weight six-family macro contextual-correctness improvement
+bound of the equal-weight seven-family macro contextual-correctness improvement
 strictly above zero. Task completion and false corrections are non-inferiority
 gates on point estimates separately in every family: completion difference
 must be at least zero and false-correction rate difference at most zero.
@@ -359,9 +522,10 @@ Sampling uses the provider default where the CLI has no control; record that
 rather than claiming a fixed temperature or seed. Token limits match each
 pinned production path and are concrete values or attested provider defaults.
 
-Card and exercise review lack accepted production model-review contracts.
-Their private prompt slots are `private://uk-behaviour-v1/card-review-prompt`
-and `private://uk-behaviour-v1/exercise-review-prompt`. The coordinator and
+Card, exercise and pedagogy review lack accepted production model-review
+contracts. Their private prompt slots are `private://uk-behaviour-v2/card-review-prompt`,
+`private://uk-behaviour-v2/exercise-review-prompt` and
+`private://uk-behaviour-v2/pedagogy-review-prompt`. The coordinator and
 evaluation maintainer must obtain advisor acceptance and pin their bytes under
 G3 before admission. The data seal cannot invent prompts after the freeze.
 Each family also seals maximum bytes, tokens, checkable claims and edits
@@ -383,24 +547,26 @@ The steward hides candidate identity, variant, repeat, timing, claimed reward
 and other judgments, and shuffles opaque outputs with seed 10453. Each output
 receives one absolute-rubric primary judgment. Before outputs, seed 10454
 selects the fixed audit sample, stratified by model and family within each
-full split. Both models and all six families occur in every full-split audit.
+full split. Both models and all seven families occur in every full-split audit.
+The pedagogy sample includes both judging modes for each row, including separate
+baseline and selected rows at final.
 Canary audits cover one exercise output from each model. The second judge
 works independently with Sources and the same rubric, without primary notes.
 
 | Phase | Candidate calls | Primary judge calls | Second judge calls | Paid calls | Wall seconds |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Development canary, two models × six families × one repeat | 12 | 12 | 2 | 26 | 31200 |
-| Development, two models × 36 items × three repeats | 216 | 216 | 22 | 454 | 544800 |
-| Selection baseline, same counts | 216 | 216 | 22 | 454 | 544800 |
-| Deferred final, up to four rows × 36 items × three repeats | 432 | 432 | 44 | 908 | 1089600 |
+| Development canary, two models × seven families × one repeat | 14 | 14 | 2 | 30 | 36000 |
+| Development, two models × 52 items × three repeats | 312 | 312 | 32 | 656 | 787200 |
+| Selection baseline, same counts | 312 | 312 | 32 | 656 | 787200 |
+| Deferred final, up to four rows × 52 items × three repeats | 624 | 624 | 64 | 1312 | 1574400 |
 | Reserved dispute adjudication, all phases combined | 0 | 0 | 12 | 12 | 14400 |
-| Programme maximum | 876 | 876 | 102 | 1854 | 2224800 |
+| Programme maximum | 1262 | 1262 | 142 | 2666 | 3199200 |
 
-The 90 scheduled second judgments audit 10.27% of the maximum 876 outputs;
+The 130 scheduled second judgments audit 10.30% of the maximum 1,262 outputs;
 12 dispute calls are separate and cannot substitute for the audit sample.
 An unchanged selected row removes its duplicate final calls and associated
 preselected audits, recorded before dispatch; there are no replacement items.
-Initial spend is at most 934 calls for canary, development and selection,
+Initial spend is at most 1,342 calls for canary, development and selection,
 plus disputes charged to the shared reserve. Two candidate models, a second
 judge and paired deferred variants explain the increase over a one-model
 baseline. This table is a ceiling, not execution or optimization approval.
@@ -410,7 +576,7 @@ candidate is selected; both frozen baselines run then, never earlier.
 
 Each invocation has a 1200-second hard timeout. Concurrency is at most two,
 with at most one live call per provider. Wall caps conservatively equal paid
-calls × timeout even if every call is serial; the sum is 618 execution hours.
+calls × timeout even if every call is serial; the sum is 888 hours 40 minutes.
 Each phase's elapsed cap includes queueing, Sources checks and audit overhead.
 Unused dispute reserve supplies at most four extra hours across phases.
 Calendar gaps before deferred final are outside these execution windows.
@@ -418,10 +584,11 @@ Whichever call, time, Sources or quota limit binds first stops new launches.
 This replaces the inconsistent single 48-hour cap.
 
 Before full spend, the paid development canary runs one presealed request per
-family per model, one repeat, plus its two audits. Canary requests are drawn
-from development only and are extra fresh-session calls, not retries or extra
+family per model, one repeat, plus its two audits. The pedagogy canary uses
+an authoring-mode video case from the presealed development roster. Canary
+requests are drawn from development only and are extra fresh-session calls, not retries or extra
 selection observations. Halt before the full development batch if more than
-10% of its 12 primary cells are `UNRESOLVED_EVALUATOR` (two cells suffice), any
+10% of its 14 primary cells are `UNRESOLVED_EVALUATOR` (two cells suffice), any
 receipt fabrication, contamination, snapshot drift or verified protected harm
 occurs, either audit has a material disagreement, or any required tool/route
 or quota is unknown. A candidate's wrong answer, refusal or size violation
@@ -440,10 +607,10 @@ a silent denominator reduction, relaxed threshold or budget extension.
 
 At most 32 Sources calls per tool-enabled candidate, primary judge, second
 judge, dispute invocation and deterministic scoring pass are allowed. There
-are at most 776 tool-enabled candidate calls: eight canary, 384 development and
-selection, and 384 final. The 100 fresh-writer calls have zero Sources calls.
-With 876 primary, 102 second/dispute judgments and 876 deterministic passes,
-the Sources ceiling is `32 * (776 + 876 + 102 + 876) = 84160` calls.
+are at most 1,162 tool-enabled candidate calls: ten canary, 576 development and
+selection, and 576 final. The 100 fresh-writer calls have zero Sources calls.
+With 1,262 primary, 142 second/dispute judgments and 1,262 deterministic passes,
+the Sources ceiling is `32 * (1162 + 1262 + 142 + 1262) = 122496` calls.
 Qualification and label adjudication must already be sealed and are not extra
 paid calls hidden in this budget. No retries, replacement generations or
 reflection are allowed. Timeouts, refusals and rate limits are typed outcomes;
@@ -470,7 +637,12 @@ zero false corrections on both clean passages and zero harmful protected
 corrections, with demonstrated meaning, stress, form and exercise-facet
 coverage. Seal supplementary qualification cases if the original packet lacks
 any required facet or protected stratum. Eight previously unverified Opus
-findings do not count. No qualification run occurs in this PR.
+findings do not count. Pedagogy qualification additionally needs independently
+adjudicated cases covering Standard coverage, textbook prerequisites, adult adaptation, all
+seven Ohoiko practices and progression, the repair-sequence clean control,
+chunk-before-system permission and both video defects. Each judge and label
+adjudicator must demonstrate these facets for assigned items in both modes.
+Unqualified pedagogy judgment blocks G2. No qualification run occurs in this PR.
 
 The report includes audit agreement by family and model on completion,
 claim correctness, F counts, protection and typed status, plus exact-agreement
@@ -514,19 +686,20 @@ substitute СУМ-11 for a missing modern authority.
 
 | Gap | Owner | Closure evidence required before baseline |
 | --- | --- | --- |
-| G1: private 108-item membership, label and exposure seals absent | Coordinator-appointed data steward | Three disjoint request and label bundles with hashes, all fixed counts, source receipts, adjudication and tested final isolation. |
+| G1: private 156-item membership, label and exposure seals absent | Coordinator-appointed data steward | Three disjoint request and label bundles with hashes, all fixed family/mode/kind counts, source-entailing pedagogy anchors, learner-state and video evidence, source receipts, adjudication and tested final isolation. |
 | G2: matching qualification packet and judge audit seals absent | Coordinator and original reviewer-trial custodian | Retained bytes, provenance, labels, exposure record and qualifications for both outside-family judges, both adjudicators and the distinct dispute adjudicator; sealed audit sample and dispute path. |
-| G3: production adapters, semantic scorer, card/exercise prompts and receipt binding absent | Coordinator and evaluation maintainer | Advisor acceptance and pinned bytes for both review prompts; existing uk-preamble runner extension; pinned code, rubric and judge templates; no-paid proof of the worked reward ordering, clean/gap and size-exhaustion branches and maximum-size evidence coverage within the judge cap. Preserve writer tool boundaries and held-out isolation. |
+| G3: production adapters, semantic scorer, card/exercise/pedagogy prompts and receipt binding absent | Coordinator and evaluation maintainer | Advisor acceptance and pinned bytes for all three review prompts; existing uk-preamble runner extension; pinned code, rubric and judge templates; no-paid proof of the worked reward ordering, clean/gap and size-exhaustion branches and maximum-size evidence coverage within the judge cap. Preserve writer tool boundaries and held-out isolation. |
 | G4: partial СУМ-20/ВТС coverage and absent immutable Sources/runtime seals | Sources custodian and baseline runner | Facet-appropriate retained evidence for every label, coverage gaps, full backing-data/tool hashes and read-only snapshot access proof for every role; pinned candidate/judge settings and per-phase hash verification. The public asset hashes are not a runnable baseline seal. |
 
-The initial phase stops at the canary breaker or when its 444 candidate cells,
-444 primary judgments and 46 scheduled audits have typed outcomes, with every
+The initial phase stops at the canary breaker or when its 638 candidate cells,
+638 primary judgments and 66 scheduled audits have typed outcomes, with every
 dispute accounted against the shared reserve. It reports failures, uncertainty,
-coverage gaps and owners. Deferred final has at most 432 candidate cells,
-432 primary judgments and 44 scheduled audits under separate GO. For final,
+coverage gaps and owners. Deferred final has at most 624 candidate cells,
+624 primary judgments and 64 scheduled audits under separate GO. For final,
 the public/coordinator report contains only aggregate
-metrics and typed cell counts by family; item-level failures, answers, judge
-notes and traces remain with the final steward and never reach a reflector.
+metrics and typed cell counts by family, mode and defect kind. Item-level
+failures, answers, judge notes and traces remain with the final steward and
+never reach a reflector.
 Missing tools, unresolved labels, contaminated items, incomplete
 cells or exhausted budgets prohibit improvement claims. A baseline report is
 measurement, not an optimization result. No automatic reflection follows it.

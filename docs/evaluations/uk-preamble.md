@@ -16,6 +16,9 @@ The [Ukrainian behaviour evaluation freeze](uk-behaviour-freeze.md) extends
 this protocol for production tasks and receipt-backed outcome scoring. It
 compares Sol and Terra through Codex on A1-heavy development and selection
 sets, followed by simultaneous baseline/selected rows on a sealed final set.
+Its pedagogy dimension uses the State Standard, Ukrainian textbook teaching
+and Ohoiko's adult presentation method, with labelled repair and authoring
+modes and whole visible video as planned listening input.
 Both Sources judges and final adjudicators exclude scored families. Its
 zero-new-harmful-corrections gate supersedes the tolerance below only for
 that evaluation. It is a specification, not an implemented runner extension
