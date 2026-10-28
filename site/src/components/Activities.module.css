@@ -613,7 +613,7 @@
 .submitButton,
 .checkButton {
   background: var(--ifm-color-primary);
-  color: var(--lu-on-primary);
+  color: var(--lu-on-primary-fill);
   border-color: var(--ifm-color-primary);
 }
 
@@ -2302,7 +2302,7 @@
 }
 
 .badgeVariant {
-  background: #00897b;
+  background: #00796b;
 }
 
 .badgeMotif {

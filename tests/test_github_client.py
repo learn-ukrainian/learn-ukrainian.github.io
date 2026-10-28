@@ -2129,8 +2129,19 @@ def test_native_fallback_honours_budget_and_never_retries(tmp_path):
     assert len(core_calls) == 1
 
 
-def test_native_fallback_rate_limit_is_typed_and_stops_next_call(tmp_path):
+def test_native_fallback_rate_limit_is_typed_and_stops_next_call(tmp_path, monkeypatch):
     store, calls = client(tmp_path, [])
+    with store._db():
+        pass
+    connect = gh.sqlite3.connect
+
+    def read_only_disk(path, **kwargs):
+        db = connect(path, **kwargs)
+        if str(path) != ":memory:":
+            db.execute("PRAGMA query_only=ON")
+        return db
+
+    monkeypatch.setattr(gh.sqlite3, "connect", read_only_disk)
     seen = []
 
     def native(args, **kw):
@@ -2711,7 +2722,7 @@ def test_concurrent_success_preserves_newer_body_under_bound(tmp_path):
         assert db.execute("SELECT body,at FROM cache").fetchall() == [(b"2", 1001)]
 
 
-@pytest.mark.parametrize("failure", ["directory_is_file", "read_only_database", "corrupt_database"])
+@pytest.mark.parametrize("failure", ["directory_is_file", "read_only_database", "corrupt_database", "read_only_connection"])
 def test_cache_maintenance_fallback_keeps_bounded_memory_and_budget(tmp_path, monkeypatch, failure):
     cache = tmp_path / "cache"
     if failure == "directory_is_file":
@@ -2720,6 +2731,20 @@ def test_cache_maintenance_fallback_keeps_bounded_memory_and_budget(tmp_path, mo
         cache.mkdir()
         database = cache / "cache.sqlite3"
         database.write_bytes(b"not a database" if failure == "corrupt_database" else b"")
+        if failure == "read_only_connection":
+            connect = gh.sqlite3.connect
+            with connect(database) as db:
+                for statement in gh.CACHE_SCHEMA:
+                    db.execute(statement)
+                db.execute("INSERT INTO cache VALUES('old','row',?,'{}',0)", (b"1",))
+
+            def read_only_disk(path, **kwargs):
+                db = connect(path, **kwargs)
+                if str(path) != ":memory:":
+                    db.execute("PRAGMA query_only=ON")
+                return db
+
+            monkeypatch.setattr(gh.sqlite3, "connect", read_only_disk)
         if failure == "read_only_database":
             original = os.access
             monkeypatch.setattr(
@@ -2739,7 +2764,8 @@ def test_cache_maintenance_fallback_keeps_bounded_memory_and_budget(tmp_path, mo
         assert db.execute("SELECT remaining,reset FROM budget").fetchall() == [(0, 2000)]
 
 
-def test_bounded_cache_reads_release_probe_lock_and_budget_writes_do_not_prune(tmp_path, monkeypatch):
+def test_bounded_cache_reads_keep_shared_budget_during_writes_and_do_not_prune(tmp_path, monkeypatch):
+    """A sibling writer must not make admission lose the disk cache and budget."""
     store, _ = client(tmp_path, [response(1)])
     store.request("GET", "user")
     statements = []
@@ -2761,6 +2787,14 @@ def test_bounded_cache_reads_release_probe_lock_and_budget_writes_do_not_prune(t
         gh._store_budget(db, "other", "core", 5, 2000, now=1000)
     assert not any("DELETE FROM cache" in sql for sql in statements)
     assert store.cache_dir == tmp_path
+    # A sibling may hold the writer reservation while readers still have access.
+    # Admission must keep using the persisted budget, without a probe write.
+    with connect(tmp_path / "cache.sqlite3", timeout=0) as sibling:
+        sibling.execute("BEGIN IMMEDIATE")
+        blocked = store.request("GET", "user", fresh=True)
+        assert blocked.error == "github_rate_limited"
+        assert blocked.reset_at == 2000
+        assert store.cache_dir == tmp_path
     with connect(tmp_path / "cache.sqlite3") as db:
         assert db.execute("SELECT remaining FROM budget WHERE scope='other'").fetchone() == (5,)
 

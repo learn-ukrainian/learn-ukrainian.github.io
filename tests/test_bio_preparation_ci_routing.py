@@ -41,6 +41,7 @@ NON_PREPARATION_PATHS = (
     "scripts/build/v7_build.py",
     "tests/test_bio_preparation_ci_routing.py",
     "curriculum/l2-uk-en/plans/a1/greetings.yaml",
+    "curriculum/l2-uk-en/plans/bio/knyahynia-olha.yaml.bak",
     "wiki/figures/not-in-the-bio-manifest.md",
 )
 

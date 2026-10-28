@@ -6,26 +6,30 @@ deletes origin and local branches only with
 exact merged-PR, a closed PR whose head GitHub still publishes at
 ``refs/pull/<N>/head``, origin/main-ancestry, or (scratch names only)
 another-origin-ref proof re-verified against the live remote with
-``git ls-remote``, runs automatic Git maintenance, and writes an immutable
+``git ls-remote``, and writes an immutable
 JSON receipt. When this run's ``fetch --prune`` fails, every deletion that
 relies on remote containment is skipped as ``fetch_failed_no_remote_proof``.
 Orphaned ``.worktrees/**`` directories are reported but never deleted, and
 no worktree is removed: the dispatcher removes each task's own worktree when
 the task settles (FR-01b).
+The separate ``--git-maintenance`` mode runs only bounded foreground GC.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
 import fcntl
 import hashlib
 import json
 import os
 import re
+import signal
 import stat
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -39,13 +43,19 @@ from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.maintenance.claude_session_scratch import sweep_sessions
 from scripts.orchestration import backup_failure_alert, disk_watermark_alert, worktree_git
+from scripts.orchestration.execution_safe_git import GIT
 from scripts.orchestration.execution_safe_git import run_git as safe_git
+from scripts.orchestration.pool_headroom import _read_limit
 from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
 from scripts.review.isolation import sweep_review_temp_orphans
 
 SCHEMA_VERSION = "scheduled-git-hygiene.v3"
 DEFAULT_INTERVAL_MINUTES = 240
+GC_MEMORY_MAX = 2 * 1024**3
+GC_DEADLINE_SECONDS = 600
+CGROUP_ROOT = Path("/sys/fs/cgroup")
+SELF_CGROUP = Path("/proc/self/cgroup")
 
 
 def default_public_repo() -> Path:
@@ -82,7 +92,7 @@ def _fetch_origin(repo_root: Path) -> subprocess.CompletedProcess[str]:
     A fetch whose loose-object count trips ``maintenance.auto`` runs
     ``maintenance run --auto``, which expires every reflog and can run
     ``gc --auto`` before the branch cleanup below has run (#10856). The
-    explicit ``git gc --auto`` at the end of the run stays the only maintenance.
+    separate bounded GC service stays the only maintenance path.
     """
     args = (*worktree_git.GIT_NO_AUTO_MAINTENANCE, "fetch", "--prune", "origin")
     fetched = _run_git(repo_root, *args)
@@ -111,6 +121,10 @@ def _failure(proc: subprocess.CompletedProcess[str]) -> str:
     return detail.splitlines()[-1] if detail else f"exit {proc.returncode}"
 
 
+class _GitHygieneBusy(RuntimeError):
+    pass
+
+
 class _GitHygieneLock:
     def __init__(self, repo_root: Path) -> None:
         common_git_dir = worktree_git._common_git_dir(repo_root)
@@ -123,7 +137,7 @@ class _GitHygieneLock:
             fcntl.flock(self.handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as exc:
             self.handle.close()
-            raise RuntimeError(f"another scheduled Git hygiene run holds {self.path}") from exc
+            raise _GitHygieneBusy(f"another scheduled Git hygiene run holds {self.path}") from exc
 
     def __exit__(self, _exc_type: Any, _exc: Any, _tb: Any) -> None:
         if self.handle is not None:
@@ -921,15 +935,115 @@ def cleanup_untracked_local_branches(
     return results
 
 
+def _maintenance_limits() -> dict[str, int | float] | None:
+    """Read effective cgroup v2 limits, including stricter ancestors."""
+    try:
+        relative = next(line[3:] for line in SELF_CGROUP.read_text().splitlines() if line.startswith("0::"))
+        group = (CGROUP_ROOT / relative.lstrip("/")).resolve()
+        root = CGROUP_ROOT.resolve()
+        group.relative_to(root)
+        values: dict[str, list[int | float]] = {name: [] for name in ("memory", "swap", "tasks", "cpu")}
+        while group != root:
+            for name, filename in (("memory", "memory.max"), ("swap", "memory.swap.max"), ("tasks", "pids.max")):
+                limit = _read_limit(group / filename, "maintenance")
+                if isinstance(limit, str):
+                    return None
+                if limit is not None:
+                    values[name].append(limit)
+            quota, period = (group / "cpu.max").read_text().split()
+            if quota != "max":
+                values["cpu"].append(int(quota) / int(period))
+            group = group.parent
+        if not all(values.values()):
+            return None
+        limits = {name: min(items) for name, items in values.items()}
+        if 0 < limits["memory"] <= GC_MEMORY_MAX and limits["swap"] == 0 and 0 < limits["tasks"] <= 32 and 0 < limits["cpu"] <= 1:
+            return limits
+    except (OSError, ValueError, StopIteration, ZeroDivisionError):
+        pass
+    return None
+
+
+class _GCDeadlineExceeded(TimeoutError):
+    pass
+
+
+def _run_gc(repo_root: Path, lock_fd: int) -> subprocess.CompletedProcess[str]:
+    command = [
+        GIT, "-c", "gc.autoDetach=false", "-c", "gc.auto=6700", "-c", "gc.autoPackLimit=50",
+        "-c", "pack.threads=1", "-c", "pack.windowMemory=64m", "-c", "pack.deltaCacheSize=64m", "gc", "--auto",
+    ]
+    proc = subprocess.Popen(
+        command, cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        text=True, env=worktree_git.sanitized_git_env(), start_new_session=True, pass_fds=(lock_fd,),
+    )
+    try:
+        stdout, stderr = proc.communicate(timeout=GC_DEADLINE_SECONDS)
+    except subprocess.TimeoutExpired:
+        # Allow Git's signal handlers to remove its locks. Keep Git unreaped
+        # during this grace period so its process-group id cannot be reused.
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(proc.pid, signal.SIGTERM)
+        time.sleep(5)
+        # Closed pipes or an exited Git parent do not prove children exited.
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(proc.pid, signal.SIGKILL)
+        try:
+            proc.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            raise _GCDeadlineExceeded("GC deadline exceeded; SIGTERM and SIGKILL requested; output pipes remain open") from None
+        raise _GCDeadlineExceeded("GC deadline exceeded; SIGTERM grace and process-group SIGKILL requested") from None
+    return subprocess.CompletedProcess(command, proc.returncode, stdout, stderr)
+
+
 def _git_maintenance(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     if not apply:
-        return {"action": "would_run", "ok": True, "detail": "git gc --auto"}
-    proc = _run_git(repo_root, "gc", "--auto")
-    return {
-        "action": "ran",
-        "ok": proc.returncode == 0,
-        "detail": None if proc.returncode == 0 else _failure(proc),
-    }
+        return {"action": "would_run", "ok": True, "detail": "bounded foreground git gc --auto"}
+    try:
+        with _GitHygieneLock(repo_root):
+            state = worktree_git._common_git_dir(repo_root) / "lu-pre-push-gate"
+            state.mkdir(mode=0o700, exist_ok=True)
+            fd = os.open(state / "admission.lock", os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+            try:
+                # This excludes both serial EX and parallel SH validation, and
+                # keeps new validation out through GC and timeout recovery.
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                limits = _maintenance_limits()
+                if limits is None:
+                    return {"action": "refused_unbounded", "ok": False, "detail": "effective cgroup limits unavailable or too loose"}
+                automatic_disabled = (
+                    _run_git(repo_root, "config", "--get", "gc.auto").stdout.strip() == "0"
+                    and _run_git(repo_root, "config", "--bool", "--get", "maintenance.auto").stdout.strip() == "false"
+                )
+                if not automatic_disabled:
+                    return {"action": "refused_automatic", "ok": False, "detail": "ordinary Git requires gc.auto=0 and maintenance.auto=false"}
+                before = _run_git(repo_root, "count-objects", "-v")
+                proc = _run_gc(repo_root, fd)
+                after = _run_git(repo_root, "count-objects", "-v")
+                ok = proc.returncode == before.returncode == after.returncode == 0
+                return {
+                    "action": "ran", "ok": ok, "limits": limits,
+                    "changed": before.stdout != after.stdout if ok else None,
+                    "detail": None if ok else _failure(next(p for p in (proc, before, after) if p.returncode)),
+                }
+            finally:
+                os.close(fd)
+    except (_GitHygieneBusy, BlockingIOError):
+        return {"action": "deferred", "ok": True, "detail": "Git hygiene or validation holds admission"}
+    except _GCDeadlineExceeded as exc:
+        return {"action": "timeout", "ok": False, "detail": str(exc)}
+    except subprocess.TimeoutExpired:
+        return {"action": "timeout", "ok": False, "detail": "Git metadata query exceeded its timeout"}
+    except (OSError, RuntimeError) as exc:
+        return {"action": "error", "ok": False, "detail": f"bounded GC unavailable: {type(exc).__name__}"}
+
+
+def _maintenance_repo_result(repo_root: Path, *, apply: bool) -> dict[str, Any]:
+    result = _empty_repo_result(repo_root)
+    result["maintenance"] = _git_maintenance(repo_root, apply=apply)
+    if not result["maintenance"]["ok"]:
+        result["errors"].append(f"git maintenance failed: {result['maintenance']['detail']}")
+    return result
 
 
 def _registered_paths(repo_root: Path) -> set[Path]:
@@ -1069,12 +1183,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             f"{row['branch']}: {row.get('error') or row['reason']}" for row in branches if row["action"] == "error"
         )
         result["orphans"] = find_orphaned_worktree_directories(repo_root)
-        # #10856: git gc --auto rewrites every worktree logs/HEAD. Fetch above
-        # runs with automatic maintenance disabled; this explicit gc runs last.
-        maintenance = _git_maintenance(repo_root, apply=apply)
-        result["maintenance"] = maintenance
-        if not maintenance["ok"]:
-            result["errors"].append(f"git maintenance failed: {maintenance['detail']}")
+        result["maintenance"] = {"action": "scheduled_separately", "ok": True, "detail": None}
         if apply:
             try:
                 sweep_res = sweep_review_temp_orphans()
@@ -1142,9 +1251,11 @@ def build_receipt(
     *,
     apply: bool,
     observed_at: str | None = None,
+    git_maintenance: bool = False,
 ) -> dict[str, Any]:
     timestamp = observed_at or utc_now()
-    repositories = [_repo_result(path.resolve(), apply=apply) for path in repo_roots]
+    runner = _maintenance_repo_result if git_maintenance else _repo_result
+    repositories = [runner(path.resolve(), apply=apply) for path in repo_roots]
     errors = sum(len(repository["errors"]) for repository in repositories)
     orphans = sum(len(repository["orphans"]) for repository in repositories)
     origin_branches_deleted = sum(
@@ -1242,10 +1353,12 @@ def build_parser() -> argparse.ArgumentParser:
         epilog="""Examples:
   .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py
   .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py --repo-root . --apply
+  .venv/bin/python scripts/orchestration/scheduled_worktree_cleanup.py --git-maintenance --apply
 Outputs:
   Private JSON receipt and aggregate JSON on stdout. Dry-run is the default.
   --apply deletes proven-merged branches and refs, snapshots and proven-ended Claude scratch.
   Large batch_state files are reported for their owners; they are never auto-deleted.
+  --git-maintenance runs only GC under verified cgroup limits and validation admission.
 Exit codes:
   0 report written without errors; 1 cleanup errors; 2 invalid arguments.
 Related:
@@ -1258,6 +1371,10 @@ Related:
         type=Path,
         default=None,
         help="Repository root to sweep. Repeatable; default: configured public and private repositories. Example: .",
+    )
+    parser.add_argument(
+        "--git-maintenance", action="store_true",
+        help="Run only bounded foreground GC, without other hygiene. Default: hourly hygiene without GC.",
     )
     parser.add_argument("--apply", action="store_true", help="Apply safe cleanup candidates. Default: dry-run.")
     parser.add_argument(
@@ -1304,6 +1421,10 @@ def build_public_summary(
         repo_name = Path(raw_root).name if raw_root else "unknown"
         repos_summary[repo_name] = {
             "orphans_reported": len(repo_dict.get("orphans", [])),
+            "maintenance": {
+                key: value for key, value in (repo_dict.get("maintenance") or {}).items()
+                if key in {"action", "ok", "changed", "limits"}
+            },
             "errors": len(repo_dict.get("errors", [])),
             "rescue_candidates": ((repo_dict.get("rescue") or {}).get("summary") or {}).get("candidate", 0),
             "branches_deleted": (
@@ -1397,7 +1518,11 @@ def disk_watermark_alert_report(state_dir: Path) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     repo_roots = args.repo_root or args.default_repo_roots
-    receipt = build_receipt(repo_roots, apply=bool(args.apply))
+    receipt = build_receipt(repo_roots, apply=bool(args.apply), **({"git_maintenance": True} if args.git_maintenance else {}))
+    if args.git_maintenance:
+        receipt_path = write_receipt(receipt, args.receipt_dir.expanduser().resolve())
+        print(json.dumps(build_public_summary(receipt, receipt_path), ensure_ascii=False, sort_keys=True))
+        return 1 if receipt["summary"]["errors"] else 0
     home_session_retention = home_session_retention_check.build_report()
     receipt["home_session_retention"] = home_session_retention
     receipt["batch_state_retention"] = batch_state_retention_reports(repo_roots, apply=bool(args.apply))

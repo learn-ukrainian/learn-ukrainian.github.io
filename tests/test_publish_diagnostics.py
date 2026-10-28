@@ -9,6 +9,44 @@ from scripts.opsec.prepublish import PublishBlocked
 from scripts.publish import github as pub
 
 
+@pytest.mark.parametrize("extra", [
+    ["--comment-id", "8"], ["--comment-id=8"],
+    ["--body", "other"],
+    ["--repo", "unit/private"], ["--number", "1"],
+    ["--endpoint", "repos/unit/private/issues/comments/7"],
+])
+def test_comment_edit_cli_repeated_or_unknown_fields_refuse_before_transport(extra, capsys):
+    with pytest.raises(SystemExit) as exc:
+        pub.main(["comment-edit", "--repo", "unit/public", "--comment-id", "7", "--body", "clean", *extra],
+                 runner=lambda *a, **k: pytest.fail("transport called"))
+    assert exc.value.code == 2
+    assert capsys.readouterr().err == "OPSEC: invalid publisher arguments; use --help.\n"
+
+
+def test_comment_edit_cli_duplicate_body_files_refuse_before_read(capsys):
+    with pytest.raises(SystemExit) as exc:
+        pub.main(["comment-edit", "--comment-id", "7", "--body-file", "missing.md", "--body-file=other.md"],
+                 runner=lambda *a, **k: pytest.fail("transport called"))
+    assert exc.value.code == 2
+    assert capsys.readouterr().err == "OPSEC: invalid publisher arguments; use --help.\n"
+
+
+def test_comment_edit_cli_conflicting_body_sources_refuse_before_transport(capsys):
+    assert pub.main(["comment-edit", "--comment-id", "7", "--body", "clean", "--body-file", "missing.md"],
+                    runner=lambda *a, **k: pytest.fail("transport called")) == 2
+    assert "one text input" in capsys.readouterr().err
+
+
+def test_comment_edit_help_distinguishes_comment_id_from_issue_number(capsys):
+    with pytest.raises(SystemExit) as exc:
+        pub.main(["comment-edit", "--help"])
+    assert exc.value.code == 0
+    help_text = capsys.readouterr().out
+    assert "#issuecomment-ID" in help_text and "not a comment ID" in help_text
+    assert "--comment-id 123456 --body-file reply.md" in help_text
+    assert "Exit codes:" in help_text and "Outputs:" in help_text
+
+
 def alert(path="scripts/example.py", number=7, security_severity="high"):
     return {
         "number": number,

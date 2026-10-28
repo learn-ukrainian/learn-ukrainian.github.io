@@ -130,7 +130,8 @@ describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
     expect(html).not.toMatch(/<a class="lexicon-daily-card"/);
     expect(html).toContain('data-daily-card');
     expect(html).toContain('data-flipped="false"');
-    expect(html).toContain('role="button"');
+    expect(html).toContain('data-daily-flip');
+    expect(html).not.toContain('role="button"');
     expect(html).toContain("lexicon-daily-front");
     expect(html).toContain("lexicon-daily-back");
   });
@@ -172,13 +173,50 @@ describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
 
     gloss.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     expect(card).toHaveAttribute("data-flipped", "true");
-    expect(card).toHaveAttribute("aria-pressed", "true");
+    expect(card.querySelector("[data-daily-flip]")).toHaveAttribute("aria-pressed", "true");
 
     lemma.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     expect(card).toHaveAttribute("data-flipped", "true");
 
     toggleDailyCardFlip(card);
     expect(card).toHaveAttribute("data-flipped", "false");
+  });
+
+  test("the lemma link is not nested inside another control (axe nested-interactive)", () => {
+    document.body.innerHTML = renderDailyCardHtml(sampleWord);
+    const card = document.querySelector<HTMLElement>("[data-daily-card]")!;
+    const flip = card.querySelector<HTMLButtonElement>("[data-daily-flip]")!;
+    const lemma = card.querySelector<HTMLAnchorElement>("[data-daily-atlas-link]")!;
+
+    expect(card).not.toHaveAttribute("role");
+    expect(card).not.toHaveAttribute("tabindex");
+    expect(flip.tagName).toBe("BUTTON");
+    expect(flip.getAttribute("aria-label")).toContain("кошик");
+    expect(flip.contains(lemma)).toBe(false);
+    expect(card.querySelectorAll("[tabindex], button, a")).toHaveLength(2);
+  });
+
+  test("flipping hides the face that is out of view from assistive tech and focus", () => {
+    document.body.innerHTML = renderDailyCardHtml(sampleWord);
+    const card = document.querySelector<HTMLElement>("[data-daily-card]")!;
+    const front = card.querySelector<HTMLElement>(".lexicon-daily-front")!;
+    const back = card.querySelector<HTMLElement>(".lexicon-daily-back")!;
+
+    expect(front).not.toHaveAttribute("inert");
+    expect(back).toHaveAttribute("inert");
+    expect(back).toHaveAttribute("aria-hidden", "true");
+
+    toggleDailyCardFlip(card);
+    expect(front).toHaveAttribute("inert");
+    expect(front).toHaveAttribute("aria-hidden", "true");
+    expect(back).not.toHaveAttribute("inert");
+    expect(back).toHaveAttribute("aria-hidden", "false");
+  });
+
+  test("the level selector is a labelled group of toggle buttons, not a list", () => {
+    expect(dailyWordsSource).toContain('role="group" aria-labelledby="lexicon-daily-level-label"');
+    expect(dailyWordsSource).toContain('id="lexicon-daily-level-label"');
+    expect(dailyWordsSource).not.toContain('role="list" data-daily-levels');
   });
 
   test("DailyWords wires the shared card helpers", () => {

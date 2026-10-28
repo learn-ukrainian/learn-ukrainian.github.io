@@ -202,9 +202,33 @@ date involved. 400 is more than twice the measured peak of 156 first-parent
 commits in any 48 hours (`git rev-list --count --first-parent --since=...` was
 73 for the 48 hours ending 2026-10-16 18:05 UTC). History shorter than 400
 steps scans the whole branch, including the root. A git failure fails the job
-instead of narrowing the window. A never-scanned older range after a long
-outage is recovered by a manual full scan; that recovery gap is a named
-follow-up and is not part of this schedule.
+instead of narrowing the window.
+
+After a successful scheduled scan or explicit default-branch full-history
+audit, CI uploads the scanned head outside Git history as the 90-day artifact
+`secret-scan-covered-head-v1`. The next schedule reads GitHub artifact
+metadata for the latest eligible default-branch CI run. It uses that run's
+immutable head SHA, without downloading or extracting any archive. Artifacts
+from PRs, forks, other branches and other workflows are ignored. The lookup
+checks at most the latest 100 matching artifacts and fails if no eligible
+record remains. If that head predates the normal window, the scan widens to `last-scanned-head..HEAD`. A failed, cancelled
+or timed-out scan never advances the record. Concurrent runs can read
+an older record and repeat work safely; a record ahead of the checkout
+fails visibly. PR, queue and bounded manual scans never advance coverage.
+
+Missing, expired, corrupt, shallow or unrelated coverage fails the scheduled
+job visibly. To initialize coverage, or recover after such a failure, run
+CI on the default branch with `secret_scan_mode=full-history-audit`.
+Only a successful audit establishes coverage; findings must be resolved
+before retrying. The audit has a 60-minute budget. The normal scheduled
+and bounded manual budgets stay at five minutes; a recovery timeout keeps
+the previous record, so an explicit audit can recover the missed range.
+
+Manual dispatch defaults to `bounded`: a branch scans from its merge-base
+with the default branch to the dispatched SHA; a default-branch or already
+merged head scans the ancestry window at that SHA. Resolution errors fail.
+Only the exact `full-history-audit` input selects full history, including
+the root. An audit on another branch does not establish scheduled coverage.
 
 The action SHA pins the workflow script only. Both TruffleHog steps set the
 action input `version` to one exact release (`3.99.0` as of #10056). Omitting

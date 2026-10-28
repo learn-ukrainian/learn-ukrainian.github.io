@@ -39,7 +39,7 @@ def test_scheduled_scan_uses_a_real_range_and_leaves_pr_and_push_alone(tmp_path:
     assert triggers["schedule"]
     secret_scan = workflow["jobs"]["secret-scan"]
     scope_step = next(step for step in secret_scan["steps"] if step.get("id") == "secret-scan-scope")
-    assert "python3 scripts/ci/secret_scan_scope.py" in scope_step["run"]
+    assert "python3 -m scripts.ci.secret_scan_scope" in scope_step["run"]
     assert scope_step["env"]["EVENT_NAME"] == "${{ github.event_name }}"
     assert scope_step["env"]["DISPATCH_HEAD_SHA"] == "${{ github.sha }}"
     assert scope_step["env"]["DISPATCH_REF"] == "${{ github.ref }}"
@@ -78,7 +78,7 @@ def test_scheduled_scan_uses_a_real_range_and_leaves_pr_and_push_alone(tmp_path:
     subprocess.check_call(["git", "commit", "-am", "new"], cwd=tmp_path, env=env, timeout=30)
     head_sha = _git(tmp_path, "rev-parse", "HEAD")
 
-    scheduled = resolve_scan_scope("schedule", repo_root=tmp_path)
+    scheduled = resolve_scan_scope("schedule", schedule_last_scanned_head=head_sha, repo_root=tmp_path)
     assert scheduled.mode == "schedule"
     assert scheduled.reason == "branch-history"
     assert scheduled.trufflehog_base == ""

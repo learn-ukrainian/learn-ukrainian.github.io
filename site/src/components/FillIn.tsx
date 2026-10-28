@@ -2,29 +2,12 @@ import React, { useRef, useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown, shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
+import { pickChipColor } from './chipColors';
 import {
   chromeFacingBilingual,
   useActivityIsUkrainian,
   useChromeLocale,
 } from '../lib/i18n/useChromeLocale';
-
-// Generate consistent colors for option chips
-const CHIP_COLORS = [
-  '#E53935',
-  '#D81B60',
-  '#8E24AA',
-  '#5E35B1',
-  '#3949AB',
-  '#1E88E5',
-  '#039BE5',
-  '#00ACC1',
-  '#00897B',
-  '#43A047',
-  '#7CB342',
-  '#FB8C00',
-  '#F4511E',
-  '#6D4C41',
-];
 
 /**
  * An option or answer may be the empty string: nothing is inserted into the
@@ -34,11 +17,6 @@ const CHIP_COLORS = [
 const BLANK_SLOT = '\u00A0';
 /** <option value> stand-in for "" so it stays distinct from the unset placeholder. */
 const EMPTY_OPTION_VALUE = '__empty__';
-
-function getChipColor(text: string, index: number): string {
-  const charSum = text.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  return CHIP_COLORS[(charSum + index) % CHIP_COLORS.length];
-}
 
 export interface FillInQuestionProps {
   /**
@@ -108,7 +86,7 @@ export function FillInQuestion({
     return shuffled.map((entry, idx) => ({
       text: entry.text,
       origIndex: entry.origIndex,
-      color: getChipColor(entry.text, idx),
+      color: pickChipColor(entry.text, idx),
     }));
   }, [options]);
 
@@ -441,6 +419,7 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
               <span className={styles.fillInText}>
                 {parseMarkdown(parts[0])}
                 <select
+                  aria-label={isUkrainian ? `Пропуск ${index + 1} з ${items.length}` : `Blank ${index + 1} of ${items.length}`}
                   className={`${styles.fillInSelect} ${
                     showResults ? (isCorrect ? styles.correct : styles.incorrect) : ''
                   }`}

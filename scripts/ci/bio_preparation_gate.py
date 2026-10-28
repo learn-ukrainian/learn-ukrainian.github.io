@@ -28,6 +28,8 @@ REGISTRY_REL = "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
 
 def is_bio_preparation_path(raw_path: str, manifest_set: set[str]) -> bool:
     path = Path(raw_path)
+    if path.suffix == ".bak":  # plan backups are not capsules; history keeps prior versions
+        return False
     parts = path.parts
     wiki_slug = path.name.removesuffix(".sources.yaml") if raw_path.endswith(".sources.yaml") else path.stem
     return (

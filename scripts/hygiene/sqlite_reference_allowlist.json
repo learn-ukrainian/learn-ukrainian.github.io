@@ -188,12 +188,11 @@
   },
   {
     "path": "scripts/ci/data_tier.py",
-    "reference_count": 2,
+    "reference_count": 1,
     "kind": "writer",
     "target_db": "disposable CI source DB copy",
     "reason": "backs up into disposable test checkout",
     "calls": [
-      "sqlite3.connect(source.as_uri() + '?mode=ro', uri=True, timeout=30)",
       "sqlite3.connect(target)"
     ]
   },

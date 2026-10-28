@@ -117,7 +117,9 @@ def test_token_normalization(reply, expected):
 
 @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"], ids=["lf", "crlf", "cr"])
 @pytest.mark.parametrize("case,reply,expected", FROZEN_CONTAINER_CASES, ids=[c[0] for c in FROZEN_CONTAINER_CASES])
-def test_container_visibility_reaches_recorder_before_any_forge_effect(tmp_path, monkeypatch, case, reply, expected, newline):
+def test_container_visibility_reaches_recorder_before_any_forge_effect(
+    tmp_path, monkeypatch, case, reply, expected, newline
+):
     response = reply.replace("\n", newline)
     normalized = {"BLOCKED": "BLOCKED", "REQUEST_CHANGES": "CHANGES_REQUESTED"}
     observed = []
@@ -173,13 +175,16 @@ def test_capacity_failure_precedes_recorder_forge_effects(tmp_path, monkeypatch,
 
 
 @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
-@pytest.mark.parametrize("reply,expected", [
-    (OVERLAP_QUOTE, None),
-    (OVERLAP_QUOTE + "\nVERDICT: BLOCKED\n", "BLOCKED"),
-    (OVERLAP_QUOTE.replace("> para\nVERDICT", "> para\n\nVERDICT"), "APPROVED"),
-    ("- " * 9 + "x\n\n```\nVERDICT: APPROVE\n```\n", None),
-    ("- " * 9 + "x\n\n```\nVERDICT: APPROVE\n```\n\nVERDICT: APPROVE\n", "APPROVED"),
-])
+@pytest.mark.parametrize(
+    "reply,expected",
+    [
+        (OVERLAP_QUOTE, None),
+        (OVERLAP_QUOTE + "\nVERDICT: BLOCKED\n", "BLOCKED"),
+        (OVERLAP_QUOTE.replace("> para\nVERDICT", "> para\n\nVERDICT"), "APPROVED"),
+        ("- " * 9 + "x\n\n```\nVERDICT: APPROVE\n```\n", None),
+        ("- " * 9 + "x\n\n```\nVERDICT: APPROVE\n```\n\nVERDICT: APPROVE\n", "APPROVED"),
+    ],
+)
 def test_overlap_and_supported_depth_recorder_controls(tmp_path, monkeypatch, newline, reply, expected):
     response = reply.replace("\n", newline)
     effects = []
@@ -195,7 +200,9 @@ def test_overlap_and_supported_depth_recorder_controls(tmp_path, monkeypatch, ne
     else:
         with pytest.raises(recorder.RecordError, match="missing or ambiguous"):
             recorder.normalize_verdict(response)
-    with pytest.raises(recorder.RecordError, match="synthetic stop before forge" if expected else "missing or ambiguous"):
+    with pytest.raises(
+        recorder.RecordError, match="synthetic stop before forge" if expected else "missing or ambiguous"
+    ):
         recorder.record("review-one", task_root=tmp_path / "tasks", lock_root=tmp_path / "locks")
     assert effects == (["forge boundary"] if expected else [])
 
@@ -207,6 +214,69 @@ def test_full_nested_task_id_is_safe_and_loadable(tmp_path):
     assert reply == "VERDICT: APPROVE"
     with pytest.raises(recorder.RecordError, match="invalid task id"):
         recorder._task("codex/../review-one", tmp_path)
+
+
+@pytest.mark.parametrize("storage", ["hot", "archived", "replaced"])
+@pytest.mark.parametrize("rewrite", ["overwrite", "replace", "normalize_newlines"])
+def test_terminal_result_rewrite_refused_before_publication(tmp_path, monkeypatch, storage, rewrite):
+    """Accidental sidecar edits cannot publish a settled task's altered verdict (#10447)."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    records = tasks / "archive" if storage == "archived" else tasks
+    original = b"VERDICT: REQUEST_CHANGES\r\nA finding.\r\n"
+    if storage == "replaced":
+        # A force-new task reuses the hot name while the previous result is archived.
+        write_task(tasks / "archive", reply="VERDICT: APPROVE")
+    write_task(records, result_sha256=hashlib.sha256(original).hexdigest(), result_file="ignored.result")
+    if storage == "archived":
+        (tasks / "review-one.json").rename(tasks / "unused.json")
+    sidecar = records / "review-one.result"
+    sidecar.write_bytes(original)
+    altered = original.replace(b"\r\n", b"\n") if rewrite == "normalize_newlines" else b"VERDICT: APPROVE"
+    if rewrite == "replace":
+        replacement = records / "replacement.result"
+        replacement.write_bytes(altered)
+        replacement.replace(sidecar)
+    else:
+        sidecar.write_bytes(altered)
+    before = {suffix: (records / f"review-one.{suffix}").read_bytes() for suffix in ("json", "result")}
+
+    with pytest.raises(recorder.RecordError, match=r"terminal_result_digest_mismatch.*review-one.*writer unknown"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    assert before == {suffix: (records / f"review-one.{suffix}").read_bytes() for suffix in before}
+
+
+@pytest.mark.parametrize("storage", ["hot", "archived", "replaced"])
+@pytest.mark.parametrize("hash_state", ["matching", "absent", "null"])
+def test_terminal_result_hash_preserves_publication(tmp_path, monkeypatch, storage, hash_state):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    checkout = tmp_path / "checkout"
+    source = checkout / "scripts" / "unit.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("value = 1\n")
+    monkeypatch.setattr(recorder, "_repo_root", lambda: checkout)
+    original = f"VERDICT: APPROVE\r\nSee {source}:1\r\n".encode()
+    records = tasks / "archive" if storage == "archived" else tasks
+    if storage == "replaced":
+        write_task(tasks / "archive", reply="VERDICT: REQUEST_CHANGES", result_sha256="0" * 64)
+    updates = (
+        {}
+        if hash_state == "absent"
+        else {"result_sha256": hashlib.sha256(original).hexdigest() if hash_state == "matching" else None}
+    )
+    write_task(records, result_file="ignored.result", **updates)
+    if storage == "archived":
+        (tasks / "review-one.json").rename(tasks / "unused.json")
+    sidecar = records / "review-one.result"
+    sidecar.write_bytes(original)
+
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+    assert result["verdict"] == "APPROVED"
+    assert calls == {"posts": 1, "statuses": 1}
+    assert "VERDICT: APPROVE\nSee scripts/unit.py:1\n" in comments[0]["body"]
+    assert sidecar.read_bytes() == original
 
 
 @pytest.mark.parametrize("reply", ["No verdict", "VERDICT: APPROVE\nVERDICT: BLOCKED"])
@@ -544,8 +614,14 @@ def retargeted_review(monkeypatch, tmp_path):
     """A real branch whose PR base was cut after its OpenAI commit, leaving only a Claude tip in ``cut..head``."""
     repo, origin = tmp_path / "pr-repo", tmp_path / "pr-origin.git"
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    env.update(GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@example.invalid", GIT_COMMITTER_NAME="t",
-               GIT_COMMITTER_EMAIL="t@example.invalid", GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1")
+    env.update(
+        GIT_AUTHOR_NAME="t",
+        GIT_AUTHOR_EMAIL="t@example.invalid",
+        GIT_COMMITTER_NAME="t",
+        GIT_COMMITTER_EMAIL="t@example.invalid",
+        GIT_CONFIG_GLOBAL=os.devnull,
+        GIT_CONFIG_NOSYSTEM="1",
+    )
 
     def run(*args):
         command = ["git", "-C", str(repo), *args]
@@ -565,7 +641,10 @@ def retargeted_review(monkeypatch, tmp_path):
     listing = [
         {
             "sha": head,
-            "commit": {"message": run("show", "--no-patch", "--format=%B", head), "tree": {"sha": run("rev-parse", f"{head}^{{tree}}")}},
+            "commit": {
+                "message": run("show", "--no-patch", "--format=%B", head),
+                "tree": {"sha": run("rev-parse", f"{head}^{{tree}}")},
+            },
             "parents": [{"sha": cut}],
         }
     ]
@@ -1886,14 +1965,23 @@ def test_archived_review_task_and_reply_are_loadable(tmp_path, monkeypatch):
                 hot.with_suffix(".result").replace(cold.with_suffix(".result"))
             assert record._read_dispatch_record(task_id, tasks) == (task, path)
             assert record.resolve_reviewer_identity(task_id, tasks) == {
-                "model": "claude-opus-5-5", "harness": "claude", "family": "anthropic"
+                "model": "claude-opus-5-5",
+                "harness": "claude",
+                "family": "anthropic",
             }
             assert record.dispatch_prompt_sha256(task_id, tasks, **binding) == prompt_hash
             expected = f'reviewer:\n  prompt_sha256: "{prompt_hash}"\n'.encode()
-            assert record.attested_return(
-                data, task_id=task_id, tasks_dir=tasks, manifest_path=tmp_path / "manifest",
-                root=tmp_path, **binding,
-            ) == expected
+            assert (
+                record.attested_return(
+                    data,
+                    task_id=task_id,
+                    tasks_dir=tasks,
+                    manifest_path=tmp_path / "manifest",
+                    root=tmp_path,
+                    **binding,
+                )
+                == expected
+            )
             for changed in (
                 {"status": "running"},
                 {"result_sha256": "c" * 64},
@@ -2846,7 +2934,9 @@ def test_unknown_history_excludes_all_possible_author_families():
     default = resolve_reviewer(facts.resolver_inputs(risk="critical", claude_account=HOST_ACCOUNT))
     assert default.selected is None
     assert default.trace and all(row.status not in {"eligible", "selected"} for row in default.trace)
-    red_team = resolve_reviewer(facts.resolver_inputs(risk="critical", claude_account=HOST_ACCOUNT), review_mode="red_team")
+    red_team = resolve_reviewer(
+        facts.resolver_inputs(risk="critical", claude_account=HOST_ACCOUNT), review_mode="red_team"
+    )
     assert red_team.selected is not None
     assert red_team.review_mode == "red_team"
     assert red_team.limitation

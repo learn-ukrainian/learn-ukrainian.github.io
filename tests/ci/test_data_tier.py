@@ -1023,21 +1023,42 @@ def test_process_group_stops_descendants_on_timeout_or_interruption(
 
 
 @pytest.mark.parametrize("only", [None, "tests/test_input.py"])
-def test_snapshots_keep_logical_stores_outside_checkout(tmp_path, only):
+@pytest.mark.parametrize("binding", ["default", "override", "missing", "invalid"])
+def test_snapshots_keep_logical_stores_outside_checkout(tmp_path, monkeypatch, only, binding):
+    """Snapshots honor logical-store overrides and never fall back on refusal."""
     primary = tmp_path / "primary"
     (primary / "data").mkdir(parents=True)
     checkout = tmp_path / "checkout"
     checkout.mkdir()
     snapshots = tmp_path / "scratch"
+    overrides = tmp_path / "override ?#%"
+    overrides.mkdir()
     for name in data_tier.HOST_DATABASES:
         with sqlite3.connect(primary / "data" / name) as connection:
             connection.execute("CREATE TABLE witness (value TEXT)")
             connection.execute("INSERT INTO witness VALUES ('snapshot')")
-    assert data_tier.snapshot_databases(primary, checkout, snapshots, only=only) == []
+        if name != "atlas.db":
+            key = f"LU_{name.removesuffix('.db').upper()}_DB"
+            monkeypatch.delenv(key, raising=False)
+            if binding == "override":
+                path = overrides / name
+                with sqlite3.connect(path) as connection:
+                    connection.execute("CREATE TABLE witness (value TEXT)")
+                    connection.execute("INSERT INTO witness VALUES ('override')")
+                monkeypatch.setenv(key, str(path))
+            elif binding != "default":
+                monkeypatch.setenv(key, str(overrides / name) if binding == "missing" else "file:refused.db")
+    missing = data_tier.snapshot_databases(primary, checkout, snapshots, only=only)
+    assert missing == (["sources.db", "vesum.db"] if binding in ("missing", "invalid") else [])
     for name in ("sources.db", "vesum.db"):
         assert not (checkout / "data" / name).exists()
+        if missing:
+            assert not (snapshots / name).exists()
+            continue
         with sqlite3.connect((snapshots / name).as_uri() + "?mode=ro", uri=True) as connection:
-            assert connection.execute("SELECT value FROM witness").fetchone() == ("snapshot",)
+            assert connection.execute("SELECT value FROM witness").fetchone() == (
+                "override" if binding == "override" else "snapshot",
+            )
     assert (checkout / "data" / "atlas.db").exists() == (only is None)
 
 
@@ -1135,7 +1156,7 @@ def test_nightly_reports_snapshot_cleanup_failure(nightly, monkeypatch):
 
 
 @pytest.mark.parametrize("available", [True, False])
-def test_data_tier_child_executes_in_real_linked_worktree(tmp_path, available):
+def test_data_tier_child_executes_in_real_linked_worktree(tmp_path, monkeypatch, available):
     """Exercise backup -> overrides -> resolver -> required child with real Git."""
     primary = tmp_path / "primary"
     primary.mkdir()
@@ -1153,6 +1174,8 @@ def test_data_tier_child_executes_in_real_linked_worktree(tmp_path, available):
     (checkout / "scripts").mkdir()
     (checkout / "data").mkdir()
     (primary / "data").mkdir()
+    for store in ("SOURCES", "VESUM"):
+        monkeypatch.delenv(f"LU_{store}_DB", raising=False)
     if available:
         for name in ("sources.db", "vesum.db"):
             with sqlite3.connect(primary / "data" / name) as connection:

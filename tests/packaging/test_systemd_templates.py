@@ -92,7 +92,7 @@ def test_data_volume_dropin_installer_applies_from_primary_checkout(
     )
     assert installer.main() == 0
     files = list(destination.glob("*.service.d/data-volume.conf"))
-    assert len(files) == 18
+    assert len(files) == 19
     assert all("@REPO_ROOT@" not in file.read_text(encoding="utf-8") for file in files)
     assert all("@PYTHON@" not in file.read_text(encoding="utf-8") for file in files)
     assert all("@PRIVATE_ROOT@" not in file.read_text(encoding="utf-8") for file in files)
@@ -101,3 +101,16 @@ def test_data_volume_dropin_installer_applies_from_primary_checkout(
         f"--repo-root {primary_root.parent / 'learn-ukrainian-infra-private'} --apply"
         in (destination / "learn-ukrainian-worktree-gc.service.d/data-volume.conf").read_text(encoding="utf-8")
     )
+
+
+def test_git_maintenance_limits_and_schedule() -> None:
+    from scripts.orchestration.scheduled_worktree_cleanup import GC_DEADLINE_SECONDS, GC_MEMORY_MAX
+
+    service = (PACKAGING / "learn-ukrainian-git-maintenance.service").read_text()
+    assert GC_MEMORY_MAX == 2 * 1024**3
+    assert {"MemoryMax=2G", "MemorySwapMax=0", "CPUQuota=100%", "TasksMax=32", "KillMode=control-group"} <= set(service.splitlines())
+    timeout = int(next(line.split("=", 1)[1] for line in service.splitlines() if line.startswith("TimeoutStartSec=")))
+    # Both repositories run sequentially; each may consume its full deadline.
+    assert timeout > 2 * GC_DEADLINE_SECONDS + 20
+    timer = (PACKAGING / "learn-ukrainian-git-maintenance.timer").read_text()
+    assert {"OnCalendar=*-*-* 03:30:00 UTC", "Persistent=false"} <= set(timer.splitlines())

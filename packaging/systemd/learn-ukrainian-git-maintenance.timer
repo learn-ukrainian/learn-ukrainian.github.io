@@ -1,0 +1,10 @@
+[Unit]
+Description=Quiet-hour Git maintenance
+
+[Timer]
+OnCalendar=*-*-* 03:30:00 UTC
+Persistent=false
+Unit=learn-ukrainian-git-maintenance.service
+
+[Install]
+WantedBy=timers.target

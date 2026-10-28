@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import shutil
+import signal
 import subprocess
+import sys
 import tempfile
 import time
 from datetime import UTC, datetime, timedelta
@@ -624,8 +627,8 @@ def _arm_auto_maintenance(repo: Path) -> None:
         assert proc.returncode == 0, proc.stderr
 
 
-def test_fetch_never_starts_maintenance_and_gc_runs_last(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Fetch must not start maintenance; the explicit gc runs last (#10856)."""
+def test_hourly_fetch_never_starts_maintenance(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Hourly hygiene never starts GC, including when fetch would trigger it."""
     repo = _repo(tmp_path)
     _arm_auto_maintenance(repo)
     control = tmp_path / "control.trace"
@@ -692,37 +695,259 @@ def test_fetch_never_starts_maintenance_and_gc_runs_last(tmp_path: Path, monkeyp
 
     result = cleanup._repo_result(repo, apply=True)
 
-    assert timeline == ["fetch", "fetch", "fetch", "gc"]
+    assert timeline == ["fetch", "fetch", "fetch"]
     assert fetched == [("-c", "maintenance.auto=false", "-c", "gc.auto=0", "fetch", "--prune", "origin")] * 3
     assert result["fetch"]["ok"] is True
     assert fetch_traces and not any(_maintenance_child(argv) for blob in fetch_traces for argv in _trace_children(blob))
-    assert result["maintenance"]["action"] == "ran"
+    assert result["maintenance"]["action"] == "scheduled_separately"
     assert result["maintenance"]["ok"] is True
 
 
-def test_git_maintenance_failure_is_reported(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
+def test_git_maintenance_failure_is_reported(tmp_path: Path, monkeypatch) -> None:
     repo = _repo(tmp_path)
-    monkeypatch.setattr(cleanup.worktree_git, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
-    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
-    monkeypatch.setattr(
-        cleanup,
-        "_git_maintenance",
-        lambda _repo, *, apply: {
-            "action": "ran",
-            "ok": False,
-            "detail": "gc failed",
-        },
-    )
-
-    result = cleanup._repo_result(repo, apply=True)
-
+    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {
+        "action": "ran", "ok": False, "detail": "gc failed",
+    })
+    result = cleanup._maintenance_repo_result(repo, apply=True)
     assert result["errors"] == ["git maintenance failed: gc failed"]
+
+
+def _maintenance_repo(tmp_path: Path, monkeypatch) -> Path:
+    repo = _repo(tmp_path)
+    _git(repo, "config", "gc.auto", "0")
+    _git(repo, "config", "maintenance.auto", "false")
+    _git(repo, "config", "gc.autoDetach", "true")
+    monkeypatch.setattr(cleanup, "_maintenance_limits", lambda: {
+        "memory": 2 * 1024**3, "swap": 0, "cpu": 1, "tasks": 32,
+    })
+    return repo
+
+
+def _pack_threshold(repo: Path) -> None:
+    # More than Git's default autoPackLimit, all reachable and nonempty.
+    for index in range(52):
+        (repo / f"object-{index}").write_text(f"reachable object {index}\n")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-m", "pack input")
+    objects = _git(repo, "rev-list", "--objects", "--all").splitlines()
+    for row in objects:
+        subprocess.run(
+            [cleanup.GIT, "pack-objects", str(repo / ".git/objects/pack/pack")],
+            cwd=repo, input=row.split()[0] + "\n", text=True, capture_output=True,
+            check=True, env=_git_env(), timeout=30,
+        )
+
+
+@pytest.mark.parametrize("lock_name,mode", [
+    ("lu-pre-push-gate/admission.lock", "shared"),
+    ("lu-pre-push-gate/admission.lock", "exclusive"),
+    ("scheduled-git-hygiene.lock", "exclusive"),
+])
+def test_maintenance_defers_for_live_validation_and_maintenance(tmp_path: Path, monkeypatch, lock_name, mode) -> None:
+    """A second process excludes maintenance through existing SH/EX admission or hygiene locks."""
+    repo = _maintenance_repo(tmp_path, monkeypatch)
+    lock = repo / ".git" / lock_name
+    lock.parent.mkdir(exist_ok=True)
+    holder = subprocess.Popen(
+        [sys.executable, "-c",
+         "import fcntl,sys; f=open(sys.argv[1], 'a+'); "
+         "fcntl.flock(f, fcntl.LOCK_SH if sys.argv[2]=='shared' else fcntl.LOCK_EX); "
+         "print('ready', flush=True); sys.stdin.readline()", str(lock), mode],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
+    )
+    try:
+        assert holder.stdout.readline().strip() == "ready"
+        result = cleanup._git_maintenance(repo, apply=True)
+        assert result["action"] == "deferred", result
+        assert result["ok"] is True
+        assert not (repo / ".git/gc.pid").exists()
+    finally:
+        holder.communicate("release\n", timeout=10)
+    assert holder.returncode == 0
+    result = cleanup._git_maintenance(repo, apply=True)
+    assert result["ok"] is True, result
+    assert result["changed"] is False
+
+
+def test_foreground_maintenance_preserves_objects_and_holds_admission_in_git_tree(tmp_path: Path, monkeypatch) -> None:
+    """Real repack cannot bypass admission, detach, or lose refs, staged objects or active worktrees."""
+    repo = _maintenance_repo(tmp_path, monkeypatch)
+    _pack_threshold(repo)
+    active = tmp_path / "active"
+    _git(repo, "worktree", "add", "-b", "active", str(active))
+    (active / "README.md").write_text("uncommitted learner work\n")
+    _git(active, "add", "README.md")
+    staged = _git(active, "rev-parse", ":README.md")
+    refs = _git(repo, "show-ref")
+    objects = _git(repo, "rev-list", "--objects", "--all")
+    worktrees = _git(repo, "worktree", "list", "--porcelain")
+    incident = repo / ".git/objects/pack/tmp_pack_incident"
+    incident.write_bytes(b"preserve incident evidence")
+    probe = tmp_path / "admission-proof"
+    lock = repo / ".git/lu-pre-push-gate/admission.lock"
+    hook = repo / ".git/hooks/pre-auto-gc"
+    hook.write_text(
+        f"#!{sys.executable}\nimport fcntl, os\n"
+        f"lock = {str(lock)!r}\nf = open(lock, 'r+')\n"
+        "try:\n fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)\n"
+        "except BlockingIOError:\n"
+        f" open({str(probe)!r}, 'w').write('excluded')\n"
+        "else:\n raise SystemExit('GC bypassed validation admission')\n"
+    )
+    hook.chmod(0o700)
+    trace = tmp_path / "gc.trace"
+    monkeypatch.setenv("GIT_TRACE2_EVENT", str(trace))
+    monkeypatch.setenv("GIT_TRACE2_CONFIG_PARAMS", "pack.threads,pack.windowMemory,pack.deltaCacheSize,gc.autoDetach")
+    result = cleanup._git_maintenance(repo, apply=True)
+    assert result["ok"] is True, result
+    assert result["changed"] is True
+    assert probe.read_text() == "excluded"
+    assert _git(repo, "count-objects", "-v").split("packs: ")[1].splitlines()[0] == "1"
+    assert _git(repo, "show-ref") == refs
+    assert _git(repo, "rev-list", "--objects", "--all") == objects
+    assert _git(repo, "worktree", "list", "--porcelain") == worktrees
+    _git(repo, "cat-file", "-e", staged)
+    assert "error:" not in _git(repo, "fsck", "--full")
+    assert (active / "README.md").read_text() == "uncommitted learner work\n"
+    assert incident.read_bytes() == b"preserve incident evidence"
+    events = [json.loads(line) for line in trace.read_text().splitlines()]
+    params = {(e.get("param"), e.get("value")) for e in events if e.get("event") == "def_param"}
+    assert {("pack.threads", "1"), ("pack.windowmemory", "64m"), ("pack.deltacachesize", "64m"), ("gc.autodetach", "false")} <= params
+    assert any("pack-objects" in child for child in _trace_children(trace.read_bytes()))
+    assert _git(repo, "config", "gc.auto") == "0"
+    assert _git(repo, "config", "maintenance.auto") == "false"
+
+
+def test_maintenance_refuses_unbounded_and_automatic_paths_and_writes_receipt(tmp_path: Path, monkeypatch, capsys) -> None:
+    """Unknown cgroups or ordinary auto-GC never silently publish successful maintenance."""
+    repo = _maintenance_repo(tmp_path, monkeypatch)
+    monkeypatch.setattr(cleanup, "_maintenance_limits", lambda: None)
+    receipt_dir = tmp_path / "receipts"
+    assert cleanup.main(["--repo-root", str(repo), "--git-maintenance", "--apply", "--receipt-dir", str(receipt_dir)]) == 1
+    receipt = json.loads(next(receipt_dir.glob("*.json")).read_text())
+    assert receipt["repositories"][0]["maintenance"]["action"] == "refused_unbounded"
+    assert json.loads(capsys.readouterr().out)["summary"]["errors"] == 1
+    monkeypatch.setattr(cleanup, "_maintenance_limits", lambda: {"memory": 2**31, "swap": 0, "tasks": 32, "cpu": 1})
+    _git(repo, "config", "maintenance.auto", "true")
+    assert cleanup._git_maintenance(repo, apply=True)["action"] == "refused_automatic"
+    _git(repo, "config", "maintenance.auto", "false")
+    assert cleanup._git_maintenance(repo, apply=True)["ok"] is True
+
+
+@pytest.mark.parametrize("escaped", [False, True])
+def test_maintenance_timeout_terminates_git_tree_and_recovers(tmp_path: Path, monkeypatch, escaped: bool) -> None:
+    """Timeout cleanup removes real Git ref locks; escaped pipe holders report GC failure truthfully."""
+    repo = _maintenance_repo(tmp_path, monkeypatch)
+    _pack_threshold(repo)
+    refs = _git(repo, "show-ref")
+    hook = repo / ".git/hooks/pre-auto-gc"
+    pid_path = tmp_path / "hook.pid"
+    hook.write_text(f"#!/bin/sh\nexec {cleanup.GIT} update-ref refs/heads/main HEAD^\n")
+    transaction_hook = repo / ".git/hooks/reference-transaction"
+    transaction_hook.write_text(
+        f"#!{sys.executable}\nimport os, signal, sys, time\nfrom pathlib import Path\n"
+        "if sys.argv[1] != 'prepared': raise SystemExit(0)\n"
+        "def delay_term(*args):\n os.close(1)\n os.close(2)\n time.sleep(30)\n"
+        f"if {escaped!r}: os.setsid()\n"
+        "signal.signal(signal.SIGTERM, delay_term)\n"
+        f"Path({str(pid_path)!r}).write_text(str(os.getpid()))\nsignal.pause()\n"
+    )
+    hook.chmod(0o700)
+    transaction_hook.chmod(0o700)
+    monkeypatch.setattr(cleanup, "GC_DEADLINE_SECONDS", 0.5)
+    try:
+        receipt = cleanup.build_receipt([repo], apply=True, git_maintenance=True)
+    finally:
+        if escaped and pid_path.exists():
+            with contextlib.suppress(ProcessLookupError):
+                os.kill(int(pid_path.read_text()), signal.SIGKILL)
+    assert receipt["repositories"][0]["maintenance"]["action"] == "timeout"
+    assert receipt["summary"]["errors"] == 1
+    detail = receipt["repositories"][0]["maintenance"]["detail"]
+    assert "SIGTERM" in detail and "SIGKILL" in detail
+    assert ("output pipes remain open" in detail) is escaped
+    pid = int(pid_path.read_text())
+    stat_path = Path(f"/proc/{pid}/stat")
+    deadline = time.monotonic() + 5
+    while True:
+        try:
+            state = stat_path.read_text().split(") ", 1)[1][0]
+        except FileNotFoundError:
+            state = None
+        if state in {None, "Z"}:
+            break
+        assert time.monotonic() < deadline, f"GC child survived timeout: {state}"
+        time.sleep(0.01)
+    hook.write_text("#!/bin/sh\nexit 0\n")
+    transaction_hook.write_text("#!/bin/sh\nexit 0\n")
+    assert not (repo / ".git/refs/heads/main.lock").exists()
+    assert _git(repo, "show-ref") == refs
+    # A real ref write fails here if timeout cleanup stranded Git's lock.
+    _git(repo, "update-ref", "refs/heads/main", "HEAD")
+    monkeypatch.setattr(cleanup, "GC_DEADLINE_SECONDS", 30)
+    result = cleanup._git_maintenance(repo, apply=True)
+    assert result["ok"] is True, result
+    assert result["changed"] is True
+    assert _git(repo, "show-ref") == refs
+    assert "error:" not in _git(repo, "fsck", "--full")
+
+
+@pytest.mark.parametrize("memory,swap,tasks,cpu,expected", [
+    ("2147483648", "0", "32", "100000 100000", True),
+    ("max", "0", "32", "100000 100000", False),
+    ("2147483648", "max", "32", "100000 100000", False),
+    ("2147483648", "0", "max", "100000 100000", False),
+    ("2147483648", "0", "32", "max 100000", False),
+    ("garbled", "0", "32", "100000 100000", False),
+    ("3221225472", "0", "32", "100000 100000", False),
+    ("2147483648", "0", "64", "100000 100000", False),
+    ("2147483648", "0", "32", "200000 100000", False),
+    (None, "0", "32", "100000 100000", False),
+])
+def test_maintenance_requires_effective_kernel_bounds(tmp_path: Path, monkeypatch, memory, swap, tasks, cpu, expected) -> None:
+    """Missing, unlimited and malformed controller limits cannot admit a repack."""
+    root = tmp_path / "cgroup"
+    group = root / "maintenance"
+    group.mkdir(parents=True)
+    for name, value in {"memory.max": memory, "memory.swap.max": swap, "pids.max": tasks, "cpu.max": cpu}.items():
+        if value is not None:
+            (group / name).write_text(value)
+    proc = tmp_path / "self-cgroup"
+    proc.write_text("0::/maintenance\n")
+    monkeypatch.setattr(cleanup, "CGROUP_ROOT", root)
+    monkeypatch.setattr(cleanup, "SELF_CGROUP", proc)
+    assert (cleanup._maintenance_limits() is not None) is expected
+
+
+def test_maintenance_uses_stricter_ancestor_limits(tmp_path: Path, monkeypatch) -> None:
+    """An unlimited leaf can run only when every resource is bounded by an ancestor."""
+    root = tmp_path / "cgroup"
+    parent = root / "bounded"
+    leaf = parent / "leaf"
+    leaf.mkdir(parents=True)
+    for name, limit in {"memory.max": "2147483648", "memory.swap.max": "0", "pids.max": "32", "cpu.max": "100000 100000"}.items():
+        (parent / name).write_text(limit)
+        (leaf / name).write_text("max 100000" if name == "cpu.max" else "max")
+    proc = tmp_path / "self-cgroup"
+    proc.write_text("0::/bounded/leaf\n")
+    monkeypatch.setattr(cleanup, "CGROUP_ROOT", root)
+    monkeypatch.setattr(cleanup, "SELF_CGROUP", proc)
+    assert cleanup._maintenance_limits() == {"memory": 2147483648, "swap": 0, "tasks": 32, "cpu": 1}
+
+
+def test_metadata_query_timeout_does_not_claim_gc_was_killed(tmp_path: Path, monkeypatch) -> None:
+    """Failure before GC must describe the metadata timeout rather than invented GC termination."""
+    repo = _maintenance_repo(tmp_path, monkeypatch)
+    real_run = cleanup._run_git
+
+    def slow_metadata(root, *args):
+        if args[0] == "count-objects":
+            raise subprocess.TimeoutExpired("git count-objects", 120)
+        return real_run(root, *args)
+
+    monkeypatch.setattr(cleanup, "_run_git", slow_metadata)
+    result = cleanup._git_maintenance(repo, apply=True)
+    assert result == {"action": "timeout", "ok": False, "detail": "Git metadata query exceeded its timeout"}
 
 
 def test_receipt_write_is_atomic_and_private(tmp_path: Path) -> None:
