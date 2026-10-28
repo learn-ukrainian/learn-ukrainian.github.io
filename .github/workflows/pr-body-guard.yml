@@ -1,10 +1,8 @@
 name: PR body guard
 
 # Negated-closing-reference guard (#8505). ci.yml used to run this check inside
-# its Secret scan job, which is why ci.yml subscribed to `edited`; that made
-# every PR-body edit restart the full 15-minute CI on an unchanged commit. The
-# guard now lives here so `edited` re-checks only the body, while opened /
-# synchronize / reopened keep the guard enforced at push time (S2).
+# its Secret scan job. CI now also checks publication fields on edits through
+# the normal PR admission tier. Direct pushes get a publication scan here.
 #
 # Status: advisory. "CI Gate" remains the only required check; promoting this
 # status to required is a deliberate branch-protection change for the operator.
@@ -12,6 +10,7 @@ name: PR body guard
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
+  push:
 
 permissions:
   contents: read
@@ -19,12 +18,13 @@ permissions:
 concurrency:
   # Keyed by PR number: a rapid body edit cancels the previous guard run. The
   # job is a two-second linter, so cancellation is cheap and safe.
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   closing-references:
     name: Reject negated closing references
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -40,6 +40,30 @@ jobs:
         with:
           python-version-file: '.python-version'
       - name: Reject negated closing references
-        env:
-          PR_BODY: ${{ github.event.pull_request.body || '' }}
-        run: printf '%s' "$PR_BODY" | python3 scripts/audit/lint_pr_closing_references.py --stdin
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          from scripts.audit.lint_pr_closing_references import scan_text
+          body = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())['pull_request']['body']
+          violations = scan_text(body or '')
+          if violations:
+              print('PR body contains a negated closing reference; use Refs #N instead')
+          raise SystemExit(bool(violations))
+          PY
+
+  push-publication:
+    name: Scan pushed publication fields
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Scan publication fields
+        run: python3 scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"

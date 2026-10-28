@@ -72,22 +72,21 @@ export function renderDailyCardHtml(word: DailyWord): string {
   const gloss = `<span class="lexicon-daily-gloss lexicon-daily-gloss-empty">${CHROME_STRINGS.uk['practice.meaningUnavailable']}</span>`;
 
   return `<li class="lexicon-daily-item">
-      <div
-        class="lexicon-daily-card"
-        data-daily-card
-        data-flipped="false"
-        role="button"
-        tabindex="0"
-        aria-pressed="false"
-        aria-label="${lemmaLabel} — торкніться картки, щоб перевернути"
-      >
+      <div class="lexicon-daily-card" data-daily-card data-flipped="false">
+        <button
+          type="button"
+          class="lexicon-daily-flip"
+          data-daily-flip
+          aria-pressed="false"
+          aria-label="${lemmaLabel} — торкніться картки, щоб перевернути"
+        ></button>
         <div class="lexicon-daily-card-inner">
           <div class="lexicon-daily-face lexicon-daily-front">
             ${renderLemma(word)}
             <span class="lexicon-daily-flip-hint">${CHROME_STRINGS.uk['practice.meaningUnavailable']}</span>
             ${chips}
           </div>
-          <div class="lexicon-daily-face lexicon-daily-back" aria-hidden="true">
+          <div class="lexicon-daily-face lexicon-daily-back" aria-hidden="true" inert>
             ${gloss}
             ${renderExample(word)}
             ${chips}
@@ -103,35 +102,30 @@ export function isDailyCardAtlasLinkTarget(target: EventTarget | null): boolean 
   return Boolean(target.closest("[data-daily-atlas-link]"));
 }
 
+function setFaceHidden(face: HTMLElement | null, hidden: boolean): void {
+  if (!face) return;
+  face.setAttribute("aria-hidden", hidden ? "true" : "false");
+  face.toggleAttribute("inert", hidden);
+}
+
 export function toggleDailyCardFlip(card: HTMLElement): void {
   const next = card.getAttribute("data-flipped") !== "true";
   card.setAttribute("data-flipped", next ? "true" : "false");
-  card.setAttribute("aria-pressed", next ? "true" : "false");
-  const back = card.querySelector<HTMLElement>(".lexicon-daily-back");
-  if (back) back.setAttribute("aria-hidden", next ? "false" : "true");
-  const front = card.querySelector<HTMLElement>(".lexicon-daily-front");
-  if (front) front.setAttribute("aria-hidden", next ? "true" : "false");
+  card.querySelector("[data-daily-flip]")?.setAttribute("aria-pressed", next ? "true" : "false");
+  setFaceHidden(card.querySelector<HTMLElement>(".lexicon-daily-back"), !next);
+  setFaceHidden(card.querySelector<HTMLElement>(".lexicon-daily-front"), next);
 }
 
 /**
- * Event delegation for a daily-words list: chrome click/keyboard flips;
- * lemma link navigates and must not flip.
+ * Event delegation for a daily-words list: a click on the card flips it (the
+ * flip button makes that work from the keyboard); the lemma link navigates and
+ * must not flip.
  */
 export function bindDailyCardInteractions(list: HTMLElement): void {
   list.addEventListener("click", (event) => {
     if (isDailyCardAtlasLinkTarget(event.target)) return;
     const card = (event.target as Element | null)?.closest?.("[data-daily-card]");
     if (!(card instanceof HTMLElement) || !list.contains(card)) return;
-    event.preventDefault();
-    toggleDailyCardFlip(card);
-  });
-
-  list.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    if (isDailyCardAtlasLinkTarget(event.target)) return;
-    const card = event.target;
-    if (!(card instanceof HTMLElement) || !card.hasAttribute("data-daily-card")) return;
-    if (!list.contains(card)) return;
     event.preventDefault();
     toggleDailyCardFlip(card);
   });

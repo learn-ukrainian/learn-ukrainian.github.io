@@ -6,7 +6,7 @@
       "slug": "introduction-to-ukrainian",
       "phase": "A1.1",
       "title_uk": null,
-      "title_en": "Introduction to ukrainian",
+      "title_en": "Introduction to Ukrainian",
       "job": "Orient yourself in English: language identity, brief history, where spoken, alphabet overview, study method and outcomes",
       "skills": [],
       "is_checkpoint": false,
@@ -24,7 +24,7 @@
       "slug": "sounds-letters-and-hello",
       "phase": "A1.1",
       "title_uk": null,
-      "title_en": "Sounds letters and hello",
+      "title_en": "Sounds, letters and hello",
       "job": "Greet and take a first spoken turn; connect useful words with letters and supported writing",
       "skills": [
         "Li",
@@ -46,7 +46,7 @@
       "slug": "who-am-i",
       "phase": "A1.1",
       "title_uk": null,
-      "title_en": "Who am i",
+      "title_en": "Who am I?",
       "job": "Introduce yourself and ask identity; common professions and origin phrases",
       "skills": [
         "Li",
@@ -90,7 +90,7 @@
       "slug": "reading-ukrainian",
       "phase": "A1.1",
       "title_uk": null,
-      "title_en": "Reading ukrainian",
+      "title_en": "Reading Ukrainian",
       "job": "Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters",
       "skills": [
         "Li",
@@ -136,7 +136,7 @@
       "slug": "checkpoint-first-contact",
       "phase": "A1.1",
       "title_uk": null,
-      "title_en": "Checkpoint first contact",
+      "title_en": "Checkpoint: first contact",
       "job": "Complete an integrated first-contact task with previously introduced language",
       "skills": [
         "Li",
@@ -181,7 +181,7 @@
       "slug": "what-is-it-like",
       "phase": "A1.2",
       "title_uk": null,
-      "title_en": "What is it like",
+      "title_en": "What is it like?",
       "job": "Describe and identify familiar objects using nominative adjective agreement",
       "skills": [
         "Li",
@@ -204,7 +204,7 @@
       "slug": "colors",
       "phase": "A1.2",
       "title_uk": null,
-      "title_en": "Colors",
+      "title_en": "Colours",
       "job": "Use colours and agreeing hard/soft-group nominative descriptions of objects and appearance",
       "skills": [
         "Li",
@@ -227,7 +227,7 @@
       "slug": "how-many",
       "phase": "A1.2",
       "title_uk": null,
-      "title_en": "How many",
+      "title_en": "How many?",
       "job": "Understand and say numbers for prices, age, phone numbers",
       "skills": [
         "Li"
@@ -283,7 +283,7 @@
       "slug": "checkpoint-my-world",
       "phase": "A1.2",
       "title_uk": null,
-      "title_en": "Checkpoint my world",
+      "title_en": "Checkpoint: my world",
       "job": "Self-check: describe, count, point",
       "skills": [
         "R"
@@ -303,7 +303,7 @@
       "slug": "what-i-like",
       "phase": "A1.3",
       "title_uk": null,
-      "title_en": "What i like",
+      "title_en": "What I like",
       "job": "Say what you like doing: infinitive, люблю + infinitive",
       "skills": [],
       "is_checkpoint": false,
@@ -321,7 +321,7 @@
       "slug": "verbs-group-one",
       "phase": "A1.3",
       "title_uk": null,
-      "title_en": "Verbs group one",
+      "title_en": "Verbs, group one",
       "job": "Conjugate читати, працювати, іти, їхати in the present",
       "skills": [],
       "is_checkpoint": false,
@@ -339,7 +339,7 @@
       "slug": "verbs-group-two",
       "phase": "A1.3",
       "title_uk": null,
-      "title_en": "Verbs group two",
+      "title_en": "Verbs, group two",
       "job": "Conjugate сидіти and дивитися in the present, including the reflexive paradigm; distinguish the two conjugations",
       "skills": [],
       "is_checkpoint": false,
@@ -357,7 +357,7 @@
       "slug": "i-want-i-can",
       "phase": "A1.3",
       "title_uk": null,
-      "title_en": "I want i can",
+      "title_en": "I want, I can",
       "job": "Say what you want, can and must do using modal plus infinitive; conjugate могти in the present",
       "skills": [],
       "is_checkpoint": false,
@@ -415,7 +415,7 @@
       "slug": "checkpoint-actions",
       "phase": "A1.3",
       "title_uk": null,
-      "title_en": "Checkpoint actions",
+      "title_en": "Checkpoint: actions",
       "job": "Self-check: say what you do, want, ask",
       "skills": [
         "R"
@@ -435,7 +435,7 @@
       "slug": "what-time",
       "phase": "A1.4",
       "title_uk": null,
-      "title_en": "What time",
+      "title_en": "What time is it?",
       "job": "Ask and tell the time using ordinal forms in all three genders, including first, second and third; reuse date phrases at 23",
       "skills": [
         "Li",
@@ -476,7 +476,7 @@
       "slug": "weather",
       "phase": "A1.4",
       "title_uk": null,
-      "title_en": "Weather",
+      "title_en": "Weather and nature",
       "job": "Talk about weather, plants, pets and landscape",
       "skills": [
         "Li",
@@ -542,7 +542,7 @@
       "slug": "checkpoint-time-nature",
       "phase": "A1.4",
       "title_uk": null,
-      "title_en": "Checkpoint time nature",
+      "title_en": "Checkpoint: time and nature",
       "job": "Self-check: time, week plan, weather",
       "skills": [
         "R"
@@ -580,7 +580,7 @@
       "slug": "where-is-it",
       "phase": "A1.5",
       "title_uk": null,
-      "title_en": "Where is it",
+      "title_en": "Where is it?",
       "job": "Say where something is: locative nouns and agreeing hard/soft-group adjectives in all three genders",
       "skills": [],
       "is_checkpoint": false,
@@ -621,7 +621,7 @@
       "slug": "where-to",
       "phase": "A1.5",
       "title_uk": null,
-      "title_en": "Where to",
+      "title_en": "Where to?",
       "job": "Say where you are going: accusative direction with в, у, на and agreeing hard/soft-group adjectives in all three genders; де vs куди",
       "skills": [],
       "is_checkpoint": false,
@@ -682,7 +682,7 @@
       "slug": "where-from",
       "phase": "A1.5",
       "title_uk": null,
-      "title_en": "Where from",
+      "title_en": "Where from?",
       "job": "Say where you and things are from; parts of the world (continents); at the border",
       "skills": [
         "W"
@@ -702,7 +702,7 @@
       "slug": "checkpoint-places",
       "phase": "A1.5",
       "title_uk": null,
-      "title_en": "Checkpoint places",
+      "title_en": "Checkpoint: places",
       "job": "Self-check: find your way",
       "skills": [
         "R"
@@ -742,7 +742,7 @@
       "slug": "i-eat-i-drink",
       "phase": "A1.6",
       "title_uk": null,
-      "title_en": "I eat i drink",
+      "title_en": "I eat, I drink",
       "job": "Say what you eat and drink: accusative inanimate nouns and agreeing hard/soft-group adjectives in all three genders",
       "skills": [],
       "is_checkpoint": false,
@@ -760,7 +760,7 @@
       "slug": "at-the-cafe",
       "phase": "A1.6",
       "title_uk": null,
-      "title_en": "At the cafe",
+      "title_en": "At the café",
       "job": "Order and pay in a café; request dishes, drinks, crockery and cutlery",
       "skills": [
         "Li",
@@ -824,7 +824,7 @@
       "slug": "checkpoint-food-shopping",
       "phase": "A1.6",
       "title_uk": null,
-      "title_en": "Checkpoint food shopping",
+      "title_en": "Checkpoint: food and shopping",
       "job": "Self-check: order and buy",
       "skills": [
         "R"
@@ -844,7 +844,7 @@
       "slug": "hey-friend",
       "phase": "A1.7",
       "title_uk": null,
-      "title_en": "Hey friend",
+      "title_en": "Hey, friend!",
       "job": "Address people by name: vocative",
       "skills": [],
       "is_checkpoint": false,
@@ -949,7 +949,7 @@
       "slug": "checkpoint-communication",
       "phase": "A1.7",
       "title_uk": null,
-      "title_en": "Checkpoint communication",
+      "title_en": "Checkpoint: communication",
       "job": "Self-check: address, ask, connect",
       "skills": [
         "R",
@@ -970,7 +970,7 @@
       "slug": "what-happened",
       "phase": "A1.8",
       "title_uk": null,
-      "title_en": "What happened",
+      "title_en": "What happened?",
       "job": "Say what happened using past forms, including reflexive verbs and бути",
       "skills": [],
       "is_checkpoint": false,
@@ -1008,7 +1008,7 @@
       "slug": "what-will-happen",
       "phase": "A1.8",
       "title_uk": null,
-      "title_en": "What will happen",
+      "title_en": "What will happen?",
       "job": "Say what will happen using all future forms of бути and the compound imperfective future",
       "skills": [],
       "is_checkpoint": false,

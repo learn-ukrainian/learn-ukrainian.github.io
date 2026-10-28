@@ -265,16 +265,19 @@ def test_review_profile_types_review_tasks_only_and_default_is_unchanged(fake):
     assert dispatcher.expected_args_sha256("t-flash", seat, "review", prompt) != sha256_text(json.dumps(plain))
 
 
-def test_flash_dispatch_carries_no_effort(fake):
+@pytest.mark.parametrize("boundary", [None, "bubblewrap (bwrap) is not installed"])
+def test_flash_dispatch_carries_no_effort(fake, monkeypatch, boundary):
     dispatcher, prompt, state = fake
+    monkeypatch.setattr("scripts.dispatcher.agy_sandbox.unavailable", lambda: boundary)
     with pytest.raises(DispatchError, match="new evaluation run tag"):
         dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=True)
     dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=False)
     args = _calls(state)[-1]
     assert "--effort" not in args and "--force-new" not in args
     assert args[args.index("--agent") + 1] == "agy"
-    # Dispatch refuses AGY read-only, so the Flash seat runs workspace-write in its own dispatch worktree.
-    assert args[args.index("--mode") + 1] == "workspace-write" and "--cwd" not in args
+    # AGY runs read-only inside its bubblewrap boundary (C-3027); where that boundary cannot start, dispatch
+    # refuses read-only and the Flash seat runs workspace-write in its own dispatch worktree.
+    assert args[args.index("--mode") + 1] == ("workspace-write" if boundary else "read-only") and "--cwd" not in args
     assert args[args.index("--research-task-family") + 1] == "ukrainian-authoring"
 
 
@@ -352,7 +355,7 @@ def test_condition_problems_name_every_departure(tmp_path: Path):
     assert len(condition_problems(v2_bad, expected=v2_expected, args_sha256="a", mode="read-only")) == 7
     assert condition_problems({"schema_version": 2}, expected=v2_expected, args_sha256="a", mode="read-only")
     assert condition_problems(v2_good, expected=expected, args_sha256="a", mode="read-only")
-    # A seat whose provider refuses read-only (AGY) is held to workspace-write, and nothing else.
+    # A seat whose provider refuses read-only (AGY without its boundary) is held to workspace-write, and nothing else.
     assert condition_problems(v2_good, expected=v2_expected, args_sha256="a", mode="workspace-write") == [
         "mode is not workspace-write"
     ]

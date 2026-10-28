@@ -5729,6 +5729,10 @@
       "sha256": "5d45796b0a6fb52afb6c62c27ef9b47abede7c4e9bade3037a7a1e4e17331b5a"
     },
     {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/_titles_en.yaml",
+      "sha256": "1b82b22b0dc49da5e7b231daf73a68cacdd59f90a882aaab135ac9c84eb95009"
+    },
+    {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml",
       "sha256": "d7561a1505d84ad0646574c25999442e95a4657318350a61d77726a298269309"
     },
@@ -13914,39 +13918,39 @@
     },
     {
       "path": "site/src/content/docs/a1/at-the-cafe/index.mdx",
-      "sha256": "30368f62090c5e9b51275a1dc01e77eb2fc0b8c623abab0e6f387fedf8423e93"
+      "sha256": "cd60ec80f288972603e6e65e56ed13db2663b59ae96ced2d7fb7a031658bf449"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-actions/index.mdx",
-      "sha256": "bafc24e0cf66e50ec6dad1728dcf0034d8bef095017e81fa25fb7a98592801df"
+      "sha256": "51a7cc82aad43b096ce07b7c6fe79bb4db658014870611f8e435a2c956de270f"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-communication/index.mdx",
-      "sha256": "3a6bce48e0eff801e5ca257e7950d7c0fe4b47790f9919e8415e732677783e03"
+      "sha256": "821d501ef9fae3875f92b4c9ba1896326247b9c80c58a5a4043127bf7d1a2303"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-first-contact/index.mdx",
-      "sha256": "fd119e52e9e2a10ca13e23620e2146869e774957b76812017dae680990b143ee"
+      "sha256": "9fc07baa8dda1b44626facd82ece0c826969bb74aa1766ecee1ea2e0f86a697f"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-food-shopping/index.mdx",
-      "sha256": "d348da2b61cdef7c033f2fa14a3d26cd8cc4bfd86f9d6a2c75eef1202d9688c8"
+      "sha256": "9603a3689822eaa2205825eaf96ee7478e298960c3249b5f1b84b7d8470ecace"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-my-world/index.mdx",
-      "sha256": "84a51060d84cc380a0557f3e9402c24a5bec37e437741a5ca5d9148371030c7f"
+      "sha256": "6f0b900b5a508387257f1d9c537ac9fcd1fede6790d3b2f7b6e5828a2d417d36"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-places/index.mdx",
-      "sha256": "9cdb71d568d0a5a79c9f5457821b4048695194d66c0b27072b15aede362849c2"
+      "sha256": "020a62b202307fc7393cfb115feec54846b774abbf6dae0f72a3f9b1db50ec0a"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-time-nature/index.mdx",
-      "sha256": "042ec3c8c4aa090bf8b78085d03a70085ecdcb2e96b561a2790b2b04cd1ee9de"
+      "sha256": "300e7c6cfaa32b9a013f14842fc588650a70de53da8fbca539cc15a7b8f0acd9"
     },
     {
       "path": "site/src/content/docs/a1/colors/index.mdx",
-      "sha256": "3bd7c5d90458aaa201bb3c25567f103d31bc32edd8895b79b833975e6aa0b51d"
+      "sha256": "aa8eb2509f30eb9391d9b9137267747c93a1e10ea05f736c3b21e08100bafc47"
     },
     {
       "path": "site/src/content/docs/a1/days-and-months/index.mdx",
@@ -13978,7 +13982,7 @@
     },
     {
       "path": "site/src/content/docs/a1/hey-friend/index.mdx",
-      "sha256": "c3cca2e3d077c2f96ef0c58cdbd847dd54618a768f9c0f29b4800cfe3195f37d"
+      "sha256": "6ce5f82d4fdb6d3b75343ad9b78b29e0056e2feccc86b14f2434f95fe855d9fd"
     },
     {
       "path": "site/src/content/docs/a1/holidays/index.mdx",
@@ -13986,15 +13990,15 @@
     },
     {
       "path": "site/src/content/docs/a1/how-many/index.mdx",
-      "sha256": "aaca20889ed6a3766eeec334c9ab5e75a77167f3832399f28e4d521a58330115"
+      "sha256": "ca32625f45847bc24f3dd8e580c3eeab30f2fd1cd0b4686f45349f00f4f779eb"
     },
     {
       "path": "site/src/content/docs/a1/i-eat-i-drink/index.mdx",
-      "sha256": "5d21526d51b9839f1795b70a488c19320a42cb7f60c4f5f68cbe8b2ca05bf2c8"
+      "sha256": "f0a577e70a608f298358dc77010a54b18dcd13caa12176e71b85a2f75bde0b76"
     },
     {
       "path": "site/src/content/docs/a1/i-want-i-can/index.mdx",
-      "sha256": "04d893fd51a4c3856f02b047db6e562e2301a8513b3e213d4dc4f8269266d294"
+      "sha256": "615103fcb145b5cdca6992eb598871b37c810f976fd56e8f0eda0acda65107f7"
     },
     {
       "path": "site/src/content/docs/a1/index.mdx",
@@ -14002,7 +14006,7 @@
     },
     {
       "path": "site/src/content/docs/a1/introduction-to-ukrainian/index.mdx",
-      "sha256": "4c45c96ff6ba8fe9c7b2b1677065a8a0c157bae0c1e85b13c76c8ff229b690e7"
+      "sha256": "e4cc219124b40231c72a7315a24256f443c1d77243194de3fac5cd01eb65ecc3"
     },
     {
       "path": "site/src/content/docs/a1/linking-ideas/index.mdx",
@@ -14050,7 +14054,7 @@
     },
     {
       "path": "site/src/content/docs/a1/reading-ukrainian/index.mdx",
-      "sha256": "0e94b6c55fa44ab4648527e1c69526938df07c80542f72dedb54e2ff358fd4c1"
+      "sha256": "7191c467525c3cb6db8221209f52e9b4749fd39387b4d9af78383288e8c6ae35"
     },
     {
       "path": "site/src/content/docs/a1/shopping/index.mdx",
@@ -14058,7 +14062,7 @@
     },
     {
       "path": "site/src/content/docs/a1/sounds-letters-and-hello/index.mdx",
-      "sha256": "56a2692f6b8c428b4660e87116b4c3144a3afbd09313d8c4a2b832ca71b44e9d"
+      "sha256": "4f4ce1a014ff625eb1d28f939561f2a7906a66c14c895c5bfbba85084fd79e11"
     },
     {
       "path": "site/src/content/docs/a1/special-signs/index.mdx",
@@ -14082,35 +14086,35 @@
     },
     {
       "path": "site/src/content/docs/a1/verbs-group-one/index.mdx",
-      "sha256": "98db66839a8b9914078cd0e6b30ff94f42d761fe9da315ab49e66c2e9c73a26e"
+      "sha256": "dcd4ebdce45adc4502fb8a3582990fb9154d44342a1b97e9c6445481c8608476"
     },
     {
       "path": "site/src/content/docs/a1/verbs-group-two/index.mdx",
-      "sha256": "f3dae47e12bb91c09015acc152a4146a226141dfc099e7bba454c1c7562b0996"
+      "sha256": "1c9759ddda94b968699725d98d2ee0a7b1a224f2b1164f7ea4a9a0104d3f15a3"
     },
     {
       "path": "site/src/content/docs/a1/weather/index.mdx",
-      "sha256": "8d2b01be6a7337b840a4d85601672b8f71058b01a9206750313e6a9d9d108f8f"
+      "sha256": "d574cd939866379db3e86dc8fca1ee69bd5ebb5aaaba61e22cc735032ae4f543"
     },
     {
       "path": "site/src/content/docs/a1/what-happened/index.mdx",
-      "sha256": "fed09921699886b1eb3b74df4fb7365f21b80ca2a7ba65648bab85d058773609"
+      "sha256": "0516fa1e2c29dfc6732c865c623faee870d54fef837092e0b27736edcb5bae20"
     },
     {
       "path": "site/src/content/docs/a1/what-i-like/index.mdx",
-      "sha256": "48d9113055dd474c0e3923ba7bd2b316020917029688c65fc2784943019dc551"
+      "sha256": "ce96db2dc6963b9a579f69b08df5de330544f8f6e9b220bec29f98f05c3cf6b9"
     },
     {
       "path": "site/src/content/docs/a1/what-is-it-like/index.mdx",
-      "sha256": "1dda31690cd393648ae1420ddbbdf04d64ecaf007208879f102f71e4b30adf70"
+      "sha256": "870dc99dc7fd165e4dc907cf98d187bf3a1f403ef7cc7e6df90418dab2a7c746"
     },
     {
       "path": "site/src/content/docs/a1/what-time/index.mdx",
-      "sha256": "abf1d28ad7b81f3c4a59dc8a3410a623ce0a9f146c24b4acdb5f29e3ba08f93e"
+      "sha256": "33582eb0b5a6baca467907ac327a60c6fa09053fdeacbaa3da19e4d99e3a63ce"
     },
     {
       "path": "site/src/content/docs/a1/what-will-happen/index.mdx",
-      "sha256": "5786b12c3fc2ae0ed4842cf0ef9fc983355c4fc5917b155368e5997e86bdc693"
+      "sha256": "63e0d9416230fa94a02d5422c67b8373244365da931a1c2f0ddcdb58df58dad2"
     },
     {
       "path": "site/src/content/docs/a1/when-and-where/index.mdx",
@@ -14118,19 +14122,19 @@
     },
     {
       "path": "site/src/content/docs/a1/where-from/index.mdx",
-      "sha256": "53ca31108fd9f635d859d6b75016f91d4026da398f2b6c04b20f2c29fc8ee2f3"
+      "sha256": "5deebf2048cfd5e8402c9b4275c17bbbf0160dda7af95f923cf37423006f0cb3"
     },
     {
       "path": "site/src/content/docs/a1/where-is-it/index.mdx",
-      "sha256": "68ab16e734eff11d2a3129e2012f4a22767c092593cb78c5a65b7c2e4a3e0f11"
+      "sha256": "23b3f565e29344aef8d093dc278359844edc8152fba77439ff81475461d8072c"
     },
     {
       "path": "site/src/content/docs/a1/where-to/index.mdx",
-      "sha256": "54dbe716919edbd6db7a9eb2bd21b6cd3bd53bda3baff0ec604c603a6e374caa"
+      "sha256": "16ca64c37fbfd474c6e07d8857e87c2af133562439b0261c4b688d573d6a6f22"
     },
     {
       "path": "site/src/content/docs/a1/who-am-i/index.mdx",
-      "sha256": "9fa7a51f5bf7692d70a76b15b9125b335dda36b5bd4d119bc98442101af9c82d"
+      "sha256": "75146957cc950fe5fe3d5e9b750f7ddf6e891df7be8577eab0061ed4596762aa"
     },
     {
       "path": "site/src/content/docs/a1/yesterday/index.mdx",

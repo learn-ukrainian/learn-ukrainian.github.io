@@ -20,7 +20,7 @@ env:
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, edited]
   merge_group:
   workflow_dispatch:
     inputs:
@@ -77,6 +77,9 @@ jobs:
           extra_args: --results=verified,unknown --exclude-detectors=Lob
 
   secret-scan:
+    permissions:
+      contents: read
+      actions: read
     name: Secret scan
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
@@ -90,11 +93,13 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
-      # schedule has no before/after. An empty base and head makes the pinned
-      # action scan every commit and exit 183 on historical findings.
-      # secret_scan_scope walks a fixed first-parent ancestry window, or the
-      # whole branch when history is shorter, and never the same base and head.
-      # A git failure exits non-zero instead of narrowing that window.
+      - name: Scan publication fields
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"
+      # Schedule scans at least the ancestry window, widening to the last
+      # successfully scanned head. Unknown coverage or git failures fail.
       # Manual dispatches use the default-branch merge-base through github.sha;
       # main refs or equal heads reuse the schedule window. Full checkout above
       # fetches all branch refs, including origin/main. Resolution errors fail.
@@ -111,7 +116,8 @@ jobs:
           DISPATCH_SCAN_MODE: ${{ inputs.secret_scan_mode }}
           DISPATCH_REF: ${{ github.ref }}
           DEFAULT_BRANCH_REF: refs/heads/${{ github.event.repository.default_branch }}
-        run: python3 scripts/ci/secret_scan_scope.py
+          GH_TOKEN: ${{ github.event_name == 'schedule' && github.token || '' }}
+        run: python3 -m scripts.ci.secret_scan_scope
       - name: Gate scrubbed public identifiers
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -136,6 +142,30 @@ jobs:
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+
+      - name: Record successfully scanned head
+        if: >-
+          success() && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+          (github.event_name == 'schedule' ||
+          (github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit'))
+        env:
+          SCANNED_HEAD: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
+          LAST_SCANNED_HEAD_FILE: ${{ runner.temp }}/secret-scan-covered-head
+        run: |
+          scanned_head="$(git rev-parse "$SCANNED_HEAD^{commit}")"
+          test "$scanned_head" = "$GITHUB_SHA"
+          printf '%s\n' "$scanned_head" > "$LAST_SCANNED_HEAD_FILE"
+      - name: Save successfully scanned head
+        if: >-
+          success() && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+          (github.event_name == 'schedule' ||
+          (github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit'))
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: secret-scan-covered-head-v1
+          path: ${{ runner.temp }}/secret-scan-covered-head
+          if-no-files-found: error
+          retention-days: 90
 
   checks:
     name: Checks

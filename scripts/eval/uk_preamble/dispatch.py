@@ -158,9 +158,10 @@ def _same_path(recorded: Any, expected: str | None) -> bool:
 def seat_mode(seat: Seat) -> str:
     """The dispatch mode of ``seat``: read-only unless its provider refuses read-only.
 
-    A provider whose read-only mode cannot be locked (AGY) is refused read-only by the dispatcher, so
-    its seat runs workspace-write in its own disposable dispatch worktree. The seat returns scored
-    text, not repository changes, and a run whose tracked checkout changed is still refused.
+    A provider whose read-only mode cannot be locked (AGY on a host where its bubblewrap boundary
+    cannot start) is refused read-only by the dispatcher, so its seat runs workspace-write in its own
+    disposable dispatch worktree. The seat returns scored text, not repository changes, and a run
+    whose tracked checkout changed is still refused.
     """
     return WORKSPACE_WRITE if providers.read_only_refusal(seat.agent) else READ_ONLY
 

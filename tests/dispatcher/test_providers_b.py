@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 from dataclasses import replace
+from pathlib import Path
 
 import pytest
 
@@ -56,7 +57,7 @@ sys.stdout.write(os.environ["STUB_STREAM"])
 """
 
 
-# Read-only AGY is refused before launch (test_core::test_read_only_mode_denies_edits_on_every_provider).
+# Read-only AGY runs only inside its bubblewrap boundary, covered below (C-3027).
 @pytest.mark.parametrize(
     "provider,mode",
     [(p, m) for p in SUCCESS for m in ("read-only", "workspace-write") if (p, m) != ("agy", "read-only")],
@@ -492,3 +493,317 @@ _CLAUDE_529 = _claude_result(api_error_status=529, result="API Error: 529 Overlo
 def test_claude_unclean_capacity_stream_stays_failed(stdout):
     result = load("claude").parse(stdout, "", 1, None)
     assert (result.rate_limited, result.error) == (False, "claude: exited with status 1")
+
+
+# --- AGY read-only boundary (C-3027) -------------------------------------------------------------
+
+_RELAY_SERVER = """import json, sys, time
+from pathlib import Path
+seen = Path(sys.argv[1])
+
+def send(message):
+    sys.stdout.write(json.dumps(message) + "\\n")
+    sys.stdout.flush()
+
+for line in sys.stdin:
+    message = json.loads(line)
+    with seen.open("a") as stream:
+        stream.write(json.dumps(message) + "\\n")
+    method, ident = message.get("method"), message.get("id")
+    name = (message.get("params") or {}).get("name")
+    if method == "tools/list":
+        result = {"tools": [{"name": "reader"}, {"name": "writer"}]}
+    elif name == "slow":
+        time.sleep(1)  # answered only after the client has tried to reuse its id
+        result = {"content": [], "isError": True}
+    elif name == "contentless":
+        result = {"isError": False}
+    elif method == "tools/call":
+        result = {"content": [], "isError": name == "failing"}
+    else:
+        result = {}
+        send({"jsonrpc": "2.0", "id": 999, "result": {"content": [], "isError": False}})  # held by no request
+    if ident is not None:
+        send({"jsonrpc": "2.0", "id": ident, "result": result})
+"""
+
+
+def _relay_exchange(connection, reader, message):
+    connection.sendall(json.dumps(message).encode() + b"\n")
+    return json.loads(reader.readline())
+
+
+def test_agy_sources_relay_forwards_only_read_only_tools_and_counts_matched_results(tmp_path):
+    """C-3027: writers, unknown methods, batches and reused ids never reach the server; only matched results count."""
+    import socket
+
+    from scripts.dispatcher.agy_sandbox import SourcesRelay
+
+    server, seen = tmp_path / "server.py", tmp_path / "seen.jsonl"
+    server.write_text(_RELAY_SERVER)
+    relay = SourcesRelay(tmp_path / "sources.sock", frozenset({"reader", "failing", "slow", "contentless"}),
+                         dict(os.environ))
+    relay.server = [sys.executable, str(server), str(seen)]
+    try:
+        directory = os.open(tmp_path, os.O_RDONLY | os.O_DIRECTORY)
+        with socket.socket(socket.AF_UNIX) as connection:
+            try:  # the descriptor path avoids the sockaddr_un length limit of deep temporary paths
+                connection.connect(f"/proc/self/fd/{directory}/sources.sock")
+            finally:
+                os.close(directory)
+            reader = connection.makefile("rb")
+            call = {"jsonrpc": "2.0", "method": "tools/call"}
+            listed = _relay_exchange(connection, reader, {"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
+            assert [tool["name"] for tool in listed["result"]["tools"]] == ["reader"]
+            assert "error" in _relay_exchange(connection, reader, {**call, "id": 2, "params": {"name": "writer"}})
+            assert "error" in _relay_exchange(connection, reader, {"jsonrpc": "2.0", "id": 3, "method": "resources/list"})
+            assert _relay_exchange(connection, reader, {**call, "id": 4, "params": {"name": "reader"}})["result"]
+            assert _relay_exchange(connection, reader, {**call, "id": "5", "params": {"name": "failing"}})["result"]
+            # The id is free again once answered, so this counts as a second, distinct completed call.
+            assert _relay_exchange(connection, reader, {**call, "id": 4, "params": {"name": "reader"}})["result"]
+            # A request of any method that reuses a pending id is refused, so it can never answer for the call.
+            connection.sendall(json.dumps({**call, "id": 7, "params": {"name": "slow"}}).encode() + b"\n")
+            assert "error" in _relay_exchange(connection, reader, {"jsonrpc": "2.0", "id": 7, "method": "ping"})
+            assert json.loads(reader.readline())["result"]["isError"] is True
+            # A response with an id no request holds (999, sent with this ping's) never reaches the client.
+            assert _relay_exchange(connection, reader, {"jsonrpc": "2.0", "id": 8, "method": "ping"})["id"] == 8
+            assert _relay_exchange(connection, reader, {**call, "id": 9, "params": {"name": "contentless"}})["result"]
+            assert "error" in _relay_exchange(connection, reader, {**call, "params": {"name": "reader"}, "id": None})
+            connection.sendall(json.dumps([{**call, "id": 6, "params": {"name": "reader"}}]).encode() + b"\n")
+            assert reader.readline() == b""  # a batch ends the connection
+    finally:
+        relay.cleanup()
+    forwarded = [json.loads(line) for line in seen.read_text().splitlines()]
+    assert [(message["method"], message.get("params", {}).get("name")) for message in forwarded] == [
+        ("tools/list", None), ("tools/call", "reader"), ("tools/call", "failing"), ("tools/call", "reader"),
+        ("tools/call", "slow"), ("ping", None), ("tools/call", "contentless"),
+    ]
+    assert relay.evidence() == {"completed": 2, "failed": 3, "tools": {"reader": 2},
+                                "refused": {"ping": 1, "resources/list": 1, "tools/call:reader": 1,
+                                            "tools/call:writer": 1}}
+
+
+def test_agy_scratch_removal_never_follows_a_link_the_sandbox_planted(tmp_path):
+    """C-3027 F1/F4: removing scratch changes no permission outside it, whatever modes the sandbox left."""
+    from scripts.dispatcher.agy_sandbox import _remove
+
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    outside.chmod(0o755)  # explicit: the test umask may narrow mkdir's mode
+    secret = outside / "config"
+    secret.write_text("host")
+    secret.chmod(0o444)
+    scratch = tmp_path / "scratch"
+    deep = scratch.joinpath(*["d"] * 40)
+    deep.mkdir(parents=True)
+    (deep / "link").symlink_to(secret)
+    (scratch / "dir-link").symlink_to(outside, target_is_directory=True)
+    locked = scratch / "locked"
+    locked.mkdir()
+    (locked / "link").symlink_to(secret)
+    locked.chmod(0o555)
+    # F4: the sandbox can leave its directories with no access at all, nested too.
+    sealed = scratch / "home" / "sealed"
+    sealed.mkdir(parents=True)
+    (sealed / "token").write_text("copy")
+    (sealed / "link").symlink_to(outside, target_is_directory=True)
+    sealed.chmod(0o000)
+    (scratch / "home").chmod(0o000)
+    _remove(scratch)
+    assert not scratch.exists()
+    assert (secret.stat().st_mode & 0o777, outside.stat().st_mode & 0o777) == (0o444, 0o755)
+    assert secret.read_text() == "host"
+
+
+def test_agy_database_mount_admits_only_the_dispatchers_own_link(tmp_path):
+    """C-3027 F3: branch content never chooses a database mount, and a missing link refuses."""
+    from scripts.dispatcher.agy_sandbox import Refused, _trusted_database
+
+    repository, worktree = tmp_path / "repo", tmp_path / "worktree"
+    (repository / "data").mkdir(parents=True)
+    (worktree / "data").mkdir(parents=True)
+    trusted = repository / "data" / "sources.db"
+    trusted.write_bytes(b"db")
+    link = worktree / "data" / "sources.db"
+    with pytest.raises(Refused, match="missing"):
+        _trusted_database(worktree, repository, "data/sources.db")
+    link.symlink_to(repository / ".env")
+    (repository / ".env").write_text("TOKEN=x")
+    with pytest.raises(Refused, match="does not name"):
+        _trusted_database(worktree, repository, "data/sources.db")
+    link.unlink()
+    link.write_bytes(b"tracked")
+    with pytest.raises(Refused, match="not the dispatcher's link"):
+        _trusted_database(worktree, repository, "data/sources.db")
+    link.unlink()
+    link.symlink_to(trusted)
+    assert _trusted_database(worktree, repository, "data/sources.db") == trusted
+
+
+def _receipt(**changes):
+    head = "a" * 40
+    receipt = {
+        "schema": 1, "task_id": "agy-ro", "status": "ran", "canary": {"passed": True, "probes": []},
+        "input": {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}},
+        "sources": {"completed": 3, "failed": 0, "refused": {}, "tools": {}},
+    }
+    for key, value in changes.items():
+        receipt[key] = value
+    return receipt
+
+
+@pytest.mark.parametrize("receipt,record,refusal", [
+    (_receipt(), {}, None),
+    (None, {}, "receipt missing"),
+    (_receipt(task_id="other"), {}, "receipt invalid"),
+    (_receipt(status="refused", reason="the sandbox canary failed"), {}, "refused: the sandbox canary failed"),
+    (_receipt(status="interrupted"), {}, "refused"),
+    (_receipt(canary={"passed": False}), {}, "canary did not pass"),
+    (_receipt(input={"start": {"head": "a" * 40, "clean": True}, "end": {"head": "b" * 40, "clean": True}}), {},
+     "review_input_drift"),
+    (_receipt(input={"start": {"head": "a" * 40, "clean": True}, "end": {"head": "a" * 40, "clean": False}}), {},
+     "review_input_drift"),
+    (_receipt(input={"start": {"head": "a" * 40, "clean": True}}), {}, "review_input_drift"),
+    (_receipt(), {"worktree_base_sha": "b" * 40}, "review_input_drift"),
+    (_receipt(), {"pinned_head": "b" * 40}, "review_input_drift"),
+])
+def test_agy_boundary_receipt_gates_the_run(tmp_path, receipt, record, refusal):
+    """C-3027: only a verified receipt for this task, canary and unchanged head included, yields a run and a count."""
+    from scripts.dispatcher import agy_sandbox
+
+    final = tmp_path / "agy-ro.result"
+    if receipt is not None:
+        agy_sandbox.receipt_file(final).write_text(json.dumps(receipt))
+    _summary, count, error = agy_sandbox.verify(final, "agy-ro", {"worktree_base_sha": "a" * 40, **record})
+    if refusal is None:
+        assert (count, error) == (3, None)
+    else:
+        assert count is None and refusal in error
+
+
+def _linked_worktree(tmp_path):
+    def git(cwd, *args):
+        return subprocess.run(["git", "-C", str(cwd), *args], check=True, capture_output=True, text=True,
+                              timeout=30).stdout.strip()
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    git(repo, "init", "-q", "-b", "main")
+    (repo / "README.md").write_text("reviewed\n")
+    (repo / "data").mkdir()
+    for name in ("sources.db", "vesum.db"):
+        (repo / "data" / name).write_bytes(b"database")
+    git(repo, "add", "README.md")
+    git(repo, "-c", "user.email=s@example.invalid", "-c", "user.name=S", "commit", "-q", "-m", "base")
+    worktree = tmp_path / "worktree"
+    git(repo, "worktree", "add", "-q", "--detach", str(worktree), "main")
+    (worktree / "data").mkdir()
+    for name in ("sources.db", "vesum.db"):
+        (worktree / "data" / name).symlink_to(repo / "data" / name)
+    # Keys a sanitized copy must drop; marker values, not credential shapes, so secret scanners stay quiet.
+    git(repo, "config", "remote.origin.url", "/canary-remote-marker")
+    git(repo, "config", "credential.helper", "canary-helper-marker")
+    (repo / ".git" / "info").mkdir(exist_ok=True)
+    (repo / ".git" / "info" / "exclude").write_text("data/\n")  # the database link is not a reviewed change
+    return worktree, git(worktree, "rev-parse", "HEAD")
+
+
+def _bwrap_usable():
+    from scripts.dispatcher.agy_sandbox import unavailable
+
+    if unavailable():
+        return False
+    probe = subprocess.run(["bwrap", "--ro-bind", "/", "/", "--unshare-net", "--unshare-pid", "--dev", "/dev",
+                            "--proc", "/proc", "true"], capture_output=True, check=False, timeout=30)
+    return probe.returncode == 0
+
+
+def _launch(tmp_path, worktree, task_id, command, **popen):
+    from scripts.dispatcher import agy_sandbox
+
+    argv = [sys.executable, "-I", "-c", agy_sandbox._BOOTSTRAP, str(agy_sandbox.ROOT), "--task-id", task_id,
+            "--worktree", str(worktree), "--scratch", str(tmp_path / f"scratch-{task_id}"),
+            "--receipt", str(tmp_path / f"{task_id}.sandbox.json"), "--", *command]
+    app = tmp_path / "agy-home"
+    app.mkdir(exist_ok=True)
+    (app / "antigravity-oauth-token").write_text("token")
+    env = {**os.environ, "AGY_APP_DATA_DIR": str(app)}
+    return argv, env
+
+
+def test_agy_read_only_launcher_refuses_without_bubblewrap_and_never_runs_agy(tmp_path, monkeypatch):
+    """C-3027: no boundary means no run; the command never starts unsandboxed."""
+    from scripts.dispatcher import agy_sandbox
+
+    worktree, _head = _linked_worktree(tmp_path)
+    marker = tmp_path / "ran"
+    monkeypatch.setattr(agy_sandbox, "unavailable", lambda: "bubblewrap (bwrap) is not installed")
+    monkeypatch.setenv("AGY_APP_DATA_DIR", str(tmp_path))
+    argv, _env = _launch(tmp_path, worktree, "nobwrap", ["/bin/sh", "-c", f"touch {marker}"])
+    assert agy_sandbox.main(argv[argv.index("--task-id"):]) == agy_sandbox.REFUSED
+    receipt = json.loads((tmp_path / "nobwrap.sandbox.json").read_text())
+    assert (receipt["status"], receipt["reason"]) == ("refused", "bubblewrap (bwrap) is not installed")
+    assert not marker.exists() and not (tmp_path / "scratch-nobwrap").exists()
+
+
+@pytest.mark.skipif(not _bwrap_usable(), reason="needs a usable unprivileged bubblewrap")
+def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tmp_path):
+    """C-3027: inside the boundary the worktree, Git metadata and database target refuse writes; a killed
+    launcher takes the whole sandbox with it."""
+    import signal
+    import time
+
+    worktree, head = _linked_worktree(tmp_path)
+    attempts = (
+        "echo x >> README.md; echo x >> data/sources.db; touch new; rm -f README.md; "
+        "git -c user.email=s@example.invalid -c user.name=S commit -q --allow-empty -m x; "
+        "git config --get-regexp 'remote|credential' >&2; git log --oneline -1 >/dev/null || echo nolog >&2; "
+        "echo scratch > $TMPDIR/ok && cat $TMPDIR/ok"
+    )
+    argv, env = _launch(tmp_path, worktree, "holds", ["/bin/sh", "-c", attempts])
+    run = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=120, check=False, cwd=worktree)
+    receipt = json.loads((tmp_path / "holds.sandbox.json").read_text())
+    assert (run.returncode, receipt["status"]) == (0, "ran"), (receipt.get("reason"), run.stderr)
+    assert receipt["canary"]["passed"] is True
+    assert run.stdout.strip() == "scratch"
+    assert run.stderr.count("Read-only file system") >= 4
+    assert "marker" not in run.stderr and "nolog" not in run.stderr
+    assert receipt["input"] == {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}}
+    outcomes = {(probe["op"], probe["path"]): probe["outcome"] for probe in receipt["canary"]["probes"]}
+    target = str((tmp_path / "repo" / "data" / "sources.db").resolve())
+    assert outcomes[("chmod", target)] == outcomes[("write_open", target)] == "EROFS"
+    assert (worktree / "README.md").read_text() == "reviewed\n" and not (worktree / "new").exists()
+    assert not (tmp_path / "scratch-holds").exists()
+
+    marker = f"{time.time_ns() % 10**6}.4242"
+    argv, env = _launch(tmp_path, worktree, "killed", ["/bin/sh", "-c", f"sleep {marker} & sleep {marker}"])
+    launcher = subprocess.Popen(argv, env=env, cwd=worktree, start_new_session=True,
+                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def sleepers():
+        found = []
+        for entry in os.listdir("/proc"):
+            try:
+                if entry.isdigit() and marker in Path(f"/proc/{entry}/cmdline").read_bytes().decode(errors="replace"):
+                    found.append(entry)
+            except OSError:
+                pass
+        return found
+
+    try:
+        deadline = time.monotonic() + 60
+        while len(sleepers()) < 2:
+            assert time.monotonic() < deadline and launcher.poll() is None, "sandboxed sleepers never started"
+            time.sleep(0.1)
+        os.killpg(launcher.pid, signal.SIGKILL)  # the worker's cancellation and timeout path
+        launcher.wait()
+        deadline = time.monotonic() + 10
+        while sleepers():
+            assert time.monotonic() < deadline, "a sandboxed descendant outlived the killed launcher"
+            time.sleep(0.1)
+    finally:
+        if launcher.poll() is None:
+            os.killpg(launcher.pid, signal.SIGKILL)
+        from scripts.dispatcher.agy_sandbox import _remove
+
+        _remove(tmp_path / "scratch-killed")
