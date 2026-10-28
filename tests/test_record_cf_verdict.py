@@ -3228,7 +3228,12 @@ def queue_extension_case(monkeypatch, tmp_path, *, base_import=False, conflict=F
     run("checkout", "-q", "main")
     run("reset", "--hard", "HEAD^")  # Drop the fixture's old unreferenced request.
     run("checkout", "-q", "-b", "candidate")
-    run("merge", "-q", "--no-ff", "-m", "candidate", old["approved_head"])
+    # Production run 40737679439 tested 25ee57d6ec9a005d7d8f416b4526c7c2823fe0f1,
+    # a squash with sole parent 8c7830abccffc626bd7964ab64ef7c1fd8105ceb.
+    # Rebuild that graph shape locally so CI needs no historical objects.
+    candidate_base = run("rev-parse", "HEAD")
+    run("merge", "-q", "--squash", old["approved_head"])
+    run("commit", "-q", "-m", "candidate")
     candidate = run("rev-parse", "HEAD")
     run("checkout", "-q", "feature")
     if conflict:
@@ -3269,6 +3274,7 @@ def queue_extension_case(monkeypatch, tmp_path, *, base_import=False, conflict=F
         "databaseId": 123,
         "attempt": 2,
         "headSha": candidate,
+        "headBranch": f"gh-readonly-queue/main/pr-42-{candidate_base}",
         "event": "merge_group",
         "status": "completed",
         "conclusion": "failure",
@@ -3288,9 +3294,13 @@ def queue_extension_case(monkeypatch, tmp_path, *, base_import=False, conflict=F
 
 @pytest.mark.parametrize("base_import,conflict", [(False, False), (True, False), (True, True)])
 def test_queue_extension_admits_exact_repair_and_separate_resolutions(monkeypatch, tmp_path, base_import, conflict):
-    tasks, _, calls, request, _, _, _ = queue_extension_case(
+    """F6: real queue squashes have one base parent and no approved-head ancestry."""
+    tasks, _, calls, request, _, run, _ = queue_extension_case(
         monkeypatch, tmp_path, base_import=base_import, conflict=conflict
     )
+    parents = run("rev-list", "--parents", "-n", "1", request["queue_candidate"]).split()
+    assert len(parents) == 2
+    assert run("merge-base", request["approved_head"], request["queue_candidate"]) != request["approved_head"]
     write_extension_approval(tasks, request)
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     receipt = result["budget_extension"]
@@ -3314,6 +3324,10 @@ def test_queue_extension_admits_exact_repair_and_separate_resolutions(monkeypatc
         ("unavailable", "queue"),
         ("wrong-approved-head", "queue"),
         ("later-enqueued-head", "queue"),
+        ("wrong-pr", "queue"),
+        ("wrong-base", "queue"),
+        ("extra-candidate-content", "queue"),
+        ("off-base-parent", "queue"),
         ("repair-head", "repair"),
         ("same-path-extra-hunk", "repair"),
         ("wrong-path", "repair"),
@@ -3338,6 +3352,8 @@ def test_queue_extension_refuses_unbound_or_unjustified_repair(monkeypatch, tmp_
         "success": {"conclusion": "success"},
         "cancelled": {"conclusion": "cancelled"},
         "running": {"status": "in_progress"},
+        "wrong-pr": {"headBranch": "gh-readonly-queue/main/pr-43-" + run("rev-parse", "candidate^")},
+        "wrong-base": {"headBranch": "gh-readonly-queue/main/pr-42-" + "d" * 40},
     }
     workflow.update(options.get(case, {}))
     if case == "wrong-approved-head":
@@ -3345,7 +3361,22 @@ def test_queue_extension_refuses_unbound_or_unjustified_repair(monkeypatch, tmp_
     if case == "later-enqueued-head":
         run("checkout", "-q", "candidate")
         run("reset", "--hard", "main^")
-        run("merge", "-q", "--no-ff", "-m", "later candidate", head)
+        run("merge", "-q", "--squash", head)
+        run("commit", "-q", "-m", "later candidate")
+        workflow["headSha"] = request["queue_candidate"] = run("rev-parse", "HEAD")
+        run("checkout", "-q", "feature")
+    if case in {"extra-candidate-content", "off-base-parent"}:
+        run("checkout", "-q", "candidate")
+        (tmp_path / "ext-repo" / "unrelated.txt").write_text("not approved\n")
+        run("add", "unrelated.txt")
+        run("commit", "-q", "--amend", "--no-edit")
+        if case == "off-base-parent":
+            # The expected tree still matches; the candidate's parent is a
+            # different branch, so the base ancestry check must refuse it.
+            parent = run("rev-parse", "HEAD")
+            run("merge", "-q", "--squash", request["approved_head"])
+            run("commit", "-q", "--allow-empty", "-m", "off-base candidate")
+            workflow["headBranch"] = f"gh-readonly-queue/main/pr-42-{parent}"
         workflow["headSha"] = request["queue_candidate"] = run("rev-parse", "HEAD")
         run("checkout", "-q", "feature")
     if case == "repair-head":
@@ -3363,6 +3394,8 @@ def test_queue_extension_refuses_unbound_or_unjustified_repair(monkeypatch, tmp_
     if case in {
         "wrong-approved-head",
         "later-enqueued-head",
+        "extra-candidate-content",
+        "off-base-parent",
         "repair-head",
         "same-path-extra-hunk",
         "wrong-path",

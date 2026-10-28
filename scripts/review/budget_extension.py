@@ -20,8 +20,8 @@ The non-author advisor must inspect the failed attempt's diagnostics and
 EVERY patch hunk, including tests and conflict resolutions, and confirm that
 the failure justifies all of them. A path match alone is insufficient.
 The seal binds that judgment to the complete request and exact patches.
-Admission checks the live failed merge_group attempt, the candidate's merge
-of the exact approved head, and every patch against that seal.
+Admission checks the live failed merge_group attempt, the candidate's tree
+from the exact approved head and a verified base parent, and every patch against that seal.
 
 Both classes first apply the unchanged review_lineage checks: all earlier
 review runs are terminal and published, and the approved head's APPROVE is
@@ -416,7 +416,7 @@ def check_queue_repair(
                 "--attempt",
                 str(request["queue_run_attempt"]),
                 "--json",
-                "databaseId,attempt,event,status,conclusion,headSha",
+                "databaseId,attempt,event,status,conclusion,headSha,headBranch",
             ]
         )
     except recorder.RecordError:
@@ -434,10 +434,20 @@ def check_queue_repair(
     ):
         raise ExtensionRefused(QUEUE, "the bound run/attempt is not a failed merge_group at the queue candidate")
     approved, candidate = request["approved_head"], request["queue_candidate"]
-    _git(repo_root, "merge-base", "--is-ancestor", approved, candidate, reason=QUEUE)
-    ancestry = _git(repo_root, "rev-list", "--parents", "--ancestry-path", f"{approved}..{candidate}", reason=QUEUE)
-    if not any(len(parents := line.split()) == 3 and parents[2] == approved for line in ancestry.decode().splitlines()):
-        raise ExtensionRefused(QUEUE, "queue candidate did not merge the exact approved head")
+    # The queue's squash candidate has only its base parent. The approved
+    # branch head is an input to its tree, not an ancestor of the commit.
+    parents = _git(repo_root, "rev-list", "--parents", "-n", "1", candidate, reason=QUEUE).decode().split()
+    if len(parents) not in (2, 3) or (len(parents) == 3 and parents[2] != approved):
+        raise ExtensionRefused(QUEUE, "queue candidate is not a squash or merge of the approved head")
+    parent = parents[1]
+    branch = run.get("headBranch")
+    if not isinstance(branch, str) or not re.fullmatch(rf"gh-readonly-queue/.+/pr-{request['pr']}-{parent}", branch):
+        raise ExtensionRefused(QUEUE, "queue branch does not bind this PR and candidate base parent")
+    _git(repo_root, "merge-base", "--is-ancestor", parent, base_tip, reason=QUEUE)
+    expected_tree = _git(repo_root, "merge-tree", "--write-tree", "--no-messages", parent, approved, reason=QUEUE).strip()
+    actual_tree = _git(repo_root, "rev-parse", f"{candidate}^{{tree}}", reason=QUEUE).strip()
+    if expected_tree != actual_tree:
+        raise ExtensionRefused(QUEUE, "queue candidate tree differs from the exact approved head merged into its base")
     merged, repairs = queue_repair_diff(repo_root, approved=approved, head=head, base_tip=base_tip)
     bound = [{key: entry[key] for key in ("commit", "kind", "paths", "patch_sha256")} for entry in request["repairs"]]
     if bound != repairs:

@@ -29,7 +29,11 @@ rounds are deltas.
   the non-author designated advisor, and the unchanged lineage checks. Every earlier
   verdict must be published; an unpublished `BLOCKED` still refuses.
 - A queue request binds the failed `merge_group` run and attempt, its candidate, the exact
-  approved head merged into it, and the repair head. Its `repairs` list binds each commit,
+  approved head combined with its base parent, and the repair head. The queue
+  branch must name this PR and that parent, the parent must be on the base
+  branch, and the candidate tree must equal Git's clean merge of that parent
+  and the approved head. Squash candidates need no approved-head ancestry.
+  Its `repairs` list binds each commit,
   kind, paths, exact patch SHA-256, and failure evidence. The advisor checks every hunk
   against that failure, including tests. Filename overlap never authorizes unrelated hunks.
   The recorder accounts for verified base imports, then checks conflict resolutions
