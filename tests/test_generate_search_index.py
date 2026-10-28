@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import gzip
+import hashlib
 import json
 import sqlite3
 from pathlib import Path
@@ -797,6 +799,82 @@ def test_db_mode_writes_browse_artifacts(tmp_path: Path) -> None:
             "hay": "іван ivan ivan",
         },
     ]
+
+
+def test_pinned_generator_withholds_unverified_heads_and_placeholder_glosses(tmp_path: Path) -> None:
+    """The reviewed census holds apply to browse, search and alias targets together."""
+    import yaml
+
+    from scripts.deploy.vendor_atlas_tree import DISCOVERY_EXCLUSIONS, VendorError, build_pinned_search
+
+    policy = json.loads(DISCOVERY_EXCLUSIONS.read_bytes())
+    holds = yaml.safe_load((PROJECT_ROOT / "registry/lexicon/published-record-dispositions/10181-six.yaml").read_text())
+    by_slug = {record["slug"]: record for record in policy["exclusions"]}
+    for hold in holds["decisions"]:
+        assert by_slug[hold["projection"]["url_slug"]]["evidence"]["published_disposition"] == hold["row_id"]
+    assert holds["release_reviews"] == []
+    assert by_slug["проєк"]["evidence"]["headword_status"] == "NOT_FOUND"
+    assert by_slug["клієн"]["evidence"]["placeholder_gloss"] == "ohoiko 1000-words entry"
+
+    version = "atlas-v1-census-test"
+    tree = tmp_path / "runtime"
+    version_root = tree / "atlas/versions" / version
+    version_root.mkdir(parents=True)
+    (tree / "atlas/current.json").write_text(json.dumps({
+        "dataVersion": version, "manifestUrl": f"versions/{version}/manifest.json",
+    }))
+    articles = [{"s": slug, "l": record["headword"], "g": record["evidence"].get("placeholder_gloss", "Meaning"),
+                 "r": "fixture", "t": "lemma"} for slug, record in by_slug.items()]
+    articles.append({"s": "іван", "l": "Іван", "g": "Ivan", "r": "ivan", "t": "lemma"})
+    aliases = [{"a": row["l"], "s": row["s"], "h": row["l"], "k": "variant"} for row in articles[:-1]]
+    retained_alias = {"a": "проєк", "s": "іван", "h": "Іван", "k": "variant"}
+    aliases.append(retained_alias)
+    manifest = {"schema": "atlas-runtime-manifest", "schemaVersion": 1, "dataVersion": version,
+                "entries": {"shards": {}}, "search": {"articles": {"shards": {}}, "aliases": {"shards": {}}},
+                "counts": {"articles": len(articles), "searchArticles": len(articles),
+                           "searchAliases": len(aliases), "formRoutes": 0, "publicRoutes": len(articles)}}
+    for family, schema, records in (
+        ("entries", "atlas-entry-shard", [{"slug": row["s"], "kind": "article"} for row in articles]),
+        ("articles", "atlas-search-article-shard", articles),
+        ("aliases", "atlas-search-alias-shard", aliases),
+    ):
+        raw = json.dumps({"schema": schema, "schemaVersion": 1, "dataVersion": version, "records": records}).encode()
+        blob = gzip.compress(raw, mtime=0)
+        (version_root / f"{family}.json.gz").write_bytes(blob)
+        index = manifest["entries"] if family == "entries" else manifest["search"][family]
+        index["shards"]["all"] = {"url": f"{family}.json.gz", "encoding": "gzip", "count": len(records),
+                                  "bytes": len(blob), "uncompressedBytes": len(raw),
+                                  "sha256": hashlib.sha256(blob).hexdigest(),
+                                  "jsonSha256": hashlib.sha256(raw).hexdigest()}
+    (version_root / "manifest.json").write_text(json.dumps(manifest))
+    pinned = {p: p.read_bytes() for p in tree.rglob("*") if p.is_file()}
+    output = tmp_path / "generated"
+    assert main(["--runtime-tree", str(tree), "--out", str(output / "search.json"),
+                 "--aliases-out", str(output / "aliases.json"),
+                 "--search-shards-out", str(output / "search-meta.json"),
+                 "--search-shard-dir", str(output / "search"),
+                 "--browse-meta-out", str(output / "browse-meta.json"),
+                 "--browse-flagged-out", str(output / "flagged.json"),
+                 "--browse-dir", str(output / "browse")]) == 0
+    assert json.loads((output / "search.json").read_bytes()) == [articles[-1]]
+    assert json.loads((output / "aliases.json").read_bytes()) == [retained_alias]
+    meta = json.loads((output / "browse-meta.json").read_bytes())
+    assert meta["total"] == 1
+    assert meta["letterCounts"]["І"] == 1
+    assert meta["letterCounts"]["П"] == 0
+    assert {r["s"] for p in (output / "browse").glob("*.json") for r in json.loads(p.read_bytes())} == {"іван"}
+    _, _, parity = build_pinned_search(tree)
+    assert parity["articles"] == 25
+    assert parity["projectedArticles"] == 1
+    assert parity["withheldAliases"] == 24
+    assert parity["absentExclusions"] == []
+    assert all(p.read_bytes() == blob for p, blob in pinned.items())
+    articles[0]["l"] = "changed head"
+    with pytest.raises(VendorError, match="exclusion headword changed"):
+        # This boundary rejects stale policy; no guessed replacement is emitted.
+        from scripts.deploy.vendor_atlas_tree import _discovery_exclusions
+
+        _discovery_exclusions(articles)
 
 
 def test_browse_staleness_guard_fires_when_browse_would_stay_pinned(tmp_path: Path) -> None:

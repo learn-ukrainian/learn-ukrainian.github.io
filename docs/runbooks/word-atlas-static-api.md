@@ -76,7 +76,16 @@ Unpinned local builds retain the DB-backed generator and its
 from an already verified extracted archive, pass `--runtime-tree ./runtime-tree`
 to `scripts/audit/generate_search_index.py`; the directory must contain
 `atlas/current.json`. This mode uses only CURRENT's article and alias rows, so
-runtime-only articles are preserved even when a newer manifest differs. The option
+runtime-only articles are preserved even when a newer manifest differs, subject to
+the reviewed discovery holds in `registry/lexicon/atlas-discovery-exclusions.json`.
+The generator and post-build vendor apply these holds after checking the complete
+raw runtime membership. They withhold article listings and aliases targeting those
+articles, while preserving aliases to retained targets. Each hold records its exact
+headword, reason and Sources evidence; the six existing published-record holds are
+carried forward by disposition ID. A changed headword fails the build until the hold
+is reviewed; absent slugs are reported in `absentExclusions`. Runtime and projected
+counts are reported separately. No runtime bytes or routes change, so direct article
+URLs still require a future runtime-data disposition. The option
 trusts prior archive verification. Public builds always prepare a fresh verified
 tree and independently validate the built advertisements before publication.
 

@@ -1,0 +1,303 @@
+{
+  "schema": "atlas-discovery-exclusions",
+  "schemaVersion": 1,
+  "provenance": {
+    "runtimeDataVersion": "atlas-v1-90605067cb27589f",
+    "runtimeManifestSha256": "626906d480dd33beeab29d64d2a76796d82a6a05f3ffee241182895d2b3ca1e0",
+    "vesumSourceVersion": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+    "reviewedOn": "2026-10-28"
+  },
+  "exclusions": [
+    {
+      "slug": "джерельність",
+      "headword": "джерельність",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "джерельність"
+        ]
+      }
+    },
+    {
+      "slug": "дієслово-зв-язка",
+      "headword": "дієслово-зв'язка",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "дієслово-зв'язка"
+        ]
+      }
+    },
+    {
+      "slug": "достовірний",
+      "headword": "достовірний",
+      "reason": "Existing published-record disposition withholds this projection; unresolved lookup or source conflict.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "KNOWN_INVALID",
+        "published_disposition": "10181-01"
+      }
+    },
+    {
+      "slug": "дтп-детепе-дорожньо-транспортна-пригода",
+      "headword": "дтп (детепе) дорожньо-транспортна пригода",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "дтп",
+          "детепе"
+        ]
+      }
+    },
+    {
+      "slug": "жорский-диск",
+      "headword": "жорский диск",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "жорский"
+        ]
+      }
+    },
+    {
+      "slug": "зосереджуватися-назосередитися-на",
+      "headword": "зосереджуватися назосередитися на",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "назосередитися"
+        ]
+      }
+    },
+    {
+      "slug": "катафора",
+      "headword": "катафора",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "катафора"
+        ]
+      }
+    },
+    {
+      "slug": "клієн",
+      "headword": "клієн",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment. Existing published-record disposition withholds this projection; unresolved lookup or source conflict. Gloss is a source-list placeholder, not a meaning.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "клієн"
+        ],
+        "published_disposition": "10181-02",
+        "placeholder_gloss": "ohoiko 1000-words entry"
+      }
+    },
+    {
+      "slug": "контрфактичний",
+      "headword": "контрфактичний",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "контрфактичний"
+        ]
+      }
+    },
+    {
+      "slug": "лет",
+      "headword": "лет",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "лет"
+        ]
+      }
+    },
+    {
+      "slug": "наверху",
+      "headword": "наверху",
+      "reason": "Existing published-record disposition withholds this projection; unresolved lookup or source conflict.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "KNOWN_INVALID",
+        "published_disposition": "10181-03"
+      }
+    },
+    {
+      "slug": "неозначено-особове",
+      "headword": "неозначено-особове",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "неозначено-особове"
+        ]
+      }
+    },
+    {
+      "slug": "об-єд",
+      "headword": "об'єд",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment. Existing published-record disposition withholds this projection; unresolved lookup or source conflict.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "об'єд"
+        ],
+        "published_disposition": "10181-04"
+      }
+    },
+    {
+      "slug": "означено-особове",
+      "headword": "означено-особове",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "означено-особове"
+        ]
+      }
+    },
+    {
+      "slug": "онлайн-оплата",
+      "headword": "онлайн-оплата",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "онлайн-оплата"
+        ]
+      }
+    },
+    {
+      "slug": "офіційно-діловий",
+      "headword": "офіційно-діловий",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "офіційно-діловий"
+        ]
+      }
+    },
+    {
+      "slug": "поєд",
+      "headword": "поєд",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment. Existing published-record disposition withholds this projection; unresolved lookup or source conflict.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "поєд"
+        ],
+        "published_disposition": "10181-05"
+      }
+    },
+    {
+      "slug": "порічка-шпоришки-центральні-області",
+      "headword": "порічка (шпоришки – центральні області)",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "шпоришки"
+        ]
+      }
+    },
+    {
+      "slug": "правила-дорожнього-руху-пдр",
+      "headword": "правила дорожнього руху (пдр)",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "пдр"
+        ]
+      }
+    },
+    {
+      "slug": "приєд",
+      "headword": "приєд",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment. Existing published-record disposition withholds this projection; unresolved lookup or source conflict.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "приєд"
+        ],
+        "published_disposition": "10181-06"
+      }
+    },
+    {
+      "slug": "проєк",
+      "headword": "проєк",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment. Gloss is a source-list placeholder, not a meaning.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "проєк"
+        ],
+        "placeholder_gloss": "ohoiko 1000-words entry"
+      }
+    },
+    {
+      "slug": "симплока",
+      "headword": "симплока",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "симплока"
+        ]
+      }
+    },
+    {
+      "slug": "топікалізація",
+      "headword": "топікалізація",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "топікалізація"
+        ]
+      }
+    },
+    {
+      "slug": "узагальнено-особове",
+      "headword": "узагальнено-особове",
+      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
+      "evidence": {
+        "tool": "sources.inspect_words",
+        "headword_status": "NOT_FOUND",
+        "not_found_components": [
+          "узагальнено-особове"
+        ]
+      }
+    }
+  ]
+}
