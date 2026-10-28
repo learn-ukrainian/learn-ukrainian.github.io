@@ -29,6 +29,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -979,12 +980,19 @@ def _run_gc(repo_root: Path, lock_fd: int) -> subprocess.CompletedProcess[str]:
     try:
         stdout, stderr = proc.communicate(timeout=GC_DEADLINE_SECONDS)
     except subprocess.TimeoutExpired:
-        # A child can close its pipes while handling SIGTERM, so reaping Git
-        # alone would leave that child running. Kill the entire owned group.
+        # Allow Git's signal handlers to remove its locks. Keep Git unreaped
+        # during this grace period so its process-group id cannot be reused.
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(proc.pid, signal.SIGTERM)
+        time.sleep(5)
+        # Closed pipes or an exited Git parent do not prove children exited.
         with contextlib.suppress(ProcessLookupError):
             os.killpg(proc.pid, signal.SIGKILL)
-        proc.communicate(timeout=5)
-        raise _GCDeadlineExceeded from None
+        try:
+            proc.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            raise _GCDeadlineExceeded("GC deadline exceeded; SIGTERM and SIGKILL requested; output pipes remain open") from None
+        raise _GCDeadlineExceeded("GC deadline exceeded; SIGTERM grace and process-group SIGKILL requested") from None
     return subprocess.CompletedProcess(command, proc.returncode, stdout, stderr)
 
 
@@ -1022,8 +1030,8 @@ def _git_maintenance(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 os.close(fd)
     except (_GitHygieneBusy, BlockingIOError):
         return {"action": "deferred", "ok": True, "detail": "Git hygiene or validation holds admission"}
-    except _GCDeadlineExceeded:
-        return {"action": "timeout", "ok": False, "detail": "foreground GC exceeded its deadline; process group sent SIGKILL"}
+    except _GCDeadlineExceeded as exc:
+        return {"action": "timeout", "ok": False, "detail": str(exc)}
     except subprocess.TimeoutExpired:
         return {"action": "timeout", "ok": False, "detail": "Git metadata query exceeded its timeout"}
     except (OSError, RuntimeError) as exc:

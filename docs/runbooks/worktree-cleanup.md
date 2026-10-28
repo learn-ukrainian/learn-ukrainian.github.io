@@ -688,7 +688,10 @@ The hourly hygiene job and macOS launchd job perform no GC.
 The maintenance service invokes the same wrapper with `--git-maintenance --apply`,
 which runs only GC and writes its private receipt. It caps the whole process tree
 at 2 GiB memory, zero swap, one CPU and 32 tasks. Each repository has a 600-second
-foreground deadline with process-group termination; the service allows 1300 seconds
+foreground deadline. Timeout cleanup gives Git a five-second SIGTERM grace period
+without reaping it, then requests SIGKILL for the entire group before reaping Git.
+This lets Git clean up its locks while still terminating children that close their
+pipes before exiting. The service allows 1300 seconds
 for both repositories and kills its entire cgroup on expiry. Effective kernel
 limits, including ancestors, must meet these bounds or GC refuses to run.
 Manual shells and systems without cgroup v2 therefore cannot run this mode unbounded.

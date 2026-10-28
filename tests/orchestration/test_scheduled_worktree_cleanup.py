@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -832,24 +834,38 @@ def test_maintenance_refuses_unbounded_and_automatic_paths_and_writes_receipt(tm
     assert cleanup._git_maintenance(repo, apply=True)["ok"] is True
 
 
-def test_maintenance_timeout_terminates_git_tree_and_recovers(tmp_path: Path, monkeypatch) -> None:
-    """A hanging Git hook cannot outlive admission, and the same repository remains usable."""
+@pytest.mark.parametrize("escaped", [False, True])
+def test_maintenance_timeout_terminates_git_tree_and_recovers(tmp_path: Path, monkeypatch, escaped: bool) -> None:
+    """Timeout cleanup removes real Git ref locks; escaped pipe holders report GC failure truthfully."""
     repo = _maintenance_repo(tmp_path, monkeypatch)
     _pack_threshold(repo)
     refs = _git(repo, "show-ref")
     hook = repo / ".git/hooks/pre-auto-gc"
     pid_path = tmp_path / "hook.pid"
-    hook.write_text(
-        f"#!{sys.executable}\nimport os, signal, time\nfrom pathlib import Path\n"
-        "def delay_term(*args):\n os.close(1)\n os.close(2)\n time.sleep(10)\n"
+    hook.write_text(f"#!/bin/sh\nexec {cleanup.GIT} update-ref refs/heads/main HEAD^\n")
+    transaction_hook = repo / ".git/hooks/reference-transaction"
+    transaction_hook.write_text(
+        f"#!{sys.executable}\nimport os, signal, sys, time\nfrom pathlib import Path\n"
+        "if sys.argv[1] != 'prepared': raise SystemExit(0)\n"
+        "def delay_term(*args):\n os.close(1)\n os.close(2)\n time.sleep(30)\n"
+        f"if {escaped!r}: os.setsid()\n"
         "signal.signal(signal.SIGTERM, delay_term)\n"
         f"Path({str(pid_path)!r}).write_text(str(os.getpid()))\nsignal.pause()\n"
     )
     hook.chmod(0o700)
+    transaction_hook.chmod(0o700)
     monkeypatch.setattr(cleanup, "GC_DEADLINE_SECONDS", 0.5)
-    receipt = cleanup.build_receipt([repo], apply=True, git_maintenance=True)
+    try:
+        receipt = cleanup.build_receipt([repo], apply=True, git_maintenance=True)
+    finally:
+        if escaped and pid_path.exists():
+            with contextlib.suppress(ProcessLookupError):
+                os.kill(int(pid_path.read_text()), signal.SIGKILL)
     assert receipt["repositories"][0]["maintenance"]["action"] == "timeout"
     assert receipt["summary"]["errors"] == 1
+    detail = receipt["repositories"][0]["maintenance"]["detail"]
+    assert "SIGTERM" in detail and "SIGKILL" in detail
+    assert ("output pipes remain open" in detail) is escaped
     pid = int(pid_path.read_text())
     stat_path = Path(f"/proc/{pid}/stat")
     deadline = time.monotonic() + 5
@@ -863,6 +879,11 @@ def test_maintenance_timeout_terminates_git_tree_and_recovers(tmp_path: Path, mo
         assert time.monotonic() < deadline, f"GC child survived timeout: {state}"
         time.sleep(0.01)
     hook.write_text("#!/bin/sh\nexit 0\n")
+    transaction_hook.write_text("#!/bin/sh\nexit 0\n")
+    assert not (repo / ".git/refs/heads/main.lock").exists()
+    assert _git(repo, "show-ref") == refs
+    # A real ref write fails here if timeout cleanup stranded Git's lock.
+    _git(repo, "update-ref", "refs/heads/main", "HEAD")
     monkeypatch.setattr(cleanup, "GC_DEADLINE_SECONDS", 30)
     result = cleanup._git_maintenance(repo, apply=True)
     assert result["ok"] is True, result
