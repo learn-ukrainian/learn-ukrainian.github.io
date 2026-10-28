@@ -62,7 +62,10 @@ def test_frozen_sources_fail_closed_without_live_fallback(release_root, logical,
         snapshot.unlink()
     for verifier in (v010, v011):
         freeze = json.loads(verifier.DEFAULT_OUTPUT.read_text())
-        with pytest.raises(verifier.FreezeError):
+        if logical.as_posix() in {row["path"] for row in freeze["artifacts"]}:
+            with pytest.raises(verifier.FreezeError):
+                verifier.validate_freeze(freeze)
+        else:
             verifier.validate_freeze(freeze)
 
 

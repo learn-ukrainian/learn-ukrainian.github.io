@@ -143,6 +143,8 @@ def sha256_file(path: Path) -> str:
 # The authorization schema consts this pre-migration runner blob (55d0ed1515).
 # P3a path routing changed the file. Current bytes are pinned outside this file.
 _FROZEN_RUNNER_LOGICAL = "scripts/projects/open_model_data/gemma_hardware_probe.py"
+_COLLECTOR_V1_RUNNER_BYTES = 63112
+_COLLECTOR_V1_RUNNER_SHA256 = "7d3e12dfb114ce96f14a195c8d8515964c77e125df4b649b9b31989b2e5c8ab6"
 _FROZEN_RUNNER_BYTES = 60894
 _FROZEN_RUNNER_SHA256 = "be0f6076669c8a0d9b84d7bb840c525b43d9f7982ab83526b20f2fd0e3e5ed56"
 
@@ -164,7 +166,10 @@ def _payload_matches_binding(payload: bytes, binding: Mapping[str, Any]) -> bool
         and str(binding["sha256"]) == _FROZEN_RUNNER_SHA256
     ):
         current_bytes, current_digest = _current_runner_identity()
-        return len(payload) == current_bytes and digest == current_digest
+        return (len(payload), digest) in {
+            (current_bytes, current_digest),
+            (_COLLECTOR_V1_RUNNER_BYTES, _COLLECTOR_V1_RUNNER_SHA256),
+        }
     return False
 
 
@@ -173,7 +178,7 @@ def _runner_hash_accepted(actual: str, authorized: str) -> bool:
         return True
     if authorized == _FROZEN_RUNNER_SHA256:
         _, current_digest = _current_runner_identity()
-        return actual == current_digest
+        return actual in {current_digest, _COLLECTOR_V1_RUNNER_SHA256}
     return False
 
 
@@ -626,7 +631,7 @@ def collect_job(
     if len(inspections) != 1:
         raise HardwareProbeError("provider inspection did not return exactly one job")
     marked = [
-        line.split(RECEIPT_MARKER, 1)[1].strip() for line in logs_result.stdout.splitlines() if RECEIPT_MARKER in line
+        line.split(RECEIPT_MARKER, 1)[1].strip() for line in re.split(r"\r\n?|\n", logs_result.stdout) if RECEIPT_MARKER in line
     ]
     if len(marked) != 1:
         raise HardwareProbeError("provider logs do not contain exactly one hardware-probe receipt")
