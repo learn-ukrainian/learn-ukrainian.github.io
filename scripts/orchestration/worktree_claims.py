@@ -650,6 +650,7 @@ def git_worktree_remove(
     task_record: Mapping[str, Any] | None = None,
     preservation_receipt: dict[str, Any] | None = None,
     stage_removal: RemovalStager | None = None,
+    preserve_files: list[str] | None = None,
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
@@ -677,6 +678,9 @@ def git_worktree_remove(
     which keeps the checkout and returns a refusal starting with
     :data:`REMOVAL_STAGE_REFUSED`. Its exit runs after git returns, so it can
     restore a checkout that git did not remove.
+    ``preserve_files`` names untracked worktree files to copy, with the ignored
+    output, into the task's verified archive under ``batch_state/preserved/``
+    before a forced removal discards them.
     """
     target = worktree
     if force:
@@ -701,6 +705,7 @@ def git_worktree_remove(
             tasks_dir=tasks_dir if tasks_dir is not None else primary / "batch_state" / "tasks",
             task_record=task_record,
             repo_root=repo_root,
+            extra_files=preserve_files,
         )
     except (ControlPlaneError, OSError, ValueError) as exc:
         return f"artifact preservation failed: {exc}; refusing worktree removal"
@@ -753,6 +758,7 @@ def remove_unclaimed_worktree(
     task_record: Mapping[str, Any] | None = None,
     settled_claim: Callable[[dict[str, Any]], bool] | None = None,
     stage_removal: RemovalStager | None = None,
+    preserve_files: list[str] | None = None,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
 
@@ -769,7 +775,8 @@ def remove_unclaimed_worktree(
        worktree lock of its own on the checkout (an ACP runtime);
     5. :func:`git_worktree_remove`, which enters ``stage_removal`` (when
        given) after artifact preservation and right before destructive Git;
-       its :class:`RemovalStageRefused` skips the removal.
+       its :class:`RemovalStageRefused` skips the removal. ``preserve_files``
+       (untracked files a forced removal would discard) are copied first.
 
     Dispatch holds the same lock from before it touches a checkout until it
     publishes the record that names it, so every attachment is either visible
@@ -855,6 +862,7 @@ def remove_unclaimed_worktree(
                 task_record=task_record,
                 preservation_receipt=preservation_receipt,
                 stage_removal=stage_removal,
+                preserve_files=preserve_files,
                 **runner_options,
             )
         except Exception as exc:

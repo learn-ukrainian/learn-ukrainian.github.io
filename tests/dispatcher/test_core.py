@@ -58,8 +58,10 @@ def sandbox(tmp_path, hermetic_monitor):
     (repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     (repo / "scripts/fleet").mkdir()
     (repo / "scripts/fleet/__init__.py").touch()
-    # D5: expose only the credit reader, keeping the common reaper stub isolated.
-    for name in ("credit_lane.py", "claude_account_lane.py"):
+    # D5: expose only the credit reader and the artifact preservation settlement removal runs,
+    # keeping the common reaper stub isolated.
+    for name in ("credit_lane.py", "claude_account_lane.py", "ignored_task_output.py", "regenerable_output.py",
+                 "terminal_abandon.py"):
         shutil.copy(SOURCE / "scripts/fleet" / name, repo / "scripts/fleet" / name)
     config = repo / "scripts/config"
     config.mkdir()
@@ -380,7 +382,6 @@ def test_pushed_write_task_removes_its_worktree_at_settle(sandbox, model, flags,
 
 
 @pytest.mark.parametrize("model,flags,reason", [
-    ("dirty", [], "dirty"),
     ("pushed-dirty", [], "dirty"),
     ("unpushed", [], "unpublished"),
     ("unpushed", ["--branch", "release"], "remote_mismatch"),
@@ -395,6 +396,45 @@ def test_dirty_or_unpublished_write_task_keeps_worktree_with_reason(sandbox, mod
     assert (tree / "delivered.txt").exists()
     assert record["worktree_branch"] in local_branches(sandbox.repo)
     assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
+
+
+def preserved_copy(sandbox, record, relative):
+    """The bytes settlement copied out of the task's worktree before removing it."""
+    receipt = record["branch_holder_archive"]
+    assert (receipt["owner"], receipt["retention_disposition"]) == (record["task_id"], "retrieved")
+    return (sandbox.repo / receipt["location"] / relative).read_text()
+
+
+@pytest.mark.parametrize("model,status", [("dirty", "no_deliverable"), ("capacity-dirty", "rate_limited")])
+def test_untracked_scratch_is_preserved_and_the_worktree_removed_at_settle(sandbox, model, status):
+    """Defect (FR-01): an untracked file a worker left kept its worktree forever; copy it out, then remove."""
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write"), expected=1)
+    assert record["status"] == status
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("removed", "clean")
+    assert not Path(record["worktree_path"]).exists()
+    assert record["worktree_branch"] not in local_branches(sandbox.repo)
+    assert preserved_copy(sandbox, record, "delivered.txt") == "literal delivered value\n"
+    assert json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text()) == record
+
+
+def test_lingering_provider_process_keeps_the_worktree_until_a_retry_proves_it_gone(sandbox):
+    """Defect (FR-45): a provider child alive past settlement's bounded wait kept the tree with no retry."""
+    task = sandbox.dispatch("tree")
+    grandchild = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    record = sandbox.settle(task)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == (
+        "retained", "provider_processes_alive")
+    assert Path(record["worktree_path"]).is_dir()
+    os.kill(grandchild, signal.SIGKILL)
+    deadline = time.monotonic() + 10
+    while worker._provider_alive(record):
+        assert time.monotonic() < deadline, "grandchild survived SIGKILL"
+        time.sleep(0.02)
+    sandbox.settle(sandbox.dispatch())
+    settled = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert not Path(record["worktree_path"]).exists()
 
 
 def test_next_dispatch_settles_terminal_task_left_by_crash(sandbox):
@@ -456,10 +496,13 @@ def test_write_task_merged_into_main_counts_as_published_after_its_branch_is_del
     assert branch not in local_branches(sandbox.repo)
 
 
-@pytest.mark.parametrize("unknown,disposition", [(False, ("removed", "clean")), (True, ("retained", "dirty"))])
-def test_settlement_ignores_setup_links_and_regenerable_caches_but_not_unknown_ignored_files(
-        sandbox, monkeypatch, unknown, disposition):
-    """Defect: a clean published write task kept its worktree for the links and test caches it was set up with."""
+@pytest.mark.parametrize("unknown", [False, True])
+def test_settlement_ignores_setup_links_and_regenerable_caches_and_records_unknown_ignored_files(
+        sandbox, monkeypatch, unknown):
+    """Defect: a clean published write task kept its worktree for the links, caches and ignored output it held.
+
+    Ignored output follows the removal chokepoint's rule: inventoried in the task record, then removed.
+    """
     record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
     tree, branch = Path(record["worktree_path"]), record["worktree_branch"]
     # As in the project, tracked files keep these directories from collapsing into one ignored entry.
@@ -475,7 +518,7 @@ def test_settlement_ignores_setup_links_and_regenerable_caches_but_not_unknown_i
         ignored.append("unknown-output/")
     (sandbox.repo / ".git/info/exclude").write_text("".join(f"/{name}\n" for name in ignored))
     for relative in (*git.DATABASE_LINKS, *git.NODE_LINKS):
-        target = sandbox.repo / "primary-links" / relative
+        target = sandbox.repo / relative  # provision_links links each entry to the primary's own path
         target.parent.mkdir(parents=True, exist_ok=True)
         (tree / relative).parent.mkdir(parents=True, exist_ok=True)
         if relative.endswith(".db"):
@@ -488,8 +531,10 @@ def test_settlement_ignores_setup_links_and_regenerable_caches_but_not_unknown_i
             (tree / name).mkdir(parents=True)
             (tree / name / "artifact").write_text("regenerated")
     in_process_repo(sandbox, monkeypatch)
-    assert git.settle_worktree(record) == dict(worktree_disposition=disposition[0], worktree_disposition_reason=disposition[1])
-    assert tree.exists() is unknown
+    assert git.settle_worktree(record) == dict(worktree_disposition="removed", worktree_disposition_reason="clean")
+    assert not tree.exists()
+    recorded = [entry["path"] for entry in record.get("preserved_artifacts", {}).get("paths", [])]
+    assert recorded == (["unknown-output/artifact"] if unknown else [])
 
 
 @pytest.mark.parametrize("pull_ref,disposition", [(True, ("removed", "clean")), (False, ("retained", "unpublished"))])
@@ -688,14 +733,12 @@ def test_nonzero_error_empty_and_signal_cannot_report_done(sandbox, model, state
     assert record["returncode"] == code
 
 
-def test_provider_capacity_ends_rate_limited_and_keeps_the_dirty_worktree(sandbox):
+def test_provider_capacity_ends_rate_limited(sandbox):
     """Defect (FR-39): a provider out of capacity is a retryable condition, not a failed task."""
     record = sandbox.settle(sandbox.dispatch("capacity"), expected=1)
     assert (record["status"], record["returncode"]) == ("rate_limited", 1)
     record = sandbox.settle(sandbox.dispatch("capacity-dirty", "--mode", "workspace-write"), expected=1)
     assert record["status"] == "rate_limited"
-    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", "dirty")
-    assert (Path(record["worktree_path"]) / "delivered.txt").exists()
 
 
 def test_provider_capacity_is_rate_limited_when_an_output_schema_is_bound(sandbox):
@@ -943,9 +986,9 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
     assert record["push_state"] == push_state
     assert record["commits_ahead"] == ahead
     assert record["worktree_dirty_on_exit"] is dirty
-    if push_state == "pushed":
-        # Settlement removed the published worktree; re-attach it at its head for the probes below.
-        assert record["worktree_disposition"] == "removed"
+    assert (record["worktree_disposition"] == "removed") is (push_state == "pushed" or dirty)
+    if record["worktree_disposition"] == "removed":
+        # Settlement removed the published or scratch-only worktree; re-attach it at its head for the probes below.
         run_git(sandbox.repo, "worktree", "add", "-b", record["worktree_branch"], record["cwd"], record["head_sha"])
     assert record["head_sha"] == run_git(Path(record["cwd"]), "rev-parse", "HEAD")
     if push_state == "pushed":
