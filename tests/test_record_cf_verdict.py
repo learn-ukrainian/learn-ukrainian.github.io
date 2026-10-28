@@ -2951,11 +2951,20 @@ from pathlib import Path
 
 Path("gen.txt").write_text("".join(f"{n}: {sha256(Path(n).read_bytes()).hexdigest()}\\n" for n in ("a.txt", "b.txt")))
 """
-# Writes a stray file only where it runs without a Git pointer, as the carry-over runs it.
-STRAY_GENERATOR = GENERATOR + 'if not Path(".git").exists():\n    Path("stray.txt").write_text("stray\\n")\n'
+# Extra writes happen only where the generator runs without a Git pointer, as the
+# carry-over runs it: an ignored log file, or a tracked file rewritten with its mtime restored.
+STRAY_GENERATOR = GENERATOR + 'if not Path(".git").exists():\n    Path("stray.log").write_text("stray\\n")\n'
+RESTORING_GENERATOR = GENERATOR + (
+    'if not Path(".git").exists():\n'
+    "    import os\n"
+    '    stat = os.stat("notes.txt")\n'
+    '    Path("notes.txt").write_text("m\\n")\n'
+    '    os.utime("notes.txt", ns=(stat.st_atime_ns, stat.st_mtime_ns))\n'
+)
 REGISTRY = "schema_version: 1\ngenerated_paths:\n  gen.txt:\n    command: [python, gen.py]\n"
 CARRY_BRANCH = "codex/carry"
 CARRY_MODELS = {"anthropic": "claude-opus-5-5", "openai": "gpt-6.1-sol", "google": "gemini-3.8-flash-high"}
+CARRY_AGENTS = {"anthropic": "claude", "openai": "codex", "google": "agy"}
 
 
 def _carry_git(repo: Path, *args: str) -> str:
@@ -2992,7 +3001,7 @@ def carry_repo(
     repo = tmp_path / "carry-repo"
     repo.mkdir()
     _carry_git(repo, "init", "-q", "-b", "main")
-    files = {"gen.py": generator, "a.txt": "a\n", "b.txt": "b\n", "notes.txt": "n\n"}
+    files = {"gen.py": generator, "a.txt": "a\n", "b.txt": "b\n", "notes.txt": "n\n", ".gitignore": "*.log\n"}
     _carry_commit(repo, "root", {**files, "scripts/config/generated_paths.yaml": REGISTRY})
     _carry_git(repo, "checkout", "-qb", CARRY_BRANCH)
     approved = _carry_commit(repo, "pr", {"a.txt": "a2\n", **(pr_files or {})})
@@ -3038,6 +3047,7 @@ def carry_review(
         require_review_verdict=True,
         review_profile=profile,
         model=CARRY_MODELS[family],
+        agent=CARRY_AGENTS[family],
         started_at=started,
         pr=42,
         status=status,
@@ -3191,11 +3201,12 @@ def test_carry_over_refuses_hand_authored_change_outside_registry(monkeypatch, t
     )
 
 
-@pytest.mark.parametrize("case", ["hand-picked-bytes", "writes-outside-targets", "deleted-target"])
+@pytest.mark.parametrize(
+    "case", ["hand-picked-bytes", "writes-ignored-path", "rewrites-with-restored-mtime", "deleted-target"]
+)
 def test_carry_over_refuses_unreproduced_generated_paths(monkeypatch, tmp_path, case):
-    repo, approved, base, head = carry_repo(
-        tmp_path, generator=STRAY_GENERATOR if case == "writes-outside-targets" else GENERATOR
-    )
+    generator = {"writes-ignored-path": STRAY_GENERATOR, "rewrites-with-restored-mtime": RESTORING_GENERATOR}
+    repo, approved, base, head = carry_repo(tmp_path, generator=generator.get(case, GENERATOR))
     if case == "hand-picked-bytes":
         (repo / "gen.txt").write_text("hand-picked side of the conflict\n")
         _carry_git(repo, "commit", "-qa", "--amend", "--no-edit")
@@ -3222,6 +3233,7 @@ def test_carry_over_refuses_unreproduced_generated_paths(monkeypatch, tmp_path, 
         "done-without-reply",
         "marker-without-run",
         "marker-model-differs",
+        "unattested-runtime-model",
         "archived-run-unpublished",
     ],
 )
@@ -3249,6 +3261,10 @@ def test_carry_over_refuses_incomplete_review_lineage(monkeypatch, tmp_path, cas
     elif case == "marker-model-differs":
         record = json.loads((tasks / "review-r2.json").read_text())
         (tasks / "review-r2.json").write_text(json.dumps({**record, "model": CARRY_MODELS["google"]}))
+    elif case == "unattested-runtime-model":
+        record = json.loads((tasks / "review-r2.json").read_text())
+        cursor = {"agent": "cursor", "resolved_model": CARRY_MODELS["anthropic"], "resolved_model_known": False}
+        (tasks / "review-r2.json").write_text(json.dumps({**record, **cursor}))
     else:
         archive = tasks / recorder.ARCHIVE_DIR_NAME
         archive.mkdir()

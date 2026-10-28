@@ -28,6 +28,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import re
 import shutil
 import subprocess
 import sys
@@ -39,7 +41,6 @@ from tempfile import TemporaryDirectory
 from typing import Any
 
 import yaml
-from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -74,6 +75,7 @@ GENERATOR_TIMEOUT_S = 900
 # A learner-facing Ukrainian change seats two reviewers from two families
 # (review-loop references/ukrainian.md § Seats); every other profile seats one.
 UKRAINIAN_SEATS = 2
+NODE_PACKAGE = re.compile(r"(?:@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*\Z")
 UNATTESTED_FAMILIES = frozenset({"unknown", "unattested", "ambiguous", "conflicting"})
 
 # Typed refusal reasons, one per condition plus the inputs they read.
@@ -98,6 +100,8 @@ class CarryOverRefused(recorder.RecordError):
 class Generated:
     path: str
     command: tuple[str, ...]
+    # Node packages the generator loads, copied privately into the worktree.
+    node_packages: tuple[str, ...] = ()
 
 
 def _git(repo_root: Path, *args: str, ok: Sequence[int] = (0,), env: Mapping[str, str] | None = None) -> bytes:
@@ -174,6 +178,7 @@ def load_registry(repo_root: Path, base_tip: str) -> dict[str, Generated]:
     registry: dict[str, Generated] = {}
     for path, entry in entries.items():
         command = entry.get("command") if isinstance(entry, dict) else None
+        packages = entry.get("node_packages", []) if isinstance(entry, dict) else None
         pure = PurePosixPath(path) if isinstance(path, str) else None
         if (
             pure is None
@@ -184,9 +189,11 @@ def load_registry(repo_root: Path, base_tip: str) -> dict[str, Generated]:
             or not isinstance(command, list)
             or not command
             or not all(isinstance(part, str) and part for part in command)
+            or not isinstance(packages, list)
+            or not all(isinstance(name, str) and NODE_PACKAGE.fullmatch(name) for name in packages)
         ):
             raise CarryOverRefused(REGISTRY, f"registry entry {path!r} malformed")
-        registry[path] = Generated(path, tuple(command))
+        registry[path] = Generated(path, tuple(command), tuple(packages))
     return registry
 
 
@@ -232,10 +239,28 @@ def _committed_blob(repo_root: Path, head: str, path: str) -> bytes:
     return _git(repo_root, "cat-file", "blob", fields[2].decode("ascii"))
 
 
-def _worktree_changes(tree: Path) -> list[str]:
-    """Tracked or untracked (not ignored) paths that differ from the worktree's commit."""
-    raw = _git(tree, "status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames")
-    return sorted({entry[3:] for entry in _nul_list(raw)})
+def _snapshot(tree: Path) -> dict[str, tuple[int, ...] | None]:
+    """Every path under ``tree``, ignored ones included, with its ``lstat`` identity.
+
+    A write, a replacement or a restored mtime all change a file's ctime, which
+    no process can set back, so comparing snapshots detects any write.
+    Directories are recorded by presence only: regenerating a target touches its parent.
+    """
+    entries: dict[str, tuple[int, ...] | None] = {}
+    for root, dirs, files in os.walk(tree):
+        for name in dirs:
+            entries[os.path.relpath(os.path.join(root, name), tree)] = None
+        for name in files:
+            path = os.path.join(root, name)
+            info = os.lstat(path)
+            entries[os.path.relpath(path, tree)] = (
+                info.st_mode,
+                info.st_ino,
+                info.st_size,
+                info.st_mtime_ns,
+                info.st_ctime_ns,
+            )
+    return entries
 
 
 def check_reproduction(
@@ -244,7 +269,7 @@ def check_reproduction(
     """Condition 3: regenerate ``paths`` on a clean worktree of ``head``; return their sha256."""
     if not paths:
         return []
-    env = {**sanitized_git_env(), "GIT_LFS_SKIP_SMUDGE": "1"}
+    env = {**sanitized_git_env(), "GIT_LFS_SKIP_SMUDGE": "1", "PYTHONDONTWRITEBYTECODE": "1"}
     with TemporaryDirectory(prefix="carry-over-", dir=ensure_scratch_root()) as scratch:
         tree = Path(scratch) / "tree"
         # Hooks heal and guard real checkouts; this one is a throwaway copy of ``head``.
@@ -264,14 +289,17 @@ def check_reproduction(
         hidden = tree.with_name("git-pointer")
         try:
             committed = {path: _committed_blob(repo_root, head, path) for path in paths}
-            node_modules = repo_root / "node_modules"
-            if node_modules.is_dir() and not (tree / "node_modules").exists():
-                # Generators may need the checkout's Node packages, as they need its interpreter.
-                (tree / "node_modules").symlink_to(node_modules, target_is_directory=True)
+            for package in sorted({name for path in paths for name in registry[path].node_packages}):
+                # A private copy: nothing a generator does reaches the checkout's own packages.
+                source = repo_root / "node_modules" / package
+                if source.is_symlink() or not source.is_dir():
+                    raise CarryOverRefused(REPRODUCTION, f"Node package {package} is not installed in the checkout")
+                shutil.copytree(source, tree / "node_modules" / package, symlinks=True)
             for path in paths:
                 (tree / path).unlink()
             # Generators run without a route into the shared Git directory.
             pointer.rename(hidden)
+            before = _snapshot(tree)
             for command in dict.fromkeys(registry[path].command for path in paths):
                 argv = [sys.executable, *command[1:]] if command[0] == "python" else list(command)
                 try:
@@ -285,11 +313,15 @@ def check_reproduction(
                     raise CarryOverRefused(
                         REPRODUCTION, f"generator {' '.join(command)} exited {result.returncode}: {detail}"
                     )
-            hidden.rename(pointer)
-            outside = [path for path in _worktree_changes(tree) if path not in paths and path != "node_modules"]
+            after = _snapshot(tree)
+            outside = sorted(
+                path
+                for path in before.keys() | after.keys()
+                if path not in paths and before.get(path, "absent") != after.get(path, "absent")
+            )
             if outside:
                 raise CarryOverRefused(
-                    REPRODUCTION, "generators wrote outside the registered paths: " + ", ".join(outside)
+                    REPRODUCTION, "generators wrote outside the registered paths: " + ", ".join(outside[:20])
                 )
             receipts = []
             for path in paths:
@@ -386,14 +418,6 @@ def _started(record: Mapping[str, Any]) -> str | None:
     return started.astimezone(UTC).isoformat(timespec="microseconds")
 
 
-def _run_models(record: Mapping[str, Any]) -> set[str]:
-    """Model ids a marker may name for this run: its own and its runtime-reported one."""
-    values = (record.get("model"), record.get("resolved_model"))
-    return {value for value in values if isinstance(value, str)} | {
-        canonical_cursor_model(value) for value in values if isinstance(value, str)
-    }
-
-
 def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[tuple[tuple[str, str], dict[str, Any]]]:
     markers = []
     for index, comment in enumerate(comments):
@@ -447,8 +471,10 @@ def check_lineage(
             continue
         try:
             verdict = recorder._review_verdict_and_count(run.reply)[0]
+            # The recorder's own attestation and formal-reviewer rules decide who reviewed.
+            model, family = recorder.reviewer_identity(run.record)
         except recorder.RecordError as exc:
-            raise CarryOverRefused(LINEAGE, f"review task {run.task_id} verdict unreadable: {exc}") from None
+            raise CarryOverRefused(LINEAGE, f"review task {run.task_id} evidence refused: {exc}") from None
         started = _started(run.record)
         published = [m for _, m in markers if m["task"] == run.task_id and m["started"] == started]
         if not published:
@@ -457,7 +483,8 @@ def check_lineage(
             if (
                 marker["sha"] != run.record.get("worktree_base_sha")
                 or marker["verdict"] != verdict
-                or marker["model"] not in _run_models(run.record)
+                or marker["model"] != model
+                or marker["family"] != family
             ):
                 raise CarryOverRefused(LINEAGE, f"published verdict of {run.task_id} conflicts with its task record")
         claimed.add((run.task_id, started))

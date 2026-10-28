@@ -4,10 +4,12 @@
 # Every entry is reviewed like code. The carry-over reads this file from the base
 # branch tip, so a PR's own edits to it never count. It deletes each listed path
 # from a clean worktree of the merge head, runs its command from the worktree root,
-# and requires the output to equal the committed bytes exactly, with no other write.
-# A leading `python` in a command is the recorder's interpreter; the recorder
-# checkout's node_modules is linked in for generators that load Node packages.
+# and requires the output to equal the committed bytes exactly, with no other write
+# anywhere in the worktree. A leading `python` in a command is the recorder's
+# interpreter. `node_packages` names the Node packages the generator loads; each is
+# copied from the recorder checkout's node_modules into the worktree.
 schema_version: 1
 generated_paths:
   docs/lesson-schema.yaml:
     command: [python, scripts/build/generate_lesson_schema.py]
+    node_packages: [typescript]

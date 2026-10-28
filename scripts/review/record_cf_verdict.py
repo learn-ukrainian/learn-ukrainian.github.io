@@ -1867,6 +1867,38 @@ def _require_formal_reviewer(
         raise RecordError(f"reviewer model refused: {refusal}")
 
 
+def reviewer_identity(task: Mapping[str, Any]) -> tuple[str, str]:
+    """The attested reviewer model and family of a review task record, or a refusal.
+
+    The recorder publishes a verdict only for this identity; the approval
+    carry-over applies the same rule to every run in a PR's review lineage.
+    """
+    cursor = task.get("agent") == "cursor"
+    native_grok = task.get("agent") in {"grok", "grok-build"}
+    reported = task.get("resolved_model") if cursor or native_grok else task.get("model")
+    if cursor and task.get("resolved_model_known") is not True:
+        raise RecordError("Cursor reviewer model unknown")
+    source = task.get("resolved_model_source")
+    if cursor and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
+        raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
+    if native_grok and (task.get("resolved_model_known") is not True or source != "grok-model-usage"):
+        raise RecordError("native Grok reviewer model unattested: modelUsage runtime report required")
+    # Only Cursor's runtime reports display names; record its catalog id.
+    model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
+    if native_grok:
+        holder, admitted_runtime_ids = _native_grok_reviewer_identity()
+        if not isinstance(reported, str) or reported not in admitted_runtime_ids:
+            raise RecordError("native Grok reviewer model unknown: runtime model is not admitted")
+        model = holder
+    if not isinstance(model, str) or not model or re.search(r"\s", model):
+        raise RecordError("reviewer model unknown")
+    family = resolve_family(model)
+    if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
+        raise RecordError("reviewer family unknown")
+    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok)
+    return model, family
+
+
 @publication_boundary(RecordError)
 def record(
     task_id: str,
@@ -1913,29 +1945,7 @@ def record(
         raise RecordError("reviewed SHA missing or invalid")
     if task.get("pinned_head") is not None and task["pinned_head"] != sha:
         raise RecordError("reviewed SHA conflicts with pinned head")
-    cursor = task.get("agent") == "cursor"
-    native_grok = task.get("agent") in {"grok", "grok-build"}
-    reported = task.get("resolved_model") if cursor or native_grok else task.get("model")
-    if cursor and task.get("resolved_model_known") is not True:
-        raise RecordError("Cursor reviewer model unknown")
-    source = task.get("resolved_model_source")
-    if cursor and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
-        raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
-    if native_grok and (task.get("resolved_model_known") is not True or source != "grok-model-usage"):
-        raise RecordError("native Grok reviewer model unattested: modelUsage runtime report required")
-    # Only Cursor's runtime reports display names; record its catalog id.
-    model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
-    if native_grok:
-        holder, admitted_runtime_ids = _native_grok_reviewer_identity()
-        if not isinstance(reported, str) or reported not in admitted_runtime_ids:
-            raise RecordError("native Grok reviewer model unknown: runtime model is not admitted")
-        model = holder
-    if not isinstance(model, str) or not model or re.search(r"\s", model):
-        raise RecordError("reviewer model unknown")
-    family = resolve_family(model)
-    if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
-        raise RecordError("reviewer family unknown")
-    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok)
+    model, family = reviewer_identity(task)
     verdict, finding_count = _review_verdict_and_count(reply)
     _require_sources_mcp_calls(task)
     ukrainian = is_ukrainian_review(task)
