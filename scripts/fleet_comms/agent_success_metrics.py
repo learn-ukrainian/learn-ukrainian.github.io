@@ -17,6 +17,7 @@ from typing import Any
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
 
 from scripts.fleet_comms.efficiency_metrics import _parse_timestamp, _read_task_record, _task_record_paths
+from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, model_aliases
 from scripts.review.record_cf_verdict import RecordError, normalize_verdict
 from scripts.review.verdict_parser import _commonmark_lines, _without_code_fences
 
@@ -81,7 +82,12 @@ TOKEN_ALIASES = {
 }
 _ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
 # Only explicit finding headers count. Quoted/code examples and prose mentions do not.
-_FINDING = re.compile(r"^ {0,3}(?:#{1,6} |[-*] )?[*_]*(?:F\d+\s+)?\[(P[0-3])\](?:[*_\s:.-]|$)")
+_FINDING = re.compile(r"^ {0,3}(?:#{1,6} |[-*] )?[*_]*\[(P[0-3])\](?:[*_\s:.-]|$)")
+_FINDING_ID = re.compile(
+    r"^ {0,3}(?:#{1,6} +|[-*+] +|\d+[.)] +)?[*_]*(F\d+)\b[*_]*"
+    r"[\s:.(\[—–-]*(?:severity[:\s]+)?(P[0-3])\b",
+    re.IGNORECASE,
+)
 
 
 def _label(value: object) -> str:
@@ -174,13 +180,18 @@ def _review(path: Path, record: dict) -> dict | None:
             if isinstance(payload, dict) and isinstance(payload.get("findings"), list) and verdict != "unknown":
                 findings = payload["findings"]
             elif verdict != "unknown":
-                priorities = [
-                    m[1]
-                    for line in _commonmark_lines(_without_code_fences(text, keep_unclosed=False))
-                    if (m := _FINDING.match(line))
-                ]
+                identified, anonymous = {}, []
+                for line in _commonmark_lines(_without_code_fences(text, keep_unclosed=False)):
+                    match = _FINDING_ID.match(line)
+                    if match:
+                        identity, priority = match[1].upper(), match[2].upper()
+                        earlier = identified.get(identity, priority)
+                        identified[identity] = priority if earlier == priority else "unknown"
+                    elif match := _FINDING.match(line):
+                        anonymous.append(match[1])
+                priorities = [*identified.values(), *anonymous]
                 if priorities:
-                    findings = [{"priority": p} for p in priorities]
+                    findings = [{"priority": priority} for priority in priorities]
         else:
             verdict = recorded
         if verdict != "unknown" and findings is None and isinstance(record.get("findings"), list):
@@ -330,6 +341,16 @@ def collect_agent_success(
     coverage = Counter()
     rows, seen = [], set()
     available = True
+    try:
+        catalog = load_model_catalog()
+        aliases = {alias.casefold(): owner for alias, owner in model_aliases(catalog).items()}
+        for owner, model in catalog["models"].items():
+            for alias in (*model.get("routing_wire_ids", {}).values(), *model.get("runtime_model_ids", [])):
+                key = alias.casefold()
+                aliases[key] = owner if aliases.get(key, owner) == owner else "unknown"
+    except ModelCatalogError:
+        available, aliases = False, {}
+        coverage["model_catalog_unavailable"] += 1
     for directory, source in ((tasks_dir, "hot"), (tasks_dir / "archive", "archive")):
         try:
             paths = _task_record_paths(directory, optional=source == "archive")
@@ -375,6 +396,7 @@ def collect_agent_success(
                 resolved = canonical_cursor_model(resolved) or resolved
             observed = _label(resolved) if record.get("resolved_model_known") is True else "unknown"
             model = observed if observed != "unknown" else requested
+            model = _label(aliases.get(model.casefold(), model)) if available else "unknown"
             selector = requested.lower()
             if observed == "unknown" and selector in {"auto", "default", "unknown"}:
                 model = "unknown"
@@ -418,6 +440,7 @@ def collect_agent_success(
                 "outside_window",
                 "duplicate_runs",
                 "unreadable_directories",
+                "model_catalog_unavailable",
             )
         },
         "tasks": len(rows),

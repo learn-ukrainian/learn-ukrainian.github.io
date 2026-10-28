@@ -20,7 +20,7 @@ Each task ID and run nonce identifies one run. A duplicate hot record takes prec
 
 `success` is done divided by all included runs. `terminal_success` is done divided by done, no_deliverable, failed, timeout, rate_limited, cancelled, and crashed. Running, spawning, needs_finalize, and unknown statuses remain visible outside the terminal denominator. The collector never probes processes or changes a stale status.
 
-`by_agent` and `by_model` each cover the cohort. Concrete labels come from recorded model fields, with positively recorded runtime resolution taking precedence. Cursor display names use the shared model normalizer. Missing, unsafe, Auto, and default identities become `unknown`. `model_sources` distinguishes requested labels from resolved identities. Requested labels alone do not attest execution. Different roles and task mixes can explain model differences; these counts do not establish a causal ranking.
+`by_agent` and `by_model` each cover the cohort. Concrete labels come from recorded model fields, with positively recorded runtime resolution taking precedence. Cursor display names use the shared model normalizer. Both requested and resolved labels then use explicit catalog aliases, wire IDs, and runtime IDs, so failed runs cannot split from successful runs of the same model. Uncatalogued labels remain visible. A missing catalog makes normalization unavailable instead of guessing. Missing, unsafe, Auto, and default identities become `unknown`. `model_sources` distinguishes requested labels from resolved identities. Requested labels alone do not attest execution. Different roles and task mixes can explain model differences; these counts do not establish a causal ranking.
 
 ## Recorded metrics
 
@@ -34,7 +34,9 @@ Each optional metric contains a `value`, an `observed` count, and an `unknown` c
 | PRs opened and merged | Explicit `pr_opened` or `pr_merged` booleans on write runs. True also requires a numeric `pr` or `pr_number` and a repository identity. PR identities are deduplicated within each group. Review target PRs, pushed branches, and done statuses prove neither event. |
 | Merge-group CI failures | Explicit nonnegative integer `merge_group_ci_failures` per run. Admission CI is not substituted. |
 | Cost in USD | Explicit numeric `cost_usd` or `total_cost_usd` on the record or its usage. No pricing estimates or allowance credits. |
-| Tokens | Recorded numeric provider fields, normalized to input, output, total, cache read, cache write, and reasoning. No inferred totals. Cache tokens remain separate because provider accounting differs. |
+| Tokens | Recorded numeric provider fields, normalized to input, output, total, cache read, cache write, and reasoning. No inferred totals. Cache tokens remain separate because provider accounting differs. Raw input counts are not comparable across providers. |
+
+Claude's `input_tokens` excludes cache reads and writes, which have separate fields ([Claude prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)). Codex input includes cached input, consistent with the [OpenAI input usage breakdown](https://developers.openai.com/api/docs/guides/prompt-caching). Muse adapter payloads retain provider-native input and cached fields; the collector does not assume they are disjoint or add them. These accounting differences prevent a direct cross-provider comparison of raw input counts.
 
 Muse tokens come from `usage.models[]` in its adapter records. Entries for the task's model are summed. A different child model's tokens are not attributed to the parent model, and child usage creates no dispatch rows. Missing fields stay unknown. Claude thinking tokens also accept `usage.output_tokens_details.thinking_tokens`; Cursor camelCase usage keys are normalized.
 
@@ -46,7 +48,7 @@ Final results must be adjacent `.result` regular files, without symlinks, under 
 
 `rounds_to_approval` reports the median explicit positive integer `review_round` on approved reviews, with missing rounds visible. It does not infer a full review history from a partial window or task-name suffixes. `changes_requested` counts normalized verdicts, not failed dispatches.
 
-Finding counts and severities use structured finding metadata or explicit `[P0]` through `[P3]` finding headers in review results. Quoted and fenced examples do not count. Free prose cannot establish zero findings. `confirmed_findings` counts explicit boolean `confirmed` flags on recorded findings; no approval or fix is treated as confirmation. `confirmation_rate` uses only findings with explicit confirmation flags. `unobserved_finding_reviews` exposes reviews whose findings were not recorded in a supported form.
+Finding counts and severities use structured finding metadata or explicit `F<n>` finding headers with P0 through P3 priorities in brackets, parentheses, or after dashes or periods. Repeated finding IDs count once; conflicting priorities become unknown. Anonymous bracketed priority headers are also supported in review results. Quoted and fenced examples do not count. Free prose cannot establish zero findings. `confirmed_findings` counts explicit boolean `confirmed` flags on recorded findings; no approval or fix is treated as confirmation. `confirmation_rate` uses only findings with explicit confirmation flags. `unobserved_finding_reviews` exposes reviews whose findings were not recorded in a supported form.
 
 ## API and exit status
 

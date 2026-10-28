@@ -46,11 +46,12 @@ def test_hand_counted_model_agent_and_window_denominators(ledger):
     """Hot/archive copies must not inflate counts or lose separate nonces/statuses."""
     report = collect_agent_success(tasks_dir=ledger, until=NOW)
     assert report["complete"] is True
-    assert report["tasks"] == 19
+    assert report["tasks"] == 21
     assert report["coverage"]["duplicate_runs"] == 1
     assert report["coverage"]["outside_window"] == 1
     assert {k: v["tasks"] for k, v in report["by_agent"].items()} == {
         "codex": 9,
+        "cursor": 2,
         "muse": 3,
         "claude": 3,
         "agy": 2,
@@ -66,7 +67,13 @@ def test_hand_counted_model_agent_and_window_denominators(ledger):
         "retired-example-1": 1,
         "unknown": 1,
         "gpt-6-luna": 1,
+        "grok-4.7": 2,
     }
+    cursor = report["by_model"]["grok-4.7"]
+    assert cursor["status"]["done"] == 1 and cursor["status"]["cancelled"] == 1
+    assert cursor["terminal_success"] == {"numerator": 1, "denominator": 2, "percent": 50.0}
+    assert cursor["model_sources"] == {"requested": 1, "resolved": 1}
+    assert "grok-4.7-high" not in report["by_model"]
     terra = report["by_model"]["gpt-6.1-terra"]
     assert terra["status"] == {
         "done": 1,
@@ -88,8 +95,8 @@ def test_hand_counted_model_agent_and_window_denominators(ledger):
     assert terra["failure_classes"]["stream"] == 1
     assert report["by_model"]["gpt-6.1-sol"]["no_deliverable_reasons"]["unknown"] == 1
     assert report["by_agent"]["agy"]["failure_classes"]["unknown"] == 1
-    assert collect_agent_success(tasks_dir=ledger, until=NOW, since=NOW - timedelta(days=1))["tasks"] == 12
-    assert collect_agent_success(tasks_dir=ledger, until=NOW, since=NOW - timedelta(days=14))["tasks"] == 20
+    assert collect_agent_success(tasks_dir=ledger, until=NOW, since=NOW - timedelta(days=1))["tasks"] == 14
+    assert collect_agent_success(tasks_dir=ledger, until=NOW, since=NOW - timedelta(days=14))["tasks"] == 22
 
 
 def test_muse_reviews_tokens_and_missing_delivery_evidence(ledger):
@@ -104,19 +111,19 @@ def test_muse_reviews_tokens_and_missing_delivery_evidence(ledger):
     reviews = muse["reviews"]
     assert reviews["verdicts"] == {"APPROVED": 2, "CHANGES_REQUESTED": 1, "BLOCKED": 0, "unknown": 0}
     assert reviews["rounds_to_approval"] == {"value": 2, "observed": 1, "unknown": 1}
-    assert reviews["findings"] == {"value": 5, "observed": 2, "unknown": 1}
+    assert reviews["findings"] == {"value": 9, "observed": 2, "unknown": 1}
     assert reviews["finding_severities"] == {
-        "P0": 0,
-        "P1": 1,
-        "P2": 2,
-        "P3": 1,
+        "P0": 1,
+        "P1": 2,
+        "P2": 3,
+        "P3": 2,
         "critical": 0,
         "high": 0,
         "medium": 0,
         "low": 1,
         "unknown": 0,
     }
-    assert reviews["confirmed_findings"] == {"value": 1, "observed": 2, "unknown": 3}
+    assert reviews["confirmed_findings"] == {"value": 1, "observed": 2, "unknown": 7}
     assert reviews["confirmation_rate"] == {"numerator": 1, "denominator": 2, "percent": 50.0}
     assert muse["pr_opened"]["value"] == "unknown"
     assert muse["pr_merged"]["value"] == "unknown"
@@ -200,6 +207,7 @@ def test_incomplete_ledger_and_window_boundaries_are_visible(tmp_path, capsys):
         "outside_window": 2,
         "duplicate_runs": 0,
         "unreadable_directories": 0,
+        "model_catalog_unavailable": 0,
     }
     assert report["by_agent"]["agy"]["status"]["unknown"] == 1
     assert main(["--tasks-dir", str(tmp_path), "--until", NOW.isoformat(), "--json"]) == 1
@@ -267,7 +275,7 @@ def test_fresh_process_cli_resolves_primary_store_override(ledger):
         timeout=60,
     )
     assert proc.returncode == 0, proc.stderr
-    assert json.loads(proc.stdout)["tasks"] == 19
+    assert json.loads(proc.stdout)["tasks"] == 21
 
 
 def test_metrics_api_uses_context_ledger_even_when_comms_store_is_missing(tmp_path, monkeypatch):
