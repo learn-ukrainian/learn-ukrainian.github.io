@@ -595,8 +595,13 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
             return failure
         # These multi-valued settings cannot all be reset with command-scope
         # config. Only the named origin's identity/ref mapping is needed here.
+        # A partial clone's origin also records promisor/partialclonefilter.
+        # They select lazy-fetch sources and the default filter for fetches of
+        # the remote named origin; this import names an anonymous file URI and
+        # lazy fetch is off, so neither can reach a transport.
         if any(key.lower().startswith(("remote.", "url.")) and key.lower() not in
-               {"remote.origin.url", "remote.origin.fetch"} for key in keys):
+               {"remote.origin.url", "remote.origin.fetch", "remote.origin.promisor",
+                "remote.origin.partialclonefilter"} for key in keys):
             return GitRefusal(args, "remote_import_config_unsupported", text=bool(kwargs.get("text")))
         for key in sorted(keys):
             if re.fullmatch(r"credential(?:\..+)?\.helper", key, re.I):
