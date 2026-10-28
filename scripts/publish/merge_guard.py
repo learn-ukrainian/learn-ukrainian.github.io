@@ -101,7 +101,7 @@ def _read_all_pages(get_json: Callable[[str], object], endpoint: str, key: str) 
     and on. The first request is the bare ``endpoint``; later ones add ``page=N``. The
     walk fails closed unless the collected records equal ``total_count``: an unreadable
     or malformed page, a short page before the total is reached, a ``total_count`` that
-    changes mid-walk or a repeated record id (the list shifted under the walk) is None.
+    changes mid-walk, or (across pages) a record without an integer id or a repeated id, is None.
     """
     first = get_json(endpoint)
     if not isinstance(first, dict) or type(first.get("total_count")) is not int or not isinstance(first.get(key), list):
@@ -121,9 +121,14 @@ def _read_all_pages(get_json: Callable[[str], object], endpoint: str, key: str) 
         ):
             return None
         records.extend(following[key])
-    ids = [row["id"] for row in records if isinstance(row, dict) and type(row.get("id")) is int]
-    if len(records) != total or len(set(ids)) != len(ids):
+    if len(records) != total:
         return None
+    if page > 1:
+        # Only a multi-page walk can shift under new records; every record must then
+        # carry an integer identity so a repeated one cannot stand in for a missed one.
+        ids = [row.get("id") if isinstance(row, dict) else None for row in records]
+        if any(type(value) is not int for value in ids) or len(set(ids)) != len(ids):
+            return None
     return {"total_count": total, key: records}
 
 

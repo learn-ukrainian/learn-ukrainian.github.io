@@ -730,6 +730,8 @@ def test_prove_external_advisory_reads_a_full_single_page_once():
     pytest.param(_paged_runs(136), {"drop": (2,)}, id="page-disappears-mid-walk"),
     pytest.param(_paged_runs(136), {"total": 137}, id="total-changes-mid-walk"),
     pytest.param(_paged_runs(100) + _paged_runs(36)[:20] + _paged_runs(100)[:16], {}, id="repeated-run-ids"),
+    pytest.param([{k: v for k, v in run.items() if k != "id"} for run in _paged_runs(136)], {}, id="ids-omitted"),
+    pytest.param([{**run, "id": str(run["id"])} for run in _paged_runs(136)], {}, id="string-ids"),
     pytest.param(_paged_runs(90), {"total": 136}, id="short-first-page"),
 ])
 def test_prove_external_advisory_fails_closed_when_pages_do_not_add_up(runs, kwargs):
