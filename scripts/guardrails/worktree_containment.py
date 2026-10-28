@@ -55,6 +55,7 @@ except ImportError:  # scripts/ on sys.path (stripped flavor)
 
 __all__ = [
     "PROTECTED_BRANCHES",
+    "GitWriteTarget",
     "NotAGitRepositoryError",
     "PathClass",
     "WriteDecision",
@@ -71,6 +72,7 @@ __all__ = [
     "is_write_allowed",
     "primary_checkout_dirty_status",
     "registered_worktrees",
+    "resolve_git_worktree",
     "resolve_main_root",
     "resolve_main_root_without_git",
 ]
@@ -154,6 +156,36 @@ def _run_git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
             stdout="",
             stderr=str(exc),
         )
+
+
+@dataclass(frozen=True)
+class GitWriteTarget:
+    common_dir: Path
+    git_dir: Path
+    worktree: Path
+    cwd: Path
+
+
+def resolve_git_worktree(cwd: Path | str, options: list[str]) -> GitWriteTarget:
+    """Resolve Git target options without executing a working-tree mutation.
+
+    Git interprets repeated -C and relative --git-dir/--work-tree itself.
+    Failed probes and missing worktrees are unknown, never foreign-repo proof.
+    """
+    proc = _run_git(
+        Path(cwd), *options, "rev-parse", "--path-format=absolute",
+        "--git-common-dir", "--absolute-git-dir", "--show-toplevel", "--show-prefix",
+    )
+    lines = proc.stdout.splitlines()
+    if proc.returncode or len(lines) != 4:
+        raise NotAGitRepositoryError("Cannot resolve Git write target")
+    common, gitdir, top, prefix = lines
+    common_dir = Path(common).resolve(strict=True)
+    git_dir = Path(gitdir).resolve(strict=True)
+    worktree = Path(top).resolve(strict=True)
+    if not all(path.is_dir() for path in (common_dir, git_dir, worktree)):
+        raise NotAGitRepositoryError("Cannot resolve Git write target")
+    return GitWriteTarget(common_dir, git_dir, worktree, (worktree / prefix).resolve(strict=True))
 
 
 def _git_dir_for(path: Path) -> Path:

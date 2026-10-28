@@ -73,7 +73,7 @@ def blocked(command: str, parser=None, depth: int = 0) -> str | None:
         binary, index = parser._command_word(segment)
         args = [str(word) for word in segment[index + 1 :]]
         if binary == "git":
-            _, rest = parser._git_global_prefix(args)
+            _, _, rest = parser._git_global_prefix(args)
             if rest and rest[0] == "push":
                 return "git push"
         elif binary == "gh":

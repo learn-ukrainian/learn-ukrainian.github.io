@@ -447,6 +447,7 @@ def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> 
     stdout, stderr = io.StringIO(), io.StringIO()
     with (
         chdir(repo),
+        patch.object(hook, "_protected_repo_anchor", return_value=repo),
         patch.dict(os.environ, {**_clean_env(), **(env_extra or {})}, clear=True),
         patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
         redirect_stdout(stdout),
@@ -926,6 +927,118 @@ def test_bash_git_write_intents_honors_dash_c():
     assert len(intents) == 1
     assert intents[0]["c_path"] == ".worktrees/dispatch/claude/task-1"
     assert intents[0]["kind"] == "apply"
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "merge --ff-only origin/main",
+        "pull",
+        "add curriculum/tracked.md",
+        "apply change.diff",
+        "checkout HEAD -- curriculum/tracked.md",
+    ],
+)
+@pytest.mark.parametrize("target", ["dash_c", "cwd", "relative", "repeated_c", "git_dirs", "git_dirs_equals"])
+def test_issue_11381_foreign_git_target_allowed(
+    repo: Path, repo_template: Path, tmp_path: Path, mutation: str, target: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    cwd = repo
+    prefix = {
+        "dash_c": f"git -C {other}",
+        "cwd": "git",
+        "relative": "git -C ../other",
+        "repeated_c": "git -C .. -C other",
+        "git_dirs": f"git --git-dir {other}/.git --work-tree {other}",
+        "git_dirs_equals": f"git --git-dir={other}/.git --work-tree={other}",
+    }[target]
+    if target == "cwd":
+        cwd = other
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(cwd), "tool_input": {"command": f"{prefix} {mutation}"}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "target",
+    [
+        "dash_c",
+        "symlink",
+        "relative",
+        "repeated_c",
+        "git_dirs",
+        "git_dirs_equals",
+        "missing_c",
+        "missing_gitdir",
+        "missing_worktree",
+    ],
+)
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "merge --ff-only origin/main",
+        "pull",
+        "add curriculum/tracked.md",
+        "apply change.diff",
+        "checkout HEAD -- curriculum/tracked.md",
+    ],
+)
+def test_issue_11381_protected_or_unresolved_git_target_blocked(
+    repo: Path, repo_template: Path, tmp_path: Path, target: str, mutation: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    link = tmp_path / "primary-link"
+    link.symlink_to(repo, target_is_directory=True)
+    prefix = {
+        "dash_c": f"git -C {repo}",
+        "symlink": f"git -C {link}",
+        "relative": "git -C ../main",
+        "repeated_c": "git -C .. -C main",
+        "git_dirs": f"git --git-dir {repo}/.git --work-tree {repo}",
+        "git_dirs_equals": f"git --git-dir={repo}/.git --work-tree={repo}",
+        "missing_c": f"git -C {tmp_path}/missing",
+        "missing_gitdir": f"git --git-dir={tmp_path}/missing --work-tree={other}",
+        "missing_worktree": f"git --git-dir={other}/.git --work-tree={tmp_path}/missing",
+    }[target]
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(other), "tool_input": {"command": f"{prefix} {mutation}"}})
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_11381_default_anchor_is_hook_repository(tmp_path: Path):
+    from scripts.guardrails import worktree_containment as wc
+
+    expected = wc.resolve_git_worktree(REPO_ROOT, []).common_dir
+    with chdir(tmp_path):
+        assert wc.resolve_git_worktree(hook._protected_repo_anchor(), []).common_dir == expected
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git --git-dir={primary}/.git --work-tree={other} add curriculum/tracked.md",
+        "git --git-dir={other}/.git --work-tree={primary} apply change.diff",
+        "git -C {other} --git-dir={primary}/.git checkout HEAD -- curriculum/tracked.md",
+        "git --git-dir={other}/.git add curriculum/tracked.md",
+        "GIT_DIR={primary}/.git git -C {other} add curriculum/tracked.md",
+        "env GIT_WORK_TREE={primary} git -C {other} apply change.diff",
+        "export GIT_DIR={primary}/.git; git -C {other} add curriculum/tracked.md",
+        "export GIT_DIR={primary}/.git; bash -c 'git -C {other} add curriculum/tracked.md'",
+        "git -C $UNKNOWN_REPOSITORY add curriculum/tracked.md",
+        "git -C {other} -c core.worktree={primary} apply change.diff",
+        "git -C {other} -ccore.worktree={primary} apply change.diff",
+        "git -C {other} --config-env=core.worktree=WORK_TREE apply change.diff",
+        "GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.worktree GIT_CONFIG_VALUE_0={primary} git -C {other} apply change.diff",
+    ],
+)
+def test_issue_11381_redirected_git_target_blocked(repo: Path, repo_template: Path, tmp_path: Path, command: str):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    # A foreign --git-dir alone uses the current working directory as its worktree.
+    cwd = repo if command == "git --git-dir={other}/.git add curriculum/tracked.md" else other
+    result = _run(
+        repo,
+        {"tool_name": "Bash", "cwd": str(cwd), "tool_input": {"command": command.format(primary=repo, other=other)}},
+    )
+    assert result.returncode == 2, result.stderr
 
 
 def test_git_apply_on_primary_blocked(repo: Path):
