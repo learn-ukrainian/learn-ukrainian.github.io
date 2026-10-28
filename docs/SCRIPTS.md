@@ -1830,6 +1830,15 @@ When the delegated task may edit files or run git commands:
 `dispatch.py status <task-id>` will include the `worktree_path` so operators can inspect or clean it up later.
 Use `dispatch.py status-or-fail <task-id>` before reporting async task state from memory; it exits 0 only when the Monitor API confirms the task is currently running, exits 1 when the task is done/missing/stale, and exits 2 when the Monitor API is unreachable.
 
+**Site dependencies.** A new dispatch worktree gets its own real `site/node_modules` made of hard links to a
+content-addressed store in the primary checkout's `.git/dispatch-dep-store` (about 530 MB once, near zero per
+worktree), so no `npm ci` is needed there. The store key covers the lockfile, `package.json`, project `.npmrc`,
+local inputs, Node/npm versions, platform and npm config; a miss installs once with `npm ci` in a staging
+directory. Store files are read-only (an in-place edit of a package file fails instead of changing every
+worktree); `npm ci` or `rm -r` in a worktree is safe. A failure never blocks the task, and
+`LEARN_UKRAINIAN_SITE_DEPS=off` skips the step. `.venv/bin/python -m scripts.dispatcher.site_deps
+{ensure|status|prune}` runs it by hand.
+
 ### Monitoring
 
 Two event surfaces, split by agent:
