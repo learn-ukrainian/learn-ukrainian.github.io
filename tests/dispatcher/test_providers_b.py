@@ -413,3 +413,19 @@ def test_claude_529_result_is_rate_limited_and_other_errors_stay_failed():
     for fields in ({"api_error_status": None}, {"api_error_status": 500}, {"api_error_status": 529, "is_error": False}):
         other = load("claude").parse(_claude_result(**fields), "", 1, None)
         assert (other.rate_limited, other.error) == (False, "claude: exited with status 1")
+
+
+_CLAUDE_529 = _claude_result(api_error_status=529, result="API Error: 529 Overloaded.")
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        "not json\n" + _CLAUDE_529,  # a malformed line before the terminal result
+        _CLAUDE_529 + '\n{"type":"assistant"}',  # an event after the terminal result
+        _CLAUDE_529 + "\n" + _CLAUDE_529,  # a duplicated terminal result
+    ],
+)
+def test_claude_unclean_capacity_stream_stays_failed(stdout):
+    result = load("claude").parse(stdout, "", 1, None)
+    assert (result.rate_limited, result.error) == (False, "claude: exited with status 1")

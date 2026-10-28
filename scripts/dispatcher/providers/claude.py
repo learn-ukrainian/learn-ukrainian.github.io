@@ -121,6 +121,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
     result, error, overloaded = {}, None, False
+    stream_clean, terminals = True, 0
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
@@ -128,10 +129,16 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             event = json.loads(line)
         except ValueError:
             error = "claude: invalid JSON stream"
+            stream_clean = False
             continue
+        if terminals:
+            # Anything after the terminal result (another result, an event) makes the stream untrustworthy.
+            stream_clean = False
         if not isinstance(event, dict):
             error = "claude: invalid event"
+            stream_clean = False
         elif event.get("type") == "result":
+            terminals += 1
             result = event
             if event.get("is_error") or event.get("subtype") != "success":
                 error = "claude: terminal result unsuccessful"
@@ -142,7 +149,7 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
     text = result.get("result")
     text = text if isinstance(text, str) and text.strip() else None
     usage = result.get("usage")
-    if overloaded and error == "claude: terminal result unsuccessful" and isinstance(result.get("result"), str):
+    if overloaded and stream_clean and terminals == 1 and error == "claude: terminal result unsuccessful" and isinstance(result.get("result"), str):
         return ParsedResult(None, None, f"claude: {result['result']}", rate_limited=True)
     if returncode:
         error = f"claude: exited with status {returncode}"
