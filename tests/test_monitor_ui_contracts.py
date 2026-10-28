@@ -8,6 +8,21 @@ pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[1]
 DASHBOARDS = ROOT / "dashboards"
+
+
+def test_orient_hosts_preserve_null_error_and_source_age():
+    """The shipped Hosts panel must not hide source age or fabricate idle on failure."""
+    result = subprocess.run(
+        ["node", "--test", "tests/orient_glance.test.cjs"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def test_orient_page_renders_active_discussions_widget():
     html = (DASHBOARDS / "orient.html").read_text(encoding="utf-8")
     assert "Active Discussions" in html
