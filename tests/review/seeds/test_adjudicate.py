@@ -208,17 +208,28 @@ def test_lesson_text_containing_a_fence_cannot_close_the_data_block(seeded: Case
 def test_the_task_dispatches_through_dispatch_py(seeded: Case) -> None:
     subject = subject_of(seeded)
     path, task_id = adj.write_task(subject, LESSON_TEXT, review_id=seeded.review_id, root=seeded.env.root)
-    argv = adj.dispatch_argv(path, task_id, "agy", model="gemini-3.1-pro-preview")
+    argv = adj.dispatch_argv(path, task_id, "codex", model="gpt-6.1-sol")
     assert Path(argv[1]).name == "dispatch.py" and argv[2] == "dispatch"
     parsed = build_parser().parse_args(argv[2:])  # the real dispatch parser accepts exactly this command
     assert (parsed.agent, parsed.task_id, parsed.prompt_file, parsed.mode, parsed.model, parsed.cwd) == (
-        "agy",
+        "codex",
         task_id,
         str(path),
         "read-only",
-        "gemini-3.1-pro-preview",
+        "gpt-6.1-sol",
         None,
     )
+
+
+def test_the_task_never_requests_a_refused_read_only_agy_run(tmp_path, capsys) -> None:
+    """Dispatch refuses read-only AGY (C-2970): the builder raises its refusal and the CLI offers no AGY."""
+    with pytest.raises(ValueError, match="read_only_unenforceable: agy cannot run --mode read-only"):
+        adj.dispatch_argv(tmp_path / "prompt.md", "adj-test", "agy", model="gemini-3.1-pro-preview")
+    with pytest.raises(SystemExit) as exit_info:
+        adj.main(["task", "seed-a1", "--review-id", "R", "--attempt-id", "A", "--lesson", "l.yaml",
+                  "--agent", "agy", "--model", "gemini-3.1-pro-preview"])
+    assert exit_info.value.code == 2
+    assert "invalid choice: 'agy'" in capsys.readouterr().err
 
 
 def test_render_dispatch_command_does_not_load_legacy_runtime(tmp_path):
@@ -743,20 +754,20 @@ def test_a_task_created_with_model_round_trips_through_the_emitted_command(
         "--lesson",
         str(lesson),
         "--agent",
-        "agy",
+        "claude",
         "--model",
-        "gemini-3.1-pro-preview",
+        "claude-opus-5-5",
     ]
     assert adj.main(argv) == 0
     payload = json.loads(capsys.readouterr().out)
     parsed = build_parser().parse_args(payload["dispatch"][2:])
-    assert parsed.model == "gemini-3.1-pro-preview"
+    assert parsed.model == "claude-opus-5-5"
     task_id = payload["task_id"]
     seeded.dispatch(parsed.agent, parsed.model, task_id=task_id, mode=parsed.mode)
     identity = adj.check_dispatch_binding(
         seeded.unit_id, seeded.review_id, seeded.attempt_id, task_id, seeded.env.tasks, seeded.env.root
     )
-    assert identity == {"model": "gemini-3.1-pro-preview", "harness": "agy", "family": "google"}
+    assert identity == {"model": "claude-opus-5-5", "harness": "claude", "family": "anthropic"}
 
 
 def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixture[str], tmp_path: Path) -> None:
@@ -774,7 +785,7 @@ def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixtur
     ]
     assert (
         adj.main(
-            ["task", "seed-a1", *common, "--lesson", str(lesson), "--agent", "agy", "--model", "gemini-3.1-pro-preview"]
+            ["task", "seed-a1", *common, "--lesson", str(lesson), "--agent", "codex", "--model", "gpt-6.1-sol"]
         )
         == 0
     )
@@ -812,9 +823,9 @@ def test_the_task_and_record_commands(seeded: Case, capsys: pytest.CaptureFixtur
                 "--lesson",
                 str(lesson),
                 "--agent",
-                "agy",
+                "claude",
                 "--model",
-                "gemini-3.1-pro-preview",
+                "claude-opus-5-5",
                 "--repo-root",
                 str(seeded.env.root),
                 "--db",

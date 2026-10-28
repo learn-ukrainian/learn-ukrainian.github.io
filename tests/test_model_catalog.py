@@ -53,17 +53,21 @@ def test_catalog_invocations_pin_supported_launchers_and_flags(seat, route, laun
     expected = [".venv/bin/python", f"scripts/{launcher}", "dispatch", "--agent", agent, "--model", model]
     if effort:
         expected += ["--effort", effort]
+    if seat == "google_bounded":  # dispatch refuses read-only AGY (C-2970): the seat must ask for write mode itself
+        expected += ["--mode", "workspace-write"]
     assert argv == expected
     from scripts.dispatcher.cli import build_parser
 
-    mode = "workspace-write" if seat == "google_bounded" else "read-only"  # dispatch refuses read-only AGY (C-2970)
     args = build_parser().parse_args([*argv[2:],
-        "--worktree", "--mode", mode, "--task-id", "catalog-review", "--prompt-file", "prompt.md",
+        "--worktree", "--task-id", "catalog-review", "--prompt-file", "prompt.md",
     ])
     assert (args.agent, args.model, args.effort, args.task_id) == (agent, model, effort, "catalog-review")
     if seat == "google_bounded":
-        candidate = resolve_role("bounded_fallback", purpose="inspect").candidates[0]
-        assert list(candidate.argv) == expected
+        from scripts.dispatcher import providers
+
+        assert args.mode == "workspace-write" and providers.read_only_refusal(agent)
+        for purpose in ("inspect", "launch"):
+            assert list(resolve_role("bounded_fallback", purpose=purpose).candidates[0].argv) == expected
 
 
 @pytest.mark.parametrize("value", [None, "grok-4.7-build", [], [""], [" "], [1], ["grok-4.7-build", None]])

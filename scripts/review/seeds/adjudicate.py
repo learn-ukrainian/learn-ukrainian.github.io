@@ -296,8 +296,12 @@ def write_task(subject: Subject, lesson_text: str, *, review_id: str, root: Path
 
 def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str) -> list[str]:
     """Build a read-only dispatch v2 command with an explicit model and full checkout."""
+    from scripts.dispatcher import providers
+
     if not model:
         raise ValueError("dispatch_argv requires an explicit model (dispatch.py dispatch's --model)")
+    if refusal := providers.read_only_refusal(agent):
+        raise ValueError(refusal)
     return [
         str(project_interpreter(REPO_ROOT)),
         str(DISPATCH),
@@ -631,7 +635,14 @@ def build_parser() -> argparse.ArgumentParser:
         command.add_argument("--db", type=Path, default=None, help="findings database (default: the unit's level)")
         if name == "task":
             command.add_argument("--lesson", type=Path, required=True, help="the expanded measurement lesson")
-            command.add_argument("--agent", required=True, help="the adjudicating harness (dispatch.py --agent)")
+            from scripts.dispatcher import providers
+
+            command.add_argument(
+                "--agent",
+                required=True,
+                choices=[agent for agent in providers.PROVIDERS if not providers.read_only_refusal(agent)],
+                help="the adjudicating harness (dispatch.py --agent); one whose read-only run dispatch accepts",
+            )
             command.add_argument(
                 "--model",
                 required=True,

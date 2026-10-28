@@ -1464,7 +1464,7 @@ seats:
         route: agy
         transport: agy
         effort: high
-        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent agy --model {wire_id} --effort high
+        invocation: .venv/bin/python scripts/dispatch.py dispatch --agent agy --model {wire_id} --effort high --mode workspace-write
 roles:
   routine_mechanical:
     routes: [mechanical_worker/native, anthropic_practical/native]
