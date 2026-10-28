@@ -238,8 +238,8 @@ Each label's directory lives only in the private binding file, as an entry with
 `config_dir` alone (an API key has no login account):
 
 ```json
-{"schema_version": 1, "accounts": {"b": {"config_dir": "...", "account_uuid": "..."},
- "kk": {"config_dir": "/home/ops/.claude-api-kk"}, "szb": {"config_dir": "/home/ops/.claude-api-szb"}}}
+{"schema_version": 1, "accounts": {"b": {"config_dir": "<absolute directory>", "account_uuid": "<account UUID>"},
+ "kk": {"config_dir": "<absolute directory>"}, "szb": {"config_dir": "<absolute directory>"}}}
 ```
 
 Admission (`attempt_boundary._refuse_claude_api_key_launch`) requires the
