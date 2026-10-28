@@ -20,7 +20,7 @@ env:
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, edited]
   merge_group:
   workflow_dispatch:
     inputs:
@@ -93,6 +93,11 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
+      - name: Scan publication fields
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"
       # Schedule scans at least the ancestry window, widening to the last
       # successfully scanned head. Unknown coverage or git failures fail.
       # Manual dispatches use the default-branch merge-base through github.sha;

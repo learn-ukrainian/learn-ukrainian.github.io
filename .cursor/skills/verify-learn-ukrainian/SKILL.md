@@ -110,7 +110,6 @@ These mirror what CI Gate runs locally — they are not a full 16-shard pytest m
 - `npm run build` / `npm run build:shell` + `npm test` in `site/` — Frontend job pieces (build via launch; unit tests: `(cd site && npm run test:unit && npm run test:built-output)` when proving frontend)
 - Targeted pytest: `tests/validate/test_permissions_register.py`
 - `.venv/bin/python -m scripts.atlas.word_card_foundation verify --manifest registry/atlas/pilot/pilot-v1.json --registry registry/atlas/identity/registry.json`
-- `.venv/bin/python -m scripts.curriculum.evidence lessons-lock a1 sounds-letters-and-hello`
 - `.venv/bin/python scripts/lexicon/check_manifest_freshness.py`
 
 ### Skip policy (never fail the suite for missing private env)
@@ -119,11 +118,9 @@ These mirror what CI Gate runs locally — they are not a full 16-shard pytest m
 
 | Check | Skip when |
 | --- | --- |
-| Evidence pack-verify | Sources MCP / sources service on the local monitor port is down |
 | Practice linguistic gate | `data/vesum.db` absent |
 | Curated-seed make targets | Private curated seed input absent |
 | Word-card verify | Input/DB refuse that names missing private files |
-| Lesson lock | Committed lock missing, or stderr reports unavailable sources/artifacts |
 | `checks.sh` | `origin/main` not fetched |
 
 Skips are successful for env gaps. Only an executed check that returns non-zero without an env-gap signal is `FAIL`.

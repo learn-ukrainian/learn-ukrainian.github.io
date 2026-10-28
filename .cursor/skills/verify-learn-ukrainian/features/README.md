@@ -46,4 +46,4 @@ Each feature file starts with an H1 title and one paragraph describing the user-
 - [Practice](./practice.md) — `/practice/` modes, cloze/matching/flashcards, secondary tools fold.
 - [Readings](./readings.md) — `/readings/` library, genre cards, one published text.
 - [Site build](./site-build.md) — production shell/full build and preview readiness.
-- [Data contracts & local CI Gate](./data-contracts.md) — lesson lock freshness, Atlas register pins/manifests, licence register, `checks.sh`.
+- [Data contracts & local CI Gate](./data-contracts.md) — Atlas register pins/manifests, licence register, `checks.sh`.
