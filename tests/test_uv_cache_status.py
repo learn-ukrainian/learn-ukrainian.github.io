@@ -1,4 +1,4 @@
-"""uv cache size/growth line for lu-driver-status (#10779), driven by injected sizes."""
+"""uv cache size/growth line for lu-driver-status (#10827), driven by injected sizes."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import contextlib
 import fcntl
 import json
 import os
+import stat
 import subprocess
 import sys
 import threading
@@ -455,7 +456,7 @@ def test_unusable_history_is_unavailable_not_building(cache: Path, tmp_path: Pat
     assert uv.format_line(status) == "UV CACHE: 11.00 GiB, growth n/a (history unavailable) [WARN: size above 10 GiB]"
 
 
-def test_atomic_update_leaves_old_history_visible_until_replace(
+def test_atomic_update_syncs_file_before_replace_and_directory_after(
     cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     state = tmp_path / "state"
@@ -463,44 +464,78 @@ def test_atomic_update_leaves_old_history_visible_until_replace(
     history = state / uv.HISTORY_FILENAME
     _write_history(history, (NOW - 24 * HOUR, GIB))
     old = history.read_bytes()
-    real_replace, real_write = os.replace, os.write
-    replacements = []
+    real_replace, real_write, real_fsync = os.replace, os.write, os.fsync
+    events = []
 
     def replace(src: str, dst: str, **kwargs: object) -> None:
         assert history.read_bytes() == old
         payload = (state / src).read_bytes()
         assert [json.loads(line)["bytes"] for line in payload.splitlines()] == [GIB, 2 * GIB]
-        replacements.append((src, dst))
+        events.append("replace")
         real_replace(src, dst, **kwargs)
 
     def short_write(fd: int, data: object) -> int:
         assert history.read_bytes() == old
         return real_write(fd, bytes(data)[:1])
 
+    def fsync(fd: int) -> None:
+        if stat.S_ISDIR(os.fstat(fd).st_mode):
+            assert _read(history) == [
+                {"ts": NOW - 24 * HOUR, "bytes": float(GIB)},
+                {"ts": NOW, "bytes": float(2 * GIB)},
+            ]
+            events.append("directory sync")
+        else:
+            assert history.read_bytes() == old
+            events.append("file sync")
+        real_fsync(fd)
+
+    monkeypatch.setattr(os, "fsync", fsync)
     monkeypatch.setattr(os, "replace", replace)
     monkeypatch.setattr(os, "write", short_write)
     with _dir_fd(state) as fd:
         uv.record_sample(fd, NOW, 2 * GIB)
-    assert len(replacements) == 1
+    assert events == ["file sync", "replace", "directory sync"]
     assert _read(history) == [{"ts": NOW - 24 * HOUR, "bytes": float(GIB)}, {"ts": NOW, "bytes": float(2 * GIB)}]
     assert sorted(p.name for p in state.iterdir()) == [uv.HISTORY_FILENAME, uv.HISTORY_FILENAME + uv.LOCK_SUFFIX]
 
 
-def test_failed_atomic_update_keeps_prior_history_and_cleans_temporary_file(
-    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize("failure", ["file sync", "replace", "directory sync"])
+def test_failed_atomic_update_reports_unavailable_and_cleans_temporary_file(
+    cache: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str
 ) -> None:
-    history = tmp_path / uv.HISTORY_FILENAME
+    history = tmp_path / "state" / uv.HISTORY_FILENAME
+    history.parent.mkdir()
     _write_history(history, (NOW - 24 * HOUR, GIB))
     before = history.read_bytes()
+    real_fsync = os.fsync
+    events = []
 
     def fail(*args: object, **kwargs: object) -> None:
         raise OSError("injected rename failure")
 
-    monkeypatch.setattr(os, "replace", fail)
+    def fsync(fd: int) -> None:
+        event = "directory sync" if stat.S_ISDIR(os.fstat(fd).st_mode) else "file sync"
+        events.append(event)
+        if event == failure:
+            raise OSError("injected sync failure")
+        real_fsync(fd)
+
+    monkeypatch.setattr(os, "fsync", fsync)
+    if failure == "replace":
+        monkeypatch.setattr(os, "replace", fail)
     status = _status(cache, history, 2 * GIB, record=True)
     assert "history unavailable" in uv.format_line(status)
-    assert history.read_bytes() == before
-    assert not list(tmp_path.glob("*.tmp"))
+    if failure == "directory sync":
+        assert events == ["file sync", "directory sync"]
+        assert _read(history) == [
+            {"ts": NOW - 24 * HOUR, "bytes": float(GIB)},
+            {"ts": NOW, "bytes": float(2 * GIB)},
+        ]
+    else:
+        assert events == ["file sync"]
+        assert history.read_bytes() == before
+    assert sorted(p.name for p in history.parent.iterdir()) == [uv.HISTORY_FILENAME, uv.HISTORY_FILENAME + uv.LOCK_SUFFIX]
 
 
 @pytest.mark.parametrize("race", ["symlink-retarget", "directory-move", "hardlink", "hardlink-unlink"])

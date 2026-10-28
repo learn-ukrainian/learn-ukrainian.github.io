@@ -38,7 +38,6 @@ import sys
 import time
 from collections.abc import Callable
 from pathlib import Path
-from typing import NamedTuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -221,14 +220,8 @@ def _lock_history(lock_fd: int, deadline: float, timeout_s: float) -> None:
             time.sleep(min(LOCK_RETRY_SECONDS, remaining))
 
 
-def _require_single_link(fd: int, what: str) -> None:
-    """Refuse the open file ``fd`` when it has another name, which may lie inside the cache."""
-    if os.fstat(fd).st_nlink != 1:
-        raise HistoryLocationError(f"the {what} has more than one link")
-
-
 def _open_lock(dir_fd: int, deadline: float, timeout_s: float) -> tuple[int, bool]:
-    """Open a regular, unaliased lock with a bounded retry deadline."""
+    """Open a regular lock with a bounded retry deadline."""
     base = os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
     name = HISTORY_FILENAME + LOCK_SUFFIX
     while True:
@@ -251,7 +244,6 @@ def _open_lock(dir_fd: int, deadline: float, timeout_s: float) -> tuple[int, boo
         try:
             if not stat.S_ISREG(os.fstat(fd).st_mode):
                 raise HistoryLocationError("the history lock file is not a regular file")
-            _require_single_link(fd, "history lock file")
         except HistoryLocationError:
             if created:
                 _unlink_if_same(name, fd, dir_fd)
@@ -376,13 +368,6 @@ def bound_dir_inside_cache(
     return bound_path == cache_real or cache_real in bound_path.parents
 
 
-class BoundHistoryDir(NamedTuple):
-    """An opened history directory and the resolved path it was opened at."""
-
-    fd: int
-    path: Path
-
-
 def validate_history_files(dir_fd: int) -> None:
     """Refuse preconfigured file aliases before creating any lock or temporary file."""
     for name, label in ((HISTORY_FILENAME, "history file"), (HISTORY_FILENAME + LOCK_SUFFIX, "history lock file")):
@@ -398,7 +383,7 @@ def validate_history_files(dir_fd: int) -> None:
             raise HistoryLocationError(f"the {label} has more than one link")
 
 
-def open_history_dir(cache: Path, history_dir: Path, *, create: bool) -> BoundHistoryDir | None:
+def open_history_dir(cache: Path, history_dir: Path, *, create: bool) -> int | None:
     """Validate configuration once and bind all operations to one directory.
 
     Ancestor identities also catch cache directory aliases. No location polling
@@ -439,7 +424,6 @@ def open_history_dir(cache: Path, history_dir: Path, *, create: bool) -> BoundHi
         chain.append((info.st_dev, info.st_ino))
         if bound_dir_inside_cache(chain, Path(os.readlink(f"/proc/self/fd/{fd}")), cache_identity, cache_real):
             raise HistoryLocationError(_INSIDE_CACHE)
-        bound = BoundHistoryDir(fd, resolved)
         validate_history_files(fd)
     except OSError as error:
         os.close(fd)
@@ -447,7 +431,7 @@ def open_history_dir(cache: Path, history_dir: Path, *, create: bool) -> BoundHi
     except BaseException:
         os.close(fd)
         raise
-    return bound
+    return fd
 
 
 def build_status(
@@ -563,13 +547,13 @@ Related: docs/runbooks/tmp-retention.md; #10827.
             file=sys.stderr,
         )
         return 2
-    bound: BoundHistoryDir | None = None
+    history_dir_fd: int | None = None
     try:
         if history_dir is not None:
-            bound = open_history_dir(cache, history_dir, create=args.record_history and cache.is_dir())
+            history_dir_fd = open_history_dir(cache, history_dir, create=args.record_history and cache.is_dir())
         status = build_status(
             cache=cache,
-            history_dir_fd=None if bound is None else bound.fd,
+            history_dir_fd=history_dir_fd,
             now=time.time(),
             record=args.record_history,
         )
@@ -579,8 +563,8 @@ Related: docs/runbooks/tmp-retention.md; #10827.
         print(f"UV CACHE: refusing to run: {reason} (LU_DRIVER_STATUS_STATE_DIR)", file=sys.stderr)
         return 2
     finally:
-        if bound is not None:
-            os.close(bound.fd)
+        if history_dir_fd is not None:
+            os.close(history_dir_fd)
     if args.json:
         safe = {key: value for key, value in status.items() if key != "cache"}
         print(json.dumps(safe, indent=1))

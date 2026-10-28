@@ -27,6 +27,7 @@ scanned. Transport paths are never published or scanned as public text.
 | --- | --- |
 | `issue-create`, `issue-edit` | Title, body, labels, milestone name |
 | `issue-comment`, `issue-comment-json` | Body (JSON variant returns the API response) |
+| `comment-edit` | Body; edits an existing issue or PR conversation comment by `--comment-id` |
 | `issue-close` | Optional comment; reason is a closed enum |
 | `pr-create`, `pr-edit`, `pr-comment` | Title, body, labels, milestone, head/base names when present |
 | `pr-review` | Optional body; verdict is approve, comment or request-changes |
@@ -42,6 +43,26 @@ scanned. Transport paths are never published or scanned as public text.
 | `label-create`, `label-edit` | Name, new name, description |
 | `milestone-create`, `milestone-edit` | Title and description |
 | `commit-status` | Context and description; state is a closed enum |
+
+To correct a conversation comment, use its positive API comment ID or the ID in
+its `#issuecomment-ID` URL fragment. Issue numbers, PR numbers, and inline review
+comment IDs are different identifiers. Supply exactly one body source:
+
+```sh
+python -m scripts.publish comment-edit --repo unit/public --comment-id 123456 --body-file reply.md
+```
+
+The Python equivalent is `publish("comment-edit", repo="unit/public",
+comment_id=123456, body="Corrected text")`. The operation sends a body-only
+PATCH to the repository's issue-comment endpoint and preserves the comment ID.
+Repeated CLI options and unknown fields refuse before transport. Use the
+`read comment --number 123456` operation to verify the result.
+GitHub can retain earlier body revisions. Editing does not erase history or
+renew review approval. Review-verdict markers remain reserved for the verdict
+recorder and cannot be submitted through `comment-edit`.
+Before mutation, the publisher reads the target and authenticated identity.
+It refuses edits to another user's comment, an existing verdict record, or an
+unverifiable target. This prevents an edit from erasing a recorded rejection.
 
 Body and notes inputs are read once, decoded as UTF-8 without newline
 normalization, scanned, then sent from a temporary file written by the publisher.

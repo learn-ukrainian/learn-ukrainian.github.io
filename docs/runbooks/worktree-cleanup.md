@@ -673,11 +673,55 @@ Each run performs the following in both repository roots:
    on the same containment evidence (`entire/` refs are preserved);
 6. preserves and reports unproven gone branches and orphaned worktree
    directories;
-7. runs `git gc --auto` last (gc rewrites every worktree `logs/HEAD`);
+7. records Git maintenance as `scheduled_separately`;
 8. writes an immutable JSON receipt.
 
 It removes no worktree. Open PRs, checked-out branches, and unmerged branch heads
 remain untouched.
+
+### Bounded Git maintenance (#11157)
+
+The separate `learn-ukrainian-git-maintenance.timer` starts at 03:30 UTC.
+`Persistent=false` prevents a missed run from starting during daytime validation.
+The hourly hygiene job and macOS launchd job perform no GC.
+
+The maintenance service invokes the same wrapper with `--git-maintenance --apply`,
+which runs only GC and writes its private receipt. It caps the whole process tree
+at 2 GiB memory, zero swap, one CPU and 32 tasks. Each repository has a 600-second
+foreground deadline. Timeout cleanup gives Git a five-second SIGTERM grace period
+without reaping it, then requests SIGKILL for the entire group before reaping Git.
+This lets Git clean up its locks while still terminating children that close their
+pipes before exiting. The service allows 1300 seconds
+for both repositories and kills its entire cgroup on expiry. Effective kernel
+limits, including ancestors, must meet these bounds or GC refuses to run.
+Manual shells and systems without cgroup v2 therefore cannot run this mode unbounded.
+
+Before enabling the timer, the driver must retain `gc.auto=0` and
+`maintenance.auto=false` in each repository's configuration. Maintenance verifies
+these settings and refuses otherwise. Its command overrides the automatic GC
+thresholds with Git's defaults of 6700 loose objects and 50 packs, disables
+detachment, and sets `pack.threads=1`, `pack.windowMemory=64m` and
+`pack.deltaCacheSize=64m`. Existing expiry settings remain in effect. An exit-zero
+GC can be a no-op; the receipt reports `changed` from before/after object counts.
+Concurrent ordinary Git writes can also change those counts. This observation
+does not prove that GC performed a repack.
+
+Maintenance takes the existing Git-hygiene lock and the validation gate's global
+admission lock exclusively and nonblockingly. Active serial or parallel validation,
+another maintenance run, or hourly hygiene produces `deferred`; the next timer
+run retries. Maintenance holds admission through GC and timeout recovery, so
+validation cannot start between a check and a repack. Gate wait limits are unchanged.
+
+Install the reviewed service, timer and data-volume drop-in together, then verify
+effective limits and lock deferral in a disposable repository before enabling the
+timer. Production rollout and confirmation that this hour fits the host's workload
+remain driver responsibilities. A cgroup OOM kill is reported by systemd and may
+prevent the process from writing its JSON receipt; absence of a receipt is not success.
+This command does not remove incident temporary packs manually. Their disposition
+requires a supported Git operation with verified retention and concurrency semantics.
+
+References: [Git GC configuration](https://git-scm.com/docs/git-gc),
+[systemd resource limits](https://www.freedesktop.org/software/systemd/man/latest/systemd.resource-control.html).
 
 ```text
 ~/.codex/worktree-cleanup/receipts/v2/

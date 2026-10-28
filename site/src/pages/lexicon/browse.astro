@@ -71,7 +71,8 @@ const frontmatter = {
 
   .atlas-view-nav a[aria-current="page"] {
     background: var(--lu-state-active);
-    color: var(--lu-primary);
+    /* Plain --lu-primary on the dark-theme tint is 3.4:1; pull toward body text for AA. */
+    color: color-mix(in srgb, var(--lu-primary) 60%, var(--lu-text));
   }
 
   .atlas-view-nav a:hover,

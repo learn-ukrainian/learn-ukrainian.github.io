@@ -18,7 +18,7 @@ from unittest.mock import Mock
 import pytest
 import yaml
 
-from scripts.dispatcher import checks, cli, git, providers, store, worker
+from scripts.dispatcher import agy_sandbox, checks, cli, git, providers, store, worker
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.providers import muse
@@ -173,6 +173,46 @@ def test_supervise_restores_signal_handlers_after_cleanup(sandbox, monkeypatch):
         signal.signal(signal.SIGINT, original_int)
 
 
+@pytest.mark.parametrize("receipt", [None, "refused", "ran"])
+def test_read_only_agy_run_needs_a_verified_boundary_receipt(sandbox, monkeypatch, receipt):
+    """C-3027: the receipt, never the provider's output, decides a read-only AGY run and its Sources count."""
+    from tests.dispatcher import stub_provider
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker.providers, "load", lambda _agent: stub_provider)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(agy_sandbox, "unavailable", lambda: None)
+    monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_runtime", lambda *_args, **_kwargs: None)
+    discarded = []
+    monkeypatch.setattr(agy_sandbox, "discard", discarded.append)
+    spec = TaskSpec("agy-ro", "agy", "echo", None, "read-only", sandbox.repo,
+                    sandbox.repo / "agy-ro.prompt", sandbox.tasks / "agy-ro.result")
+    spec.prompt_file.write_bytes(b"VERDICT: APPROVE")
+    head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main", head,
+                              {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "agy-ro.prompt")
+    path = store.create(record, b"VERDICT: APPROVE")
+    (sandbox.tasks / "logs").mkdir()
+    if receipt is not None:
+        state = {"head": head, "clean": True}
+        agy_sandbox.receipt_file(spec.final_file).write_text(json.dumps({
+            "schema": agy_sandbox.SCHEMA, "task_id": "agy-ro", "status": receipt, "reason": "the sandbox canary failed",
+            "canary": {"passed": receipt == "ran"}, "input": {"start": state, "end": state},
+            "sources": {"completed": 4},
+        }))
+    worker.supervise(path, {}, 10)
+    result = json.loads(path.read_text())
+    assert discarded == ["agy-ro"]
+    if receipt == "ran":
+        assert (result["status"], result["sources_mcp_call_count"]) == ("done", 4)
+        assert result["read_only_boundary"]["canary"] == {"passed": True}
+    else:
+        assert result["status"] == "failed" and "sources_mcp_call_count" not in result
+        assert result["error"].startswith("agy_read_only_boundary: ")
+
+
 def await_file(path):
     deadline = time.monotonic() + 10
     while not path.exists() or not (content := path.read_text()):
@@ -185,8 +225,17 @@ def await_file(path):
     ([], set()), (["--full-checkout"], {"curriculum", "site/src/data"}),
     (["--sparse-include", "/curriculum/"], {"curriculum"}),
     (["--sparse-include", "curriculum", "--sparse-include", "site/src/data"], {"curriculum", "site/src/data"}),
+    (["--owned-path", "data/projects/fixture.txt"], {"data/projects"}),
+    (["--research-owned-path", "./data//projects/./**/*.json"], {"data/projects"}),
+    (["--owned-path", "tests/projects/open_model_data/test_mine.py"], {"data/projects"}),
+    (["--research-owned-path", "scripts/projects/open_model_data/**"], {"data/projects"}),
+    (["--owned-path", "site"], {"site/src/content", "site/src/data"}),
+    (["--owned-path", "curriculum/**", "--sparse-include", "data/projects"], {"curriculum", "data/projects"}),
+    (["--owned-path", "data/projects-other", "--research-owned-path", "scripts/projects/open_model_database"], set()),
+    (["--owned-path", "../data/projects", "--research-owned-path", "/data/projects"], set()),
 ])
 def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_worktrees(sandbox, flags, restored):
+    """Owned paths must restore required trees without changing another checkout's sparse settings."""
     excluded = {
         "curriculum", "wiki", "data/projects", "data/lexicon", "data/datasets", "data/processed",
         "registry/projects", "registry/lexicon/source-inventory",
@@ -2351,7 +2400,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
     prompt = tmp_path / "prompt.txt"
     prompt.write_text("Fix the bug in X.\n")
     spec = TaskSpec("ro", agent, "vendor/model", None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
-    refused = {"agy": "--sandbox only restricts its terminal", "hermes": "bypasses approvals"}
+    refused = {"hermes": "bypasses approvals"}
     if agent in refused:
         with pytest.raises(ValueError, match=f"read_only_unenforceable: {agent} cannot run --mode read-only"):
             providers.load(agent).build(spec, {})
@@ -2360,9 +2409,24 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
         assert refused[agent] in result.stderr
         assert not sandbox.tasks.exists()
         return
+    if agent == "agy":
+        # AGY has no write lock of its own: read-only is refused where its bubblewrap boundary cannot
+        # start, and otherwise every build returns that boundary, never a bare agy (C-3027).
+        monkeypatch.setattr("scripts.dispatcher.agy_sandbox.unavailable", lambda: "bubblewrap (bwrap) is not installed")
+        with pytest.raises(ValueError, match="read_only_unenforceable: agy cannot run --mode read-only: bubblewrap"):
+            providers.load(agent).build(spec, {})
+        monkeypatch.setattr("scripts.dispatcher.agy_sandbox.unavailable", lambda: None)
     invocation = providers.load(agent).build(spec, {})
     argv = invocation.argv
-    if agent == "codex":
+    if agent == "agy":
+        split = argv.index("--")
+        assert argv[1:4] == ["-I", "-c", agy_sandbox._BOOTSTRAP] and argv[4] == str(agy_sandbox.ROOT)
+        assert argv[argv.index("--worktree") + 1] == str(tmp_path) and argv[split + 1] == "agy"
+        assert argv[argv.index("--receipt") + 1] == str(tmp_path / "final.sandbox.json")
+        assert argv[argv.index("--add-dir") + 1] == str(tmp_path)
+        assert argv[argv.index("--log-file") + 1] == str(agy_sandbox.log_file("ro"))  # private scratch
+        assert argv.index("--dangerously-skip-permissions") > split
+    elif agent == "codex":
         assert argv[argv.index("-s") + 1] == "read-only"
     elif agent == "cursor":
         assert argv[argv.index("--mode") + 1] == "ask"
@@ -2387,7 +2451,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
             source.write_text(policy)
             assert providers.read_only_refusal(agent, run_env) == (
                 f"read_only_unenforceable: claude cannot run --mode read-only: {expected}; "
-                "use codex, cursor, muse, opencode"
+                "use codex, cursor, agy, muse, opencode"
             )
             source.unlink()
         assert providers.read_only_refusal(agent, run_env) is None

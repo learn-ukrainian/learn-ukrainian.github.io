@@ -354,7 +354,7 @@ const isActive = (href: string) => {
           <nav class="lu-breadcrumbs" aria-label="Course navigation">
             {navItems.map((item, index) => (
               <>
-                {index > 0 && <span>/</span>}
+                {index > 0 && <span class="lu-breadcrumbs-sep" aria-hidden="true">/</span>}
                 <a href={item.href}>
                   {item.labelKey ? (
                     <ChromeText k={item.labelKey} />
@@ -421,6 +421,12 @@ const isActive = (href: string) => {
           })();
         </script>
       )}
+
+      <script>
+        import { keepScrollableTablesFocusable } from '../lib/scroll-region-focus';
+
+        keepScrollableTablesFocusable();
+      </script>
 
       <footer class="lu-footer">
         <div class="lu-footer-inner">

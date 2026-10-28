@@ -12,7 +12,7 @@ paths-ignore:
   - site/src/data/lexicon-*.json
   - packages/activity-kit/src/*.generated.ts
 
-  # The repository has only these incidental Go and Swift sources. Default
-  # setup language selection is still an administrator setting; these ignores
-  # keep their generated/external implementation out of source analysis.
+  # The repository has only this incidental Swift source. Default setup
+  # language selection is still an administrator setting; this ignore keeps
+  # its external implementation out of source analysis.
   - scripts/rag/apple_vision_ocr.swift

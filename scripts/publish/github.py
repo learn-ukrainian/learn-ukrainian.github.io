@@ -36,6 +36,7 @@ SCHEMAS = {
     "issue-edit": ({"number"}, {**COMMON, **EDIT, "number": "number", "remove_milestone": "bool"}),
     "issue-comment": ({"number", "body"}, {**COMMON, "number": "number", "body": "text", "body_file": "file"}),
     "issue-comment-json": ({"number", "body"}, {**COMMON, "number": "number", "body": "text", "body_file": "file"}),
+    "comment-edit": ({"comment_id", "body"}, {**COMMON, "comment_id": "number", "body": "text", "body_file": "file"}),
     "issue-close": ({"number"}, {**COMMON, "number": "number", "comment": "text", "reason": "reason"}),
     "pr-create": (
         {"title", "body", "base", "head"},
@@ -132,6 +133,7 @@ WORKFLOWS = {
 # refuse the prefix unless the value is a CfVerdictRecord on the recorder's verb.
 CF_VERDICT_MARKER_PREFIX = "<!-- cf-verdict"
 COMMENT_FIELDS = {
+    "comment-edit": "body",
     "issue-comment": "body",
     "issue-comment-json": "body",
     "pr-comment": "body",
@@ -620,6 +622,29 @@ def publish(
             raise
         except Exception:
             raise gate.PublishBlocked("OPSEC: checker unavailable; write refused.") from None
+        if verb == "comment-edit":
+            try:
+                documents = []
+                for operation, selectors in (("comment", {"number": fields["comment_id"]}), ("identity", {})):
+                    result = read(
+                        operation, repo=dest, runner=readiness_runner, cwd=cwd, env=environment,
+                        capture_output=True, text=True, check=False, timeout=15, **selectors,
+                    )
+                    if result.returncode:
+                        raise ValueError
+                    documents.append(json.loads(result.stdout))
+                comment, identity = documents
+                body, login = comment["body"], identity["login"]
+                if (
+                    type(comment["id"]) is not int or comment["id"] != fields["comment_id"]
+                    or not isinstance(body, str) or CF_VERDICT_MARKER_PREFIX in body
+                    or not isinstance(login, str) or not login or comment["user"]["login"] != login
+                ):
+                    raise ValueError
+            except github_client.GitHubRateLimited:
+                raise
+            except Exception:
+                raise gate.PublishBlocked("OPSEC: comment edit requires a verified own comment without a verdict marker.") from None
         if verb in {"release-create", "release-edit"} and "notes" not in fields and verb == "release-create":
             fields["notes"] = ""
         if verb == "pr-review" and "body" not in fields:
@@ -713,6 +738,9 @@ def publish(
             elif verb == "issue-comment-json":
                 endpoint = f"repos/{gh_repo}/issues/{fields['number']}/comments"
                 payload, method = {"body": fields["body"]}, "POST"
+            elif verb == "comment-edit":
+                endpoint = f"repos/{gh_repo}/issues/comments/{fields['comment_id']}"
+                payload, method = {"body": fields["body"]}, "PATCH"
             elif verb.startswith("milestone-"):
                 endpoint = f"repos/{gh_repo}/milestones" + (f"/{fields['number']}" if verb.endswith("edit") else "")
                 payload = {key: fields[key] for key in ("title", "description", "state") if key in fields}
@@ -772,6 +800,15 @@ class PublisherParser(argparse.ArgumentParser):
         self.exit(2, "OPSEC: invalid publisher arguments; use --help.\n")
 
 
+class StoreOnce(argparse.Action):
+    """Reject repeated scalar options on comment edits before any transport."""
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if hasattr(namespace, self.dest):
+            parser.error("repeated publisher field")
+        setattr(namespace, self.dest, values)
+
+
 def main(argv=None, *, runner=None):
     parser = PublisherParser(
         description="Publish GitHub changes through closed, scanned fields.\nUse for public writes; raw gh reads use native CLI arguments.",
@@ -782,6 +819,21 @@ def main(argv=None, *, runner=None):
     verbs = parser.add_subparsers(dest="verb", required=True)
     for verb, (_, schema) in SCHEMAS.items():
         sub = verbs.add_parser(verb, help=f"Publish {verb} with scanned fields", allow_abbrev=False)
+        if verb == "comment-edit":
+            sub.description = (
+                "Edit an existing issue or PR conversation comment through the common scanner.\n"
+                "Use the comment ID from its API response or #issuecomment-ID URL fragment.\n"
+                "An issue or PR number is not a comment ID; inline review comments are unsupported."
+            )
+            sub.formatter_class = argparse.RawDescriptionHelpFormatter
+            sub.epilog = (
+                "Examples:\n"
+                "  .venv/bin/python -m scripts.publish comment-edit --repo unit/public --comment-id 123456 --body-file reply.md\n"
+                "  .venv/bin/python -m scripts.publish comment-edit --repo unit/public --comment-id 123456 --body-file -\n"
+                "Outputs: PATCH the same comment ID with the scanned body; temporary payload removed on exit.\n"
+                "Exit codes: 0 success; 1 GitHub failure; 2 invalid input, publishing refusal or transport error.\n"
+                "Related: docs/dev/agent-public-text.md; read comment."
+            )
         if verb == "run-cancel":
             sub.description = (
                 "Request ordinary cancellation of one GitHub Actions workflow run.\n"
@@ -825,6 +877,14 @@ def main(argv=None, *, runner=None):
             )
         for key, kind in schema.items():
             kwargs = {"default": argparse.SUPPRESS, "help": f"{key.replace('_', ' ')} ({kind}); omitted by default"}
+            if verb == "comment-edit":
+                kwargs["action"] = StoreOnce
+                kwargs["help"] = {
+                    "repo": "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin",
+                    "comment_id": "Required positive comment ID (e.g. 123456), not an issue or PR number; no default",
+                    "body": "Exact UTF-8 body text; use exactly one of --body or --body-file; no default",
+                    "body_file": "UTF-8 body file (e.g. reply.md), or - for stdin; no default",
+                }[key]
             if verb in {"run-rerun", "run-cancel"}:
                 kwargs["help"] = {
                     "repo": "Repository owner/name (e.g. unit/public); defaults to GH_REPO or Git origin",

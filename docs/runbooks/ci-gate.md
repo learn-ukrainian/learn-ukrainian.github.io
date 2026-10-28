@@ -18,6 +18,18 @@ files. Deleted files are reported.
 Unsafe paths, missing guards and symlinks fail closed. No import graph or
 component inventory chooses tests.
 
+PR title and body edits run the same admission checks as code updates. The
+Secret scan job reads title, body, branch and complete commit messages from
+the event and current PR metadata using the existing OPSEC rules. Queue scans
+read every member of the first-parent squash chain and each member's current
+PR metadata and source commits. A missing field, incomplete checkout, unsupported
+event or unreadable range fails closed. Submitted values are never diagnostics
+or workflow environment inputs. The advisory PR-body guard also scans direct
+push branch names and complete commit ranges. A new topic branch uses its
+unique merge-base with the public default branch, as the pre-push gate does;
+an initial default-branch push scans all ancestry. Unresolved ranges refuse.
+No green-run receipt skips code checks or publication checks.
+
 The job has a ten-minute timeout and targets under five minutes on hosted
 runners. The committed serial file-duration sum plus 60 seconds for setup and
 collection is the conservative estimate; a selected file with no recorded time

@@ -34,8 +34,10 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from scripts.common import github_client
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import resolve_scratch_root
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.orchestration import pool_headroom, worktree_claims
 from scripts.orchestration.dispatch_isolation import _parse_bytes, build_scope_argv
+from scripts.storage.topology import StoreRefusal, resolve_store
 
 SOURCE_ROOT = Path(__file__).resolve().parents[2]
 SELECTION = Path(__file__).with_name("data_tier_selection.json")
@@ -266,10 +268,17 @@ def snapshot_databases(primary: Path, checkout: Path, snapshots: Path, *, only: 
     names = ("sources.db", "vesum.db") if only else HOST_DATABASES
     missing = []
     for name in names:
-        source = primary / "data" / name
-        if not source.is_file():
-            missing.append(name)
-            continue
+        if name == "atlas.db":
+            source = primary / "data" / name
+            if not source.is_file():
+                missing.append(name)
+                continue
+        else:
+            binding = resolve_store(name.removesuffix(".db"), primary)
+            if isinstance(binding, StoreRefusal):
+                missing.append(name)
+                continue
+            source = binding.path
         target_dir = checkout / "data" if name == "atlas.db" else snapshots
         target_dir.mkdir(parents=True, exist_ok=True)
         target = target_dir / name
@@ -279,7 +288,7 @@ def snapshot_databases(primary: Path, checkout: Path, snapshots: Path, *, only: 
         # whenever another connection writes the source between steps, which can
         # loop forever on a large, actively written database.
         with (
-            contextlib.closing(sqlite3.connect(source.as_uri() + "?mode=ro", uri=True, timeout=30)) as reader,
+            contextlib.closing(open_readonly(source, timeout=30)) as reader,
             contextlib.closing(sqlite3.connect(target)) as writer,
         ):
             reader.backup(writer, pages=-1)
