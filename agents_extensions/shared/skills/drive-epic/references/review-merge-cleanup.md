@@ -328,11 +328,13 @@ and publication is proven. Remote branches remain until `MERGED`.
 Follow `agents_extensions/shared/rules/workflow.md` § Merge policy /
 Post-merge cleanup. Worker exit, MERGED and the actual merge SHA, `merge_closeout`
 exit 0 and residue-free receipts are required before the next large dispatch.
-Non-zero or SKIPPED receipts block closeout; never use `--force`. `merge_closeout`
+A non-zero exit or a residual blocks closeout; never use `--force`. `merge_closeout`
 keeps the branch-gone proof and removes no worktree: the dispatcher removes each
-task's own worktree at settlement and records `worktree_disposition`. The driver or
-worker checks that disposition and removes a retained worktree only after confirming
-its content is published. A squash-merge alone is not done: the merging lane runs
+task's own worktree at settlement and records `worktree_disposition`. A worker's
+in-tree run reports its own tree as the only residual; once that disposition is
+`removed`, the driver re-runs `merge_closeout` for the exit 0 receipt that closes
+the PR. The driver removes a retained worktree only after confirming its content is
+published. A squash-merge alone is not done: the merging lane runs
 `merge_closeout` for the PR and needs a clean receipt before reporting it done. Stream leases are launcher-owned;
 a driver never opens, resumes, claims, renews, releases or replaces one.
 

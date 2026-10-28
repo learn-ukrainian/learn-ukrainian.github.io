@@ -59,7 +59,7 @@ Per turn and at session end:
       `.venv/bin/python -m scripts.orchestration.worktree_claims remove <path> --owner-task-id <task> --reason <why>`.
 - [ ] `.venv/bin/python -m scripts.hygiene.branch_sweep --json` reviewed and its
       proven-safe deletions applied (`--apply`), then `git fetch --prune`.
-- [ ] Every SKIPPED row from `merge_closeout` or `branch_sweep` gets a decision: remove it
+- [ ] Every residual from `merge_closeout` and SKIPPED row from `branch_sweep` gets a decision: remove it
       safely or record a verified reason to keep it (a live process, a running task,
       unpushed or unique work). Exit 0 with skips is not done. Never force removal.
 - [ ] Remove a review worktree as soon as its verdict is posted and the reviewer process

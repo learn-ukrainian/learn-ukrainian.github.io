@@ -96,15 +96,16 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
     ```
 
     `merge_closeout` proves no worktree still holds the PR and that its branches are gone; it
-    removes no worktree. Exit 0 with a residue-free receipt is required, with one accepted
-    exception: a worker runs
-    this from its own worktree, which is still in use, so the receipt reports that worktree and
-    its local branch as the only residual and the tool exits 1. That exit 1 is accepted. The
-    dispatcher removes both when the worker's task settles and records `worktree_disposition`
-    in the task record; the driver (or the worker) checks that disposition at settle and
-    removes a retained worktree only after confirming its content is published. Any other residual, any other
-    non-zero exit or any SKIPPED row still means not done: record the evidence and owner and
-    resolve it safely, never with `--force`.
+    removes no worktree. Exit 0 with a residue-free receipt is required, with one expected
+    interim case: a worker runs this from its own worktree, which is still in use, so the
+    receipt reports that worktree and its local branch as the only residual and the tool exits
+    1. The worker reports that receipt and ends its run. When its task settles, the dispatcher
+    removes both and records `worktree_disposition` in the task record. The driver reads that
+    disposition: once it is `removed`, the driver re-runs the command above from outside the
+    tree, and its exit 0 receipt is the verified final closeout; a `retained` or `error`
+    worktree is removed only after confirming its content is published (`workflow.md` §
+    Post-merge cleanup). Any other residual or non-zero exit means not done: record the
+    evidence and owner and resolve it safely, never with `--force`.
 11. **Dispose of the linked issues.** Close each named issue as completed with evidence on the
     merged SHA, or comment what remains, its owner and what it waits on (rules core P4).
 

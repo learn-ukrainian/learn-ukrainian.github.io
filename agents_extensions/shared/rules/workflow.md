@@ -304,7 +304,7 @@ Require exit 0 and the receipt proving that no dispatch worktree still holds the
 PR and that its temporary residue and local and remote branches are gone before
 the next large dispatch. `merge_closeout` keeps the branch-gone proof and removes
 no worktree; a worktree still registered is a residual it reports. A non-zero
-exit or `SKIPPED` blocks closeout: record its evidence and owner and resolve
+exit or a residual blocks closeout: record its evidence and owner and resolve
 safely, never retry with `--force`. Remote branches may be deleted only after
 `MERGED`; queued is not merged.
 
@@ -326,12 +326,14 @@ verified on the delivered artifact; name any residual, owner and dependency.
 command above for that PR's own worktrees and branches, and the PR is not done
 until the receipt is clean (exit 0, residue-free). A briefed worker runs it from its
 own worktree, which is still in use, so its receipt reports that worktree and its
-local branch as residual; the dispatcher removes both when the task settles, and the
-driver confirms the recorded `worktree_disposition`. Any other PR-scoped worktree
+local branch as its only residual and exits 1; the worker reports that receipt.
+The dispatcher removes both when the task settles; once the recorded
+`worktree_disposition` is `removed`, the driver re-runs the command and its exit 0
+receipt is the verified final closeout. Any other PR-scoped worktree
 is removed only as the disposition paragraph above describes, never by hand.
 Cleanup does not wait for a central sweep. This is not a stream lease: launchers
 own stream leases, and no driver opens, resumes, claims, renews, releases or
-replaces one. The non-zero and `SKIPPED` stop conditions above are unchanged.
+replaces one. The non-zero and residual stop conditions above are unchanged.
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a
