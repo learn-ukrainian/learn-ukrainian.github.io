@@ -15,7 +15,8 @@ from tests.claude_route_accounts import HOST_ACCOUNT
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
-def test_native_gemini_low_medium_review_retains_requested_seat(risk):
+def test_gemini_low_medium_review_request_is_substituted_not_retained(risk):
+    """C-2970: dispatch refuses read-only AGY, so a requested Gemini code review resolves to another seat."""
     result = target_admission._resolve_review_target(
         "agy",
         "gemini-3.8-flash-high",
@@ -27,7 +28,7 @@ def test_native_gemini_low_medium_review_retains_requested_seat(risk):
         budget_seat="agy",
         claude_account=HOST_ACCOUNT,
     )
-    assert result == ("agy", "gemini-3.8-flash-high")
+    assert result == ("claude", "claude-sonnet-5-5")
 
 
 @pytest.mark.parametrize(

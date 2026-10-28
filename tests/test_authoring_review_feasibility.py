@@ -441,7 +441,7 @@ def test_mixed_family_at_lower_risk_keeps_a_third_family(repo, tasks, monkeypatc
     assert fact.existing_families == {"anthropic", "openai"}
     assert fact.receipt()["commits"] == 2 and len(fact.commits) == 3
     assert fact.author_models == ("gpt-6.1-sol", "claude-opus-5-5", "gpt-6.1-sol")
-    assert selected(fact, "medium") == "gemini-3.8-flash-high"
+    assert selected(fact, "medium") == "grok-4.7-cursor-fallback"
     receipt = record_verdict(
         monkeypatch, tmp_path, repo, agent="cursor", model="auto", review_risk="medium", **GROK_RECEIPT
     )
@@ -483,11 +483,11 @@ def test_cursor_auto_incoming_writer_adds_only_cursor_family(repo, tasks):
 
     assert auto.incoming_family == "cursor"
     assert auto.excluded_families == {"anthropic", "openai", "cursor"}
-    # AGY remains independent. The surviving Grok Cursor route cannot review
-    # a Cursor-authored branch.
-    assert selected(facts(repo, tasks, writer=OPUS), "medium") == "gemini-3.8-flash-high"
+    # The surviving Grok Cursor route cannot review a Cursor-authored branch, and AGY has no
+    # review seat (dispatch refuses read-only AGY, C-2970): nobody is left at medium risk.
+    assert selected(facts(repo, tasks, writer=OPUS), "medium") == "grok-4.7-cursor-fallback"
     resolution = recorder.structural_review_route(auto, risk="medium", claude_account=HOST_ACCOUNT)
-    assert resolution.selected.name == "gemini-3.8-flash-high"
+    assert resolution.selected is None
     trace = {entry.name: entry for entry in resolution.trace}
     assert "grok-4.7" not in trace
     assert trace["grok-4.7-cursor-fallback"].status == "excluded"

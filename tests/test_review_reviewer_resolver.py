@@ -1097,8 +1097,9 @@ def test_ladders_place_cursor_grok_directly_after_opus(risk):
         assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
     else:
         assert ladder[3][0].name == "claude-sonnet-5-5"
-        assert ladder[4][0].name == "gemini-3.8-flash-high"
-        assert len(ladder) == 5
+        # No AGY rung: dispatch refuses read-only AGY (C-2970).
+        assert len(ladder) == 4
+        assert "gemini-3.8-flash-high" not in {c.name for rung in ladder for c in rung}
         assert "muse" not in {c.name for rung in ladder for c in rung}
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
@@ -2093,7 +2094,7 @@ def test_complete_author_set_excludes_every_member_not_only_the_latest():
     complete = _complete({"anthropic", "openai"}, author_model="gpt-6.1-sol")
 
     assert latest_only.selected.family == "anthropic"
-    assert complete.selected.name == "gemini-3.8-flash-high"
+    assert complete.selected.name == "grok-4.7-cursor-fallback"
     reasons = {entry.name: entry.reason for entry in complete.trace}
     assert "same family as author (anthropic)" in reasons["claude-opus-5-5"]
     # Grok reviews at every risk (#9769); an xAI member removes it too.
