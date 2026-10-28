@@ -41,7 +41,7 @@ Read-only and review tasks use the separate replacement contract below; they can
 The writer commits, passes the pre-push gate, pushes, requests independent cross-family review,
 fixes findings in the same worktree, obtains a durable pre-PR exact-head approval receipt, opens the PR,
 publishes and verifies the PR verdict projection, and waits for CI. Material findings require driver handback as defined below.
-The writer never merges, enqueues, arms auto-merge, or approves its own work.
+The writer never arms auto-merge or approves its own work; the briefed worker enqueues only after the exact-head approval and green CI (rules core P1).
 The review-request actor in that flow depends on the designated choice of Option A or Option B below.
 The merge-queue keeper enqueues only with current exact-head review and green required CI.
 The common reaper proves removal. The lane driver owns any interrupted or blocked lifecycle until disposition.

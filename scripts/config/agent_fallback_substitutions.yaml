@@ -105,10 +105,14 @@ substitutions:
 # eligible whenever task fit, provider health and subscription headroom admit
 # them. Budget substitutions apply on depletion, not as a standing prohibition.
 # The 2026-10-16 operator order adds the Sonnet worker default, the native Grok
-# measurement rule and the Gemini 4 hold (#10835).
+# measurement rule and the Gemini 4 hold (#10835). Operator order C-2903
+# (2026-10-27) sets the default pairs.
 worker_resource_policy: |
-  Sol is the default eligible code worker. Use native Claude CLI workers as
-  heavily as their subscription allows, respecting task fit and hard gates.
+  Code is authored by Claude (Sonnet 5.5, Opus 5.5 for hard work) and reviewed
+  by Sol; Ukrainian content is authored by Sol and reviewed by Claude (operator
+  C-2903, model-assignment.md). Sol stays an eligible code worker. Use native
+  Claude CLI workers as heavily as their subscription allows, respecting task
+  fit and hard gates.
   Operator 2026-10-16: native Claude workers use Sonnet 5.5 by default and
   Opus 5.5 only for complex or security work; Claude-lane Ukrainian stays
   Opus 5.5. Cursor Grok or Gemini routes are language-free overflow only;

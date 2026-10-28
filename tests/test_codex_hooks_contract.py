@@ -102,7 +102,7 @@ def test_grok_post_compact_reminder_uses_sol_worker_default(tmp_path: Path) -> N
     )
     assert result.returncode == 0, result.stderr
     context = json.loads(result.stdout)["additionalContext"]
-    assert "default eligible code worker = Sol high" in context
+    assert "default code author = Claude (Sonnet 5.5; Opus for hard work), reviewed by Sol" in context
     assert "explicit Luna/Flash bounded routes require a Sol advisory envelope" in context
     assert "default bounded work = Sol advisory envelope" not in context
 
