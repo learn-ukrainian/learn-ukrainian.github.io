@@ -119,6 +119,17 @@ def test_redirect_does_not_hide_sensitive_input_or_change_output_descriptor(monk
         ("env >/dev/null >&/dev/stderr", 2),
         ("env >&/dev/null", 0),
         ("env >captured >&/dev/null", 0),
+        ("env >/dev/null 2>/dev/./stderr 1>&2", 2),
+        ("env >&/dev/./stdout", 2),
+        ("env 2>/dev/./stdout 1>&2", 2),
+        ("env 3>/dev/./stdout 1>&3", 2),
+        ("env 2>/dev/fd/./1 1>&2", 2),
+        ("env 2>/proc/self/fd//1 1>&2", 2),
+        ("env 2>//dev/stdout 1>&2", 2),
+        ("env 2>$'/dev/./stdout' 1>&2", 2),
+        ("2>/dev/./stdout 1>&2 env", 2),
+        ("env >&/dev/./null", 0),
+        ("env 2>//dev/null 1>&2", 0),
     ],
 )
 @pytest.mark.parametrize("source", ["env", "printenv", "declare -p", "export -p"])

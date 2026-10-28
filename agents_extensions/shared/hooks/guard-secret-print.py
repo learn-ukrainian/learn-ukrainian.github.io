@@ -981,6 +981,10 @@ def _env_dump_reason(
             continue
         found = _command_at(segment)
         target = _stdout_target(found[1]) if found else None
+        if target is not None:
+            target = os.path.normpath(target)
+            if target.startswith("//"):
+                target = target[1:]
         # Process substitutions are output consumers, not capture filenames.
         sinks = [substitutions[arg][1] for arg in segment if arg in substitutions and substitutions[arg][0] == ">("]
         if sinks:
