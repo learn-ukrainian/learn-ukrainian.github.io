@@ -60,6 +60,9 @@ Repeated CLI options and unknown fields refuse before transport. Use the
 GitHub can retain earlier body revisions. Editing does not erase history or
 renew review approval. Review-verdict markers remain reserved for the verdict
 recorder and cannot be submitted through `comment-edit`.
+Before mutation, the publisher reads the target and authenticated identity.
+It refuses edits to another user's comment, an existing verdict record, or an
+unverifiable target. This prevents an edit from erasing a recorded rejection.
 
 Body and notes inputs are read once, decoded as UTF-8 without newline
 normalization, scanned, then sent from a temporary file written by the publisher.

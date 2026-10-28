@@ -622,6 +622,29 @@ def publish(
             raise
         except Exception:
             raise gate.PublishBlocked("OPSEC: checker unavailable; write refused.") from None
+        if verb == "comment-edit":
+            try:
+                documents = []
+                for operation, selectors in (("comment", {"number": fields["comment_id"]}), ("identity", {})):
+                    result = read(
+                        operation, repo=dest, runner=readiness_runner, cwd=cwd, env=environment,
+                        capture_output=True, text=True, check=False, timeout=15, **selectors,
+                    )
+                    if result.returncode:
+                        raise ValueError
+                    documents.append(json.loads(result.stdout))
+                comment, identity = documents
+                body, login = comment["body"], identity["login"]
+                if (
+                    type(comment["id"]) is not int or comment["id"] != fields["comment_id"]
+                    or not isinstance(body, str) or CF_VERDICT_MARKER_PREFIX in body
+                    or not isinstance(login, str) or not login or comment["user"]["login"] != login
+                ):
+                    raise ValueError
+            except github_client.GitHubRateLimited:
+                raise
+            except Exception:
+                raise gate.PublishBlocked("OPSEC: comment edit requires a verified own comment without a verdict marker.") from None
         if verb in {"release-create", "release-edit"} and "notes" not in fields and verb == "release-create":
             fields["notes"] = ""
         if verb == "pr-review" and "body" not in fields:

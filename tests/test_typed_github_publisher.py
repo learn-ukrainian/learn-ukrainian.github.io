@@ -60,6 +60,11 @@ def catalog(monkeypatch):
 
 def spy(calls):
     def send(args, **kwargs):
+        if args[:4] == ["gh", "api", "--method", "GET"]:
+            endpoint = args[4].split("?", 1)[0]
+            if endpoint == "user" or endpoint == "repos/unit/public/issues/comments/7":
+                document = {"login": "unit"} if endpoint == "user" else {"id": 7, "body": "previous", "user": {"login": "unit"}}
+                return subprocess.CompletedProcess(args, 0, json.dumps(document), "")
         if (
             args[:3] == ["gh", "pr", "view"]
             and "--json" in args
@@ -140,13 +145,20 @@ def test_each_typed_verb_delivers_fixed_payload(synthetic_opsec, verb, fields, g
             ("POST", "repos/unit/public/issues/1/comments", {"body": "clean"}),
             ("PATCH", "repos/unit/public/issues/1", {"state": "closed"}),
         ],
-        "comment-edit": [("PATCH", "repos/unit/public/issues/comments/7", {"body": "clean"})],
+        "comment-edit": [
+            ("GET", "repos/unit/public/issues/comments/7?per_page=100", None),
+            ("GET", "user?per_page=100", None),
+            ("PATCH", "repos/unit/public/issues/comments/7", {"body": "clean"}),
+        ],
     }
     if verb in expected_requests:
         from scripts.common.github_client import Response
 
         def transport(method, endpoint, headers, body, timeout):
-            payload = [{"name": "old"}] if method == "GET" else {}
+            if verb == "comment-edit" and method == "GET":
+                payload = {"login": "unit"} if endpoint.startswith("user?") else {"id": 7, "body": "previous", "user": {"login": "unit"}}
+            else:
+                payload = [{"name": "old"}] if method == "GET" else {}
             return Response(200, {}, json.dumps(payload).encode())
 
         requests = github_transport(transport)
@@ -159,7 +171,7 @@ def test_each_typed_verb_delivers_fixed_payload(synthetic_opsec, verb, fields, g
         monkeypatch.setattr(pub, "_run_transport", observe)
         sender = None
     assert pub.publish(verb, repo="unit/public", runner=sender, **fields).returncode == 0
-    assert len(calls) == 1
+    assert len(calls) == (3 if verb == "comment-edit" else 1)
     if verb in expected_requests:
         assert [
             (method, endpoint, json.loads(body) if body is not None else None)
@@ -269,6 +281,9 @@ def test_comment_edit_same_id_exact_body_and_failure_cleanup(synthetic_opsec, in
     calls = []
 
     def send(argv, **kwargs):
+        if argv[3] == "GET":
+            document = {"login": "unit"} if argv[4].startswith("user?") else {"id": 7, "body": "previous", "user": {"login": "unit"}}
+            return subprocess.CompletedProcess(argv, 0, json.dumps(document), "")
         assert argv[:6] == ["gh", "api", "--method", "PATCH", "repos/unit/public/issues/comments/7", "--input"]
         payload_path = Path(argv[6])
         assert json.loads(payload_path.read_bytes()) == {"body": body}
@@ -281,6 +296,35 @@ def test_comment_edit_same_id_exact_body_and_failure_cleanup(synthetic_opsec, in
     else:
         assert pub.main(["comment-edit", "--repo", "unit/public", "--comment-id", "7", "--body", body], runner=send) == 1
     assert len(calls) == 1 and not calls[0].exists()
+
+
+@pytest.mark.parametrize("interface", ["python", "cli"])
+@pytest.mark.parametrize("target,identity,status", [
+    ({"id": 7, "body": "<!-- cf-verdict v1 verdict=CHANGES_REQUESTED -->", "user": {"login": "unit"}}, {"login": "unit"}, 0),
+    ({"id": 7, "body": "clean", "user": {"login": "other"}}, {"login": "unit"}, 0),
+    ({"id": 8, "body": "clean", "user": {"login": "unit"}}, {"login": "unit"}, 0),
+    ({"id": 7, "body": None, "user": {"login": "unit"}}, {"login": "unit"}, 0),
+    ({"id": 7, "body": "clean", "user": {}}, {"login": "unit"}, 0),
+    ({"id": 7, "body": "clean", "user": {"login": "unit"}}, {}, 0),
+    ({}, {}, 1),
+    ([], [], 0),
+])
+def test_comment_edit_cannot_erase_verdict_or_mutate_unproved_owner(synthetic_opsec, interface, target, identity, status):
+    writes = []
+
+    def send(argv, **kwargs):
+        if argv[3] == "GET":
+            document = identity if argv[4].startswith("user?") else target
+            return subprocess.CompletedProcess(argv, status, json.dumps(document), "fixture read failure")
+        writes.append(argv)
+        return subprocess.CompletedProcess(argv, 0, "{}", "")
+
+    if interface == "python":
+        with pytest.raises(gate.PublishBlocked):
+            pub.publish("comment-edit", repo="unit/public", comment_id=7, body="replacement", runner=send)
+    else:
+        assert pub.main(["comment-edit", "--repo", "unit/public", "--comment-id", "7", "--body", "replacement"], runner=send) == 2
+    assert writes == []
 
 
 @pytest.mark.parametrize("verb", ["release-create", "release-upload", "gist-create"])
