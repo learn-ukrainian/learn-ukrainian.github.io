@@ -26,7 +26,7 @@ inline:
     title: Частота і запрошення
     instruction: Обери слово або фразу, які найкраще завершують речення.
     items:
-      - sentence: 'Я ___ працюю у неділю.'
+      - sentence: "(Never.) Я ___ працюю у неділю."
         answer: ніколи не
         options:
           - ніколи не
@@ -37,24 +37,24 @@ inline:
         answer: на тиждень
         options:
           - на тиждень
-          - у тиждень
-          - в тиждень
-        explanation: Для частоти кажемо раз, двічі або тричі на тиждень.
+          - на тижнем
+          - на тижнями
+        explanation: "Двічі на тиждень means twice a week. На тиждень names the frequency period."
       - sentence: '— ___ в кіно у суботу! — Добре!'
         answer: Ходімо
         options:
           - Ходімо
-          - Давай
-          - Ідемо
-        explanation: Ходімо! - готова фраза для запрошення.
-      - sentence: 'Я люблю спорт, тому ___ граю у баскетбол.'
+          - Ходжу
+          - Ходиш
+        explanation: "Ходімо invites us to go together. Ходжу and ходиш describe who goes."
+      - sentence: "(Often.) Я люблю спорт, тому ___ граю у баскетбол."
         answer: часто
         options:
           - часто
           - ніколи
           - рідко
         explanation: Якщо людина любить спорт, часто логічно підходить.
-      - sentence: 'Я не маю часу, тому ___ читаю книги.'
+      - sentence: "(Rarely.) Я не маю часу, тому ___ читаю книги."
         answer: рідко
         options:
           - рідко
@@ -66,8 +66,8 @@ inline:
         options:
           - у вихідні
           - вихідні
-          - на вихідні
-        explanation: Для "on weekends" уживаємо у вихідні.
+          - у вихідних
+        explanation: "У вихідні means on weekends. Here у takes the plural accusative вихідні."
   - id: act-3
     type: fill-in
     title: Прийменник у фразі
@@ -85,7 +85,7 @@ inline:
         options:
           - у
           - на
-          - в
+          - з
         explanation: Для спорту уживаємо грати у/в.
       - sentence: 'Я хочу ходити ___ концерт.'
         answer: на
@@ -94,10 +94,10 @@ inline:
           - в
           - у
         explanation: 'Природна фраза: ходити на концерт.'
-      - sentence: 'Вони ходять ___ театр раз на місяць.'
+      - sentence: "Ми ходимо ___ театр раз на місяць."
         answer: в
         options:
           - в
           - на
-          - у
-        explanation: У цьому уроці вчимо готову фразу ходити в театр.
+          - із
+        explanation: "Ходимо ends in a vowel. Before the consonant т in театр, use в."
