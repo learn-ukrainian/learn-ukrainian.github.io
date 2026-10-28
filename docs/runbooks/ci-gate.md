@@ -296,7 +296,8 @@ commit, a frozen base commit, and `origin/main` ancestry. Two run a
 GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
 s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
 and balances the other files around them. Shard 1 is the only shard checked out
-with full history (`fetch-depth: 0`). Shards 2..N check out only the tested
+with full history (`fetch-depth: 0`), blobless like every full-history checkout
+(see "Full-history checkouts are blobless" below). Shards 2..N check out only the tested
 commit (`fetch-depth: 1`) and run pytest with `GIT_ALLOW_PROTOCOL=file`. A
 listed file that is no longer tracked fails the split.
 
@@ -320,9 +321,32 @@ several merge-queue builds next to PR CI and other workflows. A passing
 inventory is therefore not proof of capacity for a build-concurrency change;
 see D3 in [`ci-speed-program.md`](../epics/ci-speed-program.md).
 
+### Full-history checkouts are blobless (FR-58)
+
+The public pack is about 8 GB, nearly all of it old file contents. Commits and
+trees for the whole history are about 30 MB. Every `fetch-depth: 0` checkout in
+`.github/workflows/` therefore also sets `filter: blob:none`: it downloads all
+commits and trees, plus the blobs of the checked-out tree. Ancestry checks,
+merge bases and changed-file lists read commits and trees only. A step that
+reads an old file's content (`git show <rev>:<path>`, a content diff) makes git
+fetch the missing blobs from GitHub; `git diff` and `git log --patch` fetch
+them in one batch per command. CI Gate gets the same filter from its sparse
+checkout. Before this change, one checkout took 16 s to 424 s, and the
+5-minute jobs were cancelled at their limit.
+
+TruffleHog cannot use this checkout as before: its own `git clone` of a partial
+clone fails. Both scan jobs fetch and verify the blobs of their range first and
+scan in place; see
+[secret-scanning.md](secret-scanning.md#blobless-ci-checkout-fr-58). The
+`full-history-audit` dispatch keeps a full clone.
+
+A blobless repository cannot be cloned with `git clone file://`. A test that
+clones the real checkout, rather than a repository it built itself, would fail
+on the history shard only.
+
 ## Shard setup
 
-Per shard: checkout (shallow; full history on the history shard), Python
+Per shard: checkout (shallow; blobless full history on the history shard), Python
 3.12.15, then `scripts/ci/test_env.sh start` runs `npm ci` and
 `scripts/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
 verification) in the background while `python-ci-env` installs the locked
