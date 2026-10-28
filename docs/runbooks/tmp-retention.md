@@ -159,6 +159,13 @@ overrides a task that is still unsettled.
 
 ### Process coverage
 
+The legacy `scripts.orchestration.tmp_leak_sweep` entry point uses the same
+`reap_attributed_temp` deletion engine as this sweep. It records each
+candidate's device/inode during discovery and passes that identity to the
+engine after its liveness recheck. Live or unknown candidates remain in
+place. This convergence does not resolve the process-inspection privilege
+requirement below (#9702).
+
 The sweep reads `/proc/<pid>/cwd`, `/proc/<pid>/fd` and `/proc/<pid>/maps`
 for every process. For inactive pytest scratch it also reads
 `/proc/<pid>/cmdline` and `/proc/<pid>/environ`, and inspects its own process
