@@ -153,6 +153,7 @@ export default function PaleographyAnalysis({
                 <p>{selectFeatureLabel}</p>
                 {options.length > 0 ? (
                   <select
+                    aria-label={selectFeatureLabel}
                     value={userAnswers[selectedHotspot] || ''}
                     onChange={(e) => handleAnswer(selectedHotspot, e.target.value)}
                     className={styles.featureSelect}

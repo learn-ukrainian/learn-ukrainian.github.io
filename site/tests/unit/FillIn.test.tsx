@@ -211,6 +211,18 @@ describe('FillIn wrapper', () => {
     expect(container.querySelectorAll('select')).toHaveLength(2);
   });
 
+  test('every select has an accessible name that tells the blanks apart', () => {
+    render(<FillIn items={items} />);
+    expect(screen.getByRole('combobox', { name: 'Blank 1 of 2' })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'Blank 2 of 2' })).toBeInTheDocument();
+  });
+
+  test('select names follow the activity language', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
+    render(<FillIn items={items} isUkrainian />);
+    expect(screen.getByRole('combobox', { name: 'Пропуск 2 з 2' })).toBeInTheDocument();
+  });
+
   test('renders instruction text when provided', () => {
     render(<FillIn items={items} instruction="Pick the best word" />);
     expect(screen.getByText('Pick the best word')).toBeInTheDocument();

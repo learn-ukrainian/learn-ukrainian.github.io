@@ -28,9 +28,9 @@ const dailyCount = Math.max(1, Math.floor(count));
   </div>
 
   {showLevelSelector && (
-    <div class="lexicon-daily-controls" aria-label="Learner level">
-      <span class="lexicon-daily-control-label"><ChromeText k="practice.level" /></span>
-      <div class="lexicon-daily-levels" role="list" data-daily-levels>
+    <div class="lexicon-daily-controls">
+      <span class="lexicon-daily-control-label" id="lexicon-daily-level-label"><ChromeText k="practice.level" /></span>
+      <div class="lexicon-daily-levels" role="group" aria-labelledby="lexicon-daily-level-label" data-daily-levels>
         {CEFR_LEVELS.map((level) => (
           <button
             class="lexicon-daily-level-chip"
@@ -364,7 +364,7 @@ const dailyCount = Math.max(1, Math.floor(count));
   .lexicon-daily-level-chip[aria-pressed="true"] {
     border-color: var(--lu-primary);
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-primary-fill);
   }
 
   .lexicon-daily-status {
@@ -397,7 +397,7 @@ const dailyCount = Math.max(1, Math.floor(count));
     border: 1px solid var(--lu-primary);
     border-radius: 8px;
     background: var(--lu-primary);
-    color: var(--lu-on-primary);
+    color: var(--lu-on-primary-fill);
     cursor: pointer;
     font: inherit;
     font-weight: 800;
@@ -423,19 +423,30 @@ const dailyCount = Math.max(1, Math.floor(count));
   }
 
   :global(.lexicon-daily-card) {
+    position: relative;
     perspective: 900px;
     min-height: 7.25rem;
     height: 100%;
-    cursor: pointer;
-    border: 0;
-    padding: 0;
-    background: transparent;
-    color: inherit;
-    font: inherit;
     text-align: left;
   }
 
+  /* The flip button covers the whole card so a click anywhere flips it; the
+     faces let clicks through, except the lemma link, which is a separate
+     control rather than a child of the button. */
+  :global(.lexicon-daily-flip) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+  }
+
   :global(.lexicon-daily-card-inner) {
+    pointer-events: none;
     display: grid;
     min-height: 7.25rem;
     height: 100%;
@@ -469,14 +480,17 @@ const dailyCount = Math.max(1, Math.floor(count));
   }
 
   :global(.lexicon-daily-card:hover .lexicon-daily-face),
-  :global(.lexicon-daily-card:focus-visible .lexicon-daily-face) {
+  :global(.lexicon-daily-flip:focus-visible + .lexicon-daily-card-inner .lexicon-daily-face) {
     border-color: var(--lu-primary);
-    outline: none;
     box-shadow: 0 0 0 3px var(--lu-state-active);
   }
 
-  :global(.lexicon-daily-card:focus-visible) {
+  :global(.lexicon-daily-flip:focus-visible) {
     outline: none;
+  }
+
+  :global(a.lexicon-daily-lemma) {
+    pointer-events: auto;
   }
 
   :global(.lexicon-daily-lemma) {
