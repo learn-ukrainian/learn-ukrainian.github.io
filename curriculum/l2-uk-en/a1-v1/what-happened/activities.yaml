@@ -81,7 +81,7 @@ inline:
           - text: 'Because Ukrainian has no person forms.'
             correct: false
         explanation: 'The past ending shows gender in the singular, not person.'
-      - prompt: 'Which form fits a female speaker saying I read?'
+      - prompt: "Олена: Учора я була вдома. ___"
         options:
           - text: 'Я читала.'
             correct: true
@@ -90,7 +90,7 @@ inline:
           - text: 'Я читали.'
             correct: false
         explanation: 'A female speaker uses the feminine form читала.'
-      - prompt: 'Which form fits a group?'
+      - prompt: "Олена і Тарас: ___"
         options:
           - text: 'Ми читали.'
             correct: true

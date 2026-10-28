@@ -68,15 +68,15 @@ inline:
     title: Future pattern check
     instruction: Choose the answer that keeps the A1 compound future.
     items:
-      - prompt: 'Which sentence means I will read?'
+      - prompt: "— Що ти будеш робити завтра? — ___"
         options:
           - text: 'Я буду читати.'
             correct: true
           - text: 'Я буду читаю.'
             correct: false
-          - text: 'Я читаю завтра.'
+          - text: "Я будемо читати."
             correct: false
-        explanation: 'Use буду + infinitive: буду читати.'
+        explanation: "Буду читати combines first-person singular буду with an infinitive. Буду читаю has two finite forms; я будемо disagrees in number."
       - prompt: 'What stays unchanged after будемо?'
         options:
           - text: 'The infinitive.'

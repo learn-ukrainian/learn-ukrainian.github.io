@@ -53,13 +53,13 @@ inline:
           - 'але'
           - 'тому що'
         explanation: 'Use або for a simple choice.'
-      - sentence: "(Ask which ONE profession applies.) Ви студент ___ лікар?"
+      - sentence: "Ви студент ___ лікар?"
         answer: 'чи'
         options:
           - 'чи'
           - 'бо'
-          - 'та'
-        explanation: 'Use чи in many choice questions.'
+          - "якого"
+        explanation: "Чи joins alternatives in a question. Бо cannot link these two nouns; якого cannot coordinate them."
   - id: act-2
     type: quiz
     title: What does it do?
