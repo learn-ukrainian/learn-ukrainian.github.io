@@ -291,6 +291,12 @@ def _stack_may_write(factory: str | None) -> bool:
         rel = _script_path(frame.filename)
         if rel is None or rel == _GUARD_PATH or (rel, frame.function) in _SEAM_FUNCTIONS:
             continue
+        if frame.function in _OPEN_HELPERS:
+            # The helper's file is an allowlisted writer. The helper itself
+            # must not authorize a nested writable open.
+            if factory is not None and rel == factory:
+                factory_functions.append(frame.function)
+            continue
         if factory is not None and rel == factory:
             factory_functions.append(frame.function)
             continue

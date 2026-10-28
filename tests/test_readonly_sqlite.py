@@ -113,6 +113,19 @@ def test_sources_db_writer_may_open_through_connect_sqlite(tmp_path):
     assert database.is_file()
 
 
+def test_open_helper_does_not_authorize_a_nested_writable_connect(tmp_path, monkeypatch):
+    probe = tmp_path / "probe" / "sources.db"
+    probe.parent.mkdir()
+
+    def nested(_path, **_kwargs):
+        return connect_sqlite(str(probe))
+
+    monkeypatch.setattr(sources_db, "open_readonly", nested)
+    with pytest.raises(CorpusDatabaseWriteRefused, match=r"sources\.db"):
+        sources_db._open_conn(tmp_path / "sources.db", read_only=True)
+    assert not probe.exists()
+
+
 def test_ingest_ancestor_may_write_through_a_nonwriter_relay(tmp_path):
     database = tmp_path / "sources.db"
     source = "def _review_ancestor(path, relay):\n    return relay(path)\n"
