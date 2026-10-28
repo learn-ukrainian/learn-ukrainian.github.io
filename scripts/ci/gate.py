@@ -26,7 +26,7 @@ def event_tier(event: str, payload: dict, sha: str, ref: str, actual: str) -> st
     if event == "pull_request":
         pr = payload["pull_request"]
         number = pr["number"]
-        if (payload["action"] not in {"opened", "synchronize", "reopened"}
+        if (payload["action"] not in {"opened", "synchronize", "reopened", "edited"}
                 or type(number) is not int or number < 1 or ref != f"refs/pull/{number}/merge"
                 or not SHA.fullmatch(pr["base"]["sha"]) or not SHA.fullmatch(pr["head"]["sha"])):
             raise ValueError("invalid pull_request identity")
