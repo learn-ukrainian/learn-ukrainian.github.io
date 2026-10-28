@@ -1,19 +1,31 @@
 {
   "schema": "uk-behaviour-freeze/1",
   "status": "PROTOCOL_FROZEN_DATA_UNSEALED",
-  "observed_base_sha": "fac2b6595a53453cc8ea98ed18298852c8798f06",
+  "observed_base_sha": "d0ccabb946c968e4be775bc3a018a656ab00c6a1",
   "protocol": "uk-behaviour/1",
   "scorer": "uk-behaviour-score/1",
   "baseline_authorized_by_this_artifact": false,
   "splits": {
     "development": {
-      "fresh_lesson": 5,
-      "fresh_activities": 10,
-      "v7_module": 4,
-      "card_meaning_review": 5,
+      "fresh_lesson": 2,
+      "fresh_activities": 2,
+      "v7_module": 1,
+      "exercise_review": 12,
+      "card_review": 7,
       "passage_review": 12,
       "items": 36,
+      "levels": {
+        "A1": 30,
+        "A2": 6
+      },
       "passage_seeds": 64,
+      "exercise_labelled_defect_requests": 10,
+      "exercise_clean_requests": 2,
+      "card_facets": [
+        "meaning",
+        "stress",
+        "form"
+      ],
       "passage_protected": {
         "dialect": 16,
         "heritage": 16,
@@ -21,24 +33,29 @@
       },
       "protected_by_family": {
         "fresh_lesson": {
-          "dialect": 5,
-          "heritage": 5,
-          "rare_valid": 5
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
         },
         "fresh_activities": {
-          "dialect": 10,
-          "heritage": 10,
-          "rare_valid": 10
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
         },
         "v7_module": {
-          "dialect": 4,
-          "heritage": 4,
-          "rare_valid": 4
+          "dialect": 1,
+          "heritage": 1,
+          "rare_valid": 1
         },
-        "card_meaning_review": {
-          "dialect": 5,
-          "heritage": 5,
-          "rare_valid": 5
+        "exercise_review": {
+          "dialect": 12,
+          "heritage": 12,
+          "rare_valid": 12
+        },
+        "card_review": {
+          "dialect": 7,
+          "heritage": 7,
+          "rare_valid": 7
         },
         "passage_review": {
           "dialect": 16,
@@ -49,13 +66,25 @@
       "protected_opportunities": 120
     },
     "selection": {
-      "fresh_lesson": 5,
-      "fresh_activities": 10,
-      "v7_module": 4,
-      "card_meaning_review": 5,
+      "fresh_lesson": 2,
+      "fresh_activities": 2,
+      "v7_module": 1,
+      "exercise_review": 12,
+      "card_review": 7,
       "passage_review": 12,
       "items": 36,
+      "levels": {
+        "A1": 30,
+        "A2": 6
+      },
       "passage_seeds": 64,
+      "exercise_labelled_defect_requests": 10,
+      "exercise_clean_requests": 2,
+      "card_facets": [
+        "meaning",
+        "stress",
+        "form"
+      ],
       "passage_protected": {
         "dialect": 16,
         "heritage": 16,
@@ -63,24 +92,29 @@
       },
       "protected_by_family": {
         "fresh_lesson": {
-          "dialect": 5,
-          "heritage": 5,
-          "rare_valid": 5
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
         },
         "fresh_activities": {
-          "dialect": 10,
-          "heritage": 10,
-          "rare_valid": 10
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
         },
         "v7_module": {
-          "dialect": 4,
-          "heritage": 4,
-          "rare_valid": 4
+          "dialect": 1,
+          "heritage": 1,
+          "rare_valid": 1
         },
-        "card_meaning_review": {
-          "dialect": 5,
-          "heritage": 5,
-          "rare_valid": 5
+        "exercise_review": {
+          "dialect": 12,
+          "heritage": 12,
+          "rare_valid": 12
+        },
+        "card_review": {
+          "dialect": 7,
+          "heritage": 7,
+          "rare_valid": 7
         },
         "passage_review": {
           "dialect": 16,
@@ -91,13 +125,25 @@
       "protected_opportunities": 120
     },
     "final": {
-      "fresh_lesson": 5,
-      "fresh_activities": 10,
-      "v7_module": 4,
-      "card_meaning_review": 5,
+      "fresh_lesson": 2,
+      "fresh_activities": 2,
+      "v7_module": 1,
+      "exercise_review": 12,
+      "card_review": 7,
       "passage_review": 12,
       "items": 36,
+      "levels": {
+        "A1": 30,
+        "A2": 6
+      },
       "passage_seeds": 64,
+      "exercise_labelled_defect_requests": 10,
+      "exercise_clean_requests": 2,
+      "card_facets": [
+        "meaning",
+        "stress",
+        "form"
+      ],
       "passage_protected": {
         "dialect": 16,
         "heritage": 16,
@@ -105,24 +151,29 @@
       },
       "protected_by_family": {
         "fresh_lesson": {
-          "dialect": 5,
-          "heritage": 5,
-          "rare_valid": 5
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
         },
         "fresh_activities": {
-          "dialect": 10,
-          "heritage": 10,
-          "rare_valid": 10
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
         },
         "v7_module": {
-          "dialect": 4,
-          "heritage": 4,
-          "rare_valid": 4
+          "dialect": 1,
+          "heritage": 1,
+          "rare_valid": 1
         },
-        "card_meaning_review": {
-          "dialect": 5,
-          "heritage": 5,
-          "rare_valid": 5
+        "exercise_review": {
+          "dialect": 12,
+          "heritage": 12,
+          "rare_valid": 12
+        },
+        "card_review": {
+          "dialect": 7,
+          "heritage": 7,
+          "rare_valid": 7
         },
         "passage_review": {
           "dialect": 16,
@@ -136,29 +187,73 @@
   "repeats": 3,
   "totals": {
     "items": 108,
-    "candidate_outcomes": 324,
-    "judge_outcomes": 324,
+    "candidate_outcomes_per_row_all_splits": 324,
     "passage_seeds": 192,
     "passage_protected_spans": 144,
     "protected_opportunities": 360,
-    "repeated_protected_opportunities": 1080
+    "repeated_protected_opportunities_per_row": 1080,
+    "initial_candidate_calls_including_canary": 444,
+    "deferred_final_candidate_calls_max": 432,
+    "programme_candidate_calls_max": 876,
+    "programme_primary_judge_calls_max": 876,
+    "scheduled_audits": 90,
+    "reserved_dispute_calls": 12
   },
   "budget": {
-    "candidate_calls": 324,
-    "judge_calls": 324,
-    "total_paid_invocations": 648,
+    "phases": {
+      "development_canary": {
+        "candidate_calls": 12,
+        "primary_judge_calls": 12,
+        "audit_or_dispute_calls": 2,
+        "paid_calls": 26,
+        "wall_seconds": 31200
+      },
+      "development": {
+        "candidate_calls": 216,
+        "primary_judge_calls": 216,
+        "audit_or_dispute_calls": 22,
+        "paid_calls": 454,
+        "wall_seconds": 544800
+      },
+      "selection_baseline": {
+        "candidate_calls": 216,
+        "primary_judge_calls": 216,
+        "audit_or_dispute_calls": 22,
+        "paid_calls": 454,
+        "wall_seconds": 544800
+      },
+      "deferred_final": {
+        "candidate_calls": 432,
+        "primary_judge_calls": 432,
+        "audit_or_dispute_calls": 44,
+        "paid_calls": 908,
+        "wall_seconds": 1089600
+      },
+      "dispute_reserve": {
+        "candidate_calls": 0,
+        "primary_judge_calls": 0,
+        "audit_or_dispute_calls": 12,
+        "paid_calls": 12,
+        "wall_seconds": 14400
+      }
+    },
+    "candidate_calls": 876,
+    "primary_judge_calls": 876,
+    "audit_calls": 90,
+    "dispute_calls": 12,
+    "total_paid_invocations": 1854,
+    "initial_paid_invocations_excluding_disputes": 934,
     "hard_timeout_seconds": 1200,
-    "wall_seconds": 172800,
+    "execution_wall_seconds_sum": 2224800,
     "concurrency": 2,
     "per_provider_concurrency": 1,
-    "sources_calls_total_ceiling": 26784,
-    "retry_calls": 0
-  },
-  "candidate": {
-    "model": "gpt-6.1-sol",
-    "family": "openai",
-    "harness": "codex",
-    "effort": "high"
+    "tool_enabled_candidate_calls": 778,
+    "fresh_writer_calls": 98,
+    "sources_calls_per_pass": 32,
+    "deterministic_scoring_passes": 876,
+    "sources_calls_total_ceiling": 84224,
+    "retry_calls": 0,
+    "selection_consultations_max": 3
   },
   "judge": {
     "model": "claude-opus-5-5",
@@ -191,7 +286,7 @@
   "assets": [
     {
       "path": "docs/evaluations/uk-preamble.md",
-      "sha256": "cd0e961165dabcfb06d126d06ada9a1bb366d79610ff8ae884c8847851a1b17f"
+      "sha256": "9fd10d6169101f38f7a0800ab357de619ca250e6374f5435abe9aea2a30aacad"
     },
     {
       "path": "docs/evaluations/lesson-ab.md",
@@ -199,7 +294,7 @@
     },
     {
       "path": "docs/evaluations/uk-behaviour-freeze.md",
-      "sha256": "3af18494359197aa1296b24abcbb15c0e5e8fe9e4e00e2c61a89ebe4177437a8"
+      "sha256": "be7a0c3ddf3db7544ab9900815e109c6d9fb894611258eb0b4b27a5538d76def"
     },
     {
       "path": "docs/projects/ua-eval-harness/V0_2_EVIDENCE_PLAN.md",
@@ -235,11 +330,11 @@
     },
     {
       "path": "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",
-      "sha256": "442c35d29c33b74061c4e997f165a51db4d2a88b10ebd3d08d5b4136a934ad5c"
+      "sha256": "73077dcfffcdab66dd1598f836daab7f4a181264b98fe3fc15cf82665992106f"
     },
     {
       "path": "agents_extensions/shared/rules/ukrainian-linguistics.md",
-      "sha256": "390c08389ce8be3172a8fd262a6b2a1e60bccae192dfcb63bbfd7151e07b2d46"
+      "sha256": "6c3d9873099a2a00714ac3bb02ec71c68f09a03df05306c170b2d3bfec05b3f2"
     },
     {
       "path": "agents_extensions/shared/rules/storage-topology.md",
@@ -251,7 +346,7 @@
     },
     {
       "path": "agents_extensions/shared/skills/content-review/content-review-prompt.md",
-      "sha256": "cbedc304139e1b3aa79d27ebef388e26b5bdbefa267b4e254dc934a4fddaee5a"
+      "sha256": "585705337e8e4428d19a85a3ca01b0452d4baed93eff8e80d65cc4361c87e1e9"
     },
     {
       "path": "agents_extensions/shared/skills/review-loop/references/ukrainian.md",
@@ -416,6 +511,30 @@
       "sha256": null,
       "status": "MISSING",
       "owner": "coordinator-and-evaluation-maintainer"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/exercise-review-prompt",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "coordinator-and-evaluation-maintainer"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/sources-snapshot",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "sources-custodian"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/audit-sample-and-dispute-seal",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/final/adjudication-and-judge-transcripts",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
     }
   ],
   "approval_references": [
@@ -439,5 +558,141 @@
       "sha256": "9b436a1a6c7c442f3dafaa468d358446a8cb66995562749e2801eac07b211add",
       "eligibility": "development-only pending adjudication; no held-out reuse asserted"
     }
-  ]
+  ],
+  "candidates": [
+    {
+      "model": "gpt-6.1-sol",
+      "family": "openai",
+      "harness": "codex",
+      "effort": "high",
+      "role": "evaluation-candidate"
+    },
+    {
+      "model": "gpt-6.1-terra",
+      "family": "openai",
+      "harness": "codex",
+      "effort": "high",
+      "role": "evaluation-candidate"
+    }
+  ],
+  "audit_judge": {
+    "model": "gemini-3.8-flash-high",
+    "family": "google",
+    "harness": "agy",
+    "effort": "high",
+    "sources_required": true,
+    "qualification": "UNVERIFIED"
+  },
+  "custody": {
+    "final_excluded_label_and_judge_families": [
+      "openai"
+    ],
+    "adjudication_and_judge_transcripts_in_final_custody": true,
+    "sources_snapshot_frozen_from_labels_through_final": true,
+    "initial_final_execution": false,
+    "final_baselines_and_selected_variants_simultaneous": true,
+    "output_shuffle_seed": 10453,
+    "audit_selection_seed": 10454
+  },
+  "canary": {
+    "items_per_model": 6,
+    "repeats": 1,
+    "split": "development",
+    "unresolved_evaluator_early_stop_fraction_exclusive": 0.1,
+    "all_cells_must_resolve_before_full_spend": true,
+    "projection_overhead_fraction": 0.1,
+    "stop_on_any": [
+      "fabricated_receipt",
+      "contamination",
+      "snapshot_drift",
+      "protected_harm",
+      "material_audit_disagreement",
+      "unknown_required_route_tool_or_quota",
+      "phase_wall_projection_exceeded",
+      "timeout_prevents_projection"
+    ]
+  },
+  "scoring": {
+    "required_claim_coverage_when_none_required": 1,
+    "correctness_for_verified_clean_or_gap_without_emitted_claims": 1,
+    "opportunity_denominator": "G1 pre-output seal; never candidate-controlled",
+    "quality": "C*P*(1-min(1,F/O))*(1-min(1,S/O))*(1-min(1,X/O))",
+    "reward": {
+      "verified_harm": -2,
+      "fabrication_or_overproduction": -1.5,
+      "answerable_refusal_or_missing": -1,
+      "accepted_incomplete": "-0.5+0.5*Q",
+      "complete_safety_passing": "0.1+0.9*Q"
+    },
+    "worked_ordering": [
+      {
+        "case": "perfect_or_clean",
+        "T": 1,
+        "C": 1,
+        "P": 1,
+        "F": 0,
+        "S": 0,
+        "X": 0,
+        "H": 0,
+        "O": 10,
+        "R": 1
+      },
+      {
+        "case": "good_one_error",
+        "T": 1,
+        "C": 0.9,
+        "P": 1,
+        "F": 1,
+        "S": 0,
+        "X": 0,
+        "H": 0,
+        "O": 10,
+        "R": 0.829
+      },
+      {
+        "case": "padder",
+        "T": 1,
+        "C": 1,
+        "P": 1,
+        "F": 0,
+        "S": 0,
+        "X": 8,
+        "H": 0,
+        "O": 10,
+        "R": 0.28
+      },
+      {
+        "case": "refusal",
+        "T": 0,
+        "C": 0,
+        "P": 0,
+        "F": 0,
+        "S": 0,
+        "X": 0,
+        "H": 0,
+        "O": 10,
+        "R": -1
+      },
+      {
+        "case": "accuse_everything",
+        "T": 0,
+        "C": 0,
+        "P": 0,
+        "F": 10,
+        "S": 0,
+        "X": 0,
+        "H": 1,
+        "O": 10,
+        "R": -2
+      }
+    ],
+    "acceptance": {
+      "correctness": "equal-family macro paired 95% CI lower bound > 0",
+      "completion": "per-family point difference >= 0",
+      "false_corrections": "per-family sum(F)/sum(O) point difference <= 0",
+      "safety": "zero new harms per matched item-repeat and stratum",
+      "complete_valid_cells_required": true
+    },
+    "padding": "Assertions outside frozen positive-credit slots incur X even within a facet; true extras never raise correctness"
+  }
 }
