@@ -166,6 +166,9 @@ def _normalize_plain(text: str) -> str:
 
 def check_word_in_vesum(word: str, db_path: Path | str | None = None) -> bool:
     """Require lexical evidence; Roman numeral notation supplies no word attestation."""
+    if "/" in word:
+        alternatives = [check_word_in_vesum(part, db_path=db_path) for part in word.split("/")]
+        return all(alternatives)
 
     def attested(form: str) -> bool:
         return bool(verify_word(form, db_path=db_path)) or (
@@ -972,7 +975,13 @@ def audit_practice_shards(
             # 5. Morphological attestation in VESUM
             if verify_vesum and vesum_db and Path(vesum_db).exists():
                 ans = item.get("answer") or item.get("form") or item.get("target") or item.get("correctForm", "")
-                for target in [ans, *item.get("acceptedAnswers", [])]:
+                if mode == "stress":
+                    targets = [item.get("stressed", ""), item.get("unstressed", "")]
+                elif mode == "classify":
+                    targets = [item.get("lemma", "")]
+                else:
+                    targets = [ans]
+                for target in [*targets, *item.get("acceptedAnswers", [])]:
                     if not check_word_in_vesum(target, db_path=vesum_db):
                         violations.append(
                             {

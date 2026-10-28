@@ -1236,6 +1236,7 @@ def _audit_attestation_target(tmp_path, field, target, vesum_db, *, vesum_only=T
         ("жжжа\u0300", ["жжжа"]),
         ("жжжа\u0341", ["жжжа"]),
         ("жжжа жжжб", ["жжжа", "жжжб"]),
+        ("жжжа/жжжб", ["жжжа", "жжжб"]),
         ("жжжа\tжжжб\nжжжв", ["жжжа", "жжжб", "жжжв"]),
         ("ж-ж", ["ж-ж", "жж", "ж", "ж"]),
         ("жжжа-ж", ["жжжа-ж", "жжжаж", "жжжа", "ж"]),
@@ -1264,7 +1265,7 @@ def test_target_attestation_no_analyses(tmp_path, monkeypatch, field, target, lo
 
 
 @pytest.mark.parametrize("field", _ATTESTATION_FIELDS)
-@pytest.mark.parametrize("target", ["", "   ", "!!!", "жжжа/жжжб", "жжжа—жжжб", "Latin", "жжжа123"])
+@pytest.mark.parametrize("target", ["", "   ", "!!!", "/", "жжжа—жжжб", "Latin", "жжжа123"])
 def test_target_attestation_unsupported_is_not_success(tmp_path, monkeypatch, field, target):
     from scripts.audit import practice_quality_gate
 
@@ -1278,8 +1279,7 @@ def test_target_attestation_unsupported_is_not_success(tmp_path, monkeypatch, fi
     monkeypatch.setattr(practice_quality_gate, "verify_word", no_analyses)
     all_findings = _audit_attestation_target(tmp_path, field, target, db, vesum_only=False)
     findings = [v for v in all_findings if v["type"].startswith("VESUM_")]
-    expected_calls = ["жжжа", "жжжб"] if field.startswith("correction.") and target == "жжжа/жжжб" else []
-    assert calls == (["ґґґа"] if field == "shard.acceptedAnswers" else expected_calls)
+    assert calls == (["ґґґа"] if field == "shard.acceptedAnswers" else [])
     # Empty corrections already have EMPTY_CORRECT_TARGET, rather than lexical attestation.
     if field.startswith("correction.") and not target:
         assert "EMPTY_CORRECT_TARGET" in [v["type"] for v in all_findings]
@@ -1299,6 +1299,9 @@ def test_target_attestation_unsupported_is_not_success(tmp_path, monkeypatch, fi
         ("жжжа жжжб", {"жжжа", "жжжб"}, ["жжжа", "жжжб"], False),
         ("жжжа жжжб", {"жжжа"}, ["жжжа", "жжжб"], True),
         ("жжжа жжжб", {"жжжб"}, ["жжжа", "жжжб"], True),
+        ("жжжа/жжжб", {"жжжа", "жжжб"}, ["жжжа", "жжжб"], False),
+        ("жжжа/жжжб", {"жжжа"}, ["жжжа", "жжжб"], True),
+        ("жжжа/жжжб", {"жжжб"}, ["жжжа", "жжжб"], True),
         ("ж-ж", {"ж-ж"}, ["ж-ж"], False),
         ("ж-ж", {"жж"}, ["ж-ж", "жж"], False),
         ("ж-ж", {"ж"}, ["ж-ж", "жж", "ж", "ж"], False),
@@ -1390,6 +1393,30 @@ def test_target_attestation_numeral_notation_cannot_supply_lexical_evidence(tmp_
     db = _fixture_vesum(tmp_path, [("жжжа", "noun"), ("жжжб", "noun"), ("ґґґа", "noun")])
     findings = _audit_attestation_target(tmp_path, field, target, db)
     assert [v["type"] for v in findings] == (["VESUM_UNATTESTED"] if unattested else [])
+
+
+@pytest.mark.parametrize(
+    ("mode", "target_fields", "expected"),
+    [
+        ("classify", {"lemma": "жжжа"}, []),
+        ("classify", {"lemma": "жжжб"}, ["VESUM_UNATTESTED"]),
+        ("stress", {"stressed": "жжжа́", "unstressed": "жжжа"}, []),
+        ("stress", {"stressed": "жжжб́", "unstressed": "жжжб"}, ["VESUM_UNATTESTED", "VESUM_UNATTESTED"]),
+        ("stress", {"stressed": "жжжа́", "unstressed": "жжжб"}, ["VESUM_UNATTESTED"]),
+        ("stress", {"stressed": "жжжб́", "unstressed": "жжжа"}, ["VESUM_UNATTESTED"]),
+    ],
+)
+def test_target_attestation_uses_stress_and_classify_lexical_fields(tmp_path, mode, target_fields, expected):
+    """Generated modes must attest their lexical fields, never a nonexistent answer field."""
+    db = _fixture_vesum(tmp_path, [("жжжа", "noun")])
+    item = {f"{mode}Id": "probe", **target_fields}
+    shard = tmp_path / f"practice-{mode}.A1.json"
+    shard.write_text(json.dumps({mode: [item]}, ensure_ascii=False), encoding="utf-8")
+    counts, findings = audit_practice_shards(
+        shards_dir=tmp_path, vesum_db=db, check_volume=False, modes=[mode]
+    )
+    assert counts[mode] == 1
+    assert [v["type"] for v in findings] == expected
 
 
 @pytest.mark.parametrize("field", ["correction.correctForm", "correction.correctTarget"])
