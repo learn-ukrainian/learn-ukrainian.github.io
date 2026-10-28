@@ -1439,7 +1439,7 @@ def test_paradigm_vesum_failure_skips_or_prevents_collisions(monkeypatch: pytest
     assert len(items_default) == 13, f"Expected 13 non-base cards in offline/default mode, got {len(items_default)}"
 
 
-def test_build_lexeme_emits_sense_id_and_prefers_sense_learner_en() -> None:
+def test_build_lexeme_preserves_sense_id_while_withholding_learner_en() -> None:
     """#6437: sense-first entries bind senseId and never fall back to en[0]."""
     verifier = JsonVesumVerifier({})
     entry = {
@@ -1467,11 +1467,11 @@ def test_build_lexeme_emits_sense_id_and_prefers_sense_learner_en() -> None:
     lexeme = _build_lexeme(entry, verifier)
     assert lexeme is not None
     assert lexeme["senseId"] == "brak_defect"
-    assert lexeme["glossClean"] == "defect"
+    assert lexeme["glossClean"] == ""
     assert "second" not in lexeme["gloss"].casefold()
 
 
-def test_build_lexeme_empty_learner_en_falls_back_to_uk_not_invented_en() -> None:
+def test_build_lexeme_withholds_both_languages_when_learner_en_is_empty() -> None:
     """#6437 PR3: an empty sense learner_en[] must never invent an EN gloss.
 
     A bound sense with no learner_en content must not silently borrow the
@@ -1508,8 +1508,8 @@ def test_build_lexeme_empty_learner_en_falls_back_to_uk_not_invented_en() -> Non
     lexeme = _build_lexeme(entry, verifier)
     assert lexeme is not None
     assert lexeme["senseId"] == "brak_defect"
-    assert lexeme["gloss"] == "вада"
-    assert lexeme["glossClean"] == "вада"
+    assert lexeme["gloss"] == ""
+    assert lexeme["glossClean"] == ""
     assert "second" not in lexeme["gloss"].casefold()
     assert "defect" not in lexeme["gloss"].casefold()
 
@@ -1558,10 +1558,9 @@ def test_mode_cards_propagate_sense_id_from_lexeme() -> None:
     assert legacy_classify and "senseId" not in legacy_classify[0]
 
 
-def test_multi_sense_gloss_first_sense_is_meaning_mc_eligible() -> None:
+def test_multi_sense_gloss_cannot_bypass_meaning_withdrawal() -> None:
     # A multi-sense content word ("forest; woods") has a clean concise first sense and
-    # must stay eligible for Choice/Matching. The raw-gloss `;` check used to over-exclude
-    # any multi-sense gloss even when its first sense was a perfect single-concept meaning.
+    # remains withheld: a clean-looking first segment is not source/sense proof.
     entries = [
         {
             "lemma": "ліс",
@@ -1574,9 +1573,9 @@ def test_multi_sense_gloss_first_sense_is_meaning_mc_eligible() -> None:
     ]
     shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}))
     lexeme = shards["A1"]["lexemes"]["lexemes"][0]
-    assert lexeme["glossClean"] == "forest"
-    assert lexeme["meaningMcEligible"] is True
-    assert {"matching", "choice"}.issubset(set(shards["A1"]["index"]["items"][0]["modes"]))
+    assert lexeme["glossClean"] == ""
+    assert lexeme["meaningMcEligible"] is False
+    assert {"flashcards", "matching", "choice"}.isdisjoint(shards["A1"]["index"]["items"][0]["modes"])
 
 
 def test_option_sets_are_valid_and_anti_gaming() -> None:
@@ -1690,14 +1689,14 @@ def test_cli_fails_when_approved_synonyms_lack_ulif_data(
     assert not (tmp_path / "out" / "practice-synonym.A1.json").exists()
 
 
-def test_word_without_paradigm_is_recognition_eligible() -> None:
+def test_word_without_paradigm_keeps_membership_with_no_meaning() -> None:
     # Recognition (matching/choice) needs only lemma+gloss+level. A word with no morphological
     # paradigm must still produce a lexeme (regression for the 1413->312 over-gating collapse).
     verifier = JsonVesumVerifier.from_path(VESUM)
     entry = {"lemma": "тому", "gloss": "therefore", "enrichment": {"cefr": {"level": "A1"}}}
     lexeme = _build_lexeme(entry, verifier)
     assert lexeme is not None
-    assert lexeme["gloss"] == "therefore"
+    assert lexeme["gloss"] == ""
     assert lexeme["paradigm"] == {"cases": {}}
 
 

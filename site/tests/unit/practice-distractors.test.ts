@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, test } from 'vitest';
+import { setPracticeMeaningModesForTesting } from '@site/src/lib/lexicon/srs';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { meaningDistractors } from '@site/src/components/LexiconPractice';
 import { loadState } from '@site/src/lib/lexicon/srs';
 import type { PracticeDeckData, PracticeLexeme } from '@site/src/lib/lexicon/srs';
@@ -44,6 +45,7 @@ function deck(rows: { id: string; cefr: string }[]): PracticeDeckData {
 }
 
 beforeEach(() => {
+    setPracticeMeaningModesForTesting(true);
   localStorage.clear();
   loadState(localStorage, NOW);
 });
@@ -127,3 +129,5 @@ describe('meaningDistractors', () => {
     expect(distractors[0]?.lemmaId).toBe('only-peer');
   });
 });
+
+afterEach(() => setPracticeMeaningModesForTesting(false));

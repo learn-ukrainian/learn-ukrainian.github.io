@@ -89,7 +89,7 @@ def _write_reviewed_sources(path: Path, *, reviewed: bool = False) -> None:
 def _write_level(practice_dir: Path, *, level: str = "A1", with_cloze: bool = False) -> None:
     deck_version = "atlas-practice-v1-test"
     cloze_id = "dim-cloze-1"
-    modes = ["flashcards", "matching", "choice"]
+    modes = []
     cloze_ids: list[str] = []
     cloze_rows: list[dict[str, object]] = []
     if with_cloze:
@@ -182,7 +182,9 @@ def _write_level(practice_dir: Path, *, level: str = "A1", with_cloze: bool = Fa
                     "lemma": "дім",
                     "lemmaPlain": "дім",
                     "ipa": None,
-                    "gloss": "house",
+                    "gloss": "",
+                    "glossClean": "",
+                    "meaningMcEligible": False,
                     "pos": "noun",
                     "cefr": level,
                     "heritage": None,

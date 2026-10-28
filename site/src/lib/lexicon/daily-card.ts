@@ -1,5 +1,6 @@
 import { pickDaily, type DailyWord } from "./daily";
 import { filterByCumulativeLevel } from "./levels";
+import { CHROME_STRINGS } from "../i18n/chrome";
 
 /**
  * Shared WotD / practice daily draw (#6727): filter the pool to the selected
@@ -68,9 +69,7 @@ function renderLemma(word: DailyWord): string {
 export function renderDailyCardHtml(word: DailyWord): string {
   const lemmaLabel = escapeDailyCardHtml(word.lemma);
   const chips = renderChips(word);
-  const gloss = word.gloss
-    ? `<span class="lexicon-daily-gloss">${escapeDailyCardHtml(word.gloss)}</span>`
-    : `<span class="lexicon-daily-gloss lexicon-daily-gloss-empty">—</span>`;
+  const gloss = `<span class="lexicon-daily-gloss lexicon-daily-gloss-empty">${CHROME_STRINGS.uk['practice.meaningUnavailable']}</span>`;
 
   return `<li class="lexicon-daily-item">
       <div
@@ -85,7 +84,7 @@ export function renderDailyCardHtml(word: DailyWord): string {
         <div class="lexicon-daily-card-inner">
           <div class="lexicon-daily-face lexicon-daily-front">
             ${renderLemma(word)}
-            <span class="lexicon-daily-flip-hint">Торкніться картки, щоб побачити значення</span>
+            <span class="lexicon-daily-flip-hint">${CHROME_STRINGS.uk['practice.meaningUnavailable']}</span>
             ${chips}
           </div>
           <div class="lexicon-daily-face lexicon-daily-back" aria-hidden="true">

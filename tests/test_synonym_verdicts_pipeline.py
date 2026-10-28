@@ -342,6 +342,11 @@ def test_verb_distractors_count_under_first_sense_word_head() -> None:
     _lexemes_by_entry, all_lexemes, by_plain_lemma, _lexemes_by_id = _select_practice_lexemes(
         manifest, verifier, BuildConfig(target=20)
     )
+    # Isolate the historical matcher with its source gloss inputs. Published
+    # lexemes now withhold these fields, regardless of matcher behavior.
+    source_glosses = {entry["lemma"]: entry["gloss"] for entry in manifest}
+    for lexeme in all_lexemes:
+        lexeme["gloss"] = source_glosses[lexeme["lemma"]]
     distractors = _valid_synonym_distractors(by_plain_lemma["розмовляти"], by_plain_lemma["говорити"], all_lexemes)
     assert {lexeme["lemma"] for lexeme in distractors} == {"читати", "писати", "спати"}
 

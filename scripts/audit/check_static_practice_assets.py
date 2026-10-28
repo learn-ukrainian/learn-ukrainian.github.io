@@ -29,10 +29,12 @@ try:
     from scripts.audit.generate_practice_deck import (
         THIN_WARN_THRESHOLDS,
         UNKNOWN_CEFR_TRANSPORT_LEVEL,
+        WITHDRAWN_MEANING_MODES,
         validate_classify_item,
         validate_classify_session_cap,
         validate_heritage_item,
         validate_imperative_item,
+        validate_meaning_withdrawal,
         validate_paradigm_item,
         validate_synonym_item,
         validate_synonym_option_sets,
@@ -470,8 +472,8 @@ def _check_level(
         if not _cefr_matches_transport(item.get("cefr"), level):
             errors.append(f"{prefix} cefr {item.get('cefr')!r} != {level!r}")
         modes = item.get("modes")
-        if not isinstance(modes, list) or "flashcards" not in modes:
-            errors.append(f"{prefix} modes must include flashcards")
+        if not isinstance(modes, list):
+            errors.append(f"{prefix} modes must be a list")
             modes = modes if isinstance(modes, list) else []
         unknown_modes = sorted({mode for mode in modes if mode not in PRACTICE_MODES})
         if unknown_modes:
@@ -492,11 +494,14 @@ def _check_level(
         if not isinstance(lexeme, dict):
             errors.append(f"{prefix} must be an object")
             continue
-        for field in ("lemmaId", "lemma", "lemmaPlain", "gloss"):
+        for field in ("lemmaId", "lemma", "lemmaPlain"):
             if not _has_text(lexeme.get(field)):
                 errors.append(f"{prefix} missing {field}")
         if not _cefr_matches_transport(lexeme.get("cefr"), level):
             errors.append(f"{prefix} cefr {lexeme.get('cefr')!r} != {level!r}")
+
+    for kind in ("index", "lexemes"):
+        errors.extend(f"{paths[kind]}: {error}" for error in validate_meaning_withdrawal(kind, shards[kind]))
 
     for index, item in enumerate(cloze_items):
         _check_cloze_item(
@@ -580,10 +585,10 @@ def _check_level(
             continue
         rows = cloze_items if kind == "cloze" else mode_items[kind]
         assert isinstance(rows, list)
-        expected_count = len(rows)
+        expected_count = 0 if kind in WITHDRAWN_MEANING_MODES else len(rows)
         expected_mode_coverage = (
             round(len({item.get("lemmaId") for item in rows if isinstance(item, dict)}) / len(lexemes), 4)
-            if lexemes
+            if lexemes and kind not in WITHDRAWN_MEANING_MODES
             else 0.0
         )
         if type(mode_counts.get(kind)) is not int or mode_counts.get(kind) != expected_count:

@@ -17,7 +17,7 @@ import type {
   PracticeStressItem,
   PracticeSynonymItem,
 } from "./srs";
-import { isPracticeModeEnabled } from "./srs";
+import { isPracticeModeEnabled, MEANING_MODES_ENABLED } from "./srs";
 import practiceDeckPointer from "../../data/lexicon-practice-deck.pointer.json";
 import {
   displayGloss,
@@ -45,6 +45,7 @@ export function practiceHeritageBoxes(entry: PracticeDisplayEntry) {
 
 /** Display only; never rewrite the shard, eligibility inputs or saved progress. */
 export function practiceDisplayGloss(entry: PracticeDisplayEntry, concise = false): string {
+  if (!MEANING_MODES_ENABLED) return "";
   const label = practiceHeritageBoxes(entry).usageLabel;
   if (!concise) return displayGloss(entry.gloss, label)?.text ?? "";
   const clean = entry.glossClean?.trim() || entry.gloss.split(/[;,]/, 1)[0].replace(/\s+/g, " ").trim();
