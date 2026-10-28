@@ -79,7 +79,15 @@ _ISSUE_9461_SUFFIXES = [
 
 @pytest.mark.parametrize("dependency", ["scripts.publish.merge_guard", "shell_shlex"])
 @pytest.mark.parametrize(
-    "command,expected", [("echo fixture", 0), ("", 0), ("gh pr checks 5", 0), ("gh pr merge 5", 2)]
+    "command,expected",
+    [
+        ("echo fixture", 0),
+        ("", 0),
+        ("gh pr checks 5", 0),
+        ("gh pr view 11907 --json mergeStateStatus,mergeable", 0),
+        ('gh pr list -R owner/private --state merged --search "merged:>=2026-10-28"', 0),
+        ("gh pr merge 5", 2),
+    ],
 )
 def test_missing_dependency_only_blocks_merge_commands(dependency, command, expected):
     bootstrap = """
@@ -102,6 +110,27 @@ runpy.run_path(sys.argv[1], run_name="__main__")
     assert result.returncode == expected, result.stderr
     if expected == 2:
         assert "guard dependency unavailable" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "gh pr view 11907 --json mergeStateStatus,mergeable",
+        'gh pr list -R owner/private --state merged --search "merged:>=2026-10-28"',
+        'gh pr list --search "gh pr merge"',
+        'echo "gh pr merge 5"',
+        "echo gh pr merge 5",
+        "env echo gh pr merge 5",
+        'env gh pr list --search "gh pr merge"',
+    ],
+)
+@pytest.mark.parametrize("wrapper", ["{command}", 'cd "$DIR"; eval \'{command}\''])
+def test_merge_substrings_and_literal_arguments_do_not_engage_guard(monkeypatch, command, wrapper):
+    command = wrapper.format(command=command)
+    monkeypatch.setattr(guard, "_pr_snapshot", lambda *a, **kw: pytest.fail("read-only command reached PR lookup"))
+    assert not guard._may_merge(command)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 0
 
 
 @pytest.mark.parametrize(

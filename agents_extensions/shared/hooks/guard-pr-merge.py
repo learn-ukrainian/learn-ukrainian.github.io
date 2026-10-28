@@ -61,10 +61,10 @@ def _command(payload: dict) -> str:
     return ((payload.get("tool_input") or {}).get("command") or "").strip()
 
 
-def _may_merge(command: str) -> bool:
-    # The shell drops quotes and backslashes before executing a command.
+def _merge_candidate(command: str) -> bool:
+    """Conservative bootstrap/failure probe, never a merge decision."""
     probe = command.replace("\\", "").replace("'", "").replace('"', "")
-    return ("gh" in probe or "scripts.publish" in probe) and "pr" in probe and "merge" in probe
+    return bool(re.search(r"(?<![\w.-])(?:gh\s+pr\s+merge|scripts\.publish\s+pr-merge)(?![\w-])", probe))
 
 
 # Ordinary Bash commands must remain usable even if guard dependencies are absent.
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         _CLI_PAYLOAD is not None
         and isinstance(_CLI_PAYLOAD.get("tool_input", {}), dict)
         and isinstance(_CLI_PAYLOAD.get("tool_input", {}).get("command", ""), str)
-        and not _may_merge(_command(_CLI_PAYLOAD))
+        and not _merge_candidate(_command(_CLI_PAYLOAD))
     ):
         sys.exit(0)
 
@@ -208,14 +208,14 @@ def _join_line_continuations(text: str) -> str:
     return text.replace("\\\n", "")
 
 
-def _scope_events(command: str) -> list[tuple[str, list[str]]]:
+def _scope_events(command: str, *, mark_redirect_unreadable: bool = True) -> list[tuple[str, list[str]]]:
     """Preserve the PR guard's existing event and unreadability policy."""
     return scope_events(
         command,
-        mark_redirect_unreadable="merge" in command.lower(),
+        mark_redirect_unreadable=mark_redirect_unreadable and "merge" in command.lower(),
         unreadable_marker=_UNREADABLE_MARKER,
         unparsed=_UNPARSED,
-        may_match=_may_merge,
+        may_match=_merge_candidate,
     )
 
 
@@ -294,14 +294,6 @@ def _skip_command_prefix(seg: list[str], i: int) -> int:
 
 
 _SHELLS = {"bash", "sh", "zsh", "dash", "ksh", "fish", "busybox"}
-
-
-def _find_merge(seg: list[str], start: int) -> int | None:
-    """Index of the `gh pr merge` token run at or after `start`, else None."""
-    for j in range(start, len(seg) - 2):
-        if seg[j : j + 3] == ["gh", "pr", "merge"]:
-            return j
-    return None
 
 
 # xargs options that consume a value; everything else short is a switch.
@@ -392,6 +384,32 @@ def _shell_c_payload(seg: list[str]) -> str | None:
 
 
 _MAX_SHELL_DEPTH = 8
+
+
+def _may_merge(command: str, depth: int = 0) -> bool:
+    """Recognize merge operations before applying cwd or readiness refusals.
+
+    Redirect uncertainty cannot invent a merge during this pass. Shell and eval
+    payloads are command text; ordinary arguments, JSON fields and searches are data.
+    The judging pass retains its fail-closed policy for a recognized operation.
+    """
+    for kind, argv in _scope_events(command, mark_redirect_unreadable=False):
+        if kind != "segment":
+            continue
+        if _merge_args(argv) is not None:
+            return True
+        invoked, _ = _invoked_start(argv)
+        payload = (
+            " ".join(argv[invoked + 1 :])
+            if argv[invoked : invoked + 1] == ["eval"]
+            else _shell_c_payload(argv)
+        )
+        if payload:
+            if depth >= _MAX_SHELL_DEPTH:
+                return _merge_candidate(payload)
+            if _may_merge(payload, depth + 1):
+                return True
+    return False
 
 # Stand-in segment for a shell payload left uninspected at the recursion cap. _judge()
 # recognizes the marker and refuses outright — the cap costs a refusal, never a free
@@ -571,17 +589,6 @@ def _merge_args(seg: list[str]) -> list[str] | None:
             j += 1
     elif seg[i : i + 3] == ["gh", "pr", "merge"]:
         args = seg[i + 3 :]
-    elif i > 0 and not via_xargs and any(tok != "!" for tok in seg[:i]):
-        # A known wrapper brought its own options/operands (`sudo -u bot gh pr merge`,
-        # `env -i gh pr merge`), so the command does not begin at `i`. Find it instead of
-        # letting the merge through unjudged. Only wrapper-prefixed segments are scanned,
-        # so an unwrapped `echo gh pr merge 5` is still not treated as a merge — and the
-        # scan is skipped for xargs, whose trailing tokens are DATA for another command
-        # (`xargs echo gh pr merge 5` runs echo).
-        j = _find_merge(seg, i)
-        if j is None:
-            return None
-        args = seg[j + 3 :]
     else:
         return None
     if via_xargs and _pr_selector(args) is None:
@@ -1131,13 +1138,7 @@ def main() -> int:
         sys.stderr.write(_block_msg("malformed hook command", "Provide a literal Bash command for review."))
         return 2
     command = _command(payload)
-    # Fast path: only engage on `gh ... pr ... merge` (leave every other command untouched).
-    # Quote/backslash marks are dropped first, because the shell drops them BEFORE running
-    # the command: `g\h pr merge 5` and `g'h' pr merge 5` both execute gh (verified:
-    # `bash -c 'g\h --version'` prints gh's version). Testing the raw source would let a
-    # merge past this early return before the real parser ever sees it. Normalizing only
-    # ever sends MORE commands to the full parse — never fewer.
-    if not _may_merge(command):
+    if not _merge_candidate(command):
         return 0
     # Each segment arrives carrying the cwd it runs in, so a PR number is judged in the
     # repo the MERGE runs in, not the session's repo — `cd private-repo && gh pr merge 203`
@@ -1146,6 +1147,8 @@ def main() -> int:
     # to its own shell level is _judged_segments' job: it is the only reader that knows
     # where a subshell or `bash -c` payload begins and ends.
     try:
+        if not _may_merge(command):
+            return 0
         segments = _judged_segments(command)
     except ShellPreprocessLimit:
         sys.stderr.write(
