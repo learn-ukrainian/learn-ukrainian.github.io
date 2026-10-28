@@ -502,8 +502,8 @@ jobs:
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     # PR #11922 measured supported selection at 402s/567s and a 660s superset
-    # with two workers. The 1,500s invariant ceiling
-    # subprocess ceiling plus 480s changed tests and setup fit this job budget.
+    # with two workers. The 1,500s invariant subprocess ceiling plus 480s changed
+    # tests and setup fit this job budget.
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
