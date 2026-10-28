@@ -1,0 +1,278 @@
+{
+  "hot": [
+    {
+      "task_id": "terra-done",
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "status": "done",
+      "started_at": "2026-10-28T10:00:00Z",
+      "duration_s": 60,
+      "usage": {
+        "input_tokens": 10,
+        "output_tokens": 5,
+        "cached_input_tokens": 7
+      },
+      "pr": 123,
+      "pr_opened": true,
+      "pr_merged": true,
+      "merge_group_ci_failures": 1,
+      "cost_usd": 0.1
+    },
+    {
+      "task_id": "terra-failed",
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "status": "failed",
+      "started_at": "2026-10-28T09:00:00Z",
+      "duration_s": 120,
+      "last_error": "stream_disconnected: PRIVATE_SENTINEL"
+    },
+    {
+      "task_id": "terra-no",
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "status": "no_deliverable",
+      "started_at": "2026-10-27T13:00:00Z",
+      "duration_s": 180,
+      "no_deliverable_reason": "outside_owned_paths: /home/private/PRIVATE_SENTINEL.txt"
+    },
+    {
+      "task_id": "sol-done",
+      "agent": "codex",
+      "model": "gpt-6.1-sol",
+      "status": "done",
+      "started_at": "2026-10-26T10:00:00Z",
+      "duration_s": 90,
+      "usage": {
+        "input_tokens": 20,
+        "output_tokens": 6
+      },
+      "pr_opened": false
+    },
+    {
+      "task_id": "sol-no",
+      "agent": "codex",
+      "model": "gpt-6.1-sol",
+      "status": "no_deliverable",
+      "started_at": "2026-10-27T01:00:00Z",
+      "duration_s": 30,
+      "no_deliverable_reason": "owned_paths_verification_failed"
+    },
+    {
+      "task_id": "muse-changes",
+      "agent": "muse",
+      "model": "muse-wonder-full-1.0",
+      "status": "done",
+      "mode": "read-only",
+      "require_review_verdict": true,
+      "started_at": "2026-10-28T08:00:00Z",
+      "duration_s": 40,
+      "pr": 999,
+      "result": "VERDICT: REQUEST_CHANGES\nF1 [P1] PRIVATE_SENTINEL\n**F2 (P2) \u2014** PRIVATE_SENTINEL\nF3 \u2014 P1 \u2014 PRIVATE_SENTINEL\n### F4 \u2014 P2, PRIVATE_SENTINEL\n**F5. P3.** PRIVATE_SENTINEL\n- **F6** [P0] PRIVATE_SENTINEL\nF1 [P1] repeated summary\n> F7 [P0] quoted example\n```\nF8 [P0] code example\n```\n",
+      "usage": {
+        "models": [
+          {
+            "model": "muse-wonder-full-1.0",
+            "input_tokens": 100,
+            "output_tokens": 20,
+            "cached_tokens": 30,
+            "reasoning_tokens": 8
+          },
+          {
+            "model": "child-other-model",
+            "input_tokens": 999,
+            "output_tokens": 999
+          }
+        ],
+        "allowance": {
+          "weekly": {
+            "used_percent": 90
+          }
+        }
+      }
+    },
+    {
+      "task_id": "muse-approve",
+      "agent": "muse",
+      "model": "muse-wonder-full-1.0",
+      "status": "done",
+      "mode": "read-only",
+      "review_profile": "code",
+      "review_verdict": "APPROVED",
+      "review_round": 2,
+      "findings": [
+        {
+          "priority": "P2",
+          "confirmed": true,
+          "body": "PRIVATE_SENTINEL"
+        },
+        {
+          "severity": "low",
+          "confirmed": false
+        },
+        {
+          "priority": "P3"
+        }
+      ],
+      "started_at": "2026-10-28T07:00:00Z",
+      "duration_s": 80,
+      "usage": {
+        "models": [
+          {
+            "model": "muse-wonder-full-1.0",
+            "input_tokens": 50,
+            "output_tokens": 10
+          },
+          {
+            "model": "muse-wonder-full-1.0",
+            "input_tokens": 20,
+            "output_tokens": 5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "opus-timeout",
+      "agent": "claude",
+      "model": "claude-opus-5-5",
+      "status": "timeout",
+      "started_at": "2026-10-26T12:00:00Z",
+      "duration_s": 300
+    },
+    {
+      "task_id": "sonnet-cancelled",
+      "agent": "claude",
+      "model": "claude-sonnet-5-5",
+      "status": "cancelled",
+      "started_at": "2026-10-27T14:00:00Z",
+      "duration_s": 5
+    },
+    {
+      "task_id": "agy-done",
+      "agent": "agy",
+      "model": "gemini-3.8-flash-high",
+      "status": "done",
+      "started_at": "2026-10-27T14:00:00Z",
+      "duration_s": 100,
+      "usage": {
+        "input_tokens": 50,
+        "output_tokens": 2
+      }
+    },
+    {
+      "task_id": "agy-failed",
+      "agent": "agy",
+      "model": "gemini-3.8-flash-high",
+      "status": "failed",
+      "started_at": "2026-10-26T14:00:00Z",
+      "duration_s": 20,
+      "last_error": "PRIVATE_SENTINEL error /home/private"
+    },
+    {
+      "task_id": "other-running",
+      "agent": "other",
+      "model": "retired-example-1",
+      "status": "running",
+      "started_at": "2026-10-28T11:00:00Z"
+    },
+    {
+      "task_id": "unknown-finalize",
+      "agent": "other",
+      "model": null,
+      "status": "needs_finalize",
+      "started_at": "2026-10-27T01:00:00Z"
+    },
+    {
+      "task_id": "luna-limited",
+      "agent": "codex",
+      "model": "gpt-6-luna",
+      "status": "rate_limited",
+      "started_at": "2026-10-27T15:00:00Z",
+      "duration_s": 3
+    },
+    {
+      "task_id": "opus-crashed",
+      "agent": "claude",
+      "model": "claude-opus-5-5",
+      "status": "crashed",
+      "started_at": "2026-10-27T15:00:00Z",
+      "duration_s": 8
+    },
+    {
+      "task_id": "terra-spawning",
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "status": "spawning",
+      "started_at": "2026-10-28T11:00:00Z"
+    },
+    {
+      "task_id": "sol-unknown-reason",
+      "agent": "codex",
+      "model": "gpt-6.1-sol",
+      "status": "no_deliverable",
+      "started_at": "2026-10-27T15:00:00Z",
+      "duration_s": 10,
+      "no_deliverable_reason": "PRIVATE_SENTINEL"
+    },
+    {
+      "task_id": "cursor-resolved",
+      "agent": "cursor",
+      "model": "grok-4.7-high",
+      "status": "done",
+      "started_at": "2026-10-28T08:00:00Z",
+      "duration_s": 12,
+      "resolved_model": "Grok 4.7 256K High",
+      "resolved_model_known": true
+    },
+    {
+      "task_id": "cursor-unresolved",
+      "agent": "cursor",
+      "model": "grok-4.7-high",
+      "status": "cancelled",
+      "started_at": "2026-10-28T08:00:00Z",
+      "duration_s": 30,
+      "resolved_model_known": false
+    }
+  ],
+  "archive": [
+    {
+      "task_id": "terra-done",
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "status": "done",
+      "started_at": "2026-10-28T10:00:00Z",
+      "duration_s": 60,
+      "pr": 123,
+      "pr_opened": true
+    },
+    {
+      "task_id": "terra-done",
+      "run_nonce": "old-run",
+      "agent": "codex",
+      "model": "gpt-6.1-terra",
+      "status": "no_deliverable",
+      "started_at": "2026-10-26T13:00:00Z",
+      "duration_s": 60,
+      "no_deliverable_reason": "no_commits_or_unknown"
+    },
+    {
+      "task_id": "sol-old",
+      "agent": "codex",
+      "model": "gpt-6.1-sol",
+      "status": "done",
+      "started_at": "2026-10-24T12:00:00Z",
+      "duration_s": 240
+    },
+    {
+      "task_id": "muse-old",
+      "agent": "muse",
+      "model": "muse-wonder-full-1.0",
+      "status": "done",
+      "mode": "read-only",
+      "require_review_verdict": true,
+      "started_at": "2026-10-26T11:00:00Z",
+      "duration_s": 50,
+      "result": "VERDICT: APPROVE\nPRIVATE_SENTINEL"
+    }
+  ]
+}
