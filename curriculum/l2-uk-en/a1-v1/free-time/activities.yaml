@@ -37,8 +37,8 @@ inline:
         answer: на тиждень
         options:
           - на тиждень
-          - на тижня
           - на тижнем
+          - на тижнями
         explanation: "Двічі на тиждень means twice a week. На тиждень names the frequency period."
       - sentence: '— ___ в кіно у суботу! — Добре!'
         answer: Ходімо

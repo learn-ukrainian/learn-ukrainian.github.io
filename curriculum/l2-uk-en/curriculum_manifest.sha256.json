@@ -242,7 +242,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/free-time/activities.yaml",
-      "sha256": "c36dd711cb93dc2f8bb64ffc3304277435b607c3fb853d9a07fa1f3a680766d5"
+      "sha256": "4559bc77cfe9569abba785d46a99b00c01a40445e70a3a3b82d9561203dff7d9"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/free-time/module.md",
@@ -13746,7 +13746,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/free-time.mdx",
-      "sha256": "3334dc5e7bd502152085e08834ab0e41c8412538e06efb24b9e17a2212649a55"
+      "sha256": "1c22a374134db7b6f92a1dd415584b4fbc8766766eb5939933a093e7938bbc90"
     },
     {
       "path": "site/src/content/docs/a1-v1/health.mdx",

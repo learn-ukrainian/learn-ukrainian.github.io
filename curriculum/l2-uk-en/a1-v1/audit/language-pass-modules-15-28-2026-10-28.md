@@ -67,13 +67,16 @@ The companion [machine-readable Sources evidence](language-pass-modules-15-28-ev
 - U56: search_heritage positively attests покушати in Hrinchenko 1907 and in codified rare SUM-20 usage, meaning to taste and allowing no expressed object. It carries no Russianism warning. The open evening-desire stem does not exclude that meaning.
 - U57: The structured Antonenko query for кушати returned no result. The miss is not a Russianism or invalidity verdict.
 - U58: The full-book Antonenko query for кушати returned no result. The positive heritage and modern attestation U56 decides this item.
-- U59: GRAC directly attests двічі на тижні, so the initial replacement was not exclusive. The final options use incompatible genitive and instrumental case forms after на.
+- U59: GRAC directly attests двічі на тижні, so the initial replacement was not exclusive. The next revision still contained accusative variant тижня, explicitly present in U62. U66 establishes instrumental-only analyses for both final distractors.
 - U60: GRAC directly attests о сьомій рано in two Ukrainian contexts. The final repair removes рано as well as вранці.
 - U61: VTS рано sense I.1 means during the morning. It can complete the original morning-time stem as well as ранку.
 - U62: Final revised-context VESUM check of all changed-item tokens, including тижнем, ранки, ходимо and поїла. Proper-name case and explanation fragments are distinguished from targets.
 - U63: Final revised-context stress oracle check of all polysyllabic changed-item tokens. Unmarked ambiguities and quoted or malformed options are not stress defects.
 - U64: Final revised post-repair text screen, items 1 through 150, with titles, instructions and all item fields.
 - U65: Final revised post-repair text screen, items 151 through 288, with titles, instructions and all item fields. UA-GEC suspicions are contextual diagnostics, not defect verdicts.
+- U66: Complete VESUM analyses confirm тижня has both genitive and accusative-var analyses. Тижнем and тижнями each have only instrumental analyses. The final distractors use those incompatible cases rather than inferring invalidity from a corpus miss.
+- U67: Stress oracle verifies the four time-period forms, including the final instrumental distractors. No stress mark is added to the learner item.
+- U68: Final single-item check_text screen of the frequency item after replacing the remaining accusative variant. It supersedes U65 for this one item only.
 - U01: Official Pravopys 2019 §23, pp.25-28: у between consonants and before specified clusters; в after a vowel before most consonants. Initial В before a consonant is explicitly permitted. Literary variation is distinguished from the neutral euphony patterns.
 - U02: Official Pravopys 2019 §24, pp.28-29: і between consonants, at a pause or beginning, before й/є/ї/ю/я, and after й/я/ю/є/ї; й normally after other vowel letters. This specifically supports Я і Максим. Literary variation does not erase the task asking for the smoother neutral pattern.
 - U03: Official Pravopys 2019 §25, pp.29-31: z variants depend on the neighboring sounds; із and зі are interchangeable before some clusters. The text explicitly gives зі школи and зі/зо мною.
@@ -429,7 +432,7 @@ C means checked-clean in the original task. D means a confirmed second defensibl
 | Item | Section | Original stem | Key | Verdict | Evidence and assessment |
 | --- | --- | --- | --- | --- | --- |
 | `act-2/0` | inline | Я ___ працюю у неділю. | ніколи не | D | M26; U42/U43/U44. The sentence does not specify frequency strongly enough to rule out another offered frequency. The gloss selects the intended frequency. |
-| `act-2/1` | inline | Вона грає у теніс двічі ___. | на тиждень | D | M26; U17/U59. Both у тиждень and the first replacement на тижні are attested frequency expressions. The final genitive/instrumental distractors do not complete the на plus accusative period. |
+| `act-2/1` | inline | Вона грає у теніс двічі ___. | на тиждень | D | M26; U17/U59/U66/U67/U68. Both у тиждень and на тижні are attested frequency expressions. VESUM also accepts тижня as an accusative variant. The final two distractors have instrumental-only analyses, incompatible with the на plus accusative period. |
 | `act-2/2` | inline | — ___ в кіно у суботу! — Добре! | Ходімо | D | M26; U22/U30/U31/U51. Ідемо can function as an invitation. Person-mismatched statements replace the competing invitation forms. |
 | `act-2/3` | inline | Я люблю спорт, тому ___ граю у баскетбол. | часто | D | M26; U42/U43/U44. The sentence does not specify frequency strongly enough to rule out another offered frequency. The gloss selects the intended frequency. |
 | `act-2/4` | inline | Я не маю часу, тому ___ читаю книги. | рідко | D | M26; U42/U43/U44. The sentence does not specify frequency strongly enough to rule out another offered frequency. The gloss selects the intended frequency. |
@@ -494,7 +497,7 @@ C means checked-clean in the original task. D means a confirmed second defensibl
 
 ## Confirmed defects and repairs
 
-The following 76 rows preserve their original keys. Their final replacement/context tokens are checked in POSTFIX/U50 and the revised U62/U63 evidence. Four original contexts favored the other у/в variant rather than their keys; their cues are repaired rather than changing the targets. The remaining 72 repairs exclude a confirmed second defensible answer.
+The following 76 rows preserve their original keys. Their final replacement/context tokens are checked in POSTFIX/U50. Four original contexts favored the other у/в variant rather than their keys; their cues are repaired rather than changing the targets. The remaining 72 repairs exclude a confirmed second defensible answer.
 
 | Item | Usage evidence | Source YAML repair |
 | --- | --- | --- |
@@ -555,7 +558,7 @@ The following 76 rows preserve their original keys. Their final replacement/cont
 | `my-day/act-4/6` | U56/U57/U58 | options: ["поїсти", "поїла"]; explanation: "After хочу, use the infinitive поїсти. Поїла is a feminine past-tense form." |
 | `my-day/act-4/7` | U08/U20/U21 | options: ["прокинувся", "прокинулася"]; explanation: "Встав is masculine past, so pair it with прокинувся. Прокинулася is feminine." |
 | `free-time/act-2/0` | U42/U43/U44 | sentence: "(Never.) Я ___ працюю у неділю." |
-| `free-time/act-2/1` | U17/U59 | options: ["на тиждень", "на тижня", "на тижнем"]; explanation: "Двічі на тиждень means twice a week. На тиждень names the frequency period." |
+| `free-time/act-2/1` | U17/U59/U66/U67/U68 | options: ["на тиждень", "на тижнем", "на тижнями"]; explanation: "Двічі на тиждень means twice a week. На тиждень names the frequency period." |
 | `free-time/act-2/2` | U22/U30/U31/U51 | options: ["Ходімо", "Ходжу", "Ходиш"]; explanation: "Ходімо invites us to go together. Ходжу and ходиш describe who goes." |
 | `free-time/act-2/3` | U42/U43/U44 | sentence: "(Often.) Я люблю спорт, тому ___ граю у баскетбол." |
 | `free-time/act-2/4` | U42/U43/U44 | sentence: "(Rarely.) Я не маю часу, тому ___ читаю книги." |
@@ -578,14 +581,14 @@ The following 76 rows preserve their original keys. Their final replacement/cont
 ## Validation and batch sizing
 
 - Structural scanner: `scripts/audit/scan_activity_errors.py --track a1-v1`, 55/55 files, zero findings, exit 0 before and after source repairs.
-- Existing affected suite: `pytest -n 2 tests/test_scan_activity_errors.py tests/test_a1_activity_schema_parser_drift.py tests/test_yaml_activities_a1_payload.py tests/test_activity_renderer.py tests/test_generate_mdx.py tests/test_generate_mdx_parsers.py tests/test_generate_mdx_unit_map.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_curriculum_manifest_canary.py`: 329 passed in 11.26 seconds. No new test case was added.
+- Existing affected suite: `pytest -n 2 tests/test_scan_activity_errors.py tests/test_a1_activity_schema_parser_drift.py tests/test_yaml_activities_a1_payload.py tests/test_activity_renderer.py tests/test_generate_mdx.py tests/test_generate_mdx_parsers.py tests/test_generate_mdx_unit_map.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_curriculum_manifest_canary.py`: 329 passed in 10.21 seconds. No new test case was added.
 - The existing ActivityParser, `yaml_activities_to_jsx` and `dump_json_for_jsx` regenerate only the 76 repaired tracked page item objects. Bytes outside those objects remain unchanged. Existing unaccented page conventions are retained. The integrity manifest updates the corresponding 11 YAML and 11 MDX hashes.
 - Source/page matching accounts for pre-existing omitted fill-in feedback fields. Only repaired objects receive the current serializer result. This does not certify unrelated source/page equality.
 - Chromium used the 76 changed tracked MDX payloads with the existing FillInQuestion and QuizQuestion components: 76 keys accepted, 76 wrong options rejected, zero browser errors. The runtime was copied into this worktree after both lockfiles were verified identical.
 - Ruff passed for the scanner, parser and converter modules.
 - Independent Gemini via AGY and Opus 5.5 via Claude Code review, CI and merge receipts are recorded on the PR at its exact pushed head. This report records the author pass and does not claim independent approval or deployment.
 
-The full-section inventory was recorded at 2026-10-28T19:27:21.754745+00:00. The author report was prepared at 2026-10-28T19:58:48.411647+00:00. This interval includes source verification, diagnosis, repairs and local checks; it is not pure model throughput. There are 288 checked items, fewer than the preceding batch, and the item types and usage complexity differ. Review and CI time are reported separately in the delivery receipt. The CTO should size remaining batches by complete section/item censuses, not module count alone.
+The full-section inventory was recorded at 2026-10-28T19:27:21.754745+00:00. The author report was prepared at 2026-10-28T20:10:31.294948+00:00. This interval includes source verification, diagnosis, repairs and local checks; it is not pure model throughput. There are 288 checked items, fewer than the preceding batch, and the item types and usage complexity differ. Review and CI time are reported separately in the delivery receipt. The CTO should size remaining batches by complete section/item censuses, not module count alone.
 
 Residual owner: CTO curriculum coordinator, #8893. The remaining modules, unchecked activity types, broader independent evaluation and production delivery are outside this slice.
 
@@ -597,4 +600,8 @@ F5-F7 remain non-blocking follow-ups with the CTO curriculum coordinator on #889
 
 The initial author report preceded independent review. The interval above now includes source-backed review corrections and the final heritage check. Round-2 exact-head verdicts and the final end-to-end wall-clock interval are recorded on the PR and issue; this report does not count the author as an independent reviewer.
 
-The initial inventory-to-report interval was 17.6 minutes for 288 items, ending at 2026-10-28T19:44:55.042781+00:00. That is the initial author pass, before independent review corrections. It is not an end-to-end delivery duration; merge timing is reported separately.
+Round 2 approved the revised head, but the author subsequently accepted F12: the VESUM accusative-var analysis for тижня prevents using it as a uniquely invalid frequency distractor. A corpus miss does not overrule that analysis. U66 records the complete paradigm census for all four forms; the final two distractors are instrumental singular тижнем and instrumental plural тижнями. U67/U68 verify their stress and screen the final item. The denominator and defect counts stay 288/212/76. The final head therefore receives a third exact-head delta review.
+
+Opus F11 is a non-blocking extension of F5, owned by the CTO curriculum coordinator on #8893: checkpoint-time-nature/act-1/1 and checkpoint-time-nature/act-1/2 retain the adjacent у/в preference issue without a competing в option. Those exact ids remain checked-clean for the stated case task, not certified for all euphony claims.
+
+The initial inventory-to-report interval was 17.6 minutes for 288 items, before independent review corrections. The final inventory-to-merge duration is reported on the PR and issue.
