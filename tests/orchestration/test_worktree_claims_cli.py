@@ -219,7 +219,7 @@ def test_owner_exemption_covers_only_the_owner_record(tmp_path, capsys):
     assert not worktree.exists()
 
 
-_DISPATCHER_RECORD = {"schema_version": 2, "worktree_start_sha": "a" * 40, "options": {}}
+_DISPATCHER_RECORD = {"schema_version": 2, "worktree_start_sha": "a" * 40, "options": {}, "provider_pgid": None}
 
 
 def test_dispatcher_record_proves_creation_without_the_reused_flag(tmp_path, capsys):
@@ -262,6 +262,23 @@ def test_dispatcher_record_proof_refuses_a_borrowed_or_unproven_checkout(tmp_pat
 
     assert code == worktree_claims.EXIT_REFUSED
     assert "did not create this worktree" in err
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("provider", [{"provider_pgid": os.getpgrp()}, {"provider_pgid": ...}])
+def test_dispatcher_record_removal_waits_for_the_provider_tree_to_end(tmp_path, capsys, provider):
+    """Live provider processes, or none recorded either way, keep the checkout (#11865 F1)."""
+    primary = _primary(tmp_path)
+    worktree = _linked(primary, "claude/impl-7")
+    record = {**_DISPATCHER_RECORD, **provider}
+    if provider["provider_pgid"] is ...:
+        del record["provider_pgid"]
+    _record(primary, "impl-7", status="timeout", run_nonce="owner-run-7", worktree_path=str(worktree), **record)
+
+    code, _out, err = _remove(capsys, str(worktree), "--owner-task-id", "impl-7")
+
+    assert code == worktree_claims.EXIT_REFUSED
+    assert "provider processes are live or unknown" in err
     assert worktree.exists()
 
 
