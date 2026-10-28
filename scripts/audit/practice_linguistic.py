@@ -472,7 +472,10 @@ def _target_lemma_plain(item: dict[str, Any], lemma_plain: str | None = None) ->
 
 
 def _item_id(item: dict[str, Any], fallback: str) -> str:
-    for key in ("clozeId", "stressId", "paradigmId", "heritageId", "paronymId", "antonymId", "homonymId"):
+    for key in (
+        "clozeId", "stressId", "paradigmId", "heritageId", "paronymId",
+        "antonymId", "homonymId", "classifyId", "id",
+    ):
         value = _clean(item.get(key))
         if value:
             return value
@@ -1371,7 +1374,12 @@ def check_paradigm_item(
 def check_mode_prompts(mode: str, item: dict[str, Any]) -> list[Finding]:
     item_id = _item_id(item, mode)
     findings: list[Finding] = []
-    for field in ("sentence", "prompt", "sentence_with_slot"):
+    fields = ("sentence", "prompt", "sentence_with_slot")
+    if mode == "classify":
+        fields += ("lemma",)
+    elif mode == "imperative":
+        fields += ("cueSentence",)
+    for field in fields:
         findings.extend(check_leading_quiz(item_id, _clean(item.get(field))))
     return findings
 
@@ -1385,6 +1393,8 @@ def audit_practice_payloads(
     paronym_items: list[dict[str, Any]] | None = None,
     antonym_items: list[dict[str, Any]] | None = None,
     homonym_items: list[dict[str, Any]] | None = None,
+    classify_items: list[dict[str, Any]] | None = None,
+    imperative_items: list[dict[str, Any]] | None = None,
     verifier: VesumVerifier,
     source_index: ClozeSourceIndex | None = None,
     lexeme_plain_by_id: dict[str, str] | None = None,
@@ -1417,6 +1427,8 @@ def audit_practice_payloads(
         ("paronym", paronym_items),
         ("antonym", antonym_items),
         ("homonym", homonym_items),
+        ("classify", classify_items),
+        ("imperative", imperative_items),
     ):
         for item in items or []:
             if isinstance(item, dict):
