@@ -68,7 +68,7 @@ A rule of thumb: **the moment you introduce a number, name, path, SHA, technical
 | "Module M is at audit gate ABC" | `curl -s /api/state/module/{track}/slug/{slug}` |
 | "У слові «дерево» 6 літер" (counted by hand) | `python3 -c "print(len('дерево'))"` — and it's 6 only because Cyrillic is 1 codepoint per glyph here; never assume |
 | "Russianism: кот → кіт" (memory) | `mcp__sources__search_style_guide("кот")` |
-| "Stress falls on the second syllable" | The `ukrainian-word-stress` annotator |
+| "Stress falls on the second syllable" | `verify_stress` / `verify_stresses` (ULIF-first oracle); `query_sum20` for separate accented-headword evidence |
 | "This module uses verb X" | `grep -n "verb_lemma" curriculum/.../module.md` |
 | "Tests pass on this branch" | `.venv/bin/pytest tests/<file>.py -v` |
 | "The module is ship-ready" | `curl /api/artifacts/{track}/{slug}` |
