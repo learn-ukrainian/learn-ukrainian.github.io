@@ -11,6 +11,12 @@ from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 # denied, and an output redirect is checked against the Edit deny like a direct write
 # (https://code.claude.com/docs/en/permissions, "Read-only commands" and "Redirections").
 # Its OS sandbox would allow tests too, but it needs socat on Linux and refuses to start without it.
+# dontAsk still runs anything a loaded settings file pre-approves, and a worktree loads the main
+# checkout's local settings file, so read-only runs --restricted: Claude Code then reads no
+# user, project or local settings file (managed settings and --settings still apply) and drops every
+# code-running tool and WebFetch that --tools does not name (https://code.claude.com/docs/en/cli-reference,
+# "--restricted"; settings, "Lists merge instead of overriding"). The rules below are the whole policy.
+_READ_TOOLSET = "Read,Grep,Glob,Bash,WebFetch,WebSearch"
 _READ_TOOLS = (
     "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
     "Bash(gh issue view *),Bash(gh run view *)"
@@ -50,6 +56,8 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
         allowed_tools, denies = _WRITE_TOOLS, _BACKGROUND_DENIES
     else:
         raise ValueError(f"claude: unsupported mode {spec.mode!r}")
+    if spec.mode == "read-only":
+        argv += ["--restricted", "--tools", _READ_TOOLSET]
     argv += ["--allowedTools", allowed_tools]
     argv += ["--disallowedTools", denies]
     if spec.claude_account not in (None, "a"):

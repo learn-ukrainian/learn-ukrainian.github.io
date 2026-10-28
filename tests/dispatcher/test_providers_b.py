@@ -107,7 +107,10 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     elif provider == "claude":
         if effort:
             expected += ["--effort", "high"]
-        expected += ["--output-format", "stream-json", "--verbose", "--permission-mode", "dontAsk", "--allowedTools"]
+        expected += ["--output-format", "stream-json", "--verbose", "--permission-mode", "dontAsk"]
+        if mode == "read-only":
+            expected += ["--restricted", "--tools", "Read,Grep,Glob,Bash,WebFetch,WebSearch"]
+        expected += ["--allowedTools"]
         expected += [
             "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
             "Bash(gh issue view *),Bash(gh run view *)"

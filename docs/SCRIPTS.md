@@ -961,7 +961,9 @@ provider and model from the current catalog; dispatch Grok as
 provider's own CLI holds the lock: Codex `-s read-only`, Cursor `--mode ask`,
 Muse `--disable-write --disable-shell`, Claude `dontAsk` with no blanket Bash
 grant (only Claude Code's built-in read-only commands and `gh` reads run, and
-redirects are checked against the Edit deny), and OpenCode's
+redirects are checked against the Edit deny) under `--restricted`, so no user,
+project or local settings file can add an allow rule (this also leaves the
+checkout's CLAUDE.md unloaded; read-only briefs must be self-contained), and OpenCode's
 `OPENCODE_PERMISSION` rules (edits denied; bash limited to `git diff`, `git log`,
 `git show` and `git status` with no redirect or `--output`). AGY and Hermes give
 a dispatched run no enforceable write lock, so read-only on them exits 2 with

@@ -314,7 +314,7 @@ def test_extract_json_prefers_whole_text_then_fence_then_braces():
 
 
 @pytest.mark.parametrize("kind", ["review", "writing", "judge"])
-def test_each_prompt_builder_renders_a_non_empty_prompt(eval_set, kind):
+def test_no_prompt_builder_is_left_unexecuted(eval_set, kind):
     payload = review_payload(eval_set.review) if kind == "review" else writing_payload(eval_set.writing)
     assert payload
     prompt = build_prompt(kind, payload, "Ти — редактор.")

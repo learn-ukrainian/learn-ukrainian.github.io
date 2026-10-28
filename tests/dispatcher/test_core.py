@@ -2301,6 +2301,24 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, agent)
         assert argv[argv.index("--permission-mode") + 1] == "dontAsk"
         assert "Bash" not in argv[argv.index("--allowedTools") + 1].split(",")
         assert {"Edit", "Write", "NotebookEdit"} <= set(argv[argv.index("--disallowedTools") + 1].split(","))
+        # dontAsk still runs what a loaded settings file allows, and a worktree loads the main checkout's
+        # local file (Grok F4). Lists merge across sources, so no source's write allow may take effect.
+        write_rule = "Bash(touch *)"
+        for account in ("a", "b"):
+            argv = providers.load(agent).build(dataclasses.replace(spec, claude_account=account), {}).argv
+            if "--restricted" in argv:  # loads only managed settings and --settings
+                sources = []
+            elif "--setting-sources" in argv:
+                sources = argv[argv.index("--setting-sources") + 1].split(",")
+            else:
+                sources = ["user", "project", "local"]
+            allows = set(argv[argv.index("--allowedTools") + 1].split(","))
+            if sources:  # each settings file loaded from these sources allows write_rule
+                allows.add(write_rule)
+            if "--settings" in argv:
+                allows |= set(json.loads(argv[argv.index("--settings") + 1]).get("permissions", {}).get("allow", []))
+            assert write_rule not in allows, account
+            assert argv[argv.index("--tools") + 1] == "Read,Grep,Glob,Bash,WebFetch,WebSearch"
     else:
         assert agent == "opencode" and "--auto" not in argv
         permission = json.loads(invocation.env["OPENCODE_PERMISSION"])
