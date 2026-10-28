@@ -311,8 +311,16 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
                 raise AssertionError(args.verb)
         if args[:3] == ["gh", "pr", "view"]:
             return {"number": 42, "headRefOid": head, "headRefName": branch, "state": "OPEN"}
+        if args[:3] == ["gh", "pr", "list"] and "--search" in args:
+            # GitHub's commit search: the only read that also finds closed PRs containing a SHA.
+            return list(fake_json.searched.get(args[args.index("--search") + 1], []))
         if args[:3] == ["gh", "pr", "list"]:
-            return [{"number": 42, "headRefOid": head, "headRefName": branch}]
+            return [*fake_json.branch_prs, {"number": 42, "headRefOid": head, "headRefName": branch}]
+        if args[:4] == ["gh", "api", "--paginate", "--slurp"] and args[4].endswith("/pulls?per_page=100"):
+            # Commit-to-pulls association (open and merged PRs only); by default only this PR contains a SHA.
+            sha = args[4].split("/commits/", 1)[1].split("/", 1)[0]
+            numbers = fake_json.associated.get(sha, [42])
+            return [[{"number": n, "base": {"repo": {"full_name": REPOSITORY}}} for n in numbers]]
         if args[:4] == ["gh", "api", "-X", "POST"]:
             calls["posts"] += 1
             item = {
@@ -329,6 +337,7 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
             return comments[-1]
         raise AssertionError(args)
 
+    fake_json.searched, fake_json.associated, fake_json.branch_prs = {}, {}, []
     monkeypatch.setattr(recorder, "_run_json", fake_json)
     monkeypatch.setattr(
         recorder,
@@ -443,7 +452,7 @@ def test_red_team_cross_seat_author_task_refused_before_publication(
     assert comments == [] and calls == {"posts": 0, "statuses": 0}
 
 
-@pytest.mark.parametrize("families", [{"openai"}, {"google", "openai"}, {"cursor", "openai"}, {"unknown", "openai"}])
+@pytest.mark.parametrize("families", [{"openai"}, {"google", "openai"}, {"cursor", "openai"}])
 def test_same_family_red_team_records_and_reconciles(monkeypatch, tmp_path, families):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, families=families)
     prompt = red_team_task(tasks, tmp_path)
@@ -540,6 +549,38 @@ def recorded_verdict(sha, verdict, *, task_id="prior-review", mode="cross_family
     }
 
 
+def retargeted_review(monkeypatch, tmp_path):
+    """A real branch whose PR base was cut after its OpenAI commit, leaving only a Claude tip in ``cut..head``."""
+    repo, origin = tmp_path / "pr-repo", tmp_path / "pr-origin.git"
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@example.invalid", GIT_COMMITTER_NAME="t",
+               GIT_COMMITTER_EMAIL="t@example.invalid", GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1")
+
+    def run(*args):
+        command = ["git", "-C", str(repo), *args]
+        return subprocess.run(command, check=True, capture_output=True, text=True, env=env, timeout=30).stdout.strip()
+
+    repo.mkdir()
+    run("init", "-q")
+    run("commit", "-q", "--allow-empty", "-m", "root\n\nX-Agent: claude/claude-opus-5-5")
+    run("init", "-q", "--bare", str(origin))
+    run("--git-dir", str(origin), "symbolic-ref", "HEAD", "refs/heads/main")
+    run("remote", "add", "origin", str(origin))
+    run("push", "-q", "origin", "HEAD:refs/heads/main")
+    run("commit", "-q", "--allow-empty", "-m", "work\n\nX-Agent: codex/gpt-6.1-sol")
+    cut = run("rev-parse", "HEAD")
+    run("commit", "-q", "--allow-empty", "-m", "tip\n\nX-Agent: claude/claude-opus-5-5")
+    head = run("rev-parse", "HEAD")
+    listing = [
+        {
+            "sha": head,
+            "commit": {"message": run("show", "--no-patch", "--format=%B", head), "tree": {"sha": run("rev-parse", f"{head}^{{tree}}")}},
+            "parents": [{"sha": cut}],
+        }
+    ]
+    return repo, cut, head, listing
+
+
 @pytest.mark.parametrize(
     "mode,state",
     [
@@ -549,6 +590,15 @@ def recorded_verdict(sha, verdict, *, task_id="prior-review", mode="cross_family
         ("red_team", "edited"),
         # An unresolvable X-Agent trailer excludes no family, so no reviewer is provably outside it (F1).
         ("cross_family", "unresolved-author"),
+        # A task id without a task record is unresolved on a single-family harness too (F5).
+        ("cross_family", "unresolved-kimi"),
+        # The PR's base is never the authorship range: one cut after the OpenAI commit hides nothing (F6).
+        ("cross_family", "retargeted-base"),
+        # A rejection on the closed PR this one replaced, at the same head, still stands (F7).
+        ("cross_family", "replaced-pr"),
+        ("red_team", "replaced-pr"),
+        # A red team refuses an unresolved author too; --review-author-model cannot name its model (F9).
+        ("red_team", "unresolved-author"),
     ],
 )
 def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch, tmp_path, mode, state):
@@ -556,33 +606,65 @@ def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch,
 
     from scripts.orchestration import integration_sweep as sweep
 
+    if state == "retargeted-base":
+        pr_review_facts = recorder.pr_review_facts
+        repo, cut, head, listing = retargeted_review(monkeypatch, tmp_path)
+        tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
+        write_task(tasks, worktree_base_sha=head)
+        monkeypatch.setattr(recorder, "pr_review_facts", pr_review_facts)
+        monkeypatch.setattr(recorder, "resolve_review_repository", lambda *_a, **_k: repo)
+        monkeypatch.setattr(recorder, "_pages", lambda _request: listing)
+        fake_json = recorder._run_json
+
+        def retargeted(args, **kwargs):
+            # GitHub reports the PR's base as ``cut``; the recorder must not read it.
+            if isinstance(args, list) and args[:3] == ["gh", "pr", "view"] and "baseRefOid" in args[-1]:
+                return {"baseRefName": "cut", "baseRefOid": cut, "headRefOid": head}
+            return fake_json(args, **kwargs)
+
+        monkeypatch.setattr(recorder, "_run_json", retargeted)
+        with pytest.raises(recorder.RecordError, match="differs from the local base\\.\\.head enumeration"):
+            recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+        return
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
-    prompt = red_team_task(tasks, tmp_path) if mode == "red_team" else None
+    # An explicit comparison model satisfies the red-team seat rule for an author without a model.
+    author_model = {"review_author_model": "claude-opus-5-5"} if state == "unresolved-author" else {}
+    prompt = red_team_task(tasks, tmp_path, **author_model) if mode == "red_team" else None
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
-    if state == "unresolved-author":
+    if state in {"unresolved-author", "unresolved-kimi"}:
+        harness = "kimi" if state == "unresolved-kimi" else "claude"
         author = recorder._attribute_commit(
-            {"sha": SHA, "commit": {"message": "change\n\nX-Agent: claude/cto-not-a-model"}},
+            {"sha": SHA, "commit": {"message": f"change\n\nX-Agent: {harness}/cto-not-a-model"}},
             repository=REPOSITORY,
             task_root=tasks,
             base_sha=lambda: OTHER,
         )
-        facts = replace(facts_for({"unknown"}), commits=(author,))
+        facts = replace(facts_for({author.family}), commits=(author,))
         monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
         with pytest.raises(recorder.RecordError, match=r"AUTHOR_UNRESOLVED.*no reviewer can be proved outside"):
             recorder.record("review-one", **kwargs)
         assert comments == [] and calls == {"posts": 0, "statuses": 0}
         return
+    replaced = state == "replaced-pr"
     edited = state == "edited"
-    verdict = "APPROVED" if edited else state
-    comments.append(recorded_verdict(SHA, verdict, mode=mode, edited=edited))
+    verdict = "APPROVED" if edited else "CHANGES_REQUESTED" if replaced else state
+    # A replaced PR #41 was closed at this head; only GitHub's commit search still finds it.
+    history = [] if replaced else comments
+    if replaced:
+        recorder._run_json.searched[SHA] = [{"number": 41, "headRefOid": SHA}]
+        monkeypatch.setattr(
+            recorder.GitHubAdapter, "comments", lambda self, repository, number: list(history if number == 41 else comments)
+        )
+    history.append(recorded_verdict(SHA, verdict, mode=mode, edited=edited))
     reason = "keeper reads this head's verdict as unknown" if edited else "only an APPROVE at a new head clears it"
     with pytest.raises(recorder.RecordError, match=reason):
         recorder.record("review-one", **kwargs)
-    assert len(comments) == 1 and calls == {"posts": 0, "statuses": 0}
+    assert len(history) == 1 and calls == {"posts": 0, "statuses": 0}
     # The keeper reads the same head the same way: the rejection or unknown state stands.
-    assert sweep.lookup_verdict(comments, SHA, "fleet").state == ("unknown" if edited else state)
+    assert sweep.lookup_verdict(history, SHA, "fleet").state == ("unknown" if edited else verdict)
     # A rejection or edit at an earlier head is cleared by an APPROVE at the new head.
-    comments[0] = recorded_verdict(OTHER, verdict, mode=mode, edited=edited)
+    history[0] = recorded_verdict(OTHER, verdict, mode=mode, edited=edited)
     assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
 
@@ -590,17 +672,21 @@ def test_same_head_approve_after_rejection_is_refused_in_every_mode(monkeypatch,
 @pytest.mark.parametrize(
     "risk,security,prior_heads,replacement,refused",
     [
-        (None, False, 2, False, False),
-        (None, False, 3, False, True),
-        ("high", False, 3, False, True),
+        (None, False, 2, None, False),
+        (None, False, 3, None, True),
+        ("high", False, 3, None, True),
         # The review task's own --risk critical never raises a non-security diff past 3 rounds (F3).
-        ("critical", False, 3, False, True),
+        ("critical", False, 3, None, True),
         # A security-sensitive diff reaches 5 rounds whatever risk the task recorded.
-        ("low", True, 4, False, False),
-        (None, True, 5, False, True),
+        ("low", True, 4, None, False),
+        (None, True, 5, None, True),
         # A replacement PR from the same branch continues the count (F3).
-        (None, False, 3, True, True),
-        ("low", True, 5, True, True),
+        (None, False, 3, "same-branch", True),
+        ("low", True, 5, "same-branch", True),
+        # Rounds are keyed on reviewed SHAs, not the branch name: a renamed or fork replacement continues too (F8).
+        (None, False, 3, "renamed", True),
+        (None, False, 3, "fork", True),
+        (None, False, 2, "renamed", False),
     ],
 )
 def test_verdict_beyond_review_budget_is_refused(
@@ -614,15 +700,13 @@ def test_verdict_beyond_review_budget_is_refused(
     # More verdicts at a head already reviewed open no new round.
     prior.append(recorded_verdict("1" * 40, "CHANGES_REQUESTED", task_id="second-seat"))
     if replacement:
-        # The earlier rounds were recorded on PR #41, closed and replaced by PR #42 from the same branch.
-        listed = recorder._run_json
-
-        def lineage(args, **kwargs):
-            if isinstance(args, list) and args[:3] == ["gh", "pr", "list"]:
-                return [{"number": 41, "headRefName": BRANCH, "isCrossRepository": False}, *listed(args, **kwargs)]
-            return listed(args, **kwargs)
-
-        monkeypatch.setattr(recorder, "_run_json", lineage)
+        # The earlier rounds were recorded on PR #41, closed at this head and replaced by PR #42. GitHub's
+        # commit search finds #41; a head-branch listing finds it only under the same name and repository.
+        recorder._run_json.searched[SHA] = [{"number": 41, "headRefOid": SHA}]
+        if replacement != "renamed":
+            recorder._run_json.branch_prs.append(
+                {"number": 41, "headRefName": BRANCH, "isCrossRepository": replacement == "fork"}
+            )
         monkeypatch.setattr(
             recorder.GitHubAdapter,
             "comments",
@@ -818,14 +902,13 @@ def test_red_team_unknown_history_and_validated_current_author(monkeypatch, tmp_
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     prompt = red_team_task(tasks, tmp_path, review_author_model=explicit)
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
-    if explicit == "gpt-6.1-sol":
-        with pytest.raises(recorder.RecordError, match="RED_TEAM_REFUSED: conflicting author identity"):
-            recorder.record("review-one", **kwargs)
-        assert comments == [] and calls == {"posts": 0, "statuses": 0}
-    else:
-        assert recorder.record("review-one", **kwargs)["status"] == "posted"
-        assert facts.commits[0].family == "unknown"
-        assert calls == {"posts": 1, "statuses": 1}
+    # A conflict with validated evidence is refused first; otherwise the unresolved commit is refused in a
+    # red team too, since --review-author-model cannot name a model for it (C-2902 F9).
+    reason = "RED_TEAM_REFUSED: conflicting author identity" if explicit == "gpt-6.1-sol" else "AUTHOR_UNRESOLVED"
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", **kwargs)
+    assert facts.commits[0].family == "unknown"
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
 
 
 @pytest.mark.parametrize("case", ["missing", "unreadable", "ordinary", "digest_mismatch", "unbound", "mode_conflict"])
@@ -902,7 +985,8 @@ def test_red_team_prompt_does_not_implicitly_enable_mode(monkeypatch, tmp_path):
 
 @pytest.mark.parametrize("model", ["unknown@local.invalid", "LU Unknown", "auto"])
 def test_unknown_red_team_reviewer_cannot_self_certify(monkeypatch, tmp_path, model):
-    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"unknown"})
+    # A resolved author: an unknown one is refused before the reviewer is judged (C-2902 F9).
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
     prompt = red_team_task(tasks, tmp_path, model=model)
     with pytest.raises(recorder.RecordError, match=r"reviewer (model|family) unknown|reviewer not qualified"):
         recorder.record(
@@ -1145,6 +1229,12 @@ def real_commit_set(monkeypatch, tmp_path):
             for sha in git("rev-list", "--reverse", f"{base}..{head}").stdout.splitlines()
         ]
         monkeypatch.setattr(recorder, "_pages", lambda args: commits)
+        # Origin serves ``base`` as its default branch: every branch review is attributed from it.
+        remote = tmp_path / "origin.git"
+        git("init", "-q", "--bare", str(remote))
+        git("--git-dir", str(remote), "symbolic-ref", "HEAD", "refs/heads/base")
+        git("remote", "add", "origin", str(remote))
+        git("push", "-q", "origin", f"{base}:refs/heads/base")
 
         def base_lookup(args, **kwargs):
             assert args == ["gh", "pr", "view", "42", "--repo", REPOSITORY, "--json", "baseRefOid"]
@@ -1227,19 +1317,11 @@ def test_sync_merge_of_range_commits_needs_no_attribution(real_commit_set, monke
 
 
 def test_clean_update_merge_records_exact_head_review(real_commit_set, monkeypatch, tmp_path):
-    _, _, head, base = real_commit_set("clean_update_merge")
+    _, _, head, _ = real_commit_set("clean_update_merge")
     pr_review_facts = recorder.pr_review_facts
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
     write_task(tasks, worktree_base_sha=head, model="claude-opus-5-5", agent="claude")
     monkeypatch.setattr(recorder, "pr_review_facts", pr_review_facts)
-    fake_json = recorder._run_json
-
-    def with_base(args, **kwargs):
-        if isinstance(args, list) and args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]:
-            return {"baseRefName": "base", "baseRefOid": base, "headRefOid": head}
-        return fake_json(args, **kwargs)
-
-    monkeypatch.setattr(recorder, "_run_json", with_base)
     monkeypatch.setattr(recorder, "_repo_root", lambda: Path.cwd())
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert result["head"] == head
@@ -1685,7 +1767,8 @@ def test_clean_merge_proof_requires_literal_shas(commit, base):
 @pytest.mark.parametrize(
     "trailer,expected",
     [
-        ("kimi/k2", {"moonshot"}),
+        # A task id without a task record is unresolved on a single-family harness too (C-2902 F5).
+        ("kimi/k2", {"unknown"}),
         ("codex/gpt-6-luna", {"openai"}),
         ("cursor/grok-4.7", {"xai"}),
     ],
@@ -2448,26 +2531,6 @@ def test_ambiguous_filesystem_identity_stays_verbatim(citation_checkout, kind):
 # --- #9739 A1: GitHub's listing must equal the local base..head enumeration ----------------------
 
 
-@pytest.mark.parametrize(
-    "base_name",
-    [None, "", "  ", ["main"]],
-    ids=["absent", "blank", "blank-whitespace", "malformed"],
-)
-def test_pr_review_facts_refuses_a_bad_base_name_before_collecting(monkeypatch, tmp_path, base_name):
-    payload = {"baseRefOid": SHA, "headRefOid": OTHER}
-    if base_name is not None:
-        payload["baseRefName"] = base_name
-    monkeypatch.setattr(recorder, "_run_json", lambda *_args, **_kwargs: payload)
-    monkeypatch.setattr(
-        recorder,
-        "collect_branch_review_facts",
-        lambda **_kwargs: pytest.fail("facts collected before the base name was validated"),
-    )
-
-    with pytest.raises(recorder.RecordError, match="base ref name missing or malformed"):
-        recorder.pr_review_facts(REPOSITORY, 42, head_sha=OTHER, task_root=tmp_path, repo_root=tmp_path)
-
-
 @pytest.mark.parametrize("case", ["all_trailered", "clean_update_merge"])
 def test_pr_review_facts_bind_the_github_listing_to_rev_list(real_commit_set, monkeypatch, tmp_path, case):
     _, commits, head, base = real_commit_set(case)
@@ -2740,18 +2803,15 @@ def test_red_team_no_validated_author_requires_comparison_model(monkeypatch, tmp
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     prompt = red_team_task(tasks, tmp_path, review_author_model=explicit)
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
-    if explicit == "gpt-6-luna":
-        assert recorder.record("review-one", **kwargs)["status"] == "posted"
-        assert calls == {"posts": 1, "statuses": 1}
-    else:
-        reason = (
-            "RED_TEAM_REFUSED: no validated author model; supply --review-author-model"
-            if explicit is None
-            else "RED_TEAM_REFUSED: reviewer model equals a branch author model"
-        )
-        with pytest.raises(recorder.RecordError, match=reason):
-            recorder.record("review-one", **kwargs)
-        assert comments == [] and calls == {"posts": 0, "statuses": 0}
+    # The author's task model is not in the catalog, so its family is unknown: a comparison model
+    # passes the seat rule but the unresolved author is still refused (C-2902 F9).
+    reason = {
+        None: "RED_TEAM_REFUSED: no validated author model; supply --review-author-model",
+        "gpt-6-luna": "AUTHOR_UNRESOLVED",
+    }.get(explicit, "RED_TEAM_REFUSED: reviewer model equals a branch author model")
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", **kwargs)
+    assert comments == [] and calls == {"posts": 0, "statuses": 0}
 
 
 @pytest.mark.parametrize("archived", [False, True])

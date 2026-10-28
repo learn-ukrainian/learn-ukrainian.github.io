@@ -282,10 +282,13 @@ def record_verdict(
             if args.verb == "read-comment":
                 return comments[-1]
             raise AssertionError(args.verb)
-        if args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]:
-            return {"baseRefName": "main", "baseRefOid": base, "headRefOid": head}
         if args[:3] == ["gh", "pr", "view"]:
             return {"number": 42, "headRefOid": head, "headRefName": "feature", "state": "OPEN"}
+        # The review lineage: only this PR contains a reviewed SHA.
+        if args[:3] == ["gh", "pr", "list"] and "--search" in args:
+            return []
+        if args[:4] == ["gh", "api", "--paginate", "--slurp"] and args[4].endswith("/pulls?per_page=100"):
+            return [[{"number": 42, "base": {"repo": {"full_name": REPOSITORY}}}]]
         raise AssertionError(args)
 
     monkeypatch.setattr(recorder, "_run_json", fake_json)
@@ -325,6 +328,11 @@ def test_auto_and_unknown_authors_preserve_review_independence(
     assert facts(repo, tasks).existing_families == {expected}
     if expected == "cursor" and agent == "cursor":
         with pytest.raises(recorder.RecordError, match="Cursor-authored work"):
+            record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
+        return
+    if expected == "unknown":
+        # An unknown author excludes no family, so no reviewer is provably outside it (C-2902 F1).
+        with pytest.raises(recorder.RecordError, match="AUTHOR_UNRESOLVED"):
             record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
         return
     receipt = record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
@@ -757,11 +765,9 @@ def test_pr_review_facts_drop_a_main_squash_merged_onto_a_stale_base(repo, tasks
         "_run_json",
         lambda _args, **_kwargs: {"baseRefName": "release", "baseRefOid": stale, "headRefOid": head},
     )
-    # Without the default-branch exclusion the squash stays in the PR's range,
-    # attributed by its own trailers; the sync merge adds no author.
+    # The PR's base is never read (C-2902 F6): a retargeted PR keeps the default-branch range.
     release = recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
-    assert squash in {commit.sha for commit in release.commits}
-    assert release.existing_families == {"anthropic", "openai"}
+    assert release.commits == facts.commits and release.existing_families == {"anthropic"}
 
 
 def _assert_admits_a_reviewer_outside(fact):

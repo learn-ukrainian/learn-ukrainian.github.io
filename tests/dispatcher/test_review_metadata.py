@@ -166,24 +166,39 @@ def test_v2_subject_provider_paths_inferred_from_absolute_and_windows_paths():
         assert classify_owned_path(path).seats == frozenset({"claude"})
 
 
+SOL = ("sol", "gpt-6.1-sol")
+
+
 @pytest.mark.parametrize(
-    "trailers,flags,refusal",
+    "trailers,flags,reviewer,refusal",
     [
         # Sol is outside the declared author's family but authored a commit on the branch.
         (("claude/claude-opus-5-5", "codex/gpt-6.1-sol"), ("--review-author-model", "claude-opus-5-5", "--risk", "high"),
-         "['anthropic', 'openai']"),
+         SOL, "['anthropic', 'openai']"),
         # Any review flag types a read-only review, dry runs included (F2).
-        (("codex/gpt-6.1-sol",), ("--review-mode", "cross_family"), "['openai']"),
-        (("codex/gpt-6.1-sol",), ("--review-mode", "cross_family", "--dry-run"), "['openai']"),
+        (("codex/gpt-6.1-sol",), ("--review-mode", "cross_family"), SOL, "['openai']"),
+        (("codex/gpt-6.1-sol",), ("--review-mode", "cross_family", "--dry-run"), SOL, "['openai']"),
         # An unresolvable trailer excludes no family, so no reviewer is provably outside it (F1).
-        (("claude/cto-not-a-model",), ("--risk", "low"), "AUTHOR_UNRESOLVED"),
-        # An empty base..head range is a refusal, not a range with nobody to exclude (F2).
-        ((), ("--risk", "low"), "has no commits"),
+        (("claude/cto-not-a-model",), ("--risk", "low"), SOL, "AUTHOR_UNRESOLVED"),
+        # An empty range is a refusal, not a range with nobody to exclude (F2).
+        ((), ("--risk", "low"), SOL, "has no commits"),
+        # A task id without a task record is unresolved on a single-family harness too (F5).
+        (("kimi/cto-not-a-model",), ("--risk", "low"), SOL, "AUTHOR_UNRESOLVED"),
+        # Authorship runs from the default branch: a --base cut after the Claude commit hides nothing (F6).
+        (("claude/claude-opus-5-5", "codex/gpt-6.1-sol"), ("--base", "@1", "--risk", "low"),
+         ("claude", "claude-opus-5-5"), "['anthropic', 'openai']"),
+        # A red team keeps only its seat rule: unresolved authors and an empty range are refused (F9).
+        (("claude/cto-not-a-model",), ("--review-mode", "red_team", "--review-author-model", "claude-opus-5-5"),
+         SOL, "AUTHOR_UNRESOLVED"),
+        ((), ("--review-mode", "red_team"), SOL, "has no commits"),
+        # A review subject or a reviewed --branch types a read-only review (F10).
+        (("codex/gpt-6.1-sol",), ("--subject-seat", "claude"), SOL, "['openai']"),
+        (("codex/gpt-6.1-sol",), ("--branch", "review/target"), SOL, "['openai']"),
     ],
 )
 def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp_path, capsys, trailers, flags,
-                                                      refusal):
-    repo = tmp_path / "repo"
+                                                      reviewer, refusal):
+    repo, origin = tmp_path / "repo", tmp_path / "origin.git"
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env.update(GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@example.invalid", GIT_COMMITTER_NAME="t",
                GIT_COMMITTER_EMAIL="t@example.invalid")
@@ -195,15 +210,22 @@ def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp
     repo.mkdir()
     run("init", "-q")
     run("commit", "-q", "--allow-empty", "-m", "base")
-    base = run("rev-parse", "HEAD")
+    # Origin's default branch is the base commit; the reviewed commits are the branch's own.
+    run("init", "-q", "--bare", str(origin))
+    run("--git-dir", str(origin), "symbolic-ref", "HEAD", "refs/heads/main")
+    run("remote", "add", "origin", str(origin))
+    run("push", "-q", "origin", "HEAD:refs/heads/main")
+    commits = [run("rev-parse", "HEAD")]
     for trailer in trailers:
         run("commit", "-q", "--allow-empty", "-m", f"work\n\nX-Agent: {trailer}")
-    head = run("rev-parse", "HEAD")
+        commits.append(run("rev-parse", "HEAD"))
+    head = commits[-1]
+    flags = tuple(commits[int(flag[1:])] if flag.startswith("@") else flag for flag in flags)
     monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "claude/branch", head))
     monkeypatch.setattr(checks, "check_branch_author_families", BRANCH_AUTHOR_FAMILIES)
-    review = ("--base", base, "--mode", "read-only", *flags)
-    dispatch(*review, agent="sol", model="gpt-6.1-sol", expected=2)
+    review = ("--mode", "read-only", *flags)
+    dispatch(*review, agent=reviewer[0], model=reviewer[1], expected=2)
     assert refusal in capsys.readouterr().err
     grok = ("--agent", "cursor", "--model", "grok-4.7-high")
     if trailers and refusal.startswith("["):

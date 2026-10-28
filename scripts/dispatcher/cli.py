@@ -273,9 +273,11 @@ def _dispatch(args) -> int:
     )
     checks.check_private_input(spec, info["key"])
     checks.check_review_family(args.review_author_model, args.model)
-    # Every read-only review, dry runs included, whichever review flag types it.
+    # Every read-only review, dry runs included, whichever review flag types it: a review subject, or a
+    # --branch, which the record stores as review_branch, the identity the verdict recorder publishes for (F10).
     if args.mode == "read-only" and (
-        admission.review_typed(vars(args)) or any((args.risk, args.review_mode, args.language_lane))
+        admission.review_typed(vars(args))
+        or any((args.risk, args.review_mode, args.language_lane, args.subject_seat, args.subject_family, args.branch))
     ):
         checks.check_branch_author_families(args, repo, info, sha, args.model)
     if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):

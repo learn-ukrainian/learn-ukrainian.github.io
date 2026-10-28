@@ -121,40 +121,45 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
 
     Families are derived from the branch itself, read with the facts the
     verdict recorder accepts, whether or not ``--review-author-model`` is
-    given. An empty ``base..head`` range, a branch without attributed authors
-    and a commit with an unresolvable author are refusals. The family comes
-    from each commit's ``X-Agent`` trailer, which is author-controlled (the git
-    author is not read): a readable catalog trailer is trusted as that family.
-    A red-team review is bound by the recorder's own seat rules instead.
+    given. The range is always the fetched default branch to the head; the
+    caller's ``--base`` only chooses where a worktree starts, never authorship
+    (F6). An empty range, a range without attributed authors and a commit with
+    an unresolvable author are refusals in every review mode (F9). The family
+    comes from each commit's ``X-Agent`` trailer, which is author-controlled
+    (the git author is not read): a readable catalog trailer is trusted as
+    that family. A red-team review differs only in its seat rule, which the
+    recorder applies: it may share an author family.
     """
-    if (args.review_mode or "").strip().casefold() == "red_team":
-        return
-    try:
-        base_sha = git._git(repo, "rev-parse", "--verify", f"{args.base}^{{commit}}")
-        if not git._git(repo, "rev-list", "-n", "1", f"{base_sha}..{head_sha}"):
-            raise ValueError(
-                f"review independence: reviewed range {args.base}..{head_sha} has no commits; "
-                "review a branch against the base it was cut from"
-            )
-    except (OSError, subprocess.SubprocessError) as exc:
-        raise ValueError(f"review independence: reviewed range unavailable ({exc})") from None
     from scripts.review.record_cf_verdict import (
         RecordError,
-        authorship_exclude_sha,
+        admitted_unknown_history,
         collect_branch_review_facts,
+        default_branch_review_base,
+        refuse_excluded_only_range,
         require_resolved_branch_authors,
     )
 
+    red_team = (args.review_mode or "").strip().casefold() == "red_team"
     try:
-        facts = collect_branch_review_facts(
-            repository=repository["github"], repo_root=repo, base_tip_sha=base_sha, head_sha=head_sha,
-            task_root=store.tasks_dir(), authorship_exclude_sha=authorship_exclude_sha(repo, base_branch=args.base),
+        tip, base = default_branch_review_base(repo, head_sha)
+        # Untrailered history is admissible only to a red team, by an existing admission receipt.
+        history = (
+            admitted_unknown_history(repository=repository["github"], branch=args.branch, head_sha=head_sha,
+                                     task_root=store.tasks_dir(), repo_root=repo)
+            if red_team and args.branch else ()
         )
+        facts = collect_branch_review_facts(
+            repository=repository["github"], repo_root=repo, base_tip_sha=base, head_sha=head_sha,
+            task_root=store.tasks_dir(), authorship_exclude_sha=tip, unknown_history=history,
+        )
+        refuse_excluded_only_range(facts, repo_root=repo, exclude_sha=tip)
         require_resolved_branch_authors(facts)
     except (RecordError, OSError, subprocess.SubprocessError) as exc:
         raise ValueError(f"review independence: branch author families unavailable ({exc})") from None
     if not facts.existing_families:
         raise ValueError("review independence: the reviewed range has no attributed author commits")
+    if red_team:
+        return
     reviewer = _model_families().get(reviewer_model)
     if not reviewer or reviewer in facts.excluded_families:
         raise ValueError(
