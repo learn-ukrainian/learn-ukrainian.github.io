@@ -97,6 +97,7 @@ def test_delegate_dispatch_accepts_agy_agent(tmp_path, monkeypatch, capsys):
     assert result == 0, f"dispatch --agent agy failed:\n{captured.out}\n{captured.err}"
     assert task_id in captured.out
     plan = json.loads(captured.out)
+    assert Path(plan["record_path"]).name == f"{task_id}.json"
     assert plan["argv"][0] == "agy"
     assert plan["argv"][plan["argv"].index("--model") + 1] == "gemini-3.8-flash-high"
 
