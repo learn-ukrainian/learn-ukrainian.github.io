@@ -395,11 +395,18 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
 
 
 def _tree_changes(tree: Path) -> tuple[list[str], list[str]]:
-    """Return the tree's uncommitted tracked changes and its untracked files; ignored files are neither."""
+    """Return the tree's uncommitted tracked changes and its untracked files; ignored files are neither.
+
+    Status hides edits to entries flagged assume-unchanged or skip-worktree, so every such entry present
+    on disk counts as a change; sparse checkout's skip-worktree entries are absent and do not.
+    """
     entries = [entry for entry in _git(tree, "status", "--porcelain", "-z", "--untracked-files=all",
                                        isolate=True, strip=False).split("\0") if entry]
-    return [entry for entry in entries if not entry.startswith("?? ")], [entry[3:] for entry in entries
-                                                                          if entry.startswith("?? ")]
+    hidden = [entry[2:] for entry in _git(tree, "ls-files", "-v", "-z", isolate=True, strip=False).split("\0")
+              if entry[:1].islower() or entry[:1] == "S"]
+    changed = [entry for entry in entries if not entry.startswith("?? ")]
+    changed += [f"hidden {name}" for name in hidden if os.path.lexists(tree / name)]
+    return changed, [entry[3:] for entry in entries if entry.startswith("?? ")]
 
 
 def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | None, bool]:

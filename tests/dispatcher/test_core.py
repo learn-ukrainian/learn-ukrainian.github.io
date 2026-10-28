@@ -417,6 +417,21 @@ def test_untracked_scratch_is_preserved_and_the_worktree_removed_at_settle(sandb
     assert json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text()) == record
 
 
+@pytest.mark.parametrize("flag", ["--assume-unchanged", "--skip-worktree"])
+def test_tracked_edit_hidden_by_an_index_flag_keeps_the_worktree(sandbox, flag):
+    """Review F1: status omits edits under these flags, so untracked scratch beside one forced a removal."""
+    task = sandbox.dispatch("blocked", "--mode", "workspace-write")
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    tree = Path(json.loads((sandbox.tasks / f"{task[0]}.json").read_text())["worktree_path"])
+    run_git(tree, "update-index", flag, "scripts/dispatch.py")
+    (tree / "scripts/dispatch.py").write_text("uncommitted tracked edit\n")
+    (tree / "scratch.txt").write_text("scratch\n")
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    record = sandbox.settle(task, expected=1)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert (tree / "scripts/dispatch.py").read_text() == "uncommitted tracked edit\n"
+
+
 def test_lingering_provider_process_keeps_the_worktree_until_a_retry_proves_it_gone(sandbox):
     """Defect (FR-45): a provider child alive past settlement's bounded wait kept the tree with no retry."""
     task = sandbox.dispatch("tree")
