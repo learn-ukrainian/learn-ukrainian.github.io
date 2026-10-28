@@ -1040,27 +1040,84 @@ def test_issue_11381_target_changed_before_git_write_blocked(
     assert result.returncode == 2, result.stderr
 
 
-@pytest.mark.parametrize("prefix", ["pwd", "git status --short", "cd ./"])
-def test_issue_11381_read_only_prefix_keeps_foreign_git_allowed(
-    repo: Path, repo_template: Path, tmp_path: Path, prefix: str
-):
-    other = _materialize_repo(repo_template, tmp_path / "other")
-    command = f"{prefix} && git -C {other} merge --ff-only origin/main"
-    result = _run(repo, {"tool_name": "Bash", "cwd": str(other), "tool_input": {"command": command}})
-    assert result.returncode == 0, result.stderr
-
-
-@pytest.mark.parametrize("separator", ["|", "&"])
-def test_issue_11381_concurrent_git_target_change_blocked(
-    repo: Path, repo_template: Path, tmp_path: Path, separator: str
+@pytest.mark.parametrize(
+    "command",
+    [
+        # Delta-review reproducers: a read-only Git command or an enclosing
+        # group can change the probed target before or while the write runs.
+        "git -C {other} log -1 --format='[core]%nworktree = {primary}' --output={other}/.git/config"
+        " && git -C {link} checkout HEAD -- curriculum/tracked.md",
+        "git -c core.fsmonitor='ln -sfn {primary} {link}; false' -C {other} status"
+        " && git -C {link} checkout HEAD -- curriculum/tracked.md",
+        "{{ git -C {link} checkout HEAD -- curriculum/tracked.md; }} & ln -sfn {primary} {link}",
+        "( git -C {link} checkout HEAD -- curriculum/tracked.md ) & ln -sfn {primary} {link}",
+        "git -C {link} checkout HEAD -- curriculum/tracked.md | ln -sfn {primary} {link}",
+        "git -C {link} checkout HEAD -- curriculum/tracked.md & ln -sfn {primary} {link}",
+        # Anything beyond one plain Git invocation keeps the fail-closed decision.
+        "pwd && git -C {other} merge --ff-only origin/main",
+        "git status --short && git -C {other} merge --ff-only origin/main",
+        "cd ./ && git -C {other} merge --ff-only origin/main",
+        "git -C {other} merge --ff-only origin/main; true",
+        "git -C {other} merge --ff-only origin/main || true",
+        "git -C {other} merge --ff-only origin/main |& cat",
+        "git -C {other} merge --ff-only origin/main &",
+        "git -C {other} merge --ff-only origin/main > merge.log",
+        "git -C {other} apply < change.diff",
+        "{{ git -C {other} merge --ff-only origin/main; }}",
+        "( git -C {other} merge --ff-only origin/main )",
+        "! git -C {other} merge --ff-only origin/main",
+        "time git -C {other} merge --ff-only origin/main",
+        "if true; then git -C {other} merge --ff-only origin/main; fi",
+        "for x in a; do git -C {other} merge --ff-only origin/main; done",
+        "git -C {other} merge --ff-only $(printf origin/main)",
+        "git -C {other} merge --ff-only `printf origin/main`",
+        "git -C {other} apply <(cat change.diff)",
+        "env git -C {other} merge --ff-only origin/main",
+        "command git -C {other} merge --ff-only origin/main",
+        "GIT_TRACE=1 git -C {other} merge --ff-only origin/main",
+        "LANG=C git -C {other} merge --ff-only origin/main",
+        "bash -c 'git -C {other} merge --ff-only origin/main'",
+        "eval git -C {other} merge --ff-only origin/main",
+        "git -c user.name=x -C {other} merge --ff-only origin/main",
+        "git --config-env=user.name=USER -C {other} merge --ff-only origin/main",
+        "git --exec-path={other} -C {other} merge --ff-only origin/main",
+        "git -C {other} merge --output=merge.log origin/main",
+        "git -C {other} merge -o merge.log origin/main",
+    ],
+)
+def test_issue_11381_foreign_exemption_requires_single_plain_git_command(
+    repo: Path, repo_template: Path, tmp_path: Path, command: str
 ):
     other = _materialize_repo(repo_template, tmp_path / "other")
     link = tmp_path / "foreign-link"
     link.symlink_to(other, target_is_directory=True)
-    command = f"git -C {link} checkout HEAD -- curriculum/tracked.md {separator} ln -sfn {repo} {link}"
+    command = command.format(other=other, primary=repo, link=link)
     dispatch = repo / ".worktrees/dispatch/claude/task-1"
     result = _run(repo, {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command}})
     assert result.returncode == 2, result.stderr
+    assert "BLOCKED" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git -C {link} checkout HEAD -- curriculum/tracked.md",
+        "git -C {other} merge --ff-only origin/main\n",
+        "git -C {other} merge --ff-only origin/main  # sync",
+        "/usr/bin/git -C {other} pull",
+        "git -C {other} checkout -- curriculum/tracked.md",
+    ],
+)
+def test_issue_11381_single_plain_git_command_keeps_foreign_exemption(
+    repo: Path, repo_template: Path, tmp_path: Path, command: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    link = tmp_path / "foreign-link"
+    link.symlink_to(other, target_is_directory=True)
+    command = command.format(other=other, link=link)
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
 
 
 @pytest.mark.parametrize(

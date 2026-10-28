@@ -2073,16 +2073,40 @@ def _is_git_binary(cmd: str) -> bool:
     return cmd in {"git", "git.exe"} or cmd.endswith("/git")
 
 
-def bash_git_write_intents(
-    command: str, *, cwd: str | None = None, depth: int = 0, environment: set[str] | None = None,
-    prior_writes: bool = False,
-) -> list[dict[str, object]]:
+def _is_single_simple_git_command(command: str) -> bool:
+    """Whether the whole command is one plain Git invocation (issue #11381).
+
+    Only such a command may use the foreign-repository exemption. Operators,
+    groups, substitutions, redirections, wrappers, environment assignments,
+    configuration options and output files can all change the probed target
+    before or while Git runs, so any of them keeps the fail-closed decision.
+    """
+    tokens = _tokenize(command)
+    while tokens and tokens[-1] == "\n":
+        tokens.pop()
+    segments = _expanded_segments(command)
+    if len(segments) != 1 or len(segments[0]) != len(tokens):
+        return False
+    words = segments[0]
+    if not _is_git_binary(words[0]) or any(
+        word in _CONTROL_OPS or word.shell_redirect or word.unresolved_at is not None for word in words
+    ):
+        return False
+    _, _, rest = _git_global_prefix(words[1:])
+    if any(word.startswith(("-c", "--config-env", "--exec-path")) for word in words[1 : len(words) - len(rest)]):
+        return False
+    options = rest[1 : rest.index("--")] if "--" in rest else rest[1:]
+    return not any(word.startswith(("-o", "--output")) for word in options)
+
+
+def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int = 0) -> list[dict[str, object]]:
     """Parse Bash for git-mediated working-tree mutations (issue #5396).
 
     Each intent is a dict::
 
         {
           "kind": "apply"|"add"|"stash_apply"|"path_checkout"|"restore_source",
+          "c_path": str|None,          # from git -C
           "git_options": list[str],    # -C/--git-dir/--work-tree
           "segment_cwd": str|None,     # after literal cd/pushd
           "paths": list[str],          # pathspecs when known (may be empty)
@@ -2095,62 +2119,30 @@ def bash_git_write_intents(
     """
     _refuse_nested_ansi_c_quoting(command, depth)
     intents: list[dict[str, object]] = []
-    bound_environment: dict[tuple[int, ...], set[str]] = {(): environment or set()}
 
     def record(intent: dict[str, object]) -> None:
         intent["segment_cwd"] = effective_cwd
-        intent["c_path"] = c_path
         intent["git_options"] = git_options
-        intent["git_config_redirected"] = config_redirected
-        intent["git_environment"] = environment_names
-        intent["target_may_change"] = target_may_change
         intents.append(intent)
 
-    for segment, effective_cwd, shell_cwd in _segments_with_cwd(command, cwd):
+    for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
         cmd, idx = _command_word(segment)
-        # Redirections run before their command, so include this segment's writes.
-        target_may_change = prior_writes or segment.next_op in {"|", "|&", "&"} or bool(_writer_targets(
-            segment, cwd=effective_cwd, redirect_cwd=shell_cwd, main_root=None, depth=depth
-        ))
-        inherited = set().union(*(bound_environment.get(segment.scope[:i], set()) for i in range(len(segment.scope) + 1)))
-        prefixes = {str(word).split("=", 1)[0] for word in segment[:idx] if _ASSIGN_RE.match(word)}
-        if not cmd or cmd in _BINDING_DECLARATIONS:
-            inherited.update(str(word).split("=", 1)[0] for word in segment if _ASSIGN_RE.match(word))
-            if cmd in _BINDING_DECLARATIONS:
-                inherited.update(str(word) for word in segment[idx + 1:] if not word.startswith("-"))
-            bound_environment[segment.scope] = inherited
-        environment_names = inherited | prefixes
         if cmd == "eval" and depth < _MAX_SHELL_DEPTH:
             args = segment[idx + 1 :]
             if all(getattr(arg, "unresolved_at", None) is None for arg in args):
-                intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1, environment=environment_names, prior_writes=target_may_change))
-            prior_writes = True
+                intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1))
             continue
         if cmd in {"sh", "bash", "zsh", "dash"} and depth < _MAX_SHELL_DEPTH:
             script = _shell_command_script(segment[idx + 1 :])
             if script is not None and getattr(script, "unresolved_at", None) is None:
-                intents.extend(bash_git_write_intents(str(script), cwd=effective_cwd, depth=depth + 1, environment=environment_names, prior_writes=target_may_change))
-            prior_writes = True
+                intents.extend(bash_git_write_intents(str(script), cwd=effective_cwd, depth=depth + 1))
             continue
         if not _is_git_binary(cmd):
-            prior_writes = target_may_change or cmd not in {
-                "", "cd", "pushd", "popd", "pwd", ":", "true", "false", "echo", "printf", "test", "[",
-                *_BINDING_DECLARATIONS, "unset",
-            }
             continue
         c_path, git_options, rest = _git_global_prefix(segment[idx + 1 :])
-        prefix_args = segment[idx + 1:len(segment) - len(rest)]
-        config_redirected = any(
-            re.match(r"(?i)(?:-c|--config-env=)?(?:core\.(?:worktree|bare)|include(?:if\.[^=]+)?\.path)(?:=|$)", word)
-            for word in prefix_args
-        )
         if not rest:
             continue
         sub = rest[0]
-        prior_writes = target_may_change or sub not in {
-            "status", "diff", "log", "show", "rev-parse", "ls-files", "ls-tree", "cat-file", "show-ref",
-            "check-ignore", "check-attr", "version", "help",
-        }
         sub_args = rest[1:]
         option_args = sub_args[: sub_args.index("--")] if "--" in sub_args else sub_args
 
@@ -2158,6 +2150,7 @@ def bash_git_write_intents(
             record(
                 {
                     "kind": "apply" if sub == "apply" else "am",
+                    "c_path": c_path,
                     "paths": [],
                     "summary": f"git {sub}",
                     "allowlisted": False,
@@ -2166,14 +2159,14 @@ def bash_git_write_intents(
             continue
 
         if sub in {"merge", "pull", "rebase", "cherry-pick", "revert"}:
-            record({"kind": sub, "paths": [], "summary": f"git {sub}", "allowlisted": False})
+            record({"kind": sub, "c_path": c_path, "paths": [], "summary": f"git {sub}", "allowlisted": False})
             continue
 
         # This hook owns git mutations targeted at the protected worktree via
         # effective cwd or -C. The branch-switch hook retains its separate
         # direct-command policy for all primary checkouts.
         if sub == "switch":
-            record({"kind": "switch", "paths": [], "summary": "git switch", "allowlisted": False})
+            record({"kind": "switch", "c_path": c_path, "paths": [], "summary": "git switch", "allowlisted": False})
             continue
 
         if sub == "worktree" and sub_args[:1] == ["remove"]:
@@ -2181,6 +2174,7 @@ def bash_git_write_intents(
             record(
                 {
                     "kind": "worktree_remove",
+                    "c_path": c_path,
                     "paths": paths,
                     "summary": "git worktree remove",
                     "allowlisted": False,
@@ -2209,6 +2203,7 @@ def bash_git_write_intents(
             record(
                 {
                     "kind": "add",
+                    "c_path": c_path,
                     "paths": paths,
                     "summary": "git add" + (f" {' '.join(paths)}" if paths else ""),
                     "allowlisted": False,
@@ -2224,6 +2219,7 @@ def bash_git_write_intents(
                 record(
                     {
                         "kind": "stash_apply",
+                        "c_path": c_path,
                         "paths": [],
                         "summary": f"git stash {action}",
                         "allowlisted": False,
@@ -2243,11 +2239,11 @@ def bash_git_write_intents(
                     dry_run = True
                 i += 1
             if not dry_run:
-                record({"kind": "clean", "paths": [], "summary": "git clean", "allowlisted": False})
+                record({"kind": "clean", "c_path": c_path, "paths": [], "summary": "git clean", "allowlisted": False})
             continue
 
         if sub == "reset" and any(tok in {"--hard", "--merge", "--keep"} for tok in option_args):
-            record({"kind": "reset", "paths": [], "summary": "git reset", "allowlisted": False})
+            record({"kind": "reset", "c_path": c_path, "paths": [], "summary": "git reset", "allowlisted": False})
             continue
 
         if sub == "read-tree" and any(
@@ -2255,7 +2251,7 @@ def bash_git_write_intents(
             for tok in option_args
         ):
             record(
-                {"kind": "read-tree", "paths": [], "summary": "git read-tree", "allowlisted": False}
+                {"kind": "read-tree", "c_path": c_path, "paths": [], "summary": "git read-tree", "allowlisted": False}
             )
             continue
 
@@ -2272,6 +2268,7 @@ def bash_git_write_intents(
                 record(
                     {
                         "kind": "forced_checkout",
+                        "c_path": c_path,
                         "paths": [],
                         "summary": "git checkout -f",
                         "allowlisted": False,
@@ -2287,6 +2284,7 @@ def bash_git_write_intents(
                     record(
                         {
                             "kind": "path_checkout",
+                            "c_path": c_path,
                             "paths": after,
                             "summary": "git checkout -- " + " ".join(after),
                             "allowlisted": True,
@@ -2296,6 +2294,7 @@ def bash_git_write_intents(
                     record(
                         {
                             "kind": "path_checkout",
+                            "c_path": c_path,
                             "paths": after,
                             "summary": f"git checkout {treeish[0]} -- " + " ".join(after),
                             "allowlisted": False,
@@ -2308,6 +2307,7 @@ def bash_git_write_intents(
                     record(
                         {
                             "kind": "path_checkout",
+                            "c_path": c_path,
                             "paths": positionals[1:],
                             "summary": (f"git checkout {positionals[0]} " + " ".join(positionals[1:])),
                             "allowlisted": False,
@@ -2317,6 +2317,7 @@ def bash_git_write_intents(
                     record(
                         {
                             "kind": "branch_checkout",
+                            "c_path": c_path,
                             "paths": [],
                             "summary": "git checkout " + str(positionals[0]),
                             "allowlisted": False,
@@ -2350,6 +2351,7 @@ def bash_git_write_intents(
                 record(
                     {
                         "kind": "restore_source",
+                        "c_path": c_path,
                         "paths": paths,
                         "summary": "git restore " + " ".join(paths),
                         "allowlisted": True,
@@ -2359,6 +2361,7 @@ def bash_git_write_intents(
                 record(
                     {
                         "kind": "restore_source",
+                        "c_path": c_path,
                         "paths": paths,
                         "summary": f"git restore --source={source} " + " ".join(paths),
                         "allowlisted": False,
@@ -2383,6 +2386,7 @@ def bash_git_write_intents(
             record(
                 {
                     "kind": "mv" if sub == "mv" else "rm",
+                    "c_path": c_path,
                     "paths": paths,
                     "summary": f"git {sub}" + (f" {' '.join(paths)}" if paths else ""),
                     "allowlisted": False,
@@ -2705,13 +2709,7 @@ def main() -> int:
                 summary = str(intent.get("summary") or "git write")
                 intent_root = wc.resolve_main_root(_protected_repo_anchor())
                 options = intent.get("git_options") or []
-                redirects = set(wc.GIT_REDIRECT_ENV_KEYS)
-                environment = intent.get("git_environment") or []
-                if (
-                    redirects.intersection(environment) or redirects.intersection(os.environ)
-                    or any(name.startswith("GIT_CONFIG") for name in environment)
-                    or intent.get("git_config_redirected")
-                ):
+                if set(wc.GIT_REDIRECT_ENV_KEYS).intersection(os.environ):
                     return _block_uncertain("undecidable_git_environment")
                 if any(getattr(option, "unresolved_at", None) is not None for option in options):
                     return _block_git_mediated(summary, intent_root, reason="unresolved_shell_variable")
@@ -2727,8 +2725,8 @@ def main() -> int:
                     continue
                 # A foreign index can still explicitly target our primary.
                 if target.common_dir != protected.common_dir and wc.classify_repo_path(target.worktree, cwd=intent_root) != "primary_checkout":
-                    if intent.get("target_may_change"):
-                        return _block_uncertain("undecidable_git_target_after_write")
+                    if not _is_single_simple_git_command(command):
+                        return _block_uncertain("foreign_git_target_requires_single_git_command")
                     continue
                 if intent.get("kind") == "worktree_remove":
                     for raw in intent.get("paths") or []:
