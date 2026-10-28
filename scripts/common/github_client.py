@@ -1772,6 +1772,35 @@ def _pages(client, endpoint, *, timeout, fresh, paginate, limit=None, items=lamb
     return Result(error="github_pagination_limit")
 
 
+def _counted_pages(client, endpoint, key, *, incomplete, timeout, fresh):
+    """Every page of a ``{total_count, key: [...]}`` collection as one result, else ``incomplete``.
+
+    A head can carry more than one page of check runs; ``gh``'s own rollup reads them all.
+    Across pages ``total_count`` must hold still and every record must keep a distinct
+    integer id, so a record repeated by a shifting walk cannot stand in for a missed one.
+    """
+    pages = _pages(client, endpoint, timeout=timeout, fresh=fresh, paginate=True)
+    if isinstance(pages, Result):
+        return pages
+    if not all(isinstance(page.value, dict) and isinstance(page.value.get(key, []), list) for page in pages):
+        return Result(error=incomplete)
+    total = pages[0].value.get("total_count", 0)
+    rows = [row for page in pages for row in page.value.get(key, [])]
+    if total > len(rows):
+        return Result(error=incomplete)
+    if len(pages) > 1:
+        ids = [row.get("id") if isinstance(row, dict) else None for row in rows]
+        if (
+            any(page.value.get("total_count") != total for page in pages)
+            or any(type(value) is not int for value in ids)
+            or len(set(ids)) != len(ids)
+        ):
+            return Result(error=incomplete)
+    result = pages[0]
+    result.value = {**result.value, key: rows}
+    return _merge_observation(result, *pages[1:])
+
+
 def _merge_observation(result, *observations):
     for other in observations:
         result.stale |= other.stale
@@ -1942,21 +1971,27 @@ def _read_command(client, kind, action, options, positional, *, timeout, fresh):
                 value = diff.value
             _merge_observation(result, *pages)
         if action == "checks" or "statusCheckRollup" in fields:
-            checks = client.request(
-                "GET", f"{root}/commits/{value['headRefOid']}/check-runs?per_page=100", timeout=timeout, fresh=fresh
+            checks = _counted_pages(
+                client,
+                f"{root}/commits/{value['headRefOid']}/check-runs?per_page=100",
+                "check_runs",
+                incomplete="github_checks_incomplete",
+                timeout=timeout,
+                fresh=fresh,
             )
             if checks.error:
                 return checks
-            rows = checks.value.get("check_runs", [])
-            if checks.value.get("total_count", 0) > len(rows):
-                return Result(error="github_checks_incomplete")
-            status = client.request(
-                "GET", f"{root}/commits/{value['headRefOid']}/status?per_page=100", timeout=timeout, fresh=fresh
+            rows = checks.value["check_runs"]
+            status = _counted_pages(
+                client,
+                f"{root}/commits/{value['headRefOid']}/status?per_page=100",
+                "statuses",
+                incomplete="github_statuses_incomplete",
+                timeout=timeout,
+                fresh=fresh,
             )
             if status.error:
                 return status
-            if status.value.get("total_count", 0) > len(status.value.get("statuses", [])):
-                return Result(error="github_statuses_incomplete")
             rollup = [
                 {
                     "__typename": "CheckRun",

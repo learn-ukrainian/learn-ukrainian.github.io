@@ -6,7 +6,7 @@ import json
 import re
 import subprocess
 from collections.abc import Callable
-from urllib.parse import quote
+from urllib.parse import parse_qs, quote
 
 from scripts.ci.advisory_checks import (
     external_advisory_check,
@@ -372,12 +372,44 @@ def readiness_reason(meta, states):
     return None
 
 
+def _read_label(endpoint: str) -> str:
+    """The class of a guard REST read, without its repository or head."""
+    path, _, query = endpoint.partition("?")
+    params = parse_qs(query)
+    if path.endswith("/status"):
+        label = "commit statuses"
+    elif path.endswith("/check-runs"):
+        label = "named check runs" if "check_name" in params else "check runs"
+    elif re.search(r"/actions/runs/\d+$", path):
+        label = "actions run"
+    else:
+        label = "api read"
+    return label + (f" page {params['page'][0]}" if params.get("page", [""])[0].isdigit() else "")
+
+
+def _read_failure(result) -> str:
+    """Why a read failed: the client's typed error, gh's HTTP status or the exit code; never output text."""
+    observed = getattr(result, "github_result", None)
+    error = getattr(observed, "error", None)
+    if isinstance(error, str) and re.fullmatch(r"github_[a-z_]+", error):
+        status = getattr(observed, "status", None)
+        return error + (f" HTTP {status}" if error == "github_http_error" and type(status) is int else "")
+    stderr = result.stderr if isinstance(result.stderr, str) else ""
+    status = re.search(r"\(HTTP ([0-9]{3})\)|\bHTTP ([0-9]{3})\b", stderr)
+    return f"exit {result.returncode}" + (f" HTTP {status[1] or status[2]}" if status else "")
+
+
 def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=None):
-    """Read current metadata and checks before any merge write, including private repos."""
+    """Read current metadata and checks before any merge write, including private repos.
+
+    Every refusal names the first read that failed (its class and the typed reason), so a
+    fail-closed verdict is diagnosable without repeating the reads by hand.
+    """
     if environment.get("AGENT_NO_MERGE") == "1":
         raise PublishBlocked("OPSEC: AGENT_NO_MERGE forbids merging.")
     env = {k: v for k, v in environment.items() if k not in {"CLICOLOR_FORCE", "FORCE_COLOR"}}
     env.update(NO_COLOR="1", CLICOLOR="0")
+    failed: list[str] = []
 
     def get(args):
         return runner(
@@ -390,6 +422,16 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
             timeout=15,
         )
 
+    def decoded(label, result):
+        if result.returncode != 0:
+            failed.append(f"{label}: {_read_failure(result)}")
+            return None
+        try:
+            return json.loads(result.stdout)
+        except (TypeError, ValueError):
+            failed.append(f"{label}: malformed JSON")
+            return None
+
     def get_json(endpoint):
         result = runner(
             ["gh", "api", "--method", "GET", endpoint],
@@ -400,24 +442,19 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
             check=False,
             timeout=15,
         )
-        try:
-            return json.loads(result.stdout) if result.returncode == 0 else None
-        except (TypeError, ValueError):
-            return None
+        return decoded(_read_label(endpoint), result)
 
     def bound_view():
-        result = get(["view", str(number), "--json", "headRefOid,statusCheckRollup"])
-        try:
-            return json.loads(result.stdout) if result.returncode == 0 else None
-        except (TypeError, ValueError):
-            return None
+        return decoded("pr view rollup", get(["view", str(number), "--json", "headRefOid,statusCheckRollup"]))
 
     def bound_states(bound):
         return bound_rollup_states(bound, meta["headRefOid"], repo, get_json)
 
+    def detail(fallback):
+        return f" ({failed[0]})" if failed else f" ({fallback})"
+
     try:
-        meta_result = get(["view", str(number), "--json", "number,isDraft,headRefOid"])
-        meta = json.loads(meta_result.stdout) if meta_result.returncode == 0 else None
+        meta = decoded("pr view metadata", get(["view", str(number), "--json", "number,isDraft,headRefOid"]))
         if (
             not isinstance(meta, dict)
             or type(meta.get("number")) is not int
@@ -425,7 +462,7 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
             or not isinstance(meta.get("headRefOid"), str)
             or not re.fullmatch(r"[0-9a-fA-F]{40}", meta["headRefOid"])
         ):
-            raise ValueError("invalid metadata")
+            raise PublishBlocked("OPSEC: merge readiness unverifiable" + detail("pr view metadata: invalid") + ".")
         checks = get(["checks", str(number), "--json", "name,bucket,state,workflow"])
         if _checks_json_unsupported(checks):
             bound = bound_view()
@@ -445,15 +482,21 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
                 # headless buckets cannot prove workflow/app isolation, even
                 # when the returned names are unique. Judge the bound snapshot.
                 states = bound_states(bound_view()) if raw_checks else parse_checks(raw_checks)
+            elif checks.returncode not in {0, 1, 8}:
+                failed.append(f"pr checks: {_read_failure(checks)}")
+            else:
+                failed.append("pr checks: " + ("empty failing list" if raw_checks == [] else "malformed JSON"))
         if states is None:
-            raise PublishBlocked("OPSEC: merge refused: cannot establish check state.")
+            raise PublishBlocked(
+                "OPSEC: merge refused: cannot establish check state" + detail("check rows unverifiable") + "."
+            )
         reason = readiness_reason(meta, states)
         if match_head is not None and meta["headRefOid"].lower() != match_head.lower():
             reason = "reviewed head changed"
     except (PublishBlocked, GitHubRateLimited):
         raise
-    except Exception:
-        raise PublishBlocked("OPSEC: merge readiness unverifiable.") from None
+    except Exception as exc:
+        raise PublishBlocked("OPSEC: merge readiness unverifiable" + detail(type(exc).__name__) + ".") from None
     if reason:
         raise PublishBlocked("OPSEC: merge refused: " + reason + ".")
     return meta["headRefOid"]
