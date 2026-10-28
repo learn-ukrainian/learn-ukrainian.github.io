@@ -65,7 +65,7 @@ inline:
     title: Ti or vy?
     instruction: Choose the form that fits the situation.
     items:
-      - prompt: 'You ask one friend to read.'
+      - prompt: "You ask one friend to read. (Use the ти imperative.)"
         options:
           - text: 'Читай, будь ласка.'
             correct: true
@@ -74,7 +74,7 @@ inline:
           - text: 'Читати, будь ласка.'
             correct: false
         explanation: 'One friend takes the ти form читай.'
-      - prompt: 'You ask a teacher to read.'
+      - prompt: "You ask a teacher to read. (Use the polite ви imperative.)"
         options:
           - text: 'Читайте, будь ласка.'
             correct: true
@@ -83,7 +83,7 @@ inline:
           - text: 'Читаєте, будь ласка.'
             correct: false
         explanation: 'A teacher takes polite ви.'
-      - prompt: 'You ask a server for the bill.'
+      - prompt: "You ask a server for the bill. (Use the polite ви imperative.)"
         options:
           - text: 'Дайте рахунок, будь ласка.'
             correct: true
@@ -180,7 +180,7 @@ workbook:
     title: Address plus command
     instruction: Choose the command form that matches the address.
     items:
-      - sentence: 'Олено, ___ книжку!'
+      - sentence: "(Use the ти command form.) Олено, ___ книжку!"
         answer: 'дай'
         options:
           - 'дай'
@@ -194,7 +194,7 @@ workbook:
           - 'дай'
           - 'дати'
         explanation: 'Пане Іване takes polite ви.'
-      - sentence: 'Тарасе, ___ в кафе.'
+      - sentence: "(Use the ти command form.) Тарасе, ___ в кафе."
         answer: 'іди'
         options:
           - 'іди'
