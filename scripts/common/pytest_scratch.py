@@ -65,7 +65,7 @@ _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 # A read-only mount or a denied write. Any other failure stays loud.
 _UNWRITABLE_ERRNOS = frozenset({errno.EROFS, errno.EACCES})
 _RUN = pytest.StashKey[TaskScratch]()
-_PASSED = pytest.StashKey[bool]()
+_SESSION = pytest.StashKey[pytest.Session]()
 
 
 def _is_unwritable(exc: OSError) -> bool:
@@ -347,10 +347,25 @@ def _allocate_private_fallback() -> TaskScratch:
     )
 
 
+def _passed(stash: pytest.Stash | None) -> bool:
+    """Whether the session passed under the "failed" retention policy.
+
+    Pytest itself deletes the basetemp of such a session, but only when no
+    --basetemp was given, and this plugin always gives one. Cleanups run after
+    every sessionfinish hook and wrapper, so the exit status read here is final.
+    """
+    session = stash.get(_SESSION, None) if stash is not None else None
+    return (
+        session is not None
+        and session.exitstatus == pytest.ExitCode.OK
+        and session.config.getini("tmp_path_retention_policy") == "failed"
+    )
+
+
 def _release(stash: pytest.Stash | None, scratch: TaskScratch) -> None:
     """Remove a passed run, as pytest removes its own basetemp; keep any other run for inspection."""
     try:
-        if stash is not None and stash.get(_PASSED, False):
+        if _passed(stash):
             with contextlib.suppress(OSError, TaskScratchError):
                 scratch.remove()
     finally:
@@ -398,18 +413,7 @@ def pytest_configure(config: pytest.Config) -> None:
     config.add_cleanup(restore_tempdir)
 
 
-@pytest.hookimpl(trylast=True)
-def pytest_sessionfinish(session: pytest.Session) -> None:
-    """Record a passed session under the "failed" retention policy.
-
-    Pytest itself deletes the basetemp of such a session, but only when no
-    --basetemp was given, and this plugin always gives one. The final exit
-    status counts: an earlier sessionfinish hook may have failed the session.
-    """
-    config = session.config
-    if (
-        _RUN in config.stash
-        and session.exitstatus == pytest.ExitCode.OK
-        and config.getini("tmp_path_retention_policy") == "failed"
-    ):
-        config.stash[_PASSED] = True
+def pytest_sessionstart(session: pytest.Session) -> None:
+    """Keep the session so teardown can read its final exit status."""
+    if _RUN in session.config.stash:
+        session.config.stash[_SESSION] = session
