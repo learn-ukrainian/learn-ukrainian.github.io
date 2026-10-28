@@ -18,16 +18,16 @@ Skipping the tool = hallucinating with confidence.
 
 | Domain | Claim type | Tool |
 |---|---|---|
-| Ukrainian morphology | word validity, lemma, stress, gender, case forms | `mcp__sources__verify_word(s)` / `verify_lemma` / `check_modern_form` |
+| Ukrainian morphology | word validity, lemma, gender, case forms | `mcp__sources__verify_word(s)` / `verify_lemma` / `check_modern_form` |
 | Russianisms / surzhyk / calques | "is this a Russianism?" | `mcp__sources__search_style_guide`, `check_russian_shadow` |
 | Heritage defense | "is this archaism, dialectism, or actually a Russianism?" | `mcp__sources__search_heritage` |
-| Definitions / etymology | what a word means or where it's from | `mcp__sources__search_definitions`, `search_grinchenko_1907`, `search_esum`, `search_slovnyk_me` |
+| Definitions / etymology | what a word means or where it's from | Modern meaning: `query_sum20`, then ВТС / ULIF and `search_slovnyk_me`; historical attestation: `search_grinchenko_1907`; etymology: `search_esum`. СУМ-11 / `search_definitions` is contrastive Sovietization context only. |
 | CEFR level | is word A1/A2/B1? | `mcp__sources__query_cefr_level` |
 | Textbook citation | does the source actually say this? | `mcp__sources__search_text` (textbooks), `search_literary` (literary), `query_pravopys` (orthography), `query_wikipedia` |
 | File contents / line counts / function signatures | "this function takes (x, y, z)" | `Read`, `grep` / `ugrep`, `wc`, `head`/`tail` |
 | Build status, ship-readiness, in-flight tasks, git state | "module M is at gate G" | Monitor API at `localhost:8765/api/...` |
 | Word counts / target conformance | "this module has N words" | `scripts/audit/audit_module.py` + `scripts/audit/config.py` |
-| Stress marks | "ос+тання" | the deterministic `ukrainian-word-stress` annotator (NEVER hand-write) |
+| Stress marks | stress placement | `verify_stress` / `verify_stresses` (ULIF-first oracle); `query_sum20` for accented headwords (NEVER hand-write or guess) |
 | Test pass/fail | "tests pass" | `.venv/bin/pytest <path>` |
 | Lint clean | "this is ruff-clean" | `.venv/bin/ruff check <path>` |
 | HTML validity | "the HTML parses" | `python3 -c "from html.parser import HTMLParser; HTMLParser().feed(open('X.html').read())"` |
