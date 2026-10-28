@@ -30,7 +30,7 @@ from tests.test_word_card_assembly import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-ADVISED_HOLDING_CARDS = {"wc_02a5cjxcpbcf", "wc_cvkw5nzdg00n", "wc_bgr5q9c06wxg"}
+ADVISED_HOLDING_CARDS = {"wc_02a5cjxcpbcf", "wc_cvkw5nzdg00n", "wc_bgr5q9c06wxg", "wc_ppr39m6qsr4e"}
 
 
 def seed_registry(world):
@@ -151,7 +151,7 @@ def test_registry_writes_are_refused_in_the_primary_checkout():
     allocator.require_writable(ROOT / "batch_state" / "reports" / "probe.json")  # ignored scratch: allowed
 
 
-def test_committed_registry_is_the_reviewed_allocation_plus_three_holding_senses():
+def test_committed_registry_is_the_reviewed_allocation_plus_four_holding_senses():
     registry = foundation.load(ROOT / "registry/atlas/identity/registry.json")
     manifest = foundation.load(ROOT / "registry/atlas/pilot/pilot-v1.json")
     allocation = allocator.reviewed_allocation(registry, manifest)  # proved by the pinned v2 content digest
@@ -164,7 +164,7 @@ def test_committed_registry_is_the_reviewed_allocation_plus_three_holding_senses
     holders = {e["card_id"] for old, e in zip(allocation["entries"], registry["entries"], strict=True)
                if e["senses"] != old["senses"]}
     assert holders == ADVISED_HOLDING_CARDS
-    assert sum(len(json.loads(e["evidence"])["held_units"]) for e in appended) == 7
+    assert sum(len(json.loads(e["evidence"])["held_units"]) for e in appended) == 8
     foundation.allocation_check(manifest, registry)
 
 
@@ -195,15 +195,15 @@ def test_host_verify_and_append_are_no_ops_on_the_committed_registry(monkeypatch
     for append in (False, True):
         allocator.run(False, append, sources, vesum)
         report = json.loads(capsys.readouterr().out)
-        assert (report["registry_version"], report["holding_senses"], report["holding_appended_now"]) == (3, 3, 0)
-        assert report["holding_obligations"] == 3 and report["holding_obligations_unmet"] == 0
+        assert (report["registry_version"], report["holding_senses"], report["holding_appended_now"]) == (3, 4, 0)
+        assert report["holding_obligations"] == 4 and report["holding_obligations_unmet"] == 0
         assert report["allocated_pilot_senses"] == 155 and report["pilot_units"] == 150
     assert path.read_bytes() == before
 
 
 # --- R3-F1: the frozen identity allocation assembly may consume ---------------------------------------------
 
-ASSEMBLY_LITERAL = "438b54e1995e5069076fb997454f6c3205fa4b5580dd7225ba86e3d295871ee6"
+ASSEMBLY_LITERAL = "e07f1e9c60d356e2b97d92f6b1f409be58bbcc6401f3458e247f9d8ec728fc9d"
 LATER = "later-snapshot@sha256:" + "f" * 64
 
 
@@ -287,9 +287,9 @@ def test_r3f1_identity_anchor_is_derived_from_the_committed_allocation():
     assert foundation.digest(projection) == ASSEMBLY_LITERAL == allocator.ASSEMBLY_ALLOCATION_DIGEST
     # Part one of its trust: the reviewed v2 allocation inside it, unchanged.
     assert foundation.digest(allocator.reviewed_allocation(registry, manifest)) == allocator.PILOT_ALLOCATION_DIGEST
-    # The assembler's own binding of the committed allocation: 150 units, 155 seed + 3 holding senses.
+    # The assembler's own binding of the committed allocation: 150 units, 155 seed + 4 holding senses.
     entry_by_unit, sense_events = wa.pilot_allocation(manifest, registry)
-    assert len(entry_by_unit) == 150 and len(sense_events) == 158
+    assert len(entry_by_unit) == 150 and len(sense_events) == 159
 
 
 @pytest.mark.parametrize("tamper", [None, *IDENTITY_TAMPERS])

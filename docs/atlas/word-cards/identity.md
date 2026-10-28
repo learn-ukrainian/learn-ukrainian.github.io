@@ -153,6 +153,43 @@ Inputs per candidate: VESUM entry (lemma, pos, tags, stripped form set, comment 
 
 Spelling equality is a precondition of step 1, never sufficient by itself. Every match records its `mapping.basis` (`entry`, `paradigm`, `stress`, `sense`, `overlay`, `curator`, `spelling`); a spelling-keyed row (PULS, kaikki, ukrainian-word-stress, GRAC estimates) on a spelling with more than one card is `ambiguous` unless stress or sense evidence picks the card, and ambiguous rows never feed eligibility (`schema.md` §9.5).
 
+### Pilot meaning inputs (#11627)
+
+The pilot assembler reads SUM-20 and admitted VTS witnesses after the VESUM/ULIF
+identity decision. These dictionaries never change that decision. Source lookups
+use the local read-only store binding. The VTS database stores bounded text;
+the assembler uses the held full cache only when its dictionary, word, URL and
+SHA-256 agree with the admitted database row. It never fetches or follows a
+dictionary reference.
+
+Spelling finds candidates. Explicit source headword, stress, grammatical class
+and aspect must then identify one compatible ULIF homonym and one source
+partition. Roman numbers remain source-local. An implicit or ambiguous partition,
+missing grammatical evidence, quarantine or unavailable full witness stays
+unresolved. Proper-name candidates cannot borrow common-word meanings.
+
+Each accepted article partition is retained verbatim as `definition_uk` on the
+card's allocated `unsplit` sense, including its numbered meanings, shades,
+labels and examples. The source ID, snapshot, locator and sense map preserve
+the partition. Cross-source sense alignment remains unresolved and grants no
+practice eligibility. The existing `allocate_pilot_identities --append-holding`
+step adds a missing container before assembly, preserving all earlier senses and
+events. The build reports `unsplit_sense_unallocated` if that step is omitted;
+it never borrows a seeded sense or allocates an identity. These supplemental
+witnesses use content-bound attribution, like
+VESUM; they have no persistent `sr_` correspondence or source-record selector.
+Whole-source and assertion-content suppression still apply.
+
+The generator's host-only `meanings.json` accounts for all 135 lexical inputs,
+including excluded proper names, separately from the 15 MWEs. Each row gives
+the existing identity confidence, SUM-20/VTS `has` and `used`, typed reasons,
+and all retained source partitions with their text and source URL. `has` means
+an exact-spelling article is held, including when lexeme correspondence is
+unresolved; `used` means its partition appears on this card. Totals count cards,
+so one held spelling may be counted for several unresolved homonym candidates.
+Neither this report nor the mechanics-only batch receipt certifies the pilot
+or changes its publication pin.
+
 ## 5. The cases, with measured examples
 
 **A. Two words (homographs): `замок`.** VESUM 128972/128973 differ in genitive (`замка`/`замку`) and stress; ULIF 76793/76792 differ the same way (`замка́`/`за́мку`). Two lexeme cards (`high`), plus a proper-name card for `Замок`/`За́мок`. Today's single article (`gloss castle / lock`, stress `за́мок`, Караванський synonyms `фортеця, бастіон, цитадель, шато`) is split; the curated side file already says so.
