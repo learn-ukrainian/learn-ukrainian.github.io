@@ -218,6 +218,10 @@ source-entry provenance, HTTP status and UTC check date. `free_only` requires
 an explicit free resource or free audio fact; missing access stays `unknown`.
 It does not prove present availability or include premium notes. `live_only`
 requires a recorded successful HTTP check, whose date remains visible.
+Ingest classifies each link with the evidence pack's honest identifying checker
+(bounded retries, `Retry-After`): `link_check` is `live`, `dead_link` (404/410),
+`bot_blocked` (401/403), `unverifiable` (other statuses, exhausted retries or
+connection failures), `not_applicable` (`sources://`) or `not_checked`.
 
 ULP/FMU rows have `access: mixed`, `audio_access: free` and `notes_access: premium`.
 Podcast page aliases (`/lesson/2/`, `/episode2/`) share a canonical URL.
