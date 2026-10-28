@@ -219,7 +219,7 @@ def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: st
     assert dispatch["options"] == ["bounded", "full-history-audit"]
     scan = workflow["jobs"]["secret-scan"]
     context = {
-        "github": {"event_name": event},
+        "github": {"event_name": event, "token": "read-token"},
         "inputs": {} if mode is None else {"secret_scan_mode": mode},
         "needs": {"reuse": {"outputs": {"reuse": "false"}}},
     }
@@ -227,6 +227,7 @@ def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: st
     assert _condition(scan["if"], context)
     scope = next(step for step in scan["steps"] if step.get("id") == "secret-scan-scope")
     assert _interpolate(scope["env"]["DISPATCH_SCAN_MODE"], context) == (mode or "")
+    assert _interpolate(scope["env"]["GH_TOKEN"], context) == ("read-token" if event == "schedule" else "")
     assert "if" not in scope
     scanner = next(
         step for step in scan["steps"] if str(step.get("uses", "")).startswith("trufflesecurity/trufflehog@")
@@ -234,6 +235,25 @@ def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: st
     assert "if" not in scanner
     assert scanner["uses"] == "trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9"
     assert scanner["with"]["version"] == "3.99.0"
+
+    # Artifact publication is the coverage receipt. It follows a successful
+    # scanner and is unavailable to PRs, queue runs, branches and bounded dispatch.
+    record = next(step for step in scan["steps"] if step.get("name") == "Record successfully scanned head")
+    upload = next(step for step in scan["steps"] if step.get("name") == "Save successfully scanned head")
+    assert scan["steps"].index(scanner) < scan["steps"].index(record) < scan["steps"].index(upload)
+    assert record["env"]["SCANNED_HEAD"] == "${{ steps.secret-scan-scope.outputs.trufflehog_head }}"
+    assert upload["with"]["name"] == "secret-scan-covered-head-v1"
+    for branch in ("main", "feature"):
+        for status in ("success", "failure", "cancelled"):
+            context["github"].update(ref=f"refs/heads/{branch}", event={"repository": {"default_branch": "main"}})
+            context["job"] = {"status": status}
+            expected = (
+                status == "success"
+                and branch == "main"
+                and (event == "schedule" or (event == "workflow_dispatch" and mode == "full-history-audit"))
+            )
+            assert _condition(record["if"], context) is expected
+            assert _condition(upload["if"], context) is expected
 
 
 # --- ci.yml job simulation -------------------------------------------------
