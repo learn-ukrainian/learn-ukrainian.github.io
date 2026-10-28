@@ -22,7 +22,12 @@ LINKS = (*(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum")), "
 def test_real_npm_ci_cannot_corrupt_primary_install(layout, tmp_path, relative):
     """A normal install must clean only its own dependencies, even without the shim."""
     primary, worktree = layout
-    npm = shutil.which("npm", path=os.defpath)
+    shim_dirs = {("agent_runtime", "shims"), ("dispatcher", "npm_shims")}
+    tool_path = os.pathsep.join(
+        entry for entry in os.environ.get("AGENT_ORIGINAL_PATH", os.environ.get("PATH", os.defpath)).split(os.pathsep)
+        if Path(entry).resolve().parts[-2:] not in shim_dirs
+    )
+    npm = shutil.which("npm", path=tool_path)
     assert npm is not None, "real npm is required for the corruption regression"
     target = primary / relative
     (target / "sentinel").write_text("primary dependency")
@@ -39,7 +44,7 @@ def test_real_npm_ci_cannot_corrupt_primary_install(layout, tmp_path, relative):
     result = subprocess.run(
         [npm, "ci", "--offline", "--ignore-scripts", "--no-audit", "--no-fund"],
         cwd=local.parent,
-        env={"PATH": os.defpath, "HOME": str(tmp_path), "npm_config_cache": str(tmp_path / "npm-cache"),
+        env={"PATH": tool_path, "HOME": str(tmp_path), "npm_config_cache": str(tmp_path / "npm-cache"),
              "npm_config_userconfig": str(tmp_path / "user.npmrc"),
              "npm_config_globalconfig": str(tmp_path / "global.npmrc")},
         capture_output=True, text=True, timeout=30,
@@ -75,7 +80,7 @@ def run_git(repo, *args):
 
 @pytest.mark.parametrize("full_checkout", [False, True])
 def test_creation_and_recreation_provision_clean_reapable_links(layout, full_checkout):
-    """Missing dependencies, dirty ignored links, and fix-round omissions must fail."""
+    """Database links and dependency isolation must survive creation and fix rounds."""
     primary, _unused = layout
     run_git(primary, "init", "-b", "main")
     run_git(primary, "config", "user.name", "Fixture")
@@ -109,13 +114,14 @@ def test_creation_and_recreation_provision_clean_reapable_links(layout, full_che
 def test_existing_destination_is_never_overwritten(layout, kind):
     """Provisioning must preserve real entries and both live and dangling links."""
     primary, worktree = layout
-    entry = worktree / "node_modules"
+    entry = worktree / "data/sources.db"
+    entry.parent.mkdir(parents=True, exist_ok=True)
     if kind == "file":
         entry.write_text("keep")
     elif kind == "directory":
         entry.mkdir()
     else:
-        entry.symlink_to(primary / ("node_modules" if kind == "link" else "absent"))
+        entry.symlink_to(primary / ("data/sources.db" if kind == "link" else "absent"))
     before = entry.lstat()
     git.provision_links(primary, worktree)
     assert entry.lstat() == before
@@ -130,7 +136,7 @@ def test_missing_targets_are_not_linked(tmp_path):
     assert list(worktree.iterdir()) == []
 
 
-@pytest.mark.parametrize("side,relative", [("source", "node_modules"), ("source", "data"), ("destination", "data")])
+@pytest.mark.parametrize("side,relative", [("source", "data/sources.db"), ("source", "data"), ("destination", "data")])
 def test_symlink_escape_is_refused(layout, tmp_path, side, relative):
     """Source symlinks and destination ancestor links must not escape checkout boundaries."""
     primary, worktree = layout
