@@ -7,15 +7,26 @@ import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.result import ParseResult
 from agent_runtime.runner import invoke
 from agent_runtime.telemetry import (
+    _reset_version_cache_for_tests,
     resolve_dispatch_start_telemetry,
     resolve_invocation_telemetry,
 )
+
+
+@pytest.fixture(autouse=True)
+def _isolate_version_cache():
+    """Keep mocked probe results from leaking between tests or xdist batches."""
+    _reset_version_cache_for_tests()
+    yield
+    _reset_version_cache_for_tests()
 
 
 def test_resolve_dispatch_start_telemetry_codex_model_from_registry_effort_from_config(tmp_path, monkeypatch):

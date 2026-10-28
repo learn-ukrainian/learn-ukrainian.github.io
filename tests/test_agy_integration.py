@@ -8,7 +8,7 @@ silently strip ``agy`` from ``ab discuss --with``.
 
 from __future__ import annotations
 
-import subprocess
+import json
 import sys
 import uuid
 from pathlib import Path
@@ -16,12 +16,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from tests.helpers.python import project_python
-
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-
-
-_TEST_PYTHON = project_python()
 
 
 def _ensure_scripts_path() -> None:
@@ -73,13 +68,16 @@ def discuss_bridge(monkeypatch: pytest.MonkeyPatch) -> None:
     _channels.create_channel("agy-topic", exist_ok=True)
 
 
-def test_delegate_dispatch_accepts_agy_agent():
-    """``dispatch.py dispatch --agent agy ...`` must parse without error."""
+def test_delegate_dispatch_accepts_agy_agent(tmp_path, monkeypatch, capsys):
+    """The v2 parser and dry-run accept AGY regardless of checkout refs."""
+    from scripts.dispatcher import cli, git
+
     task_id = f"test-agy-argparse-probe-{uuid.uuid4().hex}"
-    result = subprocess.run(
+    monkeypatch.setattr(
+        git, "worktree_plan", lambda *args, **kwargs: (tmp_path / task_id, f"agy/{task_id}", "a" * 40),
+    )
+    result = cli.main(
         [
-            _TEST_PYTHON,
-            str(_REPO_ROOT / "scripts" / "dispatch.py"),
             "dispatch",
             "--agent",
             "agy",
@@ -94,16 +92,13 @@ def test_delegate_dispatch_accepts_agy_agent():
             "ukrainian-authoring",
             "--dry-run",
         ],
-        capture_output=True,
-        text=True,
-        timeout=30,
-        cwd=str(_REPO_ROOT),
     )
-    assert result.returncode == 0, (
-        f"delegate dispatch --agent agy failed:\n"
-        f"stdout={result.stdout!r}\nstderr={result.stderr!r}"
-    )
-    assert task_id in result.stdout
+    captured = capsys.readouterr()
+    assert result == 0, f"dispatch --agent agy failed:\n{captured.out}\n{captured.err}"
+    assert task_id in captured.out
+    plan = json.loads(captured.out)
+    assert plan["argv"][0] == "agy"
+    assert plan["argv"][plan["argv"].index("--model") + 1] == "gemini-3.8-flash-high"
 
 
 def test_ab_discuss_accepts_agy_in_multi_participant_list(discuss_bridge, monkeypatch):
