@@ -21,6 +21,7 @@ MARKER = (
     "verdict=BLOCKED model=gpt-6.1-sol family=openai -->"
 )
 COMMENT_VERBS = [
+    ("comment-edit", {"comment_id": 7}),
     ("issue-comment", {"number": 1}),
     ("issue-comment-json", {"number": 1}),
     ("pr-comment", {"number": 1}),

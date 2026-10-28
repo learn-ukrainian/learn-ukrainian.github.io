@@ -104,6 +104,7 @@ VERBS = [
     ("issue-edit", {"number": 1, "title": "clean", "body": "clean", "milestone": "unit"}),
     ("issue-comment", {"number": 1, "body": "clean"}),
     ("issue-comment-json", {"number": 1, "body": "clean"}),
+    ("comment-edit", {"comment_id": 7, "body": "clean"}),
     ("issue-close", {"number": 1, "comment": "clean"}),
     ("pr-create", {"title": "clean", "body": "clean", "base": "main", "head": "unit"}),
     ("pr-edit", {"number": 1, "title": "clean", "add_labels": ["unit"], "remove_labels": ["old"]}),
@@ -139,6 +140,7 @@ def test_each_typed_verb_delivers_fixed_payload(synthetic_opsec, verb, fields, g
             ("POST", "repos/unit/public/issues/1/comments", {"body": "clean"}),
             ("PATCH", "repos/unit/public/issues/1", {"state": "closed"}),
         ],
+        "comment-edit": [("PATCH", "repos/unit/public/issues/comments/7", {"body": "clean"})],
     }
     if verb in expected_requests:
         from scripts.common.github_client import Response
@@ -209,7 +211,7 @@ def test_schema_refuses_invalid_operands(fields):
         pub.publish("issue-edit", runner=lambda *a, **k: pytest.fail("send"), **fields)
 
 
-@pytest.mark.parametrize("verb", ["issue-comment", "pr-comment", "pr-review", "pr-merge", "pr-create"])
+@pytest.mark.parametrize("verb", ["issue-comment", "pr-comment", "pr-review", "pr-merge", "pr-create", "comment-edit"])
 @pytest.mark.parametrize("source_kind", ["absolute", "relative", "stdin"])
 def test_body_inputs_are_frozen_and_transport_paths_not_scanned(
     synthetic_opsec, tmp_path, monkeypatch, verb, source_kind
@@ -227,14 +229,58 @@ def test_body_inputs_are_frozen_and_transport_paths_not_scanned(
     fields = {"body_file": str(body) if source_kind == "absolute" else body.name if source_kind == "relative" else "-"}
     if verb == "pr-create":
         fields.update(title="clean", base="main", head="unit")
+    elif verb == "comment-edit":
+        fields["comment_id"] = 7
     else:
         fields["number"] = 1
     if verb == "pr-review":
         fields["verdict"] = "approve"
     calls = []
     pub.publish(verb, repo="unit/public", cwd=tmp_path, stdin=expected, runner=spy(calls), **fields)
-    assert calls[0]["--body-file"] == expected
-    assert not Path(calls[0]["argv"][calls[0]["argv"].index("--body-file") + 1]).exists()
+    flag = "--input" if verb == "comment-edit" else "--body-file"
+    sent = calls[0][flag]
+    if verb == "comment-edit":
+        sent = json.loads(sent)["body"].encode("utf-8")
+    assert sent == expected
+    assert not Path(calls[0]["argv"][calls[0]["argv"].index(flag) + 1]).exists()
+
+
+@pytest.mark.parametrize("comment_id", [0, -1, True, "7", None, 1.5, "7/../../issues/1"])
+def test_comment_edit_invalid_id_cannot_mutate(comment_id):
+    with pytest.raises(gate.PublishBlocked, match="invalid publisher field comment_id"):
+        pub.publish("comment-edit", repo="unit/public", comment_id=comment_id, body="clean",
+                    runner=lambda *a, **k: pytest.fail("send"))
+
+
+@pytest.mark.parametrize("fields", [
+    {"body": "clean"}, {"comment_id": 7},
+    {"comment_id": 7, "body": "clean", "body_file": "reply.md"},
+    {"comment_id": 7, "body": "clean", "number": 1},
+])
+def test_comment_edit_missing_or_conflicting_fields_cannot_mutate(fields):
+    with pytest.raises(gate.PublishBlocked):
+        pub.publish("comment-edit", repo="unit/public", **fields,
+                    runner=lambda *a, **k: pytest.fail("send"))
+
+
+@pytest.mark.parametrize("interface", ["python", "cli"])
+def test_comment_edit_same_id_exact_body_and_failure_cleanup(synthetic_opsec, interface):
+    body = "clean\r\nexact UTF-8 é\n--body=literal"
+    calls = []
+
+    def send(argv, **kwargs):
+        assert argv[:6] == ["gh", "api", "--method", "PATCH", "repos/unit/public/issues/comments/7", "--input"]
+        payload_path = Path(argv[6])
+        assert json.loads(payload_path.read_bytes()) == {"body": body}
+        calls.append(payload_path)
+        return subprocess.CompletedProcess(argv, 1, "", "fixture failure")
+
+    if interface == "python":
+        result = pub.publish("comment-edit", repo="unit/public", comment_id=7, body=body, runner=send)
+        assert result.returncode == 1
+    else:
+        assert pub.main(["comment-edit", "--repo", "unit/public", "--comment-id", "7", "--body", body], runner=send) == 1
+    assert len(calls) == 1 and not calls[0].exists()
 
 
 @pytest.mark.parametrize("verb", ["release-create", "release-upload", "gist-create"])
@@ -783,14 +829,15 @@ if len(rows)==1:
     assert len(log.read_text().splitlines()) == 1 and TOKEN not in log.read_text()
 
 
-def test_checker_exception_is_typed_and_never_sends(monkeypatch):
+@pytest.mark.parametrize("verb,selector", [("issue-comment", {"number": 1}), ("comment-edit", {"comment_id": 7})])
+def test_checker_exception_is_typed_and_never_sends(monkeypatch, verb, selector):
     def broken(*a, **k):
         raise RuntimeError(TOKEN)
 
     monkeypatch.setattr(gate, "check_texts", broken)
     with pytest.raises(gate.PublishBlocked, match="checker unavailable") as error:
         pub.publish(
-            "issue-comment", repo="unit/public", number=1, body="clean", runner=lambda *a, **k: pytest.fail("send")
+            verb, repo="unit/public", **selector, body="clean", runner=lambda *a, **k: pytest.fail("send")
         )
     assert TOKEN not in str(error.value)
 
