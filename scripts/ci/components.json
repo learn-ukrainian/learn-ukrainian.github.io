@@ -720,12 +720,6 @@
       ]
     },
     {
-      "path": ".entire/",
-      "components": [
-        "shared-core"
-      ]
-    },
-    {
       "path": ".gemini/",
       "components": [
         "harness"
@@ -989,12 +983,6 @@
       "path": "scripts/curriculum/",
       "components": [
         "curriculum-generation"
-      ]
-    },
-    {
-      "path": "scripts/entire_context/",
-      "components": [
-        "harness"
       ]
     },
     {

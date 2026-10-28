@@ -17,8 +17,8 @@ comments**. It must **never**:
 - act as CF of record
 - write the primary checkout (local-computer: **Never** / **Ask** only)
 
-It is **not** a second Grok orchestrator, not a substitute for cross-family PR
-review, and not Entire-cloud.
+It is **not** a second Grok orchestrator and not a substitute for cross-family PR
+review.
 
 ## Grok dispatch seat
 

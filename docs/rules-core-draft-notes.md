@@ -73,7 +73,6 @@ units below. Each restoration sits at the unit's own anchor unless another ancho
 | p6-orders | Y26 (stop when a wrong guess would make the work useless) |
 | p6-approval | O25's and F11's clause (approval is current), W38 (same PR) |
 | p6-escalate | E24 (to the operator and advisors, never decided in the loop) |
-| p7-start | A28 (status **and** one bounded search, on non-trivial work, before prioritizing or dispatch; record only verified use) |
 | p9-ukrainian | U01 (other Slavic languages too, only in scoped history seminars) |
 | p9-russianism | U24 (proper nouns and borrowings excluded) |
 | r2-quality | O01 (no shortcuts, heuristics or "for now"), N40 (these fail the task), Eq12 (strict order incl. resource bounds) |

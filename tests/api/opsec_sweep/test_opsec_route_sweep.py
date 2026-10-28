@@ -367,12 +367,10 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # project_state_router._collect_missing_local_document's existing broad
     # except already treats as a failed collection, so the route degrades to
     # its documented "unknown" shape without a route-specific stub.
-    # NOTE (#7269 step 8): git_hygiene_router._run_git, the three
-    # entire_context_router provider/projection stubs, and
+    # NOTE (#7269 step 8): git_hygiene_router._run_git and
     # worktree_containment.primary_checkout_dirty_status are gone. Hygiene
     # routes treat the global denied-subprocess AssertionError as
-    # git-unavailable; entire-context reads the fixture root and degrades
-    # to projection_missing / provider_status_missing; core_router's
+    # git-unavailable; core_router's
     # existing except around primary_checkout_dirty_status already
     # degrades that collector.
     monkeypatch.setattr(

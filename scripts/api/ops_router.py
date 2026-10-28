@@ -12,13 +12,11 @@ from fastapi import APIRouter, Depends, Query
 from scripts.common import test_slots
 
 from . import load_samples
-from .entire_context_router import router as entire_context_router
 from .monitor_context import MonitorContext, get_ctx
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["ops"])
-router.include_router(entire_context_router, prefix="/entire-context")
 
 
 def _plan_dir(ctx: MonitorContext) -> Path:

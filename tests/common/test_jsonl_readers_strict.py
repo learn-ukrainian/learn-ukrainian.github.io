@@ -22,13 +22,7 @@ def test_strict_reader_preserves_records_and_rejects_interior_blanks(module_name
     module = importlib.import_module(module_name)
     fn = getattr(module, function)
     record = {"probe": VALUE, "form": VALUE}
-    # Frozen release readers retain their original separator semantics. Use
-    # escaped JSON for those ordinary-newline/blank-record checks; mutable
-    # readers additionally preserve literal Unicode separators.
-    frozen = module_name in {
-        "scripts.projects.ua_eval_harness.run_model_batch",
-    }
-    raw = json.dumps(record, ensure_ascii=frozen)
+    raw = json.dumps(record, ensure_ascii=False)
     path = tmp_path / "fixture.jsonl"
     path.write_bytes((raw + ending).encode())
     value = raw + ending if function == "_cached_jsonl_records" else path

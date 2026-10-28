@@ -288,7 +288,6 @@ core:
   # p6-escalate
   E24: p6-escalate
   # p7-start
-  A28: p7-start
   Eo06: p7-start
   # p7-health
   W29: p7-health

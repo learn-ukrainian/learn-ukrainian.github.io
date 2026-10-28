@@ -110,9 +110,6 @@ non-skippable:
   stream as a catalogued alternate; it must never co-own a live same-stream
   lease. Otherwise its role is coding or review. Do not change plane, retention,
   or formal-review eligibility without operator/advisor GO.
-- On non-trivial work, use the `entire-context` skill: run status and one
-  bounded search before prioritization or dispatch. Treat results as body-free,
-  supplemental locators; record use only when a verified locator informed work.
 - Before delegation, classify role, task family, track, and owned paths for the
   Project Research Registry. Before every `dispatch.py dispatch`, the accountable
   orchestrator records a scoped classification using `--research-role`,

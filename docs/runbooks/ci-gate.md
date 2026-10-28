@@ -72,10 +72,11 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
 | Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
 | PR changed tests and guards | PRs execute changed test files and all explicit guards; full tiers exit without duplicate execution. |
-| Frontend | Full tier only. Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. |
+| Frontend | Full tier only. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
+| Refresh pytest durations | Full tier only. Freezes one file-weight snapshot for every shard (below). |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
-| pytest report | Whole-run checks over every shard; records the tested tree, commit, PR and run. |
-| CI Gate | `if: always()`; fails on any job result other than the expected one. |
+| pytest report | Whole-run checks over every shard; records the tested tree, commit, PR and run, then the runner-normalized file durations. |
+| CI Gate | `if: always()`; fails on any job result other than the expected one. Also runs the large-file guard and attribution on a sparse, full-history checkout (below). |
 
 `ci-advisory.yml` (pull_request only, never required) carries the advisory
 checks: TypeSafe triage (#8232), Atlas POC richness (#3930) and the diff-scoped
@@ -162,6 +163,15 @@ it reports after failed or cancelled dependencies.
 Queue runs never reuse PR results. The tested-tree artifact remains an audit
 record of the candidate and its partition results.
 
+The gate's checkout keeps full history but is sparse (`scripts/` and
+`.python-version`). `actions/checkout` then fetches with `filter: blob:none`, so
+it downloads commits and trees, not the 700 MB working tree: in run
+40633770801 the full checkout took 29 s, and 4 min 06 s in the outlier run
+40610924205. The large-file guard sizes every added or modified blob as before;
+`check_large_files.py` first fetches the blobs the partial clone lacks in one
+request, instead of one round trip per blob. Attribution reads commits and
+fetches PR heads exactly as before; `merge-tree` fetches any blob it needs.
+
 The queue metadata job publishes `ci-queue-candidate`, binding the event's original
 base and candidate to the workflow run and attempt. For recovery, compare these
 immutable SHAs, then inspect that complete base-to-head diff against the failing tests, code,
@@ -241,12 +251,27 @@ files; those are imported only with `import type`, which the compiler erases.
   smokes in `tests/test_work_dashboard_private_integration.py` take a file
   lock in the run's shared temp root. Without the lock, one of them skipped
   with "ports busy" in every new-workflow run.
-- A stale durations file only costs balance, never coverage. Refresh it from a
-  full run's JUnit when shard times drift:
+- Weights never change which files run; a wrong weight only costs balance.
+  `Refresh pytest durations` takes the median of the last five successful
+  merge-group `pytest-file-durations` artifacts (downloaded concurrently),
+  keeping committed weights for files they do not name, and every shard reads
+  that one snapshot.
+- Hosted runners differ in speed. In run 40633770801 seven shards ran their
+  files at 0.56–0.72x their usual seconds and seventeen at 0.88–1.11x, so raw
+  seconds recorded the runner as much as the test. Each shard therefore writes
+  the weights it was split with (`split --weights-out`) into its artifact, and
+  `pytest report` records `durations --shards`: each shard's seconds divided by
+  that shard's speed, the median observed/expected ratio over its files with at
+  least 2 s of weight (1.0 when fewer than ten qualify, e.g. a shard holding one
+  large file). The report log prints every shard's speed. A listed file that ran
+  no test records 0, so files the tier deselects (the nightly `slow` groups in
+  `tests/conftest.py`) stop carrying weight. The slowest shard still depends on
+  which runner it draws; static splitting cannot know that in advance.
+- To rebuild the committed file from one full run:
 
   ```bash
   gh run download <run-id> --pattern 'pytest-junit-shard-*' --dir /tmp/junit
-  .venv/bin/python -m scripts.ci.split_tests durations /tmp/junit/*/*.xml > scripts/ci/pytest-file-durations.json
+  .venv/bin/python -m scripts.ci.split_tests durations --shards /tmp/junit > scripts/ci/pytest-file-durations.json
   ```
 
 ### History shard
@@ -275,8 +300,12 @@ to the list.
 
 To change the shard count, edit the static `matrix.shard` list (it must stay
 `1..N`). `scripts/ci/slot_inventory.py --check` (actionlint workflow) counts
-every PR-path job against the 58-slot ceiling (GitHub Team: 60 concurrent
-jobs, two reserved).
+every PR-path job against the slot ceiling set in that script, which keeps a
+margin for incident response. It counts each workflow's jobs once, as if one
+run of each were in flight. It does not model overlapping runs, such as
+several merge-queue builds next to PR CI and other workflows. A passing
+inventory is therefore not proof of capacity for a build-concurrency change;
+see D3 in [`ci-speed-program.md`](../epics/ci-speed-program.md).
 
 ## Shard setup
 

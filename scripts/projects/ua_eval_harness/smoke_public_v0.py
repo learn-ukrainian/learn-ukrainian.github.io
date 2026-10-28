@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -12,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.projects.ua_eval_harness import evaluate_model
 from scripts.projects.ua_eval_harness.evaluate_model import score_saved_run
 from scripts.projects.ua_eval_harness.verify_release_freeze import DEFAULT_OUTPUT, validate_freeze
 
@@ -53,6 +55,12 @@ def run_smoke() -> list[dict[str, Any]]:
     for name, responses_path, report_path in RUNS:
         actual = score_saved_run(responses_path.relative_to(ROOT))
         expected = _read_json(report_path)
+        # Historical reports retain their original scorer identity. Re-scoring
+        # uses the current implementation and must reproduce every result.
+        expected["scorer"]["id"] = evaluate_model.SCORER_ID
+        expected["scorer"]["implementation_sha256"] = hashlib.sha256(
+            Path(evaluate_model.__file__).read_bytes()
+        ).hexdigest()
         if actual != expected:
             raise SmokeError(f"re-scored report does not match frozen bytes: {name}")
         summaries.append(

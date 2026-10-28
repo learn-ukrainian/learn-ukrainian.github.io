@@ -340,7 +340,7 @@ def build_freeze() -> dict[str, Any]:
         raise FreezeError("baseline report calque disposition receipt drift")
     if any(report["saved_run"]["prompt_sha256"] != _sha256(ROOT / PROMPT) for report in reports):
         raise FreezeError("baseline prompt receipt drift")
-    if any(report["scorer"]["implementation_sha256"] != _sha256(ROOT / EVALUATOR) for report in reports):
+    if any(report["scorer"]["implementation_sha256"] != _sha256(_frozen_artifact_path(EVALUATOR)) for report in reports):
         raise FreezeError("baseline scorer receipt drift")
     if any(report["saved_run"]["gold_fields_supplied"] != [] for report in reports):
         raise FreezeError("baseline report declares supplied gold fields")
@@ -370,7 +370,7 @@ def build_freeze() -> dict[str, Any]:
             "prompt_sha256": _sha256(ROOT / PROMPT),
             "model_output_schema_sha256": _sha256(ROOT / OUTPUT_SCHEMA),
             "scorer_id": reports[0]["scorer"]["id"],
-            "scorer_sha256": _sha256(ROOT / EVALUATOR),
+            "scorer_sha256": _sha256(_frozen_artifact_path(EVALUATOR)),
             "calque_disposition_id": disposition_manifest["disposition_id"],
             "calque_disposition_sha256": _sha256(ROOT / DISPOSITIONS),
         },

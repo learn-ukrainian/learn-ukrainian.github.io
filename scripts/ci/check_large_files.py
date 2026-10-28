@@ -112,6 +112,67 @@ def batch_check_blob_sizes(shas: list[str], cwd: Path, timeout: int = 30) -> dic
     return sizes
 
 
+def prefetch_missing_blobs(shas: list[str], cwd: Path, timeout: int = 60) -> None:
+    """Fetch, in one request, the blobs a partial clone does not hold yet.
+
+    CI Gate checks out a sparse, blobless clone; ``cat-file --batch-check`` would
+    otherwise fetch each missing blob on its own round trip. The command is the one
+    git runs for its own promisor fetches. A full clone holds every blob and skips this.
+    """
+    promisors = subprocess.run(
+        ["git", "config", "--type=bool", "--get-regexp", r"^remote\..*\.promisor$"],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=timeout,
+    ).stdout.split("\n")
+    remotes = [
+        key.removeprefix("remote.").removesuffix(".promisor")
+        for key, _, value in (line.partition(" ") for line in promisors)
+        if value == "true"
+    ]
+    if len(remotes) != 1 or not shas:
+        return
+    remote = remotes[0]
+    listed = subprocess.run(
+        ["git", "rev-list", "--objects", "--no-walk", "--missing=print", "--stdin"],
+        input="".join(f"{sha}\n" for sha in shas),
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=timeout,
+    )
+    if listed.returncode != 0:
+        raise RuntimeError(f"Git rev-list --missing=print failed: {listed.stderr.strip()}")
+    missing = [line[1:] for line in listed.stdout.splitlines() if line.startswith("?")]
+    if not missing:
+        return
+    fetched = subprocess.run(
+        [
+            "git",
+            "-c",
+            "fetch.negotiationAlgorithm=noop",
+            "fetch",
+            remote,
+            "--no-tags",
+            "--no-write-fetch-head",
+            "--recurse-submodules=no",
+            "--filter=blob:none",
+            "--stdin",
+        ],
+        input="".join(f"{sha}\n" for sha in missing).encode("ascii"),
+        cwd=cwd,
+        capture_output=True,
+        check=False,
+        timeout=timeout,
+    )
+    if fetched.returncode != 0:
+        err = fetched.stderr.decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"Git fetch of {len(missing)} missing blobs failed: {err}")
+
+
 def resolve_commit(ref: str, cwd: Path) -> str:
     """Resolve a reference to a commit SHA."""
     try:
@@ -171,6 +232,7 @@ def check_changed_vs_base(
         return []
 
     unique_shas = list(dict.fromkeys(sha for _, sha in items_to_check))
+    prefetch_missing_blobs(unique_shas, cwd=repo_root)
     sizes_by_sha = batch_check_blob_sizes(unique_shas, cwd=repo_root)
 
     violations: list[tuple[str, int]] = []

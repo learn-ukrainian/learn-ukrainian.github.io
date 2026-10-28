@@ -35,7 +35,7 @@ The threshold for writing an ADR: **would a new engineer need to know this to un
 | [ADR-012](adr-012-code-driven-curriculum-lifecycle.md) | Code-driven curriculum lifecycle and prompts as versioned source | Proposed |
 | [ADR-013](adr-013-docs-knowledge-openwiki.md) | Docs-knowledge authority and conditional OpenWiki | Accepted |
 | [ADR-017](adr-017-atlas-schema-and-lifecycle.md) | Atlas projection schema and lifecycle | Accepted |
-| [ADR-018](adr-018-entire-acp-context-layer.md) | Entire is an optional context index, not a control plane | Accepted |
+| [ADR-018](adr-018-entire-acp-context-layer.md) | Entire is an optional context index, not a control plane | Superseded (integration removed, C-2928) |
 <!-- ADR-INDEX-END -->
 
 ## Template

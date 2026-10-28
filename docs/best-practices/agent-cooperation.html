@@ -171,11 +171,6 @@ Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
 <td>Sole surface <code>acp-discuss</code>; no automatic launcher/delegate use, queue, retry, formal review, or authority</td>
 </tr>
 <tr>
-<td><strong>Entire context recall</strong></td>
-<td>Optional body-free historical discovery and provenance</td>
-<td>Local verified locator cards only; never coordination, source authority, rollover, Monitor, or formal review</td>
-</tr>
-<tr>
 <td><strong>Buzz</strong></td>
 <td><strong>Deferred</strong></td>
 <td>Relay-as-authority conflicts with the current model — out of scope</td>
@@ -819,28 +814,6 @@ Independent PR CF is <code>ask-&lt;lane&gt; --type review</code> with the verdic
 <p><strong>Detection scope (v1):</strong> verbatim source-name match (with permissive inflection across Cyrillic case endings) + headword extraction from the local window (italicized, code-fenced, quoted, or &quot;іменник X&quot; / &quot;слово X&quot; patterns). Multi-pattern same-source mentions within ~200 chars are de-duplicated to one citation. Out of scope (deferred): fuzzy-match of quoted text against source body content; LLM-based attribution detection; block-mode rejection. The v1 catches outright fabrication where the headword does not exist anywhere in the source corpus.</p>
 <p><strong>Implementation:</strong> <code>scripts/ai_agent_bridge/_citation_check.py</code> (detection + verification + annotation). Hook lives in <code>_channels.py:post()</code> — controlled by <code>verify_citations: bool = True</code> keyword. System/audit kinds (anything other than <code>post</code>/<code>reply</code>) skip verification automatically.</p>
 <p><strong>Graceful degradation:</strong> the verifier soft-skips if <code>data/sources.db</code> is missing (worktree without the data dir, fresh checkout, CI minimal env). Soft-skips never produce flags — they're recorded internally as &quot;verifier unavailable&quot; so a deployment problem cannot manufacture false positives.</p>
-<hr />
-<h2>Provider-neutral historical recall</h2>
-<p>At intake for a non-trivial task, the accountable root uses the public
-<a href="../../agents_extensions/shared/skills/entire-context/SKILL.md"><code>entire-context</code> skill</a>.
-The root runs local <code>status</code> and one bounded <code>search</code> before prioritization or
-dispatch. If verified locators materially help, it creates at most one
-five-card/8-KiB capsule and includes that same capsule in the relevant Codex,
-Claude/OpenCode, Kimi, GLM, Grok, or AGY participant briefs. A child does not
-repeat the broad search simply because it uses another provider.</p>
-<p>This is context distribution, not a new fleet plane. ACP still owns live
-discussion and terminal receipts; Git/GitHub own code history and disposition;
-Fleet/file handoffs own coordination; Monitor owns runtime state; rollover owns
-cross-session continuity; and sealed Fleet review owns the formal review gate.
-Search delivery is not proof of use. The root records <code>record-use</code> only after a
-verified locator materially informed planning, implementation, explanation,
-review, or handoff.</p>
-<p>Entire capture follows the host harness (<code>codex</code>, <code>claude-code</code>, <code>opencode</code>, or
-an explicitly proved external harness adapter), never a model label. The
-canonical seat-by-seat capture and recall matrix is in
-<a href="../runbooks/agent-seat-onboarding.md#entire-recall-onboarding-matrix"><code>agent-seat-onboarding.md</code></a>.
-Raw prompts, transcripts, responses, session bodies, generated recaps, and
-generated summaries never enter automatic context.</p>
 <hr />
 <h2>Session Start Checklist</h2>
 <p><strong>Canonical path (GH #1309):</strong> call the Monitor API. Do not open

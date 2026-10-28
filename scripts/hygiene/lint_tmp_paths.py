@@ -525,21 +525,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "3c5471bf57ce54b688cc0d43fe7eb378f6cab5d98f4ba088a634e81f41b0e877:1",
     ),
     (
-        "scripts/entire/install_fleet_external_agent.sh",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "c56cfefbf063a967029718ef699daba75bc10766c62bdf4bde8f1b09e00d62cc:1",
-    ),
-    (
-        "scripts/entire/install_kimi_external_agent.sh",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "c56cfefbf063a967029718ef699daba75bc10766c62bdf4bde8f1b09e00d62cc:1",
-    ),
-    (
-        "scripts/entire_context/provider.py",
-        "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
-        "4cc7b902cc415dd61c3d74ba553e504f7cf6a74eab02e6016a34917382dd894d:1",
-    ),
-    (
         "scripts/eval/uk_preamble/common.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "0d2fbd2aae689e4f994289f6bd8ca3358fd2bd1719c528d7a9220ed2b18c4917:1",

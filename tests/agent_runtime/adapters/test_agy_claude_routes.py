@@ -379,7 +379,6 @@ def mock_agy_provider(monkeypatch, tmp_path, runner, *, stdout, exit_kind="compl
     monkeypatch.setattr(runner, "resolve_invocation_telemetry", lambda **k: SimpleNamespace(
         model=k["requested_model"], effort="high", cli_version=version,
     ))
-    monkeypatch.setattr(runner.FleetCapture, "start", lambda **k: None)
     monkeypatch.setattr(runner.PrimaryTreeWatch, "start", lambda **k: None)
     monkeypatch.setattr(runner._ChildCwdPin, "start", lambda **k: None)
     monkeypatch.setattr(runner, "_prepare_spawn_command", lambda cmd, env: (cmd, env))

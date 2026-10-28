@@ -1,6 +1,9 @@
 # ADR-018: Entire is an optional context index, not a control plane
 
-**Status**: Accepted
+**Status**: Superseded — the Entire integration was removed from the repository, with no successor
+(operator decision 2026-10-27, C-2928). The body below is the historical record. The linked rollout plan,
+runbooks, code and the `evidence/entire-0115-canary/` receipts were deleted in the removal and remain in
+Git history.
 **Date**: 2026-08-01
 **Deciders**: Operator; Sol (`gpt-5.6-sol`)
 **Advisors**: Kimi K3; GLM-5.2; Codex Terra repository analyst

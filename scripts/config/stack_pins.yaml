@@ -1,6 +1,6 @@
 ---
 # Components Dependabot does not update. review_by is the next review, not an expiry.
-# Agent CLIs and Entire: 2026-10-30. Every other row: 2026-11-16.
+# Agent CLIs: 2026-10-30. Every other row: 2026-11-16.
 # pinned: unknown and source: host means the repository does not pin a version.
 pins:
   - name: claude-code
@@ -33,12 +33,6 @@ pins:
     owner: Infra
     review_by: "2026-10-30"
     note: No install pin. Background-wait floor is 1.2.9 in scripts/agent_runtime/adapters/agy.py.
-  - name: entire
-    pinned: "0.8.42"
-    source: scripts/entire_context/provider.py
-    owner: Infra
-    review_by: "2026-10-30"
-    note: REQUIRED_ENTIRE_VERSION. An acceptance record, not an expiry; a newer CLI needs the section 5 review.
   - name: gh
     pinned: unknown
     source: host

@@ -189,8 +189,8 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "deepseek": {
         # OpenCode → first-party api.deepseek.com (deepseek-direct/*) is the
-        # dispatch default (operator 2026-08-13): Flash default, --variant high,
-        # native Entire capture. Retired Pro model requests are refused.
+        # dispatch default (operator 2026-08-13): Flash default, --variant high.
+        # Retired Pro model requests are refused.
         # Bridge asks (`ask-deepseek`,
         # `ask-hermes` alias) ride the acpx-deepseek-shadow ACP seat on the
         # same first-party opencode route since the Hermes removal (operator

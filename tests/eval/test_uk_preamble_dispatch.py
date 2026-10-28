@@ -165,7 +165,7 @@ def test_matching_agy_parse_passes_eval_identity_check(
         env_overrides={"AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)},
         env_unsets=(),
         liveness_paths=(log_file,),
-        metadata={"entire_fleet": {"requested_model": seat.model}},
+        metadata={"requested_model": seat.model},
     )
     init = {"event": "init", "conversation_id": conversation_id}
     if reported_model is not None:

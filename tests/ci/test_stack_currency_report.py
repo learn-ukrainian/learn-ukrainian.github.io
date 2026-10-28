@@ -43,7 +43,6 @@ def test_qualifying_report_keeps_pin_names_and_version_pins_only() -> None:
     assert rows["python"] == ["python", "3.12.15", "9.8.7", "withheld"]
     assert rows["node"] == ["node", "22", "9.8.7", "withheld"]
     assert rows["postgresql"][1] == "16"
-    assert rows["entire"] == ["entire", "0.8.42", "9.8.7", "withheld"]
     assert rows["uv"][1] == "0.12.9"
     assert rows["uv"][3] == "withheld"
     assert rows["ci-literals"] == ["ci-literals", "withheld", "9.8.7", "withheld"]
@@ -54,7 +53,6 @@ def test_qualifying_report_keeps_pin_names_and_version_pins_only() -> None:
         "unknown",
         "ubuntu-latest",
         ".python-version",
-        "scripts/entire_context/provider.py",
         ".github/workflows/ci.yml",
         "gpt-6.1-sol",
         "kimi-code/k3",

@@ -257,7 +257,7 @@ def render_digest(
         f"Generated: {generated.strftime('%Y-%m-%dT%H:%M:%SZ')}",
         f"Sources: {len(sources)}",
         "Method: keyword extract (no LLM)",
-        "Ladder: shell digest (step 4). Prefer Monitor, GitHub+Fleet pulses, and Entire first.",
+        "Ladder: shell digest (step 3). Prefer Monitor and GitHub+Fleet pulses first.",
         "",
     ]
     if not sources:
