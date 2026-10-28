@@ -75,6 +75,15 @@ ANTONENKO_SOURCE_FILE = "antonenko-davydovych-yak-my-hovorymo"
 # The reviewed local Sources MCP streamable-HTTP endpoint (.mcp.json
 # "sources" server). Never a remote host — loopback only.
 DEFAULT_MCP_ENDPOINT = "http://127.0.0.1:8766/mcp"
+_ULIF_SECTIONS = ("paradigm", "synonyms", "antonyms", "phraseology")
+# query_ulif status -> escalation status; parse_error still names a stored headword.
+_ULIF_STATUS = {
+    "ok": "attested",
+    "parse_error": "attested",
+    "ambiguous": "attested",
+    "not_found": "not_found",
+    "unavailable": "unavailable",
+}
 DEFAULT_MCP_TIMEOUT_S = 30.0
 
 # Amendment step 3-6 plus step 7: the exact named tools the frozen query plan
@@ -426,7 +435,7 @@ class SourcesClient(Protocol):
         ...
 
     def ulif_cached(self, word: str) -> Mapping[str, Any]:
-        """Cache-only ULIF escalation lookup via MCP. ``{status, payload}``, never live HTTP."""
+        """Local-copy ULIF escalation lookup via MCP. ``{status, payload}``, never live HTTP."""
         ...
 
     def slovnyk_me_cached(self, word: str) -> Mapping[str, Any]:
@@ -836,10 +845,14 @@ class LocalMcpSourcesClient:
         }
 
     def ulif_cached(self, word: str) -> Mapping[str, Any]:
-        payload = self._call_json("query_ulif", {"word": word, "cache_only": True})
-        if not isinstance(payload, Mapping) or payload.get("status") not in {"attested", "not_found", "unavailable"}:
-            raise LocalMcpSourcesClientError("malformed_cache_only_response:query_ulif")
-        return {"status": str(payload["status"]), "payload": payload.get("entry")}
+        # query_ulif answers only from the local DictUA copy; a stored entry or
+        # homonym listing attests the word, and a miss is not_found or unavailable.
+        payload = self._call_json("query_ulif", {"word": word, "sections": list(_ULIF_SECTIONS)})
+        status = payload.get("status") if isinstance(payload, Mapping) else None
+        if status not in _ULIF_STATUS:
+            raise LocalMcpSourcesClientError("malformed_local_response:query_ulif")
+        attested = _ULIF_STATUS[status] == "attested"
+        return {"status": _ULIF_STATUS[status], "payload": dict(payload) if attested else None}
 
     def slovnyk_me_cached(self, word: str) -> Mapping[str, Any]:
         text = self._call_text("search_slovnyk_me", {"query": word, "live": False})
@@ -1013,11 +1026,11 @@ def _escalation_evidence(
             locator="https://lcorp.ulif.org.ua/dictua",
             query=form,
             retrieval_payload=ulif,
-            parser_id="ulif-mcp-cache-only-v1",
+            parser_id="ulif-mcp-local-copy-v1",
             parser_version="1",
             row=row,
             phenomenon_id=None,
-            negative_reason="ulif_cache_" + ulif["status"],
+            negative_reason="ulif_local_" + ulif["status"],
         )
     )
     slovnyk = client.slovnyk_me_cached(form)

@@ -1689,6 +1689,15 @@ def test_ulif_cached_live_negative_is_distinct_from_an_unharvested_word():
     assert classify_outcome("query_ulif_records", "ok", "Sources database not found.")["status"] == "unavailable"
 
 
+@pytest.mark.parametrize("complete", [True, False])
+def test_ulif_records_miss_is_a_negative_only_on_a_complete_local_copy(complete):
+    miss = {"status": "not_found", "authoritative": complete, "verified": False, "entries": []}
+    result = json.dumps({"local_copy": {"state": "complete" if complete else "building", "complete": complete}, "records": [miss]})
+    assert classify_outcome("query_ulif_records", "ok", result)["status"] == ("no_hits" if complete else "unavailable")
+    # A record-level flag without the response's complete-copy receipt proves nothing.
+    assert classify_outcome("query_ulif_records", "ok", json.dumps({"records": [{**miss, "authoritative": True}]}))["status"] == "unavailable"
+
+
 def test_ulif_good_word_cannot_launder_an_unverified_quote():
     good = {"status": "ok", "verified": True, "entries": [{"status": "ok", "verified": True, "forms_state": "complete", "sections_state": "complete", "retrieved_at": "2026-10-01T00:00:00Z", "content_sha256": "a" * 64, "identity_from_raw": {"stored_matches_raw": True}, "sections": {"paradigm": [{"rows": [["fixture"]]}]}}]}
     bad = {"status": "unverified", "verified": False, "entries": [{"canonical_headword": "bad quote", "verified": False}]}

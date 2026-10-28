@@ -432,7 +432,7 @@ def test_evidence_identities_and_pending_states_are_truthful(config: dict, runti
     assert evidence["r2u"]["lookups"][0]["status"] == "miss"
     assert evidence["external_pending"] == [
         {
-            "adapter_id": "scripts.rag.source_query.ulif_lookup",
+            "adapter_id": "scripts.wiki.sources_db.query_ulif_local",
             "dictionary_identity": "ULIF DictUA underlying module pending",
             "status": "not_queried",
         },
