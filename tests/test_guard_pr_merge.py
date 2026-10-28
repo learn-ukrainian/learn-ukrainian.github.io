@@ -128,8 +128,9 @@ runpy.run_path(sys.argv[1], run_name="__main__")
         'env gh pr list --search "gh pr merge"',
         "env -i echo gh pr merge 5",
         "env -S echo gh pr merge 5",
-        "env -iS echo gh pr merge 5",
+        "env -i -S echo gh pr merge 5",
         "xargs env -S echo gh pr merge 5",
+        "env A-B=1 echo gh pr merge 5",
         "env --ignore echo gh pr merge 5",
         "env --split-string=echo gh pr merge 5",
         "sudo --non echo gh pr merge 5",
@@ -891,6 +892,20 @@ def test_admin_equals_true_is_judged_by_pr_guard(monkeypatch):
         "sudo -xu bot gh pr merge 5 --squash",
         "env --d gh pr merge 5 --squash",
         "sudo --us bot bash -c 'gh pr merge 5 --squash'",
+        # GNU env splits these spellings; uutils env drops the value and runs the rest.
+        "env --sp IGNORED gh pr merge 5 --squash",
+        "env --sp=IGNORED gh pr merge 5 --squash",
+        "env --split IGNORED gh pr merge 5 --squash",
+        "env -iS IGNORED gh pr merge 5 --squash",
+        "env -iSIGNORED gh pr merge 5 --squash",
+        "env -iS echo gh pr merge 5 --squash",
+        # env and sudo read any operand containing `=` as an assignment.
+        "env A-B=1 gh pr merge 5 --squash",
+        "env =x gh pr merge 5 --squash",
+        "env -- A-B=1 gh pr merge 5 --squash",
+        "sudo A-B=1 gh pr merge 5 --squash",
+        "env -S=IGNORED gh pr merge 5 --squash",
+        "env -S 'A-B=1' gh pr merge 5 --squash",
     ],
 )
 def test_wrapper_with_options_is_still_judged(monkeypatch, cmd):

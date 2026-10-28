@@ -360,6 +360,9 @@ _WRAPPER_GRAMMARS = {
 }
 
 _ENV_SPLIT_OPTIONS = frozenset({"-S", "--split-string"})
+# env and sudo read every operand containing `=` before the command as an assignment,
+# not only shell-identifier names: `env A-B=1 gh pr merge 5` runs the merge.
+_ASSIGNING_WRAPPERS = frozenset({"env", "sudo"})
 
 
 def _wrapper_option(wrapper: str, token: str) -> _WrapperOption | None:
@@ -368,6 +371,10 @@ def _wrapper_option(wrapper: str, token: str) -> _WrapperOption | None:
     None means the guard cannot tell where the wrapped command begins: an unknown
     option, an ambiguous long prefix, or an unknown letter in a short-option group.
     Callers treat that as unparsed and fail closed rather than guess a command word.
+
+    env's split string is unparsed in every spelling the implementations read
+    differently. GNU env splits `--sp X` and `-iS X`; uutils env drops X and runs the
+    words after it. Only `-S`, `-S<value>` and `--split-string[=]` split in both.
     """
     grammar = _WRAPPER_GRAMMARS[wrapper]
     if wrapper == "nice" and re.fullmatch(r"--?[-+]?\d+", token):
@@ -382,8 +389,12 @@ def _wrapper_option(wrapper: str, token: str) -> _WrapperOption | None:
         # A prefix shared by options of one kind is an error to the wrapper, which then
         # runs nothing; the command position is the same either way.
         name = "--" + matches[0] if len(matches) == 1 else token
+        if wrapper == "env" and name == "--split-string" and key != "split-string":
+            return None
         return _WrapperOption(name, kinds.pop(), value if sep else None)
     for index, char in enumerate(token[1:], 1):
+        if wrapper == "env" and char == "S" and index > 1:
+            return None
         if char in grammar.short_value:
             return _WrapperOption("-" + char, True, token[index + 1 :] or None)
         if char not in grammar.short_switch:
@@ -407,12 +418,12 @@ def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
     while i < len(seg):
         tok = seg[i]
         if tok == "--":
-            return i + 1
+            return _skip_wrapper_assignments(wrapper, seg, i + 1)
         if tok == "-" and wrapper == "env":
             i += 1  # A lone `-` is env's spelling of -i.
             continue
         if not tok.startswith("-") or tok == "-":
-            return i
+            return _skip_wrapper_assignments(wrapper, seg, i)
         option = _wrapper_option(wrapper, tok)
         if option is None or (wrapper == "env" and option.name in _ENV_SPLIT_OPTIONS):
             return i
@@ -420,6 +431,14 @@ def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
         if option.takes_value and option.attached is None:
             if i >= len(seg):
                 return len(seg)
+            i += 1
+    return i
+
+
+def _skip_wrapper_assignments(wrapper: str, seg: list[str], i: int) -> int:
+    """Step over the NAME=VALUE operands a wrapper reads before its command."""
+    if wrapper in _ASSIGNING_WRAPPERS:
+        while i < len(seg) and "=" in seg[i]:
             i += 1
     return i
 
@@ -488,6 +507,8 @@ def _env_split_payload(seg: list[str]) -> str | None:
             rest[start:j] = words
             j = start
         if expansions:
+            if not unparsed:
+                j = _skip_wrapper_assignments("env", rest, j)
             return shlex.join([*seg[:i], *(["env"] if unparsed else []), *rest[j:]])
         i = _skip_wrapper_options("env", seg, i + 1)
     return None
