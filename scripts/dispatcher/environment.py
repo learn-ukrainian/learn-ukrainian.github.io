@@ -33,8 +33,23 @@ def npm_shim_dir() -> Path | None:
     return None
 
 
-def claude_config_dir(account: str, home: str | None = None) -> str:
-    """The login directory a Claude account runs in until ``admission.claude_launch`` binds the verified one."""
+def claude_config_dir(account: str, home: str | None = None) -> str | None:
+    """The login directory a Claude account runs in until ``admission.claude_launch`` binds the verified one.
+
+    An API-key label's directory exists only in its private binding (C-2643), so the read-only policy
+    check before launch examines that directory; an unbound one is ``None``, and admission refuses it.
+    """
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_API_KEY_ACCOUNT_LABELS,
+        ClaudeAccountRefused,
+        load_claude_account_binding,
+    )
+
+    if account in CLAUDE_API_KEY_ACCOUNT_LABELS:
+        try:
+            return str(load_claude_account_binding(account).config_dir)
+        except ClaudeAccountRefused:
+            return None
     suffix = "" if account == "a" else "-b"
     return str(Path(home or os.environ.get("HOME") or str(Path.home())) / f".claude{suffix}")
 
@@ -51,9 +66,12 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         file_key = _load_cursor_api_key_from_env_file()
         if file_key:
             env["CURSOR_API_KEY"] = file_key
-    # An API-key label's directory exists only in its private binding, set by ``admission.claude_launch``.
-    if spec.agent == "claude" and spec.claude_account in ("a", "b"):
-        env["CLAUDE_CONFIG_DIR"] = claude_config_dir(spec.claude_account, env.get("HOME"))
+    if spec.agent == "claude" and spec.claude_account:
+        config_dir = claude_config_dir(spec.claude_account, env.get("HOME"))
+        if config_dir is None:
+            env.pop("CLAUDE_CONFIG_DIR", None)
+        else:
+            env["CLAUDE_CONFIG_DIR"] = config_dir
     shims = npm_shim_dir()
     if shims is not None:
         original_path = os.pathsep.join(

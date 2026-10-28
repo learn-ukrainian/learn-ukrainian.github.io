@@ -216,13 +216,36 @@ def test_api_key_label_launch_refuses_a_competing_source(api_key_accounts, monke
     assert _calls(api_key_accounts, "run") == []
 
 
-def test_api_key_label_adds_no_placeholder_config_dir(tmp_path, monkeypatch):
-    """Only the binding names an API-key label's directory; a and b keep their legacy placeholders."""
-    monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.delenv("CLAUDE_CONFIG_DIR", raising=False)
+def test_api_key_label_child_env_names_its_bound_directory(api_key_accounts, tmp_path, monkeypatch):
+    """The read-only policy check before launch examines the bound directory, never the default one."""
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(api_key_accounts.config_dir))  # an unrelated ambient value
     spec = TaskSpec("t", "claude", "m", None, "read-only", tmp_path, tmp_path / "p", tmp_path / "f")
+    for label in ("kk", "szb"):
+        env = child_env(dataclasses.replace(spec, claude_account=label))
+        assert env["CLAUDE_CONFIG_DIR"] == str(api_key_accounts.api_dirs[label])
+    monkeypatch.setenv("LU_CLAUDE_ACCOUNTS_FILE", str(tmp_path / "absent.json"))
     assert "CLAUDE_CONFIG_DIR" not in child_env(dataclasses.replace(spec, claude_account="kk"))
-    assert child_env(dataclasses.replace(spec, claude_account="b"))["CLAUDE_CONFIG_DIR"] == str(tmp_path / ".claude-b")
+    home = api_key_accounts.home
+    assert child_env(dataclasses.replace(spec, claude_account="b"))["CLAUDE_CONFIG_DIR"] == str(home / ".claude-b")
+
+
+# Claude Code 2.1.312 ``claude doctor`` for a helper-only directory, with or without its settings loaded.
+_HELPER_DOCTOR = (
+    "Managed settings (remote): not fetched \u2014 no usable credentials for the settings fetch\n"
+    "Organization policy: not fetched: no API key or claude.ai sign-in for the policy lookup "
+    "(apiKeyHelper keys are not used for it)\n"
+)
+
+
+def test_api_key_label_read_only_policy_check_admits_a_helper_directory(api_key_accounts, monkeypatch):
+    """The managed-policy check reads only the remote-settings line, which a helper directory reports as not fetched."""
+    from scripts.dispatcher.providers import claude as claude_provider
+
+    monkeypatch.setattr(claude_provider.subprocess, "run", lambda *_a, **_k: SimpleNamespace(stdout=_HELPER_DOCTOR))
+    env = {"PATH": os.environ["PATH"], "CLAUDE_CONFIG_DIR": str(api_key_accounts.api_dirs["kk"])}
+    assert providers.read_only_refusal("claude", env) is None
+    _private_json(api_key_accounts.api_dirs["kk"] / "remote-settings.json", {"permissions": {}})
+    assert "server-managed settings cache holds a policy" in providers.read_only_refusal("claude", env)
 
 
 # ----------------------------------------------------------------- rules core
