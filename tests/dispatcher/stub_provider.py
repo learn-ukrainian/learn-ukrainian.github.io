@@ -49,7 +49,9 @@ while not Path(sys.argv[2]).exists():
 
 
 def main():
-    model, prompt, final = sys.argv[1:4]
+    # Retain the binding line that the watchdog tests instrument with heartbeat output.
+    del sys.argv[4:]
+    model, prompt, final = sys.argv[1:]
     prompt = Path(prompt)
     prompt.with_suffix(".started.tmp").write_text(str(os.getpid()))
     prompt.with_suffix(".started.tmp").replace(prompt.with_suffix(".started"))
