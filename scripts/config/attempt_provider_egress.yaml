@@ -1,4 +1,5 @@
-# Exact provider endpoints for formal review attempts only; no wildcard matching.
+# Exact provider endpoints for formal review attempts and read-only AGY dispatches
+# (scripts/dispatcher/agy_sandbox.py); no wildcard matching.
 harnesses:
   agy:
     - cloudcode-pa.googleapis.com

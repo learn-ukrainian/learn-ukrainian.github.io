@@ -85,9 +85,10 @@ an explicit provider/model, `--mode read-only`, `--language-lane ukrainian`,
 dispatch worktree from that commit. It does not add rules, research pointers or
 legacy worktree prompt blocks; include required instructions in the input.
 
-The Gemini seat runs on AGY, which dispatch refuses in read-only mode because
-AGY's read-only mode cannot be locked against edits. That seat runs
-`--mode workspace-write` instead. Its dispatch worktree is disposable, and the
+The Gemini seat runs on AGY. AGY has no write lock of its own, so its read-only
+run is enforced by the dispatcher's bubblewrap boundary. Only on a host that
+cannot start that boundary does dispatch refuse AGY read-only, and the seat then
+runs `--mode workspace-write` instead (`seat_mode`). Its dispatch worktree is disposable, and the
 seat returns scored text, not repository changes. A run whose tracked checkout
 changed is still refused.
 

@@ -1049,8 +1049,16 @@ needs excluded inputs. Owned paths do not re-include sparse files, and no
 anchor files are added automatically.
 
 The dispatcher checks rules-core availability but does not prepend the core or
-research pointers. Include required instructions and relevant source locators
-in the brief. Research flags and owned paths record metadata; write-path claim
+research pointers to the prompt. The one exception is a read-only Claude run,
+which receives the rules core as an appended system prompt because `--restricted`
+skips `CLAUDE.md` (`scripts/dispatcher/providers/claude.py` `build`). Include
+required instructions and relevant source locators in the brief.
+
+A read-only AGY run executes inside the dispatcher's bubblewrap boundary
+(`scripts/dispatcher/agy_sandbox.py`): a read-only root, a private scratch home
+and a dispatcher-owned Sources relay that forwards only the read-only tools.
+Dispatch refuses it with `read_only_unenforceable` only on a host that cannot
+start that boundary. Research flags and owned paths record metadata; write-path claim
 admission and overlap overrides are retired.
 
 Use `status TASK --run-nonce NONCE` and `wait TASK --run-nonce NONCE` to observe
@@ -1064,7 +1072,8 @@ custody checks still apply.
 Budget/cost/pricing guards, preflight triage, lifecycle-file propagation,
 keep/force-worktree switches, repository backfill, Cursor self-dispatch and DoR
 checks, dirty-primary admission, open-PR freeze, Kimi boundary hooks, danger
-mode and RB2 are retired. Native Grok dispatch is retired; `grok` aliases Cursor.
+mode and RB2 are retired. Native Grok dispatch is retired; `grok` is not a
+dispatch agent, so use `--agent cursor --model grok-4.7-high`.
 No additional worker exports beyond `scripts/dispatcher/environment.py` are
 promised. The provider adapter layer still serves its other callers.
 

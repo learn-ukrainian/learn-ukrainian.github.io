@@ -962,10 +962,15 @@ grant (only Claude Code's built-in read-only commands and `gh` reads run, and
 redirects are checked against the Edit deny) under `--restricted`, so no user,
 project or local settings file can add an allow rule, and OpenCode's
 `OPENCODE_PERMISSION` rules (edits denied; bash limited to `git diff`, `git log`,
-`git show` and `git status` with no redirect or `--output`). AGY and Hermes give
-a dispatched run no enforceable write lock, so read-only on them exits 2 with
-`read_only_unenforceable` before anything launches. Read-only runs on Claude and
-OpenCode cannot run tests; use Codex when a read-only reviewer must execute them.
+`git show` and `git status` with no redirect or `--output`). Hermes gives a
+dispatched run no enforceable write lock, so read-only on it exits 2 with
+`read_only_unenforceable` before anything launches. AGY has none of its own
+either, so read-only AGY runs inside the dispatcher's bubblewrap boundary
+(`scripts/dispatcher/agy_sandbox.py`): a read-only root, a private scratch home,
+and a dispatcher-owned Sources relay that forwards only the read-only tools. It
+exits 2 with the same refusal only on a host that cannot start that boundary
+(not Linux, or no `bwrap`). Read-only runs on Claude and OpenCode cannot run
+tests; use Codex when a read-only reviewer must execute them.
 
 `--restricted` skips CLAUDE.md, so read-only Claude gets the rules core
 (`agents_extensions/shared/rules/core.md`) through `--append-system-prompt-file`;
