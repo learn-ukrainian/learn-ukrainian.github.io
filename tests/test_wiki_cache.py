@@ -7,6 +7,7 @@ No network calls — all API responses are mocked.
 
 from __future__ import annotations
 
+import hashlib
 import sqlite3
 import sys
 import time
@@ -21,6 +22,73 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 
 # ── WikiCache unit tests ─────────────────────────────────────────
+
+
+@pytest.mark.parametrize("mode,section", [("summary", ""), ("extract", ""), ("search", "q=Київ&limit=3"), ("sections", ""), ("section", "2")])
+@pytest.mark.parametrize("state", ["hit", "miss", "stale", "negative", "expired_negative", "empty"])
+def test_read_cached_preserves_store_and_reports_provenance(tmp_path, monkeypatch, mode, section, state):
+    from rag import wiki_cache
+
+    monkeypatch.setattr(wiki_cache.time, "time", lambda: 10000000)
+    path = tmp_path / "cache.db"
+    cache = wiki_cache.WikiCache(path)
+    response = wiki_cache.NEGATIVE_SENTINEL if "negative" in state else "# Київ\nCached article."
+    fetched = 10000000
+    if state == "stale":
+        fetched -= wiki_cache.DEFAULT_TTL
+    if state == "expired_negative":
+        fetched -= wiki_cache.DEFAULT_NEGATIVE_TTL
+    if state != "miss":
+        cache._conn.execute("INSERT INTO wiki_cache VALUES (?, ?, ?, ?, ?)", (mode, "Київ", section, "" if state == "empty" else response, fetched))
+        cache._conn.commit()
+    cache.close()
+    before = path.read_bytes()
+    result = wiki_cache.read_cached(mode, " Київ ", section, db_path=path)
+    expected = {"expired_negative": "stale", "empty": "unavailable"}.get(state, state)
+    assert result["status"] == expected
+    assert result["key"] == {"mode": mode, "title": "Київ", "section": section}
+    assert result["checked_at"] == 10000000
+    if state != "miss":
+        assert result["fetched_at"] == fetched
+    if state == "hit":
+        assert result["response"] == response
+        assert result["response_sha256"] == hashlib.sha256(response.encode()).hexdigest()
+        assert result["expires_at"] == fetched + wiki_cache.DEFAULT_TTL
+    else:
+        assert result["response"] is None
+    # SQLite may create coordination sidecars, but no cache rows may change.
+    assert path.read_bytes() == before
+    wal = tmp_path / "cache.db-wal"
+    assert not wal.exists() or wal.stat().st_size == 0
+
+
+@pytest.mark.parametrize("kind", ["missing", "schema", "corrupt"])
+def test_read_cached_unavailable_never_creates_store(tmp_path, kind):
+    from rag.wiki_cache import read_cached
+
+    path = tmp_path / "cache.db"
+    if kind == "schema":
+        sqlite3.connect(path).close()
+    elif kind == "corrupt":
+        path.write_text("not a database")
+    before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+    assert read_cached("summary", "Київ", db_path=path)["status"] == "unavailable"
+    assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == before
+
+
+def test_read_cached_sees_committed_wal_without_expiring_or_fetching(tmp_path):
+    from rag.wiki_cache import WikiCache, read_cached
+
+    path = tmp_path / "wiki.db"
+    cache = WikiCache(path)
+    try:
+        cache.put("summary", "Київ", "Committed article.")
+        assert read_cached("summary", "Київ", db_path=path)["response"] == "Committed article."
+        cache._conn.execute("UPDATE wiki_cache SET response='uncommitted'")
+        assert read_cached("summary", "Київ", db_path=path)["response"] == "Committed article."
+        cache._conn.rollback()
+    finally:
+        cache.close()
 
 
 class TestWikiCache:

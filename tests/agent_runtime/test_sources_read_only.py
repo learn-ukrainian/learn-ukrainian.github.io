@@ -22,6 +22,22 @@ from scripts.agent_runtime.sources_read_only import (
 from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, REVIEW_TOOLS
 from tests.agent_runtime.test_codex_sources_config_layers import layer
 
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_formal_review_grants_cached_evidence(access):
+    from scripts.review.receipts.ledger import review_tools
+
+    tools = review_tools(access)
+    assert {"query_ulif_records", "query_wikipedia_cached"} <= tools
+    assert not {"query_ulif", "query_wikipedia"} & tools
+
+
+def test_cached_wikipedia_name_does_not_match_claude_writer_deny():
+    import fnmatch
+
+    assert not fnmatch.fnmatchcase("mcp__sources__query_wikipedia_cached", "mcp__*__query_wikipedia")
+    assert fnmatch.fnmatchcase("mcp__sources__query_wikipedia", "mcp__*__query_wikipedia")
+
 SOURCES_READ_ONLY_TOOLS, SOURCES_PERSISTING_TOOLS = sources_tool_sets()
 
 

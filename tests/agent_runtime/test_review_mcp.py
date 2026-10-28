@@ -272,7 +272,7 @@ def test_receipt_attempt_allow_contract_includes_approved_facet_authorities(mani
         review_access=access,
         checkout_root=tmp_path,
     )
-    # Explicit approved #9949 contract; do not derive this expectation from review_tools.
+    # Explicit #9949 contract plus #9628 cached evidence, independent of review_tools.
     names = [
         "verify_word",
         "verify_lemma",
@@ -289,6 +289,8 @@ def test_receipt_attempt_allow_contract_includes_approved_facet_authorities(mani
         "query_pravopys",
         "query_r2u",
         "query_sum20",
+        "query_ulif_records",
+        "query_wikipedia_cached",
         "search_heritage",
         "search_style_guide",
         "search_text",
