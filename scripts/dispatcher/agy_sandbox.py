@@ -171,17 +171,60 @@ def _now() -> str:
     return datetime.now(UTC).isoformat()
 
 
-def _remove(path: Path) -> None:
-    def writable(_function, target, _error):
-        with contextlib.suppress(OSError):
-            os.chmod(os.path.dirname(target), 0o700)
-            os.chmod(target, 0o700)
-            os.unlink(target) if not os.path.isdir(target) or os.path.islink(target) else os.rmdir(target)
+_DIRECTORY = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 
-    if path.is_symlink():
-        path.unlink()
-    elif path.exists():
-        shutil.rmtree(path, onexc=writable)
+
+def _open_below(root: int, parts: tuple[str, ...]) -> int:
+    descriptor = os.dup(root)
+    for part in parts:
+        child = os.open(part, _DIRECTORY, dir_fd=descriptor)
+        os.close(descriptor)
+        descriptor = child
+    return descriptor
+
+
+def _remove(path: Path) -> None:
+    """Delete a tree the sandbox could write, never following a link in it.
+
+    Only directories are made writable, each through a descriptor opened with O_NOFOLLOW, because
+    unlinking needs only the parent's permission; a link is unlinked, never followed. The walk is
+    iterative, so no nesting depth stops it.
+    """
+    try:
+        if not stat.S_ISDIR(os.lstat(path).st_mode):
+            os.unlink(path)
+            return
+    except FileNotFoundError:
+        return
+    root = os.open(path, _DIRECTORY)
+    try:
+        stack: list[tuple[str, ...]] = [()]
+        while stack:
+            parts = stack[-1]
+            descriptor = _open_below(root, parts)
+            try:
+                os.fchmod(descriptor, 0o700)
+                children = []
+                for entry in os.scandir(descriptor):
+                    if entry.is_dir(follow_symlinks=False):
+                        children.append((*parts, entry.name))
+                    else:
+                        os.unlink(entry.name, dir_fd=descriptor)
+            finally:
+                os.close(descriptor)
+            if children:
+                stack.extend(children)  # emptied first; this directory is revisited afterwards
+                continue
+            stack.pop()
+            if parts:
+                parent = _open_below(root, parts[:-1])
+                try:
+                    os.rmdir(parts[-1], dir_fd=parent)
+                finally:
+                    os.close(parent)
+    finally:
+        os.close(root)
+    os.rmdir(path)
 
 
 def _write_private(path: Path, data: bytes, mode: int = 0o600) -> None:
@@ -221,8 +264,10 @@ class SourcesRelay:
 
     Each connection gets its own stdio server from this checkout (never the reviewed worktree).
     Client messages are re-serialized after the check, so the server receives exactly what was
-    checked; batches, unknown methods and non-read-only tools are refused. A call counts once,
-    when the server's response carries its id and is not an error.
+    checked; batches, unknown methods and non-read-only tools are refused. Every forwarded request
+    holds its id until answered, so no other request can share it, and a response with an id
+    nobody holds is dropped. A call counts once, when the response to its own id is a tool result
+    with content and no error.
     """
 
     def __init__(self, endpoint: Path, readers: frozenset[str], env: dict[str, str]):
@@ -328,12 +373,14 @@ class SourcesRelay:
         name = params.get("name") if method == "tools/call" else None
         request_id = message.get("id")
         allowed = method in _SOURCES_METHODS and (method != "tools/call" or name in self.readers)
-        if allowed and method in ("tools/call", "tools/list"):
+        if allowed and "id" in message:
             key = json.dumps(request_id)
             with pending_lock:
                 allowed = type(request_id) in (int, str) and key not in pending
                 if allowed:
                     pending[key] = (method, name)
+        elif allowed and method in ("tools/call", "tools/list"):
+            allowed = False  # a call without an id could never be matched to its result
         if not allowed:
             label = f"tools/call:{name}" if method == "tools/call" else str(method)[:64]
             with self.lock:
@@ -349,13 +396,14 @@ class SourcesRelay:
         with pending_lock:
             entry = pending.pop(json.dumps(message.get("id")), None)
         if entry is None:
-            return message
+            return None  # no forwarded request holds this id
         method, name = entry
         result = message.get("result")
         if method == "tools/list" and isinstance(result, dict) and isinstance(result.get("tools"), list):
             result["tools"] = [tool for tool in result["tools"] if isinstance(tool, dict) and tool.get("name") in self.readers]
         elif method == "tools/call":
-            completed = "error" not in message and isinstance(result, dict) and result.get("isError") is not True
+            completed = ("error" not in message and isinstance(result, dict) and result.get("isError") is not True
+                         and isinstance(result.get("content"), list))
             with self.lock:
                 if completed:
                     self.completed += 1
@@ -390,6 +438,46 @@ def _host_abstract_socket() -> str | None:
             if len(fields) >= 8 and fields[5] == "01" and fields[7].startswith("@") and fields[7][1:].isprintable():
                 return fields[7][1:]
     return None
+
+
+_GIT_CONFIG_KEYS = re.compile(
+    r"(core\.(repositoryformatversion|filemode|bare|logallrefupdates|ignorecase|precomposeunicode|symlinks"
+    r"|autocrlf|eol|safecrlf|checkstat|trustctime|quotepath|sparsecheckout|sparsecheckoutcone|splitindex"
+    r"|untrackedcache)|extensions\.[a-z0-9]+)"
+)
+
+
+def _safe_git_config(source: Path) -> bytes:
+    """A copy of a Git config holding only the repository-format keys a read-only Git needs."""
+    listed = subprocess.run(["git", "config", "--file", str(source), "--no-includes", "--null", "--list"],
+                            capture_output=True, timeout=_GIT_TIMEOUT, check=False, stdin=subprocess.DEVNULL)
+    if listed.returncode:
+        raise Refused("the Git config cannot be read for sanitizing")
+    lines = []
+    for entry in listed.stdout.split(b"\0"):
+        key, _, value = entry.decode("utf-8", "replace").partition("\n")
+        if _GIT_CONFIG_KEYS.fullmatch(key) and re.fullmatch(r"[A-Za-z0-9._-]*", value):
+            section, _, name = key.rpartition(".")
+            lines.append(f"[{section}]\n\t{name} = {value}\n")
+    return "".join(lines).encode()
+
+
+def _trusted_database(worktree: Path, repository: Path, relative: str) -> Path:
+    """The primary checkout's database file a worktree link must name, or a refusal.
+
+    Only the link ``provision_links`` makes is admitted: a symlink resolving exactly to the primary
+    checkout's own regular file at the same path. A missing link, a tracked or redirected link,
+    or a primary file reached through a link is refused, so branch content never picks a mount.
+    """
+    link, trusted = worktree / relative, repository / relative
+    try:
+        if not link.is_symlink() or os.path.realpath(trusted) != str(trusted):
+            raise Refused(f"database link {relative} is missing or not the dispatcher's link")
+        if not stat.S_ISREG(os.lstat(trusted).st_mode) or link.resolve(strict=True) != trusted:
+            raise Refused(f"database link {relative} does not name the primary checkout's database")
+    except OSError as exc:
+        raise Refused(f"database link {relative} cannot be resolved") from exc
+    return trusted
 
 
 def _write_error(path: Path) -> str:
@@ -432,6 +520,7 @@ class _Boundary:
         common = Path(_git(self.worktree, "rev-parse", "--path-format=absolute", "--git-common-dir").strip()).resolve(
             strict=True)
         repository = common.parent
+        self.common = common
 
         self.base.mkdir(mode=0o700)  # exclusive: an existing scratch is never reused or removed
         self.created = True
@@ -473,14 +562,14 @@ class _Boundary:
         reads, hidden = full_review_reads(self.worktree)
         corpus = (repository / "data").resolve()
         reads = [path for path in reads if path != corpus]  # Sources serves the corpus; only database links resolve
-        databases = []
-        for relative in DATABASE_LINKS:
-            link = self.worktree / relative
-            if link.is_symlink():
-                target = link.resolve(strict=True)
-                if not stat.S_ISREG(target.stat().st_mode):
-                    raise Refused(f"database link {relative} does not resolve to a regular file")
-                databases.append((link, target))
+        databases = [(self.worktree / relative, _trusted_database(self.worktree, repository, relative))
+                     for relative in DATABASE_LINKS]
+        # Git reads only these copies: remotes, credentials, URL rewrites, helpers and includes stay outside.
+        overlays = []
+        for name, source in (("gitconfig", common / "config"), ("gitconfig.worktree", git_dir / "config.worktree")):
+            if os.path.lexists(source):
+                _write_private(boundary / name, _safe_git_config(source), 0o600)
+                overlays.append((boundary / name, source))
         nonce = uuid.uuid4().hex
         self.fixture = git_dir / f"agy-canary-{nonce}"
         _write_private(self.fixture, b"sacrificial fixture of the read-only AGY canary\n")
@@ -488,7 +577,7 @@ class _Boundary:
                         if name and (self.worktree / name).is_file() and not (self.worktree / name).is_symlink()), None)
         if tracked is None:
             raise Refused("the worktree has no tracked regular file to probe")
-        probes = self._probes(tracked, git_dir, common, databases, repository, tmp / f"canary-{nonce}", nonce)
+        probes = self._probes(tracked, git_dir, overlays, databases, repository, tmp / f"canary-{nonce}", nonce)
         self.receipt["canary"] = {"targets": sorted({probe["path"] for probe in probes}), "passed": False}
 
         env_keep = {name: os.environ[name] for name in ("PATH", "HOME", "LANG", "TMPDIR") if name in os.environ}
@@ -508,6 +597,7 @@ class _Boundary:
                  str(interpreter), str(boundary / "forwarder.py"), str(boundary / "egress.sock"), str(agy), *command[1:]]
         argv = wrap_argv_with_sandbox(inner, sandbox)
         masks = [argument for path in hidden for argument in ("--tmpfs", str(path), "--remount-ro", str(path))]
+        masks += [argument for copy, source in overlays for argument in ("--ro-bind", str(copy), str(source))]
         argv[-len(inner):-len(inner)] = [
             *masks, "--ro-bind", str(boundary / "passwd"), "/etc/passwd", "--ro-bind", str(boundary / "group"),
             "/etc/group", "--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(self.worktree),
@@ -544,7 +634,7 @@ class _Boundary:
         self.receipt["returncode"] = returncode
         return returncode
 
-    def _probes(self, tracked, git_dir, common, databases, repository, positive, nonce) -> list[dict]:
+    def _probes(self, tracked, git_dir, overlays, databases, repository, positive, nonce) -> list[dict]:
         probes = []
 
         def expect(op: str, path: Path | str, outcome: str, port: int | None = None) -> None:
@@ -561,18 +651,20 @@ class _Boundary:
         expect("create", git_dir / f"agy-canary-{nonce}.new", "EROFS")
         for op in ("rename", "unlink", "write_open"):
             expect(op, self.fixture, "EROFS")
-        expect("write_open", common / "config", _write_error(common / "config"))
-        expect("chmod", common / "config", "EROFS")
-        expect("create", common / "refs" / "heads" / f"agy-canary-{nonce}", "EROFS")
+        for copy, source in overlays:  # the sanitized copy is what the sandbox sees at the source path
+            expect("write_open", source, _write_error(copy))
+            expect("chmod", source, "EROFS")
+        expect("create", self.common / "refs" / "heads" / f"agy-canary-{nonce}", "EROFS")
         for link, target in databases:
             for path in (link, target):
                 expect("write_open", path, _write_error(target))
                 expect("chmod", path, "EROFS")
         home = Path.home()
+        # A host path the launcher cannot even stat is unreachable inside too, so only present ones are probed.
         for relative in _HOST_SECRETS:
-            if (home / relative).exists():
+            if os.path.lexists(home / relative):
                 expect("stat", home / relative, "ENOENT")
-        if (repository / "AGENTS.md").exists():
+        if os.path.lexists(repository / "AGENTS.md"):
             expect("stat", repository / "AGENTS.md", "ENOENT")  # the primary checkout stays unmounted
         for port in _CONTROL_PORTS:
             expect("connect_tcp", "127.0.0.1", "ECONNREFUSED", port)
@@ -580,7 +672,7 @@ class _Boundary:
             expect("connect_abstract", name, "ECONNREFUSED")
         runtime_dir = Path(f"/run/user/{os.getuid()}")
         for path in (runtime_dir / "bus", os.environ.get("SSH_AUTH_SOCK"), *_CONTROL_SOCKETS):
-            if path and Path(path).exists():
+            if path and os.path.lexists(path):
                 expect("connect_unix", path, "ENOENT")
         expect("scratch_cycle", positive, "OK")
         return probes
