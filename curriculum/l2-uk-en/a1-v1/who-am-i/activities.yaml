@@ -18,7 +18,7 @@ inline:
           - text: Як тебе звати?
             correct: false
         explanation: З незнайомим дорослим або у формальній ситуації уживай вас.
-      - prompt: "— Привіт! Я Олег. Як тебе звати? — ___"
+      - prompt: "— Привіт! Як тебе звати? — ___"
         options:
           - text: Мене звати Олена. А тебе?
             correct: true
@@ -215,13 +215,13 @@ workbook:
     title: Доповни діалог
     instruction: Обери фразу, яка завершує рядок першого знайомства.
     items:
-      - sentence: "Привіт! Як ___ звати?"
+      - sentence: "— Привіт! Ти теж тут навчаєшся? Як ___ звати?"
         answer: тебе
         options:
           - тебе
-          - ти
-          - це
-        explanation: "Use the accusative тебе after Як in this name question. Ти and це do not fit the construction."
+          - вас
+          - я
+        explanation: "The same utterance uses ти with this addressee. Тебе maintains that register; the other address switches it mid-utterance, and nominative я does not fit the name construction."
       - sentence: Мене ___ Олена.
         answer: звати
         options:
@@ -236,13 +236,13 @@ workbook:
           - Хто
           - Що
         explanation: А тебе? повертає питання.
-      - sentence: "Добрий день! Як ___ звати?"
+      - sentence: "— Добрий день! Ви теж тут навчаєтеся? Як ___ звати?"
         answer: вас
         options:
           - вас
-          - ви
+          - тебе
           - я
-        explanation: "The name question uses accusative вас. Ви and я are nominative forms."
+        explanation: "The same utterance uses ви with this addressee. Вас maintains that register; the other address switches it mid-utterance, and nominative я does not fit the name construction."
       - sentence: Дуже ___!
         answer: приємно
         options:

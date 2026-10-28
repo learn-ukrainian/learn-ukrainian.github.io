@@ -1178,7 +1178,12 @@
         "V11",
         "V41",
         "V42",
-        "V43"
+        "V43",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "prompt": "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання. (Use informal address.)",
@@ -1195,7 +1200,7 @@
         "explanation": "Рівна ситуація залишається неформальною."
       },
       "after": {
-        "prompt": "— Привіт! Я Олег. Як тебе звати? — ___",
+        "prompt": "— Привіт! Як тебе звати? — ___",
         "options": [
           {
             "text": "Мене звати Олена. А тебе?",
@@ -1222,10 +1227,10 @@
       "disposition": "reworded",
       "key": "тебе",
       "distractors": [
-        "ти",
-        "це"
+        "вас",
+        "я"
       ],
-      "reason": "Accusative тебе fits the name question; ти and це cannot be its name-bearing accusative argument.",
+      "reason": "The same utterance uses ти with this addressee. Тебе maintains that register; the other address switches it mid-utterance, and nominative я does not fit the name construction.",
       "sources": [
         "W05",
         "W06",
@@ -1235,7 +1240,12 @@
         "S07",
         "T07",
         "D42",
-        "V42"
+        "V42",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "(Use informal address.) Привіт! Як ___ звати?",
@@ -1248,14 +1258,14 @@
         "explanation": "Привіт показує неформальну ситуацію з ровесником."
       },
       "after": {
-        "sentence": "Привіт! Як ___ звати?",
+        "sentence": "— Привіт! Ти теж тут навчаєшся? Як ___ звати?",
         "answer": "тебе",
         "options": [
           "тебе",
-          "ти",
-          "це"
+          "вас",
+          "я"
         ],
-        "explanation": "Use the accusative тебе after Як in this name question. Ти and це do not fit the construction."
+        "explanation": "The same utterance uses ти with this addressee. Тебе maintains that register; the other address switches it mid-utterance, and nominative я does not fit the name construction."
       }
     },
     {
@@ -1271,10 +1281,10 @@
       "disposition": "reworded",
       "key": "вас",
       "distractors": [
-        "ви",
+        "тебе",
         "я"
       ],
-      "reason": "Accusative вас fits звати; ви and я are nominative. The grammatical informal alternative is removed.",
+      "reason": "The same utterance uses ви with this addressee. Вас maintains that register; the other address switches it mid-utterance, and nominative я does not fit the name construction.",
       "sources": [
         "W05",
         "W06",
@@ -1286,7 +1296,12 @@
         "D41",
         "D43",
         "V41",
-        "V43"
+        "V43",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "(Use formal address.) Добрий день! Як ___ звати?",
@@ -1299,14 +1314,14 @@
         "explanation": "Добрий день пасує до формальної версії тут."
       },
       "after": {
-        "sentence": "Добрий день! Як ___ звати?",
+        "sentence": "— Добрий день! Ви теж тут навчаєтеся? Як ___ звати?",
         "answer": "вас",
         "options": [
           "вас",
-          "ви",
+          "тебе",
           "я"
         ],
-        "explanation": "The name question uses accusative вас. Ви and я are nominative forms."
+        "explanation": "The same utterance uses ви with this addressee. Вас maintains that register; the other address switches it mid-utterance, and nominative я does not fit the name construction."
       }
     },
     {
@@ -2148,7 +2163,12 @@
         "D51",
         "V16",
         "V51",
-        "V53"
+        "V53",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "(First.) ___ я прокидаюся о сьомій.",
@@ -2161,7 +2181,7 @@
         "explanation": "Спочатку starts the story."
       },
       "after": {
-        "sentence": "Я снідаю о восьмій, але ___ я прокидаюся о сьомій.",
+        "sentence": "Я снідаю о десятій, але ___ я прокидаюся о сьомій.",
         "answer": "спочатку",
         "options": [
           "спочатку",
@@ -2254,7 +2274,12 @@
         "D51",
         "V44",
         "V52",
-        "V53"
+        "V53",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "(After this.) ___ я одягаюся.",
@@ -2267,7 +2292,7 @@
         "explanation": "Після цього means after that."
       },
       "after": {
-        "sentence": "Я вмиваюся о сьомій, а ___ я одягаюся о восьмій.",
+        "sentence": "Я вмиваюся о восьмій, а ___ я одягаюся о дев’ятій.",
         "answer": "після цього",
         "options": [
           "після цього",
@@ -2307,7 +2332,12 @@
         "D50",
         "V15",
         "V44",
-        "V52"
+        "V52",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "(Then.) ___ я снідаю.",
@@ -2320,7 +2350,7 @@
         "explanation": "Потім can introduce another middle step."
       },
       "after": {
-        "sentence": "Я одягаюся о сьомій, а ___ я снідаю о восьмій.",
+        "sentence": "Я одягаюся о дев’ятій, а ___ я снідаю о десятій.",
         "answer": "потім",
         "options": [
           "потім",
@@ -2360,7 +2390,12 @@
         "D50",
         "V16",
         "V17",
-        "V52"
+        "V52",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "(Finally.) ___ я йду на роботу.",
@@ -2373,7 +2408,7 @@
         "explanation": "Нарешті marks the final step."
       },
       "after": {
-        "sentence": "Я снідаю о восьмій, а ___ я йду на роботу о дев’ятій.",
+        "sentence": "Я снідаю о десятій, а ___ я йду на роботу об одинадцятій.",
         "answer": "нарешті",
         "options": [
           "нарешті",
@@ -2413,7 +2448,12 @@
         "D50",
         "V15",
         "V44",
-        "V52"
+        "V52",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "(Then: use the single word.) Спочатку я прокидаюся. ___ я вмиваюся.",
@@ -2426,7 +2466,7 @@
         "explanation": "Потім links the second action."
       },
       "after": {
-        "sentence": "Я прокидаюся о шостій, а ___ я вмиваюся о сьомій.",
+        "sentence": "Я прокидаюся о сьомій, а ___ я вмиваюся о восьмій.",
         "answer": "потім",
         "options": [
           "потім",
@@ -2766,7 +2806,7 @@
         "холодно",
         "дощ"
       ],
-      "reason": "The stated moderate temperature supports тепло. Холодно conflicts with the temperature; дощ is a noun and cannot coordinate with сонячно as this impersonal predicate.",
+      "reason": "Twenty degrees and a pleasant walk fit тепло. Холодно conflicts with this temperature. Дощ denotes rain; although Сьогодні дощ can be grammatical, rain does not provide the stated pleasant-weather reason for this walk.",
       "sources": [
         "W05",
         "W06",
@@ -2780,7 +2820,12 @@
         "D32",
         "V18",
         "V19",
-        "V32"
+        "V32",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "(Warm.) Я гуляю, тому що сьогодні ___ і сонячно.",
@@ -2800,7 +2845,7 @@
           "холодно",
           "дощ"
         ],
-        "explanation": "Twenty degrees fits тепло. Холодно conflicts with this temperature; дощ is a noun, not an impersonal weather predicate in this frame."
+        "explanation": "Twenty degrees and a pleasant walk fit тепло. Холодно conflicts with this temperature. Дощ denotes rain; although Сьогодні дощ can be grammatical, rain does not provide the stated pleasant-weather reason for this walk."
       }
     },
     {
@@ -4050,7 +4095,13 @@
         "D33",
         "V30",
         "V32",
-        "V33"
+        "V33",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58",
+        "P09"
       ],
       "before": {
         "sentence": "(It rains.) Восени часто ___.",
@@ -4063,7 +4114,7 @@
         "explanation": "Осінь often connects with rain in this first weather map."
       },
       "after": {
-        "sentence": "На вулиці +20 °C. Я гуляю, й мій одяг стає мокрим: зараз ___.",
+        "sentence": "На вулиці +20 °C. Я гуляю, і мій одяг стає мокрим: зараз ___.",
         "answer": "іде дощ",
         "options": [
           "іде дощ",
@@ -4154,7 +4205,12 @@
         "D18",
         "D33",
         "V18",
-        "V33"
+        "V33",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "(Sunny.) — Чому ти любиш літо? — Тому що влітку ___.",
@@ -4167,7 +4223,7 @@
         "explanation": "Влітку сонячно fits the plan dialogue."
       },
       "after": {
-        "sentence": "Зараз день, на вулиці +25 °C, на небі немає хмар. Сьогодні ___.",
+        "sentence": "— На вулиці +25 °C. На небі немає хмар. Яка сьогодні погода? — Сьогодні ___.",
         "answer": "сонячно",
         "options": [
           "сонячно",
@@ -4202,7 +4258,13 @@
         "S05",
         "S07",
         "T07",
-        "G04"
+        "G04",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58",
+        "P08"
       ],
       "before": {
         "sentence": "(Statement, falling intonation) Це ка́ва___",
@@ -4222,7 +4284,7 @@
           "?",
           "!"
         ],
-        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+        "explanation": "The speaker calmly states a fact. A period ends the first sentence inside the two-sentence quotation; a question or exclamation mark would change its stated purpose."
       }
     },
     {
@@ -4250,7 +4312,13 @@
         "S05",
         "S07",
         "T07",
-        "G04"
+        "G04",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58",
+        "P08"
       ],
       "before": {
         "sentence": "(Yes/no question, rising intonation) Це метро́___",
@@ -4270,7 +4338,7 @@
           ".",
           "!"
         ],
-        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+        "explanation": "Чи offers two alternatives in a direct question, so use a question mark. A period or exclamation mark would not mark this question."
       }
     },
     {
@@ -4298,7 +4366,13 @@
         "S05",
         "S07",
         "T07",
-        "G04"
+        "G04",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58",
+        "P08"
       ],
       "before": {
         "sentence": "(Where-question, falling intonation) Де апте́ка___",
@@ -4318,7 +4392,7 @@
           ".",
           "!"
         ],
-        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+        "explanation": "Де asks for a location, so use a question mark. A period or exclamation mark would not mark this direct question."
       }
     },
     {
@@ -4346,7 +4420,13 @@
         "S05",
         "S07",
         "T07",
-        "G04"
+        "G04",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58",
+        "P08"
       ],
       "before": {
         "sentence": "(Exclamation, emphatic falling intonation) Як га́рно___",
@@ -4366,7 +4446,7 @@
           ".",
           "?"
         ],
-        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+        "explanation": "Як гарно expresses admiration in the flower scene, so use an exclamation mark. A period removes that emotion; a question mark would ask rather than admire."
       }
     },
     {
@@ -4394,7 +4474,13 @@
         "S05",
         "S07",
         "T07",
-        "G04"
+        "G04",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58",
+        "P08"
       ],
       "before": {
         "sentence": "(Statement, falling intonation) Так, це вода́___",
@@ -4407,14 +4493,14 @@
         "explanation": "Це твердження."
       },
       "after": {
-        "sentence": "Марко спокійно каже: «Так, це вода́___»",
+        "sentence": "Марко спокійно каже: «Так, це вода́___ Вона холодна».",
         "answer": ".",
         "options": [
           ".",
           "?",
           "!"
         ],
-        "explanation": "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+        "explanation": "The speaker calmly confirms that this is water. A period ends that first sentence inside the quotation; a question or exclamation mark changes the stated purpose."
       }
     },
     {
@@ -5026,7 +5112,7 @@
       "disposition": "reworded",
       "key": "Моя́ кни́га, моя́ ру́чка.",
       "distractors": [
-        "Моє кни́га, моє ру́чка."
+        "Моє́ кни́га, моє́ ру́чка."
       ],
       "reason": "Книга and ручка are feminine nominative nouns and require моя. Моє is neuter and fails agreement with both nouns. The speaker-gender condition is removed from the prompt.",
       "sources": [
@@ -5040,7 +5126,12 @@
         "D09",
         "D52",
         "V09",
-        "V54"
+        "V54",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).",
@@ -5058,7 +5149,7 @@
         "correction": "Моя́ кни́га, моя́ ру́чка.",
         "options": [
           "Моя́ кни́га, моя́ ру́чка.",
-          "Моє кни́га, моє ру́чка."
+          "Моє́ кни́га, моє́ ру́чка."
         ],
         "explanation": "Присві́йний займе́нник узго́джується з іме́нником (кни́га, ру́чка), а не з мо́вцем. — The possessive follows the nouns кни́га and ру́чка, not the speaker."
       }
@@ -5074,10 +5165,10 @@
       "type": "error-correction",
       "origin": "legacy",
       "disposition": "reworded",
-      "key": "п'ять столів / п'ять студентів",
+      "key": "п'ять столів",
       "distractors": [
-        "п'ять столи / п'ять студенти",
-        "п'ять стола / п'ять студент"
+        "п'ять столи",
+        "п'ять стола"
       ],
       "reason": "After п’ять, the counted nouns take genitive plural: столів and студентів. Столи and студенти are nominative plurals; стола and студент are not the required genitive plurals. The case label is removed from the prompt.",
       "sources": [
@@ -5094,7 +5185,12 @@
         "V02",
         "V35",
         "V55",
-        "G06"
+        "G06",
+        "W08",
+        "S08",
+        "T09",
+        "D58",
+        "V58"
       ],
       "before": {
         "sentence": "п'ять столи / п'ять студентів (якщо вжито як Називний множини)",
@@ -5108,15 +5204,15 @@
         "explanation": "With 5+, use the memorized phrase п'ять столів."
       },
       "after": {
-        "sentence": "п'ять столи / п'ять студентів",
+        "sentence": "п'ять столи",
         "error": "п'ять столи",
-        "answer": "п'ять столів / п'ять студентів",
+        "answer": "п'ять столів",
         "options": [
-          "п'ять столів / п'ять студентів",
-          "п'ять столи / п'ять студенти",
-          "п'ять стола / п'ять студент"
+          "п'ять столів",
+          "п'ять столи",
+          "п'ять стола"
         ],
-        "explanation": "With 5+, use the memorized phrase п'ять столів."
+        "explanation": "After п’ять the noun is genitive plural: столів. Столи is nominative plural; стола is genitive singular."
       }
     }
   ]

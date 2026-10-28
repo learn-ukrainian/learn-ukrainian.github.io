@@ -110,35 +110,35 @@ inline:
           - .
           - '?'
           - '!'
-        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+        explanation: "The speaker calmly states a fact. A period ends the first sentence inside the two-sentence quotation; a question or exclamation mark would change its stated purpose."
       - sentence: "Це метро́ чи апте́ка___"
         answer: '?'
         options:
           - '?'
           - .
           - '!'
-        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+        explanation: "Чи offers two alternatives in a direct question, so use a question mark. A period or exclamation mark would not mark this question."
       - sentence: "Де апте́ка___"
         answer: '?'
         options:
           - '?'
           - .
           - '!'
-        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+        explanation: "Де asks for a location, so use a question mark. A period or exclamation mark would not mark this direct question."
       - sentence: "Олена бачить квіти: «Як га́рно___»"
         answer: '!'
         options:
           - '!'
           - .
           - '?'
-        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
-      - sentence: "Марко спокійно каже: «Так, це вода́___»"
+        explanation: "Як гарно expresses admiration in the flower scene, so use an exclamation mark. A period removes that emotion; a question mark would ask rather than admire."
+      - sentence: "Марко спокійно каже: «Так, це вода́___ Вона холодна»."
         answer: .
         options:
           - .
           - '?'
           - '!'
-        explanation: "Choose the terminal mark that fits the speaker and the utterance: a calm factual statement, a question, or an emotional Як гарно."
+        explanation: "The speaker calmly confirms that this is water. A period ends that first sentence inside the quotation; a question or exclamation mark changes the stated purpose."
   - id: act-5
     type: fill-in
     title: Типові пастки наголосу

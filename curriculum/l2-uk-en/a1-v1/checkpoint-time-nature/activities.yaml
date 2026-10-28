@@ -107,7 +107,7 @@ inline:
           - тепло
           - холодно
           - дощ
-        explanation: "Twenty degrees fits тепло. Холодно conflicts with this temperature; дощ is a noun, not an impersonal weather predicate in this frame."
+        explanation: "Twenty degrees and a pleasant walk fit тепло. Холодно conflicts with this temperature. Дощ denotes rain; although Сьогодні дощ can be grammatical, rain does not provide the stated pleasant-weather reason for this walk."
       - sentence: "Уже двадцята година. ___ я вечеряю і слухаю музику."
         answer: Ввечері
         options:

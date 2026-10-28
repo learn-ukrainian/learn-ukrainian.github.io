@@ -40,7 +40,7 @@ inline:
           - холодно
           - хмарно
         explanation: "The stated temperature and thirst establish heat. Холодно contradicts +35; хмарно does not explain the stated heat-related thirst."
-      - sentence: "На вулиці +20 °C. Я гуляю, й мій одяг стає мокрим: зараз ___."
+      - sentence: "На вулиці +20 °C. Я гуляю, і мій одяг стає мокрим: зараз ___."
         answer: іде дощ
         options:
           - іде дощ
@@ -94,7 +94,7 @@ inline:
           - любить
           - робить
         explanation: 'Use the phrase тобі подобається.'
-      - sentence: "Зараз день, на вулиці +25 °C, на небі немає хмар. Сьогодні ___."
+      - sentence: "— На вулиці +25 °C. На небі немає хмар. Яка сьогодні погода? — Сьогодні ___."
         answer: сонячно
         options:
           - сонячно
