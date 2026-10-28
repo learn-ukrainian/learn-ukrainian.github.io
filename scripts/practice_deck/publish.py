@@ -502,6 +502,8 @@ def run_linguistic_gate(
     paronym_items: list[dict[str, Any]] = []
     antonym_items: list[dict[str, Any]] = []
     homonym_items: list[dict[str, Any]] = []
+    classify_items: list[dict[str, Any]] = []
+    imperative_items: list[dict[str, Any]] = []
     lexeme_plain_by_id: dict[str, str] = {}
     body_keys = {
         "cloze": ("cloze", cloze_items),
@@ -511,6 +513,8 @@ def run_linguistic_gate(
         "paronym": ("paronym", paronym_items),
         "antonym": ("antonym", antonym_items),
         "homonym": ("homonym", homonym_items),
+        "classify": ("classify", classify_items),
+        "imperative": ("imperative", imperative_items),
     }
     for level in LEVELS:
         lexeme_path = practice_dir / f"practice-lexemes.{level}.json"
@@ -538,6 +542,8 @@ def run_linguistic_gate(
         paronym_items=paronym_items,
         antonym_items=antonym_items,
         homonym_items=homonym_items,
+        classify_items=classify_items,
+        imperative_items=imperative_items,
         verifier=verifier,
         source_index=source_index,
         lexeme_plain_by_id=lexeme_plain_by_id,

@@ -736,6 +736,8 @@ def _run_linguistic_pack(
     paronym_items: list[dict[str, Any]] = []
     antonym_items: list[dict[str, Any]] = []
     homonym_items: list[dict[str, Any]] = []
+    classify_items: list[dict[str, Any]] = []
+    imperative_items: list[dict[str, Any]] = []
 
     shards = practice.get("_linguistic_shards")
     if not isinstance(shards, dict):
@@ -758,6 +760,8 @@ def _run_linguistic_pack(
             ("paronym", paronym_items),
             ("antonym", antonym_items),
             ("homonym", homonym_items),
+            ("classify", classify_items),
+            ("imperative", imperative_items),
         ):
             payload = level_shards.get(key)
             if isinstance(payload, list):
@@ -771,6 +775,8 @@ def _run_linguistic_pack(
         paronym_items=paronym_items,
         antonym_items=antonym_items,
         homonym_items=homonym_items,
+        classify_items=classify_items,
+        imperative_items=imperative_items,
         verifier=verifier,
         source_index=source_index,
         lexeme_plain_by_id=lexeme_plain_by_id,
