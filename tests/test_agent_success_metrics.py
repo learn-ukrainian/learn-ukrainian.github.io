@@ -317,11 +317,18 @@ def test_review_scores_aggregate_by_reviewer_and_author_model(tmp_path):
         ("sol-1", "codex", "gpt-6.1-sol", "claude-opus-5-5", "VERDICT: REQUEST_CHANGES\nSCORE: 9/10\nF1 [P1] b.py:2 bug."),
         ("sol-2", "codex", "gpt-6.1-sol", "claude-opus-5-5", "VERDICT: REQUEST_CHANGES\nSCORE: 9.5/10\nF1 [P0] c.py:3"),
         ("muse-1", "muse", "muse-wonder-full-1.0", "gpt-6.1-terra", "VERDICT: APPROVE\nNo score line."),
+        # Delta round: the resolved P1 no longer bounds the score; only the open P3 does.
+        ("grok-1", "cursor", "grok-4.7", "claude-sonnet-5-5", "VERDICT: APPROVE\nSCORE: 9/10\n"
+         "F1 [P1] a.py:1 resolved.\nF2 [P3] b.py:2 still open: not resolved, nit."),
+        # 1-3 without a P0 may be the rubric's wrong-approach case, so it is not compared.
+        ("grok-2", "cursor", "grok-4.7", "claude-sonnet-5-5", "VERDICT: REQUEST_CHANGES\nSCORE: 2/10\n"
+         "F1 [P2] c.py:3 wrong approach."),
     ]
     for task_id, agent, model, author, result in reviews:
         _write(tmp_path, {
             "task_id": task_id, "agent": agent, "model": model, "status": "done", "mode": "read-only",
             "started_at": "2026-10-28T01:00:00Z", "review_author_model": author, "result": result,
+            "resolved_model": model, "resolved_model_known": True, "resolved_model_source": "test",
         })
     _write(tmp_path, {
         "task_id": "sol-failed", "agent": "codex", "model": "gpt-6.1-sol", "status": "failed", "mode": "read-only",
@@ -330,8 +337,16 @@ def test_review_scores_aggregate_by_reviewer_and_author_model(tmp_path):
     scores = collect_agent_success(tasks_dir=tmp_path, until=NOW)["review_scores"]
     assert scores["by_reviewer_model"]["gpt-6.1-terra"] == {
         "rounds": 2, "scored": 2, "absent": 0, "mean": 9, "median": 9.0,
+        # Free prose cannot establish zero findings, so the clean 10/10 has no band to compare.
+        "rubric_agreement": {"numerator": 1, "denominator": 1, "percent": 100.0},
     }
-    assert scores["by_reviewer_model"]["gpt-6.1-sol"] == {"rounds": 2, "scored": 1, "absent": 1, "mean": 9, "median": 9}
+    assert scores["by_reviewer_model"]["gpt-6.1-sol"] == {
+        "rounds": 2, "scored": 1, "absent": 1, "mean": 9, "median": 9,
+        "rubric_agreement": {"numerator": 0, "denominator": 1, "percent": 0.0},
+    }
+    assert scores["by_reviewer_model"]["grok-4.7"]["rubric_agreement"] == {
+        "numerator": 1, "denominator": 1, "percent": 100.0,
+    }
     assert scores["by_reviewer_model"]["muse-wonder-full-1.0"]["absent"] == 1
     assert scores["by_reviewer_model"]["muse-wonder-full-1.0"]["mean"] == "unknown"
     opus = scores["by_author_model"]["claude-opus-5-5"]
