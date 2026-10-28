@@ -241,6 +241,33 @@ held-out subprocess interruption/concurrency/reconciliation cases, native Opus
 exact-head review, CI, landing, cleanup and operational source-access checks.
 No live acquisition or canonical-store write is part of offline validation.
 
+## СУМ-20 mirror import (design under review)
+
+`scripts.ingest.sum20_mirror_import` will import the complete staged СУМ-20
+mirror into new `sum20_mirror_*` tables of `sources.db`. It never writes the
+official `sum20_*` tables, their quarantine marks or the crawl tables.
+
+**Readers.** Readers apply rule `sum20-mirror-rule-v1` at read time:
+
+| Official rows for the key | What is served |
+| --- | --- |
+| None | The mirror row, labelled mirror |
+| A live official row agrees | Official only |
+| Only quarantined official rows | The mirror row, flagged; the official row stays hidden |
+| Live official rows differ | Official first, then the mirror row, flagged |
+
+Mirror records carry their mirror URL, fetch time and content digest. They use
+their own `source_id`, so callers that require official text never receive them.
+
+**Writer.** The writer runs only from the primary checkout:
+
+1. It copies the live store into a new generation under `data/sources/`.
+2. It imports and verifies there.
+3. It hard-links the previous generation into `data/sources/backups/`.
+4. It swaps the new file in atomically.
+
+One `restore --generation <id>` command brings a previous generation back.
+Restart the Sources MCP unit after a swap or restore.
 
 ## Foreground compatibility tools
 
