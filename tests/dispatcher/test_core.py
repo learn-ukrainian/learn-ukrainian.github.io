@@ -273,6 +273,31 @@ def prior_worktree(sandbox, name="prior-round", start="origin/main"):
     return tree
 
 
+def linked_entry(sandbox, tree, *command):
+    return subprocess.run([sys.executable, *command], cwd=tree, env=sandbox.env, text=True,
+                          capture_output=True, timeout=30)
+
+
+@pytest.mark.parametrize("entry", [("scripts/dispatch.py",), ("-m", "scripts.dispatcher.cli")])
+def test_linked_worktree_entry_runs_the_primary_checkout_dispatcher(sandbox, entry):
+    """Defect: a worktree on an older branch supervised its tasks with its own stale dispatcher (FR-43)."""
+    tree = prior_worktree(sandbox, "older-branch")
+    primary_entry = sandbox.repo.resolve() / "scripts/dispatch.py"
+    primary_entry.write_text("import json, os, sys\nprint(json.dumps([sys.argv, os.getcwd()]))\n")
+    result = linked_entry(sandbox, tree, *entry, "list", "--status", "running")
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == [[str(primary_entry), "list", "--status", "running"], str(tree.resolve())]
+
+
+@pytest.mark.parametrize("metadata", [b"gitdir: /nonexistent/metadata\n", b"gitdir: \xff\n", b"gitdir: /a\0b\n"])
+def test_linked_worktree_entry_refuses_an_unresolvable_primary(sandbox, metadata):
+    tree = prior_worktree(sandbox, "detached-metadata")
+    (tree / ".git").write_bytes(metadata)
+    result = linked_entry(sandbox, tree, "scripts/dispatch.py", "list")
+    assert result.returncode == 2
+    assert "cannot resolve the primary checkout of linked worktree" in result.stderr
+
+
 def local_branches(repo):
     return run_git(repo, "for-each-ref", "--format=%(refname:short)", "refs/heads").split()
 

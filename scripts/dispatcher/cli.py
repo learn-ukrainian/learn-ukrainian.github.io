@@ -416,4 +416,7 @@ def main(argv=None) -> int:
 
 
 if __name__ == "__main__":
+    from scripts.dispatcher.primary import exec_primary
+
+    exec_primary(sys.argv[1:])
     raise SystemExit(main())
