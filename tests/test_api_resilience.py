@@ -54,6 +54,21 @@ def test_connect_sqlite_refuses_writable_corpus_databases(tmp_path):
     conn.close()
 
 
+def test_declared_writer_may_open_sources_db_through_connect_sqlite(tmp_path, monkeypatch):
+    from scripts.lib import readonly_sqlite
+
+    monkeypatch.setattr(
+        readonly_sqlite,
+        "_declared_writer_paths",
+        lambda: frozenset({readonly_sqlite._script_path(__file__)}),
+    )
+    database = tmp_path / "sources.db"
+    connection = connect_sqlite(str(database))
+    connection.execute("CREATE TABLE sample (id INTEGER)")
+    connection.close()
+    assert database.is_file()
+
+
 def test_services_sh_loopback_bind_and_match_contract():
     """services.sh api/sources must bind loopback and keep SVC_MATCH aligned with argv."""
     content = (ROOT / "services.sh").read_text(encoding="utf-8")

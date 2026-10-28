@@ -230,11 +230,11 @@ class CorpusDatabaseWriteRefused(PermissionError):
 def corpus_database_name(database: str | os.PathLike[str] | bytes) -> str | None:
     """Return ``sources.db`` or ``vesum.db`` when ``database`` names one.
 
-    URI query and fragment characters stay out of the filename, so a path that
-    contains ``?`` or ``#`` is still judged by the file it actually names.
+    A filesystem path keeps ``?`` and ``#`` as literal characters. Only a
+    ``file:`` URI separates those characters into the query and the fragment.
     """
     raw = os.fsdecode(os.fspath(database))
-    path = unquote(urlsplit(raw).path) if raw.startswith("file:") else raw.split("?", 1)[0].split("#", 1)[0]
+    path = unquote(urlsplit(raw).path) if raw.startswith("file:") else raw
     name = Path(path).name
     if name in _CORPUS_DATABASE_NAMES:
         return name
@@ -243,13 +243,9 @@ def corpus_database_name(database: str | os.PathLike[str] | bytes) -> str | None
 
 def _uri_requests_read_only(database: str | os.PathLike[str] | bytes) -> bool:
     raw = os.fsdecode(os.fspath(database))
-    if raw.startswith("file:"):
-        query = urlsplit(raw).query
-    else:
-        _path, separator, query = raw.partition("?")
-        if not separator:
-            return False
-    return parse_qs(query).get("mode") == ["ro"]
+    if not raw.startswith("file:"):
+        return False
+    return parse_qs(urlsplit(raw).query).get("mode") == ["ro"]
 
 
 @functools.lru_cache(maxsize=1)
@@ -276,28 +272,33 @@ def _script_path(filename: str) -> str | None:
 
 
 _OPEN_HELPERS = frozenset({"_open_conn", "_open_writer_conn"})
+# The generic factory is itself an allowlisted connect. Its own frame must not
+# authorize the corpus write it is being asked to make.
+_SEAM_FUNCTIONS = frozenset({("scripts/api/resilience.py", "connect_sqlite")})
 
 
-def _external_caller_may_write(factory: str) -> bool:
-    """True when a declared writer, not only the open helper, is on the stack.
+def _stack_may_write(factory: str | None) -> bool:
+    """True when an ingest function or a declared writer file is anywhere on the stack.
 
-    ``factory``'s own migrate and ingest functions may open the corpus. A test
-    or other module that calls the open helper directly may not, unless that
-    module is itself a declared writer.
+    The open helpers alone do not authorize a write. A non-writer relay between
+    the helper and ``main`` does not hide ``main``. Generic factories such as
+    ``connect_sqlite`` pass no factory file and rely on the declared writer paths.
     """
     writers = _declared_writer_paths()
     factory_functions: list[str] = []
+    writer_on_stack = False
     for frame in inspect.stack():
         rel = _script_path(frame.filename)
-        if rel is None or rel == _GUARD_PATH:
+        if rel is None or rel == _GUARD_PATH or (rel, frame.function) in _SEAM_FUNCTIONS:
             continue
-        if rel == factory:
+        if factory is not None and rel == factory:
             factory_functions.append(frame.function)
             continue
-        if any(name not in _OPEN_HELPERS for name in factory_functions):
-            return True
-        return rel in writers
-    return any(name not in _OPEN_HELPERS for name in factory_functions)
+        if rel in writers:
+            writer_on_stack = True
+    if any(name not in _OPEN_HELPERS for name in factory_functions):
+        return True
+    return writer_on_stack
 
 
 def refuse_writable_corpus_database(
@@ -305,18 +306,21 @@ def refuse_writable_corpus_database(
     *,
     uri: bool = False,
     factory: str | None = None,
+    allow_declared_writers: bool = True,
 ) -> None:
     """Refuse a writable open of sources.db or vesum.db outside ingest writers.
 
     ``uri`` with ``mode=ro`` is a read-only open and is allowed. ``factory`` is
-    the repo-relative file of a declared writer seam; callers outside the
-    writer allowlist are refused, and a seam with no factory always is.
+    the repo-relative file of a writer seam whose own ingest functions may
+    write. Generic factories leave it unset and still allow a declared writer
+    file on the stack. ``allow_declared_writers=False`` refuses every caller;
+    the control-plane store uses that.
     """
     name = corpus_database_name(database)
     if name is None:
         return
     if uri and _uri_requests_read_only(database):
         return
-    if factory is not None and _external_caller_may_write(factory):
+    if allow_declared_writers and _stack_may_write(factory):
         return
     raise CorpusDatabaseWriteRefused(f"refusing writable open of corpus database {name}")

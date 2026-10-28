@@ -262,7 +262,7 @@ def connect(
         if path is not None
         else sqlite_path(store, repo_root=repo_root)
     )
-    refuse_writable_corpus_database(db_path)
+    refuse_writable_corpus_database(db_path, allow_declared_writers=False)
     if read_only:
         if not db_path.is_file():
             raise ControlPlaneStoreUnavailableError(

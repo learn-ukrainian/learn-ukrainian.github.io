@@ -74,6 +74,27 @@ def test_connect_refuses_corpus_database_names(tmp_path: Path) -> None:
             connect(StoreId.FLEET_COMMS, path=path)
         with pytest.raises(CorpusDatabaseWriteRefused, match=name):
             connect(StoreId.FLEET_COMMS, path=path, read_only=True)
+    special = tmp_path / "review?case" / "vesum.db"
+    special.parent.mkdir()
+    special.write_bytes(b"")
+    with pytest.raises(CorpusDatabaseWriteRefused, match=r"vesum\.db"):
+        connect(StoreId.FLEET_COMMS, path=special)
+
+
+def test_connect_refuses_corpus_names_even_for_a_declared_writer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from scripts.lib import readonly_sqlite
+
+    monkeypatch.setattr(
+        readonly_sqlite,
+        "_declared_writer_paths",
+        lambda: frozenset({readonly_sqlite._script_path(__file__)}),
+    )
+    path = tmp_path / "sources.db"
+    path.write_bytes(b"")
+    with pytest.raises(CorpusDatabaseWriteRefused, match=r"sources\.db"):
+        connect(StoreId.FLEET_COMMS, path=path)
 
 
 def test_ownership_ledger_uses_seam_and_begin_immediate(
