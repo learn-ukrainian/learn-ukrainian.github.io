@@ -15,7 +15,11 @@ def claude_doctor(tmp_path_factory, monkeypatch):
     CI has no Claude Code, and a developer host's own login must not decide a test. Tests that start a
     provider ``claude`` put their own stub first on ``PATH``.
     """
-    bin_dir = tmp_path_factory.mktemp("claude-doctor")
+    return install_claude_doctor_stub(tmp_path_factory.mktemp("claude-doctor"), monkeypatch)
+
+
+def install_claude_doctor_stub(bin_dir, monkeypatch):
+    """Put a ``claude`` that answers only ``claude doctor``, as a consumer login, first on ``PATH``."""
     stub = bin_dir / "claude"
     stub.write_text(
         f"#!{sys.executable}\nimport sys\n"

@@ -40,6 +40,7 @@ from scripts.eval.uk_preamble.runner import (
     render,
     rules_block,
 )
+from tests.dispatcher.conftest import install_claude_doctor_stub
 
 CALLER = "harness"
 
@@ -548,6 +549,9 @@ def test_three_seat_shared_cwd_refusal_uses_real_dispatch_worktree_layout(
 ):
     from scripts.dispatcher import git, providers, store, worker
 
+    # The Claude seats are read-only, so the real CLI asks `claude doctor` for managed settings first.
+    (outside_dir / "bin").mkdir()
+    install_claude_doctor_stub(outside_dir / "bin", monkeypatch)
     monkeypatch.setenv("LU_TASKS_DIR", str(outside_dir / "tasks"))
     monkeypatch.setattr(
         git, "resolve_repo", lambda key: (linked_worktree.parents[3], {"key": "public", "github": "example/public"})
