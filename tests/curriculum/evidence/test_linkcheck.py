@@ -68,6 +68,18 @@ def test_link_check_local_http_server(monkeypatch, statuses, reject_old, expecte
     assert set(result) == {"http_status", "final_url", "content_type", "date"}
 
 
+def test_non_ascii_url_is_sent_as_a_uri(monkeypatch):
+    """urllib rejects raw Cyrillic in a request line; the checker must send percent-encoding."""
+    monkeypatch.setattr(sources.time, "sleep", lambda delay: None)
+    with link_server([200]) as (url, seen):
+        assert sources.check_url(url + "/урок?q=привіт%20світ", timeout=1)["http_status"] == 200
+    assert len(seen) == 1
+    assert sources._ascii_url("https://приклад.укр/а?б=в#г") == (
+        "https://xn--80aikifvh.xn--j1amh/%D0%B0?%D0%B1=%D0%B2#%D0%B3"
+    )
+    assert sources._ascii_url("https://example.org/a%20b?x=1&y=2") == "https://example.org/a%20b?x=1&y=2"
+
+
 def test_retry_after_is_capped(monkeypatch):
     delays = []
     monkeypatch.setattr(sources.time, "sleep", delays.append)

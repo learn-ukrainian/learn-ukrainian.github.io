@@ -7,13 +7,15 @@ import importlib.util
 import json
 import sqlite3
 from collections import Counter
+from contextlib import contextmanager
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from unittest.mock import MagicMock
+from threading import Thread
 
 import pytest
-import requests
 import yaml
 
+from scripts.curriculum.evidence import sources
 from scripts.ingest import resource_catalogue_ingest as catalogue
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -184,92 +186,61 @@ def test_access_conflict_excludes_free_filter(database):
     assert merged["access"] == "mixed"
 
 
-@pytest.mark.parametrize("status", [200, 404, 403, 405, 501])
-def test_link_check_records_status_and_date(monkeypatch, status):
-    response = MagicMock(status_code=status)
-    response.__enter__.return_value = response
-    monkeypatch.setattr(catalogue.requests, "head", lambda *a, **kw: response)
-    fallback = MagicMock(status_code=200)
-    fallback.__enter__.return_value = fallback
-    get = MagicMock(return_value=fallback)
-    monkeypatch.setattr(catalogue.requests, "get", get)
-    check = catalogue.check_link("https://example.org", timeout=3)
-    assert check["http_status"] == (200 if status in {405, 501} else status)
-    assert check["checked_at"]
-    assert check["link_check"] == ("live" if status in {200, 405, 501} else "http_error")
-    if status in {405, 501}:
-        assert get.call_args.kwargs["stream"] is True
+@contextmanager
+def link_server(statuses):
+    """Serve the given statuses in turn (the last repeats) on a loopback port."""
+    seen = []
 
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            seen.append(self.headers.get("User-Agent", ""))
+            self.send_response(statuses[min(len(seen) - 1, len(statuses) - 1)])
+            self.send_header("Content-Type", "text/html")
+            self.end_headers()
 
-def test_network_failure_and_internal_link(monkeypatch):
-    monkeypatch.setattr(catalogue.requests, "head", MagicMock(side_effect=requests.Timeout))
-    assert catalogue.check_link("https://example.org")["link_check"] == "network_error"
-    assert catalogue.check_link("sources://collection/textbooks")["link_check"] == "not_applicable"
+        def log_message(self, *args):
+            pass
 
-
-LINK_CHECK_IDENTITY = (
-    "learn-ukrainian-resource-catalogue/1.0 "
-    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
-)
-
-
-def _capture_outgoing(monkeypatch, statuses, error=None):
-    """Capture real PreparedRequests at HTTPAdapter.send; no socket is opened."""
-    sent = []
-    queue = list(statuses)
-
-    def fake_send(self, request, **kwargs):
-        sent.append((request, kwargs))
-        if error is not None:
-            raise error
-        response = requests.Response()
-        response.status_code = queue.pop(0)
-        response.url = request.url
-        response.request = request
-        response._content = b""
-        response._content_consumed = True
-        return response
-
-    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", fake_send)
-    return sent
+    with ThreadingHTTPServer(("127.0.0.1", 0), Handler) as server:
+        thread = Thread(target=server.serve_forever)
+        thread.start()
+        try:
+            yield f"http://127.0.0.1:{server.server_port}/page", seen
+        finally:
+            server.shutdown()
+            thread.join()
 
 
 @pytest.mark.parametrize(
-    ("statuses", "methods", "expected_status"),
+    ("statuses", "outcome", "final_status", "requests_made"),
     [
-        ([200], ["HEAD"], 200),
-        ([405, 200], ["HEAD", "GET"], 200),
-        ([501, 200], ["HEAD", "GET"], 200),
+        ([200], "live", 200, 1),
+        ([403], "bot_blocked", 403, 1),
+        ([429, 200], "live", 200, 2),
+        ([503], "unverifiable", 503, 3),
+        ([404], "dead_link", 404, 1),
     ],
 )
-def test_link_check_prepared_requests_identify_project_with_public_contact(
-    monkeypatch, statuses, methods, expected_status
+def test_link_check_classifies_outcome_with_the_shared_honest_checker(
+    monkeypatch, statuses, outcome, final_status, requests_made
 ):
-    """Defect class: anonymous python-requests identity on outgoing HEAD and fallback GET."""
-    sent = _capture_outgoing(monkeypatch, statuses)
-    check = catalogue.check_link("https://example.org/a?b=1", timeout=3)
-    assert [request.method for request, _ in sent] == methods
-    for request, kwargs in sent:
-        assert request.headers["User-Agent"] == LINK_CHECK_IDENTITY
-        assert request.url == "https://example.org/a?b=1"
-        assert kwargs["timeout"] == 3
-    assert sent[0][1]["stream"] is False
-    if len(sent) == 2:
-        assert sent[1][1]["stream"] is True
-    assert check["http_status"] == expected_status
-    assert check["link_check"] == "live"
+    monkeypatch.setattr(sources.time, "sleep", lambda delay: None)
+    with link_server(statuses) as (url, seen):
+        check = catalogue.check_link(url, timeout=3)
+    assert check["link_check"] == outcome
+    assert check["http_status"] == final_status
     assert check["checked_at"]
+    assert len(seen) == requests_made
+    assert all(agent == sources.LINKCHECK_USER_AGENT for agent in seen)
 
 
-def test_link_check_identity_does_not_change_network_error_or_internal_paths(monkeypatch):
-    """Defect class: identity header altering exception handling or the sources:// no-network path."""
-    sent = _capture_outgoing(monkeypatch, [], error=requests.ConnectionError("down"))
-    assert catalogue.check_link("https://example.org")["link_check"] == "network_error"
-    assert [request.method for request, _ in sent] == ["HEAD"]
-    assert sent[0][0].headers["User-Agent"] == LINK_CHECK_IDENTITY
-    sent.clear()
+def test_unreachable_host_is_unverifiable_and_internal_link_is_not_applicable(monkeypatch):
+    monkeypatch.setattr(sources.time, "sleep", lambda delay: None)
+    with link_server([200]) as (url, _):
+        pass  # the server is closed: nothing listens on this port any more
+    check = catalogue.check_link(url, timeout=1)
+    assert (check["link_check"], check["http_status"]) == ("unverifiable", None)
     assert catalogue.check_link("sources://collection/textbooks")["link_check"] == "not_applicable"
-    assert sent == []
 
 
 def test_offline_preserves_previous_checks(database, monkeypatch):

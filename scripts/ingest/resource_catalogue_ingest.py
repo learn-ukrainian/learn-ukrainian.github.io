@@ -13,8 +13,9 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 
-import requests
 import yaml
+
+from scripts.curriculum.evidence import codes, sources
 
 CATALOGUES = (
     "podcasts/podcast_db.json",
@@ -33,10 +34,6 @@ CATALOGUES = (
     "verba/verba_db.json",
 )
 KINDS = ("podcast", "video", "article", "reference")
-LINK_CHECK_USER_AGENT = (
-    "learn-ukrainian-resource-catalogue/1.0 "
-    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
-)
 MAX_HITS = 20
 MAX_HIT_BYTES = 24576
 PROVENANCE_BUDGETS = {
@@ -414,33 +411,15 @@ def link_existing_text(conn: sqlite3.Connection, rows: list[dict]) -> int:
 
 
 def check_link(url: str, timeout: float = 10) -> dict:
-    """Check HTTP headers only; errors are unknown, never a live-link assertion."""
+    """Classify a link with the evidence checker: live, dead_link, bot_blocked or unverifiable."""
     if url.startswith("sources:"):
         return {"http_status": None, "checked_at": None, "link_check": "not_applicable"}
     checked_at = datetime.now(UTC).isoformat()
     try:
-        with requests.head(
-            url,
-            timeout=timeout,
-            allow_redirects=True,
-            headers={"User-Agent": LINK_CHECK_USER_AGENT},
-        ) as response:
-            status = response.status_code
-        if status in {405, 501}:
-            with requests.get(
-                url,
-                timeout=timeout,
-                stream=True,
-                headers={"User-Agent": LINK_CHECK_USER_AGENT},
-            ) as response:
-                status = response.status_code
-        return {
-            "http_status": status,
-            "checked_at": checked_at,
-            "link_check": "live" if 200 <= status < 400 else "http_error",
-        }
-    except requests.RequestException:
-        return {"http_status": None, "checked_at": checked_at, "link_check": "network_error"}
+        status = sources.check_url(url, timeout=timeout)["http_status"]
+    except ConnectionError:
+        return {"http_status": None, "checked_at": checked_at, "link_check": codes.UNVERIFIABLE}
+    return {"http_status": status, "checked_at": checked_at, "link_check": sources.classify_link_status(status)}
 
 
 def ensure_schema(conn: sqlite3.Connection) -> None:

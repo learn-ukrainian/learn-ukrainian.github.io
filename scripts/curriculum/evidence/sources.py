@@ -20,6 +20,7 @@ import sys
 import time
 import unicodedata
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections.abc import Callable, Iterable, Mapping
 from contextlib import closing, suppress
@@ -1555,6 +1556,7 @@ LINKCHECK_USER_AGENT = (
     "Mozilla/5.0 (compatible; learn-ukrainian-linkcheck/1.0; "
     "+https://github.com/learn-ukrainian/learn-ukrainian.github.io)"
 )
+LIVE_LINK = "live"
 URL_CHECK_ATTEMPTS = 3
 URL_RETRY_CAP = 5.0
 
@@ -1574,6 +1576,14 @@ def _url_retry_delay(retry_after: str | None, attempt: int) -> float:
     return min(delay, URL_RETRY_CAP)
 
 
+def _ascii_url(url: str) -> str:
+    """IRI to URI (RFC 3987 §3.1): urllib cannot send non-ASCII bytes in a request line."""
+    parts = urllib.parse.urlsplit(url)
+    host = parts.netloc.encode("idna").decode("ascii") if not parts.netloc.isascii() else parts.netloc
+    quoted = (urllib.parse.quote(part, safe="/?&=+,;:@!$'()*~%[]") for part in (parts.path, parts.query, parts.fragment))
+    return urllib.parse.urlunsplit((parts.scheme, host, *quoted))
+
+
 def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
     """GET with robot identification, redirects and bounded transient retries.
 
@@ -1582,7 +1592,7 @@ def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
     """
     if timeout is None or timeout <= 0:
         raise ValueError("check_url requires a positive timeout")
-    req = urllib.request.Request(url, headers={"User-Agent": LINKCHECK_USER_AGENT})
+    req = urllib.request.Request(_ascii_url(url), headers={"User-Agent": LINKCHECK_USER_AGENT})
     for attempt in range(URL_CHECK_ATTEMPTS):
         retry_after = None
         try:
@@ -1615,6 +1625,17 @@ def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
         if attempt == URL_CHECK_ATTEMPTS - 1:
             return result
         time.sleep(_url_retry_delay(retry_after, attempt))
+
+
+def classify_link_status(status: int) -> str:
+    """Name the outcome of a final HTTP status: ``live`` or a ``codes`` link failure."""
+    if status == 200:
+        return LIVE_LINK
+    if status in {401, 403}:
+        return codes.BOT_BLOCKED
+    if status in {404, 410}:
+        return codes.DEAD_LINK
+    return codes.UNVERIFIABLE
 
 
 @lru_cache(maxsize=1)
