@@ -241,33 +241,121 @@ held-out subprocess interruption/concurrency/reconciliation cases, native Opus
 exact-head review, CI, landing, cleanup and operational source-access checks.
 No live acquisition or canonical-store write is part of offline validation.
 
-## СУМ-20 mirror import (design under review)
+## СУМ-20 mirror import
 
-`scripts.ingest.sum20_mirror_import` will import the complete staged СУМ-20
-mirror into new `sum20_mirror_*` tables of `sources.db`. It never writes the
-official `sum20_*` tables, their quarantine marks or the crawl tables.
+`scripts.ingest.sum20_mirror_import` imports the complete staged СУМ-20 mirror
+into the `sum20_mirror_*` tables of `sources.db`. It never writes the official
+`sum20_*` tables, their quarantine marks or the crawl tables.
 
-**Readers.** Readers apply rule `sum20-mirror-rule-v1` at read time:
+### Readers
 
-| Official rows for the key | What is served |
+`query_sum20`, the Sources MCP tool and the word-card inventory apply rule
+`sum20-mirror-rule-v1` at read time (`scripts/wiki/sum20_mirror.py`). For each
+lookup key they compare every mirror row with every official row of that key:
+
+| Official rows for the key | Relation | What is served |
+| --- | --- | --- |
+| None | `mirror_only` | The mirror row |
+| A live official row with an equal comparison payload | `agrees_with_official` | Official only |
+| Only quarantined or unverified rows | `official_quarantined` | The mirror row; the official row stays hidden |
+| Live official rows that differ | `differs_from_official` | Official rows first, then the mirror row |
+
+**Identity and comparison.** The lookup key is the page headword: URL slugs
+spell the apostrophe `_`, as in `м_ясо`. The comparison payload is the one
+`scripts.lexicon.reconcile_sum20` uses.
+
+**Provenance.** Mirror records carry:
+
+- `source_id: "sum20_slovnyk_mirror"` and `source_role: "mirror"`;
+- `official_relation`;
+- the mirror URL as `source_record_id`, plus `source_url`, `retrieved_at` and `content_sha256`;
+- the verbatim article text.
+
+Official records gain only `source_role: "official"`. Callers that require
+official text keep filtering on `source_id == "sum20_official"`.
+
+**Store selection.** When official rows come from a lexdata generation, mirror
+rows still come from the default sources store and are judged against the
+lexdata rows. An explicit `LU_LEXDATA_DB` or `LEXDATA_DB_PATH` override stays
+exclusive.
+
+### Writer
+
+Run the writer from the primary checkout only. Before you start:
+
+- Hold the live store: `.venv/bin/python -m scripts.storage hold data/sources.db`.
+- Check that its WAL is empty.
+- Check that no process holds it open for writing.
+
+Staging must match the admitted SHA-256 recorded in the
+[ВТС source snapshot](../sources/admissions/2026-10-28-vts-acquisition.md),
+with an empty WAL and a complete checkpoint.
+
+```bash
+.venv/bin/python -m scripts.ingest.sum20_mirror_import plan
+.venv/bin/python -m scripts.ingest.sum20_mirror_import build \
+  --expect-staging-sha256 32e77a09e004a7ad740fa8acd350d0f5a743cb13f751e9d134ffcec5db595194
+.venv/bin/python -m scripts.ingest.sum20_mirror_import publish --generation <id> \
+  --drain-unit learn-ukrainian-sources.service --wait-drained 900
+.venv/bin/python -m scripts.ingest.sum20_mirror_import generations
+```
+
+**`build`** only reads the live store:
+
+1. It hashes the staging bytes into a private snapshot and reads only that snapshot.
+2. It copies the live store with the SQLite online backup API.
+3. It imports the staged articles into the copy.
+4. It verifies the copy and seals it as a candidate under `data/sources/candidates/`.
+
+Verification compares:
+
+- the mirror rows with every staging row;
+- the official tables, by full-row digest;
+- every other table's row count;
+- the relation counts with the plan;
+- `PRAGMA integrity_check`;
+- sampled `query_sum20` lookups for each relation.
+
+**`publish`** refuses when:
+
+- the live store changed since the copy;
+- the live store is not held;
+- its WAL holds frames;
+- any process holds a writable descriptor.
+
+It waits up to `--wait-drained` seconds for other readers to close. It then
+stops the `--drain-unit` units and checks again. It hard-links the live inode
+into `data/sources/backups/` and renames the candidate over `data/sources.db`.
+It starts the units again whatever the outcome.
+
+**Readers that stay open.** `--allow-readonly-holders` lets a publication
+proceed while read-only descriptors remain. Those readers keep the old inode
+until they reopen. Every refusal names the holding process ids.
+
+### Restore
+
+Restore any retained generation with one command:
+
+```bash
+.venv/bin/python -m scripts.ingest.sum20_mirror_import restore --generation <id> \
+  --drain-unit learn-ukrainian-sources.service --wait-drained 900
+```
+
+A restore copies the retained file, checks its SHA-256 against the receipt and
+publishes it the same way. The generation it replaces is retained too, so a
+restore can itself be undone. Nothing prunes `data/sources/backups/`. Each
+generation is a full store, and the off-site backup allowlist does not include it.
+
+**Exit codes:**
+
+| Code | Meaning |
 | --- | --- |
-| None | The mirror row, labelled mirror |
-| A live official row agrees | Official only |
-| Only quarantined official rows | The mirror row, flagged; the official row stays hidden |
-| Live official rows differ | Official first, then the mirror row, flagged |
+| 0 | Success |
+| 1 | Verification failed; the live store is untouched |
+| 2 | Refused before the swap |
 
-Mirror records carry their mirror URL, fetch time and content digest. They use
-their own `source_id`, so callers that require official text never receive them.
-
-**Writer.** The writer runs only from the primary checkout:
-
-1. It copies the live store into a new generation under `data/sources/`.
-2. It imports and verifies there.
-3. It hard-links the previous generation into `data/sources/backups/`.
-4. It swaps the new file in atomically.
-
-One `restore --generation <id>` command brings a previous generation back.
-Restart the Sources MCP unit after a swap or restore.
+A full `scripts/wiki/build_sources_db.py --force` rebuild does not carry the
+`sum20_*` or `sum20_mirror_*` tables. Run the import again after such a rebuild.
 
 ## Foreground compatibility tools
 

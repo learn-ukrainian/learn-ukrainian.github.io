@@ -808,10 +808,13 @@ def senses(inputs: Inputs, b: Builder, unit, entry, anchor, srec, ledger):
                  senses=len(entry["senses"]))
     spelling = entry["key_at_creation"]["spelling"].lower()
     articles = [a for a in inputs.sources.sum20_articles() if src.unstressed(a["headword"]).lower() == spelling]
-    if articles:
+    # Served mirror articles are recorded beside the official ones, never in their place.
+    mirror = inputs.sources.sum20_mirror_articles(spelling)
+    extra = {"mirror_articles": mirror} if mirror else {}
+    if articles or mirror:
         ledger.field(card_id, "definition_uk", "held", "sum20_article_present_not_aligned",
                      articles=[a["wordid"] for a in articles],
-                     quarantined=[a["wordid"] for a in articles if a["quarantine_reason"]])
+                     quarantined=[a["wordid"] for a in articles if a["quarantine_reason"]], **extra)
     else:
         ledger.field(card_id, "definition_uk", "source_absent",
                      "no СУМ-20 article for the lexeme in the held crawl; ВТС is not admitted (plan §6.1)")

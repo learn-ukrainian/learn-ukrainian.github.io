@@ -79,6 +79,30 @@ def open_sum20(db_path: Path | str | None = None, *, repository_root: Path | Non
     return open_sources(repository_root=repository_root)
 
 
+def open_sum20_mirror(
+    selected: SQLiteConnection,
+    db_path: Path | str | None = None,
+    *,
+    repository_root: Path | None = None,
+) -> SQLiteConnection | None:
+    """A separate sources connection for imported mirror rows, or ``None`` to reuse ``selected``.
+
+    ``selected`` is what ``open_sum20`` returned for the same arguments. An
+    injected path and a store already holding the mirror tables are reused. An
+    explicit lexdata override is exclusive and never falls back, so it is
+    reused too. Otherwise the official rows may come from a lexdata generation
+    while the mirror lives in the sources store, which is opened here. The
+    caller closes a returned connection.
+    """
+    from scripts.wiki.sum20_mirror import mirror_tables_present
+
+    if db_path is not None or mirror_tables_present(selected):
+        return None
+    if "LU_LEXDATA_DB" in os.environ or "LEXDATA_DB_PATH" in os.environ:
+        return None
+    return open_sources(repository_root=repository_root)
+
+
 def lookup_sum20_cached(
     lemma: str,
     conn: SQLiteConnection,

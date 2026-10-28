@@ -465,6 +465,18 @@
     ]
   },
   {
+    "path": "scripts/ingest/sum20_mirror_import.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "sources.db generation temp file (online-backup copy, mirror import, WAL seal)",
+    "reason": "single writer of the sum20_mirror tables: builds and verifies a new sources.db generation before the atomic swap; the live store is only read",
+    "calls": [
+      "sqlite3.connect(destination)",
+      "sqlite3.connect(path)",
+      "sqlite3.connect(temp)"
+    ]
+  },
+  {
     "path": "scripts/ingest/sum20_official_ingest.py",
     "reference_count": 1,
     "kind": "writer",
