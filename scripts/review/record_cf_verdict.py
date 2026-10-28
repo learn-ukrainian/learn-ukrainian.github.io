@@ -1599,6 +1599,10 @@ def _review_branch(task: dict[str, Any]) -> str:
 
 
 def _task(task_id: str, task_root: Path) -> tuple[dict[str, Any], str]:
+    """Detect accidental result edits before deriving a publication copy.
+
+    A deliberate same-user writer can also replace the record's stored hash.
+    """
     if not TASK_ID.fullmatch(task_id):
         raise RecordError("invalid task id")
     task_path = _hot_or_archived(task_root, f"{task_id}.json")
@@ -1606,13 +1610,21 @@ def _task(task_id: str, task_root: Path) -> tuple[dict[str, Any], str]:
     result_path = task_path.with_suffix(".result")
     try:
         task = json.loads(task_path.read_text(encoding="utf-8"))
-        reply = result_path.read_text(encoding="utf-8")
+        raw_reply = result_path.read_bytes()
     except (OSError, ValueError) as exc:
         raise RecordError("review task record or reply unavailable") from exc
     if not isinstance(task, dict):
         raise RecordError("review task record malformed")
     if task.get("status") != "done":
         raise RecordError("review task is not done")
+    expected = task.get("result_sha256")
+    if expected is not None and hashlib.sha256(raw_reply).hexdigest() != expected:
+        raise RecordError(f"terminal_result_digest_mismatch: task {task_id}; writer unknown")
+    try:
+        # Preserve read_text's universal-newline behaviour after checking the raw bytes.
+        reply = raw_reply.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
+    except UnicodeDecodeError as exc:
+        raise RecordError("review task record or reply unavailable") from exc
     _review_branch(task)
     return task, reply
 
