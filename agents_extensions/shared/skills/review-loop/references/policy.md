@@ -14,7 +14,7 @@ rounds are deltas.
   state and concurrency, and only while an evidenced blocker on it stays open, or when the
   operator asks for it (`budget_tier: elevated`). Each round past the third cites the open
   finding id that justifies it. The author never raises the limit alone.
-- **Stop early when only nits remain:** no open blocker means no further round. Remaining
+- **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
   follow-ups never hold the merge.
 - **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
   review out to helper agents. Learner-facing Ukrainian is the exception: its profile seats two

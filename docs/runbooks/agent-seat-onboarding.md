@@ -109,7 +109,7 @@ When a dispatch settles, the dispatcher removes the task's own worktree, or keep
 records why in the task record (`worktree_disposition`); resolve a kept tree by that reason
 through the P0 reaper. After GitHub reports an exact-head PR as `MERGED`, use
 `.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged` from outside the target
-worktree. The reaper is the
+worktree. Apart from the dispatcher's own removal at settlement, the reaper is the
 only ordinary deletion path: use manual Git removal only when the reaper cannot run, following
 [the worktree-cleanup runbook](worktree-cleanup.md) for `LU_REAPER_DISABLED`, rescue restore,
 and the narrowly allowlisted dual paths.

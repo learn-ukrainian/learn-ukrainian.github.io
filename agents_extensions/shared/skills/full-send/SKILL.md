@@ -99,14 +99,15 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
     removes no worktree. Exit 0 with a residue-free receipt is required, with one expected
     interim case: a worker runs this from its own worktree, which is still in use, so the
     receipt reports that worktree and its local branch as the only residual and the tool exits
-    1. The worker reports that receipt and ends its run. When its task settles, the dispatcher
-    removes both and records `worktree_disposition` in the task record. The driver reads that
+    1. The worker reports that receipt, disposes of the linked issues (step 11), and only then
+    ends its run. When its task settles, the dispatcher removes both and records
+    `worktree_disposition` in the task record. The driver reads that
     disposition: once it is `removed`, the driver re-runs the command above from outside the
     tree, and its exit 0 receipt is the verified final closeout; a `retained` or `error`
     worktree is removed only after confirming its content is published (`workflow.md` §
     Post-merge cleanup). Any other residual or non-zero exit means not done: record the
     evidence and owner and resolve it safely, never with `--force`.
-11. **Dispose of the linked issues.** Close each named issue as completed with evidence on the
+11. **Dispose of the linked issues.** A worker does this before it ends its run. Close each named issue as completed with evidence on the
     merged SHA, or comment what remains, its owner and what it waits on (rules core P4).
 
 ## Stop and escalate
