@@ -682,3 +682,58 @@ def test_external_check_states_switches_only_for_an_entry_name():
     assert external_check_states([GREEN_GATE, OBSERVED], pytest.fail, lambda: sentinel) is sentinel
     assert external_check_states([GREEN_GATE, OBSERVED, "not-a-row"], pytest.fail, pytest.fail) is None
     assert external_check_states(None, parse_checks, pytest.fail) is None
+
+
+# --- check history beyond one 100-record page ----------------------------------------------
+
+def _paged_runs(count):
+    return [entire_run(id=1000 + n) for n in range(count)]
+
+
+def _paged_get_json(runs, *, total=None, drop=()):
+    """A fake REST endpoint serving ``runs`` 100 per page; ``drop`` pages answer None."""
+    seen = []
+
+    def get_json(endpoint):
+        seen.append(endpoint)
+        if endpoint == STATUS_ENDPOINT:
+            return {"total_count": 0, "statuses": []}
+        base, _, page = endpoint.partition("&page=")
+        assert base == RUNS_ENDPOINT
+        number = int(page or 1)
+        if number in drop:
+            return None
+        return {"total_count": len(runs) if total is None else total, "check_runs": runs[(number - 1) * 100:number * 100]}
+
+    return get_json, seen
+
+
+def test_prove_external_advisory_reads_every_page_of_a_large_head():
+    from scripts.publish.merge_guard import prove_external_advisory
+
+    get_json, seen = _paged_get_json(_paged_runs(136))
+    names = frozenset({ENTIRE.name})
+    assert prove_external_advisory(REPO, HEAD, names, get_json) == names
+    assert seen == [STATUS_ENDPOINT, RUNS_ENDPOINT, RUNS_ENDPOINT + "&page=2"]
+
+
+def test_prove_external_advisory_reads_a_full_single_page_once():
+    from scripts.publish.merge_guard import prove_external_advisory
+
+    get_json, seen = _paged_get_json(_paged_runs(100))
+    assert prove_external_advisory(REPO, HEAD, frozenset({ENTIRE.name}), get_json) == frozenset({ENTIRE.name})
+    assert seen == [STATUS_ENDPOINT, RUNS_ENDPOINT]
+
+
+@pytest.mark.parametrize("runs, kwargs", [
+    pytest.param(_paged_runs(136)[:130], {"total": 136}, id="short-second-page"),
+    pytest.param(_paged_runs(136), {"drop": (2,)}, id="page-disappears-mid-walk"),
+    pytest.param(_paged_runs(136), {"total": 137}, id="total-changes-mid-walk"),
+    pytest.param(_paged_runs(100) + _paged_runs(36)[:20] + _paged_runs(100)[:16], {}, id="repeated-run-ids"),
+    pytest.param(_paged_runs(90), {"total": 136}, id="short-first-page"),
+])
+def test_prove_external_advisory_fails_closed_when_pages_do_not_add_up(runs, kwargs):
+    from scripts.publish.merge_guard import prove_external_advisory
+
+    get_json, _ = _paged_get_json(runs, **kwargs)
+    assert prove_external_advisory(REPO, HEAD, frozenset({ENTIRE.name}), get_json) is None
