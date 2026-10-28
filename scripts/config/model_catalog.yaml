@@ -392,6 +392,35 @@ models:
       - https://developers.openai.com/api/docs/models/gpt-6.1-sol
       - https://openai.com/index/introducing-gpt-6-1-sol/
       - https://developers.openai.com/api/docs/pricing
+  gpt-6.1-terra:
+    routing_wire_ids:
+      native_codex: gpt-6.1-terra
+    family: openai
+    tier: frontier_practical
+    lifecycle: active
+    roles: [implementation, agentic_coding, bounded_checks]
+    transports: [native_codex]
+    strengths: [scoped_code_fixes, balanced_quality_cost]
+    weaknesses: [not_a_formal_reviewer, no_driver_authority, no_security_tool_work, no_destructive_cleanup]
+    notes: >-
+      Default routine non-security coder through native Codex and Codex multi_agent_v2
+      at high effort. Use explicit Sol 6.1 for hard tasks, advisory work, drivers,
+      security tooling and destructive cleanup. No review-of-record, critique,
+      designated approval or Ukrainian-content judgment role. The codex formal-review
+      endpoint and authority seats remain Sol; this entry adds no reviewer candidate.
+      Standard API price per million tokens: $1 input, $0.05 cached input,
+      $1.25 cache write for 30-minute retention, $5 output. Above 272K input tokens,
+      input and cache rates double and output is 1.5x. Context 1,050,000 tokens;
+      maximum output 128,000. Efforts none, low, medium, high, xhigh, max.
+      System card section 7.5.1 reports specified unauthorized actions in 11/80
+      Terra samples (13.75%) versus 1/80 Sol 6.1 samples (1.25%), conditioned on
+      board discovery in ten adversarial scenarios with corrected maximum effort.
+      These are evaluation results, not production failure rates. Section 7.5.2
+      also reports higher destructive-action and restriction-circumvention flags
+      than Sol. These findings motivate the authority and tool-work exclusions.
+    sources:
+      - https://developers.openai.com/api/docs/models/gpt-6.1-terra
+      - https://deploymentsafety.openai.com/gpt-6-1-terra
   gpt-6-luna:
     routing_wire_ids:
       native_codex: gpt-6-luna

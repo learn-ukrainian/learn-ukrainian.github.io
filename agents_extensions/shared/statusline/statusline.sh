@@ -27,11 +27,11 @@
 #                    max red. Omitted for pre-2.1.119 clients.
 #   [think]        .thinking.enabled — emitted only when true. Omitted for
 #                    pre-2.1.119 clients.
-#   [5h: N%]       .rate_limits.five_hour.used_percentage — subscription
-#                    budget. Only shown when elevated (60%+ yellow, 80%+ red).
-#                    Stays silent while healthy — no noise in normal use.
-#   [7d: N%]       .rate_limits.seven_day.used_percentage — weekly budget.
-#                    Same threshold scheme as 5h.
+#   [acct: A/B]    CLAUDE_CONFIG_DIR, matched to the default directory or the
+#                    registered B directory; unknown directories are omitted.
+#   [5h: N% left]  .rate_limits.five_hour.used_percentage — remaining budget,
+#                    yellow below 40%, red below 20%; absent fields omitted.
+#   [7d: N% left]  .rate_limits.seven_day.used_percentage — same as 5h.
 #   [$cost]        .cost.total_cost_usd, formatted to 2 decimals, shown only
 #                    when the input JSON provides the field. Kept last/low-
 #                    emphasis: for Claude Max subscribers the 5h/7d rate-limit
@@ -78,6 +78,25 @@ json_get() {
 # ── Segments ────────────────────────────────────────────────────
 
 model=$(json_get '.model.display_name')
+
+# Read only the account binding, never the login directory's contents.
+account_seg=""
+config_dir=${CLAUDE_CONFIG_DIR:-${HOME}/.claude}
+if [[ "$config_dir" = "$HOME/.claude" || "$config_dir" -ef "$HOME/.claude" ]]; then
+  account_seg="[acct: A]"
+else
+  config_home=${XDG_CONFIG_HOME:-$HOME/.config}
+  [[ "$config_home" = /* ]] || config_home="$HOME/.config"
+  bindings=${LU_CLAUDE_ACCOUNTS_FILE-$config_home/learn-ukrainian/claude_accounts.json}
+  if [[ -f "$bindings" && -r "$bindings" ]]; then
+    account_b=$(jq -r 'select(.schema_version == 1) | .accounts.b.config_dir
+      | select(type == "string" and startswith("/") and (test("[[:cntrl:]]") | not))' \
+      "$bindings" 2>/dev/null) || account_b=""
+    if [[ -n "$account_b" && ( "$config_dir" = "$account_b" || "$config_dir" -ef "$account_b" ) ]]; then
+      account_seg="[acct: B]"
+    fi
+  fi
+fi
 
 cwd=$(json_get '.workspace.current_dir')
 [ -z "$cwd" ] && cwd=$(json_get '.cwd')
@@ -306,16 +325,16 @@ thinking_seg=""
 thinking_enabled=$(json_get '.thinking.enabled')
 [ "$thinking_enabled" = "true" ] && thinking_seg="[think]"
 
-# Rate-limit segment helper — only surface when elevated (60%+).
+# Rate-limit segment helper: always show a numeric window's remaining budget.
 # Accepts a label (e.g. "5h", "7d") and a jq path, returns coloured
 # segment on stdout or empty string.
 rate_limit_seg() {
-  local label=$1 path=$2 pct int
-  pct=$(json_get "$path")
+  local label=$1 path=$2 pct
+  pct=$(json_get "$path | select(type == \"number\") | 100 - . | [0, .] | max | [100, .] | min | round")
   [ -z "$pct" ] && return 0
-  int=$(printf '%.0f' "$pct" 2>/dev/null) || return 0
-  if   [ "$int" -ge 80 ]; then printf '\033[31m[%s: %d%%]\033[0m' "$label" "$int"
-  elif [ "$int" -ge 60 ]; then printf '\033[33m[%s: %d%%]\033[0m' "$label" "$int"
+  if   [ "$pct" -lt 20 ]; then printf '\033[31m[%s: %d%% left]\033[0m' "$label" "$pct"
+  elif [ "$pct" -lt 40 ]; then printf '\033[33m[%s: %d%% left]\033[0m' "$label" "$pct"
+  else                        printf '[%s: %d%% left]' "$label" "$pct"
   fi
 }
 
@@ -335,6 +354,9 @@ fi
 
 parts=()
 [ -n "$model" ]        && parts+=("[$model]")
+[ -n "$account_seg" ]  && parts+=("$account_seg")
+[ -n "$rl5h_seg" ]     && parts+=("$rl5h_seg")
+[ -n "$rl7d_seg" ]     && parts+=("$rl7d_seg")
 [ -n "$ctx_seg" ]      && parts+=("$ctx_seg")
 parts+=("$cwd_name")
 [ -n "$wt_seg" ]       && parts+=("$wt_seg")
@@ -346,8 +368,6 @@ parts+=("$cwd_name")
 [ -n "$mismatch_seg" ] && parts+=("$mismatch_seg")
 [ -n "$effort_seg" ]   && parts+=("$effort_seg")
 [ -n "$thinking_seg" ] && parts+=("$thinking_seg")
-[ -n "$rl5h_seg" ]     && parts+=("$rl5h_seg")
-[ -n "$rl7d_seg" ]     && parts+=("$rl7d_seg")
 [ -n "$cost_seg" ]     && parts+=("$cost_seg")
 
 # %b interprets the ANSI escape codes embedded in coloured segments.

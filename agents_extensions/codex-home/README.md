@@ -1,10 +1,12 @@
 # Reusable Codex home configuration
 
 This is the canonical portable source for Codex home defaults, orchestration
-guidance, and named profiles. The regular driver uses GPT-6.1 Sol high.
+guidance, and named profiles. Routine coding and generic `multi_agent_v2`
+children default to GPT-6.1 Terra high. Drivers explicitly use GPT-6.1 Sol high.
 
 | Profile | Model | Effort | Access |
 | --- | --- | --- | --- |
+| `terra_coder_high` | `gpt-6.1-terra` | high | workspace-write |
 | `luna_explorer_medium` | `gpt-6-luna` | medium | read-only |
 | `luna_explorer_high` | `gpt-6-luna` | high | read-only |
 | `luna_coder_high` | `gpt-6-luna` | high | workspace-write |
@@ -13,11 +15,17 @@ guidance, and named profiles. The regular driver uses GPT-6.1 Sol high.
 | `sol_ukrainian_content_high` | `gpt-6.1-sol` | high | workspace-write |
 | `sol_advisor_high` | `gpt-6.1-sol` | high | read-only |
 
-The default spawned agent is Sol high for eligible code work. Luna profiles
+The default spawned agent is Terra 6.1 high for routine non-security code.
+Terra receives owned paths, a complete brief and verification command. It has no
+security-tool, security-sensitive-code, destructive-cleanup, driver, orchestration,
+formal-review, critique, designated-approval or Ukrainian-content authority.
+Reserved Codex roles pin Sol explicitly. The
+[Terra coder boundary](../shared/rules/model-assignment.md#terra-coder-boundary)
+records the limits and official model-page and system-card evidence. Luna profiles
 remain available explicitly with a complete Sol advisory envelope when task
 fit and resource policy admit. Use Luna medium for routine scouting and high
 for ambiguous investigations or bounded coding. Sol high
-handles broader coding and adversarial review. `sol_advisor_high` runs at high
+handles hard coding and adversarial review. `sol_advisor_high` runs at high
 as the on-demand advisor for consequential design and difficult linguistic
 judgment. Advice and designated approval come from Opus 5.5 and Sol 6.1:
 approval comes from the operator or from the two agreeing; when one of them

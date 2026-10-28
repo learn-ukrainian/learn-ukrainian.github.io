@@ -35,6 +35,7 @@ from scripts.agent_runtime.accounting import recorded_model_accounting_fields
 from scripts.control_plane import storage
 from scripts.control_plane.health import authority_collector_payload, read_failure_code
 from scripts.fleet_comms import message_plane
+from scripts.fleet_comms.agent_success_metrics import collect_agent_success
 from scripts.fleet_comms.cli import fleet_help_payload, fleet_status_payload
 from scripts.fleet_comms.cold_start_board import build_cold_start_board
 from scripts.fleet_comms.efficiency_metrics import (
@@ -504,9 +505,12 @@ def fleet_facade_board(
 
 
 @router.get("/facade/metrics")
-def fleet_facade_metrics(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
+def fleet_facade_metrics(ctx: MonitorContext = Depends(get_ctx), include_agent_success: bool = False) -> dict[str, Any]:
     """Return authority-plane metrics through the existing collector."""
-    return _facade_authority_payload(collect_efficiency_metrics_authority, ctx)
+    payload = _facade_authority_payload(collect_efficiency_metrics_authority, ctx)
+    if include_agent_success:
+        payload["agent_success"] = collect_agent_success(tasks_dir=ctx.roots.batch_state_dir / "tasks")
+    return payload
 
 
 @router.get("/facade/backlog")

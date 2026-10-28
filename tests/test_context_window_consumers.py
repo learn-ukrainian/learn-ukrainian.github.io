@@ -199,6 +199,80 @@ def test_statusline_prefers_official_usage_and_observed_capacity(tmp_path: Path)
     assert persisted["transcript_path"] == os.fspath(transcript)
 
 
+@pytest.mark.parametrize("layout", ["source", "deployed"])
+@pytest.mark.parametrize(
+    ("account", "limits", "expected_account", "expected_windows"),
+    [
+        ("unset", {"five_hour": {"used_percentage": 10}, "seven_day": {"used_percentage": 65}},
+         "[acct: A]", "[5h: 90% left] \033[33m[7d: 35% left]\033[0m"),
+        ("default", {}, "[acct: A]", ""),
+        ("b", {"five_hour": {"used_percentage": 0}, "seven_day": {"used_percentage": 100}},
+         "[acct: B]", "[5h: 100% left] \033[31m[7d: 0% left]\033[0m"),
+        ("unknown", None, "", ""),
+        ("b-unregistered", {}, "", ""),
+        ("b-invalid-bindings", {}, "", ""),
+        ("b", {"five_hour": {"used_percentage": 60}}, "[acct: B]", "[5h: 40% left]"),
+        ("b", {"seven_day": {"used_percentage": 61}}, "[acct: B]", "\033[33m[7d: 39% left]\033[0m"),
+        ("unset", {"five_hour": {"used_percentage": 80}}, "[acct: A]", "\033[33m[5h: 20% left]\033[0m"),
+        ("unset", {"seven_day": {"used_percentage": 81}}, "[acct: A]", "\033[31m[7d: 19% left]\033[0m"),
+        ("unset", {"five_hour": {"used_percentage": -20}, "seven_day": {"used_percentage": 120}},
+         "[acct: A]", "[5h: 100% left] \033[31m[7d: 0% left]\033[0m"),
+        ("unset", {"five_hour": {"used_percentage": 12.4}}, "[acct: A]", "[5h: 88% left]"),
+        ("unset", {"five_hour": {"used_percentage": "oops"}, "seven_day": {"used_percentage": "50"}},
+         "[acct: A]", ""),
+        ("unset", {"five_hour": {"used_percentage": False}, "seven_day": {"used_percentage": None}},
+         "[acct: A]", ""),
+        ("unset", {"five_hour": {"used_percentage": {}}, "seven_day": {"used_percentage": []}},
+         "[acct: A]", ""),
+    ],
+)
+def test_statusline_account_and_remaining_budget_are_not_missing_or_misattributed(
+    tmp_path: Path, layout: str, account: str, limits: dict | None,
+    expected_account: str, expected_windows: str,
+) -> None:
+    """#10644: execute both layouts, pin account identity, budget arithmetic and placement."""
+    script = STATUSLINE
+    if layout == "deployed":
+        script = tmp_path / ".claude/statusline/statusline.sh"
+        script.parent.mkdir(parents=True)
+        shutil.copyfile(STATUSLINE, script)
+        library = tmp_path / ".claude/hooks/context-rollover-lib.sh"
+        library.parent.mkdir()
+        shutil.copyfile(PROJECT_ROOT / "agents_extensions/shared/hooks/context-rollover-lib.sh", library)
+    home = tmp_path / "home"
+    home.mkdir()
+    secondary = home / "registered login"
+    bindings = home / ".config/learn-ukrainian/claude_accounts.json"
+    bindings.parent.mkdir(parents=True)
+    bindings.write_text(
+        json.dumps({"schema_version": 1, "accounts": {"b": {"config_dir": str(secondary)}}}),
+        encoding="utf-8",
+    )
+    env = {**os.environ, "HOME": str(home), "CLAUDE_PROJECT_DIR": str(tmp_path)}
+    for name in ("CLAUDE_CONFIG_DIR", "XDG_CONFIG_HOME", "LU_CLAUDE_ACCOUNTS_FILE"):
+        env.pop(name, None)
+    if account == "default":
+        env["CLAUDE_CONFIG_DIR"] = str(home / ".claude")
+    elif account.startswith("b"):
+        env["CLAUDE_CONFIG_DIR"] = str(secondary)
+        if account == "b-unregistered":
+            bindings.write_text('{"schema_version": 1, "accounts": {}}', encoding="utf-8")
+        elif account == "b-invalid-bindings":
+            bindings.write_text("invalid json", encoding="utf-8")
+    elif account == "unknown":
+        env["CLAUDE_CONFIG_DIR"] = str(home / ".claude-b")
+    payload = {"model": {"display_name": "Claude"}, "workspace": {"current_dir": str(tmp_path)}}
+    if limits is not None:
+        payload["rate_limits"] = limits
+    completed = subprocess.run(
+        ["bash", str(script)], input=json.dumps(payload), text=True, capture_output=True,
+        check=True, cwd=tmp_path, env=env, timeout=30,
+    )
+    expected = " ".join(part for part in ("[Claude]", expected_account, expected_windows, tmp_path.name) if part)
+    assert completed.stdout == expected + "\n"
+    assert completed.stderr == ""
+
+
 @pytest.mark.parametrize("script", [STATUSLINE, GEMINI_STATUSLINE], ids=["shared", "gemini"])
 @pytest.mark.parametrize("source", ["transcript", "current_usage", "host_total"])
 @pytest.mark.parametrize("layout", ["source", "deployed"])
