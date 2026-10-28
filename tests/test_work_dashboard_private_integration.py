@@ -9,6 +9,7 @@ from __future__ import annotations
 import fcntl
 import json
 import os
+import re
 import socket
 import subprocess
 import threading
@@ -24,6 +25,8 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 WORK_HTML = ROOT / "dashboards" / "work.html"
 PRIVATE_URL = "http://127.0.0.1:8769/v1/projection"
+# The page's own private abort budget; the hang proof derives its bound from it.
+PRIVATE_TIMEOUT_MS = int(re.search(r"const PRIVATE_TIMEOUT_MS = (\d+);", WORK_HTML.read_text("utf-8")).group(1))
 PUBLIC_PATH = "/api/work/v1/projection"
 SCHEMA_DIGEST = "89fb9c1eec41baaa00a328d456340111163c1e3ab899cd7baa15e284fff65bde"
 PUBLIC_COMMIT = "f522c8dba5a68d86fe29d1a36bd8cfeb8c3acb9d"
@@ -801,6 +804,7 @@ const ACTIONS = {actions_json};
 const VIEWPORT = {json.dumps(viewport)};
 const PRIVATE_URL = {json.dumps(PRIVATE_URL)};
 const CANARY = {json.dumps(CANARY)};
+const PRIVATE_TIMEOUT_MS = {PRIVATE_TIMEOUT_MS};
 
 const observed = {{ public: [], private: [], options: 0, consoleErrors: [], pageErrors: [] }};
 
@@ -810,10 +814,10 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
   }});
   page.on('pageerror', (err) => observed.pageErrors.push(String(err && err.message ? err.message : err)));
 
-  // Capture only the private 5s timer. The test fires its real abort callback
+  // Capture only the private abort timer (PRIVATE_TIMEOUT_MS). The test fires its real abort callback
   // after public rows paint, avoiding a race with a slow CI browser.
   if (TRIGGER_PRIVATE_TIMEOUT) {{
-    await page.evaluateOnNewDocument(() => {{
+    await page.evaluateOnNewDocument((privateTimeoutMs) => {{
       const nativeSetTimeout = window.setTimeout;
       window.__testPrivateTimeoutCount = 0;
       let pendingTimeout = null;
@@ -826,7 +830,7 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
         return true;
       }};
       window.setTimeout = function(callback, delay, ...args) {{
-        if (delay === 5000) {{
+        if (delay === privateTimeoutMs) {{
           window.__testPrivateTimeoutCount += 1;
           const id = nativeSetTimeout.call(this, callback, delay, ...args);
           pendingTimeout = {{ id, callback, args }};
@@ -834,7 +838,7 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
         }}
         return nativeSetTimeout.call(this, callback, delay, ...args);
       }};
-    }});
+    }}, PRIVATE_TIMEOUT_MS);
   }}
 
   // Source-blind body-stall mock: fulfilled 200 Response whose json() never
@@ -950,10 +954,12 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
     const pending = await page.$eval('#source-private-meta', el => el.textContent);
     if (pending !== 'Checking capability…') throw new Error('Public rows did not paint while private was pending');
   }}
+  let abortFiredAt = null;
   if (TRIGGER_PRIVATE_TIMEOUT) {{
     await page.waitForFunction(() =>
       document.querySelectorAll('.work-row').length > 0 && window.__testPrivateTimeoutCount === 1,
       {{ timeout: 2000 }});
+    abortFiredAt = Date.now();
     const fired = await page.evaluate(() => window.__firePrivateTimeout());
     if (!fired) throw new Error('private abort timer was not pending');
   }}
@@ -973,6 +979,10 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
     if (!loadingPriv && pub.startsWith('status=')) return true;
     return false;
   }}, {{ timeout: settleBudget }});
+
+  // Abort-to-typed-timeout interval only: browser launch, navigation and
+  // teardown are deliberately outside it.
+  const abortToSettleMs = abortFiredAt === null ? null : Date.now() - abortFiredAt;
 
   for (const action of ACTIONS) {{
     if (action.type === 'select') {{
@@ -1024,6 +1034,7 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
 
   return {{
     ok: true,
+    abortToSettleMs,
     observed: {{
       publicCount: observed.public.length,
       privateCount: observed.private.length,
@@ -1126,14 +1137,12 @@ def test_browser_private_stalled_json_body_is_typed_timeout():
 
     Source-blind page fetch mock only — no real private adapter process.
     """
-    started = time.monotonic()
     result = _browser_scenario(
         public_doc=_public_min(),
         private_doc=_private_ok(),
         private_hang_json=True,
         trigger_private_timeout=True,
     )
-    elapsed = time.monotonic() - started
     snap = result["snapshot"]
     obs = result["observed"]
     assert snap["rowCount"] == 1
@@ -1145,9 +1154,15 @@ def test_browser_private_stalled_json_body_is_typed_timeout():
     assert "AbortError" not in snap["error"]
     assert "TypeError" not in snap["error"]
     assert "Failed to fetch" not in snap["error"]
-    # The page clock fires the production abort callback after public rows paint.
-    assert elapsed < 12.0, f"stalled-body timeout took too long: {elapsed:.2f}s"
-    assert elapsed >= 0.1, f"stalled-body timed out too early: {elapsed:.2f}s"
+    # The test fires the production abort callback after public rows paint. The
+    # stalled body must then settle as a typed timeout well inside one more
+    # configured budget; browser startup/teardown is not part of this interval.
+    settle_ms = result["abortToSettleMs"]
+    assert settle_ms is not None
+    assert settle_ms < PRIVATE_TIMEOUT_MS, (
+        f"stalled body did not settle within the {PRIVATE_TIMEOUT_MS} ms private budget "
+        f"after abort: {settle_ms} ms"
+    )
     assert not any("AbortError" in e for e in obs.get("pageErrors") or [])
     assert not any("AbortError" in e for e in obs.get("consoleErrors") or [])
 
