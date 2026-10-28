@@ -322,3 +322,11 @@ def test_cursor_falls_back_to_the_result_when_no_assistant_text_was_captured():
     parsed = cursor.parse(stream(*events), "", 0, None)
     assert (parsed.text, parsed.error) == ("Finished.\n\nVERDICT: APPROVE", None)
     assert recognized_verdicts(parsed.text) == ["APPROVE"]
+
+
+def test_cursor_text_deltas_do_not_displace_the_result_or_duplicate_assistant_text():
+    deltas = [{"type": "text", "content": "Checking."}]
+    result = {"type": "result", "subtype": "success", "result": "Checking.\n\nVERDICT: APPROVE"}
+    assert cursor.parse(stream(*deltas, result), "", 0, None).text == "Checking.\n\nVERDICT: APPROVE"
+    mixed = [*deltas, _assistant("VERDICT: APPROVE"), result]
+    assert cursor.parse(stream(*mixed), "", 0, None).text == "VERDICT: APPROVE"
