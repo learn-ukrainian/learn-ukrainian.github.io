@@ -2,7 +2,7 @@
 
 The local merge-queue keeper calls ``keeper_tick`` after each ``--apply`` pass. A PR
 with no live owning task (``scripts.fleet.pr_owner_check``) for ``GRACE`` raises one
-supervisory request to the CTO inbox. The alert stays outstanding, with an hourly
+request on the CTO channel to the CTO inbox. The alert stays outstanding, with an hourly
 reminder, until a named successor task accepts the handoff here, or the PR closes.
 Unobservable task telemetry is unknown: it never starts, advances or clears an alert.
 
@@ -43,6 +43,7 @@ TICK_INTERVAL = timedelta(minutes=5)
 TICK_FRESH = timedelta(minutes=20)
 CUSTODY_COVERS = ("ejection", "stale-approval", "merge-confirmation", "closeout")
 CTO_INBOX = "claude-cto"
+CTO_CHANNEL = "cto"
 SENDER = "merge-queue-keeper"
 TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 HISTORY_LIMIT = 200
@@ -227,7 +228,7 @@ def _message(kind: str, rows: list[dict[str, Any]]) -> str:
 
 
 def outbox_entries(notices: Mapping[str, list[dict[str, Any]]]) -> list[dict[str, str]]:
-    """Freeze one supervisory request per notice kind, body and key together.
+    """Freeze one CTO inbox request per notice kind, body and key together.
 
     The key is the notices' logical identity (PR, episode start, reminder number), never
     the clock. The entry is saved before delivery and retried byte for byte, so a retry
@@ -249,11 +250,16 @@ def deliver(outbox: list[dict[str, str]], service: Any) -> list[str]:
     errors = []
     for entry in list(outbox):
         try:
-            service.enqueue_supervisory_request(
+            # An ordinary CTO-channel request the CTO claims and acks. A supervisory request
+            # is a launcher wake event: the CTO never consumes one.
+            service.publish_message(
                 sender=SENDER,
-                recipient=CTO_INBOX,
                 body=entry["body"],
+                channel=CTO_CHANNEL,
+                recipients=(CTO_INBOX,),
+                kind="request",
                 correlation_id=f"pr-ownership:{entry['kind']}",
+                provenance={"Source": "merge-queue-keeper", "Agent": SENDER, "Via": "pr-ownership"},
                 idempotency_key=entry["key"],
             )
         except Exception as exc:  # one entry never blocks the others

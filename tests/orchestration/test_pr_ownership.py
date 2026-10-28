@@ -166,6 +166,8 @@ def test_any_unreadable_identity_source_is_unknown(monkeypatch, files):
     assert own.liveness({**task("t"), "pid": 7, "process_start": "boot:555"}) is None
 
 def fleet(tmp_path):
+    with AuthorityService(root=tmp_path / "fleet") as service:
+        service.create_channel(own.CTO_CHANNEL)  # exists in the live authority store
     return lambda: AuthorityService(root=tmp_path / "fleet")
 
 
@@ -185,7 +187,7 @@ def test_tick_alerts_cto_inbox_and_clears_on_accepted_handoff(tmp_path):
     lines, failed = own.keeper_tick(now=at(15), **tick)
     assert not failed and f"pr ownership alert outstanding: {KEY}" in lines
     ((recipient, kind, body),) = inbox(tmp_path)
-    assert (recipient, kind) == ("claude-cto", "supervisory-request") and KEY in body
+    assert (recipient, kind) == ("claude-cto", "request") and KEY in body
     with own.locked(path) as data:
         accepted(data, 16)
     seen = {}
@@ -243,6 +245,7 @@ def test_undelivered_alert_stays_in_the_outbox_and_is_resent_unchanged(tmp_path)
 
 def test_delivered_but_unsaved_entry_is_a_noop_on_retry(tmp_path):
     entry = own.outbox_entries({"alert": [{"pr": KEY, "since": at(0).isoformat(), "branch": "b", "reason": "r"}]})
+    fleet(tmp_path)
     with AuthorityService(root=tmp_path / "fleet") as service:
         assert own.deliver(list(entry), service) == []
         outbox = list(entry)  # the save after delivery was lost
