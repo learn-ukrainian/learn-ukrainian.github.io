@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass
@@ -41,12 +42,13 @@ class Unowned:
 
 
 def _supervisor_alive(record: dict) -> bool:
-    pid = record.get("pid")
-    if pid is None:
-        return True  # spawning, supervisor not yet started
+    """True only on positive evidence: the recorded pid still has the recorded start identity."""
+    pid, started = record.get("pid"), record.get("process_start")
+    if not pid or not started:
+        return False
     from scripts.dispatcher.worker import _identity
 
-    return _identity(pid) == record.get("process_start")
+    return _identity(pid) == started
 
 
 def _record_repository(record: dict, repos: Mapping[str, FleetRepo]) -> str:
@@ -81,26 +83,38 @@ def evaluate(
             if last is None:
                 reason = "fork PR: no branch owner possible" if fork else "no task record owns this branch"
             elif last.get("status") in _ACTIVE:
-                reason = f"last owner {last['status']} but its supervisor is gone"
+                reason = f"last owner {last['status']} but its supervisor is not verifiably alive"
             elif last.get("status") == "done":
                 reason = "last owner finished done, PR still open (not MERGED)"
             else:
                 reason = f"last owner ended {last.get('status')}, PR not MERGED"
-            unowned.append(Unowned(slug, int(pr["number"]), branch, reason, last["task_id"] if last else None))
+            unowned.append(Unowned(slug, int(pr["number"]), branch, reason, last.get("task_id") if last else None))
     return unowned
+
+
+def _usable_pr(pr: object) -> bool:
+    return (
+        isinstance(pr, dict)
+        and isinstance(pr.get("number"), int)
+        and not isinstance(pr["number"], bool)
+        and isinstance(pr.get("headRefName"), str)
+    )
 
 
 def fetch_open_prs(slug: str) -> list[dict]:
     """Open PRs of one repository; raises RuntimeError when GitHub cannot be read."""
-    proc = github_client.run(
-        ["gh", "pr", "list", "--repo", slug, "--state", "open", "--limit", str(_PR_LIMIT), "--json", _PR_FIELDS],
-        capture_output=True, text=True, check=False, timeout=_GH_TIMEOUT_SECONDS,
-    )
+    try:
+        proc = github_client.run(
+            ["gh", "pr", "list", "--repo", slug, "--state", "open", "--limit", str(_PR_LIMIT), "--json", _PR_FIELDS],
+            capture_output=True, text=True, check=False, timeout=_GH_TIMEOUT_SECONDS,
+        )
+    except (subprocess.SubprocessError, OSError) as exc:
+        raise RuntimeError(f"cannot list open PRs of {slug}: {type(exc).__name__}") from exc
     try:
         prs = json.loads(proc.stdout) if proc.returncode == 0 else None
     except ValueError:
         prs = None
-    if not isinstance(prs, list):
+    if not isinstance(prs, list) or not all(_usable_pr(pr) for pr in prs):
         raise RuntimeError(f"cannot list open PRs of {slug}: {(proc.stderr or '').strip()[:200]}")
     if len(prs) >= _PR_LIMIT:
         raise RuntimeError(f"{slug} has at least {_PR_LIMIT} open PRs; the list may be truncated")
@@ -116,8 +130,8 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/fleet/pr_owner_check.py\n"
-            "  .venv/bin/python scripts/fleet/pr_owner_check.py --repo infra-private --json\n\n"
+            "  .venv/bin/python -m scripts.fleet.pr_owner_check\n"
+            "  .venv/bin/python -m scripts.fleet.pr_owner_check --repo infra-private --json\n\n"
             "Outputs: one line per unowned PR on stdout (or a JSON list with --json); no side effects.\n"
             "Exit codes: 0 every open PR has a live owner task; 1 at least one PR is unowned;\n"
             "  2 GitHub, the repository catalog or the task records could not be read (unknown, never clean).\n"
@@ -146,10 +160,10 @@ def main(argv: list[str] | None = None) -> int:
 
         records = store.list_tasks(strict=True)
         open_prs = {repos[k].github: fetch_open_prs(repos[k].github) for k in keys}
-    except (FleetRepoError, RuntimeError, ValueError, OSError) as exc:
-        print(f"UNKNOWN: {exc}", file=sys.stderr)
+        unowned = evaluate(open_prs, records, repos)
+    except (FleetRepoError, RuntimeError, ValueError, OSError, KeyError, TypeError, AttributeError) as exc:
+        print(f"UNKNOWN: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 2
-    unowned = evaluate(open_prs, records, repos)
     if args.json:
         print(json.dumps([asdict(u) for u in unowned], indent=2))
     else:

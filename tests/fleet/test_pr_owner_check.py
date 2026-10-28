@@ -1,6 +1,8 @@
 """PR owner check: ownership comes from task records, never author or branch prefix."""
 
 import json
+import subprocess
+import sys
 from types import SimpleNamespace
 
 import pytest
@@ -63,7 +65,7 @@ def test_done_owner_with_open_pr_is_unowned():
 
 def test_dead_supervisor_is_not_live():
     (finding,) = run({PUBLIC: [pr(5, "x")]}, [task("t", "x", "running")], alive=lambda record: False)
-    assert "supervisor is gone" in finding.reason
+    assert "not verifiably alive" in finding.reason
 
 
 def test_replacement_owner_after_failure_counts_and_latest_task_is_named():
@@ -88,7 +90,42 @@ def test_legacy_record_without_repository_belongs_to_default_repo():
     assert len(run({PRIVATE: [pr(1, "x")]}, [legacy])) == 1
 
 
+@pytest.mark.parametrize(
+    "extra",
+    [
+        {},  # spawning/running with no supervisor evidence
+        {"pid": 4242},  # pid without the recorded start identity
+        {"pid": 4242, "process_start": None},
+        {"pid": 4242, "process_start": "boot:1"},  # the pid is gone: identity lookup returns None
+    ],
+)
+def test_real_liveness_needs_positive_supervisor_identity(monkeypatch, extra):
+    from scripts.dispatcher import worker
+
+    monkeypatch.setattr(worker, "_identity", lambda pid: None)
+    for status in ("running", "spawning"):
+        (finding,) = check.evaluate({PUBLIC: [pr(1, "x")]}, [task("t", "x", status, **extra)], REPOS)
+        assert "not verifiably alive" in finding.reason
+
+
+def test_real_liveness_accepts_matching_identity(monkeypatch):
+    from scripts.dispatcher import worker
+
+    monkeypatch.setattr(worker, "_identity", lambda pid: "boot:1" if pid == 4242 else None)
+    live = task("t", "x", "running", pid=4242, process_start="boot:1")
+    assert check.evaluate({PUBLIC: [pr(1, "x")]}, [live], REPOS) == []
+    reused = task("t", "x", "running", pid=4242, process_start="boot:2")
+    assert len(check.evaluate({PUBLIC: [pr(1, "x")]}, [reused], REPOS)) == 1
+
+
+def live(task_id, branch, repository=PUBLIC):
+    return task(task_id, branch, "running", repository, pid=4242, process_start="boot:1")
+
+
 def patch_world(monkeypatch, prs, records, repos=REPOS):
+    from scripts.dispatcher import worker
+
+    monkeypatch.setattr(worker, "_identity", lambda pid: "boot:1")
     monkeypatch.setattr(check, "load_fleet_repos", lambda: repos)
     monkeypatch.setattr(check, "fetch_open_prs", lambda slug: prs[slug])
     from scripts.dispatcher import store
@@ -98,10 +135,10 @@ def patch_world(monkeypatch, prs, records, repos=REPOS):
 
 def test_main_exit_codes_and_output(monkeypatch, capsys):
     prs = {PUBLIC: [pr(1, "a")], PRIVATE: [pr(2, "b")]}
-    patch_world(monkeypatch, prs, [task("a", "a", "running")])
+    patch_world(monkeypatch, prs, [live("a", "a")])
     assert check.main(["--json"]) == 1
     assert [row["number"] for row in json.loads(capsys.readouterr().out)] == [2]
-    patch_world(monkeypatch, prs, [task("a", "a", "running"), task("b", "b", "running", PRIVATE)])
+    patch_world(monkeypatch, prs, [live("a", "a"), live("b", "b", PRIVATE)])
     assert check.main([]) == 0
     assert capsys.readouterr().out == ""
 
@@ -125,8 +162,39 @@ def test_fetch_open_prs_fails_closed_on_gh_error_and_truncation(monkeypatch):
     monkeypatch.setattr(check.github_client, "run", fake("", 1))
     with pytest.raises(RuntimeError):
         check.fetch_open_prs(PUBLIC)
-    monkeypatch.setattr(check.github_client, "run", fake(json.dumps([{}] * check._PR_LIMIT)))
+    monkeypatch.setattr(check.github_client, "run", fake(json.dumps([pr(1, "a")] * check._PR_LIMIT)))
     with pytest.raises(RuntimeError, match="truncated"):
         check.fetch_open_prs(PUBLIC)
     monkeypatch.setattr(check.github_client, "run", fake(json.dumps([pr(1, "a")])))
     assert check.fetch_open_prs(PUBLIC) == [pr(1, "a")]
+
+
+def test_fetch_open_prs_rejects_unusable_rows_and_transport_errors(monkeypatch):
+    for rows in ([None], [{"number": "7", "headRefName": "a"}], [{"number": 7}], [{"number": True, "headRefName": "a"}]):
+        monkeypatch.setattr(check.github_client, "run", lambda *a, rows=rows, **k: SimpleNamespace(stdout=json.dumps(rows), stderr="", returncode=0))
+        with pytest.raises(RuntimeError):
+            check.fetch_open_prs(PUBLIC)
+
+    def timeout(*a, **k):
+        raise subprocess.TimeoutExpired("gh", 60)
+
+    monkeypatch.setattr(check.github_client, "run", timeout)
+    with pytest.raises(RuntimeError, match="TimeoutExpired"):
+        check.fetch_open_prs(PUBLIC)
+
+
+def test_main_returns_unknown_for_a_record_without_task_id_and_for_timeouts(monkeypatch, capsys):
+    patch_world(monkeypatch, {PUBLIC: [pr(1, "a")], PRIVATE: []}, [{"worktree_branch": "a", "status": "done"}])
+    assert check.main([]) == 1
+    assert "[" not in capsys.readouterr().out  # no task id to print, no crash
+    monkeypatch.setattr(check, "evaluate", lambda *a, **k: (_ for _ in ()).throw(KeyError("number")))
+    assert check.main([]) == 2
+    assert "UNKNOWN" in capsys.readouterr().err
+
+
+def test_documented_module_invocation_shows_help():
+    proc = subprocess.run(
+        [sys.executable, "-m", "scripts.fleet.pr_owner_check", "--help"],
+        capture_output=True, text=True, timeout=60, check=False,
+    )
+    assert proc.returncode == 0 and "Exit codes:" in proc.stdout
