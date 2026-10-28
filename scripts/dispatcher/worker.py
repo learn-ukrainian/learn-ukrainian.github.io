@@ -417,8 +417,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
                 terminate()
                 returncode = child.returncode
-            if spec.agent == "agy" and spec.mode == "read-only":
-                agy_sandbox.discard(spec.task_id)  # a killed launcher leaves its scratch and token copy
+            # A killed launcher leaves its scratch and token copy; residue is recorded, never raised.
+            if spec.agent == "agy" and spec.mode == "read-only" and (residue := agy_sandbox.discard(spec.task_id)):
+                record["read_only_boundary_cleanup"] = residue
             if slots is not None:
                 # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight
                 # keep their slots shared until they exit (test_slots).

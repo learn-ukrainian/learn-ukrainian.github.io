@@ -128,10 +128,16 @@ def launcher(spec, agy_argv: list[str]) -> list[str]:
     ]
 
 
-def discard(task_id: str) -> None:
-    """Remove a scratch the launcher could not (it was killed), with its credential copy."""
-    with contextlib.suppress(ValueError):
+def discard(task_id: str) -> str | None:
+    """Remove a scratch the launcher could not (it was killed), with its credential copy.
+
+    Never raises, so cleanup cannot stop the worker publishing the task; returns the residue error.
+    """
+    try:
         _remove(scratch(task_id))
+    except (OSError, ValueError) as exc:
+        return f"{type(exc).__name__}: {exc}"[:300]
+    return None
 
 
 def verify(final_file: Path, task_id: str, record: dict) -> tuple[dict, int | None, str | None]:
@@ -171,13 +177,26 @@ def _now() -> str:
     return datetime.now(UTC).isoformat()
 
 
-_DIRECTORY = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+def _open_directory(name: str, parent: int | None = None) -> int:
+    """Open a directory for listing after restoring its owner's access, never through a link.
+
+    The sandbox may have left any mode (even 000) on a scratch directory. An O_PATH descriptor needs
+    no permission on the directory itself, and with O_NOFOLLOW and O_DIRECTORY it can only name a
+    real directory, so its mode is restored through that descriptor before it is reopened.
+    """
+    anchor = os.open(name, os.O_PATH | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent)
+    try:
+        own = f"/proc/self/fd/{anchor}"
+        os.chmod(own, 0o700)
+        return os.open(own, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    finally:
+        os.close(anchor)
 
 
 def _open_below(root: int, parts: tuple[str, ...]) -> int:
     descriptor = os.dup(root)
     for part in parts:
-        child = os.open(part, _DIRECTORY, dir_fd=descriptor)
+        child = _open_directory(part, descriptor)
         os.close(descriptor)
         descriptor = child
     return descriptor
@@ -186,9 +205,9 @@ def _open_below(root: int, parts: tuple[str, ...]) -> int:
 def _remove(path: Path) -> None:
     """Delete a tree the sandbox could write, never following a link in it.
 
-    Only directories are made writable, each through a descriptor opened with O_NOFOLLOW, because
-    unlinking needs only the parent's permission; a link is unlinked, never followed. The walk is
-    iterative, so no nesting depth stops it.
+    Only directories are made accessible (``_open_directory``), because unlinking needs only the
+    parent's permission; a link is unlinked, never followed. The walk is iterative, so no nesting
+    depth stops it.
     """
     try:
         if not stat.S_ISDIR(os.lstat(path).st_mode):
@@ -196,14 +215,13 @@ def _remove(path: Path) -> None:
             return
     except FileNotFoundError:
         return
-    root = os.open(path, _DIRECTORY)
+    root = _open_directory(str(path))
     try:
         stack: list[tuple[str, ...]] = [()]
         while stack:
             parts = stack[-1]
             descriptor = _open_below(root, parts)
             try:
-                os.fchmod(descriptor, 0o700)
                 children = []
                 for entry in os.scandir(descriptor):
                     if entry.is_dir(follow_symlinks=False):
@@ -711,7 +729,10 @@ class _Boundary:
         if "start" in self.receipt.get("input", {}):
             self.receipt["input"]["end"] = _input_state(self.worktree)
         if self.created:
-            _remove(self.base)
+            try:
+                _remove(self.base)
+            except OSError as exc:  # the worker's discard retries; residue never voids the run's evidence
+                self.receipt["cleanup"] = f"residue: {type(exc).__name__}"
 
 
 def main(argv: list[str]) -> int:

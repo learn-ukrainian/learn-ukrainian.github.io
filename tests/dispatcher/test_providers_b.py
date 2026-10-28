@@ -584,7 +584,7 @@ def test_agy_sources_relay_forwards_only_read_only_tools_and_counts_matched_resu
 
 
 def test_agy_scratch_removal_never_follows_a_link_the_sandbox_planted(tmp_path):
-    """C-3027 F1: removing scratch changes no permission outside it."""
+    """C-3027 F1/F4: removing scratch changes no permission outside it, whatever modes the sandbox left."""
     from scripts.dispatcher.agy_sandbox import _remove
 
     outside = tmp_path / "outside"
@@ -602,6 +602,13 @@ def test_agy_scratch_removal_never_follows_a_link_the_sandbox_planted(tmp_path):
     locked.mkdir()
     (locked / "link").symlink_to(secret)
     locked.chmod(0o555)
+    # F4: the sandbox can leave its directories with no access at all, nested too.
+    sealed = scratch / "home" / "sealed"
+    sealed.mkdir(parents=True)
+    (sealed / "token").write_text("copy")
+    (sealed / "link").symlink_to(outside, target_is_directory=True)
+    sealed.chmod(0o000)
+    (scratch / "home").chmod(0o000)
     _remove(scratch)
     assert not scratch.exists()
     assert (secret.stat().st_mode & 0o777, outside.stat().st_mode & 0o777) == (0o444, 0o755)
@@ -693,8 +700,9 @@ def _linked_worktree(tmp_path):
     (worktree / "data").mkdir()
     for name in ("sources.db", "vesum.db"):
         (worktree / "data" / name).symlink_to(repo / "data" / name)
-    git(repo, "config", "remote.origin.url", "https://user:secret-token@example.invalid/repo.git")
-    git(repo, "config", "credential.helper", "store")
+    # Keys a sanitized copy must drop; marker values, not credential shapes, so secret scanners stay quiet.
+    git(repo, "config", "remote.origin.url", "/canary-remote-marker")
+    git(repo, "config", "credential.helper", "canary-helper-marker")
     (repo / ".git" / "info").mkdir(exist_ok=True)
     (repo / ".git" / "info" / "exclude").write_text("data/\n")  # the database link is not a reviewed change
     return worktree, git(worktree, "rev-parse", "HEAD")
@@ -759,7 +767,7 @@ def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tm
     assert receipt["canary"]["passed"] is True
     assert run.stdout.strip() == "scratch"
     assert run.stderr.count("Read-only file system") >= 4
-    assert "secret-token" not in run.stderr and "credential" not in run.stderr and "nolog" not in run.stderr
+    assert "marker" not in run.stderr and "nolog" not in run.stderr
     assert receipt["input"] == {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}}
     outcomes = {(probe["op"], probe["path"]): probe["outcome"] for probe in receipt["canary"]["probes"]}
     target = str((tmp_path / "repo" / "data" / "sources.db").resolve())
