@@ -11,7 +11,10 @@ never fine.
    meters) only for what no metric covers; a missing or wrong metric is a monitoring task,
    not a reason to keep measuring by hand.
 1. **Inbox.** Drain the four recipients ([startup](startup.md#4-identity-and-inbox)) at
-   cycle start, after workers settle and before handoff.
+   cycle start, after workers settle and before handoff. `claude-cto` is the durable CTO
+   recipient: claim it with your session identity as `--worker-id`, and a worker escalation
+   waits there at most one cycle. Any backlog still queued at a `claude-cto-<id>` name is a
+   leftover to drain once, then report it as a producer defect.
 2. **Every pool's usage**, from the scorecard metrics when present, including unused ones:
    each Claude pool, Codex, Grok and Cursor, AGY and any other catalog pool. A pool with no
    metric gets a hand-read meter, and the gap is logged as a monitoring task. Grok and Cursor

@@ -84,7 +84,7 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 
    `headRefOid` must equal the head of the recorded APPROVE and of the green admission CI.
    Send follow-ups to the CTO through Fleet Comms
-   (`"$PY" -m scripts.fleet_comms channel publish … --recipient <CTO slot>`).
+   (`"$PY" -m scripts.fleet_comms channel publish … --recipient claude-cto`; the CTO's one durable recipient, never a `claude-cto-<id>` name).
 8. **Drain the inbox, then enqueue** at the approved head. The merge-queue keeper may already
    have queued it: check `"$PY" -m scripts.gh_merge_queue_status "$PR" --json` first.
 
