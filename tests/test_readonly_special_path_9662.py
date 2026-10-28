@@ -135,9 +135,8 @@ def test_atlas_and_codex_readers_keep_special_path(tmp_path):
             connection.close()
 
 
-def test_control_plane_and_context_store_read_special_path(tmp_path, monkeypatch):
+def test_control_plane_store_reads_special_path(tmp_path, monkeypatch):
     from scripts.control_plane.storage import StoreId, connect
-    from scripts.entire_context.store import ContextLinkStore
 
     db = _write_db(_special(tmp_path), "CREATE TABLE evidence (value TEXT);")
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY", "sqlite")
@@ -146,8 +145,6 @@ def test_control_plane_and_context_store_read_special_path(tmp_path, monkeypatch
         _assert_exact_readonly(connection, db)
     finally:
         connection.close()
-    with ContextLinkStore(db)._connect(write=False) as connection:
-        _assert_exact_readonly(connection, db)
 
 
 def test_retrieval_readers_keep_special_path(tmp_path):

@@ -1,22 +1,38 @@
 # Review budget, ledger and severity (single source)
 
-This file is the only copy of the review budget. It is the approved panel decision
-PANEL-1027-1 (items 2 and 3), with the follow-up handling settled in the delivery-skills
-design. Rules and skills that mention the budget point here; do not restate it.
+This file is the only copy of the review budget, as set by operator order C-2902
+(2026-10-27), which replaced the earlier one-full-plus-delta budget. Rules and skills that
+mention the budget point here; do not restate it.
 
 ## Budget
 
-- **Default tier: one full review plus one delta review.**
-- **Elevated tier: one full review plus up to three deltas**, only for security, data-loss or
-  concurrency changes, and only while an evidenced blocker stays open. Each extra delta cites
-  the open finding id that justifies it.
-- **The reviewer or the CTO records the tier before round 1.** The author may propose a tier
-  but never sets it alone.
-- **One full plus three deltas is the hard stop.**
-- **Exhaustion means escalation or a changed approach, never approval.** The driver splits the
-  PR, changes the approach, or escalates to the CTO and the advisors (rules core P6).
+A round is one reviewer dispatch at one exact head: round 1 is the full review, later
+rounds are deltas.
+
+- **Default: three rounds** (`budget_tier: default` in the hand-off record).
+- **Up to five rounds** for a change to security, permissions, authentication, data loss, or
+  state and concurrency, and only while an evidenced blocker on it stays open, or when the
+  operator asks for it (`budget_tier: elevated`). Each round past the third cites the open
+  finding id that justifies it. The author never raises the limit alone.
+- **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
+  follow-ups never hold the merge.
+- **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
+  review out to helper agents. Learner-facing Ukrainian is the exception: its profile seats two
+  independent reviewers (`references/ukrainian.md`, § Seats). The advisory second reader in `review-loop` is not a reviewer
+  and adds no round.
+- **The end of the budget is never approval.** The author splits the PR, changes the
+  approach, or escalates to the CTO and the advisors (rules core P6).
+- **The verdict recorder refuses a round beyond the budget**, so an over-budget verdict is
+  never recorded.
 - The budget and the ledger follow the work (issue and branch lineage). A new reviewer, a
   replacement PR or a new session does not reset them.
+
+## Clearing a recorded rejection
+
+A recorded `CHANGES_REQUESTED` or `BLOCKED` is cleared only by an APPROVE at a **new** head;
+the recorder refuses a same-head APPROVE after it. So an escalation ruling on a recorded
+rejection is followed by a head move (the fix, or a base update with
+`"$PY" -m scripts.publish pr-update-branch --number "$PR"`) and one more round at that head.
 
 ## Ledger and stable finding ids
 
@@ -59,8 +75,8 @@ design. Rules and skills that mention the budget point here; do not restate it.
 ## Declines and disputes
 
 - An author may decline a finding with file:line or test evidence.
-- After two exchanges on the same finding, the dispute goes to the CTO or the advisor panel.
-- A decline never clears a blocking verdict; only a fresh exact-head APPROVE does.
+- A dispute still unresolved after two replies on the same finding goes to the operator.
+- A decline never clears a blocking verdict; only an APPROVE at a new head does.
 
 ## Breakers that still apply
 

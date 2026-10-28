@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import json
 from urllib.parse import quote
 
 import pytest
 import requests
+import requests_mock as requests_mock_lib
 
 from scripts.lexicon import enrich_manifest
 from scripts.rag.source_query import (
@@ -55,21 +57,15 @@ def test_is_disambiguation_summary() -> None:
 
 
 @pytest.mark.parametrize("operation", ["search", "entities"])
-def test_wikidata_outgoing_headers_preserve_service_identity(monkeypatch, operation):
+def test_wikidata_outgoing_headers_preserve_service_identity(requests_mock, operation):
     import scripts.rag.source_query as sq
 
-    outgoing_headers = []
-
-    def fake_send(self, request, **kwargs):
-        outgoing_headers.append(dict(request.headers))
-        return DummyResponse(200, data={"search": [{"id": "Q1"}], "entities": {"Q1": {"id": "Q1"}}})
-
-    monkeypatch.setattr(requests.Session, "send", fake_send)
+    requests_mock.get(requests_mock_lib.ANY, json={"search": [{"id": "Q1"}], "entities": {"Q1": {"id": "Q1"}}})
     if operation == "search":
         assert sq.wikidata_search_entities("fixture") == [{"id": "Q1"}]
     else:
         assert sq.wikidata_get_entities(["Q1"]) == {"Q1": {"id": "Q1"}}
-    assert outgoing_headers == [{
+    assert [dict(request.headers) for request in requests_mock.request_history] == [{
         **sq._SESSION.headers,
         "User-Agent": (
             "learn-ukrainian-word-atlas/1.0 "
@@ -80,35 +76,19 @@ def test_wikidata_outgoing_headers_preserve_service_identity(monkeypatch, operat
     }]
 
 
-def test_wikipedia_summary_lowercase_403_falls_back_to_capitalized_200(monkeypatch: pytest.MonkeyPatch) -> None:
-    recorded_calls: list[tuple[str, dict]] = []
+def test_wikipedia_summary_lowercase_403_falls_back_to_capitalized_200(requests_mock) -> None:
+    def respond(request, context):
+        if quote("ампір") in request.url:
+            context.status_code = 403
+            return "<html>Wikimedia Error 403 Forbidden</html>"
+        assert quote("Ампір") in request.url
+        return json.dumps({
+            "type": "standard", "title": "Ампір", "description": "стиль у мистецтві",
+            "extract": "Ампі́р — стиль пізнього класицизму...",
+            "content_urls": {"desktop": {"page": "https://uk.wikipedia.org/wiki/%D0%90%D0%BC%D0%BF%D1%96%D1%80"}},
+        })
 
-    def fake_send(self, request, **kwargs):
-        url = request.url
-        recorded_calls.append((url, dict(request.headers)))
-        assert kwargs["timeout"] == 15
-        # Lowercase path returns 403 HTML
-        if quote("ампір") in url:
-            return DummyResponse(403, text="<html>Wikimedia Error 403 Forbidden</html>")
-        # Capitalized path returns 200 JSON
-        if quote("Ампір") in url:
-            return DummyResponse(
-                200,
-                data={
-                    "type": "standard",
-                    "title": "Ампір",
-                    "description": "стиль у мистецтві",
-                    "extract": "Ампі́р — стиль пізнього класицизму...",
-                    "content_urls": {
-                        "desktop": {
-                            "page": "https://uk.wikipedia.org/wiki/%D0%90%D0%BC%D0%BF%D1%96%D1%80"
-                        }
-                    },
-                },
-            )
-        return DummyResponse(404)
-
-    monkeypatch.setattr(requests.Session, "send", fake_send)
+    requests_mock.get(requests_mock_lib.ANY, text=respond)
 
     result = wikipedia_summary("ампір")
     assert result == {
@@ -118,6 +98,8 @@ def test_wikipedia_summary_lowercase_403_falls_back_to_capitalized_200(monkeypat
         "url": "https://uk.wikipedia.org/wiki/%D0%90%D0%BC%D0%BF%D1%96%D1%80",
         "type": "standard",
     }
+    recorded_calls = [(r.url, dict(r.headers)) for r in requests_mock.request_history]
+    assert all(r.timeout == 15 for r in requests_mock.request_history)
     assert len(recorded_calls) == 2
     assert recorded_calls[0][0] == f"{WIKI_REST}/page/summary/{quote('ампір')}"
     assert recorded_calls[1][0] == f"{WIKI_REST}/page/summary/{quote('Ампір')}"

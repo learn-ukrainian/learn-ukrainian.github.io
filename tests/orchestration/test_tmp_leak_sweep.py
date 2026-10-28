@@ -70,10 +70,31 @@ def test_dry_run_does_not_delete(tmp_path: Path, monkeypatch) -> None:
     assert any(item["action"] == "would_reap" for item in report["reaped"])
 
 
-def test_apply_reaps_old_candidate(tmp_path: Path, monkeypatch) -> None:
+@pytest.mark.parametrize("case", ["dead", "live", "unknown", "replacement", "hardlink", "mount_unknown"])
+def test_apply_reaps_old_candidate(tmp_path: Path, monkeypatch, case) -> None:
+    """Only the proven dead identity drains; replacements and unknown guards survive."""
     _clear_proc_probe(monkeypatch)
     target = tmp_path / "review-2002"
-    _touch_old(target, age_s=10_000)
+    _touch_old(target, age_s=10_000, as_file=case == "hardlink")
+    saved = tmp_path / "saved"
+    calls = 0
+
+    def liveness(path):
+        nonlocal calls
+        calls += 1
+        if case == "replacement" and calls == 2:
+            path.rename(saved)
+            path.mkdir()
+            (path / "marker").write_text("replacement")
+        return {"live": tls.LIVENESS_LIVE, "unknown": tls.LIVENESS_UNKNOWN}.get(case, tls.LIVENESS_CLEAR)
+
+    monkeypatch.setattr(tls, "path_liveness", liveness)
+    if case == "hardlink":
+        os.link(target, tmp_path / "retained")
+    if case == "mount_unknown":
+        from scripts.common import task_scratch
+
+        monkeypatch.setattr(task_scratch, "mount_points", lambda: None)
     real_run = tls.subprocess.run
 
     def fake_run(cmd, *args, **kwargs):
@@ -89,9 +110,23 @@ def test_apply_reaps_old_candidate(tmp_path: Path, monkeypatch) -> None:
         min_age_s=3600,
         min_free_gb=0.0,
     )
-    assert report["roots_reaped"] == 1
-    assert not target.exists()
-    assert report["bytes_freed"] > 0
+    if case == "dead":
+        assert report["roots_reaped"] == 1
+        assert not target.exists()
+        assert report["bytes_freed"] > 0
+        assert report["errors"] == 0
+    else:
+        assert report["roots_reaped"] == 0
+        assert report["bytes_freed"] == 0
+        source = target if case == "hardlink" else target / "marker"
+        assert source.read_text() == ("replacement" if case == "replacement" else "x")
+        if case in {"live", "unknown"}:
+            assert report["skipped_live"] == 1
+        else:
+            assert report["errors"] == 1
+            assert report["skipped"] == [{"path": str(target), "reason": "delete_guard_refused"}]
+        if case == "replacement":
+            assert (saved / "marker").read_text() == "x"
 
 
 def test_path_has_live_process_matching_and_nonmatching(tmp_path: Path, monkeypatch) -> None:
@@ -632,7 +667,10 @@ def test_unreadable_temp_tree_scan_refuses_removal(temp_deletion_layout, monkeyp
 
     monkeypatch.setattr(tls.os, "walk", unreadable)
     with pytest.raises(PermissionError, match="scan denied"):
-        tls._remove_path(target, repo_root=primary, approved_temp_roots=(scratch,))
+        tls._remove_path(
+            target, repo_root=primary, approved_temp_roots=(scratch,),
+            expected_dev=target.lstat().st_dev, expected_ino=target.lstat().st_ino,
+        )
     assert source.read_bytes() == b"evidence"
 
 
@@ -645,10 +683,16 @@ def test_scratch_git_marker_disposition(temp_deletion_layout, marker):
     if marker == "broken_link":
         metadata.symlink_to(scratch / "absent")
         with pytest.raises(ValueError, match="linked Git worktree metadata"):
-            tls._remove_path(target, repo_root=primary, approved_temp_roots=(scratch,))
+            tls._remove_path(
+                target, repo_root=primary, approved_temp_roots=(scratch,),
+                expected_dev=target.lstat().st_dev, expected_ino=target.lstat().st_ino,
+            )
         assert target.exists()
     else:
         metadata.mkdir()
         (metadata / "object").write_bytes(b"disposable clone metadata")
-        tls._remove_path(target, repo_root=primary, approved_temp_roots=(scratch,))
+        tls._remove_path(
+            target, repo_root=primary, approved_temp_roots=(scratch,),
+            expected_dev=target.lstat().st_dev, expected_ino=target.lstat().st_ino,
+        )
         assert not target.exists()

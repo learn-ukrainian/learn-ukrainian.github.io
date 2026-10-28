@@ -352,6 +352,7 @@ def test_ask_non_kimi_review_argv_omits_kimicc_harness():
     assert command[command.index("--mode") + 1] == "read-only"
     assert "--subject-seat" not in command
     assert "--subject-family" not in command
+    assert "--repo" not in command
 
 
 def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path):
@@ -385,7 +386,8 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
     assert "--subject-family" not in calls[0][0]
 
 
-def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
+@pytest.mark.parametrize("repo", [None, "public", "infra-private"])
+def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path, repo):
     """Keep the author branch and repeated subject exclusions on the native dispatch."""
     result_file = tmp_path / "result.md"
     result_file.write_text("VERDICT: APPROVE\n", encoding="utf-8")
@@ -409,6 +411,7 @@ def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
         "claude",
         "review this",
         task_id="review-1",
+        repo=repo,
         branch="agy/impl-8419-stall-clock",
         subject_seats=["codex", "cursor"],
         subject_families=["openai", "xai", "openai"],
@@ -420,6 +423,7 @@ def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
     from scripts.dispatcher.cli import build_parser
 
     args = build_parser().parse_args(dispatch[2:])
+    assert args.repo == repo
     assert args.subject_seat == ["codex", "cursor"]
     assert args.subject_family == ["openai", "xai", "openai"]
 

@@ -44,6 +44,48 @@ class ShellPreprocessLimit(RuntimeError):
     """A nested command could not be exposed within the parser's depth cap."""
 
 
+def normalize_io_descriptors(command: str, replace: Callable[[str, str], str] | None = None) -> str:
+    """Preserve descriptor/operator identity before lexing loses adjacency.
+
+    The default drops descriptors for argv/write-target readers. Output-flow
+    readers can protect the pair through their lexer with ``replace``.
+    """
+    out: list[str] = []
+    quote = ""
+    word_start = 0
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if char == "\\" and quote != "'" and index + 1 < len(command):
+            out.extend(command[index : index + 2])
+            index += 2
+            continue
+        if quote:
+            if char == quote:
+                quote = ""
+        elif char in "'\"":
+            quote = char
+        else:
+            if char in "<>":
+                word = command[word_start:index]
+                number = word.lstrip("0") or "0"
+                if re.fullmatch(r"\{[A-Za-z_][A-Za-z0-9_]*\}", word) or (
+                    re.fullmatch(r"[0-9]+", word)
+                    and (len(number) < 10 or (len(number) == 10 and number <= "2147483647"))
+                ):
+                    del out[-len(word) :]
+                    operator = re.match(r"<<<|<<-?|[<>]&|<>|>\||>>?|<", command[index:]).group()
+                    out.append(replace(word, operator) if replace else operator)
+                    index += len(operator)
+                    word_start = index
+                    continue
+            if char in " \t\n();<>|&":
+                word_start = index + 1
+        out.append(char)
+        index += 1
+    return "".join(out)
+
+
 def split_operator_run(token: str) -> list[str]:
     """Split a pure shell-punctuation run, keeping redirects intact."""
     if token in _SHELL_OPERATORS or not token or not set(token) <= _OPERATOR_CHARS:

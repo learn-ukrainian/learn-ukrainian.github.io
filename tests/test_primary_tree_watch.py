@@ -205,14 +205,6 @@ def _run_plan(plan: _Plan, *, mode: str = "workspace-write", task_id: str = "tas
     )
 
 
-def _disable_fleet_capture(monkeypatch):
-    monkeypatch.setattr(
-        runner_mod.FleetCapture,
-        "start",
-        classmethod(lambda cls, **_kw: (_ for _ in ()).throw(RuntimeError("off"))),
-    )
-
-
 def test_runner_kills_on_escape_only_when_enforced(monkeypatch, tmp_path):
     class _StubWatch:
         enforce = True
@@ -233,7 +225,6 @@ def test_runner_kills_on_escape_only_when_enforced(monkeypatch, tmp_path):
         runner_mod.PrimaryTreeWatch, "start", classmethod(lambda cls, **kw: _StubWatch())
     )
     monkeypatch.setattr(runner_mod, "_POLL_INTERVAL_S", 0.05)
-    _disable_fleet_capture(monkeypatch)
     plan = _Plan(cmd=[sys.executable, "-c", "import time; time.sleep(30)"], cwd=tmp_path)
     started = time.monotonic()
     outcome = _run_plan(plan)
@@ -249,7 +240,6 @@ def test_end_to_end_runner_detects_primary_write(monkeypatch, repo):
     monkeypatch.setattr(runner_mod, "_POLL_INTERVAL_S", 0.05)
     monkeypatch.setenv("LU_PRIMARY_TREE_WATCH_INTERVAL_S", "0.05")
     monkeypatch.delenv("LU_PRIMARY_TREE_WATCH_ENFORCE", raising=False)
-    _disable_fleet_capture(monkeypatch)
     target = repo.main / "tracked.txt"
     script = (
         "import pathlib, time; "
@@ -271,7 +261,6 @@ def test_end_to_end_runner_detects_primary_write(monkeypatch, repo):
 def test_end_to_end_clean_child_records_nothing(monkeypatch, repo):
     monkeypatch.setattr(runner_mod, "_RUNNER_REPO_TREE", repo.main)
     monkeypatch.setenv("LU_PRIMARY_TREE_WATCH_INTERVAL_S", "0.05")
-    _disable_fleet_capture(monkeypatch)
     # The child edits its own worktree — the sanctioned flow must stay silent.
     target = repo.dispatch_wt / "tracked.txt"
     script = f"import pathlib; pathlib.Path({str(target)!r}).write_text('legit')"

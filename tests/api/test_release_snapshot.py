@@ -922,8 +922,16 @@ def test_extract_archive_reports_real_status_when_git_exits_after_the_timed_wait
 class _IgnoresKill(subprocess.Popen):
     """kill() is sent but git never goes away."""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.wait_timeouts: list[float | None] = []
+
     def kill(self) -> None:
         pass
+
+    def wait(self, timeout: float | None = None) -> int:
+        self.wait_timeouts.append(timeout)
+        return super().wait(timeout=timeout)
 
 
 class _ExitsZeroOnKill(subprocess.Popen):
@@ -969,10 +977,9 @@ def test_extract_archive_says_so_when_git_does_not_exit_after_kill(monkeypatch, 
     )
 
     try:
-        started = time.monotonic()
         err = _extract_error(tmp_path)
 
-        assert time.monotonic() - started < 3.0
+        assert release_snapshot.GIT_KILL_WAIT_S in spawned[0].wait_timeouts
         assert err.git_status is None
         assert (err.__cause__ is not None) == partial
         assert "deadline of 0.5s hit; kill sent to git" in str(err)

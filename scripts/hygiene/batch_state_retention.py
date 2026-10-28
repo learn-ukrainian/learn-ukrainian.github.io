@@ -1,11 +1,11 @@
-"""Report stale top-level batch_state directories; never deletes anything (#9737).
+"""Report batch_state staleness and declare/validate explicit scratch expiry (#9737, #11365).
 
 A directory is stale when nothing below it was written for ``stale_days``.
 Live machinery (``tasks/``, ``preserved/``, ``reports/``, ``branch-archive/``)
 is excluded, and paths listed in ``batch_state_retention.json`` are reported
 as held evidence instead of stale candidates. Sizing and digesting of task
 snapshot sidecars stays with ``scripts.maintenance.batch_state_retention``
-(#8783); this module only answers "what has gone untouched".
+(#8783). Deletion belongs to the existing tmp_sweep quarantine and purge path.
 """
 
 from __future__ import annotations
@@ -13,9 +13,11 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import stat
+import subprocess
 import time
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -25,6 +27,7 @@ from scripts.common.task_scratch import mount_points
 SCHEMA = "batch-state-retention.v1"
 EXCLUDED = frozenset({"tasks", "preserved", "reports", "branch-archive"})
 RETENTION_LIST = Path(__file__).with_name("batch_state_retention.json")
+EXPIRY_FILE = ".scratch-expiry.json"
 
 
 class RetentionListError(ValueError):
@@ -53,6 +56,76 @@ def load_holds(path: Path) -> list[dict[str, Any]]:
             raise RetentionListError(f"hold path must lie below batch_state/: {entry['path']!r}")
         holds.append({**entry, "parts": parts[1:]})
     return holds
+
+
+def scratch_expiry(
+    path: Path, *, origin: Path, now: float, expected: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Prove explicit scratch expiry, current holds and Git protection, including in quarantine.
+
+    An absent marker is unknown state, never seven-day deletion permission.
+    ``origin`` remains the original batch_state child after quarantine moves it.
+    """
+    if origin.name in EXCLUDED or origin.parent.name != "batch_state":
+        return None, "expiry_excluded"
+    try:
+        fd = os.open(path / EXPIRY_FILE, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        with os.fdopen(fd, "rb") as handle:
+            info = os.fstat(handle.fileno())
+            if not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid() or info.st_size > 65536:
+                return None, "expiry_metadata_unknown"
+            raw = handle.read(65537)
+        data = json.loads(raw)
+        if (len(raw) > 65536 or not isinstance(data, dict) or data.get("schema") != "batch-state-scratch.v1"
+                or not all(isinstance(data.get(key), str) and data[key].strip() for key in ("owner", "purpose", "delete_after"))):
+            return None, "expiry_metadata_unknown"
+        expiry = datetime.fromisoformat(data["delete_after"].replace("Z", "+00:00"))
+        if expiry.tzinfo is None or expiry.utcoffset().total_seconds() != 0:
+            return None, "expiry_metadata_unknown"
+        metadata = {key: data[key] for key in ("owner", "purpose", "delete_after")}
+        if expected is not None and metadata != expected:
+            return None, "expiry_metadata_changed"
+        if not math.isfinite(now) or expiry.timestamp() >= now:
+            return None, "expiry_not_reached"
+        holds = load_holds(RETENTION_LIST)
+        if any(hold["parts"][0] == origin.name for hold in holds):
+            return None, "expiry_held"
+        tracked = subprocess.run(
+            ["git", "-C", str(origin.parent.parent), "ls-files", "-z", "--",
+             f":(literal)batch_state/{origin.name}"], capture_output=True, check=True, timeout=15,
+        )
+        if tracked.stdout:
+            return None, "expiry_tracked"
+        return metadata, None
+    except (OSError, ValueError, OverflowError, RecursionError, subprocess.SubprocessError):
+        return None, "expiry_proof_unknown"
+
+
+def write_scratch_expiry(
+    path: Path, *, owner: str, purpose: str, delete_after: datetime | None = None,
+) -> None:
+    """Opt a producer-owned scratch directory in, exclusively; default expiry is seven days in UTC.
+
+    Producers must call this before writing disposable payloads. This never
+    retroactively marks existing unclassified state or overwrites a marker.
+    """
+    expiry = delete_after if delete_after is not None else datetime.now(UTC) + timedelta(days=7)
+    if (not owner.strip() or not purpose.strip() or expiry.tzinfo is None
+            or expiry.utcoffset().total_seconds() != 0 or path.parent.name != "batch_state"
+            or path.name in EXCLUDED or path.name.startswith(".")):
+        raise ValueError("scratch needs an owner, purpose, UTC expiry and a top-level batch_state directory")
+    data = {"schema": "batch-state-scratch.v1", "owner": owner, "purpose": purpose,
+            "delete_after": expiry.isoformat()}
+    directory = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        fd = os.open(EXPIRY_FILE, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=directory)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(data, handle)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.fsync(directory)
+    finally:
+        os.close(directory)
 
 
 def tree_activity(path: Path, cutoff: float) -> tuple[int, float, str | None]:
@@ -107,7 +180,7 @@ def report(
     counts = {"excluded": 0, "fresh": 0, "held": 0, "stale": 0, "unknown": 0}
     rows = []
     for path in sorted(batch_root.iterdir()):
-        if path.is_symlink() or not path.is_dir():
+        if path.name.startswith(".") or path.is_symlink() or not path.is_dir():
             continue
         if path.name in EXCLUDED:
             counts["excluded"] += 1

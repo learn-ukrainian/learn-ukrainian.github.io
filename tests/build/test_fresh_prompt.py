@@ -37,7 +37,6 @@ from scripts.build.fresh.prompt import (
 from scripts.build.fresh.requires_confirm import questions_from_draft, write_questions
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import PlannedState
-from scripts.dispatcher.write_intent import _read_only_write_intent_error
 from scripts.review.prompts.render import ManifestReader, _learner_state_context
 
 pytestmark = pytest.mark.reads_content
@@ -516,7 +515,6 @@ def test_read_only_writer_prompt_contract(request, sample_plan_entry, sample_cit
         ]
     rendered = (render_recap_prompt if recap else render_lesson_prompt)(**kwargs)
 
-    assert _read_only_write_intent_error(mode="read-only", prompt=rendered) is None
     assert (
         "Examples and activity items must use only this lesson's own plan entry (its letters, grammar and words) "
         "and the material taught before this lesson listed in this section."
@@ -550,7 +548,6 @@ def test_read_only_requires_confirm_prompt_contract(tmp_path, sample_plan_entry,
     assert "## a1/0" in rendered
     assert f"- 0: {record['lemma']} [key]" in rendered
     assert f"- 1: {record['lemma']}" in rendered
-    assert _read_only_write_intent_error(mode="read-only", prompt=rendered) is None
 
 
 def test_read_only_constrained_resolution_prompt_contract(
@@ -603,7 +600,6 @@ def test_read_only_constrained_resolution_prompt_contract(
     assert runner.dispatch_questions(batch, "codex:fixture", repo_root=tmp_path) == {"answers": []}
     assert len(prompts) == 1
     assert yaml.safe_load(prompts[0].split("\n\n", 1)[1]) == batch
-    assert _read_only_write_intent_error(mode="read-only", prompt=prompts[0]) is None
 
 
 @pytest.mark.parametrize("recap", [False, True])

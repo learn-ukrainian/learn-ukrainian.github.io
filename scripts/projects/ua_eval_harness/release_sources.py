@@ -8,6 +8,10 @@ from pathlib import Path
 
 RELEASE_DIR = Path("data/projects/ua_eval_harness/releases/v0.1.1")
 FROZEN_SOURCES = {
+    Path("scripts/projects/ua_eval_harness/evaluate_model.py"): RELEASE_DIR / "evaluate_model.py",
+    Path("scripts/projects/ua_eval_harness/run_model_batch.py"): RELEASE_DIR / "run_model_batch.py",
+    Path("scripts/projects/ua_eval_harness/build_heldout_manifest.py"): RELEASE_DIR / "build_heldout_manifest.py",
+    Path("scripts/projects/ua_eval_harness/smoke_public_v011.py"): RELEASE_DIR / "smoke_public_v011.py",
     Path("scripts/config/vesum_source.lock.json"): RELEASE_DIR / "vesum_source.lock.json",
     Path("scripts/rag/vesum_reingest.py"): RELEASE_DIR / "vesum_reingest.py",
     Path("scripts/projects/ua_eval_harness/build_scoring_dispositions.py"):

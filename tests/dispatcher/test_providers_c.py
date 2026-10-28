@@ -12,6 +12,7 @@ import pytest
 
 from scripts.dispatcher.providers import cursor, hermes, load, muse, opencode
 from scripts.dispatcher.types import TaskSpec
+from scripts.review.verdict_parser import recognized_verdicts
 
 MODELS = ("muse-spark-1.3", "muse-wonder-1.0", "muse-wonder-full-1.0")
 PROMPT = '--leading-option "quoted" $literal\nReply with exactly: ready\n'
@@ -111,16 +112,15 @@ def test_opencode_argv(spec, stub_env, mode, model):
     assert run_stub(opencode.build(spec, stub_env), spec) == [*expected, "--", PROMPT]
 
 
-@pytest.mark.parametrize("mode", ("read-only", "workspace-write"))
 @pytest.mark.parametrize("model", ("vendor/explicit-model", "another/model"))
-def test_hermes_argv(spec, stub_env, mode, model):
-    spec = replace(spec, agent="hermes", model=model, mode=mode)
+def test_hermes_argv(spec, stub_env, model):
+    spec = replace(spec, agent="hermes", model=model, mode="workspace-write")
     assert run_stub(hermes.build(spec, stub_env), spec) == ["-z", PROMPT, "-m", model, "--provider", "openrouter"]
 
 
 def test_hermes_has_no_default_model(spec):
     with pytest.raises(ValueError, match="explicit model"):
-        hermes.build(replace(spec, model=""), {})
+        hermes.build(replace(spec, model="", mode="workspace-write"), {})
 
 
 def stream(*events):
@@ -292,3 +292,40 @@ def test_opencode_tool_step_before_final_completion():
 def test_opencode_unknown_terminal_before_completion_stays_failed():
     output = stream({"type": "step_finish", "part": {"reason": "future_outcome"}}, OC_TEXT, OC_STOP)
     assert opencode.parse(output, "", 0, None).error
+
+
+def _assistant(text):
+    return {"type": "assistant", "message": {"role": "assistant", "content": [{"type": "text", "text": text}]}}
+
+
+def test_cursor_keeps_the_verdict_on_its_own_line_when_result_concatenates_messages():
+    """Real Grok stream: the terminal result glues the assistant messages together unseparated."""
+    messages = [
+        "I'll review the delta on the exact head before giving a verdict.",
+        "The stat is wider than the brief claimed, so I'll check the same cases.",
+        "VERDICT: APPROVE\n\nNo new findings.",
+    ]
+    events = [
+        {"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"},
+        *map(_assistant, messages),
+        {"type": "result", "subtype": "success", "is_error": False, "result": "".join(messages)},
+    ]
+    parsed = cursor.parse(stream(*events), "", 0, None)
+    assert parsed.error is None
+    assert parsed.text == "\n\n".join(messages)
+    assert recognized_verdicts(parsed.text) == ["APPROVE"]
+
+
+def test_cursor_falls_back_to_the_result_when_no_assistant_text_was_captured():
+    events = [{"type": "result", "subtype": "success", "result": "Finished.\n\nVERDICT: APPROVE"}]
+    parsed = cursor.parse(stream(*events), "", 0, None)
+    assert (parsed.text, parsed.error) == ("Finished.\n\nVERDICT: APPROVE", None)
+    assert recognized_verdicts(parsed.text) == ["APPROVE"]
+
+
+def test_cursor_text_deltas_do_not_displace_the_result_or_duplicate_assistant_text():
+    deltas = [{"type": "text", "content": "Checking."}]
+    result = {"type": "result", "subtype": "success", "result": "Checking.\n\nVERDICT: APPROVE"}
+    assert cursor.parse(stream(*deltas, result), "", 0, None).text == "Checking.\n\nVERDICT: APPROVE"
+    mixed = [*deltas, _assistant("VERDICT: APPROVE"), result]
+    assert cursor.parse(stream(*mixed), "", 0, None).text == "VERDICT: APPROVE"

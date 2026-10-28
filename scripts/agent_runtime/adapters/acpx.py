@@ -1930,11 +1930,11 @@ def _claude_acp_copies_in_use(base: Path) -> set[str] | None:
     cannot open the caller's ``0700`` copies. An unreadable potentially
     relevant process makes the result unknown, so no copy is provably free.
     """
-    prefix = f"{base}/"
     held: set[str] = set()
     try:
+        prefix = f"{base.resolve(strict=True)}/"
         pids = [entry.name for entry in os.scandir(_CLAUDE_ACP_PROC_ROOT) if entry.name.isdigit()]
-    except OSError:
+    except (OSError, RuntimeError):
         return None
     for pid in pids:
         process = _CLAUDE_ACP_PROC_ROOT / pid
@@ -1945,14 +1945,12 @@ def _claude_acp_copies_in_use(base: Path) -> set[str] | None:
                 try:
                     uid_lines = [
                         line.split()[1:]
-                        for line in (process / "status").read_text(encoding="ascii").splitlines()
+                        for line in (process / "status").read_text(encoding="ascii", errors="replace").splitlines()
                         if line.startswith("Uid:")
                     ]
                 except OSError as exc:
                     if exc.errno in (errno.ENOENT, errno.ESRCH):
                         continue
-                    uid_lines = []
-                except UnicodeError:
                     uid_lines = []
                 if len(uid_lines) == 1 and len(uid_lines[0]) == 4 and all(uid.isdecimal() for uid in uid_lines[0]):
                     # Proven other accounts must be skipped so their unreadable fd directories do not block cleanup.

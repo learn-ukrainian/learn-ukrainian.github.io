@@ -110,7 +110,7 @@ dependency/critical-path → utilization. Later items never override earlier one
 5. **Anti-gaming.** No placeholder agents, artificial task splitting, premature PRs, or
    speculative work without an integration path. §2 still binds: never manufacture
    busywork (quality > utilization). Disk wins every conflict (#M-14 — `df` + `du` of
-   `.worktrees` before fan-out; reap first).
+   `.worktrees` before fan-out; clear retained worktrees whose content is published first).
 
 Mechanical reminder + disposition telemetry (#6976/#6998). At every
 dispatch/review settle, evaluate eligible ready items and first-class admission

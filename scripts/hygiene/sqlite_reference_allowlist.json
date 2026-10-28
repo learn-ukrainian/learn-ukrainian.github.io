@@ -209,16 +209,6 @@
     ]
   },
   {
-    "path": "scripts/entire_context/store.py",
-    "reference_count": 5,
-    "kind": "writer",
-    "target_db": "Entire projection DB",
-    "reason": "persists rebuildable locator index",
-    "calls": [
-      "sqlite3.connect(self.db_path)"
-    ]
-  },
-  {
     "path": "scripts/etymology/extract_cognate_forms.py",
     "reference_count": 2,
     "kind": "writer",

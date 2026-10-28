@@ -1,12 +1,33 @@
 """Claude print-mode flags and terminal result events."""
 
 import json
+import platform
+import subprocess
+from collections.abc import Mapping
+from pathlib import Path
 
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+from scripts.lib import rules_core
 
 # Static permission profile from adapters/claude.py; account env belongs to core.
-_READ_TOOLS = "Read,Grep,Glob,LS,Bash,WebFetch,WebSearch"
+# Read-only grants no blanket Bash: under dontAsk only Claude Code's built-in read-only commands
+# (ls, cat, grep, find, read-only git forms) and the gh reads below run, every other command is
+# denied, and an output redirect is checked against the Edit deny like a direct write
+# (https://code.claude.com/docs/en/permissions, "Read-only commands" and "Redirections").
+# Its OS sandbox would allow tests too, but it needs socat on Linux and refuses to start without it.
+# dontAsk still runs anything a loaded settings file pre-approves, and a worktree loads the main
+# checkout's local settings file, so read-only runs --restricted: Claude Code then reads no
+# user, project or local settings file (managed settings and --settings still apply) and drops every
+# code-running tool and WebFetch that --tools does not name (https://code.claude.com/docs/en/cli-reference,
+# "--restricted"; settings, "Lists merge instead of overriding"). The rules below are the whole policy
+# once ``managed_policy`` finds no managed source. --restricted also skips CLAUDE.md, so the rules
+# core that ``require_core`` checks is appended to the system prompt instead.
+_READ_TOOLSET = "Read,Grep,Glob,Bash,WebFetch,WebSearch"
+_READ_TOOLS = (
+    "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
+    "Bash(gh issue view *),Bash(gh run view *)"
+)
 _WRITE_TOOLS = "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch"
 _READ_DENIES = (
     "Edit,Write,NotebookEdit,Bash(git push *),Bash(git commit *),Bash(git merge *),"
@@ -29,6 +50,52 @@ _BACKGROUND_ENV = {
     "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
     "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
 }
+# The managed sources --restricted keeps (https://code.claude.com/docs/en/managed-settings, "Where each
+# mechanism stores the policy"): on Linux the files under /etc/claude-code, which env_sanitize checks
+# as one root, and server-managed settings, cached in the config directory and fetched at start
+# (https://code.claude.com/docs/en/server-managed-settings). ``claude doctor`` reports that fetch for
+# the run's own credentials; only these outcomes mean no server policy can reach the run. The
+# dispatcher is the run's parent and passes it no parent settings.
+_REMOTE_NOT_FETCHED = (
+    "not fetched — requires an Enterprise or Team subscription",
+    "not fetched — no usable credentials",
+)
+
+
+def managed_policy(env: Mapping[str, str]) -> str | None:
+    """Why managed policy could widen a read-only run in ``env``, or None when no managed source exists.
+
+    Presence decides, not what a policy holds; a source whose state cannot be read counts as present,
+    and an empty server-managed cache (``{}``) delivers no policy key.
+    """
+    from scripts.agent_runtime.attempt_boundary import _claude_host_is_wsl
+    from scripts.agent_runtime.env_sanitize import claude_machine_policy_state
+
+    if platform.system() != "Linux" or _claude_host_is_wsl(env):
+        return "managed policy sources are checked on Linux only, not on this host"
+    if (state := claude_machine_policy_state()) != "absent":
+        return f"managed policy in /etc/claude-code is {state}"
+    config = Path(env.get("CLAUDE_CONFIG_DIR") or Path(env.get("HOME") or Path.home()) / ".claude")
+    try:
+        cached = json.loads((config / "remote-settings.json").read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        cached = {}
+    except (OSError, ValueError):
+        return "the server-managed settings cache cannot be read"
+    if cached != {}:
+        return "the server-managed settings cache holds a policy"
+    try:
+        doctor = subprocess.run(["claude", "doctor"], env=dict(env), stdin=subprocess.DEVNULL,
+                                capture_output=True, text=True, timeout=60).stdout
+    except (OSError, subprocess.SubprocessError):
+        doctor = ""
+    remote = next((line.partition(":")[2].strip() for line in doctor.splitlines()
+                   if line.startswith("Managed settings (remote):")), None)
+    if remote is None:
+        return "claude doctor did not report server-managed settings"
+    if not remote.startswith(_REMOTE_NOT_FETCHED):
+        return f"server-managed settings are {remote!r}"
+    return None
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
@@ -42,6 +109,9 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
         allowed_tools, denies = _WRITE_TOOLS, _BACKGROUND_DENIES
     else:
         raise ValueError(f"claude: unsupported mode {spec.mode!r}")
+    if spec.mode == "read-only":
+        core = rules_core.source_path(rules_core.CORE_REL)
+        argv += ["--restricted", "--tools", _READ_TOOLSET, "--append-system-prompt-file", str(core)]
     argv += ["--allowedTools", allowed_tools]
     argv += ["--disallowedTools", denies]
     if spec.claude_account not in (None, "a"):

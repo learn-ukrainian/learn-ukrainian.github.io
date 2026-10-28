@@ -406,7 +406,7 @@ def test_untrusted_creation_inventory_never_shrinks_preservation(boundary_tree, 
     assert not (repo / "batch_state/preserved").exists()
 
 
-@pytest.mark.parametrize("name", ["__pycache__", ".pytest_cache", ".entire/logs"])
+@pytest.mark.parametrize("name", ["__pycache__", ".pytest_cache"])
 def test_regular_files_with_cache_directory_names_are_preserved(boundary_tree, name):
     repo, tree, tasks, record = boundary_tree
     with (repo / ".git/info/exclude").open("a") as exclude:

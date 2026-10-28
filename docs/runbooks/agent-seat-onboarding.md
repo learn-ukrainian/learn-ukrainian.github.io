@@ -33,8 +33,6 @@ caps or live modes.
    [`docs/SCRIPTS.md`](../SCRIPTS.md).
 6. Cooperation detail (deliberation, Green Team, V2):
    [`docs/best-practices/agent-cooperation.md`](../best-practices/agent-cooperation.md).
-7. Provider-neutral historical recall:
-   [`entire-context`](../../agents_extensions/shared/skills/entire-context/SKILL.md).
 
 ---
 
@@ -105,10 +103,11 @@ handoff creates a competing authority.
 
 ## Cleanup ownership
 
-After a terminal dispatch, run `post_task_reap` for its task ID; it delegates regular
-dispatch cleanup to the P0 reaper. After GitHub reports an exact-head PR as `MERGED`, use
+When a dispatch settles, the dispatcher removes the task's own worktree, or keeps it and
+records why in the task record (`worktree_disposition`); resolve a kept tree by that reason
+through the P0 reaper. After GitHub reports an exact-head PR as `MERGED`, use
 `.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged` from outside the target
-worktree. The reaper is the
+worktree. Apart from the dispatcher's own removal at settlement, the reaper is the
 only ordinary deletion path: use manual Git removal only when the reaper cannot run, following
 [the worktree-cleanup runbook](worktree-cleanup.md) for `LU_REAPER_DISABLED`, rescue restore,
 and the narrowly allowlisted dual paths.
@@ -123,7 +122,6 @@ and the narrowly allowlisted dual paths.
 | **`scripts/dispatch.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + legacy file handoffs** | Durable coordination authority in `authority` mode; legacy file stores remain read-only migration/projection inputs | Competing message buses; new legacy writes; silent plane/retention/eligibility flips |
 | **ACPX** | Routine first-choice structured transport for eligible 2-to-4-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (Kimi is retired, OO-58); not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
-| **Entire context recall** | Optional automatic body-free discovery plus preflight-gated private native session search/explain/recap | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
 ### Caveman output-style skill
@@ -140,63 +138,8 @@ or unverified content and recreated active paths require reconciliation. Never
 hand-edit active deploy copies. Caveman is **style only** — never persisted artifacts (commits, PR/issue
 bodies, curriculum, runbooks, review-of-record text on GitHub) and never a substitute for
 fleet-comms durable state. Cursor, Kimi, GLM, and OpenCode consume it through the **host
-harness** skill tree of the CLI that actually launches them (same rule as Entire capture), not
+harness** skill tree of the CLI that actually launches them, not
 a model-named extra copy.
-
-### Entire recall onboarding matrix
-
-Capture belongs to the **host harness**, not to a model label. The same model
-may therefore use a different capture integration when it runs under a
-different host. Capture is also separate from recall: every listed seat can
-consume the same project-generated body-free capsule even when that seat has no
-native Entire capture path.
-
-| Seat or model | Host-harness capture route | Cold-start recall behavior |
-| --- | --- | --- |
-| Codex CLI or Desktop | Installed `codex` integration and shared project hooks | The accountable root runs local `status` + `search` once; Codex consumes the root's verified capsule. |
-| Claude in Claude Code | Installed `claude-code` integration | Same shared-capsule contract; no Claude-specific search or authority. |
-| Any supported model in OpenCode, including Claude or GLM | Installed `opencode` integration | Same shared-capsule contract; the model name does not select capture. |
-| Kimi in Claude Code or OpenCode | The active host's `claude-code` or `opencode` integration | Same shared-capsule contract; do not install a Kimi adapter for a hosted Kimi model. |
-| Standalone Kimi Code | Project `entire-agent-kimi` adapter only when explicitly installed for the actual standalone `kimi` harness | Same shared-capsule contract; adapter capture never replaces local verified recall. |
-| GLM outside a proved native host | No model-named integration is inferred | Consume the root's capsule; add no adapter without a source-blind unsupported-harness canary. |
-| Grok | Integration of the harness that actually launches Grok; none is inferred from `grok` alone | Consume the root's capsule; ACP remains live discussion and terminal receipts. |
-| AGY / Gemini | Integration of the harness that actually launches AGY; none is inferred from `agy` or a Gemini model label | Consume the root's capsule; the AGY bridge remains execution/discussion transport. |
-
-For each non-trivial task, the accountable root performs this contract:
-
-1. Run `.venv/bin/python -m scripts.entire_context status` and one bounded
-   `search --query "<task keywords>"` before prioritization or dispatch.
-2. Resolve any useful locator against its canonical local source. If results
-   materially help, create at most one `handoff` capsule (five cards, 8 KiB)
-   and give that same capsule to the participants that need it.
-3. Keep raw prompts, transcripts, responses, session bodies, generated recaps,
-   and generated summaries out of the shared automatic capsule. At intake run
-   `.venv/bin/python -m scripts.entire.private_mode_preflight`; after a green
-   receipt (including operator-only Entire ACLs for both mirrors), the
-   accountable root runs bounded native Entire search and may explain a
-   relevant checkpoint without distributing raw bodies to other seats.
-4. Run `record-use` only for locators that were verified and materially
-   informed the task. Search delivery alone is not use.
-5. Continue normally when recall is unavailable. Git/GitHub remain
-   authoritative for code; Fleet Comms for durable coordination; ACP for live
-   discussion and terminal receipts; Monitor for runtime state; session-stream
-   handoffs and rollover for continuity; direct toolful cross-family review
-   with an exact-head PR comment for the review gate. Legacy message-plane files
-   are read-only projections in `authority` mode.
-
-After the private preflight passes, the accountable root or operator may use
-Entire's product workflows for
-[skills](https://docs.entire.io/learn/skills),
-[search](https://docs.entire.io/learn/search-past-agent-work),
-[review and recap](https://docs.entire.io/learn/review-and-recap-agent-work), or
-[why/blame/investigation and session handoff](https://docs.entire.io/learn/investigate-why-code-exists).
-These are investigation aids, not fleet evidence. Their prompts, results,
-transcripts, generated explanations, and summaries stay in the accountable
-root's private context, are not admitted to the shared automatic capsule, and
-do not change task, review, or merge disposition. Full explain and generated
-summaries require a task that actually needs them; raw-transcript flags remain
-prohibited. Session resume or rewind additionally requires an explicit operator
-request because it mutates a worktree.
 
 ### Human overview pages
 
@@ -376,8 +319,9 @@ to Sol at `high` or the accountable orchestrator before making a consequential d
 
 ### Grok dispatch through Cursor
 
-Native Grok dispatch is retired. Dispatch v2 maps `--agent grok` to Cursor.
-Use the explicit Cursor seat at `grok-4.7-high`:
+Native Grok dispatch is retired. grok-build is the Grok TUI and is not a dispatch v2 provider;
+`--agent grok` is an unknown agent. Agent names equal the TUI binary, so use the Cursor seat at
+`grok-4.7-high`:
 
 ```bash
 .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high \
@@ -916,8 +860,7 @@ The DeepSeek seat's **standing route** is first-party via opencode:
   deepseek` instead (#6886: the seat otherwise tries to emit tool calls and
   the reply terminalizes `failed:non_evidentiary`).
 - Direct one-shot review/research outside the bridge runs
-  `opencode run --model deepseek/deepseek-flash --variant high`
-  (native Entire capture).
+  `opencode run --model deepseek/deepseek-flash --variant high`.
 - Tool-heavy work goes to `dispatch.py dispatch --model <catalog-model> --agent deepseek` from a
   dispatch worktree.
 

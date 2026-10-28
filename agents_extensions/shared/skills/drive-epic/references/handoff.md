@@ -46,7 +46,7 @@ which remains the durable message authority.
    `lu-driver-state render --lane <lane>` and `lu-driver-state check --lane <lane>`
    first. Do not write a markdown handoff block or duplicate tracker state there.
 5. Write the durable brief required by core.md P7 as a supplemental record,
-   then complete the Entire dual-write and Fleet receipt below. Public briefs
+   then complete the Fleet receipt below. Public briefs
    follow core.md P8; private detail stays in the driver-state database or the
    private infra repository.
 
@@ -58,39 +58,19 @@ handoff verified-clean (`epic-specific.md` §0c).
 implement or "fix" process in `.claude/skills/` or other deploy-rsync targets — those
 copies are overwritten on the next agents_extensions deploy and are not durable.
 
-**Entire dual-write (Option A; driver-state database remains authoritative):** on every
-session handoff, also project public continuity into entire-context. This is
-**supplemental** (ADR-018): body-free locators only; never store residual narratives,
-task ids, or OPSEC-sensitive prose only in Entire; never treat Entire as handoff
-authority or replace the tracker with a capsule.
-
-Durable sinks for the dual-write (not private deploy trees):
+Durable handoff sinks (not private deploy trees):
 
 | Sink | What to write | Survives |
 | --- | --- | --- |
 | **Driver-state database** (`lu-driver-state`) | Work items, evidence, history and one `handoff_note` | Durable lane handoff |
 | **Markdown pointer and durable brief** (`.claude/<lane>-epic/DRIVER-STATE.md`; core.md P7 brief) | Pinned provider facts and render/check instructions in the pointer; supplemental continuity in the brief | Local pointer / durable brief as applicable |
-| **entire-context projection** (`batch_state/entire-context/…` via CLI) | `bootstrap-git` + capsule via `handoff` + `record-use` | Rebuildable local projection |
 | **Fleet-comms channel** | Issue/PR numbers only | Plane authority |
 | **GitHub issues** | Residual / next work | Public queue SSOT |
 
 ```bash
-# 1) Index merge SHAs from this drive (idempotent) — writes the local projection
-.venv/bin/python -m scripts.entire_context bootstrap-git <40-hex-sha>   # repeat per merge
-
-# 2) Body-free capsule to stdout (≤5 items). Optional: --locator-id clink_… from bootstrap.
-#    Do NOT treat a tee into .claude/ as durable process storage (deploy-wiped).
-#    For disposable scratch, follow the brief's §4 scratch contract.
-.venv/bin/python -m scripts.entire_context handoff --query "<epic keywords>"
-
-# 3) Attest consumption when locators informed the handoff
-.venv/bin/python -m scripts.entire_context record-use \
-  --task-id <epic-or-stream-id> --consumer <harness> --purpose handoff \
-  --locator-id clink_…   # repeat up to the locators used
-
-# 4) Fleet receipt: issue/PR numbers only (no residual tables, no secrets)
+# Fleet receipt: issue/PR numbers only (no residual tables, no secrets)
 .venv/bin/python -m scripts.fleet_comms channel publish <stream-channel> \
-  "handoff dual-write: tracker=SSOT entire=capsule. Next issues #… Merged PRs #…" \
+  "handoff: tracker=SSOT. Next issues #… Merged PRs #…" \
   --sender "$SESSION_HANDOFF_AGENT" --source <harness> --kind state \
   --idempotency-key "handoff-<epic>-<date>"
 ```

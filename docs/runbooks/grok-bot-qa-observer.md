@@ -17,13 +17,13 @@ comments**. It must **never**:
 - act as CF of record
 - write the primary checkout (local-computer: **Never** / **Ask** only)
 
-It is **not** a second Grok orchestrator, not a substitute for cross-family PR
-review, and not Entire-cloud.
+It is **not** a second Grok orchestrator and not a substitute for cross-family PR
+review.
 
 ## Grok dispatch seat
 
 Grok dispatch runs through the Cursor seat at `grok-4.7-high`.
-Native Grok dispatch is retired; `dispatch.py --agent grok` aliases Cursor.
+Native Grok dispatch is retired; grok-build is the Grok TUI, not a dispatch v2 provider (`--agent grok` is an unknown agent).
 Grok Bot remains a separate external observer.
 
 - No `dispatch.py` / registry adapter for Grok Bot

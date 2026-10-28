@@ -63,6 +63,7 @@ from .dispatch import (
     TaskOutcome,
     condition_problems,
     frame,
+    seat_mode,
     workspace_fingerprint,
 )
 from .prompts import (
@@ -615,6 +616,7 @@ class Executor:
                 outcome.conditions,
                 expected=expected,
                 args_sha256=args_hash,
+                mode=seat_mode(task.seat),
             )
         workspace_after = (
             workspace_fingerprint(Path(expected["cwd"]))

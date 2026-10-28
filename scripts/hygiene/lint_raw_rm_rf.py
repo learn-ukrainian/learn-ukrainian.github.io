@@ -29,9 +29,6 @@ _ALLOWLIST: tuple[tuple[str, str, int], ...] = (
     ("services.sh", "rm -rf \"$vite_cache_dir\"", 1),
     ("services.sh", "rm -rf \"$dist_dir\"", 1),
     ("services.sh", "rm -rf \"$astro_dir\"", 1),
-    # Scratch-dir EXIT traps for one-shot installer scripts.
-    ("scripts/entire/install_kimi_external_agent.sh", "trap 'rm -rf \"${scratch_dir}\"' EXIT", 1),
-    ("scripts/entire/install_fleet_external_agent.sh", "trap 'rm -rf \"${scratch_dir}\"' EXIT", 1),
     # Actionlint download cleanup (scoped under a local temp dir).
     (
         "scripts/audit/check_workflows.sh",

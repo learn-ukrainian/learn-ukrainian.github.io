@@ -6,6 +6,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 import pytest
+import requests_mock as requests_mock_lib
 
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon import load_relation_candidates as relation_loader
@@ -3922,22 +3923,10 @@ def test_e2u_translation_decode_html_entities(monkeypatch) -> None:
 
 
 @pytest.mark.parametrize("status_code", [200, 403])
-def test_query_e2u_sends_public_contact(monkeypatch, status_code) -> None:
-    from scripts.rag import source_query
-
-    calls = []
-
-    def fake_send(request, **kwargs):
-        calls.append((request.url, request.headers["User-Agent"], kwargs["timeout"]))
-        response = source_query.requests.Response()
-        response.status_code = status_code
-        response._content = b'<td class="result_row"><b>entry</b> fixture</td>'
-        response.request = request
-        return response
-
+def test_query_e2u_sends_public_contact(monkeypatch, requests_mock, status_code) -> None:
+    requests_mock.get(requests_mock_lib.ANY, status_code=status_code, text='<td class="result_row"><b>entry</b> fixture</td>')
     monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: False)
     monkeypatch.setattr(enrich_manifest_module, "_polite_e2u_delay", lambda: None)
-    monkeypatch.setattr(source_query._SESSION, "send", fake_send)
     enrich_manifest_module.query_e2u_uk_en.cache_clear()
     try:
         result = enrich_manifest_module.query_e2u_uk_en("sample")
@@ -3945,6 +3934,7 @@ def test_query_e2u_sends_public_contact(monkeypatch, status_code) -> None:
         enrich_manifest_module.query_e2u_uk_en.cache_clear()
 
     assert result == ([] if status_code == 403 else [{"headword": "entry", "translation": "entry fixture"}])
+    calls = [(r.url, r.headers["User-Agent"], r.timeout) for r in requests_mock.request_history]
     assert calls == [(
         "https://e2u.org.ua/s?w=sample&dicts=all",
         "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; +https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)",
@@ -6569,24 +6559,15 @@ def test_wikidata_translation_sitelink_match_kept(monkeypatch) -> None:
 
 
 @pytest.mark.parametrize("refused_action", [None, "wbsearchentities", "wbgetentities"])
-def test_query_wikidata_sends_public_contact(monkeypatch, refused_action) -> None:
-    from scripts.rag import source_query
-
-    calls = []
-
-    def fake_send(request, **kwargs):
+def test_query_wikidata_sends_public_contact(monkeypatch, requests_mock, refused_action) -> None:
+    def respond(request, context):
         action = "wbsearchentities" if "action=wbsearchentities&" in request.url else "wbgetentities"
-        calls.append((request.url, request.headers["User-Agent"], request.headers["Accept"], kwargs["timeout"]))
-        response = source_query.requests.Response()
-        response.status_code = 403 if action == refused_action else 200
-        payload = {"search": [{"id": "Q1"}]} if action == "wbsearchentities" else {"entities": {"Q1": {"id": "Q1"}}}
-        response._content = json.dumps(payload).encode()
-        response.request = request
-        return response
+        context.status_code = 403 if action == refused_action else 200
+        return {"search": [{"id": "Q1"}]} if action == "wbsearchentities" else {"entities": {"Q1": {"id": "Q1"}}}
 
+    requests_mock.get(requests_mock_lib.ANY, json=respond)
     monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: False)
     monkeypatch.setattr(enrich_manifest_module, "_polite_wikidata_delay", lambda: None)
-    monkeypatch.setattr(source_query._SESSION, "send", fake_send)
     enrich_manifest_module.query_wikidata_uk_en.cache_clear()
     try:
         result = enrich_manifest_module.query_wikidata_uk_en("sample")
@@ -6607,6 +6588,7 @@ def test_query_wikidata_sends_public_contact(monkeypatch, refused_action) -> Non
             "application/json",
             15,
         ))
+    calls = [(r.url, r.headers["User-Agent"], r.headers["Accept"], r.timeout) for r in requests_mock.request_history]
     assert calls == expected
 
 

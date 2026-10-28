@@ -17,6 +17,7 @@ from typing import Any, Protocol
 
 from scripts.agent_runtime.attribution import resolve_invocation_attribution
 from scripts.common.repo_root import main_checkout_root
+from scripts.dispatcher import providers
 from scripts.dispatcher.cli import build_parser
 
 from .common import Seat, sha256_bytes, sha256_text
@@ -36,9 +37,10 @@ TERMINAL_STATUSES = frozenset(
     }
 )
 CONTROL_TIMEOUT = 120  # seconds for status calls
-SPAWN_TIMEOUT = 900  # seconds for dispatch, which may create a read-only worktree
+SPAWN_TIMEOUT = 900  # seconds for dispatch, which may create a worktree
 WAIT_MARGIN = 900  # seconds a wait may outlast the worker's hard timeout
 READ_ONLY = "read-only"
+WORKSPACE_WRITE = "workspace-write"
 # Classification is a property of the task kind, not the seat. Judge compares Ukrainian writing, so it is review.
 TASK_FAMILIES = {
     "review": "ukrainian-review",
@@ -153,7 +155,19 @@ def _same_path(recorded: Any, expected: str | None) -> bool:
     return isinstance(recorded, str) and Path(recorded).resolve() == Path(expected).resolve()
 
 
-def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], args_sha256: str) -> list[str]:
+def seat_mode(seat: Seat) -> str:
+    """The dispatch mode of ``seat``: read-only unless its provider refuses read-only.
+
+    A provider whose read-only mode cannot be locked (AGY) is refused read-only by the dispatcher, so
+    its seat runs workspace-write in its own disposable dispatch worktree. The seat returns scored
+    text, not repository changes, and a run whose tracked checkout changed is still refused.
+    """
+    return WORKSPACE_WRITE if providers.read_only_refusal(seat.agent) else READ_ONLY
+
+
+def condition_problems(
+    conditions: dict[str, Any], *, expected: dict[str, Any], args_sha256: str, mode: str
+) -> list[str]:
     """Why the recorded conditions are not the expected composition of the rendered prompt (empty when they are)."""
     problems = []
     if conditions.get("schema_version") == 2:
@@ -167,8 +181,8 @@ def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], 
         for key in ("cwd", "worktree_path"):
             if not _same_path(conditions.get(key), expected[key]):
                 problems.append(f"worker {key} differs from the frozen frame")
-        if conditions.get("mode") != READ_ONLY:
-            problems.append("mode is not read-only")
+        if conditions.get("mode") != mode:
+            problems.append(f"mode is not {mode}")
         if conditions.get("research") is not None:
             problems.append("research context was injected")
         if conditions.get("prompt_blocks") or conditions.get("effective_prompt_sha256"):
@@ -186,8 +200,8 @@ def condition_problems(conditions: dict[str, Any], *, expected: dict[str, Any], 
         )
     if conditions.get("research") is not None:
         problems.append("research context was injected")
-    if conditions.get("mode") != READ_ONLY:
-        problems.append(f"mode {conditions.get('mode')!r} is not {READ_ONLY!r}")
+    if conditions.get("mode") != mode:
+        problems.append(f"mode {conditions.get('mode')!r} is not {mode!r}")
     if not _same_path(conditions.get("worktree_path"), expected["worktree_path"]):
         problems.append(
             f"worker worktree {conditions.get('worktree_path')!r} is not the expected {expected['worktree_path']!r}"
@@ -301,7 +315,7 @@ class DelegateDispatcher:
         self, task_id: str, seat: Seat, kind: str, prompt_path: Path
     ) -> list[str]:
         args = ["dispatch", "--agent", seat.agent, "--model", seat.model, "--task-id", task_id]
-        args += ["--prompt-file", str(prompt_path), "--mode", READ_ONLY, "--language-lane"]
+        args += ["--prompt-file", str(prompt_path), "--mode", seat_mode(seat), "--language-lane"]
         head = _git(self.cwd, "rev-parse", "HEAD")
         if not head:
             raise DispatchError("cannot pin the worker commit")

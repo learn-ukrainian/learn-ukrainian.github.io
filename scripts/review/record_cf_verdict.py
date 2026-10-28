@@ -55,6 +55,7 @@ from scripts.orchestration.integration_sweep import (
     TRUSTED_ASSOCIATIONS,
     GitHubAdapter,
     SweepError,
+    lookup_verdict,
     parse_marker,
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
@@ -114,6 +115,10 @@ SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
 RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
 # Kimi never reviews. Native Grok requires its own runtime attestation (#9769).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
+# Review rounds per PR, counted on the reviewed heads of the current PR (C-2902);
+# a security-sensitive change gets the elevated budget.
+DEFAULT_REVIEW_ROUNDS = 3
+ELEVATED_REVIEW_ROUNDS = 5
 
 
 class RecordError(RuntimeError):
@@ -499,15 +504,15 @@ def _attribute_trailer(commit_sha: str | None, trailer: str, *, repository: str,
         if family in UNRESOLVED_AUTHOR_FAMILIES:
             if not TASK_ID.fullmatch(model):
                 raise RecordError("author model unknown")
-            if harness in SINGLE_FAMILY_HARNESSES:
-                family = SINGLE_FAMILY_HARNESSES[harness]
-                source = "single-family-harness"
-            else:
-                family = UNKNOWN_AUTHOR_FAMILY
-                source = "unresolved-author"
+            # A task id without a task record is unresolved on every harness,
+            # a single-family one included: the harness name is author-chosen
+            # text, not a model (C-2902 F5).
+            family = UNKNOWN_AUTHOR_FAMILY
+            source = "unresolved-author"
     if family in UNRESOLVED_AUTHOR_FAMILIES:
-        # A committed author without a concrete identity is reviewable by any
-        # known family (#9944). This does not grant Unknown a reviewer identity.
+        # A committed author without a concrete identity is collected as
+        # Unknown (#9944); every review refuses it (require_resolved_branch_authors,
+        # C-2902). Unknown is never a reviewer identity.
         family = UNKNOWN_AUTHOR_FAMILY
     has_record = source in {"task-record", "task-record-archived"}
     task_id = model if has_record or (TASK_ID.fullmatch(model) and not _is_catalog_model_trailer(model)) else None
@@ -694,6 +699,20 @@ class BranchReviewFacts:
         if any(commit.source in {"unknown_historical", "suspect_historical"} for commit in self.commits):
             return self.author_families | _VALID_CONCRETE_FAMILIES
         return self.author_families
+
+    @property
+    def unresolved_authors(self) -> tuple[str, ...]:
+        """Commits whose author family is unknown, so no reviewer can be proved outside it.
+
+        Untrailered history a red-team admission receipt froze (``unknown_historical``)
+        keeps its own qualification rules and is not counted here.
+        """
+        return tuple(
+            commit.sha or "(unknown commit)"
+            for commit in self.commits
+            if commit.source == "unresolved-author"
+            or (commit.family == UNKNOWN_AUTHOR_FAMILY and commit.source != "unknown_historical")
+        )
 
     @property
     def scope_paths(self) -> tuple[str, ...]:
@@ -1068,6 +1087,55 @@ def authorship_exclude_sha(repo_root: Path, *, base_branch: str | None) -> str |
     return sha
 
 
+def default_branch_review_base(repo_root: Path, head_sha: str) -> tuple[str, str]:
+    """The fetched default-branch tip and its merge-base with ``head_sha`` (C-2902 F6).
+
+    Every branch review is attributed over ``merge-base..head`` with that tip
+    excluded, at dispatch and at record. The default branch is the one origin
+    advertises as ``HEAD``, fetched fresh into ``origin/<default>``. A caller's
+    ``--base`` and the PR's base are never read: the author chooses both. Raises
+    ``BranchFactsError`` when the remote, the fetch or a shared history is unavailable.
+    """
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    deadline = time.monotonic() + BRANCH_FACTS_TIMEOUT_S
+    advertised = _facts_git(
+        repo_root, ["ls-remote", "--symref", "origin", "HEAD"], deadline=deadline, code=FACTS_TARGET_UNKNOWN
+    ).decode("utf-8", errors="replace")
+    match = re.search(r"(?m)^ref: refs/heads/(\S+)\tHEAD$", advertised)
+    try:
+        name = validate_plain_branch_name(match.group(1), repo_root=repo_root) if match else None
+    except UnsafeBranchNameError:
+        name = None
+    if name is None:
+        raise BranchFactsError(FACTS_TARGET_UNKNOWN, "origin advertises no default branch")
+    tracking = f"refs/remotes/origin/{name}"
+    _facts_git(
+        repo_root,
+        ["fetch", "--no-tags", "--no-write-fetch-head", "origin", f"+refs/heads/{name}:{tracking}"],
+        deadline=deadline,
+        code=FACTS_TARGET_UNKNOWN,
+    )
+    tip = (
+        _facts_git(
+            repo_root, ["rev-parse", "--verify", f"{tracking}^{{commit}}"], deadline=deadline, code=FACTS_TARGET_UNKNOWN
+        )
+        .decode("ascii", errors="replace")
+        .strip()
+    )
+    if not SHA.fullmatch(tip) or not isinstance(head_sha, str) or not SHA.fullmatch(head_sha):
+        raise BranchFactsError(FACTS_TARGET_UNKNOWN, "default-branch tip or head SHA invalid")
+    try:
+        merge_base = _facts_git(repo_root, ["merge-base", tip, head_sha], deadline=deadline, code=FACTS_TARGET_UNKNOWN)
+    except BranchFactsError as exc:
+        if exc.timed_out:
+            raise
+        raise BranchFactsError(
+            FACTS_TARGET_UNKNOWN, f"head {head_sha[:12]} shares no available history with origin/{name}"
+        ) from exc
+    return tip, merge_base.decode("ascii", errors="replace").strip()
+
+
 def _shas_not_reachable_from(repo_root: Path, shas: list[str], exclude_sha: str | None) -> list[str]:
     """Drop commits reachable from ``exclude_sha``, including that commit.
 
@@ -1147,22 +1215,14 @@ def pr_review_facts(
 ) -> BranchReviewFacts:
     """Facts for an open PR's frozen head, bound to GitHub's listing of its commits (A1).
 
-    The PR's base and head come from GitHub; membership comes from the local
-    ``git rev-list``. Any difference between the two commit sets refuses.
-    The base ref name is required before facts are collected: a missing, blank,
-    or non-string name would otherwise skip default-branch exclusion.
+    The head comes from GitHub; the range is the fetched default branch to
+    that head (:func:`default_branch_review_base`), never the PR's base, which
+    the author can retarget. Membership comes from the local ``git rev-list``.
+    Any difference from GitHub's listing refuses, so a PR whose base is not the
+    default branch is refused rather than attributed over a shorter range.
     """
-    pr = _run_json(
-        ["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefName,baseRefOid,headRefOid"]
-    )
-    base = pr.get("baseRefOid") if isinstance(pr, dict) else None
+    pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "headRefOid"])
     head = pr.get("headRefOid") if isinstance(pr, dict) else None
-    base_name = pr.get("baseRefName") if isinstance(pr, dict) else None
-    if not isinstance(base_name, str) or not base_name.strip():
-        raise RecordError("PR base ref name missing or malformed")
-    base_name = base_name.strip()
-    if not isinstance(base, str) or not SHA.fullmatch(base):
-        raise RecordError("PR base SHA unavailable; cannot prove clean base merge")
     if head != head_sha:
         raise RecordError("PR head moved since review; re-run exact-head review")
     listed = _pages(Request("read-commits", repo=repository, number=pr_number))
@@ -1171,7 +1231,7 @@ def pr_review_facts(
     github_shas = [entry.get("sha") for entry in listed]
     if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in github_shas):
         raise RecordError("PR commit set malformed")
-    exclude = authorship_exclude_sha(repo_root, base_branch=base_name)
+    exclude, base = default_branch_review_base(repo_root, head_sha)
     facts = collect_branch_review_facts(
         repository=repository,
         repo_root=repo_root,
@@ -1186,9 +1246,19 @@ def pr_review_facts(
         app_bot_login=listing_app_bot_login(listed, repository),
     )
     refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
-    github_own = _shas_not_reachable_from(repo_root, github_shas, exclude)
+    differs = RecordError(
+        "PR commit set differs from the local base..head enumeration from the default branch; "
+        "target the default branch, or fetch and retry"
+    )
+    try:
+        github_own = _shas_not_reachable_from(repo_root, github_shas, exclude)
+    except BranchFactsError as exc:
+        # A listed commit missing locally is a difference, not a partial read; a timeout stays one.
+        if exc.timed_out:
+            raise
+        raise differs from exc
     if sorted(github_own) != sorted({commit.sha or "" for commit in facts.commits}):
-        raise RecordError("PR commit set differs from the local base..head enumeration; fetch and retry")
+        raise differs
     return facts
 
 
@@ -1594,6 +1664,95 @@ def require_no_outside_rejection(comments: Any, sha: str) -> None:
             raise RecordError("RED_TEAM_REFUSED: outside-family rejection exists for this head")
 
 
+def require_resolved_branch_authors(facts: BranchReviewFacts) -> None:
+    """Refuse a review when any branch commit's author family is unknown (C-2902 F1, F5, F9).
+
+    An unknown author excludes no family and has no model, so no reviewer
+    can be proved independent of it, in either review mode. A trailer task id
+    without a task record is unknown on every harness. The family is read from
+    the commit's ``X-Agent`` trailer (or the task record it names), never from
+    the git author: the trailer is author-controlled, so a readable catalog
+    trailer is trusted as that family. This refuses unresolvable attribution;
+    it does not detect a forged catalog trailer. Untrailered history a red-team
+    admission receipt froze keeps its own rules (``unresolved_authors``).
+    """
+    if facts.unresolved_authors:
+        raise RecordError(
+            "AUTHOR_UNRESOLVED: branch commits have no resolvable author family "
+            f"({', '.join(facts.unresolved_authors)}); no reviewer can be proved outside them"
+        )
+
+
+def require_no_same_head_rejection(comments: Sequence[Mapping[str, Any]], sha: str, login: str, verdict: str) -> None:
+    """Refuse an APPROVE the keeper would not land at this head, in every review mode (FR-06).
+
+    The keeper's own reading decides: a same-head approval never clears a
+    same-head rejection, and an unknown head (an edited or unattested marker,
+    ``integration_sweep.lookup_verdict``) admits no approval, so the recorder
+    never posts an approval the keeper would ignore.
+    """
+    if verdict != "APPROVED":
+        return
+    current = lookup_verdict(comments, sha, login)
+    if current.state in REJECTED:
+        raise RecordError(
+            "APPROVE_REFUSED: a CHANGES_REQUESTED or BLOCKED verdict is recorded at this head; "
+            "only an APPROVE at a new head clears it"
+        )
+    if current.state == "unknown":
+        raise RecordError(
+            f"APPROVE_REFUSED: the merge-queue keeper reads this head's verdict as unknown ({current.reason}) "
+            "and would not land an APPROVE; escalate the verdict record or review a new head"
+        )
+
+
+def review_round_budget(facts: BranchReviewFacts) -> int:
+    """Rounds one PR may spend: 5 on a security-sensitive change, else 3 (C-2902).
+
+    The tier comes from the branch's own changed paths, the shared rule that
+    raises a security-sensitive target to critical. The review task's
+    caller-supplied risk never raises it: the dispatcher of a review can be
+    the author.
+    """
+    if is_security_sensitive_change(facts.changed_paths, facts.scope_paths):
+        return ELEVATED_REVIEW_ROUNDS
+    return DEFAULT_REVIEW_ROUNDS
+
+
+def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> set[str]:
+    """Heads named by verdict markers ``login`` posted with a trusted association."""
+    heads: set[str] = set()
+    for item in comments:
+        body = item.get("body") if isinstance(item, Mapping) else None
+        if not isinstance(body, str) or MARKER_PREFIX not in body:
+            continue
+        if item.get("user", {}).get("login") != login or item.get("author_association") not in TRUSTED_ASSOCIATIONS:
+            continue
+        marker = parse_marker(body)
+        if marker is not None:
+            heads.add(marker["sha"])
+    return heads
+
+
+def require_review_round_within_budget(
+    comments: Sequence[Mapping[str, Any]], sha: str, login: str, *, budget: int, pr: int
+) -> None:
+    """Refuse a verdict that would open a review round beyond this PR's budget.
+
+    A round is one reviewed head: trusted verdicts on this PR are counted
+    across heads, and more verdicts at an already reviewed head (a quorum seat
+    or a retried publication) open no new round. Earlier PRs are not read: no
+    GitHub listing finds them reliably (search index lag, the 250-commit PR
+    listing cap). Budget end is never approval.
+    """
+    heads = _trusted_verdict_shas(comments, login)
+    if sha not in heads and len(heads) >= budget:
+        raise RecordError(
+            f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(heads)} heads and its budget "
+            f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(heads) + 1}"
+        )
+
+
 def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: str) -> None:
     """Read the active task ledger before red-team admission or publication."""
     try:
@@ -1830,7 +1989,9 @@ def record(
         )
         if refusal:
             raise RecordError(refusal)
-    if family in facts.excluded_families and review_mode != "red_team":
+    # Every mode, red team included (F9): an unresolved author has no model a seat rule can compare.
+    require_resolved_branch_authors(facts)
+    if review_mode != "red_team" and family in facts.excluded_families:
         raise RecordError("reviewer family equals an author family")
     _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
     adapter = GitHubAdapter(Path.cwd())
@@ -1874,6 +2035,7 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
+        require_review_round_within_budget(comments, sha, login, budget=review_round_budget(facts), pr=number)
         existing = None
         for item in comments:
             body = item.get("body")
@@ -1905,6 +2067,7 @@ def record(
                         raise RecordError("existing verdict marker was edited or conflicts with task")
                     existing = item
                     break
+        require_no_same_head_rejection(comments, sha, login, verdict)
         if existing is None:
             data = _run_json(
                 # The typed record is the publisher's only admitted marker carrier (#11127).

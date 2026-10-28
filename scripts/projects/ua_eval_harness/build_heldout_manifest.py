@@ -22,6 +22,11 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.common.jsonl import physical_lines
+
 DEFAULT_CONFIG = ROOT / "data/projects/ua_eval_harness/heldout_manifest_config.json"
 DEFAULT_OUTPUT = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
 DEFAULT_UA_GEC_ROOT = ROOT / "data/ua-gec"
@@ -135,14 +140,14 @@ def verify_upstream(root: Path, config: Mapping[str, Any]) -> None:
 def parse_m2(path: Path) -> list[M2Sentence]:
     """Parse the sentence and edit subset of M2 used by this manifest."""
     try:
-        blocks = path.read_text(encoding="utf-8").strip().split("\n\n")
+        blocks = path.read_text(encoding="utf-8").strip("\r\n").split("\n\n")
     except OSError as exc:
         raise ManifestError(f"cannot read M2 input {path}: {exc}") from exc
     current_doc: str | None = None
     sentence_index = 0
     sentences: list[M2Sentence] = []
     for block in blocks:
-        lines = block.splitlines()
+        lines = physical_lines(block)
         if not lines:
             continue
         marker = re.fullmatch(r"S # (?P<doc_id>\d{4})", lines[0])

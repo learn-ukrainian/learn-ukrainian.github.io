@@ -1519,17 +1519,26 @@ class GitHubClient:
                 headers["If-None-Match"] = old_headers["etag"]
         response = self._send(method, endpoint, headers, raw, timeout)
         h = {k.lower(): v for k, v in response.headers.items()}
+        budget = _budget_headers(h)
         reset = None
+        limit = _limit_hold(response, now)
+        result = _response_result(
+            response,
+            h,
+            graphql=graphql,
+            raw_response=raw_response or headers.get("Accept") == "application/octet-stream",
+            reset_at=budget[1] if budget else None,
+            now=now,
+        )
+        value = result.value
         for persist_attempt in range(2):
             try:
                 with self._db() as db:
-                    budget = _budget_headers(h)
                     if budget is not None:
                         remaining, reset = budget
                         _store_budget(
                             db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset, now=now
                         )
-                    limit = _limit_hold(response, now)
                     if limit is not None:
                         holds, reset, reason = limit
                         for hold in holds:
@@ -1547,37 +1556,12 @@ class GitHubClient:
                             (now, json.dumps(h), self.scope, key, now, cached[2], cached[0], cached[1]),
                         )
                         return Result(_cached_value(cached), status=304, headers=h)
-                    if 200 <= response.status < 300 and (
-                        raw_response or headers.get("Accept") == "application/octet-stream"
-                    ):
-                        return Result(response.body, status=response.status, headers=h)
-                    try:
-                        value = json.loads(response.body) if response.body else None
-                    except ValueError:
-                        return Result(
-                            response.body,
-                            status=response.status,
-                            error=None if 200 <= response.status < 300 else "github_http_error",
-                            headers=h,
-                        )
-                    if (
-                        graphql
-                        and isinstance(value, dict)
-                        and any(
-                            e.get("type") in {"RATE_LIMIT", "RATE_LIMITED"}
-                            for e in _graphql_errors(value)
-                            if isinstance(e, dict)
-                        )
-                    ):
-                        reset = reset or int(now + 60)
+                    if result.error == "github_rate_limited":
+                        reset = result.reset_at
                         _store_budget(db, self.scope, resource, 0, reset, now=now)
                         return deferred("pool_exhausted", reset)
-                    if graphql and isinstance(value, dict) and value.get("errors"):
-                        return Result(value, status=response.status, error="github_graphql_error", headers=h)
-                    if not 200 <= response.status < 300:
-                        return Result(
-                            value, status=response.status, error="github_http_error", reset_at=reset, headers=h
-                        )
+                    if result.error or isinstance(value, bytes):
+                        return result
                     if resource_path == "rate_limit" and isinstance(value, dict):
                         for name, rate in value.get("resources", {}).items():
                             if (
@@ -1598,18 +1582,10 @@ class GitHubClient:
                     self.cache_dir = None
                     if persist_attempt == 0:
                         continue
-                try:
-                    value = json.loads(response.body) if response.body else None
-                except ValueError:
-                    value = response.body
-                return Result(
-                    value,
-                    status=response.status,
-                    error=None if 200 <= response.status < 300 else "github_http_error",
-                    reset_at=reset,
-                    headers=h,
-                )
-        return Result(value, status=response.status, headers=h)
+                if limit is not None:
+                    return deferred(limit[2], limit[1])
+                return result
+        return result
 
 
 def _api_hosts(host):
@@ -3904,18 +3880,47 @@ def _graphql_errors(value):
     return errors if isinstance(errors, list) else []
 
 
+def _response_result(response, headers, *, graphql, raw_response, reset_at, now):
+    """Classify a response independently of budget/cache persistence."""
+    success = 200 <= response.status < 300
+    if raw_response and success and not graphql:
+        return Result(response.body, status=response.status, headers=headers)
+    try:
+        value = json.loads(response.body) if response.body else None
+    except ValueError:
+        value = response.body
+    if graphql and isinstance(value, dict):
+        if any(
+            entry.get("type") in {"RATE_LIMIT", "RATE_LIMITED"}
+            for entry in _graphql_errors(value)
+            if isinstance(entry, dict)
+        ):
+            return _limited("pool_exhausted", reset_at or int(now + 60))
+        if value.get("errors") or ("errors" in value and value.get("data") is None):
+            return Result(value, status=response.status, error="github_graphql_error", headers=headers)
+    if not success:
+        return Result(value, status=response.status, error="github_http_error", reset_at=reset_at, headers=headers)
+    return Result(response.body if raw_response else value, status=response.status, headers=headers)
+
+
 def _graphql_error_detail(value):
-    """Redacted ``type`` and ``message`` of each object error; other entries are dropped."""
+    """Redact object errors, keeping at most ten and 7 KiB of JSON, plus a truncation marker."""
     from scripts.opsec.prepublish import CREDENTIAL_TOKEN_PATTERN
 
     def text(field):
         return CREDENTIAL_TOKEN_PATTERN.sub("[REDACTED]", field)[:500] if isinstance(field, str) else None
 
-    return [
-        {"type": text(entry.get("type")), "message": text(entry.get("message"))}
-        for entry in _graphql_errors(value)
-        if isinstance(entry, dict)
-    ]
+    errors, size = [], 2
+    for entry in _graphql_errors(value):
+        if not isinstance(entry, dict):
+            continue
+        detail = {"type": text(entry.get("type")), "message": text(entry.get("message"))}
+        size += len(json.dumps(detail).encode()) + 2
+        if len(errors) == 10 or size > 7 * 1024:
+            errors.append({"type": "TRUNCATED", "message": "Additional GraphQL errors omitted"})
+            break
+        errors.append(detail)
+    return errors
 
 
 def _result_process(args, result, options, kwargs, *, api=True):

@@ -24,7 +24,6 @@
 | **`scripts/dispatch.py dispatch`** | Isolated implementation execution | Worktree writes only; not durable fleet authority |
 | **Fleet-comms + file handoffs** | Durable coordination | Fleet Comms owns durable messages/jobs in `authority` mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query `.venv/bin/python -m scripts.fleet_comms plane-status`, preserve existing stream ownership, and never create legacy message/job writes or another control plane |
 | **ACPX** | Explicit fixed Codex↔Grok panel for one consequential read-only design/risk comparison (default-off/shadow) | Sole surface `acp-discuss`; no automatic launcher/delegate use, queue, retry, formal review, or authority |
-| **Entire context recall** | Optional body-free historical discovery and provenance | Local verified locator cards only; never coordination, source authority, rollover, Monitor, or formal review |
 | **Buzz** | **Deferred** | Relay-as-authority conflicts with the current model — out of scope |
 
 **Discussion is not formal review.** Design panels and same-family helpers do not
@@ -623,33 +622,6 @@ The bridge runs a citation-provenance check on every channel post and reply befo
 
 ---
 
-## Provider-neutral historical recall
-
-At intake for a non-trivial task, the accountable root uses the public
-[`entire-context` skill](../../agents_extensions/shared/skills/entire-context/SKILL.md).
-The root runs local `status` and one bounded `search` before prioritization or
-dispatch. If verified locators materially help, it creates at most one
-five-card/8-KiB capsule and includes that same capsule in the relevant Codex,
-Claude/OpenCode, Kimi, GLM, Grok, or AGY participant briefs. A child does not
-repeat the broad search simply because it uses another provider.
-
-This is context distribution, not a new fleet plane. ACP still owns live
-discussion and terminal receipts; Git/GitHub own code history and disposition;
-Fleet/file handoffs own coordination; Monitor owns runtime state; rollover owns
-cross-session continuity; and sealed Fleet review owns the formal review gate.
-Search delivery is not proof of use. The root records `record-use` only after a
-verified locator materially informed planning, implementation, explanation,
-review, or handoff.
-
-Entire capture follows the host harness (`codex`, `claude-code`, `opencode`, or
-an explicitly proved external harness adapter), never a model label. The
-canonical seat-by-seat capture and recall matrix is in
-[`agent-seat-onboarding.md`](../runbooks/agent-seat-onboarding.md#entire-recall-onboarding-matrix).
-Raw prompts, transcripts, responses, session bodies, generated recaps, and
-generated summaries never enter automatic context.
-
----
-
 ## Session Start Checklist
 
 **Canonical path (GH #1309):** call the Monitor API. Do not open
@@ -881,7 +853,7 @@ Post on the relevant GH issue explaining what was stuck and why.
 ## Dispatch handoff: GPT-6 Luna workers + fleet settle
 
 **Luna (`gpt-6-luna` @ high)** is a high-volume **bounded coding worker**, not a solo epic driver.
-Orchestrators keep acceptance (CF, merge, residual truth). Every Luna dispatch needs a complete
+The worker runs its brief's chain (`full-send`, or `full-stop` when the brief says so); orchestrators keep acceptance and residual truth. Every Luna dispatch needs a complete
 GPT-6.1 Sol advisory envelope bound to it (`--advisory-task`; operator decision 2026-09-30, #9275);
 see `agents_extensions/shared/rules/fleet-driver-routing.md` §2.
 
@@ -899,7 +871,7 @@ When a worker leaves commits without a PR, or dies with `status=running` and a d
 .venv/bin/python -m scripts.orchestration.dispatch_settle release-stale
 ```
 
-Formal CF and auto-merge stay with the orchestrator.
+Nobody arms auto-merge; the formal CF verdict is recorded with `review-loop`, and the owner of the delivery enqueues.
 
 ### Formal CF budget rotation (Codex-authored PRs)
 Current formal reviewer endpoints are `codex|claude|glm|grok|cursor`; the canonical

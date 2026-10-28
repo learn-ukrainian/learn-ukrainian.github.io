@@ -301,6 +301,7 @@ def build_ask_review_dispatch_command(
     prompt_file: Path,
     *,
     effort: str | None,
+    repo: str | None = None,
     branch: str | None = None,
     review_profile: str | None = None,
     pinned_head: str | None = None,
@@ -343,6 +344,8 @@ def build_ask_review_dispatch_command(
         str(prompt_file),
         "--require-review-verdict",
     ]
+    if repo is not None:
+        cmd.extend(["--repo", repo])
     if branch:
         cmd.extend(["--branch", branch])
     if pinned_head:
@@ -420,6 +423,7 @@ def run_ask_review_dispatch(
     model: str | None = None,
     effort: str | None = None,
     hard_timeout: int | None = None,
+    repo: str | None = None,
     branch: str | None = None,
     review_profile: str | None = None,
     pinned_head: str | None = None,
@@ -460,6 +464,7 @@ def run_ask_review_dispatch(
             task_id,
             prompt_path,
             effort=effort,
+            repo=repo,
             branch=branch,
             review_profile=review_profile,
             pinned_head=pinned_head,

@@ -738,6 +738,28 @@ async def list_tools() -> list[Tool]:
         ),
         # ── Live source query tools ──────────────────────────────
         _tool(
+            name="query_wikipedia_cached",
+            description=(
+                "Read Ukrainian Wikipedia evidence from existing caches only. Never fetches, refreshes or writes. "
+                "Returns hit/miss/stale/negative/unavailable, retrieval time, cache key and response digest. "
+                "Extract also reads curated articles, with matched title and URL. A miss is not evidence of absence. "
+                "fetched_at is Unix seconds for wiki_cache.db or the original ISO timestamp for sources.db. "
+                "Wikipedia is factual context, not a lexical authority."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"},
+                    "mode": {"type": "string", "enum": ["summary", "search", "extract", "sections", "section"], "default": "summary"},
+                    "limit": {"type": "integer", "minimum": 1, "default": 5},
+                    "section": {"type": "integer", "minimum": 0},
+                    "offset": {"type": "integer", "minimum": 0, "default": 0},
+                    "max_chars": {"type": "integer", "default": 6000},
+                },
+                "required": ["query"],
+            },
+        ),
+        _tool(
             name="query_wikipedia",
             annotations=_PERSISTING_LOOKUP_TOOL,
             description=(
@@ -2272,6 +2294,7 @@ async def _dispatch_tool_call(
             "verify_stresses": lambda: handle_verify_stresses(arguments),
             "check_text": lambda: handle_check_text(arguments),
             "query_wikipedia": lambda: handle_query_wikipedia(arguments),
+            "query_wikipedia_cached": lambda: handle_query_wikipedia_cached(arguments),
             "query_grac": lambda: handle_query_grac(arguments),
             "query_ulif": lambda: handle_query_ulif(arguments),
             "query_ulif_synonyms": lambda: handle_query_ulif_synonyms(arguments),
@@ -3200,7 +3223,7 @@ async def handle_check_text(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
 
 
-def _lookup_wikipedia_in_db(query: str) -> dict | None:
+def _lookup_wikipedia_in_db(query: str, *, include_provenance: bool = False) -> dict | None:
     """Serve the pre-ingested wikipedia table in sources.db as a persistent
     cache (#1170). Matches by exact title first, then by FTS5 title match.
     Returns None if the query isn't in the DB — callers must then fall back
@@ -3220,12 +3243,13 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
     if not db.exists():
         return None
     conn: sqlite3.Connection | None = None
+    columns = "title, url, text, fetched_at" if include_provenance else "title, url, text"
     try:
         conn = _open_conn(db, read_only=True)
         # 1. Exact title match (case-insensitive) — the common case after
         #    fetch_wikipedia.py has ingested a batch from plan topics.
         row = conn.execute(
-            "SELECT title, url, text FROM wikipedia WHERE LOWER(title) = LOWER(?) LIMIT 1",
+            f"SELECT {columns} FROM wikipedia WHERE LOWER(title) = LOWER(?) LIMIT 1",
             (query,),
         ).fetchone()
         if row:
@@ -3235,12 +3259,12 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
         #    Use MATCH on the title column only to avoid pulling large
         #    body-text hits for short queries.
         row = conn.execute(
-            """SELECT w.title, w.url, w.text
+            f"""SELECT {', '.join('w.' + c.strip() for c in columns.split(','))}
                FROM wikipedia w
                JOIN wikipedia_fts fts ON fts.rowid = w.id
                WHERE wikipedia_fts MATCH ?
                ORDER BY rank, w.id LIMIT 1""",
-            (f'title:"{query}"',),
+            ('title:"' + query.replace('"', '""') + '"',),
         ).fetchone()
         if row:
             return dict(row)
@@ -3400,6 +3424,56 @@ def _format_wikipedia_extract_page(
 
 
 WIKIPEDIA_UNAVAILABLE_PREFIX = "Wikipedia UNAVAILABLE"
+
+
+async def handle_query_wikipedia_cached(args: dict) -> list[TextContent]:
+    from rag.wiki_cache import read_cached
+
+    query, mode = args.get("query"), args.get("mode", "summary")
+    limit, section = args.get("limit", 5), args.get("section")
+    offset = _wikipedia_extract_offset(args.get("offset", 0))
+    if (
+        not isinstance(query, str) or not query.strip()
+        or mode not in {"summary", "search", "extract", "sections", "section"}
+        or type(limit) is not int or limit < 1 or offset is None
+        or (mode == "section" and (type(section) is not int or section < 0))
+    ):
+        return [TextContent(type="text", text=json.dumps({"status": "invalid_input"}))]
+    key_section = f"q={query}&limit={limit}" if mode == "search" else str(section) if mode == "section" else ""
+    result = await asyncio.to_thread(read_cached, mode, query, key_section)
+    if mode == "extract" and result["status"] == "hit":
+        title, url, body = _split_cached_wikipedia_extract(result["response"])
+        if not title or not url or not body.strip():
+            result.update(status="unavailable", response=None)
+    if mode == "extract" and result["status"] not in {"hit", "negative"}:
+        import sqlite3
+
+        try:
+            article = await asyncio.to_thread(_lookup_wikipedia_in_db, query, include_provenance=True)
+        except (OSError, sqlite3.Error):
+            result["status"] = "unavailable"
+        else:
+            if article is not None:
+                if not all(isinstance(article.get(k), str) and article[k].strip() for k in ("title", "url", "text", "fetched_at")):
+                    result["status"] = "unavailable"
+                else:
+                    response = _wikipedia_full_extract_text(article["title"], article["url"], article["text"])
+                    result.update(
+                        status="hit", store="sources.db", matched_title=article["title"],
+                        source_url=article["url"], fetched_at=article["fetched_at"], expires_at=None,
+                        response=response, response_sha256=hashlib.sha256(response.encode()).hexdigest(),
+                    )
+    if mode == "extract" and result["status"] == "hit":
+        title, url, body = _split_cached_wikipedia_extract(result["response"])
+        if offset >= len(body) or not body[offset:].strip():
+            result.update(status="unavailable", response=None)
+        else:
+            response = _format_wikipedia_extract_page(title, url, body, offset, _clamp_wikipedia_extract_max_chars(args.get("max_chars", 6000)))
+            result.update(
+                matched_title=title, source_url=url, response=response,
+                cache_response_sha256=result["response_sha256"], response_sha256=hashlib.sha256(response.encode()).hexdigest(),
+            )
+    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
 
 
 async def handle_query_wikipedia(args: dict) -> list[TextContent]:

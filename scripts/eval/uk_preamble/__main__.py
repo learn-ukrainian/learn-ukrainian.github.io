@@ -190,7 +190,7 @@ def build_parser() -> argparse.ArgumentParser:
     run = commands.add_parser(
         "run",
         help="Dispatch every seat x variant x repeat task (resumable)",
-        description="Dispatch read-only review and writing tasks through scripts/dispatch.py; resume safely.",
+        description="Dispatch review and writing tasks through scripts/dispatch.py; resume safely.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=EPILOG,
     )

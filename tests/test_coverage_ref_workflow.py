@@ -84,10 +84,17 @@ def test_ci_partition_and_pytest_denominator_are_unchanged():
     assert measured["strategy"] == {"fail-fast": False, "matrix": {"shard": list(range(1, 17))}}
     before = step(baseline, "Run pytest")["run"]
     after = step(measured, "Run CI pytest suite with branch coverage")["run"]
-    assert (
-        before[before.index("git ls-files") : before.index(".venv/bin/python -m pytest")]
-        == after[after.index("git ls-files") : after.index('.venv/bin/python "$RUNNER_TEMP')]
-    )
+    # ci.yml's split also records the shard's weights for duration normalization. That
+    # output never changes selection, and coverage-ref runs the measured commit's
+    # splitter, which may predate --weights-out, so the flag is not compared.
+    weights_out = ' --weights-out "ci-artifacts/pytest-shard-${SHARD}-weights.json"'
+    assert weights_out in before
+    split_before = before[before.index("git ls-files") : before.index(".venv/bin/python -m pytest")]
+    split_after = after[after.index("git ls-files") : after.index('.venv/bin/python "$RUNNER_TEMP')]
+    def words(text: str) -> list[str]:
+        return text.replace("\\\n", " ").split()
+
+    assert words(split_before.replace(weights_out, "")) == words(split_after)
     original = shlex.split(
         before[before.index(".venv/bin/python -m pytest") : before.index("# Postgres")].replace("\\\n", "")
     )

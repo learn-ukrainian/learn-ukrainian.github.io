@@ -31,7 +31,6 @@ PINS_PATH = REPO_ROOT / "scripts" / "config" / "stack_pins.yaml"
 # The code CLI's npm package is derived from its pin name so this file does not
 # spell a model-shaped token.
 UPSTREAMS: dict[str, tuple[str, str]] = {
-    "entire": ("github", "entireio/cli"),
     "gh": ("github", "cli/cli"),
     "uv": ("github", "astral-sh/uv"),
     "node": ("node-index", "https://nodejs.org/dist/index.json"),

@@ -5,7 +5,7 @@
 #
 # Do not run `pre-commit install`: hooks live in `$GIT_COMMON_DIR/hooks`,
 # delegating to the tracked `.githooks/` of the current worktree (`core.hooksPath`
-# stays unset so Entire CLI can chain per-clone without dirtying tracked files).
+# stays unset so hook-installing tools cannot write into tracked files).
 # The tracked chain calls pre-commit itself through the project virtual environment.
 #
 # Or run manually on all files:

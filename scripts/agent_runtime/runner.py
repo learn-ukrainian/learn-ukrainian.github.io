@@ -79,7 +79,6 @@ from scripts.agent_runtime.adapters.agy import AgyAdapter, AgyRuntimeIdentity, _
 from scripts.agent_runtime.adapters.muse import MuseRunEvidence
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 from scripts.agent_runtime.result import AgyAttempt, AgyTelemetry
-from scripts.entire.fleet_capture import FleetCapture, resolved_route
 from scripts.secret_redactor import redact_value
 
 from .accounting import model_accounting_fields
@@ -264,21 +263,6 @@ def _validated_agy_parse(
         "substituted": True,
     } if state["resolved_model_known"] and identity["substituted"] else None
     return replace(parse, model_identity=identity, substitution=substitution)
-
-
-def _agy_capture_route(
-    *, requested_model: str, plan_metadata: Mapping[str, object] | None,
-    substitution: Mapping[str, object] | None, governed: bool,
-) -> tuple[str, dict[str, object]]:
-    """Use the validated observation for governed capture, including exceptions."""
-    if not governed:
-        return resolved_route(requested_model=requested_model, plan_metadata=plan_metadata, substitution=substitution)
-    identity = _AGY_OBSERVED_IDENTITY.get()
-    known = identity is not None and identity.get("actual_model_known") is True
-    actual = identity["actual_model"] if known else ""
-    return actual, {"requested_model": requested_model, "actual_model": actual,
-                    "actual_model_known": str(known).lower(), "harness": "agy",
-                    "actual_family": identity.get("actual_family") if known else ""}
 
 
 class AgentOutputLimitError(AgentRuntimeError):
@@ -2058,7 +2042,6 @@ def _execute_invocation_once(
     output_limit = _streamed_output_limit(agent_name=agent_name, entrypoint=entrypoint)
     observed_output_stdout_lines = 0
     streamed_output_bytes = 0
-    fleet_capture: FleetCapture | None = None
     kill_reason: str | None = None
     escaped_primary: list[str] = []
     cwd_pin: _ChildCwdPin | None = None
@@ -2159,29 +2142,6 @@ def _execute_invocation_once(
             ),
             stdout_line_transform=stdout_line_transform,
         )
-        capture_repo_raw = None
-        if tool_config:
-            capture_repo_raw = tool_config.get("repo_read_root") or tool_config.get("review_snapshot_root")
-        capture_repo = Path(str(capture_repo_raw or getattr(plan, "cwd", None) or cwd))
-        try:
-            fleet_capture = FleetCapture.start(
-                host_harness=getattr(plan, "host_harness", None),
-                runner_agent=agent_name,
-                entrypoint=entrypoint,
-                requested_model=model,
-                prompt=prompt,
-                repo_path=capture_repo,
-                runtime_repo_root=_RUNNER_REPO_TREE,
-                plan_metadata=getattr(plan, "metadata", None),
-            )
-        except Exception as exc:
-            # Entire is optional: capture setup can never alter the provider call.
-            _logger.warning(
-                "Entire fleet capture start failed for %s: %s",
-                agent_name,
-                type(exc).__name__,
-            )
-            fleet_capture = None
         mcp_observer = _McpRuntimeObserver.from_tool_config(
             agent_name=agent_name,
             task_id=task_id,
@@ -2362,21 +2322,6 @@ def _execute_invocation_once(
                     f"(stdin_bytes={len(plan.stdin_payload or '')})"
                 )[:500],
             )
-        if fleet_capture is not None:
-            actual_model, route_metadata = _agy_capture_route(
-                requested_model=model,
-                plan_metadata=getattr(plan, "metadata", None),
-                substitution=parse.substitution,
-                governed=agy_identity_launch,
-            )
-            fleet_capture.finish(
-                response=parse.response,
-                outcome=kill_reason or ("ok" if parse.ok else "error"),
-                returncode=final_returncode,
-                actual_model=actual_model,
-                route_metadata=route_metadata,
-            )
-            fleet_capture = None
         if v4_claim is not None:
             parse = _finalize_v4_runner_origin(
                 authorization_id=v4_authorization_id or "",
@@ -2441,22 +2386,6 @@ def _execute_invocation_once(
         if tree_watch is not None:
             with contextlib.suppress(Exception):
                 tree_watch.final_check()
-
-        if fleet_capture is not None:
-            actual_model, route_metadata = _agy_capture_route(
-                requested_model=model,
-                plan_metadata=getattr(plan, "metadata", None),
-                substitution=None,
-                governed=agy_identity_launch,
-            )
-            fleet_capture.finish(
-                response="",
-                outcome=kill_reason or "runner_exception",
-                returncode=None if proc is None else proc.returncode,
-                actual_model=actual_model,
-                route_metadata=route_metadata,
-            )
-            fleet_capture = None
 
         if watchdog_state is not None:
             stop_watchdog(

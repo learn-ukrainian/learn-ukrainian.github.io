@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import sqlite3
+import time
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
@@ -108,6 +109,9 @@ def build(scratch: Path) -> tuple[Path, Path]:
             conn.commit()
         finally:
             conn.close()
+    with sqlite3.connect(scratch / "wiki_cache.db") as conn:
+        conn.execute("CREATE TABLE wiki_cache (mode TEXT, title TEXT, section TEXT, response TEXT, fetched_at INTEGER)")
+        conn.execute("INSERT INTO wiki_cache VALUES (?, ?, ?, ?, ?)", ("summary", "Мова", "", "Cached Wikipedia evidence.", int(time.time())))
     return sources_db, vesum_db
 
 

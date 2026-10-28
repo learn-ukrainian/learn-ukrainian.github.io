@@ -18,11 +18,12 @@ from unittest.mock import Mock
 import pytest
 import yaml
 
-from scripts.dispatcher import checks, cli, git, store, worker
+from scripts.dispatcher import checks, cli, git, providers, store, worker
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.providers import muse
 from scripts.dispatcher.types import TaskSpec
+from scripts.lib import rules_core
 from scripts.review.record_cf_verdict import _review_branch
 
 SOURCE = Path(__file__).resolve().parents[2]
@@ -83,7 +84,8 @@ def sandbox(tmp_path, hermetic_monitor):
     shutil.copy(Path(__file__).with_name("stub_provider.py"), repo / "scripts/dispatcher/providers/codex.py")
     run_git(repo, "add", ".")
     run_git(repo, "commit", "-m", "fixture")
-    run_git(repo, "init", "--bare", str(remote))
+    # Origin advertises main as its default branch: review authorship is read from it (C-2902).
+    run_git(repo, "init", "--bare", "--initial-branch=main", str(remote))
     run_git(repo, "remote", "add", "origin", str(remote))
     run_git(repo, "push", "-u", "origin", "main")
     env = {**os.environ, "LU_TASKS_DIR": str(tasks)}
@@ -114,7 +116,24 @@ def sandbox(tmp_path, hermetic_monitor):
             ).stdout
         )
 
-    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle)
+    def review_models(*models):
+        """File the stub reviewer ``models`` under OpenAI in the sandbox catalog copy only."""
+        catalog = yaml.safe_load((config / "model_catalog.yaml").read_text())
+        catalog["models"]["gpt-6.1-sol"].setdefault("runtime_model_ids", []).extend(models)
+        (config / "model_catalog.yaml").write_text(yaml.safe_dump(catalog, sort_keys=False))
+
+    def review_target(*models):
+        """Arguments for a read-only review of one Anthropic-authored commit by the stub ``models``.
+
+        A review needs a reviewed range and a reviewer family outside its authors (C-2902).
+        """
+        review_models(*models)
+        head = run_git(repo, "commit-tree", "HEAD^{tree}", "-p", "HEAD", "-m",
+                       "authored change\n\nX-Agent: claude/claude-opus-5-5")
+        return "--base", "main", "--pinned-head", head
+
+    box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle,
+                          review_models=review_models, review_target=review_target)
     yield box
     # Reap detached test supervisors, including a test interrupted by an assertion.
     for path in tasks.glob("*.json"):
@@ -550,7 +569,9 @@ def test_cursor_v2_record_never_attests_a_model_the_runtime_did_not_report(sandb
     executable.chmod(0o755)
     sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
     sandbox.env["CURSOR_API_KEY"] = "stub-process-key"
-    run_git(sandbox.repo, "branch", "review-source")
+    # A read-only --branch dispatch is a review (C-2902 F10): it needs a reviewed commit outside its family.
+    source = sandbox.review_target("requested-model-is-not-proof")[-1] if mode == "read-only" else "HEAD"
+    run_git(sandbox.repo, "branch", "review-source", source)
     run_git(sandbox.repo, "push", "origin", "review-source")
     dispatched = sandbox.cli(
         "dispatch",
@@ -641,7 +662,7 @@ def test_review_gate_prevents_false_completion_and_preserves_results(sandbox, te
     (sandbox.repo / "scripts/__init__.py").write_text(f"__path__.append({str(SOURCE / 'scripts')!r})\n")
     dispatched = sandbox.cli(
         "dispatch", "--agent", "sol", "--model", model, "--prompt", text,
-        *(["--require-review-verdict"] if required else []),
+        *(["--require-review-verdict", *sandbox.review_target(model)] if required else []),
     )
     task = dispatched.stdout.splitlines()
     record = sandbox.settle(task, expected=1 if error else 0)
@@ -659,10 +680,14 @@ def test_review_gate_exception_cannot_leave_supervisor_running(sandbox):
     review = sandbox.repo / "scripts/review"
     review.mkdir(exist_ok=True)
     (review / "__init__.py").touch()
-    (review / "verdict_parser.py").write_text(
-        "def recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
+    # Dispatch admission reads branch authorship through the recorder, which imports the rest of the parser.
+    parser = review / "verdict_parser.py"
+    parser.write_text(
+        parser.read_text() + "\n\ndef recognized_verdicts(text):\n    raise RuntimeError('sensitive scanner diagnostic')\n"
     )
-    record = sandbox.settle(sandbox.dispatch("echo", "--require-review-verdict"), expected=1)
+    record = sandbox.settle(
+        sandbox.dispatch("echo", "--require-review-verdict", *sandbox.review_target("echo")), expected=1
+    )
     assert record["status"] == "failed"
     assert record["error"] == "review_gate_error"
     assert record["returncode"] == 0
@@ -731,7 +756,7 @@ def _killed_review_supervisor(sandbox, tmp_path, model):
         sandbox.env.pop(name, None)
     sandbox.env.update({test_slots.ENABLE_ENV: "on", test_slots.DIR_ENV: str(tmp_path / "pool"),
                         test_slots.COUNT_ENV: "4", test_slots.WAIT_ENV: "5"})
-    task = sandbox.dispatch(model, "--require-review-verdict")
+    task = sandbox.dispatch(model, "--require-review-verdict", *sandbox.review_target(model))
     child = int(await_file(sandbox.tasks / f"{task[0]}.started"))
     if model == "governed":
         assert await_file(sandbox.tasks / f"{task[0]}.joined") == "joined"
@@ -1783,6 +1808,12 @@ def test_delivery_only_counts_exact_heads_on_authorized_branches(
 def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
     task = sandbox.dispatch("unpushed", "--mode", "workspace-write")
     first = sandbox.settle(task, expected=1)
+    # A read-only --branch dispatch is a review (C-2902 F10): attribute the stub delivery to a family
+    # outside the stub reviewer's, keeping its tree and parent.
+    sandbox.review_models("echo")
+    head = run_git(sandbox.repo, "commit-tree", f"{first['head_sha']}^{{tree}}", "-p", f"{first['head_sha']}^",
+                   "-m", "stub delivery\n\nX-Agent: claude/claude-opus-5-5")
+    run_git(sandbox.repo, "update-ref", f"refs/heads/{first['worktree_branch']}", head)
     result = sandbox.cli(
         "dispatch",
         "--agent",
@@ -1791,16 +1822,14 @@ def test_review_uses_exact_commit_on_fresh_branch_and_cwd_reuses(sandbox):
         "echo",
         "--prompt",
         "review",
-        "--pr",
-        "42",
         "--branch",
         first["worktree_branch"],
         "--pinned-head",
-        first["head_sha"],
+        head,
     )
     review = sandbox.settle(result.stdout.splitlines())
-    assert review["worktree_base_sha"] == first["head_sha"]
-    assert review["pinned_head"] == first["head_sha"]
+    assert review["worktree_base_sha"] == head
+    assert review["pinned_head"] == head
     assert review["review_branch"] == first["worktree_branch"]
     assert _review_branch(review) == first["worktree_branch"]
     assert review["worktree_branch"] != first["worktree_branch"]
@@ -2272,6 +2301,79 @@ def test_grok_is_no_alias_and_an_unknown_agent_names_the_supported_agents(sandbo
     assert "unknown agent 'grok'; supported agents: codex, claude, cursor, agy, muse, opencode, hermes" in result.stderr
     assert "dispatch Grok as --agent cursor --model grok-4.7-high" in result.stderr
     assert not sandbox.tasks.exists()
+
+
+@pytest.mark.parametrize("agent", providers.PROVIDERS)
+def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkeypatch, agent):
+    """C-2916 P6 removed the lexical refusal; read-only is now held by each CLI's own write lock or refused."""
+    prompt = tmp_path / "prompt.txt"
+    prompt.write_text("Fix the bug in X.\n")
+    spec = TaskSpec("ro", agent, "vendor/model", None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
+    refused = {"agy": "--sandbox only restricts its terminal", "hermes": "bypasses approvals"}
+    if agent in refused:
+        with pytest.raises(ValueError, match=f"read_only_unenforceable: {agent} cannot run --mode read-only"):
+            providers.load(agent).build(spec, {})
+        result = sandbox.cli("dispatch", "--agent", agent, "--model", "vendor/model", "--prompt", "Fix X", expected=2)
+        assert f"read_only_unenforceable: {agent} cannot run --mode read-only" in result.stderr
+        assert refused[agent] in result.stderr
+        assert not sandbox.tasks.exists()
+        return
+    invocation = providers.load(agent).build(spec, {})
+    argv = invocation.argv
+    if agent == "codex":
+        assert argv[argv.index("-s") + 1] == "read-only"
+    elif agent == "cursor":
+        assert argv[argv.index("--mode") + 1] == "ask"
+    elif agent == "muse":
+        assert {"--disable-write", "--disable-shell"} <= set(argv)
+    elif agent == "claude":
+        assert argv[argv.index("--permission-mode") + 1] == "dontAsk"
+        assert "Bash" not in argv[argv.index("--allowedTools") + 1].split(",")
+        assert {"Edit", "Write", "NotebookEdit"} <= set(argv[argv.index("--disallowedTools") + 1].split(","))
+        # dontAsk still runs what a loaded settings file allows, and a worktree loads the main checkout's
+        # local file (Grok F4). Lists merge across sources, so no source's write allow may take effect.
+        write_rule = "Bash(touch *)"
+        policy = json.dumps({"permissions": {"allow": [write_rule]}})
+        # --restricted still loads managed settings (Sol F5): a managed file or a server-managed cache refuses.
+        managed, config = tmp_path / "etc-claude-code", tmp_path / "config"
+        monkeypatch.setattr("scripts.agent_runtime.env_sanitize._CLAUDE_MANAGED_SETTINGS_DIR", managed)
+        config.mkdir()
+        run_env = {"PATH": os.environ["PATH"], "HOME": str(tmp_path), "CLAUDE_CONFIG_DIR": str(config)}
+        for source, expected in ((managed / "managed-settings.json", "managed policy in /etc/claude-code is present"),
+                                 (config / "remote-settings.json", "the server-managed settings cache holds a policy")):
+            source.parent.mkdir(exist_ok=True)
+            source.write_text(policy)
+            assert providers.read_only_refusal(agent, run_env) == (
+                f"read_only_unenforceable: claude cannot run --mode read-only: {expected}; "
+                "use codex, cursor, muse, opencode"
+            )
+            source.unlink()
+        assert providers.read_only_refusal(agent, run_env) is None
+        for account in ("a", "b"):
+            argv = providers.load(agent).build(dataclasses.replace(spec, claude_account=account), run_env).argv
+            assert argv[argv.index("--append-system-prompt-file") + 1] == str(
+                rules_core.source_path(rules_core.CORE_REL))  # --restricted skips CLAUDE.md (Sol F6)
+            if "--restricted" in argv:  # loads only managed settings, absent above, and --settings
+                sources = []
+            elif "--setting-sources" in argv:
+                sources = argv[argv.index("--setting-sources") + 1].split(",")
+            else:
+                sources = ["user", "project", "local"]
+            allows = set(argv[argv.index("--allowedTools") + 1].split(","))
+            if sources:  # each settings file loaded from these sources allows write_rule
+                allows.add(write_rule)
+            if "--settings" in argv:
+                allows |= set(json.loads(argv[argv.index("--settings") + 1]).get("permissions", {}).get("allow", []))
+            assert write_rule not in allows, account
+            assert argv[argv.index("--tools") + 1] == "Read,Grep,Glob,Bash,WebFetch,WebSearch"
+        plan = sandbox.cli("dispatch", "--agent", agent, "--model", "vendor/model", "--prompt", "Fix X", "--dry-run")
+        assert "--restricted" in json.loads(plan.stdout)["argv"]
+    else:
+        assert agent == "opencode" and "--auto" not in argv
+        permission = json.loads(invocation.env["OPENCODE_PERMISSION"])
+        assert permission["edit"] == "deny"
+        assert permission["bash"]["*"] == "deny" and permission["bash"]["*>*"] == "deny"
+        assert list(permission["bash"])[-1] == "*>*"  # the last matching pattern wins
 
 
 def test_aliases_and_all_retained_metadata_flags_parse():

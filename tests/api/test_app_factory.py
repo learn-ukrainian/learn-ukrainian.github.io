@@ -328,13 +328,6 @@ def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
         assert first_retention["missing"] is False
         assert second_retention["missing"] is False
 
-        first_status = first_client.get("/api/ops/entire-context/status").json()
-        second_status = second_client.get("/api/ops/entire-context/status").json()
-        assert first_status["schema"] == "entire-context-monitor.v1"
-        assert second_status["schema"] == "entire-context-monitor.v1"
-        assert first_status["recall"]["available"] is False
-        assert second_status["recall"]["available"] is False
-
         first_hygiene = first_client.get("/api/git/hygiene").json()
         second_hygiene = second_client.get("/api/git/hygiene").json()
         assert first_hygiene["dirty_total"] == 0

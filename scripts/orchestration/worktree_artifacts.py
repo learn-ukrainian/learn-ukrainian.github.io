@@ -60,11 +60,9 @@ def is_disposable_path(path: Path, *, worktree: Path | None = None, primary: Pat
                     return False
     if {".venv", "node_modules"}.intersection(path.parts):
         return False
-    if _DISPOSABLE_DIRECTORIES.intersection(path.parts[:-1]) or (
-        path.is_relative_to(".entire/logs") and path != Path(".entire/logs")
-    ):
+    if _DISPOSABLE_DIRECTORIES.intersection(path.parts[:-1]):
         return True
-    if worktree is None or (path.name not in _DISPOSABLE_DIRECTORIES and path != Path(".entire/logs")):
+    if worktree is None or path.name not in _DISPOSABLE_DIRECTORIES:
         return False
     # Only a cache-directory candidate needs filesystem inspection. Ordinary
     # worker tokens may not be representable filenames; the named-artifact

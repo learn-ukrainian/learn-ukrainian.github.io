@@ -378,12 +378,11 @@ WORD_CARD_TOOL_PATH = CAPACITY_FIXTURE / "word-card-tool-11084.json"
 WORD_CARD_TOOL_ROWS = [0, 4]
 
 
-def approved_word_card_tool_baseline(baseline):
-    """Apply #11084's read-only ``word_card`` Sources grant to the Codex worker argv.
+def approved_sources_tool_baseline(baseline):
+    """Apply approved #11084 word-card and #9628 cached Wikipedia grants.
 
-    The two read-only Codex rows derive their Sources ``enabled_tools`` and
-    approval map from the server's tool declarations, so each gains exactly
-    ``word_card``. Every other row, field and surface stays.
+    Historical captures stay byte-pinned. Only the two Codex reader rows gain
+    the explicitly approved tools; every other field and surface stays.
     """
     assert hashlib.sha256(WORD_CARD_TOOL_PATH.read_bytes()).hexdigest() == (
         "d0a1a006af2440f0d823508c8d59228cd7fda6a0dc51eaa894fecf8a47598fb4"
@@ -396,6 +395,16 @@ def approved_word_card_tool_baseline(baseline):
             cmd = adapters[index]["value"]["cmd"]
             assert cmd.count(before) == 1
             cmd[cmd.index(before)] = after
+    for index in WORD_CARD_TOOL_ROWS:
+        cmd = adapters[index]["value"]["cmd"]
+        enabled = next(i for i, value in enumerate(cmd) if value.startswith("mcp_servers.sources.enabled_tools="))
+        approvals = next(i for i, value in enumerate(cmd) if value.startswith("mcp_servers.sources.tools="))
+        names = json.loads(cmd[enabled].split("=", 1)[1])
+        assert "query_wikipedia_cached" not in names
+        assert cmd[approvals] == "mcp_servers.sources.tools={" + ",".join(f'{name}={{approval_mode="approve"}}' for name in names) + "}"
+        names = sorted([*names, "query_wikipedia_cached"])
+        cmd[enabled] = "mcp_servers.sources.enabled_tools=" + json.dumps(names)
+        cmd[approvals] = "mcp_servers.sources.tools={" + ",".join(f'{name}={{approval_mode="approve"}}' for name in names) + "}"
     return {**baseline, "adapters": adapters}
 
 
@@ -592,7 +601,7 @@ def approved_native_grok_help_baseline(baseline):
 
 
 PRE_BUDGET_PIN_BASELINE = approved_muse_seat_baseline(
-    approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
+    approved_agy_mode_baseline(approved_sources_tool_baseline(DRIVER_BRIEF_BASELINE))
 )
 PRE_RETIREMENT_BASELINE = approved_budget_pin_baseline(PRE_BUDGET_PIN_BASELINE)
 APPROVED_INPUTS = approved_retirement_11327_inputs(PRE_RETIREMENT_INPUTS)
@@ -665,7 +674,7 @@ def test_muse_seat_overlay_changes_only_unknown_seat_receipts():
     replacements = fixture["reviewer_fail_closed_reason_replacements"]
     named = [index for row in replacements for index in row["rows"]]
     assert len(named) == len(set(named)) == 56
-    before = approved_agy_mode_baseline(approved_word_card_tool_baseline(DRIVER_BRIEF_BASELINE))
+    before = approved_agy_mode_baseline(approved_sources_tool_baseline(DRIVER_BRIEF_BASELINE))
     original = deepcopy(before)
     after = approved_muse_seat_baseline(before)
     assert before == original
@@ -838,14 +847,14 @@ def test_retirement_11327_overlay_is_limited_to_fable_kimi_and_the_shared_meter(
 
 
 @pytest.mark.parametrize("configuration", ("host-cli", "no-cli"))
-def test_word_card_tool_overlay_adds_only_the_read_only_grant(configuration):
-    """#11084 adds ``word_card`` to the two Codex read-only Sources grants and nothing else."""
+def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration):
+    """Only the approved word-card and cached Wikipedia grants alter the captured argv."""
     from scripts.agent_runtime.sources_read_only import sources_tool_sets
 
     path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
     before = json.loads(gzip.decompress(path.read_bytes()))
     original = deepcopy(before)
-    after = approved_word_card_tool_baseline(before)
+    after = approved_sources_tool_baseline(before)
     assert before == original
     assert {k: v for k, v in after.items() if k != "adapters"} == {k: v for k, v in before.items() if k != "adapters"}
     changed = [i for i, (old, new) in enumerate(zip(before["adapters"], after["adapters"], strict=True)) if old != new]
@@ -871,7 +880,7 @@ def test_word_card_tool_overlay_adds_only_the_read_only_grant(configuration):
         ]
         enabled, approvals = (new_cmd[k].split("=", 1)[1] for k in tokens)
         assert json.loads(enabled) == read_only
-        assert json.loads(enabled) == sorted([*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card"])
+        assert json.loads(enabled) == sorted([*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card", "query_wikipedia_cached"])
         assert approvals == "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in read_only) + "}"
 
 

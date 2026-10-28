@@ -20,6 +20,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.projects.ua_eval_harness import evaluate_model
 from scripts.projects.ua_eval_harness import verify_release_freeze as v010
 from scripts.projects.ua_eval_harness.evaluate_model import (
     import_model_responses,
@@ -511,7 +512,12 @@ def _validate_gemma_baseline() -> dict[str, Any]:
         reproduced = score_saved_run(GEMMA_PATHS["responses"])
     except ValueError as exc:
         raise FreezeError(f"Gemma scoring reproduction failed: {exc}") from exc
-    if report != reproduced:
+    expected = {**report, "scorer": {
+        **report["scorer"],
+        "id": evaluate_model.SCORER_ID,
+        "implementation_sha256": _sha256(Path(evaluate_model.__file__)),
+    }}
+    if expected != reproduced:
         raise FreezeError("Gemma aggregate report is not reproducible")
     edit = report["edit_correction"]
     headline = report["headline_calque"]

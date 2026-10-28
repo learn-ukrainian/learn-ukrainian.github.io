@@ -24,7 +24,12 @@ def test_service_and_timer_contract() -> None:
     assert starts == [
         "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.batch_state_retention",
         "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary",
+        "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.hygiene.tmp_sweep --batch-state --apply --summary",
     ]
+    dropin = (installer.TEMPLATE_DIR / "dropins/learn-ukrainian-tmp-sweep.service.d/data-volume.conf").read_text()
+    guarded = [line for line in dropin.splitlines() if line.startswith("ExecStart=") and line != "ExecStart="]
+    assert guarded == [line.replace("ExecStart=", "ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/storage/data_volume_guard.sh -- ", 1)
+                       for line in starts]
     assert "PrivateTmp" not in service  # the sweep must see the real system temp area
     # Enforced in user managers (seccomp); PrivateNetwork= is accepted there but isolates nothing.
     assert "RestrictAddressFamilies=AF_UNIX" in service.splitlines()

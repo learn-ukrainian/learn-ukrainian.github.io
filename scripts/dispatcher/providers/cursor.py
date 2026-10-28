@@ -19,7 +19,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
-    parts, result, error = [""], {}, None
+    parts, messages, result, error = [""], [], {}, None
     models = set()
     for line in jsonl_lines(stdout):
         if not line.strip():
@@ -54,10 +54,15 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
                     if isinstance(p, dict) and p.get("type") == "text" and isinstance(p.get("text"), str)
                 )
             if isinstance(content, str) and content.strip():
+                messages.append(content.strip())
                 parts.extend([content, ""])
-    text = result.get("result")
-    if not isinstance(text, str) or not text.strip():
-        text = "\n\n".join(p.strip() for p in parts if p.strip()) or None
+    # The terminal result concatenates the run's assistant messages with no separator, gluing
+    # a trailing "VERDICT:" line onto the previous sentence; the separate messages keep it.
+    text = "\n\n".join(messages)
+    if not text:
+        text = result.get("result")
+        if not isinstance(text, str) or not text.strip():
+            text = "\n\n".join(p.strip() for p in parts if p.strip()) or None
     usage = result.get("usage")
     usage = usage if isinstance(usage, dict) else None
     if returncode:

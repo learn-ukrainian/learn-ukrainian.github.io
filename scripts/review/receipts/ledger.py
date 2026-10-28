@@ -52,6 +52,8 @@ REVIEW_TOOLS = frozenset(
         "inspect_words",
         "verify_stress",
         "query_sum20",
+        "query_ulif_records",
+        "query_wikipedia_cached",
         "search_slovnyk_me",
         "search_esum",
         "search_grinchenko_1907",

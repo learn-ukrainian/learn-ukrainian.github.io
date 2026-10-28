@@ -5,9 +5,9 @@ Measured failure modes (2026-08-01 drive): exit -9 after commit, no PR, publish 
 pointer commit, empty runtime log, zombie write-ownership.
 
 ## Role
-You are a bounded worker, not the driver. Deliver a pushed branch for independent
-cross-family review (or an explicit blocker with tool proof). The accountable
-orchestrator owns CF, PR creation, CI, and merge.
+You are a bounded worker, not the driver. Run your chain to the end (rules core P1,
+`full-send`: review, PR, CI, enqueue, MERGED, closeout), or to ready-to-merge when your
+brief says `full-stop`. If you cannot finish, report an explicit blocker with tool proof.
 
 ## Mandatory terminal sequence (in order)
 1. **Implement** only owned paths; no drive-by refactors.
@@ -19,15 +19,16 @@ orchestrator owns CF, PR creation, CI, and merge.
    - **commit** `site/src/data/lexicon-practice-deck.pointer.json` in the same branch
 4. **Commit** with `X-Agent: <agent>/<task-id>` trailer (every commit).
 5. **Push** branch: `git push -u origin HEAD`.
-6. **Hand off** the exact head, before/after tool evidence, test results, and
-   measured residual to the orchestrator for branch CF before PR creation.
+6. **Deliver** with the skill your brief names (`full-send`, or `full-stop` to hand off
+   at ready-to-merge), reporting the exact head, before/after tool evidence, test results,
+   and measured residual.
 7. **Print final ledger** (exact lines the orchestrator greps):
 
 ```
 CLOSEOUT
 branch: <name>
 sha: <full>
-pr: NONE (orchestrator opens after branch CF)
+pr: <number, or NONE with a blocker>
 pointer_committed: yes|no|n/a
 publish_ran: yes|no|n/a
 deck_version: <id or n/a>
@@ -36,7 +37,7 @@ blocker: <none or one line + tool proof>
 ```
 
 ## Hard rules against last-night failure modes
-- **Do not exit after commit without push and handoff.** If publish or push fails,
+- **Do not exit after commit without push and delivery.** If publish or push fails,
   set `blocker:` with tool proof; never claim the branch is reviewable remotely.
 - Prefer **one focused commit** (or: code commit + pointer commit) over a long uncommitted
   working tree that dies at hard_timeout.
@@ -44,12 +45,12 @@ blocker: <none or one line + tool proof>
 - Do **not** expand multi-MB files (e.g. full `lexicon-sentence-inventory.json`) if a
   residual sidecar exists — CF sealed evidence has a ~2MB cap.
 - Do **not** invent acceptance thresholds or mark epic goals done with residual still in scope.
-- Do **not** self-merge or self-CF (orchestrator owns cross-family review).
+- Do **not** self-approve: the review of record is the resolver-picked cross-family reviewer.
 
 ## Time / size hygiene
-- Hard timeout is real. Sequence: implement → test → publish → commit → push → handoff.
-- If approaching timeout: stop new features and report measured residual to the orchestrator.
+- Hard timeout is real. Sequence: implement → test → publish → commit → push → deliver (`full-send`, or `full-stop` hand-off).
+- If approaching timeout: stop new features and report measured residual and the blocker.
 - Keep PR evidence under size limits: tables + samples, not full regenerated corpora in body.
 
 ## Success definition
-Orchestrator can run independent branch CF on the pushed exact head without reconstructing work from a local worktree.
+The exact pushed head is reviewable, and landed or ready-to-merge per the brief, without reconstructing work from a local worktree.

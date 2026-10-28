@@ -15,5 +15,4 @@ paths-ignore:
   # The repository has only these incidental Go and Swift sources. Default
   # setup language selection is still an administrator setting; these ignores
   # keep their generated/external implementation out of source analysis.
-  - scripts/entire/external_agents/entire-agent-kimi/**
   - scripts/rag/apple_vision_ocr.swift

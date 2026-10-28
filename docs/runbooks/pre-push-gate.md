@@ -59,7 +59,7 @@ before pushing, as the rules require.
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change what the hooks import, but not the receipt. Commit or remove them. |
 | `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout` and `timeout_under_load` (a stage reached its bound; see Bounds), `receipt_unwritable`, `validation_error` (an I/O failure), `scope_setup_unavailable` (the scoped executor was never set up or is already closed; no check ran). The branch is preserved; return to the driver. Never retry blindly. |
 
-This check covers pushes that go through the tracked pre-push hook; Entire's own checkpoint sync does not use this hook and stays guarded by the capture-guard route checks.
+The Entire integration is removed (C-2928). The refusal stays because a host can still hold local `entire/*` checkpoint refs, which must never reach the public origin.
 Deleting an existing public Entire ref is refused here too; that removal is operator-owned and uses the documented `--no-verify` bypass or the forge, outside this outcome.
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
