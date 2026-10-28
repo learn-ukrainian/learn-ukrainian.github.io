@@ -2119,7 +2119,12 @@ def _is_plain_foreign_git_write(command: str) -> bool:
         return False
     if any(word.startswith(("-c", "--config-env", "--exec-path")) for word in words[1 : len(words) - len(rest)]):
         return False
-    options = rest[1 : rest.index("--")] if "--" in rest else rest[1:]
+    if rest[0] == "pull":
+        # pull hands the words after `--` to fetch, which still parses them as
+        # options (`pull -- --upload-pack=<cmd>`), so no `--` ends the check.
+        options = [word for word in rest[1:] if word != "--"]
+    else:
+        options = rest[1 : rest.index("--")] if "--" in rest else rest[1:]
     return all(word in _PLAIN_FOREIGN_GIT_WRITES[rest[0]] for word in options if word.startswith("-"))
 
 

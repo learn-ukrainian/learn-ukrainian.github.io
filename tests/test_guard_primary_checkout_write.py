@@ -1101,6 +1101,10 @@ def test_issue_11381_target_changed_before_git_write_blocked(
         "git -C {other} rebase --exec 'touch {primary}/pwned' HEAD",
         "git -C {other} pull --upload-pack='touch {primary}/pwned' {other}",
         "git -C {other} pull --upload='touch {primary}/pwned' {other}",
+        # Delta-3 reproducer (F5): pull hands the words after `--` to fetch,
+        # which still parses them as options.
+        "git -C {other} pull -- --upload-pack='touch {primary}/pwned' {other}",
+        "git -C {other} pull --ff-only -- {other} --upload-pack='touch {primary}/pwned'",
         "git --attr-source HEAD -c core.fsmonitor='touch {primary}/pwned' -C {other} merge --ff-only HEAD",
         "git -C {other} apply --unsafe-paths change.diff",
         "git -C {other} apply --unsafe change.diff",
@@ -1164,6 +1168,7 @@ def test_issue_11381_foreign_exemption_requires_single_plain_git_command(
         "git -C {other} checkout -- curriculum/tracked.md",
         "git -C {other} restore curriculum/tracked.md",
         "git -C {other} pull --rebase",
+        "git -C {other} pull --ff-only -- origin main",
         "git -C {other} add -A",
         "git --version",
     ],
