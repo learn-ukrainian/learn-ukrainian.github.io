@@ -124,12 +124,12 @@ def plan(base: str, candidate: str) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Run changed test files and fixed guards for a PR candidate.\n"
+        description="Run changed test files and guards, or marker-only repository invariants for a PR candidate.\n"
         "Use in CI admission; this never replaces full merge-group pytest.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Example: .venv/bin/python -m scripts.ci.pr_affected_tests\n"
         "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF.\n"
-        "Outputs: ci-artifacts/pr-affected.json, pr-affected.xml and GITHUB_STEP_SUMMARY.\n"
+        "Outputs: ci-artifacts/pr-affected.* or pr-repo-wide.* and GITHUB_STEP_SUMMARY.\n"
         "Exit codes: 0 required execution passed; 1 invalid proof or failed execution; 2 invalid arguments.\n"
         "Related: scripts/ci/pr-affected-guards.txt; docs/runbooks/ci-gate.md.",
     )
@@ -158,8 +158,11 @@ def main() -> int:
         record["event_base"] = pr["base"]["sha"]
         marker = "repo_wide" if args.repo_wide else "not atlas_release and not slow and not site_toolchain"
         paths = ["tests"] if args.repo_wide else record["run_files"]
+        # pytest excludes build/ by default; it contains registered invariants.
+        collection = ["--override-ini=norecursedirs=.* node_modules"] if args.repo_wide else []
         timeout = 2400 if args.repo_wide else 480
-        record.update(selection=marker, requested_paths=paths, workers=2, timeout_seconds=timeout)
+        record.update(selection=marker, requested_paths=paths, workers=2, timeout_seconds=timeout,
+                      logical_cpus=os.cpu_count(), load_average=os.getloadavg())
         stage, reason = "fresh_report", "stale_or_unwritable_report"
         output = Path("ci-artifacts")
         output.mkdir(exist_ok=True)
@@ -179,6 +182,7 @@ def main() -> int:
                 "-m",
                 "pytest",
                 *paths,
+                *collection,
                 "-n",
                 "2",
                 "--dist=worksteal",
