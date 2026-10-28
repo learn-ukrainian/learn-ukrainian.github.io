@@ -140,7 +140,7 @@ def test_provider_init_identity_on_existing_parse_result(tmp_path, monkeypatch, 
         env_overrides={},
         env_unsets=(),
         liveness_paths=(),
-        metadata={"requested_model": slug},
+        metadata={"entire_fleet": {"requested_model": slug, "actual_model": slug}},
     )
     monkeypatch.setattr(agy, "_bound_conversation", lambda *args: ("fixture", tmp_path))
     monkeypatch.setattr(agy, "_invocation_transcript", lambda *args: None)
@@ -228,7 +228,7 @@ def test_gemini_init_is_ignored(tmp_path: Path, reported_model: str | None, requ
         env_overrides={"AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)},
         env_unsets=(),
         liveness_paths=(log_file,),
-        metadata={"requested_model": requested_model},
+        metadata={"entire_fleet": {"requested_model": requested_model}},
     )
     init = {"event": "init"}
     if reported_model is not None:
@@ -273,7 +273,7 @@ def _identity_stream_plan(tmp_path, slug):
         cmd=["agy", "--output-format", "stream-json", "--model", slug],
         cwd=tmp_path,
         env_overrides={"AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)},
-        metadata={"requested_model": slug},
+        metadata={"entire_fleet": {"requested_model": slug}},
     )
     terminal = {
         "event": "result",
@@ -484,7 +484,7 @@ def test_identity_survives_provider_failure_without_claiming_success(tmp_path, m
 ])
 def test_adapter_substitution_uses_invocation_pin_instead_of_metadata(tmp_path, pin, other):
     plan, terminal = _identity_stream_plan(tmp_path, pin)
-    plan.metadata["requested_model"] = "stale-metadata-model"
+    plan.metadata["entire_fleet"]["requested_model"] = "stale-metadata-model"
     result = agy.AgyAdapter().parse_response(
         stdout="\n".join(map(json.dumps, [{"event": "init", "model": other}, terminal])),
         stderr="", returncode=0, output_file=None, plan=plan,

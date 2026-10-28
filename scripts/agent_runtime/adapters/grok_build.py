@@ -731,6 +731,10 @@ class GrokBuildAdapter:
             )
             metadata: dict[str, object] = {
                 **schema_metadata(output_schema),
+                "entire_fleet": {
+                    "requested_model": requested_model,
+                    "actual_model": requested_model,
+                },
                 _META_RESUME_SESSION_ID: resume_session_id,
                 # Plan-owned snapshot so a plan-only / split-instance poller can
                 # exclude pre-existing same-cwd peers without adapter instance
@@ -756,6 +760,7 @@ class GrokBuildAdapter:
                 env_overrides={"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_tools else {},
                 liveness_paths=liveness_paths,
                 metadata=metadata,
+                host_harness="grok",
             )
 
     def cleanup_invocation(self, plan: InvocationPlan) -> None:

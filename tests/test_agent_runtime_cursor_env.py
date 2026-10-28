@@ -172,6 +172,7 @@ def test_cursor_adapter_child_env_does_not_leak_unrelated_or_foreign_credentials
         "CUSTOM_AUTH_TOKEN": "custom-token-secret",
         "DATABASE_PASSWORD": "db-secret-password",
         "UNRELATED_FLAG": "drop-me",
+        "LU_ENTIRE_CAPTURE_OWNER": "fleet",
     }
 
     with patch.dict("os.environ", parent_env, clear=True):
@@ -188,6 +189,7 @@ def test_cursor_adapter_child_env_does_not_leak_unrelated_or_foreign_credentials
 
     # Safe / provider variables kept:
     assert child_env["CURSOR_API_KEY"] == "valid-cursor-key"
+    assert child_env["LU_ENTIRE_CAPTURE_OWNER"] == "fleet"
     assert "PATH" in child_env
     assert "HOME" in child_env
 

@@ -182,10 +182,10 @@ def test_real_pytest_env_assertion_does_not_expose_values(
             InvocationPlan,
             "{'cmd': ['agent'], 'cwd': PosixPath('.'), 'stdin_payload': '', 'output_file': None, "
             "'env_overrides': RedactedEnv(names=['A']), 'env_unsets': (), 'liveness_paths': (), "
-            "'metadata': {}}",
-            "(['agent'], PosixPath('.'), '', None, RedactedEnv(names=['A']), (), (), {})",
+            "'metadata': {}, 'host_harness': None}",
+            "(['agent'], PosixPath('.'), '', None, RedactedEnv(names=['A']), (), (), {}, None)",
             "InvocationPlan(cmd=['agent'], cwd=PosixPath('.'), stdin_payload='', output_file=None, "
-            "env_overrides=RedactedEnv(names=['A']), env_unsets=(), liveness_paths=(), metadata={})",
+            "env_overrides=RedactedEnv(names=['A']), env_unsets=(), liveness_paths=(), metadata={}, host_harness=None)",
         ),
         (
             HermesInvocationContext,

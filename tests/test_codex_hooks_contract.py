@@ -620,7 +620,7 @@ def test_shared_handoff_selection_does_not_import_hydration_runtime(tmp_path: Pa
     assert ".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md" in context
 
 
-def test_codex_tool_events_run_the_policy_hooks() -> None:
+def test_codex_tool_events_preserve_policy_then_run_optional_entire_hook() -> None:
     hooks = _manifest()["hooks"]
 
     pre_groups = hooks["PreToolUse"]
@@ -633,8 +633,13 @@ def test_codex_tool_events_run_the_policy_hooks() -> None:
 
     post_groups = hooks["PostToolUse"]
     assert len(post_groups) == 1
-    assert len(post_groups[0]["hooks"]) == 1
+    assert len(post_groups[0]["hooks"]) == 2
     assert 'codex_hook_entry.sh" post-tool-use' in post_groups[0]["hooks"][0]["command"]
+    assert "--budget 25 hooks codex post-tool-use" in post_groups[0]["hooks"][1]["command"]
+    assert post_groups[0]["hooks"][1]["timeout"] == 30
+    # Optional Entire capture runs behind the capture guard, which exits 0 even
+    # when the installed CLI errors, so it can never poison Codex exec (#10846).
+    assert "/scripts/entire/capture_guard.sh" in post_groups[0]["hooks"][1]["command"]
 
 
 def test_codex_policy_preserves_tool_scopes_and_per_guard_deadlines() -> None:

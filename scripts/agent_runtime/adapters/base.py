@@ -73,6 +73,12 @@ class InvocationPlan:
             The runner treats this as opaque data and passes the plan back to
             ``parse_response`` unchanged. Keep values non-secret because they
             may flow into runtime usage artifacts.
+        host_harness: Explicit physical CLI host that owns this subprocess
+            lifecycle when it differs from a natively supported Entire host.
+            Only the project runner consumes this value. It must never be
+            inferred from a model label: ``grok``, ``agy``, and ``hermes`` are
+            the only external fleet owners in the current rollout. ``None``
+            means native capture or no capture.
     """
 
     cmd: list[str]
@@ -83,6 +89,7 @@ class InvocationPlan:
     env_unsets: tuple[str, ...] = ()
     liveness_paths: tuple[Path, ...] = ()
     metadata: dict[str, object] = field(default_factory=dict)
+    host_harness: str | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "env_overrides", RedactedEnv(self.env_overrides))

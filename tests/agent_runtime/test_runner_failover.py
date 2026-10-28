@@ -916,7 +916,7 @@ def test_agy_real_parser_identity_reaches_runner_result(tmp_path, monkeypatch, p
         cmd=["agy", "--output-format", "stream-json", "--model", pin],
         cwd=tmp_path,
         env_overrides={"AGY_RUNTIME_LOG_FILE": str(log_file), "AGY_APP_DATA_DIR": str(app_data)},
-        metadata={"requested_model": pin},
+        metadata={"entire_fleet": {"requested_model": pin}},
     )
     value = {
         "absent": None,
