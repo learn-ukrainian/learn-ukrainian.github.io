@@ -553,6 +553,7 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
         probe(["config", "remote.origin.url", destination])
         fetchspecs = []
         partial_filter = None
+        seeded = False
         if remote == "origin" and args[0] == "fetch":
             def primary_config(*key):
                 config = subprocess.run([*prefix, "config", *key], cwd=cwd, env=env, timeout=timeout,
@@ -589,7 +590,13 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
             tips = probe(["for-each-ref", "--format=%(objectname) %(objecttype) %(refname)"], path=cwd)
             haves = dict.fromkeys(sha for sha, kind, ref in (line.split(" ", 2) for line in tips.stdout.splitlines())
                                   if kind == "commit" and any(fnmatchcase(ref, pattern) for pattern in destinations))
-            if haves:
+            # A destination that could land in the seed namespace would be
+            # hidden from the import, so such a fetch negotiates without seeds.
+            targets = [spec.partition(":")[2] for spec in [*fetchspecs, *args[args.index(remote, 1) + 1:]]
+                       if ":" in spec and not spec.startswith(("-", "^"))]
+            seeded = bool(haves) and not any(
+                _HAVES.startswith(target.split("*")[0]) or target.startswith(_HAVES) for target in targets)
+            if seeded:
                 subprocess.run([*prefix, "update-ref", "--stdin"], cwd=private, env=env, timeout=timeout,
                                input="".join(f"create {_HAVES}{index} {sha}\n" for index, sha in enumerate(haves)),
                                capture_output=True, text=True, check=True)
@@ -607,7 +614,8 @@ def _isolated_remote(args, *, executable, cwd, remote, destination, credentials,
         # transfer. Import by full object ID, never by a worker-controlled ref.
         heads = [line.split("\t", 1)[0] for line in (private / "FETCH_HEAD").read_text().splitlines()]
         refs = [row for row in (line.split(" ", 1) for line in probe(
-            ["for-each-ref", "--format=%(objectname) %(refname)"]).stdout.splitlines()) if not row[1].startswith(_HAVES)]
+            ["for-each-ref", "--format=%(objectname) %(refname)"]).stdout.splitlines())
+            if not (seeded and row[1].startswith(_HAVES))]
         if any(not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", sha) for sha in heads + [row[0] for row in refs]):
             return GitRefusal(args, "remote_object_id_invalid", text=bool(kwargs.get("text")))
         # Preserve forced updates and pruning for the existing origin refspecs.
