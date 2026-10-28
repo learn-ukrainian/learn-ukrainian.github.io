@@ -29,11 +29,12 @@ _READ_TOOLS = (
     "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
     "Bash(gh issue view *),Bash(gh run view *)"
 )
-# --restricted also skips the project settings that approve .mcp.json servers, so a read-only run gets
-# the Sources MCP server explicitly: from the dispatcher's own checkout, never the reviewed worktree,
-# whose .mcp.json the change under review could turn into a command, and alone, as --strict-mcp-config
-# drops every other server (#10074). Only the tools the server annotates read-only are allowed; the
-# ones that persist fetched entries (sources_read_only.sources_tool_sets) are denied by name.
+# Every run, read-only or workspace-write, gets the Sources MCP server explicitly: from the dispatcher's
+# own checkout, never the task's worktree, whose .mcp.json the change in it could turn into a command,
+# and alone, as --strict-mcp-config drops every other server (#10074); --restricted would skip the
+# project settings that approve .mcp.json servers anyway. Only the tools the server annotates read-only
+# are allowed, so authors, judges and fixers can check their own words; the ones that persist fetched
+# entries (sources_read_only.sources_tool_sets) are denied by name.
 _SOURCES_SERVER = "sources"
 _WRITE_TOOLS = "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch"
 _READ_DENIES = (
@@ -124,10 +125,10 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.mode == "read-only":
         core = rules_core.source_path(rules_core.CORE_REL)
         argv += ["--restricted", "--tools", _READ_TOOLSET, "--append-system-prompt-file", str(core)]
-        argv += ["--mcp-config", _sources_mcp_config(), "--strict-mcp-config"]
-        readers, writers = sources_tool_sets()
-        allowed_tools = ",".join([allowed_tools, *(f"mcp__{_SOURCES_SERVER}__{name}" for name in readers)])
-        denies = ",".join([denies, *(f"mcp__{_SOURCES_SERVER}__{name}" for name in writers)])
+    argv += ["--mcp-config", _sources_mcp_config(), "--strict-mcp-config"]
+    readers, writers = sources_tool_sets()
+    allowed_tools = ",".join([allowed_tools, *(f"mcp__{_SOURCES_SERVER}__{name}" for name in readers)])
+    denies = ",".join([denies, *(f"mcp__{_SOURCES_SERVER}__{name}" for name in writers)])
     argv += ["--allowedTools", allowed_tools]
     argv += ["--disallowedTools", denies]
     if spec.claude_account not in (None, "a"):
