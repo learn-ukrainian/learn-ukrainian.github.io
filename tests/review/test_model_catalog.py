@@ -1061,6 +1061,32 @@ def _pop_budget_extension_role(catalog):
     return {"advisory_roles": catalog.pop("advisory_roles"), "consult": role, "holders": holders}
 
 
+def with_advisory_roles(frozen):
+    """A frozen pre-advisory catalog plus the live ``advisory_roles`` section, its holders and consult roles.
+
+    Validation requires the section (bounded admission reads the envelope role from it), so the
+    historical pins are checked as the pin plus this overlay, and ``without_advisory_roles`` returns the pin.
+    """
+    live = load_model_catalog()
+    catalog = deepcopy(frozen)
+    catalog["advisory_roles"] = deepcopy(live["advisory_roles"])
+    consult = catalog["review_scheduler"]["activity_roles"]["consult"]
+    for role in catalog["advisory_roles"]:
+        for model_id, model in live["models"].items():
+            if role in model["roles"] and role not in catalog["models"][model_id]["roles"]:
+                catalog["models"][model_id]["roles"].append(role)
+        if role in live["review_scheduler"]["activity_roles"]["consult"] and role not in consult:
+            consult.append(role)
+    return catalog
+
+
+def without_advisory_roles(catalog):
+    """``with_advisory_roles`` undone: the frozen catalog the overlay was built from."""
+    catalog = deepcopy(catalog)
+    _pop_budget_extension_role(catalog)
+    return catalog
+
+
 def assert_frozen_surfaces(actual, *, surfaces):
     """Compare surviving catalog/resolver results with the literal current fixture."""
     assert set(actual) == set(surfaces)
