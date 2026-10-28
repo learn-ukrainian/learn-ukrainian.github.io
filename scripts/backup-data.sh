@@ -637,6 +637,7 @@ canonical_target() {
   local path=$1
   local parent base
 
+  [[ "$path" != *$'\n' ]] || die "Target path must not end in a newline."
   [[ "$path" == /* ]] || die "Path must be absolute: $path"
   [[ "$path" != "/" ]] || {
     printf '/\n'

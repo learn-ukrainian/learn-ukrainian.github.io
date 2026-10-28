@@ -90,6 +90,39 @@ def test_restore_is_a_dry_run_and_refuses_unsafe_targets(
     assert "must not be a symlink" in symlink_result.stderr
 
 
+@pytest.mark.parametrize("execute", [False, True])
+@pytest.mark.parametrize("target_exists", [False, True])
+def test_restore_rejects_trailing_newline_destination_before_rewriting(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+    execute: bool,
+    target_exists: bool,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_fake_run(environment)
+    target = tmp_path / "restore-target\n"
+    if target_exists:
+        target.mkdir()
+    rewritten_target = tmp_path / "restore-target"
+
+    result = _run(
+        environment,
+        "restore",
+        MANIFEST_ID,
+        "--to",
+        str(target),
+        *(("--execute",) if execute else ()),
+    )
+
+    assert result.returncode != 0, result.stdout
+    assert "Target path must not end in a newline" in result.stderr
+    assert _restore_ids(environment) == []
+    assert not rewritten_target.exists()
+    assert target.exists() == target_exists
+    if target_exists:
+        assert list(target.iterdir()) == []
+
+
 def test_restore_latest_uses_parsed_time_with_mixed_offsets(
     backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
 ) -> None:
