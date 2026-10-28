@@ -30,6 +30,7 @@ import pytest
 
 from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.launcher_sandbox import copy_slot_registry, tracked_launcher_wrappers
+from tests.test_launcher_driver_scope import default_hup as default_hup
 from tests.test_launcher_driver_scope import (
     require_soak_opt_in,
     run_live_soak,
@@ -935,6 +936,7 @@ def _signal_log(env: dict[str, str]) -> list[str]:
     return _lines(env["TEST_SIGNAL_LOG"])
 
 
+@pytest.mark.usefixtures("default_hup")
 @pytest.mark.parametrize("name", ["HUP", "TERM"])
 @pytest.mark.parametrize("target", ["group", "pid"])
 def test_hup_term_delivery_exactly_once(tmp_path: Path, name: str, target: str) -> None:
@@ -1207,6 +1209,7 @@ def test_driver_relay_during_close_preserves_client_result(
             os.close(fd)
 
 
+@pytest.mark.usefixtures("default_hup")
 def test_driver_group_hup_duplicate_lease_close_is_idempotent(tmp_path: Path) -> None:
     """Group HUP and the waiter relay can both close the same fenced lease."""
     from agents_extensions.shared.session_streams.db import SessionStreamDatabase

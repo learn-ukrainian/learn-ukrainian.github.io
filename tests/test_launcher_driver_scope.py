@@ -23,6 +23,18 @@ pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 REPO = Path(__file__).resolve().parents[1]
 
 
+@pytest.fixture
+def default_hup():
+    """Bash cannot trap HUP ignored on entry, as with a nohup pytest parent."""
+    previous = signal.signal(signal.SIGHUP, signal.SIG_DFL)
+    try:
+        assert signal.getsignal(signal.SIGHUP) == signal.SIG_DFL
+        yield
+    finally:
+        signal.signal(signal.SIGHUP, previous)
+
+
+@pytest.mark.usefixtures("default_hup")
 @pytest.mark.parametrize(("name", "expected"), [("INT", 130), ("TERM", 143), ("HUP", 129)])
 @pytest.mark.parametrize("delivery", ["pid", "group"])
 def test_forwarder_finishes_close_and_reaps_children_after_repeated_signal(
@@ -637,6 +649,7 @@ def test_late_term_preserves_the_collected_provider_status(tmp_path: Path, provi
         os.close(release_fd)
 
 
+@pytest.mark.usefixtures("default_hup")
 @pytest.mark.parametrize(("sig", "rc"), [(signal.SIGINT, 130), (signal.SIGTERM, 143), (signal.SIGHUP, 129)])
 def test_signal_reaches_provider_when_the_timed_pause_expires_in_the_trap(
     tmp_path: Path, sig: signal.Signals, rc: int
