@@ -649,7 +649,7 @@ def main(argv: list[str]) -> int:
         return boundary.run()
     except Exception as exc:  # every failure refuses; nothing falls back to an unsandboxed AGY
         if receipt["status"] != "ran":
-            receipt["reason"] = str(exc) if isinstance(exc, Refused) else f"setup failed: {type(exc).__name__}"
+            receipt["reason"] = str(exc) if isinstance(exc, Refused) else f"setup failed: {type(exc).__name__}: {exc}"[:500]
             print(f"agy read-only boundary refused: {receipt['reason']}", file=sys.stderr)
             return REFUSED
         # AGY started but the launcher could not see it finish: the run proves nothing.

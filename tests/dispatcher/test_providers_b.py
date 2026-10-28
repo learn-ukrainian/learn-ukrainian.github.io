@@ -678,7 +678,8 @@ def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tm
     argv, env = _launch(tmp_path, worktree, "holds", ["/bin/sh", "-c", attempts])
     run = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=120, check=False, cwd=worktree)
     receipt = json.loads((tmp_path / "holds.sandbox.json").read_text())
-    assert (run.returncode, receipt["status"], receipt["canary"]["passed"]) == (0, "ran", True), run.stderr
+    assert (run.returncode, receipt["status"]) == (0, "ran"), (receipt.get("reason"), run.stderr)
+    assert receipt["canary"]["passed"] is True
     assert run.stdout.strip() == "scratch"
     assert run.stderr.count("Read-only file system") >= 4
     assert receipt["input"] == {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}}
