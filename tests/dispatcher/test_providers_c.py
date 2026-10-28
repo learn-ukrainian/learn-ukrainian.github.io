@@ -12,6 +12,7 @@ import pytest
 
 from scripts.dispatcher.providers import cursor, hermes, load, muse, opencode
 from scripts.dispatcher.types import TaskSpec
+from scripts.review.verdict_parser import recognized_verdicts
 
 MODELS = ("muse-spark-1.3", "muse-wonder-1.0", "muse-wonder-full-1.0")
 PROMPT = '--leading-option "quoted" $literal\nReply with exactly: ready\n'
@@ -292,3 +293,32 @@ def test_opencode_tool_step_before_final_completion():
 def test_opencode_unknown_terminal_before_completion_stays_failed():
     output = stream({"type": "step_finish", "part": {"reason": "future_outcome"}}, OC_TEXT, OC_STOP)
     assert opencode.parse(output, "", 0, None).error
+
+
+def _assistant(text):
+    return {"type": "assistant", "message": {"role": "assistant", "content": [{"type": "text", "text": text}]}}
+
+
+def test_cursor_keeps_the_verdict_on_its_own_line_when_result_concatenates_messages():
+    """Real Grok stream: the terminal result glues the assistant messages together unseparated."""
+    messages = [
+        "I'll review the delta on the exact head before giving a verdict.",
+        "The stat is wider than the brief claimed, so I'll check the same cases.",
+        "VERDICT: APPROVE\n\nNo new findings.",
+    ]
+    events = [
+        {"type": "system", "subtype": "init", "model": "Grok 4.7 256K High"},
+        *map(_assistant, messages),
+        {"type": "result", "subtype": "success", "is_error": False, "result": "".join(messages)},
+    ]
+    parsed = cursor.parse(stream(*events), "", 0, None)
+    assert parsed.error is None
+    assert parsed.text == "\n\n".join(messages)
+    assert recognized_verdicts(parsed.text) == ["APPROVE"]
+
+
+def test_cursor_falls_back_to_the_result_when_no_assistant_text_was_captured():
+    events = [{"type": "result", "subtype": "success", "result": "Finished.\n\nVERDICT: APPROVE"}]
+    parsed = cursor.parse(stream(*events), "", 0, None)
+    assert (parsed.text, parsed.error) == ("Finished.\n\nVERDICT: APPROVE", None)
+    assert recognized_verdicts(parsed.text) == ["APPROVE"]
