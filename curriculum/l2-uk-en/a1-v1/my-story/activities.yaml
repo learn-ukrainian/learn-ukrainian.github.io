@@ -4,14 +4,14 @@ inline:
     title: Choose the time signal
     instruction: Pick the word that matches the time of the sentence.
     items:
-      - sentence: '___ я жив у Торонто.'
+      - sentence: "(Earlier, before the present period.) ___ я жив у Торонто."
         answer: 'Раніше'
         options:
           - 'Раніше'
           - 'Зараз'
           - 'Далі'
         explanation: 'Раніше points to the past.'
-      - sentence: '___ я живу в Києві.'
+      - sentence: "(Now, in the present period.) ___ я живу в Києві."
         answer: 'Зараз'
         options:
           - 'Зараз'
@@ -25,7 +25,7 @@ inline:
           - 'У дитинстві'
           - 'Раніше'
         explanation: 'Далі points to a future plan.'
-      - sentence: '___ я ходила в школу.'
+      - sentence: "(During childhood.) ___ я ходила в школу."
         answer: 'У дитинстві'
         options:
           - 'У дитинстві'
@@ -119,28 +119,28 @@ workbook:
     title: Complete the mini biography
     instruction: Choose the form that fits the time word.
     items:
-      - sentence: 'Я ___ у Львові.'
+      - sentence: "(Past tense, female speaker.) Я ___ у Львові."
         answer: 'народилася'
         options:
           - 'народилася'
           - 'народжуся'
           - 'народжуюся'
         explanation: 'Use the familiar past phrase народилася.'
-      - sentence: 'Раніше я ___ в Одесі.'
+      - sentence: "(Use past tense.) Раніше я ___ в Одесі."
         answer: 'жила'
         options:
           - 'жила'
           - 'живу'
           - 'буду жити'
         explanation: 'Раніше points to the past.'
-      - sentence: 'Зараз я ___ в офісі.'
+      - sentence: "(Use present tense.) Зараз я ___ в офісі."
         answer: 'працюю'
         options:
           - 'працюю'
           - 'працювала'
           - 'буду працювати'
         explanation: 'Зараз points to the present.'
-      - sentence: 'Далі я ___ українську щодня.'
+      - sentence: "(Use the compound future: бути + infinitive.) Далі я ___ українську щодня."
         answer: 'буду вчити'
         options:
           - 'буду вчити'
@@ -151,7 +151,7 @@ workbook:
     title: Repair the story
     instruction: Choose the better A1 sentence.
     items:
-      - prompt: 'Which sentence matches the time word?'
+      - prompt: "Which sentence uses a present-tense verb with зараз?"
         options:
           - text: 'Зараз я живу в Києві.'
             correct: true
