@@ -270,14 +270,11 @@ repos:
         stages: [pre-commit]
 
       - id: lint-agent-trailer
-        name: warn on commits missing an X-Agent trailer
-        # Warn-only during rollout (2026-05-11). Lint reports missing trailers
-        # but does NOT block the push. Flip to blocking after all in-flight
-        # PRs and orchestrator inline commits adopt the trailer.
-        entry: >-
-          bash -c 'bash scripts/pre_commit/project_python.sh
-          scripts/audit/lint_agent_trailer.py
-          || echo "(warn-only — push allowed; will be blocking after rollout)"'
+        name: block pushes with commits missing a valid X-Agent trailer
+        # Blocking (was warn-only since the 2026-05-11 rollout). Trailers must
+        # be `X-Agent: <agent>/<task-id>`; a bare model name such as
+        # `claude-opus-5-5` is rejected, as record_cf_verdict.py rejects it too.
+        entry: bash scripts/pre_commit/project_python.sh scripts/audit/lint_agent_trailer.py
         language: system
         pass_filenames: false
         stages: [pre-push]

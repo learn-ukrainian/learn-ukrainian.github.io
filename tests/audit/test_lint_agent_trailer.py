@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from scripts.audit import lint_agent_trailer as lat
-from scripts.audit.lint_agent_trailer import _check_commit, main, resolve_provenance_context
+from scripts.audit.lint_agent_trailer import ProvenanceContext, _check_commit, main, resolve_provenance_context
 
 
 @pytest.fixture(autouse=True)
@@ -335,6 +335,16 @@ def test_deepseek_plain_trailer_accepted(tmp_path: Path, monkeypatch: pytest.Mon
     verdict, reason = _check_commit("sha-deepseek", provenance=provenance)
     assert verdict == "PASS"
     assert reason == "X-Agent: deepseek/1234-fix-parse"
+
+
+@pytest.mark.parametrize("agent", ["hermes", "muse", "opencode"])
+def test_dispatcher_provider_agents_accepted(agent: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Every scripts/dispatcher/providers agent has a valid trailer; bare model names do not."""
+    provenance = ProvenanceContext(active=False)
+    _mock_commit(monkeypatch, f"feat: x\n\nX-Agent: {agent}/task-1")
+    assert _check_commit("sha", provenance=provenance) == ("PASS", f"X-Agent: {agent}/task-1")
+    _mock_commit(monkeypatch, "feat: x\n\nX-Agent: claude-opus-5-5")
+    assert _check_commit("sha", provenance=provenance)[0] == "FAIL"
 
 
 def test_detection_requires_record_to_exist(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
