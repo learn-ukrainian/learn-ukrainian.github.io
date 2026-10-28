@@ -1156,13 +1156,6 @@
       "occurrence": 1
     },
     {
-      "path": "scripts/lexicon/tools/import_ulif_dump.py",
-      "kind": "store_path",
-      "scope": "main",
-      "fingerprint": "111be4f11d5bbf2743c7a957c0c2351741dc99bef3dcecb33adfa1dbd6c28436",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/lexicon/tools/migrate_ulif_raw.py",
       "kind": "store_path",
       "scope": "<module>",
