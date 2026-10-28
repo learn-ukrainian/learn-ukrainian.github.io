@@ -105,8 +105,9 @@ handoff creates a competing authority.
 
 ## Cleanup ownership
 
-After a terminal dispatch, run `post_task_reap` for its task ID; it delegates regular
-dispatch cleanup to the P0 reaper. After GitHub reports an exact-head PR as `MERGED`, use
+When a dispatch settles, the dispatcher removes the task's own worktree, or keeps it and
+records why in the task record (`worktree_disposition`); resolve a kept tree by that reason
+through the P0 reaper. After GitHub reports an exact-head PR as `MERGED`, use
 `.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged` from outside the target
 worktree. The reaper is the
 only ordinary deletion path: use manual Git removal only when the reaper cannot run, following

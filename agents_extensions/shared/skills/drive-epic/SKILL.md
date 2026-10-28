@@ -42,9 +42,11 @@ A dispatch, a branch, an open PR, green CI, or "Next:" is **not** done. The driv
 its own lane's PRs; never ask the operator to merge. Source: `/api/rules` →
 `operator-expectations.md` §3a.
 
-**Deliver every change with the delivery skills:** `full-send` (you, to MERGED and closeout),
-`full-stop` (workers, or ready-to-merge for another driver), `review-loop` (review rounds and
-the budget), entered through `takeover` or `modernize` when the work is inherited or old.
+**Deliver every change with the delivery skills:** `full-send` (to MERGED and closeout, run by
+the worker that owns the brief, or by you), `full-stop` (ready-to-merge, when the brief says so
+or the merge belongs to another driver), `review-loop` (review rounds and the budget, run by
+whoever runs the delivery skill), entered through `takeover` or `modernize` when the work is
+inherited or old. A worker starts follow-up tasks only within the cap its brief sets.
 Per PR, `full-send` is the ordered checklist and `workflow.md` § Merge policy holds the gates.
 A PR may open before approval so CI runs; it is done only at `MERGED` with a clean
 `merge_closeout` receipt and every linked issue disposed of.
@@ -128,8 +130,9 @@ requires an operator reference. The item lifecycle is in
 9. **§5 Settle.** Arm `dispatch.py wait <task-id>` (or the Monitor tool) in the same turn
    as the dispatch. State a worker's status only after `dispatch.py status <task-id>` in
    this turn, and record its task ID, full run nonce, status, and branch head in its
-   tracker item. When the wait returns, act on the result. After a terminal status,
-   run `post_task_reap`.
+   tracker item. When the wait returns, act on the result. After a terminal status, read the
+   record's `worktree_disposition`: the dispatcher removes the task's own worktree at
+   settlement; a `retained` or `error` disposition names the reason to resolve (§5).
 10. **§5a Inbox drain — after settle.**
 11. **§6 Cross-family review, §7 merge, §7a closeout, §7-rollout proof** — through the
     delivery skills named in the Definition of done above. The mechanics (review commands,

@@ -1,6 +1,6 @@
 ---
 name: full-send
-description: Deliver one approved change end to end, through review, PR, merge and closeout, with no human stops. Use when the accountable driver of the change's stream, the integration owner or the CTO is told "full send" or must land a change; workers use full-stop.
+description: Deliver one approved change end to end, through review, PR, merge and closeout, with no human stops. Use when a worker has received a brief, or when the accountable driver of the change's stream, the integration owner or the CTO is told "full send" or must land a change; use full-stop when the brief says so.
 argument-hint: "[pr <number> | issue <number> | branch <name>]"
 ---
 
@@ -22,13 +22,21 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
 
 ## Step 0 — who may run this (fail closed)
 
-- You must be the accountable driver of the change's stream, the integration owner, or the
-  CTO. A worker never merges or enqueues (rules core P1): a worker runs `full-stop`.
+- **The worker that receives a brief runs its chain to the end** (rules core P1): this skill;
+  or `takeover` or `modernize`, then this skill; or `full-stop` when the brief says so. It lands
+  only the change its brief names, within the brief's owned paths. The CTO sets the issue,
+  limits and routing and handles exceptions; the worker does the rest, from review to closeout.
+- **Follow-up tasks stay inside the brief's cap.** A worker may dispatch follow-up tasks only up
+  to the count and within the owned paths its brief sets. Anything outside the brief goes to the
+  CTO as an issue proposal through Fleet Comms; the worker never opens issues (rules core P4).
+- The accountable driver of the change's stream, the integration owner and the CTO may also run
+  this skill.
 - **A stream driver lands only its own stream** (`workflow.md` § Merge policy, stream-scoped
   sweeps). The PR's linked issue must resolve to exactly one stream epic, and it must be yours:
   `curl -s http://127.0.0.1:8765/api/issues/streams` (built by
   `scripts.orchestration.issue_stream_audit`). No link, several links, or not yet indexed means
-  out of stream: stop. Branch prefixes are author lanes, never streams.
+  out of stream: stop. Branch prefixes are author lanes, never streams. A worker's stream is
+  its brief's stream; its brief may name an ordered brief id instead of an issue.
 - **The integration owner and the CTO are not limited to one stream.** The integration owner
   holds cross-stream merge judgment (rules core P1; `workflow.md` § Merge policy, the
   integration-owner role), and the CTO is the cross-epic lead who lands PRs (`cto` skill).
@@ -41,13 +49,15 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    ([delivery](references/delivery.md#hand-off-record)). Fill a missing field from the task
    record, issue or PR, or send the work back to the entry stage. Never guess.
 2. **Make the smallest change that achieves the outcome**, in a dispatch worktree on a branch,
-   never on `main`. Implementation and fixes go to the authoring lane; a driver dispatches
-   them (rules core P1). Fix the case that happened, not every case that could.
+   never on `main`. Implementation and fixes go to the authoring lane: a worker makes them
+   itself, a driver dispatches them (rules core P1). Fix the case that happened, not every case
+   that could.
 3. **Prove it** ([delivery](references/delivery.md#proof)): reproduce, fix, the same check
    passes; behaviour proof for a user-visible surface. Add a test only with the CTO's approval
    of that specific test.
-4. **Review with `review-loop`.** It resolves the reviewer live, dispatches it at the exact
-   pushed head, keeps the budget and the ledger, and records the verdict.
+4. **Review with `review-loop`**, which you run yourself. It resolves the reviewer live
+   (never from a family that authored the branch), dispatches it at the exact pushed head,
+   keeps the budget and the ledger, and records the verdict.
 5. **Open or update the PR** ([pr-body](references/pr-body.md)). The PR may open before
    approval so admission CI runs (`workflow.md:195`); an open PR or green CI is not approval.
 
@@ -78,24 +88,30 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    Never `--auto`, `--delete-branch` or `--admin`. Queued is not merged.
 9. **Confirm `MERGED`** and the merge SHA: `gh pr view "$PR" --json state,mergeCommit`. If the
    queue ejects the PR, follow the kick recipe in [pr-watch](references/pr-watch.md).
-10. **Close out.** After every worker and reviewer process on the PR's worktrees has exited:
+10. **Close out.** After every other worker and reviewer process on the PR's worktrees has
+    exited:
 
     ```bash
     "$PY" -m scripts.orchestration.merge_closeout "$PR" --apply
     ```
 
-    Exit 0 with a residue-free receipt is required. A non-zero exit or a SKIPPED row means not
-    done: record the evidence and owner and resolve it safely, never with `--force`.
+    Exit 0 with a residue-free receipt is required, with one expected exception: a worker runs
+    this from its own worktree, which is still in use, so the receipt reports that worktree and
+    its local branch as residual. The dispatcher removes both when the worker's task settles and
+    records `worktree_disposition` in the task record; the driver confirms it at settle. Any
+    other residual, non-zero exit or SKIPPED row means not done: record the evidence and owner
+    and resolve it safely, never with `--force`.
 11. **Dispose of the linked issues.** Close each named issue as completed with evidence on the
     merged SHA, or comment what remains, its owner and what it waits on (rules core P4).
 
 ## Stop and escalate
 
 Stop, and report `BLOCKED <reason>`, when: the proof cannot be obtained; the review budget is
-exhausted or a dispute reaches its second exchange (`review-loop`); a breaker trips; ownership
+exhausted or a dispute is unresolved after two replies (`review-loop`); a breaker trips; ownership
 or stream membership is lost; CI fails a second time or for an unclear reason; another PR makes
-this one obsolete; or the next step is outside your authority. Escalate to the CTO and, for
-decisions in rules core P6, to the advisors. Reach the operator only for the operator-only list.
+this one obsolete; or the next step is outside your authority or your brief. Escalate to the
+CTO and, for decisions in rules core P6, to the advisors. Reach the operator only for the
+operator-only list and for a review dispute unresolved after two replies.
 
 ## Report
 

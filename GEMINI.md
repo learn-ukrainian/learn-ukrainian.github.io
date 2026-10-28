@@ -28,7 +28,7 @@ Kimi models are retired in the catalog; roster may change); already-ordered work
 substantive phase/epic prompts freeze SHA-256 plus user outcome, denominator, non-goals, role map, independent held-out evaluation,
 stop/residual policy, and completion terms; live-routed critics re-review material drift. Prompt
 review is not exact-head implementation or cross-family PR review; engine proof is not product
-completion · **simplest adequate solution** (adjust code to data; proportionate review; `review-loop` budget: 1 full + 1 delta, up to 3 deltas for security/data-loss/concurrency, then escalate) · repo hard gates bind.
+completion · **simplest adequate solution** (adjust code to data; proportionate review; review budget: `agents_extensions/shared/skills/review-loop/references/policy.md`) · repo hard gates bind.
 
 ## Project Research Registry — Orchestrator Duty (binding)
 

@@ -75,6 +75,11 @@ Run every dispatch through the scratch table helper. It builds each
 `dispatch.py dispatch` argv from a table and logs stdout and stderr per task; grep the log
 for `run_nonce=`, `SUBSTITUTE` and `queued behind`. Record the actual substituted identity.
 Use exact owned file paths; never claim a shared subtree for an optional edit.
+Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
+root `tests/*.py` files, and make every file that matches an owned path, so the worker can
+update the tests that pin the changed behaviour.
+Each brief also sets the worker's follow-up cap: how many follow-up tasks it may start and in
+which owned paths (rules core P1).
 Briefs state expected eligible PR lines and files; require a one-line size justification
 above the `workflow.md` small-batch threshold, including data files.
 Limit worker-local checks to Ruff and explicitly named test files for the changed module,

@@ -51,7 +51,7 @@ handoff:
     catalog_risk: low|medium|high|critical
     profile: code|infra
     budget_tier: default|elevated
-    tier_set_by: "<reviewer or CTO>"
+    tier_set_by: "<default, open finding id, or operator request>"
     rounds_used: {full: 0, delta: 0}
     ledger: []
   landing_state: {hold: false, queued: false, auto_merge: false}

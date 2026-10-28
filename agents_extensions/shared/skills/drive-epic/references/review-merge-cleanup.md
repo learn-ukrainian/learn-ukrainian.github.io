@@ -220,8 +220,8 @@ ids for suite results. Add no test and repeat no run.
 ## §7. Landing order
 
 The gates are `agents_extensions/shared/rules/workflow.md` § Merge policy; the
-step-by-step delivery is the `full-send` skill (accountable driver, to MERGED) or
-`full-stop` (anyone, to ready-to-merge). This section keeps the queue and CI mechanics
+step-by-step delivery is the `full-send` skill (the briefed worker or the accountable
+driver, to MERGED) or `full-stop` (anyone, to ready-to-merge). This section keeps the queue and CI mechanics
 those skills point to.
 
 Immediately before enqueue, run the [core inbox drain](../SKILL.md#the-loop--run-it-every-cycle)

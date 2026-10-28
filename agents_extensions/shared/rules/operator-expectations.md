@@ -32,10 +32,12 @@ are the tie-breakers.
    scratch directory (like `batch_state/`).
    `core.bare=true` on primary is a **bug** to heal (`git config core.bare false` +
    `extensions.worktreeConfig=true`), never an intentional mode. PRs for everything — no
-   direct commits to main. **Orchestrator merge duty:** workers neither merge nor arm
-   auto-merge, but the accountable orchestrator must ensure approved PRs land in `main` —
-   once required CI and independent cross-family exact-head review both pass, the orchestrator
-   merges (or enqueues via `.venv/bin/python -m scripts.publish pr-merge --number <N>`). Never leave an approved, green PR unmerged.
+   direct commits to main. **Merge duty:** nobody arms auto-merge. The worker that
+   receives a brief runs its chain to the end (rules core P1): once required CI and independent
+   cross-family exact-head review both pass, it enqueues via
+   `.venv/bin/python -m scripts.publish pr-merge --number <N>`, unless its brief says
+   `full-stop`. The accountable orchestrator lands what no brief owns and ensures every
+   approved PR lands in `main`. Never leave an approved, green PR unmerged.
    **Landing and cleanup:** follow `workflow.md` § Merge policy and its
    Post-merge cleanup recipe; the steps are the `full-send` skill. Cleanup is mandatory before the next large
    dispatch; non-zero or SKIPPED receipts block closeout, never use `--force`.

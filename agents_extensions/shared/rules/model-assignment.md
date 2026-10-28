@@ -64,8 +64,18 @@ Match the EXACT command — not a principle. Memory does not enforce; the dispat
 
 ## Worker resource policy
 
-Per the 2026-10-09 resource-policy order, Sol @ high is the default eligible code
-worker, including native Codex helpers. Use Claude workers through the native
+**Default author and reviewer pairs (operator C-2903, 2026-10-27).** This is the single
+statement of these defaults; other rules and skills point here.
+
+- **Code:** a Claude author, Sonnet 5.5 by default and Opus 5.5 for hard or security work,
+  with a Sol 6.1 reviewer. The reviewer resolver still returns the reviewer of record and
+  applies every exclusion and risk floor; at low, medium and high risk it ranks Sol first.
+- **Ukrainian content:** a Sol 6.1 author, with a Claude reviewer (Opus 5.5) using the Sources
+  MCP. Seats come from the `review-loop` `ukrainian` profile, whose OpenAI-author pair includes
+  Opus 5.5.
+
+These defaults replace the 2026-10-09 Sol-first code-worker default. Sol @ high stays an
+eligible code worker, including native Codex helpers, when the routing card says why. Use Claude workers through the native
 Claude CLI as heavily as their subscription allows, within task fit, provider
 health and hard gates. Operator 2026-10-16: native Claude workers use Sonnet 5.5
 by default and Opus 5.5 only for complex or security work; Claude-lane Ukrainian

@@ -178,7 +178,8 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
 OO-53 (#11226) supersedes the 2026-09-18 "CF review-fix before CI" order: a PR may
 be opened before approval so CI exists; merge still needs both gates below.
 This section holds the gates, trials and red-team policy. The step-by-step delivery is
-the `full-send` skill (accountable driver, to MERGED) or `full-stop` (to ready-to-merge),
+the `full-send` skill (the briefed worker or the accountable driver, to MERGED) or
+`full-stop` (to ready-to-merge),
 with `review-loop` for review rounds and the budget.
 
 0. **CF review on the branch (binding).** Push the implementation branch.
@@ -307,16 +308,21 @@ after `MERGED`; queued is not merged. The common reaper owns removal, never a
 second deletion path. If it cannot run, use only the rescue restore and narrowly
 allowlisted fallback in `docs/runbooks/worktree-cleanup.md`.
 
-For settled tasks use `scripts.fleet.post_task_reap --task-id <id>` (dry-run
-first, `--apply` through the common reaper); review trees are reaped as soon as
-the verdict is posted and the reviewer exits. Before a branch sweep, inspect
+At settlement the dispatcher removes each task's own worktree, review trees
+included (read-only trees always; write trees when clean and published on the
+canonical remote) and records `worktree_disposition` in the task record. A
+`retained` or `error` disposition is resolved by its reason through the common
+reaper, never by hand. Before a branch sweep, inspect
 `scripts.hygiene.branch_sweep --json` receipts; then apply only safe dispositions
 and prove no residue. Close linked issues only with all acceptance criteria
 verified on the delivered artifact; name any residual, owner and dependency.
 
 **The merging lane owns its PR closeout.** The lane that merged the PR runs the
 command above for that PR's own worktrees and branches, and the PR is not done
-until the receipt is clean (exit 0, residue-free). Any PR-scoped worktree claim
+until the receipt is clean (exit 0, residue-free). A briefed worker runs it from its
+own worktree, which is still in use, so its receipt reports that worktree and its
+local branch as residual; the dispatcher removes both when the task settles, and the
+driver confirms the recorded `worktree_disposition`. Any PR-scoped worktree claim
 is settled only through the common reaper's guarded removal, never by hand.
 Cleanup does not wait for a central sweep. This is not a stream lease: launchers
 own stream leases, and no driver opens, resumes, claims, renews, releases or
@@ -325,8 +331,9 @@ replaces one. The non-zero and `SKIPPED` stop conditions above are unchanged.
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a
 session's start/end sweep is **OWN-STREAM ONLY**: it may review or review-route
-**only** PRs in its own stream. Only the accountable lead may enqueue them, after
-current-head cross-family approval and green CI. Workers never enqueue or arm auto-merge.
+**only** PRs in its own stream. Only the accountable lead, or the worker whose brief owns
+the PR, may enqueue them, after current-head cross-family approval and green CI. Nobody arms
+auto-merge.
 
 **Stream membership is AUTHORITATIVE + FAIL-CLOSED.** A PR is *in-stream* iff its linked issue resolves
 to the session's stream-epic in the issue→epic membership registry — `/api/issues/streams` (from

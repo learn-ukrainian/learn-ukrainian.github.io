@@ -145,8 +145,8 @@ untested boundaries that the review brief freezes
 real CLI is intended, evidence for each attack class uses the real tool as the oracle, with
 its version pinned.
 Reviewers keep their own independent adversarial cases; the author's matrix does not replace
-review. After the second rejected review round the author continues only within the
-elevated tier of the [review budget](../../review-loop/references/policy.md#budget). A contested decision
+review. After a rejected review round the author continues only within the
+[review budget](../../review-loop/references/policy.md#budget). A contested decision
 or a fragile or high-risk fix escalates per the rules core P6.
 
 Write every brief so pytest basetemp, probe copies, and report copies go to the
@@ -186,9 +186,12 @@ crashed | no_deliverable`. `--dry-run` prints a plan without creating a task rec
 status NOT in `{spawning, running, ""}`. The task file is truth; `/api/delegate/active`
 can omit live tasks. **Before declaring a dispatch dead:** `gh pr list --state open`
 first, then check the worktree for finished-but-unpushed work. **After terminal status,**
-run `.venv/bin/python -m scripts.fleet.post_task_reap --task-id <id>` (dry-run by default;
-pass `--apply` to reap the bound dispatch worktree). `post_task_reap` delegates removal to
-the P0 reaper; do not substitute a direct Git removal path.
+read the task record's `worktree_disposition` and `worktree_disposition_reason`. The
+dispatcher removes the task's own worktree at settlement: read-only trees always, write
+trees when clean and published on the canonical remote. A `retained` tree (dirty,
+unpublished, borrowed, unknown) or an `error` is resolved by its reason through the common
+reaper (`docs/runbooks/worktree-cleanup.md`); never a
+direct Git removal.
 
 **Wait-loop hygiene (2026-09-24).** Before arming a wait on a tool's output, grep the
 tool's source or one real output for the exact string — a loop on text the tool never
