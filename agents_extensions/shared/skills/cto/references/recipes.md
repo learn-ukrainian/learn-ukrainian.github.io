@@ -80,6 +80,8 @@ Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can
 update the tests that pin the changed behaviour.
+Before writing a brief from a tracker item, read its full history with `lu-driver-state show <id>`
+(all notes): operator amendments are recorded as notes.
 Each brief also sets the worker's follow-up cap: how many follow-up tasks it may start and in
 which owned paths (rules core P1).
 Briefs state expected eligible PR lines and files; require a one-line size justification

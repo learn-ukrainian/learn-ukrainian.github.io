@@ -853,7 +853,7 @@ Post on the relevant GH issue explaining what was stuck and why.
 ## Dispatch handoff: GPT-6 Luna workers + fleet settle
 
 **Luna (`gpt-6-luna` @ high)** is a high-volume **bounded coding worker**, not a solo epic driver.
-Orchestrators keep acceptance (CF, merge, residual truth). Every Luna dispatch needs a complete
+The worker runs its brief's chain (`full-send`, or `full-stop` when the brief says so); orchestrators keep acceptance and residual truth. Every Luna dispatch needs a complete
 GPT-6.1 Sol advisory envelope bound to it (`--advisory-task`; operator decision 2026-09-30, #9275);
 see `agents_extensions/shared/rules/fleet-driver-routing.md` §2.
 
@@ -871,7 +871,7 @@ When a worker leaves commits without a PR, or dies with `status=running` and a d
 .venv/bin/python -m scripts.orchestration.dispatch_settle release-stale
 ```
 
-Formal CF and auto-merge stay with the orchestrator.
+Nobody arms auto-merge; the formal CF verdict is recorded with `review-loop`, and the owner of the delivery enqueues.
 
 ### Formal CF budget rotation (Codex-authored PRs)
 Current formal reviewer endpoints are `codex|claude|glm|grok|cursor`; the canonical

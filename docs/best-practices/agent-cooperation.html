@@ -1047,8 +1047,9 @@ runtime init show the expected <code>sources</code> server.</li>
 </code></pre>
 <p>Post on the relevant GH issue explaining what was stuck and why.</p>
 <h2>Dispatch handoff: GPT-6 Luna workers + fleet settle</h2>
-<p><strong>Luna (<code>gpt-6-luna</code> @ high)</strong> is a high-volume <strong>bounded coding worker</strong>, not a solo epic driver. Every Luna dispatch needs a complete GPT-6.1 Sol advisory envelope bound to it (<code>--advisory-task</code>; operator decision 2026-09-30, #9275).
-Orchestrators keep acceptance (CF, merge, residual truth).</p>
+<p><strong>Luna (<code>gpt-6-luna</code> @ high)</strong> is a high-volume <strong>bounded coding worker</strong>, not a solo epic driver.
+The worker runs its brief's chain (<code>full-send</code>, or <code>full-stop</code> when the brief says so); orchestrators keep acceptance and residual truth. Every Luna dispatch needs a complete GPT-6.1 Sol advisory envelope bound to it (<code>--advisory-task</code>; operator decision 2026-09-30, #9275);
+see <code>agents_extensions/shared/rules/fleet-driver-routing.md</code> §2.</p>
 <h3>Briefing Luna</h3>
 <p>Append <a href="../dispatch-briefs/luna-max-closeout-contract.md"><code>docs/dispatch-briefs/luna-max-closeout-contract.md</code></a>
 to bounded Luna dispatch briefs. The filename is retained for existing links; its
@@ -1059,7 +1060,7 @@ current content specifies GPT-6 Luna @ high. Require the <code>CLOSEOUT</code> l
   --task-id &lt;task&gt; --push --open-pr
 .venv/bin/python -m scripts.orchestration.dispatch_settle release-stale
 </code></pre>
-<p>Formal CF and auto-merge stay with the orchestrator.</p>
+<p>Nobody arms auto-merge; the formal CF verdict is recorded with <code>review-loop</code>, and the owner of the delivery enqueues.</p>
 <h3>Formal CF budget rotation (Codex-authored PRs)</h3>
 <p>Current sealed reviewer routes are <code>codex|claude|glm|grok</code>; the canonical
 <code>review_scheduler.endpoints</code> catalog remains authoritative. <code>agy</code> is a

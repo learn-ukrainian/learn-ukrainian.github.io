@@ -1,6 +1,6 @@
 ---
 name: cto
-description: Run the CTO seat (combined CTO and cross-epic lead) to bind the rollover, drain the inbox, run the fleet cycle, land PRs and hand off. Use drive-epic for a single assigned lane.
+description: Run the CTO seat (combined CTO and cross-epic lead) to bind the rollover, drain the inbox, run the fleet cycle, dispatch workers who land their own PRs (landing only what no brief owns) and hand off. Use drive-epic for a single assigned lane.
 effort: high
 ---
 

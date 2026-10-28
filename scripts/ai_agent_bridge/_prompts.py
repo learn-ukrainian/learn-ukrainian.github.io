@@ -298,8 +298,9 @@ Perform authorized edits only in the assigned dispatch worktree:
 - Use the assigned worktree; if one is needed, follow the repository's dispatch-worktree contract.
 - Never switch, reset, clean, rebase, or merge the caller's primary checkout.
 - Preserve user and other workers' changes. Do not run destructive Git operations without explicit authorization.
-- The accountable lead owns post-merge cleanup. Helpers must not remove shared worktrees;
-  return their exact worktree and branch status to the lead.
+- A worker that owns a brief runs its own closeout (`merge_closeout`); the accountable lead
+  closes out what no brief owns. A helper must not remove shared worktrees; it returns its
+  exact worktree and branch status to the worker or lead that dispatched it.
 - If the assigned task conflicts with these constraints, report the blocker to the lead.
 
 ## Scope discipline
