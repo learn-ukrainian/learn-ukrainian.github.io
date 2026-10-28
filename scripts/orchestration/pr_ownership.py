@@ -1,0 +1,555 @@
+"""Keep every open PR owned: ownerless alerts, accepted handoffs and queue custody.
+
+The local merge-queue keeper calls ``keeper_tick`` after each ``--apply`` pass. A PR
+with no live owning task (``scripts.fleet.pr_owner_check``) for ``GRACE`` raises one
+supervisory request to the CTO inbox. The alert stays outstanding, with an hourly
+reminder, until a named successor task accepts the handoff here, or the PR closes.
+Unobservable task telemetry is unknown: it never starts, advances or clears an alert.
+
+An accepted handoff makes the successor the PR's one owner while its task is live, from
+any branch. A queue-custody handoff also names the predecessor whose only remaining step
+is waiting in the merge queue; ``queue-exit`` then lets that predecessor end cleanly,
+but only while the keeper's ownership check is running.
+
+State is one JSON file next to the shared dispatch task store, written under a lock.
+"""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import fcntl
+import hashlib
+import json
+import os
+import sys
+from collections.abc import Callable, Iterator, Mapping
+from contextlib import contextmanager
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
+from scripts.common.task_store_paths import tasks_dir
+
+GRACE = timedelta(minutes=15)
+REMINDER = timedelta(minutes=60)
+TICK_INTERVAL = timedelta(minutes=5)
+# ``queue-exit`` needs a successful ownership check this recent: the alert is in place.
+TICK_FRESH = timedelta(minutes=20)
+CUSTODY_COVERS = ("ejection", "stale-approval", "merge-confirmation", "closeout")
+CTO_INBOX = "claude-cto"
+SENDER = "merge-queue-keeper"
+TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
+HISTORY_LIMIT = 200
+_ACTIVE = {"spawning", "running"}
+
+
+class OwnershipError(RuntimeError):
+    """Evidence needed for a decision is missing or contradictory."""
+
+
+def state_path() -> Path:
+    return tasks_dir().parent / "pr_ownership" / "state.json"
+
+
+def pr_key(repo: str, number: int) -> str:
+    return f"{repo.casefold()}#{number}"
+
+
+def _empty() -> dict[str, Any]:
+    return {"schema": 1, "last_tick": None, "episodes": {}, "handoffs": {}, "history": []}
+
+
+def load(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return _empty()
+    try:
+        data = json.loads(path.read_text())
+    except (OSError, ValueError) as exc:
+        raise OwnershipError(f"ownership state unreadable: {type(exc).__name__}") from exc
+    if not isinstance(data, dict) or data.get("schema") != 1 or not all(
+        isinstance(data.get(name), dict) for name in ("episodes", "handoffs")
+    ):
+        raise OwnershipError("ownership state malformed")
+    data.setdefault("history", [])
+    return data
+
+
+def _save(path: Path, data: dict[str, Any]) -> None:
+    data["history"] = data["history"][-HISTORY_LIMIT:]
+    temporary = path.with_suffix(".tmp")
+    with temporary.open("w") as handle:
+        json.dump(data, handle, indent=2, sort_keys=True)
+        handle.flush()
+        os.fsync(handle.fileno())
+    temporary.replace(path)
+
+
+@contextmanager
+def locked(path: Path) -> Iterator[dict[str, Any]]:
+    """Read-modify-write the state under an exclusive lock; saves on clean exit."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.with_suffix(".lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        data = load(path)
+        yield data
+        _save(path, data)
+
+
+def _handoff_map(data: Mapping[str, Any]) -> dict[tuple[str, int], str]:
+    result = {}
+    for key, handoff in data["handoffs"].items():
+        repo, _, number = key.rpartition("#")
+        result[(repo, int(number))] = handoff["successor"]
+    return result
+
+
+def accepted_handoffs(path: Path | None = None) -> dict[tuple[str, int], str]:
+    """(casefolded repo, PR number) -> accepted successor task id, for the owner check."""
+    return _handoff_map(load(path or state_path()))
+
+
+def _at(value: str) -> datetime:
+    return datetime.fromisoformat(value)
+
+
+def step(
+    data: dict[str, Any],
+    open_keys: set[str],
+    findings: Mapping[str, Any],
+    now: datetime,
+) -> dict[str, list[dict[str, Any]]]:
+    """Advance alert episodes for one complete observation; return the notices to send.
+
+    ``open_keys`` are every open PR in the checked repositories; ``findings`` maps a key
+    to its ``pr_owner_check.Unowned`` row (``unknown`` rows freeze their episode).
+    """
+    notices: dict[str, list[dict[str, Any]]] = {"alert": [], "reminder": [], "cleared": []}
+    episodes, handoffs = data["episodes"], data["handoffs"]
+    stamp = now.isoformat()
+    for key in sorted(set(episodes) - open_keys):
+        episode = episodes.pop(key)
+        if episode.get("alerted_at"):
+            notices["cleared"].append({"pr": key, "how": "PR no longer open", "since": episode["since"]})
+            data["history"].append({"pr": key, "event": "closed", "at": stamp})
+    for key in sorted(set(handoffs) - open_keys):
+        handoffs.pop(key)
+    for key in sorted(open_keys):
+        finding = findings.get(key)
+        episode = episodes.get(key)
+        if finding is not None and finding.unknown:
+            continue
+        if finding is not None:
+            if episode is None:
+                episodes[key] = {
+                    "since": stamp, "branch": finding.branch, "reason": finding.reason,
+                    "last_task": finding.last_task, "alerted_at": None, "notified_at": None,
+                }
+                continue
+            episode.update(reason=finding.reason, last_task=finding.last_task)
+            if not episode["alerted_at"] and now - _at(episode["since"]) >= GRACE:
+                episode["alerted_at"] = episode["notified_at"] = stamp
+                notices["alert"].append({"pr": key, **episode})
+                data["history"].append({"pr": key, "event": "alerted", "at": stamp, "reason": finding.reason})
+            elif episode["alerted_at"] and now - _at(episode["notified_at"]) >= REMINDER:
+                episode["notified_at"] = stamp
+                notices["reminder"].append({"pr": key, **episode})
+            continue
+        if episode is None:
+            continue
+        if not episode["alerted_at"]:
+            episodes.pop(key)  # an owner returned inside the grace period
+            continue
+        handoff = handoffs.get(key)
+        if handoff and _at(handoff["accepted_at"]) >= _at(episode["since"]):
+            episodes.pop(key)
+            notices["cleared"].append({
+                "pr": key, "how": f"handoff accepted by {handoff['successor']}", "since": episode["since"],
+            })
+            data["history"].append({"pr": key, "event": "cleared", "at": stamp, "successor": handoff["successor"]})
+        else:
+            episode["reason"] = "a task owns the branch but no successor has accepted the handoff"
+    return notices
+
+
+def _message(kind: str, rows: list[dict[str, Any]]) -> str:
+    lines = {
+        "alert": "Ownerless PRs: no live owning task for 15 minutes. Seat one owner per PR; the alert "
+                 "stays outstanding until the successor records acceptance "
+                 "(python -m scripts.orchestration.pr_ownership accept).",
+        "reminder": "Still ownerless PRs: no successor has accepted the handoff yet.",
+        "cleared": "Ownerless-PR alerts cleared.",
+    }[kind]
+    body = [lines]
+    for row in rows:
+        detail = row.get("how") or row.get("reason")
+        last = f" last task {row['last_task']}" if row.get("last_task") else ""
+        body.append(f"- {row['pr']} ({row.get('branch', '')}) since {row['since']}: {detail}.{last}")
+    return "\n".join(body)
+
+
+def notify(notices: Mapping[str, list[dict[str, Any]]], service: Any, now: datetime) -> list[str]:
+    """One supervisory request per notice kind; the key makes a retried tick idempotent."""
+    ids = []
+    for kind in ("alert", "reminder", "cleared"):
+        rows = notices.get(kind) or []
+        if not rows:
+            continue
+        digest = hashlib.sha256(
+            json.dumps([[row["pr"], row["since"]] for row in rows], sort_keys=True).encode()
+        ).hexdigest()[:16]
+        stamp = now.strftime("%Y%m%dT%H%M")
+        message = service.enqueue_supervisory_request(
+            sender=SENDER,
+            recipient=CTO_INBOX,
+            body=_message(kind, rows),
+            correlation_id=f"pr-ownership:{kind}",
+            idempotency_key=f"pr-ownership:{kind}:{stamp}:{digest}",
+        )
+        ids.append(message.message_id)
+    return ids
+
+
+@dataclass(frozen=True)
+class Finding:
+    """An open PR without a verifiably live owner; ``unknown`` when its owner cannot be observed."""
+
+    repo: str
+    number: int
+    branch: str
+    reason: str
+    last_task: str | None = None
+    unknown: bool = False
+
+
+def liveness(record: Mapping[str, Any] | None) -> bool | None:
+    """True for a live supervisor, False for a finished task or a gone supervisor, None
+    when an active record or the host gives no process to observe."""
+    from scripts.fleet.pr_owner_check import _supervisor_alive
+
+    if record is None or record.get("status") not in _ACTIVE:
+        return False
+    if not record.get("pid") or not record.get("process_start") or not Path("/proc/self/stat").exists():
+        return None
+    return _supervisor_alive(dict(record))
+
+
+def findings(
+    open_prs: Mapping[str, list[dict[str, Any]]],
+    records: list[dict[str, Any]],
+    repos: Mapping[str, Any],
+    handoffs: Mapping[tuple[str, int], str],
+    live: Callable[[Mapping[str, Any] | None], bool | None] = liveness,
+) -> list[Finding]:
+    """The owner check (``pr_owner_check.evaluate``) with accepted handoffs and unknown liveness.
+
+    An accepted successor owns the PR from any branch while it is live. A PR is ownerless
+    only when no candidate owner is live or unobservable; with an unobservable one it is
+    unknown.
+    """
+    from scripts.fleet import pr_owner_check as check
+
+    by_id = {record.get("task_id"): record for record in records if record.get("task_id")}
+    successors = {}
+    seated = list(records)
+    for slug, prs in open_prs.items():
+        for pr in prs:
+            key = (slug.casefold(), int(pr["number"]))
+            record = by_id.get(handoffs.get(key))
+            if record is not None:
+                successors[key] = record
+                seated.append({**record, "repository": slug, "worktree_branch": pr.get("headRefName")})
+    strict = check.evaluate(open_prs, seated, repos, lambda record: live(record) is True)
+    lenient = {(f.repo, f.number) for f in check.evaluate(open_prs, seated, repos, lambda r: live(r) is not False)}
+    result = []
+    for row in strict:
+        key = (row.repo.casefold(), row.number)
+        successor = live(successors[key]) if key in successors else False
+        if successor is True:
+            continue  # the owner check never seats a task on a fork PR's branch
+        unknown = (row.repo, row.number) not in lenient or successor is None
+        reason = "an owner is active but its supervisor cannot be observed (unknown)" if unknown else row.reason
+        result.append(Finding(row.repo, row.number, row.branch, reason, row.last_task, unknown))
+    return result
+
+
+def _observe(handoffs: Mapping[tuple[str, int], str]) -> tuple[set[str], dict[str, Finding]]:
+    """Every open PR key and its finding, across the owner check's default fleet repositories."""
+    from scripts.dispatcher import store
+    from scripts.fleet import pr_owner_check as check
+    from scripts.orchestration.fleet_repos import load_fleet_repos
+
+    repos = load_fleet_repos()
+    records = store.list_tasks(strict=True)
+    open_prs = {repos[k].github: check.fetch_open_prs(repos[k].github) for k in check.DEFAULT_REPO_KEYS}
+    rows = findings(open_prs, records, repos, handoffs)
+    keys = {pr_key(slug, int(pr["number"])) for slug, prs in open_prs.items() for pr in prs}
+    return keys, {pr_key(f.repo, f.number): f for f in rows}
+
+
+def _default_service() -> Any:
+    from scripts.fleet_comms.authority import AuthorityService
+
+    return AuthorityService(root=None)
+
+
+def keeper_tick(
+    *,
+    now: datetime | None = None,
+    path: Path | None = None,
+    observe: Callable[[Mapping[tuple[str, int], str]], tuple[set[str], dict[str, Any]]] = _observe,
+    service_factory: Callable[[], Any] = _default_service,
+) -> tuple[list[str], bool]:
+    """Run one throttled ownership check; returns (log lines, failed)."""
+    now = now or datetime.now(UTC)
+    path = path or state_path()
+    with locked(path) as data:
+        last = data.get("last_tick") or {}
+        if last.get("ok") and now - _at(last["at"]) < TICK_INTERVAL:
+            return [], False
+        try:
+            keys, findings = observe(_handoff_map(data))
+        except Exception as exc:  # any unreadable source is unknown: change no alert
+            data["last_tick"] = {"at": now.isoformat(), "ok": False, "error": type(exc).__name__}
+            return [f"pr ownership: UNKNOWN ({type(exc).__name__}); alerts unchanged"], True
+        work = copy.deepcopy(data)
+        notices = step(work, keys, findings, now)
+        try:
+            with service_factory() as service:
+                notify(notices, service, now)
+        except Exception as exc:  # commit nothing, so the next tick sends the same notices
+            data["last_tick"] = {"at": now.isoformat(), "ok": False, "error": type(exc).__name__}
+            return [f"pr ownership: CTO inbox write failed ({type(exc).__name__}); alerts unchanged"], True
+        work["last_tick"] = {"at": now.isoformat(), "ok": True}
+        data.clear()
+        data.update(work)
+        unknown = sorted(key for key, finding in findings.items() if finding.unknown)
+        outstanding = sorted(key for key, episode in data["episodes"].items() if episode["alerted_at"])
+        lines = [
+            f"pr ownership: open={len(keys)} ownerless={len(findings) - len(unknown)} unknown={len(unknown)} "
+            f"alerts_outstanding={len(outstanding)} new={len(notices['alert'])} cleared={len(notices['cleared'])}"
+        ]
+        lines += [f"pr ownership alert outstanding: {key}" for key in outstanding]
+        lines += [f"pr ownership unknown: {key}" for key in unknown]
+        return lines, False
+
+
+def _gh_pr(repo: str, number: int) -> dict[str, Any]:
+    proc = github_client.run(
+        ["gh", "pr", "view", str(number), "--repo", repo, "--json",
+         "state,headRefOid,headRefName,isCrossRepository"],
+        capture_output=True, text=True, check=False, timeout=60,
+    )
+    try:
+        pr = json.loads(proc.stdout) if proc.returncode == 0 else None
+    except ValueError:
+        pr = None
+    if not isinstance(pr, dict) or not isinstance(pr.get("headRefOid"), str):
+        raise OwnershipError(f"cannot read {repo}#{number}")
+    return pr
+
+
+def _rerun_allowance(repo: str, number: int, head: str) -> str:
+    """The head's one evidenced CI rerun, from the shared ledger every owner uses."""
+    from scripts.opsec.prepublish import PublishBlocked
+    from scripts.publish import recovery
+
+    try:
+        first = recovery.first_attempt(recovery.ledger_path(Path.cwd()), repo, number, head)
+    except PublishBlocked:
+        return "unknown"
+    return recovery.spent_reason(first) if first else "unspent"
+
+
+def accept(
+    data: dict[str, Any],
+    *,
+    repo: str,
+    number: int,
+    pr: Mapping[str, Any],
+    successor: str,
+    records: list[dict[str, Any]],
+    predecessor: str | None,
+    custody: bool,
+    now: datetime,
+    rerun: str,
+    live: Callable[[Mapping[str, Any] | None], bool | None] | None = None,
+) -> dict[str, Any]:
+    """Record ``successor`` as the PR's one owner; refuse while another live owner remains."""
+    live = live or liveness
+    if pr.get("state") != "OPEN":
+        raise OwnershipError(f"PR is {pr.get('state')}, not open")
+    if predecessor and not custody:
+        raise OwnershipError("--from names a live predecessor and needs --custody")
+    by_id = {record.get("task_id"): record for record in records}
+    if (state := live(by_id.get(successor))) is not True:
+        raise OwnershipError(f"successor {successor} is {'unknown' if state is None else 'not live'}")
+    key = pr_key(repo, number)
+    branch = pr.get("headRefName")
+    previous = data["handoffs"].get(key)
+    if custody:
+        owners = {record.get("task_id") for record in records if record.get("worktree_branch") == branch}
+        if previous:
+            owners.add(previous["successor"])
+        if predecessor not in owners or live(by_id.get(predecessor)) is not True:
+            raise OwnershipError("queue custody needs the PR's live owner that is waiting in the queue (--from)")
+    others = {
+        record["task_id"] for record in records
+        if record.get("worktree_branch") == branch and not pr.get("isCrossRepository")
+        and str(record.get("repository") or repo).casefold() == repo.casefold()
+        and record.get("task_id") not in {successor, predecessor}
+    }
+    if previous:
+        others.add(previous["successor"])
+    others.discard(successor)
+    others.discard(predecessor)
+    blocking = sorted(task for task in others if live(by_id.get(task)) is not False)
+    if blocking:
+        raise OwnershipError(f"one owner at a time: {', '.join(blocking)} may still own this PR")
+    handoff = {
+        "successor": successor,
+        "predecessor": predecessor,
+        "accepted_at": now.isoformat(),
+        "head": pr["headRefOid"],
+        "custody": list(CUSTODY_COVERS) if custody else [],
+        "rerun_allowance": rerun,
+    }
+    data["handoffs"][key] = handoff
+    data["history"].append({"pr": key, "event": "accepted", "at": handoff["accepted_at"], **handoff})
+    return handoff
+
+
+def queue_exit(
+    data: Mapping[str, Any],
+    *,
+    repo: str,
+    number: int,
+    pr: Mapping[str, Any],
+    queued: bool | None,
+    me: str,
+    records: list[dict[str, Any]],
+    now: datetime,
+    live: Callable[[Mapping[str, Any] | None], bool | None] | None = None,
+) -> list[str]:
+    """Reasons ``me`` must keep waiting; empty means it may exit cleanly."""
+    live = live or liveness
+    reasons = []
+    last = data.get("last_tick") or {}
+    if not last.get("ok") or now - _at(last["at"]) > TICK_FRESH:
+        reasons.append("the keeper's ownership alert has not run successfully in the last 20 minutes")
+    handoff = data["handoffs"].get(pr_key(repo, number))
+    if not handoff or handoff.get("predecessor") != me or tuple(handoff.get("custody") or ()) != CUSTODY_COVERS:
+        reasons.append("no accepted queue custody names this task as predecessor")
+    else:
+        by_id = {record.get("task_id"): record for record in records}
+        if handoff["successor"] == me or live(by_id.get(handoff["successor"])) is not True:
+            reasons.append(f"custodian {handoff['successor']} is not verifiably live")
+        if handoff["head"] != pr.get("headRefOid"):
+            reasons.append("the PR head moved after custody was accepted")
+    if pr.get("state") != "OPEN":
+        reasons.append(f"PR is {pr.get('state')}: finish the closeout yourself")
+    if queued is not True:
+        reasons.append("the PR is not verifiably in the merge queue")
+    return reasons
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Record PR ownership handoffs and queue custody, and check whether a queue-waiting "
+            "owner may exit.\nThe merge-queue keeper runs the ownerless-PR alert itself; use this "
+            "CLI as the successor, custodian or waiting owner. Not for judging review or CI state."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  python -m scripts.orchestration.pr_ownership check\n"
+            "  python -m scripts.orchestration.pr_ownership status\n"
+            "  python -m scripts.orchestration.pr_ownership accept --pr 42\n"
+            "  python -m scripts.orchestration.pr_ownership accept --pr 42 --custody --from TASK\n"
+            "  python -m scripts.orchestration.pr_ownership queue-exit --pr 42\n\n"
+            "accept and queue-exit act as the dispatch task named by LEARN_UKRAINIAN_DISPATCH_TASK_ID.\n"
+            "Outputs: JSON on stdout (check: one line per PR without a live owner);\n"
+            "  only accept writes the shared ownership state.\n"
+            "Exit codes: 0 accepted / may exit / every PR owned / status printed;\n"
+            "  1 refused / keep waiting / a PR is ownerless;\n"
+            "  2 GitHub, task records or ownership state unreadable, or an owner unobservable (unknown).\n"
+            "Related: scripts/fleet/pr_owner_check.py, scripts/orchestration/merge_queue_keeper.py, "
+            "full-send references/pr-watch.md, epic #10453."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    subs = parser.add_subparsers(dest="command", required=True)
+    subs.add_parser("status", help="Print outstanding alerts, handoffs and the last keeper tick")
+    subs.add_parser("check", help="List open PRs with no live owner, counting accepted handoffs (read-only)")
+    for name, text in (("accept", "Accept ownership of a PR as its named successor"),
+                       ("queue-exit", "Exit 0 when this waiting owner may end under queue custody")):
+        sub = subs.add_parser(name, help=text)
+        sub.add_argument("--pr", type=int, required=True, help="PR number, e.g. 42")
+        sub.add_argument("--repo", default=None,
+                         help="owner/name (default: the default fleet repository)")
+        if name == "accept":
+            sub.add_argument("--custody", action="store_true",
+                             help="Accept queue custody: ejection, stale approval, merge confirmation, closeout")
+            sub.add_argument("--from", dest="predecessor",
+                             help="Live predecessor task waiting in the queue; needs --custody")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    path = state_path()
+    try:
+        if args.command == "status":
+            print(json.dumps(load(path), indent=2, sort_keys=True))
+            return 0
+        if args.command == "check":
+            keys, rows = _observe(accepted_handoffs(path))
+            for row in rows.values():
+                print(json.dumps(asdict(row), sort_keys=True))
+            print(f"{len(keys) - len(rows)}/{len(keys)} open PRs have a live owner", file=sys.stderr)
+            if any(not row.unknown for row in rows.values()):
+                return 1
+            return 2 if rows else 0
+        me = os.environ.get(TASK_ENV)
+        if not me:
+            raise OwnershipError(f"{TASK_ENV} is unset: only a dispatch task can accept or exit")
+        from scripts.dispatcher import store
+        from scripts.orchestration.fleet_repos import load_fleet_repos
+
+        repo = args.repo or next(r.github for r in load_fleet_repos().values() if r.default)
+        records = store.list_tasks(strict=True)
+        pr = _gh_pr(repo, args.pr)
+        now = datetime.now(UTC)
+        if args.command == "accept":
+            rerun = _rerun_allowance(repo, args.pr, pr["headRefOid"])
+            with locked(path) as data:
+                try:
+                    receipt = accept(
+                        data, repo=repo, number=args.pr, pr=pr, successor=me, records=records,
+                        predecessor=args.predecessor, custody=args.custody, now=now, rerun=rerun,
+                    )
+                except OwnershipError as exc:
+                    print(json.dumps({"accepted": False, "reason": str(exc)}))
+                    return 1
+            print(json.dumps({"accepted": True, "pr": pr_key(repo, args.pr), **receipt,
+                              "review_budget": "carried by the PR's review ledger; read it before acting"}))
+            return 0
+        from scripts.gh_merge_queue_status import fetch_live_status
+
+        queued = fetch_live_status(args.pr, repo).queued
+        reasons = queue_exit(load(path), repo=repo, number=args.pr, pr=pr, queued=queued,
+                             me=me, records=records, now=now)
+        print(json.dumps({"may_exit": not reasons, "reasons": reasons}))
+        return 1 if reasons else 0
+    except (OwnershipError, RuntimeError, ValueError, OSError, KeyError, TypeError) as exc:
+        print(f"UNKNOWN: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
