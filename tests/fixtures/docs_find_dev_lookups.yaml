@@ -268,9 +268,9 @@ lookups:
   - {id: P04, question: 'Where is the cross-family review preflight before a PR implemented?', kind: process, query: cross-family preflight before PR,
      expect: [scripts/build/cf_preflight.py],
      verify: [{path: scripts/build/cf_preflight.py, contains: class CfPreflightResult}]}
-  - {id: P05, question: 'What reaps dispatch worktrees after a PR merges?', kind: process, query: reap dispatch worktrees after merge,
+  - {id: P05, question: 'What proves a merged PR left no dispatch worktree behind?', kind: process, query: reap dispatch worktrees after merge,
      expect: [scripts/orchestration/merge_closeout.py, scripts/fleet/post_task_reap.py],
-     verify: [{path: scripts/orchestration/merge_closeout.py, contains: reap its dispatch worktrees}]}
+     verify: [{path: scripts/orchestration/merge_closeout.py, contains: prove no dispatch worktree still}]}
   - {id: P06, question: 'Where does the reviewer resolver pick a ladder seat?', kind: process, query: reviewer resolver ladder selection,
      expect: [scripts/review/reviewer_resolver.py],
      verify: [{path: scripts/review/reviewer_resolver.py, contains: def resolve_reviewer}]}
