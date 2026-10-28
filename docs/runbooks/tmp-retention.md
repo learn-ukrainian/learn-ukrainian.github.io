@@ -128,6 +128,14 @@ namespaces, are reported as `legacy_ownership_unknown` and never touched. An
 explicit `--basetemp` keeps its caller's ownership; the pre-push gate removes
 its own base temp. Other managed scratch is untouched.
 
+At teardown the session removes its own run when it passed (final exit status
+0) under `tmp_path_retention_policy = "failed"`, through the scratch owner's
+descriptor-safe remover. This is the removal pytest documents for that policy;
+pytest skips it whenever `--basetemp` is set, and this plugin always sets it.
+A failed, interrupted or killed session keeps its run for inspection, and the
+sweep above handles it. A refused removal leaves the run
+preserved as before.
+
 ### Other scratch
 
 `tmp_sweep` considers only direct children of the temp root. With

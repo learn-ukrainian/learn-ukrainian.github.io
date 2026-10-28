@@ -64,6 +64,8 @@ SHARED_MEMORY_TEMP = Path("/dev/shm")
 _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 # A read-only mount or a denied write. Any other failure stays loud.
 _UNWRITABLE_ERRNOS = frozenset({errno.EROFS, errno.EACCES})
+_RUN = pytest.StashKey[TaskScratch]()
+_PASSED = pytest.StashKey[bool]()
 
 
 def _is_unwritable(exc: OSError) -> bool:
@@ -345,6 +347,16 @@ def _allocate_private_fallback() -> TaskScratch:
     )
 
 
+def _release(stash: pytest.Stash | None, scratch: TaskScratch) -> None:
+    """Remove a passed run, as pytest removes its own basetemp; keep any other run for inspection."""
+    try:
+        if stash is not None and stash.get(_PASSED, False):
+            with contextlib.suppress(OSError, TaskScratchError):
+                scratch.remove()
+    finally:
+        scratch.preserve()
+
+
 def _allocate_run() -> TaskScratch:
     root = _private_shared_root()
     if root is not None:
@@ -364,7 +376,11 @@ def pytest_configure(config: pytest.Config) -> None:
     scratch = _allocate_run()
     # Pytest recreates --basetemp. Keep ownership metadata outside that payload.
     config.option.basetemp = str(scratch.payload_dir / "base")
-    config.add_cleanup(scratch.preserve)
+    # A caller without a stash gets the plain preservation it always had.
+    stash = getattr(config, "stash", None)
+    if stash is not None:
+        stash[_RUN] = scratch
+    config.add_cleanup(partial(_release, stash, scratch))
     # Fixtures and ordinary tempfile users must share a containment root.
     # Workers inherit TMPDIR; this process may already have cached tempdir.
     previous_env = os.environ.get("TMPDIR")
@@ -380,3 +396,20 @@ def pytest_configure(config: pytest.Config) -> None:
             os.environ["TMPDIR"] = previous_env
 
     config.add_cleanup(restore_tempdir)
+
+
+@pytest.hookimpl(trylast=True)
+def pytest_sessionfinish(session: pytest.Session) -> None:
+    """Record a passed session under the "failed" retention policy.
+
+    Pytest itself deletes the basetemp of such a session, but only when no
+    --basetemp was given, and this plugin always gives one. The final exit
+    status counts: an earlier sessionfinish hook may have failed the session.
+    """
+    config = session.config
+    if (
+        _RUN in config.stash
+        and session.exitstatus == pytest.ExitCode.OK
+        and config.getini("tmp_path_retention_policy") == "failed"
+    ):
+        config.stash[_PASSED] = True
