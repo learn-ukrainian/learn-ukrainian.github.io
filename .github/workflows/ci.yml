@@ -501,7 +501,9 @@ jobs:
     name: PR changed tests and guards
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Measurement envelope: recorded marked-file costs total 1,806s serial.
+    # Final budget is selected from this PR's hosted marker-only measurements.
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -525,11 +527,18 @@ jobs:
           else
             echo 'Full tier: full pytest jobs remain required.'
           fi
+      - name: Run repository invariants
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: .venv/bin/python -m scripts.ci.pr_affected_tests --repo-wide
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ always() && github.event_name == 'pull_request' }}
         with:
           name: pr-affected-proof
-          path: ci-artifacts/pr-affected.*
+          path: |
+            ci-artifacts/pr-affected.*
+            ci-artifacts/pr-repo-wide.*
           if-no-files-found: error
           retention-days: 14
 

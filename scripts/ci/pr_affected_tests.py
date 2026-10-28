@@ -1,4 +1,4 @@
-"""Run literal changed PR test files and the checked-in guards on the PR candidate."""
+"""Run changed tests and guards, or mandatory marker-only repository invariants."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ import re
 import statistics
 import subprocess
 import sys
+import time
 import unicodedata
 import xml.etree.ElementTree as ET
 from pathlib import Path, PurePosixPath
@@ -132,7 +133,8 @@ def main() -> int:
         "Exit codes: 0 required execution passed; 1 invalid proof or failed execution; 2 invalid arguments.\n"
         "Related: scripts/ci/pr-affected-guards.txt; docs/runbooks/ci-gate.md.",
     )
-    parser.parse_args()
+    parser.add_argument("--repo-wide", action="store_true", help="Run only repo_wide marked tests, independent of changed-file deferral.")
+    args = parser.parse_args()
     stage, reason = "event_identity", "invalid_event_or_candidate"
     try:
         actual = git("rev-parse", "HEAD").decode().strip()
@@ -154,22 +156,29 @@ def main() -> int:
         stage, reason = "test_plan", "invalid_paths_tests_or_durations"
         record = plan(base, actual)
         record["event_base"] = pr["base"]["sha"]
+        marker = "repo_wide" if args.repo_wide else "not atlas_release and not slow and not site_toolchain"
+        paths = ["tests"] if args.repo_wide else record["run_files"]
+        timeout = 2400 if args.repo_wide else 480
+        record.update(selection=marker, requested_paths=paths, workers=2, timeout_seconds=timeout)
         stage, reason = "fresh_report", "stale_or_unwritable_report"
         output = Path("ci-artifacts")
         output.mkdir(exist_ok=True)
-        junit = output / "pr-affected.xml"
+        stem = "pr-repo-wide" if args.repo_wide else "pr-affected"
+        junit = output / f"{stem}.xml"
+        report = output / f"{stem}.json"
         if junit.exists():
             raise ValueError("stale PR pytest report")
         record.update(exit_code=None, reported_cases=None, skipped_cases=None, failed_cases=None,
                       deferred_case_count=None, execution_status="incomplete")
-        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         stage, reason = "pytest_execution", "execution_incomplete"
+        started = time.monotonic()
         result = subprocess.run(
             [
                 sys.executable,
                 "-m",
                 "pytest",
-                *record["run_files"],
+                *paths,
                 "-n",
                 "2",
                 "--dist=worksteal",
@@ -177,16 +186,18 @@ def main() -> int:
                 "--timeout=120",
                 "--timeout-method=thread",
                 "-m",
-                "not atlas_release and not slow and not site_toolchain",
+                marker,
                 "--strict-markers",
+                "--durations=25",
                 "--junitxml=" + str(junit),
             ],
             check=False,
-            timeout=480,
+            timeout=timeout,
         )
+        record["wall_seconds"] = round(time.monotonic() - started, 3)
         stage, reason = "pytest_report", "missing_or_invalid_junit"
         record["exit_code"] = result.returncode
-        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         cases = list(ET.parse(junit).getroot().iter("testcase"))
         record.update(
             exit_code=result.returncode,
@@ -197,12 +208,13 @@ def main() -> int:
             execution_status="completed",
         )
         stage, reason = "proof_output", "proof_output_incomplete"
-        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         summary = (
             "PR admission: full pytest was not run.\n"
-            f"Candidate: {actual}\nRequested files ({len(record['run_files'])}): "
-            + ", ".join(record["run_files"])
+            f"Candidate: {actual}\nMarker selection: {marker}\nRequested paths ({len(paths)}): "
+            + ", ".join(paths)
             + "\n"
+            + f"Wall seconds: {record['wall_seconds']}; workers: 2; subprocess timeout: {timeout}s.\n"
             + f"Reported cases: {len(cases)}; skipped: {record['skipped_cases']}; failed: {record['failed_cases']}; exit: {result.returncode}.\n"
             + f"Deferred changed files ({len(record['deferred_files'])}): "
             + (", ".join(record["deferred_files"]) or "none")

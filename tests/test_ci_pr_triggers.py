@@ -649,7 +649,7 @@ def test_ci_gate_guard_steps_lack_continue_on_error() -> None:
 def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     """Missing or non-success changed-test proof must never admit a PR."""
     job = _load('ci.yml')['jobs']['pr-affected']
-    assert job['timeout-minutes'] == 10
+    assert job['timeout-minutes'] == 55
     assert 'needs' not in job
     assert 'continue-on-error' not in job
     assert 'pr-affected' in _ci_gate_job()['needs']
@@ -669,6 +669,13 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert job['steps'].index(setup) < job['steps'].index(step)
     assert '.venv/bin/python -m scripts.ci.pr_affected_tests' in step['run']
     assert '"$EVENT_NAME" = pull_request' in step['run']
+    invariants = next(s for s in job['steps'] if s.get('name') == 'Run repository invariants')
+    assert invariants['run'] == '.venv/bin/python -m scripts.ci.pr_affected_tests --repo-wide'
+    assert job['steps'].index(step) < job['steps'].index(invariants)
+    for event, status, expected in [('pull_request', 'success', True), ('pull_request', 'failure', True),
+                                    ('pull_request', 'cancelled', False), ('merge_group', 'success', False)]:
+        assert _condition(invariants['if'], {'github': {'event_name': event}, 'job': {'status': status}}) is expected
+    assert not invariants.get('continue-on-error', False)
     for status in ('failure', 'skipped', 'cancelled', '', 'unknown'):
         result = _run_gate('pull_request', PR_AFFECTED=status)
         assert result.returncode == 1, result.stdout
