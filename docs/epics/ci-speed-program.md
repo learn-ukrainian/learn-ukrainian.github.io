@@ -91,9 +91,8 @@ landed the same day, so the two effects are not separable. **What now dominates*
   Timing flakes that hit the pytest timeout (thread method) cannot be rerun and always need a real fix. The ledger first
   proves it can read rerun records under the repo's JUnit family, and it shares one JUnit parser with #9063.
 - **D3 — Merge-queue build concurrency (#8884 AC-03; re-decided 2026-10-28 by the joint CTO + Sol decision
-  MQ-JOINT-1028).** The 2026-09-28 decision was made for a much smaller merge-group run; the queue now builds one
-  entry at a time, and overlapping builds of today's larger run compete with PR CI and other workflows for the same
-  hosted runners. The decision: keep ALLGREEN and
+  MQ-JOINT-1028).** The 2026-09-28 decision was made for a much smaller merge-group run; overlapping builds of today's
+  larger run compete with PR CI and other workflows for the same hosted runners. The decision: keep ALLGREEN and
   every gate, shorten the healthy candidate first (shard balance, duration refresh, CI Gate checkout), then trial
   build concurrency **2** with no other queue setting changed. Keep 2 only if enqueue → merge p50/p95 improves without
   material runner-start delay, more ejections or a worse tail; otherwise return to 1. Concurrency 3 and 4 and
