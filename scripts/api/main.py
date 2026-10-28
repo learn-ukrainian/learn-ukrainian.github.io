@@ -23,7 +23,7 @@ import time
 import uuid
 from collections.abc import Awaitable, Callable
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import ExitStack, asynccontextmanager, suppress
+from contextlib import asynccontextmanager, suppress
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -37,7 +37,6 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 import scripts.github_rest_cache as github_rest
 from scripts.common.jsonl import physical_lines
 from scripts.common.release_layout import is_release_root
-from scripts.common.safe_open import safe_open_below
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
@@ -50,7 +49,6 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
 from scripts.orchestration import issue_stream_audit as isa
-from scripts.orchestration.reap_worktrees import primary_checkout_root, reap_worktrees
 
 from . import delegate_router as delegate_api
 from . import runtime_router as runtime_api
@@ -914,103 +912,8 @@ async def _collect_pipeline_orient_data(ctx: MonitorContext | None = None) -> di
     return {"summary": await state_api.state_summary(fresh=False, ctx=resolved_ctx)}
 
 
-_gc_sweep_lock = threading.Lock()
-_gc_sweep_thread: threading.Thread | None = None
-_last_gc_sweep_summary: dict[str, Any] | None = None
-
-
-def _maybe_run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
-    # Check kill switch first
-    kill_switch = os.environ.get("LEARN_UK_WORKTREE_GC", "1")
-    if kill_switch in ("0", "false", "no", "False", "NO"):
-        return
-
-    # Check cache TTL (default 60 minutes)
-    try:
-        interval_min = float(os.environ.get("LEARN_UK_WORKTREE_GC_INTERVAL_MIN", "60"))
-    except ValueError:
-        interval_min = 60.0
-    interval_s = interval_min * 60.0
-
-    if cache_get("worktree_gc_sweep", ttl=interval_s) is not None:
-        return
-
-    resolved_ctx = resolve_context(ctx)
-    global _gc_sweep_thread
-    with _gc_sweep_lock:
-        if _gc_sweep_thread is not None and _gc_sweep_thread.is_alive():
-            return
-        stamp = resolved_ctx.roots.batch_state_dir / "worktree-gc-sweep.last-run"
-        try:
-            stamp.parent.mkdir(parents=True, exist_ok=True)
-            with ExitStack() as cleanup:
-                directory = os.open(stamp.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
-                cleanup.callback(os.close, directory)
-                try:
-                    descriptor = safe_open_below(directory, stamp.name, os.O_RDWR | os.O_CREAT | os.O_EXCL)
-                    created = True
-                except FileExistsError:
-                    descriptor = safe_open_below(directory, stamp.name, os.O_RDWR)
-                    created = False
-                cleanup.callback(os.close, descriptor)
-                info = os.fstat(descriptor)
-                if info.st_nlink != 1:
-                    raise OSError("unsafe sweep timestamp: hardlinked file")
-                if not created and time.time() - info.st_mtime < interval_s:
-                    return
-                os.utime(descriptor, None)
-        except OSError as exc:
-            logger.warning("worktree GC sweep timestamp could not be persisted: %s", exc)
-            return
-        cache_set("worktree_gc_sweep", True)
-        _gc_sweep_thread = threading.Thread(target=_run_worktree_gc_sweep, args=(resolved_ctx,), daemon=True)
-        _gc_sweep_thread.start()
-
-
-def _run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
-    global _last_gc_sweep_summary
-    try:
-        resolved_ctx = resolve_context(ctx)
-        repo_root = primary_checkout_root(resolved_ctx.roots.project_root)
-
-        results = reap_worktrees(
-            repo_root=repo_root,
-            apply=True,
-            prune_merged_branches=True,
-            safe_only=True,
-        )
-
-        removed = sum(1 for r in results if r.action in ("removed", "preserved_then_removed"))
-        skipped = sum(1 for r in results if r.action == "skipped")
-        errors = sum(1 for r in results if r.action == "error")
-        # Report-only findings (#8663), e.g. an interrupted ``git worktree add``.
-        needs_attention = [
-            {"path": r.path, **{key: r.needs_attention.get(key) for key in ("kind", "command")}}
-            for r in results
-            if r.needs_attention is not None
-        ]
-
-        _last_gc_sweep_summary = {
-            "time": _isoformat_z(datetime.now(UTC)),
-            "removed": removed,
-            "skipped": skipped,
-            "errors": errors,
-            "needs_attention": needs_attention,
-        }
-        logger.info(
-            "worktree GC sweep: removed=%d, skipped=%d, errors=%d, needs_attention=%d",
-            removed,
-            skipped,
-            errors,
-            len(needs_attention),
-        )
-    except Exception as exc:
-        logger.exception("worktree GC sweep failed: %s", exc)
-
-
 def _collect_runtime_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved = resolve_context(ctx)
-    _maybe_run_worktree_gc_sweep(ctx=resolved)
     # One shared counter across every usage read this section makes — agent
     # inventory (last-used models), the day usage summary, today's outcome
     # counts, and the per-agent headroom scan — so corrupt usage evidence is
@@ -1033,16 +936,13 @@ def _collect_runtime_orient_data(ctx: MonitorContext | None = None) -> dict:
 
     by_agent = usage.get("by_agent", {})
 
-    res = {
+    return {
         "agents": [agent["name"] for agent in agents if agent.get("name")],
         "recent_outcomes": recent,
         "by_agent": by_agent,
         "headroom": headroom,
         "unreadable": runtime_api._unreadable_summary(unreadable),
     }
-    if _last_gc_sweep_summary is not None:
-        res["worktree_gc"] = _last_gc_sweep_summary
-    return res
 
 
 def _collect_delegate_orient_data(ctx: MonitorContext | None = None) -> dict:

@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
-"""Sol PR-L: safe retention plan/apply engine (dry-run default).
+"""Sol PR-L: dry retention plan engine.
 
-Builds a content-addressed retention plan from the existing worktree reaper
-and lane disk scanner, then applies only when the re-computed plan digest
-still matches. Active sessions, dirty/ahead/untracked worktrees, and leased
-paths never become apply candidates.
+Builds a content-addressed retention plan from the lane disk scanner and
+optional home-session hints. It never mutates anything: the dispatcher removes
+each task's own worktree when the task settles (FR-01b), so the plan carries no
+worktree removal candidates.
 
 Usage::
 
     .venv/bin/python scripts/hygiene/retention_engine.py plan
-    .venv/bin/python scripts/hygiene/retention_engine.py apply --plan path.json
     .venv/bin/python scripts/hygiene/retention_engine.py latest
-
-Apply never enables itself via launchd by default — Gate 5 requires explicit
-operator approval after seven days of dry-run evidence.
 """
 
 from __future__ import annotations
@@ -44,19 +40,11 @@ from scripts.hygiene.lane_disk_retention import (
     scan_dispatch_worktrees,
     scan_home_session_hints,
 )
-from scripts.orchestration.reap_worktrees import (
-    DEFAULT_BUILD_AGE_HOURS,
-    ReapResult,
-    primary_checkout_root,
-    reap_worktrees,
-    resolve_repo_root,
-)
+from scripts.orchestration.reap_worktrees import primary_checkout_root, resolve_repo_root
 from scripts.path_safety import assert_delete_target
 
 EXIT_OK = 0
 EXIT_USAGE = 2
-EXIT_ERROR = 3
-EXIT_DIGEST_MISMATCH = 4
 
 
 def _unlink_temp_file(
@@ -157,56 +145,21 @@ def plan_digest(plan_body: dict[str, Any]) -> str:
     return hashlib.sha256(_canonical_json(body).encode("utf-8")).hexdigest()
 
 
-def _reap_result_dict(result: ReapResult) -> dict[str, Any]:
-    return {
-        "path": result.path,
-        "branch": result.branch,
-        "action": result.action,
-        "reason": result.reason,
-        "dirty": result.dirty,
-        "pr": result.pr,
-        "error": result.error,
-    }
-
-
 def build_plan(
     *,
     repo_root: Path,
     archive_root: Path,
     stale_hours: float = 72.0,
-    build_age_hours: float = DEFAULT_BUILD_AGE_HOURS,
     include_home: bool = False,
-    safe_only: bool = True,
 ) -> dict[str, Any]:
     """Assemble a dry retention plan (zero mutations)."""
     repo_root = repo_root.resolve()
     primary = primary_checkout_root(repo_root)
 
-    # Reaper dry-run (apply=False): classifies would_remove vs skipped.
-    reaper_results = reap_worktrees(
-        repo_root=primary,
-        apply=False,
-        build_age_hours=build_age_hours,
-        preserve_then_reap=False,
-        prune_merged_branches=False,
-        safe_only=safe_only,
-    )
-    would_reap = [
-        _reap_result_dict(r) for r in reaper_results if r.action in {"would_remove", "would_preserve_then_remove"}
-    ]
-    preserved = [
-        _reap_result_dict(r)
-        for r in reaper_results
-        if r.action == "skipped"
-        and any(token in (r.reason or "").lower() for token in ("dirty", "ahead", "lease", "active", "untracked"))
-    ]
-
     scanner = scan_dispatch_worktrees(repo_root=primary, stale_hours=stale_hours)
     home = scan_home_session_hints() if include_home else []
 
     candidates = {
-        "worktree_reap": would_reap,
-        "worktree_preserved": preserved,
         "scanner_stale": [asdict(w) for w in scanner if w.recommendation != "ok"],
         "home_sessions": home,
     }
@@ -218,17 +171,11 @@ def build_plan(
         "archive_root": str(archive_root.expanduser()),
         "policy": {
             "stale_hours": float(stale_hours),
-            "build_age_hours": float(build_age_hours),
-            "safe_only": safe_only,
             "include_home": include_home,
             "session_stream_history_excluded": True,
-            "apply_requires_matching_digest": True,
-            "scheduled_apply_default": False,
         },
         "candidates": candidates,
         "counts": {
-            "would_reap": len(would_reap),
-            "preserved": len(preserved),
             "scanner_stale": len(candidates["scanner_stale"]),
             "home_sessions": len(home),
         },
@@ -296,7 +243,6 @@ def record_gate5_observation(
         "digest": plan.get("digest"),
         "mode": plan.get("mode", "dry-run"),
         "mutations": int(plan.get("mutations") or 0),
-        "would_reap": int((plan.get("counts") or {}).get("would_reap") or 0),
         "scanner_stale": int((plan.get("counts") or {}).get("scanner_stale") or 0),
     }
 
@@ -376,88 +322,6 @@ def record_gate5_observation(
     return log
 
 
-def load_plan(path: Path) -> dict[str, Any]:
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError("plan must be a JSON object")
-    if payload.get("schema") != "fleet-comms.retention.plan.v1":
-        raise ValueError(f"unsupported plan schema: {payload.get('schema')!r}")
-    if not payload.get("digest"):
-        raise ValueError("plan missing digest")
-    return payload
-
-
-def apply_plan(
-    plan: dict[str, Any],
-    *,
-    repo_root: Path | None = None,
-    dry_run: bool = False,
-) -> dict[str, Any]:
-    """Apply a previously written plan only if its digest still matches.
-
-    Only worktree reaps go through the existing safe reaper. Session archives
-    and home-session deletion are never auto-applied here (operator Gate 5).
-    """
-    expected = str(plan.get("digest") or "")
-    if not expected:
-        raise ValueError("plan missing digest")
-
-    root = Path(repo_root or plan.get("repo_root") or REPO_ROOT).resolve()
-    policy = plan.get("policy") or {}
-    fresh = build_plan(
-        repo_root=root,
-        archive_root=Path(plan.get("archive_root") or DEFAULT_ARCHIVE_ROOT),
-        stale_hours=float(policy.get("stale_hours", 72.0)),
-        build_age_hours=float(policy.get("build_age_hours", DEFAULT_BUILD_AGE_HOURS)),
-        include_home=bool(policy.get("include_home", False)),
-        safe_only=bool(policy.get("safe_only", True)),
-    )
-    actual = fresh["digest"]
-    if actual != expected:
-        return {
-            "ok": False,
-            "error": "plan_digest_mismatch",
-            "expected_digest": expected,
-            "actual_digest": actual,
-            "mutations": 0,
-            "results": [],
-        }
-
-    target_paths = [
-        Path(row["path"]) for row in (plan.get("candidates") or {}).get("worktree_reap") or [] if row.get("path")
-    ]
-    if dry_run or not target_paths:
-        return {
-            "ok": True,
-            "mode": "dry-run" if dry_run or not target_paths else "apply",
-            "digest": expected,
-            "mutations": 0,
-            "results": [],
-            "note": "no worktree candidates" if not target_paths else "dry-run only",
-        }
-
-    results = reap_worktrees(
-        repo_root=primary_checkout_root(root),
-        apply=True,
-        build_age_hours=float(policy.get("build_age_hours", DEFAULT_BUILD_AGE_HOURS)),
-        preserve_then_reap=False,
-        prune_merged_branches=False,
-        target_paths=target_paths,
-        safe_only=bool(policy.get("safe_only", True)),
-    )
-    applied = [_reap_result_dict(r) for r in results]
-    mutations = sum(1 for r in results if r.action in {"removed", "preserved_then_removed"})
-    receipt = {
-        "ok": True,
-        "mode": "apply",
-        "digest": expected,
-        "applied_at": _utc_now(),
-        "mutations": mutations,
-        "results": applied,
-    }
-    return receipt
-
-
 def cmd_plan(args: argparse.Namespace) -> int:
     try:
         root = resolve_repo_root(Path(args.repo_root).resolve() if args.repo_root else None)
@@ -467,9 +331,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
         repo_root=root,
         archive_root=Path(args.archive_root),
         stale_hours=args.stale_hours,
-        build_age_hours=args.build_age_hours,
         include_home=args.include_home,
-        safe_only=not args.unsafe,
     )
     plan_dir = Path(args.plan_dir)
     path = write_plan(plan, plan_dir)
@@ -491,28 +353,6 @@ def cmd_plan(args: argparse.Namespace) -> int:
     }
     sys.stdout.write(json.dumps(out, indent=2, sort_keys=True, default=str) + "\n")
     return EXIT_OK
-
-
-def cmd_apply(args: argparse.Namespace) -> int:
-    plan_path = Path(args.plan)
-    try:
-        plan = load_plan(plan_path)
-        receipt = apply_plan(plan, dry_run=args.dry_run)
-    except (OSError, ValueError, json.JSONDecodeError) as exc:
-        sys.stderr.write(f"failed to apply plan: {exc}\n")
-        return EXIT_ERROR
-    # Persist receipt next to plan
-    receipt_path = plan_path.with_suffix(".receipt.json")
-    if receipt.get("ok"):
-        receipt_path.write_text(
-            json.dumps(receipt, indent=2, sort_keys=True, default=str) + "\n",
-            encoding="utf-8",
-        )
-        receipt["receipt_path"] = str(receipt_path)
-    sys.stdout.write(json.dumps(receipt, indent=2, sort_keys=True, default=str) + "\n")
-    if receipt.get("error") == "plan_digest_mismatch":
-        return EXIT_DIGEST_MISMATCH
-    return EXIT_OK if receipt.get("ok") else EXIT_ERROR
 
 
 def cmd_latest(args: argparse.Namespace) -> int:
@@ -538,25 +378,22 @@ def cmd_latest(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Plan, digest-check and apply worktree retention through the safe reaper (dry-run by default).\n"
+            "Write a dry, digest-stamped retention plan from the lane disk scanner; it never mutates.\n"
             "Use for dispatch-worktree retention evidence; not for temp scratch (use scripts.hygiene.tmp_sweep)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/hygiene/retention_engine.py plan\n"
-            "  .venv/bin/python scripts/hygiene/retention_engine.py apply --plan batch_state/fleet-comms/retention/latest.json --dry-run\n"
             "  .venv/bin/python scripts/hygiene/retention_engine.py latest\n"
             "Outputs: plan writes plan-<stamp>-<digest>.json, latest.json and the Gate 5 observation log under "
-            "--plan-dir; apply writes <plan>.receipt.json and removes only digest-matching worktree candidates; "
-            "every subcommand prints JSON to stdout.\n"
-            "Exit codes: 0 success; 2 invalid usage; 3 unreadable plan or apply error; 4 plan digest mismatch "
-            "(nothing applied).\n"
+            "--plan-dir; every subcommand prints JSON to stdout.\n"
+            "Exit codes: 0 success; 2 invalid usage.\n"
             "Related: Sol PR-L retention Gate 5; #9737; docs/runbooks/tmp-retention.md; "
-            "scripts/orchestration/reap_worktrees.py."
+            "scripts/hygiene/lane_disk_retention.py."
         ),
     )
-    sub = parser.add_subparsers(dest="command", required=True, metavar="{plan,apply,latest}")
+    sub = parser.add_subparsers(dest="command", required=True, metavar="{plan,latest}")
 
     plan = sub.add_parser(
         "plan",
@@ -587,40 +424,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Lane-scanner staleness threshold in hours (default: 72; example: 48).",
     )
     plan.add_argument(
-        "--build-age-hours",
-        type=float,
-        default=DEFAULT_BUILD_AGE_HOURS,
-        help=f"Minimum build-worktree age in hours (default: {DEFAULT_BUILD_AGE_HOURS}; example: 12).",
-    )
-    plan.add_argument(
         "--include-home",
         action="store_true",
         help="Also list home-directory session hints (default: off; never deleted).",
     )
-    plan.add_argument(
-        "--unsafe",
-        action="store_true",
-        help="Allow reaper non-safe_only classification (default: off; the plan stays dry-run).",
-    )
     plan.set_defaults(func=cmd_plan)
-
-    apply_p = sub.add_parser(
-        "apply",
-        help="Apply a plan only if its digest still matches (worktree reaper only).",
-        description="Recompute the plan and apply its worktree candidates only when the digest still matches.",
-    )
-    apply_p.add_argument(
-        "--plan",
-        type=Path,
-        required=True,
-        help="Plan JSON written by 'plan' (required; example: batch_state/fleet-comms/retention/latest.json).",
-    )
-    apply_p.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Re-validate the digest without mutating (default: off; implied when there are no candidates).",
-    )
-    apply_p.set_defaults(func=cmd_apply)
 
     latest = sub.add_parser(
         "latest",

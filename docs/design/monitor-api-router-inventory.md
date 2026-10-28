@@ -319,13 +319,13 @@ full target list. The tests in `tests/api/test_router_inventory_seams.py` re-der
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `fleet_router.py` | `/api/fleet` | 27 | 2,679 | — | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 0 | 4 |
+| `fleet_router.py` | `/api/fleet` | 26 | 2,679 | — | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 0 | 4 |
 
 **Internal route groups:**
 
 | Group | Routes | Paths (representative) |
 | --- | ---: | --- |
-| Facade / cold-start | 9 | `/facade`, `/facade/help`, `/facade/status`, `/facade/board`, `/facade/metrics`, `/facade/backlog`, `/facade/dead`, `/facade/broker-report`, `/facade/reap-report` |
+| Facade / cold-start | 8 | `/facade`, `/facade/help`, `/facade/status`, `/facade/board`, `/facade/metrics`, `/facade/backlog`, `/facade/dead`, `/facade/broker-report` |
 | Operations / overview | 5 | `/operations`, `/health`, `/overview`, `/agents`, `/endpoints` |
 | Messages / discussions / reviews | 8 | `/requests`, `/messages`, `/messages/{message_id}`, `/discussions`, `/discussions/{conversation_id}`, `/reviews`, `/reviews/{review_id}`, `/dead-letters` |
 | Authority / ACP / activity | 5 | `/authority/jobs`, `/migrations`, `/acp/conversations`, `/acp/conversations/{conversation_id}`, `/activity` |

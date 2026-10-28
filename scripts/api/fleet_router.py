@@ -8,7 +8,6 @@ initializes schema, writes a receipt, invokes an agent, or retrieves artifacts.
 from __future__ import annotations
 
 import asyncio
-import inspect
 import json
 import logging
 import math
@@ -48,7 +47,6 @@ from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS
 from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
-from scripts.orchestration import reap_worktrees
 
 from . import comms_router as legacy_comms
 from .monitor_context import MonitorContext, get_ctx, resolve_context
@@ -451,33 +449,6 @@ def _facade_dead_letters_payload(limit: int, ctx: MonitorContext | None = None) 
     )
 
 
-def _facade_reap_report(ctx: MonitorContext | None = None) -> dict[str, Any]:
-    """Return the established merged-head reaper report in dry-run mode only."""
-    resolved_ctx = resolve_context(ctx)
-    try:
-        results = reap_worktrees.reap_worktrees(
-            repo_root=reap_worktrees.primary_checkout_root(resolved_ctx.roots.live_repo_root),
-            apply=False,
-            prune_merged_branches=True,
-            safe_only=True,
-            merged_pr_only=True,
-            require_activity_probe=False,
-        )
-        return {
-            "read_only": True,
-            "apply": False,
-            "report": [reap_worktrees._result_payload(result) for result in results],
-        }
-    except (OSError, RuntimeError, ValueError) as exc:
-        logger.warning("Fleet facade dry-run reaper unavailable: %s", type(exc).__name__)
-        return {
-            "read_only": True,
-            "apply": False,
-            "error": f"dry_run_unavailable: {type(exc).__name__}",
-            "report": [],
-        }
-
-
 @router.get("/facade")
 @router.get("/facade/help")
 def fleet_facade_help(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
@@ -495,7 +466,6 @@ def fleet_facade_help(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
                 "backlog": "/api/fleet/facade/backlog",
                 "dead": "/api/fleet/facade/dead",
                 "broker_report": "/api/fleet/facade/broker-report?days=7",
-                "reap_report": "/api/fleet/facade/reap-report",
             },
         }
     )
@@ -568,18 +538,6 @@ def fleet_facade_broker_report(
     payload = build_legacy_broker_report(days, routes_db=routes_db, bridge_db=bridge_db)
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     return payload
-
-
-@router.get("/facade/reap-report")
-def fleet_facade_reap_report(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
-    """Expose the guarded reaper's dry-run report; apply is never an API option."""
-    try:
-        sig = inspect.signature(_facade_reap_report)
-        if not sig.parameters:
-            return _facade_reap_report()  # type: ignore[call-arg]
-    except (ValueError, TypeError):
-        pass
-    return _facade_reap_report(ctx)
 
 
 def _count_by_state(connection: Any, table: str, column: str) -> dict[str, int]:
