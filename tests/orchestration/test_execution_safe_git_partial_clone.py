@@ -3,7 +3,9 @@
 The primary checkout is a ``--filter=blob:none`` clone, so its origin carries
 ``remote.origin.promisor`` and ``remote.origin.partialclonefilter``. The
 credential-free file import must accept exactly those keys, keep refusing every
-other remote/url key, and never lazily fetch a missing promisor object.
+other remote/url key, and never lazily fetch a missing promisor object. The file
+is large and each commit changes one line, so the server sends deltas whose
+bases a blob-filtered primary does not hold unless the transfer keeps the filter.
 """
 
 from __future__ import annotations
@@ -24,7 +26,7 @@ def _git(cwd: Path, *args: str) -> str:
 
 
 def _commit(tree: Path, content: str) -> str:
-    (tree / "file.txt").write_text(content)
+    (tree / "file.txt").write_text(content + "".join(f"shared line {n}\n" for n in range(3000)))
     _git(tree, "add", "file.txt")
     _git(tree, "commit", "-m", content.strip())
     return _git(tree, "rev-parse", "HEAD")
@@ -75,11 +77,15 @@ def test_partial_clone_origin_fetch_imports_without_lazy_fetch(partial_clone, mo
     source, primary, old, new = partial_clone
     real_run = subprocess.run
     imports = []
+    transferred = []
 
     def import_hook(argv, **kwargs):
         if "fetch" in argv and any(arg.startswith("file://") for arg in argv):
             imports.append(kwargs["env"])
-        return real_run(argv, **kwargs)
+        result = real_run(argv, **kwargs)
+        if "fetch" in argv and Path(kwargs["cwd"]) != primary:
+            transferred.append(_git(Path(kwargs["cwd"]), "count-objects", "-v"))
+        return result
 
     monkeypatch.setattr(subprocess, "run", import_hook)
     result = _fetch(primary)
@@ -87,14 +93,19 @@ def test_partial_clone_origin_fetch_imports_without_lazy_fetch(partial_clone, mo
     assert result.returncode == 0, result.stderr
     assert len(imports) == 1
     assert imports[0]["GIT_ALLOW_PROTOCOL"] == "file" and imports[0]["GIT_NO_LAZY_FETCH"] == "1"
+    # The private transfer borrowed the primary's objects: it received only
+    # the new commit and its tree, not the history again.
+    assert len(transferred) == 1
+    assert "count: 0" in transferred[0] and "in-pack: 2" in transferred[0]
     assert _git(primary, "rev-parse", "refs/remotes/origin/main") == new
     assert _git(primary, "rev-parse", "FETCH_HEAD^{commit}") == new
     assert not _git(primary, "for-each-ref", "refs/remotes/origin/gone")
-    # The default origin filter is not applied to the anonymous import, and
-    # the previously filtered blob was not lazily fetched.
+    # The import keeps origin's filter, as a plain fetch would, and lands in a
+    # promisor pack; the previously filtered blob was not lazily fetched.
     missing = _missing(primary)
-    assert _blob(source, new) not in missing
+    assert _blob(source, new) in missing
     assert _blob(source, old) in missing
+    assert _git(primary, "rev-list", "--exclude-promisor-objects", "--objects", "refs/remotes/origin/main") == ""
 
 
 @pytest.mark.parametrize(
