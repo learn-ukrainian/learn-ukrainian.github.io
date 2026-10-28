@@ -442,13 +442,14 @@ steps:
   - step_id: post_merge_hygiene
     # The dispatcher removes the task worktree at settlement; this step never
     # removes or edits a worktree. It deletes the remote branch of the requested
-    # PR only when that PR is MERGED, no PR is open on the branch, and the
-    # remote head still equals the merged head, so no checkout state, reused
-    # tree or advanced branch can change which branch is deleted.
+    # PR only when that PR is MERGED from this repository (not a fork), no PR is
+    # open on the branch, and the remote head still equals the merged head, so
+    # no checkout state, reused tree or advanced branch can change which branch
+    # is deleted.
     intent: Delete the merged remote branch and prune origin after a separate observation proved the PR merged.
     command:
       adapter: shell
-      argv: [sh, -c, 'PRIMARY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"; PR=$(gh pr view "$PR_NUMBER" --json state,headRefName,headRefOid --jq ".state+\" \"+.headRefName+\" \"+.headRefOid" 2>/dev/null) || { echo hygiene-command-failed; exit 0; }; set -- $PR; if [ "$1" = "MERGED" ] && [ -n "$2" ] && [ "$2" != "main" ]; then OPEN=$(gh pr list --head "$2" --state open --json number --jq length 2>/dev/null) || { echo hygiene-command-failed; exit 0; }; if [ "$OPEN" = "0" ]; then SHA=$(git -C "$PRIMARY" ls-remote --heads origin "$2" | cut -f1); if [ "$SHA" = "$3" ]; then git -C "$PRIMARY" push --force-with-lease="refs/heads/$2:$SHA" origin ":refs/heads/$2" >/dev/null 2>&1 || { echo hygiene-command-failed; exit 0; }; fi; fi; fi; git -C "$PRIMARY" fetch --prune origin >/dev/null 2>&1; echo hygiene-command-succeeded']
+      argv: [sh, -c, 'PRIMARY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"; PR=$(gh pr view "$PR_NUMBER" --json state,headRefName,headRefOid,isCrossRepository --jq ".state+\" \"+.headRefName+\" \"+.headRefOid+\" \"+(.isCrossRepository|tostring)" 2>/dev/null) || { echo hygiene-command-failed; exit 0; }; set -- $PR; if [ "$1" = "MERGED" ] && [ -n "$2" ] && [ "$2" != "main" ] && [ "$4" = "false" ]; then OPEN=$(gh pr list --head "$2" --state open --json number --jq length 2>/dev/null) || { echo hygiene-command-failed; exit 0; }; if [ "$OPEN" = "0" ]; then SHA=$(git -C "$PRIMARY" ls-remote --heads origin "$2" | cut -f1); if [ "$SHA" = "$3" ]; then git -C "$PRIMARY" push --force-with-lease="refs/heads/$2:$SHA" origin ":refs/heads/$2" >/dev/null 2>&1 || { echo hygiene-command-failed; exit 0; }; fi; fi; fi; git -C "$PRIMARY" fetch --prune origin >/dev/null 2>&1; echo hygiene-command-succeeded']
       environment:
         TRAIL_INVOCATION_ID: "{invocation_id}"
         PR_NUMBER: "{pr_number}"
