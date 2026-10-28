@@ -266,9 +266,9 @@ workbook:
         answer: "п'ять столів"
         options:
           - п'ять столів
-          - п'ять столи
+          - п'ять столами
           - п'ять стола
-        explanation: "After п’ять the noun is genitive plural: столів. Столи is nominative plural; стола is genitive singular."
+        explanation: "After п’ять use genitive plural столів. Столами is instrumental plural; стола is singular, so neither fits."
       - sentence: сімдесят гривні / сімдесят гривень
         error: сімдесят гривні
         answer: сімдесят гривень

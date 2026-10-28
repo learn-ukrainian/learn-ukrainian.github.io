@@ -5167,10 +5167,10 @@
       "disposition": "reworded",
       "key": "п'ять столів",
       "distractors": [
-        "п'ять столи",
+        "п'ять столами",
         "п'ять стола"
       ],
-      "reason": "After п’ять, the counted nouns take genitive plural: столів and студентів. Столи and студенти are nominative plurals; стола and студент are not the required genitive plurals. The case label is removed from the prompt.",
+      "reason": "П’ять requires genitive plural столів. The alternatives столами (instrumental plural) and стола (singular) do not fit that construction. All three options remain visible after the component removes the original error from correction choices.",
       "sources": [
         "W05",
         "W06",
@@ -5190,7 +5190,10 @@
         "S08",
         "T09",
         "D58",
-        "V58"
+        "V58",
+        "W09",
+        "S09",
+        "T10"
       ],
       "before": {
         "sentence": "п'ять столи / п'ять студентів (якщо вжито як Називний множини)",
@@ -5209,10 +5212,10 @@
         "answer": "п'ять столів",
         "options": [
           "п'ять столів",
-          "п'ять столи",
+          "п'ять столами",
           "п'ять стола"
         ],
-        "explanation": "After п’ять the noun is genitive plural: столів. Столи is nominative plural; стола is genitive singular."
+        "explanation": "After п’ять use genitive plural столів. Столами is instrumental plural; стола is singular, so neither fits."
       }
     }
   ]

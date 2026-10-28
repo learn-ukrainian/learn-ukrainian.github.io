@@ -306,7 +306,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/how-many/activities.yaml",
-      "sha256": "99e0a735de61d762398754607b394778699a932923de0e408a4b4f69a44d02f5"
+      "sha256": "2386790546cc6cf24cdc023f9728953eb3dc7ee328b153b82a1a357c19e4d79f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/how-many/module.md",
@@ -13762,7 +13762,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/how-many.mdx",
-      "sha256": "24bbcdaa6f5aaeb63c71b48b13c661b7dd1c7f109f409dd99480651b8f69ab87"
+      "sha256": "303e0664e8cb91732e5189178ad4726e5127471fcfe2b3c77f6858db028c0f9f"
     },
     {
       "path": "site/src/content/docs/a1-v1/i-eat-i-drink.mdx",
