@@ -112,10 +112,11 @@ def test_ci_partition_and_pytest_denominator_are_unchanged():
     assert instrumented.count("--timeout-method=signal") == 1
     normalization = {"--timeout=600": "--timeout=120", "--timeout-method=signal": "--timeout-method=thread"}
     assert [normalization.get(arg, arg) for arg in instrumented if not arg.startswith("--cov")] == original[3:]
-    assert (
-        step(measured, "Download pytest duration snapshot")["run"]
-        == step(baseline, "Download pytest duration snapshot")["run"]
-    )
+    for name in ("Decide pytest duration source", "Download pytest duration snapshot", "Validate pytest duration snapshot"):
+        assert {k: v for k, v in step(measured, name).items() if k != "env"} == {
+            k: v for k, v in step(baseline, name).items() if k != "env"
+        }
+    assert measured["permissions"] == baseline["permissions"] == {"contents": "read"}
     assert measured["timeout-minutes"] > baseline["timeout-minutes"]
     assert measured["env"]["PYTEST_XDIST_AUTO_NUM_WORKERS"] == "2"
     assert "PYTEST_XDIST_AUTO_NUM_WORKERS" not in baseline.get("env", {})
