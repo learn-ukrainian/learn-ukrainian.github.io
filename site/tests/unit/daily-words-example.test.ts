@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { GET as getDailyPool } from "@site/src/pages/api/lexicon/daily-pool.json";
+import { CHROME_STRINGS } from "@site/src/lib/i18n/chrome";
 import type { DailyWord } from "@site/src/lib/lexicon/daily";
 import {
   bindDailyCardInteractions,
@@ -136,7 +137,7 @@ describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
     expect(html).toContain("lexicon-daily-back");
   });
 
-  test("lemma text is the Atlas link; gloss lives on the back face", () => {
+  test("lemma text remains the Atlas link while legacy meanings are withheld", () => {
     document.body.innerHTML = renderDailyCardHtml(sampleWord);
     const lemma = document.querySelector<HTMLAnchorElement>("[data-daily-atlas-link]")!;
     const front = document.querySelector(".lexicon-daily-front")!;
@@ -145,7 +146,8 @@ describe("DailyWords card flip vs Atlas lemma (#6726)", () => {
     expect(lemma.href).toContain(dailyCardAtlasHref("кошик"));
     expect(lemma.textContent).toBe("кошик");
     expect(front.querySelector(".lexicon-daily-gloss")).toBeNull();
-    expect(back.querySelector(".lexicon-daily-gloss")?.textContent).toBe("basket");
+    expect(back.querySelector(".lexicon-daily-gloss")?.textContent).toBe(CHROME_STRINGS.uk['practice.meaningUnavailable']);
+    expect(back.querySelector(".lexicon-daily-gloss")?.textContent).not.toContain(sampleWord.gloss);
     expect(front.querySelector(".lexicon-daily-flip-hint")).not.toBeNull();
   });
 

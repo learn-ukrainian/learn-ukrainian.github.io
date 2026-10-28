@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, test } from 'vitest';
+import { setPracticeMeaningModesForTesting } from '@site/src/lib/lexicon/srs';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { State } from 'ts-fsrs';
 import {
   DAILY_PRACTICE_DECK_KEY,
@@ -465,6 +466,7 @@ function review(
 }
 
 beforeEach(() => {
+  setPracticeMeaningModesForTesting(true);
   localStorage.clear();
   loadState(localStorage, NOW);
 });
@@ -1971,3 +1973,5 @@ describe('daily practice deck (K3 chunk 1)', () => {
     expect(rows.done.map((row) => row.item.lemmaId)).toEqual(['done-one']);
   });
 });
+
+afterEach(() => setPracticeMeaningModesForTesting(false));

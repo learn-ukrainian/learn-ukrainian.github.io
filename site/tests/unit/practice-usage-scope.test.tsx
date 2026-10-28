@@ -6,7 +6,7 @@ import PracticeDailyDeck from '@site/src/components/PracticeDailyDeck';
 import { CHROME_STRINGS } from '@site/src/lib/i18n/chrome';
 import { LEARNER_LEVEL_STORAGE_KEY } from '@site/src/lib/lexicon/levels';
 import { practiceDisplayGloss, practiceHeritageBoxes } from '@site/src/lib/lexicon/practice-shard-fetch';
-import { clearLoadedSrsState, combinePracticeShards, loadState, selectNextPracticeItem } from '@site/src/lib/lexicon/srs';
+import { setPracticeMeaningModesForTesting, clearLoadedSrsState, combinePracticeShards, loadState, selectNextPracticeItem } from '@site/src/lib/lexicon/srs';
 import type { DailyPracticeDeckSnapshot, PracticeDeckData, PracticeIndexShard, PracticeLexeme, PracticeLexemeShard } from '@site/src/lib/lexicon/srs';
 import type { LexiconEntryForSeverity } from '@site/src/lib/lexicon/heritage-severity';
 
@@ -45,6 +45,7 @@ function deck(entries: PracticeLexeme[]): PracticeDeckData {
 }
 
 beforeEach(() => {
+  setPracticeMeaningModesForTesting(true);
   localStorage.clear();
   clearLoadedSrsState();
   localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B2');
@@ -54,6 +55,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  setPracticeMeaningModesForTesting(false);
   vi.restoreAllMocks();
   delete document.documentElement.dataset.chromeLocale;
 });
@@ -103,7 +105,17 @@ describe('Practice usage scope (#9652)', () => {
     expect(practiceDisplayGloss(lexeme({ glossClean: 'Crimean (resident' }), true)).toBe('Crimean (resident');
   });
 
-  test('keeps ordinary meanings, raw provenance and A1 scaffolding unchanged', () => {
+  test('withholds unverified meanings by default and preserves the isolated display formatter', () => {
+    setPracticeMeaningModesForTesting(false);
+    // #9160: a clean short label cannot certify the source article behind it.
+    const unverified = lexeme({
+      gloss: 'An unverified dictionary quotation (1957, 132).',
+      glossClean: 'An unverified dictionary quotation',
+    });
+    expect(practiceDisplayGloss(unverified)).toBe('');
+    expect(practiceDisplayGloss(unverified, true)).toBe('');
+    expect(isMeaningMcEligible(ordinary)).toBe(false);
+    setPracticeMeaningModesForTesting(true);
     expect(cardData(ordinary, 'A1', 'en')).toMatchObject({
       back: ordinary.gloss, heritageLabel: 'native', tagColor: 'var(--lu-teal)',
     });
@@ -234,7 +246,8 @@ describe('Practice usage scope (#9652)', () => {
     expect(card.querySelector('.flashcard-heritage-chip')?.textContent).toContain('scope of caution not established');
   });
 
-  test('qualifies daily snapshot glosses in both preview and rows without rewriting the snapshot', () => {
+  test('withholds cached daily snapshot meanings in preview and rows without rewriting progress', () => {
+    setPracticeMeaningModesForTesting(false);
     const snapshot: DailyPracticeDeckSnapshot = {
       version: 2, date: '2026-10-06', level: 'B2', deckVersion: 'scope-fixture', createdAt: 0,
       items: [{ lemmaId: legacy.lemmaId, origin: 'new', lemma: legacy.lemma, gloss: legacy.gloss, cefr: legacy.cefr, pos: legacy.pos }],
@@ -244,8 +257,9 @@ describe('Practice usage scope (#9652)', () => {
       snapshot={snapshot} rows={{ pendingDue: [], pendingNew: [{ item: snapshot.items[0]!, state: 'new', lastSeenAt: null }], done: [] }}
       lexemes={new Map([[legacy.lemmaId, legacy]])} atlasLemmaHref={(id) => `/lexicon/${id}/`} chromeLocale="en" learnerLevel="B2"
     />);
-    expect(container.querySelector('.row-gloss')?.textContent).toContain('обсяг застереження не встановлено');
-    expect(container.textContent?.match(/обсяг застереження не встановлено/g)?.length).toBe(2);
+    expect(container.querySelector('.row-gloss')).toBeNull();
+    expect(container.textContent).not.toContain('Crimean');
+    expect(container.textContent).toContain(CHROME_STRINGS.en['practice.meaningUnavailable']);
     expect(JSON.stringify(snapshot)).toBe(before);
   });
 });

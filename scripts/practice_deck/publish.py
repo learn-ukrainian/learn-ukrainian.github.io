@@ -43,10 +43,10 @@ DEFAULT_RELEASE_TAG = "atlas-practice-deck"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 ASSET_NAME = "lexicon-practice-deck.json.gz"
 LEVELS = ("A1", "A2", "B1", "B2", "C1")
-# The exact published source of the #8714 withdrawal ledger. Never transform
+# The exact published source of the #9160 withdrawal ledger. Never transform
 # an arbitrary package or silently use a different release as this source.
-WITHDRAWAL_SOURCE_VERSION = "atlas-practice-v1-c0c3f3242b5134b6"
-WITHDRAWAL_SOURCE_GZ_SHA256 = "5ed46cb483065703ace1e7c9f6710da9075a1377b67312d73ce17c2ed8ec8002"
+WITHDRAWAL_SOURCE_VERSION = "atlas-practice-v1-f1e1cf95470ce319"
+WITHDRAWAL_SOURCE_GZ_SHA256 = "d01ed4b4cf10d8f587de214d0e3dd7f4039f4bafe5549d6bed7145bc34e55b19"
 GH_RELEASE_VIEW_TIMEOUT_SECONDS = 30.0
 GH_RELEASE_CREATE_TIMEOUT_SECONDS = 60.0
 GH_RELEASE_ASSET_TIMEOUT_SECONDS = 180.0
@@ -165,7 +165,11 @@ def _read_json_bytes(path: Path) -> tuple[bytes, dict[str, Any]]:
 
 def _shard_metadata(path: Path, *, kind: str, level: str, deck_version: str | None) -> tuple[dict[str, Any], str]:
     data, payload = _read_json_bytes(path)
-    from scripts.audit.generate_practice_deck import SYNONYM_MODE_ENABLED
+    from scripts.audit.generate_practice_deck import SYNONYM_MODE_ENABLED, validate_meaning_withdrawal
+
+    errors = validate_meaning_withdrawal(kind, payload)
+    if errors:
+        raise PracticeDeckPublishError(f"{path}: {'; '.join(errors)}")
 
     if not SYNONYM_MODE_ENABLED:
         if kind == "synonym" and payload.get("synonym") != []:
@@ -239,29 +243,27 @@ def build_package(deck_version: str, files: list[dict[str, str]]) -> bytes:
     return json.dumps(package, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
-def withdraw_synonyms_from_pinned_package(
+def withdraw_meanings_from_pinned_package(
     source_gzip: Path, source_pointer: dict[str, Any], practice_dir: Path,
 ) -> str:
-    """Build the #8714 withdrawal from the verified published source package.
+    """Withdraw all legacy meanings, preserving the pinned lexemes and drills.
 
     This contains the defect without changing unrelated cards while the full
     rebuild is blocked by unresolved curated Atlas routes. The normal publish
     shard checks still apply here. The caller must run the linguistic gate
     separately before any upload; this helper does not publish the result.
     """
-    from scripts.audit.generate_practice_deck import SYNONYM_MODE_ENABLED, _json_bytes, _size_budget
+    from scripts.audit.generate_practice_deck import WITHDRAWN_MEANING_MODES, _json_bytes, _size_budget
     from scripts.practice_deck.io import _decode_package
 
-    if SYNONYM_MODE_ENABLED:
-        raise PracticeDeckPublishError("withdrawal requires synonym mode disabled")
     if (source_pointer.get("deck_version") != WITHDRAWAL_SOURCE_VERSION or
             source_pointer.get("gz_sha256") != WITHDRAWAL_SOURCE_GZ_SHA256):
-        raise PracticeDeckPublishError("withdrawal source is not the pinned #8714 deck")
+        raise PracticeDeckPublishError("withdrawal source is not the pinned #9160 deck")
     compressed = source_gzip.read_bytes()
     if _sha256(compressed) != WITHDRAWAL_SOURCE_GZ_SHA256:
         raise PracticeDeckPublishError("withdrawal source gzip hash mismatch")
     files = _decode_package(gzip.decompress(compressed), source_pointer)
-    version_seed = f"{source_pointer['package_sha256']}:8714-synonym-disabled-v1".encode()
+    version_seed = f"{source_pointer['package_sha256']}:9160-meanings-withdrawn-v1".encode()
     deck_version = f"atlas-practice-v1-{_sha256(version_seed)[:16]}"
     source_kind_names = {name.split(".", 1)[0].removeprefix("practice-") for name, _data in files}
     permitted = (set(KINDS), set(KINDS) - {"imperative"})
@@ -273,13 +275,15 @@ def withdraw_synonyms_from_pinned_package(
     for name, raw in files:
         payload = json.loads(raw)
         payload["deckVersion"] = deck_version
-        if name.startswith("practice-synonym."):
-            payload["synonym"] = []
+        if name.startswith("practice-lexemes."):
+            for item in payload["lexemes"]:
+                item.update(gloss="", glossClean="", meaningMcEligible=False)
         elif name.startswith("practice-index."):
             for item in payload["items"]:
-                item["modes"] = [mode for mode in item["modes"] if mode != "synonym"]
-            payload["counts"].setdefault("modeCounts", {})["synonym"] = 0
-            payload["counts"].setdefault("modeCoverage", {})["synonym"] = 0.0
+                item["modes"] = [mode for mode in item["modes"] if mode not in WITHDRAWN_MEANING_MODES]
+            for mode in WITHDRAWN_MEANING_MODES:
+                payload["counts"].setdefault("modeCounts", {})[mode] = 0
+                payload["counts"].setdefault("modeCoverage", {})[mode] = 0.0
         budget = payload.pop("sizeBudget")
         payload["sizeBudget"] = _size_budget(payload, budget["rawLimitBytes"], budget["gzipLimitBytes"])
         if not payload["sizeBudget"]["ok"]:

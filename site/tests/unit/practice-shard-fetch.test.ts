@@ -92,7 +92,7 @@ describe("practice-shard-fetch", () => {
 
   test("practiceDrillShardUrls keeps the published kind order under /lexicon", () => {
     const urls = practiceDrillShardUrls("/lexicon", "A1");
-    expect(urls).toHaveLength(8);
+    expect(urls).toHaveLength(7);
     expect(urls).toEqual([
       "/lexicon/practice-cloze.A1.json",
       "/lexicon/practice-stress.A1.json",
@@ -100,7 +100,6 @@ describe("practice-shard-fetch", () => {
       "/lexicon/practice-paradigm.A1.json",
       "/lexicon/practice-paronym.A1.json",
       "/lexicon/practice-heritage.A1.json",
-      "/lexicon/practice-antonym.A1.json",
       "/lexicon/practice-imperative.A1.json",
     ]);
   });
