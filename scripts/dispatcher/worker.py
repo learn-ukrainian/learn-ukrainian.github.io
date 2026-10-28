@@ -14,7 +14,7 @@ from pathlib import Path
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import admission, git, headroom, providers, store
+from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 from scripts.dispatcher.watchdog import DeadlineExpired, communicate, deadlines, liveness_paths
@@ -358,6 +358,14 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
         )
         text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
+        if spec.agent == "agy" and spec.mode == "read-only":
+            # Only the boundary's receipt, written outside the sandbox, proves the run read-only and
+            # supplies its Sources count (C-3027); without a verified one the run fails.
+            boundary, sources_calls, refusal = agy_sandbox.verify(spec.final_file, spec.task_id, record)
+            record["read_only_boundary"] = boundary
+            if refusal:
+                status, error = "failed", refusal
+                return
         if parsed.rate_limited and returncode >= 0:
             # Before the schema check, which would record the same terminal failure as invalid output.
             status, error = "rate_limited", parsed.error
@@ -409,6 +417,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
                 terminate()
                 returncode = child.returncode
+            # A killed launcher leaves its scratch and token copy; residue is recorded, never raised.
+            if spec.agent == "agy" and spec.mode == "read-only" and (residue := agy_sandbox.discard(spec.task_id)):
+                record["read_only_boundary_cleanup"] = residue
             if slots is not None:
                 # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight
                 # keep their slots shared until they exit (test_slots).

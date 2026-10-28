@@ -2,23 +2,12 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import styles from './Activities.module.css';
 import { shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
+import { pickChipColor } from './chipColors';
 import {
   chromeFacingBilingual,
   useActivityIsUkrainian,
   useChromeLocale,
 } from '../lib/i18n/useChromeLocale';
-
-// Generate consistent colors for words
-const WORD_COLORS = [
-  '#E53935', '#D81B60', '#8E24AA', '#5E35B1', '#3949AB',
-  '#1E88E5', '#039BE5', '#00ACC1', '#00897B', '#43A047',
-  '#7CB342', '#FB8C00', '#F4511E', '#6D4C41'
-];
-
-function getWordColor(word: string, index: number): string {
-  const charSum = word.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  return WORD_COLORS[(charSum + index) % WORD_COLORS.length];
-}
 
 /**
  * A group entry is a plain string on every existing module, or a
@@ -70,7 +59,7 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
           word,
           why: entryWhy(entry),
           correctGroup: group,
-          color: getWordColor(word, idx)
+          color: pickChipColor(word, idx)
         });
         idx++;
       }

@@ -5,18 +5,25 @@ Wants=network-online.target
 
 [Service]
 Type=simple
+# This unit runs in the operator's per-user systemd manager, which holds no
+# capabilities. Only hardening that needs none is set here: the umask, the
+# no_new_privs bit and seccomp filters, all applied for a user unit.
+# Deliberately absent (systemd.exec(5), sandboxing in user services):
+# - CapabilityBoundingSet=: dropping the bounding set needs CAP_SETPCAP, so
+#   every start fails with status=218/CAPABILITIES.
+# - PrivateMounts=, PrivateTmp=, ProtectSystem=, ProtectHome=: a user manager
+#   can only build these mount namespaces inside an unprivileged user
+#   namespace. Where the host restricts those (AppArmor userns restriction),
+#   systemd skips the mounts and the setting is silently a no-op. The unit
+#   also needs its checkout under the owner's home.
+# - ProtectProc=, ProcSubset=: documented as system-service only.
 UMask=0077
 NoNewPrivileges=yes
-PrivateMounts=yes
-PrivateTmp=yes
-ProtectSystem=strict
-ProtectHome=yes
-ProtectProc=invisible
-ProcSubset=pid
 SystemCallFilter=~@debug
 RestrictSUIDSGID=yes
 LockPersonality=yes
-CapabilityBoundingSet=
+# Both V4 switches default off; a private deployment drop-in may turn on
+# execution, admission or both.
 Environment=HRAMATKA_V4_EXECUTION_ENABLED=0
 Environment=HRAMATKA_V4_ADMISSION_ENABLED=0
 WorkingDirectory=@REPO_ROOT@

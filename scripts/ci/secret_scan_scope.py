@@ -12,17 +12,21 @@ the pinned action scan every commit (``--since-commit '' --branch ''``) and
 exit 183 when historical findings exist.  The schedule path therefore walks
 a fixed first-parent ancestry window, or the whole branch when history is
 shorter, and never the same base and head.  Commit dates are not consulted.
-A git failure exits non-zero instead of narrowing that window.
+A scheduled run widens the window to the last successfully scanned head.
+Missing or invalid coverage and git failures exit non-zero.
 """
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+from scripts.common import github_client
 
 _SHA_RE = re.compile(r"[0-9a-fA-F]{40}\Z")
 _ZERO_SHA = "0" * 40
@@ -37,13 +41,14 @@ _SCOPED_EVENTS = frozenset({"merge_group", "push"})
 #   the same count over the prior 7 days → 244
 #   peak 48-hour first-parent count across the prior 90 days → 156
 # 400 is more than twice that peak, so one nightly run still covers well
-# over 48 hours at the observed rate.  A longer outage can leave older
-# commits unscanned; recovering that range is a manual full scan, and that
-# gap is a follow-up, not this window.
+# over 48 hours at the observed rate. Recovery widens this window when the
+# last successful scan is older, so outages cannot silently lose coverage.
 SCHEDULE_FIRST_PARENT_STEPS = 400
 GIT_CAT_FILE_TIMEOUT_SECONDS = 10
 GIT_IS_ANCESTOR_TIMEOUT_SECONDS = 30
 GIT_REV_LIST_TIMEOUT_SECONDS = 30
+_COVERAGE_RECOVERY = "coverage unknown; run full-history-audit on the default branch to establish coverage"
+_COVERAGE_ARTIFACT = "secret-scan-covered-head-v1"
 
 
 class SecretScanScopeError(RuntimeError):
@@ -189,6 +194,85 @@ def _is_ancestor(repo_root: Path, base_sha: str, head_sha: str) -> bool:
     return result.returncode == 0
 
 
+def _schedule_recovery_scope(repo_root: Path, last_scanned_head: str) -> ScanScope:
+    scope = _schedule_scope(repo_root)
+    record, error = _normalize_sha(last_scanned_head, "last-scanned-head")
+    if error or record is None or not _commit_exists(repo_root, record):
+        raise SecretScanScopeError(_COVERAGE_RECOVERY)
+    shallow = _require_git_stdout(
+        repo_root, ["rev-parse", "--is-shallow-repository"], GIT_CAT_FILE_TIMEOUT_SECONDS
+    ).strip()
+    if shallow != "false" or not _is_ancestor(repo_root, record, scope.trufflehog_head):
+        raise SecretScanScopeError(_COVERAGE_RECOVERY)
+    if not scope.trufflehog_base:
+        return scope
+    # An older record covers everything before it; everything after it must
+    # be scanned now. A newer record keeps the normal overlapping window.
+    common = _sha(
+        _require_git_stdout(repo_root, ["merge-base", scope.trufflehog_base, record], GIT_IS_ANCESTOR_TIMEOUT_SECONDS)
+    )
+    if common is None:
+        raise SecretScanScopeError(_COVERAGE_RECOVERY)
+    if common == scope.trufflehog_base:
+        return scope
+    return ScanScope(record, scope.trufflehog_head, "", "schedule", "coverage-recovery")
+
+
+def _github_json(endpoint: str) -> dict:
+    """Read metadata only, never download or extract an artifact archive."""
+    try:
+        result = github_client.run(
+            ["gh", "api", endpoint], fresh=True, allow_stale=False, capture_output=True, text=True, check=True, timeout=30
+        )
+        payload = json.loads(result.stdout)
+        if not isinstance(payload, dict):
+            raise ValueError("invalid response")
+        return payload
+    except (OSError, subprocess.SubprocessError, ValueError) as exc:
+        raise SecretScanScopeError(_COVERAGE_RECOVERY) from exc
+
+
+def _last_scanned_head(repository: str, repository_id: str, default_branch_ref: str) -> str:
+    """Use GitHub's immutable artifact run SHA, checking branch and producer.
+
+    Only successful scans publish this artifact. Untrusted PR/fork artifacts
+    are ignored. A bounded metadata search that finds no record fails closed.
+    """
+    if not re.fullmatch(r"[\w.-]+/[\w.-]+", repository) or not repository_id.isdecimal():
+        raise SecretScanScopeError(_COVERAGE_RECOVERY)
+    if not default_branch_ref.startswith("refs/heads/"):
+        raise SecretScanScopeError(_COVERAGE_RECOVERY)
+    branch = default_branch_ref.removeprefix("refs/heads/")
+    prefix = f"repos/{repository}/actions"
+    try:
+        artifacts = _github_json(f"{prefix}/artifacts?name={_COVERAGE_ARTIFACT}&per_page=100")["artifacts"]
+        for artifact in sorted(artifacts, key=lambda item: int(item["id"]), reverse=True):
+            run = artifact["workflow_run"]
+            if (
+                artifact["name"] != _COVERAGE_ARTIFACT
+                or artifact["expired"]
+                or str(run["repository_id"]) != repository_id
+                or str(run["head_repository_id"]) != repository_id
+                or run["head_branch"] != branch
+            ):
+                continue
+            run_id = int(run["id"])
+            producer = _github_json(f"{prefix}/runs/{run_id}")
+            if (
+                producer["path"] != ".github/workflows/ci.yml"
+                or producer["event"] not in {"schedule", "workflow_dispatch"}
+                or producer["head_branch"] != branch
+                or producer["head_sha"] != run["head_sha"]
+            ):
+                continue
+            head = _sha(run["head_sha"]) if isinstance(run["head_sha"], str) else None
+            if head:
+                return head
+    except (KeyError, TypeError, ValueError) as exc:
+        raise SecretScanScopeError(_COVERAGE_RECOVERY) from exc
+    raise SecretScanScopeError(_COVERAGE_RECOVERY)
+
+
 def _dispatch_scope(repo_root: Path, raw_head: str, dispatch_ref: str, default_branch_ref: str) -> ScanScope:
     """Resolve a dispatch against the default branch; incomplete history is an error."""
 
@@ -237,6 +321,7 @@ def resolve_scan_scope(
     dispatch_ref: str = "",
     default_branch_ref: str = "",
     dispatch_scan_mode: str = "",
+    schedule_last_scanned_head: str = "",
     repo_root: Path | None = None,
 ) -> ScanScope:
     """Return a validated landing range or an explicit full-scan fallback.
@@ -248,8 +333,9 @@ def resolve_scan_scope(
     ancestor of the head; this rejects empty, first-run, force-push, and
     malformed ranges without ever turning a scan into a skip.
 
-    ``schedule`` walks :data:`SCHEDULE_FIRST_PARENT_STEPS` first-parent steps.
-    Commit dates are not used.  A git failure raises
+    ``schedule`` walks at least :data:`SCHEDULE_FIRST_PARENT_STEPS` first-parent
+    steps, widening to ``schedule_last_scanned_head`` when older. Missing or
+    invalid coverage fails visibly. Commit dates are not used. A git failure raises
     :class:`SecretScanScopeError` and the CLI exits non-zero.
 
     ``workflow_dispatch`` scans the default-branch merge-base through the
@@ -262,7 +348,7 @@ def resolve_scan_scope(
     event = event_name.strip()
     root = repo_root or Path.cwd()
     if event == "schedule":
-        return _schedule_scope(root)
+        return _schedule_recovery_scope(root, schedule_last_scanned_head)
     if event == "workflow_dispatch":
         if dispatch_scan_mode == "full-history-audit":
             return ScanScope("", "HEAD", "", "audit", "explicit-full-history-audit")
@@ -324,6 +410,13 @@ def _write_outputs(scope: ScanScope, output_path: Path | None) -> None:
 
 def main() -> int:
     try:
+        last_scanned_head = ""
+        if os.environ.get("EVENT_NAME", "").strip() == "schedule":
+            last_scanned_head = _last_scanned_head(
+                os.environ.get("GITHUB_REPOSITORY", ""),
+                os.environ.get("GITHUB_REPOSITORY_ID", ""),
+                os.environ.get("DEFAULT_BRANCH_REF", ""),
+            )
         scope = resolve_scan_scope(
             os.environ.get("EVENT_NAME", ""),
             merge_group_base_sha=os.environ.get("MERGE_GROUP_BASE_SHA", ""),
@@ -334,6 +427,7 @@ def main() -> int:
             dispatch_ref=os.environ.get("DISPATCH_REF", ""),
             default_branch_ref=os.environ.get("DEFAULT_BRANCH_REF", ""),
             dispatch_scan_mode=os.environ.get("DISPATCH_SCAN_MODE", ""),
+            schedule_last_scanned_head=last_scanned_head,
         )
     except SecretScanScopeError as exc:
         print(f"secret-scan-scope: {exc}", file=sys.stderr)
