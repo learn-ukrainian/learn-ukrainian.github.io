@@ -225,8 +225,17 @@ def await_file(path):
     ([], set()), (["--full-checkout"], {"curriculum", "site/src/data"}),
     (["--sparse-include", "/curriculum/"], {"curriculum"}),
     (["--sparse-include", "curriculum", "--sparse-include", "site/src/data"], {"curriculum", "site/src/data"}),
+    (["--owned-path", "data/projects/fixture.txt"], {"data/projects"}),
+    (["--research-owned-path", "./data//projects/./**/*.json"], {"data/projects"}),
+    (["--owned-path", "tests/projects/open_model_data/test_mine.py"], {"data/projects"}),
+    (["--research-owned-path", "scripts/projects/open_model_data/**"], {"data/projects"}),
+    (["--owned-path", "site"], {"site/src/content", "site/src/data"}),
+    (["--owned-path", "curriculum/**", "--sparse-include", "data/projects"], {"curriculum", "data/projects"}),
+    (["--owned-path", "data/projects-other", "--research-owned-path", "scripts/projects/open_model_database"], set()),
+    (["--owned-path", "../data/projects", "--research-owned-path", "/data/projects"], set()),
 ])
 def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_worktrees(sandbox, flags, restored):
+    """Owned paths must restore required trees without changing another checkout's sparse settings."""
     excluded = {
         "curriculum", "wiki", "data/projects", "data/lexicon", "data/datasets", "data/processed",
         "registry/projects", "registry/lexicon/source-inventory",

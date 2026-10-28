@@ -10,7 +10,7 @@ import stat
 import subprocess
 from contextlib import ExitStack, contextmanager, suppress
 from functools import partial
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import yaml
 
@@ -191,10 +191,27 @@ def ownership_git(record: dict):
         yield run
 
 
-def sparse_excludes(includes=()) -> list[str]:
+def sparse_excludes(includes=(), owned_paths=()) -> list[str]:
     includes = {name.strip().strip("/") for name in includes}
     if includes - SPARSE_EXCLUDE_DEFAULT:
         raise ValueError("--sparse-include must name a default-excluded tree: " + ", ".join(sorted(SPARSE_EXCLUDE_DEFAULT)))
+    for raw in owned_paths:
+        path = PurePosixPath(raw.strip().replace("\\", "/"))
+        if path.is_absolute() or ".." in path.parts:
+            continue
+        literal = []
+        for part in path.parts:
+            if any(char in part for char in "*?["):
+                break
+            literal.append(part)
+        if not literal:
+            continue
+        root = "/".join(literal)
+        includes.update(tree for tree in SPARSE_EXCLUDE_DEFAULT
+                        if root == tree or root.startswith(tree + "/") or tree.startswith(root + "/"))
+        if any(root == prefix or root.startswith(prefix + "/") for prefix in
+               ("tests/projects/open_model_data", "scripts/projects/open_model_data")):
+            includes.add("data/projects")
     return sorted(SPARSE_EXCLUDE_DEFAULT - includes)
 
 
