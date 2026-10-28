@@ -67,6 +67,35 @@ def _write_fixture(tmp_path: Path) -> Path:
     return p
 
 
+@pytest.mark.parametrize(
+    ("raw_header", "expected_head", "expected_gloss"),
+    [
+        (
+            "352. клієн\ń т, клієн\ń тка                              client (male, female)\n",
+            "клієнт, клієнтка",
+            "client (male, female)",
+        ),
+        (
+            "685. проєк\ń т                                        project\n",
+            "проєкт",
+            "project",
+        ),
+    ],
+)
+def test_displaced_acute_does_not_truncate_raw_ohoiko_headword(
+    tmp_path: Path, raw_header: str, expected_head: str, expected_gloss: str,
+) -> None:
+    """Exact source-record headers: the OCR newline must not discard the suffix."""
+    from scripts.lexicon.lemma_normalization import strip_acute_stress
+
+    source = tmp_path / "raw-header.txt"
+    source.write_text(raw_header, encoding="utf-8")
+    entry, = obi.parse_book(source, max_entry_number=1000)
+    assert strip_acute_stress(entry.headword) == expected_head
+    assert entry.english == expected_gloss
+    assert entry.body_lines == []
+
+
 def test_parse_book_filters_english_instruction_steps(tmp_path: Path) -> None:
     """The Anki instructions (English-headed) must NOT enter the entry list."""
     entries = obi.parse_book(_write_fixture(tmp_path), max_entry_number=10)

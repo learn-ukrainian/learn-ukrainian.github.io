@@ -260,3 +260,213 @@ def test_oo48_garbage_provenance_reply_is_refused():
 
     with pytest.raises(PublishBlocked, match="cannot establish check state"):
         ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+
+
+# --- pr-merge's own read transport over a multi-page head ------------------------------------
+# The publisher sends the guard's reads through merge_readiness_runner, where github_client
+# translates `gh pr view --json statusCheckRollup` and `gh api` into REST pages. A head with
+# more check runs than one page must reach the verdict a plain gh runner reaches.
+
+API = "https://api.github.com/"
+ACTIONS = {"id": 15368, "slug": "github-actions"}
+
+
+def _check_run(number, name="", **fields):
+    return {"id": number, "name": name or f"Job {number}", "head_sha": HEAD, "status": "completed",
+            "conclusion": "success", "html_url": f"https://github.com/unit/public/runs/{number}",
+            "details_url": f"https://example.invalid/{number}", "started_at": "2026-10-28T16:00:00Z", **fields}
+
+
+def _multi_page_head(runs, *, second_total=None):
+    """REST documents for a head whose check runs span two pages of 100."""
+    pull = {"number": 1, "state": "open", "draft": False, "head": {"sha": HEAD, "ref": "fix", "repo": {"full_name": "unit/public"}},
+            "base": {"ref": "main", "repo": {"full_name": "unit/public"}}}
+    documents = {"repos/unit/public/pulls/1": (pull, None),
+                 f"repos/unit/public/commits/{HEAD}/status?per_page=100": ({"total_count": 0, "statuses": []}, None)}
+    for endpoint in (f"repos/unit/public/commits/{HEAD}/check-runs?per_page=100",
+                     f"repos/unit/public/commits/{HEAD}/check-runs?filter=all&per_page=100"):
+        documents[endpoint] = ({"total_count": len(runs), "check_runs": runs[:100]}, f"{API}{endpoint}&page=2")
+        documents[endpoint + "&page=2"] = ({"total_count": second_total or len(runs), "check_runs": runs[100:]}, None)
+    return documents
+
+
+def _publisher_transport(tmp_path, monkeypatch, documents, checks):
+    """merge_readiness_runner over a real GitHubClient whose HTTP and native gh are fixtures."""
+    from scripts.common import github_client as gh
+    from scripts.publish.github import merge_readiness_runner
+
+    real_client, requested = gh.GitHubClient, []
+
+    def transport(method, endpoint, headers, body, timeout):
+        path = endpoint.removeprefix(API)
+        requested.append(path)
+        if path not in documents:
+            return gh.Response(404, {"X-RateLimit-Remaining": "5000"}, b'{"message": "Not Found"}')
+        value, link = documents[path]
+        reply = {"ETag": f'"{len(requested)}"', "X-RateLimit-Remaining": "5000", "X-RateLimit-Reset": "2000"}
+        if link:
+            reply["Link"] = f'<{link}>; rel="next"'
+        return gh.Response(200, reply, json.dumps(value).encode())
+
+    def native(args, **kwargs):
+        assert args[1:3] == ["pr", "checks"], args
+        return subprocess.CompletedProcess(args, 0, json.dumps(checks).encode(), b"")
+
+    monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(tmp_path))
+    monkeypatch.setattr(gh, "GitHubClient", lambda **kwargs: real_client(
+        **{**kwargs, "cache_dir": tmp_path, "transport": transport, "runner": native}))
+    return merge_readiness_runner(), requested
+
+
+def test_publisher_transport_reads_every_check_run_page_of_a_multi_page_head(tmp_path, monkeypatch):
+    """136 check runs, two of one name superseded across workflow runs: READY, as with plain gh."""
+    runs = [_check_run(n) for n in range(1, 135)]
+    runs += [_check_run(135, "Body guard", conclusion="cancelled", app=ACTIONS, check_suite={"id": 1},
+                        started_at="2026-10-28T15:00:00Z",
+                        details_url="https://github.com/unit/public/actions/runs/11/job/135"),
+             _check_run(136, "Body guard", app=ACTIONS, check_suite={"id": 2},
+                        details_url="https://github.com/unit/public/actions/runs/12/job/136")]
+    documents = _multi_page_head(runs)
+    for run_id, suite in ((11, 1), (12, 2)):
+        documents[f"repos/unit/public/actions/runs/{run_id}"] = (
+            {"id": run_id, "head_sha": HEAD, "check_suite_id": suite, "workflow_id": 7, "name": "Body guard"}, None)
+    checks = [{"name": row["name"], "bucket": "pass", "state": "SUCCESS", "workflow": ""} for row in runs]
+    runner, requested = _publisher_transport(tmp_path, monkeypatch, documents, checks)
+    environment = {"GH_HOST": "github.com", "GH_TOKEN": "fixture-only"}
+    assert ensure_merge_ready("unit/public", 1, runner=runner, cwd=tmp_path, environment=environment,
+                              match_head=HEAD) == HEAD
+    assert f"repos/unit/public/commits/{HEAD}/check-runs?per_page=100&page=2" in requested
+    assert f"repos/unit/public/commits/{HEAD}/check-runs?filter=all&per_page=100&page=2" in requested
+    assert {"repos/unit/public/actions/runs/11", "repos/unit/public/actions/runs/12"} <= set(requested)
+
+
+def test_publisher_transport_refusal_names_the_read_that_failed(tmp_path, monkeypatch):
+    """A rollup whose total shifts between pages stays unverifiable, and the refusal says which read."""
+    runs = [_check_run(n) for n in range(1, 137)]
+    documents = _multi_page_head(runs, second_total=137)
+    checks = [{"name": row["name"], "bucket": "pass", "state": "SUCCESS", "workflow": ""} for row in runs]
+    runner, _ = _publisher_transport(tmp_path, monkeypatch, documents, checks)
+    environment = {"GH_HOST": "github.com", "GH_TOKEN": "fixture-only"}
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=tmp_path, environment=environment)
+    assert str(refused.value) == (
+        "OPSEC: merge refused: cannot establish check state (pr view rollup: github_checks_incomplete).")
+
+
+@pytest.mark.parametrize("second", [
+    {"total_count": 101, "check_runs": [_check_run(101), _check_run(102)]},
+    {"total_count": True, "check_runs": [_check_run(101)]},
+    {"total_count": 101.0, "check_runs": [_check_run(101)]},
+    {"total_count": 101},
+])
+def test_publisher_transport_refuses_an_inexact_multi_page_walk(tmp_path, monkeypatch, second):
+    """More rows than the total, a non-integer total or a page without its collection is incomplete."""
+    runs = [_check_run(n) for n in range(1, 101)]
+    documents = _multi_page_head([*runs, _check_run(101)])
+    for endpoint in [path for path in documents if path.endswith("&page=2")]:
+        documents[endpoint] = (second, None)
+    checks = [{"name": row["name"], "bucket": "pass", "state": "SUCCESS", "workflow": ""} for row in runs]
+    runner, _ = _publisher_transport(tmp_path, monkeypatch, documents, checks)
+    environment = {"GH_HOST": "github.com", "GH_TOKEN": "fixture-only"}
+    with pytest.raises(PublishBlocked, match=r"pr view rollup: github_checks_incomplete"):
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=tmp_path, environment=environment)
+
+
+def test_publisher_transport_refuses_a_repeated_check_run_across_pages(tmp_path, monkeypatch):
+    runs = [_check_run(n) for n in range(1, 137)]
+    runs[120] = runs[5]
+    checks = [{"name": row["name"], "bucket": "pass", "state": "SUCCESS", "workflow": ""} for row in runs]
+    runner, _ = _publisher_transport(tmp_path, monkeypatch, _multi_page_head(runs), checks)
+    environment = {"GH_HOST": "github.com", "GH_TOKEN": "fixture-only"}
+    with pytest.raises(PublishBlocked, match=r"pr view rollup: github_checks_incomplete"):
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=tmp_path, environment=environment)
+
+
+def test_refusal_names_a_failed_status_read_for_a_plain_runner():
+    base = entire_runner({"id": 2626939, "slug": "entire"}, [])
+
+    def runner(args, **kwargs):
+        if args[1] == "api" and args[4] == STATUS:
+            return subprocess.CompletedProcess(args, 1, "", "")
+        return base(args, **kwargs)
+
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == "OPSEC: merge refused: cannot establish check state (commit statuses: exit 1)."
+
+
+def test_refusal_names_a_failed_actions_run_read_with_gh_http_status():
+    details = "https://github.com/unit/public/actions/runs/12/job/22"
+    rest = [{"name": "Body guard", "head_sha": HEAD, "status": "completed", "conclusion": "success",
+             "check_suite": {"id": 2}, "app": ACTIONS, "details_url": details}]
+    rollup = [{"__typename": "CheckRun", "name": "Body guard", "status": "COMPLETED", "conclusion": "SUCCESS",
+               "detailsUrl": details}] * 2
+    documents = {f"repos/unit/public/commits/{HEAD}/check-runs?filter=all&per_page=100":
+                 {"total_count": 1, "check_runs": rest}}
+    base = entire_runner({"id": 2626939, "slug": "entire"}, [], extra_documents=documents,
+                         bound={"headRefOid": HEAD, "statusCheckRollup": rollup})
+
+    def runner(args, **kwargs):
+        if args[1] == "api" and args[4] == "repos/unit/public/actions/runs/12":
+            return subprocess.CompletedProcess(args, 1, "", "gh: Not Found (HTTP 404)")
+        return base(args, **kwargs)
+
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == (
+        "OPSEC: merge refused: cannot establish check state (actions run: exit 1 HTTP 404).")
+
+
+def test_refusal_names_a_read_that_raised():
+    base = entire_runner({"id": 2626939, "slug": "entire"}, [])
+
+    def runner(args, **kwargs):
+        if "headRefOid,statusCheckRollup" in args:
+            raise subprocess.TimeoutExpired(args, 15)
+        return base(args, **kwargs)
+
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == "OPSEC: merge readiness unverifiable (pr view rollup: TimeoutExpired)."
+
+
+@pytest.mark.parametrize("returncode,stdout,stderr,named", [
+    (1, "", "gh: Not Found (HTTP 404)", "pr checks: exit 1 HTTP 404"),
+    (0, "{}", "", "pr checks: invalid shape"),
+    (0, "not JSON", "", "pr checks: malformed JSON"),
+    (1, "[]", "", "pr checks: empty failing list"),
+])
+def test_refusal_names_how_the_checks_read_failed(returncode, stdout, stderr, named):
+    def runner(args, **kwargs):
+        if args[2] == "checks":
+            return subprocess.CompletedProcess(args, returncode, stdout, stderr)
+        return subprocess.CompletedProcess(args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD}), "")
+
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == f"OPSEC: merge refused: cannot establish check state ({named})."
+
+
+@pytest.mark.parametrize("bound,named", [
+    ({"headRefOid": HEAD, "statusCheckRollup": None}, "pr view rollup: invalid shape"),
+    (None, "no read failed; check rows unverifiable"),
+])
+def test_refusal_names_an_invalid_shape_or_says_no_read_failed(bound, named):
+    rollup = {"headRefOid": "b" * 40, "statusCheckRollup": BOUND_ROLLUP} if bound is None else bound
+    runner = entire_runner({"id": 2626939, "slug": "entire"}, [], bound=rollup)
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == f"OPSEC: merge refused: cannot establish check state ({named})."
+
+
+def test_refusal_names_a_status_read_of_the_wrong_shape():
+    base = entire_runner({"id": 2626939, "slug": "entire"}, [])
+
+    def runner(args, **kwargs):
+        if args[1] == "api" and args[4] == STATUS:
+            return subprocess.CompletedProcess(args, 0, json.dumps({"statuses": []}), "")
+        return base(args, **kwargs)
+
+    with pytest.raises(PublishBlocked) as refused:
+        ensure_merge_ready("unit/public", 1, runner=runner, cwd=".", environment={})
+    assert str(refused.value) == "OPSEC: merge refused: cannot establish check state (commit statuses: invalid shape)."

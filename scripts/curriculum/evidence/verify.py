@@ -1092,15 +1092,9 @@ def verify_pack(
                 try:
                     res = sources_instance.check_url(vid_rec["url"], timeout=10.0)
                     status = res["http_status"]
-                    outcome = (
-                        "ok"
-                        if status == 200
-                        else codes.BOT_BLOCKED
-                        if status in {401, 403}
-                        else codes.DEAD_LINK
-                        if status in {404, 410}
-                        else codes.UNVERIFIABLE
-                    )
+                    outcome = sources.classify_link_status(status)
+                    if outcome == sources.LIVE_LINK:
+                        outcome = "ok"
                     url_checks.append({"id": vid_rec["id"], "outcome": outcome, **res})
                     if outcome != "ok":
                         msg = f"{outcome}: video {vid_rec['id']} url {vid_rec['url']} returned status {status}"

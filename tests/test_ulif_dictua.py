@@ -1227,7 +1227,7 @@ def test_migration_failure_between_copy_and_rename_keeps_the_original_table(tmp_
 
 
 def test_migrate_cli_is_idempotent(tmp_path, capsys):
-    db_path = _write_old_ulif_db(tmp_path / "cli.db")
+    db_path = _write_old_ulif_db(tmp_path / "sources.db")
     assert sources_db.main(["--migrate", "--db", str(db_path)]) == 0
     assert capsys.readouterr().out.strip() == "migrated"
     assert sources_db.main(["--migrate", "--db", str(db_path)]) == 0

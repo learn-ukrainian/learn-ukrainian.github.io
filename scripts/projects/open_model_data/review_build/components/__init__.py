@@ -2,9 +2,10 @@
 
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
-from importlib import import_module
 from types import MappingProxyType
 from typing import Protocol
+
+from scripts.lib.readonly_sqlite import import_named_module
 
 from ..attribution import AttributionAdapter
 from ..contract import Candidate
@@ -99,7 +100,7 @@ def load_components(
             continue
         target = f"{__name__}.{REGISTRY[component]}"
         try:
-            module = import_module(target)
+            module = import_named_module(target)
         except ModuleNotFoundError as exc:
             if exc.name != target:
                 raise

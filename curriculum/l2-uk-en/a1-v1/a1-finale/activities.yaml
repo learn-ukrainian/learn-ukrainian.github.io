@@ -4,13 +4,13 @@ inline:
     title: Complete the A1 line
     instruction: Choose the word or phrase that fits the time and situation.
     items:
-      - sentence: 'Зранку я ___ у кафе.'
+      - sentence: "(Past tense, male speaker.) Учора зранку я ___ у кафе."
         answer: 'снідав'
         options:
           - 'снідав'
           - 'буду снідати'
           - 'снідаю'
-        explanation: 'Зранку can describe an earlier part of the day in the final story.'
+        explanation: "Учора and the past-tense cue fix a past morning; the male-speaker cue selects снідав."
       - sentence: 'Зараз я ___ по Хрещатику.'
         answer: 'гуляю'
         options:

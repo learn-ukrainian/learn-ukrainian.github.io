@@ -19,6 +19,7 @@ from scripts.common.git_credentials import canonical_origins as canonical_origin
 from scripts.common.git_credentials import verification_credentials
 from scripts.common.repo_root import resolve_repo_root
 from scripts.common.task_scratch import allocate
+from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher.types import TaskSpec
 from scripts.storage.topology import STORE_FILES
 
@@ -314,10 +315,8 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
 
 
 DATABASE_LINKS = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
-# Recognize legacy dependency links at settlement, without provisioning new ones.
+# Legacy dependency links earlier dispatches provisioned; never provisioned again.
 NODE_LINKS = ("node_modules", "site/node_modules")
-# Ignored entries a settled worktree may still hold: regenerable caches and known shared links.
-CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".pytest_breadcrumbs", ".ruff_cache", ".mypy_cache"})
 # Work this branch contains on the canonical remote is published, even after its own branch was deleted.
 MAIN_REF = "refs/heads/main"
 # A squash merge leaves the task's own commit out of main; its pull-request head ref still proves the push.
@@ -395,13 +394,19 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
     return delivery
 
 
-def _disposable(tree: Path, entry: str) -> bool:
-    if not entry.startswith("!! "):
-        return False
-    relative = entry[3:].rstrip("/")
-    return bool(CACHE_DIRS.intersection(Path(relative).parts)) or (
-        relative in (*DATABASE_LINKS, *NODE_LINKS) and (tree / relative).is_symlink()
-    )
+def _tree_changes(tree: Path) -> tuple[list[str], list[str]]:
+    """Return the tree's uncommitted tracked changes and its untracked files; ignored files are neither.
+
+    Status hides edits to entries flagged assume-unchanged or skip-worktree, so every such entry present
+    on disk counts as a change; sparse checkout's skip-worktree entries are absent and do not.
+    """
+    entries = [entry for entry in _git(tree, "status", "--porcelain", "-z", "--untracked-files=all",
+                                       isolate=True, strip=False).split("\0") if entry]
+    hidden = [entry[2:] for entry in _git(tree, "ls-files", "-v", "-z", isolate=True, strip=False).split("\0")
+              if entry[:1].islower() or entry[:1] == "S"]
+    changed = [entry for entry in entries if not entry.startswith("?? ")]
+    changed += [f"hidden {name}" for name in hidden if os.path.lexists(tree / name)]
+    return changed, [entry[3:] for entry in entries if entry.startswith("?? ")]
 
 
 def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | None, bool]:
@@ -430,37 +435,56 @@ def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | Non
 def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
     """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
 
-    Runs from outside the worktree after the provider has exited. A write task's worktree goes only
-    when its HEAD is the publish branch's tip on the canonical remote recorded at dispatch (without
-    --branch that is the task branch), a pull-request head there, or is already in that remote's main.
+    Runs from outside the worktree after the provider has exited. Uncommitted tracked changes keep the
+    tree. A write task that committed keeps it until its HEAD is the publish branch's tip on the
+    canonical remote recorded at dispatch (without --branch that is the task branch), a pull-request
+    head there, or is already in that remote's main; a task that committed nothing needs no proof.
     borrowed() is asked under the worktree lock, right before removal, whether another task's
-    provider may still work in this tree.
+    provider may still work in this tree. Removal goes through the guarded chokepoint
+    (worktree_claims.remove_unclaimed_worktree), which records ignored output and copies untracked
+    files into the task's preserved archive before it removes the checkout.
     """
-    def disposition(state, reason):
-        return dict(worktree_disposition=state, worktree_disposition_reason=reason)
+    def disposition(state, reason, detail=None):
+        return dict(worktree_disposition=state, worktree_disposition_reason=reason,
+                    **({"worktree_disposition_detail": detail} if detail else {}))
 
     if record.get("options", {}).get("cwd"):
         return disposition("retained", "borrowed_worktree")
     try:
         repo, tree, branch = resolve_repo(record.get("repo"))[0], Path(record["worktree_path"]), record["worktree_branch"]
-        entries = _git(tree, "status", "--porcelain", "-z", "--ignored", isolate=True, strip=False).split("\0")
+        changed, untracked = _tree_changes(tree)
         head, remote, merged = _git(tree, "rev-parse", "HEAD", isolate=True), None, False
-        if not all(_disposable(tree, entry) for entry in entries if entry):
+        if changed:
             return disposition("retained", "dirty")
-        if record["mode"] != "read-only":
+        committed = head != record.get("worktree_start_sha", record["worktree_base_sha"])
+        if record["mode"] != "read-only" and committed:
             remote, merged = _canonical_publication(record, f"refs/heads/{record.get('publish_branch') or branch}", head)
     except (OSError, ValueError, KeyError, subprocess.SubprocessError):
         return disposition("retained", "unknown")
     published = head == remote or merged
-    if record["mode"] != "read-only" and not published:
+    if record["mode"] != "read-only" and committed and not published:
         return disposition("retained", "unpublished" if remote is None else "remote_mismatch")
+
+    def changed_since_inventory(path: Path) -> bool | None:
+        with suppress(OSError, subprocess.SubprocessError):
+            return _tree_changes(path) != ([], untracked)
+        return None
+
+    from scripts.orchestration import worktree_claims
+
     with worktree_lock(repo):
         if borrowed():
             return disposition("retained", "borrowed_by_live_task")
-        try:
-            _git(repo, "worktree", "remove", str(tree), isolate=True)
-        except (OSError, subprocess.SubprocessError):
-            return disposition("error", "worktree_remove_failed")
+        # Untracked files block a plain removal; the forced one runs only after they are copied.
+        removal = worktree_claims.remove_unclaimed_worktree(
+            tree, repo_root=repo, reason="dispatch settlement", owner_task_id=record["task_id"],
+            force=bool(untracked), dirty_probe=changed_since_inventory, tasks_dir=tasks_dir(),
+            task_record=record, preserve_files=untracked or None,
+        )
+    if removal.action == "skipped":
+        return disposition("retained", "removal_refused", removal.reason)
+    if removal.action != "removed":
+        return disposition("error", "worktree_remove_failed", removal.error or removal.reason)
     try:
         # The task branch goes only when its tip is published or reachable from another ref.
         if not published and _git(repo, "rev-list", "-n1", head, "--not", f"--exclude=refs/heads/{branch}", "--all",

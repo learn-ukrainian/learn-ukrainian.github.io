@@ -227,8 +227,8 @@ primary checkout:
 It proves the PR merged and its branches gone, and reports any worktree still
 tied to it; it removes no worktree.
 
-Apart from the dispatcher's own settlement removal, every worktree remover
-(dispatch's superseded-review and stale-branch-holder release, task-family
+Every worktree remover (the dispatcher's settlement removal,
+dispatch's superseded-review and stale-branch-holder release, task-family
 cleanup, ACP runtime cleanup, `scripts/wt.sh clean`, and the RB2 trail's cleanup step) goes through
 one chokepoint in `scripts/orchestration/worktree_claims.py` (#8610). It takes
 the per-worktree lock in `<git common dir>/lu-worktree-locks/` that dispatch

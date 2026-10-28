@@ -215,10 +215,13 @@ def _borrowed(record: dict) -> bool:
         for other in store.list_tasks())
 
 
-# Dispositions that can change once other processes end or the work is published (pushed or merged
-# after the task ended); crash recovery settles these again and still removes only with the proof.
+# Dispositions that can change once other processes end, the work is published (pushed or merged
+# after the task ended), or a transient Git, lock or claim refusal clears; the next dispatch's crash
+# recovery settles these again and still removes only with the proof.
 RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
-                           "unpublished", "remote_mismatch"})
+                           "unpublished", "remote_mismatch", "unknown", "removal_refused"})
+# Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
+SETTLE_PATIENCE = 10
 
 
 def _reap_settled(record: dict, patience: float = 0) -> None:
@@ -228,6 +231,7 @@ def _reap_settled(record: dict, patience: float = 0) -> None:
     cannot be proven either way keeps it.
     """
     deadline = time.monotonic() + patience
+    record.pop("worktree_disposition_detail", None)  # a retry replaces an earlier attempt's detail
     while (alive := _provider_alive(record)) and time.monotonic() < deadline:
         time.sleep(0.05)
     if alive is not False:
@@ -446,10 +450,13 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                     resolved_model_known=resolved_model is not None,
                     resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
                 )
-            # Settle before publishing the terminal record, so a waiter never sees the worktree mid-removal.
             record["provider_pgid"] = child.pid if child else None
-            _reap_settled(record, patience=2)
-            store.replace(record, path)
+            # The removal chokepoint releases a tree only to a finished owner record, so publish it, then
+            # settle; wait() reads a terminal record under this lock and never sees the tree mid-removal.
+            with store.task_state_lock(path):
+                store.replace(record, path)
+                _reap_settled(record, patience=SETTLE_PATIENCE)
+                store.replace(record, path)
         finally:
             signal.signal(signal.SIGTERM, previous_term)
             signal.signal(signal.SIGINT, previous_int)
