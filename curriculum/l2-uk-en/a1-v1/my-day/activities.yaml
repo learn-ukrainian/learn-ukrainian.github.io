@@ -26,42 +26,42 @@ inline:
     title: Послідовність дня
     instruction: Обери слово або дію, яка логічно продовжує день.
     items:
-      - sentence: '___ я прокидаюся і вмиваюся.'
+      - sentence: "(First.) ___ я прокидаюся і вмиваюся."
         answer: Спочатку
         options:
           - Спочатку
           - Потім
           - Нарешті
         explanation: День зазвичай починається з прокидання.
-      - sentence: 'Після того я ___.'
+      - sentence: "(I have breakfast.) Після того я ___."
         answer: снідаю
         options:
           - снідаю
           - вечеряю
           - лягаю спати
         explanation: Після ранкового вмивання логічно снідати.
-      - sentence: 'Вдень я ___ в офісі.'
+      - sentence: "(I work.) Вдень я ___ в офісі."
         answer: працюю
         options:
           - працюю
           - прокидаюся
           - снідаю
         explanation: Робота в офісі логічно підходить до вдень.
-      - sentence: 'О першій годині я ___.'
+      - sentence: "(I have lunch.) О першій годині я ___."
         answer: обідаю
         options:
           - обідаю
           - вечеряю
           - прокидаюся
         explanation: О першій зазвичай обідають.
-      - sentence: '___ я читаю книгу або дивлюся фільм.'
+      - sentence: "(Then.) ___ я читаю книгу або дивлюся фільм."
         answer: Потім
         options:
           - Потім
           - Спочатку
           - Вранці
         explanation: Потім продовжує розповідь після роботи або обіду.
-      - sentence: '___ я лягаю спати о дванадцятій.'
+      - sentence: "(Finally.) ___ я лягаю спати о дванадцятій."
         answer: Нарешті
         options:
           - Нарешті
@@ -73,28 +73,28 @@ inline:
     title: Частина доби
     instruction: Обери правильну частину доби для речення.
     items:
-      - sentence: "Я п'ю каву ___."
+      - sentence: "(In the morning.) Я п'ю каву ___."
         answer: вранці
         options:
           - вранці
           - вночі
           - ввечері
         explanation: Кава найчастіше підходить до ранку.
-      - sentence: 'Ми вечеряємо ___.'
+      - sentence: "(In the evening.) Ми вечеряємо ___."
         answer: ввечері
         options:
           - ввечері
           - вранці
           - вдень
         explanation: Вечеря належить до вечора.
-      - sentence: "Вона працює з дев'ятої до п'ятої ___."
+      - sentence: "(09:00-17:00.) Вона працює з дев'ятої до п'ятої ___."
         answer: вдень
         options:
           - вдень
           - вночі
           - вранці
         explanation: Робочий день з дев'ятої до п'ятої - це вдень.
-      - sentence: 'Вони гуляють у парку ___.'
+      - sentence: "(After lunch.) Вони гуляють у парку ___."
         answer: після обіду
         options:
           - після обіду
@@ -109,15 +109,13 @@ inline:
       - sentence: 'Вранці я ___.'
         answer: беру душ
         options:
-          - беру душ
-          - приймаю душ
-        explanation: У розмовній українській природно сказати беру душ.
+          ["беру душ", "бере душ"]
+        explanation: "With я, use беру. Бере is the third-person form."
       - sentence: 'Коли я хворий, я ___.'
         answer: "п'ю ліки"
         options:
-          - "п'ю ліки"
-          - приймаю ліки
-        explanation: Для ліків уживаємо пити ліки.
+          ["п'ю ліки", "п'є ліки"]
+        explanation: "With я, use п'ю. П'є goes with він or вона."
       - sentence: '___ зараз? — Восьма.'
         answer: Котра година
         options:
@@ -151,6 +149,5 @@ inline:
       - sentence: 'О сьомій я ___ і встав.'
         answer: прокинувся
         options:
-          - прокинувся
-          - проснувся
-        explanation: Тут потрібна нормативна форма прокинувся.
+          ["прокинувся", "прокинулася"]
+        explanation: "Встав is masculine past, so pair it with прокинувся. Прокинулася is feminine."

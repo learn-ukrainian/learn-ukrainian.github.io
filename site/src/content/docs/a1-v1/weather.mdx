@@ -123,7 +123,7 @@ with a season: **Мені подобається літо**, **Мені подо
 
 ### Діалог про погоду
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Яка сьогодні ___? — Сьогодні тепло.", "answer": "погода", "options": ["погода", "сонце", "дощ"]}, {"sentence": "— Завтра ___ сонячно. — Добре, гуляємо!", "answer": "буде", "options": ["буде", "є", "був"]}, {"sentence": "— Яка пора року тобі ___? — Літо.", "answer": "подобається", "options": ["подобається", "любить", "робить"]}, {"sentence": "— Чому ти любиш літо? — Тому що влітку ___.", "answer": "сонячно", "options": ["сонячно", "холодно", "хмарно"]}]`)} instruction={"Доповни короткий діалог про погоду."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Яка сьогодні ___? — Сьогодні тепло.", "answer": "погода", "options": ["погода", "сонце", "дощ"]}, {"sentence": "— Завтра ___ сонячно. — Добре, гуляємо!", "answer": "буде", "options": ["буде", "є", "був"]}, {"sentence": "— Яка пора року тобі ___? — Літо.", "answer": "подобається", "options": ["подобається", "любить", "робить"]}, {"sentence": "(Sunny.) — Чому ти любиш літо? — Тому що влітку ___.", "answer": "сонячно", "options": ["сонячно", "холодно", "хмарно"], "explanation": "Влітку сонячно fits the plan dialogue."}]`)} instruction={"Доповни короткий діалог про погоду."} isUkrainian={false} />
 
 ## Яка погода?
 
@@ -260,7 +260,7 @@ parts: time, weather, and plan.
 
 ### Погода і пора року
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Взимку часто ___.", "answer": "іде сніг", "options": ["іде сніг", "іде дощ", "світить сонце"]}, {"sentence": "Влітку дуже ___.", "answer": "спекотно", "options": ["спекотно", "холодно", "хмарно"]}, {"sentence": "Восени часто ___.", "answer": "іде дощ", "options": ["іде дощ", "іде сніг", "сонячно"]}, {"sentence": "Навесні ___ і красиво.", "answer": "тепло", "options": ["тепло", "холодно", "спекотно"]}, {"sentence": "Сьогодні мінус п'ять, дуже ___.", "answer": "холодно", "options": ["холодно", "тепло", "спекотно"]}, {"sentence": "Сьогодні плюс двадцять п'ять, ___.", "answer": "тепло", "options": ["тепло", "прохолодно", "холодно"]}]`)} instruction={"Обери логічну погоду для кожної пори року або температури."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "(It snows.) Взимку часто ___.", "answer": "іде сніг", "options": ["іде сніг", "іде дощ", "світить сонце"], "explanation": "Сніг first connects with зима."}, {"sentence": "(Hot.) Влітку дуже ___.", "answer": "спекотно", "options": ["спекотно", "холодно", "хмарно"], "explanation": "Спекотно is the safe A1 word for hot weather."}, {"sentence": "(It rains.) Восени часто ___.", "answer": "іде дощ", "options": ["іде дощ", "іде сніг", "сонячно"], "explanation": "Осінь often connects with rain in this first weather map."}, {"sentence": "(Warm.) Навесні ___ і красиво.", "answer": "тепло", "options": ["тепло", "холодно", "спекотно"], "explanation": "Навесні тепло is the target season-weather phrase."}, {"sentence": "Сьогодні мінус п'ять, дуже ___.", "answer": "холодно", "options": ["холодно", "тепло", "спекотно"]}, {"sentence": "Сьогодні плюс двадцять п'ять, ___.", "answer": "тепло", "options": ["тепло", "прохолодно", "холодно"]}]`)} instruction={"Обери логічну погоду для кожної пори року або температури."} isUkrainian={false} />
 
 ## 📋 Підсумок
 

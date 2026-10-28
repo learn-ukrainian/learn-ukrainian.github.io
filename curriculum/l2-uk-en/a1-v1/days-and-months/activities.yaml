@@ -80,13 +80,13 @@ inline:
     title: У/в для календаря
     instruction: Обери безпечну форму з у/в для дня, місяця або пори року.
     items:
-      - sentence: 'Я працюю ___.'
+      - sentence: "Урок ___."
         answer: у понеділок
         options:
           - у понеділок
           - понеділок
           - в понеділок
-        explanation: 'Use the weekday phrase у понеділок.'
+        explanation: "After the consonant in урок and before п, у понеділок follows the consonant-to-consonant pattern."
       - sentence: 'Мій день народження ___.'
         answer: у березні
         options:
