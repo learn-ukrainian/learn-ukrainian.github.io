@@ -46,13 +46,13 @@ inline:
           - 'коштують'
           - 'коштуємо'
         explanation: 'Пляшка is one bottle.'
-      - sentence: "(Use the plural verb form.) Скільки ___ три пляшки води?"
+      - sentence: "Скільки ___ ці пляшки води?"
         answer: 'коштують'
         options:
           - 'коштують'
           - 'коштує'
           - 'коштувала'
-        explanation: "The requested plural form is коштують. A singular predicate can also occur with a quantified subject."
+        explanation: "The plural subject ці пляшки requires коштують. Коштує and feminine singular past коштувала do not agree with it; the two–four agreement ambiguity is removed with the numeral."
       - sentence: 'Скільки ___ ця сукня?'
         answer: 'коштує'
         options:
@@ -170,27 +170,27 @@ inline:
           - 'одна пляшка'
           - 'один літр'
         explanation: 'Use один кілограм яблук as a buying phrase.'
-      - sentence: "(Ask for one litre.) Дайте ___ молока."
+      - sentence: "Дайте один ___ молока."
         answer: 'літр'
         options:
           - 'літр'
           - 'пляшку'
           - 'буханку'
-        explanation: 'Use літр молока.'
-      - sentence: "(Ask for one bottle.) Дайте ___ води."
+        explanation: "Один agrees with masculine accusative літр. Пляшку and буханку are feminine accusative and would need одну."
+      - sentence: "Дайте одну ___ води."
         answer: 'пляшку'
         options:
           - 'пляшку'
           - 'кілограм'
           - 'буханку'
-        explanation: 'Use пляшку води.'
-      - sentence: "(Ask for one packet of dry tea.) Дайте ___ чаю."
+        explanation: "Одну agrees with feminine accusative пляшку. Masculine кілограм would need один; буханка denotes a loaf, not poured water."
+      - sentence: "Дайте одну ___ чаю."
         answer: 'пачку'
         options:
-          - 'пачку'
-          - 'літр'
-          - 'пляшку'
-        explanation: 'Use пачку чаю.'
+          - пачку
+          - літр
+          - пачкою
+        explanation: "Одну agrees with feminine accusative пачку. Літр is masculine and would need один; пачкою is instrumental rather than the direct object."
       - sentence: 'Дайте ___ хліба.'
         answer: 'буханку'
         options:

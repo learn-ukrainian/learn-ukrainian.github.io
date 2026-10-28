@@ -32,13 +32,13 @@ inline:
           - 'молоку'
           - 'молоком'
         explanation: 'Молоко is neuter and stays молоко.'
-      - sentence: "(Use the accusative singular.) Вони їдять ___."
+      - sentence: "Вони їдять цю ___."
         answer: 'кашу'
         options:
           - 'кашу'
           - 'каша'
           - 'каші'
-        explanation: 'Каша becomes кашу.'
+        explanation: "Цю requires feminine singular accusative кашу. Каша and каші do not agree with цю."
       - sentence: "Ти п'єш ___."
         answer: 'каву'
         options:
@@ -46,26 +46,26 @@ inline:
           - 'кава'
           - 'каві'
         explanation: 'Кава becomes каву.'
-      - sentence: "(Use the accusative singular.) Я їм ___."
+      - sentence: "Я їм цей ___."
         answer: 'суп'
         options:
           - 'суп'
           - 'супу'
           - 'супом'
-        explanation: 'Суп is masculine inanimate and stays суп.'
-      - sentence: "(Use the accusative singular.) Вона їсть ___."
+        explanation: "Цей identifies a specific masculine inanimate accusative object суп. Супу and супом do not agree in case with цей."
+      - sentence: "Вона їсть цю ___."
         answer: 'картоплю'
         options:
           - 'картоплю'
           - 'картопля'
           - 'картоплі'
-        explanation: 'Картопля ends in -я, so direct object is картоплю.'
+        explanation: "Цю takes feminine accusative картоплю. Картопля and картоплі do not agree with цю."
   - id: act-2
     type: quiz
     title: Choose the food line
     instruction: Pick the natural A1 line.
     items:
-      - prompt: "(Use the accusative singular.) Я п'ю..."
+      - prompt: "Я п'ю цю..."
         options:
           - text: 'каву'
             correct: true
@@ -73,7 +73,7 @@ inline:
             correct: false
           - text: 'кави'
             correct: false
-        explanation: "After п'ю, feminine кава becomes каву."
+        explanation: "Цю requires feminine accusative каву. Кава is nominative and кави is not the matching singular accusative."
       - prompt: 'Він їсть...'
         options:
           - text: 'рибу'
@@ -83,7 +83,7 @@ inline:
           - text: 'рибі'
             correct: false
         explanation: 'Риба becomes рибу as a direct object.'
-      - prompt: "(Use the accusative singular.) Ми п'ємо..."
+      - prompt: "Ми п'ємо цей..."
         options:
           - text: 'сік'
             correct: true
@@ -91,8 +91,8 @@ inline:
             correct: false
           - text: 'соком'
             correct: false
-        explanation: 'Сік is masculine inanimate and stays сік.'
-      - prompt: "(Use the accusative singular.) Вона їсть..."
+        explanation: "Цей selects a masculine inanimate accusative object сік. Соку and соком do not agree with цей here."
+      - prompt: "Вона їсть це..."
         options:
           - text: "м'ясо"
             correct: true
@@ -100,7 +100,7 @@ inline:
             correct: false
           - text: "м'яса"
             correct: false
-        explanation: "М'ясо is neuter and stays м'ясо."
+        explanation: "The specific neuter object це м’ясо agrees in accusative/nominative-shaped singular. М’ясу and м’яса do not agree with це."
       - prompt: "Вони п'ють..."
         options:
           - text: 'воду'
@@ -110,7 +110,7 @@ inline:
           - text: 'воді'
             correct: false
         explanation: 'Вода becomes воду.'
-      - prompt: "(Use the accusative singular.) Ти їси..."
+      - prompt: "Ти їси цю..."
         options:
           - text: 'кашу'
             correct: true
@@ -118,7 +118,7 @@ inline:
             correct: false
           - text: 'каші'
             correct: false
-        explanation: 'Каша becomes кашу.'
+        explanation: "Цю requires feminine singular accusative кашу. Каша and каші do not agree with цю."
   - id: act-3
     type: match-up
     title: Verb person pairs
