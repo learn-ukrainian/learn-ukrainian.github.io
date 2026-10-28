@@ -12,7 +12,7 @@ from scripts.agent_runtime.result import Result
 from scripts.ai_agent_bridge._hermes import _invoke_hermes
 
 
-def test_cursor_adapter_plan_is_headless_and_records_the_requested_model(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_cursor_adapter_plan_is_headless_and_passes_the_requested_model(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from scripts.agent_runtime.adapters.cursor import CursorAdapter
 
     monkeypatch.setattr("shutil.which", lambda _name: "/fake/cursor-agent")
@@ -27,7 +27,7 @@ def test_cursor_adapter_plan_is_headless_and_records_the_requested_model(tmp_pat
             tool_config={},
         )
         assert "-p" in plan.cmd
-        assert plan.metadata["requested_model"] == "grok-4.7-high"
+        assert "grok-4.7-high" in plan.cmd
 
 
 def _hermes_result(*, ok: bool = True, response: str = "response body") -> Result:
