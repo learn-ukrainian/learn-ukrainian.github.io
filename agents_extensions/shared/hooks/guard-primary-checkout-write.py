@@ -87,27 +87,9 @@ one literal value in the whole command.
 
 A path containing any unknown expansion is BLOCKED as
 ``unresolved_shell_variable``: the unknown value may be absolute, empty or hold
-``..``, so no literal prefix proves it stays out of the primary. One exception:
-a redirect target whose literal text before the first unknown expansion names,
-up to its last ``/``, an absolute directory without glob characters that —
-after resolving symlinks — is neither inside the protected primary checkout nor
-one of its ancestors (``> /tmp/scratch/out-$1.log``). Bash expands a redirect
-word to exactly one word. The word must also hold no ``..`` component when
-every unknown expansion is empty, so its literal text cannot climb back out of
-that directory (``> /tmp/$X/../../<primary>/f`` and ``> /tmp/a/$X../f`` stay
-blocked), and it may hold no expansion other than plain parameters, which
-could add such text (``${X:-..}``, ``$(...)``). A directory under ``/proc``,
-``/dev/fd`` or ``/dev/std{in,out,err}`` is not external: ``/proc/self/cwd`` is
-the writing shell's cwd there, but the guard's when resolved here. The same
-holds when an existing symlink anywhere in the directory's resolution chain
-leads to such a path (``/tmp/scratch/alias -> /proc/self/cwd``); the guard
-follows each link's text component by component to find out. Ordinary
-symlinks to other external directories stay allowed. An argv path word stays blocked,
-because an unquoted expansion can word-split into further, possibly relative,
-paths. Relative prefixes, prefixes inside or above the primary, an unknown
-value alone (``> "$X"``), ``git -C`` directories and git pathspecs stay
-blocked. Inherited variables that the command never
-assigns (other than ``HOME``) are unknown too.
+``..``, so no literal prefix proves it stays out of the primary. ``git -C``
+directories and git pathspecs follow the same rule. Inherited variables that the
+command never assigns (other than ``HOME``) are unknown too.
 
 ANSI-C quoting is refused, not decoded (#10633). This guard does not model how
 Bash expands ``$'...'`` escapes, so a Bash command holding an unquoted marker
@@ -138,14 +120,6 @@ Coverage limitations (documented, by design)
   does not emit a hookable write event, this hook cannot enforce that path; the
   enforcement layer is #4445/#4446/#4449 instead. See
   ``docs/runbooks/codex-hooks.md``.
-* A redirect whose unknown part follows an external absolute directory is
-  allowed even though the unknown *value* can still hold ``..`` or name a
-  symlink that leads back into the primary checkout; ``..`` spelled in the
-  command text itself is refused (see above). Symlinks are inspected as they
-  exist when the guard runs, so one the same command creates or retargets
-  before the write is not seen. That is acceptable for an
-  accident guard: issue #4448 was an accidental cwd write, not an adversary,
-  and an accidental leaf value does not climb out of its scratch directory.
 
 Known residuals
 ---------------
@@ -768,8 +742,6 @@ def _tokenize(command: str) -> list[str]:
 # ---------------------------------------------------------------------------
 
 _VAR_REF_RE = re.compile(r"\$(?:([A-Za-z_][A-Za-z0-9_]*)|\{([A-Za-z_][A-Za-z0-9_]*)\})")
-# Positional and special parameters: their value never comes from the command text.
-_SPECIAL_PARAM_RE = re.compile(r"\$(?:[0-9@*#?$!-]|\{(?:[0-9]+|[@*#?$!-])\})")
 # ``NAME=``, ``NAME+=`` and ``NAME[i]=`` (group 2 subscript, group 3 ``+``).
 _ASSIGN_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(\[[^\]]*\])?(\+?)=", re.DOTALL)
 # The identifier a token starts with when an operator or the end follows it.
@@ -808,19 +780,14 @@ class ShellWord(str):
     (``None`` when the word resolved completely); from that offset on the text
     is the raw, unexpanded remainder, kept for messages. ``raw`` is the word as
     written. ``shell_redirect`` records an unquoted redirect operator before
-    expansion restores any quote-protected punctuation; ``redirect_target``
-    marks the file word that follows one. ``unknowns_empty`` is the word with
-    every unknown parameter empty and every known one substituted, or ``None``
-    when it holds any other expansion or nothing is unknown.
+    expansion restores any quote-protected punctuation.
     """
 
     unresolved_at: Optional[int]  # noqa: UP045 - Python 3.9 parser
-    unknowns_empty: Optional[str]  # noqa: UP045 - Python 3.9 parser
     raw: str
     base: str | None
     decision_reason: str | None
     shell_redirect: bool
-    redirect_target: bool
 
     def __new__(
         cls,
@@ -831,12 +798,10 @@ class ShellWord(str):
     ) -> ShellWord:
         word = super().__new__(cls, text)
         word.unresolved_at = unresolved_at
-        word.unknowns_empty = None
         word.raw = text if raw is None else raw
         word.base = None
         word.decision_reason = None
         word.shell_redirect = shell_redirect
-        word.redirect_target = False
         return word
 
     def tail(self, start: int) -> ShellWord:
@@ -859,43 +824,14 @@ Bindings = dict[str, Optional[str]]  # noqa: UP045 - Python 3.9 parser
 Lookup = Callable[[str], Optional[str]]  # noqa: UP045 - Python 3.9 parser
 
 
-def _with_unknowns_empty(token: str, start: int, done: str, known: Lookup) -> str | None:
-    """``done`` plus the masked ``token[start:]`` with each unknown parameter empty.
-
-    ``known`` returns every literal value the command assigned, including one
-    holding whitespace. ``$NAME``, ``${NAME}`` and positional/special parameters
-    are substituted, or emptied when unknown; any other expansion (``$(...)``,
-    backticks, ``${NAME:-x}``, an ANSI-C span) can add literal text, so the
-    result is ``None``.
-    """
-    out = [done]
-    i = start
-    while i < len(token):
-        char = token[i]
-        if char in "$`" or char == _ANSI_C_OPENER:
-            match = _VAR_REF_RE.match(token, i) if char == "$" else None
-            if match is not None:
-                out.append(known(match.group(1) or match.group(2)) or "")
-            else:
-                match = _SPECIAL_PARAM_RE.match(token, i) if char == "$" else None
-                if match is None:
-                    return None
-            i = match.end()
-            continue
-        out.append(char)
-        i += 1
-    return "".join(out).translate(_UNMASK)
-
-
-def _expand_word(token: str, lookup: Lookup, known: Lookup | None = None) -> ShellWord:
+def _expand_word(token: str, lookup: Lookup) -> ShellWord:
     """Expand ``~``, ``$NAME`` and ``${NAME}`` in one masked token.
 
     ``lookup`` returns a variable's known value or ``None``. Anything else that
     expands — ``$(...)``, backticks, ``${NAME:-x}``, positional/special
     parameters, a name without a known value, an undecoded ANSI-C ``$'...'``
     span — stops the expansion there and marks the word unresolved at that
-    offset. The word then also records ``unknowns_empty``
-    (``_with_unknowns_empty``, values from ``known``, default ``lookup``).
+    offset.
     """
     raw = token.translate(_UNMASK)
     shell_redirect = token in _REDIRECT_OPS
@@ -923,9 +859,7 @@ def _expand_word(token: str, lookup: Lookup, known: Lookup | None = None) -> She
             value = lookup(match.group(1) or match.group(2)) if match else None
             if match is None or value is None:
                 prefix = "".join(out).translate(_UNMASK)
-                word = ShellWord(prefix + token[i:].translate(_UNMASK), len(prefix), raw, shell_redirect=shell_redirect)
-                word.unknowns_empty = _with_unknowns_empty(token, i, "".join(out), known or lookup)
-                return word
+                return ShellWord(prefix + token[i:].translate(_UNMASK), len(prefix), raw, shell_redirect=shell_redirect)
             out.append(value)
             i = match.end()
             continue
@@ -1023,7 +957,7 @@ class _Expander:
                 value if (value := self._lookup(name)) is not None and not _WHITESPACE_RE.search(value) else None
             )
         )
-        return _expand_word(token, lookup, self._lookup)
+        return _expand_word(token, lookup)
 
     # -- scope tracking ------------------------------------------------------
 
@@ -1158,8 +1092,6 @@ def _redirect_targets(tokens: list[str]) -> list[str]:
             # The null device discards output; it cannot dirty a checkout.
             if dest == "/dev/null":
                 continue
-            if isinstance(dest, ShellWord):
-                dest.redirect_target = True
             targets.append(dest)
     return targets
 
@@ -2467,9 +2399,7 @@ class _UnresolvedWrite:
     message = (
         "The write target depends on a shell value the guard cannot resolve. "
         "Assign it with a literal value earlier in the same command "
-        '(S=/tmp/scratch; echo x > "$S/out.txt") or use a literal path. '
-        "A redirect may leave only the part after an absolute directory outside "
-        "the primary checkout unknown (echo x > /tmp/scratch/out-$1.log)."
+        '(S=/tmp/scratch; echo x > "$S/out.txt") or use a literal path.'
     )
 
 
@@ -2521,92 +2451,15 @@ def _final_component_matches(pattern: str, name: str) -> bool:
     return (not name.startswith(".") or pattern.startswith(".")) and fnmatch.fnmatchcase(name, pattern)
 
 
-_PROCESS_RELATIVE_ROOTS = ("/proc", "/dev/fd", "/dev/stdin", "/dev/stdout", "/dev/stderr")
-
-
-def _reaches_process_relative_path(directory: str) -> bool:
-    """Whether resolving ``directory`` passes through a process-relative path.
-
-    Walks the absolute path one component at a time and follows each existing
-    symlink's ``os.readlink`` text iteratively, as the kernel does. Any step
-    under ``/proc``, ``/dev/fd``, ``/dev/stdin``, ``/dev/stdout`` or
-    ``/dev/stderr`` names the writing shell's state there but the guard
-    process's here, so it counts. A symlink loop or unreadable link counts too.
-    """
-    resolved = "/"
-    pending = [part for part in directory.split("/") if part]
-    links = 0
-    while pending:
-        part = pending.pop(0)
-        if part == ".":
-            continue
-        candidate = os.path.dirname(resolved) if part == ".." else os.path.join(resolved, part)
-        if any(candidate == root or candidate.startswith(root + "/") for root in _PROCESS_RELATIVE_ROOTS):
-            return True
-        if part != ".." and os.path.islink(candidate):
-            links += 1
-            try:
-                target = os.readlink(candidate)
-            except OSError:
-                return True
-            if links > 40:
-                return True
-            pending[:0] = [p for p in target.split("/") if p]
-            if target.startswith("/"):
-                resolved = "/"
-            continue
-        resolved = candidate
-    return False
-
-
-def _external_prefix_decision(word: str, base: str, wc, main_root: Path | None) -> object | None:
-    """Allowing decision for a redirect whose unknown part follows an external directory.
-
-    The literal text before the first unknown expansion must name, up to its
-    last ``/``, an absolute directory without glob characters that, after
-    symlinks are resolved, is neither inside ``main_root`` nor one of its
-    ancestors, and that containment allows writing under. Only a redirect
-    target qualifies: Bash expands it to exactly one word, while an argv word
-    from an unquoted expansion can split into further, possibly relative,
-    paths. With every unknown empty, the word must hold no ``..`` component, so
-    its literal text cannot climb out (``/tmp/$X/../..``, ``/tmp/a/$X..``). A
-    directory that is, or reaches through a symlink, a process-relative path
-    (``_reaches_process_relative_path``) is never external: ``/proc/self``
-    names the writing shell there but the guard process here. Returns ``None``
-    when the word does not qualify.
-    """
-    if main_root is None or not getattr(word, "redirect_target", False):
-        return None
-    literal = str(word)[: word.unresolved_at]
-    directory = literal[: literal.rfind("/") + 1]
-    if not directory.startswith("/") or re.search(r"[*?\[\]{}]", directory):
-        return None
-    emptied = getattr(word, "unknowns_empty", None)
-    if emptied is None or ".." in emptied.split("/"):
-        return None
-    if _reaches_process_relative_path(directory):
-        return None
-    prefix = wc.canonicalize(directory)
-    if prefix == main_root or main_root in prefix.parents or prefix in main_root.parents:
-        return None
-    if prefix.parts[1:2] == ("proc",):
-        return None
-    decision = wc.evaluate_write(prefix / "__guard_unresolved_probe__", cwd=base)
-    return decision if decision.allowed else None
-
-
 def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None) -> object:
     """Containment decision for one expanded Bash path word.
 
-    A word holding an unknown expansion is blocked unless it is a redirect
-    whose literal prefix is an external absolute directory
-    (``_external_prefix_decision``): elsewhere the unknown value may be
-    absolute, empty or contain ``..``, so no literal prefix proves the path
-    stays out of the primary checkout.
+    A word holding any unknown expansion is blocked outright: the unknown value
+    may be absolute, empty or contain ``..``, so no literal prefix proves the
+    path stays out of the primary checkout.
     """
     if getattr(word, "unresolved_at", None) is not None:
-        anchor = getattr(word, "base", None) or base
-        return _external_prefix_decision(word, anchor, wc, main_root) or _UnresolvedWrite()
+        return _UnresolvedWrite()
     reason = getattr(word, "decision_reason", None)
     if reason is not None:
         return _UndecidableWrite(reason, "Use a literal target and a known working directory.")
