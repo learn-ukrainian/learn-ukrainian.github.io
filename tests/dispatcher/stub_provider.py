@@ -76,6 +76,9 @@ def main():
     if model == "crash":
         os.kill(os.getpid(), signal.SIGKILL)
     text = sys.stdin.buffer.read().decode()
+    # Echo the user's request, after the dispatcher resource catalog a real model would consume.
+    if text.startswith("Dispatcher-provided shared skills"):
+        text = text.split("\n</dispatch-context>\n\n", 1)[1]
     if model in {"capacity", "capacity-dirty"}:
         print("CAPACITY")
         return 1
