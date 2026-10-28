@@ -962,13 +962,30 @@ provider's own CLI holds the lock: Codex `-s read-only`, Cursor `--mode ask`,
 Muse `--disable-write --disable-shell`, Claude `dontAsk` with no blanket Bash
 grant (only Claude Code's built-in read-only commands and `gh` reads run, and
 redirects are checked against the Edit deny) under `--restricted`, so no user,
-project or local settings file can add an allow rule (this also leaves the
-checkout's CLAUDE.md unloaded; read-only briefs must be self-contained), and OpenCode's
+project or local settings file can add an allow rule, and OpenCode's
 `OPENCODE_PERMISSION` rules (edits denied; bash limited to `git diff`, `git log`,
 `git show` and `git status` with no redirect or `--output`). AGY and Hermes give
 a dispatched run no enforceable write lock, so read-only on them exits 2 with
 `read_only_unenforceable` before anything launches. Read-only runs on Claude and
 OpenCode cannot run tests; use Codex when a read-only reviewer must execute them.
+
+`--restricted` skips CLAUDE.md, so read-only Claude gets the rules core
+(`agents_extensions/shared/rules/core.md`) through `--append-system-prompt-file`;
+Claude-only notes that exist only in CLAUDE.md do not reach it. `--restricted`
+still loads managed settings, which could widen the lock, so read-only Claude
+also exits 2 with `read_only_unenforceable` when any managed source exists or
+cannot be checked: the `/etc/claude-code` policy directory, a non-empty
+`remote-settings.json` cache, a `claude doctor` report other than "not fetched"
+for remote managed settings, or a host other than plain Linux.
+
+**Accepted residual risk (F5, CTO decision C-2982, 2026-10-28).** `claude doctor`
+reads user, project and local settings files that the `--restricted` launch
+ignores, so an auth override in one of them could make doctor report "not
+fetched" while the launch uses a stored Team or Enterprise login whose
+server-managed policy widens the lock. This is accepted because neither host
+Claude login can carry such a policy: both are individual Max accounts
+(`oauthAccount.organizationType = claude_max`), and `/etc/claude-code` is
+absent. Revisit before any Team or Enterprise login is added to this host.
 
 Sparse worktrees use `SPARSE_EXCLUDE_DEFAULT` in `scripts/dispatcher/git.py`.
 Re-include a tree explicitly with `--sparse-include DIR`, or use
