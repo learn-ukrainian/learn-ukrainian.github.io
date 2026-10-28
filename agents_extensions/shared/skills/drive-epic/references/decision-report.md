@@ -40,6 +40,33 @@ not wait on the operator. Operator-only items (core.md P6) wait for the operator
 independent work continues; list each as a residual with a workaround and the command output
 that shows it is operator-only.
 
+## Council: optional independent panel
+
+Use it for a consequential design decision, when the operator asks for a second opinion
+("council"), or for a named unresolved risk on a critical PR. Not for routine PRs.
+
+- **Members:** live eligible routes only: Opus via Claude, Sol via Codex, Grok via Cursor
+  (`model-assignment.md`). Muse may add advice but never replaces designated approval
+  (operator-expectations.md item 12). Gemini is out while AGY read-only dispatch is refused
+  (C-2970). Grok is out of Ukrainian-content questions. An unavailable member is reported,
+  never substituted, and the panel is then not called complete.
+- **Read-only** comes from the harness (`dispatch.py --mode read-only`), not from prompt wording.
+- **Freeze before dispatch:** the question, context, roles and stop condition. Panel rounds
+  count against the same `review-loop` budget as any review
+  ([policy](../../review-loop/references/policy.md)); never "until all members are satisfied".
+- **Findings and score:** every panelist returns written findings plus `SCORE n/10` with a
+  one-line rationale, against this rubric: 10 = no findings; 7-9 = only P2/P3; 4-6 = an open
+  P1; 1-3 = a P0 or the wrong approach. A score never gates a merge: the verdict and the
+  findings do.
+- **Output:** evidence, dissent, scores, dispositions and owners go in this report and the
+  durable task record. For a PR panel, record each round in a rounds table in the PR body
+  (round, member, verdict, score, key finding).
+- **On a PR** the panel shares the `review-loop` budget and ledger; `review-loop` keeps the
+  single exact-head review of record, so the panel adds no second review path. Designated
+  approval and `full-send` are unchanged.
+
+Learned from tstack's `council` skill (MIT, Theo Browne); the text is our own.
+
 ## Sources
 
 Every source cited above, with its link or path.
