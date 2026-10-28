@@ -25,6 +25,7 @@ def test_cancelled_shard_keeps_running_test_evidence(tmp_path: Path, cancel_sign
     upload = next(step for step in job["steps"] if step.get("name") == "Upload pytest JUnit report")
     assert diagnostic["if"] == "${{ failure() || cancelled() }}"
     assert upload["if"] == "${{ always() }}"
+    assert upload["with"]["overwrite"] is True
     assert "ci-artifacts/pytest-shard-*-breadcrumbs/" in upload["with"]["path"]
     breadcrumb_dir = job["env"]["PYTEST_BREADCRUMB_DIR"].replace("${{ matrix.shard }}", "15")
     env = {key: value for key, value in os.environ.items() if not key.startswith(("PYTEST_", "LU_"))}

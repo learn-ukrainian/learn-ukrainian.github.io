@@ -432,6 +432,8 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-junit-shard-${{ matrix.shard }}
+          # A retry replaces the cancelled attempt's incomplete shard artifact.
+          overwrite: true
           path: |
             ci-artifacts/pytest-shard-*.xml
             ci-artifacts/pytest-shard-*-files.txt
