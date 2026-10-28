@@ -27,7 +27,8 @@ rounds are deltas.
 - **One verification round after a final-round APPROVE.** When the head moves after an
   APPROVE in the last budgeted round, the recorder admits exactly one more round (round 4,
   or round 6 on the elevated tier), with no open blocker required, and labels it with the
-  APPROVE head and the tier. It needs the APPROVE head's verdict as the keeper reads it to be
+  APPROVE head. The tier recorded at the APPROVE head holds: a later diff neither raises nor
+  lowers it. It needs the APPROVE head's verdict as the keeper reads it to be
   APPROVED (an edited or unknown record refuses), no `CHANGES_REQUESTED` or `BLOCKED`
   recorded after it, a new head that descends from it (a rebase that drops it escalates), and
   one dispatch per seat whose brief names the APPROVE head's full SHA and covers the delta

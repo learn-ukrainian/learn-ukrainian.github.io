@@ -457,7 +457,7 @@ def test_same_family_red_team_records_and_reconciles(monkeypatch, tmp_path, fami
     assert calls == {"posts": 1, "statuses": 2}
     body = comments[0]["body"]
     assert body.startswith("### Adversarial red-team review\nReview mode: red_team\n")
-    assert body.endswith("review_mode=red_team -->")
+    assert body.endswith("review_mode=red_team budget_tier=default -->")
     from scripts.orchestration.integration_sweep import lookup_verdict
 
     verdict = lookup_verdict(comments, SHA, "fleet")
@@ -519,9 +519,10 @@ def test_red_team_outside_rejection_publication_guard(monkeypatch, tmp_path, ver
         assert calls == {"posts": 1, "statuses": 1}
 
 
-def recorded_verdict(sha, verdict, *, task_id="prior-review", mode="cross_family", edited=False):
+def recorded_verdict(sha, verdict, *, task_id="prior-review", mode="cross_family", edited=False, budget_tier=None):
     """A trusted verdict comment the keeper reads, as the recorder posts it (``edited`` changes it later)."""
     body = recorder.build_comment(
+        budget_tier=budget_tier,
         sha=sha,
         task_id=task_id,
         started="2026-09-23T11:00:00.000001+00:00",
@@ -681,11 +682,21 @@ def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, se
         assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
 
 
-@pytest.mark.parametrize("security,budget,tier", [(False, 3, "default"), (True, 5, "elevated")])
-def test_verification_round_after_a_final_round_approve_is_spent_once(monkeypatch, tmp_path, security, budget, tier):
+@pytest.mark.parametrize(
+    "held,security,tier",
+    [
+        # Markers recorded before tiers were stored hold the tier the new head computes.
+        (None, False, "default"),
+        # The tier recorded at the approved head holds when the delta adds or drops a security path.
+        ("default", True, "default"),
+        ("elevated", False, "elevated"),
+    ],
+)
+def test_verification_round_after_a_final_round_approve_is_spent_once(monkeypatch, tmp_path, held, security, tier):
     from scripts.orchestration import integration_sweep as sweep
 
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    budget = recorder.TIER_ROUNDS[tier]
     anchor = f"{budget:x}" * 40
     prompt = tasks / "review.prompt"
 
@@ -699,22 +710,30 @@ def test_verification_round_after_a_final_round_approve_is_spent_once(monkeypatc
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
     monkeypatch.setattr(recorder, "_descends_from", lambda _root, old, new: (old, new) == (anchor, SHA))
     comments.extend(recorded_verdict(f"{index:x}" * 40, "CHANGES_REQUESTED") for index in range(1, budget))
-    comments.append(recorded_verdict(anchor, "APPROVED", task_id="final-round"))
+    comments.append(recorded_verdict(anchor, "APPROVED", task_id="final-round", budget_tier=held))
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     # The round is bound to a brief that scopes the delta from the approved head.
     briefed("review-one", "Verification delta since the last reviewed head.")
-    with pytest.raises(recorder.RecordError, match="brief must name the approved head"):
+    with pytest.raises(recorder.RecordError, match="bound brief that names the approved head"):
         recorder.record("review-one", **kwargs)
+    # An unrecorded dispatch at that head, archived at any depth, already spent the round.
+    shopped = tasks / recorder.ARCHIVE_DIR_NAME / "group" / "review-two.json"
+    briefed(f"{recorder.ARCHIVE_DIR_NAME}/group/review-two", f"Verification delta: git diff {anchor}..{SHA}")
     briefed("review-one", f"Verification delta: git diff {anchor}..{SHA}")
+    with pytest.raises(recorder.RecordError, match="admits 1 review dispatch"):
+        recorder.record("review-one", **kwargs)
+    shopped.unlink()
     for expected in ("posted", "existing"):
         assert recorder.record("review-one", **kwargs)["comment"] == expected
     marker = sweep.parse_marker(comments[-1]["body"])
     assert (marker["verification_of"], marker["budget_tier"]) == (anchor, tier)
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
-    # Another dispatch at the verification head cannot spend the round again, and no later head opens one.
-    briefed("review-two", f"Verification delta: git diff {anchor}..{SHA}")
+    # Another dispatch at the verification head cannot spend the round again; the recorded task
+    # still republishes, and no later head opens a round.
+    briefed("review-three", f"Verification delta: git diff {anchor}..{SHA}")
     with pytest.raises(recorder.RecordError, match="admits 1 review dispatch"):
-        recorder.record("review-two", **kwargs)
+        recorder.record("review-three", **kwargs)
+    assert recorder.record("review-one", **kwargs)["comment"] == "existing"
     with pytest.raises(recorder.RecordError, match="spent its verification round"):
         recorder.require_review_round_within_budget(
             comments, "c" * 40, "fleet", budget=budget, pr=42, descends=lambda *_: True

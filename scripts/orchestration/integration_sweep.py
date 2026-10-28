@@ -61,8 +61,9 @@ MARKER = re.compile(
     r"(?: unknown_history=(?P<unknown_history>[0-9a-f]{40}(?:,[0-9a-f]{40})*))?"
     r"(?: authorship=(?P<authorship>verified_app_bot))?"
     r"(?: review_profile=(?P<review_profile>ukrainian))?(?: sources_calls=(?P<sources_calls>[0-9]+))?"
-    # The one verification round after a final-round APPROVE (review-loop policy § Budget).
-    r"(?: verification_of=(?P<verification_of>[0-9a-f]{40}) budget_tier=(?P<budget_tier>default|elevated))? -->\Z"
+    # The round's budget tier, and the one verification round after a final-round APPROVE
+    # (review-loop policy § Budget).
+    r"(?: budget_tier=(?P<budget_tier>default|elevated))?(?: verification_of=(?P<verification_of>[0-9a-f]{40}))? -->\Z"
 )
 MARKER_PREFIX = CF_VERDICT_MARKER_PREFIX
 # Stable reason codes for an ``unknown`` verdict (#11127); consumers may match on them.
@@ -215,9 +216,12 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     # once each. Substrings also admit negation, prefixed labels and conflicts.
     authorship = item.pop("authorship")
     history = item.pop("unknown_history")
-    anchor, tier = item.pop("verification_of"), item.pop("budget_tier")
+    tier, anchor = item.pop("budget_tier"), item.pop("verification_of")
+    if anchor is not None and tier is None:
+        return None
     statements = {
-        "Verification round:": f"Verification round: after APPROVE at {anchor}, budget_tier {tier}" if anchor else None,
+        "Budget tier:": f"Budget tier: {tier}" if tier else None,
+        "Verification round:": f"Verification round: after APPROVE at {anchor}" if anchor else None,
         "Authorship:": f"Authorship: {authorship}" if authorship else None,
         "Historical authorship:": "Historical authorship: unknown_historical" if history else None,
         "Unknown history:": f"Unknown history: {history}" if history else None,
@@ -248,8 +252,10 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     # A verified app bot author (#10531) is stated in the readable prefix too.
     if authorship is not None:
         item["authorship"] = authorship
+    if tier is not None:
+        item["budget_tier"] = tier
     if anchor is not None:
-        item.update(verification_of=anchor, budget_tier=tier)
+        item["verification_of"] = anchor
     if mode is not None:
         item["review_mode"] = mode
         if not body.startswith("### Adversarial red-team review\nReview mode: red_team\n"):

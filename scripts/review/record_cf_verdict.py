@@ -120,6 +120,7 @@ NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
 # a security-sensitive change gets the elevated budget.
 DEFAULT_REVIEW_ROUNDS = 3
 ELEVATED_REVIEW_ROUNDS = 5
+TIER_ROUNDS = {"default": DEFAULT_REVIEW_ROUNDS, "elevated": ELEVATED_REVIEW_ROUNDS}
 
 
 class RecordError(RuntimeError):
@@ -1421,9 +1422,9 @@ def _repo_root() -> Path:
 
 
 @contextmanager
-def sha_lock(repository: str, sha: str, lock_root: Path):
+def publication_lock(repository: str, key: str, lock_root: Path):
     lock_root.mkdir(parents=True, exist_ok=True)
-    name = hashlib.sha256(f"{repository}\0{sha}".encode()).hexdigest() + ".lock"
+    name = hashlib.sha256(f"{repository}\0{key}".encode()).hexdigest() + ".lock"
     with (lock_root / name).open("a+") as lock_file:
         fcntl.flock(lock_file, fcntl.LOCK_EX)
         try:
@@ -1449,7 +1450,8 @@ def build_comment(
     app_bot: bool = False,
     score: int | None = None,
     author_models: Iterable[str | None] = (),
-    verification: VerificationRound | None = None,
+    budget_tier: Literal["default", "elevated"] | None = None,
+    verification_of: str | None = None,
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1468,16 +1470,17 @@ def build_comment(
     _require_sources_mcp_calls({"review_profile": review_profile, "sources_mcp_call_count": sources_mcp_call_count})
     profile_field = " review_profile=ukrainian" if ukrainian else ""
     sources_field = f" sources_calls={sources_mcp_call_count}" if sources_mcp_call_count is not None else ""
-    verification_field = (
-        f" verification_of={verification.anchor} budget_tier={verification.budget_tier}" if verification else ""
-    )
+    if verification_of is not None and (budget_tier is None or not SHA.fullmatch(verification_of)):
+        raise RecordError("a verification round needs a budget tier and a full approved-head SHA")
+    tier_field = f" budget_tier={budget_tier}" if budget_tier else ""
+    verification_field = f" verification_of={verification_of}" if verification_of else ""
     # The score is advisory (C-3020): stored for calibration, never read by a gate.
     score_text = f"{score}/10" if score is not None else "absent"
     authors = sorted({author for author in author_models if author})
     marker = (
         f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
         f"model={model} family={family}{mode_field}{history_field}{authorship_field}{profile_field}{sources_field}"
-        f"{verification_field} -->"
+        f"{tier_field}{verification_field} -->"
     )
     prefix = (
         ("### Adversarial red-team review\n" if review_mode == "red_team" else "### Cross-family review\n")
@@ -1490,11 +1493,8 @@ def build_comment(
         + (f"Authorship: {VERIFIED_APP_BOT}\n" + ("" if history else "No author model assumed.\n") if app_bot else "")
         + ("Review profile: ukrainian\n" if ukrainian else "")
         + (f"Sources MCP calls: {sources_mcp_call_count}\n" if sources_mcp_call_count is not None else "")
-        + (
-            f"Verification round: after APPROVE at {verification.anchor}, budget_tier {verification.budget_tier}\n"
-            if verification
-            else ""
-        )
+        + (f"Budget tier: {budget_tier}\n" if budget_tier else "")
+        + (f"Verification round: after APPROVE at {verification_of}\n" if verification_of else "")
         + f"head: {sha}\n"
         f"Reviewer family: {family}\n"
         f"VERDICT: {verdict}\n"
@@ -1753,11 +1753,11 @@ def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[
 
 
 @dataclass(frozen=True)
-class VerificationRound:
-    """The one round past the budget that verifies a moved head after a final-round APPROVE."""
+class RoundAdmission:
+    """The budget tier a new verdict records, and the approved head a verification round follows."""
 
-    anchor: str
     budget_tier: Literal["default", "elevated"]
+    verification_of: str | None = None
 
 
 def require_review_round_within_budget(
@@ -1768,7 +1768,7 @@ def require_review_round_within_budget(
     budget: int,
     pr: int,
     descends: Callable[[str, str], bool],
-) -> VerificationRound | None:
+) -> RoundAdmission:
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
     A round is one reviewed head: trusted verdicts on this PR are counted
@@ -1777,12 +1777,15 @@ def require_review_round_within_budget(
     GitHub listing finds them reliably (search index lag, the 250-commit PR
     listing cap). Budget end is never approval.
 
-    One round past the budget is admitted, once, as the verification round
-    (review-loop policy § Budget): when the final budgeted head's effective
-    verdict is APPROVED, no rejection was published after that approval, and
-    the new head descends from it. Its marker records the anchor and tier; once
-    recorded, no other head opens a round. Returns that round, else None.
+    The tier recorded at the last reviewed head holds: a new head opens an
+    ordinary round only within both that tier and its own, so a later diff
+    neither raises nor lowers the budget already in force. One round past the
+    held tier is admitted, once, as the verification round (review-loop policy
+    § Budget): when the last head's effective verdict is APPROVED, no rejection
+    was published after that approval, and the new head descends from it. Its
+    marker names that head; once recorded, no other head opens a round.
     """
+    tier: Literal["default", "elevated"] = "elevated" if budget == ELEVATED_REVIEW_ROUNDS else "default"
     markers = _trusted_markers(comments, login)
     heads = list(dict.fromkeys(marker["sha"] for marker in markers))
     spent = next((marker for marker in markers if marker.get("verification_of")), None)
@@ -1792,14 +1795,19 @@ def require_review_round_within_budget(
                 f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} spent its verification round at {spent['sha']}; "
                 "budget end is never approval, escalate instead of recording another round"
             )
-        return VerificationRound(spent["verification_of"], spent["budget_tier"])
-    if sha in heads or len(heads) < budget:
-        return None
+        return RoundAdmission(spent["budget_tier"], spent["verification_of"])
+    if sha in heads or not heads:
+        return RoundAdmission(tier)
+    held = next(
+        (marker["budget_tier"] for marker in markers if marker["sha"] == heads[-1] and marker.get("budget_tier")), tier
+    )
+    if len(heads) < min(TIER_ROUNDS[held], budget):
+        return RoundAdmission(tier)
     refusal = (
         f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(heads)} heads and its budget "
-        f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(heads) + 1}"
+        f"is {TIER_ROUNDS[held]} rounds; budget end is never approval, escalate instead of recording round {len(heads) + 1}"
     )
-    if len(heads) > budget:
+    if len(heads) != TIER_ROUNDS[held]:
         raise RecordError(refusal)
     anchor = heads[-1]
     current = lookup_verdict(comments, anchor, login)
@@ -1819,7 +1827,7 @@ def require_review_round_within_budget(
         raise RecordError(
             f"{refusal} (no verification round: {sha} is not proven to descend from approved head {anchor})"
         )
-    return VerificationRound(anchor, "elevated" if budget == ELEVATED_REVIEW_ROUNDS else "default")
+    return RoundAdmission(held, anchor)
 
 
 def _descends_from(repo_root: Path, anchor: str, sha: str) -> bool:
@@ -1836,6 +1844,23 @@ def _descends_from(repo_root: Path, anchor: str, sha: str) -> bool:
     return True
 
 
+def _review_dispatch_at(record: Any, branch: str, sha: str) -> bool:
+    """Whether a task record is a review dispatch of ``branch`` pinned at ``sha``.
+
+    Only reviews carry ``review_branch``; a pre-V2 review named its branch as
+    ``worktree_branch`` and ran read-only, unlike the authoring tasks that share it.
+    """
+    if not isinstance(record, dict) or record.get("worktree_base_sha") != sha:
+        return False
+    if record.get("review_branch") == branch:
+        return True
+    return (
+        record.get("schema_version") != 2
+        and record.get("worktree_branch") == branch
+        and record.get("mode") == "read-only"
+    )
+
+
 def require_one_verification_dispatch(
     task: Mapping[str, Any],
     task_id: str,
@@ -1847,12 +1872,14 @@ def require_one_verification_dispatch(
     seats: int,
     recorded_tasks: Iterable[str],
 ) -> None:
-    """Bind the verification round to one briefed dispatch per seat at its head.
+    """Bind a new verification verdict to one briefed dispatch per seat at its head.
 
     Its brief must name the approved head, so the delta is the change since
-    that APPROVE; a retried publication of the same task stays idempotent, but
-    no other dispatch at that head spends the round again.
+    that APPROVE. Every review task record at that head counts, hot or
+    archived and at any depth; a task already recorded there is checked once,
+    so its republication stays idempotent.
     """
+    exhausted = "REVIEW_BUDGET_EXHAUSTED: the verification round"
     prompt_file = task.get("prompt_file")
     try:
         path = Path(prompt_file) if isinstance(prompt_file, str) else None
@@ -1867,28 +1894,22 @@ def require_one_verification_dispatch(
         or digest not in (task.get("prompt_sha256"), task.get("effective_prompt_sha256"))
         or anchor not in prompt.decode("utf-8", errors="replace")
     ):
-        raise RecordError(
-            f"REVIEW_BUDGET_EXHAUSTED: a verification round's bound brief must name the approved head {anchor}"
-        )
+        raise RecordError(f"{exhausted} needs a bound brief that names the approved head {anchor}")
     dispatches = {task_id, *recorded_tasks}
-    for directory in (task_root, task_root / ARCHIVE_DIR_NAME):
-        try:
-            paths = sorted(directory.glob("*.json")) if directory.is_dir() else []
-            for path in paths:
-                text = path.read_text(encoding="utf-8")
-                if sha not in text:
-                    continue
-                record = json.loads(text)
-                if not isinstance(record, dict):
-                    continue
-                if record.get("review_branch") == branch and record.get("worktree_base_sha") == sha:
-                    dispatches.add(path.stem)
-        except (OSError, UnicodeError, ValueError):
-            raise RecordError("verification round dispatch ledger unreadable") from None
+    try:
+        for path in sorted(task_root.rglob("*.json")):
+            text = path.read_text(encoding="utf-8")
+            if sha in text and _review_dispatch_at(json.loads(text), branch, sha):
+                relative = path.relative_to(task_root).with_suffix("")
+                if relative.parts[0] == ARCHIVE_DIR_NAME:
+                    relative = relative.relative_to(ARCHIVE_DIR_NAME)
+                dispatches.add(relative.as_posix())
+    except (OSError, UnicodeError, ValueError):
+        raise RecordError(f"{exhausted} dispatch ledger is unreadable; its dispatch count is unknown") from None
     if len(dispatches) > seats:
         raise RecordError(
-            f"REVIEW_BUDGET_EXHAUSTED: the verification round at {sha} admits {seats} review dispatch(es), "
-            f"found {len(dispatches)}; budget end is never approval, escalate instead"
+            f"{exhausted} at {sha} admits {seats} review dispatch(es), found {len(dispatches)}; "
+            "budget end is never approval, escalate instead"
         )
 
 
@@ -2137,7 +2158,8 @@ def record(
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
     posted = False
-    with sha_lock(repository, sha, lock_root):
+    # One lock per PR: the verification round is spent across heads, not at one head.
+    with publication_lock(repository, f"pr-{number}", lock_root):
         # The PR may move while an earlier recorder owns the lock.
         current = _pr(repository, branch, number)
         if current.get("headRefOid") != sha:
@@ -2149,7 +2171,7 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
-        verification = require_review_round_within_budget(
+        admission = require_review_round_within_budget(
             comments,
             sha,
             login,
@@ -2157,18 +2179,19 @@ def record(
             pr=number,
             descends=partial(_descends_from, review_root),
         )
-        if verification is not None:
+        recorded = {marker["task"] for marker in _trusted_markers(comments, login) if marker["sha"] == sha}
+        if admission.verification_of is not None and task_id not in recorded:
             require_one_verification_dispatch(
                 task,
                 task_id,
                 task_root=task_root,
                 branch=branch,
                 sha=sha,
-                anchor=verification.anchor,
+                anchor=admission.verification_of,
                 seats=2 if ukrainian else 1,
-                recorded_tasks=(marker["task"] for marker in _trusted_markers(comments, login) if marker["sha"] == sha),
+                recorded_tasks=recorded,
             )
-        # The verification round is known only from the comments read under the lock.
+        # The round's tier and verification anchor are known only from the comments read under the lock.
         comment_fields = dict(
             sha=sha,
             task_id=task_id,
@@ -2184,7 +2207,8 @@ def record(
             app_bot=bool(facts.app_bot_commits),
             score=review_score(reply),
             author_models=facts.author_models,
-            verification=verification,
+            budget_tier=admission.budget_tier,
+            verification_of=admission.verification_of,
         )
         comment = build_comment(**comment_fields)
         destination = normalize_repository(repository)
@@ -2223,7 +2247,7 @@ def record(
                         or marker.get("authorship") != (VERIFIED_APP_BOT if facts.app_bot_commits else None)
                         or marker.get("review_profile", "code") != ("ukrainian" if ukrainian else "code")
                         or marker.get("sources_calls") != sources_count
-                        or marker.get("verification_of") != (verification.anchor if verification else None)
+                        or marker.get("verification_of") != admission.verification_of
                         or item.get("created_at") != item.get("updated_at")
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
