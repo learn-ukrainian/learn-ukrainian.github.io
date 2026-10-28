@@ -1,7 +1,9 @@
 name: CI
 
-# PRs run admission checks and collect pytest without executing the full suite.
-# merge_group, nightly and opt-in workflow_dispatch run the full supported suite.
+# Every event runs the full supported pytest shards and Frontend, so a PR head is
+# validated before review. A PR also runs its changed-test guards (pr-affected) for
+# early signal; merge_group re-validates the queue candidate, which can include other
+# changes. Nightly and opt-in workflow_dispatch run the same full suite.
 # Every merge candidate must pass the same required "CI Gate" context.
 
 concurrency:
@@ -243,7 +245,7 @@ jobs:
     # Builds only when the diff touches scripts/ci/frontend_change_denominator.json
     # (site/ plus the backend inputs hydrate reads) or the base is unknown.
     name: Frontend
-    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -303,7 +305,7 @@ jobs:
   # Lookup failure keeps the committed weights and exits 0; it must not fail CI.
   refresh-pytest-durations:
     name: Refresh pytest durations
-    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -357,7 +359,7 @@ jobs:
   pytest:
     name: pytest (${{ matrix.shard }})
     needs: [refresh-pytest-durations]
-    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # The same-run snapshot comes from actions/download-artifact, which needs no

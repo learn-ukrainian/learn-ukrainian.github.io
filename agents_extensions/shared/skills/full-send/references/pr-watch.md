@@ -19,6 +19,8 @@ the accountable driver's cycle.
   "$PY" -m scripts.gh_merge_queue_status "$PR" --json
   ```
 
+- Do not start a review round while the PR's `CI Gate` is pending or red on the head under
+  review: wait for green first (`full-send` step 4).
 - While CI or a review runs, dispatch the next ready item instead of idling (drive-epic §2c).
 - An event is news, not a decision: re-check the gate yourself.
 

@@ -156,8 +156,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     refresh = jobs["refresh-pytest-durations"]
     assert "reuse" not in jobs
     assert not refresh.get("needs")
-    full = "${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
-    assert refresh["if"] == full
+    assert refresh["if"] == "${{ !cancelled() }}"
     assert refresh["timeout-minutes"] == 10
     assert refresh["permissions"] == {"contents": "read", "actions": "read"}
     refresh_steps = [step.get("run", "") for step in refresh["steps"]]
@@ -170,7 +169,7 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     assert upload["with"]["path"] == "ci-artifacts/pytest-file-durations.json"
     pytest_job = jobs["pytest"]
     assert pytest_job["needs"] == ["refresh-pytest-durations"]
-    assert pytest_job["if"] == full
+    assert pytest_job["if"] == "${{ !cancelled() }}"
     assert pytest_job["timeout-minutes"] == 15
     assert pytest_job["strategy"]["matrix"]["shard"] == list(range(1, 25))
     # The same-run snapshot comes through actions/download-artifact, which needs no token scope.
