@@ -122,7 +122,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     dispatch.add_argument(
         "--sparse-include", action="append", default=[], metavar="DIR",
-        help="Keep a default-excluded tree; repeatable (default: none). Example: --sparse-include curriculum. "
+        help="Keep a default-excluded tree; repeatable (default: inferred from owned paths). Example: --sparse-include curriculum. "
         "Excluded: " + ", ".join(sorted(git.SPARSE_EXCLUDE_DEFAULT)),
     )
     dispatch.add_argument(
@@ -180,7 +180,7 @@ def _dispatch(args) -> int:
             raise ValueError("review_attempt_runtime_unavailable: v2 review isolation is not wired")
     if args.require_review_verdict and args.mode != "read-only":
         raise ValueError("--require-review-verdict requires --mode read-only")
-    git.sparse_excludes(args.sparse_include)
+    excluded = git.sparse_excludes(args.sparse_include, [*args.owned_path, *args.research_owned_path])
     if (args.prompt is None) == (args.prompt_file is None):
         raise ValueError("provide exactly one of --prompt or --prompt-file")
     source = args.prompt if args.prompt is not None else args.prompt_file
@@ -315,7 +315,7 @@ def _dispatch(args) -> int:
             store.check_review_attempt(binding, claim=True)
         if not args.cwd:
             git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout,
-                                sparse_include=args.sparse_include, **exact_start)
+                                sparse_include=git.SPARSE_EXCLUDE_DEFAULT - set(excluded), **exact_start)
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
         if publish_remote is not None:
             record["worktree_remote_url"] = publish_remote
