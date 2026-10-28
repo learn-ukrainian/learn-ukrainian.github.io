@@ -39,9 +39,10 @@ from scripts.lexicon.enrich_manifest import (
     _slovnyk_lookup_word,
     _valid_slovnyk_positive,
 )
-from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS, resolve_dict_slug
+from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS, normalize_word, resolve_dict_slug
 from scripts.wiki.sum20_official import (
     DEFAULT_USER_AGENT,
+    MIN_CRAWL_DELAY_S,
     PARSER_VERSION,
     SUM20_SOURCE_ID,
     Sum20ParseError,
@@ -143,6 +144,12 @@ def make_spec(args: argparse.Namespace) -> tuple[dict[str, Any], list[tuple[str,
         manifest = json.loads(raw)
         if not isinstance(manifest, dict) or not isinstance(manifest.get("entries"), list):
             raise JobError("invalid_manifest")
+        source_headwords = manifest.get("source_headwords", False)
+        if "source_headwords" in manifest and source_headwords is not True:
+            raise JobError("invalid_manifest")
+        if source_headwords and args.seed_cache:
+            raise JobError("source_headwords_seed_unsupported")
+        spec["lookup_mode"] = "source_headword" if source_headwords else "lemma"
         targets = []
         seen = set()
         for entry in manifest["entries"]:
@@ -150,7 +157,7 @@ def make_spec(args: argparse.Namespace) -> tuple[dict[str, Any], list[tuple[str,
                 raise JobError("invalid_manifest_lemma")
             lemma = entry["lemma"]
             if lemma not in seen:
-                lookup = _slovnyk_lookup_word(lemma)
+                lookup = normalize_word(lemma) if source_headwords else _slovnyk_lookup_word(lemma)
                 if not lookup:
                     raise JobError("empty_lookup")
                 targets.append((lemma, lookup))
@@ -263,7 +270,9 @@ def project_status(conn: sqlite3.Connection, directory: Path, now: float) -> dic
     """Reconcile counts/checkpoint from durable result rows, never from old JSON."""
     job = conn.execute("SELECT * FROM job").fetchone()
     spec = json.loads(job["spec"])
-    rows = conn.execute("SELECT * FROM results ORDER BY position").fetchall()
+    rows = conn.execute(
+        "SELECT position, status, attempts, next_attempt_at, target FROM results ORDER BY position"
+    ).fetchall()
     counts = dict.fromkeys(("positive", "miss", "pending", "error", "reused"), 0)
     checkpoint = 0
     requests_count = 0
@@ -382,7 +391,8 @@ def fetch_once(session: Any, spec: dict[str, Any], row: sqlite3.Row, now: float)
     url = (
         official_url_for_wordid(int(row["target"]))
         if official
-        else f"https://slovnyk.me/dict/{spec['dictionary']}/{quote(row['lookup'], safe='')}"
+        else f"https://slovnyk.me/dict/{spec['dictionary']}/"
+        f"{quote(row['target'] if spec.get('lookup_mode') == 'source_headword' else row['lookup'], safe='')}"
     )
     try:
         response = session.get(
@@ -447,7 +457,10 @@ def acquire(
         report(conn, directory, clock())
         return EXIT[job["state"]]
     spec = json.loads(job["spec"])
-    host = "sum20ua" if spec["dictionary"] == SUM20_SOURCE_ID else "slovnyk"
+    official = spec["dictionary"] == SUM20_SOURCE_ID
+    host = "sum20ua" if official else "slovnyk"
+    # Apply the current minimum to persisted jobs too, without rewriting their identity.
+    request_delay = max(spec["delay"], MIN_CRAWL_DELAY_S if official else 0)
     while True:
         row = conn.execute(
             "SELECT * FROM results WHERE status NOT IN ('positive','not_found','reused') ORDER BY position LIMIT 1"
@@ -473,7 +486,7 @@ def acquire(
             now = clock()
             # Reserve before GET, including a worst-case request timeout. A killed GET cannot
             # leave the next process sending a request immediately into the same host.
-            atomic_json(throttle, {"next_request_at": now + spec["timeout"] + spec["delay"]})
+            atomic_json(throttle, {"next_request_at": now + spec["timeout"] + request_delay})
             with conn:
                 conn.execute("UPDATE job SET state='running',reason=''")
                 conn.execute(
@@ -484,7 +497,7 @@ def acquire(
             report(conn, directory, now)
             status, http, payload, retry = fetch_once(session, spec, row, now)
             finished = clock()
-            delay = max(spec["delay"], spec["backoff"] * 2 ** row["attempts"], retry)
+            delay = max(request_delay, spec["backoff"] * 2 ** row["attempts"], retry)
             state = {"blocked": "blocked", "parse_error": "parse_error", "transient_error": "transient"}.get(
                 status, "running"
             )
@@ -513,7 +526,7 @@ def acquire(
                     (row["position"], finished, status, http),
                 )
             # Hold the host lock until outcome is durable, then permit the next host slot.
-            atomic_json(throttle, {"next_request_at": finished + max(spec["delay"], retry)})
+            atomic_json(throttle, {"next_request_at": finished + max(request_delay, retry)})
         report(conn, directory, clock())
         if state != "running":
             return EXIT[state]
@@ -629,7 +642,9 @@ Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_
         "--dictionary", required=True, help="Exactly one catalogue slug (e.g. vts, newsum) or sum20_official; required"
     )
     result.add_argument(
-        "--manifest", type=Path, help="Slovnyk JSON with entries[].lemma, e.g. manifest.json; default none"
+        "--manifest",
+        type=Path,
+        help="Slovnyk JSON with entries[].lemma; source_headwords: true preserves exact URL suffixes; default none",
     )
     result.add_argument("--start-wordid", type=int, help="Official inclusive first wordid, e.g. 5; default none")
     result.add_argument(
@@ -644,7 +659,7 @@ Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_
         "--delay",
         type=float,
         default=4,
-        help="Minimum shared host spacing after every request, including retries; default 4 seconds, minimum 2",
+        help="Minimum shared host spacing after every request, including retries; default 4 seconds, minimum 2; official SUM-20 always uses at least 10",
     )
     result.add_argument("--timeout", type=float, default=30, help="HTTP timeout seconds; default 30, e.g. 60")
     result.add_argument(

@@ -180,7 +180,7 @@ workbook:
     title: Address plus command
     instruction: Choose the command form that matches the address.
     items:
-      - sentence: 'Олено, ___ книжку!'
+      - sentence: "(Use the ти command form.) Олено, ___ книжку!"
         answer: 'дай'
         options:
           - 'дай'
@@ -194,7 +194,7 @@ workbook:
           - 'дай'
           - 'дати'
         explanation: 'Пане Іване takes polite ви.'
-      - sentence: 'Тарасе, ___ в кафе.'
+      - sentence: "(Use the ти command form.) Тарасе, ___ в кафе."
         answer: 'іди'
         options:
           - 'іди'

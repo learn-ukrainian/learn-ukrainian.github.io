@@ -83,6 +83,10 @@ def build_parser() -> argparse.ArgumentParser:
         ("risk", None, "Review risk label (default: none)"),
         ("review-mode", None, "Review mode label (default: none)"),
         ("advisory-task", None, "Finished advisor task admitting this bounded worker, e.g. advice-42 (default: none)"),
+        ("advisory-role", None, "Catalog advisory_roles decision this read-only task records, e.g. "
+         "review_budget_extension; needs --advisory-binding (default: none)"),
+        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget extension request digest "
+         "(default: none)"),
         ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check scripts' (default: none)"),
     ):
         dispatch.add_argument(f"--{flag}", default=default, required=flag in {"agent", "model"}, help=help_text)
@@ -236,6 +240,7 @@ def _dispatch(args) -> int:
         raise host_admission.Refused(f"❌ {exc}", 2) from None
     host_admission.check_credit(agent, args.model)
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
+    advisory_fields.update(checks.check_advisory_role(args, agent, args.model))
     force_reason = args.force_admission
     if force_reason is not None:
         force_reason = str(force_reason).strip()
@@ -395,7 +400,9 @@ def main(argv=None) -> int:
             return _dispatch(args)
         code = 0
         if args.command == "list":
-            result = store.list_tasks(args.status, args.all)
+            result = [worker._observe(record) for record in store.list_tasks(include_archive=args.all)]
+            if args.status is not None:
+                result = [record for record in result if record.get("status") == args.status]
         elif args.command == "wait":
             if args.timeout < 0 or args.poll_interval <= 0:
                 raise ValueError("timeout must be nonnegative and poll interval positive")

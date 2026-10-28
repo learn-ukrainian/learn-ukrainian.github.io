@@ -445,7 +445,7 @@ async def wiki_sources_inventory(ctx: MonitorContext = Depends(get_ctx)):
     tables = []
     total_entries = 0
 
-    with handle.connect() as conn:
+    with handle.connect(read_only=True) as conn:
         for table_name in _TABLE_NAMES:
             try:
                 row_count = conn.execute(f"SELECT count(*) FROM {table_name}").fetchone()[0]

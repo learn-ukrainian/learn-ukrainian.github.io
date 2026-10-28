@@ -58,6 +58,7 @@ from scripts.ingest._section_coverage import (
     ensure_section_schema,
     link_lesson_sections,
 )
+from scripts.lexicon.ohoiko_quality_enrichment import normalize_500_verbs_lines
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -255,6 +256,11 @@ def parse_book(txt_path: Path) -> list[Verb]:
             current.body_lines.pop()
         verbs.append(current)
 
+    for verb in verbs:
+        # A detached acute can follow the English gloss, so the first
+        # physical line is not necessarily the complete headword pair.
+        lines = normalize_500_verbs_lines(verb.render())
+        verb.headword_line = lines[0].strip() if lines else ""
     return verbs
 
 

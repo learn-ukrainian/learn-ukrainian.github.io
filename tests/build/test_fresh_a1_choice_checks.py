@@ -191,8 +191,9 @@ def _check(
     lookup=None,
     typ: str = "quiz",
     receipt: bool = True,
+    following_items: list[dict] | None = None,
 ) -> dict:
-    draft = {"activities": [{"id": "a1", "items": [item]}], "steps": []}
+    draft = {"activities": [{"id": "a1", "items": [item, *(following_items or [])]}], "steps": []}
     lesson = {"activities": [{"id": "a1", "type": typ}]}
     words = {"words": [record, *(extra_records or [])]}
     stream = SimpleNamespace(
@@ -231,8 +232,11 @@ def _write_form_receipt(tmp_path: Path, item: dict, *, decision: str = "confirm"
                 "reason": "source-backed unique reading" if decision == "confirm" else "alternative reading",
                 "requires_forced": decision == "confirm",
                 "options": [
-                    {"text": text, "judgement": "valid" if i == key else "invalid",
-                     "evidence": ["vesum:" + VESUM_LOCATIONS[item["option_records"][i]]]}
+                    {
+                        "text": text,
+                        "judgement": "valid" if i == key else "invalid",
+                        "evidence": ["vesum:" + VESUM_LOCATIONS[item["option_records"][i]]],
+                    }
                     for i, text in enumerate(options)
                 ],
                 "writer": {"seat": "codex@sol", "family": "openai"},
@@ -290,6 +294,8 @@ DEED = _record(
         ("діла", "noun:inanim:p:v_kly"),
     ],
 )
+
+
 def _case_offer(
     sentence: str,
     *,
@@ -783,6 +789,25 @@ def test_brother_accusative_requires_receipt(tmp_path: Path) -> None:
     assert _check(tmp_path, swapped, BROTHER)["code"] == "form_not_unique_for_requires"
 
 
+def test_missing_requirement_receipt_does_not_hide_later_writer_defect(tmp_path: Path) -> None:
+    item = _form(["брата", "брату"], BROTHER, {"Case": "Acc"})
+    invalid = _form(["брата", "брату"], BROTHER, {"Case": "Dat"})
+    row = _check(tmp_path, item, BROTHER, receipt=False, following_items=[invalid])
+    assert row["code"] == "form_not_unique_for_requires"
+    assert row["token"] == "1"
+    assert "awaiting_requires_confirmation" not in row.get("details", {})
+
+
+def test_existing_receipt_without_current_item_is_stale(tmp_path: Path) -> None:
+    item = _form(["брата", "брату"], BROTHER, {"Case": "Acc"})
+    _write_form_receipt(tmp_path, item)
+    path = receipts.requirement_receipt_path(tmp_path, 1)
+    doc = yaml.safe_load(path.read_text())
+    doc["items"][0]["item"] = 1
+    receipts.write_requirement_receipts(path, doc)
+    assert _check(tmp_path, item, BROTHER)["code"] == "requires_receipt_stale"
+
+
 def test_book_plural_accusative_needs_singular_demand(tmp_path: Path) -> None:
     item = _form(["книгу", "книги"], BOOK, {"Case": "Acc", "Number": "Sing"}, taught="Number")
     assert _check(tmp_path, item, BOOK)["status"] == "passed"
@@ -841,7 +866,9 @@ def test_excluded_distractors_are_offered_and_pass_check_7(
     draft = {"activities": [{"id": "a1", "items": [item]}]}
     lesson = {"activities": [{"id": "a1", "type": "quiz"}]}
     assert (
-        check_4_activities(draft, lesson, {"words": [record, _store_record(NEGATION_PARTICLE_RECORD), *other_records]}, {}, level="a1")[0]["status"]
+        check_4_activities(
+            draft, lesson, {"words": [record, _store_record(NEGATION_PARTICLE_RECORD), *other_records]}, {}, level="a1"
+        )[0]["status"]
         == "passed"
     )
     assert _check(tmp_path, item, record, extra_records=other_records)["status"] == "passed"
@@ -1299,7 +1326,8 @@ def test_choice_gate_records_resolved_evidence_identity(tmp_path):
     result = _check(tmp_path, item, BROTHER)
     with Sources() as api:
         evidence = receipts.resolve_requirement_evidence(
-            receipts.read_requirement_receipts(receipts.requirement_receipt_path(tmp_path, 1), sources=api), sources=api,
+            receipts.read_requirement_receipts(receipts.requirement_receipt_path(tmp_path, 1), sources=api),
+            sources=api,
         )
     assert result["status"] == "passed"
     assert result["details"]["requirement_evidence"] == {"sha256": evidence.content_hash, "sources": evidence.metadata}

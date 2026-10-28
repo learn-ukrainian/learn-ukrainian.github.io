@@ -150,42 +150,42 @@ inline:
     title: Доповни речення
     instruction: Choose хочу, можу, or мушу in the right form.
     items:
-      - sentence: Я ___ гуляти, але не можу сьогодні.
+      - sentence: "(Express desire: want to.) Я ___ гуляти, але не можу сьогодні."
         answer: хочу
         options:
           - хочу
           - можу
           - мушу
         explanation: The first part gives desire.
-      - sentence: Я хочу піти, але не ___.
+      - sentence: "(Express inability: cannot.) Я хочу піти, але не ___."
         answer: можу
         options:
           - можу
           - хочу
           - мушу
         explanation: Але не можу gives the practical block.
-      - sentence: "Я не можу: я ___ працювати."
+      - sentence: "(Express obligation: must.) Я не можу: я ___ працювати."
         answer: мушу
         options:
           - мушу
           - можу
           - хочу
         explanation: The reason is an obligation.
-      - sentence: Оля ___ гуляти, але не може сьогодні.
+      - sentence: "(Express desire: wants to.) Оля ___ гуляти, але не може сьогодні."
         answer: хоче
         options:
           - хоче
           - може
           - мусить
         explanation: The first part gives her desire.
-      - sentence: "Денис не ___ піти: він мусить працювати."
+      - sentence: "(Express inability: cannot.) Денис не ___ піти: він мусить працювати."
         answer: може
         options:
           - може
           - хоче
           - мусить
         explanation: Не може gives the practical block.
-      - sentence: Вони хочуть гуляти, але ___ працювати.
+      - sentence: "(Express obligation: must.) Вони хочуть гуляти, але ___ працювати."
         answer: мусять
         options:
           - мусять
