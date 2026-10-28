@@ -3632,3 +3632,12 @@ def test_untrusted_copied_marker_cannot_block_elevated_classification(monkeypatc
     assert result["verdict"] == "APPROVED"
     assert result["budget_classification"]["finding_id"] == "F2"
     assert calls["posts"] == 1
+
+
+def test_deleted_public_comment_author_cannot_block_elevated_classification(monkeypatch, tmp_path):
+    tasks, comments, calls = classified_budget_case(monkeypatch, tmp_path)
+    comments.append({"body": "Ordinary public comment", "user": None, "author_association": "NONE"})
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "APPROVED"
+    assert result["budget_classification"]["finding_id"] == "F2"
+    assert calls["posts"] == 1

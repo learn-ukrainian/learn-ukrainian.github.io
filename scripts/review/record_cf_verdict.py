@@ -1844,7 +1844,8 @@ def recorded_budget_classification(
         if not re.search(rf"\b{re.escape(finding)}\b", visible) or evidence not in visible:
             refuse("finding id and evidence must appear in the published blocking finding")
         for comment in comments:
-            if (comment.get("user", {}).get("login") != login
+            user = comment.get("user")
+            if (not isinstance(user, Mapping) or user.get("login") != login
                 or comment.get("author_association") not in TRUSTED_ASSOCIATIONS):
                 continue
             marker = parse_marker(comment.get("body", ""))
