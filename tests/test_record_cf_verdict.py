@@ -519,10 +519,13 @@ def test_red_team_outside_rejection_publication_guard(monkeypatch, tmp_path, ver
         assert calls == {"posts": 1, "statuses": 1}
 
 
-def recorded_verdict(sha, verdict, *, task_id="prior-review", mode="cross_family", edited=False, budget_tier=None):
+def recorded_verdict(
+    sha, verdict, *, task_id="prior-review", mode="cross_family", edited=False, budget_tier=None, verification_of=None
+):
     """A trusted verdict comment the keeper reads, as the recorder posts it (``edited`` changes it later)."""
     body = recorder.build_comment(
         budget_tier=budget_tier,
+        verification_of=verification_of,
         sha=sha,
         task_id=task_id,
         started="2026-09-23T11:00:00.000001+00:00",
@@ -805,6 +808,33 @@ def test_verification_round_refuses_a_head_that_does_not_descend_from_the_approv
             recorder.require_review_round_within_budget(
                 comments, rewritten, "fleet", budget=5, pr=42, descends=lambda *_: True
             )
+
+
+@pytest.mark.parametrize("doubtful", ["edited", "renamed"])
+def test_doubtful_verification_marker_refuses_a_reset_to_a_reviewed_head(monkeypatch, tmp_path, doubtful):
+    # Round-5 reproduction on #11882 (R2-F5): approvals at H1-H3, the verification round at H4,
+    # then the PR is reset to H3 and a fresh review task records there.
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    first, verified = "1" * 40, "4" * 40
+    comments.extend(recorded_verdict(head, "APPROVED", budget_tier="default") for head in (first, "2" * 40, SHA))
+    intact = recorded_verdict(verified, "APPROVED", task_id="verification", budget_tier="default", verification_of=SHA)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    comments.append(intact)
+    with pytest.raises(recorder.RecordError, match="spent its verification round"):
+        recorder.record("review-one", **kwargs)
+    edited = dict(intact, updated_at="2026-09-23T11:45:00Z")
+    if doubtful == "renamed":
+        # The edited verification is renamed to H1 and loses the fields that prove the round spent.
+        body = edited["body"]
+        for field in ("Budget tier: default\n", f"Verification round: after APPROVE at {SHA}\n"):
+            body = body.replace(field, "")
+        for field in (" budget_tier=default", f" verification_of={SHA}"):
+            body = body.replace(field, "")
+        edited["body"] = body.replace(verified, first)
+    comments[-1] = edited
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*1 unreadable or edited verdict"):
+        recorder.record("review-one", **kwargs)
+    assert len(comments) == 4 and calls == {"posts": 0, "statuses": 0}
 
 
 @pytest.mark.parametrize("body", [None, "<!-- cf-verdict v1 unreadable -->"])

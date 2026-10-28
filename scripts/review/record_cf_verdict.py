@@ -1804,8 +1804,8 @@ def require_review_round_within_budget(
                 "budget end is never approval, escalate instead of recording another round"
             )
         return RoundAdmission(spent["budget_tier"], spent["verification_of"])
-    if sha in heads:
-        return RoundAdmission(tier)
+    # Before the reviewed-head return: a doubtful marker may hide a spent verification round,
+    # and a reset to an earlier head must not record past it.
     if doubtful:
         # Below the default budget every tier admits an ordinary round and no verification round exists yet.
         if len(heads) + doubtful < DEFAULT_REVIEW_ROUNDS:
@@ -1814,6 +1814,8 @@ def require_review_round_within_budget(
             f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} has {doubtful} unreadable or edited verdict(s), so its rounds, "
             "budget tier and verification round are unknown; escalate the verdict record"
         )
+    if sha in heads:
+        return RoundAdmission(tier)
     if not heads:
         return RoundAdmission(tier)
     held = next(
