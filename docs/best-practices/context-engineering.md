@@ -111,9 +111,10 @@ return. Include the canonical excerpts and locators needed for that unit rather
 than the driver's entire history. The
 [dispatch brief contract](../../agents_extensions/shared/rules/workflow.md#dispatch-brief-unit-binding--5737)
 and [worker role](../../agents_extensions/shared/rules/core.md#p1--how-we-work)
-define that boundary. The driver retains scope, sequencing, routing, review
-judgment, landing, and closeout. Workers do not invent PR sequences, merge,
-enqueue, arm auto-merge, or delegate without authorization.
+define that boundary. The driver retains scope, sequencing, routing,
+exceptions, and terminal disposition. A briefed worker runs its chain to the end
+(review, enqueue at the P4 gate, closeout) but does not invent PR sequences, arm
+auto-merge, or delegate beyond its brief.
 
 A scoped prompt retains the operator contract and all applicable safety and
 delivery gates. Load the [core](../../agents_extensions/shared/rules/core.md),

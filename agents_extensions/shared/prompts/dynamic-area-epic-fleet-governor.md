@@ -236,7 +236,7 @@ worktree for writes, and deliberate research classification:
 - `--research-track`
 - repeatable `--research-owned-path`
 
-Workers never self-merge, expand scope, or silently choose overlapping paths.
+Workers never arm auto-merge, expand scope, or silently choose overlapping paths.
 Track native and external work in one requested-agent ledger containing task
 identity, provider/model/harness/family, role/classification, area/epic/issue,
 owned paths, lifecycle, state, evidence, PR, reviewer, and disposition.

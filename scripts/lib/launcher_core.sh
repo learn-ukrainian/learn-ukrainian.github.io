@@ -1424,7 +1424,7 @@ launcher_bind_drive_epic() {
   if command -v fleet_comms_cold_clause >/dev/null 2>&1; then
     fleet_clause="$(fleet_comms_cold_clause)"
   else
-    fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6). PRs may open so CI runs; enqueue only after independent exact-head cross-family APPROVE and same-head green CI Gate. The driver enqueues through the merge queue and runs closeout; authority mode is durable state and ACP is provider transport.'
+    fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6). PRs may open so CI runs; enqueue only after independent exact-head cross-family APPROVE and same-head green CI Gate. The worker that owns the brief (or the driver, when no brief owns the PR) enqueues through the merge queue and runs closeout; authority mode is durable state and ACP is provider transport.'
   fi
   local canary_status='not run'
   # A successful hook alone is no execution evidence; dry runs never run a probe.

@@ -94,7 +94,7 @@ def _manifest() -> dict:
     return json.loads(HOOKS_CONFIG.read_text(encoding="utf-8"))
 
 
-def test_grok_post_compact_reminder_uses_sol_worker_default(tmp_path: Path) -> None:
+def test_grok_post_compact_reminder_pins_c2903_author_reviewer_pairs(tmp_path: Path) -> None:
     result = subprocess.run(
         ["bash", str(POST_COMPACT_HOOK)], cwd=tmp_path,
         env={**os.environ, "GROK_AGENT": "grok", "SESSION_EPIC": "", "CODEX_COMPACT_SESSION_START": ""},
@@ -102,7 +102,8 @@ def test_grok_post_compact_reminder_uses_sol_worker_default(tmp_path: Path) -> N
     )
     assert result.returncode == 0, result.stderr
     context = json.loads(result.stdout)["additionalContext"]
-    assert "default eligible code worker = Sol high" in context
+    assert "default code author = Claude (Sonnet 5.5; Opus 5.5 for hard or security work), reviewed by Sol 6.1" in context
+    assert "Ukrainian content authored by Sol 6.1, reviewed by Claude (Opus 5.5)" in context
     assert "explicit Luna/Flash bounded routes require a Sol advisory envelope" in context
     assert "default bounded work = Sol advisory envelope" not in context
 

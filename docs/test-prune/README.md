@@ -80,6 +80,10 @@ mutation parameters. The test and its parameter helpers have identical ASTs to
   11 whole files), one row each with its source and reason.
 - `2026-10-21-phase-b-recheck-sample.jsonl`: the 63 recheck-sample decisions.
 
+Addendum 2026-10-28: #11807 edited both ledgers when it deleted the five test files that
+covered `scripts/delegate.py`, removing their rows. The counts above are the current row
+counts (117 selected entries, 63 recheck decisions); the ledgers originally held 118 and 65.
+
 ### Method
 
 1. Collect `tests/` and `tests/build` on the base. `tests/build` needs its own pass because

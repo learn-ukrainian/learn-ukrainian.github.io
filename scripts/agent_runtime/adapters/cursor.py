@@ -53,14 +53,6 @@ from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
 
-# This marker is emitted only by our GH shim after it has recognized a
-# GitHub-side secondary-limit response. It must not trip Cursor's provider
-# cooldown: the Cursor model is still available, and the worker can succeed
-# after the shim's bounded retry. If retries are exhausted, preserve the
-# distinct failure for delegate recovery rather than calling it a provider
-# rate limit.
-_GITHUB_SECONDARY_RATE_LIMIT_MARKER = "agent-gh-shim: github_secondary_rate_limited"
-
 # Cursor's automatic route is a selector, not an attributable model. Keep
 # this boundary structural: assistant prose, tool input, and arbitrary log
 # text must never become model evidence merely because they contain the word
@@ -523,17 +515,10 @@ class CursorAdapter:
         # stderr diagnostic is rate-limited.
         usable_response = bool(response)
         failed_call = returncode != 0 or not usable_response
-        github_secondary_rate_limited = failed_call and any(
-            line.strip().startswith(_GITHUB_SECONDARY_RATE_LIMIT_MARKER) for line in (stderr or "").split("\n")
-        )
         provider_error = provider_stderr_error(stderr or "")
         failure_code = None
         if failed_call:
-            failure_code = (
-                "github_secondary_rate_limited"
-                if github_secondary_rate_limited
-                else provider_failure_code(provider_error)
-            )
+            failure_code = provider_failure_code(provider_error)
         rate_limited = failed_call and failure_code == "rate_limited"
 
         ok = returncode == 0 and bool(response) and not rate_limited

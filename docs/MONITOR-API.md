@@ -654,6 +654,11 @@ errors.
 
 Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The default payload always enumerates opaque hosts `host-teacher` and observer-only `mac-operator` (plus any additional mapped hosts). Ghost `host-job` is not a default glance row and is not queryable unless mapped via `MONITOR_OCCUPANCY_HOST_IDS`. When the map is empty, the Linux API process fills `host-teacher` in-process (local load + seats) instead of `unavailable/unreachable`. The Mac row stays visible when the observer store is empty or Monitor just restarted; with no live observer or load it is `status: "unavailable"` and is never rendered idle by omission. Live observer heartbeats still merge into that row. Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped remote hosts return `status: "unavailable"` with `idle_or_empty: false` — unreachable burn is unknown, not proven idle. Canonical aliases are never used as JSON keys.
 
+The Hosts panel on `orient.html` displays each host's observation status, source age
+at lookup, occupancy, and error. Null or missing source age displays as unknown.
+Unavailable observations display unknown age even when the API supplies a placeholder
+zero. Stale and unavailable observations display unknown occupancy.
+
 Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service | observer`. Each host entry includes `occupant_count`, `ai_seats` (active agent seats), `burn_state` in `active | idle | unknown`, `burn_sources` with exactly `atlas_job`, `driver`, `foundry`, `service`, and `observer` entries (each `state` is `active | clear | unknown` and `observation_age_s` is non-negative), and the compatibility boolean `idle_or_empty`, which is true only when `burn_state` is `idle`. An active source makes the host active; a source read failure is unknown and never permits idle. `burn_state` derives only from `burn_sources` — occupants are active evidence only when their owning source is marked active. Sources, in order:
 
 - atlas-job registry rows in `running` / `queued` / `submitted` / `needs_finalize`
