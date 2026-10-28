@@ -1872,11 +1872,34 @@ def test_shell_c_payload_inherits_cwd_but_does_not_export_it(monkeypatch):
         "cd /safe; env --sp echo cd /wrong; gh pr merge 5",
         "cd /safe; env -S 'cd /wrong'; gh pr merge 5",
         "cd /safe; env -S echo eval cd /wrong; gh pr merge 5",
+        # A child wrapper cannot run the cd builtin, whatever precedes the cd.
+        "cd /safe; env A-B=1 cd /wrong; gh pr merge 5",
+        "cd /safe; env =x cd /wrong; gh pr merge 5",
+        "cd /safe; env -- A-B=1 cd /wrong; gh pr merge 5",
+        "cd /safe; env -u FOO A-B=1 cd /wrong; gh pr merge 5",
+        "cd /safe; sudo A-B=1 cd /wrong; gh pr merge 5",
+        "cd /safe; env cd /wrong; gh pr merge 5",
+        "cd /safe; sudo -u bot cd /wrong; gh pr merge 5",
+        "cd /safe; nice -n 1 cd /wrong; gh pr merge 5",
+        "cd /safe; env cd \"$DIR\"; gh pr merge 5",
     ],
 )
-def test_env_split_string_does_not_change_parent_cwd(monkeypatch, command):
-    """env -S runs its split words in a child, so they never move this shell's cwd."""
+def test_child_wrapper_cd_does_not_change_parent_cwd(monkeypatch, command):
+    """env -S and other child wrappers run their words in a child, so they never move this shell's cwd."""
     assert _judged_cwds(monkeypatch, command) == [("5", "/safe")]
+
+
+@pytest.mark.parametrize(
+    "command,cwd",
+    [
+        ("cd /safe; command cd /inner; gh pr merge 5", "/inner"),
+        ("cd /safe; time -p cd /inner; gh pr merge 5", "/inner"),
+        ("cd /safe; A=1 cd /inner; gh pr merge 5", "/inner"),
+    ],
+)
+def test_shell_level_prefix_cd_still_moves_cwd(monkeypatch, command, cwd):
+    """`command`, the `time` keyword and assignments keep cd in this shell."""
+    assert _judged_cwds(monkeypatch, command) == [("5", cwd)]
 
 
 def test_unparsed_wrapper_option_names_the_refusal(monkeypatch, capsys):

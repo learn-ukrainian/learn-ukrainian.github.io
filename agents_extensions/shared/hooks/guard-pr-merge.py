@@ -248,6 +248,9 @@ def _is_env_assignment(tok: str) -> bool:
 
 
 _WRAPPERS = frozenset({"env", "sudo", "time", "nice", "stdbuf", "nohup", "command", "exec"})
+# Wrappers that execute their command as a separate program. A `cd` behind one never
+# runs as this shell's builtin, so it cannot move the cwd of a later merge.
+_CHILD_WRAPPERS = frozenset({"env", "sudo", "nice", "stdbuf", "nohup"})
 
 
 class _WrapperOption(NamedTuple):
@@ -443,17 +446,21 @@ def _skip_wrapper_assignments(wrapper: str, seg: list[str], i: int) -> int:
     return i
 
 
-def _skip_command_prefix(seg: list[str], i: int, *, stop_at_env: bool = False) -> int:
+def _skip_command_prefix(
+    seg: list[str], i: int, *, stop_at_env: bool = False, wrappers: list[str] | None = None
+) -> int:
     """Advance past wrappers (and their flags), assignments, ``{`` and ``!``.
 
     Thus `nice -n 10 gh pr merge` reaches `gh`, rather than stopping on the
-    wrapper option (#4878).
+    wrapper option (#4878). ``wrappers`` collects the wrapper words stepped over.
     """
     while i < len(seg):
         tok = seg[i]
         if stop_at_env and tok == "env":
             break
         if tok in _WRAPPERS:
+            if wrappers is not None:
+                wrappers.append(tok)
             i = _skip_wrapper_options(tok, seg, i + 1)
         elif tok in {"{", "!"} or _is_env_assignment(tok):
             i += 1
@@ -681,9 +688,13 @@ def _cd_target(seg: list[str], cwd: str | None = None, cwd_unreadable: bool = Fa
     `--` does NOT demote `-` to a plain directory name, though it reads as if it should:
     `cd -- -` still toggles to $OLDPWD (verified against bash with a real `./-` directory
     in place, which only `cd -- ./-` reaches). So `-` stays unreadable in both spellings.
+
+    A cd behind a child wrapper (`env A-B=1 cd /x`, `sudo cd /x`) is not this shell's cd:
+    the wrapper cannot run the builtin, so the shell stays where it was.
     """
-    i = _skip_command_prefix(seg, 0)
-    if i >= len(seg) or seg[i] != "cd":
+    wrappers: list[str] = []
+    i = _skip_command_prefix(seg, 0, wrappers=wrappers)
+    if i >= len(seg) or seg[i] != "cd" or _CHILD_WRAPPERS.intersection(wrappers):
         return None
     if _UNREADABLE_MARKER in seg:
         return _CD_UNREADABLE
