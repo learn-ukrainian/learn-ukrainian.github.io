@@ -1004,11 +1004,11 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
         assert "blocked" in str(error.value)
     if consumer == "verdict":
         expected = (
-            f"### Cross-family review\nhead: {'a' * 40}\nReviewer family: openai\nVERDICT: APPROVED\n"
+            f"### Cross-family review\nBudget tier: default\nhead: {'a' * 40}\nReviewer family: openai\nVERDICT: APPROVED\n"
             "Reviewer model: gpt-6.1-sol\nReview score: absent\nTask id: unit-review\n\nWithheld findings: unknown\n"
             "Findings are held privately.\n\n"
             f"<!-- cf-verdict v1 sha={'a' * 40} task=unit-review started=2026-01-01T00:00:00.000000+00:00 "
-            "verdict=APPROVED model=gpt-6.1-sol family=openai -->"
+            "verdict=APPROVED model=gpt-6.1-sol family=openai budget_tier=default -->"
         )
         assert len(calls) == 3
         assert all(args[:2] == ["gh", "api"] for args in calls)

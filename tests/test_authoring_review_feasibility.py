@@ -1119,7 +1119,7 @@ def test_verified_dependabot_branch_is_attributed_reviewed_and_recorded_without_
         assert receipt["authorship"] == "verified_app_bot" and receipt["app_bot_commits"] == [head]
         body = posted[0]["body"]
         family = recorder.resolve_family(model)
-        assert body.rstrip().endswith(f"model={model} family={family} authorship=verified_app_bot -->")
+        assert body.rstrip().endswith(f"model={model} family={family} authorship=verified_app_bot budget_tier=default -->")
         assert "Authorship: verified_app_bot\nNo author model assumed.\n" in body
         marker = recorder.parse_marker(body)
         assert marker["authorship"] == "verified_app_bot" and marker["model"] == model

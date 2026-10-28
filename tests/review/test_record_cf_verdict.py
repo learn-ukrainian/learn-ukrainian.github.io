@@ -63,12 +63,12 @@ def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     body = comments[0]["body"]
     assert body == (
-        f"### Cross-family review\nhead: {SHA}\nReviewer family: openai\nVERDICT: {verdict}\n"
+        f"### Cross-family review\nBudget tier: default\nhead: {SHA}\nReviewer family: openai\nVERDICT: {verdict}\n"
         "Reviewer model: gpt-6.1-sol\nReview score: absent\nAuthored by: gemini-3.8-flash-high\n"
         "Task id: review-one\n\nWithheld findings: unknown\n"
         "Findings are held privately.\n\n"
         f"<!-- cf-verdict v1 sha={SHA} task=review-one started=2026-09-23T12:00:00.000001+00:00 "
-        f"verdict={verdict} model=gpt-6.1-sol family=openai -->"
+        f"verdict={verdict} model=gpt-6.1-sol family=openai budget_tier=default -->"
     )
     assert sent == [body]
     assert detail not in body and "SYNTHETIC-DETAIL" not in body
@@ -92,13 +92,13 @@ def test_clean_publication_bytes_unchanged(scanned_recorder, tmp_path):
     write_task(tasks, reply=reply)
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     expected = (
-        f"### Cross-family review\nhead: {SHA}\nReviewer family: openai\nVERDICT: APPROVED\n"
+        f"### Cross-family review\nBudget tier: default\nhead: {SHA}\nReviewer family: openai\nVERDICT: APPROVED\n"
         "Reviewer model: gpt-6.1-sol\nReview score: 8/10\nAuthored by: gemini-3.8-flash-high\n"
         "Task id: review-one\n\n"
         "<details><summary>Reviewer's reply</summary>\n\n"
         + reply + "\n\n</details>\n\n"
         f"<!-- cf-verdict v1 sha={SHA} task=review-one started=2026-09-23T12:00:00.000001+00:00 "
-        "verdict=APPROVED model=gpt-6.1-sol family=openai -->"
+        "verdict=APPROVED model=gpt-6.1-sol family=openai budget_tier=default -->"
     )
     assert comments[0]["body"].encode() == expected.encode()
     assert sent == [expected] and calls == {"posts": 1, "statuses": 1}
