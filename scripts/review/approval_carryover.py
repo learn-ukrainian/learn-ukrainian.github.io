@@ -330,85 +330,66 @@ def check_reproduction(
     env = {**sanitized_git_env(), "GIT_LFS_SKIP_SMUDGE": "1", "PYTHONDONTWRITEBYTECODE": "1"}
     with TemporaryDirectory(prefix="carry-over-", dir=ensure_scratch_root()) as scratch:
         tree = Path(scratch) / "tree"
-        # Hooks heal and guard real checkouts; this one is a throwaway copy of ``head``.
-        _git(
-            repo_root,
-            "-c",
-            "core.hooksPath=/dev/null",
-            "worktree",
-            "add",
-            "--quiet",
-            "--detach",
-            str(tree),
-            head,
-            env=env,
-        )
-        try:
-            committed = {path: _committed_blob(repo_root, head, path) for path in paths}
-            for package in sorted({name for path in paths for name in registry[path].node_packages}):
-                # A private copy: nothing a generator does reaches the checkout's own packages.
-                source = repo_root / "node_modules" / package
-                if source.is_symlink() or not source.is_dir():
-                    raise CarryOverRefused(REPRODUCTION, f"Node package {package} is not installed in the checkout")
-                try:
-                    # Links are dereferenced, so the copy holds no route back to shared files.
-                    shutil.copytree(source, tree / "node_modules" / package, symlinks=False)
-                except (OSError, shutil.Error) as exc:
-                    raise CarryOverRefused(REPRODUCTION, f"Node package {package} could not be copied: {exc}") from None
-            if empty := [path for path in paths if not committed[path]]:
-                raise CarryOverRefused(
-                    REPRODUCTION, "an empty committed file proves no generation: " + ", ".join(empty)
-                )
-            for path in paths:
-                # Emptied, not removed: each target stays the sandbox's only writable file.
-                (tree / path).write_bytes(b"")
-            node = any(registry[path].node_packages for path in paths)
-            before = _snapshot(tree)
-            for command in dict.fromkeys(registry[path].command for path in paths):
-                argv = [sys.executable, *command[1:]] if command[0] == "python" else list(command)
-                try:
-                    result = subprocess.run(
-                        _sandboxed(argv, tree=tree, writable=[tree / path for path in paths], node=node),
-                        cwd=tree,
-                        capture_output=True,
-                        check=False,
-                        timeout=GENERATOR_TIMEOUT_S,
-                        env=env,
-                    )
-                except (OSError, subprocess.TimeoutExpired) as exc:
-                    raise CarryOverRefused(REPRODUCTION, f"generator {' '.join(command)} did not run: {exc}") from None
-                if result.returncode:
-                    detail = result.stderr.decode("utf-8", "replace").strip()[-300:]
-                    raise CarryOverRefused(
-                        REPRODUCTION, f"generator {' '.join(command)} exited {result.returncode}: {detail}"
-                    )
-            after = _snapshot(tree)
-            outside = sorted(
-                path
-                for path in before.keys() | after.keys()
-                if path not in paths and before.get(path, "absent") != after.get(path, "absent")
-            )
-            if outside:
-                raise CarryOverRefused(
-                    REPRODUCTION, "generators wrote outside the registered paths: " + ", ".join(outside[:20])
-                )
-            receipts = []
-            for path in paths:
-                produced = tree / path
-                if produced.is_symlink() or not produced.is_file():
-                    raise CarryOverRefused(REPRODUCTION, f"generator did not produce {path}")
-                if produced.read_bytes() != committed[path]:
-                    raise CarryOverRefused(
-                        REPRODUCTION, f"regenerated {path} differs from the bytes committed at {head}"
-                    )
-                receipts.append({"path": path, "sha256": hashlib.sha256(committed[path]).hexdigest()})
-            return receipts
-        finally:
+        # A plain export of ``head`` through a private index: Git registers no
+        # worktree, runs no hooks, and leaves no route back to its directory.
+        export_env = {**env, "GIT_INDEX_FILE": str(Path(scratch) / "index")}
+        _git(repo_root, "read-tree", head, env=export_env)
+        _git(repo_root, "checkout-index", "--all", f"--prefix={tree}/", env=export_env)
+        committed = {path: _committed_blob(repo_root, head, path) for path in paths}
+        for package in sorted({name for path in paths for name in registry[path].node_packages}):
+            # A private copy: nothing a generator does reaches the checkout's own packages.
+            source = repo_root / "node_modules" / package
+            if source.is_symlink() or not source.is_dir():
+                raise CarryOverRefused(REPRODUCTION, f"Node package {package} is not installed in the checkout")
             try:
-                _git(repo_root, "worktree", "remove", "--force", str(tree))
-            except CarryOverRefused:
-                shutil.rmtree(tree, ignore_errors=True)
-                _git(repo_root, "worktree", "prune")
+                # Links are dereferenced, so the copy holds no route back to shared files.
+                shutil.copytree(source, tree / "node_modules" / package, symlinks=False)
+            except (OSError, shutil.Error) as exc:
+                raise CarryOverRefused(REPRODUCTION, f"Node package {package} could not be copied: {exc}") from None
+        if empty := [path for path in paths if not committed[path]]:
+            raise CarryOverRefused(REPRODUCTION, "an empty committed file proves no generation: " + ", ".join(empty))
+        for path in paths:
+            # Emptied, not removed: each target stays the sandbox's only writable file.
+            (tree / path).write_bytes(b"")
+        node = any(registry[path].node_packages for path in paths)
+        before = _snapshot(tree)
+        for command in dict.fromkeys(registry[path].command for path in paths):
+            argv = [sys.executable, *command[1:]] if command[0] == "python" else list(command)
+            try:
+                result = subprocess.run(
+                    _sandboxed(argv, tree=tree, writable=[tree / path for path in paths], node=node),
+                    cwd=tree,
+                    capture_output=True,
+                    check=False,
+                    timeout=GENERATOR_TIMEOUT_S,
+                    env=env,
+                )
+            except (OSError, subprocess.TimeoutExpired) as exc:
+                raise CarryOverRefused(REPRODUCTION, f"generator {' '.join(command)} did not run: {exc}") from None
+            if result.returncode:
+                detail = result.stderr.decode("utf-8", "replace").strip()[-300:]
+                raise CarryOverRefused(
+                    REPRODUCTION, f"generator {' '.join(command)} exited {result.returncode}: {detail}"
+                )
+        after = _snapshot(tree)
+        outside = sorted(
+            path
+            for path in before.keys() | after.keys()
+            if path not in paths and before.get(path, "absent") != after.get(path, "absent")
+        )
+        if outside:
+            raise CarryOverRefused(
+                REPRODUCTION, "generators wrote outside the registered paths: " + ", ".join(outside[:20])
+            )
+        receipts = []
+        for path in paths:
+            produced = tree / path
+            if produced.is_symlink() or not produced.is_file():
+                raise CarryOverRefused(REPRODUCTION, f"generator did not produce {path}")
+            if produced.read_bytes() != committed[path]:
+                raise CarryOverRefused(REPRODUCTION, f"regenerated {path} differs from the bytes committed at {head}")
+            receipts.append({"path": path, "sha256": hashlib.sha256(committed[path]).hexdigest()})
+        return receipts
 
 
 def _is_review_task(task: Mapping[str, Any]) -> bool:
