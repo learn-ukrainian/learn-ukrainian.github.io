@@ -1759,8 +1759,8 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 
 ```bash
 # AGY bridge — Ukrainian content review; bridge code reviews are refused.
-# Native AGY admits low/medium risk code review through dispatch.py;
-# high/critical, infra and security reviews exclude Gemini.
+# Dispatch refuses read-only AGY (read_only_unenforceable, C-2970), so no AGY code review
+# is currently available at any risk; Gemini is not a code-review candidate.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Перевір наголос і відмінювання в curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
   --review \
