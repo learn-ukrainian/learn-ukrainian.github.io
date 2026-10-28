@@ -148,7 +148,6 @@ jobs:
       with:
         persist-credentials: false
         fetch-depth: ${{ matrix.shard != 1 && 1 || 0 }}
-        filter: ${{ matrix.shard == 1 && 'blob:none' || '' }}
         ref: ${{ needs.prepare.outputs.validated_revision }}
     - name: Check out measurement tooling
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
