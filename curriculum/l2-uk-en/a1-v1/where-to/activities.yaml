@@ -113,8 +113,8 @@ inline:
         answer: 'на'
         options:
           - 'на'
-          - 'в'
-          - 'у'
+          - "до"
+          - "біля"
         explanation: 'The route phrase is на вокзал.'
       - sentence: 'Марко йде ___ зупинку.'
         answer: 'на'

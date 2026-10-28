@@ -117,7 +117,7 @@ inline:
         answer: 'в'
         options:
           - 'в'
-          - 'у'
+          - "до"
           - 'з'
         explanation: 'Before the vowel in Одесі, в is the smoother choice.'
       - sentence: 'Я ___ Дерибасівській вулиці.'
@@ -127,7 +127,7 @@ inline:
           - 'в'
           - 'з'
         explanation: 'Use на with street location: на вулиці.'
-      - sentence: 'Я йду ___ кафе.'
+      - sentence: "(You are leaving the cafe.) Я йду ___ кафе."
         answer: 'з'
         options:
           - 'з'
@@ -138,7 +138,7 @@ inline:
         answer: 'у'
         options:
           - 'у'
-          - 'в'
+          - "без"
           - 'з'
         explanation: 'Before a consonant, у порт is a smooth destination phrase.'
       - sentence: 'Після порту я йду ___ пляж.'
@@ -148,7 +148,7 @@ inline:
           - 'в'
           - 'з'
         explanation: 'На пляж is the safe destination phrase.'
-      - sentence: 'Увечері я їду ___.'
+      - sentence: "(The station is your destination.) Увечері я їду ___."
         answer: 'на вокзал'
         options:
           - 'на вокзал'
@@ -244,7 +244,7 @@ workbook:
           - text: 'Я з школи.'
             correct: false
         explanation: 'Де? needs в/у plus the static place form.'
-      - prompt: 'Repair: Я іду в школі.'
+      - prompt: "(Give the destination: school.) Repair: Я іду в школі."
         options:
           - text: 'Я іду в школу.'
             correct: true
@@ -262,7 +262,7 @@ workbook:
           - text: 'Я працюю до пошти.'
             correct: false
         explanation: 'The safe Ukrainian phrase is на пошті.'
-      - prompt: 'Repair: Книга є на столі.'
+      - prompt: "(Give the shorter version without є.) Repair: Книга є на столі."
         options:
           - text: 'Книга на столі.'
             correct: true
@@ -270,7 +270,7 @@ workbook:
             correct: false
           - text: 'Книга в стіл.'
             correct: false
-        explanation: 'Ukrainian normally omits the present helper in this place line.'
+        explanation: "The requested shorter place sentence omits є. The version with є is also grammatical."
       - prompt: 'Repair: Вона живе Київ.'
         options:
           - text: 'Вона живе в Києві.'
@@ -354,7 +354,7 @@ workbook:
         answer: 'в'
         options:
           - 'в'
-          - 'у'
+          - "до"
           - 'з'
         explanation: 'В музей is a learned destination phrase.'
       - sentence: 'Музей ___ площі.'
@@ -371,7 +371,7 @@ workbook:
           - 'з метро'
           - 'у метрою'
         explanation: 'На метро is the transport phrase.'
-      - sentence: 'Після музею вона їде ___.'
+      - sentence: "(The station is her destination.) Після музею вона їде ___."
         answer: 'на вокзал'
         options:
           - 'на вокзал'

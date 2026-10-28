@@ -4,7 +4,7 @@ inline:
     title: Direction words
     instruction: Complete each direction line.
     items:
-      - sentence: 'Ідіть ___, потім направо.'
+      - sentence: "(Go straight, then right.) Ідіть ___, потім направо."
         answer: 'прямо'
         options:
           - 'прямо'
@@ -25,7 +25,7 @@ inline:
           - 'район'
           - 'центр'
         explanation: "П'ять хвилин пішки is a route phrase."
-      - sentence: 'Потім ідіть ___, школа там.'
+      - sentence: "(Next, go right.) Потім ідіть ___, школа там."
         answer: 'направо'
         options:
           - 'направо'
@@ -60,7 +60,7 @@ inline:
           - text: 'до парку'
             correct: false
         explanation: 'Зараз asks де?'
-      - prompt: 'Я йду...'
+      - prompt: "(Name your destination.) Я йду..."
         options:
           - text: 'в магазин'
             correct: true
@@ -78,7 +78,7 @@ inline:
           - text: 'вулиця'
             correct: false
         explanation: 'На вулиці answers де?'
-      - prompt: 'Потім їду на...'
+      - prompt: "(Name your destination.) Потім їду на..."
         options:
           - text: 'роботу'
             correct: true
@@ -96,7 +96,7 @@ inline:
           - text: 'центру'
             correct: false
         explanation: 'Зараз у центрі is static.'
-      - prompt: 'Вона йде в...'
+      - prompt: "(Name her destination.) Вона йде в..."
         options:
           - text: 'офіс'
             correct: true
@@ -140,14 +140,14 @@ inline:
     title: Close, far, or on the corner
     instruction: Complete each city location or route line.
     items:
-      - sentence: "Аптека ___. П'ять хвилин пішки."
+      - sentence: "(The pharmacy is nearby.) Аптека ___. П'ять хвилин пішки."
         answer: 'близько'
         options:
           - 'близько'
           - 'далеко'
           - 'наліво'
         explanation: "П'ять хвилин пішки means the place is close."
-      - sentence: 'Вокзал ___. Їдьте на метро.'
+      - sentence: "(The station is far away.) Вокзал ___. Їдьте на метро."
         answer: 'далеко'
         options:
           - 'далеко'
@@ -168,7 +168,7 @@ inline:
           - 'до'
           - 'автобусом'
         explanation: 'The phrase is на розі.'
-      - sentence: 'Ідіть ___, потім наліво.'
+      - sentence: "(Go straight, then left.) Ідіть ___, потім наліво."
         answer: 'прямо'
         options:
           - 'прямо'

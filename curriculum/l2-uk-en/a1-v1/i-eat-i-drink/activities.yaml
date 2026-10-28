@@ -32,7 +32,7 @@ inline:
           - 'молоку'
           - 'молоком'
         explanation: 'Молоко is neuter and stays молоко.'
-      - sentence: 'Вони їдять ___.'
+      - sentence: "(Use the accusative singular.) Вони їдять ___."
         answer: 'кашу'
         options:
           - 'кашу'
@@ -46,14 +46,14 @@ inline:
           - 'кава'
           - 'каві'
         explanation: 'Кава becomes каву.'
-      - sentence: 'Я їм ___.'
+      - sentence: "(Use the accusative singular.) Я їм ___."
         answer: 'суп'
         options:
           - 'суп'
           - 'супу'
           - 'супом'
         explanation: 'Суп is masculine inanimate and stays суп.'
-      - sentence: 'Вона їсть ___.'
+      - sentence: "(Use the accusative singular.) Вона їсть ___."
         answer: 'картоплю'
         options:
           - 'картоплю'
@@ -65,7 +65,7 @@ inline:
     title: Choose the food line
     instruction: Pick the natural A1 line.
     items:
-      - prompt: "Я п'ю..."
+      - prompt: "(Use the accusative singular.) Я п'ю..."
         options:
           - text: 'каву'
             correct: true
@@ -83,7 +83,7 @@ inline:
           - text: 'рибі'
             correct: false
         explanation: 'Риба becomes рибу as a direct object.'
-      - prompt: "Ми п'ємо..."
+      - prompt: "(Use the accusative singular.) Ми п'ємо..."
         options:
           - text: 'сік'
             correct: true
@@ -92,7 +92,7 @@ inline:
           - text: 'соком'
             correct: false
         explanation: 'Сік is masculine inanimate and stays сік.'
-      - prompt: 'Вона їсть...'
+      - prompt: "(Use the accusative singular.) Вона їсть..."
         options:
           - text: "м'ясо"
             correct: true
@@ -110,7 +110,7 @@ inline:
           - text: 'воді'
             correct: false
         explanation: 'Вода becomes воду.'
-      - prompt: 'Ти їси...'
+      - prompt: "(Use the accusative singular.) Ти їси..."
         options:
           - text: 'кашу'
             correct: true

@@ -18,7 +18,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/activities.yaml",
-      "sha256": "dc82366d61e73ea4a103cb56a640909a49f2c9f24c41d4e37fad9558e0795301"
+      "sha256": "ffab0cddf7d83811173f5b3c32512112980a686dc480105ef4dde701718da2cd"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/module.md",
@@ -34,7 +34,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/at-the-cafe/activities.yaml",
-      "sha256": "0b58d3d0fbf7f42b800ef8a40d9abc3a69f6ddce75bf1f6dda56748cc9909ef2"
+      "sha256": "0b7523f9726f74c89f93225b70656e30eeff8c6486c07a399de971cf1f9e5f35"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/at-the-cafe/module.md",
@@ -98,7 +98,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/activities.yaml",
-      "sha256": "5020aaa654f01849424babbb383a60b681171251c5ab7ddb42aadf2352a015a1"
+      "sha256": "6211b9e2b2c9d1a6214e7b31c51332ca89468da66f4494e4b6e34bcd20cbbc34"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/module.md",
@@ -130,7 +130,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/activities.yaml",
-      "sha256": "58f92338a98b0ea62d48f6a30675c2e908073b73fc7daafd61baa50960086ed0"
+      "sha256": "cde02fbf1738d60f2f437041e263c7b36cecbe115ffd753d229dce2bafd214dc"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/module.md",
@@ -226,7 +226,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/food-and-drink/activities.yaml",
-      "sha256": "255b1eb391fba32cd4d384fd392ff48c2fab7f4eda33d78e28a9a4e6cf741687"
+      "sha256": "356ba0d940257dede5b2fcb71e3b7cc58a19b28a43c619a85d1f8fae301a3734"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/food-and-drink/module.md",
@@ -322,7 +322,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/i-eat-i-drink/activities.yaml",
-      "sha256": "e42615f5d47fa68ad853039c2807dadadd01aebb6fcf53b6d1bcee5b79d725e7"
+      "sha256": "de92b1ba2bd21a018bc6414172c6d78c7f4b501000931825e1853e3a48d96b7f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/i-eat-i-drink/module.md",
@@ -386,7 +386,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-city/activities.yaml",
-      "sha256": "72d840e9b6d1419d812b21de112047374b9d39f3e2e1ed55781bbb6345e46ff3"
+      "sha256": "b33db97c7cf00cb7ad7fd6bb24671e02804cee31948a378205cb5bb868ffec31"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-city/module.md",
@@ -546,7 +546,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/shopping/activities.yaml",
-      "sha256": "6c88ddff69c3863e7fc5e87c5b6529c762dd6e7121c8ef43bb5ff62ee9584640"
+      "sha256": "f4e60ba996370da4c627b120ade17fd8ddb74afd39677577193d12e615ef164d"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/shopping/module.md",
@@ -642,7 +642,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/transport/activities.yaml",
-      "sha256": "2cc0b6810e786f8a4ac03bb08f74ea8cb71dc4139d6589779c8b0185d47f5bc1"
+      "sha256": "3218e35571158a47cc6b2517d57cbf936fd55110708c285a75ca95ac69a366ba"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/transport/module.md",
@@ -802,7 +802,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-from/activities.yaml",
-      "sha256": "242b5781229bea247a7d33e8ab1f83151123089b0dc40aee5f107b36322aa028"
+      "sha256": "8ceb60f7f2bb7ae29ac3aa61f1541953c327b4b7987a94453e7a1b38cf9adaae"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-from/module.md",
@@ -818,7 +818,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-is-it/activities.yaml",
-      "sha256": "bcb3b4c491c25c98eb774a972cfe61ddd8ef9090dc0ede3569592459bfcc0606"
+      "sha256": "38fcae3c218cb8f4066f21085cd1cc72637e29c6412c2b22eeb906319782e6bd"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-is-it/module.md",
@@ -834,7 +834,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-to/activities.yaml",
-      "sha256": "a2fa9e457bab54a365f33f95e9f1eca33001a8a6333e40ef239d9ce35f0f33c1"
+      "sha256": "b1f0831c6dcb6f4884e6849054fb7908d38c6e39cde305410e747886b1b70cc0"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-to/module.md",
@@ -13690,11 +13690,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/around-the-city.mdx",
-      "sha256": "9a2cc150d43a7b8676a43e01e1c76d5e2aa8b2fd6e975737c894635fec3da710"
+      "sha256": "ae08a6b0f22379b77d653e2a744e91680abec5e20b32ec588dcde4d68846abf3"
     },
     {
       "path": "site/src/content/docs/a1-v1/at-the-cafe.mdx",
-      "sha256": "3542dd6f17db4c4ed8ad46d8c0d90ace77d87dcbae141338d9396765bd1c1533"
+      "sha256": "324fa48cd1007734085631e9b1a2c909f487279de0b3014613641c94dec598db"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-actions.mdx",
@@ -13710,7 +13710,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-food-shopping.mdx",
-      "sha256": "6f963a0451beccacbd0ebba242024c1c7cd4da3434311554539022da5ba45c01"
+      "sha256": "d82f66ee1de7dca0a1fd0f8aea177c5dcbc4f47ac958bdca325236e9f904437e"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-my-world.mdx",
@@ -13718,7 +13718,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-places.mdx",
-      "sha256": "8ab1f60d8fe5a1206a855059d2d33a6ac43abba4390909c42cfd8fe4118a419a"
+      "sha256": "fea99455cdc431827b2abd7aa1c035878a335458fd177b18cce0d0991c9c54ad"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-time-nature.mdx",
@@ -13742,7 +13742,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/food-and-drink.mdx",
-      "sha256": "b928b9de20b44bf55e9c70969526c237fccfb21d8c686e8ee2eecb5d837a5ccf"
+      "sha256": "8cb666e0f262e3636449dc207d3cc8b411fd3877f0e0c53a34c2502b56599b5b"
     },
     {
       "path": "site/src/content/docs/a1-v1/free-time.mdx",
@@ -13766,7 +13766,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/i-eat-i-drink.mdx",
-      "sha256": "9297733c9773f9577caa8b83f031db9bf3b88583987a13b740bfbd06bf897d4a"
+      "sha256": "d5a93889bd8aaf2c55d37114970ae8196682a7cdf2341739bddd903d467a7961"
     },
     {
       "path": "site/src/content/docs/a1-v1/i-want-i-can.mdx",
@@ -13786,7 +13786,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/my-city.mdx",
-      "sha256": "3eb8442dbaaebff0e255c1f0bb2b5822612cc3c92546a376e328cf485eb681f5"
+      "sha256": "fec7fdbc83da8795049338f40498b22212d8ae8103b457bdefe075233729235a"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-day.mdx",
@@ -13826,7 +13826,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/shopping.mdx",
-      "sha256": "ce35a02430bbf47b906c3219c98949f1c23cc21bf5d984307c1333893facc591"
+      "sha256": "af326a8e23b1d713cbd95f82536f6e3a171c07b573c682be4d0b37d467fb3604"
     },
     {
       "path": "site/src/content/docs/a1-v1/sounds-letters-and-hello.mdx",
@@ -13850,7 +13850,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/transport.mdx",
-      "sha256": "2feb103e0c29c5bbf27302fb3ea4cdce6a8233c7fb5c8069764a3fab0be18389"
+      "sha256": "7e9bd43c3b7d59f0fe414cf41f786c55f74d3ee6a37b610c865bf3bf72c1d943"
     },
     {
       "path": "site/src/content/docs/a1-v1/verbs-group-one.mdx",
@@ -13890,15 +13890,15 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/where-from.mdx",
-      "sha256": "4465272280a171c5a94c6638a70a06b67e5751c454a5a43349796079e3cad568"
+      "sha256": "f5dab946c6f5402ae34e65be4d9d334903db77ed3d7a85cfe548e08905d57cdd"
     },
     {
       "path": "site/src/content/docs/a1-v1/where-is-it.mdx",
-      "sha256": "3969a40dee2c4591d3551e14503a22e3a22146776054cb05859ff9c0f4c2d8fd"
+      "sha256": "26d8d1292f32ad7b52d2e72a6d552d3c1c9f332747c04ae761620f7dc542cc3b"
     },
     {
       "path": "site/src/content/docs/a1-v1/where-to.mdx",
-      "sha256": "29917b0b991b7c5127ae5f7718a8e34b1a07888622ac50d2628b6c5cb657b9ae"
+      "sha256": "7b79593eba6e7bbff96305109dd325f002b2f9fbce2346ec129a10a22bb4795f"
     },
     {
       "path": "site/src/content/docs/a1-v1/who-am-i.mdx",

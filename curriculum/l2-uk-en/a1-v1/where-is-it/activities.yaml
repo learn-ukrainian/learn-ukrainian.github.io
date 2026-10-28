@@ -62,7 +62,7 @@ inline:
         options:
           - text: 'на'
             correct: true
-          - text: 'в'
+          - text: "без"
             correct: false
           - text: 'до'
             correct: false

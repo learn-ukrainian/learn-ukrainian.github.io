@@ -111,7 +111,7 @@ inline:
         answer: 'зі США'
         options:
           - 'зі США'
-          - 'з США'
+          - "США"
           - 'у США'
         explanation: 'Use зі США for easier pronunciation.'
       - sentence: 'Мій друг ___.'
@@ -273,21 +273,21 @@ workbook:
     title: Country, city, current home
     instruction: Complete each short introduction with a safe learned phrase.
     items:
-      - sentence: 'Я ___, з Києва.'
+      - sentence: "(State the place of origin: Ukraine.) Я ___, з Києва."
         answer: 'з України'
         options:
           - 'з України'
           - 'в Україні'
           - 'в Україну'
         explanation: 'Country origin answers звідки?: з України.'
-      - sentence: 'Анна ___, із Торонто.'
+      - sentence: "(State the place of origin: Canada.) Анна ___, із Торонто."
         answer: 'з Канади'
         options:
           - 'з Канади'
           - 'у Канаді'
           - 'до Канади'
         explanation: 'Origin from Canada is з Канади.'
-      - sentence: 'Олена живе в Києві, але вона ___.'
+      - sentence: "(State the place of origin: Lviv.) Олена живе в Києві, але вона ___."
         answer: 'зі Львова'
         options:
           - 'зі Львова'
@@ -308,7 +308,7 @@ workbook:
           - 'у США'
           - 'до США'
         explanation: 'Use зі США for easier pronunciation.'
-      - sentence: 'Марко ___ і говорить українською.'
+      - sentence: "(State the place of origin: Kyiv.) Марко ___ і говорить українською."
         answer: 'з Києва'
         options:
           - 'з Києва'
