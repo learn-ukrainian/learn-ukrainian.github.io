@@ -221,6 +221,9 @@ def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp
         commits.append(run("rev-parse", "HEAD"))
     head = commits[-1]
     flags = tuple(commits[int(flag[1:])] if flag.startswith("@") else flag for flag in flags)
+    # The gate guards a reviewed change: a verdict is recorded only for a task pinned with --branch (see below).
+    if "--branch" not in flags:
+        flags = ("--branch", "review/target", *flags)
     monkeypatch.setattr(git, "resolve_repo", lambda _: (repo, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "claude/branch", head))
     monkeypatch.setattr(checks, "check_branch_author_families", BRANCH_AUTHOR_FAMILIES)
@@ -236,3 +239,14 @@ def test_reviewer_excludes_every_branch_author_family(dispatch, monkeypatch, tmp
     else:
         # Unresolvable authorship and an empty range refuse every reviewer family.
         dispatch(*review, agent="cursor", model="grok-4.7-high", expected=2)
+
+
+@pytest.mark.parametrize("flags", [("--language-lane", "ukrainian"), ("--risk", "low"), ("--review-profile", "ukrainian")])
+def test_typed_dispatch_without_a_reviewed_change_checks_no_branch_authorship(dispatch, monkeypatch, flags):
+    # The uk-preamble eval runs --language-lane at a pinned head with no branch or PR. The verdict recorder
+    # refuses such a task ("review was not branch-pinned"), so no authorship range exists to check.
+    def unexpected(*_args):
+        raise AssertionError("branch authorship checked for a dispatch that reviews no change")
+
+    monkeypatch.setattr(checks, "check_branch_author_families", unexpected)
+    dispatch("--mode", "read-only", *flags, "--pinned-head", "a" * 40, agent="codex", model="gpt-6.1-sol")
