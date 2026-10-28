@@ -1149,6 +1149,25 @@ def test_issue_11381_redirected_git_target_blocked(repo: Path, repo_template: Pa
     assert result.returncode == 2, result.stderr
 
 
+@pytest.mark.parametrize(
+    ("command", "expected"),
+    [
+        ("GIT_WORK_TREE={primary} git checkout HEAD -- curriculum/tracked.md", 2),
+        ("env GIT_DIR={primary}/.git git add curriculum/tracked.md", 2),
+        ("export GIT_DIR={primary}/.git; git add curriculum/tracked.md", 2),
+        ("export GIT_WORK_TREE={primary}; bash -c 'git checkout HEAD -- curriculum/tracked.md'", 2),
+        ("( export GIT_WORK_TREE={primary}; git checkout HEAD -- curriculum/tracked.md )", 2),
+        ("git -c core.worktree={primary} checkout HEAD -- curriculum/tracked.md", 2),
+        ("GIT_TRACE=1 git add curriculum/tracked.md", 0),
+    ],
+)
+def test_issue_11381_redirected_own_worktree_git_target_blocked(repo: Path, command: str, expected: int):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command.format(primary=repo)}}
+    result = _run(repo, payload)
+    assert result.returncode == expected, result.stderr
+
+
 def test_git_apply_on_primary_blocked(repo: Path):
     payload = {
         "tool_name": "Bash",

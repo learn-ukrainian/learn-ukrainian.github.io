@@ -2099,7 +2099,9 @@ def _is_single_simple_git_command(command: str) -> bool:
     return not any(word.startswith(("-o", "--output")) for word in options)
 
 
-def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int = 0) -> list[dict[str, object]]:
+def bash_git_write_intents(
+    command: str, *, cwd: str | None = None, depth: int = 0, git_environment: frozenset[str] = frozenset()
+) -> list[dict[str, object]]:
     """Parse Bash for git-mediated working-tree mutations (issue #5396).
 
     Each intent is a dict::
@@ -2108,6 +2110,8 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
           "kind": "apply"|"add"|"stash_apply"|"path_checkout"|"restore_source",
           "c_path": str|None,          # from git -C
           "git_options": list[str],    # -C/--git-dir/--work-tree
+          "git_environment": set[str], # GIT_* names the command binds
+          "git_config_redirected": bool,
           "segment_cwd": str|None,     # after literal cd/pushd
           "paths": list[str],          # pathspecs when known (may be empty)
           "summary": str,              # human-readable for the block message
@@ -2119,23 +2123,40 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
     """
     _refuse_nested_ansi_c_quoting(command, depth)
     intents: list[dict[str, object]] = []
+    segments = list(_segments_with_cwd(command, cwd))
+    # The target probe sees neither the command's own environment nor its Git
+    # configuration, so record every override the command names at any scope.
+    words = [word for segment, _, _ in segments for word in segment]
+    git_environment = git_environment | {
+        match.group(1) for word in words if (match := re.match(r"(GIT_[A-Za-z0-9_]*)(?:\+?=|$)", word))
+    }
+    config_redirected = any(
+        re.match(r"(?i)(?:-c|--config-env=)?(?:core\.(?:worktree|bare)|include(?:if\.[^=]+)?\.path)(?:=|$)", word)
+        for word in words
+    )
 
     def record(intent: dict[str, object]) -> None:
         intent["segment_cwd"] = effective_cwd
         intent["git_options"] = git_options
+        intent["git_environment"] = git_environment
+        intent["git_config_redirected"] = config_redirected
         intents.append(intent)
 
-    for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
+    for segment, effective_cwd, _shell_cwd in segments:
         cmd, idx = _command_word(segment)
         if cmd == "eval" and depth < _MAX_SHELL_DEPTH:
             args = segment[idx + 1 :]
             if all(getattr(arg, "unresolved_at", None) is None for arg in args):
-                intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1))
+                intents.extend(bash_git_write_intents(
+                    " ".join(args), cwd=effective_cwd, depth=depth + 1, git_environment=git_environment
+                ))
             continue
         if cmd in {"sh", "bash", "zsh", "dash"} and depth < _MAX_SHELL_DEPTH:
             script = _shell_command_script(segment[idx + 1 :])
             if script is not None and getattr(script, "unresolved_at", None) is None:
-                intents.extend(bash_git_write_intents(str(script), cwd=effective_cwd, depth=depth + 1))
+                intents.extend(bash_git_write_intents(
+                    str(script), cwd=effective_cwd, depth=depth + 1, git_environment=git_environment
+                ))
             continue
         if not _is_git_binary(cmd):
             continue
@@ -2709,7 +2730,13 @@ def main() -> int:
                 summary = str(intent.get("summary") or "git write")
                 intent_root = wc.resolve_main_root(_protected_repo_anchor())
                 options = intent.get("git_options") or []
-                if set(wc.GIT_REDIRECT_ENV_KEYS).intersection(os.environ):
+                redirects = set(wc.GIT_REDIRECT_ENV_KEYS)
+                environment = intent.get("git_environment") or frozenset()
+                if (
+                    redirects.intersection(environment) or redirects.intersection(os.environ)
+                    or any(name.startswith("GIT_CONFIG") for name in environment)
+                    or intent.get("git_config_redirected")
+                ):
                     return _block_uncertain("undecidable_git_environment")
                 if any(getattr(option, "unresolved_at", None) is not None for option in options):
                     return _block_git_mediated(summary, intent_root, reason="unresolved_shell_variable")
