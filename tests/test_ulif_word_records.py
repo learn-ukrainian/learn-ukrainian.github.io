@@ -300,6 +300,19 @@ def test_forms_state_transitions_and_failure_reporting(tmp_path):
     assert rec4[0]["entries"][0]["forms_state"] == "complete"
     assert len(rec4[0]["entries"][0]["forms"]) > 0
 
+    # 5. A legacy receipt without source_fingerprint cannot decide a miss and does not fail the batch
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("ALTER TABLE ulif_forms_build DROP COLUMN source_fingerprint")
+    conn.commit()
+    conn.close()
+    rec5 = sources_db.get_ulif_word_records(["замок", "пилосмок"], db_path=db_path)
+    assert rec5[0]["entries"][0]["forms_state"] == "missing_source_fingerprint"
+    assert {key: rec5[1][key] for key in ("status", "authoritative", "reason")} == {
+        "status": "unavailable",
+        "authoritative": False,
+        "reason": "local_copy_incomplete",
+    }
+
 
 def test_batch_query_returns_ordered_records(tmp_path):
     db_path = tmp_path / "sources.db"

@@ -1014,30 +1014,24 @@ def get_ulif_word_records(
                 for w in word_list
             ]
 
-        has_forms_build = _ulif_table_exists(conn, "ulif_forms_build")
-        has_forms_table = _ulif_table_exists(conn, "ulif_forms")
         has_failures_table = _ulif_table_exists(conn, "ulif_forms_failures")
         has_sections_table = _ulif_table_exists(conn, "ulif_dictua_sections")
 
-        if not has_forms_build or not has_forms_table or not has_failures_table or not has_sections_table:
-            global_forms_state = "missing_table"
+        # One reading of the receipt for both the forms state and the miss
+        # authority; it tolerates a legacy receipt without newer columns.
+        local_copy = ulif_local_copy(conn)
+        copy_complete = local_copy["complete"]
+        if copy_complete:
+            global_forms_state = "complete"
+        elif local_copy["state"] in {"missing_table", "unmigrated_entries", "unbuilt"}:
+            global_forms_state = str(local_copy["state"])
+        elif local_copy.get("state") != "complete":
+            global_forms_state = str(local_copy.get("state"))
+        elif local_copy.get("parser_version") != ULIF_FORMS_PARSER_VERSION:
+            global_forms_state = "stale_parser_version"
         else:
-            build_row = conn.execute(
-                "SELECT state, parser_version, source_fingerprint FROM ulif_forms_build WHERE id = 1"
-            ).fetchone()
-            if build_row is None:
-                global_forms_state = "unbuilt"
-            elif build_row["state"] != "complete":
-                global_forms_state = str(build_row["state"])
-            elif build_row["parser_version"] != ULIF_FORMS_PARSER_VERSION:
-                global_forms_state = "stale_parser_version"
-            elif not build_row["source_fingerprint"]:
-                global_forms_state = "missing_source_fingerprint"
-            else:
-                global_forms_state = "complete"
+            global_forms_state = "missing_source_fingerprint"
 
-        # A miss decides "not in ULIF" only on a complete local copy.
-        copy_complete = ulif_local_copy(conn)["complete"]
         records: list[dict] = []
         for word in word_list:
             normalized = normalize_ulif_dictua_query(word)
