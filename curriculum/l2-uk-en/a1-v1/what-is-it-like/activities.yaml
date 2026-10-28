@@ -189,7 +189,7 @@ workbook:
         options:
           - text: Книга нова.
             correct: true
-          - text: Книга є нова.
+          - text: "Книга нове."
             correct: false
           - text: Книга новий.
             correct: false
@@ -200,7 +200,7 @@ workbook:
             correct: true
           - text: Стіл чиста.
             correct: false
-          - text: Стіл є чистий.
+          - text: "Стіл чисте."
             correct: false
         explanation: Стіл is masculine, and the no-є frame is natural.
       - prompt: The window is big.
@@ -271,7 +271,7 @@ workbook:
           - великий
           - велика
         explanation: Вікно is neuter.
-      - sentence: Книга дорога, ___ листівка дешева.
+      - sentence: "(Contrast: whereas.) Книга дорога, ___ листівка дешева."
         answer: а
         options:
           - а
@@ -375,9 +375,9 @@ workbook:
         answer: правильна
         options:
           - правильна
-          - вірна
+          - "правильний"
         explanation: Use правильна відповідь for a correct answer.
-      - sentence: Дай мені, будь ласка, ___ олівець.
+      - sentence: "(Any pencil, with no particular preference.) Дай мені, будь ласка, ___ олівець."
         answer: будь-який
         options:
           - будь-який

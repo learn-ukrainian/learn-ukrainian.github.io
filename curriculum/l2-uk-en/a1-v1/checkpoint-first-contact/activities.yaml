@@ -26,7 +26,7 @@ inline:
         options:
           - text: Мене звати Олена.
             correct: true
-          - text: Моє ім'я є Олена.
+          - text: "Мій ім'я Олена."
             correct: false
           - text: Я звати Олена.
             correct: false
@@ -35,7 +35,7 @@ inline:
         options:
           - text: Я студент.
             correct: true
-          - text: Я є студент.
+          - text: "Я студенти."
             correct: false
           - text: Мене студент.
             correct: false
@@ -44,7 +44,7 @@ inline:
         options:
           - text: Мені 20 років.
             correct: true
-          - text: Я маю 20 років.
+          - text: "Мені 20 роки."
             correct: false
           - text: Я 20 роки.
             correct: false
@@ -163,14 +163,14 @@ inline:
         answer: студент
         options:
           - студент
-          - є студент
+          - "студенти"
           - мене студент
         explanation: Речення A1 про ідентичність не потребує є.
       - sentence: ___ 20 років.
         answer: Мені
         options:
           - Мені
-          - Я маю
+          - "Моє"
           - Мене
         explanation: Вік подаємо блоком Мені ... років.
       - sentence: У мене ___ сестра.
@@ -203,21 +203,21 @@ inline:
         options:
           - text: Мене звати Джон.
             correct: true
-          - text: Моє ім'я є Джон.
+          - text: "Мій ім'я Джон."
             correct: false
         explanation: Українська представляє ім'я через Мене звати...
       - prompt: Речення ідентичності
         options:
           - text: Я студент.
             correct: true
-          - text: Я є студент.
+          - text: "Я студенти."
             correct: false
         explanation: Теперішня ідентичність зазвичай не додає є.
       - prompt: Речення про вік
         options:
           - text: Мені 20 років.
             correct: true
-          - text: Я маю 20 років.
+          - text: "Мені 20 роки."
             correct: false
         explanation: Вік подаємо блоком Мені ... років.
       - prompt: Пряме звертання
@@ -231,14 +231,14 @@ inline:
         options:
           - text: Добрий день! Мене звати Оксана.
             correct: true
-          - text: Здрастуйте! Мене звати Оксана.
+          - text: "Добрий день! Мене звати Оксану."
             correct: false
         explanation: Добрий день — безпечне стандартне привітання.
       - prompt: Прізвище
         options:
           - text: Моє прізвище Сміт.
             correct: true
-          - text: Моя фамілія Сміт.
+          - text: "Мій прізвище Сміт."
             correct: false
         explanation: Прізвище — стандартне українське слово.
       - prompt: Прощання
@@ -309,7 +309,7 @@ inline:
           - Її
           - Вона
         explanation: Його підходить до брата.
-      - sentence: Дуже приємно ___!
+      - sentence: "(Greeting a new classmate: nice to meet you.) Дуже приємно ___!"
         answer: познайомитися
         options:
           - познайомитися

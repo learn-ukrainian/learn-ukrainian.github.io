@@ -11,7 +11,7 @@ inline:
             correct: true
           - text: Який колір є олівець?
             correct: false
-          - text: Якого кольору є олівець?
+          - text: "Якої кольору олівець?"
             correct: false
         explanation: Learn Якого кольору...? as one question phrase without є.
       - prompt: Якого кольору светр?
@@ -54,7 +54,7 @@ inline:
         options:
           - text: Синьо-жовтий.
             correct: true
-          - text: Блакитно-жовтий.
+          - text: "Червоно-жовтий."
             correct: false
           - text: Сіро-жовтий.
             correct: false
@@ -189,9 +189,9 @@ inline:
         options:
           - text: синьо-жовтий прапор
             correct: true
-          - text: блакитно-жовтий прапор
+          - text: "червоно-жовтий прапор"
             correct: false
-          - text: голубо-жовтий прапор
+          - text: "зелено-жовтий прапор"
             correct: false
         explanation: The standard phrase is синьо-жовтий прапор.
       - prompt: A dark blue sweater
@@ -329,7 +329,7 @@ workbook:
         answer: карі
         options:
           - карі
-          - коричневі
+          - "коричнева"
           - каре
         explanation: Use the fixed appearance phrase карі очі.
       - sentence: У нього ___ волосся.
