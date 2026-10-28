@@ -78,7 +78,7 @@ def test_scheduled_scan_uses_a_real_range_and_leaves_pr_and_push_alone(tmp_path:
     subprocess.check_call(["git", "commit", "-am", "new"], cwd=tmp_path, env=env, timeout=30)
     head_sha = _git(tmp_path, "rev-parse", "HEAD")
 
-    scheduled = resolve_scan_scope("schedule", repo_root=tmp_path)
+    scheduled = resolve_scan_scope("schedule", schedule_last_scanned_head=head_sha, repo_root=tmp_path)
     assert scheduled.mode == "schedule"
     assert scheduled.reason == "branch-history"
     assert scheduled.trufflehog_base == ""
