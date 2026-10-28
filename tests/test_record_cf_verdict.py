@@ -3183,16 +3183,36 @@ def test_budget_extension_refuses(monkeypatch, tmp_path, case, reason):
     assert calls == {"posts": 0, "statuses": 0}
 
 
-def test_budget_extension_reads_archived_lineage_runs_by_recorded_task_id(monkeypatch, tmp_path):
-    """An archived run keeps its published task id and its reply beside it (F2)."""
-    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path)
+def _archive_run(tasks, task_id, stem):
+    """Move a run into the archive as ``stale_task_records`` does: ``<stem>.json`` beside ``<stem>.result``."""
     archive = tasks / recorder.ARCHIVE_DIR_NAME
-    archive.mkdir()
-    record = json.loads((tasks / "round-3.json").read_text())
-    record.update(task_id="round-3", result_file=str(tasks / "round-3.result"))
-    (archive / "round-3.20261028T120000Z.archived.json").write_text(json.dumps(record))
-    (tasks / "round-3.result").rename(archive / "round-3.result")
-    (tasks / "round-3.json").unlink()
+    archive.mkdir(exist_ok=True)
+    record = json.loads((tasks / f"{task_id}.json").read_text())
+    record.update(task_id=task_id, result_file=str(tasks / f"{task_id}.result"))
+    (archive / f"{stem}.json").write_text(json.dumps(record))
+    (tasks / f"{task_id}.result").rename(archive / f"{stem}.result")
+    (tasks / f"{task_id}.json").unlink()
+
+
+def test_budget_extension_reads_archived_lineage_runs_by_recorded_task_id(monkeypatch, tmp_path):
+    """An archived run keeps its published task id and its own reply beside it (F2)."""
+    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path)
+    _archive_run(tasks, "round-3", "round-3.20261028T120000Z.archived")
     write_extension_approval(tasks, request)
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert result["budget_extension"]["seats"] == ["anthropic"] and calls["posts"] == 1
+
+
+def test_budget_extension_never_reads_another_archived_runs_reply(monkeypatch, tmp_path):
+    """A stamped archived run is read with its own reply, not an older run's ``<task>.result`` (review round 2, F2)."""
+    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path)
+    write_task(tasks, task_id="seat", reply="no verdict here", worktree_base_sha=request["approved_head"], pr=42,
+               review_profile="code", status="failed")
+    _archive_run(tasks, "seat", "seat")
+    write_task(tasks, task_id="seat", reply="VERDICT: BLOCKED", worktree_base_sha=request["approved_head"], pr=42,
+               review_profile="code", status="failed")
+    _archive_run(tasks, "seat", "seat.20261028T120000Z.archived")
+    write_extension_approval(tasks, request)
+    with pytest.raises(recorder.RecordError, match=r"\[lineage\].*review task seat \(failed\) carries an unpublished verdict"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}

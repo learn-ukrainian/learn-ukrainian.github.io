@@ -34,7 +34,7 @@ from scripts.orchestration.integration_sweep import (
     lookup_verdict,
     parse_marker,
 )
-from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME, relocated_result_file
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.reviewer_resolver import resolve_family
@@ -83,13 +83,13 @@ def _read_run(path: Path, record: Mapping[str, Any]) -> ReviewRun:
     """Read one run's reply, refusing a reply its record's digest disowns.
 
     The run is named by its recorded task id, which its published verdict
-    names; an archived record's file name carries an archive stamp, and its
-    reply sits beside it (``relocated_result_file``).
+    names; an archived record's file name carries an archive stamp. Its reply
+    is always the ``<stem>.result`` beside it (``stale_task_records._sidecar_names``),
+    never another run's reply under the bare task id.
     """
     recorded = record.get("task_id")
     task_id = recorded if isinstance(recorded, str) and recorded else path.stem
-    result_file = relocated_result_file(path, record.get("result_file"))
-    result = Path(result_file) if result_file else path.with_suffix(".result")
+    result = path.with_suffix(".result")
     try:
         raw = result.read_bytes() if result.exists() else None
     except OSError as exc:
