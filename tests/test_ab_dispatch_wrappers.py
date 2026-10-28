@@ -355,6 +355,12 @@ def test_ask_non_kimi_review_argv_omits_kimicc_harness():
     assert "--repo" not in command
 
 
+def test_review_dispatch_never_emits_a_refused_read_only_agy_run():
+    """A review verdict needs --mode read-only and dispatch refuses it on AGY (C-2970): no argv is built."""
+    with pytest.raises(ValueError, match="read_only_unenforceable: agy"):
+        wrappers.build_ask_review_dispatch_command(_admitted_reviewer("agy"), "review-1", Path("prompt.md"), effort=None)
+
+
 def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path):
     result_file = tmp_path / "result.md"
     result_file.write_text("Reviewed the diff.\nVERDICT: APPROVED\n", encoding="utf-8")

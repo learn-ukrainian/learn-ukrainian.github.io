@@ -733,6 +733,43 @@ sys.exit(1)
     assert wait_argv[wait_argv.index("--run-nonce") + 1] == "n1"
 
 
+@pytest.mark.parametrize(
+    ("writer", "model", "mode"),
+    [("agy", "gemini-3.8-flash-high", "workspace-write"), ("codex", "gpt-6.1-sol", "read-only")],
+)
+def test_writer_dispatch_never_requests_a_refused_read_only_run(tmp_path, passing_preflight, writer, model, mode):
+    """Dispatch refuses --mode read-only on AGY (C-2970): its isolated writer run asks for workspace-write."""
+    argv_log = tmp_path / "argv.json"
+    fake_delegate = tmp_path / "fake_dispatch.py"
+    fake_delegate.write_text(
+        f"import json, sys; open({str(argv_log)!r}, 'w').write(json.dumps(sys.argv[1:])); sys.exit(1)\n",
+        encoding="utf-8",
+    )
+    prompt_file = tmp_path / "prompt.md"
+    prompt_file.write_text("Test prompt", encoding="utf-8")
+
+    with pytest.raises(WriterCallError, match=r"dispatch\.py dispatch failed"):
+        dispatch_writer(
+            writer=writer,
+            level="a1",
+            slug="agy-mode",
+            lesson_n=1,
+            prompt_file=prompt_file,
+            prompt_sha256="e" * 64,
+            inputs=_inputs("e" * 64),
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+            delegate_script=fake_delegate,
+            repo_root=tmp_path,
+            model=model,
+        )
+
+    argv = json.loads(argv_log.read_text(encoding="utf-8"))
+    assert argv[argv.index("--agent") + 1] == writer
+    assert argv[argv.index("--mode") + 1] == mode
+    assert "--worktree" in argv
+
+
 def test_real_dispatch_path_wait_failure(tmp_path, a1_valid_fixture, passing_preflight):
     """Finding 7: dispatch_writer fails when wait reports non-zero exit code."""
     fake_delegate_script = tmp_path / "fake_delegate_failing.py"

@@ -201,6 +201,45 @@ def test_dispatch_dry_run_builds_dispatch_command(tmp_path: Path, capsys):
     assert not oc.run_state_path(tmp_path, "a1-policy").exists()
 
 
+def _agy_dispatch(tmp_path: Path, *extra: str) -> list[str]:
+    return [
+        "--repo-root",
+        str(tmp_path),
+        "dispatch",
+        "--run-id",
+        "a1-policy",
+        "--task-id",
+        "worker-agy",
+        "--agent",
+        "agy",
+        "--worktree",
+        "--prompt",
+        "Do the worker task.",
+        "--dry-run",
+        *extra,
+    ]
+
+
+def test_agy_dispatch_defaults_to_workspace_write_never_read_only(tmp_path: Path, capsys):
+    """Dispatch refuses --mode read-only on AGY (C-2970): the default for AGY is its scoped workspace-write."""
+    rc = oc.main(_agy_dispatch(tmp_path, "--owned-path", "scripts/one.py"))
+    command = json.loads(capsys.readouterr().out)["command"]
+
+    assert rc == 0
+    assert _option(command, "--agent") == "agy"
+    assert _option(command, "--mode") == "workspace-write"
+
+
+def test_agy_dispatch_needs_an_owned_path_like_any_write_dispatch(tmp_path: Path, capsys):
+    assert oc.main(_agy_dispatch(tmp_path)) == 2
+    assert "requires --owned-path" in capsys.readouterr().out
+
+
+def test_explicit_read_only_agy_dispatch_is_refused_with_the_dispatcher_reason(tmp_path: Path, capsys):
+    assert oc.main(_agy_dispatch(tmp_path, "--mode", "read-only")) == 2
+    assert "read_only_unenforceable: agy" in capsys.readouterr().out
+
+
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 def test_write_dispatch_without_owned_paths_refuses_before_any_prompt_or_delegate(tmp_path: Path, capsys, mode):
     """#9739: a write dispatch is scoped; refuse here instead of handing delegate an unscoped writer."""

@@ -359,10 +359,23 @@ def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, mo
     assert len(calls) == 2
     assert calls[0][0][0] == calls[1][0][0] == sys.executable
     assert "--model" in calls[0][0] and "fixture" in calls[0][0]
+    # Dispatch refuses read-only AGY (C-2970): the isolated question run asks for workspace-write.
+    assert calls[0][0][calls[0][0].index("--mode") + 1] == "workspace-write"
     assert "wait" in calls[1][0]
     assert calls[0][0][1].endswith("scripts/dispatch.py")
     assert calls[1][0][calls[1][0].index("--run-nonce") + 1] == nonce
     assert all(call[1]["timeout"] for call in calls)
+
+
+def test_question_dispatch_keeps_read_only_for_a_seat_dispatch_accepts(tmp_path, monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        runner.subprocess, "run", lambda cmd, **kw: calls.append(cmd) or subprocess.CompletedProcess(cmd, 1, "", "stop")
+    )
+    batch = {"lesson": {"level": "a1", "slug": "sample-slug", "n": 1}, "questions": []}
+    with pytest.raises(RuntimeError, match="stop"):
+        runner.dispatch_questions(batch, "codex:fixture", repo_root=tmp_path)
+    assert calls[0][calls[0].index("--mode") + 1] == "read-only"
 
 
 class _FixtureSources:

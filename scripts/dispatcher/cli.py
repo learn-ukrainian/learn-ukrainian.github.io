@@ -21,6 +21,16 @@ from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFA
 ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes")
 
 
+def isolated_run_mode(agent: str) -> str:
+    """The mode for a caller that wants a run kept out of its checkout and has no use for edits.
+
+    Dispatch refuses ``--mode read-only`` on a CLI with no write lock (AGY, C-2970); such a run uses
+    ``workspace-write``, which stays confined to the run's own ``--worktree``. Callers that need a
+    review verdict stay read-only and surface the refusal instead.
+    """
+    return "workspace-write" if providers.read_only_refusal(ALIASES.get(agent, agent)) else "read-only"
+
+
 class _PromptPath(type(Path())):
     """Let builders read submitted bytes while dry-run leaves the filesystem untouched."""
 

@@ -322,8 +322,14 @@ def build_ask_review_dispatch_command(
     the review seat; the command carries its seat and model.
     """
     from agent_runtime.target_admission import require_admitted, seat_default_model
+    from scripts.dispatcher import providers
+    from scripts.dispatcher.cli import ALIASES
 
     target = require_admitted(target)
+    # A review verdict needs --mode read-only (dispatch refuses --require-review-verdict otherwise), so a
+    # seat that cannot run read-only (AGY, C-2970) cannot review: surface dispatch's own refusal.
+    if refusal := providers.read_only_refusal(ALIASES.get(target.recipient, target.recipient)):
+        raise ValueError(refusal)
     model = target.model or seat_default_model(target.recipient)
     if not model:
         raise ValueError(f"no default dispatch model for {target.recipient!r}")

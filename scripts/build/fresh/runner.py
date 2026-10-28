@@ -90,6 +90,7 @@ from scripts.curriculum.resolver.narrow import learner_usable
 from scripts.curriculum.resolver.stream import resolve
 from scripts.curriculum.resolver.tokenize import Token, lookup_form, tokenize
 from scripts.curriculum.validate.activity_report import draft_report
+from scripts.dispatcher.cli import isolated_run_mode
 from scripts.review.digest.error import DigestError
 
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-lesson-gates-v1.schema.json"
@@ -1376,7 +1377,7 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
         "--model",
         model,
         "--mode",
-        "read-only",
+        isolated_run_mode(agent),
         "--worktree",
         "--task-id",
         task_id,

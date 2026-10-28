@@ -1,4 +1,4 @@
-"""Gemini's native low/medium formal-review boundary (#10073)."""
+"""Reviewer resolver: task identity, red-team seats and the D-129 seat rules; no AGY review seat (C-2970)."""
 
 from dataclasses import replace
 
@@ -15,8 +15,6 @@ from scripts.review.reviewer_resolver import (
     review_task_id_comparison_keys,
 )
 from tests.claude_route_accounts import HOST_ACCOUNT
-
-GEMINI = REVIEW_CANDIDATES["gemini-3.8-flash-high"]
 
 
 @pytest.mark.parametrize(
@@ -57,60 +55,33 @@ def test_different_task_comparison_keys_do_not_intersect():
     )
 
 
-@pytest.mark.parametrize("profile", ["code", "infra"])
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
-@pytest.mark.parametrize("entrypoint", ["evaluate", "pin", "ladder"])
-def test_gemini_risk_boundary(profile, risk, entrypoint):
-    inputs = ResolverInputs(author_model="gpt-6.1-sol", review_profile=profile, risk=risk, claude_account=HOST_ACCOUNT)
-    if entrypoint == "evaluate":
-        eligible = evaluate_candidate(GEMINI, inputs).status == "eligible"
-    else:
-        if entrypoint == "pin":
-            inputs = replace(inputs, pinned_candidate=GEMINI.name, pressure_override_reason="boundary test")
-        eligible = resolve_reviewer(inputs, ladder=((GEMINI,),)).selected is not None
-    assert eligible == (profile == "code" and risk in {"low", "medium"})
+def test_gemini_is_not_a_review_candidate(risk):
+    """Dispatch refuses read-only AGY (C-2970), so no AGY seat can review: the ladder never offers one."""
+    assert "gemini-3.8-flash-high" not in REVIEW_CANDIDATES
+    assert not [name for name, candidate in REVIEW_CANDIDATES.items() if candidate.route == "agy"]
+    snapshot = {route: "unhealthy" for route in {candidate.route for candidate in REVIEW_CANDIDATES.values()}}
+    snapshot["agy"] = "healthy"
+    result = resolve_reviewer(
+        ResolverInputs(author_model="gpt-6.1-sol", risk=risk, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT)
+    )
+    assert result.selected is None
+    assert not [row.name for row in result.trace if row.route == "agy"]
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
-@pytest.mark.parametrize("scope", ["changed_paths", "owned_paths"])
-@pytest.mark.parametrize(
-    "path", ["scripts/review/reviewer_resolver.py", "scripts/agent_runtime/adapters/agy.py", ".github/workflows/ci.yml"]
-)
-def test_gemini_security_paths_override_declared_risk(risk, scope, path):
-    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, **{scope: (path,)}, claude_account=HOST_ACCOUNT)
-    result = evaluate_candidate(GEMINI, inputs)
-    assert result.status == "excluded"
-    assert "security-sensitive" in result.reason
-    assert resolve_reviewer(inputs, ladder=((GEMINI,),)).selected is None
-
-
-@pytest.mark.parametrize("formal", [True, False])
-def test_custom_roles_cannot_grant_gemini_high_risk(formal):
-    forged = replace(GEMINI, model_roles=frozenset({"critical_review", "standard_review"}))
-    assert (
-        evaluate_candidate(
-            forged, ResolverInputs(author_model="gpt-6.1-sol", risk="critical", formal_review=formal, claude_account=HOST_ACCOUNT)
-        ).status
-        == "excluded"
+def test_explicit_gemini_pin_fails_closed(risk):
+    result = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk=risk,
+            pinned_candidate="gemini-3.8-flash-high",
+            pressure_override_reason="C-2970 boundary test",
+            claude_account=HOST_ACCOUNT,
+        )
     )
-
-
-def test_gemini_independence_and_unhealthy_route():
-    same = evaluate_candidate(GEMINI, ResolverInputs(author_model="gemini-3.8-flash-high", risk="low", claude_account=HOST_ACCOUNT))
-    assert same.status == "excluded"
-    assert "same family" in same.reason
-    unhealthy = evaluate_candidate(
-        GEMINI, ResolverInputs(author_model="gpt-6.1-sol", risk="low", routing_snapshot={"agy": "unhealthy"}, claude_account=HOST_ACCOUNT)
-    )
-    assert unhealthy.status == "excluded"
-
-
-@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
-def test_automatic_ladder_can_use_gemini_when_other_routes_unavailable(risk):
-    snapshot = {route: "unhealthy" for route in {candidate.route for candidate in REVIEW_CANDIDATES.values()}}
-    snapshot["agy"] = "healthy"
-    result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk, routing_snapshot=snapshot, claude_account=HOST_ACCOUNT))
-    assert (result.selected.name if result.selected else None) == (GEMINI.name if risk in {"low", "medium"} else None)
+    assert result.selected is None
+    assert result.fail_closed_reason == "unknown explicit reviewer pin 'gemini-3.8-flash-high'"
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
@@ -132,22 +103,6 @@ def test_near_cap_sol_precedes_agy_and_grok_for_claude_author(risk):
     grok = next(row for row in result.trace if row.name == "grok-4.7-cursor-fallback")
     assert grok.status == "eligible"
     assert result.selected.suitability_rank < grok.suitability_rank
-
-
-@pytest.mark.parametrize(
-    "field,value",
-    [
-        ("participant", "codex"),
-        ("catalog_transport", "native_codex"),
-        ("sealed_executable", "other.py"),
-        ("adapter_transport", "acp"),
-    ],
-)
-def test_native_endpoint_identity_cannot_be_forged(field, value):
-    forged = replace(GEMINI, **{field: value})
-    result = evaluate_candidate(forged, ResolverInputs(author_model="gpt-6.1-sol", risk="low", claude_account=HOST_ACCOUNT))
-    assert result.status == "excluded"
-    assert "endpoint identity" in result.reason
 
 
 @pytest.mark.parametrize(

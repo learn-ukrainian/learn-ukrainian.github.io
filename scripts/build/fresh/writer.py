@@ -50,6 +50,7 @@ from scripts.build.fresh.regeneration import (
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
+from scripts.dispatcher.cli import isolated_run_mode
 from scripts.dispatcher.store import read as read_task_record
 from scripts.orchestration.task_record_store import locate_task_record
 
@@ -386,7 +387,7 @@ def dispatch_writer(
             "--agent",
             writer,
             "--mode",
-            "read-only",
+            isolated_run_mode(writer),
             "--worktree",
             "--task-id",
             task_id,

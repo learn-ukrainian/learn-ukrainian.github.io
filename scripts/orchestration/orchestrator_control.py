@@ -28,7 +28,8 @@ _IMPORT_ROOT = Path(__file__).resolve().parents[2]
 if str(_IMPORT_ROOT) not in sys.path:
     sys.path.insert(0, str(_IMPORT_ROOT))
 
-from scripts.dispatcher.cli import ALIASES
+from scripts.dispatcher import providers
+from scripts.dispatcher.cli import ALIASES, isolated_run_mode
 from scripts.orchestration.execution_safe_git import run_git
 from scripts.orchestration.task_record_store import (
     iter_task_records,
@@ -540,6 +541,11 @@ def resolve_prompt_file(repo_root: Path, args: argparse.Namespace) -> Path:
     return path
 
 
+def resolve_mode(args: argparse.Namespace) -> str:
+    """The dispatch mode: the requested one, else read-only, else workspace-write for a CLI that cannot run read-only."""
+    return args.mode or isolated_run_mode(args.agent)
+
+
 def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[str]:
     command = [
         PYTHON,
@@ -550,7 +556,7 @@ def build_dispatch_command(args: argparse.Namespace, prompt_file: Path) -> list[
         "--task-id",
         args.task_id,
         "--mode",
-        args.mode,
+        resolve_mode(args),
         "--prompt-file",
         str(prompt_file),
     ]
@@ -625,9 +631,13 @@ def cmd_add_task(args: argparse.Namespace) -> int:
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
     repo_root = Path(args.repo_root).resolve()
-    if args.mode in WRITE_MODES and not getattr(args, "owned_path", None):
+    mode = resolve_mode(args)
+    if mode == "read-only" and (refusal := providers.read_only_refusal(SEAT_PROVIDERS.get(args.agent, args.agent))):
+        print(json.dumps({"error": refusal}, indent=2))
+        return 2
+    if mode in WRITE_MODES and not getattr(args, "owned_path", None):
         # Retain the write-scope requirement before writing a prompt file (#9739).
-        print(json.dumps({"error": f"--mode {args.mode} requires --owned-path (#9739)"}, indent=2))
+        print(json.dumps({"error": f"--mode {mode} requires --owned-path (#9739)"}, indent=2))
         return 2
     try:
         prompt_file = resolve_prompt_file(repo_root, args)
@@ -802,7 +812,11 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--prompt")
     dispatch.add_argument("--prompt-file")
     dispatch.add_argument("--note", default="")
-    dispatch.add_argument("--mode", default="read-only", choices=["read-only", "workspace-write", "danger"])
+    dispatch.add_argument(
+        "--mode",
+        choices=["read-only", "workspace-write", "danger"],
+        help="Default read-only; workspace-write for a CLI dispatch cannot run read-only (agy), which then needs --owned-path.",
+    )
     dispatch.add_argument("--model", help="Exact model required by dispatch v2; omission is refused by v2.")
     dispatch.add_argument("--effort", choices=["low", "medium", "high", "xhigh", "max"])
     dispatch.add_argument("--cwd")

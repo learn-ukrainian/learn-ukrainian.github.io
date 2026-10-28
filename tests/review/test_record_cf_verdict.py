@@ -333,7 +333,7 @@ def test_detached_identity_preserves_specific_review_refusals(monkeypatch, tmp_p
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])
-@pytest.mark.parametrize("profile", ["code", "ukrainian"])
+@pytest.mark.parametrize("profile", ["ukrainian"])
 def test_gemini_verdict_records_and_gate_accepts_exact_head(monkeypatch, tmp_path, risk, profile):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
     write_task(tasks, agent="agy", model="gemini-3.8-flash-high", review_profile=profile,
@@ -358,7 +358,8 @@ def test_gemini_code_verdict_refused_before_publication(monkeypatch, tmp_path, r
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     monkeypatch.setattr(recorder, "pr_review_facts", lambda *_args, **_kwargs: facts_for({"anthropic"}, changed_paths=(path,)))
     write_task(tasks, agent="agy", model="gemini-3.8-flash-high", review_profile="code", review_risk=risk)
-    with pytest.raises(recorder.RecordError, match="Gemini code review requires AGY at low/medium risk"):
+    # C-2970: dispatch refuses read-only AGY, so Gemini is no code-review candidate at any risk or path.
+    with pytest.raises(recorder.RecordError, match=r"agy/gemini-3\.8-flash-high is not a catalog review candidate"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert not comments
     assert calls == {"posts": 0, "statuses": 0}

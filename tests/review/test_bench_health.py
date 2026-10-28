@@ -36,11 +36,6 @@ DEFAULT_COUNTS = {
 }
 
 
-# #10073 adds a native low/medium seat outside Google-authored work.
-DEFAULT_COUNTS = {family: seats + (["gemini-3.8-flash-high"] if family != "google" else [])
-                  for family, seats in DEFAULT_COUNTS.items()}
-
-
 def retired_candidate(name):
     model, family, route = {
         "glm-5.3": ("glm-5.3", "zhipu", "glm"),
@@ -219,7 +214,7 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
     results = check_bench_health(routing_snapshot={}, data_egress_policy=policy)
     assert all("glm-5.3" not in seats for seats in results.values())
     assert all("openai_frontier" not in seats for seats in results.values())
-    assert results["anthropic"] == [GROK, "gemini-3.8-flash-high"]
+    assert results["anthropic"] == [GROK]
     pinned = evaluate_candidate(
         retired_candidate("glm-5.3"),
         ResolverInputs(
@@ -254,15 +249,13 @@ def test_bench_health_preserves_capacity_gate(status, reason, route, names, caps
         assert all(not names.intersection(seats) for seats in results.values())
     else:
         assert results == DEFAULT_COUNTS
-    # Cursor Grok and Gemini supply Anthropic seats when Codex is unavailable.
-    assert main([], routing_snapshot=data) == 0
+    # Only Cursor Grok supplies an Anthropic seat when Codex is unavailable: below the two-seat minimum.
+    assert main([], routing_snapshot=data) == (1 if blocked else 0)
     for finding in _findings(capsys.readouterr()):
         for name in names:
             if REVIEW_CANDIDATES[name].family != finding["author_family"]:
                 assert finding["excluded_seats"][name] == reason
-    assert results["anthropic"] == (
-        [GROK, "gemini-3.8-flash-high"] if route == "codex" and blocked else DEFAULT_COUNTS["anthropic"]
-    )
+    assert results["anthropic"] == ([GROK] if route == "codex" and blocked else DEFAULT_COUNTS["anthropic"])
     # Check exclusion reasons even when Grok admission prevents a CLI shortfall.
     _, excluded = bench_health._bench_inventory(
         data, data_egress_policy="local_interactive", review_profile="code", risk="medium"
