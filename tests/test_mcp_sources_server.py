@@ -97,6 +97,23 @@ def test_cached_wikipedia_dispatch_reads_existing_mode_key(server_module, tmp_pa
     assert result["response_sha256"] == hashlib.sha256(result["response"].encode()).hexdigest()
 
 
+@pytest.mark.parametrize("offset", [9999, 11])
+def test_cached_wikipedia_empty_page_cannot_supply_evidence(server_module, tmp_path, monkeypatch, offset):
+    from rag import wiki_cache
+    from scripts.review.receipts.outcomes import classify_outcome
+
+    path = tmp_path / "cache.db"
+    monkeypatch.setattr(wiki_cache, "_DEFAULT_DB", path)
+    cache = wiki_cache.WikiCache(path)
+    cache.put("extract", "Мова", "# Мова\n**URL**: https://uk.wikipedia.org/wiki/Мова\n\nShort body.   ")
+    cache.close()
+    content = _run(server_module.handle_query_wikipedia_cached({"query": "Мова", "mode": "extract", "offset": offset}))
+    result = json.loads(content[0].text)
+    assert result["status"] == "unavailable"
+    assert result["response"] is None
+    assert classify_outcome("query_wikipedia_cached", "ok", content[0].text)["hits"] == 0
+
+
 @pytest.fixture
 def server_module():
     """Import the server module fresh."""

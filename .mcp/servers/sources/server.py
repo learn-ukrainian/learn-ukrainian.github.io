@@ -743,6 +743,7 @@ async def list_tools() -> list[Tool]:
                 "Read Ukrainian Wikipedia evidence from existing caches only. Never fetches, refreshes or writes. "
                 "Returns hit/miss/stale/negative/unavailable, retrieval time, cache key and response digest. "
                 "Extract also reads curated articles, with matched title and URL. A miss is not evidence of absence. "
+                "fetched_at is Unix seconds for wiki_cache.db or the original ISO timestamp for sources.db. "
                 "Wikipedia is factual context, not a lexical authority."
             ),
             inputSchema={
@@ -3464,11 +3465,14 @@ async def handle_query_wikipedia_cached(args: dict) -> list[TextContent]:
                     )
     if mode == "extract" and result["status"] == "hit":
         title, url, body = _split_cached_wikipedia_extract(result["response"])
-        response = _format_wikipedia_extract_page(title, url, body, offset, _clamp_wikipedia_extract_max_chars(args.get("max_chars", 6000)))
-        result.update(
-            matched_title=title, source_url=url, response=response,
-            cache_response_sha256=result["response_sha256"], response_sha256=hashlib.sha256(response.encode()).hexdigest(),
-        )
+        if offset >= len(body) or not body[offset:].strip():
+            result.update(status="unavailable", response=None)
+        else:
+            response = _format_wikipedia_extract_page(title, url, body, offset, _clamp_wikipedia_extract_max_chars(args.get("max_chars", 6000)))
+            result.update(
+                matched_title=title, source_url=url, response=response,
+                cache_response_sha256=result["response_sha256"], response_sha256=hashlib.sha256(response.encode()).hexdigest(),
+            )
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
 
 

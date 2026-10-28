@@ -416,6 +416,14 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
                         isinstance(e, dict) and e.get("verified") is True and e.get("status") == "ok"
                         and e.get("sections_state") == "complete" and e.get("forms_state") == "complete"
                         and e.get("retrieved_at") and re.fullmatch(r"[a-f0-9]{64}", str(e.get("content_sha256", "")))
+                        and isinstance(e.get("identity_from_raw"), dict)
+                        and e["identity_from_raw"].get("stored_matches_raw") is True
+                        and not e["identity_from_raw"].get("error")
+                        and isinstance(e.get("sections"), dict)
+                        and all(
+                            isinstance(group, list) and all(isinstance(section, dict) and not section.get("error") for section in group)
+                            for group in e["sections"].values()
+                        )
                         for r in records for e in r["entries"]
                     )
                 ):

@@ -35,7 +35,7 @@ def test_settle_ulif_authority_is_available_to_the_review_route():
 
 @pytest.mark.parametrize("available", [True, False])
 def test_settle_can_use_verified_ulif_but_not_cache_miss(world, available):
-    entry = {"canonical_headword": "fixture", "status": "ok", "verified": True, "forms_state": "complete", "sections_state": "complete", "retrieved_at": "2026-10-01T00:00:00Z", "content_sha256": "a" * 64}
+    entry = {"canonical_headword": "fixture", "status": "ok", "verified": True, "forms_state": "complete", "sections_state": "complete", "retrieved_at": "2026-10-01T00:00:00Z", "content_sha256": "a" * 64, "identity_from_raw": {"stored_matches_raw": True}, "sections": {"paradigm": [{"rows": [["fixture"]]}]}}
     record = {"word": "fixture", "status": "ok" if available else "not_found", "verified": available, "entries": [entry] if available else []}
     receipt = ledger.append(
         world.own_ledger, review_id="settle-R", attempt_id="settle-A", manifest_sha256=world.current_hash(),
