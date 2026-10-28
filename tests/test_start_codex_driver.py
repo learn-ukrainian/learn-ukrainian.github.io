@@ -462,13 +462,21 @@ def test_non_model_passthrough_remains_available(harness):
     assert "--verbose" in result.stdout
 
 
-def test_luna_is_rejected_for_driver_and_governor() -> None:
-    driver = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-luna")
-    assert driver.returncode == 4, driver.stderr
-    assert "not certified" in driver.stderr
-    governor = run_launcher("start-codex-driver.sh", "--governor", "AUTO", "--model", "gpt-6-luna")
-    assert governor.returncode == 4, governor.stderr
-    assert "not a governor model" in governor.stderr
+def test_non_driver_workers_are_rejected_for_driver_and_governor() -> None:
+    for model in ("gpt-6-luna", "gpt-6.1-terra"):
+        for harness in ("codex", "claude-code"):
+            driver = run_launcher("start-codex-driver.sh", "--harness", harness,
+                                  "--epic", "devops", "--model", model)
+            assert driver.returncode == 4, driver.stderr
+            assert "not certified" in driver.stderr
+            assert "would claim lease" not in driver.stdout
+        governor = run_launcher("start-codex-driver.sh", "--governor", "AUTO", "--model", model)
+        if model == "gpt-6.1-terra":
+            assert governor.returncode == 2, governor.stderr
+            assert "approved models are gpt-6-luna, gpt-6.1-sol" in governor.stderr
+        else:
+            assert governor.returncode == 4, governor.stderr
+            assert "not a governor model" in governor.stderr
     bounded = run_launcher("start-codex.sh", "--model", "gpt-6-luna")
     assert bounded.returncode == 0, bounded.stderr
     assert "--model gpt-6-luna" in bounded.stdout

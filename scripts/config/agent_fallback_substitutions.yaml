@@ -58,7 +58,7 @@ substitutions:
 
   - currently_uses: "scripts/dispatch.py dispatch --agent claude (code dispatch >50 LOC)"
     fallback: |
-      (a) Codex via `scripts/dispatch.py dispatch --agent codex` (separate weekly quota), OR
+      (a) Routine non-security code: Codex via `scripts/dispatch.py dispatch --agent codex --model gpt-6.1-terra`; reserved work uses explicit Sol 6.1, OR
       (b) inline by orchestrator if context-continuity gives it an edge
     budget_bucket: "Codex weekly quota OR interactive"
 
@@ -105,10 +105,20 @@ substitutions:
 # eligible whenever task fit, provider health and subscription headroom admit
 # them. Budget substitutions apply on depletion, not as a standing prohibition.
 # The 2026-10-16 operator order adds the Sonnet worker default, the native Grok
-# measurement rule and the Gemini 4 hold (#10835).
+# measurement rule and the Gemini 4 hold (#10835). Operator order C-2903
+# (2026-10-27) sets the default pairs.
 worker_resource_policy: |
-  Sol is the default eligible code worker. Use native Claude CLI workers as
-  heavily as their subscription allows, respecting task fit and hard gates.
+  Codex routine non-security coding defaults to gpt-6.1-terra at high effort,
+  including Codex multi_agent_v2 subagents. Use explicit gpt-6.1-sol at high for
+  advisory work, hard tasks, security tooling, destructive cleanup and drivers.
+  Terra has no driver, orchestration, formal-review, critique, designated-approval
+  or Ukrainian-content judgment authority. Give it a complete bounded brief,
+  owned paths and verification command; it returns blockers to its lead.
+  Review and Ukrainian-content seats retain their existing qualified models.
+  This policy does not substitute Terra for a pinned Sol reviewer or advisor.
+  See model-assignment.md Terra coder boundary and its official model-page and
+  system-card sources. Native Claude workers remain eligible within task fit,
+  subscription headroom and hard gates.
   Operator 2026-10-16: native Claude workers use Sonnet 5.5 by default and
   Opus 5.5 only for complex or security work; Claude-lane Ukrainian stays
   Opus 5.5. Cursor Grok or Gemini routes are language-free overflow only;

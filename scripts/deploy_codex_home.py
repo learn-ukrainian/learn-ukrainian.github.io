@@ -20,14 +20,15 @@ class DeployError(Exception):
 
 
 EXPECTED = {
-    "model": "gpt-6.1-sol",
+    "model": "gpt-6.1-terra",
     "model_reasoning_effort": "high",
     "agents": {
-        "default_subagent_model": "gpt-6.1-sol",
+        "default_subagent_model": "gpt-6.1-terra",
         "default_subagent_reasoning_effort": "high",
     },
 }
 PROFILE_ROLES = {
+    "terra_coder_high": ("gpt-6.1-terra", "high", "workspace-write"),
     "luna_explorer_medium": ("gpt-6-luna", "medium", "read-only"),
     "luna_explorer_high": ("gpt-6-luna", "high", "read-only"),
     "luna_coder_high": ("gpt-6-luna", "high", "workspace-write"),

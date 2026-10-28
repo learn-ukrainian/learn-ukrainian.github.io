@@ -99,7 +99,6 @@ def _make_client(root: Path, monkeypatch: pytest.MonkeyPatch, *, stub_adapter: b
     """
     usage_mod._reset_rate_limit_cache_for_tests()
     monkeypatch.delenv("LU_BYPASS_RATE_LIMIT", raising=False)
-    monkeypatch.setenv("LEARN_UK_WORKTREE_GC", "0")
     monkeypatch.setattr(usage_mod, "_usage_dir", lambda: _usage_dir(root))
     if stub_adapter:
         _stub_codex_adapter(root)

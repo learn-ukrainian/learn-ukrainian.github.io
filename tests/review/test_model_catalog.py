@@ -1040,7 +1040,12 @@ def assert_frozen_surfaces(actual, *, surfaces):
     """Compare surviving catalog/resolver results with the literal current fixture."""
     assert set(actual) == set(surfaces)
     for surface in surfaces:
-        assert actual[surface] == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
+        value = deepcopy(actual[surface])
+        if surface == "catalog":
+            # The coder-only Terra addition leaves every frozen seat and review route intact.
+            terra = value["models"].pop("gpt-6.1-terra")
+            assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
+        assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 
 def test_deepseek_flash_execution_requires_opencode():

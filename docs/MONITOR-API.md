@@ -103,16 +103,15 @@ This thin, read-only namespace makes the existing `python -m scripts.fleet_comms
 
 | Method | Path | Existing source |
 | --- | --- | --- |
-| GET | `/api/fleet/facade` or `/help` | Truth/Hand/Eyes map and endpoint index |
+| GET | `/api/fleet/facade` or `/help` | Truth/Eyes map and endpoint index |
 | GET | `/api/fleet/facade/status` | `fleet status` plane status plus compact health |
 | GET | `/api/fleet/facade/board` | JSON cold-start board |
 | GET | `/api/fleet/facade/metrics` | Authority metrics collector |
 | GET | `/api/fleet/facade/backlog` | Authority backlog collector |
 | GET | `/api/fleet/facade/dead` | Authority dead-letter collector |
 | GET | `/api/fleet/facade/broker-report?days=7` | Legacy Broker Ops report (`days` is 1–90) |
-| GET | `/api/fleet/facade/reap-report` | Guarded reaper dry-run only; the response always has `"apply": false` |
 
-The facade is fail-open when the plane SQLite file is absent or unavailable: authority collector responses include `db_missing` or `db_error`, while status retains the plane schema diagnostic. Reaper apply remains CLI-only and is never an HTTP option.
+The facade is fail-open when the plane SQLite file is absent or unavailable: authority collector responses include `db_missing` or `db_error`, while status retains the plane schema diagnostic.
 
 ---
 
@@ -654,6 +653,11 @@ errors.
 ### `GET /api/occupancy[?host_id=x][&fresh=true]`
 
 Opaque host occupancy for drivers. Reuses the atlas-jobs load cache (no second probe board). The default payload always enumerates opaque hosts `host-teacher` and observer-only `mac-operator` (plus any additional mapped hosts). Ghost `host-job` is not a default glance row and is not queryable unless mapped via `MONITOR_OCCUPANCY_HOST_IDS`. When the map is empty, the Linux API process fills `host-teacher` in-process (local load + seats) instead of `unavailable/unreachable`. The Mac row stays visible when the observer store is empty or Monitor just restarted; with no live observer or load it is `status: "unavailable"` and is never rendered idle by omission. Live observer heartbeats still merge into that row. Host mappings are configured via `MONITOR_OCCUPANCY_HOST_IDS` (`canonical=opaque-id,...`). Unmapped remote hosts return `status: "unavailable"` with `idle_or_empty: false` — unreachable burn is unknown, not proven idle. Canonical aliases are never used as JSON keys.
+
+The Hosts panel on `orient.html` displays each host's observation status, source age
+at lookup, occupancy, and error. Null or missing source age displays as unknown.
+Unavailable observations display unknown age even when the API supplies a placeholder
+zero. Stale and unavailable observations display unknown occupancy.
 
 Occupants are `{kind, agent, task_id, epic}` with `kind` in `driver | worker | job | service | observer`. Each host entry includes `occupant_count`, `ai_seats` (active agent seats), `burn_state` in `active | idle | unknown`, `burn_sources` with exactly `atlas_job`, `driver`, `foundry`, `service`, and `observer` entries (each `state` is `active | clear | unknown` and `observation_age_s` is non-negative), and the compatibility boolean `idle_or_empty`, which is true only when `burn_state` is `idle`. An active source makes the host active; a source read failure is unknown and never permits idle. `burn_state` derives only from `burn_sources` — occupants are active evidence only when their owning source is marked active. Sources, in order:
 

@@ -16,8 +16,8 @@ def source(tmp_path):
     (root / "agents").mkdir(parents=True)
     (root / "AGENTS.md").write_text("Reusable instructions.\n")
     (root / "config.toml").write_text(
-        'model = "gpt-6.1-sol"\nmodel_reasoning_effort = "high"\n[agents]\n'
-        'default_subagent_model = "gpt-6.1-sol"\n'
+        'model = "gpt-6.1-terra"\nmodel_reasoning_effort = "high"\n[agents]\n'
+        'default_subagent_model = "gpt-6.1-terra"\n'
         'default_subagent_reasoning_effort = "high"\n'
     )
     for name, (model, effort, sandbox) in deployer.PROFILE_ROLES.items():
@@ -58,7 +58,7 @@ def test_preservation_idempotence_backups(source):
     assert deployer.deploy(source, home) == 0
     result = tomllib.loads(config.read_text())
     assert result["model_reasoning_effort"] == "high"
-    assert result["agents"]["default_subagent_model"] == "gpt-6.1-sol"
+    assert result["agents"]["default_subagent_model"] == "gpt-6.1-terra"
     assert result["future"] == {"enabled": True, "values": [1, 2]}
     assert result["agents"]["max_threads"] == 9
     assert result["mcp_servers"]["private"]["url"] == "private-sentinel"
@@ -273,10 +273,10 @@ def test_canonical_cli_deploy_preserves_config_and_replays(tmp_path):
     result = subprocess.run(cli, capture_output=True, text=True, check=True, timeout=60)
     assert "agents/sol_advisor_high.toml: changed" in result.stdout
     config = tomllib.loads((home / "config.toml").read_text())
-    assert config["model"] == "gpt-6.1-sol"
+    assert config["model"] == "gpt-6.1-terra"
     assert config["model_reasoning_effort"] == "high"
     assert config["agents"] == {
-        "max_threads": 9, "default_subagent_model": "gpt-6.1-sol",
+        "max_threads": 9, "default_subagent_model": "gpt-6.1-terra",
         "default_subagent_reasoning_effort": "high",
     }
     assert config["features"]["multi_agent_v2"] == {"enabled": True, "tool_namespace": "agents"}
@@ -284,6 +284,7 @@ def test_canonical_cli_deploy_preserves_config_and_replays(tmp_path):
     assert '# sentinel comment\n' in (home / "config.toml").read_text()
     assert '"xhigh" # nested sentinel\n' in (home / "config.toml").read_text()
     expected = {
+        "terra_coder_high": ("gpt-6.1-terra", "high", "workspace-write"),
         "sol_advisor_high": ("gpt-6.1-sol", "high", "read-only"),
         "sol_coder_high": ("gpt-6.1-sol", "high", "workspace-write"),
         "sol_red_team_high": ("gpt-6.1-sol", "high", "read-only"),

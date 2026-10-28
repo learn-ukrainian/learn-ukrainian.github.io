@@ -21,7 +21,7 @@ def test_top_level_help_has_examples_outputs_exit_codes_and_related(capsys: pyte
     assert ".venv/bin/python scripts/hygiene/retention_engine.py plan" in out
     for section in ("Outputs:", "Exit codes:", "Related:"):
         assert section in out
-    assert "4 plan digest mismatch" in out
+    assert "2 invalid usage" in out
 
 
 def test_every_argument_has_help() -> None:

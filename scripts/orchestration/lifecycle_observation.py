@@ -1,7 +1,7 @@
 """Local lifecycle capture before cleanup, and verified preserved-output recovery.
 
 Closeout-record recovery reads its merged PR through the existing forge adapter.
-The lifecycle API owns receipt appends; removal stays with the common reaper.
+The lifecycle API owns receipt appends; worktree removal stays with its callers.
 """
 
 from __future__ import annotations
@@ -169,7 +169,7 @@ def before_reap(
                 ):
                     raise ObservationRefusal("LIFECYCLE_LOCAL_OBSERVATION_INCOMPLETE")
                 # Capture facts only. Readiness still requires authored commits,
-                # and the common reaper still owns every removal safety gate.
+                # and the caller still owns every removal safety gate.
             now = datetime.now(UTC).isoformat()
             receipt, _ = _append(path, ledger, _local_paths(repo_root, local), now)
             receipts.append({"status": "recorded", "receipt_id": receipt["id"]})
@@ -378,6 +378,27 @@ def _verify_push(
         raise ObservationRefusal("RECOVERY_PUSH_UNPROVEN")
 
 
+def _closeout_worktree_gone(closeout: Mapping[str, Any], task: Mapping[str, Any]) -> bool:
+    """Prove the task's worktree was gone when its closeout ran.
+
+    A current closeout removes nothing, so it matched no live worktree. A
+    closeout written before FR-01b carries ``reap_results``, which must show
+    it removed this task's worktree.
+    """
+    matched = closeout.get("matched_worktrees")
+    if not isinstance(matched, list):
+        return False
+    if "reap_results" not in closeout:
+        return matched == []
+    rows = closeout["reap_results"]
+    return (
+        isinstance(rows, list)
+        and task["worktree_path"] in matched
+        and any(row.get("path") == task["worktree_path"] and row.get("branch") == task["worktree_branch"] for row in rows)
+        and not any(row.get("action") not in {"removed", "preserved_then_removed"} or row.get("error") for row in rows)
+    )
+
+
 def _recovery_pr_head(
     task: Mapping[str, Any],
     ledger: Mapping[str, Any],
@@ -411,13 +432,7 @@ def _recovery_pr_head(
     cleanup_pr = closeout.get("pr") or {}
     branch = closeout.get("branch_status") or {}
     if (
-        not isinstance(closeout.get("matched_worktrees"), list)
-        or not isinstance(closeout.get("reap_results"), list)
-        or task["worktree_path"] not in closeout["matched_worktrees"]
-        or not any(
-            row.get("path") == task["worktree_path"] and row.get("branch") == task["worktree_branch"]
-            for row in closeout["reap_results"]
-        )
+        not _closeout_worktree_gone(closeout, task)
         or closeout.get("apply") is not True
         or closeout.get("ok") is not True
         or closeout.get("errors") != []
@@ -434,10 +449,6 @@ def _recovery_pr_head(
         or branch.get("local_gone") is not True
         or branch.get("remote_error") is not None
         or branch.get("local_error") is not None
-        or any(
-            row.get("action") not in {"removed", "preserved_then_removed"} or row.get("error")
-            for row in closeout["reap_results"]
-        )
     ):
         raise ObservationRefusal("RECOVERY_CLEANUP_UNPROVEN")
     if proof and _recovery_pr_head(task, ledger, recovery, None) != pr.get("head_sha"):

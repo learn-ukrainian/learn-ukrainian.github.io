@@ -1,4 +1,4 @@
-/* Read-only fleet board. Talks only to /api/fleet/v1. */
+/* Read-only fleet board over existing fleet and account-capacity APIs. */
 (function (root) {
   const REFRESH_MS = 30000;
   const STALE_MS = 120000;
@@ -25,10 +25,11 @@
 
   function isFleetPath(path) {
     if (typeof path !== "string") return false;
+    if (path === "/api/state/routing-budget") return true;
     if (path.includes("://") || path.includes("\\") || path.includes("..")) return false;
     if (!path.startsWith("/api/fleet/v1")) return false;
     const rest = path.slice("/api/fleet/v1".length);
-    if (rest === "/now" || rest === "/epics" || rest === "/agents") return true;
+    if (["/now", "/epics", "/agents", "/roster"].includes(rest)) return true;
     const epic = /^\/epics\/([^/]+)$/.exec(rest);
     if (epic) return epic[1].length > 0 && !/%2f/i.test(epic[1]);
     const agent = /^\/agents\/([^/]+)$/.exec(rest);
@@ -340,8 +341,59 @@
     }).join("");
   }
 
-  function panel(title, endpoint, body) {
-    return `<section class="fb-panel fb-placeholder"><h3>${esc(title)}</h3>${body}<p class="fb-src">source: ${esc(endpoint)}</p></section>`;
+  function panel(title, endpoint, body, placeholder = true) {
+    return `<section class="fb-panel${placeholder ? " fb-placeholder" : ""}"><h3>${esc(title)}</h3>${body}<p class="fb-src">source: ${esc(endpoint)}</p></section>`;
+  }
+
+  function sourceAge(age, elapsedMs) {
+    if (typeof age !== "number" || !Number.isFinite(age) || age < 0) return "age unknown";
+    return Math.floor(age + Math.max(0, elapsedMs || 0) / 1000) + " s old";
+  }
+
+  function rosterPanel(envelope, options) {
+    const source = sourcesOf(envelope).find(row => row.name === "roster_snapshot");
+    const failed = optionFlag(options, "rosterFailed");
+    const status = source ? sourceLabel(source.status) : "unavailable";
+    const age = sourceAge(source && source.age_s, options && options.rosterAgeMs);
+    const layers = envelope && envelope.data && envelope.data.layers;
+    const usable = source && ["ok", "stale"].includes(source.status) && Array.isArray(layers);
+    const body = usable ? layers.map(layer => {
+      const epics = Array.isArray(layer.epics) ? layer.epics : [];
+      const rows = epics.map(epic => `<li><a href="#/epic/${esc(encodeURIComponent(epic.epic))}">${esc(epic.epic)}</a>
+        · ${esc(epic.state || "unknown")} · depends on: ${esc((epic.depends_on || []).join(", ") || "none")}
+        · restart: ${esc(epic.restart_condition || "unknown")}
+        ${esc((epic.flags || []).map(flag => flag.name + ": " + flag.value).join(" · "))}</li>`).join("");
+      return `<h4>${esc(layer.kind)}</h4><ul>${rows || "<li>No epics in this layer.</li>"}</ul>`;
+    }).join("") : "";
+    return panel("Roster", "/api/fleet/v1/roster",
+      `<p class="fb-src">${esc(failed && envelope ? "stale · refresh failed" : status)} · ${esc(age)}</p>${body}`, false);
+  }
+
+  function accountPanel(capacity, options) {
+    const accounts = capacity && capacity.claude_accounts;
+    const failed = optionFlag(options, "capacityFailed");
+    const stale = failed || !!(capacity && capacity.diagnostics && capacity.diagnostics.stale);
+    const pct = value => typeof value === "number" && Number.isFinite(value) ? esc(value) + "%" : "unknown";
+    const rows = Object.entries(accounts || {}).map(([name, row]) => {
+      const weekly = row.weekly || {};
+      const session = row.session5h || {};
+      const usable = ["ok", "stale"].includes(row.status);
+      const status = usable && (stale || row.stale) ? "stale" : row.status || "unknown";
+      return `<tr><td data-l="Account">${esc(name)}</td><td data-l="Status">${esc(status)}</td>
+        <td data-l="5h left">${pct(usable ? session.left_pct : null)}</td>
+        <td data-l="Weekly left">${pct(usable ? weekly.left_pct : null)}</td>
+        <td data-l="Projected leftover">${pct(usable ? weekly.leftover_pct : null)}</td>
+        <td data-l="Pace">${esc(usable && weekly.pace || "unknown")}</td>
+        <td data-l="Reset">${esc(usable && weekly.resets_at || "unknown")}</td>
+        <td data-l="Source age">${esc(sourceAge(row.age_s, options && options.capacityAgeMs))}
+          · ${esc(row.updated || "observation time unknown")} ${esc(row.reason || "")}</td></tr>`;
+    }).join("");
+    const status = !capacity ? "unavailable" : failed ? "stale · refresh failed" : stale ? "stale" : "";
+    const table = rows ? `<table class="fb-table"><thead><tr><th>Account</th><th>Status</th><th>5h left</th>
+      <th>Weekly left</th><th>Projected leftover</th><th>Pace</th><th>Reset</th><th>Source age</th></tr></thead>
+      <tbody>${rows}</tbody></table>` : `<p class="fb-empty">Per-account capacity unavailable.</p>`;
+    return panel("Routing budget and pace", "/api/state/routing-budget",
+      `<p class="fb-src">${esc(status)} · Claude accounts · <a href="/routing.html">All routing lanes and API accounts</a></p>${table}`, false);
   }
 
   function harnessCaption(sources) {
@@ -403,7 +455,7 @@
     return `<p id="fb-stale" class="fb-stale" role="status"${hidden}>${esc(staleMessage(state))}</p>`;
   }
 
-  function homeModel(nowEnvelope, epicsEnvelope) {
+  function homeModel(nowEnvelope, epicsEnvelope, rosterEnvelope, capacity) {
     const nowData = (nowEnvelope && nowEnvelope.data) || {};
     const epicData = (epicsEnvelope && epicsEnvelope.data) || {};
     const fromEpics = Array.isArray(epicData.epics) ? epicData.epics : null;
@@ -411,6 +463,8 @@
     return {
       attention: Array.isArray(nowData.attention) ? nowData.attention : [],
       epics: fromEpics || fromNow,
+      roster: rosterEnvelope,
+      capacity,
       sources: mergeSources(nowEnvelope, epicsEnvelope),
     };
   }
@@ -433,16 +487,8 @@
     const banner = staleBanner(staleState(sources, ageOption(options), optionFlag(options, "failed")));
     const cards = filtered.map(cardHtml).join("") || `<p class="fb-empty">No epics match these filters.</p>`;
     const attn = attention.map(attentionItem).join("") || `<p class="fb-empty">Nothing needs attention.</p>`;
-    const roster = panel(
-      "Roster",
-      "/api/fleet/v1/roster",
-      statusRows(sources, [["Roster", "roster_snapshot"]]),
-    );
-    const budget = panel(
-      "Routing budget and pace",
-      "/api/fleet/v1/budget",
-      statusRows(sources, [["Budget", ""]]),
-    );
+    const roster = rosterPanel(model.roster, options);
+    const budget = accountPanel(model.capacity, options);
     const ops = panel(
       "Ops",
       "/api/fleet/v1/alerts",
@@ -630,7 +676,8 @@
   }
 
   function routeSlots(route) {
-    return route && route.view === "epic" ? ["epic", "agents"] : ["now", "epics"];
+    if (route && route.view === "epic") return ["epic", "agents"];
+    return route && route.view === "prs" ? ["now", "epics"] : ["now", "epics", "roster", "capacity"];
   }
 
   function routeFailed(failures, route) {
@@ -683,7 +730,7 @@
   }
 
   function displayedAge(stamps, route, now) {
-    const keys = route && route.view === "epic" ? ["epic", "agents"] : ["now", "epics"];
+    const keys = routeSlots(route);
     let oldest = null;
     keys.forEach((key) => {
       const at = stamps && stamps[key];
@@ -745,9 +792,9 @@
 
   if (typeof document === "undefined" || !document.getElementById) return;
 
-  const snapshot = { now: null, epics: null, epic: null, epicId: "", agents: null };
-  const freshAt = { now: 0, epics: 0, epic: 0, agents: 0 };
-  const failures = { now: false, epics: false, epic: false, agents: false };
+  const snapshot = { now: null, epics: null, epic: null, epicId: "", agents: null, roster: null, capacity: null };
+  const freshAt = { now: 0, epics: 0, epic: 0, agents: 0, roster: 0, capacity: 0 };
+  const failures = { now: false, epics: false, epic: false, agents: false, roster: false, capacity: false };
   let refreshGen = 0;
   let appliedKey = "";
   let openAgentId = null;
@@ -865,6 +912,10 @@
       ageMs: ageMs(),
       failed: routeFailed(failures, route),
       agentsFailed: !!failures.agents,
+      rosterFailed: !!failures.roster,
+      capacityFailed: !!failures.capacity,
+      rosterAgeMs: freshAt.roster ? Date.now() - freshAt.roster : 0,
+      capacityAgeMs: freshAt.capacity ? Date.now() - freshAt.capacity : 0,
     };
     let html;
     if (route.view === "epic") {
@@ -879,7 +930,7 @@
     } else if (!snapshot.now && !snapshot.epics) {
       html = failed ? `<p class="fb-empty">The board could not be read.</p>` : `<p class="fb-empty">Loading the board…</p>`;
     } else {
-      html = renderHome(homeModel(snapshot.now, snapshot.epics), route.params, options);
+      html = renderHome(homeModel(snapshot.now, snapshot.epics, snapshot.roster, snapshot.capacity), route.params, options);
     }
     app.innerHTML = html;
     markNav(route.view);
@@ -937,12 +988,16 @@
         incoming.epic = epicBody;
         incoming.agents = agentsBody;
       } else {
-        const [nowBody, epicsBody] = await Promise.all([
+        const [nowBody, epicsBody, rosterBody, capacityBody] = await Promise.all([
           fetchJson("/api/fleet/v1/now"),
           fetchJson("/api/fleet/v1/epics"),
+          route.view === "prs" ? null : fetchJson("/api/fleet/v1/roster"),
+          route.view === "prs" ? null : fetchJson("/api/state/routing-budget"),
         ]);
         incoming.now = nowBody;
         incoming.epics = epicsBody;
+        incoming.roster = rosterBody;
+        incoming.capacity = capacityBody;
       }
     } finally {
       const current = parseRoute(location.hash || "#/home");

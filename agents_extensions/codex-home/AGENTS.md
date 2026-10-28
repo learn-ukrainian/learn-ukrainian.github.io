@@ -47,14 +47,20 @@
 ## Worker preference
 
 - Use Sol at high reasoning as the regular accountable driver. The default
-  subagent is Sol at high reasoning for eligible code work.
+  coder and generic subagent are Terra 6.1 at high reasoning for routine
+  non-security code, including Codex multi_agent_v2 children.
 - Luna profiles remain available explicitly for bounded work with a complete
   Sol advisory envelope; use them only when task fit and resource policy admit.
 - Use `luna_explorer_medium` for routine exploration and scouting. Use
   `luna_explorer_high` when ambiguity or complex call chains justify deeper
   investigation. Both explorer roles are read-only.
-- Use `luna_coder_high` for bounded implementation with explicit owned paths
-  and scope ceilings. Use `sol_coder_high` for broader implementation.
+- Use `terra_coder_high` for routine non-security implementation with explicit
+  owned paths, a complete brief and verification command. Use `sol_coder_high`
+  for hard tasks. `luna_coder_high` remains an explicit bounded-work option.
+- Terra must not operate security tools or change security-sensitive code, perform
+  destructive cleanup, drive or orchestrate a lane, review or critique work, give
+  designated approval, or author or judge Ukrainian content. Pin Sol explicitly
+  for reserved Codex roles. Terra returns blockers to the accountable lead.
 - Use `sol_red_team_high` for adversarial code review and
   `sol_advisor_high` for consequential architecture and technical advice.
   Both roles are read-only; the driver retains final judgment.
