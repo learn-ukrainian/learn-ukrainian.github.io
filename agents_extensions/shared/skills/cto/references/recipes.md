@@ -60,10 +60,12 @@ Classify each granted case before the grant is sent:
 The PR body lists which cases are defect cases and which are controls, with the before and
 after result of each. Never require a control case to fail before the fix.
 
-## Reap before re-dispatch
+## Worktree disposition before re-dispatch
 
-A finished task holds its worktree and branch lease, so reap it before dispatching the same
-branch again (`workflow.md` § Post-merge cleanup, `docs/runbooks/worktree-cleanup.md`).
+A finished task's worktree and branch lease end when the dispatcher settles it and removes the
+worktree. Before dispatching the same branch again, read its `worktree_disposition`; if the
+worktree was retained, remove it only after confirming its content is published
+(`workflow.md` § Post-merge cleanup, `docs/runbooks/worktree-cleanup.md`).
 
 ## Dispatch helpers
 
@@ -75,6 +77,11 @@ Run every dispatch through the scratch table helper. It builds each
 `dispatch.py dispatch` argv from a table and logs stdout and stderr per task; grep the log
 for `run_nonce=`, `SUBSTITUTE` and `queued behind`. Record the actual substituted identity.
 Use exact owned file paths; never claim a shared subtree for an optional edit.
+Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
+root `tests/*.py` files, and make every file that matches an owned path, so the worker can
+update the tests that pin the changed behaviour.
+Each brief also sets the worker's follow-up cap: how many follow-up tasks it may start and in
+which owned paths (rules core P1).
 Briefs state expected eligible PR lines and files; require a one-line size justification
 above the `workflow.md` small-batch threshold, including data files.
 Limit worker-local checks to Ruff and explicitly named test files for the changed module,

@@ -160,11 +160,11 @@ Every epic driver session (any harness) MUST:
    provider canary. Interactive launchers never claim a driver lease.
 8. **Post-merge cleanup is mandatory.** Follow the single recipe in
    `agents_extensions/shared/rules/workflow.md` § Merge policy / Post-merge
-   cleanup: MERGED, worker exit, common-reaper exit 0 and residue-free receipts.
+   cleanup: MERGED, worker exit, `merge_closeout` exit 0 and residue-free receipts.
    Never create formal sealed review trees, force removal or invent a second
-   deletion path. `LU_REAPER_DISABLED=1` remains the reaper's immediate kill switch.
-   If it cannot run, use only the rescue restore and narrowly allowlisted manual
-   fallback in `docs/runbooks/worktree-cleanup.md`.
+   deletion path. The dispatcher removes each task's own worktree at settlement;
+   remove a retained one only after confirming its content is published
+   (`workflow.md` § Post-merge cleanup).
 
 ## Operator launch surface (#5632)
 

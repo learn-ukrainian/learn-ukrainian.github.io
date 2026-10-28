@@ -1,6 +1,6 @@
 ---
 name: full-stop
-description: Do the full-send work on a change but stop with the PR ready to merge, never merging it. Use when told "full stop", when a worker must deliver to ready-to-merge, or when the merge belongs to another driver.
+description: Do the full-send work on a change but stop with the PR ready to merge, never merging it. Use when told "full stop", when a brief says to stop at ready-to-merge, or when the merge belongs to another driver.
 argument-hint: "[pr <number> | issue <number> | branch <name>]"
 ---
 
@@ -23,8 +23,9 @@ Never merge, enqueue, arm auto-merge, push to `main`, bypass protection, or ask 
 to do any of these. You may commit, push and rebase this task's own branch, using
 `--force-with-lease=<branch>:<observed head>` after a rebase.
 
-A worker does not dispatch reviewers: it asks its driver for the `review-loop` through Fleet
-Comms and waits for the verdict (rules core P1).
+Everything before the merge stays yours: a worker runs `review-loop` itself, and the resolver
+picks its reviewer (rules core P1). Only the enqueue and what follows belong to the receiving
+driver.
 
 ## Protect the PR before any work
 
