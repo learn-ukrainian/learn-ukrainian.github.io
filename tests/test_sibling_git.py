@@ -1128,18 +1128,20 @@ def test_module_context_attacks(world, tmp_path, monkeypatch, kind):
 @pytest.mark.parametrize(
     ("shape", "expected"),
     [
-        ("git -C {sibling} merge --ff-only origin/main", 2),
+        ("git -C {sibling} merge --ff-only origin/main", 0),
         ("cd {sibling} && git merge --ff-only origin/main", 2),
         ("git -C {sibling} worktree remove {target}", 0),
+        ("git -C {primary} merge --ff-only origin/main", 2),
+        ("cd {primary} && git merge --ff-only origin/main", 2),
     ],
 )
-def test_raw_sibling_git_keeps_existing_behavior(world, monkeypatch, shape, expected):
+def test_issue_11381_raw_git_targets_own_repository(world, monkeypatch, shape, expected):
     primary, sibling, _ = world
     hook = fixture_hook(primary, monkeypatch)
-    command = shape.format(sibling=shlex.quote(str(sibling)), target=shlex.quote(str(primary / "file.txt")))
+    command = shape.format(sibling=shlex.quote(str(sibling)), primary=shlex.quote(str(primary)), target=shlex.quote(str(primary / "file.txt")))
     before = snapshot(primary)
     try:
-        # These are existing parser decisions, not sibling_git executions.
+        # The raw Git commands are classified without executing any mutation.
         assert decide(hook, command, primary) == expected
         assert snapshot(primary) == before
     finally:

@@ -486,6 +486,7 @@ def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> 
     stdout, stderr = io.StringIO(), io.StringIO()
     with (
         chdir(repo),
+        patch.object(hook, "_protected_repo_anchor", return_value=repo),
         patch.dict(os.environ, {**_clean_env(), **(env_extra or {})}, clear=True),
         patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
         redirect_stdout(stdout),
@@ -965,6 +966,292 @@ def test_bash_git_write_intents_honors_dash_c():
     assert len(intents) == 1
     assert intents[0]["c_path"] == ".worktrees/dispatch/claude/task-1"
     assert intents[0]["kind"] == "apply"
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "merge --ff-only origin/main",
+        "pull",
+        "add curriculum/tracked.md",
+        "apply change.diff",
+        "checkout HEAD -- curriculum/tracked.md",
+    ],
+)
+@pytest.mark.parametrize("target", ["dash_c", "cwd", "relative", "repeated_c", "git_dirs", "git_dirs_equals"])
+def test_issue_11381_foreign_git_target_allowed(
+    repo: Path, repo_template: Path, tmp_path: Path, mutation: str, target: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    cwd = repo
+    prefix = {
+        "dash_c": f"git -C {other}",
+        "cwd": "git",
+        "relative": "git -C ../other",
+        "repeated_c": "git -C .. -C other",
+        "git_dirs": f"git --git-dir {other}/.git --work-tree {other}",
+        "git_dirs_equals": f"git --git-dir={other}/.git --work-tree={other}",
+    }[target]
+    if target == "cwd":
+        cwd = other
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(cwd), "tool_input": {"command": f"{prefix} {mutation}"}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "target",
+    [
+        "dash_c",
+        "symlink",
+        "relative",
+        "repeated_c",
+        "git_dirs",
+        "git_dirs_equals",
+        "missing_c",
+        "missing_gitdir",
+        "missing_worktree",
+    ],
+)
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "merge --ff-only origin/main",
+        "pull",
+        "add curriculum/tracked.md",
+        "apply change.diff",
+        "checkout HEAD -- curriculum/tracked.md",
+    ],
+)
+def test_issue_11381_protected_or_unresolved_git_target_blocked(
+    repo: Path, repo_template: Path, tmp_path: Path, target: str, mutation: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    link = tmp_path / "primary-link"
+    link.symlink_to(repo, target_is_directory=True)
+    prefix = {
+        "dash_c": f"git -C {repo}",
+        "symlink": f"git -C {link}",
+        "relative": "git -C ../main",
+        "repeated_c": "git -C .. -C main",
+        "git_dirs": f"git --git-dir {repo}/.git --work-tree {repo}",
+        "git_dirs_equals": f"git --git-dir={repo}/.git --work-tree={repo}",
+        "missing_c": f"git -C {tmp_path}/missing",
+        "missing_gitdir": f"git --git-dir={tmp_path}/missing --work-tree={other}",
+        "missing_worktree": f"git --git-dir={other}/.git --work-tree={tmp_path}/missing",
+    }[target]
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(other), "tool_input": {"command": f"{prefix} {mutation}"}})
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_11381_default_anchor_is_hook_repository(tmp_path: Path):
+    from scripts.guardrails import worktree_containment as wc
+
+    expected = wc.resolve_git_worktree(REPO_ROOT, []).common_dir
+    with chdir(tmp_path):
+        assert wc.resolve_git_worktree(hook._protected_repo_anchor(), []).common_dir == expected
+
+
+@pytest.mark.parametrize(
+    "setup",
+    [
+        "git -C {other} config core.worktree {primary}",
+        "git -C {other} config include.path {config}",
+        "printf '[core]\\nworktree = {primary}\\n' > {other}/.git/config",
+        "ln -sfn {primary} {link}",
+        "mv {link} {link}.old; ln -s {primary} {link}",
+        "bash -c 'git -C {other} config core.worktree {primary}'",
+    ],
+)
+@pytest.mark.parametrize("nested", [False, True])
+def test_issue_11381_target_changed_before_git_write_blocked(
+    repo: Path, repo_template: Path, tmp_path: Path, setup: str, nested: bool
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    link = tmp_path / "foreign-link"
+    link.symlink_to(other, target_is_directory=True)
+    values = {"other": other, "primary": repo, "link": link, "config": tmp_path / "redirect.cfg"}
+    setup = setup.format(**values)
+    write = f"git -C {link} checkout HEAD -- curriculum/tracked.md"
+    if nested:
+        write = f"bash -c '{write}'"
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": f"{setup} && {write}"}})
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        # Delta-review reproducers: a read-only Git command or an enclosing
+        # group can change the probed target before or while the write runs.
+        "git -C {other} log -1 --format='[core]%nworktree = {primary}' --output={other}/.git/config"
+        " && git -C {link} checkout HEAD -- curriculum/tracked.md",
+        "git -c core.fsmonitor='ln -sfn {primary} {link}; false' -C {other} status"
+        " && git -C {link} checkout HEAD -- curriculum/tracked.md",
+        "{{ git -C {link} checkout HEAD -- curriculum/tracked.md; }} & ln -sfn {primary} {link}",
+        "( git -C {link} checkout HEAD -- curriculum/tracked.md ) & ln -sfn {primary} {link}",
+        # Delta-2 reproducers: rescue forms and options that run commands or
+        # reach outside the foreign target.
+        "git -C {other} log -1 --format='[core]%nworktree = {primary}' --output={other}/.git/config"
+        " && git -C {link} checkout -- curriculum/tracked.md",
+        "git -c core.fsmonitor='ln -sfn {primary} {link}; false' -C {other} status"
+        " && git -C {link} checkout -- curriculum/tracked.md",
+        "( git -C {link} checkout -- curriculum/tracked.md ) & ln -sfn {primary} {link}",
+        "( git -C {link} restore curriculum/tracked.md ) & ln -sfn {primary} {link}",
+        "git -C {other} rebase --exec 'touch {primary}/pwned' HEAD",
+        "git -C {other} pull --upload-pack='touch {primary}/pwned' {other}",
+        "git -C {other} pull --upload='touch {primary}/pwned' {other}",
+        # Delta-3 reproducer (F5): pull hands the words after `--` to fetch,
+        # which still parses them as options.
+        "git -C {other} pull -- --upload-pack='touch {primary}/pwned' {other}",
+        "git -C {other} pull --ff-only -- {other} --upload-pack='touch {primary}/pwned'",
+        "git --attr-source HEAD -c core.fsmonitor='touch {primary}/pwned' -C {other} merge --ff-only HEAD",
+        "git -C {other} apply --unsafe-paths change.diff",
+        "git -C {other} apply --unsafe change.diff",
+        "git -C {other} merge -s ours origin/main",
+        "git -C {other} cherry-pick origin/main",
+        "git -C {other} reset --hard",
+        "git -C {link} checkout HEAD -- curriculum/tracked.md | ln -sfn {primary} {link}",
+        "git -C {link} checkout HEAD -- curriculum/tracked.md & ln -sfn {primary} {link}",
+        # Anything beyond one plain Git invocation keeps the fail-closed decision.
+        "pwd && git -C {other} merge --ff-only origin/main",
+        "git status --short && git -C {other} merge --ff-only origin/main",
+        "cd ./ && git -C {other} merge --ff-only origin/main",
+        "git -C {other} merge --ff-only origin/main; true",
+        "git -C {other} merge --ff-only origin/main || true",
+        "git -C {other} merge --ff-only origin/main |& cat",
+        "git -C {other} merge --ff-only origin/main &",
+        "git -C {other} merge --ff-only origin/main > merge.log",
+        "git -C {other} apply < change.diff",
+        "{{ git -C {other} merge --ff-only origin/main; }}",
+        "( git -C {other} merge --ff-only origin/main )",
+        "! git -C {other} merge --ff-only origin/main",
+        "time git -C {other} merge --ff-only origin/main",
+        "if true; then git -C {other} merge --ff-only origin/main; fi",
+        "for x in a; do git -C {other} merge --ff-only origin/main; done",
+        "git -C {other} merge --ff-only $(printf origin/main)",
+        "git -C {other} merge --ff-only `printf origin/main`",
+        "git -C {other} apply <(cat change.diff)",
+        "env git -C {other} merge --ff-only origin/main",
+        "command git -C {other} merge --ff-only origin/main",
+        "GIT_TRACE=1 git -C {other} merge --ff-only origin/main",
+        "LANG=C git -C {other} merge --ff-only origin/main",
+        "bash -c 'git -C {other} merge --ff-only origin/main'",
+        "eval git -C {other} merge --ff-only origin/main",
+        "git -c user.name=x -C {other} merge --ff-only origin/main",
+        "git --config-env=user.name=USER -C {other} merge --ff-only origin/main",
+        "git --exec-path={other} -C {other} merge --ff-only origin/main",
+        "git -C {other} merge --output=merge.log origin/main",
+        "git -C {other} merge -o merge.log origin/main",
+    ],
+)
+def test_issue_11381_foreign_exemption_requires_single_plain_git_command(
+    repo: Path, repo_template: Path, tmp_path: Path, command: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    link = tmp_path / "foreign-link"
+    link.symlink_to(other, target_is_directory=True)
+    command = command.format(other=other, primary=repo, link=link)
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+    assert "BLOCKED" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git -C {link} checkout HEAD -- curriculum/tracked.md",
+        "git -C {other} merge --ff-only origin/main\n",
+        "git -C {other} merge --ff-only origin/main  # sync",
+        "/usr/bin/git -C {other} pull",
+        "git -C {other} checkout -- curriculum/tracked.md",
+        "git -C {other} restore curriculum/tracked.md",
+        "git -C {other} pull --rebase",
+        "git -C {other} pull --ff-only -- origin main",
+        "git -C {other} add -A",
+        "git --version",
+    ],
+)
+def test_issue_11381_single_plain_git_command_keeps_foreign_exemption(
+    repo: Path, repo_template: Path, tmp_path: Path, command: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    link = tmp_path / "foreign-link"
+    link.symlink_to(other, target_is_directory=True)
+    command = command.format(other=other, link=link)
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git --git-dir={primary}/.git --work-tree={other} add curriculum/tracked.md",
+        "git --git-dir={other}/.git --work-tree={primary} apply change.diff",
+        "git -C {other} --git-dir={primary}/.git checkout HEAD -- curriculum/tracked.md",
+        "git --git-dir={other}/.git add curriculum/tracked.md",
+        "GIT_DIR={primary}/.git git -C {other} add curriculum/tracked.md",
+        "env GIT_WORK_TREE={primary} git -C {other} apply change.diff",
+        "export GIT_DIR={primary}/.git; git -C {other} add curriculum/tracked.md",
+        "export GIT_DIR={primary}/.git; bash -c 'git -C {other} add curriculum/tracked.md'",
+        "git -C $UNKNOWN_REPOSITORY add curriculum/tracked.md",
+        "git -C {other} -c core.worktree={primary} apply change.diff",
+        "git -C {other} -ccore.worktree={primary} apply change.diff",
+        "git -C {other} --config-env=core.worktree=WORK_TREE apply change.diff",
+        "GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.worktree GIT_CONFIG_VALUE_0={primary} git -C {other} apply change.diff",
+    ],
+)
+def test_issue_11381_redirected_git_target_blocked(repo: Path, repo_template: Path, tmp_path: Path, command: str):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    # A foreign --git-dir alone uses the current working directory as its worktree.
+    cwd = repo if command == "git --git-dir={other}/.git add curriculum/tracked.md" else other
+    result = _run(
+        repo,
+        {"tool_name": "Bash", "cwd": str(cwd), "tool_input": {"command": command.format(primary=repo, other=other)}},
+    )
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git -C {other} checkout -- curriculum/tracked.md",
+        "git -C {other} restore curriculum/tracked.md",
+        "git -C {other} merge --ff-only origin/main",
+    ],
+)
+def test_issue_11381_foreign_git_dir_with_stored_primary_worktree_blocked(
+    repo: Path, repo_template: Path, tmp_path: Path, command: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    _git(other, "config", "core.worktree", str(repo))
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command.format(other=other)}}
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    ("command", "expected"),
+    [
+        ("GIT_WORK_TREE={primary} git checkout HEAD -- curriculum/tracked.md", 2),
+        ("GIT_WORK_TREE={primary} git --git-dir={primary}/../other/.git checkout -- curriculum/tracked.md", 2),
+        ("git --no-advice -C {primary} merge --ff-only origin/main", 2),
+        ("env GIT_DIR={primary}/.git git add curriculum/tracked.md", 2),
+        ("export GIT_DIR={primary}/.git; git add curriculum/tracked.md", 2),
+        ("export GIT_WORK_TREE={primary}; bash -c 'git checkout HEAD -- curriculum/tracked.md'", 2),
+        ("( export GIT_WORK_TREE={primary}; git checkout HEAD -- curriculum/tracked.md )", 2),
+        ("git -c core.worktree={primary} checkout HEAD -- curriculum/tracked.md", 2),
+        ("GIT_TRACE=1 git add curriculum/tracked.md", 0),
+    ],
+)
+def test_issue_11381_redirected_own_worktree_git_target_blocked(repo: Path, command: str, expected: int):
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command.format(primary=repo)}}
+    result = _run(repo, payload)
+    assert result.returncode == expected, result.stderr
 
 
 def test_git_apply_on_primary_blocked(repo: Path):
