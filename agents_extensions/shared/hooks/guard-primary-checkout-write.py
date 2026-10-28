@@ -2074,7 +2074,8 @@ def _is_git_binary(cmd: str) -> bool:
 
 
 def bash_git_write_intents(
-    command: str, *, cwd: str | None = None, depth: int = 0, environment: set[str] | None = None
+    command: str, *, cwd: str | None = None, depth: int = 0, environment: set[str] | None = None,
+    prior_writes: bool = False,
 ) -> list[dict[str, object]]:
     """Parse Bash for git-mediated working-tree mutations (issue #5396).
 
@@ -2102,10 +2103,15 @@ def bash_git_write_intents(
         intent["git_options"] = git_options
         intent["git_config_redirected"] = config_redirected
         intent["git_environment"] = environment_names
+        intent["target_may_change"] = target_may_change
         intents.append(intent)
 
-    for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
+    for segment, effective_cwd, shell_cwd in _segments_with_cwd(command, cwd):
         cmd, idx = _command_word(segment)
+        # Redirections run before their command, so include this segment's writes.
+        target_may_change = prior_writes or segment.next_op in {"|", "|&", "&"} or bool(_writer_targets(
+            segment, cwd=effective_cwd, redirect_cwd=shell_cwd, main_root=None, depth=depth
+        ))
         inherited = set().union(*(bound_environment.get(segment.scope[:i], set()) for i in range(len(segment.scope) + 1)))
         prefixes = {str(word).split("=", 1)[0] for word in segment[:idx] if _ASSIGN_RE.match(word)}
         if not cmd or cmd in _BINDING_DECLARATIONS:
@@ -2117,14 +2123,20 @@ def bash_git_write_intents(
         if cmd == "eval" and depth < _MAX_SHELL_DEPTH:
             args = segment[idx + 1 :]
             if all(getattr(arg, "unresolved_at", None) is None for arg in args):
-                intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1, environment=environment_names))
+                intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1, environment=environment_names, prior_writes=target_may_change))
+            prior_writes = True
             continue
         if cmd in {"sh", "bash", "zsh", "dash"} and depth < _MAX_SHELL_DEPTH:
             script = _shell_command_script(segment[idx + 1 :])
             if script is not None and getattr(script, "unresolved_at", None) is None:
-                intents.extend(bash_git_write_intents(str(script), cwd=effective_cwd, depth=depth + 1, environment=environment_names))
+                intents.extend(bash_git_write_intents(str(script), cwd=effective_cwd, depth=depth + 1, environment=environment_names, prior_writes=target_may_change))
+            prior_writes = True
             continue
         if not _is_git_binary(cmd):
+            prior_writes = target_may_change or cmd not in {
+                "", "cd", "pushd", "popd", "pwd", ":", "true", "false", "echo", "printf", "test", "[",
+                *_BINDING_DECLARATIONS, "unset",
+            }
             continue
         c_path, git_options, rest = _git_global_prefix(segment[idx + 1 :])
         prefix_args = segment[idx + 1:len(segment) - len(rest)]
@@ -2135,6 +2147,10 @@ def bash_git_write_intents(
         if not rest:
             continue
         sub = rest[0]
+        prior_writes = target_may_change or sub not in {
+            "status", "diff", "log", "show", "rev-parse", "ls-files", "ls-tree", "cat-file", "show-ref",
+            "check-ignore", "check-attr", "version", "help",
+        }
         sub_args = rest[1:]
         option_args = sub_args[: sub_args.index("--")] if "--" in sub_args else sub_args
 
@@ -2711,6 +2727,8 @@ def main() -> int:
                     continue
                 # A foreign index can still explicitly target our primary.
                 if target.common_dir != protected.common_dir and wc.classify_repo_path(target.worktree, cwd=intent_root) != "primary_checkout":
+                    if intent.get("target_may_change"):
+                        return _block_uncertain("undecidable_git_target_after_write")
                     continue
                 if intent.get("kind") == "worktree_remove":
                     for raw in intent.get("paths") or []:

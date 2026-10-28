@@ -1013,6 +1013,57 @@ def test_issue_11381_default_anchor_is_hook_repository(tmp_path: Path):
 
 
 @pytest.mark.parametrize(
+    "setup",
+    [
+        "git -C {other} config core.worktree {primary}",
+        "git -C {other} config include.path {config}",
+        "printf '[core]\\nworktree = {primary}\\n' > {other}/.git/config",
+        "ln -sfn {primary} {link}",
+        "mv {link} {link}.old; ln -s {primary} {link}",
+        "bash -c 'git -C {other} config core.worktree {primary}'",
+    ],
+)
+@pytest.mark.parametrize("nested", [False, True])
+def test_issue_11381_target_changed_before_git_write_blocked(
+    repo: Path, repo_template: Path, tmp_path: Path, setup: str, nested: bool
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    link = tmp_path / "foreign-link"
+    link.symlink_to(other, target_is_directory=True)
+    values = {"other": other, "primary": repo, "link": link, "config": tmp_path / "redirect.cfg"}
+    setup = setup.format(**values)
+    write = f"git -C {link} checkout HEAD -- curriculum/tracked.md"
+    if nested:
+        write = f"bash -c '{write}'"
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": f"{setup} && {write}"}})
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize("prefix", ["pwd", "git status --short", "cd ./"])
+def test_issue_11381_read_only_prefix_keeps_foreign_git_allowed(
+    repo: Path, repo_template: Path, tmp_path: Path, prefix: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    command = f"{prefix} && git -C {other} merge --ff-only origin/main"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(other), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("separator", ["|", "&"])
+def test_issue_11381_concurrent_git_target_change_blocked(
+    repo: Path, repo_template: Path, tmp_path: Path, separator: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    link = tmp_path / "foreign-link"
+    link.symlink_to(other, target_is_directory=True)
+    command = f"git -C {link} checkout HEAD -- curriculum/tracked.md {separator} ln -sfn {repo} {link}"
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
     "command",
     [
         "git --git-dir={primary}/.git --work-tree={other} add curriculum/tracked.md",
