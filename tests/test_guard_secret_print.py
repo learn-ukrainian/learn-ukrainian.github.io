@@ -42,6 +42,150 @@ def _load_hook():
 
 guard = _load_hook()
 
+
+@pytest.mark.parametrize(
+    "redirect", ["", "2>&1", ">/dev/null", ">out", ">>out", "2>/dev/null", "&>out", "<input", "{fd}>out", "true &&>out"]
+)
+@pytest.mark.parametrize(
+    "binary,operand,expected",
+    [
+        ("cat", ".env", 2),
+        ("head", ".env", 2),
+        ("tail", ".env", 2),
+        ("bat", ".env", 2),
+        ("less", ".env", 2),
+        ("cat", "notes.txt", 0),
+        ("wc", "-l .env", 0),
+    ],
+)
+@pytest.mark.parametrize("suffix", ["", " | cat"])
+def test_redirect_keeps_secret_file_policy(
+    monkeypatch, tmp_path: Path, redirect: str, binary: str, operand: str, expected: int, suffix: str
+):
+    """Redirects must preserve both protected reads and value-free checks (#9490)."""
+    stub = tmp_path / binary
+    stub.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > record\n')
+    stub.chmod(0o755)
+    (tmp_path / "input").touch()
+    command = f"{redirect} {shlex.quote(str(stub))} {operand}{suffix}"
+    result = subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", command], cwd=tmp_path, capture_output=True, text=True, timeout=10
+    )
+    assert result.returncode == 0, result.stderr
+    assert (tmp_path / "record").read_text().splitlines() == operand.split()
+    assert _run(monkeypatch, command) == expected
+
+
+@pytest.mark.parametrize(
+    "command,expected",
+    [
+        ("<.env cat", 2),
+        ("0<.env cat", 2),
+        ("env <.env cat", 2),
+        (">/dev/null env", 0),
+        ("1>/dev/null env", 0),
+        ("01>/dev/null env", 0),
+        ("2>/dev/null env", 2),
+        ("{fd}>/dev/null env", 2),
+        ("env 2>/dev/null", 2),
+        ("env 1>/dev/null", 0),
+        ("env 2 > /dev/null", 0),
+        ("'2'>/dev/null wc -l .env", 2),
+        ("$'2'2>/dev/null wc -l .env", 2),
+        ('while read l; do echo "$l"; done < .env', 2),
+        ("while read l; do echo $l; done < .env", 2),
+    ],
+)
+def test_redirect_does_not_hide_sensitive_input_or_change_output_descriptor(monkeypatch, command, expected):
+    """Prefix input reads and stderr redirects must not become safe stdout sinks (#9490)."""
+    assert _run(monkeypatch, command) == expected
+
+
+@pytest.mark.parametrize(
+    "command,expected",
+    [
+        ("env 01>captured 1>&2", 2),
+        ("env 01>captured 1>&2 | wc -l", 2),
+        ("env >captured 1>&2", 2),
+        ("env 1>&2 >captured", 0),
+        ("env 2>captured 1>&2", 0),
+        ("env >captured 1>&1", 0),
+        ("env 3>&1 >captured 1>&3", 2),
+        ("env 3>&1 >captured 1>&3 | wc -l", 0),
+        ("env 01>$UNKNOWN_CAPTURE", 2),
+        ("env >/dev/null >&2", 2),
+        (">/dev/null >&2 env", 2),
+        ("env >/dev/null 1>&2", 2),
+        ("env >/dev/null >&/dev/stderr", 2),
+        ("env >&/dev/null", 0),
+        ("env >captured >&/dev/null", 0),
+        ("env >/dev/null 2>/dev/./stderr 1>&2", 2),
+        ("env >&/dev/./stdout", 2),
+        ("env 2>/dev/./stdout 1>&2", 2),
+        ("env 3>/dev/./stdout 1>&3", 2),
+        ("env 2>/dev/fd/./1 1>&2", 2),
+        ("env 2>/proc/self/fd//1 1>&2", 2),
+        ("env 2>//dev/stdout 1>&2", 2),
+        ("env 2>$'/dev/./stdout' 1>&2", 2),
+        ("2>/dev/./stdout 1>&2 env", 2),
+        ("env >&/dev/./null", 0),
+        ("env 2>//dev/null 1>&2", 0),
+    ],
+)
+@pytest.mark.parametrize("source", ["env", "printenv", "declare -p", "export -p"])
+def test_stdout_duplication_cannot_expose_environment_dump(monkeypatch, tmp_path, command, expected, source):
+    """A later descriptor duplication must not turn a capture into a value leak (#9490)."""
+    stub = tmp_path / "env"
+    stub.write_text("#!/bin/sh\nprintf 'synthetic-output\\n'\n")
+    stub.chmod(0o755)
+    if "$" not in command:
+        oracle = subprocess.run(
+            ["bash", "--noprofile", "--norc", "-c", command.replace("env", shlex.quote(str(stub)), 1)],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        assert oracle.returncode == 0, oracle.stderr
+        assert ("synthetic-output" in oracle.stdout + oracle.stderr) == (expected == 2)
+    assert _run(monkeypatch, command.replace("env", source, 1)) == expected
+
+
+@pytest.mark.parametrize("source", ["env", "printenv", "declare -p", "export -p"])
+@pytest.mark.parametrize("separator", [";", "&&"])
+@pytest.mark.parametrize("write_form", ["single", "double", "double_dot"])
+@pytest.mark.parametrize("read_form", ["single", "double", "double_dot"])
+@pytest.mark.parametrize("reader", ["cat", "open", "read_text", "read_bytes"])
+def test_capture_path_aliases_cannot_hide_later_secret_reads(
+    monkeypatch, tmp_path, source, separator, write_form, read_form, reader
+):
+    """Capture and display must use the same pathname identity (#9490 F3)."""
+    capture = tmp_path / "capture"
+    spellings = {"single": str(capture), "double": "/" + str(capture), "double_dot": "/" + str(tmp_path) + "/./capture"}
+    write_path, read_path = spellings[write_form], spellings[read_form]
+    if reader == "cat":
+        read_command = "cat " + shlex.quote(read_path)
+    else:
+        expression = f"open({read_path!r}).read()" if reader == "open" else f"Path({read_path!r}).{reader}()"
+        program = "from pathlib import Path; print(" + expression + ")"
+        read_command = shlex.quote(sys.executable) + " -c " + shlex.quote(program)
+    stub = tmp_path / "env"
+    stub.write_text("#!/bin/sh\nprintf 'synthetic-capture\\n'\n")
+    stub.chmod(0o755)
+    oracle_command = f"{shlex.quote(str(stub))} >{shlex.quote(write_path)} {separator} {read_command}"
+    oracle = subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", oracle_command],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert oracle.returncode == 0, oracle.stderr
+    assert "synthetic-capture" in oracle.stdout
+    command = f"{source} >{shlex.quote(write_path)} {separator} {read_command}"
+    assert _run(monkeypatch, command) == 2
+
+
 ROUND_SEVEN_DENIED = [
     ("bun-bracket", "bun -e 'console.log(import.meta[\"env\"])'"),
     ("bun-optional-bracket", "bun -e 'console.log(import.meta?.[\"env\"])'"),
