@@ -578,19 +578,19 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/activities.yaml",
-      "sha256": "b5fbcae8267d178d97ea5a2351a1f514ad6c3401491a06a1bdbd49e3961c21a6"
+      "sha256": "8eccc82572fd2bc8c76913746eb4f89b5b4365d83e8e9413fb50693925f43c12"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/module.md",
-      "sha256": "03f523cfaed0e7d2e1bdbac2562008e46eb860a02a5ee9a055d58a522e83bf9c"
+      "sha256": "fdd0721e7c538697d59d2a67bf5af278d9873b4eebc8f66b37145ba02c4ff7fe"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/resources.yaml",
-      "sha256": "21c905ba3a5f796228fcc0abc770f00627a0b8cda4ddc850ef7c2a5cd5ccb8ab"
+      "sha256": "482db727af234b7427e5faf9c81da7b1074acf1ed42879a336eaa3d36f1ef43b"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/vocabulary.yaml",
-      "sha256": "3d1f0cfb21e38620188fa4f7b1c90b298d3f9942f9e6ea9d89bd0cc99bc84841"
+      "sha256": "f849ab943026239edc34188540883f5e0730031802058d3e0b26596c7c93ad29"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/stress-and-melody/activities.yaml",
@@ -13834,7 +13834,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/special-signs.mdx",
-      "sha256": "e4496e75315a52b52c14412e4604ffbcb5dcdac6f91dbb8a94a3c62101a4fd6d"
+      "sha256": "09dbae44e5fcb35fe5899052443356d039a7f3a26221f332ec299d12057f454f"
     },
     {
       "path": "site/src/content/docs/a1-v1/stress-and-melody.mdx",
