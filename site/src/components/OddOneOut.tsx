@@ -84,6 +84,7 @@ export default function OddOneOut({ instruction, items: sourceItems }: OddOneOut
   // with their authored index, so `correct` and `optionWhy` are remapped from it.
   const { lists: wordOrders, reshuffle } = useShuffledLists(
     (sourceItems || []).map((item) => item.words.map((word, index) => ({ word, index }))),
+    (entry) => entry.word,
   );
   const items = useMemo(
     () => (sourceItems || []).map((item, n) => ({

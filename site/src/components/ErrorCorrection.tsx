@@ -135,7 +135,7 @@ export function ErrorCorrectionItem({
     const survivingIndices = optionIndicesWithoutSpottedError(options, errorWord, correctForm);
     return survivingIndices.map((origIndex) => ({ text: options[origIndex], origIndex }));
   }, [options, errorWord, correctForm]);
-  const { choices: shuffledOptions, reshuffle } = useShuffledChoices(survivingOptions);
+  const { choices: shuffledOptions, reshuffle } = useShuffledChoices(survivingOptions, (o) => o.text);
 
   const [step, setStep] = useState<Step>('identify');
   const [selectedWord, setSelectedWord] = useState<string | null>(null);

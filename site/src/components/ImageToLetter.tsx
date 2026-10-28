@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './Activities.module.css';
 import directStyles from './Direct.module.css';
 import { useShuffledChoices } from './utils';
@@ -91,6 +91,10 @@ export default function ImageToLetter({
 
   // Fresh random order after hydration and for each card
   const { choices: options, reshuffle } = useShuffledChoices([item.answer, ...item.distractors]);
+  // The delayed reshuffle after a wrong pick only applies while that card is
+  // still the active, unanswered one.
+  const activeCard = useRef({ currentIndex, answered });
+  activeCard.current = { currentIndex, answered };
 
   const headerLabel =
     title || (isUkrainian ? 'Яка перша буква?' : 'Which first letter?');
@@ -132,9 +136,10 @@ export default function ImageToLetter({
       }
       // Clear wrong selection after shake animation, then offer the next
       // attempt in a fresh order (the attempted option's feedback stays put).
+      const cardAtClick = currentIndex;
       setTimeout(() => {
         setSelectedAnswer(null);
-        reshuffle();
+        if (activeCard.current.currentIndex === cardAtClick && !activeCard.current.answered) reshuffle();
       }, 400);
     }
   };

@@ -25,10 +25,16 @@ export function deriveSeed<T>(array: T[]): number {
   return hash;
 }
 
-/** Comparable identity of each item, so duplicate values count as the same option. */
-function itemKeys<T>(list: T[]): string[] {
-  return list.map((item) => JSON.stringify(item));
+/**
+ * Comparable identity of each item. `keyOf` names the displayed value, so options
+ * with the same text count as the same option even when callers wrap them with
+ * their authored index.
+ */
+function itemKeys<T>(list: T[], keyOf: (item: T) => unknown): string[] {
+  return list.map((item) => JSON.stringify(keyOf(item)));
 }
+
+const itself = (item: unknown) => item;
 
 function sameKeys(a: string[], b: string[]): boolean {
   return a.length === b.length && a.every((key, i) => key === b[i]);
@@ -58,8 +64,8 @@ function permutation(keys: string[], rand: () => number, avoid: string[] | null)
  * produce the same result (no hydration mismatch). Never returns source order
  * for two or more distinct items, because option lists are authored answer-first.
  */
-export function shuffle<T>(array: T[]): T[] {
-  const keys = itemKeys(array);
+export function shuffle<T>(array: T[], keyOf: (item: T) => unknown = itself): T[] {
+  const keys = itemKeys(array, keyOf);
   return permutation(keys, seededRandom(deriveSeed(array)), keys).map((i) => array[i]);
 }
 
@@ -75,14 +81,17 @@ const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : us
  * bookkeeping (map to `{ ..., origIndex }` first), so scoring and per-option
  * feedback still point at the authored option.
  */
-export function useShuffledLists<T>(lists: T[][]): { lists: T[][]; reshuffle: () => void } {
+export function useShuffledLists<T>(
+  lists: T[][],
+  keyOf: (item: T) => unknown = itself,
+): { lists: T[][]; reshuffle: () => void } {
   const [orders, setOrders] = useState<number[][] | null>(null);
   // Content signature, so callers may pass fresh-but-equal arrays on each render.
   const signature = JSON.stringify(lists);
   const shown = useMemo(
     () => lists.map((list, i) => {
       const order = orders?.[i];
-      return order && order.length === list.length ? order.map((j) => list[j]) : shuffle(list);
+      return order && order.length === list.length ? order.map((j) => list[j]) : shuffle(list, keyOf);
     }),
     [signature, orders],
   );
@@ -90,7 +99,7 @@ export function useShuffledLists<T>(lists: T[][]): { lists: T[][]; reshuffle: ()
     setOrders((previous) => lists.map((list, i) => {
       // The first draw is unrestricted (avoiding the server order would force
       // source order for two-item lists); a retry never repeats the order on screen.
-      const keys = itemKeys(list);
+      const keys = itemKeys(list, keyOf);
       const shownOrder = previous?.[i];
       const avoid = shownOrder && shownOrder.length === list.length ? shownOrder.map((j) => keys[j]) : null;
       return permutation(keys, Math.random, avoid);
@@ -101,8 +110,11 @@ export function useShuffledLists<T>(lists: T[][]): { lists: T[][]; reshuffle: ()
 }
 
 /** Single-list form of `useShuffledLists`. */
-export function useShuffledChoices<T>(list: T[]): { choices: T[]; reshuffle: () => void } {
-  const { lists, reshuffle } = useShuffledLists([list]);
+export function useShuffledChoices<T>(
+  list: T[],
+  keyOf: (item: T) => unknown = itself,
+): { choices: T[]; reshuffle: () => void } {
+  const { lists, reshuffle } = useShuffledLists([list], keyOf);
   return { choices: lists[0], reshuffle };
 }
 

@@ -66,6 +66,12 @@ describe('shuffle', () => {
     expect(shuffle(['same', 'same'])).toEqual(['same', 'same']);
   });
 
+  test('keyOf lets wrapped options compare by displayed text', () => {
+    const wrapped = ['answer', 'x', 'x'].map((text, origIndex) => ({ text, origIndex }));
+    const shown = shuffle(wrapped, (o) => o.text).map((o) => o.text);
+    expect(shown).not.toEqual(['answer', 'x', 'x']);
+  });
+
   test('passes single and empty lists through', () => {
     expect(shuffle(['a'])).toEqual(['a']);
     expect(shuffle([])).toEqual([]);
@@ -77,6 +83,15 @@ describe('server-rendered output is never in source order', () => {
     const root = html(<QuizQuestion question="q" options={options} correctIndex={0} />);
     expect(texts(root, '[data-activity="quiz-options"] button')).not.toEqual(options);
     expect(new Set(texts(root, 'button'))).toEqual(new Set(options));
+  });
+
+  test.each([['answer', 'x', 'x'], ['answer2', 'x', 'x']])('components with repeated option text %s', (...options) => {
+    const quiz = html(<QuizQuestion question="q" options={options} correctIndex={0} />);
+    expect(texts(quiz, '[data-activity="quiz-options"] button')).not.toEqual(options);
+    const translate = html(<TranslateItem source="s" answer={options[0]} options={options} />);
+    expect(texts(translate, '[data-activity="translate-options"] button')).not.toEqual(options);
+    const chips = html(<FillInQuestion sentence="a ___ b" answer={options[0]} options={options} mode="form-choice" />);
+    expect(texts(chips, '[data-activity="fillin-chips"] button')).not.toEqual(options);
   });
 
   test.each(OPTION_SETS)('TranslateItem %s', (...options) => {
@@ -244,6 +259,37 @@ describe('after hydration the correct answer moves between positions', () => {
       await waitFor(() => expect(order()).not.toEqual(before));
       expect(new Set(order())).toEqual(new Set(['Я', 'А', 'О', 'У']));
     }
+  });
+
+  test('FillIn chips with repeated option text still change order on retry', async () => {
+    const user = userEvent.setup();
+    const options = ['answer', 'x', 'x'];
+    const { container } = render(
+      <FillInQuestion sentence="a ___" answer="answer" options={options} mode="form-choice" />,
+    );
+    const order = () => texts(container, '[data-activity="fillin-chips"] button');
+    let previous = order();
+    for (let attempt = 0; attempt < 8; attempt++) {
+      await user.click(screen.getAllByRole('button', { name: 'x' })[0]);
+      await user.click(screen.getByRole('button', { name: 'Try Again' }));
+      const next = order();
+      expect(next).not.toEqual(previous);
+      previous = next;
+    }
+  });
+
+  test('a late reshuffle from an earlier ImageToLetter card does not reorder the active card', async () => {
+    const first = { emoji: '🍎', answer: 'Я', distractors: ['А', 'О', 'У'], explanation: 'e' };
+    const second = { emoji: '🦉', answer: 'С', distractors: ['Т'], explanation: 'e' };
+    const { container } = render(<ImageToLetter items={[first, second]} />);
+    const order = () => texts(container, '[data-activity="itl-options"] button');
+    fireEvent.click(screen.getByRole('button', { name: 'А' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Я' }));
+    fireEvent.click(screen.getByRole('button', { name: /Next|Далі/ }));
+    const onNewCard = order();
+    expect(new Set(onNewCard)).toEqual(new Set(['С', 'Т']));
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    expect(order()).toEqual(onNewCard);
   });
 
   test('OddOneOut shows a fresh order on replay', async () => {

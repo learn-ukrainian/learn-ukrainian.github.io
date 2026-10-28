@@ -63,7 +63,7 @@ export function TranslateItem({
     const opts = options.length > 0 ? options : [answer, ...alternatives];
     return opts.map((text, origIndex) => ({ text, origIndex }));
   }, [options, answer, alternatives]);
-  const { choices: displayOptions, reshuffle } = useShuffledChoices(sourceOptions);
+  const { choices: displayOptions, reshuffle } = useShuffledChoices(sourceOptions, (o) => o.text);
 
   const handleSelect = (option: string) => {
     if (submitted) return;

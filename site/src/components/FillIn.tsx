@@ -84,7 +84,7 @@ export function FillInQuestion({
     () => options.map((opt, origIndex) => ({ text: opt, origIndex })),
     [options],
   );
-  const { choices: shuffledChoices, reshuffle } = useShuffledChoices(indexedOptions);
+  const { choices: shuffledChoices, reshuffle } = useShuffledChoices(indexedOptions, (o) => o.text);
   const coloredOptions = useMemo(() => {
     return shuffledChoices.map((entry, idx) => ({
       text: entry.text,

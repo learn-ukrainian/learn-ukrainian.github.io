@@ -52,7 +52,7 @@ export function QuizQuestion({ question, options, correctIndex, explanation, opt
     () => options.map((opt, i) => ({ opt, originalIndex: i })),
     [options],
   );
-  const { choices: shuffledOptions } = useShuffledChoices(indexedOptions);
+  const { choices: shuffledOptions } = useShuffledChoices(indexedOptions, (o) => o.opt);
 
   const [selected, setSelected] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
