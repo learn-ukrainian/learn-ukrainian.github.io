@@ -43,6 +43,16 @@ The reviewer marks every earlier id `resolved` or `still open: <reason>`, review
 delta scope in [policy](policy.md#delta-scope), and replies in the round 1 reply format,
 `SCORE` line included.
 
+## Commands a read-only reviewer can run
+
+The reviewer's worktree is already checked out at the exact head and the base ref is present, so
+the brief says no fetch is needed (`git fetch` writes refs and is not a read-only command). A
+compound line runs only when every part is read-only, so one denied part denies the whole line
+(https://code.claude.com/docs/en/permissions, "Read-only commands"). The brief tells the reviewer
+to run read-only git commands one per call (`git rev-parse HEAD`, `git diff <merge-base>..HEAD`,
+`git log`), that `gh pr view`, `gh pr diff` and `gh pr checks` are allowed, and that after a
+denial it retries once with a simple literal read-only form before it replies BLOCKED.
+
 ## Wording that read-only admission accepts
 
 A read-only dispatch refuses a brief in which a sentence or list item starts with a write verb

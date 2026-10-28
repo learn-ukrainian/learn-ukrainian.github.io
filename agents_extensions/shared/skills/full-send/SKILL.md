@@ -20,6 +20,13 @@ Recipes run with the primary checkout's interpreter, resolved once
 PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/bin/python"
 ```
 
+A dispatched worker runs under `--permission-mode dontAsk`, which denies any command its allowlist
+cannot match (https://code.claude.com/docs/en/permissions, "Compound commands"). Write the command
+word literally: the absolute interpreter path, no `PY=...; $PY` prefix and no `eval`. Use the
+`scripts.publish` verbs for GitHub writes. Substitute the resolved path for `"$PY"` when you
+dispatch. After one denial, retry once in a literal form before you stop; a second denial is
+`BLOCKED`.
+
 ## Step 0 — who may run this (fail closed)
 
 - **The worker that receives a brief runs its chain to the end** (rules core P1): this skill;
