@@ -2951,8 +2951,11 @@ from pathlib import Path
 
 Path("gen.txt").write_text("".join(f"{n}: {sha256(Path(n).read_bytes()).hexdigest()}\\n" for n in ("a.txt", "b.txt")))
 """
+# Writes a stray file only where it runs without a Git pointer, as the carry-over runs it.
+STRAY_GENERATOR = GENERATOR + 'if not Path(".git").exists():\n    Path("stray.txt").write_text("stray\\n")\n'
 REGISTRY = "schema_version: 1\ngenerated_paths:\n  gen.txt:\n    command: [python, gen.py]\n"
 CARRY_BRANCH = "codex/carry"
+CARRY_MODELS = {"anthropic": "claude-opus-5-5", "openai": "gpt-6.1-sol", "google": "gemini-3.8-flash-high"}
 
 
 def _carry_git(repo: Path, *args: str) -> str:
@@ -2977,15 +2980,22 @@ def _carry_commit(repo: Path, message: str, files: dict[str, str], *, regenerate
     return _carry_git(repo, "rev-parse", "HEAD")
 
 
-def carry_repo(tmp_path: Path, *, merge_edits: dict[str, str] | None = None, extra_commit: bool = False):
+def carry_repo(
+    tmp_path: Path,
+    *,
+    merge_edits: dict[str, str] | None = None,
+    pr_files: dict[str, str] | None = None,
+    generator: str = GENERATOR,
+    extra_commit: bool = False,
+):
     """Approved head A, base commit B and merge head N whose only conflict is ``gen.txt``."""
     repo = tmp_path / "carry-repo"
     repo.mkdir()
     _carry_git(repo, "init", "-q", "-b", "main")
-    files = {"gen.py": GENERATOR, "a.txt": "a\n", "b.txt": "b\n", "notes.txt": "n\n"}
+    files = {"gen.py": generator, "a.txt": "a\n", "b.txt": "b\n", "notes.txt": "n\n"}
     _carry_commit(repo, "root", {**files, "scripts/config/generated_paths.yaml": REGISTRY})
     _carry_git(repo, "checkout", "-qb", CARRY_BRANCH)
-    approved = _carry_commit(repo, "pr", {"a.txt": "a2\n"})
+    approved = _carry_commit(repo, "pr", {"a.txt": "a2\n", **(pr_files or {})})
     _carry_git(repo, "checkout", "-q", "main")
     base = _carry_commit(repo, "main", {"b.txt": "b2\n"})
     _carry_git(repo, "checkout", "-q", CARRY_BRANCH)
@@ -3002,31 +3012,23 @@ def carry_repo(tmp_path: Path, *, merge_edits: dict[str, str] | None = None, ext
     return repo, approved, base, head
 
 
-def carry_marker(sha: str, verdict: str, *, task_id: str, family: str, minute: int, profile: str = "code"):
-    model = {"anthropic": "claude-opus-5-5", "openai": "gpt-6.1-sol", "google": "gemini-3.8-flash-high"}[family]
-    body = recorder.build_comment(
-        sha=sha,
-        task_id=task_id,
-        started=f"2026-10-28T10:{minute:02d}:00.000001+00:00",
-        verdict=verdict,
-        model=model,
-        family=family,
-        reply=f"VERDICT: {verdict}",
-        review_profile=profile,
-        sources_mcp_call_count=3 if profile == "ukrainian" else None,
-    )
-    stamp = f"2026-10-28T11:{minute:02d}:00Z"
-    return {
-        "body": body,
-        "user": {"login": "fleet"},
-        "author_association": "MEMBER",
-        "created_at": stamp,
-        "updated_at": stamp,
-    }
-
-
-def carry_task(root: Path, task_id: str, sha: str, *, status: str = "done", reply: str = "VERDICT: APPROVE") -> None:
-    root.mkdir(parents=True, exist_ok=True)
+def carry_review(
+    tasks: Path,
+    comments: list,
+    task_id: str,
+    sha: str,
+    verdict: str,
+    *,
+    family: str = "anthropic",
+    minute: int = 1,
+    status: str = "done",
+    publish: bool = True,
+    profile: str = "code",
+    reply: str | None = None,
+) -> dict:
+    """One review run on record, and its published verdict when ``publish``."""
+    started = f"2026-10-28T10:{minute:02d}:00.000001+00:00"
+    tasks.mkdir(parents=True, exist_ok=True)
     record = task(
         worktree_branch=f"claude/{task_id}",
         review_branch=CARRY_BRANCH,
@@ -3034,32 +3036,79 @@ def carry_task(root: Path, task_id: str, sha: str, *, status: str = "done", repl
         worktree_base_sha=sha,
         pinned_head=sha,
         require_review_verdict=True,
-        review_profile="code",
+        review_profile=profile,
+        model=CARRY_MODELS[family],
+        started_at=started,
         pr=42,
         status=status,
     )
-    (root / f"{task_id}.json").write_text(json.dumps(record))
-    (root / f"{task_id}.result").write_text(reply)
+    (tasks / f"{task_id}.json").write_text(json.dumps(record))
+    if reply is not False:
+        (tasks / f"{task_id}.result").write_text(reply if reply is not None else f"VERDICT: {verdict}")
+    if publish:
+        body = recorder.build_comment(
+            sha=sha,
+            task_id=task_id,
+            started=started,
+            verdict=recorder.NORMALIZED[verdict],
+            model=CARRY_MODELS[family],
+            family=family,
+            reply=f"VERDICT: {verdict}",
+            review_profile=profile,
+            sources_mcp_call_count=3 if profile == "ukrainian" else None,
+        )
+        stamp = f"2026-10-28T11:{minute:02d}:00Z"
+        comments.append(
+            {
+                "body": body,
+                "user": {"login": "fleet"},
+                "author_association": "MEMBER",
+                "created_at": stamp,
+                "updated_at": stamp,
+            }
+        )
+    return record
 
 
-def run_carry_over(monkeypatch, tmp_path, repo, approved, head, *, base_tip, comments, ci="SUCCESS"):
+def approved_lineage(tmp_path: Path, approved: str) -> list[dict]:
+    comments: list[dict] = []
+    tasks = tmp_path / "tasks"
+    carry_review(tasks, comments, "review-r1", "c" * 40, "REQUEST_CHANGES", minute=1)
+    carry_review(tasks, comments, "review-r2", approved, "APPROVE", minute=2)
+    return comments
+
+
+def run_carry_over(monkeypatch, tmp_path, repo, approved, head, *, base_tip, comments, ci=("SUCCESS",), readback=True):
     from scripts.review import approval_carryover
 
-    calls = {"comments": [], "statuses": []}
+    calls = {"comments": [], "statuses": [], "views": 0}
+    ci_states = list(ci)
 
     def fake_json(args, *, input_text=None):
         if isinstance(args, recorder.Request):
+            if args.verb == "read-comment":
+                body = calls["comments"][-1] if readback else "edited"
+                stamp = "2026-10-28T12:00:00Z"
+                return {
+                    "body": body,
+                    "user": {"login": "fleet"},
+                    "author_association": "MEMBER",
+                    "created_at": stamp,
+                    "updated_at": stamp,
+                }
             assert args.verb == "issue-comment-json"
             calls["comments"].append(args.fields["body"])
             return {"id": len(calls["comments"])}
         if args[:3] == ["gh", "pr", "view"]:
+            state = ci_states[min(calls["views"], len(ci_states) - 1)]
+            calls["views"] += 1
             return {
                 "number": 42,
                 "state": "OPEN",
                 "headRefName": CARRY_BRANCH,
                 "headRefOid": head,
                 "baseRefName": "main",
-                "statusCheckRollup": [{"name": "CI Gate", "status": "COMPLETED", "conclusion": ci}],
+                "statusCheckRollup": [{"name": "CI Gate", "status": "COMPLETED", "conclusion": state}],
             }
         if args[:4] == ["gh", "api", "--method", "GET"]:
             return {"commit": {"sha": base_tip}}
@@ -3080,13 +3129,12 @@ def run_carry_over(monkeypatch, tmp_path, repo, approved, head, *, base_tip, com
     return result, calls
 
 
-def approved_lineage(tmp_path: Path, approved: str) -> list[dict]:
-    carry_task(tmp_path / "tasks", "review-r1", "c" * 40, reply="VERDICT: REQUEST_CHANGES")
-    carry_task(tmp_path / "tasks", "review-r2", approved)
-    return [
-        carry_marker("c" * 40, "CHANGES_REQUESTED", task_id="review-r1", family="anthropic", minute=1),
-        carry_marker(approved, "APPROVED", task_id="review-r2", family="anthropic", minute=2),
-    ]
+def refused_reason(monkeypatch, tmp_path, repo, approved, head, *, base_tip, comments, **kwargs) -> str:
+    from scripts.review.approval_carryover import CarryOverRefused
+
+    with pytest.raises(CarryOverRefused) as refused:
+        run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base_tip, comments=comments, **kwargs)
+    return refused.value.reason
 
 
 def test_carry_over_full_pass_on_synthetic_repository(monkeypatch, tmp_path):
@@ -3096,7 +3144,6 @@ def test_carry_over_full_pass_on_synthetic_repository(monkeypatch, tmp_path):
     committed = subprocess.run(
         ["git", "-C", str(repo), "cat-file", "blob", f"{head}:gen.txt"], capture_output=True, check=True, timeout=30
     ).stdout
-    assert result["approved_head"] == approved and result["base_commit"] == base and result["head"] == head
     conflicted = subprocess.run(
         ["git", "-C", str(repo), "merge-tree", "--write-tree", "--name-only", approved, base],
         capture_output=True,
@@ -3105,100 +3152,144 @@ def test_carry_over_full_pass_on_synthetic_repository(monkeypatch, tmp_path):
         timeout=30,
     )
     assert conflicted.returncode == 1 and conflicted.stdout.split("\n")[1] == "gen.txt"
+    assert result["approved_head"] == approved and result["base_commit"] == base and result["head"] == head
     assert result["merge_tree"] == conflicted.stdout.split()[0]
     assert result["regenerated"] == [{"path": "gen.txt", "sha256": hashlib.sha256(committed).hexdigest()}]
-    assert result["seats"] == ["anthropic"] and result["status"] == "posted"
+    assert result["seats"] == ["anthropic"] and result["status"] == "posted" and result["comment"] == "posted"
     assert [status["context"] for status in calls["statuses"]] == ["fleet/approval-carry-over"]
     assert calls["statuses"][0]["head_sha"] == head and calls["statuses"][0]["state"] == "success"
     (receipt,) = calls["comments"]
     assert recorder.MARKER_PREFIX not in receipt and "VERDICT" not in receipt
-    assert f"Merge-tree OID: {result['merge_tree']}" in receipt and committed and "gen.txt" in receipt
+    assert f"Merge-tree OID: {result['merge_tree']}" in receipt and "gen.txt" in receipt
     # No temporary worktree outlives the check.
     assert _carry_git(repo, "worktree", "list", "--porcelain").count("worktree ") == 1
 
 
 @pytest.mark.parametrize("case", ["extra-commit", "wrong-first-parent", "base-not-on-branch"])
 def test_carry_over_refuses_unpinned_merge(monkeypatch, tmp_path, case):
-    from scripts.review.approval_carryover import PINNED_MERGE, CarryOverRefused
-
     repo, approved, base, head = carry_repo(tmp_path, extra_commit=case == "extra-commit")
     comments = approved_lineage(tmp_path, approved)
     carried = base if case == "wrong-first-parent" else approved
     base_tip = approved if case == "base-not-on-branch" else base
-    with pytest.raises(CarryOverRefused) as refused:
-        run_carry_over(monkeypatch, tmp_path, repo, carried, head, base_tip=base_tip, comments=comments)
-    assert refused.value.reason == PINNED_MERGE
+    assert refused_reason(monkeypatch, tmp_path, repo, carried, head, base_tip=base_tip, comments=comments) == (
+        "pinned-merge"
+    )
 
 
-def test_carry_over_refuses_hand_authored_change_outside_registry(monkeypatch, tmp_path):
-    from scripts.review.approval_carryover import MERGE_RESULT, CarryOverRefused
-
-    repo, approved, base, head = carry_repo(tmp_path, merge_edits={"notes.txt": "resolved by hand\n"})
+@pytest.mark.parametrize("pr_registers", [False, True])
+def test_carry_over_refuses_hand_authored_change_outside_registry(monkeypatch, tmp_path, pr_registers):
+    # A registry the PR edits is not the reviewed one; only the base tip's copy counts.
+    own = REGISTRY + "  notes.txt:\n    command: [python, gen.py]\n"
+    repo, approved, base, head = carry_repo(
+        tmp_path,
+        merge_edits={"notes.txt": "resolved by hand\n"},
+        pr_files={"scripts/config/generated_paths.yaml": own} if pr_registers else None,
+    )
     comments = approved_lineage(tmp_path, approved)
-    with pytest.raises(CarryOverRefused, match=r"notes\.txt") as refused:
-        run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments)
-    assert refused.value.reason == MERGE_RESULT
+    assert refused_reason(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments) == (
+        "merge-result"
+    )
 
 
-def test_carry_over_refuses_generated_bytes_the_generator_does_not_reproduce(monkeypatch, tmp_path):
-    from scripts.review.approval_carryover import REPRODUCTION, CarryOverRefused
-
-    repo, approved, base, head = carry_repo(tmp_path)
-    (repo / "gen.txt").write_text("hand-picked side of the conflict\n")
-    _carry_git(repo, "commit", "-qa", "--amend", "--no-edit")
+@pytest.mark.parametrize("case", ["hand-picked-bytes", "writes-outside-targets", "deleted-target"])
+def test_carry_over_refuses_unreproduced_generated_paths(monkeypatch, tmp_path, case):
+    repo, approved, base, head = carry_repo(
+        tmp_path, generator=STRAY_GENERATOR if case == "writes-outside-targets" else GENERATOR
+    )
+    if case == "hand-picked-bytes":
+        (repo / "gen.txt").write_text("hand-picked side of the conflict\n")
+        _carry_git(repo, "commit", "-qa", "--amend", "--no-edit")
+    elif case == "deleted-target":
+        _carry_git(repo, "rm", "-q", "gen.txt")
+        _carry_git(repo, "commit", "-q", "--amend", "--no-edit")
     head = _carry_git(repo, "rev-parse", "HEAD")
     comments = approved_lineage(tmp_path, approved)
-    with pytest.raises(CarryOverRefused) as refused:
-        run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments)
-    assert refused.value.reason == REPRODUCTION
+    assert refused_reason(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments) == (
+        "reproduction"
+    )
+    assert _carry_git(repo, "worktree", "list", "--porcelain").count("worktree ") == 1
 
 
 @pytest.mark.parametrize(
-    "case", ["rejection-at-approved-head", "seat-latest-elsewhere", "in-flight", "unpublished", "failed-with-verdict"]
+    "case",
+    [
+        "rejection-at-approved-head",
+        "seat-latest-elsewhere",
+        "in-flight",
+        "unpublished",
+        "failed-with-verdict",
+        "failed-without-reply",
+        "done-without-reply",
+        "marker-without-run",
+        "marker-model-differs",
+        "archived-run-unpublished",
+    ],
 )
 def test_carry_over_refuses_incomplete_review_lineage(monkeypatch, tmp_path, case):
-    from scripts.review.approval_carryover import LINEAGE, CarryOverRefused
-
     repo, approved, base, head = carry_repo(tmp_path)
     comments = approved_lineage(tmp_path, approved)
     tasks = tmp_path / "tasks"
     if case == "rejection-at-approved-head":
-        carry_task(tasks, "review-r3", approved, reply="VERDICT: BLOCKED")
-        comments.append(carry_marker(approved, "BLOCKED", task_id="review-r3", family="openai", minute=3))
+        carry_review(tasks, comments, "review-r3", approved, "BLOCKED", family="openai", minute=3)
     elif case == "seat-latest-elsewhere":
-        comments.append(carry_marker("c" * 40, "CHANGES_REQUESTED", task_id="review-r0", family="openai", minute=0))
+        carry_review(tasks, comments, "review-r0", "c" * 40, "REQUEST_CHANGES", family="openai", minute=0)
     elif case == "in-flight":
-        carry_task(tasks, "review-r3", head, status="running", reply="")
+        carry_review(tasks, comments, "review-r3", head, "APPROVE", status="running", publish=False, reply="")
     elif case == "unpublished":
-        carry_task(tasks, "review-r3", approved, reply="VERDICT: REQUEST_CHANGES")
+        carry_review(tasks, comments, "review-r3", approved, "REQUEST_CHANGES", minute=3, publish=False)
+    elif case == "failed-with-verdict":
+        carry_review(tasks, comments, "review-r3", approved, "REQUEST_CHANGES", status="timeout", publish=False)
+    elif case == "failed-without-reply":
+        carry_review(tasks, comments, "review-r3", approved, "APPROVE", status="failed", publish=False, reply=False)
+    elif case == "done-without-reply":
+        (tasks / "review-r2.result").unlink()
+    elif case == "marker-without-run":
+        carry_review(tasks, comments, "review-r3", approved, "APPROVE", family="openai", minute=3)
+        (tasks / "review-r3.json").unlink()
+    elif case == "marker-model-differs":
+        record = json.loads((tasks / "review-r2.json").read_text())
+        (tasks / "review-r2.json").write_text(json.dumps({**record, "model": CARRY_MODELS["google"]}))
     else:
-        carry_task(tasks, "review-r3", approved, status="timeout", reply="VERDICT: REQUEST_CHANGES")
-    with pytest.raises(CarryOverRefused) as refused:
-        run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments)
-    assert refused.value.reason == LINEAGE
+        archive = tasks / recorder.ARCHIVE_DIR_NAME
+        archive.mkdir()
+        carry_review(archive, [], "review-r2", approved, "REQUEST_CHANGES", minute=0, publish=False)
+    assert refused_reason(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments) == "lineage"
+
+
+def test_carry_over_refuses_a_family_label_its_model_does_not_carry(monkeypatch, tmp_path):
+    repo, approved, base, head = carry_repo(tmp_path)
+    comments = approved_lineage(tmp_path, approved)
+    comments[-1]["body"] = (
+        comments[-1]["body"]
+        .replace("family=anthropic", "family=openai")
+        .replace("Reviewer family: anthropic", "Reviewer family: openai")
+    )
+    assert refused_reason(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments) == "lineage"
 
 
 def test_carry_over_requires_two_seats_for_ukrainian_review(monkeypatch, tmp_path):
-    from scripts.review.approval_carryover import LINEAGE, CarryOverRefused
+    from scripts.review.approval_carryover import CarryOverRefused
 
     repo, approved, base, head = carry_repo(tmp_path)
-    carry_task(tmp_path / "tasks", "review-uk", approved)
-    comments = [
-        carry_marker(approved, "APPROVED", task_id="review-uk", family="anthropic", minute=1, profile="ukrainian")
-    ]
+    comments: list[dict] = []
+    carry_review(tmp_path / "tasks", comments, "review-uk", approved, "APPROVE", profile="ukrainian")
     with pytest.raises(CarryOverRefused, match="requires 2") as refused:
         run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments)
-    assert refused.value.reason == LINEAGE
+    assert refused.value.reason == "lineage"
 
 
-def test_carry_over_refuses_red_same_head_ci(monkeypatch, tmp_path):
-    from scripts.review.approval_carryover import CI, CarryOverRefused
-
+@pytest.mark.parametrize("ci", [("FAILURE",), ("SUCCESS", "FAILURE")])
+def test_carry_over_refuses_red_same_head_ci_including_at_publication(monkeypatch, tmp_path, ci):
     repo, approved, base, head = carry_repo(tmp_path)
     comments = approved_lineage(tmp_path, approved)
-    with pytest.raises(CarryOverRefused) as refused:
-        run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments, ci="FAILURE")
-    assert refused.value.reason == CI
+    assert refused_reason(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments, ci=ci) == "ci"
+
+
+def test_carry_over_receipt_readback_mismatch_reports_unknown_state(monkeypatch, tmp_path):
+    repo, approved, base, head = carry_repo(tmp_path)
+    comments = approved_lineage(tmp_path, approved)
+    with pytest.raises(recorder.RecordError, match="readback mismatch"):
+        run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments, readback=False)
 
 
 def test_recorder_cli_routes_carry_over_verb(monkeypatch):

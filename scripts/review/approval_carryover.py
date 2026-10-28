@@ -10,9 +10,10 @@ typed reason):
    second parent B is an ancestor of the PR's base branch at check time.
 2. ``merge-result``: every path where N's tree differs from ``git merge-tree
    --write-tree A B``, and every path that merge reports as conflicted, is in the
-   checked-in generated-path registry (``scripts/config/generated_paths.yaml``).
+   generated-path registry as merged on the base branch
+   (``scripts/config/generated_paths.yaml``).
 3. ``reproduction``: each such path's generator, run on N in a clean temporary
-   worktree, reproduces N's committed bytes exactly.
+   worktree, reproduces N's committed bytes exactly and writes nothing else.
 4. ``lineage``: every review task of the PR is terminal, every review verdict is
    published, and A's APPROVE is the latest verdict of every reviewer seat.
 5. ``ci``: same-head CI on N is green.
@@ -32,11 +33,13 @@ import subprocess
 import sys
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
 from typing import Any
 
 import yaml
+from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -59,6 +62,7 @@ from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.publish.github import Request
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.language_lane import is_ukrainian_review
+from scripts.review.reviewer_resolver import resolve_family
 from scripts.review.verdict_parser import recognized_verdicts
 
 REGISTRY_PATH = "scripts/config/generated_paths.yaml"
@@ -153,16 +157,20 @@ def check_pinned_merge(repo_root: Path, *, approved: str, head: str, base_tip: s
     return base
 
 
-def load_registry(repo_root: Path, head: str) -> dict[str, Generated]:
-    """The generated-path registry as committed at ``head``."""
-    raw = _git(repo_root, "cat-file", "blob", f"{head}:{REGISTRY_PATH}", ok=(0, 128))
+def load_registry(repo_root: Path, base_tip: str) -> dict[str, Generated]:
+    """The generated-path registry as merged on the base branch tip.
+
+    Only the merged copy has passed review and the merge gate; a registry the PR
+    edits, or one N carries, never decides which of N's paths may differ.
+    """
+    raw = _git(repo_root, "cat-file", "blob", f"{base_tip}:{REGISTRY_PATH}", ok=(0, 128))
     try:
         data = yaml.safe_load(raw.decode("utf-8")) if raw else None
     except (UnicodeDecodeError, yaml.YAMLError):
         data = None
     entries = data.get("generated_paths") if isinstance(data, dict) and data.get("schema_version") == 1 else None
     if not isinstance(entries, dict) or not entries:
-        raise CarryOverRefused(REGISTRY, f"{REGISTRY_PATH} missing or malformed at {head}")
+        raise CarryOverRefused(REGISTRY, f"{REGISTRY_PATH} missing or malformed at {base_tip}")
     registry: dict[str, Generated] = {}
     for path, entry in entries.items():
         command = entry.get("command") if isinstance(entry, dict) else None
@@ -172,6 +180,7 @@ def load_registry(repo_root: Path, head: str) -> dict[str, Generated]:
             or pure.is_absolute()
             or ".." in pure.parts
             or str(pure) != path
+            or path == REGISTRY_PATH
             or not isinstance(command, list)
             or not command
             or not all(isinstance(part, str) and part for part in command)
@@ -201,6 +210,34 @@ def check_merge_result(
     return tree, paths
 
 
+def _committed_blob(repo_root: Path, head: str, path: str) -> bytes:
+    """``path``'s bytes at ``head``, which must be a regular file.
+
+    Git records no entry beneath a symlink, so a regular blob at ``path`` also
+    proves that none of its parent directories is a symlink.
+    """
+    listing = _git(repo_root, "ls-tree", "-z", head, "--", path)
+    meta, _, name = listing.rstrip(b"\0").partition(b"\t")
+    fields = meta.split()
+    if (
+        name.decode("utf-8", "replace") != path
+        or len(fields) != 3
+        or fields[:2]
+        not in (
+            [b"100644", b"blob"],
+            [b"100755", b"blob"],
+        )
+    ):
+        raise CarryOverRefused(REPRODUCTION, f"{path} is not a regular file committed at {head}")
+    return _git(repo_root, "cat-file", "blob", fields[2].decode("ascii"))
+
+
+def _worktree_changes(tree: Path) -> list[str]:
+    """Tracked or untracked (not ignored) paths that differ from the worktree's commit."""
+    raw = _git(tree, "status", "--porcelain=v1", "-z", "--untracked-files=all", "--no-renames")
+    return sorted({entry[3:] for entry in _nul_list(raw)})
+
+
 def check_reproduction(
     repo_root: Path, *, head: str, paths: Sequence[str], registry: Mapping[str, Generated]
 ) -> list[dict[str, str]]:
@@ -223,16 +260,18 @@ def check_reproduction(
             head,
             env=env,
         )
+        pointer = tree / ".git"
+        hidden = tree.with_name("git-pointer")
         try:
+            committed = {path: _committed_blob(repo_root, head, path) for path in paths}
             node_modules = repo_root / "node_modules"
             if node_modules.is_dir() and not (tree / "node_modules").exists():
                 # Generators may need the checkout's Node packages, as they need its interpreter.
                 (tree / "node_modules").symlink_to(node_modules, target_is_directory=True)
             for path in paths:
-                target = tree / path
-                if not target.parent.resolve().is_relative_to(tree.resolve()) or target.is_dir():
-                    raise CarryOverRefused(REPRODUCTION, f"{path} is not a file inside the worktree")
-                target.unlink(missing_ok=True)
+                (tree / path).unlink()
+            # Generators run without a route into the shared Git directory.
+            pointer.rename(hidden)
             for command in dict.fromkeys(registry[path].command for path in paths):
                 argv = [sys.executable, *command[1:]] if command[0] == "python" else list(command)
                 try:
@@ -246,19 +285,26 @@ def check_reproduction(
                     raise CarryOverRefused(
                         REPRODUCTION, f"generator {' '.join(command)} exited {result.returncode}: {detail}"
                     )
+            hidden.rename(pointer)
+            outside = [path for path in _worktree_changes(tree) if path not in paths and path != "node_modules"]
+            if outside:
+                raise CarryOverRefused(
+                    REPRODUCTION, "generators wrote outside the registered paths: " + ", ".join(outside)
+                )
             receipts = []
             for path in paths:
-                committed = _git(repo_root, "cat-file", "blob", f"{head}:{path}", ok=(0, 128))
                 produced = tree / path
-                if not produced.is_file() or produced.is_symlink():
+                if produced.is_symlink() or not produced.is_file():
                     raise CarryOverRefused(REPRODUCTION, f"generator did not produce {path}")
-                if produced.read_bytes() != committed:
+                if produced.read_bytes() != committed[path]:
                     raise CarryOverRefused(
                         REPRODUCTION, f"regenerated {path} differs from the bytes committed at {head}"
                     )
-                receipts.append({"path": path, "sha256": hashlib.sha256(committed).hexdigest()})
+                receipts.append({"path": path, "sha256": hashlib.sha256(committed[path]).hexdigest()})
             return receipts
         finally:
+            if hidden.exists() and not pointer.exists():
+                hidden.rename(pointer)
             try:
                 _git(repo_root, "worktree", "remove", "--force", str(tree))
             except CarryOverRefused:
@@ -276,39 +322,80 @@ def _is_review_task(task: Mapping[str, Any]) -> bool:
     )
 
 
-def lineage_tasks(task_root: Path, *, repository: str, number: int, branch: str) -> dict[str, dict[str, Any]]:
-    """Every hot or archived review task record of this PR, by task id."""
-    tasks: dict[str, dict[str, Any]] = {}
+@dataclass(frozen=True)
+class ReviewRun:
+    """One dispatch run of a review task: its record and its reply, read together."""
+
+    task_id: str
+    record: Mapping[str, Any]
+    reply: str | None
+
+
+def _read_run(path: Path, record: Mapping[str, Any]) -> ReviewRun:
+    """Read one run's reply, refusing a reply its record's digest disowns."""
+    result = path.with_suffix(".result")
     try:
-        # A hot record is read after its archived copy, so the hot one wins (``_hot_or_archived``).
+        raw = result.read_bytes() if result.exists() else None
+    except OSError as exc:
+        raise CarryOverRefused(LINEAGE, f"review task {path.stem} reply unreadable: {exc}") from None
+    expected = record.get("result_sha256")
+    if raw is not None and expected is not None and hashlib.sha256(raw).hexdigest() != expected:
+        raise CarryOverRefused(LINEAGE, f"review task {path.stem} reply does not match its recorded digest")
+    try:
+        reply = raw.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n") if raw is not None else None
+    except UnicodeDecodeError:
+        raise CarryOverRefused(LINEAGE, f"review task {path.stem} reply is not UTF-8") from None
+    return ReviewRun(path.stem, record, reply)
+
+
+def lineage_runs(task_root: Path, *, repository: str, number: int, branch: str) -> list[ReviewRun]:
+    """Every hot and archived review run of this PR; an archived run is kept beside a hot one."""
+    try:
         paths = [*sorted((task_root / ARCHIVE_DIR_NAME).glob("*.json")), *sorted(task_root.glob("*.json"))]
     except OSError as exc:
         raise CarryOverRefused(LINEAGE, f"task ledger unavailable: {exc}") from None
+    runs = []
     for path in paths:
         try:
-            task = json.loads(path.read_text(encoding="utf-8"))
+            record = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as exc:
             raise CarryOverRefused(LINEAGE, f"task record {path.name} unreadable: {exc}") from None
-        if not isinstance(task, dict) or task.get("status") in {"dry_run", "dry-run"} or not _is_review_task(task):
+        if (
+            not isinstance(record, dict)
+            or record.get("status") in {"dry_run", "dry-run"}
+            or not _is_review_task(record)
+        ):
             continue
-        if not isinstance(task.get("repository"), str) or normalize_repository(
-            task["repository"]
+        if not isinstance(record.get("repository"), str) or normalize_repository(
+            record["repository"]
         ) != normalize_repository(repository):
             continue
-        if task.get("pr") == number or task.get("review_branch") == branch:
-            tasks[path.stem] = {**task, "_result_path": path.with_suffix(".result")}
-    return tasks
+        if record.get("pr") == number or record.get("review_branch") == branch:
+            runs.append(_read_run(path, record))
+    return runs
 
 
-def check_lineage(
-    *,
-    tasks: Mapping[str, Mapping[str, Any]],
-    comments: Sequence[Mapping[str, Any]],
-    login: str,
-    approved: str,
-) -> list[str]:
-    """Condition 4: return the seats (reviewer families) whose latest verdict is A's APPROVE."""
-    markers: list[tuple[tuple[str, str], dict[str, Any]]] = []
+def _started(record: Mapping[str, Any]) -> str | None:
+    """The run's start as the recorder writes it into a marker."""
+    try:
+        started = datetime.fromisoformat(str(record.get("started_at") or "").replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if started.tzinfo is None:
+        return None
+    return started.astimezone(UTC).isoformat(timespec="microseconds")
+
+
+def _run_models(record: Mapping[str, Any]) -> set[str]:
+    """Model ids a marker may name for this run: its own and its runtime-reported one."""
+    values = (record.get("model"), record.get("resolved_model"))
+    return {value for value in values if isinstance(value, str)} | {
+        canonical_cursor_model(value) for value in values if isinstance(value, str)
+    }
+
+
+def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[tuple[tuple[str, str], dict[str, Any]]]:
+    markers = []
     for index, comment in enumerate(comments):
         body = comment.get("body") if isinstance(comment, Mapping) else None
         if not isinstance(body, str):
@@ -321,32 +408,62 @@ def check_lineage(
         ):
             continue
         marker = parse_marker(body)
+        ref = comment.get("id", index)
         if marker is None:
-            raise CarryOverRefused(LINEAGE, f"unreadable verdict marker in comment {comment.get('id', index)}")
+            raise CarryOverRefused(LINEAGE, f"unreadable verdict marker in comment {ref}")
         if comment.get("created_at") != comment.get("updated_at"):
-            raise CarryOverRefused(LINEAGE, f"verdict marker in comment {comment.get('id', index)} was edited")
-        if marker["family"] in UNATTESTED_FAMILIES:
-            raise CarryOverRefused(LINEAGE, f"verdict by task {marker['task']} has no attested reviewer family")
+            raise CarryOverRefused(LINEAGE, f"verdict marker in comment {ref} was edited")
+        if marker["family"] in UNATTESTED_FAMILIES or resolve_family(marker["model"]) != marker["family"]:
+            raise CarryOverRefused(LINEAGE, f"verdict marker in comment {ref} has no attested reviewer family")
         markers.append(((marker["started"], str(comment.get("created_at"))), marker))
-    published = {marker["task"]: marker for _, marker in markers}
-    for task_id, task in sorted(tasks.items()):
-        status = task.get("status")
+    return markers
+
+
+def check_lineage(
+    *,
+    runs: Sequence[ReviewRun],
+    comments: Sequence[Mapping[str, Any]],
+    login: str,
+    approved: str,
+) -> list[str]:
+    """Condition 4: return the seats (reviewer families) whose latest verdict is A's APPROVE.
+
+    Every published verdict must belong to a run on record, and every run must
+    be terminal with a reply: a finished run's verdict, model, family and start
+    must match its published marker, and any other run's reply must carry no
+    verdict at all.
+    """
+    markers = _trusted_markers(comments, login)
+    claimed: set[tuple[str, str]] = set()
+    for run in runs:
+        status = run.record.get("status")
         if status not in TERMINAL_TASK_STATUSES:
-            raise CarryOverRefused(LINEAGE, f"review task {task_id} is not terminal (status {status!r})")
-        if status == "done":
-            marker = published.get(task_id)
-            if marker is None:
-                raise CarryOverRefused(LINEAGE, f"review task {task_id} finished but its verdict is unpublished")
-            if marker["sha"] != task.get("worktree_base_sha"):
-                raise CarryOverRefused(LINEAGE, f"published verdict of {task_id} names another head than its task")
+            raise CarryOverRefused(LINEAGE, f"review task {run.task_id} is not terminal (status {status!r})")
+        if run.reply is None:
+            raise CarryOverRefused(LINEAGE, f"review task {run.task_id} ({status}) has no reply on record")
+        if status != "done":
+            if recognized_verdicts(run.reply):
+                raise CarryOverRefused(LINEAGE, f"review task {run.task_id} ({status}) carries an unpublished verdict")
             continue
-        result = task["_result_path"]
         try:
-            reply = result.read_text(encoding="utf-8") if result.exists() else ""
-        except (OSError, UnicodeError) as exc:
-            raise CarryOverRefused(LINEAGE, f"review task {task_id} reply unreadable: {exc}") from None
-        if recognized_verdicts(reply):
-            raise CarryOverRefused(LINEAGE, f"review task {task_id} ({status}) carries an unpublished verdict")
+            verdict = recorder._review_verdict_and_count(run.reply)[0]
+        except recorder.RecordError as exc:
+            raise CarryOverRefused(LINEAGE, f"review task {run.task_id} verdict unreadable: {exc}") from None
+        started = _started(run.record)
+        published = [m for _, m in markers if m["task"] == run.task_id and m["started"] == started]
+        if not published:
+            raise CarryOverRefused(LINEAGE, f"review task {run.task_id} finished but its verdict is unpublished")
+        for marker in published:
+            if (
+                marker["sha"] != run.record.get("worktree_base_sha")
+                or marker["verdict"] != verdict
+                or marker["model"] not in _run_models(run.record)
+            ):
+                raise CarryOverRefused(LINEAGE, f"published verdict of {run.task_id} conflicts with its task record")
+        claimed.add((run.task_id, started))
+    for _, marker in markers:
+        if (marker["task"], marker["started"]) not in claimed:
+            raise CarryOverRefused(LINEAGE, f"published verdict of task {marker['task']} has no review run on record")
     current = lookup_verdict(list(comments), approved, login)
     if current.state != "APPROVED":
         raise CarryOverRefused(LINEAGE, f"approved head {approved} reads as {current.state}, not APPROVED")
@@ -360,7 +477,7 @@ def check_lineage(
             )
     seats = sorted(latest)
     ukrainian = any(marker["sha"] == approved and is_ukrainian_review(marker) for _, marker in markers) or any(
-        task.get("worktree_base_sha") == approved and is_ukrainian_review(task) for task in tasks.values()
+        run.record.get("worktree_base_sha") == approved and is_ukrainian_review(run.record) for run in runs
     )
     required = UKRAINIAN_SEATS if ukrainian else 1
     if len(seats) < required:
@@ -441,46 +558,57 @@ def carry_over(
     base_tip = _base_tip(repository, str(pull.get("baseRefName") or ""))
     _ensure_commits(repo_root, [head, base_tip])
     base = check_pinned_merge(repo_root, approved=approved_head, head=head, base_tip=base_tip)
-    registry = load_registry(repo_root, head)
+    registry = load_registry(repo_root, base_tip)
     tree, paths = check_merge_result(repo_root, approved=approved_head, base=base, head=head, registry=registry)
     regenerated = check_reproduction(repo_root, head=head, paths=paths, registry=registry)
     adapter = recorder.GitHubAdapter(repo_root)
-    try:
-        login = adapter.identity()
-        comments = adapter.comments(repository, pr_number)
-    except SweepError as exc:
-        raise CarryOverRefused(LINEAGE, f"PR verdicts unavailable: {exc}") from None
-    tasks = lineage_tasks(task_root, repository=repository, number=pr_number, branch=branch)
-    seats = check_lineage(tasks=tasks, comments=comments, login=login, approved=approved_head)
-    check_ci(pull, head)
-    receipt = {
-        "pr": pr_number,
-        "approved_head": approved_head,
-        "base_commit": base,
-        "head": head,
-        "merge_tree": tree,
-        "regenerated": regenerated,
-        "seats": seats,
-        "review_tasks": len(tasks),
-    }
-    body = receipt_comment(receipt)
-    check_texts(normalize_repository(repository), [body], environment={})
     with recorder.sha_lock(repository, head, lock_root):
-        if _pull(repository, pr_number).get("headRefOid") != head:
+        # CI and review evidence are read here, under the lock and just before
+        # publication, so nothing that arrives during regeneration is missed.
+        current = _pull(repository, pr_number)
+        if current.get("headRefOid") != head:
             raise CarryOverRefused(TARGET, "PR head moved during the carry-over check")
+        check_ci(current, head)
         try:
-            existing = any(
-                item.get("body") == body
-                and item.get("user", {}).get("login") == login
-                and item.get("author_association") in TRUSTED_ASSOCIATIONS
-                for item in adapter.comments(repository, pr_number)
-            )
+            login = adapter.identity()
+            comments = adapter.comments(repository, pr_number)
         except SweepError as exc:
-            raise CarryOverRefused(TARGET, f"PR comments unavailable: {exc}") from None
+            raise CarryOverRefused(LINEAGE, f"PR verdicts unavailable: {exc}") from None
+        runs = lineage_runs(task_root, repository=repository, number=pr_number, branch=branch)
+        seats = check_lineage(runs=runs, comments=comments, login=login, approved=approved_head)
+        receipt = {
+            "pr": pr_number,
+            "approved_head": approved_head,
+            "base_commit": base,
+            "head": head,
+            "merge_tree": tree,
+            "regenerated": regenerated,
+            "seats": seats,
+            "review_tasks": len(runs),
+        }
+        body = receipt_comment(receipt)
+        check_texts(normalize_repository(repository), [body], environment={})
+        existing = any(
+            item.get("body") == body
+            and item.get("user", {}).get("login") == login
+            and item.get("author_association") in TRUSTED_ASSOCIATIONS
+            and item.get("created_at") == item.get("updated_at")
+            for item in comments
+        )
         if not existing:
             posted = recorder._run_json(Request("issue-comment-json", repo=repository, number=pr_number, body=body))
-            if not isinstance(posted, dict) or not isinstance(posted.get("id"), int):
+            comment_id = posted.get("id") if isinstance(posted, dict) else None
+            if not isinstance(comment_id, int):
                 raise recorder.RecordError("receipt comment post response lacked id; retry to reconcile")
+            readback = recorder._run_json(Request("read-comment", repo=repository, number=comment_id))
+            if (
+                not isinstance(readback, dict)
+                or readback.get("body") != body
+                or readback.get("user", {}).get("login") != login
+                or readback.get("author_association") not in TRUSTED_ASSOCIATIONS
+                or readback.get("created_at") != readback.get("updated_at")
+            ):
+                raise recorder.RecordError("receipt comment readback mismatch; publication state unknown")
         try:
             recorder.post_commit_status(
                 repository=repository,

@@ -75,8 +75,8 @@ rejection is followed by a head move (the fix, or a base update with
   records it. The recorder refuses with a typed reason unless all of these hold: N's first parent is the
   approved head A and its second parent is on the base branch; every path where N differs
   from `git merge-tree --write-tree` of the two parents, and every conflicted path, is in
-  `scripts/config/generated_paths.yaml`; each such path regenerates byte-for-byte in a clean
-  worktree of N; every review task of the PR is terminal, every verdict is published, and
+  the base branch's `scripts/config/generated_paths.yaml`; each such path regenerates
+  byte-for-byte in a clean worktree of N, with no write outside those paths; every review task of the PR is terminal, every verdict is published, and
   A's APPROVE is each seat's latest verdict; and same-head CI on N is green. A carry-over is
   not a review and opens no round: it posts the `fleet/approval-carry-over` status and a
   receipt comment on N. Any other difference takes a normal delta round. Designated
