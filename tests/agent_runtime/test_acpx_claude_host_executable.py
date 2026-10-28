@@ -1073,6 +1073,14 @@ def test_cleanup_leaves_a_held_copy_and_reports_it_typed_and_logged(launcher_che
     assert not copy.parents[2].exists()
 
 
+def test_holder_scan_finds_a_copy_through_a_symlinked_ancestor(launcher_checkouts):
+    copy = _accepted_copy(launcher_checkouts)
+    alias = launcher_checkouts.root / "home-alias"
+    alias.symlink_to(launcher_checkouts.root, target_is_directory=True)
+    with _held_open(copy, launcher_checkouts.proc):
+        assert acpx_module._claude_acp_copies_in_use(alias / "copies") == {copy.parents[2].name}
+
+
 @pytest.mark.skipif(os.geteuid() == 0, reason="root removes any entry")
 def test_a_copy_that_cannot_be_removed_is_a_typed_logged_failure(launcher_checkouts, caplog):
     copy = _accepted_copy(launcher_checkouts)
@@ -1211,6 +1219,7 @@ def test_cleanup_refuses_unknown_holders_and_reports_the_failure(launcher_checko
         "held",
         "same_denied",
         "foreign",
+        "foreign_non_ascii_name",
         "status_denied",
         "missing_uid",
         "bad_ids",
@@ -1232,7 +1241,7 @@ def test_cleanup_checks_task_uid_when_proc_inode_is_root_owned(launcher_checkout
     if visibility == "held":
         (fds / "0").symlink_to(copy)
     status = process / "status"
-    uid = os.getuid() + 1 if visibility == "foreign" else os.getuid()
+    uid = os.getuid() + 1 if visibility in {"foreign", "foreign_non_ascii_name"} else os.getuid()
     statuses = {
         "missing_uid": "Name:\tchild\n",
         "bad_ids": "Uid:\tunknown\tunknown\tunknown\tunknown\n",
@@ -1246,6 +1255,8 @@ def test_cleanup_checks_task_uid_when_proc_inode_is_root_owned(launcher_checkout
         (fds / "0").symlink_to(copy)
     if visibility == "non_ascii":
         status.write_bytes(b"Uid:\t\xff\n")
+    if visibility == "foreign_non_ascii_name":
+        status.write_bytes(b"Name:\t\xff\n" + status.read_bytes())
     real_stat, real_read_text, real_listdir = Path.stat, Path.read_text, os.listdir
 
     def process_stat(path, *args, **kwargs):
@@ -1262,7 +1273,7 @@ def test_cleanup_checks_task_uid_when_proc_inode_is_root_owned(launcher_checkout
         return real_read_text(path, *args, **kwargs)
 
     def listdir(path):
-        if path == fds and visibility in {"foreign", "same_denied"}:
+        if path == fds and visibility in {"foreign", "foreign_non_ascii_name", "same_denied"}:
             raise PermissionError(errno.EACCES, "Permission denied")
         return real_listdir(path)
 
@@ -1270,7 +1281,7 @@ def test_cleanup_checks_task_uid_when_proc_inode_is_root_owned(launcher_checkout
     monkeypatch.setattr(Path, "read_text", read_text)
     monkeypatch.setattr(acpx_module.os, "listdir", listdir)
     parsed = _parse(plan, _ok_stream())
-    if visibility in {"foreign", "free", "exited_enoent", "exited_esrch"}:
+    if visibility in {"foreign", "foreign_non_ascii_name", "free", "exited_enoent", "exited_esrch"}:
         assert (parsed.ok, parsed.response) == (True, "51")
         assert plan.metadata["claude_code_launcher_cleanup"] == "removed"
         assert not copy.parents[2].exists()
