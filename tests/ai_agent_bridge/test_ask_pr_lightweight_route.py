@@ -259,3 +259,159 @@ def test_ask_review_refuses_a_fable_pin_before_any_dispatch(monkeypatch, target,
             stdout_only=False,
             hard_timeout=None,
         )
+
+
+@pytest.fixture()
+def registered_histories(tmp_path, monkeypatch):
+    from scripts.dispatcher import git as dispatch_git
+    from scripts.orchestration import fleet_repos
+    from tests.test_review_target_resolution import _git, _init_repo, _publish_pr_branch
+
+    roots, heads = {}, {}
+    for key, slug in (("public", "example/public"), ("infra-private", "example/sibling")):
+        seed = tmp_path / (key + "-seed")
+        seed.mkdir()
+        root = _init_repo(seed).rename(tmp_path / key)
+        _git(root, "config", "core.hooksPath", os.devnull)
+        (root / "app.py").write_text(f"print({key!r})\n", encoding="utf-8")
+        _git(root, "add", "app.py")
+        _git(root, "commit", "-qm", "distinct target")
+        _git(root, "remote", "add", "origin", f"https://github.com/{slug}.git")
+        heads[key] = _git(root, "rev-parse", "HEAD").stdout.strip()
+        _publish_pr_branch(root, "review-shared", heads[key])
+        roots[key] = root
+    assert heads["public"] != heads["infra-private"]
+    config = tmp_path / "repos.yaml"
+    config.write_text(
+        "repos:\n"
+        "  public: {github: example/public, local_name: public, default: true}\n"
+        "  infra-private: {github: example/sibling, local_name: infra-private}\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(fleet_repos, "_CONFIG_PATH", config)
+    monkeypatch.setattr(dispatch_git, "CONFIG", config)
+    monkeypatch.setattr(dispatch_git, "ROOT", roots["public"])
+    monkeypatch.setattr(_cli, "REPO_ROOT", roots["public"])
+    monkeypatch.setenv("GIT_ALLOW_PROTOCOL", "file")
+    return roots, heads
+
+
+@pytest.mark.parametrize("selector", [None, "public", "infra-private", " INFRA-PRIVATE "])
+@pytest.mark.parametrize("target_flag", ["--pr", "--branch"])
+def test_registered_review_targets_use_selected_history(
+    registered_histories, tmp_path, monkeypatch, selector, target_flag, acp_guard,
+):
+    from pathlib import Path
+
+    from scripts.dispatcher import git as dispatch_git
+    from scripts.dispatcher.cli import build_parser
+
+    roots, heads = registered_histories
+    key = selector.strip().lower() if selector else "public"
+    calls = []
+    result = tmp_path / "review-result"
+    result.write_text("VERDICT: APPROVE\n", encoding="utf-8")
+    monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(tmp_path))
+    real_run = subprocess.run
+
+    def boundary(command, **kwargs):
+        if command[0] == "gh":
+            assert kwargs["cwd"] == roots[key]
+            assert command[command.index("--repo") + 1] == f"example/{'public' if key == 'public' else 'sibling'}"
+            return subprocess.CompletedProcess(command, 0, _same_repo_payload(head_sha=heads[key], branch="review-shared"))
+        if len(command) > 2 and command[1] == "scripts/dispatch.py":
+            calls.append(command)
+            if command[2] == "wait":
+                return subprocess.CompletedProcess(command, 0, json.dumps({
+                    "status": "done", "result_file": str(result), "worktree_base_sha": heads[key],
+                }))
+            parsed = build_parser().parse_args(command[2:])
+            assert parsed.repo == (key if selector is not None else None)
+            root, _ = dispatch_git.resolve_repo(parsed.repo)
+            assert root == roots[key]
+            _, _, sha = dispatch_git.worktree_plan(
+                root, parsed.agent, parsed.task_id, parsed.pinned_head or parsed.branch,
+            )
+            assert sha == heads[key]
+            prompt = Path(parsed.prompt_file).read_text()
+            if target_flag == "--pr":
+                assert parsed.pinned_head == heads[key]
+                assert heads[key] in prompt
+                assert heads["infra-private" if key == "public" else "public"] not in prompt
+            return subprocess.CompletedProcess(command, 0)
+        return real_run(command, **kwargs)
+
+    monkeypatch.setattr(_cli.github_client, "run", boundary)
+    monkeypatch.setattr(subprocess, "run", boundary)
+    argv = ["ask-claude", "Review this.", "--task-id", "selected-review", target_flag]
+    argv.append("12" if target_flag == "--pr" else "review-shared")
+    if selector is not None:
+        argv.extend(["--repo", selector])
+    _cli._handle_ask_claude(_cli._build_parser().parse_args(argv))
+    assert len(calls) == 2
+    assert acp_guard["count"] == 0
+
+
+@pytest.mark.parametrize("selector", ["unknown", "infra-private"])
+def test_invalid_repository_refuses_before_provider(registered_histories, monkeypatch, selector, capsys):
+    from scripts.orchestration import fleet_repos
+
+    if selector == "infra-private":
+        original = fleet_repos.load_fleet_repos
+        from dataclasses import replace
+
+        monkeypatch.setattr(fleet_repos, "load_fleet_repos", lambda: {
+            key: replace(repo, local_name="absent-private-checkout") if key == selector else repo
+            for key, repo in original().items()
+        })
+        # The resolver imports this function, so use the same test catalog there.
+        monkeypatch.setattr("scripts.review.target_resolution.load_fleet_repos", fleet_repos.load_fleet_repos)
+    monkeypatch.setattr(_cli.github_client, "run", lambda *_a, **_k: pytest.fail("forge/provider reached"))
+    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", lambda *_a, **_k: pytest.fail("provider reached"))
+    args = _cli._build_parser().parse_args([
+        "ask-claude", "Review.", "--task-id", "invalid-review", "--branch", "review-shared", "--repo", selector,
+    ])
+    with pytest.raises(SystemExit) as exc:
+        _cli._handle_ask_claude(args)
+    output = str(exc.value) + capsys.readouterr().err
+    assert "absent-private-checkout" not in output
+    assert "example/sibling" not in output
+    assert ("unknown --repo" if selector == "unknown" else "PRIVATE_REVIEW_TARGET_UNRESOLVED") in output
+
+
+def test_repository_selector_requires_review_intent(monkeypatch):
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", lambda *_a, **_k: pytest.fail("ACP reached"))
+    args = _cli._build_parser().parse_args([
+        "ask-claude", "Question.", "--task-id", "ordinary", "--repo", "public",
+    ])
+    with pytest.raises(SystemExit, match="--repo requires review intent"):
+        _cli._handle_ask_claude(args)
+
+
+@pytest.mark.parametrize("failure", ["wrong-origin", "missing-branch", "forge-error", "cross-repository"])
+def test_selected_repository_refusals_preserve_private_boundary(registered_histories, monkeypatch, failure, capsys):
+    from tests.test_review_target_resolution import _git
+
+    roots, heads = registered_histories
+    if failure == "wrong-origin":
+        _git(roots["infra-private"], "remote", "set-url", "origin", "https://github.com/example/wrong.git")
+    elif failure == "missing-branch":
+        _git(roots["infra-private"], "--git-dir", str(roots["infra-private"].parent / "infra-private-canonical.git"),
+             "update-ref", "-d", "refs/heads/review-shared")
+    payload = json.loads(_same_repo_payload(head_sha=heads["infra-private"], branch="review-shared"))
+    payload["isCrossRepository"] = failure == "cross-repository"
+
+    def forge(command, **kwargs):
+        assert failure != "wrong-origin", "invalid identity reached forge"
+        return subprocess.CompletedProcess(
+            command, int(failure == "forge-error"), json.dumps(payload), "private-diagnostic-sentinel",
+        )
+
+    monkeypatch.setattr(_cli.github_client, "run", forge)
+    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", lambda *_a, **_k: pytest.fail("provider reached"))
+    args = _cli._build_parser().parse_args([
+        "ask-claude", "Review.", "--task-id", "refused-review", "--pr", "12", "--repo", "infra-private",
+    ])
+    with pytest.raises(SystemExit) as exc:
+        _cli._handle_ask_claude(args)
+    assert "private-diagnostic-sentinel" not in str(exc.value) + capsys.readouterr().err

@@ -462,6 +462,10 @@ def _add_review_options(parser: argparse.ArgumentParser) -> None:
         ),
     )
     review_target = parser.add_mutually_exclusive_group()
+    parser.add_argument(
+        "--repo",
+        help="Registered fleet_repos.yaml key for native review, e.g. public (default: public checkout); requires review intent",
+    )
     review_target.add_argument(
         "--branch",
         help=(
@@ -1544,7 +1548,7 @@ def _is_full_git_sha(value: object) -> bool:
     return isinstance(value, str) and len(value) == 40 and all(c in "0123456789abcdef" for c in value)
 
 
-def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
+def _resolve_same_repo_pr_head(pr_number: int, *, repo_root: Path | None = None) -> tuple[str, str]:
     """Return the live canonical branch and pinned SHA for one same-repo PR.
 
     One ``gh pr view`` plus a live ref observation. A cross-repository PR, or any failure to resolve
@@ -1552,8 +1556,9 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
     """
     from scripts.review.target_resolution import TargetResolutionError, _origin_github_repo, live_canonical_branch_head
 
+    repo_root = Path(REPO_ROOT) if repo_root is None else repo_root
     try:
-        repository = _origin_github_repo(Path(REPO_ROOT))
+        repository = _origin_github_repo(repo_root)
     except (OSError, TargetResolutionError) as exc:
         raise SystemExit(f"ask --pr {pr_number}: canonical repository unavailable") from exc
     if repository is None:
@@ -1572,7 +1577,7 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
         proc = github_client.run(
             cmd,
             fresh=True,
-            cwd=REPO_ROOT,
+            cwd=repo_root,
             capture_output=True,
             text=True,
             check=False,
@@ -1580,15 +1585,11 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise SystemExit(
-            f"ask --pr {pr_number}: could not resolve the PR head ({exc}); refusing to review main"
+            f"ask --pr {pr_number}: could not resolve the PR head; refusing to review main"
         ) from exc
     if proc.returncode != 0:
-        detail = (proc.stderr or proc.stdout or "").strip().replace("\n", " ")
-        if len(detail) > 200:
-            detail = detail[:200] + "…"
-        suffix = f": {detail}" if detail else ""
         raise SystemExit(
-            f"ask --pr {pr_number}: gh pr view failed (exit {proc.returncode}){suffix}; refusing to review main"
+            f"ask --pr {pr_number}: gh pr view failed (exit {proc.returncode}); refusing to review main"
         )
     try:
         payload = json.loads(proc.stdout or "")
@@ -1605,7 +1606,7 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
 
     try:
-        branch = validate_plain_branch_name(branch, repo_root=REPO_ROOT)
+        branch = validate_plain_branch_name(branch, repo_root=repo_root)
     except UnsafeBranchNameError as exc:
         raise SystemExit(
             f"ask --pr {pr_number}: PR head branch {branch!r} is not a local branch name; "
@@ -1614,7 +1615,7 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
     if not _is_full_git_sha(head_sha):
         raise SystemExit(f"ask --pr {pr_number}: PR payload has no full head SHA; refusing to review main")
     try:
-        head_sha = live_canonical_branch_head(Path(REPO_ROOT), branch, repository=repository)
+        head_sha = live_canonical_branch_head(repo_root, branch, repository=repository)
     except TargetResolutionError as exc:
         raise SystemExit(f"ask --pr {pr_number}: {exc}; refusing to review main") from exc
     return branch, head_sha
@@ -1709,6 +1710,21 @@ def _handle_acp_compat(args, target: str) -> None:
     review = bool(getattr(args, "review", False)) or str(getattr(args, "type", "") or "").strip().casefold() == "review"
     pr_number = getattr(args, "pr", None)
     branch = getattr(args, "branch", None)
+    repo = getattr(args, "repo", None)
+    review_root = Path(REPO_ROOT)
+    if repo is not None:
+        if not (review or pr_number is not None or branch is not None):
+            raise SystemExit("--repo requires review intent (--review, --type review, --pr or --branch)")
+        from scripts.orchestration.fleet_repos import FleetRepoError, canonical_repo_key
+        from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
+
+        try:
+            repo = canonical_repo_key(repo)
+            review_root = resolve_review_repository(
+                review_root, repo, mode="pr" if pr_number is not None else "branch", branch=branch,
+            )
+        except (FleetRepoError, TargetResolutionError) as exc:
+            raise SystemExit(str(exc)) from None
     resolved_head_sha: str | None = None
     if pr_number is not None or branch is not None:
         # #7010: sealed review-pr was removed in #8520. Route
@@ -1717,7 +1733,10 @@ def _handle_acp_compat(args, target: str) -> None:
         # review mode is forced so the reply still needs a grounded verdict.
         # #8706: --pr must check out that PR's head, not the default base.
         if pr_number is not None:
-            branch, resolved_head_sha = _resolve_same_repo_pr_head(int(pr_number))
+            branch, resolved_head_sha = (
+                _resolve_same_repo_pr_head(int(pr_number), repo_root=review_root)
+                if repo is not None else _resolve_same_repo_pr_head(int(pr_number))
+            )
             target_desc = f"PR #{pr_number} — exact head {resolved_head_sha} (`gh pr diff {pr_number}`)"
         else:
             target_desc = f"remote branch origin/{branch}"
@@ -1741,7 +1760,7 @@ def _handle_acp_compat(args, target: str) -> None:
             content_error = gemini_pr_or_branch_content_error(
                 pr_number=int(pr_number) if pr_number is not None else None,
                 branch=branch,
-                repo_root=str(REPO_ROOT),
+                repo_root=str(review_root),
                 head_sha=resolved_head_sha,
             )
             if content_error is not None:
@@ -1769,6 +1788,7 @@ def _handle_acp_compat(args, target: str) -> None:
             # None resolves the seat's per-seat timeout profile default;
             # --no-timeout bypasses it with a generous ceiling.
             hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else None,
+            repo=repo,
             branch=branch,
             resolved_head_sha=resolved_head_sha,
             pinned_head=resolved_head_sha,
@@ -1837,6 +1857,7 @@ def _dispatch_headless_review(
     output_path: str | None,
     stdout_only: bool,
     hard_timeout: int | None,
+    repo: str | None = None,
     branch: str | None = None,
     resolved_head_sha: str | None = None,
     pinned_head: str | None = None,
@@ -1873,6 +1894,7 @@ def _dispatch_headless_review(
             model=model,
             effort=effort,
             hard_timeout=hard_timeout,
+            repo=repo,
             branch=branch,
             review_profile=review_profile,
             pinned_head=pinned_head,
