@@ -42,6 +42,7 @@ from scripts.lexicon.enrich_manifest import (
 from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS, resolve_dict_slug
 from scripts.wiki.sum20_official import (
     DEFAULT_USER_AGENT,
+    MIN_CRAWL_DELAY_S,
     PARSER_VERSION,
     SUM20_SOURCE_ID,
     Sum20ParseError,
@@ -447,7 +448,10 @@ def acquire(
         report(conn, directory, clock())
         return EXIT[job["state"]]
     spec = json.loads(job["spec"])
-    host = "sum20ua" if spec["dictionary"] == SUM20_SOURCE_ID else "slovnyk"
+    official = spec["dictionary"] == SUM20_SOURCE_ID
+    host = "sum20ua" if official else "slovnyk"
+    # Apply the current minimum to persisted jobs too, without rewriting their identity.
+    request_delay = max(spec["delay"], MIN_CRAWL_DELAY_S if official else 0)
     while True:
         row = conn.execute(
             "SELECT * FROM results WHERE status NOT IN ('positive','not_found','reused') ORDER BY position LIMIT 1"
@@ -473,7 +477,7 @@ def acquire(
             now = clock()
             # Reserve before GET, including a worst-case request timeout. A killed GET cannot
             # leave the next process sending a request immediately into the same host.
-            atomic_json(throttle, {"next_request_at": now + spec["timeout"] + spec["delay"]})
+            atomic_json(throttle, {"next_request_at": now + spec["timeout"] + request_delay})
             with conn:
                 conn.execute("UPDATE job SET state='running',reason=''")
                 conn.execute(
@@ -484,7 +488,7 @@ def acquire(
             report(conn, directory, now)
             status, http, payload, retry = fetch_once(session, spec, row, now)
             finished = clock()
-            delay = max(spec["delay"], spec["backoff"] * 2 ** row["attempts"], retry)
+            delay = max(request_delay, spec["backoff"] * 2 ** row["attempts"], retry)
             state = {"blocked": "blocked", "parse_error": "parse_error", "transient_error": "transient"}.get(
                 status, "running"
             )
@@ -513,7 +517,7 @@ def acquire(
                     (row["position"], finished, status, http),
                 )
             # Hold the host lock until outcome is durable, then permit the next host slot.
-            atomic_json(throttle, {"next_request_at": finished + max(spec["delay"], retry)})
+            atomic_json(throttle, {"next_request_at": finished + max(request_delay, retry)})
         report(conn, directory, clock())
         if state != "running":
             return EXIT[state]
@@ -644,7 +648,7 @@ Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_
         "--delay",
         type=float,
         default=4,
-        help="Minimum shared host spacing after every request, including retries; default 4 seconds, minimum 2",
+        help="Minimum shared host spacing after every request, including retries; default 4 seconds, minimum 2; official SUM-20 always uses at least 10",
     )
     result.add_argument("--timeout", type=float, default=30, help="HTTP timeout seconds; default 30, e.g. 60")
     result.add_argument(

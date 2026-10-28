@@ -40,6 +40,8 @@ except ModuleNotFoundError as exc:
 
 SUM20_SOURCE_ID = "sum20_official"
 SUM20_OFFICIAL_BASE_URL = "https://sum20ua.com"
+# Recorded crawl-delay in docs/sources/permissions-register.yaml, sum20_robots.
+MIN_CRAWL_DELAY_S = 10.0
 SUM20_ATTRIBUTION_LABEL = (
     "Словник української мови у 20 томах (УМІФ НАН України; Інститут мовознавства ім. О. О. Потебні НАН України)"
 )
@@ -811,5 +813,5 @@ def fetch_sum20_wordid(
             last_code = None
             last_error = "network request failure"
         if attempt < max(0, retries):
-            sleep(_retry_delay(response, retry_backoff_s, attempt))
+            sleep(max(MIN_CRAWL_DELAY_S, _retry_delay(response, retry_backoff_s, attempt)))
     return FetchOutcome("transient_error", error_text=last_error or "request retries exhausted", http_status=last_code)

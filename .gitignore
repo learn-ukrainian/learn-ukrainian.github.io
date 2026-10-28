@@ -249,12 +249,14 @@ docs/damage-report-*.csv
 /curriculum/l2-uk-en/evidence/**/lesson-*.mutex
 
 # Batch runner state (generated at runtime). Allow schema-capped atlas-job
-# git receipts only — registry/result/pull trees stay ignored.
+# git receipts only — registry/result/pull trees stay ignored. Review budget
+# extension requests are committed decisions (scripts/review/budget_extension.py).
 batch_state/*
 !batch_state/atlas-jobs/
 batch_state/atlas-jobs/*
 !batch_state/atlas-jobs/receipts/
 !batch_state/atlas-jobs/receipts/**
+!batch_state/review-budget-extensions/
 
 # Orchestration build artifacts — TRACKED for pipeline analytics
 # Lock files and raw LLM dumps are excluded; everything else is valuable data

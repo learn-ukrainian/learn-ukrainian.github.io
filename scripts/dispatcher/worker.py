@@ -11,6 +11,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from scripts.agent_runtime import bounded_advisory
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
@@ -18,6 +19,24 @@ from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers,
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 from scripts.dispatcher.watchdog import DeadlineExpired, communicate, deadlines, liveness_paths
+from scripts.review.model_catalog import advisory_role_policy
+
+
+def _seal_advisory_result(record: dict, result: Path) -> None:
+    """Seal an advisory decision's result as written (``bounded_advisory.seal_advisor_result``).
+
+    A seal that cannot be computed is left out, so every consumer refuses the
+    result as unsealed; it never stops the record from settling.
+    """
+    try:
+        fence = advisory_role_policy(record["advisory_role"]).fence
+        response = result.read_bytes().decode("utf-8")
+    except (KeyError, OSError, UnicodeDecodeError, ValueError) as exc:
+        record["advisory_seal_error"] = f"{type(exc).__name__}: {exc}"[:300]
+        return
+    record[bounded_advisory.SEAL_FIELD] = bounded_advisory.seal_advisor_result(
+        response, model=record.get("model"), run_nonce=record.get("run_nonce"), fence=fence
+    )
 
 
 def _identity(pid: int | None) -> str | None:
@@ -431,6 +450,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if text is not None:
                 spec.final_file.write_text(text)
                 spec.final_file.chmod(0o600)
+                if record.get("advisory_role") is not None:
+                    _seal_advisory_result(record, spec.final_file)
             record.update(
                 status=status,
                 returncode=returncode,

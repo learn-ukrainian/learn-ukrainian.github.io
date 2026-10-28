@@ -160,7 +160,7 @@ inline:
     title: Ранку, дня чи вечора?
     instruction: Обери частину доби для речення.
     items:
-      - prompt: 'Я прокидаюся о сьомій ___.'
+      - prompt: "(07:00.) Я прокидаюся о сьомій ___."
         options:
           - text: ранку
             correct: true
@@ -169,7 +169,7 @@ inline:
           - text: вечора
             correct: false
         explanation: 'Waking up at seven is usually о сьомій ранку.'
-      - prompt: 'Я снідаю о восьмій ___.'
+      - prompt: "(08:00.) Я снідаю о восьмій ___."
         options:
           - text: ранку
             correct: true
@@ -178,7 +178,7 @@ inline:
           - text: ночі
             correct: false
         explanation: 'Breakfast is normally о восьмій ранку.'
-      - prompt: 'Я обідаю о першій ___.'
+      - prompt: "(13:00.) Я обідаю о першій ___."
         options:
           - text: дня
             correct: true
@@ -187,7 +187,7 @@ inline:
           - text: ночі
             correct: false
         explanation: 'О першій дня means at one in the afternoon.'
-      - prompt: 'Зустріч о третій ___.'
+      - prompt: "(15:00.) Зустріч о третій ___."
         options:
           - text: дня
             correct: true
@@ -196,7 +196,7 @@ inline:
           - text: ночі
             correct: false
         explanation: 'О третій дня is a simple afternoon meeting time.'
-      - prompt: 'Я вечеряю о сьомій ___.'
+      - prompt: "(19:00.) Я вечеряю о сьомій ___."
         options:
           - text: вечора
             correct: true
@@ -205,7 +205,7 @@ inline:
           - text: дня
             correct: false
         explanation: 'Dinner is normally о сьомій вечора.'
-      - prompt: 'Фільм об одинадцятій ___.'
+      - prompt: "(23:00.) Фільм об одинадцятій ___."
         options:
           - text: вечора
             correct: true

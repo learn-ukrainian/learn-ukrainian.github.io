@@ -52,11 +52,12 @@ SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "module-build-report-
 
 
 def draft_is_current(ledger: dict[str, Any], draft_path: Path, current_hashes: dict[str, str]) -> bool:
-    """A draft is reusable only after a completed check-12 attempt on identical bytes."""
+    """Reuse identical bytes after check 12 or while awaiting requires confirmation."""
     if ledger.get("terminal_layer") is not None or not draft_path.is_file():
         return False
     snapshot = ledger.get("last_success") or {}
-    return snapshot.get("through_check") == 12 and snapshot.get("inputs") == {
+    saved = ledger.get("awaiting_requires") or (snapshot.get("inputs") if snapshot.get("through_check") == 12 else None)
+    return saved == {
         **current_hashes,
         "draft_sha256": hashlib.sha256(draft_path.read_bytes()).hexdigest(),
     }
@@ -317,6 +318,13 @@ def build_module(
                     **(runner_kwargs or {}),
                 )
                 ledger = load_ledger(ledger_path, slug, n)
+                if report.get("awaiting_requires_confirmation"):
+                    questions = (state_dir / f"lesson-{n}.requires-questions.yaml").relative_to(repo_root)
+                    prompt_file = (state_dir / f"lesson-{n}.requires-confirm.prompt.md").relative_to(repo_root)
+                    stopped = _stop(n, f"awaiting_requires_confirmation: {questions}; {prompt_file}", check=7)
+                    stopped["regenerations"] = ledger["regenerations"]
+                    results.append(stopped)
+                    break
                 if report["passed"] and report.get("manifest_sha256"):
                     results.append(
                         {
@@ -334,7 +342,9 @@ def build_module(
                     break
                 bad = next((row for row in report.get("checks", []) if row["status"] == "failed"), None)
                 check = report.get("stopping_check") or (bad["check"] if bad else report.get("passed_through", 0))
-                reason = public_diagnostic(report.get("reason") or (bad["reason"] if bad else "build_failed"), repo_root)
+                reason = public_diagnostic(
+                    report.get("reason") or (bad["reason"] if bad else "build_failed"), repo_root
+                )
                 layer = bad["layer"] if bad else (report.get("layer") or "engine")
                 if layer == "harness":
                     # The real runner records its failure. Report-only runners need

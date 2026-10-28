@@ -41,7 +41,10 @@ def questions_from_draft(draft: dict[str, Any], lesson: dict[str, Any], inputs: 
             if any(not isinstance(option, str) for option in options) or key is None or not 0 <= key < len(options):
                 raise _bad(f"{aid}/{index}: invalid option or key")
             sentence, demand = receipts.requirement_sentence(item), item.get("requires")
-            if not sentence or not isinstance(demand, dict):
+            sentence_required = typ in {"quiz", "multiple-choice"} or (
+                typ == "fill-in" and item.get("mode") == "form-choice"
+            )
+            if (sentence_required and not sentence) or not isinstance(demand, dict):
                 raise _bad(f"{aid}/{index}: invalid sentence or requires")
             questions.append(
                 {
@@ -60,11 +63,7 @@ def questions_from_draft(draft: dict[str, Any], lesson: dict[str, Any], inputs: 
 def write_questions(state_dir: Path, n: int, batch: dict[str, Any]) -> None:
     questions_path = state_dir / f"lesson-{n}.requires-questions.yaml"
     lock.write(questions_path, lock.yaml_bytes(batch))
-    prompt = (
-        _environment(PROMPTS_DIR)
-        .get_template("requires-confirm.md.j2")
-        .render(batch=batch)
-    )
+    prompt = _environment(PROMPTS_DIR).get_template("requires-confirm.md.j2").render(batch=batch)
     lock.atomic_write(state_dir / f"lesson-{n}.requires-confirm.prompt.md", prompt.encode("utf-8"))
 
 

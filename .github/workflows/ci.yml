@@ -501,7 +501,8 @@ jobs:
     name: PR changed tests and guards
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
-    # PR #11922 measured a 660s superset with two workers. Its 1,500s
+    # PR #11922 measured supported selection at 402s/567s and a 660s superset
+    # with two workers. The 1,500s invariant ceiling
     # subprocess ceiling plus 480s changed tests and setup fit this job budget.
     timeout-minutes: 40
     steps:
