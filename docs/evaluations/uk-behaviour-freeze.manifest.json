@@ -18,7 +18,35 @@
         "dialect": 16,
         "heritage": 16,
         "rare_valid": 16
-      }
+      },
+      "protected_by_family": {
+        "fresh_lesson": {
+          "dialect": 5,
+          "heritage": 5,
+          "rare_valid": 5
+        },
+        "fresh_activities": {
+          "dialect": 10,
+          "heritage": 10,
+          "rare_valid": 10
+        },
+        "v7_module": {
+          "dialect": 4,
+          "heritage": 4,
+          "rare_valid": 4
+        },
+        "card_meaning_review": {
+          "dialect": 5,
+          "heritage": 5,
+          "rare_valid": 5
+        },
+        "passage_review": {
+          "dialect": 16,
+          "heritage": 16,
+          "rare_valid": 16
+        }
+      },
+      "protected_opportunities": 120
     },
     "selection": {
       "fresh_lesson": 5,
@@ -32,7 +60,35 @@
         "dialect": 16,
         "heritage": 16,
         "rare_valid": 16
-      }
+      },
+      "protected_by_family": {
+        "fresh_lesson": {
+          "dialect": 5,
+          "heritage": 5,
+          "rare_valid": 5
+        },
+        "fresh_activities": {
+          "dialect": 10,
+          "heritage": 10,
+          "rare_valid": 10
+        },
+        "v7_module": {
+          "dialect": 4,
+          "heritage": 4,
+          "rare_valid": 4
+        },
+        "card_meaning_review": {
+          "dialect": 5,
+          "heritage": 5,
+          "rare_valid": 5
+        },
+        "passage_review": {
+          "dialect": 16,
+          "heritage": 16,
+          "rare_valid": 16
+        }
+      },
+      "protected_opportunities": 120
     },
     "final": {
       "fresh_lesson": 5,
@@ -46,7 +102,35 @@
         "dialect": 16,
         "heritage": 16,
         "rare_valid": 16
-      }
+      },
+      "protected_by_family": {
+        "fresh_lesson": {
+          "dialect": 5,
+          "heritage": 5,
+          "rare_valid": 5
+        },
+        "fresh_activities": {
+          "dialect": 10,
+          "heritage": 10,
+          "rare_valid": 10
+        },
+        "v7_module": {
+          "dialect": 4,
+          "heritage": 4,
+          "rare_valid": 4
+        },
+        "card_meaning_review": {
+          "dialect": 5,
+          "heritage": 5,
+          "rare_valid": 5
+        },
+        "passage_review": {
+          "dialect": 16,
+          "heritage": 16,
+          "rare_valid": 16
+        }
+      },
+      "protected_opportunities": 120
     }
   },
   "repeats": 3,
@@ -55,7 +139,9 @@
     "candidate_outcomes": 324,
     "judge_outcomes": 324,
     "passage_seeds": 192,
-    "passage_protected_spans": 144
+    "passage_protected_spans": 144,
+    "protected_opportunities": 360,
+    "repeated_protected_opportunities": 1080
   },
   "budget": {
     "candidate_calls": 324,
@@ -65,7 +151,7 @@
     "wall_seconds": 172800,
     "concurrency": 2,
     "per_provider_concurrency": 1,
-    "sources_calls_total_ceiling": 31104,
+    "sources_calls_total_ceiling": 26784,
     "retry_calls": 0
   },
   "candidate": {
@@ -113,7 +199,7 @@
     },
     {
       "path": "docs/evaluations/uk-behaviour-freeze.md",
-      "sha256": "3cd889f99473b36797df02d5b4ca5b23ac0f69f5ddfbc87e59a71a6a9ddd65d2"
+      "sha256": "2efcd4465b4db89839982b2fd3e1c15285855c2a384ab34639399c35cd94ce5b"
     },
     {
       "path": "docs/projects/ua-eval-harness/V0_2_EVIDENCE_PLAN.md",
@@ -324,6 +410,12 @@
       "sha256": null,
       "status": "MISSING",
       "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/card-review-prompt",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "coordinator-and-evaluation-maintainer"
     }
   ],
   "approval_references": [

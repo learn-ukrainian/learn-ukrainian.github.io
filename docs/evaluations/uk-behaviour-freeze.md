@@ -27,7 +27,7 @@ Each split has exactly these slots. Every item has a unique opaque identifier.
 | Fresh lesson | `scripts/build/fresh/writer.py`, its lesson prompt and `fresh-build-writer-contract.md`. One lesson, four prescribed inputs, no search. No authored stress, card glosses or reference text. | 5 | 5 | 5 |
 | Fresh activities | Same writer, restricted to the plan's fill-in or quiz activities and existing per-level schemas. One complete lesson draft per request; score its activity fields separately. | 10 | 10 | 10 |
 | V7 module | `curriculum-writer.md`, one complete V7 module with its supplied plan, inventory and size policy. Sources access follows that agent contract. Never apply this prompt to the fresh writer. | 4 | 4 | 4 |
-| Card meaning review | `word_card_assembly.py`, `word_card_contrasts.py` and `golden-set-spec.md`. Review supplied source-bound card assertions for meaning, scope and context. Assembly stays deterministic; the candidate cannot invent replacement source values. | 5 | 5 | 5 |
+| Card meaning review | `word_card_assembly.py`, `word_card_contrasts.py` and `golden-set-spec.md` supply deterministic production artifacts, not a model-review prompt. This measurement adapter is missing and blocked under G3. Review source-bound assertions; never invent replacement source values or replace deterministic assembly. | 5 | 5 | 5 |
 | Passage review | `content-review-prompt.md`, applied to planted-error and clean passages; preserve source text except evidence-supported repairs. The harness captures corrected text and findings. | 12 | 12 | 12 |
 | Total independent items | Each family remains a separate report. | 36 | 36 | 36 |
 
@@ -48,11 +48,22 @@ retained. All four clean passages contain two spans from each stratum; the
 eight mixed passages contain one from each stratum. Seeds never overlap
 protected spans. All remaining correct tokens still enter false-alarm scoring.
 
+Every non-passage item also has exactly three protected opportunities, one
+per stratum. The per-split family counts are 15 fresh-lesson, 30 fresh-activity,
+12 V7, 15 card-review and 48 passage opportunities, totaling 120, or 40 per
+stratum. All five card cases include all three strata. These are contextual
+source assertions, cited references or permitted displays; they do not license
+out-of-inventory forms in scored activities or new vocabulary teaching. Fresh
+writers preserve the required reference and avoid false accusations; the
+engine owns displayed source text. Each opportunity and its required behavior
+must be source-adjudicated in G1, including clean no-change expectations.
+
 The 64 seeds per split cover the existing scorer's 17 error types: three per
 type, with a fourth seed for the first 13 types in `common.ERROR_TYPES` order.
 No optional style preference is a planted error. The three splits total 108
-items, 192 seeds and 144 protected spans. Three repeats give 324 candidate
-outcomes, including 576 seed opportunities and 432 protected-span opportunities.
+items, 192 seeds, 144 passage protected spans and 360 protected opportunities
+across all families. Three repeats give 324 candidate outcomes, including 576
+seed opportunities and 1,080 protected opportunities, of which 432 are passage spans.
 These are small exploratory denominators, not evidence of general Ukrainian
 competence. Safety results report raw counts and intervals per stratum.
 
@@ -62,7 +73,10 @@ The coordinator appoints a private data steward independent of the later
 reflector. Development is available for debugging and later reflection only
 after separate optimization approval. Selection is consulted only at the
 predeclared candidate decisions of that later approval, never fed back as
-item-level answers, traces or critiques. Final is used once after selection.
+item-level answers, traces or critiques. Final runs once for the baseline and
+once for one later selected candidate under separate approval. Each evaluation
+includes the three frozen repeats. After that comparison, retire this final
+set; another selection requires a fresh sealed final set and new approval.
 Final prompts, answers, labels, Sources traces, judge notes and outputs never
 reach any later reflector, including through logs, retrieval or research pointers.
 Only aggregate final metrics and a pass/fail decision leave final custody.
@@ -97,6 +111,9 @@ approve each label against Sources before sealing, without candidate outputs.
 At least one is outside OpenAI for the first candidate. A disagreement or thin
 source is `UNRESOLVED`, not majority gold. Resolve it before baseline admission;
 an unresolved item cannot be dropped or replaced after viewing results.
+Label adjudicators must satisfy the same verified-error, clean-passage and
+protected-case qualification criteria as judges below, with demonstrated
+facet coverage for their assigned labels. G1 retains their qualification receipts.
 
 ## Authority and verifiable receipts
 
@@ -139,8 +156,20 @@ to their own Sources receipts in a private sidecar. Other writers' production
 output schemas also stay unchanged. A claim with no verifiable receipt earns
 zero, even when its spelling is plausible. Candidate-provided IDs alone cannot
 authenticate a receipt. Fabricated receipts also invalidate the cell and stop
-execution pending coordinator investigation. Do not edit production behaviour
+execution pending coordinator investigation, with status
+`INVALID_FABRICATED_RECEIPT` and zero positive reward for the whole cell.
+Do not edit production behaviour
 to improve receipt coverage during this baseline.
+
+Distinguish a candidate's missing evidence from evaluator unavailability.
+A candidate-supplied claim with a missing receipt earns zero; a completed
+Sources-backed judgment that contradicts or fails to support it also earns
+zero. If a judge cannot check a claim because its call budget expires, a tool
+is unavailable or authority coverage is missing, mark the cell
+`UNRESOLVED_EVALUATOR`, with the limitation's owner. Missing receipts still
+give zero provisional credit, but that cell cannot enter a valid comparison
+or establish a candidate failure. Fresh writers' judge-created evidence follows
+this rule. No extra calls, omissions or denominator changes repair such a cell.
 
 ## Immutable scorer and reward
 
@@ -169,8 +198,9 @@ or 1 where none were prescribed, `F` the count of false corrections including
 unsupported accusations, `S` positive-authority uses of СУМ-11, and `H` harmful
 protected corrections. The frozen reward is
 `R = T*C*P - F - 2*S - 5*H`. A missing receipt gives its claim zero credit;
-a fabricated one gives the entire item zero positive credit and triggers the
-stop above. Report all component counts and receipt coverage alongside `R`.
+a fabricated one has the invalid-cell consequence above, with zero positive
+credit and an immediate stop. Invalid or unresolved cells have provisional
+scores only and block conclusions. Report all component counts and receipt coverage alongside `R`.
 Tool-call count, latency and spend are diagnostics only and earn no reward.
 
 No aggregate reward can override safety. Any later candidate must introduce
@@ -183,6 +213,9 @@ within items, never independent samples. Later acceptance requires the lower
 bound of contextual-correctness improvement above zero, no task-completion
 decline, no false-correction increase, the safety rule above and complete cells.
 These are future decision rules, not authorization to search or reflect.
+An independently verified harmful accusation about any additional protected
+form also enters `H` and the safety gate; an unlabelled extra claim cannot
+escape protection. It does not enlarge the frozen preservation denominator.
 
 ## Candidate, blind judges and execution budget
 
@@ -196,13 +229,18 @@ Sampling uses the provider default where the CLI has no sampling control;
 record that explicitly rather than claiming a fixed temperature or seed.
 Input and output token limits match each pinned production path and must be
 recorded as concrete values or an attested provider default in the private seal.
+The card-review row has no existing production model contract. Its private
+prompt hash slot is `private://uk-behaviour-v1/card-review-prompt`, owned by
+the evaluation maintainer under G3. The coordinator must obtain advisor
+acceptance of that prompt's scope and pin its bytes before baseline admission;
+the data seal cannot silently invent a production prompt after this freeze.
 
 The first judge is Opus, `{model: claude-opus-5-5, family: anthropic,
 harness: claude, effort: high, sources: required}`. A qualified data steward
 holds the identity key and gives the judge only opaque item/output IDs, the
 request, scoring anchors and source evidence. Candidate names, variant,
 repeat number, claimed reward, timing and other judges' decisions are hidden.
-Shuffle outputs with sealed seed 10453. Each of the 324 outputs receives one
+Shuffle outputs with frozen seed 10453. Each of the 324 outputs receives one
 absolute-rubric judgment. A disputed or unsupported judgment is unresolved and
 blocks conclusions; no silent extra paid judge calls are admitted.
 
@@ -227,7 +265,9 @@ invocations across all three sets. Each invocation has a 1,200-second hard
 timeout; global wall time is at most 48 hours, concurrency at most two, with
 at most one live call per provider. Whichever limit binds first stops launches.
 At most 32 Sources calls per tool-enabled candidate or judge invocation and
-32 deterministic evidence calls per output are allowed, at most 31,104 total.
+32 deterministic evidence calls per output are allowed, at most 26,784 total:
+32 times 189 tool-enabled candidate calls, 324 judge calls and 324 deterministic
+scoring passes. The 135 fresh-writer calls have no Sources allowance.
 Fresh writers have zero tool calls. Qualification and label adjudication must
 already be sealed; this budget includes no extra model calls for them, retries,
 canaries, replacements, new conditions or reflection. Record rate limits,
@@ -258,12 +298,15 @@ substitute СУМ-11 for a missing modern authority.
 | --- | --- | --- |
 | G1: private 108-item membership, label and exposure seals absent | Coordinator-appointed data steward | Three disjoint request and label bundles with hashes, all fixed counts, source receipts, adjudication and tested final isolation. |
 | G2: matching reviewer-qualification packet unlocated | Coordinator and original reviewer-trial custodian | Retained bytes, provenance, labels, exposure record and qualified outside-family judge receipt. |
-| G3: production-path adapters, absolute semantic scorer and receipt binding absent | Evaluation maintainer appointed by coordinator | Extension of existing uk-preamble runner, pinned code/rubric/template hashes and a no-paid execution proof against sealed fixtures. Preserve writer tool boundaries. |
+| G3: production-path adapters, absolute semantic scorer, card-review prompt and receipt binding absent | Coordinator and evaluation maintainer | Advisor acceptance and pinned bytes for the proposed card-review prompt; extension of existing uk-preamble runner, pinned code/rubric/template hashes and a no-paid execution proof against sealed fixtures. Preserve writer tool boundaries. |
 | G4: partial СУМ-20/ВТС MCP coverage and unsealed runtime settings | Sources custodian and baseline runner | Facet-appropriate retained evidence for every label, explicit coverage gaps, pinned settings and Sources identity. The public asset hashes are not a runnable baseline seal. |
 
 The approved phase stops when all 324 candidate cells and all 324 judge cells
 have a typed outcome and its report lists failures, uncertainty, coverage gaps
-and owners. Missing tools, unresolved labels, contaminated items, incomplete
+and owners. For final, the public/coordinator report contains only aggregate
+metrics and typed cell counts by family; item-level failures, answers, judge
+notes and traces remain with the final steward and never reach a reflector.
+Missing tools, unresolved labels, contaminated items, incomplete
 cells or exhausted budgets prohibit improvement claims. A baseline report is
 measurement, not an optimization result. No automatic reflection follows it.
 This task stops earlier with an independently reviewed, held spec PR; the
