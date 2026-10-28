@@ -104,6 +104,10 @@ def test_partial_clone_origin_fetch_imports_without_lazy_fetch(partial_clone, mo
         ("remote.origin.pushurl", "https://example.invalid/push.git"),
         ("remote.upstream.url", "https://example.invalid/upstream.git"),
         ("url.https://example.invalid/.insteadOf", "unused:"),
+        # Subsections are case-sensitive, so these configure other remotes.
+        ("remote.Origin.promisor", "true"),
+        ("remote.ORIGIN.partialclonefilter", "blob:none"),
+        ("remote.Origin.url", "https://example.invalid/other.git"),
     ],
 )
 def test_partial_clone_keeps_other_remote_config_refusals(partial_clone, key, value):
