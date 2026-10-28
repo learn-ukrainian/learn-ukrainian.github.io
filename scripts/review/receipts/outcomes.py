@@ -390,6 +390,38 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
     if invalid_input or (tool == "verify_stress" and re.match(r"^[^\n]+ — invalid_input:", stripped)):
         return {"call_status": "ok", "hits": 0, "status": "error", "unavailable": False}
 
+    if tool in {"query_ulif_records", "query_wikipedia_cached"}:
+        # These payloads contain arbitrary source prose. Only structured state
+        # determines evidence availability, before generic substring heuristics.
+        outcome, hits = "unavailable", 0
+        if tool == "query_wikipedia_cached" and isinstance(parsed, dict):
+            if parsed.get("status") == "hit" and isinstance(parsed.get("response"), str) and parsed["response"].strip():
+                outcome, hits = "hits_found", 1
+            elif parsed.get("status") == "negative":
+                outcome = "no_hits"
+        elif isinstance(parsed, dict):
+            records = parsed.get("records")
+            if isinstance(records, list) and records and all(isinstance(r, dict) for r in records):
+                populated = all(
+                    isinstance(r.get("entries"), list) and r["entries"]
+                    and all(isinstance(e, dict) for e in r["entries"]) for r in records
+                )
+                entries = [e for r in records for e in r["entries"]] if populated else []
+                if populated and entries and all(e.get("status") == "not_found" and e.get("retrieved_at") for e in entries):
+                    outcome = "no_hits"
+                elif (
+                    populated
+                    and all(r.get("status") == "ok" and r.get("verified") is True for r in records)
+                    and all(
+                        isinstance(e, dict) and e.get("verified") is True and e.get("status") == "ok"
+                        and e.get("sections_state") == "complete" and e.get("forms_state") == "complete"
+                        and e.get("retrieved_at") and re.fullmatch(r"[a-f0-9]{64}", str(e.get("content_sha256", "")))
+                        for r in records for e in r["entries"]
+                    )
+                ):
+                    outcome, hits = "hits_found", len(entries)
+        return {"call_status": "ok", "hits": hits, "status": outcome, "unavailable": outcome == "unavailable"}
+
     if tool == "search_resources" and "Resource catalogue ingestion is required before searching resources." in text:
         return {"call_status": "ok", "hits": 0, "status": "unavailable", "unavailable": True}
 

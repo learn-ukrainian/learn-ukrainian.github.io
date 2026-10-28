@@ -24,6 +24,46 @@ from yaml_activities import ActivityParser
 pytestmark = pytest.mark.reads_content
 
 
+def test_settle_ulif_authority_is_available_to_the_review_route():
+    from scripts.review.receipts.ledger import review_tools
+
+    assert settle.SOURCES["query_ulif_records"] == "ulif"
+    assert "query_ulif_records" in settle.SEARCH_TOOLS["lemma"] <= review_tools()
+    assert "query_ulif" not in settle.SOURCES
+    assert "query_ulif" not in settle.SEARCH_TOOLS["lemma"]
+
+
+@pytest.mark.parametrize("available", [True, False])
+def test_settle_can_use_verified_ulif_but_not_cache_miss(world, available):
+    entry = {"canonical_headword": "fixture", "status": "ok", "verified": True, "forms_state": "complete", "sections_state": "complete", "retrieved_at": "2026-10-01T00:00:00Z", "content_sha256": "a" * 64}
+    record = {"word": "fixture", "status": "ok" if available else "not_found", "verified": available, "entries": [entry] if available else []}
+    receipt = ledger.append(
+        world.own_ledger, review_id="settle-R", attempt_id="settle-A", manifest_sha256=world.current_hash(),
+        tool="query_ulif_records", server_version="fixture", arguments={"words": ["fixture"]},
+        snapshots={}, status="ok", result=json.dumps({"records": [record]}),
+    )
+    reply = world.reply("supported_defect", [{"receipt": receipt, "quote": "fixture"}])
+    if available:
+        assert settle.validate_reply(reply, world.manifest.read_bytes(), world.own_ledger) == ("supported_defect", [receipt])
+    else:
+        with pytest.raises(settle.SettleError, match="needs a cited receipt with hits"):
+            settle.validate_reply(reply, world.manifest.read_bytes(), world.own_ledger)
+
+
+def test_wikipedia_can_support_fact_but_not_lexical_source_conflict(world):
+    receipt = ledger.append(
+        world.own_ledger, review_id="settle-R", attempt_id="settle-A", manifest_sha256=world.current_hash(),
+        tool="query_wikipedia_cached", server_version="fixture", arguments={"query": "fixture"},
+        snapshots={}, status="ok", result=json.dumps({"status": "hit", "response": "fixture"}),
+    )
+    evidence = [{"receipt": receipt, "quote": "fixture"}]
+    assert settle.validate_reply(world.reply("refuted", evidence), world.manifest.read_bytes(), world.own_ledger)[0] == "refuted"
+    vesum = world.call("verify_word", "fixture")
+    evidence.append({"receipt": vesum, "quote": "fixture"})
+    with pytest.raises(settle.SettleError, match="two different sources"):
+        settle.validate_reply(world.reply("source_conflict", evidence), world.manifest.read_bytes(), world.own_ledger)
+
+
 @dataclass
 class World:
     root: Path
