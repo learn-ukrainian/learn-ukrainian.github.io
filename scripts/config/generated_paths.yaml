@@ -1,0 +1,12 @@
+# Generated paths an approval carry-over may regenerate after a base merge
+# (`record_cf_verdict.py carry-over`, scripts/review/approval_carryover.py).
+#
+# Every entry is reviewed like code. The carry-over deletes each listed path from a
+# clean worktree of the merge head, runs its command from the worktree root, and
+# requires the output to equal the committed bytes exactly. A leading `python` in a
+# command is the recorder's interpreter; the recorder checkout's node_modules is
+# linked in for generators that load Node packages.
+schema_version: 1
+generated_paths:
+  docs/lesson-schema.yaml:
+    command: [python, scripts/build/generate_lesson_schema.py]

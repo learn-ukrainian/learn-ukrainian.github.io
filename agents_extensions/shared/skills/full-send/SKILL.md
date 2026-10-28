@@ -82,7 +82,8 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
    gh pr view "$PR" --json state,isDraft,headRefOid,mergeable,mergeStateStatus,autoMergeRequest
    ```
 
-   `headRefOid` must equal the head of the recorded APPROVE and of the green admission CI.
+   `headRefOid` must equal the head of the recorded APPROVE (or of its recorded carry-over,
+   [pr-watch](references/pr-watch.md#the-base-moves)) and of the green admission CI.
    Send follow-ups to the CTO through Fleet Comms
    (`"$PY" -m scripts.fleet_comms channel publish … --recipient <CTO slot>`).
 8. **Drain the inbox, then enqueue** at the approved head. The merge-queue keeper may already

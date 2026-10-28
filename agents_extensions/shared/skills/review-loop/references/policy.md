@@ -69,6 +69,18 @@ rejection is followed by a head move (the fix, or a base update with
   reviewer always comes from the live resolver with every author and subject exclusion, never
   a fixed model.
 - A moved head needs a delta review and a fresh exact-head approval before enqueue.
+- One exception, enforced by tooling and never by hand: an approval carries over to a base
+  merge commit N only when
+  `"$PY" scripts/review/record_cf_verdict.py carry-over --pr "$PR" --approved-head "$A"`
+  records it. The recorder refuses with a typed reason unless all of these hold: N's first parent is the
+  approved head A and its second parent is on the base branch; every path where N differs
+  from `git merge-tree --write-tree` of the two parents, and every conflicted path, is in
+  `scripts/config/generated_paths.yaml`; each such path regenerates byte-for-byte in a clean
+  worktree of N; every review task of the PR is terminal, every verdict is published, and
+  A's APPROVE is each seat's latest verdict; and same-head CI on N is green. A carry-over is
+  not a review and opens no round: it posts the `fleet/approval-carry-over` status and a
+  receipt comment on N. Any other difference takes a normal delta round. Designated
+  approval: CTO proposal, Sol 6.1 APPROVE (advisory task cto-7eba-adv-carryover2).
 - The red-team exception in `workflow.md` § Merge policy is unchanged and is labelled
   `review_mode=red_team`, never cross-family.
 

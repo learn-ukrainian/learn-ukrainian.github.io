@@ -85,7 +85,8 @@ Proof is evidence observed in this session: command output, a reproduction, a ru
 Every item must hold on the **current** head. A moved head voids the verdict and the CI.
 
 1. Proof covers every change in the diff.
-2. A recorded exact-head APPROVE from the reviewer of record (`review-loop`), with no open
+2. A recorded exact-head APPROVE from the reviewer of record (`review-loop`), or a recorded
+   approval carry-over at this head ([pr-watch](pr-watch.md#the-base-moves)), with no open
    blocker in the ledger.
 3. Same-head PR admission CI Gate green. Admission CI does not run the full suite and never
    replaces the merge-group CI Gate (`workflow.md` § Merge policy).

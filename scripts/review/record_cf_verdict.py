@@ -2146,6 +2146,12 @@ def record(
 
 @publication_cli(RecordError)
 def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["carry-over"]:
+        # The carry-over verb builds on this module, so it is imported only when chosen.
+        from scripts.review.approval_carryover import main as carry_over_main
+
+        return carry_over_main(argv[1:])
     parser = argparse.ArgumentParser(
         description="Publish a completed exact-head verdict; cross-family is the default.\n"
         "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
@@ -2153,6 +2159,8 @@ def main(argv: list[str] | None = None) -> int:
         epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
         "--review-mode red_team --red-team-prompt brief.md\n"
+        "  .venv/bin/python scripts/review/record_cf_verdict.py carry-over --pr 1 --approved-head <sha>\n"
+        "    (approval carry-over across a generated-only base merge; not a review, see carry-over --help)\n"
         "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
         "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
     )

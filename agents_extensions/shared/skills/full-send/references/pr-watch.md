@@ -49,6 +49,12 @@ the accountable driver's cycle.
 - Re-check BEHIND and DIRTY before calling the PR ready. Rebase through the authoring lane and
   push with `--force-with-lease=<branch>:<observed head>`; the new head needs a delta review
   and fresh CI.
+- When the base conflicts with an approved head A only in generated files, merge the base
+  into A, run the files' generators from `scripts/config/generated_paths.yaml`, commit the
+  merge and push it. Once its CI is green, run
+  `"$PY" scripts/review/record_cf_verdict.py carry-over --pr "$PR" --approved-head "$A"`
+  instead of a delta round. A refusal names its reason; any refusal means a normal delta
+  round ([policy](../../review-loop/references/policy.md#gate-of-record)).
 - If another PR makes this one obsolete, stop and report it with evidence. Closing the PR is
   a driver act; closing an issue is the CTO's.
 
