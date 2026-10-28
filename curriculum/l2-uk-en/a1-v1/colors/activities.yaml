@@ -5,7 +5,7 @@ inline:
     title: Запитай про колір
     instruction: Choose the natural question or short answer.
     items:
-      - prompt: You point to a pencil and ask its color.
+      - prompt: "(Do not use є.) You point to a pencil and ask its color."
         options:
           - text: Якого кольору олівець?
             correct: true
@@ -54,7 +54,7 @@ inline:
         options:
           - text: Синьо-жовтий.
             correct: true
-          - text: Блакитно-жовтий.
+          - text: "Червоно-жовтий."
             correct: false
           - text: Сіро-жовтий.
             correct: false
@@ -189,9 +189,9 @@ inline:
         options:
           - text: синьо-жовтий прапор
             correct: true
-          - text: блакитно-жовтий прапор
+          - text: "червоно-жовтий прапор"
             correct: false
-          - text: голубо-жовтий прапор
+          - text: "зелено-жовтий прапор"
             correct: false
         explanation: The standard phrase is синьо-жовтий прапор.
       - prompt: A dark blue sweater
@@ -285,14 +285,14 @@ workbook:
           - У нього сіре волосся.
           - Він має сивий волосся.
         explanation: For grey hair, use the fixed phrase сиве волосся.
-      - sentence: ЧорнИй, білИй (з наголосом на закінченні)
-        error: ЧорнИй, білИй (з наголосом на закінченні)
+      - sentence: ЧорнИй, білИй (keep the masculine forms; capitals mark stress)
+        error: ЧорнИй, білИй
         answer: ЧОрний, бІлий
         options:
           - ЧОрний, бІлий
-          - ЧорнИй, білИй
-          - чорний, білий
-        explanation: In these common color words, stress is on the root.
+          - чОрна, бІла
+          - чОрне, бІле
+        explanation: Keep the masculine forms чорний, білий and stress the root. The other options change the gender.
   - type: fill-in
     title: Кольори кімнати й одягу
     instruction: Complete each practical sentence.
@@ -329,7 +329,7 @@ workbook:
         answer: карі
         options:
           - карі
-          - коричневі
+          - "коричнева"
           - каре
         explanation: Use the fixed appearance phrase карі очі.
       - sentence: У нього ___ волосся.

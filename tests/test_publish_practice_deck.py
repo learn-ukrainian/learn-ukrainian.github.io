@@ -228,34 +228,41 @@ def test_withdrawal_repackages_only_pinned_source_and_removes_cards(
         build_package,
         build_pointer,
         collect_shards,
-        withdraw_synonyms_from_pinned_package,
+        withdraw_meanings_from_pinned_package,
     )
 
     source_dir = tmp_path / "source"
     _write_practice_deck(source_dir)
-    old_index = source_dir / "practice-index.B1.json"
+    old_index = source_dir / "practice-index.A1.json"
     index_payload = json.loads(old_index.read_text(encoding="utf-8"))
-    index_payload["items"] = [{"lemmaId": "old", "modes": ["flashcards", "synonym"]}]
-    index_payload["counts"]["modeCounts"] = {"synonym": 1}
-    index_payload["counts"]["modeCoverage"] = {"synonym": 1.0}
+    index_payload["items"] = [{"lemmaId": "old", "modes": ["flashcards", "matching", "choice", "antonym", "homonym", "cloze"]}]
+    index_payload["counts"]["modeCounts"] = {"flashcards": 1}
+    index_payload["counts"]["modeCoverage"] = {"flashcards": 1.0}
     _write_json(old_index, index_payload)
-    old_synonym = source_dir / "practice-synonym.B1.json"
-    synonym_payload = json.loads(old_synonym.read_text(encoding="utf-8"))
-    synonym_payload["synonym"] = [{"synonymId": "old-card"}]
-    _write_json(old_synonym, synonym_payload)
-    for path in (old_index, old_synonym):
+    old_lexemes = source_dir / "practice-lexemes.A1.json"
+    lexemes_payload = json.loads(old_lexemes.read_text(encoding="utf-8"))
+    lexemes_payload["lexemes"] = [{
+        "lemmaId": "old", "gloss": "unverified quotation (1957)",
+        "glossClean": "unverified", "meaningMcEligible": True,
+    }]
+    _write_json(old_lexemes, lexemes_payload)
+    for path in (old_index, old_lexemes):
         payload = json.loads(path.read_text(encoding="utf-8"))
         payload["sizeBudget"] = {"rawLimitBytes": 1_600_000, "gzipLimitBytes": 180_000}
         _write_json(path, payload)
     for path in source_dir.glob("practice-*.json"):
-        if path in (old_index, old_synonym):
+        if path in (old_index, old_lexemes):
             continue
         payload = json.loads(path.read_text(encoding="utf-8"))
         payload["sizeBudget"] = {"rawLimitBytes": 1_600_000, "gzipLimitBytes": 180_000}
         _write_json(path, payload)
 
-    monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
-    version, metadata, files = collect_shards(source_dir)
+    with pytest.raises(PracticeDeckPublishError, match="withdrawn meaning"):
+        collect_shards(source_dir)
+
+    with monkeypatch.context() as source_context:
+        source_context.setattr(generator, "validate_meaning_withdrawal", lambda *args: [])
+        version, metadata, files = collect_shards(source_dir)
     package = build_package(version, files)
     compressed = gzip.compress(package, mtime=0)
     source_gzip = tmp_path / "source.json.gz"
@@ -266,16 +273,27 @@ def test_withdrawal_repackages_only_pinned_source_and_removes_cards(
     monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", False)
 
     output_dir = tmp_path / "withdrawn"
-    withdrawn_version = withdraw_synonyms_from_pinned_package(source_gzip, pointer, output_dir)
+    withdrawn_version = withdraw_meanings_from_pinned_package(source_gzip, pointer, output_dir)
     assert withdrawn_version != version
     assert collect_shards(output_dir)[0] == withdrawn_version
-    assert json.loads((output_dir / "practice-synonym.B1.json").read_text())["synonym"] == []
-    index = json.loads((output_dir / "practice-index.B1.json").read_text())
-    assert index["items"][0]["modes"] == ["flashcards"]
-    assert index["counts"]["modeCounts"]["synonym"] == 0
+    assert json.loads((output_dir / "practice-synonym.A1.json").read_text())["synonym"] == []
+    index = json.loads((output_dir / "practice-index.A1.json").read_text())
+    assert index["items"][0]["modes"] == ["cloze"]
+    lexeme = json.loads((output_dir / "practice-lexemes.A1.json").read_text())["lexemes"][0]
+    assert lexeme["gloss"] == lexeme["glossClean"] == ""
+    assert lexeme["meaningMcEligible"] is False
+    for mode in generator.WITHDRAWN_MEANING_MODES:
+        assert index["counts"]["modeCounts"][mode] == 0
+    lexeme["_meaningExclusionHead"] = "unverified"
+    leaked = json.loads((output_dir / "practice-lexemes.A1.json").read_text())
+    leaked["lexemes"] = [lexeme]
+    _write_json(output_dir / "practice-lexemes.A1.json", leaked)
+    with pytest.raises(PracticeDeckPublishError, match="withdrawn meaning"):
+        collect_shards(output_dir)
+    assert index["counts"]["modeCounts"]["flashcards"] == 0
 
     with pytest.raises(PracticeDeckPublishError, match="not the pinned"):
-        withdraw_synonyms_from_pinned_package(source_gzip, {**pointer, "deck_version": "wrong"}, tmp_path / "wrong")
+        withdraw_meanings_from_pinned_package(source_gzip, {**pointer, "deck_version": "wrong"}, tmp_path / "wrong")
 
 
 def test_publish_practice_deck_dry_run_builds_hash_pinned_package(tmp_path: Path) -> None:

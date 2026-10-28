@@ -38,7 +38,7 @@ def _run_sources_query[T](ctx: MonitorContext, callback: Callable[[], T]) -> T:
     handle = ctx.stores.sources_db
     if handle is None or not handle.path.exists():
         raise FileNotFoundError("data/sources.db not found")
-    connection = handle.connect()
+    connection = handle.connect(read_only=True)
     connection.row_factory = sqlite3.Row
     try:
         with query_sources_db.using_connection(connection):

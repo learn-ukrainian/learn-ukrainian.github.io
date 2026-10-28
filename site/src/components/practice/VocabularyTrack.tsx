@@ -74,7 +74,7 @@ export default function VocabularyTrack({
         role="group"
         aria-label={chromeLocale === 'uk' ? 'Словниковий запас' : 'Vocabulary modes'}
       >
-        {VOCAB_PRIMARY_MODES.map((mode) => renderModeCard(mode, mode === 'mixed'))}
+        {VOCAB_PRIMARY_MODES.filter(isPracticeModeEnabled).map((mode) => renderModeCard(mode, mode === 'mixed'))}
       </div>
 
       {/* Expandable Lexical Relations Group */}

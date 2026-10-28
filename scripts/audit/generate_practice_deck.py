@@ -256,6 +256,8 @@ EXPLANATION_ALLOWED_TOKENS = frozenset({"сум", "втс", "уліф", "есу�
 SYNONYM_DEFAULT_AVAILABILITY = "B1"
 # Advisor ruling A on #8714: withhold the mode until #8984 has per-card sense binding.
 SYNONYM_MODE_ENABLED = False
+WITHDRAWN_MEANING_MODES = frozenset({"flashcards", "matching", "choice", "antonym", "homonym"})
+PRIVATE_MEANING_FIELDS = frozenset({"_meaningExclusionHead", "_synonymExclusionHead"})
 HERITAGE_OPTION_LEAK_PATTERN = re.compile(
     r"(?:⚠|кальк|calque|русизм|russianism|суржик|рос\.)",
     re.IGNORECASE,
@@ -894,7 +896,7 @@ def _practice_gloss_clean(
     *,
     sense: dict[str, Any] | None = None,
 ) -> str:
-    """Short meaning label shown beside the lemma (#8715).
+    """Historical gloss availability, used only to preserve membership (#9160).
 
     English glosses keep their first comma/semicolon segment.  A Ukrainian
     dictionary definition keeps its first sense; when that carries no meaning,
@@ -1647,7 +1649,7 @@ def _eligible_decoys(
     case_name: str,
     number: str,
 ) -> list[tuple[dict[str, Any], str]]:
-    answer_head = _headword(answer["gloss"])
+    answer_head = answer.get("_meaningExclusionHead", _headword(answer["gloss"]))
     answer_bucket = _option_pos_bucket(answer.get("pos"))
     if not answer_bucket:
         return []
@@ -1663,7 +1665,7 @@ def _eligible_decoys(
             continue
         if CEFR_RANK[lexeme["cefr"]] > CEFR_RANK[answer["cefr"]]:
             continue
-        if _headword(lexeme["gloss"]) == answer_head:
+        if lexeme.get("_meaningExclusionHead", _headword(lexeme["gloss"])) == answer_head:
             continue
         decoy_form = _case_form(lexeme.get("paradigm", {}), case_name, number)
         if decoy_form and (case_name == "nominative" or _plain(decoy_form) != _plain(lexeme["lemma"])):
@@ -1704,7 +1706,7 @@ def _eligible_dictionary_decoys(
     answer_bucket = _option_pos_bucket(answer.get("pos"))
     if not answer_bucket:
         return []
-    answer_head = _headword(answer["gloss"])
+    answer_head = answer.get("_meaningExclusionHead", _headword(answer["gloss"]))
     answer_label = _plain(answer["lemma"])
     candidates: list[tuple[dict[str, Any], str]] = []
     seen_labels: set[str] = {answer_label}
@@ -1717,7 +1719,7 @@ def _eligible_dictionary_decoys(
             continue
         if CEFR_RANK[lexeme["cefr"]] > CEFR_RANK[answer["cefr"]]:
             continue
-        if _headword(lexeme["gloss"]) == answer_head:
+        if lexeme.get("_meaningExclusionHead", _headword(lexeme["gloss"])) == answer_head:
             continue
         label = _clean_text(lexeme.get("lemma"))
         if not label or _meaning_label_is_phrase(label) or _plain(label) in seen_labels:
@@ -2229,11 +2231,10 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
         # No source carries a meaning (#8715): showing the raw article head
         # («МОТИВА́ТОР.») would teach nothing.
         return None
-    meaning_mc_eligible = _meaning_mc_eligible(gloss_clean, lemma_plain, pos)
-    # Recognition (matching/choice/flashcard) needs only lemma+gloss, so an admitted
-    # word stays in the deck even when CEFR is unknown. Prefer enrichment morphology;
-    # when that is missing/unverified, **search VESUM by lemma** for real non-base
-    # forms (новий→нового/новому/…) so focused cloze can drill declension.
+    # Preserve the legacy membership decision above; none of its derived text
+    # is admitted as a meaning. Restoration requires #8977's source/sense proof.
+    # Preserve the independent paradigm when meanings are withheld. When the
+    # enrichment is unverified, search VESUM by lemma for attested forms.
     paradigm = _paradigm(entry)
     if not _verify_paradigm(lemma_plain, pos, paradigm, verifier):
         searched = _paradigm_from_vesum_lemma_search(lemma_plain, pos, verifier)
@@ -2243,9 +2244,11 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
         "lemma": lemma,
         "lemmaPlain": lemma_plain,
         "ipa": _ipa(entry),
-        "gloss": gloss,
-        "glossClean": gloss_clean,
-        "meaningMcEligible": meaning_mc_eligible,
+        "gloss": "",
+        "glossClean": "",
+        "meaningMcEligible": False,
+        "_meaningExclusionHead": _headword(gloss),
+        "_synonymExclusionHead": _synonym_gloss_head(gloss),
         "pos": pos,
         "cefr": level,
         "heritage": _heritage(entry),
@@ -4228,7 +4231,9 @@ def _valid_synonym_distractors(
     recorded synonym partner, every ULIF synonym-group co-member and every
     lexeme sharing an English sense with the prompt or the answer.
     """
-    blocked_heads = {_synonym_gloss_head(prompt["gloss"]), _synonym_gloss_head(answer["gloss"])}
+    blocked_heads = {
+        item.get("_synonymExclusionHead", _synonym_gloss_head(item["gloss"])) for item in (prompt, answer)
+    }
     ans_plain = _plain(answer["lemma"])
     prompt_plain = _plain(prompt["lemma"])
     partners: dict[str, set[str]] = context["partners"] if context else {}
@@ -4243,7 +4248,7 @@ def _valid_synonym_distractors(
             continue
         if lexeme.get("pos") != answer.get("pos"):
             continue
-        if _synonym_gloss_head(lexeme["gloss"]) in blocked_heads:
+        if lexeme.get("_synonymExclusionHead", _synonym_gloss_head(lexeme["gloss"])) in blocked_heads:
             continue
         cand_plain = _plain(lexeme["lemma"])
         if (
@@ -6159,14 +6164,41 @@ def _repair_deck_homoglyphs(value: Any) -> Any:
     return value
 
 
+def validate_meaning_withdrawal(kind: str, payload: dict[str, Any]) -> list[str]:
+    """Legacy meanings have no accepted admission mechanism (#9160)."""
+    errors = []
+    if kind not in {"lexemes", "index"}:
+        return errors
+    rows = payload.get("lexemes" if kind == "lexemes" else "items", [])
+    if not isinstance(rows, list) or any(not isinstance(item, dict) for item in rows):
+        return [f"{kind} rows must be objects in a list"]
+    if kind == "lexemes":
+        for item in rows:
+            if (PRIVATE_MEANING_FIELDS.intersection(item)
+                    or any(item.get(field) != "" for field in ("gloss", "glossClean"))
+                    or item.get("meaningMcEligible") is not False):
+                errors.append(f"{item.get('lemmaId')} contains a withdrawn meaning")
+    if kind == "index":
+        for item in rows:
+            modes = item.get("modes", [])
+            if not isinstance(modes, list) or any(mode in WITHDRAWN_MEANING_MODES for mode in modes):
+                errors.append(f"{item.get('lemmaId')} advertises a withdrawn meaning mode")
+        counts = payload.get("counts", {})
+        if not isinstance(counts, dict):
+            return [*errors, "index counts must be an object"]
+        for counter in ("modeCounts", "modeCoverage"):
+            values = counts.get(counter, {})
+            if not isinstance(values, dict) or any(values.get(mode, 0) != 0 for mode in WITHDRAWN_MEANING_MODES):
+                errors.append(f"{counter} advertises withdrawn meaning modes")
+    return errors
+
+
 def validate_deck_text(
     shards: dict[str, dict[str, dict[str, Any]]],
-    verifier: VesumVerifier | None = None,
 ) -> list[str]:
     """Deck-wide text gates (#8715).
 
-    Every string in every shard is free of mixed-script words, and every
-    Ukrainian ``glossClean`` names a meaning rather than a stub.
+    Every string is free of mixed-script words; legacy meanings stay withdrawn.
     """
     errors: list[str] = []
 
@@ -6184,13 +6216,7 @@ def validate_deck_text(
     for level, level_shards in shards.items():
         for kind, payload in level_shards.items():
             walk(payload, f"{kind}.{level}")
-        lexemes = level_shards.get("lexemes", {}).get("lexemes", [])
-        for lexeme in lexemes if isinstance(lexemes, list) else []:
-            label = str(lexeme.get("glossClean") or "")
-            if _is_english_learner_gloss(label):
-                continue
-            if _is_uk_gloss_stub(label, str(lexeme.get("lemma") or ""), verifier):
-                errors.append(f"lexemes.{level}: {lexeme.get('lemmaId')} glossClean is a stub {label!r}")
+            errors.extend(f"{kind}.{level}: {error}" for error in validate_meaning_withdrawal(kind, payload))
     return errors
 
 
@@ -7112,13 +7138,11 @@ def build_practice_shards(
         index_items = []
         for order, lexeme in enumerate(level_lexemes):
             cloze_ids = cloze_ids_by_lemma.get(lexeme["lemmaId"], [])
-            modes = ["flashcards"]
-            if lexeme.get("meaningMcEligible"):
-                modes.extend(["matching", "choice"])
+            modes = []
             if cloze_ids:
                 modes.append("cloze")
             for drill_mode in DRILL_MODES:
-                if lexeme["lemmaId"] in level_mode_lemma_ids[drill_mode]:
+                if drill_mode not in WITHDRAWN_MEANING_MODES and lexeme["lemmaId"] in level_mode_lemma_ids[drill_mode]:
                     modes.append(drill_mode)
             index_items.append(
                 {
@@ -7153,12 +7177,12 @@ def build_practice_shards(
             "clozeCoverage": coverage,
             "modeCounts": {
                 "cloze": len(level_cloze),
-                **{mode: len(mode_by_level[level][mode]) for mode in DRILL_MODES},
+                **{mode: 0 if mode in WITHDRAWN_MEANING_MODES else len(mode_by_level[level][mode]) for mode in DRILL_MODES},
             },
             "modeCoverage": {
                 "cloze": coverage,
                 **{
-                    mode: round(
+                    mode: 0.0 if mode in WITHDRAWN_MEANING_MODES else round(
                         len({item["lemmaId"] for item in mode_by_level[level][mode]}) / len(level_lexemes),
                         4,
                     )
@@ -7190,7 +7214,7 @@ def build_practice_shards(
             level,
             config,
             "lexemes",
-            level_lexemes,
+            [{key: value for key, value in item.items() if key not in PRIVATE_MEANING_FIELDS} for item in level_lexemes],
         )
         cloze_payload = _level_payload(
             "atlas-practice-cloze",
@@ -7232,7 +7256,7 @@ def build_practice_shards(
                         if lemma:
                             item["senseId"] = f"{lemma}_s1"
     shards = _repair_deck_homoglyphs(shards)
-    text_errors = validate_deck_text(shards, verifier)
+    text_errors = validate_deck_text(shards)
     if text_errors:
         raise ValueError(f"deck text gate failed ({len(text_errors)}): {text_errors[:10]}")
     return shards
@@ -7876,16 +7900,11 @@ def apply_size_budgets(
                 continue
             lemma_id = _clean_text(item.get("lemmaId"))
             cloze_ids = cloze_by_lemma.get(lemma_id, [])
-            existing_modes = set(item.get("modes") or [])
-            modes = ["flashcards"]
-            if "matching" in existing_modes:
-                modes.append("matching")
-            if "choice" in existing_modes:
-                modes.append("choice")
+            modes = []
             if cloze_ids:
                 modes.append("cloze")
             for mode in DRILL_MODES:
-                if lemma_id in mode_lemma_ids.get(mode, set()):
+                if mode not in WITHDRAWN_MEANING_MODES and lemma_id in mode_lemma_ids.get(mode, set()):
                     modes.append(mode)
             item["modes"] = modes
             item["hasCloze"] = bool(cloze_ids)
@@ -7906,13 +7925,16 @@ def apply_size_budgets(
         mode_coverage["cloze"] = counts["clozeCoverage"]
         for mode in DRILL_MODES:
             mode_items = body_items(level_shards, mode) or []
-            mode_counts[mode] = len(mode_items)
+            mode_counts[mode] = 0 if mode in WITHDRAWN_MEANING_MODES else len(mode_items)
             mode_item_lemma_ids = {
                 _clean_text(item.get("lemmaId"))
                 for item in mode_items
                 if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
             }
-            mode_coverage[mode] = round(len(mode_item_lemma_ids) / lexeme_count, 4) if lexeme_count else 0
+            mode_coverage[mode] = (
+                round(len(mode_item_lemma_ids) / lexeme_count, 4)
+                if lexeme_count and mode not in WITHDRAWN_MEANING_MODES else 0
+            )
 
     def refresh_all_metadata() -> None:
         """Rebuild mode links from each level's post-trim mode payload."""

@@ -52,7 +52,7 @@ from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
 
-ASSEMBLER_VERSION = "pilot-assembly-v5"
+ASSEMBLER_VERSION = "pilot-assembly-v6"
 # CTO proper-name scope (#8977 / #8981, OO-38). Add learner names explicitly;
 # source CEFR evidence alone never expands this set.
 LEARNER_PROPER_NAME_ALLOWLIST = frozenset({"ЮНЕСКО"})
@@ -536,7 +536,9 @@ def class_homonyms(inputs: Inputs, raw: dict, unit: dict, proper: bool) -> dict[
                                              else lemma_row_head(forms or []))
         if head or forms is None or row["id"] == entry_id:
             homonyms[row["id"]] = {"head": head, "row": row, "aspect": parse_aspect(row["grammatical_label"]),
-                                   "paradigm": src.ulif_paradigm(forms) if forms is not None else None}
+                                   "paradigm": src.ulif_paradigm(
+                                       forms, pronoun=row["grammatical_label"].startswith("займенник"),
+                                   ) if forms is not None else None}
     return homonyms
 
 

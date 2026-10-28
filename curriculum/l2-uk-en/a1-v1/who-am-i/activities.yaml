@@ -4,7 +4,7 @@ inline:
     title: Ти чи ви?
     instruction: Обери фразу для ситуації.
     items:
-      - prompt: Ти знайомишся з однокурсником свого віку.
+      - prompt: "Ти знайомишся з однокурсником свого віку. (Use informal address.)"
         options:
           - text: Як тебе звати?
             correct: true
@@ -18,7 +18,7 @@ inline:
           - text: Як тебе звати?
             correct: false
         explanation: З незнайомим дорослим або у формальній ситуації уживай вас.
-      - prompt: Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання.
+      - prompt: "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання. (Use informal address.)"
         options:
           - text: Мене звати Олена. А тебе?
             correct: true
@@ -214,7 +214,7 @@ workbook:
     title: Доповни діалог
     instruction: Обери фразу, яка завершує рядок першого знайомства.
     items:
-      - sentence: Привіт! Як ___ звати?
+      - sentence: "(Use informal address.) Привіт! Як ___ звати?"
         answer: тебе
         options:
           - тебе
@@ -235,7 +235,7 @@ workbook:
           - Хто
           - Що
         explanation: А тебе? повертає питання.
-      - sentence: Добрий день! Як ___ звати?
+      - sentence: "(Use formal address.) Добрий день! Як ___ звати?"
         answer: вас
         options:
           - вас
@@ -284,7 +284,7 @@ workbook:
           - теж
           - тоже
         explanation: Теж і також — безпечні українські вибори.
-      - sentence: Оксана — ___.
+      - sentence: "(Use the feminine profession noun.) Оксана — ___."
         answer: інженерка
         options:
           - інженерка

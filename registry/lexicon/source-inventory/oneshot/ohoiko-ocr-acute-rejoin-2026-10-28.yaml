@@ -1,0 +1,64 @@
+version: 1
+kind: atlas_source_inventory
+sources:
+- id: ohoiko-ocr-acute-rejoin-2026-10-28
+  source_family: ohoiko
+  extraction_mode: ocr_acute_rejoin
+  title: Ohoiko detached-acute headword corrections
+  locator: numbered Ohoiko source records
+  notes: 'Independent correction inventory; historical bulk rows and #10181 holds remain immutable.'
+  headwords:
+  - lemma: клієнт
+    pos: noun
+    gloss: client (male, female)
+    locator: 'ohoiko-1000-words entry 352 :: acute-rejoin::клієн -> клієнт'
+    context: Detached OCR acute rejoined; raw record SHA-256 981a549410e4105163abaf8edf23f9d75f4585c90e3e5b729ec33efc5ef0cb84.
+      Stress is not inferred from OCR; canonical head is VESUM-attested.
+  - lemma: клієнтка
+    pos: noun
+    gloss: client (male, female)
+    locator: 'ohoiko-1000-words entry 352 :: acute-rejoin::клієн -> клієнтка'
+    context: Detached OCR acute rejoined; raw record SHA-256 981a549410e4105163abaf8edf23f9d75f4585c90e3e5b729ec33efc5ef0cb84.
+      Stress is not inferred from OCR; canonical head is VESUM-attested.
+  - lemma: проєкт
+    pos: noun
+    gloss: project
+    locator: 'ohoiko-1000-words entry 685 :: acute-rejoin::проєк -> проєкт'
+    context: Detached OCR acute rejoined; raw record SHA-256 dd91391f2f26bbb2d909952e42e9a91b7e4d2a6b87ba9e333064290576a7af35.
+      Stress is not inferred from OCR; canonical head is VESUM-attested.
+  - lemma: об'єднувати
+    pos: verb
+    gloss: to unite sth/sb [to come together, to unite]
+    locator: 'ohoiko-500-verbs entry 277 :: acute-rejoin::об''єд -> об''єднувати'
+    context: Detached OCR acute rejoined; raw record SHA-256 737129460ed9cc057a720caba6c8358d40eb484888a9b5282649c3175f5e2d48.
+      Stress is not inferred from OCR; canonical head is VESUM-attested.
+  - lemma: об'єднати
+    pos: verb
+    gloss: to unite sth/sb [to come together, to unite]
+    locator: 'ohoiko-500-verbs entry 277 :: acute-rejoin::об''єд -> об''єднати'
+    context: Detached OCR acute rejoined; raw record SHA-256 737129460ed9cc057a720caba6c8358d40eb484888a9b5282649c3175f5e2d48.
+      Stress is not inferred from OCR; canonical head is VESUM-attested.
+  - lemma: поєднувати
+    pos: verb
+    gloss: to combine sth [to combine]
+    locator: 'ohoiko-500-verbs entry 341 :: acute-rejoin::поєд -> поєднувати'
+    context: Detached OCR acute rejoined; raw record SHA-256 8644f06f6379419badf55b4e9e524e60c8cc6870153985807f0c85596e4ba642.
+      Stress is not inferred from OCR; canonical head is VESUM-attested.
+  - lemma: поєднати
+    pos: verb
+    gloss: to combine sth [to combine]
+    locator: 'ohoiko-500-verbs entry 341 :: acute-rejoin::поєд -> поєднати'
+    context: Detached OCR acute rejoined; raw record SHA-256 8644f06f6379419badf55b4e9e524e60c8cc6870153985807f0c85596e4ba642.
+      Stress is not inferred from OCR; canonical head is VESUM-attested.
+  - lemma: приєднувати
+    pos: verb
+    gloss: to add, to attach, to join sth [to join]
+    locator: 'ohoiko-500-verbs entry 365 :: acute-rejoin::приєд -> приєднувати'
+    context: Detached OCR acute rejoined; raw record SHA-256 3e22e8845f403f44e0c856a0dca3d250bb1fd40ed37b7ccd8f57af313b8b0971.
+      Stress is not inferred from OCR; canonical head is VESUM-attested.
+  - lemma: приєднати
+    pos: verb
+    gloss: to add, to attach, to join sth [to join]
+    locator: 'ohoiko-500-verbs entry 365 :: acute-rejoin::приєд -> приєднати'
+    context: Detached OCR acute rejoined; raw record SHA-256 3e22e8845f403f44e0c856a0dca3d250bb1fd40ed37b7ccd8f57af313b8b0971.
+      Stress is not inferred from OCR; canonical head is VESUM-attested.

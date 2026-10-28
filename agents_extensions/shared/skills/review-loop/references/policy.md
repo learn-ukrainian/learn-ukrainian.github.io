@@ -22,6 +22,12 @@ rounds are deltas.
   and adds no round.
 - **The end of the budget is never approval.** The author splits the PR, changes the
   approach, or escalates to the CTO and the advisors (rules core P6).
+- When a base conflict follows an approval in the last budgeted round, the recordable outcome
+  of that CTO-and-advisor escalation is one budget extension per lineage: a request committed
+  on the default branch under `batch_state/review-budget-extensions/` plus a sealed
+  `review_budget_extension` APPROVE from the non-author designated advisor, which the recorder
+  checks before it admits exactly one more round (`scripts/review/budget_extension.py`;
+  designated approval: advisory task cto-7eba-adv-extension2).
 - **The verdict recorder refuses a round beyond the budget**, so an over-budget verdict is
   never recorded.
 - The budget and the ledger follow the work (issue and branch lineage). A new reviewer, a

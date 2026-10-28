@@ -284,7 +284,8 @@ before dispatching:
    classified Ukrainian authoring or review.
 3. `gpt-6.1-sol` at `high` issues that envelope in a read-only dispatch. Put the
    worker's `--print-advisory-binding` digest and envelope request in the brief;
-   the legacy advisor-role/binding switches are retired. The envelope
+   the legacy advisor-role/binding switches for envelopes are retired (the current
+   `--advisory-role` covers only catalog `advisory_roles` decisions). The envelope
    holds the task contract, exact owned paths, maximum changed-file and
    non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence, and
    escalation triggers. In this role Sol advises; it is not the bounded task's
@@ -318,7 +319,7 @@ to Sol at `high` or the accountable orchestrator before making a consequential d
 
 ### Grok dispatch through Cursor
 
-Native Grok dispatch is retired. Dispatch v2 maps `--agent grok` to Cursor.
+Native Grok dispatch is retired. Dispatch v2 rejects `--agent grok` (`unknown agent`).
 Use the explicit Cursor seat at `grok-4.7-high`:
 
 ```bash

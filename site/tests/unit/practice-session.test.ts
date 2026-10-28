@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, test } from 'vitest';
+import { setPracticeMeaningModesForTesting } from '@site/src/lib/lexicon/srs';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { Rating, fsrs, createEmptyCard } from 'ts-fsrs';
 import {
   DEFAULT_NEW_PER_DAY,
@@ -88,6 +89,7 @@ function dueCard(lemmaId: string, dueTime?: number) {
 }
 
 beforeEach(() => {
+  setPracticeMeaningModesForTesting(true);
   localStorage.clear();
   loadState(localStorage, NOW);
 });
@@ -458,3 +460,5 @@ describe('practice session helpers', () => {
     localStorage.removeItem(SRS_STORAGE_KEY);
   });
 });
+
+afterEach(() => setPracticeMeaningModesForTesting(false));

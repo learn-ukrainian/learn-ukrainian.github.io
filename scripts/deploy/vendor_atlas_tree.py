@@ -90,6 +90,7 @@ TRANSPORT_DIR_RE = re.compile(r"(?P<data_version>.+)-transport-[0-9a-f]{64}")
 SKIP_MESSAGE = "atlas vendoring: no pin configured, skipping"
 
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
+DISCOVERY_EXCLUSIONS = Path(__file__).resolve().parents[2] / "registry/lexicon/atlas-discovery-exclusions.json"
 
 
 class VendorError(RuntimeError):
@@ -603,11 +604,34 @@ def _runtime_shard_records(
         yield rows
 
 
+def _discovery_exclusions(article_rows: list[dict[str, Any]]) -> tuple[set[str], list[str]]:
+    """Apply reviewed holds to discovery without altering immutable routes."""
+    policy = json.loads(DISCOVERY_EXCLUSIONS.read_bytes())
+    if policy["schema"] != "atlas-discovery-exclusions" or policy["schemaVersion"] != 1:
+        raise VendorError("invalid Atlas discovery exclusion schema")
+    heads = {row["s"]: row["l"] for row in article_rows}
+    withheld: set[str] = set()
+    absent: list[str] = []
+    seen: set[str] = set()
+    for record in policy["exclusions"]:
+        slug = record["slug"]
+        if slug in seen or not record["headword"] or not record["reason"] or not record["evidence"]:
+            raise VendorError("duplicate or incomplete Atlas discovery exclusion")
+        seen.add(slug)
+        if slug not in heads:
+            absent.append(slug)
+        elif heads[slug] != record["headword"]:
+            raise VendorError(f"Atlas discovery exclusion headword changed: {slug}")
+        else:
+            withheld.add(slug)
+    return withheld, sorted(absent)
+
+
 def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     """Project search from the installed pin, refusing full-set or alias drift.
 
-    The immutable runtime owns membership. Apply the established public display
-    projection using only that pin's article payloads; never consult another DB.
+    The immutable runtime owns routes. After full parity validation, reviewed
+    discovery exclusions may withhold listings, never rewrite the pinned tree.
     """
     try:
         current = json.loads((extract_root / CURRENT_REL).read_bytes())
@@ -712,15 +736,23 @@ def build_pinned_search(extract_root: Path) -> tuple[list[dict[str, Any]], list[
             article_rows.append(row)
         article_rows.sort(key=lambda row: (_uk_sort_key(row["l"]), row["s"]))
         aliases = sorted(families["aliases"], key=lambda row: (_uk_sort_key(row["a"]), row["s"], row["k"]))
+        withheld, absent_exclusions = _discovery_exclusions(article_rows)
+        projected_articles = [row for row in article_rows if row["s"] not in withheld]
+        projected_aliases = [row for row in aliases if row["s"] not in withheld]
         return (
-            article_rows,
-            aliases,
+            projected_articles,
+            projected_aliases,
             {
                 "dataVersion": data_version,
                 "runtimeManifestSha256": sha256_hex(manifest_bytes),
                 "articles": len(articles),
                 "formRoutes": len(forms),
                 "aliases": len(aliases),
+                "projectedArticles": len(projected_articles),
+                "projectedAliases": len(projected_aliases),
+                "withheldArticles": sorted(withheld),
+                "withheldAliases": len(aliases) - len(projected_aliases),
+                "absentExclusions": absent_exclusions,
                 "advertisedOnly": advertised_only,
                 "runtimeOnly": runtime_only,
                 "articleDuplicates": 0,

@@ -198,7 +198,8 @@ receive the core at the head of the initial prompt. A Kimi launcher exits 2 on t
 retirement before rules attachment, so it never starts a coding task. ACP calls
 and legacy bridge prompts prepend the same block unless the prompt already
 starts with it. Dispatch v2 checks core availability but does not prepend the
-core or support rules-seat selection. An absent, unreadable or empty core (or, for a content seat, addendum) refuses: a launcher exits 1 before
+core or support rules-seat selection; the one exception is read-only Claude, which
+gets the core as an appended system prompt (see the dispatch v2 section below). An absent, unreadable or empty core (or, for a content seat, addendum) refuses: a launcher exits 1 before
 any adapter check or deploy, `dispatch.py dispatch` exits 2 before any check or task record, an ACP call raises
 `InterAgentTransportError`, a discussion raises `AcpxDiscussionError` before admission, an `ask-*` prompt exits, and
 the loader CLI exits 3; each message names the path. `LAUNCHER_DRY_RUN=1` prints the seat
@@ -942,7 +943,10 @@ disposition. The briefed worker runs its chain to the end and nobody arms auto-m
 `agents_extensions/shared/rules/workflow.md`.
 
 The dispatcher requires the local rules core to exist. It does not inject rules
-or research pointers into the worker prompt. Put the required instructions and
+or research pointers into the worker prompt, with one exception: a read-only
+Claude run (`scripts/dispatcher/providers/claude.py` `build`) passes the rules
+core to `claude` as an appended system prompt (`--append-system-prompt-file`),
+because `--restricted` skips `CLAUDE.md`. Put the required instructions and
 source locators in the brief. Research flags record metadata; they do not fetch
 or deliver registry records. `--owned-path` records scope without a path-claim
 queue. Check disjoint ownership before launch.
@@ -962,10 +966,15 @@ grant (only Claude Code's built-in read-only commands and `gh` reads run, and
 redirects are checked against the Edit deny) under `--restricted`, so no user,
 project or local settings file can add an allow rule, and OpenCode's
 `OPENCODE_PERMISSION` rules (edits denied; bash limited to `git diff`, `git log`,
-`git show` and `git status` with no redirect or `--output`). AGY and Hermes give
-a dispatched run no enforceable write lock, so read-only on them exits 2 with
-`read_only_unenforceable` before anything launches. Read-only runs on Claude and
-OpenCode cannot run tests; use Codex when a read-only reviewer must execute them.
+`git show` and `git status` with no redirect or `--output`). Hermes gives a
+dispatched run no enforceable write lock, so read-only on it exits 2 with
+`read_only_unenforceable` before anything launches. AGY has none of its own
+either, so read-only AGY runs inside the dispatcher's bubblewrap boundary
+(`scripts/dispatcher/agy_sandbox.py`): a read-only root, a private scratch home,
+and a dispatcher-owned Sources relay that forwards only the read-only tools. It
+exits 2 with the same refusal only on a host that cannot start that boundary
+(not Linux, or no `bwrap`). Read-only runs on Claude and OpenCode cannot run
+tests; use Codex when a read-only reviewer must execute them.
 
 `--restricted` skips CLAUDE.md, so read-only Claude gets the rules core
 (`agents_extensions/shared/rules/core.md`) through `--append-system-prompt-file`;

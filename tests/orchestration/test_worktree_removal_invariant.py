@@ -45,9 +45,6 @@ ALLOWLIST: dict[tuple[str, str | None], str] = {
     ("scripts/orchestration/worktree_claims.py", "remove_unclaimed_worktree"): (
         "the chokepoint: calls the raw remover only under the lock, ownership proof, and claim scan"
     ),
-    ("scripts/dispatcher/git.py", "settle_worktree"): (
-        "creator-owned settlement under the task lock: publication proof on the recorded remote, never another task's or a borrowed live tree"
-    ),
 }
 
 # Names of functions that remove a worktree without the guard, current or

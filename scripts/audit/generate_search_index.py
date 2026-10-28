@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import sys
 import unicodedata
@@ -1086,21 +1087,105 @@ def write_browse_outputs(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Generate compact Word Atlas search and browse indexes.\n"
+            "Use the prepared immutable runtime tree for site builds, a verified extracted "
+            "runtime for local preparation, or atlas.db for unpinned local builds."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/audit/generate_search_index.py --db data/atlas.db
+  .venv/bin/python scripts/audit/generate_search_index.py --runtime-tree ./runtime-tree
+
+Outputs: search index, alias index, search shard metadata, browse metadata and letter shards.
+ATLAS_SEARCH_RUNTIME_TREE selects the verified tree prepared by site/scripts/prepare-atlas-search.py.
+This generator neither downloads a runtime nor changes a release or pointer.
+Exit codes: 0 on success; nonzero on invalid input or runtime integrity failure.
+Related: scripts/deploy/vendor_atlas_tree.py; docs/runbooks/word-atlas-static-api.md; #10453.
+""",
+    )
+    parser.add_argument(
+        "--manifest", type=Path, default=DEFAULT_MANIFEST, help=f"Legacy input manifest (default: {DEFAULT_MANIFEST})."
+    )
     parser.add_argument(
         "--db",
         type=Path,
-        help="Build public search artifacts from atlas.db instead of the legacy manifest.",
+        help="Unpinned local input DB, e.g. data/atlas.db (default: legacy manifest).",
     )
-    parser.add_argument("--out", type=Path, default=DEFAULT_SEARCH_OUT)
-    parser.add_argument("--aliases-out", type=Path, default=DEFAULT_SEARCH_ALIASES_OUT)
-    parser.add_argument("--search-shards-out", type=Path, default=DEFAULT_SEARCH_SHARDS_OUT)
-    parser.add_argument("--search-shard-dir", type=Path, default=DEFAULT_SEARCH_SHARD_DIR)
-    parser.add_argument("--browse-meta-out", type=Path, default=DEFAULT_BROWSE_META_OUT)
-    parser.add_argument("--browse-flagged-out", type=Path, default=DEFAULT_BROWSE_FLAGGED_OUT)
-    parser.add_argument("--browse-dir", type=Path, default=DEFAULT_BROWSE_DIR)
+    parser.add_argument(
+        "--runtime-tree",
+        type=Path,
+        default=os.environ.get("ATLAS_SEARCH_RUNTIME_TREE") or None,
+        help="Verified extracted tree containing atlas/current.json; overrides DB (default: $ATLAS_SEARCH_RUNTIME_TREE or none).",
+    )
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=DEFAULT_SEARCH_OUT,
+        help=f"Article search index output (default: {DEFAULT_SEARCH_OUT}).",
+    )
+    parser.add_argument(
+        "--aliases-out",
+        type=Path,
+        default=DEFAULT_SEARCH_ALIASES_OUT,
+        help=f"Runtime/DB alias index output (default: {DEFAULT_SEARCH_ALIASES_OUT}).",
+    )
+    parser.add_argument(
+        "--search-shards-out",
+        type=Path,
+        default=DEFAULT_SEARCH_SHARDS_OUT,
+        help=f"Search shard metadata output (default: {DEFAULT_SEARCH_SHARDS_OUT}).",
+    )
+    parser.add_argument(
+        "--search-shard-dir",
+        type=Path,
+        default=DEFAULT_SEARCH_SHARD_DIR,
+        help="Optional directory for search shard JSON, e.g. site/public/lexicon/search (default: none).",
+    )
+    parser.add_argument(
+        "--browse-meta-out",
+        type=Path,
+        default=DEFAULT_BROWSE_META_OUT,
+        help=f"Browse metadata output (default: {DEFAULT_BROWSE_META_OUT}).",
+    )
+    parser.add_argument(
+        "--browse-flagged-out",
+        type=Path,
+        default=DEFAULT_BROWSE_FLAGGED_OUT,
+        help=f"Flagged browse rows output (default: {DEFAULT_BROWSE_FLAGGED_OUT}).",
+    )
+    parser.add_argument(
+        "--browse-dir",
+        type=Path,
+        default=DEFAULT_BROWSE_DIR,
+        help=f"Browse letter shard directory (default: {DEFAULT_BROWSE_DIR}).",
+    )
     args = parser.parse_args(argv)
+
+    if args.runtime_tree is not None:
+        # The vendor reader owns runtime membership and the public display
+        # projection. Import lazily so unpinned DB/manifest execution stays small.
+        if str(PROJECT_ROOT) not in sys.path:
+            sys.path.insert(0, str(PROJECT_ROOT))
+        from scripts.deploy.vendor_atlas_tree import build_pinned_search
+
+        rows, aliases, parity = build_pinned_search(args.runtime_tree)
+        meta, browse_shards, flagged_rows = build_browse_outputs(rows)
+        search_shards, search_shard_rows = build_search_shards(rows)
+        write_index(rows, args.out)
+        write_aliases(aliases, args.aliases_out)
+        write_search_shards(search_shards, search_shard_rows, args.search_shards_out, args.search_shard_dir)
+        write_browse_outputs(
+            meta, browse_shards, flagged_rows, args.browse_meta_out, args.browse_flagged_out, args.browse_dir
+        )
+        verify_browse_artifacts_written(args.browse_meta_out, args.browse_dir, meta["total"])
+        print(
+            "atlas pinned search/browse artifacts: "
+            f"articles={len(rows)} aliases={len(aliases)} browse_records={meta['total']} "
+            f"data_version={parity['dataVersion']}"
+        )
+        return 0
 
     if args.db is not None:
         rows, aliases, counts = build_atlas_db_search_artifacts(args.db)

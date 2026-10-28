@@ -105,7 +105,7 @@ inline:
         options:
           - Ця
           - Цей
-          - Це
+          - "Ці"
         explanation: Вишиванка is feminine in this checkpoint scene.
       - sentence: ___ глечик старий.
         answer: Той
@@ -126,7 +126,7 @@ inline:
         options:
           - Ці
           - Ця
-          - Це
+          - "Цей"
         explanation: Писанки is plural, so use ці.
       - sentence: Ця сумка ___.
         answer: червона
@@ -378,7 +378,7 @@ workbook:
             correct: true
           - text: Цей лампа.
             correct: false
-          - text: Це лампа.
+          - text: "Ці лампа."
             correct: false
         explanation: Лампа is feminine, so use ця.
       - prompt: Великий вікно.
