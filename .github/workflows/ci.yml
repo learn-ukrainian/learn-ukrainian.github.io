@@ -387,6 +387,8 @@ jobs:
           REFRESH_RESULT: ${{ needs.refresh-pytest-durations.result }}
         run: |
           set -euo pipefail
+          # Hosted runners differ in speed; the CPU model shows which kind this shard drew.
+          echo "runner: $(nproc) CPUs, $(grep -m1 '^model name' /proc/cpuinfo | cut -d: -f2- | xargs)"
           mkdir -p ci-artifacts
           export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"
           # Every collected needs_artifact test, before -m deselects (pytest report audits it).
@@ -403,7 +405,6 @@ jobs:
             | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
               --durations "$durations" --weights-out "ci-artifacts/pytest-shard-${SHARD}-weights.json" \
               > "$LU_PYTEST_SHARD_FILES"
-          echo "runner: $(nproc) CPUs, $(grep -m1 '^model name' /proc/cpuinfo | cut -d: -f2- | xargs)"
           .venv/bin/python -m pytest tests -n logical --dist=worksteal --max-worker-restart=0 \
             --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
             --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"

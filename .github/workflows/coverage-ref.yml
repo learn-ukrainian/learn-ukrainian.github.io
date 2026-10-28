@@ -253,7 +253,8 @@ jobs:
         # other tests hit 120s. Allow 5x CI's budget under branch tracing (#11226).
         git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
           | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
-            --durations "$durations" > "$LU_PYTEST_SHARD_FILES"
+            --durations "$durations" --weights-out "ci-artifacts/pytest-shard-${SHARD}-weights.json" \
+            > "$LU_PYTEST_SHARD_FILES"
         .venv/bin/python "$RUNNER_TEMP/coverage-ref/coverage_ref.py" run \
           --output ci-artifacts/raw --shard "$SHARD" -- tests \
           --cov=scripts --cov=.mcp --cov=agents_extensions --cov=packages \
