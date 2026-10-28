@@ -149,7 +149,7 @@ runner, and orchestrator hosts).
 
 - **Install**: The collector sweeps both repository roots. Replace both `@REPO_ROOT@` and `@PRIVATE_ROOT@` in the service template before installing it.
 - **Frequency**: The shipped systemd timer schedules cleanup hourly (`OnCalendar=hourly`, `RandomizedDelaySec=0`), retaining `OnBootSec=15min` and `Persistent=true`.
-- **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, sweep temp and session scratch, and run automatic git maintenance with receipt logging. It removes no worktree: the dispatcher removes each task's own worktree when the task settles.
+- **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and sweep temp and session scratch with receipt logging. It removes no worktree: the dispatcher removes each task's own worktree when the task settles. GC runs separately through `learn-ukrainian-git-maintenance.timer` at 03:30 UTC, with no catch-up, verified cgroup limits and validation exclusion. Install its service, timer and data-volume drop-in together. See [bounded Git maintenance](../../docs/runbooks/worktree-cleanup.md#bounded-git-maintenance-11157) for prerequisites and rollout checks.
 - **Default mode**: Apply. The shipped unit passes both repository roots and `--apply` to the wrapper. Protections for live, dirty, unpublished, OPEN-PR, or unknown state are unchanged.
 - **Disable branch cleanup**: Set `LU_REAPER_DISABLED=1` in the user unit environment to skip the terminal-worktree inventory and every branch deletion. Reload systemd after changing the unit:
   ```bash
