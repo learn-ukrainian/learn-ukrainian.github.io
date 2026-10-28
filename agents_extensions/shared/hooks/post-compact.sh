@@ -76,7 +76,7 @@ emit_context() {
 if [ -n "${GROK_AGENT:-}" ] || [ "${SESSION_HANDOFF_AGENT:-}" = "grok" ] \
   || [ "${SESSION_HANDOFF_AGENT:-}" = "grok-build" ]; then
   _grok_ctx="KEY REMINDERS (Grok post-compact, thin path):
-  - Fleet driver: dispatch with ROUTING_CARD_V1; default code author = Claude (Sonnet 5.5; Opus for hard work), reviewed by Sol; Ukrainian content authored by Sol, reviewed by Claude; explicit Luna/Flash bounded routes require a Sol advisory envelope.
+  - Fleet driver: dispatch with ROUTING_CARD_V1; default code author = Claude (Sonnet 5.5; Opus 5.5 for hard or security work), reviewed by Sol 6.1; Ukrainian content authored by Sol 6.1, reviewed by Claude (Opus 5.5); Sol at high is an eligible code worker only when the routing card says why; explicit Luna/Flash bounded routes require a Sol advisory envelope.
   - Heavy atlas compute on VPS (atlas-runner), not the Mac.
   - Tool-backed claims only; breadth report before handoff.
   - Epic=${SESSION_EPIC:-none}"

@@ -108,10 +108,11 @@ substitutions:
 # measurement rule and the Gemini 4 hold (#10835). Operator order C-2903
 # (2026-10-27) sets the default pairs.
 worker_resource_policy: |
-  Code is authored by Claude (Sonnet 5.5, Opus 5.5 for hard work) and reviewed
-  by Sol; Ukrainian content is authored by Sol and reviewed by Claude (operator
-  C-2903, model-assignment.md). Sol stays an eligible code worker. Use native
-  Claude CLI workers as heavily as their subscription allows, respecting task
+  Code is authored by Claude (Sonnet 5.5 by default, Opus 5.5 for hard or
+  security work) and reviewed by Sol 6.1; Ukrainian content is authored by
+  Sol 6.1 and reviewed by Claude (Opus 5.5) (operator C-2903,
+  model-assignment.md). Sol at high stays an eligible code worker only when
+  the routing card says why. Use native Claude CLI workers as heavily as their subscription allows, respecting task
   fit and hard gates.
   Operator 2026-10-16: native Claude workers use Sonnet 5.5 by default and
   Opus 5.5 only for complex or security work; Claude-lane Ukrainian stays
