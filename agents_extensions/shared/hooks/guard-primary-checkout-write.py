@@ -96,9 +96,13 @@ word to exactly one word. The word must also hold no ``..`` component when
 every unknown expansion is empty, so its literal text cannot climb back out of
 that directory (``> /tmp/$X/../../<primary>/f`` and ``> /tmp/a/$X../f`` stay
 blocked), and it may hold no expansion other than plain parameters, which
-could add such text (``${X:-..}``, ``$(...)``). A directory under ``/proc`` or
-``/dev/fd`` is not external: ``/proc/self/cwd`` is the writing shell's cwd
-there, but the guard's when resolved here. An argv path word stays blocked,
+could add such text (``${X:-..}``, ``$(...)``). A directory under ``/proc``,
+``/dev/fd`` or ``/dev/std{in,out,err}`` is not external: ``/proc/self/cwd`` is
+the writing shell's cwd there, but the guard's when resolved here. The same
+holds when an existing symlink anywhere in the directory's resolution chain
+leads to such a path (``/tmp/scratch/alias -> /proc/self/cwd``); the guard
+follows each link's text component by component to find out. Ordinary
+symlinks to other external directories stay allowed. An argv path word stays blocked,
 because an unquoted expansion can word-split into further, possibly relative,
 paths. Relative prefixes, prefixes inside or above the primary, an unknown
 value alone (``> "$X"``), ``git -C`` directories and git pathspecs stay
@@ -137,7 +141,9 @@ Coverage limitations (documented, by design)
 * A redirect whose unknown part follows an external absolute directory is
   allowed even though the unknown *value* can still hold ``..`` or name a
   symlink that leads back into the primary checkout; ``..`` spelled in the
-  command text itself is refused (see above). That is acceptable for an
+  command text itself is refused (see above). Symlinks are inspected as they
+  exist when the guard runs, so one the same command creates or retargets
+  before the write is not seen. That is acceptable for an
   accident guard: issue #4448 was an accidental cwd write, not an adversary,
   and an accidental leaf value does not climb out of its scratch directory.
 
@@ -2515,6 +2521,44 @@ def _final_component_matches(pattern: str, name: str) -> bool:
     return (not name.startswith(".") or pattern.startswith(".")) and fnmatch.fnmatchcase(name, pattern)
 
 
+_PROCESS_RELATIVE_ROOTS = ("/proc", "/dev/fd", "/dev/stdin", "/dev/stdout", "/dev/stderr")
+
+
+def _reaches_process_relative_path(directory: str) -> bool:
+    """Whether resolving ``directory`` passes through a process-relative path.
+
+    Walks the absolute path one component at a time and follows each existing
+    symlink's ``os.readlink`` text iteratively, as the kernel does. Any step
+    under ``/proc``, ``/dev/fd``, ``/dev/stdin``, ``/dev/stdout`` or
+    ``/dev/stderr`` names the writing shell's state there but the guard
+    process's here, so it counts. A symlink loop or unreadable link counts too.
+    """
+    resolved = "/"
+    pending = [part for part in directory.split("/") if part]
+    links = 0
+    while pending:
+        part = pending.pop(0)
+        if part == ".":
+            continue
+        candidate = os.path.dirname(resolved) if part == ".." else os.path.join(resolved, part)
+        if any(candidate == root or candidate.startswith(root + "/") for root in _PROCESS_RELATIVE_ROOTS):
+            return True
+        if part != ".." and os.path.islink(candidate):
+            links += 1
+            try:
+                target = os.readlink(candidate)
+            except OSError:
+                return True
+            if links > 40:
+                return True
+            pending[:0] = [p for p in target.split("/") if p]
+            if target.startswith("/"):
+                resolved = "/"
+            continue
+        resolved = candidate
+    return False
+
+
 def _external_prefix_decision(word: str, base: str, wc, main_root: Path | None) -> object | None:
     """Allowing decision for a redirect whose unknown part follows an external directory.
 
@@ -2526,7 +2570,8 @@ def _external_prefix_decision(word: str, base: str, wc, main_root: Path | None) 
     from an unquoted expansion can split into further, possibly relative,
     paths. With every unknown empty, the word must hold no ``..`` component, so
     its literal text cannot climb out (``/tmp/$X/../..``, ``/tmp/a/$X..``). A
-    directory under ``/proc`` or ``/dev/fd`` is never external: ``/proc/self``
+    directory that is, or reaches through a symlink, a process-relative path
+    (``_reaches_process_relative_path``) is never external: ``/proc/self``
     names the writing shell there but the guard process here. Returns ``None``
     when the word does not qualify.
     """
@@ -2539,8 +2584,7 @@ def _external_prefix_decision(word: str, base: str, wc, main_root: Path | None) 
     emptied = getattr(word, "unknowns_empty", None)
     if emptied is None or ".." in emptied.split("/"):
         return None
-    parts = [part for part in directory.split("/") if part not in ("", ".")]
-    if parts[:1] == ["proc"] or (parts[:1] == ["dev"] and parts[1:2] in (["fd"], ["stdin"], ["stdout"], ["stderr"])):
+    if _reaches_process_relative_path(directory):
         return None
     prefix = wc.canonicalize(directory)
     if prefix == main_root or main_root in prefix.parents or prefix in main_root.parents:

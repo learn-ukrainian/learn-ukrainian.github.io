@@ -1766,12 +1766,26 @@ def test_bash_variable_git_dash_c_primary_still_blocked(repo: Path, command: str
         # Defect (#11814 review F3): /proc/self/cwd is the shell's cwd (the
         # primary) but resolves to the guard process's cwd (outside).
         pytest.param("echo x > /proc/self/cwd/$X", False, id="proc-self-cwd"),
+        # Defect (#11814 review F6): a symlink in the literal prefix leads to a
+        # process-relative path, which the guard resolves against its own cwd.
+        pytest.param("echo x > {outside}/proc-alias/out-$X", False, id="symlink-to-proc-self-cwd"),
+        pytest.param("echo x > {outside}/proc-relative/out-$X", False, id="relative-symlink-to-proc"),
+        pytest.param("echo x > {outside}/proc-chain/out-$X", False, id="symlink-chain-to-proc"),
+        pytest.param("echo x > {outside}/fd-alias/out-$X", False, id="symlink-to-dev-fd"),
+        # Control: an ordinary symlink to another external directory.
+        pytest.param("echo x > {outside}/scratch-alias/out-$X", True, id="symlink-to-external-dir"),
     ],
 )
 def test_unresolved_redirect_leaf_is_allowed_only_under_external_absolute_prefix(
     repo: Path, outside_dir: Path, template: str, allowed: bool
 ):
     (outside_dir / "link").symlink_to(repo)
+    (outside_dir / "proc-alias").symlink_to("/proc/self/cwd")
+    (outside_dir / "proc-relative").symlink_to("../" * (len(outside_dir.parts) - 1) + "proc/self/cwd")
+    (outside_dir / "proc-chain").symlink_to(outside_dir / "proc-alias")
+    (outside_dir / "fd-alias").symlink_to("/dev/fd")
+    (outside_dir / "scratch").mkdir()
+    (outside_dir / "scratch-alias").symlink_to(outside_dir / "scratch")
     command = template.format(
         outside=outside_dir,
         repo=repo,
