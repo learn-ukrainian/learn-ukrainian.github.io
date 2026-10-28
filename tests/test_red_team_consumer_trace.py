@@ -31,7 +31,6 @@ HANDLING = {
     "scripts/fleet_comms/cli.py": "ignore",
     "scripts/fleet_comms/efficiency_metrics.py": "ignore",
     "scripts/ci/pr20_measurement.py": "ignore",
-    "scripts/entire_context/resolvers.py": "ignore",
 }
 
 

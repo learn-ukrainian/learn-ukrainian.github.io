@@ -19,16 +19,13 @@ def seed_read_only_checkout(repo: Path, monkeypatch) -> None:
     subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True, timeout=30)
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True, capture_output=True, timeout=30)
     subprocess.run(["git", "config", "user.name", "test"], cwd=repo, check=True, capture_output=True, timeout=30)
-    entire = repo / ".entire"
-    entire.mkdir(parents=True, exist_ok=True)
-    (entire / ".gitignore").write_text("tmp/\nsettings.local.json\nmetadata/\nlogs/\nredactors/local/\n", encoding="utf-8")
     (repo / ".gitignore").write_text(
         ".agent/\n.mcp/servers/message-broker/*.log\nscratch/\n.cache/\nbatch_state/\n.pytest_cache/\n"
         ".pytest_breadcrumbs/\n.ruff_cache/\n__pycache__/\n.runtime/\n*.sqlite3-wal\n*.sqlite3-shm\n*.sqlite3-journal\n",
         encoding="utf-8",
     )
     (repo / "tracked.txt").write_text("baseline\n", encoding="utf-8")
-    subprocess.run(["git", "add", ".entire/.gitignore", ".gitignore", "tracked.txt"], cwd=repo, check=True, timeout=30)
+    subprocess.run(["git", "add", ".gitignore", "tracked.txt"], cwd=repo, check=True, timeout=30)
     subprocess.run(["git", "commit", "-m", "fixture"], cwd=repo, check=True, capture_output=True, timeout=30)
 
 AGY_UKRAINIAN_REVIEW = {

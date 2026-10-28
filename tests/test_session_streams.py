@@ -1029,17 +1029,17 @@ def test_hosts_under_public_suffix_labels_are_rejected(body: str) -> None:
         validate_entry_body(body)
 
 
-def test_entire_canary_script_receipts_remain_files_but_siblings_stay_hosts() -> None:
+def test_archived_script_receipts_remain_files_but_siblings_stay_hosts() -> None:
     # .sh (Saint Helena) and .py (Paraguay) are suffix labels before .txt; only
     # the exact tracked receipt names are files, never the label or the shape.
     for body in (
-        "tool-cenv.sh.txt",
-        "canary-driver.py.txt",
-        "docs/architecture/adr/evidence/entire-0115-canary/round-2/tool-canary-hooks.sh.txt",
+        "run_codex_baseline.py.txt",
+        "verify_release_freeze.py.txt",
+        "archive/evidence/ua-eval-v0.1.0/run_codex_baseline.py.txt",
     ):
         assert not _filename_contains_hostname(body), body
         validate_entry_body(body)
-    for body in ("tool-other.sh.txt", "canary-driver.sh.txt", "TOOL-CENV.SH.TXT", "tool-cenv.sh.json"):
+    for body in ("tool-other.sh.txt", "run_codex_baseline.sh.txt", "RUN_CODEX_BASELINE.PY.TXT", "run_codex_baseline.py.json"):
         assert _filename_contains_hostname(body), body
         with pytest.raises(ContentRejectedError, match="hostname rule"):
             validate_entry_body(body)

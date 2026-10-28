@@ -44,7 +44,6 @@ Seam consumers already routed in Phase 0a:
 
 Remaining allowlisted direct opens in `scripts/hygiene/lint_control_plane_sqlite.py`:
 - Monitor API routers (`scripts/api/fleet_router.py`, `scripts/api/fleet_workers_collect.py`, `scripts/api/runtime_router.py` — handled in #7269 steps 3/4/6)
-- Entire context diagnostic readers (`scripts/entire_context/reconcile.py`, `scripts/entire_context/resolvers.py`)
 - Runtime / slot routing readers (`scripts/agent_runtime/acpx_discuss.py`, `scripts/orchestration/slot_routing.py`)
 
 Legacy broker `messages.db` call sites remain direct non-authority file opens.

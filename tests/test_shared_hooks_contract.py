@@ -1,4 +1,4 @@
-"""Contracts for fail-open behavior of Claude and Cursor Entire hooks, and updated inbox instruction."""
+"""Contracts for the shared inbox and stamp-pytest hooks."""
 
 from __future__ import annotations
 
@@ -8,17 +8,13 @@ import re
 import shutil
 import sqlite3
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
-from scripts.entire import cursor_native_hook_shim as cursor_shim
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CLAUDE_SETTINGS = REPO_ROOT / "agents_extensions" / "shared" / "settings.json"
 INBOX_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "check-agent-inbox.sh"
-CURSOR_SHIM_SCRIPT = REPO_ROOT / "scripts" / "entire" / "cursor_native_hook_shim.py"
 
 
 def _hook_env() -> dict[str, str]:
@@ -26,31 +22,6 @@ def _hook_env() -> dict[str, str]:
     env = os.environ.copy()
     env.pop("AB_DB_PATH", None)
     return env
-
-
-def _claude_entire_hooks() -> list[dict]:
-    settings = json.loads(CLAUDE_SETTINGS.read_text(encoding="utf-8"))
-    needle = "hooks claude-code "
-    return [
-        hook
-        for event in settings["hooks"]
-        for entry in settings["hooks"][event]
-        for hook in entry.get("hooks", [])
-        if needle in hook.get("command", "")
-    ]
-
-
-def _make_fake_entire_cli(directory: Path, *, exit_code: int = 1) -> Path:
-    directory.mkdir(parents=True, exist_ok=True)
-    fake_cli = directory / "entire"
-    fake_cli.write_text(
-        "#!/bin/sh\n"
-        "echo 'failed to parse hook event: empty hook input' >&2\n"
-        f"exit {exit_code}\n",
-        encoding="utf-8",
-    )
-    fake_cli.chmod(0o755)
-    return fake_cli
 
 
 def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
@@ -83,139 +54,6 @@ def _write_inbox_fixture(fixtures: Path, recipient: str, preview: str, *, messag
         f"      {preview}\n",
         encoding="utf-8",
     )
-
-
-def test_claude_entire_hooks_manifest_structure() -> None:
-    """Claude settings should have 7 composed Entire hooks without exec and ending with || true."""
-    hooks = _claude_entire_hooks()
-    assert len(hooks) == 7
-
-    verbs = {
-        re.search(r"hooks claude-code ([a-z-]+)", hook["command"]).group(1)
-        for hook in hooks
-    }
-    assert verbs == {
-        "session-start",
-        "pre-task",
-        "post-task",
-        "post-todo",
-        "user-prompt-submit",
-        "stop",
-        "session-end",
-    }
-    # Entire 0.11.5's Claude Code template gives stop and post-task 120s, the rest 30s.
-    assert {
-        re.search(r"hooks claude-code ([a-z-]+)", hook["command"]).group(1): hook["timeout"]
-        for hook in hooks
-    } == {
-        "session-start": 30,
-        "pre-task": 30,
-        "post-task": 120,
-        "post-todo": 30,
-        "user-prompt-submit": 30,
-        "stop": 120,
-        "session-end": 30,
-    }
-    assert all("if ! command -v entire" in hook["command"] for hook in hooks)
-    assert all("exec entire" not in hook["command"] for hook in hooks)
-    # Capture runs only behind the guard (version + private route), which always exits 0.
-    assert all("/scripts/entire/capture_guard.sh" in hook["command"] for hook in hooks)
-    assert not any("entire hooks claude-code" in hook["command"] for hook in hooks)
-
-
-def test_claude_entire_hooks_fail_open_when_cli_errors(tmp_path: Path) -> None:
-    """Every Claude Entire hook command exits 0 when a fake entire on PATH exits 1."""
-    fake_bin = tmp_path / "bin"
-    _make_fake_entire_cli(fake_bin, exit_code=1)
-    env = {"PATH": f"{fake_bin}:/usr/bin:/bin"}
-
-    hooks = _claude_entire_hooks()
-    assert len(hooks) == 7
-
-    for hook in hooks:
-        for stdin_data in ("", "{}\n", '{"event":"UserPromptSubmit"}\n'):
-            result = subprocess.run(
-                ["/bin/sh", "-c", hook["command"]],
-                input=stdin_data,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=env,
-                timeout=5,
-            )
-            assert result.returncode == 0, (
-                f"Hook {hook['command']} exited with {result.returncode} on stdin={stdin_data!r}"
-            )
-
-
-def test_cursor_stock_commands_fail_open_when_cli_errors(tmp_path: Path) -> None:
-    """Stock Cursor hook commands must not exec and must exit 0 when entire on PATH exits 1."""
-    fake_bin = tmp_path / "bin"
-    _make_fake_entire_cli(fake_bin, exit_code=1)
-    env = {"PATH": f"{fake_bin}:/usr/bin:/bin"}
-
-    stock_commands = cursor_shim._STOCK_COMMANDS
-    assert len(stock_commands) == 7
-
-    for key, command in stock_commands.items():
-        assert "exec entire" not in command, f"Stock command {key} still uses exec: {command}"
-        assert command.endswith("|| true'"), f"Stock command {key} does not end with || true': {command}"
-
-        for stdin_data in ("", "{}\n", '{"conversation_id":"c123"}\n'):
-            result = subprocess.run(
-                ["/bin/sh", "-c", command],
-                input=stdin_data,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=env,
-                timeout=5,
-            )
-            assert result.returncode == 0, (
-                f"Cursor stock command {key} exited with {result.returncode} on stdin={stdin_data!r}"
-            )
-
-
-def test_cursor_shim_commands_fail_open_when_cli_errors(tmp_path: Path) -> None:
-    """Cursor shim invocation must fail open when entire on PATH exits 1."""
-    fake_bin = tmp_path / "bin"
-    _make_fake_entire_cli(fake_bin, exit_code=1)
-    env = os.environ.copy()
-    env["PATH"] = f"{fake_bin}:{env.get('PATH', '/usr/bin:/bin')}"
-
-    for verb in ("session-start", "before-submit-prompt", "stop"):
-        for stdin_data in ("", "{}\n", '{"conversation_id":"dummy"}\n'):
-            result = subprocess.run(
-                [sys.executable, str(CURSOR_SHIM_SCRIPT), verb],
-                input=stdin_data,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=env,
-                cwd=str(REPO_ROOT),
-                timeout=5,
-            )
-            assert result.returncode == 0, (
-                f"Cursor shim {verb} exited with {result.returncode} on stdin={stdin_data!r}"
-            )
-
-    managed_commands = cursor_shim._MANAGED_COMMANDS
-    for key, command in managed_commands.items():
-        assert command.endswith("; exit 0'")
-        for stdin_data in ("", "{}\n"):
-            result = subprocess.run(
-                ["/bin/sh", "-c", command],
-                input=stdin_data,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=env,
-                cwd=str(REPO_ROOT),
-                timeout=5,
-            )
-            assert result.returncode == 0, (
-                f"Managed command {key} exited with {result.returncode} on stdin={stdin_data!r}"
-            )
 
 
 def test_inbox_hook_emits_provider_scoped_previews_and_live_inbox_instruction(tmp_path: Path) -> None:

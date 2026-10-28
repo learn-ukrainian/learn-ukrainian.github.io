@@ -347,7 +347,7 @@ def test_dispatch_transport_accepts_only_known_ignored_metadata_leak(tmp_path) -
         "exit_code": 0,
         "result_file": str(result),
         "last_error": "read-only checkout mutation detected: .agent/sessions/review.json",
-        "read_only_mutation_paths": [".agent/sessions/review.json", ".entire/metadata/review/prompt.txt"],
+        "read_only_mutation_paths": [".agent/sessions/review.json", "batch_state/api_usage/usage_review.jsonl"],
     }
     receipt = admission.validate_dispatch_transport(
         state,

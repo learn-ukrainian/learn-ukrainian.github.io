@@ -769,7 +769,7 @@ def build_hydrate_capsule(
         "1. **Canary PASS** only proves durable anchors (identity / mintable Next Drive / Hands-off).\n"
         "2. Re-read **Next Drive** + **Active Working Set** from this capsule (or diary if missing).\n"
         "3. Open the **active phase receipt** named in Next Drive / Working Set "
-        "(private `docs/entire/...` or stream pin) — do not resume from vibe.\n"
+        "(or stream pin) — do not resume from vibe.\n"
         "4. If the open task is **not** spelled in Next Drive or Active Working Set: "
         "**STOP inventing** — stamp dual-write or hand off / re-mint.\n"
         "5. Anything not dual-written before compact is **allowed to have evaporated**.\n"

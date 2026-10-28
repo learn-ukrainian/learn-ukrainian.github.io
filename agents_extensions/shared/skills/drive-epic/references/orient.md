@@ -49,14 +49,6 @@ and next-action time alongside the projection — also a queue INPUT, never a re
 (absent) cache → `503` `building` + `retry_after_s` (does not trigger a build); unknown
 `stream` → `400` with `valid_streams`.
 
-**Entire cold-start companion (supplemental to the lane tracker):** after orienting,
-run `.venv/bin/python -m scripts.entire_context status` and
-`search --query "<path-or-sha-needle>"` (and optional `handoff --query`) so promoted SHAs
-surface before dispatch. Ranking is **one substring** (prefer path tokens like `practice`
-or a full SHA — not multi-word sentences). Empty search = nothing indexed for that needle;
-`handoff --query` with zero hits may return `seed_invalid` — use `--locator-id` from
-bootstrap/search instead. Fall through to GH issues and the lane tracker.
-
 ## §0b. Optional Monitor inbox-watcher wakeup — cold start only
 
 At cold-start, **if your harness has a Monitor-equivalent**, invoke it once with that

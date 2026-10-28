@@ -498,7 +498,7 @@ def test_worker_guards_run_parser_guards_under_the_project_interpreter(tmp_path:
             "$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-venv.sh",
             *(f"{_WRAPPER} {name}" for name in _PINNED_GUARDS),
             "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-secret-print.py",
-            "sh -c 'entire hooks claude-code pre-task || true'",
+            "sh -c 'optional-telemetry pre-task || true'",
         ],
     )
     hooks = _settings_from(tmp_path, monkeypatch)
@@ -580,7 +580,7 @@ def test_worker_guards_refuse_other_fleet_guard_forms(tmp_path: Path, monkeypatc
 
 @pytest.mark.parametrize(
     "command",
-    [f"{_WRAPPER} 'guard-pr-merge.py", "sh -c 'entire hooks claude-code pre-task"],
+    [f"{_WRAPPER} 'guard-pr-merge.py", "sh -c 'optional-telemetry pre-task"],
 )
 def test_worker_guards_refuse_an_unreadable_hook_command(tmp_path: Path, monkeypatch, command: str) -> None:
     _guard_source_tree(tmp_path, [command])
