@@ -90,13 +90,46 @@ def external_advisory_names(rows: object) -> frozenset[str]:
     )
 
 
-def _complete_page(document: object, key: str) -> bool:
-    return (
-        isinstance(document, dict)
-        and type(document.get("total_count")) is int
-        and isinstance(document.get(key), list)
-        and document["total_count"] == len(document[key])
-    )
+_PAGE_SIZE = 100
+_MAX_PAGES = 100
+
+
+def _read_all_pages(get_json: Callable[[str], object], endpoint: str, key: str) -> dict | None:
+    """The whole ``{total_count, key: [...]}`` collection at ``endpoint`` (``per_page=100``), or None.
+
+    GitHub caps a page at 100 records, so a head with more check runs needs ``page=2``
+    and on. The first request is the bare ``endpoint``; later ones add ``page=N``. The
+    walk fails closed unless the collected records equal ``total_count``: an unreadable
+    or malformed page, a short page before the total is reached, a ``total_count`` that
+    changes mid-walk, or (across pages) a record without an integer id or a repeated id, is None.
+    """
+    first = get_json(endpoint)
+    if not isinstance(first, dict) or type(first.get("total_count")) is not int or not isinstance(first.get(key), list):
+        return None
+    total, records = first["total_count"], list(first[key])
+    page = 1
+    while len(records) < total:
+        if len(records) != page * _PAGE_SIZE or page >= _MAX_PAGES:
+            return None
+        page += 1
+        following = get_json(f"{endpoint}&page={page}")
+        if (
+            not isinstance(following, dict)
+            or following.get("total_count") != total
+            or not isinstance(following.get(key), list)
+            or not following[key]
+        ):
+            return None
+        records.extend(following[key])
+    if len(records) != total:
+        return None
+    if page > 1:
+        # Only a multi-page walk can shift under new records; every record must then
+        # carry an integer identity so a repeated one cannot stand in for a missed one.
+        ids = [row.get("id") if isinstance(row, dict) else None for row in records]
+        if any(type(value) is not int for value in ids) or len(set(ids)) != len(ids):
+            return None
+    return {"total_count": total, key: records}
 
 
 def prove_external_advisory(
@@ -119,20 +152,22 @@ def prove_external_advisory(
     ):
         return None
     head = head.lower()
-    status = get_json(f"repos/{repo}/commits/{head}/status?per_page=100")
-    if not _complete_page(status, "statuses") or any(
+    status = _read_all_pages(get_json, f"repos/{repo}/commits/{head}/status?per_page=100", "statuses")
+    if status is None or any(
         not isinstance(row, dict) or not isinstance(row.get("context"), str) or row["context"] in names
         for row in status["statuses"]
     ):
         return None
     for name in sorted(names):
         entry = external_advisory_check(name)
-        page = get_json(
-            f"repos/{repo}/commits/{head}/check-runs?check_name={quote(name, safe='')}&filter=all&per_page=100"
+        page = _read_all_pages(
+            get_json,
+            f"repos/{repo}/commits/{head}/check-runs?check_name={quote(name, safe='')}&filter=all&per_page=100",
+            "check_runs",
         )
         if (
             entry is None
-            or not _complete_page(page, "check_runs")
+            or page is None
             or not page["check_runs"]
             or not all(is_external_advisory_run(entry, run, head) for run in page["check_runs"])
         ):
@@ -242,8 +277,8 @@ def bound_rollup_states(
         isinstance(row, dict) and row.get("name") and not row.get("workflowName")
         and (_duplicate_check_names(rows) or row["name"] in policy.names) for row in rows
     ):
-        page = get_json(f"repos/{repo}/commits/{head}/check-runs?filter=all&per_page=100")
-        if not _complete_page(page, "check_runs"):
+        page = _read_all_pages(get_json, f"repos/{repo}/commits/{head}/check-runs?filter=all&per_page=100", "check_runs")
+        if page is None:
             return None
         runs = bind_workflow_runs(
             page["check_runs"], head, repo,
