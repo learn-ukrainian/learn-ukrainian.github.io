@@ -1755,8 +1755,14 @@ def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> 
 
 
 def require_review_round_within_budget(
-    comments: Sequence[Mapping[str, Any]], sha: str, login: str, *, budget: int, pr: int
-) -> None:
+    comments: Sequence[Mapping[str, Any]],
+    sha: str,
+    login: str,
+    *,
+    budget: int,
+    pr: int,
+    extension: Callable[[], dict[str, Any] | None] | None = None,
+) -> dict[str, Any] | None:
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
     A round is one reviewed head: trusted verdicts on this PR are counted
@@ -1764,13 +1770,33 @@ def require_review_round_within_budget(
     or a retried publication) open no new round. Earlier PRs are not read: no
     GitHub listing finds them reliably (search index lag, the 250-commit PR
     listing cap). Budget end is never approval.
+
+    The one exception is round ``budget + 1`` under an approved budget
+    extension (``scripts/review/budget_extension.py``): ``extension`` returns
+    its receipt, None when the PR has no extension request, or refuses.
     """
     heads = _trusted_verdict_shas(comments, login)
     if sha not in heads and len(heads) >= budget:
-        raise RecordError(
+        exhausted = (
             f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(heads)} heads and its budget "
             f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(heads) + 1}"
         )
+        if extension is not None and len(heads) == budget:
+            try:
+                receipt = extension()
+            except RecordError as exc:
+                raise RecordError(f"{exhausted}; {exc}") from exc
+            if receipt is not None:
+                return receipt
+        raise RecordError(exhausted)
+    return None
+
+
+def _budget_extension(**kwargs: Any) -> dict[str, Any] | None:
+    # The extension check builds on this module, so it is imported only when the budget is spent.
+    from scripts.review.budget_extension import admit_extension_round
+
+    return admit_extension_round(**kwargs)
 
 
 def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: str) -> None:
@@ -1867,6 +1893,38 @@ def _require_formal_reviewer(
         raise RecordError(f"reviewer model refused: {refusal}")
 
 
+def reviewer_identity(task: Mapping[str, Any]) -> tuple[str, str]:
+    """The attested reviewer model and family of a review task record, or a refusal.
+
+    The recorder publishes a verdict only for this identity; the approval
+    carry-over applies the same rule to every run in a PR's review lineage.
+    """
+    cursor = task.get("agent") == "cursor"
+    native_grok = task.get("agent") in {"grok", "grok-build"}
+    reported = task.get("resolved_model") if cursor or native_grok else task.get("model")
+    if cursor and task.get("resolved_model_known") is not True:
+        raise RecordError("Cursor reviewer model unknown")
+    source = task.get("resolved_model_source")
+    if cursor and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
+        raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
+    if native_grok and (task.get("resolved_model_known") is not True or source != "grok-model-usage"):
+        raise RecordError("native Grok reviewer model unattested: modelUsage runtime report required")
+    # Only Cursor's runtime reports display names; record its catalog id.
+    model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
+    if native_grok:
+        holder, admitted_runtime_ids = _native_grok_reviewer_identity()
+        if not isinstance(reported, str) or reported not in admitted_runtime_ids:
+            raise RecordError("native Grok reviewer model unknown: runtime model is not admitted")
+        model = holder
+    if not isinstance(model, str) or not model or re.search(r"\s", model):
+        raise RecordError("reviewer model unknown")
+    family = resolve_family(model)
+    if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
+        raise RecordError("reviewer family unknown")
+    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok)
+    return model, family
+
+
 @publication_boundary(RecordError)
 def record(
     task_id: str,
@@ -1913,29 +1971,7 @@ def record(
         raise RecordError("reviewed SHA missing or invalid")
     if task.get("pinned_head") is not None and task["pinned_head"] != sha:
         raise RecordError("reviewed SHA conflicts with pinned head")
-    cursor = task.get("agent") == "cursor"
-    native_grok = task.get("agent") in {"grok", "grok-build"}
-    reported = task.get("resolved_model") if cursor or native_grok else task.get("model")
-    if cursor and task.get("resolved_model_known") is not True:
-        raise RecordError("Cursor reviewer model unknown")
-    source = task.get("resolved_model_source")
-    if cursor and not (isinstance(source, str) and source in RUNTIME_REPORTED_MODEL_SOURCES):
-        raise RecordError("Cursor reviewer model unattested: its source is not a runtime report")
-    if native_grok and (task.get("resolved_model_known") is not True or source != "grok-model-usage"):
-        raise RecordError("native Grok reviewer model unattested: modelUsage runtime report required")
-    # Only Cursor's runtime reports display names; record its catalog id.
-    model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
-    if native_grok:
-        holder, admitted_runtime_ids = _native_grok_reviewer_identity()
-        if not isinstance(reported, str) or reported not in admitted_runtime_ids:
-            raise RecordError("native Grok reviewer model unknown: runtime model is not admitted")
-        model = holder
-    if not isinstance(model, str) or not model or re.search(r"\s", model):
-        raise RecordError("reviewer model unknown")
-    family = resolve_family(model)
-    if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
-        raise RecordError("reviewer family unknown")
-    _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok)
+    model, family = reviewer_identity(task)
     verdict, finding_count = _review_verdict_and_count(reply)
     _require_sources_mcp_calls(task)
     ukrainian = is_ukrainian_review(task)
@@ -2057,7 +2093,24 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
-        require_review_round_within_budget(comments, sha, login, budget=review_round_budget(facts), pr=number)
+        extension = require_review_round_within_budget(
+            comments,
+            sha,
+            login,
+            budget=review_round_budget(facts),
+            pr=number,
+            extension=partial(
+                _budget_extension,
+                repository=repository,
+                number=number,
+                branch=branch,
+                head=sha,
+                comments=comments,
+                login=login,
+                task_root=task_root,
+                repo_root=review_root,
+            ),
+        )
         existing = None
         for item in comments:
             body = item.get("body")
@@ -2141,11 +2194,19 @@ def record(
     }
     if facts.app_bot_commits:
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
+    if extension is not None:
+        result["budget_extension"] = extension
     return result
 
 
 @publication_cli(RecordError)
 def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["budget-extension"]:
+        # The extension verb builds on this module, so it is imported only when chosen.
+        from scripts.review.budget_extension import main as budget_extension_main
+
+        return budget_extension_main(argv[1:])
     parser = argparse.ArgumentParser(
         description="Publish a completed exact-head verdict; cross-family is the default.\n"
         "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
@@ -2153,6 +2214,8 @@ def main(argv: list[str] | None = None) -> int:
         epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
         "--review-mode red_team --red-team-prompt brief.md\n"
+        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-extension digest <request.json>\n"
+        "    (a budget extension request's digest; see budget-extension --help)\n"
         "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
         "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
     )

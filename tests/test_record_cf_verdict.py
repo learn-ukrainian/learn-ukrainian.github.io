@@ -407,6 +407,8 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
     )
     monkeypatch.setattr(recorder.GitHubAdapter, "identity", lambda self: "fleet")
     monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda self, repository, number: list(comments))
+    # No budget extension request exists unless a test builds one (extension_case).
+    monkeypatch.setattr(recorder, "_budget_extension", lambda **_kwargs: None)
 
     def fake_status(**kwargs):
         calls["statuses"] += 1
@@ -2941,3 +2943,227 @@ def test_unknown_history_excludes_all_possible_author_families():
     assert red_team.review_mode == "red_team"
     assert red_team.limitation
     assert red_team.selected.concrete_model != "gpt-6-luna"
+
+
+# Review budget extension (scripts/review/budget_extension.py): one round past the budget.
+_REAL_BUDGET_EXTENSION = recorder._budget_extension
+EXTENSION_ROLE = "review_budget_extension"
+
+
+def extension_repo(tmp_path, *, author="claude/claude-opus-5-5", extra_requests=(), head_kind="merge"):
+    """A PR branch approved at A, then a base change on main with this PR's request, then head N."""
+    repo, origin = tmp_path / "ext-repo", tmp_path / "ext-origin.git"
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(
+        GIT_AUTHOR_NAME="t",
+        GIT_AUTHOR_EMAIL="t@example.invalid",
+        GIT_COMMITTER_NAME="t",
+        GIT_COMMITTER_EMAIL="t@example.invalid",
+        GIT_CONFIG_GLOBAL=os.devnull,
+        GIT_CONFIG_NOSYSTEM="1",
+    )
+
+    def run(*args):
+        command = ["git", "-C", str(repo), *args]
+        return subprocess.run(command, check=True, capture_output=True, text=True, env=env, timeout=30).stdout.strip()
+
+    def commit(path, text, message):
+        (repo / path).parent.mkdir(parents=True, exist_ok=True)
+        (repo / path).write_text(text)
+        run("add", path)
+        run("commit", "-q", "-m", message)
+
+    repo.mkdir()
+    run("init", "-q", "-b", "main")
+    commit("shared.txt", "base\n", "root\n\nX-Agent: claude/claude-opus-5-5")
+    run("init", "-q", "--bare", str(origin))
+    run("--git-dir", str(origin), "symbolic-ref", "HEAD", "refs/heads/main")
+    run("remote", "add", "origin", str(origin))
+    run("checkout", "-q", "-b", "feature")
+    commit("feature.txt", "feature\n", "feature\n\nX-Agent: codex/gpt-6.1-sol")
+    approved = run("rev-parse", "HEAD")
+    run("checkout", "-q", "main")
+    commit("shared.txt", "base changed\n", "base change\n\nX-Agent: claude/claude-opus-5-5")
+    request = {
+        "pr": 42,
+        "lineage_id": "issue-42",
+        "approved_head": approved,
+        "reason_class": "post-approval-base-conflict",
+        "grant": 1,
+        "requested_at": "2026-10-28T18:00:00+00:00",
+    }
+    folder = "batch_state/review-budget-extensions"
+    commit(f"{folder}/pr-42.json", json.dumps(request), f"request\n\nX-Agent: {author}\n\nX-Agent: {author}")
+    for name, extra in extra_requests:
+        commit(f"{folder}/{name}", json.dumps({**request, **extra}), "another request\n\nX-Agent: claude/claude-opus-5-5")
+    run("push", "-q", "origin", "main")
+    run("checkout", "-q", "feature")
+    if head_kind == "merge":
+        run("merge", "-q", "--no-ff", "-m", "merge main\n\nX-Agent: codex/gpt-6.1-sol", "main")
+    else:
+        commit("feature.txt", "feature fixed\n", "fix\n\nX-Agent: codex/gpt-6.1-sol")
+    return repo, approved, run("rev-parse", "HEAD"), request, run
+
+
+def write_extension_approval(tasks, request, *, task_id="ext-approval", decision=(), text=None, seal=True, edited=False, **record):
+    """A finished advisory task for ``request``, sealed at finish as the dispatcher seals it."""
+    from scripts.agent_runtime import bounded_advisory
+
+    digest = bounded_advisory.canonical_sha256(request)
+    typed = {"decision": "APPROVE", **{key: request[key] for key in ("pr", "lineage_id", "approved_head", "reason_class", "grant")}}
+    typed.update(request_sha256=digest, **dict(decision))
+    text = f"VERDICT: APPROVE\n\n```budget-extension\n{json.dumps(typed)}\n```\n" if text is None else text
+    path = tasks / f"{task_id}.json"
+    data = {
+        "task_id": task_id,
+        "status": "done",
+        "agent": "codex",
+        "model": "gpt-6.1-sol",
+        "mode": "read-only",
+        "repository": REPOSITORY,
+        "advisory_role": EXTENSION_ROLE,
+        "advisory_route": f"advisory_roles.{EXTENSION_ROLE}",
+        "advisory_binding_sha256": digest,
+        "run_nonce": f"{task_id}-run",
+        "result_file": str(path.with_suffix(".result")),
+        **record,
+    }
+    if seal:
+        data["advisory_seal"] = bounded_advisory.seal_advisor_result(
+            text, model=data["model"], run_nonce=data["run_nonce"], fence="budget-extension"
+        )
+    path.with_suffix(".result").write_text(text + ("edited\n" if edited else ""))
+    path.write_text(json.dumps(data))
+
+
+def extension_case(monkeypatch, tmp_path, **repo_options):
+    """Three spent rounds ending in A's APPROVE, each a published run on record, and the round at N to record."""
+    repo, approved, head, request, run = extension_repo(tmp_path, **repo_options)
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
+    monkeypatch.setattr(recorder, "_budget_extension", _REAL_BUDGET_EXTENSION)
+    monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: repo)
+    write_task(tasks, worktree_base_sha=head)
+    rounds = (("1" * 40, "CHANGES_REQUESTED"), ("2" * 40, "CHANGES_REQUESTED"), (approved, "APPROVED"))
+    for index, (sha, verdict) in enumerate(rounds, start=1):
+        write_task(
+            tasks,
+            task_id=f"round-{index}",
+            reply="VERDICT: APPROVE" if verdict == "APPROVED" else "VERDICT: REQUEST_CHANGES",
+            worktree_base_sha=sha,
+            model="claude-opus-5-5",
+            agent="claude",
+            pr=42,
+            review_profile="code",
+            started_at="2026-09-23T11:00:00.000001+00:00",
+        )
+        item = recorded_verdict(sha, verdict, task_id=f"round-{index}")
+        item["created_at"] = item["updated_at"] = f"2026-09-23T11:3{index}:00Z"
+        comments.append(item)
+    return tasks, comments, calls, request, head, run
+
+
+def test_valid_budget_extension_admits_exactly_one_round(monkeypatch, tmp_path):
+    tasks, comments, calls, request, head, run = extension_case(monkeypatch, tmp_path)
+    write_extension_approval(tasks, request)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    result = recorder.record("review-one", **kwargs)
+    assert result["verdict"] == "APPROVED" and calls["posts"] == 1
+    receipt = result["budget_extension"]
+    assert receipt["approval_task"] == "ext-approval" and receipt["advisor_model"] == "gpt-6.1-sol"
+    assert receipt["approved_head"] == request["approved_head"] and receipt["seats"] == ["anthropic"]
+    # A second seat at N is the same round.
+    write_task(tasks, task_id="seat-two", worktree_base_sha=head)
+    assert recorder.record("seat-two", **kwargs)["verdict"] == "APPROVED"
+    # Any later head is a second extension round, refused whatever round 4 decided.
+    later = tmp_path / "ext-repo" / "feature.txt"
+    later.write_text("after the extension round\n")
+    run("commit", "-q", "-am", "more\n\nX-Agent: codex/gpt-6.1-sol")
+    tasks2, comments2, calls2 = tasks, list(comments), calls
+    next_head = run("rev-parse", "HEAD")
+    monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda self, repository, number: list(comments2))
+    fake = recorder._run_json
+
+    def moved(args, *, input_text=None):
+        if isinstance(args, list) and args[:3] == ["gh", "pr", "view"]:
+            return {"number": 42, "headRefOid": next_head, "headRefName": BRANCH, "state": "OPEN"}
+        return fake(args, input_text=input_text)
+
+    monkeypatch.setattr(recorder, "_run_json", moved)
+    write_task(tasks2, task_id="round-five", worktree_base_sha=next_head)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 4 heads"):
+        recorder.record("round-five", **kwargs)
+    assert calls2["posts"] == 2
+
+
+def test_budget_extension_follows_the_non_author_advisor(monkeypatch, tmp_path):
+    """An OpenAI-authored request needs Opus (operator-expectations item 12); Sol's approval refuses."""
+    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path, author="codex/gpt-6.1-sol")
+    write_extension_approval(tasks, request)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_EXTENSION_REFUSED\[approval\].*not the advisor claude-opus-5-5"):
+        recorder.record("review-one", **kwargs)
+    write_extension_approval(tasks, request, agent="claude", model="claude-opus-5-5")
+    assert recorder.record("review-one", **kwargs)["budget_extension"]["advisor_model"] == "claude-opus-5-5"
+    assert calls["posts"] == 1
+
+
+@pytest.mark.parametrize(
+    "case,reason",
+    [
+        # A review APPROVE, or any untyped approval, is not an extension decision.
+        ("ordinary-review-approve", r"\[approval\].*exactly one finished approval task, found 0"),
+        ("untyped-approve", r"\[approval\].*holds no ```budget-extension block"),
+        ("wrong-role", r"\[approval\].*did not run as 'review_budget_extension'"),
+        ("wrong-model", r"\[approval\].*not the advisor gpt-6.1-sol"),
+        ("write-mode", r"\[approval\].*did not run read-only"),
+        ("unsealed", r"\[approval\].*no finish-time advisory_seal"),
+        ("edited-result", r"\[approval\].*result hashes to"),
+        ("wrong-field", r"\[approval\].*decided approved_head="),
+        ("wrong-type", r"\[approval\].*decided grant=True"),
+        ("extra-field", r"\[approval\].*must hold exactly"),
+        ("advisor-refused", r"\[approval\].*decided decision='REFUSE'"),
+        ("in-flight", r"\[approval\].*still in flight"),
+        ("second-approval", r"\[approval\].*found 2"),
+        ("changed-request", r"\[approval\].*found 0"),
+        ("second-extension", r"\[request\].*lineage 'issue-42' already has an extension request"),
+        ("bad-request", r"\[request\].*grant must be 1"),
+        ("no-advisor", r"\[approval\].*no single non-author designated advisor"),
+        ("lineage", r"\[lineage\].*round-late finished but its verdict is unpublished"),
+        ("descent", r"\[descent\].*is not a two-parent merge"),
+    ],
+)
+def test_budget_extension_refuses(monkeypatch, tmp_path, case, reason):
+    repo_options = {
+        "second-extension": {"extra_requests": [("pr-41.json", {"pr": 41})]},
+        "bad-request": {"extra_requests": [("pr-43.json", {"pr": 43, "grant": 2})]},
+        "no-advisor": {"author": "agy/gemini-3.8-flash-high"},
+        "descent": {"head_kind": "commit"},
+    }.get(case, {})
+    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path, **repo_options)
+    approval = {
+        "ordinary-review-approve": dict(
+            seal=False, advisory_role=None, advisory_route=None, advisory_binding_sha256=None, review_profile="code"
+        ),
+        "untyped-approve": dict(text="VERDICT: APPROVE\n\nApproved: one more round for PR #42 at its approved head.\n"),
+        "wrong-role": dict(advisory_role="bounded_advisory_envelope"),
+        "wrong-model": dict(agent="claude", model="claude-opus-5-5"),
+        "write-mode": dict(mode="workspace-write"),
+        "unsealed": dict(seal=False),
+        "edited-result": dict(edited=True),
+        "wrong-field": dict(decision={"approved_head": "c" * 40}),
+        "wrong-type": dict(decision={"grant": True}),
+        "extra-field": dict(decision={"note": "fine"}),
+        "advisor-refused": dict(decision={"decision": "REFUSE"}),
+        "in-flight": dict(status="running"),
+    }.get(case, {})
+    if case == "changed-request":
+        write_extension_approval(tasks, {**request, "requested_at": "2026-10-28T17:00:00+00:00"})
+    else:
+        write_extension_approval(tasks, request, **approval)
+    if case == "second-approval":
+        write_extension_approval(tasks, request, task_id="ext-approval-retry")
+    if case == "lineage":
+        write_task(tasks, task_id="round-late", worktree_base_sha=request["approved_head"], pr=42, review_profile="code")
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_EXTENSION_REFUSED" + reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}

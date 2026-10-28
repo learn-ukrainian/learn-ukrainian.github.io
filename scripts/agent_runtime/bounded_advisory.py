@@ -25,7 +25,10 @@ finishes: the SHA-256 of the result it wrote, of the envelope in it, and the
 model and run nonce it ran. The seal is a consistency checksum. Admission
 recomputes both digests and refuses a result edited or replaced after finish
 without a matching record update; a writer that updates both is outside the
-threat model above.
+threat model above. ``load_sealed_result`` holds the record, binding and seal
+checks every advisory role shares; the review budget extension
+(``scripts/review/budget_extension.py``) reuses them with its own role, route,
+model and fenced object.
 
 The bound brief is what the worker runs: the worker rebuilds the expected
 prompt from the brief whose SHA-256 the envelope binds plus the dispatcher
@@ -71,7 +74,14 @@ from scripts.review.model_catalog import (
 
 ENVELOPE_FENCE = "advisory-envelope"
 BINDING_FIELD = "dispatch_args_sha256"
-_FENCE_RE = re.compile(r"^```" + re.escape(ENVELOPE_FENCE) + r"[ \t]*\n(.*?)\n```[ \t]*$", re.MULTILINE | re.DOTALL)
+
+
+def _fence_re(fence: str) -> re.Pattern[str]:
+    """A whole fenced block labelled ``fence``: the typed object an advisor result carries."""
+    return re.compile(r"^```" + re.escape(fence) + r"[ \t]*\n(.*?)\n```[ \t]*$", re.MULTILINE | re.DOTALL)
+
+
+_FENCE_RE = _fence_re(ENVELOPE_FENCE)
 _SHA256_RE = re.compile(r"[0-9a-f]{64}")
 _GLOB_CHARS = frozenset("*?[")
 # Repo roots a bounded worker never owns: git metadata, dispatch worktrees,
@@ -227,9 +237,9 @@ def envelope_sha256(envelope: Mapping[str, Any]) -> str:
     return canonical_sha256(envelope)
 
 
-def _result_envelope_sha256(result_text: str) -> str | None:
-    """The canonical digest of the result's one fenced envelope object; None when there is not exactly one."""
-    blocks = _FENCE_RE.findall(result_text)
+def _result_envelope_sha256(result_text: str, fence: str = ENVELOPE_FENCE) -> str | None:
+    """The canonical digest of the result's one fenced ``fence`` object; None when there is not exactly one."""
+    blocks = _fence_re(fence).findall(result_text)
     if len(blocks) != 1:
         return None
     try:
@@ -239,18 +249,21 @@ def _result_envelope_sha256(result_text: str) -> str | None:
     return envelope_sha256(envelope) if isinstance(envelope, dict) else None
 
 
-def seal_advisor_result(response: str, *, model: str | None, run_nonce: str | None) -> dict[str, Any]:
+def seal_advisor_result(
+    response: str, *, model: str | None, run_nonce: str | None, fence: str = ENVELOPE_FENCE
+) -> dict[str, Any]:
     """The finish-time consistency checksum an advisor's worker records beside the result it writes.
 
     ``response`` is the text written, UTF-8, to the canonical result; ``model``
-    the model the worker ran. Admission refuses a result that no longer hashes
-    to ``result_sha256`` or whose envelope no longer hashes to
+    the model the worker ran; ``fence`` labels the typed object its advisory
+    role returns. Admission refuses a result that no longer hashes to
+    ``result_sha256`` or whose typed object no longer hashes to
     ``envelope_sha256``. The seal authenticates nothing: whoever can write the
     task record can recompute it (see the module threat model).
     """
     return {
         "result_sha256": hashlib.sha256(response.encode("utf-8")).hexdigest(),
-        "envelope_sha256": _result_envelope_sha256(response),
+        "envelope_sha256": _result_envelope_sha256(response, fence),
         "advisor_model": canonical_model_id(model) or model,
         "run_nonce": run_nonce,
     }
@@ -711,6 +724,22 @@ def _require_positive_int(envelope: Mapping[str, Any], field: str) -> None:
         raise AdvisoryRefused(ENVELOPE_INCOMPLETE, f"{field} must be a positive integer, got {value!r}")
 
 
+def fenced_object(result_text: str, fence: str) -> dict[str, Any]:
+    """The one fenced ``fence`` JSON object in an advisor result, or a typed refusal."""
+    blocks = _fence_re(fence).findall(result_text)
+    if not blocks:
+        raise AdvisoryRefused(ENVELOPE_MISSING, f"the advisor result holds no ```{fence} block")
+    if len(blocks) > 1:
+        raise AdvisoryRefused(ENVELOPE_MISSING, f"the advisor result holds {len(blocks)} ```{fence} blocks")
+    try:
+        value = json.loads(blocks[0])
+    except ValueError as exc:
+        raise AdvisoryRefused(ENVELOPE_INCOMPLETE, f"the envelope is not JSON: {exc}") from None
+    if not isinstance(value, dict):
+        raise AdvisoryRefused(ENVELOPE_INCOMPLETE, "the envelope must be a JSON object")
+    return value
+
+
 def parse_envelope(
     result_text: str,
     *,
@@ -719,17 +748,7 @@ def parse_envelope(
 ) -> dict[str, Any]:
     """The one ``advisory-envelope`` JSON object in ``result_text``, validated field by field."""
     policy = policy or bounded_execution_policy()
-    blocks = _FENCE_RE.findall(result_text)
-    if not blocks:
-        raise AdvisoryRefused(ENVELOPE_MISSING, f"the advisor result holds no ```{ENVELOPE_FENCE} block")
-    if len(blocks) > 1:
-        raise AdvisoryRefused(ENVELOPE_MISSING, f"the advisor result holds {len(blocks)} ```{ENVELOPE_FENCE} blocks")
-    try:
-        envelope = json.loads(blocks[0])
-    except ValueError as exc:
-        raise AdvisoryRefused(ENVELOPE_INCOMPLETE, f"the envelope is not JSON: {exc}") from None
-    if not isinstance(envelope, dict):
-        raise AdvisoryRefused(ENVELOPE_INCOMPLETE, "the envelope must be a JSON object")
+    envelope = fenced_object(result_text, ENVELOPE_FENCE)
     expected = {*policy.advisor_output_fields, BINDING_FIELD}
     missing = sorted(expected - set(envelope))
     extra = sorted(set(envelope) - expected)
@@ -765,32 +784,56 @@ def _read_record(state_path: Path, advisor_task_id: str) -> dict[str, Any]:
     return record
 
 
-def load_envelope(
+@dataclass(frozen=True)
+class SealedResult:
+    """A finished advisory task's record and canonical result, checked against its finish-time seal."""
+
+    record: dict[str, Any]
+    result_path: Path
+    result_text: str
+    result_sha256: str
+    seal: dict[str, Any]
+
+    def require_sealed_object(self, value: Mapping[str, Any], advisor_task_id: str) -> str:
+        """The canonical digest of ``value``, which must be the typed object the advisor sealed."""
+        digest = canonical_sha256(value)
+        if self.seal.get("envelope_sha256") != digest:
+            raise AdvisoryRefused(
+                SEAL_MISMATCH,
+                f"advisory task {advisor_task_id!r} envelope hashes to {digest}, "
+                f"not the {self.seal.get('envelope_sha256')!r} its advisor sealed at finish",
+            )
+        return digest
+
+
+def load_sealed_result(
     advisor_task_id: str,
     *,
     state_path: Path,
+    role: str,
+    route: str,
+    model_id: str,
     binding_sha256: str,
-    repo_root: Path,
-    policy: BoundedExecutionPolicy | None = None,
-) -> ValidatedEnvelope:
-    """Validate the advisor task's canonical record and result, and the envelope's binding to this dispatch."""
-    policy = policy or bounded_execution_policy()
+) -> SealedResult:
+    """The sealed result of an advisory task that ran ``role`` on ``route`` and ``model_id``, read-only and bound.
+
+    Every advisory role shares these checks. The caller parses its role's
+    typed object from ``result_text`` and binds it to the seal with
+    ``SealedResult.require_sealed_object``.
+    """
     record = _read_record(state_path, advisor_task_id)
     status = record.get("status")
     if status != "done":
         raise AdvisoryRefused(TASK_NOT_DONE, f"advisory task {advisor_task_id!r} is {status!r}, not 'done'")
-    if record.get("advisory_role") != policy.advisor_role or record.get("advisory_route") != ADVISOR_ROUTE:
-        raise AdvisoryRefused(
-            TASK_WRONG_ROLE,
-            f"advisory task {advisor_task_id!r} did not run as {policy.advisor_role!r} on {ADVISOR_ROUTE}",
-        )
+    if record.get("advisory_role") != role or record.get("advisory_route") != route:
+        raise AdvisoryRefused(TASK_WRONG_ROLE, f"advisory task {advisor_task_id!r} did not run as {role!r} on {route}")
     if record.get("mode") != "read-only":
         raise AdvisoryRefused(TASK_WRONG_ROLE, f"advisory task {advisor_task_id!r} did not run read-only")
     recorded_model = record.get("model")
-    if canonical_model_id(recorded_model) != policy.advisor_model_id or record.get("resolved_model_known") is False:
+    if canonical_model_id(recorded_model) != model_id or record.get("resolved_model_known") is False:
         raise AdvisoryRefused(
             TASK_WRONG_MODEL,
-            f"advisory task {advisor_task_id!r} ran on {recorded_model!r}, not the advisor {policy.advisor_model_id}",
+            f"advisory task {advisor_task_id!r} ran on {recorded_model!r}, not the advisor {model_id}",
         )
     if record.get("advisory_binding_sha256") != binding_sha256:
         raise AdvisoryRefused(
@@ -810,11 +853,11 @@ def load_envelope(
         raise AdvisoryRefused(
             SEAL_MISSING, f"advisory task {advisor_task_id!r} has no finish-time {SEAL_FIELD} for its result"
         )
-    if canonical_model_id(seal.get("advisor_model")) != policy.advisor_model_id:
+    if canonical_model_id(seal.get("advisor_model")) != model_id:
         raise AdvisoryRefused(
             SEAL_MISMATCH,
             f"advisory task {advisor_task_id!r} result was sealed by {seal.get('advisor_model')!r}, "
-            f"not the advisor {policy.advisor_model_id}",
+            f"not the advisor {model_id}",
         )
     if seal.get("run_nonce") != record.get("run_nonce"):
         raise AdvisoryRefused(
@@ -834,14 +877,29 @@ def load_envelope(
             f"advisory task {advisor_task_id!r} result hashes to {result_sha256}, "
             f"not the {seal.get('result_sha256')!r} its advisor sealed at finish",
         )
-    envelope = parse_envelope(result_text, repo_root=repo_root, policy=policy)
-    digest = envelope_sha256(envelope)
-    if seal.get("envelope_sha256") != digest:
-        raise AdvisoryRefused(
-            SEAL_MISMATCH,
-            f"advisory task {advisor_task_id!r} envelope hashes to {digest}, "
-            f"not the {seal.get('envelope_sha256')!r} its advisor sealed at finish",
-        )
+    return SealedResult(record, result_path, result_text, result_sha256, seal)
+
+
+def load_envelope(
+    advisor_task_id: str,
+    *,
+    state_path: Path,
+    binding_sha256: str,
+    repo_root: Path,
+    policy: BoundedExecutionPolicy | None = None,
+) -> ValidatedEnvelope:
+    """Validate the advisor task's canonical record and result, and the envelope's binding to this dispatch."""
+    policy = policy or bounded_execution_policy()
+    sealed = load_sealed_result(
+        advisor_task_id,
+        state_path=state_path,
+        role=policy.advisor_role,
+        route=ADVISOR_ROUTE,
+        model_id=policy.advisor_model_id,
+        binding_sha256=binding_sha256,
+    )
+    envelope = parse_envelope(sealed.result_text, repo_root=repo_root, policy=policy)
+    digest = sealed.require_sealed_object(envelope, advisor_task_id)
     if envelope[BINDING_FIELD] != binding_sha256:
         raise AdvisoryRefused(
             BINDING_MISMATCH,
@@ -849,10 +907,10 @@ def load_envelope(
         )
     return ValidatedEnvelope(
         advisor_task_id=advisor_task_id,
-        advisor_model=str(recorded_model),
-        advisor_run_nonce=record.get("run_nonce"),
-        result_path=str(result_path),
-        result_sha256=result_sha256,
+        advisor_model=str(sealed.record.get("model")),
+        advisor_run_nonce=sealed.record.get("run_nonce"),
+        result_path=str(sealed.result_path),
+        result_sha256=sealed.result_sha256,
         envelope=envelope,
         envelope_sha256=digest,
         binding_sha256=binding_sha256,

@@ -1,5 +1,6 @@
 """Dispatch input, review independence and resource admission checks."""
 
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -10,7 +11,7 @@ import yaml
 from scripts.agent_runtime import bounded_advisory as advisory
 from scripts.dispatcher import git, store
 from scripts.dispatcher.types import TaskSpec
-from scripts.review.model_catalog import canonical_model_id
+from scripts.review.model_catalog import advisory_role_policy, canonical_model_id
 
 CATALOG = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
 
@@ -63,6 +64,30 @@ def check_bounded_advisory(args, model: str, repo: Path, prompt: bytes) -> dict:
         )}
     except advisory.AdvisoryRefused as exc:
         raise ValueError(str(exc)) from None
+
+
+def check_advisory_role(args, model: str) -> dict:
+    """Record a read-only advisory decision's catalog role and the digest it binds.
+
+    The worker seals the result at finish (``worker.py``). The consumer of the
+    decision, not dispatch, checks that the model is the non-author advisor.
+    """
+    role, binding = args.advisory_role, args.advisory_binding
+    if role is None and binding is None:
+        return {}
+    if role is None or binding is None:
+        raise ValueError("--advisory-role and --advisory-binding are required together")
+    try:
+        policy = advisory_role_policy(role)
+    except KeyError:
+        raise ValueError(f"--advisory-role {role!r} is not a catalog advisory_roles entry") from None
+    if args.mode != "read-only":
+        raise ValueError("--advisory-role runs read-only")
+    if canonical_model_id(model) not in policy.advisor_models:
+        raise ValueError(f"--advisory-role {role} runs on a designated advisor: {sorted(policy.advisor_models)}")
+    if not re.fullmatch(r"[0-9a-f]{64}", binding):
+        raise ValueError("--advisory-binding must be a lowercase sha256 hex digest")
+    return {"advisory_role": role, "advisory_route": policy.route, "advisory_binding_sha256": binding}
 
 
 def _handle_private_input(spec: TaskSpec, message: str) -> None:
