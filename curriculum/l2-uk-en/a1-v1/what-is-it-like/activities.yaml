@@ -185,7 +185,7 @@ workbook:
     title: Модель речення
     instruction: Choose the natural A1 sentence.
     items:
-      - prompt: The book is new.
+      - prompt: "(Do not use є.) The book is new."
         options:
           - text: Книга нова.
             correct: true
@@ -194,7 +194,7 @@ workbook:
           - text: Книга новий.
             correct: false
         explanation: Ukrainian usually leaves out є in this present-tense frame.
-      - prompt: The table is clean.
+      - prompt: "(Do not use є.) The table is clean."
         options:
           - text: Стіл чистий.
             correct: true
@@ -271,7 +271,7 @@ workbook:
           - великий
           - велика
         explanation: Вікно is neuter.
-      - sentence: Книга дорога, ___ листівка дешева.
+      - sentence: "(Contrast: whereas.) Книга дорога, ___ листівка дешева."
         answer: а
         options:
           - а
@@ -377,7 +377,7 @@ workbook:
           - правильна
           - вірна
         explanation: Use правильна відповідь for a correct answer.
-      - sentence: Дай мені, будь ласка, ___ олівець.
+      - sentence: "(Any pencil, with no particular preference.) Дай мені, будь ласка, ___ олівець."
         answer: будь-який
         options:
           - будь-який
