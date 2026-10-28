@@ -302,10 +302,8 @@ To change the shard count, edit the static `matrix.shard` list (it must stay
 `1..N`). `scripts/ci/slot_inventory.py --check` (actionlint workflow) counts
 every PR-path job against the 58-slot ceiling (GitHub Team: 60 concurrent
 jobs, two reserved). It counts each workflow's jobs once, as if one run of
-each were in flight. It does not model overlapping runs: merge-queue build
-concurrency N puts up to N × 33 `ci.yml` jobs in flight, next to PR CI and
-other workflows, and other repositories share the same 60 slots. A passing
-inventory is therefore not proof of capacity for a build-concurrency change;
+each were in flight. It does not model overlapping runs, such as several
+merge-queue builds next to PR CI and other workflows. A passing inventory is therefore not proof of capacity for a build-concurrency change;
 see D3 in [`ci-speed-program.md`](../epics/ci-speed-program.md).
 
 ## Shard setup

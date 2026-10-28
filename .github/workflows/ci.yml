@@ -387,8 +387,6 @@ jobs:
           REFRESH_RESULT: ${{ needs.refresh-pytest-durations.result }}
         run: |
           set -euo pipefail
-          # Hosted runners differ in speed; the CPU model shows which kind this shard drew.
-          echo "runner: $(nproc) CPUs, $(grep -m1 '^model name' /proc/cpuinfo | cut -d: -f2- | xargs)"
           mkdir -p ci-artifacts
           export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"
           # Every collected needs_artifact test, before -m deselects (pytest report audits it).

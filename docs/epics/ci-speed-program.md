@@ -91,16 +91,15 @@ landed the same day, so the two effects are not separable. **What now dominates*
   Timing flakes that hit the pytest timeout (thread method) cannot be rerun and always need a real fix. The ledger first
   proves it can read rerun records under the repo's JUnit family, and it shares one JUnit parser with #9063.
 - **D3 — Merge-queue build concurrency (#8884 AC-03; re-decided 2026-10-28 by the joint CTO + Sol decision
-  MQ-JOINT-1028).** The 2026-09-28 decision kept `max_entries_to_build: 4` for a 17-job run. The ruleset has built
-  **1** entry at a time since 2026-10-26 (ALLGREEN, merge limits 1–4, wait 0, timeout 60, SQUASH). A merge-group run
-  is now 33 jobs, so two synchronized builds alone fill the 60 hosted slots; the observed repository peak was 55
-  concurrent jobs (2026-10-28T04:42Z, run 40633770801 plus PR CI and other workflows). The decision: keep ALLGREEN and
+  MQ-JOINT-1028).** The 2026-09-28 decision was made for a much smaller merge-group run; the queue now builds one
+  entry at a time, and overlapping builds of today's larger run compete with PR CI and other workflows for the same
+  hosted runners. The decision: keep ALLGREEN and
   every gate, shorten the healthy candidate first (shard balance, duration refresh, CI Gate checkout), then trial
   build concurrency **2** with no other queue setting changed. Keep 2 only if enqueue → merge p50/p95 improves without
   material runner-start delay, more ejections or a worse tail; otherwise return to 1. Concurrency 3 and 4 and
   HEADGREEN are not adopted. Never change shard count and build concurrency in the same trial; 20 shards is the first
   experiment if concurrency 2 shows contention. `scripts/ci/slot_inventory.py` cannot settle this question: it counts
-  each workflow's jobs once per run and does not model overlapping runs or other repositories' jobs.
+  each workflow's jobs once per run and does not model overlapping runs.
 - **D5 — Test once per stage (#9057).** Dispatched workers run only the tests covering what they changed (including
   dependents of a changed shared helper), in the foreground. The PR's own CI run (its classified tier) is the proof for
   the PR; the merge queue's full run is the proof for `main`; a `workflow_dispatch` run only when a brief asks (branch

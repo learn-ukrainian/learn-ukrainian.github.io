@@ -5,9 +5,9 @@ The ceiling is intentionally a constant here: changing it is a visible one-line
 policy change, while the runbook explains why and how to make that change.
 
 Each workflow's jobs are counted once, as if one run of each were in flight.
-Overlapping runs (merge-queue build concurrency, several PRs at once) and other
-repositories sharing the account's slots are not modelled, so a pass is not
-proof of capacity for a build-concurrency change (docs/runbooks/ci-gate.md).
+Overlapping runs (merge-queue build concurrency, several PRs at once) are not
+modelled, so a pass is not proof of capacity for a build-concurrency change
+(docs/runbooks/ci-gate.md).
 """
 
 from __future__ import annotations
