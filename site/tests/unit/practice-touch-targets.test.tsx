@@ -1,3 +1,8 @@
+import { webcrypto } from 'node:crypto';
+import { vi } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import ReportProblemAction from '@site/src/components/practice/ReportProblemAction';
+import { loadMechanicsDeck } from '@site/src/lib/lexicon/mechanics-deck-loader';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -166,5 +171,32 @@ describe('Practice mobile touch targets & desktop non-goal (#8383)', () => {
     expect(settingsToggleBlock).not.toBeNull();
     expect(settingsToggleBlock![1]).not.toContain('minHeight');
     expect(settingsToggleBlock![1]).not.toContain('minWidth');
+  });
+});
+
+
+describe('report disclosure (#10704)', () => {
+  it('requires a keyboard-opened disclosure and keeps only the current public item', async () => {
+    vi.stubGlobal('crypto', webcrypto);
+    const cards = await loadMechanicsDeck('noun');
+    const user = userEvent.setup();
+    localStorage.setItem('private-progress-sentinel', 'private-answer-sentinel');
+    const { rerender } = render(<ReportProblemAction records={[cards[0]!]} type="mechanics:noun" chromeLocale="en" />);
+    expect(screen.queryByRole('link', { name: 'Continue' })).toBeNull();
+    const button = screen.getByRole('button', { name: 'Report a problem' });
+    button.focus();
+    await user.keyboard('{Enter}');
+    expect(screen.getByText('The report will be public on GitHub. A GitHub account is required. You can edit the text before submitting.')).toBeVisible();
+    const link = screen.getByRole('link', { name: 'Continue' });
+    expect(link.getAttribute('href')).not.toMatch(/private-progress|private-answer|prompt_sentence/);
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+    rerender(<ReportProblemAction records={[cards[0]!]} type="mechanics:noun" chromeLocale="en" />);
+    expect(screen.getByRole('link', { name: 'Continue' }).getAttribute('href')).toBe(link.getAttribute('href'));
+    rerender(<ReportProblemAction records={[cards[1]!]} type="mechanics:noun" chromeLocale="en" />);
+    expect(screen.queryByRole('link', { name: 'Continue' })).toBeNull();
+    rerender(<ReportProblemAction records={[{ ...cards[0]! }]} type="mechanics:noun" chromeLocale="en" />);
+    expect(screen.queryByRole('button', { name: 'Report a problem' })).toBeNull();
+    vi.unstubAllGlobals();
+    localStorage.clear();
   });
 });

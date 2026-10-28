@@ -5,6 +5,7 @@
  * treated as an empty payload. Network faults and 5xx must surface (#6768).
  */
 
+import { parsePublicPracticeJson } from "./practice-report";
 import type {
   PracticeAntonymItem,
   PracticeClassifyItem,
@@ -119,7 +120,7 @@ export async function getShardJson<T>(url: string, cache: ShardJsonCache): Promi
         err.status = res.status;
         throw err;
       }
-      return res.json() as Promise<T>;
+      return res.text().then((text) => parsePublicPracticeJson<T>(text, url));
     });
     // On failure allow retry next time
     p = p.catch((err) => {

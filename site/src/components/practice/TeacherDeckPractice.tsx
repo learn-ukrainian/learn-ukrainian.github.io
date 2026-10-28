@@ -8,6 +8,8 @@
  * continuity and migration live in `lib/lexicon/teacher-deck-srs.ts`.
  */
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import ReportProblemAction from './ReportProblemAction';
+import { teacherReport } from '../../lib/lexicon/practice-report-selection';
 import MatchUp from '../MatchUp';
 import PracticeFlashcard from '../PracticeFlashcard';
 import PracticeStress from '../PracticeStress';
@@ -317,6 +319,7 @@ export default function TeacherDeckPractice({
           isUkrainian={chromeLocale === 'uk'}
           onComplete={() => setMatchingComplete(true)}
         />
+        <ul>{matchingPairs.map((entry) => <li key={entry.entryId}><span lang="uk">{entry.uk}</span><ReportProblemAction records={[entry]} type="teacher-matching" chromeLocale={chromeLocale} /></li>)}</ul>
         {matchingComplete ? (
           <div className="teacher-deck-actions">
             <button
@@ -405,6 +408,7 @@ export default function TeacherDeckPractice({
               <ChromeDual uk="Нове слово" en="New word" />
             </p>
           ) : null}
+          <ReportProblemAction {...teacherReport(deck, currentEntry, current.presentation)} chromeLocale={chromeLocale} />
           <TeacherSlot
             key={current.slotId}
             deck={deck}

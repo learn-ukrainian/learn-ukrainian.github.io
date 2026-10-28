@@ -1,3 +1,11 @@
+import { selectionReport, teacherReport } from '@site/src/lib/lexicon/practice-report-selection';
+import { buildTeacherDeck } from '@site/src/lib/lexicon/teacher-deck';
+import { bindDailyReport, dailyReportRecords } from '@site/src/lib/lexicon/practice-report-daily';
+import type { DailyWord } from '@site/src/lib/lexicon/daily';
+import type { DailyPracticeDeckItem, PracticeSelection, PracticeLexeme, PracticeIndexItem } from '@site/src/lib/lexicon/srs';
+import { readFileSync } from 'node:fs';
+import { createHash, webcrypto } from 'node:crypto';
+import { parsePublicPracticeJson, practiceReportUrl, REPORT_DESTINATION } from '@site/src/lib/lexicon/practice-report';
 import { afterEach, describe, expect, test, vi } from "vitest";
 import {
   appendDrillFields,
@@ -130,8 +138,8 @@ describe("practice-shard-fetch", () => {
     expect(fields.synonym).toEqual([]);
     expect(requested.some((url) => url.includes("practice-synonym.A1.json"))).toBe(false);
 
-    const oldCard = { synonymId: "old-card", lemmaId: "old" } as PracticeDeckData["synonym"][number];
-    const deck = { index: [], lexemes: [], cloze: [], synonym: [oldCard] } as PracticeDeckData;
+    const oldCard = { synonymId: "old-card", lemmaId: "old", targetLemmaId: "other", polarity: "synonym", prompt: "fixture", answer: "fixture", options: [], source: "fixture" } satisfies NonNullable<PracticeDeckData["synonym"]>[number];
+    const deck: PracticeDeckData = { deckVersion: "old", level: "A1", index: [], lexemes: [], cloze: [], synonym: [oldCard] };
     expect(appendDrillFields(deck, { ...emptyFields, synonym: [oldCard] }).synonym).toEqual([]);
   });
 
@@ -254,5 +262,94 @@ describe("practice-shard-fetch", () => {
     const urls = practiceDrillShardUrls("/lexicon", "A1", true);
     expect(urls.some((u) => u.includes("practice-imperative"))).toBe(false);
     expect(urls.some((u) => u.includes("practice-cloze"))).toBe(true);
+  });
+});
+
+
+describe('public item report binding (#10704)', () => {
+  afterEach(() => { vi.unstubAllGlobals(); });
+  test('the real fetched bytes bind the seven fields, while mismatches, copies and mutations withhold', async () => {
+    vi.stubGlobal('crypto', webcrypto);
+    const text = readFileSync('public/lexicon/practice-lexemes.A1.json', 'utf8');
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(text)));
+    const data = await getShardJson<{ lexemes: { lemmaId: string; gloss: string }[] }>('/lexicon/practice-lexemes.A1.json', new Map());
+    const item = data.lexemes[0]!;
+    const href = practiceReportUrl([item], 'flashcards', 'en');
+    expect(href).not.toBeNull();
+    const url = new URL(href!);
+    expect(url.origin + url.pathname).toBe(REPORT_DESTINATION);
+    expect([...url.searchParams.keys()].sort()).toEqual(['body', 'template', 'title']);
+    expect(url.searchParams.get('template')).toBe('');
+    const fields = Object.fromEntries(url.searchParams.get('body')!.split('\n').map((line) => {
+      const [key, value] = line.split(': '); return [key, decodeURIComponent(value!)];
+    }));
+    expect(fields).toEqual({
+      deck: 'atlas-practice-deck', version: expect.stringMatching(/^atlas-practice-v1-/),
+      digest: createHash('sha256').update(text).digest('hex'), item: item.lemmaId,
+      type: 'flashcards', 'interface-locale': 'en', 'public-prompt-reference-id': '/lexicon/practice-lexemes.A1.json/lexemes/0',
+    });
+    expect(url.searchParams.get('body')).not.toContain(item.gloss);
+    expect(practiceReportUrl([{ ...item }], 'flashcards', 'en')).toBeNull();
+    expect(practiceReportUrl([item], 'flashcards\nlabels: injected', 'en')).toBeNull();
+    expect(practiceReportUrl([item], 'flashcards', 'en', 'private\ntext')).toBeNull();
+    const changed = await parsePublicPracticeJson<typeof data>(text + ' ', '/lexicon/practice-lexemes.A1.json');
+    expect(practiceReportUrl([changed.lexemes[0]!], 'flashcards', 'en')).toBeNull();
+    item.gloss = 'private-learner-sentinel';
+    expect(practiceReportUrl([item], 'flashcards', 'en')).toBeNull();
+  });
+  test('missing crypto and non-public URLs preserve practice without issuing report identities', async () => {
+    vi.stubGlobal('crypto', undefined);
+    const text = '[{"slug":"public-id","lemma":"fixture"}]';
+    const rows = await parsePublicPracticeJson<object[]>(text, '/lexicon/daily-pool.json');
+    expect(rows).toEqual([{ slug: 'public-id', lemma: 'fixture' }]);
+    expect(practiceReportUrl(rows, 'daily-preview', 'en')).toBeNull();
+    vi.stubGlobal('crypto', webcrypto);
+    const imported = await parsePublicPracticeJson<object[]>(text, '/imports/private.json');
+    expect(practiceReportUrl(imported, 'daily-preview', 'en')).toBeNull();
+  });
+});
+
+
+describe('report consumer identities (#10704)', () => {
+  afterEach(() => vi.unstubAllGlobals());
+  test('a CEFR report identifies the served selection and refuses mismatched selection IDs', async () => {
+    vi.stubGlobal('crypto', webcrypto);
+    const lex = await parsePublicPracticeJson<{ lexemes: PracticeLexeme[] }>(readFileSync('public/lexicon/practice-lexemes.A1.json', 'utf8'), '/lexicon/practice-lexemes.A1.json');
+    const index = await parsePublicPracticeJson<{ items: PracticeIndexItem[] }>(readFileSync('public/lexicon/practice-index.A1.json', 'utf8'), '/lexicon/practice-index.A1.json');
+    const lemma = lex.lexemes[0]!;
+    const selection: PracticeSelection = { lemma, indexItem: index.items.find((i) => i.lemmaId === lemma.lemmaId)!, mode: 'flashcards', itemId: `${lemma.lemmaId}:flashcards`, cardKey: 'private-progress-key', cardState: null, due: 0, lapsed: false, recallDirection: 'uk-to-meaning', choicePolarity: 'word-to-meaning' };
+    const report = selectionReport(selection);
+    expect(practiceReportUrl(report.records, report.type, 'en', report.item)).not.toBeNull();
+    expect(selectionReport({ ...selection, itemId: 'private-selection' }).records).toEqual([]);
+    expect(selectionReport({ ...selection, lemma: { ...lemma, gloss: 'private' } }).records).toEqual([]);
+  });
+  test('teacher grammar and cloze bind the actual drill, and unknown drill IDs withhold', async () => {
+    vi.stubGlobal('crypto', webcrypto);
+    const deckFile = await parsePublicPracticeJson(readFileSync('public/lexicon/practice-deck.teacher.json', 'utf8'), '/lexicon/practice-deck.teacher.json');
+    const clozeFile = await parsePublicPracticeJson(readFileSync('public/lexicon/practice-cloze.teacher.json', 'utf8'), '/lexicon/practice-cloze.teacher.json');
+    const deck = buildTeacherDeck('virtual_teacher_table', deckFile, clozeFile);
+    const grammar = [...deck.grammarById.entries()][0]!;
+    const entryId = grammar[1].item.entryId;
+    const entry = deck.entriesById.get(entryId)!;
+    const report = teacherReport(deck, entry, { type: 'grammar', mode: grammar[1].mode, itemId: grammar[0] });
+    expect(report.item).toBe(grammar[0]);
+    expect(practiceReportUrl(report.records, report.type, 'en', report.item)).not.toBeNull();
+    expect(teacherReport(deck, entry, { type: 'grammar', mode: 'stress', itemId: 'private-id' }).records).toEqual([]);
+    const cloze = [...deck.clozeById.values()][0]!;
+    const clozeEntry = deck.entriesById.get(cloze.entryId)!;
+    const clozeReport = teacherReport(deck, clozeEntry, { type: 'cloze', clozeId: cloze.clozeId });
+    expect(clozeReport.item).toBe(cloze.clozeId);
+    expect(practiceReportUrl(clozeReport.records, clozeReport.type, 'en', clozeReport.item)).not.toBeNull();
+  });
+  test('pool-only daily previews bind one response and withhold copies, enrichment and changed content', async () => {
+    vi.stubGlobal('crypto', webcrypto);
+    const [source] = await parsePublicPracticeJson<DailyWord[]>('[{"slug":"public-item","lemma":"fixture","gloss":"public-gloss","cefr":"A1"}]', '/lexicon/daily-pool.json');
+    const item: DailyPracticeDeckItem = bindDailyReport({ lemmaId: 'public-item', lemma: source!.lemma, gloss: source!.gloss, cefr: 'A1', origin: 'new', hasAtlasEntry: true, pos: null }, source!);
+    expect(dailyReportRecords(item, null)).toEqual([source]);
+    expect(dailyReportRecords({ ...item }, null)).toEqual([]);
+    const lexeme: PracticeLexeme = { lemmaId: 'public-item', lemma: 'fixture', lemmaPlain: 'fixture', gloss: 'public-gloss', ipa: null, paradigm: { cases: {} }, pos: null, cefr: 'A1', heritage: null, severity: null };
+    expect(dailyReportRecords(item, { ...lexeme, pos: 'noun' })).toEqual([]);
+    item.gloss = 'private-input';
+    expect(dailyReportRecords(item, null)).toEqual([]);
   });
 });

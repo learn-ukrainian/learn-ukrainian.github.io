@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import ReportProblemAction from './ReportProblemAction';
 import type { NormalizedMechanicsCard, MechanicsDeckMeta } from '../../lib/lexicon/mechanics-deck-loader';
 
 export interface MechanicsPracticeProps {
@@ -120,6 +121,7 @@ export default function MechanicsPractice({
                     <div style={{ fontSize: '0.85rem', color: 'var(--sl-color-gray-3)', marginTop: '0.25rem' }}>
                       {m.eval.feedback}
                     </div>
+                    <ReportProblemAction records={[m.card]} type={`mechanics:${m.card.pos}`} chromeLocale={chromeLocale} />
                   </li>
                 ))}
               </ul>
@@ -303,6 +305,7 @@ export default function MechanicsPractice({
           </div>
         ) : null}
 
+        <ReportProblemAction records={[currentCard]} type={`mechanics:${currentCard.pos}`} chromeLocale={chromeLocale} />
         {/* Navigation Action */}
         {selectedOption !== null ? (
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
