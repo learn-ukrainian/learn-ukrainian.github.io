@@ -185,22 +185,22 @@ workbook:
     title: Модель речення
     instruction: Choose the natural A1 sentence.
     items:
-      - prompt: The book is new.
+      - prompt: "(Do not use є.) The book is new."
         options:
           - text: Книга нова.
             correct: true
-          - text: "Книга нове."
+          - text: Книга є нова.
             correct: false
           - text: Книга новий.
             correct: false
         explanation: Ukrainian usually leaves out є in this present-tense frame.
-      - prompt: The table is clean.
+      - prompt: "(Do not use є.) The table is clean."
         options:
           - text: Стіл чистий.
             correct: true
           - text: Стіл чиста.
             correct: false
-          - text: "Стіл чисте."
+          - text: Стіл є чистий.
             correct: false
         explanation: Стіл is masculine, and the no-є frame is natural.
       - prompt: The window is big.
@@ -375,7 +375,7 @@ workbook:
         answer: правильна
         options:
           - правильна
-          - "правильний"
+          - вірна
         explanation: Use правильна відповідь for a correct answer.
       - sentence: "(Any pencil, with no particular preference.) Дай мені, будь ласка, ___ олівець."
         answer: будь-який

@@ -2,7 +2,7 @@
 
 Refs #8893. Source snapshot: `d59fd9bcfd894f4fac5de27a173f0d6e42180d6c`.
 
-This is one bounded Method step 2 slice. It checks 447 items: all 446 fill-in and quiz items in both inline/root and workbook sections of the first 14 manifest modules, plus `a1-finale/act-1/0`. There are 403 checked-clean items and 44 confirmed ambiguous items, all repaired. No wrong key was confirmed. Every original key, learning target and activity type is retained.
+This is one bounded Method step 2 slice. It checks 447 items: all 446 fill-in and quiz items in both inline/root and workbook sections of the first 14 manifest modules, plus `a1-finale/act-1/0`. There are 405 checked-clean items and 42 confirmed ambiguous items, all repaired. No wrong key was confirmed. Every original key, learning target and activity type is retained.
 
 The order comes from `levels.a1-v1.modules` in `curriculum/l2-uk-en/curriculum.yaml`. It is the issue's arc-order fallback; no authorized usage ranking was supplied. The first 14 entries cover the first two arcs, including both checkpoints. The existing sibling `audit/` directory is the report convention.
 
@@ -14,9 +14,9 @@ The order comes from `levels.a1-v1.modules` in `curriculum/l2-uk-en/curriculum.y
 | 4 | `stress-and-melody` | 28 | 28 | 0 |
 | 5 | `who-am-i` | 25 | 20 | 5 |
 | 6 | `my-family` | 34 | 32 | 2 |
-| 7 | `checkpoint-first-contact` | 51 | 40 | 11 |
+| 7 | `checkpoint-first-contact` | 51 | 41 | 10 |
 | 8 | `things-have-gender` | 44 | 38 | 6 |
-| 9 | `what-is-it-like` | 37 | 32 | 5 |
+| 9 | `what-is-it-like` | 37 | 33 | 4 |
 | 10 | `colors` | 32 | 28 | 4 |
 | 11 | `how-many` | 35 | 35 | 0 |
 | 12 | `this-and-that` | 41 | 35 | 6 |
@@ -30,7 +30,7 @@ Item indices and anonymous `workbook[n]` activity indices are zero-based. An exp
 
 The structural scanner ran before and after repair: 55/55 activity files, exit 0, zero structural findings. It therefore added no flagged items from other activity types. This is not a replacement for issue Method step 1's broader intended semantic and VESUM rules.
 
-Not checked: other activity types with no structural flag; lesson prose, plans, vocabulary and resources; the remaining 40 modules; every other finale item; historical generated/source drift outside the 44 repaired objects; audio, teacher usage and the deployed site. The rest of #8893 remains open with the CTO curriculum coordinator. No deployment or publication is part of this slice.
+Not checked: other activity types with no structural flag; lesson prose, plans, vocabulary and resources; the remaining 40 modules; every other finale item; historical generated/source drift outside the 42 repaired objects; audio, teacher usage and the deployed site. The rest of #8893 remains open with the CTO curriculum coordinator. No deployment or publication is part of this slice.
 
 ## Sources evidence and its limits
 
@@ -40,11 +40,11 @@ For every module batch, `verify_words` received the distinct Ukrainian tokens fr
 
 Capitalization misses were checked again as proper names in U66, 28/28 found. U45 additionally checks completed fill-in strings, including the adjective endings as whole words. K checks 520 target/context tokens, 483 found before the proper-name recheck; its remaining tokens include letters, phonetic fragments, the displayed `мален_кий` scaffold and quoted code-switching errors. They are not unverified target vocabulary. Apostrophe/soft-sign completions were also checked as whole words. Stress ambiguities were interpreted by the item's sense, number and case; a pending reading of an unmarked word is not a defect. All explicitly marked target forms were compared with their applicable readings.
 
-K is the `KEYS` locator in the companion file. A final one-item POSTFIX screen also checks the replacement Моє distractor after the three bulk screens. U73 verifies the final cue forms and the new compound-color components with the stress oracle; the masculine past and first-person present readings of снідати agree with the finale target distinction.
+K is the `KEYS` locator in the companion file. POSTFIX checks the replacement Моє distractor. U73 verifies the final cue forms and new compound-color components with the stress oracle.
 
-The post-repair `check_text` screens cover all 447 rows in batches of 150, 150 and 147. They report 123, 120 and 103 VESUM diagnostics and 8, 6 and 2 contextual UA-GEC suspicions. These are not clean-tool verdicts: most diagnostics are case-sensitive words, letters, stems, deliberately wrong options or quoted errors. Contextual suggestions such as changing `один` to `одне` do not override a masculine noun. No suspicion alone caused a repair.
+The post-repair `check_text` screens cover all 447 rows in batches of 150, 150 and 147. Counts from these screens are preserved in the companion evidence; they include intentional wrong options and quoted errors. These are not clean-tool verdicts: most diagnostics are case-sensitive words, letters, stems, deliberately wrong options or quoted errors. Contextual suggestions such as changing `один` to `одне` do not override a masculine noun. No suspicion alone caused a repair.
 
-The companion [machine-readable Sources evidence](language-pass-modules-01-14-evidence.jsonl) preserves query arguments, VESUM analyses, ULIF row identifiers and diagnostic results for these locators. It contains the module batches, K, U45, U66, and the post-repair screens. Usage locators are summarized with their source citations below.
+The companion [machine-readable Sources evidence](language-pass-modules-01-14-evidence.jsonl) preserves query arguments, VESUM analyses, ULIF row identifiers and diagnostic results. It also preserves usage-query metadata, source locators, response digests and source summaries for the U locators.
 
 ### Module batch locators
 
@@ -316,7 +316,7 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `act-4/2` | inline | Речення про вік | Мені 20 років. | D, fixed | M07; U20. Мати with a numeral and рік is attested for age; Я маю 20 років is a defensible answer. |
 | `act-4/3` | inline | Пряме звертання | Привіт, Максиме! | C | M07; U10/U20/U32/U34/U37/U39/U41/U66/U70. The stated communication function, agreement, case, spelling or English gloss selects the key. |
 | `act-4/4` | inline | Безпечне привітання | Добрий день! Мене звати Оксана. | D, fixed | M07; U12/U38. Здрастуйте is an attested Ukrainian greeting; replace it with an incorrect name case. |
-| `act-4/5` | inline | Прізвище | Моє прізвище Сміт. | D, fixed | M07; U11/U30. Фамілія has an attested colloquial surname reading; no register distinction was requested. |
+| `act-4/5` | inline | Прізвище | Моє прізвище Сміт. | C | M07; U10/U20/U32/U34/U37/U39/U41/U66/U70. The normative-register instruction selects прізвище; the surname reading of фамілія is colloquial. Both original options are restored. |
 | `act-4/6` | inline | Прощання | До побачення! | C | M07; U10/U20/U32/U34/U37/U39/U41/U66/U70. The stated communication function, agreement, case, spelling or English gloss selects the key. |
 | `act-4/7` | inline | Звичка до роду іменника | Вивчення слова разом із його родом | C | M07; U10/U20/U32/U34/U37/U39/U41/U66/U70. The stated communication function, agreement, case, spelling or English gloss selects the key. |
 | `act-5/0` | inline | ___! Мене звати Богдан. | Привіт | C | M07; U10/U20/U32/U34/U37/U39/U41/U66/U70. The stated communication function, agreement, case, spelling or English gloss selects the key. |
@@ -429,7 +429,7 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `workbook[3]/2` | workbook | У сусідки ___ кіт. | чорний | C | M09; U10/U52/U53/U55/U60/U61/U62. The standard A1 adjective and its stated meaning fit; morphology alone is not used to condemn the other word. |
 | `workbook[3]/3` | workbook | Прапор ___, а не білий. | червоний | C | M09; U10/U52/U53/U55/U60/U61/U62. The standard A1 adjective and its stated meaning fit; morphology alone is not used to condemn the other word. |
 | `workbook[3]/4` | workbook | Це ___ фільм. | поганий | C | M09; U10/U52/U53/U55/U60/U61/U62. The standard A1 adjective and its stated meaning fit; morphology alone is not used to condemn the other word. |
-| `workbook[3]/5` | workbook | Це ___ відповідь на запитання. | правильна | D, fixed | M09; U52/U53/U60. VTS admits a colloquial rare correct/accurate sense of вірний; a style preference alone does not make the alternative impossible. |
+| `workbook[3]/5` | workbook | Це ___ відповідь на запитання. | правильна | C | M09; U10/U52/U53/U55/U60/U61/U62. The standard-register instruction selects правильна; VTS labels the competing correct sense of вірна colloquial/rare and Antonenko recommends правильний. |
 | `workbook[3]/6` | workbook | Дай мені, будь ласка, ___ олівець. | будь-який | D, fixed | M09; U54/U55/U61. Любий can mean dear/beloved; without an any cue both adjective meanings are defensible. |
 | `workbook[3]/7` | workbook | Сергій — ___ хлопчик. | розумний | C | M09; U10/U52/U53/U55/U60/U61/U62. The standard A1 adjective and its stated meaning fit; morphology alone is not used to condemn the other word. |
 | `workbook[3]/8` | workbook | Тарас — ___ учень. | лінивий | C | M09; U10/U52/U53/U55/U60/U61/U62. The standard A1 adjective and its stated meaning fit; morphology alone is not used to condemn the other word. |
@@ -665,16 +665,15 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `who-am-i/workbook[4]/4` | U17 | sentence: (Use the feminine profession noun.) Оксана — ___. |
 | `my-family/act-1/0` | U10 | prompt: Ти питаєш одного ровесника, чи є в нього брат. — You ask a peer whether they have a brother. |
 | `my-family/act-3/2` | U10 | option 1: мене → мій |
-| `checkpoint-first-contact/act-1/2` | U10, U31 | option 1: Моє ім'я є Олена. → Мій ім'я Олена. |
-| `checkpoint-first-contact/act-1/3` | U10, U31 | option 1: Я є студент. → Я студенти. |
-| `checkpoint-first-contact/act-3/3` | U10, U31 | option 1: є студент → студенти |
-| `checkpoint-first-contact/act-4/0` | U10, U31 | option 1: Моє ім'я є Джон. → Мій ім'я Джон. |
-| `checkpoint-first-contact/act-4/1` | U10, U31 | option 1: Я є студент. → Я студенти. |
+| `checkpoint-first-contact/act-1/2` | U10, U31 | prompt: Ти називаєш своє ім'я. (Use the Мене звати formula.); explanation: The requested name formula is Мене звати... . The alternative with Моє ім'я is also grammatical. |
+| `checkpoint-first-contact/act-1/3` | U10, U31 | prompt: (Do not use є.) Ти кажеш, що ти студент. |
+| `checkpoint-first-contact/act-3/3` | U10, U31 | sentence: (Do not use є.) Я ___. |
+| `checkpoint-first-contact/act-4/0` | U10, U31 | prompt: Представлення імені (Use the Мене звати formula.); explanation: The requested name formula is Мене звати... . The alternative with Моє ім'я is also grammatical. |
+| `checkpoint-first-contact/act-4/1` | U10, U31 | prompt: (Do not use є.) Речення ідентичності |
 | `checkpoint-first-contact/act-1/4` | U20 | option 1: Я маю 20 років. → Мені 20 роки. |
 | `checkpoint-first-contact/act-3/4` | U20 | option 1: Я маю → Моє |
 | `checkpoint-first-contact/act-4/2` | U20 | option 1: Я маю 20 років. → Мені 20 роки. |
-| `checkpoint-first-contact/act-4/4` | U12, U38 | option 1: Здрастуйте! Мене звати Оксана. → Добрий день! Мене звати Оксану. |
-| `checkpoint-first-contact/act-4/5` | U11, U30 | option 1: Моя фамілія Сміт. → Мій прізвище Сміт. |
+| `checkpoint-first-contact/act-4/4` | U12, U38 | option 1: Здрастуйте! Мене звати Оксана. → До побачення! Мене звати Оксана. |
 | `checkpoint-first-contact/act-5/7` | U28, U37 | sentence: (Greeting a new classmate: nice to meet you.) Дуже приємно ___! |
 | `things-have-gender/act-9/0` | U17 | prompt: She is a teacher. (Use the feminine profession noun.) |
 | `things-have-gender/act-9/1` | U17 | prompt: She is a doctor. (Use the feminine profession noun.) |
@@ -682,12 +681,11 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `things-have-gender/act-w3/1` | U10 | option 2: моя́ → мій |
 | `things-have-gender/act-w3/2` | U10 | option 1: мене́ → ми |
 | `things-have-gender/act-w3/3` | U10 | sentence: (I have a window.) У мене́ є ___. |
-| `what-is-it-like/workbook[0]/0` | U10 | option 1: Книга є нова. → Книга нове. |
-| `what-is-it-like/workbook[0]/1` | U10 | option 2: Стіл є чистий. → Стіл чисте. |
+| `what-is-it-like/workbook[0]/0` | U10 | prompt: (Do not use є.) The book is new. |
+| `what-is-it-like/workbook[0]/1` | U10 | prompt: (Do not use є.) The table is clean. |
 | `what-is-it-like/workbook[1]/4` | U62 | sentence: (Contrast: whereas.) Книга дорога, ___ листівка дешева. |
-| `what-is-it-like/workbook[3]/5` | U52, U53, U60 | option 1: вірна → правильний |
 | `what-is-it-like/workbook[3]/6` | U54, U55, U61 | sentence: (Any pencil, with no particular preference.) Дай мені, будь ласка, ___ олівець. |
-| `colors/act-1/0` | U10 | option 2: Якого кольору є олівець? → Якої кольору олівець? |
+| `colors/act-1/0` | U10 | prompt: (Do not use є.) You point to a pencil and ask its color. |
 | `colors/act-1/5` | U18 | option 1: Блакитно-жовтий. → Червоно-жовтий. |
 | `colors/act-4/1` | U18 | option 1: блакитно-жовтий прапор → червоно-жовтий прапор; option 2: голубо-жовтий прапор → зелено-жовтий прапор |
 | `colors/workbook[2]/4` | U57, U63, U65 | option 1: коричневі → коричнева |
@@ -706,13 +704,20 @@ C means checked-clean in the original source. D means a confirmed second defensi
 
 - Structural scanner: `scripts/audit/scan_activity_errors.py --track a1-v1`, 55/55 files, zero findings, exit 0 before and after changes.
 - Existing affected checks: `pytest -n 2 tests/test_scan_activity_errors.py tests/test_a1_activity_schema_parser_drift.py tests/test_yaml_activities_a1_payload.py tests/test_activity_renderer.py tests/test_generate_mdx.py tests/test_generate_mdx_parsers.py tests/test_generate_mdx_unit_map.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_curriculum_manifest_canary.py`: 329 passed in 10.43 seconds. No new test case was added.
-- The existing ActivityParser, `yaml_activities_to_jsx` and `dump_json_for_jsx` regenerated only the 44 changed page item objects. Unchanged source objects and page bytes outside those serialized objects are preserved. Existing unaccented generated-page conventions are preserved; English cues are retained. The integrity manifest changes exactly the 10 source and 10 generated-page hashes.
+- The existing ActivityParser, `yaml_activities_to_jsx` and `dump_json_for_jsx` regenerated only the 42 changed page item objects. Unchanged source objects and page bytes outside those serialized objects are preserved. Existing unaccented generated-page conventions are preserved; English cues are retained. The integrity manifest changes exactly the 10 source and 10 generated-page hashes.
 - Source matching detected pre-existing page/source differences, including stripped stress marks and an omitted bilingual suffix. Matching accounts for those representations, while replacements come from the source parser. This is not evidence that every archived page equals its YAML.
-- Chromium exercised the actual tracked MDX payloads in the existing QuizQuestion and FillInQuestion components: 44/44 correct choices accepted, 44/44 wrong choices rejected, zero browser errors. The runtime was copied into this worktree after its lockfile matched the primary checkout.
+- After the review corrections, Chromium exercised all 42 changed tracked MDX payloads in the existing QuizQuestion and FillInQuestion components: 42 correct choices accepted, 42 wrong choices rejected, zero browser errors. Its runtime was copied into this worktree after lockfile equality was verified.
+- The affected Python suite was repeated after the changed cues and restorations: 329 tests passed. The final structural scanner still checks 55/55 files with zero findings.
 - Independent Gemini via AGY and Opus 5.5 via Claude Code review, browser proof, and CI/merge receipts are recorded on the PR at its exact pushed head. This audit document records the author pass; it is not a claim of independent approval or of deployment.
 
-The full section census matters for sizing: the first inline/root-only extraction had 293 items; workbook discovery added 154. The final denominator is 447. The source inventory started at 2026-10-28T16:54:45.782236+00:00. The author pass/report was prepared at 2026-10-28T17:18:44.793868+00:00. This elapsed interval includes rule reading, inventory correction, Sources retries after a temporary outage, source analysis, patches and local validation; it is not pure model throughput. At this item density the 55-module issue is a multi-batch job. Multiplying this batch by 55/14 is only a planning estimate because later modules have different item counts and harder usage questions. The CTO should size the next batch by counted items in all sections, not by the issue's rough 48-items-per-module estimate.
+The full section census matters for sizing: the first inline/root-only extraction had 293 items; workbook discovery added 154. The final denominator is 447. The source inventory started at 2026-10-28T16:54:45.782236+00:00. The author pass/report was prepared at 2026-10-28T17:35:55.478538+00:00. This elapsed interval includes rule reading, inventory correction, Sources retries after a temporary outage, source analysis, patches and local validation; it is not pure model throughput. At this item density the 55-module issue is a multi-batch job. Multiplying this batch by 55/14 is only a planning estimate because later modules have different item counts and harder usage questions. The CTO should size the next batch by counted items in all sections, not by the issue's rough 48-items-per-module estimate.
 
 Residual owner: CTO curriculum coordinator, #8893. The remaining modules, unchecked activity types, all other finale items, independent broader evaluation and production delivery remain outside this slice.
 
-At the end of author validation, the measured wall interval was 27.5 minutes for 447 items across 14 full modules plus one finale item. Straight-line module scaling gives approximately 108 minutes for 55 modules, before independent review and CI. This is a planning estimate with the limits above, not a measured full-track completion time.
+## Review corrections and tracked follow-ups
+
+Round 1 Opus findings F1-F3 were accepted. F1 keeps the name statement identical while contrasting greeting with farewell. F2 restores the two standard-register traps as checked-clean, reducing confirmed defects from 44 to 42. F3 keeps the grammatical є options and adds the requested pattern cues, so feedback and teaching target agree. The source evidence supports the forms; the instruction selects the applicable register.
+
+F4-F6 remain non-blocking follow-ups with the CTO curriculum coordinator on #8893: contradictory examples in other activity types, the explicit finale tense hint and unequal feedback payloads, and more individual explanations in future audit tables. Usage query locators are now also preserved in the machine-readable evidence.
+
+The initial author validation interval was 27.5 minutes for 447 items, before independent review. Straight-line module scaling gives approximately 108 minutes for 55 modules before review/CI, with the different-density and harder-usage limits above. Round-1 independent review added about 7 minutes and identified three repair classes to correct; the revised head requires fresh review and CI. This is a planning estimate, not a measured full-track completion time.

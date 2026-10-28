@@ -82,7 +82,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/activities.yaml",
-      "sha256": "7375ba44cde26ebc7fb85cfc3e8ca8304464099e1cb87dbf9cf00a42318b2c36"
+      "sha256": "8b1affc2b28098473966b765756ea47b8c7780bbd9a6ea9530547c74d9c2ca39"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/module.md",
@@ -162,7 +162,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/colors/activities.yaml",
-      "sha256": "fab2296f57c95fdb2aeffed50caf8f57cda680e5e8f771f96706f69ba62953da"
+      "sha256": "4d7c1af430bbcf96b4a858118d2b21d8e3db0360da769139291e120c58edbe78"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/colors/module.md",
@@ -738,7 +738,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-is-it-like/activities.yaml",
-      "sha256": "44c69b3d1419f96bcc671fb94b47d48532a66e8a363c054979b7a7a6c5c12ca6"
+      "sha256": "dd9f935bfed8f32be701fa07debb4d8a78629e54696b6cdba69e78d6de794b5e"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-is-it-like/module.md",
@@ -13706,7 +13706,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-first-contact.mdx",
-      "sha256": "26a9532c35172e3a9ae3a4ef85506b9a952b4e270216ddb62af26c2fff8f49e0"
+      "sha256": "500bca883512f07b470b7cc350f73158ae75814a6b944b5a6a1d7b9d0e37b9c3"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-food-shopping.mdx",
@@ -13726,7 +13726,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/colors.mdx",
-      "sha256": "d6300ed25ce0bbafb7d1359acc4bf25b04c71392542ffa73079f6d97cd3a9db1"
+      "sha256": "cb598cb7058fec898eba8d5ad85fd7dc02aed52cb96a775151a4ab5eae5826c6"
     },
     {
       "path": "site/src/content/docs/a1-v1/days-and-months.mdx",
@@ -13874,7 +13874,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/what-is-it-like.mdx",
-      "sha256": "06ca57a06980745dde53107e6c1d8297d17661bd905e0468a3044193c00d6ea4"
+      "sha256": "0a1333058612f2492bfe9e5efdc493f4d46b851304d4c476054c1c4dc26c3666"
     },
     {
       "path": "site/src/content/docs/a1-v1/what-time.mdx",

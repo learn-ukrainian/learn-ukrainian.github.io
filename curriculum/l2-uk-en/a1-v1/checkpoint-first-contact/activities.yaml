@@ -22,20 +22,20 @@ inline:
           - text: Мене звати!
             correct: false
         explanation: Добрий день — безпечне нейтральне формальне привітання.
-      - prompt: Ти називаєш своє ім'я.
+      - prompt: "Ти називаєш своє ім'я. (Use the Мене звати formula.)"
         options:
           - text: Мене звати Олена.
             correct: true
-          - text: "Мій ім'я Олена."
+          - text: Моє ім'я є Олена.
             correct: false
           - text: Я звати Олена.
             correct: false
-        explanation: Мене звати... — головний блок для імені.
-      - prompt: Ти кажеш, що ти студент.
+        explanation: "The requested name formula is Мене звати... . The alternative with Моє ім'я is also grammatical."
+      - prompt: "(Do not use є.) Ти кажеш, що ти студент."
         options:
           - text: Я студент.
             correct: true
-          - text: "Я студенти."
+          - text: Я є студент.
             correct: false
           - text: Мене студент.
             correct: false
@@ -159,11 +159,11 @@ inline:
           - у
           - це
         explanation: Я з... дає походження.
-      - sentence: Я ___.
+      - sentence: "(Do not use є.) Я ___."
         answer: студент
         options:
           - студент
-          - "студенти"
+          - є студент
           - мене студент
         explanation: Речення A1 про ідентичність не потребує є.
       - sentence: ___ 20 років.
@@ -199,18 +199,18 @@ inline:
     title: Виправ A1.1 пастки
     instruction: Обери нормативну українську форму.
     items:
-      - prompt: Представлення імені
+      - prompt: "Представлення імені (Use the Мене звати formula.)"
         options:
           - text: Мене звати Джон.
             correct: true
-          - text: "Мій ім'я Джон."
+          - text: Моє ім'я є Джон.
             correct: false
-        explanation: Українська представляє ім'я через Мене звати...
-      - prompt: Речення ідентичності
+        explanation: "The requested name formula is Мене звати... . The alternative with Моє ім'я is also grammatical."
+      - prompt: "(Do not use є.) Речення ідентичності"
         options:
           - text: Я студент.
             correct: true
-          - text: "Я студенти."
+          - text: Я є студент.
             correct: false
         explanation: Теперішня ідентичність зазвичай не додає є.
       - prompt: Речення про вік
@@ -231,14 +231,14 @@ inline:
         options:
           - text: Добрий день! Мене звати Оксана.
             correct: true
-          - text: "Добрий день! Мене звати Оксану."
+          - text: "До побачення! Мене звати Оксана."
             correct: false
         explanation: Добрий день — безпечне стандартне привітання.
       - prompt: Прізвище
         options:
           - text: Моє прізвище Сміт.
             correct: true
-          - text: "Мій прізвище Сміт."
+          - text: Моя фамілія Сміт.
             correct: false
         explanation: Прізвище — стандартне українське слово.
       - prompt: Прощання

@@ -5,13 +5,13 @@ inline:
     title: Запитай про колір
     instruction: Choose the natural question or short answer.
     items:
-      - prompt: You point to a pencil and ask its color.
+      - prompt: "(Do not use є.) You point to a pencil and ask its color."
         options:
           - text: Якого кольору олівець?
             correct: true
           - text: Який колір є олівець?
             correct: false
-          - text: "Якої кольору олівець?"
+          - text: Якого кольору є олівець?
             correct: false
         explanation: Learn Якого кольору...? as one question phrase without є.
       - prompt: Якого кольору светр?
