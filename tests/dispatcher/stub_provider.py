@@ -26,6 +26,7 @@ def parse(stdout, stderr, returncode, final_text):
         final_text if final_text is not None else stdout.strip(),
         {"tokens": 7},
         "terminal error" if "PARSE_ERROR" in stdout else None,
+        rate_limited="CAPACITY" in stdout,
     )
 
 
@@ -61,11 +62,11 @@ def main():
             prompt.with_suffix(".grandchild.tmp").replace(prompt.with_suffix(".grandchild"))
         while not prompt.with_suffix(".release").exists():
             time.sleep(0.02)
-    if model in {"pushed", "unpushed", "dirty", "pushed-dirty", "pushed-nested"}:
+    if model in {"pushed", "unpushed", "dirty", "pushed-dirty", "pushed-nested", "capacity-dirty"}:
         delivered = Path("src/delivered.txt" if model == "pushed-nested" else "delivered.txt")
         delivered.parent.mkdir(exist_ok=True)
         delivered.write_text("literal delivered value\n")
-        if model != "dirty":
+        if model not in {"dirty", "capacity-dirty"}:
             subprocess.run(["git", "add", str(delivered)], check=True, stdout=subprocess.DEVNULL, timeout=30)
             subprocess.run(["git", "commit", "-m", "stub delivery"], check=True, stdout=subprocess.DEVNULL, timeout=30)
         if model.startswith("pushed"):
@@ -75,6 +76,9 @@ def main():
     if model == "crash":
         os.kill(os.getpid(), signal.SIGKILL)
     text = sys.stdin.buffer.read().decode()
+    if model in {"capacity", "capacity-dirty"}:
+        print("CAPACITY")
+        return 1
     if model == "file":
         Path(final).write_text(text)
     else:
