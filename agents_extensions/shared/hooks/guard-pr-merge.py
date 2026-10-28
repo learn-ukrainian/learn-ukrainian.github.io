@@ -43,6 +43,7 @@ import concurrent.futures
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -64,8 +65,23 @@ def _command(payload: dict) -> str:
 def _merge_candidate(command: str) -> bool:
     """Conservative bootstrap/failure probe, never a merge decision."""
     probe = command.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
-    return all(re.search(rf"(?<![\w.-]){word}(?![\w-])", probe) for word in ("gh", "pr", "merge")) or bool(
-        re.search(r"(?<![\w.-])scripts\.publish\s+pr-merge(?![\w-])", probe)
+    return ("gh" in probe or "scripts.publish" in probe) and "pr" in probe and "merge" in probe
+
+
+def _plain_pr_read(command: str) -> bool:
+    """Prove a single literal PR read without importing guard dependencies."""
+    try:
+        lexer = shlex.shlex(command, posix=True, punctuation_chars=";&|()<>\n")
+        lexer.whitespace = " \t\r"
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        argv = list(lexer)
+    except ValueError:
+        return False
+    return (
+        argv[:2] == ["gh", "pr"]
+        and argv[2:3] in (["view"], ["list"], ["checks"])
+        and not any("$" in arg or "`" in arg or (arg and set(arg) <= set(";&|()<>\n")) for arg in argv)
     )
 
 
@@ -77,7 +93,7 @@ if __name__ == "__main__":
         _CLI_PAYLOAD is not None
         and isinstance(_CLI_PAYLOAD.get("tool_input", {}), dict)
         and isinstance(_CLI_PAYLOAD.get("tool_input", {}).get("command", ""), str)
-        and not _merge_candidate(_command(_CLI_PAYLOAD))
+        and (_plain_pr_read(_command(_CLI_PAYLOAD)) or not _merge_candidate(_command(_CLI_PAYLOAD)))
     ):
         sys.exit(0)
 
@@ -94,6 +110,7 @@ try:
     from shell_shlex import (
         ShellPreprocessLimit,
         skippable_heredoc_delimiters,
+        strip_shell_comments,
         strip_skippable_heredoc_bodies,
     )
 except Exception as exc:
@@ -233,7 +250,7 @@ def _is_env_assignment(tok: str) -> bool:
 _WRAPPERS = frozenset({"env", "sudo", "time", "nice", "stdbuf", "nohup", "command", "exec"})
 
 _WRAPPER_VALUE_OPTIONS = {
-    "env": frozenset({"-u", "--unset", "-C", "--chdir"}),
+    "env": frozenset({"-u", "--unset", "-C", "--chdir", "-a", "--argv0", "-f", "--file", "-S", "--split-string"}),
     "sudo": frozenset(
         {
             "-u",
@@ -268,13 +285,24 @@ _WRAPPER_VALUE_OPTIONS = {
 }
 
 
+def _wrapper_value_option(wrapper: str, token: str) -> tuple[str | None, str | None]:
+    """First value-taking option and its attached value, or None for a switch."""
+    options = _WRAPPER_VALUE_OPTIONS.get(wrapper, frozenset())
+    if token.startswith("--"):
+        key, sep, value = token.partition("=")
+        return (key, value if sep else None) if key in options else (None, None)
+    for index, char in enumerate(token[1:], 1):
+        if "-" + char in options:
+            return "-" + char, token[index + 1 :] or None
+    return None, None
+
+
 def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
     """Return the first command word after one transparent wrapper.
 
     A missing operand for a recognised value-taking option cannot execute a
     command, so the scan consumes to the end instead of guessing a verb.
     """
-    value_options = _WRAPPER_VALUE_OPTIONS.get(wrapper, frozenset())
     while i < len(seg):
         tok = seg[i]
         if tok == "--":
@@ -282,14 +310,15 @@ def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
         if not tok.startswith("-") or tok == "-":
             return i
         i += 1
-        if tok in value_options:
+        option, attached = _wrapper_value_option(wrapper, tok)
+        if option and attached is None:
             if i >= len(seg):
                 return len(seg)
             i += 1
     return i
 
 
-def _skip_command_prefix(seg: list[str], i: int) -> int:
+def _skip_command_prefix(seg: list[str], i: int, *, stop_at_env: bool = False) -> int:
     """Advance past wrappers (and their flags), assignments, ``{`` and ``!``.
 
     Thus `nice -n 10 gh pr merge` reaches `gh`, rather than stopping on the
@@ -297,6 +326,8 @@ def _skip_command_prefix(seg: list[str], i: int) -> int:
     """
     while i < len(seg):
         tok = seg[i]
+        if stop_at_env and tok == "env":
+            break
         if tok in _WRAPPERS:
             i = _skip_wrapper_options(tok, seg, i + 1)
         elif tok in {"{", "!"} or _is_env_assignment(tok):
@@ -304,6 +335,44 @@ def _skip_command_prefix(seg: list[str], i: int) -> int:
         else:
             break
     return i
+
+
+def _env_split_payload(seg: list[str]) -> str | None:
+    """Read env -S as argv, rather than discarding its executable as an operand."""
+    i, _ = _invoked_start(seg, stop_at_env=True)
+    while i < len(seg):
+        i = _skip_command_prefix(seg, i, stop_at_env=True)
+        if seg[i : i + 1] != ["env"]:
+            return None
+        rest = seg[i + 1 :]
+        j = expansions = 0
+        while j < len(rest) and rest[j].startswith("-") and rest[j] != "-":
+            if rest[j] == "--":
+                j += 1
+                break
+            start = j
+            option, value = _wrapper_value_option("env", rest[j])
+            j += 1
+            if option and value is None:
+                if j >= len(rest):
+                    return None
+                value = rest[j]
+                j += 1
+            if option not in {"-S", "--split-string"}:
+                continue
+            expansions += 1
+            if expansions > _MAX_SHELL_DEPTH or any(char in value for char in "\\$`"):
+                return shlex.join(_UNPARSED)
+            try:
+                words = shlex.split(strip_shell_comments(value))
+            except ValueError:
+                return shlex.join(_UNPARSED)
+            rest[start:j] = words
+            j = start
+        if expansions:
+            return shlex.join([*seg[:i], *rest[j:]])
+        i = _skip_wrapper_options("env", seg, i + 1)
+    return None
 
 
 _SHELLS = {"bash", "sh", "zsh", "dash", "ksh", "fish", "busybox"}
@@ -333,7 +402,7 @@ _XARGS_VALUE_OPTS = {
 }
 
 
-def _invoked_start(seg: list[str]) -> tuple[int, bool]:
+def _invoked_start(seg: list[str], *, stop_at_env: bool = False) -> tuple[int, bool]:
     """Index where the actually-executed command begins → (index, reached_via_xargs).
 
     `xargs` is NOT a transparent prefix: it appends stdin items to the command it runs.
@@ -342,7 +411,7 @@ def _invoked_start(seg: list[str]) -> tuple[int, bool]:
     `printf '5' | xargs gh pr merge --squash` (which really does merge PR 5) hides its
     selector on stdin.
     """
-    i = _skip_command_prefix(seg, 0)
+    i = _skip_command_prefix(seg, 0, stop_at_env=stop_at_env)
     if i >= len(seg) or seg[i] != "xargs":
         return i, False
     i += 1
@@ -357,7 +426,7 @@ def _invoked_start(seg: list[str]) -> tuple[int, bool]:
             i += 1
             continue
         i += 1
-    return _skip_command_prefix(seg, i), True
+    return _skip_command_prefix(seg, i, stop_at_env=stop_at_env), True
 
 
 def _strip_dollar_quote(payload: str) -> str:
@@ -377,6 +446,9 @@ def _shell_c_payload(seg: list[str]) -> str | None:
     first token is `$gh`, matching nothing. Bash runs that command for real (verified),
     so the marker is stripped rather than left to hide the merge.
     """
+    split_payload = _env_split_payload(seg)
+    if split_payload is not None:
+        return split_payload
     i, _ = _invoked_start(seg)
     if i >= len(seg):
         return None
@@ -413,18 +485,21 @@ def _may_merge(command: str, depth: int = 0) -> bool:
             return True
         invoked, _ = _invoked_start(argv)
         is_eval = argv[invoked : invoked + 1] == ["eval"]
-        if is_eval and any("$" in arg or "`" in arg or arg == _UNREADABLE_MARKER for arg in argv[invoked + 1 :]):
+        operands = argv[invoked + 1 :]
+        if is_eval and operands[:1] == ["--"]:
+            operands = operands[1:]
+        payload = " ".join(operands) if is_eval else _shell_c_payload(argv)
+        if is_eval and _plain_pr_read(payload):
+            continue
+        if is_eval and any(
+            any(char in arg for char in "$`{}[]*?~") or arg == _UNREADABLE_MARKER for arg in operands
+        ):
             # The candidate pass found merge words, but eval's expansion can
             # change argv. Preserve the existing refusal instead of guessing.
             return True
-        payload = (
-            " ".join(argv[invoked + 1 :])
-            if is_eval
-            else _shell_c_payload(argv)
-        )
         if payload:
             if depth >= _MAX_SHELL_DEPTH:
-                return _merge_candidate(payload)
+                return True
             if _may_merge(payload, depth + 1):
                 return True
     return False
@@ -581,6 +656,8 @@ def _merge_args(seg: list[str]) -> list[str] | None:
     Admin merges are judged here as well as by ``guard-admin-merge.py``: the
     ordinary PR checks still apply when a command contains ``--admin``.
     """
+    if _env_split_payload(seg) is not None:
+        return None
     i, via_xargs = _invoked_start(seg)
     if (
         i + 3 < len(seg)
