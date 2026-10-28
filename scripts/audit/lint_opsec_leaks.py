@@ -19,6 +19,7 @@ Safe exclusions:
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -440,6 +441,140 @@ def get_public_personal_identifier_paths(revision: str = "") -> list[str]:
     return [path for path in paths if is_public_personal_identifier_path(path)]
 
 
+def publication_git(*args: str) -> str:
+    """Capture Git output so failures never print submitted messages or refs."""
+    return subprocess.run(
+        ["git", *args], cwd=REPO_ROOT, capture_output=True, check=True,
+        timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+    ).stdout.decode("utf-8")
+
+
+def publication_sha(value: object) -> str:
+    if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{40}", value):
+        raise ValueError("invalid publication SHA")
+    return value
+
+
+def publication_messages(base: object, head: object, *, new_branch: bool = False) -> str:
+    base, head = publication_sha(base), publication_sha(head)
+    if head == "0" * 40 or base == head:
+        raise ValueError("empty publication range")
+    if publication_git("rev-parse", "--is-shallow-repository").strip() != "false":
+        raise ValueError("incomplete publication history")
+    publication_git("cat-file", "-e", f"{head}^{{commit}}")
+    if base == "0" * 40 and new_branch:
+        span = head
+    else:
+        publication_git("cat-file", "-e", f"{base}^{{commit}}")
+        publication_git("merge-base", base, head)
+        span = f"{base}..{head}"
+    return publication_git("log", "--format=%B%x00", span)
+
+
+def current_publication_pr(repository: str, number: int) -> dict:
+    # Direct script execution also works in a clean stdlib-only checkout.
+    if str(REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(REPO_ROOT))
+    from scripts.common import github_client
+
+    result = github_client.run(
+        ["gh", "api", "-X", "GET", f"repos/{repository}/pulls/{number}"],
+        fresh=True, capture_output=True, text=True, timeout=30,
+    )
+    if result.returncode:
+        raise ValueError("current publication metadata unavailable")
+    pr = json.loads(result.stdout)
+    if not isinstance(pr, dict) or pr.get("number") != number:
+        raise ValueError("invalid current publication metadata")
+    return pr
+
+
+def publication_pr_texts(pr: dict, *, live: bool = False) -> list[tuple[str, str]]:
+    title, body, branch = pr["title"], pr["body"], pr["head"]["ref"]
+    if not isinstance(title, str) or not title or not isinstance(branch, str) or not branch:
+        raise ValueError("missing publication field")
+    if body is not None and not isinstance(body, str):
+        raise ValueError("invalid publication body")
+    base, head = publication_sha(pr["base"]["sha"]), publication_sha(pr["head"]["sha"])
+    if live:
+        for sha in (base, head):
+            try:
+                publication_git("cat-file", "-e", f"{sha}^{{commit}}")
+            except subprocess.CalledProcessError:
+                publication_git("fetch", "--no-tags", "--quiet", "origin", sha)
+    return [("title", title), ("body", body or ""), ("branch", branch),
+            ("commit", publication_messages(base, head))]
+
+
+def publication_texts(payload: dict, event: str) -> list[tuple[str, str]]:
+    """Read all required event and live fields without replacing event evidence."""
+    if event == "push":
+        ref = payload["ref"]
+        if not isinstance(ref, str) or not ref.startswith(("refs/heads/", "refs/tags/")):
+            raise ValueError("invalid push ref")
+        publication_git("check-ref-format", ref)
+        before, after = publication_sha(payload["before"]), publication_sha(payload["after"])
+        if after == "0" * 40 and payload.get("deleted") is True:
+            publication_git("cat-file", "-e", f"{before}^{{commit}}")
+            return [("branch", ref)]
+        return [("branch", ref), ("commit", publication_messages(before, after, new_branch=True))]
+    if event not in {"pull_request", "merge_group"}:
+        raise ValueError("unsupported publication event")
+    repository = payload["repository"]["full_name"]
+    if not isinstance(repository, str) or not re.fullmatch(r"[\w.-]+/[\w.-]+", repository, re.ASCII):
+        raise ValueError("invalid publication repository")
+    if event == "pull_request":
+        if payload["action"] not in {"opened", "synchronize", "reopened", "edited"}:
+            raise ValueError("unsupported publication action")
+        pr = payload["pull_request"]
+        number = pr["number"]
+        if type(number) is not int or number < 1:
+            raise ValueError("invalid publication PR")
+        return publication_pr_texts(pr) + publication_pr_texts(current_publication_pr(repository, number), live=True)
+    if payload["action"] != "checks_requested":
+        raise ValueError("unsupported queue action")
+    group = payload["merge_group"]
+    base, head = publication_sha(group["base_sha"]), publication_sha(group["head_sha"])
+    texts = [("commit", publication_messages(base, head))]
+    publication_git("merge-base", "--is-ancestor", base, head)
+    chain = publication_git("rev-list", "--first-parent", f"{base}..{head}").split()
+    if not chain:
+        raise ValueError("empty queue chain")
+    # Same squash-chain convention as check_agent_attribution, without its
+    # Markdown dependency. Every queue member, not just the ref's PR, is read.
+    for sha in chain:
+        if len(publication_git("rev-list", "--parents", "-n", "1", sha).split()) != 2:
+            raise ValueError("unsupported queue commit")
+        subject = publication_git("log", "-1", "--format=%s", sha).strip()
+        match = re.search(r"\(#([1-9][0-9]*)\)$", subject)
+        if not match:
+            raise ValueError("queue PR unavailable")
+        texts.extend(publication_pr_texts(current_publication_pr(repository, int(match[1])), live=True))
+    ref = group["head_ref"]
+    if not isinstance(ref, str) or not ref.startswith("refs/heads/gh-readonly-queue/"):
+        raise ValueError("invalid queue ref")
+    publication_git("check-ref-format", ref)
+    texts.append(("branch", ref))
+    return texts
+
+
+def scan_publication_event(event_file: str) -> int:
+    try:
+        payload = json.loads(Path(event_file).read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise ValueError("invalid event")
+        texts = publication_texts(payload, os.environ.get("GITHUB_EVENT_NAME", ""))
+        failed = False
+        for field, text in texts:
+            for line, _matched, rule in check_content(text, "docs/runbooks/publication.txt"):
+                print(f"OPSEC publication: {field} line={line} rule={rule}")
+                failed = True
+        return int(failed)
+    except (KeyError, TypeError, ValueError, OSError, subprocess.SubprocessError, RuntimeError):
+        print("OPSEC publication: required input unavailable or invalid", file=sys.stderr)
+        return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Lint committed or staged files for OPSEC leaks.\nUse commit ranges to check historical content before publication.",
@@ -447,11 +582,13 @@ def main(argv: list[str] | None = None) -> int:
         epilog="Examples:\n  lint_opsec_leaks.py --staged\n  lint_opsec_leaks.py --commit-range origin/main..HEAD\n"
         "Outputs: redacted findings on stdout; no files written.\n"
         "Exit codes: 0 clean; 1 leaks or unreadable Git data; 2 invalid arguments.\n"
-        "Related: docs/runbooks/pre-push-gate.md; #10579.",
+        "Event scanning: --event-file event.json reads GITHUB_EVENT_NAME and current PR metadata; requires gh.\n"
+        "Related: docs/runbooks/pre-push-gate.md; #10579; #10524.",
     )
     parser.add_argument("diff_range", nargs="?", help="Git diff range (e.g. origin/main...HEAD)")
     parser.add_argument("--staged", action="store_true", help="Inspect staged git index blobs")
     parser.add_argument("--all", action="store_true", help="Explicitly scan all tracked files in repo")
+    parser.add_argument("--event-file", help="Scan publication fields from a GitHub event JSON file; default: file scanning")
     parser.add_argument(
         "--commit-range",
         help="Scan each commit's touched blobs, e.g. origin/main..HEAD; default: push refs when available",
@@ -466,6 +603,10 @@ def main(argv: list[str] | None = None) -> int:
         help="Read --public-identifiers files from this git revision instead of HEAD",
     )
     args = parser.parse_args(argv)
+    if args.event_file is not None:
+        if any((args.diff_range, args.commit_range, args.staged, args.all, args.public_identifiers, args.revision)):
+            parser.error("--event-file cannot be combined with file-scanning options")
+        return scan_publication_event(args.event_file)
 
     if args.public_identifiers and (args.staged or args.all):
         parser.error("--public-identifiers cannot be combined with --staged or --all")

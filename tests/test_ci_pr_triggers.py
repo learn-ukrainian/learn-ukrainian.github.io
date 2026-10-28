@@ -3,9 +3,8 @@
 Safety invariant under test: no event path may make the required "CI Gate"
 check green or skipped without every job required by the event tier running.
 
-- ci.yml fires on opened/synchronize/reopened only, never `edited` or
-  `labeled`. The negated-closing-reference body guard lives in
-  pr-body-guard.yml, the only workflow subscribed to `edited`.
+- ci.yml runs the same admission checks for opened/synchronize/reopened/edited.
+  The negated-closing-reference body guard lives in pr-body-guard.yml.
 - Exactly one job in any workflow is named "CI Gate". It uses `if: always()`
   and fails when a required job was cancelled or skipped unexpectedly;
   GitHub treats a skipped required job as success.
@@ -255,6 +254,7 @@ _EVENTS = {
     "opened": _pr_event("opened"),
     "synchronize": _pr_event("synchronize"),
     "reopened": _pr_event("reopened"),
+    "edited": _pr_event("edited"),
     "merge_group": _github(
         "merge_group",
         {"action": "checks_requested", "merge_group": {"head_sha": "b" * 40}},
@@ -305,9 +305,35 @@ def _concurrency_group(github: dict[str, Any]) -> str:
     return _interpolate(_load("ci.yml")["concurrency"]["group"], {"github": github})
 
 
-def test_ci_triggers_on_code_events_only() -> None:
-    # Neither `edited` nor `labeled` may start CI on an unchanged SHA.
-    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened"}
+def test_metadata_edits_cannot_bypass_code_or_publication_checks() -> None:
+    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened", "edited"}
+    steps = _load("ci.yml")["jobs"]["secret-scan"]["steps"]
+    scan = next(s for s in steps if s.get("name") == "Scan publication fields")
+    for event in ("opened", "edited", "merge_group"):
+        assert _condition(scan["if"], {"github": _EVENTS[event]})
+    assert scan["run"] == 'python3 scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"'
+    assert set(scan["env"]) == {"GH_TOKEN"}
+    assert "reuse" not in _load("ci.yml")["jobs"]
+
+
+def test_publication_workflows_do_not_log_submitted_fields(tmp_path: Path) -> None:
+    guard = _load("pr-body-guard.yml")
+    assert "push" in _triggers(guard)
+    push = guard["jobs"]["push-publication"]
+    assert push["if"] == "github.event_name == 'push'"
+    assert push["steps"][0]["with"]["fetch-depth"] == 0
+    assert '--event-file "$GITHUB_EVENT_PATH"' in push["steps"][-1]["run"]
+    step = guard["jobs"]["closing-references"]["steps"][-1]
+    assert "env" not in step
+    marker = "synthetic-submitted-field"
+    event = tmp_path / "event.json"
+    event.write_text(json.dumps({"pull_request": {"body": f"{marker}\nDoes not close #123"}}))
+    result = subprocess.run(["bash", "-e", "-c", step["run"]], cwd=_REPO_ROOT,
+                            env={**os.environ, "GITHUB_EVENT_PATH": str(event)},
+                            capture_output=True, text=True, timeout=30)
+    assert result.returncode == 1
+    assert marker not in result.stdout + result.stderr
+    assert result.stdout == "PR body contains a negated closing reference; use Refs #N instead\n"
 
 
 @pytest.mark.parametrize("event", sorted(_EVENTS))
@@ -315,7 +341,7 @@ def test_every_event_runs_every_job(event: str) -> None:
     results, names = _simulate(_EVENTS[event])
     skipped = {job for job, result in results.items() if result != "success"}
     expected = set() if event == "merge_group" else {"queue-metadata-scan"}
-    if event in {"opened", "synchronize", "reopened"}:
+    if event in {"opened", "synchronize", "reopened", "edited"}:
         expected |= {"frontend", "refresh-pytest-durations", "pytest", "pytest-report"}
     assert skipped == expected
     assert names["ci-gate"] == "CI Gate"
@@ -381,7 +407,7 @@ _GREEN = {
 }
 
 
-def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
+def _run_gate(event: str, *, action: str = "opened", **results: str) -> subprocess.CompletedProcess[str]:
     # Candidate identity and ancestry belong to this fixture, not the source
     # checkout, which may contain only HEAD in a real queue shard.
     with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"]) as directory:
@@ -401,7 +427,7 @@ def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
         payload = {"repository": {"default_branch": "main"}}
         ref = "refs/heads/main"
         if event == "pull_request":
-            payload.update(action="opened", pull_request={"number": 7, "base": {"sha": "b" * 40}, "head": {"sha": "a" * 40}})
+            payload.update(action=action, pull_request={"number": 7, "base": {"sha": "b" * 40}, "head": {"sha": "a" * 40}})
             ref = "refs/pull/7/merge"
         elif event == "merge_group":
             ref = "refs/heads/gh-readonly-queue/main/pr-7-" + "d" * 40
@@ -432,8 +458,9 @@ def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
 
 
 
-def test_gate_passes_a_green_pull_request_run() -> None:
-    result = _run_gate("pull_request")
+@pytest.mark.parametrize("action", ["opened", "edited"])
+def test_gate_passes_a_green_pull_request_run(action: str) -> None:
+    result = _run_gate("pull_request", action=action)
     assert result.returncode == 0, result.stdout
     assert "CI Gate green" in result.stdout
     assert "full pytest was not run" in result.stdout

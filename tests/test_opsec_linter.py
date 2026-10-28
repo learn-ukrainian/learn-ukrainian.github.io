@@ -1,4 +1,9 @@
+import copy
+import json
+import os
 import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -74,6 +79,152 @@ def test_commit_range_named_staged_reads_committed_blobs(pushed_range):
     git("add", str(path.relative_to(path.parents[1])))
 
     assert opsec_linter.main(["--commit-range", f"{base}..staged-publication"]) == 1
+
+
+@pytest.fixture
+def publication(pushed_range, monkeypatch, tmp_path):
+    git, _path, base = pushed_range
+    git("commit", "--allow-empty", "-m", "clean publication")
+    pr = {"number": 1, "title": "clean title", "body": None,
+          "head": {"ref": "topic", "sha": git("rev-parse", "HEAD")}, "base": {"sha": base}}
+    live = copy.deepcopy(pr)
+    monkeypatch.setattr(opsec_linter, "current_publication_pr", lambda repo, number: live)
+    event_file = tmp_path / "event.json"
+
+    def run(payload, event="pull_request"):
+        event_file.write_text(json.dumps(payload))
+        monkeypatch.setenv("GITHUB_EVENT_NAME", event)
+        return opsec_linter.main(["--event-file", str(event_file)])
+
+    payload = {"repository": {"full_name": "example/project"}, "action": "edited", "pull_request": pr}
+    return run, payload, live, git
+
+
+@pytest.mark.parametrize("field", ["title", "body", "branch", "commit"])
+@pytest.mark.parametrize("source", ["event", "live"])
+def test_publication_scans_every_pr_field_without_erasing_event_evidence(publication, capsys, field, source):
+    run, payload, live, git = publication
+    assert run(payload) == 0
+    marker = "10." + "23.45.67"
+    pr = payload["pull_request"] if source == "event" else live
+    if field == "branch":
+        pr["head"]["ref"] = marker
+    elif field == "commit":
+        git("commit", "--allow-empty", "-m", "ordinary subject", "-m", marker)
+        pr["head"]["sha"] = git("rev-parse", "HEAD")
+    else:
+        pr[field] = marker
+    assert run(payload) == 1
+    output = capsys.readouterr()
+    assert marker not in output.out + output.err
+    assert f"publication: {field} " in output.out
+
+
+@pytest.mark.parametrize("field", ["title", "body", "head", "base"])
+def test_incomplete_live_enrichment_fails_closed(publication, capsys, field):
+    run, payload, live, _git = publication
+    del live[field]
+    assert run(payload) == 1
+    assert capsys.readouterr().err == "OPSEC publication: required input unavailable or invalid\n"
+
+
+@pytest.mark.parametrize("event,payload", [("unknown", {}), ("push", {}), ("pull_request", []),
+                                         ("pull_request", {}), ("merge_group", {})])
+def test_unrecognized_or_incomplete_publication_events_never_pass(publication, event, payload):
+    run, *_ = publication
+    assert run(payload, event) == 1
+
+
+@pytest.mark.parametrize("invalid", [False, True])
+def test_push_scans_complete_git_history_instead_of_truncated_payload(publication, capsys, invalid):
+    run, payload, _live, git = publication
+    marker = "-----BEGIN " + "PRIVATE KEY-----"
+    git("commit", "--allow-empty", "-m", "first subject", "-m", marker)
+    git("commit", "--allow-empty", "-m", "clean tip")
+    push = {"ref": "refs/heads/topic", "before": payload["pull_request"]["base"]["sha"],
+            "after": git("rev-parse", "HEAD"), "commits": [{"message": "clean tip"}]}
+    if invalid:
+        push["before"] = "f" * 40
+    assert run(push, "push") == 1
+    output = capsys.readouterr()
+    assert marker not in output.out + output.err
+    assert ("required input" in output.err) if invalid else ("publication: commit " in output.out)
+
+
+def test_new_branch_scans_ancestry_and_shallow_history_is_rejected(publication):
+    run, _payload, _live, git = publication
+    push = {"ref": "refs/heads/topic", "before": "0" * 40, "after": git("rev-parse", "HEAD")}
+    assert run(push, "push") == 0
+    git_dir = Path(git("rev-parse", "--absolute-git-dir"))
+    (git_dir / "shallow").write_text(push["after"] + "\n")
+    assert run(push, "push") == 1
+
+
+def test_direct_push_branch_is_scanned_even_when_commit_payload_is_empty(publication, capsys):
+    run, payload, _live, git = publication
+    marker = "10." + "23.45.67"
+    push = {"ref": "refs/heads/" + marker, "before": payload["pull_request"]["base"]["sha"],
+            "after": git("rev-parse", "HEAD"), "commits": []}
+    assert run(push, "push") == 1
+    output = capsys.readouterr()
+    assert "publication: branch " in output.out
+    assert marker not in output.out + output.err
+
+
+@pytest.mark.parametrize("member,field", [(1, "title"), (1, "body"), (2, "branch"), (2, "commit"), (1, "clean")])
+def test_queue_scans_each_members_current_fields_and_original_commit_bodies(publication, monkeypatch, capsys, member, field):
+    run, payload, live, git = publication
+    marker = "10." + "23.45.67"
+    prs = {1: copy.deepcopy(live), 2: copy.deepcopy(live)}
+    queue_base = queue_head = payload["pull_request"]["head"]["sha"]
+    for number in (1, 2):
+        git("commit", "--allow-empty", "-m", f"member (#{number})", "-m", marker if (number, field) == (member, "commit") else "clean body")
+        prs[number]["number"] = number
+        prs[number]["head"]["sha"] = git("rev-parse", "HEAD")
+        queue_head = git("commit-tree", "HEAD^{tree}", "-p", queue_head, "-m", f"member (#{number})")
+    if field == "branch":
+        prs[member]["head"]["ref"] = marker
+    elif field not in {"commit", "clean"}:
+        prs[member][field] = marker
+    monkeypatch.setattr(opsec_linter, "current_publication_pr", lambda repo, number: prs[number])
+    group = {"base_sha": queue_base, "head_sha": queue_head,
+             "head_ref": "refs/heads/gh-readonly-queue/main/pr-2-" + "a" * 40}
+    assert run({"repository": payload["repository"], "action": "checks_requested", "merge_group": group}, "merge_group") == (0 if field == "clean" else 1)
+    output = capsys.readouterr()
+    assert marker not in output.out + output.err
+    if field != "clean":
+        assert f"publication: {field} " in output.out
+
+
+def test_direct_script_publication_mode_needs_no_site_packages(tmp_path):
+    script = Path(opsec_linter.__file__).resolve()
+    event = tmp_path / "event.json"
+    event.write_text("{}")
+    result = subprocess.run([sys.executable, "-S", str(script), "--event-file", str(event)],
+                            env={**os.environ, "GITHUB_EVENT_NAME": "unsupported"},
+                            capture_output=True, text=True, timeout=30)
+    assert result.returncode == 1
+    assert result.stderr == "OPSEC publication: required input unavailable or invalid\n"
+    # Exercise the live-metadata import closure too, without network or site packages.
+    code = """
+import runpy, sys
+from types import SimpleNamespace
+from pathlib import Path
+sys.path.insert(0, str(Path(sys.argv[1]).parents[2]))
+from scripts.common import github_client
+github_client.run = lambda *a, **kw: SimpleNamespace(returncode=0, stdout='{}')
+module = runpy.run_path(sys.argv[1])
+try:
+    module['current_publication_pr']('example/project', 1)
+except ValueError:
+    raise SystemExit(0)
+raise SystemExit(1)
+"""
+    result = subprocess.run([sys.executable, "-S", "-c", code, str(script)],
+                            capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0
+    assert result.stderr == ""
+
 
 
 def test_f002_pkcs8_unqualified_private_key_detected():

@@ -39,8 +39,8 @@ _WORKFLOW_EXPECTATIONS = {
         "cancel-in-progress": "${{ github.event_name == 'pull_request' }}",
     },
     ".github/workflows/pr-body-guard.yml": {
-        "group": _PR_NUMBER_ONLY_GROUP,
-        "cancel-in-progress": True,
+        "group": _PR_OR_UNIQUE_RUN_GROUP,
+        "cancel-in-progress": _PR_ONLY_CANCELLATION,
     },
     ".github/workflows/security-audit.yml": {
         "group": _EVENT_SHA_GROUP,

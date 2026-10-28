@@ -58,7 +58,7 @@ def _git(
     env: dict[str, str] | None = None,
     check: bool = True,
 ) -> subprocess.CompletedProcess[str]:
-    return _run(["git", *args], cwd=repo, env=env, check=check)
+    return _run([os.environ.get("AGENT_REAL_GIT") or "git", *args], cwd=repo, env=env, check=check)
 
 
 def _write_executable(path: Path, text: str) -> None:
