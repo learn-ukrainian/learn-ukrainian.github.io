@@ -92,30 +92,38 @@ def test_restore_is_a_dry_run_and_refuses_unsafe_targets(
 
 @pytest.mark.parametrize("execute", [False, True])
 @pytest.mark.parametrize("target_exists", [False, True])
+@pytest.mark.parametrize("destination_form", ["leaf", "leaf_with_slash", "parent"])
 def test_restore_rejects_trailing_newline_destination_before_rewriting(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
     tmp_path: Path,
     execute: bool,
     target_exists: bool,
+    destination_form: str,
 ) -> None:
     environment, _source, _staging, _legacy = backup_environment
     _write_fake_run(environment)
     target = tmp_path / "restore-target\n"
+    rewritten_target = tmp_path / "restore-target"
+    if destination_form == "parent":
+        target = tmp_path / "restore-parent\n" / "restore-target"
+        rewritten_target = tmp_path / "restore-parent" / "restore-target"
+        target.parent.mkdir()
+        rewritten_target.parent.mkdir()
     if target_exists:
         target.mkdir()
-    rewritten_target = tmp_path / "restore-target"
+    target_argument = str(target) + ("/" if destination_form == "leaf_with_slash" else "")
 
     result = _run(
         environment,
         "restore",
         MANIFEST_ID,
         "--to",
-        str(target),
+        target_argument,
         *(("--execute",) if execute else ()),
     )
 
     assert result.returncode != 0, result.stdout
-    assert "Target path must not end in a newline" in result.stderr
+    assert "Target path components must not end in a newline" in result.stderr
     assert _restore_ids(environment) == []
     assert not rewritten_target.exists()
     assert target.exists() == target_exists
