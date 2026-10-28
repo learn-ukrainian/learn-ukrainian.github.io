@@ -111,16 +111,15 @@ def test_opencode_argv(spec, stub_env, mode, model):
     assert run_stub(opencode.build(spec, stub_env), spec) == [*expected, "--", PROMPT]
 
 
-@pytest.mark.parametrize("mode", ("read-only", "workspace-write"))
 @pytest.mark.parametrize("model", ("vendor/explicit-model", "another/model"))
-def test_hermes_argv(spec, stub_env, mode, model):
-    spec = replace(spec, agent="hermes", model=model, mode=mode)
+def test_hermes_argv(spec, stub_env, model):
+    spec = replace(spec, agent="hermes", model=model, mode="workspace-write")
     assert run_stub(hermes.build(spec, stub_env), spec) == ["-z", PROMPT, "-m", model, "--provider", "openrouter"]
 
 
 def test_hermes_has_no_default_model(spec):
     with pytest.raises(ValueError, match="explicit model"):
-        hermes.build(replace(spec, model=""), {})
+        hermes.build(replace(spec, model="", mode="workspace-write"), {})
 
 
 def stream(*events):

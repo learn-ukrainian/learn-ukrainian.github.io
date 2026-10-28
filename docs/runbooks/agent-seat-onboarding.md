@@ -318,8 +318,9 @@ to Sol at `high` or the accountable orchestrator before making a consequential d
 
 ### Grok dispatch through Cursor
 
-Native Grok dispatch is retired. Dispatch v2 maps `--agent grok` to Cursor.
-Use the explicit Cursor seat at `grok-4.7-high`:
+Native Grok dispatch is retired. grok-build is the Grok TUI and is not a dispatch v2 provider;
+`--agent grok` is an unknown agent. Agent names equal the TUI binary, so use the Cursor seat at
+`grok-4.7-high`:
 
 ```bash
 .venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high \

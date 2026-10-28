@@ -23,7 +23,7 @@ review.
 ## Grok dispatch seat
 
 Grok dispatch runs through the Cursor seat at `grok-4.7-high`.
-Native Grok dispatch is retired; `dispatch.py --agent grok` aliases Cursor.
+Native Grok dispatch is retired; grok-build is the Grok TUI, not a dispatch v2 provider (`--agent grok` is an unknown agent).
 Grok Bot remains a separate external observer.
 
 - No `dispatch.py` / registry adapter for Grok Bot

@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.dispatcher import admission, checks, git, headroom, host_admission, providers, store, worker, write_intent
+from scripts.dispatcher import admission, checks, git, headroom, host_admission, providers, store, worker
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
@@ -198,8 +198,6 @@ def _dispatch(args) -> int:
         rules_core.require_core()
     except rules_core.RulesCoreMissing as exc:
         raise ValueError(f"dispatch refused: {exc}; the rules core is required.") from None
-    if write_intent_error := write_intent._read_only_write_intent_error(mode=args.mode, prompt=prompt.decode()):
-        raise ValueError(write_intent_error)
     agent = ALIASES.get(args.agent, args.agent)
     # An unknown Claude account label reaches admission, which refuses it typed (claude_account_unknown).
     if agent not in providers.PROVIDERS:
@@ -210,6 +208,8 @@ def _dispatch(args) -> int:
         raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.output_schema is not None and agent != "codex":
         raise ValueError("--output-schema is supported only with the effective codex agent")
+    if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent)):
+        raise ValueError(refusal)
     deadlines(vars(args))
     if args.cwd and (args.branch or args.pinned_head or args.worktree is not None):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
@@ -272,6 +272,8 @@ def _dispatch(args) -> int:
         **fields,
     )
     checks.check_private_input(spec, info["key"])
+    if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent, child_env(spec))):
+        raise ValueError(refusal)
     checks.check_review_family(args.review_author_model, args.model)
     if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
         exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,

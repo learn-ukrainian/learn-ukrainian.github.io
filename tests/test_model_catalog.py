@@ -609,7 +609,7 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
         "model_id": "auto",
         "route": "grok",
         "transport": "native_grok",
-        "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent grok",
+        "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent cursor",
         "review_profiles": ["code", "infra"],
         "capabilities": ["code_review"],
     }
