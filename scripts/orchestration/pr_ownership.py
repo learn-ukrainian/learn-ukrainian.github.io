@@ -17,7 +17,6 @@ State is one JSON file next to the shared dispatch task store, written under a l
 from __future__ import annotations
 
 import argparse
-import copy
 import fcntl
 import hashlib
 import json
@@ -63,7 +62,7 @@ def pr_key(repo: str, number: int) -> str:
 
 
 def _empty() -> dict[str, Any]:
-    return {"schema": 1, "last_tick": None, "episodes": {}, "handoffs": {}, "history": []}
+    return {"schema": 1, "last_tick": None, "episodes": {}, "handoffs": {}, "history": [], "outbox": []}
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -97,6 +96,12 @@ def load(path: Path) -> dict[str, Any]:
                 raise TypeError("last_tick")
         if not isinstance(data.setdefault("history", []), list):
             raise TypeError("history")
+        outbox = data.setdefault("outbox", [])
+        if not isinstance(outbox, list) or not all(
+            isinstance(entry, dict) and all(isinstance(entry.get(name), str) for name in ("kind", "key", "body"))
+            for entry in outbox
+        ):
+            raise TypeError("outbox")
     except (AttributeError, KeyError, TypeError, ValueError) as exc:
         raise OwnershipError(f"ownership state malformed: {type(exc).__name__}") from exc
     return data
@@ -152,7 +157,7 @@ def step(
     """Advance alert episodes for one complete observation; return the notices to send.
 
     ``open_keys`` are every open PR in the checked repositories; ``findings`` maps a key
-    to its ``pr_owner_check.Unowned`` row (``unknown`` rows freeze their episode).
+    to its ``Finding`` (an ``unknown`` row restarts a pending episode and freezes a raised one).
     """
     notices: dict[str, list[dict[str, Any]]] = {"alert": [], "reminder": [], "cleared": []}
     episodes, handoffs = data["episodes"], data["handoffs"]
@@ -221,28 +226,41 @@ def _message(kind: str, rows: list[dict[str, Any]]) -> str:
     return "\n".join(body)
 
 
-def notify(notices: Mapping[str, list[dict[str, Any]]], service: Any) -> list[str]:
-    """One supervisory request per notice kind.
+def outbox_entries(notices: Mapping[str, list[dict[str, Any]]]) -> list[dict[str, str]]:
+    """Freeze one supervisory request per notice kind, body and key together.
 
-    The idempotency key is the notices' logical identity (PR, episode start, reminder
-    number), never the clock, so a tick retried after an unsaved delivery sends nothing new.
+    The key is the notices' logical identity (PR, episode start, reminder number), never
+    the clock. The entry is saved before delivery and retried byte for byte, so a retry
+    after an unsaved delivery is a no-op, never a different payload under the same key.
     """
-    ids = []
+    entries = []
     for kind in ("alert", "reminder", "cleared"):
         rows = notices.get(kind) or []
         if not rows:
             continue
         identity = [[row["pr"], row["since"], row.get("reminders", 0) if kind == "reminder" else 0] for row in rows]
         digest = hashlib.sha256(json.dumps(sorted(identity)).encode()).hexdigest()[:24]
-        message = service.enqueue_supervisory_request(
-            sender=SENDER,
-            recipient=CTO_INBOX,
-            body=_message(kind, rows),
-            correlation_id=f"pr-ownership:{kind}",
-            idempotency_key=f"pr-ownership:{kind}:{digest}",
-        )
-        ids.append(message.message_id)
-    return ids
+        entries.append({"kind": kind, "key": f"pr-ownership:{kind}:{digest}", "body": _message(kind, rows)})
+    return entries
+
+
+def deliver(outbox: list[dict[str, str]], service: Any) -> list[str]:
+    """Send every outbox entry; returns the errors. Sent entries leave the outbox."""
+    errors = []
+    for entry in list(outbox):
+        try:
+            service.enqueue_supervisory_request(
+                sender=SENDER,
+                recipient=CTO_INBOX,
+                body=entry["body"],
+                correlation_id=f"pr-ownership:{entry['kind']}",
+                idempotency_key=entry["key"],
+            )
+        except Exception as exc:  # one entry never blocks the others
+            errors.append(f"{entry['key']}: {type(exc).__name__}")
+            continue
+        outbox.remove(entry)
+    return errors
 
 
 @dataclass(frozen=True)
@@ -258,22 +276,32 @@ class Finding:
 
 
 def liveness(record: Mapping[str, Any] | None) -> bool | None:
-    """True for a live supervisor, False for a finished task or a gone supervisor, None
-    when an active record or the host gives no process to observe."""
-    from scripts.fleet.pr_owner_check import _supervisor_alive
+    """True for a live supervisor, False for a finished task or a provably gone or replaced
+    supervisor, None when the record or the host gives no identity to observe.
 
+    The identity is the one ``scripts.dispatcher.worker`` records (boot id and process
+    start time), read here so that an unreadable source stays unknown instead of gone.
+    """
     if record is None or record.get("status") not in _ACTIVE:
         return False
-    pid = record.get("pid")
-    if not pid or not record.get("process_start") or not Path("/proc/self/stat").exists():
+    pid, started = record.get("pid"), record.get("process_start")
+    if not pid or not started:
         return None
     try:
-        Path(f"/proc/{int(pid)}/stat").read_bytes()
+        stat = Path(f"/proc/{int(pid)}/stat").read_text()
     except FileNotFoundError:
-        return False  # provably gone
+        return None if not Path("/proc/self/stat").exists() else False
     except (OSError, ValueError, TypeError):
-        return None  # unreadable is unobservable, never gone
-    return _supervisor_alive(dict(record))
+        return None
+    try:
+        fields = stat.rsplit(")", 1)[1].split()
+        boot = Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+        start_ticks = fields[19]
+    except (OSError, IndexError):
+        return None
+    if fields[0] == "Z":
+        return False
+    return f"{boot}:{start_ticks}" == started
 
 
 def findings(
@@ -355,6 +383,12 @@ def display(exc: BaseException) -> str:
     return f"{type(exc).__name__}: {str(exc)[:200]}" if str(exc) else type(exc).__name__
 
 
+def _unknown_interval(data: dict[str, Any]) -> None:
+    """The whole source is unknown: no pending episode may count this time toward grace."""
+    for key in [key for key, episode in data["episodes"].items() if not episode["alerted_at"]]:
+        data["episodes"].pop(key)
+
+
 def _tick(now, path, observe, service_factory) -> tuple[list[str], bool]:
     with locked(path) as data:
         last = data.get("last_tick") or {}
@@ -364,31 +398,34 @@ def _tick(now, path, observe, service_factory) -> tuple[list[str], bool]:
             keys, findings = observe(_handoff_map(data))
         except GitHubRateLimited:
             # The queue pass reports this as a skip; so does the ownership check.
+            _unknown_interval(data)
             data["last_tick"] = {"at": now.isoformat(), "ok": False, "error": "GitHubRateLimited"}
-            return ["pr ownership: skipped (GitHub rate limited); alerts unchanged"], False
-        except Exception as exc:  # any unreadable source is unknown: change no alert
+            return ["pr ownership: skipped (GitHub rate limited); raised alerts unchanged"], False
+        except Exception as exc:  # any unreadable source is unknown
+            _unknown_interval(data)
             data["last_tick"] = {"at": now.isoformat(), "ok": False, "error": type(exc).__name__}
-            return [f"pr ownership: UNKNOWN ({type(exc).__name__}); alerts unchanged"], True
-        work = copy.deepcopy(data)
-        notices = step(work, keys, findings, now)
+            return [f"pr ownership: UNKNOWN ({type(exc).__name__}); raised alerts unchanged"], True
+        notices = step(data, keys, findings, now)
+        outbox = data.setdefault("outbox", [])
+        outbox.extend(outbox_entries(notices))
+        _save(path, data)  # the frozen payloads exist on disk before any delivery
         try:
             with service_factory() as service:
-                notify(notices, service)
-        except Exception as exc:  # commit nothing, so the next tick sends the same notices
-            data["last_tick"] = {"at": now.isoformat(), "ok": False, "error": type(exc).__name__}
-            return [f"pr ownership: CTO inbox write failed ({type(exc).__name__}); alerts unchanged"], True
-        work["last_tick"] = {"at": now.isoformat(), "ok": True}
-        data.clear()
-        data.update(work)
+                errors = deliver(outbox, service)
+        except Exception as exc:
+            errors = [f"CTO inbox unavailable: {type(exc).__name__}"]
+        data["last_tick"] = {"at": now.isoformat(), "ok": not errors}
         unknown = sorted(key for key, finding in findings.items() if finding.unknown)
         outstanding = sorted(key for key, episode in data["episodes"].items() if episode["alerted_at"])
         lines = [
             f"pr ownership: open={len(keys)} ownerless={len(findings) - len(unknown)} unknown={len(unknown)} "
-            f"alerts_outstanding={len(outstanding)} new={len(notices['alert'])} cleared={len(notices['cleared'])}"
+            f"alerts_outstanding={len(outstanding)} new={len(notices['alert'])} cleared={len(notices['cleared'])} "
+            f"undelivered={len(outbox)}"
         ]
         lines += [f"pr ownership alert outstanding: {key}" for key in outstanding]
         lines += [f"pr ownership unknown: {key}" for key in unknown]
-        return lines, False
+        lines += [f"pr ownership delivery FAILED: {error}" for error in errors]
+        return lines, bool(errors)
 
 
 def _gh_pr(repo: str, number: int) -> dict[str, Any]:

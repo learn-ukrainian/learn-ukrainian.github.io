@@ -119,28 +119,51 @@ def test_accepted_successor_owns_from_another_branch_while_live():
     assert find(fork, records, {(REPO.casefold(), 42): "succ"}) == []
 
 
-def test_unobservable_owner_is_unknown_and_gone_owner_is_ownerless(monkeypatch):
-    from scripts.dispatcher import worker
+def fake_proc(monkeypatch, files):
+    """Serve /proc reads from ``files``: a string is content, an exception is raised."""
+    real = own.Path.read_text
 
+    def read(self, *args, **kwargs):
+        if str(self).startswith("/proc/"):
+            value = files.get(str(self), FileNotFoundError(str(self)))
+            if isinstance(value, Exception):
+                raise value
+            return value
+        return real(self, *args, **kwargs)
+
+    monkeypatch.setattr(own.Path, "read_text", read)
+
+
+STAT = "7 (python) S" + " 0" * 18 + " 555 0"  # field 22 of proc(5), start ticks, is 555
+
+
+def test_unobservable_owner_is_unknown_and_gone_owner_is_ownerless(monkeypatch):
     prs = [{"number": 42, "headRefName": "codex/x", "isCrossRepository": False}]
-    monkeypatch.setattr(worker, "_identity", lambda pid: None)  # the recorded pid no longer exists
+    owner = {**task("t"), "pid": 7, "process_start": "boot:555"}
+    fake_proc(monkeypatch, {})  # the recorded pid no longer exists
     for extra in ({}, {"pid": 7}, {"pid": 7, "process_start": None}):
         (row,) = find(prs, [{**task("t"), **extra}], live=own.liveness)
         assert row.unknown and "cannot be observed" in row.reason
-    (row,) = find(prs, [{**task("t"), "pid": 7, "process_start": "boot:1"}], live=own.liveness)
+    (row,) = find(prs, [owner], live=own.liveness)
     assert not row.unknown and "not verifiably alive" in row.reason
-    monkeypatch.setattr(worker, "_identity", lambda pid: "boot:1")
-    assert find(prs, [{**task("t"), "pid": 7, "process_start": "boot:1"}], live=own.liveness) == []
-    monkeypatch.setattr(own.Path, "exists", lambda self: False)  # no process table on this host
-    assert own.liveness({**task("t"), "pid": 7, "process_start": "boot:1"}) is None
-    monkeypatch.undo()
+    boot = {"/proc/sys/kernel/random/boot_id": "boot\n"}
+    fake_proc(monkeypatch, {"/proc/7/stat": STAT, **boot})
+    assert find(prs, [owner], live=own.liveness) == []
+    fake_proc(monkeypatch, {"/proc/7/stat": STAT.replace(" 555 ", " 556 "), **boot})  # pid reused
+    assert own.liveness(owner) is False
     (row,) = find(prs, [task("old", status="done"), task("succ", "claude/q")], {(REPO.casefold(), 42): "succ"},
                   live=lambda r: None if r and r["task_id"] == "succ" else False)
     assert row.unknown
 
 
-# --- keeper tick ------------------------------------------------------------------
-
+@pytest.mark.parametrize("files", [
+    {"/proc/7/stat": PermissionError("stat")},
+    {"/proc/7/stat": STAT, "/proc/sys/kernel/random/boot_id": PermissionError("boot")},
+    {"/proc/7/stat": "garbage"},
+])
+def test_any_unreadable_identity_source_is_unknown(monkeypatch, files):
+    fake_proc(monkeypatch, files)
+    assert own.liveness({**task("t"), "pid": 7, "process_start": "boot:555"}) is None
 
 def fleet(tmp_path):
     return lambda: AuthorityService(root=tmp_path / "fleet")
@@ -177,22 +200,30 @@ def test_tick_alerts_cto_inbox_and_clears_on_accepted_handoff(tmp_path):
     assert "Ownerless-PR alerts cleared" in inbox(tmp_path)[-1][2]
 
 
-def test_unreadable_source_is_unknown_and_changes_nothing(tmp_path):
+def test_unreadable_source_is_unknown_and_never_counts_toward_grace(tmp_path):
     path = tmp_path / "state.json"
     good = dict(path=path, service_factory=fleet(tmp_path))
-    own.keeper_tick(now=at(0), observe=lambda h: ({KEY}, {KEY: ownerless()}), **good)
-    before = own.load(path)["episodes"]
+    ownerless_now = lambda h: ({KEY}, {KEY: ownerless()})  # noqa: E731
+    own.keeper_tick(now=at(0), observe=ownerless_now, **good)
 
     def broken(handoffs):
         raise RuntimeError("gh down")
 
-    lines, failed = own.keeper_tick(now=at(20), observe=broken, **good)
+    lines, failed = own.keeper_tick(now=at(5), observe=broken, **good)
     assert failed and "UNKNOWN" in lines[0]
     state = own.load(path)
-    assert state["episodes"] == before and state["last_tick"]["ok"] is False
+    assert state["episodes"] == {} and state["last_tick"]["ok"] is False
+    # The clock restarts once the source is readable again: no alert at minute 60.
+    own.keeper_tick(now=at(60), observe=ownerless_now, **good)
+    assert own.keeper_tick(now=at(70), observe=ownerless_now, **good)[0][0].endswith("undelivered=0")
+    assert inbox(tmp_path) == []
+    own.keeper_tick(now=at(75), observe=ownerless_now, **good)
+    assert len(inbox(tmp_path)) == 1
+    # A raised alert survives an unknown tick.
+    own.keeper_tick(now=at(80), observe=broken, **good)
+    assert own.load(path)["episodes"][KEY]["alerted_at"]
 
-
-def test_inbox_failure_commits_nothing_and_next_tick_resends(tmp_path):
+def test_undelivered_alert_stays_in_the_outbox_and_is_resent_unchanged(tmp_path):
     path = tmp_path / "state.json"
     observe = lambda handoffs: ({KEY}, {KEY: ownerless()})  # noqa: E731
     own.keeper_tick(now=at(0), path=path, observe=observe, service_factory=fleet(tmp_path))
@@ -200,11 +231,23 @@ def test_inbox_failure_commits_nothing_and_next_tick_resends(tmp_path):
     def down():
         raise OSError("inbox down")
 
-    _, failed = own.keeper_tick(now=at(15), path=path, observe=observe, service_factory=down)
-    assert failed and own.load(path)["episodes"][KEY]["alerted_at"] is None
-    own.keeper_tick(now=at(16), path=path, observe=observe, service_factory=fleet(tmp_path))
-    assert len(inbox(tmp_path)) == 1
+    lines, failed = own.keeper_tick(now=at(15), path=path, observe=observe, service_factory=down)
+    assert failed and "undelivered=1" in lines[0]
+    (entry,) = own.load(path)["outbox"]
+    # The owner reason changes before the retry; the frozen payload does not.
+    changed = lambda handoffs: ({KEY}, {KEY: own.Finding(REPO, 42, "codex/x", "new reason", "new")})  # noqa: E731
+    lines, failed = own.keeper_tick(now=at(16), path=path, observe=changed, service_factory=fleet(tmp_path))
+    assert not failed and "undelivered=0" in lines[0]
+    assert [body for _, _, body in inbox(tmp_path)] == [entry["body"]]
 
+
+def test_delivered_but_unsaved_entry_is_a_noop_on_retry(tmp_path):
+    entry = own.outbox_entries({"alert": [{"pr": KEY, "since": at(0).isoformat(), "branch": "b", "reason": "r"}]})
+    with AuthorityService(root=tmp_path / "fleet") as service:
+        assert own.deliver(list(entry), service) == []
+        outbox = list(entry)  # the save after delivery was lost
+        assert own.deliver(outbox, service) == [] and outbox == []
+    assert len(inbox(tmp_path)) == 1
 
 def test_keeper_apply_runs_the_ownership_tick(tmp_path, monkeypatch):
     calls = []
@@ -353,14 +396,7 @@ def test_documented_module_invocation_shows_help():
 
 
 def test_unreadable_process_is_unknown_and_blocks_takeover(monkeypatch):
-    real = own.Path.read_bytes
-
-    def denied(self):
-        if str(self).startswith("/proc/4242"):
-            raise PermissionError(str(self))
-        return real(self)
-
-    monkeypatch.setattr(own.Path, "read_bytes", denied)
+    fake_proc(monkeypatch, {"/proc/4242/stat": PermissionError("/proc/4242/stat")})
     owner = {**task("owner"), "pid": 4242, "process_start": "boot:1"}
     assert own.liveness(owner) is None
     live = lambda r: own.liveness(r) if r and r["task_id"] == "owner" else is_live(r)  # noqa: E731
@@ -410,13 +446,10 @@ def test_queue_membership_is_bound_to_the_custody_head(monkeypatch):
 
 
 def test_notice_identity_ignores_the_clock(tmp_path):
-    notices = {"alert": [{"pr": KEY, "since": at(0).isoformat(), "branch": "codex/x", "reason": "r"}],
-               "reminder": [], "cleared": []}
-    with AuthorityService(root=tmp_path / "fleet") as service:
-        first = own.notify(notices, service)
-        assert own.notify(notices, service) == first
-    assert len(inbox(tmp_path)) == 1
-
+    notices = {"alert": [{"pr": KEY, "since": at(0).isoformat(), "branch": "codex/x", "reason": "r"}]}
+    assert own.outbox_entries(notices) == own.outbox_entries(notices)
+    later = {"alert": [{"pr": KEY, "since": at(0).isoformat(), "branch": "codex/x", "reason": "r2"}]}
+    assert own.outbox_entries(later)[0]["key"] == own.outbox_entries(notices)[0]["key"]
 
 def test_malformed_nested_state_fails_the_tick_without_raising(tmp_path):
     path = tmp_path / "state.json"
@@ -440,7 +473,11 @@ def test_rate_limit_is_a_skip_for_the_ownership_tick(tmp_path):
     def limited(handoffs):
         raise GitHubRateLimited("2026-10-28T13:00:00Z")
 
-    lines, failed = own.keeper_tick(now=at(0), path=tmp_path / "s.json", observe=limited,
-                                    service_factory=fleet(tmp_path))
+    path = tmp_path / "s.json"
+    own.keeper_tick(now=at(0), path=path, observe=lambda h: ({KEY}, {KEY: ownerless()}),
+                    service_factory=fleet(tmp_path))
+    lines, failed = own.keeper_tick(now=at(5), path=path, observe=limited, service_factory=fleet(tmp_path))
     assert not failed and "skipped" in lines[0]
-    assert own.load(tmp_path / "s.json")["last_tick"]["ok"] is False  # queue-exit stays closed
+    state = own.load(path)
+    assert state["last_tick"]["ok"] is False  # queue-exit stays closed
+    assert state["episodes"] == {}  # rate-limited time never counts toward grace
