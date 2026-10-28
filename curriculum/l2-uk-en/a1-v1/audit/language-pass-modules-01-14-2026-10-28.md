@@ -82,7 +82,7 @@ Each M locator binds the successful `verify_words`, `verify_stresses` and `check
 
 ### Usage and orthography locators
 
-The following are compact source summaries, not copied dictionary articles. The official offline SUM-20 lookups U1/U5/U6/U7/U19/U64 returned ingestion misses, so they prove neither validity nor invalidity. Modern VTS lookups were the facet-appropriate fallback. No SUM-11 text is used as normative evidence. Incidental cross-dictionary snippets on an aggregator page are distinguished below.
+The following are compact source summaries, not copied dictionary articles. The official offline SUM-20 lookups U1/U5/U6/U7/U19/U64 returned ingestion misses, so they prove neither validity nor invalidity. Modern VTS lookups were the facet-appropriate fallback. The listed modern dictionaries, textbooks and corpus results support the verdicts. Incidental cross-dictionary snippets on an aggregator page are distinguished below.
 
 - U9: `query_slovnyk_me(word="зранку", dict="vts")`: morning time or since morning; no past-tense requirement.
 - U10: VTS `бути`: present є across persons; sense 10 is the copula, often omitted; sense 2 is possession/existence. https://slovnyk.me/dict/vts/бути
@@ -315,7 +315,7 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `act-4/1` | inline | Речення ідентичності | Я студент. | D, fixed | M07; U10/U31. Overt є is a valid copula; an alternative grammatical identity sentence cannot be marked wrong. |
 | `act-4/2` | inline | Речення про вік | Мені 20 років. | D, fixed | M07; U20. Мати with a numeral and рік is attested for age; Я маю 20 років is a defensible answer. |
 | `act-4/3` | inline | Пряме звертання | Привіт, Максиме! | C | M07; U10/U20/U32/U34/U37/U39/U41/U66/U70. The stated communication function, agreement, case, spelling or English gloss selects the key. |
-| `act-4/4` | inline | Безпечне привітання | Добрий день! Мене звати Оксана. | D, fixed | M07; U12/U38. Здрастуйте is an attested Ukrainian greeting; replace it with an incorrect name case. |
+| `act-4/4` | inline | Безпечне привітання | Добрий день! Мене звати Оксана. | D, fixed | M07; U12/U38. Здрастуйте is an attested Ukrainian greeting; replace it with a farewell while keeping the name statement identical. |
 | `act-4/5` | inline | Прізвище | Моє прізвище Сміт. | C | M07; U10/U20/U32/U34/U37/U39/U41/U66/U70. The normative-register instruction selects прізвище; the surname reading of фамілія is colloquial. Both original options are restored. |
 | `act-4/6` | inline | Прощання | До побачення! | C | M07; U10/U20/U32/U34/U37/U39/U41/U66/U70. The stated communication function, agreement, case, spelling or English gloss selects the key. |
 | `act-4/7` | inline | Звичка до роду іменника | Вивчення слова разом із його родом | C | M07; U10/U20/U32/U34/U37/U39/U41/U66/U70. The stated communication function, agreement, case, spelling or English gloss selects the key. |
