@@ -18,7 +18,10 @@ def exec_primary(argv: list[str]) -> None:
     linked worktree's primary cannot be resolved.
     """
     root = Path(__file__).resolve().parents[2]
-    primary = main_checkout_root(root).resolve()
+    try:
+        primary = main_checkout_root(root).resolve()
+    except ValueError as exc:  # undecodable metadata, or a NUL in its gitdir target
+        _refuse(f"cannot resolve the primary checkout of linked worktree {root}: {exc}")
     if primary == root:
         if (root / ".git").is_file():
             _refuse(f"cannot resolve the primary checkout of linked worktree {root}")

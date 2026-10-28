@@ -289,9 +289,10 @@ def test_linked_worktree_entry_runs_the_primary_checkout_dispatcher(sandbox, ent
     assert json.loads(result.stdout) == [[str(primary_entry), "list", "--status", "running"], str(tree.resolve())]
 
 
-def test_linked_worktree_entry_refuses_an_unresolvable_primary(sandbox):
+@pytest.mark.parametrize("metadata", [b"gitdir: /nonexistent/metadata\n", b"gitdir: \xff\n", b"gitdir: /a\0b\n"])
+def test_linked_worktree_entry_refuses_an_unresolvable_primary(sandbox, metadata):
     tree = prior_worktree(sandbox, "detached-metadata")
-    (tree / ".git").write_text("gitdir: /nonexistent/metadata\n")
+    (tree / ".git").write_bytes(metadata)
     result = linked_entry(sandbox, tree, "scripts/dispatch.py", "list")
     assert result.returncode == 2
     assert "cannot resolve the primary checkout of linked worktree" in result.stderr
