@@ -87,7 +87,7 @@ inline:
         options:
           - Ця
           - Цей
-          - Це
+          - "Ці"
         explanation: Книга is feminine and near, so use ця.
       - sentence: Ця книга нова, а ___ — стара.
         answer: та
@@ -101,7 +101,7 @@ inline:
         options:
           - Ця
           - Цей
-          - Це
+          - "Ці"
         explanation: Сумка is feminine and near.
       - sentence: Ця сумка червона, а ___ — синя.
         answer: та
@@ -115,7 +115,7 @@ inline:
         options:
           - Цей
           - Ця
-          - Це
+          - "Ці"
         explanation: Стіл is masculine and near.
       - sentence: Цей стіл новий, а ___ — старий.
         answer: той
@@ -219,7 +219,7 @@ inline:
     title: L2-пастки
     instruction: Choose the repaired Ukrainian sentence or the clearer variant.
     items:
-      - prompt: 'Fix the sentence: Це є цікава книга.'
+      - prompt: "Say 'This is an interesting book' without using є."
         options:
           - text: Це цікава книга.
             correct: true
@@ -227,7 +227,7 @@ inline:
             correct: false
           - text: Цей цікава книга.
             correct: false
-        explanation: In this present-tense sentence, drop є.
+        explanation: "The requested pattern omits є. The version with є is also grammatical."
       - prompt: 'Fix the sentence: Я хочу купити цей сумку.'
         options:
           - text: Я хочу купити цю сумку.
@@ -345,15 +345,15 @@ workbook:
         answer: Ця
         options:
           - Ця
-          - Це
+          - "Ці"
           - Цей
         explanation: Before a feminine noun, use ця.
       - sentence: ___ мій стіл.
         answer: Це
         options:
           - Це
-          - Це є
-          - Цей є
+          - "Ці"
+          - "Ця"
         explanation: Це мій стіл is the natural sentence.
       - sentence: ___ ця книга тут.
         answer: Ось
