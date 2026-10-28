@@ -47,17 +47,27 @@ guard = _load_hook()
     "redirect", ["", "2>&1", ">/dev/null", ">out", ">>out", "2>/dev/null", "&>out", "<input", "{fd}>out", "true &&>out"]
 )
 @pytest.mark.parametrize(
-    "binary,operand,expected", [("cat", ".env", 2), ("head", ".env", 2), ("cat", "notes.txt", 0), ("wc", "-l .env", 0)]
+    "binary,operand,expected",
+    [
+        ("cat", ".env", 2),
+        ("head", ".env", 2),
+        ("tail", ".env", 2),
+        ("bat", ".env", 2),
+        ("less", ".env", 2),
+        ("cat", "notes.txt", 0),
+        ("wc", "-l .env", 0),
+    ],
 )
+@pytest.mark.parametrize("suffix", ["", " | cat"])
 def test_redirect_keeps_secret_file_policy(
-    monkeypatch, tmp_path: Path, redirect: str, binary: str, operand: str, expected: int
+    monkeypatch, tmp_path: Path, redirect: str, binary: str, operand: str, expected: int, suffix: str
 ):
     """Redirects must preserve both protected reads and value-free checks (#9490)."""
     stub = tmp_path / binary
     stub.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > record\n')
     stub.chmod(0o755)
     (tmp_path / "input").touch()
-    command = f"{redirect} {shlex.quote(str(stub))} {operand} | cat"
+    command = f"{redirect} {shlex.quote(str(stub))} {operand}{suffix}"
     result = subprocess.run(
         ["bash", "--noprofile", "--norc", "-c", command], cwd=tmp_path, capture_output=True, text=True, timeout=10
     )

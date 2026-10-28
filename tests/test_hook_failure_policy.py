@@ -651,9 +651,35 @@ def test_tracked_cursor_guard_hooks_fail_closed() -> None:
 )
 @pytest.mark.parametrize(
     "command,blocked",
-    [("git push origin x", True), ("gh pr comment 5 -b x", True), ("gh pr view 5", False), ("git status", False)],
+    [
+        ("git push origin x", True),
+        ("git -c core.quotePath=false push", True),
+        ("gh pr create -b x", True),
+        ("gh pr merge 5", True),
+        ("gh pr comment 5 -b x", True),
+        ("gh pr review 5 -b x", True),
+        ("gh pr edit 5 -b x", True),
+        ("gh pr close 5", True),
+        ("gh pr reopen 5", True),
+        ("gh issue create -b x", True),
+        ("gh issue comment 5 -b x", True),
+        ("gh issue edit 5 -b x", True),
+        ("gh issue close 5", True),
+        ("gh issue reopen 5", True),
+        ("gh api -X POST repos/o/r", True),
+        ("gh release create v1", True),
+        ("gh workflow run ci.yml", True),
+        ("python -m scripts.publish issue-comment --number 5 --body x", True),
+        ("gh pr view 5", False),
+        ("gh api -X GET repos/o/r", False),
+        ("python -m scripts.publish --help", False),
+        ("git status", False),
+    ],
 )
-def test_redirect_cannot_hide_reviewer_publish(tmp_path: Path, redirect: str, command: str, blocked: bool) -> None:
+@pytest.mark.parametrize("suffix", ["", " | cat"])
+def test_redirect_cannot_hide_reviewer_publish(
+    tmp_path: Path, redirect: str, command: str, blocked: bool, suffix: str
+) -> None:
     """Bash's actual argv must remain subject to the publishing policy (#9490)."""
     record = tmp_path / "record"
     (tmp_path / "input").touch()
@@ -661,7 +687,7 @@ def test_redirect_cannot_hide_reviewer_publish(tmp_path: Path, redirect: str, co
     stub = tmp_path / binary
     stub.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > record\n')
     stub.chmod(0o755)
-    shell_command = f"{redirect} {shlex.quote(str(stub))} {' '.join(args)} | cat"
+    shell_command = f"{redirect} {shlex.quote(str(stub))} {' '.join(args)}{suffix}"
     oracle = subprocess.run(
         ["bash", "--noprofile", "--norc", "-c", shell_command], cwd=tmp_path, capture_output=True, text=True, timeout=10
     )
