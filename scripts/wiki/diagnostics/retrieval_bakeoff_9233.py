@@ -53,7 +53,7 @@ THREADS = 6
 THREAD_ENV = ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS", "ORT_NUM_THREADS")
 MEMORY_BYTES = 10 * 1024**3
 E5 = "intfloat/multilingual-e5-small"
-GUARDRAILS = {"threads": THREADS, "memory_bytes": MEMORY_BYTES, "memory_enforcement": "systemd_scope_or_rss_watchdog", "cpu_nice": 19, "io_priority": "idle"}
+GUARDRAILS = {"threads": THREADS, "memory_bytes": MEMORY_BYTES, "memory_enforcement": "systemd_scope", "cpu_nice": 19, "io_priority": "idle"}
 PASSAGE_POLICIES = {"embedder": "model maximum; head only", "reranker": {"tokens": 512, "head": 128, "tail": 384, "overhead_excluded": True}}
 TOKEN_RE = phase1.TOKEN_RE
 
@@ -538,7 +538,7 @@ def _enforce_host_limits() -> dict[str, Any]:
 
     torch.set_num_threads(THREADS)
     torch.set_num_interop_threads(THREADS)
-    return {**GUARDRAILS, "memory_enforcement": os.environ.get("LU_BAKEOFF_MEMORY_ENFORCEMENT", "rss_watchdog")}
+    return GUARDRAILS.copy()
 
 
 def _scope_environment() -> dict[str, str]:
@@ -554,7 +554,11 @@ def _scope_environment() -> dict[str, str]:
 
 
 def _scope_command() -> list[str]:
-    return ["systemd-run", "--user", "--scope", "--quiet", "-p", "MemoryMax=10G", "-p", "MemorySwapMax=0"]
+    return [
+        "systemd-run", "--user", "--scope", "--quiet", "--slice=lu.slice",
+        "-p", "MemoryMax=10G", "-p", "MemorySwapMax=0",
+        "/bin/bash", str(ROOT / "scripts/lib/job_memory_scope.sh"), str(MEMORY_BYTES), "--",
+    ]
 
 
 class _HeavyProcess:
@@ -613,28 +617,24 @@ def _launch_heavy(function: Any, args: tuple, kwargs: dict, work: Path) -> tuple
         scoped = subprocess.run([*_scope_command(), "true"], env=environment, capture_output=True, timeout=10, check=False).returncode == 0
     except (OSError, subprocess.TimeoutExpired):
         scoped = False
-    enforcement = "systemd_scope" if scoped else "rss_watchdog"
-    environment["LU_BAKEOFF_MEMORY_ENFORCEMENT"] = enforcement
+    if not scoped:
+        raise RuntimeError("memory scope unavailable; heavy compute not started")
+    enforcement = "systemd_scope"
     payload_path = work / "steps" / "worker-input.json"
     result_path = work / "steps" / "worker-result.json"
     # Unique output avoids consuming a prior result after an interrupted step.
     result_path = result_path.with_name(f"worker-result-{os.getpid()}-{time.time_ns()}.json")
     _write_json(payload_path, {"function": function.__name__, "args": [{"path": str(a)} if isinstance(a, Path) else a for a in args], "kwargs": kwargs})
     command = [str(project_interpreter(ROOT)), "-c", "from pathlib import Path; import sys; from scripts.wiki.diagnostics.retrieval_bakeoff_9233 import _file_worker; _file_worker(Path(sys.argv[1]), Path(sys.argv[2]))", str(payload_path), str(result_path)]
-    if scoped:
-        command = _scope_command() + command
+    command = _scope_command() + command
     process = subprocess.Popen(command, env=environment, cwd=ROOT, start_new_session=True)
-    if scoped:
-        # A successful probe does not guarantee the subsequent scope starts.
-        # Retry only a launcher failure before the worker's start receipt; an
-        # OOM kill or any failure after entry must never restart compute.
-        expires = time.monotonic() + 10
-        while process.poll() is None and not result_path.with_suffix(".started").exists() and time.monotonic() < expires:
-            time.sleep(.05)
-        if process.poll() == 1 and not result_path.with_suffix(".started").exists():
-            enforcement = "rss_watchdog"
-            environment["LU_BAKEOFF_MEMORY_ENFORCEMENT"] = enforcement
-            process = subprocess.Popen(command[len(_scope_command()):], env=environment, cwd=ROOT, start_new_session=True)
+    # The real launch can fail after a successful probe. Never retry compute
+    # outside its scope, whether startup or the workload itself failed.
+    expires = time.monotonic() + 10
+    while process.poll() is None and not result_path.with_suffix(".started").exists() and time.monotonic() < expires:
+        time.sleep(.05)
+    if process.poll() is not None and not result_path.with_suffix(".started").exists():
+        raise RuntimeError("memory scope failed; heavy compute not started")
     return _HeavyProcess(process), _ResultFile(result_path), enforcement
 
 

@@ -65,6 +65,7 @@ for _arg in "$@"; do
 done
 
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
+SCOPE_ENTRY="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../lib" && pwd)/job_memory_scope.sh"
 WORK_DIR="${ATLAS_WORK_DIR:-$RUN_ROOT/run-20k}"
 UNIT="${ATLAS_ENRICH_UNIT:-atlas-20k-enrich.service}"
 LOG="$WORK_DIR/enrich.log"
@@ -124,13 +125,16 @@ COMMON_ARGS=(
 if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run >/dev/null 2>&1; then
   rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
   nohup systemd-run --user --wait --collect --unit="${UNIT%.service}" \
+    --slice=lu.slice \
     --working-directory="$REPO" \
     --property=MemoryHigh="${JOB_MEMORY_HIGH_MIB}M" \
     --property=MemoryMax="${JOB_MEMORY_MAX_MIB}M" \
+    --property=MemorySwapMax=0 \
     --property=Environment=LU_LEXICON_JOB_MEMORY_HIGH_MIB="${JOB_MEMORY_HIGH_MIB}" \
     --property=Environment=LU_LEXICON_JOB_MEMORY_MAX_MIB="${JOB_MEMORY_MAX_MIB}" \
     --property=StandardOutput="append:$LOG" \
     --property=StandardError="append:$LOG" \
+    /bin/bash "$SCOPE_ENTRY" "$((JOB_MEMORY_MAX_MIB * 1024 * 1024))" -- \
     /usr/bin/nice -n 10 /usr/bin/ionice -c3 "$REPO/.venv/bin/python" \
     "$DRIVER" \
     "${COMMON_ARGS[@]}" \
@@ -156,12 +160,5 @@ if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run 
   exit 1
 fi
 
-rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
-nohup /usr/bin/nice -n 10 /usr/bin/ionice -c3 "$REPO/.venv/bin/python" \
-  "$DRIVER" \
-  "${COMMON_ARGS[@]}" \
-  --memory-high-mib "$JOB_MEMORY_HIGH_MIB" \
-  --memory-max-mib "$JOB_MEMORY_MAX_MIB" \
-  "${EXTRA_ARGS[@]}" >> "$LOG" 2>&1 &
-printf '%s\n' "$!" > "$PID_FILE"
-printf 'pid=%s log=%s\n' "$(cat "$PID_FILE")" "$LOG"
+echo 'JOB_SCOPE_REFUSED reason=user-manager-unavailable' >&2
+exit 6
