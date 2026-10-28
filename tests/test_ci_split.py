@@ -859,7 +859,13 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert deferred['reason'] == 'recorded estimate exceeds 600 second cap'
     del weights['tests/test_new.py']
     (repo / affected.DURATIONS).write_text(json.dumps(weights))
-    assert affected.plan(base, candidate)['reason'] == 'recorded duration unknown'
+    # A new test file with no recorded duration is weighted at the median and still runs.
+    unrecorded = affected.plan(base, candidate)
+    assert unrecorded['unknown_duration_files'] == ['tests/test_new.py']
+    assert unrecorded['reason'] is None
+    assert unrecorded['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
+    assert unrecorded['deferred_files'] == []
+    assert unrecorded['estimate_seconds'] == 67
     weights['tests/test_new.py'] = -1
     (repo / affected.DURATIONS).write_text(json.dumps(weights))
     with pytest.raises(ValueError, match='invalid recorded duration'):
