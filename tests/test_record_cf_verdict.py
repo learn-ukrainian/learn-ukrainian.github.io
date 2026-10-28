@@ -9,6 +9,7 @@ import shlex
 import subprocess
 import zlib
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -678,6 +679,82 @@ def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, se
         assert calls == {"posts": 0, "statuses": 0}
     else:
         assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
+
+
+@pytest.mark.parametrize("security,budget,tier", [(False, 3, "default"), (True, 5, "elevated")])
+def test_verification_round_after_a_final_round_approve_is_spent_once(monkeypatch, tmp_path, security, budget, tier):
+    from scripts.orchestration import integration_sweep as sweep
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    anchor = f"{budget:x}" * 40
+    prompt = tasks / "review.prompt"
+
+    def briefed(task_id, text):
+        prompt.write_text(text)
+        digest = hashlib.sha256(text.encode()).hexdigest()
+        write_task(tasks, task_id=task_id, review_branch=BRANCH, prompt_file=str(prompt), prompt_sha256=digest)
+
+    changed = ("scripts/review/record_cf_verdict.py",) if security else ("docs/readme.md",)
+    facts = facts_for({"google"}, changed_paths=changed)
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    monkeypatch.setattr(recorder, "_descends_from", lambda _root, old, new: (old, new) == (anchor, SHA))
+    comments.extend(recorded_verdict(f"{index:x}" * 40, "CHANGES_REQUESTED") for index in range(1, budget))
+    comments.append(recorded_verdict(anchor, "APPROVED", task_id="final-round"))
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    # The round is bound to a brief that scopes the delta from the approved head.
+    briefed("review-one", "Verification delta since the last reviewed head.")
+    with pytest.raises(recorder.RecordError, match="brief must name the approved head"):
+        recorder.record("review-one", **kwargs)
+    briefed("review-one", f"Verification delta: git diff {anchor}..{SHA}")
+    for expected in ("posted", "existing"):
+        assert recorder.record("review-one", **kwargs)["comment"] == expected
+    marker = sweep.parse_marker(comments[-1]["body"])
+    assert (marker["verification_of"], marker["budget_tier"]) == (anchor, tier)
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+    # Another dispatch at the verification head cannot spend the round again, and no later head opens one.
+    briefed("review-two", f"Verification delta: git diff {anchor}..{SHA}")
+    with pytest.raises(recorder.RecordError, match="admits 1 review dispatch"):
+        recorder.record("review-two", **kwargs)
+    with pytest.raises(recorder.RecordError, match="spent its verification round"):
+        recorder.require_review_round_within_budget(
+            comments, "c" * 40, "fleet", budget=budget, pr=42, descends=lambda *_: True
+        )
+    assert calls["posts"] == 1
+
+
+def test_verification_round_refuses_a_head_that_does_not_descend_from_the_approve(tmp_path):
+    repo = tmp_path / "repo"
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(
+        GIT_AUTHOR_NAME="t",
+        GIT_AUTHOR_EMAIL="t@example.invalid",
+        GIT_COMMITTER_NAME="t",
+        GIT_COMMITTER_EMAIL="t@example.invalid",
+        GIT_CONFIG_GLOBAL=os.devnull,
+        GIT_CONFIG_NOSYSTEM="1",
+    )
+
+    def run(*args):
+        command = ["git", "-C", str(repo), *args]
+        return subprocess.run(command, check=True, capture_output=True, text=True, env=env, timeout=30).stdout.strip()
+
+    repo.mkdir()
+    run("init", "-q")
+    run("commit", "-q", "--allow-empty", "-m", "root")
+    root = run("rev-parse", "HEAD")
+    run("commit", "-q", "--allow-empty", "-m", "approved")
+    approved = run("rev-parse", "HEAD")
+    # A rewrite drops the approved commit: the new head shares only the root with it.
+    run("reset", "-q", "--hard", root)
+    run("commit", "-q", "--allow-empty", "-m", "rewritten")
+    rewritten = run("rev-parse", "HEAD")
+    assert recorder._descends_from(repo, root, rewritten)
+    comments = [recorded_verdict(head, "CHANGES_REQUESTED") for head in ("1" * 40, "2" * 40)]
+    comments.append(recorded_verdict(approved, "APPROVED", task_id="final-round"))
+    with pytest.raises(recorder.RecordError, match=f"not proven to descend from approved head {approved}"):
+        recorder.require_review_round_within_budget(
+            comments, rewritten, "fleet", budget=3, pr=42, descends=partial(recorder._descends_from, repo)
+        )
 
 
 @pytest.mark.parametrize("body", [None, "<!-- cf-verdict v1 unreadable -->"])

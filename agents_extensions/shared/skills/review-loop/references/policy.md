@@ -24,6 +24,17 @@ rounds are deltas.
   approach, or escalates to the CTO and the advisors (rules core P6).
 - **The verdict recorder refuses a round beyond the budget**, so an over-budget verdict is
   never recorded.
+- **One verification round after a final-round APPROVE.** When the head moves after an
+  APPROVE in the last budgeted round, the recorder admits exactly one more round (round 4,
+  or round 6 on the elevated tier), with no open blocker required, and labels it with the
+  APPROVE head and the tier. It needs the APPROVE head's verdict as the keeper reads it to be
+  APPROVED (an edited or unknown record refuses), no `CHANGES_REQUESTED` or `BLOCKED`
+  recorded after it, a new head that descends from it (a rebase that drops it escalates), and
+  one dispatch per seat whose brief names the APPROVE head's full SHA and covers the delta
+  since it (§ Delta scope). It is spent once and never chained; a verdict other than APPROVE
+  ends the budget. It grants no authority to choose or raise the tier, and a new reviewer,
+  review mode, session or PR adds none; the red-team conditions in `workflow.md` § Merge
+  policy apply again at the new head.
 - The budget and the ledger follow the work (issue and branch lineage). A new reviewer, a
   replacement PR or a new session does not reset them.
 
