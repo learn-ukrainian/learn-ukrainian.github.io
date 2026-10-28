@@ -397,9 +397,12 @@ jobs:
           snapshot=ci-artifacts/pytest-file-durations.json
           durations=$(python3 -m scripts.ci.split_tests duration-source \
             --refresh-result "$REFRESH_RESULT" --snapshot "$snapshot")
+          # The shard's weights go into its artifact: pytest report divides out this
+          # runner's speed before recording durations (hosted runners differ ~1.6x).
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
             | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
-              --durations "$durations" > "$LU_PYTEST_SHARD_FILES"
+              --durations "$durations" --weights-out "ci-artifacts/pytest-shard-${SHARD}-weights.json" \
+              > "$LU_PYTEST_SHARD_FILES"
           .venv/bin/python -m pytest tests -n logical --dist=worksteal --max-worker-restart=0 \
             --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
             --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
@@ -420,6 +423,7 @@ jobs:
             ci-artifacts/pytest-shard-*.xml
             ci-artifacts/pytest-shard-*-files.txt
             ci-artifacts/pytest-shard-*-needs-artifact.txt
+            ci-artifacts/pytest-shard-*-weights.json
           if-no-files-found: error
           retention-days: 14
 
@@ -451,8 +455,9 @@ jobs:
         run: python3 -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json
       # Future runs learn only from a full, successful partition. The refresher
       # further requires the entire merge-group workflow to have passed.
+      # Seconds are divided by each shard's runner speed; files that ran no test record 0.
       - name: Record pytest durations
-        run: python3 -m scripts.ci.split_tests durations ci-artifacts/shards/*/pytest-shard-*.xml > ci-artifacts/pytest-file-durations.json
+        run: python3 -m scripts.ci.split_tests durations --shards ci-artifacts/shards > ci-artifacts/pytest-file-durations.json
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-file-durations
@@ -543,12 +548,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      # Full history, but sparse: checkout then implies filter blob:none, so only the
+      # commits, trees and the gate's own scripts are downloaded, not the 700 MB tree.
+      # check_large_files fetches the changed blobs it sizes in one request.
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event_name == 'merge_group' && github.event.merge_group.head_sha || '' }}
           persist-credentials: false
           fetch-depth: 0
+          sparse-checkout: |
+            scripts/
+            .python-version
+          sparse-checkout-cone-mode: false
       - name: Set up Python
         id: setup-python-gate
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
