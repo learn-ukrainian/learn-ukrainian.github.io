@@ -19,7 +19,6 @@ from scripts.common.git_credentials import canonical_origins as canonical_origin
 from scripts.common.git_credentials import verification_credentials
 from scripts.common.repo_root import resolve_repo_root
 from scripts.common.task_scratch import allocate
-from scripts.dispatcher.environment import npm_shim_dir
 from scripts.dispatcher.types import TaskSpec
 from scripts.storage.topology import STORE_FILES
 
@@ -298,6 +297,7 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
 
 
 DATABASE_LINKS = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
+# Recognize legacy dependency links at settlement, without provisioning new ones.
 NODE_LINKS = ("node_modules", "site/node_modules")
 # Ignored entries a settled worktree may still hold: regenerable caches and the links provisioned above.
 CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".pytest_breadcrumbs", ".ruff_cache", ".mypy_cache"})
@@ -309,14 +309,10 @@ PULL_HEAD = re.compile(r"refs/pull/[0-9]+/head")
 
 
 def provision_links(repo: Path, worktree: Path) -> None:
-    """Provision only real primary targets; atomic symlink creation never replaces entries."""
+    """Share databases only; dependency installs must stay local to each worktree."""
     repo = repo.absolute()
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-    node_links = NODE_LINKS
-    if npm_shim_dir() is None:
-        logging.getLogger(__name__).warning("Skipping node_modules and site/node_modules: npm/npx guard unavailable")
-        node_links = ()
-    for relative in (*DATABASE_LINKS, *node_links):
+    for relative in DATABASE_LINKS:
         parts = Path(relative).parts
         with ExitStack() as stack:
             def open_directory(name, parent=None):

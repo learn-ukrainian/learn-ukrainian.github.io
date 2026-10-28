@@ -1,6 +1,7 @@
-"""Dispatch dependencies must be present without overwriting or escaping either checkout."""
+"""Dispatch installs stay local while shared databases remain available."""
 
 import errno
+import json
 import os
 import shutil
 import subprocess
@@ -15,6 +16,40 @@ from scripts.orchestration.worktree_artifacts import is_disposable_path
 from scripts.storage.topology import STORE_FILES
 
 LINKS = (*(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum")), "node_modules", "site/node_modules")
+
+
+@pytest.mark.parametrize("relative", ["node_modules", "site/node_modules"])
+def test_real_npm_ci_cannot_corrupt_primary_install(layout, tmp_path, relative):
+    """A normal install must clean only its own dependencies, even without the shim."""
+    primary, worktree = layout
+    npm = shutil.which("npm", path=os.defpath)
+    assert npm is not None, "real npm is required for the corruption regression"
+    target = primary / relative
+    (target / "sentinel").write_text("primary dependency")
+    before = target.stat().st_ino
+    git.provision_links(primary, worktree)
+    local = worktree / relative
+    local.mkdir(parents=True, exist_ok=True)
+    (local / "obsolete").write_text("stale worktree dependency")
+    package = {"name": "isolation-regression", "version": "1.0.0"}
+    (local.parent / "package.json").write_text(json.dumps(package))
+    (local.parent / "package-lock.json").write_text(json.dumps({
+        **package, "lockfileVersion": 3, "packages": {"": package},
+    }))
+    result = subprocess.run(
+        [npm, "ci", "--offline", "--ignore-scripts", "--no-audit", "--no-fund"],
+        cwd=local.parent,
+        env={"PATH": os.defpath, "HOME": str(tmp_path), "npm_config_cache": str(tmp_path / "npm-cache"),
+             "npm_config_userconfig": str(tmp_path / "user.npmrc"),
+             "npm_config_globalconfig": str(tmp_path / "global.npmrc")},
+        capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert not (local / "obsolete").exists(), "npm must actually clean the local installation"
+    assert target.stat().st_ino == before
+    assert (target / "sentinel").read_text() == "primary dependency"
+    assert sorted(path.name for path in target.iterdir()) == ["sentinel"]
+    assert not local.is_symlink()
 
 
 @pytest.fixture
@@ -54,12 +89,15 @@ def test_creation_and_recreation_provision_clean_reapable_links(layout, full_che
     for round_number in range(2):
         git.create_worktree(primary, worktree, f"codex/fixture-{round_number}", sha, full_checkout=full_checkout)
         git.provision_links(primary, worktree)
-        for relative in LINKS:
+        for relative in git.DATABASE_LINKS:
             link = worktree / relative
             assert link.is_symlink()
             assert link.readlink() == primary / relative
             assert run_git(worktree, "check-ignore", relative) == relative
             assert is_disposable_path(Path(relative), worktree=worktree, primary=primary)
+        for relative in git.NODE_LINKS:
+            assert not (worktree / relative).exists()
+            assert not (worktree / relative).is_symlink()
         assert run_git(worktree, "status", "--porcelain") == ""
         run_git(primary, "worktree", "remove", str(worktree))
         assert (primary / "data/sources.db").read_text() == "database sentinel"
@@ -117,13 +155,13 @@ def test_atomic_creation_preserves_racing_entry(layout, monkeypatch):
     original = git.os.symlink
 
     def competing_creator(source, destination, *, dir_fd):
-        if destination == "node_modules" and source == primary / "node_modules":
-            (worktree / "node_modules").write_text("racing writer")
+        if destination == "sources.db" and source == primary / "data/sources.db":
+            (worktree / "data/sources.db").write_text("racing writer")
         return original(source, destination, dir_fd=dir_fd)
 
     monkeypatch.setattr(git.os, "symlink", competing_creator)
     git.provision_links(primary, worktree)
-    assert (worktree / "node_modules").read_text() == "racing writer"
+    assert (worktree / "data/sources.db").read_text() == "racing writer"
 
 
 def test_unexpected_io_failure_is_reported(layout, monkeypatch):
@@ -144,6 +182,10 @@ def test_child_env_refuses_shared_install_without_changing_git_gh(layout, monkey
     """Dispatch PATH must guard shared installs without enabling legacy git/gh policies."""
     primary, worktree = layout
     git.provision_links(primary, worktree)
+    for legacy in git.NODE_LINKS:
+        link = worktree / legacy
+        link.parent.mkdir(parents=True, exist_ok=True)
+        link.symlink_to(primary / legacy)
     target = primary / relative / "sentinel"
     target.write_text("keep")
     binaries = worktree.parent / "bin"
@@ -183,7 +225,7 @@ def test_child_env_refuses_shared_install_without_changing_git_gh(layout, monkey
 
 
 @pytest.mark.parametrize("missing", ["directory", "npm", "npx", "npm_guard.py", "interpreter"])
-def test_unavailable_guard_skips_shared_install_links_only(layout, monkeypatch, caplog, missing):
+def test_unavailable_guard_keeps_new_installs_isolated_and_refuses_legacy_links(layout, monkeypatch, missing):
     """Missing npm/npx protection must not expose the primary install to children."""
     primary, worktree = layout
     if missing == "directory":
@@ -198,7 +240,6 @@ def test_unavailable_guard_skips_shared_install_links_only(layout, monkeypatch, 
     git.provision_links(primary, worktree)
     for relative in LINKS:
         assert (worktree / relative).is_symlink() == relative.endswith(".db")
-    assert "npm/npx guard unavailable" in caplog.text
     (worktree / "node_modules").symlink_to(primary / "node_modules")
     spec = TaskSpec("fixture", "codex", "stub", None, "workspace-write", worktree, worktree / "prompt", worktree / "final")
     with pytest.raises(ValueError, match="npm/npx guard unavailable"):
