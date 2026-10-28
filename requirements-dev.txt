@@ -18,6 +18,7 @@ mypy>=2.1.0
 
 # Test utilities
 pytest-xdist>=3.6         # parallel test execution (-n auto)
+requests-mock>=1.12.1     # requests transport fixture
 pytest-mock>=3.16.0          # fixture-based mocker
 
 # Coverage reporting
