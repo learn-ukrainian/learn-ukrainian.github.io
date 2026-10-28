@@ -18,7 +18,7 @@ from unittest.mock import Mock
 import pytest
 import yaml
 
-from scripts.dispatcher import checks, cli, git, store, worker
+from scripts.dispatcher import checks, cli, git, providers, store, worker
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.providers import muse
@@ -2272,6 +2272,41 @@ def test_grok_is_no_alias_and_an_unknown_agent_names_the_supported_agents(sandbo
     assert "unknown agent 'grok'; supported agents: codex, claude, cursor, agy, muse, opencode, hermes" in result.stderr
     assert "dispatch Grok as --agent cursor --model grok-4.7-high" in result.stderr
     assert not sandbox.tasks.exists()
+
+
+@pytest.mark.parametrize("agent", providers.PROVIDERS)
+def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, agent):
+    """C-2916 P6 removed the lexical refusal; read-only is now held by each CLI's own write lock or refused."""
+    prompt = tmp_path / "prompt.txt"
+    prompt.write_text("Fix the bug in X.\n")
+    spec = TaskSpec("ro", agent, "vendor/model", None, "read-only", tmp_path, prompt, tmp_path / "final", "a")
+    refused = {"agy": "--sandbox only restricts its terminal", "hermes": "bypasses approvals"}
+    if agent in refused:
+        with pytest.raises(ValueError, match=f"read_only_unenforceable: {agent} cannot run --mode read-only"):
+            providers.load(agent).build(spec, {})
+        result = sandbox.cli("dispatch", "--agent", agent, "--model", "vendor/model", "--prompt", "Fix X", expected=2)
+        assert f"read_only_unenforceable: {agent} cannot run --mode read-only" in result.stderr
+        assert refused[agent] in result.stderr
+        assert not sandbox.tasks.exists()
+        return
+    invocation = providers.load(agent).build(spec, {})
+    argv = invocation.argv
+    if agent == "codex":
+        assert argv[argv.index("-s") + 1] == "read-only"
+    elif agent == "cursor":
+        assert argv[argv.index("--mode") + 1] == "ask"
+    elif agent == "muse":
+        assert {"--disable-write", "--disable-shell"} <= set(argv)
+    elif agent == "claude":
+        assert argv[argv.index("--permission-mode") + 1] == "dontAsk"
+        assert "Bash" not in argv[argv.index("--allowedTools") + 1].split(",")
+        assert {"Edit", "Write", "NotebookEdit"} <= set(argv[argv.index("--disallowedTools") + 1].split(","))
+    else:
+        assert agent == "opencode" and "--auto" not in argv
+        permission = json.loads(invocation.env["OPENCODE_PERMISSION"])
+        assert permission["edit"] == "deny"
+        assert permission["bash"]["*"] == "deny" and permission["bash"]["*>*"] == "deny"
+        assert list(permission["bash"])[-1] == "*>*"  # the last matching pattern wins
 
 
 def test_aliases_and_all_retained_metadata_flags_parse():

@@ -11,9 +11,13 @@ import pytest
 from scripts.eval.uk_preamble.common import HarnessError
 from scripts.eval.uk_preamble.dataset import ReviewItem, Span, load_set, protocol_shortfalls
 from scripts.eval.uk_preamble.prompts import (
+    build_prompt,
     extract_json,
+    review_payload,
     validate_response,
+    writing_payload,
 )
+from scripts.eval.uk_preamble.runner import render, rules_block
 from scripts.eval.uk_preamble.scoring import score_review_item
 
 
@@ -307,6 +311,15 @@ def test_extract_json_prefers_whole_text_then_fence_then_braces():
 
 
 # --------------------------------------------------------------------------- prompts and set loading
+
+
+@pytest.mark.parametrize("kind", ["review", "writing", "judge"])
+def test_each_prompt_builder_renders_a_non_empty_prompt(eval_set, kind):
+    payload = review_payload(eval_set.review) if kind == "review" else writing_payload(eval_set.writing)
+    assert payload
+    prompt = build_prompt(kind, payload, "Ти — редактор.")
+    assert isinstance(prompt, str) and prompt.strip()
+    assert render(prompt, rules_block()).endswith(prompt)
 
 
 def test_set_validation_rejects_span_mismatch_and_overlap(tmp_path: Path, mini_set_dict):

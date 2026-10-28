@@ -954,7 +954,19 @@ Dispatch v2 has no budget substitution guard, pricing/cost telemetry, preflight
 triage, lifecycle-file propagation, keep/force-worktree switches, repository
 backfill, Cursor self-dispatch/DoR/dirty-primary gates, open-PR freeze, or Kimi
 boundary hooks. Native Grok dispatch and the RB2 trail are retired. Use a supported
-provider and model from the current catalog; `grok` is a Cursor alias.
+provider and model from the current catalog; dispatch Grok as
+`--agent cursor --model grok-4.7-high` (`grok` is not an agent).
+
+`--mode read-only` (the default) cannot edit the worktree on any provider. Each
+provider's own CLI holds the lock: Codex `-s read-only`, Cursor `--mode ask`,
+Muse `--disable-write --disable-shell`, Claude `dontAsk` with no blanket Bash
+grant (only Claude Code's built-in read-only commands and `gh` reads run, and
+redirects are checked against the Edit deny), and OpenCode's
+`OPENCODE_PERMISSION` rules (edits denied; bash limited to `git diff`, `git log`,
+`git show` and `git status` with no redirect or `--output`). AGY and Hermes give
+a dispatched run no enforceable write lock, so read-only on them exits 2 with
+`read_only_unenforceable` before anything launches. Read-only runs on Claude and
+OpenCode cannot run tests; use Codex when a read-only reviewer must execute them.
 
 Sparse worktrees use `SPARSE_EXCLUDE_DEFAULT` in `scripts/dispatcher/git.py`.
 Re-include a tree explicitly with `--sparse-include DIR`, or use

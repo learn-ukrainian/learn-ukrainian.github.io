@@ -208,6 +208,8 @@ def _dispatch(args) -> int:
         raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.output_schema is not None and agent != "codex":
         raise ValueError("--output-schema is supported only with the effective codex agent")
+    if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent)):
+        raise ValueError(refusal)
     deadlines(vars(args))
     if args.cwd and (args.branch or args.pinned_head or args.worktree is not None):
         raise ValueError("invalid process deadline or conflicting existing-worktree options")

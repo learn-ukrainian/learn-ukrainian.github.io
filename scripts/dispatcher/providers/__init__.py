@@ -10,6 +10,24 @@ from types import ModuleType
 
 PROVIDERS = ("codex", "claude", "cursor", "agy", "muse", "opencode", "hermes")
 
+# Read-only must be unable to edit. These CLIs give a dispatched run no enforceable write lock, so
+# read-only is refused before launch instead of trusting the model not to edit (probed 2026-10-28).
+READ_ONLY_REFUSALS = {
+    "agy": "agy has no per-run write lock: --sandbox only restricts its terminal, and where the terminal "
+    "sandbox is unavailable (this host) agy continues in its default mode and edits; its deny rules "
+    "live only in a scoped-home settings file this dispatcher does not provision",
+    "hermes": "hermes -z bypasses approvals, and its file toolset grants write_file and patch with read_file",
+}
+
+
+def read_only_refusal(name: str) -> str | None:
+    """The typed refusal for read-only on ``name``, or None when its read-only argv carries a write lock."""
+    reason = READ_ONLY_REFUSALS.get(name)
+    if reason is None:
+        return None
+    usable = ", ".join(provider for provider in PROVIDERS if provider not in READ_ONLY_REFUSALS)
+    return f"read_only_unenforceable: {name} cannot run --mode read-only: {reason}; use {usable}"
+
 
 def load(name: str) -> ModuleType:
     if name == "codex":

@@ -6,7 +6,15 @@ from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 # Static permission profile from adapters/claude.py; account env belongs to core.
-_READ_TOOLS = "Read,Grep,Glob,LS,Bash,WebFetch,WebSearch"
+# Read-only grants no blanket Bash: under dontAsk only Claude Code's built-in read-only commands
+# (ls, cat, grep, find, read-only git forms) and the gh reads below run, every other command is
+# denied, and an output redirect is checked against the Edit deny like a direct write
+# (https://code.claude.com/docs/en/permissions, "Read-only commands" and "Redirections").
+# Its OS sandbox would allow tests too, but it needs socat on Linux and refuses to start without it.
+_READ_TOOLS = (
+    "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
+    "Bash(gh issue view *),Bash(gh run view *)"
+)
 _WRITE_TOOLS = "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch"
 _READ_DENIES = (
     "Edit,Write,NotebookEdit,Bash(git push *),Bash(git commit *),Bash(git merge *),"

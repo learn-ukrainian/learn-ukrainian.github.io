@@ -4,12 +4,17 @@ from __future__ import annotations
 
 import re
 
+from scripts.dispatcher.providers import read_only_refusal
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 _ANSI = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
+    if spec.mode != "workspace-write":
+        raise ValueError(
+            read_only_refusal("hermes") if spec.mode == "read-only" else f"hermes: unsupported mode {spec.mode!r}"
+        )
     if not spec.model.strip():
         raise ValueError("hermes requires an explicit model")
     argv = ["hermes", "-z", spec.prompt_file.read_text(encoding="utf-8"), "-m", spec.model, "--provider", "openrouter"]
