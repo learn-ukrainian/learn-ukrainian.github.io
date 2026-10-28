@@ -1,5 +1,3 @@
-import requests
+"""Retired Ukrainian Lessons website probe (#8999)."""
 
-headers = {'User-Agent': 'Mozilla/5.0'}
-resp = requests.get('https://www.ukrainianlessons.com/season1/', headers=headers, timeout=15)
-print(resp.text[:3000])
+print("Ukrainian Lessons website scraping is disabled. Use scripts/crawl/crawl_ulp.py for resource metadata.")
