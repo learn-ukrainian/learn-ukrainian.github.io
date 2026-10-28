@@ -230,6 +230,46 @@ merged head scans the ancestry window at that SHA. Resolution errors fail.
 Only the exact `full-history-audit` input selects full history, including
 the root. An audit on another branch does not establish scheduled coverage.
 
+### Blobless CI checkout (FR-58)
+
+The public pack is about 8 GB, nearly all of it old file contents, so CI no
+longer downloads it. The Secret scan and Queue commit metadata scan jobs check
+out full history without blobs (`filter: blob:none`); the queue job's checkout
+is also sparse (`scripts/` and `.python-version`), since it reads no file
+content. Only the `full-history-audit` dispatch, which reads every blob anyway,
+keeps a full clone. Before TruffleHog runs,
+`python3 -m scripts.ci.secret_scan_scope materialize` takes the scan's base
+and head (the scope's outputs, or the pull request's base and head that the
+action uses on its own), then:
+
+1. resolves every merge base of head and base, because TruffleHog scans
+   `head ^merge-base` and go-git may pick any one of them;
+2. fetches, in batches of 50,000, the blobs on both sides of every diff in
+   that range, or every blob of the history when the scan has no base;
+3. re-runs the `git log` TruffleHog runs (same options as
+   `gitparse.prepGitArgs` in 3.99.0) with `GIT_NO_LAZY_FETCH=1` and fails on
+   any missing object.
+
+Step 3 is required. TruffleHog's default mode clones the checkout with
+`git clone file://`, which fails on a partial clone, so both steps pass
+`--trust-local-git-config` and scan the checkout in place. In place, a blob that
+is missing and cannot be fetched does not fail TruffleHog: it exits 0 having
+scanned 0 bytes (reproduced with 3.99.0 against an unreachable promisor). A
+full clone skips both steps.
+
+In place, go-git also reads the checkout's own git config. A setting it does not
+support is a scan error that, by default, still exits 0 with nothing scanned
+(for example `extensions.worktreeConfig`, which `git sparse-checkout set` turns
+on; `actions/checkout` sets `core.sparseCheckout` directly and does not). Both
+steps therefore also pass `--fail-on-scan-errors`, as the local wrapper does. No
+scan errors appeared in the twelve Secret scan and queue jobs checked before this
+change, including two 400-commit schedule windows.
+
+Coverage is unchanged. The same base and head give the same chunk and byte
+counts as the full clone did: 10 chunks and 21,939 bytes for queue run
+40752784461, 45 and 13,905 for PR run 40752258232, and 15,503 and 37,957,893
+for the 400-step schedule window of run 40667791948.
+
 The action SHA pins the workflow script only. Both TruffleHog steps set the
 action input `version` to one exact release (`3.99.0` as of #10056). Omitting
 it pulls `:latest`. Bump both steps together to the newest
