@@ -1425,14 +1425,12 @@ def _ansi_c_shape(repo: Path, shape: str) -> str:
         # Bash removes backslash-newline before tokenizing: still ANSI-C quoting.
         pytest.param("echo x > $\\\n'\\457{tail}'", id="line-continued-octal-wrap"),
         pytest.param("echo x > $\\\n\\\n'\\457{tail}'", id="two-line-continuations"),
-        # Presence alone decides: embedded, benign-looking, read-only, quoted.
+        # Presence alone decides: embedded, benign-looking, read-only.
         pytest.param("echo x > {repo}/curriculum/tra$'c'ked.md", id="embedded-mid-word"),
         pytest.param("tee $'\\164racked.md'", id="dispatch-relative-name"),
         pytest.param("echo x > $'\\457tmp/scratch-10633.txt'", id="outside-repo-path"),
         pytest.param("printf x > $'\\xc3\\xa9.md'", id="byte-escape-name"),
         pytest.param("printf '%s\\n' $'a\\tb'", id="no-write-target"),
-        pytest.param("grep -c 'end$' notes.txt", id="single-quoted-regex-anchor"),
-        pytest.param("echo \"$'\\x41'\" > notes.txt", id="inside-double-quotes"),
     ],
 )
 def test_issue_10633_ansi_c_quoting_refused_on_presence(repo: Path, shape: str):
@@ -1542,6 +1540,36 @@ def test_issue_10633_plain_quoting_controls_allowed(repo: Path, command: str):
 
 
 @pytest.mark.parametrize(
+    "shape, cwd, refused",
+    [
+        # Defects: Bash performs no ANSI-C quoting inside single or double quotes.
+        pytest.param("tmux capture-pane -p -t infra | grep -v '^\\s*$' | tail -25", "primary", False, id="tmux-grep"),
+        pytest.param("grep -v '^\\s*$' notes.txt", "primary", False, id="single-quoted-anchor"),
+        pytest.param("grep -c 'end$' notes.txt", "dispatch", False, id="single-quoted-closing-quote"),
+        pytest.param("grep \"end$'\" notes.txt", "primary", False, id="double-quoted-marker"),
+        pytest.param("echo \"$'\\x41'\" > notes.txt", "dispatch", False, id="double-quoted-span-write"),
+        # Controls: an unquoted marker, joined or nested, is still refused.
+        pytest.param("echo x > {octal}", "dispatch", True, id="unquoted-write-target"),
+        pytest.param("printf changed | $'\\564ee' {target}", "dispatch", True, id="unquoted-command-word"),
+        pytest.param("grep -c 'end$' notes.txt; tee $'\\164racked.md'", "dispatch", True, id="quoted-then-unquoted"),
+        pytest.param("echo '$'$'\\x41' > notes.txt", "dispatch", True, id="adjacent-unquoted-span"),
+        pytest.param("echo x > $\\\n'\\457{tail}'", "dispatch", True, id="line-continued"),
+        pytest.param(r"eval echo x \> \$\'\\457{tail}\'", "dispatch", True, id="eval-joined"),
+        pytest.param("bash -c \"printf x > \\$'\\\\457{tail}'\"", "dispatch", True, id="sh-c-unquoted"),
+        # Bash's default extquote decodes $'...' inside "${...}".
+        pytest.param("x=; echo \"${{x:-$'\\x41'}}\" > notes.txt", "dispatch", True, id="extquote-parameter"),
+    ],
+)
+def test_ansi_c_marker_inside_quotes_is_not_ansi_c_quoting(repo: Path, shape: str, cwd: str, refused: bool):
+    where = repo if cwd == "primary" else repo / ".worktrees/dispatch/claude/task-1"
+    result = _hook_subprocess(repo, _ansi_c_shape(repo, shape), cwd=where)
+    if refused:
+        _assert_ansi_c_refused(result)
+    else:
+        assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
     "command, expected",
     [
         ("echo $'x'", True),
@@ -1636,11 +1664,12 @@ def test_issue_10633_parser_ansi_c_path_program_name_keeps_basename(repo: Path):
         ("echo x > {repo}/$X/f", "unresolved_shell_variable"),
         ("echo x > {parent}/$X/f", "unresolved_shell_variable"),
         # An unknown component may be absolute, empty or hold ``..``: no literal
-        # prefix proves the path stays out of the primary.
-        ("echo x > /nonexistent-8500/$X/f", "unresolved_shell_variable"),
+        # prefix proves the path stays out of the primary. An argv word can also
+        # word-split, so only a redirect may follow an external directory.
+        ("tee /nonexistent-8500/$X/f", "unresolved_shell_variable"),
         ("echo x > local_state/$X.log", "unresolved_shell_variable"),
-        ("echo x > /tmp/$X/AGENTS.md", "unresolved_shell_variable"),
-        ("X=$(echo ../{parent_rel}); echo x > /tmp/$X/AGENTS.md", "unresolved_shell_variable"),
+        ("tee /nonexistent-8500/$X/AGENTS.md", "unresolved_shell_variable"),
+        ("X=$(echo ../{parent_rel}); tee /nonexistent-8500/$X/AGENTS.md", "unresolved_shell_variable"),
         # A literal value holding ``..`` resolves lexically into the primary.
         ("X=../{repo_rel}; echo x > /tmp/$X/AGENTS.md", "untracked_primary_checkout"),
         # Only unconditional top-level literal assignments are trusted (#8500 r2).
@@ -1698,6 +1727,43 @@ def test_bash_variable_git_dash_c_primary_still_blocked(repo: Path, command: str
     result = _bash(repo, command.format(repo=repo), cwd=worktree)
     assert result.returncode == 2, result.stderr
     assert "#5396" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "template, allowed",
+    [
+        # Defect: only the leaf holds an unknown value, under an external directory.
+        pytest.param(
+            'S={outside}/scratchpad; for spec in "a b"; do set -- $spec; cmd > $S/dispatch-$1.log 2>&1; done',
+            True,
+            id="loop-leaf-under-external-prefix",
+        ),
+        pytest.param("echo x > {outside}/$X/f", True, id="unknown-directory-under-external-prefix"),
+        # Controls: relative, inside or above the primary, unknown alone, argv word.
+        pytest.param("echo x > scratch/$X.log", False, id="relative-prefix"),
+        pytest.param("echo x > {repo}/curriculum/$X.md", False, id="inside-primary"),
+        pytest.param("echo x > {repo}/local_state/$X.log", False, id="inside-primary-ignored"),
+        pytest.param("echo x > {repo}-$X/f", False, id="partial-component-reaching-ancestor"),
+        pytest.param("echo x > /{top}/$X/f", False, id="ancestor-of-primary"),
+        pytest.param("echo x > /$X", False, id="root"),
+        pytest.param('echo x > "$X"', False, id="unknown-alone"),
+        pytest.param("echo x > {outside}/link/$X", False, id="symlinked-prefix-into-primary"),
+        pytest.param("echo x > /*/$X/f", False, id="glob-prefix"),
+        pytest.param("tee {outside}/$X", False, id="argv-word-may-split"),
+        pytest.param("git -C {outside}/$X add f", False, id="git-dash-c"),
+    ],
+)
+def test_unresolved_leaf_under_external_absolute_prefix_is_allowed(
+    repo: Path, outside_dir: Path, template: str, allowed: bool
+):
+    (outside_dir / "link").symlink_to(repo)
+    command = template.format(outside=outside_dir, repo=repo, top=repo.parts[1])
+    result = _bash(repo, command)
+    if allowed:
+        assert result.returncode == 0, result.stderr
+    else:
+        assert result.returncode == 2, result.stderr
+        assert "unresolved_shell_variable" in result.stderr
 
 
 def test_bash_read_home_shadows_inherited_home(repo: Path):
