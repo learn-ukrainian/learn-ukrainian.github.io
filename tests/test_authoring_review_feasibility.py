@@ -636,7 +636,11 @@ def test_invalid_attribution_is_never_green(repo, tasks, case, reason):
         repo.git("checkout", "-q", "-b", "side", "origin/main")
         repo.commit(SOL, path="src/app.py")
         repo.git("checkout", "-q", "feature")
-        repo.git("merge", "-q", "--no-ff", "side", "-m", "merge a non-base branch")
+        # A clean merge of the PR's own commits is exempt; a hand edit is not.
+        repo.git("merge", "-q", "--no-ff", "--no-commit", "side")
+        (repo.root / "docs/hand-edit.md").write_text("authored during the merge\n", encoding="utf-8")
+        repo.git("add", "-A")
+        repo.git("commit", "-q", "-m", "merge a non-base branch")
     with pytest.raises(recorder.BranchFactsError, match=reason) as refused:
         facts(repo, tasks, writer=OPUS)
     assert refused.value.code == recorder.FACTS_AUTHORSHIP_UNKNOWN
@@ -2376,8 +2380,11 @@ def test_pr_review_facts_drop_a_main_squash_merged_onto_a_stale_base(repo, tasks
         "_run_json",
         lambda _args, **_kwargs: {"baseRefName": "release", "baseRefOid": stale, "headRefOid": head},
     )
-    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
-        recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
+    # Without the default-branch exclusion the squash stays in the PR's range,
+    # attributed by its own trailers; the sync merge adds no author.
+    release = recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
+    assert squash in {commit.sha for commit in release.commits}
+    assert release.existing_families == {"anthropic", "openai"}
 
 
 def _assert_admits_a_reviewer_outside(fact):
@@ -2684,7 +2691,10 @@ def test_verified_dependabot_branch_is_attributed_reviewed_and_recorded_without_
     # A bot has no model and no model family: no reviewer family is excluded, the risk floor still binds.
     inputs = fact.resolver_inputs(risk="critical", claude_account=HOST_ACCOUNT)
     assert inputs.author_models == ()
-    trace = {entry.name: entry for entry in recorder.structural_review_route(fact, risk="critical", claude_account=HOST_ACCOUNT).trace}
+    trace = {
+        entry.name: entry
+        for entry in recorder.structural_review_route(fact, risk="critical", claude_account=HOST_ACCOUNT).trace
+    }
     assert {trace["claude-opus-5-5"].status, trace["openai_frontier"].status} <= {"selected", "eligible"}
     assert "same family" not in " ".join(str(entry.reason) for entry in trace.values())
     assert selected(fact, "critical") is not None
