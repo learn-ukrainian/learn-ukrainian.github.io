@@ -55,7 +55,6 @@ from scripts.orchestration.integration_sweep import (
     TRUSTED_ASSOCIATIONS,
     GitHubAdapter,
     SweepError,
-    attributed_marker_head,
     lookup_verdict,
     parse_marker,
 )
@@ -1738,18 +1737,14 @@ def review_round_budget(facts: BranchReviewFacts) -> int:
     return DEFAULT_REVIEW_ROUNDS
 
 
-def _trusted_markers(
-    comments: Sequence[Mapping[str, Any]], login: str
-) -> tuple[list[dict[str, Any]], list[str], set[str]]:
-    """Verdict markers ``login`` posted with a trusted association, every head they review, and doubtful heads.
+def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> tuple[list[dict[str, Any]], list[str], int]:
+    """Intact verdict markers ``login`` posted with a trusted association, their heads, and doubtful markers.
 
-    Markers and heads are in publication order. A trusted marker the keeper
-    cannot parse still spends a round at the head it names, so malformed
-    evidence never shrinks the count; one that names no single head refuses.
-    A head with an unparsed or edited trusted marker is doubtful: its tier and
-    whether it spent the verification round are unknown.
+    Markers and heads are in publication order. A trusted marker that does not
+    parse, or was edited, proves neither its head, its tier nor whether it
+    spent the verification round, so it is only counted, as a round of its own.
     """
-    markers, heads, doubtful = [], [], set()
+    markers, heads, doubtful = [], [], 0
     for item in comments:
         body = item.get("body") if isinstance(item, Mapping) else None
         if not isinstance(body, str) or MARKER_PREFIX not in body:
@@ -1757,15 +1752,12 @@ def _trusted_markers(
         if item.get("user", {}).get("login") != login or item.get("author_association") not in TRUSTED_ASSOCIATIONS:
             continue
         marker = parse_marker(body)
-        if marker is not None:
-            markers.append(marker)
-        head = marker["sha"] if marker is not None else attributed_marker_head(body)
-        if head is None:
-            raise RecordError("REVIEW_BUDGET_EXHAUSTED: a trusted verdict marker names no single head; rounds unknown")
-        if head not in heads:
-            heads.append(head)
         if marker is None or item.get("created_at") != item.get("updated_at"):
-            doubtful.add(head)
+            doubtful += 1
+            continue
+        markers.append(marker)
+        if marker["sha"] not in heads:
+            heads.append(marker["sha"])
     return markers, heads, doubtful
 
 
@@ -1812,14 +1804,18 @@ def require_review_round_within_budget(
                 "budget end is never approval, escalate instead of recording another round"
             )
         return RoundAdmission(spent["budget_tier"], spent["verification_of"])
-    if sha in heads or not heads:
+    if sha in heads:
         return RoundAdmission(tier)
-    # Below the default budget every tier admits an ordinary round and no verification round exists yet.
-    if heads[-1] in doubtful and len(heads) >= DEFAULT_REVIEW_ROUNDS:
+    if doubtful:
+        # Below the default budget every tier admits an ordinary round and no verification round exists yet.
+        if len(heads) + doubtful < DEFAULT_REVIEW_ROUNDS:
+            return RoundAdmission(tier)
         raise RecordError(
-            f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} has an unreadable or edited verdict at its last reviewed head "
-            f"{heads[-1]}, so its budget tier and verification round are unknown; escalate the verdict record"
+            f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} has {doubtful} unreadable or edited verdict(s), so its rounds, "
+            "budget tier and verification round are unknown; escalate the verdict record"
         )
+    if not heads:
+        return RoundAdmission(tier)
     held = next(
         (marker["budget_tier"] for marker in markers if marker["sha"] == heads[-1] and marker.get("budget_tier")), tier
     )

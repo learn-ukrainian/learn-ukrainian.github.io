@@ -791,14 +791,17 @@ def test_verification_round_refuses_a_head_that_does_not_descend_from_the_approv
         recorder.require_review_round_within_budget(
             comments, rewritten, "fleet", budget=3, pr=42, descends=partial(recorder._descends_from, repo)
         )
-    # A malformed or edited final verdict hides its tier: no next head opens a round, even when the
-    # new diff would raise the tier (the elevated budget of 5).
-    malformed = dict(comments[-1], body=comments[-1]["body"].replace("VERDICT: APPROVED\n", "VERDICT: APPROVE\n"))
-    for final in (malformed, recorded_verdict(approved, "APPROVED", task_id="final-round", edited=True)):
-        comments[-1] = final
-        with pytest.raises(
-            recorder.RecordError, match=f"unreadable or edited verdict at its last reviewed head {approved}"
-        ):
+    # A malformed or edited final verdict proves neither its head nor its tier: it still spends a round,
+    # and no next head opens one, even when the new diff would raise the tier (the elevated budget of 5).
+    final = comments[-1]
+    edited = recorded_verdict(approved, "APPROVED", task_id="final-round", edited=True)
+    for doubtful in (
+        dict(final, body=final["body"].replace("VERDICT: APPROVED\n", "VERDICT: APPROVE\n")),
+        edited,
+        dict(edited, body=edited["body"].replace(approved, "2" * 40)),
+    ):
+        comments[-1] = doubtful
+        with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*1 unreadable or edited verdict"):
             recorder.require_review_round_within_budget(
                 comments, rewritten, "fleet", budget=5, pr=42, descends=lambda *_: True
             )
