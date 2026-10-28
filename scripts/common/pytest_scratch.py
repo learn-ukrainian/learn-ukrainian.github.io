@@ -352,8 +352,8 @@ def _passed(stash: pytest.Stash | None) -> bool:
 
     Pytest itself deletes the basetemp of such a session, but only when no
     --basetemp was given, and this plugin always gives one. The session is
-    known only once every sessionfinish hook and wrapper returned normally,
-    and cleanups run after them, so the exit status read here is final.
+    known only once the whole sessionfinish call returned normally, and
+    cleanups run after it, so the exit status read here is final.
     """
     session = stash.get(_SESSION, None) if stash is not None else None
     return (
@@ -414,15 +414,23 @@ def pytest_configure(config: pytest.Config) -> None:
     config.add_cleanup(restore_tempdir)
 
 
-@pytest.hookimpl(wrapper=True, tryfirst=True)
-def pytest_sessionfinish(session: pytest.Session):
-    """Keep the session for teardown only if every sessionfinish hook returned.
+@pytest.hookimpl(wrapper=True)
+def pytest_runtestloop(session: pytest.Session):
+    """After a completed test loop, watch the whole sessionfinish call.
 
-    The outermost wrapper resumes after all other implementations and wrappers.
-    A raising hook can end pytest with an error while the session status still
-    reads OK, so its run is never marked for removal.
+    A hook monitor sees the outcome of the entire call, outside every
+    implementation and wrapper whatever their order. Only a call that ends
+    without any exception keeps the session for teardown: a raising hook can
+    end pytest with an error while the session status still reads OK. The
+    monitor is never undone, since undoing would also drop monitors added
+    after it; it lives as long as this plugin manager.
     """
     result = yield
     if _RUN in session.config.stash:
-        session.config.stash[_SESSION] = session
+
+        def after(outcome, hook_name, _impls, kwargs) -> None:
+            if hook_name == "pytest_sessionfinish" and outcome.exception is None:
+                session.config.stash[_SESSION] = kwargs["session"]
+
+        session.config.pluginmanager.add_hookcall_monitoring(lambda *_: None, after)
     return result
