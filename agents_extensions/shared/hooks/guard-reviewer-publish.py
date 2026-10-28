@@ -70,6 +70,7 @@ def blocked(command: str, parser=None, depth: int = 0) -> str | None:
     if parser._has_ansi_c_quoting(command):
         return "Bash ANSI-C quoting ($'...')"
     for segment in parser._expanded_segments(command):
+        segment = parser._without_redirects(segment)
         binary, index = parser._command_word(segment)
         args = [str(word) for word in segment[index + 1 :]]
         if binary == "git":
@@ -121,7 +122,7 @@ def main() -> int:
             return 0
         command = payload.get("tool_input", {}).get("command", "")
         reason = blocked(command)
-    except (ImportError, OSError, ValueError, TypeError, RuntimeError) as exc:
+    except Exception as exc:
         print(f"BLOCKED by guard-reviewer-publish: cannot inspect command ({type(exc).__name__}).", file=sys.stderr)
         return 2
     if reason:

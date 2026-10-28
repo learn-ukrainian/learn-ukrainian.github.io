@@ -10,6 +10,7 @@ import pytest
 
 from scripts.dispatcher.providers import load
 from scripts.dispatcher.types import ParsedResult, TaskSpec
+from scripts.lib import rules_core
 
 # Small recorded event shapes from the old adapters' stream contracts.
 SUCCESS = {
@@ -49,8 +50,11 @@ sys.stdout.write(os.environ["STUB_STREAM"])
 """
 
 
-@pytest.mark.parametrize("provider", SUCCESS)
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+# Read-only AGY is refused before launch (test_core::test_read_only_mode_denies_edits_on_every_provider).
+@pytest.mark.parametrize(
+    "provider,mode",
+    [(p, m) for p in SUCCESS for m in ("read-only", "workspace-write") if (p, m) != ("agy", "read-only")],
+)
 @pytest.mark.parametrize("effort", [None, "high"])
 def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, effort):
     """Catch lost stdin, wrong mode and headless background work escaping print completion."""
@@ -104,9 +108,14 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     elif provider == "claude":
         if effort:
             expected += ["--effort", "high"]
-        expected += ["--output-format", "stream-json", "--verbose", "--permission-mode", "dontAsk", "--allowedTools"]
+        expected += ["--output-format", "stream-json", "--verbose", "--permission-mode", "dontAsk"]
+        if mode == "read-only":
+            expected += ["--restricted", "--tools", "Read,Grep,Glob,Bash,WebFetch,WebSearch",
+                         "--append-system-prompt-file", str(rules_core.source_path(rules_core.CORE_REL))]
+        expected += ["--allowedTools"]
         expected += [
-            "Read,Grep,Glob,LS,Bash,WebFetch,WebSearch"
+            "Read,Grep,Glob,LS,WebFetch,WebSearch,Bash(gh pr view *),Bash(gh pr diff *),Bash(gh pr checks *),"
+            "Bash(gh issue view *),Bash(gh run view *)"
             if mode == "read-only"
             else "Bash,Read,Edit,Write,Grep,Glob,LS,WebFetch,WebSearch"
         ]
@@ -126,10 +135,8 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     elif provider == "cursor":
         expected += ["--mode", "ask"] if mode == "read-only" else ["--approve-mcps", "--sandbox", "disabled", "--force"]
     else:
-        expected += ["--sandbox"] if mode == "read-only" else ["--dangerously-skip-permissions"]
+        expected += ["--dangerously-skip-permissions"]
         expected += ["--print-timeout", "120m", "--log-file", str(final.with_suffix(".log"))]
-        if mode == "read-only":
-            expected += ["--add-dir", str(worktree)]
     proc = subprocess.run(
         invocation.argv, input=invocation.stdin, env=invocation.env, cwd=worktree, capture_output=True, timeout=10
     )

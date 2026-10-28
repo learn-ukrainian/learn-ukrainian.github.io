@@ -20,7 +20,7 @@ from scripts.eval.uk_preamble.common import (
     sha256_text,
 )
 from scripts.eval.uk_preamble.dataset import load_set, parse_variants
-from scripts.eval.uk_preamble.dispatch import DispatchError, TaskOutcome, composition_of
+from scripts.eval.uk_preamble.dispatch import DispatchError, TaskOutcome, composition_of, seat_mode
 from scripts.eval.uk_preamble.report import build_report, render_markdown
 from scripts.eval.uk_preamble.runner import (
     Executor,
@@ -142,7 +142,7 @@ class FakeDispatcher:
             "prompt_blocks": ["rules_core", "worktree"],
             "dispatch_args_sha256": self.expected_args_sha256(task_id, seat, kind, prompt_path),
             "cwd": str(self.cwd),
-            "mode": "read-only",
+            "mode": seat_mode(seat),
             "worktree_path": str(self.cwd),
             "research": None,
             "effort": seat.effort,

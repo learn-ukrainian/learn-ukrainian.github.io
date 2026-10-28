@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 409,
-    "probe_count": 818,
+    "cli_count": 408,
+    "probe_count": 816,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/kimi_boundary.py",
@@ -205,7 +205,6 @@
       "scripts/curriculum/validate/__main__.py",
       "scripts/curriculum/validate/validate.py",
       "scripts/debug/debug_hash.py",
-      "scripts/entire_context/__main__.py",
       "scripts/etymology/bulk_ocr_gemini.py",
       "scripts/eval/uk_preamble/__main__.py",
       "scripts/eval/zno_nmt/__main__.py",
@@ -414,7 +413,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "2bc834f4208aa8b75749d3397aa82da847b675bdf3e42266e62e5b64965db5f6"
+    "cli_paths_sha256": "fbb3556c5f747caf9b86cea2d8b16eed4633c3a1e9d7a2a984eafb2689f91419"
   },
   "failures": [
     {

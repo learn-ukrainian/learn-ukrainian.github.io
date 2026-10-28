@@ -125,7 +125,6 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_deploy_script_idempotency.py::test_claude_diff_excludes_do_not_mask_shipped_source",
     "tests/test_deploy_script_idempotency.py::test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy",
     "tests/test_deploy_script_idempotency.py::test_fresh_deploy_produces_synced_output",
-    "tests/test_entire_capture_guard.py::test_canary_evidence_bundle_carries_no_local_absolute_paths",
     "tests/test_kimi_coding_only_admission.py::test_every_allowlisted_root_exists_in_the_repository",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",

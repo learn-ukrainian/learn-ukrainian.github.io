@@ -126,7 +126,7 @@ EXPECTED_SCOPE_INPUT_HASHES = {
     "final_drive_backup_receipt_sha256": EXPECTED_INPUT_HASHES["final_drive_backup_receipt_sha256"],
 }
 DISPOSITIONS = ("admit_scoped", "contextual_only", "quarantine", "needs_more_evidence")
-METADATA_ONLY_MUTATION_PREFIXES = (".agent/sessions/", ".entire/", "batch_state/api_usage/usage_")
+METADATA_ONLY_MUTATION_PREFIXES = (".agent/sessions/", "batch_state/api_usage/usage_")
 SOURCE_ROLES = frozenset(
     {
         "explicit_rule",

@@ -1,6 +1,6 @@
 # Driver Cold Start Board & Handoff Runbook
 
-**Status:** Sol PR-2 / WP-A + WP-D operational\
+**Status:** Sol PR-2 / WP-A operational\
 **Authority:** `scripts/fleet_comms/cold_start_board.py` · `scripts/fleet_comms/cli.py`\
 **Binding doctrine:** `agents_extensions/shared/rules/fleet-comms-coordination.md`
 
@@ -95,30 +95,6 @@ The board executes 10 diagnostic probes. Each probe measures execution timing (`
 - Export `FLEET_COMMS_PLANE_MODE="${FLEET_COMMS_PLANE_MODE:-$(fleet_comms_resolve_plane_mode)}"` before building the clause.
 - `fleet_comms_cold_clause` resolves live mode when the env var is unset/empty (same as the banner). Never default the injected sentence to `off` when live mode is `authority`.
 - Plane-mode resolve uses the checkout `.venv` or the primary interpreter via `git rev-parse --git-common-dir` so sparse dispatch worktrees still tell the truth.
-
----
-
-## WP-D: Entire-Context Handoff & Closed-Issue Recipe
-
-When drivers record or consume entire-context handoffs during session transitions:
-
-### 1. `bootstrap-git` for Closed Issues
-
-- **Closed Issue Limitation:** Closed GitHub issues **cannot** be indexed using `bootstrap-github-issue` (the GitHub issue API rejects closed issues for bootstrap).
-- **Recipe:** Drivers must use `bootstrap-git` with a full 40-character hex commit SHA:
-
-```bash
-# Bootstrap entire-context using real commit SHA after merge
-.venv/bin/python -m scripts.entire_context bootstrap-git <40-hex-sha>
-```
-
-- **SHA Rule:** Always pass real, verified commit SHAs from `git log` or GitHub PR merges. **Do not invent placeholder SHAs** in scripts or code.
-
-### 2. Single-Token Search Needles
-
-- **Substring Matching:** Entire-context search and cold-start board needle searches perform exact single substring matching rather than multi-word natural language parsing.
-- **Rule:** Use single-token needles (e.g. `practice`, `cold_start`, `4707`, or a commit SHA fragment).
-- **Warning:** Multi-word queries (such as `"practice membership"`) score zero or trigger `seed_invalid` errors when no single entry contains the entire phrase verbatim.
 
 ---
 

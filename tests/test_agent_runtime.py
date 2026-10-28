@@ -4045,11 +4045,8 @@ def test_agy_direct_runtime_requires_real_context_for_every_projection(tmp_path,
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(model, "exact"))
-    records, captures = [], []
+    records = []
     monkeypatch.setattr(runner, "write_record", records.append)
-    monkeypatch.setattr(runner.FleetCapture, "start", lambda **kwargs: SimpleNamespace(
-        finish=lambda **fields: captures.append(fields),
-    ))
     result = runner.invoke("agy", "Implement.", model=model, mode="workspace-write", cwd=tmp_path,
                            task_id="direct-context" if binding in {"task-only", "bound"} else None,
                            tool_config={"run_nonce": "direct-run"} if binding in {"nonce-only", "bound"} else None)
@@ -4058,8 +4055,6 @@ def test_agy_direct_runtime_requires_real_context_for_every_projection(tmp_path,
     assert result.model == model
     assert bool(result.model_identity and result.model_identity["actual_model_known"]) is (binding == "bound")
     assert bool(records[0].get("model_identity")) is (binding == "bound")
-    assert captures[0]["actual_model"] == (model if binding == "bound" else "")
-    assert captures[0]["route_metadata"]["actual_model_known"] == ("true" if binding == "bound" else "false")
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
 
 
@@ -4082,10 +4077,6 @@ def test_agy_watchdog_cleanup_failure_retains_only_valid_observation(tmp_path, m
     from tests.agent_runtime.adapters.test_agy_claude_routes import consistency_stream, mock_agy_provider
 
     launches, _, _ = mock_agy_provider(monkeypatch, tmp_path, runner, stdout=consistency_stream(pin, case))
-    captures = []
-    monkeypatch.setattr(runner.FleetCapture, "start", lambda **kwargs: SimpleNamespace(
-        finish=lambda **fields: captures.append(fields),
-    ))
 
     def stop(*args, **kwargs):
         raise RuntimeError("synthetic watchdog cleanup failure")
@@ -4096,10 +4087,6 @@ def test_agy_watchdog_cleanup_failure_retains_only_valid_observation(tmp_path, m
                       task_id="watchdog-cleanup", tool_config={"run_nonce": "watchdog-run"})
     assert len(launches) == 1
     assert bool(caught.value.model_identity and caught.value.model_identity["actual_model_known"]) is known
-    assert len(captures) == 1
-    assert captures[0]["actual_model"] == (pin if known else "")
-    assert captures[0]["route_metadata"]["actual_model_known"] == str(known).lower()
-    assert captures[0]["outcome"] == "runner_exception"
     assert runner._AGY_OBSERVED_IDENTITY.get() is None
 
 

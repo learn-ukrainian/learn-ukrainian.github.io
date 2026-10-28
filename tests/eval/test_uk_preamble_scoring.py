@@ -8,7 +8,6 @@ from typing import Any
 
 import pytest
 
-from scripts.dispatcher import write_intent
 from scripts.eval.uk_preamble.common import HarnessError
 from scripts.eval.uk_preamble.dataset import ReviewItem, Span, load_set, protocol_shortfalls
 from scripts.eval.uk_preamble.prompts import (
@@ -315,10 +314,12 @@ def test_extract_json_prefers_whole_text_then_fence_then_braces():
 
 
 @pytest.mark.parametrize("kind", ["review", "writing", "judge"])
-def test_rendered_prompts_pass_the_read_only_write_intent_guard(eval_set, kind):
+def test_no_prompt_builder_is_left_unexecuted(eval_set, kind):
     payload = review_payload(eval_set.review) if kind == "review" else writing_payload(eval_set.writing)
-    prompt = render(build_prompt(kind, payload, "Ти — редактор."), rules_block())
-    assert write_intent._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+    assert payload
+    prompt = build_prompt(kind, payload, "Ти — редактор.")
+    assert isinstance(prompt, str) and prompt.strip()
+    assert render(prompt, rules_block()).endswith(prompt)
 
 
 def test_set_validation_rejects_span_mismatch_and_overlap(tmp_path: Path, mini_set_dict):

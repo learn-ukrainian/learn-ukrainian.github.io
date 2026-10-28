@@ -148,21 +148,19 @@ fresh or healthy.
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
 `$GIT_COMMON_DIR/hooks` that delegate to the tracked `.githooks/` of the current
-worktree. `core.hooksPath` stays unset so Entire CLI can chain per-clone without
-dirtying tracked files. The delegators ensure the complete tracked hook chain is
+worktree. `core.hooksPath` stays unset so hook-installing tools cannot write into
+tracked files. The delegators ensure the complete tracked hook chain is
 shared across all linked worktrees without a per-worktree install. It runs the
 configured pre-commit, commit-message, and pre-push gates; preserves the
 pytest-stamp and Git LFS hooks; and restores the primary-checkout guards after
 checkout or merge. The installer also materializes `.githooks` in existing sparse
-worktrees without broadening their checkout. Where Entire CLI owns a hook, the
-delegator sits at `<name>.pre-entire` and the installer makes Entire's wrapper
-chain to it, and routes Entire's own call through `scripts/entire/capture_guard.sh`
-(Entire runs only with the accepted CLI version and the private checkpoint route,
-and never blocks a commit or push; the post-commit capture runs at niceness +10
-and idle I/O priority). It refuses, without changing anything, when a
-hook path is a symlink. `scripts/install_git_hooks.sh --check` (read-only) fails
-when a hook stage declared in `.pre-commit-config.yaml` has no reachable
-delegator, an Entire wrapper is unguarded, or a hook path is a symlink.
+worktrees without broadening their checkout. The Entire CLI integration was removed
+(C-2928): the installer replaces any Entire wrapper still in the hooks directory with
+the delegator, removes the Entire-only wrappers and the delegators it once placed at
+`<name>.pre-entire`. It refuses, without changing anything, when a hook path is a
+symlink. `scripts/install_git_hooks.sh --check` (read-only) fails when a hook stage
+declared in `.pre-commit-config.yaml` has no reachable delegator, an Entire wrapper
+remains (`RETIRED`), or a hook path is a symlink.
 
 ---
 
@@ -954,7 +952,38 @@ Dispatch v2 has no budget substitution guard, pricing/cost telemetry, preflight
 triage, lifecycle-file propagation, keep/force-worktree switches, repository
 backfill, Cursor self-dispatch/DoR/dirty-primary gates, open-PR freeze, or Kimi
 boundary hooks. Native Grok dispatch and the RB2 trail are retired. Use a supported
-provider and model from the current catalog; `grok` is a Cursor alias.
+provider and model from the current catalog; dispatch Grok as
+`--agent cursor --model grok-4.7-high` (`grok` is not an agent).
+
+`--mode read-only` (the default) cannot edit the worktree on any provider. Each
+provider's own CLI holds the lock: Codex `-s read-only`, Cursor `--mode ask`,
+Muse `--disable-write --disable-shell`, Claude `dontAsk` with no blanket Bash
+grant (only Claude Code's built-in read-only commands and `gh` reads run, and
+redirects are checked against the Edit deny) under `--restricted`, so no user,
+project or local settings file can add an allow rule, and OpenCode's
+`OPENCODE_PERMISSION` rules (edits denied; bash limited to `git diff`, `git log`,
+`git show` and `git status` with no redirect or `--output`). AGY and Hermes give
+a dispatched run no enforceable write lock, so read-only on them exits 2 with
+`read_only_unenforceable` before anything launches. Read-only runs on Claude and
+OpenCode cannot run tests; use Codex when a read-only reviewer must execute them.
+
+`--restricted` skips CLAUDE.md, so read-only Claude gets the rules core
+(`agents_extensions/shared/rules/core.md`) through `--append-system-prompt-file`;
+Claude-only notes that exist only in CLAUDE.md do not reach it. `--restricted`
+still loads managed settings, which could widen the lock, so read-only Claude
+also exits 2 with `read_only_unenforceable` when any managed source exists or
+cannot be checked: the `/etc/claude-code` policy directory, a non-empty
+`remote-settings.json` cache, a `claude doctor` report other than "not fetched"
+for remote managed settings, or a host other than plain Linux.
+
+**Accepted residual risk (F5, CTO decision C-2982, 2026-10-28).** `claude doctor`
+reads user, project and local settings files that the `--restricted` launch
+ignores, so an auth override in one of them could make doctor report "not
+fetched" while the launch uses a stored Team or Enterprise login whose
+server-managed policy widens the lock. This is accepted because neither host
+Claude login can carry such a policy: both are individual Max accounts
+(`oauthAccount.organizationType = claude_max`), and `/etc/claude-code` is
+absent. Revisit before any Team or Enterprise login is added to this host.
 
 Sparse worktrees use `SPARSE_EXCLUDE_DEFAULT` in `scripts/dispatcher/git.py`.
 Re-include a tree explicitly with `--sparse-include DIR`, or use

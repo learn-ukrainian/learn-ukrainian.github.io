@@ -1,6 +1,6 @@
 ---
 name: review-loop
-description: Run the bounded independent review of one change, from its pushed head to a recorded exact-head verdict, inside full-send or full-stop. Use when a driver needs the review of record for a code, infra or Ukrainian change; a worker asks its driver instead.
+description: Run the bounded independent review of one change, from its pushed head to a recorded exact-head verdict, inside full-send or full-stop. Use when the worker that owns a brief, or a driver, needs the review of record for a code, infra or Ukrainian change.
 argument-hint: "<branch> [pr <number>]"
 ---
 
@@ -12,9 +12,11 @@ The reviewer's own procedure is `local-code-review`; learner-content review proc
 with `track-completion` and `post-build-review`, seated by the `ukrainian` profile below.
 ACP discussion is never review.
 
-**Who runs it.** The accountable driver, the integration owner or the CTO. A worker does not
-dispatch reviewers (rules core P1): it sends its driver a review request through Fleet Comms
-with the branch, exact head and hand-off record, then waits for the verdict.
+**Who runs it.** The worker that owns the brief runs it itself (rules core P1), as do the
+accountable driver, the integration owner and the CTO. The resolver picks the reviewer; the
+runner never picks one, and the resolver never returns a family that authored a commit on the
+branch. No eligible reviewer is handled in step 2; nobody substitutes a reviewer of their own
+choosing.
 
 **Inputs.** The hand-off record ([delivery](../full-send/references/delivery.md#hand-off-record)):
 branch, exact pushed head, base and merge-base, author model of every commit, catalog risk,
@@ -33,8 +35,8 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
 ## Steps
 
 1. **Freeze the round-1 brief** ([brief](references/brief.md)): outcome, acceptance criteria,
-   non-goals, threat and input model, dispositions. The reviewer or the CTO records the budget
-   tier before round 1. Later rounds reuse the frozen sections unchanged.
+   non-goals, threat and input model, dispositions. Record the budget tier
+   ([policy](references/policy.md#budget)); later rounds reuse the frozen sections unchanged.
 2. **Resolve the target and the reviewer live.** Never pick a fixed model. Derive the review
    profile from the target and record it in the hand-off record (`review.profile`) and the
    frozen brief: `infra` when the change touches the build pipeline, gates, CI, deploy, the
@@ -60,11 +62,8 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    and `requires_silence_timeout`. Exit 1 is fail-closed: no eligible reviewer means escalate
    to the CTO, or use the red-team exception (`workflow.md` § Merge policy) exactly as written
    there. Never review your own work.
-3. **Dispatch the reviewer read-only at the exact pushed head.**
-   Requires #11785 (v2 protected review). Until it is merged on your base, launch and settle
-   with the `dispatch.py` recipe in drive-epic §6
-   ([review-merge-cleanup](../drive-epic/references/review-merge-cleanup.md)), passing the same
-   `$REVIEW_PROFILE`.
+3. **Dispatch the reviewer read-only at the exact pushed head**, passing the same
+   `$REVIEW_PROFILE`. The dispatcher removes the review worktree when the task settles.
 
    ```bash
    "$PY" scripts/dispatch.py dispatch \
@@ -88,10 +87,12 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
 5. **Settle.** Read the task JSON: `done`, attested reviewer model and family, and a pinned head
    equal to the current pushed tip. Read the findings themselves, not only the verdict line.
    Give each finding a stable id and a disposition in the ledger ([policy](references/policy.md)).
-   Fixes go to the authoring lane; the driver does not patch them in.
+   Fixes go to the authoring lane (the worker itself when it runs the loop); a driver does not
+   patch them in.
 6. **Next round or stop.** Start a delta round only if the budget allows it and an open blocker,
-   a changed behaviour or a moved head needs it. The delta brief carries the ledger and the fix
-   diff ([brief](references/brief.md#delta-rounds-round-2-and-later)).
+   a changed behaviour or a moved head needs it. A recorded rejection is cleared only at a new
+   head ([policy](references/policy.md#clearing-a-recorded-rejection)). The delta brief carries
+   the ledger and the fix diff ([brief](references/brief.md#delta-rounds-round-2-and-later)).
 7. **Record the verdict once a PR exists** (the PR may already be open, `workflow.md:195`):
 
    ```bash
@@ -124,9 +125,10 @@ silence or approval proves nothing. Making it mandatory needs the operator's app
 
 ## Stop and report
 
-Stop when the current head has a recorded APPROVE with no open blocker, when the budget is
-exhausted, when a dispute reaches its second exchange, or when a breaker trips. The last three
-escalate to the CTO; none of them is approval.
+Stop when the current head has a recorded APPROVE and only nits or follow-ups remain, when the
+budget is exhausted, when a dispute is unresolved after two replies, or when a breaker trips.
+An exhausted budget and a tripped breaker escalate to the CTO; a dispute goes to the operator
+([policy](references/policy.md)). None of them is approval.
 
 Report: exact SHA reviewed, reviewer model, family and harness, verdict, rounds used against
 the tier, the ledger with each disposition, diff size before and after review, and who owns

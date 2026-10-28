@@ -506,15 +506,15 @@ entries:
 
   - id: small-harness-docs
     kind: doc_family
-    paths: [docs/guardrails/**, docs/ops/**, docs/entire/**, docs/examples/**, docs/specs/**, docs/third-party/**, docs/playbooks/**]
-    purpose: Fleet tooling guardrail, fleet session-awareness charter, Entire recall receipts, launchd example, task-family manager spec and vendored third-party licence text.
-    keywords: [agent fleet guardrail, Gemini CLI, AGY route, supported agent routes, Entire, launchd example, task family manager, third-party licence, fleet agent eyes]
+    paths: [docs/guardrails/**, docs/ops/**, docs/examples/**, docs/specs/**, docs/third-party/**, docs/playbooks/**]
+    purpose: Fleet tooling guardrail, fleet session-awareness charter, launchd example, task-family manager spec and vendored third-party licence text.
+    keywords: [agent fleet guardrail, Gemini CLI, AGY route, supported agent routes, launchd example, task family manager, third-party licence, fleet agent eyes]
     lifecycle: active
     owner: infra-harness
     entrypoints:
       - {topic: supported agent fleet entry points, path: docs/guardrails/agent-fleet-tooling.md}
     query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/guardrails docs/ops docs/entire docs/specs"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/guardrails docs/ops docs/specs"}
     content_searchable: true
 
   - id: legacy-agent-docs
@@ -626,7 +626,7 @@ entries:
     kind: doc_family
     paths: [docs/plans/*]
     purpose: Named plans of record and roadmaps; GitHub issue state wins over stale plan text.
-    keywords: [plan of record, roadmap, rollout plan, entire ACP context layer, primary text hosting]
+    keywords: [plan of record, roadmap, rollout plan, primary text hosting]
     lifecycle: active
     owner: infra-harness
     query:
@@ -2328,19 +2328,6 @@ store_registry:
       backup: none
       protection_gap: 'Legacy broker history is not in the allowlist; DB plan step 6 proposes keep until #6106 retires it, then frozen and kept.'
       retention: 'Legacy broker history; frozen read-only and kept after #6106 retirement, never row-deleted without operator authorization.'
-    - path: batch_state/entire-context/v1/context-links.sqlite3
-      owner: infra-harness
-      kind: operational
-      activity: active
-      presence: present
-      writers: [scripts/entire_context/store.py:ContextLinkStore._connect]
-      journal: delete
-      busy_ms: 5000
-      busy_source: default
-      protection: keep
-      backup: none
-      protection_gap: Not in the allowlist; DB plan step 6 proposes keep.
-      retention: Body-free context links and use receipts; kept indefinitely.
     - path: <git-common-dir>/ci-recovery.sqlite3
       owner: devops
       kind: operational

@@ -48,7 +48,7 @@ Keep these outcomes separate:
    route and capability, including operator-policy clearance where required.
 5. **Delivery:** independently reviewed changes land with same-head green CI,
    representative real-route proof and required hygiene. Merge, deployment and
-   certification are distinct. The worker only returns a pushed branch.
+   certification are distinct. A worker's pushed branch is a milestone, not delivery.
 
 The denominator is **all protocol gates and requested capability tracks**,
 including clean cases, failed cases, tools and isolation; provider-call success
@@ -81,7 +81,7 @@ they are not a provider forecast or lasting health attestation.
 | --- | --- |
 | `agy --help` | Lists `--model`, `--effort` (`low`, `medium`, `high`, `xhigh`, `max`), `--sandbox`, stream-JSON input/output, `--log-file` and `--disable-slash-commands`. A flag's existence does not prove adapter wiring or effective enforcement. |
 | `agy models` | Lists Gemini 3.8 Flash, 3.7 Flash, 3.6 Flash and 3.1 Pro variants, plus non-Gemini models. No Gemini 4 identity was listed. Listing proves availability only, not permission, tool access or authority suitability. |
-| [AGY adapter](../../scripts/agent_runtime/adapters/agy.py), `build_invocation` and `_resolve_model_flag` | Emits a resolved `--model` slug and rejects unknown explicit models. Effort remains a no-op with the `not yet wired through CLI` diagnostic. `entire_fleet.actual_model` is constructed from configured/resolved values before launch; it is not observed backend identity. Historical docstrings about display-label-only invocation are not current argv evidence. |
+| [AGY adapter](../../scripts/agent_runtime/adapters/agy.py), `build_invocation` and `_resolve_model_flag` | Emits a resolved `--model` slug and rejects unknown explicit models. Effort remains a no-op with the `not yet wired through CLI` diagnostic. Historical docstrings about display-label-only invocation are not current argv evidence. |
 | Same adapter, native `review_isolation` branch | Raises `agy_isolated_review_unsupported` without `review_attempt_boundary`. Existing content attempts with that boundary are a distinct route; their success cannot establish native formal code/infra isolation. |
 | [AGY permission runbook](agy-review-permissions.md), [attempt isolation runbook](formal-review-attempt-isolation.md), [review MCP provisioner](../../scripts/agent_runtime/review_mcp.py) and [receipt ledger](../../scripts/review/receipts/ledger.py) | Source implements scoped Sources exposure, exact tool grants and attempt boundaries for content review. Configuration, unit tests and fixture success do not prove all required tools work for a new candidate/runtime. |
 | [Formal AGY isolation runbook](agy-formal-cf-isolation.md), [catalog](../../scripts/config/model_catalog.yaml), [catalog validation](../../scripts/review/model_catalog.py), [resolver](../../scripts/review/reviewer_resolver.py) and [target admission](../../scripts/agent_runtime/target_admission.py) | Native AGY formal eligibility admits low-risk and medium-risk code review through resolver and target admission. High/critical, infra and security reviews exclude Gemini, including explicit pins and injected ladders. The ACP bridge refuses code review. This admission does not prove authority-seat qualification; qualification cannot override the production gates. |

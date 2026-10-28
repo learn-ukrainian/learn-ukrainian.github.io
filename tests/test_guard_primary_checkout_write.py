@@ -273,6 +273,13 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
         ("echo x &> both.txt", ["both.txt"]),
         ("echo x 2>err.txt", ["err.txt"]),
         ("build > /dev/null", []),
+        ("touch 2>/dev/null", []),
+        ("touch 2 >/dev/null", ["2"]),
+        ("touch '2'>/dev/null", ["2"]),
+        (r"touch \2>/dev/null", ["2"]),
+        ("touch 2147483648>/dev/null", ["2147483648"]),
+        ("touch {fd}>/dev/null", []),
+        ("touch '{fd}'>/dev/null", ["{fd}"]),
         # tee (with wrapper + append flag).
         ("cat a | tee out.txt", ["out.txt"]),
         ("cat a | tee -a log.txt", ["log.txt"]),
@@ -289,6 +296,38 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
 )
 def test_bash_write_targets(command, expected):
     assert hook.bash_write_targets(command) == expected
+
+
+@pytest.mark.parametrize(
+    "redirect", ["", "2>&1", ">/dev/null", ">out", ">>out", "2>/dev/null", "&>out", "<input", "{fd}>out", "true &&>out"]
+)
+@pytest.mark.parametrize("primary", [True, False])
+@pytest.mark.parametrize("suffix", ["", " | cat"])
+def test_leading_redirect_cannot_hide_primary_cd(repo: Path, tmp_path: Path, redirect: str, primary: bool, suffix: str):
+    """A redirect must not hide the cwd used by a later writer (#9490)."""
+    (tmp_path / "input").touch()
+    target = repo if primary else repo / ".worktrees/dispatch/claude/task-1"
+    command = f"{redirect} cd {shlex.quote(str(target))} && touch marker{suffix}"
+    # The recording binary performs no write in the primary fixture.
+    oracle = subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", 'touch() { printf "%s\\n" "$PWD"; }; ' + command],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert oracle.returncode == 0, oracle.stderr
+    assert oracle.stdout.strip() == str(target)
+    result = _run(tmp_path, {"tool_name": "Bash", "cwd": str(tmp_path), "tool_input": {"command": command}})
+    assert result.returncode == (2 if primary else 0), result.stderr
+
+
+@pytest.mark.parametrize("suffix", ["2>&1", ">&2", "2> /dev/null", "{fd}>/dev/null"])
+def test_descriptor_is_not_a_cp_destination(repo: Path, suffix: str):
+    """Descriptor syntax must not become a primary-checkout file operand (#9490)."""
+    command = f"cp input /dev/null {suffix}"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
 
 
 @pytest.mark.parametrize(

@@ -27,7 +27,7 @@ never fine.
    blocker is a token refresh, done through the supported refresh path in the private
    operations doc, not an operator re-login.
 3. **Disk and load.** `df -h .`, `uptime`, `git worktree list | wc -l`. When disk climbs,
-   run the reaper and retention tools before admitting write workers; never delete bulk
+   run the retention tools and clear retained worktrees (published content only) before admitting write workers; never delete bulk
    corpus or data without a separate operator-authorized task (core.md P6).
    **Lane machinery.** Read the latest tick result of the host driver keeper and its lane
    wake. They are host-local code, not in this repository; their units and log location
@@ -55,14 +55,14 @@ never fine.
    blocker line with its age, next action and owner; flag ages over the one-hour target.
    Read keeper reasons for approved green PRs not enqueued. List every `hold` with its
    owning tracker item and removal condition; clear it when that condition is met.
-   Measure stage time across dispatch, review, PR admission CI, queue CI, merge and reap
+   Measure stage time across dispatch, review, PR admission CI, queue CI, merge and closeout
    in both repositories. Act on the slowest stage this cycle, with an owner and next check.
 5. **Live workers.** Active dispatches from the Monitor API, then
    `.venv/bin/python scripts/dispatch.py status <task-id> --run-nonce <nonce>` for each task
    the handoff or the view names; task files outrank a partial view. Every running worker
    has an armed background `dispatch.py wait`. Any terminal status but `done` is an
    attention item; before calling a dispatch dead check open PRs and its worktree for
-   unpushed work; reap after terminal status ([recipes](recipes.md#reap-before-re-dispatch)).
+   unpushed work; check the worktree disposition after terminal status ([recipes](recipes.md#worktree-disposition-before-re-dispatch)).
    List every task result or lane message awaiting a CTO grant or approval, with its age.
    Before any reply, compare running workers per pool with current authorized targets;
    fill a deficit with ready reserve-pool work, or name the blocker. Sent orders are not starts.

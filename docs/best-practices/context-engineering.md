@@ -46,9 +46,6 @@ incomplete packet is not evidence that an order, hold, or stop is absent. Check
 live worker, PR, CI, and queue state through their authoritative interfaces before
 making consequential decisions, as required by
 [core reporting rules](../../agents_extensions/shared/rules/core.md#p0--tool-backed-claims-honest-reporting).
-The [Entire intake skill](../../agents_extensions/shared/skills/entire-context/SKILL.md)
-provides bounded body-free locators. They supplement canonical evidence and do
-not replace authority or formal review.
 
 Routing context also stays current. Use the live catalog and qualified capacity,
 following [core routing rules](../../agents_extensions/shared/rules/core.md#p2--which-model-for-what)
@@ -133,7 +130,7 @@ and an honest report of unresolved gaps. It is not full task completion. The
 [merge and cleanup recipe](../../agents_extensions/shared/rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450)
 requires independent exact-head cross-family approval and same-head green CI before
 enqueue (a PR may open earlier so CI runs), confirmed merge, and common-reaper cleanup. A changed
-head voids approval and CI. The accountable driver owns those steps and the
+head voids approval and CI. The worker that owns the brief (else the accountable driver) runs those steps, and the
 [acceptance and completion evidence](../../agents_extensions/shared/rules/core.md#p3--definition-of-ready-and-definition-of-done).
 Author checks are ordinary verification, not independent held-out proof.
 

@@ -114,7 +114,7 @@ before removal.
 
 Known tool directories (`__pycache__`, `.pytest_cache`, `.ruff_cache`,
 `.mypy_cache`, `.pytest_breadcrumbs`, `.astro`,
-`.hypothesis`, `.tox`, `.nox`, `.entire/logs`, and Git metadata) are excluded. `.cache`
+`.hypothesis`, `.tox`, `.nox`, and Git metadata) are excluded. `.cache`
 itself is deliberately not a tool-cache exemption. Shared state and verified
 provisioned database links survive outside the worktree and are never copied.
 Task output placed in an excluded cache remains disposable. Real `.venv`

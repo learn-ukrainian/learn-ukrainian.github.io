@@ -876,6 +876,70 @@ def test_issue_link_graphql_errors_of_unexpected_shape_fail_without_echo(tmp_pat
     assert "boom" not in result.stdout + result.stderr
 
 
+@pytest.mark.parametrize("failure", [None, sqlite3.OperationalError, sqlite3.DatabaseError, OSError])
+@pytest.mark.parametrize("raw_response", [False, True])
+@pytest.mark.parametrize(
+    "payload,code,error",
+    [
+        ({"errors": [{"type": "FORBIDDEN", "message": f"cred_{LEAKED_TOKEN}_suffix"}]}, 1, "github_graphql_error"),
+        ({"errors": [{"type": "RATE_LIMITED", "message": LEAKED_TOKEN}]}, 75, "github_rate_limited"),
+        ({"errors": [{"type": "RATE_LIMIT", "message": LEAKED_TOKEN}]}, 75, "github_rate_limited"),
+        ({"data": None, "errors": []}, 1, "github_graphql_error"),
+        ({"data": {"viewer": {"login": "unit"}}}, 0, None),
+        ({"data": {"viewer": {"login": "unit"}}, "errors": []}, 0, None),
+    ],
+)
+def test_graphql_persistence_failure_cannot_change_command_result(
+    tmp_path, monkeypatch, failure, raw_response, payload, code, error
+):
+    store, calls = client(tmp_path, [response(payload)])
+    writes = []
+    if failure:
+
+        def fail_every_write(*args, **kwargs):
+            writes.append(1)
+            raise failure("persistent write failure")
+
+        monkeypatch.setattr(gh, "_store_budget", fail_every_write)
+    result = store.request(
+        "POST", "graphql", payload={"query": "query { viewer { login } }"}, raw_response=raw_response
+    )
+    proc = gh._result_process(["gh", "api", "graphql"], result, {}, {"capture_output": True})
+    assert (proc.returncode, result.error) == (code, error)
+    assert len(calls) == 1
+    if failure:
+        assert len(writes) == 2
+    if error:
+        assert LEAKED_TOKEN.encode() not in proc.stdout + proc.stderr
+        detail = json.loads(proc.stderr)
+        assert json.loads(proc.stdout) == detail
+        if error == "github_graphql_error":
+            assert detail == {
+                "error": error,
+                "reset_at": None,
+                "errors": [{"type": "FORBIDDEN", "message": "cred_[REDACTED]_suffix"}] if payload["errors"] else [],
+            }
+        else:
+            assert detail == {"error": error, "reset_at": 2000, "reason": "pool_exhausted"}
+    else:
+        assert json.loads(proc.stdout) == payload
+        assert proc.stderr == b""
+
+
+@pytest.mark.parametrize("message", ["short", "я" * 500, "\u0001" * 500])
+def test_graphql_error_output_caps_count_and_encoded_bytes(tmp_path, monkeypatch, message):
+    result, _ = _publish_link(
+        tmp_path, monkeypatch, [response({"errors": [{"type": "FORBIDDEN", "message": message}] * 5000})]
+    )
+    assert result.returncode == 1
+    for stream in (result.stdout, result.stderr):
+        assert len(stream.encode()) <= 8192
+        errors = json.loads(stream)["errors"]
+        assert 1 < len(errors) <= 11
+        assert errors[0] == {"type": "FORBIDDEN", "message": message}
+        assert errors[-1] == {"type": "TRUNCATED", "message": "Additional GraphQL errors omitted"}
+
+
 def _observe_reaped_descendant(pid, *, process=None):
     """Return ``disappeared`` or ``reaped``. A live descendant raises ``TimeoutExpired``.
 

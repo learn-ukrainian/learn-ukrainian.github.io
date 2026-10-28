@@ -57,8 +57,7 @@ non-skippable:
     and completion terms. Prompt review never replaces exact-head
     implementation or cross-family PR review.
 15. **Simplest adequate solution** (adjust code to data; proportionate review;
-    `review-loop` budget: 1 full + 1 delta, up to 3 deltas for
-    security/data-loss/concurrency, then escalate).
+    the review budget is `agents_extensions/shared/skills/review-loop/references/policy.md`).
 
 ## Non-skippable offline execution guardrails
 
@@ -88,12 +87,12 @@ non-skippable:
   scope. Agents may read or summarize them; they must not treat them as
   operator tasking.
 - Every commit has an `X-Agent: <agent>/<task-id>` trailer. Change tasks end in
-  a pushed branch; never push directly to `main`. Workers neither merge nor
-  arm auto-merge. Gates: `agents_extensions/shared/rules/workflow.md` § Merge policy; steps: the
-  `full-send` (driver) and `full-stop` skills. A PR may open before approval so CI
-  runs; the accountable driver enqueues only after exact-head independent
-  cross-family APPROVE and same-head green CI, then confirms MERGED and
-  common-reaper cleanup. Never leave approved green PRs unmerged; moved heads void both
+  a pushed branch; never push directly to `main`. Nobody arms auto-merge. Gates:
+  `agents_extensions/shared/rules/workflow.md` § Merge policy; steps: the `full-send` and
+  `full-stop` skills. The worker that receives a brief runs its chain to the end (rules core
+  P1): a PR may open before approval so CI runs; it enqueues only after exact-head
+  independent cross-family APPROVE and same-head green CI, then confirms MERGED and closes
+  out, unless its brief says `full-stop`. The accountable driver lands what no brief owns. Never leave approved green PRs unmerged; moved heads void both
   gates and unresolved material findings block landing.
 - Treat unavailable telemetry as unknown, not policy proof. Do not close
   partial work: state verified outcome, denominator, residual gap, and owner.
@@ -110,9 +109,6 @@ non-skippable:
   stream as a catalogued alternate; it must never co-own a live same-stream
   lease. Otherwise its role is coding or review. Do not change plane, retention,
   or formal-review eligibility without operator/advisor GO.
-- On non-trivial work, use the `entire-context` skill: run status and one
-  bounded search before prioritization or dispatch. Treat results as body-free,
-  supplemental locators; record use only when a verified locator informed work.
 - Before delegation, classify role, task family, track, and owned paths for the
   Project Research Registry. Before every `dispatch.py dispatch`, the accountable
   orchestrator records a scoped classification using `--research-role`,

@@ -18,9 +18,13 @@ Issue: #803
 
 from __future__ import annotations
 
+import hashlib
 import sqlite3
 import time
+from contextlib import closing
 from pathlib import Path
+
+from scripts.lib.readonly_sqlite import open_readonly
 
 # Default cache location (relative to project root)
 _DEFAULT_DB = Path(__file__).resolve().parent.parent.parent / "data" / "wiki_cache.db"
@@ -33,6 +37,44 @@ NEGATIVE_SENTINEL = "__404__"
 
 # Short negative TTL (1 hour) so outages and misses do not persist for 30 days (#9016)
 DEFAULT_NEGATIVE_TTL = 3600
+
+
+def read_cached(mode: str, title: str, section: str = "", *, db_path: Path | None = None) -> dict:
+    """Read a cache snapshot without initializing, evicting, refreshing or fetching.
+
+    A missing row is a cache miss, never evidence that an article does not exist.
+    Only fresh positive bodies are returned; other states retain their provenance.
+    """
+    key = {"mode": mode, "title": WikiCache._normalize_title(title), "section": section}
+    checked = int(time.time())
+    result = {
+        "status": "unavailable", "store": "wiki_cache.db", "source_url": "https://uk.wikipedia.org",
+        "key": key, "checked_at": checked, "fetched_at": None, "expires_at": None,
+        "response": None, "response_sha256": None,
+    }
+    try:
+        with closing(open_readonly(db_path if db_path is not None else _DEFAULT_DB)) as conn:
+            row = conn.execute(
+                "SELECT response, fetched_at FROM wiki_cache WHERE mode=? AND title=? AND section=?",
+                (mode, key["title"], section),
+            ).fetchone()
+    except (OSError, sqlite3.Error):
+        return result
+    if row is None:
+        return {**result, "status": "miss"}
+    response, fetched = row
+    result["fetched_at"] = fetched
+    if not isinstance(response, str) or not response.strip() or type(fetched) is not int or not 0 < fetched <= checked:
+        return result
+    expires = fetched + (DEFAULT_NEGATIVE_TTL if response == NEGATIVE_SENTINEL else DEFAULT_TTL)
+    result.update(expires_at=expires, response_sha256=hashlib.sha256(response.encode()).hexdigest())
+    if checked >= expires:
+        result["status"] = "stale"
+    elif response == NEGATIVE_SENTINEL:
+        result["status"] = "negative"
+    else:
+        result.update(status="hit", response=response)
+    return result
 
 
 class WikiCache:

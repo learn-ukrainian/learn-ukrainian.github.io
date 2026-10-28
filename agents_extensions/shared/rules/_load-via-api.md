@@ -60,7 +60,6 @@ to exist but does not inject it into prompts:
                            docs/best-practices/fleet-role-scorecard.md
                            agents_extensions/shared/skills/drive-epic/SKILL.md
     scope=task:fleet-comms agents_extensions/shared/rules/fleet-comms-coordination.md
-    scope=task:intake      agents_extensions/shared/skills/entire-context/SKILL.md
     scope=task:review      agents_extensions/shared/skills/local-code-review/SKILL.md
     scope=task:task-family agents_extensions/shared/skills/task-family-manager/SKILL.md
     scope=task:rollover    agents_extensions/shared/skills/thread-rollover/SKILL.md

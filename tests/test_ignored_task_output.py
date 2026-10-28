@@ -953,7 +953,7 @@ def test_source_change_during_reuse_refuses_removal(checkout, monkeypatch):
     assert source.read_bytes() == b"different"
 
 
-@pytest.mark.parametrize("cache", [".pytest_breadcrumbs", "site/.astro", ".entire/logs", ".hypothesis", ".tox", ".nox"])
+@pytest.mark.parametrize("cache", [".pytest_breadcrumbs", "site/.astro", ".hypothesis", ".tox", ".nox"])
 def test_tool_state_excluded_but_cache_output_survives(checkout, cache):
     (checkout[0] / ".gitignore").write_text(".cache/\n" + cache + "/\n")
     artifact(checkout, f"{cache}/tool.bin", b"regenerable")

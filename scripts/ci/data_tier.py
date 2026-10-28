@@ -286,11 +286,11 @@ def snapshot_databases(primary: Path, checkout: Path, snapshots: Path, *, only: 
     return missing
 
 
-# Provision content only. A nested repository's metadata (.git, and .entire
-# from the Entire CLI hook) would make the copy a second clone with untracked
-# files and a local-only branch, which the worktree-removal guard rightly
-# refuses to discard, so the nightly checkout could never be cleaned up.
-PROVISION_SKIPPED_PARTS = frozenset({".git", ".entire"})
+# Provision content only. A nested repository's metadata (.git) would make the
+# copy a second clone with untracked files and a local-only branch, which the
+# worktree-removal guard rightly refuses to discard, so the nightly checkout
+# could never be cleaned up.
+PROVISION_SKIPPED_PARTS = frozenset({".git"})
 
 
 def provision_host_files(primary: Path, checkout: Path) -> None:

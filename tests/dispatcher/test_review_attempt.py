@@ -45,6 +45,8 @@ def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, mon
     monkeypatch.setattr(git, "resolve_repo", lambda _: (tmp_path, dict(key="public", github="example/public")))
     monkeypatch.setattr(git, "worktree_plan", lambda *a: (tmp_path, "codex/review", "a" * 40))
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
+    # The synthetic head has no Git history to read branch authorship from.
+    monkeypatch.setattr(checks, "check_branch_author_families", lambda *a: None)
     for _ in range(2):
         assert invoke(attempt, "--dry-run") == 0
         plan = json.loads(capsys.readouterr().out)

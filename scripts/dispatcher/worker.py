@@ -321,6 +321,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         invocation = provider.build(spec, child_env(spec))
         try:
             invocation = admission.claude_launch(spec, invocation)
+            # Checked again with the launch's own environment: a managed policy may appear after dispatch.
+            if spec.mode == "read-only" and (refusal := providers.read_only_refusal(spec.agent, invocation.env)):
+                raise ValueError(refusal)
         except ValueError as exc:
             status, error = "failed", str(exc)
             return

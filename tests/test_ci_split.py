@@ -90,10 +90,13 @@ def test_split_cli_prints_one_shard(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     history = tmp_path / "history.txt"
     history.write_text("# comment\ntests/test_b.py  # reads old commits\n\n", encoding="utf-8")
     args = ["--durations", str(durations), "--history", str(history)]
-    monkeypatch.setattr(sys, "stdin", __import__("io").StringIO("tests/test_a.py\ntests/test_b.py\n"))
-    assert split_main(["split", "--shard", "2", "--of", "2", *args]) == 0
+    monkeypatch.setattr(sys, "stdin", __import__("io").StringIO("tests/test_a.py\ntests/test_b.py\ntests/test_new.py\n"))
+    weights = tmp_path / "weights.json"
+    assert split_main(["split", "--shard", "2", "--of", "2", *args, "--weights-out", str(weights)]) == 0
     # b is pinned to shard 1 despite being the shorter file.
     assert capsys.readouterr().out == "tests/test_a.py\n"
+    # Only recorded weights are written; an unrecorded file's median stand-in is not.
+    assert json.loads(weights.read_text(encoding="utf-8")) == {"tests/test_a.py": 5.0}
     with pytest.raises(SystemExit):
         split_main(["split", "--shard", "3", "--of", "2", *args])
 
@@ -120,6 +123,34 @@ def test_durations_sum_testcase_time_per_file(tmp_path: Path, capsys) -> None:
     assert junit_file_seconds([junit]) == {"tests/audit/test_x.py": 3.5, "tests/test_y.py": 0.25}
     assert split_main(["durations", str(junit)]) == 0
     assert json.loads(capsys.readouterr().out) == {"tests/audit/test_x.py": 3.5, "tests/test_y.py": 0.25}
+
+    # --shards: a fast runner's seconds are divided by its speed (median observed/weight),
+    # a listed file that ran no test records 0, and a shard too small to measure keeps its seconds.
+    fast = tmp_path / "shards/pytest-junit-shard-1"
+    fast.mkdir(parents=True)
+    names = [f"tests/test_f{index}.py" for index in range(10)]
+    (fast / "pytest-shard-1-files.txt").write_text("\n".join([*names, "tests/test_deselected.py"]) + "\n")
+    (fast / "pytest-shard-1-weights.json").write_text(json.dumps({name: 10.0 for name in [*names, "tests/test_deselected.py"]}))
+    (fast / "pytest-shard-1.xml").write_text(
+        "<testsuite>"
+        + "".join(f'<testcase classname="tests.test_f{index}" name="test_a" time="6"/>' for index in range(10))
+        + "</testsuite>"
+    )
+    alone = tmp_path / "shards/pytest-junit-shard-2"
+    alone.mkdir()
+    (alone / "pytest-shard-2-files.txt").write_text("tests/test_big.py\n")
+    (alone / "pytest-shard-2-weights.json").write_text('{"tests/test_big.py": 900}')
+    (alone / "pytest-shard-2.xml").write_text('<testsuite><testcase classname="tests.test_big" name="t" time="600"/></testsuite>')
+    assert split_main(["durations", "--shards", str(tmp_path / "shards")]) == 0
+    recorded = capsys.readouterr()
+    assert json.loads(recorded.out) == {
+        **{name: 10.0 for name in names},
+        "tests/test_deselected.py": 0.0,
+        "tests/test_big.py": 600.0,
+    }
+    assert "pytest-shard-1=0.60 pytest-shard-2=1.00" in recorded.err
+    with pytest.raises(SystemExit):
+        split_main(["durations", str(junit), "--shards", str(tmp_path / "shards")])
 
 
 def test_committed_durations_are_seconds_per_test_file() -> None:
@@ -828,7 +859,13 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert deferred['reason'] == 'recorded estimate exceeds 600 second cap'
     del weights['tests/test_new.py']
     (repo / affected.DURATIONS).write_text(json.dumps(weights))
-    assert affected.plan(base, candidate)['reason'] == 'recorded duration unknown'
+    # A new test file with no recorded duration is weighted at the median and still runs.
+    unrecorded = affected.plan(base, candidate)
+    assert unrecorded['unknown_duration_files'] == ['tests/test_new.py']
+    assert unrecorded['reason'] is None
+    assert unrecorded['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
+    assert unrecorded['deferred_files'] == []
+    assert unrecorded['estimate_seconds'] == 67
     weights['tests/test_new.py'] = -1
     (repo / affected.DURATIONS).write_text(json.dumps(weights))
     with pytest.raises(ValueError, match='invalid recorded duration'):

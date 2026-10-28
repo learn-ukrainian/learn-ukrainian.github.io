@@ -50,6 +50,8 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 from scripts.common.scratch import DEFAULT_SCRATCH_ROOT, fallback_scratch_root, resolve_scratch_root
 from scripts.common.task_scratch import TaskScratchError, mount_points
 from scripts.common.task_store_paths import tasks_dir
+from scripts.hygiene import batch_state_retention
+from scripts.hygiene.batch_state_retention import EXCLUDED, default_batch_root, load_holds, scratch_expiry
 from scripts.hygiene.retention_engine import plan_digest, reap_attributed_temp
 from scripts.hygiene.tmp_sweep_ledger import (
     DEFAULT_DIGEST_LIMIT,
@@ -411,6 +413,7 @@ def classify_path(
     now: float,
     min_age_s: float,
     scratch: ScratchPolicy | None = None,
+    batch_state: bool = False,
 ) -> dict[str, Any]:
     """Return a privacy-safe inventory row and the proof used by the apply recheck.
 
@@ -443,11 +446,29 @@ def classify_path(
     if EXCLUDED_NAMES.match(path.name):
         row["reason"] = "excluded_name"
         return row
+    if batch_state and path.name in EXCLUDED:
+        row["reason"] = "expiry_excluded"
+        return row
     row["bytes"], newest, changed, tree_reason = tree_facts(path)
     row["newest_mtime"] = newest
     row["newest_change"] = changed
     row["age_hours"] = round(max(0, now - newest) / 3600, 2)
-    matches = task_attribution(path.name, records)
+    if batch_state:
+        metadata, problem = scratch_expiry(path, origin=path, now=now)
+        if problem:
+            row["reason"] = problem
+            return row
+        row["expiry"] = metadata
+        matches = [metadata["owner"]] if metadata["owner"] in records else []
+        if not matches:
+            row["reason"] = "expiry_owner_unknown"
+            return row
+        expiry = datetime.fromisoformat(metadata["delete_after"].replace("Z", "+00:00")).timestamp()
+        if changed > expiry:
+            row["reason"] = "expiry_reused"
+            return row
+    else:
+        matches = task_attribution(path.name, records)
     if matches:
         row["task"] = matches[0]
         row["task_record"] = records[matches[0]]
@@ -497,7 +518,7 @@ def classify_path(
             reason = "task_completion_unknown"
         else:
             if tasks.complete:
-                reason = "dead_attributed_task"
+                reason = "expired_scratch" if batch_state else "dead_attributed_task"
                 row["decision"] = "would_reap"
             else:
                 reason = "task_inventory_unknown"
@@ -513,7 +534,11 @@ def proof_digest(row: dict[str, Any]) -> str:
 def attribution_changed(row: dict[str, Any], records: dict[str, dict[str, Any]]) -> bool:
     """True when the task owning ``row`` (or its absence) no longer holds byte-for-byte."""
     expected = [row["task"]] if row["task"] else []
-    if task_attribution(row["name"], records) != expected:
+    if row.get("expiry"):
+        actual = [row["expiry"]["owner"]] if row["expiry"]["owner"] in records else []
+    else:
+        actual = task_attribution(row["name"], records)
+    if actual != expected:
         return True
     return bool(row["task"]) and records.get(row["task"]) != row.get("task_record")
 
@@ -880,6 +905,10 @@ def quarantined_problem(
     inventory = load_tasks(task_root)
     if not inventory.complete:
         return "quarantine_task_inventory_unknown"
+    if row.get("expiry"):
+        _, problem = scratch_expiry(quarantined, origin=origin, now=time.time(), expected=row["expiry"])
+        if problem:
+            return problem
     if attribution_changed(row, inventory.records) or any(
         task_referenced(path, inventory.references) for path in (origin, quarantined)
     ):
@@ -934,6 +963,7 @@ def quarantine_entry(
             "kind": row["kind"],
             "reason": row["reason"],
             "task": row["task"],
+            **({"expiry": row["expiry"], "task_record": row["task_record"]} if row.get("expiry") else {}),
             "allocated_bytes": row["bytes"],
             **facts,
         }
@@ -982,6 +1012,14 @@ def purge_problem(entry: Entry, task_root: Path) -> str | None:
         return "purge_task_inventory_unknown"
     if any(task_referenced(path, inventory.references) for path in (entry.original, location)):
         return "purge_task_reference"
+    if entry.intent.get("expiry"):
+        _, problem = scratch_expiry(location, origin=entry.original, now=time.time(), expected=entry.intent["expiry"])
+        if problem:
+            return problem
+        record = inventory.records.get(entry.intent["expiry"]["owner"])
+        if (record != entry.intent.get("task_record") or record is None
+                or record["status"] not in REAPABLE_STATES):
+            return "purge_task_owner_changed"
     references, complete = process_snapshot()
     if any(ref == location or location in ref.parents for _, ref in references):
         return "purge_live_process"
@@ -1119,6 +1157,7 @@ def sweep(
     state_dir: Path | None = None,
     quarantine_s: float = DEFAULT_QUARANTINE_S,
     digest_limit: int = DEFAULT_DIGEST_LIMIT,
+    batch_state: bool = False,
 ) -> dict[str, Any]:
     """Inventory top-level unmanaged entries; on ``apply``, purge expired quarantine, then quarantine proven ones.
 
@@ -1139,7 +1178,13 @@ def sweep(
     ):
         raise ValueError("temp root must be a real temporary directory")
     root = temp_root.resolve()
+    if batch_state and (root != repo_root.resolve() / "batch_state" or scratch is not None):
+        raise ValueError("batch expiry requires the repository batch_state root and explicit metadata")
+    if batch_state:
+        load_holds(batch_state_retention.RETENTION_LIST)  # No batch mutation with unreadable holds.
     allowed_areas = {*SYSTEM_TEMP_AREAS, *protected_roots()}
+    if batch_state:
+        allowed_areas.add(root)
     if not any(root == area.resolve() or area.resolve() in root.parents for area in allowed_areas):
         raise ValueError("temp root is outside system temp and configured scratch areas")
     if scratch is not None and not any(
@@ -1161,13 +1206,15 @@ def sweep(
             run_id=run_id,
             quarantine_s=quarantine_s,
             digest_limit=digest_limit,
+            batch_state=batch_state,
         )
-        from scripts.hygiene.pytest_retention import sweep_pytest_runs
+        if not batch_state:
+            from scripts.hygiene.pytest_retention import sweep_pytest_runs
 
-        report["pytest_retention"] = sweep_pytest_runs(
-            apply=apply, ledger=ledger, run_id=run_id, task_root=tasks, quarantine_s=quarantine_s, repo_root=repo_root,
-        )
-        report["errors"] += report["pytest_retention"]["errors"]
+            report["pytest_retention"] = sweep_pytest_runs(
+                apply=apply, ledger=ledger, run_id=run_id, task_root=tasks, quarantine_s=quarantine_s, repo_root=repo_root,
+            )
+            report["errors"] += report["pytest_retention"]["errors"]
         report["digest"] = plan_digest(report)
         return report
 
@@ -1184,6 +1231,7 @@ def _sweep_locked(
     run_id: str,
     quarantine_s: float,
     digest_limit: int,
+    batch_state: bool = False,
 ) -> dict[str, Any]:
     root_fd = os.open(root, _DIR_FLAGS)
     quarantine: Quarantine | None = None
@@ -1231,6 +1279,7 @@ def _sweep_locked(
                     now=time.time(),
                     min_age_s=min_age_s,
                     scratch=scratch,
+                    batch_state=batch_state,
                 )
                 if apply and row["decision"] == "would_reap":
                     # The pre-rename snapshot is taken before the fresh proof, so
@@ -1247,6 +1296,7 @@ def _sweep_locked(
                         now=time.time(),
                         min_age_s=min_age_s,
                         scratch=scratch,
+                        batch_state=batch_state,
                     )
                     if before is None or fresh["decision"] != "would_reap" or proof_digest(fresh) != proof_digest(row):
                         row = fresh | {"decision": "preserve", "reason": "proof_changed"}
@@ -1628,6 +1678,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep --json\n"
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --summary\n"
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep --unattributed-scratch --apply --summary\n"
+            "  .venv/bin/python -m scripts.hygiene.tmp_sweep --batch-state --summary\n"
             "  .venv/bin/python -m scripts.hygiene.tmp_sweep restore <ledger-id>\n"
             "Outputs: stdout inventory (or --summary counts) with ledger location, quarantine and purge totals; "
             "with --apply, appends to the ledger, moves proven entries into quarantine and deletes only "
@@ -1639,9 +1690,13 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--batch-state", action="store_true",
+        help="Sweep explicitly marked batch_state scratch with current holds and exact task ownership; unknown state is retained. Uses the existing quarantine window (default off).",
+    )
+    parser.add_argument(
         "--temp-root",
         type=Path,
-        default=Path("/tmp"),
+        default=None,
         help="System temp area to inventory (default /tmp; example /private/tmp).",
     )
     parser.add_argument(
@@ -1712,6 +1767,8 @@ def main(argv: list[str] | None = None) -> int:
         return ledger_main(argv)
     parser = build_parser()
     args = parser.parse_args(argv)
+    if args.batch_state and (args.temp_root is not None or args.unattributed_scratch):
+        parser.error("--batch-state cannot be combined with --temp-root or --unattributed-scratch")
     try:
         scratch = (
             ScratchPolicy(min_age_s=args.scratch_age_hours * 3600, quiet_s=args.scratch_quiet_hours * 3600)
@@ -1721,7 +1778,8 @@ def main(argv: list[str] | None = None) -> int:
         if not math.isfinite(args.digest_limit_mib) or args.digest_limit_mib < 0:
             raise ValueError("digest limit must be finite and non-negative")
         report = sweep(
-            temp_root=args.temp_root,
+            temp_root=default_batch_root() if args.batch_state else args.temp_root or SYSTEM_TEMP_AREAS[0],
+            repo_root=default_batch_root().parent if args.batch_state else REPO_ROOT,
             task_root=args.task_root,
             min_age_s=args.min_age_hours * 3600,
             scratch=scratch,
@@ -1729,6 +1787,7 @@ def main(argv: list[str] | None = None) -> int:
             state_dir=args.state_dir,
             quarantine_s=args.quarantine_days * 86400,
             digest_limit=int(args.digest_limit_mib * (1 << 20)),
+            batch_state=args.batch_state,
         )
     except LedgerError as error:
         # The step in progress stays unconfirmed in the ledger, and the next run reconciles it.
@@ -1743,7 +1802,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print("| Entry | Allocated bytes | Task / live PID attribution | Decision | Reason |")
         print("|---|---:|---|---|---|")
-        for row in report["rows"] + report["pytest_retention"]["rows"]:
+        for row in report["rows"] + report.get("pytest_retention", {}).get("rows", []):
             name = json.dumps(row["name"], ensure_ascii=True).replace("|", "\\|")
             owner = row["task"] or ("live process" if row["live_pids"] else "unknown")
             print(f"| {name} | {row['bytes']} | {owner} | {row['decision']} | {row['reason']} |")
@@ -1757,9 +1816,10 @@ def main(argv: list[str] | None = None) -> int:
         print(
             f"bytes_reclaimable={report['bytes_reclaimable']} bytes_reclaimed={report['bytes_reclaimed']} free_bytes={report['free_bytes']} projected_free_bytes={report['projected_free_bytes']}"
         )
-        print("pytest_retention=" + json.dumps({
-            key: value for key, value in report["pytest_retention"].items() if key != "rows"
-        }, sort_keys=True))
+        if "pytest_retention" in report:
+            print("pytest_retention=" + json.dumps({
+                key: value for key, value in report["pytest_retention"].items() if key != "rows"
+            }, sort_keys=True))
     return 1 if report["errors"] else 0
 
 

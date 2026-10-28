@@ -53,16 +53,6 @@ _ALLOWLIST: tuple[tuple[str, str, int], ...] = (
         1,
     ),
     (
-        "scripts/entire_context/reconcile.py",
-        'with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:',
-        1,
-    ),
-    (
-        "scripts/entire_context/resolvers.py",
-        'with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:',
-        1,
-    ),
-    (
         "scripts/orchestration/slot_routing.py",
         'conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)',
         1,
