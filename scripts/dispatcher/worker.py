@@ -234,10 +234,11 @@ def _borrowed(record: dict) -> bool:
         for other in store.list_tasks())
 
 
-# Dispositions that can change once other processes end, the work is published (pushed or merged
-# after the task ended), or a transient Git, lock, claim or removal failure clears; the next dispatch's
-# crash recovery settles these again, in a fresh process, and still removes only with the proof.
-RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
+# Dispositions that can change once other processes end, the tree is committed or reverted, the work is
+# published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
+# clears; the next dispatch's crash recovery settles these again, in a fresh process, and still removes
+# only with the proof. A tree that is still dirty is kept again, so only a changed tree is removed.
+RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
                            "unpublished", "remote_mismatch", "unknown", "removal_refused",
                            "worktree_remove_failed", "settlement_failed"})
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.

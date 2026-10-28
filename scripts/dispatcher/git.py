@@ -455,7 +455,7 @@ def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
         changed, untracked = _tree_changes(tree)
         head, remote, merged = _git(tree, "rev-parse", "HEAD", isolate=True), None, False
         if changed:
-            return disposition("retained", "dirty")
+            return disposition("retained", "dirty", "; ".join(changed[:5]))
         committed = head != record.get("worktree_start_sha", record["worktree_base_sha"])
         if record["mode"] != "read-only" and committed:
             remote, merged = _canonical_publication(record, f"refs/heads/{record.get('publish_branch') or branch}", head)
