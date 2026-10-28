@@ -1,0 +1,139 @@
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: ohoiko-ocr-acute-rejoin-2026-10-28
+batch_label: ohoiko-ocr-acute-rejoin-2026-10-28
+reviewer: operator-ordered-source-restoration
+reviewed_at: '2026-10-28'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 9
+  approved_in_queue: 9
+  promotion_batch_size: 9
+production_outputs_updated: []
+decisions:
+- lemma: клієнт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: client (male, female)
+  sense_note: Source-backed OCR header restoration; no surface admission.
+  source_inventory:
+    key: f65339d373bb5854
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ocr-acute-rejoin-2026-10-28.yaml
+    locator: 'ohoiko-1000-words entry 352 :: acute-rejoin::клієн -> клієнт'
+    source_id: ohoiko-ocr-acute-rejoin-2026-10-28
+    source_family: ohoiko
+  evidence_refs:
+  - VESUM via Sources verify_words / inspect_word
+  - raw record SHA-256 981a549410e4105163abaf8edf23f9d75f4585c90e3e5b729ec33efc5ef0cb84
+- lemma: клієнтка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: client (male, female)
+  sense_note: Source-backed OCR header restoration; no surface admission.
+  source_inventory:
+    key: a19771b812c3960e
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ocr-acute-rejoin-2026-10-28.yaml
+    locator: 'ohoiko-1000-words entry 352 :: acute-rejoin::клієн -> клієнтка'
+    source_id: ohoiko-ocr-acute-rejoin-2026-10-28
+    source_family: ohoiko
+  evidence_refs:
+  - VESUM via Sources verify_words / inspect_word
+  - raw record SHA-256 981a549410e4105163abaf8edf23f9d75f4585c90e3e5b729ec33efc5ef0cb84
+- lemma: проєкт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: project
+  sense_note: Source-backed OCR header restoration; no surface admission.
+  source_inventory:
+    key: e2c07b2a978ac4a1
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ocr-acute-rejoin-2026-10-28.yaml
+    locator: 'ohoiko-1000-words entry 685 :: acute-rejoin::проєк -> проєкт'
+    source_id: ohoiko-ocr-acute-rejoin-2026-10-28
+    source_family: ohoiko
+  evidence_refs:
+  - VESUM via Sources verify_words / inspect_word
+  - raw record SHA-256 dd91391f2f26bbb2d909952e42e9a91b7e4d2a6b87ba9e333064290576a7af35
+- lemma: об'єднувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to unite sth/sb [to come together, to unite]
+  sense_note: Source-backed OCR header restoration; no surface admission.
+  source_inventory:
+    key: 099ef54f4035da52
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ocr-acute-rejoin-2026-10-28.yaml
+    locator: 'ohoiko-500-verbs entry 277 :: acute-rejoin::об''єд -> об''єднувати'
+    source_id: ohoiko-ocr-acute-rejoin-2026-10-28
+    source_family: ohoiko
+  evidence_refs:
+  - VESUM via Sources verify_words / inspect_word
+  - raw record SHA-256 737129460ed9cc057a720caba6c8358d40eb484888a9b5282649c3175f5e2d48
+- lemma: об'єднати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to unite sth/sb [to come together, to unite]
+  sense_note: Source-backed OCR header restoration; no surface admission.
+  source_inventory:
+    key: 5934cf4a7ea18151
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ocr-acute-rejoin-2026-10-28.yaml
+    locator: 'ohoiko-500-verbs entry 277 :: acute-rejoin::об''єд -> об''єднати'
+    source_id: ohoiko-ocr-acute-rejoin-2026-10-28
+    source_family: ohoiko
+  evidence_refs:
+  - VESUM via Sources verify_words / inspect_word
+  - raw record SHA-256 737129460ed9cc057a720caba6c8358d40eb484888a9b5282649c3175f5e2d48
+- lemma: поєднувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to combine sth [to combine]
+  sense_note: Source-backed OCR header restoration; no surface admission.
+  source_inventory:
+    key: 357bf64154aedc95
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ocr-acute-rejoin-2026-10-28.yaml
+    locator: 'ohoiko-500-verbs entry 341 :: acute-rejoin::поєд -> поєднувати'
+    source_id: ohoiko-ocr-acute-rejoin-2026-10-28
+    source_family: ohoiko
+  evidence_refs:
+  - VESUM via Sources verify_words / inspect_word
+  - raw record SHA-256 8644f06f6379419badf55b4e9e524e60c8cc6870153985807f0c85596e4ba642
+- lemma: поєднати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to combine sth [to combine]
+  sense_note: Source-backed OCR header restoration; no surface admission.
+  source_inventory:
+    key: a8c1f438484c9de0
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ocr-acute-rejoin-2026-10-28.yaml
+    locator: 'ohoiko-500-verbs entry 341 :: acute-rejoin::поєд -> поєднати'
+    source_id: ohoiko-ocr-acute-rejoin-2026-10-28
+    source_family: ohoiko
+  evidence_refs:
+  - VESUM via Sources verify_words / inspect_word
+  - raw record SHA-256 8644f06f6379419badf55b4e9e524e60c8cc6870153985807f0c85596e4ba642
+- lemma: приєднувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to add, to attach, to join sth [to join]
+  sense_note: Source-backed OCR header restoration; no surface admission.
+  source_inventory:
+    key: b6eb9be1a1bef68c
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ocr-acute-rejoin-2026-10-28.yaml
+    locator: 'ohoiko-500-verbs entry 365 :: acute-rejoin::приєд -> приєднувати'
+    source_id: ohoiko-ocr-acute-rejoin-2026-10-28
+    source_family: ohoiko
+  evidence_refs:
+  - VESUM via Sources verify_words / inspect_word
+  - raw record SHA-256 3e22e8845f403f44e0c856a0dca3d250bb1fd40ed37b7ccd8f57af313b8b0971
+- lemma: приєднати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to add, to attach, to join sth [to join]
+  sense_note: Source-backed OCR header restoration; no surface admission.
+  source_inventory:
+    key: 6df4dc3139188bfa
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ocr-acute-rejoin-2026-10-28.yaml
+    locator: 'ohoiko-500-verbs entry 365 :: acute-rejoin::приєд -> приєднати'
+    source_id: ohoiko-ocr-acute-rejoin-2026-10-28
+    source_family: ohoiko
+  evidence_refs:
+  - VESUM via Sources verify_words / inspect_word
+  - raw record SHA-256 3e22e8845f403f44e0c856a0dca3d250bb1fd40ed37b7ccd8f57af313b8b0971

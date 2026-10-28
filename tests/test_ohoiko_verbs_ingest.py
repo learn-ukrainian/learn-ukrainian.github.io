@@ -30,6 +30,28 @@ import pytest
 from scripts.ingest import ohoiko_verbs_ingest as ovi
 from scripts.ingest._section_coverage import ensure_section_schema
 
+
+@pytest.mark.parametrize(
+    ("number", "fragment", "perfective", "stems", "gloss"),
+    [
+        (277, "об’єд", "об’єдна́ти", "об’єдну- | об’єдна-", "to unite sth/sb [to come together, to unite]"),
+        (341, "поєд", "поєдна́ти", "поєдну- | поєдна-", "to combine sth [to combine]"),
+        (365, "приєд", "приєдна́ти", "приєдну- | приєдна-", "to add, to attach, to join sth [to join]"),
+    ],
+)
+def test_displaced_acute_after_gloss_does_not_truncate_verb_headword(
+    tmp_path: Path, number: int, fragment: str, perfective: str, stems: str, gloss: str,
+) -> None:
+    """The continuation belongs to the Ukrainian header, across its English gloss."""
+    from scripts.lexicon.lemma_normalization import strip_acute_stress
+
+    raw = f"{fragment}\n{gloss}\ń нувати [ся] | {perfective} [ся]    Present / Future Stems: {stems}\n"
+    source = tmp_path / "verbs.txt"
+    source.write_text(f"№{number}\n{raw}", encoding="utf-8")
+    verb, = ovi.parse_book(source)
+    assert strip_acute_stress(verb.title) == f"{fragment}нувати [ся] | {strip_acute_stress(perfective)} [ся]"
+    assert verb.render() == raw
+
 FIXTURE_TXT = (
     "Some grammar guide content here.\nMore intro text.\n\n"
     "\x0c№1\n\n"
