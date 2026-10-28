@@ -1,5 +1,6 @@
 """Deterministic provider executable copied into disposable dispatcher repositories."""
 
+import json
 import os
 import signal
 import subprocess
@@ -11,9 +12,14 @@ from pathlib import Path
 def build(spec, env):
     from scripts.dispatcher.types import Invocation
 
+    stdin = spec.prompt_file.read_bytes()
+    if spec.agent == "agy":
+        stdin = (json.dumps({"event": "user", "message": {
+            "role": "user", "content": [{"type": "text", "text": stdin.decode()}],
+        }}) + "\n").encode()
     return Invocation(
         [sys.executable, str(Path(__file__)), spec.model, str(spec.prompt_file), str(spec.final_file)],
-        spec.prompt_file.read_bytes(),
+        stdin,
         env,
         spec.final_file if spec.model == "file" else None,
     )
@@ -43,7 +49,7 @@ while not Path(sys.argv[2]).exists():
 
 
 def main():
-    model, prompt, final = sys.argv[1:]
+    model, prompt, final = sys.argv[1:4]
     prompt = Path(prompt)
     prompt.with_suffix(".started.tmp").write_text(str(os.getpid()))
     prompt.with_suffix(".started.tmp").replace(prompt.with_suffix(".started"))
@@ -76,6 +82,8 @@ def main():
     if model == "crash":
         os.kill(os.getpid(), signal.SIGKILL)
     text = sys.stdin.buffer.read().decode()
+    if text.startswith('{"event": "user",'):
+        text = json.loads(text)["message"]["content"][0]["text"]
     # Echo the user's request, after the dispatcher resource catalog a real model would consume.
     if text.startswith("Dispatcher-provided shared skills"):
         text = text.split("\n</dispatch-context>\n\n", 1)[1]
