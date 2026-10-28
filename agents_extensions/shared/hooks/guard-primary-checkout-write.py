@@ -2073,13 +2073,28 @@ def _is_git_binary(cmd: str) -> bool:
     return cmd in {"git", "git.exe"} or cmd.endswith("/git")
 
 
-def _is_single_simple_git_command(command: str) -> bool:
-    """Whether the whole command is one plain Git invocation (issue #11381).
+# The only Git writes a foreign repository may receive (issue #11381, AC-01),
+# with the only options they may carry. Any other option can run a command,
+# write outside the target or select another target.
+_PLAIN_FOREIGN_GIT_WRITES = {
+    "merge": {"--ff-only", "--ff", "--no-ff", "--no-edit", "--stat", "--no-stat", "-q", "--quiet", "-v", "--verbose"},
+    "pull": {
+        "--ff-only", "--ff", "--no-ff", "--no-edit", "--rebase", "--no-rebase", "-q", "--quiet", "-v", "--verbose",
+    },
+    "add": {"-A", "--all", "-u", "--update", "-N", "--intent-to-add", "-n", "--dry-run", "-v", "--verbose"},
+    "apply": {"--index", "--cached", "-3", "--3way", "--check", "--stat", "-R", "--reverse", "-v", "--verbose"},
+    "checkout": {"-q", "--quiet"},
+    "restore": {"-q", "--quiet", "-W", "--worktree", "-S", "--staged"},
+}
+
+
+def _is_plain_foreign_git_write(command: str) -> bool:
+    """Whether the whole command is one plain AC-01 Git write (issue #11381).
 
     Only such a command may use the foreign-repository exemption. Operators,
     groups, substitutions, redirections, wrappers, environment assignments,
-    configuration options and output files can all change the probed target
-    before or while Git runs, so any of them keeps the fail-closed decision.
+    Git configuration options and any option outside the allowlist can change
+    the probed target or act outside it, so they keep the fail-closed decision.
     """
     tokens = _tokenize(command)
     while tokens and tokens[-1] == "\n":
@@ -2093,10 +2108,12 @@ def _is_single_simple_git_command(command: str) -> bool:
     ):
         return False
     _, _, rest = _git_global_prefix(words[1:])
+    if not rest or rest[0] not in _PLAIN_FOREIGN_GIT_WRITES:
+        return False
     if any(word.startswith(("-c", "--config-env", "--exec-path")) for word in words[1 : len(words) - len(rest)]):
         return False
     options = rest[1 : rest.index("--")] if "--" in rest else rest[1:]
-    return not any(word.startswith(("-o", "--output")) for word in options)
+    return all(word in _PLAIN_FOREIGN_GIT_WRITES[rest[0]] for word in options if word.startswith("-"))
 
 
 def bash_git_write_intents(
@@ -2164,6 +2181,11 @@ def bash_git_write_intents(
         if not rest:
             continue
         sub = rest[0]
+        if sub.startswith("-"):
+            # An unmodeled global option hides the subcommand and the target.
+            if sub not in {"--version", "-v", "--help", "-h", "--exec-path", "--html-path", "--man-path", "--info-path"}:
+                record({"kind": "unparsed_option", "paths": [], "summary": f"git {sub}", "allowlisted": False})
+            continue
         sub_args = rest[1:]
         option_args = sub_args[: sub_args.index("--")] if "--" in sub_args else sub_args
 
@@ -2725,8 +2747,6 @@ def main() -> int:
     if is_shell_tool(tool_name) and command and not allow_primary_git:
         try:
             for intent in git_intents:
-                if intent.get("allowlisted"):
-                    continue
                 summary = str(intent.get("summary") or "git write")
                 intent_root = wc.resolve_main_root(_protected_repo_anchor())
                 options = intent.get("git_options") or []
@@ -2738,6 +2758,8 @@ def main() -> int:
                     or intent.get("git_config_redirected")
                 ):
                     return _block_uncertain("undecidable_git_environment")
+                if intent.get("kind") == "unparsed_option":
+                    return _block_uncertain("undecidable_git_global_option")
                 if any(getattr(option, "unresolved_at", None) is not None for option in options):
                     return _block_git_mediated(summary, intent_root, reason="unresolved_shell_variable")
                 segment_cwd = intent.get("segment_cwd", cwd)
@@ -2750,21 +2772,24 @@ def main() -> int:
                 git_cwd = target.cwd
                 if not wc.is_protected_branch(intent_root):
                     continue
-                # A foreign index can still explicitly target our primary.
-                if target.common_dir != protected.common_dir and wc.classify_repo_path(target.worktree, cwd=intent_root) != "primary_checkout":
-                    if not _is_single_simple_git_command(command):
-                        return _block_uncertain("foreign_git_target_requires_single_git_command")
-                    continue
                 if intent.get("kind") == "worktree_remove":
                     for raw in intent.get("paths") or []:
                         decision = _bash_path_decision(raw, str(git_cwd), wc, intent_root)
                         if not decision.allowed:
                             return _block_git_mediated(summary, intent_root, reason=decision.reason)
                     continue
+                # A foreign index can still explicitly target our primary.
+                if target.common_dir != protected.common_dir and wc.classify_repo_path(target.worktree, cwd=intent_root) != "primary_checkout":
+                    if not _is_plain_foreign_git_write(command):
+                        return _block_uncertain("foreign_git_target_requires_plain_git_write")
+                    continue
                 # Primary Git metadata stays protected even with a foreign worktree.
                 if wc.classify_repo_path(git_cwd, cwd=intent_root) != "primary_checkout":
                     if target.git_dir == protected.common_dir:
                         return _block_git_mediated(summary, intent_root, reason="git_mediated_primary_worktree")
+                    continue
+                # Rescue forms restore the primary from its own index, never another one.
+                if intent.get("allowlisted") and target.git_dir == protected.common_dir:
                     continue
                 paths = list(intent.get("paths") or [])
                 if not paths:

@@ -1051,6 +1051,23 @@ def test_issue_11381_target_changed_before_git_write_blocked(
         " && git -C {link} checkout HEAD -- curriculum/tracked.md",
         "{{ git -C {link} checkout HEAD -- curriculum/tracked.md; }} & ln -sfn {primary} {link}",
         "( git -C {link} checkout HEAD -- curriculum/tracked.md ) & ln -sfn {primary} {link}",
+        # Delta-2 reproducers: rescue forms and options that run commands or
+        # reach outside the foreign target.
+        "git -C {other} log -1 --format='[core]%nworktree = {primary}' --output={other}/.git/config"
+        " && git -C {link} checkout -- curriculum/tracked.md",
+        "git -c core.fsmonitor='ln -sfn {primary} {link}; false' -C {other} status"
+        " && git -C {link} checkout -- curriculum/tracked.md",
+        "( git -C {link} checkout -- curriculum/tracked.md ) & ln -sfn {primary} {link}",
+        "( git -C {link} restore curriculum/tracked.md ) & ln -sfn {primary} {link}",
+        "git -C {other} rebase --exec 'touch {primary}/pwned' HEAD",
+        "git -C {other} pull --upload-pack='touch {primary}/pwned' {other}",
+        "git -C {other} pull --upload='touch {primary}/pwned' {other}",
+        "git --attr-source HEAD -c core.fsmonitor='touch {primary}/pwned' -C {other} merge --ff-only HEAD",
+        "git -C {other} apply --unsafe-paths change.diff",
+        "git -C {other} apply --unsafe change.diff",
+        "git -C {other} merge -s ours origin/main",
+        "git -C {other} cherry-pick origin/main",
+        "git -C {other} reset --hard",
         "git -C {link} checkout HEAD -- curriculum/tracked.md | ln -sfn {primary} {link}",
         "git -C {link} checkout HEAD -- curriculum/tracked.md & ln -sfn {primary} {link}",
         # Anything beyond one plain Git invocation keeps the fail-closed decision.
@@ -1106,6 +1123,10 @@ def test_issue_11381_foreign_exemption_requires_single_plain_git_command(
         "git -C {other} merge --ff-only origin/main  # sync",
         "/usr/bin/git -C {other} pull",
         "git -C {other} checkout -- curriculum/tracked.md",
+        "git -C {other} restore curriculum/tracked.md",
+        "git -C {other} pull --rebase",
+        "git -C {other} add -A",
+        "git --version",
     ],
 )
 def test_issue_11381_single_plain_git_command_keeps_foreign_exemption(
@@ -1150,9 +1171,30 @@ def test_issue_11381_redirected_git_target_blocked(repo: Path, repo_template: Pa
 
 
 @pytest.mark.parametrize(
+    "command",
+    [
+        "git -C {other} checkout -- curriculum/tracked.md",
+        "git -C {other} restore curriculum/tracked.md",
+        "git -C {other} merge --ff-only origin/main",
+    ],
+)
+def test_issue_11381_foreign_git_dir_with_stored_primary_worktree_blocked(
+    repo: Path, repo_template: Path, tmp_path: Path, command: str
+):
+    other = _materialize_repo(repo_template, tmp_path / "other")
+    _git(other, "config", "core.worktree", str(repo))
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command.format(other=other)}}
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
     ("command", "expected"),
     [
         ("GIT_WORK_TREE={primary} git checkout HEAD -- curriculum/tracked.md", 2),
+        ("GIT_WORK_TREE={primary} git --git-dir={primary}/../other/.git checkout -- curriculum/tracked.md", 2),
+        ("git --no-advice -C {primary} merge --ff-only origin/main", 2),
         ("env GIT_DIR={primary}/.git git add curriculum/tracked.md", 2),
         ("export GIT_DIR={primary}/.git; git add curriculum/tracked.md", 2),
         ("export GIT_WORK_TREE={primary}; bash -c 'git checkout HEAD -- curriculum/tracked.md'", 2),
