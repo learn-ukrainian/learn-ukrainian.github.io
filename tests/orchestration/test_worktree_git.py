@@ -265,6 +265,38 @@ def test_active_probe_missing_record_leaves_activity_unknown(tmp_path, monkeypat
     assert "active_task_probe_timeout" in rows[-1]["reason"]
 
 
+@pytest.mark.parametrize(
+    ("change", "suffix"),
+    [
+        ({}, None),
+        ({"task_id": "someone-else"}, "local_task_identity_mismatch"),
+        ({"worktree_path": None}, "local_task_binding_missing"),
+        ({"pid": 0}, "local_task_pid_invalid"),
+        ({"pid": "123"}, "local_task_pid_invalid"),
+        ({"pid": True}, "local_task_pid_invalid"),
+        ({"status": "running"}, "local_task_nonterminal task-id=probe-fallback"),
+    ],
+)
+def test_active_probe_fallback_trusts_only_a_bound_terminal_record(tmp_path, monkeypatch, change, suffix):
+    """A Monitor outage clears a checkout only through its own finished task record."""
+    repo = init_repo(tmp_path)
+    worktree, task_file, record = _probe_fixture(repo, monkeypatch, TimeoutError("deadline"))
+    task_file.write_text(json.dumps({**record, **change}))
+    info = next(info for info in wg.list_git_worktrees(repo) if info.path == worktree)
+
+    active_ids, error = wg._resolve_activity_probe(repo, info, wg._read_active_task_probe())
+
+    if suffix is None:
+        assert (active_ids, error) == (set(), None)
+        rows = [json.loads(line) for line in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+        assert rows[-1]["event"] == "activity-probe-fallback"
+        assert rows[-1]["status"] == "done"
+    else:
+        assert active_ids is None
+        assert error is not None and "active_task_probe_timeout" in error
+        assert error.endswith(f"; {suffix}")
+
+
 # --- Branch pruning --
 
 

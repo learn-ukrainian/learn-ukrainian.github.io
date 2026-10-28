@@ -2732,7 +2732,7 @@ def _full_disk(monkeypatch, *readings):
     """Ported from tests/test_delegate_admission.py::_full_disk."""
     from scripts.orchestration import dispatch_admission
 
-    seen = {"readings": list(readings), "reaper": [], "alerts": []}
+    seen = {"readings": list(readings), "alerts": []}
 
     def probe():
         values = seen["readings"]
@@ -2740,12 +2740,7 @@ def _full_disk(monkeypatch, *readings):
         used_bytes = int(400 * 1024**3 * used / 100)
         return dispatch_admission.DiskProbe(used_bytes=used_bytes, free_bytes=400 * 1024**3 - used_bytes)
 
-    def reaper(repo_root, _timeout_s=None):
-        seen["reaper"].append(repo_root)
-        return dispatch_admission.ReaperOutcome(ran=True, detail="reaper removed 0 worktree(s)")
-
     monkeypatch.setattr(dispatch_admission, "probe_disk", probe)
-    monkeypatch.setattr(dispatch_admission, "run_disk_reaper", reaper)
     monkeypatch.setattr(dispatch_admission, "post_disk_alert", lambda body, _key: seen["alerts"].append(body))
     return seen
 
@@ -2993,7 +2988,6 @@ def test_live_forced_dispatch_on_a_full_disk_stops_at_the_first_gate(admission_d
     disk = _full_disk(monkeypatch, 90.0)
     assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
     # Disk admission measures, alerts and refuses; only each task's creator removes its worktree.
-    assert disk["reaper"] == []
     assert disk["alerts"]
     assert "--force-admission cannot override a full disk" in capsys.readouterr().err
     assert not admission_dispatch.spawned
@@ -3007,7 +3001,6 @@ def test_locked_recheck_holds_a_disk_refusal_against_a_force_reason(admission_di
     disk = _full_disk(monkeypatch, 60.0, 90.0)
     monkeypatch.setattr(git, "create_worktree", lambda *_a, **_k: pytest.fail("must not create a worktree"))
     assert admission_dispatch.dispatch("--force-admission", "hotfix while the disk drains") == 4
-    assert disk["reaper"] == []
     err = capsys.readouterr().err
     assert "disk 90.0% used" in err and "--force-admission cannot override a full disk" in err
     assert not admission_dispatch.spawned
