@@ -18,7 +18,7 @@ inline:
           - 'голова'
           - 'кашель'
         explanation: 'Лікар means doctor.'
-      - sentence: 'У мене ___.'
+      - sentence: "(Say that you have a fever.) У мене ___."
         answer: 'температура'
         options:
           - 'температура'

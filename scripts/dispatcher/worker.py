@@ -11,6 +11,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from scripts.agent_runtime import bounded_advisory
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
@@ -18,6 +19,24 @@ from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers,
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 from scripts.dispatcher.watchdog import DeadlineExpired, communicate, deadlines, liveness_paths
+from scripts.review.model_catalog import advisory_role_policy
+
+
+def _seal_advisory_result(record: dict, result: Path) -> None:
+    """Seal an advisory decision's result as written (``bounded_advisory.seal_advisor_result``).
+
+    A seal that cannot be computed is left out, so every consumer refuses the
+    result as unsealed; it never stops the record from settling.
+    """
+    try:
+        fence = advisory_role_policy(record["advisory_role"]).fence
+        response = result.read_bytes().decode("utf-8")
+    except (KeyError, OSError, UnicodeDecodeError, ValueError) as exc:
+        record["advisory_seal_error"] = f"{type(exc).__name__}: {exc}"[:300]
+        return
+    record[bounded_advisory.SEAL_FIELD] = bounded_advisory.seal_advisor_result(
+        response, model=record.get("model"), run_nonce=record.get("run_nonce"), fence=fence
+    )
 
 
 def _identity(pid: int | None) -> str | None:
@@ -215,10 +234,14 @@ def _borrowed(record: dict) -> bool:
         for other in store.list_tasks())
 
 
-# Dispositions that can change once other processes end or the work is published (pushed or merged
-# after the task ended); crash recovery settles these again and still removes only with the proof.
+# Dispositions that can change once other processes end, the work is published (pushed or merged
+# after the task ended), or a transient Git, lock, claim or removal failure clears; the next dispatch's
+# crash recovery settles these again, in a fresh process, and still removes only with the proof.
 RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
-                           "unpublished", "remote_mismatch"})
+                           "unpublished", "remote_mismatch", "unknown", "removal_refused",
+                           "worktree_remove_failed", "settlement_failed"})
+# Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
+SETTLE_PATIENCE = 10
 
 
 def _reap_settled(record: dict, patience: float = 0) -> None:
@@ -228,6 +251,7 @@ def _reap_settled(record: dict, patience: float = 0) -> None:
     cannot be proven either way keeps it.
     """
     deadline = time.monotonic() + patience
+    record.pop("worktree_disposition_detail", None)  # a retry replaces an earlier attempt's detail
     while (alive := _provider_alive(record)) and time.monotonic() < deadline:
         time.sleep(0.05)
     if alive is not False:
@@ -427,6 +451,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if text is not None:
                 spec.final_file.write_text(text)
                 spec.final_file.chmod(0o600)
+                if record.get("advisory_role") is not None:
+                    _seal_advisory_result(record, spec.final_file)
             record.update(
                 status=status,
                 returncode=returncode,
@@ -446,10 +472,13 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                     resolved_model_known=resolved_model is not None,
                     resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
                 )
-            # Settle before publishing the terminal record, so a waiter never sees the worktree mid-removal.
             record["provider_pgid"] = child.pid if child else None
-            _reap_settled(record, patience=2)
-            store.replace(record, path)
+            # The removal chokepoint releases a tree only to a finished owner record, so publish it, then
+            # settle; wait() reads a terminal record under this lock and never sees the tree mid-removal.
+            with store.task_state_lock(path):
+                store.replace(record, path)
+                _reap_settled(record, patience=SETTLE_PATIENCE)
+                store.replace(record, path)
         finally:
             signal.signal(signal.SIGTERM, previous_term)
             signal.signal(signal.SIGINT, previous_int)
@@ -493,5 +522,8 @@ def cancel(task_id: str, nonce: str | None = None) -> dict:
 
 
 if __name__ == "__main__":
+    # Run as -m, this module is __main__; a later `import scripts.dispatcher.worker` (the removal chokepoint's
+    # liveness proof) must get this running copy, not a second one loaded from a checkout that has moved since.
+    sys.modules.setdefault("scripts.dispatcher.worker", sys.modules[__name__])
     settings = json.load(sys.stdin)
     supervise(Path(sys.argv[1]), **settings)

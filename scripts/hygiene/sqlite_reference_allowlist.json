@@ -805,16 +805,6 @@
     ]
   },
   {
-    "path": "scripts/projects/open_model_data/build_decolonization_cases.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Sources read opens mode=ro with a percent-encoded URI because ensure_reproducible_sum20_table creates a temp table, which query_only refuses.",
-    "calls": [
-      "sqlite3.connect(sources_path.resolve().as_uri() + '?mode=ro', uri=True)"
-    ]
-  },
-  {
     "path": "scripts/projects/open_model_data/document_signal_manifest.py",
     "reference_count": 3,
     "kind": "writer",
@@ -887,14 +877,6 @@
       "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)",
       "sqlite3.connect(path)"
     ]
-  },
-  {
-    "path": "scripts/projects/open_model_data/review_build/components/__init__.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing read-only snapshot reader or dynamic component loader on the rebased main; tracked by #9662.",
-    "calls": []
   },
   {
     "path": "scripts/publish/recovery.py",

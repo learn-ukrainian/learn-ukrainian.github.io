@@ -875,9 +875,19 @@ def test_form_choice_prints_store_spelling_and_state_is_byte_stable(tmp_path, mo
     validate_fixture_draft(draft)
     first, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert first["checks"][6]["code"] == "requires_receipt_missing"
+    ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)
+    assert ledger["attempts"] == []
+    assert ledger["regenerations"] == 0
+    assert ledger["terminal_layer"] is None
+    assert "awaiting_requires" in ledger
+    questions = state / "lesson-1.requires-questions.yaml"
+    assert lock.check(questions)
+    assert len(yaml.safe_load(questions.read_text())["questions"]) == 1
+    assert (state / "lesson-1.requires-confirm.prompt.md").is_file()
     _confirm_fixture_form(state, draft["activities"][0]["items"][0])
     first, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert first["passed"] is True, first
+    assert "awaiting_requires" not in load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)
     assert first["checks"][6]["details"]["requirement_receipts"] == [
         {"activity": "a1", "item": 0, "requirement": "confirmed"}
     ]

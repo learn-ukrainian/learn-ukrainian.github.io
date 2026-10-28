@@ -2,8 +2,8 @@
   "schema": "store-access-baseline.v1",
   "base_commit": "e467138966bff83cec3edaff87f103d5bda07b84",
   "counts": {
-    "raw_store_constructor": 12,
-    "store_path": 384,
+    "raw_store_constructor": 11,
+    "store_path": 383,
     "test_import_access": 1
   },
   "file_counts": {
@@ -1454,20 +1454,6 @@
       "kind": "store_path",
       "scope": "query_vesum_evidence",
       "fingerprint": "c56bd473c9139f536cc91e92eae2894c9f7869e407dfa2b74502916ec18f3d28",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/projects/open_model_data/build_decolonization_cases.py",
-      "kind": "raw_store_constructor",
-      "scope": "build_all_cases",
-      "fingerprint": "5df83a4ec6bb75b5e8721c6248ae37728d419017d6ea4739f69772c39ff94139",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/projects/open_model_data/build_decolonization_cases.py",
-      "kind": "store_path",
-      "scope": "build_all_cases",
-      "fingerprint": "7592382d63d008b8f8dc108592b526dd295402c57fcbcda79eac236948a1640a",
       "occurrence": 0
     },
     {

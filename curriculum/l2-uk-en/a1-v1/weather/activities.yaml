@@ -26,28 +26,28 @@ inline:
     title: Погода і пора року
     instruction: Обери логічну погоду для кожної пори року або температури.
     items:
-      - sentence: 'Взимку часто ___.'
+      - sentence: "(It snows.) Взимку часто ___."
         answer: іде сніг
         options:
           - іде сніг
           - іде дощ
           - світить сонце
         explanation: 'Сніг first connects with зима.'
-      - sentence: 'Влітку дуже ___.'
+      - sentence: "(Hot.) Влітку дуже ___."
         answer: спекотно
         options:
           - спекотно
           - холодно
           - хмарно
         explanation: 'Спекотно is the safe A1 word for hot weather.'
-      - sentence: 'Восени часто ___.'
+      - sentence: "(It rains.) Восени часто ___."
         answer: іде дощ
         options:
           - іде дощ
           - іде сніг
           - сонячно
         explanation: 'Осінь often connects with rain in this first weather map.'
-      - sentence: 'Навесні ___ і красиво.'
+      - sentence: "(Warm.) Навесні ___ і красиво."
         answer: тепло
         options:
           - тепло
@@ -94,7 +94,7 @@ inline:
           - любить
           - робить
         explanation: 'Use the phrase тобі подобається.'
-      - sentence: '— Чому ти любиш літо? — Тому що влітку ___.'
+      - sentence: "(Sunny.) — Чому ти любиш літо? — Тому що влітку ___."
         answer: сонячно
         options:
           - сонячно

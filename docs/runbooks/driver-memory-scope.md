@@ -410,8 +410,22 @@ Test parent saturation separately after its cap is approved.
 Escape classes remain uncontained: login shells, terminal-multiplexer panes
 started outside a launcher (including new panes created through an existing
 multiplexer server) and ad hoc commands run from them. The operator owns that
-residual. Repository detached jobs are a separate step of #9624. Per-session
-containment does not complete the whole issue denominator.
+residual.
+
+The detached lexicon enrich, reduce and class-B re-enrich launchers and the
+retrieval bake-off enter `lu.slice` with their existing memory maxima and
+`MemorySwapMax=0`. `scripts/lib/job_memory_scope.sh` checks the actual kernel
+placement, job limits and finite parent-pool limits before executing the
+workload. Missing containment refuses the launch; the plain detached and RSS
+watchdog fallbacks have been removed. The optional pre-push validation scope
+checks the same pool and swap limits in its existing readiness handshake.
+The retired detached pytest precheck is no longer an entry point.
+
+These controls cover the enumerated repository launch paths. Login shells,
+existing multiplexer servers, ad hoc operator work and deployment-only helper
+or service limits remain outside this implementation. The full #9624
+denominator and per-class live-soak certification remain open with DevOps;
+operator boundary decisions remain with the operator.
 
 References: [systemd-run](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd-run.xml),
 [memory controls](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd.resource-control.xml),

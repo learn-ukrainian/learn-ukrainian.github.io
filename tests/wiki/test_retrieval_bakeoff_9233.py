@@ -11,6 +11,34 @@ import pytest
 from scripts.wiki.diagnostics import retrieval_bakeoff_9233 as bakeoff
 
 
+def test_unavailable_memory_scope_starts_no_unbounded_compute(tmp_path: Path, monkeypatch) -> None:
+    launches = []
+    monkeypatch.setattr(
+        bakeoff.subprocess, "run", lambda *a, **kw: SimpleNamespace(returncode=1)
+    )
+    monkeypatch.setattr(
+        bakeoff.subprocess, "Popen",
+        lambda *a, **kw: launches.append(a) or SimpleNamespace(pid=123),
+    )
+    with pytest.raises(RuntimeError, match="memory scope unavailable"):
+        bakeoff._launch_heavy(dict, (), {}, tmp_path)
+    assert launches == []
+
+
+def test_failed_actual_memory_scope_never_retries_unbounded(tmp_path: Path, monkeypatch) -> None:
+    launches = []
+    monkeypatch.setattr(
+        bakeoff.subprocess, "run", lambda *a, **kw: SimpleNamespace(returncode=0)
+    )
+    monkeypatch.setattr(
+        bakeoff.subprocess, "Popen",
+        lambda *a, **kw: launches.append(a) or SimpleNamespace(pid=123, poll=lambda: 1),
+    )
+    with pytest.raises(RuntimeError, match="memory scope failed"):
+        bakeoff._launch_heavy(dict, (), {}, tmp_path)
+    assert len(launches) == 1
+
+
 def _vesum(path: Path) -> sqlite3.Connection:
     conn = sqlite3.connect(path)
     conn.executescript(

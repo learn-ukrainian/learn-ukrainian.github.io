@@ -302,6 +302,27 @@ def _run_transport(command, **kwargs):
     return github_client.run(command, **kwargs)
 
 
+def merge_readiness_runner(runner=None):
+    """The read transport ``pr-merge`` gives its readiness reads; it performs no write itself.
+
+    Reads are fresh and a stale observation or typed refusal is raised, never judged.
+    """
+
+    def readiness_runner(args, **kwargs):
+        if runner is None:
+            kwargs["fresh"] = True
+        result = _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
+        observation = getattr(result, "github_result", None)
+        if observation is not None and observation.stale:
+            raise github_client.GitHubRateLimited(observation.reset_at, observation.reason)
+        refusal = github_client.refusal_of(result, injected=runner is not None)
+        if refusal is not None:
+            raise refusal
+        return result
+
+    return readiness_runner
+
+
 SQUASH_TEXT_QUERY = (
     "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){"
     "pullRequest(number:$number){headRefOid isMergeQueueEnabled "
@@ -522,17 +543,7 @@ def publish(
                     raise gate.PublishBlocked("OPSEC: publisher text is not UTF-8.") from None
         _refuse_verdict_markers(verb, fields)
 
-        def readiness_runner(args, **kwargs):
-            if runner is None:
-                kwargs["fresh"] = True
-            result = _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
-            observation = getattr(result, "github_result", None)
-            if observation is not None and observation.stale:
-                raise github_client.GitHubRateLimited(observation.reset_at, observation.reason)
-            refusal = github_client.refusal_of(result, injected=runner is not None)
-            if refusal is not None:
-                raise refusal
-            return result
+        readiness_runner = merge_readiness_runner(runner)
 
         def queue_probe():
             identity = readiness_runner(

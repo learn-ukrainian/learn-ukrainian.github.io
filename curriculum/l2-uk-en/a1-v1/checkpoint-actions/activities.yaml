@@ -100,14 +100,14 @@ inline:
     title: Діалог із сусідом
     instruction: Complete the dialogue with the modal, question word, or verb form.
     items:
-      - sentence: 'Олег: ___ готує сьогодні?'
+      - sentence: "(Ask who is cooking.) Олег: ___ готує сьогодні?"
         answer: Хто
         options:
           - Хто
           - Коли
           - Як
         explanation: Хто asks which person.
-      - sentence: 'Олег: Коли ти ___?'
+      - sentence: "(Ask when the person wakes up.) Олег: Коли ти ___?"
         answer: прокидаєшся
         options:
           - прокидаєшся
@@ -135,7 +135,7 @@ inline:
           - читаєш
           - робиш
         explanation: Любиш + infinitive asks about liking an action.
-      - sentence: 'Олег: Я ___ готувати сьогодні.'
+      - sentence: "(Express desire: want to.) Олег: Я ___ готувати сьогодні."
         answer: хочу
         options:
           - хочу
@@ -161,28 +161,28 @@ inline:
     title: Мій день
     instruction: Choose the word that completes the short day description.
     items:
-      - sentence: ___ я прокидаюся о сьомій.
+      - sentence: "(First.) ___ я прокидаюся о сьомій."
         answer: Спочатку
         options:
           - Спочатку
           - Нарешті
           - Чому
         explanation: Спочатку starts the routine.
-      - sentence: Потім я ___ і чищу зуби.
+      - sentence: "(I wash up.) Потім я ___ і чищу зуби."
         answer: вмиваюся
         options:
           - вмиваюся
           - працюю
           - читаю
         explanation: Вмиваюся is the morning routine form.
-      - sentence: Після цього я ___ вдома.
+      - sentence: "(I have breakfast.) Після цього я ___ вдома."
         answer: снідаю
         options:
           - снідаю
           - говорю
           - пишу
         explanation: Снідаю fits the morning sequence.
-      - sentence: Вдень я ___ в офісі.
+      - sentence: "(I work.) Вдень я ___ в офісі."
         answer: працюю
         options:
           - працюю

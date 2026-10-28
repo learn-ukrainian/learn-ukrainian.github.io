@@ -15,7 +15,14 @@ from pathlib import Path
 
 import pytest
 
-from scripts.lib.readonly_sqlite import SerializedConnection, SerializedCursor, open_readonly
+from scripts.api.resilience import connect_sqlite
+from scripts.lib.readonly_sqlite import (
+    CorpusDatabaseWriteRefused,
+    SerializedConnection,
+    SerializedCursor,
+    open_readonly,
+)
+from scripts.wiki import sources_db
 
 
 @pytest.fixture
@@ -67,6 +74,73 @@ def test_vacuum_into_is_refused(database, tmp_path):
         with pytest.raises(sqlite3.OperationalError, match="too many attached databases"):
             conn.execute("VACUUM INTO ?", (str(target),))
     assert not target.exists()
+
+
+def test_query_only_off_allows_temp_tables_and_refuses_main_writes(database):
+    before = database.read_bytes()
+    with closing(open_readonly(database, query_only=False)) as conn:
+        assert conn.execute("PRAGMA query_only").fetchone() == (0,)
+        conn.execute("CREATE TEMP TABLE scratch (id INTEGER)")
+        conn.execute("INSERT INTO scratch VALUES (1)")
+        assert conn.execute("SELECT id FROM scratch").fetchall() == [(1,)]
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("INSERT INTO synthetic VALUES (8)")
+    assert database.read_bytes() == before
+
+
+def test_special_parent_directory_still_refuses_a_writable_corpus_name(tmp_path):
+    for fragment in ("review?case", "review#case"):
+        database = tmp_path / fragment / "sources.db"
+        database.parent.mkdir()
+        with pytest.raises(CorpusDatabaseWriteRefused, match=r"sources\.db"):
+            connect_sqlite(str(database))
+
+
+def test_sources_db_writer_may_open_through_connect_sqlite(tmp_path):
+    database = tmp_path / "sources.db"
+    source = (
+        "def _review_probe(path):\n"
+        "    from scripts.api.resilience import connect_sqlite\n"
+        "    return connect_sqlite(str(path))\n"
+    )
+    exec(compile(source, sources_db.__file__, "exec"), sources_db.__dict__)
+    try:
+        connection = sources_db._review_probe(database)
+        connection.execute("CREATE TABLE sample (id INTEGER)")
+        connection.close()
+    finally:
+        del sources_db._review_probe
+    assert database.is_file()
+
+
+def test_open_helper_does_not_authorize_a_nested_writable_connect(tmp_path, monkeypatch):
+    probe = tmp_path / "probe" / "sources.db"
+    probe.parent.mkdir()
+
+    def nested(_path, **_kwargs):
+        return connect_sqlite(str(probe))
+
+    monkeypatch.setattr(sources_db, "open_readonly", nested)
+    with pytest.raises(CorpusDatabaseWriteRefused, match=r"sources\.db"):
+        sources_db._open_conn(tmp_path / "sources.db", read_only=True)
+    assert not probe.exists()
+
+
+def test_ingest_ancestor_may_write_through_a_nonwriter_relay(tmp_path):
+    database = tmp_path / "sources.db"
+    source = "def _review_ancestor(path, relay):\n    return relay(path)\n"
+    exec(compile(source, sources_db.__file__, "exec"), sources_db.__dict__)
+
+    def relay(path):
+        return sources_db._open_conn(path)
+
+    try:
+        connection = sources_db._review_ancestor(database, relay)
+        connection.execute("CREATE TABLE sample (id INTEGER)")
+        connection.close()
+    finally:
+        del sources_db._review_ancestor
+    assert database.is_file()
 
 
 def test_schema_and_journal_pragmas_cannot_write(database):

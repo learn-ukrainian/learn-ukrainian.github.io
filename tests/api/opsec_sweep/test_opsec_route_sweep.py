@@ -1071,7 +1071,7 @@ def test_isolated_fixture_denies_real_database_access(isolated_fixture: Isolated
     )
     connection: sqlite3.Connection | None = None
     try:
-        with pytest.raises(AssertionError, match="forbids real database access"):
+        with pytest.raises(PermissionError, match=r"sources\.db"):
             connection = sources_db._open_conn(real_db_path)
     finally:
         if connection is not None:

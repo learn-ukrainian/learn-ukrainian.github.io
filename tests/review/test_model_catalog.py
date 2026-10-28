@@ -1052,6 +1052,17 @@ MUSE_REVIEW_CANDIDATE = {
     "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high",
     "review_profiles": ["code"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
 }
+def _pop_budget_extension_role(catalog):
+    """Remove the review budget extension role (cto-7eba-adv-extension2) and return what it added."""
+    role = "review_budget_extension"
+    consult = catalog["review_scheduler"]["activity_roles"]["consult"]
+    consult.remove(role)
+    holders = sorted(model_id for model_id, model in catalog["models"].items() if role in model["roles"])
+    for model_id in holders:
+        catalog["models"][model_id]["roles"].remove(role)
+    return {"advisory_roles": catalog.pop("advisory_roles"), "consult": role, "holders": holders}
+
+
 def assert_frozen_surfaces(actual, *, surfaces):
     """Compare surviving catalog/resolver results with the literal current fixture."""
     assert set(actual) == set(surfaces)
@@ -1061,6 +1072,10 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
+            # The advisory budget extension role is a consult role held by Sol and Opus; it moves no
+            # seat, route or review ranking.
+            extension = _pop_budget_extension_role(value)
+            assert hashlib.sha256(encode(extension)).hexdigest() == "8f8213328a04a6562564724e55ec083a00cdc11f0e228bba263bc5d5dedbf06c"
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 

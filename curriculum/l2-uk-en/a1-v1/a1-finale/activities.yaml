@@ -4,49 +4,49 @@ inline:
     title: Complete the A1 line
     instruction: Choose the word or phrase that fits the time and situation.
     items:
-      - sentence: 'Зранку я ___ у кафе.'
+      - sentence: "(Past tense, male speaker.) Учора зранку я ___ у кафе."
         answer: 'снідав'
         options:
           - 'снідав'
           - 'буду снідати'
           - 'снідаю'
-        explanation: 'Зранку can describe an earlier part of the day in the final story.'
-      - sentence: 'Зараз я ___ по Хрещатику.'
+        explanation: "Учора and the past-tense cue fix a past morning; the male-speaker cue selects снідав."
+      - sentence: "(Use present tense.) Зараз я ___ по Хрещатику."
         answer: 'гуляю'
         options:
           - 'гуляю'
           - 'гуляв'
           - 'буду гуляти'
         explanation: 'Зараз points to the present.'
-      - sentence: 'Учора я ___ квиток.'
+      - sentence: "(Use past tense, male speaker.) Учора я ___ квиток."
         answer: 'купив'
         options:
           - 'купив'
           - 'купую'
           - 'буду купувати'
         explanation: 'Учора points to the past.'
-      - sentence: 'Завтра я ___ по Україні.'
+      - sentence: "(Use the compound future: бути + infinitive.) Завтра я ___ по Україні."
         answer: 'буду подорожувати'
         options:
           - 'буду подорожувати'
           - 'подорожував'
           - 'подорожую'
         explanation: 'Завтра pairs with буду + infinitive.'
-      - sentence: 'Ввечері ми ___ в кіно.'
+      - sentence: "(Use past tense.) Учора ввечері ми ___ в кіно."
         answer: 'ходили'
         options:
           - 'ходили'
           - 'ходимо'
           - 'будемо ходити'
         explanation: 'This line reports what happened in the evening.'
-      - sentence: 'Зараз Олена ___ борщ і салат.'
+      - sentence: "(Use present tense.) Зараз Олена ___ борщ і салат."
         answer: 'замовляє'
         options:
           - 'замовляє'
           - 'замовляла'
           - 'буде замовляти'
         explanation: 'Зараз points to the present.'
-      - sentence: 'Учора була гарна погода, і ми ___ в парку.'
+      - sentence: "(Use past tense.) Учора була гарна погода, і ми ___ в парку."
         answer: 'гуляли'
         options:
           - 'гуляли'
@@ -214,7 +214,7 @@ workbook:
           - 'коштує'
           - 'болить'
         explanation: 'Мене звати introduces your name.'
-      - sentence: 'Зранку я ___ у кафе.'
+      - sentence: "(Past tense, male speaker.) Учора зранку я ___ у кафе."
         answer: 'снідав'
         options:
           - 'снідав'

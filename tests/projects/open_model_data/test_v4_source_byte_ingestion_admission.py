@@ -384,6 +384,23 @@ def test_build_receipt_records_live_reachability_against_a_synthetic_store(tmp_p
     assert by_id["db.textbooks.public"]["row_count_observed_at_admission"] == 1
 
 
+def test_special_character_path_opens_exact_file_readonly(tmp_path: Path) -> None:
+    path = tmp_path / "space ї # ?.db"
+    with sqlite3.connect(path) as conn:
+        conn.execute("CREATE TABLE synthetic (id INTEGER)")
+        conn.execute("INSERT INTO synthetic VALUES (7)")
+        conn.commit()
+    before = path.read_bytes()
+    connection = admission._connect_read_only(path)
+    try:
+        assert connection.execute("SELECT id FROM synthetic").fetchall() == [(7,)]
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            connection.execute("INSERT INTO synthetic VALUES (8)")
+    finally:
+        connection.close()
+    assert path.read_bytes() == before
+
+
 def test_build_receipt_records_unreachable_when_local_store_absent(tmp_path: Path) -> None:
     receipt = admission.build_receipt(primary_root=tmp_path)
     for unit in receipt["admitted_source_units"]:

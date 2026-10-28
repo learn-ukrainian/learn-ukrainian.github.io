@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 import re
+import sqlite3
 from pathlib import Path
+
+import pytest
 
 from scripts.api.resilience import (
     connect_sqlite,
     get_resilience_snapshot,
     reset_resilience_stats_for_tests,
 )
+from scripts.lib.readonly_sqlite import CorpusDatabaseWriteRefused
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -33,6 +37,36 @@ def test_slow_sql_caller_never_exposes_absolute_filesystem_root(monkeypatch, tmp
         assert "/home/" not in caller
         assert "/Users/" not in caller
     assert any(caller.startswith("tests/test_api_resilience.py:") for caller in callers)
+
+
+def test_connect_sqlite_refuses_writable_corpus_databases(tmp_path):
+    sources = tmp_path / "sources.db"
+    vesum = tmp_path / "vesum.db"
+    other = tmp_path / "notes.db"
+    for path in (sources, vesum):
+        with pytest.raises(CorpusDatabaseWriteRefused, match=path.name):
+            connect_sqlite(str(path))
+        uri = path.resolve().as_uri() + "?mode=ro"
+        with pytest.raises(sqlite3.OperationalError):
+            connect_sqlite(uri, uri=True)
+    conn = connect_sqlite(str(other))
+    conn.execute("CREATE TABLE sample (id INTEGER)")
+    conn.close()
+
+
+def test_declared_writer_may_open_sources_db_through_connect_sqlite(tmp_path, monkeypatch):
+    from scripts.lib import readonly_sqlite
+
+    monkeypatch.setattr(
+        readonly_sqlite,
+        "_declared_writer_paths",
+        lambda: frozenset({readonly_sqlite._script_path(__file__)}),
+    )
+    database = tmp_path / "sources.db"
+    connection = connect_sqlite(str(database))
+    connection.execute("CREATE TABLE sample (id INTEGER)")
+    connection.close()
+    assert database.is_file()
 
 
 def test_services_sh_loopback_bind_and_match_contract():

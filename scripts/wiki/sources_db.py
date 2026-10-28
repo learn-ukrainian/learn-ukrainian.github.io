@@ -53,7 +53,11 @@ from scripts.lexicon.runner.ulif_dictua_store import (
     ULIF_DICTUA_ENTRIES_DDL,
     ulif_dictua_entries_table_sql,
 )
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from scripts.lib.readonly_sqlite import (
+    SQLiteConnection,
+    open_readonly,
+    refuse_writable_corpus_database,
+)
 
 # ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
 # The top-level ``audit/`` tree is a namespace package, so ``import audit``
@@ -1871,6 +1875,7 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
         # that CPython 3.12 corrupts under concurrent use (#11217).
         conn = open_readonly(db_path, check_same_thread=False, factory=_connection_factory)
     else:
+        refuse_writable_corpus_database(db_path, factory="scripts/wiki/sources_db.py")
         options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
         conn = _open_writer_conn(db_path, options)
     conn.row_factory = sqlite3.Row

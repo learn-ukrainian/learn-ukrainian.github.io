@@ -366,6 +366,10 @@
         "sha256": "9a6be21d3fb920bb0fa90f5e594144a65dbf4f2d5c033c3dbbe1aab59a900313"
       },
       {
+        "path": "scripts/lexicon/repair_ohoiko_headwords.py",
+        "sha256": "6aa27ce1d77187a89af66aa7eaf7b415972d54b8ef12a2166209bced2e48dcf0"
+      },
+      {
         "path": "scripts/lexicon/repair_plural_noun_aliases.py",
         "sha256": "9242789d49580c5ad20eb13526b5d2b0f4af161483bd282179b2e2b2eed00136"
       },
