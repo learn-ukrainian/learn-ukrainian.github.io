@@ -1,0 +1,351 @@
+{
+  "schema": "uk-behaviour-freeze/1",
+  "status": "PROTOCOL_FROZEN_DATA_UNSEALED",
+  "observed_base_sha": "fac2b6595a53453cc8ea98ed18298852c8798f06",
+  "protocol": "uk-behaviour/1",
+  "scorer": "uk-behaviour-score/1",
+  "baseline_authorized_by_this_artifact": false,
+  "splits": {
+    "development": {
+      "fresh_lesson": 5,
+      "fresh_activities": 10,
+      "v7_module": 4,
+      "card_meaning_review": 5,
+      "passage_review": 12,
+      "items": 36,
+      "passage_seeds": 64,
+      "passage_protected": {
+        "dialect": 16,
+        "heritage": 16,
+        "rare_valid": 16
+      }
+    },
+    "selection": {
+      "fresh_lesson": 5,
+      "fresh_activities": 10,
+      "v7_module": 4,
+      "card_meaning_review": 5,
+      "passage_review": 12,
+      "items": 36,
+      "passage_seeds": 64,
+      "passage_protected": {
+        "dialect": 16,
+        "heritage": 16,
+        "rare_valid": 16
+      }
+    },
+    "final": {
+      "fresh_lesson": 5,
+      "fresh_activities": 10,
+      "v7_module": 4,
+      "card_meaning_review": 5,
+      "passage_review": 12,
+      "items": 36,
+      "passage_seeds": 64,
+      "passage_protected": {
+        "dialect": 16,
+        "heritage": 16,
+        "rare_valid": 16
+      }
+    }
+  },
+  "repeats": 3,
+  "totals": {
+    "items": 108,
+    "candidate_outcomes": 324,
+    "judge_outcomes": 324,
+    "passage_seeds": 192,
+    "passage_protected_spans": 144
+  },
+  "budget": {
+    "candidate_calls": 324,
+    "judge_calls": 324,
+    "total_paid_invocations": 648,
+    "hard_timeout_seconds": 1200,
+    "wall_seconds": 172800,
+    "concurrency": 2,
+    "per_provider_concurrency": 1,
+    "sources_calls_total_ceiling": 31104,
+    "retry_calls": 0
+  },
+  "candidate": {
+    "model": "gpt-6.1-sol",
+    "family": "openai",
+    "harness": "codex",
+    "effort": "high"
+  },
+  "judge": {
+    "model": "claude-opus-5-5",
+    "family": "anthropic",
+    "harness": "claude",
+    "effort": "high",
+    "sources_required": true,
+    "qualification": "UNVERIFIED"
+  },
+  "future_candidate_configuration": [
+    {
+      "family": "anthropic",
+      "harness": "claude",
+      "model_role": "Opus or Sonnet",
+      "enabled": false,
+      "judge_family_exclusions": [
+        "anthropic"
+      ]
+    },
+    {
+      "family": "google",
+      "harness": "agy",
+      "model_role": "Gemini",
+      "enabled": false,
+      "judge_family_exclusions": [
+        "google"
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "path": "docs/evaluations/uk-preamble.md",
+      "sha256": "cd0e961165dabcfb06d126d06ada9a1bb366d79610ff8ae884c8847851a1b17f"
+    },
+    {
+      "path": "docs/evaluations/lesson-ab.md",
+      "sha256": "294e5fd0ba31c7f1cbc946d7eb0ed089cc3cc4c0a102d08cd72a14e197401e03"
+    },
+    {
+      "path": "docs/evaluations/uk-behaviour-freeze.md",
+      "sha256": "3cd889f99473b36797df02d5b4ca5b23ac0f69f5ddfbc87e59a71a6a9ddd65d2"
+    },
+    {
+      "path": "docs/projects/ua-eval-harness/V0_2_EVIDENCE_PLAN.md",
+      "sha256": "3c744f6fac3083ccc0f541c7a330172e6be6001be6dd7fa6847efd1e621f223b"
+    },
+    {
+      "path": "docs/atlas/word-cards/golden-set-spec.md",
+      "sha256": "9d6ac185f13c97b56bb31aeb4a862e84cbf62e632660ff437808f36988031d71"
+    },
+    {
+      "path": "eval/russianism/calibration-cases-h2c.README.md",
+      "sha256": "c2d8768771a255c9eab7b71c42a6e72a6edb000a01eeb5d85111471881df4ceb"
+    },
+    {
+      "path": "eval/russianism/calibration-cases-h2c.jsonl",
+      "sha256": "f7f835dfac250f6bafe809e109e67684b7da0b597c6bdf96f645e2d3b7cbf5ac"
+    },
+    {
+      "path": "tests/test_heritage_classifier.py",
+      "sha256": "bf9ce6e2d389097eaedd36c0ca5e77e858787886a7a7f8478dcf5118107b81cd"
+    },
+    {
+      "path": "tests/test_ulif_stress_oracle.py",
+      "sha256": "43846dc861fb45a5683b7021468976e2171a7d91001ec6b068e64e529854a2ec"
+    },
+    {
+      "path": "agents_extensions/shared/rules/core.md",
+      "sha256": "2529a665c5257836fc475a59bef270e087da05561aaaea79394714ba687d70fe"
+    },
+    {
+      "path": "agents_extensions/shared/rules/core-curriculum.md",
+      "sha256": "1797271b152a5aace3ee6ec301d7ce789892faf6b5d24ea11ff22e9ff0691b52"
+    },
+    {
+      "path": "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",
+      "sha256": "442c35d29c33b74061c4e997f165a51db4d2a88b10ebd3d08d5b4136a934ad5c"
+    },
+    {
+      "path": "agents_extensions/shared/rules/ukrainian-linguistics.md",
+      "sha256": "390c08389ce8be3172a8fd262a6b2a1e60bccae192dfcb63bbfd7151e07b2d46"
+    },
+    {
+      "path": "agents_extensions/shared/rules/storage-topology.md",
+      "sha256": "b024ec40d3791f6f7db858c5179baef1a40556175d204fb657a14d3f5d1fc847"
+    },
+    {
+      "path": "agents_extensions/shared/agents/curriculum-writer.md",
+      "sha256": "0ded8fb60fea6dd34459b11fd573dc65424dae0f6c6276814e7b846a6afc8d83"
+    },
+    {
+      "path": "agents_extensions/shared/skills/content-review/content-review-prompt.md",
+      "sha256": "cbedc304139e1b3aa79d27ebef388e26b5bdbefa267b4e254dc934a4fddaee5a"
+    },
+    {
+      "path": "agents_extensions/shared/skills/review-loop/references/ukrainian.md",
+      "sha256": "9344bf994c1667b811d908689466f7f78845129f92f1870e88481b54eab051a8"
+    },
+    {
+      "path": "docs/epics/fresh-build-writer-contract.md",
+      "sha256": "cc5859e2968f144e3c745c4d944fb923f5e1003a2f9bfd6c1178725c5951861b"
+    },
+    {
+      "path": "scripts/build/fresh/writer.py",
+      "sha256": "884e5ba31c4ea079f1e2af1f912cab6b954dc4eab76cc4af61238bcd633f286e"
+    },
+    {
+      "path": "scripts/build/fresh/prompts/lesson-writer.md.j2",
+      "sha256": "aaed7266f8ad68d2c4d9fe6ba1627f91fc5a59869dcee2e655f8b32729edf9b6"
+    },
+    {
+      "path": "scripts/atlas/word_card_assembly.py",
+      "sha256": "60dd1d6701f8a4a483b13967ba3bb6ec7eb2fa3d8a6fbe37940e781169e0fd1d"
+    },
+    {
+      "path": "scripts/atlas/word_card_contrasts.py",
+      "sha256": "3f99afecce289a429977f3d8227758b4a19777fa2b52bd3349d451f3b00fae79"
+    },
+    {
+      "path": "scripts/review/receipts/ledger.py",
+      "sha256": "b259e2b35ab101227b692191f63152e9ddc09a2d66fda86ce29ad43011a3adad"
+    },
+    {
+      "path": "scripts/review/receipts/outcomes.py",
+      "sha256": "487d6840ce6d963554ce438460dd63f59b76b667be37494a9cc8d5633c192567"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/__init__.py",
+      "sha256": "db24eb39c2a2e333451cde51063b653cc5952d30fe1bffca10c3fb77a1997371"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/__main__.py",
+      "sha256": "add3c749ebc224994644df32f390cd127ee5c6dd49a1099dd2e4644b2f25a701"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/common.py",
+      "sha256": "2b7b72df721b4a945aa9fafa6e4895e6bcfd0f183871b1e64a29782e2df905ba"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/convert.py",
+      "sha256": "91274d6480eb3896de0fde627078d94da34a24ad546906f081c182ed5bed052f"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/dataset.py",
+      "sha256": "e387dc3c799e6099c1c225a0f0488546a214c178456d36c92ad7d959fbeddf14"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/dispatch.py",
+      "sha256": "7d1f5012b784f2a39915f48d483aed231c22d96f16d0ca933c875060ccc9ddd7"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/prompts.py",
+      "sha256": "fe75b27ba0e9207267993812ce8c023575f1edb3eeb1ac544d6dd27a80721c1c"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/report.py",
+      "sha256": "267ac905be2ff81f8b69bee3ea5fefd4d90ec11c8515dc6c2ccb0126228edbd2"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/runner.py",
+      "sha256": "33efef2f1e78311ce6214fee345883e7c830638d39200e9e2ddb19b0bc1c9f58"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/scoring.py",
+      "sha256": "2ed9f66fcd2f0ec69774a0d9a5800bcde10531333c96cac401bf08d53fe50e3e"
+    }
+  ],
+  "private_references": [
+    {
+      "ref": "private://uk-behaviour-v1/development/requests",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/development/labels",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/development/exposure",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/selection/requests",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/selection/labels",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/selection/exposure",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/final/requests",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/final/labels",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/final/exposure",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/reviewer-qualification",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "reviewer-trial-custodian"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/runtime-and-prompts",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "baseline-runner"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/semantic-scorer-and-judge-template",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "evaluation-maintainer"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/source-evidence-ledgers",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "sources-custodian"
+    },
+    {
+      "ref": "private://uk-behaviour-v1/final-isolation-proof",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    }
+  ],
+  "approval_references": [
+    {
+      "ref": "private://ordered-approval/uk-behaviour/approval",
+      "sha256": "7925e13a38a37befb0ecf54ede9efbf3273db9fac756b085c7463180c8d63ee7"
+    },
+    {
+      "ref": "private://ordered-approval/uk-behaviour/proposal",
+      "sha256": "815e206c9985d7cf0c29da3098dd9244909f0154b8f0a752928a2191ccc709fe"
+    }
+  ],
+  "located_private_assets": [
+    {
+      "ref": "private://ua-eval-harness/heldout_manifest_v1.json",
+      "sha256": "56eb4fc17a5ed6967c5c13fbdc9fde964d1b8fb08bde7da7f15cf535486735dd",
+      "eligibility": "development-only pending adjudication; no held-out reuse asserted"
+    },
+    {
+      "ref": "private://ua-eval-harness/v0.2/review_packet_priority_v1.jsonl",
+      "sha256": "9b436a1a6c7c442f3dafaa468d358446a8cb66995562749e2801eac07b211add",
+      "eligibility": "development-only pending adjudication; no held-out reuse asserted"
+    }
+  ]
+}
