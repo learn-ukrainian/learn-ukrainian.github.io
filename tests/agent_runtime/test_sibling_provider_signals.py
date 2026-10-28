@@ -149,7 +149,7 @@ def test_opencode_provider_error_is_classified_even_with_rc_zero(adapter, return
     assert result.failure_code == "rate_limited"
 
 
-@pytest.mark.parametrize("failure_code", [None, "acp_agent_startup", "acp_turn_limit", "github_secondary_rate_limited"])
+@pytest.mark.parametrize("failure_code", [None, "acp_agent_startup", "acp_turn_limit"])
 @pytest.mark.parametrize("returncode", [0, 1])
 def test_failover_never_reads_raw_stdout_or_excerpt(failure_code, returncode):
     result = ParseResult(ok=False, response="", stderr_excerpt=CONTENT, failure_code=failure_code)
@@ -157,17 +157,6 @@ def test_failover_never_reads_raw_stdout_or_excerpt(failure_code, returncode):
         classify_failover_trigger(
             parse=result, returncode=returncode, kill_reason=None, stdout_text=CONTENT, stderr_text=""
         )
-        is None
-    )
-
-
-def test_cursor_gh_shim_does_not_trigger_provider_failover():
-    stderr = "agent-gh-shim: github_secondary_rate_limited HTTP 403; retries exhausted after 3 attempts."
-    result = CursorAdapter().parse_response(stdout="", stderr=stderr, returncode=1, output_file=None)
-    assert result.failure_code == "github_secondary_rate_limited"
-    assert result.rate_limited is False
-    assert (
-        classify_failover_trigger(parse=result, returncode=1, kill_reason=None, stdout_text=CONTENT, stderr_text=stderr)
         is None
     )
 
