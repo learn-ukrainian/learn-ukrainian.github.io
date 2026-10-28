@@ -63,8 +63,10 @@ def _command(payload: dict) -> str:
 
 def _merge_candidate(command: str) -> bool:
     """Conservative bootstrap/failure probe, never a merge decision."""
-    probe = command.replace("\\", "").replace("'", "").replace('"', "")
-    return bool(re.search(r"(?<![\w.-])(?:gh\s+pr\s+merge|scripts\.publish\s+pr-merge)(?![\w-])", probe))
+    probe = command.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
+    return all(re.search(rf"(?<![\w.-]){word}(?![\w-])", probe) for word in ("gh", "pr", "merge")) or bool(
+        re.search(r"(?<![\w.-])scripts\.publish\s+pr-merge(?![\w-])", probe)
+    )
 
 
 # Ordinary Bash commands must remain usable even if guard dependencies are absent.
@@ -247,11 +249,22 @@ _WRAPPER_VALUE_OPTIONS = {
             "-c",
             "--command-timeout",
             "-T",
+            "-p",
+            "--prompt",
+            "-D",
+            "--chdir",
+            "-R",
+            "--chroot",
+            "-h",
+            "--host",
+            "-U",
+            "--other-user",
         }
     ),
     "time": frozenset({"-f", "--format", "-o", "--output"}),
     "nice": frozenset({"-n", "--adjustment"}),
     "stdbuf": frozenset({"-i", "--input", "-o", "--output", "-e", "--error"}),
+    "exec": frozenset({"-a"}),
 }
 
 
@@ -399,9 +412,14 @@ def _may_merge(command: str, depth: int = 0) -> bool:
         if _merge_args(argv) is not None:
             return True
         invoked, _ = _invoked_start(argv)
+        is_eval = argv[invoked : invoked + 1] == ["eval"]
+        if is_eval and any("$" in arg or "`" in arg or arg == _UNREADABLE_MARKER for arg in argv[invoked + 1 :]):
+            # The candidate pass found merge words, but eval's expansion can
+            # change argv. Preserve the existing refusal instead of guessing.
+            return True
         payload = (
             " ".join(argv[invoked + 1 :])
-            if argv[invoked : invoked + 1] == ["eval"]
+            if is_eval
             else _shell_c_payload(argv)
         )
         if payload:
@@ -410,6 +428,7 @@ def _may_merge(command: str, depth: int = 0) -> bool:
             if _may_merge(payload, depth + 1):
                 return True
     return False
+
 
 # Stand-in segment for a shell payload left uninspected at the recursion cap. _judge()
 # recognizes the marker and refuses outright — the cap costs a refusal, never a free

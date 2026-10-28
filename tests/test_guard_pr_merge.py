@@ -122,6 +122,7 @@ runpy.run_path(sys.argv[1], run_name="__main__")
         "echo gh pr merge 5",
         "env echo gh pr merge 5",
         'env gh pr list --search "gh pr merge"',
+        "env -i echo gh pr merge 5",
     ],
 )
 @pytest.mark.parametrize("wrapper", ["{command}", 'cd "$DIR"; eval \'{command}\''])
@@ -835,12 +836,24 @@ def test_admin_equals_true_is_judged_by_pr_guard(monkeypatch):
         "sudo -u bot gh pr merge 5 --squash",
         "env -i gh pr merge 5 --squash",
         "env -u FOO gh pr merge 5 --auto",
+        "exec -a fixture gh pr merge 5 --squash",
+        "sudo -p P gh pr merge 5 --squash",
+        "sudo --prompt P gh pr merge 5 --squash",
+        "sudo -D other gh pr merge 5 --squash",
+        "sudo --chdir other gh pr merge 5 --squash",
+        "sudo -R other gh pr merge 5 --squash",
+        "sudo --chroot other gh pr merge 5 --squash",
+        "sudo -h host gh pr merge 5 --squash",
+        "sudo --host host gh pr merge 5 --squash",
+        "sudo -U bot gh pr merge 5 --squash",
+        "sudo --other-user bot gh pr merge 5 --squash",
     ],
 )
-def test_wrapper_with_options_is_still_judged(cmd):
+def test_wrapper_with_options_is_still_judged(monkeypatch, cmd):
     # F002: _skip_command_prefix consumed the wrapper but not its options, so the
     # `['gh','pr','merge']` match failed and the merge was never judged.
     assert _any_merge(cmd)
+    assert _run(monkeypatch, cmd, checks=(["CI Gate"], [])) == 2
 
 
 @pytest.mark.parametrize(
@@ -1557,8 +1570,18 @@ def test_unclosed_heredoc_does_not_hide_merge():
     assert _any_merge("cat <<'NOEND'\nnote\ngh pr merge 5 --squash")
 
 
-def test_backslash_continuation_merge_detected():
-    assert _any_merge("gh pr merge 5 \\\n  --auto --squash")
+@pytest.mark.parametrize(
+    "command",
+    [
+        "gh pr merge 5 \\\n  --auto --squash",
+        "g\\\nh pr merge 5 --subject gh",
+        "gh p\\\nr merge 5 --subject pr",
+        "gh pr m\\\nerge 5 --subject merge",
+    ],
+)
+def test_backslash_continuation_merge_detected(monkeypatch, command):
+    assert _any_merge(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
 
 
 # --- colorized gh output (review B1, PR #5324) ------------------------------
@@ -1990,7 +2013,16 @@ def test_issue_9480_target_argv_matches_bash(monkeypatch, tmp_path, command, exp
 
 @pytest.mark.parametrize("suffix", ["", " >out", " | cat"])
 @pytest.mark.parametrize(
-    "command", ["eval 'gh pr merge 5 >f'", "eval gh pr merge 5", "bash -c \"eval 'gh pr merge 5'\""]
+    "command",
+    [
+        "eval 'gh pr merge 5 >f'",
+        "eval gh pr merge 5",
+        "bash -c \"eval 'gh pr merge 5'\"",
+        'CMD="gh pr merge 5"; eval "$CMD"',
+        "eval $(printf 'gh pr merge %s' 5)",
+        'A=gh; eval "$A pr merge 5"',
+        "A=gh; bash -c 'eval \"$A pr merge 5\"'",
+    ],
 )
 def test_issue_9480_eval_merge_is_refused(monkeypatch, capsys, command, suffix):
     monkeypatch.setattr(guard, "_pr_snapshot", lambda *args, **kwargs: pytest.fail("unreadable eval reached lookup"))
