@@ -593,6 +593,16 @@ def test_nonzero_error_empty_and_signal_cannot_report_done(sandbox, model, state
     assert record["returncode"] == code
 
 
+def test_provider_capacity_ends_rate_limited_and_keeps_the_dirty_worktree(sandbox):
+    """Defect (FR-39): a provider out of capacity is a retryable condition, not a failed task."""
+    record = sandbox.settle(sandbox.dispatch("capacity"), expected=1)
+    assert (record["status"], record["returncode"]) == ("rate_limited", 1)
+    record = sandbox.settle(sandbox.dispatch("capacity-dirty", "--mode", "workspace-write"), expected=1)
+    assert record["status"] == "rate_limited"
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert (Path(record["worktree_path"]) / "delivered.txt").exists()
+
+
 def test_provider_final_file_and_exact_stdin_bytes(sandbox):
     result = sandbox.cli(
         "dispatch", "--agent", "codex", "--model", "file", "--prompt-file", "-", stdin="exact\nbytes\n"

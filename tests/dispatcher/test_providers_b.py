@@ -362,3 +362,47 @@ def test_agy_partial_stderr_rejects_incomplete_runs_with_safe_reason(stderr, err
 def test_agy_duplicate_terminal_cannot_replace_first_result_or_clear_failure(first, second, expected):
     """agy-duplicate-terminal: accept neither a second answer nor recovery after a malformed terminal."""
     assert load("agy").parse(first + "\n" + second + "\n", "", 0, None) == expected
+
+
+# Real stream shapes: codex ends a refused turn with error + turn.failed (batch_state task logs, 2026-10-28);
+# claude ends with a result event carrying the API's HTTP status.
+_CAPACITY = "Selected model is at capacity. Please try a different model."
+_CODEX_CAPACITY = "\n".join(map(json.dumps, [
+    {"type": "thread.started", "thread_id": "t"},
+    {"type": "turn.started"},
+    {"type": "item.completed", "item": {"type": "agent_message", "text": f"quoted: {_CAPACITY}"}},
+    {"type": "error", "message": _CAPACITY},
+    {"type": "turn.failed", "error": {"message": _CAPACITY}},
+]))
+
+
+def test_codex_terminal_capacity_failure_is_rate_limited_with_the_provider_message():
+    result = load("codex").parse(_CODEX_CAPACITY, "", 1, None)
+    assert (result.rate_limited, result.error) == (True, f"codex: {_CAPACITY}")
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    [
+        _CODEX_CAPACITY.replace(_CAPACITY, "Something else broke."),
+        # A notice or agent text naming capacity, with no terminal failure of it, is not a classification.
+        "\n".join([*_CODEX_CAPACITY.splitlines()[:4], json.dumps({"type": "turn.failed", "error": {"message": "boom"}})]),
+        _CODEX_CAPACITY + "\nnot json",
+    ],
+)
+def test_codex_ordinary_or_unclean_failure_stays_failed(stdout):
+    result = load("codex").parse(stdout, "", 1, None)
+    assert (result.rate_limited, result.error) == (False, "codex: exited with status 1")
+
+
+def _claude_result(**fields):
+    return json.dumps({"type": "result", "subtype": "success", "is_error": True, "result": "API Error", **fields})
+
+
+def test_claude_529_result_is_rate_limited_and_other_errors_stay_failed():
+    message = "API Error: 529 Overloaded. This is a server-side issue, usually temporary."
+    capacity = load("claude").parse(_claude_result(api_error_status=529, result=message), "", 1, None)
+    assert (capacity.rate_limited, capacity.error) == (True, f"claude: {message}")
+    for fields in ({"api_error_status": None}, {"api_error_status": 500}, {"api_error_status": 529, "is_error": False}):
+        other = load("claude").parse(_claude_result(**fields), "", 1, None)
+        assert (other.rate_limited, other.error) == (False, "claude: exited with status 1")

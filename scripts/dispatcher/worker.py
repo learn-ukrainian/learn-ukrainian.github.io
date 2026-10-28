@@ -368,6 +368,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
         if returncode < 0:
             status = "crashed"
+        if parsed.rate_limited and status == "failed":
+            status = "rate_limited"
         if status != "done":
             error = parsed.error or (
                 "provider exited unsuccessfully" if returncode else "provider returned no successful final response"
