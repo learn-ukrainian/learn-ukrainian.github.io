@@ -692,6 +692,11 @@ def publisher(tmp_path, monkeypatch, synthetic_opsec):
             return gh.Response(
                 200, {}, json.dumps({"number": 1, "draft": False, "head": {"sha": HEAD}, "base": {}}).encode()
             )
+        # The FR-55 seat read: no recorded verdicts, and the fleet identity.
+        if endpoint.startswith("repos/unit/public/issues/1/comments"):
+            return gh.Response(200, {}, b"[]")
+        if endpoint.startswith("user"):
+            return gh.Response(200, {}, json.dumps({"login": "unit"}).encode())
         pull = {
             "headRefOid": HEAD,
             "isMergeQueueEnabled": False,
@@ -722,12 +727,14 @@ def test_publisher_merge_proceeds_at_zero_with_every_readiness_read(publisher):
         text=True,
     )
     assert result.returncode == 0, result.stderr
-    assert wire.sent[:3] == [
+    assert wire.sent[:5] == [
         ("http", "GET", "repos/unit/public/pulls/1"),
         ("native", "pr", "checks", "1", "--json", "name,bucket,state,workflow", "--repo", "unit/public"),
         ("http", "POST", "graphql"),
+        ("http", "GET", "repos/unit/public/issues/1/comments?per_page=100"),
+        ("http", "GET", "user?per_page=100"),
     ]
-    assert wire.sent[3][:4] == ("native", "pr", "merge", "1") and len(wire.sent) == 4
+    assert wire.sent[5][:4] == ("native", "pr", "merge", "1") and len(wire.sent) == 6
     # The operation ended with the verb: a non-landing verb is refused with its typed reason.
     refused(
         pub.publish(
@@ -741,7 +748,7 @@ def test_publisher_merge_proceeds_at_zero_with_every_readiness_read(publisher):
         ),
         "secondary_hold",
     )
-    assert len(wire.sent) == 4
+    assert len(wire.sent) == 6
 
 
 def test_publisher_merge_honours_only_an_authentic_hold_with_its_reason(publisher):

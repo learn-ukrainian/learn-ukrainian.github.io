@@ -54,6 +54,7 @@ from scripts.orchestration.integration_sweep import (
     REJECTED,
     SHA,
     TRUSTED_ASSOCIATIONS,
+    UKRAINIAN_SEAT_FAMILIES,
     GitHubAdapter,
     SweepError,
     lookup_verdict,
@@ -117,8 +118,6 @@ SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
 RUNTIME_REPORTED_MODEL_SOURCES = frozenset({"cursor-stream-json", "cursor-transcript", "cursor-stderr-json"})
 # Kimi never reviews. Native Grok requires its own runtime attestation (#9769).
 NATIVE_NON_REVIEWER_FAMILIES = frozenset({"xai", "moonshot"})
-# review-loop references/ukrainian.md § Seats: the Claude, GPT and Gemini seats.
-UKRAINIAN_SEAT_FAMILIES = frozenset({"anthropic", "openai", "google"})
 # Review rounds per PR, counted on the reviewed heads of the current PR (C-2902);
 # a security-sensitive change gets the elevated budget.
 DEFAULT_REVIEW_ROUNDS = 3

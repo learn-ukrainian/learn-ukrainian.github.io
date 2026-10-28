@@ -553,19 +553,17 @@ def _ever_approved(comments: list[dict[str, Any]], login: str) -> bool:
 def _recorded_approval_for_head(comments: list[dict[str, Any]], head: str, login: str) -> bool:
     """Find a recorder-approved head even when a later marker changed the verdict.
 
-    Each seat's approval is read alone, then together, so a Ukrainian profile counts
-    as approved only once every seat approved this head.
+    One Ukrainian seat's approval counts, so a queued head whose other seat is
+    missing is still revoked when later evidence makes its verdict unknown (FR-55).
     """
-    approvals = [
-        row
-        for row in comments
-        if isinstance(row, dict)
+    return any(
+        isinstance(row, dict)
         and isinstance(row.get("body"), str)
         and (marker := parse_marker(row["body"])) is not None
         and marker["sha"] == head
         and lookup_verdict([row], head, login).state in {"APPROVED", NEEDS_SEAT}
-    ]
-    return bool(approvals) and lookup_verdict(approvals, head, login).state == "APPROVED"
+        for row in comments
+    )
 
 
 def _cf_unknown_detail(cause: str, verdict: Verdict) -> str:

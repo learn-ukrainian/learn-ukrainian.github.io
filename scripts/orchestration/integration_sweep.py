@@ -91,7 +91,9 @@ REJECTED = frozenset({"CHANGES_REQUESTED", "BLOCKED"})
 # The recorder normalizes APPROVE to APPROVED, but older trailers carry the reviewer's raw token (#10119).
 VERDICT_ALIASES = {"APPROVE": "APPROVED"}
 SUCCESSFUL = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
-# review-loop references/ukrainian.md § Seats: two reviewer families approve the same head.
+# review-loop references/ukrainian.md § Seats: two of the Claude, GPT and Gemini families
+# approve the same head in cross-family review.
+UKRAINIAN_SEAT_FAMILIES = frozenset({"anthropic", "openai", "google"})
 UKRAINIAN_REVIEW_SEATS = 2
 # A Ukrainian-profile head with fewer approving seat families than that; never approval.
 NEEDS_SEAT = "needs-seat"
@@ -224,6 +226,8 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         "Historical authorship:": "Historical authorship: unknown_historical" if history else None,
         "Unknown history:": f"Unknown history: {history}" if history else None,
         "author model": "No author model assumed." if history or authorship else None,
+        # An altered profile statement must not downgrade a Ukrainian seat to code (FR-55).
+        "Review profile": f"Review profile: {profile}" if profile else None,
     }
     for label, expected in statements.items():
         lines = [
@@ -234,13 +238,7 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         ]
         if lines != ([expected] if expected is not None else []):
             return None
-    ukrainian = is_ukrainian_review(item) or "Review profile: ukrainian\n" in prefix
-    if ukrainian and (item["sources_calls"] is None or item["sources_calls"] <= 0):
-        return None
-    if ukrainian:
-        # Either statement makes it a Ukrainian seat; the seat count must not miss it.
-        item["review_profile"] = "ukrainian"
-    if profile is not None and f"Review profile: {profile}\n" not in prefix:
+    if is_ukrainian_review(item) and (item["sources_calls"] is None or item["sources_calls"] <= 0):
         return None
     if sources is not None and f"Sources MCP calls: {item['sources_calls']}\n" not in prefix:
         return None
@@ -276,8 +274,14 @@ def parse_marker(body: str) -> dict[str, Any] | None:
 
 
 def ukrainian_seat_families(markers: Iterable[Mapping[str, Any]]) -> set[str]:
-    """Reviewer families of the Ukrainian-profile markers among ``markers``."""
-    return {marker["family"] for marker in markers if is_ukrainian_review(marker)}
+    """Families of the eligible cross-family Ukrainian seats among ``markers``."""
+    return {
+        marker["family"]
+        for marker in markers
+        if is_ukrainian_review(marker)
+        and marker["family"] in UKRAINIAN_SEAT_FAMILIES
+        and marker.get("review_mode", "cross_family") == "cross_family"
+    }
 
 
 def lookup_verdict(
@@ -381,8 +385,9 @@ def lookup_verdict(
         winner = next(item for item in approvals if item[0] == latest_start)
     marker = winner[2]
     state = marker["verdict"]
-    seats = () if standing else tuple(sorted(ukrainian_seat_families(item[2] for item in approvals)))
-    if 0 < len(seats) < UKRAINIAN_REVIEW_SEATS:
+    profiled = [item[2] for item in approvals if is_ukrainian_review(item[2])]
+    seats = () if standing else tuple(sorted(ukrainian_seat_families(profiled)))
+    if not standing and profiled and len(seats) < UKRAINIAN_REVIEW_SEATS:
         # A Ukrainian-profile head is approved only once every seat has approved it (FR-55).
         state = NEEDS_SEAT
     return Verdict(

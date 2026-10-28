@@ -350,7 +350,7 @@ def test_gemini_verdict_records_and_gate_accepts_exact_head(monkeypatch, tmp_pat
     # A Ukrainian head needs its second seat before the gate accepts it (FR-55).
     gate = "APPROVED" if profile == "code" else sweep.NEEDS_SEAT
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == gate
-    assert keeper._recorded_approval_for_head(comments, SHA, "fleet") is (profile == "code")
+    assert keeper._recorded_approval_for_head(comments, SHA, "fleet")
     assert not keeper._recorded_approval_for_head(comments, "b" * 40, "fleet")
     assert calls == {"posts": 1, "statuses": 1}
 
@@ -432,7 +432,8 @@ def test_ukrainian_review_with_sources_calls_accepted(monkeypatch, tmp_path, cou
     assert statuses[0]["state"] == "pending"
     assert statuses[0]["description"].endswith("; awaiting Ukrainian seat: anthropic")
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_SEAT
-    assert not keeper._recorded_approval_for_head(comments, SHA, "fleet")
+    # One seat's approval still counts as recorded, so a queued head can be revoked.
+    assert keeper._recorded_approval_for_head(comments, SHA, "fleet")
     recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 1, "statuses": 2}
     assert statuses[1]["state"] == "pending"
@@ -458,7 +459,6 @@ def test_ukrainian_status_succeeds_only_when_every_seat_approves(monkeypatch, tm
     assert "awaiting" not in statuses[1]["description"]
     expected = "APPROVED" if state == "success" else recorder.normalize_verdict(second)
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == expected
-    assert keeper._recorded_approval_for_head(comments, SHA, "fleet") is (state == "success")
 
 
 def test_code_profile_single_approval_still_succeeds(monkeypatch, tmp_path):
@@ -556,6 +556,44 @@ def test_sources_marker_must_match_published_count(replacement):
         review_profile="ukrainian", sources_mcp_call_count=3,
     ).replace("sources_calls=3", replacement)
     assert recorder.parse_marker(body) is None
+
+
+def ukrainian_body(**overrides):
+    fields = dict(
+        sha=SHA, task_id="review-one", started="2026-09-23T12:00:00.000001+00:00",
+        verdict="APPROVED", model="gpt-6.1-sol", family="openai", reply="VERDICT: APPROVE",
+        review_profile="ukrainian", sources_mcp_call_count=3,
+    )
+    return recorder.build_comment(**{**fields, **overrides})
+
+
+@pytest.mark.parametrize("statement", ["Review profile: Ukrainian\n", "Review profile: ukrainian \n", "Review profile: ukrainian\n"])
+def test_altered_profile_statement_never_downgrades_a_seat(statement):
+    # FR-55: without the trailer field, any profile statement left in the prefix refuses the marker.
+    body = ukrainian_body().replace(" review_profile=ukrainian", "").replace("Review profile: ukrainian\n", statement)
+    assert recorder.parse_marker(body) is None
+
+
+def seat_comment(body, index):
+    stamp = f"2026-09-23T13:00:0{index}Z"
+    return {"id": index, "body": body, "user": {"login": "fleet"}, "author_association": "MEMBER",
+            "created_at": stamp, "updated_at": stamp}
+
+
+@pytest.mark.parametrize("second", [
+    {"model": "grok-4.7", "family": "xai"},
+    {"model": "claude-opus-5-5", "family": "anthropic", "review_mode": "red_team"},
+    {"model": "gpt-6.1-sol", "family": "openai"},
+], ids=["ineligible-family", "red-team", "same-family"])
+def test_only_eligible_cross_family_seats_complete_the_set(second):
+    first = ukrainian_body()
+    other = ukrainian_body(task_id="review-two", started="2026-09-23T12:00:01.000001+00:00",
+                           reply="VERDICT: APPROVE", **second)
+    assert recorder.parse_marker(other) is not None
+    comments = [seat_comment(first, 1), seat_comment(other, 2)]
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_SEAT
+    # Alone, an ineligible Ukrainian approval is not a code-profile approval either.
+    assert sweep.lookup_verdict([seat_comment(other, 2)], SHA, "fleet").state == sweep.NEEDS_SEAT
 
 
 def test_removing_profile_marker_cannot_hide_missing_sources_count():

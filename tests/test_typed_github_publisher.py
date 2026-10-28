@@ -58,13 +58,19 @@ def catalog(monkeypatch):
     monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
 
 
-def spy(calls, *, comment_edit=False):
+def spy(calls, *, comment_edit=False, merge=False):
     def send(args, **kwargs):
         if comment_edit and args[:4] == ["gh", "api", "--method", "GET"]:
             endpoint = args[4].split("?", 1)[0]
             if endpoint == "user" or endpoint == "repos/unit/public/issues/comments/7":
                 document = {"login": "unit"} if endpoint == "user" else {"id": 7, "body": "previous", "user": {"login": "unit"}}
                 return subprocess.CompletedProcess(args, 0, json.dumps(document), "")
+        if merge and args[:4] == ["gh", "api", "--method", "GET"] and args[4].split("?", 1)[0] in {
+            "repos/unit/public/issues/1/comments", "user"
+        }:
+            # pr-merge reads the recorded review seats (FR-55): none recorded, fleet identity.
+            seats = [[]] if args[4].startswith("repos/") else {"login": "unit"}
+            return subprocess.CompletedProcess(args, 0, json.dumps(seats), "")
         if (
             args[:3] == ["gh", "pr", "view"]
             and "--json" in args
@@ -133,7 +139,7 @@ VERBS = [
 @pytest.mark.parametrize("verb,fields", VERBS)
 def test_each_typed_verb_delivers_fixed_payload(synthetic_opsec, verb, fields, github_transport, monkeypatch):
     calls = []
-    sender = spy(calls)
+    sender = spy(calls, merge=verb == "pr-merge")
     expected_requests = {
         "issue-create": [("POST", "repos/unit/public/issues", {"title": "clean", "body": "clean", "labels": ["unit"]})],
         "pr-create": [("POST", "repos/unit/public/pulls", {"title": "clean", "body": "clean", "head": "unit", "base": "main", "draft": False})],
@@ -248,7 +254,7 @@ def test_body_inputs_are_frozen_and_transport_paths_not_scanned(
     if verb == "pr-review":
         fields["verdict"] = "approve"
     calls = []
-    pub.publish(verb, repo="unit/public", cwd=tmp_path, stdin=expected, runner=spy(calls, comment_edit=verb == "comment-edit"), **fields)
+    pub.publish(verb, repo="unit/public", cwd=tmp_path, stdin=expected, runner=spy(calls, comment_edit=verb == "comment-edit", merge=verb == "pr-merge"), **fields)
     flag = "--input" if verb == "comment-edit" else "--body-file"
     sent = calls[0][flag]
     if verb == "comment-edit":

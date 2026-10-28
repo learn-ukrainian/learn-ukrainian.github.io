@@ -269,16 +269,22 @@ def test_ukrainian_profile_enqueues_only_when_every_seat_approves(
     assert not failed
     assert ("enqueue" in mutations(fake)) is enqueued
     assert f"reason={reason}" in lines[0]
-    assert keeper._recorded_approval_for_head(fake.comments_rows, HEAD_A, "driver") is enqueued
 
 
-def test_queued_ukrainian_profile_with_one_seat_is_revoked(tmp_path: Path) -> None:
+@pytest.mark.parametrize("malformed", [False, True], ids=["one-seat", "one-seat-then-malformed"])
+def test_queued_ukrainian_profile_with_one_seat_is_revoked(tmp_path: Path, malformed: bool) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.comments_rows = [ukrainian_seat("APPROVED")]
+    if malformed:
+        # Evidence that makes the head unknown must not keep a one-seat head queued.
+        broken = ukrainian_seat("APPROVED", "anthropic")
+        broken["body"] = broken["body"].replace("Reviewer model: claude-opus-5-5", "Reviewer model: unknown")
+        fake.comments_rows.append(broken)
     lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
-    assert mutations(fake) == ["dequeue", "comment"]
-    assert "#42 revoked: needs-CF" in lines
+    assert ("dequeue", "PR_node_42") in fake.actions and "enqueue" not in mutations(fake)
+    revoked = "CF-unknown-after-approval" if malformed else "needs-CF"
+    assert any(line.startswith(f"#42 revoked: {revoked}") for line in lines)
 
 
 def _keeper_comment(fake: FakeGitHub) -> str:
