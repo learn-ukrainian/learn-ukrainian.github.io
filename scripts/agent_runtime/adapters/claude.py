@@ -344,6 +344,18 @@ _LABELLED_AUTH_STATUS_KEYS = frozenset(
 # for each endpoint, proxy, certificate, token, key or provider override in
 # effect (JSON reports none of those), so any other line refuses.
 _LABELLED_STATUS_TEXT_LABELS = frozenset({"Login method", "Organization", "Email"})
+# An API-key label's run (C-2643): the key helper from its bound settings file and nothing else.
+# Claude Code 2.1.312 reports exactly these keys and the one text line below for it.
+_API_KEY_AUTH_STATUS = {
+    "loggedIn": True,
+    "authMethod": "api_key_helper",
+    "apiProvider": "firstParty",
+    "apiKeySource": "apiKeyHelper",
+}
+_API_KEY_AUTH_STATUS_KEYS = frozenset(
+    {*_API_KEY_AUTH_STATUS, "analyticsDisabled", "projectsDirectory", "configDirectory"}
+)
+_API_KEY_STATUS_TEXT = ["Auth token: apiKeyHelper"]
 _AUTH_STATUS_TIMEOUT_S = 30
 # Runs ``env_sanitize.run_claude_launch_guard`` from this checkout's code,
 # isolated from the worker's Python environment variables and working
@@ -1192,6 +1204,7 @@ def _claude_account_binding(tc: dict[str, Any]) -> ClaudeAccountBinding | None:
     """
     from scripts.agent_runtime.attempt_boundary import (
         CLAUDE_ACCOUNT_KEY,
+        CLAUDE_API_KEY_ACCOUNT_LABELS,
         DEFAULT_CLAUDE_ACCOUNT,
         ClaudeAccountRefused,
         resolve_claude_account_label,
@@ -1199,6 +1212,10 @@ def _claude_account_binding(tc: dict[str, Any]) -> ClaudeAccountBinding | None:
     )
 
     label = resolve_claude_account_label(tc.get(CLAUDE_ACCOUNT_KEY))
+    if label in CLAUDE_API_KEY_ACCOUNT_LABELS:
+        # Its key helper arrives as the run's one --settings, which here carries the worker's
+        # guard hooks; only the dispatcher (``dispatcher.admission.claude_launch``) runs it.
+        raise ClaudeAccountRefused("claude_account_api_key_route_unsupported")
     if label == DEFAULT_CLAUDE_ACCOUNT or tc.get("review_attempt_boundary"):
         return None
     if tc.get("review_isolation"):
@@ -1268,8 +1285,13 @@ def _verify_labelled_auth_method(
     cwd: Path,
     env: Mapping[str, str],
     login_dir: str,
+    api_key: bool = False,
 ) -> None:
     """Refuse unless Claude Code reports the run's own consumer subscription login and nothing else (#10619).
+
+    With ``api_key`` (C-2643) it must instead report the key helper of the
+    run's ``--settings`` file as the only key source, and the text only that
+    helper as its token; no plan is classified.
 
     Runs ``claude auth status`` (JSON, then text) with the run's settings
     arguments, its working directory and ``env``, the environment the runner
@@ -1318,12 +1340,21 @@ def _verify_labelled_auth_method(
     if not isinstance(parsed, dict) or "loggedIn" not in parsed:
         raise ClaudeAccountRefused("claude_account_auth_status_unavailable")
     directory = parsed.get("configDirectory")
+    expected, allowed = (
+        (_API_KEY_AUTH_STATUS, _API_KEY_AUTH_STATUS_KEYS)
+        if api_key
+        else (_LABELLED_AUTH_STATUS, _LABELLED_AUTH_STATUS_KEYS)
+    )
     if (
-        any(parsed.get(key) != value for key, value in _LABELLED_AUTH_STATUS.items())
-        or not set(parsed) <= _LABELLED_AUTH_STATUS_KEYS
+        any(parsed.get(key) != value for key, value in expected.items())
+        or not set(parsed) <= allowed
         or not (isinstance(directory, str) and Path(directory) == Path(login_dir))
     ):
         raise ClaudeAccountRefused("claude_account_auth_method_conflict")
+    if api_key:
+        if [line for line in status("--text").splitlines() if line.strip()] != _API_KEY_STATUS_TEXT:
+            raise ClaudeAccountRefused("claude_account_status_override")
+        return
     if parsed.get("subscriptionType") not in CLAUDE_CONSUMER_PLANS.values():
         raise ClaudeAccountRefused("claude_account_plan_unverified")
     lines = [line for line in status("--text").splitlines() if line.strip()]
