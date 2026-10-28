@@ -156,7 +156,10 @@ def main() -> int:
         stage, reason = "test_plan", "invalid_paths_tests_or_durations"
         record = plan(base, actual)
         record["event_base"] = pr["base"]["sha"]
-        marker = "repo_wide" if args.repo_wide else "not atlas_release and not slow and not site_toolchain"
+        marker = "not atlas_release and not slow and not site_toolchain"
+        if args.repo_wide:
+            # Keep nightly, release and frontend tests in their existing tiers.
+            marker = "repo_wide and " + marker
         paths = ["tests"] if args.repo_wide else record["run_files"]
         # pytest excludes build/ by default; it contains registered invariants.
         collection = ["--override-ini=norecursedirs=.* node_modules"] if args.repo_wide else []

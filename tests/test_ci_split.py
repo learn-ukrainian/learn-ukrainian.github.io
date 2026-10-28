@@ -711,11 +711,17 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     (repo / affected.DURATIONS).write_text(json.dumps(weights))
     (repo / 'scripts/ci/pr_affected_tests.py').write_bytes(Path(affected.__file__).read_bytes())
     (repo / 'scripts/ci/gate.py').write_bytes((_REPO_ROOT / 'scripts/ci/gate.py').read_bytes())
-    (repo / 'pytest.ini').write_text('[pytest]\nmarkers =\n    repo_wide: repository invariant\n')
+    (repo / 'pytest.ini').write_text(
+        '[pytest]\nmarkers =\n    repo_wide: repository invariant\n    slow: nightly test\n'
+        '    atlas_release: release test\n    site_toolchain: frontend test\n'
+    )
     (repo / 'tests/build').mkdir()
     (repo / 'tests/build/test_invariant.py').write_text(
         'import pytest\n@pytest.mark.repo_wide\ndef test_invariant():\n    assert True\n'
         'def test_unmarked():\n    assert False, "unmarked tests must not run"\n'
+        '@pytest.mark.repo_wide\n@pytest.mark.slow\ndef test_slow():\n    assert False, "nightly test"\n'
+        '@pytest.mark.repo_wide\n@pytest.mark.atlas_release\ndef test_release():\n    assert False, "release test"\n'
+        '@pytest.mark.repo_wide\n@pytest.mark.site_toolchain\ndef test_frontend():\n    assert False, "frontend test"\n'
     )
     (repo / '.gitignore').write_text('ci-artifacts/\n')
     _git(repo, 'add', '.')
@@ -830,7 +836,8 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert marker_cli.returncode == 0, marker_cli.stdout + marker_cli.stderr
     marker = json.loads((repo / 'ci-artifacts/pr-repo-wide.json').read_text())
     assert marker['reported_cases'] == 1 and marker['failed_cases'] == 0
-    assert marker['selection'] == 'repo_wide' and marker['requested_paths'] == ['tests']
+    assert marker['selection'] == 'repo_wide and not atlas_release and not slow and not site_toolchain'
+    assert marker['requested_paths'] == ['tests']
     assert marker['reason'] == 'pytest infrastructure changed'
     assert marker['candidate'] == workflow_candidate and marker['wall_seconds'] > 0
     (repo / 'untracked-note.txt').unlink()

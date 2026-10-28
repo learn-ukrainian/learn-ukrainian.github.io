@@ -501,7 +501,7 @@ jobs:
     name: PR changed tests and guards
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
-    # PR #11922 measured 660s marker-only with two workers. Its 1,500s
+    # PR #11922 measured a 660s superset with two workers. Its 1,500s
     # subprocess ceiling plus 480s changed tests and setup fit this job budget.
     timeout-minutes: 40
     steps:

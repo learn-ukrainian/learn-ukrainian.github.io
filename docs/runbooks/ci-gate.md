@@ -6,7 +6,8 @@ guard, attribution, lint and content contracts, dependency-audit scoping, and
 `pytest --collect-only`. Its summary states plainly that full pytest was not run.
 The parallel required `pr-affected` job executes literal changed existing
 `tests/**/test_*.py` files plus every path in `scripts/ci/pr-affected-guards.txt`.
-The same job also runs `pytest tests -m repo_wide` in a separate required step.
+The same job also runs `pytest tests -m 'repo_wide and not atlas_release and not slow and not site_toolchain'`
+in a separate required step.
 This selects marked tests only, including marked functions in otherwise
 unmarked files. Its traversal includes `tests/build/`, which pytest normally
 excludes. It uses the same candidate identity and checkout-integrity checks.
@@ -60,13 +61,14 @@ The `pr-affected-proof` artifact also contains `pr-repo-wide.json` and
 `pr-repo-wide.xml`. The JSON records the exact candidate, marker expression,
 requested paths, worker count, subprocess timeout, elapsed wall time,
 logical CPU count and initial load average, plus reported cases, failures and
-skips. The marker expression is exactly `repo_wide`; it does not broaden
-execution to unmarked tests or inherit the changed-test exclusions.
+skips. The marker expression requires `repo_wide` and retains the supported
+tier's `atlas_release`, `slow` and `site_toolchain` exclusions. It does not
+broaden execution to unmarked tests or move nightly or release tests into PR CI.
 An empty selection, failed execution, stale report or missing JUnit fails CI.
 Both invocations use two pytest workers with work stealing. Invariants have
 a 1,500-second subprocess timeout; the combined job has a 40-minute timeout.
 The budget uses the hosted measurements on [PR #11922](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/11922):
-twice the observed marker wall time, rounded up to five minutes, plus the
+twice the initial superset's observed marker wall time, rounded up to five minutes, plus the
 existing 480-second changed-test ceiling, twice the observed setup time and
 one minute for report publication, again rounded up to five minutes.
 The same job runs both selections without additional PR jobs or shards.
