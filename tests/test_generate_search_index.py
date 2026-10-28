@@ -815,6 +815,8 @@ def test_pinned_generator_withholds_unverified_heads_and_placeholder_glosses(tmp
     assert holds["release_reviews"] == []
     assert by_slug["проєк"]["evidence"]["headword_status"] == "NOT_FOUND"
     assert by_slug["клієн"]["evidence"]["placeholder_gloss"] == "ohoiko 1000-words entry"
+    assert "правила-дорожнього-руху-пдр" not in by_slug
+    assert by_slug["дтп-детепе-дорожньо-транспортна-пригода"]["evidence"]["not_found_components"] == ["детепе"]
 
     version = "atlas-v1-census-test"
     tree = tmp_path / "runtime"
@@ -826,7 +828,9 @@ def test_pinned_generator_withholds_unverified_heads_and_placeholder_glosses(tmp
     articles = [{"s": slug, "l": record["headword"], "g": record["evidence"].get("placeholder_gloss", "Meaning"),
                  "r": "fixture", "t": "lemma"} for slug, record in by_slug.items()]
     articles.append({"s": "іван", "l": "Іван", "g": "Ivan", "r": "ivan", "t": "lemma"})
-    aliases = [{"a": row["l"], "s": row["s"], "h": row["l"], "k": "variant"} for row in articles[:-1]]
+    articles.append({"s": "правила-дорожнього-руху-пдр", "l": "правила дорожнього руху (пдр)",
+                     "g": "Traffic rules", "r": "pravyla", "t": "multiword_term"})
+    aliases = [{"a": row["l"], "s": row["s"], "h": row["l"], "k": "variant"} for row in articles[:-2]]
     retained_alias = {"a": "проєк", "s": "іван", "h": "Іван", "k": "variant"}
     aliases.append(retained_alias)
     manifest = {"schema": "atlas-runtime-manifest", "schemaVersion": 1, "dataVersion": version,
@@ -856,17 +860,20 @@ def test_pinned_generator_withholds_unverified_heads_and_placeholder_glosses(tmp
                  "--browse-meta-out", str(output / "browse-meta.json"),
                  "--browse-flagged-out", str(output / "flagged.json"),
                  "--browse-dir", str(output / "browse")]) == 0
-    assert json.loads((output / "search.json").read_bytes()) == [articles[-1]]
+    assert json.loads((output / "search.json").read_bytes()) == articles[-2:]
     assert json.loads((output / "aliases.json").read_bytes()) == [retained_alias]
     meta = json.loads((output / "browse-meta.json").read_bytes())
-    assert meta["total"] == 1
+    assert meta["total"] == 2
     assert meta["letterCounts"]["І"] == 1
-    assert meta["letterCounts"]["П"] == 0
-    assert {r["s"] for p in (output / "browse").glob("*.json") for r in json.loads(p.read_bytes())} == {"іван"}
+    assert meta["letterCounts"]["П"] == 1
+    assert meta["letterCounts"]["Л"] == 0
+    assert {r["s"] for p in (output / "browse").glob("*.json") for r in json.loads(p.read_bytes())} == {
+        "іван", "правила-дорожнього-руху-пдр",
+    }
     _, _, parity = build_pinned_search(tree)
     assert parity["articles"] == 25
-    assert parity["projectedArticles"] == 1
-    assert parity["withheldAliases"] == 24
+    assert parity["projectedArticles"] == 2
+    assert parity["withheldAliases"] == 23
     assert parity["absentExclusions"] == []
     assert all(p.read_bytes() == blob for p, blob in pinned.items())
     articles[0]["l"] = "changed head"

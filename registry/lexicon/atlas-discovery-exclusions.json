@@ -50,7 +50,6 @@
         "tool": "sources.inspect_words",
         "headword_status": "NOT_FOUND",
         "not_found_components": [
-          "дтп",
           "детепе"
         ]
       }
@@ -222,18 +221,6 @@
         "headword_status": "NOT_FOUND",
         "not_found_components": [
           "шпоришки"
-        ]
-      }
-    },
-    {
-      "slug": "правила-дорожнього-руху-пдр",
-      "headword": "правила дорожнього руху (пдр)",
-      "reason": "Unverified headword or component in VESUM; withhold pending source adjudication, without a nonexistence judgment.",
-      "evidence": {
-        "tool": "sources.inspect_words",
-        "headword_status": "NOT_FOUND",
-        "not_found_components": [
-          "пдр"
         ]
       }
     },
