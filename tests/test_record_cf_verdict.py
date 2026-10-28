@@ -9,6 +9,7 @@ import shlex
 import subprocess
 import zlib
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -409,6 +410,8 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
     monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda self, repository, number: list(comments))
     # No budget extension request exists unless a test builds one (extension_case).
     monkeypatch.setattr(recorder, "_budget_extension", lambda **_kwargs: None)
+    # No head proves a clean base merge descent unless a test builds a repository (exemption_case).
+    monkeypatch.setattr(recorder, "_clean_merge_descent_prover", lambda *_a: lambda *_b: None)
 
     def fake_status(**kwargs):
         calls["statuses"] += 1
@@ -2947,6 +2950,7 @@ def test_unknown_history_excludes_all_possible_author_families():
 
 # Review budget extension (scripts/review/budget_extension.py): one round past the budget.
 _REAL_BUDGET_EXTENSION = recorder._budget_extension
+_REAL_DESCENT_PROVER = recorder._clean_merge_descent_prover
 EXTENSION_ROLE = "review_budget_extension"
 
 
@@ -2981,6 +2985,8 @@ def extension_repo(tmp_path, *, author="claude/claude-opus-5-5", extra_requests=
     run("remote", "add", "origin", str(origin))
     run("checkout", "-q", "-b", "feature")
     commit("feature.txt", "feature\n", "feature\n\nX-Agent: codex/gpt-6.1-sol")
+    # The feature side edits the line the base change edits, so merging main conflicts (the extension's case).
+    commit("shared.txt", "feature side\n", "feature shared\n\nX-Agent: codex/gpt-6.1-sol")
     approved = run("rev-parse", "HEAD")
     run("checkout", "-q", "main")
     commit("shared.txt", "base changed\n", "base change\n\nX-Agent: claude/claude-opus-5-5")
@@ -2999,7 +3005,11 @@ def extension_repo(tmp_path, *, author="claude/claude-opus-5-5", extra_requests=
     run("push", "-q", "origin", "main")
     run("checkout", "-q", "feature")
     if head_kind == "merge":
-        run("merge", "-q", "--no-ff", "-m", "merge main\n\nX-Agent: codex/gpt-6.1-sol", "main")
+        conflicted = subprocess.run(
+            ["git", "-C", str(repo), "merge", "-q", "--no-ff", "main"], capture_output=True, env=env, timeout=30
+        )
+        assert conflicted.returncode != 0
+        commit("shared.txt", "base changed\nfeature side\n", "merge main\n\nX-Agent: codex/gpt-6.1-sol")
     else:
         commit("feature.txt", "feature fixed\n", "fix\n\nX-Agent: codex/gpt-6.1-sol")
     return repo, approved, run("rev-parse", "HEAD"), request, run
@@ -3041,6 +3051,8 @@ def extension_case(monkeypatch, tmp_path, **repo_options):
     repo, approved, head, request, run = extension_repo(tmp_path, **repo_options)
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
     monkeypatch.setattr(recorder, "_budget_extension", _REAL_BUDGET_EXTENSION)
+    # A conflict-resolved merge is no clean base merge: the real proof runs and grants no exemption.
+    monkeypatch.setattr(recorder, "_clean_merge_descent_prover", _REAL_DESCENT_PROVER)
     monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: repo)
     write_task(tasks, worktree_base_sha=head)
     rounds = (("1" * 40, "CHANGES_REQUESTED"), ("2" * 40, "CHANGES_REQUESTED"), (approved, "APPROVED"))
@@ -3216,3 +3228,239 @@ def test_budget_extension_never_reads_another_archived_runs_reply(monkeypatch, t
     with pytest.raises(recorder.RecordError, match=r"\[lineage\].*review task seat \(failed\) carries an unpublished verdict"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
+
+
+# A head that only merges main cleanly after the last fully approved head consumes no round.
+class ExemptionRepo:
+    """A PR branch approved at A while main moves on files the branch does not touch."""
+
+    def __init__(self, tmp_path):
+        self.repo, origin = tmp_path / "exempt-repo", tmp_path / "exempt-origin.git"
+        self.env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+        self.env.update(
+            GIT_AUTHOR_NAME="t",
+            GIT_AUTHOR_EMAIL="t@example.invalid",
+            GIT_COMMITTER_NAME="t",
+            GIT_COMMITTER_EMAIL="t@example.invalid",
+            GIT_CONFIG_GLOBAL=os.devnull,
+            GIT_CONFIG_NOSYSTEM="1",
+        )
+        self.repo.mkdir()
+        self.run("init", "-q", "-b", "main")
+        self.commit("shared.txt", "base\n", "root")
+        self.run("init", "-q", "--bare", str(origin))
+        self.run("--git-dir", str(origin), "symbolic-ref", "HEAD", "refs/heads/main")
+        self.run("remote", "add", "origin", str(origin))
+        self.run("push", "-q", "origin", "main")
+        self.run("checkout", "-q", "-b", "feature")
+        self.approved = self.commit("feature.txt", "feature\n", "feature")
+
+    def run(self, *args, check=True):
+        command = ["git", "-C", str(self.repo), *args]
+        proc = subprocess.run(command, check=check, capture_output=True, text=True, env=self.env, timeout=30)
+        return proc.stdout.strip()
+
+    def commit(self, path, text, message):
+        (self.repo / path).write_text(text)
+        self.run("add", path)
+        self.run("commit", "-q", "-m", f"{message}\n\nX-Agent: codex/gpt-6.1-sol")
+        return self.run("rev-parse", "HEAD")
+
+    def main_moves(self, name):
+        """Advance origin's main by one commit on a file of its own and return to the feature branch."""
+        self.run("checkout", "-q", "main")
+        self.commit(f"{name}.txt", f"{name}\n", name)
+        self.run("push", "-q", "origin", "main")
+        self.run("checkout", "-q", "feature")
+        return self.run("rev-parse", "main")
+
+    def merge(self, ref="main"):
+        self.run("merge", "-q", "--no-ff", "-m", "merge main\n\nX-Agent: codex/gpt-6.1-sol", ref)
+        return self.run("rev-parse", "HEAD")
+
+
+def exemption_case(monkeypatch, tmp_path, git, head, history):
+    """Recorded ``history`` (sha, verdict) rounds and the round at ``head`` to record, with the real proof."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
+    monkeypatch.setattr(recorder, "_clean_merge_descent_prover", _REAL_DESCENT_PROVER)
+    monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: git.repo)
+    write_task(tasks, worktree_base_sha=head)
+    comments.extend(recorded_verdict(sha, verdict, task_id=f"round-{index}") for index, (sha, verdict) in enumerate(history))
+    return tasks, comments, calls
+
+
+def move_head(monkeypatch, head):
+    fake = recorder._run_json
+
+    def moved(args, *, input_text=None):
+        if isinstance(args, list) and args[:3] == ["gh", "pr", "view"]:
+            return {"number": 42, "headRefOid": head, "headRefName": BRANCH, "state": "OPEN"}
+        return fake(args, input_text=input_text)
+
+    monkeypatch.setattr(recorder, "_run_json", moved)
+
+
+SPENT = (("1" * 40, "CHANGES_REQUESTED"), ("2" * 40, "CHANGES_REQUESTED"))
+
+
+def test_clean_base_merge_after_approval_consumes_no_round(monkeypatch, tmp_path):
+    from scripts.orchestration import integration_sweep as sweep
+
+    git = ExemptionRepo(tmp_path)
+    first_base = git.main_moves("base-one")
+    first = git.merge()
+    tasks, comments, calls = exemption_case(
+        monkeypatch, tmp_path, git, first, (*SPENT, (git.approved, "APPROVED"))
+    )
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    # No approval carries forward: the merge head has no verdict of its own yet.
+    assert sweep.lookup_verdict(comments, first, "fleet").state != "APPROVED"
+    result = recorder.record("review-one", **kwargs)
+    assert result["verdict"] == "APPROVED" and calls["posts"] == 1
+    assert result["budget_exemption"] == {
+        "reason": "clean-base-merge",
+        "approved_head": git.approved,
+        "base_merges": [first_base],
+    }
+    # A second clean merge is anchored to the exempt head, now the last fully approved one.
+    second_base = git.main_moves("base-two")
+    second = git.merge()
+    move_head(monkeypatch, second)
+    write_task(tasks, task_id="round-merge-two", worktree_base_sha=second)
+    result = recorder.record("round-merge-two", **kwargs)
+    assert result["budget_exemption"]["approved_head"] == first
+    assert result["budget_exemption"]["base_merges"] == [second_base]
+    # A real commit after them is round 4 of 3; the exempt heads are named but not counted.
+    fixed = git.commit("feature.txt", "feature fixed\n", "fix")
+    move_head(monkeypatch, fixed)
+    write_task(tasks, task_id="round-fix", worktree_base_sha=fixed)
+    with pytest.raises(
+        recorder.RecordError,
+        match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 3 heads \(and 2 clean base merge head",
+    ):
+        recorder.record("round-fix", **kwargs)
+    assert calls["posts"] == 2
+    # Verdict history is kept: every earlier head still reads as recorded.
+    assert [sweep.lookup_verdict(comments, sha, "fleet").state for sha in (git.approved, first, second)] == [
+        "APPROVED"
+    ] * 3
+
+
+def test_exempt_head_rejection_is_not_cleared(monkeypatch, tmp_path):
+    from scripts.orchestration import integration_sweep as sweep
+
+    git = ExemptionRepo(tmp_path)
+    git.main_moves("base-one")
+    head = git.merge()
+    tasks, comments, calls = exemption_case(monkeypatch, tmp_path, git, head, (*SPENT, (git.approved, "APPROVED")))
+    write_task(tasks, reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=head)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert recorder.record("review-one", **kwargs)["budget_exemption"]["approved_head"] == git.approved
+    write_task(tasks, task_id="seat-two", worktree_base_sha=head)
+    with pytest.raises(recorder.RecordError, match="only an APPROVE at a new head clears it"):
+        recorder.record("seat-two", **kwargs)
+    assert sweep.lookup_verdict(comments, head, "fleet").state == "CHANGES_REQUESTED" and calls["posts"] == 1
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "conflict",
+        "manual-merge-edit",
+        "unrelated-commit-after-merge",
+        "unrelated-commit-before-merge",
+        "non-base-merge",
+        "proof-error",
+        "anchor-rejected",
+        "anchor-rejected-after-approval",
+    ],
+)
+def test_clean_base_merge_exemption_refuses(monkeypatch, tmp_path, case):
+    git = ExemptionRepo(tmp_path)
+    history = [*SPENT, (git.approved, "APPROVED")]
+    if case == "conflict":
+        git.run("checkout", "-q", "main")
+        git.commit("feature.txt", "main side\n", "main edits the branch's file")
+        git.run("push", "-q", "origin", "main")
+        git.run("checkout", "-q", "feature")
+        git.run("merge", "-q", "main", check=False)
+        assert git.run("rev-parse", "--verify", "MERGE_HEAD")
+        head = git.commit("feature.txt", "resolved\n", "merge main")
+    elif case == "manual-merge-edit":
+        git.main_moves("base-one")
+        git.run("merge", "-q", "--no-ff", "--no-commit", "main")
+        head = git.commit("feature.txt", "edited inside the merge\n", "merge main")
+    elif case == "unrelated-commit-after-merge":
+        git.main_moves("base-one")
+        git.merge()
+        head = git.commit("feature.txt", "more\n", "more")
+    elif case == "unrelated-commit-before-merge":
+        git.commit("feature.txt", "more\n", "more")
+        git.main_moves("base-one")
+        head = git.merge()
+    elif case == "non-base-merge":
+        git.run("checkout", "-q", "-b", "side", "main")
+        git.commit("side.txt", "side\n", "side")
+        git.run("checkout", "-q", "feature")
+        head = git.merge("side")
+    else:
+        git.main_moves("base-one")
+        head = git.merge()
+        if case == "proof-error":
+            git.run("remote", "remove", "origin")
+        elif case == "anchor-rejected":
+            history[-1] = (git.approved, "CHANGES_REQUESTED")
+        else:
+            history.append((git.approved, "CHANGES_REQUESTED"))
+    tasks, _comments, calls = exemption_case(monkeypatch, tmp_path, git, head, history)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 3 heads and"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_clean_base_merge_descent_needs_every_object(tmp_path):
+    git = ExemptionRepo(tmp_path)
+    tip = git.main_moves("base-one")
+    head = git.merge()
+    prove = partial(recorder.clean_base_merge_descent, git.repo, base_tip=tip)
+    assert prove(approved=git.approved, head=head) == [tip]
+    # A head, approved head or base the object store lacks proves nothing.
+    assert prove(approved=git.approved, head="c" * 40) is None
+    assert prove(approved="c" * 40, head=head) is None
+    assert recorder.clean_base_merge_descent(git.repo, approved=git.approved, head=head, base_tip="c" * 40) is None
+    # The approved head itself adds no merge.
+    assert prove(approved=head, head=head) is None
+
+
+def test_ukrainian_head_is_fully_approved_only_by_both_seats():
+    approved, head = "1" * 40, "2" * 40
+
+    def seat(family, model):
+        body = recorder.build_comment(
+            sha=approved,
+            task_id=f"seat-{family}",
+            started="2026-09-23T11:00:00.000001+00:00",
+            verdict="APPROVED",
+            model=model,
+            family=family,
+            reply="VERDICT: APPROVE",
+            review_profile="ukrainian",
+            sources_mcp_call_count=3,
+        )
+        stamp = "2026-09-23T11:30:00Z"
+        return {"body": body, "user": {"login": "fleet"}, "author_association": "MEMBER", "created_at": stamp,
+                "updated_at": stamp}
+
+    calls = []
+
+    def prove(anchor, descendant):
+        calls.append((anchor, descendant))
+        return ["3" * 40]
+
+    one_seat = [seat("anthropic", "claude-opus-5-5")]
+    assert recorder.budget_exempt_heads(one_seat, head, "fleet", prove=prove) == {} and calls == []
+    both = [*one_seat, seat("openai", "gpt-6.1-sol")]
+    assert recorder.budget_exempt_heads(both, head, "fleet", prove=prove) == {
+        head: {"approved_head": approved, "base_merges": ["3" * 40]}
+    }
+    assert calls == [(approved, head)]

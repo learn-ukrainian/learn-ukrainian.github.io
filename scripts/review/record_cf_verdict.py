@@ -1739,10 +1739,10 @@ def review_round_budget(facts: BranchReviewFacts) -> int:
     return DEFAULT_REVIEW_ROUNDS
 
 
-def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> set[str]:
-    """Heads named by verdict markers ``login`` posted with a trusted association."""
-    heads: set[str] = set()
-    for item in comments:
+def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[tuple[int, dict[str, Any]]]:
+    """Comment index and parsed marker of each verdict ``login`` posted with a trusted association."""
+    markers: list[tuple[int, dict[str, Any]]] = []
+    for index, item in enumerate(comments):
         body = item.get("body") if isinstance(item, Mapping) else None
         if not isinstance(body, str) or MARKER_PREFIX not in body:
             continue
@@ -1750,8 +1750,122 @@ def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> 
             continue
         marker = parse_marker(body)
         if marker is not None:
-            heads.add(marker["sha"])
-    return heads
+            markers.append((index, marker))
+    return markers
+
+
+def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> set[str]:
+    """Heads named by verdict markers ``login`` posted with a trusted association."""
+    return {marker["sha"] for _, marker in _trusted_markers(comments, login)}
+
+
+# A post-approval base update is one merge, or a few; a longer first-parent walk is not one.
+MAX_EXEMPT_BASE_MERGES = 10
+
+
+def clean_base_merge_descent(repo_root: Path, *, approved: str, head: str, base_tip: str) -> list[str] | None:
+    """The base commits ``head`` merges after ``approved``, when that is all it adds; else None.
+
+    Every commit on the first-parent path from ``head`` back to ``approved``
+    must be a Git-proven conflict-free merge of the base branch
+    (:func:`_clean_merge_source`): its second parent is on ``base_tip`` and its
+    tree is exactly Git's merge of its parents. A missing object, a conflict, a
+    manual edit in a merge, any other commit, a path longer than
+    ``MAX_EXEMPT_BASE_MERGES`` or a proof error proves nothing.
+    """
+    merged: list[str] = []
+    current = head
+    deadline = time.monotonic() + BRANCH_FACTS_TIMEOUT_S
+    try:
+        while current != approved:
+            if len(merged) >= MAX_EXEMPT_BASE_MERGES:
+                return None
+            entry = _read_commit_entries(repo_root, [current], deadline=deadline)[0]
+            if _clean_merge_source(entry, base_tip, checkout=repo_root) != CLEAN_BASE_MERGE:
+                return None
+            merged.append(entry["parents"][1]["sha"])
+            current = entry["parents"][0]["sha"]
+    except RecordError:
+        return None
+    return merged or None
+
+
+def _clean_merge_descent_prover(repo_root: Path, head: str) -> Callable[[str, str], list[str] | None]:
+    """:func:`clean_base_merge_descent` bound to the fetched default-branch tip, fetched once on first use.
+
+    A tip that cannot be fetched proves no descent.
+    """
+    tip: list[str | None] = []
+
+    def prove(approved: str, descendant: str) -> list[str] | None:
+        if not tip:
+            try:
+                tip.append(default_branch_review_base(repo_root, head)[0])
+            except RecordError:
+                tip.append(None)
+        base_tip = tip[0]
+        if base_tip is None:
+            return None
+        return clean_base_merge_descent(repo_root, approved=approved, head=descendant, base_tip=base_tip)
+
+    return prove
+
+
+def _fully_approved(comments: Sequence[Mapping[str, Any]], head: str, login: str) -> bool:
+    """Whether the keeper reads ``head`` as APPROVED and every seat its profile requires approved it."""
+    if lookup_verdict(comments, head, login).state != "APPROVED":
+        return False
+    at_head = [marker for _, marker in _trusted_markers(comments, login) if marker["sha"] == head]
+    approving = {marker["family"] for marker in at_head if marker["verdict"] == "APPROVED"}
+    # A learner-facing Ukrainian change seats two reviewers (review-loop references/ukrainian.md § Seats).
+    required = 2 if any(is_ukrainian_review(marker) for marker in at_head) else 1
+    return len(approving) >= required
+
+
+def budget_exempt_heads(
+    comments: Sequence[Mapping[str, Any]],
+    sha: str,
+    login: str,
+    *,
+    prove: Callable[[str, str], list[str] | None],
+) -> dict[str, dict[str, Any]]:
+    """The reviewed heads, and ``sha``, that consume no review round, each with its receipt.
+
+    A head is exempt when it descends from the last fully approved head before
+    its first verdict only through clean merges of the base branch (``prove``,
+    :func:`clean_base_merge_descent`). The exemption changes accounting only:
+    every head still needs its own exact-head verdict, no approval carries
+    forward, a recorded rejection stands, and no verdict is dropped. Exemptions
+    are re-proven from Git on every call, so a head whose proof is lost counts.
+    """
+    markers = _trusted_markers(comments, login)
+    first: dict[str, int] = {}
+    for index, marker in markers:
+        first.setdefault(marker["sha"], index)
+    order = sorted(first.items(), key=lambda item: item[1])
+    if sha not in first:
+        order.append((sha, len(comments)))
+    exempt: dict[str, dict[str, Any]] = {}
+    for head, start in order:
+        prefix = comments[:start]
+        latest: dict[str, int] = {}
+        for index, marker in markers:
+            if index < start:
+                latest[marker["sha"]] = index
+        anchor = next(
+            (
+                candidate
+                for candidate, _ in sorted(latest.items(), key=lambda item: item[1], reverse=True)
+                if _fully_approved(prefix, candidate, login)
+            ),
+            None,
+        )
+        if anchor is None:
+            continue
+        merges = prove(anchor, head)
+        if merges:
+            exempt[head] = {"approved_head": anchor, "base_merges": merges}
+    return exempt
 
 
 def require_review_round_within_budget(
@@ -1762,7 +1876,8 @@ def require_review_round_within_budget(
     budget: int,
     pr: int,
     extension: Callable[[], dict[str, Any] | None] | None = None,
-) -> dict[str, Any] | None:
+    prove_merge_only: Callable[[str, str], list[str] | None] | None = None,
+) -> dict[str, Any]:
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
     A round is one reviewed head: trusted verdicts on this PR are counted
@@ -1771,25 +1886,36 @@ def require_review_round_within_budget(
     GitHub listing finds them reliably (search index lag, the 250-commit PR
     listing cap). Budget end is never approval.
 
-    The one exception is round ``budget + 1`` under an approved budget
-    extension (``scripts/review/budget_extension.py``): ``extension`` returns
-    its receipt, None when the PR has no extension request, or refuses.
+    A head that only merges the base branch cleanly after the last fully
+    approved head consumes no round (:func:`budget_exempt_heads`, proven with
+    ``prove_merge_only``); it is checked only once the counted heads reach the
+    budget. The other exception is round ``budget + 1`` under an approved
+    budget extension (``scripts/review/budget_extension.py``): ``extension``
+    returns its receipt, None when the PR has no extension request, or refuses.
+    Returns the result fields that record the exception used, else nothing.
     """
     heads = _trusted_verdict_shas(comments, login)
-    if sha not in heads and len(heads) >= budget:
-        exhausted = (
-            f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(heads)} heads and its budget "
-            f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(heads) + 1}"
-        )
-        if extension is not None and len(heads) == budget:
-            try:
-                receipt = extension()
-            except RecordError as exc:
-                raise RecordError(f"{exhausted}; {exc}") from exc
-            if receipt is not None:
-                return receipt
-        raise RecordError(exhausted)
-    return None
+    if sha in heads or len(heads) < budget:
+        return {}
+    exempt = budget_exempt_heads(comments, sha, login, prove=prove_merge_only) if prove_merge_only else {}
+    if sha in exempt:
+        return {"budget_exemption": {"reason": CLEAN_BASE_MERGE, **exempt[sha]}}
+    counted = heads - set(exempt)
+    if len(counted) < budget:
+        return {}
+    note = f" (and {len(exempt)} clean base merge head(s), which consume no round)" if exempt else ""
+    exhausted = (
+        f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(counted)} heads{note} and its budget "
+        f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(counted) + 1}"
+    )
+    if extension is not None and len(counted) == budget:
+        try:
+            receipt = extension()
+        except RecordError as exc:
+            raise RecordError(f"{exhausted}; {exc}") from exc
+        if receipt is not None:
+            return {"budget_extension": receipt}
+    raise RecordError(exhausted)
 
 
 def _budget_extension(**kwargs: Any) -> dict[str, Any] | None:
@@ -2093,12 +2219,13 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
-        extension = require_review_round_within_budget(
+        budget_receipt = require_review_round_within_budget(
             comments,
             sha,
             login,
             budget=review_round_budget(facts),
             pr=number,
+            prove_merge_only=_clean_merge_descent_prover(review_root, sha),
             extension=partial(
                 _budget_extension,
                 repository=repository,
@@ -2194,8 +2321,7 @@ def record(
     }
     if facts.app_bot_commits:
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
-    if extension is not None:
-        result["budget_extension"] = extension
+    result.update(budget_receipt)
     return result
 
 
