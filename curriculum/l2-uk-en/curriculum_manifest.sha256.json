@@ -130,7 +130,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/activities.yaml",
-      "sha256": "2e09bcecf0cd3ee1a7edd0e097ccecfd9a8dc667c51b9a96f94464421aeb58f5"
+      "sha256": "2a70aa11e886fea69c6e9255b2aa20fe4d4af5c51183680477b936d91cc48c4f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/module.md",
@@ -13718,7 +13718,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-places.mdx",
-      "sha256": "5fb90a1ee1ba7e7fcaee52c4355362d013d389a7000184f268aa5eb90098ce73"
+      "sha256": "6f9bf5a7607f15bfde16db47f36000fcc189bd67a66cd49769f350a9e21cb35b"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-time-nature.mdx",

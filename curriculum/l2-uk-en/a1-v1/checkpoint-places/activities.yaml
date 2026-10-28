@@ -248,9 +248,9 @@ workbook:
         options:
           - text: "Я йду в школу."
             correct: true
-          - text: 'Я іду в школі.'
+          - text: 'Я йду в школі.'
             correct: false
-          - text: 'Я іду зі школи.'
+          - text: 'Я йду зі школи.'
             correct: false
         explanation: "For the destination, use в школу. After Я, the euphonic verb form is йду."
       - prompt: 'Repair: Я працюю в пошті.'

@@ -43,7 +43,7 @@ Some unmarked homonyms have multiple stress readings; no marked target is change
 
 POST1-POST3 screen the final 326 items in batches of 150, 150 and 26. Diagnostics include case-sensitive tokens and intentionally wrong options. UA-GEC suggestions about один, назад, Ти знаєш and ставить are contextual suspicions and caused no repair. Ingestion misses, negated corpus examples and irrelevant concordances are explicitly distinguished in the U locators.
 
-The companion [machine-readable Sources evidence](language-pass-modules-29-42-evidence.jsonl) preserves query arguments, VESUM analyses, ULIF row identifiers, diagnostic results and compact usage summaries. SHA-256 values bind the persisted normalized result objects; they are not hashes of transport envelopes. Usage records preserve metadata and source locators, with no copied private reference text. The file has 117 records.
+The companion [machine-readable Sources evidence](language-pass-modules-29-42-evidence.jsonl) preserves query arguments, VESUM analyses, ULIF row identifiers, diagnostic results and compact usage summaries. SHA-256 values bind the persisted normalized result objects; they are not hashes of transport envelopes. Usage records preserve metadata and source locators, with no copied private reference text. The file has 120 records.
 
 ### Module batch locators
 
@@ -123,8 +123,12 @@ The official offline SUM-20 lookups U1-U5 returned ingestion misses; modern VTS 
 - U80: The returned textbook material distinguishes cardinal and ordinal numerals but does not confirm the suspected track label.
 - U82: GRAC directly attests the exact offered в вокзалі in interior station locations, in both literary and conversational examples. Its euphony is disfavoured; the item asks for a static preposition, not the preferred euphonic spelling.
 - U83: Official Pravopys 2019 section 24, pages 28-29: і/й and initial і-/й- distribution, with Він іде after a consonant and Вона йде after a vowel. https://www.ulif.org.ua/system/files/pravopus-new.pdf
+- U86: GRAC lookup returned no usable attestation; it supports no defect.
 - U87: VTS направо includes both movement to the right and static position on the right. The latter can describe a cafe that is also near home. https://slovnyk.me/dict/vts/%D0%BD%D0%B0%D0%BF%D1%80%D0%B0%D0%B2%D0%BE
 - U90: GRAC returns two actual name-giving uses of моє ім'я є among ten results. The other existential and figurative examples do not establish that formula. These two occurrences support a possible naming statement, not the preferred A1 formula.
+
+- U91: GRAC returned two foreign-character speech examples of я є голодний; these do not establish an ordinary A1 alternative, so the item remains unchanged/clean.
+- U92/U93: VESUM verifies all seven forms in the final school rephrase; ULIF verifies шко́лу, шко́лі and шко́ли. POST4 checks its final full text and alternatives.
 
 ## Per-item verdicts
 
@@ -313,7 +317,7 @@ C means checked-clean in the original source. D means a confirmed answer ambigui
 | `act-4/4` | inline | Після порту я йду ___ пляж. | на | C | M35; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key на matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/5` | inline | Увечері я їду ___. | на вокзал | D | M35; U65. Їду з вокзалу is a valid source phrase; їду alone does not ask only куди. |
 | `workbook[2]/0` | workbook | Repair: Я в школа. | Я в школі. | C | M35; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Я в школі. matches the stated meaning and case; the displayed competitors fail that task. |
-| `workbook[2]/1` | workbook | Repair: Я іду в школі. | Я іду в школу. | D | M35; U14; U61; U64; U83; U84; U85. Walking can occur in the school or go to it. The destination cue selects в школу; the full-sentence key also changes іду to йду after Я under section 24. The correct option index and destination meaning stay the same. |
+| `workbook[2]/1` | workbook | Repair: Я іду в школі. | Я іду в школу. | D | M35; U14; U61; U64; U83; U84; U85; POST4; U92; U93. Walking can occur in the school or go to it. The destination cue selects в школу; the full-sentence key also changes іду to йду after Я under section 24. The correct option index and destination meaning stay the same. All three final options use йду so verb spelling cannot give away the destination answer. |
 | `workbook[2]/2` | workbook | Repair: Я працюю в пошті. | Я працюю на пошті. | C | M35; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Я працюю на пошті. matches the stated meaning and case; the displayed competitors fail that task. |
 | `workbook[2]/3` | workbook | Repair: Книга є на столі. | Книга на столі. | D | M35; U17. The present є is grammatical. The cue asks for its omission rather than condemning it. |
 | `workbook[2]/4` | workbook | Repair: Вона живе Київ. | Вона живе в Києві. | C | M35; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Вона живе в Києві. matches the stated meaning and case; the displayed competitors fail that task. |
@@ -554,7 +558,7 @@ Every repair retains the answer meaning and correct-option index. All but the th
 | `checkpoint-places/act-4/2` | U14, U64, U65 | sentence: (You are leaving the cafe.) Я йду ___ кафе. |
 | `checkpoint-places/act-4/3` | U6, U84, U85 | option 1: в → без; sentence: Потім вони йдуть ___ порт.; explanation: Between the consonants in йдуть and порт, use у порт for the destination. |
 | `checkpoint-places/act-4/5` | U65 | sentence: (The station is your destination.) Увечері я їду ___. |
-| `checkpoint-places/workbook[2]/1` | U14, U61, U64, U83, U84, U85 | prompt: (Give the destination: school.) Rephrase: Я йду в школі.; option 0: Я іду в школу. → Я йду в школу.; explanation: For the destination, use в школу. After Я, the euphonic verb form is йду. |
+| `checkpoint-places/workbook[2]/1` | U14, U61, U64, U83, U84, U85, POST4, U92, U93 | prompt: (Give the destination: school.) Rephrase: Я йду в школі.; option 0: Я іду в школу. → Я йду в школу.; option 1: Я іду в школі. → Я йду в школі.; option 2: Я іду зі школи. → Я йду зі школи.; explanation: For the destination, use в школу. After Я, the euphonic verb form is йду. |
 | `checkpoint-places/workbook[2]/3` | U17 | prompt: (Give the shorter version without є.) Rephrase: Книга є на столі.; explanation: The requested A1 place pattern is Книга на столі. |
 | `checkpoint-places/workbook[4]/2` | U6, U64 | option 1: у → до |
 | `checkpoint-places/workbook[4]/5` | U65 | sentence: (The station is her destination.) Після музею вона їде ___. |
@@ -602,7 +606,7 @@ Every repair retains the answer meaning and correct-option index. All but the th
 ## Validation and batch sizing
 
 - Structural scanner: `scripts/audit/scan_activity_errors.py --track a1-v1`, 55/55 files, zero findings, exit 0 before and after repair.
-- Existing affected checks: `pytest -n 2 tests/test_scan_activity_errors.py tests/test_a1_activity_schema_parser_drift.py tests/test_yaml_activities_a1_payload.py tests/test_activity_renderer.py tests/test_generate_mdx.py tests/test_generate_mdx_parsers.py tests/test_generate_mdx_unit_map.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_curriculum_manifest_canary.py`, run together with the existing source-policy guard: 342 passed in 12.10 seconds. No test file or case was added.
+- Existing affected checks: `pytest -n 2 tests/test_scan_activity_errors.py tests/test_a1_activity_schema_parser_drift.py tests/test_yaml_activities_a1_payload.py tests/test_activity_renderer.py tests/test_generate_mdx.py tests/test_generate_mdx_parsers.py tests/test_generate_mdx_unit_map.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_curriculum_manifest_canary.py`, run together with the existing source-policy guard: 342 passed in 11.50 seconds. No test file or case was added.
 - The existing ActivityParser, yaml_activities_to_jsx and dump_json_for_jsx regenerated exactly 66 changed tracked item payloads in 12 modules. Unchanged source objects and page bytes outside those serialized objects are preserved. The integrity manifest updates only the corresponding 24 hashes. Archived unaccented page conventions are retained.
 - Chromium exercised the existing Quiz and FillIn components with all 63 changed items that have choices: 63 keys accepted, all 126 distractors rejected, zero browser errors. Three other changed payloads have no options; they received source and Sources verification, but cannot receive positive browser-answer proof through the existing dropdown. A separate live component check confirmed all 14 pre-existing empty FillIn dropdowns have only a disabled placeholder and a disabled Check Answers button. Runtime package and lockfile hashes matched before dependencies were copied into the worktree.
 - Independent Gemini through AGY and Opus 5.5 through Claude review, admission CI and merge receipts are recorded on the PR at its exact pushed head. This document records the author audit; it does not assert independent approval or site deployment.
@@ -624,3 +628,16 @@ F4's in-scope euphony class was checked across every completed keyed item. All e
 F5's report wording is corrected. Exactly 14 declared source fill-ins have no authored options: where-is-it/act-2 (8) and my-city/act-3 (6). The live tracked-component check confirms that their empty dropdowns cannot be answered. Three receive language-context repairs in this batch, but their existing answerability limitation remains; no browser success is claimed for those three. This is an explicit pre-existing renderer/source-contract residual, not a free-text feature. Owner: CTO curriculum coordinator, #8893. The other eight cited hey-friend items are ErrorCorrection payloads, not FillIn; they are outside the 326-item fill-in/quiz denominator and their answerability is not certified here.
 
 F6 is fixed: the Одесі explanation no longer compares an option that was removed, and the grammatical conditional request is labelled Rephrase under its explicit imperative cue. G1, the first Gemini report's inaccurate alternative lists, was corrected by its source-fidelity verification round. The final moved head still requires fresh exact-head approvals from both seats. No superseded verdict authorizes landing it.
+
+
+## Final review correction and delivery state
+
+Opus delta finding F7 identified an introduced spelling giveaway in checkpoint-places/workbook[2]/1. Both distractors now use йду, matching the key; their place/source meanings stay unchanged. The final alternatives are Я йду в школу. / Я йду в школі. / Я йду зі школи. U83 supplies the orthographic rule; U92 verifies all seven forms, U93 verifies шко́лу/шко́лі/шко́ли, and POST4 rechecks the final full item. Its only VESUM diagnostic is case-sensitive Я; lowercase я is verified by U92. There are no UA-GEC suspicions. POST4 supersedes this one item's earlier POST2 text.
+
+U86 is an inconclusive GRAC lookup and supports no defect. U91 is a GRAC lookup for я є голодний whose two hits are foreign-character speech; it does not support an ordinary A1 rival and that item remains unchanged/clean. Both records are preserved in the evidence ledger.
+
+The author now withholds Gemini round 3's APPROVE: a deterministic source comparison found 16 misquoted arrays among its 29 reported samples. The default three-round Gemini budget is exhausted and the limitation is escalated to the CTO. Opus round 2 requested this F7 correction; fresh exact-head review remains required. No merge or deployment is claimed.
+
+Additional non-blocking follow-ups remain with the CTO on #8893: the port story's temporary they/I subject switch; sentence-initial Йдіть in around-the-city act-1/4; and euphony in where-to vocabulary-card examples outside these activity items. The existing 14 empty-dropdown residuals and broader lesson-label reconciliation also remain open.
+
+The final one-item correction was validated at 2026-10-28T21:04:37.007219+00:00: the scanner is 55/55 clean, all 342 affected tests pass in 11.50 seconds, and Chromium again accepts 63 keys and rejects 126 distractors with zero browser errors. The counts remain 66 repaired and 260 checked-clean.
