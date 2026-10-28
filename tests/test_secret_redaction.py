@@ -56,8 +56,6 @@ def test_launchers_and_dispatcher_call_the_sanitizer() -> None:
     assert "launcher_drop_unneeded_secrets" in launcher
     assert "env_sanitize.py" in launcher
     assert '--provider "$LC_PROVIDER"' in launcher
-    delegate = (REPO / "scripts/delegate.py").read_text(encoding="utf-8")
-    assert "without_unneeded_secrets(worker_env, dispatch_agent)" in delegate
     dispatcher = (REPO / "scripts/batch/batch_dispatcher.py").read_text(encoding="utf-8")
     assert 'unneeded_env_var_names(os.environ, "dispatcher")' in dispatcher
     wrapper = (REPO / "run-dispatcher.sh").read_text(encoding="utf-8")
@@ -256,58 +254,6 @@ def test_dispatcher_wrapper_is_executable() -> None:
     import stat
 
     assert (REPO / "run-dispatcher.sh").stat().st_mode & stat.S_IXUSR
-
-
-@pytest.mark.parametrize(
-    "provider,key",
-    [
-        ("gemini", "GEMINI_API_KEY"),
-        ("cursor", "CURSOR_API_KEY"),
-        ("codex", "OPENAI_API_KEY"),
-    ],
-)
-def test_api_key_only_dispatch_preserves_only_child_provider_key(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    provider: str,
-    key: str,
-) -> None:
-    from scripts import delegate
-    from scripts.batch.batch_dispatcher import _drop_unneeded_dispatcher_secrets
-
-    # Prevent credential resolution from ever consulting the real host.
-    monkeypatch.setattr(delegate, "_inject_gh_token_for_agent", lambda *args: None)
-    monkeypatch.setattr(delegate, "_scrub_unusable_gh_config_dir", lambda *args: None)
-    parent = {
-        "HOME": str(tmp_path),
-        "PATH": os.defpath,
-        "GEMINI_API_KEY": "synthetic-gemini-key-0123456789",
-        "CURSOR_API_KEY": SYNTHETIC_KEY,
-        "OPENAI_API_KEY": "synthetic-openai-key-0123456789",
-        "UNRELATED_API_KEY": "synthetic-unrelated-key-0123456789",
-    }
-    with monkeypatch.context() as patch:
-        patch.setattr(os, "environ", parent.copy())
-        _drop_unneeded_dispatcher_secrets()
-        assert "UNRELATED_API_KEY" not in os.environ
-        child_env = delegate._build_worker_env(task_id="synthetic-key-dispatch", dispatch_agent=provider)
-    proc = subprocess.run(
-        [
-            sys.executable,
-            "-c",
-            "import os,sys; sys.exit(0 if os.environ.get(sys.argv[1]) == sys.argv[2] else 1)",
-            key,
-            parent[key],
-        ],
-        env=child_env,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
-    assert proc.returncode == 0
-    assert proc.stdout == proc.stderr == ""
-    assert {name for name in child_env if name.endswith("_API_KEY")} == {key}
 
 
 def test_dispatcher_wrapper_retains_downstream_keys(tmp_path: Path) -> None:

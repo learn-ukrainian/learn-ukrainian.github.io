@@ -170,17 +170,6 @@ def resolve_fleet_repo(
     return repo, checkout
 
 
-def fleet_repo_as_dict(repo: FleetRepo, checkout: Path) -> dict[str, Any]:
-    return {
-        "key": repo.key,
-        "github": repo.github,
-        "local_name": repo.local_name,
-        "role": repo.role,
-        "default": repo.default,
-        "checkout": str(checkout),
-    }
-
-
 @cache
 def _repository_catalog(path: Path) -> dict[str, FleetRepo]:
     return load_fleet_repos(path)

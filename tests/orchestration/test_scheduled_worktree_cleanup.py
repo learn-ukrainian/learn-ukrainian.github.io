@@ -6,7 +6,6 @@ import shutil
 import subprocess
 import tempfile
 import time
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
@@ -159,19 +158,8 @@ def _repo(tmp_path: Path) -> Path:
     return repo
 
 
-def test_apply_fails_closed_without_process_probe(tmp_path: Path, monkeypatch) -> None:
-    repo = _repo(tmp_path)
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: None)
-
-    result = cleanup._repo_result(repo, apply=True)
-
-    assert result["activity_probe"] == {"available": False, "cwd_count": 0}
-    assert result["errors"] == ["process-CWD activity probe unavailable; apply skipped"]
-    assert result["results"] == []
-
-
-def test_scheduled_apply_reports_rescue_candidates_before_reaper(tmp_path: Path, monkeypatch) -> None:
-    """Defect class: reaping before inventory loses terminal work evidence."""
+def test_scheduled_apply_reports_rescue_candidates(tmp_path: Path, monkeypatch) -> None:
+    """Terminal worktrees still on disk are inventoried for rescue, never removed."""
     repo = _repo(tmp_path)
     calls: list[str] = []
 
@@ -181,8 +169,6 @@ def test_scheduled_apply_reports_rescue_candidates_before_reaper(tmp_path: Path,
 
     monkeypatch.setattr(cleanup, "report_terminal_worktrees", report)
     monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: calls.append("reaper") or [])
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
@@ -192,7 +178,7 @@ def test_scheduled_apply_reports_rescue_candidates_before_reaper(tmp_path: Path,
     monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda apply=False: {"errors": 0})
 
     result = cleanup._repo_result(repo, apply=True)
-    assert calls[:2] == ["rescue", "reaper"]
+    assert calls == ["rescue"]
     assert result["rescue"] == {
         "summary": {"candidate": 1},
         "tasks": [{"task_id": "rescue-test", "action": "report"}],
@@ -221,63 +207,23 @@ def test_orphaned_broken_gitdir_is_reported_not_deleted(tmp_path: Path) -> None:
     assert (orphan / "recover-me.txt").read_text(encoding="utf-8") == "local work\n"
 
 
-def test_reaper_error_marks_repository_run_failed(
+def test_runtime_error_marks_repository_run_failed(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
     repo = _repo(tmp_path)
-    worktree = repo / ".worktrees" / "dispatch" / "codex" / "failed"
-    row = cleanup.reap_worktrees.ReapResult(
-        path=str(worktree),
-        branch="codex/failed",
-        action="error",
-        reason="PR #1 MERGED",
-        dirty=False,
-        error="worktree removal failed",
-    )
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "_live_cwd_paths",
-        lambda _repo: set(),
-    )
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "reap_worktrees",
-        lambda **_kwargs: [replace(row)],
-    )
     monkeypatch.setattr(
         cleanup,
-        "find_orphaned_worktree_directories",
-        lambda _repo: [],
+        "cleanup_stale_origin_branches",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(RuntimeError("branch cleanup lock held")),
     )
 
     result = cleanup._repo_result(repo, apply=True)
 
-    assert result["errors"] == [f"{worktree}: worktree removal failed"]
+    assert result["errors"] == ["branch cleanup lock held"]
 
 
-def test_lock_contention_marks_repository_run_failed(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo = _repo(tmp_path)
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "_live_cwd_paths",
-        lambda _repo: set(),
-    )
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "reap_worktrees",
-        lambda **_kwargs: (_ for _ in ()).throw(RuntimeError("cleanup lock held")),
-    )
-
-    result = cleanup._repo_result(repo, apply=True)
-
-    assert result["errors"] == ["cleanup lock held"]
-
-
-def test_stale_worktree_registration_is_pruned_before_reaping(
+def test_stale_worktree_registration_is_pruned(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
@@ -286,11 +232,6 @@ def test_stale_worktree_registration_is_pruned_before_reaping(
     worktree = repo / ".worktrees" / "dispatch" / "codex" / "stale-registration"
     _git(repo, "worktree", "add", "-b", branch, str(worktree), "main")
     shutil.rmtree(worktree)
-    monkeypatch.setattr(
-        cleanup.reap_worktrees,
-        "_live_cwd_paths",
-        lambda _repo: set(),
-    )
     monkeypatch.setattr(
         cleanup.reap_worktrees,
         "_query_pr_states",
@@ -594,7 +535,6 @@ def test_worktree_prune_failure_stops_repository_run(
 
     result = cleanup._repo_result(repo, apply=True)
 
-    assert result["results"] == []
     assert result["branches"] == []
     assert result["maintenance"] is None
     assert result["errors"] == ["worktree prune failed; cleanup skipped"]
@@ -608,13 +548,6 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
         return {
             "repo_root": str(repo_root),
             "fetch": {"ok": True, "detail": None},
-            "activity_probe": {"available": True, "cwd_count": 2},
-            "results": [
-                {
-                    "action": "removed" if repo_root == public else "skipped",
-                    "branch_pruned": repo_root == public,
-                }
-            ],
             "branches": [{"action": "deleted"} if repo_root == public else {"action": "skipped"}],
             "orphans": [{"path": "orphan"}] if repo_root == private else [],
             "errors": [],
@@ -631,22 +564,7 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
 
     assert receipt["summary"] == {
         "repositories": 2,
-        "removed": 1,
-        "retained": 1,
-        "retained_exceptions": 0,
-        "by_preservation_class": {
-            "primary": 0,
-            "active_dispatch": 0,
-            "open_pr": 0,
-            "dirty": 0,
-            "detached_unknown": 0,
-            "permission_error": 0,
-            "foreign": 0,
-            "unmerged": 0,
-            "uncertain": 1,
-        },
-        "by_owner": {"unattributed": 2},
-        "branches_deleted": 2,
+        "branches_deleted": 1,
         "origin_branches_deleted": 0,
         "orphans_reported": 1,
         "errors": 0,
@@ -655,7 +573,6 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
         "task_scratch_reaped": 0,
         "task_scratch_bytes_freed": 0,
         "task_scratch_preserved": 0,
-        "needs_finalize_worktrees": [],
     }
     assert receipt["mode"] == "apply"
 
@@ -707,8 +624,8 @@ def _arm_auto_maintenance(repo: Path) -> None:
         assert proc.returncode == 0, proc.stderr
 
 
-def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Fetch must not start maintenance before the reaper; explicit gc stays after (#10856)."""
+def test_fetch_never_starts_maintenance_and_gc_runs_last(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Fetch must not start maintenance; the explicit gc runs last (#10856)."""
     repo = _repo(tmp_path)
     _arm_auto_maintenance(repo)
     control = tmp_path / "control.trace"
@@ -757,8 +674,6 @@ def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPat
 
     monkeypatch.setattr(cleanup, "_run_git", spy_run_git)
     monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
-    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
-    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: timeline.append("reaper") or [])
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
     monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
@@ -777,7 +692,7 @@ def test_reaper_runs_before_git_gc(tmp_path: Path, monkeypatch: pytest.MonkeyPat
 
     result = cleanup._repo_result(repo, apply=True)
 
-    assert timeline == ["fetch", "fetch", "reaper", "fetch", "gc"]
+    assert timeline == ["fetch", "fetch", "fetch", "gc"]
     assert fetched == [("-c", "maintenance.auto=false", "-c", "gc.auto=0", "fetch", "--prune", "origin")] * 3
     assert result["fetch"]["ok"] is True
     assert fetch_traces and not any(_maintenance_child(argv) for blob in fetch_traces for argv in _trace_children(blob))
@@ -1488,17 +1403,7 @@ def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
         "mode": "dry_run",
         "summary": {
             "repositories": 2,
-            "removed": 1,
-            "retained": 3,
-            "retained_exceptions": 2,
-            "by_preservation_class": {
-                "primary": 1,
-                "dirty": 1,
-                "permission_error": 1,
-                "unmerged": 0,
-            },
-            "by_owner": {"codex": 2, "claude": 1},
-            "branches_deleted": 0,
+            "branches_deleted": 1,
             "origin_branches_deleted": 0,
             "orphans_reported": 0,
             "errors": 0,
@@ -1508,46 +1413,22 @@ def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
         "repositories": [
             {
                 "repo_root": "/home/secret/host/learn-ukrainian",
-                "retained": 2,
-                "retained_exceptions": 1,
-                "by_preservation_class": {"primary": 1, "dirty": 1},
-                "by_owner": {"codex": 2},
-                "results": [
-                    {
-                        "path": "/home/secret/host/learn-ukrainian/.worktrees/dispatch/codex/t1",
-                        "branch": "codex/t1",
-                        "action": "skipped",
-                        "reason": "dirty",
-                        "dirty": True,
-                        "owner": "codex",
-                    },
-                ],
-                "branches": [],
+                "branches": [{"branch": "codex/t1", "action": "deleted", "reason": "merged"}],
                 "origin_branches": [],
                 "orphans": [],
                 "errors": [],
             },
             {
                 "repo_root": "/home/secret/host/learn-ukrainian-infra-private",
-                "retained": 1,
-                "retained_exceptions": 1,
-                "by_preservation_class": {"permission_error": 1},
-                "by_owner": {"claude": 1},
-                "results": [
-                    {
-                        "path": "/home/secret/host/learn-ukrainian-infra-private/.worktrees/dispatch/claude/t2",
-                        "branch": "claude/t2",
-                        "action": "error",
-                        "reason": "permission denied",
-                        "error": "permission denied",
-                        "dirty": False,
-                        "owner": "claude",
-                    },
-                ],
                 "branches": [],
                 "origin_branches": [],
-                "orphans": [],
-                "errors": [],
+                "orphans": [
+                    {
+                        "path": "/home/secret/host/learn-ukrainian-infra-private/.worktrees/dispatch/claude/t2",
+                        "reason": "unregistered worktree with missing gitdir",
+                    },
+                ],
+                "errors": ["permission denied"],
             },
         ],
     }
@@ -1558,8 +1439,10 @@ def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
     assert public["receipt_id"] == "20260906T200000Z-abcdef123456.json"
     assert "learn-ukrainian" in public["repositories"]
     assert "learn-ukrainian-infra-private" in public["repositories"]
-    assert public["summary"]["retained_exceptions"] == 2
-    assert public["summary"]["by_owner"] == {"codex": 2, "claude": 1}
+    assert public["summary"]["branches_deleted"] == 1
+    assert public["repositories"]["learn-ukrainian"]["branches_deleted"] == 1
+    assert public["repositories"]["learn-ukrainian-infra-private"]["orphans_reported"] == 1
+    assert public["repositories"]["learn-ukrainian-infra-private"]["errors"] == 1
 
     # Verify zero host paths dumped anywhere
     dumped = json.dumps(public)

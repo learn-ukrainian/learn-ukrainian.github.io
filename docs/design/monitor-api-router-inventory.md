@@ -51,14 +51,14 @@ print(sum(calls.values()), len(calls), [n for n, c in calls.items() if c > 1])
 The one-line `grep -oE` form of this count is not authoritative: it breaks on the
 multiline `reviewer_ghosts_router` call. The AST parse above is.
 
-### Total route-handler count — **291** decorator sum; **292** OpenAPI HTTP ops + **1** WebSocket
+### Total route-handler count — **290** decorator sum; **291** OpenAPI HTTP ops + **1** WebSocket
 
 Three separate denominators (do not conflate them):
 
 | Metric | Value | Source |
 | --- | ---: | --- |
-| Route-handler decorator sum | **291** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
-| OpenAPI HTTP operations | **292** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
+| Route-handler decorator sum | **290** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
+| OpenAPI HTTP operations | **291** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
 | WebSocket routes | **1** | `FROZEN_WEBSOCKET_ROUTE_COUNT`; `WS /ws/batch` on `batch_router` — absent from `app.openapi()['paths']` |
 
 Nested mounts (grep `\.include_router(` in `scripts/api/*.py`, excluding
@@ -141,7 +141,7 @@ for var, path in sorted(ROUTER_MAP.items()):
     total += n
 print(total)
 "
-# 291
+# 290
 
 .venv/bin/python -c "
 import sys; sys.path.insert(0,'.')
@@ -151,8 +151,8 @@ print(sum(len(v) for v in app.openapi()['paths'].values()))
 print(FROZEN_HTTP_OPERATION_COUNT)
 print(FROZEN_WEBSOCKET_ROUTE_COUNT)
 "
-# 292
-# 292
+# 291
+# 291
 # 1
 ```
 
@@ -251,7 +251,7 @@ routers (§4.2 core-router-last ordering).
 | **1** | `session_streams_router`, `rollover_router`, `session_router`, `rules_router` | 911 | Session-streams / handoff / rules cluster; shared `LIVE_REPO_ROOT`, session-streams DB |
 | **2** | `state_router` | 3,329 | Large; orient/authority/pipeline — see internal route groups |
 | **3** | `agent_router`, `agent_monitor_router`, `occupancy_router`, `observer_presence_router`, `fleet_workers_router`, `project_state_router` | 2,207 | Agent monitor DB + occupancy markers + in-memory presence + fleet project-state |
-| **4** | `fleet_router` | 2,679 | Large; fleet facade / messages / ACP — see internal route groups |
+| **4** | `fleet_router` | 2,639 | Large; fleet facade / messages / ACP — see internal route groups |
 | **5** | `comms_router` | 2,126 | Large; `MESSAGE_DB` + fleet-comms plane — see internal route groups |
 | **6** | `runtime_router` | 1,838 | Large; runtime adapters / ACP / usage telemetry |
 | **7** | `docs_router`, `artifacts_router`, `images_router` | 2,108 | Docs `EFFECTIVE_ROOTS` + curriculum artifacts + image/textbook stores |
@@ -319,13 +319,13 @@ full target list. The tests in `tests/api/test_router_inventory_seams.py` re-der
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `fleet_router.py` | `/api/fleet` | 27 | 2,679 | — | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 0 | 4 |
+| `fleet_router.py` | `/api/fleet` | 26 | 2,639 | — | — (uses `default_plane_root`, `legacy_comms.MESSAGE_DB` at call time) | 0 | 4 |
 
 **Internal route groups:**
 
 | Group | Routes | Paths (representative) |
 | --- | ---: | --- |
-| Facade / cold-start | 9 | `/facade`, `/facade/help`, `/facade/status`, `/facade/board`, `/facade/metrics`, `/facade/backlog`, `/facade/dead`, `/facade/broker-report`, `/facade/reap-report` |
+| Facade / cold-start | 8 | `/facade`, `/facade/help`, `/facade/status`, `/facade/board`, `/facade/metrics`, `/facade/backlog`, `/facade/dead`, `/facade/broker-report` |
 | Operations / overview | 5 | `/operations`, `/health`, `/overview`, `/agents`, `/endpoints` |
 | Messages / discussions / reviews | 8 | `/requests`, `/messages`, `/messages/{message_id}`, `/discussions`, `/discussions/{conversation_id}`, `/reviews`, `/reviews/{review_id}`, `/dead-letters` |
 | Authority / ACP / activity | 5 | `/authority/jobs`, `/migrations`, `/acp/conversations`, `/acp/conversations/{conversation_id}`, `/activity` |
@@ -520,8 +520,8 @@ beyond the config imports and module globals listed above.
 | Router registrations (`include_router` calls) | 48 |
 | Distinct router objects (46 imported modules + `core_router`) | 47 |
 | Routers mounted twice | 1 (`docs_router`) |
-| Route handlers (decorator sum, nested included) | 291 |
-| OpenAPI HTTP operations (sweep denominator) | 292 |
+| Route handlers (decorator sum, nested included) | 290 |
+| OpenAPI HTTP operations (sweep denominator) | 291 |
 | WebSocket routes (separate denominator) | 1 |
 | OPSEC fixture `setattr` targets (unique; see *OPSEC fixture seams*) | 22 |
 

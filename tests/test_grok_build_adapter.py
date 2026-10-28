@@ -382,24 +382,6 @@ def recorded_cancelled_turn():
     }
 
 
-@pytest.mark.parametrize("returncode", [0, 1])
-def test_recorded_cancelled_turn_is_not_a_done_task(recorded_cancelled_turn, returncode):
-    from scripts import delegate
-
-    result = GrokBuildAdapter().parse_response(
-        stdout=json.dumps(recorded_cancelled_turn), stderr="", returncode=returncode, output_file=None,
-    )
-    assert not result.ok
-    assert result.response == ""
-    assert result.failure_code == "provider_stream_incomplete"
-    assert recorded_cancelled_turn["text"] in result.stderr_excerpt
-    assert result.session_id == recorded_cancelled_turn["sessionId"]
-    assert result.substitution["actual_model"] == "grok-4.7-build"
-    assert delegate._classify_final_status(
-        cancelled=False, rate_limited=result.rate_limited, ok_outcome=result.ok,
-    ) == "failed"
-
-
 @pytest.mark.parametrize("stop_reason", [
     "cancelled", "max_tokens", "tool_use", "error", "EndTurn", "", None, 0, [], {},
 ])
@@ -446,49 +428,6 @@ def test_end_turn_without_answer_is_not_success(text):
     )
     assert not result.ok
     assert result.response == ""
-
-
-@pytest.mark.parametrize("usage,expected", [
-    ({"grok-4.7-build": {"modelCalls": 1}}, "grok-4.7-build"),
-    ({"grok-4.7-build-fast": {"modelCalls": 1}}, "grok-4.7-build-fast"),
-    ({}, None), (None, None), ([], None),
-    ({"grok-4.7-build": {}, "grok-4.7-build-fast": {}}, None),
-    ({"": {}}, None),
-])
-def test_native_runtime_identity_comes_only_from_single_model_usage_key(usage, expected):
-    from scripts import delegate
-
-    stdout = json.dumps({"text": "VERDICT: APPROVE grok-4.7-build", "stopReason": "end_turn", "model": "grok-4.7-build", "modelUsage": usage})
-    result = GrokBuildAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
-    assert result.ok
-    assert result.substitution["actual_model"] == expected
-    assert result.substitution["actual_model_known"] is (expected is not None)
-    state = delegate._cursor_model_state(agent="grok", result=result, substitution=result.substitution)
-    assert state["resolved_model"] == (expected or "unattested-harness")
-    assert state["resolved_model_known"] is (expected is not None)
-    assert state["resolved_model_source"] == ("grok-model-usage" if expected else "unattested-harness")
-
-
-@pytest.mark.parametrize("agent", ["grok", "grok-build"])
-@pytest.mark.parametrize("runtime,substituted", [
-    ("grok-4.7-build", False),
-    ("grok-4.7", False),
-    ("grok-4.7-build-fast", True),
-    ("grok-4.6", True),
-    ("grok-4.7-build-extra", True),
-])
-def test_native_runtime_alias_keeps_requested_pin_and_real_substitution(agent, runtime, substituted):
-    from scripts import delegate
-
-    result = GrokBuildAdapter().parse_response(
-        stdout=json.dumps({"text": "VERDICT: APPROVE", "stopReason": "end_turn", "modelUsage": {runtime: {"modelCalls": 1}}}),
-        stderr="", returncode=0, output_file=None,
-    )
-    assert result.substitution["substituted"] is substituted
-    state = delegate._cursor_model_state(agent=agent, result=result, substitution=result.substitution)
-    assert state["model"] == (runtime if substituted else "grok-4.7")
-    assert state["resolved_model"] == runtime
-    assert state["resolved_model_source"] == "grok-model-usage"
 
 
 def test_parse_failure_nonzero():

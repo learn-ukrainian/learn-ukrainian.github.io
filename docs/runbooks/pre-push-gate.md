@@ -1,7 +1,7 @@
 # Pre-push gate (#10033)
 
 `.githooks/pre-push` runs `.githooks/pre_push_gate.py` on the exact outgoing commit before any push
-leaves a checkout. Worker `git push` and the auto-finalize push (`scripts/delegate.py`) both go through
+leaves a checkout. Worker `git push` and the auto-finalize push (`scripts/dispatch.py`) both go through
 it. Install and repair the hook chain with `scripts/install_git_hooks.sh`.
 
 ## What it checks
@@ -40,13 +40,9 @@ hook `.pre-commit-config.yaml` places at the `pre-push` stage, unchanged, includ
 
 **No push path runs pytest.** The gate has no pytest stage, takes no host test slots and
 runs no affected-test selector. No explicit or implicit `pre-push` hook invokes pytest.
-CI Gate's required Checks job runs the unchanged
-`tests/test_sparse_collection_guard.py::test_tree_referencing_modules_collect_when_sparse_trees_are_absent`
-node with `--override-ini addopts=-q -m slow --strict-markers`. Its `slow` marker excludes it
-from ordinary pytest shards, so this explicit step preserves required verification.
 CI Gate's pytest shards still run `tests/test_repo_wide_marker_invariant.py` and
 `tests/test_conftest_task_store_guard.py`. `tests/test_ruff_ci_scope.py` pins the removed hooks'
-absence and the sparse guard's required CI ownership. These checks run on pull requests and
+absence and Checks' required CI ownership. These checks run on pull requests and
 merge groups, subject to the existing identical-tree green-run reuse policy.
 The nightly slow run stays advisory.
 A green pre-push is never evidence that the suite passes. Run the tests your change touches yourself
@@ -98,7 +94,7 @@ can only shorten these.
 One predecessor's admission allowance (`ADMISSION_WAIT_S`) covers one complete run of gate version 11,
 which also waited for host test slots and its selector: checkouts that still run it share this queue
 (one Git common directory), so the allowance keeps that length until none does (#11276). The hard
-admission ceiling is ten of these. The auto-finalize push timeout in `scripts/delegate.py` reads both
+admission ceiling is ten of these. The auto-finalize push timeout in `scripts/dispatch.py` reads both
 values from the gate.
 
 Before joining the global queue, a caller joins a FIFO queue for its immutable outgoing head under
@@ -293,5 +289,5 @@ approval and CI; merge-group CI stays the authority for semantic combinations.
 
 ## Bypass
 
-`git push --no-verify` is the explicit operator bypass; the rescue path in `scripts/delegate.py` uses it
+`git push --no-verify` is the explicit operator bypass; the rescue path in `scripts/dispatch.py` uses it
 deliberately. Agent sessions must not.

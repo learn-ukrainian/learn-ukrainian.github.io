@@ -9,7 +9,7 @@ if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -
   exit 0
 fi
 
-# A delegate.py dispatch worker inherits its dispatcher's environment, so a
+# A dispatch.py dispatch worker inherits its dispatcher's environment, so a
 # worker launched from a driver shell carries that driver's SESSION_EPIC (#10455).
 # Driver-only replay (Codex hydration) belongs to the
 # launcher-bound driver alone; drop the inherited epic so every branch below

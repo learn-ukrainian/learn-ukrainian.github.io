@@ -121,8 +121,8 @@ A target absent from the snapshot still needs a live audit. A fresh cache
 does not register a new issue by itself.
 
 Issue fetching and membership observation each have a 60-second budget,
-including cache validation and the entire live audit. Together they leave 15
-seconds for overhead inside dispatch's 135-second checker timeout. Timeout codes
+including cache validation and the entire live audit. These are standalone
+checker budgets; dispatch v2 does not run the checker. Timeout codes
 identify `membership_timeout_target_fetch`,
 `membership_timeout_cached_audit_validation`, `membership_timeout_live_audit_open_issues`,
 or `membership_timeout_live_audit_root_N_of_M_issue_K`, naming the root's position
@@ -132,34 +132,11 @@ DoR and DoD findings. A target-fetch timeout adds its typed code to
 `checker_error`; other fetch failures report `checker_error`. Membership cannot
 be established when the target fetch fails.
 
-Implementation dispatch checks both workspace-write and danger modes; read-only
-triage stays exempt. Non-trivial malformed DoD and conflicting ancestry cannot
-be overridden.
-With an explicit `--lifecycle-file`, dispatch loads one validated snapshot before
-DoR and requires its original issue and epic URLs to equal the canonical URLs
-for its repository and numbers, including refusing null URLs. Both applicable
-DoR checks select only that repository-qualified task issue and use the same
-snapshot carried into the worker prompt and task state. Evidence citations do
-not select additional cards or alter issue associations. An invalid binding or
-a declared PR or epic refuses without falling back to citations. Without a
-lifecycle binding, the existing conservative visible-reference scan, quoting
-and PR/epic handling remain unchanged. The URL boundary applies only to these
-write modes; read-only lifecycle applicability stays unchanged.
-Absent DoD, missing parent, unavailable registry and unknown membership refuse
-by default, with the existing recorded `--allow-dor-warn REASON` exception.
-A membership timeout on a card whose DoR and DoD read PASS is the one
-exception (#11283): dispatch records `dor: UNKNOWN (timeout)` with the timeout
-codes under `unknown`, prints an advisory and proceeds without the override.
-UNKNOWN is never PASS. It needs consistent positive evidence: DoR and DoD
-sections that read PASS with no errors, and a membership section whose single
-error is a timeout code the checker produces, matched whole (never by prefix)
-and listed exactly as the top-level `missing`. A target-fetch timeout, a
-checker failure, a card finding next to the timeout, or any missing, unchecked
-or contradictory section keeps the refusal, so a timeout never stands in for
-unread or incomplete card evidence. Cursor Auto refuses any override, any
-`unknown` entry and any explicit `dor` other than PASS. Registered fleet repositories without a
-membership registry report `membership_not_applicable` in admission, while DoR
-and DoD remain required. They need no permanent override.
+Dispatch v2 does not run the legacy DoR preflight, lifecycle-file propagation or
+Cursor Auto DoR gate. The accountable driver still checks the task card and
+preflight before launch. Supply the ledger locator in the brief and run the
+issue-quality checker explicitly when its evidence is needed. There is no
+legacy dispatch override for missing or unknown card evidence.
 
 The separate daily `issue_quality_report` service and timer summarize all
 repositories from `fleet_repos.load_fleet_repos()`. One audit per registered
@@ -317,7 +294,7 @@ Compose only the rows that apply (N/A needs a reason — do not skip silently):
       head + **landed** (merge verified, not merely enqueued) by the accountable
       driver — workers never merge; drivers never ask the operator to merge
 - [ ] **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s)
-      reaped (`merge_closeout` / `reap_worktrees.py`)
+      gone (`merge_closeout` proves all three)
 - [ ] **GitHub hygiene:** issue updated; closed when acceptance criteria are met
       (else open only with named residual + owner)
 - [ ] **Terminal goal matched** — merge ≠ deploy ≠ certify.
@@ -363,14 +340,9 @@ Before dispatch and before close:
 ```
 
 Without `--strict`, the advisory CLI exits `0` with `PASS` or `WARN` (missing
-fields listed), including when GitHub/API input cannot be read. It does **not**
-block issue creation or merge. Implementation dispatch uses `--strict`: WARN,
-GitHub/API lookup failure, or checker failure refuses dispatch by default.
-The recorded `--allow-dor-warn <reason>` exception covers absent DoD or missing
-and unknown membership; a membership timeout alone on an otherwise PASS card is
-an UNKNOWN advisory that needs no override. Malformed DoD and conflicting ancestry remain
-non-overrideable. PR references are skipped after API resolution; a brief
-without an issue reference is not gated. The detailed admission rules are above.
+fields listed), including when GitHub/API input cannot be read. It does not
+block issue creation or merge. Run `--strict` explicitly when the driver needs
+a failing exit code. Dispatch v2 does not invoke this checker automatically.
 
 ---
 

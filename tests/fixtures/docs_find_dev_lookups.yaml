@@ -268,18 +268,15 @@ lookups:
   - {id: P04, question: 'Where is the cross-family review preflight before a PR implemented?', kind: process, query: cross-family preflight before PR,
      expect: [scripts/build/cf_preflight.py],
      verify: [{path: scripts/build/cf_preflight.py, contains: class CfPreflightResult}]}
-  - {id: P05, question: 'What reaps dispatch worktrees after a PR merges?', kind: process, query: reap dispatch worktrees after merge,
+  - {id: P05, question: 'What proves a merged PR left no dispatch worktree behind?', kind: process, query: reap dispatch worktrees after merge,
      expect: [scripts/orchestration/merge_closeout.py, scripts/fleet/post_task_reap.py],
-     verify: [{path: scripts/orchestration/merge_closeout.py, contains: reap its dispatch worktrees}]}
+     verify: [{path: scripts/orchestration/merge_closeout.py, contains: prove no dispatch worktree still}]}
   - {id: P06, question: 'Where does the reviewer resolver pick a ladder seat?', kind: process, query: reviewer resolver ladder selection,
      expect: [scripts/review/reviewer_resolver.py],
      verify: [{path: scripts/review/reviewer_resolver.py, contains: def resolve_reviewer}]}
   - {id: P07, question: 'Where are review verdicts parsed?', kind: process, query: review verdict parsing,
-     expect: [scripts/delegate.py],
-     verify: [{path: scripts/delegate.py, contains: def parse_review_verdict}]}
-  - {id: P08, question: 'Where is the DoR preflight implemented in delegate?', kind: process, query: DoR preflight in delegate,
-     expect: [scripts/delegate.py],
-     verify: [{path: scripts/delegate.py, contains: def _run_dor_preflight}]}
+     expect: [scripts/review/verdict_parser.py],
+     verify: [{path: scripts/review/verdict_parser.py, contains: ACCEPTED_VERDICT_TOKENS}]}
   - {id: P09, question: 'Where is the one-command definition of done for a module?', kind: process, query: one command definition of done module,
      expect: [scripts/build/verify_shippable.py],
      verify: [{path: scripts/build/verify_shippable.py, contains: one-command Definition-of-Done}]}
@@ -287,8 +284,8 @@ lookups:
      expect: [.githooks/check-pytest-stamp.py, .githooks/pre-push],
      verify: [{path: .githooks/pre-push, contains: check-pytest-stamp.py}]}
   - {id: P11, question: 'Where is the dispatch worktree anchor directory checked?', kind: process, query: dispatch worktree anchor directory check,
-     expect: [scripts/delegate.py],
-     verify: [{path: scripts/delegate.py, contains: .worktrees/dispatch/<agent>}]}
+     expect: [scripts/dispatcher/git.py],
+     verify: [{path: scripts/dispatcher/git.py, contains: def worktree_plan}]}
   - {id: P12, question: 'What deletes stale agent branches safely?', kind: process, query: stale agent branches safe delete,
      expect: [scripts/hygiene/branch_sweep.py],
      verify: [{path: scripts/hygiene/branch_sweep.py, contains: List stale agent branches}]}

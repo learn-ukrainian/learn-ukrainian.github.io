@@ -27,7 +27,7 @@
       "Bash(gh run rerun *)",
       "Bash(gh run watch *)",
       "Bash(gh workflow run ci.yml *)",
-      "Bash(.venv/bin/python scripts/delegate.py *)",
+      "Bash(.venv/bin/python scripts/dispatch.py *)",
       "Bash(.venv/bin/python scripts/ai_agent_bridge/__main__.py *)",
       "Bash(.venv/bin/python -m scripts.orchestration.merge_closeout *)",
       "Bash(.venv/bin/python -m scripts.hygiene.branch_sweep *)",

@@ -8,7 +8,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts import delegate
 from scripts.agent_runtime.adapters import agy
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
@@ -88,16 +87,6 @@ def test_worker_route_keeps_high_pin_and_existing_permissions(tmp_path, monkeypa
     assert "--dangerously-skip-permissions" in plan.cmd
     assert "--sandbox" not in plan.cmd
     assert "--effort" not in plan.cmd
-
-
-@pytest.mark.parametrize("model", SLUGS)
-def test_real_delegate_probe_keeps_explicit_high_pin(tmp_path, monkeypatch, model):
-    monkeypatch.setattr(agy, "require_hook_config", lambda *a, **k: None)
-    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *args: None)
-    monkeypatch.setattr(agy, "_build_log_path", lambda *args: tmp_path / "agy.log")
-    assert delegate._adapter_model_rejection("agy", model) is None
-    with pytest.raises(delegate.BudgetGuardRefuseError, match="pinned AGY Claude identity"):
-        delegate._resolve_substitution_model("agy", model)
 
 
 @pytest.mark.parametrize("owned", [["scripts/delegate.py"], ["scripts/agent_runtime/"], ["scripts/"]])

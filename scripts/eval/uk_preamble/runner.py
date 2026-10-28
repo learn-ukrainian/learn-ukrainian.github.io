@@ -3,7 +3,7 @@
 Results directory layout (private, outside every Git work tree, given on the command line)::
 
     manifest.json              the frozen plan (set, variants, templates, rules core, seats,
-                               repeats, kinds, item ids, chunking, run tag, worker cwd, delegate's
+                               repeats, kinds, item ids, chunking, run tag, worker cwd, the dispatcher's
                                composition frame, dispatch argument hashes, protocol shortfalls)
                                and, from the first ``score --judge``, the frozen judge terms and, once
                                judges are dispatched, each judge seat's dispatch-argument hash.
@@ -14,10 +14,10 @@ Results directory layout (private, outside every Git work tree, given on the com
     raw/<task_id>.pending.json dispatched, outcome not collected yet (holds the dispatch-time
                                workspace and the expected composition)
 
-A task is accepted only when its record attests the planned seat, the rendered
-prompt, delegate's expected composition of it (effective prompt hash, prompt
-blocks, cwd, worktree; see ``dispatch.py``) and the other frozen conditions, and
-the worker checkout was the same at dispatch and at collection.
+A task is accepted only when its record attests the planned seat, exact submitted
+prompt bytes and worker checkout, and the checkout stayed the same from dispatch
+to collection. Argument fingerprints are caller-owned manifest terms, not v2
+record attestations.
 """
 
 from __future__ import annotations
@@ -80,7 +80,7 @@ DEFAULT_LENGTH_RATIO = 0.8
 
 
 def rules_block() -> str:
-    """The rules core block delegate prepends for ``--rules-seat core``; the harness renders it into the prompt."""
+    """The rules core block the evaluation harness renders explicitly into its submitted prompt."""
     return rules_core.core_block("core")
 
 
@@ -170,7 +170,7 @@ def frozen_plan(
     outside ``templates_sha256``) are frozen only when the profile is set, so a default plan keeps its manifest
     unchanged.
 
-    ``composition`` (delegate's frame around the prompts, see ``composition_frame``) and
+    ``composition`` (the dispatcher's frame around the prompts, see ``composition_frame``) and
     ``dispatch_args_sha256`` (see ``dispatch_args_frame``) are added once the candidate prompts are planned.
     """
     plan = {
@@ -262,11 +262,10 @@ def load_manifest(results: ResultsDir) -> dict[str, Any]:
 
 
 def composition_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec]) -> dict[str, Any]:
-    """The frame delegate puts around every candidate prompt; refused unless it is the same for all of them.
+    """The frame dispatcher puts around every candidate prompt; refused unless it is the same for all of them.
 
-    Delegate's worktree block depends on paths the prompt names (its sparse-checkout
-    note), so a preamble or item naming such a path would frame its arm differently
-    and the arms would differ in more than the preamble.
+    Dispatch v2 passes the prompt bytes unchanged. The frame also records the
+    dispatch root and pinned worker head, which must match across every arm.
     """
     seen: dict[str, dict[str, Any]] = {}
     first: tuple[str, dict[str, Any]] | None = None
@@ -282,7 +281,7 @@ def composition_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec]) -> dict
         elif current != first[1]:
             fields = ", ".join(sorted(key for key in current if current[key] != first[1][key]))
             raise HarnessError(
-                f"delegate would frame {task.task_id} differently from {first[0]} ({fields}); "
+                f"dispatcher would frame {task.task_id} differently from {first[0]} ({fields}); "
                 "the arms would differ in more than the preamble"
             )
     if first is None:
@@ -293,7 +292,7 @@ def composition_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec]) -> dict
 def dispatch_args_frame(dispatcher: Dispatcher, tasks: Sequence[TaskSpec], results: ResultsDir) -> dict[str, str]:
     """Argument hash of the first task of each kind and seat.
 
-    Frozen on the manifest as ``dispatch_args_sha256``. The hash is delegate's hash of the
+    Frozen on the manifest as ``dispatch_args_sha256``. The hash fingerprints the
     arguments this harness builds, including ``--research-task-family``, so a manifest frozen
     under other arguments (or before tasks were classified) cannot be resumed. Task ids and
     prompt paths are stable for one plan, and the same kind classifies every seat.
@@ -585,14 +584,14 @@ class Executor:
             self._last_spawn = time.monotonic()
 
     def _expected(self, task: TaskSpec) -> dict[str, Any]:
-        """Delegate's composition of the task's prompt; refused when it departs from the frozen frame."""
+        """The dispatcher composition of the task's prompt; refused when it departs from the frozen frame."""
         expected = self.dispatcher.compose(task.prompt)
         if expected.get("schema_version") == 2:
             path = str(Path(expected["dispatch_root"]) / task.seat.agent / task.task_id)
             expected.update(cwd=path, worktree_path=path)
         if self.frame is not None and frame(expected) != self.frame:
             fields = ", ".join(sorted(key for key in self.frame if self.frame[key] != expected.get(key)))
-            raise DispatchError(f"delegate would frame the prompt differently from the frozen plan ({fields})")
+            raise DispatchError(f"dispatcher would frame the prompt differently from the frozen plan ({fields})")
         return expected
 
     def _record(
@@ -602,14 +601,9 @@ class Executor:
         workspace: dict[str, Any] | None,
         expected: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        if outcome.conditions.get("schema_version") != 2 and isinstance(self.dispatcher, DelegateDispatcher):
-            expected, args_hash = self.dispatcher.legacy_inputs(
-                task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id), task.prompt
-            )
-        else:
-            args_hash = self.dispatcher.expected_args_sha256(
-                task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id)
-            )
+        args_hash = self.dispatcher.expected_args_sha256(
+            task.task_id, task.seat, task.kind, prompt_path(self.results, task.task_id)
+        )
         problems = []
         if expected is None:  # no pending marker: recompute (the task is refused below anyway)
             try:
@@ -666,7 +660,7 @@ class Executor:
 
     def _execute(self, task: TaskSpec, summary: RunSummary) -> None:
         base_id, attempt = task.task_id, 0
-        v2 = isinstance(self.dispatcher, DelegateDispatcher) and not self.dispatcher.legacy_resume
+        v2 = isinstance(self.dispatcher, DelegateDispatcher)
         if v2:
             latest, attempt = _latest_attempt(self.results, base_id)
             task = replace(task, task_id=latest)
@@ -739,13 +733,12 @@ class Executor:
         return summary
 
     def preflight(self, tasks: Sequence[TaskSpec]) -> RunSummary:
-        """Write prompts and validate each dispatch with the delegate's dry run; nothing is spawned.
+        """Write prompts and validate each dispatch with the dispatcher's dry run; nothing is spawned.
 
         Each prompt's composition is computed and checked against the frozen frame first. The dry run
-        uses a distinct ``-preflight`` task id so it never collides with the real task. When that id
-        already names this caller's terminal ``dry_run`` record, the dispatcher passes ``--force-new``
-        so the dry run can be repeated. When no record exists, it omits ``--force-new``. Any other
-        existing record refuses that preflight and archives nothing. A real dispatch omits it too.
+        uses a distinct ``-preflight`` task id so it never collides with the real task. Dispatch v2
+        creates no record for a dry run, so it can be repeated while that id remains unused.
+        Any existing record refuses that preflight and archives nothing; v2 refuses task-id replacement.
         """
         summary = RunSummary()
         for task in tasks:
@@ -802,7 +795,7 @@ def pair_problem(
         return "arms ran under different conditions: " + ", ".join(differing)
     frames = [frame(raw.get("composition") or {}) for raw in (base, cand)]
     if frames[0] != frames[1] or frames[0] != plan.get("composition"):
-        return "delegate framed the arms differently or not as frozen"
+        return "dispatcher framed the arms differently or not as frozen"
     base_prompt, cand_prompt = _stored_prompt(results, base), _stored_prompt(results, cand)
     if base_prompt is None or cand_prompt is None:
         return "stored prompt missing or not the attested prompt"

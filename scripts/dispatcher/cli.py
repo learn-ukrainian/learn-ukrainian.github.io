@@ -191,7 +191,7 @@ def _dispatch(args) -> int:
     )
     prompt.decode("utf-8")
     # Every worker and review seat needs the rules core: without it nothing is dispatched, and this
-    # runs before any check, worktree or task record (delegate.py cmd_dispatch, rules_core.require_core).
+    # runs before any check, worktree or task record.
     from scripts.lib import rules_core
 
     try:

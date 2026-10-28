@@ -37,7 +37,8 @@ _PROFILE_RESOLVER = REPO_ROOT / "scripts" / "lib" / "profile_resolver.sh"
 _SUPERVISOR = REPO_ROOT / "scripts" / "orchestration" / "claudex_supervisor.py"
 # Python code that builds the environment of a spawned agent session.
 _PYTHON_ENV_SITES = (
-    REPO_ROOT / "scripts" / "delegate.py",
+    REPO_ROOT / "scripts" / "dispatcher" / "environment.py",
+    REPO_ROOT / "scripts" / "dispatcher" / "worker.py",
     _SUPERVISOR,
     *sorted((REPO_ROOT / "scripts" / "agent_runtime").glob("*.py")),
 )

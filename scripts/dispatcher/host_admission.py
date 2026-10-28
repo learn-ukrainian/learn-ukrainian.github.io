@@ -1,6 +1,6 @@
 """Legacy host/credit admission and the atomic pre-launch write-slot hold.
 
-Mirrors delegate.py:5128-5192, 15385-15406, 15812-15882 and 19369-19386.
+Checks host/credit admission before reserving a write-slot hold.
 The retained admission scanner and ownership ledger read the same hold format.
 """
 
@@ -82,7 +82,7 @@ def evaluate(mode, *, sweep, thresholds=None, disk_guard=True):
 
 
 def allows(decision, force_reason):
-    """delegate.py:5155: force may override host checks, never disk refusal."""
+    """Force may override host checks, never disk refusal."""
     return decision.exempt or decision.admitted or (force_reason is not None and not decision.disk_refused)
 
 
@@ -122,7 +122,7 @@ def check(mode, *, dry_run, disk_guard, force_reason=None):
 
 
 def credit_period_refusal(agent, model):
-    """delegate.py:19369: import errors propagate; only the reader owns unknown-state policy."""
+    """Import errors propagate; only the reader owns unknown-state policy."""
     from scripts.fleet import credit_lane
 
     if not model:

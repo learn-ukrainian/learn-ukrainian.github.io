@@ -90,7 +90,7 @@ a justification, not as silent practice.
 
 ### `.worktree-briefs/` (was not gitignored pre-2026-04-24)
 
-One-shot dispatch prompts consumed by `delegate.py dispatch`. Each
+One-shot dispatch prompts consumed by `dispatch.py dispatch`. Each
 brief is generated, passed to a Codex/Claude/Gemini subprocess, and
 produces a PR. After the PR merges, the brief has zero archival value.
 Now gitignored (commit 3aa5880304). If you ever see one tracked, delete

@@ -17,7 +17,7 @@ rules_core_refuse() {
 
 # rules_core_load PYTHON ROOT LANE PROVIDER
 # Sets LC_RULES_SEAT, LC_RULES_CORE, LC_RULES_CORE_BYTES and exports LU_RULES_SEAT
-# so delegate.py and ACP calls made from the session inherit the seat. Returns 1,
+# so dispatch.py and ACP calls made from the session inherit the seat. Returns 1,
 # naming the path, when the core cannot be loaded.
 rules_core_load() {
   local py="$1" root="$2" lane="${3:-}" provider="${4:-claude}"

@@ -69,7 +69,7 @@ V7 is single-module per invocation (no `--range`). To run a batch, use standard 
 
 Gemini CLI auth modes are legacy-only and are not supported for current
 project work. Route Gemini-family review or Q&A through AGY via
-`ai_agent_bridge`. Use `scripts/delegate.py dispatch --agent agy` for
+`ai_agent_bridge`. Use `scripts/dispatch.py dispatch --model <catalog-model> --agent agy` for
 dispatched execution.
 
 ### Resume (continue from where it stopped)

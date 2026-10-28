@@ -10,7 +10,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
 from scripts.orchestration import job_host_exec as jh
 
 pytestmark = pytest.mark.reads_content
@@ -41,11 +40,6 @@ def test_cli_help_runs_without_pythonpath(tmp_path: Path) -> None:
     assert "Exit codes:" in proc.stdout
 
 
-def _marker_root(tmp_path: Path) -> Path:
-    plane = tmp_path / "batch_state" / "fleet-comms" / "v1"
-    plane.mkdir(parents=True)
-    (plane / RETIRED_LOCAL_MARKER).write_text("retired\n", encoding="utf-8")
-    return tmp_path
 
 
 def _entry(*, status: str = "fresh", mem: float = 20.0, disk: float = 40.0, cpu: int = 4, load1: float = 0.2) -> dict:
@@ -93,70 +87,14 @@ def test_fails_closed_when_env_unset(monkeypatch: pytest.MonkeyPatch) -> None:
         jh.repo_for_host_id("host-teacher")
 
 
-def test_no_marker_stays_notebook(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(jh.ENV_ALLOW_NOTEBOOK, raising=False)
-    occupancy = _payload(**{"host-job": _entry(), "host-teacher": _entry(disk=20.0)})
-    placement, reason, host_id = jh.decide_dispatch_placement(repo_root=tmp_path, occupancy=occupancy)
-    assert (placement, reason, host_id) == ("notebook", "no_retire_marker", None)
 
 
-def test_picks_teacher_when_it_has_more_headroom(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(jh.ENV_ALLOW_NOTEBOOK, raising=False)
-    root = _marker_root(tmp_path)
-    occupancy = _payload(
-        **{
-            "host-job": _entry(mem=20.0, disk=49.0, load1=0.2),
-            "host-teacher": _entry(mem=20.0, disk=24.0, load1=0.1),
-        }
-    )
-    placement, reason, host_id = jh.decide_dispatch_placement(repo_root=root, occupancy=occupancy)
-    assert (placement, reason, host_id) == ("vps", "available", "host-teacher")
 
 
-def test_job_full_uses_teacher(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(jh.ENV_ALLOW_NOTEBOOK, raising=False)
-    root = _marker_root(tmp_path)
-    occupancy = _payload(
-        **{
-            "host-job": _entry(mem=90.0, disk=40.0),
-            "host-teacher": _entry(mem=20.0, disk=24.0),
-        }
-    )
-    assert jh.decide_dispatch_placement(repo_root=root, occupancy=occupancy) == (
-        "vps",
-        "available",
-        "host-teacher",
-    )
 
 
-def test_both_full_or_down_falls_back_to_notebook(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(jh.ENV_ALLOW_NOTEBOOK, raising=False)
-    root = _marker_root(tmp_path)
-    both_full = _payload(**{"host-job": _entry(mem=90.0), "host-teacher": _entry(disk=90.0)})
-    assert jh.decide_dispatch_placement(repo_root=root, occupancy=both_full) == ("notebook", "full", None)
-    both_down = _payload(
-        **{
-            "host-job": _entry(status="unavailable"),
-            "host-teacher": _entry(status="unavailable"),
-        }
-    )
-    assert jh.decide_dispatch_placement(repo_root=root, occupancy=both_down) == (
-        "notebook",
-        "unavailable",
-        None,
-    )
-    assert jh.decide_dispatch_placement(repo_root=root, occupancy=None) == ("notebook", "unavailable", None)
 
 
-def test_allow_env_bypasses_block(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(jh.ENV_ALLOW_NOTEBOOK, "1")
-    root = _marker_root(tmp_path)
-    occupancy = _payload(**{"host-job": _entry(), "host-teacher": _entry(disk=10.0)})
-    assert jh.decide_dispatch_placement(repo_root=root, occupancy=occupancy) == (
-        "notebook",
-        "allow_env",
-        None,
-    )
 
 
 def test_main_uses_ssh_stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -220,65 +158,6 @@ def test_main_dispatch_preserves_session_initiator(tmp_path: Path, monkeypatch: 
     assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script
 
 
-@pytest.mark.parametrize("entrypoint", ["scripts/dispatch.py", "scripts/delegate.py", "/local/scripts/delegate.py"])
-@pytest.mark.parametrize("prompt_flag", ["--prompt-file", "--prompt"])
-def test_main_dispatch_copies_local_prompt_file(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, entrypoint, prompt_flag
-):
-    fake_bin = tmp_path / "bin"
-    fake_bin.mkdir()
-    args_file = tmp_path / "ssh.args"
-    fake_ssh = fake_bin / "ssh"
-    fake_ssh.write_text(
-        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
-        encoding="utf-8",
-    )
-    fake_ssh.chmod(0o755)
-    prompt = tmp_path / "brief.md"
-    prompt.write_text("keep curriculum/l2-uk-en in the worktree\n", encoding="utf-8")
-    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
-    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
-    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "cursor")
-    lifecycle = tmp_path / "lifecycle.json"
-    lifecycle.write_text('{"version": 1}', encoding="utf-8")
-    rc = jh.main(
-        [
-            "--host-id",
-            "host-job",
-            "--",
-            ".venv/bin/python",
-            entrypoint,
-            "dispatch",
-            "--agent",
-            "codex",
-            "--task-id",
-            "cf",
-            prompt_flag,
-            str(prompt) if prompt_flag == "--prompt-file" else prompt.read_text(),
-            "--lifecycle-file",
-            str(lifecycle),
-            "--run-nonce",
-            "test-nonce",
-        ]
-    )
-    assert rc == 0
-    recorded = args_file.read_text(encoding="utf-8")
-    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
-    assert str(prompt) not in recorded
-    assert "keep curriculum/l2-uk-en in the worktree" not in recorded
-    assert prompt_flag in script
-    if prompt_flag == "--prompt-file":
-        assert "/tmp/lu-dispatch-prompt.XXXXXX" in script
-        assert "$LU_DISPATCH_PROMPT_0" in script
-    assert f"export {jh.ENV_ALLOW_NOTEBOOK}=1" in script
-    assert f"export {jh.ENV_RUNTIME_INITIATOR}=cursor" in script
-    assert f"export {jh.ENV_RUNTIME_INITIATOR_SOURCE}=" in script
-    assert f"export {jh.ENV_RUNTIME_RUN_NONCE}=test-nonce" in script
-    assert str(lifecycle) not in recorded
-    assert str(lifecycle) not in script
-    assert "eyJ2ZXJzaW9uIjogMX0=" in script
-    assert f"scripts/{Path(entrypoint).name}" in script
 
 
 def test_main_help_contract() -> None:
@@ -374,42 +253,6 @@ def test_forward_dispatch_rewrites_prompt_dash(tmp_path: Path, monkeypatch: pyte
     assert "touch wiki/pages.md" not in recorded
 
 
-def test_forward_dispatch_copies_lifecycle_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    fake_bin = tmp_path / "bin"
-    fake_bin.mkdir()
-    args_file = tmp_path / "ssh.args"
-    fake_ssh = fake_bin / "ssh"
-    fake_ssh.write_text(
-        f'#!/usr/bin/env bash\nprintf "%s\\n" "$@" > {args_file}\ncat > {args_file}.stdin\nexit 0\n',
-        encoding="utf-8",
-    )
-    fake_ssh.chmod(0o755)
-    ledger = tmp_path / "task-lifecycle.json"
-    ledger.write_text('{"schema":"task-lifecycle.v1","task_id":"cf"}\n', encoding="utf-8")
-    monkeypatch.setenv("PATH", f"{fake_bin}:/usr/bin:/bin")
-    monkeypatch.setenv(jh.ENV_HOST, "job-alias")
-    monkeypatch.setenv(jh.ENV_REPO, "/remote/repo")
-    rc = jh.forward_dispatch(
-        host_id="host-job",
-        argv=[
-            "scripts/dispatch.py",
-            "dispatch",
-            "--agent",
-            "codex",
-            "--task-id",
-            "cf",
-            "--lifecycle-file",
-            str(ledger),
-        ],
-    )
-    assert rc == 0
-    recorded = args_file.read_text(encoding="utf-8")
-    script = (tmp_path / "ssh.args.stdin").read_text(encoding="utf-8")
-    assert str(ledger) not in recorded
-    assert "--lifecycle-file" in script
-    assert "/tmp/lu-dispatch-lifecycle.XXXXXX" in script
-    assert "$LU_DISPATCH_LIFECYCLE_0" in script
-    assert "base64 -d >" in script
 
 
 def test_forward_dispatch_rejects_notebook_cwd(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -479,16 +322,6 @@ def test_forward_dispatch_missing_ssh_is_transport_error(tmp_path: Path, monkeyp
         )
 
 
-def test_notebook_fallback_only_on_transport_failure() -> None:
-    assert jh.notebook_fallback_after_forward(None, error=ValueError("missing host")) is False
-    assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("/tmp/local.json")) is False
-    assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("/tmp/ssh")) is False
-    assert jh.notebook_fallback_after_forward(None, error=FileNotFoundError("ssh")) is False
-    assert jh.notebook_fallback_after_forward(None, error=jh.SshTransportError("ssh missing")) is True
-    assert jh.notebook_fallback_after_forward(None, error=jh.SshTransportError("Permission denied")) is True
-    assert jh.notebook_fallback_after_forward(255) is True
-    assert jh.notebook_fallback_after_forward(0) is False
-    assert jh.notebook_fallback_after_forward(2) is False
 
 
 @pytest.mark.parametrize(
@@ -579,8 +412,8 @@ def test_main_missing_ssh_dispatch_returns_255(tmp_path: Path, monkeypatch: pyte
     [
         "scripts/dispatch.py",
         "/local/checkout/scripts/dispatch.py",
-        "scripts/delegate.py",
-        "/local/checkout/scripts/delegate.py",
+        "scripts/dispatch.py",
+        "/local/checkout/scripts/dispatch.py",
     ],
 )
 def test_forward_dispatch_propagates_run_nonce_in_argv_and_export(

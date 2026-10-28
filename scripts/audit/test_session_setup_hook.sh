@@ -583,7 +583,7 @@ assert_not_contains "$output" "DURABLE THREAD LEASE CONFLICT" "gate budget exhau
 # 17c. #7827: a dispatched worker never evaluates the per-agent thread lease.
 #      A lease held by a live orchestrator must stop a normal session but not
 #      a dispatch worker — whether the worker is recognized by the explicit
-#      delegate.py marker or by the layout-A dispatch worktree path alone.
+#      dispatch.py marker or by the layout-A dispatch worktree path alone.
 write_held_lease() {
   local root="$1"
   local holder_pid="$2"
@@ -629,7 +629,7 @@ output="$(run_hook "$fixture_root" 0 claude)"
 assert_contains "$output" "DURABLE THREAD LEASE CONFLICT" "dispatch exemption control"
 assert_not_contains "$output" "thread lease not evaluated" "dispatch exemption control"
 
-# 17c-ii. The explicit delegate.py marker exempts the worker and logs one
+# 17c-ii. The explicit dispatch.py marker exempts the worker and logs one
 #      informational line naming the recorded owner and generation.
 output="$(run_hook "$fixture_root" 0 claude "" "" native_claude "" "" "" "task-7827")"
 assert_contains "$output" "dispatch worker (claude/task-7827): thread lease not evaluated; owner orchestrator-thread generation 4" \

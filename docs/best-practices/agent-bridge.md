@@ -56,7 +56,7 @@ working tree changes while participants are running. A failed round
 posts a loud system warning into the thread before returning non-zero,
 including `READ_ONLY_VIOLATION: <agent>` for the agent family that must
 be treated as the write source. Filesystem writes during discussion are
-a hard stop; dispatch the work as a separate `scripts/delegate.py dispatch`
+a hard stop; dispatch the work as a separate `scripts/dispatch.py dispatch`
 brief.
 
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py post` creates channel
@@ -65,7 +65,7 @@ delivery mode is read-only, and the inbox worker applies the same
 discussion read-only adapter contract to those default deliveries. Use
 write-capable modes only when the post is explicitly an execution
 request. Implementation work that needs file edits, commits, pushes, or
-a PR should normally go through `scripts/delegate.py dispatch` or
+a PR should normally go through `scripts/dispatch.py dispatch` or
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix`, not
 through discussion.
 
@@ -161,14 +161,14 @@ assignment enforced by tooling instead of memory.
 
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix <issue-or-task-id> [--brief-file PATH]` dispatches a
 Codex worktree implementation run for "fix this and ship a PR" tasks.
-It hardcodes `scripts/delegate.py dispatch --agent codex --mode danger
+It hardcodes `scripts/dispatch.py dispatch --model <catalog-model> --agent codex --mode workspace-write
 --worktree --base origin/main --effort high`, and every generated
 brief includes the commit, push, and PR checklist. If `--brief-file`
 is omitted, the wrapper builds `/tmp/dispatch-fix-<task-id>.md` from
 `gh issue view <issue> --json title,body`.
 
 Exact-head cross-family review through `ask-<lane> --type review` (headless dispatch via
-`scripts/delegate.py dispatch --agent <reviewer> --mode read-only --worktree --branch <branch>`)
+`scripts/dispatch.py dispatch --model <catalog-model> --agent <reviewer> --mode read-only --worktree --branch <branch>`)
 is the **canonical formal PR review entry** (sealed `review-pr` and `publish-review-verdict`
 were removed in #8520):
 
@@ -263,7 +263,7 @@ delegate worker.
 
 ## Silence-timeout vs hard-timeout
 
-`scripts/delegate.py dispatch` has two watchdogs with different jobs.
+`scripts/dispatch.py dispatch` has two watchdogs with different jobs.
 `--hard-timeout` is the absolute wall-clock fallback for the worker.
 `--silence-timeout` is narrower: it kills the agent CLI when no watchdog
 activity arrives within the configured window, then marks the task
@@ -307,7 +307,7 @@ agent.** Per channel conventions:
 5. Commit only after the review is CLEAN or BLOCKING is resolved
 6. Commit message includes `Reviewed-By: <qualified cross-family reviewer> (task-id)` trailer
 
-The AGY bridge reviews Ukrainian content only. Native AGY dispatch through `delegate.py` admits low/medium risk code reviews subject to resolver admission, scoped permissions and command denial; high/critical, infra and security reviews exclude Gemini. A `post reviews --to agy` or `discuss --with agy` call is refused unless `--review-profile ukrainian` is set. `--review-profile code` is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.
+The AGY bridge reviews Ukrainian content only. Native AGY dispatch through `dispatch.py` admits low/medium risk code reviews subject to resolver admission. Dispatch v2 does not provide protected review isolation. High/critical, infra and security reviews exclude Gemini. A `post reviews --to agy` or `discuss --with agy` call is refused unless `--review-profile ukrainian` is set. `--review-profile code` is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.
 
 This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.
@@ -332,7 +332,7 @@ environment for each process:
 - Provider credentials pass through only to that provider: Gemini sees
   Gemini/Google keys, Claude sees Anthropic/Claude keys, and Codex sees
   OpenAI/Codex keys. Cross-provider keys stay absent. `GITHUB_TOKEN`
-  is never passed through directly; `delegate.py` resolves it once from
+  is never passed through directly; `dispatch.py` resolves it once from
   the environment or `~/.bash_secrets` and exposes it as `GH_TOKEN` only
   for Codex, Claude, and bridge subprocesses so authenticated `gh`
   commands work without sourcing shell secrets. Gemini subprocesses do
@@ -503,7 +503,7 @@ from a plain shell; launchers can supply the sender identity. `discuss`
 accepts 2 to 4 distinct enabled seats. Neither surface falls back to a one-shot
 provider process on failure.
 
-Use `delegate.py dispatch --worktree` for planning, creation, design, or other
+Use `dispatch.py dispatch --worktree` for planning, creation, design, or other
 toolful work. Explicit `ask-* --type review`, `--review`, and `--pr` requests
 retain their headless toolful dispatch path. The `process-*` commands exist to
 drain old queued messages; do not create new one-shot jobs for them. Ordinary

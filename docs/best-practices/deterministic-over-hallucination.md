@@ -91,7 +91,7 @@ A rule of thumb: **the moment you introduce a number, name, path, SHA, technical
 ### Codex (primary coder + adversarial reviewer)
 
 - Dispatch briefs MUST list the deterministic verification path for every load-bearing claim. The brief is the contract.
-- CLI `--mode read-only` runs are ideal for verification; `--mode danger` writes only to worktrees, never to main.
+- CLI `--mode read-only` runs are ideal for verification; `--mode workspace-write` writes only to worktrees, never to main.
 - Reviews must cite SPECIFIC examples from the actual code or text — same standard as the linguistic reviewer (see `non-negotiable-rules.md` rule 6).
 
 ### Gemini (writer + content reviewer)
@@ -126,11 +126,9 @@ THREE of the following in the PR body — quoted raw output, not paraphrase:**
 2. **AFTER** — quoted `sqlite3 data/sources.db "SELECT COUNT(*) FROM <table> WHERE <scope>"` output, taken after the write.
 3. **SAMPLE** — quoted `SELECT chunk_id, substr(text, 1, 80) FROM <table> WHERE <scope> LIMIT 3` showing 2-3 real rows with the new metadata visible.
 
-The path must be the canonical `data/sources.db` from the dispatch
-worktree (which is a symlink to main's DB via
-`scripts/delegate.py:_provision_data_symlinks`). If the path is wrong,
-the symlink is missing, or the migration rolled back, the BEFORE/AFTER
-counts will be identical — that's the deterministic signal we need.
+Resolve the canonical store through `scripts.storage.topology`; dispatch v2
+does not provision the legacy data symlinks. Verify the selected store before
+comparing BEFORE/AFTER counts.
 
 Orchestrator MUST independently re-run the AFTER count from the main
 checkout before merging. A merge gated only on the brief's quoted

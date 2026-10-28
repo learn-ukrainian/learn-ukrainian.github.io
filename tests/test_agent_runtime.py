@@ -22,6 +22,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -43,7 +44,7 @@ from tests.helpers.codex_exec_stream import (
     turn_started,
 )
 from tests.helpers.python import project_python
-from tests.opsec_fixtures import TOKEN
+from tests.opsec_fixtures import ROOT, TOKEN
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -3585,6 +3586,33 @@ def test_gh_shim_secondary_limit_with_closed_stdin_is_one_typed_attempt(tmp_path
     assert attempts.read_text().splitlines() == ["called"]
     assert json.loads(proc.stdout)["error"] == "github_rate_limited"
     assert "retrying" not in proc.stderr
+
+
+def test_gh_shim_works_without_temporary_directory(tmp_path, gh_shim_sandbox):
+    """The gh shim runs Git through the agent git shim; neither needs a temporary directory."""
+    root, shim, _tooling = gh_shim_sandbox
+    shutil.copy2(ROOT / "scripts/agent_runtime/shims/git", shim.parent / "git")
+    binary = tmp_path / "real-gh"
+    binary.write_text("#!/bin/sh\nprintf 'real-gh %s\\n' \"$*\"\n")
+    binary.chmod(0o755)
+    proc = subprocess.run(
+        [str(shim), "issue", "list"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(binary),
+            "AGENT_REAL_GIT": shutil.which("git", path=os.defpath),
+            "PATH": os.pathsep.join([str(shim.parent), os.environ.get("PATH", "")]),
+            "TMPDIR": str(tmp_path / "missing-temporary-directory"),
+        },
+        check=False,
+        timeout=15,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout.startswith("real-gh issue list"), proc.stdout
+    assert "OPSEC" not in proc.stderr
 
 
 def test_git_shim_blocks_push_to_main_without_opt_in(tmp_path):

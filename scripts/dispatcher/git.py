@@ -25,7 +25,7 @@ from scripts.storage.topology import STORE_FILES
 
 ROOT = resolve_repo_root(Path(__file__), 2)
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "fleet_repos.yaml"
-# Mirrors scripts/delegate.py::_DISPATCH_SPARSE_EXCLUDE_DEFAULT without importing its runtime.
+# Default trees excluded from dispatch worktrees.
 SPARSE_EXCLUDE_DEFAULT = frozenset({
     "curriculum", "wiki", "data/projects", "data/lexicon", "data/datasets", "data/processed",
     "registry/projects", "registry/lexicon/source-inventory",
@@ -300,7 +300,7 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
 DATABASE_LINKS = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
 NODE_LINKS = ("node_modules", "site/node_modules")
 # Ignored entries a settled worktree may still hold: regenerable caches and the links provisioned above.
-CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"})
+CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".pytest_breadcrumbs", ".ruff_cache", ".mypy_cache"})
 # Work this branch contains on the canonical remote is published, even after its own branch was deleted.
 MAIN_REF = "refs/heads/main"
 # A squash merge leaves the task's own commit out of main; its pull-request head ref still proves the push.

@@ -8,46 +8,10 @@ any of them.
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-
-
-def test_delegate_dispatch_accepts_grok_agent_and_alias(tmp_path):
-    """``--agent grok`` and permanent alias ``--agent grok-build`` parse."""
-    from tests.launcher_sandbox import copy_interactive_launcher_checkout
-
-    copy_interactive_launcher_checkout(tmp_path)
-    for agent, task in (
-        ("grok", "test-grok-argparse-probe"),
-        ("grok-build", "test-grok-build-argparse-probe"),
-        ("grok-hermes", "test-grok-hermes-argparse-probe"),
-    ):
-        result = subprocess.run(
-            [
-                sys.executable,
-                str(tmp_path / "scripts" / "delegate.py"),
-                "dispatch",
-                "--agent",
-                agent,
-                "--task-id",
-                task,
-                "--prompt",
-                "noop",
-                "--dry-run",
-                "--force-new",
-            ],
-            capture_output=True,
-            text=True,
-            timeout=30,
-            cwd=str(tmp_path),
-        )
-        assert result.returncode == 0, (
-            f"delegate dispatch --agent {agent} failed:\nstdout={result.stdout!r}\nstderr={result.stderr!r}"
-        )
-        assert task in result.stdout
 
 
 def test_ab_channels_cli_marks_grok_cli_available():

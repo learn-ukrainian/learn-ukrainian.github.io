@@ -305,31 +305,6 @@ def test_invalid_asset_cli_name_is_masked_exit_two(capsys):
     assert "invalid#name" not in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("body,verdict", [("trivial: yes\nFixture maintenance", "PASS"), ("## Overview\nIncomplete fixture", "WARN")])
-def test_delegate_dor_issue_reaches_real_shim_and_checker(body, verdict, tmp_path, monkeypatch, gh_shim_sandbox):
-    from scripts import delegate
-    spy = tmp_path / "real-gh"
-    log = tmp_path / "calls.jsonl"
-    payload = {"number": 1, "title": "Fixture", "body": body, "labels": []}
-    spy.write_text(f'#!{sys.executable}\nimport json,sys\nfrom pathlib import Path\nwith Path({str(log)!r}).open("a") as out: out.write(json.dumps(sys.argv[1:])+"\\n")\nprint("HTTP/1.1 200 OK\\nX-RateLimit-Remaining: 100\\nX-RateLimit-Reset: 2000\\n\\n") if "--include" in sys.argv else None\nprint({json.dumps(payload)!r})\n')
-    spy.chmod(0o755)
-    _root, shim, _tooling = gh_shim_sandbox
-    monkeypatch.setenv("PATH", str(shim.parent) + os.pathsep + os.environ["PATH"])
-    monkeypatch.setenv("AGENT_REAL_GH", str(spy))
-    monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
-    # delegate anchors its checker at the primary checkout. From a worktree that
-    # file is not this branch; CI checks out the branch, so use this tree.
-    monkeypatch.setattr(delegate, "_REPO_ROOT", ROOT)
-    error, record = delegate._run_dor_preflight("Issue: #1", None, dispatch_repo="learn-ukrainian/learn-ukrainian-infra-private")
-    assert record["issues"] == [1]
-    assert bool(record["warnings"]) == (verdict == "WARN")
-    assert "checker_error" not in record["warnings"].values()
-    assert (error is None) == (verdict == "PASS")
-    calls = [json.loads(line) for line in log.read_text().splitlines()]
-    assert all(args[0] == "api" and "repos/learn-ukrainian/learn-ukrainian-infra-private/issues/1" in args for args in calls)
-    assert any("--include" in args and "repos/learn-ukrainian/learn-ukrainian-infra-private/issues/1" in args for args in calls)
-
-
 def test_hook_recognises_typed_merge(monkeypatch):
     spec = importlib.util.spec_from_file_location("r5_guard", ROOT / "agents_extensions/shared/hooks/guard-pr-merge.py")
     guard = importlib.util.module_from_spec(spec)

@@ -330,13 +330,15 @@ def test_run_merge_closeout_fails_closed_when_gh_pr_view_errors(
         mc.run_merge_closeout(repo, 99, apply=True)
 
 
-def test_apply_reaps_matched_worktree_by_branch_and_deletes_branches(
+def test_apply_deletes_branches_after_dispatcher_removed_worktree(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/feature")
     head_sha = git(worktree, "rev-parse", "HEAD")
     git(worktree, "push", "-u", "origin", "codex/feature")
+    # The dispatcher removes a settled task's worktree; the branch remains.
+    git(repo, "worktree", "remove", str(worktree))
 
     patch_gh(
         monkeypatch,
@@ -347,11 +349,9 @@ def test_apply_reaps_matched_worktree_by_branch_and_deletes_branches(
         branch_prs={"codex/feature": [{"number": 101, "state": "MERGED", "headRefOid": head_sha}]},
     )
 
-    result = mc.run_merge_closeout(repo, 101, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 101, apply=True)
 
-    assert result.matched_worktrees == [str(worktree)]
-    assert [entry["action"] for entry in result.reap_results] == ["removed"]
-    assert not worktree.exists()
+    assert result.matched_worktrees == []
     assert result.branch_status is not None
     assert result.branch_status.local_gone is True
     assert result.branch_status.remote_gone is True
@@ -369,52 +369,6 @@ def test_apply_reaps_matched_worktree_by_branch_and_deletes_branches(
     assert local.returncode != 0
 
 
-@pytest.mark.parametrize("failure", [None, "cap", "copy"])
-def test_merge_closeout_preserves_unnamed_ignored_output_without_task_record(tmp_path, monkeypatch, failure):
-    from scripts.fleet import ignored_task_output as output
-
-    repo = init_repo(tmp_path)
-    worktree = add_worktree(repo, "codex/output")
-    with (repo / ".git/info/exclude").open("a") as exclude:
-        exclude.write(".cache/\n__pycache__/\n")
-    source = worktree / ".cache/transcriptions/page.txt"
-    source.parent.mkdir(parents=True)
-    source.write_bytes(b"transcription proof")
-    cache = worktree / "__pycache__/worker.pyc"
-    cache.parent.mkdir()
-    cache.write_bytes(b"tool cache")
-    head = git(worktree, "rev-parse", "HEAD")
-    git(worktree, "push", "-u", "origin", "codex/output")
-    patch_gh(
-        monkeypatch,
-        pr_number=9645,
-        state="MERGED",
-        head_ref_name="codex/output",
-        head_sha=head,
-        branch_prs={"codex/output": [{"number": 9645, "state": "MERGED", "headRefOid": head}]},
-    )
-    if failure == "cap":
-        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
-    elif failure == "copy":
-
-        def fail_copy(*args, **_kwargs):
-            raise OSError("copy denied")
-
-        monkeypatch.setattr(output.artifacts, "_copy_verified", fail_copy)
-
-    result = mc.run_merge_closeout(repo, 9645, apply=True, live_cwds=set())
-
-    assert not result.ok and worktree.exists()
-    assert source.read_bytes() == b"transcription proof"
-    assert result.reap_results[0]["action"] == "skipped"
-    receipt = result.reap_results[0]["preserved_artifacts"]
-    assert receipt["count"] == 1 and receipt["bytes"] == len(b"transcription proof")
-    assert receipt["retention_disposition"] == "retained"
-    assert receipt["owner"] == "infra lane" and receipt["next_condition"]
-    assert "missing canonical task attribution" in result.reap_results[0]["reason"]
-    assert not (repo / "batch_state/preserved").exists()
-
-
 def test_apply_matches_detached_review_sibling_by_exact_sha(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     head_sha = commit_on_branch(repo, "codex/reviewed", "notes.txt")
@@ -430,12 +384,12 @@ def test_apply_matches_detached_review_sibling_by_exact_sha(tmp_path: Path, monk
         sha_prs={head_sha: [{"number": 202, "state": "MERGED"}]},
     )
 
-    result = mc.run_merge_closeout(repo, 202, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 202, apply=True)
 
     matched = {Path(p).resolve() for p in result.matched_worktrees}
     assert review_worktree.resolve() in matched
-    assert not review_worktree.exists()
-    assert result.ok is True
+    assert review_worktree.exists()
+    assert result.ok is False
 
 
 def test_dry_run_does_not_delete_anything(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -453,7 +407,7 @@ def test_dry_run_does_not_delete_anything(tmp_path: Path, monkeypatch: pytest.Mo
         branch_prs={"codex/dry-run": [{"number": 303, "state": "MERGED", "headRefOid": head_sha}]},
     )
 
-    result = mc.run_merge_closeout(repo, 303, apply=False, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 303, apply=False)
 
     assert result.apply is False
     assert result.matched_worktrees == [str(worktree)]
@@ -479,7 +433,7 @@ def test_apply_deletes_stale_remote_branch_when_no_worktree_remains(
         head_sha=head_sha,
     )
 
-    result = mc.run_merge_closeout(repo, 404, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 404, apply=True)
 
     assert result.matched_worktrees == []
     assert result.branch_status is not None
@@ -504,7 +458,7 @@ def test_apply_deletes_local_branch_when_tip_is_ancestor_of_live_pr_head(
         branch_prs={"codex/updated": [{"number": 8560, "state": "MERGED", "headRefOid": pr_head}]},
     )
 
-    result = mc.run_merge_closeout(repo, 8560, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 8560, apply=True)
 
     assert result.matched_worktrees == []
     assert result.branch_status is not None
@@ -740,7 +694,7 @@ def test_apply_reports_residual_when_branch_head_diverges(tmp_path: Path, monkey
         head_sha=head_sha,
     )
 
-    result = mc.run_merge_closeout(repo, 505, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 505, apply=True)
 
     assert result.branch_status is not None
     assert result.branch_status.remote_gone is False
@@ -752,8 +706,8 @@ def test_apply_reports_residual_when_branch_head_diverges(tmp_path: Path, monkey
 def test_apply_exits_nonzero_when_matched_worktree_stays_dirty(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """A dirty matched worktree the reaper retains (action=skipped) must not
-    report a successful closeout -- CF F1."""
+    """A matched worktree the dispatcher kept (here: dirty) must not report a
+    successful closeout -- CF F1. Closeout never removes it."""
     repo = init_repo(tmp_path)
     head_sha = commit_on_branch(repo, "codex/dirty-retained", "note.txt")
     review_worktree = add_detached_worktree(repo, "pr-707", head_sha)
@@ -772,9 +726,9 @@ def test_apply_exits_nonzero_when_matched_worktree_stays_dirty(
 
     assert review_worktree.exists()
     payload = json.loads(capsys.readouterr().out)
-    assert [entry["action"] for entry in payload["reap_results"]] == ["skipped"]
+    assert "reap_results" not in payload
     assert payload["ok"] is False
-    assert any("still registered after reap" in error for error in payload["errors"])
+    assert any("merge_closeout does not remove worktrees" in error for error in payload["errors"])
     assert exit_code == 1
 
 
@@ -794,7 +748,7 @@ def test_apply_fails_closed_when_origin_is_unreachable(tmp_path: Path, monkeypat
     )
     git(repo, "remote", "set-url", "origin", str(tmp_path / "does-not-exist.git"))
 
-    result = mc.run_merge_closeout(repo, 808, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 808, apply=True)
 
     assert result.branch_status is not None
     assert result.branch_status.remote_gone is False
@@ -826,7 +780,7 @@ def test_apply_refuses_fallback_branch_delete_when_open_pr_exists(
         },
     )
 
-    result = mc.run_merge_closeout(repo, 42, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 42, apply=True)
 
     assert result.branch_status is not None
     assert result.branch_status.remote_gone is False
@@ -855,7 +809,7 @@ def test_apply_expected_head_missing_still_refuses_branch_with_open_pr(
         branch_prs={"codex/open-pr-no-expected-head": [{"number": 8568, "state": "OPEN", "headRefOid": local_head}]},
     )
 
-    result = mc.run_merge_closeout(repo, 8567, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 8567, apply=True)
 
     assert result.branch_status is not None
     assert result.branch_status.local_gone is False
@@ -899,8 +853,6 @@ def test_main_dry_run_default_reports_ok_without_deleting(
         head_sha=head_sha,
         branch_prs={"codex/main-cli": [{"number": 606, "state": "MERGED", "headRefOid": head_sha}]},
     )
-    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
-
     exit_code = mc.main(["606", "--repo-root", str(repo)])
 
     assert exit_code == 0
@@ -962,66 +914,11 @@ def test_apply_keeps_same_tree_divergent_commit(
         branch_prs={"codex/feature": [{"number": 7070, "state": "MERGED", "headRefOid": pr_head}]},
     )
 
-    result = mc.run_merge_closeout(repo, 7070, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 7070, apply=True)
 
     assert worktree.exists()
     assert git(repo, "rev-parse", "--verify", "codex/feature")
-    assert any("not deletion proof" in entry["reason"] for entry in result.reap_results)
     assert result.ok is False
-
-
-def _merged_worktree_with_audit_sidecars(tmp_path, monkeypatch, branch: str, pr_number: int, *, extra=None):
-    """A merged, clean, unattributed checkout holding the audit's refresh sidecars (#10519)."""
-    repo = init_repo(tmp_path)
-    worktree = add_worktree(repo, branch)
-    with (repo / ".git/info/exclude").open("a") as exclude:
-        exclude.write("batch_state/\n.cache/\n")
-    state = worktree / "batch_state/issue_stream_audit_refresh.json"
-    state.parent.mkdir()
-    state.write_text('{"schema_version": 1, "phase": "idle"}', encoding="utf-8")
-    (worktree / "batch_state/issue_stream_audit_refresh.lock").write_bytes(b"")
-    if extra is not None:
-        source = worktree / extra
-        source.parent.mkdir(parents=True)
-        source.write_bytes(b"unrelated task output")
-    head = git(worktree, "rev-parse", "HEAD")
-    git(worktree, "push", "-u", "origin", branch)
-    patch_gh(
-        monkeypatch,
-        pr_number=pr_number,
-        state="MERGED",
-        head_ref_name=branch,
-        head_sha=head,
-        branch_prs={branch: [{"number": pr_number, "state": "MERGED", "headRefOid": head}]},
-    )
-    return repo, worktree
-
-
-def test_merge_closeout_reaps_unattributed_worktree_holding_only_audit_sidecars(tmp_path, monkeypatch):
-    repo, worktree = _merged_worktree_with_audit_sidecars(tmp_path, monkeypatch, "codex/audit-state", 10519)
-
-    result = mc.run_merge_closeout(repo, 10519, apply=True, live_cwds=set())
-
-    assert [entry["action"] for entry in result.reap_results] == ["removed"], result.reap_results
-    assert not worktree.exists()
-    assert not result.reap_results[0].get("preserved_artifacts")
-    assert result.errors == [] and result.ok is True
-    assert not (repo / "batch_state/preserved").exists()
-
-
-def test_merge_closeout_keeps_unattributed_worktree_when_unrelated_file_sits_beside_sidecars(tmp_path, monkeypatch):
-    repo, worktree = _merged_worktree_with_audit_sidecars(
-        tmp_path, monkeypatch, "codex/audit-state-output", 10520, extra=".cache/transcriptions/page.txt"
-    )
-
-    result = mc.run_merge_closeout(repo, 10520, apply=True, live_cwds=set())
-
-    assert not result.ok and worktree.exists()
-    assert result.reap_results[0]["action"] == "skipped"
-    assert "missing canonical task attribution" in result.reap_results[0]["reason"]
-    receipt = result.reap_results[0]["preserved_artifacts"]
-    assert [entry["path"] for entry in receipt["paths"]] == [".cache/transcriptions/page.txt"]
-    assert (worktree / "batch_state/issue_stream_audit_refresh.json").exists()
 
 
 def test_cleanup_report_keeps_criterion_eligibility_separate(tmp_path, monkeypatch):
@@ -1030,7 +927,7 @@ def test_cleanup_report_keeps_criterion_eligibility_separate(tmp_path, monkeypat
     report = {"closure_ready": False, "error": "CLOSEOUT_CRITERION_EXECUTION_OR_PROOF_MISSING"}
     monkeypatch.setattr(mc, "fetch_pr_info", lambda *a, **k: pr)
     monkeypatch.setattr(mc, "collect_criterion_receipts", lambda *a, **k: [report])
-    result = mc.run_merge_closeout(repo, 77, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 77, apply=True)
     assert result.ok is True  # Existing exit status proves cleanup only.
     assert mc._result_to_dict(result)["criterion_receipts"] == [report]
     assert '"closure_ready": false' in mc._format_text(result)
@@ -1041,13 +938,12 @@ def test_text_report_renders_cleanup_and_criterion_residuals():
     result = mc.CloseoutResult(
         pr=mc.PullRequestInfo(77, "MERGED", "codex/branch", "a" * 40), apply=True,
         matched_worktrees=[".worktrees/dispatch/codex/example"],
-        reap_results=[{"action": "retained", "path": ".worktrees/dispatch/codex/example", "reason": "active owner"}],
         branch_status=mc.BranchStatus("codex/branch", False, False, "remote unavailable", "local retained"),
         ok=False, errors=["cleanup residual"], lifecycle_observations=[{"status": "recorded"}],
         criterion_receipts=[{"criteria_passed": True, "cleanup_residual": True, "closure_ready": False}],
     )
     text = mc._format_text(result)
-    assert "active owner" in text
+    assert "  .worktrees/dispatch/codex/example" in text
     assert '"criteria_passed": true' in text
     assert '"closure_ready": false' in text
     assert "remote_error: remote unavailable" in text
@@ -1062,7 +958,6 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
     branch = "codex/repository-collision"
     head = commit_on_branch(repo, branch, "collision.txt")
     publish_pr_head(repo, 42, branch, head)
-    worktree = add_detached_worktree(repo, "pr-42", head)
     repository = "learn-ukrainian/learn-ukrainian.github.io"
     second_repository = "example/second-repository"
     merged = {
@@ -1080,18 +975,16 @@ def test_cross_repository_pr_identity_collision_does_not_block_closeout(
         branch_prs={branch: [merged]}, sha_prs={head: [merged]},
     )
 
-    result = mc.run_merge_closeout(repo, 42, apply=True, live_cwds=set())
+    result = mc.run_merge_closeout(repo, 42, apply=True)
 
     assert result.ok is True, result.errors
-    assert result.matched_worktrees == [str(worktree)]
-    assert [entry["action"] for entry in result.reap_results] == ["removed"]
-    assert not worktree.exists()
+    assert result.matched_worktrees == []
     assert result.branch_status is not None
     assert result.branch_status.remote_gone and result.branch_status.local_gone
     assert git(repo, "ls-remote", "--heads", "origin", branch) == ""
-    searches = [call for call in calls if call[1:3] == ["search", "prs"]]
-    assert searches
-    assert all(call[call.index("--repo") + 1] == repository for call in searches)
+    lookups = [call for call in calls if "--repo" in call]
+    assert lookups
+    assert all(call[call.index("--repo") + 1] == repository for call in lookups)
 
     # Requests are repository restricted; a foreign row makes their proof unknown.
     for transport in ("rest", "graphql", "search"):

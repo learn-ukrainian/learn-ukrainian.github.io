@@ -101,7 +101,7 @@ Then:
 5. Check `/api/health`, confirm the new release contains no `.pyc` files, and
    run `verify_release()` against the published release.
 
-`delegate.py dispatch` intentionally warns rather than blocks if the Monitor
+`dispatch.py dispatch` intentionally warns rather than blocks if the Monitor
 API health probe is unreachable. File-based dispatch fallbacks still work and
 may be needed to repair the API; the warning names `services.sh status api` and
 the crash record as recovery steps.

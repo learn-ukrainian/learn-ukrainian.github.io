@@ -200,27 +200,6 @@ def test_fleet_status_and_help_expose_the_facade_contract(tmp_path: Path, capsys
     rc = main(["fleet", "help"])
     assert rc == EXIT_OK
     help_payload = json.loads(capsys.readouterr().out)
-    assert set(help_payload) == {"truth", "hand", "eyes", "note"}
+    assert set(help_payload) == {"truth", "eyes", "note"}
     assert "broker_report" in help_payload["truth"]
-    assert "reap_report" in help_payload["hand"]
     assert {"board", "backlog", "dead"} <= set(help_payload["eyes"])
-
-
-def test_fleet_reap_report_forwards_only_the_established_guards(monkeypatch, capsys) -> None:
-    from scripts.orchestration import reap_worktrees
-
-    observed: list[list[str]] = []
-
-    def fake_main(args: list[str]) -> int:
-        observed.append(args)
-        return 0
-
-    monkeypatch.setattr(reap_worktrees, "main", fake_main)
-
-    assert main(["fleet", "reap-report"]) == EXIT_OK
-    assert main(["fleet", "reap-report", "--apply", "--json", "--repo-root", "/repo"]) == EXIT_OK
-    assert capsys.readouterr().out == ""
-    assert observed == [
-        ["--merged", "--dry-run"],
-        ["--merged", "--apply", "--repo-root", "/repo", "--json"],
-    ]

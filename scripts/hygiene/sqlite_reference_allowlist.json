@@ -209,14 +209,6 @@
     ]
   },
   {
-    "path": "scripts/delegate.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing dynamic module import may expose SQLite constructors; resolve through the structural boundary in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/entire_context/store.py",
     "reference_count": 5,
     "kind": "writer",
@@ -569,7 +561,7 @@
     "reference_count": 3,
     "kind": "writer",
     "target_db": "lexdata generation temp file; lexdata backup copy; in-memory temp-directory pin and probe",
-    "reason": "single writer of data/lexdata.db: builds the temp generation before the atomic swap and receives the online backup of the published generation (lexdata design r3 §6); a private :memory: connection pins and proves the SQLite temp directory (§9)",
+    "reason": "single writer of data/lexdata.db: builds the temp generation before the atomic swap and receives the online backup of the published generation (lexdata design r3 \u00a76); a private :memory: connection pins and proves the SQLite temp directory (\u00a79)",
     "calls": [
       "sqlite3.connect(':memory:')",
       "sqlite3.connect(path.resolve().as_uri() + '?mode=rwc', uri=True, isolation_level='DEFERRED')",

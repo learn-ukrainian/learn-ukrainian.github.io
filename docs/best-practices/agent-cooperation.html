@@ -135,7 +135,7 @@ Review evidence contract: <a href="../review-protocol.md"><code>docs/review-prot
 If you're touching an agent subprocess, read <a href="../agent-runtime-guide.md"><code>docs/agent-runtime-guide.md</code></a> first.</p>
 <p><strong>Seat onboarding (canonical ownership matrix):</strong>
 <a href="../runbooks/agent-seat-onboarding.md"><code>docs/runbooks/agent-seat-onboarding.md</code></a> —
-<code>discuss</code> vs <code>delegate.py</code> vs fleet-comms/file handoffs vs experimental ACPX vs
+<code>discuss</code> vs <code>dispatch.py</code> vs fleet-comms/file handoffs vs experimental ACPX vs
 Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
 <code>ask-* --type review</code> (shielded <code>review-pr</code> RETIRED); fresh-agent smoke.</p>
 </blockquote>
@@ -156,7 +156,7 @@ Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
 <td>Never implementation; never the formal cross-family review gate</td>
 </tr>
 <tr>
-<td><strong><code>scripts/delegate.py dispatch</code></strong></td>
+<td><strong><code>scripts/dispatch.py dispatch</code></strong></td>
 <td>Isolated implementation execution</td>
 <td>Worktree writes only; not durable fleet authority</td>
 </tr>
@@ -611,16 +611,16 @@ invoked through <code>scripts/agent_runtime/runner.invoke()</code>. This applies
 <ul>
 <li><code>scripts/ai_agent_bridge/</code> — bridge messaging (<code>ask-agy</code>, <code>ask-codex</code>, <code>process-claude</code>, etc.)</li>
 <li><code>scripts/build/dispatch.py</code> — pipeline phase dispatch (<code>skeleton</code>, <code>write</code>, <code>review</code>, etc.)</li>
-<li><code>scripts/delegate.py</code> (future) — ad-hoc coding task delegation</li>
+<li><code>scripts/dispatch.py</code> (future) — ad-hoc coding task delegation</li>
 <li><code>scripts/consult.py</code> (future) — multi-agent consultation</li>
 </ul>
 <p><strong>If you find yourself writing <code>subprocess.Popen([... &quot;claude&quot;, ...])</code> or similar — stop.</strong> Use <code>runner.invoke()</code>. The runtime owns stall detection, usage logging, rate-limit headroom checks, mode validation, and resume-policy enforcement uniformly across all agents.</p>
 <p>Full guide: <a href="../agent-runtime-guide.md"><code>docs/agent-runtime-guide.md</code></a>.</p>
-<h3>Claude Code version gotchas (affects <code>delegate.py dispatch --agent claude</code>)</h3>
+<h3>Claude Code version gotchas (affects <code>dispatch.py dispatch --agent claude</code>)</h3>
 <ul>
-<li><strong>CC 2.1.119+: <code>--print</code> mode honors subagent <code>tools:</code> / <code>disallowedTools:</code> frontmatter.</strong> Previously print mode ignored those restrictions — they only applied in interactive subagent invocations. Our dispatched-Claude pattern (<code>delegate.py dispatch --agent claude</code> → <code>claude -p ...</code>) now enforces them. The curriculum orchestrator declares <code>tools: &quot;*&quot;</code>, while restricted writer agents must be treated as intentionally tool-limited in dispatch mode. Don't declare <code>tools: [Read, Grep]</code> on a subagent you plan to dispatch unless that limit is intentional for dispatched runs too.</li>
-<li><strong>CC 2.1.119+: <code>--agent &lt;name&gt;</code> honors agent definition's <code>permissionMode</code> for built-in agents.</strong> We pass <code>--mode danger</code> explicitly on every dispatch, so this is a no-op for us. Don't remove the explicit <code>--mode danger</code> and expect the agent definition to carry it — not every dispatch target is a built-in agent.</li>
-<li><strong>CC 2.1.119+: <code>Agent</code> tool with <code>isolation: &quot;worktree&quot;</code> no longer reuses stale worktrees from prior sessions.</strong> Until this fix we avoided the built-in Agent-tool isolation and hand-rolled <code>git worktree add</code> (see <code>.claude/rules/delegate-must-use-worktree.md</code>). The hand-rolled pattern is still correct — it survives across sessions, shows up in <code>git worktree list</code>, and matches our dispatch conventions — but the Agent-tool built-in is now a safe alternative for short-lived, same-session isolation.</li>
+<li><strong>CC 2.1.119+: <code>--print</code> mode honors subagent <code>tools:</code> / <code>disallowedTools:</code> frontmatter.</strong> Previously print mode ignored those restrictions — they only applied in interactive subagent invocations. Our dispatched-Claude pattern (<code>dispatch.py dispatch --agent claude</code> → <code>claude -p ...</code>) now enforces them. The curriculum orchestrator declares <code>tools: &quot;*&quot;</code>, while restricted writer agents must be treated as intentionally tool-limited in dispatch mode. Don't declare <code>tools: [Read, Grep]</code> on a subagent you plan to dispatch unless that limit is intentional for dispatched runs too.</li>
+<li><strong>CC 2.1.119+: <code>--agent &lt;name&gt;</code> honors agent definition's <code>permissionMode</code> for built-in agents.</strong> We pass <code>--mode workspace-write</code> explicitly on every dispatch, so this is a no-op for us. Don't remove the explicit <code>--mode workspace-write</code> and expect the agent definition to carry it — not every dispatch target is a built-in agent.</li>
+<li><strong>CC 2.1.119+: <code>Agent</code> tool with <code>isolation: &quot;worktree&quot;</code> no longer reuses stale worktrees from prior sessions.</strong> Until this fix we avoided the built-in Agent-tool isolation and hand-rolled <code>git worktree add</code> (see <code>.claude/rules/dispatch-must-use-worktree.md</code>). The hand-rolled pattern is still correct — it survives across sessions, shows up in <code>git worktree list</code>, and matches our dispatch conventions — but the Agent-tool built-in is now a safe alternative for short-lived, same-session isolation.</li>
 </ul>
 <h3>Direct dispatch (ask-agy / ask-codex)</h3>
 <p>For requests needing immediate response. AGY reviews Ukrainian content only
@@ -1031,7 +1031,7 @@ research = _extract_delimiter(output, &quot;===RESEARCH_START===&quot;, &quot;==
 <p>Gemini CLI and Gemini Code Assist are unsupported for current project work.
 For Ukrainian-language Gemini-family review or support, use AGY through
 <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...</code> or
-<code>scripts/delegate.py dispatch --agent agy ...</code>.</p>
+<code>scripts/dispatch.py dispatch --agent agy ...</code>.</p>
 <p>Direct <code>agy --model</code> calls use display labels from <code>agy models</code>, such as
 <code>Gemini 3.1 Pro (High)</code> and <code>Gemini 3.5 Flash (High)</code>. The bridge and runtime
 may accept slugs such as <code>gemini-3.1-pro-high</code> and map them to AGY display

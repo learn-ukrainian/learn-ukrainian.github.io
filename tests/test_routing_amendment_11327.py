@@ -11,10 +11,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts import delegate
 from scripts.agent_runtime.registry import AGENTS
 from scripts.fleet import capacity_pick, credit_lane
-from scripts.fleet.claude_account_lane import no_claude_account
 from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, require_execution_model
 from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, resolve_reviewer
 from tests.claude_route_accounts import HOST_ACCOUNT
@@ -91,52 +89,6 @@ def test_explicit_fable_pin_requires_native_claude_transport(transport):
             require_execution_model(FABLE, transport=transport)
 
 
-@pytest.mark.parametrize("model", [FABLE, FABLE + "-thinking-high"])
-def test_explicit_fable_dispatch_passes_retirement_and_warns_once(monkeypatch, capsys, model):
-    class ReachedHost(Exception):
-        pass
-
-    def host(*_args, **_kwargs):
-        raise ReachedHost
-
-    monkeypatch.setattr(delegate, "_early_host_refusal", host)
-    args = delegate.build_parser().parse_args(["dispatch", "--dry-run", "--agent", "claude", "--model", model,
-                                            "--task-id", "fable-pin", "--prompt", "implement"])
-    with pytest.raises(ReachedHost):
-        delegate.cmd_dispatch(args)
-    captured = capsys.readouterr()
-    assert captured.out == ""
-    lines = captured.err.splitlines()
-    assert len(lines) == 1
-    assert FABLE in lines[0] and "cost" in lines[0].lower()
-
-
-@pytest.mark.parametrize("lane", ["grok", "cursor"])
-@pytest.mark.parametrize("remaining", [(1, 95), (95, 1)])
-def test_shared_pool_refuses_either_transport_at_the_same_reserve(monkeypatch, lane, remaining):
-    budget = snapshot(*remaining)
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    with pytest.raises(delegate.BudgetGuardRefuseError, match="1% remaining"):
-        delegate._resolve_agent_with_budget_guard(lane, fallbacks={}, claude_account=no_claude_account())
-
-
-def test_pool_record_controls_admission_and_capacity_ranking(monkeypatch):
-    budget = snapshot()
-    pooled = capacity_pick.build_lane_rows(budget, reset_reserve={"enabled": False})
-    rows = {row["lane"]: row for row in pooled}
-    assert rows["grok"]["remaining_pct"] == rows["cursor"]["remaining_pct"] == 1
-    assert rows["grok"]["avoid"] is rows["cursor"]["avoid"] is True
-    assert rows["codex"]["remaining_pct"] == 50 and not rows["codex"]["avoid"]
-    assert capacity_pick.build_pick_order(pooled)[0]["lane"] == "codex"
-    catalog = deepcopy(load_model_catalog())
-    catalog.pop("usage_pools")
-    monkeypatch.setattr("scripts.review.model_catalog.load_model_catalog", lambda: catalog)
-    independent = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget, reset_reserve={"enabled": False})}
-    assert independent["cursor"]["remaining_pct"] == 95 and not independent["cursor"]["avoid"]
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    assert delegate._resolve_agent_with_budget_guard("cursor", fallbacks={}, claude_account=no_claude_account()) == "cursor"
-
-
 def test_reviewer_capacity_and_ranking_read_shared_allowance():
     from scripts.review.capacity import review_capacity
     from scripts.review.reviewer_scheduler import _route_record, metrics_for
@@ -160,12 +112,6 @@ def test_pool_mirroring_preserves_route_health_and_does_not_mutate_snapshot():
     assert budget == original
 
 
-def test_shared_pool_is_never_its_own_cooler_substitute():
-    agents = snapshot(80, 95)["agents"]
-    assert delegate._budget_cooler_lanes(agents, exclude="grok") == ["codex"]
-    assert delegate._budget_cooler_lanes(agents, exclude="cursor") == ["codex"]
-
-
 def test_retired_kimi_cannot_win_budget_recommendation_or_capacity_pick():
     from scripts.api.state_router import _recommend_agent
 
@@ -184,28 +130,6 @@ def test_capacity_picker_lists_each_cool_usage_pool_once():
     assert capacity_pick.cooler_lanes(rows) == ["codex", "grok"]
 
 
-def test_explicit_fable_dispatch_dry_run_reaches_launch_plan(tmp_path, monkeypatch):
-    """The public dispatch CLI accepts a Fable pin and emits one cost warning."""
-    import subprocess
-    import sys
-
-    from tests.launcher_sandbox import copy_interactive_launcher_checkout
-
-    checkout = tmp_path / "checkout"
-    copy_interactive_launcher_checkout(checkout)
-    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
-    result = subprocess.run(
-        [sys.executable, str(checkout / "scripts/delegate.py"), "dispatch", "--agent", "claude",
-         "--model", FABLE, "--task-id", "fable-explicit-dry-run", "--prompt", "noop",
-         "--dry-run", "--force-new"],
-        cwd=checkout, text=True, capture_output=True, timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert "fable-explicit-dry-run" in result.stdout
-    warnings = [line for line in result.stderr.splitlines() if "cost" in line.lower()]
-    assert len(warnings) == 1 and FABLE in warnings[0]
-
-
 def test_route_runtime_failure_does_not_block_the_other_shared_transport():
     budget = snapshot(80, 95)
     budget["agents"]["grok"].update(status="hot", runtime={"headroom_blocked": True})
@@ -222,21 +146,6 @@ def test_missing_transport_meter_uses_shared_allowance_without_inventing_health(
     assert rows["cursor"]["remaining_pct"] == 1
     assert rows["cursor"]["avoid"]
     assert rows["cursor"]["health"] == "unknown"
-
-
-@pytest.mark.parametrize("agent", ["kimi", "acpx-kimicc-shadow"])
-def test_kimi_registry_defaults_refuse_before_dispatch_host_checks(monkeypatch, capsys, agent):
-    """A shadow adapter must not escape retirement by omitting its model pin."""
-    def forbidden(*_args, **_kwargs):
-        pytest.fail("retired registry default reached host checks")
-
-    monkeypatch.setattr(delegate, "_early_host_refusal", forbidden)
-    args = delegate.build_parser().parse_args(
-        ["dispatch", "--dry-run", "--agent", "kimi", "--task-id", "retired-shadow-default", "--prompt", "noop"]
-    )
-    args.agent = agent  # Shadow seats are programmatic; the public CLI keeps them closed.
-    assert delegate.cmd_dispatch(args) == 2
-    assert "retired in the model catalog (kimi-code/" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("agent", ["kimi", "acpx-kimicc-shadow"])

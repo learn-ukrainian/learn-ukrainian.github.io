@@ -5706,7 +5706,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml",
-      "sha256": "c52ab5dd39aebb0e6c1de623e3abcf8baf2c41c3d718a819c87e96451821fe78"
+      "sha256": "5c625fd7e8934ce2aeb90efa9754a246c675959ef551c7b471b1966a71300f02"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml",
@@ -5746,7 +5746,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a2/_decisions.yaml",
-      "sha256": "703cd9e7522f56478841b98bd94b3208abc4ac7cda8c5eac60c0156aa994a1f0"
+      "sha256": "692be119b0e282d87c77e3d410a95ed70a8db8d7ec885400190fd4322c28e830"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/b1/_arc.yaml",
@@ -5754,7 +5754,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/b1/_decisions.yaml",
-      "sha256": "d58c19de87fa121156cc264553b258ac81ecf03396da1800fc42d2bfaf86de11"
+      "sha256": "419c2362e9ea92ccdec3ebb0c4278fb998f059334d23d6aa67570a836d889f44"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/b2/_arc.yaml",
@@ -5762,7 +5762,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/b2/_decisions.yaml",
-      "sha256": "9f39c383b8f304e9e005aa31a4c408704ad905998a9f8bb9ba0d210cc6f4a214"
+      "sha256": "0ba84f83794c0ac860b86d474a04fda95e2708f218dc1c63d22ab71379429df2"
     },
     {
       "path": "curriculum/l2-uk-en/module-mapping.json",

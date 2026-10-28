@@ -1,5 +1,5 @@
 # Agent fallback substitution map — canonical source of truth.
-# Consumed by /api/state/routing-budget and legacy budget admission for hard auto-sub.
+# Consumed by /api/state/routing-budget and routing guidance; dispatch v2 does not provide budget admission.
 # referenced by orchestrator routing decisions (MEMORY.md, this file).
 
 # Machine-readable for hard auto-sub (when lane is near_cap, hot for a reason
@@ -34,7 +34,8 @@ dispatch_fallbacks:
 # lane will run out before reset outside the on-pace band, the orchestrator
 # MUST use the substitution path below instead of draining the depleted
 # bucket. A pace that is not yet visible, or whose |delta| is within 2 points,
-# is not a deficit. Missing mapping → refuse unless --force-agent.
+# is not a deficit. Dispatch v2 does not implement budget refusal or --force-agent;
+# the caller owns selection of a supported route.
 #
 # Provenance: user direction 2026-05-13 — "you need to store this and add to
 # router" (paste of the substitution table built during the budget-economics
@@ -50,14 +51,14 @@ substitutions:
     fallback: "Resolve catalog role routine_mechanical: Haiku 5.5 first, Sonnet 5.5 fallback"
     budget_bucket: "Claude; provider health and quota must admit the selected route"
 
-  - currently_uses: "delegate.py --agent claude (adversarial review)"
+  - currently_uses: "scripts/dispatch.py dispatch --agent claude (adversarial review)"
     fallback: 'Agent(subagent_type="general-purpose", model="opus")'
     fallback_note: "Agent tool subagents run as children of this session"
     budget_bucket: "interactive (orchestrator session, not programmatic)"
 
-  - currently_uses: "delegate.py --agent claude (code dispatch >50 LOC)"
+  - currently_uses: "scripts/dispatch.py dispatch --agent claude (code dispatch >50 LOC)"
     fallback: |
-      (a) Codex via `delegate.py --agent codex` (separate weekly quota), OR
+      (a) Codex via `scripts/dispatch.py dispatch --agent codex` (separate weekly quota), OR
       (b) inline by orchestrator if context-continuity gives it an edge
     budget_bucket: "Codex weekly quota OR interactive"
 
@@ -69,33 +70,33 @@ substitutions:
 
   - currently_uses: "ab discuss (Codex + Claude adversarial)"
     fallback: |
-      Codex via `delegate.py --agent codex` + Agent subagent for Claude role,
+      Codex via `scripts/dispatch.py dispatch --agent codex` + Agent subagent for Claude role,
       OR escalate to user for cold-start interactive Claude (highest-stakes
       adversarial dynamic only)
     budget_bucket: "Codex + interactive"
 
-  - currently_uses: "delegate.py --agent codex"
+  - currently_uses: "scripts/dispatch.py dispatch --agent codex"
     fallback: |
       When Codex is hot / near_cap / weekly deficit: hard auto-sub to
-      `delegate.py --agent cursor` via dispatch_fallbacks (operator 2026-08-12).
+      `scripts/dispatch.py dispatch --agent cursor` via dispatch_fallbacks (operator 2026-08-12).
       Otherwise Codex weekly quota is independent of Claude interactive.
     budget_bucket: "Codex weekly → Cursor when shed"
 
-  - currently_uses: "delegate.py --agent gemini"
+  - currently_uses: "scripts/dispatch.py dispatch --agent gemini"
     fallback: |
       PERMANENT, always-on (not a budget-status shed): gemini CLI is
       retired and will not be reinstalled (operator 2026-08-18). Resolves
-      to `delegate.py --agent agy` before Popen, via
+      to `scripts/dispatch.py dispatch --agent agy` before Popen, via
       dispatch_fallbacks.gemini and agent_identity.RETIRED_AGENT_ALIASES.
       Do not tell agents to install `gemini` — the live Gemini-family
       implementer is agy.
     budget_bucket: "Gemini-family quota, tracked under agy"
 
-  - currently_uses: "delegate.py --agent glm"
+  - currently_uses: "scripts/dispatch.py dispatch --agent glm"
     fallback: |
       PERMANENT, always-on (not a budget-status shed): the z.ai GLM
       subscription is retired (key gone; operator 2026-09-03). Resolves to
-      `delegate.py --agent cursor` before Popen, via dispatch_fallbacks.glm
+      `scripts/dispatch.py dispatch --agent cursor` before Popen, via dispatch_fallbacks.glm
       and agent_identity.RETIRED_AGENT_ALIASES. GLM is not subscribed (operator 2026-10-23); retired model pins refuse.
       Do not dispatch GLM.
     budget_bucket: "glm quota (retired) → Cursor"

@@ -840,7 +840,6 @@ def test_verified_host_is_pinned_in_transport(synthetic_opsec):
         "dataset",
         "manifest",
         "fmu",
-        "delegate",
     ],
 )
 def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
@@ -995,9 +994,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
             artifact.rename(tmp_path / TOKEN)
             importlib.import_module("scripts.lexicon.admit_fmu_boosters")._publish_asset(tmp_path / TOKEN)
         else:
-            importlib.import_module("scripts.delegate")._create_auto_finalize_pr(
-                tmp_path, branch="unit", base_branch="main", title=TOKEN, body="clean"
-            )
+            raise AssertionError(f"unknown consumer {consumer}")
 
     if consumer in {"bridge", "decision", "stream", "verdict"}:
         invoke()

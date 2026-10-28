@@ -46,8 +46,6 @@
 {"nodeid": "tests/test_mcp_sources_server.py::TestHealthEndpoint::test_git_commit_failure_is_unknown", "decision": "delete", "reason": "diagnostic fallback string; /health contract kept in test_handle_health_response"}
 {"nodeid": "tests/orchestration/test_tmp_leak_sweep.py::test_name_patterns_match_known_leaks", "decision": "restore", "reason": "only test that unrelated old self-owned /tmp names are not sweep candidates; both covering siblings are deleted too"}
 {"nodeid": "tests/test_mcp_sources_load.py::test_health_stays_under_one_second_while_saturated", "decision": "delete", "reason": "wall-clock latency bound; concurrency cap kept in tests/rag/test_call_governor.py"}
-{"nodeid": "tests/test_sparse_collection_guard.py::test_citation_module_skip_is_a_reported_outcome", "decision": "delete", "reason": "tests the test-only collection harness, not production code"}
-{"nodeid": "tests/test_sparse_collection_guard.py::test_guarded_open_without_mode_matches_umask", "decision": "delete", "reason": "tests the test-only audit plugin's os.open hook"}
 {"nodeid": "tests/test_pg_skip_guard.py::test_postgres_files_are_found_in_the_repo", "decision": "restore", "reason": "the whole file is deleted, leaving the CI postgres skip guard's file discovery with no test"}
 {"nodeid": "tests/test_guard_branch_switch_in_main.py::test_issue_9479_r7_missing_terminator_fails_closed", "decision": "delete", "reason": "same unterminated-heredoc fail-closed path as kept test_issue_9479_r6_unknown_repository_branch_variants"}
 {"nodeid": "tests/test_lexicon_enrich_manifest.py::test_homonym_fixture_samples_expand_from_zero", "decision": "delete", "reason": "same loop and VESUM gate as kept test_homonym_relations_require_numbering_and_an_exact_vesum_lemma"}

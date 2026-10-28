@@ -14,8 +14,8 @@ from uuid import UUID, uuid4
 
 import pytest
 
-from tests.orchestration.test_interrupted_caller_matrix import hashes
-from tests.orchestration.test_interrupted_caller_matrix import interrupted_checkout as interrupted_checkout
+from tests.helpers.interrupted_checkout import hashes
+from tests.helpers.interrupted_checkout import interrupted_checkout as interrupted_checkout
 
 
 @pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])

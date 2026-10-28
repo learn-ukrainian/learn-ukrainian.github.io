@@ -11,7 +11,6 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUSIONS = {
-    "scripts/delegate.py": (2, "#9878: accountable driver migrates after concurrent edit settles"),
 }
 CLIENT = "scripts/common/github_client.py"
 # Exact API and upload hosts, compared as parsed hostnames.

@@ -22,18 +22,17 @@ from scripts.review.reviewer_resolver import (
 )
 from tests.claude_route_accounts import HOST_ACCOUNT
 
-# #9769: native Grok counts outside xAI at every risk; the runtime-attested
-# Cursor fallback additionally excludes Moonshot authors.
-NATIVE_GROK = "grok-4.7"
+# The runtime-attested Cursor Grok seat excludes xAI and Moonshot authors.
+# Native Grok dispatch is retired.
 GROK = "grok-4.7-cursor-fallback"
 DEFAULT_COUNTS = {
-    "anthropic": ["openai_frontier", NATIVE_GROK, GROK],
-    "google": ["openai_frontier", NATIVE_GROK, GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
-    "openai": [NATIVE_GROK, GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
-    "moonshot": ["openai_frontier", NATIVE_GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
-    "zhipu": ["openai_frontier", NATIVE_GROK, GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "anthropic": ["openai_frontier", GROK],
+    "google": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "openai": [GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "moonshot": ["openai_frontier", "claude-opus-5-5", "claude-sonnet-5-5"],
+    "zhipu": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
     "xai": ["openai_frontier", "claude-opus-5-5", "claude-sonnet-5-5"],
-    "deepseek": ["openai_frontier", NATIVE_GROK, GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
+    "deepseek": ["openai_frontier", GROK, "claude-opus-5-5", "claude-sonnet-5-5"],
 }
 
 
@@ -69,9 +68,9 @@ def test_bench_health_default_snapshot_closes_the_anthropic_shortfall_below_crit
         assert len(results[family]) >= 2, f"Family {family} has < 2 eligible seats: {results[family]}"
         assert all(REVIEW_CANDIDATES[name].family != family for name in results[family])
         assert not set(results[family]) & {"composer-2.5", "pool", "pool-xs"}
-    # Both Grok transports now have critical_review suitability.
+    # Cursor Grok retains critical_review suitability.
     critical = check_bench_health(routing_snapshot=snapshot, data_egress_policy="local_interactive", risk="critical")
-    assert critical["anthropic"] == ["openai_frontier", NATIVE_GROK, GROK]
+    assert critical["anthropic"] == ["openai_frontier", GROK]
     assert len(critical["anthropic"]) >= bench_health.MIN_ELIGIBLE_SEATS
     automatic = resolve_reviewer(ResolverInputs(author_model="claude", data_egress_policy="local_interactive", claude_account=HOST_ACCOUNT))
     assert automatic.selected.name == "openai_frontier"
@@ -104,25 +103,25 @@ def test_bench_exclusions_match_automatic_resolver(risk, profile, capsys):
         assert set(seats) == {entry.name for entry in resolution.trace if entry.status in {"selected", "eligible"}}
     if risk == "high":
         assert {family: results[family] for family in ("anthropic", "openai")} == {
-            "anthropic": ["openai_frontier", NATIVE_GROK, GROK],
-            "openai": [NATIVE_GROK, GROK, "claude-opus-5-5"],
+            "anthropic": ["openai_frontier", GROK],
+            "openai": [GROK, "claude-opus-5-5"],
         }
         for family in set(AUTHOR_FAMILIES) - {"anthropic", "openai"}:
-            grok_seats = [] if family == "xai" else [NATIVE_GROK] if family == "moonshot" else [NATIVE_GROK, GROK]
+            grok_seats = [] if family == "xai" else [] if family == "moonshot" else [GROK]
             assert results[family] == ["openai_frontier", *grok_seats, "claude-opus-5-5"]
         # The resolver names the single eligibility rule, not a bench-local list.
         rule = "performed only by gpt-6.1-sol, claude-opus-5-5, grok-4.7"
-        assert not {NATIVE_GROK, GROK}.intersection(exclusions["anthropic"])
-        assert not {NATIVE_GROK, GROK}.intersection(exclusions["openai"])
+        assert not {GROK}.intersection(exclusions["anthropic"])
+        assert not {GROK}.intersection(exclusions["openai"])
         assert rule in exclusions["openai"]["claude-sonnet-5-5"]
         return
     if risk != "critical":
         return
-    assert results["anthropic"] == ["openai_frontier", NATIVE_GROK, GROK]
-    assert results["openai"] == [NATIVE_GROK, GROK, "claude-opus-5-5"]
-    assert set(exclusions["anthropic"]) == set(REVIEW_CANDIDATES) - {"openai_frontier", NATIVE_GROK, GROK}
+    assert results["anthropic"] == ["openai_frontier", GROK]
+    assert results["openai"] == [GROK, "claude-opus-5-5"]
+    assert set(exclusions["anthropic"]) == set(REVIEW_CANDIDATES) - {"openai_frontier", GROK}
     assert not {"glm-5.3", "composer-2.5", "pool", "pool-xs"} & set(exclusions["anthropic"])
-    assert not {NATIVE_GROK, GROK}.intersection(exclusions["anthropic"])
+    assert not {GROK}.intersection(exclusions["anthropic"])
 
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
@@ -195,7 +194,7 @@ def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, 
     results = check_bench_health(routing_snapshot={"glm": "healthy"})
     assert all("glm-5.3" not in seats for seats in results.values())
     assert results["anthropic"] == DEFAULT_COUNTS["anthropic"]
-    # Removing Sol and both Grok routes leaves zero seats; still list the retired route.
+    # Removing Sol and Cursor Grok leaves zero seats; still list the retired route.
     assert (
         main(
             ["--risk", "critical"],
@@ -220,7 +219,7 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
     results = check_bench_health(routing_snapshot={}, data_egress_policy=policy)
     assert all("glm-5.3" not in seats for seats in results.values())
     assert all("openai_frontier" not in seats for seats in results.values())
-    assert results["anthropic"] == [NATIVE_GROK, GROK, "gemini-3.8-flash-high"]
+    assert results["anthropic"] == [GROK, "gemini-3.8-flash-high"]
     pinned = evaluate_candidate(
         retired_candidate("glm-5.3"),
         ResolverInputs(
@@ -255,14 +254,14 @@ def test_bench_health_preserves_capacity_gate(status, reason, route, names, caps
         assert all(not names.intersection(seats) for seats in results.values())
     else:
         assert results == DEFAULT_COUNTS
-    # Native Grok supplies the second Anthropic seat when Codex is unavailable.
+    # Cursor Grok and Gemini supply Anthropic seats when Codex is unavailable.
     assert main([], routing_snapshot=data) == 0
     for finding in _findings(capsys.readouterr()):
         for name in names:
             if REVIEW_CANDIDATES[name].family != finding["author_family"]:
                 assert finding["excluded_seats"][name] == reason
     assert results["anthropic"] == (
-        [NATIVE_GROK, GROK, "gemini-3.8-flash-high"] if route == "codex" and blocked else DEFAULT_COUNTS["anthropic"]
+        [GROK, "gemini-3.8-flash-high"] if route == "codex" and blocked else DEFAULT_COUNTS["anthropic"]
     )
     # Check exclusion reasons even when Grok admission prevents a CLI shortfall.
     _, excluded = bench_health._bench_inventory(
@@ -294,18 +293,18 @@ def test_accepted_single_seat_still_requires_available_reviewer(risk, status, ro
     if status == "near_cap":
         results = check_bench_health(routing_snapshot=data, risk=risk)
         assert results[family] == (
-            ["openai_frontier", NATIVE_GROK, GROK] if route == "codex" else [NATIVE_GROK, GROK]
+            ["openai_frontier", GROK] if route == "codex" else [GROK]
         )
         findings = _findings(captured)
         if route == "claude":
-            # Claude's cap still leaves xAI authors below their two-seat minimum.
-            assert len(findings) == 1
-            assert findings[0]["author_family"] == "xai"
-            assert findings[0]["minimum"] == 2
-            assert findings[0]["counted_seats"] == ["openai_frontier"]
-            assert findings[0]["excluded_seats"]["claude-opus-5-5"] == (
-                "quota bucket is near cap — automatic assignments are prohibited"
-            )
+            # Claude's cap leaves Moonshot and xAI authors below their two-seat minimum.
+            assert {finding["author_family"] for finding in findings} == {"moonshot", "xai"}
+            for finding in findings:
+                assert finding["minimum"] == 2
+                assert finding["counted_seats"] == ["openai_frontier"]
+                assert finding["excluded_seats"]["claude-opus-5-5"] == (
+                    "quota bucket is near cap — automatic assignments are prohibited"
+                )
             assert "BENCH HEALTH FAIL" in captured.err
         else:
             assert not findings

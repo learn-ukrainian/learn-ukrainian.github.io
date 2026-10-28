@@ -11,10 +11,9 @@ cards, dataset rows). What blocks, reporting by class and evidence stay in
   Each reviews the same exact head from the same frozen brief without the other's findings.
 - Default, and for an Anthropic author: Gemini (AGY) + Sol. Author OpenAI: Gemini (AGY) +
   Opus 5.5. Author Google: Sol + Opus 5.5. Any other author: Gemini (AGY) + Sol.
-- Grok is not a seat. Cursor stays off language seats (`model-assignment.md`, native Grok
-  language seat), and delegate admission refuses xAI for Ukrainian
-  (`UKRAINIAN_MODEL_REFUSED`, `scripts/delegate.py`; grok-4.7 note in
-  `scripts/config/model_catalog.yaml`). Admitting Grok via Cursor for Ukrainian needs a
+- Grok is not a language seat. Native Grok dispatch is retired. Cursor `grok-4.7-high`
+  stays off language seats (`model-assignment.md`, Grok language routing;
+  `scripts/config/model_catalog.yaml` review profiles). Admitting Grok via Cursor for Ukrainian needs a
   separate catalog change backed by the measurement below (Grok 25/27, Sources tools
   reachable).
   Muse is advisory only, never a seat, until it can call the Sources tools.

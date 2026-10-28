@@ -92,11 +92,11 @@ Escalate when: architecture, hard multi-file judgment, high-stakes synthesis —
 
 ```bash
 # AGY default / escalate
-.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.8-flash-high ...
+.venv/bin/python scripts/dispatch.py dispatch --agent agy --model gemini-3.8-flash-high ...
 # Claude escalate
-.venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5-5 ...
+.venv/bin/python scripts/dispatch.py dispatch --agent claude --model claude-opus-5-5 ...
 # Codex named advisor escalate
-.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6.1-sol ...
+.venv/bin/python scripts/dispatch.py dispatch --agent codex --model gpt-6.1-sol ...
 ```
 
 ## Formal CF defaults (orchestrator-ready)
@@ -143,12 +143,12 @@ Practical seats @ **high** — not Sol on routine PRs:
   --type review --pr <N> --task-id review-<N> < prompt.md
 
 # Headless dispatch equivalent:
-.venv/bin/python scripts/delegate.py dispatch \
+.venv/bin/python scripts/dispatch.py dispatch --model <catalog-model> \
   --agent codex --mode read-only --worktree --branch <branch> \
   --task-id review-<N> --prompt-file prompt.md
 
 # Exceptional pin: still passes every hard gate and uses the same reservation ledger.
-.venv/bin/python scripts/delegate.py dispatch \
+.venv/bin/python scripts/dispatch.py dispatch \
   --agent claude --mode read-only --worktree --branch <branch> \
   --task-id review-<N> --model claude-opus-5-5 --effort high \
   --prompt-file prompt.md
@@ -295,12 +295,7 @@ Use the seat-facing facade from any repository checkout:
 .venv/bin/python -m scripts.fleet_comms fleet backlog
 .venv/bin/python -m scripts.fleet_comms fleet dead
 .venv/bin/python -m scripts.fleet_comms fleet metrics
-.venv/bin/python -m scripts.fleet_comms fleet reap-report
 ```
-
-`fleet reap-report` is a dry run over merged PR heads. It passes through the
-existing reaper's active-worktree, exact-merged-head, and dirty-tree guards.
-`--apply` is available only for the same guarded reaper path.
 
 Before proposing deletion of a Broker Ops page or a legacy route, choose a
 window between 1 and 90 days and run:

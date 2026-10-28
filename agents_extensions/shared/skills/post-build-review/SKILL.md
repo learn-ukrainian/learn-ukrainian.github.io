@@ -94,7 +94,7 @@ track-completion ledger.
    and must stop before inference:
 
    ```bash
-   .venv/bin/python scripts/delegate.py dispatch \
+   .venv/bin/python scripts/dispatch.py dispatch \
      --agent codex --task-id <unique_review_task_id> \
      --prompt-file <semantic_prompt_path> --mode read-only \
      --cwd <exact_review_checkout> --model <model> --effort <effort> \

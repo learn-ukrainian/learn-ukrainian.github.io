@@ -481,7 +481,6 @@ def test_resumable_run_commands_pin_gemini_and_codex(tmp_path: Path) -> None:
     assert commands[-1][0] == sys.executable
 
 
-
 def test_opencode_prelude_extracts_one_exact_trailing_response() -> None:
     response = {"schema_version": "fixture", "reviews": []}
     payload = b"OpenCode UI prelude\nmodel: xai/grok-4.5\n" + transport.canonical_json(response).encode()
@@ -541,64 +540,6 @@ def test_voided_cycle001_production_cannot_run_or_ingest(tmp_path: Path) -> None
             raw_response_path=tmp_path / "must-not-be-read.raw",
             provider_invocation_receipt_path=tmp_path / "must-not-be-read.json",
         )
-
-
-def test_review_completion_gate_verdict_and_trailing_json_extraction() -> None:
-    from scripts import delegate
-
-    schema = json.loads(transport.DEFAULT_SCHEMA.read_text(encoding="utf-8"))
-    identity = {
-        "family_id": "school_textbooks",
-        "unit_id": "fixture-1",
-        "unit_sha256": "a" * 64,
-        "locator_sha256": "b" * 64,
-        "source_text_sha256": "c" * 64,
-    }
-    decision = {
-        "unit_id": identity["unit_id"],
-        "unit_sha256": identity["unit_sha256"],
-        "disposition_code": "not_rule_bearing",
-        "primary_source_role": "ordinary_narration",
-        "secondary_source_roles": [],
-        "claim_type": "attestation_only",
-        "candidate_classes": [],
-        "artifact": None,
-        "consumer_views": [],
-        "rationale": "Synthetic fixture only.",
-    }
-    response = {
-        "schema_version": "phase3_source_production_review_response_v1",
-        "packet_id": "phase3_source_review_packet:" + "d" * 64,
-        "identity_order": [identity],
-        "reviews": [{"unit_id": identity["unit_id"], "unit_sha256": identity["unit_sha256"], "outcome": "confirmed", "decision": decision}],
-        "parse_state": "parsed",
-    }
-    text = json.dumps(response)
-
-    # Bare JSON fails the completion gate because it lacks the verdict line
-    failure = delegate.first_completion_gate_failure(
-        {"mode": "read-only", "require_review_verdict": True},
-        response=text,
-        commits_ahead=None,
-        worktree=None,
-    )
-    assert failure is not None
-    assert failure.failure == "review_missing_verdict_line"
-
-    # Leading verdict line plus trailing JSON passes completion gate and extracts cleanly
-    for verdict in ("VERDICT: APPROVE", "VERDICT: REQUEST_CHANGES"):
-        full_response = f"{verdict}\n\n{text}"
-        assert (
-            delegate.first_completion_gate_failure(
-                {"mode": "read-only", "require_review_verdict": True},
-                response=full_response,
-                commits_ahead=None,
-                worktree=None,
-            )
-            is None
-        )
-        extracted = transport._trailing_json_response(full_response.encode("utf-8"), "review")
-        assert json.loads(extracted.decode("utf-8")) == response
 
 
 def test_run_packets_generates_distinct_task_ids_and_handles_retries(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -45,7 +45,7 @@ Trailer format
 
 Where ``agent`` ∈ {``claude-inline``, ``claude``, ``codex``, ``gemini``,
 ``agy-inline``, ``agy``, ``grok``, ``grok-build``, ``grok-hermes``,
-``deepseek``, ``deepseek-v4-pro``, ``cursor``, ``glm``, ``kimi``, ``dependabot``} and ``task-id`` is the
+``deepseek``, ``deepseek-v4-pro``, ``cursor``, ``hermes``, ``muse``, ``opencode``, ``glm``, ``kimi``, ``dependabot``} and ``task-id`` is the
 dispatch task identifier or the ``inline`` literal for orchestrator commits.
 ``grok-build`` is a permanent alias of the native ``grok`` seat (historical
 trailers must keep validating). ``gemini`` is an alias of ``agy``. Examples::
@@ -84,7 +84,7 @@ from scripts.common.repo_root import main_checkout_root, resolve_repo_root
 from scripts.orchestration.task_record_store import locate_task_record
 
 _TRAILER_RE = re.compile(
-    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek|deepseek-v4-pro|cursor|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
+    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek|deepseek-v4-pro|cursor|hermes|muse|opencode|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
     re.MULTILINE,
 )
 
@@ -126,7 +126,7 @@ def locate_record_for_trailer(tasks_dir: Path, agent: str, task: str) -> tuple[P
     """Locate task record for a trailer agent/task, normalization-aware.
 
     For trailer ``agent/task``, accepts a record named ``{agent}-task``,
-    ``{agent}_task``, or ``task`` (the inverse of ``_x_agent_task_id`` in delegate.py).
+    ``{agent}_task``, or ``task``.
     Prefers a candidate whose record agent matches the trailer agent.
     """
     normalized = task
@@ -279,10 +279,42 @@ def resolve_provenance_context(
     )
 
 
-def _commits_in_range(rev_range: str, cwd: Path | None = None) -> list[str]:
-    """Return commit SHAs (newest first) in the range, excluding merges."""
-    raw = _git("log", "--no-merges", "--format=%H", rev_range, cwd=cwd)
+def _commits_in_range(rev_range: str, cwd: Path | None = None, *, exclude: tuple[str, ...] = ()) -> list[str]:
+    """Return commit SHAs (newest first) in the range, excluding merges and anything reachable from ``exclude``."""
+    not_args = ["--not", *exclude] if exclude else []
+    raw = _git("log", "--no-merges", "--format=%H", rev_range, *not_args, cwd=cwd)
     return raw.splitlines() if raw else []
+
+
+def _pre_push_range(cwd: Path | None = None) -> tuple[str, tuple[str, ...]] | None:
+    """Return ``(rev_range, exclude)`` for the push pre-commit is running, or ``None`` outside a push.
+
+    pre-commit exports the pushed range as ``PRE_COMMIT_FROM_REF``/``PRE_COMMIT_TO_REF``
+    (``pre_commit.commands.hook_impl._pre_push_ns``): for an existing remote ref, the
+    remote's old tip..the pushed tip; for a new ref, the parent of the first commit no
+    remote has..the pushed tip. It resolves only the first non-delete ref of a multi-ref
+    push (hook stdin is not forwarded), so later refs are not visible here. A push that
+    includes the root commit sets neither variable; ``PRE_COMMIT_LOCAL_BRANCH`` is then
+    linted against everything the remote already has. Commits already on ``origin/main``
+    are always excluded.
+    """
+    from_ref = os.environ.get("PRE_COMMIT_FROM_REF")
+    to_ref = os.environ.get("PRE_COMMIT_TO_REF")
+    exclude: list[str] = []
+    if from_ref and to_ref:
+        rev_range = f"{from_ref}..{to_ref}"
+    else:
+        local_branch = os.environ.get("PRE_COMMIT_LOCAL_BRANCH")
+        if not local_branch or not os.environ.get("PRE_COMMIT_REMOTE_NAME"):
+            return None
+        rev_range = local_branch
+        exclude.append(f"--remotes={os.environ['PRE_COMMIT_REMOTE_NAME']}")
+    try:
+        _git("rev-parse", "--verify", "--quiet", "origin/main", cwd=cwd)
+        exclude.append("origin/main")
+    except subprocess.CalledProcessError:
+        pass
+    return rev_range, tuple(exclude)
 
 
 def _commit_meta(sha: str, cwd: Path | None = None) -> tuple[str, str, str, str]:
@@ -385,8 +417,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "rev_range",
         nargs="?",
-        default="origin/main..HEAD",
-        help='Git rev range to check (default: "origin/main..HEAD"). '
+        default=None,
+        help='Git rev range to check. Default: the range being pushed when run by pre-commit\'s pre-push '
+        'stage (PRE_COMMIT_FROM_REF..PRE_COMMIT_TO_REF), else "origin/main..HEAD". '
         'Examples: "origin/main..HEAD", "HEAD~3..HEAD", "abc123..def456".',
     )
     parser.add_argument(
@@ -403,14 +436,20 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    rev_range = args.rev_range
+    exclude: tuple[str, ...] = ()
+    if rev_range is None:
+        pushed = _pre_push_range(cwd=args.cwd)
+        rev_range, exclude = pushed if pushed else ("origin/main..HEAD", ())
+
     try:
-        shas = _commits_in_range(args.rev_range, cwd=args.cwd)
+        shas = _commits_in_range(rev_range, cwd=args.cwd, exclude=exclude)
     except subprocess.CalledProcessError as exc:
         print(f"git log failed: {exc.stderr or exc}", file=sys.stderr)
         return 2
 
     if not shas:
-        print(f"No commits in range {args.rev_range!r} (nothing to check).")
+        print(f"No commits in range {rev_range!r} (nothing to check).")
         return 0
 
     provenance = resolve_provenance_context(tasks_dir=args.tasks_dir, cwd=args.cwd)
@@ -420,7 +459,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"🌲 Validating X-Agent task provenance (expected: {provenance.expected_trailer})\n")
 
     fails = 0
-    print(f"Checking {len(shas)} commit(s) in {args.rev_range}:\n")
+    print(f"Checking {len(shas)} commit(s) in {rev_range}:\n")
     for sha in shas:
         short = sha[:10]
         verdict, reason = _check_commit(sha, provenance=provenance, cwd=args.cwd)
@@ -438,7 +477,7 @@ def main(argv: list[str] | None = None) -> int:
             "       git commit --amend --trailer 'X-Agent: claude-inline/orchestrator'\n"
             "   For dispatched-agent commits, use the expected literal trailer:\n"
             f"       git commit --amend --trailer '{provenance.expected_trailer or 'X-Agent: <agent>/<task-id>'}'\n"
-            "   See AGENTS.md rule #11 / GEMINI.md / agents_extensions/shared/rules/delegate-must-use-worktree.md."
+            "   See AGENTS.md rule #11 / GEMINI.md / agents_extensions/shared/rules/dispatch-must-use-worktree.md."
         )
         return 1
 

@@ -417,13 +417,11 @@ def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
     assert dispatch[dispatch.index("--branch") + 1] == "agy/impl-8419-stall-clock"
     assert [dispatch[i + 1] for i, arg in enumerate(dispatch) if arg == "--subject-seat"] == ["codex", "cursor"]
     assert [dispatch[i + 1] for i, arg in enumerate(dispatch) if arg == "--subject-family"] == ["openai", "xai", "openai"]
-    from scripts import delegate
+    from scripts.dispatcher.cli import build_parser
 
-    args = delegate.build_parser().parse_args(dispatch[2:])
-    assert delegate._authoring_review_state_fields(args, None) == {
-        "review_subject_seats": ["codex", "cursor"],
-        "review_subject_families": ["openai", "xai", "openai"],
-    }
+    args = build_parser().parse_args(dispatch[2:])
+    assert args.subject_seat == ["codex", "cursor"]
+    assert args.subject_family == ["openai", "xai", "openai"]
 
 
 def test_run_ask_review_dispatch_without_verdict_fails_with_reason(monkeypatch, tmp_path):
@@ -450,34 +448,6 @@ def test_run_ask_review_dispatch_without_verdict_fails_with_reason(monkeypatch, 
     assert state["failure_reason"] == "review_missing_verdict_line"
 
 
-def test_run_ask_review_dispatch_judges_by_verdict_not_dispatch_exit(monkeypatch, tmp_path):
-    """#8786: a read-only review has no push; its verdict line is the deliverable.
-
-    The live failure had the worker print a complete verdict and then exit
-    non-zero as ``no_deliverable``. The wrapper must judge a review by the
-    parsed verdict, not by the dispatch process exit code, and a reply with no
-    verdict must still fail loudly (covered by the sibling test above).
-    """
-    result_file = tmp_path / "result.md"
-    result_file.write_text("Adversarial review complete.\n\n**Verdict**: **APPROVE**\n", encoding="utf-8")
-
-    def fake_run(cmd, **kwargs):
-        if "dispatch" in cmd:
-            return subprocess.CompletedProcess(cmd, 0)
-        if "wait" in cmd:
-            return subprocess.CompletedProcess(
-                cmd,
-                1,
-                stdout=json.dumps({"status": "no_deliverable", "result_file": str(result_file)}),
-            )
-        raise AssertionError(f"unexpected cmd: {cmd}")
-
-    monkeypatch.setattr(wrappers.github_client, "run", fake_run)
-    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
-    state = wrappers.run_ask_review_dispatch("deepseek", "review this", task_id="review-8786")
-    assert state["ok"] is True
-    assert state["status"] == "done"
-    assert state.get("no_deliverable_reason") is None
 
 
 def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, response, wait_fields=None):
@@ -500,7 +470,7 @@ def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, respo
     return wrappers.run_ask_review_dispatch("deepseek", "review this", task_id="review-8786")
 
 
-@pytest.mark.parametrize("status,wait_rc", [("done", 0), ("no_deliverable", 1), ("failed", 1)])
+@pytest.mark.parametrize("status,wait_rc", [("done", 0), ("failed", 1)])
 @pytest.mark.parametrize(
     "response,token",
     [
@@ -611,7 +581,7 @@ def test_ask_unsupported_token_never_replaces_other_terminal_failure(monkeypatch
 
 @pytest.mark.parametrize("response", [
     "VERDICT: CHANGES\nVERDICT: APPROVE", "VERDICT: APPROVE\nVERDICT: CHANGES",
-    "VERDICT: CHANGES\nVERDICT: APPROVE\nVERDICT: REQUEST_CHANGES\nVERDICT: REVISE",
+    "VERDICT: CHANGES\nVERDICT: APPROVE\nVERDICT: APPROVE\nVERDICT: REVISE",
 ])
 def test_ask_mixed_unsupported_and_recognized_verdicts_stay_done(monkeypatch, tmp_path, response):
     state = _run_review_with_wait_state(
@@ -655,16 +625,6 @@ def test_run_ask_review_dispatch_ignores_quoted_verdict_example(monkeypatch, tmp
     assert state["failure_reason"] == "review_missing_verdict_line"
 
 
-def test_run_ask_review_dispatch_last_verdict_line_wins(monkeypatch, tmp_path):
-    state = _run_review_with_wait_state(
-        monkeypatch,
-        tmp_path,
-        status="no_deliverable",
-        wait_rc=1,
-        response="VERDICT: APPROVE\n\n**VERDICT: REQUEST_CHANGES**\n",
-    )
-    assert state["ok"] is True
-    assert state["status"] == "done"
 
 
 @pytest.mark.parametrize("target", ["curriculum/" + "long-path/" * 20, "#1740"])
@@ -676,10 +636,3 @@ def test_review_task_ids_fit_v2_store_without_truncation_collisions(target):
     assert len(task_id) <= 128
     assert record_path(task_id).name == task_id + ".json"
     assert wrappers._review_task_id(target + "-other") != task_id
-
-
-def test_ask_review_keeps_recovering_legacy_wait_until_dispatch_migrates():
-    """Legacy wait still heals dead-worker records while ask-review dispatch is legacy."""
-    assert wrappers.build_ask_review_wait_command("review-legacy", timeout=3) == [
-        ".venv/bin/python", "scripts/delegate.py", "wait", "review-legacy", "--timeout", "3",
-    ]

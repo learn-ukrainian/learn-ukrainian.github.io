@@ -148,7 +148,7 @@ Green means: `python_qg` all gates · `assemble_mdx` ok · `mdx_render` all isla
    forward-drift gate).
 3. **Independent content review** — **LANGUAGE-LANES only** (agy / codex / claude),
    VESUM-backed via `sources` MCP, off-seat. Example:
-   `delegate.py dispatch --agent agy --mode read-only` (or codex/claude).
+   `dispatch.py dispatch --model <catalog-model> --agent agy --mode read-only` (or codex/claude).
    **Do not** use deepseek/cursor/kimi/pool/glm for folk or UA content review
    (LANGUAGE-LANES + no DeepSeek for folk). Apply valid deltas.
 4. `handoff_ready --pr <N>` before declaring ready.

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Prove a PR is MERGED, then close it out: reap its dispatch worktrees
-through the P0 reaper and prove the remote and local branch are gone.
+"""Prove a PR is MERGED, then close it out: prove no dispatch worktree still
+holds it and that its remote and local branch are gone.
 
 ``gh pr merge`` (or the merge queue) reporting MERGED is not closeout --
-worktree reaping and branch deletion are frequently skipped afterward. This
-CLI makes the full closeout a single command instead of a checklist an
-orchestrator can forget.
+branch deletion is frequently skipped afterward. This CLI makes the full
+closeout a single command instead of a checklist an orchestrator can forget.
+The dispatcher removes each task's worktree when the task settles; a worktree
+it kept is reported here as a residual, never removed.
 
     .venv/bin/python -m scripts.orchestration.merge_closeout <pr-number> --apply
 
@@ -67,7 +68,6 @@ class CloseoutResult:
     pr: PullRequestInfo
     apply: bool
     matched_worktrees: list[str]
-    reap_results: list[dict[str, Any]]
     branch_status: BranchStatus | None
     ok: bool
     errors: list[str] = field(default_factory=list)
@@ -313,37 +313,13 @@ def find_matching_worktrees(repo_root: Path, pr: PullRequestInfo) -> list[rw.Wor
     return matches
 
 
-def reap_matched_worktrees(
-    repo_root: Path,
-    matches: list[rw.WorktreeInfo],
-    *,
-    apply: bool,
-    live_cwds: set[Path] | None = None,
-) -> list[rw.ReapResult]:
-    """Delegate removal to the P0 reaper. This is not a second deletion hand."""
-    if not matches:
-        return []
-    return rw.reap_worktrees(
-        repo_root=repo_root,
-        apply=apply,
-        target_paths=[info.path for info in matches],
-        merged_pr_only=True,
-        prune_merged_branches=True,
-        safe_only=True,
-        live_cwds=live_cwds,
-        require_activity_probe=apply,
-    )
-
-
 def _guard_branch_not_open(repo_root: Path, branch: str) -> str | None:
     """Return an error message when it is unsafe to delete ``branch``.
 
-    Reuses the P0 reaper's ``gh pr list`` guard (``rw._query_pr_states``).
-    When no worktree remains, the reaper's own guard never runs, so this
-    fallback path must re-run it: a branch with a currently OPEN PR -- even
-    one opened after the merged PR this closeout targets -- must never be
-    deleted, and a failed guard query must fail closed rather than be read
-    as "no open PR".
+    Reuses the P0 reaper's ``gh pr list`` guard (``rw._query_pr_states``):
+    a branch with a currently OPEN PR -- even one opened after the merged PR
+    this closeout targets -- must never be deleted, and a failed guard query
+    must fail closed rather than be read as "no open PR".
     """
     prs, pr_error = rw._query_pr_states(repo_root, branch)
     if pr_error is not None:
@@ -382,8 +358,7 @@ def verify_branch_gone(
 
     Only ever deletes a branch whose live head exactly matches the merged PR
     head -- the same exact-head proof the P0 reaper requires -- and only
-    when the reaper's open-PR guard clears it. This is a fallback for
-    whatever the reap step above did not already clean up. A failed lookup
+    when the reaper's open-PR guard clears it. A failed lookup
     (unreachable origin, failed gh call) is never read as "branch is gone";
     it leaves the branch alone and is reported as an error.
     """
@@ -576,7 +551,6 @@ def run_merge_closeout(
     *,
     repo: str | None = None,
     apply: bool = False,
-    live_cwds: set[Path] | None = None,
     no_lifecycle_observation: str | None = None,
 ) -> CloseoutResult:
     pr = fetch_pr_info(repo_root, pr_number, repo=repo)
@@ -596,22 +570,14 @@ def run_merge_closeout(
         except (OSError, ValueError, KeyError, TypeError, RuntimeError) as exc:
             return CloseoutResult(
                 pr=pr, apply=apply, matched_worktrees=[str(info.path) for info in matches],
-                reap_results=[], branch_status=None, ok=False,
+                branch_status=None, ok=False,
                 errors=[f"lifecycle observation refused: {exc}"], lifecycle_observations=observations,
             )
-    reap_results = reap_matched_worktrees(repo_root, matches, apply=apply, live_cwds=live_cwds)
+    errors: list[str] = []
 
-    errored_paths = {result.path for result in reap_results if result.action == "error"}
-    errors: list[str] = [
-        f"{result.path}: {result.error or result.reason}"
-        for result in reap_results
-        if result.action == "error"
-    ]
-
-    # A worktree the reaper left retained/skipped (dirty, active dispatch, PR
-    # guard, etc.) is not an ``error`` action -- it must still block success,
-    # or a retained dirty worktree reports a clean closeout. Re-enumerate the
-    # live worktrees rather than trusting the reap actions alone.
+    # The dispatcher removes a task's worktree when the task settles and keeps
+    # it only for a reason (dirty, unpublished, live process ...). A kept
+    # worktree blocks a clean closeout; this command never removes it.
     worktree_residuals: list[str] = []
     if apply and matches:
         still_present = {str(info.path) for info in rw.list_git_worktrees(repo_root)}
@@ -619,8 +585,7 @@ def run_merge_closeout(
             path_str = str(info.path)
             if path_str in still_present:
                 worktree_residuals.append(path_str)
-                if path_str not in errored_paths:
-                    errors.append(f"{path_str}: worktree still registered after reap (not removed)")
+                errors.append(f"{path_str}: worktree still registered (merge_closeout does not remove worktrees)")
 
     branch_status = verify_branch_gone(repo_root, pr, apply=apply)
     if branch_status is not None:
@@ -639,7 +604,6 @@ def run_merge_closeout(
         pr=pr,
         apply=apply,
         matched_worktrees=[str(info.path) for info in matches],
-        reap_results=[rw._result_payload(result) for result in reap_results],
         branch_status=branch_status,
         ok=not errors and not residual,
         errors=errors,
@@ -653,7 +617,6 @@ def _result_to_dict(result: CloseoutResult) -> dict[str, Any]:
         "pr": asdict(result.pr),
         "apply": result.apply,
         "matched_worktrees": result.matched_worktrees,
-        "reap_results": result.reap_results,
         "branch_status": asdict(result.branch_status) if result.branch_status else None,
         "ok": result.ok,
         "errors": result.errors,
@@ -672,8 +635,6 @@ def _format_text(result: CloseoutResult) -> str:
         lines.extend(f"  {path}" for path in result.matched_worktrees)
     else:
         lines.append("matched worktrees: none")
-    for entry in result.reap_results:
-        lines.append(f"  reap {entry['action']}: {entry['path']} ({entry['reason']})")
     for entry in result.lifecycle_observations:
         lines.append(f"  lifecycle observation: {json.dumps(entry, sort_keys=True)}")
     for entry in result.criterion_receipts:
@@ -698,15 +659,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="merge_closeout",
         description=(
-            "Prove a PR is MERGED, reap its dispatch worktrees through the P0 "
-            "reaper, and prove its remote and local branch are gone. "
+            "Prove a PR is MERGED, that no dispatch worktree still holds it, "
+            "and that its remote and local branch are gone. "
             "Dry-run by default."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
   .venv/bin/python -m scripts.orchestration.merge_closeout 123 --json
   .venv/bin/python -m scripts.orchestration.merge_closeout 123 --apply
-Outputs: Cleanup report; apply records lifecycle observations, reaps trees and deletes branches.
+Outputs: Cleanup report; apply records lifecycle observations and deletes branches.
 Exit codes: 0 = clean report; 1 = residual; 2 = PR state unavailable.
 Related: docs/runbooks/worktree-cleanup.md § Immediate cleanup after merge.
 """,
@@ -722,7 +683,7 @@ Related: docs/runbooks/worktree-cleanup.md § Immediate cleanup after merge.
     parser.add_argument(
         "--apply",
         action="store_true",
-        help="Reap matched worktrees and delete residual branches. Default is dry-run.",
+        help="Delete the merged PR's residual branches. Default is dry-run.",
     )
     parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON.")
     parser.add_argument(

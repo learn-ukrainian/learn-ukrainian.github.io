@@ -120,7 +120,7 @@ and the narrowly allowlisted dual paths.
 | Surface | Owns | Never owns |
 | --- | --- | --- |
 | **`discuss`** (bridge) | An observable exception for agent communication that ACP cannot serve; bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
-| **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
+| **`scripts/dispatch.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + legacy file handoffs** | Durable coordination authority in `authority` mode; legacy file stores remain read-only migration/projection inputs | Competing message buses; new legacy writes; silent plane/retention/eligibility flips |
 | **ACPX** | Routine first-choice structured transport for eligible 2-to-4-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (Kimi is retired, OO-58); not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Entire context recall** | Optional automatic body-free discovery plus preflight-gated private native session search/explain/recap | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
@@ -275,7 +275,7 @@ path. Never fall back to `python`, `.venv/bin/python`, or `python -m venv .venv`
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" scripts/delegate.py dispatch \
+"$PRIMARY_REPO/.venv/bin/python" scripts/dispatch.py dispatch --model <catalog-model> \
   --agent <lane> --task-id <id> --prompt-file <path> --worktree
 ```
 
@@ -289,7 +289,7 @@ become a second coordination plane.
 #### Sibling-repo dispatch
 
 `--worktree` and `--branch` default to the Learn Ukrainian primary checkout
-that owns `scripts/delegate.py` (`_REPO_ROOT`). They do **not** follow the
+that owns `scripts/dispatch.py` (`_REPO_ROOT`). They do **not** follow the
 shell cwd. Invoking `dispatch --worktree` from a sibling repository (for
 example a private checkout next to this one) without `--repo` is refused: the
 worktree would otherwise be created under the primary while the brief still
@@ -301,7 +301,7 @@ under that sibling checkout:
 
 ```bash
 LU_PRIMARY="$(dirname "$(git -C /path/to/learn-ukrainian rev-parse --path-format=absolute --git-common-dir)")"
-"$LU_PRIMARY/.venv/bin/python" "$LU_PRIMARY/scripts/delegate.py" dispatch \
+"$LU_PRIMARY/.venv/bin/python" "$LU_PRIMARY/scripts/dispatch.py" dispatch \
   --agent <lane> --task-id <id> --prompt-file <path> \
   --mode workspace-write --repo hramatka --worktree
 ```
@@ -319,7 +319,7 @@ git -C /path/to/sibling worktree add .worktrees/dispatch/<agent>/<task> <base-or
 
 # Invoke this repo's delegate against that worktree (no --worktree).
 LU_PRIMARY="$(dirname "$(git -C /path/to/learn-ukrainian rev-parse --path-format=absolute --git-common-dir)")"
-"$LU_PRIMARY/.venv/bin/python" "$LU_PRIMARY/scripts/delegate.py" dispatch \
+"$LU_PRIMARY/.venv/bin/python" "$LU_PRIMARY/scripts/dispatch.py" dispatch \
   --agent <lane> --task-id <id> --prompt-file <path> \
   --mode workspace-write --cwd /path/to/sibling/.worktrees/dispatch/<agent>/<task>
 ```
@@ -340,15 +340,15 @@ before dispatching:
    recon, always under a complete Sol advisory envelope (operator decision 2026-09-30, #9275). There is no direct bounded dispatch;
    the same holds for the `gemini-3.8-flash-high` fallback unless the dispatch is
    classified Ukrainian authoring or review.
-3. `gpt-6.1-sol` at `high` issues that envelope read-only with
-   `--advisory-role bounded_advisory_envelope --advisory-binding <digest>`, where the
-   digest is the worker dispatch's `--print-advisory-binding` output. The envelope
+3. `gpt-6.1-sol` at `high` issues that envelope in a read-only dispatch. Put the
+   worker's `--print-advisory-binding` digest and envelope request in the brief;
+   the legacy advisor-role/binding switches are retired. The envelope
    holds the task contract, exact owned paths, maximum changed-file and
    non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence, and
    escalation triggers. In this role Sol advises; it is not the bounded task's
    implementer or reviewer.
 4. The worker is dispatched with `--advisory-task <advisor task id>` and an
-   `--owned-path` set equal to the envelope's. `delegate.py` refuses a bounded
+   `--owned-path` set equal to the envelope's. `dispatch.py` refuses a bounded
    dispatch without a complete bound envelope and fails the worker at finalize when
    its diff exceeds the ceilings. Luna escalates any ceiling overrun,
    consequential architecture, security, release, high-risk go/no-go, unresolved
@@ -374,16 +374,19 @@ to Sol at `high` or the accountable orchestrator before making a consequential d
 - Plane / retention-apply / `formal_review_eligible` flips belong to the
   infra/harness lane after parity + present-tense operator/advisor GO.
 
-### Native Grok dispatch effort
+### Grok dispatch through Cursor
 
-`scripts/delegate.py dispatch --agent grok` accepts only the native Grok CLI
-effort vocabulary: `low`, `medium`, or `high`. The permanent
-`--agent grok-build` alias has the identical contract. Dispatch checks this
-per-agent capability before it creates task state, a worktree, a runtime lease,
-or a worker process; `xhigh` and `max` are refused with a clear error rather
-than silently clamped to a different reasoning level. Omit `--effort` to use
-the native Grok default (`high`). This restriction does not apply to the
-separate historical `grok-hermes` transport.
+Native Grok dispatch is retired. Dispatch v2 maps `--agent grok` to Cursor.
+Use the explicit Cursor seat at `grok-4.7-high`:
+
+```bash
+.venv/bin/python scripts/dispatch.py dispatch --agent cursor --model grok-4.7-high \
+  --mode read-only --task-id <task-id> --prompt-file <brief>
+```
+
+The Cursor model pin supplies high effort. The former native Grok CLI effort
+vocabulary is not a dispatch v2 contract. Native Grok CLI callers outside detached
+dispatch retain their own interfaces.
 
 ### ACPX — structured transport boundary
 
@@ -545,7 +548,7 @@ Every fleet launcher exports ACP as the routine transport. The project
 2 to 4 distinct enabled participants: Codex, Grok, Claude,
 Cursor, Pool, AGY/Gemini, GLM, or DeepSeek. Never Kimi. The direct `acp-discuss` command remains available for
 operators and tests. Selection starts no process at cold start and does not
-change `delegate.py`. Any other count or invalid seat list is rejected loudly
+change `dispatch.py`. Any other count or invalid seat list is rejected loudly
 before it creates a conversation; there is no bridge/provider-execution
 fallback. Use the default two rounds; three is the hard maximum. Admission is
 one conversation repository-wide. If it is occupied, return `busy`
@@ -558,7 +561,7 @@ execution engine, for supported 2-to-4-seat panels: it delegates to ACP and
 records the durable ACP conversation. Ordinary `ask-*` calls also use the
 2-to-4-seat ACP controller; queued ordinary `process-*` calls drain through that
 same transport. Do not add one-shot provider launch logic. Toolful tasks use
-`delegate.py`; explicit review asks retain headless toolful dispatch.
+`dispatch.py`; explicit review asks retain headless toolful dispatch.
 The retirement order is compatibility shim → deprecation event → measured zero
 use → operator GO → code removal. Keep telemetry, Broker Ops, and legacy HTTP
 routes until that gate passes; #6106 remains open during caller migration. Fleet-comms persistence, leases, inbox delivery, formal verdicts,
@@ -751,8 +754,9 @@ counts and outcomes.
 
 1. Disable the ACPX feature flag (default-off posture).
 2. Continue on native agent runtime transport
-   (`scripts/agent_runtime/` via `runner.invoke`, bridge, `delegate.py`) —
-   native Codex and native Grok remain the authoritative paths.
+   (`scripts/agent_runtime/` via `runner.invoke`, bridge, `dispatch.py`) —
+   native Codex remains available. Grok detached dispatch uses Cursor at
+   `grok-4.7-high`; native Grok dispatch is retired.
 3. Leave fleet-comms plane mode and formal-review eligibility unchanged.
 4. Preserve the read-only legacy projections; resume legacy writes only as part
    of an explicitly approved rollback to `dual_write`.
@@ -804,7 +808,7 @@ printf '%s\n' 'Review PR #<N> at head <SHA>: verdict + findings.' | \
   --task-id review-<N> --type review
 
 # Execution
-.venv/bin/python scripts/delegate.py dispatch --agent <lane> --worktree ...
+.venv/bin/python scripts/dispatch.py dispatch --model <catalog-model> --agent <lane> --worktree ...
 
 # Topology (never hard-code the answer)
 .venv/bin/python -m scripts.fleet_comms plane-status
@@ -860,7 +864,7 @@ review as CF. Keep the resulting operational evidence private.
 ## Reviewer-seat transport recovery
 
 Direct read-only code reviews can target a registered sibling repository with
-`delegate.py dispatch --repo <key> --pr <number>` or
+`dispatch.py dispatch --repo <key> --pr <number>` or
 `--repo <key> --branch <branch> --pinned-head <full-sha>`, together with the
 required review profile, author model and risk flags. Dispatch resolves the
 repository through the fleet registry and creates a detached snapshot inside
@@ -908,13 +912,13 @@ The DeepSeek seat's **standing route** is first-party via opencode:
   Stop on a different model line, version, or tier.
   DeepSeek ASKs are toolless and self-contained: the seat has no repo or
   tool access, so paste everything the answer needs into the prompt —
-  reviews that require repo access go to `delegate.py dispatch --agent
+  reviews that require repo access go to `dispatch.py dispatch --model <catalog-model> --agent
   deepseek` instead (#6886: the seat otherwise tries to emit tool calls and
   the reply terminalizes `failed:non_evidentiary`).
 - Direct one-shot review/research outside the bridge runs
   `opencode run --model deepseek/deepseek-flash --variant high`
   (native Entire capture).
-- Tool-heavy work goes to `delegate.py dispatch --agent deepseek` from a
+- Tool-heavy work goes to `dispatch.py dispatch --model <catalog-model> --agent deepseek` from a
   dispatch worktree.
 
 Any legacy DeepSeek ACP route that still names a `hermes` binary keeps the admission-time

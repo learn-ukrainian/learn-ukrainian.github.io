@@ -37,13 +37,12 @@ from tests.claude_route_accounts import HOST_ACCOUNT
 
 @pytest.mark.parametrize("seat,route,launcher,agent,model,effort", [
     ("openai_frontier", "native", "dispatch.py", "codex", "gpt-6.1-sol", "high"),
-    ("xai_reviewer", "native", "delegate.py", "grok", "grok-4.7", None),
     ("xai_reviewer", "cursor_fallback", "dispatch.py", "cursor", "grok-4.7-high", None),
     ("anthropic_authority", "native", "dispatch.py", "claude", "claude-opus-5-5", None),
     ("anthropic_practical", "native", "dispatch.py", "claude", "claude-sonnet-5-5", None),
     ("mechanical_worker", "native", "dispatch.py", "claude", "claude-haiku-5-5", "high"),
-    ("bounded_worker", "native", "delegate.py", "codex", "gpt-6-luna", "high"),
-    ("google_bounded", "native", "delegate.py", "agy", "gemini-3.8-flash-high", "high"),
+    ("bounded_worker", "native", "dispatch.py", "codex", "gpt-6-luna", "high"),
+    ("google_bounded", "native", "dispatch.py", "agy", "gemini-3.8-flash-high", "high"),
 ])
 def test_catalog_invocations_pin_supported_launchers_and_flags(seat, route, launcher, agent, model, effort):
     from scripts.review.role_resolution import resolve_role
@@ -55,10 +54,7 @@ def test_catalog_invocations_pin_supported_launchers_and_flags(seat, route, laun
     if effort:
         expected += ["--effort", effort]
     assert argv == expected
-    if launcher == "dispatch.py":
-        from scripts.dispatcher.cli import build_parser
-    else:
-        from scripts.delegate import build_parser
+    from scripts.dispatcher.cli import build_parser
 
     args = build_parser().parse_args([*argv[2:],
         "--worktree", "--mode", "read-only", "--task-id", "catalog-review", "--prompt-file", "prompt.md",
@@ -102,7 +98,7 @@ def test_runtime_substitution_matches_only_requested_model_ids(requested, runtim
 @pytest.mark.parametrize("roles", [[], ["not-a-role"], ["standard_review"]])
 def test_candidate_suitability_roles_must_be_nonempty_and_held(roles):
     catalog = deepcopy(load_model_catalog())
-    catalog["review_candidates"]["grok-4.7"]["suitability_roles"] = roles
+    catalog["review_candidates"]["grok-4.7-cursor-fallback"]["suitability_roles"] = roles
     with pytest.raises(ModelCatalogError, match="suitability_roles"):
         validate_catalog(catalog)
 
@@ -404,7 +400,7 @@ def test_catalog_rejects_missing_risk_ladder():
 
 def test_catalog_rejects_candidate_transport_not_supported_by_model():
     broken = deepcopy(load_model_catalog())
-    broken["review_candidates"]["grok-4.7"]["transport"] = "hermes"
+    broken["review_candidates"]["grok-4.7-cursor-fallback"]["transport"] = "hermes"
     with pytest.raises(ModelCatalogError, match="is not listed"):
         validate_catalog(broken)
 
@@ -1045,7 +1041,7 @@ def test_primary_cannot_follow_last_resort_even_if_quality_is_equal():
 @pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
 def test_grok_cannot_repeat_in_any_code_review_ladder(risk):
     catalog = deepcopy(load_model_catalog())
-    catalog["review_ladders"][risk].append(["grok-4.7"])
+    catalog["review_ladders"][risk].append(["grok-4.7-cursor-fallback"])
     with pytest.raises(ModelCatalogError, match="repeats candidate"):
         validate_catalog(catalog)
 

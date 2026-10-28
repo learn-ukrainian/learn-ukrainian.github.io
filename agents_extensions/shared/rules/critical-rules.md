@@ -14,7 +14,7 @@
 **English**: all technical work. **Ukrainian**: curriculum content only.
 
 ### 4. External LLM Access
-Gemini-family work goes through the AGY lane (`ab ask-agy`, `delegate.py --agent agy`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
+Gemini-family work goes through the AGY lane (`ab ask-agy`, `.venv/bin/python scripts/dispatch.py dispatch --agent agy --model <model> --prompt-file <brief>`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
 Code review eligibility follows the `model-assignment.md` Code review row.
 
 ### 5. Word Targets Are Minimums
@@ -63,7 +63,7 @@ PR CI, review, and the pre-commit hooks in a single action.
 **8.2 — ALWAYS work in a git worktree**, never the primary checkout, and never switch branches in it:
 `git worktree add .worktrees/dispatch/<agent>/<task> -b <agent>/<task> origin/main`. The primary
 checkout is reserved for humans and services on `main`.
-Full contract: [`delegate-must-use-worktree.md`](delegate-must-use-worktree.md). Pass git an explicit
+Full contract: [`dispatch-must-use-worktree.md`](dispatch-must-use-worktree.md). Pass git an explicit
 **literal** `-C <absolute worktree path>`: the primary-checkout guard cannot resolve shell variables
 and will refuse the write, which is a guard working correctly, not a bug to route around.
 > **Scope honesty: this is hygiene, not a supply-chain control.** It prevents agent and human
@@ -82,20 +82,18 @@ legitimately complete with no PR: reviews, audits, research, diagnosis, and any 
 `--mode read-only`. For those, the deliverable *is* the report. The mechanical test is the dispatch's
 own mode plus whether its worktree is dirty — not a judgement about intent.
 
-**Four distinct terminal outcomes; do not collapse them into `done`:**
-- **`done`** — the deliverable exists (a pushed PR for change tasks, a report for read-only tasks).
-- **`needs_finalize`** — work was produced but not committed or pushed. This is a **failure to finish**,
-  and it is now detected mechanically for every write-capable mode (`delegate.py`); a dirty worktree with
-  no commits can no longer report `done`.
-- **`no_deliverable`** — a clean write-capable dispatch produced nothing verifiable: zero commits on
-  its branch, a clean worktree, and only a trivial response that cannot itself be the deliverable.
-  Detection is inferred from observable git facts, not from any formatting contract — commits on the
-  dispatch branch are sufficient proof on their own. A structured final `DELIVERABLE:` line is an
-  **optional** positive signal (a reasoned `no_change` proves a legitimate no-op); its absence never
-  fails a dispatch. `no_deliverable` is distinct from `needs_finalize`: do not re-enter its worktree
-  expecting uncommitted edits. Resolve the failed task or re-dispatch it.
-- **`BLOCKED` / `NEEDS-INPUT`** — genuinely cannot proceed. Reporting this is correct behaviour, not a
-  failure of nerve.
+**Dispatch v2 terminal statuses; do not collapse them into `done`:**
+- **`done`** — the worker completed successfully. Write tasks also passed Git delivery verification;
+  independently verify the pushed branch, open PR and CI required above.
+- **`no_deliverable`** — a write task failed delivery verification. In `scripts/dispatcher/worker.py`,
+  dirty or unknown worktree state gives `worktree_dirty_or_unknown`, zero or unknown commits gives
+  `no_commits_or_unknown`, and unpushed or unknown push state gives `work_not_pushed_or_unknown`.
+  Owned-path violations or unverifiable ownership also fail delivery. Inspect the task record and
+  worktree before recovery; uncommitted or unpushed work may remain.
+- **`failed`, `timeout`, `rate_limited`, `cancelled`, `crashed`** — unsuccessful terminal statuses.
+
+`--dry-run` prints a plan without creating a task record. `BLOCKED` and `NEEDS-INPUT` are report
+dispositions, not dispatch v2 statuses. Reporting a genuine inability to proceed is correct behaviour.
 
 Prefer **assume-and-proceed** over asking: where a brief is ambiguous but a reasonable assumption exists,
 take it, state it in the PR body, and continue. Reserve `BLOCKED` for the case where no reasonable

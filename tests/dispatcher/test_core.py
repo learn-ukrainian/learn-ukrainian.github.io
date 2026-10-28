@@ -363,6 +363,42 @@ def test_write_task_merged_into_main_counts_as_published_after_its_branch_is_del
     assert branch not in local_branches(sandbox.repo)
 
 
+@pytest.mark.parametrize("unknown,disposition", [(False, ("removed", "clean")), (True, ("retained", "dirty"))])
+def test_settlement_ignores_setup_links_and_regenerable_caches_but_not_unknown_ignored_files(
+        sandbox, monkeypatch, unknown, disposition):
+    """Defect: a clean published write task kept its worktree for the links and test caches it was set up with."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    tree, branch = Path(record["worktree_path"]), record["worktree_branch"]
+    # As in the project, tracked files keep these directories from collapsing into one ignored entry.
+    for tracked in ("data/README", "site/README", ".githooks/pre-commit"):
+        (tree / tracked).parent.mkdir(exist_ok=True)
+        (tree / tracked).write_text("tracked\n")
+    run_git(tree, "add", ".")
+    run_git(tree, "commit", "-m", "tracked directories")
+    run_git(tree, "push", str(sandbox.remote), f"HEAD:refs/heads/{branch}")
+    ignored = [*git.DATABASE_LINKS, *git.NODE_LINKS, "scripts/__pycache__/", ".pytest_cache/", ".ruff_cache/",
+               ".mypy_cache/", ".pytest_breadcrumbs/", ".githooks/__pycache__/"]
+    if unknown:
+        ignored.append("unknown-output/")
+    (sandbox.repo / ".git/info/exclude").write_text("".join(f"/{name}\n" for name in ignored))
+    for relative in (*git.DATABASE_LINKS, *git.NODE_LINKS):
+        target = sandbox.repo / "primary-links" / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        (tree / relative).parent.mkdir(parents=True, exist_ok=True)
+        if relative.endswith(".db"):
+            target.write_text("database")
+        else:
+            target.mkdir()
+        (tree / relative).symlink_to(target)
+    for name in ignored:
+        if name.endswith("/"):
+            (tree / name).mkdir(parents=True)
+            (tree / name / "artifact").write_text("regenerated")
+    in_process_repo(sandbox, monkeypatch)
+    assert git.settle_worktree(record) == dict(worktree_disposition=disposition[0], worktree_disposition_reason=disposition[1])
+    assert tree.exists() is unknown
+
+
 @pytest.mark.parametrize("pull_ref,disposition", [(True, ("removed", "clean")), (False, ("retained", "unpublished"))])
 def test_recovery_removes_squash_merged_write_task_only_when_a_pull_ref_holds_its_head(sandbox, pull_ref, disposition):
     """CTO residual: after a squash merge and branch deletion, D3 never fired, so the worktree stayed forever."""

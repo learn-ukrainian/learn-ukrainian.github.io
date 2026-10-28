@@ -157,14 +157,6 @@ def _lexicon_cap_test_unit_prefix() -> Generator[None, None, None]:
             os.environ[env_name] = previous
 
 
-@pytest.fixture(scope="session", autouse=True)
-def _dispatch_template_factory(tmp_path_factory: pytest.TempPathFactory) -> None:
-    """Let the dispatch fixture clone be built once per worker (#9065)."""
-    from tests.helpers.dispatch_checkout import register_template_factory
-
-    register_template_factory(tmp_path_factory)
-
-
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -255,7 +247,7 @@ SESSION_IDENTITY_ENV_VARS = (
     "LU_DRIVER_SCOPE_UNIT",
     "LU_DRIVER_SCOPE_PID",
     # Rules-core seat of the launched session (scripts/lib/rules_core.sh); its
-    # delegate.py workers and ACP calls inherit it.
+    # Dispatch workers and ACP calls inherit it.
     "LU_RULES_SEAT",
     # Stream lease capsule (scripts/lib/session_supervisor.sh).
     "SESSION_STREAM_ID",
@@ -313,7 +305,7 @@ SESSION_IDENTITY_ENV_VARS = (
     "LEARN_UKRAINIAN_OBSERVED_MODEL_ID",
     "LEARN_UKRAINIAN_OBSERVED_CONTEXT_WINDOW_TOKENS",
     "LEARN_UKRAINIAN_THREAD_LEASE_GENERATION",
-    # Dispatch worker identity (scripts/delegate.py ``_build_worker_env``).
+    # Dispatch worker identity (scripts/dispatcher/environment.py).
     "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
     "LEARN_UKRAINIAN_DISPATCH_AGENT",
     "LU_X_AGENT_TRAILER",
@@ -730,12 +722,6 @@ def _resolve_real_gh_binary() -> str | None:
 
 _REAL_GH_BINARY = _resolve_real_gh_binary()
 _LIVE_GITHUB_ALLOWED = False
-
-
-@pytest.fixture(autouse=True)
-def _disable_open_pr_freeze(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Keep dispatch tests off the live open-PR count; freeze tests opt back in."""
-    monkeypatch.setenv("LU_OPEN_PR_FREEZE_THRESHOLD", "0")
 
 
 @pytest.fixture(autouse=True)
@@ -1450,7 +1436,7 @@ def hermetic_monitor(monkeypatch):
     Pin the variable to an unreachable loopback port: every Monitor call fails
     fast into the fail-open path, exactly as in CI. The ``tool-timing.sh`` hook
     reads its own endpoint variable and would otherwise post fake telemetry to
-    the live Monitor, so that one is pinned too, as is ``delegate.py``'s
+    the live Monitor, so that one is pinned too, as is the task store's
     dispatch-time health probe (``DELEGATE_MONITOR_API``).
 
     Opt in with ``pytestmark = pytest.mark.usefixtures("hermetic_monitor")`` in a
@@ -1637,7 +1623,7 @@ def _isolate_issue_stream_refresh_state(_write_ownership_base: Path, monkeypatch
 # The ownership ledger above is a separate seam (env override).
 
 _REAL_TASKS_DIR = (resolve_repo_root(Path(__file__), 1) / "batch_state" / "tasks").resolve()
-# Live paths ``scripts/delegate.py`` derives from ``tasks_dir().parent``:
+# Legacy task-store paths derived from ``tasks_dir().parent``:
 # - ``tasks_dir().parent / "preflight_fast_fail.jsonl"``
 # - fallback ``tasks_dir().parent / worktree_claims.LOCK_DIR_NAME``
 #   (``lu-worktree-locks``) when the git common dir is unknown.
@@ -2099,12 +2085,11 @@ _install_socket_guard()
 # always runs them. Needs are derived from the test module (path joins,
 # Path/open arguments, imported path constants, fixtures, and
 # pytest.mark.needs_sparse_tree), not from a hand list. A string that only
-# mentions the tree name is not a read. Every default exclusion in
-# scripts/delegate.py is listed except wiki and the trees with a cone anchor
-# (_DISPATCH_SPARSE_ANCHORS): their directory exists in a default checkout,
-# so a directory check cannot see them absent (#10777,
-# tests/test_dispatch_checkout_size.py). _SPARSE_ANCHORED_TREES below reads
-# that absence from the sparse cone instead.
+# mentions the tree name is not a read. The tables below cover only the
+# trees handled by this skip mechanism, not every dispatch exclusion.
+# A partially materialized source-inventory tree needs a cone-membership
+# check rather than only a directory existence check. This does not add
+# sparse anchors to dispatch.
 _SPARSE_TREE_DIRS: dict[str, tuple[str, ...]] = {
     "data/projects": ("tests/projects/open_model_data",),
     "data/lexicon": ("tests/lexicon",),

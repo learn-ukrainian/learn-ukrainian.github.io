@@ -1819,17 +1819,18 @@ def test_missing_final_newline_is_not_an_authoritative_probe(push_sandbox):
     _assert_alias_probe_unchecked(result, push_sandbox, before, sha, "cause: probe key missing;")
 
 
-def test_unavailable_probe_directory_refuses_without_path_disclosure(push_sandbox):
-    """Failure to allocate probe state cannot execute the command or disclose mktemp's input."""
-    stub = _git_stub(push_sandbox, "exit 0\n")
+def test_alias_probe_needs_no_temporary_directory(push_sandbox):
+    """With no usable temporary directory an unaliased command runs and an alias is still refused."""
+    missing = str(push_sandbox.tmp / "MISSING_SYNTHETIC_SECRET_\u202e")
     sha = push_sandbox.commit("clean subject")
+    result = push_sandbox.push("rev-parse", "HEAD", TMPDIR=missing)
+    assert result.returncode == 0 and result.stderr == "", result.stderr
+    assert result.stdout.strip() == sha
     before = push_sandbox.remote_refs()
-    result = push_sandbox.push(
-        "push", AGENT_REAL_GIT=stub, TMPDIR=str(push_sandbox.tmp / "MISSING_SYNTHETIC_SECRET_\u202e")
-    )
-    _assert_alias_probe_unchecked(result, push_sandbox, before, sha, "cause: probe temporary directory unavailable;")
-    assert result.stderr.endswith("       cause: probe temporary directory unavailable;\n")
-    assert str(push_sandbox.tmp) not in result.stderr and "SYNTHETIC_SECRET" not in result.stderr
+    refused = push_sandbox.push("-c", "alias.push=status", "push", TMPDIR=missing)
+    assert_alias_refused(refused, push_sandbox, before, sha, "push")
+    for stderr in (result.stderr, refused.stderr):
+        assert str(push_sandbox.tmp) not in stderr and "SYNTHETIC_SECRET" not in stderr
 
 
 def test_stalled_alias_probe_ignores_test_hook_and_refuses_at_production_limit(push_sandbox):

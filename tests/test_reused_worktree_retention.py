@@ -375,9 +375,8 @@ def renamed_creator(cohort):
     return repo, tree, tasks, creator, successor, source
 
 
-@pytest.mark.parametrize("boundary", ["post-task", "scheduled", "closeout", "retry"])
+@pytest.mark.parametrize("boundary", ["post-task", "scheduled", "retry"])
 def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
-    from scripts.orchestration import merge_closeout
 
     repo, tree, tasks, creator, _, source = renamed_creator
     before = {path: path.read_bytes() for path in tasks.glob("*.json")}
@@ -435,12 +434,10 @@ def test_renamed_creator_retrieval_release_and_reap(renamed_creator, boundary):
         boundary = "post-task"
     if boundary == "post-task":
         result = reap.post_task_reap(creator["task_id"], tasks_dir=tasks, repo_root=repo, apply=True)["main_worktree"]
-    elif boundary == "scheduled":
+    else:
         result = next(
             row for row in reap.reap_worktrees.reap_worktrees(repo_root=repo, apply=True) if row.path == str(tree)
         ).__dict__
-    else:
-        result = merge_closeout.run_merge_closeout(repo, 9645, apply=True, live_cwds=set()).reap_results[0]
     assert result["action"] == "removed", result
     assert not tree.exists()
     final_record = json.loads((tasks / "codex-boundary.json").read_text())

@@ -14,21 +14,14 @@ from pathlib import Path
 
 import pytest
 
-from scripts import delegate
 from scripts.fleet import sibling_git
-from scripts.orchestration import stale_task_records, worktree_claims
-from scripts.orchestration.fleet_repos import FleetRepo
+from scripts.orchestration import worktree_claims
 from scripts.orchestration.task_family import git_safety
 from tests.orchestration.test_merge_closeout import _REAL_RUN
 from tests.orchestration.test_worktree_claims_cli import _git
 from tests.orchestration.test_worktree_output_chokepoint import (
-    boundary_remove,
-)
-from tests.orchestration.test_worktree_output_chokepoint import (
     boundary_tree as boundary_tree,
 )
-
-CALLERS = ["scheduled", "closeout", "post-task", "delegate", "task-family", "sibling", "stale-record"]
 
 
 @pytest.mark.parametrize("scope", ["common", "worktree"])
@@ -252,87 +245,6 @@ def install_markers(repo: Path, tree: Path, root: Path) -> Path:
     }.items():
         _git(tree, "config", "--worktree", key, value)
     return marker
-
-
-def drive(caller, fixture, monkeypatch, capsys):
-    repo, tree, tasks, record = fixture
-    if caller == "task-family":
-        # Executor uses this adapter as its sole worktree-removal stage.
-        assert git_safety.is_worktree_dirty(tree) is False
-        git_safety.remove_unclaimed_worktree(repo, tree)
-        return "removed"
-    if caller == "sibling":
-        public = repo.parent / "public"
-        public.mkdir(exist_ok=True)
-        if not (public / ".git").exists():
-            _git(public, "init", "-b", "main")
-        public_tasks = public / "batch_state/tasks"
-        public_tasks.mkdir(parents=True, exist_ok=True)
-        (public_tasks / "boundary.json").write_text(json.dumps(record))
-        lock_dir = public / ".git" / worktree_claims.LOCK_DIR_NAME
-        with worktree_claims.worktree_lock(tree, lock_dir=lock_dir):
-            pass
-        monkeypatch.setattr(
-            sibling_git,
-            "load_fleet_repos",
-            lambda: {
-                "fixture": FleetRepo("fixture", "fixture/sibling", repo.name, "private"),
-            },
-        )
-        monkeypatch.setattr(sibling_git, "_registry_transport", lambda _key: "ssh")
-        _git(repo, "config", "remote.origin.url", "git@github.com:fixture/sibling.git")
-        _git(repo, "update-ref", "refs/remotes/origin/main", _git(repo, "rev-parse", "HEAD"))
-        with sibling_git.git_session() as git:
-            resolved = sibling_git.resolve_repository("fixture", public, git)
-            result = sibling_git.worktree_remove(resolved, public, git, str(tree))
-        assert result["removed"] is True
-        return "removed"
-    if caller == "stale-record":
-        head = _git(repo, "rev-parse", "HEAD")
-        candidate = stale_task_records.Candidate(
-            path=tasks / "boundary.json",
-            mtime_ns=0,
-            age_days=1,
-            record={**record, "repository": "fixture", "worktree_branch": "codex/boundary"},
-        )
-        facts = stale_task_records.RepoFacts(
-            slug="fixture",
-            checkout=repo,
-            remote_heads={"codex/boundary": head},
-            local_branches={"codex/boundary": head},
-        )
-        stale_task_records._classify_one(candidate, facts)
-        assert candidate.evidence["worktree_dirty"] is False
-        return candidate.klass
-    if caller == "delegate":
-        assert delegate._worktree_is_dirty(tree) is False
-    result = boundary_remove(caller, fixture, monkeypatch)
-    assert result["action"] == "removed", result
-    return result["action"]
-
-
-@pytest.mark.parametrize("caller", CALLERS)
-def test_caller_never_executes_worker_config(boundary_tree, tmp_path, monkeypatch, capsys, caller):
-    repo, tree, tasks, record = boundary_tree
-    # First run the same production path with ordinary config. Recreate a
-    # linked worktree at the same base for the configured case below.
-    head = _git(tree, "rev-parse", "HEAD")
-    expected = drive(caller, boundary_tree, monkeypatch, capsys)
-    if tree.exists():
-        _git(repo, "worktree", "remove", str(tree))
-    _git(repo, "worktree", "add", "-B", "codex/boundary", str(tree), head)
-    if caller == "closeout":
-        _git(tree, "push", "-u", "origin", "codex/boundary")
-    assert _git(tree, "rev-parse", "HEAD") == head
-    (tasks / "boundary.json").write_text(json.dumps(record))
-    marker = install_markers(repo, tree, tmp_path)
-    try:
-        actual = drive(caller, boundary_tree, monkeypatch, capsys)
-    finally:
-        assert not marker.exists(), f"{caller}: worker Git configuration executed a marker"
-    assert actual == expected
-    if caller != "stale-record":
-        assert not tree.exists()
 
 
 @pytest.mark.parametrize(

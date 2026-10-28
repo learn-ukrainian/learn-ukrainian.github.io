@@ -475,48 +475,6 @@ def gemini_review_targets_model(
     return is_gemini_family_model(model) or is_gemini_family_model(resolved_model)
 
 
-def gemini_review_verdict_dispatch_error(
-    *,
-    agent: str,
-    require_review_verdict: bool,
-    profile: str | None,
-    pr_number: int | None,
-    branch: str | None,
-    repo_root: str,
-    model: str | None = None,
-    resolved_model: str | None = None,
-    review: bool = False,
-    head_out: list[str] | None = None,
-    head_sha: str | None = None,
-) -> str | None:
-    """Gate a review-typed dispatch whose agent or model is Gemini-family.
-
-    Review-typed means ``--require-review-verdict``, ``--review`` / ``--type review``,
-    or ``--pr``. The requested model and the model after fallback substitution
-    are both checked, on every agent. Native AGY code reviews proceed to the
-    resolver's risk and security-path gates. Ukrainian reviews require every
-    changed path to be Ukrainian content. ``head_sha``, when set, is the
-    commit that diff covers; otherwise a PR number is resolved once.
-    ``head_out`` receives that SHA. Implementation dispatches pass.
-    """
-    review_typed = require_review_verdict or review or pr_number is not None
-    if not review_typed:
-        return None
-    if not gemini_review_targets_model(agent=agent, model=model, resolved_model=resolved_model):
-        return None
-    native_code_review = (agent or "").strip().lower() in GEMINI_REVIEW_AGENTS
-    profile_error = gemini_review_profile_error(profile, native_code_review=native_code_review)
-    if profile_error is not None:
-        return profile_error
-    if (profile or "").strip().lower() == "code":
-        return None
-    return gemini_pr_or_branch_content_error(
-        pr_number=pr_number,
-        branch=branch,
-        repo_root=repo_root,
-        head_out=head_out,
-        head_sha=head_sha,
-    )
 
 
 def ask_agy(

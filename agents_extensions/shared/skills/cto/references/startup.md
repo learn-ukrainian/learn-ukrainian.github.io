@@ -58,7 +58,7 @@ They do not bind this seat: loading `drive-epic` as the entry point,
 
 ## 6. Re-arm and cycle
 
-Re-arm in the background `.venv/bin/python scripts/delegate.py wait <task-id> --run-nonce
+Re-arm in the background `.venv/bin/python scripts/dispatch.py wait <task-id> --run-nonce
 <nonce>` for every live worker and any PR watcher the handoff names, then run the first
 [cycle](cycle.md).
 

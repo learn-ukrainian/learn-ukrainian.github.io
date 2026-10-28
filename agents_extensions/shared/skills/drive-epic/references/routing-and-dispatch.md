@@ -42,7 +42,7 @@ from memory.
 **Binding full text:** `agents_extensions/shared/rules/fleet-driver-routing.md` (served at
 `/api/rules` after model-assignment).
 
-Before **every** implement `delegate.py dispatch`:
+Before **every** implement `dispatch.py dispatch`:
 
 1. Emit a **ROUTING_CARD_V1** (handoff / issue / `batch_state/` receipt) with:
    `tier` (authority|practical|heap) · `model_x_harness` · `why_this_tier` ·
@@ -50,20 +50,14 @@ Before **every** implement `delegate.py dispatch`:
    ≥2 `alternatives_considered` · `parallel_free_seats` · quoted
    `routing_budget_primary` + `capacity_pick_order` (tool evidence).
 2. **No card = no dispatch.** Skipping the card is a process defect; do not launch the
-   worker and "write the card later." The runtime runs the issue-card checker
-   `--strict` for implementation briefs naming GitHub issues. A WARN refuses
-   dispatch unless urgent in-flight work uses `--allow-dor-warn <reason>`;
-   the task JSON records that reason. GitHub/API lookup and checker failures
-   also refuse dispatch unless that override is supplied. PR references are
-   skipped after API resolution. Briefs without issue references are not gated.
-   Opening or editing an issue updates one advisory checker comment.
+   worker and "write the card later." The driver checks the issue card before
+   launch; dispatch v2 does not run the retired DoR preflight or accept its override.
 3. **Default eligible code worker:** Sol @ high, per the 2026-10-09 resource-policy order.
    Use Claude workers through the native Claude CLI as heavily as their subscription
    allows, within task fit and hard gates. Cursor Grok or Gemini routes are language-free
    overflow only, admitted by live catalog and capacity evidence. Explicit Luna and bounded
-   Flash workers still require a Sol advisory **envelope** (`--advisory-role
-   bounded_advisory_envelope`) bound through `--advisory-task`. There is no direct bounded dispatch
-   (operator decision 2026-09-30, #9275): `delegate.py` refuses Luna, and Flash not classified
+   Flash workers still require a Sol advisory **envelope** (the advisor brief) bound through `--advisory-task`. There is no direct bounded dispatch
+   (operator decision 2026-09-30, #9275): `dispatch.py` refuses Luna, and Flash not classified
    Ukrainian authoring/review, without a complete envelope bound to that dispatch. See
    `fleet-driver-routing.md` §2.
 4. **Advisory path:** Opus 5.5 / Sol 6.1; Fable holds no advisory role (#9583). Do not spend
@@ -120,15 +114,12 @@ behaviour for one PR. Before review, apply the size guide, exclusions and
 split-or-justify rule in [workflow.md § Merge policy](../../../rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450).
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch --check-budget --agent <lane> --worktree ...
+.venv/bin/python scripts/dispatch.py dispatch --model <catalog-model>  --agent <lane> --worktree ...
 ```
 
-`--check-budget` (or `LU_DISPATCH_CHECK_BUDGET=1` in the launcher) hard-subs via
-`dispatch_fallbacks` when mapped (e.g. `codex → cursor`); otherwise it exits non-zero
-unless `--force-agent` + NOTE. Before claiming who authored work, read the
-`🔄 HARD AUTO-SUBSTITUTE` line (stderr) and the task record's `agent`/`model` in
-`batch_state/tasks/<id>.json` (2026-09-25). Never filter dispatch output down to the
-base-SHA line or drop stderr; that hides the substitution.
+Dispatch v2 has no budget substitution guard. Choose the lane explicitly from
+live capacity evidence and record substitutions. Verify the task record's actual
+agent/model before attributing work.
 
 Before launch, verify the brief's actual worktree path and owned paths against the
 dispatch target and the worktree contract. Reconcile current queue instructions
@@ -141,8 +132,8 @@ Dispatch with a numbered brief
 the worker**) and the `#M-4` evidence preamble (each claim + its deterministic tool +
 quoted raw evidence). Classify the task and pass the research flags
 (`--research-role/-task-family/-track/-owned-path`). For write dispatches also pass
-repeatable `--owned-path <path>` for the paths the worker may commit: auto-finalize commits
-only under them and commits nothing without them (#8991). Stagger same-lane spawns ~10s.
+repeatable `--owned-path <path>` to record scope. Workers commit and push their
+work; dispatch v2 does not provide legacy auto-finalize. Stagger same-lane spawns ~10s.
 
 **Security-code briefs (#10665).** An author brief for security code (hooks, launchers,
 credentials, admission, sandbox, guards) states the trust boundary, the allowed inputs, the
@@ -182,16 +173,16 @@ authorized work until its terminal goal, a real blocker, an explicit operator
 pause, or the seat's handoff signal. A reminder neither settles a live task nor
 waives a gate.
 
-A dispatch returning is not a settle. Arm a wait in the same turn: `delegate.py
+A dispatch returning is not a settle. Arm a wait in the same turn: `dispatch.py
 wait <task-id>` where the seat has no Monitor tool; otherwise watch the task's
 `batch_state/tasks/<id>.json` `status` with the **Monitor** tool. Ending the turn with a
 live worker and no wait is a driver defect. When the wait returns, read the result and
 take the next action. This wait is a §2c fill window, not an idle period: fill free lanes
 before holding.
 
-Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS** (NOT "completed");
-other terminal/attention states: `failed | timeout | rate_limited | cancelled |
-crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize | no_deliverable`. Emit on any
+Dispatch v2 terminal statuses (`scripts/dispatcher/worker.py`): **`done` = SUCCESS**;
+other terminal statuses: `failed | timeout | rate_limited | cancelled |
+crashed | no_deliverable`. `--dry-run` prints a plan without creating a task record. Emit on any
 status NOT in `{spawning, running, ""}`. The task file is truth; `/api/delegate/active`
 can omit live tasks. **Before declaring a dispatch dead:** `gh pr list --state open`
 first, then check the worktree for finished-but-unpushed work. **After terminal status,**

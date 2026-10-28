@@ -76,7 +76,7 @@ class TaskScope:
 TASK_SCOPES: dict[str, TaskScope] = {
     "repo-change": TaskScope(
         "Any repository change",
-        (f"{_RULES}/critical-rules.md", f"{_RULES}/delegate-must-use-worktree.md", f"{_RULES}/workflow.md"),
+        (f"{_RULES}/critical-rules.md", f"{_RULES}/dispatch-must-use-worktree.md", f"{_RULES}/workflow.md"),
     ),
     "cli": TaskScope("CLI implementation", (f"{_RULES}/cli-help-standard.md",)),
     "curriculum": TaskScope("Curriculum planning", (f"{_RULES}/non-negotiable-rules.md",)),

@@ -37,7 +37,7 @@ def test_rule_sources_includes_all_unscoped_files():
         "agents_extensions/shared/rules/non-negotiable-rules.md",
         "agents_extensions/shared/rules/workflow.md",
         "agents_extensions/shared/rules/fleet-comms-coordination.md",
-        "agents_extensions/shared/rules/delegate-must-use-worktree.md",
+        "agents_extensions/shared/rules/dispatch-must-use-worktree.md",
         "agents_extensions/shared/rules/cli-help-standard.md",
         "agents_extensions/shared/rules/model-assignment.md",
         "agents_extensions/shared/rules/fleet-driver-routing.md",

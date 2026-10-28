@@ -380,16 +380,15 @@ _opsec_now_ms() {
 
 _opsec_aliased() {
   local fd="" pid="" names="" chunk="" name rest word="${_opsec_command,,}"
-  local read_status=0 git_status=0 result=2 kill_child=0 opened=0
-  local dir="" now_ms=0 deadline_ms=0 remaining_ms=0 remaining_s=""
-  local started_ms=0 spin_ms=0
+  local read_status=0 git_status="" result=2 kill_child=0 opened=0
+  local now_ms=0 deadline_ms=0 remaining_ms=0 remaining_s=""
+  local started_ms=0 spin_ms=0 records=0
   _opsec_alias_detail=""
-  dir="$(mktemp -d "${TMPDIR:-/tmp}/lu-opsec-alias.XXXXXX" 2>/dev/null)" || {
-    _opsec_alias_detail="cause: probe temporary directory unavailable;"
-    return 2
-  }
-  # Git's exit status is recorded by the child. Waiting on the process
+  # Git's exit status is reported by the child. Waiting on the process
   # substitution is not git's status: bash does not promise that wait.
+  # The child writes it after Git's output as one NUL and the status, so the
+  # probe needs no file and no writable directory. Git's --name-only listing
+  # never contains a NUL, so a second NUL in the stream is Git's.
   exec {fd}< <(
     set +e
     git_pid=""
@@ -400,7 +399,7 @@ _opsec_aliased() {
     wait "${git_pid}"
     rc=$?
     git_pid=""
-    printf '%s\n' "$rc" >"${dir}/rc"
+    printf '\0%s\n' "$rc"
     exit 0
   )
   pid=$!
@@ -419,7 +418,16 @@ _opsec_aliased() {
     read_status=0
     spin_ms="$now_ms"
     IFS= read -r -d '' -t "$remaining_s" -u "$fd" chunk || read_status=$?
-    names+="$chunk"
+    if [[ "$records" -eq 0 ]]; then
+      names+="$chunk"
+    else
+      git_status+="$chunk"
+    fi
+    # The first NUL ends Git's output; the status then runs to end-of-file.
+    if [[ "$read_status" -eq 0 && "$records" -eq 0 ]]; then
+      records=1
+      continue
+    fi
     if [[ "$read_status" -eq 0 || "$read_status" -eq 1 ]]; then
       break
     fi
@@ -444,11 +452,7 @@ _opsec_aliased() {
     kill_child=1
     _opsec_alias_detail="cause: git exit status unavailable;"
   else
-    git_status=""
-    if [[ -f "${dir}/rc" ]]; then
-      git_status="$(<"${dir}/rc")" || git_status=""
-      git_status="${git_status//[[:space:]]/}"
-    fi
+    git_status="${git_status//[[:space:]]/}"
     if [[ ! "$git_status" =~ ^[0-9]+$ ]]; then
       _opsec_alias_detail="cause: git exit status unavailable;"
     elif [[ "$git_status" -ne 0 ]]; then
@@ -469,8 +473,8 @@ _opsec_aliased() {
     fi
   fi
   # Failure leaves the child running when the read did not see it exit
-  # (a false end-of-file, or the timeout path). Kill after the status file and
-  # output have been read. A child that already exited is unreaped; kill fails.
+  # (a false end-of-file, or the timeout path). Kill after the output and
+  # status have been read. A child that already exited is unreaped; kill fails.
   if [[ "$kill_child" -eq 1 || "$result" -eq 2 ]]; then
     kill "$pid" 2>/dev/null || true
   fi
@@ -478,7 +482,6 @@ _opsec_aliased() {
     exec {fd}<&-
     wait "$pid" 2>/dev/null || true
   fi
-  rm -rf -- "$dir" || true
   return "$result"
 }
 

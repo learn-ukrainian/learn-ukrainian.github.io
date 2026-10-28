@@ -270,16 +270,16 @@ repos:
         stages: [pre-commit]
 
       - id: lint-agent-trailer
-        name: warn on commits missing an X-Agent trailer
-        # Warn-only during rollout (2026-05-11). Lint reports missing trailers
-        # but does NOT block the push. Flip to blocking after all in-flight
-        # PRs and orchestrator inline commits adopt the trailer.
-        entry: >-
-          bash -c 'bash scripts/pre_commit/project_python.sh
-          scripts/audit/lint_agent_trailer.py
-          || echo "(warn-only — push allowed; will be blocking after rollout)"'
+        name: block pushes with commits missing a valid X-Agent trailer
+        # Blocking (was warn-only since the 2026-05-11 rollout). Trailers must
+        # be `X-Agent: <agent>/<task-id>`; a bare model name such as
+        # `claude-opus-5-5` is rejected, as record_cf_verdict.py rejects it too.
+        entry: bash scripts/pre_commit/project_python.sh scripts/audit/lint_agent_trailer.py
         language: system
         pass_filenames: false
+        # Commit messages, not files, are what is checked: an empty or
+        # add-then-revert push changes no files but must still be linted.
+        always_run: true
         stages: [pre-push]
 
       - id: lint-opsec-leaks
@@ -312,8 +312,8 @@ repos:
 
       # --- Repo-wide guards (B19, #9064; trimmed in #11315) ---
       # No push path runs pytest. CI Gate's pytest shards own repo-wide-marker-invariant
-      # and task-store-resolver-guard. Its required Checks job explicitly runs the
-      # existing slow sparse-collection-guard node, which the shards deselect.
+      # and task-store-resolver-guard. The required Checks job collects pytest on
+      # PRs and runs lint and content-contract gates on every tier.
       # These hooks stay absent rather than re-staged: implicit stages also include
       # pre-push. tests/test_ruff_ci_scope.py pins their absence and required CI ownership.
 

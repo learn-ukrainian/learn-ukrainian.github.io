@@ -30,8 +30,6 @@ from scripts.publish.github import read
 
 ROOT = Path(__file__).resolve().parents[2]
 MAX_AGE_S = 3600
-# delegate.py gives --issue --strict 135 seconds: 60 for the issue, 60 for
-# membership (cache validation and any live audit included), 15 for overhead.
 NON_OVERRIDABLE = frozenset({"dod_structure_malformed", "membership_conflicting_ancestry"})
 TARGET_FETCH_TIMEOUT = "membership_timeout_target_fetch"
 

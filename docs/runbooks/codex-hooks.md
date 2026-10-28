@@ -195,7 +195,7 @@ result. In that case the session must stop; do not force-release based only on a
 claim timeout. A later claim will reclaim a confirmed-dead owner automatically.
 
 Dispatched workers are exempt from the per-agent thread lease (#7827). A headless
-worker launched by `delegate.py dispatch` carries
+worker launched by `dispatch.py dispatch` carries
 `LEARN_UKRAINIAN_DISPATCH_TASK_ID`/`LEARN_UKRAINIAN_DISPATCH_AGENT` in its
 environment (both names are allowlisted in `agent_runtime/env_sanitize.py`, name
 and value lists, so the markers survive sanitization for every dispatched

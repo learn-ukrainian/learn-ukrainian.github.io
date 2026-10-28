@@ -163,9 +163,10 @@ is `BLOCKED_WITH_RECEIPT` with an owner, reason, evidence, and next action.
 
 ## Git and review gates
 
-Before post-merge removal, `merge_closeout` and `post_task_reap` append local
-observations through the lifecycle API while the task's dispatch worktree is
-still present. A valid earlier observation makes capture a no-op. Capture
+`merge_closeout` and `post_task_reap` append local observations through the
+lifecycle API while the task's dispatch worktree is still present;
+`post_task_reap` does so before it removes the worktree, and `merge_closeout`
+removes none. A valid earlier observation makes capture a no-op. Capture
 failure retains the worktree; an explicit `--no-lifecycle-observation REASON`
 is logged in the cleanup report. Tasks without a lifecycle ledger retain their
 existing cleanup path.
@@ -224,7 +225,7 @@ action.
 
 The validated carrier contains the full task identity and AC snapshot, terminal
 goal, PR binding, remaining scope, current projection, ledger path, and latest
-receipt digest. `delegate.py`, the agent ledger, and orchestrator run/inbox state
+receipt digest. `dispatch.py`, the agent ledger, and orchestrator run/inbox state
 carry this exact projection. Monitor coordination endpoints expose agent-ledger
 records unchanged.
 

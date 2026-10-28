@@ -533,62 +533,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/delegate.py",
-      "kind": "store_path",
-      "scope": "_provision_data_symlinks",
-      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/delegate.py",
-      "kind": "store_path",
-      "scope": "_provision_data_symlinks",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/delegate.py",
-      "kind": "store_path",
-      "scope": "_primary_database_path",
-      "fingerprint": "12931d41fca2cdd12e04644529e13200c97abd412daa334906be425226e4bc3f",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/delegate.py",
-      "kind": "store_path",
-      "scope": "_primary_database_path",
-      "fingerprint": "9d78871372484a05e7098c5d4f849497e0408d6bf5dc66976099a4db186e0097",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/delegate.py",
-      "kind": "store_path",
-      "scope": "_primary_database_path",
-      "fingerprint": "26b3abf432bff0c90e02a12677b9332a5076230d3267f31836ab8daa4928d998",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/delegate.py",
-      "kind": "store_path",
-      "scope": "_run_worker",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/delegate.py",
-      "kind": "store_path",
-      "scope": "_run_worker",
-      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/delegate.py",
-      "kind": "store_path",
-      "scope": "_run_worker",
-      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
-      "occurrence": 1
-    },
-    {
       "path": "scripts/etymology/build_data_manifest.py",
       "kind": "store_path",
       "scope": "<module>",
@@ -2756,41 +2700,6 @@
       "kind": "store_path",
       "scope": "test_refusal_is_not_swallowed_by_a_broad_except.reader",
       "fingerprint": "2878471786a5b8234ba59ce25fabbf95d511d92fa91eaf8bc9ef00097aa14db8",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_delegate_read_only_db_lookups.py",
-      "kind": "store_path",
-      "scope": "test_augment_prompt_with_worktree_teaches_primary_database_access",
-      "fingerprint": "d2bb429c7e6d1f77953c595a21e1a92952e136d00eec65a9090121b929e95173",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_delegate_read_only_db_lookups.py",
-      "kind": "store_path",
-      "scope": "test_primary_database_path_resolution",
-      "fingerprint": "08fb8e648234569bbd18326b3d248170193cbf91c523bf5fcbfd364df47e98d0",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_delegate_read_only_db_lookups.py",
-      "kind": "store_path",
-      "scope": "test_primary_database_path_resolution",
-      "fingerprint": "bc3eba2a125afe1940418d8d370ca5f7c7a25f1a7d702870ea1f0873e1774efb",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_delegate_read_only_db_lookups.py",
-      "kind": "store_path",
-      "scope": "test_primary_database_path_resolution",
-      "fingerprint": "302af50cc0566e0ec4ab479742104cb945ef449655537317de1807d0b7e3db88",
-      "occurrence": 0
-    },
-    {
-      "path": "tests/test_delegate_read_only_db_lookups.py",
-      "kind": "store_path",
-      "scope": "test_primary_database_path_resolution",
-      "fingerprint": "5b4756640528b995d6fc0adcf6d830df38cc840687f85226ae93a2d6b03f6d1f",
       "occurrence": 0
     },
     {

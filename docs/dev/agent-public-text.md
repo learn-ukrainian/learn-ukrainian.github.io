@@ -211,7 +211,7 @@ posting searches at the exact head.
 | Consumer | Typed publication |
 | --- | --- |
 | `scripts/ai_agent_bridge/_github.py` | Issue comments |
-| `scripts/delegate.py`, `scripts/orchestration/dispatch_settle.py` | Explicit PR creation |
+| `scripts/orchestration/dispatch_settle.py` | Explicit PR creation |
 | `scripts/audit/check_decisions.py` | Label and issue creation |
 | `scripts/audit/check_review_issues.py`, `scripts/verify_review.py` | Issue comments and close |
 | `scripts/review/record_cf_verdict.py` | Verdict comments with JSON response |

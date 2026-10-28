@@ -18,7 +18,7 @@ retain relevant context across phases and reload when its contents change.
 
 | Task or phase | Read before acting |
 | --- | --- |
-| Any repository change, including documentation | `agents_extensions/shared/rules/critical-rules.md`; `agents_extensions/shared/rules/delegate-must-use-worktree.md`; `agents_extensions/shared/rules/workflow.md` sections on task workflow and merge policy |
+| Any repository change, including documentation | `agents_extensions/shared/rules/critical-rules.md`; `agents_extensions/shared/rules/dispatch-must-use-worktree.md`; `agents_extensions/shared/rules/workflow.md` sections on task workflow and merge policy |
 | CLI implementation or interface change | `agents_extensions/shared/rules/cli-help-standard.md` |
 | Curriculum planning, build, repair, or semantic review | `agents_extensions/shared/rules/non-negotiable-rules.md`; select the relevant curriculum skill below |
 | Core fresh lesson-based build (epic #7994 / #8397: arcs, plans, evidence packs, engine, lesson reviews) | `docs/epics/fresh-build-build-program.md`; then `fresh-build-requirements.md`, `fresh-build-plan-schema.md`, `fresh-build-writer-contract.md`, `fresh-build-review-contracts.md` as the phase needs |

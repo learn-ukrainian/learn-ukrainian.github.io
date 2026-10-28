@@ -19,8 +19,8 @@ The hook refuses nothing: the call already ran when the post phase fires, and
 a failing snapshot must not stall a session, so both phases fail open. An
 internal error in the post phase exits 1, which the harness shows as a hook
 error.
-Dispatch still refuses a dirty primary (``scripts/delegate.py``); this hook
-makes the dirt attributable and removable without the operator override.
+Dispatch v2 does not refuse a dirty primary. This hook attributes dirt for
+targeted cleanup.
 Threat model and cost: ``scripts/guardrails/primary_dirt_audit.py``.
 """
 

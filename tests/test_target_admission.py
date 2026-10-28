@@ -435,59 +435,6 @@ def test_a_target_from_either_import_path_is_accepted_by_either_sink_check():
     assert target_admission.require_admitted(target) is target
 
 
-def test_delegate_launches_only_the_admitted_route():
-    import delegate
-
-    (target,) = resolve_and_admit(("claude",), mode="read-only", model="claude-opus-5-5")
-    assert delegate._worker_route_argv(target) == ["--agent", "claude", "--model", "claude-opus-5-5"]
-    with pytest.raises(TypeError, match="AdmittedTarget"):
-        delegate._worker_route_argv("kimi")
-
-
-@pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high"])
-def test_delegate_worker_argv_normalizes_the_cursor_wire_pin(model):
-    import delegate
-
-    (target,) = resolve_and_admit(("cursor",), mode="read-only", model=model)
-    assert delegate._worker_route_argv(target) == ["--agent", "cursor", "--model", "grok-4.7-high"]
-    assert target.model == model  # The admitted catalog identity is preserved.
-
-
-@pytest.mark.parametrize(
-    ("model", "code"),
-    [
-        ("opus", "CURSOR_CLAUDE_REFUSED"),
-        ("haiku", "CURSOR_CLAUDE_REFUSED"),
-        ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
-        ("composer-2.5[fast=true]", "CURSOR_MODEL_NOT_APPROVED"),
-    ],
-)
-def test_delegate_dispatch_refuses_invalid_cursor_pins(model, code, monkeypatch):
-    import delegate
-    import scripts.agent_runtime.adapters.claude as claude_module
-
-    monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
-    args = delegate.build_parser().parse_args(
-        [
-            "dispatch",
-            "--agent",
-            "cursor",
-            "--model",
-            model,
-            "--mode",
-            "read-only",
-            "--task-id",
-            "cursor-pin-test",
-            "--prompt",
-            "fixture",
-            "--dry-run",
-        ]
-    )
-    refusal, target = delegate._admit_dispatch_target(args, agent="cursor", trees=None)
-    assert target is None
-    assert refusal.startswith(code + ":")
-
-
 def test_no_dispatch_fallback_row_maps_onto_a_kimi_seat_or_model():
     """Makes the documented probe-before-final-gate limitation unreachable by data.
 
@@ -498,15 +445,17 @@ def test_no_dispatch_fallback_row_maps_onto_a_kimi_seat_or_model():
     launched with a Kimi model (a mapped substitution model or its lane
     default).
     """
-    import delegate
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+    from pathlib import Path
 
-    fallbacks = load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)
+    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+    from scripts.review.model_catalog import budget_substitution_table, substitution_default_model
+
+    fallbacks = load_dispatch_fallbacks(Path("scripts/config/agent_fallback_substitutions.yaml"))
     assert fallbacks, "dispatch_fallbacks did not load; this guard would pass vacuously"
-    models = delegate._load_budget_substitution_table()
+    models = budget_substitution_table()
     onto_kimi = []
     for source, destination in fallbacks.items():
-        launch_models = [*models.get(destination, {}).values(), delegate._lane_default_model(destination)]
+        launch_models = [*models.get(destination, {}).values(), substitution_default_model(destination)]
         if target_admission.stored_kimi_row(destination) or any(
             target_admission.stored_kimi_row(destination, model) for model in launch_models if model
         ):
