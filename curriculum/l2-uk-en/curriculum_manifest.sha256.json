@@ -18,7 +18,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/activities.yaml",
-      "sha256": "ffab0cddf7d83811173f5b3c32512112980a686dc480105ef4dde701718da2cd"
+      "sha256": "de2d40d6fb63a77244c54009546cf412865edaedf4ccfbd9e8dee47e481eb714"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/module.md",
@@ -98,7 +98,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/activities.yaml",
-      "sha256": "6211b9e2b2c9d1a6214e7b31c51332ca89468da66f4494e4b6e34bcd20cbbc34"
+      "sha256": "e935b27254b1c4dc81f7e3f217dce71dd4464645255f28400974a7ecb1a94dc3"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-food-shopping/module.md",
@@ -130,7 +130,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/activities.yaml",
-      "sha256": "cde02fbf1738d60f2f437041e263c7b36cecbe115ffd753d229dce2bafd214dc"
+      "sha256": "2e09bcecf0cd3ee1a7edd0e097ccecfd9a8dc667c51b9a96f94464421aeb58f5"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/module.md",
@@ -802,7 +802,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-from/activities.yaml",
-      "sha256": "8ceb60f7f2bb7ae29ac3aa61f1541953c327b4b7987a94453e7a1b38cf9adaae"
+      "sha256": "3c0361451de22319b53f6d43109357b137f858a1a2ad11add861379dfdde2d7f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-from/module.md",
@@ -818,7 +818,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-is-it/activities.yaml",
-      "sha256": "38fcae3c218cb8f4066f21085cd1cc72637e29c6412c2b22eeb906319782e6bd"
+      "sha256": "122b8555b113631417feb47bc500d57bfc6b2b641d5d94553e87db900319315a"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-is-it/module.md",
@@ -834,7 +834,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-to/activities.yaml",
-      "sha256": "b1f0831c6dcb6f4884e6849054fb7908d38c6e39cde305410e747886b1b70cc0"
+      "sha256": "04304ee4ecff86f14132ef3a8d7c841829c5a417768239ef03948715b3714772"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-to/module.md",
@@ -13690,7 +13690,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/around-the-city.mdx",
-      "sha256": "ae08a6b0f22379b77d653e2a744e91680abec5e20b32ec588dcde4d68846abf3"
+      "sha256": "b047374eec677329b04d47023d460557a350c9d98094520f3412856e9b97c117"
     },
     {
       "path": "site/src/content/docs/a1-v1/at-the-cafe.mdx",
@@ -13710,7 +13710,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-food-shopping.mdx",
-      "sha256": "d82f66ee1de7dca0a1fd0f8aea177c5dcbc4f47ac958bdca325236e9f904437e"
+      "sha256": "836c9e786a403c8d4af7baebe281e7138e79ea905147bf86b8d6b9d62967c132"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-my-world.mdx",
@@ -13718,7 +13718,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-places.mdx",
-      "sha256": "fea99455cdc431827b2abd7aa1c035878a335458fd177b18cce0d0991c9c54ad"
+      "sha256": "5fb90a1ee1ba7e7fcaee52c4355362d013d389a7000184f268aa5eb90098ce73"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-time-nature.mdx",
@@ -13890,15 +13890,15 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/where-from.mdx",
-      "sha256": "f5dab946c6f5402ae34e65be4d9d334903db77ed3d7a85cfe548e08905d57cdd"
+      "sha256": "5538d1aaa24643b9d6760b7c155659f47c880cdcb9562605fd2bfba0c3a89787"
     },
     {
       "path": "site/src/content/docs/a1-v1/where-is-it.mdx",
-      "sha256": "26d8d1292f32ad7b52d2e72a6d552d3c1c9f332747c04ae761620f7dc542cc3b"
+      "sha256": "1cdb1d324f93caf2ae7d8ecbba3c2d0297671c0800c21e0f27463daca437a78e"
     },
     {
       "path": "site/src/content/docs/a1-v1/where-to.mdx",
-      "sha256": "7b79593eba6e7bbff96305109dd325f002b2f9fbce2346ec129a10a22bb4795f"
+      "sha256": "9eb281559444c436dd79f6742f90ce03947ef1f997cefd9778e77f830060cf93"
     },
     {
       "path": "site/src/content/docs/a1-v1/who-am-i.mdx",

@@ -154,7 +154,7 @@ inline:
           - 'поруч'
           - 'прямо'
         explanation: 'If you need metro, the station is far.'
-      - sentence: 'Кафе ___. Воно біля дому.'
+      - sentence: "(The cafe is nearby.) Кафе ___. Воно біля дому."
         answer: 'поруч'
         options:
           - 'поруч'

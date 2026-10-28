@@ -301,7 +301,7 @@ workbook:
           - 'у Польщі'
           - 'до Польщі'
         explanation: 'Use з Польщі for origin.'
-      - sentence: 'Джон ___, але зараз живе у Києві.'
+      - sentence: "Джон ___, але зараз живе в Києві."
         answer: 'зі США'
         options:
           - 'зі США'

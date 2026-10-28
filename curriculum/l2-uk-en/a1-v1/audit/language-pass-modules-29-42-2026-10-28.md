@@ -2,30 +2,30 @@
 
 Refs #8893. Source snapshot: `0ab9b6b1dd455c090c251dd2f07e52bc2e73e717`.
 
-This is one bounded Method step 2 slice. It checks all 326 fill-in and quiz items in both inline/root and workbook sections of manifest modules 29-42, including 57 workbook items. There are 269 checked-clean items and 57 confirmed ambiguous items, all repaired. No wrong key was confirmed. Every original key, learning target and activity type is retained.
+This is one bounded Method step 2 slice. It checks all 326 fill-in and quiz items in both inline/root and workbook sections of manifest modules 29-42, including 57 workbook items. There are 260 checked-clean items and 66 confirmed defective items, all repaired: 56 answer ambiguities and 11 euphony or key-context defects, with one item in both groups. All learning targets, answer meanings and correct-option indices are retained. Three full-sentence keys have euphonic spelling corrections; the other keys are unchanged.
 
 The order comes from `levels.a1-v1.modules` in `curriculum/l2-uk-en/curriculum.yaml`. It is the issue's arc-order fallback; no authorized usage ranking was supplied. Modules 15-28 belong to the parallel worker and are untouched.
 
 | Position | Module | Items checked | Clean | Defects fixed |
 | --- | --- | ---: | ---: | ---: |
-| 29 | `where-is-it` | 24 | 23 | 1 |
+| 29 | `where-is-it` | 24 | 18 | 6 |
 | 30 | `my-city` | 20 | 19 | 1 |
-| 31 | `where-to` | 24 | 23 | 1 |
+| 31 | `where-to` | 24 | 20 | 4 |
 | 32 | `transport` | 26 | 24 | 2 |
-| 33 | `around-the-city` | 24 | 16 | 8 |
-| 34 | `where-from` | 18 | 13 | 5 |
+| 33 | `around-the-city` | 24 | 15 | 9 |
+| 34 | `where-from` | 18 | 12 | 6 |
 | 35 | `checkpoint-places` | 24 | 16 | 8 |
 | 36 | `food-and-drink` | 18 | 15 | 3 |
 | 37 | `i-eat-i-drink` | 22 | 15 | 7 |
 | 38 | `at-the-cafe` | 22 | 15 | 7 |
 | 39 | `shopping` | 23 | 19 | 4 |
 | 40 | `people-around-me` | 24 | 24 | 0 |
-| 41 | `checkpoint-food-shopping` | 31 | 21 | 10 |
+| 41 | `checkpoint-food-shopping` | 31 | 22 | 9 |
 | 42 | `hey-friend` | 26 | 26 | 0 |
 
 ## What was checked
 
-Item indices and anonymous `workbook[n]` activity indices are zero-based. Explicit activity ids are used when present. Each row checks the key and every displayed alternative against the instruction and stem. The original stem and unchanged key identify the item even when its cue changes. Clean means no confirmed wrong key or second defensible option within that task, not certification of every linguistic claim in the module.
+Item indices and anonymous `workbook[n]` activity indices are zero-based. Explicit activity ids are used when present. Each row checks the key and every displayed alternative against the instruction and stem. The original stem and original key identify the item; the repair table records all cue and key-spelling changes. Clean means no confirmed wrong key or second defensible option within that task, not certification of every linguistic claim in the module.
 
 The structural scanner ran before and after repair: 55/55 activity files, exit 0, zero structural findings. It added no flagged items from other activity types. As in the preceding batch, this structural pass does not replace Method step 1's broader intended semantic and VESUM rules.
 
@@ -37,13 +37,13 @@ The `sources` MCP supplied the evidence on 2026-10-28. VESUM proves forms and gr
 
 For each module section, `verify_words` received distinct Ukrainian tokens from the instruction and every item field and option, lowercased with acute accents stripped. `verify_stresses` received original polysyllabic tokens, retaining case and any marks. `check_text` received item ids and accent-free full item text with vesum and ua_gec checks. These are the same batch normalization and receipt format used by the first report. No transport error counts as evidence.
 
-NAMES rechecks 48 correctly cased personal and geographical forms, 48/48 found. NAME-STRESS checks their stress readings. KEYS verifies 297 distinct tokens from completed fill-in strings, 269 found before the proper-name recheck. All its 28 misses are correctly cased names/forms covered by NAMES. The module screens also contain intentionally malformed distractors such as їст, їсиш, метрою, таксієм, синке and бабусе; their failure is not a claim that the target vocabulary is invalid. No new Ukrainian vocabulary target or stress mark is introduced.
+NAMES rechecks 48 correctly cased personal and geographical forms, 48/48 found. NAME-STRESS checks their stress readings. KEYS verifies 297 distinct tokens from the initial completed fill-in strings, 269 found before the proper-name recheck. U84/U85 and U88/U89 verify the revised euphonic forms and their stress readings. All its 28 misses are correctly cased names/forms covered by NAMES. The module screens also contain intentionally malformed distractors such as їст, їсиш, метрою, таксієм, синке and бабусе; their failure is not a claim that the target vocabulary is invalid. No new Ukrainian vocabulary target or stress mark is introduced.
 
 Some unmarked homonyms have multiple stress readings; no marked target is changed here. Дерибасівській remains pending in the stress oracle, although VESUM verifies its form. No stress verdict about that street name is claimed. This limitation does not change the preposition key in its item.
 
 POST1-POST3 screen the final 326 items in batches of 150, 150 and 26. Diagnostics include case-sensitive tokens and intentionally wrong options. UA-GEC suggestions about один, назад, Ти знаєш and ставить are contextual suspicions and caused no repair. Ingestion misses, negated corpus examples and irrelevant concordances are explicitly distinguished in the U locators.
 
-The companion [machine-readable Sources evidence](language-pass-modules-29-42-evidence.jsonl) preserves query arguments, VESUM analyses, ULIF row identifiers, diagnostic results and compact usage summaries. SHA-256 values bind the persisted normalized result objects; they are not hashes of transport envelopes. Usage records preserve metadata and source locators, with no copied private reference text. The file has 108 records.
+The companion [machine-readable Sources evidence](language-pass-modules-29-42-evidence.jsonl) preserves query arguments, VESUM analyses, ULIF row identifiers, diagnostic results and compact usage summaries. SHA-256 values bind the persisted normalized result objects; they are not hashes of transport envelopes. Usage records preserve metadata and source locators, with no copied private reference text. The file has 117 records.
 
 ### Module batch locators
 
@@ -122,10 +122,13 @@ The official offline SUM-20 lookups U1-U5 returned ingestion misses; modern VTS 
 - U79: The returned колія три matches put three after a different inflected noun phrase. They do not confirm a cardinal track label.
 - U80: The returned textbook material distinguishes cardinal and ordinal numerals but does not confirm the suspected track label.
 - U82: GRAC directly attests the exact offered в вокзалі in interior station locations, in both literary and conversational examples. Its euphony is disfavoured; the item asks for a static preposition, not the preferred euphonic spelling.
+- U83: Official Pravopys 2019 section 24, pages 28-29: і/й and initial і-/й- distribution, with Він іде after a consonant and Вона йде after a vowel. https://www.ulif.org.ua/system/files/pravopus-new.pdf
+- U87: VTS направо includes both movement to the right and static position on the right. The latter can describe a cafe that is also near home. https://slovnyk.me/dict/vts/%D0%BD%D0%B0%D0%BF%D1%80%D0%B0%D0%B2%D0%BE
+- U90: GRAC returns two actual name-giving uses of моє ім'я є among ten results. The other existential and figurative examples do not establish that formula. These two occurrences support a possible naming statement, not the preferred A1 formula.
 
 ## Per-item verdicts
 
-C means checked-clean in the original source. D means a confirmed second defensible answer in the original source, fixed here. Every row cites M plus usage locators where meaning or register decides. NAMES and NAME-STRESS apply to proper names throughout. No key changed. The repair detail for every D row follows the tables.
+C means checked-clean in the original source. D means a confirmed answer ambiguity or form/context defect in the original source, fixed here. Every row cites M plus usage locators where meaning or register decides. NAMES and NAME-STRESS apply to proper names throughout. Three full-sentence keys change only euphonic spelling: Він живе у Києві to Він живе в Києві; Я іду в школу to Я йду в школу; Степан йде на пошту to Степан іде на пошту. Their meanings and correct-option indices stay the same. The repair detail for every D row follows the tables.
 
 ### 29. where-is-it
 
@@ -138,22 +141,22 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `act-1/4` | inline | Аптека ___ вулиці. | на | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key на matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-1/5` | inline | Пошта ___ площі. | на | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key на matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-1/6` | inline | Тато ___ вокзалі. | на | D | M29; U6; U64; U82. GRAC attests the exact offered в вокзалі as an interior location, despite its disfavoured euphony. A task about static place rather than euphonic spelling does not exclude it. Без requires a genitive instead of вокзалі. |
-| `act-1/7` | inline | Марко ___ лікарні. | у | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key у matches the stated meaning and case; the displayed competitors fail that task. |
+| `act-1/7` | inline | Марко ___ лікарні. | у | D | M29; U6; U84; U85. The original key у follows a vowel before лікарні. Adding consonant-final зараз makes the preserved у normative under section 23. |
 | `act-1/8` | inline | Ми ___ кафе. | в | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key в matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-1/9` | inline | Друг ___ Одесі. | в | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key в matches the stated meaning and case; the displayed competitors fail that task. |
-| `act-2/0` | inline | Олена ___ (школа). | в школі | C | M29; U13/U64. No options are authored. The key в школі supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-2/1` | inline | Тарас ___ (робота). | на роботі | C | M29; U13/U64. No options are authored. The key на роботі supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-2/2` | inline | Максим ___ (банк). | у банку | C | M29; U13/U64. No options are authored. The key у банку supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-2/3` | inline | Я ___ (магазин). | в магазині | C | M29; U13/U64. No options are authored. The key в магазині supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-2/4` | inline | Аптека ___ (вулиця). | на вулиці | C | M29; U13/U64. No options are authored. The key на вулиці supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-2/5` | inline | Ми ___ (місто). | у місті | C | M29; U13/U64. No options are authored. The key у місті supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-2/6` | inline | Софія ___ (лікарня). | у лікарні | C | M29; U13/U64. No options are authored. The key у лікарні supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-2/7` | inline | Я живу ___ (Київ). | у Києві | C | M29; U13/U64. No options are authored. The key у Києві supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
+| `act-2/0` | inline | Олена ___ (школа). | в школі | C | M29; U13/U64. No options are authored. The key в школі supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-2/1` | inline | Тарас ___ (робота). | на роботі | C | M29; U13/U64. No options are authored. The key на роботі supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-2/2` | inline | Максим ___ (банк). | у банку | C | M29; U13/U64. No options are authored. The key у банку supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-2/3` | inline | Я ___ (магазин). | в магазині | C | M29; U13/U64. No options are authored. The key в магазині supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-2/4` | inline | Аптека ___ (вулиця). | на вулиці | C | M29; U13/U64. No options are authored. The key на вулиці supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-2/5` | inline | Ми ___ (місто). | у місті | D | M29; U6; U84; U85. The original completed sentence conflicts with the default у/в distribution in section 23. The revised context preserves the target case, meaning and answer. |
+| `act-2/6` | inline | Софія ___ (лікарня). | у лікарні | D | M29; U6; U84; U85. The original completed sentence conflicts with the default у/в distribution in section 23. The revised context preserves the target case, meaning and answer. |
+| `act-2/7` | inline | Я живу ___ (Київ). | у Києві | D | M29; U6; U84; U85. The original completed sentence conflicts with the default у/в distribution in section 23. The revised context preserves the target case, meaning and answer. |
 | `act-4/0` | inline | Де Олена? | Вона в школі. | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Вона в школі. matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/1` | inline | Де Тарас? | Він на роботі. | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Він на роботі. matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/2` | inline | Де Максим? | Він у банку. | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Він у банку. matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/3` | inline | Де книга? | Книга на столі. | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Книга на столі. matches the stated meaning and case; the displayed competitors fail that task. |
-| `act-4/4` | inline | Де Марко живе? | Він живе у Києві. | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Він живе у Києві. matches the stated meaning and case; the displayed competitors fail that task. |
+| `act-4/4` | inline | Де Марко живе? | Він живе у Києві. | D | M29; U6. The original full-sentence key uses у after a vowel before Києві. Its euphonic spelling changes to в; answer meaning and correct option index stay the same. |
 | `act-4/5` | inline | Де пошта? | Пошта на площі. | C | M29; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Пошта на площі. matches the stated meaning and case; the displayed competitors fail that task. |
 
 ### 30. my-city
@@ -168,12 +171,12 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `act-2/5` | inline | Where do you buy bread? | у магазині | C | M30; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key у магазині matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-2/6` | inline | Where does a tourist sleep? | у готелі | C | M30; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key у готелі matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-2/7` | inline | Where is the match? | на стадіоні | C | M30; U13/U71. The match venue uses на стадіоні. U71 concerns an office inside a stadium building, not a match-venue construction; no defect is inferred from it. |
-| `act-3/0` | inline | У моєму місті є великий ___. | парк | C | M30; U13/U64. No options are authored. The key парк supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-3/1` | inline | Бібліотека ___ університету. | біля | C | M30; U13/U64. No options are authored. The key біля supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-3/2` | inline | Аптека ___ розі. | на | C | M30; U13/U64. No options are authored. The key на supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-3/3` | inline | Магазин тут, ___ дому. | біля | C | M30; U13/U64. No options are authored. The key біля supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-3/4` | inline | Школа далеко, ___ центрі міста. | у | C | M30; U13/U64. No options are authored. The key у supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
-| `act-3/5` | inline | У місті ___ багато парків. | є | C | M30; U13/U64. No options are authored. The key є supplies the required place phrase; this row makes no uniqueness claim about unoffered free-text completions. |
+| `act-3/0` | inline | У моєму місті є великий ___. | парк | C | M30; U13/U64. No options are authored. The key парк supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-3/1` | inline | Бібліотека ___ університету. | біля | C | M30; U13/U64. No options are authored. The key біля supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-3/2` | inline | Аптека ___ розі. | на | C | M30; U13/U64. No options are authored. The key на supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-3/3` | inline | Магазин тут, ___ дому. | біля | C | M30; U13/U64. No options are authored. The key біля supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-3/4` | inline | Школа далеко, ___ центрі міста. | у | C | M30; U13/U64. No options are authored. The key у supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
+| `act-3/5` | inline | У місті ___ багато парків. | є | C | M30; U13/U64. No options are authored. The key є supplies the required place phrase; this row makes no uniqueness claim about unoffered completions. The tracked empty-option dropdown is a separate renderer residual documented below. |
 | `act-4/0` | inline | You need medicine. Which place? | аптека | C | M30; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key аптека matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/1` | inline | You want to read a book quietly. Which place? | бібліотека | C | M30; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key бібліотека matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/2` | inline | You need bread for dinner. Which place? | магазин | C | M30; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key магазин matches the stated meaning and case; the displayed competitors fail that task. |
@@ -193,10 +196,10 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `act-1/5` | inline | Я працюю в офісі. | Де? | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Де? matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-1/6` | inline | Олена йде в аптеку. | Куди? | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Куди? matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-1/7` | inline | Степан на роботі. | Де? | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Де? matches the stated meaning and case; the displayed competitors fail that task. |
-| `act-2/0` | inline | Я йду ___ банк. | у | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key у matches the stated meaning and case; the displayed competitors fail that task. |
+| `act-2/0` | inline | Я йду ___ банк. | у | D | M31; U6; U84; U85. The original completed sentence conflicts with the default у/в distribution in section 23. The revised context preserves the target case, meaning and answer. |
 | `act-2/1` | inline | Олена йде ___ роботу. | на | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key на matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-2/2` | inline | Ми йдемо в ___. | аптеку | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key аптеку matches the stated meaning and case; the displayed competitors fail that task. |
-| `act-2/3` | inline | Степан йде у ___. | бібліотеку | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key бібліотеку matches the stated meaning and case; the displayed competitors fail that task. |
+| `act-2/3` | inline | Степан йде у ___. | бібліотеку | D | M31; U6; U84; U85. The original completed sentence conflicts with the default у/в distribution in section 23. The revised context preserves the target case, meaning and answer. |
 | `act-2/4` | inline | Я їду ___ вокзал. | на | D | M31; U10; U64. В вокзал can describe movement into the station building, alongside на вокзал as the station destination. До requires a genitive. |
 | `act-2/5` | inline | Марко йде ___ зупинку. | на | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key на matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-2/6` | inline | Він у ___. | банку | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key банку matches the stated meaning and case; the displayed competitors fail that task. |
@@ -206,7 +209,7 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `act-4/0` | inline | I am going to the shop on foot. | Я йду в магазин. | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Я йду в магазин. matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/1` | inline | We are going to the station by bus. | Ми їдемо на вокзал. | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Ми їдемо на вокзал. matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/2` | inline | Oksana is going to Lviv by train. | Оксана їде у Львів. | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Оксана їде у Львів. matches the stated meaning and case; the displayed competitors fail that task. |
-| `act-4/3` | inline | Stepan is walking to the post office. | Степан йде на пошту. | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Степан йде на пошту. matches the stated meaning and case; the displayed competitors fail that task. |
+| `act-4/3` | inline | Stepan is walking to the post office. | Степан йде на пошту. | D | M31; U83; U88; U89. The original full-sentence key uses йде after consonant-final Степан. Section 24 calls for іде in this position. Meaning and correct option index stay the same. |
 | `act-4/4` | inline | They are going to the park on foot. | Вони йдуть у парк. | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Вони йдуть у парк. matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/5` | inline | I am going to Odesa by train. | Я їду в Одесу. | C | M31; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Я їду в Одесу. matches the stated meaning and case; the displayed competitors fail that task. |
 
@@ -259,7 +262,7 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `act-2/5` | inline | Вона йде в... | офіс | D | M33; U14; U61; U64. В офісі can locate the walking inside the office. The cue selects the destination в офіс. |
 | `act-5/0` | inline | Аптека ___. П'ять хвилин пішки. | близько | D | M33; U20. Наліво can locate a pharmacy to the left, including five minutes away. The proximity cue selects близько. |
 | `act-5/1` | inline | Вокзал ___. Їдьте на метро. | далеко | D | M33; U20. A recommendation to take the metro does not exclude a station nearby or straight ahead. The explicit distance cue selects далеко. |
-| `act-5/2` | inline | Кафе ___. Воно біля дому. | поруч | C | M33; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key поруч matches the stated meaning and case; the displayed competitors fail that task. |
+| `act-5/2` | inline | Кафе ___. Воно біля дому. | поруч | D | M33; U20; U87. Направо has an attested static right-hand-side meaning, which can coexist with біля дому. The proximity cue selects поруч. |
 | `act-5/3` | inline | Бібліотека ___ розі. | на | C | M33; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key на matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-5/4` | inline | Ідіть ___, потім наліво. | прямо | D | M33; U14; U20. Ідіть поруч can tell people to walk alongside each other, then turn left. The direction cue selects прямо. |
 | `act-5/5` | inline | Музей ___ центрі. | у | C | M33; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key у matches the stated meaning and case; the displayed competitors fail that task. |
@@ -290,7 +293,7 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `workbook[4]/1` | workbook | Анна ___, із Торонто. | з Канади | D | M34; U64; U65. The original introduction also permits the offered current-location phrase. The new origin cue selects the unchanged from-place key. |
 | `workbook[4]/2` | workbook | Олена живе в Києві, але вона ___. | зі Львова | D | M34; U64; U65. The original introduction also permits the offered current-location phrase. The new origin cue selects the unchanged from-place key. |
 | `workbook[4]/3` | workbook | Ми зараз в Україні, але ми ___. | з Польщі | C | M34; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key з Польщі matches the stated meaning and case; the displayed competitors fail that task. |
-| `workbook[4]/4` | workbook | Джон ___, але зараз живе у Києві. | зі США | C | M34; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key зі США matches the stated meaning and case; the displayed competitors fail that task. |
+| `workbook[4]/4` | workbook | Джон ___, але зараз живе у Києві. | зі США | D | M34; U6; U84; U85. The original completed sentence conflicts with the default у/в distribution in section 23. The revised context preserves the target case, meaning and answer. |
 | `workbook[4]/5` | workbook | Марко ___ і говорить українською. | з Києва | D | M34; U64; U65. The original introduction also permits the offered current-location phrase. The new origin cue selects the unchanged from-place key. |
 
 ### 35. checkpoint-places
@@ -306,11 +309,11 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `act-4/0` | inline | Я зараз ___ Одесі. | в | D | M35; U6; U64. В and у express the same location; the task does not request a specific euphonic spelling. До is incompatible with locative Одесі. |
 | `act-4/1` | inline | Я ___ Дерибасівській вулиці. | на | C | M35; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key на matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/2` | inline | Я йду ___ кафе. | з | D | M35; U14; U64; U65. With indeclinable кафе, both з кафе and в кафе fit йду unless source versus destination is specified. |
-| `act-4/3` | inline | Потім я йду ___ порт. | у | D | M35; U6; U64. Both у порт and в порт are destination phrases. Без requires the genitive instead of порт. |
+| `act-4/3` | inline | Потім я йду ___ порт. | у | D | M35; U6; U84; U85. The original vowel-final йду requires в before порт under section 23. The consonant-final йдуть makes the preserved key у normative. |
 | `act-4/4` | inline | Після порту я йду ___ пляж. | на | C | M35; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key на matches the stated meaning and case; the displayed competitors fail that task. |
 | `act-4/5` | inline | Увечері я їду ___. | на вокзал | D | M35; U65. Їду з вокзалу is a valid source phrase; їду alone does not ask only куди. |
 | `workbook[2]/0` | workbook | Repair: Я в школа. | Я в школі. | C | M35; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Я в школі. matches the stated meaning and case; the displayed competitors fail that task. |
-| `workbook[2]/1` | workbook | Repair: Я іду в школі. | Я іду в школу. | D | M35; U14; U61; U64. Walking can occur in the school or go to it; a location phrase is not inherently a grammatical error. The destination cue selects в школу. |
+| `workbook[2]/1` | workbook | Repair: Я іду в школі. | Я іду в школу. | D | M35; U14; U61; U64; U83; U84; U85. Walking can occur in the school or go to it. The destination cue selects в школу; the full-sentence key also changes іду to йду after Я under section 24. The correct option index and destination meaning stay the same. |
 | `workbook[2]/2` | workbook | Repair: Я працюю в пошті. | Я працюю на пошті. | C | M35; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Я працюю на пошті. matches the stated meaning and case; the displayed competitors fail that task. |
 | `workbook[2]/3` | workbook | Repair: Книга є на столі. | Книга на столі. | D | M35; U17. The present є is grammatical. The cue asks for its omission rather than condemning it. |
 | `workbook[2]/4` | workbook | Repair: Вона живе Київ. | Вона живе в Києві. | C | M35; U13/U14/U64/U65. The task distinguishes location, destination, origin or transport. The key Вона живе в Києві. matches the stated meaning and case; the displayed competitors fail that task. |
@@ -487,8 +490,8 @@ C means checked-clean in the original source. D means a confirmed second defensi
 | `workbook[5]/0` | workbook | Repair: Я хочу вода. | Я хочу воду. | C | M41; U16/U17/U28/U32/U48/U59/U60. The key Я хочу воду. matches the stated food/object, numeral, meal or repair task. No second option is supported in that task. |
 | `workbook[5]/1` | workbook | Repair: Я люблю борща. | Я люблю борщ. | C | M41; U16/U17/U28/U32/U48/U59/U60. The key Я люблю борщ. matches the stated food/object, numeral, meal or repair task. No second option is supported in that task. |
 | `workbook[5]/2` | workbook | Repair: Смачний кава. | Смачна кава. | C | M41; U16/U17/U28/U32/U48/U59/U60. The key Смачна кава. matches the stated food/object, numeral, meal or repair task. No second option is supported in that task. |
-| `workbook[5]/3` | workbook | Repair: Я є голодний. | Я голодний. (Або: Я хочу їсти). | D | M41; U17. Я є голодний is grammatical with an overt present copula. The requested shorter pattern omits є. |
-| `workbook[5]/4` | workbook | Repair: Моє ім'я є Джон, і я хочу меню. | Мене звати Джон, дайте меню. | D | M41; U17. The original name statement with є and хочу is grammatical. The formula and request cue selects the unchanged key. |
+| `workbook[5]/3` | workbook | Repair: Я є голодний. | Я голодний. (Або: Я хочу їсти). | C | M41; U17/U91. The A1 interference-repair task selects Я голодний. The exact corpus examples of Я є голодний are foreign-character speech, not evidence for an ordinary A1 alternative; the general copula entry does not settle that register question. No confirmed defect; unchanged. |
+| `workbook[5]/4` | workbook | Repair: Моє ім'я є Джон, і я хочу меню. | Мене звати Джон, дайте меню. | D | M41; U17; U90. Two GRAC examples attest a naming statement with Моє ім'я є. The explicit formula and imperative cue selects the requested A1 response without a general grammar claim in feedback. |
 | `workbook[5]/5` | workbook | Repair: Чи не могли б ви дати мені рахунок? | Дайте, будь ласка, рахунок. | D | M41; U78. The conditional request is grammatical and polite. The cue requests the already-keyed direct imperative. |
 | `workbook[5]/6` | workbook | Repair: Я плачу рублями. | Я плачу гривнями. | D | M41; U26; U27. Рублями is a real currency instrumental and a grammatical payment phrase. The Ukrainian-currency cue selects гривнями. |
 
@@ -525,7 +528,7 @@ C means checked-clean in the original source. D means a confirmed second defensi
 
 ## Confirmed defects and fixes
 
-Every repair retains the key. Changes are English task cues, distractors, or the feedback needed to keep a repaired cue accurate. Each row below corresponds to one D verdict. Source YAML is authoritative; the existing parser and serializer regenerate only those changed item objects in the tracked pages.
+Every repair retains the answer meaning and correct-option index. All but the three stated spelling corrections retain the key text. Changes are English task cues, distractors, or the feedback needed to keep a repaired cue accurate. Each row below corresponds to one D verdict. Source YAML is authoritative; the existing parser and serializer regenerate only those changed item objects in the tracked pages.
 
 | Item | Evidence | Source changes |
 | --- | --- | --- |
@@ -547,12 +550,12 @@ Every repair retains the key. Changes are English task cues, distractors, or the
 | `where-from/workbook[4]/1` | U64, U65 | sentence: (State the place of origin: Canada.) Анна ___, із Торонто. |
 | `where-from/workbook[4]/2` | U64, U65 | sentence: (State the place of origin: Lviv.) Олена живе в Києві, але вона ___. |
 | `where-from/workbook[4]/5` | U64, U65 | sentence: (State the place of origin: Kyiv.) Марко ___ і говорить українською. |
-| `checkpoint-places/act-4/0` | U6, U64 | option 1: у → до |
+| `checkpoint-places/act-4/0` | U6, U64 | option 1: у → до; explanation: В Одесі answers the static-location question де? in this sentence. |
 | `checkpoint-places/act-4/2` | U14, U64, U65 | sentence: (You are leaving the cafe.) Я йду ___ кафе. |
-| `checkpoint-places/act-4/3` | U6, U64 | option 1: в → без |
+| `checkpoint-places/act-4/3` | U6, U84, U85 | option 1: в → без; sentence: Потім вони йдуть ___ порт.; explanation: Between the consonants in йдуть and порт, use у порт for the destination. |
 | `checkpoint-places/act-4/5` | U65 | sentence: (The station is your destination.) Увечері я їду ___. |
-| `checkpoint-places/workbook[2]/1` | U14, U61, U64 | prompt: (Give the destination: school.) Repair: Я іду в школі. |
-| `checkpoint-places/workbook[2]/3` | U17 | prompt: (Give the shorter version without є.) Repair: Книга є на столі.; explanation: The requested shorter place sentence omits є. The version with є is also grammatical. |
+| `checkpoint-places/workbook[2]/1` | U14, U61, U64, U83, U84, U85 | prompt: (Give the destination: school.) Rephrase: Я йду в школі.; option 0: Я іду в школу. → Я йду в школу.; explanation: For the destination, use в школу. After Я, the euphonic verb form is йду. |
+| `checkpoint-places/workbook[2]/3` | U17 | prompt: (Give the shorter version without є.) Rephrase: Книга є на столі.; explanation: The requested A1 place pattern is Книга на столі. |
 | `checkpoint-places/workbook[4]/2` | U6, U64 | option 1: у → до |
 | `checkpoint-places/workbook[4]/5` | U65 | sentence: (The station is her destination.) Після музею вона їде ___. |
 | `food-and-drink/workbook[3]/1` | U15, U24 | sentence: (Name the midday meal.) Вдень я ___. |
@@ -582,19 +585,42 @@ Every repair retains the key. Changes are English task cues, distractors, or the
 | `checkpoint-food-shopping/act-2/8` | U48, U60 | prompt: (Use the accusative singular.) Я їм ___. |
 | `checkpoint-food-shopping/act-3/0` | U48, U60 | sentence: (Use the accusative singular.) — Що ти їси на сніданок? — Я їм ___ і п'ю каву. |
 | `checkpoint-food-shopping/workbook[2]/5` | U22, U68 | sentence: (Measure the water in one drinking glass.) Анна наливає ___ води. |
-| `checkpoint-food-shopping/workbook[5]/3` | U17 | prompt: (Give the shorter version without є.) Repair: Я є голодний.; explanation: The requested shorter state sentence omits є. The version with є is also grammatical. |
-| `checkpoint-food-shopping/workbook[5]/4` | U17 | prompt: (Use the Мене звати formula and an imperative request.) Repair: Моє ім'я є Джон, і я хочу меню.; explanation: The requested name formula is Мене звати; дайте is the requested imperative. The original sentence is also grammatical. |
-| `checkpoint-food-shopping/workbook[5]/5` | U78 | prompt: (Use a direct imperative with будь ласка.) Repair: Чи не могли б ви дати мені рахунок?; explanation: The requested direct imperative is Дайте, будь ласка, рахунок. The conditional request is also grammatical and polite. |
+| `checkpoint-food-shopping/workbook[5]/4` | U17, U90 | prompt: (Use the Мене звати formula and an imperative request.) Rephrase: Моє ім'я є Джон, і я хочу меню.; explanation: Мене звати Джон is the requested name formula, and дайте is the requested imperative. |
+| `checkpoint-food-shopping/workbook[5]/5` | U78 | prompt: (Use a direct imperative with будь ласка.) Rephrase: Чи не могли б ви дати мені рахунок?; explanation: The requested direct imperative is Дайте, будь ласка, рахунок. The conditional request is also grammatical and polite. |
 | `checkpoint-food-shopping/workbook[5]/6` | U26, U27 | prompt: (Name the Ukrainian currency used for this payment.) Repair: Я плачу рублями. |
+| `around-the-city/act-5/2` | U20, U87 | sentence: (The cafe is nearby.) Кафе ___. Воно біля дому. |
+| `where-is-it/act-1/7` | U6, U84, U85 | prompt: Марко зараз ___ лікарні. |
+| `where-is-it/act-2/5` | U6, U84, U85 | sentence: Ми зараз ___ (місто). |
+| `where-is-it/act-2/6` | U6, U84, U85 | sentence: Софія зараз ___ (лікарня). |
+| `where-is-it/act-2/7` | U6, U84, U85 | sentence: Я зараз ___ (Київ). |
+| `where-to/act-2/0` | U6, U84, U85 | sentence: Вони йдуть ___ банк. |
+| `where-to/act-2/3` | U6, U84, U85 | sentence: Вони йдуть у ___. |
+| `where-from/workbook[4]/4` | U6, U84, U85 | sentence: Джон ___, але зараз живе в Києві. |
+| `where-is-it/act-4/4` | U6 | option 0: Він живе у Києві. → Він живе в Києві.; explanation: After the vowel in живе, use в Києві for this static city location. |
+| `where-to/act-4/3` | U83, U88, U89 | option 0: Степан йде на пошту. → Степан іде на пошту.; explanation: Walking uses іде here. After the consonant in Степан, choose the euphonic іде form. |
 
 ## Validation and batch sizing
 
 - Structural scanner: `scripts/audit/scan_activity_errors.py --track a1-v1`, 55/55 files, zero findings, exit 0 before and after repair.
-- Existing affected checks: `pytest -n 2 tests/test_scan_activity_errors.py tests/test_a1_activity_schema_parser_drift.py tests/test_yaml_activities_a1_payload.py tests/test_activity_renderer.py tests/test_generate_mdx.py tests/test_generate_mdx_parsers.py tests/test_generate_mdx_unit_map.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_curriculum_manifest_canary.py`: 329 passed in 11.48 seconds. No test file or case was added.
-- The existing ActivityParser, yaml_activities_to_jsx and dump_json_for_jsx regenerated exactly 57 changed tracked item payloads in 12 modules. Unchanged source objects and page bytes outside those serialized objects are preserved. The integrity manifest updates only the corresponding 24 hashes. Archived unaccented page conventions are retained.
-- Chromium exercised the existing Quiz and FillIn components with all 57 changed tracked payloads: 57 keys accepted, 114 displayed distractors rejected, zero browser errors. This includes the actual dropdown/check-answer path for these archived fill-ins. Runtime package and lockfile hashes matched before the installed dependencies were copied into the worktree.
+- Existing affected checks: `pytest -n 2 tests/test_scan_activity_errors.py tests/test_a1_activity_schema_parser_drift.py tests/test_yaml_activities_a1_payload.py tests/test_activity_renderer.py tests/test_generate_mdx.py tests/test_generate_mdx_parsers.py tests/test_generate_mdx_unit_map.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_curriculum_manifest_canary.py`, run together with the existing source-policy guard: 342 passed in 12.10 seconds. No test file or case was added.
+- The existing ActivityParser, yaml_activities_to_jsx and dump_json_for_jsx regenerated exactly 66 changed tracked item payloads in 12 modules. Unchanged source objects and page bytes outside those serialized objects are preserved. The integrity manifest updates only the corresponding 24 hashes. Archived unaccented page conventions are retained.
+- Chromium exercised the existing Quiz and FillIn components with all 63 changed items that have choices: 63 keys accepted, all 126 distractors rejected, zero browser errors. Three other changed payloads have no options; they received source and Sources verification, but cannot receive positive browser-answer proof through the existing dropdown. A separate live component check confirmed all 14 pre-existing empty FillIn dropdowns have only a disabled placeholder and a disabled Check Answers button. Runtime package and lockfile hashes matched before dependencies were copied into the worktree.
 - Independent Gemini through AGY and Opus 5.5 through Claude review, admission CI and merge receipts are recorded on the PR at its exact pushed head. This document records the author audit; it does not assert independent approval or site deployment.
 
-The full census is 326 items: 269 inline/root and 57 workbook items. The inventory started at 2026-10-28T20:03:31.016106+00:00; this author report was prepared at 2026-10-28T20:23:50.569758+00:00. The inventory-to-report interval is 20.3 wall-clock minutes. It includes evidence queries, source analysis, conservative removal of unconfirmed candidates, repairs, regeneration, affected checks and browser verification. It excludes later independent review, CI and merge. It is not pure model throughput. Item density differs from the first batch, so module-count scaling is not a measured full-track duration.
+The full census is 326 items: 269 inline/root and 57 workbook items. The inventory started at 2026-10-28T20:03:31.016106+00:00. The initial author report, before independent review, took 20.3 wall-clock minutes and recorded 57 ambiguities. The revised report was prepared at 2026-10-28T20:51:14.025127+00:00, 47.7 minutes after inventory. This later interval includes review, the additional sibling checks, source repairs, new Sources screens and repeated artifact validation. It is not pure model throughput. End-to-end time through review, CI and merge is recorded on the PR after landing; module-count scaling is not a measured full-track duration.
 
 Residual owner: CTO curriculum coordinator, #8893. Unchecked activity types, other modules and finale items, broader independent evaluation, audio and production delivery remain outside this slice. The module-15-28 worker retains its disjoint ownership. Shared integrity-manifest changes require rebase and scoped regeneration if another batch merges first.
+
+## Review corrections and tracked follow-ups
+
+F1 is fixed by changing the port stem to Потім вони йдуть ___ порт. The consonant-final йдуть makes the preserved у normative under Pravopys section 23, and the explanation gives that rule. The original port key conflicted with its vowel-final context; it is classified as a key-context defect rather than an answer ambiguity.
+
+F2 uses both remedies permitted by the review. The Я є голодний item is restored unchanged as checked-clean: the exact corpus examples are foreign-character speech and do not confirm an ordinary A1 rival. The other two items use the cue-and-feedback remedy. The two retained copula/name repairs retain explicit short-pattern cues, use Rephrase instead of Repair, and give only the requested A1 pattern in feedback. No learner-facing explanation now announces that a lesson-labelled bad example is also grammatical. The source evidence and the report distinguish general copula grammar from the module's requested A1 pattern. The existing prose and other activity types are unchanged; any broader reconciliation of their absolute bad labels belongs to the CTO curriculum coordinator on #8893, including the earlier batch's analogous wording.
+
+F3 is fixed in around-the-city/act-5/2. VTS направо has a static right-hand-side sense, so the cafe can be both to the right and near home. The new proximity cue selects поруч.
+
+F4's in-scope euphony class was checked across every completed keyed item. All eleven confirmed affected items are repaired, including the additional same-class siblings discovered in that census. У Львів remains unchanged because section 23 specifically requires у before льв-. Three full-sentence keys receive spelling-only corrections; the other cases change sentence context while preserving the encoded answer. U83 gives the initial і-/й- rule. U84/U85 and U88/U89 check the forms and stress. The stress tool labels monosyllabic йде and йдуть invalid_input; VESUM verifies them and no stress mark is asserted for them.
+
+F5's report wording is corrected. Exactly 14 declared source fill-ins have no authored options: where-is-it/act-2 (8) and my-city/act-3 (6). The live tracked-component check confirms that their empty dropdowns cannot be answered. Three receive language-context repairs in this batch, but their existing answerability limitation remains; no browser success is claimed for those three. This is an explicit pre-existing renderer/source-contract residual, not a free-text feature. Owner: CTO curriculum coordinator, #8893. The other eight cited hey-friend items are ErrorCorrection payloads, not FillIn; they are outside the 326-item fill-in/quiz denominator and their answerability is not certified here.
+
+F6 is fixed: the Одесі explanation no longer compares an option that was removed, and the grammatical conditional request is labelled Rephrase under its explicit imperative cue. G1, the first Gemini report's inaccurate alternative lists, was corrected by its source-fidelity verification round. The final moved head still requires fresh exact-head approvals from both seats. No superseded verdict authorizes landing it.
