@@ -121,7 +121,7 @@ export default function MechanicsPractice({
                     <div style={{ fontSize: '0.85rem', color: 'var(--sl-color-gray-3)', marginTop: '0.25rem' }}>
                       {m.eval.feedback}
                     </div>
-                    <ReportProblemAction records={[m.card]} type={`mechanics:${m.card.pos}`} chromeLocale={chromeLocale} />
+                    <ReportProblemAction records={[m.card]} type={`mechanics:${m.card.pos}`} context={m.card.prompt} chromeLocale={chromeLocale} />
                   </li>
                 ))}
               </ul>

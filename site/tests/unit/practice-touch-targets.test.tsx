@@ -186,10 +186,14 @@ describe('report disclosure (#10704)', () => {
     const button = screen.getByRole('button', { name: 'Report a problem' });
     button.focus();
     await user.keyboard('{Enter}');
+    expect(document.getElementById(button.getAttribute('aria-controls')!)).toBeVisible();
     expect(screen.getByText('The report will be public on GitHub. A GitHub account is required. You can edit the text before submitting.')).toBeVisible();
     const link = screen.getByRole('link', { name: 'Continue' });
     expect(link.getAttribute('href')).not.toMatch(/private-progress|private-answer|prompt_sentence/);
     expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+    rerender(<ReportProblemAction records={[cards[0]!]} type="mechanics:noun" chromeLocale="en" context="local-context-sentinel" />);
+    expect(screen.getByRole('button', { name: 'Report a problem: local-context-sentinel' })).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Continue' }).getAttribute('href')).not.toContain('local-context-sentinel');
     rerender(<ReportProblemAction records={[cards[0]!]} type="mechanics:noun" chromeLocale="en" />);
     expect(screen.getByRole('link', { name: 'Continue' }).getAttribute('href')).toBe(link.getAttribute('href'));
     rerender(<ReportProblemAction records={[cards[1]!]} type="mechanics:noun" chromeLocale="en" />);

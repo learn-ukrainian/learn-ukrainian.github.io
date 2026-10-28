@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: c1a97dc265df02938646414625b2ea113e46a093906c18b6d633078ac12d1992
+  components_sha256: 2e51b1e5915ad089a9ea15366ecfc3c3f53e186c00c231ca550a5297ef63ba3d
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -2345,6 +2345,10 @@ components:
       - name: item
         type: string
         description: item prop.
+        ukrainian_text: 'false'
+      - name: context
+        type: string
+        description: context prop.
         ukrainian_text: 'false'
     nested_types: {}
     example:

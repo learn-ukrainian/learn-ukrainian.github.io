@@ -319,7 +319,7 @@ export default function TeacherDeckPractice({
           isUkrainian={chromeLocale === 'uk'}
           onComplete={() => setMatchingComplete(true)}
         />
-        <ul>{matchingPairs.map((entry) => <li key={entry.entryId}><span lang="uk">{entry.uk}</span><ReportProblemAction records={[entry]} type="teacher-matching" chromeLocale={chromeLocale} /></li>)}</ul>
+        <ul>{matchingPairs.map((entry) => <li key={entry.entryId}><span lang="uk">{entry.uk}</span><ReportProblemAction records={[entry]} type="teacher-matching" context={entry.uk} chromeLocale={chromeLocale} /></li>)}</ul>
         {matchingComplete ? (
           <div className="teacher-deck-actions">
             <button

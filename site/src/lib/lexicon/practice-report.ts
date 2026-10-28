@@ -67,7 +67,8 @@ export async function loadBundledPractice<T>(path: string, project: (data: unkno
   const text = await loader();
   const digest = await digestOf(text);
   const value = project(JSON.parse(text));
-  if (digest) register(value, { deck: path, version: `content-sha256:${digest}`, digest }, `site/src/data/${path}`);
+  const collection = path.startsWith('practice-mechanics/') ? '/cards' : path === 'practice-error-corrections.json' ? '/drills' : '';
+  if (digest) register(value, { deck: path, version: `content-sha256:${digest}`, digest }, `site/src/data/${path}${collection}`);
   return value;
 }
 function originOf(value: object): Origin | undefined {

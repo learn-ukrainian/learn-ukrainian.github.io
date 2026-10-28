@@ -4234,7 +4234,7 @@ function LexiconPracticeIsland({
         // #6722: surface on the results screen — dedupe by lemma, keep the latest miss.
         setSessionMisses((items) => [
           ...items.filter((entry) => entry.lemmaId !== current.lemma.lemmaId),
-          { lemmaId: current.lemma.lemmaId, lemma: current.lemma.lemma, gloss: practiceDisplayGloss(current.lemma, true), report: selectionReport(current) },
+          { lemmaId: current.lemma.lemmaId, lemma: current.lemma.lemma, gloss: practiceDisplayGloss(current.lemma, true), report: selectionReport(current, current.mode === 'heritage' && current.heritage && mode === 'mixed' ? selectHeritagePracticePresentation(current.heritage, sessionSeed, deck?.heritage ?? [], heritageContext).kind : 'mc') },
         ]);
       }
       if (wasNew && rating !== 'again') {
@@ -5496,7 +5496,7 @@ function PracticeItemReports({ selection, deck, pairs, sessionSeed, presentation
   if (!report.records.length) return null;
   if (selection.mode === 'matching') return <ul>{pairs.map((pair) => <li key={pair.lemmaId}>
     <span lang="uk">{pair.left}</span>
-    <ReportProblemAction records={[pair.source]} type="matching-pair" chromeLocale={chromeLocale} />
+    <ReportProblemAction records={[pair.source]} type="matching-pair" context={pair.left} chromeLocale={chromeLocale} />
   </li>)}</ul>;
   if (selection.mode === 'heritage' && selection.heritage) {
     const presentation = presentationVariants
@@ -5504,7 +5504,7 @@ function PracticeItemReports({ selection, deck, pairs, sessionSeed, presentation
       : { kind: 'mc' as const };
     if (presentation.kind === 'match-up') return <ul>{presentation.item.pairs.map((pair, i) => {
       const source = heritageMatchPairSource(pair);
-      return <li key={i}><span lang="uk">{pair.left}</span><ReportProblemAction records={source ? [source] : []} type="heritage:match-up" chromeLocale={chromeLocale} /></li>;
+      return <li key={i}><span lang="uk">{pair.left}</span><ReportProblemAction records={source ? [source] : []} type="heritage:match-up" context={pair.left} chromeLocale={chromeLocale} /></li>;
     })}</ul>;
     return <ReportProblemAction {...report} type={`heritage:${presentation.kind}`} chromeLocale={chromeLocale} />;
   }

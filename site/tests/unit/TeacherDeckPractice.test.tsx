@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { State } from 'ts-fsrs';
 import TeacherDeckPractice from '@site/src/components/practice/TeacherDeckPractice';
 import { buildTeacherDeck, type TeacherDeck, type TeacherGrammarItem } from '@site/src/lib/lexicon/teacher-deck';
+import { teacherReport } from '@site/src/lib/lexicon/practice-report-selection';
 import { teacherOptionDisplay } from '@site/src/lib/lexicon/teacher-deck-options';
 import {
   deckProgressStorageKey,
@@ -137,6 +138,7 @@ describe('TeacherDeckPractice', () => {
     fireEvent.click(await screen.findByTestId('teacher-deck-start'));
     expect(screen.queryByTestId('teacher-deck-recognition-choice')).toBeNull();
     expect(screen.getByRole('button', { name: /Справедливий/ })).toBeInTheDocument();
+    expect(teacherReport(deck, deck.entries[0]!, { type: 'recognition-choice' }).type).toBe('teacher:recognition-flashcard');
   });
 
   test('production choice shows uniform Ukrainian case, punctuation, and stress shape', async () => {

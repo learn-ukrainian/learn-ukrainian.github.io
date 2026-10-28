@@ -320,6 +320,10 @@ describe('report consumer identities (#10704)', () => {
     const selection: PracticeSelection = { lemma, indexItem: index.items.find((i) => i.lemmaId === lemma.lemmaId)!, mode: 'flashcards', itemId: `${lemma.lemmaId}:flashcards`, cardKey: 'private-progress-key', cardState: null, due: 0, lapsed: false, recallDirection: 'uk-to-meaning', choicePolarity: 'word-to-meaning' };
     const report = selectionReport(selection);
     expect(practiceReportUrl(report.records, report.type, 'en', report.item)).not.toBeNull();
+    const matching = selectionReport({ ...selection, mode: 'matching', itemId: `${lemma.lemmaId}:matching` });
+    expect(matching.type).toBe('matching-pair');
+    expect(matching.item).toBe(lemma.lemmaId);
+    expect(practiceReportUrl(matching.records, matching.type, 'en', matching.item)).not.toBeNull();
     expect(selectionReport({ ...selection, itemId: 'private-selection' }).records).toEqual([]);
     expect(selectionReport({ ...selection, lemma: { ...lemma, gloss: 'private' } }).records).toEqual([]);
   });

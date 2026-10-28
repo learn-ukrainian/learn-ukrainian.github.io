@@ -117,7 +117,7 @@ export default function PracticeSessionSummary({
             {stats.misses.map((miss) => (
               <li key={miss.lemmaId}>
                 <span lang="uk">{miss.lemma}</span>
-                {miss.report && <ReportProblemAction {...miss.report} chromeLocale={chromeLocale} />}
+                {miss.report && <ReportProblemAction {...miss.report} context={miss.lemma} chromeLocale={chromeLocale} />}
                 {showMissGloss ? (
                   <span className="lexicon-session-miss-gloss"> — {miss.gloss}</span>
                 ) : null}

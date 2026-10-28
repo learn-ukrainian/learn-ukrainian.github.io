@@ -52,6 +52,7 @@ describe('mechanics-deck-loader', () => {
       const firstCard = cards[0];
       const report = practiceReportUrl([firstCard], `mechanics:${pos}`, 'en');
       expect(report).not.toBeNull();
+      if (pos === 'noun') expect(decodeURIComponent(new URL(report!).searchParams.get('body')!)).toContain('public-prompt-reference-id: site/src/data/practice-mechanics/noun_mechanics_deck.json/cards/0');
       expect(new URL(report!).searchParams.get('body')).toContain(`item: ${firstCard.id}`);
       expect(practiceReportUrl([{ ...firstCard }], `mechanics:${pos}`, 'en')).toBeNull();
       // Verify evaluation: correct pick
