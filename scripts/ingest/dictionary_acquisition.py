@@ -39,7 +39,7 @@ from scripts.lexicon.enrich_manifest import (
     _slovnyk_lookup_word,
     _valid_slovnyk_positive,
 )
-from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS, resolve_dict_slug
+from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS, normalize_word, resolve_dict_slug
 from scripts.wiki.sum20_official import (
     DEFAULT_USER_AGENT,
     MIN_CRAWL_DELAY_S,
@@ -144,6 +144,12 @@ def make_spec(args: argparse.Namespace) -> tuple[dict[str, Any], list[tuple[str,
         manifest = json.loads(raw)
         if not isinstance(manifest, dict) or not isinstance(manifest.get("entries"), list):
             raise JobError("invalid_manifest")
+        source_headwords = manifest.get("source_headwords", False)
+        if "source_headwords" in manifest and source_headwords is not True:
+            raise JobError("invalid_manifest")
+        if source_headwords and args.seed_cache:
+            raise JobError("source_headwords_seed_unsupported")
+        spec["lookup_mode"] = "source_headword" if source_headwords else "lemma"
         targets = []
         seen = set()
         for entry in manifest["entries"]:
@@ -151,7 +157,7 @@ def make_spec(args: argparse.Namespace) -> tuple[dict[str, Any], list[tuple[str,
                 raise JobError("invalid_manifest_lemma")
             lemma = entry["lemma"]
             if lemma not in seen:
-                lookup = _slovnyk_lookup_word(lemma)
+                lookup = normalize_word(lemma) if source_headwords else _slovnyk_lookup_word(lemma)
                 if not lookup:
                     raise JobError("empty_lookup")
                 targets.append((lemma, lookup))
@@ -264,7 +270,9 @@ def project_status(conn: sqlite3.Connection, directory: Path, now: float) -> dic
     """Reconcile counts/checkpoint from durable result rows, never from old JSON."""
     job = conn.execute("SELECT * FROM job").fetchone()
     spec = json.loads(job["spec"])
-    rows = conn.execute("SELECT * FROM results ORDER BY position").fetchall()
+    rows = conn.execute(
+        "SELECT position, status, attempts, next_attempt_at, target FROM results ORDER BY position"
+    ).fetchall()
     counts = dict.fromkeys(("positive", "miss", "pending", "error", "reused"), 0)
     checkpoint = 0
     requests_count = 0
@@ -383,7 +391,8 @@ def fetch_once(session: Any, spec: dict[str, Any], row: sqlite3.Row, now: float)
     url = (
         official_url_for_wordid(int(row["target"]))
         if official
-        else f"https://slovnyk.me/dict/{spec['dictionary']}/{quote(row['lookup'], safe='')}"
+        else f"https://slovnyk.me/dict/{spec['dictionary']}/"
+        f"{quote(row['target'] if spec.get('lookup_mode') == 'source_headword' else row['lookup'], safe='')}"
     )
     try:
         response = session.get(
@@ -633,7 +642,9 @@ Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_
         "--dictionary", required=True, help="Exactly one catalogue slug (e.g. vts, newsum) or sum20_official; required"
     )
     result.add_argument(
-        "--manifest", type=Path, help="Slovnyk JSON with entries[].lemma, e.g. manifest.json; default none"
+        "--manifest",
+        type=Path,
+        help="Slovnyk JSON with entries[].lemma; source_headwords: true preserves exact URL suffixes; default none",
     )
     result.add_argument("--start-wordid", type=int, help="Official inclusive first wordid, e.g. 5; default none")
     result.add_argument(
