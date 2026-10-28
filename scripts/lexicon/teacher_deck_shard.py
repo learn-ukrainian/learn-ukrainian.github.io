@@ -1238,7 +1238,7 @@ def build_grammar(
         item.update({"entryId": entry_id, "cardId": card_id, "atlas": atlas_ref})
         return item
 
-    stress = _stress_payload(article)
+    stress = _stress_payload(article, verifier=verifier)
     if stress:
         modes["stress"].append(
             tag({"lemmaId": gated["lemmaId"], "lemma": gated["lemma"], **stress}, "stressId", "stress")
