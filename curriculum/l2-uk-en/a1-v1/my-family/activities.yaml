@@ -4,7 +4,7 @@ inline:
     title: Питання до фото
     instruction: Обери український рядок для фото-розмови.
     items:
-      - prompt: Ти питаєш одного ровесника про брата. — You ask a peer about a brother.
+      - prompt: "Ти питаєш одного ровесника, чи є в нього брат. — You ask a peer whether they have a brother."
         options:
           - text: У тебе є брат?
             correct: true
@@ -102,7 +102,7 @@ inline:
         answer: тебе
         options:
           - тебе
-          - мене
+          - "мій"
           - він
         explanation: У тебе є...? питає одну знайому людину.
       - sentence: У ___ є діти?
