@@ -5,6 +5,7 @@ import styles from './ArcLanding.module.css';
 import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import { formatLessonCount } from '../lib/i18n/chrome';
 import { ARC_STATE_KEY, groupByPhase, moduleHref, type ArcPosition } from '../lib/arc';
+import { a1NewIsPrimary, a1PreviousEdition } from '../lib/a1-entry';
 
 type ArcLandingProps = {
   level: string;
@@ -53,13 +54,15 @@ export default function ArcLanding({ level, positions, previousEditionHref }: Ar
   return (
     <div className={layout.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>{level.toUpperCase()}</h1>
+        <h1 className={styles.title}>
+          {level === 'a1' && !a1NewIsPrimary ? <ChromeText k="home.track.a1Preparing" /> : level.toUpperCase()}
+        </h1>
         <p className={styles.summary}>
           {positions.length} <ChromeText k="stats.modules" />
         </p>
         {previousEditionHref && (
           <a className={styles.previous} href={previousEditionHref}>
-            <ChromeText k="home.track.a1Previous" />
+            <ChromeText k={a1PreviousEdition.titleKey} />
           </a>
         )}
       </header>

@@ -3,6 +3,7 @@ import CourseLayout from '../layouts/CourseLayout.astro';
 import ChromeText from '../components/chrome/ChromeText.astro';
 import type { ChromeKey } from '../lib/i18n/chrome';
 import curriculumStats from '../data/curriculum-stats.json';
+import { a1PrimaryEdition, a1SecondaryEdition } from '../lib/a1-entry';
 
 type TrackStats = Record<string, { modules?: number } | number>;
 
@@ -31,8 +32,8 @@ const LANDING_TRACKS = new Set([
 const trackHref = (id: string) => (LANDING_TRACKS.has(id) ? `/${id}/` : undefined);
 
 const coreTracks: TrackRow[] = ([
-  { id: 'a1', label: 'A1', titleKey: 'home.track.a1New', statusKey: 'status.preview' },
-  { id: 'a1-v1', label: 'A1', titleKey: 'home.track.a1Previous', statusKey: 'status.released' },
+  { ...a1PrimaryEdition, label: 'A1' },
+  { ...a1SecondaryEdition, label: 'A1' },
   { id: 'a2', label: 'A2', titleKey: 'home.track.preIntermediate', statusKey: 'status.released' },
   { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.released' },
   { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.released' },
@@ -62,7 +63,7 @@ const seminarTracks: TrackRow[] = ([
 
 <CourseLayout
   title="Learn Ukrainian"
-  description="An English learner interface for new A1 lessons, the previous A1 edition, and released A2, B1, and B2 Ukrainian courses, live C1 and C2 course maps, plus the Word Atlas reference tool."
+  description="Start the available A1 Ukrainian course, continue through A2, B1, and B2, and explore C1 and C2 course maps and Word Atlas."
   eyebrowKey="home.eyebrow"
   subtitle="A practical English interface for learning Ukrainian."
   currentPath="/"
@@ -76,8 +77,8 @@ const seminarTracks: TrackRow[] = ([
         <ChromeText k="home.introBody" />
       </p>
       <div class="home-actions">
-        <a class="home-primary" href="/a1/"><ChromeText k="home.actionStartA1" /></a>
-        <a class="home-secondary" href="/a1-v1/"><ChromeText k="home.actionOpenA1Previous" /></a>
+        <a class="home-primary" href={a1PrimaryEdition.href}><ChromeText k="home.actionStartA1" /></a>
+        <a class="home-secondary" href={a1SecondaryEdition.href}><ChromeText k={a1SecondaryEdition.actionKey} /></a>
         <a class="home-secondary" href="/b2/"><ChromeText k="home.actionOpenB2" /></a>
       </div>
     </div>
@@ -96,16 +97,13 @@ const seminarTracks: TrackRow[] = ([
   <section>
     <h2><ChromeText k="home.availableNow" /></h2>
     <div class="lu-card-grid">
-      <a class="lu-card" href="/a1/">
-        <span class="track-badge a1">A1</span>
-        <h3><ChromeText k="home.track.a1New" /></h3>
-        <p><ChromeText k="home.cardA1Desc" /></p>
-      </a>
-      <a class="lu-card" href="/a1-v1/">
-        <span class="track-badge a1">A1</span>
-        <h3><ChromeText k="home.track.a1Previous" /></h3>
-        <p><ChromeText k="home.cardA1PreviousDesc" /></p>
-      </a>
+      {[a1PrimaryEdition, a1SecondaryEdition].map((edition) => (
+        <a class="lu-card" href={edition.href}>
+          <span class="track-badge a1">A1</span>
+          <h3><ChromeText k={edition.titleKey} /></h3>
+          <p><ChromeText k={edition.descriptionKey} /></p>
+        </a>
+      ))}
       <a class="lu-card" href="/a2/">
         <span class="track-badge a2">A2</span>
         <h3><ChromeText k="home.track.preIntermediate" /></h3>

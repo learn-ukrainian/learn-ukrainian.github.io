@@ -10,6 +10,7 @@
 import CourseLayout from '../layouts/CourseLayout.astro';
 import ChromeText from '../components/chrome/ChromeText.astro';
 import WordAtlasClientShell from '../lexicon/WordAtlasClientShell';
+import { a1PrimaryHref } from '../lib/a1-entry';
 
 const siteUrl = Astro.site ? new URL(Astro.site).origin : 'https://learn-ukrainian.github.io';
 const ogTitle = 'Learn Ukrainian';
@@ -86,7 +87,7 @@ const atlasAssetBase = `${baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '')}/atl
     <h2><ChromeText k="state.notFoundTitle" /></h2>
     <p><ChromeText k="state.notFoundBody" /></p>
     <div class="state-actions">
-      <a href="/a1/"><ChromeText k="nav.a1" /></a>
+      <a href={a1PrimaryHref}><ChromeText k="nav.a1" /></a>
       <a href="/b1/"><ChromeText k="nav.b1" /></a>
       <a href="/search/"><ChromeText k="nav.search" /></a>
       <a href="/lexicon/"><ChromeText k="nav.atlas" /></a>
