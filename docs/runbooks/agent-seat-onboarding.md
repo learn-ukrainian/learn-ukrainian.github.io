@@ -283,9 +283,9 @@ before dispatching:
    the same holds for the `gemini-3.8-flash-high` fallback unless the dispatch is
    classified Ukrainian authoring or review.
 3. `gpt-6.1-sol` at `high` issues that envelope in a read-only dispatch. Put the
-   worker's `--print-advisory-binding` digest and envelope request in the brief;
-   the legacy advisor-role/binding switches for envelopes are retired (the current
-   `--advisory-role` covers only catalog `advisory_roles` decisions). The envelope
+   worker's `--print-advisory-binding` digest and envelope request in the brief,
+   and dispatch with `--advisory-role bounded_advisory_envelope --advisory-binding
+   <digest>` (a catalog `advisory_roles` decision). The envelope
    holds the task contract, exact owned paths, maximum changed-file and
    non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence, and
    escalation triggers. In this role Sol advises; it is not the bounded task's

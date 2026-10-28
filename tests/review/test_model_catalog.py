@@ -1048,6 +1048,11 @@ MUSE_REVIEW_CANDIDATE = {
 def _pop_budget_extension_role(catalog):
     """Remove the review budget extension role (cto-7eba-adv-extension2) and return what it added."""
     role = "review_budget_extension"
+    # The envelope role is the one advisory_roles entry of the bounded route; it is checked against the
+    # route's advisor, not frozen here, and the extension's frozen receipt stays what it was.
+    envelope = catalog["advisory_roles"].pop("bounded_advisory_envelope")
+    advisor = catalog["execution_routing"]["sol_advised_bounded"]["advisor"]
+    assert (envelope["effort"], envelope["output_fields"]) == (advisor["effort"], advisor["output_fields"])
     consult = catalog["review_scheduler"]["activity_roles"]["consult"]
     consult.remove(role)
     holders = sorted(model_id for model_id, model in catalog["models"].items() if role in model["roles"])

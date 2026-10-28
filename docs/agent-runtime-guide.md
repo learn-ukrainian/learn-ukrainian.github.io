@@ -1078,13 +1078,14 @@ No additional worker exports beyond `scripts/dispatcher/environment.py` are
 promised. The provider adapter layer still serves its other callers.
 
 Bounded workers retain the v2 driver-brief and `--advisory-task` admission paths.
-Use `--print-advisory-binding` with the exact worker request. The legacy
-advisor-role switches for bounded envelopes are absent; include the requested
-envelope and binding in the read-only advisor's brief. `--advisory-role` and
-`--advisory-binding` serve only the catalog's `advisory_roles` decisions (today
-`review_budget_extension`, read by the verdict recorder): the read-only task records
-the role, route and bound digest, and its worker seals the result at finish
-(`bounded_advisory.seal_advisor_result`).
+Use `--print-advisory-binding` with the exact worker request, and run the
+read-only advisor with `--advisory-role bounded_advisory_envelope
+--advisory-binding <digest>`. `--advisory-role` and `--advisory-binding` serve the
+catalog's `advisory_roles` decisions (`bounded_advisory_envelope`, read by
+`--advisory-task` admission, and `review_budget_extension`, read by the verdict
+recorder): the read-only task records the role, route and bound digest, and its
+worker seals the result at finish (`bounded_advisory.seal_advisor_result`). The
+fence and output fields come from the role's catalog entry.
 
 ### Review attempts: server and templates must match (#9163)
 

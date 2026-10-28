@@ -15,8 +15,8 @@ this module authenticates who wrote a record or result.
 
 An envelope references the advisor's task, never a free file. The advisor task must have run with ``--advisory-role bounded_advisory_envelope``
 on the advisor model, read-only, and finished ``done``. Its canonical result
-must hold exactly one fenced ``advisory-envelope`` JSON object with every
-catalog ``output_fields`` key, typed and meaningful, plus the
+must hold exactly one JSON object fenced as the catalog ``advisory_roles`` entry
+for that role says (``fence``), with every catalog ``output_fields`` key, typed and meaningful, plus the
 ``dispatch_args_sha256`` binding digest of the worker dispatch that the advisor
 dispatch recorded as ``advisory_binding_sha256``.
 
@@ -65,14 +65,12 @@ from typing import Any
 
 from scripts.orchestration.worktree_paths import automatic_worktree_path
 from scripts.review.model_catalog import (
-    ADVISOR_ROUTE,
     BoundedExecutionPolicy,
     bounded_execution_policy,
     canonical_model_id,
     driver_brief_models,
 )
 
-ENVELOPE_FENCE = "advisory-envelope"
 BINDING_FIELD = "dispatch_args_sha256"
 
 
@@ -81,7 +79,6 @@ def _fence_re(fence: str) -> re.Pattern[str]:
     return re.compile(r"^```" + re.escape(fence) + r"[ \t]*\n(.*?)\n```[ \t]*$", re.MULTILINE | re.DOTALL)
 
 
-_FENCE_RE = _fence_re(ENVELOPE_FENCE)
 _SHA256_RE = re.compile(r"[0-9a-f]{64}")
 _GLOB_CHARS = frozenset("*?[")
 # Repo roots a bounded worker never owns: git metadata, dispatch worktrees,
@@ -239,7 +236,7 @@ def envelope_sha256(envelope: Mapping[str, Any]) -> str:
     return canonical_sha256(envelope)
 
 
-def _result_envelope_sha256(result_text: str, fence: str = ENVELOPE_FENCE) -> str | None:
+def _result_envelope_sha256(result_text: str, fence: str) -> str | None:
     """The canonical digest of the result's one fenced ``fence`` object; None when there is not exactly one."""
     blocks = _fence_re(fence).findall(result_text)
     if len(blocks) != 1:
@@ -251,9 +248,7 @@ def _result_envelope_sha256(result_text: str, fence: str = ENVELOPE_FENCE) -> st
     return envelope_sha256(envelope) if isinstance(envelope, dict) else None
 
 
-def seal_advisor_result(
-    response: str, *, model: str | None, run_nonce: str | None, fence: str = ENVELOPE_FENCE
-) -> dict[str, Any]:
+def seal_advisor_result(response: str, *, model: str | None, run_nonce: str | None, fence: str) -> dict[str, Any]:
     """The finish-time consistency checksum an advisor's worker records beside the result it writes.
 
     ``response`` is the text written, UTF-8, to the canonical result; ``model``
@@ -748,9 +743,9 @@ def parse_envelope(
     repo_root: Path,
     policy: BoundedExecutionPolicy | None = None,
 ) -> dict[str, Any]:
-    """The one ``advisory-envelope`` JSON object in ``result_text``, validated field by field."""
+    """The one catalog-fenced JSON object in ``result_text``, validated field by field."""
     policy = policy or bounded_execution_policy()
-    envelope = fenced_object(result_text, ENVELOPE_FENCE)
+    envelope = fenced_object(result_text, policy.advisor_fence)
     expected = {*policy.advisor_output_fields, BINDING_FIELD}
     missing = sorted(expected - set(envelope))
     extra = sorted(set(envelope) - expected)
@@ -905,7 +900,7 @@ def load_envelope(
         advisor_task_id,
         state_path=state_path,
         role=policy.advisor_role,
-        route=ADVISOR_ROUTE,
+        route=policy.advisor_route,
         model_id=policy.advisor_model_id,
         binding_sha256=binding_sha256,
     )
@@ -1295,7 +1290,7 @@ def advisor_prompt_block(binding_sha256: str, policy: BoundedExecutionPolicy | N
     return (
         "\n\n## Advisory envelope output contract\n\n"
         f"You are the {policy.advisor_role} advisor for one bounded-worker dispatch. End your reply with "
-        f"exactly one fenced block whose info string is `{ENVELOPE_FENCE}`, holding one JSON object with "
+        f"exactly one fenced block whose info string is `{policy.advisor_fence}`, holding one JSON object with "
         f"exactly these keys: {fields}, and `{BINDING_FIELD}`.\n"
         "- `task_contract`: non-empty string.\n"
         "- `owned_paths`: non-empty list of repo-relative paths (dir/, dir/**, file or glob) under existing "
