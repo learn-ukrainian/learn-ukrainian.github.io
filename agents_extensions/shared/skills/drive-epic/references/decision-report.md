@@ -47,9 +47,10 @@ Use it for a consequential design decision, when the operator asks for a second 
 
 - **Members:** live eligible routes only: Opus via Claude, Sol via Codex, Grok via Cursor
   (`model-assignment.md`). Muse may add advice but never replaces designated approval
-  (operator-expectations.md item 12). Gemini is out while AGY read-only dispatch is refused
-  (C-2970). Grok is out of Ukrainian-content questions. An unavailable member is reported,
-  never substituted, and the panel is then not called complete.
+  (operator-expectations.md item 12). AGY read-only dispatch runs inside the dispatcher's
+  bubblewrap boundary (C-3027) and is refused only on a host that cannot start it. Grok is
+  out of Ukrainian-content questions. An unavailable member is reported, never substituted,
+  and the panel is then not called complete.
 - **Read-only** comes from the harness (`dispatch.py --mode read-only`), not from prompt wording.
 - **Freeze before dispatch:** the question, context, roles and stop condition. Panel rounds
   count against the same `review-loop` budget as any review

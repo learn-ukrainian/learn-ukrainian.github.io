@@ -1,3 +1,4 @@
+import { setPracticeMeaningModesForTesting } from '@site/src/lib/lexicon/srs';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { State } from 'ts-fsrs';
 import { renderToString } from 'react-dom/server';
@@ -1059,6 +1060,7 @@ function antonymPolaritySynonymDeck(): PracticeDeckData {
 }
 
 beforeEach(() => {
+  setPracticeMeaningModesForTesting(true);
   localStorage.clear();
   loadState(localStorage, NOW);
   vi.restoreAllMocks();
@@ -4152,27 +4154,30 @@ describe('LexiconPractice', () => {
     );
   });
 
-  test("withdrawn synonym direct entry returns to the mode home without an empty session", async () => {
+  test.each(["synonym", "flashcards", "matching", "choice", "antonym", "homonym"] as const)("withdrawn %s direct entry returns to the mode home without an empty session", async (mode) => {
+    setPracticeMeaningModesForTesting(false);
     document.documentElement.dataset.chromeLocale = "en";
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
-    const deck = sampleDeckWithOnlyMode("knyha", "synonym");
-    render(<LexiconPractice initialDeck={deck} autoStart initialMode="synonym" />);
+    const deck = sampleDeckWithOnlyMode("knyha", mode);
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode={mode} />);
     await waitFor(() => {
       expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
     });
     expect(screen.queryByTestId('practice-synonym')).not.toBeInTheDocument();
     expect(screen.queryByTestId('practice-session-progress')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('practice-mode-count-synonym')).not.toBeInTheDocument();
+    expect(screen.queryByTestId(`practice-mode-count-${mode}`)).not.toBeInTheDocument();
   });
 
   test('Mixed strips withdrawn cards from a stale supplied deck (#8714)', async () => {
-    const oldDeck = synonymDeck();
-    oldDeck.index[0]!.modes.push('flashcards');
+    setPracticeMeaningModesForTesting(false);
+    const oldDeck = stressDeck();
+    oldDeck.index[0]!.modes.push('synonym', 'flashcards', 'matching', 'choice', 'antonym', 'homonym');
     const clean = withoutDisabledPracticeModes(oldDeck);
     expect(clean.synonym).toEqual([]);
-    expect(clean.index[0]!.modes).toEqual(['flashcards']);
+    expect(clean.index[0]!.modes).toEqual(['stress']);
+    expect(clean.lexemes.every((entry) => entry.gloss === '' && entry.glossClean === '' && entry.meaningMcEligible === false)).toBe(true);
     expect(selectNextPracticeItem(oldDeck, { modeFilter: 'synonym', now: NOW })).toBeNull();
-    expect(selectNextPracticeItem(oldDeck, { modeFilter: 'mixed', now: NOW })?.mode).toBe('flashcards');
+    expect(selectNextPracticeItem(oldDeck, { modeFilter: 'mixed', now: NOW })?.mode).toBe('stress');
 
     render(<LexiconPractice initialDeck={oldDeck} autoStart initialMode="mixed" />);
     expect(await screen.findByTestId('practice-session-progress')).toBeInTheDocument();
@@ -4180,15 +4185,16 @@ describe('LexiconPractice', () => {
     expect(screen.queryByTestId('practice-mode-count-synonym')).not.toBeInTheDocument();
   });
 
-  test('withdrawn direct and Mixed snapshots are not resumable (#8714)', () => {
+  test.each(['synonym', 'flashcards', 'matching', 'choice', 'antonym', 'homonym'] as const)('withdrawn %s direct and Mixed snapshots are not resumable', (mode) => {
+    setPracticeMeaningModesForTesting(false);
     const snapshot = {
       sessionSeed: 1, history: [], budget: 20, completed: 0,
-      modeFilter: 'synonym', level: 'A1', deckId: 'all', dateSeed: dateSeed(NOW),
+      modeFilter: mode, level: 'A1', deckId: 'all', dateSeed: dateSeed(NOW),
       startedAt: NOW.getTime(), plannedTotal: 20,
     } as Parameters<typeof isPracticeSessionResumable>[0];
     expect(isPracticeSessionResumable(snapshot, NOW)).toBe(false);
-    expect(isPracticeSessionResumable({ ...snapshot!, modeFilter: 'mixed', history: [{ mode: 'synonym' }] } as typeof snapshot, NOW)).toBe(false);
-    expect(isPracticeSessionResumable({ ...snapshot!, modeFilter: 'mixed', unresolvedCardKeys: ['old::synonym'] }, NOW)).toBe(false);
+    expect(isPracticeSessionResumable({ ...snapshot!, modeFilter: 'mixed', history: [{ mode }] } as typeof snapshot, NOW)).toBe(false);
+    expect(isPracticeSessionResumable({ ...snapshot!, modeFilter: 'mixed', unresolvedCardKeys: [`old::${mode}`] }, NOW)).toBe(false);
   });
 
   test("cloze placeholder is pure EN when chrome locale is en", async () => {
@@ -8046,3 +8052,5 @@ describe('LexiconPractice', () => {
     });
   });
 });
+
+afterEach(() => setPracticeMeaningModesForTesting(false));

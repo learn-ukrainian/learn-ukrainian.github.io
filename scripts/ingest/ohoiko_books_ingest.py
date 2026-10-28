@@ -45,6 +45,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from scripts.lexicon.ohoiko_quality_enrichment import normalize_chunk_lines
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
@@ -184,6 +186,7 @@ def parse_book(txt_path: Path, max_entry_number: int | None = None) -> list[Entr
 
     entries: list[Entry] = []
     current: Entry | None = None
+    header_line = ""
     previous_was_footer = False
 
     with txt_path.open(encoding="utf-8") as f:
@@ -203,6 +206,16 @@ def parse_book(txt_path: Path, max_entry_number: int | None = None) -> list[Entr
             # Bare page-number lines (rare; mostly absorbed by the footer
             # rule above, but a few survive in odd page-break contexts).
             if _BARE_PAGE_NUMBER_RE.match(line) and current is None:
+                continue
+
+            # A detached acute continues an unfinished header, not its body.
+            # Keep page furniture and examples on their original physical lines.
+            if current is not None and not current.english and not current.body_lines and line.strip().startswith("\u0301"):
+                header_line = normalize_chunk_lines(f"{header_line}\n{line}")[0]
+                match = _ENTRY_START_RE.match(header_line)
+                assert match is not None  # the entry-number prefix is unchanged
+                current.headword = match.group("headword").strip()
+                current.english = (match.group("english") or "").strip()
                 continue
 
             m = _ENTRY_START_RE.match(line)
@@ -252,6 +265,7 @@ def parse_book(txt_path: Path, max_entry_number: int | None = None) -> list[Entr
                     english=english,
                     body_lines=[],
                 )
+                header_line = line
                 continue
 
             # Body line for the in-flight entry.

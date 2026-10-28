@@ -83,6 +83,10 @@ def build_parser() -> argparse.ArgumentParser:
         ("risk", None, "Review risk label (default: none)"),
         ("review-mode", None, "Review mode label (default: none)"),
         ("advisory-task", None, "Finished advisor task admitting this bounded worker, e.g. advice-42 (default: none)"),
+        ("advisory-role", None, "Catalog advisory_roles decision this read-only task records, e.g. "
+         "review_budget_extension; needs --advisory-binding (default: none)"),
+        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget extension request digest "
+         "(default: none)"),
         ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check scripts' (default: none)"),
     ):
         dispatch.add_argument(f"--{flag}", default=default, required=flag in {"agent", "model"}, help=help_text)
@@ -122,7 +126,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     dispatch.add_argument(
         "--sparse-include", action="append", default=[], metavar="DIR",
-        help="Keep a default-excluded tree; repeatable (default: none). Example: --sparse-include curriculum. "
+        help="Keep a default-excluded tree; repeatable (default: inferred from owned paths). Example: --sparse-include curriculum. "
         "Excluded: " + ", ".join(sorted(git.SPARSE_EXCLUDE_DEFAULT)),
     )
     dispatch.add_argument(
@@ -180,7 +184,7 @@ def _dispatch(args) -> int:
             raise ValueError("review_attempt_runtime_unavailable: v2 review isolation is not wired")
     if args.require_review_verdict and args.mode != "read-only":
         raise ValueError("--require-review-verdict requires --mode read-only")
-    git.sparse_excludes(args.sparse_include)
+    excluded = git.sparse_excludes(args.sparse_include, [*args.owned_path, *args.research_owned_path])
     if (args.prompt is None) == (args.prompt_file is None):
         raise ValueError("provide exactly one of --prompt or --prompt-file")
     source = args.prompt if args.prompt is not None else args.prompt_file
@@ -236,6 +240,7 @@ def _dispatch(args) -> int:
         raise host_admission.Refused(f"❌ {exc}", 2) from None
     host_admission.check_credit(agent, args.model)
     advisory_fields = checks.check_bounded_advisory(args, args.model, repo, prompt)
+    advisory_fields.update(checks.check_advisory_role(args, agent, args.model))
     force_reason = args.force_admission
     if force_reason is not None:
         force_reason = str(force_reason).strip()
@@ -315,7 +320,7 @@ def _dispatch(args) -> int:
             store.check_review_attempt(binding, claim=True)
         if not args.cwd:
             git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout,
-                                sparse_include=args.sparse_include, **exact_start)
+                                sparse_include=git.SPARSE_EXCLUDE_DEFAULT - set(excluded), **exact_start)
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
         if publish_remote is not None:
             record["worktree_remote_url"] = publish_remote

@@ -52,11 +52,6 @@ _ALLOWLIST: tuple[tuple[str, str, int], ...] = (
         'connection = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True)',
         1,
     ),
-    (
-        "scripts/orchestration/slot_routing.py",
-        'conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)',
-        1,
-    ),
 )
 
 _WRITE_OWNERSHIP = re.compile(r"write[-_]ownership")

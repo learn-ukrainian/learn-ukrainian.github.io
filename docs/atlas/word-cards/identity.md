@@ -127,6 +127,15 @@ Inputs per candidate: VESUM entry (lemma, pos, tags, stripped form set, comment 
 
 1. **Candidate set** = VESUM entries with `lemma = normalized_query` (case-sensitive: `Замок` ≠ `замок`) × ULIF checked entries with that `normalized_query`, filtered by **POS compatibility** (`noun` ↔ `іменник…`/`множинний іменник`/`прізвище`/`власна назва`; `verb` ↔ `дієслово …`; `adj` ↔ `прикметник…`/`дієприкметник`; `adv` ↔ `прислівник`; `advp` ↔ `дієприслівник`; proper names only with proper names).
 2. **Paradigm signature**: the set of (case/number/person, stripped form) from ULIF rows compared with VESUM's form set for the same slots. `equal`, `subset` (ULIF gives fewer slots), `differs` (any slot with a different form: `замка` vs `замку`).
+   A shared slot matches only when its whole form sets are equal; extra variants remain differences.
+   ULIF related verb forms retain their `adjp`, `advp`, `impers` and voice markers in separate
+   displayed keys, such as `past.adjp.pasv`. These separate forms do not enter the main verb's
+   inflection comparison. No related lexeme is allocated or merged.
+   On VESUM personal pronouns (`pron:pers`), person is a lexical feature rather than an
+   inflectional slot. A case-only ULIF pronoun table receives an implicit number only when
+   every VESUM case slot in that personal-pronoun entry gives the same number. Neither
+   source loses any form, including preposition-bound or marked variants. These slot
+   repairs leave genuine form-set disagreements unresolved under the same confidence rules.
 3. **Stress**: compare the ULIF stressed lemma with VESUM's comment stress when present (`за́мок (будівля)`); when VESUM has no stress (most entries: only 1,090 comments carry one), stress can only separate ULIF candidates from each other.
 4. **Aspect** for verbs: VESUM `perf`/`imperf` must equal ULIF `доконаного`/`недоконаного`; biaspectual (`недоконаного і доконаного`) matches either.
 5. **Decision** (`identity.method`, `identity.confidence`):

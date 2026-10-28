@@ -1,3 +1,4 @@
+import { setPracticeMeaningModesForTesting } from '@site/src/lib/lexicon/srs';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -67,6 +68,7 @@ describe('Mobile Mixed Mode Transition (Issue #8382)', () => {
   const originalMatchMedia = window.matchMedia;
 
   beforeEach(() => {
+    setPracticeMeaningModesForTesting(true);
     localStorage.clear();
     delete document.documentElement.dataset.chromeLocale;
     document.documentElement.lang = 'en';
@@ -83,6 +85,7 @@ describe('Mobile Mixed Mode Transition (Issue #8382)', () => {
   });
 
   afterEach(() => {
+    setPracticeMeaningModesForTesting(false);
     delete document.documentElement.dataset.chromeLocale;
     Object.defineProperty(window, 'innerWidth', {
       writable: true,

@@ -674,7 +674,7 @@ def test_other_consumers_of_sources_db_get_an_unobserved_reader_when_the_factory
     monkeypatch.setattr(sdb, "_connection_factory", None)
 
     readonly = sdb._open_conn(db, read_only=True)
-    writable = sdb._open_conn(db)
+    writable = sdb._open_conn(db.parent / "plain.db")
     try:
         assert isinstance(readonly, sqlite3.Connection) and type(writable) is sqlite3.Connection
         assert not isinstance(readonly, server._ObservedConnection)
@@ -683,6 +683,8 @@ def test_other_consumers_of_sources_db_get_an_unobserved_reader_when_the_factory
     finally:
         readonly.close()
         writable.close()
+    with pytest.raises(PermissionError, match=r"sources\.db"):
+        sdb._open_conn(db)
 
 
 def test_sources_db_default_factory_is_unset_without_the_server():

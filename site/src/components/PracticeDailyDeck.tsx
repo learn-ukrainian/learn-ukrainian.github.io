@@ -183,7 +183,7 @@ export default function PracticeDailyDeck({
             <div className="flashcard-back">
               {currentItem ? (
                 <>
-                  <span className="flashcard-word">{displayGloss ?? '—'}</span>
+                  <span className="flashcard-word">{displayGloss || <ChromeText k="practice.meaningUnavailable" />}</span>
                   {displayPos && (
                     <span className="flashcard-subtitle">{displayPos}</span>
                   )}

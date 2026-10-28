@@ -34,7 +34,7 @@ def test_registry_is_closed_lazy_and_reports_only_selected_missing_id(monkeypatc
             return SimpleNamespace(COMPONENT=obj)
         raise ModuleNotFoundError(name=target)
 
-    monkeypatch.setattr(components, "import_module", load)
+    monkeypatch.setattr(components, "import_named_module", load)
     assert components.load_components(["C1"]) == {"C1": obj}
     assert len(calls) == 1
     for unknown in ("C7", "C8", "C6", "socket", "../c1"):

@@ -104,35 +104,35 @@ inline:
     title: Пунктуація і мелодика
     instruction: Обери розділовий знак, який відповідає реченню.
     items:
-      - sentence: Це ка́ва_
+      - sentence: '(Statement, falling intonation) Це ка́ва___'
         answer: .
         options:
           - .
           - '?'
           - '!'
         explanation: Твердження має крапку й спадну мелодику.
-      - sentence: Це метро́_
+      - sentence: '(Yes/no question, rising intonation) Це метро́___'
         answer: '?'
         options:
           - '?'
           - .
           - '!'
         explanation: Так/ні питання має знак питання й висхідну мелодику.
-      - sentence: Де апте́ка_
+      - sentence: '(Where-question, falling intonation) Де апте́ка___'
         answer: '?'
         options:
           - '?'
           - .
           - '!'
         explanation: Де робить це питанням, але мелодика спадна.
-      - sentence: Як га́рно_
+      - sentence: '(Exclamation, emphatic falling intonation) Як га́рно___'
         answer: '!'
         options:
           - '!'
           - '?'
           - .
         explanation: Це оклик.
-      - sentence: Так, це вода́_
+      - sentence: '(Statement, falling intonation) Так, це вода́___'
         answer: .
         options:
           - .

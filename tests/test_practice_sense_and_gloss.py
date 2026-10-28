@@ -394,11 +394,14 @@ def test_ukrainian_gloss_clean_is_the_first_sense_not_a_stub(
 
     assert generate_practice_deck._gloss_clean(gloss) == published_stub
     assert lexeme is not None
-    assert lexeme["glossClean"] == expected
+    assert generate_practice_deck._practice_gloss_clean(
+        _entry(lemma, "noun", gloss, "B1"), gloss, SELF_FORMS
+    ) == expected
+    assert lexeme["gloss"] == lexeme["glossClean"] == ""
     assert lexeme["meaningMcEligible"] is False
 
 
-def test_self_form_gloss_falls_back_to_the_english_source_gloss() -> None:
+def test_self_form_gloss_does_not_publish_an_english_fallback() -> None:
     entry = _entry(
         "присмерк",
         "noun",
@@ -410,10 +413,10 @@ def test_self_form_gloss_falls_back_to_the_english_source_gloss() -> None:
     lexeme = _build_lexeme(entry, SELF_FORMS)
 
     assert lexeme is not None
-    assert lexeme["glossClean"] == "twilight"
+    assert lexeme["gloss"] == lexeme["glossClean"] == ""
 
 
-def test_sourced_ukrainian_definition_stands_in_before_english() -> None:
+def test_unreviewed_definition_and_english_fallback_are_both_withheld() -> None:
     entry = _entry(
         "присмерк",
         "noun",
@@ -426,7 +429,7 @@ def test_sourced_ukrainian_definition_stands_in_before_english() -> None:
     lexeme = _build_lexeme(entry, SELF_FORMS)
 
     assert lexeme is not None
-    assert lexeme["glossClean"] == "слабке світло після заходу сонця"
+    assert lexeme["gloss"] == lexeme["glossClean"] == ""
 
 
 def test_english_fallback_rejects_a_bare_grammar_code_and_withholds_a_meaningless_lexeme() -> None:
@@ -472,12 +475,14 @@ def test_deck_text_gate_rejects_mixed_script_words_and_stub_glosses() -> None:
         },
     )
 
-    errors = generate_practice_deck.validate_deck_text(planted, SELF_FORMS)
+    errors = generate_practice_deck.validate_deck_text(planted)
 
     assert errors == [
         "heritage.B2.heritage[0].options[0].label: mixed Cyrillic/Latin word 'cебе'",
-        "lexemes.B2: абонент glossClean is a stub 'Той'",
-        "lexemes.B2: хіть glossClean is a stub 'хі́ті'",
+        "lexemes.B2: абонент contains a withdrawn meaning",
+        "lexemes.B2: хіть contains a withdrawn meaning",
+        "lexemes.B2: книга contains a withdrawn meaning",
+        "lexemes.B2: довкіл contains a withdrawn meaning",
     ]
 
 
@@ -506,7 +511,7 @@ def test_homoglyph_gate_reads_a_stressed_word_as_one_word(apostrophe: str) -> No
     assert generate_practice_deck.validate_deck_text(generate_practice_deck._repair_deck_homoglyphs(planted)) == []
 
 
-def test_shard_build_repairs_homoglyphs_and_fails_on_an_unrepairable_one() -> None:
+def test_withdrawal_removes_gloss_homoglyphs_without_publishing_a_repair() -> None:
     def build(gloss: str) -> dict[str, dict[str, dict[str, Any]]]:
         return build_practice_shards(
             [_entry("книга", "noun", gloss, "A1")],
@@ -520,7 +525,8 @@ def test_shard_build_repairs_homoglyphs_and_fails_on_an_unrepairable_one() -> No
         )
 
     repaired = build("book (у вiзочку)")
-    assert repaired["A1"]["lexemes"]["lexemes"][0]["gloss"] == "book (у візочку)"
+    assert repaired["A1"]["lexemes"]["lexemes"][0]["gloss"] == ""
 
-    with pytest.raises(ValueError, match="mixed Cyrillic/Latin word 'дgом'"):
-        build("book (дgом)")
+    withheld = build("book (дgом)")["A1"]["lexemes"]["lexemes"][0]
+    assert withheld["gloss"] == withheld["glossClean"] == ""
+    assert withheld["meaningMcEligible"] is False

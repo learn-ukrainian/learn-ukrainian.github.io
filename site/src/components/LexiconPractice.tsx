@@ -33,6 +33,7 @@ import {
   isPracticeNewCard,
   isPracticeSessionResumable,
   isPracticeModeEnabled,
+  MEANING_MODES_ENABLED,
   isPracticeStorageEphemeral,
   isWrongCaseAnswer,
   loadState,
@@ -877,6 +878,7 @@ function isPhraseGloss(label: string): boolean {
 }
 
 export function isMeaningMcEligible(entry: PracticeLexeme): boolean {
+  if (!MEANING_MODES_ENABLED) return false;
   const label = glossLabel(entry);
   if (entry.meaningMcEligible === false) return false;
   // Judge the CLEAN first-sense label, not the raw multi-sense gloss: a word like
@@ -1107,7 +1109,7 @@ function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[])
     };
   });
   const deckGuidanceLevel = lexemes.find((entry) => entry.cefr)?.cefr ?? 'unknown';
-  return {
+  return withoutDisabledPracticeModes({
     deckVersion: 'test-fixture',
     level: deckGuidanceLevel,
     index: lexemes.map((entry, index) => ({
@@ -1125,7 +1127,7 @@ function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[])
     classify: [],
     paradigm: [],
     synonym: [],
-  };
+  });
 }
 
 function historyFromSelection(selection: PracticeSelection): SelectionHistoryItem {
@@ -5278,7 +5280,7 @@ function LexiconPracticeIsland({
           // #M-13 immersion: A2+ never gets English raised back up — the miss
           // review shows the UA lemma + an Atlas link always, the gloss only
           // where content glosses are already the level's norm (A1/EN chrome).
-          showMissGloss={showEnglishSubtitles}
+          showMissGloss={MEANING_MODES_ENABLED && showEnglishSubtitles}
           onAnotherSession={() => {
             // A fresh «another session» is never a focus session — startSession(focus=null)
             // clears any weakness so the next session is the full pool for `mode`.

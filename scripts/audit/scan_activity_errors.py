@@ -2,14 +2,13 @@
 """
 Batch scanner for structural activity errors across all tracks.
 
-Finds all activities/*.yaml files and runs the 5 structural correctness
-checks that audit/core.py now enforces, then reports a summary.
+Finds activity YAML in both activities/<slug>.yaml and <slug>/activities.yaml
+layouts, runs the existing structural checks, and reports coverage.
 
 Usage:
-    .venv/bin/python scripts/scan_activity_errors.py
-    .venv/bin/python scripts/scan_activity_errors.py --track b2
-    .venv/bin/python scripts/scan_activity_errors.py --track b2 hist bio
-    .venv/bin/python scripts/scan_activity_errors.py --fix-report   # output fixable errors only
+    .venv/bin/python scripts/audit/scan_activity_errors.py
+    .venv/bin/python scripts/audit/scan_activity_errors.py --track a1-v1
+    .venv/bin/python scripts/audit/scan_activity_errors.py --track b2 hist bio
 """
 
 import argparse
@@ -36,6 +35,7 @@ from yaml_activities import ActivityParser
 # All known tracks (directories under curriculum/l2-uk-en/)
 ALL_TRACKS = [
     "a1",
+    "a1-v1",
     "a2",
     "b1",
     "b2",
@@ -87,18 +87,45 @@ def scan_file(yaml_path: Path) -> list[dict]:
     return violations
 
 
+def _activity_files(track: str) -> list[Path]:
+    track_dir = CURRICULUM_ROOT / track
+    return sorted(set((track_dir / "activities").glob("*.yaml")) | set(track_dir.glob("*/activities.yaml")))
+
+
 def scan_track(track: str) -> list[dict]:
-    """Scan all activities YAML files in a track."""
-    track_dir = CURRICULUM_ROOT / track / "activities"
-    if not track_dir.exists():
-        return []
-    return [v for f in sorted(track_dir.glob("*.yaml")) for v in scan_file(f)]
+    """Scan both published layouts; missing input is not a clean result."""
+    files = _activity_files(track)
+    if not files:
+        return [{
+            "file": str((CURRICULUM_ROOT / track).relative_to(PROJECT_ROOT)),
+            "type": "SCAN_INPUT_ERROR",
+            "severity": "critical",
+            "activity": "",
+            "message": f"No activity YAML files found for track {track!r}",
+            "suggestion": "Check the track name and materialize its curriculum files before scanning",
+        }]
+    return [v for f in files for v in scan_file(f)]
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Scan activity YAML files for structural errors")
-    parser.add_argument("--track", nargs="+", metavar="TRACK", help="Tracks to scan (default: all)")
-    parser.add_argument("--fix-report", action="store_true", help="Show only critical fixable errors")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Scan both published activity YAML layouts for structural errors. "
+            "Use for structural auditing, not source-backed Ukrainian language review."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/audit/scan_activity_errors.py --track a1-v1\n"
+            "  .venv/bin/python scripts/audit/scan_activity_errors.py --track b2 hist bio\n"
+            "Outputs: coverage and violations on stdout; no files written.\n"
+            "Exit codes: 0 no critical structural violations; 1 critical violations or missing input; "
+            "2 invalid arguments.\n"
+            "Related: #8893; scripts/audit/checks/activity_validation.py"
+        ),
+    )
+    parser.add_argument("--track", nargs="+", metavar="TRACK", help="Tracks to scan, e.g. a1-v1 (default: all known tracks)")
+    parser.add_argument("--fix-report", action="store_true", help="Show only critical violations (default: show all)")
     args = parser.parse_args()
 
     tracks = args.track if args.track else ALL_TRACKS
@@ -110,6 +137,9 @@ def main():
         violations = scan_track(track)
         track_counts[track] = len(violations)
         all_violations.extend(violations)
+
+    print(f"Scanned {sum(len(_activity_files(track)) for track in tracks)} activity file(s) across {len(tracks)} track(s).")
+    print("Structural checks do not verify Ukrainian answer ambiguity or option validity.")
 
     if not all_violations:
         print("✅ No structural activity errors found across all scanned tracks.")
@@ -135,6 +165,7 @@ def main():
     # Summary by type
     print("Issues by type:")
     type_labels = {
+        "SCAN_INPUT_ERROR": "no activity files found",
         "SELECT_MIN_CORRECT_MISMATCH": "select min_correct mismatch",
         "QUIZ_CORRECT_COUNT": "quiz wrong correct count",
         "FILL_IN_ANSWER_NOT_IN_OPTIONS": "fill-in answer not in options",
@@ -157,6 +188,8 @@ def main():
     print("Detailed errors:")
     print("-" * 70)
     for v in all_violations:
+        if args.fix_report and v["severity"] != "critical":
+            continue
         sev = "🔴" if v["severity"] == "critical" else "⚠️ "
         print(f"{sev} [{v['type']}]")
         print(f"   File    : {v['file']}")

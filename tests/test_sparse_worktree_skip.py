@@ -57,12 +57,15 @@ class _Item:
         self.markers.append(marker.name)
 
 
+@pytest.mark.parametrize("sparse_enabled", [False, True])
 def test_sparse_skip_is_decided_at_run_time_not_collection(
-    monkeypatch: pytest.MonkeyPatch, pytestconfig: pytest.Config
+    monkeypatch: pytest.MonkeyPatch, pytestconfig: pytest.Config, sparse_enabled: bool
 ) -> None:
     """Collection analyzes no module; only a test that runs is checked (#10498)."""
-    monkeypatch.setenv(sparse_trees.FORCE_MISSING_TREES_ENV, "data/projects")
+    monkeypatch.delenv(sparse_trees.FORCE_MISSING_TREES_ENV, raising=False)
     conftest = _conftest()
+    monkeypatch.setattr(conftest, "_sparse_checkout_enabled", lambda: sparse_enabled)
+    monkeypatch.setattr(conftest, "_REPO_ROOT", conftest._REPO_ROOT / "absent-checkout")
     setup = pytestconfig.pluginmanager.get_plugin("sparse-tree-skip")
     assert isinstance(setup, conftest._SparseTreeSkip)
     reader = _Item("tests/projects/open_model_data/test_mine.py", "test_mine")
@@ -76,7 +79,10 @@ def test_sparse_skip_is_decided_at_run_time_not_collection(
         conftest.pytest_collection_modifyitems(None, [reader, unrelated])
     assert "skip" not in reader.markers + unrelated.markers
 
-    with pytest.raises(pytest.skip.Exception, match="--sparse-include data/projects") as skipped:
-        setup.pytest_runtest_setup(reader)
-    assert skipped.value._use_item_location
+    if sparse_enabled:
+        with pytest.raises(pytest.skip.Exception, match="--sparse-include data/projects") as skipped:
+            setup.pytest_runtest_setup(reader)
+        assert skipped.value._use_item_location
+    else:
+        assert setup.pytest_runtest_setup(reader) is None
     assert setup.pytest_runtest_setup(unrelated) is None

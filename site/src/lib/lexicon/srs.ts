@@ -83,20 +83,32 @@ export type PracticeMode = (typeof PRACTICE_MODES)[number];
 export type PracticeModeFilter = PracticeMode | 'mixed';
 // #8714 ruling A: no synonym card is playable until #8984 admits bound senses.
 export const SYNONYM_MODE_ENABLED = false;
+// #9160 fallback: legacy meanings have no accepted source/sense admission.
+export let MEANING_MODES_ENABLED = false;
+const MEANING_MODES = new Set<PracticeModeFilter>(['flashcards', 'matching', 'choice', 'antonym', 'homonym']);
+
+/** Exercise general scheduling in tests without changing the shipped default. */
+export function setPracticeMeaningModesForTesting(enabled: boolean): void {
+  MEANING_MODES_ENABLED = enabled;
+}
+
 export function isPracticeModeEnabled(mode: PracticeModeFilter): boolean {
-  return mode !== 'synonym' || SYNONYM_MODE_ENABLED;
+  return (mode !== 'synonym' || SYNONYM_MODE_ENABLED) &&
+    (MEANING_MODES_ENABLED || !MEANING_MODES.has(mode));
 }
 
 /** Strip withdrawn inventory from supplied or cached decks before UI accounting. */
 export function withoutDisabledPracticeModes(deck: PracticeDeckData): PracticeDeckData {
-  if (SYNONYM_MODE_ENABLED) return deck;
   return {
     ...deck,
+    lexemes: MEANING_MODES_ENABLED ? deck.lexemes : deck.lexemes.map((entry) => ({
+      ...entry, gloss: '', glossClean: '', meaningMcEligible: false,
+    })),
     index: deck.index.map((item) => ({
       ...item,
       modes: item.modes.filter(isPracticeModeEnabled),
     })),
-    synonym: [],
+    synonym: SYNONYM_MODE_ENABLED ? deck.synonym : [],
   };
 }
 export type RecallDirection = 'uk-to-meaning' | 'meaning-to-uk';
@@ -2721,7 +2733,7 @@ export function combinePracticeShards(
     heritage?: PracticeHeritageShard;
   } = {},
 ): PracticeDeckData {
-  return {
+  const deck: PracticeDeckData = {
     deckVersion: indexShard.deckVersion,
     level: indexShard.level,
     index: indexShard.items,
@@ -2735,6 +2747,7 @@ export function combinePracticeShards(
     heritage: modeShards.heritage?.heritage ?? [],
     fixtureNote: indexShard.fixtureNote,
   };
+  return MEANING_MODES_ENABLED ? deck : withoutDisabledPracticeModes(deck);
 }
 
 /**
@@ -3173,7 +3186,7 @@ export function isPracticeSessionResumable(
   if (!snapshot) return false;
   if (!isPracticeModeEnabled(snapshot.modeFilter) ||
       snapshot.history.some((item) => !isPracticeModeEnabled(item.mode)) ||
-      snapshot.unresolvedCardKeys?.some((key) => key.includes('::synonym'))) return false;
+      snapshot.unresolvedCardKeys?.some((key) => !isPracticeModeEnabled(parseCardKey(key)?.mode ?? 'mixed'))) return false;
   if (
     expected &&
     (snapshot.level !== expected.level ||

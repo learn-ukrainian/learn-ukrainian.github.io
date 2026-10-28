@@ -29,6 +29,8 @@ CASES = ("v_naz", "v_rod", "v_dav", "v_zna", "v_oru", "v_mis", "v_kly")
 GENDERS = ("m", "f", "n")
 TENSES = ("inf", "pres", "futr", "past", "impr")
 PERSONS = ("1", "2", "3")
+RELATED_FORMS = ("adjp", "advp", "impers")
+VOICES = ("actv", "pasv")
 # Canonical slot order: tense, case, number, gender, person.
 SLOT_VOCABULARY = frozenset(CASES + GENDERS + TENSES + PERSONS + ("s", "p"))
 HIDDEN_MARKERS = ("bad", "obsc", "subst")
@@ -295,12 +297,12 @@ class PilotSources:
 
 def ulif_slot(tags: list[str]) -> tuple[str, ...] | None:
     """Slot key of a ULIF form row, or None when the row is not a grammatical slot."""
-    tokens = [t for t in tags if t in SLOT_VOCABULARY]
+    tokens = [t for t in tags if t in SLOT_VOCABULARY or t in RELATED_FORMS or t in VOICES]
     return slot_key(tokens) if tokens else None
 
 
 def slot_key(tokens: list[str]) -> tuple[str, ...]:
-    order = TENSES + CASES + ("s", "p") + GENDERS + PERSONS
+    order = TENSES + CASES + ("s", "p") + GENDERS + PERSONS + RELATED_FORMS + VOICES
     return tuple(sorted(set(tokens), key=order.index))
 
 
@@ -309,7 +311,7 @@ def slot_name(slot: tuple[str, ...]) -> str:
     return ".".join(slot)
 
 
-def ulif_paradigm(forms: list[dict]) -> dict:
+def ulif_paradigm(forms: list[dict], *, pronoun: bool = False) -> dict:
     """Group an entry's ULIF form rows into slots.
 
     Returns {slots: {slot: {forms, stressed, rows, withheld[]}}, uncertain_only: {...}}. A slot is withheld
@@ -347,12 +349,14 @@ def ulif_paradigm(forms: list[dict]) -> dict:
         item["forms"].sort()
         item["uncertain"].sort()
     # A slot with no certain form takes no part in comparison or acceptance; its rows stay as withheld evidence.
-    return {"slots": {slot: item for slot, item in slots.items() if item["forms"]},
+    return {"pronoun": pronoun, "slots": {slot: item for slot, item in slots.items() if item["forms"]},
             "uncertain_only": {slot: item for slot, item in slots.items() if not item["forms"]}}
 
 
 def vesum_slot(tokens: list[str], keep_gender: bool) -> tuple[str, ...] | None:
     chosen = [t for t in tokens if t in SLOT_VOCABULARY]
+    if {"pron", "pers"} <= set(tokens):
+        chosen = [t for t in chosen if t not in PERSONS]
     if not chosen:
         return None
     # VESUM leaves the singular implicit (`noun:inanim:m:v_naz`, `verb:imperf:past:m`).
@@ -398,7 +402,10 @@ def vesum_paradigm(rows: list[dict], keep_gender: bool) -> dict[int, dict]:
             if ACUTE in token and unstressed(token) == row["lemma"]:
                 entry["stress"].add(nfc(token))
     for entry in entries.values():
-        entry["aspect"] = vesum_aspect_of(entry.pop("tags"))
+        tags = entry.pop("tags")
+        entry["personal_pronoun"] = entry["pos"] == "noun" and all(
+            {"pron", "pers"} <= set(tag.split(":")) for tag in tags)
+        entry["aspect"] = vesum_aspect_of(tags)
     return entries
 
 
@@ -408,12 +415,22 @@ def compare_paradigms(ulif: dict | None, vesum: dict) -> dict:
     relation: `equal` (the same slots with equal form sets; two invariable sides are equal), `subset` (every ULIF
     slot equals VESUM's and ULIF gives fewer slots) or `differs` (any ULIF slot whose form set is not VESUM's,
     a slot VESUM does not print included: `замка` vs `замку`). `unknown` when the ULIF forms did not authenticate.
-    `slots` classifies every slot so a mismatch stays visible as evidence.
+    `slots` classifies inflection slots. Related verb forms remain displayed in the
+    source paradigm under their own keys and do not decide the main verb's identity.
     """
     if ulif is None:
         return {"relation": "unknown", "slots": {}}
-    u = {slot: set(item["forms"]) for slot, item in ulif["slots"].items()}
+    u = {slot: set(item["forms"]) for slot, item in ulif["slots"].items()
+         if not set(slot).intersection(RELATED_FORMS)}
     v = {slot: set(item["forms"]) for slot, item in vesum["slots"].items()}
+    # A case-only ULIF pronoun table has an implicit number only when the
+    # corresponding VESUM personal-pronoun entry gives one number throughout.
+    numbers = {token for slot in v for token in slot if token in {"s", "p"}}
+    if (ulif.get("pronoun") and vesum.get("personal_pronoun") and len(numbers) == 1
+            and u and all(len(slot) == 1 and slot[0] in CASES for slot in u)
+            and all(any(case in slot for case in CASES) and numbers.intersection(slot) for slot in v)):
+        number = next(iter(numbers))
+        u = {slot_key([*slot, number]): forms for slot, forms in u.items()}
     detail = {}
     for slot in sorted(set(u) | set(v)):
         if slot not in v:

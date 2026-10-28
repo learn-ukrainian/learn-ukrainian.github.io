@@ -82,12 +82,14 @@ re-labels it as the harness set object; nothing is normalised or repaired.
 The harness submits the complete UTF-8 prompt bytes to dispatch v2. It supplies
 an explicit provider/model, `--mode read-only`, `--language-lane ukrainian`,
 `--pinned-head`, and the task-kind research-family metadata. V2 creates its own
-dispatch worktree from that commit. It does not add rules, research pointers or
-legacy worktree prompt blocks; include required instructions in the input.
+dispatch worktree from that commit. It does not add research pointers or legacy
+worktree prompt blocks, and adds rules only for a read-only Claude seat (the rules
+core as an appended system prompt); include required instructions in the input.
 
-The Gemini seat runs on AGY, which dispatch refuses in read-only mode because
-AGY's read-only mode cannot be locked against edits. That seat runs
-`--mode workspace-write` instead. Its dispatch worktree is disposable, and the
+The Gemini seat runs on AGY. AGY has no write lock of its own, so its read-only
+run is enforced by the dispatcher's bubblewrap boundary. Only on a host that
+cannot start that boundary does dispatch refuse AGY read-only, and the seat then
+runs `--mode workspace-write` instead (`seat_mode`). Its dispatch worktree is disposable, and the
 seat returns scored text, not repository changes. A run whose tracked checkout
 changed is still refused.
 

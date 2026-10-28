@@ -41,7 +41,8 @@ read this full fallback list — same paths, same order as
 Scoped selections — `GET /api/rules?scope=<scope>&format=markdown`, each with
 its own hash. Offline, `scripts/lib/rules_core.py` reads the same files in the
 same order. Launchers and ACP asks inject the core; dispatch v2 requires it
-to exist but does not inject it into prompts:
+to exist but does not inject it into prompts, except that a read-only Claude
+run receives the core as an appended system prompt:
 
     scope=core             agents_extensions/shared/rules/core.md
     scope=content          agents_extensions/shared/rules/core.md
