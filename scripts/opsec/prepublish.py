@@ -218,14 +218,14 @@ def private_tooling() -> Path:
 
 
 CREDENTIAL_TOKEN_PATTERN = re.compile(
-    r"\b("
+    r"("
     r"ghp_[A-Za-z0-9]{20,}|"
     r"github_pat_[A-Za-z0-9_]{20,}|"
     r"gh[ours]_[A-Za-z0-9]{20,}|"
     r"(?:AKIA|ABIA|ACCA|ASIA)[0-9A-Z]{16}"
-    r")\b|"
-    r"(?<![\w-])xox[baprs]-[A-Za-z0-9-]{10,}\b|"
-    r"(?<![\w-])(?:sk-(?:ant-|proj-)[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{20,})\b|"
+    r")|"
+    r"(?<!-)xox[baprs]-[A-Za-z0-9-]{10,}|"
+    r"(?<!-)(?:sk-(?:ant-|proj-)[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{20,})|"
     r"-----BEGIN [A-Z ]*PRIVATE KEY-----"
 )
 
