@@ -277,6 +277,9 @@ repos:
         entry: bash scripts/pre_commit/project_python.sh scripts/audit/lint_agent_trailer.py
         language: system
         pass_filenames: false
+        # Commit messages, not files, are what is checked: an empty or
+        # add-then-revert push changes no files but must still be linted.
+        always_run: true
         stages: [pre-push]
 
       - id: lint-opsec-leaks

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -65,7 +66,7 @@ def _mock_commit(
     subject: str = "feat: some commit",
     sha: str = "a1b2c3d4e5f67890123456789012345678901234",
 ) -> None:
-    monkeypatch.setattr(lat, "_commits_in_range", lambda rev_range, cwd=None: [sha])
+    monkeypatch.setattr(lat, "_commits_in_range", lambda rev_range, cwd=None, **_kwargs: [sha])
     monkeypatch.setattr(
         lat,
         "_commit_meta",
@@ -553,3 +554,47 @@ def test_commit_meta_fields_split_only_on_physical_newlines(monkeypatch: pytest.
         f"Author{separator}Name",
         f"fix: a{separator}b",
     )
+
+
+def _git_repo_with_branches(root: Path) -> tuple[Path, dict[str, str]]:
+    """Repo with origin/main plus a ``good`` (trailered) and a ``bad`` (untrailered) branch."""
+
+    def git(*args: str) -> str:
+        return subprocess.check_output(["git", "-C", str(root), *args], text=True, timeout=30).strip()
+
+    subprocess.check_call(["git", "init", "-q", "-b", "main", str(root)], timeout=30)
+    git("config", "user.email", "dev@example.com")
+    git("config", "user.name", "Dev")
+    git("commit", "-q", "--allow-empty", "-m", "base")
+    git("update-ref", "refs/remotes/origin/main", "HEAD")
+    shas = {"base": git("rev-parse", "HEAD")}
+    git("checkout", "-q", "-b", "good")
+    git("commit", "-q", "--allow-empty", "-m", "good\n\nX-Agent: codex/task-1")
+    shas["good"] = git("rev-parse", "HEAD")
+    git("checkout", "-q", "-b", "bad", shas["base"])
+    git("commit", "-q", "--allow-empty", "-m", "bad: no trailer")
+    shas["bad"] = git("rev-parse", "HEAD")
+    return root, shas
+
+
+@pytest.mark.parametrize(
+    ("checked_out", "pushed", "expected_rc"),
+    [("good", "bad", 1), ("bad", "good", 0)],
+    ids=["untrailered-push-from-clean-head", "valid-push-from-untrailered-head"],
+)
+def test_pre_push_lints_pushed_range_not_checked_out_head(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+    checked_out: str,
+    pushed: str,
+    expected_rc: int,
+) -> None:
+    """The pre-push hook checks what is pushed (PRE_COMMIT_FROM_REF..TO_REF), not the checked-out HEAD."""
+    repo, shas = _git_repo_with_branches(tmp_path)
+    subprocess.check_call(["git", "-C", str(repo), "checkout", "-q", checked_out], timeout=30)
+    monkeypatch.setenv("PRE_COMMIT_FROM_REF", shas["base"])
+    monkeypatch.setenv("PRE_COMMIT_TO_REF", shas[pushed])
+
+    assert main(["--cwd", str(repo)]) == expected_rc
+    assert f"{shas['base']}..{shas[pushed]}" in capsys.readouterr().out
