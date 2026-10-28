@@ -44,6 +44,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import resolve_repo_root
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 _MODULE_ROOT = resolve_repo_root(Path(__file__), 2)
 
@@ -261,6 +262,7 @@ def connect(
         if path is not None
         else sqlite_path(store, repo_root=repo_root)
     )
+    refuse_writable_corpus_database(db_path)
     if read_only:
         if not db_path.is_file():
             raise ControlPlaneStoreUnavailableError(

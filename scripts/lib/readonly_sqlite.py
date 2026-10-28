@@ -8,6 +8,9 @@ from __future__ import annotations
 
 import functools
 import importlib
+import inspect
+import json
+import os
 import sqlite3
 import threading
 from collections.abc import Callable, Iterable
@@ -15,6 +18,7 @@ from contextlib import suppress
 from pathlib import Path
 from types import ModuleType
 from typing import Any, Protocol, Self
+from urllib.parse import parse_qs, unquote, urlsplit
 
 
 class SQLiteConnection(Protocol):
@@ -136,9 +140,12 @@ def open_readonly(
     isolation_level: str | None = "",
     immutable: bool = False,
     factory: type[sqlite3.Connection] | None = None,
+    query_only: bool = True,
 ) -> sqlite3.Connection:
     """Open exactly path, read-only; refuse extensions and other databases.
 
+    ``query_only`` stays on unless the caller must fill a connection-local temp
+    table. ``mode=ro`` still refuses writes to the file itself.
     Optional settings preserve reader concurrency, transaction, and immutable
     side-artifact contracts. The caller owns closing the returned connection.
     URI strings are not filesystem paths and must be decoded by their owner.
@@ -182,7 +189,8 @@ def open_readonly(
     try:
         if hasattr(conn, "enable_load_extension"):
             conn.enable_load_extension(False)
-        conn.execute("PRAGMA query_only=ON")
+        if query_only:
+            conn.execute("PRAGMA query_only=ON")
         # Refuse ATTACH with SQLite's own limit, never a Python callback: a
         # callback runs while SQLite holds the connection mutex with the GIL
         # released, so a connection shared across threads deadlocks against a
@@ -209,3 +217,106 @@ def import_named_module(name: str) -> ModuleType:
     if root in _SQLITE_MODULE_ROOTS or name in _SQLITE_MODULE_ROOTS:
         raise ImportError(f"SQLite modules are not loaded through this boundary: {name}")
     return importlib.import_module(name)
+
+
+_CORPUS_DATABASE_NAMES = frozenset({"sources.db", "vesum.db"})
+_GUARD_PATH = "scripts/lib/readonly_sqlite.py"
+
+
+class CorpusDatabaseWriteRefused(PermissionError):
+    """A generic factory cannot open sources.db or vesum.db for writing."""
+
+
+def corpus_database_name(database: str | os.PathLike[str] | bytes) -> str | None:
+    """Return ``sources.db`` or ``vesum.db`` when ``database`` names one.
+
+    URI query and fragment characters stay out of the filename, so a path that
+    contains ``?`` or ``#`` is still judged by the file it actually names.
+    """
+    raw = os.fsdecode(os.fspath(database))
+    path = unquote(urlsplit(raw).path) if raw.startswith("file:") else raw.split("?", 1)[0].split("#", 1)[0]
+    name = Path(path).name
+    if name in _CORPUS_DATABASE_NAMES:
+        return name
+    return None
+
+
+def _uri_requests_read_only(database: str | os.PathLike[str] | bytes) -> bool:
+    raw = os.fsdecode(os.fspath(database))
+    if raw.startswith("file:"):
+        query = urlsplit(raw).query
+    else:
+        _path, separator, query = raw.partition("?")
+        if not separator:
+            return False
+    return parse_qs(query).get("mode") == ["ro"]
+
+
+@functools.lru_cache(maxsize=1)
+def _declared_writer_paths() -> frozenset[str]:
+    """Writer paths from the allowlist file, without importing the linter."""
+    for parent in Path(__file__).resolve().parents:
+        candidate = parent / "scripts" / "hygiene" / "sqlite_reference_allowlist.json"
+        if not candidate.is_file():
+            continue
+        entries = json.loads(candidate.read_text(encoding="utf-8"))
+        return frozenset(entry["path"] for entry in entries if entry.get("kind") == "writer")
+    return frozenset()
+
+
+def _script_path(filename: str) -> str | None:
+    path = Path(filename).resolve()
+    for parent in path.parents:
+        if (parent / "scripts" / "hygiene" / "sqlite_reference_allowlist.json").is_file():
+            try:
+                return path.relative_to(parent).as_posix()
+            except ValueError:
+                return None
+    return None
+
+
+_OPEN_HELPERS = frozenset({"_open_conn", "_open_writer_conn"})
+
+
+def _external_caller_may_write(factory: str) -> bool:
+    """True when a declared writer, not only the open helper, is on the stack.
+
+    ``factory``'s own migrate and ingest functions may open the corpus. A test
+    or other module that calls the open helper directly may not, unless that
+    module is itself a declared writer.
+    """
+    writers = _declared_writer_paths()
+    factory_functions: list[str] = []
+    for frame in inspect.stack():
+        rel = _script_path(frame.filename)
+        if rel is None or rel == _GUARD_PATH:
+            continue
+        if rel == factory:
+            factory_functions.append(frame.function)
+            continue
+        if any(name not in _OPEN_HELPERS for name in factory_functions):
+            return True
+        return rel in writers
+    return any(name not in _OPEN_HELPERS for name in factory_functions)
+
+
+def refuse_writable_corpus_database(
+    database: str | os.PathLike[str] | bytes,
+    *,
+    uri: bool = False,
+    factory: str | None = None,
+) -> None:
+    """Refuse a writable open of sources.db or vesum.db outside ingest writers.
+
+    ``uri`` with ``mode=ro`` is a read-only open and is allowed. ``factory`` is
+    the repo-relative file of a declared writer seam; callers outside the
+    writer allowlist are refused, and a seam with no factory always is.
+    """
+    name = corpus_database_name(database)
+    if name is None:
+        return
+    if uri and _uri_requests_read_only(database):
+        return
+    if factory is not None and _external_caller_may_write(factory):
+        return
+    raise CorpusDatabaseWriteRefused(f"refusing writable open of corpus database {name}")

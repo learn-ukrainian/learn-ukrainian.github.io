@@ -69,6 +69,18 @@ def test_vacuum_into_is_refused(database, tmp_path):
     assert not target.exists()
 
 
+def test_query_only_off_allows_temp_tables_and_refuses_main_writes(database):
+    before = database.read_bytes()
+    with closing(open_readonly(database, query_only=False)) as conn:
+        assert conn.execute("PRAGMA query_only").fetchone() == (0,)
+        conn.execute("CREATE TEMP TABLE scratch (id INTEGER)")
+        conn.execute("INSERT INTO scratch VALUES (1)")
+        assert conn.execute("SELECT id FROM scratch").fetchall() == [(1,)]
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("INSERT INTO synthetic VALUES (8)")
+    assert database.read_bytes() == before
+
+
 def test_schema_and_journal_pragmas_cannot_write(database):
     before = database.read_bytes()
     with closing(open_readonly(database)) as conn:

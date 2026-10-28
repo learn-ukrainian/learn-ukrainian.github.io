@@ -20,6 +20,7 @@ from scripts.control_plane.storage import (
 )
 from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.hygiene import lint_control_plane_sqlite
+from scripts.lib.readonly_sqlite import CorpusDatabaseWriteRefused
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -63,6 +64,16 @@ def test_sqlite_path_resolution(monkeypatch: pytest.MonkeyPatch, tmp_path: Path)
     custom_override = tmp_path / "custom-ledger.sqlite3"
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(custom_override))
     assert sqlite_path(StoreId.WRITE_OWNERSHIP) == custom_override.resolve()
+
+
+def test_connect_refuses_corpus_database_names(tmp_path: Path) -> None:
+    for name in ("sources.db", "vesum.db"):
+        path = tmp_path / name
+        path.write_bytes(b"")
+        with pytest.raises(CorpusDatabaseWriteRefused, match=name):
+            connect(StoreId.FLEET_COMMS, path=path)
+        with pytest.raises(CorpusDatabaseWriteRefused, match=name):
+            connect(StoreId.FLEET_COMMS, path=path, read_only=True)
 
 
 def test_ownership_ledger_uses_seam_and_begin_immediate(
