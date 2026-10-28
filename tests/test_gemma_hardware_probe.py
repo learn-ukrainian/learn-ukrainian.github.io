@@ -85,6 +85,26 @@ def test_runner_pin_matches_current_file_and_pre_migration_blob() -> None:
     )
     assert len(pre_migration) == probe._FROZEN_RUNNER_BYTES
     assert hashlib.sha256(pre_migration).hexdigest() == probe._FROZEN_RUNNER_SHA256
+    previous_collector = subprocess.check_output(
+        ["git", "cat-file", "blob", "58c41a6d295cb4ed6309aea1335cbac983ddfd3a"], timeout=30,
+    )
+    assert len(previous_collector) == 63112
+    assert hashlib.sha256(previous_collector).hexdigest() == (
+        "7d3e12dfb114ce96f14a195c8d8515964c77e125df4b649b9b31989b2e5c8ab6"
+    )
+    binding = _authorization()["runner"]
+    assert probe._payload_matches_binding(previous_collector, binding)
+    assert probe._payload_matches_binding(current, binding)
+    assert probe._payload_matches_binding(pre_migration, binding)
+    assert not probe._payload_matches_binding(current + b"\n", binding)
+    assert not probe._payload_matches_binding(current, {**binding, "logical_path": "unrelated.py"})
+    for digest in (
+        probe._FROZEN_RUNNER_SHA256,
+        "7d3e12dfb114ce96f14a195c8d8515964c77e125df4b649b9b31989b2e5c8ab6",
+        GEMMA_PROBE_RUNNER_SHA256,
+    ):
+        assert probe._runner_hash_accepted(digest, binding["sha256"])
+    assert not probe._runner_hash_accepted("0" * 64, binding["sha256"])
 
 
 def test_committed_probe_schemas_and_plan_validate() -> None:
@@ -339,7 +359,11 @@ def test_provider_attempt_query_blocks_reused_authorization(monkeypatch: pytest.
         probe.require_no_provider_attempt(hf_cli="/safe/hf", authorization_sha256="a" * 64)
 
 
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"])
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r", ""])
 def test_collector_persists_and_validates_one_job_receipt(
+    separator: str,
+    ending: str,
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -349,7 +373,7 @@ def test_collector_persists_and_validates_one_job_receipt(
     monkeypatch.setenv("JOB_ID", job_id)
     receipt = probe.aborted_worker_receipt(
         authorization_sha256=authorization_sha256,
-        abort_reason="HardwareProbeError: synthetic unit-test abort",
+        abort_reason=f"HardwareProbeError: before{separator}after",
         started_at="2026-08-02T00:00:00Z",
         started_monotonic=probe.time.monotonic(),
     )
@@ -382,7 +406,7 @@ def test_collector_persists_and_validates_one_job_receipt(
                 stderr="",
             ),
             SimpleNamespace(returncode=1, stdout="", stderr="metrics unavailable after exit"),
-            SimpleNamespace(returncode=0, stdout=f"{probe.RECEIPT_MARKER}{probe.canonical_json(receipt)}\n", stderr=""),
+            SimpleNamespace(returncode=0, stdout=f"diagnostic{ending or chr(10)}{probe.RECEIPT_MARKER}{probe.canonical_json(receipt)}{ending}", stderr=""),
         )
     )
     monkeypatch.setattr(probe, "require_hf_auth", lambda _: None)
@@ -394,6 +418,7 @@ def test_collector_persists_and_validates_one_job_receipt(
         authorization_path=authorization_path,
         output_directory=output_directory,
     )
+    assert collected["abort_reason"] == f"HardwareProbeError: before{separator}after"
     assert collected["provider_job"]["job_status"] == "ERROR"
     assert collected["provider_job"]["provider_running_seconds"] == 20
     assert collected["provider_job"]["provider_derived_cost_usd"] == 0.01

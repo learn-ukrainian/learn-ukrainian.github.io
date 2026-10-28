@@ -25,11 +25,16 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.common.jsonl import physical_lines
+
 REQUEST_SCHEMA = "ua_eval_generation_requests.v1"
 STATE_SCHEMA = "ua_eval_model_batch_state.v1"
 CONFIG_SCHEMA = "ua_eval_model_run_config.v1"
 METADATA_SCHEMA = "ua_eval_model_run_metadata.v1"
-RUNNER_VERSION = "ua_eval_provider_neutral_batch_runner.v1.3"
+RUNNER_VERSION = "ua_eval_provider_neutral_batch_runner.v1.4"
 JSON_TRANSPORT_PROTOCOL = "json_object_with_unicode_escaped_quotes.v1"
 TAGGED_TRANSPORT_PROTOCOL = "tagged_text_blocks.v1"
 EXPECTED_REQUEST_COUNT = 677
@@ -165,7 +170,7 @@ def _publish_text(path: Path, text: str) -> None:
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        lines = physical_lines(path.read_text(encoding="utf-8"))
     except OSError as exc:
         raise RunnerError(f"cannot read JSONL: {path}") from exc
     rows: list[dict[str, Any]] = []
@@ -424,7 +429,7 @@ def _validate_provider_payload(
 def _ndjson_assistant_text(raw_text: str) -> str:
     assistant_text: str | None = None
     try:
-        for line in raw_text.splitlines():
+        for line in physical_lines(raw_text):
             if line.strip():
                 found = _assistant_text_from_event(json.loads(line))
                 if found is not None:

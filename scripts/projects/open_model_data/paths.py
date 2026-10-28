@@ -52,8 +52,8 @@ QUARANTINE_INVENTORY_SCHEMA = "open_model_quarantine_inventory_v1"
 STRAY_STORAGE = "stray"
 # Successor of the pre-migration gemma probe runner. Filled after the routed
 # file is frozen for this commit; tests require these to match the file bytes.
-GEMMA_PROBE_RUNNER_BYTES = 63112
-GEMMA_PROBE_RUNNER_SHA256 = "7d3e12dfb114ce96f14a195c8d8515964c77e125df4b649b9b31989b2e5c8ab6"
+GEMMA_PROBE_RUNNER_BYTES = 63380
+GEMMA_PROBE_RUNNER_SHA256 = "8e4f156b7dc6fa7240736e4f969082b929114cba70fe98aa2dbdc4892ea0a3fc"
 
 
 def ensure_component_directories() -> None:
