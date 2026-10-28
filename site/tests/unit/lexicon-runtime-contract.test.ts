@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import {
   PRACTICE_LEVELS,
   buildLexiconApiContract,
@@ -45,6 +45,28 @@ function practiceIndexes(overrides: Partial<Record<PracticeLevel, unknown>> = {}
 }
 
 describe("buildLexiconRuntimeStatus", () => {
+  test("keeps generatedAt stable across build times and honors SOURCE_DATE_EPOCH", () => {
+    const input = { manifestPointer: { generated_at: "2026-09-11T10:12:36+00:00" } };
+    vi.useFakeTimers();
+    vi.stubEnv("SOURCE_DATE_EPOCH", undefined);
+    try {
+      vi.setSystemTime(new Date("2026-10-01T00:00:00Z"));
+      const first = buildLexiconRuntimeStatus(input);
+      vi.setSystemTime(new Date("2026-10-02T00:00:00Z"));
+      const second = buildLexiconRuntimeStatus(input);
+      expect(first.generatedAt).toBe("2026-09-11T10:12:36+00:00");
+      expect(second.generatedAt).toBe(first.generatedAt);
+      expect(buildLexiconApiContract(second).generatedAt).toBe(first.generatedAt);
+
+      vi.stubEnv("SOURCE_DATE_EPOCH", "0");
+      expect(buildLexiconRuntimeStatus(input).generatedAt).toBe("1970-01-01T00:00:00.000Z");
+      vi.stubEnv("SOURCE_DATE_EPOCH", "invalid");
+      expect(() => buildLexiconRuntimeStatus(input)).toThrow();
+    } finally {
+      vi.unstubAllEnvs();
+      vi.useRealTimers();
+    }
+  });
   test("summarizes the static Atlas contract", () => {
     const status = buildLexiconRuntimeStatus({
       generatedAt: "2026-06-30T00:00:00.000Z",
@@ -134,7 +156,7 @@ describe("buildLexiconRuntimeStatus", () => {
       manifest: {
         entries: [{ lemma: "дім", url_slug: "дім" }],
       },
-      manifestPointer: {},
+      manifestPointer: { generated_at: "2026-06-29T00:00:00Z" },
       searchIndex: [{ l: "дім" }, { l: "кава" }],
       searchAliases: [],
       browseMeta: { total: 1, letterCounts: { Д: 1 } },
