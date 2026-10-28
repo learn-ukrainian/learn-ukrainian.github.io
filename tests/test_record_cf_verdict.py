@@ -723,6 +723,17 @@ def test_verification_round_after_a_final_round_approve_is_spent_once(monkeypatc
     with pytest.raises(recorder.RecordError, match="admits 1 review dispatch"):
         recorder.record("review-one", **kwargs)
     shopped.unlink()
+    # A task directory that cannot be listed leaves the dispatch count unknown.
+    walk = os.walk
+
+    def unlistable(top, onerror=None, **kwargs):
+        onerror(PermissionError(13, "Permission denied", str(Path(top, recorder.ARCHIVE_DIR_NAME))))
+        yield from walk(top, **kwargs)
+
+    monkeypatch.setattr(recorder.os, "walk", unlistable)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*dispatch ledger is unreadable"):
+        recorder.record("review-one", **kwargs)
+    monkeypatch.setattr(recorder.os, "walk", walk)
     for expected in ("posted", "existing"):
         assert recorder.record("review-one", **kwargs)["comment"] == expected
     marker = sweep.parse_marker(comments[-1]["body"])
@@ -774,6 +785,10 @@ def test_verification_round_refuses_a_head_that_does_not_descend_from_the_approv
         recorder.require_review_round_within_budget(
             comments, rewritten, "fleet", budget=3, pr=42, descends=partial(recorder._descends_from, repo)
         )
+    # A malformed approval still spends its round: the next head is no ordinary round 3.
+    comments[-1]["body"] = comments[-1]["body"].replace("VERDICT: APPROVED\n", "VERDICT: APPROVE\n")
+    with pytest.raises(recorder.RecordError, match=f"no verification round: final-round head {approved} reads unknown"):
+        recorder.require_review_round_within_budget(comments, rewritten, "fleet", budget=3, pr=42, descends=lambda *_: True)
 
 
 @pytest.mark.parametrize("body", [None, "<!-- cf-verdict v1 unreadable -->"])

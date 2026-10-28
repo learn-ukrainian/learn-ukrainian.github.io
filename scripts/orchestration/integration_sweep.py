@@ -179,7 +179,7 @@ def _comment_ref(comment: Mapping[str, Any], index: int) -> str:
     return str(value) if isinstance(value, int) and not isinstance(value, bool) else f"index-{index}"
 
 
-def _attributed_head(body: str) -> str | None:
+def attributed_marker_head(body: str) -> str | None:
     """The one head a single, closed marker names through one ``sha=`` key, else None."""
     if body.count(MARKER_PREFIX) != 1:
         return None
@@ -344,7 +344,7 @@ def lookup_verdict(
                 if re.search(r"(?im)^\s*VERDICT:", body):
                     legacy = True
                 continue
-            head = _attributed_head(body)
+            head = attributed_marker_head(body)
             if head is None:
                 return unknown(MARKER_UNATTRIBUTABLE, index, comment)
             if head == sha:

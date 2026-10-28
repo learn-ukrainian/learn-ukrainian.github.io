@@ -55,6 +55,7 @@ from scripts.orchestration.integration_sweep import (
     TRUSTED_ASSOCIATIONS,
     GitHubAdapter,
     SweepError,
+    attributed_marker_head,
     lookup_verdict,
     parse_marker,
 )
@@ -1737,9 +1738,14 @@ def review_round_budget(facts: BranchReviewFacts) -> int:
     return DEFAULT_REVIEW_ROUNDS
 
 
-def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[dict[str, Any]]:
-    """Verdict markers ``login`` posted with a trusted association, in publication order."""
-    markers = []
+def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> tuple[list[dict[str, Any]], list[str]]:
+    """Verdict markers ``login`` posted with a trusted association, and every head they review.
+
+    Both are in publication order. A trusted marker the keeper cannot parse
+    still spends a round at the head it names, so malformed evidence never
+    shrinks the count; one that names no single head refuses.
+    """
+    markers, heads = [], []
     for item in comments:
         body = item.get("body") if isinstance(item, Mapping) else None
         if not isinstance(body, str) or MARKER_PREFIX not in body:
@@ -1749,7 +1755,12 @@ def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[
         marker = parse_marker(body)
         if marker is not None:
             markers.append(marker)
-    return markers
+        head = marker["sha"] if marker is not None else attributed_marker_head(body)
+        if head is None:
+            raise RecordError("REVIEW_BUDGET_EXHAUSTED: a trusted verdict marker names no single head; rounds unknown")
+        if head not in heads:
+            heads.append(head)
+    return markers, heads
 
 
 @dataclass(frozen=True)
@@ -1786,8 +1797,7 @@ def require_review_round_within_budget(
     marker names that head; once recorded, no other head opens a round.
     """
     tier: Literal["default", "elevated"] = "elevated" if budget == ELEVATED_REVIEW_ROUNDS else "default"
-    markers = _trusted_markers(comments, login)
-    heads = list(dict.fromkeys(marker["sha"] for marker in markers))
+    markers, heads = _trusted_markers(comments, login)
     spent = next((marker for marker in markers if marker.get("verification_of")), None)
     if spent is not None:
         if sha != spent["sha"]:
@@ -1896,14 +1906,23 @@ def require_one_verification_dispatch(
     ):
         raise RecordError(f"{exhausted} needs a bound brief that names the approved head {anchor}")
     dispatches = {task_id, *recorded_tasks}
+
+    def unreadable(exc: OSError) -> None:
+        raise exc
+
     try:
-        for path in sorted(task_root.rglob("*.json")):
-            text = path.read_text(encoding="utf-8")
-            if sha in text and _review_dispatch_at(json.loads(text), branch, sha):
-                relative = path.relative_to(task_root).with_suffix("")
-                if relative.parts[0] == ARCHIVE_DIR_NAME:
-                    relative = relative.relative_to(ARCHIVE_DIR_NAME)
-                dispatches.add(relative.as_posix())
+        # ``os.walk`` reports a directory it cannot list; ``Path.rglob`` skips it.
+        for directory, _subdirectories, names in os.walk(task_root, onerror=unreadable):
+            for name in sorted(names):
+                if not name.endswith(".json"):
+                    continue
+                path = Path(directory, name)
+                text = path.read_text(encoding="utf-8")
+                if sha in text and _review_dispatch_at(json.loads(text), branch, sha):
+                    relative = path.relative_to(task_root).with_suffix("")
+                    if relative.parts[0] == ARCHIVE_DIR_NAME:
+                        relative = relative.relative_to(ARCHIVE_DIR_NAME)
+                    dispatches.add(relative.as_posix())
     except (OSError, UnicodeError, ValueError):
         raise RecordError(f"{exhausted} dispatch ledger is unreadable; its dispatch count is unknown") from None
     if len(dispatches) > seats:
@@ -2179,7 +2198,7 @@ def record(
             pr=number,
             descends=partial(_descends_from, review_root),
         )
-        recorded = {marker["task"] for marker in _trusted_markers(comments, login) if marker["sha"] == sha}
+        recorded = {marker["task"] for marker in _trusted_markers(comments, login)[0] if marker["sha"] == sha}
         if admission.verification_of is not None and task_id not in recorded:
             require_one_verification_dispatch(
                 task,
