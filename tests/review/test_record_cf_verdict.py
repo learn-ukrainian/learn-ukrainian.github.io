@@ -64,7 +64,8 @@ def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail
     body = comments[0]["body"]
     assert body == (
         f"### Cross-family review\nhead: {SHA}\nReviewer family: openai\nVERDICT: {verdict}\n"
-        "Reviewer model: gpt-6.1-sol\nTask id: review-one\n\nWithheld findings: unknown\n"
+        "Reviewer model: gpt-6.1-sol\nReview score: absent\nAuthored by: gemini-3.8-flash-high\n"
+        "Task id: review-one\n\nWithheld findings: unknown\n"
         "Findings are held privately.\n\n"
         f"<!-- cf-verdict v1 sha={SHA} task=review-one started=2026-09-23T12:00:00.000001+00:00 "
         f"verdict={verdict} model=gpt-6.1-sol family=openai -->"
@@ -87,12 +88,13 @@ def test_real_refusal_publishes_only_skeleton(scanned_recorder, tmp_path, detail
 
 def test_clean_publication_bytes_unchanged(scanned_recorder, tmp_path):
     tasks, comments, calls, sent, _ = scanned_recorder
-    reply = "VERDICT: APPROVE\nOrdinary reviewer text.\n\n  Preserve spacing.\n"
+    reply = "VERDICT: APPROVE\nSCORE: 8/10 one P3 nit.\nOrdinary reviewer text.\n\n  Preserve spacing.\n"
     write_task(tasks, reply=reply)
-    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     expected = (
         f"### Cross-family review\nhead: {SHA}\nReviewer family: openai\nVERDICT: APPROVED\n"
-        "Reviewer model: gpt-6.1-sol\nTask id: review-one\n\n"
+        "Reviewer model: gpt-6.1-sol\nReview score: 8/10\nAuthored by: gemini-3.8-flash-high\n"
+        "Task id: review-one\n\n"
         "<details><summary>Reviewer's reply</summary>\n\n"
         + reply + "\n\n</details>\n\n"
         f"<!-- cf-verdict v1 sha={SHA} task=review-one started=2026-09-23T12:00:00.000001+00:00 "
@@ -100,6 +102,8 @@ def test_clean_publication_bytes_unchanged(scanned_recorder, tmp_path):
     )
     assert comments[0]["body"].encode() == expected.encode()
     assert sent == [expected] and calls == {"posts": 1, "statuses": 1}
+    # The advisory score (C-3020) never changes the recorded verdict.
+    assert result["score"] == 8 and sweep.parse_marker(expected)["verdict"] == "APPROVED"
 
 
 def test_skeleton_scanner_rejection_has_no_write(scanned_recorder, tmp_path, monkeypatch, synthetic_opsec):
@@ -554,3 +558,24 @@ def test_commit_headers_split_only_on_physical_newlines(tmp_path, separator):
 
     assert entry["parents"] == []
     assert entry["commit"]["tree"]["sha"] == git("rev-parse", "HEAD^{tree}")
+
+
+@pytest.mark.parametrize("score_line,score", [
+    ("SCORE: 4/10 open P1 on the parser.", 4),
+    ("SCORE: 4.5/10", None),
+    ("", None),
+])
+def test_recorded_round_stores_score_with_reviewer_and_author_models(scanned_recorder, tmp_path, score_line, score):
+    """C-3020: the score is advisory; a missing or malformed one is recorded as absent."""
+    tasks, comments, _, sent, _ = scanned_recorder
+    write_task(tasks, reply=f"VERDICT: REQUEST_CHANGES\n{score_line}\nF1 [P1] a.py:1 fails.\n")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    body = comments[0]["body"]
+    assert sent == [body]
+    assert result["score"] == score and result["verdict"] == "CHANGES_REQUESTED"
+    assert (
+        "Reviewer family: openai\nVERDICT: CHANGES_REQUESTED\nReviewer model: gpt-6.1-sol\n"
+        f"Review score: {f'{score}/10' if score else 'absent'}\nAuthored by: gemini-3.8-flash-high\n"
+    ) in body
+    marker = sweep.parse_marker(body)
+    assert (marker["verdict"], marker["model"], marker["family"]) == ("CHANGES_REQUESTED", "gpt-6.1-sol", "openai")

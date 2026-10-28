@@ -243,6 +243,29 @@ def _findings_json_verdicts(response: str) -> list[str]:
     return verdicts
 
 
+# The review-loop reply's advisory ``SCORE: n/10`` line (C-3020), with the same
+# line-start rules as a verdict line; the colon is optional, as in the council's
+# ``SCORE n/10``. The rubric is 1 to 10.
+_REVIEW_SCORE_LINE_RE = re.compile(
+    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?SCORE(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)(\d{1,2})[*_`]* */ *10(?!\d|\.\d)",
+    re.IGNORECASE,
+)
+
+
+def review_score(response: str) -> int | None:
+    """Return the reply's one ``SCORE`` value, or None when absent, malformed or ambiguous.
+
+    A score never gates a review, so this reader never raises.
+    """
+    try:
+        lines = _commonmark_lines(_without_code_fences(response, keep_unclosed=False))
+    except (ValueError, ImportError):
+        return None
+    scores = {int(match.group(1)) for line in lines if (match := _REVIEW_SCORE_LINE_RE.match(line))}
+    score = scores.pop() if len(scores) == 1 else None
+    return score if score is not None and 1 <= score <= 10 else None
+
+
 def unsupported_verdict_tokens(response: str) -> list[str]:
     """Return safe unsupported own tokens verbatim, for diagnostics only.
 

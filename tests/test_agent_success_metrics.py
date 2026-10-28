@@ -307,3 +307,39 @@ def test_metrics_api_uses_context_ledger_even_when_comms_store_is_missing(tmp_pa
             assert payload["tasks"] == 1
             assert payload["by_model"]["muse-wonder-full-1.0"]["status"]["done"] == 1
             assert "PRIVATE_SENTINEL" not in response.text
+
+
+def test_review_scores_aggregate_by_reviewer_and_author_model(tmp_path):
+    """C-3020: advisory scores group by reviewer and author model; missing or malformed stay absent."""
+    reviews = [
+        ("terra-1", "codex", "gpt-6.1-terra", "claude-opus-5-5", "VERDICT: APPROVE\nSCORE: 8/10 one nit.\nF1 [P3] a.py:1 nit."),
+        ("terra-2", "codex", "gpt-6.1-terra", "gpt-6.1-sol", "VERDICT: APPROVE\nSCORE: 10/10 clean."),
+        ("sol-1", "codex", "gpt-6.1-sol", "claude-opus-5-5", "VERDICT: REQUEST_CHANGES\nSCORE: 9/10\nF1 [P1] b.py:2 bug."),
+        ("sol-2", "codex", "gpt-6.1-sol", "claude-opus-5-5", "VERDICT: REQUEST_CHANGES\nSCORE: 9.5/10\nF1 [P0] c.py:3"),
+        ("muse-1", "muse", "muse-wonder-full-1.0", "gpt-6.1-terra", "VERDICT: APPROVE\nNo score line."),
+    ]
+    for task_id, agent, model, author, result in reviews:
+        _write(tmp_path, {
+            "task_id": task_id, "agent": agent, "model": model, "status": "done", "mode": "read-only",
+            "started_at": "2026-10-28T01:00:00Z", "review_author_model": author, "result": result,
+        })
+    _write(tmp_path, {
+        "task_id": "sol-failed", "agent": "codex", "model": "gpt-6.1-sol", "status": "failed", "mode": "read-only",
+        "started_at": "2026-10-28T01:00:00Z", "review_author_model": "claude-opus-5-5",
+    })
+    scores = collect_agent_success(tasks_dir=tmp_path, until=NOW)["review_scores"]
+    assert scores["by_reviewer_model"]["gpt-6.1-terra"] == {
+        "rounds": 2, "scored": 2, "absent": 0, "mean": 9, "median": 9.0,
+        # Free prose cannot establish zero findings, so the clean 10/10 has no band to compare.
+        "rubric_agreement": {"numerator": 1, "denominator": 1, "percent": 100.0},
+    }
+    assert scores["by_reviewer_model"]["gpt-6.1-sol"] == {
+        "rounds": 2, "scored": 1, "absent": 1, "mean": 9, "median": 9,
+        "rubric_agreement": {"numerator": 0, "denominator": 1, "percent": 0.0},
+    }
+    assert scores["by_reviewer_model"]["muse-wonder-full-1.0"]["absent"] == 1
+    assert scores["by_reviewer_model"]["muse-wonder-full-1.0"]["mean"] == "unknown"
+    opus = scores["by_author_model"]["claude-opus-5-5"]
+    assert (opus["rounds"], opus["scored"], opus["absent"], opus["mean"]) == (3, 2, 1, 8.5)
+    assert scores["by_author_model"]["gpt-6.1-sol"]["median"] == 10
+    assert scores["by_author_model"]["gpt-6.1-terra"]["scored"] == 0

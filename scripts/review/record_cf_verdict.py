@@ -93,6 +93,7 @@ from scripts.review.verdict_parser import (
     _findings_json_verdicts,
     _without_code_fences,
     recognized_verdicts,
+    review_score,
 )
 
 NORMALIZED = {
@@ -1446,6 +1447,8 @@ def build_comment(
     unknown_history: Iterable[str] = (),
     withheld_findings: int | Literal["unknown"] | None = None,
     app_bot: bool = False,
+    score: int | None = None,
+    author_models: Iterable[str | None] = (),
 ) -> str:
     if not SHA.fullmatch(sha):
         raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
@@ -1464,6 +1467,9 @@ def build_comment(
     _require_sources_mcp_calls({"review_profile": review_profile, "sources_mcp_call_count": sources_mcp_call_count})
     profile_field = " review_profile=ukrainian" if ukrainian else ""
     sources_field = f" sources_calls={sources_mcp_call_count}" if sources_mcp_call_count is not None else ""
+    # The score is advisory (C-3020): stored for calibration, never read by a gate.
+    score_text = f"{score}/10" if score is not None else "absent"
+    authors = sorted({author for author in author_models if author})
     marker = (
         f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
         f"model={model} family={family}{mode_field}{history_field}{authorship_field}{profile_field}{sources_field} -->"
@@ -1483,7 +1489,9 @@ def build_comment(
         f"Reviewer family: {family}\n"
         f"VERDICT: {verdict}\n"
         f"Reviewer model: {model}\n"
-        f"Task id: {task_id}\n\n"
+        f"Review score: {score_text}\n"
+        + (f"Authored by: {', '.join(authors)}\n" if authors else "")
+        + f"Task id: {task_id}\n\n"
     )
     if withheld_findings is not None:
         return prefix + f"Withheld findings: {withheld_findings}\n" + "Findings are held privately.\n\n" + marker
@@ -2010,6 +2018,8 @@ def record(
         sources_mcp_call_count=sources_count,
         unknown_history=facts.unknown_history,
         app_bot=bool(facts.app_bot_commits),
+        score=review_score(reply),
+        author_models=facts.author_models,
     )
     comment = build_comment(**comment_fields)
     destination = normalize_repository(repository)
@@ -2111,6 +2121,7 @@ def record(
         "head": sha,
         "task": task_id,
         "verdict": verdict,
+        "score": comment_fields["score"],
         "review_mode": review_mode,
         "unknown_history": list(facts.unknown_history),
         "comment": "posted" if posted else "existing",

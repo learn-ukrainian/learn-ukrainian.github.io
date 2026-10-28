@@ -11,7 +11,7 @@ import stat
 from collections import Counter
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from statistics import median
+from statistics import mean, median
 from typing import Any
 
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
@@ -19,7 +19,7 @@ from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
 from scripts.fleet_comms.efficiency_metrics import _parse_timestamp, _read_task_record, _task_record_paths
 from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, model_aliases
 from scripts.review.record_cf_verdict import RecordError, normalize_verdict
-from scripts.review.verdict_parser import _commonmark_lines, _without_code_fences
+from scripts.review.verdict_parser import _commonmark_lines, _without_code_fences, review_score
 
 STATUSES = (
     "done",
@@ -162,7 +162,7 @@ def _result_text(path: Path, record: dict) -> str | None:
 def _review(path: Path, record: dict) -> dict | None:
     if not any(record.get(k) for k in ("review_profile", "review_author_model", "require_review_verdict")):
         return None
-    verdict, findings = "unknown", None
+    verdict, findings, score = "unknown", None, None
     if record.get("status") == "done":
         recorded = VERDICTS.get(str(record.get("review_verdict")), "unknown")
         text = _result_text(path, record)
@@ -173,6 +173,7 @@ def _review(path: Path, record: dict) -> dict | None:
                 verdict = "unknown"
             if recorded != "unknown" and recorded != verdict:
                 verdict = "unknown"
+            score = review_score(text) if verdict != "unknown" else None
             try:
                 payload = json.loads(text)
             except (ValueError, RecursionError):
@@ -211,6 +212,34 @@ def _review(path: Path, record: dict) -> dict | None:
         "severities": severities,
         "confirmations": confirmations,
         "round": _number(record.get("review_round")) if verdict == "APPROVED" else None,
+        "score": score,
+    }
+
+
+# The review rubric's score band for the worst finding (C-3020); "wrong approach" has no finding.
+SCORE_BANDS = {None: (10, 10), "P3": (7, 9), "P2": (7, 9), "P1": (4, 6), "P0": (1, 3)}
+
+
+def _scores(reviews: list[dict]) -> dict:
+    """Advisory review scores for rounds with a verdict; a missing or malformed SCORE stays absent."""
+    rounds = [r for r in reviews if r["verdict"] != "unknown"]
+    scores = [r["score"] for r in rounds if r["score"] is not None]
+    banded = []
+    for review in rounds:
+        if review["score"] is None or review["findings"] is None:
+            continue
+        priorities = set(review["severities"])
+        if priorities - {"P0", "P1", "P2", "P3"}:
+            continue
+        low, high = SCORE_BANDS[min(priorities, default=None)]
+        banded.append(low <= review["score"] <= high)
+    return {
+        "rounds": len(rounds),
+        "scored": len(scores),
+        "absent": len(rounds) - len(scores),
+        "mean": round(mean(scores), 2) if scores else "unknown",
+        "median": median(scores) if scores else "unknown",
+        "rubric_agreement": _rate(sum(banded), len(banded)),
     }
 
 
@@ -400,6 +429,8 @@ def collect_agent_success(
             selector = requested.lower()
             if observed == "unknown" and selector in {"auto", "default", "unknown"}:
                 model = "unknown"
+            author = _label(record.get("review_author_model"))
+            author = _label(aliases.get(author.casefold(), author)) if available else "unknown"
             status = record.get("status")
             rows.append(
                 {
@@ -413,9 +444,11 @@ def collect_agent_success(
                     if model != "unknown"
                     else "unknown",
                     "review": _review(path, record),
+                    "author_model": author,
                     "usage": _usage(record, requested),
                 }
             )
+    reviewed = [r for r in rows if r["review"] is not None]
     return {
         "schema_version": "agent-success.v1",
         "content_included": False,
@@ -449,5 +482,13 @@ def collect_agent_success(
         },
         "by_model": {
             key: _summary([r for r in rows if r["model"] == key]) for key in sorted({r["model"] for r in rows})
+        },
+        # Reviewer calibration groups by the reviewing model, author quality by the reviewed PR's author model.
+        "review_scores": {
+            dimension: {
+                key: _scores([r["review"] for r in reviewed if r[field] == key])
+                for key in sorted({r[field] for r in reviewed})
+            }
+            for dimension, field in (("by_reviewer_model", "model"), ("by_author_model", "author_model"))
         },
     }
