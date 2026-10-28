@@ -54,6 +54,7 @@ except ModuleNotFoundError as exc:
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 from scripts.control_plane.storage import ControlPlaneError
+from scripts.fleet_comms.agent_success_metrics import collect_agent_success
 from scripts.fleet_comms.efficiency_metrics import (
     collect_dead_letters,
     collect_dead_letters_authority,
@@ -2107,20 +2108,29 @@ async def comms_v1_dead_letters(
 
 
 @router.get("/v1/metrics")
-async def comms_v1_metrics(ctx: MonitorContext = Depends(get_ctx)) -> dict:
+async def comms_v1_metrics(ctx: MonitorContext = Depends(get_ctx), include_agent_success: bool = False) -> dict:
     """Efficiency metrics from durable timestamps (no content). Sol PR-M / #7486 switch-aware."""
+    extra = {}
+    if include_agent_success:
+        extra["agent_success"] = await asyncio.to_thread(
+            collect_agent_success, tasks_dir=ctx.roots.batch_state_dir / "tasks"
+        )
     if resolve_metrics_source() == "authority":
-        return _authority_metrics_payload(collect_efficiency_metrics_authority, ctx)
+        payload = _authority_metrics_payload(collect_efficiency_metrics_authority, ctx)
+        payload.update(extra)
+        return payload
     message_db = ctx.roots.message_db_path
     store = legacy_broker_store(reachable=message_db.is_file())
     if not message_db.exists():
         return {
             "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
             "content_included": False,
+            **extra,
             "db_missing": True,
             "store": store,
         }
     payload = collect_efficiency_metrics(message_db)
+    payload.update(extra)
     payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
     payload["store"] = store
     return payload
