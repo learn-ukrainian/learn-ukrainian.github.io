@@ -1816,10 +1816,15 @@ def _fully_approved(comments: Sequence[Mapping[str, Any]], head: str, login: str
     if lookup_verdict(comments, head, login).state != "APPROVED":
         return False
     at_head = [marker for _, marker in _trusted_markers(comments, login) if marker["sha"] == head]
-    approving = {marker["family"] for marker in at_head if marker["verdict"] == "APPROVED"}
-    # A learner-facing Ukrainian change seats two reviewers (review-loop references/ukrainian.md § Seats).
-    required = 2 if any(is_ukrainian_review(marker) for marker in at_head) else 1
-    return len(approving) >= required
+    # A learner-facing Ukrainian change seats two Ukrainian reviewers from two families
+    # (review-loop references/ukrainian.md § Seats); an approval of another profile fills no seat.
+    ukrainian = any(is_ukrainian_review(marker) for marker in at_head)
+    approving = {
+        marker["family"]
+        for marker in at_head
+        if marker["verdict"] == "APPROVED" and (not ukrainian or is_ukrainian_review(marker))
+    }
+    return len(approving) >= (2 if ukrainian else 1)
 
 
 def budget_exempt_heads(

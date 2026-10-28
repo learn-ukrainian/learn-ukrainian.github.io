@@ -3435,17 +3435,17 @@ def test_clean_base_merge_descent_needs_every_object(tmp_path):
 def test_ukrainian_head_is_fully_approved_only_by_both_seats():
     approved, head = "1" * 40, "2" * 40
 
-    def seat(family, model):
+    def seat(family, model, profile="ukrainian"):
         body = recorder.build_comment(
             sha=approved,
-            task_id=f"seat-{family}",
+            task_id=f"seat-{family}-{profile}",
             started="2026-09-23T11:00:00.000001+00:00",
             verdict="APPROVED",
             model=model,
             family=family,
             reply="VERDICT: APPROVE",
-            review_profile="ukrainian",
-            sources_mcp_call_count=3,
+            review_profile=profile,
+            sources_mcp_call_count=3 if profile == "ukrainian" else None,
         )
         stamp = "2026-09-23T11:30:00Z"
         return {"body": body, "user": {"login": "fleet"}, "author_association": "MEMBER", "created_at": stamp,
@@ -3459,6 +3459,9 @@ def test_ukrainian_head_is_fully_approved_only_by_both_seats():
 
     one_seat = [seat("anthropic", "claude-opus-5-5")]
     assert recorder.budget_exempt_heads(one_seat, head, "fleet", prove=prove) == {} and calls == []
+    # An approval of another profile from a second family fills no Ukrainian seat (review round 1, F1).
+    mixed = [*one_seat, seat("xai", "grok-4.7-high", profile="code")]
+    assert recorder.budget_exempt_heads(mixed, head, "fleet", prove=prove) == {} and calls == []
     both = [*one_seat, seat("openai", "gpt-6.1-sol")]
     assert recorder.budget_exempt_heads(both, head, "fleet", prove=prove) == {
         head: {"approved_head": approved, "base_merges": ["3" * 40]}
