@@ -26,6 +26,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from scripts.common import github_client
+
 _SHA_RE = re.compile(r"[0-9a-fA-F]{40}\Z")
 _ZERO_SHA = "0" * 40
 _SCOPED_EVENTS = frozenset({"merge_group", "push"})
@@ -219,7 +221,9 @@ def _schedule_recovery_scope(repo_root: Path, last_scanned_head: str) -> ScanSco
 def _github_json(endpoint: str) -> dict:
     """Read metadata only, never download or extract an artifact archive."""
     try:
-        result = subprocess.run(["gh", "api", endpoint], capture_output=True, text=True, check=True, timeout=30)
+        result = github_client.run(
+            ["gh", "api", endpoint], fresh=True, allow_stale=False, capture_output=True, text=True, check=True, timeout=30
+        )
         payload = json.loads(result.stdout)
         if not isinstance(payload, dict):
             raise ValueError("invalid response")

@@ -1131,6 +1131,6 @@ def test_coverage_api_failure_fails_visibly_instead_of_narrowing(failure: str) -
             raise OSError("gh unavailable")
         return subprocess.CompletedProcess("gh", 0, stdout="[1]" if failure == "shape" else "invalid")
 
-    with patch("scripts.ci.secret_scan_scope.subprocess.run", side_effect=failed_api):
+    with patch("scripts.ci.secret_scan_scope.github_client.run", side_effect=failed_api):
         with pytest.raises(secret_scan_scope.SecretScanScopeError, match="full-history-audit"):
             secret_scan_scope._last_scanned_head("unit/repo", "42", "refs/heads/main")

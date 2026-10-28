@@ -111,8 +111,8 @@ jobs:
           DISPATCH_SCAN_MODE: ${{ inputs.secret_scan_mode }}
           DISPATCH_REF: ${{ github.ref }}
           DEFAULT_BRANCH_REF: refs/heads/${{ github.event.repository.default_branch }}
-          GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/ci/secret_scan_scope.py
+          GH_TOKEN: ${{ github.event_name == 'schedule' && github.token || '' }}
+        run: python3 -m scripts.ci.secret_scan_scope
       - name: Gate scrubbed public identifiers
         env:
           EVENT_NAME: ${{ github.event_name }}

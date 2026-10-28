@@ -220,7 +220,7 @@ def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: st
     assert dispatch["options"] == ["bounded", "full-history-audit"]
     scan = workflow["jobs"]["secret-scan"]
     context = {
-        "github": {"event_name": event},
+        "github": {"event_name": event, "token": "read-token"},
         "inputs": {} if mode is None else {"secret_scan_mode": mode},
         "needs": {"reuse": {"outputs": {"reuse": "false"}}},
     }
@@ -228,6 +228,7 @@ def test_secret_scan_audit_budget_cannot_widen_other_events(event: str, mode: st
     assert _condition(scan["if"], context)
     scope = next(step for step in scan["steps"] if step.get("id") == "secret-scan-scope")
     assert _interpolate(scope["env"]["DISPATCH_SCAN_MODE"], context) == (mode or "")
+    assert _interpolate(scope["env"]["GH_TOKEN"], context) == ("read-token" if event == "schedule" else "")
     assert "if" not in scope
     scanner = next(
         step for step in scan["steps"] if str(step.get("uses", "")).startswith("trufflesecurity/trufflehog@")
