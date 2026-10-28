@@ -749,6 +749,12 @@ def test_verification_round_after_a_final_round_approve_is_spent_once(monkeypatc
         recorder.require_review_round_within_budget(
             comments, "c" * 40, "fleet", budget=budget, pr=42, descends=lambda *_: True
         )
+    # A malformed verification marker still holds the round spent, under any later tier.
+    comments[-1]["body"] = comments[-1]["body"].replace(f"Budget tier: {tier}\n", "")
+    with pytest.raises(recorder.RecordError, match="REVIEW_BUDGET_EXHAUSTED"):
+        recorder.require_review_round_within_budget(
+            comments, "c" * 40, "fleet", budget=recorder.ELEVATED_REVIEW_ROUNDS, pr=42, descends=lambda *_: True
+        )
     assert calls["posts"] == 1
 
 
@@ -785,10 +791,17 @@ def test_verification_round_refuses_a_head_that_does_not_descend_from_the_approv
         recorder.require_review_round_within_budget(
             comments, rewritten, "fleet", budget=3, pr=42, descends=partial(recorder._descends_from, repo)
         )
-    # A malformed approval still spends its round: the next head is no ordinary round 3.
-    comments[-1]["body"] = comments[-1]["body"].replace("VERDICT: APPROVED\n", "VERDICT: APPROVE\n")
-    with pytest.raises(recorder.RecordError, match=f"no verification round: final-round head {approved} reads unknown"):
-        recorder.require_review_round_within_budget(comments, rewritten, "fleet", budget=3, pr=42, descends=lambda *_: True)
+    # A malformed or edited final verdict hides its tier: no next head opens a round, even when the
+    # new diff would raise the tier (the elevated budget of 5).
+    malformed = dict(comments[-1], body=comments[-1]["body"].replace("VERDICT: APPROVED\n", "VERDICT: APPROVE\n"))
+    for final in (malformed, recorded_verdict(approved, "APPROVED", task_id="final-round", edited=True)):
+        comments[-1] = final
+        with pytest.raises(
+            recorder.RecordError, match=f"unreadable or edited verdict at its last reviewed head {approved}"
+        ):
+            recorder.require_review_round_within_budget(
+                comments, rewritten, "fleet", budget=5, pr=42, descends=lambda *_: True
+            )
 
 
 @pytest.mark.parametrize("body", [None, "<!-- cf-verdict v1 unreadable -->"])

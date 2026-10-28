@@ -1738,14 +1738,18 @@ def review_round_budget(facts: BranchReviewFacts) -> int:
     return DEFAULT_REVIEW_ROUNDS
 
 
-def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> tuple[list[dict[str, Any]], list[str]]:
-    """Verdict markers ``login`` posted with a trusted association, and every head they review.
+def _trusted_markers(
+    comments: Sequence[Mapping[str, Any]], login: str
+) -> tuple[list[dict[str, Any]], list[str], set[str]]:
+    """Verdict markers ``login`` posted with a trusted association, every head they review, and doubtful heads.
 
-    Both are in publication order. A trusted marker the keeper cannot parse
-    still spends a round at the head it names, so malformed evidence never
-    shrinks the count; one that names no single head refuses.
+    Markers and heads are in publication order. A trusted marker the keeper
+    cannot parse still spends a round at the head it names, so malformed
+    evidence never shrinks the count; one that names no single head refuses.
+    A head with an unparsed or edited trusted marker is doubtful: its tier and
+    whether it spent the verification round are unknown.
     """
-    markers, heads = [], []
+    markers, heads, doubtful = [], [], set()
     for item in comments:
         body = item.get("body") if isinstance(item, Mapping) else None
         if not isinstance(body, str) or MARKER_PREFIX not in body:
@@ -1760,7 +1764,9 @@ def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> tuple
             raise RecordError("REVIEW_BUDGET_EXHAUSTED: a trusted verdict marker names no single head; rounds unknown")
         if head not in heads:
             heads.append(head)
-    return markers, heads
+        if marker is None or item.get("created_at") != item.get("updated_at"):
+            doubtful.add(head)
+    return markers, heads, doubtful
 
 
 @dataclass(frozen=True)
@@ -1797,7 +1803,7 @@ def require_review_round_within_budget(
     marker names that head; once recorded, no other head opens a round.
     """
     tier: Literal["default", "elevated"] = "elevated" if budget == ELEVATED_REVIEW_ROUNDS else "default"
-    markers, heads = _trusted_markers(comments, login)
+    markers, heads, doubtful = _trusted_markers(comments, login)
     spent = next((marker for marker in markers if marker.get("verification_of")), None)
     if spent is not None:
         if sha != spent["sha"]:
@@ -1808,6 +1814,12 @@ def require_review_round_within_budget(
         return RoundAdmission(spent["budget_tier"], spent["verification_of"])
     if sha in heads or not heads:
         return RoundAdmission(tier)
+    # Below the default budget every tier admits an ordinary round and no verification round exists yet.
+    if heads[-1] in doubtful and len(heads) >= DEFAULT_REVIEW_ROUNDS:
+        raise RecordError(
+            f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} has an unreadable or edited verdict at its last reviewed head "
+            f"{heads[-1]}, so its budget tier and verification round are unknown; escalate the verdict record"
+        )
     held = next(
         (marker["budget_tier"] for marker in markers if marker["sha"] == heads[-1] and marker.get("budget_tier")), tier
     )
