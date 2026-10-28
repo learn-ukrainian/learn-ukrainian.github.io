@@ -153,7 +153,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - Multi-agent discuss: `discuss <chan> "topic-or-stdin" --with codex,claude,agy --max-rounds 3 [--review]`
 - Broker: inbox / send / post / channel / converse / process-*
 
-**Delegate real work (edits, builds — ALWAYS --worktree):** `scripts/dispatch.py dispatch --model <catalog-model> --agent codex --task-id bar --prompt-file docs/dispatch-briefs/xx.md --worktree --mode workspace-write` (or read-only). Providers: codex/claude/agy/cursor/muse/opencode/hermes; grok aliases Cursor. Follow with `status`, `wait`, `list`.
+**Delegate real work (edits, builds — ALWAYS --worktree):** `scripts/dispatch.py dispatch --model <catalog-model> --agent codex --task-id bar --prompt-file docs/dispatch-briefs/xx.md --worktree --mode workspace-write` (or read-only). Providers: codex/claude/agy/cursor/muse/opencode/hermes; `grok` is not an agent (use `--agent cursor --model grok-4.7-high`). Follow with `status`, `wait`, `list`.
 
 **CodexBar.app (local Mac app on this machine):** Visual for 5h / weekly / monthly limits + consumption across agents + self. (Agents query `.venv/bin/python -m scripts.fleet.capacity_pick` and `.venv/bin/python -m scripts.fleet.usage show`; `codexbar usage` is retired.)
 

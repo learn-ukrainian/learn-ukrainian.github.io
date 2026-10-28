@@ -149,7 +149,7 @@ Green means: `python_qg` all gates · `assemble_mdx` ok · `mdx_render` all isla
 3. **Independent content review** — **LANGUAGE-LANES only** (agy / codex / claude),
    VESUM-backed via `sources` MCP, off-seat. Example:
    `dispatch.py dispatch --model <catalog-model> --agent codex --mode read-only` (or claude), or
-   `ab ask-agy --to-model gemini-3.8-flash-high` for AGY (dispatch refuses read-only AGY).
+   `ab ask-agy --to-model gemini-3.8-flash-high` for AGY (or `dispatch.py --agent agy --mode read-only`, which runs in the bubblewrap boundary).
    **Do not** use deepseek/cursor/kimi/pool/glm for folk or UA content review
    (LANGUAGE-LANES + no DeepSeek for folk). Apply valid deltas.
 4. `handoff_ready --pr <N>` before declaring ready.

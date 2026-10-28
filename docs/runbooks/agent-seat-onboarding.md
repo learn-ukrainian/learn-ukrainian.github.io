@@ -318,7 +318,7 @@ to Sol at `high` or the accountable orchestrator before making a consequential d
 
 ### Grok dispatch through Cursor
 
-Native Grok dispatch is retired. Dispatch v2 maps `--agent grok` to Cursor.
+Native Grok dispatch is retired. Dispatch v2 rejects `--agent grok` (`unknown agent`).
 Use the explicit Cursor seat at `grok-4.7-high`:
 
 ```bash
