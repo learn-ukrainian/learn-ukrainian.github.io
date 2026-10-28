@@ -135,6 +135,17 @@ def test_execution_defaults_refused_by_catalog_identity_and_transport(model, tra
 
 def test_execution_default_resolves_active_alias_and_rejects_hold():
     catalog = deepcopy(load_model_catalog())
+    assert require_execution_model("gpt-6.1-terra", transport="native_codex", catalog=catalog) == "gpt-6.1-terra"
+    terra = catalog["models"]["gpt-6.1-terra"]
+    assert terra["family"] == "openai"
+    assert terra["tier"] == "frontier_practical"
+    assert terra["routing_wire_ids"] == {"native_codex": "gpt-6.1-terra"}
+    assert set(terra["roles"]) == {"implementation", "agentic_coding", "bounded_checks"}
+    for activity in ("review", "consult"):
+        assert activity_role_refusal("gpt-6.1-terra", activity, catalog=catalog)
+    assert all(row["model_id"] != "gpt-6.1-terra" for row in catalog["review_candidates"].values())
+    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6.1-sol"]
+    assert catalog["orchestrator_seats"]["codex"]["model_id"] == "gpt-6.1-sol"
     assert require_execution_model("gemini-3.8-flash-low", transport="agy", catalog=catalog) == "gemini-3.8-flash-high"
     catalog["models"]["gemini-3.8-flash-high"]["lifecycle"] = "hold"
     with pytest.raises(ModelCatalogError, match="not admitted for execution"):
