@@ -530,9 +530,8 @@ def render_lesson_prompt(
     )
 
     imm_dict = immersion.to_dict() if isinstance(immersion, ImmersionPayload) else dict(immersion)
-    if level == "a1":
-        imm_dict.pop("module_structural", None)
-        imm_dict["structural_targets"] = {}
+    imm_dict.pop("module_structural", None)
+    imm_dict["structural_targets"] = {}
 
     pe = dict(plan_entry)
     if "lesson" not in pe:
@@ -606,9 +605,8 @@ def render_recap_prompt(
     )
 
     imm_dict = immersion.to_dict() if isinstance(immersion, ImmersionPayload) else dict(immersion)
-    if level == "a1":
-        imm_dict.pop("module_structural", None)
-        imm_dict["structural_targets"] = {}
+    imm_dict.pop("module_structural", None)
+    imm_dict["structural_targets"] = {}
 
     pe = dict(plan_entry)
     if "lesson" not in pe:

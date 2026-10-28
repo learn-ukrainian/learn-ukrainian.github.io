@@ -1061,6 +1061,52 @@ def test_structured_citations_reach_the_writer_record_loader():
     }
 
 
+@pytest.mark.parametrize("recap", [False, True])
+@pytest.mark.parametrize("level,position", [("a2", 1), ("a2", 4), ("a2", 8), ("a2", 21), ("a2", 51), ("b1", 1), ("b2", 1)])
+def test_module_minima_do_not_leak_into_lesson_or_review_inputs(
+    tmp_path, sample_plan_entry, sample_learner_state, sample_cited_records, recap, level, position
+):
+    """A stale module-target dict must not impose quotas on a fresh lesson (#10132)."""
+    state = dataclasses.replace(sample_learner_state, level=level, position=position)
+    immersion = compute_immersion_payload(level, position, 1)
+    raw = immersion.to_dict()
+    stale_targets = {"min_uk_dialogue_lines": 99, "min_uk_example_sentences": 99, "min_vocab_entries": 99}
+    raw.update(structural_targets=stale_targets, module_structural=stale_targets)
+    common = dict(
+        plan_entry=sample_plan_entry,
+        cited_records=sample_cited_records,
+        learner_state=state,
+        word_store=SAMPLE_WORD_STORE,
+        immersion=raw,
+        level=level,
+        slug="sample",
+        lesson_n=1,
+    )
+    prompt = render_recap_prompt(built_lessons=[], **common) if recap else render_lesson_prompt(**common)
+    assert "Module Structural Minimums" not in prompt
+    assert all(key not in prompt for key in stale_targets)
+    assert "lesson_structural_minimums_not_calibrated" in prompt
+    assert f"**Advisory Ukrainian Share**: {immersion.advisory_uk_share[0]}-{immersion.advisory_uk_share[1]}%" in prompt
+    for role, langs in immersion.permitted_languages.items():
+        assert f"{role}: {', '.join(langs)}" in prompt
+    assert raw["structural_targets"] == stale_targets  # Rendering does not mutate its caller's input.
+
+    identity = learner_state_sha256(state)
+    state_path = tmp_path / f"curriculum/l2-uk-en/evidence/{level}/_state/sample/lesson-1.learner-state.yaml"
+    manifest = {
+        "kind": "lesson",
+        "inputs": {"learner_state": materialize_learner_state(state_path, learner_state_document(state, immersion), tmp_path)},
+        "learner_state": {"sha256": identity, "source": "planned_state"},
+    }
+    reviewed = _learner_state_context(ManifestReader(manifest, tmp_path), manifest)
+    rule = yaml.safe_load(reviewed["immersion_yaml"])
+    assert rule["structural_targets"] == {}
+    assert rule["not_checked"] == ["lesson_structural_minimums_not_calibrated"]
+    assert rule["advisory_uk_share"] == list(immersion.advisory_uk_share)
+    assert rule["permitted_languages"] == {role: list(langs) for role, langs in immersion.permitted_languages.items()}
+    assert reviewed["learner_state_sha256"] == identity
+
+
 def test_structured_citation_discovery_preserves_existing_sources_and_ignores_prose():
     from scripts.build.fresh.prompt import extract_plan_citations
 

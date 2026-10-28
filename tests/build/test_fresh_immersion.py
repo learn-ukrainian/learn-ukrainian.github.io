@@ -12,7 +12,7 @@ from scripts.build.fresh.immersion import (
     compute_immersion_payload,
 )
 from scripts.curriculum.arc.loader import ArcPosition
-from scripts.curriculum.learner_state.immersion import ImmersionError, LessonBand
+from scripts.curriculum.learner_state.immersion import ImmersionError, LessonBand, compute_lesson_immersion_band
 
 
 def synthetic_arc_loader(level: str) -> list[ArcPosition]:
@@ -113,22 +113,38 @@ def test_a1_immersion_payload_early():
     assert targets == {}
 
 
-def test_a2_immersion_payload():
-    """From A2 on, never allow more English than contract allows (#8431 §6/§7, Finding 6).
-
-    a2-bridge uses easy Ukrainian as default teaching voice (no English body scaffolding).
-    """
-    p_bridge = compute_immersion_payload("a2", arc_position=1, lesson_n=1, arc_loader=synthetic_arc_loader)
-    assert p_bridge.band_key == "a2-bridge"
-    assert p_bridge.permitted_languages["narration"] == ("uk",)
-    assert p_bridge.permitted_languages["activity_instruction"] == ("uk",)
-    assert p_bridge.permitted_languages["activity_item"] == ("uk",)
-
-    p_ramp = compute_immersion_payload("a2", arc_position=4, lesson_n=1, arc_loader=synthetic_arc_loader)
-    assert p_ramp.band_key == "a2-ramp"
-    assert p_ramp.permitted_languages["narration"] == ("uk",)
-    assert p_ramp.permitted_languages["activity_instruction"] == ("uk",)
-    assert p_ramp.permitted_languages["activity_item"] == ("uk",)
+@pytest.mark.parametrize(
+    "level,position,key,share,module_targets",
+    [
+        ("a2", 1, "a2-bridge", (75, 100), (2, 5, 5)),
+        ("a2", 4, "a2-ramp", (85, 100), (3, 5, 6)),
+        ("a2", 8, "a2-m01-20", (85, 100), (3, 6, 8)),
+        ("a2", 21, "a2-m21-50", (90, 100), (4, 8, 8)),
+        ("a2", 51, "a2-m51-70", (95, 100), (4, 8, 8)),
+        ("b1", 1, "b1-core", (100, 100), (0, 0, 0)),
+        ("b2", 1, "b2+", (100, 100), (0, 0, 0)),
+    ],
+)
+def test_a2_immersion_payload(level, position, key, share, module_targets):
+    """Module minima must not become lesson quotas or relax A2+ immersion (#10132)."""
+    payload = compute_immersion_payload(level, position, 1)
+    assert payload.band_key == key
+    assert payload.advisory_uk_share == share
+    assert payload.structural_targets == {}
+    assert payload.not_checked == ["lesson_structural_minimums_not_calibrated"]
+    assert payload.permitted_languages == {
+        "narration": ("uk",),
+        "dialogue_line": ("uk",),
+        "activity_instruction": ("uk",),
+        "activity_item": ("uk",),
+        "gloss": ("en",),
+        "quote": ("uk",),
+        "resource_line": ("en", "uk"),
+    }
+    band = compute_lesson_immersion_band(level, position, 1)
+    assert band.module_structural == dict(
+        zip(("min_uk_dialogue_lines", "min_uk_example_sentences", "min_vocab_entries"), module_targets, strict=True)
+    )
 
 
 def test_unsupported_band_key_fails_closed():
