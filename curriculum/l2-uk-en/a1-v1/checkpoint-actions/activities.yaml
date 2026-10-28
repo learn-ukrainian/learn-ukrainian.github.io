@@ -100,20 +100,20 @@ inline:
     title: Діалог із сусідом
     instruction: Complete the dialogue with the modal, question word, or verb form.
     items:
-      - sentence: "(Ask who is cooking.) Олег: ___ готує сьогодні?"
+      - sentence: "Олег: ___ готує сьогодні? Анна: Сьогодні готує Марко."
         answer: Хто
         options:
           - Хто
           - Коли
           - Як
-        explanation: Хто asks which person.
-      - sentence: "(Ask when the person wakes up.) Олег: Коли ти ___?"
+        explanation: "The reply identifies Марко as the cook, so ask Хто. Коли asks for time; як asks for manner."
+      - sentence: "Олег: Коли ти ___?"
         answer: прокидаєшся
         options:
           - прокидаєшся
-          - працюєш
-          - пишеш
-        explanation: The question asks about the morning routine.
+          - прокидається
+          - прокидаються
+        explanation: "Use прокидаєшся with ти. Прокидається is third-person singular; прокидаються is third-person plural."
       - sentence: 'Олег: Що ти ___ потім?'
         answer: робиш
         options:
@@ -135,13 +135,13 @@ inline:
           - читаєш
           - робиш
         explanation: Любиш + infinitive asks about liking an action.
-      - sentence: "(Express desire: want to.) Олег: Я ___ готувати сьогодні."
+      - sentence: "Олег: Я не можу готувати сьогодні й не мушу готувати, але я ___ готувати."
         answer: хочу
         options:
           - хочу
           - можу
           - мушу
-        explanation: Хочу + infinitive gives a plan or desire.
+        explanation: "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning."
       - sentence: 'Олег: Ти ___ допомагати?'
         answer: можеш
         options:
@@ -161,34 +161,34 @@ inline:
     title: Мій день
     instruction: Choose the word that completes the short day description.
     items:
-      - sentence: "(First.) ___ я прокидаюся о сьомій."
+      - sentence: "Я снідаю о восьмій, але ___ я прокидаюся о сьомій."
         answer: Спочатку
         options:
           - Спочатку
-          - Нарешті
-          - Чому
-        explanation: Спочатку starts the routine.
-      - sentence: "(I wash up.) Потім я ___ і чищу зуби."
+          - Пізніше
+          - Після цього
+        explanation: "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00."
+      - sentence: "Потім я ___ і чищу зуби."
         answer: вмиваюся
         options:
           - вмиваюся
-          - працюю
-          - читаю
-        explanation: Вмиваюся is the morning routine form.
-      - sentence: "(I have breakfast.) Після цього я ___ вдома."
+          - вмиваєшся
+          - вмивається
+        explanation: "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+      - sentence: "Після цього я ___ вдома."
         answer: снідаю
         options:
           - снідаю
-          - говорю
-          - пишу
-        explanation: Снідаю fits the morning sequence.
-      - sentence: "(I work.) Вдень я ___ в офісі."
+          - снідаєш
+          - снідають
+        explanation: "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+      - sentence: "Вдень я ___ в офісі."
         answer: працюю
         options:
           - працюю
-          - прокидаюся
-          - вмиваюся
-        explanation: Працюю fits the work part of the day.
+          - працюєш
+          - працюють
+        explanation: "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
       - sentence: Увечері я ___ гуляти.
         answer: хочу
         options:

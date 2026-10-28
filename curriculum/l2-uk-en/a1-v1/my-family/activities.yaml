@@ -4,7 +4,7 @@ inline:
     title: Питання до фото
     instruction: Обери український рядок для фото-розмови.
     items:
-      - prompt: "Ти питаєш одного ровесника, чи є в нього брат. — You ask a peer whether they have a brother."
+      - prompt: "Олег розповідає про свою родину. Ти питаєш, чи є в нього брат."
         options:
           - text: У тебе є брат?
             correct: true
@@ -242,13 +242,14 @@ workbook:
           - Це мій брат.
           - Це є мій брат.
         explanation: У простому фото-реченні є не потрібне.
-      - sentence: Батьки (у значенні батька / meaning father)
-        error: Батьки (у значенні батька / meaning father)
-        correction: Тато / батько
+      - sentence: "Це мій батьки."
+        error: "Це мій батьки."
+        correction: "Це мій батько."
         options:
-          - Тато / батько
-          - Батьки
-        explanation: Батьки означає маму й тата або кількох батьків, а не одного тата.
+          - Це мій батько.
+          - Це моє батько.
+          - Це моя батько.
+        explanation: "Батько is masculine singular and agrees with мій. Моє is neuter and моя is feminine."
       - sentence: У мене немає брат.
         error: У мене немає брат.
         correction: Ні.

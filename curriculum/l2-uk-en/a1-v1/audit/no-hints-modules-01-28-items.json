@@ -1,0 +1,4660 @@
+{
+  "schema": "a1-no-hints-repairs.v1",
+  "base": "26d1ff156284e1a85aca64f46ac9f603ce835f94",
+  "merged_passes": [
+    "bdd5f82a739db599fc4303f007496e06aab24b93",
+    "6571f3391c4dd0ba928e41715a3bec87d7d5d804"
+  ],
+  "counts": {
+    "merged_changed_prompts_in_scope": 87,
+    "context_only": 4,
+    "clock_contexts_kept": 7,
+    "merged_hints_removed": 76,
+    "legacy_hints_removed": 14,
+    "items_reworded": 85,
+    "items_replaced": 5
+  },
+  "items": [
+    {
+      "id": "checkpoint-first-contact/inline/act-1/2",
+      "module": "checkpoint-first-contact",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 2,
+      "activity_title": "Готовність до знайомства",
+      "instruction": "Обери безпечний український рядок для ситуації.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Мене звати Олена.",
+      "distractors": [
+        "Мені звати Олена.",
+        "Я звати Олена."
+      ],
+      "reason": "The name construction takes мене; мені is dative and я is nominative. The valid Моє ім’я alternative is removed.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D01",
+        "D41",
+        "V01",
+        "V41"
+      ],
+      "before": {
+        "prompt": "Ти називаєш своє ім'я. (Use the Мене звати formula.)",
+        "options": [
+          {
+            "text": "Мене звати Олена.",
+            "correct": true
+          },
+          {
+            "text": "Моє ім'я є Олена.",
+            "correct": false
+          },
+          {
+            "text": "Я звати Олена.",
+            "correct": false
+          }
+        ],
+        "explanation": "The requested name formula is Мене звати... . The alternative with Моє ім'я is also grammatical."
+      },
+      "after": {
+        "prompt": "Ти називаєш своє ім'я.",
+        "options": [
+          {
+            "text": "Мене звати Олена.",
+            "correct": true
+          },
+          {
+            "text": "Мені звати Олена.",
+            "correct": false
+          },
+          {
+            "text": "Я звати Олена.",
+            "correct": false
+          }
+        ],
+        "explanation": "Звати takes the name-bearer in the accusative: Мене звати Олена. Мені and я do not fit this construction."
+      }
+    },
+    {
+      "id": "checkpoint-first-contact/inline/act-1/3",
+      "module": "checkpoint-first-contact",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 3,
+      "activity_title": "Готовність до знайомства",
+      "instruction": "Обери безпечний український рядок для ситуації.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Я студент.",
+      "distractors": [
+        "Я студента.",
+        "Мене студент."
+      ],
+      "reason": "Студент is nominative predicate; студента is genitive/accusative and мене cannot be the subject here.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D02",
+        "D41",
+        "V02",
+        "V41"
+      ],
+      "before": {
+        "prompt": "(Do not use є.) Ти кажеш, що ти студент.",
+        "options": [
+          {
+            "text": "Я студент.",
+            "correct": true
+          },
+          {
+            "text": "Я є студент.",
+            "correct": false
+          },
+          {
+            "text": "Мене студент.",
+            "correct": false
+          }
+        ],
+        "explanation": "У такому реченні українська зазвичай не додає є."
+      },
+      "after": {
+        "prompt": "Ти кажеш, що ти студент.",
+        "options": [
+          {
+            "text": "Я студент.",
+            "correct": true
+          },
+          {
+            "text": "Я студента.",
+            "correct": false
+          },
+          {
+            "text": "Мене студент.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use the subject я and the nominative profession студент: Я студент."
+      }
+    },
+    {
+      "id": "checkpoint-first-contact/inline/act-3/3",
+      "module": "checkpoint-first-contact",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "activity_title": "Доповни текст",
+      "instruction": "Обери пропущене слово або блок у самопрезентації.",
+      "type": "fill-in",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "студент",
+      "distractors": [
+        "студента",
+        "мене студент"
+      ],
+      "reason": "Only студент is a nominative predicate after я. Студента is oblique; мене студент would leave a second, incompatible pronoun.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D02",
+        "D41",
+        "V02",
+        "V41"
+      ],
+      "before": {
+        "sentence": "(Do not use є.) Я ___.",
+        "answer": "студент",
+        "options": [
+          "студент",
+          "є студент",
+          "мене студент"
+        ],
+        "explanation": "Речення A1 про ідентичність не потребує є."
+      },
+      "after": {
+        "sentence": "Я ___.",
+        "answer": "студент",
+        "options": [
+          "студент",
+          "студента",
+          "мене студент"
+        ],
+        "explanation": "Я студент is a complete identity statement. Студента is an oblique form; мене does not belong after я."
+      }
+    },
+    {
+      "id": "checkpoint-first-contact/inline/act-4/0",
+      "module": "checkpoint-first-contact",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 0,
+      "activity_title": "Виправ A1.1 пастки",
+      "instruction": "Обери нормативну українську форму.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Мене звати Джон.",
+      "distractors": [
+        "Мені звати Джон."
+      ],
+      "reason": "Accusative мене fits звати; dative мені does not. The grammatical naming alternative is removed.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D01",
+        "D41",
+        "V01",
+        "V41"
+      ],
+      "before": {
+        "prompt": "Представлення імені (Use the Мене звати formula.)",
+        "options": [
+          {
+            "text": "Мене звати Джон.",
+            "correct": true
+          },
+          {
+            "text": "Моє ім'я є Джон.",
+            "correct": false
+          }
+        ],
+        "explanation": "The requested name formula is Мене звати... . The alternative with Моє ім'я is also grammatical."
+      },
+      "after": {
+        "prompt": "Представлення імені",
+        "options": [
+          {
+            "text": "Мене звати Джон.",
+            "correct": true
+          },
+          {
+            "text": "Мені звати Джон.",
+            "correct": false
+          }
+        ],
+        "explanation": "The name construction is Мене звати Джон. The dative мені does not fit звати."
+      }
+    },
+    {
+      "id": "checkpoint-first-contact/inline/act-4/1",
+      "module": "checkpoint-first-contact",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 1,
+      "activity_title": "Виправ A1.1 пастки",
+      "instruction": "Обери нормативну українську форму.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Я студент.",
+      "distractors": [
+        "Я студента."
+      ],
+      "reason": "The identity predicate is nominative студент, not genitive/accusative студента. No claim rejects overt є.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D02",
+        "D41",
+        "V02",
+        "V41"
+      ],
+      "before": {
+        "prompt": "(Do not use є.) Речення ідентичності",
+        "options": [
+          {
+            "text": "Я студент.",
+            "correct": true
+          },
+          {
+            "text": "Я є студент.",
+            "correct": false
+          }
+        ],
+        "explanation": "Теперішня ідентичність зазвичай не додає є."
+      },
+      "after": {
+        "prompt": "Речення ідентичності",
+        "options": [
+          {
+            "text": "Я студент.",
+            "correct": true
+          },
+          {
+            "text": "Я студента.",
+            "correct": false
+          }
+        ],
+        "explanation": "In Я студент, студент is a nominative predicate. Студента is a different case."
+      }
+    },
+    {
+      "id": "checkpoint-first-contact/inline/act-5/7",
+      "module": "checkpoint-first-contact",
+      "section": "inline",
+      "activity_index": 4,
+      "item_index": 7,
+      "activity_title": "Пропуски в діалозі",
+      "instruction": "Доповни діалог на мовних курсах.",
+      "type": "fill-in",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "познайомитися",
+      "distractors": [
+        "походження",
+        "познайомився"
+      ],
+      "reason": "A first introduction licenses познайомитися after приємно. Походження is a noun, and познайомився is a finite past form.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D03",
+        "V03"
+      ],
+      "before": {
+        "sentence": "(Greeting a new classmate: nice to meet you.) Дуже приємно ___!",
+        "answer": "познайомитися",
+        "options": [
+          "познайомитися",
+          "походження",
+          "допомогти"
+        ],
+        "explanation": "Дуже приємно познайомитися завершує першу зустріч."
+      },
+      "after": {
+        "sentence": "— Мене звати Олена. — А мене Марко. Дуже приємно ___!",
+        "answer": "познайомитися",
+        "options": [
+          "познайомитися",
+          "походження",
+          "познайомився"
+        ],
+        "explanation": "After приємно, use the infinitive познайомитися in this introduction. Походження is a noun; познайомився is past tense."
+      }
+    },
+    {
+      "id": "colors/inline/act-1/0",
+      "module": "colors",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "activity_title": "Запитай про колір",
+      "instruction": "Choose the natural question or short answer.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Якого кольору олівець?",
+      "distractors": [
+        "Який колір є олівець?",
+        "Якого кольори олівець?"
+      ],
+      "reason": "Якого кольору agrees in genitive singular. Який колір є олівець gives a mismatched noun predicate; якого кольори mixes singular and plural.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "(Do not use є.) You point to a pencil and ask its color.",
+        "options": [
+          {
+            "text": "Якого кольору олівець?",
+            "correct": true
+          },
+          {
+            "text": "Який колір є олівець?",
+            "correct": false
+          },
+          {
+            "text": "Якого кольору є олівець?",
+            "correct": false
+          }
+        ],
+        "explanation": "Learn Якого кольору...? as one question phrase without є."
+      },
+      "after": {
+        "prompt": "Ось олівець. Обери запитання про нього.",
+        "options": [
+          {
+            "text": "Якого кольору олівець?",
+            "correct": true
+          },
+          {
+            "text": "Який колір є олівець?",
+            "correct": false
+          },
+          {
+            "text": "Якого кольори олівець?",
+            "correct": false
+          }
+        ],
+        "explanation": "Use Якого кольору олівець? Якого and кольору agree. Кольори is plural, and Який колір є олівець does not form this question."
+      }
+    },
+    {
+      "id": "my-family/inline/act-1/0",
+      "module": "my-family",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "activity_title": "Питання до фото",
+      "instruction": "Обери український рядок для фото-розмови.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "У тебе є брат?",
+      "distractors": [
+        "У мене є брат?",
+        "Це брат?"
+      ],
+      "reason": "Тебе addresses Oleg. У мене asks about the questioner, while Це брат asks to identify someone rather than whether Oleg has a brother.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D36",
+        "D41",
+        "D42",
+        "V36",
+        "V41",
+        "V42"
+      ],
+      "before": {
+        "prompt": "Ти питаєш одного ровесника, чи є в нього брат. — You ask a peer whether they have a brother.",
+        "options": [
+          {
+            "text": "У тебе є брат?",
+            "correct": true
+          },
+          {
+            "text": "У мене є брат?",
+            "correct": false
+          },
+          {
+            "text": "Це брат?",
+            "correct": false
+          }
+        ],
+        "explanation": "У тебе є...? питає одну знайому людину."
+      },
+      "after": {
+        "prompt": "Олег розповідає про свою родину. Ти питаєш, чи є в нього брат.",
+        "options": [
+          {
+            "text": "У тебе є брат?",
+            "correct": true
+          },
+          {
+            "text": "У мене є брат?",
+            "correct": false
+          },
+          {
+            "text": "Це брат?",
+            "correct": false
+          }
+        ],
+        "explanation": "У тебе є...? питає одну знайому людину."
+      }
+    },
+    {
+      "id": "sounds-letters-and-hello/root/act-5/4",
+      "module": "sounds-letters-and-hello",
+      "section": "root",
+      "activity_index": 4,
+      "item_index": 4,
+      "activity_title": "First conversations",
+      "instruction": "Choose the phrase that completes the line.",
+      "type": "fill-in",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "поба́чення",
+      "distractors": [
+        "тебе́",
+        "ма́ма"
+      ],
+      "reason": "The farewell reply establishes the parting expression До побачення. До тебе is not a farewell; до мама has the wrong case.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D04",
+        "D42",
+        "V04",
+        "V42"
+      ],
+      "before": {
+        "sentence": "(Saying goodbye) До ____!",
+        "answer": "поба́чення",
+        "options": [
+          "поба́чення",
+          "тебе́",
+          "ма́ма"
+        ]
+      },
+      "after": {
+        "sentence": "— До ____! — Бувай!",
+        "answer": "поба́чення",
+        "options": [
+          "поба́чення",
+          "тебе́",
+          "ма́ма"
+        ]
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-9/0",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 5,
+      "item_index": 0,
+      "activity_title": "Фо́рми профе́сій — Profession forms",
+      "instruction": "Обери́ приро́дну фо́рму профе́сії. — Choose the natural profession form.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Вона́ вчи́телька.",
+      "distractors": [
+        "Вона́ вчи́тельку.",
+        "Воно́ вчи́телька."
+      ],
+      "reason": "Вчителька is nominative; вчительку is accusative. Воно cannot refer to Олена. The valid masculine profession noun is removed.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D05",
+        "V05"
+      ],
+      "before": {
+        "prompt": "She is a teacher. (Use the feminine profession noun.)",
+        "options": [
+          {
+            "text": "Вона́ вчи́телька.",
+            "correct": true
+          },
+          {
+            "text": "Вона́ вчи́тель.",
+            "correct": false
+          },
+          {
+            "text": "Воно́ вчи́телька.",
+            "correct": false
+          }
+        ],
+        "explanation": "Вжива́йте жіно́чу фо́рму профе́сії для жі́нки (вчи́телька). — Use the feminine profession form for a woman."
+      },
+      "after": {
+        "prompt": "Це Олена. Обери речення про неї.",
+        "options": [
+          {
+            "text": "Вона́ вчи́телька.",
+            "correct": true
+          },
+          {
+            "text": "Вона́ вчи́тельку.",
+            "correct": false
+          },
+          {
+            "text": "Воно́ вчи́телька.",
+            "correct": false
+          }
+        ],
+        "explanation": "Вона вчителька uses the nominative profession noun and refers to Олена. Вчительку is accusative; воно does not refer to her."
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-9/1",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 5,
+      "item_index": 1,
+      "activity_title": "Фо́рми профе́сій — Profession forms",
+      "instruction": "Обери́ приро́дну фо́рму профе́сії. — Choose the natural profession form.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Вона́ лі́карка.",
+      "distractors": [
+        "Вона́ лі́карку.",
+        "Він лі́карка."
+      ],
+      "reason": "Лікарка is nominative, лікарку accusative; він mismatches Олена. Masculine лікар is not labelled wrong.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D06",
+        "V06"
+      ],
+      "before": {
+        "prompt": "She is a doctor. (Use the feminine profession noun.)",
+        "options": [
+          {
+            "text": "Вона́ лі́карка.",
+            "correct": true
+          },
+          {
+            "text": "Вона́ лі́кар.",
+            "correct": false
+          },
+          {
+            "text": "Він лі́карка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Лі́карка — це жіно́ча фо́рма профе́сії. — \"Лі́карка\" is the feminine form."
+      },
+      "after": {
+        "prompt": "Це Олена. Обери речення про неї.",
+        "options": [
+          {
+            "text": "Вона́ лі́карка.",
+            "correct": true
+          },
+          {
+            "text": "Вона́ лі́карку.",
+            "correct": false
+          },
+          {
+            "text": "Він лі́карка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use Вона лікарка for Олена. Лікарку is accusative; він does not refer to Олена."
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-9/3",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 5,
+      "item_index": 3,
+      "activity_title": "Фо́рми профе́сій — Profession forms",
+      "instruction": "Обери́ приро́дну фо́рму профе́сії. — Choose the natural profession form.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Вона́ акто́рка.",
+      "distractors": [
+        "Вона́ акто́рку.",
+        "Воно́ акто́рка."
+      ],
+      "reason": "Акторка is nominative, акторку accusative; воно mismatches the named person. Masculine актор is not labelled wrong.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D07",
+        "V07"
+      ],
+      "before": {
+        "prompt": "She is an actor. (Use the feminine profession noun.)",
+        "options": [
+          {
+            "text": "Вона́ акто́рка.",
+            "correct": true
+          },
+          {
+            "text": "Вона́ акто́р.",
+            "correct": false
+          },
+          {
+            "text": "Воно́ акто́рка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Акто́рка — це жіно́ча фо́рма профе́сії. — \"Акто́рка\" is the feminine profession form."
+      },
+      "after": {
+        "prompt": "Це Олена. Обери речення про неї.",
+        "options": [
+          {
+            "text": "Вона́ акто́рка.",
+            "correct": true
+          },
+          {
+            "text": "Вона́ акто́рку.",
+            "correct": false
+          },
+          {
+            "text": "Воно́ акто́рка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Вона акторка uses the nominative profession noun. Акторку is accusative; воно does not refer to Олена."
+      }
+    },
+    {
+      "id": "things-have-gender/workbook/act-w3/3",
+      "module": "things-have-gender",
+      "section": "workbook",
+      "activity_index": 2,
+      "item_index": 3,
+      "activity_title": "У мене́ є предме́ти — I have objects",
+      "instruction": "Допо́вніть ре́чення про предме́ти. — Complete the object sentence.",
+      "type": "fill-in",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "вікно́",
+      "distractors": [
+        "він",
+        "моя́"
+      ],
+      "reason": "Вікно is the neuter noun compatible with воно маленьке. Він is masculine; моя is feminine and has no matching noun.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D08",
+        "V08"
+      ],
+      "before": {
+        "sentence": "(I have a window.) У мене́ є ___.",
+        "answer": "вікно́",
+        "options": [
+          "вікно́",
+          "він",
+          "моя́"
+        ],
+        "explanation": "Вікно́ — іме́нник пі́сля «У мене́ є». — \"Вікно́\" is an object noun after \"У мене́ є\"."
+      },
+      "after": {
+        "sentence": "У кімнаті темно. У мене́ є ___, але воно маленьке.",
+        "answer": "вікно́",
+        "options": [
+          "вікно́",
+          "він",
+          "моя́"
+        ],
+        "explanation": "Вікно agrees with воно маленьке. Він is masculine; моя is feminine and needs a noun."
+      }
+    },
+    {
+      "id": "this-and-that/inline/act-5/0",
+      "module": "this-and-that",
+      "section": "inline",
+      "activity_index": 4,
+      "item_index": 0,
+      "activity_title": "L2-пастки",
+      "instruction": "Choose the repaired Ukrainian sentence or the clearer variant.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Це цікава книга.",
+      "distractors": [
+        "Це є цікава книгу.",
+        "Цей цікава книга."
+      ],
+      "reason": "Цікава книга agrees in nominative. Цікава книгу mixes cases; цей is masculine with feminine книга. A valid copula alternative is removed.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D09",
+        "V09"
+      ],
+      "before": {
+        "prompt": "Say 'This is an interesting book' without using є.",
+        "options": [
+          {
+            "text": "Це цікава книга.",
+            "correct": true
+          },
+          {
+            "text": "Це є цікава книга.",
+            "correct": false
+          },
+          {
+            "text": "Цей цікава книга.",
+            "correct": false
+          }
+        ],
+        "explanation": "The requested pattern omits є. The version with є is also grammatical."
+      },
+      "after": {
+        "prompt": "На столі лежить книга. Обери речення про неї.",
+        "options": [
+          {
+            "text": "Це цікава книга.",
+            "correct": true
+          },
+          {
+            "text": "Це є цікава книгу.",
+            "correct": false
+          },
+          {
+            "text": "Цей цікава книга.",
+            "correct": false
+          }
+        ],
+        "explanation": "Це цікава книга has matching nominative forms. Книгу is accusative; цей is masculine. A sentence with є can also be grammatical when its forms agree."
+      }
+    },
+    {
+      "id": "what-is-it-like/workbook/0/0",
+      "module": "what-is-it-like",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 0,
+      "activity_title": "Модель речення",
+      "instruction": "Choose the natural A1 sentence.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Книга нова.",
+      "distractors": [
+        "Книгу нова.",
+        "Книга новий."
+      ],
+      "reason": "Книга нова agrees in feminine nominative. Книгу cannot be its subject; новий is masculine.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D09",
+        "V09"
+      ],
+      "before": {
+        "prompt": "(Do not use є.) The book is new.",
+        "options": [
+          {
+            "text": "Книга нова.",
+            "correct": true
+          },
+          {
+            "text": "Книга є нова.",
+            "correct": false
+          },
+          {
+            "text": "Книга новий.",
+            "correct": false
+          }
+        ],
+        "explanation": "Ukrainian usually leaves out є in this present-tense frame."
+      },
+      "after": {
+        "prompt": "Ось книга. Обери речення про неї.",
+        "options": [
+          {
+            "text": "Книга нова.",
+            "correct": true
+          },
+          {
+            "text": "Книгу нова.",
+            "correct": false
+          },
+          {
+            "text": "Книга новий.",
+            "correct": false
+          }
+        ],
+        "explanation": "Книга нова has feminine nominative agreement. Книгу is accusative; новий is masculine."
+      }
+    },
+    {
+      "id": "what-is-it-like/workbook/0/1",
+      "module": "what-is-it-like",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 1,
+      "activity_title": "Модель речення",
+      "instruction": "Choose the natural A1 sentence.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Стіл чистий.",
+      "distractors": [
+        "Стіл чиста.",
+        "Столу чистий."
+      ],
+      "reason": "Стіл чистий agrees in masculine nominative. Чиста is feminine; столу is oblique.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D10",
+        "D35",
+        "V10",
+        "V35"
+      ],
+      "before": {
+        "prompt": "(Do not use є.) The table is clean.",
+        "options": [
+          {
+            "text": "Стіл чистий.",
+            "correct": true
+          },
+          {
+            "text": "Стіл чиста.",
+            "correct": false
+          },
+          {
+            "text": "Стіл є чистий.",
+            "correct": false
+          }
+        ],
+        "explanation": "Стіл is masculine, and the no-є frame is natural."
+      },
+      "after": {
+        "prompt": "Ось стіл. Обери речення про нього.",
+        "options": [
+          {
+            "text": "Стіл чистий.",
+            "correct": true
+          },
+          {
+            "text": "Стіл чиста.",
+            "correct": false
+          },
+          {
+            "text": "Столу чистий.",
+            "correct": false
+          }
+        ],
+        "explanation": "Стіл is masculine nominative, so use чистий. Чиста is feminine; столу is not the subject form."
+      }
+    },
+    {
+      "id": "what-is-it-like/workbook/1/4",
+      "module": "what-is-it-like",
+      "section": "workbook",
+      "activity_index": 1,
+      "item_index": 4,
+      "activity_title": "Опиши кімнату",
+      "instruction": "Complete the short room lines.",
+      "type": "fill-in",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "а",
+      "distractors": [
+        "якого",
+        "яке"
+      ],
+      "reason": "А joins the two contrasting clauses. Якого and яке cannot agree with feminine книга or serve as conjunctions here; the grammatical і alternative is removed.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D11",
+        "V11"
+      ],
+      "before": {
+        "sentence": "(Contrast: whereas.) Книга дорога, ___ листівка дешева.",
+        "answer": "а",
+        "options": [
+          "а",
+          "і",
+          "яке"
+        ],
+        "explanation": "А contrasts two things."
+      },
+      "after": {
+        "sentence": "Книга дорога, ___ листівка дешева.",
+        "answer": "а",
+        "options": [
+          "а",
+          "якого",
+          "яке"
+        ],
+        "explanation": "А joins the clauses about the expensive book and the cheap card. Якого and яке cannot connect these clauses."
+      }
+    },
+    {
+      "id": "what-is-it-like/workbook/3/6",
+      "module": "what-is-it-like",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 6,
+      "activity_title": "Виправ прикметникові пастки",
+      "instruction": "Choose the standard Ukrainian adjective.",
+      "type": "fill-in",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "будь-який",
+      "distractors": [
+        "будь-яку"
+      ],
+      "reason": "Inanimate masculine accusative олівець requires будь-який. Будь-яку is feminine accusative. No assertion condemns любий generally.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D12",
+        "V12"
+      ],
+      "before": {
+        "sentence": "(Any pencil, with no particular preference.) Дай мені, будь ласка, ___ олівець.",
+        "answer": "будь-який",
+        "options": [
+          "будь-який",
+          "любий"
+        ],
+        "explanation": "Use the standard Ukrainian form for any."
+      },
+      "after": {
+        "sentence": "Мені потрібен олівець для вправи. Дай мені, будь ласка, ___ олівець.",
+        "answer": "будь-який",
+        "options": [
+          "будь-який",
+          "будь-яку"
+        ],
+        "explanation": "Олівець is masculine and inanimate, so the accusative form is будь-який. Будь-яку is feminine."
+      }
+    },
+    {
+      "id": "who-am-i/inline/act-1/0",
+      "module": "who-am-i",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "activity_title": "Ти чи ви?",
+      "instruction": "Обери фразу для ситуації.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Як тебе звати?",
+      "distractors": [
+        "Як ти звати?"
+      ],
+      "reason": "The name construction takes accusative тебе; nominative ти does not fit. The valid polite-address alternative is removed.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D01",
+        "D42",
+        "V01",
+        "V42"
+      ],
+      "before": {
+        "prompt": "Ти знайомишся з однокурсником свого віку. (Use informal address.)",
+        "options": [
+          {
+            "text": "Як тебе звати?",
+            "correct": true
+          },
+          {
+            "text": "Як вас звати?",
+            "correct": false
+          }
+        ],
+        "explanation": "З одним знайомим або рівним співрозмовником уживай тебе."
+      },
+      "after": {
+        "prompt": "Ти знайомишся з однокурсником свого віку.",
+        "options": [
+          {
+            "text": "Як тебе звати?",
+            "correct": true
+          },
+          {
+            "text": "Як ти звати?",
+            "correct": false
+          }
+        ],
+        "explanation": "Use тебе with звати. Ти is nominative and does not fit this name question."
+      }
+    },
+    {
+      "id": "who-am-i/inline/act-1/2",
+      "module": "who-am-i",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 2,
+      "activity_title": "Ти чи ви?",
+      "instruction": "Обери фразу для ситуації.",
+      "type": "quiz",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "Мене звати Олена. А тебе?",
+      "distractors": [
+        "Мені звати Олена. А тебе?"
+      ],
+      "reason": "Only accusative мене fits звати. The alternative with мені has the wrong case, independent of polite-address preferences.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D01",
+        "D11",
+        "D41",
+        "D42",
+        "V01",
+        "V11",
+        "V41",
+        "V42"
+      ],
+      "before": {
+        "prompt": "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання. (Use informal address.)",
+        "options": [
+          {
+            "text": "Мене звати Олена. А тебе?",
+            "correct": true
+          },
+          {
+            "text": "Мене звати Олена. А вас?",
+            "correct": false
+          }
+        ],
+        "explanation": "Рівна ситуація залишається неформальною."
+      },
+      "after": {
+        "prompt": "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання.",
+        "options": [
+          {
+            "text": "Мене звати Олена. А тебе?",
+            "correct": true
+          },
+          {
+            "text": "Мені звати Олена. А тебе?",
+            "correct": false
+          }
+        ],
+        "explanation": "Мене звати Олена uses the accusative мене. Мені is dative and does not fit this construction."
+      }
+    },
+    {
+      "id": "who-am-i/workbook/3/0",
+      "module": "who-am-i",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 0,
+      "activity_title": "Доповни діалог",
+      "instruction": "Обери фразу, яка завершує рядок першого знайомства.",
+      "type": "fill-in",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "тебе",
+      "distractors": [
+        "ти",
+        "це"
+      ],
+      "reason": "Accusative тебе fits the name question; ти and це cannot be its name-bearing accusative argument.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D42",
+        "V42"
+      ],
+      "before": {
+        "sentence": "(Use informal address.) Привіт! Як ___ звати?",
+        "answer": "тебе",
+        "options": [
+          "тебе",
+          "вас",
+          "це"
+        ],
+        "explanation": "Привіт показує неформальну ситуацію з ровесником."
+      },
+      "after": {
+        "sentence": "Привіт! Як ___ звати?",
+        "answer": "тебе",
+        "options": [
+          "тебе",
+          "ти",
+          "це"
+        ],
+        "explanation": "Use the accusative тебе after Як in this name question. Ти and це do not fit the construction."
+      }
+    },
+    {
+      "id": "who-am-i/workbook/3/3",
+      "module": "who-am-i",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 3,
+      "activity_title": "Доповни діалог",
+      "instruction": "Обери фразу, яка завершує рядок першого знайомства.",
+      "type": "fill-in",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "вас",
+      "distractors": [
+        "ви",
+        "я"
+      ],
+      "reason": "Accusative вас fits звати; ви and я are nominative. The grammatical informal alternative is removed.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D41",
+        "D43",
+        "V41",
+        "V43"
+      ],
+      "before": {
+        "sentence": "(Use formal address.) Добрий день! Як ___ звати?",
+        "answer": "вас",
+        "options": [
+          "вас",
+          "тебе",
+          "я"
+        ],
+        "explanation": "Добрий день пасує до формальної версії тут."
+      },
+      "after": {
+        "sentence": "Добрий день! Як ___ звати?",
+        "answer": "вас",
+        "options": [
+          "вас",
+          "ви",
+          "я"
+        ],
+        "explanation": "The name question uses accusative вас. Ви and я are nominative forms."
+      }
+    },
+    {
+      "id": "who-am-i/workbook/4/4",
+      "module": "who-am-i",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 4,
+      "activity_title": "Обери українську норму",
+      "instruction": "Заповни речення українським вибором.",
+      "type": "fill-in",
+      "origin": "bdd5f82a",
+      "disposition": "reworded",
+      "key": "інженерка",
+      "distractors": [
+        "інженерку"
+      ],
+      "reason": "The profession predicate is nominative інженерка. Інженерку is accusative. Masculine інженер is not declared ungrammatical.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D13",
+        "V13"
+      ],
+      "before": {
+        "sentence": "(Use the feminine profession noun.) Оксана — ___.",
+        "answer": "інженерка",
+        "options": [
+          "інженерка",
+          "інженер"
+        ],
+        "explanation": "Для жінки вживай фемінітив, коли українська форма існує."
+      },
+      "after": {
+        "sentence": "Оксана — ___.",
+        "answer": "інженерка",
+        "options": [
+          "інженерка",
+          "інженерку"
+        ],
+        "explanation": "Оксана — інженерка uses a nominative profession noun. Інженерку is accusative."
+      }
+    },
+    {
+      "id": "checkpoint-actions/inline/act-2/0",
+      "module": "checkpoint-actions",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 0,
+      "activity_title": "Діалог із сусідом",
+      "instruction": "Complete the dialogue with the modal, question word, or verb form.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Хто",
+      "distractors": [
+        "Коли",
+        "Як"
+      ],
+      "reason": "Анна identifies the cook, answering хто. She gives neither a time nor a manner, so коли and як do not fit this exchange.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D14",
+        "V14"
+      ],
+      "before": {
+        "sentence": "(Ask who is cooking.) Олег: ___ готує сьогодні?",
+        "answer": "Хто",
+        "options": [
+          "Хто",
+          "Коли",
+          "Як"
+        ],
+        "explanation": "Хто asks which person."
+      },
+      "after": {
+        "sentence": "Олег: ___ готує сьогодні? Анна: Сьогодні готує Марко.",
+        "answer": "Хто",
+        "options": [
+          "Хто",
+          "Коли",
+          "Як"
+        ],
+        "explanation": "The reply identifies Марко as the cook, so ask Хто. Коли asks for time; як asks for manner."
+      }
+    },
+    {
+      "id": "checkpoint-actions/inline/act-2/1",
+      "module": "checkpoint-actions",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 1,
+      "activity_title": "Діалог із сусідом",
+      "instruction": "Complete the dialogue with the modal, question word, or verb form.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "прокидаєшся",
+      "distractors": [
+        "прокидається",
+        "прокидаються"
+      ],
+      "reason": "Ти requires second-person singular прокидаєшся. Both other forms are third person.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "sentence": "(Ask when the person wakes up.) Олег: Коли ти ___?",
+        "answer": "прокидаєшся",
+        "options": [
+          "прокидаєшся",
+          "працюєш",
+          "пишеш"
+        ],
+        "explanation": "The question asks about the morning routine."
+      },
+      "after": {
+        "sentence": "Олег: Коли ти ___?",
+        "answer": "прокидаєшся",
+        "options": [
+          "прокидаєшся",
+          "прокидається",
+          "прокидаються"
+        ],
+        "explanation": "Use прокидаєшся with ти. Прокидається is third-person singular; прокидаються is third-person plural."
+      }
+    },
+    {
+      "id": "checkpoint-actions/inline/act-2/5",
+      "module": "checkpoint-actions",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 5,
+      "activity_title": "Діалог із сусідом",
+      "instruction": "Complete the dialogue with the modal, question word, or verb form.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "хочу",
+      "distractors": [
+        "можу",
+        "мушу"
+      ],
+      "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D23",
+        "D24",
+        "D25",
+        "V23",
+        "V24",
+        "V25"
+      ],
+      "before": {
+        "sentence": "(Express desire: want to.) Олег: Я ___ готувати сьогодні.",
+        "answer": "хочу",
+        "options": [
+          "хочу",
+          "можу",
+          "мушу"
+        ],
+        "explanation": "Хочу + infinitive gives a plan or desire."
+      },
+      "after": {
+        "sentence": "Олег: Я не можу готувати сьогодні й не мушу готувати, але я ___ готувати.",
+        "answer": "хочу",
+        "options": [
+          "хочу",
+          "можу",
+          "мушу"
+        ],
+        "explanation": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning."
+      }
+    },
+    {
+      "id": "checkpoint-actions/inline/act-3/1",
+      "module": "checkpoint-actions",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "activity_title": "Мій день",
+      "instruction": "Choose the word that completes the short day description.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "вмиваюся",
+      "distractors": [
+        "вмиваєшся",
+        "вмивається"
+      ],
+      "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D29",
+        "V29"
+      ],
+      "before": {
+        "sentence": "(I wash up.) Потім я ___ і чищу зуби.",
+        "answer": "вмиваюся",
+        "options": [
+          "вмиваюся",
+          "працюю",
+          "читаю"
+        ],
+        "explanation": "Вмиваюся is the morning routine form."
+      },
+      "after": {
+        "sentence": "Потім я ___ і чищу зуби.",
+        "answer": "вмиваюся",
+        "options": [
+          "вмиваюся",
+          "вмиваєшся",
+          "вмивається"
+        ],
+        "explanation": "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+      }
+    },
+    {
+      "id": "checkpoint-actions/inline/act-3/2",
+      "module": "checkpoint-actions",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "activity_title": "Мій день",
+      "instruction": "Choose the word that completes the short day description.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "снідаю",
+      "distractors": [
+        "снідаєш",
+        "снідають"
+      ],
+      "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D26",
+        "V26"
+      ],
+      "before": {
+        "sentence": "(I have breakfast.) Після цього я ___ вдома.",
+        "answer": "снідаю",
+        "options": [
+          "снідаю",
+          "говорю",
+          "пишу"
+        ],
+        "explanation": "Снідаю fits the morning sequence."
+      },
+      "after": {
+        "sentence": "Після цього я ___ вдома.",
+        "answer": "снідаю",
+        "options": [
+          "снідаю",
+          "снідаєш",
+          "снідають"
+        ],
+        "explanation": "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+      }
+    },
+    {
+      "id": "checkpoint-actions/inline/act-3/3",
+      "module": "checkpoint-actions",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "activity_title": "Мій день",
+      "instruction": "Choose the word that completes the short day description.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "працюю",
+      "distractors": [
+        "працюєш",
+        "працюють"
+      ],
+      "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D27",
+        "V27"
+      ],
+      "before": {
+        "sentence": "(I work.) Вдень я ___ в офісі.",
+        "answer": "працюю",
+        "options": [
+          "працюю",
+          "прокидаюся",
+          "вмиваюся"
+        ],
+        "explanation": "Працюю fits the work part of the day."
+      },
+      "after": {
+        "sentence": "Вдень я ___ в офісі.",
+        "answer": "працюю",
+        "options": [
+          "працюю",
+          "працюєш",
+          "працюють"
+        ],
+        "explanation": "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+      }
+    },
+    {
+      "id": "my-day/inline/act-2/1",
+      "module": "my-day",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 1,
+      "activity_title": "Послідовність дня",
+      "instruction": "Обери слово або дію, яка логічно продовжує день.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "снідаю",
+      "distractors": [
+        "снідаєш",
+        "снідають"
+      ],
+      "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D26",
+        "V26"
+      ],
+      "before": {
+        "sentence": "(I have breakfast.) Після того я ___.",
+        "answer": "снідаю",
+        "options": [
+          "снідаю",
+          "вечеряю",
+          "лягаю спати"
+        ],
+        "explanation": "Після ранкового вмивання логічно снідати."
+      },
+      "after": {
+        "sentence": "Після того я ___.",
+        "answer": "снідаю",
+        "options": [
+          "снідаю",
+          "снідаєш",
+          "снідають"
+        ],
+        "explanation": "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+      }
+    },
+    {
+      "id": "my-day/inline/act-2/2",
+      "module": "my-day",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 2,
+      "activity_title": "Послідовність дня",
+      "instruction": "Обери слово або дію, яка логічно продовжує день.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "працюю",
+      "distractors": [
+        "працюєш",
+        "працюють"
+      ],
+      "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D27",
+        "V27"
+      ],
+      "before": {
+        "sentence": "(I work.) Вдень я ___ в офісі.",
+        "answer": "працюю",
+        "options": [
+          "працюю",
+          "прокидаюся",
+          "снідаю"
+        ],
+        "explanation": "Робота в офісі логічно підходить до вдень."
+      },
+      "after": {
+        "sentence": "Вдень я ___ в офісі.",
+        "answer": "працюю",
+        "options": [
+          "працюю",
+          "працюєш",
+          "працюють"
+        ],
+        "explanation": "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+      }
+    },
+    {
+      "id": "my-day/inline/act-2/3",
+      "module": "my-day",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 3,
+      "activity_title": "Послідовність дня",
+      "instruction": "Обери слово або дію, яка логічно продовжує день.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "обідаю",
+      "distractors": [
+        "обідаєш",
+        "обідають"
+      ],
+      "reason": "The subject я requires the first-person singular key. The two alternatives are second-person singular and third-person plural or singular, so neither agrees.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D28",
+        "V28"
+      ],
+      "before": {
+        "sentence": "(I have lunch.) О першій годині я ___.",
+        "answer": "обідаю",
+        "options": [
+          "обідаю",
+          "вечеряю",
+          "прокидаюся"
+        ],
+        "explanation": "О першій зазвичай обідають."
+      },
+      "after": {
+        "sentence": "О першій годині я ___.",
+        "answer": "обідаю",
+        "options": [
+          "обідаю",
+          "обідаєш",
+          "обідають"
+        ],
+        "explanation": "The subject я needs the first-person singular verb. The other options belong with ти or вони/він."
+      }
+    },
+    {
+      "id": "checkpoint-actions/inline/act-3/0",
+      "module": "checkpoint-actions",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "activity_title": "Мій день",
+      "instruction": "Choose the word that completes the short day description.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Спочатку",
+      "distractors": [
+        "Пізніше",
+        "Після цього"
+      ],
+      "reason": "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D16",
+        "D49",
+        "D51",
+        "V16",
+        "V51",
+        "V53"
+      ],
+      "before": {
+        "sentence": "(First.) ___ я прокидаюся о сьомій.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Нарешті",
+          "Чому"
+        ],
+        "explanation": "Спочатку starts the routine."
+      },
+      "after": {
+        "sentence": "Я снідаю о восьмій, але ___ я прокидаюся о сьомій.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Пізніше",
+          "Після цього"
+        ],
+        "explanation": "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00."
+      }
+    },
+    {
+      "id": "checkpoint-time-nature/inline/act-3/0",
+      "module": "checkpoint-time-nature",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "activity_title": "Абзац про день",
+      "instruction": "Обери слово або фразу, які завершують опис дня.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Спочатку",
+      "distractors": [
+        "Пізніше",
+        "Після цього"
+      ],
+      "reason": "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D16",
+        "D49",
+        "D51",
+        "V16",
+        "V51",
+        "V53"
+      ],
+      "before": {
+        "sentence": "(First.) ___ я прокидаюся і снідаю.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Потім",
+          "Нарешті"
+        ],
+        "explanation": "Спочатку відкриває послідовність дня."
+      },
+      "after": {
+        "sentence": "Я снідаю о восьмій, але ___ я прокидаюся о сьомій.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Пізніше",
+          "Після цього"
+        ],
+        "explanation": "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00."
+      }
+    },
+    {
+      "id": "checkpoint-time-nature/inline/act-3/6",
+      "module": "checkpoint-time-nature",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 6,
+      "activity_title": "Абзац про день",
+      "instruction": "Обери слово або фразу, які завершують опис дня.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "replaced",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Finally.) ___ я лягаю спати о дванадцятій.",
+        "answer": "Нарешті",
+        "options": [
+          "Нарешті",
+          "Спочатку",
+          "Потім"
+        ],
+        "explanation": "Нарешті завершує послідовність дня."
+      },
+      "after": {
+        "sentence": "Я слухаю музику до одинадцятої, а ___ я лягаю спати о дванадцятій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step."
+      }
+    },
+    {
+      "id": "my-day/inline/act-2/0",
+      "module": "my-day",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 0,
+      "activity_title": "Послідовність дня",
+      "instruction": "Обери слово або дію, яка логічно продовжує день.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Спочатку",
+      "distractors": [
+        "Пізніше",
+        "Після цього"
+      ],
+      "reason": "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D16",
+        "D49",
+        "D51",
+        "V16",
+        "V51",
+        "V53"
+      ],
+      "before": {
+        "sentence": "(First.) ___ я прокидаюся і вмиваюся.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Потім",
+          "Нарешті"
+        ],
+        "explanation": "День зазвичай починається з прокидання."
+      },
+      "after": {
+        "sentence": "Я снідаю о восьмій, але ___ я прокидаюся о сьомій.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Пізніше",
+          "Після цього"
+        ],
+        "explanation": "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00."
+      }
+    },
+    {
+      "id": "my-day/inline/act-2/4",
+      "module": "my-day",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 4,
+      "activity_title": "Послідовність дня",
+      "instruction": "Обери слово або дію, яка логічно продовжує день.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Then.) ___ я читаю книгу або дивлюся фільм.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Спочатку",
+          "Вранці"
+        ],
+        "explanation": "Потім продовжує розповідь після роботи або обіду."
+      },
+      "after": {
+        "sentence": "Я працюю до п’ятої, а ___ я читаю книгу о шостій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+      }
+    },
+    {
+      "id": "my-day/inline/act-2/5",
+      "module": "my-day",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 5,
+      "activity_title": "Послідовність дня",
+      "instruction": "Обери слово або дію, яка логічно продовжує день.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "replaced",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Finally.) ___ я лягаю спати о дванадцятій.",
+        "answer": "Нарешті",
+        "options": [
+          "Нарешті",
+          "Спочатку",
+          "Вдень"
+        ],
+        "explanation": "Лягати спати - остання дія дня."
+      },
+      "after": {
+        "sentence": "Я читаю книгу до одинадцятої, а ___ я лягаю спати о дванадцятій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step."
+      }
+    },
+    {
+      "id": "my-morning/inline/act-3/0",
+      "module": "my-morning",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "activity_title": "Порядок ранку",
+      "instruction": "Choose the sequence word that fits the routine.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Спочатку",
+      "distractors": [
+        "Пізніше",
+        "Після цього"
+      ],
+      "reason": "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D16",
+        "D49",
+        "D51",
+        "V16",
+        "V51",
+        "V53"
+      ],
+      "before": {
+        "sentence": "(First.) ___ я прокидаюся о сьомій.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Після цього",
+          "Нарешті"
+        ],
+        "explanation": "Спочатку starts the story."
+      },
+      "after": {
+        "sentence": "Я снідаю о восьмій, але ___ я прокидаюся о сьомій.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Пізніше",
+          "Після цього"
+        ],
+        "explanation": "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00."
+      }
+    },
+    {
+      "id": "my-morning/inline/act-3/1",
+      "module": "my-morning",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "activity_title": "Порядок ранку",
+      "instruction": "Choose the sequence word that fits the routine.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Then.) ___ я вмиваюся.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Нарешті",
+          "Спочатку"
+        ],
+        "explanation": "Потім gives the next action."
+      },
+      "after": {
+        "sentence": "Я прокидаюся о сьомій, а ___ я вмиваюся о восьмій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+      }
+    },
+    {
+      "id": "my-morning/inline/act-3/2",
+      "module": "my-morning",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "activity_title": "Порядок ранку",
+      "instruction": "Choose the sequence word that fits the routine.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Після цього",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D44",
+        "D50",
+        "D51",
+        "V44",
+        "V52",
+        "V53"
+      ],
+      "before": {
+        "sentence": "(After this.) ___ я одягаюся.",
+        "answer": "Після цього",
+        "options": [
+          "Після цього",
+          "Спочатку",
+          "Нарешті"
+        ],
+        "explanation": "Після цього means after that."
+      },
+      "after": {
+        "sentence": "Я вмиваюся о сьомій, а ___ я одягаюся о восьмій.",
+        "answer": "Після цього",
+        "options": [
+          "Після цього",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+      }
+    },
+    {
+      "id": "my-morning/inline/act-3/3",
+      "module": "my-morning",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "activity_title": "Порядок ранку",
+      "instruction": "Choose the sequence word that fits the routine.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Then.) ___ я снідаю.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Нарешті",
+          "Спочатку"
+        ],
+        "explanation": "Потім can introduce another middle step."
+      },
+      "after": {
+        "sentence": "Я одягаюся о сьомій, а ___ я снідаю о восьмій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+      }
+    },
+    {
+      "id": "my-morning/inline/act-3/4",
+      "module": "my-morning",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 4,
+      "activity_title": "Порядок ранку",
+      "instruction": "Choose the sequence word that fits the routine.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "replaced",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Finally.) ___ я йду на роботу.",
+        "answer": "Нарешті",
+        "options": [
+          "Нарешті",
+          "Спочатку",
+          "Після цього"
+        ],
+        "explanation": "Нарешті marks the final step."
+      },
+      "after": {
+        "sentence": "Я снідаю о восьмій, а ___ я йду на роботу о дев’ятій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step."
+      }
+    },
+    {
+      "id": "my-morning/inline/act-3/5",
+      "module": "my-morning",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 5,
+      "activity_title": "Порядок ранку",
+      "instruction": "Choose the sequence word that fits the routine.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Then: use the single word.) Спочатку я прокидаюся. ___ я вмиваюся.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Нарешті",
+          "Після цього"
+        ],
+        "explanation": "Потім links the second action."
+      },
+      "after": {
+        "sentence": "Я прокидаюся о шостій, а ___ я вмиваюся о сьомій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+      }
+    },
+    {
+      "id": "my-morning/inline/act-4/0",
+      "module": "my-morning",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 0,
+      "activity_title": "Три речення про ранок",
+      "instruction": "Complete the three-sentence morning story.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Спочатку",
+      "distractors": [
+        "Пізніше",
+        "Після цього"
+      ],
+      "reason": "Waking at08:00 precedes breakfast at09:00. Спочатку fits; Пізніше and Після цього reverse that time order.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D16",
+        "D49",
+        "D51",
+        "V16",
+        "V51",
+        "V53"
+      ],
+      "before": {
+        "sentence": "(First.) ___ я прокидаюся о восьмій.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Нарешті",
+          "Після цього"
+        ],
+        "explanation": "Start the story with Спочатку."
+      },
+      "after": {
+        "sentence": "Я снідаю о дев’ятій, але ___ я прокидаюся о восьмій.",
+        "answer": "Спочатку",
+        "options": [
+          "Спочатку",
+          "Пізніше",
+          "Після цього"
+        ],
+        "explanation": "Waking at08:00 precedes breakfast at09:00. Спочатку fits; Пізніше and Після цього reverse that time order."
+      }
+    },
+    {
+      "id": "my-morning/inline/act-4/1",
+      "module": "my-morning",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 1,
+      "activity_title": "Три речення про ранок",
+      "instruction": "Complete the three-sentence morning story.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Then.) ___ я вмиваюся і снідаю.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Нарешті",
+          "Спочатку"
+        ],
+        "explanation": "Потім gives the next action."
+      },
+      "after": {
+        "sentence": "Я прокидаюся о восьмій, а ___ я вмиваюся і снідаю о дев’ятій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+      }
+    },
+    {
+      "id": "my-morning/inline/act-4/2",
+      "module": "my-morning",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 2,
+      "activity_title": "Три речення про ранок",
+      "instruction": "Complete the three-sentence morning story.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "replaced",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Finally.) ___ я йду в університет.",
+        "answer": "Нарешті",
+        "options": [
+          "Нарешті",
+          "Потім",
+          "Спочатку"
+        ],
+        "explanation": "Нарешті marks the last sentence."
+      },
+      "after": {
+        "sentence": "Я снідаю о восьмій, а ___ я йду в університет о дев’ятій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step."
+      }
+    },
+    {
+      "id": "checkpoint-time-nature/inline/act-1/4",
+      "module": "checkpoint-time-nature",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 4,
+      "activity_title": "Час, дні і погода",
+      "instruction": "Обери правильний варіант для повторення A1.4.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "холодно",
+      "distractors": [
+        "спекотно",
+        "тепло"
+      ],
+      "reason": "Minus twenty establishes cold conditions. Спекотно and тепло contradict the stated temperature.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D18",
+        "D19",
+        "D31",
+        "V18",
+        "V19",
+        "V31"
+      ],
+      "before": {
+        "sentence": "(Cold.) Взимку дуже ___.",
+        "answer": "холодно",
+        "options": [
+          "холодно",
+          "спекотно",
+          "тепло"
+        ],
+        "explanation": "Взимку природно поєднується з холодно."
+      },
+      "after": {
+        "sentence": "На вулиці мінус двадцять градусів. Тут дуже ___.",
+        "answer": "холодно",
+        "options": [
+          "холодно",
+          "спекотно",
+          "тепло"
+        ],
+        "explanation": "At minus twenty degrees, холодно fits. Спекотно and тепло describe different temperature conditions."
+      }
+    },
+    {
+      "id": "checkpoint-time-nature/inline/act-3/1",
+      "module": "checkpoint-time-nature",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "activity_title": "Абзац про день",
+      "instruction": "Обери слово або фразу, які завершують опис дня.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Потім",
+      "distractors": [
+        "Перед цим",
+        "До цього"
+      ],
+      "reason": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D15",
+        "D44",
+        "D50",
+        "V15",
+        "V44",
+        "V52"
+      ],
+      "before": {
+        "sentence": "(Then.) ___ я йду на роботу.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Вранці",
+          "Вночі"
+        ],
+        "explanation": "Потім продовжує опис після першої дії."
+      },
+      "after": {
+        "sentence": "Я снідаю о сьомій, а ___ я йду на роботу о восьмій.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Перед цим",
+          "До цього"
+        ],
+        "explanation": "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
+      }
+    },
+    {
+      "id": "checkpoint-time-nature/inline/act-3/3",
+      "module": "checkpoint-time-nature",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "activity_title": "Абзац про день",
+      "instruction": "Обери слово або фразу, які завершують опис дня.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Після обіду",
+      "distractors": [
+        "Вранці",
+        "Вночі"
+      ],
+      "reason": "The lunch has ended and it is14:00, so після обіду fits. Вранці and вночі contradict the stated time.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D51",
+        "V53"
+      ],
+      "before": {
+        "sentence": "(After lunch.) ___ я гуляю в парку.",
+        "answer": "Після обіду",
+        "options": [
+          "Після обіду",
+          "Вранці",
+          "Вночі"
+        ],
+        "explanation": "Після обіду природно продовжує день."
+      },
+      "after": {
+        "sentence": "Я обідаю о першій. Зараз друга година дня. ___ я гуляю в парку.",
+        "answer": "Після обіду",
+        "options": [
+          "Після обіду",
+          "Вранці",
+          "Вночі"
+        ],
+        "explanation": "Lunch has ended and it is two in the afternoon. Після обіду fits; вранці and вночі contradict that time."
+      }
+    },
+    {
+      "id": "checkpoint-time-nature/inline/act-3/4",
+      "module": "checkpoint-time-nature",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 4,
+      "activity_title": "Абзац про день",
+      "instruction": "Обери слово або фразу, які завершують опис дня.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "тепло",
+      "distractors": [
+        "теплий",
+        "тепла"
+      ],
+      "reason": "The impersonal weather clause takes тепло, an adverb. Теплий and тепла are adjectives with no matching subject noun.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D19",
+        "V19"
+      ],
+      "before": {
+        "sentence": "(Warm.) Я гуляю, тому що сьогодні ___ і сонячно.",
+        "answer": "тепло",
+        "options": [
+          "тепло",
+          "холодно",
+          "дощ"
+        ],
+        "explanation": "Тепло і сонячно логічно пояснює прогулянку."
+      },
+      "after": {
+        "sentence": "На вулиці двадцять градусів. Я гуляю, тому що сьогодні ___ і сонячно.",
+        "answer": "тепло",
+        "options": [
+          "тепло",
+          "теплий",
+          "тепла"
+        ],
+        "explanation": "Тепло is the adverb used in this weather sentence. Теплий and тепла are adjectives and need a matching noun."
+      }
+    },
+    {
+      "id": "checkpoint-time-nature/inline/act-3/5",
+      "module": "checkpoint-time-nature",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 5,
+      "activity_title": "Абзац про день",
+      "instruction": "Обери слово або фразу, які завершують опис дня.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Ввечері",
+      "distractors": [
+        "Вдень",
+        "Вранці"
+      ],
+      "reason": "20:00 fixes the evening; вдень and вранці contradict it.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "sentence": "(In the evening.) ___ я вечеряю і слухаю музику.",
+        "answer": "Ввечері",
+        "options": [
+          "Ввечері",
+          "Вдень",
+          "Вранці"
+        ],
+        "explanation": "Вечеря належить до вечора."
+      },
+      "after": {
+        "sentence": "Уже двадцята година. ___ я вечеряю і слухаю музику.",
+        "answer": "Ввечері",
+        "options": [
+          "Ввечері",
+          "Вдень",
+          "Вранці"
+        ],
+        "explanation": "Twenty hundred hours is evening, so Ввечері fits. Вдень and Вранці describe other parts of the day."
+      }
+    },
+    {
+      "id": "free-time/inline/act-2/0",
+      "module": "free-time",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 0,
+      "activity_title": "Частота і запрошення",
+      "instruction": "Обери слово або фразу, які найкраще завершують речення.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "ніколи не",
+      "distractors": [
+        "ніколи",
+        "ніякий"
+      ],
+      "reason": "Negative pronoun ніколи requires не with працюю. Ніколи alone omits the required negative particle; ніякий is an adjective with no matching noun.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D20",
+        "V20",
+        "G05"
+      ],
+      "before": {
+        "sentence": "(Never.) Я ___ працюю у неділю.",
+        "answer": "ніколи не",
+        "options": [
+          "ніколи не",
+          "завжди",
+          "часто"
+        ],
+        "explanation": "Зі словом ніколи потрібна частка не."
+      },
+      "after": {
+        "sentence": "У неділю в офісі нікого немає. Я ___ працюю у неділю.",
+        "answer": "ніколи не",
+        "options": [
+          "ніколи не",
+          "ніколи",
+          "ніякий"
+        ],
+        "explanation": "Use ніколи не with a negative verb: Я ніколи не працюю. Ніколи needs не here; ніякий does not fit this verb phrase."
+      }
+    },
+    {
+      "id": "free-time/inline/act-2/3",
+      "module": "free-time",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 3,
+      "activity_title": "Частота і запрошення",
+      "instruction": "Обери слово або фразу, які найкраще завершують речення.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "часто",
+      "distractors": [
+        "частий",
+        "часта"
+      ],
+      "reason": "The verb граю takes frequency adverb часто. Частий and часта are adjectives and cannot function as its frequency adjunct.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D21",
+        "V21"
+      ],
+      "before": {
+        "sentence": "(Often.) Я люблю спорт, тому ___ граю у баскетбол.",
+        "answer": "часто",
+        "options": [
+          "часто",
+          "ніколи",
+          "рідко"
+        ],
+        "explanation": "Якщо людина любить спорт, часто логічно підходить."
+      },
+      "after": {
+        "sentence": "Я люблю спорт, тому ___ граю у баскетбол.",
+        "answer": "часто",
+        "options": [
+          "часто",
+          "частий",
+          "часта"
+        ],
+        "explanation": "Часто is an adverb that modifies граю. Частий and часта are adjectives."
+      }
+    },
+    {
+      "id": "free-time/inline/act-2/4",
+      "module": "free-time",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 4,
+      "activity_title": "Частота і запрошення",
+      "instruction": "Обери слово або фразу, які найкраще завершують речення.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "рідко",
+      "distractors": [
+        "рідкий",
+        "рідка"
+      ],
+      "reason": "The verb читаю takes frequency adverb рідко. Рідкий and рідка are adjectives.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D22",
+        "V22"
+      ],
+      "before": {
+        "sentence": "(Rarely.) Я не маю часу, тому ___ читаю книги.",
+        "answer": "рідко",
+        "options": [
+          "рідко",
+          "часто",
+          "завжди"
+        ],
+        "explanation": "Коли часу мало, дія відбувається рідко."
+      },
+      "after": {
+        "sentence": "Я не маю часу, тому ___ читаю книги.",
+        "answer": "рідко",
+        "options": [
+          "рідко",
+          "рідкий",
+          "рідка"
+        ],
+        "explanation": "Рідко modifies читаю. Рідкий and рідка are adjectives, so they cannot fill this gap."
+      }
+    },
+    {
+      "id": "i-want-i-can/inline/act-3/0",
+      "module": "i-want-i-can",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "activity_title": "Доповни речення",
+      "instruction": "Choose хочу, можу, or мушу in the right form.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "хочу",
+      "distractors": [
+        "можу",
+        "мушу"
+      ],
+      "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D23",
+        "D24",
+        "D25",
+        "V23",
+        "V24",
+        "V25"
+      ],
+      "before": {
+        "sentence": "(Express desire: want to.) Я ___ гуляти, але не можу сьогодні.",
+        "answer": "хочу",
+        "options": [
+          "хочу",
+          "можу",
+          "мушу"
+        ],
+        "explanation": "The first part gives desire."
+      },
+      "after": {
+        "sentence": "Я не можу гуляти сьогодні й не мушу гуляти, але я ___ гуляти.",
+        "answer": "хочу",
+        "options": [
+          "хочу",
+          "можу",
+          "мушу"
+        ],
+        "explanation": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning."
+      }
+    },
+    {
+      "id": "i-want-i-can/inline/act-3/1",
+      "module": "i-want-i-can",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "activity_title": "Доповни речення",
+      "instruction": "Choose хочу, можу, or мушу in the right form.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "можу",
+      "distractors": [
+        "хочу",
+        "мушу"
+      ],
+      "reason": "The two earlier clauses establish desire and obligation; denying them in the gap would contradict those clauses. The remaining modal expresses inability.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D23",
+        "D24",
+        "D25",
+        "V23",
+        "V24",
+        "V25"
+      ],
+      "before": {
+        "sentence": "(Express inability: cannot.) Я хочу піти, але не ___.",
+        "answer": "можу",
+        "options": [
+          "можу",
+          "хочу",
+          "мушу"
+        ],
+        "explanation": "Але не можу gives the practical block."
+      },
+      "after": {
+        "sentence": "Я хочу піти й мушу піти, але не ___.",
+        "answer": "можу",
+        "options": [
+          "можу",
+          "хочу",
+          "мушу"
+        ],
+        "explanation": "The two earlier clauses establish desire and obligation; denying them in the gap would contradict those clauses. The remaining modal expresses inability."
+      }
+    },
+    {
+      "id": "i-want-i-can/inline/act-3/2",
+      "module": "i-want-i-can",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "activity_title": "Доповни речення",
+      "instruction": "Choose хочу, можу, or мушу in the right form.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "мушу",
+      "distractors": [
+        "можу",
+        "хочу"
+      ],
+      "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D23",
+        "D24",
+        "D25",
+        "V23",
+        "V24",
+        "V25"
+      ],
+      "before": {
+        "sentence": "(Express obligation: must.) Я не можу: я ___ працювати.",
+        "answer": "мушу",
+        "options": [
+          "мушу",
+          "можу",
+          "хочу"
+        ],
+        "explanation": "The reason is an obligation."
+      },
+      "after": {
+        "sentence": "Я не хочу працювати й не можу працювати, але ___ працювати.",
+        "answer": "мушу",
+        "options": [
+          "мушу",
+          "можу",
+          "хочу"
+        ],
+        "explanation": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning."
+      }
+    },
+    {
+      "id": "i-want-i-can/inline/act-3/3",
+      "module": "i-want-i-can",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "activity_title": "Доповни речення",
+      "instruction": "Choose хочу, можу, or мушу in the right form.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "хоче",
+      "distractors": [
+        "може",
+        "мусить"
+      ],
+      "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D23",
+        "D24",
+        "D25",
+        "V23",
+        "V24",
+        "V25"
+      ],
+      "before": {
+        "sentence": "(Express desire: wants to.) Оля ___ гуляти, але не може сьогодні.",
+        "answer": "хоче",
+        "options": [
+          "хоче",
+          "може",
+          "мусить"
+        ],
+        "explanation": "The first part gives her desire."
+      },
+      "after": {
+        "sentence": "Оля не може гуляти й не мусить гуляти, але ___ гуляти.",
+        "answer": "хоче",
+        "options": [
+          "хоче",
+          "може",
+          "мусить"
+        ],
+        "explanation": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning."
+      }
+    },
+    {
+      "id": "i-want-i-can/inline/act-3/4",
+      "module": "i-want-i-can",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 4,
+      "activity_title": "Доповни речення",
+      "instruction": "Choose хочу, можу, or мушу in the right form.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "може",
+      "distractors": [
+        "хоче",
+        "мусить"
+      ],
+      "reason": "The two earlier clauses establish desire and obligation; denying them in the gap would contradict those clauses. The remaining modal expresses inability.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D23",
+        "D24",
+        "D25",
+        "V23",
+        "V24",
+        "V25"
+      ],
+      "before": {
+        "sentence": "(Express inability: cannot.) Денис не ___ піти: він мусить працювати.",
+        "answer": "може",
+        "options": [
+          "може",
+          "хоче",
+          "мусить"
+        ],
+        "explanation": "Не може gives the practical block."
+      },
+      "after": {
+        "sentence": "Денис хоче піти й мусить піти, але не ___.",
+        "answer": "може",
+        "options": [
+          "може",
+          "хоче",
+          "мусить"
+        ],
+        "explanation": "The two earlier clauses establish desire and obligation; denying them in the gap would contradict those clauses. The remaining modal expresses inability."
+      }
+    },
+    {
+      "id": "i-want-i-can/inline/act-3/5",
+      "module": "i-want-i-can",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 5,
+      "activity_title": "Доповни речення",
+      "instruction": "Choose хочу, можу, or мушу in the right form.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "мусять",
+      "distractors": [
+        "можуть",
+        "хочуть"
+      ],
+      "reason": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D23",
+        "D24",
+        "D25",
+        "V23",
+        "V24",
+        "V25"
+      ],
+      "before": {
+        "sentence": "(Express obligation: must.) Вони хочуть гуляти, але ___ працювати.",
+        "answer": "мусять",
+        "options": [
+          "мусять",
+          "можуть",
+          "хочуть"
+        ],
+        "explanation": "Але marks the obligation that blocks the plan."
+      },
+      "after": {
+        "sentence": "Вони не хочуть працювати й не можуть працювати, але ___ працювати.",
+        "answer": "мусять",
+        "options": [
+          "мусять",
+          "можуть",
+          "хочуть"
+        ],
+        "explanation": "The earlier clauses explicitly deny both competing modal statements. Either competing option would contradict one of them; the key supplies the remaining compatible modal meaning."
+      }
+    },
+    {
+      "id": "my-day/inline/act-3/0",
+      "module": "my-day",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "activity_title": "Частина доби",
+      "instruction": "Обери правильну частину доби для речення.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "вранці",
+      "distractors": [
+        "вночі",
+        "ввечері"
+      ],
+      "reason": "07:00 fixes the morning. Вночі and ввечері contradict it.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "sentence": "(In the morning.) Я п'ю каву ___.",
+        "answer": "вранці",
+        "options": [
+          "вранці",
+          "вночі",
+          "ввечері"
+        ],
+        "explanation": "Кава найчастіше підходить до ранку."
+      },
+      "after": {
+        "sentence": "На годиннику 07:00. Я п'ю каву ___.",
+        "answer": "вранці",
+        "options": [
+          "вранці",
+          "вночі",
+          "ввечері"
+        ],
+        "explanation": "07:00 is morning: вранці. Вночі and ввечері refer to other parts of the day."
+      }
+    },
+    {
+      "id": "my-day/inline/act-3/1",
+      "module": "my-day",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "activity_title": "Частина доби",
+      "instruction": "Обери правильну частину доби для речення.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "ввечері",
+      "distractors": [
+        "вранці",
+        "вдень"
+      ],
+      "reason": "20:00 fixes the evening. Вранці and вдень contradict it.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "sentence": "(In the evening.) Ми вечеряємо ___.",
+        "answer": "ввечері",
+        "options": [
+          "ввечері",
+          "вранці",
+          "вдень"
+        ],
+        "explanation": "Вечеря належить до вечора."
+      },
+      "after": {
+        "sentence": "На годиннику 20:00. Ми вечеряємо ___.",
+        "answer": "ввечері",
+        "options": [
+          "ввечері",
+          "вранці",
+          "вдень"
+        ],
+        "explanation": "20:00 is evening: ввечері. Вранці and вдень refer to other parts of the day."
+      }
+    },
+    {
+      "id": "my-day/inline/act-3/3",
+      "module": "my-day",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "activity_title": "Частина доби",
+      "instruction": "Обери правильну частину доби для речення.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "після обіду",
+      "distractors": [
+        "вночі",
+        "вранці"
+      ],
+      "reason": "Lunch has ended at14:00; після обіду fits. Вночі and вранці contradict the time.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D51",
+        "V53"
+      ],
+      "before": {
+        "sentence": "(After lunch.) Вони гуляють у парку ___.",
+        "answer": "після обіду",
+        "options": [
+          "після обіду",
+          "вночі",
+          "вранці"
+        ],
+        "explanation": "Після обіду - природний час для прогулянки."
+      },
+      "after": {
+        "sentence": "Я обідаю о першій. Зараз друга година дня. Вони гуляють у парку ___.",
+        "answer": "після обіду",
+        "options": [
+          "після обіду",
+          "вночі",
+          "вранці"
+        ],
+        "explanation": "Lunch has ended and it is two in the afternoon: після обіду. Вночі and вранці do not fit that time."
+      }
+    },
+    {
+      "id": "questions/inline/act-1/0",
+      "module": "questions",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "activity_title": "Обери питальне слово",
+      "instruction": "Choose the question word that completes each short question.",
+      "type": "quiz",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Хто",
+      "distractors": [
+        "Куди",
+        "Де"
+      ],
+      "reason": "Я студент identifies the speaker. Куди asks for a destination and де for a location; neither is answered by the identity statement. Potentially identity-like що is removed.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D14",
+        "V14"
+      ],
+      "before": {
+        "prompt": "(Ask who the person is.) ___ ти?",
+        "options": [
+          {
+            "text": "Хто",
+            "correct": true
+          },
+          {
+            "text": "Що",
+            "correct": false
+          },
+          {
+            "text": "Де",
+            "correct": false
+          }
+        ],
+        "explanation": "Хто asks for a person."
+      },
+      "after": {
+        "prompt": "— ___ ти? — Я студент.",
+        "options": [
+          {
+            "text": "Хто",
+            "correct": true
+          },
+          {
+            "text": "Куди",
+            "correct": false
+          },
+          {
+            "text": "Де",
+            "correct": false
+          }
+        ],
+        "explanation": "Я студент answers Хто ти? Куди asks for a destination; де asks for a location."
+      }
+    },
+    {
+      "id": "questions/inline/act-1/1",
+      "module": "questions",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 1,
+      "activity_title": "Обери питальне слово",
+      "instruction": "Choose the question word that completes each short question.",
+      "type": "quiz",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Що",
+      "distractors": [
+        "Хто",
+        "Коли"
+      ],
+      "reason": "The reply gives the object of study, answering що. Хто cannot agree with second-person вивчаєш; коли asks for time.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D14",
+        "V14"
+      ],
+      "before": {
+        "prompt": "(Ask what the person studies.) ___ ти вивчаєш?",
+        "options": [
+          {
+            "text": "Що",
+            "correct": true
+          },
+          {
+            "text": "Хто",
+            "correct": false
+          },
+          {
+            "text": "Коли",
+            "correct": false
+          }
+        ],
+        "explanation": "Що asks for the topic or action."
+      },
+      "after": {
+        "prompt": "— ___ ти вивчаєш? — Українську мову.",
+        "options": [
+          {
+            "text": "Що",
+            "correct": true
+          },
+          {
+            "text": "Хто",
+            "correct": false
+          },
+          {
+            "text": "Коли",
+            "correct": false
+          }
+        ],
+        "explanation": "Українську мову answers Що ти вивчаєш? Хто does not fit with вивчаєш; коли asks for time."
+      }
+    },
+    {
+      "id": "questions/inline/act-1/2",
+      "module": "questions",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 2,
+      "activity_title": "Обери питальне слово",
+      "instruction": "Choose the question word that completes each short question.",
+      "type": "quiz",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Де",
+      "distractors": [
+        "Куди",
+        "Чому"
+      ],
+      "reason": "У Києві gives a location. Куди requests a destination, чому a reason.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "(Ask where the person lives.) ___ ти живеш?",
+        "options": [
+          {
+            "text": "Де",
+            "correct": true
+          },
+          {
+            "text": "Куди",
+            "correct": false
+          },
+          {
+            "text": "Чому",
+            "correct": false
+          }
+        ],
+        "explanation": "Де asks for a place."
+      },
+      "after": {
+        "prompt": "— ___ ти живеш? — У Києві.",
+        "options": [
+          {
+            "text": "Де",
+            "correct": true
+          },
+          {
+            "text": "Куди",
+            "correct": false
+          },
+          {
+            "text": "Чому",
+            "correct": false
+          }
+        ],
+        "explanation": "У Києві gives a location, answering Де. Куди asks for a destination; чому asks for a reason."
+      }
+    },
+    {
+      "id": "questions/inline/act-1/3",
+      "module": "questions",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 3,
+      "activity_title": "Обери питальне слово",
+      "instruction": "Choose the question word that completes each short question.",
+      "type": "quiz",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Куди",
+      "distractors": [
+        "Де",
+        "Хто"
+      ],
+      "reason": "У парк is an accusative destination. Де requires a location answer; хто cannot agree with ходиш.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D14",
+        "V14"
+      ],
+      "before": {
+        "prompt": "(Ask about destination: where to.) ___ ти ходиш?",
+        "options": [
+          {
+            "text": "Куди",
+            "correct": true
+          },
+          {
+            "text": "Де",
+            "correct": false
+          },
+          {
+            "text": "Хто",
+            "correct": false
+          }
+        ],
+        "explanation": "Куди asks for direction after movement."
+      },
+      "after": {
+        "prompt": "— ___ ти ходиш після уроків? — У парк.",
+        "options": [
+          {
+            "text": "Куди",
+            "correct": true
+          },
+          {
+            "text": "Де",
+            "correct": false
+          },
+          {
+            "text": "Хто",
+            "correct": false
+          }
+        ],
+        "explanation": "У парк names the destination, so ask Куди. Де asks about a location; хто does not agree with ходиш."
+      }
+    },
+    {
+      "id": "questions/inline/act-1/4",
+      "module": "questions",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 4,
+      "activity_title": "Обери питальне слово",
+      "instruction": "Choose the question word that completes each short question.",
+      "type": "quiz",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Коли",
+      "distractors": [
+        "Куди",
+        "Як"
+      ],
+      "reason": "The reply gives the working schedule, answering коли. Куди asks for destination and як for manner.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "(Ask when the person works.) ___ ти працюєш?",
+        "options": [
+          {
+            "text": "Коли",
+            "correct": true
+          },
+          {
+            "text": "Куди",
+            "correct": false
+          },
+          {
+            "text": "Як",
+            "correct": false
+          }
+        ],
+        "explanation": "Коли asks for time."
+      },
+      "after": {
+        "prompt": "— ___ ти працюєш? — Щодня з дев’ятої до п’ятої.",
+        "options": [
+          {
+            "text": "Коли",
+            "correct": true
+          },
+          {
+            "text": "Куди",
+            "correct": false
+          },
+          {
+            "text": "Як",
+            "correct": false
+          }
+        ],
+        "explanation": "The reply gives a time schedule, so ask Коли. Куди asks for a destination; як asks for manner."
+      }
+    },
+    {
+      "id": "questions/inline/act-1/5",
+      "module": "questions",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 5,
+      "activity_title": "Обери питальне слово",
+      "instruction": "Choose the question word that completes each short question.",
+      "type": "quiz",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Чому",
+      "distractors": [
+        "Куди",
+        "Хто"
+      ],
+      "reason": "Тому що introduces the reason, answering чому. Куди asks destination; хто cannot agree with працюєш.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D14",
+        "V14"
+      ],
+      "before": {
+        "prompt": "(Ask why.) ___ ти не працюєш?",
+        "options": [
+          {
+            "text": "Чому",
+            "correct": true
+          },
+          {
+            "text": "Куди",
+            "correct": false
+          },
+          {
+            "text": "Хто",
+            "correct": false
+          }
+        ],
+        "explanation": "Чому asks for a reason."
+      },
+      "after": {
+        "prompt": "— ___ ти не працюєш? — Тому що сьогодні неділя.",
+        "options": [
+          {
+            "text": "Чому",
+            "correct": true
+          },
+          {
+            "text": "Куди",
+            "correct": false
+          },
+          {
+            "text": "Хто",
+            "correct": false
+          }
+        ],
+        "explanation": "Тому що introduces the reason, so ask Чому. Куди asks for a destination; хто does not fit with працюєш."
+      }
+    },
+    {
+      "id": "questions/inline/act-1/7",
+      "module": "questions",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 7,
+      "activity_title": "Обери питальне слово",
+      "instruction": "Choose the question word that completes each short question.",
+      "type": "quiz",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "Хто",
+      "distractors": [
+        "Що",
+        "Де"
+      ],
+      "reason": "Олена identifies a human speaker, answering хто. Що asks about a thing; де asks for location.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D14",
+        "V14"
+      ],
+      "before": {
+        "prompt": "(Ask which person speaks Ukrainian.) ___ говорить українською?",
+        "options": [
+          {
+            "text": "Хто",
+            "correct": true
+          },
+          {
+            "text": "Що",
+            "correct": false
+          },
+          {
+            "text": "Де",
+            "correct": false
+          }
+        ],
+        "explanation": "Хто asks which person speaks."
+      },
+      "after": {
+        "prompt": "— ___ говорить українською? — Олена.",
+        "options": [
+          {
+            "text": "Хто",
+            "correct": true
+          },
+          {
+            "text": "Що",
+            "correct": false
+          },
+          {
+            "text": "Де",
+            "correct": false
+          }
+        ],
+        "explanation": "Олена names the speaker, answering Хто. Що asks about a thing; де asks about a place."
+      }
+    },
+    {
+      "id": "weather/inline/act-2/0",
+      "module": "weather",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 0,
+      "activity_title": "Погода і пора року",
+      "instruction": "Обери логічну погоду для кожної пори року або температури.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "іде сніг",
+      "distractors": [
+        "іде снігу",
+        "іде снігом"
+      ],
+      "reason": "The subject of іде is nominative сніг. Снігу is genitive/dative/locative, снігом instrumental; neither can be the subject.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D30",
+        "V30"
+      ],
+      "before": {
+        "sentence": "(It snows.) Взимку часто ___.",
+        "answer": "іде сніг",
+        "options": [
+          "іде сніг",
+          "іде дощ",
+          "світить сонце"
+        ],
+        "explanation": "Сніг first connects with зима."
+      },
+      "after": {
+        "sentence": "Взимку часто ___.",
+        "answer": "іде сніг",
+        "options": [
+          "іде сніг",
+          "іде снігу",
+          "іде снігом"
+        ],
+        "explanation": "Сніг is the nominative subject of іде. Снігу and снігом are different cases."
+      }
+    },
+    {
+      "id": "weather/inline/act-2/1",
+      "module": "weather",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 1,
+      "activity_title": "Погода і пора року",
+      "instruction": "Обери логічну погоду для кожної пори року або температури.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "спекотно",
+      "distractors": [
+        "спекотний",
+        "спекотна"
+      ],
+      "reason": "The impersonal weather predicate is adverb спекотно. The other options are adjectives with no subject noun.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D31",
+        "V31"
+      ],
+      "before": {
+        "sentence": "(Hot.) Влітку дуже ___.",
+        "answer": "спекотно",
+        "options": [
+          "спекотно",
+          "холодно",
+          "хмарно"
+        ],
+        "explanation": "Спекотно is the safe A1 word for hot weather."
+      },
+      "after": {
+        "sentence": "Влітку дуже ___.",
+        "answer": "спекотно",
+        "options": [
+          "спекотно",
+          "спекотний",
+          "спекотна"
+        ],
+        "explanation": "Спекотно is an adverb used as an impersonal weather predicate. Спекотний and спекотна are adjectives."
+      }
+    },
+    {
+      "id": "weather/inline/act-2/2",
+      "module": "weather",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 2,
+      "activity_title": "Погода і пора року",
+      "instruction": "Обери логічну погоду для кожної пори року або температури.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "іде дощ",
+      "distractors": [
+        "іде дощу",
+        "іде дощем"
+      ],
+      "reason": "The subject of іде is nominative дощ. Дощу and дощем are oblique forms.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D32",
+        "V32"
+      ],
+      "before": {
+        "sentence": "(It rains.) Восени часто ___.",
+        "answer": "іде дощ",
+        "options": [
+          "іде дощ",
+          "іде сніг",
+          "сонячно"
+        ],
+        "explanation": "Осінь often connects with rain in this first weather map."
+      },
+      "after": {
+        "sentence": "Восени часто ___.",
+        "answer": "іде дощ",
+        "options": [
+          "іде дощ",
+          "іде дощу",
+          "іде дощем"
+        ],
+        "explanation": "Дощ is the nominative subject of іде. Дощу and дощем are different cases."
+      }
+    },
+    {
+      "id": "weather/inline/act-2/3",
+      "module": "weather",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 3,
+      "activity_title": "Погода і пора року",
+      "instruction": "Обери логічну погоду для кожної пори року або температури.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "тепло",
+      "distractors": [
+        "теплий",
+        "тепла"
+      ],
+      "reason": "Тепло is the adverb coordinated with красиво. Теплий and тепла are adjectives without a matching noun.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D19",
+        "V19"
+      ],
+      "before": {
+        "sentence": "(Warm.) Навесні ___ і красиво.",
+        "answer": "тепло",
+        "options": [
+          "тепло",
+          "холодно",
+          "спекотно"
+        ],
+        "explanation": "Навесні тепло is the target season-weather phrase."
+      },
+      "after": {
+        "sentence": "Навесні ___ і красиво.",
+        "answer": "тепло",
+        "options": [
+          "тепло",
+          "теплий",
+          "тепла"
+        ],
+        "explanation": "Тепло and красиво are adverbs in this weather sentence. Теплий and тепла are adjectives."
+      }
+    },
+    {
+      "id": "weather/inline/act-3/3",
+      "module": "weather",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "activity_title": "Діалог про погоду",
+      "instruction": "Доповни короткий діалог про погоду.",
+      "type": "fill-in",
+      "origin": "6571f339",
+      "disposition": "reworded",
+      "key": "сонячно",
+      "distractors": [
+        "сонячний",
+        "сонячна"
+      ],
+      "reason": "The impersonal weather predicate is adverb сонячно. The masculine/feminine adjectives have no matching subject noun.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D33",
+        "V33"
+      ],
+      "before": {
+        "sentence": "(Sunny.) — Чому ти любиш літо? — Тому що влітку ___.",
+        "answer": "сонячно",
+        "options": [
+          "сонячно",
+          "холодно",
+          "хмарно"
+        ],
+        "explanation": "Влітку сонячно fits the plan dialogue."
+      },
+      "after": {
+        "sentence": "— Чому ти любиш літо? — Тому що влітку ___.",
+        "answer": "сонячно",
+        "options": [
+          "сонячно",
+          "сонячний",
+          "сонячна"
+        ],
+        "explanation": "Сонячно is an adverb used for the weather. Сонячний and сонячна are adjectives and need a matching noun."
+      }
+    },
+    {
+      "id": "stress-and-melody/inline/act-4/0",
+      "module": "stress-and-melody",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 0,
+      "activity_title": "Пунктуація і мелодика",
+      "instruction": "Обери розділовий знак, який відповідає реченню.",
+      "type": "fill-in",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": ".",
+      "distractors": [
+        ",",
+        ":"
+      ],
+      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "G04"
+      ],
+      "before": {
+        "sentence": "(Statement, falling intonation) Це ка́ва___",
+        "answer": ".",
+        "options": [
+          ".",
+          "?",
+          "!"
+        ],
+        "explanation": "Твердження має крапку й спадну мелодику."
+      },
+      "after": {
+        "sentence": "Це ка́ва___",
+        "answer": ".",
+        "options": [
+          ".",
+          ",",
+          ":"
+        ],
+        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+      }
+    },
+    {
+      "id": "stress-and-melody/inline/act-4/1",
+      "module": "stress-and-melody",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 1,
+      "activity_title": "Пунктуація і мелодика",
+      "instruction": "Обери розділовий знак, який відповідає реченню.",
+      "type": "fill-in",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "?",
+      "distractors": [
+        ",",
+        ":"
+      ],
+      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "G04"
+      ],
+      "before": {
+        "sentence": "(Yes/no question, rising intonation) Це метро́___",
+        "answer": "?",
+        "options": [
+          "?",
+          ".",
+          "!"
+        ],
+        "explanation": "Так/ні питання має знак питання й висхідну мелодику."
+      },
+      "after": {
+        "sentence": "Це метро́ чи апте́ка___",
+        "answer": "?",
+        "options": [
+          "?",
+          ",",
+          ":"
+        ],
+        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+      }
+    },
+    {
+      "id": "stress-and-melody/inline/act-4/2",
+      "module": "stress-and-melody",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 2,
+      "activity_title": "Пунктуація і мелодика",
+      "instruction": "Обери розділовий знак, який відповідає реченню.",
+      "type": "fill-in",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "?",
+      "distractors": [
+        ",",
+        ":"
+      ],
+      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "G04"
+      ],
+      "before": {
+        "sentence": "(Where-question, falling intonation) Де апте́ка___",
+        "answer": "?",
+        "options": [
+          "?",
+          ".",
+          "!"
+        ],
+        "explanation": "Де робить це питанням, але мелодика спадна."
+      },
+      "after": {
+        "sentence": "Де апте́ка___",
+        "answer": "?",
+        "options": [
+          "?",
+          ",",
+          ":"
+        ],
+        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+      }
+    },
+    {
+      "id": "stress-and-melody/inline/act-4/3",
+      "module": "stress-and-melody",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 3,
+      "activity_title": "Пунктуація і мелодика",
+      "instruction": "Обери розділовий знак, який відповідає реченню.",
+      "type": "fill-in",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "!",
+      "distractors": [
+        ",",
+        ":"
+      ],
+      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "G04"
+      ],
+      "before": {
+        "sentence": "(Exclamation, emphatic falling intonation) Як га́рно___",
+        "answer": "!",
+        "options": [
+          "!",
+          "?",
+          "."
+        ],
+        "explanation": "Це оклик."
+      },
+      "after": {
+        "sentence": "Як га́рно___",
+        "answer": "!",
+        "options": [
+          "!",
+          ",",
+          ":"
+        ],
+        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+      }
+    },
+    {
+      "id": "stress-and-melody/inline/act-4/4",
+      "module": "stress-and-melody",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 4,
+      "activity_title": "Пунктуація і мелодика",
+      "instruction": "Обери розділовий знак, який відповідає реченню.",
+      "type": "fill-in",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": ".",
+      "distractors": [
+        ",",
+        ":"
+      ],
+      "reason": "The complete sentence needs its terminal punctuation. Neither a comma nor a colon can terminate this standalone statement, question, or exclamation.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "G04"
+      ],
+      "before": {
+        "sentence": "(Statement, falling intonation) Так, це вода́___",
+        "answer": ".",
+        "options": [
+          ".",
+          "?",
+          "!"
+        ],
+        "explanation": "Це твердження."
+      },
+      "after": {
+        "sentence": "Так, це вода́___",
+        "answer": ".",
+        "options": [
+          ".",
+          ",",
+          ":"
+        ],
+        "explanation": "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+      }
+    },
+    {
+      "id": "my-family/workbook/0/4",
+      "module": "my-family",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 4,
+      "activity_title": "Обери українське родинне речення",
+      "instruction": "Обери безпечніший український рядок.",
+      "type": "error-correction",
+      "origin": "legacy",
+      "disposition": "replaced",
+      "key": "Це мій батько.",
+      "distractors": [
+        "Це моє батько.",
+        "Це моя батько."
+      ],
+      "reason": "Singular masculine батько agrees with мій. Моє is neuter and моя is feminine, so neither agrees with батько. The explicit meaning-father gloss is replaced with a sentence to repair.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D34",
+        "V34"
+      ],
+      "before": {
+        "sentence": "Батьки (у значенні батька / meaning father)",
+        "error": "Батьки (у значенні батька / meaning father)",
+        "correction": "Тато / батько",
+        "options": [
+          "Тато / батько",
+          "Батьки"
+        ],
+        "explanation": "Батьки означає маму й тата або кількох батьків, а не одного тата."
+      },
+      "after": {
+        "sentence": "Це мій батьки.",
+        "error": "Це мій батьки.",
+        "correction": "Це мій батько.",
+        "options": [
+          "Це мій батько.",
+          "Це моє батько.",
+          "Це моя батько."
+        ],
+        "explanation": "Батько is masculine singular and agrees with мій. Моє is neuter and моя is feminine."
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-3/7",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 7,
+      "activity_title": "Він, вона́ чи воно́? — Masculine, feminine, or neuter?",
+      "instruction": "Обери́ украї́нський займе́нник для переві́рки ро́ду. — Choose the Ukrainian gender-test word.",
+      "type": "quiz",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "він",
+      "distractors": [
+        "вона́",
+        "воно́"
+      ],
+      "reason": "VESUM identifies the given name Микола as masculine; feminine/neuter pronouns do not agree. The prompt no longer states the grammatical answer.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "Мико́ла (Mykola - male name)",
+        "options": [
+          {
+            "text": "він",
+            "correct": true
+          },
+          {
+            "text": "вона́",
+            "correct": false
+          },
+          {
+            "text": "воно́",
+            "correct": false
+          }
+        ],
+        "explanation": "Мико́ла — чолові́че ім'я́. — \"Мико́ла\" is a masculine name."
+      },
+      "after": {
+        "prompt": "Мико́ла (Mykola)",
+        "options": [
+          {
+            "text": "він",
+            "correct": true
+          },
+          {
+            "text": "вона́",
+            "correct": false
+          },
+          {
+            "text": "воно́",
+            "correct": false
+          }
+        ],
+        "explanation": "Мико́ла — чолові́че ім'я́. — \"Мико́ла\" is a masculine name."
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-5/0",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 0,
+      "activity_title": "Закі́нчення підка́зує рід — The ending hints at the gender",
+      "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+      "type": "quiz",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "він / мій",
+      "distractors": [
+        "вона́ / моя́",
+        "воно́ / моє́"
+      ],
+      "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "стіл закі́нчується на при́голосний. — \"Стіл\" ends in a consonant.",
+        "options": [
+          {
+            "text": "він / мій",
+            "correct": true
+          },
+          {
+            "text": "вона́ / моя́",
+            "correct": false
+          },
+          {
+            "text": "воно́ / моє́",
+            "correct": false
+          }
+        ],
+        "explanation": "Чітке́ закі́нчення на при́голосний — це звича́йно чолові́чий рід (він / мій). — A clear consonant ending is usually masculine."
+      },
+      "after": {
+        "prompt": "стіл",
+        "options": [
+          {
+            "text": "він / мій",
+            "correct": true
+          },
+          {
+            "text": "вона́ / моя́",
+            "correct": false
+          },
+          {
+            "text": "воно́ / моє́",
+            "correct": false
+          }
+        ],
+        "explanation": "Чітке́ закі́нчення на при́голосний — це звича́йно чолові́чий рід (він / мій). — A clear consonant ending is usually masculine."
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-5/1",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 1,
+      "activity_title": "Закі́нчення підка́зує рід — The ending hints at the gender",
+      "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+      "type": "quiz",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "він / мій",
+      "distractors": [
+        "вона́ / моя́",
+        "воно́ / моє́"
+      ],
+      "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "брат закі́нчується на при́голосний. — \"Брат\" ends in a consonant.",
+        "options": [
+          {
+            "text": "він / мій",
+            "correct": true
+          },
+          {
+            "text": "вона́ / моя́",
+            "correct": false
+          },
+          {
+            "text": "воно́ / моє́",
+            "correct": false
+          }
+        ],
+        "explanation": "«Брат» закі́нчується на при́голосний і є чолові́чим ро́дом (він / мій). — \"Брат\" ends in a consonant and is masculine."
+      },
+      "after": {
+        "prompt": "брат",
+        "options": [
+          {
+            "text": "він / мій",
+            "correct": true
+          },
+          {
+            "text": "вона́ / моя́",
+            "correct": false
+          },
+          {
+            "text": "воно́ / моє́",
+            "correct": false
+          }
+        ],
+        "explanation": "«Брат» закі́нчується на при́голосний і є чолові́чим ро́дом (він / мій). — \"Брат\" ends in a consonant and is masculine."
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-5/2",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 2,
+      "activity_title": "Закі́нчення підка́зує рід — The ending hints at the gender",
+      "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+      "type": "quiz",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "вона́ / моя́",
+      "distractors": [
+        "він / мій",
+        "воно́ / моє́"
+      ],
+      "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "кни́га закі́нчується на -а. — \"Кни́га\" ends in -а.",
+        "options": [
+          {
+            "text": "вона́ / моя́",
+            "correct": true
+          },
+          {
+            "text": "він / мій",
+            "correct": false
+          },
+          {
+            "text": "воно́ / моє́",
+            "correct": false
+          }
+        ],
+        "explanation": "Чітке́ закі́нчення на -а — це звича́йно жіно́чий рід (вона́ / моя́). — A clear -а ending is usually feminine."
+      },
+      "after": {
+        "prompt": "кни́га",
+        "options": [
+          {
+            "text": "вона́ / моя́",
+            "correct": true
+          },
+          {
+            "text": "він / мій",
+            "correct": false
+          },
+          {
+            "text": "воно́ / моє́",
+            "correct": false
+          }
+        ],
+        "explanation": "Чітке́ закі́нчення на -а — це звича́йно жіно́чий рід (вона́ / моя́). — A clear -а ending is usually feminine."
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-5/3",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 3,
+      "activity_title": "Закі́нчення підка́зує рід — The ending hints at the gender",
+      "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+      "type": "quiz",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "вона́ / моя́",
+      "distractors": [
+        "він / мій",
+        "воно́ / моє́"
+      ],
+      "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "сестра́ закі́нчується на -а. — \"Сестра́\" ends in -а.",
+        "options": [
+          {
+            "text": "вона́ / моя́",
+            "correct": true
+          },
+          {
+            "text": "він / мій",
+            "correct": false
+          },
+          {
+            "text": "воно́ / моє́",
+            "correct": false
+          }
+        ],
+        "explanation": "«Сестра́» закі́нчується на -а і є жіно́чим ро́дом (вона́ / моя́). — \"Сестра́\" ends in -а and is feminine."
+      },
+      "after": {
+        "prompt": "сестра́",
+        "options": [
+          {
+            "text": "вона́ / моя́",
+            "correct": true
+          },
+          {
+            "text": "він / мій",
+            "correct": false
+          },
+          {
+            "text": "воно́ / моє́",
+            "correct": false
+          }
+        ],
+        "explanation": "«Сестра́» закі́нчується на -а і є жіно́чим ро́дом (вона́ / моя́). — \"Сестра́\" ends in -а and is feminine."
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-5/4",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 4,
+      "activity_title": "Закі́нчення підка́зує рід — The ending hints at the gender",
+      "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+      "type": "quiz",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "воно́ / моє́",
+      "distractors": [
+        "він / мій",
+        "вона́ / моя́"
+      ],
+      "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "вікно́ закі́нчується на -о. — \"Вікно́\" ends in -о.",
+        "options": [
+          {
+            "text": "воно́ / моє́",
+            "correct": true
+          },
+          {
+            "text": "він / мій",
+            "correct": false
+          },
+          {
+            "text": "вона́ / моя́",
+            "correct": false
+          }
+        ],
+        "explanation": "Чітке́ закі́нчення на -о — це звича́йно сере́дній рід (воно́ / моє́). — A clear -о ending is usually neuter."
+      },
+      "after": {
+        "prompt": "вікно́",
+        "options": [
+          {
+            "text": "воно́ / моє́",
+            "correct": true
+          },
+          {
+            "text": "він / мій",
+            "correct": false
+          },
+          {
+            "text": "вона́ / моя́",
+            "correct": false
+          }
+        ],
+        "explanation": "Чітке́ закі́нчення на -о — це звича́йно сере́дній рід (воно́ / моє́). — A clear -о ending is usually neuter."
+      }
+    },
+    {
+      "id": "things-have-gender/inline/act-5/5",
+      "module": "things-have-gender",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 5,
+      "activity_title": "Закі́нчення підка́зує рід — The ending hints at the gender",
+      "instruction": "Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual gender signal from the noun ending.",
+      "type": "quiz",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "воно́ / моє́",
+      "distractors": [
+        "вона́ / моя́",
+        "він / мій"
+      ],
+      "reason": "The noun’s VESUM gender licenses only the keyed matching pronoun/possessive pair. The prompt no longer describes its ending as a grammar cue.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03"
+      ],
+      "before": {
+        "prompt": "мі́сто закі́нчується на -о. — \"Мі́сто\" ends in -о.",
+        "options": [
+          {
+            "text": "воно́ / моє́",
+            "correct": true
+          },
+          {
+            "text": "вона́ / моя́",
+            "correct": false
+          },
+          {
+            "text": "він / мій",
+            "correct": false
+          }
+        ],
+        "explanation": "«Мі́сто» закі́нчується на -о і є сере́днім ро́дом (воно́ / моє́). — \"Мі́сто\" ends in -о and is neuter."
+      },
+      "after": {
+        "prompt": "мі́сто",
+        "options": [
+          {
+            "text": "воно́ / моє́",
+            "correct": true
+          },
+          {
+            "text": "вона́ / моя́",
+            "correct": false
+          },
+          {
+            "text": "він / мій",
+            "correct": false
+          }
+        ],
+        "explanation": "«Мі́сто» закі́нчується на -о і є сере́днім ро́дом (воно́ / моє́). — \"Мі́сто\" ends in -о and is neuter."
+      }
+    },
+    {
+      "id": "colors/workbook/1/5",
+      "module": "colors",
+      "section": "workbook",
+      "activity_index": 1,
+      "item_index": 5,
+      "activity_title": "Виправ кольорові пастки",
+      "instruction": "Choose the standard Ukrainian correction.",
+      "type": "error-correction",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "ЧОрний, бІлий",
+      "distractors": [
+        "чОрна, бІла",
+        "чОрне, бІле"
+      ],
+      "reason": "Correction keeps the input adjective forms while restoring root stress. The other alternatives change the input gender rather than correct its stress; the prompt no longer names the required gender.",
+      "sources": [
+        "W03",
+        "W02",
+        "S03",
+        "T03",
+        "D39",
+        "D40",
+        "V39",
+        "V40"
+      ],
+      "before": {
+        "sentence": "ЧорнИй, білИй (keep the masculine forms; capitals mark stress)",
+        "error": "ЧорнИй, білИй",
+        "answer": "ЧОрний, бІлий",
+        "options": [
+          "ЧОрний, бІлий",
+          "чОрна, бІла",
+          "чОрне, бІле"
+        ],
+        "explanation": "Keep the masculine forms чорний, білий and stress the root. The other options change the gender."
+      },
+      "after": {
+        "sentence": "ЧорнИй, білИй",
+        "error": "ЧорнИй, білИй",
+        "answer": "ЧОрний, бІлий",
+        "options": [
+          "ЧОрний, бІлий",
+          "чОрна, бІла",
+          "чОрне, бІле"
+        ],
+        "explanation": "Keep the masculine forms чорний, білий and stress the root. The other options change the gender."
+      }
+    }
+  ]
+}

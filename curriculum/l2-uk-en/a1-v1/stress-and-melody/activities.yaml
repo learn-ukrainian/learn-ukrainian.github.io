@@ -104,41 +104,41 @@ inline:
     title: Пунктуація і мелодика
     instruction: Обери розділовий знак, який відповідає реченню.
     items:
-      - sentence: '(Statement, falling intonation) Це ка́ва___'
+      - sentence: "Це ка́ва___"
         answer: .
         options:
           - .
-          - '?'
-          - '!'
-        explanation: Твердження має крапку й спадну мелодику.
-      - sentence: '(Yes/no question, rising intonation) Це метро́___'
+          - ','
+          - ':'
+        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+      - sentence: "Це метро́ чи апте́ка___"
         answer: '?'
         options:
           - '?'
-          - .
-          - '!'
-        explanation: Так/ні питання має знак питання й висхідну мелодику.
-      - sentence: '(Where-question, falling intonation) Де апте́ка___'
+          - ','
+          - ':'
+        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+      - sentence: "Де апте́ка___"
         answer: '?'
         options:
           - '?'
-          - .
-          - '!'
-        explanation: Де робить це питанням, але мелодика спадна.
-      - sentence: '(Exclamation, emphatic falling intonation) Як га́рно___'
+          - ','
+          - ':'
+        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+      - sentence: "Як га́рно___"
         answer: '!'
         options:
           - '!'
-          - '?'
-          - .
-        explanation: Це оклик.
-      - sentence: '(Statement, falling intonation) Так, це вода́___'
+          - ','
+          - ':'
+        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
+      - sentence: "Так, це вода́___"
         answer: .
         options:
           - .
-          - '?'
-          - '!'
-        explanation: Це твердження.
+          - ','
+          - ':'
+        explanation: "The key ends the complete sentence. A comma or colon cannot end this standalone sentence."
   - id: act-5
     type: fill-in
     title: Типові пастки наголосу

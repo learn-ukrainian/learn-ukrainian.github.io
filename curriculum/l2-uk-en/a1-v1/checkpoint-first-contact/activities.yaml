@@ -22,24 +22,24 @@ inline:
           - text: Мене звати!
             correct: false
         explanation: Добрий день — безпечне нейтральне формальне привітання.
-      - prompt: "Ти називаєш своє ім'я. (Use the Мене звати formula.)"
+      - prompt: "Ти називаєш своє ім'я."
         options:
           - text: Мене звати Олена.
             correct: true
-          - text: Моє ім'я є Олена.
+          - text: Мені звати Олена.
             correct: false
           - text: Я звати Олена.
             correct: false
-        explanation: "The requested name formula is Мене звати... . The alternative with Моє ім'я is also grammatical."
-      - prompt: "(Do not use є.) Ти кажеш, що ти студент."
+        explanation: "Звати takes the name-bearer in the accusative: Мене звати Олена. Мені and я do not fit this construction."
+      - prompt: "Ти кажеш, що ти студент."
         options:
           - text: Я студент.
             correct: true
-          - text: Я є студент.
+          - text: Я студента.
             correct: false
           - text: Мене студент.
             correct: false
-        explanation: У такому реченні українська зазвичай не додає є.
+        explanation: "Use the subject я and the nominative profession студент: Я студент."
       - prompt: Ти кажеш свій вік.
         options:
           - text: Мені 20 років.
@@ -159,13 +159,13 @@ inline:
           - у
           - це
         explanation: Я з... дає походження.
-      - sentence: "(Do not use є.) Я ___."
+      - sentence: "Я ___."
         answer: студент
         options:
           - студент
-          - є студент
+          - студента
           - мене студент
-        explanation: Речення A1 про ідентичність не потребує є.
+        explanation: "Я студент is a complete identity statement. Студента is an oblique form; мене does not belong after я."
       - sentence: ___ 20 років.
         answer: Мені
         options:
@@ -199,20 +199,20 @@ inline:
     title: Виправ A1.1 пастки
     instruction: Обери нормативну українську форму.
     items:
-      - prompt: "Представлення імені (Use the Мене звати formula.)"
+      - prompt: "Представлення імені"
         options:
           - text: Мене звати Джон.
             correct: true
-          - text: Моє ім'я є Джон.
+          - text: Мені звати Джон.
             correct: false
-        explanation: "The requested name formula is Мене звати... . The alternative with Моє ім'я is also grammatical."
-      - prompt: "(Do not use є.) Речення ідентичності"
+        explanation: "The name construction is Мене звати Джон. The dative мені does not fit звати."
+      - prompt: "Речення ідентичності"
         options:
           - text: Я студент.
             correct: true
-          - text: Я є студент.
+          - text: Я студента.
             correct: false
-        explanation: Теперішня ідентичність зазвичай не додає є.
+        explanation: "In Я студент, студент is a nominative predicate. Студента is a different case."
       - prompt: Речення про вік
         options:
           - text: Мені 20 років.
@@ -309,13 +309,13 @@ inline:
           - Її
           - Вона
         explanation: Його підходить до брата.
-      - sentence: "(Greeting a new classmate: nice to meet you.) Дуже приємно ___!"
+      - sentence: "— Мене звати Олена. — А мене Марко. Дуже приємно ___!"
         answer: познайомитися
         options:
           - познайомитися
           - походження
-          - допомогти
-        explanation: Дуже приємно познайомитися завершує першу зустріч.
+          - познайомився
+        explanation: "After приємно, use the infinitive познайомитися in this introduction. Походження is a noun; познайомився is past tense."
   - id: act-6
     type: quiz
     title: Порядок знайомства

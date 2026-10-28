@@ -33,13 +33,13 @@ inline:
           - іде дощова
           - ідуть дощ
         explanation: Іде дощ - безпечний чанк для погоди.
-      - sentence: "(Cold.) Взимку дуже ___."
+      - sentence: "На вулиці мінус двадцять градусів. Тут дуже ___."
         answer: холодно
         options:
           - холодно
           - спекотно
           - тепло
-        explanation: Взимку природно поєднується з холодно.
+        explanation: "At minus twenty degrees, холодно fits. Спекотно and тепло describe different temperature conditions."
       - sentence: 'Я прокидаюся о сьомій ___.'
         answer: ранку
         options:
@@ -73,20 +73,20 @@ inline:
     title: Абзац про день
     instruction: Обери слово або фразу, які завершують опис дня.
     items:
-      - sentence: "(First.) ___ я прокидаюся і снідаю."
+      - sentence: "Я снідаю о восьмій, але ___ я прокидаюся о сьомій."
         answer: Спочатку
         options:
           - Спочатку
-          - Потім
-          - Нарешті
-        explanation: Спочатку відкриває послідовність дня.
-      - sentence: "(Then.) ___ я йду на роботу."
+          - Пізніше
+          - Після цього
+        explanation: "Waking at07:00 precedes breakfast at08:00, so Спочатку fits. Пізніше and Після цього would place07:00 after08:00."
+      - sentence: "Я снідаю о сьомій, а ___ я йду на роботу о восьмій."
         answer: Потім
         options:
           - Потім
-          - Вранці
-          - Вночі
-        explanation: Потім продовжує опис після першої дії.
+          - Перед цим
+          - До цього
+        explanation: "The second action has a later clock time, so the keyed after-connector fits. Перед цим and До цього both put it before the first action and contradict the clock times."
       - sentence: "Я працюю з дев'ятої ___ п'ятої."
         answer: до
         options:
@@ -94,31 +94,31 @@ inline:
           - і
           - по
         explanation: У цьому чанку вживаємо з дев'ятої до п'ятої.
-      - sentence: "(After lunch.) ___ я гуляю в парку."
+      - sentence: "Я обідаю о першій. Зараз друга година дня. ___ я гуляю в парку."
         answer: Після обіду
         options:
           - Після обіду
           - Вранці
           - Вночі
-        explanation: Після обіду природно продовжує день.
-      - sentence: "(Warm.) Я гуляю, тому що сьогодні ___ і сонячно."
+        explanation: "Lunch has ended and it is two in the afternoon. Після обіду fits; вранці and вночі contradict that time."
+      - sentence: "На вулиці двадцять градусів. Я гуляю, тому що сьогодні ___ і сонячно."
         answer: тепло
         options:
           - тепло
-          - холодно
-          - дощ
-        explanation: Тепло і сонячно логічно пояснює прогулянку.
-      - sentence: "(In the evening.) ___ я вечеряю і слухаю музику."
+          - теплий
+          - тепла
+        explanation: "Тепло is the adverb used in this weather sentence. Теплий and тепла are adjectives and need a matching noun."
+      - sentence: "Уже двадцята година. ___ я вечеряю і слухаю музику."
         answer: Ввечері
         options:
           - Ввечері
           - Вдень
           - Вранці
-        explanation: Вечеря належить до вечора.
-      - sentence: "(Finally.) ___ я лягаю спати о дванадцятій."
-        answer: Нарешті
+        explanation: "Twenty hundred hours is evening, so Ввечері fits. Вдень and Вранці describe other parts of the day."
+      - sentence: "Я слухаю музику до одинадцятої, а ___ я лягаю спати о дванадцятій."
+        answer: "Потім"
         options:
-          - Нарешті
-          - Спочатку
           - Потім
-        explanation: Нарешті завершує послідовність дня.
+          - Перед цим
+          - До цього
+        explanation: "This replacement still tests routine sequence. Потім puts the second action after the first, matching both clock times. Перед цим and До цього reverse that order. The original Нарешті could also mark emotion rather than a final step."

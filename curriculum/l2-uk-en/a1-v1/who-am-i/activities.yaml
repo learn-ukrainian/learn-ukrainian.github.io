@@ -4,13 +4,13 @@ inline:
     title: Ти чи ви?
     instruction: Обери фразу для ситуації.
     items:
-      - prompt: "Ти знайомишся з однокурсником свого віку. (Use informal address.)"
+      - prompt: "Ти знайомишся з однокурсником свого віку."
         options:
           - text: Як тебе звати?
             correct: true
-          - text: Як вас звати?
+          - text: Як ти звати?
             correct: false
-        explanation: З одним знайомим або рівним співрозмовником уживай тебе.
+        explanation: "Use тебе with звати. Ти is nominative and does not fit this name question."
       - prompt: Ти знайомишся з незнайомим дорослим на орієнтації.
         options:
           - text: Як вас звати?
@@ -18,13 +18,13 @@ inline:
           - text: Як тебе звати?
             correct: false
         explanation: З незнайомим дорослим або у формальній ситуації уживай вас.
-      - prompt: "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання. (Use informal address.)"
+      - prompt: "Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання."
         options:
           - text: Мене звати Олена. А тебе?
             correct: true
-          - text: Мене звати Олена. А вас?
+          - text: Мені звати Олена. А тебе?
             correct: false
-        explanation: Рівна ситуація залишається неформальною.
+        explanation: "Мене звати Олена uses the accusative мене. Мені is dative and does not fit this construction."
       - prompt: Викладач питає твоє ім'я. Ти відповідаєш і повертаєш питання.
         options:
           - text: Мене звати Петро. А вас?
@@ -214,13 +214,13 @@ workbook:
     title: Доповни діалог
     instruction: Обери фразу, яка завершує рядок першого знайомства.
     items:
-      - sentence: "(Use informal address.) Привіт! Як ___ звати?"
+      - sentence: "Привіт! Як ___ звати?"
         answer: тебе
         options:
           - тебе
-          - вас
+          - ти
           - це
-        explanation: Привіт показує неформальну ситуацію з ровесником.
+        explanation: "Use the accusative тебе after Як in this name question. Ти and це do not fit the construction."
       - sentence: Мене ___ Олена.
         answer: звати
         options:
@@ -235,13 +235,13 @@ workbook:
           - Хто
           - Що
         explanation: А тебе? повертає питання.
-      - sentence: "(Use formal address.) Добрий день! Як ___ звати?"
+      - sentence: "Добрий день! Як ___ звати?"
         answer: вас
         options:
           - вас
-          - тебе
+          - ви
           - я
-        explanation: Добрий день пасує до формальної версії тут.
+        explanation: "The name question uses accusative вас. Ви and я are nominative forms."
       - sentence: Дуже ___!
         answer: приємно
         options:
@@ -284,12 +284,12 @@ workbook:
           - теж
           - тоже
         explanation: Теж і також — безпечні українські вибори.
-      - sentence: "(Use the feminine profession noun.) Оксана — ___."
+      - sentence: "Оксана — ___."
         answer: інженерка
         options:
           - інженерка
-          - інженер
-        explanation: Для жінки вживай фемінітив, коли українська форма існує.
+          - інженерку
+        explanation: "Оксана — інженерка uses a nominative profession noun. Інженерку is accusative."
       - sentence: Це мій ___.
         answer: лікар
         options:
