@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import styles from './Activities.module.css';
-import { deriveSeed, seededRandom } from './utils';
+import { deriveSeed, seededRandom, useShuffledLists } from './utils';
 
 interface OddOneOutProps {
   /**
@@ -57,6 +57,16 @@ export function shuffleOddOneOut(
     const j = Math.floor(rng() * (i + 1));
     [order[i], order[j]] = [order[j], order[i]];
   }
+  return arrangeOddOneOut(order, words, correct, optionWhy);
+}
+
+/** Lay out `words` (and aligned `optionWhy`) in `order`, remapping `correct`. */
+function arrangeOddOneOut(
+  order: number[],
+  words: string[],
+  correct: number,
+  optionWhy?: string[],
+): { words: string[]; correct: number; optionWhy?: string[] } {
   return {
     words: order.map((i) => words[i]),
     correct: order.indexOf(correct),
@@ -70,12 +80,18 @@ export function shuffleOddOneOut(
  * Ukrainian textbook exercise pattern (МійКлас Grade 5).
  */
 export default function OddOneOut({ instruction, items: sourceItems }: OddOneOutProps) {
+  // Fresh random word order after hydration and on every replay. Words travel
+  // with their authored index, so `correct` and `optionWhy` are remapped from it.
+  const { lists: wordOrders, reshuffle } = useShuffledLists(
+    (sourceItems || []).map((item) => item.words.map((word, index) => ({ word, index }))),
+    (entry) => entry.word,
+  );
   const items = useMemo(
-    () => (sourceItems || []).map((item) => ({
+    () => (sourceItems || []).map((item, n) => ({
       ...item,
-      ...shuffleOddOneOut(item.words, item.correct, undefined, item.optionWhy),
+      ...arrangeOddOneOut(wordOrders[n].map((entry) => entry.index), item.words, item.correct, item.optionWhy),
     })),
-    [sourceItems],
+    [sourceItems, wordOrders],
   );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -122,6 +138,7 @@ export default function OddOneOut({ instruction, items: sourceItems }: OddOneOut
           <button
             className={styles.submitButton}
             onClick={() => {
+              reshuffle();
               setCurrentIndex(0);
               setSelected(null);
               setShowResult(false);
