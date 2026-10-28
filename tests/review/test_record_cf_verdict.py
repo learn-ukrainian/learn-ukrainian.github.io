@@ -567,25 +567,34 @@ def ukrainian_body(**overrides):
     return recorder.build_comment(**{**fields, **overrides})
 
 
-@pytest.mark.parametrize("statement", ["Review profile: Ukrainian\n", "Review profile: ukrainian \n", "Review profile: ukrainian\n"])
+ALTERED_PROFILES = [
+    "Review profile: Ukrainian", "Review profile: ukrainian ", "Review profile:  ukrainian",
+    "review profile: ukrainian", "Review  profile: ukrainian", "Review_profile: ukrainian",
+    "Review__profile: ukrainian", "review_profile: ukrainian", "Review\nprofile: ukrainian",
+]
+
+
+@pytest.mark.parametrize("statement", [*(line + "\n" for line in ALTERED_PROFILES), "Review profile: ukrainian\n"])
 def test_altered_profile_statement_never_downgrades_a_seat(statement):
     # FR-55: without the trailer field, any profile statement left in the prefix refuses the marker.
     body = ukrainian_body().replace(" review_profile=ukrainian", "").replace("Review profile: ukrainian\n", statement)
     assert recorder.parse_marker(body) is None
 
 
-@pytest.mark.parametrize("statement", [
-    "Review profile: Ukrainian", "Review profile: ukrainian ", "Review profile:  ukrainian",
-    "review profile: ukrainian", "Review  profile: ukrainian",
-])
-def test_altered_profile_on_a_raw_approve_trailer_poisons_the_head(statement):
-    # FR-55 round 2: the legacy APPROVE fallback must not ignore an altered Ukrainian marker.
+@pytest.mark.parametrize("statement", ALTERED_PROFILES)
+@pytest.mark.parametrize("form", ["record", "other-field-malformed", "heading-removed"])
+def test_altered_profile_on_a_raw_approve_trailer_poisons_the_head(statement, form):
+    # FR-55: the legacy APPROVE fallback must not ignore an altered Ukrainian marker.
     altered = (
         ukrainian_body(task_id="review-two", started="2026-09-23T12:00:01.000001+00:00",
                        model="claude-opus-5-5", family="anthropic")
         .replace(" review_profile=ukrainian", "").replace("verdict=APPROVED", "verdict=APPROVE")
         .replace("Review profile: ukrainian", statement)
     )
+    if form == "other-field-malformed":
+        altered = altered.replace("Reviewer model: claude-opus-5-5", "Reviewer model: unknown")
+    elif form == "heading-removed":
+        altered = altered.removeprefix("### Cross-family review\n")
     assert recorder.parse_marker(altered) is None
     code = recorder.build_comment(
         sha=SHA, task_id="review-one", started="2026-09-23T12:00:00.000001+00:00",

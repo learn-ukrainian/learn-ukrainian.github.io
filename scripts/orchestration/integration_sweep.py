@@ -97,8 +97,14 @@ UKRAINIAN_SEAT_FAMILIES = frozenset({"anthropic", "openai", "google"})
 UKRAINIAN_REVIEW_SEATS = 2
 # A Ukrainian-profile head with fewer approving seat families than that; never approval.
 NEEDS_SEAT = "needs-seat"
-# A review-profile statement however spelled; only the recorder's exact line is admitted (FR-55).
-PROFILE_STATEMENT = re.compile(r"review\W*profile", re.IGNORECASE)
+# Recorder headings; a body that opens with one is a verdict record, never informal prose.
+RECORD_HEADINGS = ("### Cross-family review\n", "### Adversarial red-team review\n")
+# A review-profile statement however spelled (FR-55).
+PROFILE_STATEMENT = re.compile(r"review[\W_]*profile", re.IGNORECASE)
+# Readable record lines whose value the trailer does not carry.
+FREE_RECORD_LINES = re.compile(
+    r"Review score: (?:\d+/10|absent)|Authored by: [^\s,]+(?:, [^\s,]+)*|Withheld findings: (?:\d+|unknown)"
+)
 REQUIRED_CHECKS = ("CI Gate",)
 DEFAULT_GH_TIMEOUT_SECONDS = 60.0
 
@@ -238,10 +244,6 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         ]
         if lines != ([expected] if expected is not None else []):
             return None
-    # An altered profile statement must not downgrade a Ukrainian seat to code (FR-55).
-    profile_lines = [line for line in prefix.split("\n") if PROFILE_STATEMENT.search(line)]
-    if profile_lines != ([f"Review profile: {profile}"] if profile else []):
-        return None
     if is_ukrainian_review(item) and (item["sources_calls"] is None or item["sources_calls"] <= 0):
         return None
     if sources is not None and f"Sources MCP calls: {item['sources_calls']}\n" not in prefix:
@@ -272,6 +274,28 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         or f"Reviewer model: {item['model']}" not in body
         or f"Task id: {item['task']}" not in body
     ):
+        return None
+    # Every readable line is one the recorder writes for these trailer fields, so an
+    # altered or added statement, such as a review profile in any spelling, refuses the
+    # marker instead of downgrading a Ukrainian seat to code (FR-55).
+    fixed = {
+        "",
+        "Findings are held privately.",
+        # The withheld-findings wording of earlier recorders, still on open PRs.
+        "Findings are held privately on the host in CF run output files (`out/<task>.final` and `out/<task>.md`).",
+        RECORD_HEADINGS[mode is not None].rstrip("\n"),
+        f"head: {item['sha']}",
+        f"Reviewer family: {item['family']}",
+        f"VERDICT: {item['verdict']}",
+        f"Reviewer model: {item['model']}",
+        f"Task id: {item['task']}",
+        *(statement for statement in statements.values() if statement),
+        *(["Review mode: red_team"] if mode else []),
+        *([f"Review profile: {profile}"] if profile else []),
+        *([f"Sources MCP calls: {item['sources_calls']}"] if sources is not None else []),
+    }
+    readable = (prefix if "<details>" in body else body.rstrip("\n").rsplit("\n", 1)[0]).split("\n")
+    if any(line not in fixed and not FREE_RECORD_LINES.fullmatch(line) for line in readable):
         return None
     item["verdict"] = VERDICT_ALIASES.get(item["verdict"], item["verdict"])
     return item
@@ -345,6 +369,7 @@ def lookup_verdict(
                 trailer is not None
                 and trailer["verdict"] == "APPROVE"
                 and not is_ukrainian_review(trailer.groupdict())
+                and not body.startswith(RECORD_HEADINGS)
                 and not PROFILE_STATEMENT.search(body.split("<details>", 1)[0])
             ):
                 # An approval trailer outside the keeper format cannot hide a rejection, so it neither
