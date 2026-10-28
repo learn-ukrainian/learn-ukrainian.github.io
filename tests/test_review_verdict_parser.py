@@ -94,3 +94,36 @@ def test_findings_json_beside_contradicting_free_text_verdict_is_refused_by_reco
     }, indent=indent).replace("\n", newline)
     with pytest.raises(RecordError, match=r"findings payload.*verdict line"):
         normalize_verdict(preamble + response + newline + "VERDICT: " + verdict)
+
+
+@pytest.mark.parametrize("reply,expected", [
+    pytest.param("VERDICT: APPROVE\nSCORE: 8/10 two P3 nits.", 8, id="present"),
+    pytest.param("VERDICT: APPROVE\nSCORE 10/10", 10, id="council-form"),
+    pytest.param("**SCORE:** **5**/10 open P1.", 5, id="emphasis"),
+    pytest.param("## Score: 3 / 10.", 3, id="heading-trailing-period"),
+    pytest.param("SCORE: 7/10\nSCORE: 7/10", 7, id="repeated-same"),
+    pytest.param("VERDICT: APPROVE", None, id="absent"),
+    pytest.param("SCORE: 8.5/10", None, id="decimal"),
+    pytest.param("SCORE: 11/10", None, id="above-rubric"),
+    pytest.param("SCORE: 0/10", None, id="below-rubric"),
+    pytest.param("SCORE: 8/100", None, id="wrong-scale"),
+    pytest.param("SCORE: high", None, id="word"),
+    pytest.param("SCORE: 8/10, minor nits", 8, id="trailing-comma"),
+    pytest.param("SCORE: 8/10e2", None, id="trailing-garbage"),
+    pytest.param("SCORE: 8/10/100", None, id="double-scale"),
+    pytest.param("SCORE: 8/10\nSCORE: 6.5/10", None, id="valid-then-malformed"),
+    pytest.param("SCORE: 8/10\nSCORE: high", None, id="valid-then-word"),
+    pytest.param("SCORE: 8/10\nSCORE high", None, id="valid-then-colonless-word"),
+    pytest.param("SCORE: 8/10\nSCORE -1/10", None, id="valid-then-negative"),
+    pytest.param("SCORE +6/10", None, id="signed"),
+    pytest.param("SCORE: 8/10\nSCORE", None, id="valid-then-bare"),
+    pytest.param("SCORE: 8/10\nScores differ by reviewer.", 8, id="other-word"),
+    pytest.param("SCORE: 8/10\nSCORE: 6/10", None, id="ambiguous"),
+    pytest.param("The SCORE: 8/10 line is next.", None, id="inline-prose"),
+    pytest.param("```\nSCORE: 8/10\n```", None, id="fenced-example"),
+    pytest.param("> SCORE: 8/10", None, id="quoted-example"),
+])
+def test_review_score_is_tolerant_and_never_raises(reply, expected):
+    from scripts.review.verdict_parser import review_score
+
+    assert review_score(reply) == expected

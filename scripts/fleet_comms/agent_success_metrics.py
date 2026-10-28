@@ -11,7 +11,7 @@ import stat
 from collections import Counter
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from statistics import median
+from statistics import mean, median
 from typing import Any
 
 from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
@@ -19,7 +19,7 @@ from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
 from scripts.fleet_comms.efficiency_metrics import _parse_timestamp, _read_task_record, _task_record_paths
 from scripts.review.model_catalog import ModelCatalogError, load_model_catalog, model_aliases
 from scripts.review.record_cf_verdict import RecordError, normalize_verdict
-from scripts.review.verdict_parser import _commonmark_lines, _without_code_fences
+from scripts.review.verdict_parser import _commonmark_lines, _without_code_fences, review_score
 
 STATUSES = (
     "done",
@@ -88,6 +88,9 @@ _FINDING_ID = re.compile(
     r"[\s:.(\[—–-]*(?:severity[:\s]+)?(P[0-3])\b",
     re.IGNORECASE,
 )
+# A delta-round reply marks each earlier id `resolved` or `still open: <reason>` (review-loop brief).
+_RESOLVED = re.compile(r"\bresolved\b", re.IGNORECASE)
+_STILL_OPEN = re.compile(r"\bstill open\b|\bnot (?:yet )?resolved\b", re.IGNORECASE)
 
 
 def _label(value: object) -> str:
@@ -162,7 +165,7 @@ def _result_text(path: Path, record: dict) -> str | None:
 def _review(path: Path, record: dict) -> dict | None:
     if not any(record.get(k) for k in ("review_profile", "review_author_model", "require_review_verdict")):
         return None
-    verdict, findings = "unknown", None
+    verdict, findings, score = "unknown", None, None
     if record.get("status") == "done":
         recorded = VERDICTS.get(str(record.get("review_verdict")), "unknown")
         text = _result_text(path, record)
@@ -173,6 +176,7 @@ def _review(path: Path, record: dict) -> dict | None:
                 verdict = "unknown"
             if recorded != "unknown" and recorded != verdict:
                 verdict = "unknown"
+            score = review_score(text) if verdict != "unknown" else None
             try:
                 payload = json.loads(text)
             except (ValueError, RecursionError):
@@ -180,29 +184,37 @@ def _review(path: Path, record: dict) -> dict | None:
             if isinstance(payload, dict) and isinstance(payload.get("findings"), list) and verdict != "unknown":
                 findings = payload["findings"]
             elif verdict != "unknown":
-                identified, anonymous = {}, []
+                identified, anonymous, resolved = {}, [], set()
                 for line in _commonmark_lines(_without_code_fences(text, keep_unclosed=False)):
+                    closed = bool(_RESOLVED.search(line)) and not _STILL_OPEN.search(line)
                     match = _FINDING_ID.match(line)
                     if match:
                         identity, priority = match[1].upper(), match[2].upper()
                         earlier = identified.get(identity, priority)
                         identified[identity] = priority if earlier == priority else "unknown"
+                        if closed:
+                            resolved.add(identity)
                     elif match := _FINDING.match(line):
-                        anonymous.append(match[1])
-                priorities = [*identified.values(), *anonymous]
-                if priorities:
-                    findings = [{"priority": priority} for priority in priorities]
+                        anonymous.append({"priority": match[1], "resolved": closed})
+                findings = [
+                    *({"priority": p, "resolved": i in resolved} for i, p in identified.items()),
+                    *anonymous,
+                ] or None
         else:
             verdict = recorded
         if verdict != "unknown" and findings is None and isinstance(record.get("findings"), list):
             findings = record["findings"]
     severities = Counter()
     confirmations = []
+    open_priorities = None if findings is None else []
     if findings is not None:
         for finding in findings:
             finding = finding if isinstance(finding, dict) else {}
             priority = finding.get("priority", finding.get("severity"))
-            severities[priority if isinstance(priority, str) and priority in SEVERITIES else "unknown"] += 1
+            priority = priority if isinstance(priority, str) and priority in SEVERITIES else "unknown"
+            severities[priority] += 1
+            if finding.get("resolved") is not True:
+                open_priorities.append(priority)
             if type(finding.get("confirmed")) is bool:
                 confirmations.append(int(finding["confirmed"]))
     return {
@@ -211,6 +223,41 @@ def _review(path: Path, record: dict) -> dict | None:
         "severities": severities,
         "confirmations": confirmations,
         "round": _number(record.get("review_round")) if verdict == "APPROVED" else None,
+        "score": score,
+        "open_priorities": open_priorities,
+    }
+
+
+# The review rubric's score band for the worst open finding (C-3020).
+SCORE_BANDS = {None: (10, 10), "P3": (7, 9), "P2": (7, 9), "P1": (4, 6), "P0": (1, 3)}
+
+
+def _rubric_agrees(review: dict) -> bool | None:
+    """Whether a score sits in its rubric band; None when the comparison is uncertain."""
+    score, priorities = review["score"], review["open_priorities"]
+    # Free prose cannot establish zero findings, and non-P severities have no band.
+    if score is None or priorities is None or set(priorities) - {"P0", "P1", "P2", "P3"}:
+        return None
+    worst = min(priorities, default=None)
+    # 1-3 also means "the wrong approach", which no finding records.
+    if score <= 3 and worst != "P0":
+        return None
+    low, high = SCORE_BANDS[worst]
+    return low <= score <= high
+
+
+def _scores(reviews: list[dict]) -> dict:
+    """Advisory review scores for rounds with a verdict; a missing or malformed SCORE stays absent."""
+    rounds = [r for r in reviews if r["verdict"] != "unknown"]
+    scores = [r["score"] for r in rounds if r["score"] is not None]
+    agreement = [agrees for r in rounds if (agrees := _rubric_agrees(r)) is not None]
+    return {
+        "rounds": len(rounds),
+        "scored": len(scores),
+        "absent": len(rounds) - len(scores),
+        "mean": round(mean(scores), 2) if scores else "unknown",
+        "median": median(scores) if scores else "unknown",
+        "rubric_agreement": _rate(sum(agreement), len(agreement)),
     }
 
 
@@ -400,6 +447,8 @@ def collect_agent_success(
             selector = requested.lower()
             if observed == "unknown" and selector in {"auto", "default", "unknown"}:
                 model = "unknown"
+            author = _label(record.get("review_author_model"))
+            author = _label(aliases.get(author.casefold(), author)) if available else "unknown"
             status = record.get("status")
             rows.append(
                 {
@@ -413,9 +462,11 @@ def collect_agent_success(
                     if model != "unknown"
                     else "unknown",
                     "review": _review(path, record),
+                    "author_model": author,
                     "usage": _usage(record, requested),
                 }
             )
+    reviewed = [r for r in rows if r["review"] is not None]
     return {
         "schema_version": "agent-success.v1",
         "content_included": False,
@@ -449,5 +500,13 @@ def collect_agent_success(
         },
         "by_model": {
             key: _summary([r for r in rows if r["model"] == key]) for key in sorted({r["model"] for r in rows})
+        },
+        # Reviewer calibration groups by the reviewing model, author quality by the reviewed PR's author model.
+        "review_scores": {
+            dimension: {
+                key: _scores([r["review"] for r in reviewed if r[field] == key])
+                for key in sorted({r[field] for r in reviewed})
+            }
+            for dimension, field in (("by_reviewer_model", "model"), ("by_author_model", "author_model"))
         },
     }
