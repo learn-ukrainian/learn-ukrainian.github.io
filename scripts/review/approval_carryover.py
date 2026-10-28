@@ -14,7 +14,8 @@ typed reason):
    (``scripts/config/generated_paths.yaml``).
 3. ``reproduction``: each such path's generator, run on N in a clean temporary
    worktree, reproduces N's committed bytes exactly and writes nothing else: it
-   runs under bubblewrap with every file read-only except its targets.
+   runs under bubblewrap, seeing only system files, its runtimes and the worktree,
+   all read-only except its targets, with no network or host service sockets.
 4. ``lineage``: every review task of the PR is terminal, every review verdict is
    published, and A's APPROVE is the latest verdict of every reviewer seat.
 5. ``ci``: same-head CI on N is green.
@@ -78,6 +79,8 @@ GENERATOR_TIMEOUT_S = 900
 # (review-loop references/ukrainian.md § Seats); every other profile seats one.
 UKRAINIAN_SEATS = 2
 NODE_PACKAGE = re.compile(r"(?:@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*\Z")
+# The only host paths a sandboxed generator sees, besides its runtimes and worktree.
+SANDBOX_SYSTEM_PATHS = ("/usr", "/etc", "/bin", "/sbin", "/lib", "/lib32", "/lib64", "/libx32")
 UNATTESTED_FAMILIES = frozenset({"unknown", "unattested", "ambiguous", "conflicting"})
 
 # Typed refusal reasons, one per condition plus the inputs they read.
@@ -264,26 +267,50 @@ def _snapshot(tree: Path) -> dict[str, tuple[Any, ...]]:
     return entries
 
 
-def _sandboxed(argv: Sequence[str], *, tree: Path, writable: Sequence[Path]) -> list[str]:
-    """``argv`` under bubblewrap: the whole filesystem read-only except ``writable``.
+def _runtime_roots(*, node: bool) -> list[Path]:
+    """Install trees of the interpreters a generator runs on: Python, and Node when it loads packages."""
+    roots = {Path(sys.prefix).resolve(), Path(sys.base_prefix).resolve()}
+    if node:
+        found = shutil.which("node")
+        if found is None:
+            raise CarryOverRefused(REPRODUCTION, "Node is required by a registered generator but is not installed")
+        roots.add(Path(found).resolve().parent.parent)
+    return sorted(roots)
 
-    No write, transient or lasting, can land anywhere but the target files, and
-    the generator has no network.
+
+def _sandboxed(argv: Sequence[str], *, tree: Path, writable: Sequence[Path], node: bool) -> list[str]:
+    """``argv`` under bubblewrap, seeing only system files, its runtimes and the worktree.
+
+    Everything is read-only except ``writable``. Host paths that hold service
+    sockets (``/run``, ``/tmp``, home directories) are not mounted, and the
+    network namespace isolates abstract sockets and loopback, so no host service
+    can write on the generator's behalf either.
     """
     bwrap = shutil.which("bwrap")
     if bwrap is None:
         raise CarryOverRefused(REPRODUCTION, "bubblewrap (bwrap) is required to sandbox generators")
-    binds = [arg for path in writable for arg in ("--bind", str(path), str(path))]
+    mounts: list[str] = []
+    for system in SANDBOX_SYSTEM_PATHS:
+        path = Path(system)
+        if path.is_symlink():
+            mounts += ["--symlink", os.readlink(path), system]
+        elif path.is_dir():
+            mounts += ["--ro-bind", system, system]
+    for root in _runtime_roots(node=node):
+        if not any(root.is_relative_to(system) for system in SANDBOX_SYSTEM_PATHS):
+            mounts += ["--ro-bind", str(root), str(root)]
+    mounts += ["--ro-bind", str(tree), str(tree)]
+    mounts += [arg for path in writable for arg in ("--bind", str(path), str(path))]
     return [
         bwrap,
-        "--ro-bind",
-        "/",
-        "/",
+        *mounts,
         "--dev",
         "/dev",
         "--proc",
         "/proc",
-        *binds,
+        # The sandbox's own root (a tmpfs holding the mount points) is read-only too.
+        "--remount-ro",
+        "/",
         "--unshare-all",
         "--die-with-parent",
         "--new-session",
@@ -335,12 +362,13 @@ def check_reproduction(
             for path in paths:
                 # Emptied, not removed: each target stays the sandbox's only writable file.
                 (tree / path).write_bytes(b"")
+            node = any(registry[path].node_packages for path in paths)
             before = _snapshot(tree)
             for command in dict.fromkeys(registry[path].command for path in paths):
                 argv = [sys.executable, *command[1:]] if command[0] == "python" else list(command)
                 try:
                     result = subprocess.run(
-                        _sandboxed(argv, tree=tree, writable=[tree / path for path in paths]),
+                        _sandboxed(argv, tree=tree, writable=[tree / path for path in paths], node=node),
                         cwd=tree,
                         capture_output=True,
                         check=False,

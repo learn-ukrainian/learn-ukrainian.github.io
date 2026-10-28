@@ -5,8 +5,9 @@
 # branch tip, so a PR's own edits to it never count. It empties each listed path
 # from a clean worktree of the merge head, runs its command from the worktree root,
 # and requires the output to equal the committed bytes exactly. Commands run under
-# bubblewrap with every file read-only except their targets, and with no network,
-# so a generator that writes anything else fails. A leading `python` is the recorder's
+# bubblewrap seeing only system files, their runtimes and the worktree, all
+# read-only except their targets, with no network and no host service sockets, so a
+# generator that writes anything else fails. A leading `python` is the recorder's
 # interpreter. `node_packages` names the Node packages the generator loads; each is
 # copied from the recorder checkout's node_modules into the worktree.
 schema_version: 1

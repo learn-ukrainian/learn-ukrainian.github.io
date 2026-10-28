@@ -3353,6 +3353,59 @@ def test_carry_over_refuses_red_same_head_ci_including_at_publication(monkeypatc
     assert refused_reason(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments, ci=ci) == "ci"
 
 
+@pytest.mark.skipif(not bwrap_usable(), reason="bubblewrap cannot create a sandbox on this host")
+def test_carry_over_sandbox_hides_host_service_sockets(monkeypatch, tmp_path):
+    """A host service reachable over a Unix socket could write for the generator; it must stay unreachable."""
+    import socket
+    import threading
+
+    from scripts.review.approval_carryover import CarryOverRefused
+
+    contacted = []
+    with TemporaryDirectory(dir=ensure_scratch_root()) as folder:
+        # Bound and reached by a relative name: the absolute path can exceed AF_UNIX's limit.
+        server = socket.socket(socket.AF_UNIX)
+        with monkeypatch.context() as cwd:
+            cwd.chdir(folder)
+            server.bind("svc.sock")
+        server.listen(1)
+        server.settimeout(60)
+
+        def serve():
+            try:
+                connection, _ = server.accept()
+            except OSError:
+                return
+            contacted.append(connection.recv(64))
+            connection.close()
+
+        listener = threading.Thread(target=serve, daemon=True)
+        listener.start()
+        reach = EXTRA + (
+            "    import socket\n"
+            "    client = socket.socket(socket.AF_UNIX)\n"
+            f"    os.chdir({folder!r})\n"
+            "    client.connect('svc.sock')\n"
+            "    client.sendall(b'write for me')\n"
+        )
+        repo, approved, base, head = carry_repo(tmp_path, generator=GENERATOR + reach)
+        monkeypatch.setenv("CARRY_EXTRA", "1")
+        comments = approved_lineage(tmp_path, approved)
+        with pytest.raises(CarryOverRefused) as refused:
+            run_carry_over(monkeypatch, tmp_path, repo, approved, head, base_tip=base, comments=comments)
+        server.close()
+        listener.join(timeout=10)
+    assert refused.value.reason == "reproduction" and contacted == []
+    from scripts.review.approval_carryover import _sandboxed
+
+    hidden = subprocess.run(
+        _sandboxed(["/bin/sh", "-c", "test ! -e /run && ! touch /probe"], tree=tmp_path, writable=[], node=False),
+        capture_output=True,
+        timeout=60,
+    )
+    assert hidden.returncode == 0, hidden.stderr
+
+
 def test_carry_over_receipt_readback_mismatch_reports_unknown_state(monkeypatch, tmp_path):
     repo, approved, base, head = carry_repo(tmp_path)
     comments = approved_lineage(tmp_path, approved)
