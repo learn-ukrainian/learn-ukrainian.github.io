@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
-import { parseMarkdown, shuffle } from './utils';
+import { parseMarkdown, useShuffledChoices } from './utils';
 import ActivityHelp from './ActivityHelp';
 import YouTubeVideo from './YouTubeVideo';
 import {
@@ -47,11 +47,12 @@ interface QuizQuestionProps {
 }
 
 export function QuizQuestion({ question, options, correctIndex, explanation, optionWhy, isUkrainian, host }: QuizQuestionProps) {
-  // Shuffle options on mount, tracking original indices
-  const shuffledOptions = useMemo(() => {
-    const indexed = options.map((opt, i) => ({ opt, originalIndex: i }));
-    return shuffle(indexed);
-  }, [options]);
+  // Fresh random order after hydration, tracking original indices
+  const indexedOptions = useMemo(
+    () => options.map((opt, i) => ({ opt, originalIndex: i })),
+    [options],
+  );
+  const { choices: shuffledOptions } = useShuffledChoices(indexedOptions);
 
   const [selected, setSelected] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);

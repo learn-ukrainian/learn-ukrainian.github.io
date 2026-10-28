@@ -1,6 +1,6 @@
 import React, { useRef, useState, useMemo } from 'react';
 import styles from './Activities.module.css';
-import { parseMarkdown, shuffle } from './utils';
+import { parseMarkdown, useShuffledChoices, useShuffledLists } from './utils';
 import ActivityHelp from './ActivityHelp';
 import { pickChipColor } from './chipColors';
 import {
@@ -77,18 +77,21 @@ export function FillInQuestion({
   const [typedAnswer, setTypedAnswer] = useState('');
   const completionReportedRef = useRef(false);
 
-  // Shuffle and create colored option chips, keeping each option's original
-  // (pre-shuffle) index so per-option feedback can be looked up after the
-  // learner answers.
+  // Shuffle (fresh random order after hydration and on every retry) and create
+  // colored option chips, keeping each option's original (pre-shuffle) index so
+  // per-option feedback can be looked up after the learner answers.
+  const indexedOptions = useMemo(
+    () => options.map((opt, origIndex) => ({ text: opt, origIndex })),
+    [options],
+  );
+  const { choices: shuffledChoices, reshuffle } = useShuffledChoices(indexedOptions);
   const coloredOptions = useMemo(() => {
-    const indexed = options.map((opt, origIndex) => ({ text: opt, origIndex }));
-    const shuffled = shuffle(indexed);
-    return shuffled.map((entry, idx) => ({
+    return shuffledChoices.map((entry, idx) => ({
       text: entry.text,
       origIndex: entry.origIndex,
       color: pickChipColor(entry.text, idx),
     }));
-  }, [options]);
+  }, [shuffledChoices]);
 
   const complete = (value: string) => {
     if (disabled || showResult) return;
@@ -126,6 +129,7 @@ export function FillInQuestion({
 
   const handleReset = () => {
     if (disabled) return;
+    reshuffle();
     setSelected(null);
     setShowResult(false);
     setTypedAnswer('');
@@ -370,6 +374,10 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
 
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
+  // One fresh random option order per blank, redrawn after hydration and on retry.
+  const { lists: shuffledOptionLists, reshuffle: reshuffleBlanks } = useShuffledLists(
+    items.map((item) => item.options || []),
+  );
   const batchCount = items.filter((item) => item.mode !== 'form-choice' && item.mode !== 'orthography').length;
   const showBatchControls = items.length === 0 || batchCount > 0;
 
@@ -428,7 +436,7 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
                   disabled={showResults}
                 >
                   <option value="" disabled>{isUkrainian ? '— оберіть —' : '— choose —'}</option>
-                  {shuffle(item.options || []).map((opt, i) => (
+                  {shuffledOptionLists[index].map((opt, i) => (
                     <option key={i} value={opt === '' ? EMPTY_OPTION_VALUE : opt}>
                       {opt || BLANK_SLOT}
                     </option>
@@ -459,6 +467,7 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
             <button
               className={styles.retryButton}
               onClick={() => {
+                reshuffleBlanks();
                 setShowResults(false);
                 setAnswers({});
               }}

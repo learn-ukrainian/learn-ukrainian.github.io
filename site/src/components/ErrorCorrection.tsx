@@ -6,7 +6,7 @@ import {
   useActivityIsUkrainian,
   useChromeLocale,
 } from '../lib/i18n/useChromeLocale';
-import { shuffle } from './utils';
+import { useShuffledChoices } from './utils';
 import { optionIndicesWithoutSpottedError } from '../../../packages/activity-kit/src/components/utils';
 
 export interface ErrorCorrectionItemProps {
@@ -127,13 +127,15 @@ export function ErrorCorrectionItem({
   disabled = false,
 }: ErrorCorrectionItemProps) {
   const typedFix = fixMode === 'type';
-  // Shuffle options on mount, minus the error the learner already spotted.
-  // Original (pre-filter, pre-shuffle) indices are kept alongside each entry
-  // so per-option feedback (aligned by original index) survives both steps.
-  const shuffledOptions = useMemo(() => {
+  // Fresh random order after hydration and on every retry, minus the error the
+  // learner already spotted. Original (pre-filter, pre-shuffle) indices are kept
+  // alongside each entry so per-option feedback (aligned by original index)
+  // survives both steps.
+  const survivingOptions = useMemo(() => {
     const survivingIndices = optionIndicesWithoutSpottedError(options, errorWord, correctForm);
-    return shuffle(survivingIndices.map((origIndex) => ({ text: options[origIndex], origIndex })));
+    return survivingIndices.map((origIndex) => ({ text: options[origIndex], origIndex }));
   }, [options, errorWord, correctForm]);
+  const { choices: shuffledOptions, reshuffle } = useShuffledChoices(survivingOptions);
 
   const [step, setStep] = useState<Step>('identify');
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
@@ -233,6 +235,7 @@ export function ErrorCorrectionItem({
 
   const handleReset = () => {
     if (disabled) return;
+    reshuffle();
     setStep('identify');
     setSelectedWord(null);
     setSelectedFix(null);

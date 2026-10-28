@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
-import { shuffle } from './utils';
+import { useShuffledChoices } from './utils';
 
 interface TranslateItemProps {
   /**
@@ -56,13 +56,14 @@ export function TranslateItem({
   const [submitted, setSubmitted] = useState(false);
 
   // Generate options if not provided: correct answer + alternatives + distractors
-  // Then shuffle so correct answer isn't always first. Original indices are
-  // kept so per-option feedback can be looked up after the shuffle.
-  const displayOptions = useMemo(() => {
+  // Then shuffle so correct answer isn't always first: a fresh random order
+  // after hydration and on every retry. Original indices are kept so
+  // per-option feedback can be looked up after the shuffle.
+  const sourceOptions = useMemo(() => {
     const opts = options.length > 0 ? options : [answer, ...alternatives];
-    const indexed = opts.map((text, origIndex) => ({ text, origIndex }));
-    return shuffle(indexed);
+    return opts.map((text, origIndex) => ({ text, origIndex }));
   }, [options, answer, alternatives]);
+  const { choices: displayOptions, reshuffle } = useShuffledChoices(sourceOptions);
 
   const handleSelect = (option: string) => {
     if (submitted) return;
@@ -73,6 +74,7 @@ export function TranslateItem({
   const handleReset = () => {
     setSelected(null);
     setSubmitted(false);
+    reshuffle();
   };
 
   const allCorrectAnswers = [answer, ...alternatives];

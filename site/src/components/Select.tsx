@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
-import { shuffle } from './utils';
+import { useShuffledChoices } from './utils';
 
 interface SelectQuestionProps {
   /**
@@ -32,8 +32,8 @@ interface SelectQuestionProps {
 }
 
 export function SelectQuestion({ question, options, correctAnswers, explanation, isUkrainian }: SelectQuestionProps) {
-  // Shuffle options on mount
-  const shuffledOptions = useMemo(() => shuffle([...options]), [options]);
+  // Fresh random order after hydration and on every retry
+  const { choices: shuffledOptions, reshuffle } = useShuffledChoices(options);
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
@@ -63,6 +63,7 @@ export function SelectQuestion({ question, options, correctAnswers, explanation,
   const handleReset = () => {
     setSelected(new Set());
     setSubmitted(false);
+    reshuffle();
   };
 
   const isCorrectOption = (option: string) =>
