@@ -23,8 +23,6 @@ READERS = (
     "scripts/api/fleet_router.py",
     "scripts/api/fleet_workers_collect.py",
     "scripts/api/runtime_router.py",
-    "scripts/entire_context/reconcile.py",
-    "scripts/entire_context/resolvers.py",
     "scripts/fleet_comms/authority.py",
     "scripts/fleet_comms/cold_start_board.py",
     "scripts/fleet_comms/efficiency_metrics.py",

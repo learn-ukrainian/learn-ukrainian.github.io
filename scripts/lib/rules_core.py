@@ -93,7 +93,6 @@ TASK_SCOPES: dict[str, TaskScope] = {
         ),
     ),
     "fleet-comms": TaskScope("Fleet Comms action", (f"{_RULES}/fleet-comms-coordination.md",)),
-    "intake": TaskScope("Non-trivial intake", (f"{_SKILLS}/entire-context/SKILL.md",)),
     "review": TaskScope("Code/infra review", (f"{_SKILLS}/local-code-review/SKILL.md",)),
     "task-family": TaskScope("Task archive", (f"{_SKILLS}/task-family-manager/SKILL.md",)),
     "rollover": TaskScope("Rollover preparation", (f"{_SKILLS}/thread-rollover/SKILL.md",)),

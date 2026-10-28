@@ -200,9 +200,9 @@ class ExternalAdvisoryCheck:
     decision: str
 
 
-# Operator decision OO-48 (#11184): the Entire integration is switched off until it is
-# reintroduced, so its "Entire Gates" check is informational in every state. Reintroducing
-# the integration means deleting this entry; no other check shares the exemption.
+# Operator decision OO-48 (#11184): the Entire integration is switched off (and removed from
+# the repository, C-2928), so a "Entire Gates" run its GitHub App may still post is
+# informational in every state. No other check shares the exemption.
 OO48_ENTIRE_GATES = ExternalAdvisoryCheck(name="Entire Gates", app_id=2626939, app_slug="entire", decision="OO-48")
 EXTERNAL_ADVISORY_CHECKS: tuple[ExternalAdvisoryCheck, ...] = (OO48_ENTIRE_GATES,)
 

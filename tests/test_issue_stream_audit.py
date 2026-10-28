@@ -1572,40 +1572,13 @@ def test_resolvers_refuse_incomplete_report_that_looks_uniquely_owned():
     assert make_issue_resolver(report)("500") is False
 
 
-def test_resolve_github_issue_refuses_incomplete_cache_for_traced_case(tmp_path):
-    """#500 is referenced by roots #10 and #20, but #20 was never read.
-
-    The partial index makes #500 look uniquely owned by #10. entire_context
-    must still refuse.
-    """
-    import time
-
-    from scripts.entire_context.resolvers import REASON_RESOLUTION_ERROR, ResolutionError, resolve_github_issue
-
-    report = {
-        "generated_at": time.time(),
-        "membership_complete": False,
-        "incomplete_nodes": [20],
-        "warnings": [{"code": "traversal_incomplete", "issue": 20}],
-        "open_issue_numbers": [10, 20, 500],
-        "effective_membership": {"500": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
-    }
-    cache = tmp_path / "issue_stream_audit.json"
-    cache.write_text(json.dumps(report), encoding="utf-8")
-    with pytest.raises(ResolutionError) as excinfo:
-        resolve_github_issue(500, cache_path=cache, repo=tmp_path, namespace="github:acme/repo")
-    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
-    assert "incomplete" in str(excinfo.value)
-
-
-def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_path, monkeypatch):
+def test_run_audit_incomplete_node_refuses_membership(tmp_path, monkeypatch):
     """End to end through the real ``_tree_membership``: two roots, one unread.
 
     Roots #10 and #20 both reference #500. #20's fetch fails, so the nodes
     that were read make #500 look uniquely owned by #10. ``resolve_membership``
-    and ``entire_context`` must both refuse.
+    must refuse.
     """
-    from scripts.entire_context.resolvers import REASON_RESOLUTION_ERROR, ResolutionError, resolve_github_issue
     from scripts.orchestration import task_lifecycle
 
     monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
@@ -1658,12 +1631,6 @@ def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_pat
     assert result["valid"] is False
     assert "#20" in result["reason"]
     assert "incomplete" in result["reason"]
-
-    cache = root / "batch_state" / "issue_stream_audit.json"
-    with pytest.raises(ResolutionError) as excinfo:
-        resolve_github_issue(500, cache_path=cache, repo=root, namespace="github:acme/repo")
-    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
-    assert "incomplete" in str(excinfo.value)
 
 
 def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_path, monkeypatch):

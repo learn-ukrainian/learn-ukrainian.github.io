@@ -205,7 +205,6 @@
       "scripts/curriculum/validate/__main__.py",
       "scripts/curriculum/validate/validate.py",
       "scripts/debug/debug_hash.py",
-      "scripts/entire_context/__main__.py",
       "scripts/etymology/bulk_ocr_gemini.py",
       "scripts/eval/uk_preamble/__main__.py",
       "scripts/eval/zno_nmt/__main__.py",

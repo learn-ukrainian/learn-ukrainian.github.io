@@ -45,10 +45,7 @@ def test_cursor_adapter_missing_or_blank_process_key_falls_back_to_file(
         tool_config=None,
     )
 
-    assert plan.env_overrides == {
-        "LU_ENTIRE_CAPTURE_OWNER": "fleet",
-        **({"CURSOR_API_KEY": file_key} if file_key else {}),
-    }
+    assert plan.env_overrides == ({"CURSOR_API_KEY": file_key} if file_key else {})
 
 
 def test_cursor_key_file_corrupt_invalid_utf8_returns_no_key_without_raising(tmp_path, capsys):

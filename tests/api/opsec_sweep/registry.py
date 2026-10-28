@@ -33,9 +33,9 @@ FixtureKind = Literal["isolated", "skip"]
 
 # Filled from the current exact route tree after the implementation is
 # assembled.  The count and digest are intentionally independent checks.
-FROZEN_HTTP_OPERATION_COUNT = 292
+FROZEN_HTTP_OPERATION_COUNT = 290
 FROZEN_WEBSOCKET_ROUTE_COUNT = 1
-FROZEN_DENOMINATOR_SHA256 = "97b1f1007b71f470a624bd23d00a4b6b3761866b87df30d44dc9a6c77c63f2e9"
+FROZEN_DENOMINATOR_SHA256 = "5edff832c0a9d40c0858c08f7c5665135ce0d55c4c430a6c06ab071a523e27b9"
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied
@@ -407,7 +407,7 @@ def _query_for(path_template: str) -> dict[str, Any]:
         return {"dry_run": "true"}
     if path_template == "/api/work/v1/next":
         return {"stream": "infra-harness", "limit": "1"}
-    if path_template in {"/api/ops/entire-context/search", "/api/knowledge/find"}:
+    if path_template == "/api/knowledge/find":
         return {"q": "opsec synthetic", "limit": "1"}
     if path_template in {"/api/sources/search_text", "/api/sources/search_literary"}:
         return {"q": "opsec synthetic", "limit": "1"}

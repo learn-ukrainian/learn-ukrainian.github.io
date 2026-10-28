@@ -288,7 +288,7 @@ class CursorAdapter:
                 cmd.append("--approve-mcps")
             cmd.extend(["--force", "--sandbox", "disabled"])
 
-        env_overrides: dict[str, str] = {"LU_ENTIRE_CAPTURE_OWNER": "fleet"}
+        env_overrides: dict[str, str] = {}
         if not os.environ.get("CURSOR_API_KEY", "").strip():
             file_key = _load_cursor_api_key_from_env_file()
             if file_key:
@@ -301,13 +301,7 @@ class CursorAdapter:
             output_file=None,  # Cursor writes to stdout
             env_overrides=env_overrides,
             liveness_paths=(),  # rely on stdout streaming
-            metadata={
-                "entire_fleet": {
-                    "requested_model": model or self.default_model,
-                    "actual_model_known": "false",
-                }
-            },
-            host_harness="cursor-headless",
+            metadata={"requested_model": model or self.default_model},
         )
 
     def _should_approve_mcps(self, config: dict, *, default: bool) -> bool:
@@ -642,11 +636,9 @@ def _requested_model_from_plan(plan: InvocationPlan | None, *, default: str) -> 
     if plan is not None:
         metadata = plan.metadata
         if isinstance(metadata, Mapping):
-            fleet = metadata.get("entire_fleet")
-            if isinstance(fleet, Mapping):
-                requested = fleet.get("requested_model")
-                if isinstance(requested, str) and requested.strip():
-                    return requested.strip()
+            requested = metadata.get("requested_model")
+            if isinstance(requested, str) and requested.strip():
+                return requested.strip()
         try:
             model_index = plan.cmd.index("--model")
             requested = plan.cmd[model_index + 1]

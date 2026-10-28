@@ -46,9 +46,6 @@ incomplete packet is not evidence that an order, hold, or stop is absent. Check
 live worker, PR, CI, and queue state through their authoritative interfaces before
 making consequential decisions, as required by
 [core reporting rules](../../agents_extensions/shared/rules/core.md#p0--tool-backed-claims-honest-reporting).
-The [Entire intake skill](../../agents_extensions/shared/skills/entire-context/SKILL.md)
-provides bounded body-free locators. They supplement canonical evidence and do
-not replace authority or formal review.
 
 Routing context also stays current. Use the live catalog and qualified capacity,
 following [core routing rules](../../agents_extensions/shared/rules/core.md#p2--which-model-for-what)

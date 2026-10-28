@@ -22,18 +22,16 @@ compat scanning of `.claude/settings.json`.
 | Grok Claude-compat | Merges project Claude hooks when trusted | **On by default** — main footgun |
 | `.githooks/*` (via `$GIT_COMMON_DIR/hooks`) | Git lifecycle delegators | Low overhead per git action |
 
-## Git hooks and Entire CLI delegator architecture
+## Git hook delegator architecture
 
-Tracked hook source files live in `.githooks/` as the single source of truth across all linked worktrees. Historically, `scripts/install_git_hooks.sh` set `core.hooksPath=.githooks`. However, when Entire CLI is enabled (via `.entire/settings.json`), its session lifecycle auto-installs git hook wrappers into whichever directory `core.hooksPath` points at. If `core.hooksPath` points at `.githooks`, Entire overwrites the tracked files and creates untracked artifacts (`*.pre-entire`, `prepare-commit-msg`, `post-rewrite`), leaving the primary checkout dirty and breaking automated dispatch and handoff gates.
+Tracked hook source files live in `.githooks/` as the single source of truth across all linked worktrees. Historically, `scripts/install_git_hooks.sh` set `core.hooksPath=.githooks`. A tool that installs git hook wrappers writes into whichever directory `core.hooksPath` points at; when that was `.githooks`, the since-removed Entire CLI overwrote the tracked files and left untracked artifacts, leaving the primary checkout dirty and breaking automated dispatch and handoff gates.
 
-To prevent dirty checkout drift while preserving Entire CLI functionality:
+To prevent dirty checkout drift:
 - `core.hooksPath` is kept **unset** (or cleared if set to `.githooks`).
 - `scripts/install_git_hooks.sh` writes untracked delegator scripts into the Git common hooks directory (`$GIT_COMMON_DIR/hooks/`).
 - Each delegator dynamically resolves the current worktree root (`git rev-parse --show-toplevel`) and delegates to `$root/.githooks/<name>` if executable.
-- When Entire CLI is present, Entire installs its wrapper at `$GIT_COMMON_DIR/hooks/<name>`. Entire (0.11.5) adds its `# Chain: run pre-existing hook` block, which runs `<name>.pre-entire` as the wrapper's last command, only when `<name>.pre-entire` already exists as Entire writes the wrapper; Entire does not rewrite wrappers on later runs unless one is missing or `entire enable --force` / `entire doctor --force` reinstalls them. The installer detects the `# Entire CLI hooks` marker, places the delegator at `$GIT_COMMON_DIR/hooks/<name>.pre-entire`, and appends Entire's chain block when the wrapper lacks it, so the repo hook's exit status decides the commit or push (#9195). An Entire reinstall regenerates the same bytes (verified against the real 0.11.5 binary, #10846).
-- The 0.11.5 block differs from the 0.8.42 one, which installed hosts may still carry and the installer still recognizes: the pre-push wrapper exits first when its Entire command fails (inert once guarded, see below), and the chain sets and exports `ENTIRE_CHAINING_<HOOK>` and skips itself while that variable is set. A git command that a chained repo hook runs therefore does not run the same repo hook again, and tests that drive Entire-chained fixture repositories from inside a hook must drop `ENTIRE_CHAINING_*` from the child environment. Unchained wrapper bytes are identical in 0.8.42 and 0.11.5.
-- The installer routes every Entire wrapper's `entire hooks git` call (prepare-commit-msg, commit-msg, post-commit, post-rewrite, pre-push) through `scripts/entire/capture_guard.sh` (#10846). The guard runs Entire only after it proves the routing allowlist, the exact accepted CLI version and the private checkpoint route in `entire status --json`, and it always exits 0. A refused capture or an Entire failure therefore never blocks a commit or push, and the repository gate alone decides. Entire treats the guarded line as current. `entire enable --force` rewrites it, and the installer re-guards it on the next run. The installer refuses, before changing anything, when the hooks directory or any hook path it would write is a symlink, dangling or not.
-- `scripts/install_git_hooks.sh --check` is read-only. It fails when the hooks directory or a hook path is a symlink, when an Entire wrapper runs Entire without the capture guard (`UNGUARDED`), and when a stage declared in `.pre-commit-config.yaml` (`default_install_hook_types`, `default_stages`, or a hook's `stages`) has no reachable repo delegator in the effective hooks directory. It reads the stages with a YAML parse (`scripts/pre_commit/declared_hook_stages.py`, project interpreter) and fails closed when the config cannot be parsed or names an unknown stage.
+- The Entire CLI integration was removed (C-2928). A host may still carry its wrappers (marked `# Entire CLI hooks`) with the delegator moved to `<name>.pre-entire`. The installer replaces each such wrapper with the delegator, removes the Entire-only `prepare-commit-msg` and `post-rewrite` wrappers, and removes the `<name>.pre-entire` delegators it generated. The installer refuses, before changing anything, when the hooks directory or any hook path it would write is a symlink, dangling or not.
+- `scripts/install_git_hooks.sh --check` is read-only. It fails when the hooks directory or a hook path is a symlink, when an Entire wrapper remains (`RETIRED`), and when a stage declared in `.pre-commit-config.yaml` (`default_install_hook_types`, `default_stages`, or a hook's `stages`) has no reachable repo delegator in the effective hooks directory. It reads the stages with a YAML parse (`scripts/pre_commit/declared_hook_stages.py`, project interpreter) and fails closed when the config cannot be parsed or names an unknown stage.
 
 ## Keep / drop matrix
 
@@ -49,7 +47,6 @@ To prevent dirty checkout drift while preserving Entire CLI functionality:
 | `post-compact` full scan | yes (Claude epic) | **skip** when Grok + no `SESSION_EPIC` | ~2s → ~0 |
 | `context-monitor` every tool | yes (Claude) | **skip** for Grok unless `GROK_CONTEXT_MONITOR=1` | high frequency |
 | `stamp-pytest` PostToolUse/PostToolUseFailure (Bash only) | keep fire-and-forget | skip for Grok | |
-| Entire CLI hooks | no-op if missing | no-op | still spawn shell — OK |
 | Auto-audit FileChanged curriculum | Claude only | off | |
 
 ## Grok profile (enforced recommendation)
@@ -131,7 +128,7 @@ Under host load the guards used to time out, and the tool then ran unguarded.
 - `heal-core-bare.py` stays fail-open. It refuses nothing, and blocking every git command
   because a repair helper stalled would wedge the session. It now reads the shared git
   config in-process and starts the checker only when `core.bare` may be on.
-- SessionStart, PostToolUse, UserPromptSubmit, Stop and the Entire hooks stay fail-open.
+- SessionStart, PostToolUse, UserPromptSubmit and Stop hooks stay fail-open.
 - `tests/test_hook_failure_policy.py` enforces all of this. A new `guard-*.py` entry fails
   the test until it is added to the fail-closed list.
 - A live Claude Code 2.1.301 canary (opt-in test, `LU_LIVE_CLAUDE_HOOK_CANARY=1`) confirmed

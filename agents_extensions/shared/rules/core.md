@@ -122,9 +122,9 @@ Every Russianism check queries both `search_style_guide` and `search_text` with
 
 ## P7 — Continuity
 
-- Read the handoff first; its housekeeping and in-flight lines are to-dos. Non-trivial intake runs Entire status and one bounded search before prioritizing or dispatching, supplemental only (empty recall falls back to sources); record use only when a verified locator informed the work. <!-- p7-start: A28 -->
+- Read the handoff first; its housekeeping and in-flight lines are to-dos. <!-- p7-start: Eo06 -->
 - Run the SessionStart detector's exact commands; never auto-resume. End on the seat's handoff signal, not compact count. For Grok/Gemini/Kimi, run the corresponding `scripts.session_canary.{grok,gemini,kimi}_lane` mint/score procedure only within `thread-rollover`, and end on FAIL-HANDOFF below 8/10. Claude/Sonnet use SessionStart/PostCompact plus thread-handoff and have no model-specific canary lane. Keep the file handoff current and authoritative through every plane mode; stop on a failed handoff. <!-- p7-health: W29 -->
-- Before ending write the handoff and lessons. Write each durable handoff as `docs/session-state/<date>-<slug>-brief.md`, roughly 2–5 KB, with YAML frontmatter and a bullet-list body. HTML companions require an explicit request or a major milestone. Roll over via the `thread-rollover` packet, never tracked scratch. The `current.md` compatibility router holds pointers: read it only to discover paths; keep detail in the agent-specific file. Do not read its `.html` unless that handoff points there. Keep the file handoff authoritative and add the Entire dual-write and Fleet receipt; obtain every timestamp from `date -u`. <!-- p7-end: W28 -->
+- Before ending write the handoff and lessons. Write each durable handoff as `docs/session-state/<date>-<slug>-brief.md`, roughly 2–5 KB, with YAML frontmatter and a bullet-list body. HTML companions require an explicit request or a major milestone. Roll over via the `thread-rollover` packet, never tracked scratch. The `current.md` compatibility router holds pointers: read it only to discover paths; keep detail in the agent-specific file. Do not read its `.html` unless that handoff points there. Keep the file handoff authoritative and add the Fleet receipt; obtain every timestamp from `date -u`. <!-- p7-end: W28 -->
 
 ## P8 — Operational security
 
@@ -170,7 +170,7 @@ The repo is public and Ukraine is at war with Russia; the enemy reads it too.
 - Ukrainian language: `ukrainian-linguistics.md`, `mcp-sources-and-dictionaries.md`.
 - Curriculum: `core-curriculum.md`, `non-negotiable-rules.md`, `pipeline.md`, `activity-yaml.md`.
 - CLI, storage: `cli-help-standard.md`, `storage-topology.md`.
-- Review; intake; rollover: `local-code-review`, `entire-context`, `thread-rollover` skills.
+- Review; rollover: `local-code-review`, `thread-rollover` skills.
 - Full ruleset: `/api/rules?scope=full&format=markdown`; offline `_load-via-api.md`.
 
 </critical>

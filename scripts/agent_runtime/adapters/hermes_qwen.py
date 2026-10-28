@@ -155,7 +155,6 @@ class HermesQwenAdapter:
             env_overrides=context.env_overrides,
             liveness_paths=(),
             metadata=context.metadata,
-            host_harness="hermes",
         )
 
     def parse_response(

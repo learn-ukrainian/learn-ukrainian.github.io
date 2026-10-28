@@ -1172,13 +1172,8 @@ class AgyAdapter:
                     if review_route
                     else None
                 ),
-                "entire_fleet": {
-                    "requested_model": model or self.default_model,
-                    "actual_model": None if resolved_model in _AGY_CLAUDE_SLUGS else resolved_model or model or self.default_model,
-                    **({"actual_model_known": "false"} if resolved_model in _AGY_CLAUDE_SLUGS else {}),
-                },
+                "requested_model": model or self.default_model,
             },
-            host_harness="agy",
         )
 
     def _resolve_model_flag(self, model: str | None) -> str | None:
@@ -1221,7 +1216,7 @@ class AgyAdapter:
         # Identity evidence comes only from the provider's init event.
         model_identity: dict[str, Any] = {
             "requested_provider": "agy",
-            "requested_model": (plan.metadata.get("entire_fleet") or {}).get("requested_model") if plan else None,
+            "requested_model": plan.metadata.get("requested_model") if plan else None,
             "actual_provider": "agy",
             "actual_model": None,
             "actual_model_known": False,

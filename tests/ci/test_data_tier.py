@@ -942,8 +942,6 @@ def test_host_file_provisioning_copies_content_but_not_nested_repository_metadat
         ("data/train/doc.txt", "content\n"),
         (".git/HEAD", "ref: refs/heads/main\n"),
         (".git/refs/heads/entire/checkpoints/v1", "df01a9f6\n"),
-        (".entire/settings.json", "{}\n"),
-        (".entire/metadata/state.json", "{}\n"),
         ("python/pkg/.gitkeep", ""),
     ):
         path = nested / relative
@@ -960,7 +958,6 @@ def test_host_file_provisioning_copies_content_but_not_nested_repository_metadat
     assert (copy / "python" / "pkg" / ".gitkeep").is_file()
     assert (checkout / "site" / "public" / "lexicon" / "a.json").is_file()
     assert not (copy / ".git").exists()
-    assert not (copy / ".entire").exists()
 
 
 def test_stale_worktrees_pruned_only_without_active_scopes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

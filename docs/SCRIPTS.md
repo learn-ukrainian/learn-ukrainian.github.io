@@ -148,21 +148,19 @@ fresh or healthy.
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
 `$GIT_COMMON_DIR/hooks` that delegate to the tracked `.githooks/` of the current
-worktree. `core.hooksPath` stays unset so Entire CLI can chain per-clone without
-dirtying tracked files. The delegators ensure the complete tracked hook chain is
+worktree. `core.hooksPath` stays unset so hook-installing tools cannot write into
+tracked files. The delegators ensure the complete tracked hook chain is
 shared across all linked worktrees without a per-worktree install. It runs the
 configured pre-commit, commit-message, and pre-push gates; preserves the
 pytest-stamp and Git LFS hooks; and restores the primary-checkout guards after
 checkout or merge. The installer also materializes `.githooks` in existing sparse
-worktrees without broadening their checkout. Where Entire CLI owns a hook, the
-delegator sits at `<name>.pre-entire` and the installer makes Entire's wrapper
-chain to it, and routes Entire's own call through `scripts/entire/capture_guard.sh`
-(Entire runs only with the accepted CLI version and the private checkpoint route,
-and never blocks a commit or push; the post-commit capture runs at niceness +10
-and idle I/O priority). It refuses, without changing anything, when a
-hook path is a symlink. `scripts/install_git_hooks.sh --check` (read-only) fails
-when a hook stage declared in `.pre-commit-config.yaml` has no reachable
-delegator, an Entire wrapper is unguarded, or a hook path is a symlink.
+worktrees without broadening their checkout. The Entire CLI integration was removed
+(C-2928): the installer replaces any Entire wrapper still in the hooks directory with
+the delegator, removes the Entire-only wrappers and the delegators it once placed at
+`<name>.pre-entire`. It refuses, without changing anything, when a hook path is a
+symlink. `scripts/install_git_hooks.sh --check` (read-only) fails when a hook stage
+declared in `.pre-commit-config.yaml` has no reachable delegator, an Entire wrapper
+remains (`RETIRED`), or a hook path is a symlink.
 
 ---
 

@@ -139,7 +139,7 @@ requires an operator reference. The item lifecycle is in
 12. **§8a Inbox drain — before handoff.**
 13. **§8 Handoff.** Reconcile the lane tracker and add one `handoff_note` item.
     Keep `DRIVER-STATE.md` under 4 KB as a pointer with pinned provider facts and the
-    render/check instructions. Preserve the Entire dual-write and Fleet receipt:
+    render/check instructions. Preserve the Fleet receipt:
     [handoff](references/handoff.md).
 
 Write the brief for a new multi-PR outcome as a [decision report](references/decision-report.md).

@@ -5,7 +5,7 @@
 # only when a launcher has explicitly bound an epic driver.
 
 [features]
-# Entire 0.8.42 uses the same project hook surface in Codex CLI and Desktop.
+# Codex CLI and Desktop share the same project hook surface.
 hooks = true
 multi_agent = true
 # Fleet streams and file shadow diaries are the durable memory layer.

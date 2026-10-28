@@ -49,7 +49,6 @@
       "Bash(sudo caddy reload*)"
     ],
     "deny": [
-      "Read(./.entire/metadata/**)",
       "Bash(git fetch *--upload-pack*)",
       "Bash(git fetch *--upload-pack)",
       "Bash(git fetch *--upl*)",
@@ -709,11 +708,6 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-setup.sh",
             "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then printf \"%s\\n\" \"{\\\"systemMessage\\\":\\\"\\n\\nEntire CLI is enabled but not installed or not on PATH.\\nInstallation guide: https://docs.entire.io/cli/installation#installation-methods\\\"}\"; exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code session-start; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
-            "timeout": 30
           }
         ]
       }
@@ -786,16 +780,6 @@
             "onFailure": "block"
           }
         ]
-      },
-      {
-        "matcher": "Task",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code pre-task; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
-            "timeout": 30
-          }
-        ]
       }
     ],
     "PostToolUse": [
@@ -825,26 +809,6 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/audit-primary-checkout-dirt.py",
             "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "Task",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 110 hooks claude-code post-task; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
-            "timeout": 120
-          }
-        ]
-      },
-      {
-        "matcher": "TodoWrite",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code post-todo; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
-            "timeout": 30
           }
         ]
       }
@@ -887,11 +851,6 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/context-rollover-guard.sh",
             "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code user-prompt-submit; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
-            "timeout": 30
           }
         ]
       }
@@ -949,11 +908,6 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/goal-driver-stop.sh",
             "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 110 hooks claude-code stop; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
-            "timeout": 120
           }
         ]
       }
@@ -976,11 +930,6 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/release-thread-lease.sh",
             "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; g=\"$(git rev-parse --show-toplevel 2>/dev/null)/scripts/entire/capture_guard.sh\"; if [ -x \"$g\" ]; then \"$g\" --budget 25 hooks claude-code session-end; else echo \"[entire] capture refused (guard_missing): no checkpoint written\" >&2; fi'",
-            "timeout": 30
           }
         ]
       }
