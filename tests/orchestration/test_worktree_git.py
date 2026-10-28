@@ -320,6 +320,19 @@ def test_prune_branch_refuses_branch_checked_out_in_another_worktree(
     assert git(worktree, "branch", "--show-current") == branch
 
 
+def test_worktree_clean_counts_a_real_untracked_venv_as_dirty(tmp_path: Path) -> None:
+    """A real environment is non-disposable, so every removal guard sees it."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/venv-residue")
+    assert wg._worktree_clean(worktree) is True
+    venv_file = worktree / ".venv" / "bin" / "python"
+    venv_file.parent.mkdir(parents=True)
+    venv_file.write_text("worker environment residue\n", encoding="utf-8")
+
+    assert "?? .venv/bin/python" in git(worktree, "status", "--porcelain", "-uall")
+    assert wg._worktree_clean(worktree) is False
+
+
 # --- Pull-request lookup --
 
 
@@ -690,6 +703,40 @@ def test_write_claim_pid_replacement_ignores_stale_task_identity(tmp_path, monke
     assert reason == (None if claim_state == "dead" else "active write claim task-id=replacement-claim")
     assert task_file.read_bytes() == before_task
     assert db_path.read_bytes() == before_ledger
+
+
+def test_write_claims_query_error_fails_closed_without_empty_skip(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    db_path = repo / "batch_state" / "tasks" / "write-ownership.sqlite3"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    with contextlib.closing(sqlite3.connect(db_path)) as conn:
+        conn.execute("CREATE TABLE wrong_table (dummy TEXT)")
+        conn.commit()
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(db_path))
+
+    claim_reason = wg._has_active_ownership_claim(repo, "query-err-task")
+
+    assert claim_reason is not None
+    assert "active write claim check failed" in claim_reason
+
+
+def test_missing_configured_ownership_ledger_fails_closed_without_fallback(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    # Create default ledger without any claims; fallback must not silently occur.
+    default_db = repo / "batch_state" / "tasks" / "write-ownership.sqlite3"
+    default_db.parent.mkdir(parents=True, exist_ok=True)
+    with contextlib.closing(sqlite3.connect(default_db)) as conn:
+        conn.execute(
+            "CREATE TABLE write_claims (task_id TEXT NOT NULL, claim_json TEXT NOT NULL, pid INTEGER, "
+            "created_at REAL NOT NULL, PRIMARY KEY (task_id, claim_json))"
+        )
+        conn.commit()
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(tmp_path / "does_not_exist.sqlite3"))
+
+    claim_reason = wg._has_active_ownership_claim(repo, "missing-ledger-task")
+
+    assert claim_reason is not None
+    assert "active write claim check failed" in claim_reason
 
 
 def test_namespace_unknown_worker_is_not_gone():
