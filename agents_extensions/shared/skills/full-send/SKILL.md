@@ -95,12 +95,13 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
     "$PY" -m scripts.orchestration.merge_closeout "$PR" --apply
     ```
 
-    Exit 0 with a residue-free receipt is required, with one expected exception: a worker runs
+    Exit 0 with a residue-free receipt is required, with one accepted exception: a worker runs
     this from its own worktree, which is still in use, so the receipt reports that worktree and
-    its local branch as residual. The dispatcher removes both when the worker's task settles and
-    records `worktree_disposition` in the task record; the driver confirms it at settle. Any
-    other residual, non-zero exit or SKIPPED row means not done: record the evidence and owner
-    and resolve it safely, never with `--force`.
+    its local branch as the only residual and the tool exits 1. That exit 1 is accepted. The
+    dispatcher removes both when the worker's task settles and records `worktree_disposition`
+    in the task record; the driver confirms it at settle. Any other residual, any other
+    non-zero exit or any SKIPPED row still means not done: record the evidence and owner and
+    resolve it safely, never with `--force`.
 11. **Dispose of the linked issues.** Close each named issue as completed with evidence on the
     merged SHA, or comment what remains, its owner and what it waits on (rules core P4).
 

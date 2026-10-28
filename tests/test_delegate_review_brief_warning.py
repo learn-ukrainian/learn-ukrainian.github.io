@@ -38,4 +38,4 @@ def test_shared_review_texts_state_the_rules():
         assert disposition in texts["review-deep instructions"]
     assert "inconclusive: give the BLOCKED token" in texts["ask verdict preamble"]
     assert "approval may carry tracked non-blocking follow-ups" in texts["ask verdict preamble"]
-    assert "fail-closed" in texts["security brief"] and "second rejected review round" in texts["security brief"]
+    assert "fail-closed" in texts["security brief"] and "a rejected review round" in texts["security brief"]

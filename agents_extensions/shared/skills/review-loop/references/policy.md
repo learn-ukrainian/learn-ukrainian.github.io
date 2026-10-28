@@ -17,7 +17,8 @@ rounds are deltas.
 - **Stop early when only nits remain:** no open blocker means no further round. Remaining
   follow-ups never hold the merge.
 - **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
-  review out to helper agents. The advisory second reader in `review-loop` is not a reviewer
+  review out to helper agents. Learner-facing Ukrainian is the exception: its profile seats two
+  independent reviewers (`references/ukrainian.md`, § Seats). The advisory second reader in `review-loop` is not a reviewer
   and adds no round.
 - **The end of the budget is never approval.** The author splits the PR, changes the
   approach, or escalates to the CTO and the advisors (rules core P6).
