@@ -17,7 +17,8 @@ from scripts.atlas import word_card_sources as src
 from scripts.storage.topology import store_locality
 
 SOURCES = ("sum20", "vts_busel_slovnyk_me")
-VERSION = "pilot-meanings-v1"
+VERSION = "pilot-meanings-v2"
+SOURCE_TAIL = re.compile(r"\s+Джерело:.*$", re.IGNORECASE | re.DOTALL)
 
 
 def key(text: str) -> str:
@@ -52,23 +53,29 @@ def vts_partitions(text: str, spelling: str) -> list[dict]:
     article is held whole rather than distributing its meanings by ordinal.
     Offsets address the authenticated full cache text, before any normalization.
     """
-    markers = list(re.finditer(r"(?<!\S)[IVX]+(?=\s)", text))
+    lookup = re.match(rf"\s*{re.escape(spelling)}\s+", text, re.IGNORECASE)
+    start = lookup.end() if lookup else 0
+    footer = SOURCE_TAIL.search(text)
+    end = footer.start() if footer else len(text)
+    markers = list(re.compile(r"(?<!\S)[IVX]+(?=\s)").finditer(text, start, end))
     if not markers:
-        spans = [(0, len(text))]
+        spans = [(start, end)]
     else:
         # Inline references also contain Roman numerals. Without markup these
         # cannot safely be distinguished from implicit homonym headers.
-        spans = [(m.start(), markers[i + 1].start() if i + 1 < len(markers) else len(text))
+        spans = [(m.start(), markers[i + 1].start() if i + 1 < len(markers) else end)
                  for i, m in enumerate(markers)]
         if any(not re.match(r"[IVX]+\s+\S+", text[a:b]) for a, b in spans):
             return []
     out = []
     for start, end in spans:
+        while start < end and text[start].isspace():
+            start += 1
+        while start < end and text[end - 1].isspace():
+            end -= 1
         body = text[start:end]
         header = re.sub(r"^[IVX]+\s+", "", body)
         tokens = header.split()
-        if len(tokens) > 1 and tokens[0] == spelling and key(vts_stress(tokens[1])).startswith(spelling):
-            tokens = tokens[1:]
         head = re.match(r"[А-Яа-яІіЇїЄєҐґ'’`́-]+", tokens[0]) if tokens else None
         stressed = vts_stress(head[0]) if head else ""
         # Some headers join the inflection suffix directly to the headword.

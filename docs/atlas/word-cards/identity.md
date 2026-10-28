@@ -162,6 +162,11 @@ the assembler uses the held full cache only when its dictionary, word, URL and
 SHA-256 agree with the admitted database row. It never fetches or follows a
 dictionary reference.
 
+VTS locators use character offsets into the authenticated full text. The slice
+excludes the mirror's leading lookup key, attribution footer and edge whitespace.
+The printed dictionary head and complete article body remain verbatim; source
+attribution and the source URL remain separate report fields.
+
 Spelling finds candidates. Explicit source headword, stress, grammatical class
 and aspect must then identify one compatible ULIF homonym and one source
 partition. Roman numbers remain source-local. An implicit or ambiguous partition,

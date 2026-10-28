@@ -203,7 +203,7 @@ def test_host_verify_and_append_are_no_ops_on_the_committed_registry(monkeypatch
 
 # --- R3-F1: the frozen identity allocation assembly may consume ---------------------------------------------
 
-ASSEMBLY_LITERAL = "e07f1e9c60d356e2b97d92f6b1f409be58bbcc6401f3458e247f9d8ec728fc9d"
+ASSEMBLY_LITERAL = "1b239e5be01b9a04e54e211f6c159ac0848a8873b37e15d1d033bce83be47469"
 LATER = "later-snapshot@sha256:" + "f" * 64
 
 

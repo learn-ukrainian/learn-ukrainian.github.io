@@ -40,7 +40,7 @@ PILOT_ALLOCATION_DIGEST = "d094872dbfaabe71cbfacaf4951138f08861f17c032d04bf0182e
 # `identity_allocation_check`'s projection of the committed v3 registry. Its entries and events are the reviewed v2
 # allocation above plus the holding epoch `holding_check` admits against host-derived obligations. A fixed reviewed
 # value: never learned from a candidate, a manifest, the environment or an invocation.
-ASSEMBLY_ALLOCATION_DIGEST = "e07f1e9c60d356e2b97d92f6b1f409be58bbcc6401f3458e247f9d8ec728fc9d"
+ASSEMBLY_ALLOCATION_DIGEST = "1b239e5be01b9a04e54e211f6c159ac0848a8873b37e15d1d033bce83be47469"
 IDENTITY_REFUSAL = "Pilot allocation differs from frozen creation/mint evidence"
 BUILD_PREFIX = "pilot-identity-allocation-9402@sha256:"
 HOLDING_BUILD_PREFIX = "pilot-holding-sense-allocation-8981@sha256:"

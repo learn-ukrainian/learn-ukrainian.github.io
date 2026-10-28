@@ -54,7 +54,7 @@ from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
 from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
-ASSEMBLER_VERSION = "pilot-assembly-v7"
+ASSEMBLER_VERSION = "pilot-assembly-v8"
 # CTO proper-name scope (#8977 / #8981, OO-38). Add learner names explicitly;
 # source CEFR evidence alone never expands this set.
 LEARNER_PROPER_NAME_ALLOWLIST = frozenset({"ЮНЕСКО"})

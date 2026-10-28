@@ -554,7 +554,8 @@ def meaning_inputs(tmp_path):
             "article_text": f"Complete SUM20 witness {i}. Including every shade and citation.",
             "article_html": "", "quarantine_reason": "", "official_url": f"https://sum20ua.com/?wordid={i+100}",
             "fetched_at": "2026-01-01"})
-    text = f"альфа I а{A}льфа -и, ч. 1》 Witness A. II альфа{A} -у, ч. 1》 Witness B."
+    text = (f"альфа I а{A}льфа -и, ч. 1》 Witness A. II альфа{A} -у, ч. 1》 Witness B. "
+            "Джерело: Великий тлумачний словник сучасної української мови на Slovnyk.me")
     insert(w.sources, "slovnyk_me_entries", {"id": 1, "word": "альфа", "normalized_word": "альфа",
         "dictionary_slug": "vts", "text": text, "content_sha256": hashlib.sha256(text.encode()).hexdigest(),
         "cache_path": "", "source_url": "https://slovnyk.me/dict/vts/test"})
@@ -570,7 +571,7 @@ def test_modern_meanings_preserve_homonym_partitions_and_all_source_text(meaning
     definitions = {a["source_id"]: a for a in first["assertions"] if a["field"] == "definition_uk"}
     assert set(definitions) == {"sum20", "vts_busel_slovnyk_me"}
     assert definitions["sum20"]["value"] == "Complete SUM20 witness 1. Including every shade and citation."
-    assert definitions["vts_busel_slovnyk_me"]["value"] == f"I а{A}льфа -и, ч. 1》 Witness A. "
+    assert definitions["vts_busel_slovnyk_me"]["value"] == f"I а{A}льфа -и, ч. 1》 Witness A."
     assert "Witness B" not in json.dumps(definitions)
     assert all(a["subject"]["id"] == wa.holding_sense(first["senses"])["sense_id"] for a in definitions.values())
     assert all(a["mapping"]["confidence"] == "unresolved" for a in definitions.values())
@@ -625,6 +626,17 @@ def test_vts_bounded_text_requires_authentic_full_local_witness(meaning_inputs, 
     lookup["text"] += " altered"
     path.write_text(json.dumps({"lookups": {"vts": lookup}}))
     assert meanings.full_vts(row, tmp_path) == (None, "source_snapshot_mismatch")
+
+
+def test_vts_definition_boundaries_exclude_mirror_key_and_footer():
+    """Mirror page wrappers must never become dictionary definitions (F1)."""
+    body = "швидка́ -ої, ж., розм. 1》 Служба швидкої медичної допомоги. 2》 Машина швидкої допомоги."
+    text = "швидка " + body + " Джерело: Великий тлумачний словник сучасної української мови на Slovnyk.me"
+    (partition,) = meanings.vts_partitions(text, "швидка")
+    assert partition["text"] == body
+    assert partition["span"] == [7, 94]
+    assert text[slice(*partition["span"])] == body
+    assert "Джерело:" not in partition["text"] and not partition["text"].startswith("швидка ")
 
 
 def test_ledger_covers_every_applicable_field(result):
