@@ -151,6 +151,41 @@ def test_stdout_duplication_cannot_expose_environment_dump(monkeypatch, tmp_path
     assert _run(monkeypatch, command.replace("env", source, 1)) == expected
 
 
+@pytest.mark.parametrize("source", ["env", "printenv", "declare -p", "export -p"])
+@pytest.mark.parametrize("separator", [";", "&&"])
+@pytest.mark.parametrize("write_form", ["single", "double", "double_dot"])
+@pytest.mark.parametrize("read_form", ["single", "double", "double_dot"])
+@pytest.mark.parametrize("reader", ["cat", "open", "read_text", "read_bytes"])
+def test_capture_path_aliases_cannot_hide_later_secret_reads(
+    monkeypatch, tmp_path, source, separator, write_form, read_form, reader
+):
+    """Capture and display must use the same pathname identity (#9490 F3)."""
+    capture = tmp_path / "capture"
+    spellings = {"single": str(capture), "double": "/" + str(capture), "double_dot": "/" + str(tmp_path) + "/./capture"}
+    write_path, read_path = spellings[write_form], spellings[read_form]
+    if reader == "cat":
+        read_command = "cat " + shlex.quote(read_path)
+    else:
+        expression = f"open({read_path!r}).read()" if reader == "open" else f"Path({read_path!r}).{reader}()"
+        program = "from pathlib import Path; print(" + expression + ")"
+        read_command = shlex.quote(sys.executable) + " -c " + shlex.quote(program)
+    stub = tmp_path / "env"
+    stub.write_text("#!/bin/sh\nprintf 'synthetic-capture\\n'\n")
+    stub.chmod(0o755)
+    oracle_command = f"{shlex.quote(str(stub))} >{shlex.quote(write_path)} {separator} {read_command}"
+    oracle = subprocess.run(
+        ["bash", "--noprofile", "--norc", "-c", oracle_command],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert oracle.returncode == 0, oracle.stderr
+    assert "synthetic-capture" in oracle.stdout
+    command = f"{source} >{shlex.quote(write_path)} {separator} {read_command}"
+    assert _run(monkeypatch, command) == 2
+
+
 ROUND_SEVEN_DENIED = [
     ("bun-bracket", "bun -e 'console.log(import.meta[\"env\"])'"),
     ("bun-optional-bracket", "bun -e 'console.log(import.meta?.[\"env\"])'"),

@@ -982,9 +982,7 @@ def _env_dump_reason(
         found = _command_at(segment)
         target = _stdout_target(found[1]) if found else None
         if target is not None:
-            target = os.path.normpath(target)
-            if target.startswith("//"):
-                target = target[1:]
+            target = _normalized_path(target)
         # Process substitutions are output consumers, not capture filenames.
         sinks = [substitutions[arg][1] for arg in segment if arg in substitutions and substitutions[arg][0] == ">("]
         if sinks:
@@ -1001,7 +999,7 @@ def _env_dump_reason(
         )
         if target and not visible:
             if target != "/dev/null":
-                dumped_files.add(os.path.normpath(target))
+                dumped_files.add(target)
             continue
         return reason
     return None
@@ -1180,7 +1178,7 @@ def _inline_program_reason(segment: list[str], dumped_files: set[str]) -> str | 
         return reason
     if _is_python_command(cmd) and re.search(r"\b(?:open|read_text|read_bytes)\s*\(", program):
         paths = re.findall(r"[\"']([^\"']+)[\"']", program)
-        if any(os.path.normpath(path) in dumped_files for path in paths):
+        if any(_normalized_path(path) in dumped_files for path in paths):
             return "inline program would display a redirected environment dump"
     return None
 
@@ -1471,10 +1469,15 @@ def _danger_reason(
     return None
 
 
-def _sensitive_path(path: str) -> bool:
+def _normalized_path(path: str) -> str:
     clean = os.path.normpath(_strip_quotes(path))
     if clean.startswith("//"):
         clean = clean[1:]
+    return clean
+
+
+def _sensitive_path(path: str) -> bool:
+    clean = _normalized_path(path)
     return _is_known_secret_file(clean) or bool(re.fullmatch(r"/proc/[^/]+/environ", clean))
 
 
@@ -1519,7 +1522,7 @@ def _sensitive_file_reason(pipeline: list[list[str]], index: int, dumped_files: 
     # Named file operands (e.g. dd's if=) and long options carry the same path.
     operands += [_strip_quotes(arg).split("=", 1)[1] for arg in args if "=" in arg and not _redirection_skip_count(arg)]
     paths = [_strip_quotes(arg) for arg in operands]
-    sensitive = [path for path in paths if _sensitive_path(path) or os.path.normpath(path) in dumped_files]
+    sensitive = [path for path in paths if _sensitive_path(path) or _normalized_path(path) in dumped_files]
     if not sensitive:
         return None
     options = [arg for arg in _without_redirects(args) if arg not in sensitive]
