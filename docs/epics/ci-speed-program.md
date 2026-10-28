@@ -14,9 +14,9 @@ Agents and the operator get CI feedback that is **fast, trustworthy, and paid fo
 - a code PR's CI answer arrives in minutes, not tens of minutes;
 - a green PR is never ejected from the merge queue by a flaky test or an infrastructure hiccup;
 - a red run says *what* failed without downloading artifacts;
-- each change is tested on GitHub's runners at two required stages: the PR runs its classified tier (full, or a
-  narrower path-selected tier once #9066/#8872 ship), and the merge queue runs the full required Python tier on the
-  merged tree for every code change (D4). Workers and reviewers do not re-run suites on the VPS (operator,
+- each change is tested on GitHub's runners at two required stages: the PR runs admission checks and its changed
+  tests, and the merge queue runs the full required Python tier on every candidate (D4; the current tiers are in
+  [`ci-gate.md`](../runbooks/ci-gate.md)). Workers and reviewers do not re-run suites on the VPS (operator,
   2026-09-28: "running the same test in parallel is so stupid").
 
 Non-goals: the V7/fresh-build curriculum pipeline, separate repositories, self-hosted runners (public repo — GitHub
@@ -73,6 +73,8 @@ landed the same day, so the two effects are not separable. **What now dominates*
   decision #8437 that gave `merge_group` the same path classes as PRs; it is the standard merge-queue pattern and what
   makes any PR-side selection safe. Cost: a genuine failure caught only by the queue costs one ejection cycle (~10 min),
   which the drive-epic skill already treats as same-hour work, and is measured as queue-only escapes (§2).
+  *Now (gate freeze, operator 2026-10-23):* every `merge_group` candidate runs the full supported suite with no
+  docs-only or content-only exemption, and PRs run admission checks plus their changed tests.
 - **D1 — Retire the blanket `full-ci` habit (#9066; after #9073 and #9057).** Remove the drive-epic rule that labels
   every PR touching `tests/`; the label stays for the rare change the classifier cannot see. `full-ci` stops forcing
   the Frontend job unless site paths changed.
@@ -88,10 +90,17 @@ landed the same day, so the two effects are not separable. **What now dominates*
   a listed test that needs its rerun in more than 5 % of the week's queue runs escalates its issue to the driver's queue.
   Timing flakes that hit the pytest timeout (thread method) cannot be rerun and always need a real fix. The ledger first
   proves it can read rerun records under the repo's JUnit family, and it shares one JUnit parser with #9063.
-- **D3 — Merge-queue build concurrency (#8884 AC-03).** Keep `max_entries_to_build: 4` (0.57 % of busy time at ≥ 60
-  concurrent jobs, 0 timeouts). Re-decide when queue wait, runner saturation or first-enqueue p95 regress — not only
-  after an ejection — and after #9066 and #9062 change the job mix. Other workflows on the same events share the
-  60 slots, so the paper figure (4 × 17 = 68) understates the peak.
+- **D3 — Merge-queue build concurrency (#8884 AC-03; re-decided 2026-10-28 by the joint CTO + Sol decision
+  MQ-JOINT-1028).** The 2026-09-28 decision kept `max_entries_to_build: 4` for a 17-job run. The ruleset has built
+  **1** entry at a time since 2026-10-26 (ALLGREEN, merge limits 1–4, wait 0, timeout 60, SQUASH). A merge-group run
+  is now 33 jobs, so two synchronized builds alone fill the 60 hosted slots; the observed repository peak was 55
+  concurrent jobs (2026-10-28T04:42Z, run 40633770801 plus PR CI and other workflows). The decision: keep ALLGREEN and
+  every gate, shorten the healthy candidate first (shard balance, duration refresh, CI Gate checkout), then trial
+  build concurrency **2** with no other queue setting changed. Keep 2 only if enqueue → merge p50/p95 improves without
+  material runner-start delay, more ejections or a worse tail; otherwise return to 1. Concurrency 3 and 4 and
+  HEADGREEN are not adopted. Never change shard count and build concurrency in the same trial; 20 shards is the first
+  experiment if concurrency 2 shows contention. `scripts/ci/slot_inventory.py` cannot settle this question: it counts
+  each workflow's jobs once per run and does not model overlapping runs or other repositories' jobs.
 - **D5 — Test once per stage (#9057).** Dispatched workers run only the tests covering what they changed (including
   dependents of a changed shared helper), in the foreground. The PR's own CI run (its classified tier) is the proof for
   the PR; the merge queue's full run is the proof for `main`; a `workflow_dispatch` run only when a brief asks (branch

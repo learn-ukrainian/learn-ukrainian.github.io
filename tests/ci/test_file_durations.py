@@ -82,7 +82,8 @@ def test_refresh_filters_failed_foreign_rerun_expired_and_duplicate_artifacts(tm
     output = tmp_path / "new" / "snapshot.json"
     assert split.refresh_durations("owner/repo", fallback, output) == 2
     assert json.loads(output.read_text()) == {"tests/test_a.py": 25, "tests/test_missing.py": 7}
-    assert calls[-2:] == ["repos/owner/repo/actions/artifacts/3/zip", "repos/owner/repo/actions/artifacts/2/zip"]
+    # Archives download concurrently; the samples, not the call order, follow run order.
+    assert sorted(calls[2:]) == ["repos/owner/repo/actions/artifacts/2/zip", "repos/owner/repo/actions/artifacts/3/zip"]
     assert "2 successful merge-group samples" in capsys.readouterr().out
 
 
@@ -199,6 +200,10 @@ def test_workflow_refreshes_one_snapshot_and_publishes_after_partition_proof() -
     proof = next(i for i, step in enumerate(report_steps) if "scripts.ci.pytest_report" in step.get("run", ""))
     record = next(i for i, step in enumerate(report_steps) if step.get("name") == "Record pytest durations")
     assert proof < record
+    assert "split_tests durations --shards ci-artifacts/shards" in report_steps[record]["run"]
+    assert '--weights-out "ci-artifacts/pytest-shard-${SHARD}-weights.json"' in run_pytest["run"]
+    shard_upload = next(step for step in pytest_job["steps"] if step.get("name") == "Upload pytest JUnit report")
+    assert "ci-artifacts/pytest-shard-*-weights.json" in shard_upload["with"]["path"]
     report_upload = next(
         step for step in report_steps if step.get("with", {}).get("name") == "pytest-file-durations"
     )

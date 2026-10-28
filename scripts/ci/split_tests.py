@@ -17,9 +17,20 @@ the split, so the list cannot go stale silently.
 
     python -m scripts.ci.split_tests durations junit/*.xml > scripts/ci/pytest-file-durations.json
 
-``refresh`` freezes median weights from the last 20 available successful
-merge-group timing artifacts, retaining committed weights where observations
-are absent. ci.yml publishes those artifacts only after its full partition
+With ``--shards`` it reads the per-shard artifacts instead, and records what a
+file costs rather than how fast its runner happened to be. Hosted runners
+differ in speed (in run 40633770801 seven shards ran their files at about 0.6x
+their usual seconds, the rest near 1.0x), so raw seconds mix the test's cost
+with the runner's speed. Each shard's speed is the median ratio of its observed
+seconds to the weights it was split with (``split --weights-out``), and that
+shard's seconds are divided by it. A listed file that ran no test records 0,
+so a file the tier deselects stops carrying a weight it never costs.
+
+``refresh`` freezes median weights from the last ``SAMPLE_LIMIT`` (5) available
+successful merge-group timing artifacts, retaining committed weights where
+observations are absent. Five samples follow a test that got faster or slower
+within three runs and still outvote two outliers; with runner speed removed, a
+longer window mostly adds lag. ci.yml publishes those artifacts only after its full partition
 audit, and distributes one snapshot to the whole matrix. Unavailable telemetry
 keeps the committed weights inside that one snapshot and exits 0. Shards do
 not choose a fallback themselves: every shard reads the same refresh-job
@@ -45,6 +56,7 @@ import zipfile
 import zlib
 from collections import defaultdict
 from collections.abc import Sequence
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from xml.etree import ElementTree
 
@@ -67,6 +79,13 @@ MAX_MEMBER_BYTES = 1024 * 1024
 REFRESH_RESULTS = frozenset({"success", "failure", "cancelled", "skipped"})
 SOURCE_SNAPSHOT = "snapshot"
 SOURCE_COMMITTED = "committed"
+# Runner speed is measured on files expected to take at least this long, and
+# only when a shard has enough of them; otherwise its seconds are kept as run.
+SPEED_MIN_WEIGHT = 2.0
+SPEED_MIN_FILES = 10
+# Median window, and concurrent timing-archive downloads (one small gh api call each).
+SAMPLE_LIMIT = 5
+DOWNLOAD_WORKERS = 8
 
 
 class DurationSnapshotRequired(RuntimeError):
@@ -165,7 +184,7 @@ def archive_durations(payload: bytes) -> dict[str, float]:
     return validate_durations(json.loads(data))
 
 
-def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) -> int:
+def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = SAMPLE_LIMIT) -> int:
     """Freeze recent successful merge-group timings once, with an offline fallback.
 
     Only timing artifacts published after the full partition report passes are
@@ -189,6 +208,7 @@ def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) 
         print("duration lookup unavailable; retaining committed fallback", file=sys.stderr)
         runs = []
         by_run = defaultdict(list)
+    candidates = []
     for run in runs:
         try:
             if not isinstance(run, dict):
@@ -202,12 +222,14 @@ def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) 
             ):
                 continue
             artifacts = by_run[run["id"]]
-            if len(artifacts) != 1:
-                continue
-            payload = github_api(f"repos/{repo}/actions/artifacts/{int(artifacts[0]['id'])}/zip")
-            samples.append(archive_durations(payload))
-            if len(samples) == limit:
-                break
+            if len(artifacts) == 1:
+                candidates.append(int(artifacts[0]["id"]))
+        except (ValueError, KeyError, TypeError):
+            print("duration sample unavailable or invalid; skipping sample", file=sys.stderr)
+
+    def download(artifact_id: int) -> dict[str, float] | None:
+        try:
+            return archive_durations(github_api(f"repos/{repo}/actions/artifacts/{artifact_id}/zip"))
         except (
             subprocess.SubprocessError,
             OSError,
@@ -220,6 +242,16 @@ def refresh_durations(repo: str, fallback: Path, output: Path, limit: int = 20) 
             zlib.error,
         ):
             print("duration sample unavailable or invalid; skipping sample", file=sys.stderr)
+            return None
+
+    # The refresh job is on the shards' critical path, so archives download
+    # concurrently. Samples are still the first ``limit`` valid ones in run order.
+    with ThreadPoolExecutor(max_workers=DOWNLOAD_WORKERS) as pool:
+        start = 0
+        while len(samples) < limit and start < len(candidates):
+            batch = candidates[start : start + limit - len(samples)]
+            start += len(batch)
+            samples += [sample for sample in pool.map(download, batch) if sample is not None]
     # Preserve older measurements for files absent from the sampled runs.
     snapshot = {**recorded, **median_durations(samples)}
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -289,6 +321,45 @@ def junit_file_seconds(paths: list[Path]) -> dict[str, float]:
     return {name: round(seconds, 3) for name, seconds in sorted(totals.items())}
 
 
+def runner_speed(observed: dict[str, float], weights: dict[str, float]) -> float:
+    """Median observed/expected seconds over a shard's files that both ran and carry weight.
+
+    1.0 (seconds kept as run) when fewer than ``SPEED_MIN_FILES`` files qualify, e.g. a
+    shard holding one large file, whose speed cannot be told apart from its cost.
+    """
+    ratios = [
+        observed[name] / weight
+        for name, weight in weights.items()
+        if weight >= SPEED_MIN_WEIGHT and observed.get(name, 0) > 0
+    ]
+    return statistics.median(ratios) if len(ratios) >= SPEED_MIN_FILES else 1.0
+
+
+def shard_file_seconds(results: Path) -> tuple[dict[str, float], dict[str, float]]:
+    """Per-file seconds normalized for each shard's runner speed, and those speeds.
+
+    ``results`` holds every shard's artifact: ``pytest-shard-N-files.txt``,
+    ``pytest-shard-N.xml`` and, from ``split --weights-out``, ``pytest-shard-N-weights.json``.
+    Every listed file gets an entry; one that ran no test records 0.
+    """
+    seconds: dict[str, float] = {}
+    speeds: dict[str, float] = {}
+    for listing in sorted(results.rglob("pytest-shard-*-files.txt")):
+        shard = listing.name.removesuffix("-files.txt")
+        files = listing.read_text(encoding="utf-8").split()
+        observed = junit_file_seconds([listing.with_name(f"{shard}.xml")])
+        weights_path = listing.with_name(f"{shard}-weights.json")
+        weights = json.loads(weights_path.read_text(encoding="utf-8")) if weights_path.exists() else {}
+        if weights:
+            validate_durations(weights)
+        speeds[shard] = speed = runner_speed(observed, {name: weights[name] for name in files if name in weights})
+        for name in files:
+            seconds[name] = round(observed.get(name, 0.0) / speed, 3)
+    if not seconds:
+        raise ValueError(f"no shard file lists under {results}")
+    return dict(sorted(seconds.items())), speeds
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -296,6 +367,7 @@ def main(argv: list[str] | None = None) -> int:
         epilog="""Examples:
   .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16 < files.txt
   .venv/bin/python -m scripts.ci.split_tests durations junit/*.xml > durations.json
+  .venv/bin/python -m scripts.ci.split_tests durations --shards ci-artifacts/shards > durations.json
   .venv/bin/python -m scripts.ci.split_tests refresh --repo owner/repo --output snapshot.json
   .venv/bin/python -m scripts.ci.split_tests validate snapshot.json
   .venv/bin/python -m scripts.ci.split_tests duration-source --refresh-result success --snapshot ci-artifacts/pytest-file-durations.json
@@ -313,8 +385,18 @@ Related: .github/workflows/ci.yml; issues #9065 and #11040.
         "--durations", type=Path, default=DEFAULT_DURATIONS, help="file weights (default: committed JSON)"
     )
     split.add_argument("--history", type=Path, default=DEFAULT_HISTORY, help="files pinned to the history shard")
+    split.add_argument(
+        "--weights-out",
+        type=Path,
+        help="also write this shard's recorded file weights, e.g. ci-artifacts/pytest-shard-1-weights.json",
+    )
     durations = commands.add_parser("durations", help="print per-file seconds from JUnit XML")
-    durations.add_argument("junit", nargs="+", type=Path, help="all shard JUnit XML files from one full run")
+    durations.add_argument("junit", nargs="*", type=Path, help="all shard JUnit XML files from one full run")
+    durations.add_argument(
+        "--shards",
+        type=Path,
+        help="directory of shard artifacts; record runner-normalized seconds instead, e.g. ci-artifacts/shards",
+    )
     validate = commands.add_parser("validate", help="check a snapshot against the shared timing schema")
     validate.add_argument("snapshot", type=Path, help="timing JSON to validate, e.g. snapshot.json")
     source = commands.add_parser(
@@ -342,11 +424,23 @@ Related: .github/workflows/ci.yml; issues #9065 and #11040.
     refresh.add_argument(
         "--fallback", type=Path, default=DEFAULT_DURATIONS, help="offline weights (default: committed JSON)"
     )
-    refresh.add_argument("--limit", type=int, default=20, help="successful timing samples, 1..20 (default: 20)")
+    refresh.add_argument(
+        "--limit", type=int, default=SAMPLE_LIMIT, help=f"successful timing samples, 1..20 (default: {SAMPLE_LIMIT})"
+    )
     args = parser.parse_args(argv)
 
     if args.command == "durations":
-        json.dump(validate_durations(junit_file_seconds(args.junit)), sys.stdout, indent=2)
+        if bool(args.junit) == (args.shards is not None):
+            parser.error("durations takes JUnit files or --shards, not both")
+        if args.shards is None:
+            recorded = junit_file_seconds(args.junit)
+        else:
+            recorded, speeds = shard_file_seconds(args.shards)
+            print(
+                "runner speed: " + " ".join(f"{shard}={speed:.2f}" for shard, speed in sorted(speeds.items())),
+                file=sys.stderr,
+            )
+        json.dump(validate_durations(recorded), sys.stdout, indent=2)
         sys.stdout.write("\n")
         return 0
     if args.command == "validate":
@@ -383,6 +477,9 @@ Related: .github/workflows/ci.yml; issues #9065 and #11040.
         parser.error("no test files on stdin")
     recorded = validate_durations(json.loads(args.durations.read_text(encoding="utf-8")))
     shard = assign(files, recorded, args.shard_count, read_list(args.history))[args.shard - 1]
+    if args.weights_out is not None:
+        weights = {name: recorded[name] for name in shard if name in recorded}
+        args.weights_out.write_text(json.dumps(weights, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     sys.stdout.write("".join(f"{name}\n" for name in shard))
     return 0
 
