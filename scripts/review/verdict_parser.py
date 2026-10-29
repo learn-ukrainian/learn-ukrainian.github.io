@@ -268,8 +268,11 @@ _REVIEW_SCORE_LINE_RE = re.compile(
 
 
 # Inside a structured reply the score sits in ``overall.explanation`` prose, often
-# mid-line (``VERDICT: APPROVE. SCORE: 9/10.``), so only the exact form counts there.
-_STRUCTURED_SCORE_RE = re.compile(r"\bSCORE\s*:\s*(\d{1,2})\s*/\s*10\b")
+# mid-line (``VERDICT: APPROVE. SCORE: 9/10.``). Every uppercase SCORE word there
+# declares a score and must read exactly ``SCORE: n/10``; a sentence's closing
+# period may follow, a decimal or any other continuation may not.
+_STRUCTURED_SCORE_LABEL_RE = re.compile(r"\bSCORE\b")
+_STRUCTURED_SCORE_RE = re.compile(r"SCORE\s*:\s*(\d{1,2})\s*/\s*10(?![\w/]|\.\w)")
 
 
 def _structured_explanation(response: str) -> str | None:
@@ -294,7 +297,13 @@ def review_score(response: str) -> int | None:
     """
     structured = _structured_explanation(response)
     if structured is not None:
-        scores = {int(value) for value in _STRUCTURED_SCORE_RE.findall(structured)}
+        declared = [
+            _STRUCTURED_SCORE_RE.match(structured, label.start())
+            for label in _STRUCTURED_SCORE_LABEL_RE.finditer(structured)
+        ]
+        if None in declared:
+            return None
+        scores = {int(match.group(1)) for match in declared if match is not None}
         score = scores.pop() if len(scores) == 1 else None
         return score if score is not None and 1 <= score <= 10 else None
     try:

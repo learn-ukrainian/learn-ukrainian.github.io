@@ -437,11 +437,14 @@ def resolve_verdict_and_evidence(
         if evidence is not None
         else _verdict_from_degenerate_evidence(payload)
     )
-    if derived == "APPROVED" and evidence is not None and evidence.findings:
-        # An approval that carries follow-ups never outranks the reviewer's own
-        # stated verdict: a stated rejection holds the change on those findings.
-        claim = explicit or stated
-        claimed = {claim} if claim is not None else _stated_verdicts(evidence.explanation)
+    if derived == "APPROVED" and evidence is not None:
+        # An approval never outranks a rejection the reviewer states anywhere:
+        # every explanation token counts, quoted ones included. The verdict field
+        # and the line outside the payload hold an approval only when it carries
+        # follow-ups; without findings their conflict refuses as a mismatch.
+        claimed = _stated_verdicts(evidence.explanation)
+        if evidence.findings:
+            claimed |= {verdict for verdict in (explicit, stated) if verdict is not None}
         if claimed - {"APPROVED"}:
             derived = "CHANGES_REQUESTED"
     if explicit is not None and explicit != derived:
