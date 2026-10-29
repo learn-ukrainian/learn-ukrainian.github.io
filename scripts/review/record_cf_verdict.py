@@ -2323,6 +2323,10 @@ def record(
             comments = adapter.comments(repository, number)
         except SweepError as exc:
             raise RecordError(f"comment lookup failed: {exc}") from exc
+        # The capability failure module builds on this one, so it is imported only here.
+        from scripts.review.capability_failure import require_unclassified
+
+        require_unclassified(comments, login, task=task_id, started=started)
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
@@ -2525,6 +2529,11 @@ def main(argv: list[str] | None = None) -> int:
         from scripts.review.budget_grant import main as budget_grant_main
 
         return budget_grant_main(argv[1:])
+    if argv[:1] == ["capability-failure"]:
+        # The capability failure verb builds on this module, so it is imported only when chosen.
+        from scripts.review.capability_failure import main as capability_failure_main
+
+        return capability_failure_main(argv[1:])
     parser = argparse.ArgumentParser(
         description="Publish a completed exact-head verdict; cross-family is the default.\n"
         "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
@@ -2536,6 +2545,9 @@ def main(argv: list[str] | None = None) -> int:
         "    (whether the next review round is admitted, before dispatch; see budget-check --help)\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py budget-grant digest <ruling.json>\n"
         "    (an elevated-tier grant ruling's digest; see budget-grant --help)\n"
+        "  .venv/bin/python scripts/review/record_cf_verdict.py capability-failure --task-id review-unit --pr 1 "
+        "--capability test-execution --authority claude-cto\n"
+        "    (classify a finished run that only lacked a capability; see capability-failure --help)\n"
         "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
         "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
     )
