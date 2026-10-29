@@ -141,6 +141,14 @@ def _unattested(pair):
     return ReviewRun(run.task_id, {**run.record, "model": "unknown-model"}, run.reply), comment
 
 
+def _pinned(pair, pin):
+    run, comment = pair
+    return ReviewRun(run.task_id, {**run.record, "pinned_head": pin}, run.reply), comment
+
+
+UNSUPERSEDED = "review task sol-r1 finished but its verdict is unpublished"
+
+
 @pytest.mark.parametrize(
     "damage,refusal",
     [
@@ -157,8 +165,20 @@ def _unattested(pair):
             lambda: review("sol-r2", APPROVED, "VERDICT: APPROVE", minute=2, status="failed"),
             r"review task sol-r2 \(failed\) carries an unpublished verdict",
         ),
+        # A witness pinned to another head, or to no valid head, is evidence the recorder refuses.
+        (lambda: _pinned(review("sol-r2", APPROVED, "VERDICT: APPROVE", minute=2), CANDIDATE), UNSUPERSEDED),
+        (lambda: _pinned(review("sol-r2", APPROVED, "VERDICT: APPROVE", minute=2), "invalid-sha"), UNSUPERSEDED),
+        (lambda: _pinned(review("sol-r2", APPROVED, "VERDICT: APPROVE", minute=2), []), UNSUPERSEDED),
     ],
-    ids=["conflicting-marker", "edited-marker", "unattested-reviewer", "unfinished-run"],
+    ids=[
+        "conflicting-marker",
+        "edited-marker",
+        "unattested-reviewer",
+        "unfinished-run",
+        "pinned-elsewhere",
+        "pinned-invalid",
+        "pinned-malformed",
+    ],
 )
 def test_a_malformed_witness_supersedes_nothing_and_the_lineage_still_refuses(damage, refusal):
     orphan = review("sol-r1", EARLY, "VERDICT: APPROVE", minute=1, publish=False)

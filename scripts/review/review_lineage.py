@@ -177,17 +177,28 @@ def _profile(item: Mapping[str, Any]) -> str:
     return "ukrainian" if is_ukrainian_review(item) else "code"
 
 
-def _finished_verdict(run: ReviewRun) -> tuple[str, int | str, str, str, str] | None:
-    """Verdict, finding count, reviewer model and family, and start of a finished run whose evidence holds."""
+def _finished_verdict(run: ReviewRun) -> tuple[str, str, int | str, str, str, str] | None:
+    """Head, verdict, finding count, reviewer model and family, and start of a finished run whose evidence holds.
+
+    The head obeys the recorder's own rules: a full SHA, and the pinned head when one is recorded.
+    """
     started = _started(run.record)
-    if run.record.get("status") != "done" or run.reply is None or started is None:
+    sha = run.record.get("worktree_base_sha")
+    if (
+        run.record.get("status") != "done"
+        or run.reply is None
+        or started is None
+        or not isinstance(sha, str)
+        or not SHA.fullmatch(sha)
+        or run.record.get("pinned_head") not in (None, sha)
+    ):
         return None
     try:
         verdict, findings = recorder._review_verdict_and_count(run.reply)
         model, family = recorder.reviewer_identity(run.record)
     except recorder.RecordError:
         return None
-    return verdict, findings, model, family, started
+    return sha, verdict, findings, model, family, started
 
 
 def _supersede(
@@ -200,8 +211,7 @@ def _supersede(
         evidence = _finished_verdict(run)
         if evidence is None:
             continue
-        verdict, findings, model, family, started = evidence
-        sha = run.record.get("worktree_base_sha")
+        sha, verdict, findings, model, family, started = evidence
         profile = _profile(run.record)
         published = [m for m in markers if m["task"] == run.task_id and m["started"] == started]
         if published:
@@ -221,12 +231,7 @@ def _supersede(
                         "profile": profile,
                     }
                 )
-        elif (
-            (run.task_id, started) not in events
-            and isinstance(sha, str)
-            and SHA.fullmatch(sha)
-            and run.record.get("pinned_head") in (None, sha)
-        ):
+        elif (run.task_id, started) not in events:
             orphans.append(
                 {
                     "task": run.task_id,
