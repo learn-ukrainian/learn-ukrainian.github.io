@@ -44,10 +44,13 @@ _VERDICT_LINE_RE = re.compile(
     re.IGNORECASE,
 )
 
-# A verdict a reviewer states inside a structured reply's explanation, in the
-# review brief's vocabulary (``VERDICT: APPROVE``, ``VERDICT: REQUEST_CHANGES``).
+# A verdict a reviewer states inside a structured reply's explanation. This is
+# the prose verdict-line grammar (``scripts/review/verdict_parser.py``
+# ``_REVIEW_VERDICT_LINE_RE``, Markdown emphasis and code spans included),
+# unanchored, because explanation prose states it mid-line.
 _STATED_VERDICT_RE = re.compile(
-    r"\bVERDICT\s*:\s*(APPROVED?|REQUEST_CHANGES|CHANGES_REQUESTED|BLOCKED)\b",
+    r"(?<![^\W_])VERDICT(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
+    r"(APPROVED?|REQUEST_CHANGES|CHANGES_REQUESTED|BLOCKED)(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
 )
 _STATED_VERDICT_TOKENS = {
