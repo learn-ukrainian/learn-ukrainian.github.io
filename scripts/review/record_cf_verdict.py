@@ -92,6 +92,7 @@ from scripts.review.verdict_parser import (
     _commonmark_lines,
     _findings_json_verdicts,
     _without_code_fences,
+    invalid_findings_blocks,
     recognized_verdicts,
     review_score,
 )
@@ -132,8 +133,7 @@ def normalize_verdict(reply: str) -> str:
     if any(_REVIEW_VERDICT_LINE_RE.match(line) for line in _commonmark_lines(visible)):
         # The verdict line is the reply's stated verdict; it holds a findings block that approves with follow-ups.
         stated = next(iter(tokens)) if len(tokens) == 1 else None
-        invalid: list[str] = []
-        findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply, stated=stated, invalid=invalid)}
+        findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply, stated=stated)}
         offset = 0
         for line in _commonmark_lines(visible, keepends=True):
             line_start = offset
@@ -146,11 +146,8 @@ def normalize_verdict(reply: str) -> str:
                 _, end = json.JSONDecoder().raw_decode(visible, start)
             except ValueError:
                 continue
-            findings.update(
-                NORMALIZED[token]
-                for token in _findings_json_verdicts(visible[start:end], stated=stated, invalid=invalid)
-            )
-        if invalid:
+            findings.update(NORMALIZED[token] for token in _findings_json_verdicts(visible[start:end], stated=stated))
+        if invalid := invalid_findings_blocks(reply, stated=stated):
             raise RecordError(f"reply carries an invalid findings block beside a verdict line: {invalid[0]}")
         if findings and findings != tokens:
             raise RecordError("reply carries a findings payload contradicting a verdict line")

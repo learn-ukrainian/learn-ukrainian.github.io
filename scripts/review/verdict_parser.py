@@ -218,18 +218,10 @@ def recognized_verdicts(response: str) -> list[str]:
     return verdicts or _findings_json_verdicts(response)
 
 
-# A top-level JSON object carrying any of these keys is offered as a findings envelope.
-_FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
-
-
-def _findings_json_verdicts(
-    response: str, *, stated: str | None = None, invalid: list[str] | None = None
-) -> list[str]:
+def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list[str]:
     """Read whole JSON replies and top-level JSON blocks, never quoted examples.
 
     ``stated`` is the reply's own canonical verdict line, if any (see ``resolve_verdict_and_evidence``).
-    A block that looks like a findings envelope but fails validation adds a reason to ``invalid`` when
-    the caller passes one; otherwise it is skipped.
     """
     from markdown_it import MarkdownIt
 
@@ -255,13 +247,67 @@ def _findings_json_verdicts(
             validate_reviewer_payload(payload)
             verdict, _ = resolve_verdict_and_evidence(payload, stated=stated)
         except (ContractError, ReviewPublicationError):
-            if invalid is not None and _FINDINGS_ENVELOPE_KEYS & payload.keys():
-                invalid.append("top-level findings block fails validation")
             continue
         verdicts.append(
             {"APPROVED": "APPROVE", "CHANGES_REQUESTED": "REQUEST_CHANGES", "BLOCKED": "BLOCKED"}[verdict]
         )
     return verdicts
+
+
+# A top-level JSON object carrying any of these keys is offered as a findings envelope.
+_FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
+
+
+def invalid_findings_blocks(response: str, *, stated: str | None = None) -> list[str]:
+    """Reasons for each top-level JSON block offered as a findings envelope that fails validation.
+
+    Top level means outside quotes and code fences and outside any list item or other container: a
+    fenced ``json`` block, or an object that starts a line of a top-level paragraph. An object nested
+    in another top-level object is part of that object, never a block of its own. A block carrying
+    none of the envelope keys is not offered as one. ``stated`` is as in ``_findings_json_verdicts``.
+    """
+    from markdown_it import MarkdownIt
+
+    from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
+    from scripts.review.review_contract import ContractError, validate_reviewer_payload
+
+    visible = _without_code_fences(response, keep_unclosed=False)
+    paragraph_lines: set[int] = set()
+    for token in MarkdownIt("commonmark").parse(visible):
+        if token.type == "paragraph_open" and token.level == 0 and token.map:
+            paragraph_lines.update(range(*token.map))
+    candidates = [
+        token.content
+        for token in MarkdownIt("commonmark").parse(response)
+        if token.type == "fence" and token.level == 0 and token.info.strip() in {"", "json"}
+    ]
+    offset = consumed = 0
+    for number, line in enumerate(_commonmark_lines(visible, keepends=True)):
+        line_start, offset = offset, offset + len(line)
+        match = re.match(r" {0,3}\{", line)
+        if match is None or number not in paragraph_lines or line_start < consumed:
+            continue
+        start = line_start + match.end() - 1
+        try:
+            _, consumed = json.JSONDecoder().raw_decode(visible, start)
+        except ValueError:
+            continue
+        candidates.append(visible[start:consumed])
+    invalid: list[str] = []
+    for candidate in candidates:
+        try:
+            payload = json.loads(candidate)
+        except ValueError:
+            continue
+        if not isinstance(payload, dict) or not _FINDINGS_ENVELOPE_KEYS & payload.keys():
+            continue
+        payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
+        try:
+            validate_reviewer_payload(payload)
+            resolve_verdict_and_evidence(payload, stated=stated)
+        except (ContractError, ReviewPublicationError):
+            invalid.append("top-level findings block fails validation")
+    return invalid
 
 
 # The review-loop reply's advisory ``SCORE: n/10`` line (C-3020), with the same
