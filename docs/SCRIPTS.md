@@ -148,8 +148,9 @@ fresh or healthy.
 
 The shared GitHub client (`scripts/common/github_client.py`) counts every request it sends to
 the REST core pool in a `usage` table of its own cache (`batch_state/github-client/cache.sqlite3`,
-owner-only, rows kept six hours), written in the transaction it already opens for the request.
-Each row names the caller (the dispatched task id with its command, else the calling command;
+owner-only, rows kept six hours). A request's row is written in the transaction the client
+already opens to persist its response; a native `gh` command's row is written after it ran, so
+its admission stays read-only. Each row names the caller (the dispatched task id with its command, else the calling command;
 for the `gh` shim, the command that ran `gh`) and an endpoint template such as
 `GET repos/:repo/actions/runs/:n`. Print the top consumers of the last hour:
 
@@ -159,9 +160,12 @@ for the `gh` shim, the command that ran `gh`) and an endpoint template such as
 
 `charged` excludes `304` responses, which GitHub does not charge; `landing` counts calls made
 for a landing operation, which the landing reserve never refuses. A native `gh` command counts
-once when admitted, as charged, however many requests gh makes for it. A cache file SQLite
-reports as damaged is set aside as `cache.sqlite3.corrupt` and rebuilt, because without it
-every read is charged in full and budget observations stop reaching other callers.
+once, as charged, however many requests gh makes for it; a failed write drops its row rather
+than fail the command, and a native command on the landing path is not counted, so counting
+never adds a wait there. A cache file SQLite reports as damaged is set aside as
+`cache.sqlite3.corrupt` and rebuilt, because without it every read is charged in full and budget
+observations stop reaching other callers. Only the damaged file is moved: a fresh file another
+process already put in its place is left alone.
 
 ## Git hooks
 

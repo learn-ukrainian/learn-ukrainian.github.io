@@ -1347,11 +1347,14 @@ class GitHubClient:
                 except OSError:
                     self.cache_dir = None
                     path = ":memory:"
+            generation = None
             try:
                 db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
                 if self.cache_dir is None:
                     self._memory_db = db
                 else:
+                    # The file this connection opened: only it may be set aside as damaged.
+                    generation = github_usage.file_identity(path)
                     with suppress(OSError):
                         os.chmod(path, 0o600)
                 for statement in CACHE_SCHEMA:
@@ -1371,7 +1374,7 @@ class GitHubClient:
                         # A damaged cache is rebuilt, not abandoned: without it every read is
                         # charged in full and budget observations stop reaching other callers.
                         # This client continues in memory; the next one opens a fresh file.
-                        github_usage.set_aside(path)
+                        github_usage.set_aside(path, generation)
                     self.cache_dir = None
                     if attempt == 0:
                         continue
@@ -1385,7 +1388,7 @@ class GitHubClient:
         except sqlite3.DatabaseError as error:
             # As above: the caller falls back to memory, and the next client opens a fresh file.
             if self.cache_dir is not None and github_usage.corrupt(error):
-                github_usage.set_aside(self.cache_dir / "cache.sqlite3")
+                github_usage.set_aside(self.cache_dir / "cache.sqlite3", generation)
             raise
         finally:
             if self.cache_dir is not None:
@@ -3308,14 +3311,6 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
     try:
         with client._db() as db:
             refusal = _admit(db, client.scope, request, client.clock())
-            if refusal is None and "core" in pools:
-                # Counted once when admitted, however many requests gh makes for it. A raw
-                # ``gh api`` that admission could not read is named by its verb alone.
-                if request.path:
-                    endpoint = github_usage.endpoint_template(request.method, request.path)
-                else:
-                    endpoint = "gh api" if str(args[1]) == "api" else " ".join(["gh", *map(str, args[1:3])])
-                github_usage.record(db, endpoint=endpoint, status=None, landing=request.call_class == "landing")
     except GitHubUnpreparedRequest as refused:
         return _result_process(args, _unprepared(refused.reason), {}, kwargs)
     if refusal is not None:
@@ -3349,6 +3344,17 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
         native = _transport_process(command, limit=client.max_response_bytes, framed=injected, **call)
     else:
         native = executor(command, **call)
+    if "core" in pools and request.call_class != "landing":
+        # Counted once, after it ran, however many requests gh made for it. A landing command is
+        # not counted, so counting never adds a lock wait to the landing path. A raw ``gh api``
+        # that admission could not read is named by its verb alone.
+        if request.path:
+            endpoint = github_usage.endpoint_template(request.method, request.path)
+        else:
+            endpoint = "gh api" if str(args[1]) == "api" else " ".join(["gh", *map(str, args[1:3])])
+        # Admission stayed read-only; a failure here drops the row, never the command's result.
+        with suppress(sqlite3.Error, OSError), client._db() as db:
+            github_usage.record(db, endpoint=endpoint, status=None, landing=False)
     output, error = (
         value.encode() if isinstance(value, str) else value or b"" for value in (native.stdout, native.stderr)
     )
