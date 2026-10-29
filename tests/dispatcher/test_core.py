@@ -218,9 +218,9 @@ def test_read_only_agy_run_needs_a_verified_boundary_receipt(sandbox, monkeypatc
         assert result["error"].startswith("agy_read_only_boundary: ")
 
 
-def await_file(path):
+def await_file(path, *, ready=lambda content: True):
     deadline = time.monotonic() + 10
-    while not path.exists() or not (content := path.read_text()):
+    while not path.exists() or not (content := path.read_text()) or not ready(content):
         assert time.monotonic() < deadline, f"stub did not populate {path.name}"
         time.sleep(0.02)
     return content
@@ -943,7 +943,10 @@ def _killed_review_supervisor(sandbox, tmp_path, model):
     child = int(await_file(sandbox.tasks / f"{task[0]}.started"))
     if model == "governed":
         assert await_file(sandbox.tasks / f"{task[0]}.joined") == "joined"
-    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    # The provider's start marker precedes the supervisor's record update.
+    record = json.loads(await_file(
+        sandbox.tasks / f"{task[0]}.json", ready=lambda content: "review_test_slots" in json.loads(content)
+    ))
     assert record["review_test_slots"]["outcome"] == "held"
     os.kill(record["pid"], signal.SIGKILL)
     deadline = time.monotonic() + 10
