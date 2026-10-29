@@ -80,8 +80,7 @@
     "target_db": "atlas.db",
     "reason": "writes local enrichment output",
     "calls": [
-      "sqlite3.connect(path)",
-      "sqlite3.connect(sources_db_path)"
+      "sqlite3.connect(path)"
     ]
   },
   {
@@ -1054,18 +1053,15 @@
   },
   {
     "path": "scripts/wiki/build_sources_db.py",
-    "reference_count": 14,
+    "reference_count": 12,
     "kind": "writer",
     "target_db": "sources.db; temporary rebuild DB",
     "reason": "builds source database before atomic replacement",
     "calls": [
       "sqlite3.connect(str(db_path))",
-      "sqlite3.connect(str(db))",
       "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db))",
-      "sqlite3.connect(str(db))",
-      "sqlite3.connect(str(tmp_db))",
-      "sqlite3.connect(str(db))"
+      "sqlite3.connect(str(tmp_db))"
     ]
   },
   {
@@ -1117,7 +1113,6 @@
     "target_db": "sources.db",
     "reason": "caches fetched Wikipedia articles",
     "calls": [
-      "sqlite3.connect(str(DB_PATH))",
       "sqlite3.connect(str(DB_PATH))"
     ]
   },
@@ -1192,7 +1187,6 @@
     "target_db": "sources.db",
     "reason": "ingests wiki passages and migrates schema",
     "calls": [
-      "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db_path))"
