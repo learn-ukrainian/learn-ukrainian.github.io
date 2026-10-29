@@ -159,22 +159,64 @@ inline:
           - 'скажіть'
           - 'ідіть'
   - id: act-4
-    type: unjumble
-    title: Polite request order
-    instruction: Put the words in a natural order.
+    type: quiz
+    title: Polite request sentences
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: ['Олено', 'читай', 'будь', 'ласка']
-        answer: 'Олено, читай, будь ласка.'
-      - words: ['Пане', 'Іване', 'читайте', 'будь', 'ласка']
-        answer: 'Пане Іване, читайте, будь ласка.'
-      - words: ['Дайте', 'мені', 'меню', 'будь', 'ласка']
-        answer: 'Дайте мені меню, будь ласка.'
-      - words: ['Дай', 'мені', 'меню', 'будь', 'ласка']
-        answer: 'Дай мені меню, будь ласка.'
-      - words: ['Скажіть', 'ще', 'раз', 'будь', 'ласка']
-        answer: 'Скажіть ще раз, будь ласка.'
-      - words: ['Відкрийте', 'підручники', 'будь', 'ласка']
-        answer: 'Відкрийте підручники, будь ласка.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Олено, читай, будь ласка.
+            correct: true
+          - text: Олено, читай, будь ласку.
+            correct: false
+          - text: Олено, читай, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Пане Іване, читайте, будь ласка.
+            correct: true
+          - text: Пане Іване, читайте, будь ласку.
+            correct: false
+          - text: Пане Іване, читайте, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Дайте мені меню, будь ласка.
+            correct: true
+          - text: Дайте мені меню, будь ласку.
+            correct: false
+          - text: Дайте мені меню, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Дай мені меню, будь ласка.
+            correct: true
+          - text: Дай мені меню, будь ласку.
+            correct: false
+          - text: Дай мені меню, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Скажіть ще раз, будь ласка.
+            correct: true
+          - text: Скажіть ще раз, будь ласку.
+            correct: false
+          - text: Скажіть ще раз, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Відкрийте підручники, будь ласка.
+            correct: true
+          - text: Відкрийте підручники, будь ласку.
+            correct: false
+          - text: Відкрийте підручники, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
 workbook:
   - type: fill-in
     title: "Address and request"
@@ -201,7 +243,7 @@ workbook:
           - 'ідіть'
           - "іде"
         explanation: "Ти matches іди. Ідіть belongs to ви; іде is third-person indicative."
-      - sentence: "Друзі, ви вже готові? Тоді ___ в кафе."
+      - sentence: "Друзі, ви вже готові? Тоді ___ у кафе."
         answer: 'ідіть'
         options:
           - 'ідіть'
@@ -270,32 +312,88 @@ workbook:
         right: 'іди / ідіть'
       - left: 'відкрити'
         right: 'відкрий / відкрийте'
-  - type: unjumble
+  - type: quiz
     title: Class and cafe requests
-    instruction: Put each request in a natural order.
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: ['Відкрийте', 'підручники', 'будь', 'ласка']
-        answer: 'Відкрийте підручники, будь ласка.'
-      - words: ['Читайте', 'текст', 'будь', 'ласка']
-        answer: 'Читайте текст, будь ласка.'
-      - words: ['Пишіть', 'три', 'речення']
-        answer: 'Пишіть три речення.'
-      - words: ['Дайте', 'мені', 'меню', 'будь', 'ласка']
-        answer: 'Дайте мені меню, будь ласка.'
-      - words: ['Дайте', 'рахунок', 'будь', 'ласка']
-        answer: 'Дайте рахунок, будь ласка.'
-      - words: ['Скажіть', 'ще', 'раз', 'будь', 'ласка']
-        answer: 'Скажіть ще раз, будь ласка.'
-      - words: ['Олено', 'читай', 'текст']
-        answer: 'Олено, читай текст.'
-      - words: ['Тарасе', 'дай', 'меню', 'будь', 'ласка']
-        answer: 'Тарасе, дай меню, будь ласка.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Відкрийте підручники, будь ласка.
+            correct: true
+          - text: Відкрийте підручники, будь ласку.
+            correct: false
+          - text: Відкрийте підручники, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Читайте текст, будь ласка.
+            correct: true
+          - text: Читайте текст, будь ласку.
+            correct: false
+          - text: Читайте текст, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Пишіть три речення.
+            correct: true
+          - text: Пишіть три реченню.
+            correct: false
+          - text: Пишіть три реченням.
+            correct: false
+        explanation: The construction takes речення. The case forms реченню and реченням cannot replace it here.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Дайте мені меню, будь ласка.
+            correct: true
+          - text: Дайте мені меню, будь ласку.
+            correct: false
+          - text: Дайте мені меню, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Дайте рахунок, будь ласка.
+            correct: true
+          - text: Дайте рахунок, будь ласку.
+            correct: false
+          - text: Дайте рахунок, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Скажіть ще раз, будь ласка.
+            correct: true
+          - text: Скажіть ще раз, будь ласку.
+            correct: false
+          - text: Скажіть ще раз, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Олено, читай текст.
+            correct: true
+          - text: Олено, читай текстом.
+            correct: false
+          - text: Олено, читай тексту.
+            correct: false
+        explanation: The construction takes текст. The case forms текстом and тексту cannot replace it here.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Тарасе, дай меню, будь ласка.
+            correct: true
+          - text: Тарасе, дай меню, будь ласку.
+            correct: false
+          - text: Тарасе, дай меню, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
   - type: match-up
     title: Repair imperative interference
     instruction: Match each learner mistake with the Ukrainian repair.
     pairs:
-      - left: 'Будь ласка, читати текст.'
-        right: 'Будь ласка, читай текст. / Будь ласка, читайте текст.'
+      - left: 'Олено, ти читайте текст.'
+        right: 'Олено, ти читай текст.'
       - left: 'Давай робити це зараз.'
         right: 'Робімо це зараз!'
       - left: 'Хай він працювати.'
@@ -310,10 +408,10 @@ workbook:
     title: Fix the request
     instruction: Correct the command or request form.
     items:
-      - sentence: 'Будь ласка, читати текст.'
-        error: 'читати'
+      - sentence: 'Олено, ти читайте текст.'
+        error: 'читайте'
         correction: 'читай'
-        explanation: 'Use читай with one familiar person, or читайте for polite ви.'
+        explanation: 'Ти and читай address one familiar person; читайте addresses ви.'
       - sentence: 'Пане Іване, читати текст, будь ласка.'
         error: 'читати'
         correction: 'читайте'

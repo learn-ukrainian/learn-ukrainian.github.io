@@ -56,7 +56,7 @@ inline:
           - 'святкуємо'
           - "святкує"
           - "святкуєш"
-        explanation: "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."
+        explanation: "Ми requires the first-person plural святкуємо. Святкує and святкуєш have different persons."
       - sentence: '___ Різдво ми співаємо колядки.'
         answer: 'На'
         options:
@@ -70,7 +70,7 @@ inline:
           - 'святкуємо'
           - "святкує"
           - "святкуєш"
-        explanation: "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."
+        explanation: "Ми requires the first-person plural святкуємо. Святкує and святкуєш have different persons."
       - sentence: '___ Великдень ми печемо паски.'
         answer: 'На'
         options:
@@ -181,7 +181,7 @@ workbook:
         items:
           - '1 січня'
           - 'З Новим роком!'
-          - 'подарунок'
+          - 'новорічний подарунок'
       - name: 'Різдво'
         items:
           - '25 грудня'
@@ -277,10 +277,10 @@ workbook:
         error: 'Новий рік'
         correction: 'Новим роком'
         explanation: 'Use the fixed phrase з Новим роком.'
-      - sentence: 'Ми святкуємо на Різдво.'
-        error: 'святкуємо на Різдво'
-        correction: 'святкуємо Різдво'
-        explanation: 'Use святкувати + holiday name.'
+      - sentence: 'Ми святкує Різдво.'
+        error: 'святкує'
+        correction: 'святкуємо'
+        explanation: 'Ми requires the first-person plural святкуємо.'
       - sentence: 'На Різдво ми співаємо щедрівки.'
         error: 'щедрівки'
         correction: 'колядки'
@@ -293,19 +293,19 @@ workbook:
         error: 'Великдень'
         correction: 'Великоднем'
         explanation: 'Use the fixed greeting З Великоднем.'
-      - sentence: 'Щасливого Різдва!'
-        error: 'Щасливого Різдва'
-        correction: 'З Різдвом Христовим'
-        explanation: 'Use the Ukrainian Christmas greeting phrase taught in this module.'
+      - sentence: 'З Різдво Христове!'
+        error: 'Різдво Христове'
+        correction: 'Різдвом Христовим'
+        explanation: 'The greeting uses з with the instrumental Різдвом Христовим.'
       - sentence: 'Ми печемо писанки.'
-        error: 'печемо писанки'
-        correction: 'фарбуємо яйця / робимо писанки'
-        explanation: 'You bake pasky; you decorate or dye eggs.'
+        error: 'писанки'
+        correction: 'паски'
+        explanation: 'Паски are baked. Писанки are decorated eggs.'
       - sentence: 'День Незалежності України - 22 січня.'
         error: '22 січня'
         correction: '24 серпня'
         explanation: '24 серпня is Independence Day of Ukraine.'
-      - sentence: 'Пасха - мій улюблений день.'
-        error: 'Пасха'
-        correction: 'Великдень'
-        explanation: 'Use Великдень as the active Ukrainian word.'
+      - sentence: 'Великдень — моя улюблений день.'
+        error: 'моя'
+        correction: 'мій'
+        explanation: 'Masculine день agrees with мій, not feminine моя.'

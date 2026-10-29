@@ -161,22 +161,64 @@ inline:
       - left: 'Веселих свят!'
         right: 'Happy holidays!'
 workbook:
-  - type: unjumble
-    title: Build checkpoint sentences
-    instruction: Put the words in a natural order.
+  - type: quiz
+    title: Choose checkpoint sentences
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: ['Олено', 'принеси', 'листівки', 'будь', 'ласка']
-        answer: 'Олено, принеси листівки, будь ласка.'
-      - words: ['Я', 'знаю', 'де', 'маркери']
-        answer: 'Я знаю, де маркери.'
-      - words: ['Я', 'хочу', 'допомогти', 'але', 'я', 'зайнятий']
-        answer: 'Я хочу допомогти, але я зайнятий.'
-      - words: ['Тарасе', 'постав', 'стіл']
-        answer: 'Тарасе, постав стіл.'
-      - words: ['Ми', 'пишемо', 'листівки', 'і', 'вітаємо', 'друзів']
-        answer: 'Ми пишемо листівки і вітаємо друзів.'
-      - words: ['Вітаю', 'з', 'Новим', 'роком']
-        answer: 'Вітаю з Новим роком!'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Олено, принеси листівки, будь ласка.
+            correct: true
+          - text: Олено, принеси листівки, будь ласку.
+            correct: false
+          - text: Олено, принеси листівки, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Я знаю, де маркери.
+            correct: true
+          - text: Я знаєш, де маркери.
+            correct: false
+          - text: Я знають, де маркери.
+            correct: false
+        explanation: The stated subject agrees with знаю, not with the person/number forms знаєш or знають.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Я хочу допомогти, але я зайнятий.
+            correct: true
+          - text: Я хочеш допомогти, але я зайнятий.
+            correct: false
+          - text: Я хочуть допомогти, але я зайнятий.
+            correct: false
+        explanation: The stated subject agrees with хочу, not with the person/number forms хочеш or хочуть.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Тарасе, постав стіл.
+            correct: true
+          - text: Тарасе, постав столом.
+            correct: false
+          - text: Тарасе, постав столу.
+            correct: false
+        explanation: The construction takes стіл. The case forms столом and столу cannot replace it here.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Ми пишемо листівки і вітаємо друзів.
+            correct: true
+          - text: Ми пише листівки і вітаємо друзів.
+            correct: false
+          - text: Ми пишеш листівки і вітаємо друзів.
+            correct: false
+        explanation: The stated subject agrees with пишемо, not with the person/number forms пише or пишеш.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Вітаю з Новим роком!
+            correct: true
+          - text: Вітаю з Новий рік!
+            correct: false
+          - text: Вітаю з Новому році!
+            correct: false
+        explanation: The construction takes Новим роком. The case forms Новий рік and Новому році cannot replace it here.
   - type: group-sort
     title: Which module does it review?
     instruction: Sort each item by the A1.7 module it reviews.
@@ -328,7 +370,7 @@ workbook:
         error: 'думаю що'
         correction: 'думаю, що'
         explanation: 'Add the comma before що.'
-      - sentence: 'Ми святкуємо на Різдво.'
-        error: 'святкуємо на Різдво'
-        correction: 'святкуємо Різдво'
-        explanation: 'Use святкувати + holiday name.'
+      - sentence: 'Ми святкує Різдво.'
+        error: 'святкує'
+        correction: 'святкуємо'
+        explanation: 'Ми requires the first-person plural святкуємо.'

@@ -12,7 +12,6 @@ import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
 import FillIn from '@site/src/components/FillIn';
 import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
 import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection from '@site/src/components/ErrorCorrection';
@@ -450,9 +449,9 @@ information, and ask for help in a hospital, pharmacy, or police station.
 
 <TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Допоможіть! Тут аварія.", "isTrue": true, "explanation": "This gives a help call and a problem."}, {"statement": "Я на вулиці Франка.", "isTrue": true, "explanation": "This gives a location."}, {"statement": "Мене номер Анна.", "isTrue": false, "explanation": "Use Мене звати Анна."}, {"statement": "Потрібна швидка.", "isTrue": true, "explanation": "This asks for an ambulance."}, {"statement": "Подзвоніть за номером телефон.", "isTrue": false, "explanation": "A phone phrase needs a number."}]`)} instruction={"Decide whether the phrase is clear emergency language."} isUkrainian={false} />
 
-### Build emergency lines
+### Choose emergency lines
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Допоможіть! / Тут / аварія.", "answer": "Допоможіть! Тут аварія."}, {"jumbled": "Я / на / вулиці / Шевченка.", "answer": "Я на вулиці Шевченка."}, {"jumbled": "Мене / звати / Анна.", "answer": "Мене звати Анна."}, {"jumbled": "Подзвоніть / за / номером / 112.", "answer": "Подзвоніть за номером 112."}]`)} instruction={"Put the words in a natural order."} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Обери правильно побудоване речення.", "options": [{"text": "Допоможіть! Тут аварія.", "correct": true}, {"text": "Допоможіть! Тут аварію.", "correct": false}, {"text": "Допоможіть! Тут аварією.", "correct": false}], "explanation": "The construction takes аварія. The case forms аварію and аварією cannot replace it here."}, {"question": "Обери правильно побудоване речення.", "options": [{"text": "Я на вулиці Шевченка.", "correct": true}, {"text": "Я на вулиця Шевченка.", "correct": false}, {"text": "Я на вулицею Шевченка.", "correct": false}], "explanation": "The construction takes вулиці. The case forms вулиця and вулицею cannot replace it here."}, {"question": "— Як тебе звати? — ___", "options": [{"text": "Мене звати Анна.", "correct": true}, {"text": "Мене звати Анну.", "correct": false}, {"text": "Мене звати Анні.", "correct": false}], "explanation": "This construction requires nominative Анна. Анну and Анні are different case forms."}, {"question": "Обери правильно побудоване речення.", "options": [{"text": "Подзвоніть за номером 112.", "correct": true}, {"text": "Подзвоніть за номеру 112.", "correct": false}, {"text": "Подзвоніть за номер 112.", "correct": false}], "explanation": "The construction takes номером. The case forms номеру and номер cannot replace it here."}]`)} instruction={"Choose the sentence whose words fit together."} isUkrainian={false} />
 
 ### Location details
 
@@ -468,7 +467,7 @@ information, and ask for help in a hospital, pharmacy, or police station.
 
 ### Repair emergency lines
 
-<ErrorCorrection client:only='react' instruction="Fix the sentence by using the safe A1 emergency phrase." items={JSON.parse(`[{"sentence": "Мене номер Анна.", "errorWord": "Мене номер Анна", "correctForm": "Мене звати Анна", "options": [], "explanation": ""}, {"sentence": "Я на вулиця Шевченка.", "errorWord": "на вулиця", "correctForm": "на вулиці Шевченка", "options": [], "explanation": ""}, {"sentence": "Потрібен швидка.", "errorWord": "Потрібен швидка", "correctForm": "Потрібна швидка", "options": [], "explanation": ""}, {"sentence": "Я загубив паспорта.", "errorWord": "загубив паспорта", "correctForm": "Я загубив паспорт", "options": [], "explanation": ""}, {"sentence": "Подзвоніть номером 112.", "errorWord": "Подзвоніть номером", "correctForm": "Подзвоніть за номером 112", "options": [], "explanation": ""}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Fix the sentence by using the safe A1 emergency phrase." items={JSON.parse(`[{"sentence": "Мене номер Анна.", "errorWord": "Мене номер Анна", "correctForm": "Мене звати Анна", "options": [], "explanation": ""}, {"sentence": "Я на вулиця Шевченка.", "errorWord": "на вулиця", "correctForm": "на вулиці", "options": [], "explanation": ""}, {"sentence": "Потрібен швидка.", "errorWord": "Потрібен швидка", "correctForm": "Потрібна швидка", "options": [], "explanation": ""}, {"sentence": "Я загубив паспортом.", "errorWord": "паспортом", "correctForm": "паспорт", "options": [], "explanation": "The lost object here is accusative паспорт. Паспортом is instrumental; паспорта is an attested accusative variant and is not condemned."}, {"sentence": "Подзвоніть номером 112.", "errorWord": "Подзвоніть номером", "correctForm": "Подзвоніть за номером", "options": [], "explanation": ""}]`)} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

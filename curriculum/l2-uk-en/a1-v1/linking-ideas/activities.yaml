@@ -29,8 +29,8 @@ inline:
         answer: 'бо'
         options:
           - 'бо'
-          - 'а'
-          - 'або'
+          - 'якого'
+          - 'котрому'
         explanation: 'Use бо to answer чому?'
       - sentence: 'Мама ___ тато вдома.'
         answer: 'й'
@@ -169,52 +169,94 @@ inline:
   - id: act-4
     type: group-sort
     title: Connector shelves
-    instruction: Sort each connector by its A1 job.
+    instruction: Sort each complete sentence by the relationship expressed by its connector.
     groups:
-      - name: 'add'
+      - name: 'addition'
         items:
-          - 'і'
-          - 'й'
-          - 'та'
-      - name: 'compare or contrast'
+          - 'Я читаю і пишу.'
+          - 'Мама й тато вдома.'
+          - 'Хліб та масло на столі.'
+      - name: 'comparison or contrast'
         items:
-          - 'а'
-          - 'але'
+          - Я працюю, а брат навчається.
+          - Я хочу, але не можу.
+          - Я хочу, проте не можу.
+          - Тут холодно, зате вдома тепло.
+          - Я хочу, однак не можу.
       - name: 'choice'
         items:
-          - 'або'
-          - 'чи'
+          - 'Кава або чай?'
+          - 'Ви студент чи лікар?'
       - name: 'reason'
         items:
-          - 'бо'
-          - 'тому що'
-      - name: 'recognize later'
+          - 'Я вдома, бо я хворий.'
+          - 'Ми вдома, тому що йде дощ.'
+      - name: 'time, condition or purpose'
         items:
-          - 'проте'
-          - 'зате'
-          - 'однак'
-          - 'щоб'
-          - 'якщо'
-          - 'коли'
-          - 'поки'
-          - 'відколи'
+          - Я читаю, щоб знати більше.
+          - Якщо буде дощ, я буду вдома.
+          - Коли буде дощ, я буду вдома.
+          - Поки йде дощ, я вдома.
+          - Відколи я тут, я вчу українську.
 workbook:
-  - type: unjumble
-    title: Build connected sentences
-    instruction: Put the words in a natural order.
+  - type: quiz
+    title: Choose connected sentences
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: ['Я', 'читаю', 'і', 'пишу']
-        answer: 'Я читаю і пишу.'
-      - words: ['Я', 'хочу', 'каву', 'а', 'ти']
-        answer: 'Я хочу каву, а ти?'
-      - words: ['Гори', 'гарні', 'але', 'далеко']
-        answer: 'Гори гарні, але далеко.'
-      - words: ['Море', 'тепле', 'бо', 'літо']
-        answer: 'Море тепле, бо літо.'
-      - words: ['Ви', 'студент', 'чи', 'лікар']
-        answer: 'Ви студент чи лікар?'
-      - words: ['Ми', 'вдома', 'тому', 'що', 'йде', 'дощ']
-        answer: 'Ми вдома, тому що йде дощ.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Я читаю і пишу.
+            correct: true
+          - text: Я читаєш і пишу.
+            correct: false
+          - text: Я читають і пишу.
+            correct: false
+        explanation: The stated subject agrees with читаю, not with the person/number forms читаєш or читають.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Я хочу каву, а ти?
+            correct: true
+          - text: Я хочеш каву, а ти?
+            correct: false
+          - text: Я хочуть каву, а ти?
+            correct: false
+        explanation: The stated subject agrees with хочу, not with the person/number forms хочеш or хочуть.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Гори гарні, але далеко.
+            correct: true
+          - text: Гори гарна, але далеко.
+            correct: false
+          - text: Гори гарний, але далеко.
+            correct: false
+        explanation: The subject requires гарні. гарна and гарний have a different gender or number.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Море тепле, бо літо.
+            correct: true
+          - text: Море тепла, бо літо.
+            correct: false
+          - text: Море теплий, бо літо.
+            correct: false
+        explanation: The subject requires тепле. тепла and теплий have a different gender or number.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Ви студент чи лікар?
+            correct: true
+          - text: Ви студент чи лікарю?
+            correct: false
+          - text: Ви студент чи лікарем?
+            correct: false
+        explanation: This construction requires nominative лікар. лікарю and лікарем are different case forms.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Ми вдома, тому що йде дощ.
+            correct: true
+          - text: Ми вдома, тому що йдуть дощ.
+            correct: false
+          - text: Ми вдома, тому що йдеш дощ.
+            correct: false
+        explanation: Singular дощ agrees with third-person singular йде, not plural йдуть or second-person йдеш.
   - type: fill-in
     title: Travel plan connectors
     instruction: Choose the connector that fits the short travel sentence.
@@ -237,8 +279,8 @@ workbook:
         answer: 'бо'
         options:
           - 'бо'
-          - 'а'
-          - 'та'
+          - 'якого'
+          - 'котрому'
         explanation: 'Use бо to give the reason.'
       - sentence: 'Я хочу в гори, ___ ти?'
         answer: 'а'
@@ -251,15 +293,15 @@ workbook:
         answer: 'і'
         options:
           - 'і'
-          - 'але'
-          - 'чи'
+          - 'якого'
+          - 'котрому'
         explanation: 'Use і to add both ideas.'
       - sentence: 'Поїдемо в Карпати, ___ там дешевше.'
         answer: 'бо'
         options:
           - 'бо'
-          - 'та'
-          - 'а'
+          - 'якого'
+          - 'котрому'
         explanation: 'Use бо to explain why.'
   - type: match-up
     title: Comma habit repairs
@@ -281,8 +323,8 @@ workbook:
     title: Repair linking interference
     instruction: Match each learner mistake with the Ukrainian repair.
     pairs:
-      - left: 'Він вивчає українську, тому що це є цікаво.'
-        right: 'Він вивчає українську, тому що це цікаво.'
+      - left: 'Він вивчає українську, тому що я любить Україну.'
+        right: 'Він вивчає українську, тому що я люблю Україну.'
       - left: 'Я не прийшов, що я захворів.'
         right: 'Я не прийшов, бо я захворів. (або тому що)'
       - left: 'Я поважаю його за те що він дуже сміливий.'
@@ -327,10 +369,10 @@ workbook:
     title: Fix the linked sentence
     instruction: Correct the connector, comma, or copied structure.
     items:
-      - sentence: 'Він вивчає українську, тому що це є цікаво.'
-        error: 'є'
-        correction: ''
-        explanation: 'Do not copy present-tense is into це цікаво.'
+      - sentence: 'Він вивчає українську, тому що я любить Україну.'
+        error: 'любить'
+        correction: 'люблю'
+        explanation: 'Я agrees with люблю. Любить is third-person singular.'
       - sentence: 'Я не прийшов, що я захворів.'
         error: 'що'
         correction: 'бо'
@@ -344,9 +386,9 @@ workbook:
         correction: 'працюю, а'
         explanation: 'Add the comma before а.'
       - sentence: 'Він дуже хоче що б ми всі прийшли.'
-        error: 'що б'
-        correction: 'щоб'
-        explanation: 'Use щоб together in this purpose sentence, with a comma before it in the full repair.'
+        error: 'Він дуже хоче що б ми всі прийшли.'
+        correction: 'Він дуже хоче, щоб ми всі прийшли.'
+        explanation: 'Щоб is one conjunction here. The complete repair also separates the subordinate clause with a comma.'
       - sentence: 'Добрий день, я маю 20 років, і я студент.'
         error: 'я маю 20 років'
         correction: 'мені 20 років'

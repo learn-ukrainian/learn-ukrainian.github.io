@@ -65,14 +65,14 @@ inline:
     title: Put the final day in order
     instruction: Arrange the events from morning to night.
     items:
-      - 'Я прокинувся в готелі.'
-      - 'Я снідав у кафе.'
-      - 'Я їхав на метро в центр.'
-      - 'Я купив сувенір.'
-      - 'Я обідав з Оленою.'
-      - 'Ми ходили в кіно.'
-      - 'Ми вечеряли в ресторані.'
-      - 'Я повернувся в готель.'
+      - 'О сьомій я прокинувся в готелі.'
+      - 'О восьмій я снідав у кафе.'
+      - 'О дев’ятій я їхав на метро в центр.'
+      - 'Об одинадцятій я купив сувенір.'
+      - 'О першій годині дня я обідав з Оленою.'
+      - 'О четвертій годині дня ми ходили в кіно.'
+      - 'О сьомій вечора ми вечеряли в ресторані.'
+      - 'О дев’ятій вечора я повернувся в готель.'
     correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
   - id: act-3
     type: match-up
@@ -89,11 +89,11 @@ inline:
         right: 'Скільки коштує?'
       - left: 'repairing understanding'
         right: 'Повторіть, будь ласка.'
-      - left: 'asking for help'
-        right: 'Мені потрібна допомога.'
-      - left: 'emergency situation'
+      - left: 'asking a colleague for help with a task'
+        right: 'Допоможи мені з цим завданням, будь ласка.'
+      - left: 'calling an ambulance for an injured person'
         right: 'Допоможіть! Викличте швидку!'
-      - left: 'at the pharmacy'
+      - left: 'asking at a pharmacy for headache tablets'
         right: 'Дайте, будь ласка, таблетки від головного болю.'
       - left: 'saying goodbye'
         right: 'Дякую! До побачення!'
@@ -102,22 +102,22 @@ inline:
     title: Sort your A1 toolkit
     instruction: Put each phrase into the right communication group.
     groups:
-      - name: 'people'
+      - name: 'identity and relationships'
         items:
           - 'Мене звати'
           - 'Я з Канади'
           - 'Це моя подруга'
-      - name: 'city'
+      - name: 'directions and location'
         items:
           - 'Де метро?'
           - 'Я на вулиці'
           - 'Як дістатися до центру?'
-      - name: 'food and shopping'
+      - name: 'cafe and shopping'
         items:
           - 'Каву, будь ласка'
           - 'Скільки коштує?'
           - 'Я беру це'
-      - name: 'time'
+      - name: 'explicit time markers'
         items:
           - 'Учора я був'
           - 'Зараз я йду'
@@ -140,9 +140,9 @@ workbook:
         options:
           - text: 'Ходімо в кафе!'
             correct: true
-          - text: 'Я був у кафе.'
+          - text: 'Я будемо в кафе.'
             correct: false
-          - text: 'Де кафе?'
+          - text: 'Ми буде в кафе.'
             correct: false
         explanation: 'Ходімо... is the A1 invitation phrase.'
       - prompt: "— Де болить? — ___"
@@ -179,35 +179,63 @@ workbook:
       - statement: 'Мене звати Сара. Я з Канади.'
         answer: true
         explanation: 'This is clear A1 identity language.'
-      - statement: 'Вчора я снідаю у кафе.'
+      - statement: 'Вчора я снідає у кафе.'
         answer: false
-        explanation: 'Use past after Вчора: я снідав / снідала.'
+        explanation: 'Я does not agree with third-person снідає. In a past narrative, я снідав or я снідала is usual; narrative present is also possible.'
       - statement: 'Зараз я їду на метро.'
         answer: true
         explanation: 'Зараз plus present їду is clear.'
       - statement: 'Завтра я буду читати українську.'
         answer: true
         explanation: 'Буду + infinitive is the A1 future.'
-      - statement: "Моє ім'я є Адам."
+      - statement: "Мене звати Адаму."
         answer: false
-        explanation: 'Use Мене звати Адам.'
-  - type: unjumble
-    title: Build final A1 lines
-    instruction: Put the words in a natural order.
+        explanation: 'The name in Мене звати Адам is nominative, not dative Адаму.'
+  - type: quiz
+    title: Choose final A1 lines
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: 'Учора/я/снідав/у/кафе.'
-        answer: 'Учора я снідав у кафе.'
-      - words: 'Зараз/я/їду/на/метро.'
-        answer: 'Зараз я їду на метро.'
-      - words: 'Завтра/я/буду/гуляти/в/парку.'
-        answer: 'Завтра я буду гуляти в парку.'
-      - words: 'Повторіть,/будь/ласка.'
-        answer: 'Повторіть, будь ласка.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Учора я снідав у кафе.
+            correct: true
+          - text: Учора я снідали у кафе.
+            correct: false
+          - text: Учора ми снідав у кафе.
+            correct: false
+        explanation: The key has matching subject and verb forms. я снідали and ми снідав combine a singular subject with a plural verb or a plural subject with a singular verb.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Зараз я їду на метро.
+            correct: true
+          - text: Зараз я їдеш на метро.
+            correct: false
+          - text: Зараз я їдуть на метро.
+            correct: false
+        explanation: The stated subject agrees with їду, not with the person/number forms їдеш or їдуть.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Завтра я буду гуляти в парку.
+            correct: true
+          - text: Завтра я будеш гуляти в парку.
+            correct: false
+          - text: Завтра я будемо гуляти в парку.
+            correct: false
+        explanation: The subject agrees with буду; будеш and будемо belong to different persons or numbers.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Повторіть, будь ласка.
+            correct: true
+          - text: Повторіть, будь ласку.
+            correct: false
+          - text: Повторіть, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
   - type: fill-in
     title: Final story frame
-    instruction: Choose the phrase that completes the ten-sentence story frame.
+    instruction: Choose the phrase that completes each sentence in the story.
     items:
-      - sentence: 'Мене ___.'
+      - sentence: 'Мене ___ Адам.'
         answer: 'звати'
         options:
           - 'звати'
@@ -270,14 +298,14 @@ workbook:
     title: Repair final A1 lines
     instruction: Fix the common finale mistake.
     items:
-      - sentence: "Моє ім'я є Адам."
-        error: "Моє ім'я є"
-        correction: 'Мене звати'
-        explanation: 'Use the A1 name phrase: Мене звати Адам.'
-      - sentence: 'Вчора я снідаю у кафе.'
-        error: 'снідаю'
-        correction: 'снідав / снідала'
-        explanation: 'Use a past form after учора / вчора.'
+      - sentence: "Мене звати Адаму."
+        error: "Адаму"
+        correction: 'Адам'
+        explanation: 'The name after Мене звати is nominative here.'
+      - sentence: 'Адам: Учора я снідала у кафе.'
+        error: 'снідала'
+        correction: 'снідав'
+        explanation: 'Адам agrees with masculine singular снідав.'
       - sentence: 'Завтра я гуляв у парку.'
         error: 'гуляв'
         correction: 'буду гуляти'

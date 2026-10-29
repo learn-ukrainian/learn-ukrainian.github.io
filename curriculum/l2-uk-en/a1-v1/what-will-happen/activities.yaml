@@ -129,7 +129,7 @@ workbook:
       - statement: 'Я буду читати завтра.'
         answer: true
         explanation: 'Буду + читати is correct.'
-      - statement: 'Ти будеш робити ввечері?'
+      - statement: 'Що ти будеш робити ввечері?'
         answer: true
         explanation: 'Будеш + робити is correct.'
       - statement: 'Вона буде читає книжку.'
@@ -144,26 +144,61 @@ workbook:
       - statement: 'Ви будете гуляти в парку?'
         answer: true
         explanation: 'Будете + гуляти is correct.'
-  - type: unjumble
-    title: Build future sentences
-    instruction: Put the words in a natural order.
+  - type: quiz
+    title: Choose future sentences
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: ['Завтра', 'я', 'буду', 'працювати']
-        answer: 'Завтра я буду працювати.'
-      - words: ['Що', 'ти', 'будеш', 'робити', 'ввечері']
-        answer: 'Що ти будеш робити ввечері?'
-      - words: ['Вона', 'буде', 'читати', 'книжку']
-        answer: 'Вона буде читати книжку.'
-      - words: ['Ми', 'будемо', 'дивитися', 'футбол']
-        answer: 'Ми будемо дивитися футбол.'
-      - words: ['Вони', 'будуть', 'відпочивати']
-        answer: 'Вони будуть відпочивати.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Завтра я буду працювати.
+            correct: true
+          - text: Завтра я будеш працювати.
+            correct: false
+          - text: Завтра я будемо працювати.
+            correct: false
+        explanation: The subject agrees with буду; будеш and будемо belong to different persons or numbers.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Що ти будеш робити ввечері?
+            correct: true
+          - text: Що ти буду робити ввечері?
+            correct: false
+          - text: Що ти будуть робити ввечері?
+            correct: false
+        explanation: The subject agrees with будеш; буду and будуть belong to different persons or numbers.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Вона буде читати книжку.
+            correct: true
+          - text: Вона буду читати книжку.
+            correct: false
+          - text: Вона будуть читати книжку.
+            correct: false
+        explanation: The subject agrees with буде; буду and будуть belong to different persons or numbers.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Ми будемо дивитися футбол.
+            correct: true
+          - text: Ми буде дивитися футбол.
+            correct: false
+          - text: Ми буду дивитися футбол.
+            correct: false
+        explanation: The subject agrees with будемо; буде and буду belong to different persons or numbers.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Вони будуть відпочивати.
+            correct: true
+          - text: Вони буде відпочивати.
+            correct: false
+          - text: Вони буду відпочивати.
+            correct: false
+        explanation: The subject agrees with будуть; буде and буду belong to different persons or numbers.
   - type: order
     title: From now to tomorrow
     instruction: Put the mini-sequence in a natural time order.
     items:
-      - 'Зараз я читаю.'
-      - 'Ввечері я буду готувати.'
+      - 'Зараз понеділок, восьма ранку. Я читаю.'
+      - 'Сьогодні ввечері я буду готувати.'
       - 'Завтра я буду працювати.'
       - 'Наступного тижня я буду відпочивати.'
     correct_order: [0, 1, 2, 3]
@@ -178,7 +213,7 @@ workbook:
           - 'читаю'
           - 'читав'
         explanation: "The given future auxiliary takes infinitive читати. читаю is a finite present form and читав a finite past form; neither combines with that auxiliary."
-      - sentence: 'Ти будеш ___ ввечері?'
+      - sentence: 'Що ти будеш ___ ввечері?'
         answer: 'робити'
         options:
           - 'робити'
@@ -232,7 +267,7 @@ workbook:
         options:
           - text: 'Ми будемо дивитися футбол.'
             correct: true
-          - text: 'Ми дивимося футбол.'
+          - text: 'Ми буде дивитися футбол.'
             correct: false
           - text: 'Ми дивилися футбол.'
             correct: false
@@ -241,7 +276,7 @@ workbook:
         options:
           - text: 'Вони будуть відпочивати.'
             correct: true
-          - text: 'Вони відпочивають.'
+          - text: 'Вони буде відпочивати.'
             correct: false
           - text: 'Вони відпочивали.'
             correct: false
@@ -254,7 +289,7 @@ workbook:
         error: 'читаю'
         correction: 'читати'
         explanation: 'After буду, use the infinitive читати.'
-      - sentence: 'Ти будеш робиш ввечері?'
+      - sentence: 'Що ти будеш робиш ввечері?'
         error: 'робиш'
         correction: 'робити'
         explanation: 'After будеш, use робити.'

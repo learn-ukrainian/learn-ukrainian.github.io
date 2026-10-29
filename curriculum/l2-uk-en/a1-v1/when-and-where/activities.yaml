@@ -29,8 +29,8 @@ inline:
         answer: 'що'
         options:
           - 'що'
-          - 'коли'
-          - 'де'
+          - 'якого'
+          - 'котрому'
         explanation: 'Каже, що introduces what she says.'
       - sentence: "— Я знаю, ___ ти живеш. — Так, ти вже був у мене вдома."
         answer: 'де'
@@ -286,22 +286,64 @@ workbook:
         right: 'Я буду тут, поки ти не прийдеш.'
       - left: 'Він читає з тих пір.'
         right: 'Він читає відтоді.'
-  - type: unjumble
-    title: Build short complex sentences
-    instruction: Put the words in a natural order.
+  - type: quiz
+    title: Choose short complex sentences
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: ['Я', 'знаю', 'що', 'це', 'кафе']
-        answer: 'Я знаю, що це кафе.'
-      - words: ['Я', 'не', 'знаю', 'де', 'парк']
-        answer: 'Я не знаю, де парк.'
-      - words: ['Скажи', 'коли', 'урок']
-        answer: 'Скажи, коли урок.'
-      - words: ['Вона', 'каже', 'що', 'магазин', 'близько']
-        answer: 'Вона каже, що магазин близько.'
-      - words: ['Ти', 'знаєш', 'де', 'нове', 'кафе']
-        answer: 'Ти знаєш, де нове кафе?'
-      - words: ['Я', 'думаю', 'що', 'це', 'правильно']
-        answer: 'Я думаю, що це правильно.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Я знаю, що це кафе.
+            correct: true
+          - text: Я знаєш, що це кафе.
+            correct: false
+          - text: Я знають, що це кафе.
+            correct: false
+        explanation: The stated subject agrees with знаю, not with the person/number forms знаєш or знають.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Я не знаю, де парк.
+            correct: true
+          - text: Я не знаєш, де парк.
+            correct: false
+          - text: Я не знають, де парк.
+            correct: false
+        explanation: The stated subject agrees with знаю, not with the person/number forms знаєш or знають.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Скажи, коли урок.
+            correct: true
+          - text: Скажи, якого урок.
+            correct: false
+          - text: Скажи, котрому урок.
+            correct: false
+        explanation: Коли introduces the time question. Якого and котрому have no compatible noun or syntactic role here.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Вона каже, що магазин близько.
+            correct: true
+          - text: Вона кажеш, що магазин близько.
+            correct: false
+          - text: Вона кажуть, що магазин близько.
+            correct: false
+        explanation: The stated subject agrees with каже, not with the person/number forms кажеш or кажуть.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Ти знаєш, де нове кафе?
+            correct: true
+          - text: Ти знаю, де нове кафе?
+            correct: false
+          - text: Ти знає, де нове кафе?
+            correct: false
+        explanation: The stated subject agrees with знаєш, not with the person/number forms знаю or знає.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Я думаю, що це правильно.
+            correct: true
+          - text: Я думаєш, що це правильно.
+            correct: false
+          - text: Я думають, що це правильно.
+            correct: false
+        explanation: The stated subject agrees with думаю, not with the person/number forms думаєш or думають.
   - type: true-false
     title: Connector checks
     instruction: Decide whether each statement fits this A1 module.
@@ -354,10 +396,10 @@ workbook:
         error: 'що'
         correction: 'де'
         explanation: 'A park location needs де.'
-      - sentence: 'Скажи, що зустріч.'
+      - sentence: '— Скажи, що зустріч. — О третій.'
         error: 'що'
         correction: 'коли'
-        explanation: 'A meeting time needs коли.'
+        explanation: 'The reply о третій supplies a time, so коли introduces the time question.'
       - sentence: 'Вона каже що урок сьогодні.'
         error: 'каже що'
         correction: 'каже, що'
