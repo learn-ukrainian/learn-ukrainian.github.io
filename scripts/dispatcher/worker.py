@@ -385,6 +385,13 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         invocation = provider.build(spec, child_env(spec))
         try:
             invocation = admission.claude_launch(spec, invocation)
+            if spec.agent == "claude" and spec.claude_account not in (None, "a"):
+                from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt
+
+                # Value-free: label, source and the verified method (``api_key_helper`` bills that key).
+                record["claude_account_auth"] = claude_account_auth_receipt(
+                    spec.claude_account, source=record.get("claude_account_source")
+                )
             # Checked again with the launch's own environment: a managed policy may appear after dispatch.
             if spec.mode == "read-only" and (refusal := providers.read_only_refusal(spec.agent, invocation.env)):
                 raise ValueError(refusal)

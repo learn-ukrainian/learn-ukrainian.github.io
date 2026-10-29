@@ -301,6 +301,49 @@ def test_pack_verify_publication_refuses_incomplete_proof(
     assert any(error.startswith(code + ":") for error in result["errors"])
 
 
+@pytest.mark.parametrize(
+    "plan,code",
+    [
+        (None, None),
+        ({"steps": [{"needs": ["quote"], "ref": "T-999"}]}, "publication_right"),
+        ("steps: [", "publication_plan_unresolved"),
+    ],
+)
+def test_provisional_pack_verify_needs_no_plan_but_checks_an_existing_one(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, plan, code
+):
+    """The provisional lock precedes the plan (§5 step 2a); plan review keeps planned quote use fail-closed."""
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET source_file='1-klas-bukvar-zaharijchuk-2025-1' WHERE chunk_id='chunk-1'")
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    plan_dir = tmp_path / "plans"
+    plan_dir.mkdir()
+    if plan is not None:
+        (plan_dir / "test-mod.yaml").write_text(plan if isinstance(plan, str) else yaml.safe_dump(plan))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
+        provisional, review = [
+            verify.verify_pack(
+                "a1",
+                "test-mod",
+                evidence_dir=synthetic_word_store,
+                plans_dir=plan_dir,
+                sources_instance=src,
+                offline=True,
+                **kwargs,
+            )
+            for kwargs in ({"require_plan": False}, {})
+        ]
+    if code is None:
+        assert provisional["status"] == "ok", provisional
+        assert "planned_quote_use" in provisional["not_checked"]
+        assert review["status"] == "failed"
+        assert any(error.startswith("publication_plan_unresolved:") for error in review["errors"])
+    else:
+        for result in (provisional, review):
+            assert result["status"] == "failed"
+            assert any(error.startswith(code + ":") for error in result["errors"])
+
+
 def test_moved_chunk_id_with_same_text_is_drift_and_still_reports_chunk_id_moved(
     synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
 ):

@@ -19,7 +19,6 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts.lexicon.runner.fetch_ulif_20k import DictUAClient
 from scripts.lexicon.runner.fetch_ulif_homonyms import (
     EXIT_FORBIDDEN,
     EXIT_INTERRUPTED,
@@ -32,6 +31,7 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     SpellingLedger,
     _dedupe_register_rows,
     _spellings_from_file,
+    _tokens,
     _write_group,
     build_a1_a2_spellings,
     main,
@@ -50,8 +50,8 @@ def _html(name: str) -> str:
     return (FIXTURES / name).read_text(encoding="utf-8")
 
 
-def _tokens(html: str) -> dict[str, str]:
-    tokens = DictUAClient._tokens(html)
+def _page_tokens(html: str) -> dict[str, str]:
+    tokens = _tokens(html)
     assert tokens is not None
     return tokens
 
@@ -136,7 +136,7 @@ def test_zamok_group_stores_three_entries_and_tab_sets(tmp_path):
         "Select$5": _html("zamok-entry-2.html"),
         "Select$6": _html("zamok-entry-3.html"),
     }
-    entry_view = {key: _tokens(html)["__VIEWSTATE"] for key, html in entry.items()}
+    entry_view = {key: _page_tokens(html)["__VIEWSTATE"] for key, html in entry.items()}
     tabs = {
         entry_view["Select$4"]: {"paradigm": _html("zamok-entry-1-par.html")},
         entry_view["Select$5"]: {

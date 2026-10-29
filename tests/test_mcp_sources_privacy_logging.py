@@ -1,8 +1,8 @@
 """Cycle 007 amendment step 3: hash-only privacy-mode tool-call logging.
 
-Also covers step 4's additive ``cache_only`` option on ``query_ulif`` /
-``query_grac`` — never a live fetch, fails closed to ``unavailable`` when no
-cache is available.
+Also covers step 4's additive ``cache_only`` option on ``query_grac`` — never
+a live fetch, fails closed to ``unavailable`` when no cache is available — and
+``query_ulif``, which answers only from the local DictUA copy.
 
 Exercises the real ``_log_tool_call``/``call_tool`` functions (not a
 reimplementation), pointed at a per-module tmp log directory via
@@ -118,14 +118,20 @@ def test_privacy_mode_flag_is_stripped_before_dispatch(server):
     assert "_privacy_mode" not in text
 
 
-def test_query_ulif_cache_only_never_makes_a_live_call(server):
-    result = asyncio.run(server.call_tool("query_ulif", {"word": "стіл", "cache_only": True}))
-    payload = json.loads(result[0].text)
-    assert payload["status"] in {"attested", "not_found", "unavailable", "ambiguous"}
-    assert "entry" in payload
-    if payload["status"] == "ambiguous":
-        assert payload["entry"] is None
-        assert isinstance(payload.get("entries"), list) and len(payload["entries"]) >= 2
+def test_query_ulif_never_makes_a_live_call(server, monkeypatch):
+    attempts = []
+
+    def no_network(_session, method, url, *_args, **_kwargs):
+        attempts.append((method, url))
+        raise AssertionError("query_ulif reached the network")
+
+    monkeypatch.setattr(requests.Session, "request", no_network)
+    for args in ({"word": "стіл"}, {"word": "стіл", "sections": ["paradigm", "synonyms"]}):
+        text = asyncio.run(server.call_tool("query_ulif", args))[0].text
+        assert "reached the network" not in text
+        if text.startswith("{"):
+            assert json.loads(text)["status"] in {"ok", "parse_error", "ambiguous", "not_found", "unavailable"}
+    assert attempts == []
 
 
 def test_query_grac_cache_only_always_unavailable(server):
