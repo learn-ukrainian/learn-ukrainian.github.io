@@ -872,7 +872,7 @@ def test_maintenance_timeout_terminates_git_tree_and_recovers(tmp_path: Path, mo
     while True:
         try:
             state = stat_path.read_text().split(") ", 1)[1][0]
-        except FileNotFoundError:
+        except (FileNotFoundError, ProcessLookupError):  # a task that exits mid-read raises ESRCH
             state = None
         if state in {None, "Z"}:
             break

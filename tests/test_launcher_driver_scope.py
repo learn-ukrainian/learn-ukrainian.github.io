@@ -107,7 +107,7 @@ IFS= read -r _ < "$TEST_GATE"
                     continue
                 try:
                     fields = (entry / "stat").read_text().rsplit(")", 1)[1].split()
-                except FileNotFoundError:
+                except (FileNotFoundError, ProcessLookupError):  # a task that exits mid-read raises ESRCH
                     continue
                 if int(fields[2]) == process.pid:
                     assert int(fields[3]) == process.pid
