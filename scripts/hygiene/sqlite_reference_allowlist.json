@@ -713,28 +713,6 @@
     ]
   },
   {
-    "path": "scripts/lexicon/tools/dump_ulif.py",
-    "reference_count": 2,
-    "kind": "writer",
-    "target_db": "ULIF dump DB",
-    "reason": "persists resumable crawler dump",
-    "calls": [
-      "sqlite3.connect(str(self.db_path))",
-      "sqlite3.connect(str(dump_db_path))"
-    ]
-  },
-  {
-    "path": "scripts/lexicon/tools/import_ulif_dump.py",
-    "reference_count": 6,
-    "kind": "writer",
-    "target_db": "ULIF dump DB; sources.db",
-    "reason": "imports held crawler dump into sources",
-    "calls": [
-      "sqlite3.connect(str(args.dump_db))",
-      "sqlite3.connect(str(args.sources_db))"
-    ]
-  },
-  {
     "path": "scripts/lexicon/tools/migrate_ulif_raw.py",
     "reference_count": 6,
     "kind": "writer",
@@ -1174,7 +1152,7 @@
   },
   {
     "path": "scripts/wiki/sources_db.py",
-    "reference_count": 30,
+    "reference_count": 33,
     "kind": "writer",
     "target_db": "sources.db",
     "reason": "write branch migrates and ingests ULIF schema",

@@ -2,7 +2,7 @@
 """Durable offline reduce for the Atlas 20k ULIF network cache (#5230).
 
 Consumes ``network-cache.sqlite`` raw envelopes (read-only) written by
-``fetch_ulif_20k.py``, parses DictUA HTML into structured lemma artifacts,
+the retired ``fetch_ulif_20k.py`` fetch phase, parses DictUA HTML into structured lemma artifacts,
 stages a resumable ledger phase ``offline_reduce``, and emits a candidate
 export + aggregate divergence summary.  Stops before publish/pin-flip.
 

@@ -1,8 +1,8 @@
 {
   "schema": "source-tool-import-baseline.v1",
   "denominator": {
-    "cli_count": 406,
-    "probe_count": 812,
+    "cli_count": 403,
+    "probe_count": 806,
     "cli_paths": [
       "scripts/agent_runtime/acpx_pilot.py",
       "scripts/agent_runtime/kimi_boundary.py",
@@ -275,7 +275,6 @@
       "scripts/lexicon/runner/atlas_job.py",
       "scripts/lexicon/runner/durable_mirror.py",
       "scripts/lexicon/runner/enrich_offline_20k.py",
-      "scripts/lexicon/runner/fetch_ulif_20k.py",
       "scripts/lexicon/runner/fetch_ulif_homonyms.py",
       "scripts/lexicon/runner/finalize.py",
       "scripts/lexicon/runner/generate_pr1_fixture.py",
@@ -286,8 +285,6 @@
       "scripts/lexicon/runner/worker.py",
       "scripts/lexicon/teacher_deck.py",
       "scripts/lexicon/thin_page_report.py",
-      "scripts/lexicon/tools/dump_ulif.py",
-      "scripts/lexicon/tools/import_ulif_dump.py",
       "scripts/lexicon/tools/migrate_ulif_raw.py",
       "scripts/lexicon/tools/report_ulif_homonym_suspects.py",
       "scripts/lexicon/triage_needs_review.py",
@@ -411,7 +408,7 @@
       "scripts/wiki/sources_db.py",
       "scripts/wiki/ukrainian_wiki_corpus.py"
     ],
-    "cli_paths_sha256": "12788507c0d798125113e5b55e622a3e6a194ca4bf250e9cafd54c16ef6f25ce"
+    "cli_paths_sha256": "f271832fbd7307177fb323c1b0485628653e5e8e1591df4157d0ad161b786bae"
   },
   "failures": [
     {

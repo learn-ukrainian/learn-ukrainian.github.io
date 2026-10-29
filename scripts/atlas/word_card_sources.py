@@ -22,7 +22,6 @@ from scripts.atlas import word_card_foundation as foundation
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_dictua_parse
 from scripts.lib.readonly_sqlite import SQLiteConnection
-from scripts.wiki import sum20_mirror
 from scripts.wiki.sources_db import compute_ulif_entry_fingerprint
 
 ACUTE = "́"
@@ -134,17 +133,17 @@ class PilotSources:
     so the build identity covers candidate and absence evidence, not only the frozen anchor rows.
     """
 
-    def __init__(self, sources: SQLiteConnection, vesum: SQLiteConnection, raw_cache: SQLiteConnection):
+    def __init__(self, sources: SQLiteConnection, vesum: SQLiteConnection, raw_cache: SQLiteConnection,
+                 meaning_cache_root: Path | None = None):
         self.sources = sources
         self.vesum = vesum
         self.raw_cache = raw_cache
+        self.meaning_cache_root = meaning_cache_root
         self.sources.row_factory = sqlite3.Row
         self.vesum.row_factory = sqlite3.Row
         self._forms: dict[int, dict] = {}
         self._homonyms: dict[str, list[dict]] = {}
         self._vesum: dict[str, list[dict]] = {}
-        self._sum20: list[dict] | None = None
-        self._sum20_mirror: dict[str, list[dict]] = {}
         self.consumed: dict[str, str] = {}
 
     def begin(self) -> None:
@@ -276,33 +275,6 @@ class PilotSources:
             self._vesum[lemma] = [row_dict(r) for r in rows]
         rows = self._vesum[lemma]
         self._use(f"vesum_forms:{lemma}", rows)
-        return rows
-
-    def sum20_articles(self) -> list[dict]:
-        """Held СУМ-20 articles (crawl paused: a small sample). Headwords only; no definition text is read here."""
-        if self._sum20 is None:
-            rows = self.sources.execute(
-                "SELECT id, wordid, headword, stressed_headword, quarantine_reason FROM sum20_articles ORDER BY id"
-            )
-            self._sum20 = [row_dict(r) for r in rows]
-        self._use("sum20_articles", self._sum20)
-        return self._sum20
-
-    def sum20_mirror_articles(self, spelling: str) -> list[dict]:
-        """Imported СУМ-20 mirror articles the read-time rule serves for a spelling (sum20-mirror-rule-v1).
-
-        Locators and relations only: no definition text is read into the card, and a mirror article never
-        stands in for an official one. A store without the mirror tables yields an empty list.
-        """
-        key = sum20_mirror.mirror_key(spelling)
-        if key not in self._sum20_mirror:
-            self._sum20_mirror[key] = [
-                {"source_url": row["source_url"], "fetched_at": row["fetched_at"],
-                 "content_sha256": row["content_sha256"], "relation": relation}
-                for row, relation in sum20_mirror.served_rows(self.sources, key)
-            ]
-        rows = self._sum20_mirror[key]
-        self._use(f"sum20_mirror_articles:{key}", rows)
         return rows
 
     def vesum_canonical_sha(self) -> str:

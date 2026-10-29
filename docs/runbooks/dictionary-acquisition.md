@@ -249,9 +249,9 @@ into the `sum20_mirror_*` tables of `sources.db`. It never writes the official
 
 ### Readers
 
-`query_sum20`, the Sources MCP tool and the word-card inventory apply rule
-`sum20-mirror-rule-v1` at read time (`scripts/wiki/sum20_mirror.py`). For each
-lookup key they compare every mirror row with every official row of that key:
+`query_sum20` and the Sources MCP tool apply rule `sum20-mirror-rule-v1` at
+read time (`scripts/wiki/sum20_mirror.py`). For each lookup key they compare
+every mirror row with every official row of that key:
 
 | Official rows for the key | Relation | What is served |
 | --- | --- | --- |
@@ -273,6 +273,10 @@ spell the apostrophe `_`, as in `м_ясо`. The comparison payload is the one
 
 Official records gain only `source_role: "official"`. Callers that require
 official text keep filtering on `source_id == "sum20_official"`.
+
+**Word cards.** Word cards do not read mirror rows yet. Their meaning sources
+need a permissions-register entry each, so the mirror must be admitted as its
+own source before `served_rows` can supply it.
 
 **Store selection.** When official rows come from a lexdata generation, mirror
 rows still come from the default sources store and are judged against the

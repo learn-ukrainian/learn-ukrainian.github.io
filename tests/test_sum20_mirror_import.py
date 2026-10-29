@@ -14,7 +14,6 @@ from pathlib import Path
 
 import pytest
 
-from scripts.atlas import word_card_sources as src
 from scripts.ingest import sum20_mirror_import as importer
 from scripts.lexdata import generation, transforms
 from scripts.lexicon import sum20_lookup
@@ -569,26 +568,6 @@ def test_lexdata_official_rows_still_get_mirror_rows_from_sources(store, monkeyp
         if part.exists():
             part.unlink()
     assert [r["source_role"] for r in _query("берег")] == ["official"]  # the official answer survives
-
-
-def test_word_card_inventory_records_served_mirror_locators(store):
-    target, sha = store
-    candidate = target.candidate(_build(target, sha)["generation"])
-    conn = sqlite3.connect(f"file:{candidate}?mode=ro", uri=True)
-    try:
-        sources = src.PilotSources(conn, conn, conn)
-        assert sources.sum20_mirror_articles("берег") == [
-            {
-                "source_url": _url("берег"),
-                "fetched_at": "2026-10-01T00:00:00+00:00",
-                "content_sha256": hashlib.sha256(f"берег {MIRROR[0][2]}{FOOTER}".encode()).hexdigest(),
-                "relation": "mirror_only",
-            }
-        ]
-        assert sources.sum20_mirror_articles("вода") == []
-        assert {"sum20_mirror_articles:берег", "sum20_mirror_articles:вода"} <= set(sources.consumed)
-    finally:
-        conn.close()
 
 
 def test_stores_without_mirror_tables_serve_no_mirror_rows(store):

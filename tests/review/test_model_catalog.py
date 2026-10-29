@@ -378,8 +378,13 @@ WORD_CARD_TOOL_PATH = CAPACITY_FIXTURE / "word-card-tool-11084.json"
 WORD_CARD_TOOL_ROWS = [0, 4]
 
 
+# The ULIF tools became read-only when they stopped fetching and caching
+# (ULIF local-copy order, 2026-10-28, PR #11918).
+ULIF_LOCAL_TOOLS = ("query_ulif", "query_ulif_antonyms", "query_ulif_phraseology", "query_ulif_synonyms")
+
+
 def approved_sources_tool_baseline(baseline):
-    """Apply approved #11084 word-card and #9628 cached Wikipedia grants.
+    """Apply approved #11084 word-card, #9628 cached Wikipedia and #11918 local ULIF grants.
 
     Historical captures stay byte-pinned. Only the two Codex reader rows gain
     the explicitly approved tools; every other field and surface stays.
@@ -400,9 +405,9 @@ def approved_sources_tool_baseline(baseline):
         enabled = next(i for i, value in enumerate(cmd) if value.startswith("mcp_servers.sources.enabled_tools="))
         approvals = next(i for i, value in enumerate(cmd) if value.startswith("mcp_servers.sources.tools="))
         names = json.loads(cmd[enabled].split("=", 1)[1])
-        assert "query_wikipedia_cached" not in names
+        assert not {"query_wikipedia_cached", *ULIF_LOCAL_TOOLS} & set(names)
         assert cmd[approvals] == "mcp_servers.sources.tools={" + ",".join(f'{name}={{approval_mode="approve"}}' for name in names) + "}"
-        names = sorted([*names, "query_wikipedia_cached"])
+        names = sorted([*names, "query_wikipedia_cached", *ULIF_LOCAL_TOOLS])
         cmd[enabled] = "mcp_servers.sources.enabled_tools=" + json.dumps(names)
         cmd[approvals] = "mcp_servers.sources.tools={" + ",".join(f'{name}={{approval_mode="approve"}}' for name in names) + "}"
     return {**baseline, "adapters": adapters}
@@ -880,7 +885,9 @@ def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration)
         ]
         enabled, approvals = (new_cmd[k].split("=", 1)[1] for k in tokens)
         assert json.loads(enabled) == read_only
-        assert json.loads(enabled) == sorted([*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card", "query_wikipedia_cached"])
+        assert json.loads(enabled) == sorted(
+            [*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card", "query_wikipedia_cached", *ULIF_LOCAL_TOOLS]
+        )
         assert approvals == "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in read_only) + "}"
 
 

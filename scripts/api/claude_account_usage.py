@@ -1,6 +1,6 @@
 """Per-account Claude usage rows for the routing budget (#10630).
 
-One bounded CodexBar probe per registered Claude account label, run only by
+One bounded CodexBar probe per Claude subscription label, run only by
 the background usage refresh. ``claude_accounts_snapshot`` serves the cache: it
 never starts a probe and never opens, reads or parses a file. Rows carry
 numbers and freshness, never identity: no account id, email, organization or
@@ -9,7 +9,9 @@ directory appears in any row.
 Label ``a`` is the host's default Claude directory, bound to the account
 recorded at login beside it. Every other label takes its directory and account
 from the private binding read by ``load_claude_account_binding``; a missing or
-refused binding makes that row unknown, never an endpoint error.
+refused binding makes that row unknown, never an endpoint error. An API-key
+label (``kk``, ``szb``) has no plan window and no row: its spend is billed per
+token to that key.
 
 Threat model: the label is accounting and display, not isolation against a
 hostile process of the same user. The risk closed here is a row of the wrong
@@ -79,8 +81,8 @@ from typing import Any
 
 from scripts.agent_runtime.attempt_boundary import (
     _CLAUDE_ACCOUNT_UUID_RE,
-    CLAUDE_ACCOUNT_LABELS,
     CLAUDE_ACCOUNT_REFUSAL_CODES,
+    CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS,
     DEFAULT_CLAUDE_ACCOUNT,
     ClaudeAccountRefused,
     _claude_access_token,
@@ -848,8 +850,8 @@ def _refresh_one(label: str, timeout_s: float) -> None:
 
 def refresh_claude_account_usage(*, timeout_s: float = PROBE_TIMEOUT_S) -> None:
     """Probe every registered label in parallel. Background refresh only."""
-    with ThreadPoolExecutor(max_workers=len(CLAUDE_ACCOUNT_LABELS)) as executor:
-        list(executor.map(lambda label: _refresh_one(label, timeout_s), CLAUDE_ACCOUNT_LABELS))
+    with ThreadPoolExecutor(max_workers=len(CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS)) as executor:
+        list(executor.map(lambda label: _refresh_one(label, timeout_s), CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS))
 
 
 def _ambiguous(samples: Mapping[str, _Sample]) -> bool:
@@ -956,14 +958,14 @@ def claude_accounts_snapshot(*, ttl_s: float | None = None, now: float | None = 
     ttl = _codexbar_cache_ttl_s() if ttl_s is None else ttl_s
     moment = time.time() if now is None else now
     with _lock:
-        cached = {label: _last_good[label] for label in CLAUDE_ACCOUNT_LABELS if label in _last_good}
+        cached = {label: _last_good[label] for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS if label in _last_good}
         failures = dict(_last_failure)
     samples = {label: sample for label, sample in cached.items() if _unchanged(label, sample.accounts.watch)}
     if len(samples) < len(cached):
         _schedule_revalidation()
     withheld = _ambiguous(samples)
     rows: dict[str, dict[str, Any]] = {}
-    for label in CLAUDE_ACCOUNT_LABELS:
+    for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS:
         sample = samples.get(label)
         failure = failures.get(label)
         if sample is None:
@@ -992,7 +994,7 @@ def preferred_claude_account(rows: Mapping[str, Mapping[str, Any]]) -> str | Non
     and one is strictly larger: an unknown account cannot be ranked against.
     """
     leftovers: dict[str, float] = {}
-    for label in CLAUDE_ACCOUNT_LABELS:
+    for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS:
         row = rows.get(row_key(label))
         if not isinstance(row, Mapping) or row.get("status") != "ok":
             return None

@@ -30,6 +30,7 @@ from scripts.agent_runtime import attempt_boundary, env_sanitize, runner
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.attempt_boundary import (
     AttemptBoundary,
+    ClaudeAccountRefused,
     authorized_closure,
     prepare_attempt_boundary,
     runtime_files,
@@ -1825,3 +1826,160 @@ def test_receipt_carries_only_fixed_vocabulary():
         "method": "host_login",
         "verified": False,
     }
+
+
+# ----------------------------------------------------------------- API-key labels (C-2643)
+
+API_KEY_HELPER_SETTINGS = {"apiKeyHelper": "fixture-helper-command"}
+
+
+def bind_api_key_label(binding: Path, config_dir: Path, label: str = "kk") -> Path:
+    """Add an API-key label to ``binding``: its directory, a helper-only ``settings.json`` and a global config."""
+    config_dir.mkdir(mode=0o700)
+    _private_json(config_dir / "settings.json", API_KEY_HELPER_SETTINGS)
+    _private_json(config_dir / ".claude.json", {"firstStartTime": "fixture"})
+    data = json.loads(binding.read_text())
+    data["accounts"][label] = {"config_dir": str(config_dir)}
+    _private_json(binding, data)
+    return config_dir
+
+
+@pytest.fixture
+def api_key_account(two_accounts, tmp_path):
+    two_accounts.api_dir = bind_api_key_label(two_accounts.binding, tmp_path / "api-kk")
+    bind_api_key_label(two_accounts.binding, tmp_path / "api-szb", "szb")
+    return two_accounts
+
+
+@pytest.mark.parametrize("label", ["kk", "szb"])
+def test_api_key_label_is_accepted_and_mapped_to_its_bound_directory(api_key_account, tmp_path, label):
+    """An API-key label resolves and binds its own directory, with no login account or provider call."""
+    from scripts.agent_runtime.attempt_boundary import (
+        resolve_claude_account_label,
+        resolve_dispatch_claude_account,
+        verify_claude_account,
+    )
+
+    assert resolve_claude_account_label(label) == label
+    assert resolve_dispatch_claude_account(label) == (label, "explicit")
+    binding = verify_claude_account(label)
+
+    assert binding.config_dir == tmp_path / f"api-{label}"
+    assert binding.api_key is True and binding.account_uuid == "" and binding.credential == ""
+    assert api_key_account.profile_calls == []
+    # The subscription labels are unchanged.
+    assert verify_claude_account("a") is None
+    assert verify_claude_account("b").api_key is False
+
+
+@pytest.mark.parametrize("label", ["KK", "kk ", "szb\n", "k", "api"])
+def test_unknown_api_key_like_label_is_refused(api_key_account, label):
+    from scripts.agent_runtime.attempt_boundary import verify_claude_account
+
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        verify_claude_account(label)
+    assert refused.value.code == "claude_account_unknown"
+
+
+def _api_key_conflict(accounts: SimpleNamespace, monkeypatch, case: str) -> None:
+    config, binding = accounts.api_dir, accounts.binding
+    data = json.loads(binding.read_text())
+    if case in CLAUDE_AMBIENT_AUTH:
+        monkeypatch.setenv(case, "fixture-ambient-" + "e" * 30)
+    elif case == "ambient_config_dir":
+        monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(accounts.config_dir))
+    elif case == "binding_without_label":
+        del data["accounts"]["kk"]
+        _private_json(binding, data)
+    elif case == "binding_with_account_uuid":
+        data["accounts"]["kk"]["account_uuid"] = BOUND_ACCOUNT_UUID
+        _private_json(binding, data)
+    elif case == "config_is_default_dir":
+        data["accounts"]["kk"]["config_dir"] = str(accounts.home / ".claude")
+        _private_json(binding, data)
+    elif case == "settings_absent":
+        (config / "settings.json").unlink()
+    elif case == "settings_shared":
+        (config / "settings.json").chmod(0o664)
+    elif case == "settings_extra_key":
+        _private_json(config / "settings.json", {**API_KEY_HELPER_SETTINGS, "env": {"ANTHROPIC_BASE_URL": "x"}})
+    elif case == "settings_hooks":
+        _private_json(config / "settings.json", {**API_KEY_HELPER_SETTINGS, "hooks": {}})
+    elif case == "settings_empty_helper":
+        _private_json(config / "settings.json", {"apiKeyHelper": " "})
+    elif case == "config_env":
+        _private_json(config / ".claude.json", {"env": {"ANTHROPIC_BASE_URL": "https://fixture.invalid"}})
+    elif case == "legacy_config":
+        _private_json(config / ".config.json", {})
+    elif case == "policy_cache":
+        _private_json(config / "remote-settings.json", {})
+    else:
+        raise AssertionError(case)
+
+
+@pytest.mark.parametrize(
+    "case,code",
+    [
+        *((key, "claude_account_ambient_conflict") for key in CLAUDE_AMBIENT_AUTH),
+        ("ambient_config_dir", "claude_account_ambient_conflict"),
+        ("binding_without_label", "claude_account_binding_missing"),
+        ("binding_with_account_uuid", "claude_account_binding_invalid"),
+        ("config_is_default_dir", "claude_account_binding_is_default"),
+        ("settings_absent", "claude_account_credentials_missing"),
+        ("settings_shared", "claude_account_settings_not_private"),
+        ("settings_extra_key", "claude_account_settings_credential_source"),
+        ("settings_hooks", "claude_account_settings_credential_source"),
+        ("settings_empty_helper", "claude_account_settings_invalid"),
+        ("config_env", "claude_account_config_credential_source"),
+        ("legacy_config", "claude_account_config_ambiguous"),
+        ("policy_cache", "claude_account_policy_cache_present"),
+    ],
+)
+def test_api_key_label_refuses_conflicting_sources(api_key_account, monkeypatch, case, code):
+    """Each ambiguous or competing source refuses an API-key label by code alone; no value is reported."""
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_REFUSAL_CODES, verify_claude_account
+
+    assert verify_claude_account("kk")  # positive control
+    _api_key_conflict(api_key_account, monkeypatch, case)
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        verify_claude_account("kk")
+    assert refused.value.code == code and code in CLAUDE_ACCOUNT_REFUSAL_CODES
+    rendered = repr(refused.value) + str(refused.value.__cause__) + str(refused.value.__context__)
+    assert "fixture" not in rendered and str(api_key_account.api_dir) not in rendered
+
+
+def test_api_key_label_with_its_own_ambient_config_dir_is_admitted(api_key_account, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import verify_claude_account
+
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(api_key_account.api_dir))
+    assert verify_claude_account("kk").config_dir == api_key_account.api_dir
+
+
+def test_api_key_label_never_comes_from_the_default_file_or_a_sealed_attempt(api_key_account, tmp_path, monkeypatch):
+    """A paid key is named explicitly per run; a sealed attempt would need the key itself."""
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth, resolve_dispatch_claude_account
+
+    _default_file(tmp_path, monkeypatch, b"kk\n")
+    with pytest.raises(ClaudeAccountRefused) as refused:
+        resolve_dispatch_claude_account(None)
+    assert refused.value.code == "claude_account_default_file_invalid"
+    with pytest.raises(ReviewIsolationError, match=r"^claude_account_api_key_route_unsupported$"):
+        linux_claude_auth("kk")
+
+
+def test_api_key_receipt_names_the_helper_method():
+    from scripts.agent_runtime.attempt_boundary import (
+        claude_account_auth_receipt,
+        note_claude_account_verified,
+        reset_claude_account_receipts,
+    )
+
+    reset_claude_account_receipts()
+    note_claude_account_verified("szb", "api_key_helper")
+    assert claude_account_auth_receipt("szb", source="explicit") == {
+        "label": "szb",
+        "source": "explicit",
+        "method": "api_key_helper",
+        "verified": True,
+    }
+    reset_claude_account_receipts()

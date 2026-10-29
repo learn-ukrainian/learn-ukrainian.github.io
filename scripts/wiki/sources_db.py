@@ -1018,27 +1018,23 @@ def get_ulif_word_records(
                 for w in word_list
             ]
 
-        has_forms_build = _ulif_table_exists(conn, "ulif_forms_build")
-        has_forms_table = _ulif_table_exists(conn, "ulif_forms")
         has_failures_table = _ulif_table_exists(conn, "ulif_forms_failures")
         has_sections_table = _ulif_table_exists(conn, "ulif_dictua_sections")
 
-        if not has_forms_build or not has_forms_table or not has_failures_table or not has_sections_table:
-            global_forms_state = "missing_table"
+        # One reading of the receipt for both the forms state and the miss
+        # authority; it tolerates a legacy receipt without newer columns.
+        local_copy = ulif_local_copy(conn)
+        copy_complete = local_copy["complete"]
+        if copy_complete:
+            global_forms_state = "complete"
+        elif local_copy["state"] in {"missing_table", "unmigrated_entries", "unbuilt"}:
+            global_forms_state = str(local_copy["state"])
+        elif local_copy.get("state") != "complete":
+            global_forms_state = str(local_copy.get("state"))
+        elif local_copy.get("parser_version") != ULIF_FORMS_PARSER_VERSION:
+            global_forms_state = "stale_parser_version"
         else:
-            build_row = conn.execute(
-                "SELECT state, parser_version, source_fingerprint FROM ulif_forms_build WHERE id = 1"
-            ).fetchone()
-            if build_row is None:
-                global_forms_state = "unbuilt"
-            elif build_row["state"] != "complete":
-                global_forms_state = str(build_row["state"])
-            elif build_row["parser_version"] != ULIF_FORMS_PARSER_VERSION:
-                global_forms_state = "stale_parser_version"
-            elif not build_row["source_fingerprint"]:
-                global_forms_state = "missing_source_fingerprint"
-            else:
-                global_forms_state = "complete"
+            global_forms_state = "missing_source_fingerprint"
 
         records: list[dict] = []
         for word in word_list:
@@ -1054,16 +1050,22 @@ def get_ulif_word_records(
                 })
                 continue
 
-            rows = _load_ulif_dictua_rows(conn, normalized)
+            # The register key first: a leftover per-query row stored under a
+            # stress-marked spelling must not hide the checked register entry.
+            rows = _load_ulif_dictua_rows(conn, ulif_lookup_key(word)) or _load_ulif_dictua_rows(conn, normalized)
             if not rows:
-                records.append({
+                miss = {
                     "word": word,
                     "normalized_query": normalized,
-                    "status": "not_found",
+                    "status": "not_found" if copy_complete else "unavailable",
+                    "authoritative": copy_complete,
                     "verified": False,
                     "entry_count": 0,
                     "entries": [],
-                })
+                }
+                if not copy_complete:
+                    miss["reason"] = "local_copy_incomplete"
+                records.append(miss)
                 continue
 
             entries: list[dict] = []
@@ -1621,6 +1623,173 @@ def search_ulif_dictua_sections(
         if len(matches) >= limit:
             break
     return matches
+
+
+# ── Local ULIF copy: the only answer path of the Sources ULIF tools ---------
+
+_ULIF_APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'"})
+#: Inflected-form owners listed for a non-headword query.
+_ULIF_FORM_OWNER_LIMIT = 20
+
+
+def ulif_lookup_key(word: str) -> str:
+    """Return the register key of *word*: unstressed, ASCII apostrophe, casefolded.
+
+    The DictUA walk stores every checked headword under this shape, so a
+    stress-marked or typographic-apostrophe query reaches the same entry.
+    """
+    return normalize_ulif_dictua_query(word.replace("́", "").translate(_ULIF_APOSTROPHES))
+
+
+_ULIF_LOCAL_COPY_TABLES = ("ulif_dictua_entries", "ulif_dictua_sections", "ulif_forms", "ulif_forms_failures")
+
+
+def ulif_local_copy(conn: sqlite3.Connection) -> dict[str, Any]:
+    """Identity of the local DictUA copy, from the forms build receipt.
+
+    ``complete`` is true only when every table of the copy is present, the
+    entries table has its register flag, and the receipt is a finished build of
+    the current parser with a source fingerprint. Only then is a miss a
+    statement about ULIF itself.
+    """
+    missing = [name for name in (*_ULIF_LOCAL_COPY_TABLES, "ulif_forms_build") if not _ulif_table_exists(conn, name)]
+    if missing:
+        return {"state": "missing_table", "missing_tables": missing, "complete": False}
+    if "homonym_checked" not in _ulif_entry_columns(conn):
+        return {"state": "unmigrated_entries", "complete": False}
+    row = conn.execute("SELECT * FROM ulif_forms_build WHERE id = 1").fetchone()
+    if row is None:
+        return {"state": "unbuilt", "complete": False}
+    columns = row.keys()
+    identity = {
+        key: row[key]
+        for key in (
+            "state", "parser_version", "started_at", "finished_at", "source_fingerprint",
+            "total_entries", "entries_done", "entries_failed", "total_forms",
+        )
+        if key in columns
+    }
+    identity["complete"] = (
+        identity.get("state") == "complete"
+        and identity.get("parser_version") == ULIF_FORMS_PARSER_VERSION
+        and bool(identity.get("source_fingerprint"))
+    )
+    return identity
+
+
+def _ulif_forms_build_failure(conn: sqlite3.Connection, entry_id: int) -> dict | None:
+    if not _ulif_table_exists(conn, "ulif_forms_failures"):
+        return None
+    row = conn.execute(
+        "SELECT reason, locator FROM ulif_forms_failures WHERE entry_id = ?", (entry_id,)
+    ).fetchone()
+    return {"reason": row["reason"], "locator": row["locator"]} if row is not None else None
+
+
+def _ulif_form_owners(conn: sqlite3.Connection, word: str) -> list[dict]:
+    """Checked headwords that list *word* as one of their forms."""
+    if not _ulif_table_exists(conn, "ulif_forms"):
+        return []
+    cleaned = " ".join(word.replace("́", "").translate(_ULIF_APOSTROPHES).split())
+    for candidate in dict.fromkeys((cleaned, cleaned.lower(), cleaned.title())):
+        rows = conn.execute(
+            """SELECT DISTINCT e.id, e.canonical_headword, e.homonym_index, e.grammatical_label
+               FROM ulif_forms AS f JOIN ulif_dictua_entries AS e ON e.id = f.entry_id
+               WHERE f.form_unstressed = ? AND e.homonym_checked = 1
+               ORDER BY e.id LIMIT ?""",
+            (candidate, _ULIF_FORM_OWNER_LIMIT),
+        ).fetchall()
+        if rows:
+            return [
+                {
+                    "entry_id": row["id"],
+                    "canonical_headword": row["canonical_headword"],
+                    "homonym_index": row["homonym_index"],
+                    "grammatical_label": row["grammatical_label"],
+                }
+                for row in rows
+            ]
+    return []
+
+
+def _ulif_source_fields() -> dict[str, str]:
+    return {
+        "source_id": ULIF_DICTUA_SOURCE_ID,
+        "official_url": ULIF_DICTUA_OFFICIAL_URL,
+        "attribution_label": ULIF_DICTUA_ATTRIBUTION_LABEL,
+    }
+
+
+def read_ulif_local_copy(*, db_path: str | Path | None = None) -> dict[str, Any]:
+    """Open the sources DB read-only and return :func:`ulif_local_copy`."""
+    conn = _ulif_dictua_conn(db_path)
+    if conn is None:
+        return {"state": "unavailable", "complete": False}
+    try:
+        return ulif_local_copy(conn)
+    finally:
+        conn.close()
+
+
+def query_ulif_local(
+    word: str,
+    sections: tuple[str, ...] | list[str] = ULIF_DICTUA_SECTION_KINDS,
+    *,
+    db_path: str | Path | None = None,
+) -> dict:
+    """Answer a ULIF lookup from the local DictUA copy only; never the network.
+
+    Only register rows from the walk (``homonym_checked = 1``) count. A hit is
+    the stored entry with the requested sections, ``ambiguous`` lists the
+    homonyms, and a miss is ``not_found`` with ``authoritative`` set when the
+    forms build receipt is complete. A miss on an incomplete copy is
+    ``unavailable``. Every answer carries ``local_copy`` (the receipt) and each
+    entry its ``forms_build_failure`` (``None`` unless it is a recorded failure).
+    """
+    requested = tuple(dict.fromkeys(sections))
+    unknown = set(requested) - set(ULIF_DICTUA_SECTION_KINDS)
+    if unknown:
+        raise ValueError(f"Unknown ULIF sections: {', '.join(sorted(unknown))}")
+    key = ulif_lookup_key(word)
+    base = {"word": word, "normalized_query": key, **_ulif_source_fields()}
+    conn = _ulif_dictua_conn(db_path)
+    if conn is None:
+        return {**base, "status": "unavailable", "reason": "sources_db_missing", "sections": {}}
+    try:
+        local_copy = ulif_local_copy(conn)
+        # An un-migrated table has no homonym_checked column and therefore no register rows.
+        checked = "homonym_checked" in _ulif_entry_columns(conn) if key else False
+        rows = [row for row in _load_ulif_dictua_rows(conn, key) if row["homonym_checked"] == 1] if checked else []
+        if len(rows) > 1:
+            entries = []
+            for row in rows:
+                identity = _ulif_entry_identity(row)
+                identity["status"] = row["status"]
+                identity["forms_build_failure"] = _ulif_forms_build_failure(conn, row["id"])
+                entries.append(identity)
+            return {**base, "status": "ambiguous", "entries": entries, "local_copy": local_copy}
+        if rows:
+            entry = _materialize_ulif_dictua_entry(conn, rows[0])
+            entry["sections"] = {kind: entry["sections"][kind] for kind in requested if kind in entry["sections"]}
+            entry["forms_build_failure"] = _ulif_forms_build_failure(conn, rows[0]["id"])
+            entry["local_copy"] = local_copy
+            return entry
+        if not local_copy["complete"]:
+            return {
+                **base, "status": "unavailable", "reason": "local_copy_incomplete",
+                "sections": {}, "local_copy": local_copy,
+            }
+        return {
+            **base,
+            "status": "not_found",
+            "authoritative": True,
+            "sections": {},
+            "forms_build_failure": None,
+            "inflected_form_of": _ulif_form_owners(conn, word) if key else [],
+            "local_copy": local_copy,
+        }
+    finally:
+        conn.close()
 
 
 #: Max wait (ms) for SQLite to acquire a shared read lock when another

@@ -25,7 +25,7 @@ class TaskSpec:
     worktree: Path
     prompt_file: Path
     final_file: Path  # where the final message ends up
-    claude_account: str | None = None  # "a" | "b" for agent claude
+    claude_account: str | None = None  # "a" | "b" | "kk" | "szb" for agent claude
     provider: str | None = None  # explicit upstream such as openrouter; never a fallback
     options: dict[str, str] = field(default_factory=dict)  # provider extras, e.g. {"contributor_mode": "on"}
 

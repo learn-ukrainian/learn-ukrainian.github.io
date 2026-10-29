@@ -71,7 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
-        ("claude-account", None, "Claude account a or b (default: inherited configuration)"),
+        ("claude-account", None, "Claude account: subscription a or b, or API key kk or szb (default: inherited configuration)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
         ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
         ("research-role", None, "Research role metadata (default: none)"),

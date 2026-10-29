@@ -1244,7 +1244,7 @@ def _candidate_evidence(
         },
         "external_pending": [
             {
-                "adapter_id": "scripts.rag.source_query.ulif_lookup",
+                "adapter_id": "scripts.wiki.sources_db.query_ulif_local",
                 "dictionary_identity": "ULIF DictUA underlying module pending",
                 "status": "lookup_pending" if valid_routes else "not_queried",
             },
