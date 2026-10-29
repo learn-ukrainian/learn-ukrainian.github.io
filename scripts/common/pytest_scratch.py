@@ -381,12 +381,13 @@ def _around_outermost_call(caller: Any, around: Callable[[Callable[[], Any], Map
 
 
 def _record_return(stash: pytest.Stash, key: pytest.StashKey[bool]) -> Callable[..., Any]:
-    """Record in the stash whether the call returned normally."""
+    """Record in the stash whether every call returned normally; a later call never clears a failure."""
 
     def around(call: Callable[[], Any], _kwargs: Mapping[str, Any]) -> Any:
+        returned = stash.get(key, True)
         stash[key] = False
         result = call()
-        stash[key] = True
+        stash[key] = returned
         return result
 
     return around
@@ -403,7 +404,11 @@ def _release(scratch: TaskScratch, *, remove: bool) -> None:
 
 
 def _release_at_teardown(stash: pytest.Stash | None, scratch: TaskScratch) -> None:
-    """Keep the run, unless pytest's main command settles it once the command returns."""
+    """Keep the run, unless pytest's main command settles it once the command returns.
+
+    A plugin registered after that command began cannot observe its outcome,
+    so the run of such a session is kept.
+    """
     if stash is None or not stash.get(_IN_MAIN, False):
         scratch.preserve()
 

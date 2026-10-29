@@ -157,8 +157,9 @@ hook-call monitor) also returned without any exception. Every other session
 keeps its run for inspection, and the sweep above handles it: a failed,
 interrupted or killed session, one whose teardown cleanup failed, and one that
 a session-finish hook ended with an error or a `pytest.exit`, even when pytest
-still exits with status 0. Under the other retention policies every run is
-kept. A refused removal leaves the run preserved as before and never fails the
+still exits with status 0. A session that registers this plugin only after
+the main command began keeps its run, because the plugin cannot observe that
+command. Under the other retention policies every run is kept. A refused removal leaves the run preserved as before and never fails the
 session.
 
 ### Other scratch
