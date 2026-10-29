@@ -17,6 +17,7 @@ This guard is deliberately narrow. It catches high-confidence dump shapes only:
   - `echo` / `printf` expanding known secret environment variables
   - `scripts.session_supervisor worker-env` environment views, including the
     explicit `--all` form
+  - full-command-line process kills that can match the invoking shell
 
 Quote-aware tokenization keeps dangerous-looking strings inside a quoted commit
 message from becoming false positives. This is defense-in-depth, not a sandbox.
@@ -1659,6 +1660,91 @@ def _hide_substitutions(command: str) -> tuple[str, dict[str, tuple[str, str]]]:
     return "".join(out), substitutions
 
 
+def _full_process_match(cmd: str, args: list[str]) -> bool:
+    if cmd not in {"pkill", "pgrep"}:
+        return False
+    words = iter(_strip_quotes(arg) for arg in _without_redirects(args))
+    for word in words:
+        if word == "--":
+            break
+        if word == "--full" or (word.startswith("-") and not word.startswith("--") and "f" in word[1:]):
+            return True
+        if word in {"-F", "-G", "-g", "-P", "-s", "-t", "-U", "-u", "-d", "-O", "-r", "-H", "-q", "--signal"}:
+            next(words, None)
+    return False
+
+
+def _kill_consumer(cmd: str, args: list[str]) -> bool:
+    if cmd == "xargs":
+        words = iter(_strip_quotes(arg) for arg in _without_redirects(args))
+        for word in words:
+            if word in {
+                "-a",
+                "-d",
+                "-E",
+                "-I",
+                "-L",
+                "-n",
+                "-P",
+                "-s",
+                "--arg-file",
+                "--delimiter",
+                "--eof",
+                "--replace",
+                "--max-lines",
+                "--max-args",
+                "--max-procs",
+                "--max-chars",
+            }:
+                next(words, None)
+            elif word == "--":
+                cmd = next(words, "echo").rsplit("/", 1)[-1]
+                break
+            elif not word.startswith("-"):
+                cmd = word.rsplit("/", 1)[-1]
+                break
+    return cmd == "kill"
+
+
+def _process_kill_refused(command: str, *, depth: int = 0, listing: bool = False) -> bool:
+    """Judge process selection using the guard's shared shell readers."""
+    if depth >= 12:
+        return True
+    executable, substitutions = _hide_substitutions(preprocess_shell_command(command))
+    for pipeline in _pipelines(executable):
+        matched = False
+        for segment in pipeline:
+            found = _command_at(segment)
+            if found is None:
+                continue
+            cmd, args, _ = found
+            full = _full_process_match(cmd, args)
+            if full and (cmd == "pkill" or listing):
+                return True
+            consumes = _kill_consumer(cmd, args)
+            if matched and consumes:
+                return True
+            matched |= full and cmd == "pgrep"
+            for marker, (prefix, body) in substitutions.items():
+                if any(marker in token for token in segment) and (
+                    _process_kill_refused(body, depth=depth + 1)
+                    or (
+                        consumes
+                        and prefix in {"$(", "`", "<("}
+                        and _process_kill_refused(body, depth=depth + 1, listing=True)
+                    )
+                ):
+                    return True
+            if cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
+                for marker, (prefix, body) in substitutions.items():
+                    spelling = prefix + body + ("`" if prefix == "`" else ")")
+                    args = [arg.replace(marker, spelling) for arg in args]
+                for script in _shell_script(args):
+                    if _process_kill_refused(script, depth=depth + 1, listing=listing):
+                        return True
+    return False
+
+
 def _scan_command(
     command: str,
     copied: set[str],
@@ -1744,9 +1830,6 @@ def _main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     if args == ["--self-test"]:
         return _self_test()
-    if os.environ.get("LEARN_UK_SECRETS_OK") == "1":
-        return 0
-
     payload = _read_payload()
     if payload is None or not isinstance(payload.get("tool_input", {}), dict):
         sys.stderr.write(_block_msg("malformed hook payload"))
@@ -1756,6 +1839,16 @@ def _main(argv: list[str] | None = None) -> int:
         return 2
     command = _command(payload)
     if not command:
+        return 0
+
+    if _process_kill_refused(command):
+        sys.stderr.write(
+            "BLOCKED: full-command-line process kills can match the invoking shell. "
+            "Kill exact numeric PIDs read in an earlier command, or stop a harness background "
+            "task with the harness's own stop tool.\n"
+        )
+        return 2
+    if os.environ.get("LEARN_UK_SECRETS_OK") == "1":
         return 0
 
     try:
