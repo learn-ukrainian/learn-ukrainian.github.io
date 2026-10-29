@@ -706,6 +706,28 @@ def review_probes(root: Path) -> list[dict[str, Any]]:
     result = _score(fx, _label(fx.item, fx.family, required=1), output, _reply(fx, assertions))
     cases.append(_case("one broken binding does not erase a verified false correction", 1, result["components"]["F"]))
 
+    # A judge naming an unknown slot, a slot of another facet or an unlabelled protected
+    # opportunity loses that assertion's credit, not its verified false correction.
+    fx = Fixture(root, "probe-misnamed-false-edits")
+    output, assertions = _slot_review(fx, 1)
+    findings = json.loads(output)["findings"]
+    for n, misnamed in ((18, {"slot_id": "s99"}), (19, {"slot_id": "s2"}), (20, {"protected_opportunity_id": "p9"})):
+        claim = f"claim w{n} is a wrong form"
+        findings.append(_finding(f"FX{n}", n, claim, [], edit=True))
+        binding = _bind("judge", fx.receipt("judge", f"wx{n}"))
+        fields = {"kind": "edit", "verdict": "incorrect", "false_correction": True, "bindings": [binding]}
+        assertions.append(_assertion(f"AX{n}", claim, f"FX{n}", **fields, **misnamed))
+    slots = [{"slot_id": "s1", "facet": "form"}, {"slot_id": "s2", "facet": "stress"}]
+    label = _label(fx.item, fx.family, required=1, positive_slots=slots)
+    result = _score(fx, label, _envelope(fx.item, findings), _reply(fx, assertions))
+    cases.append(
+        _case(
+            "a misnamed slot, facet or protected id does not erase a verified false correction",
+            (3, UNRESOLVED_EVALUATOR),
+            (result["components"]["F"], result["status"]),
+        )
+    )
+
     cap = FAMILIES["card_review"].cap.max_bytes
     for name, output in (("malformed", "x" * (cap + 1)), ("blank", " " * (cap + 1))):
         fx = Fixture(root, f"probe-oversize-{name}", "card_review")
@@ -734,6 +756,29 @@ def review_probes(root: Path) -> list[dict[str, Any]]:
             "a malformed envelope citing an absent receipt is fabrication",
             (INVALID_FABRICATED_RECEIPT, -1.5, 1),
             (result["status"], result["R"], result["counts"]["fabricated_receipts"]),
+        )
+    )
+
+    fx = Fixture(root, "probe-escaped-receipt", "card_review")
+    finding = {
+        "id": "F1",
+        "facet": "form",
+        "location": {"field": "/card", "quote": "c"},
+        "claim": "claim c1 is wrong",
+        "proposed_edit": None,
+        "receipts": ["rr-" + "a" * 20],
+    }
+    observed = []
+    for item_id in (fx.item["item_id"], "another"):  # accepted, then malformed
+        envelope = {"item_id": item_id, "judging_mode": "repair", "outcome": "findings", "findings": [finding]}
+        output = json.dumps(envelope | {"gaps": []}).replace('"rr-', '"\\u0072r-')
+        result = _score(fx, _label(fx.item, fx.family, required=1), output, None)
+        observed.append((result["response"], result["status"], result["counts"]["fabricated_receipts"]))
+    cases.append(
+        _case(
+            "a receipt id cited in JSON escapes is authenticated, accepted or not",
+            [("accepted", INVALID_FABRICATED_RECEIPT, 1), ("malformed", INVALID_FABRICATED_RECEIPT, 1)],
+            observed,
         )
     )
 
@@ -808,6 +853,17 @@ def review_probes(root: Path) -> list[dict[str, Any]]:
             "label metadata nested inside an allowlisted field is refused",
             True,
             _refused(lambda: adapters.render_review("card_review", nested, b"prompt")),
+        )
+    )
+    inputs = {key: {"x": {"content_sha256": "0" * 64}} for key in adapters.WORD_CARD_INPUTS}
+    cases.append(
+        _case(
+            "a nested answerable or O is refused, but a word card's build inputs are kept",
+            (True, True, False),
+            tuple(
+                _refused(lambda card=card: adapters.render_review("card_review", nested | {"card": card}, b"prompt"))
+                for card in ({"answerable": False}, {"x": [{"O": 10}]}, {"build": {"inputs": inputs}})
+            ),
         )
     )
     return cases

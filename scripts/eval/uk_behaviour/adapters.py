@@ -75,6 +75,8 @@ FRESH_INPUTS = frozenset({"plan_entry", "cited_records", "learner_state", "immer
 LABEL_KEYS = frozenset(
     {
         "labels",
+        "answerable",
+        "O",
         "expected_outcome",
         "required_slots",
         "positive_slots",
@@ -89,6 +91,9 @@ LABEL_KEYS = frozenset(
         "gold",
     }
 )
+# A word card's build inputs (word-card-v1 ``build.inputs``: exactly S, V, I, O and R, each an
+# object of hashed inputs) hold a production ``O``; only there is that key not a label's ``O``.
+WORD_CARD_INPUTS = frozenset({"S", "V", "I", "O", "R"})
 
 REQUEST_FRAME = "\n\n## Request\n\nThe request is this JSON object:\n\n```json\n{payload}\n```\n"
 
@@ -159,6 +164,8 @@ def _check_item(family: str, item: dict[str, Any]) -> None:
 def _label_keys(value: Any) -> set[str]:
     if isinstance(value, dict):
         found = {key for key in value if key in LABEL_KEYS}
+        if set(value) == WORD_CARD_INPUTS and all(isinstance(child, dict) for child in value.values()):
+            found.discard("O")
         for child in value.values():
             found |= _label_keys(child)
         return found
