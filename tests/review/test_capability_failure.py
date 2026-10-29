@@ -277,7 +277,8 @@ def test_a_capability_failure_waives_no_required_seat():
         capability="sources-mcp", sha=SHA, reply=structured(missing=None), review_profile="ukrainian",
         sources_mcp_call_count=0,
     )
-    with pytest.raises(LineageRefused, match=r"1 seat\(s\) approved .* requires 2"):
+    # The keeper's own reading already lacks the second seat (#12020).
+    with pytest.raises(LineageRefused, match=r"reads as needs-seat, not APPROVED"):
         lineage(approve, blocked, comments=[verdict, event_comment(failure)])
 
 

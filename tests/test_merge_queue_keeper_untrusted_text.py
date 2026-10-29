@@ -64,6 +64,10 @@ class Transport:
                 "headRefOid": HEAD, "isMergeQueueEnabled": True, "isInMergeQueue": self.is_in_merge_queue,
                 "viewerMergeHeadlineText": "A change", "viewerMergeBodyText": "A change",
             }}}}), "")
+        if argv[1:4] == ["api", "--method", "GET"]:
+            # pr-merge reads the recorded review seats (#12020): the approval, fleet identity.
+            seats = [[approval()]] if "/issues/42/comments" in argv[4] else {"login": "driver"}
+            return subprocess.CompletedProcess(argv, 0, json.dumps(seats), "")
         if verb == ["pr", "merge"]:
             body = Path(argv[argv.index("--body-file") + 1]).read_text(encoding="utf-8")
             self.sent.append(("pr merge", json.dumps(argv), body))

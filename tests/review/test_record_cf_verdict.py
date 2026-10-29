@@ -363,7 +363,9 @@ def test_gemini_verdict_records_and_gate_accepts_exact_head(monkeypatch, tmp_pat
     marker = recorder.parse_marker(comments[0]["body"])
     assert marker["family"] == "google"
     assert marker["sha"] == SHA
-    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+    # A Ukrainian head needs its second seat before the gate accepts it (#12020).
+    gate = "APPROVED" if profile == "code" else sweep.NEEDS_SEAT
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == gate
     assert keeper._recorded_approval_for_head(comments, SHA, "fleet")
     assert not keeper._recorded_approval_for_head(comments, "b" * 40, "fleet")
     assert calls == {"posts": 1, "statuses": 1}
@@ -442,10 +444,100 @@ def test_ukrainian_review_with_sources_calls_accepted(monkeypatch, tmp_path, cou
     assert marker["sources_calls"] == count
     assert marker["review_profile"] == "ukrainian"
     assert f"sources={count}" in statuses[0]["description"]
-    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+    # #12020: one of the profile's two seats is not approval, but it is a recorded approval
+    # the keeper can revoke when the head is queued.
+    assert statuses[0]["state"] == "pending"
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_SEAT
     assert keeper._recorded_approval_for_head(comments, SHA, "fleet")
     recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 1, "statuses": 2}
+
+
+def record_seat(tasks, tmp_path, task_id, **seat):
+    """Record one Ukrainian-profile review of SHA through the recorder."""
+    write_task(tasks, task_id=task_id, review_profile="ukrainian", sources_mcp_call_count=3, **seat)
+    recorder.record(task_id, pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+
+def merge(monkeypatch, comments):
+    """Run ``pr-merge`` on SHA with every check passing; only the recorded seats can refuse it."""
+    from scripts.opsec import prepublish as gate
+    from scripts.publish import github as pub
+    from tests.opsec_fixtures import CATALOG
+
+    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+    monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
+    writes = []
+
+    def spy(args, **kwargs):
+        if args[1:3] == ["pr", "view"]:
+            body = {"number": 42, "isDraft": False, "headRefOid": SHA}
+        elif args[1:3] == ["pr", "checks"]:
+            body = []
+        elif args[1:5] == ["api", "--method", "POST", "graphql"]:
+            body = {"data": {"repository": {"pullRequest": {
+                "headRefOid": SHA, "isMergeQueueEnabled": False,
+                "viewerMergeHeadlineText": "clean (#42)", "viewerMergeBodyText": "clean"}}}}
+        elif args[1:4] == ["api", "--method", "GET"]:
+            body = [comments] if "/issues/42/comments" in args[4] else {"login": "fleet"}
+        else:
+            writes.append(args)
+            return subprocess.CompletedProcess(args, 0, "", "")
+        return subprocess.CompletedProcess(args, 0, json.dumps(body), "")
+
+    pub.publish("pr-merge", repo="unit/public", number=42, runner=spy, env={})
+    return writes
+
+
+def test_one_ukrainian_seat_leaves_the_status_pending_and_the_merge_refused(monkeypatch, tmp_path):
+    # #12020 (AC-04a): one of the profile's two seats is not approval.
+    from scripts.opsec import prepublish as gate
+
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
+    record_seat(tasks, tmp_path, "review-one")
+    assert statuses[-1]["state"] == "pending"
+    assert statuses[-1]["description"].endswith("; awaiting Ukrainian seat: anthropic")
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_SEAT
+    with pytest.raises(gate.PublishBlocked, match="Ukrainian review seat has not approved"):
+        merge(monkeypatch, comments)
+
+
+def test_two_eligible_ukrainian_seats_at_the_same_head_pass(monkeypatch, tmp_path):
+    # #12020 (AC-04b): GPT and Claude seats, both independent of the author family.
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
+    record_seat(tasks, tmp_path, "review-one")
+    record_seat(tasks, tmp_path, "review-two", agent="claude", model="claude-opus-5-5",
+                started_at="2026-09-23T12:00:01.000001+00:00")
+    assert [status["state"] for status in statuses] == ["pending", "success"]
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+    assert len(merge(monkeypatch, comments)) == 1
+
+
+def test_a_ukrainian_seat_approving_an_older_head_does_not_count(monkeypatch, tmp_path):
+    # #12020 (AC-04c): seats count only when they approved the head that would land.
+    from scripts.opsec import prepublish as gate
+    from tests.test_record_cf_verdict import OTHER
+
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
+    older = recorder.build_comment(
+        sha=OTHER, task_id="review-old", started="2026-09-23T11:00:00.000001+00:00", verdict="APPROVED",
+        model="claude-opus-5-5", family="anthropic", reply="VERDICT: APPROVE",
+        review_profile="ukrainian", sources_mcp_call_count=3,
+    )
+    stamp = "2026-09-23T12:30:00Z"
+    comments.append({"id": 0, "body": older, "user": {"login": "fleet"}, "author_association": "MEMBER",
+                     "created_at": stamp, "updated_at": stamp})
+    record_seat(tasks, tmp_path, "review-one")
+    assert statuses[-1]["state"] == "pending"
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_SEAT
+    with pytest.raises(gate.PublishBlocked, match="Ukrainian review seat has not approved"):
+        merge(monkeypatch, comments)
 
 
 @pytest.mark.parametrize("verdict", ["APPROVE", "REQUEST_CHANGES", "BLOCKED"])

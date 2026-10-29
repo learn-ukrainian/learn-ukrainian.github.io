@@ -132,6 +132,9 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
             body = {"data": {"repository": {"pullRequest": {
                 "headRefOid": "a" * 40, "isMergeQueueEnabled": False,
                 "viewerMergeHeadlineText": "clean (#1)", "viewerMergeBodyText": "clean"}}}}
+        elif args[1:4] == ["api", "--method", "GET"]:
+            reads.append(args)
+            body = [[]] if "/issues/1/comments" in args[4] else {"login": "unit"}
         else:
             writes.append(args)
             return subprocess.CompletedProcess(args, 0, "", "")
@@ -143,8 +146,9 @@ def test_merge_readiness_applies_to_public_and_private(synthetic_opsec, repo, st
         with pytest.raises(gate.PublishBlocked):
             pub.publish("pr-merge", repo=repo, number=1, runner=spy, env={})
         assert writes == []
-    # Read the head-bound checks; ready merges also read the default squash text.
-    assert len(reads) == (4 if state == "ready" else 3)
+    # Read the head-bound checks; ready merges also read the default squash text,
+    # the recorded review seats and, with none recorded, the checks again (#12020).
+    assert len(reads) == (7 if state == "ready" else 3)
 
 
 def test_worker_merge_guard_and_changed_head_refuse_before_write():

@@ -40,7 +40,7 @@ import argparse
 import json
 import re
 import subprocess
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -91,6 +91,23 @@ REJECTED = frozenset({"CHANGES_REQUESTED", "BLOCKED"})
 # The recorder normalizes APPROVE to APPROVED, but older trailers carry the reviewer's raw token (#10119).
 VERDICT_ALIASES = {"APPROVE": "APPROVED"}
 SUCCESSFUL = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
+# review-loop references/ukrainian.md § Seats: two of the Claude, GPT and Gemini families
+# approve the same head in cross-family review.
+UKRAINIAN_SEAT_FAMILIES = frozenset({"anthropic", "openai", "google"})
+UKRAINIAN_REVIEW_SEATS = 2
+# A Ukrainian-profile head with fewer approving seat families than that; never approval.
+NEEDS_SEAT = "needs-seat"
+# Recorder headings; a body that opens with one is a verdict record, never informal prose.
+RECORD_HEADINGS = ("### Cross-family review\n", "### Adversarial red-team review\n")
+# Every recorder opens the reviewer's reply with this line, right after the record's lines.
+REPLY_OPENER = "<details><summary>Reviewer's reply</summary>\n\n"
+# Since #11127 the publisher posts only the recorder's typed record, which never carries a
+# raw APPROVE trailer, so only a comment GitHub created before then can be such a legacy record.
+LEGACY_TRAILER_CUTOFF = datetime(2026, 10, 20, 6, 0, 20, tzinfo=UTC)
+# Readable record lines whose value the trailer does not carry.
+FREE_RECORD_LINES = re.compile(
+    r"Review score: (?:\d+/10|absent)|Authored by: [^\s,]+(?:, [^\s,]+)*|Withheld findings: (?:\d+|unknown)"
+)
 REQUIRED_CHECKS = ("CI Gate",)
 DEFAULT_GH_TIMEOUT_SECONDS = 60.0
 
@@ -114,6 +131,8 @@ class Verdict:
     comment_id: str | None = None
     # Trusted malformed markers that name another head; they neither poison nor approve.
     superseded_markers: tuple[str, ...] = ()
+    # Reviewer families of the Ukrainian seats that approved this head, sorted.
+    ukrainian_seats: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if (self.state == "unknown") != (self.reason is not None):
@@ -208,7 +227,11 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     profile = item.pop("review_profile")
     if profile is not None:
         item["review_profile"] = profile
-    prefix = body.split("<details>", 1)[0]
+    # The record's own lines end where the recorder opens the reply, or, in a record
+    # without a reply, at the trailer; nothing else in the body can end them early (#12020).
+    prefix, opened, _ = body.partition(REPLY_OPENER)
+    if not opened:
+        prefix = body.rstrip("\n").rsplit("\n", 1)[0]
     # These readable statements must agree with the terminal marker exactly,
     # once each. Substrings also admit negation, prefixed labels and conflicts.
     authorship = item.pop("authorship")
@@ -228,10 +251,7 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         ]
         if lines != ([expected] if expected is not None else []):
             return None
-    ukrainian = is_ukrainian_review(item) or "Review profile: ukrainian\n" in prefix
-    if ukrainian and (item["sources_calls"] is None or item["sources_calls"] <= 0):
-        return None
-    if profile is not None and f"Review profile: {profile}\n" not in prefix:
+    if is_ukrainian_review(item) and (item["sources_calls"] is None or item["sources_calls"] <= 0):
         return None
     if sources is not None and f"Sources MCP calls: {item['sources_calls']}\n" not in prefix:
         return None
@@ -248,22 +268,52 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         item["review_mode"] = mode
         if not body.startswith("### Adversarial red-team review\nReview mode: red_team\n"):
             return None
-    elif not body.startswith("### Cross-family review\n") or "Review mode:" in body.split("<details>", 1)[0]:
+    elif not body.startswith("### Cross-family review\n") or "Review mode:" in prefix:
         return None
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}(?:Z|\+00:00)", item["started"]):
         return None
     if _timestamp(item["started"]) is None:
         return None
-    if (
-        f"head: {item['sha']}" not in body
-        or f"Reviewer family: {item['family']}" not in body
-        or f"VERDICT: {item['verdict']}" not in body
-        or f"Reviewer model: {item['model']}" not in body
-        or f"Task id: {item['task']}" not in body
-    ):
+    readable = prefix.split("\n")
+    identity = [
+        f"head: {item['sha']}",
+        f"Reviewer family: {item['family']}",
+        f"VERDICT: {item['verdict']}",
+        f"Reviewer model: {item['model']}",
+        f"Task id: {item['task']}",
+    ]
+    if any(line not in readable for line in identity):
+        return None
+    # Every readable line is one the recorder writes for these trailer fields, so an
+    # altered or added statement, such as a review profile in any spelling, refuses the
+    # marker instead of downgrading a Ukrainian seat to code (#12020).
+    fixed = {
+        "",
+        "Findings are held privately.",
+        # The withheld-findings wording of earlier recorders, still on open PRs.
+        "Findings are held privately on the host in CF run output files (`out/<task>.final` and `out/<task>.md`).",
+        RECORD_HEADINGS[mode is not None].rstrip("\n"),
+        *identity,
+        *(statement for statement in statements.values() if statement),
+        *(["Review mode: red_team"] if mode else []),
+        *([f"Review profile: {profile}"] if profile else []),
+        *([f"Sources MCP calls: {item['sources_calls']}"] if sources is not None else []),
+    }
+    if any(line not in fixed and not FREE_RECORD_LINES.fullmatch(line) for line in readable):
         return None
     item["verdict"] = VERDICT_ALIASES.get(item["verdict"], item["verdict"])
     return item
+
+
+def ukrainian_seat_families(markers: Iterable[Mapping[str, Any]]) -> set[str]:
+    """Families of the eligible cross-family Ukrainian seats among ``markers``."""
+    return {
+        marker["family"]
+        for marker in markers
+        if is_ukrainian_review(marker)
+        and marker["family"] in UKRAINIAN_SEAT_FAMILIES
+        and marker.get("review_mode", "cross_family") == "cross_family"
+    }
 
 
 def lookup_verdict(
@@ -323,10 +373,14 @@ def lookup_verdict(
                 trailer is not None
                 and trailer["verdict"] == "APPROVE"
                 and not is_ukrainian_review(trailer.groupdict())
-                and "Review profile: ukrainian\n" not in body.split("<details>", 1)[0]
+                and not body.startswith(RECORD_HEADINGS)
+                and (created := _timestamp(_field(comment, "created_at", "createdAt"))) is not None
+                and created < LEGACY_TRAILER_CUTOFF
             ):
-                # An approval trailer outside the keeper format cannot hide a rejection, so it neither
-                # poisons the head nor counts as approval; an edited one still poisons it (#10119).
+                # A legacy approval trailer outside the keeper format cannot hide a rejection, so it
+                # neither poisons the head nor counts as approval; an edited one still poisons it
+                # (#10119). A newer one is no legacy record and poisons the head like any malformed
+                # marker, so it cannot hide a Ukrainian seat however it is spelled (#12020).
                 if trailer["sha"] == sha and _edited(comment):
                     return unknown(MARKER_EDITED, index, comment)
                 if re.search(r"(?im)^\s*VERDICT:", body):
@@ -366,8 +420,14 @@ def lookup_verdict(
         latest_start = max(item[0] for item in approvals)
         winner = next(item for item in approvals if item[0] == latest_start)
     marker = winner[2]
+    state = marker["verdict"]
+    profiled = [item[2] for item in approvals if is_ukrainian_review(item[2])]
+    seats = () if standing else tuple(sorted(ukrainian_seat_families(profiled)))
+    if not standing and profiled and len(seats) < UKRAINIAN_REVIEW_SEATS:
+        # A Ukrainian-profile head is approved only once every seat has approved it (#12020).
+        state = NEEDS_SEAT
     return Verdict(
-        marker["verdict"],
+        state,
         marker["task"],
         marker["model"],
         marker["family"],
@@ -376,6 +436,7 @@ def lookup_verdict(
         marker.get("review_mode", "cross_family"),
         tuple(marker.get("unknown_history", ())),
         superseded_markers=tuple(superseded),
+        ukrainian_seats=seats,
     )
 
 
@@ -515,7 +576,7 @@ def classify_pr(pr: Mapping[str, Any], verdict: Verdict, *, queued: bool | None,
         state = "armed"
     elif verdict.state == "unknown" or queued is None or "CI unknown" in " ".join(blockers):
         state = "CF-unknown" if verdict.state == "unknown" else "unknown"
-    elif verdict.state in {"needs-CF", "CF-unrecorded", "CF-stale"}:
+    elif verdict.state in {"needs-CF", "CF-unrecorded", "CF-stale", NEEDS_SEAT}:
         state = verdict.state
     elif verdict.state in REJECTED:
         state = "CF-rejected"

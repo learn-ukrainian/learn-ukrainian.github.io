@@ -363,6 +363,70 @@ def _squash_text(gh_repo, fields, dest, temp, runner, cwd, environment):
     return {"subject": subject, "body": body, "queue": pull["isMergeQueueEnabled"]}
 
 
+def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
+    """Refuse a head the merge-queue keeper would not land on its recorded verdicts (#12020).
+
+    An earlier recorder posted ``fleet/cross-family-review`` success after one seat,
+    so the check rollup alone cannot prove the seat set, and a moved head carries no
+    status at all. Every reading but an exact-head approval refuses: an incomplete seat
+    set, a rejection, unverifiable evidence and reviews of other heads only. A PR with no
+    recorded review is outside the recorder's regime and is not refused here, unless the
+    head's own rollup carries the recorder's status: then its record was removed or
+    rewritten, and the status alone is unverifiable.
+    """
+    from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
+    from scripts.orchestration.integration_sweep import NEEDS_SEAT, lookup_verdict
+
+    try:
+        documents = []
+        for operation, selectors in (("comments", {"number": number}), ("identity", {})):
+            paged = operation == "comments"
+            result = read(
+                operation, repo=dest, runner=runner, cwd=cwd, env=environment, capture_output=True,
+                text=True, check=False, timeout=30, paginate=paged, slurp=paged, **selectors,
+            )
+            if result.returncode:
+                raise ValueError
+            documents.append(json.loads(result.stdout))
+        pages, identity = documents
+        login = identity.get("login") if isinstance(identity, dict) else None
+        if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
+            raise ValueError
+        if not isinstance(login, str) or not re.fullmatch(r"\S+", login):
+            raise ValueError
+        state = lookup_verdict([item for page in pages for item in page], head, login).state
+    except github_client.GitHubRateLimited:
+        raise
+    except Exception:
+        raise gate.PublishBlocked("OPSEC: merge refused: review seats unverifiable.") from None
+    if state == NEEDS_SEAT:
+        raise gate.PublishBlocked("OPSEC: merge refused: a Ukrainian review seat has not approved this head.")
+    if state not in {"APPROVED", "needs-CF"}:
+        raise gate.PublishBlocked(f"OPSEC: merge refused: recorded review verdict is {state} at this head.")
+    if state == "needs-CF":
+        from scripts.publish.merge_guard import _rollup_name
+
+        argv = ["gh", "pr", "view", str(number), "--json", "headRefOid,statusCheckRollup", "--repo", dest.split("/", 1)[1]]
+        # As in the readiness read: forced colour would wrap the JSON in escape codes.
+        env = {key: value for key, value in environment.items() if key not in {"CLICOLOR_FORCE", "FORCE_COLOR"}}
+        env.update(NO_COLOR="1", CLICOLOR="0")
+        try:
+            result = runner(argv, cwd=cwd, env=env, capture_output=True, text=True, check=False, timeout=30)
+            bound = json.loads(result.stdout)
+            rows = bound["statusCheckRollup"]
+            # The rollup and its head arrive in one response, so these rows are the judged head's.
+            if result.returncode or bound["headRefOid"].lower() != head.lower() or not isinstance(rows, list):
+                raise ValueError
+            if any(not isinstance(row, dict) or _rollup_name(row) is None for row in rows):
+                raise ValueError
+        except github_client.GitHubRateLimited:
+            raise
+        except Exception:
+            raise gate.PublishBlocked("OPSEC: merge refused: review seats unverifiable.") from None
+        if any(DEFAULT_STATUS_CONTEXT in (row.get("name"), row.get("context")) for row in rows):
+            raise gate.PublishBlocked("OPSEC: merge refused: this head's review status has no verdict record.")
+
+
 def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
     """Resolve live PR/run identities and posted evidence before any recovery write."""
     from scripts.gh_merge_queue_status import extract_pr_number
@@ -840,6 +904,8 @@ def publish(
             argv = ["gh", "api", "--method", method, endpoint, "--input", str(frozen)]
             if endpoint == "graphql":
                 argv += _hostname_flag(dest)
+        if verb == "pr-merge":
+            _refuse_incomplete_seats(dest, fields["number"], fields["match_head"], readiness_runner, cwd, environment)
         if verb == "run-rerun":
             reservation = _prepare_recovery(verb, fields, dest, cwd, environment, readiness_runner)
             if reservation:
