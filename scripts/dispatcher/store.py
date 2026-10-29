@@ -222,6 +222,8 @@ def list_tasks(status: str | None = None, include_archive=False, *, strict=False
             record = json.loads(path.read_text())
             if not isinstance(record, dict) or "task_id" not in record:
                 continue
+            if "schema" in record and "schema_version" not in record:
+                continue  # AGY sandbox receipt, not a task record
             if not isinstance(record["task_id"], str):
                 raise ValueError("invalid task record")
             if status is None or record.get("status") == status:

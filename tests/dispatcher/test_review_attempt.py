@@ -131,6 +131,14 @@ def test_strict_listing_skips_evidence_append_beside_task_records(tmp_path, monk
 
     assert store.list_tasks(strict=True) == records
 
+    # A sandbox receipt must not shadow its running task in ownership lookups.
+    records[0]["status"] = "running"
+    (tmp_path / "first.json").write_text(json.dumps(records[0]))
+    (tmp_path / "first.sandbox.json").write_text(json.dumps({"schema": 1, "task_id": "first", "status": "ran"}))
+    listed = store.list_tasks(strict=True)
+    assert listed == records
+    assert {record["task_id"]: record for record in listed}["first"]["status"] == "running"
+
 
 def test_concurrent_admissions_claim_one_pair_for_different_tasks(attempt, tmp_path, monkeypatch):
     from scripts.agent_runtime import review_mcp
