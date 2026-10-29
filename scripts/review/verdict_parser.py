@@ -218,10 +218,18 @@ def recognized_verdicts(response: str) -> list[str]:
     return verdicts or _findings_json_verdicts(response)
 
 
-def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list[str]:
+# A top-level JSON object carrying any of these keys is offered as a findings envelope.
+_FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
+
+
+def _findings_json_verdicts(
+    response: str, *, stated: str | None = None, invalid: list[str] | None = None
+) -> list[str]:
     """Read whole JSON replies and top-level JSON blocks, never quoted examples.
 
     ``stated`` is the reply's own canonical verdict line, if any (see ``resolve_verdict_and_evidence``).
+    A block that looks like a findings envelope but fails validation adds a reason to ``invalid`` when
+    the caller passes one; otherwise it is skipped.
     """
     from markdown_it import MarkdownIt
 
@@ -247,6 +255,8 @@ def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list
             validate_reviewer_payload(payload)
             verdict, _ = resolve_verdict_and_evidence(payload, stated=stated)
         except (ContractError, ReviewPublicationError):
+            if invalid is not None and _FINDINGS_ENVELOPE_KEYS & payload.keys():
+                invalid.append("top-level findings block fails validation")
             continue
         verdicts.append(
             {"APPROVED": "APPROVE", "CHANGES_REQUESTED": "REQUEST_CHANGES", "BLOCKED": "BLOCKED"}[verdict]

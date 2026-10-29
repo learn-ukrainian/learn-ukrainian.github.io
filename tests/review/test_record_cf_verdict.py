@@ -193,6 +193,14 @@ def test_approve_reply_with_one_p3_finding_records_approve_with_score(scanned_re
     assert result["score"] == 9 and "VERDICT: APPROVED\n" in body and "Review score: 9/10\n" in body
 
 
+def test_approve_line_beside_top_level_request_changes_envelope_is_refused():
+    """An outer APPROVE never outranks a top-level findings block that requests changes (#12040)."""
+    payload = structured_review(1)
+    payload["findings"][0]["priority"] = "P1"
+    with pytest.raises(recorder.RecordError, match="contradicting a verdict line"):
+        recorder.normalize_verdict("VERDICT: APPROVE\n\n" + json.dumps(payload, indent=2))
+
+
 @pytest.mark.parametrize("update", [
     {"findings": "not a list"}, {"findings": [None]}, {"verdict": "APPROVED"},
     {"verdict": "INVALID"}, {"overall": {}},
