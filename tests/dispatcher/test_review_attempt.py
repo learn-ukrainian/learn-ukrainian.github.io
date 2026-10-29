@@ -69,7 +69,7 @@ def test_legacy_artifact_spends_attempt_even_without_task_record(attempt, tmp_pa
 def test_archived_record_spends_attempt_across_manifest_changes(attempt, tmp_path, schema, capsys):
     archive = tmp_path / "tasks" / "archive"
     archive.mkdir(parents=True)
-    (archive / "prior.json").write_text(json.dumps(dict(schema_version=schema, status="failed", review_attempt={
+    (archive / "prior.json").write_text(json.dumps(dict(task_id="prior", schema_version=schema, status="failed", review_attempt={
         "review_id": "review", "attempt_id": "attempt", "manifest_sha256": "b" * 64})))
     assert invoke(attempt, "--dry-run") == 2
     assert "already spent" in capsys.readouterr().err
@@ -120,6 +120,16 @@ def test_manifest_must_be_a_file(attempt, manifest, capsys):
     attempt[-1] = manifest
     assert invoke(attempt, "--dry-run") == 2
     assert "must name a manifest file" in capsys.readouterr().err
+
+
+def test_strict_listing_skips_evidence_append_beside_task_records(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    records = [{"task_id": task_id, "status": "done", "result_file": None} for task_id in ("first", "second")]
+    for record in records:
+        (tmp_path / f"{record['task_id']}.json").write_text(json.dumps(record))
+    (tmp_path / "first.evidence-append.json").write_text("[]")
+
+    assert store.list_tasks(strict=True) == records
 
 
 def test_concurrent_admissions_claim_one_pair_for_different_tasks(attempt, tmp_path, monkeypatch):

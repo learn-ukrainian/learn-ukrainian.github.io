@@ -11,7 +11,6 @@ from pathlib import Path
 
 from scripts.common.git_context import validate_plain_branch_name
 from scripts.common.task_store_paths import tasks_dir
-from scripts.dispatcher.agy_sandbox import RECEIPT_SUFFIX as SANDBOX_RECEIPT_SUFFIX
 from scripts.dispatcher.types import ReviewAttempt
 from scripts.orchestration.task_record_store import task_state_lock
 
@@ -221,10 +220,10 @@ def list_tasks(status: str | None = None, include_archive=False, *, strict=False
     for path in paths:
         try:
             record = json.loads(path.read_text())
-            if not isinstance(record, dict):
+            if not isinstance(record, dict) or "task_id" not in record:
+                continue
+            if not isinstance(record["task_id"], str):
                 raise ValueError("invalid task record")
-            if path.name == f"{record.get('task_id')}{SANDBOX_RECEIPT_SUFFIX}":
-                continue  # the AGY read-only sandbox receipt beside its task's record, not a task
             if status is None or record.get("status") == status:
                 if relocated_result_file:
                     record["result_file"] = relocated_result_file(path, record.get("result_file"))
