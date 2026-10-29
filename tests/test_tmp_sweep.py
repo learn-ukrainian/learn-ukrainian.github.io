@@ -671,3 +671,41 @@ def test_socket_endpoint_is_preserved_even_without_fd_path_reference(inventory, 
         report = inventory.run(apply=True)
         assert path.exists() and report["rows"][0]["reason"] == "special_file"
         assert report["bytes_reclaimed"] == 0
+
+
+def test_live_listener_is_named_and_a_closed_one_stays_held(inventory, monkeypatch):
+    """A listening socket is reported as such; its leftover file keeps the tree held (the ledger cannot manifest it)."""
+    path = inventory.make()
+    try:
+        endpoint = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    except PermissionError as error:
+        pytest.skip(f"this sandbox forbids AF_UNIX socket creation: {error}")
+    try:
+        endpoint.bind(str(path / "s"))
+    except OSError:  # path longer than sun_path
+        monkeypatch.chdir(path)
+        endpoint.bind("s")
+    endpoint.listen()
+    try:
+        report = inventory.run(apply=True)
+        assert path.exists() and report["rows"][0]["reason"] == "live_socket"
+        assert report["bytes_reclaimed"] == 0
+    finally:
+        endpoint.close()
+    report = inventory.run(apply=True)
+    assert path.exists() and report["rows"][0]["reason"] == "special_file"
+
+
+def test_unreadable_listener_table_keeps_a_socket_tree_held(inventory, monkeypatch, tmp_path):
+    path = inventory.make()
+    try:
+        endpoint = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    except PermissionError as error:
+        pytest.skip(f"this sandbox forbids AF_UNIX socket creation: {error}")
+    monkeypatch.chdir(path)
+    with endpoint:
+        endpoint.bind("endpoint")
+        endpoint.listen()
+        monkeypatch.setattr("scripts.orchestration.tmp_leak_sweep._NET_UNIX", tmp_path / "missing")
+        report = inventory.run(apply=True)
+        assert path.exists() and report["rows"][0]["reason"] == "special_file"

@@ -9,8 +9,12 @@ manifests, so these names never drain without manual intervention.
 This module is age-gated, name-pattern scoped, and fails closed on liveness:
 a path is deleted only when ``pgrep -f`` is negative AND a ``/proc`` walk fully
 probed every process (any owner: state, command line, cwd, environment, open
-descriptors) without finding a reference.  No ``/proc`` (macOS), or any process
-that refuses inspection, is an unknown answer, and unknown preserves the path.
+descriptors) without finding a reference, and no socket below it is bound by a
+live listener.  A listening Unix socket never appears as a path in
+``/proc/<pid>/fd`` (only ``socket:[inode]``), so the process walk cannot see it;
+``/proc/net/unix`` names every bound listener and is read separately.  No
+``/proc`` (macOS), an unreadable ``/proc/net/unix``, or any process that refuses
+inspection is an unknown answer, and unknown preserves the path.
 It is not a blanket ``rm -rf /tmp/*``.
 
 Atlas/QA legacy residue (#8738): only the exact large names left by the
@@ -32,6 +36,7 @@ import stat
 import subprocess
 import tempfile
 import time
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -105,6 +110,9 @@ CANDIDATE_KIND_LEGACY_EXACT = "legacy_exact"
 CANDIDATE_KIND_LEGACY_INVENTORY = "legacy_inventory"
 
 _PROC_ROOT = Path("/proc")
+_NET_UNIX = Path("/proc/net/unix")
+# ``Flags`` column of /proc/net/unix: __SO_ACCEPTCON, set while the socket listens.
+_SO_ACCEPTCON = 0x00010000
 
 
 @dataclass(frozen=True)
@@ -366,14 +374,111 @@ LIVENESS_UNKNOWN = "unknown"
 LIVENESS_CLEAR = "clear"
 
 
+def listening_socket_paths(net_unix: Path | None = None) -> frozenset[str] | None:
+    """Return the filesystem paths of every listening Unix socket, or ``None`` when unknown.
+
+    A listener is invisible to the ``/proc/<pid>/fd`` path scan, which shows only
+    ``socket:[inode]``, so deleting its directory strands a running server (a
+    tmux server whose socket directory was swept). ``/proc/net/unix`` lists
+    each socket with a ``Flags`` word (``00010000`` while listening) and the
+    path it was bound to; abstract sockets (``@name``) own no file. Both the
+    bound spelling and its ``realpath`` are returned, since the node on disk
+    may be reached through a symlinked directory. A file that cannot be read,
+    or any line that cannot be parsed, is unknown: never an empty set.
+    """
+    source = _NET_UNIX if net_unix is None else net_unix
+    try:
+        lines = source.read_text(encoding="utf-8", errors="surrogateescape").splitlines()
+    except OSError:
+        return None
+    if not lines or not lines[0].startswith("Num"):
+        return None
+    paths: set[str] = set()
+    for line in lines[1:]:
+        fields = line.split(None, 7)
+        if len(fields) < 7:
+            return None
+        try:
+            flags = int(fields[3], 16)
+        except ValueError:
+            return None
+        if not flags & _SO_ACCEPTCON or len(fields) < 8 or fields[7].startswith("@"):
+            continue
+        bound = fields[7]
+        paths.add(bound)
+        if bound.startswith("/"):
+            paths.add(os.path.realpath(bound))
+    return frozenset(paths)
+
+
+def socket_node_listening(node: Path, listeners: frozenset[str]) -> bool:
+    """Return True when the socket file ``node`` is a bound listener.
+
+    A listener bound with a relative ``sun_path`` shows only that relative text,
+    so it matches any node whose path ends with it: a false hold is harmless,
+    a missed listener strands a server.
+    """
+    if str(node) in listeners or os.path.realpath(node) in listeners:
+        return True
+    text = str(node)
+    return any(not bound.startswith("/") and text.endswith("/" + bound) for bound in listeners)
+
+
+def tree_socket_nodes(path: Path) -> Iterator[Path]:
+    """Yield every socket file at ``path`` or below it, never following symlinks.
+
+    A node that vanished meanwhile holds nothing. Raises any other ``OSError``,
+    such as a directory that cannot be listed.
+    """
+    pending = [path]
+    while pending:
+        node = pending.pop()
+        try:
+            info = node.lstat()
+            if stat.S_ISSOCK(info.st_mode):
+                yield node
+            elif stat.S_ISDIR(info.st_mode):
+                with os.scandir(node) as entries:
+                    pending.extend(
+                        Path(entry.path)
+                        for entry in entries
+                        if not entry.is_symlink() and not entry.is_file(follow_symlinks=False)
+                    )
+        except FileNotFoundError:
+            continue
+
+
+def listener_liveness(path: Path, *, net_unix: Path | None = None) -> str:
+    """Classify ``path`` by the listening Unix sockets at or below it.
+
+    ``live`` when any socket node there is a bound listener, ``unknown`` when
+    ``/proc/net/unix`` cannot be read or the tree cannot be walked, else
+    ``clear``. An empty listener table is ``clear`` without walking the tree.
+    """
+    listeners = listening_socket_paths(net_unix)
+    if listeners is None:
+        return LIVENESS_UNKNOWN
+    if not listeners:
+        return LIVENESS_CLEAR
+    try:
+        for node in tree_socket_nodes(path):
+            if socket_node_listening(node, listeners):
+                return LIVENESS_LIVE
+    except OSError:
+        return LIVENESS_UNKNOWN
+    return LIVENESS_CLEAR
+
+
 def path_liveness(path: Path, *, proc_root: Path | None = None) -> str:
     """Classify ``path`` as ``live``, ``unknown`` or ``clear``.
 
     Combines ``pgrep -f`` (command lines of every user) with the ``/proc``
     probe (state, cwd, open files, environment and command line of every
-    process). Only ``clear`` permits deletion, and ``clear`` requires both a
-    negative ``pgrep`` and a ``/proc`` walk in which every process was fully
-    probed and none referenced the path.
+    process) with the listening sockets of ``/proc/net/unix``. Only ``clear``
+    permits deletion, and ``clear`` requires a negative ``pgrep``, a ``/proc``
+    walk in which every process was fully probed and none referenced the path,
+    and no socket at or below it bound by a live listener (a listener holds no
+    fd path, so the walk cannot see it).
 
     A negative ``pgrep`` alone is not proof: it only sees command lines, so a
     process holding the path as its cwd or through an open descriptor is
@@ -384,9 +489,12 @@ def path_liveness(path: Path, *, proc_root: Path | None = None) -> str:
     if _pgrep_references(path):
         return LIVENESS_LIVE
     verdict = proc_references(path, proc_root=proc_root)
-    if verdict is None:
-        return LIVENESS_UNKNOWN
-    return LIVENESS_LIVE if verdict else LIVENESS_CLEAR
+    if verdict:
+        return LIVENESS_LIVE
+    sockets = listener_liveness(path)
+    if sockets == LIVENESS_LIVE:
+        return LIVENESS_LIVE
+    return LIVENESS_UNKNOWN if verdict is None or sockets == LIVENESS_UNKNOWN else LIVENESS_CLEAR
 
 
 def path_has_live_process(path: Path) -> bool:
