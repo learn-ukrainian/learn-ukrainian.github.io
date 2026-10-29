@@ -59,7 +59,13 @@ from scripts.lib.readonly_sqlite import (
     open_readonly,
     refuse_writable_corpus_database,
 )
-from scripts.storage.generations import GENERATIONS_DIRNAME, store_writer, track_connection
+from scripts.storage.generations import (
+    GENERATIONS_DIRNAME,
+    one_generation,
+    reader_pin,
+    store_writer,
+    track_connection,
+)
 
 # ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
 # The top-level ``audit/`` tree is a namespace package, so ``import audit``
@@ -102,31 +108,6 @@ _conn_lock = threading.Lock()
 _active_connection: contextvars.ContextVar[sqlite3.Connection | None] = contextvars.ContextVar(
     "sources_db_active_connection", default=None
 )
-
-
-# A lookup that reads more than once must not straddle a publication of a new
-# generation: inside ``one_generation`` the first ``_get_conn()`` result serves
-# every later call. The list is filled lazily, so a missing database still
-# raises at the first read, as it does outside the block.
-_lookup_pin: contextvars.ContextVar[list[SQLiteConnection] | None] = contextvars.ContextVar(
-    "sources_db_lookup_pin", default=None
-)
-
-
-@contextmanager
-def one_generation() -> Iterator[None]:
-    """Serve every ``_get_conn()`` in this block from one connection, so one generation.
-
-    Nested blocks and an active ``using_connection`` keep the outer connection.
-    """
-    if _lookup_pin.get() is not None or _active_connection.get() is not None:
-        yield
-        return
-    token = _lookup_pin.set([])
-    try:
-        yield
-    finally:
-        _lookup_pin.reset(token)
 
 
 def _one_generation_lookup(function: Callable[..., Any]) -> Callable[..., Any]:
@@ -1927,13 +1908,30 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
 
 
 def _get_conn() -> sqlite3.Connection:
-    """Reuse the cached reader until the selector's target, inode or mtime changes."""
+    """The request's connection, a pinned generation's reader, or the cached reader."""
     override = _active_connection.get()
     if override is not None:
         return override
-    pin = _lookup_pin.get()
-    if pin:
-        return pin[0]
+    pin = reader_pin()
+    if pin is None:
+        return _cached_reader()
+    with pin.lock:
+        reader = pin.readers.get(__name__)
+        if reader is None:
+            reader = _cached_reader()
+            path = Path(reader.execute("PRAGMA database_list").fetchone()[2])
+            if pin.generation is None:
+                pin.generation = path
+            elif path != pin.generation:
+                # Another thread or import name fixed the generation first and
+                # this cache has moved on since: read the pinned generation.
+                reader = _open_conn(pin.generation, read_only=True)
+            pin.readers[__name__] = reader
+        return reader
+
+
+def _cached_reader() -> SQLiteConnection:
+    """Reuse the cached reader until the selector's target, inode or mtime changes."""
     global _conn, _conn_state
     with _conn_lock:
         if _conn is not None and _conn_state is not None and _conn_state[0] is not _conn:
@@ -1987,8 +1985,6 @@ def _get_conn() -> sqlite3.Connection:
                         fresh = _open_conn(reopen_path, read_only=True)
                         _conn = fresh
                         _conn_state = (fresh, reopen_path, identity)
-    if pin is not None:
-        pin.append(_conn)
     return _conn
 
 

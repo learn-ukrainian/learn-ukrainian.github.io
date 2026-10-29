@@ -17,6 +17,7 @@ import importlib
 import importlib.util
 import inspect
 import json
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -440,9 +441,9 @@ def test_failed_reopen_replaces_the_held_connection_with_one_that_fails_every_qu
 def test_reader_paused_before_returning_the_connection_never_gets_none_when_a_heal_runs(server, sdb, db):
     _stats(server)
     held = sdb._conn
-    source, first_line = inspect.getsourcelines(sdb._get_conn)
+    source, first_line = inspect.getsourcelines(sdb._cached_reader)  # the cache behind _get_conn
     return_line = first_line + next(i for i, text in enumerate(source) if text.strip() == "return _conn")
-    code = sdb._get_conn.__code__
+    code = sdb._cached_reader.__code__
     paused, resume = threading.Event(), threading.Event()
     outcome: dict[str, object] = {}
 
@@ -1075,3 +1076,30 @@ def test_one_tool_attempt_reads_one_sources_generation(server, sdb, db):
     assert asyncio.run(server._run_attempt(handler, ())) == "done"
     assert seen[0] is seen[1] and seen[0] is not replacement
     assert sdb._get_conn() is replacement  # the next attempt reads the new connection
+
+
+def test_both_sources_db_import_names_read_the_attempts_generation(server, sdb, db, tmp_path, monkeypatch):
+    """The two module copies keep separate caches; one attempt still reads one file."""
+    full = importlib.import_module("scripts.wiki.sources_db")
+    assert full is not sdb
+    moved = tmp_path / "moved.db"
+    shutil.copyfile(db, moved)
+    elsewhere = full._open_conn(moved, read_only=True)
+    stat = moved.stat()
+    monkeypatch.setattr(full, "SOURCES_DB_PATH", moved)
+    monkeypatch.setattr(full, "_conn", elsewhere)
+    monkeypatch.setattr(full, "_conn_state", (elsewhere, moved, (stat.st_ino, stat.st_mtime_ns, stat.st_size)))
+    _stats(server)
+    files: list[str] = []
+
+    async def handler():
+        for module in (sdb, full):
+            files.append(module._get_conn().execute("PRAGMA database_list").fetchone()[2])
+        return "done"
+
+    try:
+        assert asyncio.run(server._run_attempt(handler, ())) == "done"
+        assert files[0] == files[1] == str(db.resolve())
+        assert full._get_conn() is elsewhere  # outside an attempt each cache answers for itself
+    finally:
+        elsewhere.close()

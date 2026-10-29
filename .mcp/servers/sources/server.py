@@ -27,7 +27,6 @@ Tools:
 """
 
 import asyncio
-import contextlib
 import contextvars
 import functools
 import hashlib
@@ -63,6 +62,7 @@ import scripts.wiki.sources_db as sources_db_full_name
 import wiki.sources_db as sources_db_short_name
 from scripts.lib.readonly_sqlite import SerializedConnection, SerializedCursor
 from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
+from scripts.storage.generations import one_generation as one_sources_generation
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
 
@@ -2168,13 +2168,10 @@ async def _run_attempt(handler: Any, markers: tuple[str, ...]) -> Any:
     attempt = _AttemptDamage(markers)
     token = _ATTEMPT_DAMAGE.set(attempt)
     try:
-        # One attempt reads one Sources generation, however many lookups it makes;
-        # a retry after a heal is a new attempt and may read a newer one.
-        with contextlib.ExitStack() as pins:
-            for module_name in _SQLITE_CONNECTION_CACHES["sources.db"][0]:
-                module = sys.modules.get(module_name)
-                if module is not None:
-                    pins.enter_context(module.one_generation())
+        # One attempt reads one Sources generation, through either import name of
+        # sources_db and in every worker thread; a retry after a heal is a new
+        # attempt and may read a newer one.
+        with one_sources_generation():
             result = await handler()
     except Exception as exc:
         if attempt.errors and not isinstance(exc, sqlite3.DatabaseError):

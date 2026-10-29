@@ -27,6 +27,7 @@ operator-run command and is not part of this module.
 from __future__ import annotations
 
 import contextlib
+import contextvars
 import fcntl
 import hashlib
 import json
@@ -79,7 +80,9 @@ __all__ = [
     "inspect_selector",
     "is_generation_name",
     "live_store_path",
+    "one_generation",
     "publish_generation",
+    "reader_pin",
     "store_kind",
     "store_writer",
     "writable_open_refusal",
@@ -308,6 +311,44 @@ def track_connection(path: str | os.PathLike[str], connection: SQLiteConnection)
     held = _current(ref.lock_dir)
     if held is not None and not held.inherited:
         held.track(connection)
+
+
+@dataclass
+class ReaderPin:
+    """One Sources generation for one lookup or request.
+
+    Shared by every thread of the lookup and by both import names of
+    ``scripts.wiki.sources_db`` (each has its own connection cache): the first
+    reader fixes ``generation``, and every later one gets a connection to it.
+    """
+
+    generation: Path | None = None
+    readers: dict[str, Any] = field(default_factory=dict)
+    lock: threading.RLock = field(default_factory=threading.RLock)
+
+
+_reader_pin: contextvars.ContextVar[ReaderPin | None] = contextvars.ContextVar("sources_reader_pin", default=None)
+
+
+@contextlib.contextmanager
+def one_generation() -> Iterator[None]:
+    """Read one generation throughout this block; a nested block keeps the outer pin.
+
+    The pin is filled at the first read, so a missing store still fails there.
+    Worker threads see it when they run in a copy of this context.
+    """
+    if _reader_pin.get() is not None:
+        yield
+        return
+    token = _reader_pin.set(ReaderPin())
+    try:
+        yield
+    finally:
+        _reader_pin.reset(token)
+
+
+def reader_pin() -> ReaderPin | None:
+    return _reader_pin.get()
 
 
 def required_free_bytes(generation_bytes: int) -> int:

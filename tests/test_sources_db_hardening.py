@@ -539,3 +539,50 @@ def test_cached_reader_follows_the_selector_and_keeps_calls_in_flight(
     finally:
         fresh.close()
         sources_db._conn = None
+
+
+def test_parallel_workers_of_one_lookup_share_its_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A worker that starts after a publication still reads the lookup's generation."""
+    import contextvars
+
+    selector = _selector_store(tmp_path, monkeypatch)
+    old = sources_db._get_conn()
+    real = sources_db._cached_reader
+    paused, release = threading.Event(), threading.Event()
+
+    def reader() -> sqlite3.Connection:
+        conn = real()
+        if threading.current_thread().name == "worker-a":
+            paused.set()  # worker A has its connection but has not pinned it yet
+            assert release.wait(timeout=30)
+        return conn
+
+    monkeypatch.setattr(sources_db, "_cached_reader", reader)
+    results: dict[str, sqlite3.Connection] = {}
+
+    def worker(name: str, context: contextvars.Context) -> threading.Thread:
+        thread = threading.Thread(
+            name=name, target=lambda: results.__setitem__(name, context.run(sources_db._get_conn))
+        )
+        thread.start()
+        return thread
+
+    with sources_db.one_generation():
+        a = worker("worker-a", contextvars.copy_context())
+        assert paused.wait(timeout=30)
+        _publish_new(selector)
+        fresh = contextvars.Context().run(sources_db._get_conn)  # an unpinned request refreshes the cache
+        assert fresh.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "new0"
+        b = worker("worker-b", contextvars.copy_context())
+        release.set()
+        a.join(timeout=30)
+        b.join(timeout=30)
+    try:
+        assert results["worker-a"] is results["worker-b"] is old
+        assert results["worker-b"].execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "v0"
+    finally:
+        old.close()
+        fresh.close()
+        sources_db._conn = None
