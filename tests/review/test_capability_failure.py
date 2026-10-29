@@ -8,10 +8,12 @@ from dataclasses import replace
 
 import pytest
 
+from scripts.guardrails.delegate_ownership import TERMINAL_TASK_STATUSES
 from scripts.orchestration import integration_sweep as sweep
 from scripts.review import capability_failure as cf
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.review_lineage import LineageRefused, ReviewRun, check_lineage
+from scripts.review.verdict_parser import recognized_verdicts
 from tests.test_record_cf_verdict import BRANCH, OTHER, SHA, recorded_verdict, setup_record
 
 EARLIER = "c" * 40
@@ -186,6 +188,20 @@ def test_a_run_without_its_bindings_refuses(updates, match):
         classify(record, reply)
 
 
+def test_every_verdict_reader_sees_a_declared_reply_as_blocked():
+    """Dispatch's verdict check reads the documented shape, so such a run can finish ``done``."""
+    assert recognized_verdicts(structured()) == ["BLOCKED"]
+    assert recognized_verdicts(structured(missing=("teleport",))) == ["BLOCKED"]
+
+
+def test_a_reply_the_verdict_readers_disagree_on_refuses():
+    reply = json.dumps({**json.loads(structured()), "unreviewed_key": True})
+    assert recorder._review_verdict_and_count(reply) == ("BLOCKED", 0) and recognized_verdicts(reply) == []
+    record, reply = run_record(reply=reply)
+    with pytest.raises(cf.CapabilityFailureRefused, match=r"\[verdict\].*not read as one BLOCKED by every reader"):
+        classify(record, reply)
+
+
 def test_only_the_cto_seat_records_a_classification():
     record, reply = run_record()
     with pytest.raises(cf.CapabilityFailureRefused, match=r"\[authority\]"):
@@ -265,6 +281,17 @@ def test_a_capability_failure_waives_no_required_seat():
         lineage(approve, blocked, comments=[verdict, event_comment(failure)])
 
 
+@pytest.mark.parametrize("status", sorted(TERMINAL_TASK_STATUSES - {"done"}))
+@pytest.mark.parametrize("missing", [("test-execution",), ("teleport",), "shell"], ids=["valid", "unknown", "malformed"])
+def test_a_declaration_never_hides_an_unfinished_runs_verdict(status, missing):
+    """A run that did not finish keeps refusing the lineage when its reply has a verdict (round 1, F1)."""
+    approve, verdict = approving_run()
+    reply = json.dumps({**json.loads(structured(correctness="incorrect", findings=[FINDING])), "missing_capabilities": missing})
+    record, reply = run_record(reply=reply, status=status)
+    with pytest.raises(LineageRefused, match=rf"review task review-blocked \({status}\) carries an unpublished verdict"):
+        lineage(approve, ReviewRun("review-blocked", record, reply), comments=[verdict])
+
+
 def test_a_blocked_with_a_finding_keeps_todays_treatment_even_with_an_event():
     approve, verdict = approving_run()
     reply = "VERDICT: BLOCKED\nF1 [P1] scripts/unit.py:1 a real defect."
@@ -307,7 +334,7 @@ def test_conflicting_or_orphaned_publications_refuse():
         lineage(approve, blocked, comments=[verdict, published, event_comment(failure)])
     with pytest.raises(LineageRefused, match="capability failure of task review-blocked has no finished review run"):
         lineage(approve, comments=[verdict, event_comment(failure)])
-    unfinished = ReviewRun("review-blocked", {**blocked.record, "status": "failed"}, blocked.reply)
+    unfinished = ReviewRun("review-blocked", {**blocked.record, "status": "failed"}, "The run stopped early.")
     with pytest.raises(LineageRefused, match="has no finished review run"):
         lineage(approve, unfinished, comments=[verdict, event_comment(failure)])
 

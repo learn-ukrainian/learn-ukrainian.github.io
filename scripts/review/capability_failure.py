@@ -49,13 +49,14 @@ from scripts.opsec.prepublish import check_texts, normalize_repository, publicat
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.budget_grant import ISSUERS
 from scripts.review.language_lane import is_ukrainian_review
+from scripts.review.verdict_parser import MISSING_CAPABILITIES_FIELD, REVIEW_CAPABILITIES, recognized_verdicts
 
 EVENT_PREFIX = "<!-- review-capability-failure"
 SOURCES_MCP = "sources-mcp"
 # The capabilities a reviewer can lack; ``sources-mcp`` alone has runtime evidence in the task record.
-CAPABILITIES = frozenset({SOURCES_MCP, "test-execution", "shell", "browser", "checkout-data"})
+CAPABILITIES = REVIEW_CAPABILITIES
 # The structured reply's own declaration of what it lacked, beside the canonical findings fields.
-DECLARATION_FIELD = "missing_capabilities"
+DECLARATION_FIELD = MISSING_CAPABILITIES_FIELD
 # Only the CTO seat records a classification.
 AUTHORITIES = ISSUERS
 _EVENT = re.compile(
@@ -168,6 +169,11 @@ def classify(
         raise CapabilityFailureRefused(RUN, f"review task {task_id} evidence refused: {exc}") from None
     if verdict != "BLOCKED":
         raise CapabilityFailureRefused(VERDICT, f"review task {task_id} replied {verdict}, not BLOCKED")
+    # Dispatch and the lineage read verdicts with ``recognized_verdicts``; they must read the same BLOCKED.
+    if recognized_verdicts(reply) != ["BLOCKED"]:
+        raise CapabilityFailureRefused(
+            VERDICT, f"review task {task_id}'s reply is not read as one BLOCKED by every reader"
+        )
     if count == "unknown":
         raise CapabilityFailureRefused(
             FINDINGS,
