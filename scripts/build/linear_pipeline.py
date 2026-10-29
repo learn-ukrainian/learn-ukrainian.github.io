@@ -3957,7 +3957,7 @@ def writer_context(
         "WORKBOOK_ALLOWED_TYPES": activity_config["WORKBOOK_ALLOWED_TYPES"],
         "ACTIVITY_COUNT_TARGET": activity_config["ACTIVITY_COUNT_TARGET"],
         "VOCAB_COUNT_TARGET": activity_config["VOCAB_COUNT_TARGET"],
-        "COMPONENT_PROPS_SCHEMA": _render_component_props_schema(activity_config["ALLOWED_ACTIVITY_TYPES"]),
+        "COMPONENT_PROPS_SCHEMA": _render_component_props_schema(activity_config["ALLOWED_ACTIVITY_TYPES"], level=level),
     }
     # Seminar/FOLK-only writer rules: gated out of core (a1-c2) prompts so the
     # A1 letter module stays under WRITER_PROMPT_CEILING_BYTES. Resolved after
@@ -3996,7 +3996,7 @@ def writer_context(
     return context
 
 
-def _render_component_props_schema(allowed_activity_types: str) -> str:
+def _render_component_props_schema(allowed_activity_types: str, *, level: str = "") -> str:
     """Render compact authoring-field spec per allowed activity type.
 
     Historical name retained for prompt-token compatibility. The writer must
@@ -4010,8 +4010,21 @@ def _render_component_props_schema(allowed_activity_types: str) -> str:
     """
     allowed = {token.strip() for token in allowed_activity_types.split(",") if token.strip()}
     authoring_by_type = _activity_type_field_whitelist()
+    folk_schemas = _folk_activity_schemas() if level.lower() == "folk" else {}
     lines: list[str] = []
+    if folk_schemas:
+        lines.append(
+            "Use only the fields and nested shapes below. Use instruction, not task. "
+            "Do not emit source_reading or peer_review_guidelines; put guidance in instruction or notes. "
+            "critical-analysis uses model_answers as a list, not model_answer. "
+            "Quote YAML string list entries containing ': ' so they stay strings. "
+            "Essay rubric rows are objects with criteria and description. "
+            "correct_order contains zero-based integer indices, not display strings."
+        )
     for activity_type in sorted(allowed):
+        if activity_type in folk_schemas:
+            lines.append(f"- {activity_type}: " + json.dumps(folk_schemas[activity_type], ensure_ascii=False))
+            continue
         fields = authoring_by_type.get(activity_type)
         if fields is None:
             lines.append(
@@ -9451,7 +9464,7 @@ def run_python_qg(
                     )
         gates[name] = report
 
-    record("activity_schema", _activity_schema_gate(activities))
+    record("activity_schema", _activity_schema_gate(activities, level=level))
     if gates["activity_schema"].get("passed") is False:
         gates["passed"] = False
         return _python_qg_report(plan, gates)
@@ -10225,7 +10238,15 @@ def _activity_type_field_whitelist() -> dict[str, frozenset[str]]:
     rationale for sourcing from authoring shape rather than from
     `docs/lesson-schema.yaml` (component-prop side).
     """
-    return _ACTIVITY_AUTHORING_FIELDS
+    # The JSON writer also needs to admit canonical FOLK fields before the
+    # level-aware post-emit gate checks their full nested schema.
+    return {
+        **_ACTIVITY_AUTHORING_FIELDS,
+        **{
+            activity_type: _ACTIVITY_AUTHORING_FIELDS[activity_type] | frozenset(schema["properties"])
+            for activity_type, schema in _folk_activity_schemas().items()
+        },
+    }
 
 
 def _activity_item_schema_whitelist() -> dict[str, frozenset[str]]:
@@ -10545,8 +10566,22 @@ def _load_bare_activity_list(path: Path) -> list[dict[str, Any]]:
     return _activity_list_from_loaded_data(load_yaml(path))
 
 
-def _activity_schema_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
-    """Validate strict item-level authoring schemas before content gates run."""
+def _folk_activity_schemas() -> dict[str, Any]:
+    """Canonical schemas for the activity types the FOLK writer may emit."""
+    from pipeline.config_tables import ACTIVITY_CONFIGS
+
+    definitions = json.loads(
+        (PROJECT_ROOT / "schemas" / "activity-v2.schema.json").read_text(encoding="utf-8")
+    )["$defs"]
+    allowed = ACTIVITY_CONFIGS["folk"]["ALLOWED_ACTIVITY_TYPES"]
+    return {activity_type.strip(): definitions[activity_type.strip()] for activity_type in allowed.split(",")}
+
+
+def _activity_schema_gate(activities: list[dict[str, Any]], *, level: str = "") -> dict[str, Any]:
+    """Validate authoring shapes before content gates and module handoff."""
+    from jsonschema import Draft7Validator
+
+    folk_schemas = _folk_activity_schemas() if level.lower() == "folk" else {}
     item_fields_by_type = _activity_item_schema_whitelist()
     violations: list[dict[str, Any]] = []
     checked = 0
@@ -10556,6 +10591,21 @@ def _activity_schema_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
             continue
         activity_type = str(activity.get("type") or "")
         activity_id = str(activity.get("id") or f"#{activity_index}")
+        if activity_type in folk_schemas:
+            checked += 1
+            for error in Draft7Validator(folk_schemas[activity_type]).iter_errors(activity):
+                field_path = ".".join(str(part) for part in error.absolute_path)
+                violations.append({
+                    "activity_id": activity_id,
+                    "activity_index": activity_index,
+                    "item_index": None,
+                    "activity_type": activity_type,
+                    "offending_field": field_path or None,
+                    "expected_field": None,
+                    "scope": "activity",
+                    "message": f"{activity_type} {field_path or 'activity'}: {error.message}",
+                })
+            continue
         if (
             activity_type == "performance"
             and "self_check" in activity
