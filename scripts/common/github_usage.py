@@ -182,17 +182,20 @@ _NAMED_AFTER = frozenset(
         "assignees",
         "collaborators",
         "environments",
+        "following",
         "labels",
         "members",
         "orgs",
+        "secrets",
         "statuses",
         "teams",
         "users",
+        "variables",
         "workflows",
     }
 )
-"""Path words whose next segment names an account, label, team or workflow."""
-_REF_AFTER = frozenset({"blobs", "matching-refs", "ref", "refs", "tarball", "trees", "zipball"})
+"""Path words whose next segment names an account, label, team, workflow, secret or variable."""
+_REF_AFTER = frozenset({"blobs", "matching-refs", "readme", "ref", "refs", "starred", "tarball", "trees", "zipball"})
 """Path words after which the rest of the path is one ref, whose own name may contain slashes."""
 _COMMIT_TAILS = frozenset({"branches-where-head", "check-runs", "check-suites", "comments", "pulls", "status", "statuses"})
 """What may follow a commit SHA in ``commits/<sha>/...``."""
