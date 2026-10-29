@@ -1674,10 +1674,13 @@ def _full_process_match(cmd: str, args: list[str]) -> bool:
     return False
 
 
-def _kill_consumer(cmd: str, args: list[str]) -> bool:
+def _kill_consumer(cmd: str, args: list[str], *, depth: int = 0) -> bool:
+    if depth >= 12:
+        return True
     if cmd == "xargs":
-        words = iter(_strip_quotes(arg) for arg in _without_redirects(args))
-        for word in words:
+        words = iter(_without_redirects(args))
+        for raw in words:
+            word = _strip_quotes(raw)
             if word in {
                 "-a",
                 "-d",
@@ -1697,12 +1700,17 @@ def _kill_consumer(cmd: str, args: list[str]) -> bool:
                 "--max-chars",
             }:
                 next(words, None)
-            elif word == "--":
-                cmd = next(words, "echo").rsplit("/", 1)[-1]
-                break
-            elif not word.startswith("-"):
-                cmd = word.rsplit("/", 1)[-1]
-                break
+            elif word == "--" or not word.startswith("-"):
+                target = next(words, "echo") if word == "--" else raw
+                found = _command_at([target, *words])
+                return bool(found and _kill_consumer(found[0], found[1], depth=depth + 1))
+    if cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
+        for script in _shell_script(args):
+            for pipeline in _pipelines(script):
+                for segment in pipeline:
+                    found = _command_at(segment)
+                    if found and _kill_consumer(found[0], found[1], depth=depth + 1):
+                        return True
     return cmd == "kill"
 
 
@@ -1711,6 +1719,7 @@ def _process_kill_refused(command: str, *, depth: int = 0, listing: bool = False
     if depth >= 12:
         return True
     executable, substitutions = _hide_substitutions(preprocess_shell_command(command))
+    selected_pids: set[str] = set()
     for pipeline in _pipelines(executable):
         matched = False
         for segment in pipeline:
@@ -1724,8 +1733,23 @@ def _process_kill_refused(command: str, *, depth: int = 0, listing: bool = False
             consumes = _kill_consumer(cmd, args)
             if matched and consumes:
                 return True
+            if cmd == "read" and matched:
+                names = {
+                    _strip_quotes(arg) for arg in args if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", _strip_quotes(arg))
+                }
+                selected_pids.update(names or {"REPLY"})
+            if cmd == "kill" and any(_expanded_secret_var(arg, selected_pids) in selected_pids for arg in args):
+                return True
             matched |= full and cmd == "pgrep"
             for marker, (prefix, body) in substitutions.items():
+                if (
+                    segment[:1] == ["for"]
+                    and len(segment) >= 4
+                    and segment[2] == "in"
+                    and any(marker in token for token in segment[3:])
+                    and _process_kill_refused(body, depth=depth + 1, listing=True)
+                ):
+                    selected_pids.add(_strip_quotes(segment[1]))
                 if any(marker in token for token in segment) and (
                     _process_kill_refused(body, depth=depth + 1)
                     or (
@@ -1843,7 +1867,7 @@ def _main(argv: list[str] | None = None) -> int:
 
     if _process_kill_refused(command):
         sys.stderr.write(
-            "BLOCKED: full-command-line process kills can match the invoking shell. "
+            "BLOCKED by guard-secret-print (#M-5): full-command-line process kills can match the invoking shell. "
             "Kill exact numeric PIDs read in an earlier command, or stop a harness background "
             "task with the harness's own stop tool.\n"
         )
