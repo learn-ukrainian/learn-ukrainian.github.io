@@ -20,6 +20,7 @@ from scripts.dispatcher import (
     git,
     headroom,
     host_admission,
+    pool_selector,
     providers,
     runtime_context,
     store,
@@ -392,6 +393,7 @@ def _dispatch(args) -> int:
         if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
             raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
         record.update(advisory_fields, **account_fields)
+        record["pool_shadow"] = pool_selector.shadow_decision(record)
         if agent == "muse":
             record["contributor_mode"] = spec.options.get("contributor_mode", "off")
         try:
