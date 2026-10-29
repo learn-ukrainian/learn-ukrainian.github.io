@@ -28,6 +28,7 @@ class TaskSpec:
     claude_account: str | None = None  # "a" | "b" | "kk" | "szb" for agent claude
     provider: str | None = None  # explicit upstream such as openrouter; never a fallback
     options: dict[str, str] = field(default_factory=dict)  # provider extras, e.g. {"contributor_mode": "on"}
+    codex_account: str | None = None  # "sub" | "api" for agent codex
 
 
 @dataclass(frozen=True)

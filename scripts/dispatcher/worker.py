@@ -180,6 +180,7 @@ def _spec(record: dict, options: dict) -> TaskSpec:
         record["claude_account"],
         record["provider"],
         {**record.get("options", {}), **options},
+        codex_account=record.get("codex_account"),
     )
 
 
