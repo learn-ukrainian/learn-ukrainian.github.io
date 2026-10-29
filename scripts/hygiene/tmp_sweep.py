@@ -284,24 +284,42 @@ def registered_worktrees(repo_root: Path) -> set[Path] | None:
         return None
 
 
-def _disposable_git_directory(path: Path) -> bool:
-    """Recognize ordinary fixture metadata without linked or external Git storage.
+# Config that can make a ``.git`` directory the metadata of a checkout elsewhere, or pull in
+# settings the sweep cannot read, keeps the run. Every other key (remotes, branches, hooks
+# path, credentials, aliases) only describes the repository and cannot make it custodian of
+# anything outside its tree, so deleting the tree with it harms no one.
+_REDIRECT_CONFIG_PREFIXES = (b"include.", b"includeif.")
+_ALLOWED_EXTENSIONS = frozenset({b"extensions.worktreeconfig"})
+_ORDINARY_CONFIG_VALUES = {b"core.repositoryformatversion": b"0", b"core.bare": b"false"}
+_GIT_POINTER_LIMIT = 4096
 
-    The caller has checked every node's owner, type, links and mounts. Keep
-    unfamiliar configuration rather than guessing whether it redirects Git.
-    Parse only this config, without includes, global config or repository discovery.
-    """
+
+def _inside(root: Path, target: str, *, base: Path) -> bool:
+    """Whether a path named by Git metadata resolves to ``root`` or below it, symlinks followed."""
     try:
-        if not all(stat.S_ISDIR((path / name).lstat().st_mode) for name in ("objects", "refs")):
-            return False
-        if not stat.S_ISREG((path / "HEAD").lstat().st_mode):
-            return False
-        if any(os.path.lexists(path / name) for name in (
-            "commondir", "gitdir", "worktrees", "config.worktree",
-            "objects/info/alternates", "objects/info/http-alternates",
-        )):
-            return False
-        fd = os.open(path / "config", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        resolved = Path(os.path.realpath(os.path.join(base, target)))
+    except (OSError, ValueError):
+        return False
+    return resolved == root or root in resolved.parents
+
+
+def _read_pointer(path: Path) -> bytes | None:
+    """The short regular file at ``path`` without following a symlink, or ``None``."""
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        with os.fdopen(fd, "rb") as handle:
+            if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                return None
+            content = handle.read(_GIT_POINTER_LIMIT + 1)
+    except OSError:
+        return None
+    return content if len(content) <= _GIT_POINTER_LIMIT else None
+
+
+def _custody_free_config(path: Path, root: Path, git_dir: Path) -> bool:
+    """Parse one config file without includes or global config; refuse anything that redirects custody."""
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
         with os.fdopen(fd, "rb") as config:
             if not stat.S_ISREG(os.fstat(config.fileno()).st_mode):
                 return False
@@ -313,25 +331,68 @@ def _disposable_git_directory(path: Path) -> bool:
             input=content, capture_output=True, check=False, timeout=15,
             env={"PATH": os.environ.get("PATH", os.defpath)},
         )
-        if result.returncode:
-            return False
-        ordinary = {
-            b"core.repositoryformatversion", b"core.filemode", b"core.bare", b"core.logallrefupdates",
-            b"core.ignorecase", b"core.precomposeunicode", b"user.name", b"user.email",
-        }
-        for field in result.stdout.split(b"\0"):
-            if not field:
-                continue
-            key, _, value = field.partition(b"\n")
-            if key not in ordinary:
-                return False
-            if key == b"core.bare" and value.lower() != b"false":
-                return False
-            if key == b"core.repositoryformatversion" and value != b"0":
-                return False
-        return True
     except (OSError, subprocess.SubprocessError):
         return False
+    if result.returncode:
+        return False
+    for field in result.stdout.split(b"\0"):
+        if not field:
+            continue
+        name, _, value = field.partition(b"\n")
+        key = name.lower()
+        if key.startswith(_REDIRECT_CONFIG_PREFIXES):
+            return False
+        if key.startswith(b"extensions.") and key not in _ALLOWED_EXTENSIONS:
+            return False
+        if key in _ORDINARY_CONFIG_VALUES and value.lower() != _ORDINARY_CONFIG_VALUES[key]:
+            return False
+        if key == b"core.worktree" and not _inside(root, os.fsdecode(value), base=git_dir):
+            return False
+    return True
+
+
+def _disposable_git_directory(path: Path, root: Path) -> bool:
+    """Recognize a ``.git`` directory that is custodian of nothing outside ``root``, the tree being removed.
+
+    The caller has checked every node's owner, type, links and mounts. Deleting
+    a repository only harms others when they depend on its storage: a checkout
+    elsewhere whose Git directory this is (``core.worktree``, a linked worktree
+    registered here but located outside ``root``, or a Git directory that is itself a
+    linked or external one), or settings the sweep cannot read (includes,
+    unfamiliar extensions). Anything it merely points at, such as alternate object
+    stores, remotes or hooks, stays untouched by the deletion. Parse only
+    this metadata, without includes, global config or repository discovery.
+    """
+    try:
+        if not all(stat.S_ISDIR((path / name).lstat().st_mode) for name in ("objects", "refs")):
+            return False
+        if not stat.S_ISREG((path / "HEAD").lstat().st_mode):
+            return False
+        if any(os.path.lexists(path / name) for name in ("commondir", "gitdir", "objects/info/http-alternates")):
+            return False
+        if not _custody_free_config(path / "config", root, path):
+            return False
+        if os.path.lexists(path / "config.worktree") and not _custody_free_config(path / "config.worktree", root, path):
+            return False
+        worktrees = path / "worktrees"
+        if os.path.lexists(worktrees):
+            if not stat.S_ISDIR(worktrees.lstat().st_mode):
+                return False
+            for entry in worktrees.iterdir():
+                pointer = _read_pointer(entry / "gitdir")
+                if pointer is None or not _inside(root, os.fsdecode(pointer.strip()), base=entry):
+                    return False
+        return True
+    except (OSError, ValueError):
+        return False
+
+
+def _disposable_git_file(node: Path, root: Path) -> bool:
+    """A linked worktree's ``.git`` file whose ``gitdir:`` target lies inside ``root``."""
+    pointer = _read_pointer(node)
+    if pointer is None or not pointer.startswith(b"gitdir: "):
+        return False
+    return _inside(root, os.fsdecode(pointer[len(b"gitdir: "):].strip()), base=node.parent)
 
 
 def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float, float, str | None]:
@@ -348,6 +409,7 @@ def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float,
     changed = 0.0
     reason = None
     git_directories = []
+    git_files = []
     try:
         mounts = mount_points()
         if mounts is None:
@@ -376,6 +438,8 @@ def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float,
             if node.name == ".git":
                 if disposable_git and stat.S_ISDIR(info.st_mode):
                     git_directories.append(node)
+                elif disposable_git and stat.S_ISREG(info.st_mode):
+                    git_files.append(node)
                 else:
                     reason = reason or "git_metadata"
             if disposable_git and stat.S_ISLNK(info.st_mode) and ".git" in node.relative_to(path).parts:
@@ -385,8 +449,12 @@ def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float,
                 continue
             if stat.S_ISDIR(info.st_mode):
                 pending.extend(node.iterdir())
-        if reason is None and any(not _disposable_git_directory(node) for node in git_directories):
-            reason = "git_metadata"
+        if reason is None:
+            tree_root = path.resolve()
+            if not all(_disposable_git_directory(node, tree_root) for node in git_directories) or not all(
+                _disposable_git_file(node, tree_root) for node in git_files
+            ):
+                reason = "git_metadata"
     except OSError:
         return allocated, newest, changed, "tree_unknown"
     return allocated, newest, changed, reason
