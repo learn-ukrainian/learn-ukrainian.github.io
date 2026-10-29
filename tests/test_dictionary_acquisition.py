@@ -9,6 +9,7 @@ import os
 import signal
 import subprocess
 import sys
+import threading
 import time
 from itertools import pairwise
 from pathlib import Path
@@ -1115,6 +1116,26 @@ def test_summaries_continue_while_another_job_holds_the_host_slot(tmp_path, caps
     before_request = lines[: next(i for i, line in enumerate(lines) if "positive  a" in line)]
     assert polls[:4] == [acquisition.HOST_POLL_SECONDS] * 4
     assert sum("progress 0/1" in line for line in before_request) >= 1
+
+
+def test_summaries_continue_while_one_request_is_in_flight(tmp_path, capsys):
+    argv = arguments(tmp_path, "vts", ("a",), "--progress-interval", "0.05")
+    log = tmp_path / "staging" / "vts" / "progress.log"
+
+    class Slow(HTTP):
+        def get(self, url, **kwargs):
+            deadline = time.monotonic() + 20
+            while (log.read_text().count("progress 0/1") if log.exists() else 0) < 2:
+                assert time.monotonic() < deadline, "no summary while the request was in flight"
+                time.sleep(0.01)
+            return response()
+
+    assert acquisition.main(["run", *argv], session_factory=lambda: Slow([], None), sleep=lambda _s: None) == 0
+    lines = capsys.readouterr().err.splitlines()
+    first_result = next(i for i, line in enumerate(lines) if "positive  a" in line)
+    assert sum("progress 0/1" in line for line in lines[:first_result]) >= 2
+    assert progress_lines(tmp_path) == lines
+    assert not [t for t in threading.enumerate() if t.name == "acquisition-heartbeat"]  # always joined
 
 
 KILL_RUNNER = """

@@ -95,6 +95,27 @@ def sleep_in_slices(
             return
 
 
+@contextlib.contextmanager
+def heartbeat(progress: ProgressLog) -> Iterator[None]:
+    """Keep the periodic summary going from a helper thread while the caller blocks in one HTTP call.
+
+    The caller emits nothing while it is inside, and the thread is stopped and joined before the
+    block exits, so lines never interleave. It reads no job state and cannot affect the request."""
+    stop = threading.Event()
+
+    def beat() -> None:
+        while not stop.wait(progress.interval):
+            progress.tick()
+
+    thread = threading.Thread(target=beat, name="acquisition-heartbeat", daemon=True)
+    thread.start()
+    try:
+        yield
+    finally:
+        stop.set()
+        thread.join(timeout=5)
+
+
 class ProgressLog:
     """Human-readable progress for one dictionary job, written to stderr and ``path``.
 

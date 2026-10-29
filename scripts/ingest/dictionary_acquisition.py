@@ -39,6 +39,7 @@ from scripts.ingest.acquisition_log import (
     Interrupted,
     ProgressLog,
     duration,
+    heartbeat,
     interrupt_code,
     interrupt_name,
     operator_signals,
@@ -610,7 +611,8 @@ def resolve_targets(
                 )
                 conn.execute("INSERT INTO events(position,time,kind) VALUES(?,?,'attempt')", (row["position"], now))
             report(conn, directory, now)
-            status, http, payload, retry = fetch_once(session, spec, row, now)
+            with heartbeat(progress):
+                status, http, payload, retry = fetch_once(session, spec, row, now)
             finished = clock()
             delay = max(request_delay, spec["backoff"] * 2 ** row["attempts"], retry)
             state = {"blocked": "blocked", "parse_error": "parse_error", "transient_error": "transient"}.get(
