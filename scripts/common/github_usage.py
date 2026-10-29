@@ -6,8 +6,8 @@ when there is one, else the calling command (a module or script name, never its 
 endpoint is a template: owner, repository, numbers, commit SHAs and every named account, branch,
 tag or label are replaced. A ``304`` is counted but not charged, because GitHub does not charge
 a conditional request that returns it; a native ``gh`` command has no status here and counts once, as charged, unless it
-is on the landing path, where it is not counted. A landing request is counted only when its
-transaction already writes the budget, so counting never adds a lock wait to it.
+is on the landing path, where it is not counted. A landing request is never counted, so counting
+never adds a lock wait to it.
 
 The rows live in the client's own cache file, owner-only. A request's row is written in the
 transaction the client already opens to persist its response; a native command's row is written
@@ -36,7 +36,7 @@ from pathlib import Path
 RETENTION_SECONDS = 6 * 60 * 60
 TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
 SCHEMA = (
-    "CREATE TABLE usage (at REAL, caller TEXT, endpoint TEXT, status INTEGER, landing INTEGER)",
+    "CREATE TABLE usage (at REAL, caller TEXT, endpoint TEXT, status INTEGER)",
     "CREATE INDEX usage_at ON usage(at)",
 )
 _REPOSITORY = Path(__file__).resolve().parents[2]
@@ -192,10 +192,10 @@ _NAMED_AFTER = frozenset(
     }
 )
 """Path words whose next segment names an account, label, team or workflow."""
-_REF_AFTER = frozenset({"blobs", "ref", "refs", "tarball", "trees", "zipball"})
+_REF_AFTER = frozenset({"blobs", "matching-refs", "ref", "refs", "tarball", "trees", "zipball"})
 """Path words after which the rest of the path is one ref, whose own name may contain slashes."""
 _COMMIT_TAILS = frozenset({"branches-where-head", "check-runs", "check-suites", "comments", "pulls", "status", "statuses"})
-"""What may follow a commit-ish in ``commits/<ref>/...``; the ref is everything before the last of them."""
+"""What may follow a commit SHA in ``commits/<sha>/...``."""
 
 
 def endpoint_template(method, path):
@@ -212,9 +212,14 @@ def endpoint_template(method, path):
             segments.append(":name")
             break
         if previous == "commits":
-            end = max((at for at in range(index, len(parts)) if parts[at] in _COMMIT_TAILS), default=len(parts))
-            segment = "/".join(parts[index - 1 : end])
-            index = end
+            # A commit SHA, with at most one tail word, keeps its shape. Anything else is a ref whose
+            # own name may hold slashes and tail words, so it is replaced whole.
+            rest = parts[index - 1 :]
+            if re.fullmatch(r"[0-9a-f]{7,64}", rest[0]) and (len(rest) == 1 or (len(rest) == 2 and rest[1] in _COMMIT_TAILS)):
+                segments.extend([":sha", *rest[1:]])
+            else:
+                segments.append(":name")
+            break
         if segment.isdigit():
             segment = ":n"
         elif re.fullmatch(r"[0-9a-f]{7,64}", segment):
@@ -225,7 +230,7 @@ def endpoint_template(method, path):
     return f"{str(method).upper()} {'/'.join(segments)}"
 
 
-def record(db, *, endpoint, status, landing, now=None):
+def record(db, *, endpoint, status, now=None):
     """Count one request on a cache connection the client opened.
 
     A statement SQLite refuses drops the row and never fails the call or the writes beside it.
@@ -234,7 +239,7 @@ def record(db, *, endpoint, status, landing, now=None):
     """
     now = time.time() if now is None else now
     try:
-        db.execute("INSERT INTO usage VALUES(?,?,?,?,?)", (now, caller(), endpoint, status, int(bool(landing))))
+        db.execute("INSERT INTO usage VALUES(?,?,?,?)", (now, caller(), endpoint, status))
         db.execute("DELETE FROM usage WHERE at<?", (now - RETENTION_SECONDS,))
     except sqlite3.Error as error:
         if corrupt(error):
@@ -254,14 +259,14 @@ def top(directory, *, hours=1.0, limit=20, now=None):
         if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='usage'").fetchone() is None:
             return []
         rows = db.execute(
-            """SELECT caller, endpoint, count(*) AS requests, sum(status IS NOT 304) AS charged, sum(landing) AS landing
+            """SELECT caller, endpoint, count(*) AS requests, sum(status IS NOT 304) AS charged
             FROM usage WHERE at>=? GROUP BY caller, endpoint
             ORDER BY charged DESC, requests DESC, caller, endpoint LIMIT ?""",
             (now - hours * 3600, limit),
         ).fetchall()
     finally:
         db.close()
-    return [dict(zip(("caller", "endpoint", "requests", "charged", "landing"), row, strict=True)) for row in rows]
+    return [dict(zip(("caller", "endpoint", "requests", "charged"), row, strict=True)) for row in rows]
 
 
 def main(argv=None):
@@ -282,9 +287,9 @@ def main(argv=None):
     if args.json:
         print(json.dumps(rows, indent=2))
         return 0
-    print(f"{'charged':>8} {'requests':>8} {'landing':>8}  caller  endpoint")
+    print(f"{'charged':>8} {'requests':>8}  caller  endpoint")
     for row in rows:
-        print(f"{row['charged']:>8} {row['requests']:>8} {row['landing']:>8}  {row['caller']}  {row['endpoint']}")
+        print(f"{row['charged']:>8} {row['requests']:>8}  {row['caller']}  {row['endpoint']}")
     return 0
 
 

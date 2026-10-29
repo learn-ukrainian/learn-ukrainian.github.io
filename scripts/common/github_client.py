@@ -1558,31 +1558,21 @@ class GitHubClient:
         for persist_attempt in range(2):
             try:
                 with self._db() as db:
+                    # Counted first, so a row SQLite refuses (even one whose rollback takes the
+                    # whole transaction) costs no budget observation and never adds a second lock
+                    # wait. 599 is this client's own transport failure: nothing reached GitHub. A
+                    # landing call is not counted, so counting never adds a wait to it.
+                    if resource == "core" and response.status != 599 and normalized.call_class != "landing":
+                        github_usage.record(
+                            db,
+                            endpoint=github_usage.endpoint_template(method, resource_path),
+                            status=response.status,
+                        )
                     if budget is not None:
                         remaining, reset = budget
                         _store_budget(
                             db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset, now=now
                         )
-                    # 599 is this client's own transport failure: nothing reached GitHub. Counted
-                    # after the budget, so a refused row never costs the observation; a landing
-                    # call is counted only once this transaction already holds the write lock, so
-                    # counting never adds a wait to it.
-                    if (
-                        resource == "core"
-                        and response.status != 599
-                        and (normalized.call_class != "landing" or db.in_transaction)
-                    ):
-                        wrote = db.in_transaction
-                        github_usage.record(
-                            db,
-                            endpoint=github_usage.endpoint_template(method, resource_path),
-                            status=response.status,
-                            landing=normalized.call_class == "landing",
-                        )
-                        if budget is not None and wrote and not db.in_transaction:
-                            # SQLite rolled the whole transaction back with the refused row (a full
-                            # disk, for one): the observation is stored again, without the row.
-                            _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), *budget, now=now)
                     if limit is not None:
                         holds, reset, reason = limit
                         for hold in holds:
@@ -3379,7 +3369,7 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
             endpoint = "gh api" if str(args[1]) == "api" else " ".join(["gh", *map(str, args[1:3])])
         # Admission stayed read-only; a failure here drops the row, never the command's result.
         with suppress(sqlite3.Error, OSError), client._db() as db:
-            github_usage.record(db, endpoint=endpoint, status=None, landing=False)
+            github_usage.record(db, endpoint=endpoint, status=None)
     output, error = (
         value.encode() if isinstance(value, str) else value or b"" for value in (native.stdout, native.stderr)
     )
