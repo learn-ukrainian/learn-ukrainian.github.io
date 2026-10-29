@@ -376,7 +376,7 @@ Repair these common learner forms:
 
 ### People and things questions
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "мама", "right": "кого?"}, {"left": "брат", "right": "кого?"}, {"left": "лікар", "right": "кого?"}, {"left": "хліб", "right": "що?"}, {"left": "дерево", "right": "що?"}, {"left": "кава", "right": "що?"}]`)} instruction={"Match each word with the question it answers in this lesson."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"кого?": ["маму", "брата", "лікаря"], "що?": ["хліб", "дерево", "каву"]}`)} instruction={"Я бачу ___. Розподіли додатки за питаннями кого? і що? / Sort the objects by the question they answer after Я бачу."} isUkrainian={false} />
 
 ### Build people lines
 

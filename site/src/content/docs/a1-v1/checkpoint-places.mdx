@@ -463,7 +463,7 @@ in English notes, write **Kyiv**, **Lviv**, **Kharkiv**, **Odesa**.
 
 ### Function check
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "у центрі", "right": "Де?"}, {"left": "у музей", "right": "Куди?"}, {"left": "з Канади", "right": "Звідки?"}, {"left": "на метро", "right": "Як?"}, {"left": "прямо", "right": "Куди повернути?"}, {"left": "на площі", "right": "Де?"}]`)} instruction={"Match each phrase with the question it answers."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Де? (static place)": ["у центрі", "на площі"], "Куди? (destination)": ["у музей"], "Звідки? (origin)": ["з Канади"], "Як? (transport)": ["на метро"], "У якому напрямку? (direction)": ["прямо"]}`)} instruction={"Sort each phrase under the question it answers."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

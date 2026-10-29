@@ -328,14 +328,14 @@ workbook:
     title: Repair city-route interference
     instruction: Choose the natural Ukrainian city sentence.
     items:
-      - sentence: 'Я живу Київ. / Я бути школа.'
-        error: 'живу Київ / бути школа'
-        correction: 'Я живу в Києві. / Я в школі.'
+      - sentence: 'Я живу Київ.'
+        error: 'Київ'
+        correction: 'Я живу в Києві.'
         options:
-          - 'Я живу в Києві. / Я в школі.'
-          - 'Я живу Київ. / Я бути школа.'
-          - 'Я живу до Києва. / Я школа.'
-        explanation: 'Де? needs в/у or на plus the locative.'
+          - 'Я живу в Києві.'
+          - 'Я живу Київ.'
+          - 'Я живу до Києва.'
+        explanation: 'After живу, в Києві names where the speaker lives. Київ needs the locative form here; до Києва names a destination.'
       - sentence: 'Я йду в магазині.'
         error: 'в магазині'
         correction: 'Я йду в магазин.'

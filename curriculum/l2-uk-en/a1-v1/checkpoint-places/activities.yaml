@@ -378,19 +378,23 @@ workbook:
           - 'на вокзалі'
           - 'з вокзалу'
         explanation: "Куди asks for destination, so на вокзал fits. На вокзалі denotes location; з вокзалу denotes departure."
-  - type: match-up
+  - type: group-sort
     title: Function check
-    instruction: Match each phrase with the question it answers.
-    pairs:
-      - left: 'у центрі'
-        right: 'Де?'
-      - left: 'у музей'
-        right: 'Куди?'
-      - left: 'з Канади'
-        right: 'Звідки?'
-      - left: 'на метро'
-        right: 'Як?'
-      - left: 'прямо'
-        right: 'Куди повернути?'
-      - left: 'на площі'
-        right: 'Де?'
+    instruction: Sort each phrase under the question it answers.
+    groups:
+      - label: Де? (static place)
+        items:
+          - у центрі
+          - на площі
+      - label: Куди? (destination)
+        items:
+          - у музей
+      - label: Звідки? (origin)
+        items:
+          - з Канади
+      - label: Як? (transport)
+        items:
+          - на метро
+      - label: У якому напрямку? (direction)
+        items:
+          - прямо

@@ -18,7 +18,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/activities.yaml",
-      "sha256": "15b868a977eaac6e051b1fc9a4bd5ab26d0a12bc1f5ea83307f21f42e0a94c5d"
+      "sha256": "53002edd04f37eff31277bf2dc6f121a9f2083938a7c69bc706b24c296791ca1"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/module.md",
@@ -130,7 +130,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/activities.yaml",
-      "sha256": "ead587a1c5ae952ed906a55b8e56a0fe15611edeed1d7a368b8c255f501c0423"
+      "sha256": "f323daa7c6e95d0891d2822680d612427bdbf7262111837c5f780d2d0771ab23"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/module.md",
@@ -178,7 +178,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/days-and-months/activities.yaml",
-      "sha256": "bb54f48d8e21429a0b93e2aaea623e83c09c76fb5a8f83e700b8db6ae3fa5339"
+      "sha256": "f0d77d9731f36df2a239d7cc51b223ca4a049429a7d3c00bf2de95c3d4979935"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/days-and-months/module.md",
@@ -242,7 +242,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/free-time/activities.yaml",
-      "sha256": "fa3a23773cf88a5f2380e1b21cc151916484444803644b9e64e48e8a578fd7c6"
+      "sha256": "fb405a6edc108b8c248f7a29a79b1ad9818bd26eb7dc5bbfeda390f3f93c5f3d"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/free-time/module.md",
@@ -402,7 +402,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-day/activities.yaml",
-      "sha256": "b493ccaead3be7db10e8f3a088f52a7037c974ae68a6a0d406099217edd7459e"
+      "sha256": "c9fe402d7e0d15ec3bff51857dfb3f78bb1e87161d6a48e0950e492fe72ba05d"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-day/module.md",
@@ -482,7 +482,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/people-around-me/activities.yaml",
-      "sha256": "fe205eb1860bd36eb0357d399c8a69539873fa808c844ae47d43f01c64c1fdad"
+      "sha256": "970206861811860f2226b36fb04bd743a3916cf7a0eaf97daccbd17773f48e58"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/people-around-me/module.md",
@@ -13690,7 +13690,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/around-the-city.mdx",
-      "sha256": "e43b807f565b82fd5b39e61d97176fa63667c3fe1befc401458af64ce48e6242"
+      "sha256": "858e27465aa376353dd445f1fe57a87a0903de9a9c4a6ab9bc29a438b024ab6e"
     },
     {
       "path": "site/src/content/docs/a1-v1/at-the-cafe.mdx",
@@ -13718,7 +13718,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-places.mdx",
-      "sha256": "adfbaf4c270cfb1a1073348eea88b9f9e882aecbf1893d3bc2e7dbe74d6a8739"
+      "sha256": "dc83b7cbd1d51f3185d03e0ed359cb5755eca12a3739a7f0785cc7f0a55964d0"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-time-nature.mdx",
@@ -13730,7 +13730,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/days-and-months.mdx",
-      "sha256": "14b00512e2550a533424229e4d4b09a8ada8e44e5bf1c32510a7495c8f8bdda8"
+      "sha256": "be2ebddc329eb98c5ba59708c3710646554d4ffbaaba7fe67acaddf9eae9a7a6"
     },
     {
       "path": "site/src/content/docs/a1-v1/emergencies.mdx",
@@ -13746,7 +13746,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/free-time.mdx",
-      "sha256": "e65892c48856bc4e8ec8c3db70dbb32fa1848c3c050952cd787344115cc25a57"
+      "sha256": "637ff13c14afb19074324a6f81817f9e94861f298d38e40bf0ba29a8ce19a69f"
     },
     {
       "path": "site/src/content/docs/a1-v1/health.mdx",
@@ -13790,7 +13790,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/my-day.mdx",
-      "sha256": "e6f2abbfd973a373826452214c21ce8d3b9360eb929977713f37680532d99a6d"
+      "sha256": "befab780c1832573d0191ec891bdb6dc156a7f06b80ec6293d231ce62a8299a4"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-family.mdx",
@@ -13810,7 +13810,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/people-around-me.mdx",
-      "sha256": "f3485a956dcadf162aee5aa11cfc12dcfc524a6ecef607c82a4e0481ee09f266"
+      "sha256": "5666d44c104c359786b1dd02201202012fc611ff64aa867e8511f1ca653c1cba"
     },
     {
       "path": "site/src/content/docs/a1-v1/please-do-this.mdx",
