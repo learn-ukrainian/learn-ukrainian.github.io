@@ -727,14 +727,16 @@ def test_publisher_merge_proceeds_at_zero_with_every_readiness_read(publisher):
         text=True,
     )
     assert result.returncode == 0, result.stderr
-    assert wire.sent[:5] == [
+    assert wire.sent[:6] == [
         ("http", "GET", "repos/unit/public/pulls/1"),
         ("native", "pr", "checks", "1", "--json", "name,bucket,state,workflow", "--repo", "unit/public"),
         ("http", "POST", "graphql"),
         ("http", "GET", "repos/unit/public/issues/1/comments?per_page=100"),
         ("http", "GET", "user?per_page=100"),
+        # No verdict is recorded, so the guard checks that no review status was left behind.
+        ("native", "pr", "checks", "1", "--json", "name,bucket,state,workflow", "--repo", "unit/public"),
     ]
-    assert wire.sent[5][:4] == ("native", "pr", "merge", "1") and len(wire.sent) == 6
+    assert wire.sent[6][:4] == ("native", "pr", "merge", "1") and len(wire.sent) == 7
     # The operation ended with the verb: a non-landing verb is refused with its typed reason.
     refused(
         pub.publish(
@@ -748,7 +750,7 @@ def test_publisher_merge_proceeds_at_zero_with_every_readiness_read(publisher):
         ),
         "secondary_hold",
     )
-    assert len(wire.sent) == 6
+    assert len(wire.sent) == 7
 
 
 def test_publisher_merge_honours_only_an_authentic_hold_with_its_reason(publisher):
