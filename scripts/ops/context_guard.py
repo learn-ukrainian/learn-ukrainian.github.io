@@ -25,8 +25,9 @@ handoff
     tick's dialog check remains the fallback. A failing anchor check sends the
     lane back with the missing sections and counts instead of exiting; the check
     is bounded and alerts ``epics`` once per distinct failure. A check error or a missing handoff fails
-    open, with one alert, so the guard can never wedge a lane. When the agent and
-    its launcher have exited, the pane is respawned with the lane's launcher
+    open, with one alert, so the anchor check can never wedge a lane. Once
+    HANDOFF-DONE has been seen and the agent and its launcher have exited, the
+    pane is respawned with the lane's launcher
     (fresh session; it reads its goal file). If the same idle Claude agent survives
     two exits after HANDOFF-DONE, the same guarded respawn ends it and alerts
     ``claude-cto`` once with a redacted pane tail. Other stalled handoffs alert
@@ -747,6 +748,7 @@ class Guard:
             )
             if not s["done_seen"]:
                 self.log(f"{lane.name} handoff ctx_pct={pct}: agent gone without HANDOFF-DONE; no relaunch")
+                self._stall_alert(lane, s, waited)
                 return
             if snap.busy:
                 # Respawning now would kill the launcher's own exit path (lease release, handoff writes).
@@ -794,6 +796,8 @@ class Guard:
                         f"Pane tail: {tail or '(none captured)'}",
                         f"failed-exit-{lane.name}-{s['since']}",
                     )
+                else:
+                    self._stall_alert(lane, s, waited)
                 return
             command = "/exit" if lane.kind == "claude" else "/quit"
             if not self._unchanged(lane, snap, command, pct):
@@ -837,10 +841,13 @@ class Guard:
             f"{lane.name} handoff ctx_pct={pct} waited={waited}s done={done} idle={idle} "
             f"quit_sent={s.get('quit_sent')} nudges={s.get('nudges', 0)}"
         )
+        self._stall_alert(lane, s, waited)
+
+    def _stall_alert(self, lane: Lane, s: dict[str, Any], waited: int) -> None:
         if waited > self.setting("handoff_alert_seconds") and not s.get("alerted"):
             self.send(
                 "epics",
-                f"CTO-ALERT {iso(self.now())}: {lane.name} driver still running {waited}s after HANDOFF NOW; "
+                f"CTO-ALERT {iso(self.now())}: {lane.name} handoff still incomplete {waited}s after HANDOFF NOW; "
                 f"no forced kill. Check tmux session {lane.session}",
                 f"handoff-alert-{lane.name}-{iso(self.now())}",
             )
