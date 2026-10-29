@@ -127,13 +127,13 @@ inline:
           - 'в'
           - 'з'
         explanation: 'Use на with street location: на вулиці.'
-      - sentence: "(You are leaving the cafe.) Я йду ___ кафе."
+      - sentence: "Я випив каву. Тепер я йду ___ кафе додому."
         answer: 'з'
         options:
           - 'з'
           - 'в'
           - 'на'
-        explanation: 'Йду з кафе answers звідки?'
+        explanation: "The speaker is returning home after coffee, so з кафе marks the point of departure. В кафе goes into the cafe; на кафе does not express departure from it."
       - sentence: "Потім вони йдуть ___ порт."
         answer: 'у'
         options:
@@ -148,13 +148,13 @@ inline:
           - 'в'
           - 'з'
         explanation: 'На пляж is the safe destination phrase.'
-      - sentence: "(The station is your destination.) Увечері я їду ___."
+      - sentence: "— Куди ти їдеш? — Увечері я їду ___."
         answer: 'на вокзал'
         options:
           - 'на вокзал'
           - 'на вокзалі'
           - 'з вокзалу'
-        explanation: 'Їду asks куди?, so use на вокзал.'
+        explanation: "Куди asks for the destination, answered by accusative на вокзал. На вокзалі is a location; з вокзалу is an origin, so neither answers the destination question."
 workbook:
   - type: true-false
     title: Ready checkpoint lines
@@ -244,7 +244,7 @@ workbook:
           - text: 'Я з школи.'
             correct: false
         explanation: 'Де? needs в/у plus the static place form.'
-      - prompt: "(Give the destination: school.) Rephrase: Я йду в школі."
+      - prompt: "— Куди ти йдеш? — ___"
         options:
           - text: "Я йду в школу."
             correct: true
@@ -252,7 +252,7 @@ workbook:
             correct: false
           - text: 'Я йду зі школи.'
             correct: false
-        explanation: "For the destination, use в школу. After Я, the euphonic verb form is йду."
+        explanation: "Куди asks for the destination. Я йду в школу answers it; в школі gives a location and зі школи gives an origin."
       - prompt: 'Repair: Я працюю в пошті.'
         options:
           - text: 'Я працюю на пошті.'
@@ -262,15 +262,15 @@ workbook:
           - text: 'Я працюю до пошти.'
             correct: false
         explanation: 'The safe Ukrainian phrase is на пошті.'
-      - prompt: "(Give the shorter version without є.) Rephrase: Книга є на столі."
+      - prompt: "— Де книга? — ___"
         options:
-          - text: 'Книга на столі.'
+          - text: Книга на столі.
             correct: true
-          - text: 'Книга є на столі.'
+          - text: Книга на столом.
             correct: false
-          - text: 'Книга в стіл.'
+          - text: Книга в стіл.
             correct: false
-        explanation: "The requested A1 place pattern is Книга на столі."
+        explanation: "Де asks for location, answered by locative на столі. На does not govern instrumental столом; в стіл is accusative direction rather than the requested location."
       - prompt: 'Repair: Вона живе Київ.'
         options:
           - text: 'Вона живе в Києві.'
@@ -371,13 +371,13 @@ workbook:
           - 'з метро'
           - 'у метрою'
         explanation: 'На метро is the transport phrase.'
-      - sentence: "(The station is her destination.) Після музею вона їде ___."
+      - sentence: "— Куди вона їде після музею? — Після музею вона їде ___."
         answer: 'на вокзал'
         options:
           - 'на вокзал'
           - 'на вокзалі'
           - 'з вокзалу'
-        explanation: 'Їде asks куди?, so use на вокзал.'
+        explanation: "Куди asks for destination, so на вокзал fits. На вокзалі denotes location; з вокзалу denotes departure."
   - type: match-up
     title: Function check
     instruction: Match each phrase with the question it answers.
