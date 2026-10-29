@@ -354,7 +354,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/linking-ideas/activities.yaml",
-      "sha256": "4f71c43174bc6fcffd0af01b867d817e152bde949f3dfafba93cc652027e6380"
+      "sha256": "bc079ad1f4ea88853cf162a98251f34366322a9b4c10906070eb6a4d58084bac"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/linking-ideas/module.md",
@@ -498,7 +498,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/please-do-this/activities.yaml",
-      "sha256": "5cd819781730c05cca6366f231cd446e46a7eb1f469c6a4b1b9a309ebb6a3c32"
+      "sha256": "4ee551bc91b8dd48dcb21c149f00e914198477cd8a66208aaf604d1bc45c438f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/please-do-this/module.md",
@@ -13778,7 +13778,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/linking-ideas.mdx",
-      "sha256": "12de2d3462ba7b9173bdb8a33db0a2d5b3a06b5e6c9255187713db03a0d219e5"
+      "sha256": "8813843fe85e04a3eeb98424ace06c861a9c247798cd60572f0604f5429cce7a"
     },
     {
       "path": "site/src/content/docs/a1-v1/many-things.mdx",
@@ -13814,7 +13814,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/please-do-this.mdx",
-      "sha256": "d8f1e838c0e135d45d74272fd5b373eac42d06b0ac40d4c8e1797ea4a5c3395f"
+      "sha256": "a81ef91063b182430c2969a042fc5bb715d416ec32ab85634f471a13f403bfa5"
     },
     {
       "path": "site/src/content/docs/a1-v1/questions.mdx",
