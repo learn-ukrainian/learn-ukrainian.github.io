@@ -32,7 +32,8 @@ candidates. It and the CI Secret scan job read title, body, branch and complete
 commit messages from the event and current PR metadata using the existing OPSEC
 rules. Queue scans
 read every member of the first-parent squash chain and each member's current
-PR metadata and source commits. A missing field, incomplete checkout, unsupported
+PR metadata and source commits. On `merge_group`, CI Gate repeats that scan as
+its last step, so an edit made while the queue run was testing still blocks. A missing field, incomplete checkout, unsupported
 event or unreadable range fails closed. Submitted values are never diagnostics
 or workflow environment inputs. The advisory PR-body guard also scans direct
 push branch names and complete commit ranges. A new topic branch uses its
