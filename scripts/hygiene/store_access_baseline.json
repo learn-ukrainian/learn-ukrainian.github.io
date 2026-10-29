@@ -2178,13 +2178,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/wiki/fetch_wikipedia.py",
-      "kind": "raw_store_constructor",
-      "scope": "show_status",
-      "fingerprint": "588886214fe0937e24de535d57314b2d2a13f780fd3715454f49bb1c691483c2",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/wiki/migrate_external_chunks.py",
       "kind": "store_path",
       "scope": "<module>",

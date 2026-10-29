@@ -321,6 +321,119 @@ held-out subprocess interruption/concurrency/reconciliation cases, native Opus
 exact-head review, CI, landing, cleanup and operational source-access checks.
 No live acquisition or canonical-store write is part of offline validation.
 
+## СУМ-20 mirror import
+
+`scripts.ingest.sum20_mirror_import` imports the complete staged СУМ-20 mirror
+into the `sum20_mirror_*` tables of `sources.db`. It never writes the official
+`sum20_*` tables, their quarantine marks or the crawl tables.
+
+### Readers
+
+`query_sum20`, the Sources MCP tool and the word-card meanings apply rule
+`sum20-mirror-rule-v1` at read time (`scripts/wiki/sum20_mirror.py`). For each lookup key they compare
+every mirror row with every official row of that key:
+
+| Official rows for the key | Relation | What is served |
+| --- | --- | --- |
+| None | `mirror_only` | The mirror row |
+| A live official row with an equal comparison payload | `agrees_with_official` | Official only |
+| Only quarantined or unverified rows | `official_quarantined` | The mirror row; the official row stays hidden |
+| Live official rows that differ | `differs_from_official` | Official rows first, then the mirror row |
+
+**Identity and comparison.** The lookup key is the page headword: URL slugs
+spell the apostrophe `_`, as in `м_ясо`. The comparison payload is the one
+`scripts.lexicon.reconcile_sum20` uses.
+
+**Provenance.** Mirror records carry:
+
+- `source_id: "sum20_slovnyk_mirror"` and `source_role: "mirror"`;
+- `official_relation`;
+- the mirror URL as `source_record_id`, plus `source_url`, `retrieved_at` and `content_sha256`;
+- the verbatim article text.
+
+Official records gain only `source_role: "official"`. Callers that require
+official text keep filtering on `source_id == "sum20_official"`.
+
+**Word cards.** Word cards read the same served rows as the separate meaning
+source `sum20_slovnyk_mirror` (`scripts/atlas/word_card_meanings.py`). Its
+permissions-register entry and its lineage are `G-ULIF`, tier 2: a copy of
+СУМ-20, never independent corroboration. The witness is the article body,
+without the page's lookup word or source footer. A page splits only at
+homonym headers numbered ¹, ², … in order, and any other page with several
+entries is held unresolved. A partition is attached only when its head and
+grammar match the card's lexeme uniquely.
+
+**Store selection.** When official rows come from a lexdata generation, mirror
+rows still come from the default sources store and are judged against the
+lexdata rows. An explicit `LU_LEXDATA_DB` or `LEXDATA_DB_PATH` override stays
+exclusive.
+
+### Writer
+
+The writer publishes a new Sources store generation. It needs the generation
+layout, so it runs only after the one-time bootstrap in
+[storage topology](storage-topology.md#sources-store-generations). Before the
+bootstrap it refuses with `import_requires_selector` and changes nothing.
+
+Run it from the primary checkout. Staging must match the admitted SHA-256
+recorded in the [ВТС source snapshot](../sources/admissions/2026-10-28-vts-acquisition.md),
+with an empty WAL and a complete checkpoint.
+
+```bash
+.venv/bin/python -m scripts.ingest.sum20_mirror_import plan
+.venv/bin/python -m scripts.ingest.sum20_mirror_import import \
+  --expect-staging-sha256 32e77a09e004a7ad740fa8acd350d0f5a743cb13f751e9d134ffcec5db595194
+.venv/bin/python -m scripts.storage generations
+```
+
+`plan` only reads. `import` holds the store writer lock from start to finish,
+so a second writer is refused with `writer_lock_busy` and never waits. Under
+the lock it:
+
+1. Hashes the staging bytes into a private snapshot and reads only that snapshot.
+2. Copies the selected generation with the SQLite online backup API into a
+   candidate file in `data/`. The selected generation is only read.
+3. Imports the staged articles into the candidate.
+4. Verifies the candidate.
+5. Publishes it with `publish_generation`, the only routine that changes the
+   selection.
+
+Verification compares:
+
+- the mirror rows with every staging row;
+- the official tables, by full-row digest;
+- every other table's row count;
+- the relation counts with the plan;
+- `PRAGMA integrity_check` and the foreign-key check;
+- sampled `query_sum20` lookups for each relation.
+
+A refusal or a failed check removes the candidate and leaves the selection
+unchanged. Readers need no drain and no restart. A reader that opened the store
+before the switch keeps the previous generation, whole and unchanged. New
+lookups, including the Sources MCP's next request, get the new generation.
+
+### Rollback
+
+Every generation is retained. To go back, select the previous generation; the
+`import` output names it as `previous`:
+
+```bash
+.venv/bin/python -m scripts.storage restore-generation data/sources-generations/<previous>
+```
+
+The generation it replaces stays retained too, so a rollback can be undone the
+same way.
+
+**Exit codes:**
+
+| Code | Meaning |
+| --- | --- |
+| 0 | Published |
+| 1 | Verification failed; the selection is unchanged |
+| 2 | Refused; the selection is unchanged |
+
+A full `scripts/wiki/build_sources_db.py --force` rebuild carries every
+`sum20_*` table, the mirror tables included.
 
 ## Foreground compatibility tools
 

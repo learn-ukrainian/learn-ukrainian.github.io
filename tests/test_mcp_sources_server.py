@@ -900,6 +900,33 @@ class TestCallToolDispatch:
         assert "Леся Українка" in text
         assert "slovnyk.me" not in text
 
+    def test_query_sum20_labels_mirror_records_with_their_provenance(self, server_module):
+        record = {
+            "source_id": "sum20_slovnyk_mirror",
+            "source_role": "mirror",
+            "official_relation": "mirror_only",
+            "rule_version": "sum20-mirror-rule-v1",
+            "source_record_id": "https://slovnyk.example/dict/newsum/берег",
+            "headword": "берег",
+            "stressed_headword": "БЕ́РЕГ",
+            "attribution_label": "Словник української мови у 20 томах — копія slovnyk.me (newsum); fixture",
+            "source_url": "https://slovnyk.example/dict/newsum/берег",
+            "mirror": "slovnyk.me newsum",
+            "retrieved_at": "2026-10-01T00:00:00+00:00",
+            "content_sha256": "def456",
+            "article_text": "берег БЕ́РЕГ, а, ч. Synthetic fixture article.",
+            "senses": [],
+            "citations": [],
+        }
+        with patch("wiki.sources_db.query_sum20", return_value=[record]):
+            text = _run(server_module.handle_query_sum20({"word": "берег"}))[0].text
+
+        assert text.startswith("**СУМ-20 mirror entries for 'берег'**")
+        assert "Official СУМ-20 entries" not in text and "No official" not in text
+        for expected in ("mirror · mirror_only", "https://slovnyk.example/dict/newsum/берег",
+                         "retrieved 2026-10-01T00:00:00+00:00", "Synthetic fixture article."):
+            assert expected in text
+
 
 class TestVerifyWordHandler:
     """Test verify_word handler formatting."""
