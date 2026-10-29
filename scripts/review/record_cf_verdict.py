@@ -2634,4 +2634,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    # Run as a file or with ``-m``, this module is ``__main__`` and defines its own ``RecordError``; the
+    # refusals other modules raise subclass the package module's, so ``main`` must come from that one.
+    from scripts.review.record_cf_verdict import main as package_main
+
+    raise SystemExit(package_main())

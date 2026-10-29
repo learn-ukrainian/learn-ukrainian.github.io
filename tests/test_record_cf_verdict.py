@@ -7,6 +7,7 @@ import json
 import os
 import shlex
 import subprocess
+import sys
 import zlib
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
@@ -3892,3 +3893,52 @@ def test_finding_disposition_refuses_any_closing_language(entry, open_):
     from scripts.review.budget_grant import finding_is_open
 
     assert finding_is_open(entry) is open_
+
+
+# The refusal classes live in other modules (``RepairRefused`` subclasses the package's ``RecordError``).
+# Run as a file or as ``-m``, the script's own copy of ``RecordError`` is a different class, so the CLI must
+# enter through the package module or those refusals escape as tracebacks. The launcher stands in for the
+# network and the fleet registry, then runs the entry exactly as the interpreter does for that form.
+_REFUSING_LAUNCHER = """
+import json, runpy, subprocess, sys
+
+import scripts.orchestration.fleet_repos as fleet_repos
+import scripts.publish.github as github
+
+OPEN_PR = {"headRefOid": "a" * 40, "headRefName": "claude/x", "state": "OPEN"}
+
+
+def refuse(*_args, **_kwargs):
+    from scripts.review.repair_round import RepairRefused
+
+    raise RepairRefused("unclassifiable", "refused by the fixture")
+
+
+github.request_run = lambda args, **_kw: subprocess.CompletedProcess(args, 0, json.dumps(OPEN_PR), "")
+fleet_repos.load_fleet_repos = refuse
+form, entry, *sys.argv[1:] = sys.argv[1:]
+sys.argv[0] = entry
+if form == "file":
+    runpy.run_path(entry, run_name="__main__")
+else:
+    runpy.run_module(entry, run_name="__main__", alter_sys=True)
+"""
+
+
+@pytest.mark.parametrize("form", ["file", "module"])
+def test_cli_prints_the_typed_refusal_in_every_invocation_form(form):
+    repo = Path(recorder.__file__).resolve().parents[2]
+    entry = str(repo / "scripts/review/record_cf_verdict.py") if form == "file" else "scripts.review.record_cf_verdict"
+    env = {**os.environ, "PYTHONPATH": os.pathsep.join(filter(None, [str(repo), os.environ.get("PYTHONPATH")]))}
+    done = subprocess.run(
+        [sys.executable, "-c", _REFUSING_LAUNCHER, form, entry, "budget-check", "--repository", REPOSITORY, "--pr", "42"],
+        capture_output=True,
+        text=True,
+        cwd=repo,
+        env=env,
+        check=False,
+        timeout=120,
+    )
+    assert done.returncode == 1 and "Traceback" not in done.stderr, done.stderr
+    refusal = json.loads(done.stdout)
+    assert refusal["admitted"] is False and "refused by the fixture" in refusal["refusal"]
