@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Iterator
+from typing import Any
 
 ACCEPTED_VERDICT_TOKENS = (
     "APPROVE",
@@ -252,6 +253,62 @@ def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list
             {"APPROVED": "APPROVE", "CHANGES_REQUESTED": "REQUEST_CHANGES", "BLOCKED": "BLOCKED"}[verdict]
         )
     return verdicts
+
+
+# A top-level JSON object carrying any of these keys is offered as a findings envelope.
+_FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
+_JSON_VALUE_START_RE = re.compile(r"^ {0,3}[\[{]", re.MULTILINE)
+
+
+def _top_level_json_values(response: str) -> Iterator[Any]:
+    """Decoded JSON of each top-level block: a ``json`` or bare fence, or a value that starts a paragraph line.
+
+    Top level is CommonMark level 0: quotes, list items and values nested in another value are examples.
+    """
+    from markdown_it import MarkdownIt
+
+    decoder = json.JSONDecoder()
+    for token in MarkdownIt("commonmark").parse("\n".join(_commonmark_lines(response))):
+        if token.type == "fence" and token.level == 0 and token.info.strip() in {"", "json"}:
+            try:
+                value = json.loads(token.content)
+            except ValueError:
+                continue
+            yield value
+        elif token.type == "inline" and token.level == 1:
+            consumed = 0
+            for match in _JSON_VALUE_START_RE.finditer(token.content):
+                if match.end() <= consumed:
+                    continue
+                try:
+                    value, consumed = decoder.raw_decode(token.content, match.end() - 1)
+                except ValueError:
+                    continue
+                yield value
+
+
+def invalid_findings_block(response: str, *, stated: str | None = None) -> str | None:
+    """Why the reply carries a top-level findings block that fails validation, or None.
+
+    Fails closed: when the scan cannot decide the top-level blocks (the decoder's depth limit), the reply
+    is treated as carrying an invalid block. ``stated`` is as in ``_findings_json_verdicts``.
+    """
+    from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
+    from scripts.review.review_contract import ContractError, validate_reviewer_payload
+
+    try:
+        for payload in _top_level_json_values(response):
+            if not isinstance(payload, dict) or not _FINDINGS_ENVELOPE_KEYS & payload.keys():
+                continue
+            payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
+            try:
+                validate_reviewer_payload(payload)
+                resolve_verdict_and_evidence(payload, stated=stated)
+            except (ContractError, ReviewPublicationError):
+                return "top-level findings block fails validation"
+    except RecursionError:
+        return "top-level blocks cannot be decided"
+    return None
 
 
 # The review-loop reply's advisory ``SCORE: n/10`` line (C-3020), with the same
