@@ -97,7 +97,9 @@
         "2V27",
         "2V28",
         "2V29",
-        "2V32"
+        "2V32",
+        "R2-P01",
+        "R2-W01"
       ],
       "before": {
         "sentence": "(Next, go right.) Потім ідіть ___, школа там.",
@@ -110,7 +112,7 @@
         "explanation": "Направо means to the right."
       },
       "after": {
-        "sentence": "Школа праворуч від вас. На перехресті ідіть ___, до школи.",
+        "sentence": "Школа праворуч від вас. На перехресті йдіть ___, до школи.",
         "answer": "направо",
         "options": [
           "направо",
@@ -1539,7 +1541,9 @@
         "2D10",
         "2D11",
         "2V10",
-        "2V11"
+        "2V11",
+        "R2-D01",
+        "R2-W01"
       ],
       "before": {
         "sentence": "(Ask the customer to wait a moment.) Добре, одну ___.",
@@ -1552,7 +1556,7 @@
         "explanation": "Одну хвилинку means one moment."
       },
       "after": {
-        "sentence": "Суп готовий. Зараз принесу. Добре, одну ___.",
+        "sentence": "Офіціант: Добре, одну ___. Суп уже готовий, зараз принесу.",
         "answer": "хвилинку",
         "options": [
           "хвилинку",
@@ -2482,7 +2486,7 @@
       "section": "inline",
       "activity_index": 2,
       "item_index": 0,
-      "activity_title": "Автобусом чи на метро?",
+      "activity_title": "Як ми їдемо?",
       "instruction": "Choose the natural travel model.",
       "type": "quiz",
       "origin": "11930",
@@ -2492,13 +2496,14 @@
         "автобусу",
         "автобуса"
       ],
-      "reason": "Instrumental автобусом expresses the means of transport. Bare dative/genitive автобусу and genitive/accusative автобусa do not express the transport means after їдемо without a preposition. На автобусі remains grammatical generally and is no longer a distractor.",
+      "reason": "Автобусом is the instrumental form for the means of transport. Автобусу and автобуса are not instrumental forms.",
       "sources": [
         "2W02",
         "2W03",
         "2S02",
         "2T02",
-        "2D26"
+        "2D26",
+        "R2-W01"
       ],
       "before": {
         "prompt": "(Use one word in the instrumental case.) How do you say by bus?",
@@ -2534,7 +2539,7 @@
             "correct": false
           }
         ],
-        "explanation": "Instrumental автобусом expresses the means of transport. Bare dative/genitive автобусу and genitive/accusative автобусa do not express the transport means after їдемо without a preposition. На автобусі remains grammatical generally and is no longer a distractor."
+        "explanation": "Автобусом is the instrumental form for the means of transport. Автобусу and автобуса are not instrumental forms."
       }
     },
     {
@@ -2888,7 +2893,9 @@
         "2D62",
         "2V60",
         "2V61",
-        "2V62"
+        "2V62",
+        "R2-P01",
+        "R2-W01"
       ],
       "before": {
         "sentence": "Їхати за автобусом (Travel by bus)",
@@ -2902,7 +2909,7 @@
         "explanation": "Means of transport uses the instrumental without a preposition."
       },
       "after": {
-        "sentence": "Я сиджу в цьому автобусі й їду за цим автобусом.",
+        "sentence": "Я сиджу в цьому автобусі і їду за цим автобусом.",
         "error": "їду за цим автобусом",
         "correction": "їду цим автобусом",
         "options": [

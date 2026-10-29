@@ -8,18 +8,20 @@
       "прямо",
       "наліво",
       "направо"
-    ]
+    ],
+    "title": "Direction words"
   },
   {
     "id": "around-the-city/inline/act-1/3",
     "type": "fill-in",
     "instruction": "Complete each direction line.",
-    "prompt": "Школа праворуч від вас. На перехресті ідіть ___, до школи.",
+    "prompt": "Школа праворуч від вас. На перехресті йдіть ___, до школи.",
     "options": [
       "направо",
       "наліво",
       "назад"
-    ]
+    ],
+    "title": "Direction words"
   },
   {
     "id": "around-the-city/inline/act-2/1",
@@ -30,7 +32,8 @@
       "в магазин",
       "в магазині",
       "на магазині"
-    ]
+    ],
+    "title": "Де or куди in context"
   },
   {
     "id": "around-the-city/inline/act-2/3",
@@ -41,7 +44,8 @@
       "роботу",
       "роботі",
       "робота"
-    ]
+    ],
+    "title": "Де or куди in context"
   },
   {
     "id": "around-the-city/inline/act-2/5",
@@ -52,7 +56,8 @@
       "офіс",
       "офісі",
       "офісу"
-    ]
+    ],
+    "title": "Де or куди in context"
   },
   {
     "id": "around-the-city/inline/act-5/0",
@@ -63,7 +68,8 @@
       "близько",
       "далеко",
       "їдьте"
-    ]
+    ],
+    "title": "Close, far, or on the corner"
   },
   {
     "id": "around-the-city/inline/act-5/1",
@@ -74,7 +80,8 @@
       "далеко",
       "поруч",
       "їдьте"
-    ]
+    ],
+    "title": "Close, far, or on the corner"
   },
   {
     "id": "around-the-city/inline/act-5/2",
@@ -85,7 +92,8 @@
       "поруч",
       "їдьте",
       "далеко"
-    ]
+    ],
+    "title": "Close, far, or on the corner"
   },
   {
     "id": "around-the-city/inline/act-5/4",
@@ -96,7 +104,8 @@
       "прямо",
       "наліво",
       "направо"
-    ]
+    ],
+    "title": "Close, far, or on the corner"
   },
   {
     "id": "at-the-cafe/inline/act-2/2",
@@ -107,7 +116,8 @@
       "борщ",
       "борщу",
       "борщем"
-    ]
+    ],
+    "title": "Order with мені"
   },
   {
     "id": "at-the-cafe/inline/act-2/3",
@@ -118,7 +128,8 @@
       "салат",
       "салату",
       "салатом"
-    ]
+    ],
+    "title": "Order with мені"
   },
   {
     "id": "at-the-cafe/inline/act-2/4",
@@ -129,7 +140,8 @@
       "чай",
       "чаю",
       "чаєм"
-    ]
+    ],
+    "title": "Order with мені"
   },
   {
     "id": "at-the-cafe/inline/act-2/6",
@@ -140,7 +152,8 @@
       "хліб",
       "хліба",
       "хлібом"
-    ]
+    ],
+    "title": "Order with мені"
   },
   {
     "id": "at-the-cafe/inline/act-2/7",
@@ -151,7 +164,8 @@
       "маленьку каву",
       "маленька кава",
       "маленької кави"
-    ]
+    ],
+    "title": "Order with мені"
   },
   {
     "id": "checkpoint-food-shopping/inline/act-2/0",
@@ -162,7 +176,8 @@
       "салат",
       "салата",
       "салату"
-    ]
+    ],
+    "title": "Accusative checkpoint"
   },
   {
     "id": "checkpoint-food-shopping/inline/act-2/2",
@@ -173,7 +188,8 @@
       "воду",
       "вода",
       "води"
-    ]
+    ],
+    "title": "Accusative checkpoint"
   },
   {
     "id": "checkpoint-food-shopping/inline/act-2/6",
@@ -184,7 +200,8 @@
       "хліб",
       "хліба",
       "хлібу"
-    ]
+    ],
+    "title": "Accusative checkpoint"
   },
   {
     "id": "checkpoint-food-shopping/inline/act-2/8",
@@ -195,7 +212,8 @@
       "піцу",
       "піца",
       "піци"
-    ]
+    ],
+    "title": "Accusative checkpoint"
   },
   {
     "id": "checkpoint-food-shopping/inline/act-3/0",
@@ -206,7 +224,8 @@
       "кашу",
       "каша",
       "каші"
-    ]
+    ],
+    "title": "Market and cafe day"
   },
   {
     "id": "i-eat-i-drink/inline/act-1/4",
@@ -217,7 +236,8 @@
       "кашу",
       "каша",
       "каші"
-    ]
+    ],
+    "title": "Direct object endings"
   },
   {
     "id": "i-eat-i-drink/inline/act-1/6",
@@ -228,7 +248,8 @@
       "суп",
       "супу",
       "супом"
-    ]
+    ],
+    "title": "Direct object endings"
   },
   {
     "id": "i-eat-i-drink/inline/act-1/7",
@@ -239,7 +260,8 @@
       "картоплю",
       "картопля",
       "картоплі"
-    ]
+    ],
+    "title": "Direct object endings"
   },
   {
     "id": "i-eat-i-drink/inline/act-2/0",
@@ -250,7 +272,8 @@
       "каву",
       "кава",
       "кави"
-    ]
+    ],
+    "title": "Choose the food line"
   },
   {
     "id": "i-eat-i-drink/inline/act-2/2",
@@ -261,7 +284,8 @@
       "сік",
       "соку",
       "соком"
-    ]
+    ],
+    "title": "Choose the food line"
   },
   {
     "id": "i-eat-i-drink/inline/act-2/3",
@@ -272,7 +296,8 @@
       "м'ясо",
       "м'ясу",
       "м'яса"
-    ]
+    ],
+    "title": "Choose the food line"
   },
   {
     "id": "i-eat-i-drink/inline/act-2/5",
@@ -283,7 +308,8 @@
       "кашу",
       "каша",
       "каші"
-    ]
+    ],
+    "title": "Choose the food line"
   },
   {
     "id": "at-the-cafe/inline/act-4/0",
@@ -294,18 +320,20 @@
       "меню",
       "рахунок",
       "карткою"
-    ]
+    ],
+    "title": "Complete the cafe dialogue"
   },
   {
     "id": "at-the-cafe/inline/act-4/5",
     "type": "fill-in",
     "instruction": "Choose the word or phrase that fits the dialogue.",
-    "prompt": "Суп готовий. Зараз принесу. Добре, одну ___.",
+    "prompt": "Офіціант: Добре, одну ___. Суп уже готовий, зараз принесу.",
     "options": [
       "хвилинку",
       "годину",
       "картку"
-    ]
+    ],
+    "title": "Complete the cafe dialogue"
   },
   {
     "id": "checkpoint-food-shopping/workbook/2/5",
@@ -316,7 +344,8 @@
       "склянку",
       "кілограм",
       "буханку"
-    ]
+    ],
+    "title": "Serve the table"
   },
   {
     "id": "checkpoint-food-shopping/workbook/5/4",
@@ -327,7 +356,8 @@
       "Мене звати Джон, дайте меню.",
       "Мені звати Джон, дайте меню.",
       "Я є Джон і я маю меню."
-    ]
+    ],
+    "title": "Repair A1.6 interference"
   },
   {
     "id": "checkpoint-food-shopping/workbook/5/5",
@@ -338,7 +368,8 @@
       "Дайте, будь ласка, рахунок.",
       "Дай, будь ласка, рахунок.",
       "Дайте мені рахунком."
-    ]
+    ],
+    "title": "Repair A1.6 interference"
   },
   {
     "id": "checkpoint-food-shopping/workbook/5/6",
@@ -349,7 +380,8 @@
       "Я плачу гривнями.",
       "Я плачу рублями.",
       "Я плачу гривень."
-    ]
+    ],
+    "title": "Repair A1.6 interference"
   },
   {
     "id": "checkpoint-places/inline/act-4/2",
@@ -360,7 +392,8 @@
       "з",
       "в",
       "на"
-    ]
+    ],
+    "title": "Odesa call gaps"
   },
   {
     "id": "checkpoint-places/inline/act-4/5",
@@ -371,7 +404,8 @@
       "на вокзал",
       "на вокзалі",
       "з вокзалу"
-    ]
+    ],
+    "title": "Odesa call gaps"
   },
   {
     "id": "checkpoint-places/workbook/2/1",
@@ -382,7 +416,8 @@
       "Я йду в школу.",
       "Я йду в школі.",
       "Я йду зі школи."
-    ]
+    ],
+    "title": "Repair checkpoint-places interference"
   },
   {
     "id": "checkpoint-places/workbook/2/3",
@@ -393,7 +428,8 @@
       "Книга на столі.",
       "Книга на столом.",
       "Книга в стіл."
-    ]
+    ],
+    "title": "Repair checkpoint-places interference"
   },
   {
     "id": "checkpoint-places/workbook/4/5",
@@ -404,7 +440,8 @@
       "на вокзал",
       "на вокзалі",
       "з вокзалу"
-    ]
+    ],
+    "title": "One city story phrases"
   },
   {
     "id": "food-and-drink/workbook/3/1",
@@ -415,7 +452,8 @@
       "обідаю",
       "вечеряю",
       "п'ю"
-    ]
+    ],
+    "title": "Meal verb rhythm"
   },
   {
     "id": "food-and-drink/workbook/3/3",
@@ -426,7 +464,8 @@
       "їм",
       "їси",
       "їсть"
-    ]
+    ],
+    "title": "Meal verb rhythm"
   },
   {
     "id": "food-and-drink/workbook/3/5",
@@ -437,7 +476,8 @@
       "з молоком",
       "з молоко",
       "смачна"
-    ]
+    ],
+    "title": "Meal verb rhythm"
   },
   {
     "id": "shopping/inline/act-1/6",
@@ -448,7 +488,8 @@
       "коштують",
       "коштує",
       "коштувала"
-    ]
+    ],
+    "title": "Price questions"
   },
   {
     "id": "shopping/inline/act-4/1",
@@ -459,7 +500,8 @@
       "літр",
       "пляшку",
       "буханку"
-    ]
+    ],
+    "title": "Quantity phrases"
   },
   {
     "id": "shopping/inline/act-4/2",
@@ -470,7 +512,8 @@
       "пляшку",
       "кілограм",
       "буханку"
-    ]
+    ],
+    "title": "Quantity phrases"
   },
   {
     "id": "shopping/inline/act-4/3",
@@ -481,7 +524,8 @@
       "пачку",
       "літр",
       "пачкою"
-    ]
+    ],
+    "title": "Quantity phrases"
   },
   {
     "id": "transport/inline/act-2/5",
@@ -492,7 +536,8 @@
       "відправлення",
       "відправленням",
       "відправленню"
-    ]
+    ],
+    "title": "Ticket window"
   },
   {
     "id": "transport/inline/act-3/0",
@@ -503,7 +548,8 @@
       "автобусом",
       "автобусу",
       "автобуса"
-    ]
+    ],
+    "title": "Як ми їдемо?"
   },
   {
     "id": "where-from/workbook/4/0",
@@ -514,7 +560,8 @@
       "з України",
       "в Україні",
       "в Україну"
-    ]
+    ],
+    "title": "Country, city, current home"
   },
   {
     "id": "where-from/workbook/4/1",
@@ -525,7 +572,8 @@
       "з Канади",
       "у Канаді",
       "до Канади"
-    ]
+    ],
+    "title": "Country, city, current home"
   },
   {
     "id": "where-from/workbook/4/2",
@@ -536,7 +584,8 @@
       "зі Львова",
       "у Львові",
       "до Львова"
-    ]
+    ],
+    "title": "Country, city, current home"
   },
   {
     "id": "where-from/workbook/4/4",
@@ -547,7 +596,8 @@
       "зі США",
       "у США",
       "до США"
-    ]
+    ],
+    "title": "Country, city, current home"
   },
   {
     "id": "where-from/workbook/4/5",
@@ -558,7 +608,8 @@
       "з Києва",
       "у Києві",
       "у Київ"
-    ]
+    ],
+    "title": "Country, city, current home"
   },
   {
     "id": "transport/workbook/3/0",
@@ -569,18 +620,20 @@
       "Я їду автобусом до школи.",
       "Я їду автобусу до школи.",
       "Я їду автобусом до школі."
-    ]
+    ],
+    "title": "Repair transport interference"
   },
   {
     "id": "transport/workbook/3/1",
     "type": "error-correction",
     "instruction": "Choose the natural Ukrainian transport sentence.",
-    "prompt": "Я сиджу в цьому автобусі й їду за цим автобусом.",
+    "prompt": "Я сиджу в цьому автобусі і їду за цим автобусом.",
     "options": [
       "їду цим автобусом",
       "їду цим автобусу",
       "їду біля цього автобуса"
-    ]
+    ],
+    "title": "Repair transport interference"
   },
   {
     "id": "transport/workbook/3/2",
@@ -591,6 +644,7 @@
       "в таксі, а потім на метро",
       "в таксієм, а потім на метро",
       "в таксі, а потім на метрою"
-    ]
+    ],
+    "title": "Repair transport interference"
   }
 ]

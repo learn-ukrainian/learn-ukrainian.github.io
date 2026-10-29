@@ -200,7 +200,7 @@ inline:
           - 'читати'
           - 'платити'
         explanation: 'The server asks what you will drink.'
-      - sentence: "Суп готовий. Зараз принесу. Добре, одну ___."
+      - sentence: "Офіціант: Добре, одну ___. Суп уже готовий, зараз принесу."
         answer: 'хвилинку'
         options:
           - 'хвилинку'

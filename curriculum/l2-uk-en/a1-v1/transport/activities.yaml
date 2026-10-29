@@ -125,7 +125,7 @@ inline:
         explanation: "The departure event is the nominative subject відправлення in this time question. Instrumental відправленням and dative відправленню cannot be its subject."
   - id: act-3
     type: quiz
-    title: Автобусом чи на метро?
+    title: Як ми їдемо?
     instruction: Choose the natural travel model.
     items:
       - prompt: "Ми їдемо..."
@@ -136,7 +136,7 @@ inline:
             correct: false
           - text: автобуса
             correct: false
-        explanation: "Instrumental автобусом expresses the means of transport. Bare dative/genitive автобусу and genitive/accusative автобусa do not express the transport means after їдемо without a preposition. На автобусі remains grammatical generally and is no longer a distractor."
+        explanation: "Автобусом is the instrumental form for the means of transport. Автобусу and автобуса are not instrumental forms."
       - prompt: 'How do you say by metro?'
         options:
           - text: 'на метро'
@@ -305,7 +305,7 @@ workbook:
           - Я їду автобусу до школи.
           - Я їду автобусом до школі.
         explanation: "Автобусом expresses the means without в. Автобусу is not the instrumental; до requires genitive школи, not locative школі."
-      - sentence: "Я сиджу в цьому автобусі й їду за цим автобусом."
+      - sentence: "Я сиджу в цьому автобусі і їду за цим автобусом."
         error: "їду за цим автобусом"
         correction: "їду цим автобусом"
         options:

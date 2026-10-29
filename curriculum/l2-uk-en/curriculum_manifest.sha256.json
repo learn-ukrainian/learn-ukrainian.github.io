@@ -18,7 +18,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/activities.yaml",
-      "sha256": "f04a0edd19b3f6fd06337200d8cae49ebbe9b0fa97033aef62d4265defc7e77f"
+      "sha256": "15b868a977eaac6e051b1fc9a4bd5ab26d0a12bc1f5ea83307f21f42e0a94c5d"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/module.md",
@@ -34,7 +34,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/at-the-cafe/activities.yaml",
-      "sha256": "eec7fe9ae0b4616e917bf92f4d7a6e93f85b823d760eb1ed5863d6e46e2c96b5"
+      "sha256": "1ef1d96400ef1a768ca773183e5d22fba0a82e59f14da6205b5908d07a157d99"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/at-the-cafe/module.md",
@@ -642,7 +642,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/transport/activities.yaml",
-      "sha256": "0115e8b6b4c6cc081a04969d9199f5d1f3dad6e7e4d02ba7d3f87916d746b5d9"
+      "sha256": "668f3c07717a6c77dffaff3c76f3b2f84ac559dfd41f68ff7eebc4ed9cae2c66"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/transport/module.md",
@@ -13690,11 +13690,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/around-the-city.mdx",
-      "sha256": "a1ca3d535ebfe0507d5b6da8a069ea8bd1c9de5cc0927e97bb61d93fb05ac3ad"
+      "sha256": "e43b807f565b82fd5b39e61d97176fa63667c3fe1befc401458af64ce48e6242"
     },
     {
       "path": "site/src/content/docs/a1-v1/at-the-cafe.mdx",
-      "sha256": "c3b46947028b4bbaadb895fce351a54cbb462eb8de91c92fbabf9771c8e53975"
+      "sha256": "31c4e9eb131f8bf82b2dd8b81289859035a3f817ae7ba041019aa334b7212bc2"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-actions.mdx",
@@ -13850,7 +13850,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/transport.mdx",
-      "sha256": "2a10d363284cd74558163349206090f4b10877a5f05513188c198e58adba9982"
+      "sha256": "2c965fb8b4072443743ec6ce8b10a3807b3ced59f4c833078079f2436afbb0d5"
     },
     {
       "path": "site/src/content/docs/a1-v1/verbs-group-one.mdx",
