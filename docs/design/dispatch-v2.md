@@ -20,7 +20,9 @@ gets `worktree_disposition` (`removed`, `retained` or `error`) with a
 A retained tree whose reason can clear later (`worker.RETRY_REASONS`, which
 covers every reason except `borrowed_worktree`) is settled again by
 `worker.settle_left_worktrees`. This happens each time a dispatch starts and
-each time a task settles, after that task's own record is published. A retry
+each time a task settles, just before that task's record turns terminal, so the
+supervisor exits as soon as its own tree is settled and a tree the task borrowed
+is retried on the next pass. A retry
 uses the same proofs as the first settlement, so a tree that still holds
 uncommitted or unpublished work, or a nested repository with unpushed commits,
 stays. A retry never forces a removal.

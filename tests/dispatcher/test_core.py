@@ -487,10 +487,10 @@ def test_lingering_provider_process_keeps_the_worktree_until_a_retry_proves_it_g
 
 
 def settled_by_next_task(sandbox, retained_id, before_release=lambda _kept: None):
-    """Run one task to its end and return the retained record once that task's settlement retried it.
+    """Run one task to its end and return the retained record as that task's settlement retried it.
 
-    ``before_release`` sees the record as the dispatch's own retry left it. The settlement retry runs
-    after the task's own record is published, so it is seen as a replaced record file.
+    ``before_release`` sees the record as the dispatch's own retry left it; the settlement retry
+    rewrites the record file before the task turns terminal.
     """
     record_file = sandbox.tasks / f"{retained_id}.json"
     task = sandbox.dispatch("blocked")
@@ -499,10 +499,7 @@ def settled_by_next_task(sandbox, retained_id, before_release=lambda _kept: None
     before_release(json.loads(record_file.read_text()))
     (sandbox.tasks / f"{task[0]}.release").touch()
     sandbox.settle(task)
-    deadline = time.monotonic() + 15
-    while record_file.stat().st_ino == before:
-        assert time.monotonic() < deadline, "settlement never retried the retained worktree"
-        time.sleep(0.02)
+    assert record_file.stat().st_ino != before, "settlement never retried the retained worktree"
     return json.loads(record_file.read_text())
 
 

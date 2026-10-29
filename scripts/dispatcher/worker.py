@@ -570,16 +570,17 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                     resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
                 )
             record["provider_pgid"] = child.pid if child else None
+            # Settling a task first retries the trees earlier settlements kept for a cause that may have
+            # cleared, under the same proofs. It runs before this task's record turns terminal, holding no
+            # record lock, so the supervisor exits as soon as its own tree is settled.
+            with contextlib.suppress(Exception):
+                settle_left_worktrees()
             # The removal chokepoint releases a tree only to a finished owner record, so publish it, then
             # settle; wait() reads a terminal record under this lock and never sees the tree mid-removal.
             with store.task_state_lock(path):
                 store.replace(record, path)
                 _reap_settled(record, patience=SETTLE_PATIENCE)
                 store.replace(record, path)
-            # Settling a task also retries the trees earlier settlements kept for a cause that may
-            # have cleared, under the same proofs; this task's outcome is already published.
-            with contextlib.suppress(Exception):
-                settle_left_worktrees()
         finally:
             signal.signal(signal.SIGTERM, previous_term)
             signal.signal(signal.SIGINT, previous_int)
