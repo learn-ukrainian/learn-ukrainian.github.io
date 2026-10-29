@@ -283,6 +283,7 @@ def shadow_decision(record: dict) -> dict:
                                    Task(headless=True), meters, policy, now)
             result.update(decision=type(decision).__name__, **asdict(decision), policy_version=policy.version,
                           meters=asdict_meter(meters),
+                          pool_sources={p.key: p.source for p in policy.pools},
                           meter_sha256=hashlib.sha256(json.dumps(asdict_meter(meters), sort_keys=True).encode()).hexdigest())
     except Exception:
         # Shadow telemetry can never become a new admission gate. Private exception text stays private.

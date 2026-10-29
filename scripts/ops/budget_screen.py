@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import shlex
 import sys
 from collections import Counter
 from datetime import UTC, datetime, timedelta
@@ -14,7 +15,7 @@ if __package__ in {None, ""}:
 from scripts.dispatcher import pool_selector as selector
 
 
-def shadow_history(now: datetime) -> tuple[Counter, dict]:
+def shadow_history(now: datetime, pool_sources: dict[str, str]) -> tuple[Counter, dict]:
     from scripts.dispatcher.store import list_tasks
 
     counts = Counter()
@@ -22,15 +23,19 @@ def shadow_history(now: datetime) -> tuple[Counter, dict]:
     for record in list_tasks(include_archive=True):
         shadow = record.get("pool_shadow") or {}
         observed = selector.timestamp(shadow.get("observed_at"))
-        if observed and now - timedelta(hours=24) <= observed <= now:
-            if shadow.get("decision") in {"Selected", "ResetRequired"}:
-                counts[shadow.get("pool")] += 1
-            for key, raw in shadow.get("meters", {}).items():
-                meter = selector.Meter(selector.timestamp(raw.get("observed_at")),
-                    tuple(selector.Window(w["name"], w["left"], selector.timestamp(w.get("ends_at")), w["unit"])
-                          for w in raw["windows"]), raw["status"])
-                if meter.observed_at:
-                    samples.setdefault(key, {})[meter.observed_at] = meter
+        if (observed and now - timedelta(hours=24) <= observed <= now
+                and shadow.get("decision") in {"Selected", "ResetRequired"}):
+            counts[shadow.get("pool")] += 1
+        if observed is None or observed > now:
+            continue
+        for key, raw in shadow.get("meters", {}).items():
+            if key not in pool_sources or shadow.get("pool_sources", {}).get(key) != pool_sources[key]:
+                continue
+            meter = selector.Meter(selector.timestamp(raw.get("observed_at")),
+                tuple(selector.Window(w["name"], w["left"], selector.timestamp(w.get("ends_at")), w["unit"])
+                      for w in raw["windows"]), raw["status"])
+            if meter.observed_at:
+                samples.setdefault(key, {})[meter.observed_at] = meter
     return counts, samples
 
 
@@ -69,7 +74,7 @@ def screen(policy_path: Path | None = None, *, redact: bool = False) -> str:
         sources = selector.budget_sources(selector.read_budget(), now)
     except Exception:
         sources = {}
-    counts, history = shadow_history(now)
+    counts, history = shadow_history(now, {p.key: p.source for p in policy.pools} if policy else {})
     entries = [(p.key, p.source, p) for p in policy.pools] if policy else []
     mapped = {source for _, source, _ in entries}
     entries.extend((source, source, None) for source in sources if source not in mapped)
@@ -97,7 +102,9 @@ def screen(policy_path: Path | None = None, *, redact: bool = False) -> str:
         check = ""
         if not left or "NOT CHECKED" in left or "STALE" in left:
             check = (pool.check_command if pool else "") or (
-                f"codexbar usage --provider {provider} --format json --no-color")
+                f"codexbar usage --provider {shlex.quote(provider)} --format json --no-color")
+            if redact and pool and pool.check_command:
+                check = "[private check command]"
         rows.append([label, left or "NOT CHECKED", deadline, age, pace,
                      str(counts[pool.key]) if pool else "unmapped", check])
     if not sources:
