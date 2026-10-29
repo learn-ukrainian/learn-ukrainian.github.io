@@ -467,8 +467,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             )
             record.update(status="running", provider_pgid=child.pid)
             store.replace(record, path)
+            terminal_observer = getattr(provider, "terminal_result_observer", None)
             communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
-                        initial_response_timeout, liveness_paths(spec, invocation), output_sizes)
+                        initial_response_timeout, liveness_paths(spec, invocation), output_sizes,
+                        terminal_observer(stdout_path) if terminal_observer else None)
         returncode = child.returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
