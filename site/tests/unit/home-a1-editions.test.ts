@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { Window, type Document, type Element } from 'happy-dom';
 import Home from '../../src/pages/index.astro';
@@ -8,6 +8,8 @@ import CourseLayout from '../../src/layouts/CourseLayout.astro';
 import { CHROME_STRINGS } from '../../src/lib/i18n/chrome';
 import { readFileSync } from 'node:fs';
 import yaml from 'js-yaml';
+import arc from '../../src/data/arc-a1.json';
+import { deriveA1PrimaryHref, levelEntryHref } from '../../src/lib/a1-entry';
 
 const editions = ['/a1/', '/a1-v1/'];
 
@@ -38,11 +40,12 @@ describe('public A1 edition entry points', () => {
     home = parse(await container.renderToString(Home as any));
   });
 
-  test('home actions open either edition and keep Start A1 canonical', () => {
+  test('home actions start the usable course and label the preparation edition', () => {
     const actions = home.querySelector('.home-actions')!;
     requireBothEditions(actions);
-    expect(actions.querySelector('.home-primary')?.getAttribute('href')).toBe('/a1/');
-    expect(actions.querySelector('a[href="/a1-v1/"]')?.textContent).toContain('Open previous A1');
+    expect(actions.querySelector('.home-primary')?.getAttribute('href')).toBe('/a1-v1/');
+    expect(actions.querySelector('a[href="/a1/"]')?.textContent).toContain('in preparation');
+    expect(home.querySelector('.home-intro')?.textContent).not.toMatch(/archive|архів/);
   });
 
   test('Available Now has adjacent, distinctly labelled edition cards in both locales', () => {
@@ -50,21 +53,24 @@ describe('public A1 edition entry points', () => {
     requireBothEditions(cards);
     const current = cards.querySelector('a[href="/a1/"]')!;
     const previous = cards.querySelector('a[href="/a1-v1/"]')!;
-    expect(current.nextElementSibling).toBe(previous);
+    expect(cards.firstElementChild).toBe(previous);
+    expect(previous.nextElementSibling).toBe(current);
     for (const locale of ['en', 'uk'] as const) {
       expect(current.querySelector(`h3 [data-loc="${locale}"]`)?.textContent)
-        .toBe(CHROME_STRINGS[locale]['home.track.a1New']);
+        .toBe(CHROME_STRINGS[locale]['home.track.a1Preparing']);
       expect(previous.querySelector(`h3 [data-loc="${locale}"]`)?.textContent)
-        .toBe(CHROME_STRINGS[locale]['home.track.a1Previous']);
+        .toBe(CHROME_STRINGS[locale]['home.track.a1Available']);
     }
     expect(previous.textContent).toContain('55');
-    expect(current.textContent).toContain('landing only');
+    expect(current.textContent).toContain('in preparation');
   });
 
   test('course ladder links both editions and shows the complete previous course', () => {
     const ladder = home.querySelector('.track-column')!;
     requireBothEditions(ladder);
     expect(ladder.querySelector('a[href="/a1-v1/"]')?.textContent).toContain('55');
+    expect(ladder.querySelector('a')?.getAttribute('href')).toBe('/a1-v1/');
+    expect(ladder.querySelector('a[href="/a1/"]')?.textContent).toContain('in preparation');
   });
 
   test('course map shows the manifest-derived module count on every linked track row (from curriculum.yaml)', () => {
@@ -112,12 +118,55 @@ describe('public A1 edition entry points', () => {
       expect(nav.querySelector('a[aria-current="page"]')?.getAttribute('href')).toBe(currentPath);
       for (const locale of ['en', 'uk'] as const) {
         expect(nav.querySelector(`a[href="/a1-v1/"] [data-loc="${locale}"]`)?.textContent)
-          .toBe(CHROME_STRINGS[locale]['nav.a1Previous']);
+          .toBe(CHROME_STRINGS[locale]['nav.a1']);
+        expect(nav.querySelector(`a[href="/a1/"] [data-loc="${locale}"]`)?.textContent)
+          .toBe(CHROME_STRINGS[locale]['home.track.a1Preparing']);
       }
     }
+    expect(page.querySelector('footer a[href="/a1-v1/"]')).not.toBeNull();
   });
 
   test('English and Ukrainian cover the same chrome keys', () => {
     expect(Object.keys(CHROME_STRINGS.uk).sort()).toEqual(Object.keys(CHROME_STRINGS.en).sort());
+  });
+
+  test('publication derivation cannot promote an empty or incomplete opening module or a later lesson', () => {
+    const opening = { position: 1, lesson_numbers: [1, 2], built_lessons: [] };
+    const later = { position: 2, lesson_numbers: [1], built_lessons: [1] };
+    expect(deriveA1PrimaryHref([])).toBe('/a1-v1/');
+    expect(deriveA1PrimaryHref(arc.positions)).toBe('/a1-v1/');
+    expect(deriveA1PrimaryHref([opening, later])).toBe('/a1-v1/');
+    expect(deriveA1PrimaryHref([{ ...opening, built_lessons: [1] }])).toBe('/a1-v1/');
+    expect(deriveA1PrimaryHref([{ ...opening, lesson_numbers: [], built_lessons: [1, 2] }])).toBe('/a1-v1/');
+    expect(deriveA1PrimaryHref([later])).toBe('/a1-v1/');
+    expect(deriveA1PrimaryHref([later, { ...opening, built_lessons: [2, 1] }])).toBe('/a1/');
+    expect(levelEntryHref('A1')).toBe('/a1-v1/');
+    expect(levelEntryHref('B2')).toBe('/b2/');
+  });
+
+  test('publishing the opening module automatically promotes home, map, header, footer and picker together', async () => {
+    vi.resetModules();
+    vi.doMock('../../src/data/arc-a1.json', () => ({
+      default: { ...arc, positions: [{ ...arc.positions[0], lesson_numbers: [1, 2], built_lessons: [1, 2] }] },
+    }));
+    try {
+      const { default: PromotedHome } = await import('../../src/pages/index.astro');
+      const { levelEntryHref: promotedLevelHref } = await import('../../src/lib/a1-entry');
+      const container = await AstroContainer.create();
+      const promoted = parse(await container.renderToString(PromotedHome));
+      expect(promoted.querySelector('.home-primary')?.getAttribute('href')).toBe('/a1/');
+      expect(promoted.querySelector('.home-actions a[href="/a1-v1/"]')?.textContent).toContain('Open previous A1');
+      expect(promoted.querySelector('.lu-card-grid a')?.getAttribute('href')).toBe('/a1/');
+      expect(promoted.querySelector('.lu-card-grid a')?.textContent).toContain('opening module is available');
+      expect(promoted.querySelector('.track-column a')?.getAttribute('href')).toBe('/a1/');
+      expect(promoted.querySelector('.track-column a')?.textContent).not.toContain('planned');
+      expect(promoted.querySelector('header nav a[href="/a1/"] [data-loc="en"]')?.textContent).toBe('A1');
+      expect(promoted.querySelector('footer a[href="/a1/"]')).not.toBeNull();
+      expect(promotedLevelHref('A1')).toBe('/a1/');
+      expect(promoted.textContent).not.toContain('in preparation');
+    } finally {
+      vi.doUnmock('../../src/data/arc-a1.json');
+      vi.resetModules();
+    }
   });
 });
