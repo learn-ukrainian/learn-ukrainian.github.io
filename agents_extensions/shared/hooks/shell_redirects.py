@@ -601,6 +601,45 @@ def unknown_repository_segments(command: str) -> list[list[str]]:
     return segments
 
 
+def _logical_lines(command: str) -> list[str]:
+    """Keep quoted multiline literals together without hiding expansions.
+
+    Expanded multiline double quotes retain the physical-line fallback: their
+    substitutions can execute commands that the scope reader cannot follow.
+    Malformed quotes retain that fallback too.
+    """
+    lines: list[str] = []
+    start = 0
+    quote = ""
+    escaped = False
+    multiline = expanded = False
+    for index, char in enumerate(command):
+        if escaped:
+            escaped = False
+            continue
+        if char == "\\" and quote != "'":
+            escaped = True
+        elif quote:
+            if char == quote:
+                if multiline and expanded:
+                    return command.splitlines()
+                quote = ""
+            elif char == "\n":
+                multiline = True
+            elif quote == '"' and char in "$`":
+                expanded = True
+        elif char in "'\"":
+            quote = char
+            multiline = expanded = False
+        elif char == "\n":
+            lines.append(command[start:index])
+            start = index + 1
+    if quote or escaped:
+        return command.splitlines()
+    lines.append(command[start:])
+    return lines
+
+
 def scope_events(
     command: str,
     *,
@@ -616,7 +655,7 @@ def scope_events(
     quoted commit body (`git commit -m "... gh pr merge ..."`) stays one argv element —
     no false block. A `; gh pr merge 5` glued to a preceding token becomes its own
     segment and is inspected — no evasion. Heredoc bodies are stripped (document text is
-    not commands); `\\`-continuations are folded; each logical line lexes separately.
+    not commands); `\\`-continuations are folded; quoted multiline literals stay intact.
 
     Events, rather than a flat segment list, because `(` and `)` are the only record of a
     SUBSHELL — and a subshell's `cd` dies at its `)` (#5333). Flattening them away made
@@ -644,7 +683,7 @@ def scope_events(
     """
     events: list[tuple[str, list[str]]] = []
     # Each consumer selects when redirect uncertainty must refuse its target.
-    for line in preprocess_shell_command(command).splitlines():
+    for line in _logical_lines(preprocess_shell_command(command)):
         line_events: list[tuple[str, list[str]]] = []
         readable = True
         cur: list[str] = []
