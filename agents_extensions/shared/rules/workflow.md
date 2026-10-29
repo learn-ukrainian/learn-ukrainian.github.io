@@ -214,7 +214,11 @@ only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or ap
 Only non-draft PRs with no unresolved BLOCKING finding may enqueue. Pending
 or cancelled required checks fail the gate; never use `--admin` to bypass CI.
 Queued is not MERGED: diagnose conflicts, changed bases, failed checks or queue
-ejection, and re-establish the gates before re-enqueueing. The rules core's
+ejection, and re-establish the gates before re-enqueueing.
+**Priority line (#12019):** only the CTO seat applies the `merge-priority` label, to a
+machinery fix, after the exact-head approval is recorded; `pr-merge` (and so the keeper)
+then enqueues that head at the front of the queue, while every gate, including the
+merge-group CI Gate, still applies, and a label applied before that head's approval does nothing. The rules core's
 unchanged-head CI recovery allowance and evidence requirements still bind.
 
 **Small batches (trial until 2026-11-05).** One behaviour per PR. Before review,

@@ -102,7 +102,9 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
    "$PY" -m scripts.publish pr-merge --number "$PR" --match-head "$HEAD_SHA"
    ```
 
-   Never `--auto`, `--delete-branch` or `--admin`. Queued is not merged.
+   Never `--auto`, `--delete-branch` or `--admin`. Queued is not merged. A PR the CTO
+   labelled `merge-priority` after its exact-head approval enqueues at the front of the
+   queue on its own (`workflow.md` § Merge policy, priority line); never apply that label yourself.
 9. **Confirm `MERGED`** and the merge SHA: `gh pr view "$PR" --json state,mergeCommit`. If the
    queue ejects the PR, follow the kick recipe in [pr-watch](references/pr-watch.md). If
    waiting in the queue is the only step left and the integration owner has accepted queue
