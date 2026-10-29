@@ -1,17 +1,16 @@
 """СУМ-20 mirror import: rule sum20-mirror-rule-v1, reader routing and the generation writer (#8579).
 
-Every article here is synthetic fixture text, not dictionary content.
+Every article here is synthetic fixture text, not dictionary content. Every
+store lives under tmp_path in the generation layout (docs/runbooks/storage-topology.md).
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
-import os
+import multiprocessing
 import sqlite3
-import subprocess
-import sys
-from contextlib import closing, contextmanager
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -20,9 +19,14 @@ from scripts.ingest import sum20_mirror_import as importer
 from scripts.lexdata import generation, transforms
 from scripts.lexicon import sum20_lookup
 from scripts.lexicon.sum20_store import Sum20StoreError
+from scripts.lib.readonly_sqlite import open_readonly
+from scripts.storage import cli as storage_cli
+from scripts.storage import generations
 from scripts.wiki import sources_db, sum20_mirror
 from scripts.wiki.sum20_official import PARSER_VERSION, ensure_sum20_official_schema, normalize_sum20_lookup
 
+SPAWN = multiprocessing.get_context("spawn")
+WAIT = 60  # an event that never fires fails the test instead of hanging it
 FOOTER = " Джерело: Словник української мови (СУМ-20) на Slovnyk.me"
 # (url slug, page headword, article body). The body follows the page's own headword prefix.
 MIRROR = [
@@ -127,78 +131,76 @@ def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _observed(holders=(), locks=()):
-    return {"holders": list(holders), "locks": list(locks), "unscannable": []}
-
-
-def _no_holders(paths):
-    return _observed()
-
-
-def _options(**overrides):
-    options = {
-        "scan": _no_holders,
-        "control": lambda action, unit: None,
-        "drain_units": [],
-        "wait_drained": 0.0,
-        "sleep": lambda s: None,
-    }
-    options.update(overrides)
-    return options
-
-
-READER = {"pid": 8, "writable": False, "files": ["sources.db"], "command": "python"}
-WRITER = {"pid": 7, "writable": True, "files": ["sources.db"], "command": "python"}
-UNKNOWN = {"pid": 9, "writable": None, "files": ["sources.db"], "command": "python"}
-READ_LOCK = {"pid": 4, "access": "READ", "file": "sources.db-shm"}
-WRITE_LOCK = {"pid": 5, "access": "WRITE", "file": "sources.db-shm"}
+def _bootstrap(selector: Path) -> Path:
+    """Turn the fixture's regular store into its first generation, as the operator's bootstrap does."""
+    with generations.writer_lock(selector) as held:
+        generations.checkpoint_legacy_store(held)
+        return generations.publish_generation(selector, held, mode="bootstrap").generation
 
 
 @pytest.fixture
 def store(tmp_path, monkeypatch):
-    """A fixture repository with a held live store and a complete staged mirror."""
+    """A fixture repository: a held store behind its selector and a complete staged mirror."""
     for name in ("LEXDATA_DB_PATH", "LU_LEXDATA_DB", "LU_SOURCES_DB", "SOURCES_DB_PATH"):
         monkeypatch.delenv(name, raising=False)
+    monkeypatch.delenv(generations.ENV_WRITER_FD, raising=False)
+    monkeypatch.delenv(generations.ENV_WRITER_SELECTOR, raising=False)
+    # The publisher's real margin (generation + 10 GiB + 4 GiB) is tested with the generations.
+    monkeypatch.setenv("LU_EVIDENCE_FREE_DISK_FLOOR_BYTES", "0")
+    monkeypatch.setenv("LU_EVIDENCE_WAL_CEILING_BYTES", "0")
     monkeypatch.setattr(sources_db, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(sum20_lookup, "REPO_ROOT", tmp_path)
     data = tmp_path / "data"
     _make_live(data / "sources.db")
+    _bootstrap(data / "sources.db")
     sha = _make_staging(data / "sum20_slovnyk_staging.db")
     target = importer.writer_target(test_data_dir=data)
     return target, sha
 
 
-def _build(target, sha):
-    return importer.build(target, sha, scan=_no_holders)
+def _selected(target) -> Path:
+    return generations.inspect_selector(target.selector).generation
+
+
+def _import(target, sha):
+    """Run the import; return its payload and the generation it published."""
+    payload = importer.run_import(target, sha)
+    return payload, target.data_dir / generations.GENERATIONS_DIRNAME / payload["generation"]
 
 
 def _query(word, db=None):
     return sources_db.query_sum20(word, db_path=db)
 
 
-def test_build_leaves_live_untouched_and_verifies_the_rule(store):
-    target, sha = store
-    before = _sha(target.live)
-    receipt = _build(target, sha)
+def _leftovers(target) -> list[Path]:
+    """Candidate and staging-snapshot files the import must never leave in ``data/``."""
+    return sorted(target.data_dir.glob(".sources.db.*")) + sorted(target.data_dir.glob(f".{importer.STAGING_NAME}.*"))
 
-    assert _sha(target.live) == before
-    assert receipt["state"] == "candidate"
-    assert receipt["verification"]["relation_counts"] == {
+
+def test_import_leaves_the_previous_generation_untouched_and_verifies_the_rule(store):
+    target, sha = store
+    previous = _selected(target)
+    before = _sha(previous)
+    payload, published = _import(target, sha)
+
+    assert _sha(previous) == before
+    assert payload["previous"] == previous.name and _selected(target) == published
+    assert payload["verification"]["relation_counts"] == {
         "mirror_only": 2,
         "agrees_with_official": 1,
         "official_quarantined": 1,
         "differs_from_official": 1,
     }
-    assert receipt["reconcile_differing"] == 2  # ліс and the quarantined дух; вода matches
-    candidate = target.candidate(receipt["generation"])
-    assert candidate.stat().st_mode & 0o777 == 0o444
-    assert not any(path.exists() for path in importer._sidecars(candidate))
-    assert not list(target.work_dir.glob("staging.*"))
+    assert payload["reconcile_differing"] == 2  # ліс and the quarantined дух; вода matches
+    assert payload["default_reader"] == {"key_sampled": True, "serves_mirror": True}
+    assert generations.is_held(published) and _sha(published) == payload["sha256"]
+    assert generations.read_receipt(published)["state"] == "published"
+    assert not _leftovers(target)
 
 
 def test_rule_serves_official_first_and_flags_every_mirror_row(store):
     target, sha = store
-    candidate = target.candidate(_build(target, sha)["generation"])
+    _, candidate = _import(target, sha)
 
     berег = _query("берег", candidate)
     assert [(r["source_role"], r["official_relation"]) for r in berег] == [("mirror", "mirror_only")]
@@ -221,24 +223,23 @@ def test_rule_serves_official_first_and_flags_every_mirror_row(store):
 
 def test_official_records_and_tables_are_unchanged(store):
     target, sha = store
-    candidate = target.candidate(_build(target, sha)["generation"])
+    previous = _selected(target)
+    _, candidate = _import(target, sha)
     for word in ("вода", "ліс", "дух"):
-        assert [r for r in _query(word, candidate) if r["source_role"] == "official"] == _query(word, target.live)
-    with (
-        closing(sqlite3.connect(f"file:{candidate}?mode=ro", uri=True)) as new,
-        closing(sqlite3.connect(f"file:{target.live}?mode=ro", uri=True)) as old,
-    ):
+        assert [r for r in _query(word, candidate) if r["source_role"] == "official"] == _query(word, previous)
+    with closing(open_readonly(candidate)) as new, closing(open_readonly(previous)) as old:
         assert importer.official_digest(new) == importer.official_digest(old)
         quarantined = new.execute("SELECT wordid FROM sum20_articles WHERE quarantine_reason != ''").fetchall()
     assert quarantined == [(11,)]
 
 
-def test_rule_is_judged_at_read_time_against_a_later_official_row(store):
+def test_rule_is_judged_at_read_time_against_a_later_official_row(store, tmp_path):
     target, sha = store
-    candidate = target.candidate(_build(target, sha)["generation"])
-    candidate.chmod(0o644)
-    with closing(sqlite3.connect(candidate)) as conn:  # an official ingest later adds the mirror-only key
-        conn.execute(
+    _, published = _import(target, sha)
+    later = tmp_path / "later.db"  # a scratch copy; a published generation is never written in place
+    with closing(open_readonly(published)) as source, closing(sqlite3.connect(later)) as conn:
+        source.backup(conn)
+        conn.execute(  # an official ingest later adds the mirror-only key
             "INSERT INTO sum20_articles (wordid, normalized_lookup_key, headword, stressed_headword, article_html, "
             "article_text, definition_text, official_url, fetched_at, content_sha256, parser_version) "
             "VALUES (20, 'берег', 'БЕРЕГ', 'БЕРЕГ', '', 'БЕ́РЕГ, а, ч. Synthetic mirror-only sense.', '', "
@@ -246,248 +247,102 @@ def test_rule_is_judged_at_read_time_against_a_later_official_row(store):
             (PARSER_VERSION,),
         )
         conn.commit()
-    assert [r["source_role"] for r in _query("берег", candidate)] == ["official"]
+    assert [r["source_role"] for r in _query("берег", later)] == ["official"]
 
 
-def test_publish_retains_the_previous_generation_and_restore_brings_it_back(store):
+def test_import_retains_the_previous_generation_and_restore_selects_it_again(store):
     target, sha = store
-    old_sha, old_ino = _sha(target.live), target.live.stat().st_ino
-    built = _build(target, sha)
+    previous = _selected(target)
+    old_sha, old_ino = _sha(previous), previous.stat().st_ino
+    payload, published = _import(target, sha)
 
-    published = importer.publish(target, built["generation"], _options())
-    assert published["status"] == "published" and published["unit_restart_errors"] == []
-    assert _sha(target.live) == built["sha256"]
-    assert target.live.stat().st_mode & 0o777 == 0o444  # the hold survives the swap
-    backup = target.backup(published["previous"])
-    assert backup.stat().st_ino == old_ino and _sha(backup) == old_sha  # the old inode itself, no copy
-    assert backup.stat().st_mode & 0o777 == 0o444  # unfenced after the rename
-    assert not importer._journal(target).exists()
-    assert json.loads(target.receipt(built["generation"]).read_text())["state"] == "published"
     assert _query("берег")[0]["source_role"] == "mirror"  # default selection reads the new generation
-    listing = {row["generation"]: row for row in importer.generations(target)["generations"]}
-    assert listing[built["generation"]]["live"] and listing[published["previous"]]["restorable"]
+    assert previous.stat().st_ino == old_ino and _sha(previous) == old_sha  # retained in place, never copied
+    assert generations.read_receipt(published)["previous"] == previous.name
 
-    restored = importer.restore(target, published["previous"], _options())
-    assert restored["status"] == "restored" and _sha(target.live) == old_sha
-    assert _sha(backup) == old_sha  # restoring copies; the retained generation stays pristine
+    assert storage_cli.main(["restore-generation", str(previous), "--store", str(target.selector)]) == 0
+    assert _selected(target) == previous and _sha(previous) == old_sha
     assert _query("берег") == []
-    again = importer.restore(target, built["generation"], _options())  # the published one was retained too
-    assert again["status"] == "restored" and _sha(target.live) == built["sha256"]
+    assert storage_cli.main(["restore-generation", str(published), "--store", str(target.selector)]) == 0
+    assert _selected(target) == published and _sha(published) == payload["sha256"]  # the new one was retained too
 
 
-def test_drain_restarts_every_unit_and_reports_restart_failures_apart(store, capsys):
-    target, sha = store
-    built = _build(target, sha)
-    calls = []
+def reader_across_publication(selector: str, ready, go, out) -> None:
+    """Open the store, read, wait while the import publishes, then read again on the same connection."""
 
-    def control(action, unit):
-        calls.append((action, unit))
-        if (action, unit) == ("start", "b.service"):
-            raise TimeoutError("fixture")
-
-    published = importer.publish(
-        target, built["generation"], _options(drain_units=["a.service", "b.service"], control=control)
-    )
-    assert calls == [("stop", "a.service"), ("stop", "b.service"), ("start", "b.service"), ("start", "a.service")]
-    assert published["status"] == "published"  # the swap committed and says so
-    assert published["unit_restart_errors"] == ["start b.service: TimeoutError"]
-    assert json.loads(target.receipt(built["generation"]).read_text())["state"] == "published"
-
-
-def test_a_unit_stop_failure_refuses_and_still_starts_every_unit(store):
-    target, sha = store
-    built = _build(target, sha)
-    before, calls = _sha(target.live), []
-
-    def control(action, unit):
-        calls.append((action, unit))
-        if (action, unit) == ("stop", "b.service"):
-            raise TimeoutError("fixture")
-
-    with pytest.raises(importer.Refused, match="unit_stop_failed") as exc:
-        importer.publish(target, built["generation"], _options(drain_units=["a.service", "b.service"], control=control))
-    assert calls[-2:] == [("start", "b.service"), ("start", "a.service")]
-    assert exc.value.detail["unit_errors"] == ["stop b.service: TimeoutError"]
-    assert _sha(target.live) == before
-
-
-@pytest.mark.parametrize(
-    "observed",
-    [_observed([WRITER]), _observed([READER]), _observed([UNKNOWN]), _observed(locks=[READ_LOCK])],
-    ids=["writer", "reader", "unknown-access", "lock-only"],
-)
-def test_publication_needs_a_full_drain(store, observed):
-    target, sha = store
-    built = _build(target, sha)
-    before = _sha(target.live)
-    with pytest.raises(importer.Refused, match="live_store_in_use") as exc:
-        importer.publish(
-            target,
-            built["generation"],
-            _options(scan=lambda paths: observed, wait_drained=10.0, clock=iter(range(0, 100, 5)).__next__),
+    def view(conn) -> tuple:
+        tables = conn.execute("SELECT name FROM sqlite_master WHERE name LIKE 'sum20_mirror%' ORDER BY name").fetchall()
+        return (
+            [str(name) for (name,) in tables],
+            importer.official_digest(conn),
+            conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0],
+            len(sum20_mirror.served_rows(conn, "берег")),
         )
-    assert exc.value.detail == {"holders": observed["holders"], "locks": observed["locks"]}
-    assert _sha(target.live) == before and not list(target.backups_dir.glob("*.db"))
 
-
-def test_publication_waits_for_readers_to_leave(store):
-    target, sha = store
-    built = _build(target, sha)
-    scans, slept = iter([_observed([READER]), _observed(locks=[READ_LOCK])]), []
-    scan = lambda paths: next(scans, _observed())  # noqa: E731
-    published = importer.publish(
-        target, built["generation"], _options(scan=scan, wait_drained=60.0, sleep=slept.append)
-    )
-    assert published["status"] == "published" and slept == [importer.DRAIN_POLL_S] * 2
-
-
-def test_an_open_that_breaks_a_lease_rolls_the_publication_back(store, monkeypatch):
-    target, sha = store
-    built = _build(target, sha)
-    before, old_ino = _sha(target.live), target.live.stat().st_ino
-    real = importer.leases
-
-    @contextmanager
-    def broken_after_fence(paths, kind, diagnose):
-        with real(paths, kind, diagnose):
-            yield lambda: False  # an open that began before the fence broke a lease
-
-    monkeypatch.setattr(importer, "leases", broken_after_fence)
-    with pytest.raises(importer.Refused, match="live_store_opened_during_publication"):
-        importer.publish(target, built["generation"], _options())
-    assert target.live.stat().st_ino == old_ino and _sha(target.live) == before
-    assert target.live.stat().st_mode & 0o777 == 0o444  # unfenced
-    assert all(p.stat().st_ino != old_ino for p in target.backups_dir.glob("*.db"))  # no backup aliases live
-    assert not importer._journal(target).exists()
-    assert target.candidate(built["generation"]).is_file()
-
-
-HIDDEN_HOLDER = """
-import ctypes, os, sys
-fd = os.open(sys.argv[1], os.O_RDWR if sys.argv[2] == "write" else os.O_RDONLY)
-ctypes.CDLL(None).prctl(4, 0, 0, 0, 0)  # PR_SET_DUMPABLE 0: /proc can no longer list this process's descriptors
-print("ready", flush=True)
-sys.stdin.read()
-"""
-
-
-@contextmanager
-def hidden_holder(path, mode):
-    """A process holding ``path`` that the /proc scan cannot see (the round-3 probe)."""
-    child = subprocess.Popen(
-        [sys.executable, "-I", "-c", HIDDEN_HOLDER, str(path), mode],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        text=True,
-    )
     try:
-        assert child.stdout.readline().strip() == "ready"
-        assert importer.holders([path])["holders"] == []  # invisible to the scan
-        yield child
+        with closing(open_readonly(selector, isolation_level=None)) as conn:
+            conn.execute("BEGIN")
+            pinned = view(conn)
+            ready.set()
+            assert go.wait(WAIT)
+            during = view(conn)  # the same read transaction, after the switch
+            conn.execute("COMMIT")
+            after = view(conn)  # a new transaction on the connection opened before the switch
+        out.put({"pinned": pinned, "during": during, "after": after})
+    except BaseException as error:  # report, so the parent fails with the cause
+        ready.set()
+        out.put({"error": repr(error)})
+
+
+def test_a_reader_of_the_previous_generation_sees_no_mixed_data_while_the_import_publishes(store):
+    target, sha = store
+    previous = _selected(target)
+    before = _sha(previous)
+    ready, go, out = SPAWN.Event(), SPAWN.Event(), SPAWN.Queue()
+    reader = SPAWN.Process(target=reader_across_publication, args=(str(target.selector), ready, go, out))
+    reader.start()
+    try:
+        assert ready.wait(WAIT)
+        _, published = _import(target, sha)  # the reader keeps its connection open throughout
+        go.set()
+        seen = out.get(timeout=WAIT)
     finally:
-        child.stdin.close()
-        child.wait(timeout=30)
+        reader.join(WAIT)
+    assert "error" not in seen, seen
+    assert seen["pinned"][0] == [] and seen["pinned"][3] == 0  # the previous generation has no mirror rows
+    assert seen["during"] == seen["pinned"] and seen["after"] == seen["pinned"]  # whole and unchanged
+    assert _selected(target) == published and _sha(previous) == before
+    with closing(open_readonly(target.selector)) as fresh:  # a new opener gets the new generation, whole
+        assert len(sum20_mirror.served_rows(fresh, "берег")) == 1
+        assert importer.official_digest(fresh) == seen["pinned"][1]
 
 
-def test_leases_refuse_holders_the_scan_cannot_see(store):
+def test_import_refuses_a_busy_lock_a_pre_bootstrap_store_and_a_writable_generation(store, tmp_path):
     target, sha = store
-    target.live.chmod(0o644)
-    with hidden_holder(target.live, "write"):  # a writable descriptor opened before the hold
-        target.live.chmod(0o444)
-        with pytest.raises(importer.Refused, match="live_store_in_use") as exc:
-            importer.build(target, sha, scan=importer.holders)
-        assert exc.value.detail["lease"] == "sources.db"
-    built = _build(target, sha)
-    before = _sha(target.live)
-    with hidden_holder(target.live, "read"), pytest.raises(importer.Refused, match="live_store_in_use"):
-        importer.publish(target, built["generation"], _options())
-    assert _sha(target.live) == before and not importer._journal(target).exists()
-    assert importer.publish(target, built["generation"], _options())["status"] == "published"
+    previous = _selected(target)
+    with generations.writer_lock(target.selector):  # another writer holds the lock: refused, never waited for
+        with pytest.raises(importer.Refused, match="writer_lock_busy"):
+            importer.run_import(target, sha)
+    generations.lift_database(previous)
+    try:
+        with pytest.raises(importer.Refused, match="current_generation_writable"):
+            importer.run_import(target, sha)
+    finally:
+        generations.hold_database(previous)
+    assert _selected(target) == previous and not _leftovers(target)
 
-
-def test_an_interrupted_unit_stop_still_starts_every_unit(store):
-    target, sha = store
-    built = _build(target, sha)
-    calls = []
-
-    def control(action, unit):
-        calls.append((action, unit))
-        if (action, unit) == ("stop", "b.service"):
-            raise KeyboardInterrupt
-
-    with pytest.raises(KeyboardInterrupt):
-        importer.publish(target, built["generation"], _options(drain_units=["a.service", "b.service"], control=control))
-    assert calls[-2:] == [("start", "b.service"), ("start", "a.service")]
-
-
-def _crash_before_rename(target, built):
-    """The state a killed process leaves after the journal, link and fence but before the rename."""
-    parent = json.loads(target.receipt(built["generation"]).read_text())
-    previous = importer.generation_id(parent["parent_sha256"])
-    importer._write_json(
-        importer._journal(target),
-        {
-            "previous": previous,
-            "previous_sha256": parent["parent_sha256"],
-            "old_ino": target.live.stat().st_ino,
-            "old_mode": 0o444,
-            "kind": "retained_before_import",
-            "published": built["generation"],
-        },
-    )
-    target.backups_dir.mkdir(parents=True, exist_ok=True)
-    os.link(target.live, target.backup(previous))
-    target.live.chmod(0)
-    return previous
-
-
-def test_recovery_undoes_a_publication_killed_before_the_rename(store):
-    target, sha = store
-    built = _build(target, sha)
-    old_ino = target.live.stat().st_ino
-    previous = _crash_before_rename(target, built)
-
-    listing = importer.generations(target)
-    assert listing["recovered_first"] == {"recovered": "rolled_back", "previous": previous}
-    assert target.live.stat().st_ino == old_ino and target.live.stat().st_mode & 0o777 == 0o444
-    assert not target.backup(previous).exists()  # the alias of the live inode is gone
-    assert importer.publish(target, built["generation"], _options())["status"] == "published"
-
-
-def test_recovery_finishes_a_publication_killed_after_the_rename(store):
-    target, sha = store
-    built = _build(target, sha)
-    old_ino = target.live.stat().st_ino
-    previous = _crash_before_rename(target, built)
-    os.replace(target.candidate(built["generation"]), target.live)
-
-    assert importer.generations(target)["recovered_first"] == {"recovered": "rolled_forward", "previous": previous}
-    backup = target.backup(previous)
-    assert backup.stat().st_ino == old_ino and backup.stat().st_mode & 0o777 == 0o444
-    assert json.loads(target.receipt(built["generation"]).read_text())["state"] == "published"
-    assert json.loads(target.receipt(previous).read_text())["state"] == "retained"
-
-
-def test_build_refuses_writers_an_unheld_store_and_a_busy_wal(store):
-    target, sha = store
-    for observed in (_observed([WRITER]), _observed([UNKNOWN]), _observed(locks=[WRITE_LOCK])):
-        with pytest.raises(importer.Refused, match="live_store_has_writers"):
-            importer.build(target, sha, scan=lambda paths, observed=observed: observed)
-    assert importer.build(target, sha, scan=lambda paths: _observed([READER], [READ_LOCK]))["state"] == "candidate"
-    target.live.chmod(0o644)
-    with pytest.raises(importer.Refused, match="live_store_not_held"):
-        _build(target, sha)
-    wal = Path(f"{target.live}-wal")
-    wal.unlink(missing_ok=True)
-    wal.write_bytes(b"frames")
-    with pytest.raises(importer.Refused, match="live_store_not_checkpointed"):
-        _build(target, sha)
+    legacy = tmp_path / "legacy" / "data"  # before the operator's bootstrap the store is one regular file
+    _make_live(legacy / "sources.db")
+    _make_staging(legacy / "sum20_slovnyk_staging.db")
+    with pytest.raises(importer.Refused, match="import_requires_selector"):
+        importer.run_import(importer.writer_target(test_data_dir=legacy), sha)
+    assert (legacy / "sources.db").is_file() and not (legacy / "sources.db").is_symlink()
 
 
 def test_staging_must_match_the_admitted_digest_and_hold_no_wal_frames(store):
     target, sha = store
     with pytest.raises(importer.Refused, match="staging_digest_mismatch"):
-        _build(target, "0" * 64)
+        _import(target, "0" * 64)
     conn = sqlite3.connect(target.staging)
     try:
         conn.execute("PRAGMA wal_autocheckpoint=0")
@@ -495,9 +350,10 @@ def test_staging_must_match_the_admitted_digest_and_hold_no_wal_frames(store):
         conn.commit()  # committed, but only in the WAL: the main file and its digest are unchanged
         assert _sha(target.staging) == sha
         with pytest.raises(importer.Refused, match="staging_not_checkpointed"):
-            _build(target, sha)
+            _import(target, sha)
     finally:
         conn.close()
+    assert not _leftovers(target)
 
 
 def test_incomplete_staging_is_refused(store):
@@ -508,24 +364,26 @@ def test_incomplete_staging_is_refused(store):
         conn.execute("UPDATE sum20_slovnyk_checkpoint SET completed_count = 1")
         conn.commit()
     with pytest.raises(importer.Refused, match="staging_incomplete"):
-        _build(target, _sha(target.staging))
+        _import(target, _sha(target.staging))
 
 
-def test_publish_refuses_a_live_store_changed_since_the_candidate(store):
+def test_import_refuses_a_generation_changed_since_the_copy(store, monkeypatch):
     target, sha = store
-    built = _build(target, sha)
-    for part in [target.live, *importer._sidecars(target.live)]:  # lift the hold, write, hold again
-        if part.exists():
-            part.chmod(0o644)
-    with closing(sqlite3.connect(target.live)) as conn:
-        conn.execute("INSERT INTO textbooks (text) VALUES ('a later write')")
-        conn.commit()
-    for part in [target.live, *importer._sidecars(target.live)]:
-        if part.exists():
-            part.chmod(0o444)
-    with pytest.raises(importer.Refused, match="live_store_changed_since_candidate"):
-        importer.publish(target, built["generation"], _options())
-    assert importer.generations(target)["generations"]
+    previous = _selected(target)
+    real_verify = importer.verify
+
+    def write_behind_the_lock(*args):
+        generations.lift_database(previous)  # a writer that bypasses the lock (e.g. by mode bits)
+        with closing(sqlite3.connect(previous)) as conn:
+            conn.execute("INSERT INTO textbooks (text) VALUES ('a later write')")
+            conn.commit()
+        generations.hold_database(previous)
+        return real_verify(*args)
+
+    monkeypatch.setattr(importer, "verify", write_behind_the_lock)
+    with pytest.raises(importer.Refused, match="current_generation_changed"):
+        importer.run_import(target, sha)
+    assert _selected(target) == previous and not _leftovers(target)
 
 
 def test_writer_refuses_a_linked_worktree(tmp_path, monkeypatch):
@@ -536,83 +394,21 @@ def test_writer_refuses_a_linked_worktree(tmp_path, monkeypatch):
         importer.writer_target(tmp_path / "linked")
 
 
-def test_cli_reports_refusals_path_free_and_exit_3_for_a_failed_restart(store, capsys, monkeypatch):
+def test_cli_reports_refusals_path_free(store, capsys):
     target, sha = store
-    assert importer.main(["publish", "--generation", "missing"], test_data_dir=target.data_dir) == 2
-    assert json.loads(capsys.readouterr().out) == {"status": "refused", "reason": "candidate_unknown"}
-    built = _build(target, sha)
-
-    def failing_start(action, unit):
-        if action == "start":
-            raise TimeoutError("fixture")
-
-    monkeypatch.setattr(importer, "holders", _no_holders)
-    monkeypatch.setattr(importer, "systemctl", failing_start)
-    argv = ["publish", "--generation", built["generation"], "--drain-unit", "a.service"]
-    assert importer.main(argv, test_data_dir=target.data_dir) == 3
+    argv = ["import", "--expect-staging-sha256", "0" * 64]
+    assert importer.main(argv, test_data_dir=target.data_dir) == 2
+    assert json.loads(capsys.readouterr().out) == {"status": "refused", "reason": "staging_digest_mismatch"}
+    with generations.writer_lock(target.selector):
+        assert importer.main(["import", "--expect-staging-sha256", sha], test_data_dir=target.data_dir) == 2
+    assert json.loads(capsys.readouterr().out) == {"status": "refused", "reason": "writer_lock_busy"}
+    assert importer.main(["import", "--expect-staging-sha256", sha], test_data_dir=target.data_dir) == 0
     assert json.loads(capsys.readouterr().out)["status"] == "published"
-
-
-def test_holders_scan_matches_inodes_access_mode_locks_and_unscannable(tmp_path):
-    db = tmp_path / "sources.db"
-    db.write_bytes(b"x")
-    info = db.stat()
-    proc = tmp_path / "proc"
-    for pid, flags in (("101", "0100000"), ("102", "0100002"), ("103", None)):
-        (proc / pid / "fd").mkdir(parents=True)
-        (proc / pid / "fdinfo").mkdir()
-        (proc / pid / "fd" / "3").symlink_to(db)
-        if flags is not None:
-            (proc / pid / "fdinfo" / "3").write_text(f"pos:\t0\nflags:\t{flags}\n")
-        else:  # a descriptor whose access mode cannot be read
-            (proc / pid / "fdinfo" / "3").mkdir()
-        (proc / pid / "comm").write_text("python\n")
-    (proc / "104").mkdir()
-    (proc / "104" / "comm").write_text("guarded\n")
-    (proc / "104" / "fd").mkdir(mode=0)
-    # Two descriptors on the store, one with an unreadable access mode: unknown stays unknown.
-    (proc / "105" / "fd").mkdir(parents=True)
-    (proc / "105" / "fdinfo").mkdir()
-    (proc / "105" / "comm").write_text("python\n")
-    for fd, flags in (("3", None), ("4", "0100000")):
-        (proc / "105" / "fd" / fd).symlink_to(db)
-        if flags:
-            (proc / "105" / "fdinfo" / fd).write_text(f"flags:\t{flags}\n")
-        else:
-            (proc / "105" / "fdinfo" / fd).mkdir()
-    # A descriptor whose target cannot be identified makes the process unscannable, not clean.
-    hidden = tmp_path / "hidden"
-    hidden.mkdir()
-    (hidden / "file").write_text("x")
-    (proc / "106" / "fd").mkdir(parents=True)
-    (proc / "106" / "comm").write_text("blind\n")
-    (proc / "106" / "fd" / "3").symlink_to(hidden / "file")
-    hidden.chmod(0)
-    device = f"{os.major(info.st_dev):02x}:{os.minor(info.st_dev):02x}:{info.st_ino}"
-    (proc / "locks").write_text(
-        f"1: POSIX  ADVISORY  READ 105 {device} 1073741826 1073742335\n2: POSIX  ADVISORY  WRITE 106 00:00:1 0 EOF\n"
-    )
-    try:
-        found = importer.holders([db, tmp_path / "sources.db-wal"], proc=proc)
-    finally:
-        (proc / "104" / "fd").chmod(0o755)
-        hidden.chmod(0o755)
-    assert [(h["pid"], h["writable"], h["files"]) for h in found["holders"]] == [
-        (101, False, ["sources.db"]),
-        (102, True, ["sources.db"]),
-        (103, None, ["sources.db"]),
-        (105, None, ["sources.db"]),
-    ]
-    assert found["locks"] == [{"pid": 105, "access": "READ", "file": "sources.db"}]
-    if os.geteuid() != 0:  # root can list a mode-000 directory
-        assert found["unscannable"] == [{"pid": 104, "command": "guarded"}, {"pid": 106, "command": "blind"}]
-    (proc / "locks").unlink()
-    assert importer.holders([db], proc=proc)["locks"] is None  # an unreadable table is unknown, not empty
 
 
 def test_lexdata_official_rows_still_get_mirror_rows_from_sources(store, monkeypatch):
     target, sha = store
-    importer.publish(target, _build(target, sha)["generation"], _options())
+    _import(target, sha)
     lexdata = target.data_dir / "lexdata.db"
     with closing(sqlite3.connect(lexdata)) as conn:
         ensure_sum20_official_schema(conn)
@@ -654,17 +450,15 @@ def test_lexdata_official_rows_still_get_mirror_rows_from_sources(store, monkeyp
     assert [r["source_role"] for r in _query("берег")] == ["official"]
 
     monkeypatch.delenv("LU_LEXDATA_DB")
-    for part in [target.live, *importer._sidecars(target.live)]:  # no sources store at all
-        if part.exists():
-            part.unlink()
+    target.selector.unlink()  # no sources store at all
     assert [r["source_role"] for r in _query("берег")] == ["official"]  # the official answer survives
-    monkeypatch.setenv("LU_SOURCES_DB", str(target.live))  # an explicit override that names nothing still refuses
+    monkeypatch.setenv("LU_SOURCES_DB", str(target.selector))  # an explicit override that names nothing still refuses
     with pytest.raises(Sum20StoreError):
         _query("берег")
 
 
 def test_stores_without_mirror_tables_serve_no_mirror_rows(store):
     target, _ = store
-    with closing(sqlite3.connect(f"file:{target.live}?mode=ro", uri=True)) as conn:
+    with closing(open_readonly(target.selector)) as conn:
         assert sum20_mirror.served_rows(conn, "берег") == []
-    assert os.access(target.live, os.W_OK) is False
+    assert generations.is_held(_selected(target))

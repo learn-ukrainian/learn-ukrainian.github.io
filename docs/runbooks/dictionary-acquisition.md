@@ -370,31 +370,33 @@ exclusive.
 
 ### Writer
 
-Run the writer from the primary checkout only. Before you start:
+The writer publishes a new Sources store generation. It needs the generation
+layout, so it runs only after the one-time bootstrap in
+[storage topology](storage-topology.md#sources-store-generations). Before the
+bootstrap it refuses with `import_requires_selector` and changes nothing.
 
-- Hold the live store: `.venv/bin/python -m scripts.storage hold data/sources.db`.
-- Check that its WAL is empty.
-- Check that no process holds it open for writing.
-
-Staging must match the admitted SHA-256 recorded in the
-[ВТС source snapshot](../sources/admissions/2026-10-28-vts-acquisition.md),
+Run it from the primary checkout. Staging must match the admitted SHA-256
+recorded in the [ВТС source snapshot](../sources/admissions/2026-10-28-vts-acquisition.md),
 with an empty WAL and a complete checkpoint.
 
 ```bash
 .venv/bin/python -m scripts.ingest.sum20_mirror_import plan
-.venv/bin/python -m scripts.ingest.sum20_mirror_import build \
+.venv/bin/python -m scripts.ingest.sum20_mirror_import import \
   --expect-staging-sha256 32e77a09e004a7ad740fa8acd350d0f5a743cb13f751e9d134ffcec5db595194
-.venv/bin/python -m scripts.ingest.sum20_mirror_import publish --generation <id> \
-  --drain-unit learn-ukrainian-sources.service --wait-drained 900
-.venv/bin/python -m scripts.ingest.sum20_mirror_import generations
+.venv/bin/python -m scripts.storage generations
 ```
 
-**`build`** only reads the live store:
+`plan` only reads. `import` holds the store writer lock from start to finish,
+so a second writer is refused with `writer_lock_busy` and never waits. Under
+the lock it:
 
-1. It hashes the staging bytes into a private snapshot and reads only that snapshot.
-2. It copies the live store with the SQLite online backup API.
-3. It imports the staged articles into the copy.
-4. It verifies the copy and seals it as a candidate under `data/sources/candidates/`.
+1. Hashes the staging bytes into a private snapshot and reads only that snapshot.
+2. Copies the selected generation with the SQLite online backup API into a
+   candidate file in `data/`. The selected generation is only read.
+3. Imports the staged articles into the candidate.
+4. Verifies the candidate.
+5. Publishes it with `publish_generation`, the only routine that changes the
+   selection.
 
 Verification compares:
 
@@ -402,68 +404,36 @@ Verification compares:
 - the official tables, by full-row digest;
 - every other table's row count;
 - the relation counts with the plan;
-- `PRAGMA integrity_check`;
+- `PRAGMA integrity_check` and the foreign-key check;
 - sampled `query_sum20` lookups for each relation.
 
-**Exclusion proof.** Kernel file leases prove exclusion for every process of
-every user, including processes `/proc` cannot list:
+A refusal or a failed check removes the candidate and leaves the selection
+unchanged. Readers need no drain and no restart. A reader that opened the store
+before the switch keeps the previous generation, whole and unchanged. New
+lookups, including the Sources MCP's next request, get the new generation.
 
-- `build` takes read leases on the live file and its sidecars; Linux grants
-  them only while no writable descriptor exists.
-- `publish` holds write leases from its barrier to the rename; Linux grants
-  them only while no other descriptor exists at all.
+### Rollback
 
-The `/proc` descriptor scan and the kernel lock table name the holders in a
-refusal and pace the wait for `--drain-unit` processes. An unknown access mode
-or an unreadable lock table counts as in use.
-
-Once nothing else uses the store, publication runs in this order:
-
-1. It waits up to `--wait-drained` seconds for other users to close.
-2. It stops the units.
-3. It checks that the live store:
-   - is identical to the copy the candidate was built from;
-   - is held;
-   - has an empty WAL;
-   - is unused.
-4. It writes a journal.
-5. It hard-links the live inode into `data/sources/backups/` and fsyncs the
-   link and its receipt.
-6. It sets the old inode to mode 000, so a last-instant open fails instead of
-   reading it.
-7. It checks again.
-8. It renames the candidate over `data/sources.db`.
-9. It gives the retained inode its mode back.
-
-Every command first finishes or undoes a publication that a crash
-interrupted. The units start again whatever happens. A refusal names the
-holding process ids and locks.
-
-### Restore
-
-Restore any retained generation with one command:
+Every generation is retained. To go back, select the previous generation; the
+`import` output names it as `previous`:
 
 ```bash
-.venv/bin/python -m scripts.ingest.sum20_mirror_import restore --generation <id> \
-  --drain-unit learn-ukrainian-sources.service --wait-drained 900
+.venv/bin/python -m scripts.storage restore-generation data/sources-generations/<previous>
 ```
 
-A restore copies the retained file, checks its SHA-256 against the receipt and
-publishes it the same way. The generation it replaces is retained too, so a
-restore can itself be undone. Nothing prunes `data/sources/backups/`. Each
-generation is a full store, and the off-site backup allowlist does not include it.
+The generation it replaces stays retained too, so a rollback can be undone the
+same way.
 
 **Exit codes:**
 
 | Code | Meaning |
 | --- | --- |
-| 0 | Success |
-| 1 | Verification failed; the live store is untouched |
-| 2 | Refused before the swap |
-| 3 | Swapped, but a drained unit did not start; start it by hand |
+| 0 | Published |
+| 1 | Verification failed; the selection is unchanged |
+| 2 | Refused; the selection is unchanged |
 
-A full `scripts/wiki/build_sources_db.py --force` rebuild does not carry the
-`sum20_*` or `sum20_mirror_*` tables. Run the import again after such a rebuild.
+A full `scripts/wiki/build_sources_db.py --force` rebuild carries every
+`sum20_*` table, the mirror tables included.
 
 ## Foreground compatibility tools
 

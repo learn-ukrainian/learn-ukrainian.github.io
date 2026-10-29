@@ -1,74 +1,47 @@
 #!/usr/bin/env python3
 """Import the staged СУМ-20 mirror into a new, verified ``sources.db`` generation (#8579).
 
-``build`` takes the frozen staging bytes and a copy of the live
-``data/sources.db``. It imports every staged slovnyk.me ``newsum`` article into
-the copy's ``sum20_mirror_*`` tables (``scripts.wiki.sum20_mirror``), verifies
-the copy and seals it as a candidate generation. ``publish`` swaps a candidate
-in atomically and keeps the previous generation in ``data/sources/backups/``
-as a hard link of its unchanged inode. ``restore`` brings a retained generation
-back the same way. The official ``sum20_*`` tables, their quarantine marks and
-the crawl tables are never written; verification proves them unchanged.
+``import`` takes the store writer lock, then copies the selected generation
+with the SQLite online backup API into a candidate file in ``data/``. It
+imports every staged slovnyk.me ``newsum`` article from the frozen staging
+bytes into the candidate's ``sum20_mirror_*`` tables (``scripts.wiki.sum20_mirror``)
+and verifies the candidate. It then publishes the candidate as a new generation
+through ``scripts.storage.generations.publish_generation``, still under the
+same lock. The official ``sum20_*`` tables, their quarantine marks and the
+crawl tables are never written, and verification proves them unchanged.
 
-**Exclusion.** The live store must be held (``scripts.storage hold``: no write
-bit on the file or its sidecars). Kernel file leases are the proof; the
-``/proc`` scan and lock table only explain a refusal and pace the wait.
+The selected generation is only read, and the publisher is the only thing that
+changes the selection (docs/runbooks/storage-topology.md, "Sources store
+generations"). A reader that opened the store before the switch keeps the
+previous generation, whole and unchanged. Every generation is retained, so a
+rollback selects the previous one with
+``python -m scripts.storage restore-generation``.
 
-- ``build`` takes a read lease on the live file and its sidecars. Linux grants
-  one only when no process, of any user and whether or not ``/proc`` can list
-  it, holds a writable descriptor. The scan's unknown descriptors and write
-  locks refuse too.
-- A publication holds write leases, granted only when no other descriptor
-  exists at all, from the barrier to the rename. It waits up to
-  ``--wait-drained`` seconds for other users to close, then stops the
-  ``--drain-unit`` units. It also requires the live file to be identical to the
-  one the candidate was copied from, with an empty WAL.
-
-**Publication.** A journal is written before the previous generation is
-retained as a durable hard link. The old inode is then fenced at mode 000, so a
-new open fails. An open that began earlier breaks a lease and refuses the
-publication. Only then comes the rename. Every command first finishes or undoes a publication a crash
-interrupted. Units are started again whatever happens, and a failure to
-restart one is reported apart from the committed swap.
-
-The writer runs only from the primary checkout on a local filesystem, under an
-exclusive non-blocking lock. It makes no network request.
+The writer runs only from the primary checkout, on a local filesystem, after
+the one-time generation bootstrap. A busy writer lock is refused, never waited
+for. It makes no network request.
 
 Examples:
   .venv/bin/python -m scripts.ingest.sum20_mirror_import plan
-  .venv/bin/python -m scripts.ingest.sum20_mirror_import build --expect-staging-sha256 <sha256>
-  .venv/bin/python -m scripts.ingest.sum20_mirror_import publish --generation <id> \\
-      --drain-unit learn-ukrainian-sources.service --wait-drained 900
-  .venv/bin/python -m scripts.ingest.sum20_mirror_import restore --generation <id> \\
-      --drain-unit learn-ukrainian-sources.service --wait-drained 900
-  .venv/bin/python -m scripts.ingest.sum20_mirror_import generations
+  .venv/bin/python -m scripts.ingest.sum20_mirror_import import --expect-staging-sha256 <sha256>
 
-Outputs: one JSON object on stdout; candidates, backups and receipts under
-``data/sources/``.
-Exit codes: 0 success; 1 verification failed (live store untouched);
-2 refused (arguments, locality, lock, staging, hold, holders, barrier, unit stop);
-3 published or restored, but a drained unit failed to start again.
+Outputs: one JSON object on stdout.
+Exit codes: 0 published; 1 verification failed (selection unchanged); 2 refused
+(arguments, locality, layout, lock, staging, disk space, publication).
 """
 
 from __future__ import annotations
 
 import argparse
-import contextlib
-import errno
-import fcntl
 import hashlib
 import json
 import os
-import shutil
-import signal
+import secrets
 import sqlite3
-import stat
-import subprocess
 import sys
-import time
 from collections import Counter
-from collections.abc import Callable, Iterator, Sequence
-from contextlib import closing, contextmanager
+from collections.abc import Iterator, Sequence
+from contextlib import closing
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -80,12 +53,11 @@ if __package__ in {None, ""}:
 from scripts.common.repo_root import main_checkout_root
 from scripts.lexicon import reconcile_sum20
 from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
-from scripts.storage import topology
+from scripts.storage import generations, topology
 from scripts.wiki import sum20_mirror
 from scripts.wiki.sum20_official import live_article_predicate, normalize_sum20_lookup
 
 STAGING_NAME = "sum20_slovnyk_staging.db"
-WORK_DIR = "sources"
 OFFICIAL_TABLES = (
     ("sum20_articles", "id"),
     ("sum20_senses", "id"),
@@ -95,14 +67,11 @@ OFFICIAL_TABLES = (
 )
 SAMPLE_PER_RELATION = 5
 BATCH_ROWS = 5000
-DISK_RESERVE_BYTES = 10 * 1024**3
 CHUNK = 8 * 1024 * 1024
-DRAIN_POLL_S = 5.0
-SYSTEMCTL_TIMEOUT_S = 120
 
 
 class Refused(RuntimeError):
-    """Stopped before the live store was touched; ``reason`` is path-free."""
+    """Stopped before the selection changed; ``reason`` is path-free."""
 
     def __init__(self, reason: str, **detail: Any) -> None:
         super().__init__(reason)
@@ -111,7 +80,7 @@ class Refused(RuntimeError):
 
 
 class VerificationFailed(RuntimeError):
-    """The new generation failed a check; the live store was not touched."""
+    """The candidate failed a check; the selection was not changed."""
 
     def __init__(self, reason: str, **detail: Any) -> None:
         super().__init__(reason)
@@ -122,50 +91,22 @@ class VerificationFailed(RuntimeError):
 class Target:
     data_dir: Path
     root: Path
-    live: Path
+
+    @property
+    def selector(self) -> Path:
+        return self.data_dir / topology.SELECTOR_NAME
 
     @property
     def staging(self) -> Path:
         return self.data_dir / STAGING_NAME
 
-    @property
-    def work_dir(self) -> Path:
-        return self.data_dir / WORK_DIR
-
-    @property
-    def candidates_dir(self) -> Path:
-        return self.work_dir / "candidates"
-
-    @property
-    def backups_dir(self) -> Path:
-        return self.work_dir / "backups"
-
-    @property
-    def receipts_dir(self) -> Path:
-        return self.work_dir / "receipts"
-
-    @property
-    def lock_path(self) -> Path:
-        return self.work_dir / ".build.lock"
-
-    def candidate(self, generation: str) -> Path:
-        return self.candidates_dir / f"sources.{generation}.db"
-
-    def backup(self, generation: str) -> Path:
-        return self.backups_dir / f"sources.{generation}.db"
-
-    def receipt(self, generation: str) -> Path:
-        return self.receipts_dir / f"{generation}.json"
-
-    def temp(self, label: str) -> Path:
-        return self.work_dir / f"sources.{label}.db.tmp"
-
 
 def writer_target(repository_root: Path | None = None, *, test_data_dir: Path | None = None) -> Target:
     """The primary checkout's ``data/``, or an explicit test directory.
 
-    Like the lexdata writer it refuses a linked worktree, symlinked store paths
-    and a network or unknown filesystem.
+    Like the lexdata writer it refuses a linked worktree, a symlinked ``data/``
+    and a network or unknown filesystem. The store is always the canonical
+    selector of that directory, never an environment override.
     """
     if test_data_dir is not None:
         data_dir, root = test_data_dir, test_data_dir.parent
@@ -179,37 +120,11 @@ def writer_target(repository_root: Path | None = None, *, test_data_dir: Path | 
         raise Refused("symlinked_path")
     if not data_dir.is_dir():
         raise Refused("data_dir_missing")
-    # The canonical file of this root, never an environment override: the writer
-    # replaces exactly the store the resolver serves by default.
-    resolved = topology.resolve_store("sources", root, env={})
-    if isinstance(resolved, topology.StoreRefusal):
-        raise Refused(f"live_{resolved.reason}")
-    live = resolved.path
-    if live.is_symlink() or live.parent != data_dir.resolve():
-        raise Refused("symlinked_path")
-    target = Target(data_dir.resolve(), root, live)
-    for path in (target.work_dir, target.candidates_dir, target.backups_dir, target.receipts_dir):
-        if path.is_symlink():
-            raise Refused("symlinked_path")
+    target = Target(data_dir.resolve(), root)
     locality = topology.store_locality(target.data_dir)
     if locality != "local":
         raise Refused(f"locality_{locality}")
     return target
-
-
-@contextmanager
-def build_lock(target: Target) -> Iterator[None]:
-    """Exclusive non-blocking ``flock``: a second writer is refused, never queued."""
-    target.work_dir.mkdir(exist_ok=True)
-    fd = os.open(target.lock_path, os.O_RDWR | os.O_CREAT, 0o600)
-    try:
-        try:
-            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            raise Refused("build_locked") from None
-        yield
-    finally:
-        os.close(fd)
 
 
 def file_sha256(path: Path) -> str:
@@ -218,19 +133,6 @@ def file_sha256(path: Path) -> str:
         while chunk := handle.read(CHUNK):
             digest.update(chunk)
     return digest.hexdigest()
-
-
-def generation_id(sha256: str) -> str:
-    """Generations are content-addressed: equal bytes are the same generation."""
-    return sha256[:16]
-
-
-def _fsync(path: Path, *, directory: bool = False) -> None:
-    fd = os.open(path, os.O_RDONLY | (os.O_DIRECTORY if directory else 0))
-    try:
-        os.fsync(fd)
-    finally:
-        os.close(fd)
 
 
 def _sidecars(path: Path) -> list[Path]:
@@ -243,222 +145,8 @@ def _remove(paths: Sequence[Path]) -> None:
             path.unlink()
 
 
-def _write_json(path: Path, payload: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temp = path.with_name(path.name + ".tmp")
-    temp.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    _fsync(temp)
-    temp.replace(path)
-    _fsync(path.parent, directory=True)
-
-
-def _read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
 def _now() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat()
-
-
-# --- the live store: identity, hold and holders --------------------------------------------------------
-
-
-def live_identity(path: Path) -> dict[str, int]:
-    """File identity, mode and journal state; any change between copy and swap refuses the swap."""
-    info = path.stat()
-    wal = Path(f"{path}-wal")
-    return {
-        "dev": info.st_dev,
-        "ino": info.st_ino,
-        "size": info.st_size,
-        "mtime_ns": info.st_mtime_ns,
-        "mode": stat.S_IMODE(info.st_mode),
-        "wal_bytes": wal.stat().st_size if wal.exists() else 0,
-        "journal": int(Path(f"{path}-journal").exists()),
-    }
-
-
-def _require_held(path: Path) -> None:
-    """The file and every existing sidecar carry no write bit: no new writer can open them."""
-    for part in [path, *_sidecars(path)]:
-        if part.exists() and stat.S_IMODE(part.stat().st_mode) & 0o222:
-            raise Refused("live_store_not_held")
-
-
-def _require_quiet(identity: dict[str, int]) -> None:
-    """An empty WAL and no rollback journal: the main file holds every committed page."""
-    if identity["wal_bytes"] or identity["journal"]:
-        raise Refused("live_store_not_checkpointed")
-
-
-def holders(paths: Sequence[Path], proc: Path = Path("/proc")) -> dict[str, Any]:
-    """Every observable use of ``paths`` (matched by inode), for the exclusion checks.
-
-    - ``holders``: processes with a descriptor on a path; ``writable`` is ``None``
-      when the descriptor's access mode cannot be read, and counts as unknown.
-    - ``locks``: POSIX locks on a path from ``/proc/locks``. That table covers every
-      process, including those whose descriptors cannot be listed, and SQLite
-      holds such locks for each connection that has read the database.
-    - ``unscannable``: live processes whose descriptor table cannot be listed.
-      Exited processes are skipped; this process is excluded.
-    """
-    inodes: dict[tuple[int, int], str] = {}
-    for path in paths:
-        try:
-            info = path.stat()
-        except FileNotFoundError:
-            continue
-        inodes[(info.st_dev, info.st_ino)] = path.name
-    found: dict[int, dict[str, Any]] = {}
-    unscannable: list[dict[str, Any]] = []
-    for entry in proc.iterdir():
-        if not entry.name.isdigit() or int(entry.name) == os.getpid():
-            continue
-        try:
-            descriptors = list((entry / "fd").iterdir())
-        except PermissionError:
-            unscannable.append({"pid": int(entry.name), "command": _comm(proc, int(entry.name))})
-            continue
-        except (FileNotFoundError, ProcessLookupError):
-            continue
-        blind = False
-        for descriptor in descriptors:
-            try:
-                info = descriptor.stat()
-            except FileNotFoundError:
-                continue  # closed between listing and reading
-            except OSError:
-                blind = True  # an open file this scan cannot identify
-                continue
-            name = inodes.get((info.st_dev, info.st_ino))
-            if name is None:
-                continue
-            holder = found.setdefault(int(entry.name), {"pid": int(entry.name), "writable": False, "files": []})
-            try:
-                flags = next(
-                    int(line.split()[1], 8)
-                    for line in (entry / "fdinfo" / descriptor.name).read_text().splitlines()
-                    if line.startswith("flags:")
-                )
-                writable: bool | None = (flags & os.O_ACCMODE) != os.O_RDONLY
-            except FileNotFoundError:
-                continue
-            except (OSError, StopIteration, ValueError):
-                writable = None
-            if holder["writable"] is not True:  # unknown stays unknown unless a writer is proven
-                holder["writable"] = (
-                    True if writable else None if writable is None or holder["writable"] is None else False
-                )
-            if name not in holder["files"]:
-                holder["files"].append(name)
-        if blind:
-            unscannable.append({"pid": int(entry.name), "command": _comm(proc, int(entry.name))})
-    for pid, holder in found.items():
-        holder["command"] = _comm(proc, pid)
-    return {
-        "holders": sorted(found.values(), key=lambda h: h["pid"]),
-        "locks": _locks(inodes, proc / "locks"),
-        "unscannable": sorted(unscannable, key=lambda h: h["pid"]),
-    }
-
-
-def _comm(proc: Path, pid: int) -> str:
-    try:
-        return (proc / str(pid) / "comm").read_text().strip()
-    except OSError:
-        return ""
-
-
-def _locks(inodes: dict[tuple[int, int], str], table: Path) -> list[dict[str, Any]] | None:
-    """Kernel lock-table entries on ``inodes``; ``None`` when the table cannot be read (unknown, not empty).
-
-    ``major:minor:inode`` is the hexadecimal device and the decimal inode.
-    """
-    wanted = {(os.major(dev), os.minor(dev), ino): name for (dev, ino), name in inodes.items()}
-    found = []
-    try:
-        lines = table.read_text().splitlines()
-    except OSError:
-        return None
-    for line in lines:
-        fields = line.split()
-        try:
-            at = next(i for i, field in enumerate(fields) if field.count(":") == 2)
-            major, minor, ino = fields[at].split(":")
-            key = (int(major, 16), int(minor, 16), int(ino))
-        except (StopIteration, ValueError):
-            continue
-        if key in wanted:
-            found.append(
-                {
-                    "pid": int(fields[at - 1]) if fields[at - 1].isdigit() else None,
-                    "access": fields[at - 2],
-                    "file": wanted[key],
-                }
-            )
-    return found
-
-
-def _live_files(target: Target) -> list[Path]:
-    return [target.live, *_sidecars(target.live)]
-
-
-@contextmanager
-def leases(paths: Sequence[Path], kind: int, diagnose: Callable[[], dict[str, Any]]) -> Iterator[Callable[[], bool]]:
-    """Kernel file leases on every existing path: the exclusion proof, across all users and processes.
-
-    Linux grants ``F_WRLCK`` only when no other descriptor for the file exists
-    anywhere, and ``F_RDLCK`` only when none is open for writing, including in
-    processes ``/proc`` cannot list. While a lease is held, another open blocks
-    and breaks it (``SIGIO``); the yielded check is false once any lease broke.
-    Refusals carry ``diagnose()``, the ``/proc`` view of who holds the store.
-    """
-    broken: list[int] = []
-    previous = signal.signal(signal.SIGIO, lambda signum, frame: broken.append(signum))
-    fds: list[int] = []
-    try:
-        for path in paths:
-            try:
-                fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
-            except FileNotFoundError:
-                continue
-            fds.append(fd)
-            try:
-                fcntl.fcntl(fd, fcntl.F_SETLEASE, kind)
-            except BlockingIOError:
-                raise Refused("live_store_in_use", lease=path.name, **diagnose()) from None
-            except OSError as exc:
-                raise Refused(f"lease_unavailable_{errno.errorcode.get(exc.errno, exc.errno)}") from None
-        yield lambda: not broken and all(fcntl.fcntl(fd, fcntl.F_GETLEASE) == kind for fd in fds)
-    finally:
-        for fd in fds:
-            with contextlib.suppress(OSError):
-                fcntl.fcntl(fd, fcntl.F_SETLEASE, fcntl.F_UNLCK)
-            os.close(fd)
-        signal.signal(signal.SIGIO, previous)
-
-
-def _require_no_writers(target: Target, scan: Callable[[Sequence[Path]], dict[str, Any]]) -> None:
-    """No writable descriptor on the live files anywhere: a read lease proves it; the scan explains refusals."""
-    observed = scan(_live_files(target))
-    writers = [h for h in observed["holders"] if h["writable"] is not False]
-    locks = observed["locks"]
-    if writers or locks is None or any(lock["access"] == "WRITE" for lock in locks):
-        raise Refused("live_store_has_writers", holders=writers, locks=locks)
-    with leases(_live_files(target), fcntl.F_RDLCK, lambda: _undrained(observed, lambda holder: False)):
-        pass
-
-
-def _undrained(observed: dict[str, Any], allowed: Callable[[dict[str, Any]], bool]) -> dict[str, Any]:
-    """What still uses the live store, apart from processes of the units about to be drained.
-
-    ``locks`` is ``None`` when the lock table could not be read, which counts as in use.
-    """
-    locks = observed["locks"]
-    return {
-        "holders": [h for h in observed["holders"] if not allowed(h)],
-        "locks": None if locks is None else [lock for lock in locks if lock["pid"] is None or not allowed(lock)],
-    }
 
 
 # --- staging ---------------------------------------------------------------------------------------------
@@ -490,7 +178,7 @@ def snapshot_staging(target: Target, expect_sha256: str) -> tuple[Path, str]:
     before = _staging_identity(resolved.path)
     if before[4] or before[5]:
         raise Refused("staging_not_checkpointed")
-    snapshot = target.work_dir / f"staging.{os.getpid()}.snapshot.db"
+    snapshot = target.data_dir / f".{STAGING_NAME}.{os.getpid()}.snapshot"
     digest = hashlib.sha256()
     with resolved.path.open("rb") as source, snapshot.open("wb") as copy:
         while chunk := source.read(CHUNK):
@@ -777,30 +465,33 @@ def verify(
     return {"checks": "passed", "sampled_lookups": sampled, "relation_counts": counts}
 
 
-def _seal(path: Path, mode: int) -> None:
-    """Persist WAL mode in the header, close cleanly and leave one self-contained file."""
+def _seal(path: Path) -> None:
+    """Persist WAL mode in the header and close last, so the candidate is one self-contained file.
+
+    The verification reads leave empty sidecars; this last read-write
+    connection removes them on close, so none outlives the candidate's name.
+    """
     with closing(sqlite3.connect(path)) as conn:
         if str(conn.execute("PRAGMA journal_mode=WAL").fetchone()[0]).lower() != "wal":
             raise VerificationFailed("journal_mode_not_wal")
     if any(sidecar.exists() for sidecar in _sidecars(path)):
         raise VerificationFailed("sidecar_left_after_close")
-    _fsync(path)
-    path.chmod(mode)
 
 
-def _pre_image(target: Target, scan: Callable[[Sequence[Path]], dict[str, Any]]) -> dict[str, Any]:
-    identity = live_identity(target.live)
-    _require_quiet(identity)
-    _require_held(target.live)
-    _require_no_writers(target, scan)
-    if shutil.disk_usage(target.data_dir).free < 2 * identity["size"] + DISK_RESERVE_BYTES:
-        raise Refused("disk_space")
-    return {"identity": identity, "sha256": file_sha256(target.live)}
+# --- plan and import ---------------------------------------------------------------------------------------
+
+
+def _selected(target: Target) -> Path:
+    """The file the store selects now (the selected generation, or the pre-bootstrap file); read only."""
+    resolved = topology.resolve_store("sources", target.root, binding=topology.StoreBinding("sources", target.selector))
+    if isinstance(resolved, topology.StoreRefusal):
+        raise Refused(f"live_{resolved.reason}")
+    return resolved.path
 
 
 def plan(target: Target) -> dict[str, Any]:
     """Read-only relation counts against the live official rows; nothing is copied or written."""
-    with closing(_open_ro(target.staging)) as staging, closing(_open_ro(target.live)) as live:
+    with closing(_open_ro(target.staging)) as staging, closing(_open_ro(_selected(target))) as live:
         summary = staging_summary(staging)
         result = classify_staging(staging, live)
     return {
@@ -811,427 +502,115 @@ def plan(target: Target) -> dict[str, Any]:
     }
 
 
-def build(
-    target: Target, expect_sha256: str, *, scan: Callable[[Sequence[Path]], dict[str, Any]] = holders
-) -> dict[str, Any]:
-    """Copy, import and verify into a sealed candidate generation; the live store is only read."""
-    with build_lock(target):
-        pre = _pre_image(target, scan)
-        snapshot, staging_sha = snapshot_staging(target, expect_sha256)
-        temp = target.temp("building")
-        _remove([temp, *_sidecars(temp)])
-        try:
-            with closing(_open_ro(snapshot, immutable=True)) as staging:
-                info = {"sha256": staging_sha, **staging_summary(staging)}
-                with closing(_open_ro(target.live)) as live:
-                    pre["official_digest"] = official_digest(live)
-                    pre["table_counts"] = table_counts(live)
-                    result = classify_staging(staging, live)
-                if result["reconcile_differing_unflagged"]:
-                    raise VerificationFailed("reconcile_difference_not_flagged")
-                _copy_live(target.live, temp)
-                label = f"{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
-                with closing(sqlite3.connect(temp)) as conn:
-                    _import(conn, staging, info, result, label, pre["official_digest"])
-                checks = verify(temp, target.live, staging, pre, result)
-            _seal(temp, pre["identity"]["mode"])
-            sha256 = file_sha256(temp)
-            generation = generation_id(sha256)
-            target.candidates_dir.mkdir(parents=True, exist_ok=True)
-            os.replace(temp, target.candidate(generation))
-            _fsync(target.candidates_dir, directory=True)
-        except BaseException:
-            _remove([temp, *_sidecars(temp)])
-            raise
-        finally:
-            _remove([snapshot])
-        receipt = {
-            "generation": generation,
-            "sha256": sha256,
-            "kind": "sum20_mirror_import",
-            "state": "candidate",
-            "parent": generation_id(pre["sha256"]),
-            "parent_sha256": pre["sha256"],
-            "parent_identity": pre["identity"],
-            "import_label": label,
-            "staging_sha256": staging_sha,
-            "staging_records": info["records"],
-            "rule_version": sum20_mirror.RULE_VERSION,
-            "reconcile_differing": result["reconcile_differing"],
-            "samples": result["samples"],
-            "verification": checks,
-            "recorded_at": _now(),
-        }
-        _write_json(target.receipt(generation), receipt)
-        return {"status": "candidate", **receipt}
-
-
-# --- publication -----------------------------------------------------------------------------------------
-
-
-def systemctl(action: str, unit: str) -> None:
-    env = dict(os.environ)
-    env.setdefault("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
-    subprocess.run(
-        ["systemctl", "--user", action, unit], check=True, env=env, timeout=SYSTEMCTL_TIMEOUT_S, capture_output=True
-    )
-
-
-class Drain:
-    """Stop units for a critical section and always try to start every one of them again.
-
-    A stop or start failure of one unit never skips another. Stop failures refuse
-    the section; start failures are collected in ``restart_errors`` and never
-    hide whether the section itself committed.
-    """
-
-    def __init__(self, units: Sequence[str], control: Callable[[str, str], None]) -> None:
-        self.units, self.control = list(units), control
-        self.restart_errors: list[str] = []
-
-    def __enter__(self) -> Drain:
-        stop_errors = []
-        try:
-            for unit in self.units:
-                try:
-                    self.control("stop", unit)
-                except Exception as exc:  # any failure leaves the unit's state unknown
-                    stop_errors.append(f"stop {unit}: {type(exc).__name__}")
-        except BaseException:  # an interruption still starts every unit before it propagates
-            self._start_all()
-            raise
-        if stop_errors:
-            self._start_all()
-            raise Refused("unit_stop_failed", unit_errors=stop_errors + self.restart_errors)
-        return self
-
-    def __exit__(self, exc_type, exc, tb) -> bool:
-        self._start_all()
-        if isinstance(exc, (Refused, VerificationFailed)) and self.restart_errors:
-            exc.detail["unit_restart_errors"] = self.restart_errors
-        return False
-
-    def _start_all(self) -> None:
-        interrupted: BaseException | None = None
-        for unit in reversed(self.units):
-            try:
-                self.control("start", unit)
-            except Exception as exc:
-                self.restart_errors.append(f"start {unit}: {type(exc).__name__}")
-            except BaseException as exc:  # finish the other starts, then let the interruption through
-                self.restart_errors.append(f"start {unit}: {type(exc).__name__}")
-                interrupted = interrupted or exc
-        if interrupted is not None:
-            raise interrupted
-
-
-def _unit_pids(units: Sequence[str], proc: Path = Path("/proc")) -> Callable[[dict[str, Any]], bool]:
-    """Whether a holder or lock belongs to one of ``units`` (its cgroup path ends in the unit name)."""
-
-    def allowed(holder: dict[str, Any]) -> bool:
-        try:
-            cgroup = (proc / str(holder["pid"]) / "cgroup").read_text()
-        except OSError:
-            return False
-        return any(line.rstrip().endswith(f"/{unit}") for line in cgroup.splitlines() for unit in units)
-
-    return allowed
-
-
-def _await_drain(target: Target, options: dict[str, Any], allowed: Callable[[dict[str, Any]], bool]) -> None:
-    """Poll until nothing but the drain units uses the live store, or refuse after ``wait_drained``."""
-    scan, sleep, clock = options["scan"], options.get("sleep", time.sleep), options.get("clock", time.monotonic)
-    deadline = clock() + options["wait_drained"]
-    while True:
-        left = _undrained(scan(_live_files(target)), allowed)
-        if not left["holders"] and left["locks"] == []:
-            return
-        if clock() >= deadline:
-            raise Refused("live_store_in_use", **left)
-        sleep(DRAIN_POLL_S)
-
-
-def _barrier(target: Target, parent: dict[str, Any]) -> None:
-    """Unchanged since the candidate's copy, checkpointed and held; the write leases prove it unused."""
-    now = live_identity(target.live)
-    if now != parent:
-        raise Refused("live_store_changed_since_candidate")
-    _require_quiet(now)
-    _require_held(target.live)
-
-
-def _journal(target: Target) -> Path:
-    return target.work_dir / "publication.json"
-
-
-def recover(target: Target) -> dict[str, Any] | None:
-    """Finish or undo a publication that a crash interrupted; run under the lock before any other step.
-
-    If the rename did not happen, the live file gets its mode back and a backup
-    link sharing its inode is removed (a backup must never alias the live inode).
-    If it did, the retained file gets its mode back and the receipts are completed.
-    """
-    journal = _journal(target)
-    if not journal.is_file():
-        return None
-    state = _read_json(journal)
-    backup = target.backup(state["previous"])
-    live = target.live.stat()
-    if live.st_ino == state["old_ino"]:
-        target.live.chmod(state["old_mode"])
-        if backup.exists() and backup.stat().st_ino == live.st_ino:
-            backup.unlink()
-            _fsync(target.backups_dir, directory=True)
-        outcome = "rolled_back"
-    else:
-        if backup.exists():
-            backup.chmod(state["old_mode"])
-        _finish_receipts(target, state)
-        outcome = "rolled_forward"
-    journal.unlink()
-    _fsync(target.work_dir, directory=True)
-    return {"recovered": outcome, "previous": state["previous"]}
-
-
-def _finish_receipts(target: Target, state: dict[str, Any]) -> None:
-    if not target.receipt(state["previous"]).exists():
-        _write_json(
-            target.receipt(state["previous"]),
-            {
-                "generation": state["previous"],
-                "sha256": state["previous_sha256"],
-                "kind": state["kind"],
-                "state": "retained",
-                "recorded_at": _now(),
-            },
-        )
-    published = state.get("published")
-    if published and target.receipt(published).is_file():
-        receipt = _read_json(target.receipt(published))
-        if receipt.get("state") != "published":
-            receipt.update(
-                {
-                    "state": "published",
-                    "published_at": _now(),
-                    "previous": state["previous"],
-                    "inode": target.live.stat().st_ino,
-                }
-            )
-            _write_json(target.receipt(published), receipt)
-
-
-def _publish(
-    target: Target,
-    source: Path,
-    expected_sha256: str,
-    parent: dict[str, Any],
-    parent_sha256: str,
-    kind: str,
-    options: dict[str, Any],
-    published: str | None = None,
-) -> dict[str, Any]:
-    """Drain, retain the live inode durably, fence it, and rename ``source`` over it.
-
-    Order: both digests before any unit stops; wait until only drain-unit
-    processes use the store; stop the units; barrier; journal the intent;
-    hard-link the live inode into backups and fsync that and the receipt; set the
-    old inode to mode 000, so a new open fails instead of reading it; barrier
-    again; rename; give the retained inode its mode back; finish the receipts.
-    ``recover`` completes or undoes any step a crash interrupts. An unchanged
-    identity proves the live bytes still hash to ``parent_sha256``.
-    """
-    if file_sha256(source) != expected_sha256:
-        raise VerificationFailed("candidate_digest_mismatch")
-    scan = options["scan"]
-    allowed = _unit_pids(options["drain_units"])
-    _await_drain(target, options, allowed)
-    previous = generation_id(parent_sha256)
-    backup = target.backup(previous)
-    state = {
-        "previous": previous,
-        "previous_sha256": parent_sha256,
-        "old_ino": parent["ino"],
-        "old_mode": parent["mode"],
-        "kind": kind,
-        "published": published,
+def _build_candidate(target: Target, current: Path, expect_sha256: str) -> tuple[Path, dict[str, Any]]:
+    """Copy ``current``, import the staged mirror into the copy and verify it; ``current`` is only read."""
+    snapshot, staging_sha = snapshot_staging(target, expect_sha256)
+    # In data/ itself: the publisher hard-links the candidate, so it must share the store's filesystem.
+    candidate = target.data_dir / f".{topology.SELECTOR_NAME}.{os.getpid()}.{secrets.token_hex(4)}.sum20-mirror"
+    try:
+        with closing(_open_ro(snapshot, immutable=True)) as staging:
+            info = {"sha256": staging_sha, **staging_summary(staging)}
+            with closing(_open_ro(current)) as live:
+                pre = {"official_digest": official_digest(live), "table_counts": table_counts(live)}
+                result = classify_staging(staging, live)
+            if result["reconcile_differing_unflagged"]:
+                raise VerificationFailed("reconcile_difference_not_flagged")
+            _copy_live(current, candidate)
+            label = f"{datetime.now(UTC):%Y%m%dT%H%M%SZ}"
+            with closing(sqlite3.connect(candidate)) as conn:
+                _import(conn, staging, info, result, label, pre["official_digest"])
+            checks = verify(candidate, current, staging, pre, result)
+        _seal(candidate)
+    except BaseException:
+        _remove([candidate, *_sidecars(candidate)])
+        raise
+    finally:
+        _remove([snapshot])
+    details = {
+        "import_label": label,
+        "staging_sha256": staging_sha,
+        "staging_records": info["records"],
+        "rule_version": sum20_mirror.RULE_VERSION,
+        "reconcile_differing": result["reconcile_differing"],
+        "samples": result["samples"],
+        "verification": checks,
     }
-    diagnose = lambda: _undrained(scan(_live_files(target)), lambda holder: False)  # noqa: E731
-    with Drain(options["drain_units"], options["control"]) as drain:
-        _barrier(target, parent)
-        if backup.exists() and backup.stat().st_ino != parent["ino"] and file_sha256(backup) != parent_sha256:
-            raise Refused("backup_name_conflict")
-        with leases(_live_files(target), fcntl.F_WRLCK, diagnose) as intact:
-            target.backups_dir.mkdir(parents=True, exist_ok=True)
-            _write_json(_journal(target), state)
-            replaced = False
+    return candidate, details
+
+
+def run_import(target: Target, expect_sha256: str) -> dict[str, Any]:
+    """Build, verify and publish one new generation, holding the store writer lock throughout.
+
+    The lock is taken before the selector is read and kept until the publisher
+    has switched it, so no writer changes the generation the candidate was
+    copied from. A refusal or failed verification leaves the selection as it
+    was; the candidate file is removed.
+    """
+    try:
+        with generations.writer_lock(target.selector) as held:
+            if held.layout != "selector" or held.generation is None:
+                raise Refused("import_requires_selector")
+            current = held.generation
+            if not generations.is_held(current):
+                raise Refused("current_generation_writable")
+            # The candidate and the staging snapshot, each with the publisher's margin.
+            generations.require_free_space(target.data_dir, current.stat().st_size + 2 * target.staging.stat().st_size)
+            candidate, details = _build_candidate(target, current, expect_sha256)
             try:
-                if not backup.exists():
-                    os.link(target.live, backup)
-                _fsync(target.backups_dir, directory=True)
-                _finish_receipts(target, {**state, "published": None})
-                target.live.chmod(0)
-                # An open that began before the fence breaks a lease; refuse rather than leave it the old inode.
-                if not intact():
-                    raise Refused("live_store_opened_during_publication", **diagnose())
-                _barrier(target, {**parent, "mode": 0})
-                _remove(_sidecars(target.live))
-                os.replace(source, target.live)
-                replaced = True
-                _fsync(target.data_dir, directory=True)
-            finally:
-                recover(target)  # replaced: unfence the retained inode and finish; otherwise undo
-        if not replaced:
-            raise Refused("publication_not_completed")
-    return {"previous": previous, "unit_restart_errors": drain.restart_errors}
-
-
-def _publish_options(args: argparse.Namespace) -> dict[str, Any]:
+                publication = generations.publish_generation(candidate, held)
+            except BaseException:
+                _remove([candidate, *_sidecars(candidate)])
+                raise
+    except generations.GenerationError as exc:
+        raise Refused(exc.reason) from None
     return {
-        "scan": holders,
-        "control": systemctl,
-        "drain_units": list(args.drain_unit or []),
-        "wait_drained": float(args.wait_drained),
+        "status": "published",
+        "generation": publication.generation.name,
+        "previous": None if publication.previous is None else publication.previous.name,
+        "sha256": publication.sha256,
+        **details,
+        "default_reader": default_reader_check(details["samples"]),
     }
 
 
-def publish(target: Target, generation: str, options: dict[str, Any]) -> dict[str, Any]:
-    with build_lock(target):
-        recovered = recover(target)
-        candidate, receipt_path = target.candidate(generation), target.receipt(generation)
-        if candidate.is_symlink() or not candidate.is_file() or not receipt_path.is_file():
-            raise Refused("candidate_unknown")
-        receipt = _read_json(receipt_path)
-        if receipt.get("state") != "candidate":
-            raise Refused("candidate_unknown")
-        result = _publish(
-            target,
-            candidate,
-            receipt["sha256"],
-            receipt["parent_identity"],
-            receipt["parent_sha256"],
-            "retained_before_import",
-            options,
-            published=generation,
-        )
-        return {
-            "status": "published",
-            "generation": generation,
-            "recovered_first": recovered,
-            "default_reader": default_reader_check(_read_json(receipt_path)),
-            **result,
-        }
-
-
-def default_reader_check(receipt: dict[str, Any]) -> dict[str, Any]:
+def default_reader_check(samples: dict[str, list[str]]) -> dict[str, Any]:
     """Whether the default ``query_sum20`` selection now serves a sampled mirror-only key."""
     from scripts.wiki.sources_db import query_sum20
 
-    keys = (receipt.get("samples") or {}).get(sum20_mirror.MIRROR_ONLY) or []
+    keys = samples.get(sum20_mirror.MIRROR_ONLY) or []
     if not keys:
         return {"key_sampled": False}
     records = query_sum20(keys[0])
     return {"key_sampled": True, "serves_mirror": any(r.get("source_role") == "mirror" for r in records)}
 
 
-def restore(target: Target, generation: str, options: dict[str, Any]) -> dict[str, Any]:
-    with build_lock(target):
-        recovered = recover(target)
-        backup, receipt_path = target.backup(generation), target.receipt(generation)
-        if backup.is_symlink() or not backup.is_file() or not receipt_path.is_file():
-            raise Refused("generation_unknown")
-        expected = _read_json(receipt_path)["sha256"]
-        parent = live_identity(target.live)
-        _require_quiet(parent)
-        _require_held(target.live)
-        parent_sha256 = file_sha256(target.live)
-        if parent_sha256 == expected:
-            return {"status": "already_live", "generation": generation}
-        temp = target.temp(f"restoring-{generation}")
-        try:
-            shutil.copyfile(backup, temp)
-            _fsync(temp)
-            temp.chmod(parent["mode"])
-            result = _publish(target, temp, expected, parent, parent_sha256, "retained_before_restore", options)
-        finally:
-            _remove([temp])
-        return {
-            "status": "restored",
-            "generation": generation,
-            "sha256": expected,
-            "recovered_first": recovered,
-            **result,
-        }
-
-
-def generations(target: Target) -> dict[str, Any]:
-    with build_lock(target):
-        recovered = recover(target)
-        live_ino = target.live.stat().st_ino
-        rows = []
-        for path in sorted(target.receipts_dir.glob("*.json")) if target.receipts_dir.is_dir() else []:
-            receipt = _read_json(path)
-            generation = receipt["generation"]
-            held = [p for p in (target.backup(generation), target.candidate(generation)) if p.is_file()]
-            rows.append(
-                {
-                    "generation": generation,
-                    "kind": receipt.get("kind"),
-                    "state": receipt.get("state"),
-                    "recorded_at": receipt.get("recorded_at"),
-                    "live": receipt.get("inode") == live_ino or any(p.stat().st_ino == live_ino for p in held),
-                    "restorable": target.backup(generation).is_file(),
-                }
-            )
-    return {"status": "generations", "recovered_first": recovered, "generations": rows}
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Import the staged СУМ-20 mirror into a new verified sources.db generation, publish it, or "
-            "list/restore generations. Primary checkout only; never writes the official sum20 tables."
+            "Import the staged СУМ-20 mirror into a new verified sources.db generation and publish it. "
+            "Primary checkout only; never writes the official sum20 tables."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python -m scripts.ingest.sum20_mirror_import build --expect-staging-sha256 <sha256>\n"
-            "  .venv/bin/python -m scripts.ingest.sum20_mirror_import publish --generation <id> "
-            "--drain-unit learn-ukrainian-sources.service --wait-drained 900\n"
-            "  .venv/bin/python -m scripts.ingest.sum20_mirror_import restore --generation <id> "
-            "--drain-unit learn-ukrainian-sources.service --wait-drained 900\n\n"
-            "Outputs: JSON on stdout; candidates, backups and receipts under data/sources/.\n"
-            "Exit codes: 0 success; 1 verification failed (live store untouched); 2 refused; 3 swapped, unit restart failed.\n"
-            "Related: issue #8579; docs/runbooks/dictionary-acquisition.md; scripts/wiki/sum20_mirror.py."
+            "  .venv/bin/python -m scripts.ingest.sum20_mirror_import plan\n"
+            "  .venv/bin/python -m scripts.ingest.sum20_mirror_import import --expect-staging-sha256 <sha256>\n"
+            "  .venv/bin/python -m scripts.storage restore-generation data/sources-generations/<previous>  # rollback\n\n"
+            "Outputs: JSON on stdout; the new generation under data/sources-generations/.\n"
+            "Exit codes: 0 published; 1 verification failed (selection unchanged); 2 refused.\n"
+            "Related: issue #8579; docs/runbooks/dictionary-acquisition.md; docs/runbooks/storage-topology.md."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("plan", help="Read-only relation counts for the staged mirror against the live official rows.")
-    build_cmd = sub.add_parser(
-        "build", help="Build and verify a sealed candidate generation; the live store is read only."
+    import_cmd = sub.add_parser(
+        "import", help="Build, verify and publish a new generation under the store writer lock."
     )
-    build_cmd.add_argument(
+    import_cmd.add_argument(
         "--expect-staging-sha256",
         required=True,
         help="SHA-256 of the admitted staging file (required), e.g. the admission record's digest.",
     )
-    for name, help_text in (
-        ("publish", "Swap a candidate generation in."),
-        ("restore", "Swap a retained generation back in."),
-    ):
-        cmd = sub.add_parser(name, help=help_text)
-        cmd.add_argument("--generation", required=True, help="Generation id from `generations`, e.g. 0123456789abcdef.")
-        cmd.add_argument(
-            "--drain-unit",
-            action="append",
-            help="systemd user unit to stop around the swap and start again (repeatable; default none).",
-        )
-        cmd.add_argument(
-            "--wait-drained",
-            type=float,
-            default=0.0,
-            help="Seconds to wait for other holders of the live store to exit (default 0).",
-        )
-    sub.add_parser("generations", help="List recorded generations and which one is live.")
     return parser
 
 
@@ -1239,16 +618,7 @@ def main(argv: list[str] | None = None, *, test_data_dir: Path | None = None) ->
     args = build_parser().parse_args(argv)
     try:
         target = writer_target(test_data_dir=test_data_dir)
-        if args.command == "plan":
-            payload = plan(target)
-        elif args.command == "build":
-            payload = build(target, args.expect_staging_sha256)
-        elif args.command == "publish":
-            payload = publish(target, args.generation, _publish_options(args))
-        elif args.command == "restore":
-            payload = restore(target, args.generation, _publish_options(args))
-        else:
-            payload = generations(target)
+        payload = plan(target) if args.command == "plan" else run_import(target, args.expect_staging_sha256)
     except Refused as exc:
         print(json.dumps({"status": "refused", "reason": exc.reason, **exc.detail}, ensure_ascii=False))
         return 2
@@ -1256,8 +626,7 @@ def main(argv: list[str] | None = None, *, test_data_dir: Path | None = None) ->
         print(json.dumps({"status": "verification_failed", "reason": str(exc), **exc.detail}, ensure_ascii=False))
         return 1
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
-    # The swap is committed either way; a unit that did not start again needs the operator.
-    return 3 if payload.get("unit_restart_errors") else 0
+    return 0
 
 
 if __name__ == "__main__":
