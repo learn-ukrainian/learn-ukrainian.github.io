@@ -619,6 +619,10 @@ def _logical_lines(command: str) -> list[str]:
             continue
         if char == "\\" and quote != "'":
             escaped = True
+        elif quote != "'" and (char == "`" or command.startswith(("$'", "$(", "${", "$["), index)):
+            # Bash can nest quotes or escape them differently in these forms.
+            # A shlex quote mismatch must not swallow later command lines.
+            return command.splitlines()
         elif quote:
             if char == quote:
                 if multiline and expanded:
