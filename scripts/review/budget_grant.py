@@ -250,29 +250,20 @@ _STILL_OPEN = re.compile(
     r"\bstill open\b|\bremains open\b|\bunresolved\b|\bnot (?:yet )?(?:resolved|fixed|addressed)\b", re.I
 )
 _CLOSED = re.compile(r"\b(?:resolved|fixed|declined|withdrawn|closed|addressed|superseded)\b", re.I)
-_FINDING_MENTION = re.compile(r"\bF[1-9][0-9]{0,3}\b")
 
 
-def finding_is_open(entry: str, finding_id: str) -> bool:
-    """Whether an entry leaves ``finding_id`` open: its last disposition, about this finding only.
+def finding_is_open(entry: str) -> bool:
+    """Whether an entry is unambiguous evidence that its finding is still open; ambiguity refuses.
 
-    The text is cut at the first mention of another finding, so another
-    finding's state never counts. A closing word (``resolved``, ``fixed``,
-    ``declined`` …) after the last open marker (``still open``,
-    ``unresolved``, ``not resolved`` …) closes the finding; an open marker
-    after it, or no disposition at all (a newly raised finding), leaves it open.
+    Any closing word (``resolved``, ``fixed``, ``declined`` …) anywhere in the
+    entry closes it, whatever it is about, unless the word sits inside an
+    open phrase (``not resolved``, ``unresolved`` …). So a granted round
+    needs the reviewer to keep the finding open in plain words, such as
+    ``still open: <reason>``, or to raise it new; mixed language never
+    admits a round.
     """
-    others = [match.start() for match in _FINDING_MENTION.finditer(entry) if match[0] != finding_id]
-    text = entry[: others[0]] if others else entry
-    opened = [match.span() for match in _STILL_OPEN.finditer(text)]
-    closed = [
-        match.start()
-        for match in _CLOSED.finditer(text)
-        if not any(start <= match.start() < end for start, end in opened)
-    ]
-    if not closed:
-        return True
-    return bool(opened) and opened[-1][0] > closed[-1]
+    opened = [match.span() for match in _STILL_OPEN.finditer(entry)]
+    return not any(not any(start <= match.start() < end for start, end in opened) for match in _CLOSED.finditer(entry))
 
 
 def finding_entries(reply: str, finding_id: str) -> list[tuple[str | None, str]]:
@@ -312,7 +303,7 @@ def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, findin
     severities = [severity for severity, _ in entries if severity]
     if not entries or not severities or severities[-1] not in BLOCKING_SEVERITIES:
         return None
-    return head if finding_is_open(entries[-1][1], finding_id) else None
+    return head if finding_is_open(entries[-1][1]) else None
 
 
 def admit_grant_round(

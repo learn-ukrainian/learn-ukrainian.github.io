@@ -3727,19 +3727,24 @@ def test_archived_grant_keeps_its_seal(monkeypatch, tmp_path, stem):
 @pytest.mark.parametrize(
     "entry,open_",
     [
-        # Review round 2, F1: another finding's state and earlier language never reopen F2.
+        # Review rounds 2 and 3, F1: any closing language closes the entry, whatever it is about.
         ("F2 [P1] docs/readme.md:3 fixed with evidence; F3 remains open.", False),
         ("F2 [P1] docs/readme.md:3 still open.\n  Status: resolved at the new head.", False),
         ("F2 [P1] docs/readme.md:3 was not resolved in round 1; now fixed with evidence.", False),
+        ("F2 [P1] docs/readme.md:3 shares a cause with F3; F2 is resolved with evidence.", False),
+        ("F2 [P1] docs/readme.md:3 shares a cause with F3.\n  Status: resolved.", False),
         ("F2 [P1] docs/readme.md:3 resolved.", False),
         ("F2 [P1] docs/readme.md:3 declined with evidence at docs/readme.md:9.", False),
-        ("F2 [P1] docs/readme.md:3 fixed in round 2, but still open: the retry path races.", True),
+        # Mixed language is ambiguous and refuses, even when it ends open.
+        ("F2 [P1] docs/readme.md:3 fixed in round 2, but still open: the retry path races.", False),
+        ("F2 [P1] docs/readme.md:3 still open: unchanged since F1 was resolved.", False),
+        # Plain open language, or a newly raised finding, is evidence.
         ("F2 [P1] docs/readme.md:3 not resolved: the retry path still races.", True),
-        ("F2 [P1] docs/readme.md:3 still open: unchanged since F1 was resolved.", True),
+        ("F2 [P1] docs/readme.md:3 still open: the retry path races. Impact: lost update.", True),
         ("F2 [P1] docs/readme.md:3 two writers race on the lock. Impact: lost update.", True),
     ],
 )
-def test_finding_disposition_is_its_own_last_one(entry, open_):
+def test_finding_disposition_refuses_any_closing_language(entry, open_):
     from scripts.review.budget_grant import finding_is_open
 
-    assert finding_is_open(entry, "F2") is open_
+    assert finding_is_open(entry) is open_

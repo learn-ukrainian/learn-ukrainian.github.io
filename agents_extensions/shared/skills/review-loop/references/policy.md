@@ -23,7 +23,9 @@ rounds are deltas.
   `record_cf_verdict.py budget-grant digest <ruling.json>`, then dispatch the advisor
   read-only with `--advisory-role review_budget_elevation --advisory-binding <digest>
   --initiator claude-cto`. Each granted round needs the latest recorded verdict to be a
-  rejection that lists the granted finding at P0 or P1 and not as resolved. A grant never
+  rejection that lists the granted finding at P0 or P1 and keeps it open in plain words
+  (`still open: <reason>`, or a newly raised finding); any closing word in that entry, such as
+  `resolved`, `fixed` or `declined`, refuses the round. A grant never
   resets the rounds already counted, never covers a path outside its scope, and five rounds
   stay the total.
 - **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
