@@ -523,6 +523,56 @@ class TestWikipediaPreservation:
             conn.close()
 
 
+class TestSum20Preservation:
+    def test_sum20_tables_survive_force_rebuild(self, tmp_path):
+        from wiki.sum20_official import ensure_sum20_official_schema
+
+        p = tmp_path / "populated.db"
+        _make_populated_db(p)
+        conn = sqlite3.connect(str(p))
+        ensure_sum20_official_schema(conn)
+        conn.execute(
+            """
+            INSERT INTO sum20_articles
+                (id, wordid, normalized_lookup_key, headword, stressed_headword,
+                 article_html, article_text, definition_text, official_url,
+                 fetched_at, content_sha256, parser_version)
+            VALUES (5, 77, 'привіт', 'привіт', 'приві́т', '<p/>', 'привіт', 'вітання',
+                    'https://example.invalid/77', '2026-10-01', 'abc', 'v')
+            """
+        )
+        conn.execute(
+            "INSERT INTO sum20_senses (article_id, sense_order, definition) VALUES (5, 1, 'вітання')"
+        )
+        # A table a later change adds: only the name prefix identifies it.
+        conn.execute("CREATE TABLE sum20_mirror_rows (id INTEGER PRIMARY KEY, body TEXT)")
+        conn.execute("INSERT INTO sum20_mirror_rows (body) VALUES ('дзеркало')")
+        conn.commit()
+        conn.close()
+
+        empty_gd = tmp_path / "empty_gd"
+        empty_gd.mkdir()
+        (empty_gd / "textbook_chunks").mkdir()
+        (empty_gd / "literary_texts").mkdir()
+        empty_ext = tmp_path / "empty_ext"
+        empty_ext.mkdir()
+        with patch.object(bs, "_ingest_jsonl", return_value=0), \
+             patch.object(bs, "GDRIVE_DATA", empty_gd), \
+             patch.object(bs, "EXTERNAL_DIR", empty_ext):
+            bs.build(db_path=p, force=True)
+
+        conn = sqlite3.connect(str(p))
+        try:
+            assert conn.execute("SELECT wordid, headword FROM sum20_articles").fetchall() == [(77, "привіт")]
+            assert conn.execute("SELECT article_id, definition FROM sum20_senses").fetchall() == [(5, "вітання")]
+            assert conn.execute("SELECT body FROM sum20_mirror_rows").fetchall() == [("дзеркало",)]
+            assert conn.execute(
+                "SELECT rowid FROM sum20_articles_fts WHERE sum20_articles_fts MATCH 'привіт'"
+            ).fetchall() == [(5,)]
+        finally:
+            conn.close()
+
+
 # ──────────────────────────────────────────────────────────────────────
 # #4859 — build validation + failure-atomic forced rebuild
 # ──────────────────────────────────────────────────────────────────────
