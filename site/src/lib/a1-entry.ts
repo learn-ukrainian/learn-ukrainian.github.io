@@ -43,7 +43,7 @@ export const a1PreviousEdition = {
   actionKey: 'home.actionOpenA1Previous',
   navKey: a1NewIsPrimary ? 'nav.a1Previous' : 'nav.a1',
   descriptionKey: 'home.cardA1PreviousDesc', statusKey: 'status.released',
-} satisfies Edition;
+} satisfies Edition & { courseLabel: string; courseStatus: string };
 
 export const a1PrimaryEdition = a1NewIsPrimary ? current : a1PreviousEdition;
 export const a1SecondaryEdition = a1NewIsPrimary ? a1PreviousEdition : current;
