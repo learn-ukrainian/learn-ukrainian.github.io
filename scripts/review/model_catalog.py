@@ -805,7 +805,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             values = _require_string_list(
                 model.get(field),
                 f"models.{model_id}.{field}",
-                allow_empty=field == "transports" and lifecycle == "retired",
+                allow_empty=field == "transports" and lifecycle in {"hold", "retired"},
             )
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")

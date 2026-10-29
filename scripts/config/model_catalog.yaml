@@ -737,6 +737,26 @@ models:
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
       - https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/
+  gemini-4-carbon:
+    family: google
+    tier: compatibility
+    lifecycle: hold
+    roles: [inventory_only]
+    transports: []
+    strengths: [inventory_placeholder]
+    weaknesses: [unreleased, unofficial_evidence_only, provisional_id, unavailable_on_agy]
+    notes: >-
+      Unreleased model reported only by unofficial sources. The catalog id
+      gemini-4-carbon is provisional, not a verified provider selector or wire id.
+      A live `agy models` probe on 2026-10-29 listed no Carbon selector.
+      No execution, resolver, ladder, dispatch or role placement is authorized.
+      Promotion requires a new live `agy models` probe listing the exact Carbon
+      selector, recording the real wire id(s) from that listing, then designated
+      approval before lifecycle: active and any role or ladder placement.
+    sources:
+      - https://testingcatalog.com/gemini-4-carbon-early-test-results
+      - https://letsdatascience.com/news/gemini-4-carbon-checkpoint-reportedly-appears-on-chatbot-are-ee165ebf
+      - https://pasqualepillitteri.it/de/news/22309/gemini-4-carbon-leak-mitarbeiter-opus-5-5
   gemini-4-argon-high:
     family: google
     tier: frontier_practical
