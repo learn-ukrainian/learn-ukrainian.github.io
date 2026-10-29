@@ -89,6 +89,7 @@ term of protection (Art. 31) and public domain (Art. 32(3)).
 | `pohribnyi_1992` | Author М. І. Погрібний; published by агентство «TRANSFORM», Дніпропетровськ (per the ingest record) | internal | No licence text recorded | — |
 | `textbooks_university` | Authors and publishers named on each held university textbook imprint page. | internal, site | No common licence recorded; see per-book origin records | — |
 | `vts_busel_slovnyk_me` | Not established from electronic mirror colophon (candidate attribution: ВТФ «Перун» / ред. В. Т. Бусел unverified); digital copy hosted by slovnyk.me | internal, site | All rights reserved (rights holder unverified / candidate ВТФ «Перун» / В. Т. Бусел); definitions quoted referencing Art. 22(2)(1) of Law 2811-IX with author/source attribution and marked quotation boundaries | Великий тлумачний словник сучасної української мови |
+| `sum20_slovnyk_mirror` | Український мовно-інформаційний фонд НАН України with the Інститут мовознавства ім. О. О. Потебні НАН України (the `sum20` work); digital copy hosted by slovnyk.me | internal | All rights reserved (© ULIF, the `sum20` work); no open licence on the slovnyk.me aggregator | Словник української мови у 20 томах — копія slovnyk.me |
 
 ## Open questions
 
@@ -741,3 +742,21 @@ Open questions: none recorded.
 Open questions:
 - Print edition attribution (ВТФ «Перун» / за ред. В. Т. Бусела, 2005) not established from electronic mirror colophon; edition verification prerequisite remains open for formal bibliographic citation.
 - Commercial/public-dataset redistribution licence status remains unconfirmed with rights holder (ВТФ «Перун»); blocks Phase 7 public dataset release only.
+
+### «Словник української мови у 20 томах» (СУМ-20) via slovnyk.me (newsum) — `sum20_slovnyk_mirror`
+
+- **Permission status:** `pending-expert-contact`. It is the same work and rights holder as `sum20`; slovnyk.me is only the retrieval route (see `slovnyk_me`). Use follows the operator's source decision of 2026-09-27 (#8977). This entry is a provenance and takedown record.
+- **Organisation:** Український мовно-інформаційний фонд НАН України with the Інститут мовознавства ім. О. О. Потебні НАН України (the `sum20` work); digital copy hosted by slovnyk.me
+- **Role:** Modern Ukrainian definitions beside the official offline collection. `query_sum20` and the Sources MCP serve each mirror row under rule `sum20-mirror-rule-v1`, and internal word cards use it as a separate meaning source. It is never official verification.
+- **Fields:** headword, definition_text
+- **Appears in:** internal. Every `query_sum20` and Sources MCP record carries `source_role` mirror with its mirror URL and fetch time. Word cards carry it as source `sum20_slovnyk_mirror` (lineage G-ULIF, tier 2), so it never counts as independent corroboration of `sum20`.
+- **Stored in:** data/sum20_slovnyk_staging.db sum20_slovnyk_articles (164,838 articles, complete checkpoint); data/sources.db sum20_mirror_articles (scripts/ingest/sum20_mirror_import.py)
+- **Where from:** https://slovnyk.me/dict/newsum/
+- **Retrieval evidence:** sum20_slovnyk_articles.fetched_at spans 2026-08-06 to 2026-10-12; 164,838 rows, every one with outcome ok; staging file SHA-256 `32e77a09e004a7ad740fa8acd350d0f5a743cb13f751e9d134ffcec5db595194` (docs/sources/admissions/2026-10-28-vts-acquisition.md).
+- **Terms:** All rights reserved (© ULIF, the `sum20` work); no open licence on the slovnyk.me aggregator. Search record: https://slovnyk.me/terms (recorded as `slovnyk_terms_2024` in the `slovnyk_me` entry).
+- **Statute referred to:** `law_art22_quotation`
+- **Citation:** Словник української мови у 20 томах (електронна копія на Slovnyk.me, https://slovnyk.me/dict/newsum/). Label shown: Словник української мови у 20 томах — копія slovnyk.me.
+- **Removal:** https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues — mirror records served by `query_sum20` and the Sources MCP, word-card meanings with source `sum20_slovnyk_mirror`, and the stored copies in data/sum20_slovnyk_staging.db and data/sources.db.
+
+Open questions:
+- The copy covers the 164,838 articles of its own crawl list, not the whole dictionary; common lemmas such as день, дім and знати have no article in it.

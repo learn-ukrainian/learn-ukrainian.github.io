@@ -92,8 +92,9 @@ def open_sum20_mirror(
     mirror tables and for an explicit lexdata override, which is exclusive and
     never falls back. Otherwise the official rows may come from a lexdata
     generation while the mirror lives in the sources store, which is opened
-    here (the caller closes it). An absent sources store means no mirror rows
-    (``None``), never a lost official answer; other refusals stay typed errors.
+    here (the caller closes it). An absent default sources store means no mirror
+    rows (``None``), never a lost official answer. An explicit ``LU_SOURCES_DB``
+    and every other refusal stay typed errors.
     """
     from scripts.wiki.sum20_mirror import mirror_tables_present
 
@@ -104,7 +105,7 @@ def open_sum20_mirror(
     try:
         return open_sources(repository_root=repository_root)
     except Sum20StoreError as exc:
-        if exc.reason == "store_missing":
+        if exc.reason == "store_missing" and "LU_SOURCES_DB" not in os.environ:
             return None
         raise
 

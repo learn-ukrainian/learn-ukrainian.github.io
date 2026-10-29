@@ -15,9 +15,11 @@ from pathlib import Path
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_sources as src
 from scripts.storage.topology import store_locality
+from scripts.wiki import sum20_mirror
 
-SOURCES = ("sum20", "vts_busel_slovnyk_me")
-VERSION = "pilot-meanings-v2"
+SOURCES = ("sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me")
+VERSION = "pilot-meanings-v3"
+HEAD_TOKEN = re.compile(r"[А-Яа-яІіЇїЄєҐґ'’ʼ`́-]+")
 SOURCE_TAIL = re.compile(r"\s+Джерело:.*$", re.IGNORECASE | re.DOTALL)
 
 
@@ -95,6 +97,32 @@ def vts_partitions(text: str, spelling: str) -> list[dict]:
     return out
 
 
+def mirror_partition(row: dict, spelling: str) -> dict:
+    """The article body of one served СУМ-20 mirror row, bounded like the ВТС spans.
+
+    The page repeats its headword before the article and appends a source
+    footer; neither belongs to the witness. The head is the article's first
+    word, and the grammar is the text up to its first full stop. A head that does
+    not spell the card's lexeme leaves the partition unresolved.
+    """
+    text = row["article_text"]
+    lookup = re.match(rf"\s*{re.escape(row['headword'])}\s+", text, re.IGNORECASE)
+    start = lookup.end() if lookup else 0
+    footer = SOURCE_TAIL.search(text, start)
+    end = footer.start() if footer else len(text)
+    body = text[start:end].strip()
+    start = text.index(body, start) if body else start
+    head = HEAD_TOKEN.match(body)
+    stressed = src.nfc(head[0].lower()) if head else ""
+    if not body or key(stressed) != spelling:
+        return {"text": None, "head": "", "pos": None, "aspect": None, "partition": "unresolved", "span": [0, 0],
+                "reason": "source_partition_unresolved"}
+    grammar = body[len(head[0]):].partition(".")[0] + "."
+    return {"text": body, "head": stressed, "pos": grammar_pos(grammar),
+            "aspect": "imperf" if "недок." in grammar else "perf" if "док." in grammar else None,
+            "partition": "article", "span": [start, start + len(body)], "reason": None}
+
+
 def full_vts(row: dict, root: Path | None) -> tuple[str | None, str | None]:
     """Authenticate the admitted full witness; never fetch or follow a reference."""
     text = row["text"]
@@ -140,6 +168,15 @@ def candidates(sources: src.PilotSources, spelling: str) -> dict[str, list[dict]
             "locator": f"sum20:sum20_articles:id:{row['id']} [article_text]",
             "snapshot": "sum20-article@sha256:" + foundation.digest({"article": row, "senses": senses}),
             "url": row["official_url"]})
+    # Only the mirror rows sum20-mirror-rule-v1 serves: an agreeing row adds nothing to the official one.
+    served = sum20_mirror.served_rows(sources.sources, sum20_mirror.mirror_key(spelling))
+    sources._use(f"meaning:sum20_mirror:{spelling}", [[row, relation] for row, relation in served])
+    for row, relation in served:
+        part = mirror_partition(row, spelling)
+        start, end = part["span"]
+        out["sum20_slovnyk_mirror"].append({**part, "row": row, "relation": relation,
+            "locator": f"sum20_slovnyk_mirror:sum20_mirror_articles:id:{row['id']} [article_text:{start}:{end}]",
+            "snapshot": "sum20-mirror-article@sha256:" + foundation.digest(row), "url": row["source_url"]})
     rows = [src.row_dict(r) for r in sources.sources.execute(
         "SELECT * FROM slovnyk_me_entries WHERE dictionary_slug='vts' AND normalized_word=? ORDER BY id",
         (spelling,))]

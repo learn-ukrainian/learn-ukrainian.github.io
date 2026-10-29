@@ -11,17 +11,23 @@ back the same way. The official ``sum20_*`` tables, their quarantine marks and
 the crawl tables are never written; verification proves them unchanged.
 
 **Exclusion.** The live store must be held (``scripts.storage hold``: no write
-bit on the file or its sidecars). ``build`` refuses a writable or unknown
-descriptor and any write lock. A publication needs a full drain: no process
-with a descriptor and no POSIX lock on the file or its sidecars. It waits up
-to ``--wait-drained`` seconds for other users to close, then stops the
-``--drain-unit`` units and checks again. It also requires the live file to be
-identical to the one the candidate was copied from, with an empty WAL.
+bit on the file or its sidecars). Kernel file leases are the proof; the
+``/proc`` scan and lock table only explain a refusal and pace the wait.
+
+- ``build`` takes a read lease on the live file and its sidecars. Linux grants
+  one only when no process, of any user and whether or not ``/proc`` can list
+  it, holds a writable descriptor. The scan's unknown descriptors and write
+  locks refuse too.
+- A publication holds write leases, granted only when no other descriptor
+  exists at all, from the barrier to the rename. It waits up to
+  ``--wait-drained`` seconds for other users to close, then stops the
+  ``--drain-unit`` units. It also requires the live file to be identical to the
+  one the candidate was copied from, with an empty WAL.
 
 **Publication.** A journal is written before the previous generation is
-retained as a durable hard link. The old inode is then fenced at mode 000, so
-an open in the last instant fails instead of reading it. After a final check
-comes the rename. Every command first finishes or undoes a publication a crash
+retained as a durable hard link. The old inode is then fenced at mode 000, so a
+new open fails. An open that began earlier breaks a lease and refuses the
+publication. Only then comes the rename. Every command first finishes or undoes a publication a crash
 interrupted. Units are started again whatever happens, and a failure to
 restart one is reported apart from the committed swap.
 
@@ -47,11 +53,14 @@ Exit codes: 0 success; 1 verification failed (live store untouched);
 from __future__ import annotations
 
 import argparse
+import contextlib
+import errno
 import fcntl
 import hashlib
 import json
 import os
 import shutil
+import signal
 import sqlite3
 import stat
 import subprocess
@@ -312,11 +321,15 @@ def holders(paths: Sequence[Path], proc: Path = Path("/proc")) -> dict[str, Any]
             continue
         except (FileNotFoundError, ProcessLookupError):
             continue
+        blind = False
         for descriptor in descriptors:
             try:
                 info = descriptor.stat()
-            except OSError:
+            except FileNotFoundError:
                 continue  # closed between listing and reading
+            except OSError:
+                blind = True  # an open file this scan cannot identify
+                continue
             name = inodes.get((info.st_dev, info.st_ino))
             if name is None:
                 continue
@@ -332,10 +345,14 @@ def holders(paths: Sequence[Path], proc: Path = Path("/proc")) -> dict[str, Any]
                 continue
             except (OSError, StopIteration, ValueError):
                 writable = None
-            if holder["writable"] is not True:
-                holder["writable"] = None if writable is None else (holder["writable"] or writable)
+            if holder["writable"] is not True:  # unknown stays unknown unless a writer is proven
+                holder["writable"] = (
+                    True if writable else None if writable is None or holder["writable"] is None else False
+                )
             if name not in holder["files"]:
                 holder["files"].append(name)
+        if blind:
+            unscannable.append({"pid": int(entry.name), "command": _comm(proc, int(entry.name))})
     for pid, holder in found.items():
         holder["command"] = _comm(proc, pid)
     return {
@@ -352,14 +369,17 @@ def _comm(proc: Path, pid: int) -> str:
         return ""
 
 
-def _locks(inodes: dict[tuple[int, int], str], table: Path) -> list[dict[str, Any]]:
-    """Entries of the kernel lock table on ``inodes`` (``major:minor:inode`` is hexadecimal device, decimal inode)."""
+def _locks(inodes: dict[tuple[int, int], str], table: Path) -> list[dict[str, Any]] | None:
+    """Kernel lock-table entries on ``inodes``; ``None`` when the table cannot be read (unknown, not empty).
+
+    ``major:minor:inode`` is the hexadecimal device and the decimal inode.
+    """
     wanted = {(os.major(dev), os.minor(dev), ino): name for (dev, ino), name in inodes.items()}
     found = []
     try:
         lines = table.read_text().splitlines()
-    except FileNotFoundError:
-        return found
+    except OSError:
+        return None
     for line in lines:
         fields = line.split()
         try:
@@ -383,19 +403,61 @@ def _live_files(target: Target) -> list[Path]:
     return [target.live, *_sidecars(target.live)]
 
 
+@contextmanager
+def leases(paths: Sequence[Path], kind: int, diagnose: Callable[[], dict[str, Any]]) -> Iterator[Callable[[], bool]]:
+    """Kernel file leases on every existing path: the exclusion proof, across all users and processes.
+
+    Linux grants ``F_WRLCK`` only when no other descriptor for the file exists
+    anywhere, and ``F_RDLCK`` only when none is open for writing, including in
+    processes ``/proc`` cannot list. While a lease is held, another open blocks
+    and breaks it (``SIGIO``); the yielded check is false once any lease broke.
+    Refusals carry ``diagnose()``, the ``/proc`` view of who holds the store.
+    """
+    broken: list[int] = []
+    previous = signal.signal(signal.SIGIO, lambda signum, frame: broken.append(signum))
+    fds: list[int] = []
+    try:
+        for path in paths:
+            try:
+                fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+            except FileNotFoundError:
+                continue
+            fds.append(fd)
+            try:
+                fcntl.fcntl(fd, fcntl.F_SETLEASE, kind)
+            except BlockingIOError:
+                raise Refused("live_store_in_use", lease=path.name, **diagnose()) from None
+            except OSError as exc:
+                raise Refused(f"lease_unavailable_{errno.errorcode.get(exc.errno, exc.errno)}") from None
+        yield lambda: not broken and all(fcntl.fcntl(fd, fcntl.F_GETLEASE) == kind for fd in fds)
+    finally:
+        for fd in fds:
+            with contextlib.suppress(OSError):
+                fcntl.fcntl(fd, fcntl.F_SETLEASE, fcntl.F_UNLCK)
+            os.close(fd)
+        signal.signal(signal.SIGIO, previous)
+
+
 def _require_no_writers(target: Target, scan: Callable[[Sequence[Path]], dict[str, Any]]) -> None:
-    """No writable or unknown descriptor and no write lock: nothing can commit while ``build`` copies."""
+    """No writable descriptor on the live files anywhere: a read lease proves it; the scan explains refusals."""
     observed = scan(_live_files(target))
     writers = [h for h in observed["holders"] if h["writable"] is not False]
-    if writers or any(lock["access"] == "WRITE" for lock in observed["locks"]):
-        raise Refused("live_store_has_writers", holders=writers, locks=observed["locks"])
+    locks = observed["locks"]
+    if writers or locks is None or any(lock["access"] == "WRITE" for lock in locks):
+        raise Refused("live_store_has_writers", holders=writers, locks=locks)
+    with leases(_live_files(target), fcntl.F_RDLCK, lambda: _undrained(observed, lambda holder: False)):
+        pass
 
 
 def _undrained(observed: dict[str, Any], allowed: Callable[[dict[str, Any]], bool]) -> dict[str, Any]:
-    """What still uses the live store, apart from processes of the units about to be drained."""
+    """What still uses the live store, apart from processes of the units about to be drained.
+
+    ``locks`` is ``None`` when the lock table could not be read, which counts as in use.
+    """
+    locks = observed["locks"]
     return {
         "holders": [h for h in observed["holders"] if not allowed(h)],
-        "locks": [lock for lock in observed["locks"] if lock["pid"] is None or not allowed(lock)],
+        "locks": None if locks is None else [lock for lock in locks if lock["pid"] is None or not allowed(lock)],
     }
 
 
@@ -829,11 +891,15 @@ class Drain:
 
     def __enter__(self) -> Drain:
         stop_errors = []
-        for unit in self.units:
-            try:
-                self.control("stop", unit)
-            except Exception as exc:  # any failure leaves the unit's state unknown
-                stop_errors.append(f"stop {unit}: {type(exc).__name__}")
+        try:
+            for unit in self.units:
+                try:
+                    self.control("stop", unit)
+                except Exception as exc:  # any failure leaves the unit's state unknown
+                    stop_errors.append(f"stop {unit}: {type(exc).__name__}")
+        except BaseException:  # an interruption still starts every unit before it propagates
+            self._start_all()
+            raise
         if stop_errors:
             self._start_all()
             raise Refused("unit_stop_failed", unit_errors=stop_errors + self.restart_errors)
@@ -846,11 +912,17 @@ class Drain:
         return False
 
     def _start_all(self) -> None:
+        interrupted: BaseException | None = None
         for unit in reversed(self.units):
             try:
                 self.control("start", unit)
             except Exception as exc:
                 self.restart_errors.append(f"start {unit}: {type(exc).__name__}")
+            except BaseException as exc:  # finish the other starts, then let the interruption through
+                self.restart_errors.append(f"start {unit}: {type(exc).__name__}")
+                interrupted = interrupted or exc
+        if interrupted is not None:
+            raise interrupted
 
 
 def _unit_pids(units: Sequence[str], proc: Path = Path("/proc")) -> Callable[[dict[str, Any]], bool]:
@@ -872,23 +944,20 @@ def _await_drain(target: Target, options: dict[str, Any], allowed: Callable[[dic
     deadline = clock() + options["wait_drained"]
     while True:
         left = _undrained(scan(_live_files(target)), allowed)
-        if not left["holders"] and not left["locks"]:
+        if not left["holders"] and left["locks"] == []:
             return
         if clock() >= deadline:
             raise Refused("live_store_in_use", **left)
         sleep(DRAIN_POLL_S)
 
 
-def _barrier(target: Target, parent: dict[str, Any], scan: Callable[[Sequence[Path]], dict[str, Any]]) -> None:
-    """Unchanged, checkpointed, held, and used by no observable process or lock."""
+def _barrier(target: Target, parent: dict[str, Any]) -> None:
+    """Unchanged since the candidate's copy, checkpointed and held; the write leases prove it unused."""
     now = live_identity(target.live)
     if now != parent:
         raise Refused("live_store_changed_since_candidate")
     _require_quiet(now)
     _require_held(target.live)
-    left = _undrained(scan(_live_files(target)), lambda holder: False)
-    if left["holders"] or left["locks"]:
-        raise Refused("live_store_in_use", **left)
 
 
 def _journal(target: Target) -> Path:
@@ -986,26 +1055,31 @@ def _publish(
         "kind": kind,
         "published": published,
     }
+    diagnose = lambda: _undrained(scan(_live_files(target)), lambda holder: False)  # noqa: E731
     with Drain(options["drain_units"], options["control"]) as drain:
-        _barrier(target, parent, scan)
+        _barrier(target, parent)
         if backup.exists() and backup.stat().st_ino != parent["ino"] and file_sha256(backup) != parent_sha256:
             raise Refused("backup_name_conflict")
-        target.backups_dir.mkdir(parents=True, exist_ok=True)
-        _write_json(_journal(target), state)
-        replaced = False
-        try:
-            if not backup.exists():
-                os.link(target.live, backup)
-            _fsync(target.backups_dir, directory=True)
-            _finish_receipts(target, {**state, "published": None})
-            target.live.chmod(0)
-            _barrier(target, {**parent, "mode": 0}, scan)
-            _remove(_sidecars(target.live))
-            os.replace(source, target.live)
-            replaced = True
-            _fsync(target.data_dir, directory=True)
-        finally:
-            recover(target)  # replaced: unfence the retained inode and finish; otherwise undo
+        with leases(_live_files(target), fcntl.F_WRLCK, diagnose) as intact:
+            target.backups_dir.mkdir(parents=True, exist_ok=True)
+            _write_json(_journal(target), state)
+            replaced = False
+            try:
+                if not backup.exists():
+                    os.link(target.live, backup)
+                _fsync(target.backups_dir, directory=True)
+                _finish_receipts(target, {**state, "published": None})
+                target.live.chmod(0)
+                # An open that began before the fence breaks a lease; refuse rather than leave it the old inode.
+                if not intact():
+                    raise Refused("live_store_opened_during_publication", **diagnose())
+                _barrier(target, {**parent, "mode": 0})
+                _remove(_sidecars(target.live))
+                os.replace(source, target.live)
+                replaced = True
+                _fsync(target.data_dir, directory=True)
+            finally:
+                recover(target)  # replaced: unfence the retained inode and finish; otherwise undo
         if not replaced:
             raise Refused("publication_not_completed")
     return {"previous": previous, "unit_restart_errors": drain.restart_errors}

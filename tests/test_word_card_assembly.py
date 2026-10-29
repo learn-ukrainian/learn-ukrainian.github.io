@@ -33,6 +33,7 @@ from scripts.common.git_context import sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.storage.topology import StoreBinding, resolve_store
+from scripts.wiki import sum20_mirror
 from tests.test_word_card_sources import (
     ENTRY_DDL,
     FAILURES_DDL,
@@ -279,7 +280,7 @@ def make_inputs(w, scratch, registry=None):
     register = {"schema_version": 2, "sources": [
         {"id": s, "appears_in": ["internal", "site", "dataset"]}
         for s in ("ulif", "vesum", "puls", "frazeolohichnyi", "ukrainian_word_stress", "sum20",
-                  "vts_busel_slovnyk_me")]}
+                  "sum20_slovnyk_mirror", "vts_busel_slovnyk_me")]}
     scratch.mkdir(parents=True, exist_ok=True)
     extract = scratch / "extract.sqlite"
     entry_ids = sorted(r["raw_row"]["id"] for r in w.records if r["table"] == "ulif_dictua_entries")
@@ -559,6 +560,18 @@ def meaning_inputs(tmp_path):
     insert(w.sources, "slovnyk_me_entries", {"id": 1, "word": "альфа", "normalized_word": "альфа",
         "dictionary_slug": "vts", "text": text, "content_sha256": hashlib.sha256(text.encode()).hexdigest(),
         "cache_path": "", "source_url": "https://slovnyk.me/dict/vts/test"})
+    # One imported СУМ-20 mirror article that differs from the official rows, so the rule serves it.
+    w.sources.executescript(sum20_mirror.SCHEMA_SQL)
+    insert(w.sources, "sum20_mirror_imports", {"id": 1, "generation": "fixture", "rule_version": "fixture",
+        "staging_sha256": "0" * 64, "staging_records": 1, "checkpoint_count": 1, "checkpoint_last_url": "fixture",
+        "checkpoint_updated_at": "fixture", "official_digest": "fixture", "relation_counts": "{}",
+        "imported_at": "fixture"})
+    mirror_text = (f"альфа А{A}ЛЬФА, и, ж. Mirror witness. "
+                   "Джерело: Словник української мови (СУМ-20) на Slovnyk.me")
+    insert(w.sources, "sum20_mirror_articles", {"id": 1, "mirror_url": "https://slovnyk.me/dict/newsum/test",
+        "source_url": "https://slovnyk.me/dict/newsum/test", "mirror": "slovnyk.me newsum", "lemma": "альфа",
+        "headword": "альфа", "normalized_lookup_key": "альфа", "title": "fixture", "article_text": mirror_text,
+        "senses_json": "{}", "fetched_at": "2026-01-01", "content_sha256": "fixture", "import_id": 1})
     yield make_inputs(w, tmp_path)
     w.sources.close()
     w.vesum.close()
@@ -569,8 +582,13 @@ def test_modern_meanings_preserve_homonym_partitions_and_all_source_text(meaning
     result = wa.build(meaning_inputs)
     first = card_of(result, "альфа")
     definitions = {a["source_id"]: a for a in first["assertions"] if a["field"] == "definition_uk"}
-    assert set(definitions) == {"sum20", "vts_busel_slovnyk_me"}
+    assert set(definitions) == {"sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me"}
     assert definitions["sum20"]["value"] == "Complete SUM20 witness 1. Including every shade and citation."
+    # The mirror witness keeps its own source id, without the page's lookup word or source footer.
+    assert definitions["sum20_slovnyk_mirror"]["value"] == f"А{A}ЛЬФА, и, ж. Mirror witness."
+    start, end = map(int, definitions["sum20_slovnyk_mirror"]["locator"].removesuffix("]").split(":")[-2:])
+    stored = meaning_inputs.sources.sources.execute("SELECT article_text FROM sum20_mirror_articles").fetchone()[0]
+    assert stored[start:end] == definitions["sum20_slovnyk_mirror"]["value"]
     assert definitions["vts_busel_slovnyk_me"]["value"] == f"I а{A}льфа -и, ч. 1》 Witness A."
     assert "Witness B" not in json.dumps(definitions)
     assert all(a["subject"]["id"] == wa.holding_sense(first["senses"])["sense_id"] for a in definitions.values())

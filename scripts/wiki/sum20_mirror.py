@@ -2,7 +2,7 @@
 
 ``scripts.ingest.sum20_mirror_import`` is the only writer of these tables. This
 module holds their schema and the read-time rule ``sum20-mirror-rule-v1`` that
-``query_sum20`` applies; any other reader must use ``served_rows`` too. It never
+``query_sum20`` and the word-card meanings apply through ``served_rows``. It never
 writes, never opens a store and never touches the official ``sum20_*`` tables.
 
 For a lookup key, compare each mirror row with every official row of that key:

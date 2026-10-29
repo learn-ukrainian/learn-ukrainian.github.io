@@ -249,8 +249,8 @@ into the `sum20_mirror_*` tables of `sources.db`. It never writes the official
 
 ### Readers
 
-`query_sum20` and the Sources MCP tool apply rule `sum20-mirror-rule-v1` at
-read time (`scripts/wiki/sum20_mirror.py`). For each lookup key they compare
+`query_sum20`, the Sources MCP tool and the word-card meanings apply rule
+`sum20-mirror-rule-v1` at read time (`scripts/wiki/sum20_mirror.py`). For each lookup key they compare
 every mirror row with every official row of that key:
 
 | Official rows for the key | Relation | What is served |
@@ -274,9 +274,12 @@ spell the apostrophe `_`, as in `м_ясо`. The comparison payload is the one
 Official records gain only `source_role: "official"`. Callers that require
 official text keep filtering on `source_id == "sum20_official"`.
 
-**Word cards.** Word cards do not read mirror rows yet. Their meaning sources
-need a permissions-register entry each, so the mirror must be admitted as its
-own source before `served_rows` can supply it.
+**Word cards.** Word cards read the same served rows as the separate meaning
+source `sum20_slovnyk_mirror` (`scripts/atlas/word_card_meanings.py`). Its
+permissions-register entry and its lineage are `G-ULIF`, tier 2: a copy of
+СУМ-20, never independent corroboration. The witness is the article body,
+without the page's lookup word or source footer. It is attached only when its
+head and grammar match the card's lexeme uniquely.
 
 **Store selection.** When official rows come from a lexdata generation, mirror
 rows still come from the default sources store and are judged against the
@@ -320,10 +323,17 @@ Verification compares:
 - `PRAGMA integrity_check`;
 - sampled `query_sum20` lookups for each relation.
 
-**`publish`** needs a full drain. Nothing but the `--drain-unit` processes may
-hold a descriptor on the live file or its sidecars. No POSIX lock may exist on
-them either; the kernel lock table covers processes whose descriptors cannot
-be listed. A descriptor with an unknown access mode counts as in use.
+**Exclusion proof.** Kernel file leases prove exclusion for every process of
+every user, including processes `/proc` cannot list:
+
+- `build` takes read leases on the live file and its sidecars; Linux grants
+  them only while no writable descriptor exists.
+- `publish` holds write leases from its barrier to the rename; Linux grants
+  them only while no other descriptor exists at all.
+
+The `/proc` descriptor scan and the kernel lock table name the holders in a
+refusal and pace the wait for `--drain-unit` processes. An unknown access mode
+or an unreadable lock table counts as in use.
 
 Once nothing else uses the store, publication runs in this order:
 

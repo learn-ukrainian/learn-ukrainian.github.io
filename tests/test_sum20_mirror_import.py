@@ -9,7 +9,9 @@ import hashlib
 import json
 import os
 import sqlite3
-from contextlib import closing
+import subprocess
+import sys
+from contextlib import closing, contextmanager
 from pathlib import Path
 
 import pytest
@@ -17,6 +19,7 @@ import pytest
 from scripts.ingest import sum20_mirror_import as importer
 from scripts.lexdata import generation, transforms
 from scripts.lexicon import sum20_lookup
+from scripts.lexicon.sum20_store import Sum20StoreError
 from scripts.wiki import sources_db, sum20_mirror
 from scripts.wiki.sum20_official import PARSER_VERSION, ensure_sum20_official_schema, normalize_sum20_lookup
 
@@ -338,18 +341,83 @@ def test_publication_waits_for_readers_to_leave(store):
     assert published["status"] == "published" and slept == [importer.DRAIN_POLL_S] * 2
 
 
-def test_an_open_after_the_fence_rolls_the_publication_back(store, monkeypatch):
+def test_an_open_that_breaks_a_lease_rolls_the_publication_back(store, monkeypatch):
     target, sha = store
     built = _build(target, sha)
     before, old_ino = _sha(target.live), target.live.stat().st_ino
-    calls = iter([_observed(), _observed(), _observed([READER])])  # the final barrier sees a late reader
-    with pytest.raises(importer.Refused, match="live_store_in_use"):
-        importer.publish(target, built["generation"], _options(scan=lambda paths: next(calls)))
+    real = importer.leases
+
+    @contextmanager
+    def broken_after_fence(paths, kind, diagnose):
+        with real(paths, kind, diagnose):
+            yield lambda: False  # an open that began before the fence broke a lease
+
+    monkeypatch.setattr(importer, "leases", broken_after_fence)
+    with pytest.raises(importer.Refused, match="live_store_opened_during_publication"):
+        importer.publish(target, built["generation"], _options())
     assert target.live.stat().st_ino == old_ino and _sha(target.live) == before
     assert target.live.stat().st_mode & 0o777 == 0o444  # unfenced
     assert all(p.stat().st_ino != old_ino for p in target.backups_dir.glob("*.db"))  # no backup aliases live
     assert not importer._journal(target).exists()
     assert target.candidate(built["generation"]).is_file()
+
+
+HIDDEN_HOLDER = """
+import ctypes, os, sys
+fd = os.open(sys.argv[1], os.O_RDWR if sys.argv[2] == "write" else os.O_RDONLY)
+ctypes.CDLL(None).prctl(4, 0, 0, 0, 0)  # PR_SET_DUMPABLE 0: /proc can no longer list this process's descriptors
+print("ready", flush=True)
+sys.stdin.read()
+"""
+
+
+@contextmanager
+def hidden_holder(path, mode):
+    """A process holding ``path`` that the /proc scan cannot see (the round-3 probe)."""
+    child = subprocess.Popen(
+        [sys.executable, "-I", "-c", HIDDEN_HOLDER, str(path), mode],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        assert child.stdout.readline().strip() == "ready"
+        assert importer.holders([path])["holders"] == []  # invisible to the scan
+        yield child
+    finally:
+        child.stdin.close()
+        child.wait(timeout=30)
+
+
+def test_leases_refuse_holders_the_scan_cannot_see(store):
+    target, sha = store
+    target.live.chmod(0o644)
+    with hidden_holder(target.live, "write"):  # a writable descriptor opened before the hold
+        target.live.chmod(0o444)
+        with pytest.raises(importer.Refused, match="live_store_in_use") as exc:
+            importer.build(target, sha, scan=importer.holders)
+        assert exc.value.detail["lease"] == "sources.db"
+    built = _build(target, sha)
+    before = _sha(target.live)
+    with hidden_holder(target.live, "read"), pytest.raises(importer.Refused, match="live_store_in_use"):
+        importer.publish(target, built["generation"], _options())
+    assert _sha(target.live) == before and not importer._journal(target).exists()
+    assert importer.publish(target, built["generation"], _options())["status"] == "published"
+
+
+def test_an_interrupted_unit_stop_still_starts_every_unit(store):
+    target, sha = store
+    built = _build(target, sha)
+    calls = []
+
+    def control(action, unit):
+        calls.append((action, unit))
+        if (action, unit) == ("stop", "b.service"):
+            raise KeyboardInterrupt
+
+    with pytest.raises(KeyboardInterrupt):
+        importer.publish(target, built["generation"], _options(drain_units=["a.service", "b.service"], control=control))
+    assert calls[-2:] == [("start", "b.service"), ("start", "a.service")]
 
 
 def _crash_before_rename(target, built):
@@ -502,6 +570,24 @@ def test_holders_scan_matches_inodes_access_mode_locks_and_unscannable(tmp_path)
     (proc / "104").mkdir()
     (proc / "104" / "comm").write_text("guarded\n")
     (proc / "104" / "fd").mkdir(mode=0)
+    # Two descriptors on the store, one with an unreadable access mode: unknown stays unknown.
+    (proc / "105" / "fd").mkdir(parents=True)
+    (proc / "105" / "fdinfo").mkdir()
+    (proc / "105" / "comm").write_text("python\n")
+    for fd, flags in (("3", None), ("4", "0100000")):
+        (proc / "105" / "fd" / fd).symlink_to(db)
+        if flags:
+            (proc / "105" / "fdinfo" / fd).write_text(f"flags:\t{flags}\n")
+        else:
+            (proc / "105" / "fdinfo" / fd).mkdir()
+    # A descriptor whose target cannot be identified makes the process unscannable, not clean.
+    hidden = tmp_path / "hidden"
+    hidden.mkdir()
+    (hidden / "file").write_text("x")
+    (proc / "106" / "fd").mkdir(parents=True)
+    (proc / "106" / "comm").write_text("blind\n")
+    (proc / "106" / "fd" / "3").symlink_to(hidden / "file")
+    hidden.chmod(0)
     device = f"{os.major(info.st_dev):02x}:{os.minor(info.st_dev):02x}:{info.st_ino}"
     (proc / "locks").write_text(
         f"1: POSIX  ADVISORY  READ 105 {device} 1073741826 1073742335\n2: POSIX  ADVISORY  WRITE 106 00:00:1 0 EOF\n"
@@ -510,14 +596,18 @@ def test_holders_scan_matches_inodes_access_mode_locks_and_unscannable(tmp_path)
         found = importer.holders([db, tmp_path / "sources.db-wal"], proc=proc)
     finally:
         (proc / "104" / "fd").chmod(0o755)
+        hidden.chmod(0o755)
     assert [(h["pid"], h["writable"], h["files"]) for h in found["holders"]] == [
         (101, False, ["sources.db"]),
         (102, True, ["sources.db"]),
         (103, None, ["sources.db"]),
+        (105, None, ["sources.db"]),
     ]
     assert found["locks"] == [{"pid": 105, "access": "READ", "file": "sources.db"}]
     if os.geteuid() != 0:  # root can list a mode-000 directory
-        assert found["unscannable"] == [{"pid": 104, "command": "guarded"}]
+        assert found["unscannable"] == [{"pid": 104, "command": "guarded"}, {"pid": 106, "command": "blind"}]
+    (proc / "locks").unlink()
+    assert importer.holders([db], proc=proc)["locks"] is None  # an unreadable table is unknown, not empty
 
 
 def test_lexdata_official_rows_still_get_mirror_rows_from_sources(store, monkeypatch):
@@ -568,6 +658,9 @@ def test_lexdata_official_rows_still_get_mirror_rows_from_sources(store, monkeyp
         if part.exists():
             part.unlink()
     assert [r["source_role"] for r in _query("берег")] == ["official"]  # the official answer survives
+    monkeypatch.setenv("LU_SOURCES_DB", str(target.live))  # an explicit override that names nothing still refuses
+    with pytest.raises(Sum20StoreError):
+        _query("берег")
 
 
 def test_stores_without_mirror_tables_serve_no_mirror_rows(store):
