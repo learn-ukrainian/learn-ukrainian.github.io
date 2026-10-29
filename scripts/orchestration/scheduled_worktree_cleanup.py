@@ -629,6 +629,7 @@ def settle_terminal_worktrees(repo_root: Path, *, apply: bool, github: GitHubRea
     the list as exhaustive; ``unreadable`` names those records.
     """
     from scripts.common.task_store_paths import tasks_dir
+    from scripts.dispatcher import git as dispatcher_git
     from scripts.dispatcher import store, worker
 
     try:
@@ -640,24 +641,29 @@ def settle_terminal_worktrees(repo_root: Path, *, apply: bool, github: GitHubRea
     complete, error = True, None
     try:
         if apply:
-            worker.settle_left_worktrees(salvage=True)
+            # Once the run is degraded, settlement's proof reads are refused before they are sent.
+            with dispatcher_git.github_degraded_when(github.degraded):
+                worker.settle_left_worktrees(salvage=True)
     except Exception as exc:  # one failed record must not hide the others' state
         complete, error = False, f"settlement retry failed ({type(exc).__name__})"
     github.degraded()
     records: list[dict[str, Any]] = []
     unreadable: list[str] = []
+    # The hot record set iter_task_records yields, read here so that a directory or record that
+    # cannot be listed or read marks the scan incomplete instead of disappearing from it.
     try:
-        with os.scandir(root):  # iter_task_records reads an unlistable directory as empty
-            pass
+        names = sorted(entry.name for entry in os.scandir(root) if entry.name.endswith(".json"))
     except OSError:
-        complete = False
+        complete, names = False, []
         unreadable.append(root.name)
-    for record_path in iter_task_records(root, include_archive=False):
+    for name in names:
         try:
-            record = json.loads(record_path.read_text(encoding="utf-8"))
+            record = json.loads((root / name).read_text(encoding="utf-8"))
+        except IsADirectoryError:
+            continue
         except (OSError, ValueError):
             complete = False
-            unreadable.append(record_path.name)
+            unreadable.append(name)
             continue
         if isinstance(record, dict):  # a JSON value that is not an object is no task record
             records.append(record)

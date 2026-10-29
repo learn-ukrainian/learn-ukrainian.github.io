@@ -1,5 +1,6 @@
 """Worktree creation and observational Git delivery reporting."""
 
+import contextvars
 import errno
 import fcntl
 import json
@@ -407,9 +408,27 @@ class GitHubRefused(ValueError):
     """The shared GitHub client's reserve or hold admission refused a read; nothing was sent."""
 
 
+# A run with one GitHub degraded mode (the hourly hygiene run) sets this around settlement: once it
+# reports the run degraded, no further GitHub read is sent (github_degraded_when).
+_GITHUB_DEGRADED: contextvars.ContextVar = contextvars.ContextVar("dispatcher_github_degraded", default=None)
+
+
+@contextmanager
+def github_degraded_when(degraded):
+    """Refuse every GitHub read of this context, before it is sent, while ``degraded()`` is true."""
+    token = _GITHUB_DEGRADED.set(degraded)
+    try:
+        yield
+    finally:
+        _GITHUB_DEGRADED.reset(token)
+
+
 def _gh(*args: str) -> str:
     from scripts.common import github_client
 
+    degraded = _GITHUB_DEGRADED.get()
+    if degraded is not None and degraded():
+        raise GitHubRefused("the run's GitHub reads are degraded")
     proc = github_client.run(["gh", *args], capture_output=True, text=True, check=False, timeout=60)
     if proc.returncode != 0:
         if github_client.refusal_of(proc) is not None:
