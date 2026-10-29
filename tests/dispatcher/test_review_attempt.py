@@ -122,6 +122,16 @@ def test_manifest_must_be_a_file(attempt, manifest, capsys):
     assert "must name a manifest file" in capsys.readouterr().err
 
 
+def test_strict_listing_skips_evidence_append_beside_task_records(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    records = [{"task_id": task_id, "status": "done", "result_file": None} for task_id in ("first", "second")]
+    for record in records:
+        (tmp_path / f"{record['task_id']}.json").write_text(json.dumps(record))
+    (tmp_path / "first.evidence-append.json").write_text("[]")
+
+    assert store.list_tasks(strict=True) == records
+
+
 def test_concurrent_admissions_claim_one_pair_for_different_tasks(attempt, tmp_path, monkeypatch):
     from scripts.agent_runtime import review_mcp
 
