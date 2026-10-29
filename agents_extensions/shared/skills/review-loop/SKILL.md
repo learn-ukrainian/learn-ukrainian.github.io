@@ -89,8 +89,17 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    Give each finding a stable id and a disposition in the ledger ([policy](references/policy.md)).
    Fixes go to the authoring lane (the worker itself when it runs the loop); a driver does not
    patch them in.
-6. **Next round or stop.** Start a delta round only if the budget allows it and an open blocker,
-   a changed behaviour or a moved head needs it. A recorded rejection is cleared only at a new
+6. **Next round or stop.** Start a delta round only if an open blocker, a changed behaviour or a
+   moved head needs it, and only after the recorder admits it. Ask the recorder itself before
+   dispatching; it applies the clean-merge exemption, a designated grant and the lineage's one
+   repair-verification round ([policy](references/policy.md#budget)):
+
+   ```bash
+   "$PY" -m scripts.review.record_cf_verdict budget-check --repository "$REPOSITORY" --pr "$PR"
+   ```
+
+   Exit 0 admits the round; carry any `repair_round` receipt (its approved and candidate heads,
+   class, failed runs or conflicted paths) into the delta brief. Exit 1 is the stop below. A recorded rejection is cleared only at a new
    head ([policy](references/policy.md#clearing-a-recorded-rejection)). The delta brief carries
    the ledger and the fix diff ([brief](references/brief.md#delta-rounds-round-2-and-later)).
 7. **Record the verdict once a PR exists** (the PR may already be open, `workflow.md:195`):
@@ -125,10 +134,13 @@ silence or approval proves nothing. Making it mandatory needs the operator's app
 
 ## Stop and report
 
-Stop when the current head has a recorded APPROVE and only nits or follow-ups remain, when the
-budget is exhausted, when a dispute is unresolved after two replies, or when a breaker trips.
-An exhausted budget and a tripped breaker escalate to the CTO; a dispute goes to the operator
-([policy](references/policy.md)). None of them is approval.
+Stop when the current head has a recorded APPROVE and only nits or follow-ups remain, when
+`budget-check` refuses the next round, when a dispute is unresolved after two replies, or when a
+breaker trips. A head you only need to merge with the base, a CI fix after approval and a
+conflict resolution after approval are not stops: `budget-check` admits them while the
+exemption or the lineage's repair round applies. A refusal and a tripped breaker escalate to
+the CTO with the refusal text; a dispute goes to the operator ([policy](references/policy.md)).
+None of them is approval.
 
 Report: exact SHA reviewed, reviewer model, family and harness, verdict, rounds used against
 the tier, the ledger with each disposition, diff size before and after review, and who owns

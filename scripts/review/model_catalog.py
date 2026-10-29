@@ -88,14 +88,9 @@ ADVISOR_OUTPUT_FIELDS = [
 ]
 ADVISORY_ROLES_KEY = "advisory_roles"
 ADVISORY_ROLE_KEYS = frozenset({"effort", "fence", "output_fields"})
-REVIEW_BUDGET_EXTENSION_ROLE = "review_budget_extension"
 REVIEW_BUDGET_ELEVATION_ROLE = "review_budget_elevation"
 # Role -> (fence label, exact typed-object fields) the catalog entry must declare.
 ADVISORY_ROLE_SHAPES = {
-    REVIEW_BUDGET_EXTENSION_ROLE: (
-        "budget-extension",
-        ["decision", "pr", "lineage_id", "approved_head", "reason_class", "grant", "request_sha256"],
-    ),
     REVIEW_BUDGET_ELEVATION_ROLE: (
         "budget-elevation",
         [

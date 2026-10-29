@@ -13,7 +13,7 @@ import stat
 import subprocess
 import sys
 import time
-from collections.abc import Callable, Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
@@ -245,6 +245,40 @@ def _merge_proof_object_store(start: Path | None = None) -> Path:
     raise OSError("Git checkout unavailable")
 
 
+@contextmanager
+def isolated_object_store(checkout: Path | None = None) -> Iterator[dict[str, str]]:
+    """A Git environment that reads the checkout's objects and writes only to a throwaway store.
+
+    The bare repository imports no init templates, config, refs, grafts,
+    attributes or index from the writable shared Git dir, and objects a proof
+    writes (``merge-tree --write-tree``) never reach the shared store. Raises
+    ``OSError`` when the checkout's object store is unavailable.
+    """
+    objects = _merge_proof_object_store(checkout)
+    with TemporaryDirectory(prefix="cf-merge-") as isolated:
+        proof_dir = Path(isolated)
+        (proof_dir / "objects/info").mkdir(parents=True)
+        (proof_dir / "refs").mkdir()
+        (proof_dir / "HEAD").write_text("ref: refs/heads/proof\n", encoding="utf-8")
+        (proof_dir / "config").write_text(
+            "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
+            # Commit graphs can also be read from the alternate object store.
+            f"\tcommitGraph = false\n\tattributesFile = {os.devnull}\n",
+            encoding="utf-8",
+        )
+        (proof_dir / "objects/info/alternates").write_text(
+            json.dumps(str(objects), ensure_ascii=False) + "\n", encoding="utf-8"
+        )
+        yield {
+            **{key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+            "GIT_DIR": isolated,
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": str(proof_dir / "no-global-config"),
+            "GIT_ATTR_NOSYSTEM": "1",
+            "GIT_NO_LAZY_FETCH": "1",
+        }
+
+
 CLEAN_BASE_MERGE = "clean-base-merge"
 CLEAN_SYNC_MERGE = "clean-sync-merge"
 
@@ -283,31 +317,7 @@ def _clean_merge_source(
         return None
     git = ["git"]
     try:
-        objects = _merge_proof_object_store(checkout)
-        with TemporaryDirectory(prefix="cf-merge-") as isolated:
-            # Construct a bare repository without importing init templates, config,
-            # refs, grafts, attributes, or an index from the writable shared Git dir.
-            proof_dir = Path(isolated)
-            (proof_dir / "objects/info").mkdir(parents=True)
-            (proof_dir / "refs").mkdir()
-            (proof_dir / "HEAD").write_text("ref: refs/heads/proof\n", encoding="utf-8")
-            (proof_dir / "config").write_text(
-                "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
-                # Commit graphs can also be read from the alternate object store.
-                f"\tcommitGraph = false\n\tattributesFile = {os.devnull}\n",
-                encoding="utf-8",
-            )
-            (proof_dir / "objects/info/alternates").write_text(
-                json.dumps(str(objects), ensure_ascii=False) + "\n", encoding="utf-8"
-            )
-            env = {
-                **{key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
-                "GIT_DIR": isolated,
-                "GIT_CONFIG_NOSYSTEM": "1",
-                "GIT_CONFIG_GLOBAL": str(proof_dir / "no-global-config"),
-                "GIT_ATTR_NOSYSTEM": "1",
-                "GIT_NO_LAZY_FETCH": "1",
-            }
+        with isolated_object_store(checkout) as env:
             commit = subprocess.run(
                 [*git, "cat-file", "commit", commit_sha],
                 env=env,
@@ -1880,9 +1890,10 @@ def require_review_round_within_budget(
     *,
     budget: int,
     pr: int,
-    extension: Callable[[], dict[str, Any] | None] | None = None,
     prove_merge_only: Callable[[str, str], list[str] | None] | None = None,
     grant: Callable[[], dict[str, Any] | None] | None = None,
+    repair: Callable[[], dict[str, Any] | None] | None = None,
+    repair_heads: frozenset[str] = frozenset(),
 ) -> dict[str, Any]:
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
@@ -1897,11 +1908,11 @@ def require_review_round_within_budget(
     ``prove_merge_only``); it is checked only once the counted heads reach the
     budget. A sealed elevated-tier grant (``scripts/review/budget_grant.py``)
     admits rounds up to ``ELEVATED_REVIEW_ROUNDS`` in total: ``grant`` returns
-    its receipt, None when the PR has no grant, or refuses. The other exception
-    is round ``budget + 1`` under an approved budget extension
-    (``scripts/review/budget_extension.py``): ``extension`` returns its receipt,
-    None when the PR has no extension request, or refuses. Returns the result
-    fields that record the exception used, else nothing.
+    its receipt, None when the PR has no grant, or refuses. The lineage's one
+    repair-verification round (``scripts/review/repair_round.py``) is outside
+    the budget: ``repair`` returns its receipt or refuses, and ``repair_heads``
+    names the heads it already admitted, which count as no budgeted round.
+    Returns the result fields that record the exception used, else nothing.
     """
     heads = _trusted_verdict_shas(comments, login)
     if sha in heads or len(heads) < budget:
@@ -1909,7 +1920,7 @@ def require_review_round_within_budget(
     exempt = budget_exempt_heads(comments, sha, login, prove=prove_merge_only) if prove_merge_only else {}
     if sha in exempt:
         return {"budget_exemption": {"reason": CLEAN_BASE_MERGE, **exempt[sha]}}
-    counted = heads - set(exempt)
+    counted = heads - set(exempt) - repair_heads
     if len(counted) < budget:
         return {}
     note = f" (and {len(exempt)} clean base merge head(s), which consume no round)" if exempt else ""
@@ -1920,7 +1931,8 @@ def require_review_round_within_budget(
     refusals: list[str] = []
     admissions = (
         ("budget_grant", grant, budget < len(counted) + 1 <= ELEVATED_REVIEW_ROUNDS),
-        ("budget_extension", extension, len(counted) == budget),
+        # Once per lineage: only a retry of the round already admitted at this head may run it again.
+        ("repair_round", repair, not repair_heads - {sha}),
     )
     for field, admit, applies in admissions:
         if admit is None or not applies:
@@ -1942,11 +1954,71 @@ def _budget_grant(**kwargs: Any) -> dict[str, Any] | None:
     return admit_grant_round(**kwargs)
 
 
-def _budget_extension(**kwargs: Any) -> dict[str, Any] | None:
-    # The extension check builds on this module, so it is imported only when the budget is spent.
-    from scripts.review.budget_extension import admit_extension_round
+def _repair_round(**kwargs: Any) -> dict[str, Any] | None:
+    # The repair round builds on this module, so it is imported only when the budget is spent.
+    from scripts.review.repair_round import admit_repair_round
 
-    return admit_extension_round(**kwargs)
+    return admit_repair_round(**kwargs)
+
+
+def _repair_receipts(task_root: Path) -> Path:
+    """Where the repair rounds' durable receipts live: beside the task ledger, never removed."""
+    from scripts.review.repair_round import RECEIPT_DIR
+
+    return task_root.parent / RECEIPT_DIR
+
+
+def budget_admission(
+    *,
+    repository: str,
+    number: int,
+    branch: str,
+    sha: str,
+    facts: BranchReviewFacts,
+    comments: Sequence[Mapping[str, Any]],
+    login: str,
+    task_root: Path,
+    review_root: Path,
+) -> dict[str, Any]:
+    """The round decision for a verdict at ``sha``, shared by the recorder and ``budget-check``; reads only."""
+    from scripts.review.repair_round import repair_heads
+
+    budget = review_round_budget(facts)
+    receipts = _repair_receipts(task_root)
+    return require_review_round_within_budget(
+        comments,
+        sha,
+        login,
+        budget=budget,
+        pr=number,
+        prove_merge_only=_clean_merge_descent_prover(review_root, sha),
+        # A change whose paths already give it five rounds needs no grant.
+        grant=partial(
+            _budget_grant,
+            repository=repository,
+            number=number,
+            branch=branch,
+            changed_paths=facts.changed_paths,
+            comments=comments,
+            login=login,
+            task_root=task_root,
+        )
+        if budget < ELEVATED_REVIEW_ROUNDS
+        else None,
+        repair=partial(
+            _repair_round,
+            repository=repository,
+            number=number,
+            branch=branch,
+            head=sha,
+            comments=comments,
+            login=login,
+            task_root=task_root,
+            repo_root=review_root,
+            receipt_root=receipts,
+        ),
+        repair_heads=repair_heads(receipts, repository=repository, number=number, branch=branch),
+    )
 
 
 def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: str) -> None:
@@ -2243,38 +2315,16 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
-        budget = review_round_budget(facts)
-        budget_receipt = require_review_round_within_budget(
-            comments,
-            sha,
-            login,
-            budget=budget,
-            pr=number,
-            prove_merge_only=_clean_merge_descent_prover(review_root, sha),
-            # A change whose paths already give it five rounds needs no grant.
-            grant=partial(
-                _budget_grant,
-                repository=repository,
-                number=number,
-                branch=branch,
-                changed_paths=facts.changed_paths,
-                comments=comments,
-                login=login,
-                task_root=task_root,
-            )
-            if budget < ELEVATED_REVIEW_ROUNDS
-            else None,
-            extension=partial(
-                _budget_extension,
-                repository=repository,
-                number=number,
-                branch=branch,
-                head=sha,
-                comments=comments,
-                login=login,
-                task_root=task_root,
-                repo_root=review_root,
-            ),
+        budget_receipt = budget_admission(
+            repository=repository,
+            number=number,
+            branch=branch,
+            sha=sha,
+            facts=facts,
+            comments=comments,
+            login=login,
+            task_root=task_root,
+            review_root=review_root,
         )
         existing = None
         for item in comments:
@@ -2308,6 +2358,12 @@ def record(
                     existing = item
                     break
         require_no_same_head_rejection(comments, sha, login, verdict)
+        repair = budget_receipt.get("repair_round")
+        if repair is not None:
+            from scripts.review.repair_round import record_admission
+
+            # The admission receipt is durable before the verdict exists, so the round is spent even if posting fails.
+            record_admission(_repair_receipts(task_root), repair)
         if existing is None:
             data = _run_json(
                 # The typed record is the publisher's only admitted marker carrier (#11127).
@@ -2326,6 +2382,12 @@ def record(
             ):
                 raise RecordError("comment readback mismatch; publication state unknown")
             posted = True
+        if repair is not None:
+            from scripts.review.repair_round import record_consumption
+
+            record_consumption(
+                _repair_receipts(task_root), repair, comment=str(comment_id if posted else existing.get("id"))
+            )
         description = (
             f"review_mode=red_team unknown_history={len(facts.unknown_history)} "
             if facts.unknown_history
@@ -2363,14 +2425,82 @@ def record(
     return result
 
 
+def budget_check(repository: str, number: int, *, task_root: Path | None = None) -> dict[str, Any]:
+    """The recorder's round decision for a verdict at the PR's current head, before any review runs."""
+    root = _repo_root()
+    task_root = task_root or root / "batch_state" / "tasks"
+    pr = _run_json(["gh", "pr", "view", str(number), "--repo", repository, "--json", "headRefOid,headRefName,state"])
+    if not isinstance(pr, dict) or pr.get("state") != "OPEN":
+        raise RecordError(f"PR #{number} is not open")
+    sha, branch = pr.get("headRefOid"), pr.get("headRefName")
+    if not isinstance(sha, str) or not SHA.fullmatch(sha) or not isinstance(branch, str) or not branch:
+        raise RecordError("PR head unavailable")
+    try:
+        repo_keys = [key for key, repo in load_fleet_repos().items() if repo.github.casefold() == repository.casefold()]
+        if len(repo_keys) != 1:
+            raise RecordError("review repository is not uniquely registered")
+        review_root = resolve_review_repository(root, repo_keys[0], mode="pr")
+    except (FleetRepoError, TargetResolutionError, OSError, subprocess.TimeoutExpired):
+        raise RecordError("review repository checkout unavailable") from None
+    facts = pr_review_facts(repository, number, head_sha=sha, task_root=task_root, repo_root=review_root)
+    adapter = GitHubAdapter(Path.cwd())
+    login = adapter.identity()
+    try:
+        comments = adapter.comments(repository, number)
+    except SweepError as exc:
+        raise RecordError(f"comment lookup failed: {exc}") from exc
+    heads = _trusted_verdict_shas(comments, login)
+    receipt = budget_admission(
+        repository=repository,
+        number=number,
+        branch=branch,
+        sha=sha,
+        facts=facts,
+        comments=comments,
+        login=login,
+        task_root=task_root,
+        review_root=review_root,
+    )
+    return {
+        "pr": number,
+        "head": sha,
+        "admitted": True,
+        "reviewed_heads": len(heads),
+        "budget": review_round_budget(facts),
+        "head_already_reviewed": sha in heads,
+        **receipt,
+    }
+
+
+def budget_check_main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        prog="record_cf_verdict.py budget-check",
+        description="Ask the verdict recorder whether a review round at the PR's current head would be admitted.\n"
+        "Run it before dispatching a reviewer; it reads only and writes no receipt.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py budget-check "
+        "--repository learn-ukrainian/learn-ukrainian.github.io --pr 42\n"
+        "Outputs: JSON on stdout: admitted, the budget, and any exemption, grant or repair-round receipt.\n"
+        "Exit codes: 0: admitted; 1: refused (the reason names what to escalate).\n"
+        "Related: agents_extensions/shared/skills/review-loop/references/policy.md",
+    )
+    parser.add_argument("--repository", required=True, help="GitHub owner/name of the PR")
+    parser.add_argument("--pr", type=int, required=True, help="Open PR number")
+    args = parser.parse_args(argv)
+    try:
+        result = budget_check(args.repository, args.pr)
+    except (RecordError, SweepError, ValueError) as exc:
+        print(json.dumps({"pr": args.pr, "admitted": False, "refusal": str(exc)}, sort_keys=True))
+        return 1
+    print(json.dumps(result, sort_keys=True))
+    return 0
+
+
 @publication_cli(RecordError)
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
-    if argv[:1] == ["budget-extension"]:
-        # The extension verb builds on this module, so it is imported only when chosen.
-        from scripts.review.budget_extension import main as budget_extension_main
-
-        return budget_extension_main(argv[1:])
+    if argv[:1] == ["budget-check"]:
+        return budget_check_main(argv[1:])
     if argv[:1] == ["budget-grant"]:
         # The grant verb builds on this module, so it is imported only when chosen.
         from scripts.review.budget_grant import main as budget_grant_main
@@ -2383,8 +2513,8 @@ def main(argv: list[str] | None = None) -> int:
         epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
         "--review-mode red_team --red-team-prompt brief.md\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-extension digest <request.json>\n"
-        "    (a budget extension request's digest; see budget-extension --help)\n"
+        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-check --repository owner/name --pr 1\n"
+        "    (whether the next review round is admitted, before dispatch; see budget-check --help)\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py budget-grant digest <ruling.json>\n"
         "    (an elevated-tier grant ruling's digest; see budget-grant --help)\n"
         "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"

@@ -26,8 +26,8 @@ model and run nonce it ran. The seal is a consistency checksum. Admission
 recomputes both digests and refuses a result edited or replaced after finish
 without a matching record update; a writer that updates both is outside the
 threat model above. ``load_sealed_result`` holds the record, binding and seal
-checks every advisory role shares; the review budget extension
-(``scripts/review/budget_extension.py``) reuses them with its own role, route,
+checks every advisory role shares; the review budget grant
+(``scripts/review/budget_grant.py``) reuses them with its own role, route,
 model and fenced object.
 
 The bound brief is what the worker runs: the worker rebuilds the expected

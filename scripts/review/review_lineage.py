@@ -4,8 +4,8 @@ Rule (designated approval: CTO proposal, Sol 6.1 APPROVE, advisory task
 cto-7eba-adv-carryover2, condition 4): every review task of the PR is terminal,
 every review verdict is published and matches its run, and the approved head's
 APPROVE is the latest verdict of every reviewer seat. Unknown, unpublished or
-in-flight evidence refuses. The approval carry-over and the review budget
-extension (``scripts/review/budget_extension.py``) both apply it before
+in-flight evidence refuses. The approval carry-over and the repair-verification
+round (``scripts/review/repair_round.py``) both apply it before
 anything else. Ported from the carry-over's reviewed reader (#11907) so the two
 share one implementation.
 
