@@ -141,7 +141,7 @@ review_scheduler:
       - architecture_support
       - consequential_advisory
       - bounded_advisory_envelope
-      - review_budget_extension
+      - review_budget_elevation
       - advisory
       - high_volume_dissent
       - web_fact_check
@@ -341,13 +341,14 @@ execution_routing:
 # `output_fields`, sealed at finish. The advisor is the active holder of the
 # role outside the proposal author's family (operator-expectations item 12).
 advisory_roles:
-  # One extra review round after a post-approval base conflict; read by the
-  # verdict recorder (scripts/review/budget_extension.py). Designated approval:
-  # CTO proposal, Sol 6.1 APPROVE (task cto-7eba-adv-extension2).
-  review_budget_extension:
+  # Rounds 4 and 5 for one PR's open qualifying blocker, by the CTO's ruling and
+  # this sealed non-author APPROVE; read by the verdict recorder
+  # (scripts/review/budget_grant.py). Designated approval: CTO proposal, Sol 6.1
+  # APPROVE WITH CHANGES (task cto-7923-adv-clog-sol, item 3b).
+  review_budget_elevation:
     effort: high
-    fence: budget-extension
-    output_fields: [decision, pr, lineage_id, approved_head, reason_class, grant, request_sha256]
+    fence: budget-elevation
+    output_fields: [decision, repository, pr, lineage_id, scope_paths, finding_id, blocker_class, issuer, issuer_model, issued_at, request_sha256]
 
 models:
   muse-wonder-full-1.0:
@@ -391,7 +392,7 @@ models:
       - critical_review
       - agentic_coding
       - bounded_advisory_envelope
-      - review_budget_extension
+      - review_budget_elevation
       - consequential_advisory
       - ukrainian_review
     transports: [native_codex]
@@ -586,7 +587,7 @@ models:
       - critical_review
       - security_review
       - ukrainian_review
-      - review_budget_extension
+      - review_budget_elevation
     transports: [native_claude, agy]
     strengths: [agentic_coding_at_medium_effort, code_review_precision, grounded_analysis, visual_input_reading]
     weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]

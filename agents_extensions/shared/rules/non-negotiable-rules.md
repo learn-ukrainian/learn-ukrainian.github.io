@@ -217,11 +217,11 @@ The project has VESUM (6.7M forms), СУМ-20, ВТС, Грінченко (67K),
 | Ukrainian word | `mcp__sources__verify_word(s)`, `verify_lemma`, `check_modern_form` |
 | Russianism / surzhyk | `mcp__sources__search_style_guide`, `check_russian_shadow` |
 | Heritage defense | `mcp__sources__search_heritage` |
-| Definitions / modern meaning | `query_sum20`, `search_slovnyk_me`, `search_grinchenko_1907`, `search_esum` (`search_definitions` is Soviet СУМ-11: use only for Soviet colonization analysis) |
+| Definitions / modern meaning | `query_sum20`, then ВТС / ULIF and `search_slovnyk_me`; `search_grinchenko_1907` is historical attestation, `search_esum` is etymology (`search_definitions` is Soviet СУМ-11: use only for Soviet colonization analysis) |
 | File contents / signatures | `Read`, `grep` / `ugrep`, `wc` |
 | Build status / module gates / git state | Monitor API at `localhost:8765/api/...` |
 | Word counts | `scripts/audit/audit_module.py` + `config.py` |
-| Stress marks | `ukrainian-word-stress` annotator (NEVER hand-write) |
+| Stress marks | `verify_stress` / `verify_stresses` (ULIF-first oracle); `query_sum20` for accented headwords (NEVER hand-write or guess) |
 | Test pass / lint clean | `pytest`, `ruff check` |
 
 **Decision test:** if you introduce a number, name, path, SHA, or Ukrainian word that wasn't in your very recent tool output and you didn't run a tool to confirm — STOP, run it.

@@ -506,3 +506,27 @@ def test_multivalued_features_never_depend_on_set_iteration_order():
 
     assert compatible({"upos=NOUN"}, {"upos=NOUN", "upos=NUM"})
     assert compatible({"Case=Gen"}, {"Case=Gen", "Case=Acc"})
+
+
+def test_animate_label_qualifier_never_joins_an_inanimate_analysis():
+    from scripts.verification.ulif_stress import _features, analysis_features, joined_analyses
+
+    # коса#3 (ко́са, animate common gender) beside коса#4 (коса́ 'braid'); VESUM has only the braid.
+    braid = {"lemma": "коса", "pos": "noun", "tags": "noun:inanim:f:v_naz"}
+    row = {
+        "entry_key": "коса#3",
+        "canonical_headword": "ко́са",
+        "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+        "grammatical_tags": '["v_naz", "s"]',
+    }
+    assert "Animacy=Anim" in _features(row)
+    assert joined_analyses(row, [braid]) == []
+    assert joined_analyses(row, [{**braid, "tags": "noun:anim:f:v_naz"}])
+    inanimate = {
+        **row,
+        "entry_key": "коса#4",
+        "canonical_headword": "коса́",
+        "grammatical_label": "іменник жіночого роду",
+    }
+    assert joined_analyses(inanimate, [braid]) == [braid]
+    assert "Animacy=Inan" in analysis_features(braid)

@@ -180,12 +180,18 @@ def test_transport_fragment_task_id_is_rejected_before_directory_creation(
 
 
 _ASK_BODY = (
-    "import sys, time\n"
+    "import os, signal, sys\n"
     "from pathlib import Path\n"
     "from scripts.ai_agent_bridge._acp_execution import acp_execution_cwd\n"
+    # Keep SIGTERM readable even if it arrives just before the blocking read.
+    # A signal received just before time.sleep enters its syscall can otherwise
+    # leave CPython's handler pending for the entire sleep.
+    "read_fd, write_fd = os.pipe()\n"
+    "os.set_blocking(write_fd, False)\n"
+    "signal.set_wakeup_fd(write_fd)\n"
     "with acp_execution_cwd(Path(sys.argv[1]), task_id=sys.argv[2]) as workspace:\n"
     "    print(f'WORKSPACE={workspace}', flush=True)\n"
-    "    time.sleep(120)\n"
+    "    os.read(read_fd, 1)\n"
 )
 
 
@@ -289,17 +295,21 @@ def test_sigterm_unwinds_and_leaves_nothing_behind(tmp_path: Path) -> None:
     primary = _make_primary(tmp_path)
     proc, workspace = _spawn_ask(primary, "cancelled-8344")
 
-    proc.send_signal(signal.SIGTERM)
-    returncode = proc.wait(timeout=30)
+    try:
+        proc.send_signal(signal.SIGTERM)
+        _stdout, stderr = proc.communicate(timeout=30)
 
-    # Orderly unwind ran the finally cleanup, then exited with the
-    # conventional 128+SIGTERM code — the signal was not swallowed.
-    assert returncode == 128 + signal.SIGTERM
-    assert not workspace.exists()
-    listed = _git(primary, "worktree", "list", "--porcelain").stdout
-    assert str(workspace) not in listed
-    stderr = proc.stderr.read() if proc.stderr is not None else ""
-    assert "ACP execution worktree cleanup failed" not in stderr
+        # Orderly unwind ran the finally cleanup, then exited with the
+        # conventional 128+SIGTERM code — the signal was not swallowed.
+        assert proc.returncode == 128 + signal.SIGTERM
+        assert not workspace.exists()
+        listed = _git(primary, "worktree", "list", "--porcelain").stdout
+        assert str(workspace) not in listed
+        assert "ACP execution worktree cleanup failed" not in stderr
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+        proc.communicate(timeout=30)
 
 
 def test_sweep_preserves_dead_owner_worktree_with_unexpected_files(

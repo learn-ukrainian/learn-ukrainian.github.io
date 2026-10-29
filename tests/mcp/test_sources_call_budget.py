@@ -280,8 +280,9 @@ def test_query_sum20_missing_word_is_a_structured_error(server_module):
 
 
 # Tools that persist a live fetch (#9551); tests/mcp/test_sources_tool_side_effects.py
-# proves each attempts a write and every other tool attempts none.
-PERSISTING_TOOLS = {"query_wikipedia", "query_ulif", "query_ulif_synonyms", "query_ulif_antonyms", "query_ulif_phraseology"}
+# proves each attempts a write and every other tool attempts none. The ULIF tools
+# read the local DictUA copy and are read-only.
+PERSISTING_TOOLS = {"query_wikipedia"}
 
 
 def test_every_sources_tool_advertises_its_read_only_hint(server_module):

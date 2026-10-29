@@ -8,8 +8,9 @@ mouth how to read the nearby letters.
 
 Listen once before you write. A native Ukrainian teacher or tutor can say
 **день**, **сім'я́**, **буря́к**, **бур'я́н**, and **свя́то**; you point to
-the sign you hear on the page. If you are working alone, record your own voice
-and compare it with the routine below.
+the printed sign that matches each sound. If you are working alone, use the
+spelling tables below to check which sign belongs in each word. Ask a teacher
+or tutor to check your pronunciation when you can.
 
 Teacher Oksana's routine for this module is short: find the sign, say what it
 does, then read the word once.
@@ -41,12 +42,14 @@ By the end, you can:
 Earlier lessons introduced basic vowel letters. Here you only need the quick review
 that makes **ь** and apostrophe readable.
 
-At beginner level, use this rule:
+Use this reading guide:
 
 | Position | Beginner reading habit |
 | --- | --- |
-| **я, ю, є** after a consonant with no apostrophe | the consonant becomes soft, then you read the vowel |
+| **я, ю, є** at the start of a word or after a vowel | read **[й] + vowel** |
+| **я, ю, є** directly after a consonant letter | read the vowel without an extra **[й]**; the consonant is soft or partly softened |
 | **я, ю, є, ї** after an apostrophe | keep the previous consonant hard, then read **[й] + vowel** |
+| **я, ю, є** after **ь** | keep the preceding consonant soft and read **[й] + vowel** |
 | **ї** anywhere | always **[йі]** |
 
 Compare two words:
@@ -59,10 +62,9 @@ Compare two words:
 The apostrophe is a Ukrainian reading instruction: do not soften the previous
 consonant; keep the next **й** sound.
 
-Use one listening question before spelling. Say or hear the word slowly: do I
-hear a separate **й** before **я, ю, є, ї**? If yes, apostrophe may be part of
-the prepared spelling. If no, the vowel letter may simply soften the previous
-consonant.
+A **й** sound alone does not tell you to write an apostrophe. Position matters:
+**я** at the start of a word already includes **[йа]**. For this lesson, learn
+the spellings in the tables and connect each spelling with its sound.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -107,9 +109,12 @@ conversation today.
 Read it as a separation sign. It does not make a big pause. It keeps the
 previous consonant hard and lets the next **я, ю, є, ї** start with **[й]**.
 
-The first A1 model is:
+In this lesson's examples, look for an apostrophe in this position:
 
 **б, п, в, м, ф, р + апостроф + я, ю, є, ї**
+
+This is a reading pattern, not an instruction to insert an apostrophe after
+every one of these letters. Compare **буря́к** with **бур'я́н** below.
 
 Start with these words:
 
@@ -122,8 +127,8 @@ Start with these words:
 | **ім'я́** | name | **м** stays hard, then **[йа]** |
 | **комп'ю́тер** | computer | **п** stays hard, then **[йу]** |
 
-Read **п'ять** smoothly, with a clear **й** sound. The airflow continues; the
-spelling tells you to separate the consonant from the iotated vowel.
+Read **п'ять** as one word, with a clear **й** sound and no extra pause at the
+apostrophe.
 
 For now, do not build a large system from loanwords. **Комп'ю́тер** is useful
 because learners know the object, but the lesson target is the apostrophe
@@ -162,28 +167,11 @@ Common learner traps:
 | putting apostrophe into **свя́то** | keep **свя́то** with no apostrophe |
 | writing **ден** for **день** | keep **ь** after **н** |
 | inventing a soft-sign version of **ло́жка** | do not invent a soft sign or soft **л** |
-| treating apostrophe as a hard stop | keep airflow and pronounce **й** |
-
-Stay inside Ukrainian for this lesson. The apostrophe and soft sign already
-have Ukrainian jobs, so you do not need another alphabet or another sign to
-explain them.
+| treating apostrophe as a pause | read the whole word with **й** after the apostrophe |
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-## Перенос і письмо
-
-You will sometimes see words split across a line in printed Ukrainian. At this
-level, use only prepared models:
-
-| Whole word | Safe line-break model |
-| --- | --- |
-| **Мар'я́на** | `Мар'-яна` |
-| **дерев'я́ний** | `дере-в'яний` |
-| **бур'я́н** | `бур'-ян` |
-| **па́льці** | `паль-ці` |
-
-The simple idea: **ь** and apostrophe stay with the letter before them. Also,
-do not leave one single letter alone on a line.
+## Читання і письмо
 
 Reading before writing: first recognize the printed word, then copy the sign in
 a notebook cue.
@@ -202,7 +190,7 @@ Ask a native Ukrainian teacher or tutor to listen to a short read-aloud:
 **день, сім'я́, буря́к, бур'я́н, свя́то**. The feedback target is small:
 soft ending, clear **й**, no invented pause.
 
-Before you leave the lesson tab, check that you can do these things:
+Check that you can do these things:
 
 - say that **ь** has no sound of its own;
 - read **день**, **кінь**, **сіль**, and **вчи́тель** without adding **і**;
@@ -218,8 +206,6 @@ Before you leave the lesson tab, check that you can do these things:
 Use the signs as reading instructions, not decorations. Before moving on,
 choose one word from each contrast and do a final sign check: name the sign,
 state its effect, then read the word.
-
-<!-- INJECT_ACTIVITY: act-5 -->
 
 ## Далі
 

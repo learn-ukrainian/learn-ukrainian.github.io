@@ -114,6 +114,7 @@ def record_writer_call(path: Path, slug: str, n: int, inputs: dict[str, str] | N
     doc = _load_ledger(path, slug, n, inputs)
     if doc["terminal_layer"] is not None:
         return doc
+    doc.pop("awaiting_requires", None)
     if doc.get("last_success") or not doc["attempts"]:
         doc.update(attempts=[], regenerations=0)
     else:
@@ -205,6 +206,7 @@ def record_failure(
     if failure["layer"] == "harness":
         return _record_harness_failure(path, slug, n, failure["reason"], inputs, at=at)
     doc = _load_ledger(path, slug, n, inputs)
+    doc.pop("awaiting_requires", None)
     if doc["terminal_layer"] is not None:
         return doc
     if doc.get("last_success") or not doc["attempts"]:
@@ -241,11 +243,22 @@ def record_failure(
 
 
 @_serialized
+def record_requires_wait(path: Path, slug: str, n: int, inputs: dict[str, str]) -> dict[str, Any]:
+    """Preserve the checked draft while its independent confirmation is pending."""
+    doc = _load_ledger(path, slug, n, inputs)
+    doc["awaiting_requires"] = dict(inputs)
+    _validate(doc)
+    lock.write(path, lock.yaml_bytes(doc))
+    return doc
+
+
+@_serialized
 def record_success(
     path: Path, slug: str, n: int, inputs: dict[str, str] | None = None, *, at: str | None = None
 ) -> dict[str, Any]:
     """Count a regeneration that succeeded without another failure row."""
     doc = _load_ledger(path, slug, n, inputs)
+    doc.pop("awaiting_requires", None)
     if doc["terminal_layer"] is None:
         if not doc.get("last_success"):
             doc["regenerations"] = min(2, max(doc["regenerations"], len(doc["attempts"])))

@@ -520,6 +520,7 @@ class _Boundary:
         from scripts.agent_runtime.attempt_network import AttemptEgress, load_allowlist
         from scripts.agent_runtime.review_mcp import _real_agy_token
         from scripts.agent_runtime.sources_read_only import sources_tool_sets
+        from scripts.dispatcher import runtime_context
         from scripts.dispatcher.git import DATABASE_LINKS
         from scripts.review.isolation import prepare_host_sandbox, wrap_argv_with_sandbox
 
@@ -581,7 +582,8 @@ class _Boundary:
         corpus = (repository / "data").resolve()
         reads = [path for path in reads if path != corpus]  # Sources serves the corpus; only database links resolve
         databases = [(self.worktree / relative, _trusted_database(self.worktree, repository, relative))
-                     for relative in DATABASE_LINKS]
+                     for relative in DATABASE_LINKS
+                     if os.path.lexists(self.worktree / relative) or os.path.lexists(repository / relative)]
         # Git reads only these copies: remotes, credentials, URL rewrites, helpers and includes stay outside.
         overlays = []
         for name, source in (("gitconfig", common / "config"), ("gitconfig.worktree", git_dir / "config.worktree")):
@@ -603,7 +605,8 @@ class _Boundary:
         self.egress = AttemptEgress(boundary / "egress.sock", load_allowlist("agy"))
         sandbox = prepare_host_sandbox(
             engine="agy", snapshot_root=self.worktree, write_root=runtime, reject_root=repository,
-            runtime_reads=[*runtime_files(agy), *reads, *(target for _, target in databases), boundary],
+            runtime_reads=[*runtime_files(agy), *reads, *(target for _, target in databases),
+                           *runtime_context.read_roots(), boundary],
             network_allowed=False,
         )
         self.receipt["bwrap"] = str(sandbox.binary)
@@ -627,6 +630,7 @@ class _Boundary:
             "HOME": str(home), "TMPDIR": str(tmp), "PATH": f"/usr/bin:/bin:{agy.parent}",
             "LANG": os.environ.get("LANG", "C.UTF-8"), "USER": "review", "LOGNAME": "review", "SHELL": "/bin/bash",
             "AGY_APP_DATA_DIR": str(app), **{name: os.environ[name] for name in _AGY_AUTH if name in os.environ},
+            "LU_TASKS_DIR": str(runtime_context.read_roots()[1]),
         }
         try:
             self.process = subprocess.Popen(argv, env=env, cwd=self.worktree, pass_fds=(report_write, go_read))

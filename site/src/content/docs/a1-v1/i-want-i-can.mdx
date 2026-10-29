@@ -275,7 +275,7 @@ possibility. This pattern lets you make a real plan with very little grammar.
 
 ### Доповни речення
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ гуляти, але не можу сьогодні.", "answer": "хочу", "options": ["хочу", "можу", "мушу"]}, {"sentence": "Я хочу піти, але не ___.", "answer": "можу", "options": ["можу", "хочу", "мушу"]}, {"sentence": "Я не можу: я ___ працювати.", "answer": "мушу", "options": ["мушу", "можу", "хочу"]}, {"sentence": "Оля ___ гуляти, але не може сьогодні.", "answer": "хоче", "options": ["хоче", "може", "мусить"]}, {"sentence": "Денис не ___ піти: він мусить працювати.", "answer": "може", "options": ["може", "хоче", "мусить"]}, {"sentence": "Вони хочуть гуляти, але ___ працювати.", "answer": "мусять", "options": ["мусять", "можуть", "хочуть"]}]`)} instruction={"Choose хочу, можу, or мушу in the right form."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "(Express desire: want to.) Я ___ гуляти, але не можу сьогодні.", "answer": "хочу", "options": ["хочу", "можу", "мушу"], "explanation": "The first part gives desire."}, {"sentence": "(Express inability: cannot.) Я хочу піти, але не ___.", "answer": "можу", "options": ["можу", "хочу", "мушу"], "explanation": "Але не можу gives the practical block."}, {"sentence": "(Express obligation: must.) Я не можу: я ___ працювати.", "answer": "мушу", "options": ["мушу", "можу", "хочу"], "explanation": "The reason is an obligation."}, {"sentence": "(Express desire: wants to.) Оля ___ гуляти, але не може сьогодні.", "answer": "хоче", "options": ["хоче", "може", "мусить"], "explanation": "The first part gives her desire."}, {"sentence": "(Express inability: cannot.) Денис не ___ піти: він мусить працювати.", "answer": "може", "options": ["може", "хоче", "мусить"], "explanation": "Не може gives the practical block."}, {"sentence": "(Express obligation: must.) Вони хочуть гуляти, але ___ працювати.", "answer": "мусять", "options": ["мусять", "можуть", "хочуть"], "explanation": "Але marks the obligation that blocks the plan."}]`)} instruction={"Choose хочу, можу, or мушу in the right form."} isUkrainian={false} />
 
 ## 📋 Підсумок
 
@@ -356,9 +356,6 @@ When unsure, keep the sentence short and choose a complete action word.
 <TabItem label="Resources">
 
 :::info[🎧 🔗 External Resources]
-
-**📺 Videos:**
-- 🎥 [Modal Verbs in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) — Extra listening practice with modal verbs; use after the workbook checks.
 
 **📝 Articles:**
 - 📄 [Ukrainian Modal Verbs](https://www.ukrainianlessons.com/modal-verbs/) — Follow-up explanation for хотіти, могти, мусити, and треба after the lesson.

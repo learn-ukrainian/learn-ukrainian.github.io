@@ -867,7 +867,7 @@ def test_fetch_statuses_never_turn_transient_or_parse_failures_into_misses() -> 
 
     assert not_found.status == "not_found"
     assert transient.status == "transient_error"
-    assert transient_delays == [1.5]
+    assert transient_delays == [10]
     assert malformed.status == "parse_error"
 
 
@@ -1060,7 +1060,38 @@ def test_official_retry_then_terminal_stop(terminal):
     result = fetch_sum20_wordid(5, session=session, retries=7, sleep=sleeps.append)
     assert result.terminal and result.http_status == terminal
     assert result.status == ("parse_error" if terminal == 200 else "transient_error")
-    assert sleeps == [2]
+    assert sleeps == [10]
+
+
+@pytest.mark.parametrize("requested,expected", [(0, 10), (2, 10), (25, 25)])
+def test_ingest_cannot_reduce_official_crawl_delay(monkeypatch, tmp_path, requested, expected):
+    times = []
+    now = 0
+
+    def fetch(*_args, **_kwargs):
+        times.append(now)
+        return FetchOutcome("not_found", http_status=404)
+
+    def sleep(seconds):
+        nonlocal now
+        now += seconds
+
+    monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", fetch)
+    result = sum20_official_ingest.ingest_wordids(
+        tmp_path / "staging.db", start_wordid=5, limit=3, delay_s=requested, sleep=sleep
+    )
+    assert result["not_found"] == 3
+    assert times == [0, expected, expected * 2]
+
+
+def test_official_retries_honor_crawl_delay_and_longer_retry_after():
+    responses = [_FakeResponse(503), _FakeResponse(429), _FakeResponse(404)]
+    responses[1].headers = {"Retry-After": "25"}
+    session = _FakeSession(responses)
+    sleeps = []
+    result = fetch_sum20_wordid(5, session=session, retry_backoff_s=0, sleep=sleeps.append)
+    assert result.status == "not_found"
+    assert sleeps == [10, 25]
 
 
 def test_official_parser_recursion_stops_one_request(monkeypatch):

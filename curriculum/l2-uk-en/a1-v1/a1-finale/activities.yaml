@@ -4,55 +4,55 @@ inline:
     title: Complete the A1 line
     instruction: Choose the word or phrase that fits the time and situation.
     items:
-      - sentence: "(Past tense, male speaker.) Учора зранку я ___ у кафе."
+      - sentence: "Адам: Учора зранку я ___ у кафе."
         answer: 'снідав'
         options:
           - 'снідав'
-          - 'буду снідати'
-          - 'снідаю'
-        explanation: "Учора and the past-tense cue fix a past morning; the male-speaker cue selects снідав."
-      - sentence: 'Зараз я ___ по Хрещатику.'
+          - "снідала"
+          - "снідали"
+        explanation: "Адам selects masculine singular снідав. Снідала is feminine and снідали plural."
+      - sentence: "Зараз я ___ по Хрещатику."
         answer: 'гуляю'
         options:
           - 'гуляю'
-          - 'гуляв'
-          - 'буду гуляти'
-        explanation: 'Зараз points to the present.'
-      - sentence: 'Учора я ___ квиток.'
+          - "гуляєш"
+          - "гуляють"
+        explanation: "Я selects first-person singular гуляю. Гуляєш is second-person singular; гуляють third-person plural."
+      - sentence: "Адам: Учора я ___ квиток."
         answer: 'купив'
         options:
           - 'купив'
-          - 'купую'
-          - 'буду купувати'
-        explanation: 'Учора points to the past.'
-      - sentence: 'Завтра я ___ по Україні.'
+          - "купила"
+          - "купили"
+        explanation: "Адам selects masculine singular купив. Купила is feminine; купили plural."
+      - sentence: "Завтра я ___ по Україні."
         answer: 'буду подорожувати'
         options:
           - 'буду подорожувати'
-          - 'подорожував'
-          - 'подорожую'
-        explanation: 'Завтра pairs with буду + infinitive.'
-      - sentence: 'Ввечері ми ___ в кіно.'
+          - "будеш подорожувати"
+          - "будемо подорожувати"
+        explanation: "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged."
+      - sentence: "Учора ввечері ми ___ в кіно."
         answer: 'ходили'
         options:
           - 'ходили'
-          - 'ходимо'
-          - 'будемо ходити'
-        explanation: 'This line reports what happened in the evening.'
-      - sentence: 'Зараз Олена ___ борщ і салат.'
+          - "ходив"
+          - "ходила"
+        explanation: "Ми selects plural ходили. Ходив and ходила are singular."
+      - sentence: "Зараз Олена ___ борщ і салат."
         answer: 'замовляє'
         options:
           - 'замовляє'
-          - 'замовляла'
-          - 'буде замовляти'
-        explanation: 'Зараз points to the present.'
-      - sentence: 'Учора була гарна погода, і ми ___ в парку.'
+          - "замовляю"
+          - "замовляєш"
+        explanation: "Олена selects third-person singular замовляє. Замовляю is first-person and замовляєш second-person."
+      - sentence: "Учора була гарна погода, і ми ___ в парку."
         answer: 'гуляли'
         options:
           - 'гуляли'
-          - 'гуляємо'
-          - 'будемо гуляти'
-        explanation: 'Учора була sets the past frame.'
+          - "гуляв"
+          - "гуляла"
+        explanation: "Ми selects plural гуляли. Гуляв and гуляла are singular."
       - sentence: 'Я вже ___ до рівня А2!'
         answer: 'готовий'
         options:
@@ -125,9 +125,9 @@ inline:
 workbook:
   - type: quiz
     title: Choose the A1 response
-    instruction: Pick the response that fits the situation.
+    instruction: "Choose the best answer."
     items:
-      - prompt: 'How do you ask about the price of a ticket?'
+      - prompt: "— ___ — Квиток коштує сто гривень."
         options:
           - text: 'Скільки коштує квиток?'
             correct: true
@@ -136,7 +136,7 @@ workbook:
           - text: 'Дайте один квиток.'
             correct: false
         explanation: 'Скільки коштує...? asks the price.'
-      - prompt: 'You invite a friend to a cafe.'
+      - prompt: "— У мене є година. — ___ — Добре, я теж хочу кави."
         options:
           - text: 'Ходімо в кафе!'
             correct: true
@@ -145,15 +145,15 @@ workbook:
           - text: 'Де кафе?'
             correct: false
         explanation: 'Ходімо... is the A1 invitation phrase.'
-      - prompt: 'How do you say: My head hurts?'
+      - prompt: "— Де болить? — ___"
         options:
           - text: 'У мене болить голова.'
             correct: true
-          - text: 'У мене температура.'
+          - text: "У мене болить головою."
             correct: false
-          - text: 'Я хворий.'
+          - text: "У мене болить голові."
             correct: false
-        explanation: 'У мене болить голова is the practiced health phrase.'
+        explanation: "Голова is the nominative subject of болить. Головою is instrumental and голові dative; neither can be its subject here."
       - prompt: "Someone asks: 'Де ви?'"
         options:
           - text: 'Я на вулиці Хрещатик.'
@@ -214,13 +214,13 @@ workbook:
           - 'коштує'
           - 'болить'
         explanation: 'Мене звати introduces your name.'
-      - sentence: 'Зранку я ___ у кафе.'
+      - sentence: "Адам: Учора зранку я ___ у кафе."
         answer: 'снідав'
         options:
           - 'снідав'
           - 'кафе'
           - 'буду'
-        explanation: 'This is a past line in the story.'
+        explanation: "Адам selects masculine singular снідав. Кафе is a place noun, not a predicate here; буду requires an infinitive absent from the line."
       - sentence: 'Ввечері ми ___ в кіно.'
         answer: 'ходили'
         options:

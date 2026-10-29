@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""Crawl ukrainianlessons.com: podcast episodes + blog articles.
+"""Build Ukrainian Lessons resource metadata from iTunes and local catalogues.
 
 Gathers metadata from multiple sources:
   - iTunes API: 200 most recent ULP episodes (seasons 2-6) + all 60 FMU episodes
-  - Website season1 page: season 1 episodes (1-40) — too old for iTunes limit
+  - Local season-one catalogue: episodes 1-40, without website requests
   - Existing blog catalog: 119 blog article entries with topics/levels
 
 Outputs a unified blog_db.json v3.0 with all resources typed and tagged.
 
 Usage:
-    .venv/bin/python scripts/crawl_ulp.py                    # full crawl
-    .venv/bin/python scripts/crawl_ulp.py --episodes-only    # just episodes
-    .venv/bin/python scripts/crawl_ulp.py --blog-only        # just blog articles
-    .venv/bin/python scripts/crawl_ulp.py --dry-run          # show plan without fetching
+    .venv/bin/python scripts/crawl/crawl_ulp.py                    # full catalogue
+    .venv/bin/python scripts/crawl/crawl_ulp.py --episodes-only    # just episodes
+    .venv/bin/python scripts/crawl/crawl_ulp.py --blog-only        # just blog articles
+    .venv/bin/python scripts/crawl/crawl_ulp.py --dry-run          # show plan without fetching
 
 Output:
     docs/resources/ukrainianlessons/blog_db.json (v3.0)
@@ -50,6 +50,10 @@ SEASONS: dict[int, dict] = {
 }
 
 REQUEST_TIMEOUT = 30
+USER_AGENT = (
+    "learn-ukrainian-resources/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 
 
 # ── Topic extraction ─────────────────────────────────────────────
@@ -149,7 +153,7 @@ def get_fmu_level(episode_num: int) -> str:
 def fetch_itunes_episodes(podcast_id: int, limit: int = 300) -> list[dict]:
     """Fetch podcast episodes from iTunes Lookup API."""
     url = f"https://itunes.apple.com/lookup?id={podcast_id}&media=podcast&entity=podcastEpisode&limit={limit}"
-    client = httpx.Client(follow_redirects=True, timeout=REQUEST_TIMEOUT)
+    client = httpx.Client(follow_redirects=True, timeout=REQUEST_TIMEOUT, headers={"User-Agent": USER_AGENT})
     try:
         r = client.get(url)
         r.raise_for_status()
@@ -270,81 +274,7 @@ def parse_fmu_itunes(episodes: list[dict]) -> list[dict]:
     return entries
 
 
-# ── Website scraping (season 1 only) ────────────────────────────
-
-def scrape_season1_from_website() -> list[dict]:
-    """Scrape season 1 episode titles from the website (too old for iTunes).
-
-    Uses requests (not httpx) — the website's Cloudflare responds better to it
-    for the first request in a fresh session.
-    """
-    import requests as req
-
-    session = req.Session()
-    session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9,uk;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-        "Upgrade-Insecure-Requests": "1",
-    })
-
-    try:
-        r = session.get(f"{BASE_URL}/season1/", timeout=REQUEST_TIMEOUT)
-        r.raise_for_status()
-        r.encoding = "utf-8"
-        text = r.text
-    except Exception as e:
-        print(f"  WARNING: Could not fetch season1 page: {e}")
-        return []
-    finally:
-        session.close()
-
-    entries: list[dict] = []
-    pattern = r'href="https://www\.ukrainianlessons\.com/episode(\d+)/?"[^>]*>([^<]*(?:<strong>[^<]*</strong>[^<]*)*)</a>'
-    matches = re.findall(pattern, text)
-
-    seen: set[int] = set()
-    for ep_num_str, raw_title in matches:
-        ep_num = int(ep_num_str)
-        if ep_num in seen:
-            continue
-
-        # Clean HTML tags
-        clean = re.sub(r"</?strong>", "", raw_title).strip()
-        if clean.lower() in ("go to lesson", ""):
-            continue
-
-        seen.add(ep_num)
-
-        # Remove ULP prefix
-        title = re.sub(r"^ULP\s+\d+-\d+\s*", "", clean).strip()
-        _, level, focus = get_season_info(ep_num)
-
-        entries.append({
-            "id": f"ulp-ep-{ep_num:03d}",
-            "content_type": "podcast_episode",
-            "series": "ULP",
-            "season": 1,
-            "episode": ep_num,
-            "url": f"{BASE_URL}/episode{ep_num}/",
-            "title": title,
-            "title_uk": "",
-            "description": "",
-            "topics": extract_topics(title, ""),
-            "suggested_level": level,
-            "season_focus": focus,
-            "release_date": "",
-        })
-
-    return entries
-
-
-# Static fallback for season 1 (if website is blocked by Cloudflare)
+# Local season-one metadata. Website scraping is disabled under #8999.
 SEASON1_TITLES: dict[int, str] = {
     1: "Informal Greetings in Ukrainian",
     2: "Formal Greetings and Saying Goodbye in Ukrainian + Pronouns",
@@ -390,7 +320,7 @@ SEASON1_TITLES: dict[int, str] = {
 
 
 def season1_fallback() -> list[dict]:
-    """Generate season 1 entries from static title data."""
+    """Generate season 1 entries from the local title catalogue without fetching."""
     entries: list[dict] = []
     for ep_num, title in SEASON1_TITLES.items():
         _, level, focus = get_season_info(ep_num)
@@ -463,11 +393,26 @@ def build_db(ulp: list[dict], fmu: list[dict], blog: list[dict]) -> dict:
 # ── Main ─────────────────────────────────────────────────────────
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Crawl ukrainianlessons.com podcast + blog")
-    parser.add_argument("--output", type=Path, default=OUTPUT_PATH)
-    parser.add_argument("--episodes-only", action="store_true", dest="episodes_only")
-    parser.add_argument("--blog-only", action="store_true", dest="blog_only")
-    parser.add_argument("--dry-run", action="store_true", dest="dry_run")
+    parser = argparse.ArgumentParser(
+        description=("Build Ukrainian Lessons resource metadata from iTunes and local catalogues. "
+                     "Use to refresh resource links; never scrapes ukrainianlessons.com."),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/crawl/crawl_ulp.py --output catalogue.json
+  .venv/bin/python scripts/crawl/crawl_ulp.py --blog-only --output blog.json
+Outputs: JSON metadata catalogue at --output, including in --dry-run mode.
+Exit codes: 0 catalogue written; 1 fetch or write failure; 2 invalid arguments.
+Related: scripts/crawl/crawl_ulp_blog.py; issue #8999.
+""",
+    )
+    parser.add_argument("--output", type=Path, default=OUTPUT_PATH,
+                        help="JSON destination; default docs/resources/ukrainianlessons/blog_db.json")
+    parser.add_argument("--episodes-only", action="store_true", dest="episodes_only",
+                        help="Include only iTunes episodes and the local season-one catalogue")
+    parser.add_argument("--blog-only", action="store_true", dest="blog_only",
+                        help="Include only the existing local blog catalogue; no network requests")
+    parser.add_argument("--dry-run", action="store_true", dest="dry_run",
+                        help="Show fetch plan without network requests; writes an empty catalogue to --output")
     args = parser.parse_args()
 
     ulp_episodes: list[dict] = []
@@ -478,7 +423,7 @@ def main() -> int:
 
     if do_all or args.episodes_only:
         if args.dry_run:
-            print("Would fetch: 240 ULP episodes (iTunes API + season1 page)")
+            print("Would fetch: 240 ULP episodes (iTunes API + local season-one catalogue)")
             print("Would fetch: 60 FMU episodes (iTunes API)")
         else:
             # 1. Get seasons 2-6 from iTunes (200 episodes)
@@ -488,13 +433,8 @@ def main() -> int:
             itunes_nums = {e["episode"] for e in itunes_episodes}
             print(f"  iTunes: {len(itunes_episodes)} episodes (range: {min(itunes_nums)}-{max(itunes_nums)})")
 
-            # 2. Get season 1 from website (too old for iTunes 200-limit)
-            print("Fetching season 1 from website...")
-            s1_episodes = scrape_season1_from_website()
-            s1_only = [e for e in s1_episodes if e["episode"] not in itunes_nums]
-            if not s1_only:
-                print("  Website blocked — using static fallback for season 1")
-                s1_only = [e for e in season1_fallback() if e["episode"] not in itunes_nums]
+            # 2. Fill season one from the existing local catalogue, without scraping.
+            s1_only = [e for e in season1_fallback() if e["episode"] not in itunes_nums]
             print(f"  Season 1: {len(s1_only)} episodes")
 
             ulp_episodes = itunes_episodes + s1_only

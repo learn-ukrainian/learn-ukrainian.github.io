@@ -16,41 +16,41 @@ inline:
     title: Time words for yesterday
     instruction: Choose the time word that fits each part of the day.
     items:
-      - sentence: '___ я прокинулася о сьомій.'
+      - sentence: "___ я прокинулася о сьомій."
         answer: 'Зранку'
         options:
           - 'Зранку'
-          - 'Ввечері'
-          - 'Нарешті'
-        explanation: 'Зранку marks the morning.'
-      - sentence: '___ я пішла на роботу.'
+          - "Ранок"
+          - "Ранковий"
+        explanation: "Зранку is the time adverb. Ранок is a noun and ранковий an adjective; neither modifies прокинулася as a time expression."
+      - sentence: "Я поснідала о восьмій. ___, о дев’ятій, я пішла на роботу."
         answer: 'Потім'
         options:
           - 'Потім'
-          - 'Учора'
-          - 'Вночі'
-        explanation: 'Потім moves the story to the next action.'
-      - sentence: '___ я обідала в кафе.'
+          - "До цього"
+          - "Напередодні"
+        explanation: "Nine follows eight, selecting потім. До цього reverses the order; напередодні shifts the event to the previous day."
+      - sentence: "___ я обідала в кафе о першій годині дня."
         answer: 'Вдень'
         options:
           - 'Вдень'
-          - 'Зранку'
-          - 'Нарешті'
-        explanation: 'Вдень fits lunch or the middle of the day.'
-      - sentence: '___ я повернулася додому.'
+          - "Вночі"
+          - "Зранку"
+        explanation: "The one-in-the-afternoon clock expression selects вдень. Вночі and зранку conflict with that time."
+      - sentence: "___, о дев’ятій вечора, я повернулася додому."
         answer: 'Ввечері'
         options:
           - 'Ввечері'
-          - 'Спочатку'
+          - "Вдень"
           - 'Зранку'
-        explanation: 'Ввечері marks the evening.'
-      - sentence: '___ я лягла спати.'
+        explanation: "Nine in the evening selects ввечері. Вдень and зранку conflict with that clock expression."
+      - sentence: "Я довго не мала часу відпочити. ___ о другій ночі я лягла спати."
         answer: 'Нарешті'
         options:
           - 'Нарешті'
           - 'Вдень'
-          - 'Після цього'
-        explanation: 'Нарешті can mark the last action.'
+          - "Зранку"
+        explanation: "Нарешті marks reaching rest after the stated delay. Вдень and зранку conflict with the clock expression о другій ночі."
   - id: act-3
     type: group-sort
     title: Sort story words
@@ -91,7 +91,7 @@ inline:
           - text: 'Потім я поснідали.'
             correct: false
         explanation: 'Анна keeps the feminine form поснідала.'
-      - prompt: 'Which pair fits one female speaker?'
+      - prompt: "Анна розповідає про вчорашній день. Обери її речення."
         options:
           - text: 'Я пішла. Я повернулася.'
             correct: true

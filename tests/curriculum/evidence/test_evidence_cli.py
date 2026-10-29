@@ -284,8 +284,11 @@ def test_cli_build_and_verify_pack_subprocess(synthetic_sources, synthetic_stand
     missing_plan_cmd = cmd_verify.copy()
     missing_plan_cmd[missing_plan_cmd.index("--plans-dir") + 1] = str(tmp_path / "missing-plans")
     missing_plan = subprocess.run(missing_plan_cmd, capture_output=True, text=True, cwd=REPO_ROOT, timeout=30)
-    assert missing_plan.returncode == 1
-    assert any(error.startswith("publication_plan_unresolved:") for error in json.loads(missing_plan.stdout)["errors"])
+    # The provisional lock precedes the plan (§5 step 2a): planned quote use is reported, not failed.
+    assert missing_plan.returncode == 0, missing_plan.stdout
+    missing_plan_data = json.loads(missing_plan.stdout)
+    assert missing_plan_data["status"] == "ok"
+    assert "planned_quote_use" in missing_plan_data["not_checked"]
 
 
 def test_cli_pack_dry_run_does_not_write_files(synthetic_sources, synthetic_standard, tmp_path):
