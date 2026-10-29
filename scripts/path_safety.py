@@ -32,6 +32,22 @@ def _is_within(root: Path, target: Path) -> bool:
     return common == str(root)
 
 
+def _tmux_socket_dirs() -> tuple[Path, ...]:
+    """Return the host tmux server's socket directories (``tmux-<uid>``).
+
+    tmux puts them under ``$TMUX_TMPDIR`` and falls back to ``/tmp``, so both
+    count. A listening socket shows in no process's fd or cwd links, so a
+    liveness scan never sees the server using it; removing the directory leaves
+    the server running but unreachable by every new client.
+    """
+    if not hasattr(os, "getuid"):
+        return ()
+    bases = {Path("/tmp")}
+    if os.environ.get("TMUX_TMPDIR"):
+        bases.add(Path(os.environ["TMUX_TMPDIR"]))
+    return tuple(sorted({(base / f"tmux-{os.getuid()}").resolve() for base in bases}))
+
+
 def _declared_live_data_roots(logical_base: Path) -> tuple[Path, ...]:
     """Return the resolved, explicitly approved release data targets.
 
@@ -166,8 +182,9 @@ def assert_delete_target(
     accepts only descendants (never the allowlist root itself) of the
     repository's ``.worktrees/`` or ``batch_state/tmp/`` directories, the
     process ``$TMPDIR`` (when configured), or an explicitly supplied approved
-    temporary root.  The repository root, the user's home directory, empty
-    shell expansions, and symlink escapes are all rejected.
+    temporary root.  The repository root, the user's home directory, the host
+    tmux socket directory (or a tree holding it), empty shell expansions, and
+    symlink escapes are all rejected.
 
     ``approved_temp_roots`` is for a narrow, caller-owned temporary directory;
     it is not a mechanism to approve a broad parent such as a repository or
@@ -188,6 +205,9 @@ def assert_delete_target(
         raise ValueError("delete target is the repository root")
     if resolved_target == home_root:
         raise ValueError("delete target is the home directory")
+    for socket_dir in _tmux_socket_dirs():
+        if _is_within(socket_dir, resolved_target) or _is_within(resolved_target, socket_dir):
+            raise ValueError("delete target is or holds the tmux server socket directory")
 
     allowed_roots = [
         resolved_repo_root / ".worktrees",

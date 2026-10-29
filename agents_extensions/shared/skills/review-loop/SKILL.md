@@ -104,7 +104,7 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    that the complete delta is only that repair. Exit 1 is the stop below. A recorded rejection is cleared only at a new
    head ([policy](references/policy.md#clearing-a-recorded-rejection)). The delta brief carries
    the ledger and the fix diff ([brief](references/brief.md#delta-rounds-round-2-and-later)).
-7. **Record the verdict once a PR exists** (the PR may already be open, `workflow.md:195`):
+7. **Record the verdict on the open PR** (it is open and CI-green at the reviewed head, `full-send` step 4):
 
    ```bash
    "$PY" -m scripts.review.record_cf_verdict --task-id "$REVIEW_TASK" --pr "$PR"

@@ -13,7 +13,9 @@ Admission, at the recorder and in the pre-dispatch ``budget-check``:
 1. Approved. The PR's review lineage before N passes ``review_lineage``: every
    run terminal and published, and A's APPROVE the latest verdict of every
    seat, with as many seats as the profile needs. A is the PR's latest
-   reviewed head.
+   reviewed head. An unpublished run that a later verdict of its own seat,
+   at another head before N, supersedes is listed in the receipt, never
+   dropped; an approval at N supersedes nothing.
 2. Classified. Every commit on the first-parent path from N back to A is one
    of: a Git-proven clean merge of the default branch; a conflicted merge of
    it whose tree differs from Git's own merge of its two parents only in the
@@ -55,7 +57,7 @@ from typing import Any
 
 from scripts.orchestration.integration_sweep import SHA
 from scripts.review import record_cf_verdict as recorder
-from scripts.review.review_lineage import LineageRefused, check_lineage, lineage_runs
+from scripts.review.review_lineage import LineageRefused, check_lineage, lineage_runs, superseded_runs
 
 RECEIPT_DIR = "review-repair-rounds"
 RECEIPT_SCHEMA = "review-repair-round.v1"
@@ -353,23 +355,26 @@ def admit_repair_round(
                 f"({receipt.get('approved_head')} to {receipt.get('candidate_head')}); escalate to the CTO",
             )
     try:
-        seats = check_lineage(
-            runs=lineage_runs(task_root, repository=repository, number=number, branch=branch),
-            comments=comments,
-            login=login,
-            approved=approved,
-            exclude_head=head,
-        )
+        runs = lineage_runs(task_root, repository=repository, number=number, branch=branch)
+        seats = check_lineage(runs=runs, comments=comments, login=login, approved=approved, exclude_head=head)
     except LineageRefused as exc:
         raise RepairRefused(
             LINEAGE, f"the last reviewed head {approved} is not an approval of record: {exc.detail}"
         ) from None
+    # Listed, never dropped: each unpublished run that its seat's later verdict superseded.
+    superseded = superseded_runs(runs=runs, comments=comments, login=login, exclude_head=head)
     prior = next((receipt for receipt in found.values() if receipt is not None), None)
     if prior is not None:
         # A retry of the round admitted here: the lineage is checked again above, its receipt
         # stands, and any key it lacks is added.
         keys = sorted({*prior.get("lineage_keys", ()), *keys})
-        return {**prior, "lineage_keys": keys, "approved_seats": seats, "same_round": True}
+        return {
+            **prior,
+            "lineage_keys": keys,
+            "approved_seats": seats,
+            "superseded_runs": superseded,
+            "same_round": True,
+        }
     base_tip, _ = recorder.default_branch_review_base(repo_root, head, fetch=fetch)
     delta = classify_delta(repo_root, approved=approved, candidate=head, base_tip=base_tip)
     kinds = delta.kinds
@@ -403,6 +408,7 @@ def admit_repair_round(
         "lineage_keys": keys,
         "approved_head": approved,
         "approved_seats": seats,
+        "superseded_runs": superseded,
         "candidate_head": head,
         "class": kind,
         "commits": delta.commits,

@@ -766,6 +766,31 @@ def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, se
         assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
 
 
+@pytest.mark.parametrize("orphan_head,refused", [("c" * 40, True), ("1" * 40, False)], ids=["own-head", "reviewed-head"])
+def test_a_superseded_runs_unpublished_only_head_still_counts_a_round(monkeypatch, tmp_path, capsys, orphan_head, refused):
+    """A head reviewed only by a superseded run is a reviewed head; a head already counted is not counted twice."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    seat = dict(model="claude-opus-5-5", agent="claude", pr=42, review_profile="code")
+    write_task(tasks, task_id="orphan", reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=orphan_head,
+               started_at="2026-09-23T10:00:00.000001+00:00", **seat)
+    for index in (1, 2):
+        sha = f"{index}" * 40
+        write_task(tasks, task_id=f"round-{index}", reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=sha,
+                   started_at="2026-09-23T11:00:00.000001+00:00", **seat)
+        comments.append(recorded_verdict(sha, "CHANGES_REQUESTED", task_id=f"round-{index}"))
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    check = ["budget-check", "--repository", REPOSITORY, "--pr", "42"]
+    monkeypatch.setattr(recorder, "budget_check", partial(recorder.budget_check, task_root=tasks))
+    if refused:
+        with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 3 heads"):
+            recorder.record("review-one", **kwargs)
+        assert recorder.main(check) == 1 and calls == {"posts": 0, "statuses": 0}
+        assert "REVIEW_BUDGET_EXHAUSTED" in json.loads(capsys.readouterr().out)["refusal"]
+    else:
+        assert recorder.main(check) == 0 and json.loads(capsys.readouterr().out)["reviewed_heads"] == 2
+        assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
+
+
 @pytest.mark.parametrize("body", [None, "<!-- cf-verdict v1 unreadable -->"])
 def test_red_team_unreadable_marker_history_refused(monkeypatch, tmp_path, body):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
@@ -3697,6 +3722,9 @@ def test_elevated_grant_needs_the_blocker_open_before_each_round(monkeypatch, tm
         ("scope", r"\[scope\].*does not cover changed paths \['docs/readme.md'\]"),
         ("resolved", r"\[blocker\]"),
         ("p2", r"\[blocker\]"),
+        # A delta round's plain-words disposition keeps the same rules (the severity follows `still open:`).
+        ("still-open-p2", r"\[blocker\]"),
+        ("still-open-resolved", r"\[blocker\]"),
         ("other-finding", r"\[blocker\].*does not leave F3 an open"),
         # The finding's complete current disposition decides, not its first line (review round 1, F1).
         ("resolved-next-line", r"\[blocker\]"),
@@ -3717,6 +3745,12 @@ def test_elevated_grant_refuses(monkeypatch, tmp_path, case, reason):
     last = {
         "resolved": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "resolved.")),
         "p2": dict(last_reply=OPEN_F2.replace("[P1]", "[P2]")),
+        "still-open-p2": dict(
+            last_reply="VERDICT: REQUEST_CHANGES\nF2 still open: [P2] docs/readme.md:3 the retry path still races."
+        ),
+        "still-open-resolved": dict(
+            last_reply="VERDICT: REQUEST_CHANGES\nF2 still open: [P1] docs/readme.md:3 the lock race is fixed."
+        ),
         "latest-approved": dict(last_verdict="APPROVED", last_reply="VERDICT: APPROVE\nF2 [P1] still open"),
         "resolved-next-line": dict(last_reply=OPEN_F2 + "\n  Status: resolved at the new head."),
         "fixed-with-evidence": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "fixed with evidence.")),
@@ -3786,8 +3820,11 @@ def test_budget_grant_digest_verb(tmp_path, capsys):
         OPEN_F2.replace("Impact: lost update.", "not resolved: the retry path still races."),
         "VERDICT: REQUEST_CHANGES\n- **F2** [P1] docs/readme.md:3 still open. Impact: lost update.",
         OPEN_F2 + "\n\nF1 [P2] docs/readme.md:9 resolved.",
+        # The wording review-loop policy tells a delta reviewer to use: the severity follows the disposition.
+        "VERDICT: REQUEST_CHANGES\nF1 resolved.\n\nF2 still open: [P1] `docs/readme.md:3` the retry path races.",
+        "VERDICT: REQUEST_CHANGES\nF2 (P1) still open: docs/readme.md:3 the retry path races.",
     ],
-    ids=["not-resolved", "bulleted", "other-finding-resolved"],
+    ids=["not-resolved", "bulleted", "other-finding-resolved", "still-open-then-severity", "parenthesised-severity"],
 )
 def test_elevated_grant_reads_an_open_finding(monkeypatch, tmp_path, reply):
     tasks, _comments, _calls = grant_case(monkeypatch, tmp_path, last_reply=reply)

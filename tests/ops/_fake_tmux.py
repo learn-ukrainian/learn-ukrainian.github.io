@@ -1,4 +1,4 @@
-"""A fake tmux/ps/systemd-run runner for the context guard and lane relaunch tests (#10814).
+"""A fake tmux/ps/pgrep/systemd-run runner for the context guard and lane relaunch tests (#10814).
 
 It answers the argv the code builds, records every call, and never runs a real
 process, so no test touches a live tmux server or the user manager. ``override``
@@ -29,6 +29,7 @@ class FakeTmux:
     clients: list[tuple[str, int]] = field(default_factory=list)
     server_running: bool = True
     exit_on_create: dict[str, int] = field(default_factory=dict)
+    servers: list[str] = field(default_factory=list)  # ``pgrep -a`` rows of running tmux servers
     now: float = 1_000_000.0
     calls: list[list[str]] = field(default_factory=list)
     # Injected answers keyed by "ps" or a tmux command: a CompletedProcess to return, or an exception to raise.
@@ -40,7 +41,7 @@ class FakeTmux:
             argv = argv[argv.index("tmux"):]
         if argv[0] == "env":
             argv = argv[argv.index("ps"):]
-        key = argv[0] if argv[0] == "ps" else argv[1]
+        key = argv[0] if argv[0] in {"ps", "pgrep"} else argv[1]
         if key in self.override:
             injected = self.override[key]
             if isinstance(injected, Exception):
@@ -48,6 +49,8 @@ class FakeTmux:
             return injected
         if argv[0] == "ps":
             return self._ok("\n".join(self._ps_rows(with_start="lstart" in argv[-1])))
+        if argv[0] == "pgrep":
+            return self._ok("\n".join(self.servers)) if self.servers else self._fail("")
         assert argv[0] == "tmux", argv
         command, args = argv[1], argv[2:]
         target = args[args.index("-t") + 1] if "-t" in args else None

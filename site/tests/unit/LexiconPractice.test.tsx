@@ -85,7 +85,7 @@ function ThrowPracticeError(): never {
 }
 
 function okJson(body: unknown): Response {
-  return { ok: true, json: async () => body } as unknown as Response;
+  return new Response(JSON.stringify(body), { status: 200 });
 }
 
 function notFoundResponse(): Response {

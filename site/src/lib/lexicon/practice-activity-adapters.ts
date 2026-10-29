@@ -117,6 +117,9 @@ function sourceOptions(item: PracticeHeritageItem): string[] | null {
   return options.includes(item.answer) ? options : null;
 }
 
+const heritagePairSources = new WeakMap<MatchPair, PracticeHeritageItem>();
+export function heritageMatchPairSource(pair: MatchPair): PracticeHeritageItem | undefined { return heritagePairSources.get(pair); }
+
 function heritageMatchPair(item: PracticeHeritageItem): MatchPair | null {
   // MatchUp drops the frame entirely, so it cannot carry a paired construction.
   if (isFunctionWordTarget(item)) return null;
@@ -125,7 +128,9 @@ function heritageMatchPair(item: PracticeHeritageItem): MatchPair | null {
   const right = item.answer.trim();
   if (!options || !left || !right || left.toLocaleLowerCase() === right.toLocaleLowerCase())
     return null;
-  return { left, right, lemmaId: item.lemmaId };
+  const pair = { left, right, lemmaId: item.lemmaId };
+  heritagePairSources.set(pair, item);
+  return pair;
 }
 
 function correctSentenceTokens(item: PracticeHeritageItem): string[] | null {

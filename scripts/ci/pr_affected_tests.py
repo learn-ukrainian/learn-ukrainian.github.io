@@ -125,7 +125,7 @@ def plan(base: str, candidate: str) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Run changed test files and guards, or marker-only repository invariants for a PR candidate.\n"
-        "Use in CI admission; this never replaces full merge-group pytest.",
+        "Use in PR CI for early signal; the full pytest shards run in their own jobs.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Example: .venv/bin/python -m scripts.ci.pr_affected_tests\n"
         "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF.\n"
@@ -217,7 +217,7 @@ def main() -> int:
         stage, reason = "proof_output", "proof_output_incomplete"
         report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         summary = (
-            "PR admission: full pytest was not run.\n"
+            "PR changed tests and guards: the full pytest shards run in their own jobs.\n"
             f"Candidate: {actual}\nMarker selection: {marker}\nRequested paths ({len(paths)}): "
             + ", ".join(paths)
             + "\n"
