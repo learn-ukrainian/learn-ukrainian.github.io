@@ -624,8 +624,10 @@ def _unmodeled_quoting(command: str) -> bool:
     # Comments, heredoc data and continuing quotes can disagree about state
     # across physical lines. Refuse multiline Bash-only syntax without using
     # a guessed quote state to dismiss it as data.
-    if len(command.splitlines()) > 1 and any(marker in command for marker in ("$'", "$(", "${", "$[", "`")):
-        return True
+    if len(command.splitlines()) > 1:
+        probe = _join_line_continuations(command)
+        if any(marker in probe for marker in ("$'", "$(", "${", "$[", "`")):
+            return True
     quote = ""
     index = 0
     while index < len(command):
