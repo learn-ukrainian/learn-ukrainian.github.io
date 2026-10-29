@@ -935,8 +935,8 @@
     },
     {
       "ref": "private://uk-behaviour-v2/exercise-review-prompt",
-      "sha256": null,
-      "status": "MISSING",
+      "sha256": "4f90c0fd149907a0a7f2667d1c123e75e6524a0a781a232c091c9648e44c7587",
+      "status": "PINNED",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
@@ -959,8 +959,8 @@
     },
     {
       "ref": "private://uk-behaviour-v2/pedagogy-review-prompt",
-      "sha256": null,
-      "status": "MISSING",
+      "sha256": "201afd85c8c37f444aa8926426698c68d1b363daefda5c3f303f30e205b8c9a2",
+      "status": "PINNED",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
@@ -1273,7 +1273,7 @@
     ]
   },
   "g3": {
-    "status": "SCORER_PINNED_REVIEW_PROMPTS_AWAITING_ACCEPTANCE",
+    "status": "PINNED",
     "harness": "uk-behaviour-harness/1",
     "scorer": "uk-behaviour-score/2",
     "code": [
@@ -1351,14 +1351,30 @@
       {
         "family": "exercise_review",
         "ref": "private://uk-behaviour-v2/exercise-review-prompt",
-        "sha256": null,
-        "acceptance": null
+        "sha256": "4f90c0fd149907a0a7f2667d1c123e75e6524a0a781a232c091c9648e44c7587",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 3,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-3",
+          "sha256": "d7fbfd5f347e2b2ab7bac81ddb78ca09b4bfece0627b1e691791c605b154bb83"
+        }
       },
       {
         "family": "pedagogy_review",
         "ref": "private://uk-behaviour-v2/pedagogy-review-prompt",
-        "sha256": null,
-        "acceptance": null
+        "sha256": "201afd85c8c37f444aa8926426698c68d1b363daefda5c3f303f30e205b8c9a2",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 3,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-3",
+          "sha256": "d7fbfd5f347e2b2ab7bac81ddb78ca09b4bfece0627b1e691791c605b154bb83"
+        }
       }
     ],
     "caps": {
