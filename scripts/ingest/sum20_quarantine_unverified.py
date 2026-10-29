@@ -91,7 +91,8 @@ def quarantine(db_path: Path, *, apply: bool, expected: Mapping[int, str] = EXPE
     """Check (and with ``apply``, mark) the unverified rows; return a receipt."""
     if not db_path.is_file():
         raise QuarantineError(f"database not found: {db_path}")
-    refuse_writable_corpus_database(db_path)
+    if apply:
+        refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path, isolation_level=None) if apply else _shared_open_readonly(db_path.resolve())
     try:
         conn.execute("PRAGMA busy_timeout = 30000")

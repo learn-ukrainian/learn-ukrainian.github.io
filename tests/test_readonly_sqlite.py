@@ -682,3 +682,19 @@ def test_pre_bootstrap_live_store_needs_the_lock(tmp_path, monkeypatch):
     unrelated = tmp_path / "fixture" / "sources.db"
     unrelated.parent.mkdir()
     _as_declared_writer(unrelated).close()  # a fixture named sources.db is not the store
+
+
+def test_aliases_of_a_generation_still_need_the_lock(tmp_path):
+    """A link's own name or a symlinked parent directory cannot rename a generation."""
+    from scripts.lib.readonly_sqlite import corpus_database_name
+
+    _, old, current = _generation_store(tmp_path)
+    named_vesum = tmp_path / "vesum.db"
+    named_vesum.symlink_to(current)
+    linked_parent = tmp_path / "linked-generations"
+    linked_parent.symlink_to(current.parent)
+    for alias in (named_vesum, linked_parent / current.name, linked_parent / old.name):
+        assert corpus_database_name(alias) == "sources.db"
+        assert corpus_database_name(alias.as_uri() if alias.is_absolute() else alias) == "sources.db"
+        with pytest.raises(CorpusDatabaseWriteRefused, match="writer_lock_not_held"):
+            _as_declared_writer(alias)

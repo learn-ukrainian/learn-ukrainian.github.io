@@ -162,7 +162,8 @@ def main() -> int:
         return 1
 
     # Connect to SQLite
-    refuse_writable_corpus_database(db_path)
+    if not args.dry_run:
+        refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path)
     try:
         updates_to_apply, conflicts_found, db_tasks, skipped_count = plan_annotations(conn, annotations)

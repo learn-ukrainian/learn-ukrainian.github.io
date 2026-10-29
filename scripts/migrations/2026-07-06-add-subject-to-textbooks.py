@@ -208,7 +208,8 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"Sources DB not found: {args.db}")
 
     try:
-        refuse_writable_corpus_database(str(args.db))
+        if not args.dry_run:
+            refuse_writable_corpus_database(str(args.db))
         with sqlite3.connect(str(args.db)) as conn:
             status = apply(conn, dry_run=args.dry_run)
     except UnmappedTextbookSubjectsError as exc:

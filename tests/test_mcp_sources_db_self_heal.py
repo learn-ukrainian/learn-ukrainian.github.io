@@ -1058,3 +1058,20 @@ def test_corpus_workers_keep_held_readers_usable_across_one_shared_heal(server, 
     assert opens == [1]
     assert sdb._conn is not held
     held.close()
+
+
+def test_one_tool_attempt_reads_one_sources_generation(server, sdb, db):
+    """A publication that reopens the cache mid-call does not split one attempt across generations."""
+    _stats(server)
+    replacement = sdb._open_conn(db, read_only=True)
+    seen: list[object] = []
+
+    async def handler():
+        seen.append(sdb._get_conn())
+        sdb._conn = replacement  # what the cache does when the selector moves
+        seen.append(sdb._get_conn())
+        return "done"
+
+    assert asyncio.run(server._run_attempt(handler, ())) == "done"
+    assert seen[0] is seen[1] and seen[0] is not replacement
+    assert sdb._get_conn() is replacement  # the next attempt reads the new connection

@@ -675,7 +675,8 @@ def ingest_wiktionary_etymology(
     max_text_chars: int,
 ) -> tuple[int, int, int]:
     """Load Atlas-bounded uk.wiktionary etymology rows into sources.db."""
-    refuse_writable_corpus_database(str(db_path))
+    if not dry_run:
+        refuse_writable_corpus_database(str(db_path))
     conn = None if dry_run else sqlite3.connect(str(db_path))
     skipped_phrases = 0
     loaded = 0

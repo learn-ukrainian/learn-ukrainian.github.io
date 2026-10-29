@@ -446,11 +446,8 @@ def test_shared_read_only_connection_survives_threads(small_db: Path) -> None:
     assert not errors, errors[:1]
 
 
-def test_cached_reader_follows_the_selector_and_keeps_calls_in_flight(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    import gc
-    import weakref
+def _selector_store(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """A bootstrapped generation store with ``t`` = v0..v49, cached by ``sources_db``."""
     from contextlib import closing
 
     from scripts.storage import generations
@@ -474,19 +471,60 @@ def test_cached_reader_follows_the_selector_and_keeps_calls_in_flight(
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", selector)
     monkeypatch.setattr(sources_db, "_conn", None)
     monkeypatch.setattr(sources_db, "_conn_state", None)
+    return selector
 
-    held_reader = sources_db._get_conn()
-    in_flight = held_reader.execute("SELECT v FROM t ORDER BY id")
-    assert in_flight.fetchone()[0] == "v0"
-    assert sources_db._get_conn() is held_reader  # an unchanged selector does not reopen
+
+def _publish_new(selector: Path) -> None:
+    """Publish a generation whose ``t`` rows read new0..new49."""
+    from contextlib import closing
+
+    from scripts.storage import generations
 
     with generations.writer_lock(selector) as held:
-        stage = data / "stage.db"
+        stage = selector.with_name("stage.db")
         with closing(open_readonly(held.generation)) as source, closing(sqlite3.connect(stage)) as copy:
             source.backup(copy)
             copy.execute("UPDATE t SET v = 'new' || id")
             copy.commit()
         generations.publish_generation(stage, held)
+
+
+def test_one_lookup_reads_one_generation_across_a_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    selector = _selector_store(tmp_path, monkeypatch)
+    with sources_db.one_generation():
+        first = sources_db._get_conn()
+        _publish_new(selector)
+        again = sources_db._get_conn()
+        assert again is first
+        assert again.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "v0"
+    fresh = sources_db._get_conn()
+    try:
+        assert fresh is not first
+        assert fresh.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "new0"
+        # Lookups that read more than once run inside one generation.
+        assert sources_db.ulif_stress_rows.__wrapped__ is not None
+        assert sources_db.search_sources.__wrapped__ is not None
+    finally:
+        first.close()
+        fresh.close()
+        sources_db._conn = None
+
+
+def test_cached_reader_follows_the_selector_and_keeps_calls_in_flight(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import gc
+    import weakref
+
+    selector = _selector_store(tmp_path, monkeypatch)
+    held_reader = sources_db._get_conn()
+    in_flight = held_reader.execute("SELECT v FROM t ORDER BY id")
+    assert in_flight.fetchone()[0] == "v0"
+    assert sources_db._get_conn() is held_reader  # an unchanged selector does not reopen
+
+    _publish_new(selector)
 
     fresh = sources_db._get_conn()
     try:

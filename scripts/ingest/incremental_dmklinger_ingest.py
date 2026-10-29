@@ -137,7 +137,8 @@ def ingest(
     # become a refusal after input has been read.
     db_path = resolved_db
     expected, schema = _expected_input(input_path, input_sha256)
-    refuse_writable_corpus_database(db_path.resolve().as_uri() + "?mode=rw", uri=True)
+    if apply:
+        refuse_writable_corpus_database(db_path.resolve().as_uri() + "?mode=rw", uri=True)
     conn = (
         sqlite3.connect(db_path.resolve().as_uri() + "?mode=rw", uri=True, isolation_level=None)
         if apply else open_readonly(db_path, isolation_level=None)

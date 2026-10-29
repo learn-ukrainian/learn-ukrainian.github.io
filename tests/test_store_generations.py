@@ -223,6 +223,11 @@ def test_bootstrap_refuses_while_a_reader_holds_a_transaction(tmp_path):
     ("../sources-generations/sources.20260101T000000Z-0123456789ab.db", "selector_target_outside_generations"),
     ("sources-generations/other.db", "selector_target_outside_generations"),
     ("sources-generations/sources.20260101T000000Z-0123456789ab.db", "selected_generation_missing"),
+    # The link text must be exact, not merely normalize to a generation.
+    ("./sources-generations/sources.20260101T000000Z-0123456789ab.db", "selector_target_outside_generations"),
+    ("sources-generations//sources.20260101T000000Z-0123456789ab.db", "selector_target_outside_generations"),
+    ("sources-generations/./sources.20260101T000000Z-0123456789ab.db", "selector_target_outside_generations"),
+    ("sources-generations/sources.20260101T000000Z-0123456789ab.db/", "selector_target_outside_generations"),
 ])
 def test_selector_is_confined_to_the_generation_directory(tmp_path, text, reason):
     data = tmp_path / "data"
@@ -341,6 +346,27 @@ def test_writable_open_needs_the_lock_and_the_selected_generation(selector):
     with pytest.raises(generations.GenerationError, match="generation_named_directly"):
         with generations.store_writer(old):
             pass
+
+
+def test_only_the_canonical_selector_carries_the_lock(selector, monkeypatch):
+    old = selector.resolve()
+    publish(selector, "g1")
+    previous = selector.with_name("previous.db")
+    previous.symlink_to(f"sources-generations/{old.name}")
+    with pytest.raises(generations.GenerationError, match="selector_not_canonical"):
+        with generations.writer_lock(previous, lift=True):
+            pass
+    assert generations.is_held(old)
+    with generations.writer_lock(selector) as held:
+        # A child told to use another link in the same directory is not authorized.
+        monkeypatch.setenv(generations.ENV_WRITER_FD, str(held.fd))
+        monkeypatch.setenv(generations.ENV_WRITER_SELECTOR, str(previous))
+        assert generations._current(selector.parent) is held  # this process still holds it
+        from scripts.lib import readonly_sqlite
+
+        assert readonly_sqlite.inherited_store_writer(selector.parent) is None
+        monkeypatch.setenv(generations.ENV_WRITER_SELECTOR, str(selector))
+        assert readonly_sqlite.inherited_store_writer(selector.parent) is not None
 
 
 def test_lock_release_closes_tracked_connections_and_holds_again(selector):

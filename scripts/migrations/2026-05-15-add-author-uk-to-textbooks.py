@@ -248,7 +248,8 @@ def main(argv: list[str] | None = None) -> int:
     if not args.db.exists():
         raise SystemExit(f"Sources DB not found: {args.db}")
 
-    refuse_writable_corpus_database(str(args.db))
+    if not args.dry_run:
+        refuse_writable_corpus_database(str(args.db))
     with sqlite3.connect(str(args.db)) as conn:
         status = apply(conn, dry_run=args.dry_run)
 

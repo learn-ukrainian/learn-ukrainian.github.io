@@ -244,17 +244,23 @@ def _filesystem_path(database: str | os.PathLike[str] | bytes) -> str:
 def corpus_database_name(database: str | os.PathLike[str] | bytes) -> str | None:
     """Return ``sources.db`` or ``vesum.db`` when ``database`` names one.
 
-    A file in a ``sources-generations`` directory, or a link that resolves to
-    one, is a Sources generation and returns ``sources.db``.
+    The file the path resolves to decides first, so a link or a symlinked
+    parent directory cannot rename a corpus database. A file in a
+    ``sources-generations`` directory is a Sources generation and returns
+    ``sources.db``. The literal name still counts when the path cannot be
+    resolved.
     """
     path = Path(_filesystem_path(database))
-    if path.name in _CORPUS_DATABASE_NAMES:
-        return path.name
+    with suppress(OSError, RuntimeError, ValueError):
+        resolved = path.resolve()
+        if resolved.parent.name == _GENERATIONS_DIRNAME:
+            return "sources.db"
+        if resolved.name in _CORPUS_DATABASE_NAMES:
+            return resolved.name
     if path.parent.name == _GENERATIONS_DIRNAME:
         return "sources.db"
-    with suppress(OSError, RuntimeError, ValueError):
-        if path.is_symlink() and path.resolve().parent.name == _GENERATIONS_DIRNAME:
-            return "sources.db"
+    if path.name in _CORPUS_DATABASE_NAMES:
+        return path.name
     return None
 
 
@@ -328,6 +334,9 @@ def _stack_may_write(factory: str | None) -> bool:
 # scripts/storage/generations.py takes the store-wide writer lock and registers
 # the selector here, so this guard can require the lock without importing it.
 STORE_WRITER_LOCK_NAME = ".sources-writer.lock"
+# Only the canonical selector carries the lock; another link in the same
+# directory never authorizes a write.
+STORE_SELECTOR_NAME = "sources.db"
 # A process started by ``python -m scripts.storage write`` inherits the
 # parent's locked descriptor and the selector it locked.
 ENV_STORE_WRITER_FD = "LU_SOURCES_WRITER_FD"
@@ -354,7 +363,11 @@ def inherited_store_writer(lock_dir: Path) -> tuple[int, Path] | None:
     if raw_fd is None or raw_selector is None:
         return None
     selector = Path(raw_selector)
-    if not selector.is_absolute() or os.path.realpath(selector.parent) != os.path.realpath(lock_dir):
+    if (
+        not selector.is_absolute()
+        or selector.name != STORE_SELECTOR_NAME
+        or os.path.realpath(selector.parent) != os.path.realpath(lock_dir)
+    ):
         return None
     try:
         fd = int(raw_fd)

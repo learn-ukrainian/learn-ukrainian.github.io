@@ -27,6 +27,7 @@ Tools:
 """
 
 import asyncio
+import contextlib
 import contextvars
 import functools
 import hashlib
@@ -2167,7 +2168,14 @@ async def _run_attempt(handler: Any, markers: tuple[str, ...]) -> Any:
     attempt = _AttemptDamage(markers)
     token = _ATTEMPT_DAMAGE.set(attempt)
     try:
-        result = await handler()
+        # One attempt reads one Sources generation, however many lookups it makes;
+        # a retry after a heal is a new attempt and may read a newer one.
+        with contextlib.ExitStack() as pins:
+            for module_name in _SQLITE_CONNECTION_CACHES["sources.db"][0]:
+                module = sys.modules.get(module_name)
+                if module is not None:
+                    pins.enter_context(module.one_generation())
+            result = await handler()
     except Exception as exc:
         if attempt.errors and not isinstance(exc, sqlite3.DatabaseError):
             raise attempt.errors[0] from exc  # the swallowed damage is the cause of whatever broke next

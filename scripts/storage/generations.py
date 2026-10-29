@@ -215,6 +215,9 @@ def writer_lock(
     closed before the lock is released.
     """
     selector = Path(os.path.abspath(selector))
+    if selector.name != SELECTOR_NAME:
+        # The lock binds the canonical selector; another link in the directory never carries it.
+        raise GenerationError("selector_not_canonical")
     directory = selector.parent
     key = _key(directory)
     with _held_lock:

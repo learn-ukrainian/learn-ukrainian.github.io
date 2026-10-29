@@ -23,6 +23,7 @@ Helpers:
 """
 
 import contextvars
+import functools
 import hashlib
 import json
 import os
@@ -30,7 +31,7 @@ import sqlite3
 import sys
 import threading
 from collections import defaultdict
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from pathlib import Path
@@ -101,6 +102,42 @@ _conn_lock = threading.Lock()
 _active_connection: contextvars.ContextVar[sqlite3.Connection | None] = contextvars.ContextVar(
     "sources_db_active_connection", default=None
 )
+
+
+# A lookup that reads more than once must not straddle a publication of a new
+# generation: inside ``one_generation`` the first ``_get_conn()`` result serves
+# every later call. The list is filled lazily, so a missing database still
+# raises at the first read, as it does outside the block.
+_lookup_pin: contextvars.ContextVar[list[SQLiteConnection] | None] = contextvars.ContextVar(
+    "sources_db_lookup_pin", default=None
+)
+
+
+@contextmanager
+def one_generation() -> Iterator[None]:
+    """Serve every ``_get_conn()`` in this block from one connection, so one generation.
+
+    Nested blocks and an active ``using_connection`` keep the outer connection.
+    """
+    if _lookup_pin.get() is not None or _active_connection.get() is not None:
+        yield
+        return
+    token = _lookup_pin.set([])
+    try:
+        yield
+    finally:
+        _lookup_pin.reset(token)
+
+
+def _one_generation_lookup(function: Callable[..., Any]) -> Callable[..., Any]:
+    """Run a lookup that reads several times inside ``one_generation``."""
+
+    @functools.wraps(function)
+    def lookup(*args: Any, **kwargs: Any) -> Any:
+        with one_generation():
+            return function(*args, **kwargs)
+
+    return lookup
 
 
 @contextmanager
@@ -1894,6 +1931,9 @@ def _get_conn() -> sqlite3.Connection:
     override = _active_connection.get()
     if override is not None:
         return override
+    pin = _lookup_pin.get()
+    if pin:
+        return pin[0]
     global _conn, _conn_state
     with _conn_lock:
         if _conn is not None and _conn_state is not None and _conn_state[0] is not _conn:
@@ -1947,6 +1987,8 @@ def _get_conn() -> sqlite3.Connection:
                         fresh = _open_conn(reopen_path, read_only=True)
                         _conn = fresh
                         _conn_state = (fresh, reopen_path, identity)
+    if pin is not None:
+        pin.append(_conn)
     return _conn
 
 
@@ -1962,6 +2004,7 @@ def ulif_stress_build() -> dict[str, Any]:
     return dict(row) if row is not None else {"state": "unbuilt"}
 
 
+@_one_generation_lookup
 def ulif_stress_rows(form: str) -> list[dict[str, Any]]:
     """Indexed per-form lookup of checked entries only (#8400 rule 3).
 
@@ -2727,6 +2770,7 @@ def _expand_to_chunk_candidates(
     return expanded
 
 
+@_one_generation_lookup
 def _dispatch_corpus_search(
     corpus: str,
     *,
@@ -2933,6 +2977,7 @@ def _expand_ukrainian_wiki_neighbors(match: dict) -> dict:
     }
 
 
+@_one_generation_lookup
 def _expand_neighbor_context(match: dict) -> dict:
     corpus = str(match.get("corpus", ""))
     if corpus in {"modern_literary", "archaic_literary"}:
@@ -3007,6 +3052,7 @@ def _is_textbook_section(match: dict) -> bool:
     return match.get("corpus") == "textbook_sections"
 
 
+@_one_generation_lookup
 def search_sources(
     query: str | Path,
     *,
@@ -3196,6 +3242,7 @@ def _fts_search(fts_table: str, data_table: str,
     raise last_exc
 
 
+@_one_generation_lookup
 def search_textbooks(
     ukr_keywords: set[str],
     max_total: int = 40,
@@ -3271,6 +3318,7 @@ def search_textbooks(
     return results
 
 
+@_one_generation_lookup
 def search_external(
     ukr_keywords: set[str],
     max_total: int = 10,
@@ -3396,6 +3444,7 @@ def search_literary(ukr_keywords: set[str], max_total: int = 20) -> list[dict]:
     return rows
 
 
+@_one_generation_lookup
 def search_wikipedia(ukr_keywords: set[str], max_total: int = 10) -> list[dict]:
     """Search Wikipedia articles via FTS5."""
     try:
@@ -3684,6 +3733,7 @@ def search_balla_en_uk_batch(
     return _batch_dict_lookup("balla_en_uk", words, limit=1, db_path=db_path)
 
 
+@_one_generation_lookup
 def search_dmklinger_uk_en_batch(
     words: list[str],
     *,
@@ -3752,6 +3802,7 @@ def search_dmklinger_uk_en_batch(
     return results
 
 
+@_one_generation_lookup
 def search_esum_batch(
     words: list[str],
     *,
@@ -3814,6 +3865,7 @@ def search_esum_batch(
     return results
 
 
+@_one_generation_lookup
 def search_slovnyk_me_entries_batch(
     words: list[str],
     *,
@@ -4042,6 +4094,7 @@ def _esum_match_tier(query: str, lemma: str) -> int:
     return 3
 
 
+@_one_generation_lookup
 def search_esum(
     query: str,
     volume: int | None = None,
@@ -4313,6 +4366,7 @@ def _resolved_slovnyk_dicts(dictionaries: list[str] | tuple[str, ...] | None) ->
     return resolved
 
 
+@_one_generation_lookup
 def _search_slovnyk_me_db(
     query: str,
     *,
@@ -4408,6 +4462,7 @@ def _search_slovnyk_me_db(
         _close_if_temporary(conn, db_path)
 
 
+@_one_generation_lookup
 def _dictionaries_not_recorded_missing(
     query: str,
     dictionaries: list[str] | tuple[str, ...] | None,
@@ -4466,6 +4521,7 @@ def search_slovnyk_me(
     return rows
 
 
+@_one_generation_lookup
 def search_slovnyk_me_with_status(
     query: str,
     limit: int = 10,
@@ -4641,6 +4697,7 @@ def _heritage_match_tier(query: str, headword: str) -> int:
     return 3
 
 
+@_one_generation_lookup
 def search_heritage(
     query: str,
     limit: int = 10,

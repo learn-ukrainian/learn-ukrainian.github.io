@@ -7,7 +7,7 @@ from typing import Any
 
 from scripts.curriculum.evidence.tags import TagMapper
 from scripts.lexicon.runner.ulif_dictua_parse import lookup_ulif_label
-from scripts.wiki.sources_db import normalize_ulif_dictua_query, ulif_stress_rows
+from scripts.wiki.sources_db import normalize_ulif_dictua_query, one_generation, ulif_stress_rows
 
 
 def _features(row: dict) -> set[str]:
@@ -114,10 +114,11 @@ def readings(form: str, *, supplied: set[str], lemma: str | None, vesum: list[di
         _strip_stress,
     )
 
-    rows = ulif_stress_rows(form)
-    if lemma or form != form.lower():
-        for spelling in (form.lower(), form.title()):
-            rows += [row for row in ulif_stress_rows(spelling) if row not in rows]
+    with one_generation():  # every spelling is read from the same generation
+        rows = ulif_stress_rows(form)
+        if lemma or form != form.lower():
+            for spelling in (form.lower(), form.title()):
+                rows += [row for row in ulif_stress_rows(spelling) if row not in rows]
     selected: list[tuple[dict, set[str], list[dict]]] = []
     for row in rows:
         indices = json.loads(row["stress_vowel_indices"])

@@ -294,7 +294,8 @@ def ingest_goroh_etymology(
     max_text_chars: int,
 ) -> tuple[int, int]:
     """Fetch Atlas-bounded Goroh etymology rows into sources.db."""
-    refuse_writable_corpus_database(str(db_path))
+    if not dry_run:
+        refuse_writable_corpus_database(str(db_path))
     conn = None if dry_run else sqlite3.connect(str(db_path))
     fetched = 0
     loaded = 0

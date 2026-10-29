@@ -580,19 +580,22 @@ def inspect_selector(selector: Path) -> SelectorState:
         return SelectorState("legacy_file", "regular_file", selector)
     if not stat.S_ISLNK(info.st_mode):
         return SelectorState("invalid", "selector_not_file_or_link")
-    parts = PurePosixPath(os.readlink(selector)).parts
-    if len(parts) != 2 or parts[0] != GENERATIONS_DIRNAME or not is_generation_name(parts[1]):
+    # The link text itself must be exact: no "./", doubled or trailing slashes.
+    text = os.readlink(selector)
+    prefix = f"{GENERATIONS_DIRNAME}/"
+    name = text[len(prefix):] if text.startswith(prefix) else ""
+    if not is_generation_name(name):
         return SelectorState("invalid", "selector_target_outside_generations")
     directory = selector.parent / GENERATIONS_DIRNAME
     try:
         if not stat.S_ISDIR(directory.lstat().st_mode):
             return SelectorState("invalid", "generations_dir_not_real_directory")
-        target_info = (directory / parts[1]).lstat()
+        target_info = (directory / name).lstat()
     except FileNotFoundError:
         return SelectorState("invalid", "selected_generation_missing")
     if not stat.S_ISREG(target_info.st_mode):
         return SelectorState("invalid", "selected_generation_not_regular_file")
-    return SelectorState("selector", "selector", directory / parts[1])
+    return SelectorState("selector", "selector", directory / name)
 
 
 @functools.cache
