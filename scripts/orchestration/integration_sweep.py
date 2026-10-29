@@ -99,6 +99,8 @@ UKRAINIAN_REVIEW_SEATS = 2
 NEEDS_SEAT = "needs-seat"
 # Recorder headings; a body that opens with one is a verdict record, never informal prose.
 RECORD_HEADINGS = ("### Cross-family review\n", "### Adversarial red-team review\n")
+# Every recorder opens the reviewer's reply with this line, right after the record's lines.
+REPLY_OPENER = "<details><summary>Reviewer's reply</summary>\n\n"
 # Since #11127 the publisher posts only the recorder's typed record, which never carries a
 # raw APPROVE trailer, so only a comment GitHub created before then can be such a legacy record.
 LEGACY_TRAILER_CUTOFF = datetime(2026, 10, 20, 6, 0, 20, tzinfo=UTC)
@@ -225,7 +227,11 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     profile = item.pop("review_profile")
     if profile is not None:
         item["review_profile"] = profile
-    prefix = body.split("<details>", 1)[0]
+    # The record's own lines end where the recorder opens the reply, or, in a record
+    # without a reply, at the trailer; nothing else in the body can end them early (#12020).
+    prefix, opened, _ = body.partition(REPLY_OPENER)
+    if not opened:
+        prefix = body.rstrip("\n").rsplit("\n", 1)[0]
     # These readable statements must agree with the terminal marker exactly,
     # once each. Substrings also admit negation, prefixed labels and conflicts.
     authorship = item.pop("authorship")
@@ -262,19 +268,21 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         item["review_mode"] = mode
         if not body.startswith("### Adversarial red-team review\nReview mode: red_team\n"):
             return None
-    elif not body.startswith("### Cross-family review\n") or "Review mode:" in body.split("<details>", 1)[0]:
+    elif not body.startswith("### Cross-family review\n") or "Review mode:" in prefix:
         return None
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}(?:Z|\+00:00)", item["started"]):
         return None
     if _timestamp(item["started"]) is None:
         return None
-    if (
-        f"head: {item['sha']}" not in body
-        or f"Reviewer family: {item['family']}" not in body
-        or f"VERDICT: {item['verdict']}" not in body
-        or f"Reviewer model: {item['model']}" not in body
-        or f"Task id: {item['task']}" not in body
-    ):
+    readable = prefix.split("\n")
+    identity = [
+        f"head: {item['sha']}",
+        f"Reviewer family: {item['family']}",
+        f"VERDICT: {item['verdict']}",
+        f"Reviewer model: {item['model']}",
+        f"Task id: {item['task']}",
+    ]
+    if any(line not in readable for line in identity):
         return None
     # Every readable line is one the recorder writes for these trailer fields, so an
     # altered or added statement, such as a review profile in any spelling, refuses the
@@ -285,17 +293,12 @@ def parse_marker(body: str) -> dict[str, Any] | None:
         # The withheld-findings wording of earlier recorders, still on open PRs.
         "Findings are held privately on the host in CF run output files (`out/<task>.final` and `out/<task>.md`).",
         RECORD_HEADINGS[mode is not None].rstrip("\n"),
-        f"head: {item['sha']}",
-        f"Reviewer family: {item['family']}",
-        f"VERDICT: {item['verdict']}",
-        f"Reviewer model: {item['model']}",
-        f"Task id: {item['task']}",
+        *identity,
         *(statement for statement in statements.values() if statement),
         *(["Review mode: red_team"] if mode else []),
         *([f"Review profile: {profile}"] if profile else []),
         *([f"Sources MCP calls: {item['sources_calls']}"] if sources is not None else []),
     }
-    readable = (prefix if "<details>" in body else body.rstrip("\n").rsplit("\n", 1)[0]).split("\n")
     if any(line not in fixed and not FREE_RECORD_LINES.fullmatch(line) for line in readable):
         return None
     item["verdict"] = VERDICT_ALIASES.get(item["verdict"], item["verdict"])
