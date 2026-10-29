@@ -1098,7 +1098,7 @@ def authorship_exclude_sha(repo_root: Path, *, base_branch: str | None) -> str |
     return sha
 
 
-def default_branch_review_base(repo_root: Path, head_sha: str) -> tuple[str, str]:
+def default_branch_review_base(repo_root: Path, head_sha: str, *, fetch: bool = True) -> tuple[str, str]:
     """The fetched default-branch tip and its merge-base with ``head_sha`` (C-2902 F6).
 
     Every branch review is attributed over ``merge-base..head`` with that tip
@@ -1106,6 +1106,8 @@ def default_branch_review_base(repo_root: Path, head_sha: str) -> tuple[str, str
     advertises as ``HEAD``, fetched fresh into ``origin/<default>``. A caller's
     ``--base`` and the PR's base are never read: the author chooses both. Raises
     ``BranchFactsError`` when the remote, the fetch or a shared history is unavailable.
+    ``fetch=False`` reads the existing ``origin/<default>`` without writing any ref
+    or object, for read-only callers such as ``budget-check``.
     """
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
 
@@ -1121,12 +1123,13 @@ def default_branch_review_base(repo_root: Path, head_sha: str) -> tuple[str, str
     if name is None:
         raise BranchFactsError(FACTS_TARGET_UNKNOWN, "origin advertises no default branch")
     tracking = f"refs/remotes/origin/{name}"
-    _facts_git(
-        repo_root,
-        ["fetch", "--no-tags", "--no-write-fetch-head", "origin", f"+refs/heads/{name}:{tracking}"],
-        deadline=deadline,
-        code=FACTS_TARGET_UNKNOWN,
-    )
+    if fetch:
+        _facts_git(
+            repo_root,
+            ["fetch", "--no-tags", "--no-write-fetch-head", "origin", f"+refs/heads/{name}:{tracking}"],
+            deadline=deadline,
+            code=FACTS_TARGET_UNKNOWN,
+        )
     tip = (
         _facts_git(
             repo_root, ["rev-parse", "--verify", f"{tracking}^{{commit}}"], deadline=deadline, code=FACTS_TARGET_UNKNOWN
@@ -1223,6 +1226,7 @@ def pr_review_facts(
     subject_seats: Iterable[str] = (),
     subject_families: Iterable[str] = (),
     unknown_history: Iterable[str] = (),
+    fetch: bool = True,
 ) -> BranchReviewFacts:
     """Facts for an open PR's frozen head, bound to GitHub's listing of its commits (A1).
 
@@ -1242,7 +1246,7 @@ def pr_review_facts(
     github_shas = [entry.get("sha") for entry in listed]
     if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in github_shas):
         raise RecordError("PR commit set malformed")
-    exclude, base = default_branch_review_base(repo_root, head_sha)
+    exclude, base = default_branch_review_base(repo_root, head_sha, fetch=fetch)
     facts = collect_branch_review_facts(
         repository=repository,
         repo_root=repo_root,
@@ -1800,7 +1804,9 @@ def clean_base_merge_descent(repo_root: Path, *, approved: str, head: str, base_
     return merged or None
 
 
-def _clean_merge_descent_prover(repo_root: Path, head: str) -> Callable[[str, str], list[str] | None]:
+def _clean_merge_descent_prover(
+    repo_root: Path, head: str, *, fetch: bool = True
+) -> Callable[[str, str], list[str] | None]:
     """:func:`clean_base_merge_descent` bound to the fetched default-branch tip, fetched once on first use.
 
     A tip that cannot be fetched proves no descent.
@@ -1810,7 +1816,7 @@ def _clean_merge_descent_prover(repo_root: Path, head: str) -> Callable[[str, st
     def prove(approved: str, descendant: str) -> list[str] | None:
         if not tip:
             try:
-                tip.append(default_branch_review_base(repo_root, head)[0])
+                tip.append(default_branch_review_base(repo_root, head, fetch=fetch)[0])
             except RecordError:
                 tip.append(None)
         base_tip = tip[0]
@@ -1979,8 +1985,12 @@ def budget_admission(
     login: str,
     task_root: Path,
     review_root: Path,
+    fetch: bool = True,
 ) -> dict[str, Any]:
-    """The round decision for a verdict at ``sha``, shared by the recorder and ``budget-check``; reads only."""
+    """The round decision for a verdict at ``sha``, shared by the recorder and ``budget-check``.
+
+    It writes nothing; ``fetch=False`` also leaves the default-branch ref as it is.
+    """
     from scripts.review.repair_round import repair_heads
 
     budget = review_round_budget(facts)
@@ -1991,7 +2001,7 @@ def budget_admission(
         login,
         budget=budget,
         pr=number,
-        prove_merge_only=_clean_merge_descent_prover(review_root, sha),
+        prove_merge_only=_clean_merge_descent_prover(review_root, sha, fetch=fetch),
         # A change whose paths already give it five rounds needs no grant.
         grant=partial(
             _budget_grant,
@@ -2016,6 +2026,7 @@ def budget_admission(
             task_root=task_root,
             repo_root=review_root,
             receipt_root=receipts,
+            fetch=fetch,
         ),
         repair_heads=repair_heads(receipts, repository=repository, number=number, branch=branch),
     )
@@ -2358,10 +2369,16 @@ def record(
                     existing = item
                     break
         require_no_same_head_rejection(comments, sha, login, verdict)
-        repair = budget_receipt.get("repair_round")
-        if repair is not None:
-            from scripts.review.repair_round import record_admission
+        from scripts.review.repair_round import receipt_at, record_admission, require_repair_verified
 
+        repair = budget_receipt.get("repair_round")
+        repaired = repair or receipt_at(
+            _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
+        )
+        if repaired is not None and verdict == "APPROVED":
+            # The non-author reviewer, not the recorder, verifies that the delta is only the repair.
+            require_repair_verified(reply, repaired)
+        if repair is not None:
             # The admission receipt is durable before the verdict exists, so the round is spent even if posting fails.
             record_admission(_repair_receipts(task_root), repair)
         if existing is None:
@@ -2442,7 +2459,8 @@ def budget_check(repository: str, number: int, *, task_root: Path | None = None)
         review_root = resolve_review_repository(root, repo_keys[0], mode="pr")
     except (FleetRepoError, TargetResolutionError, OSError, subprocess.TimeoutExpired):
         raise RecordError("review repository checkout unavailable") from None
-    facts = pr_review_facts(repository, number, head_sha=sha, task_root=task_root, repo_root=review_root)
+    # Read-only: the default-branch ref is read as it is, never fetched; a stale or missing one refuses.
+    facts = pr_review_facts(repository, number, head_sha=sha, task_root=task_root, repo_root=review_root, fetch=False)
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     try:
@@ -2460,6 +2478,7 @@ def budget_check(repository: str, number: int, *, task_root: Path | None = None)
         login=login,
         task_root=task_root,
         review_root=review_root,
+        fetch=False,
     )
     return {
         "pr": number,

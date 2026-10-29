@@ -411,7 +411,7 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
     # No repair-verification round applies unless a test builds a repository (repair_case).
     monkeypatch.setattr(recorder, "_repair_round", lambda **_kwargs: None)
     # No head proves a clean base merge descent unless a test builds a repository (exemption_case).
-    monkeypatch.setattr(recorder, "_clean_merge_descent_prover", lambda *_a: lambda *_b: None)
+    monkeypatch.setattr(recorder, "_clean_merge_descent_prover", lambda *_a, **_k: lambda *_b: None)
     # No elevated-tier grant exists unless a test seals one (grant_case).
     monkeypatch.setattr(recorder, "_budget_grant", lambda **_kwargs: None)
 
@@ -3024,6 +3024,16 @@ def repair_repo(tmp_path, *, head_kind, conflicting=True):
     return repo, approved, head, run
 
 
+def verified_approve(repo, approved, head):
+    """The repair round reviewer's APPROVE, naming the complete delta it verified as only the repair."""
+    from scripts.review import repair_round
+
+    return f"VERDICT: APPROVE\nREPAIR_VERIFIED: {repair_round._diff_sha256(repo, approved, head)}"
+
+
+CI_RUN = {"path": ".github/workflows/ci.yml", "conclusion": "failure"}
+
+
 def fake_github_reads(*, failed=(), queue=(), trees=None, issues=()):
     from scripts.review import repair_round
 
@@ -3044,7 +3054,7 @@ def repair_case(monkeypatch, tmp_path, *, head_kind="conflict", conflicting=True
     monkeypatch.setattr(recorder, "_repair_round", _REAL_REPAIR_ROUND)
     monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: repo)
     monkeypatch.setattr(repair_round, "github_reads", lambda *_a: github or fake_github_reads())
-    write_task(tasks, worktree_base_sha=head)
+    write_task(tasks, worktree_base_sha=head, reply=verified_approve(repo, approved, head))
     rounds = (("1" * 40, "CHANGES_REQUESTED"), ("2" * 40, "CHANGES_REQUESTED"), (approved, last_verdict))
     for index, (sha, verdict) in enumerate(rounds, start=1):
         write_task(
@@ -3083,8 +3093,11 @@ def test_conflict_resolution_after_approval_gets_one_repair_round(monkeypatch, t
     stored = receipts(tasks)
     assert len(stored) == 2 and {item["state"] for item in stored} == {"consumed"}
     assert {item["candidate_head"] for item in stored} == {head} and calls["posts"] == 1
-    # A second seat at N is the same round.
+    # A second seat at N is the same round, and its APPROVE attests the delta too.
     write_task(tasks, task_id="seat-two", worktree_base_sha=head)
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[verification\]"):
+        recorder.record("seat-two", **kwargs)
+    write_task(tasks, task_id="seat-two", worktree_base_sha=head, reply=verified_approve(tmp_path / "repair-repo", approved, head))
     assert recorder.record("seat-two", **kwargs)["verdict"] == "APPROVED"
     # The approval at N replenishes nothing: any later head refuses, whatever it changes.
     later = tmp_path / "repair-repo" / "feature.txt"
@@ -3108,7 +3121,16 @@ def test_ci_fix_needs_a_failed_run_tied_to_the_approved_head(monkeypatch, tmp_pa
     assert receipts(tasks) == [] and calls["posts"] == 0
     from scripts.review import repair_round
 
-    failed = [{"id": 7, "head_sha": approved, "conclusion": "failure", "event": "pull_request"}]
+    # A manual run, another workflow, or a cancelled run of CI is no evidence (review round 1, F1).
+    unrelated = [
+        {**CI_RUN, "id": 4, "head_sha": approved, "event": "workflow_dispatch"},
+        {**CI_RUN, "id": 5, "head_sha": approved, "event": "pull_request", "path": ".github/workflows/docs.yml"},
+        {**CI_RUN, "id": 6, "head_sha": approved, "event": "pull_request", "conclusion": "cancelled"},
+    ]
+    monkeypatch.setattr(repair_round, "github_reads", lambda *_a: fake_github_reads(failed=unrelated))
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[evidence\]"):
+        recorder.record("review-one", **kwargs)
+    failed = [*unrelated, {**CI_RUN, "id": 7, "head_sha": approved, "event": "pull_request"}]
     monkeypatch.setattr(repair_round, "github_reads", lambda *_a: fake_github_reads(failed=failed))
     receipt = recorder.record("review-one", **kwargs)["repair_round"]
     assert receipt["class"] == "ci-fix" and receipt["failed_runs"] == [
@@ -3123,10 +3145,10 @@ def test_ci_fix_ties_a_failed_merge_queue_candidate_by_its_tree(monkeypatch, tmp
     base = run("rev-parse", "main")
     tree = run("merge-tree", "--write-tree", base, approved)
     queue = [
-        {"id": 8, "head_branch": f"gh-readonly-queue/main/pr-42-{base}", "head_sha": "c" * 40, "conclusion": "failure"},
+        {**CI_RUN, "id": 8, "event": "merge_group", "head_branch": f"gh-readonly-queue/main/pr-42-{base}", "head_sha": "c" * 40},
         # Another PR's candidate, and a candidate whose tree is not this head's, tie nothing.
-        {"id": 9, "head_branch": f"gh-readonly-queue/main/pr-41-{base}", "head_sha": "c" * 40, "conclusion": "failure"},
-        {"id": 10, "head_branch": f"gh-readonly-queue/main/pr-42-{base}", "head_sha": "d" * 40, "conclusion": "failure"},
+        {**CI_RUN, "id": 9, "event": "merge_group", "head_branch": f"gh-readonly-queue/main/pr-41-{base}", "head_sha": "c" * 40},
+        {**CI_RUN, "id": 10, "event": "merge_group", "head_branch": f"gh-readonly-queue/main/pr-42-{base}", "head_sha": "d" * 40},
     ]
     reads = fake_github_reads(queue=queue, trees={"c" * 40: tree, "d" * 40: "e" * 40})
     monkeypatch.setattr(repair_round, "github_reads", lambda *_a: reads)
@@ -3173,6 +3195,60 @@ def test_a_replacement_pr_never_replenishes_the_repair_round(monkeypatch, tmp_pa
     assert calls == {"posts": 0, "statuses": 0}
 
 
+@pytest.mark.parametrize("reply", ["VERDICT: APPROVE", "VERDICT: APPROVE\nREPAIR_VERIFIED: " + "0" * 64])
+def test_a_repair_round_approve_must_verify_the_delta(monkeypatch, tmp_path, reply):
+    """The non-author reviewer verifies the delta is only the repair (review round 1, F1)."""
+    tasks, _comments, calls, _approved, head, _run = repair_case(monkeypatch, tmp_path)
+    write_task(tasks, worktree_base_sha=head, reply=reply)
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[verification\].*REPAIR_VERIFIED: [0-9a-f]{64}"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert receipts(tasks) == [] and calls == {"posts": 0, "statuses": 0}
+
+
+def test_a_repair_round_rejection_needs_no_attestation_and_spends_the_round(monkeypatch, tmp_path):
+    tasks, _comments, calls, _approved, head, _run = repair_case(monkeypatch, tmp_path)
+    write_task(tasks, worktree_base_sha=head, reply="VERDICT: REQUEST_CHANGES\nF1 [P1] shared.txt:1 the merge drops a line.")
+    assert recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["verdict"] == "CHANGES_REQUESTED"
+    assert {item["state"] for item in receipts(tasks)} == {"consumed"} and calls["posts"] == 1
+
+
+def test_an_interrupted_admission_is_completed_under_every_key(monkeypatch, tmp_path):
+    """A retry writes every key the interrupted attempt missed, so a replacement PR finds the round spent (F2)."""
+    from scripts.review import repair_round
+
+    tasks, comments, _calls, _approved, head, _run = repair_case(monkeypatch, tmp_path, github=fake_github_reads(issues=[7]))
+    root = tasks.parent / "review-repair-rounds"
+    receipt = repair_round.admit_repair_round(
+        repository=REPOSITORY, number=42, branch=BRANCH, head=head, comments=comments, login="fleet",
+        task_root=tasks, repo_root=tmp_path / "repair-repo", receipt_root=root,
+    )
+    # Interrupted after the branch key alone.
+    repair_round.record_admission(root, {**receipt, "lineage_keys": [f"branch:{REPOSITORY}:{BRANCH}"]})
+    assert len(receipts(tasks)) == 1
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert len(receipts(tasks)) == 3 and {item["state"] for item in receipts(tasks)} == {"consumed"}
+    replacement = repair_round.lineage_keys(REPOSITORY, 43, "codex/43", [7])
+    with pytest.raises(repair_round.RepairRefused, match=r"\[spent\].*used its one repair round at PR #42"):
+        repair_round.admit_repair_round(
+            repository=REPOSITORY, number=43, branch="codex/43", head=head, comments=comments, login="fleet",
+            task_root=tasks, repo_root=tmp_path / "repair-repo", receipt_root=root,
+            github=fake_github_reads(issues=[7]),
+        )
+    assert any(key.startswith("issue:") for key in replacement)
+
+
+def test_an_unreadable_receipt_under_any_key_refuses(monkeypatch, tmp_path):
+    from scripts.review import repair_round
+
+    tasks, _comments, calls, *_ = repair_case(monkeypatch, tmp_path, github=fake_github_reads(issues=[7]))
+    root = tasks.parent / "review-repair-rounds"
+    root.mkdir()
+    repair_round._receipt_path(root, f"issue:{REPOSITORY}#7").write_text("not json")
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[spent\].*unreadable"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
 def test_an_admitted_round_whose_post_failed_is_retried_as_the_same_round(monkeypatch, tmp_path):
     from scripts.review import repair_round
 
@@ -3192,7 +3268,12 @@ def test_an_admitted_round_whose_post_failed_is_retried_as_the_same_round(monkey
 def test_budget_check_exposes_the_recorders_decision_before_dispatch(monkeypatch, tmp_path, capsys):
     tasks, _comments, calls, _approved, head, _run = repair_case(monkeypatch, tmp_path)
     monkeypatch.setattr(recorder, "budget_check", partial(recorder.budget_check, task_root=tasks))
+    steps = []
+    real_git = recorder._facts_git
+    monkeypatch.setattr(recorder, "_facts_git", lambda root, args, **kw: steps.append(args[0]) or real_git(root, args, **kw))
     assert recorder.main(["budget-check", "--repository", REPOSITORY, "--pr", "42"]) == 0
+    # It never fetches into the shared repository (review round 1, F3).
+    assert "fetch" not in steps and "ls-remote" in steps
     decision = json.loads(capsys.readouterr().out)
     assert decision["admitted"] is True and decision["repair_round"]["candidate_head"] == head
     # It reads only: no receipt and no verdict.

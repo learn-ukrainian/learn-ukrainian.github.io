@@ -99,7 +99,9 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    ```
 
    Exit 0 admits the round; carry any `repair_round` receipt (its approved and candidate heads,
-   class, failed runs or conflicted paths) into the delta brief. Exit 1 is the stop below. A recorded rejection is cleared only at a new
+   class, failed runs or conflicted paths, and `delta_sha256`) into the delta brief, and ask the
+   reviewer to APPROVE only with the line `REPAIR_VERIFIED: <delta_sha256>` once it has verified
+   that the complete delta is only that repair. Exit 1 is the stop below. A recorded rejection is cleared only at a new
    head ([policy](references/policy.md#clearing-a-recorded-rejection)). The delta brief carries
    the ledger and the fix diff ([brief](references/brief.md#delta-rounds-round-2-and-later)).
 7. **Record the verdict once a PR exists** (the PR may already be open, `workflow.md:195`):

@@ -40,13 +40,16 @@ rounds are deltas.
   last reviewed head A needs a new head N only for a CI fix or a conflict resolution, the
   recorder admits one more round at N with no request PR (`scripts/review/repair_round.py`).
   It needs: the review lineage before N on record, with A's APPROVE the latest verdict of every
-  seat; a CI fix tied to a failed run of A itself or of this PR's merge-queue candidate built
-  from A; or a conflict resolution whose merge tree differs from Git's own merge of its pinned
+  seat; a CI fix tied to a failed run of the required CI workflow at A itself (a PR run) or of
+  this PR's merge-queue candidate built from A; or a conflict resolution whose merge tree differs from Git's own merge of its pinned
   parents only in the paths Git reports conflicted. Any other change after approval, or a mix
   of the two, is unclassifiable and escalates to the CTO. The round's reviewer covers the
   whole repair delta (`git diff A N`), the callers it affects, the invariants it touches and any
   weakened or deleted tests ([delta scope](#delta-scope)), plus the failed run or the conflicted
-  paths it names. The recorder writes a durable receipt for the round under the PR, its head
+  paths it names. An APPROVE in that round must carry the line
+  `REPAIR_VERIFIED: <delta_sha256>` with the digest `budget-check` reports: the reviewer's
+  statement that the complete delta is only the repair it names. Without it the recorder
+  refuses the APPROVE; a rejection needs no such line. The recorder writes a durable receipt for the round under the PR, its head
   branch and every issue it closes, before it posts the verdict. That receipt is never removed:
   another approval, a replacement PR or a new session never replenishes the round.
 - **A clean base merge consumes no round.** A head that descends from the last fully approved

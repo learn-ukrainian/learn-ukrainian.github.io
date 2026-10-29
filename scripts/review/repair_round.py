@@ -63,6 +63,11 @@ CI_FIX = "ci-fix"
 CONFLICT_RESOLUTION = "conflict-resolution"
 MAX_REPAIR_COMMITS = 20
 FAILED_CONCLUSIONS = frozenset({"failure", "timed_out"})
+# Only the required CI workflow's PR and merge-queue runs are CI evidence; a manual or other run is not.
+REQUIRED_WORKFLOW = ".github/workflows/ci.yml"
+CI_EVENTS = frozenset({"pull_request", "merge_group"})
+# The round's reviewer verifies the complete delta is only the repair, bound to its digest.
+REPAIR_VERIFIED = re.compile(r"(?m)^\s*REPAIR_VERIFIED:\s*([0-9a-f]{64})\s*$")
 GIT_TIMEOUT_S = 60.0
 
 # Typed refusal reasons.
@@ -70,6 +75,7 @@ LINEAGE = "lineage"
 UNCLASSIFIABLE = "unclassifiable"
 EVIDENCE = "evidence"
 SPENT = "spent"
+VERIFICATION = "verification"
 
 
 class RepairRefused(recorder.RecordError):
@@ -227,17 +233,28 @@ def classify_delta(repo_root: Path, *, approved: str, candidate: str, base_tip: 
     return delta
 
 
+def _required_failure(run: Mapping[str, Any]) -> bool:
+    """A failed run of the required CI workflow on a PR or merge-queue event."""
+    path = str(run.get("path") or "").split("@", 1)[0]
+    return path == REQUIRED_WORKFLOW and run.get("event") in CI_EVENTS and run.get("conclusion") in FAILED_CONCLUSIONS
+
+
 def failed_runs_for(approved: str, *, number: int, repo_root: Path, github: GitHubReads) -> list[dict[str, Any]]:
     """Failed CI runs of the approved head itself, or of this PR's merge-queue candidate built from it."""
     tied = [
         {"run_id": run.get("id"), "event": run.get("event"), "conclusion": run.get("conclusion")}
         for run in github.failed_runs(approved)
-        if run.get("head_sha") == approved and run.get("conclusion") in FAILED_CONCLUSIONS
+        if run.get("head_sha") == approved and _required_failure(run) and run.get("event") == "pull_request"
     ]
     queue = re.compile(rf"gh-readonly-queue/[^/]+(?:/[^/]+)*/pr-{number}-([0-9a-f]{{40}})\Z")
     for run in github.queue_runs():
         match = queue.match(str(run.get("head_branch") or ""))
-        if not match or run.get("conclusion") not in FAILED_CONCLUSIONS or not SHA.fullmatch(str(run.get("head_sha"))):
+        if (
+            not match
+            or not _required_failure(run)
+            or run.get("event") != "merge_group"
+            or not SHA.fullmatch(str(run.get("head_sha")))
+        ):
             continue
         # The squash candidate holds exactly the queue base merged with this head.
         try:
@@ -314,6 +331,7 @@ def admit_repair_round(
     repo_root: Path,
     receipt_root: Path,
     github: GitHubReads | None = None,
+    fetch: bool = True,
 ) -> dict[str, Any]:
     """The receipt of the lineage's one repair round at ``head``, or a refusal. Reads only."""
     github = github or github_reads(repository, number)
@@ -322,6 +340,22 @@ def admit_repair_round(
     if not others:
         raise RepairRefused(LINEAGE, f"PR #{number} has no reviewed head before {head}")
     approved = others[-1]["sha"]
+    keys = lineage_keys(repository, number, branch, github.closing_issues())
+    # Every key is checked: one receipt of another round anywhere spends the lineage.
+    found = {key: _read_receipt(_receipt_path(receipt_root, key)) for key in keys}
+    for key, receipt in found.items():
+        if receipt is not None and not _same_round(
+            receipt, repository=repository, number=number, approved=approved, candidate=head
+        ):
+            raise RepairRefused(
+                SPENT,
+                f"lineage {key} used its one repair round at PR #{receipt.get('pr')} "
+                f"({receipt.get('approved_head')} to {receipt.get('candidate_head')}); escalate to the CTO",
+            )
+    prior = next((receipt for receipt in found.values() if receipt is not None), None)
+    if prior is not None:
+        # A retry of the round admitted here: its receipt stands, and any key it lacks is added.
+        return {**prior, "lineage_keys": sorted({*prior.get("lineage_keys", ()), *keys}), "same_round": True}
     try:
         seats = check_lineage(
             runs=lineage_runs(task_root, repository=repository, number=number, branch=branch),
@@ -334,18 +368,7 @@ def admit_repair_round(
         raise RepairRefused(
             LINEAGE, f"the last reviewed head {approved} is not an approval of record: {exc.detail}"
         ) from None
-    keys = lineage_keys(repository, number, branch, github.closing_issues())
-    for key in keys:
-        receipt = _read_receipt(_receipt_path(receipt_root, key))
-        if receipt is not None:
-            if _same_round(receipt, repository=repository, number=number, approved=approved, candidate=head):
-                return {**receipt, "same_round": True}
-            raise RepairRefused(
-                SPENT,
-                f"lineage {key} used its one repair round at PR #{receipt.get('pr')} "
-                f"({receipt.get('approved_head')} to {receipt.get('candidate_head')}); escalate to the CTO",
-            )
-    base_tip, _ = recorder.default_branch_review_base(repo_root, head)
+    base_tip, _ = recorder.default_branch_review_base(repo_root, head, fetch=fetch)
     delta = classify_delta(repo_root, approved=approved, candidate=head, base_tip=base_tip)
     kinds = delta.kinds
     evidence: dict[str, Any] = {}
@@ -402,16 +425,19 @@ def _write_json(path: Path, data: Mapping[str, Any], *, exclusive: bool) -> None
 
 
 def record_admission(receipt_root: Path, receipt: Mapping[str, Any]) -> None:
-    """Write the admission receipt under every lineage key; a key taken by another round refuses."""
-    if receipt.get("same_round"):
-        return
+    """Write the admission receipt under every lineage key that lacks it; a key held by another round refuses.
+
+    A retry completes the keys an interrupted attempt left unwritten, so the
+    round is spent under every key before its verdict is posted.
+    """
     receipt_root.mkdir(parents=True, exist_ok=True)
-    stamped = {**receipt, "admitted_at": datetime.now(UTC).isoformat(timespec="seconds")}
+    body = {key: value for key, value in receipt.items() if key != "same_round"}
+    stamped = {**body, "admitted_at": body.get("admitted_at") or datetime.now(UTC).isoformat(timespec="seconds")}
     written: list[Path] = []
     for key in receipt["lineage_keys"]:
         path = _receipt_path(receipt_root, key)
         try:
-            _write_json(path, stamped, exclusive=True)
+            _write_json(path, {**stamped, "state": "admitted"}, exclusive=True)
         except FileExistsError:
             existing = _read_receipt(path)
             if existing and _same_round(
@@ -428,6 +454,28 @@ def record_admission(receipt_root: Path, receipt: Mapping[str, Any]) -> None:
                 SPENT, f"lineage {key} took its repair round concurrently; escalate to the CTO"
             ) from None
         written.append(path)
+
+
+def receipt_at(receipt_root: Path, *, repository: str, number: int, branch: str, head: str) -> dict[str, Any] | None:
+    """This PR's repair-round receipt when ``head`` is its candidate, else None."""
+    repo = repository.casefold()
+    for key in (f"pr:{repo}#{number}", f"branch:{repo}:{branch}"):
+        receipt = _read_receipt(_receipt_path(receipt_root, key))
+        if receipt and receipt.get("pr") == number and receipt.get("candidate_head") == head:
+            return receipt
+    return None
+
+
+def require_repair_verified(reply: str, receipt: Mapping[str, Any]) -> None:
+    """An APPROVE in the repair round names the delta it verified as only the repair."""
+    attested = REPAIR_VERIFIED.findall(reply)
+    if attested != [receipt.get("delta_sha256")]:
+        raise RepairRefused(
+            VERIFICATION,
+            "an APPROVE in the repair round needs exactly one line "
+            f"`REPAIR_VERIFIED: {receipt.get('delta_sha256')}`, the reviewer's statement that the complete "
+            "delta is only the repair it names",
+        )
 
 
 def record_consumption(receipt_root: Path, receipt: Mapping[str, Any], *, comment: str) -> None:
