@@ -67,8 +67,8 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 4. **Open or update the PR and get green CI first** ([pr-body](references/pr-body.md)).
    Push the branch and open a non-draft PR so CI runs on the exact head. PR CI runs
    Frontend and the affected tests (changed tests, tests that import or read changed files,
-   the guards and the repository invariants); the full pytest suite runs only in the merge
-   group, so a failure there can still eject the PR. An open PR is not approval.
+   the guards and the repository invariants); the full pytest suite runs only in merge-group,
+   nightly and manual runs, so a failure in the merge group can still eject the PR. An open PR is not approval.
 
    ```bash
    "$PY" -m scripts.publish pr-create --title "$TITLE" --body-file "$BODY" \

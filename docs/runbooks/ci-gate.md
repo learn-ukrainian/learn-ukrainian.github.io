@@ -28,7 +28,9 @@ Unsafe paths, missing guards and symlinks fail closed. Tests for changed code co
 from the direct edges of the static scan in `scripts/ci/components.py`
 (`scan_imports`): imports, literal loads, file reads and Python subprocess targets.
 Only direct importers are selected; the transitive closure spans most of the suite,
-which the merge group runs. The component inventory chooses no tests.
+which the merge group runs. A deleted file has no edges in the candidate, so the
+surviving tests that depended on it come from the same scan of the base tree.
+The component inventory chooses no tests.
 
 PR title and body edits run the same admission checks as code updates. The
 Secret scan job reads title, body, branch and complete commit messages from
@@ -50,7 +52,8 @@ estimate exceeds 600 seconds or pytest infrastructure changes, all guards still 
 and changed files outside the guards defer to merge-group pytest. Otherwise the
 importing tests fill the remaining budget, cheapest recorded duration first; the
 rest defer with the same reason and are listed in `importing_test_files` and
-`deferred_files`. Infrastructure
+`deferred_files`. The recorded estimate includes the importing tests that run, and
+`unknown_duration_files` includes every importing test with no recorded time. Infrastructure
 includes conftest, pytest configuration, dependency locks, the CI workflow, CI Python setup,
 CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
 record the candidate, requested files, deferred files and reason, recorded
@@ -116,7 +119,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
 | Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
 | PR changed tests and guards | PRs execute changed test files, tests that import changed files, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
-| Frontend | Full tier only. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
+| Frontend | Every event. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
 | Refresh pytest durations | Full tier only. Freezes one file-weight snapshot for every shard (below). |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
 | pytest report | Whole-run checks over every shard; records the tested tree, commit, PR and run, then the runner-normalized file durations. |

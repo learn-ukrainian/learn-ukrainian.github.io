@@ -54,17 +54,28 @@ def safe_path(name: str) -> str:
     return name
 
 
-def importing_tests(targets: set[str], entries: dict[str, str]) -> list[str]:
+def importing_tests(targets: set[str], deleted: set[str], base: str, entries: dict[str, str]) -> list[str]:
     """Tests that directly import, load, read or run a changed file, by static scan.
 
     Direct edges only: the transitive closure spans most of the suite, which the
-    merge group already runs.
+    merge group already runs. A deleted file has no edges in the candidate, so its
+    surviving dependents come from a scan of the base tree.
     """
     from scripts.ci import components
 
-    graph = components.scan_imports(components.python_sources(), set(components.tracked_paths()))
+    edges = components.scan_imports(components.python_sources(), set(components.tracked_paths()))["file_edges"]
+    if deleted:
+        tree = {}
+        for row in git("ls-tree", "-rz", base).split(b"\0"):
+            if row:
+                meta, name = row.decode("utf-8").split("\t", 1)
+                tree[name] = meta.split()
+        blobs = tuple((name, meta[2]) for name, meta in tree.items() if name.endswith(".py") and meta[1] == "blob")
+        sources = components.indexed_python_sources(str(components.ROOT), blobs, ())
+        edges = [*edges, *(edge for edge in components.scan_imports(sources, set(tree))["file_edges"]
+                           if edge[1] in deleted)]
     return sorted({
-        importer for importer, target in graph["file_edges"]
+        importer for importer, target in edges
         if target in targets and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
     })
 
@@ -125,7 +136,17 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
     # Tests for changed code fill the cap's remaining budget, cheapest first; the
     # rest defer to merge-group pytest. Infrastructure changes run guards only.
     sources = {p for p in changed if not TEST.fullmatch(p)}
-    imported = [p for p in importing_tests(sources, entries) if p not in run] if importers and sources and not reason else []
+    deleted = {
+        safe_path(p.decode("utf-8"))
+        for p in git("diff", "--no-renames", "--diff-filter=D", "--name-only", "-z", base, candidate, "--").split(b"\0")
+        if p
+    } & sources
+    imported = (
+        [p for p in importing_tests(sources, deleted, base, entries) if p not in run]
+        if importers and sources and not reason
+        else []
+    )
+    unknown += [p for p in imported if p not in durations]
     for p in imported:
         value = durations.get(p, default)
         if type(value) not in {int, float} or not math.isfinite(value) or value < 0:
@@ -147,7 +168,7 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         "run_files": run,
         "deferred_files": sorted((set(tests) | set(imported)) - set(run)),
         "reason": reason,
-        "estimate_seconds": estimate,
+        "estimate_seconds": budget,
         "unknown_duration_files": unknown,
         "deleted_test_files": sorted(
             p for p in changed if p.startswith("tests/") and p.endswith(".py") and p not in entries
