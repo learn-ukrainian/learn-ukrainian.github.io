@@ -1830,7 +1830,7 @@ def message_gate(arguments: list[str]) -> int:
         if arguments[0] == "--push-messages":
             environment = dict(os.environ)
             repository = git_push.Repository(git_push.real_git(environment), environment)
-            configured = repository.run("config", "--type=path", "--get", "core.hooksPath")
+            hooks = repository.run("rev-parse", "--git-path", "hooks")
             scanner_hooks = {
                 git_push.HOOKS.resolve(),
                 (prepublish.primary_root() / "scripts/opsec/push_hooks").resolve(),
@@ -1838,7 +1838,7 @@ def message_gate(arguments: list[str]) -> int:
             # When Git selected the shared scanner's hook, it scanned these
             # updates before chaining here. Scanning twice would consume its
             # command-scoped false-positive override twice.
-            if configured.returncode == 0 and Path(configured.stdout.decode().rstrip("\n")).resolve() in scanner_hooks:
+            if hooks.returncode == 0 and Path(hooks.stdout.decode().rstrip("\n")).resolve() in scanner_hooks:
                 return 0
             return git_push.main(arguments[1:], chain=lambda *_: 0)
         with git_push.deadline(git_push.scan_timeout(dict(os.environ))):
