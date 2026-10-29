@@ -395,7 +395,7 @@ def shadow_decision(record: dict) -> dict:
         meters = apply_exhaustion(meters, policy, list_tasks(include_archive=True), now)
         with admission_lock(tasks_dir()):
             decision = choose_pool(Route(record["agent"], record["model"], record.get("provider")),
-                                   Task(headless=True), meters, policy, now)
+                                   Task(), meters, policy, now)
             result.update(decision=type(decision).__name__, **asdict(decision), policy_version=policy.version,
                           meters=asdict_meter(meters),
                           pool_sources={p.key: p.source for p in policy.pools},

@@ -133,8 +133,27 @@ def test_dispatch_records_shadow_without_changing_account(tmp_path, monkeypatch)
 
     record = {"task_id": "shadow-hook", "status": "spawning", "agent": "claude", "model": "approved-model",
               "provider": None, "claude_account": "live-login", "prompt_file": str(tmp_path / "task.prompt")}
-    shadow = {"decision": "Selected", "pool": "shadow-account", "shadow_only": True}
     seen = {}
+    observed = datetime.now(UTC)
+    expiry = (observed + timedelta(days=1)).isoformat()
+    policy = s.Policy("hook-test", (
+        s.Pool("shadow-account", "claude", "subscription", "claude:synthetic", ("session5h", "weekly"),
+               authorized=True, binding_verified=True, protects_held=True),
+        s.Pool("api-alternate", "claude", "api", "synthetic:api", ("balance",),
+               authorized=True, binding_verified=True),
+    ), claude_active_pool="shadow-account")
+    budget = {
+        "claude_accounts": {"claude:synthetic": {
+            "status": "ok", "stale": False, "updated": observed.isoformat(),
+            "session5h": {"left_pct": 50, "resets_at": expiry},
+            "weekly": {"left_pct": 50, "resets_at": expiry},
+        }},
+        "api_accounts": {"synthetic": {
+            "freshness": "fresh", "stale": False, "fetched_at": observed.isoformat(),
+            "account_remaining_usd": 10, "expires_at": (observed + timedelta(hours=1)).isoformat(),
+        }},
+    }
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     args = cli.build_parser().parse_args(["dispatch", "--agent", "claude", "--model", "approved-model",
         "--task-id", "shadow-hook", "--prompt", "bounded task", "--mode", "read-only", "--worktree"])
     monkeypatch.setattr(cli.admission, "claude_account", lambda *_: {"claude_account": "live-login"})
@@ -156,7 +175,9 @@ def test_dispatch_records_shadow_without_changing_account(tmp_path, monkeypatch)
     monkeypatch.setattr(store, "read", lambda *_args, **_kw: None)
     monkeypatch.setattr(store, "record_path", lambda *_: tmp_path / "task.json")
     monkeypatch.setattr(store, "new_record", lambda *_args, **_kw: dict(record, run_nonce="nonce"))
-    monkeypatch.setattr(s, "shadow_decision", lambda actual: dict(shadow))
+    monkeypatch.setattr(s, "read_policy", lambda: policy)
+    monkeypatch.setattr(s, "read_budget", lambda: budget)
+    monkeypatch.setattr(store, "list_tasks", lambda *_args, **_kw: [])
 
     def start(spec, actual, prompt, *_):
         seen.update(spec_account=spec.claude_account)
@@ -167,4 +188,6 @@ def test_dispatch_records_shadow_without_changing_account(tmp_path, monkeypatch)
     saved = json.loads((tmp_path / "task.json").read_text())
     assert seen["spec_account"] == "live-login"
     assert saved["claude_account"] == "live-login"
-    assert saved["pool_shadow"] == shadow
+    assert saved["pool_shadow"]["decision"] == "Selected"
+    assert saved["pool_shadow"]["pool"] == "shadow-account"
+    assert saved["pool_shadow"]["shadow_only"] is True
