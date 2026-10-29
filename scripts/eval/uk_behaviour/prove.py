@@ -401,6 +401,18 @@ def branches(root: Path) -> list[dict[str, Any]]:
         )
     )
 
+    fx = Fixture(root, "unsettled-extra")
+    output, assertions = _slot_review(fx, 0, extra_true=1)
+    assertions[0]["bindings"] = [_bind("judge", "rr-" + "c" * 20)]
+    result = _score(fx, _label(fx.item, fx.family, required=1), output, _reply(fx, assertions))
+    cases.append(
+        _case(
+            "an assertion the evaluator cannot settle keeps zero provisional credit",
+            (UNRESOLVED_EVALUATOR, 0.0, True),
+            (result["status"], result["components"]["C"], result["provisional"]),
+        )
+    )
+
     cases += _passage_cases(root)
     cases += _evidence_cases(root)
     cases += _size_cases(root)

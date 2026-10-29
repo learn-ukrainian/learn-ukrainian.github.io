@@ -182,7 +182,7 @@ def score_cell(
     if isinstance(acceptance.parsed, dict):
         findings = {entry["id"]: entry for entry in acceptance.parsed.get("findings", [])}
     evidence = adapters.request_evidence(item)
-    index.request_evidence = {**evidence, **index.request_evidence}
+    index = index.with_request_evidence(evidence)
     positive = {slot["slot_id"] for slot in label.get("positive_slots", [])}
     required = {slot["slot_id"] for slot in label.get("required_slots", [])}
     protected_ids = {entry["opportunity_id"] for entry in label.get("protected", [])}
@@ -217,14 +217,21 @@ def score_cell(
         facet_count = facets.setdefault(a["facet"], Counter())
         facet_count["emitted"] += 1
         slot = a["slot_id"]
+        # An assertion the evaluator cannot settle keeps its place in the correctness
+        # denominator with zero provisional credit; the cell is unresolved.
+        if slot in positive:
+            emitted_slots.add(slot)
         if slot is not None and slot not in positive:
             tally.unresolved(f"assertion {a['id']} names a slot outside the label")
+            unsupported_extras += 1
             continue
         if a["protected_opportunity_id"] is not None and a["protected_opportunity_id"] not in protected_ids:
             tally.unresolved(f"assertion {a['id']} names an unlabelled protected opportunity")
+            unsupported_extras += slot is None
             continue
         if a["false_correction"] and (a["kind"] == "assertion" or a["verdict"] != "incorrect"):
             tally.unresolved(f"assertion {a['id']}: a false correction is an incorrect edit or accusation")
+            unsupported_extras += slot is None
             continue
 
         # A harmful correction of a labelled protected opportunity is verified by its sealed label;
@@ -240,10 +247,12 @@ def score_cell(
         broken = [c.reason for c in checks if c.status not in (VERIFIED, SUM11_POSITIVE)]
         if broken and a["verdict"] != "unchecked":
             tally.unresolved(f"assertion {a['id']} evidence does not verify: {broken[0]}")
+            unsupported_extras += slot is None
             continue
         verified = [b for b, c in zip(a["bindings"], checks, strict=True) if c.status == VERIFIED]
         if (a["false_correction"] or a["harm"]) and not verified:
             tally.unresolved(f"assertion {a['id']}: a false correction or harm needs bound evidence")
+            unsupported_extras += slot is None
             continue
         if contract.candidate_receipts_required:
             finding = findings.get(a["finding_id"])
@@ -266,7 +275,6 @@ def score_cell(
             if a["kind"] == "accusation":
                 accusation_false_corrections += 1
         if slot is not None:
-            emitted_slots.add(slot)
             if supported:
                 supported_slots.add(slot)
             elif a["verdict"] == "incorrect":
@@ -341,7 +349,7 @@ def score_cell(
         if emitted == 0:
             correctness = 1.0 if gap_ok else 0.0
         else:
-            correctness = len(credited) / (len(emitted_slots) + unsupported_extras)
+            correctness = len(credited) / max(1, len(emitted_slots) + unsupported_extras)
         C = coverage * correctness
         T = 1 if not unmet else 0
     elif abstention and gap_ok:

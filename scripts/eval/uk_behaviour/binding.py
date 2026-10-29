@@ -21,6 +21,7 @@ Positive stress evidence from ``verify_stress`` needs a ULIF reading.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import re
 import unicodedata
@@ -117,6 +118,12 @@ class LedgerIndex:
                     raise BindingError(f"{ref.role} ledger holds a record of another attempt")
                 indexed[receipt_id] = record
             self.counts[ref.role] += len(found)
+
+    def with_request_evidence(self, evidence: dict[str, str]) -> LedgerIndex:
+        """A view of the same ledgers that also resolves this cell's request evidence."""
+        view = copy.copy(self)
+        view.request_evidence = {**evidence, **self.request_evidence}
+        return view
 
     def get(self, role: str, receipt_id: str) -> dict[str, Any] | None:
         return self._by_role.get(role, {}).get(receipt_id)

@@ -416,8 +416,7 @@ def test_manifest_matches_the_scorer_and_pins_its_code() -> None:
     manifest = load_manifest()
     assert manifest_problems(manifest) == []
     found = pins.problems(manifest)
-    # Inherited and production asset drift is checked before each phase by verify-pins, not here:
-    # an unrelated change to a production file must not fail this suite.
-    assert [problem for problem in found if not problem.startswith("asset ")] == []
-    freeze = next(asset for asset in manifest["assets"] if asset["path"] == "docs/evaluations/uk-behaviour-freeze.md")
-    assert pins.file_sha256(pins.REPO_ROOT / freeze["path"]) == freeze["sha256"]
+    # Evaluation-owned assets must match their pins. Production asset drift is checked before
+    # each phase by verify-pins instead, so an unrelated production change cannot fail this suite.
+    owned = ("asset scripts/eval/", "asset docs/evaluations/")
+    assert [problem for problem in found if not problem.startswith("asset ") or problem.startswith(owned)] == []

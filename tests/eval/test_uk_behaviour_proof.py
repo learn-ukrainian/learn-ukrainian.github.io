@@ -24,6 +24,7 @@ REQUIRED = [
     "missing receipt earns its claim zero",
     "fabricated receipt invalidates the cell",
     "a judge binding no ledger holds is an evaluator error, and labelled harm still counts",
+    "an assertion the evaluator cannot settle keeps zero provisional credit",
     "output over its byte cap is overproduction",
     "claims over the cap are overproduction, not evaluator failure",
     "off-contract padding that exhausts the judge is overproduction",
