@@ -406,8 +406,13 @@ def _release(scratch: TaskScratch, *, remove: bool) -> None:
 def _release_at_teardown(stash: pytest.Stash | None, scratch: TaskScratch) -> None:
     """Keep the run, unless pytest's main command settles it once the command returns.
 
-    A plugin registered after that command began cannot observe its outcome,
-    so the run of such a session is kept.
+    Accepted exception to removing every passed run: a plugin registered
+    after that command began, for example from pytest_configure, cannot
+    observe the command's exit status or the cleanups registered before it,
+    so removing the run there could delete a failed session's evidence; the
+    run of such a session is kept, as before. Every supported loading path
+    (a conftest's pytest_plugins, -p, pytest.main(plugins=...)) registers
+    before the command and removes a passed run.
     """
     if stash is None or not stash.get(_IN_MAIN, False):
         scratch.preserve()

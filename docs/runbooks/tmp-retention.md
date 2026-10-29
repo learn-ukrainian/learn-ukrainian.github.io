@@ -157,10 +157,19 @@ hook-call monitor) also returned without any exception. Every other session
 keeps its run for inspection, and the sweep above handles it: a failed,
 interrupted or killed session, one whose teardown cleanup failed, and one that
 a session-finish hook ended with an error or a `pytest.exit`, even when pytest
-still exits with status 0. A session that registers this plugin only after
-the main command began keeps its run, because the plugin cannot observe that
-command. Under the other retention policies every run is kept. A refused removal leaves the run preserved as before and never fails the
-session.
+still exits with status 0. Under the other retention policies every run is
+kept. A refused removal leaves the run preserved as before and never fails
+the session.
+
+One accepted exception: a session that registers this plugin only after the
+main command began, for example from a `pytest_configure` hook, keeps its run
+even when it passed. The plugin cannot observe that command's exit status or
+the cleanups registered before it, so removing the run there could delete a
+failed session's evidence; keeping it matches the earlier behaviour, and the
+hourly sweep handles it. Every supported loading path registers the plugin
+before the command and removes a passed run: a conftest's `pytest_plugins`
+(how this repository loads it, from `tests/conftest.py`), `-p`, and the
+`plugins` argument of `pytest.main()`.
 
 ### Other scratch
 
