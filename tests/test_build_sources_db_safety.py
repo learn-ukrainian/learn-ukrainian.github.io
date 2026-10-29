@@ -547,6 +547,9 @@ class TestSum20Preservation:
         # A table a later change adds: only the name prefix identifies it.
         conn.execute("CREATE TABLE sum20_mirror_rows (id INTEGER PRIMARY KEY, body TEXT)")
         conn.execute("INSERT INTO sum20_mirror_rows (body) VALUES ('дзеркало')")
+        # Ordinary data whose name looks like a full-text shadow table.
+        conn.execute("CREATE TABLE sum20_articles_fts_content (id INTEGER PRIMARY KEY, body TEXT)")
+        conn.execute("INSERT INTO sum20_articles_fts_content (body) VALUES ('не тінь')")
         conn.commit()
         conn.close()
 
@@ -566,6 +569,11 @@ class TestSum20Preservation:
             assert conn.execute("SELECT wordid, headword FROM sum20_articles").fetchall() == [(77, "привіт")]
             assert conn.execute("SELECT article_id, definition FROM sum20_senses").fetchall() == [(5, "вітання")]
             assert conn.execute("SELECT body FROM sum20_mirror_rows").fetchall() == [("дзеркало",)]
+            assert conn.execute("SELECT body FROM sum20_articles_fts_content").fetchall() == [("не тінь",)]
+            # Lookup indexes are named idx_sum20_*, so the name prefix alone misses them.
+            assert {
+                "idx_sum20_articles_lookup", "idx_sum20_senses_article", "idx_sum20_citations_article",
+            } <= {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type = 'index'")}
             assert conn.execute(
                 "SELECT rowid FROM sum20_articles_fts WHERE sum20_articles_fts MATCH 'привіт'"
             ).fetchall() == [(5,)]

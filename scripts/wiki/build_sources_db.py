@@ -699,7 +699,9 @@ def _restore_wikipedia_snapshot(conn: sqlite3.Connection,
 
 
 SUM20_TABLE_PREFIX = "sum20_"
-_FTS_SHADOW_SUFFIXES = ("_data", "_idx", "_content", "_docsize", "_config")
+# Shadow tables of an external-content FTS5 index; it has no ``_content`` shadow,
+# so a table with that suffix is ordinary data.
+_FTS_SHADOW_SUFFIXES = ("_data", "_idx", "_docsize", "_config")
 _EXTERNAL_CONTENT_RE = re.compile(r"content\s*=\s*'[^']+'", re.IGNORECASE)
 _SUM20_COPY_BATCH = 5000
 
@@ -712,9 +714,9 @@ def _carry_over_sum20_tables(conn: SQLiteConnection, old_db: Path) -> dict[str, 
     """Copy every ``sum20_*`` object from ``old_db`` into the fresh build.
 
     The official СУМ-20 rows cannot be re-imported, so a forced rebuild must
-    not drop them. The match is by name prefix, which also covers tables added
-    later. Tables, views, indexes and triggers are recreated from the old
-    DDL; external-content FTS5 indexes are rebuilt from their content table.
+    not drop them. The match is by name prefix on the table, or on the table an
+    index or trigger belongs to, which also covers tables added later. Tables,
+    views, indexes and triggers are recreated from the old DDL; external-content FTS5 indexes are rebuilt from their content table.
     A ``sum20_`` FTS5 index that is not external-content cannot be rebuilt
     from the carried rows, so it raises (the build then aborts and the live
     DB stays untouched) rather than silently dropping its data.
@@ -727,8 +729,9 @@ def _carry_over_sum20_tables(conn: SQLiteConnection, old_db: Path) -> dict[str, 
     try:
         objects = old.execute(
             "SELECT type, name, sql FROM sqlite_master "
-            "WHERE substr(name, 1, ?) = ? AND sql IS NOT NULL ORDER BY rowid",
-            (len(SUM20_TABLE_PREFIX), SUM20_TABLE_PREFIX),
+            "WHERE (substr(name, 1, ?) = ? OR substr(tbl_name, 1, ?) = ?) "
+            "AND sql IS NOT NULL ORDER BY rowid",
+            (len(SUM20_TABLE_PREFIX), SUM20_TABLE_PREFIX) * 2,
         ).fetchall()
         if not objects:
             return {}
