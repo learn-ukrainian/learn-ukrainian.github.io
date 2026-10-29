@@ -22,10 +22,12 @@ if str(_PROJECT_ROOT) not in sys.path:
 
 from scripts.audit.checks.cross_file_integrity import extract_ukrainian_words
 from scripts.audit.checks.russicism_detection import check_russicisms, check_ua_gec_calques
-from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+from scripts.common.repo_root import main_checkout_root
+from scripts.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
 from scripts.rag.rag_batch_verify import vesum_batch_lookup
 from scripts.rag.source_query import pravopys_lookup
 from scripts.storage.artifacts import write_artifact
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 from scripts.wiki.config import PROJECT_ROOT
 from scripts.wiki.embedding_manifest import DEFAULT_MANIFEST_DB, EmbeddingManifest, reserve_corpus_shard
 from scripts.wiki.quality_gate import _check_citation_registry
@@ -813,6 +815,21 @@ def _suspicious_thresholds(chunk_counts: list[int]) -> tuple[float, float]:
     return max(0.0, q1 - 1.5 * iqr), q3 + 1.5 * iqr
 
 
+def _open_sources_reader(path: Path) -> sqlite3.Connection:
+    """Read the Sources store. ``path`` is the canonical store or a fixture."""
+    candidate = Path(path)
+    if not candidate.is_absolute():
+        candidate = Path.cwd() / candidate
+    resolved = resolve_store(
+        "sources",
+        main_checkout_root(PROJECT_ROOT),
+        binding=StoreBinding("sources", candidate),
+    )
+    if isinstance(resolved, StoreRefusal):
+        raise FileNotFoundError(resolved.reason)
+    return open_readonly(resolved.path)
+
+
 def run_smoke_queries(
     queries: list[str],
     *,
@@ -820,7 +837,7 @@ def run_smoke_queries(
     limit: int = 5,
     db_path: Path = DEFAULT_DB_PATH,
 ) -> list[SmokeQueryResult]:
-    conn = sqlite3.connect(str(db_path))
+    conn = _open_sources_reader(db_path)
     conn.row_factory = sqlite3.Row
     smoke_results: list[SmokeQueryResult] = []
     try:

@@ -1222,15 +1222,19 @@ async def list_tools() -> list[Tool]:
                 "collection built from sum20ua.com sequential wordid articles. "
                 "Coverage: volumes 1–16 (А–Р); vols 17–20 (С–Я) not yet "
                 "published online. Results are exact offline matches only: this tool never "
-                "performs a live lookup or falls back to another dictionary. Each article "
-                "includes its official URL, retrieval time, content hash, and parser version."
+                "performs a live lookup or falls back to another dictionary. Each official article "
+                "includes its official URL, retrieval time, content hash, and parser version. "
+                "Imported slovnyk.me СУМ-20 mirror articles follow the official ones, marked "
+                "source role mirror with their mirror URL, retrieval time and relation to the "
+                "official rows (sum20-mirror-rule-v1); a mirror article that agrees with a live "
+                "official article is not repeated, and a mirror article is never official verification."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "word": {
                         "type": "string",
-                        "description": "Ukrainian headword to look up in СУМ-20 (must be in А–Р range)",
+                        "description": "Ukrainian headword to look up in СУМ-20 (official coverage А–Р; mirror rows may cover more)",
                     },
                 },
                 "required": ["word"],
@@ -4015,7 +4019,7 @@ async def handle_query_e2u(args: dict) -> list[TextContent]:
 
 
 async def handle_query_sum20(args: dict) -> list[TextContent]:
-    """Read every exact-match official СУМ-20 article from sources.db."""
+    """Read every exact-match СУМ-20 article from sources.db: official, then served mirror rows."""
     word = args.get("word") if isinstance(args, dict) else None
     if not isinstance(word, str) or not word.strip():
         payload = {
@@ -4042,8 +4046,27 @@ async def handle_query_sum20(args: dict) -> list[TextContent]:
             )
         ]
 
-    lines = [f"**Official СУМ-20 entries for '{word}'**"]
+    if records[0].get("source_role") == "mirror":
+        lines = [f"**СУМ-20 mirror entries for '{word}'** (slovnyk.me copy; no official record is served)"]
+    else:
+        lines = [f"**Official СУМ-20 entries for '{word}'**"]
     for record in records:
+        if record.get("source_role") == "mirror":
+            # Imported mirror rows (sum20-mirror-rule-v1): provenance first, then the verbatim article.
+            lines.extend(
+                [
+                    "",
+                    f"**{record['stressed_headword'] or record['headword']}** — mirror · {record['official_relation']}",
+                    f"**Source**: {record['attribution_label']}",
+                    f"**URL**: {record['source_url']}",
+                    (
+                        f"**Record**: {record['mirror']} · retrieved {record['retrieved_at']} · "
+                        f"sha256 {record['content_sha256']} · {record['rule_version']}"
+                    ),
+                    record["article_text"],
+                ]
+            )
+            continue
         lines.extend(
             [
                 "",
