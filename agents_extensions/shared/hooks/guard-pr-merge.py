@@ -711,12 +711,9 @@ def _may_merge(command: str, depth: int = 0) -> bool:
     events = _scope_events(command, mark_redirect_unreadable=False)
     # The reader starts each physical line outside any quote. After a line it
     # cannot tokenize, Bash may still be inside that line's quote, so no later
-    # line is read as Bash reads it: refuse rather than call it data.
-    if (
-        _merge_candidate(command)
-        and ("unreadable", []) in events
-        and len(preprocess_shell_command(command).splitlines()) > 1
-    ):
+    # line is read as Bash reads it: refuse rather than call it data. Count raw
+    # lines: preprocessing can drop the later lines as heredoc data.
+    if _merge_candidate(command) and ("unreadable", []) in events and len(command.splitlines()) > 1:
         raise _SplitQuoting("quoting spans lines")
     for kind, argv in events:
         if kind != "segment":
