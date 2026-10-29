@@ -292,14 +292,14 @@ def invalid_findings_blocks(response: str, *, stated: str | None = None) -> list
                 start = starts[number] + match.end() - 1
                 try:
                     _, consumed = json.JSONDecoder().raw_decode(text, start)
-                except ValueError:
+                except (ValueError, RecursionError):
                     continue
                 candidates.append(text[start:consumed])
     invalid: list[str] = []
     for candidate in candidates:
         try:
             payload = json.loads(candidate)
-        except ValueError:
+        except (ValueError, RecursionError):
             continue
         if not isinstance(payload, dict) or not _FINDINGS_ENVELOPE_KEYS & payload.keys():
             continue
