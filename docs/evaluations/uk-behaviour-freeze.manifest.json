@@ -929,14 +929,14 @@
     },
     {
       "ref": "private://uk-behaviour-v2/card-review-prompt",
-      "sha256": null,
-      "status": "AWAITING_ACCEPTANCE",
+      "sha256": "d76190af4bd9ac9c13c1a9cfb205dd1a2e6d24e3d0f0aeb9e1ed286daf9d1399",
+      "status": "PINNED",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
       "ref": "private://uk-behaviour-v2/exercise-review-prompt",
-      "sha256": null,
-      "status": "AWAITING_ACCEPTANCE",
+      "sha256": "fd5bfb6170280721f401943660ec154c35325d82f16e7dc8d2493ae8d91cbcff",
+      "status": "PINNED",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
@@ -1273,7 +1273,7 @@
     ]
   },
   "g3": {
-    "status": "SCORER_PINNED_REVIEW_PROMPTS_AWAITING_ACCEPTANCE",
+    "status": "PINNED",
     "harness": "uk-behaviour-harness/1",
     "scorer": "uk-behaviour-score/2",
     "code": [
@@ -1337,14 +1337,30 @@
       {
         "family": "card_review",
         "ref": "private://uk-behaviour-v2/card-review-prompt",
-        "sha256": null,
-        "acceptance": null
+        "sha256": "d76190af4bd9ac9c13c1a9cfb205dd1a2e6d24e3d0f0aeb9e1ed286daf9d1399",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 5,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-5",
+          "sha256": "168c69b9eae74bb756f468a8cce82be5f67b26b153ee2bb0d2c03d5bbbb21b73"
+        }
       },
       {
         "family": "exercise_review",
         "ref": "private://uk-behaviour-v2/exercise-review-prompt",
-        "sha256": null,
-        "acceptance": null
+        "sha256": "fd5bfb6170280721f401943660ec154c35325d82f16e7dc8d2493ae8d91cbcff",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 5,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-5",
+          "sha256": "168c69b9eae74bb756f468a8cce82be5f67b26b153ee2bb0d2c03d5bbbb21b73"
+        }
       },
       {
         "family": "pedagogy_review",
