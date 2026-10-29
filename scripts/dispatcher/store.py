@@ -218,11 +218,11 @@ def list_tasks(status: str | None = None, include_archive=False, *, strict=False
     )
     records = []
     for path in paths:
-        if "." in path.stem:
-            continue
         try:
             record = json.loads(path.read_text())
-            if not isinstance(record, dict):
+            if not isinstance(record, dict) or "task_id" not in record:
+                continue
+            if not isinstance(record["task_id"], str):
                 raise ValueError("invalid task record")
             if status is None or record.get("status") == status:
                 if relocated_result_file:

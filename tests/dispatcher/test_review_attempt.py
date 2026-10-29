@@ -69,7 +69,7 @@ def test_legacy_artifact_spends_attempt_even_without_task_record(attempt, tmp_pa
 def test_archived_record_spends_attempt_across_manifest_changes(attempt, tmp_path, schema, capsys):
     archive = tmp_path / "tasks" / "archive"
     archive.mkdir(parents=True)
-    (archive / "prior.json").write_text(json.dumps(dict(schema_version=schema, status="failed", review_attempt={
+    (archive / "prior.json").write_text(json.dumps(dict(task_id="prior", schema_version=schema, status="failed", review_attempt={
         "review_id": "review", "attempt_id": "attempt", "manifest_sha256": "b" * 64})))
     assert invoke(attempt, "--dry-run") == 2
     assert "already spent" in capsys.readouterr().err
