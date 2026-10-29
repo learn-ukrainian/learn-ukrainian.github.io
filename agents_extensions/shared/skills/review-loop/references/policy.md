@@ -14,6 +14,20 @@ rounds are deltas.
   state and concurrency, and only while an evidenced blocker on it stays open, or when the
   operator asks for it (`budget_tier: elevated`). Each round past the third cites the open
   finding id that justifies it. The author never raises the limit alone.
+- **How the recorder grants the elevated tier.** Security-sensitive changed paths give a PR
+  five rounds on their own. Any other change gets rounds four and five only through a sealed
+  designated grant (`scripts/review/budget_grant.py`): the CTO's typed ruling, issued as
+  `claude-cto` and bound to the repository, the PR, its head branch, the changed paths it
+  covers, the blocker class and the open finding id, plus a sealed APPROVE of that ruling from
+  the designated advisor outside the issuer's family. Print the ruling's digest with
+  `record_cf_verdict.py budget-grant digest <ruling.json>`, then dispatch the advisor
+  read-only with `--advisory-role review_budget_elevation --advisory-binding <digest>
+  --initiator claude-cto`. Each granted round needs the latest recorded verdict to be a
+  rejection that lists the granted finding at P0 or P1 and keeps it open in plain words
+  (`still open: <reason>`, or a newly raised finding); any closing word in that entry, such as
+  `resolved`, `fixed` or `declined`, refuses the round. A grant never
+  resets the rounds already counted, never covers a path outside its scope, and five rounds
+  stay the total.
 - **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
   follow-ups never hold the merge.
 - **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the

@@ -1882,6 +1882,7 @@ def require_review_round_within_budget(
     pr: int,
     extension: Callable[[], dict[str, Any] | None] | None = None,
     prove_merge_only: Callable[[str, str], list[str] | None] | None = None,
+    grant: Callable[[], dict[str, Any] | None] | None = None,
 ) -> dict[str, Any]:
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
@@ -1894,10 +1895,13 @@ def require_review_round_within_budget(
     A head that only merges the base branch cleanly after the last fully
     approved head consumes no round (:func:`budget_exempt_heads`, proven with
     ``prove_merge_only``); it is checked only once the counted heads reach the
-    budget. The other exception is round ``budget + 1`` under an approved
-    budget extension (``scripts/review/budget_extension.py``): ``extension``
-    returns its receipt, None when the PR has no extension request, or refuses.
-    Returns the result fields that record the exception used, else nothing.
+    budget. A sealed elevated-tier grant (``scripts/review/budget_grant.py``)
+    admits rounds up to ``ELEVATED_REVIEW_ROUNDS`` in total: ``grant`` returns
+    its receipt, None when the PR has no grant, or refuses. The other exception
+    is round ``budget + 1`` under an approved budget extension
+    (``scripts/review/budget_extension.py``): ``extension`` returns its receipt,
+    None when the PR has no extension request, or refuses. Returns the result
+    fields that record the exception used, else nothing.
     """
     heads = _trusted_verdict_shas(comments, login)
     if sha in heads or len(heads) < budget:
@@ -1913,14 +1917,29 @@ def require_review_round_within_budget(
         f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(counted)} heads{note} and its budget "
         f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(counted) + 1}"
     )
-    if extension is not None and len(counted) == budget:
+    refusals: list[str] = []
+    admissions = (
+        ("budget_grant", grant, budget < len(counted) + 1 <= ELEVATED_REVIEW_ROUNDS),
+        ("budget_extension", extension, len(counted) == budget),
+    )
+    for field, admit, applies in admissions:
+        if admit is None or not applies:
+            continue
         try:
-            receipt = extension()
+            receipt = admit()
         except RecordError as exc:
-            raise RecordError(f"{exhausted}; {exc}") from exc
+            refusals.append(str(exc))
+            continue
         if receipt is not None:
-            return {"budget_extension": receipt}
-    raise RecordError(exhausted)
+            return {field: receipt}
+    raise RecordError("; ".join([exhausted, *refusals]))
+
+
+def _budget_grant(**kwargs: Any) -> dict[str, Any] | None:
+    # The grant check builds on this module, so it is imported only when the default budget is spent.
+    from scripts.review.budget_grant import admit_grant_round
+
+    return admit_grant_round(**kwargs)
 
 
 def _budget_extension(**kwargs: Any) -> dict[str, Any] | None:
@@ -2224,13 +2243,27 @@ def record(
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
+        budget = review_round_budget(facts)
         budget_receipt = require_review_round_within_budget(
             comments,
             sha,
             login,
-            budget=review_round_budget(facts),
+            budget=budget,
             pr=number,
             prove_merge_only=_clean_merge_descent_prover(review_root, sha),
+            # A change whose paths already give it five rounds needs no grant.
+            grant=partial(
+                _budget_grant,
+                repository=repository,
+                number=number,
+                branch=branch,
+                changed_paths=facts.changed_paths,
+                comments=comments,
+                login=login,
+                task_root=task_root,
+            )
+            if budget < ELEVATED_REVIEW_ROUNDS
+            else None,
             extension=partial(
                 _budget_extension,
                 repository=repository,
@@ -2338,6 +2371,11 @@ def main(argv: list[str] | None = None) -> int:
         from scripts.review.budget_extension import main as budget_extension_main
 
         return budget_extension_main(argv[1:])
+    if argv[:1] == ["budget-grant"]:
+        # The grant verb builds on this module, so it is imported only when chosen.
+        from scripts.review.budget_grant import main as budget_grant_main
+
+        return budget_grant_main(argv[1:])
     parser = argparse.ArgumentParser(
         description="Publish a completed exact-head verdict; cross-family is the default.\n"
         "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
@@ -2347,6 +2385,8 @@ def main(argv: list[str] | None = None) -> int:
         "--review-mode red_team --red-team-prompt brief.md\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py budget-extension digest <request.json>\n"
         "    (a budget extension request's digest; see budget-extension --help)\n"
+        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-grant digest <ruling.json>\n"
+        "    (an elevated-tier grant ruling's digest; see budget-grant --help)\n"
         "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
         "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
     )

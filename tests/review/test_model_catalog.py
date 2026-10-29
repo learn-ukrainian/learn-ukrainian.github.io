@@ -1063,6 +1063,16 @@ def _pop_budget_extension_role(catalog):
     return {"advisory_roles": catalog.pop("advisory_roles"), "consult": role, "holders": holders}
 
 
+def _pop_budget_elevation_role(catalog):
+    """Remove the elevated-tier grant role (cto-7923-adv-clog-sol, item 3b) and return what it added."""
+    role = "review_budget_elevation"
+    catalog["review_scheduler"]["activity_roles"]["consult"].remove(role)
+    holders = sorted(model_id for model_id, model in catalog["models"].items() if role in model["roles"])
+    for model_id in holders:
+        catalog["models"][model_id]["roles"].remove(role)
+    return {"advisory_role": catalog["advisory_roles"].pop(role), "consult": role, "holders": holders}
+
+
 def assert_frozen_surfaces(actual, *, surfaces):
     """Compare surviving catalog/resolver results with the literal current fixture."""
     assert set(actual) == set(surfaces)
@@ -1073,7 +1083,9 @@ def assert_frozen_surfaces(actual, *, surfaces):
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
             # The advisory budget extension role is a consult role held by Sol and Opus; it moves no
-            # seat, route or review ranking.
+            # seat, route or review ranking. The elevated-tier grant role is held the same way.
+            elevation = _pop_budget_elevation_role(value)
+            assert hashlib.sha256(encode(elevation)).hexdigest() == "4a395379ef040f47f69be6badd96376bcbc1041d8698ff0703bc9209e399592d"
             extension = _pop_budget_extension_role(value)
             assert hashlib.sha256(encode(extension)).hexdigest() == "8f8213328a04a6562564724e55ec083a00cdc11f0e228bba263bc5d5dedbf06c"
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
