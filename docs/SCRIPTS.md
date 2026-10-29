@@ -149,8 +149,9 @@ fresh or healthy.
 The shared GitHub client (`scripts/common/github_client.py`) counts every request it sends to
 the REST core pool in a `usage` table of its own cache (`batch_state/github-client/cache.sqlite3`,
 owner-only, rows kept six hours). A request's row is written in a short transaction of its own,
-after the call's budget observation and cache writes committed, and never waits more than a quarter
-second for the write lock. Each row names the caller (the dispatched task id with its command, else
+after the call's budget observation and cache writes committed; opening it and taking the write
+lock together wait at most a quarter second, and counting never changes where the client keeps its
+budget. Each row names the caller (the dispatched task id with its command, else
 the calling command's module or script, never its arguments; for the `gh` shim, the command that
 ran `gh`) and an endpoint template such as
 `GET repos/:repo/actions/runs/:n`, in which the repository, numbers, commit SHAs and every named

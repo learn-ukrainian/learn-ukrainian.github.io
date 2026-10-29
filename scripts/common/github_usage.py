@@ -10,7 +10,7 @@ as charged. A landing call is never counted, so counting never adds a lock wait 
 
 The rows live in the client's own cache file, owner-only. Each is written in a short transaction of
 its own, after the call's budget observation and cache writes committed, that waits at most a quarter
-second for the write lock: a row SQLite refuses is dropped and never fails the call or costs an
+second to open and lock the file: a row SQLite refuses is dropped and never fails the call or costs an
 observation. Each write drops rows older than :data:`RETENTION_SECONDS`.
 
 Print the top consumers of the last hour::

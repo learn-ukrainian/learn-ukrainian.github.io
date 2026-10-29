@@ -1334,7 +1334,7 @@ class GitHubClient:
         self.scope = hashlib.sha256((self.host + "\0" + credential).encode()).hexdigest()
 
     @contextmanager
-    def _db(self):
+    def _db(self, timeout=5):
         for attempt in range(2):
             path = ":memory:"
             if self.cache_dir is not None:
@@ -1351,7 +1351,7 @@ class GitHubClient:
             # before connecting, so a replacement that appears afterwards is never taken for it.
             generation = github_usage.file_identity(path) if self.cache_dir is not None else None
             try:
-                db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
+                db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=timeout)
                 if self.cache_dir is None:
                     self._memory_db = db
                 else:
@@ -1408,12 +1408,17 @@ class GitHubClient:
     def _count(self, endpoint, status):
         """Count one request in a short transaction of its own, after the call's writes committed.
 
-        Best effort: it waits at most a quarter second for the write lock, and a row SQLite
-        refuses, or a damaged file, drops the row and never fails or slows the call further.
+        Best effort: the connection and the write lock together wait at most a quarter second, and
+        a row SQLite refuses, or a file that cannot be opened in that time, drops the row. Counting
+        never changes where this client keeps its budget: whatever it did to the cache connection
+        state (a lock, a file set aside as damaged), the client's own view stays as it was.
         """
-        with suppress(sqlite3.Error, OSError), self._db() as db:
-            db.execute("PRAGMA busy_timeout=250")
-            github_usage.record(db, endpoint=endpoint, status=status)
+        kept = self.cache_dir, self._memory_db
+        try:
+            with suppress(sqlite3.Error, OSError), self._db(timeout=0.25) as db:
+                github_usage.record(db, endpoint=endpoint, status=status)
+        finally:
+            self.cache_dir, self._memory_db = kept
 
     def _send(self, method, endpoint, headers, body, timeout):
         if self.transport:
