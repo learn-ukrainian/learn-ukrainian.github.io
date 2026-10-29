@@ -763,13 +763,27 @@ def test_unreadable_listener_table_refuses_a_directory_holding_a_socket(tmp_path
     assert target.exists()
 
 
+_NET_UNIX_HEADER = "Num       RefCount Protocol Flags    Type St Inode Path\n"
+
+
+def _net_unix_row(flags: int, inode: int, path: str | None) -> str:
+    """One /proc/net/unix row as the kernel prints it."""
+    row = f"0000000000000000: 00000002 00000000 {flags:08X} 0001 01 {inode:5d}"
+    return row + (f" {path}" if path is not None else "") + "\n"
+
+
 @pytest.mark.parametrize(
     "table",
     [
         "",
         "not a header\n",
-        "Num       RefCount Protocol Flags    Type St Inode Path\n0000: 00000002 00000000 zzzz 0001 01\n",
-        "Num       RefCount Protocol Flags    Type St Inode Path\nshort line\n",
+        "Num\n",  # truncated header
+        _NET_UNIX_HEADER + "0000: 00000002 00000000 zzzz 0001 01 1 /x\n",
+        _NET_UNIX_HEADER + "short line\n",
+        # A row that lost its inode column must not read as a pathless socket.
+        _NET_UNIX_HEADER + "0000000000000000: 00000002 00000000 00010000 0001 01 /srv/review-4004/s\n",
+        # A bound path holding a newline splits into a second, unparsable line.
+        _NET_UNIX_HEADER + _net_unix_row(0x10000, 1, "/run/a\nb"),
     ],
 )
 def test_malformed_listener_table_is_unknown(tmp_path: Path, table: str) -> None:
@@ -781,12 +795,34 @@ def test_malformed_listener_table_is_unknown(tmp_path: Path, table: str) -> None
 def test_listener_table_parsing_keeps_only_bound_listening_paths(tmp_path: Path) -> None:
     net_unix = tmp_path / "unix"
     net_unix.write_text(
-        "Num       RefCount Protocol Flags    Type St Inode Path\n"
-        "0000: 00000002 00000000 00010000 0001 01 1 /run/a b/listen\n"
-        "0000: 00000003 00000000 00000000 0001 03 2 /run/connected\n"
-        "0000: 00000002 00000000 00010000 0001 01 3 @abstract\n"
-        "0000: 00000002 00000000 00010000 0001 01 4\n"
-        "0000: 00000002 00000000 00010000 0001 01 5 rel/sock\n",
+        _NET_UNIX_HEADER
+        + _net_unix_row(0x10000, 1, "/run/a b/listen")
+        + _net_unix_row(0, 2, "/run/connected")
+        + _net_unix_row(0x10000, 3, "@abstract")
+        + _net_unix_row(0x10000, 4, None)
+        + _net_unix_row(0x10000, 5, "rel/sock")
+        + _net_unix_row(0x10000, 6, " lead")
+        + _net_unix_row(0x10001, 7, "/run/flagged"),
         encoding="utf-8",
     )
-    assert tls.listening_socket_paths(net_unix) == frozenset({"/run/a b/listen", "rel/sock"})
+    paths = tls.listening_socket_paths(net_unix)
+    assert paths is not None
+    assert {"/run/a b/listen", "@abstract", "rel/sock", " lead", "/run/flagged"} <= paths
+    assert "/run/connected" not in paths
+
+
+@pytest.mark.parametrize(
+    "bound",
+    ["s", "./s", "deep/../s", "deep//s", "../review-4004/s", "/srv/../srv/review-4004/s", " s", "@s"],
+)
+def test_equivalent_spellings_of_a_listener_path_hold_the_node(tmp_path: Path, bound: str) -> None:
+    """A table spelling of the bound path that differs from the node's still holds the tree."""
+    node = tmp_path / "review-4004" / bound.rpartition("/")[2]
+    net_unix = tmp_path / "unix"
+    net_unix.write_text(_NET_UNIX_HEADER + _net_unix_row(0x10000, 1, bound), encoding="utf-8")
+    listeners = tls.listening_socket_paths(net_unix)
+    assert listeners is not None
+    if bound.startswith("/"):
+        node = Path(os.path.realpath(bound))
+    assert tls.socket_node_listening(node, listeners)
+    assert not tls.socket_node_listening(node.with_name("other"), listeners)

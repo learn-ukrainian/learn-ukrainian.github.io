@@ -189,8 +189,10 @@ running with no way for a client to connect. This is how a swept
 Both sweeps therefore read `/proc/net/unix` and treat every directory that
 contains, at any depth the sweep would remove, a socket node bound by a
 listener (flags word `00010000`, path column) as held. The bound path is
-compared as written and as resolved, and a relative bound path matches any
-node ending in it. Abstract sockets (`@name`) own no file and are ignored.
+compared as written and as resolved. Any other bound path, a relative one or
+an abstract `@name`, matches every socket node with the same final name,
+because the table does not say which directory it is relative to; this can
+hold a tree needlessly, never release one.
 
 - `tmp_leak_sweep`: a listener keeps the candidate (`live_process`); once the
   listener is closed the stale socket file no longer holds the tree and the
@@ -198,7 +200,8 @@ node ending in it. Abstract sockets (`@name`) own no file and are ignored.
 - `tmp_sweep`: a live listener is `live_socket`. Any other socket, including
   the file a closed listener leaves behind, stays `special_file`, because the
   ledger's manifest cannot describe a socket.
-- If `/proc/net/unix` cannot be read or parsed, the answer is unknown and the
+- If `/proc/net/unix` cannot be read, its header is not the expected one, or
+  any row does not parse, the answer is unknown and the
   candidate is kept (`liveness_unknown` in `tmp_leak_sweep`; a socket tree
   stays `special_file` in `tmp_sweep`). Hosts without it, such as macOS,
   remove nothing here.

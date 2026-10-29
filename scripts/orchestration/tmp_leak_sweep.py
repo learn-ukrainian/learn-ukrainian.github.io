@@ -374,37 +374,50 @@ LIVENESS_UNKNOWN = "unknown"
 LIVENESS_CLEAR = "clear"
 
 
+_NET_UNIX_HEADER = ["Num", "RefCount", "Protocol", "Flags", "Type", "St", "Inode", "Path"]
+# One row as the kernel prints it: "%pK: %08X %08X %08X %04X %02X %5lu", then a single
+# space and the bound path when there is one. The path is kept byte for byte,
+# leading whitespace included.
+_NET_UNIX_ROW = re.compile(
+    r"(\S+): ([0-9A-Fa-f]{8}) ([0-9A-Fa-f]{8}) ([0-9A-Fa-f]{8}) ([0-9A-Fa-f]{4}) ([0-9A-Fa-f]{2}) +(\d+)(?: (.*))?",
+    re.DOTALL,
+)
+
+
 def listening_socket_paths(net_unix: Path | None = None) -> frozenset[str] | None:
-    """Return the filesystem paths of every listening Unix socket, or ``None`` when unknown.
+    """Return the bound paths of every listening Unix socket, or ``None`` when unknown.
 
     A listener is invisible to the ``/proc/<pid>/fd`` path scan, which shows only
     ``socket:[inode]``, so deleting its directory strands a running server (a
     tmux server whose socket directory was swept). ``/proc/net/unix`` lists
     each socket with a ``Flags`` word (``00010000`` while listening) and the
-    path it was bound to; abstract sockets (``@name``) own no file. Both the
-    bound spelling and its ``realpath`` are returned, since the node on disk
-    may be reached through a symlinked directory. A file that cannot be read,
-    or any line that cannot be parsed, is unknown: never an empty set.
+    path it was bound to. An absolute bound path is returned as written and
+    resolved, since the node on disk may be reached through a symlinked
+    directory. Any other path is returned as written, including an abstract
+    ``@name``: a filesystem socket may also be named like that, and the
+    over-match only holds a tree longer. Rows are split on newlines alone, so a
+    bound path that contains one fails the row check. A file that cannot be
+    read, a header that is not the expected one, or any row that does not
+    parse is unknown: never an empty or partial set.
     """
     source = _NET_UNIX if net_unix is None else net_unix
     try:
-        lines = source.read_text(encoding="utf-8", errors="surrogateescape").splitlines()
+        raw = source.read_bytes()
     except OSError:
         return None
-    if not lines or not lines[0].startswith("Num"):
+    lines = raw.decode("utf-8", errors="surrogateescape").split("\n")
+    if lines and lines[-1] == "":
+        lines.pop()
+    if not lines or lines[0].split() != _NET_UNIX_HEADER:
         return None
     paths: set[str] = set()
     for line in lines[1:]:
-        fields = line.split(None, 7)
-        if len(fields) < 7:
+        row = _NET_UNIX_ROW.fullmatch(line)
+        if row is None:
             return None
-        try:
-            flags = int(fields[3], 16)
-        except ValueError:
-            return None
-        if not flags & _SO_ACCEPTCON or len(fields) < 8 or fields[7].startswith("@"):
+        bound = row.group(8)
+        if not int(row.group(4), 16) & _SO_ACCEPTCON or not bound:
             continue
-        bound = fields[7]
         paths.add(bound)
         if bound.startswith("/"):
             paths.add(os.path.realpath(bound))
@@ -412,16 +425,17 @@ def listening_socket_paths(net_unix: Path | None = None) -> frozenset[str] | Non
 
 
 def socket_node_listening(node: Path, listeners: frozenset[str]) -> bool:
-    """Return True when the socket file ``node`` is a bound listener.
+    """Return True when the socket file ``node`` may be a bound listener.
 
-    A listener bound with a relative ``sun_path`` shows only that relative text,
-    so it matches any node whose path ends with it: a false hold is harmless,
-    a missed listener strands a server.
+    A listener bound with a relative ``sun_path`` shows only that text, which
+    can spell its directory many ways (``./s``, ``d/../s``, ``d//s``) and
+    depends on a working directory the table does not record. It therefore
+    matches any node with the same final name: a false hold is harmless, a
+    missed listener strands a server.
     """
     if str(node) in listeners or os.path.realpath(node) in listeners:
         return True
-    text = str(node)
-    return any(not bound.startswith("/") and text.endswith("/" + bound) for bound in listeners)
+    return any(not bound.startswith("/") and bound.rpartition("/")[2] == node.name for bound in listeners)
 
 
 def tree_socket_nodes(path: Path) -> Iterator[Path]:
