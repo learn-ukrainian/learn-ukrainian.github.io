@@ -133,16 +133,17 @@ class PilotSources:
     so the build identity covers candidate and absence evidence, not only the frozen anchor rows.
     """
 
-    def __init__(self, sources: SQLiteConnection, vesum: SQLiteConnection, raw_cache: SQLiteConnection):
+    def __init__(self, sources: SQLiteConnection, vesum: SQLiteConnection, raw_cache: SQLiteConnection,
+                 meaning_cache_root: Path | None = None):
         self.sources = sources
         self.vesum = vesum
         self.raw_cache = raw_cache
+        self.meaning_cache_root = meaning_cache_root
         self.sources.row_factory = sqlite3.Row
         self.vesum.row_factory = sqlite3.Row
         self._forms: dict[int, dict] = {}
         self._homonyms: dict[str, list[dict]] = {}
         self._vesum: dict[str, list[dict]] = {}
-        self._sum20: list[dict] | None = None
         self.consumed: dict[str, str] = {}
 
     def begin(self) -> None:
@@ -275,16 +276,6 @@ class PilotSources:
         rows = self._vesum[lemma]
         self._use(f"vesum_forms:{lemma}", rows)
         return rows
-
-    def sum20_articles(self) -> list[dict]:
-        """Held СУМ-20 articles (crawl paused: a small sample). Headwords only; no definition text is read here."""
-        if self._sum20 is None:
-            rows = self.sources.execute(
-                "SELECT id, wordid, headword, stressed_headword, quarantine_reason FROM sum20_articles ORDER BY id"
-            )
-            self._sum20 = [row_dict(r) for r in rows]
-        self._use("sum20_articles", self._sum20)
-        return self._sum20
 
     def vesum_canonical_sha(self) -> str:
         row = self.vesum.execute(

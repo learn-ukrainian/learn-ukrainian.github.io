@@ -123,8 +123,12 @@ def test_lexeme_spelling_preserves_exact_vesum_case(case_inputs):
 
 def test_excluded_names_remain_accounted_for(pilot_cards, tmp_path):
     ledger = wa.Ledger()
-    for key in pilot_cards:
+    for key, built in pilot_cards.items():
         ledger.start(key, key)
+        built["identity"] = {"confidence": "unresolved"}
+        ledger.field(key, "definition_uk", "unresolved", "identity_unresolved",
+                     sources={source: {"has": False, "used": False, "reason": "identity_unresolved"}
+                              for source in wa.meanings.SOURCES}, identity_status="unresolved")
     result = {"cards": pilot_cards, "ledger": ledger, "build_id": "fixture",
               "block": {"inputs": {}, "rules_version": "fixture"}, "takedown": []}
     wa.write_output(tmp_path, result, {})

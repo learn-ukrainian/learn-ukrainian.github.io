@@ -132,17 +132,51 @@ def _normalize_recipients(recipients: Iterable[str] | None) -> tuple[str, ...]:
     return tuple(sorted(normalized))
 
 
+DURABLE_CTO_RECIPIENT = "claude-cto"
+"""The one CTO recipient. A session identity ``claude-cto-<id>`` only claims and acknowledges."""
+
+
+def is_session_cto_recipient(name: str | None) -> bool:
+    """True for a session-specific CTO name such as ``claude-cto-27b21508``."""
+    normalized = " ".join(str(name or "").split())
+    return normalized.startswith(f"{DURABLE_CTO_RECIPIENT}-")
+
+
+def _refuse_session_cto_recipients(names: Iterable[str | None]) -> None:
+    """Refuse a session-specific CTO recipient with a pointer to the durable one."""
+    for name in names:
+        if is_session_cto_recipient(name):
+            raise AuthorityServiceError(
+                f"session_cto_recipient_refused: address {DURABLE_CTO_RECIPIENT}, not "
+                f"{' '.join(str(name).split())}; the session identity only claims and acknowledges"
+            )
+
+
+def _durable_subscriber(name: str, sender: str) -> str | None:
+    """Map a stored session-specific CTO subscriber to the durable CTO; drop the sender's own seat."""
+    if not is_session_cto_recipient(name):
+        return name
+    if is_session_cto_recipient(sender) or sender == DURABLE_CTO_RECIPIENT:
+        return None
+    return DURABLE_CTO_RECIPIENT
+
+
 def _admit_recipients(
     recipients: Iterable[str | None],
     *,
     mode: str,
     attachments: Iterable[Any] = (),
+    claiming: bool = False,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve and admit recipients in one step (whitespace-normalized names, as rows store them).
 
-    Raises ``KimiAdmissionRefused`` for a Kimi seat or model before any write.
+    Raises ``KimiAdmissionRefused`` for a Kimi seat or model before any write, and
+    ``AuthorityServiceError`` for a session-specific CTO name unless ``claiming``:
+    legacy deliveries to old names stay claimable, but nothing new may address them.
     """
     names = tuple(" ".join(str(item or "").split()) for item in recipients)
+    if not claiming:
+        _refuse_session_cto_recipients(names)
     return resolve_and_admit(names, mode=mode, attachments=attachments)
 
 
@@ -357,8 +391,13 @@ class AuthorityService:
         *,
         subscribers: Iterable[str] = (),
         metadata: Mapping[str, Any] | None = None,
+        legacy_import: bool = False,
     ) -> AuthorityChannel:
         """Create a channel once; exact repeats are idempotent.
+
+        A session-specific CTO subscriber is refused; only the legacy import
+        (``legacy_import=True``) may replay one, and fan-out maps it to the
+        durable CTO recipient.
 
         A Kimi subscriber is kept as given (the legacy import replays history
         through here) but never receives a delivery: ``publish_message`` skips
@@ -366,6 +405,8 @@ class AuthorityService:
         """
         channel_name = _nonempty(name, field="channel")
         normalized_subscribers = _normalize_recipients(subscribers)
+        if not legacy_import:
+            _refuse_session_cto_recipients(normalized_subscribers)
         meta = _safe_json_mapping(metadata)
         with self._write_transaction():
             row = self._conn.execute(
@@ -1216,7 +1257,7 @@ class AuthorityService:
         recipient. A stored delivery of a request pinned to a Kimi model
         (legacy) is passed over unwritten (``_stored_kimi_delivery``).
         """
-        (target,) = _admit_recipients((recipient,), mode=BRIDGE_MODE)
+        (target,) = _admit_recipients((recipient,), mode=BRIDGE_MODE, claiming=True)
         recipient_name = _nonempty(target.recipient, field="recipient")
         worker = _nonempty(worker_id, field="worker_id")
         if lease_seconds <= 0 or max_attempts <= 0:
@@ -1790,6 +1831,7 @@ class AuthorityService:
                     self.create_channel(
                         name,
                         subscribers=subscribers,
+                        legacy_import=True,
                         metadata={
                             "Source": source_name,
                             "Agent": "legacy-channel",
@@ -1850,11 +1892,13 @@ class AuthorityService:
                    WHERE channel_id = ? AND recipient != ? ORDER BY recipient ASC""",
                 (str(channel_row["channel_id"]), sender_name),
             ).fetchall()
-            recipients_norm = tuple(
-                target.recipient for target in _admitted_subscribers(str(row["recipient"]) for row in subscriber_rows)
+            durable = (_durable_subscriber(str(row["recipient"]), sender_name) for row in subscriber_rows)
+            recipients_norm = _normalize_recipients(
+                target.recipient for target in _admitted_subscribers(name for name in durable if name)
             )
         else:
             recipients_norm = _normalize_recipients(require_admitted(target).recipient for target in targets or ())
+            _refuse_session_cto_recipients(recipients_norm)
         revisions = self._normalize_context_revisions(context_revisions, channel_row)
         provenance_data = _safe_json_mapping(provenance)
         deadline = self._normalize_deadline(deadline_at)

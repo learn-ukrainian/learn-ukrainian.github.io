@@ -20,6 +20,7 @@ from scripts.common.git_credentials import verification_credentials
 from scripts.common.repo_root import resolve_repo_root
 from scripts.common.task_scratch import allocate
 from scripts.common.task_store_paths import tasks_dir
+from scripts.dispatcher import site_deps
 from scripts.dispatcher.types import TaskSpec
 from scripts.storage.topology import STORE_FILES
 
@@ -312,6 +313,8 @@ def create_worktree(repo: Path, path: Path, branch: str, sha: str, *, full_check
             run_git(path, "sparse-checkout", "set", "--no-cone", "--", "/*", *(f"!/{name}/" for name in excluded))
         run_git(path, "reset", "--hard", sha)
         provision_links(repo, path)
+    # Outside the lock: a store miss runs one npm install, and other creations must not wait for it.
+    site_deps.provision(repo, path)
 
 
 DATABASE_LINKS = tuple(f"data/{STORE_FILES[store][0]}" for store in ("sources", "vesum"))
@@ -325,7 +328,7 @@ PULL_HEAD = re.compile(r"refs/pull/[0-9]+/head")
 
 
 def provision_links(repo: Path, worktree: Path) -> None:
-    """Share databases only; dependency installs must stay local to each worktree."""
+    """Share databases only; dependency installs stay local to each worktree (see site_deps)."""
     repo = repo.absolute()
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
     for relative in DATABASE_LINKS:
@@ -455,7 +458,7 @@ def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
         changed, untracked = _tree_changes(tree)
         head, remote, merged = _git(tree, "rev-parse", "HEAD", isolate=True), None, False
         if changed:
-            return disposition("retained", "dirty")
+            return disposition("retained", "dirty", "; ".join(changed[:5]))
         committed = head != record.get("worktree_start_sha", record["worktree_base_sha"])
         if record["mode"] != "read-only" and committed:
             remote, merged = _canonical_publication(record, f"refs/heads/{record.get('publish_branch') or branch}", head)

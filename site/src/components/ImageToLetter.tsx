@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './Activities.module.css';
 import directStyles from './Direct.module.css';
-import { shuffle } from './utils';
+import { useShuffledChoices } from './utils';
 
 interface ImageToLetterItem {
   /**
@@ -89,10 +89,12 @@ export default function ImageToLetter({
   const total = items.length;
   const isComplete = completedCount >= total;
 
-  // Shuffle options for each item
-  const options = useMemo(() => {
-    return shuffle([item.answer, ...item.distractors]);
-  }, [currentIndex, item.answer, item.distractors]);
+  // Fresh random order after hydration and for each card
+  const { choices: options, reshuffle } = useShuffledChoices([item.answer, ...item.distractors]);
+  // The delayed reshuffle after a wrong pick only applies while that card is
+  // still the active, unanswered one.
+  const activeCard = useRef({ currentIndex, answered });
+  activeCard.current = { currentIndex, answered };
 
   const headerLabel =
     title || (isUkrainian ? 'Яка перша буква?' : 'Which first letter?');
@@ -106,6 +108,7 @@ export default function ImageToLetter({
   const handleNext = () => {
     setCompletedCount((c) => c + 1);
     if (!isLast) {
+      reshuffle();
       setCurrentIndex((i) => i + 1);
       setAnswered(false);
       setSelectedAnswer(null);
@@ -131,8 +134,13 @@ export default function ImageToLetter({
       if (newWrong >= 2) {
         setShowHint(true);
       }
-      // Clear wrong selection after shake animation
-      setTimeout(() => setSelectedAnswer(null), 400);
+      // Clear wrong selection after shake animation, then offer the next
+      // attempt in a fresh order (the attempted option's feedback stays put).
+      const cardAtClick = currentIndex;
+      setTimeout(() => {
+        setSelectedAnswer(null);
+        if (activeCard.current.currentIndex === cardAtClick && !activeCard.current.answered) reshuffle();
+      }, 400);
     }
   };
 

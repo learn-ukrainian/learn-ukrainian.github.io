@@ -1,4 +1,4 @@
-"""Focused offline tests for the official ULIF DictUA live-query cache."""
+"""Focused offline tests for the local ULIF DictUA copy: parsers, store and readers."""
 
 from __future__ import annotations
 
@@ -11,11 +11,9 @@ import socket
 import sqlite3
 import sys
 from pathlib import Path
-from urllib.parse import parse_qsl
 
 import pytest
 import requests
-import requests_mock as requests_mock_lib
 from bs4 import BeautifulSoup
 
 from scripts.lexicon import ulif_raw_cache
@@ -23,7 +21,6 @@ from scripts.lexicon import ulif_raw_cache
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-source_query = importlib.import_module("rag.source_query")
 sources_db = importlib.import_module("wiki.sources_db")
 ulif_parse = importlib.import_module("lexicon.runner.ulif_dictua_parse")
 ulif_store = importlib.import_module("lexicon.runner.ulif_dictua_store")
@@ -36,29 +33,9 @@ def _fixture(name: str) -> str:
     return (FIXTURES / name).read_text(encoding="utf-8")
 
 
-def _without_paradigm(html: str) -> str:
-    """Keep a valid matched DictUA page while removing its inflection table."""
-    soup = BeautifulSoup(html, "html.parser")
-    for table in soup.find_all("table"):
-        labels = table.get_text(" ", strip=True).casefold()
-        if table.find("table") is None and ("називний" in labels or "інфінітив" in labels):
-            table.decompose()
-    return str(soup)
-
-
-class _Response:
-    def __init__(self, text: str, status_code: int = 200):
-        self.text = text
-        self.status_code = status_code
-
-    def raise_for_status(self) -> None:
-        if self.status_code >= 400:
-            raise requests.HTTPError(f"HTTP {self.status_code}")
-
-
 @pytest.mark.parametrize("name", ["privit-paradigm.html", "hovoryty-paradigm.html"])
 def test_parses_noun_and_verb_paradigms(name: str):
-    paradigm = source_query._parse_ulif_paradigm(_fixture(name))
+    paradigm = ulif_parse.parse_ulif_paradigm(_fixture(name))
 
     assert paradigm is not None
     rows = paradigm["rows"]
@@ -70,32 +47,17 @@ def test_parses_noun_and_verb_paradigms(name: str):
 
 
 def test_canonical_headword_comes_from_the_returned_article():
-    assert source_query._ulif_headword(_fixture("privit-paradigm.html"), "привіту") == "приві́т"
+    assert ulif_parse.ulif_headword(_fixture("privit-paradigm.html"), "привіту") == "приві́т"
 
 
-def test_search_result_requires_exact_stress_insensitive_membership(tmp_path, monkeypatch, requests_mock):
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(
-        _fixture("privit-paradigm.html")
-    ))
-    requests_mock.post(requests_mock_lib.ANY, text=_fixture("privit-paradigm.html"))
-
-    assert source_query._ulif_search_result_matches(
-        _fixture("privit-paradigm.html"), "ПРИВІТ"
-    ) is True
-    not_found = source_query.ulif_lookup("привіточок")
-
-    assert not_found["status"] == "not_found"
-    cached = sources_db.get_ulif_dictua_entry("привіточок")
-    assert cached is not None
-    assert cached["status"] == "not_found"
-    assert cached["status"] != "ok"
+def test_search_result_requires_exact_stress_insensitive_membership():
+    html = _fixture("privit-paradigm.html")
+    assert ulif_parse.ulif_search_result_matches(html, "ПРИВІТ") is True
+    assert ulif_parse.ulif_search_result_matches(html, "привіточок") is False
 
 
 def test_synonym_groups_preserve_order_registers_and_citations():
-    groups = source_query._parse_ulif_relation_groups(
+    groups = ulif_parse.parse_ulif_relation_groups(
         _fixture("privit-synonyms.html"), "synonyms"
     )
 
@@ -110,10 +72,10 @@ def test_synonym_groups_preserve_order_registers_and_citations():
 
 
 def test_phraseology_and_antonym_groups_remain_structured():
-    phraseology = source_query._parse_ulif_relation_groups(
+    phraseology = ulif_parse.parse_ulif_relation_groups(
         _fixture("privit-phraseology.html"), "phraseology"
     )
-    antonyms = source_query._parse_ulif_relation_groups(
+    antonyms = ulif_parse.parse_ulif_relation_groups(
         _fixture("dobryi-antonyms.html"), "antonyms"
     )
 
@@ -143,18 +105,12 @@ def _first_relation_term(groups, kind):
         ("privit-phraseology.html", "phraseology", "ні одві́ту, ні приві́ту,"),
     ],
 )
-def test_live_and_offline_relation_parsers_match_retained_source_literal(fixture, kind, expected):
+def test_relation_parser_retains_source_literal(fixture, kind, expected):
     html = _fixture(fixture)
-    live = source_query._parse_ulif_relation_groups(html, kind)
-    offline = ulif_parse.parse_ulif_relation_groups(html, kind)
-    assert _first_relation_term(live, kind)["text"] == expected
-    assert _first_relation_term(offline, kind)["text"] == expected
+    groups = ulif_parse.parse_ulif_relation_groups(html, kind)
+    assert _first_relation_term(groups, kind)["text"] == expected
     expected_counts = {"synonyms": 43, "antonyms": 38, "phraseology": 3}
-    assert sum(_relation_term_count(group, kind) for group in live) == expected_counts[kind]
-    assert sum(_relation_term_count(group, kind) for group in offline) == expected_counts[kind]
-    assert [term["raw_html"] for term in _relation_terms(live, kind)] == [
-        term["raw_html"] for term in _relation_terms(offline, kind)
-    ]
+    assert sum(_relation_term_count(group, kind) for group in groups) == expected_counts[kind]
     if fixture == "privit-phraseology.html":
         assert hashlib.sha256((FIXTURES / fixture).read_bytes()).hexdigest() == (
             "45b081264c4a8c2dc4843620048a9c09aca6571f28c7ae41992303c64b73340d"
@@ -203,12 +159,10 @@ def _relation_terms(groups, kind):
 )
 def test_term_spacing_retains_whitespace_punctuation_and_entities(raw_html, expected):
     html = f'<div class="p_cl"><p>{raw_html}</p></div>'
-    for parser in (source_query._parse_ulif_relation_groups, ulif_parse.parse_ulif_relation_groups):
-        assert parser(html, "phraseology")[0]["terms"][0]["text"] == expected
+    assert ulif_parse.parse_ulif_relation_groups(html, "phraseology")[0]["terms"][0]["text"] == expected
 
 
 def test_relation_term_explicit_br_is_a_boundary_but_inline_tags_are_not():
-    scripts_source_query = importlib.import_module("scripts.rag.source_query")
     cases = [
         ("synonyms", '<div class="p_cl"><p><b><a>ні</a><br/><a>так</a></b></p></div>',
          ["ні так"], ["<b><a>ні</a><br/><a>так</a></b>"]),
@@ -237,25 +191,19 @@ def test_relation_term_explicit_br_is_a_boundary_but_inline_tags_are_not():
         ),
     ]
     for kind, html, expected, expected_raw in cases:
-        for parser in (
-            source_query._parse_ulif_relation_groups,
-            scripts_source_query._parse_ulif_relation_groups,
-            ulif_parse.parse_ulif_relation_groups,
-        ):
-            groups = parser(html, kind)
-            if kind != "antonyms":
-                terms = [term for group in groups for term in group["terms"]]
-            else:
-                rows = groups[0]["rows"]
-                terms = [rows[0]["left"]["terms"][0], rows[0]["right"]["terms"][0], rows[1]["terms"][0]]
-            assert [term["text"] for term in terms] == expected
-            assert [term["raw_html"] for term in terms] == expected_raw
+        groups = ulif_parse.parse_ulif_relation_groups(html, kind)
+        if kind != "antonyms":
+            terms = [term for group in groups for term in group["terms"]]
+        else:
+            rows = groups[0]["rows"]
+            terms = [rows[0]["left"]["terms"][0], rows[0]["right"]["terms"][0], rows[1]["terms"][0]]
+        assert [term["text"] for term in terms] == expected
+        assert [term["raw_html"] for term in terms] == expected_raw
 
 
 def test_explicit_br_stale_cache_and_actual_mcp_views_are_corrected_without_io(
-    tmp_path, monkeypatch, requests_mock
+    tmp_path, monkeypatch
 ):
-    scripts_source_query = importlib.import_module("scripts.rag.source_query")
     scripts_sources_db = importlib.import_module("scripts.wiki.sources_db")
     sources = {
         "synonyms": '<div class="p_cl"><p><b><a>ні</a><br/><a>так</a></b></p></div>',
@@ -316,9 +264,7 @@ def test_explicit_br_stale_cache_and_actual_mcp_views_are_corrected_without_io(
         network_attempts.append((args, kwargs))
         pytest.fail("network access forbidden for cached BR correction")
 
-    for query_module in (source_query, scripts_source_query):
-        monkeypatch.setattr(query_module, "_get", deny_network)
-    requests_mock.post(requests_mock_lib.ANY, text=deny_network)
+    monkeypatch.setattr(requests.Session, "request", deny_network)
     monkeypatch.setattr(socket.socket, "connect", deny_network)
     monkeypatch.setattr(socket, "create_connection", deny_network)
     monkeypatch.setattr(socket, "getaddrinfo", deny_network)
@@ -357,9 +303,9 @@ def test_explicit_br_stale_cache_and_actual_mcp_views_are_corrected_without_io(
             assert [term["text"] for term in record_terms] == expected[kind]
             assert [term["raw_html"] for term in cached_terms] == expected_raw[kind]
 
-    for query_module in (source_query, scripts_source_query):
+    for reader in (sources_db, scripts_sources_db):
         for kind in sources:
-            result = query_module.query_ulif("boundary", [kind])
+            result = reader.query_ulif_local("boundary", [kind])
             assert [term["text"] for term in terms_in(result["sections"][kind], kind)] == expected[kind]
 
     server_spec = importlib.util.spec_from_file_location(
@@ -370,10 +316,10 @@ def test_explicit_br_stale_cache_and_actual_mcp_views_are_corrected_without_io(
     sys.modules[server_spec.name] = server
     server_spec.loader.exec_module(server)
     query = json.loads(asyncio.run(server.handle_query_ulif(
-        {"word": "boundary", "cache_only": True}
+        {"word": "boundary", "sections": list(sources)}
     ))[0].text)
     for kind in sources:
-        query_terms = terms_in(query["entry"]["sections"][kind], kind)
+        query_terms = terms_in(query["sections"][kind], kind)
         assert [term["text"] for term in query_terms] == expected[kind]
         assert [term["raw_html"] for term in query_terms] == expected_raw[kind]
         relation = json.loads(asyncio.run(getattr(server, f"handle_query_ulif_{kind}")(
@@ -526,263 +472,6 @@ def test_cached_materializer_handles_missing_sections_table_without_migration(tm
     conn.close()
 
 
-def test_wrappers_share_one_complete_cached_lookup(tmp_path, monkeypatch, requests_mock):
-    """A first wrapper fetches all available tabs; later ones issue no POST."""
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(
-        _fixture("hovoryty-paradigm.html")
-    ))
-
-    calls: list[dict[str, str]] = []
-
-    def post(_url: str, data: dict[str, str], timeout: int) -> _Response:
-        calls.append(data)
-        if "ctl00$ContentPlaceHolder1$search.x" in data:
-            return _Response(_fixture("hovoryty-paradigm.html"))
-        if "ctl00$ContentPlaceHolder1$syn.x" in data:
-            return _Response(_fixture("hovoryty-synonyms.html"))
-        if "ctl00$ContentPlaceHolder1$phras.x" in data:
-            return _Response(_fixture("privit-phraseology.html"))
-        if "ctl00$ContentPlaceHolder1$ant.x" in data:
-            return _Response(_fixture("dobryi-antonyms.html"))
-        raise AssertionError(f"Unexpected DictUA POST: {data}")
-
-    requests_mock.post(requests_mock_lib.ANY, text=lambda request, context: post(
-        request.url, dict(parse_qsl(request.text, keep_blank_values=True)), request.timeout
-    ).text)
-
-    record = source_query.query_ulif("говорити", source_query.ULIF_SECTIONS)
-    assert record["status"] == "ok"
-    assert record["sections"]["phraseology"][0]["terms"][0]["text"] == (
-        "ні одві́ту, ні приві́ту,"
-    )
-    assert {
-        "source_id", "official_url", "attribution_label", "retrieved_at",
-        "content_sha256", "parser_version", "status",
-    } <= record.keys()
-    assert record["source_id"] == "ulif_dictua"
-    assert source_query.query_ulif_synonyms("говорити")["sections"]
-    assert source_query.query_ulif_phraseology("говорити")["sections"]
-    assert source_query.query_ulif_antonyms("говорити")["sections"]
-
-    # Search + every available image-button tab exactly once, not once per wrapper.
-    assert len(calls) == 4
-    assert db_path.exists()
-
-
-def test_empty_available_relation_tab_is_not_a_parse_error(tmp_path, monkeypatch, requests_mock):
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(
-        _fixture("hovoryty-paradigm.html")
-    ))
-
-    def post(_url: str, data: dict[str, str], timeout: int) -> _Response:
-        if "ctl00$ContentPlaceHolder1$search.x" in data:
-            return _Response(_fixture("hovoryty-paradigm.html"))
-        if "ctl00$ContentPlaceHolder1$syn.x" in data:
-            return _Response(_fixture("hovoryty-synonyms.html"))
-        if "ctl00$ContentPlaceHolder1$phras.x" in data:
-            # The tab remains visible, but its panel has no relation groups.
-            return _Response(_fixture("hovoryty-paradigm.html"))
-        if "ctl00$ContentPlaceHolder1$ant.x" in data:
-            return _Response(_fixture("dobryi-antonyms.html"))
-        raise AssertionError(f"Unexpected DictUA POST: {data}")
-
-    requests_mock.post(requests_mock_lib.ANY, text=lambda request, context: post(
-        request.url, dict(parse_qsl(request.text, keep_blank_values=True)), request.timeout
-    ).text)
-
-    record = source_query.query_ulif("говорити", source_query.ULIF_SECTIONS)
-    assert record["status"] == "ok"
-    assert "phraseology" not in record["sections"]
-
-
-def test_confirmed_relation_only_headword_is_complete_without_paradigm(tmp_path, monkeypatch, requests_mock):
-    """An adverb-like headword must not be failed solely for lacking inflection."""
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
-    search_html = _without_paradigm(_fixture("privit-paradigm.html"))
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(search_html))
-
-    def post(_url: str, data: dict[str, str], timeout: int) -> _Response:
-        if "ctl00$ContentPlaceHolder1$search.x" in data:
-            return _Response(search_html)
-        if "ctl00$ContentPlaceHolder1$syn.x" in data:
-            return _Response(_fixture("privit-synonyms.html"))
-        if "ctl00$ContentPlaceHolder1$phras.x" in data:
-            return _Response(_fixture("privit-phraseology.html"))
-        raise AssertionError(f"Unexpected DictUA POST: {data}")
-
-    requests_mock.post(requests_mock_lib.ANY, text=lambda request, context: post(
-        request.url, dict(parse_qsl(request.text, keep_blank_values=True)), request.timeout
-    ).text)
-
-    record = source_query.query_ulif("привіт", ("paradigm", "synonyms"))
-    assert record["status"] == "ok"
-    assert "paradigm" not in record["sections"]
-    assert record["sections"]["synonyms"][0]["sense_or_group_id"] == "synonyms:1"
-    assert record["content_sha256"]
-    assert record["parser_version"] == "ulif-dictua-v2"
-
-
-def test_confirmed_but_content_empty_headword_fails_closed(tmp_path, monkeypatch, requests_mock):
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
-    empty_html = _without_paradigm(_fixture("privit-paradigm.html"))
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(empty_html))
-    requests_mock.post(requests_mock_lib.ANY, text=empty_html)
-
-    record = source_query.query_ulif("привіт", source_query.ULIF_SECTIONS)
-
-    assert record["status"] == "parse_error"
-    assert record["sections"] == {}
-    assert sources_db.get_ulif_dictua_entry("привіт")["status"] == "parse_error"
-
-
-def test_transient_error_is_not_persisted_as_a_negative_cache(tmp_path, monkeypatch):
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-
-    def offline(*args, **kwargs):
-        raise requests.ConnectionError("offline")
-
-    monkeypatch.setattr(source_query, "_get", offline)
-    result = source_query.ulif_lookup("привіт")
-
-    assert result["status"] == "transient_error"
-    assert not db_path.exists(), "transient failures must not create cache entries"
-
-
-def test_legacy_ulif_paradigm_reports_unavailable_not_no_paradigm(tmp_path, monkeypatch):
-    """A DictUA outage must not collapse into the same shape as a real miss (#9005)."""
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-
-    def offline(*args, **kwargs):
-        raise requests.ConnectionError("offline")
-
-    monkeypatch.setattr(source_query, "_get", offline)
-
-    assert source_query.ulif_paradigm("привіт") == {"status": "unavailable", "word": "привіт"}
-
-
-def test_not_found_and_parse_error_are_distinguishable_and_cached(tmp_path, monkeypatch, requests_mock):
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(
-        _fixture("privit-paradigm.html")
-    ))
-    # DictUA returns 200 with an unrelated selected article for a no-match;
-    # `ulif_lookup` must use the result list, not cache that article as a hit.
-    requests_mock.post(requests_mock_lib.ANY, text=_fixture("privit-paradigm.html"))
-
-    not_found = source_query.ulif_lookup("xzxqj")
-    assert not_found["status"] == "not_found"
-    assert sources_db.get_ulif_dictua_entry("xzxqj")["status"] == "not_found"
-
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(
-        "<html><body>missing WebForms controls</body></html>"
-    ))
-    parse_error = source_query.ulif_lookup("зламане")
-    assert parse_error["status"] == "parse_error"
-    assert sources_db.get_ulif_dictua_entry("зламане")["status"] == "parse_error"
-
-
-def test_parse_error_keeps_successful_sections_and_legacy_paradigm(tmp_path, monkeypatch, requests_mock):
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-    monkeypatch.setattr(source_query, "ULIF_REQUEST_DELAY_SECONDS", 0)
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(
-        _fixture("privit-paradigm.html")
-    ))
-    missing_eventvalidation = _fixture("privit-synonyms.html").replace(
-        'name="__EVENTVALIDATION"', 'name="__MISSING_EVENTVALIDATION"', 1
-    )
-
-    def post(_url: str, data: dict[str, str], timeout: int) -> _Response:
-        if "ctl00$ContentPlaceHolder1$search.x" in data:
-            return _Response(_fixture("privit-paradigm.html"))
-        if "ctl00$ContentPlaceHolder1$syn.x" in data:
-            return _Response(missing_eventvalidation)
-        raise AssertionError(f"Unexpected DictUA POST: {data}")
-
-    requests_mock.post(requests_mock_lib.ANY, text=lambda request, context: post(
-        request.url, dict(parse_qsl(request.text, keep_blank_values=True)), request.timeout
-    ).text)
-
-    record = source_query.query_ulif("привіт", source_query.ULIF_SECTIONS)
-
-    assert record["status"] == "parse_error"
-    assert record["sections"]["synonyms"][0]["terms"][0]["text"] == "ВІТА́ННЯ"
-    cached = sources_db.get_ulif_dictua_entry("привіт")
-    assert cached is not None
-    assert cached["status"] == "parse_error"
-    assert cached["sections"]["synonyms"][0]["terms"][0]["text"] == "ВІТА́ННЯ"
-    assert sources_db.resolve_ulif_dictua_raw_response(cached["raw_response_ref"])
-    assert source_query.ulif_paradigm("привіт") == {
-        "word": "привіт",
-        "rows": record["sections"]["paradigm"]["rows"],
-    }
-
-
-def test_parser_version_change_retries_a_cached_parse_error(tmp_path, monkeypatch):
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-    sources_db.store_ulif_dictua_entry(
-        word="зламане",
-        canonical_headword="зламане",
-        sections={},
-        raw_responses={"paradigm": "<html>old parser failure</html>"},
-        retrieved_at="2026-07-15T00:00:00+00:00",
-        parser_version="ulif-dictua-v0",
-        status="parse_error",
-    )
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: _Response(
-        "<html><body>still missing WebForms controls</body></html>"
-    ))
-
-    result = source_query.ulif_lookup("зламане")
-
-    assert result["status"] == "parse_error"
-    assert result["parser_version"] == source_query.ULIF_PARSER_VERSION
-
-
-def test_legacy_ulif_paradigm_shape_uses_the_unified_cache(tmp_path, monkeypatch):
-    db_path = tmp_path / "sources.db"
-    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
-    sources_db.store_ulif_dictua_entry(
-        word="привіт",
-        canonical_headword="привіт",
-        sections={"paradigm": {"rows": [["Називний", "приві́т"]]}},
-        raw_responses={"paradigm": "<html>cached</html>"},
-        retrieved_at="2026-07-15T00:00:00+00:00",
-        parser_version=source_query.ULIF_PARSER_VERSION,
-        status="ok",
-    )
-    monkeypatch.setattr(source_query, "_get", lambda *args, **kwargs: pytest.fail(
-        "cache hit unexpectedly accessed the network"
-    ))
-
-    assert source_query.ulif_paradigm("привіт") == {
-        "word": "привіт",
-        "rows": [["Називний", "приві́т"]],
-    }
-    conn = sqlite3.connect(str(db_path))
-    try:
-        assert conn.execute("SELECT 1 FROM sqlite_master WHERE name='ulif_dictua_raw_responses'").fetchone() is None
-        with ulif_raw_cache.open_cache(ulif_raw_cache.cache_path(db_path), create=False) as raw:
-            assert raw.execute("SELECT COUNT(*) FROM ulif_dictua_raw_responses").fetchone()[0] == 2
-    finally:
-        conn.close()
-
-
 def test_ulif_dictionary_rows_keep_conventional_fields_and_structure(tmp_path, monkeypatch):
     db_path = tmp_path / "sources.db"
     monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", db_path)
@@ -799,7 +488,7 @@ def test_ulif_dictionary_rows_keep_conventional_fields_and_structure(tmp_path, m
             "phraseology": "<html>official phraseology group</html>",
         },
         retrieved_at="2026-07-15T00:00:00+00:00",
-        parser_version=source_query.ULIF_PARSER_VERSION,
+        parser_version=ulif_parse.ULIF_PARSER_VERSION,
         status="ok",
     )
 

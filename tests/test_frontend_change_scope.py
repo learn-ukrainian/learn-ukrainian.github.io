@@ -275,11 +275,8 @@ def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
     jobs = workflow["jobs"]
     assert "frontend-e2e" not in jobs
     frontend = jobs["frontend"]
-    # Full-tier events run frontend; PR admission leaves it to the merge candidate.
-    assert frontend["if"] == (
-        "${{ !cancelled() && (github.event_name == 'merge_group' || "
-        "github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}"
-    )
+    # Every event runs frontend, so a PR head is built before review.
+    assert frontend["if"] == "${{ !cancelled() }}"
     assert "reuse" not in frontend.get("needs", [])
     assert "frontend" in jobs["ci-gate"]["needs"]
     steps = frontend["steps"]

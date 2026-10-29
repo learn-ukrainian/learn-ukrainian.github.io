@@ -61,7 +61,12 @@ from .env_sanitize import (
 # only in private local configuration (see ``load_claude_account_binding``).
 CLAUDE_ACCOUNT_KEY = "claude_account"
 DEFAULT_CLAUDE_ACCOUNT = "a"
-CLAUDE_ACCOUNT_LABELS = ("a", "b")
+# Subscription logins: the host's own (``a``) and a second consumer login.
+CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS = ("a", "b")
+# Anthropic API keys (C-2643): the bound directory's ``settings.json`` names
+# only an ``apiKeyHelper``, the run's one credential, billed to that key.
+CLAUDE_API_KEY_ACCOUNT_LABELS = ("kk", "szb")
+CLAUDE_ACCOUNT_LABELS = (*CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS, *CLAUDE_API_KEY_ACCOUNT_LABELS)
 ENV_CLAUDE_ACCOUNTS_FILE = "LU_CLAUDE_ACCOUNTS_FILE"
 CLAUDE_ACCOUNTS_FILE_NAME = "claude_accounts.json"
 CLAUDE_ACCOUNTS_SCHEMA_VERSION = 1
@@ -82,8 +87,11 @@ CLAUDE_ACCOUNT_SOURCES = ("explicit", "default-file", "builtin", "record")
 CLAUDE_AUTH_HOST_LOGIN = "host_login"
 CLAUDE_AUTH_SUBSCRIPTION_LOGIN = "subscription_login"
 CLAUDE_AUTH_BOUND_ACCOUNT_TOKEN = "bound_account_token"
+CLAUDE_AUTH_API_KEY_HELPER = "api_key_helper"
 CLAUDE_AUTH_UNVERIFIED = "unverified"
-_CLAUDE_VERIFIED_AUTH_METHODS = frozenset({CLAUDE_AUTH_SUBSCRIPTION_LOGIN, CLAUDE_AUTH_BOUND_ACCOUNT_TOKEN})
+_CLAUDE_VERIFIED_AUTH_METHODS = frozenset(
+    {CLAUDE_AUTH_SUBSCRIPTION_LOGIN, CLAUDE_AUTH_BOUND_ACCOUNT_TOKEN, CLAUDE_AUTH_API_KEY_HELPER}
+)
 _CLAUDE_AMBIENT_AUTH_ENV = (
     "ANTHROPIC_API_KEY",
     "ANTHROPIC_AUTH_TOKEN",
@@ -106,6 +114,9 @@ _claude_renewal_lock = threading.Lock()
 _CLAUDE_WSL_ENV = ("WSL_DISTRO_NAME", "WSL_INTEROP")
 _CLAUDE_PROC_VERSION = Path("/proc/version")
 _CLAUDE_BINDING_KEYS = frozenset({"config_dir", "account_uuid"})
+# An API key has no login account to bind; Claude Code's own status attests the helper.
+_CLAUDE_API_KEY_BINDING_KEYS = frozenset({"config_dir"})
+_CLAUDE_API_KEY_SETTINGS_KEYS = frozenset({"apiKeyHelper"})
 _CLAUDE_ACCOUNT_UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 _CLAUDE_BINDING_MAX_BYTES = 65536
 _CLAUDE_GLOBAL_CONFIG_MAX_BYTES = 16 * 1024 * 1024
@@ -208,6 +219,7 @@ CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
         "claude_account_machine_policy_unavailable",
         "claude_account_record_conflict",
         "claude_account_forward_unsupported",
+        "claude_account_api_key_route_unsupported",
         *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
         *(
             f"claude_account_{kind}_{failure}"
@@ -233,13 +245,19 @@ class ClaudeAccountBinding:
     """A label's private binding: Claude's config directory and the account it must hold.
 
     After verification ``credential`` is the ``claude_credential_fingerprint``
-    of the credential record whose plan was classified.
+    of the credential record whose plan was classified. An API-key label has
+    no login account (``account_uuid`` and ``credential`` are empty): its key
+    helper is bound through the launch digest of its ``settings.json``.
     """
 
     label: str
     config_dir: Path = field(repr=False)
     account_uuid: str = field(repr=False)
     credential: str = field(default="", repr=False, compare=False)
+
+    @property
+    def api_key(self) -> bool:
+        return self.label in CLAUDE_API_KEY_ACCOUNT_LABELS
 
 
 def resolve_claude_account_label(raw: object) -> str:
@@ -351,7 +369,8 @@ def read_claude_default_account(environ: Mapping[str, str] | None = None) -> str
     token = (raw or b"").strip(b" \t\r\n")
     if not token:
         return None
-    if token not in {label.encode() for label in CLAUDE_ACCOUNT_LABELS}:
+    # An API-key label is never a fleet-wide default: each paid run names it explicitly.
+    if token not in {label.encode() for label in CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS}:
         raise ClaudeAccountRefused("claude_account_default_file_invalid")
     return token.decode()
 
@@ -429,8 +448,9 @@ def load_claude_account_binding(label: str, *, environ: Mapping[str, str] | None
     """The private binding for a non-default label, from local configuration only.
 
     The file is a JSON object ``{"schema_version": 1, "accounts": {"<label>":
-    {"config_dir": "<absolute directory>", "account_uuid": "<account UUID>"}}}``.
-    The default label has no binding: it is always the host's own account.
+    {"config_dir": "<absolute directory>", "account_uuid": "<account UUID>"}}}``;
+    an API-key label's entry holds ``config_dir`` alone. The default label has
+    no binding: it is always the host's own account.
     """
     if resolve_claude_account_label(label) == DEFAULT_CLAUDE_ACCOUNT:
         raise ClaudeAccountRefused("claude_account_default_has_no_binding")
@@ -453,16 +473,18 @@ def load_claude_account_binding(label: str, *, environ: Mapping[str, str] | None
     entry = accounts.get(label)
     if entry is None:
         raise ClaudeAccountRefused("claude_account_binding_missing")
-    if not isinstance(entry, dict) or set(entry) != _CLAUDE_BINDING_KEYS:
+    api_key = label in CLAUDE_API_KEY_ACCOUNT_LABELS
+    keys = _CLAUDE_API_KEY_BINDING_KEYS if api_key else _CLAUDE_BINDING_KEYS
+    if not isinstance(entry, dict) or set(entry) != keys:
         raise ClaudeAccountRefused("claude_account_binding_invalid")
-    config_dir, account_uuid = entry["config_dir"], entry["account_uuid"]
+    config_dir, account_uuid = entry["config_dir"], entry.get("account_uuid", "")
     if (
         not isinstance(config_dir, str)
         or not config_dir
         or not Path(config_dir).is_absolute()
         or any(ord(c) < 32 or ord(c) == 127 for c in config_dir)
         or not isinstance(account_uuid, str)
-        or not _CLAUDE_ACCOUNT_UUID_RE.fullmatch(account_uuid)
+        or not (api_key or _CLAUDE_ACCOUNT_UUID_RE.fullmatch(account_uuid))
     ):
         raise ClaudeAccountRefused("claude_account_binding_invalid")
     return ClaudeAccountBinding(label=label, config_dir=Path(config_dir), account_uuid=account_uuid)
@@ -606,6 +628,55 @@ def _refuse_claude_launch(directory: int, account_uuid: str, env: Mapping[str, s
     return account
 
 
+def _refuse_claude_api_key_launch(directory: int, env: Mapping[str, str]) -> None:
+    """Every gate an API-key label's directory must pass before its key helper may run (C-2643).
+
+    The run loads the directory's ``settings.json`` as its ``--settings``
+    (flag scope, above project and local), so that file may name the key
+    helper and nothing else; the helper's value is never read into a record
+    or a refusal. The global config's ``env`` map, applied whatever the
+    setting sources, stays on the labelled allowlist; machine policy, policy
+    caches and profile stores refuse as for a subscription label. Claude Code
+    does not use a helper's key to fetch organisational policy (``claude
+    doctor``, 2.1.312), so no plan is classified: ``auth status`` attests the
+    helper at launch.
+    """
+    if platform.system() != "Linux" or _claude_host_is_wsl(env):
+        raise ClaudeAccountRefused("claude_account_platform_unsupported")
+    refuse_claude_machine_policy()
+    try:
+        os.stat(CLAUDE_LEGACY_GLOBAL_CONFIG, dir_fd=directory, follow_symlinks=False)
+    except FileNotFoundError:
+        pass
+    else:
+        raise ClaudeAccountRefused("claude_account_config_ambiguous")
+    config = _read_private_json(
+        Path(".claude.json"), limit=_CLAUDE_GLOBAL_CONFIG_MAX_BYTES, code="claude_account_config", dir_fd=directory
+    )
+    if config is not None:
+        if not isinstance(config, dict):
+            raise ClaudeAccountRefused("claude_account_config_invalid")
+        _refuse_unlisted_env(config, "claude_account_config")
+    settings = _read_private_json(
+        Path("settings.json"),
+        limit=_CLAUDE_SETTINGS_MAX_BYTES,
+        code="claude_account_settings",
+        dir_fd=directory,
+        forbidden_mode=0o022,
+    )
+    if settings is None:
+        raise ClaudeAccountRefused("claude_account_credentials_missing")
+    if not isinstance(settings, dict):
+        raise ClaudeAccountRefused("claude_account_settings_invalid")
+    if set(settings) != _CLAUDE_API_KEY_SETTINGS_KEYS:
+        raise ClaudeAccountRefused("claude_account_settings_credential_source")
+    helper = settings["apiKeyHelper"]
+    if not isinstance(helper, str) or not helper.strip():
+        raise ClaudeAccountRefused("claude_account_settings_invalid")
+    _refuse_policy_caches(directory)
+    _refuse_profile_store(env)
+
+
 def _claude_host_is_wsl(env: Mapping[str, str]) -> bool:
     """Whether Claude Code would take this Linux host for WSL, as it decides it (2.1.300)."""
     if any(env.get(name) for name in _CLAUDE_WSL_ENV):
@@ -735,6 +806,9 @@ def _validated_claude_selection(
                     continue
                 if (selected.st_dev, selected.st_ino) == (info.st_dev, info.st_ino):
                     raise ClaudeAccountRefused("claude_account_binding_is_default")
+            if binding.api_key:
+                _refuse_claude_api_key_launch(directory, env)
+                return binding, ""
             if _claude_config_account_uuid(home / ".claude.json") == binding.account_uuid:
                 raise ClaudeAccountRefused("claude_account_binding_is_default")
             account = _refuse_claude_launch(directory, binding.account_uuid, env)
@@ -933,11 +1007,14 @@ def linux_claude_auth(account: str | None = None) -> dict[str, str]:
     legacy selection: an ambient credential, else the default credential file.
     A non-default label reads only its verified bound account's credential
     file and refuses every conflicting source before anything is returned.
+    An API-key label refuses: a sealed attempt would need the key itself.
     """
     from scripts.review.isolation import ReviewIsolationError
 
     try:
         label = resolve_claude_account_label(account)
+        if label in CLAUDE_API_KEY_ACCOUNT_LABELS:
+            raise ClaudeAccountRefused("claude_account_api_key_route_unsupported")
         if label != DEFAULT_CLAUDE_ACCOUNT:
             _, token = _validated_claude_selection(label)
             note_claude_account_verified(label, CLAUDE_AUTH_BOUND_ACCOUNT_TOKEN)

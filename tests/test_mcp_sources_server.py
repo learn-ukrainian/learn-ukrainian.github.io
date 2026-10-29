@@ -31,7 +31,7 @@ import pymorphy3  # noqa: F401  # Declares the Russian-shadow runtime dependency
 import pymorphy3_dicts_uk  # noqa: F401  # Declares the Ukrainian morphology dictionary.
 import pytest
 import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime dependency.
-import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
+import requests  # Declares the Sources HTTP dependency to the CI fastlane.
 from mcp.types import CallToolRequestParams, TextContent
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
@@ -143,7 +143,6 @@ def test_network_sources_override_has_missing_database_responses(server_module, 
     assert envelope["status"] == "error"
     assert envelope["error_code"] == "sources_db_missing"
     for args in (
-        {"word": "fixture", "cache_only": True},
         {"word": "fixture", "sections": ["paradigm"]},
         {"word": "fixture"},
     ):
@@ -247,101 +246,164 @@ class TestListTools:
         assert "When supplied" in sections["description"]
 
 
-class TestUlifHandlers:
-    def test_query_ulif_without_sections_renders_legacy_paradigm(self, server_module):
-        paradigm = {"word": "великий", "rows": [["Називний", "великий"]]}
-        with patch("rag.source_query.ulif_paradigm", return_value=paradigm) as query:
-            result = _run(server_module.handle_query_ulif({"word": "великий"}))
+ULIF_FINGERPRINT = "f" * 64
 
-        query.assert_called_once_with("великий")
-        assert result[0].text == "Paradigm for 'великий':\n\nНазивний | великий"
 
-    def test_query_ulif_without_sections_renders_legacy_no_result(self, server_module):
-        with patch("rag.source_query.ulif_paradigm", return_value=None) as query:
-            result = _run(server_module.handle_query_ulif({"word": "відсутнє"}))
+def _ulif_local_db(path: Path, *, state: str = "complete") -> Path:
+    """A local DictUA copy: a paradigm headword, homonyms, a build failure and one form row."""
+    from wiki import sources_db
 
-        query.assert_called_once_with("відсутнє")
-        assert result[0].text == "No ULIF paradigm found for: 'відсутнє'"
+    def store(word, headword, sections, status="ok", index=1, label=""):
+        return sources_db.store_ulif_dictua_entry(
+            word=word, canonical_headword=headword, sections=sections, raw_responses={},
+            retrieved_at="2026-09-29T00:00:00+00:00", parser_version="ulif-dictua-v2", status=status,
+            homonym_index=index, grammatical_label=label, homonym_checked=1, db_path=path,
+        )
 
-    def test_query_ulif_without_sections_unavailable_is_not_no_result(self, server_module):
-        """A DictUA outage must not render as 'No ULIF paradigm found' (#9005)."""
-        unavailable = {"status": "unavailable", "word": "великий"}
-        with patch("rag.source_query.ulif_paradigm", return_value=unavailable):
-            result = _run(server_module.handle_query_ulif({"word": "великий"}))
-
-        assert "unavailable" in result[0].text
-        assert "No ULIF paradigm found" not in result[0].text
-
-    def test_query_ulif_renders_structured_source_metadata(self, server_module):
-        expected = {
-            "source_id": "ulif_dictua",
-            "official_url": "https://lcorp.ulif.org.ua/dictua",
-            "attribution_label": "«Словники України» (Український мовно-інформаційний фонд НАН України)",
-            "retrieved_at": "2026-07-15T00:00:00+00:00",
-            "content_sha256": "a" * 64,
-            "parser_version": "ulif-dictua-v1",
-            "status": "ok",
-            "sections": {"paradigm": {"rows": [["Називний", "великий"]]}},
-        }
-        with patch("rag.source_query.query_ulif", return_value=expected) as query:
-            result = _run(
-                server_module.handle_query_ulif(
-                    {
-                        "word": "великий",
-                        "sections": ["paradigm"],
-                    }
-                )
-            )
-
-        query.assert_called_once_with("великий", ["paradigm"])
-        assert json.loads(result[0].text) == expected
-
-    def test_query_ulif_with_explicit_sections_transient_error_is_unavailable(self, server_module):
-        """query_ulif with explicit sections renders unavailable prose on outage (#9016)."""
-        transient = {
-            "status": "transient_error",
-            "word": "великий",
-            "canonical_headword": "великий",
-            "sections": {},
-        }
-        with patch("rag.source_query.query_ulif", return_value=transient):
-            result = _run(
-                server_module.handle_query_ulif(
-                    {"word": "великий", "sections": ["paradigm"]}
-                )
-            )
-
-        text = result[0].text
-        assert "unavailable" in text
-        assert "lcorp.ulif.org.ua" in text
-        assert "transient_error" not in text
-
-    @pytest.mark.parametrize(
-        "handler_name,query_fn_name",
-        [
-            ("handle_query_ulif_synonyms", "query_ulif_synonyms"),
-            ("handle_query_ulif_antonyms", "query_ulif_antonyms"),
-            ("handle_query_ulif_phraseology", "query_ulif_phraseology"),
-        ],
+    store("великий", "вели́кий", {
+        "paradigm": {"rows": [["Називний", "вели́кий"]]},
+        "synonyms": [{"terms": [{"text": "ВЕЛИЧЕ́ЗНИЙ"}]}],
+    }, label="прикметник")
+    store("хто", "", {}, status="parse_error")
+    store("замок", "за́мок", {"synonyms": [{"terms": [{"text": "ПАЛА́Ц"}]}]}, index=1)
+    store("замок", "замо́к", {}, index=2)
+    conn = sqlite3.connect(path)
+    entry_id = {row[0]: row[1] for row in conn.execute("SELECT normalized_query, id FROM ulif_dictua_entries")}
+    conn.execute(
+        "INSERT INTO ulif_forms (entry_id, entry_key, form_unstressed, form_stressed) VALUES (?, ?, ?, ?)",
+        (entry_id["великий"], "великий#1", "великого", "вели́кого"),
     )
-    def test_ulif_relation_tools_transient_error_is_unavailable(
-        self, server_module, handler_name, query_fn_name
-    ):
-        """ULIF relation tools render unavailable prose instead of transient_error JSON (#9016)."""
-        transient = {
-            "status": "transient_error",
-            "word": "великий",
-            "canonical_headword": "великий",
-            "sections": {},
-        }
-        handler = getattr(server_module, handler_name)
-        with patch(f"rag.source_query.{query_fn_name}", return_value=transient):
-            result = _run(handler({"word": "великий"}))
+    conn.execute(
+        "INSERT INTO ulif_forms_failures (entry_id, reason, locator) VALUES (?, ?, ?)",
+        (entry_id["хто"], "empty_visible_article", f"ulif:entry:{entry_id['хто']}"),
+    )
+    conn.execute(
+        "INSERT INTO ulif_forms_build (id, state, parser_version, total_entries, entries_done, entries_failed,"
+        " total_forms, started_at, finished_at, source_fingerprint) VALUES (1, ?, ?, 4, 3, 1, 1, ?, ?, ?)",
+        (state, sources_db.ULIF_FORMS_PARSER_VERSION, "2026-09-30T04:00:00+00:00",
+         "2026-09-30T06:00:00+00:00", ULIF_FINGERPRINT),
+    )
+    conn.commit()
+    conn.close()
+    return path
 
-        text = result[0].text
-        assert "unavailable" in text
-        assert "lcorp.ulif.org.ua" in text
-        assert "transient_error" not in text
+
+@pytest.fixture
+def ulif_local(tmp_path, monkeypatch):
+    """Point the reader at a local DictUA copy and fail any HTTP attempt."""
+    from wiki import sources_db
+
+    path = _ulif_local_db(tmp_path / "sources.db")
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", path)
+    monkeypatch.setattr(sources_db, "_conn", None)
+    attempts: list[str] = []
+
+    def no_network(_session, method, url, *_args, **_kwargs):
+        attempts.append(f"{method} {url}")
+        raise AssertionError("ULIF lookup reached the network")
+
+    monkeypatch.setattr(requests.Session, "request", no_network)
+    yield path
+    assert attempts == []
+
+
+class TestUlifHandlers:
+    def test_ulif_tools_drop_cache_only_and_are_read_only(self, server_module):
+        tools = {tool.name: tool for tool in _run(server_module.list_tools())}
+        for name in ("query_ulif", "query_ulif_synonyms", "query_ulif_antonyms", "query_ulif_phraseology"):
+            assert "cache_only" not in tools[name].input_schema["properties"]
+            assert tools[name].annotations.read_only_hint is True
+
+    def test_plain_hit_renders_the_local_paradigm(self, server_module, ulif_local):
+        result = _run(server_module.handle_query_ulif({"word": "вели́кий"}))
+        assert result[0].text == "Paradigm for 'вели́кий':\n\nНазивний | вели́кий"
+
+    def test_structured_hit_carries_sections_and_build_identity(self, server_module, ulif_local):
+        result = json.loads(_run(server_module.handle_query_ulif({"word": "великий", "sections": ["synonyms"]}))[0].text)
+        assert result["status"] == "ok"
+        assert list(result["sections"]) == ["synonyms"]
+        assert result["source_id"] == "ulif_dictua"
+        assert result["forms_build_failure"] is None
+        assert result["local_copy"]["source_fingerprint"] == ULIF_FINGERPRINT
+
+    def test_miss_is_authoritative_and_cites_the_build(self, server_module, ulif_local):
+        result = json.loads(_run(server_module.handle_query_ulif({"word": "пилосмок", "sections": ["paradigm"]}))[0].text)
+        assert result["status"] == "not_found"
+        assert result["authoritative"] is True
+        assert result["forms_build_failure"] is None
+        assert result["inflected_form_of"] == []
+        assert {key: result["local_copy"][key] for key in ("state", "finished_at", "parser_version", "source_fingerprint")} == {
+            "state": "complete",
+            "finished_at": "2026-09-30T06:00:00+00:00",
+            "parser_version": "ulif-forms-v4",
+            "source_fingerprint": ULIF_FINGERPRINT,
+        }
+        text = _run(server_module.handle_query_ulif({"word": "пилосмок"}))[0].text
+        assert text.startswith("No ULIF entry found for: 'пилосмок'. Authoritative miss")
+        assert "not one of the recorded forms build failures" in text
+        assert f"source_fingerprint {ULIF_FINGERPRINT}" in text
+        assert "unavailable" not in text
+
+    def test_inflected_form_names_its_headword(self, server_module, ulif_local):
+        text = _run(server_module.handle_query_ulif({"word": "великого"}))[0].text
+        assert "is an inflected form of: вели́кий" in text
+
+    def test_build_failure_entry_is_reported_as_such(self, server_module, ulif_local):
+        result = json.loads(_run(server_module.handle_query_ulif({"word": "хто", "sections": ["paradigm"]}))[0].text)
+        assert result["status"] == "parse_error"
+        assert result["forms_build_failure"]["reason"] == "empty_visible_article"
+        text = _run(server_module.handle_query_ulif({"word": "хто"}))[0].text
+        assert text.startswith("No ULIF paradigm found for: 'хто'.")
+        assert "a recorded forms build failure (empty_visible_article" in text
+
+    def test_incomplete_copy_cannot_decide_a_miss(self, server_module, tmp_path, monkeypatch):
+        from wiki import sources_db
+
+        path = _ulif_local_db(tmp_path / "building.db", state="building")
+        monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", path)
+        miss = json.loads(_run(server_module.handle_query_ulif({"word": "пилосмок", "sections": ["paradigm"]}))[0].text)
+        assert miss["status"] == "unavailable"
+        assert miss["reason"] == "local_copy_incomplete"
+        hit = json.loads(_run(server_module.handle_query_ulif({"word": "великий", "sections": ["paradigm"]}))[0].text)
+        assert hit["status"] == "ok"
+        records = json.loads(_run(server_module.handle_query_ulif_records({"words": ["пилосмок"]}))[0].text)
+        assert records["local_copy"]["complete"] is False
+        assert records["records"][0]["status"] == "unavailable"
+        assert records["records"][0]["authoritative"] is False
+
+    @pytest.mark.parametrize("table", ["ulif_forms", "ulif_forms_failures", "ulif_dictua_sections"])
+    def test_complete_receipt_without_a_copy_table_cannot_decide_a_miss(self, server_module, ulif_local, table):
+        conn = sqlite3.connect(ulif_local)
+        conn.execute(f"DROP TABLE {table}")
+        conn.commit()
+        conn.close()
+        miss = json.loads(_run(server_module.handle_query_ulif({"word": "пилосмок", "sections": ["paradigm"]}))[0].text)
+        assert miss["status"] == "unavailable"
+        assert miss["local_copy"]["complete"] is False
+        assert table in miss["local_copy"]["missing_tables"]
+
+    @pytest.mark.parametrize("kind", ["synonyms", "antonyms", "phraseology"])
+    def test_relation_tools_answer_locally(self, server_module, ulif_local, kind):
+        handler = getattr(server_module, f"handle_query_ulif_{kind}")
+        result = json.loads(_run(handler({"word": "великий"}))[0].text)
+        assert result["status"] == "ok"
+        assert ("ВЕЛИЧЕ́ЗНИЙ" in json.dumps(result, ensure_ascii=False)) is (kind == "synonyms")
+        miss = json.loads(_run(handler({"word": "пилосмок"}))[0].text)
+        assert miss["status"] == "not_found" and miss["authoritative"] is True
+
+    def test_relation_tools_render_each_checked_homonym(self, server_module, ulif_local):
+        text = _run(server_module.handle_query_ulif_synonyms({"word": "замок"}))[0].text
+        assert "1: за́мок" in text
+        assert "ПАЛА́Ц" in text
+
+    def test_records_miss_is_authoritative_on_a_complete_copy(self, server_module, ulif_local):
+        response = json.loads(_run(server_module.handle_query_ulif_records({"words": ["пилосмок"]}))[0].text)
+        assert response["local_copy"]["complete"] is True
+        assert response["records"][0]["status"] == "not_found"
+        assert response["records"][0]["authoritative"] is True
+        # A stress-marked query reaches the checked register entry.
+        stressed = json.loads(_run(server_module.handle_query_ulif_records({"words": ["вели́кий"]}))[0].text)
+        assert stressed["records"][0]["entries"][0]["canonical_headword"] == "вели́кий"
 
 
 class TestQueryUlifRecordsHandler:
@@ -1565,7 +1627,7 @@ class TestDictSearchQuoteBalance:
         assert envelope["match_count"] == 2
 
     def test_ulif_relation_tools_render_every_ambiguous_homonym(self, server_module):
-        ambiguous = {"status": "ambiguous", "entries": [{"homonym_index": 1}, {"homonym_index": 2}]}
+        ambiguous = {"status": "ambiguous", "normalized_query": "замок", "entries": [{"homonym_index": 1}, {"homonym_index": 2}]}
         records = [
             {
                 "homonym_index": 1,
@@ -1580,8 +1642,10 @@ class TestDictSearchQuoteBalance:
                 "sections": {"synonyms": [{"terms": [{"text": "КРЕМЛЬ"}]}]},
             },
         ]
+        for record in records:
+            record["homonym_checked"] = 1
         with (
-            patch("rag.source_query.query_ulif_synonyms", return_value=ambiguous),
+            patch("wiki.sources_db.query_ulif_local", return_value=ambiguous),
             patch("wiki.sources_db.search_ulif_dictua_sections", return_value=records),
         ):
             content = _run(server_module.handle_query_ulif_synonyms({"word": "замок"}))

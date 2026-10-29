@@ -25,6 +25,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.atlas import word_card_assembly as wa
 from scripts.atlas import word_card_foundation as foundation
+from scripts.atlas import word_card_meanings as meanings
 from scripts.atlas import word_card_sources as src
 from scripts.atlas.allocate_pilot_identities import label_pos
 from scripts.atlas.word_card_resolver import aid, card_version, public_projection, resolve
@@ -61,6 +62,11 @@ class Resolver:
 
     def check(self, card: dict, a: dict) -> str | None:
         """None when the locator resolves and carries the value; otherwise a closed reason code."""
+        if a["source_id"] in meanings.SOURCES:
+            candidates = meanings.candidates(self.sources, meanings.key(card["key_at_creation"]["spelling"]))
+            return None if any(c["locator"] == a["locator"] and c["snapshot"] == a["snapshot_id"]
+                               and c["text"] == a["value"] and not c["reason"]
+                               for c in candidates[a["source_id"]]) else "meaning_witness_mismatch"
         locator = a["locator"]
         match = LOCATOR.match(locator)
         if not match:
@@ -248,6 +254,10 @@ def live_relation_maps(card: dict) -> dict[str, list[dict]]:
             unit = {"source_id": "ulif", "source_sense_key": f"ulif:section:{section}", "mapped_by": rule}
             if unit not in by_sense[a["subject"]["id"]]:
                 by_sense[a["subject"]["id"]].append(unit)
+        elif a["subject"]["kind"] == "sense" and a["field"] == "definition_uk" and a["source_id"] in meanings.SOURCES \
+                and a["status"] == "active":
+            by_sense[a["subject"]["id"]].append({"source_id": a["source_id"], "source_sense_key": a["locator"],
+                                               "mapped_by": wa.SENSE_RULE_HOLDING})
     return {k: sorted(v, key=lambda u: u["source_sense_key"]) for k, v in by_sense.items()}
 
 
@@ -305,6 +315,46 @@ def identity_binding(inputs: wa.Inputs, cards: dict) -> dict:
 
 
 UNADDRESSABLE = frozenset({"inventory", "dictionary_key", "malformed"})
+
+
+def meaning_witnesses(inputs, unit):
+    """Rederive supplemental dictionary binding from the frozen unit and the held identities."""
+    entry = inputs.entry_by_unit[unit["unit_key"]]
+    raw = inputs.records[unit["anchor_locator"]]["raw_row"]
+    proper = entry["card_kind"] == "proper_name"
+    homonyms = wa.class_homonyms(inputs, raw, unit, proper)
+    return meanings.select(inputs.sources, meanings.key(entry["key_at_creation"]["spelling"]), homonyms,
+                           raw["id"], matched_vesum_entry(inputs, unit) is not None, proper)
+
+
+def meaning_conservation(inputs, cards):
+    """Every admissible supplemental partition appears once; rejected identities supply none."""
+    errors, retained = Counter(), 0
+    for unit in inputs.units:
+        if unit["entry_type"] != "lexeme_candidate":
+            entry = inputs.entry_by_unit[unit["unit_key"]]
+            errors["unexpected_mwe_meaning"] += any(a["source_id"] in meanings.SOURCES
+                                                  for a in cards[entry["card_id"]]["assertions"])
+            continue
+        entry = inputs.entry_by_unit[unit["unit_key"]]
+        card = cards[entry["card_id"]]
+        hold = wa.holding_sense(entry["senses"])
+        expected = meaning_witnesses(inputs, unit)
+        for source, item in expected.items():
+            witness = item["witness"] if hold else None
+            found = [a for a in card["assertions"] if a["source_id"] == source]
+            errors["inventory"] += len(found) != int(witness is not None)
+            if witness and len(found) == 1:
+                a = found[0]
+                retained += 1
+                errors["binding"] += (a["subject"], a["field"], a["locator"], a["snapshot_id"], a["value"],
+                                      a["value_norm"], a["extraction_version"]) != (
+                    {"kind": "sense", "id": hold["sense_id"]}, "definition_uk", witness["locator"],
+                    witness["snapshot"], witness["text"], src.norm_v1(witness["text"]), meanings.VERSION)
+                errors["alignment"] += a.get("mapping") != wa.mapping("unresolved", "sense", ambiguous=True,
+                    note="resolved lexeme; source partition retained without cross-source sense alignment")
+    return {"passed": not any(errors.values()), "partitions": retained,
+            "errors": {k: v for k, v in errors.items() if v}}
 
 
 def matched_vesum_entry(inputs: wa.Inputs, unit: dict) -> int | None:
@@ -565,6 +615,7 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
     if UNADDRESSABLE & set(report["identity_binding"]["errors"]):
         report["passed"] = False
         return report
+    report["meanings"] = meaning_conservation(inputs, cards)
 
     unit_cards = {inputs.entry_by_unit[u["unit_key"]]["card_id"] for u in inputs.units}
     senses_ok = all(
@@ -610,6 +661,12 @@ def verify(inputs: wa.Inputs, result: dict, again: dict | None = None, suppressi
                 match = LOCATOR.fullmatch(a["locator"])
                 sr_errors["vesum_entry_mismatch"] += vesum_entry is None or match is None or (
                     match.group("head") != f"vesum:entry:{vesum_entry}")
+            elif a["source_id"] in meanings.SOURCES:
+                # Supplemental witnesses follow the existing VESUM pattern:
+                # immutable content/locator binding, without invented sr_ IDs.
+                # meaning_conservation independently checks complete coverage,
+                # identity, allocated subject and source-local partition.
+                sr_errors["unexpected_attribution"] += "source_record_id" in a or "source_record_key" in a
             else:
                 routes = source_routes(inputs, unit, inputs.entry_by_unit[unit["unit_key"]], a)
                 match = LOCATOR.fullmatch(a["locator"])

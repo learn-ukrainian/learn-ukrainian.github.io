@@ -267,7 +267,6 @@ SOURCE_INGEST_BUILD_WRITERS = {
     "scripts/lexicon/migrate_sum11_sovietization.py",
     "scripts/lexicon/runner/ulif_forms.py",
     "scripts/lexicon/teacher_deck.py",
-    "scripts/lexicon/tools/import_ulif_dump.py",
     "scripts/lexicon/tools/migrate_ulif_raw.py",
     "scripts/migrations/2026-05-15-add-author-uk-to-textbooks.py",
     "scripts/migrations/2026-07-06-add-subject-to-textbooks.py",

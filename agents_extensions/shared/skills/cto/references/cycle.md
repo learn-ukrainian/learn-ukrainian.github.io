@@ -11,7 +11,10 @@ never fine.
    meters) only for what no metric covers; a missing or wrong metric is a monitoring task,
    not a reason to keep measuring by hand.
 1. **Inbox.** Drain the four recipients ([startup](startup.md#4-identity-and-inbox)) at
-   cycle start, after workers settle and before handoff.
+   cycle start, after workers settle and before handoff. `claude-cto` is the durable CTO
+   recipient: claim it with your session identity as `--worker-id`, and a worker escalation
+   waits there at most one cycle. Any backlog still queued at a `claude-cto-<id>` name is a
+   leftover to drain once, then report it as a producer defect.
 2. **Every pool's usage**, from the scorecard metrics when present, including unused ones:
    each Claude pool, Codex, Grok and Cursor, AGY and any other catalog pool. A pool with no
    metric gets a hand-read meter, and the gap is logged as a monitoring task. Grok and Cursor
@@ -57,9 +60,20 @@ never fine.
    owning tracker item and removal condition; clear it when that condition is met.
    Measure stage time across dispatch, review, PR admission CI, queue CI, merge and closeout
    in both repositories. Act on the slowest stage this cycle, with an owner and next check.
-   Run `.venv/bin/python -m scripts.fleet.pr_owner_check` (exit 1 lists unowned PRs, 2 is unknown):
-   dispatch an owner for every unowned PR, replacing any owner that ended failed, timed out or
-   was cancelled; ownership is the live task record, never the author or branch prefix.
+   Run `.venv/bin/python -m scripts.orchestration.pr_ownership check` (exit 1 lists ownerless
+   PRs, 2 is unknown). It is the replacement-owner check `scripts.fleet.pr_owner_check` with
+   accepted handoffs counted, and an owner whose supervisor cannot be observed is unknown, not
+   ownerless. Dispatch an owner for every ownerless PR, replacing any owner that ended failed,
+   timed out or was cancelled. Ownership is the live task record or an accepted handoff, never
+   the author or branch prefix. The merge-queue keeper runs the same check every 5 minutes. It
+   alerts the CTO inbox when a PR has had no live owning task for 15 minutes, and repeats the
+   alert hourly. Re-seat each alerted PR this cycle with one successor (the integration owner
+   for queue work in CTO-only mode). Start the successor's brief with
+   `scripts.orchestration.pr_ownership accept --pr <N>`. The alert clears only on that recorded
+   acceptance, or when the PR closes; `pr_ownership status` lists the alerts still
+   outstanding. The successor inherits the PR's review budget and the head's rerun allowance.
+   A queue custodian also covers ejection, stale approval, merge confirmation and closeout for
+   the owners it releases ([pr-watch](../../full-send/references/pr-watch.md#queue-custody)).
 5. **Live workers.** Active dispatches from the Monitor API, then
    `.venv/bin/python scripts/dispatch.py status <task-id> --run-nonce <nonce>` for each task
    the handoff or the view names; task files outrank a partial view. Every running worker

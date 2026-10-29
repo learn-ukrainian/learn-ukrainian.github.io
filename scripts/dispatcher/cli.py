@@ -12,7 +12,17 @@ from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.dispatcher import admission, checks, git, headroom, host_admission, providers, store, worker
+from scripts.dispatcher import (
+    admission,
+    checks,
+    git,
+    headroom,
+    host_admission,
+    providers,
+    runtime_context,
+    store,
+    worker,
+)
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
@@ -71,7 +81,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
-        ("claude-account", None, "Claude account a or b (default: inherited configuration)"),
+        ("claude-account", None, "Claude account: subscription a or b, or API key kk or szb (default: inherited configuration)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
         ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
         ("research-role", None, "Research role metadata (default: none)"),
@@ -306,7 +316,7 @@ def _dispatch(args) -> int:
     )
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
-        invocation = providers.load(agent).build(spec, child_env(spec))
+        invocation = runtime_context.build(spec, child_env(spec))
         plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")

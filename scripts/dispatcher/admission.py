@@ -81,9 +81,15 @@ def claude_launch(spec, invocation):
     change while verified and no machine policy may exist. The returned argv runs the CLI behind
     the legacy launch guard, which recomputes the inputs digest in the spawned process. The default
     label and other seats are returned unchanged. A refusal raises ``ValueError`` with the code.
+
+    An API-key label (C-2643) runs the same way, except that the run's one ``--settings`` (repeats
+    are last-wins) becomes the bound directory's own ``settings.json``, whose key helper is then
+    the run's only credential; the background denies it replaces are also in ``--disallowedTools``.
+    ``auth status`` must report that helper and nothing else, and the file is bound by the digest.
     """
     from scripts.agent_runtime.adapters import claude as adapter
     from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_AUTH_API_KEY_HELPER,
         CLAUDE_AUTH_SUBSCRIPTION_LOGIN,
         DEFAULT_CLAUDE_ACCOUNT,
         ClaudeAccountRefused,
@@ -112,7 +118,10 @@ def claude_launch(spec, invocation):
         login_dir = str(binding.config_dir)
         env = {**invocation.env, "CLAUDE_CONFIG_DIR": login_dir}
         argv = invocation.argv
-        settings = argv[argv.index("--settings") + 1]
+        index = argv.index("--settings") + 1
+        if binding.api_key:
+            argv = [*argv[:index], str(binding.config_dir / "settings.json"), *argv[index + 1:]]
+        settings = argv[index]
         sources = argv[argv.index("--setting-sources") + 1]
         if sources != adapter.LABELLED_ACCOUNT_SETTING_SOURCES:
             raise ClaudeAccountRefused("claude_account_settings_changed")
@@ -123,13 +132,19 @@ def claude_launch(spec, invocation):
             )
 
         verified = digest()
-        adapter._verify_labelled_auth_method((argv[0],), settings, cwd=spec.worktree, env=env, login_dir=login_dir)
-        if not claude_fingerprints_match(digest(), verified) or not claude_fingerprints_match(
-            claude_login_credential_fingerprint(login_dir), binding.credential
+        adapter._verify_labelled_auth_method(
+            (argv[0],), settings, cwd=spec.worktree, env=env, login_dir=login_dir, api_key=binding.api_key
+        )
+        # An API key has no login credential; its helper is bound by the digest of its settings file.
+        if not claude_fingerprints_match(digest(), verified) or not (
+            binding.api_key
+            or claude_fingerprints_match(claude_login_credential_fingerprint(login_dir), binding.credential)
         ):
             raise ClaudeAccountRefused("claude_account_settings_changed")
         refuse_claude_machine_policy()
-        note_claude_account_verified(label, CLAUDE_AUTH_SUBSCRIPTION_LOGIN)
+        note_claude_account_verified(
+            label, CLAUDE_AUTH_API_KEY_HELPER if binding.api_key else CLAUDE_AUTH_SUBSCRIPTION_LOGIN
+        )
     except ClaudeAccountRefused as exc:
         raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {exc.code}") from None
     guarded = [str(project_interpreter()), "-I", "-c", adapter._LAUNCH_GUARD_CODE, str(adapter._CODE_ROOT), verified]
