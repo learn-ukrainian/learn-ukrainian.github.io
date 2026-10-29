@@ -256,43 +256,45 @@ def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list
 
 # A top-level JSON object carrying any of these keys is offered as a findings envelope.
 _FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
+_JSON_VALUE_START_RE = re.compile(r" {0,3}[\[{]")
 
 
 def invalid_findings_blocks(response: str, *, stated: str | None = None) -> list[str]:
     """Reasons for each top-level JSON block offered as a findings envelope that fails validation.
 
-    Top level means outside quotes and code fences and outside any list item or other container: a
-    fenced ``json`` block, or an object that starts a line of a top-level paragraph. An object nested
-    in another top-level object is part of that object, never a block of its own. A block carrying
-    none of the envelope keys is not offered as one. ``stated`` is as in ``_findings_json_verdicts``.
+    Top level is CommonMark level 0 of the original reply: a ``json`` or bare fence, or an object that
+    starts a line of a paragraph or setext heading. Anything inside a quote, list item or other container,
+    or nested in another JSON value, is an example or part of that value, never a block of its own. A block
+    carrying none of the envelope keys is not offered as one. ``stated`` is as in ``_findings_json_verdicts``.
     """
     from markdown_it import MarkdownIt
 
     from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
     from scripts.review.review_contract import ContractError, validate_reviewer_payload
 
-    visible = _without_code_fences(response, keep_unclosed=False)
-    paragraph_lines: set[int] = set()
-    for token in MarkdownIt("commonmark").parse(visible):
-        if token.type == "paragraph_open" and token.level == 0 and token.map:
-            paragraph_lines.update(range(*token.map))
-    candidates = [
-        token.content
-        for token in MarkdownIt("commonmark").parse(response)
-        if token.type == "fence" and token.level == 0 and token.info.strip() in {"", "json"}
-    ]
-    offset = consumed = 0
-    for number, line in enumerate(_commonmark_lines(visible, keepends=True)):
-        line_start, offset = offset, offset + len(line)
-        match = re.match(r" {0,3}\{", line)
-        if match is None or number not in paragraph_lines or line_start < consumed:
+    lines = _commonmark_lines(response)
+    text = "\n".join(lines)
+    starts = [0]
+    for line in lines:
+        starts.append(starts[-1] + len(line) + 1)
+    candidates: list[str] = []
+    consumed = 0
+    for token in MarkdownIt("commonmark").parse(text):
+        if token.level:
             continue
-        start = line_start + match.end() - 1
-        try:
-            _, consumed = json.JSONDecoder().raw_decode(visible, start)
-        except ValueError:
-            continue
-        candidates.append(visible[start:consumed])
+        if token.type == "fence" and token.info.strip() in {"", "json"}:
+            candidates.append(token.content)
+        elif token.type in {"paragraph_open", "heading_open"} and token.map:
+            for number in range(*token.map):
+                match = _JSON_VALUE_START_RE.match(lines[number])
+                if match is None or starts[number] < consumed:
+                    continue
+                start = starts[number] + match.end() - 1
+                try:
+                    _, consumed = json.JSONDecoder().raw_decode(text, start)
+                except ValueError:
+                    continue
+                candidates.append(text[start:consumed])
     invalid: list[str] = []
     for candidate in candidates:
         try:
