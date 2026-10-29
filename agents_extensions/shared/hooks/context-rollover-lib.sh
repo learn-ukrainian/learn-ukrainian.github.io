@@ -95,15 +95,32 @@ context_effective_rollover_mode() {
 # scripts/config/driver_lanes.json by tmux session name, so the operator is not
 # the one who restarts such a session. Both facts must hold: the launcher's
 # exported SESSION_EPIC names a lane epic, and this pane's tmux session is that
-# lane's session. Anything missing or unreadable means "not guard-managed".
+# lane's session. The registry is read with the guard's own loader, so a
+# registry the guard rejects (duplicate session, malformed file) yields no lane.
+# Anything missing or failing means "not guard-managed": the operator text stays.
 context_driver_lane_name() {
-  local project_dir="$1" lanes_file session
-  lanes_file="$project_dir/scripts/config/driver_lanes.json"
+  local project_dir="$1" interpreter session name
   [ -n "${SESSION_EPIC:-}" ] && [ -n "${TMUX:-}" ] && [ -n "${TMUX_PANE:-}" ] || return 0
-  [ -f "$lanes_file" ] && command -v tmux >/dev/null 2>&1 || return 0
+  command -v tmux >/dev/null 2>&1 || return 0
   session=$(tmux display-message -p -t "$TMUX_PANE" '#{session_name}' 2>/dev/null) || return 0
   [ -n "$session" ] || return 0
-  jq -r --arg session "$session" --arg epic "$SESSION_EPIC" '
-    [.lanes[]? | select(.session == $session and .epic == $epic and .kind == "claude") | .name][0] // empty
-  ' "$lanes_file" 2>/dev/null || true
+  interpreter="${THREAD_ROLLOVER_PYTHON:-}"
+  if [ -z "$interpreter" ]; then
+    # shellcheck source=scripts/lib/project_interpreter.sh
+    source "$project_dir/scripts/lib/project_interpreter.sh" 2>/dev/null || return 0
+    interpreter=$(project_interpreter_resolve "$project_dir" 2>/dev/null) || return 0
+  fi
+  [ -x "$interpreter" ] || return 0
+  name=$("$interpreter" -I -c '
+import sys
+sys.path.insert(0, sys.argv[1])
+from scripts.ops.driver_lanes import load_registry
+lanes = [
+    lane.name
+    for lane in load_registry().lanes
+    if lane.session == sys.argv[2] and lane.epic == sys.argv[3] and lane.kind == "claude"
+]
+print(lanes[0] if len(lanes) == 1 else "")
+' "$project_dir" "$session" "$SESSION_EPIC" 2>/dev/null) || return 0
+  printf '%s\n' "$name"
 }
