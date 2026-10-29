@@ -235,7 +235,7 @@ workbook:
           - 'обідаю'
           - 'вечеряю'
         explanation: 'Morning meal: я снідаю.'
-      - sentence: 'Вдень я ___.'
+      - sentence: "(Name the midday meal.) Вдень я ___."
         answer: 'обідаю'
         options:
           - 'обідаю'
@@ -249,7 +249,7 @@ workbook:
           - 'снідаю'
           - 'їм чай'
         explanation: 'Dinner: я вечеряю.'
-      - sentence: 'Я ___ борщ.'
+      - sentence: "(Use їсти: I eat borscht.) Я ___ борщ."
         answer: 'їм'
         options:
           - 'їм'
@@ -263,7 +263,7 @@ workbook:
           - 'їм'
           - 'вечеряю'
         explanation: 'Tea is drunk.'
-      - sentence: 'Я хочу каву ___.'
+      - sentence: "(With milk.) Я хочу каву ___."
         answer: 'з молоком'
         options:
           - 'з молоком'
