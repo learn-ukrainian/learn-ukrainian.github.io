@@ -4,7 +4,9 @@ Rule (designated approval: CTO proposal, Sol 6.1 APPROVE, advisory task
 cto-7eba-adv-carryover2, condition 4): every review task of the PR is terminal,
 every review verdict is published and matches its run, and the approved head's
 APPROVE is the latest verdict of every reviewer seat. Unknown, unpublished or
-in-flight evidence refuses. The approval carry-over and the repair-verification
+in-flight evidence refuses. A finished run whose only outcome is a published
+capability failure (``scripts/review/capability_failure.py``) has no verdict
+and fills no seat. The approval carry-over and the repair-verification
 round (``scripts/review/repair_round.py``) both apply it before
 anything else. Ported from the carry-over's reviewed reader (#11907) so the two
 share one implementation.
@@ -20,7 +22,6 @@ import hashlib
 import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -35,7 +36,9 @@ from scripts.orchestration.integration_sweep import (
     parse_marker,
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
+from scripts.review import capability_failure
 from scripts.review import record_cf_verdict as recorder
+from scripts.review.capability_failure import run_started as _started
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.reviewer_resolver import resolve_family
 from scripts.review.verdict_parser import recognized_verdicts
@@ -131,17 +134,6 @@ def lineage_runs(task_root: Path, *, repository: str, number: int, branch: str) 
     return runs
 
 
-def _started(record: Mapping[str, Any]) -> str | None:
-    """The run's start as the recorder writes it into a marker."""
-    try:
-        started = datetime.fromisoformat(str(record.get("started_at") or "").replace("Z", "+00:00"))
-    except ValueError:
-        return None
-    if started.tzinfo is None:
-        return None
-    return started.astimezone(UTC).isoformat(timespec="microseconds")
-
-
 def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[tuple[tuple[str, str], dict[str, Any]]]:
     markers = []
     for index, comment in enumerate(comments):
@@ -180,12 +172,20 @@ def check_lineage(
     Every published verdict must belong to a run on record, and every run must
     be terminal with a reply: a finished run's verdict, model, family and start
     must match its published marker, and any other run's reply must carry no
-    verdict at all. ``exclude_head`` drops the runs and verdicts of one later
-    head, the round being recorded, which is not part of the lineage before it.
+    verdict at all. A finished run may instead have exactly one capability-failure
+    event that its record and reply re-derive (``capability_failure.require_bound``),
+    never beside a published verdict. ``exclude_head`` drops the runs, verdicts
+    and events of one later head, the round being recorded, which is not part of
+    the lineage before it.
     """
     markers = [item for item in _trusted_markers(comments, login) if item[1]["sha"] != exclude_head]
+    try:
+        failures = [event for event in capability_failure.events(comments, login) if event.sha != exclude_head]
+    except recorder.RecordError as exc:
+        raise LineageRefused(str(exc)) from None
     runs = [run for run in runs if exclude_head is None or run.record.get("worktree_base_sha") != exclude_head]
     claimed: set[tuple[str, str]] = set()
+    classified: set[tuple[str, str]] = set()
     for run in runs:
         status = run.record.get("status")
         if status not in TERMINAL_TASK_STATUSES:
@@ -196,14 +196,23 @@ def check_lineage(
             if recognized_verdicts(run.reply):
                 raise LineageRefused(f"review task {run.task_id} ({status}) carries an unpublished verdict")
             continue
+        started = _started(run.record)
+        published = [m for _, m in markers if m["task"] == run.task_id and m["started"] == started]
         try:
+            events = capability_failure.run_events(failures, run.task_id, started)
+            if events and published:
+                raise LineageRefused(f"review task {run.task_id} has both a published verdict and a capability failure")
+            if events:
+                capability_failure.require_bound(events[0], run.task_id, run.record, run.reply)
+                classified.add((run.task_id, events[0].started))
+                continue
             verdict = recorder._review_verdict_and_count(run.reply)[0]
             # The recorder's own attestation and formal-reviewer rules decide who reviewed.
             model, family = recorder.reviewer_identity(run.record)
+        except LineageRefused:
+            raise
         except recorder.RecordError as exc:
             raise LineageRefused(f"review task {run.task_id} evidence refused: {exc}") from None
-        started = _started(run.record)
-        published = [m for _, m in markers if m["task"] == run.task_id and m["started"] == started]
         if not published:
             raise LineageRefused(f"review task {run.task_id} finished but its verdict is unpublished")
         for marker in published:
@@ -218,6 +227,9 @@ def check_lineage(
     for _, marker in markers:
         if (marker["task"], marker["started"]) not in claimed:
             raise LineageRefused(f"published verdict of task {marker['task']} has no review run on record")
+    for event in failures:
+        if (event.task, event.started) not in classified:
+            raise LineageRefused(f"capability failure of task {event.task} has no finished review run on record")
     current = lookup_verdict(list(comments), approved, login)
     if current.state != "APPROVED":
         raise LineageRefused(f"approved head {approved} reads as {current.state}, not APPROVED")

@@ -73,6 +73,29 @@ the recorder refuses a same-head APPROVE after it. So an escalation ruling on a 
 rejection is followed by a head move (the fix, or a base update with
 `"$PY" -m scripts.publish pr-update-branch --number "$PR"`) and one more round at that head.
 
+## A BLOCKED that only lacked a capability
+
+A finished review whose verdict is never published refuses every later round of its lineage.
+When the reviewer stopped only because a capability it needed was missing, the CTO may record a
+capability failure for the run instead of a verdict
+(`scripts/review/capability_failure.py`):
+
+```bash
+"$PY" scripts/review/record_cf_verdict.py capability-failure --task-id "$REVIEW_TASK" --pr "$PR" \
+  --capability <sources-mcp|test-execution|shell|browser|checkout-data> --authority claude-cto
+```
+
+- It qualifies only when the reply is `BLOCKED` with a known count of zero findings, which only a
+  structured `code-review-findings.v1` reply proves, and the missing capability is evidenced:
+  `sources-mcp` by the run's recorded count of zero Sources MCP calls on the Ukrainian profile,
+  any other capability by the reply's `missing_capabilities` list beside its findings. A prose
+  reply, any finding (P3 included) or "no in-scope blocker" does not qualify, and that BLOCKED is
+  handled as today.
+- The event is bound to the run, its reviewed head and its reply digest; the reply stays as it is.
+  It is not a verdict: it approves nothing, rejects nothing, opens no round and fills no seat, so
+  every required review still has to happen. A run with a published verdict cannot be
+  reclassified, and a classified run's verdict cannot be published.
+
 ## Ledger and stable finding ids
 
 - Every finding gets a stable id (`F1`, `F2`, …) that keeps its number across rounds.
@@ -101,6 +124,8 @@ rejection is followed by a head move (the fix, or a base update with
 - `SECURITY_VERDICT FAIL` always blocks and is never downgraded to a follow-up.
 - INCONCLUSIVE (`BLOCKED` on the verdict line, naming the missing capability), a timeout, an
   error or no reply is never approval.
+  A capability-only BLOCKED may be recorded as a capability failure
+  ([above](#a-blocked-that-only-lacked-a-capability)).
 
 ## Gate of record
 
