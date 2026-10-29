@@ -402,7 +402,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-day/activities.yaml",
-      "sha256": "c9fe402d7e0d15ec3bff51857dfb3f78bb1e87161d6a48e0950e492fe72ba05d"
+      "sha256": "2de27deed7e2c28abb9144d435cfb50af13c3c9ad474230cb8d1c740d083b63e"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-day/module.md",
@@ -13790,7 +13790,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/my-day.mdx",
-      "sha256": "befab780c1832573d0191ec891bdb6dc156a7f06b80ec6293d231ce62a8299a4"
+      "sha256": "787938f08dc5858a21195b8deca34c334420a43969f25a1e7b89cf7dd9f52747"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-family.mdx",
