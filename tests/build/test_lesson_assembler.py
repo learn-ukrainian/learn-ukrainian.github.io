@@ -503,3 +503,5 @@ def test_alphabet_assemble_persists_ec_repair_into_activities_yaml(tmp_path, mon
         assert gates.contradictions({"items": disk[placement][0]["items"]}, disk[placement][0]["id"]) == []
     assert "ло́жка" in pages["1"]
     assert "сім'я́" in pages["index"] or "сім\\'я́" in pages["index"]
+
+# canary: exercise changed-test path
