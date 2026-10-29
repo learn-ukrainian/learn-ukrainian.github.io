@@ -28,6 +28,12 @@ rounds are deltas.
   `review_budget_extension` APPROVE from the non-author designated advisor, which the recorder
   checks before it admits exactly one more round (`scripts/review/budget_extension.py`;
   designated approval: advisory task cto-7eba-adv-extension2).
+- **A clean base merge consumes no round.** A head that descends from the last fully approved
+  head only through conflict-free merges of the default branch, each proven by Git to add
+  nothing beyond the merge, is reviewed without counting against the budget. It still needs
+  its own exact-head review and CI: no approval carries forward, a recorded rejection stands,
+  and verdict history is kept. A conflict, a manual edit inside a merge, any other commit, or
+  a missing object or failed proof makes the head count as a normal round.
 - **The verdict recorder refuses a round beyond the budget**, so an over-budget verdict is
   never recorded.
 - The budget and the ledger follow the work (issue and branch lineage). A new reviewer, a
