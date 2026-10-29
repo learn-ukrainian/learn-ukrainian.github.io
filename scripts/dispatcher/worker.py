@@ -388,7 +388,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     def cancelled(_signum, _frame):
         # A handler's exception lands at an arbitrary bytecode, where Python can drop it (a weakref
         # callback) or a caller can convert it (#11994). Record the request; checkpoint() raises it,
-        # and only a wait marked interruptible, built to unwind there, is stopped in place.
+        # settlement honours it, and only a wait marked interruptible, built to unwind there, is
+        # stopped in place.
         nonlocal cancel_requested, interruptible
         cancel_requested = True
         if interruptible:
@@ -454,23 +455,23 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             except (OSError, ValueError) as exc:
                 status, error = "failed", f"read_only_scratch_unavailable: {exc}"
                 return
-        checkpoint()
         # The slot queue can wait for an hour and discards its ticket on any exception, so cancel stops it in place.
         interruptible = True
         try:
+            checkpoint()  # after the region opens: a request from before it cannot wait out the queue
             slots, slots_record = admission.hold_review_test_slots(
                 agent=spec.agent, mode=spec.mode, review_typed=admission.review_typed(record),
                 sealed_attempt=bool(record.get("review_attempt")), task_id=spec.task_id,
             )
         finally:
             interruptible = False
-        checkpoint()  # the last one before the provider starts: a cancelled run launches nothing
         if slots_record is not None:
             record["review_test_slots"] = slots_record
         with tempfile.TemporaryFile(dir=ensure_scratch_root()) as stdin, stdout_path.open("wb") as out, stderr_path.open("ab") as err:
             stdin.write(invocation.stdin or b"")
             stdin.seek(0)
             output_sizes = out.tell(), err.tell()
+            checkpoint()  # the last one before the provider starts: a cancelled run launches nothing
             child = subprocess.Popen(
                 invocation.argv,
                 stdin=stdin,
@@ -544,6 +545,9 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     except Exception:
         status, error = "crashed", "supervisor or provider processing failed"
     finally:
+        if cancel_requested:
+            # A cancel requested before settlement decides the run, whatever exit the work took after it.
+            status, error = "cancelled", "cancelled by client"
         try:
             if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
                 terminate()
