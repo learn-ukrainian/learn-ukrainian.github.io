@@ -323,7 +323,7 @@ RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_livene
                            "unpublished", "remote_mismatch", "unknown", "removal_refused",
                            "worktree_remove_failed", "settlement_failed",
                            "salvage_failed", "salvage_unverified", "large_ignored_output",
-                           "nested_repository_unpushed"})
+                           "nested_repository_unpushed", "github_deferred"})
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
 SETTLE_PATIENCE = 10
 

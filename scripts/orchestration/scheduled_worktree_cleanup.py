@@ -564,40 +564,47 @@ GITHUB_DEFERRED = "github admission refused; pull-request-dependent deletion def
 
 
 class GitHubReads:
-    """The run's pull-request reads and its one degraded mode.
+    """The run's pull-request reads and its one degraded mode, shared by every repository it sweeps.
 
     The first read the shared GitHub client refuses (its reserve or hold admission, which
     serializes the refusal as ``github_rate_limited``) degrades the run: no later read is sent,
     and each deletion that needs a pull-request answer is deferred instead of reported as an
-    error. Git-proven local work continues.
+    error. Git-proven local work continues. The client records every refusal it originates in
+    this context, so a settlement read refused before the first branch read, or a first
+    transport refused behind a fallback that answered, degrades the run too; that call's
+    answer is deferred like the rest.
     """
 
     def __init__(self) -> None:
         self.refusal: str | None = None
+        self._seen = github_client._LAST_REFUSAL.get()
 
-    def _degrade(self, error: str | None) -> bool:
-        if error is not None and github_client.GitHubRateLimited.code in error:
+    def degraded(self, error: str | None = None) -> bool:
+        """Whether the run is degraded, entering it on a refusal recorded since the start or named in ``error``."""
+        last = github_client._LAST_REFUSAL.get()
+        if self.refusal is None and last is not self._seen:
+            self.refusal = f"{github_client.GitHubRateLimited.code} reset_at={last[0]} reason={last[1]}"
+        if self.refusal is None and error is not None and github_client.GitHubRateLimited.code in error:
             self.refusal = error
         return self.refusal is not None
 
-    def pr_states(self, repo_root: Path, branch: str) -> tuple[list[worktree_git.PullRequestState] | None, str | None]:
-        """``worktree_git._query_pr_states``; ``(None, GITHUB_DEFERRED)`` once the run is degraded."""
-        if self.refusal is None:
-            states, error = worktree_git._query_pr_states(repo_root, branch)
-            if not self._degrade(error):
+    def _read(self, query) -> tuple[list[worktree_git.PullRequestState] | None, str | None]:
+        if not self.degraded():
+            try:
+                states, error = query()
+            except github_client.GitHubRateLimited as exc:  # its message starts with the code
+                states, error = [], str(exc)
+            if not self.degraded(error):
                 return states, error
         return None, GITHUB_DEFERRED
 
+    def pr_states(self, repo_root: Path, branch: str) -> tuple[list[worktree_git.PullRequestState] | None, str | None]:
+        """``worktree_git._query_pr_states``; ``(None, GITHUB_DEFERRED)`` once the run is degraded."""
+        return self._read(lambda: worktree_git._query_pr_states(repo_root, branch))
+
     def pr_by_number(self, repo_root: Path, number: int) -> tuple[list[worktree_git.PullRequestState] | None, str | None]:
         """``_query_pr_by_number``; ``(None, GITHUB_DEFERRED)`` once the run is degraded."""
-        if self.refusal is None:
-            try:
-                states, error = _query_pr_by_number(repo_root, number)
-            except github_client.GitHubRateLimited as exc:  # its message starts with the code
-                states, error = [], str(exc)
-            if not self._degrade(error):
-                return states, error
-        return None, GITHUB_DEFERRED
+        return self._read(lambda: _query_pr_by_number(repo_root, number))
 
 
 def _deferred(branch: str, head_sha: str) -> dict[str, Any]:
@@ -610,20 +617,23 @@ SAFETY_STOP_REASONS = frozenset({"salvage_failed", "salvage_unverified", "large_
                                  "nested_repository_unpushed", "worktree_remove_failed", "settlement_failed"})
 
 
-def settle_terminal_worktrees(repo_root: Path, *, apply: bool) -> dict[str, Any] | None:
+def settle_terminal_worktrees(repo_root: Path, *, apply: bool, github: GitHubReads) -> dict[str, Any] | None:
     """Run the dispatcher's settlement retry with salvage, then list every finished task's tree still on disk.
 
     Only the control plane whose task records the dispatcher itself reads runs it (``None``
     otherwise), so a sibling repository or another checkout never settles that tree set; a
     dry run only lists. Settlement keeps every tree whose work it cannot prove is on the
-    canonical remote. A borrowed tree is its creator's and is not listed twice. ``complete``
-    is false when the retry failed, so a consumer must not read the list as exhaustive.
+    canonical remote, and a GitHub read it was refused degrades ``github``. A borrowed tree
+    is its creator's and is not listed twice. ``complete`` is false when the retry failed or
+    a task record (or the record directory) could not be read, so a consumer must not read
+    the list as exhaustive; ``unreadable`` names those records.
     """
     from scripts.common.task_store_paths import tasks_dir
     from scripts.dispatcher import store, worker
 
     try:
-        if (repo_root / "batch_state" / "tasks").resolve() != tasks_dir().resolve():
+        root = tasks_dir()
+        if (repo_root / "batch_state" / "tasks").resolve() != root.resolve():
             return None
     except (OSError, RuntimeError):
         return None
@@ -633,9 +643,27 @@ def settle_terminal_worktrees(repo_root: Path, *, apply: bool) -> dict[str, Any]
             worker.settle_left_worktrees(salvage=True)
     except Exception as exc:  # one failed record must not hide the others' state
         complete, error = False, f"settlement retry failed ({type(exc).__name__})"
+    github.degraded()
+    records: list[dict[str, Any]] = []
+    unreadable: list[str] = []
+    try:
+        with os.scandir(root):  # iter_task_records reads an unlistable directory as empty
+            pass
+    except OSError:
+        complete = False
+        unreadable.append(root.name)
+    for record_path in iter_task_records(root, include_archive=False):
+        try:
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            complete = False
+            unreadable.append(record_path.name)
+            continue
+        if isinstance(record, dict):  # a JSON value that is not an object is no task record
+            records.append(record)
     trees: list[dict[str, Any]] = []
     # The same record set settlement reads (dispatch v2); legacy records name trees it never settles.
-    for record in store.list_tasks():
+    for record in records:
         path = record.get("worktree_path")
         if (record.get("schema_version") != 2 or record.get("status") in store.ACTIVE
                 or (record.get("options") or {}).get("cwd")
@@ -651,7 +679,7 @@ def settle_terminal_worktrees(repo_root: Path, *, apply: bool) -> dict[str, Any]
             "detail": record.get("worktree_disposition_detail"),
             "safety_stop": record.get("worktree_disposition") == "error" or reason in SAFETY_STOP_REASONS,
         })
-    return {"complete": complete, "error": error, "trees": trees}
+    return {"complete": complete, "error": error, "unreadable": unreadable, "trees": trees}
 
 
 def cleanup_stale_origin_branches(
@@ -1235,8 +1263,9 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
     }
 
 
-def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
+def _repo_result_unlocked(repo_root: Path, *, apply: bool, github: GitHubReads | None = None) -> dict[str, Any]:
     result = _empty_repo_result(repo_root)
+    github = github or GitHubReads()
     if not (repo_root / ".git").exists():
         result["errors"].append("repository .git metadata is missing")
         return result
@@ -1272,10 +1301,10 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
 
     reaper = os.environ.get("LU_REAPER_DISABLED") != "1"
     try:
-        result["retained"] = settle_terminal_worktrees(repo_root, apply=apply and reaper)
+        result["retained"] = settle_terminal_worktrees(repo_root, apply=apply and reaper, github=github)
     except Exception as exc:  # an unreadable record set leaves the list incomplete, never the run stopped
         result["retained"] = {"complete": False, "error": f"retained worktree scan failed ({type(exc).__name__})",
-                              "trees": []}
+                              "unreadable": [], "trees": []}
     if result["retained"] and result["retained"]["error"]:
         result["errors"].append(result["retained"]["error"])
 
@@ -1283,7 +1312,6 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         result["rescue"] = report_terminal_worktrees(repo_root)
         result["errors"].extend(row["error"] for row in result["rescue"]["tasks"] if row["action"] == "error")
 
-    github = GitHubReads()
     try:
         if apply and not reaper:
             origin_branches: list[dict[str, Any]] = []
@@ -1364,12 +1392,12 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     return result
 
 
-def _repo_result(repo_root: Path, *, apply: bool) -> dict[str, Any]:
+def _repo_result(repo_root: Path, *, apply: bool, github: GitHubReads | None = None) -> dict[str, Any]:
     if not (repo_root / ".git").exists():
-        return _repo_result_unlocked(repo_root, apply=apply)
+        return _repo_result_unlocked(repo_root, apply=apply, github=github)
     try:
         with _GitHygieneLock(repo_root):
-            return _repo_result_unlocked(repo_root, apply=apply)
+            return _repo_result_unlocked(repo_root, apply=apply, github=github)
     except github_client.GitHubRateLimited:
         raise
     except RuntimeError as exc:
@@ -1386,8 +1414,11 @@ def build_receipt(
     git_maintenance: bool = False,
 ) -> dict[str, Any]:
     timestamp = observed_at or utc_now()
-    runner = _maintenance_repo_result if git_maintenance else _repo_result
-    repositories = [runner(path.resolve(), apply=apply) for path in repo_roots]
+    if git_maintenance:
+        repositories = [_maintenance_repo_result(path.resolve(), apply=apply) for path in repo_roots]
+    else:
+        github = GitHubReads()  # one degraded mode for the whole run
+        repositories = [_repo_result(path.resolve(), apply=apply, github=github) for path in repo_roots]
     errors = sum(len(repository["errors"]) for repository in repositories)
     orphans = sum(len(repository["orphans"]) for repository in repositories)
     origin_branches_deleted = sum(

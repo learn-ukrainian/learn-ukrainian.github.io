@@ -403,11 +403,17 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
 _REMOTE_SLUG = re.compile(r"(?:https://[^/]+/|git@[^:]+:|ssh://[^/]+/)([\w.-]+/[\w.-]+?)(?:\.git)?/?")
 
 
+class GitHubRefused(ValueError):
+    """The shared GitHub client's reserve or hold admission refused a read; nothing was sent."""
+
+
 def _gh(*args: str) -> str:
     from scripts.common import github_client
 
     proc = github_client.run(["gh", *args], capture_output=True, text=True, check=False, timeout=60)
     if proc.returncode != 0:
+        if github_client.refusal_of(proc) is not None:
+            raise GitHubRefused("GitHub admission refused the read")
         raise ValueError("GitHub read failed")
     return proc.stdout
 
@@ -621,8 +627,8 @@ def _salvage(record: dict, tree: Path, head: str, changed: list[str]) -> tuple[s
 
     The commit is head itself when nothing is uncommitted, else one commit on head holding the tracked
     and untracked files, with a fixed author and date so a retry builds the same commit. It goes to the
-    URL recorded at dispatch without force, never over a salvage branch that holds another commit, and
-    counts only once that remote advertises exactly it.
+    URL recorded at dispatch only as a new branch: the push leases the branch as absent, so it never
+    updates one that exists, even by fast-forward. It counts only once that remote advertises exactly it.
     """
     task_id, remote = record["task_id"], record["worktree_remote_url"]
     ref = SALVAGE_PREFIX + task_id
@@ -646,17 +652,19 @@ def _salvage(record: dict, tree: Path, head: str, changed: list[str]) -> tuple[s
         return next((sha for sha, name in (line.split() for line in listing.splitlines()) if name == ref), None)
 
     try:
-        existing = advertised()
-        if existing not in (None, commit):
-            raise _Kept("salvage_failed", f"{ref} already holds another commit")
-        if existing is None:
-            _verification_git(tree, "push", "--quiet", "--", remote, f"{commit}:{ref}", credential_remote=remote,
-                              timeout=VERIFICATION_FETCH_TIMEOUT)
+        if advertised() is None:
+            # A refused push (the branch appeared meanwhile, or a transport failure) is judged by what
+            # the remote advertises next.
+            with suppress(subprocess.CalledProcessError):
+                _verification_git(tree, "push", "--quiet", f"--force-with-lease={ref}:", "--", remote,
+                                  f"{commit}:{ref}", credential_remote=remote, timeout=VERIFICATION_FETCH_TIMEOUT)
         verified = advertised()
     except (OSError, ValueError, subprocess.SubprocessError):
         raise _Kept("salvage_failed", f"push of {ref} to the recorded remote failed") from None
+    if verified is None:
+        raise _Kept("salvage_failed", f"push of {ref} to the recorded remote failed")
     if verified != commit:
-        raise _Kept("salvage_unverified", f"{ref} does not advertise the salvage commit")
+        raise _Kept("salvage_failed", f"{ref} already holds another commit")
     return commit, snapshot
 
 
@@ -693,6 +701,8 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
         if not changed and record["mode"] != "read-only" and committed:
             remote, merged = _canonical_publication(record, f"refs/heads/{record.get('publish_branch') or branch}", head)
         hold = _salvage_hold(tree, repo, untracked) if salvage else None
+    except GitHubRefused:
+        return disposition("retained", "github_deferred")
     except (OSError, ValueError, KeyError, subprocess.SubprocessError):
         return disposition("retained", "unknown")
     published = head == remote or merged
@@ -721,21 +731,26 @@ def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False)
     salvage_detail = f"{SALVAGE_PREFIX}{record['task_id']} {salvaged[0]}" if salvaged else None
 
     def changed_since_inventory(path: Path) -> bool | None:
-        with suppress(OSError, subprocess.SubprocessError):
+        with suppress(OSError, ValueError, subprocess.SubprocessError):
+            now_changed, now_untracked = _tree_changes(path)
+            if _git(path, "rev-parse", "HEAD", isolate=True) != head:
+                return True
             if salvaged:
-                return (_git(path, "rev-parse", "HEAD", isolate=True) != head
-                        or _snapshot_tree(path, record["task_id"]) != salvaged[1]
-                        or any(entry.startswith("hidden ") for entry in _tree_changes(path)[0]))
-            return _tree_changes(path) != ([], untracked)
+                moved = (_snapshot_tree(path, record["task_id"]) != salvaged[1]
+                         or any(entry.startswith("hidden ") for entry in now_changed))
+            else:
+                moved = (now_changed, now_untracked) != ([], untracked)
+            return moved or (salvage and _salvage_hold(path, repo, now_untracked) is not None)
         return None
 
     with worktree_lock(repo):
         if borrowed():
             return disposition("retained", "borrowed_by_live_task")
-        # Untracked files and salvaged edits block a plain removal; the forced one runs only after the dirty probe.
+        # Untracked files and salvaged edits block a plain removal; the forced one runs only after the dirty
+        # probe, which salvage always runs so its HEAD, content and holds are checked again under the lock.
         removal = worktree_claims.remove_unclaimed_worktree(
             tree, repo_root=repo, reason="dispatch settlement", owner_task_id=record["task_id"],
-            force=bool(untracked or changed), dirty_probe=changed_since_inventory, tasks_dir=tasks_dir(),
+            force=bool(untracked or changed or salvage), dirty_probe=changed_since_inventory, tasks_dir=tasks_dir(),
             task_record=record, preserve_files=untracked or None,
         )
     if removal.action == "skipped":

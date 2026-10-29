@@ -579,7 +579,7 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
     public = tmp_path / "public"
     private = tmp_path / "private"
 
-    def fake_repo_result(repo_root: Path, *, apply: bool):
+    def fake_repo_result(repo_root: Path, *, apply: bool, github=None):
         return {
             "repo_root": str(repo_root),
             "fetch": {"ok": True, "detail": None},

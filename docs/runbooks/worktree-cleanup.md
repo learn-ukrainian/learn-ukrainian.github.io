@@ -263,7 +263,9 @@ deletes these), then removes the tree as `removed`/`salvaged`. A failed or
 unproven salvage keeps it (`salvage_failed`, `salvage_unverified`), and so do
 a nested repository with unpushed or uncommitted work
 (`nested_repository_unpushed`) and more than 100 MB of meaningful ignored
-output (`large_ignored_output`). The run's private receipt lists every
+output (`large_ignored_output`); a publication read that the shared GitHub
+client's admission refused keeps a tree as `github_deferred` in any
+settlement. The run's private receipt lists every
 finished task's tree still on disk with its reason; the summary carries
 `retained_count`, `retained_safety_stops` and `retained_complete`.
 `scripts/dispatch.py worktrees` lists every linked worktree with its
