@@ -31,7 +31,7 @@ from scripts.eval.uk_behaviour.contract import (
     manifest_problems,
 )
 from scripts.eval.uk_behaviour.reward import Components, quality, resolve_status, reward
-from scripts.eval.uk_behaviour.runner import admission_refusal, plan_cells
+from scripts.eval.uk_behaviour.runner import admission_refusal, launch_refusal, plan_cells
 from scripts.review.receipts import ledger
 
 SHA = "0" * 64
@@ -89,6 +89,20 @@ def test_answer_position_rule(keys: list[int], defect: bool) -> None:
 # --------------------------------------------------------------------------- binding
 
 
+# One complete, verified ULIF record, as the ledger's outcome classifier requires for a hit.
+ULIF_ENTRY = {
+    "verified": True,
+    "status": "ok",
+    "sections_state": "complete",
+    "forms_state": "complete",
+    "retrieved_at": "2026-10-01T00:00:00Z",
+    "content_sha256": "a" * 64,
+    "identity_from_raw": {"stored_matches_raw": True},
+    "sections": {"forms": [{"stressed": "xx"}]},
+}
+ULIF_RECORDS = {"records": [{"word": "x", "status": "ok", "verified": True, "entries": [ULIF_ENTRY]}]}
+
+
 @pytest.fixture
 def index(tmp_path: Path) -> tuple[LedgerIndex, dict[str, str]]:
     path = tmp_path / "rv-unit" / "cand.jsonl"
@@ -98,9 +112,10 @@ def index(tmp_path: Path) -> tuple[LedgerIndex, dict[str, str]]:
         ("words", "verify_words", "Found: 1/1\n- **x** — FOUND"),
         ("miss", "verify_words", "Found: 0/1\n- **y** — NOT FOUND"),
         ("sum11", "search_definitions", "СУМ-11 notice\nentry for x"),
-        ("slovnyk", "search_slovnyk_me", "Source: СУМ-11\nentry for x"),
-        ("ulif", "verify_stress", '{"status": "ok", "matches": [{"source": "ulif", "stressed_form": "x"}]}'),
-        ("trie", "verify_stress", '{"status": "ok", "matches": [{"source": "trie", "stressed_form": "x"}]}'),
+        ("slovnyk", "search_slovnyk_me", "### Result 1\n- **Dictionary**: СУМ-11\n- **Snippet**: entry for x"),
+        ("stress", "verify_stress", "x — ok: xx"),
+        ("sum20", "query_sum20", "**Official СУМ-20 entries for 'x'**\n\n**xx** (noun)\n**URL**: https://s.example/x"),
+        ("records", "query_ulif_records", json.dumps(ULIF_RECORDS)),
     ):
         receipts[name] = ledger.append(
             path,
@@ -127,7 +142,7 @@ def _binding(index: LedgerIndex, receipt_id: str, excerpt: str, **extra) -> dict
         "arguments_sha256": arguments_sha256(record["arguments"]),
         "result_sha256": sha256_text(record["result"]),
         "evidence_excerpt": excerpt,
-        "source_locator": "loc",
+        "source_locator": excerpt,
     } | extra
 
 
@@ -155,15 +170,35 @@ def test_sum11_is_never_positive_authority(index) -> None:
     assert check_binding(named, "meaning", idx).status == SUM11_POSITIVE
 
 
-def test_stress_needs_ulif_provenance(index) -> None:
+def test_stress_needs_a_ulif_or_sum20_record(index) -> None:
     idx, receipts = index
-    assert check_binding(_binding(idx, receipts["ulif"], "stressed_form"), "stress", idx).status == VERIFIED
-    assert check_binding(_binding(idx, receipts["trie"], "stressed_form"), "stress", idx).status == EVIDENCE_INVALID
+    # verify_stress keeps one summary line and no reading provenance.
+    assert check_binding(_binding(idx, receipts["stress"], "x — ok: xx"), "stress", idx).status == EVIDENCE_INVALID
+    sum20 = _binding(idx, receipts["sum20"], "**xx** (noun)", source_locator="https://s.example/x")
+    assert check_binding(sum20, "stress", idx).status == VERIFIED
+    record = _binding(idx, receipts["records"], "xx", source_locator="xx")
+    assert check_binding(record, "stress", idx).status == EVIDENCE_INVALID  # a JSON result needs its record
+    pointed = record | {"evidence_pointer": "/records/0/entries/0"}
+    assert check_binding(pointed, "stress", idx).status == VERIFIED
+    assert check_binding(pointed | {"evidence_pointer": "/records"}, "stress", idx).status == EVIDENCE_INVALID
+
+
+def test_excerpt_and_locator_share_one_unit(index) -> None:
+    idx, receipts = index
+    header = _binding(idx, receipts["sum20"], "**xx** (noun)", source_locator="Official СУМ-20 entries")
+    assert check_binding(header, "stress", idx).status == EVIDENCE_INVALID
+    invented = _binding(idx, receipts["sum20"], "**xx** (noun)", source_locator="invented")
+    assert check_binding(invented, "stress", idx).status == EVIDENCE_INVALID
 
 
 def test_request_evidence_supports_pedagogy_and_exercise_only(index) -> None:
     idx, _ = index
-    binding = {"role": "request", "evidence_id": "standard", "evidence_excerpt": "line 233", "source_locator": "s"}
+    binding = {
+        "role": "request",
+        "evidence_id": "standard",
+        "evidence_excerpt": "line 233",
+        "source_locator": "standard",
+    }
     assert check_binding(binding, "pedagogy", idx).status == VERIFIED
     assert check_binding(binding, "exercise", idx).status == VERIFIED
     assert check_binding(binding, "meaning", idx).status == EVIDENCE_INVALID
@@ -350,7 +385,7 @@ def test_bind_reply_computes_offsets_and_digests(index) -> None:
                         "role": "candidate",
                         "receipt_id": receipts["words"],
                         "evidence_excerpt": "Found: 1/1",
-                        "source_locator": "VESUM",
+                        "source_locator": "**x**",
                     }
                 ],
             }
@@ -397,6 +432,32 @@ def test_shuffle_and_audit_sample_are_seeded_and_stratified() -> None:
 
 
 # --------------------------------------------------------------------------- runner and manifest
+
+
+def test_nested_label_keys_are_refused_and_production_fields_are_kept() -> None:
+    with pytest.raises(adapters.AdapterError):
+        adapters.render_review("card_review", CARD | {"card": {"x": [{"expected_outcome": "clean"}]}}, b"P")
+    exercise = {
+        "item_id": "e",
+        "judging_mode": "repair",
+        "level": "A1",
+        "target": "t",
+        "learner_state": {},
+        "exercise": {"items": [{"stem": "s", "options": ["a"], "key": "a", "accepted": ["a"]}]},
+    }
+    assert "accepted" in adapters.render_review("exercise_review", exercise, b"P")
+
+
+def test_every_paid_cell_is_refused_until_its_tool_policy_can_be_enforced() -> None:
+    bundle = {
+        "bundle": "uk-behaviour-v2/requests",
+        "split": "development",
+        "items": [{"family": "card_review", "item": CARD}],
+    }
+    task = plan_cells(bundle, {"card_review": b"PROMPT"}, "unit")[0]
+    assert "receipt ledger" in launch_refusal(task)
+    fresh = task.__class__(**{**task.__dict__, "meta": {"family": "fresh_lesson", "tool_policy": {"sources": False}}})
+    assert "zero-tool boundary" in launch_refusal(fresh)
 
 
 def test_cells_give_both_candidates_identical_bytes_and_refuse_paid_runs() -> None:

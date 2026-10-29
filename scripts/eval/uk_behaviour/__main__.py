@@ -18,7 +18,7 @@ from . import pins, prove
 from .adapters import AdapterError, pinned_bytes
 from .contract import JUDGE_SLOT, MANIFEST_PATH, PRIVATE_PROMPT_SLOTS, load_manifest, manifest_problems
 from .rubric import rubric_sha256
-from .runner import admission_refusal, load_bundle, plan_cells
+from .runner import admission_refusal, launch_refusal, load_bundle, plan_cells
 
 EPILOG = """\
 Examples:
@@ -98,7 +98,7 @@ def _cmd_plan(args: argparse.Namespace) -> int:
             prompts[family] = pinned_bytes(paths[slot].read_bytes(), entry.get("sha256"), slot)
     tasks = plan_cells(load_bundle(args.requests), prompts, validate_run_tag(args.run_tag))
     if not args.dry_run:
-        refusal = admission_refusal(manifest)
+        refusal = admission_refusal(manifest) or next(filter(None, map(launch_refusal, tasks)), None)
         if refusal:
             raise HarnessError(f"paid execution refused: {refusal}")
     from scripts.eval.uk_preamble.__main__ import make_dispatcher, make_executor

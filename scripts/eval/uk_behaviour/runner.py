@@ -8,9 +8,10 @@ A sealed request bundle (private, G1) is one JSON object::
 Each item is rendered once by its production adapter, so both candidates
 receive identical bytes, and planned as one ``TaskSpec`` per candidate seat and
 repeat 1-3 for the inherited ``uk_preamble.runner.Executor``. Paid execution
-stays refused until the manifest admits the baseline; ``preflight`` only
-writes prompts privately and validates each dispatch with the dispatcher's dry
-run.
+stays refused until the manifest admits the baseline and every cell's tool
+policy can be enforced and attested at launch (``launch_refusal``);
+``preflight`` only writes prompts privately and validates each dispatch with
+the dispatcher's dry run.
 """
 
 from __future__ import annotations
@@ -116,3 +117,22 @@ def admission_refusal(manifest: dict[str, Any]) -> str | None:
     if missing:
         return f"{len(missing)} private references are still unsealed"
     return None
+
+
+# What the launch must enforce and attest per tool policy, and why this dispatcher cannot yet.
+# Both are G4 runtime seals owned by the baseline runner (protocol G4 row); until then every
+# paid cell is refused rather than run with a boundary that is only declared in metadata.
+_UNENFORCED = {
+    False: "the zero-tool boundary of a fresh writer: the dispatcher cannot launch a seat with every tool "
+    "removed and attest it",
+    True: "the Sources boundary: the dispatcher does not provision a per-attempt receipt ledger restricted "
+    "to the review tools with a 32-call cap",
+}
+
+
+def launch_refusal(task: TaskSpec) -> str | None:
+    """Why ``task`` cannot be launched with its tool policy enforced, or None when it can."""
+    policy = task.meta.get("tool_policy")
+    if not isinstance(policy, dict) or "sources" not in policy:
+        return "the task carries no tool policy"
+    return f"{task.meta.get('family')}: {_UNENFORCED[bool(policy['sources'])]} (G4, baseline runner)"

@@ -23,15 +23,19 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.scratch import ensure_scratch_root
+from scripts.eval.uk_preamble.common import tokenize
 from scripts.review.receipts import ledger
 
 from . import adapters, coverage, judge
 from .binding import LedgerIndex, LedgerRef
 from .contract import (
     COMPLETE,
+    EXERCISE_REQUEST_DEFECTS,
     FAMILIES,
     INVALID_FABRICATED_RECEIPT,
     INVALID_OVERPRODUCTION,
+    PEDAGOGY_ANCHORS,
+    PEDAGOGY_DEFECTS,
     UNRESOLVED_EVALUATOR,
     load_manifest,
 )
@@ -62,22 +66,26 @@ class Fixture:
             self.item |= {"card": {}, "context": "synthetic"}
         self.refs: list[LedgerRef] = []
         self.paths: dict[str, Path] = {}
-        for role in ("candidate", "judge"):
+        for role in ("candidate", "judge", "pack"):
             path = root / f"rv-{name}" / f"{role}.jsonl"
             ledger.create_empty_ledger(path)
             self.paths[role] = path
             self.refs.append(LedgerRef(role, path, f"rv-{name}", role, MANIFEST_SHA))
 
     def receipt(self, role: str, word: str, *, found: bool = True) -> str:
-        result = f"Found: {1 if found else 0}/1\n- **{word}** — {'FOUND' if found else 'NOT FOUND'}"
+        result = f"Source: VESUM\nFound: {1 if found else 0}/1\n- **{word}** — {'FOUND' if found else 'NOT FOUND'}"
+        return self.call(role, "verify_words", {"words": [word]}, result)
+
+    def call(self, role: str, tool: str, arguments: dict[str, Any], result: str) -> str:
+        """Append one synthetic Sources call to the role's verified ledger."""
         return ledger.append(
             self.paths[role],
             review_id=self.paths[role].parent.name,
             attempt_id=role,
             manifest_sha256=MANIFEST_SHA,
-            tool="verify_words",
+            tool=tool,
             server_version="fixture",
-            arguments={"words": [word]},
+            arguments=arguments,
             snapshots={},
             status="ok",
             result=result,
@@ -142,8 +150,10 @@ def _bind(role: str, receipt_id: str, *, found: bool = True) -> dict[str, Any]:
     }
 
 
-def _label(item: dict[str, Any], family: str, *, required: int, expected: str = "findings", **extra: Any) -> dict:
-    slots = [{"slot_id": f"s{i}", "facet": "form"} for i in range(1, required + 1)]
+def _label(
+    item: dict[str, Any], family: str, *, required: int, expected: str = "findings", facet: str = "form", **extra: Any
+) -> dict:
+    slots = [{"slot_id": f"s{i}", "facet": facet} for i in range(1, required + 1)]
     return {
         "item_id": item["item_id"],
         "family": family,
@@ -422,7 +432,7 @@ def branches(root: Path) -> list[dict[str, Any]]:
 def _one_finding_cell(fx: Fixture, finding: dict[str, Any], quote: str, facet: str) -> dict[str, Any]:
     output = _envelope(fx.item, [finding])
     assertion = _assertion("A1", quote, finding["id"], facet=facet, slot_id="s1")
-    return _score(fx, _label(fx.item, fx.family, required=1), output, _reply(fx, [assertion]))
+    return _score(fx, _label(fx.item, fx.family, required=1, facet=facet), output, _reply(fx, [assertion]))
 
 
 def _evidence_cases(root: Path) -> list[dict[str, Any]]:
@@ -584,37 +594,210 @@ def _evidence_cases(root: Path) -> list[dict[str, Any]]:
     result = _one_finding_cell(fx, finding, "the plan defers promised coverage", "pedagogy")
     cases.append(_case("learner-state text relabelled as the coverage map earns nothing", 0.1, result["R"]))
 
-    for name, reading, expected in (
-        ("an exercise stress finding on a fallback reading earns nothing, whatever the judge's facet", "trie", 0.1),
-        ("an exercise stress finding on a ULIF reading earns credit", "ulif", 1.0),
+    for name, tool, expected in (
+        (
+            "an exercise stress finding on a verify_stress receipt earns nothing, whatever the judge's facet",
+            "verify_stress",
+            0.1,
+        ),
+        ("an exercise stress finding on a СУМ-20 record earns credit", "query_sum20", 1.0),
     ):
-        fx = Fixture(root, f"stress-{reading}", "exercise_review")
-        rid = ledger.append(
-            fx.paths["candidate"],
-            review_id=fx.paths["candidate"].parent.name,
-            attempt_id="candidate",
-            manifest_sha256=MANIFEST_SHA,
-            tool="verify_stress",
-            server_version="fixture",
-            arguments={"words": ["w5"]},
-            snapshots={},
-            status="ok",
-            result=json.dumps({"status": "ok", "matches": [{"source": reading, "stressed_form": "w5"}]}),
-        )
+        fx = Fixture(root, f"stress-{tool}", "exercise_review")
+        if tool == "verify_stress":  # its receipt keeps one summary line, never the reading's source
+            result, excerpt, locator = "w5 — ok: w5x", "w5 — ok: w5x", "w5"
+        else:
+            result = _sum20("w5")
+            excerpt, locator = "**w5x** (noun)", "https://sum20.example/w5"
+        rid = fx.call("candidate", tool, {"word": "w5"}, result)
         finding = _finding("F1", 5, "the stress of w5 is wrong", [rid], defect="stress")
-        output = _envelope(fx.item, [finding])
         binding = {
             "role": "candidate",
             "receipt_id": rid,
             "polarity": "positive",
-            "evidence_excerpt": "stressed_form",
-            "source_locator": "ULIF",
+            "evidence_excerpt": excerpt,
+            "source_locator": locator,
         }
         assertion = _assertion(
             "A1", "the stress of w5 is wrong", "F1", facet="exercise", slot_id="s1", bindings=[binding]
         )
-        result = _score(fx, _label(fx.item, fx.family, required=1), output, _reply(fx, [assertion]))
+        label = _label(fx.item, fx.family, required=1, facet="stress")
+        result = _score(fx, label, _envelope(fx.item, [finding]), _reply(fx, [assertion]))
         cases.append(_case(name, expected, result["R"]))
+    return cases
+
+
+def _sum20(word: str) -> str:
+    """A synthetic ``query_sum20`` result: a header and one record (two evidence units)."""
+    return (
+        f"**Official СУМ-20 entries for '{word}'**\n\n**{word}x** (noun)\n**Source**: СУМ-20\n"
+        f"**URL**: https://sum20.example/{word}\n1. sense of {word}"
+    )
+
+
+def review_probes(root: Path) -> list[dict[str, Any]]:
+    """The independent review's round-1 probes: judge fields, integrity and provenance."""
+    cases = []
+    fx = Fixture(root, "probe-harm-slot")
+    output, assertions = _slot_review(fx, 1)
+    rid = fx.receipt("judge", "w1")
+    assertions[0] |= {
+        "slot_id": "s99",
+        "harm": True,
+        "protected_opportunity_id": "p1",
+        "bindings": [_bind("judge", rid)],
+    }
+    result = _score(fx, _label(fx.item, fx.family, required=1), output, _reply(fx, assertions))
+    cases.append(
+        _case(
+            "labelled harm counts even when the judge names an unknown slot",
+            (1, -2.0),
+            (result["components"]["H"], result["R"]),
+        )
+    )
+
+    fx = Fixture(root, "probe-slot-facet")
+    finding = _finding("F1", 3, "the gloss gives the answer away", [], defect="giveaway_gloss")
+    result = _one_finding_cell(fx, finding, "the gloss gives the answer away", "stress")
+    cases.append(
+        _case(
+            "a request-only finding cannot take a stress slot",
+            (0, 0.1),
+            (result["counts"]["credited_slots"], result["R"]),
+        )
+    )
+
+    fx = Fixture(root, "probe-omitted", "card_review")
+    rid = fx.receipt("candidate", "c1")
+    finding = {
+        "id": "F1",
+        "facet": "form",
+        "location": {"field": "/card", "quote": "c"},
+        "claim": "claim c1 is wrong",
+        "proposed_edit": None,
+        "receipts": [rid],
+    }
+    output = json.dumps(
+        {
+            "item_id": fx.item["item_id"],
+            "judging_mode": "repair",
+            "outcome": "findings",
+            "findings": [finding],
+            "gaps": [],
+        }
+    )
+    reply = _reply(fx, [], outcome_correct=True)
+    result = _score(fx, _label(fx.item, fx.family, required=0, expected="clean"), output, reply)
+    cases.append(
+        _case(
+            "a finding the judge omits keeps zero credit on a clean control",
+            (0.0, UNRESOLVED_EVALUATOR),
+            (result["components"]["C"], result["status"]),
+        )
+    )
+
+    fx = Fixture(root, "probe-two-bindings")
+    output, assertions = _slot_review(fx, 1, false_edit=True)
+    assertions[-1]["bindings"].append(_bind("judge", "rr-" + "b" * 20))
+    result = _score(fx, _label(fx.item, fx.family, required=1), output, _reply(fx, assertions))
+    cases.append(_case("one broken binding does not erase a verified false correction", 1, result["components"]["F"]))
+
+    cap = FAMILIES["card_review"].cap.max_bytes
+    for name, output in (("malformed", "x" * (cap + 1)), ("blank", " " * (cap + 1))):
+        fx = Fixture(root, f"probe-oversize-{name}", "card_review")
+        result = _score(fx, _label(fx.item, fx.family, required=1), output, None)
+        cases.append(
+            _case(
+                f"an oversized {name} output is overproduction",
+                (INVALID_OVERPRODUCTION, -1.5),
+                (result["status"], result["R"]),
+            )
+        )
+
+    fx = Fixture(root, "probe-wrong-item", "card_review")
+    output = json.dumps(
+        {
+            "item_id": "another",
+            "judging_mode": "repair",
+            "outcome": "findings",
+            "findings": [{"id": "F1", "receipts": ["rr-" + "a" * 20]}],
+            "gaps": [],
+        }
+    )
+    result = _score(fx, _label(fx.item, fx.family, required=1), output, None)
+    cases.append(
+        _case(
+            "a malformed envelope citing an absent receipt is fabrication",
+            (INVALID_FABRICATED_RECEIPT, -1.5, 1),
+            (result["status"], result["R"], result["counts"]["fabricated_receipts"]),
+        )
+    )
+
+    mixed = (
+        'Found 2 slovnyk.me result(s) for: "m1"\n\n### Result 1\n- **Headword**: m1\n'
+        "- **Dictionary**: ВТС\n- **URL**: https://slovnyk.example/vts/m1\n- **Snippet**: modern sense\n\n"
+        "### Result 2\n- **Headword**: m1\n- **Dictionary**: СУМ-11\n"
+        "- **URL**: https://slovnyk.example/sum/m1\n- **Snippet**: soviet sense\n"
+    )
+    for name, dictionary, locator, expected in (
+        (
+            "a СУМ-11 entry relabelled as ВТС in a mixed result earns nothing",
+            "ВТС",
+            "https://slovnyk.example/sum/m1",
+            (0.1, 0),
+        ),
+        ("a СУМ-11 entry in a mixed result counts in S", "СУМ-11", "https://slovnyk.example/sum/m1", (0.1, 1)),
+        ("an invented locator binds nothing", "ВТС", "invented locator", (0.1, 0)),
+        ("the ВТС entry of a mixed result earns credit", "ВТС", "https://slovnyk.example/vts/m1", (1.0, 0)),
+    ):
+        fx = Fixture(root, f"probe-slovnyk-{len(cases)}", "card_review")
+        rid = fx.call("candidate", "search_slovnyk_me", {"query": "m1"}, mixed)
+        excerpt = "soviet sense" if "sum" in locator else "modern sense"
+        finding = {
+            "id": "F1",
+            "facet": "meaning",
+            "location": {"field": "/card", "quote": "m"},
+            "claim": "the sense of m1 is wrong",
+            "proposed_edit": None,
+            "receipts": [rid],
+        }
+        output = json.dumps(
+            {
+                "item_id": fx.item["item_id"],
+                "judging_mode": "repair",
+                "outcome": "findings",
+                "findings": [finding],
+                "gaps": [],
+            }
+        )
+        binding = {
+            "role": "candidate",
+            "receipt_id": rid,
+            "polarity": "positive",
+            "evidence_excerpt": excerpt,
+            "source_locator": locator,
+            "underlying_dictionary": dictionary,
+        }
+        assertion = _assertion(
+            "A1", "the sense of m1 is wrong", "F1", facet="meaning", slot_id="s1", bindings=[binding]
+        )
+        label = _label(fx.item, fx.family, required=1, facet="meaning")
+        result = _score(fx, label, output, _reply(fx, [assertion]))
+        cases.append(_case(name, expected, (result["R"], result["components"]["S"])))
+
+    nested = {
+        "item_id": "c",
+        "judging_mode": "repair",
+        "level": "A1",
+        "card": {"labels": {"protected": []}},
+        "context": "c",
+    }
+    cases.append(
+        _case(
+            "label metadata nested inside an allowlisted field is refused",
+            True,
+            _refused(lambda: adapters.render_review("card_review", nested, b"prompt")),
+        )
+    )
     return cases
 
 
@@ -836,6 +1019,342 @@ def max_size_coverage() -> list[dict[str, Any]]:
     return cases
 
 
+FRESH_FIXTURE = "tests/build/fixtures/fresh/lesson-draft-a1-valid.yaml"
+PAD = "Read each line aloud once more."
+
+
+def _vesum_batch(words: list[str]) -> str:
+    lines = "\n".join(f"- **{word}** — FOUND" for word in words)
+    return f"Source: VESUM\nFound: {len(words)}/{len(words)}\n{lines}"
+
+
+def _textbook(n: int) -> str:
+    return (
+        f'Found 1 results for: "q{n}"\n\n### Result 1\n- **Chunk ID**: `chunk-{n:02d}`\n'
+        f"- **Text**:\nsentence {n:02d} of the page"
+    )
+
+
+def _bound(fx: Fixture, role: str, rid: str, excerpt: str, locator: str) -> dict[str, Any]:
+    return {
+        "role": role,
+        "receipt_id": rid,
+        "polarity": "positive",
+        "evidence_excerpt": excerpt,
+        "source_locator": locator,
+    }
+
+
+def _pad(text: str, family: str, filler: str) -> str:
+    """``text`` grown with ``filler`` close to whichever of the family's caps binds first."""
+    cap = FAMILIES[family].cap
+    by_bytes = (cap.max_bytes - 512 - len(text.encode("utf-8"))) // len(filler.encode("utf-8"))
+    by_tokens = (cap.max_tokens - 256 - len(tokenize(text))) // len(tokenize(filler))
+    return text + filler * max(0, min(by_bytes, by_tokens))
+
+
+def _writer_claims(fx: Fixture, batched_role: str, words: list[str], claims: list[str]):
+    """Batched form claims on shared verify_words receipts, and one search_text receipt per claim."""
+    slots, assertions = [], []
+    for start in range(0, len(words), 200):
+        chunk = words[start : start + 200]
+        rid = fx.call(batched_role, "verify_words", {"words": chunk}, _vesum_batch(chunk))
+        for word in chunk:
+            slots.append({"slot_id": f"b-{word}", "facet": "form"})
+            assertions.append(
+                _assertion(
+                    f"A-{word}",
+                    word,
+                    None,
+                    slot_id=f"b-{word}",
+                    bindings=[_bound(fx, batched_role, rid, f"- **{word}** — FOUND", "VESUM")],
+                )
+            )
+    for n, claim in enumerate(claims, 1):
+        rid = fx.call("judge", "search_text", {"query": f"q{n}"}, _textbook(n))
+        slots.append({"slot_id": f"i{n}", "facet": "naturalness"})
+        assertions.append(
+            _assertion(
+                f"I{n}",
+                claim,
+                None,
+                facet="naturalness",
+                slot_id=f"i{n}",
+                bindings=[_bound(fx, "judge", rid, f"sentence {n:02d} of the page", f"chunk-{n:02d}")],
+            )
+        )
+    return slots, assertions
+
+
+def _max_fresh(root: Path, family: str) -> tuple[Fixture, str, list, list, Any]:
+    import yaml
+
+    from scripts.build.fresh.writer import parse_and_validate_reply
+
+    from .contract import REPO_ROOT
+
+    cap = FAMILIES[family].cap
+    fx = Fixture(root, f"max-{family}", family)
+    fx.item = {
+        "item_id": f"syn-max-{family}",
+        "judging_mode": "authoring",
+        "level": "A1",
+        "slug": "s",
+        "lesson_n": 1,
+        "inputs": {"plan_entry": {}, "cited_records": {}, "learner_state": {}, "immersion": {}},
+    }
+    draft = yaml.safe_load((REPO_ROOT / FRESH_FIXTURE).read_text(encoding="utf-8"))
+    words = [f"w{n:03d}{side}" for n in range(1, cap.batched // 2 + 1) for side in "ab"]
+    claims = [f"Line {n:02d} is read twice." for n in range(1, cap.max_claims + 1)]
+    blocks = draft["steps"][0]["blocks"]
+    blocks.append({"kind": "table", "rows": [words[i : i + 2] for i in range(0, len(words), 2)], "explains": ["T-003"]})
+    blocks += [{"kind": "tip", "text": claim} for claim in claims]
+    base = yaml.safe_dump(draft, allow_unicode=True, sort_keys=False)
+    tips = yaml.safe_dump({"b": [{"kind": "tip", "text": PAD} for _ in range(10)]})  # distinct: no aliases
+    empty = yaml.safe_dump({"b": []})
+    per_bytes = (len(tips.encode()) - len(empty.encode())) / 10
+    per_tokens = (len(tokenize(tips)) - len(tokenize(empty))) / 10
+    count = min(
+        (cap.max_bytes - 1024 - len(base.encode())) / per_bytes,
+        (cap.max_tokens - 256 - len(tokenize(base))) / per_tokens,
+    )
+    blocks += [{"kind": "tip", "text": PAD} for _ in range(int(count))]  # whichever cap binds first
+    output = yaml.safe_dump(draft, allow_unicode=True, sort_keys=False)
+    while len(output.encode()) > cap.max_bytes - 256 or len(tokenize(output)) > cap.max_tokens - 64:
+        del blocks[-20:]  # the estimate ignores nesting depth; trim back under the caps
+        output = yaml.safe_dump(draft, allow_unicode=True, sort_keys=False)
+    slots, assertions = _writer_claims(fx, "pack", words, claims)
+
+    def validate(reply: str, level: str) -> Any:  # the production validator; the fixture is shape-only
+        return parse_and_validate_reply(reply, level.lower())
+
+    return fx, output, slots, assertions, validate
+
+
+def _max_v7(root: Path) -> tuple[Fixture, str, list, list, Any]:
+    cap = FAMILIES["v7_module"].cap
+    fx = Fixture(root, "max-v7", "v7_module")
+    fx.item = {"item_id": "syn-max-v7", "judging_mode": "authoring", "level": "A2", "writer_prompt": "write"}
+    words = [f"v{n:03d}{side}" for n in range(1, cap.batched // 2 + 1) for side in "ab"]
+    claims = [f"Line {n:02d} is read twice." for n in range(1, cap.max_claims + 1)]
+    text = "# Module\n\n" + "\n".join(f"| {a} | {b} |" for a, b in zip(words[::2], words[1::2], strict=True))
+    text += "\n\n" + "\n".join(claims) + "\n\n"
+    output = _pad(text, "v7_module", PAD + "\n")
+    slots, assertions = _writer_claims(fx, "candidate", words, claims)
+    return fx, output, slots, assertions, None
+
+
+def _max_review(root: Path, family: str) -> tuple[Fixture, str, list, list, Any]:
+    cap = FAMILIES[family].cap
+    fx = Fixture(root, f"max-{family}", family)
+    n_claims = cap.max_claims
+    findings, slots, assertions = [], [], []
+    if family == "pedagogy_review":
+        norm = [
+            {"id": f"n-{kind}", "kind": kind, "locator": f"loc-{kind}", "text": f"evidence for {kind}"}
+            for kind in (
+                "standard_lines",
+                "coverage_map",
+                "ohoiko_practice",
+                "ohoiko_progression",
+                "adult_adaptation",
+                "video_resource",
+                "video_decision",
+            )
+        ]
+        fx.item = {
+            "item_id": "syn-max-pedagogy",
+            "judging_mode": "authoring",
+            "level": "A1",
+            "shape": "plan",
+            "snippet": {"text": "the snippet under review"},
+            "target": "t",
+            "learner_state": {"known": "the learner state"},
+            "prerequisites": [],
+            "resources": [],
+            "norm_evidence": norm,
+        }
+    elif family == "passage_review":
+        seeds = [f"e{n:02d}" for n in range(1, n_claims + 1)]
+        text = " ".join(f"t{n:02d} {seed}" for n, seed in enumerate(seeds, 1)) + " p01 end"
+        fx.item |= {"passage": text}
+        errors = [
+            {
+                "id": seed,
+                "start": text.index(seed),
+                "end": text.index(seed) + 3,
+                "span": seed,
+                "error_type": "spelling",
+                "accepted": [seed.upper()],
+            }
+            for seed in seeds
+        ]
+        at = text.index("p01")
+        fx.passage = {
+            "id": "syn-max-passage",
+            "text": text,
+            "errors": errors,
+            "protected": [{"id": "p1", "start": at, "end": at + 3, "span": "p01", "kind": "heritage"}],
+        }
+        corrected = text
+        for seed in seeds:
+            corrected = corrected.replace(seed, seed.upper())
+    form_words = [f"f{n:02d}" for n in range(1, n_claims + 1)]
+    batch = fx.call("candidate", "verify_words", {"words": form_words}, _vesum_batch(form_words))
+    pad = "x" * 40
+    for n in range(1, n_claims + 1):
+        fid, claim = f"F{n}", f"claim {n:02d} holds"
+        if family == "pedagogy_review":
+            defect = PEDAGOGY_DEFECTS[(n - 1) % len(PEDAGOGY_DEFECTS)]
+            anchors, receipts = [], []
+            for part in PEDAGOGY_ANCHORS[defect]:
+                kind = part[0]
+                if kind == "textbook_page":
+                    rid = fx.call("candidate", "search_text", {"query": f"q{n}"}, _textbook(n))
+                    receipts.append(rid)
+                    anchors.append({"kind": kind, "evidence": None, "receipt": rid, "quote": f"sentence {n:02d}"})
+                elif kind == "learner_state":
+                    anchors.append(
+                        {"kind": kind, "evidence": "/learner_state/known", "receipt": None, "quote": "learner state"}
+                    )
+                elif kind == "leak":
+                    anchors.append({"kind": kind, "evidence": "/snippet/text", "receipt": None, "quote": "snippet"})
+                else:
+                    anchors.append(
+                        {"kind": kind, "evidence": f"n-{kind}", "receipt": None, "quote": f"evidence for {kind}"}
+                    )
+            finding = {
+                "id": fid,
+                "defect": defect,
+                "norm": "ohoiko_method",
+                "anchors": anchors,
+                "location": {"field": "/snippet/text", "quote": "under review"},
+                "claim": claim + pad,
+                "proposed_edit": None,
+                "receipts": receipts,
+            }
+            facet = "pedagogy"
+            binding = {
+                "role": "request",
+                "evidence_id": "/snippet/text",
+                "evidence_excerpt": "under review",
+                "source_locator": "/snippet/text",
+            }
+        elif family == "exercise_review":
+            defect = ("giveaway_gloss", "stem_names_answer", "form", "wrong_key", "stress", "form")[(n - 1) % 6]
+            receipts = []
+            if defect in EXERCISE_REQUEST_DEFECTS:
+                facet = "exercise"
+                binding = {
+                    "role": "request",
+                    "evidence_id": f"/exercise/items/{n - 1}/stem",
+                    "evidence_excerpt": f"w{n}",
+                    "source_locator": f"/exercise/items/{n - 1}/stem",
+                }
+            elif defect == "form":
+                facet, receipts = "form", [batch]
+                binding = _bound(fx, "candidate", batch, f"- **f{n:02d}** — FOUND", "VESUM")
+            else:
+                facet = "meaning" if defect == "wrong_key" else "stress"
+                rid = fx.call("candidate", "query_sum20", {"word": f"s{n:02d}"}, _sum20(f"s{n:02d}"))
+                receipts = [rid]
+                binding = _bound(fx, "candidate", rid, f"**s{n:02d}x** (noun)", f"https://sum20.example/s{n:02d}")
+            finding = _finding(fid, n, claim + pad, receipts, defect=defect)
+        else:
+            facet = ("meaning", "stress", "form")[(n - 1) % 3] if family == "card_review" else "form"
+            if facet == "form":
+                receipts = [batch]
+                binding = _bound(fx, "candidate", batch, f"- **f{n:02d}** — FOUND", "VESUM")
+            else:
+                rid = fx.call("candidate", "query_sum20", {"word": f"s{n:02d}"}, _sum20(f"s{n:02d}"))
+                receipts = [rid]
+                binding = _bound(fx, "candidate", rid, f"**s{n:02d}x** (noun)", f"https://sum20.example/s{n:02d}")
+            field = "/passage" if family == "passage_review" else "/card"
+            edit = {"field": field, "replacement": f"E{n:02d}"} if family == "passage_review" else None
+            finding = {
+                "id": fid,
+                "facet": facet,
+                "location": {"field": field, "quote": "x"},
+                "claim": claim + pad,
+                "proposed_edit": edit,
+                "receipts": receipts,
+            }
+        slot = f"e{n:02d}" if family == "passage_review" else f"s{n}"
+        slots.append({"slot_id": slot, "facet": facet})
+        kind = "edit" if family == "passage_review" else "assertion"
+        assertions.append(_assertion(f"A{n}", claim, fid, facet=facet, kind=kind, slot_id=slot, bindings=[binding]))
+        findings.append(finding)
+    envelope = {
+        "item_id": fx.item["item_id"],
+        "judging_mode": fx.item["judging_mode"],
+        "outcome": "findings",
+        "findings": findings,
+        "gaps": [],
+    }
+    if family == "passage_review":
+        envelope["corrected_text"] = corrected
+    output = json.dumps(envelope, indent=1)
+    while (  # grow the claims towards whichever cap binds first
+        len(output.encode()) + len(pad) * n_claims < cap.max_bytes - 256
+        and len(tokenize(output)) + 2 * n_claims < cap.max_tokens - 64
+    ):
+        for finding in findings:
+            finding["claim"] += pad
+        output = json.dumps(envelope, indent=1)
+    return fx, output, slots, assertions, None
+
+
+def max_size_cells(root: Path) -> list[dict[str, Any]]:
+    """Accepted, production-shaped outputs at each family's caps, every claim bound within 32 calls."""
+    cases = []
+    for family in FAMILIES:
+        if family in ("fresh_lesson", "fresh_activities"):
+            fx, output, slots, assertions, validate = _max_fresh(root, family)
+        elif family == "v7_module":
+            fx, output, slots, assertions, validate = _max_v7(root)
+        else:
+            fx, output, slots, assertions, validate = _max_review(root, family)
+        label = _label(fx.item, family, required=0) | {
+            "required_slots": slots,
+            "positive_slots": slots,
+            "protected": [],
+            "obligations": [],
+            "O": len(slots) + 3,
+        }
+        if family == "passage_review":
+            label |= {"passage": fx.passage, "protected": [{"opportunity_id": "p1", "stratum": "heritage"}]}
+        judge_calls = len(ledger.records(fx.paths["judge"]))
+        reply = _reply(fx, assertions, sources_calls=judge_calls)
+        reply["protected"] = (
+            [{"opportunity_id": "p1", "preserved": True, "harm": False}] if family == ("passage_review") else []
+        )
+        reply["obligations"] = []
+        index = fx.index()
+        sidecar = judge.bind_reply(
+            json.dumps(reply), item_id=fx.item["item_id"], output_id="out-fixture", output=output, index=index
+        )
+        result = score_cell(
+            family, label=label, item=fx.item, output=output, sidecar=sidecar, index=index, validate_draft=validate
+        )
+        cap = FAMILIES[family].cap
+        fill = max(len(output.encode("utf-8")) / cap.max_bytes, len(tokenize(output)) / cap.max_tokens)
+        cases.append(
+            _case(
+                f"{family}: accepted maximum-size output, every claim bound within 32 judge calls",
+                ("accepted", COMPLETE, 1.0, len(assertions), True, True),
+                (
+                    result["response"],
+                    result["status"],
+                    result["R"],
+                    result["counts"]["receipt_bound_assertions"],
+                    judge_calls <= 32,
+                    fill >= 0.9,
+                ),
+            )
+        )
+    return cases
+
+
 def boundaries(root: Path) -> list[dict[str, Any]]:
     cases = []
     for family in FAMILIES:
@@ -933,5 +1452,6 @@ def _refused(action: Callable[[], Any]) -> bool:
 def run() -> dict[str, Any]:
     with tempfile.TemporaryDirectory(prefix="uk-behaviour-proof-", dir=ensure_scratch_root()) as tmp:
         root = Path(tmp)
-        cases = worked_ordering(root) + branches(root) + max_size_coverage() + boundaries(root)
+        cases = worked_ordering(root) + branches(root) + review_probes(root) + max_size_coverage()
+        cases += max_size_cells(root) + boundaries(root)
     return {"proof": PROOF, "cases": cases, "pass": all(case["pass"] for case in cases)}

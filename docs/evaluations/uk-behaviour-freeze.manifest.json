@@ -911,7 +911,7 @@
     },
     {
       "ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
-      "sha256": "4676816a307aa7d6539c12f52bc07a10f86cc10587bc991b19b4c7971c89e44a",
+      "sha256": "ca87f1ad511a8d917a3f65df9efbb9c22441571e17dd6b087e81902126f66632",
       "status": "PINNED",
       "owner": "evaluation-maintainer"
     },
@@ -929,14 +929,14 @@
     },
     {
       "ref": "private://uk-behaviour-v2/card-review-prompt",
-      "sha256": "ad5045f2918c961a9dac936d39af408b2cce5304f3ff1ad7bca1e9323568ecf8",
-      "status": "PINNED",
+      "sha256": null,
+      "status": "AWAITING_ACCEPTANCE",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
       "ref": "private://uk-behaviour-v2/exercise-review-prompt",
-      "sha256": "4f90c0fd149907a0a7f2667d1c123e75e6524a0a781a232c091c9648e44c7587",
-      "status": "PINNED",
+      "sha256": null,
+      "status": "AWAITING_ACCEPTANCE",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
@@ -1273,7 +1273,7 @@
     ]
   },
   "g3": {
-    "status": "PINNED",
+    "status": "SCORER_PINNED_REVIEW_PROMPTS_AWAITING_ACCEPTANCE",
     "harness": "uk-behaviour-harness/1",
     "scorer": "uk-behaviour-score/2",
     "code": [
@@ -1283,15 +1283,15 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/__main__.py",
-        "sha256": "88fe994aea3fa82902343268637d6232c42aa07b27be0ed7358f62b5dfac2c3e"
+        "sha256": "05e47f09ec3b797b8f7adb588ace7e520e3456c1550003c61fb10e44b798c651"
       },
       {
         "path": "scripts/eval/uk_behaviour/adapters.py",
-        "sha256": "fbcc4b165056209b5af92376da5741fb14a001cc49b3a2c08cf5a2a61b20483d"
+        "sha256": "1d7c77931187d5376965e5a365b0e5edf22549a51c3f44e2bb184d10ba522514"
       },
       {
         "path": "scripts/eval/uk_behaviour/binding.py",
-        "sha256": "b5a04acb44d68b597c0febca8f07a3b5b1a6d259b2976ad7b997deceabc63042"
+        "sha256": "4e40f8aa070848f158315c9ea762539985454f1e09b6d2212a586adefc30d8b2"
       },
       {
         "path": "scripts/eval/uk_behaviour/contract.py",
@@ -1303,7 +1303,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/judge.py",
-        "sha256": "574d8c7047b5b22c7c865b3794fd587d74f7b585374ad49cadcbbfcd66bc435f"
+        "sha256": "c256ce8e914c7c3c9fc58d2d046757bcebe2659ec65af1335a651977554e8823"
       },
       {
         "path": "scripts/eval/uk_behaviour/pins.py",
@@ -1311,7 +1311,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/prove.py",
-        "sha256": "8d6b48145087c3b11cb09082b964aafefac38bab020f18274c658d4d585aa3a3"
+        "sha256": "f2c96956cea44049201f4cfae21786bb47a896316ef247e6e663282f346c67f9"
       },
       {
         "path": "scripts/eval/uk_behaviour/reward.py",
@@ -1319,48 +1319,32 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/rubric.py",
-        "sha256": "dcaf48d96b143a884ca6a4615d6c8c95ad738a17d97f2bc12be1e678c3bc0e20"
+        "sha256": "db147482c48842b40398f92fa2b8878983cd2405af06eb4d85d2f01119efb657"
       },
       {
         "path": "scripts/eval/uk_behaviour/runner.py",
-        "sha256": "0a95a5b0ce93da7d3378e622646edb4218eddbb8218d45e14c95861fe08ecab7"
+        "sha256": "623e4e2ff301080b8aa3530df34cc12e2d63843d62b638922c0a101606f5783d"
       },
       {
         "path": "scripts/eval/uk_behaviour/scorer.py",
-        "sha256": "f532c517a85c7e8a524f550b17b174c18003d7ca171d8a364e0aa5d956f8d41c"
+        "sha256": "fcdf4ba25e7000b558f893a75cc8f6251cac1628bfda0892be7c0a0eda9e4aff"
       }
     ],
-    "rubric_sha256": "978141f2d6f2d61c36a517a0dbfee6a51104a618312b98375ce7816240b1fe8f",
-    "judge_template_sha256": "d16e5c0fed82e3ee97a3d3529cbd037683ee330f61823f8c0fd44a2d280de2ea",
+    "rubric_sha256": "a6aca0477ee7fd95f99f538da2193ed49da586a223644adbf579b7679522e7f5",
+    "judge_template_sha256": "2332a0cfec2aa7126e9d5f9cc7aeb591c4528357989a0113fd3de00c1860126c",
     "judge_template_ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
     "review_prompts": [
       {
         "family": "card_review",
         "ref": "private://uk-behaviour-v2/card-review-prompt",
-        "sha256": "ad5045f2918c961a9dac936d39af408b2cce5304f3ff1ad7bca1e9323568ecf8",
-        "acceptance": {
-          "advisor": "gpt-6.1-sol",
-          "family": "openai",
-          "harness": "codex",
-          "round": 2,
-          "verdict": "ACCEPT",
-          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-2",
-          "sha256": "7cb37b301be7f1832d7d9915300dc4d13003f80b954c2253223b70456b04abbd"
-        }
+        "sha256": null,
+        "acceptance": null
       },
       {
         "family": "exercise_review",
         "ref": "private://uk-behaviour-v2/exercise-review-prompt",
-        "sha256": "4f90c0fd149907a0a7f2667d1c123e75e6524a0a781a232c091c9648e44c7587",
-        "acceptance": {
-          "advisor": "gpt-6.1-sol",
-          "family": "openai",
-          "harness": "codex",
-          "round": 3,
-          "verdict": "ACCEPT",
-          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-3",
-          "sha256": "d7fbfd5f347e2b2ab7bac81ddb78ca09b4bfece0627b1e691791c605b154bb83"
-        }
+        "sha256": null,
+        "acceptance": null
       },
       {
         "family": "pedagogy_review",

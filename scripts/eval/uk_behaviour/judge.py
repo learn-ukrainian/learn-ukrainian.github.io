@@ -70,6 +70,7 @@ def _schema(bound: bool) -> dict[str, Any]:
         "role": {"enum": ["candidate", "judge", "pack", "label", "request"]},
         "receipt_id": {"type": "string", "pattern": "^rr-[0-9a-f]{20}$"},
         "evidence_id": {"type": "string", "minLength": 1},
+        "evidence_pointer": {"type": "string", "pattern": "^/"},
         "polarity": {"enum": ["positive", "negative"]},
         "evidence_excerpt": {"type": "string", "minLength": 1},
         "source_locator": {"type": "string", "minLength": 1},

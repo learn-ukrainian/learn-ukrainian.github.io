@@ -21,6 +21,7 @@ The label interface (private, sealed under G1)::
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any
@@ -51,6 +52,7 @@ from .coverage import cost_class
 from .reward import Components, quality, resolve_status, reward
 
 GAP_OUTCOMES = ("clean", "evidence_gap", "abstention")
+RECEIPT_ID = re.compile(r"\brr-[0-9a-f]{20}\b")
 
 
 class ScoringError(Exception):
@@ -168,6 +170,29 @@ def _anchor_ok(
     return kinds.get(source) == kind and _quoted(anchor["quote"], evidence.get(source))
 
 
+def _unsettle(tally: _Tally, emitted_slots: set[str], aid: str, slot: str | None, reason: str) -> int:
+    """An assertion the evaluator cannot settle: zero provisional credit, kept in the denominator.
+
+    Returns the unsupported-extra count it adds (1 for an extra, 0 for a slot claim).
+    """
+    tally.unresolved(f"assertion {aid}: {reason}")
+    if slot is not None:
+        emitted_slots.add(slot)
+        return 0
+    return 1
+
+
+def _effective_facet(family: str, finding: dict[str, Any] | None, assertion: dict[str, Any]) -> str:
+    """The facet a claim is checked under: the one its own finding declares, else the judge's."""
+    if finding is None:
+        return assertion["facet"]
+    if family in ("card_review", "passage_review"):
+        return finding["facet"]
+    if family == "exercise_review":
+        return EXERCISE_DEFECT_FACETS.get(finding["defect"], "exercise")
+    return "pedagogy"
+
+
 def score_cell(
     family: str,
     *,
@@ -178,7 +203,14 @@ def score_cell(
     index: LedgerIndex,
     validate_draft: Any = None,
 ) -> dict[str, Any]:
-    """Score one item-repeat. Every status but ``COMPLETE`` leaves the reward provisional."""
+    """Score one item-repeat. Every status but ``COMPLETE`` leaves the reward provisional.
+
+    Candidate integrity (size caps and cited receipts) is checked on the raw output, whether
+    or not it is accepted. Judge fields are reconciled against the output and the label:
+    every finding needs a judged assertion, a claim is checked under the facet its own
+    finding declares, and a slot credits only a claim of the slot's facet. A labelled
+    protected harm counts whatever else in the judgement fails.
+    """
     if family not in FAMILIES:
         raise ScoringError(f"unknown family {family!r}")
     _check_label(family, label)
@@ -190,9 +222,12 @@ def score_cell(
 
     if not contract.sources_tools and index.counts["candidate"]:
         tally.unresolved("a fresh writer reached Sources tools; the tool boundary was broken", "baseline-runner")
-    fabricated = [rid for rid in acceptance.cited_receipts if index.get("candidate", rid) is None]
+    fabricated = sorted({rid for rid in RECEIPT_ID.findall(text) if index.get("candidate", rid) is None})
     if fabricated:
         tally.flags.add(INVALID_FABRICATED_RECEIPT)
+    oversize = adapters.size_problems(family, text, individual=0, batched=0, edits=0) if text else []
+    if oversize:
+        tally.flags.add(INVALID_OVERPRODUCTION)
 
     assertions: list[dict[str, Any]] = []
     if sidecar is not None:
@@ -210,12 +245,14 @@ def score_cell(
     elif response == "accepted":
         tally.unresolved("accepted output has no judgement")
 
+    envelope = acceptance.parsed if response == "accepted" and isinstance(acceptance.parsed, dict) else None
     findings: dict[str, dict[str, Any]] = {}
-    if isinstance(acceptance.parsed, dict):
-        findings = {entry["id"]: entry for entry in acceptance.parsed.get("findings", [])}
+    if envelope is not None and contract.output in ("review-envelope", "passage-envelope"):
+        findings = {entry["id"]: entry for entry in envelope["findings"]}
     evidence = adapters.request_evidence(item)
-    index = index.with_request_evidence(evidence)
-    positive = {slot["slot_id"] for slot in label.get("positive_slots", [])}
+    index = index.with_request_evidence(evidence, adapters.request_locators(item))
+    slot_facets = {slot["slot_id"]: slot["facet"] for slot in label.get("positive_slots", [])}
+    positive = set(slot_facets)
     required = {slot["slot_id"] for slot in label.get("required_slots", [])}
     protected_ids = {entry["opportunity_id"] for entry in label.get("protected", [])}
 
@@ -233,61 +270,79 @@ def score_cell(
     extra_harms = 0
     facets: dict[str, Counter] = {}
     seen: set[str] = set()
+
+    # Every finding the candidate emitted needs at least one judged assertion; an unjudged
+    # finding keeps zero credit in the denominator and leaves the cell unresolved.
+    judged = {a["finding_id"] for a in assertions}
+    for fid in sorted(set(findings) - judged):
+        tally.unresolved(f"finding {fid} has no judged assertion")
+        unsupported_extras += 1
+
     for a in assertions:
-        size[cost_class(family, a["facet"])] += 1
+        if a["harm"] and a["protected_opportunity_id"] in protected_ids:
+            harmed.add(a["protected_opportunity_id"])  # verified by the sealed label itself
+        finding = findings.get(a["finding_id"]) if a["finding_id"] is not None else None
+        facet = _effective_facet(family, finding, a)
+        size[cost_class(family, facet)] += 1
         if a["kind"] == "edit":
             size["edits"] += 1
+        slot = a["slot_id"] if a["slot_id"] in positive else None
+
         span = a["span"]
         if not (span["start"] < span["end"] <= len(text)) or text[span["start"] : span["end"]] != span["quote"]:
-            tally.unresolved(f"assertion {a['id']} span does not quote the output")
+            unsupported_extras += _unsettle(tally, emitted_slots, a["id"], slot, "span does not quote the output")
             continue
         if a["duplicate_of"] is not None:
             if a["duplicate_of"] not in seen:
                 tally.unresolved(f"assertion {a['id']} duplicates an unknown assertion")
             continue
         seen.add(a["id"])
-        facet_count = facets.setdefault(a["facet"], Counter())
+        facet_count = facets.setdefault(facet, Counter())
         facet_count["emitted"] += 1
-        slot = a["slot_id"]
-        # An assertion the evaluator cannot settle keeps its place in the correctness
-        # denominator with zero provisional credit; the cell is unresolved.
-        if slot in positive:
-            emitted_slots.add(slot)
-        if slot is not None and slot not in positive:
-            tally.unresolved(f"assertion {a['id']} names a slot outside the label")
-            unsupported_extras += 1
+        if a["slot_id"] is not None and slot is None:
+            unsupported_extras += _unsettle(tally, emitted_slots, a["id"], slot, "names a slot outside the label")
+            continue
+        if findings and a["finding_id"] is not None and finding is None:
+            unsupported_extras += _unsettle(
+                tally, emitted_slots, a["id"], slot, "names a finding the output does not hold"
+            )
+            continue
+        if slot is not None and slot_facets[slot] != facet:
+            unsupported_extras += _unsettle(
+                tally, emitted_slots, a["id"], slot, f"a {facet} claim cannot take the {slot_facets[slot]} slot {slot}"
+            )
             continue
         if a["protected_opportunity_id"] is not None and a["protected_opportunity_id"] not in protected_ids:
-            tally.unresolved(f"assertion {a['id']} names an unlabelled protected opportunity")
-            unsupported_extras += slot is None
+            unsupported_extras += _unsettle(
+                tally, emitted_slots, a["id"], slot, "names an unlabelled protected opportunity"
+            )
             continue
         if a["false_correction"] and (a["kind"] == "assertion" or a["verdict"] != "incorrect"):
-            tally.unresolved(f"assertion {a['id']}: a false correction is an incorrect edit or accusation")
-            unsupported_extras += slot is None
+            unsupported_extras += _unsettle(
+                tally, emitted_slots, a["id"], slot, "a false correction is an incorrect edit or accusation"
+            )
             continue
 
-        # A harmful correction of a labelled protected opportunity is verified by its sealed label;
-        # no evidence error below can erase it.
-        if a["harm"] and a["protected_opportunity_id"] is not None:
-            harmed.add(a["protected_opportunity_id"])
-
-        checks = [check_binding(b, a["facet"], index) for b in a["bindings"]]
+        checks = [check_binding(b, facet, index) for b in a["bindings"]]
         if any(check.status == SUM11_POSITIVE for check in checks):
             s_count += 1
         # Candidate fabrication is decided from the receipts the output itself cites (above);
-        # a judge binding to a receipt no ledger holds is an evaluator error.
-        broken = [c.reason for c in checks if c.status not in (VERIFIED, SUM11_POSITIVE)]
-        if broken and a["verdict"] != "unchecked":
-            tally.unresolved(f"assertion {a['id']} evidence does not verify: {broken[0]}")
-            unsupported_extras += slot is None
-            continue
+        # a judge binding that does not verify is an evaluator error. Verified evidence on the
+        # same assertion still counts, so one bad binding cannot erase a verified failure.
         verified = [b for b, c in zip(a["bindings"], checks, strict=True) if c.status == VERIFIED]
+        broken = [c.reason for c in checks if c.status not in (VERIFIED, SUM11_POSITIVE)]
+        if broken:
+            reason = f"evidence does not verify: {broken[0]}"
+            if not verified and a["verdict"] != "unchecked":
+                unsupported_extras += _unsettle(tally, emitted_slots, a["id"], slot, reason)
+                continue
+            tally.unresolved(f"assertion {a['id']}: {reason}")
         if (a["false_correction"] or a["harm"]) and not verified:
-            tally.unresolved(f"assertion {a['id']}: a false correction or harm needs bound evidence")
-            unsupported_extras += slot is None
+            unsupported_extras += _unsettle(
+                tally, emitted_slots, a["id"], slot, "a false correction or harm needs bound evidence"
+            )
             continue
         if contract.candidate_receipts_required:
-            finding = findings.get(a["finding_id"])
             has_receipt = finding is not None and _candidate_evidence(family, finding, verified, item, evidence, index)
         else:
             has_receipt = bool(verified)
@@ -307,6 +362,7 @@ def score_cell(
             if a["kind"] == "accusation":
                 accusation_false_corrections += 1
         if slot is not None:
+            emitted_slots.add(slot)
             if supported:
                 supported_slots.add(slot)
             elif a["verdict"] == "incorrect":
@@ -318,8 +374,8 @@ def score_cell(
                 unsupported_extras += 1
 
     passage = None
-    if family == "passage_review" and response == "accepted" and isinstance(acceptance.parsed, dict):
-        passage = review_counts(_passage_item(label), acceptance.parsed["corrected_text"])
+    if family == "passage_review" and envelope is not None:
+        passage = review_counts(_passage_item(label), envelope["corrected_text"])
     credited = supported_slots - refuted_slots
     if passage is not None:
         credited &= set(passage.hits) | (positive - {span.id for span in _passage_item(label).errors})
@@ -358,10 +414,12 @@ def score_cell(
     if passage is not None:  # the corrected text is the edit record; the judge's edit entries restate it
         edits = sum(len(units) for units in (passage.hits, passage.wrong, passage.tokens, passage.insertions))
         edits += len(passage.protected)
-    overproduction = adapters.size_problems(
-        family, text, individual=size["individual"], batched=size["batched"], edits=edits
-    )
-    if response == "accepted" and overproduction:
+    overproduction = oversize
+    if sidecar is not None:  # the judge's enumeration is what claim and edit caps count
+        overproduction = adapters.size_problems(
+            family, text, individual=size["individual"], batched=size["batched"], edits=edits
+        )
+    if overproduction:
         tally.flags.add(INVALID_OVERPRODUCTION)
     if sidecar is not None and sidecar["budget_exhausted"]:
         if extras:  # off-contract padding consumed the judge's budget
@@ -376,6 +434,8 @@ def score_cell(
     emitted = len(seen)
     P = len(preserved_ids) / len(protected_ids) if protected_ids else 1.0
     gap_ok = label["expected_outcome"] in GAP_OUTCOMES and (sidecar or {}).get("outcome_correct") is True
+    if envelope is not None and contract.output in ("review-envelope", "passage-envelope"):
+        gap_ok = gap_ok and envelope["outcome"] == label["expected_outcome"] and not findings
     if response == "accepted":
         coverage = len(credited & required) / len(required) if required else 1.0
         if emitted == 0:
@@ -420,6 +480,6 @@ def score_cell(
             "size": dict(size),
         },
         "receipt_coverage": round(bound / emitted, 6) if emitted else None,
-        "overproduction": overproduction if response == "accepted" else [],
+        "overproduction": overproduction,
         "evaluator_limits": tally.limits,
     }

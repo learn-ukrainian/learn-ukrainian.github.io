@@ -69,6 +69,26 @@ VISIBLE_FIELDS: dict[str, frozenset[str]] = {
     ),
 }
 FRESH_INPUTS = frozenset({"plan_entry", "cited_records", "learner_state", "immersion"})
+# Keys that only a sealed label carries. A request holding one at any depth is refused, so
+# label metadata cannot ride inside an allowlisted payload object. Production request fields
+# (a key, its accepted alternatives, options) are not in this list.
+LABEL_KEYS = frozenset(
+    {
+        "labels",
+        "expected_outcome",
+        "required_slots",
+        "positive_slots",
+        "protected",
+        "protected_opportunities",
+        "protection_reason",
+        "obligations",
+        "planted_defect",
+        "primary_defect",
+        "seeds",
+        "judge_anchors",
+        "gold",
+    }
+)
 
 REQUEST_FRAME = "\n\n## Request\n\nThe request is this JSON object:\n\n```json\n{payload}\n```\n"
 
@@ -131,6 +151,20 @@ def _check_item(family: str, item: dict[str, Any]) -> None:
             raise AdapterError(f"{family} item needs {key}")
     if item["judging_mode"] not in FAMILIES[family].modes:
         raise AdapterError(f"{family} items use {list(FAMILIES[family].modes)} mode, not {item['judging_mode']!r}")
+    leaked = sorted(_label_keys(item))
+    if leaked:
+        raise AdapterError(f"{family} item carries label fields: {', '.join(leaked)}")
+
+
+def _label_keys(value: Any) -> set[str]:
+    if isinstance(value, dict):
+        found = {key for key in value if key in LABEL_KEYS}
+        for child in value.values():
+            found |= _label_keys(child)
+        return found
+    if isinstance(value, list):
+        return set().union(*(_label_keys(child) for child in value)) if value else set()
+    return set()
 
 
 def pinned_bytes(data: bytes, expected_sha256: str | None, what: str) -> bytes:
@@ -348,8 +382,12 @@ def accept(
         if validate_draft is None:
             from scripts.build.fresh.writer import parse_and_validate_reply
 
+            plan_entry = (item.get("inputs") or {}).get("plan_entry") or {}
+            # As the production writer does: the plan's activity types, and the lowercase level.
+            types = {a["id"]: a["type"] for a in plan_entry.get("activities") or [] if "id" in a and "type" in a}
+
             def validate_draft(reply: str, level: str) -> Any:
-                return parse_and_validate_reply(reply, level)
+                return parse_and_validate_reply(reply, level.lower(), plan_activity_types=types)
 
         try:
             return Acceptance("accepted", parsed=validate_draft(text, item["level"]))
@@ -389,6 +427,15 @@ def request_evidence(item: dict[str, Any]) -> dict[str, str]:
         if isinstance(entry, dict) and isinstance(entry.get("id"), str) and isinstance(entry.get("text"), str):
             found[entry["id"]] = entry["text"]
     return found
+
+
+def request_locators(item: dict[str, Any]) -> dict[str, str]:
+    """The sealed locator of each ``norm_evidence`` entry, by id."""
+    return {
+        entry["id"]: entry["locator"]
+        for entry in item.get("norm_evidence") or []
+        if isinstance(entry, dict) and isinstance(entry.get("id"), str) and isinstance(entry.get("locator"), str)
+    }
 
 
 def block_key_positions(item: dict[str, Any], pointer: str) -> list[int] | None:

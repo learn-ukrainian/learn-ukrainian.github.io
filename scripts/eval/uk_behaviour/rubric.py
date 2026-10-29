@@ -31,6 +31,9 @@ RUBRIC: dict[str, Any] = {
         "Before judging a form accusation correct after a VESUM miss, check compound components, ULIF, "
         "the underlying dictionary and corpus evidence; if VESUM is unavailable, the accusation is unchecked.",
         "verify_quote is fuzzy: compare the exact retained span; a positive boolean proves nothing.",
+        "verify_stress receipts keep no reading provenance: bind stress to a query_ulif_records or query_sum20 record.",
+        "Excerpt, source locator and any underlying dictionary come from one evidence unit: one record "
+        "of a JSON result (name it with evidence_pointer) or one entry of a Markdown result.",
         "GRAC is never a stress authority; frequency never establishes correctness or CEFR suitability.",
         "A missing MCP hit for СУМ-20 or ВТС is a coverage gap, never a negative label.",
     ],
@@ -46,8 +49,8 @@ RUBRIC: dict[str, Any] = {
     },
     "bindings": (
         "Each binding names one receipt by role (candidate, judge, pack or label) and receipt id, with an "
-        "exact excerpt of that receipt's full result and a source locator; or role request with a sealed "
-        "request evidence id. polarity negative is evidence of absence. The harness adds the tool, argument "
+        "exact excerpt of that receipt's full result and a source locator from the same evidence unit; or "
+        "role request with a sealed request evidence id and its own locator or pointer. polarity negative is evidence of absence. The harness adds the tool, argument "
         "and result digests from the verified ledger. In families where candidate_receipts_required is true, "
         "a correct verdict needs a candidate binding to a receipt the finding itself cites."
     ),
