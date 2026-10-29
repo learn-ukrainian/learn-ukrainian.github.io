@@ -212,6 +212,21 @@ def test_rootless_isolated_contract_preserves_worker_claim(tmp_path, review_inpu
     assert refusal == (None if review_inputs_only else "worktree claimed by active task review")
 
 
+def test_non_record_json_beside_the_records_never_blocks_removal_but_a_truncated_record_refuses(tmp_path):
+    """A worker's JSON proof list in the task-record directory refused every settlement removal."""
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    tree = tmp_path / "worker"
+    (tasks / "worker.json").write_text(json.dumps({"task_id": "worker", "status": "done", "worktree_path": str(tree)}))
+    (tasks / "other.cli-proof.json").write_text(json.dumps([{"worktree": str(tree), "ok": True}]))
+    assert worktree_claims.active_worktree_claim_refusal(tree, tasks_dir=tasks, repo_root=tmp_path) is None
+    (tasks / "other.json").write_text('{"task_id": "other", "status": "running", "worktree_path": ')
+    assert (
+        worktree_claims.active_worktree_claim_refusal(tree, tasks_dir=tasks, repo_root=tmp_path)
+        == "task record other.json unreadable; refusing worktree removal"
+    )
+
+
 @pytest.mark.parametrize("unreadable", ["invalid-json", "permission"])
 def test_unreadable_review_record_fails_closed(tmp_path, monkeypatch, unreadable):
     tasks = tmp_path / "tasks"
