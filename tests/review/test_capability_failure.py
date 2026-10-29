@@ -19,6 +19,16 @@ STARTED = "2026-09-23T10:00:00.000001+00:00"
 UNIT_DIGEST = "d" * 64
 
 
+@pytest.fixture
+def opsec_rules(synthetic_opsec):
+    """The synthetic scanner with the absolute-path rule the recorder's citation rewrite needs."""
+    from tests.opsec_fixtures import synthetic_rules
+
+    rules = synthetic_rules(rule="3-absolute-path", level=3, pattern=r"(?<![<\w:])/[A-Za-z][^\s`'\"<>),;\]}|*]*")
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+    return synthetic_opsec
+
+
 def structured(*, correctness="uncertain", findings=(), missing=("test-execution",)):
     payload = {
         "schema_version": "code-review-findings.v1",
@@ -348,7 +358,7 @@ def test_a_capability_failure_neither_approves_nor_rejects_its_head():
     recorder.require_no_same_head_rejection(alone, SHA, "fleet", "APPROVED")
 
 
-def test_the_recorder_refuses_a_verdict_for_a_classified_run(monkeypatch, tmp_path):
+def test_the_recorder_refuses_a_verdict_for_a_classified_run(monkeypatch, tmp_path, opsec_rules):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     failure = cf.CapabilityFailure(
         "review-one", "2026-09-23T12:00:00.000001+00:00", "nonce-one", SHA, UNIT_DIGEST, "test-execution",
@@ -377,7 +387,7 @@ def record_failure(tasks, tmp_path, **kwargs):
     return cf.record_capability_failure("review-blocked", task_root=tasks, lock_root=tmp_path / "locks", **arguments)
 
 
-def test_the_verb_appends_one_event_and_is_idempotent(monkeypatch, tmp_path, synthetic_opsec):
+def test_the_verb_appends_one_event_and_is_idempotent(monkeypatch, tmp_path, opsec_rules):
     tasks, comments, calls = verb_case(monkeypatch, tmp_path)
     before = {suffix: (tasks / f"review-blocked.{suffix}").read_bytes() for suffix in ("json", "result")}
     receipt = record_failure(tasks, tmp_path)
@@ -390,7 +400,7 @@ def test_the_verb_appends_one_event_and_is_idempotent(monkeypatch, tmp_path, syn
     assert before == {suffix: (tasks / f"review-blocked.{suffix}").read_bytes() for suffix in ("json", "result")}
 
 
-def test_the_verb_refuses_an_ineligible_run_before_any_post(monkeypatch, tmp_path, synthetic_opsec):
+def test_the_verb_refuses_an_ineligible_run_before_any_post(monkeypatch, tmp_path, opsec_rules):
     tasks, comments, calls = verb_case(monkeypatch, tmp_path, reply="VERDICT: BLOCKED - sandbox prevents pytest.")
     with pytest.raises(cf.CapabilityFailureRefused, match=r"\[findings\]"):
         record_failure(tasks, tmp_path)
@@ -401,7 +411,7 @@ def test_the_verb_refuses_an_ineligible_run_before_any_post(monkeypatch, tmp_pat
     assert comments == [] and calls["posts"] == 0
 
 
-def test_the_verb_never_replaces_a_published_verdict_or_another_event(monkeypatch, tmp_path, synthetic_opsec):
+def test_the_verb_never_replaces_a_published_verdict_or_another_event(monkeypatch, tmp_path, opsec_rules):
     tasks, comments, calls = verb_case(monkeypatch, tmp_path)
     published = recorded_verdict(EARLIER, "BLOCKED", task_id="review-blocked")
     published["body"] = published["body"].replace("started=2026-09-23T11:00:00.000001+00:00", f"started={STARTED}")
@@ -418,7 +428,7 @@ def test_the_verb_never_replaces_a_published_verdict_or_another_event(monkeypatc
     assert calls["posts"] == 1
 
 
-def test_the_verb_is_reachable_from_the_recorder_cli(monkeypatch, tmp_path, synthetic_opsec, capsys):
+def test_the_verb_is_reachable_from_the_recorder_cli(monkeypatch, tmp_path, opsec_rules, capsys):
     tasks, comments, _calls = verb_case(monkeypatch, tmp_path)
     monkeypatch.setattr(cf.recorder, "_repo_root", lambda: tmp_path)
     (tmp_path / "batch_state").mkdir()
