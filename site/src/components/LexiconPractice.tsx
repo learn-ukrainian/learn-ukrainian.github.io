@@ -1,6 +1,6 @@
 import { type CSSProperties, type ReactElement, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import MatchUp, { type MatchPair } from './MatchUp';
-import { parseMarkdown, shuffle } from '../../../packages/activity-kit/src/components/utils';
+import { parseMarkdown, seededShuffle, shuffle } from '../../../packages/activity-kit/src/components/utils';
 import PracticeDailyDeck from './PracticeDailyDeck';
 import PracticeErrorBoundary from './PracticeErrorBoundary';
 import PracticeFlashcard from './PracticeFlashcard';
@@ -6079,7 +6079,7 @@ export function PracticeItem({
 
 /**
  * #8733: every published Paronym card had `answer === options[0]`, leaking the
- * answer by position. `shuffle` derives its seed from array content alone (SSR-safe
+ * answer by position. `seededShuffle` derives its seed from array content alone (SSR-safe
  * determinism), so salt each option with `presentationKey` first — otherwise
  * reshuffling the same card's unchanged content always reproduces the same order,
  * including when an SRS requeue re-serves the identical card later in the session.
@@ -6091,7 +6091,7 @@ export function paronymOptions(item: PracticeParonymItem, presentationKey: strin
     label: option.label,
     correct: option.label === item.answer,
   }));
-  return shuffle(base.map((option) => ({ ...option, presentationKey }))).map((option) => ({
+  return seededShuffle(base.map((option) => ({ ...option, presentationKey }))).map((option) => ({
     label: option.label,
     correct: option.correct,
   }));

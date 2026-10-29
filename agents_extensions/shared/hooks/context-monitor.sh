@@ -194,13 +194,34 @@ fi
 # One locked read/reset/replace transaction; refusal is silent and fail open.
 [ "$(context_hook_state claim "$PROJECT_DIR" "$SESSION_ID" "$TIER" "$TOKENS")" = "claimed" ] || exit 0
 
-# operator_restart (#8511): the session never continues itself. It hands off,
-# tells the operator it is ready for a restart, and waits; context-rollover-guard.sh
-# reminds on later prompts. Nothing blocks Claude Code's own auto-compaction
-# (holding it for a prepared handoff is #9790).
+# operator_restart (#8511): the session never continues itself. It hands off and
+# waits to be restarted; context-rollover-guard.sh reminds on later prompts.
+# Nothing blocks Claude Code's own auto-compaction (holding it for a prepared
+# handoff is #9790). Who restarts it depends on the session: a guard-managed
+# driver lane is handed off by scripts/ops/context_guard.py, which waits for a
+# standalone HANDOFF-DONE line, exits the agent and respawns the launcher, so
+# that lane posts the line and ends the turn instead of waiting for a human.
 RESTART_HINT=""
 [ -n "${SESSION_EPIC:-}" ] && RESTART_HINT=" (./start-claude-driver.sh --epic ${SESSION_EPIC})"
-if [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER3_PCT" ]; then
+LANE_NAME=""
+[ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER2_PCT" ] \
+  && LANE_NAME=$(context_driver_lane_name "$PROJECT_DIR")
+if [ -n "$LANE_NAME" ] && [ "$PCT" -ge "$TIER3_PCT" ]; then
+  MSG=$(printf '%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
+    "EMERGENCY: Context is at ${CONTEXT_FACT}. The profile's final rollover tier is ${TIER3_PCT}%: this session is the guard-managed driver lane ${LANE_NAME}, so it finishes its handoff and the context guard restarts it. No operator restarts it." \
+    "" \
+    "STOP all current work THIS TURN. Do not dispatch, start new work, or start a continuation thread. Only:" \
+    "1. Refresh your lane handoff file with current state, in-flight work, and next steps, and stop every background task and Monitor stream you started." \
+    "2. Follow the thread-rollover skill's prepare phase (references/prepare.md): run ${PREPARE_CMD}. This writes the gitignored rollover lease plus its handoff and bootstrap packet under .agent/thread-rollovers/." \
+    "3. Post a standalone line (a line of its own in your reply, not inside other text) reading: HANDOFF-DONE ${LANE_NAME}" \
+    "4. END THE TURN. Do not tell the operator to restart and do not wait for one: the context guard sees HANDOFF-DONE, exits this session and restarts the lane.")
+elif [ -n "$LANE_NAME" ]; then
+  MSG=$(printf '%s\n%s\n%s\n%s\n' \
+    "CRITICAL: Context is at ${CONTEXT_FACT}. The profile's critical rollover tier is ${TIER2_PCT}%." \
+    "" \
+    "Finish the current logical unit. Do not start new multi-step work, dispatches, or large operations." \
+    "At ${TIER3_PCT}% this guard-managed lane (${LANE_NAME}) refreshes its handoff, prepares the rollover (${PREPARE_CMD}), posts a standalone HANDOFF-DONE ${LANE_NAME} line, and ends the turn; the context guard restarts it.")
+elif [ "$ROLLOVER_MODE" = "operator_restart" ] && [ "$PCT" -ge "$TIER3_PCT" ]; then
   MSG=$(printf '%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
     "EMERGENCY: Context is at ${CONTEXT_FACT}. The profile's final rollover tier is ${TIER3_PCT}%: this session hands off and waits for the operator to restart it." \
     "" \
