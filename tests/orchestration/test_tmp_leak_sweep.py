@@ -780,6 +780,13 @@ def _net_unix_row(flags: int, inode: int, path: str | None) -> str:
         "Num\n",  # truncated header
         _NET_UNIX_HEADER + "0000: 00000002 00000000 zzzz 0001 01 1 /x\n",
         _NET_UNIX_HEADER + "short line\n",
+        # A table cut at a line boundary or inside a row must not read as complete,
+        # even when the surviving prefix still matches the row format.
+        _NET_UNIX_HEADER,
+        _NET_UNIX_HEADER.rstrip("\n"),
+        _NET_UNIX_HEADER + "0000000000000000: 00000002 00000000 00010000 0001 01 12345",
+        _NET_UNIX_HEADER + _net_unix_row(0, 1, "/run/a") + "0000000000000000: 00000002 00000000 00010000 0001 01 12",
+        _NET_UNIX_HEADER + _net_unix_row(0x10000, 1, "/run/a").rstrip("\n"),
         # A row that lost its inode column must not read as a pathless socket.
         _NET_UNIX_HEADER + "0000000000000000: 00000002 00000000 00010000 0001 01 /srv/review-4004/s\n",
         # A bound path holding a newline splits into a second, unparsable line.

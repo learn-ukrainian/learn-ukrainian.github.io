@@ -200,9 +200,10 @@ hold a tree needlessly, never release one.
 - `tmp_sweep`: a live listener is `live_socket`. Any other socket, including
   the file a closed listener leaves behind, stays `special_file`, because the
   ledger's manifest cannot describe a socket.
-- If `/proc/net/unix` cannot be read, its header is not the expected one, or
-  any row does not parse, the answer is unknown and the
-  candidate is kept (`liveness_unknown` in `tmp_leak_sweep`; a socket tree
+- If `/proc/net/unix` cannot be read, its header is not the expected one, it
+  has no row or does not end in a newline (a truncated read; a live host
+  always has Unix sockets), or any row does not parse, the answer is unknown
+  and the candidate is kept (`liveness_unknown` in `tmp_leak_sweep`; a socket tree
   stays `special_file` in `tmp_sweep`). Hosts without it, such as macOS,
   remove nothing here.
 - The name exclusions above stay: `tmux-*`, `ssh-*`, `claude-*`, `systemd-*`

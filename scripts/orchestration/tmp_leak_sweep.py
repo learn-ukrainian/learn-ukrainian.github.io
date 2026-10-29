@@ -397,18 +397,22 @@ def listening_socket_paths(net_unix: Path | None = None) -> frozenset[str] | Non
     ``@name``: a filesystem socket may also be named like that, and the
     over-match only holds a tree longer. Rows are split on newlines alone, so a
     bound path that contains one fails the row check. A file that cannot be
-    read, a header that is not the expected one, or any row that does not
-    parse is unknown: never an empty or partial set.
+    read, one that does not end in a newline, one with a header and no row (a
+    live host always has Unix sockets, and a header alone cannot be told from a
+    table cut after it), a header that is not the expected one, or any row that
+    does not parse is unknown: never an empty or partial set.
     """
     source = _NET_UNIX if net_unix is None else net_unix
     try:
         raw = source.read_bytes()
     except OSError:
         return None
-    lines = raw.decode("utf-8", errors="surrogateescape").split("\n")
-    if lines and lines[-1] == "":
-        lines.pop()
-    if not lines or lines[0].split() != _NET_UNIX_HEADER:
+    # The kernel ends every row with a newline, so an unterminated last line is a
+    # truncated read, even when its prefix still matches the row format.
+    if not raw.endswith(b"\n"):
+        return None
+    lines = raw.decode("utf-8", errors="surrogateescape").split("\n")[:-1]
+    if len(lines) < 2 or lines[0].split() != _NET_UNIX_HEADER:
         return None
     paths: set[str] = set()
     for line in lines[1:]:
