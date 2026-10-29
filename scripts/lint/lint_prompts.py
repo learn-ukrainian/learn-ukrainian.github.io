@@ -15,6 +15,7 @@ Exit code 0 = clean, 1 = violations found.
 import argparse
 import importlib.util
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -343,15 +344,79 @@ def extract_curriculum_level_keys(manifest_path: Path = CURRICULUM_MANIFEST) -> 
     return set(extract_curriculum_level_types(manifest_path))
 
 
+def _git_output(anchor: Path, *args: str) -> bytes | None:
+    """Run one git command. None means git is unavailable or the command failed."""
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(anchor), *args],
+            check=False,
+            capture_output=True,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if completed.returncode != 0:
+        return None
+    return completed.stdout
+
+
+def _git_toplevel(path: Path) -> Path | None:
+    """Worktree root that contains path, walking up past a sparse-excluded missing tail."""
+    anchor = path if path.exists() else next((parent for parent in path.parents if parent.exists()), None)
+    if anchor is None:
+        return None
+    output = _git_output(anchor, "rev-parse", "--show-toplevel")
+    if not output:
+        return None
+    text = output.decode("utf-8", "surrogateescape").removesuffix("\n")
+    return Path(text) if text else None
+
+
+def _skip_worktree_blob(path: Path) -> str | None:
+    """Index text for a sparse-excluded path. A deleted or untracked path stays missing."""
+    logical = path.resolve()
+    toplevel = _git_toplevel(logical)
+    if toplevel is None:
+        return None
+    try:
+        relative = logical.relative_to(toplevel).as_posix()
+    except ValueError:
+        return None
+    if not relative or "\n" in relative or "\0" in relative:
+        return None
+    listed = _git_output(toplevel, "ls-files", "-v", "-z", "--", relative)
+    if not listed:
+        return None
+    record = listed.split(b"\0", 1)[0]
+    prefix = b"S "
+    if not record.startswith(prefix):
+        return None
+    recorded = record[len(prefix):].decode("utf-8", "surrogateescape")
+    if recorded != relative:
+        return None
+    blob = _git_output(toplevel, "cat-file", "blob", f":{relative}")
+    if blob is None:
+        return None
+    return blob.decode("utf-8")
+
+
+def _manifest_text(manifest_path: Path) -> str | None:
+    """Manifest bytes from disk, or from the index when sparse checkout left the path out."""
+    if manifest_path.is_file():
+        return manifest_path.read_text(encoding="utf-8")
+    return _skip_worktree_blob(manifest_path)
+
+
 def extract_curriculum_level_types(manifest_path: Path = CURRICULUM_MANIFEST) -> dict[str, str]:
     """Extract active level/track types from curriculum.yaml without PyYAML."""
-    if not manifest_path.exists():
+    text = _manifest_text(manifest_path)
+    if text is None:
         return {}
 
     level_types: dict[str, str] = {}
     current_level: str | None = None
     in_levels = False
-    for raw_line in manifest_path.read_text(encoding="utf-8").splitlines():
+    for raw_line in text.splitlines():
         if raw_line.strip() == "levels:":
             in_levels = True
             continue

@@ -1,0 +1,2987 @@
+{
+  "schema": "a1-no-hints-repairs.v1",
+  "base": "83b9c3bd6ba0d31cfd5e09dabb017eddc8493073",
+  "original_pass_head": "df817fe8d83d2b192ecd52a97ac1d8efb5b9275e",
+  "counts": {
+    "original_changed_prompt_fields": 58,
+    "added_hints_removed": 50,
+    "context_only_kept": 8,
+    "class_sibling_reworded": 1,
+    "legacy_labels_removed": 3,
+    "items_reworded": 53,
+    "items_replaced": 1
+  },
+  "items": [
+    {
+      "id": "around-the-city/inline/act-1/0",
+      "module": "around-the-city",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "activity_title": "Direction words",
+      "instruction": "Complete each direction line.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "прямо",
+      "distractors": [
+        "наліво",
+        "направо"
+      ],
+      "reason": "The museum is directly ahead, rather than to either side. Прямо follows that route; наліво and направо lead away from the stated position.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D01",
+        "2D02",
+        "2D03",
+        "2V01",
+        "2V02",
+        "2V03",
+        "2V27",
+        "2V28",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(Go straight, then right.) Ідіть ___, потім направо.",
+        "answer": "прямо",
+        "options": [
+          "прямо",
+          "пішки",
+          "поруч"
+        ],
+        "explanation": "Прямо means straight ahead."
+      },
+      "after": {
+        "sentence": "Музей перед вами, а не ліворуч чи праворуч. Ідіть ___, до музею.",
+        "answer": "прямо",
+        "options": [
+          "прямо",
+          "наліво",
+          "направо"
+        ],
+        "explanation": "The museum is directly ahead, rather than to either side. Прямо follows that route; наліво and направо lead away from the stated position."
+      }
+    },
+    {
+      "id": "around-the-city/inline/act-1/3",
+      "module": "around-the-city",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 3,
+      "activity_title": "Direction words",
+      "instruction": "Complete each direction line.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "направо",
+      "distractors": [
+        "наліво",
+        "назад"
+      ],
+      "reason": "The school is on the right. Направо gives movement toward it; наліво and назад give other directions.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D02",
+        "2D03",
+        "2D04",
+        "2V02",
+        "2V03",
+        "2V04",
+        "2V27",
+        "2V28",
+        "2V29",
+        "2V32",
+        "R2-P01",
+        "R2-W01"
+      ],
+      "before": {
+        "sentence": "(Next, go right.) Потім ідіть ___, школа там.",
+        "answer": "направо",
+        "options": [
+          "направо",
+          "пішки",
+          "вдома"
+        ],
+        "explanation": "Направо means to the right."
+      },
+      "after": {
+        "sentence": "Школа праворуч від вас. На перехресті йдіть ___, до школи.",
+        "answer": "направо",
+        "options": [
+          "направо",
+          "наліво",
+          "назад"
+        ],
+        "explanation": "The school is on the right. Направо gives movement toward it; наліво and назад give other directions."
+      }
+    },
+    {
+      "id": "around-the-city/inline/act-2/1",
+      "module": "around-the-city",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 1,
+      "activity_title": "Де or куди in context",
+      "instruction": "Choose the phrase that fits the sentence.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "в магазин",
+      "distractors": [
+        "в магазині",
+        "на магазині"
+      ],
+      "reason": "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D29",
+        "2D32",
+        "2V29",
+        "2V32",
+        "2V27",
+        "2V28"
+      ],
+      "before": {
+        "prompt": "(Name your destination.) Я йду...",
+        "options": [
+          {
+            "text": "в магазин",
+            "correct": true
+          },
+          {
+            "text": "в магазині",
+            "correct": false
+          },
+          {
+            "text": "на магазині",
+            "correct": false
+          }
+        ],
+        "explanation": "Йду asks куди?"
+      },
+      "after": {
+        "prompt": "— Куди ти йдеш? — Я йду...",
+        "options": [
+          {
+            "text": "в магазин",
+            "correct": true
+          },
+          {
+            "text": "в магазині",
+            "correct": false
+          },
+          {
+            "text": "на магазині",
+            "correct": false
+          }
+        ],
+        "explanation": "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination."
+      }
+    },
+    {
+      "id": "around-the-city/inline/act-2/3",
+      "module": "around-the-city",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 3,
+      "activity_title": "Де or куди in context",
+      "instruction": "Choose the phrase that fits the sentence.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "роботу",
+      "distractors": [
+        "роботі",
+        "робота"
+      ],
+      "reason": "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D27",
+        "2D28",
+        "2D29",
+        "2V27",
+        "2V28",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "prompt": "(Name your destination.) Потім їду на...",
+        "options": [
+          {
+            "text": "роботу",
+            "correct": true
+          },
+          {
+            "text": "роботі",
+            "correct": false
+          },
+          {
+            "text": "робота",
+            "correct": false
+          }
+        ],
+        "explanation": "Їду на роботу answers куди?"
+      },
+      "after": {
+        "prompt": "— Куди ти їдеш потім? — Потім їду на...",
+        "options": [
+          {
+            "text": "роботу",
+            "correct": true
+          },
+          {
+            "text": "роботі",
+            "correct": false
+          },
+          {
+            "text": "робота",
+            "correct": false
+          }
+        ],
+        "explanation": "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination."
+      }
+    },
+    {
+      "id": "around-the-city/inline/act-2/5",
+      "module": "around-the-city",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 5,
+      "activity_title": "Де or куди in context",
+      "instruction": "Choose the phrase that fits the sentence.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "офіс",
+      "distractors": [
+        "офісі",
+        "офісу"
+      ],
+      "reason": "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D27",
+        "2D28",
+        "2D29",
+        "2V27",
+        "2V28",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "prompt": "(Name her destination.) Вона йде в...",
+        "options": [
+          {
+            "text": "офіс",
+            "correct": true
+          },
+          {
+            "text": "офісі",
+            "correct": false
+          },
+          {
+            "text": "офісу",
+            "correct": false
+          }
+        ],
+        "explanation": "Йде в офіс answers куди?"
+      },
+      "after": {
+        "prompt": "— Куди вона йде? — Вона йде в...",
+        "options": [
+          {
+            "text": "офіс",
+            "correct": true
+          },
+          {
+            "text": "офісі",
+            "correct": false
+          },
+          {
+            "text": "офісу",
+            "correct": false
+          }
+        ],
+        "explanation": "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination."
+      }
+    },
+    {
+      "id": "around-the-city/inline/act-5/0",
+      "module": "around-the-city",
+      "section": "inline",
+      "activity_index": 4,
+      "item_index": 0,
+      "activity_title": "Close, far, or on the corner",
+      "instruction": "Complete each city location or route line.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "близько",
+      "distractors": [
+        "далеко",
+        "їдьте"
+      ],
+      "reason": "The pharmacy is in the speaker’s own building, so близько fits this scene. Далеко contradicts that location; їдьте is an imperative, not a location predicate.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D05",
+        "2D06",
+        "2D49",
+        "2V05",
+        "2V06",
+        "2V49",
+        "2V27",
+        "2V28",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(The pharmacy is nearby.) Аптека ___. П'ять хвилин пішки.",
+        "answer": "близько",
+        "options": [
+          "близько",
+          "далеко",
+          "наліво"
+        ],
+        "explanation": "П'ять хвилин пішки means the place is close."
+      },
+      "after": {
+        "sentence": "Я вдома. Аптека ___: вона на першому поверсі нашого будинку.",
+        "answer": "близько",
+        "options": [
+          "близько",
+          "далеко",
+          "їдьте"
+        ],
+        "explanation": "The pharmacy is in the speaker’s own building, so близько fits this scene. Далеко contradicts that location; їдьте is an imperative, not a location predicate."
+      }
+    },
+    {
+      "id": "around-the-city/inline/act-5/1",
+      "module": "around-the-city",
+      "section": "inline",
+      "activity_index": 4,
+      "item_index": 1,
+      "activity_title": "Close, far, or on the corner",
+      "instruction": "Complete each city location or route line.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "далеко",
+      "distractors": [
+        "поруч",
+        "їдьте"
+      ],
+      "reason": "Twenty kilometres from home is the stated city-distance contrast: далеко fits; поруч does not. Їдьте is an imperative, not a predicate locating the station.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D06",
+        "2D07",
+        "2D49",
+        "2V06",
+        "2V07",
+        "2V49",
+        "2V27",
+        "2V28",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(The station is far away.) Вокзал ___. Їдьте на метро.",
+        "answer": "далеко",
+        "options": [
+          "далеко",
+          "поруч",
+          "прямо"
+        ],
+        "explanation": "If you need metro, the station is far."
+      },
+      "after": {
+        "sentence": "Я вдома, а вокзал за двадцять кілометрів від мого дому. Вокзал ___.",
+        "answer": "далеко",
+        "options": [
+          "далеко",
+          "поруч",
+          "їдьте"
+        ],
+        "explanation": "Twenty kilometres from home is the stated city-distance contrast: далеко fits; поруч does not. Їдьте is an imperative, not a predicate locating the station."
+      }
+    },
+    {
+      "id": "around-the-city/inline/act-5/2",
+      "module": "around-the-city",
+      "section": "inline",
+      "activity_index": 4,
+      "item_index": 2,
+      "activity_title": "Close, far, or on the corner",
+      "instruction": "Complete each city location or route line.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "поруч",
+      "distractors": [
+        "їдьте",
+        "далеко"
+      ],
+      "reason": "The cafe is next to the speaker’s home and the speaker is at home, so поруч fits. Далеко contradicts that relation; їдьте is an imperative rather than a location predicate.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D06",
+        "2D07",
+        "2D49",
+        "2V06",
+        "2V07",
+        "2V49",
+        "2V27",
+        "2V28",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(The cafe is nearby.) Кафе ___. Воно біля дому.",
+        "answer": "поруч",
+        "options": [
+          "поруч",
+          "їдьте",
+          "направо"
+        ],
+        "explanation": "Поруч means nearby."
+      },
+      "after": {
+        "sentence": "Я вдома. Кафе ___. Воно біля мого дому.",
+        "answer": "поруч",
+        "options": [
+          "поруч",
+          "їдьте",
+          "далеко"
+        ],
+        "explanation": "The cafe is next to the speaker’s home and the speaker is at home, so поруч fits. Далеко contradicts that relation; їдьте is an imperative rather than a location predicate."
+      }
+    },
+    {
+      "id": "around-the-city/inline/act-5/4",
+      "module": "around-the-city",
+      "section": "inline",
+      "activity_index": 4,
+      "item_index": 4,
+      "activity_title": "Close, far, or on the corner",
+      "instruction": "Complete each city location or route line.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "прямо",
+      "distractors": [
+        "наліво",
+        "направо"
+      ],
+      "reason": "The bank is directly ahead. Прямо follows the stated route; наліво and направо turn away from it.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D01",
+        "2D02",
+        "2D03",
+        "2V01",
+        "2V02",
+        "2V03",
+        "2V27",
+        "2V28",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(Go straight, then left.) Ідіть ___, потім наліво.",
+        "answer": "прямо",
+        "options": [
+          "прямо",
+          "поруч",
+          "центр"
+        ],
+        "explanation": "Прямо is a direction word."
+      },
+      "after": {
+        "sentence": "Банк перед вами, а не ліворуч чи праворуч. Ідіть ___, до банку.",
+        "answer": "прямо",
+        "options": [
+          "прямо",
+          "наліво",
+          "направо"
+        ],
+        "explanation": "The bank is directly ahead. Прямо follows the stated route; наліво and направо turn away from it."
+      }
+    },
+    {
+      "id": "at-the-cafe/inline/act-2/2",
+      "module": "at-the-cafe",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 2,
+      "activity_title": "Order with мені",
+      "instruction": "Choose the form that completes the cafe order.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "борщ",
+      "distractors": [
+        "борщу",
+        "борщем"
+      ],
+      "reason": "Цей requires a matching masculine inanimate accusative/nominative-shaped noun: борщ. Борщу and борщем do not agree in case with цей here.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D33",
+        "2V33",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "sentence": "(Use the accusative singular.) Мені ___, будь ласка.",
+        "answer": "борщ",
+        "options": [
+          "борщ",
+          "борщу",
+          "борщем"
+        ],
+        "explanation": "Борщ is masculine inanimate and stays борщ."
+      },
+      "after": {
+        "sentence": "Мені цей ___, будь ласка.",
+        "answer": "борщ",
+        "options": [
+          "борщ",
+          "борщу",
+          "борщем"
+        ],
+        "explanation": "Цей requires a matching masculine inanimate accusative/nominative-shaped noun: борщ. Борщу and борщем do not agree in case with цей here."
+      }
+    },
+    {
+      "id": "at-the-cafe/inline/act-2/3",
+      "module": "at-the-cafe",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 3,
+      "activity_title": "Order with мені",
+      "instruction": "Choose the form that completes the cafe order.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "салат",
+      "distractors": [
+        "салату",
+        "салатом"
+      ],
+      "reason": "Цей selects the matching singular masculine object салат. Салату is oblique and салатом is instrumental; neither agrees with цей.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D34",
+        "2V34",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "sentence": "(Use the accusative singular.) Мені ___, будь ласка.",
+        "answer": "салат",
+        "options": [
+          "салат",
+          "салату",
+          "салатом"
+        ],
+        "explanation": "Салат stays салат in this A1 pattern."
+      },
+      "after": {
+        "sentence": "Мені цей ___, будь ласка.",
+        "answer": "салат",
+        "options": [
+          "салат",
+          "салату",
+          "салатом"
+        ],
+        "explanation": "Цей selects the matching singular masculine object салат. Салату is oblique and салатом is instrumental; neither agrees with цей."
+      }
+    },
+    {
+      "id": "at-the-cafe/inline/act-2/4",
+      "module": "at-the-cafe",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 4,
+      "activity_title": "Order with мені",
+      "instruction": "Choose the form that completes the cafe order.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "чай",
+      "distractors": [
+        "чаю",
+        "чаєм"
+      ],
+      "reason": "Цей identifies a whole singular masculine object, selecting чай. Чаю and чаєм do not agree with цей here.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D35",
+        "2V35",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "sentence": "(Use the accusative singular.) Дайте, будь ласка, ___.",
+        "answer": "чай",
+        "options": [
+          "чай",
+          "чаю",
+          "чаєм"
+        ],
+        "explanation": "Чай stays чай."
+      },
+      "after": {
+        "sentence": "Дайте, будь ласка, цей ___.",
+        "answer": "чай",
+        "options": [
+          "чай",
+          "чаю",
+          "чаєм"
+        ],
+        "explanation": "Цей identifies a whole singular masculine object, selecting чай. Чаю and чаєм do not agree with цей here."
+      }
+    },
+    {
+      "id": "at-the-cafe/inline/act-2/6",
+      "module": "at-the-cafe",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 6,
+      "activity_title": "Order with мені",
+      "instruction": "Choose the form that completes the cafe order.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "хліб",
+      "distractors": [
+        "хліба",
+        "хлібом"
+      ],
+      "reason": "Цей selects хліб as the specific singular masculine object. Хліба and хлібом do not agree with цей.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D36",
+        "2V36",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "sentence": "(Use the accusative singular.) Можна ___?",
+        "answer": "хліб",
+        "options": [
+          "хліб",
+          "хліба",
+          "хлібом"
+        ],
+        "explanation": "Хліб stays хліб."
+      },
+      "after": {
+        "sentence": "Можна цей ___?",
+        "answer": "хліб",
+        "options": [
+          "хліб",
+          "хліба",
+          "хлібом"
+        ],
+        "explanation": "Цей selects хліб as the specific singular masculine object. Хліба and хлібом do not agree with цей."
+      }
+    },
+    {
+      "id": "at-the-cafe/inline/act-2/7",
+      "module": "at-the-cafe",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 7,
+      "activity_title": "Order with мені",
+      "instruction": "Choose the form that completes the cafe order.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "маленьку каву",
+      "distractors": [
+        "маленька кава",
+        "маленької кави"
+      ],
+      "reason": "Цю requires feminine accusative маленьку каву. Маленька кава is nominative and маленької кави is genitive, so neither agrees with цю.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D37",
+        "2V37",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "sentence": "(Use the accusative singular.) Мені ___ із собою, будь ласка.",
+        "answer": "маленьку каву",
+        "options": [
+          "маленьку каву",
+          "маленька кава",
+          "маленької кави"
+        ],
+        "explanation": "Use маленьку каву as one ordering phrase."
+      },
+      "after": {
+        "sentence": "Мені цю ___ із собою, будь ласка.",
+        "answer": "маленьку каву",
+        "options": [
+          "маленьку каву",
+          "маленька кава",
+          "маленької кави"
+        ],
+        "explanation": "Цю requires feminine accusative маленьку каву. Маленька кава is nominative and маленької кави is genitive, so neither agrees with цю."
+      }
+    },
+    {
+      "id": "checkpoint-food-shopping/inline/act-2/0",
+      "module": "checkpoint-food-shopping",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 0,
+      "activity_title": "Accusative checkpoint",
+      "instruction": "Choose the correct object form.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "салат",
+      "distractors": [
+        "салата",
+        "салату"
+      ],
+      "reason": "Цей identifies a masculine inanimate accusative object: салат. Салата and салату are not the matching case in this phrase.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D34",
+        "2V34"
+      ],
+      "before": {
+        "prompt": "(Use the accusative singular.) Я їм ___.",
+        "options": [
+          {
+            "text": "салат",
+            "correct": true
+          },
+          {
+            "text": "салата",
+            "correct": false
+          },
+          {
+            "text": "салату",
+            "correct": false
+          }
+        ],
+        "explanation": "Салат is masculine inanimate and stays салат."
+      },
+      "after": {
+        "prompt": "Я їм цей ___.",
+        "options": [
+          {
+            "text": "салат",
+            "correct": true
+          },
+          {
+            "text": "салата",
+            "correct": false
+          },
+          {
+            "text": "салату",
+            "correct": false
+          }
+        ],
+        "explanation": "Цей identifies a masculine inanimate accusative object: салат. Салата and салату are not the matching case in this phrase."
+      }
+    },
+    {
+      "id": "checkpoint-food-shopping/inline/act-2/2",
+      "module": "checkpoint-food-shopping",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 2,
+      "activity_title": "Accusative checkpoint",
+      "instruction": "Choose the correct object form.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "воду",
+      "distractors": [
+        "вода",
+        "води"
+      ],
+      "reason": "Цю takes matching feminine accusative воду. Вода is nominative; води is not feminine singular accusative.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D38",
+        "2V38"
+      ],
+      "before": {
+        "prompt": "(Use the accusative singular.) Я п'ю ___.",
+        "options": [
+          {
+            "text": "воду",
+            "correct": true
+          },
+          {
+            "text": "вода",
+            "correct": false
+          },
+          {
+            "text": "води",
+            "correct": false
+          }
+        ],
+        "explanation": "Вода becomes воду for the direct object."
+      },
+      "after": {
+        "prompt": "Я п'ю цю ___.",
+        "options": [
+          {
+            "text": "воду",
+            "correct": true
+          },
+          {
+            "text": "вода",
+            "correct": false
+          },
+          {
+            "text": "води",
+            "correct": false
+          }
+        ],
+        "explanation": "Цю takes matching feminine accusative воду. Вода is nominative; води is not feminine singular accusative."
+      }
+    },
+    {
+      "id": "checkpoint-food-shopping/inline/act-2/6",
+      "module": "checkpoint-food-shopping",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 6,
+      "activity_title": "Accusative checkpoint",
+      "instruction": "Choose the correct object form.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "хліб",
+      "distractors": [
+        "хліба",
+        "хлібу"
+      ],
+      "reason": "Цей identifies the singular masculine accusative object хліб. Хліба and хлібу do not agree in case with цей.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D36",
+        "2V36"
+      ],
+      "before": {
+        "prompt": "(Use the accusative singular.) Я купую ___.",
+        "options": [
+          {
+            "text": "хліб",
+            "correct": true
+          },
+          {
+            "text": "хліба",
+            "correct": false
+          },
+          {
+            "text": "хлібу",
+            "correct": false
+          }
+        ],
+        "explanation": "Хліб stays хліб here."
+      },
+      "after": {
+        "prompt": "Я купую цей ___.",
+        "options": [
+          {
+            "text": "хліб",
+            "correct": true
+          },
+          {
+            "text": "хліба",
+            "correct": false
+          },
+          {
+            "text": "хлібу",
+            "correct": false
+          }
+        ],
+        "explanation": "Цей identifies the singular masculine accusative object хліб. Хліба and хлібу do not agree in case with цей."
+      }
+    },
+    {
+      "id": "checkpoint-food-shopping/inline/act-2/8",
+      "module": "checkpoint-food-shopping",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 8,
+      "activity_title": "Accusative checkpoint",
+      "instruction": "Choose the correct object form.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "піцу",
+      "distractors": [
+        "піца",
+        "піци"
+      ],
+      "reason": "Цю requires feminine accusative піцу. Піца is nominative; піци is not feminine singular accusative.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D42",
+        "2V42"
+      ],
+      "before": {
+        "prompt": "(Use the accusative singular.) Я їм ___.",
+        "options": [
+          {
+            "text": "піцу",
+            "correct": true
+          },
+          {
+            "text": "піца",
+            "correct": false
+          },
+          {
+            "text": "піци",
+            "correct": false
+          }
+        ],
+        "explanation": "Choose піцу after я їм."
+      },
+      "after": {
+        "prompt": "Я їм цю ___.",
+        "options": [
+          {
+            "text": "піцу",
+            "correct": true
+          },
+          {
+            "text": "піца",
+            "correct": false
+          },
+          {
+            "text": "піци",
+            "correct": false
+          }
+        ],
+        "explanation": "Цю requires feminine accusative піцу. Піца is nominative; піци is not feminine singular accusative."
+      }
+    },
+    {
+      "id": "checkpoint-food-shopping/inline/act-3/0",
+      "module": "checkpoint-food-shopping",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "activity_title": "Market and cafe day",
+      "instruction": "Choose the word or phrase that completes the dialogue.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "кашу",
+      "distractors": [
+        "каша",
+        "каші"
+      ],
+      "reason": "Цю requires feminine singular accusative кашу. Каша is nominative; каші has no feminine singular accusative reading.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D39",
+        "2V39",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "sentence": "(Use the accusative singular.) — Що ти їси на сніданок? — Я їм ___ і п'ю каву.",
+        "answer": "кашу",
+        "options": [
+          "кашу",
+          "каша",
+          "каші"
+        ],
+        "explanation": "After я їм, choose кашу."
+      },
+      "after": {
+        "sentence": "— Що ти їси на сніданок? — Я їм цю ___ і п'ю каву.",
+        "answer": "кашу",
+        "options": [
+          "кашу",
+          "каша",
+          "каші"
+        ],
+        "explanation": "Цю requires feminine singular accusative кашу. Каша is nominative; каші has no feminine singular accusative reading."
+      }
+    },
+    {
+      "id": "i-eat-i-drink/inline/act-1/4",
+      "module": "i-eat-i-drink",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 4,
+      "activity_title": "Direct object endings",
+      "instruction": "Choose the correct direct-object form after їсти or пити.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "кашу",
+      "distractors": [
+        "каша",
+        "каші"
+      ],
+      "reason": "Цю requires feminine singular accusative кашу. Каша and каші do not agree with цю.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D39",
+        "2V39",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "sentence": "(Use the accusative singular.) Вони їдять ___.",
+        "answer": "кашу",
+        "options": [
+          "кашу",
+          "каша",
+          "каші"
+        ],
+        "explanation": "Каша becomes кашу."
+      },
+      "after": {
+        "sentence": "Вони їдять цю ___.",
+        "answer": "кашу",
+        "options": [
+          "кашу",
+          "каша",
+          "каші"
+        ],
+        "explanation": "Цю requires feminine singular accusative кашу. Каша and каші do not agree with цю."
+      }
+    },
+    {
+      "id": "i-eat-i-drink/inline/act-1/6",
+      "module": "i-eat-i-drink",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 6,
+      "activity_title": "Direct object endings",
+      "instruction": "Choose the correct direct-object form after їсти or пити.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "суп",
+      "distractors": [
+        "супу",
+        "супом"
+      ],
+      "reason": "Цей identifies a specific masculine inanimate accusative object суп. Супу and супом do not agree in case with цей.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D40",
+        "2V40",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "sentence": "(Use the accusative singular.) Я їм ___.",
+        "answer": "суп",
+        "options": [
+          "суп",
+          "супу",
+          "супом"
+        ],
+        "explanation": "Суп is masculine inanimate and stays суп."
+      },
+      "after": {
+        "sentence": "Я їм цей ___.",
+        "answer": "суп",
+        "options": [
+          "суп",
+          "супу",
+          "супом"
+        ],
+        "explanation": "Цей identifies a specific masculine inanimate accusative object суп. Супу and супом do not agree in case with цей."
+      }
+    },
+    {
+      "id": "i-eat-i-drink/inline/act-1/7",
+      "module": "i-eat-i-drink",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 7,
+      "activity_title": "Direct object endings",
+      "instruction": "Choose the correct direct-object form after їсти or пити.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "картоплю",
+      "distractors": [
+        "картопля",
+        "картоплі"
+      ],
+      "reason": "Цю takes feminine accusative картоплю. Картопля and картоплі do not agree with цю.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D41",
+        "2V41",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "sentence": "(Use the accusative singular.) Вона їсть ___.",
+        "answer": "картоплю",
+        "options": [
+          "картоплю",
+          "картопля",
+          "картоплі"
+        ],
+        "explanation": "Картопля ends in -я, so direct object is картоплю."
+      },
+      "after": {
+        "sentence": "Вона їсть цю ___.",
+        "answer": "картоплю",
+        "options": [
+          "картоплю",
+          "картопля",
+          "картоплі"
+        ],
+        "explanation": "Цю takes feminine accusative картоплю. Картопля and картоплі do not agree with цю."
+      }
+    },
+    {
+      "id": "i-eat-i-drink/inline/act-2/0",
+      "module": "i-eat-i-drink",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 0,
+      "activity_title": "Choose the food line",
+      "instruction": "Pick the natural A1 line.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "каву",
+      "distractors": [
+        "кава",
+        "кави"
+      ],
+      "reason": "Цю requires feminine accusative каву. Кава is nominative and кави is not the matching singular accusative.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D37",
+        "2V37"
+      ],
+      "before": {
+        "prompt": "(Use the accusative singular.) Я п'ю...",
+        "options": [
+          {
+            "text": "каву",
+            "correct": true
+          },
+          {
+            "text": "кава",
+            "correct": false
+          },
+          {
+            "text": "кави",
+            "correct": false
+          }
+        ],
+        "explanation": "After п'ю, feminine кава becomes каву."
+      },
+      "after": {
+        "prompt": "Я п'ю цю...",
+        "options": [
+          {
+            "text": "каву",
+            "correct": true
+          },
+          {
+            "text": "кава",
+            "correct": false
+          },
+          {
+            "text": "кави",
+            "correct": false
+          }
+        ],
+        "explanation": "Цю requires feminine accusative каву. Кава is nominative and кави is not the matching singular accusative."
+      }
+    },
+    {
+      "id": "i-eat-i-drink/inline/act-2/2",
+      "module": "i-eat-i-drink",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 2,
+      "activity_title": "Choose the food line",
+      "instruction": "Pick the natural A1 line.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "сік",
+      "distractors": [
+        "соку",
+        "соком"
+      ],
+      "reason": "Цей selects a masculine inanimate accusative object сік. Соку and соком do not agree with цей here.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D44",
+        "2V44"
+      ],
+      "before": {
+        "prompt": "(Use the accusative singular.) Ми п'ємо...",
+        "options": [
+          {
+            "text": "сік",
+            "correct": true
+          },
+          {
+            "text": "соку",
+            "correct": false
+          },
+          {
+            "text": "соком",
+            "correct": false
+          }
+        ],
+        "explanation": "Сік is masculine inanimate and stays сік."
+      },
+      "after": {
+        "prompt": "Ми п'ємо цей...",
+        "options": [
+          {
+            "text": "сік",
+            "correct": true
+          },
+          {
+            "text": "соку",
+            "correct": false
+          },
+          {
+            "text": "соком",
+            "correct": false
+          }
+        ],
+        "explanation": "Цей selects a masculine inanimate accusative object сік. Соку and соком do not agree with цей here."
+      }
+    },
+    {
+      "id": "i-eat-i-drink/inline/act-2/3",
+      "module": "i-eat-i-drink",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 3,
+      "activity_title": "Choose the food line",
+      "instruction": "Pick the natural A1 line.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "м'ясо",
+      "distractors": [
+        "м'ясу",
+        "м'яса"
+      ],
+      "reason": "The specific neuter object це м’ясо agrees in accusative/nominative-shaped singular. М’ясу and м’яса do not agree with це.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D43",
+        "2V43",
+        "2D30",
+        "2V30"
+      ],
+      "before": {
+        "prompt": "(Use the accusative singular.) Вона їсть...",
+        "options": [
+          {
+            "text": "м'ясо",
+            "correct": true
+          },
+          {
+            "text": "м'ясу",
+            "correct": false
+          },
+          {
+            "text": "м'яса",
+            "correct": false
+          }
+        ],
+        "explanation": "М'ясо is neuter and stays м'ясо."
+      },
+      "after": {
+        "prompt": "Вона їсть це...",
+        "options": [
+          {
+            "text": "м'ясо",
+            "correct": true
+          },
+          {
+            "text": "м'ясу",
+            "correct": false
+          },
+          {
+            "text": "м'яса",
+            "correct": false
+          }
+        ],
+        "explanation": "The specific neuter object це м’ясо agrees in accusative/nominative-shaped singular. М’ясу and м’яса do not agree with це."
+      }
+    },
+    {
+      "id": "i-eat-i-drink/inline/act-2/5",
+      "module": "i-eat-i-drink",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 5,
+      "activity_title": "Choose the food line",
+      "instruction": "Pick the natural A1 line.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "кашу",
+      "distractors": [
+        "каша",
+        "каші"
+      ],
+      "reason": "Цю requires feminine singular accusative кашу. Каша and каші do not agree with цю.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D39",
+        "2V39"
+      ],
+      "before": {
+        "prompt": "(Use the accusative singular.) Ти їси...",
+        "options": [
+          {
+            "text": "кашу",
+            "correct": true
+          },
+          {
+            "text": "каша",
+            "correct": false
+          },
+          {
+            "text": "каші",
+            "correct": false
+          }
+        ],
+        "explanation": "Каша becomes кашу."
+      },
+      "after": {
+        "prompt": "Ти їси цю...",
+        "options": [
+          {
+            "text": "кашу",
+            "correct": true
+          },
+          {
+            "text": "каша",
+            "correct": false
+          },
+          {
+            "text": "каші",
+            "correct": false
+          }
+        ],
+        "explanation": "Цю requires feminine singular accusative кашу. Каша and каші do not agree with цю."
+      }
+    },
+    {
+      "id": "at-the-cafe/inline/act-4/0",
+      "module": "at-the-cafe",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 0,
+      "activity_title": "Complete the cafe dialogue",
+      "instruction": "Choose the word or phrase that fits the dialogue.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "меню",
+      "distractors": [
+        "рахунок",
+        "карткою"
+      ],
+      "reason": "The guest has not chosen a dish, so меню supplies the choices. Рахунок is a bill after an order, rather than dish choices; instrumental карткою cannot be the subject of ось.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D08",
+        "2D09",
+        "2V08",
+        "2V09"
+      ],
+      "before": {
+        "sentence": "(The server brings the menu.) Добрий день! Ось ___.",
+        "answer": "меню",
+        "options": [
+          "меню",
+          "рахунок",
+          "картка"
+        ],
+        "explanation": "The server gives the menu first."
+      },
+      "after": {
+        "sentence": "Гість: Я щойно сів за стіл і хочу вибрати страву. Офіціант: Добрий день! Ось ___.",
+        "answer": "меню",
+        "options": [
+          "меню",
+          "рахунок",
+          "карткою"
+        ],
+        "explanation": "The guest has not chosen a dish, so меню supplies the choices. Рахунок is a bill after an order, rather than dish choices; instrumental карткою cannot be the subject of ось."
+      }
+    },
+    {
+      "id": "at-the-cafe/inline/act-4/5",
+      "module": "at-the-cafe",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 5,
+      "activity_title": "Complete the cafe dialogue",
+      "instruction": "Choose the word or phrase that fits the dialogue.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "хвилинку",
+      "distractors": [
+        "годину",
+        "картку"
+      ],
+      "reason": "The food is ready and will be brought now, so the short wait одну хвилинку fits. Одну годину contradicts the immediate-ready context; одну картку is not a waiting interval.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D10",
+        "2D11",
+        "2V10",
+        "2V11",
+        "R2-D01",
+        "R2-W01"
+      ],
+      "before": {
+        "sentence": "(Ask the customer to wait a moment.) Добре, одну ___.",
+        "answer": "хвилинку",
+        "options": [
+          "хвилинку",
+          "годину",
+          "картку"
+        ],
+        "explanation": "Одну хвилинку means one moment."
+      },
+      "after": {
+        "sentence": "Офіціант: Добре, одну ___. Суп уже готовий, зараз принесу.",
+        "answer": "хвилинку",
+        "options": [
+          "хвилинку",
+          "годину",
+          "картку"
+        ],
+        "explanation": "The food is ready and will be brought now, so the short wait одну хвилинку fits. Одну годину contradicts the immediate-ready context; одну картку is not a waiting interval."
+      }
+    },
+    {
+      "id": "checkpoint-food-shopping/workbook/2/5",
+      "module": "checkpoint-food-shopping",
+      "section": "workbook",
+      "activity_index": 2,
+      "item_index": 5,
+      "activity_title": "Serve the table",
+      "instruction": "Complete the dinner scene.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "склянку",
+      "distractors": [
+        "кілограм",
+        "буханку"
+      ],
+      "reason": "Одну agrees with feminine accusative склянку. Masculine кілограм would need один; буханка is a loaf and cannot be a measure/container of poured water.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D12",
+        "2D13",
+        "2D14",
+        "2V12",
+        "2V13",
+        "2V14"
+      ],
+      "before": {
+        "sentence": "(Measure the water in one drinking glass.) Анна наливає ___ води.",
+        "answer": "склянку",
+        "options": [
+          "склянку",
+          "кілограм",
+          "буханку"
+        ],
+        "explanation": "Use склянку води."
+      },
+      "after": {
+        "sentence": "Анна наливає одну ___ води.",
+        "answer": "склянку",
+        "options": [
+          "склянку",
+          "кілограм",
+          "буханку"
+        ],
+        "explanation": "Одну agrees with feminine accusative склянку. Masculine кілограм would need один; буханка is a loaf and cannot be a measure/container of poured water."
+      }
+    },
+    {
+      "id": "checkpoint-food-shopping/workbook/5/4",
+      "module": "checkpoint-food-shopping",
+      "section": "workbook",
+      "activity_index": 5,
+      "item_index": 4,
+      "activity_title": "Repair A1.6 interference",
+      "instruction": "Pick the A1.6 sentence you would actually say.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "Мене звати Джон, дайте меню.",
+      "distractors": [
+        "Мені звати Джон, дайте меню.",
+        "Я є Джон і я маю меню."
+      ],
+      "reason": "The key gives a name and requests the menu. Мені has the wrong case with звати; the possession statement я маю меню does not answer the server’s request for what to bring.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D08",
+        "2D46",
+        "2D47",
+        "2V08",
+        "2V46",
+        "2V47"
+      ],
+      "before": {
+        "prompt": "(Use the Мене звати formula and an imperative request.) Rephrase: Моє ім'я є Джон, і я хочу меню.",
+        "options": [
+          {
+            "text": "Мене звати Джон, дайте меню.",
+            "correct": true
+          },
+          {
+            "text": "Моє ім'я є Джон, і я хочу меню.",
+            "correct": false
+          },
+          {
+            "text": "Я є Джон і я маю меню.",
+            "correct": false
+          }
+        ],
+        "explanation": "Мене звати Джон is the requested name formula, and дайте is the requested imperative."
+      },
+      "after": {
+        "prompt": "Офіціант: Як вас звати? Що вам принести? Джон: ___",
+        "options": [
+          {
+            "text": "Мене звати Джон, дайте меню.",
+            "correct": true
+          },
+          {
+            "text": "Мені звати Джон, дайте меню.",
+            "correct": false
+          },
+          {
+            "text": "Я є Джон і я маю меню.",
+            "correct": false
+          }
+        ],
+        "explanation": "The key gives a name and requests the menu. Мені has the wrong case with звати; the possession statement я маю меню does not answer the server’s request for what to bring."
+      }
+    },
+    {
+      "id": "checkpoint-food-shopping/workbook/5/5",
+      "module": "checkpoint-food-shopping",
+      "section": "workbook",
+      "activity_index": 5,
+      "item_index": 5,
+      "activity_title": "Repair A1.6 interference",
+      "instruction": "Pick the A1.6 sentence you would actually say.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "Дайте, будь ласка, рахунок.",
+      "distractors": [
+        "Дай, будь ласка, рахунок.",
+        "Дайте мені рахунком."
+      ],
+      "reason": "Дайте addresses both servers. Дай is singular and cannot address both; рахунком is instrumental instead of the direct object рахунок after дайте.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D09",
+        "2D46",
+        "2V09",
+        "2V46"
+      ],
+      "before": {
+        "prompt": "(Use a direct imperative with будь ласка.) Rephrase: Чи не могли б ви дати мені рахунок?",
+        "options": [
+          {
+            "text": "Дайте, будь ласка, рахунок.",
+            "correct": true
+          },
+          {
+            "text": "Чи не могли б ви дати мені рахунок?",
+            "correct": false
+          },
+          {
+            "text": "Дайте мені рахунком.",
+            "correct": false
+          }
+        ],
+        "explanation": "The requested direct imperative is Дайте, будь ласка, рахунок. The conditional request is also grammatical and polite."
+      },
+      "after": {
+        "prompt": "У кафе двоє офіціантів. Джон звертається до обох: ___",
+        "options": [
+          {
+            "text": "Дайте, будь ласка, рахунок.",
+            "correct": true
+          },
+          {
+            "text": "Дай, будь ласка, рахунок.",
+            "correct": false
+          },
+          {
+            "text": "Дайте мені рахунком.",
+            "correct": false
+          }
+        ],
+        "explanation": "Дайте addresses both servers. Дай is singular and cannot address both; рахунком is instrumental instead of the direct object рахунок after дайте."
+      }
+    },
+    {
+      "id": "checkpoint-food-shopping/workbook/5/6",
+      "module": "checkpoint-food-shopping",
+      "section": "workbook",
+      "activity_index": 5,
+      "item_index": 6,
+      "activity_title": "Repair A1.6 interference",
+      "instruction": "Pick the A1.6 sentence you would actually say.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "Я плачу гривнями.",
+      "distractors": [
+        "Я плачу рублями.",
+        "Я плачу гривень."
+      ],
+      "reason": "The price is denominated in hryvnias, so Я плачу гривнями fits. Рублями names another currency, not this price’s unit; гривень is genitive rather than the payment instrumental.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D15",
+        "2D16",
+        "2V15",
+        "2V16"
+      ],
+      "before": {
+        "prompt": "(Name the Ukrainian currency used for this payment.) Repair: Я плачу рублями.",
+        "options": [
+          {
+            "text": "Я плачу гривнями.",
+            "correct": true
+          },
+          {
+            "text": "Я плачу рублями.",
+            "correct": false
+          },
+          {
+            "text": "Я плачу гривень.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use гривня for Ukrainian currency."
+      },
+      "after": {
+        "prompt": "Київ. На ціннику написано «20 ₴». Я плачу й кажу: ___",
+        "options": [
+          {
+            "text": "Я плачу гривнями.",
+            "correct": true
+          },
+          {
+            "text": "Я плачу рублями.",
+            "correct": false
+          },
+          {
+            "text": "Я плачу гривень.",
+            "correct": false
+          }
+        ],
+        "explanation": "The price is denominated in hryvnias, so Я плачу гривнями fits. Рублями names another currency, not this price’s unit; гривень is genitive rather than the payment instrumental."
+      }
+    },
+    {
+      "id": "checkpoint-places/inline/act-4/2",
+      "module": "checkpoint-places",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 2,
+      "activity_title": "Odesa call gaps",
+      "instruction": "Choose the phrase that completes the video call.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "з",
+      "distractors": [
+        "в",
+        "на"
+      ],
+      "reason": "The speaker is returning home after coffee, so з кафе marks the point of departure. В кафе goes into the cafe; на кафе does not express departure from it.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D27",
+        "2D29",
+        "2D32",
+        "2V27",
+        "2V29",
+        "2V32",
+        "2V28"
+      ],
+      "before": {
+        "sentence": "(You are leaving the cafe.) Я йду ___ кафе.",
+        "answer": "з",
+        "options": [
+          "з",
+          "в",
+          "на"
+        ],
+        "explanation": "Йду з кафе answers звідки?"
+      },
+      "after": {
+        "sentence": "Я випив каву. Тепер я йду ___ кафе додому.",
+        "answer": "з",
+        "options": [
+          "з",
+          "в",
+          "на"
+        ],
+        "explanation": "The speaker is returning home after coffee, so з кафе marks the point of departure. В кафе goes into the cafe; на кафе does not express departure from it."
+      }
+    },
+    {
+      "id": "checkpoint-places/inline/act-4/5",
+      "module": "checkpoint-places",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 5,
+      "activity_title": "Odesa call gaps",
+      "instruction": "Choose the phrase that completes the video call.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "на вокзал",
+      "distractors": [
+        "на вокзалі",
+        "з вокзалу"
+      ],
+      "reason": "Куди asks for the destination, answered by accusative на вокзал. На вокзалі is a location; з вокзалу is an origin, so neither answers the destination question.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D27",
+        "2D29",
+        "2V27",
+        "2V29",
+        "2V28",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(The station is your destination.) Увечері я їду ___.",
+        "answer": "на вокзал",
+        "options": [
+          "на вокзал",
+          "на вокзалі",
+          "з вокзалу"
+        ],
+        "explanation": "Їду asks куди?, so use на вокзал."
+      },
+      "after": {
+        "sentence": "— Куди ти їдеш? — Увечері я їду ___.",
+        "answer": "на вокзал",
+        "options": [
+          "на вокзал",
+          "на вокзалі",
+          "з вокзалу"
+        ],
+        "explanation": "Куди asks for the destination, answered by accusative на вокзал. На вокзалі is a location; з вокзалу is an origin, so neither answers the destination question."
+      }
+    },
+    {
+      "id": "checkpoint-places/workbook/2/1",
+      "module": "checkpoint-places",
+      "section": "workbook",
+      "activity_index": 2,
+      "item_index": 1,
+      "activity_title": "Repair checkpoint-places interference",
+      "instruction": "Choose the natural Ukrainian repair.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "Я йду в школу.",
+      "distractors": [
+        "Я йду в школі.",
+        "Я йду зі школи."
+      ],
+      "reason": "Куди asks for the destination. Я йду в школу answers it; в школі gives a location and зі школи gives an origin.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D32",
+        "2D48",
+        "2V32",
+        "2V48",
+        "2V27",
+        "2V28",
+        "2V29"
+      ],
+      "before": {
+        "prompt": "(Give the destination: school.) Rephrase: Я йду в школі.",
+        "options": [
+          {
+            "text": "Я йду в школу.",
+            "correct": true
+          },
+          {
+            "text": "Я йду в школі.",
+            "correct": false
+          },
+          {
+            "text": "Я йду зі школи.",
+            "correct": false
+          }
+        ],
+        "explanation": "For the destination, use в школу. After Я, the euphonic verb form is йду."
+      },
+      "after": {
+        "prompt": "— Куди ти йдеш? — ___",
+        "options": [
+          {
+            "text": "Я йду в школу.",
+            "correct": true
+          },
+          {
+            "text": "Я йду в школі.",
+            "correct": false
+          },
+          {
+            "text": "Я йду зі школи.",
+            "correct": false
+          }
+        ],
+        "explanation": "Куди asks for the destination. Я йду в школу answers it; в школі gives a location and зі школи gives an origin."
+      }
+    },
+    {
+      "id": "checkpoint-places/workbook/2/3",
+      "module": "checkpoint-places",
+      "section": "workbook",
+      "activity_index": 2,
+      "item_index": 3,
+      "activity_title": "Repair checkpoint-places interference",
+      "instruction": "Choose the natural Ukrainian repair.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "Книга на столі.",
+      "distractors": [
+        "Книга на столом.",
+        "Книга в стіл."
+      ],
+      "reason": "Де asks for location, answered by locative на столі. На does not govern instrumental столом; в стіл is accusative direction rather than the requested location.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D29",
+        "2D31",
+        "2D32",
+        "2V29",
+        "2V31",
+        "2V32",
+        "2V27",
+        "2V28"
+      ],
+      "before": {
+        "prompt": "(Give the shorter version without є.) Rephrase: Книга є на столі.",
+        "options": [
+          {
+            "text": "Книга на столі.",
+            "correct": true
+          },
+          {
+            "text": "Книга є на столі.",
+            "correct": false
+          },
+          {
+            "text": "Книга в стіл.",
+            "correct": false
+          }
+        ],
+        "explanation": "The requested A1 place pattern is Книга на столі."
+      },
+      "after": {
+        "prompt": "— Де книга? — ___",
+        "options": [
+          {
+            "text": "Книга на столі.",
+            "correct": true
+          },
+          {
+            "text": "Книга на столом.",
+            "correct": false
+          },
+          {
+            "text": "Книга в стіл.",
+            "correct": false
+          }
+        ],
+        "explanation": "Де asks for location, answered by locative на столі. На does not govern instrumental столом; в стіл is accusative direction rather than the requested location."
+      }
+    },
+    {
+      "id": "checkpoint-places/workbook/4/5",
+      "module": "checkpoint-places",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 5,
+      "activity_title": "One city story phrases",
+      "instruction": "Complete the checkpoint story with learned place phrases.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "на вокзал",
+      "distractors": [
+        "на вокзалі",
+        "з вокзалу"
+      ],
+      "reason": "Куди asks for destination, so на вокзал fits. На вокзалі denotes location; з вокзалу denotes departure.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D27",
+        "2D29",
+        "2V27",
+        "2V29",
+        "2V28",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(The station is her destination.) Після музею вона їде ___.",
+        "answer": "на вокзал",
+        "options": [
+          "на вокзал",
+          "на вокзалі",
+          "з вокзалу"
+        ],
+        "explanation": "Їде asks куди?, so use на вокзал."
+      },
+      "after": {
+        "sentence": "— Куди вона їде після музею? — Після музею вона їде ___.",
+        "answer": "на вокзал",
+        "options": [
+          "на вокзал",
+          "на вокзалі",
+          "з вокзалу"
+        ],
+        "explanation": "Куди asks for destination, so на вокзал fits. На вокзалі denotes location; з вокзалу denotes departure."
+      }
+    },
+    {
+      "id": "food-and-drink/workbook/3/1",
+      "module": "food-and-drink",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 1,
+      "activity_title": "Meal verb rhythm",
+      "instruction": "Choose the natural short line.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "обідаю",
+      "distractors": [
+        "вечеряю",
+        "п'ю"
+      ],
+      "reason": "The stated midday meal fits обідаю. Вечеряю is the evening meal, and п’ю is drinking rather than the explicitly stated eating of soup.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D17",
+        "2D18",
+        "2D20",
+        "2V17",
+        "2V18",
+        "2V20"
+      ],
+      "before": {
+        "sentence": "(Name the midday meal.) Вдень я ___.",
+        "answer": "обідаю",
+        "options": [
+          "обідаю",
+          "вечеряю",
+          "п'ю"
+        ],
+        "explanation": "Lunch: я обідаю."
+      },
+      "after": {
+        "sentence": "Зараз перша година дня. Я сиджу за столом і їм суп. Вдень я ___.",
+        "answer": "обідаю",
+        "options": [
+          "обідаю",
+          "вечеряю",
+          "п'ю"
+        ],
+        "explanation": "The stated midday meal fits обідаю. Вечеряю is the evening meal, and п’ю is drinking rather than the explicitly stated eating of soup."
+      }
+    },
+    {
+      "id": "food-and-drink/workbook/3/3",
+      "module": "food-and-drink",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 3,
+      "activity_title": "Meal verb rhythm",
+      "instruction": "Choose the natural short line.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "їм",
+      "distractors": [
+        "їси",
+        "їсть"
+      ],
+      "reason": "Я requires first-person singular їм. Їси is second-person singular; їсть is third-person singular. The legitimate drink/eat alternatives are not condemned generally.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D19",
+        "2V19"
+      ],
+      "before": {
+        "sentence": "(Use їсти: I eat borscht.) Я ___ борщ.",
+        "answer": "їм",
+        "options": [
+          "їм",
+          "п'ю",
+          "снідаю"
+        ],
+        "explanation": "Soup and borscht are eaten."
+      },
+      "after": {
+        "sentence": "Я ___ борщ.",
+        "answer": "їм",
+        "options": [
+          "їм",
+          "їси",
+          "їсть"
+        ],
+        "explanation": "Я requires first-person singular їм. Їси is second-person singular; їсть is third-person singular. The legitimate drink/eat alternatives are not condemned generally."
+      }
+    },
+    {
+      "id": "food-and-drink/workbook/3/5",
+      "module": "food-and-drink",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 5,
+      "activity_title": "Meal verb rhythm",
+      "instruction": "Choose the natural short line.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "з молоком",
+      "distractors": [
+        "з молоко",
+        "смачна"
+      ],
+      "reason": "З молоком has instrumental after з for the additive milk. З молоко uses nominative/accusative instead; смачна is nominative and cannot agree with accusative каву here.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D21",
+        "2D27",
+        "2V21",
+        "2V27"
+      ],
+      "before": {
+        "sentence": "(With milk.) Я хочу каву ___.",
+        "answer": "з молоком",
+        "options": [
+          "з молоком",
+          "без цукру",
+          "смачна"
+        ],
+        "explanation": "Кава з молоком is a whole drink phrase."
+      },
+      "after": {
+        "sentence": "Я хочу каву ___.",
+        "answer": "з молоком",
+        "options": [
+          "з молоком",
+          "з молоко",
+          "смачна"
+        ],
+        "explanation": "З молоком has instrumental after з for the additive milk. З молоко uses nominative/accusative instead; смачна is nominative and cannot agree with accusative каву here."
+      }
+    },
+    {
+      "id": "shopping/inline/act-1/6",
+      "module": "shopping",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 6,
+      "activity_title": "Price questions",
+      "instruction": "Choose the word that completes each shopping question.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "коштують",
+      "distractors": [
+        "коштує",
+        "коштувала"
+      ],
+      "reason": "The plural subject ці пляшки requires коштують. Коштує and feminine singular past коштувала do not agree with it; the two–four agreement ambiguity is removed with the numeral.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D45",
+        "2V45"
+      ],
+      "before": {
+        "sentence": "(Use the plural verb form.) Скільки ___ три пляшки води?",
+        "answer": "коштують",
+        "options": [
+          "коштують",
+          "коштує",
+          "коштувала"
+        ],
+        "explanation": "The requested plural form is коштують. A singular predicate can also occur with a quantified subject."
+      },
+      "after": {
+        "sentence": "Скільки ___ ці пляшки води?",
+        "answer": "коштують",
+        "options": [
+          "коштують",
+          "коштує",
+          "коштувала"
+        ],
+        "explanation": "The plural subject ці пляшки requires коштують. Коштує and feminine singular past коштувала do not agree with it; the two–four agreement ambiguity is removed with the numeral."
+      }
+    },
+    {
+      "id": "shopping/inline/act-4/1",
+      "module": "shopping",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 1,
+      "activity_title": "Quantity phrases",
+      "instruction": "Choose the quantity word or phrase that fits the product.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "літр",
+      "distractors": [
+        "пляшку",
+        "буханку"
+      ],
+      "reason": "Один agrees with masculine accusative літр. Пляшку and буханку are feminine accusative and would need одну.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D14",
+        "2D22",
+        "2D23",
+        "2V14",
+        "2V22",
+        "2V23"
+      ],
+      "before": {
+        "sentence": "(Ask for one litre.) Дайте ___ молока.",
+        "answer": "літр",
+        "options": [
+          "літр",
+          "пляшку",
+          "буханку"
+        ],
+        "explanation": "Use літр молока."
+      },
+      "after": {
+        "sentence": "Дайте один ___ молока.",
+        "answer": "літр",
+        "options": [
+          "літр",
+          "пляшку",
+          "буханку"
+        ],
+        "explanation": "Один agrees with masculine accusative літр. Пляшку and буханку are feminine accusative and would need одну."
+      }
+    },
+    {
+      "id": "shopping/inline/act-4/2",
+      "module": "shopping",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 2,
+      "activity_title": "Quantity phrases",
+      "instruction": "Choose the quantity word or phrase that fits the product.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "пляшку",
+      "distractors": [
+        "кілограм",
+        "буханку"
+      ],
+      "reason": "Одну agrees with feminine accusative пляшку. Masculine кілограм would need один; буханка denotes a loaf, not poured water.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D13",
+        "2D14",
+        "2D23",
+        "2V13",
+        "2V14",
+        "2V23"
+      ],
+      "before": {
+        "sentence": "(Ask for one bottle.) Дайте ___ води.",
+        "answer": "пляшку",
+        "options": [
+          "пляшку",
+          "кілограм",
+          "буханку"
+        ],
+        "explanation": "Use пляшку води."
+      },
+      "after": {
+        "sentence": "Дайте одну ___ води.",
+        "answer": "пляшку",
+        "options": [
+          "пляшку",
+          "кілограм",
+          "буханку"
+        ],
+        "explanation": "Одну agrees with feminine accusative пляшку. Masculine кілограм would need один; буханка denotes a loaf, not poured water."
+      }
+    },
+    {
+      "id": "shopping/inline/act-4/3",
+      "module": "shopping",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 3,
+      "activity_title": "Quantity phrases",
+      "instruction": "Choose the quantity word or phrase that fits the product.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "пачку",
+      "distractors": [
+        "літр",
+        "пачкою"
+      ],
+      "reason": "Одну agrees with feminine accusative пачку. Літр is masculine and would need один; пачкою is instrumental rather than the direct object.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D22",
+        "2D24",
+        "2V22",
+        "2V24"
+      ],
+      "before": {
+        "sentence": "(Ask for one packet of dry tea.) Дайте ___ чаю.",
+        "answer": "пачку",
+        "options": [
+          "пачку",
+          "літр",
+          "пляшку"
+        ],
+        "explanation": "Use пачку чаю."
+      },
+      "after": {
+        "sentence": "Дайте одну ___ чаю.",
+        "answer": "пачку",
+        "options": [
+          "пачку",
+          "літр",
+          "пачкою"
+        ],
+        "explanation": "Одну agrees with feminine accusative пачку. Літр is masculine and would need один; пачкою is instrumental rather than the direct object."
+      }
+    },
+    {
+      "id": "transport/inline/act-2/5",
+      "module": "transport",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 5,
+      "activity_title": "Ticket window",
+      "instruction": "Complete the ticket-buying lines.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "відправлення",
+      "distractors": [
+        "відправленням",
+        "відправленню"
+      ],
+      "reason": "The departure event is the nominative subject відправлення in this time question. Instrumental відправленням and dative відправленню cannot be its subject.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D25",
+        "2V25"
+      ],
+      "before": {
+        "sentence": "(Ask about departure time.) О котрій ___?",
+        "answer": "відправлення",
+        "options": [
+          "відправлення",
+          "зупинка",
+          "станція"
+        ],
+        "explanation": "О котрій відправлення? asks the departure time."
+      },
+      "after": {
+        "sentence": "О котрій ___?",
+        "answer": "відправлення",
+        "options": [
+          "відправлення",
+          "відправленням",
+          "відправленню"
+        ],
+        "explanation": "The departure event is the nominative subject відправлення in this time question. Instrumental відправленням and dative відправленню cannot be its subject."
+      }
+    },
+    {
+      "id": "transport/inline/act-3/0",
+      "module": "transport",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "activity_title": "Як ми їдемо?",
+      "instruction": "Choose the natural travel model.",
+      "type": "quiz",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "автобусом",
+      "distractors": [
+        "автобусу",
+        "автобуса"
+      ],
+      "reason": "Автобусом is the instrumental form for the means of transport. Автобусу and автобуса are not instrumental forms.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D26",
+        "R2-W01"
+      ],
+      "before": {
+        "prompt": "(Use one word in the instrumental case.) How do you say by bus?",
+        "options": [
+          {
+            "text": "автобусом",
+            "correct": true
+          },
+          {
+            "text": "за автобусом",
+            "correct": false
+          },
+          {
+            "text": "на автобусі",
+            "correct": false
+          }
+        ],
+        "explanation": "Use the instrumental: автобусом."
+      },
+      "after": {
+        "prompt": "Ми їдемо...",
+        "options": [
+          {
+            "text": "автобусом",
+            "correct": true
+          },
+          {
+            "text": "автобусу",
+            "correct": false
+          },
+          {
+            "text": "автобуса",
+            "correct": false
+          }
+        ],
+        "explanation": "Автобусом is the instrumental form for the means of transport. Автобусу and автобуса are not instrumental forms."
+      }
+    },
+    {
+      "id": "where-from/workbook/4/0",
+      "module": "where-from",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 0,
+      "activity_title": "Country, city, current home",
+      "instruction": "Complete each short introduction with a safe learned phrase.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "з України",
+      "distractors": [
+        "в Україні",
+        "в Україну"
+      ],
+      "reason": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D27",
+        "2D32",
+        "2V27",
+        "2V32",
+        "2V28",
+        "2V29"
+      ],
+      "before": {
+        "sentence": "(State the place of origin: Ukraine.) Я ___, з Києва.",
+        "answer": "з України",
+        "options": [
+          "з України",
+          "в Україні",
+          "в Україну"
+        ],
+        "explanation": "Country origin answers звідки?: з України."
+      },
+      "after": {
+        "sentence": "— Звідки ти? — Я ___.",
+        "answer": "з України",
+        "options": [
+          "з України",
+          "в Україні",
+          "в Україну"
+        ],
+        "explanation": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question."
+      }
+    },
+    {
+      "id": "where-from/workbook/4/1",
+      "module": "where-from",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 1,
+      "activity_title": "Country, city, current home",
+      "instruction": "Complete each short introduction with a safe learned phrase.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "з Канади",
+      "distractors": [
+        "у Канаді",
+        "до Канади"
+      ],
+      "reason": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D27",
+        "2D28",
+        "2D62",
+        "2V27",
+        "2V28",
+        "2V62",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(State the place of origin: Canada.) Анна ___, із Торонто.",
+        "answer": "з Канади",
+        "options": [
+          "з Канади",
+          "у Канаді",
+          "до Канади"
+        ],
+        "explanation": "Origin from Canada is з Канади."
+      },
+      "after": {
+        "sentence": "— Звідки Анна? — Вона ___.",
+        "answer": "з Канади",
+        "options": [
+          "з Канади",
+          "у Канаді",
+          "до Канади"
+        ],
+        "explanation": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question."
+      }
+    },
+    {
+      "id": "where-from/workbook/4/2",
+      "module": "where-from",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 2,
+      "activity_title": "Country, city, current home",
+      "instruction": "Complete each short introduction with a safe learned phrase.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "зі Львова",
+      "distractors": [
+        "у Львові",
+        "до Львова"
+      ],
+      "reason": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D28",
+        "2D62",
+        "2V28",
+        "2V62",
+        "2V27",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(State the place of origin: Lviv.) Олена живе в Києві, але вона ___.",
+        "answer": "зі Львова",
+        "options": [
+          "зі Львова",
+          "у Львові",
+          "до Львова"
+        ],
+        "explanation": "Origin from Lviv is зі Львова."
+      },
+      "after": {
+        "sentence": "— Звідки Олена? — Вона ___.",
+        "answer": "зі Львова",
+        "options": [
+          "зі Львова",
+          "у Львові",
+          "до Львова"
+        ],
+        "explanation": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question."
+      }
+    },
+    {
+      "id": "where-from/workbook/4/4",
+      "module": "where-from",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 4,
+      "activity_title": "Country, city, current home",
+      "instruction": "Complete each short introduction with a safe learned phrase.",
+      "type": "fill-in",
+      "origin": "class_sibling",
+      "disposition": "reworded",
+      "key": "зі США",
+      "distractors": [
+        "у США",
+        "до США"
+      ],
+      "reason": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D28",
+        "2D62",
+        "2V28",
+        "2V62",
+        "2V27",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "Джон ___, але зараз живе в Києві.",
+        "answer": "зі США",
+        "options": [
+          "зі США",
+          "у США",
+          "до США"
+        ],
+        "explanation": "Use зі США for easier pronunciation."
+      },
+      "after": {
+        "sentence": "— Звідки Джон? — Він ___.",
+        "answer": "зі США",
+        "options": [
+          "зі США",
+          "у США",
+          "до США"
+        ],
+        "explanation": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question."
+      }
+    },
+    {
+      "id": "where-from/workbook/4/5",
+      "module": "where-from",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 5,
+      "activity_title": "Country, city, current home",
+      "instruction": "Complete each short introduction with a safe learned phrase.",
+      "type": "fill-in",
+      "origin": "11930",
+      "disposition": "reworded",
+      "key": "з Києва",
+      "distractors": [
+        "у Києві",
+        "у Київ"
+      ],
+      "reason": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D27",
+        "2D28",
+        "2V27",
+        "2V28",
+        "2V29",
+        "2V32"
+      ],
+      "before": {
+        "sentence": "(State the place of origin: Kyiv.) Марко ___ і говорить українською.",
+        "answer": "з Києва",
+        "options": [
+          "з Києва",
+          "у Києві",
+          "у Київ"
+        ],
+        "explanation": "З якого міста? — з Києва."
+      },
+      "after": {
+        "sentence": "— Звідки Марко? — Він ___.",
+        "answer": "з Києва",
+        "options": [
+          "з Києва",
+          "у Києві",
+          "у Київ"
+        ],
+        "explanation": "Звідки asks for origin. The keyed з/зі phrase gives that origin. The location and destination alternatives answer де/куди instead of the stated origin question."
+      }
+    },
+    {
+      "id": "transport/workbook/3/0",
+      "module": "transport",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 0,
+      "activity_title": "Repair transport interference",
+      "instruction": "Choose the natural Ukrainian transport sentence.",
+      "type": "error-correction",
+      "origin": "legacy",
+      "disposition": "replaced",
+      "key": "Я їду автобусом до школи.",
+      "distractors": [
+        "Я їду автобусу до школи.",
+        "Я їду автобусом до школі."
+      ],
+      "reason": "The replacement retains the natural transport-means point without defining the requested phrase in English. Bare instrumental автобусом fits; автобусу does not express means here, and до школі uses the wrong case.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D26",
+        "2D49",
+        "2D62",
+        "2V49",
+        "2V62",
+        "2W04",
+        "2W05",
+        "2S04",
+        "2S05",
+        "2T03",
+        "2T04",
+        "2D60",
+        "2D61",
+        "2V60",
+        "2V61"
+      ],
+      "before": {
+        "sentence": "Брати автобус (Take a bus)",
+        "error": "брати автобус",
+        "correction": "Їхати автобусом / Сідати в автобус",
+        "options": [
+          "Їхати автобусом / Сідати в автобус",
+          "Брати автобус",
+          "Їхати за автобусом"
+        ],
+        "explanation": "Ukrainian uses the transport as means or says to get into it."
+      },
+      "after": {
+        "sentence": "Я їду в автобусом до школи.",
+        "error": "Я їду в автобусом до школи.",
+        "correction": "Я їду автобусом до школи.",
+        "options": [
+          "Я їду автобусом до школи.",
+          "Я їду автобусу до школи.",
+          "Я їду автобусом до школі."
+        ],
+        "explanation": "Автобусом expresses the means without в. Автобусу is not the instrumental; до requires genitive школи, not locative школі."
+      }
+    },
+    {
+      "id": "transport/workbook/3/1",
+      "module": "transport",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 1,
+      "activity_title": "Repair transport interference",
+      "instruction": "Choose the natural Ukrainian transport sentence.",
+      "type": "error-correction",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "їду цим автобусом",
+      "distractors": [
+        "їду цим автобусу",
+        "їду біля цього автобуса"
+      ],
+      "reason": "The speaker is inside the same bus whose movement is described. Їду цим автобусом fits that means; цим автобусу fails case agreement and біля цього автобуса contradicts being inside this bus.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D26",
+        "2D49",
+        "2V49",
+        "2W04",
+        "2W05",
+        "2S04",
+        "2S05",
+        "2T03",
+        "2T04",
+        "2D60",
+        "2D61",
+        "2D62",
+        "2V60",
+        "2V61",
+        "2V62",
+        "R2-P01",
+        "R2-W01"
+      ],
+      "before": {
+        "sentence": "Їхати за автобусом (Travel by bus)",
+        "error": "за автобусом",
+        "correction": "Їхати автобусом",
+        "options": [
+          "Їхати автобусом",
+          "Їхати за автобусом",
+          "Їхати біля автобуса"
+        ],
+        "explanation": "Means of transport uses the instrumental without a preposition."
+      },
+      "after": {
+        "sentence": "Я сиджу в цьому автобусі і їду за цим автобусом.",
+        "error": "їду за цим автобусом",
+        "correction": "їду цим автобусом",
+        "options": [
+          "їду цим автобусом",
+          "їду цим автобусу",
+          "їду біля цього автобуса"
+        ],
+        "explanation": "The speaker is inside this same bus, so їду цим автобусом expresses transport by it. Цим автобусу fails agreement; біля цього автобуса places the traveler outside the bus."
+      }
+    },
+    {
+      "id": "transport/workbook/3/2",
+      "module": "transport",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 2,
+      "activity_title": "Repair transport interference",
+      "instruction": "Choose the natural Ukrainian transport sentence.",
+      "type": "error-correction",
+      "origin": "legacy",
+      "disposition": "reworded",
+      "key": "в таксі, а потім на метро",
+      "distractors": [
+        "в таксієм, а потім на метро",
+        "в таксі, а потім на метрою"
+      ],
+      "reason": "Таксі and метро are indeclinable. The key keeps both unchanged; таксієм and метрою add unlicensed endings to these transport nouns. The original метрі is a form of метр, not the transport метро. The English gloss is removed and all options have the same clause format.",
+      "sources": [
+        "2W02",
+        "2W03",
+        "2S02",
+        "2T02",
+        "2D29",
+        "2D32",
+        "2V29",
+        "2V32",
+        "2W04",
+        "2W05",
+        "2S04",
+        "2S05",
+        "2T03",
+        "2T04",
+        "2D26",
+        "2D60",
+        "2D61",
+        "2D62",
+        "2V60",
+        "2V61",
+        "2V62"
+      ],
+      "before": {
+        "sentence": "В таксію / на метрі (In the taxi / on the metro)",
+        "error": "таксію / метрі",
+        "correction": "У таксі / на метро",
+        "options": [
+          "У таксі / на метро",
+          "В таксію / на метрі",
+          "У таксієм / на метрою"
+        ],
+        "explanation": "Таксі and метро do not change."
+      },
+      "after": {
+        "sentence": "Я їду в таксію, а потім на метрі.",
+        "error": "в таксію, а потім на метрі",
+        "correction": "в таксі, а потім на метро",
+        "options": [
+          "в таксі, а потім на метро",
+          "в таксієм, а потім на метро",
+          "в таксі, а потім на метрою"
+        ],
+        "explanation": "Таксі and метро are indeclinable transport nouns. Таксію/таксієм and метрою wrongly add endings; метрі is a form of the unit метр, not the transport noun метро."
+      }
+    }
+  ]
+}

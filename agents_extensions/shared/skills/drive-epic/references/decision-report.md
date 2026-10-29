@@ -65,6 +65,7 @@ Use it for a consequential design decision, when the operator asks for a second 
 - **On a PR** the panel shares the `review-loop` budget and ledger; `review-loop` keeps the
   single exact-head review of record, so the panel adds no second review path. Designated
   approval and `full-send` are unchanged.
+  Before a panel round, bring the head up to date as `review-loop` step 0 says.
 
 Learned from tstack's `council` skill (MIT, Theo Browne); the text is our own.
 
