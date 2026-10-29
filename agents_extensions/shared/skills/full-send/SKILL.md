@@ -64,27 +64,35 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 3. **Prove it** ([delivery](references/delivery.md#proof)): reproduce, fix, the same check
    passes; behaviour proof for a user-visible surface. Add a test only with the CTO's approval
    of that specific test.
-4. **Review with `review-loop`**, which you run yourself. It resolves the reviewer live
-   (never from a family that authored the branch), dispatches it at the exact pushed head,
-   keeps the budget and the ledger, and records the verdict.
-5. **Open or update the PR** ([pr-body](references/pr-body.md)). The PR may open before
-   approval so admission CI runs (`workflow.md:195`); an open PR or green CI is not approval.
+4. **Open or update the PR and get full green CI first** ([pr-body](references/pr-body.md)).
+   Push the branch and open a non-draft PR so CI runs on the exact head. PR CI runs the
+   full supported pytest shards and Frontend, not only the changed tests, so a failure the
+   diff causes shows up now and not after approval. An open PR is not approval.
 
    ```bash
    "$PY" -m scripts.publish pr-create --title "$TITLE" --body-file "$BODY" \
      --base main --head "$BRANCH"
    ```
 
+   Wait for the `CI Gate` check on that head to finish (`gh pr checks "$PR"`; see
+   [pr-watch](references/pr-watch.md)). Fix a red gate through the authoring lane first;
+   every fix is a new head and restarts the wait. **No budgeted review round starts until
+   the `CI Gate` is green on the head to be reviewed**: a round spent on a head that then
+   changes for a CI failure is wasted budget.
+5. **Review with `review-loop`**, which you run yourself, at that green head. It resolves
+   the reviewer live (never from a family that authored the branch), dispatches it at the
+   exact pushed head, keeps the budget and the ledger, and records the verdict. A fix that
+   moves the head returns to step 4 for green CI before the next round.
 6. **Watch it** ([pr-watch](references/pr-watch.md)): fix real findings and CI failures
    through the authoring lane, prove each fix, and run a `review-loop` delta for every new
-   head. One evidenced rerun for an unrelated CI failure, never more.
+   head once its CI Gate is green. One evidenced rerun for an unrelated CI failure, never more.
 7. **Check the gate on the live head** ([delivery](references/delivery.md#the-gate)):
 
    ```bash
    gh pr view "$PR" --json state,isDraft,headRefOid,mergeable,mergeStateStatus,autoMergeRequest
    ```
 
-   `headRefOid` must equal the head of the recorded APPROVE and of the green admission CI.
+   `headRefOid` must equal the head of the recorded APPROVE and of the green PR CI Gate.
    Send follow-ups to the CTO through Fleet Comms
    (`"$PY" -m scripts.fleet_comms channel publish … --recipient claude-cto`; the CTO's one durable recipient, never a `claude-cto-<id>` name).
 8. **Drain the inbox, then enqueue** at the approved head. The merge-queue keeper may already
