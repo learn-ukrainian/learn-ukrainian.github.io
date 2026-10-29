@@ -60,6 +60,10 @@ metadata would take with it, not whether its configuration is familiar:
   alternates naming an outside object store (the run depends on that store;
   deleting the run leaves it untouched), `extensions.worktreeConfig` with a
   `config.worktree`, hooks path, credential, alias and similar settings.
+- Judged by shape, not name: any directory holding `HEAD`, `objects` and `refs`
+  (a separate Git directory, a bare repository, a submodule's administrative
+  directory) gets the same checks as `.git`, and so does each linked worktree's own
+  `config.worktree`.
 - Kept as `git_metadata`: a worktree registered here that lives outside the run,
   a `.git` file pointing outside it, a Git directory that is itself linked or
   separate (`commondir`, `gitdir`), `core.worktree` resolving outside the run,

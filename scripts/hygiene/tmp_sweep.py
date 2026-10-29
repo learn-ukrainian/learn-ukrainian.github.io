@@ -292,6 +292,7 @@ _REDIRECT_CONFIG_PREFIXES = (b"include.", b"includeif.")
 _ALLOWED_EXTENSIONS = frozenset({b"extensions.worktreeconfig"})
 _ORDINARY_CONFIG_VALUES = {b"core.repositoryformatversion": b"0", b"core.bare": b"false"}
 _GIT_POINTER_LIMIT = 4096
+_GIT_DIRECTORY_SHAPE = frozenset({"HEAD", "objects", "refs"})
 
 
 def _inside(root: Path, target: str, *, base: Path) -> bool:
@@ -316,8 +317,11 @@ def _read_pointer(path: Path) -> bytes | None:
     return content if len(content) <= _GIT_POINTER_LIMIT else None
 
 
-def _custody_free_config(path: Path, root: Path, git_dir: Path) -> bool:
-    """Parse one config file without includes or global config; refuse anything that redirects custody."""
+def _custody_free_config(path: Path, root: Path, git_dir: Path, *, bare_ok: bool = False) -> bool:
+    """Parse one config file without includes or global config; refuse anything that redirects custody.
+
+    ``bare_ok`` admits ``core.bare = true`` for a Git directory that is not named ``.git``.
+    """
     try:
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
         with os.fdopen(fd, "rb") as config:
@@ -344,6 +348,8 @@ def _custody_free_config(path: Path, root: Path, git_dir: Path) -> bool:
             return False
         if key.startswith(b"extensions.") and key not in _ALLOWED_EXTENSIONS:
             return False
+        if key == b"core.bare" and bare_ok:
+            continue
         if key in _ORDINARY_CONFIG_VALUES and value.lower() != _ORDINARY_CONFIG_VALUES[key]:
             return False
         if key == b"core.worktree" and not _inside(root, os.fsdecode(value), base=git_dir):
@@ -362,6 +368,9 @@ def _disposable_git_directory(path: Path, root: Path) -> bool:
     unfamiliar extensions). Anything it merely points at, such as alternate object
     stores, remotes or hooks, stays untouched by the deletion. Parse only
     this metadata, without includes, global config or repository discovery.
+    A Git directory is recognized by its shape (``HEAD``, ``objects``, ``refs``), not
+    its name, so a separate Git directory, a bare repository or a submodule's
+    administrative directory that a ``.git`` file points at is judged the same way.
     """
     try:
         if not all(stat.S_ISDIR((path / name).lstat().st_mode) for name in ("objects", "refs")):
@@ -370,7 +379,7 @@ def _disposable_git_directory(path: Path, root: Path) -> bool:
             return False
         if any(os.path.lexists(path / name) for name in ("commondir", "gitdir", "objects/info/http-alternates")):
             return False
-        if not _custody_free_config(path / "config", root, path):
+        if not _custody_free_config(path / "config", root, path, bare_ok=path.name != ".git"):
             return False
         if os.path.lexists(path / "config.worktree") and not _custody_free_config(path / "config.worktree", root, path):
             return False
@@ -381,6 +390,11 @@ def _disposable_git_directory(path: Path, root: Path) -> bool:
             for entry in worktrees.iterdir():
                 pointer = _read_pointer(entry / "gitdir")
                 if pointer is None or not _inside(root, os.fsdecode(pointer.strip()), base=entry):
+                    return False
+                # A linked worktree keeps its own config, which can redirect custody like the main one.
+                if os.path.lexists(entry / "config.worktree") and not _custody_free_config(
+                    entry / "config.worktree", root, entry
+                ):
                     return False
         return True
     except (OSError, ValueError):
@@ -448,7 +462,10 @@ def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float,
                 reason = reason or "mount_point"
                 continue
             if stat.S_ISDIR(info.st_mode):
-                pending.extend(node.iterdir())
+                children = list(node.iterdir())
+                if disposable_git and node.name != ".git" and {c.name for c in children} >= _GIT_DIRECTORY_SHAPE:
+                    git_directories.append(node)
+                pending.extend(children)
         if reason is None:
             tree_root = path.resolve()
             if not all(_disposable_git_directory(node, tree_root) for node in git_directories) or not all(
