@@ -430,7 +430,9 @@ def merged_delivery(record: dict) -> dict | None:
     reset or deleted the branch after the merge. A candidate counts only when GitHub reports
     it MERGED into the task's base after the task started. Any lookup failure is None, so the
     caller falls back to refusing on the local evidence. ``paths`` is every path the PR
-    changed, rename sources included.
+    changed, rename sources included. The task's own head must also be published (nothing
+    ahead of the task start, or already in the PR or the base), so merged work never hides
+    further work that was not pushed.
     """
     try:
         match = _REMOTE_SLUG.fullmatch(record["worktree_remote_url"])
@@ -450,11 +452,17 @@ def merged_delivery(record: dict) -> dict | None:
             if (pr["state"] != "MERGED" or pr["baseRefName"] != base
                     or datetime.fromisoformat(pr["mergedAt"].replace("Z", "+00:00")) < started):
                 continue
+            if record.get("commits_ahead") != 0:
+                tip, merged = _canonical_publication(
+                    record, f"refs/heads/{record.get('publish_branch') or record['worktree_branch']}", record["head_sha"])
+                if not (merged or tip == record["head_sha"]):
+                    return None
+            # One JSON string per line keeps a name with a newline or quote whole.
             changed = _gh("api", "--paginate", f"repos/{repo}/pulls/{number}/files",
-                          "--jq", ".[] | .filename, .previous_filename")
+                          "--jq", ".[] | (.filename, (.previous_filename // empty)) | @json")
             return dict(repo=repo, number=number, merged_at=pr["mergedAt"],
-                        paths=sorted({line for line in changed.splitlines() if line}))
-    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+                        paths=sorted({json.loads(line) for line in changed.splitlines() if line}))
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, RuntimeError, subprocess.SubprocessError):
         return None
     return None
 

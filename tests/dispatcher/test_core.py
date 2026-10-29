@@ -1254,7 +1254,7 @@ def merged_delivery_world(tmp_path, monkeypatch):
     from scripts.orchestration import pr_ownership
 
     world = SimpleNamespace(
-        prs={}, files={}, listed=[], accepted=[],
+        prs={}, files={}, listed=[], published=(None, True), lookup_error=None,
         record={
             "task_id": "merge-probe", "mode": "workspace-write", "status": "done", "error": None,
             "owned_paths": ["docs/owned.md"], "worktree_remote_url": "https://github.com/org/repo.git",
@@ -1265,15 +1265,18 @@ def merged_delivery_world(tmp_path, monkeypatch):
     )
 
     def gh(args, **_):
+        if world.lookup_error:
+            raise world.lookup_error
         words = args[1:]
         out = (json.dumps(world.listed) if words[:2] == ["pr", "list"]
                else json.dumps(world.prs[int(words[2])]) if words[:2] == ["pr", "view"]
-               else "\n".join(world.files[int(words[2].split("/")[4])]))
+               else "\n".join(json.dumps(name) for name in world.files[int(words[2].split("/")[4])]))
         return SimpleNamespace(returncode=0, stdout=out, stderr="")
 
     state = tmp_path / "state.json"
     monkeypatch.setattr(pr_ownership, "state_path", lambda: state)
     monkeypatch.setattr(github_client, "run", gh)
+    monkeypatch.setattr(git, "_canonical_publication", lambda *_: world.published)
     monkeypatch.setattr(git, "ownership_git", Mock(side_effect=subprocess.CalledProcessError(
         128, ["git", "fetch"], stderr="branch gone")))
 
@@ -1304,7 +1307,7 @@ def test_branch_reset_or_deleted_after_merge_is_delivered(merged_delivery_world)
     world = merged_delivery_world
     world.record["commits_ahead"] = 2
     world.listed = [{"number": 78, "isCrossRepository": False, "headRefName": "claude/merge-probe"}]
-    world.prs[78], world.files[78] = MERGED, ["docs/owned.md", ""]
+    world.prs[78], world.files[78] = MERGED, ["docs/owned.md"]
     worker._enforce_delivery(world.record)
     assert (world.record["status"], world.record["error"]) == ("done", None)
     assert world.record["delivery_pr"] == "org/repo#78"
@@ -1318,24 +1321,51 @@ def test_merged_pr_outside_owned_paths_is_still_refused(merged_delivery_world):
     worker._enforce_delivery(world.record)
     assert (world.record["status"], world.record["error"]) == (
         "no_deliverable", "outside_owned_paths: scripts/elsewhere.py")
+    # A name that only differs from an owned path by a trailing newline is not that path.
+    world.record.update(status="done", error=None)
+    world.files[79] = ["docs/owned.md\n"]
+    worker._enforce_delivery(world.record)
+    assert world.record["status"] == "no_deliverable"
+    assert world.record["error"].startswith("outside_owned_paths: docs/owned.md")
 
 
-@pytest.mark.parametrize("pr", [
-    {**MERGED, "state": "OPEN"}, {**MERGED, "mergedAt": "2026-10-29T07:00:00Z"}, {**MERGED, "baseRefName": "other"},
+@pytest.mark.parametrize("fault", [
+    "open-pr", "merged-before-start", "foreign-base", "unpublished-head", "github-timeout", "ledger-unreadable",
+    "missing-field",
 ])
-def test_unpushed_change_without_a_merged_delivery_is_still_refused(merged_delivery_world, pr):
-    """Control: unpushed work, even beside an unmerged, stale or foreign-base PR, is refused with its exact cause."""
+def test_unpushed_change_without_a_provable_merged_delivery_is_still_refused(merged_delivery_world, fault):
+    """Control: unpushed work, even beside a merged, stale or foreign PR or a failed lookup, keeps its exact refusal."""
+    from scripts.orchestration import pr_ownership
+
     world = merged_delivery_world
     world.accept(80)
-    world.prs[80], world.files[80] = pr, ["docs/owned.md"]
+    world.prs[80], world.files[80] = dict(MERGED), ["docs/owned.md"]
     world.record["commits_ahead"] = 1
+    expected = "owned_paths_verification_failed: git fetch failed"
+    if fault == "open-pr":
+        world.prs[80]["state"] = "OPEN"
+    elif fault == "merged-before-start":
+        world.prs[80]["mergedAt"] = "2026-10-29T07:00:00Z"
+    elif fault == "foreign-base":
+        world.prs[80]["baseRefName"] = "other"
+    elif fault == "unpublished-head":
+        # Merged work must not hide a further local commit that was never pushed.
+        world.published = (None, False)
+    elif fault == "github-timeout":
+        world.lookup_error = subprocess.TimeoutExpired(["gh"], 60)
+    elif fault == "ledger-unreadable":
+        pr_ownership.state_path().write_text("{")
+    else:
+        del world.record["commits_ahead"]
+        world.published = (None, False)
+        expected = "no_commits_or_unknown"
     worker._enforce_delivery(world.record)
-    assert (world.record["status"], world.record["error"]) == (
-        "no_deliverable", "owned_paths_verification_failed: git fetch failed")
+    assert (world.record["status"], world.record["error"]) == ("no_deliverable", expected)
     assert "delivery_pr" not in world.record
-    world.record.update(status="done", owned_paths=None)
-    worker._enforce_delivery(world.record)
-    assert world.record["error"] == "work_not_pushed_or_unknown"
+    if fault == "open-pr":
+        world.record.update(status="done", owned_paths=None)
+        worker._enforce_delivery(world.record)
+        assert world.record["error"] == "work_not_pushed_or_unknown"
 
 
 @pytest.mark.parametrize("reuse_cwd", [False, True])

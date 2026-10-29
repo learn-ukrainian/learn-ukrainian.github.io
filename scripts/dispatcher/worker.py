@@ -205,7 +205,7 @@ def _enforce_delivery(record: dict) -> None:
     cause = None
     owned = record.get("owned_paths")
     # With no commits ahead there is nothing to verify, and the remote branch may never have existed.
-    if owned and (record["commits_ahead"] or 0) > 0:
+    if owned and (record.get("commits_ahead") or 0) > 0:
         try:
             with git.ownership_git(record) as run:
                 base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
@@ -228,15 +228,15 @@ def _enforce_delivery(record: dict) -> None:
         except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError) as exc:
             cause = _verification_cause(exc)
     if cause is None:
-        if record["worktree_dirty_on_exit"] is not False:
+        if record.get("worktree_dirty_on_exit") is not False:
             cause = "worktree_dirty_or_unknown"
-        elif record["commits_ahead"] is None or record["commits_ahead"] == 0:
+        elif not record.get("commits_ahead"):
             cause = "no_commits_or_unknown"
-        elif record["push_state"] != "pushed":
+        elif record.get("push_state") != "pushed":
             cause = "work_not_pushed_or_unknown"
     # Merged work leaves nothing on the task branch to inspect (it may be reset or deleted), so the
     # merged pull request is the evidence; it refuses an outside-owned path the same way.
-    if cause and cause.split(":", 1)[0] in MERGE_RESCUABLE and record["worktree_dirty_on_exit"] is False and (
+    if cause and cause.split(":", 1)[0] in MERGE_RESCUABLE and record.get("worktree_dirty_on_exit") is False and (
             merged := git.merged_delivery(record)):
         cause = _outside_cause(merged["paths"], owned) if owned else None
         record["delivery_pr"] = f"{merged['repo']}#{merged['number']}"
