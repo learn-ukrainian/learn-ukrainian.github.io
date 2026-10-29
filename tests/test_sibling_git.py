@@ -1129,7 +1129,7 @@ def test_module_context_attacks(world, tmp_path, monkeypatch, kind):
     ("shape", "expected"),
     [
         ("git -C {sibling} merge --ff-only origin/main", 0),
-        ("cd {sibling} && git merge --ff-only origin/main", 0),
+        ("cd {sibling} && git merge --ff-only origin/main", 2),
         ("git -C {sibling} worktree remove {target}", 0),
         ("git -C {primary} merge --ff-only origin/main", 2),
         ("cd {primary} && git merge --ff-only origin/main", 2),

@@ -936,6 +936,7 @@ def test_bash_git_write_intents_honors_dash_c():
         "pull",
         "add curriculum/tracked.md",
         "apply change.diff",
+        "checkout -- curriculum/tracked.md",
         "checkout HEAD -- curriculum/tracked.md",
     ],
 )
@@ -1021,6 +1022,13 @@ def test_issue_11381_default_anchor_is_hook_repository(tmp_path: Path):
         "ln -sfn {primary} {link}",
         "mv {link} {link}.old; ln -s {primary} {link}",
         "bash -c 'git -C {other} config core.worktree {primary}'",
+        "echo $(ln -sfn {primary} {link})",
+        "x=$(ln -sfn {primary} {link})",
+        "test -e <(ln -sfn {primary} {link})",
+        "for x in once; do ln -sfn {primary} {link}; done",
+        'cd "$(ln -sfn {primary} {link}; pwd)"',
+        "git -C {other} log -1 --format='[core]%nrepositoryformatversion = 0%nbare = false%nworktree = {primary}' --output={other}/.git/config",
+        "git -c core.fsmonitor='ln -sfn {primary} {link}; false' -C {other} status",
     ],
 )
 @pytest.mark.parametrize("nested", [False, True])
@@ -1040,24 +1048,44 @@ def test_issue_11381_target_changed_before_git_write_blocked(
     assert result.returncode == 2, result.stderr
 
 
-@pytest.mark.parametrize("prefix", ["pwd", "git status --short", "cd ./"])
-def test_issue_11381_read_only_prefix_keeps_foreign_git_allowed(
-    repo: Path, repo_template: Path, tmp_path: Path, prefix: str
+@pytest.mark.parametrize(
+    "command",
+    [
+        "pwd && {git}", "git status --short && {git}", "cd ./ && {git}",
+        "{git};", "{git} && true", "{git} || true", "{git} | cat", "{git} |& cat", "{git} &",
+        "( {git} )", "{{ {git}; }}", "for x in once; do {git}; done", "{git}\ntrue",
+        "echo $({git})", "echo `{git}`", "cat <({git})", "bash -c '{git}'", "eval '{git}'",
+        "OTHER=value {git}", "GIT_TRACE=1 {git}", "env {git}",
+        "git -c core.fsmonitor=false -C {other} merge --ff-only origin/main",
+        "git -ccore.fsmonitor=false -C {other} merge --ff-only origin/main",
+        "git --config-env=core.fsmonitor=MONITOR -C {other} merge --ff-only origin/main",
+        "git --exec-path=/tmp -C {other} merge --ff-only origin/main",
+        "{git} --output=/tmp/output", "{git} --output /tmp/output", "{git} -o/tmp/output", "{git} -o /tmp/output",
+    ],
+)
+def test_issue_11381_non_simple_foreign_git_blocked(
+    repo: Path, repo_template: Path, tmp_path: Path, command: str
 ):
     other = _materialize_repo(repo_template, tmp_path / "other")
-    command = f"{prefix} && git -C {other} merge --ff-only origin/main"
+    command = command.format(git=f"git -C {other} merge --ff-only origin/main", other=other)
     result = _run(repo, {"tool_name": "Bash", "cwd": str(other), "tool_input": {"command": command}})
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 2, result.stderr
 
 
-@pytest.mark.parametrize("separator", ["|", "&"])
+@pytest.mark.parametrize("command", [
+    "{git} | {relink}", "{git} |& {relink}", "{git} & {relink}",
+    "{{ {git}; }} & {relink}", "( {git} ) & {relink}",
+    "{{ {git}; }} | {relink}", "( {git} ) |& {relink}",
+])
 def test_issue_11381_concurrent_git_target_change_blocked(
-    repo: Path, repo_template: Path, tmp_path: Path, separator: str
+    repo: Path, repo_template: Path, tmp_path: Path, command: str
 ):
     other = _materialize_repo(repo_template, tmp_path / "other")
     link = tmp_path / "foreign-link"
     link.symlink_to(other, target_is_directory=True)
-    command = f"git -C {link} checkout HEAD -- curriculum/tracked.md {separator} ln -sfn {repo} {link}"
+    command = command.format(
+        git=f"git -C {link} checkout HEAD -- curriculum/tracked.md", relink=f"ln -sfn {repo} {link}"
+    )
     dispatch = repo / ".worktrees/dispatch/claude/task-1"
     result = _run(repo, {"tool_name": "Bash", "cwd": str(dispatch), "tool_input": {"command": command}})
     assert result.returncode == 2, result.stderr
