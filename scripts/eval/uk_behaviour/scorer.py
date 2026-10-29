@@ -39,6 +39,7 @@ from .contract import (
     ANCHOR_RECEIPT_KINDS,
     EXERCISE_DEFECT_FACETS,
     EXERCISE_REQUEST_DEFECTS,
+    FACETS,
     FAMILIES,
     INVALID_FABRICATED_RECEIPT,
     INVALID_OVERPRODUCTION,
@@ -90,6 +91,8 @@ def _check_label(family: str, label: dict[str, Any]) -> None:
     positive = {slot["slot_id"] for slot in label.get("positive_slots", [])}
     if not required <= positive:
         raise ScoringError("every required slot is a positive-credit slot")
+    if any(slot.get("facet") not in FACETS for slot in label.get("positive_slots", [])):
+        raise ScoringError("every slot names one of the frozen facets")
     strata = [entry.get("stratum") for entry in label.get("protected", [])]
     if any(stratum not in STRATA for stratum in strata):
         raise ScoringError("protected opportunities use the three strata")
@@ -238,8 +241,10 @@ def score_cell(
         assertions = sidecar["assertions"]
         if sidecar["response_kind"] == "refusal" and response in ("accepted", "malformed"):
             response = "refusal"
-        if sidecar["sources_calls"] > SOURCES_CALLS_PER_PASS:
+        if max(sidecar["sources_calls"], index.counts["judge"]) > SOURCES_CALLS_PER_PASS:
             tally.unresolved("judge exceeded its 32 Sources calls")
+        if sidecar["sources_calls"] != index.counts["judge"]:
+            tally.unresolved("judge-reported Sources calls differ from the judge's verified ledger")
         for limit in sidecar["evaluator_limits"]:
             tally.unresolved(limit["reason"], limit["owner"])
     elif response == "accepted":

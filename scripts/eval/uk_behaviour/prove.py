@@ -177,7 +177,7 @@ def _reply(fx: Fixture, assertions: list[dict], *, protected=True, harm=False, s
         "assertions": assertions,
         "protected": [{"opportunity_id": "p1", "preserved": protected, "harm": harm}],
         "obligations": [{"id": "o1", "satisfied": satisfied}],
-        "sources_calls": 3,
+        "sources_calls": None,  # filled from the judge's ledger by _score unless a case sets it
         "budget_exhausted": False,
         "evaluator_limits": [],
     } | extra
@@ -186,6 +186,8 @@ def _reply(fx: Fixture, assertions: list[dict], *, protected=True, harm=False, s
 def _score(fx: Fixture, label: dict, output: str, reply: dict | None) -> dict[str, Any]:
     index = fx.index()
     sidecar = None
+    if reply is not None and reply["sources_calls"] is None:
+        reply = reply | {"sources_calls": index.counts["judge"]}
     if reply is not None:
         sidecar = judge.bind_reply(
             json.dumps(reply), item_id=fx.item["item_id"], output_id="out-fixture", output=output, index=index
@@ -783,6 +785,13 @@ def review_probes(root: Path) -> list[dict[str, Any]]:
         label = _label(fx.item, fx.family, required=1, facet="meaning")
         result = _score(fx, label, output, _reply(fx, [assertion]))
         cases.append(_case(name, expected, (result["R"], result["components"]["S"])))
+
+    fx = Fixture(root, "probe-judge-calls")
+    output, assertions = _slot_review(fx, 1)
+    result = _score(fx, _label(fx.item, fx.family, required=1), output, _reply(fx, assertions, sources_calls=5))
+    cases.append(
+        _case("judge-reported calls must equal the judge's own ledger", UNRESOLVED_EVALUATOR, result["status"])
+    )
 
     nested = {
         "item_id": "c",

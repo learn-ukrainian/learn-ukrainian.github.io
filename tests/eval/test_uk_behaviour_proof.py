@@ -55,6 +55,7 @@ REQUIRED = (
         "an invented locator binds nothing",
         "the ВТС entry of a mixed result earns credit",
         "label metadata nested inside an allowlisted field is refused",
+        "judge-reported calls must equal the judge's own ledger",
         "fresh writer gets exactly the production prompt over four inputs, no mode field",
         "a fresh writer that reached Sources is not scorable",
     ]
