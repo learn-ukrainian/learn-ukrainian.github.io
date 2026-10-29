@@ -1291,7 +1291,8 @@ def resolve_reviewer(
             fail_closed_reason=(
                 f"unsupported local-code-review profile {inputs.review_profile!r}; "
                 f"expected one of {sorted(VALID_REVIEW_PROFILES)}. Learner-content semantic "
-                "review belongs to track-completion via post-build-review."
+                "review belongs to track-completion via post-build-review; seats come from "
+                "agents_extensions/shared/skills/review-loop/references/ukrainian.md, § Seats."
             ),
         )
     inputs = replace(inputs, review_profile=review_profile)

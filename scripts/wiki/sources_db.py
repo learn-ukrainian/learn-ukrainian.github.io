@@ -4585,10 +4585,13 @@ def _json_string_list(value: object) -> list[str]:
 
 
 def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
-    """Return every exact-matching article from the offline official СУМ-20 collection.
+    """Return every exact-matching СУМ-20 article: official records, then served mirror records.
 
-    The collection is populated only by an explicit ingest. This reader has no
-    live fallback, so its provenance is the stored official ``wordid`` record.
+    Both collections are populated only by explicit offline writers; this
+    reader has no live fallback. Official records carry their stored ``wordid``
+    provenance. Imported mirror records follow ``sum20-mirror-rule-v1``
+    (``scripts.wiki.sum20_mirror``) and carry their mirror URL, fetch time and
+    ``official_relation``; they never use the official ``source_id``.
     An omitted ``db_path`` uses ``data/lexdata.db`` when that file already holds
     ``sum20_articles``; otherwise it uses the read-only sources collection.
     ``LEXDATA_DB_PATH`` is exclusive and never falls back.
@@ -4602,7 +4605,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
     try:
         columns = {str(row["name"]) for row in conn.execute("PRAGMA table_info(sum20_articles)").fetchall()}
         if not columns:
-            return []
+            return _sum20_mirror_records(conn, db_path, normalized_lookup_key)
         where = sum20_live_article_where(columns, prefix=False)
         articles = conn.execute(
             f"SELECT * FROM sum20_articles WHERE {where} ORDER BY wordid",
@@ -4647,6 +4650,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
             records.append(
                 {
                     "source_id": SUM20_SOURCE_ID,
+                    "source_role": "official",
                     "source_record_id": str(article["wordid"]),
                     "headword": str(article["headword"]),
                     "stressed_headword": str(article["stressed_headword"]),
@@ -4663,9 +4667,26 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
                     "attribution_label": SUM20_ATTRIBUTION_LABEL,
                 }
             )
+        records.extend(_sum20_mirror_records(conn, db_path, normalized_lookup_key))
         return records
     finally:
         conn.close()
+
+
+def _sum20_mirror_records(official, db_path: str | Path | None, key: str) -> list[dict]:
+    """Served mirror records, judged against the official rows ``official`` returned (sum20-mirror-rule-v1)."""
+    from scripts.lexicon.sum20_store import open_sum20_mirror
+    from scripts.wiki.sum20_mirror import mirror_records
+
+    mirror = open_sum20_mirror(official, db_path, repository_root=PROJECT_ROOT)
+    if mirror is None:
+        return []
+    if mirror is official:
+        return mirror_records(official, key)
+    try:
+        return mirror_records(mirror, key, official)
+    finally:
+        mirror.close()
 
 
 def _heritage_text(hit: dict) -> str:

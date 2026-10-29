@@ -2,10 +2,12 @@
 
 `.github/workflows/ci.yml` emits the required `CI Gate` context in two tiers.
 PR events run admission checks: file-content secret scanning, the large-file
-guard, attribution, lint and content contracts, dependency-audit scoping, and
-`pytest --collect-only`. Its summary states plainly that full pytest was not run.
+guard, attribution, lint and content contracts, dependency-audit scoping,
+`pytest --collect-only` and Frontend. They run no pytest shards; the gate summary
+states plainly that full pytest was not run (operator decision, 2026-10-29).
 The parallel required `pr-affected` job executes literal changed existing
-`tests/**/test_*.py` files plus every path in `scripts/ci/pr-affected-guards.txt`.
+`tests/**/test_*.py` files, every path in `scripts/ci/pr-affected-guards.txt`, and
+the tests that directly import, load, read or run a changed non-test file.
 The same job also runs `pytest tests -m 'repo_wide and not atlas_release and not slow and not site_toolchain'`
 in a separate required step.
 This selects marked tests only, including marked functions in otherwise
@@ -22,8 +24,13 @@ neither replaces that immutable parent. No fetched-target, event-base ancestry,
 changes still fail the checkout-integrity check.
 The diff uses NUL-delimited Git paths, rename destinations and tracked regular
 files. Deleted files are reported.
-Unsafe paths, missing guards and symlinks fail closed. No import graph or
-component inventory chooses tests.
+Unsafe paths, missing guards and symlinks fail closed. Tests for changed code come
+from the direct edges of the static scan in `scripts/ci/components.py`
+(`scan_imports`): imports, literal loads, file reads and Python subprocess targets.
+Only direct importers are selected; the transitive closure spans most of the suite,
+which the merge group runs. A deleted file has no edges in the candidate, so the
+surviving tests that depended on it come from the same scan of the base tree.
+The component inventory chooses no tests.
 
 CI does not run on PR title and body edits; an edit would restart the whole
 suite on an unchanged head. The `Scan PR publication fields` job in
@@ -46,7 +53,11 @@ serial file-duration sum plus 60 seconds for setup and
 collection is the conservative estimate; a selected file with no recorded time
 (a new test file) counts at the median recorded file and still runs. If the
 estimate exceeds 600 seconds or pytest infrastructure changes, all guards still run
-and changed files outside the guards defer to merge-group pytest. Infrastructure
+and changed files outside the guards defer to merge-group pytest. Otherwise the
+importing tests fill the remaining budget, cheapest recorded duration first; the
+rest defer with the same reason and are listed in `importing_test_files` and
+`deferred_files`. The recorded estimate includes the importing tests that run, and
+`unknown_duration_files` includes every importing test with no recorded time. Infrastructure
 includes conftest, pytest configuration, dependency locks, the CI workflow, CI Python setup,
 CI helpers and quarantine inputs. The summary and `pr-affected-proof` artifact
 record the candidate, requested files, deferred files and reason, recorded
@@ -111,8 +122,8 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
 | Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
-| PR changed tests and guards | PRs execute changed test files, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
-| Frontend | Full tier only. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
+| PR changed tests and guards | PRs execute changed test files, tests that import changed files, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
+| Frontend | Every event. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
 | Refresh pytest durations | Full tier only. Freezes one file-weight snapshot for every shard (below). |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |
 | pytest report | Whole-run checks over every shard; records the tested tree, commit, PR and run, then the runner-normalized file durations. |
@@ -193,8 +204,8 @@ test files this change deleted or rewrote.
 `GITHUB_SHA`, the event ref, action and candidate identity. Unknown events,
 missing metadata, incorrect refs and malformed proof fail closed.
 
-The gate requires Secret scan, Checks, Dependency audit and PR changed tests and guards to succeed on every
-event. Frontend, duration refresh, pytest and pytest report must succeed on the
+The gate requires Secret scan, Checks, Dependency audit, Frontend and PR changed tests and guards to
+succeed on every event. Duration refresh, pytest and pytest report must succeed on the
 full tier and be skipped on PR admission. Queue commit metadata scanning must
 succeed on merge-group events and be skipped elsewhere. Every other result,
 including cancellation or unknown status, blocks the gate. `always()` ensures

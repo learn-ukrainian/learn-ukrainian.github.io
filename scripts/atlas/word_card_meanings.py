@@ -15,9 +15,13 @@ from pathlib import Path
 from scripts.atlas import word_card_foundation as foundation
 from scripts.atlas import word_card_sources as src
 from scripts.storage.topology import store_locality
+from scripts.wiki import sum20_mirror
 
-SOURCES = ("sum20", "vts_busel_slovnyk_me")
-VERSION = "pilot-meanings-v2"
+SOURCES = ("sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me")
+VERSION = "pilot-meanings-v3"
+SUPERSCRIPTS = "¹²³⁴⁵⁶⁷⁸⁹"
+# A headword in capitals (stress marks allowed), an optional homonym number, then its grammar.
+MIRROR_HEADER = re.compile(r"(?<!\S)([А-ЯІЇЄҐ'’ʼ`́-]{2,})([¹²³⁴⁵⁶⁷⁸⁹]?)(?=,)")
 SOURCE_TAIL = re.compile(r"\s+Джерело:.*$", re.IGNORECASE | re.DOTALL)
 
 
@@ -95,6 +99,39 @@ def vts_partitions(text: str, spelling: str) -> list[dict]:
     return out
 
 
+def mirror_partitions(row: dict, spelling: str) -> list[dict]:
+    """Source-local homonym partitions of one served СУМ-20 mirror page; ``[]`` holds the page unresolved.
+
+    The page repeats its headword before the article and appends a source
+    footer; neither belongs to a witness. A header is the card's spelling in
+    capitals followed by its grammar. One header gives one partition. Several
+    headers split the page only when they are numbered ¹, ², … in order, so each
+    witness stays within its own homonym. Unnumbered or out-of-order headers
+    (``АТЛА́С`` … ``А́ТЛАС``) cannot be told from references and hold the page.
+    """
+    text = row["article_text"]
+    lookup = re.match(rf"\s*{re.escape(row['headword'])}\s+", text, re.IGNORECASE)
+    start = lookup.end() if lookup else 0
+    footer = SOURCE_TAIL.search(text, start)
+    end = footer.start() if footer else len(text)
+    headers = [m for m in MIRROR_HEADER.finditer(text, start, end) if key(m[1].lower()) == spelling]
+    if not headers or headers[0].start() != start:
+        return []
+    if len(headers) > 1 and [m[2] for m in headers] != list(SUPERSCRIPTS[: len(headers)]):
+        return []
+    out = []
+    for i, header in enumerate(headers):
+        first = header.start()
+        last = headers[i + 1].start() if i + 1 < len(headers) else end
+        body = text[first:last].rstrip()
+        grammar = text[header.end():first + len(body)].partition(".")[0] + "."
+        out.append({"text": body, "head": src.nfc(header[1].lower()), "pos": grammar_pos(grammar),
+                    "aspect": "imperf" if "недок." in grammar else "perf" if "док." in grammar else None,
+                    "partition": header[1] + header[2] if len(headers) > 1 else "article",
+                    "span": [first, first + len(body)], "reason": None})
+    return out
+
+
 def full_vts(row: dict, root: Path | None) -> tuple[str | None, str | None]:
     """Authenticate the admitted full witness; never fetch or follow a reference."""
     text = row["text"]
@@ -140,6 +177,18 @@ def candidates(sources: src.PilotSources, spelling: str) -> dict[str, list[dict]
             "locator": f"sum20:sum20_articles:id:{row['id']} [article_text]",
             "snapshot": "sum20-article@sha256:" + foundation.digest({"article": row, "senses": senses}),
             "url": row["official_url"]})
+    # Only the mirror rows sum20-mirror-rule-v1 serves: an agreeing row adds nothing to the official one.
+    served = sum20_mirror.served_rows(sources.sources, sum20_mirror.mirror_key(spelling))
+    sources._use(f"meaning:sum20_mirror:{spelling}", [[row, relation] for row, relation in served])
+    for row, relation in served:
+        parts = mirror_partitions(row, spelling) or [{
+            "text": None, "head": "", "pos": None, "aspect": None, "partition": "unresolved", "span": [0, 0],
+            "reason": "source_partition_unresolved"}]
+        for part in parts:
+            start, end = part["span"]
+            out["sum20_slovnyk_mirror"].append({**part, "row": row, "relation": relation,
+                "locator": f"sum20_slovnyk_mirror:sum20_mirror_articles:id:{row['id']} [article_text:{start}:{end}]",
+                "snapshot": "sum20-mirror-article@sha256:" + foundation.digest(row), "url": row["source_url"]})
     rows = [src.row_dict(r) for r in sources.sources.execute(
         "SELECT * FROM slovnyk_me_entries WHERE dictionary_slug='vts' AND normalized_word=? ORDER BY id",
         (spelling,))]
