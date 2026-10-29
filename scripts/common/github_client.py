@@ -1572,12 +1572,17 @@ class GitHubClient:
                         and response.status != 599
                         and (normalized.call_class != "landing" or db.in_transaction)
                     ):
+                        wrote = db.in_transaction
                         github_usage.record(
                             db,
                             endpoint=github_usage.endpoint_template(method, resource_path),
                             status=response.status,
                             landing=normalized.call_class == "landing",
                         )
+                        if budget is not None and wrote and not db.in_transaction:
+                            # SQLite rolled the whole transaction back with the refused row (a full
+                            # disk, for one): the observation is stored again, without the row.
+                            _store_budget(db, self.scope, h.get("x-ratelimit-resource", resource), *budget, now=now)
                     if limit is not None:
                         holds, reset, reason = limit
                         for hold in holds:

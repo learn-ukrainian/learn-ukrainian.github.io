@@ -154,7 +154,7 @@ is written after it ran, so its admission stays read-only. Each row names the ca
 dispatched task id with its command, else the calling command's module or script, never its
 arguments; for the `gh` shim, the command that ran `gh`) and an endpoint template such as
 `GET repos/:repo/actions/runs/:n`, in which the repository, numbers, commit SHAs and every
-named account, branch, tag or label are replaced. Print the top consumers of the last hour:
+named account, branch, tag or label (a ref with slashes included) are replaced. Print the top consumers of the last hour:
 
 ```bash
 .venv/bin/python -m scripts.common.github_usage top            # --hours 3, --limit 50, --json
@@ -168,8 +168,8 @@ however many requests gh makes for it. A write SQLite refuses drops its row rath
 call or the budget observation beside it. A cache file SQLite reports as damaged, whether at open
 or mid-use, is set aside as `cache.sqlite3.corrupt` and rebuilt, because without it every read
 is charged in full and budget observations stop reaching other callers; the call itself
-continues in memory. Only the damaged file is moved, under a directory lock: a fresh file
-another process already put in its place is left alone.
+continues in memory. Only the damaged file is moved, under a directory lock a client never waits
+for: a fresh file another process already put in its place is left alone.
 
 ## Git hooks
 

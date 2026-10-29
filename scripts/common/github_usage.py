@@ -68,7 +68,7 @@ def set_aside(path, identity):
     Only while ``path`` still names that file: once another process has set it aside and a
     fresh file replaced it, the replacement is left alone. The check and the move happen under
     one exclusive lock on the directory, so two clients that found the same damage cannot
-    interleave them. One slot per file keeps disk use bounded. A journal is left in place:
+    interleave them; a client that finds the lock taken leaves the move to the holder. One slot per file keeps disk use bounded. A journal is left in place:
     SQLite discards a journal beside an empty database, and moving it could take a live
     transaction's journal from a process that still has the old file open.
     """
@@ -77,7 +77,8 @@ def set_aside(path, identity):
     with suppress(OSError):
         directory = os.open(os.path.dirname(os.fspath(path)) or ".", os.O_RDONLY)
         try:
-            fcntl.flock(directory, fcntl.LOCK_EX)
+            # Contended: another client is moving the file, so this one never waits for it.
+            fcntl.flock(directory, fcntl.LOCK_EX | fcntl.LOCK_NB)
             if file_identity(path) == identity:
                 os.replace(path, f"{path}.corrupt")
         finally:
@@ -116,7 +117,7 @@ def _python_target(options, program):
 
 
 def _shell_target(options, program):
-    """The script of a shell command line; ``-c`` and its inline text are never read."""
+    """The script of a shell command line; ``-c``'s inline text and ``-s``'s positional arguments are never read."""
     for arg in options:
         if arg == "--":
             return _script_name(next(options, program))
@@ -126,6 +127,8 @@ def _shell_target(options, program):
         elif arg[:1] in ("-", "+") and len(arg) > 1:
             if arg[0] == "-" and "c" in arg:
                 return f"{program} -c"
+            if arg[0] == "-" and "s" in arg:
+                return f"{program} -s"
             if arg[-1] in "oO":
                 next(options, None)
         else:
@@ -177,25 +180,22 @@ def caller():
 _NAMED_AFTER = frozenset(
     {
         "assignees",
-        "blobs",
         "collaborators",
-        "commits",
         "environments",
         "labels",
         "members",
         "orgs",
-        "ref",
-        "refs",
         "statuses",
-        "tarball",
         "teams",
-        "trees",
         "users",
         "workflows",
-        "zipball",
     }
 )
-"""Path words whose next segment names an account, branch, tag, label or commit-ish."""
+"""Path words whose next segment names an account, label, team or workflow."""
+_REF_AFTER = frozenset({"blobs", "ref", "refs", "tarball", "trees", "zipball"})
+"""Path words after which the rest of the path is one ref, whose own name may contain slashes."""
+_COMMIT_TAILS = frozenset({"branches-where-head", "check-runs", "check-suites", "comments", "pulls", "status", "statuses"})
+"""What may follow a commit-ish in ``commits/<ref>/...``; the ref is everything before the last of them."""
 
 
 def endpoint_template(method, path):
@@ -203,13 +203,23 @@ def endpoint_template(method, path):
     path = str(path or "").split("?", 1)[0].strip("/")
     path = re.sub(r"^repos/[^/]+/[^/]+", "repos/:repo", path)
     path = re.sub(r"/(heads|tags|branches|compare|contents)/.*$", r"/\1/:ref", path)
+    parts = path.split("/")
     segments = []
-    for segment in path.split("/"):
+    index = 0
+    while index < len(parts):
+        segment, previous, index = parts[index], segments[-1] if segments else "", index + 1
+        if previous in _REF_AFTER:
+            segments.append(":name")
+            break
+        if previous == "commits":
+            end = max((at for at in range(index, len(parts)) if parts[at] in _COMMIT_TAILS), default=len(parts))
+            segment = "/".join(parts[index - 1 : end])
+            index = end
         if segment.isdigit():
             segment = ":n"
         elif re.fullmatch(r"[0-9a-f]{7,64}", segment):
             segment = ":sha"
-        elif segments[-1:] and segments[-1] in _NAMED_AFTER:
+        elif previous in _NAMED_AFTER or previous == "commits":
             segment = ":name"
         segments.append(segment)
     return f"{str(method).upper()} {'/'.join(segments)}"
