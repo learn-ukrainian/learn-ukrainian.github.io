@@ -68,6 +68,8 @@ LINEAGE = {
     "puls": ("G-PULS", 2),
     "ukrainian_word_stress": ("G-ULIF", 2),
     "sum20": ("G-ULIF", 1),
+    # A slovnyk.me copy of the same СУМ-20 work: the same lineage, never independent corroboration.
+    "sum20_slovnyk_mirror": ("G-ULIF", 2),
     "vts_busel_slovnyk_me": ("G-VTS?", 2),
 }
 GENDER_WORDS = {"чоловічого": "m", "жіночого": "f", "середнього": "n"}
@@ -1131,6 +1133,9 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str
                            "note": "frozen row only"},
                 "sum20": {"ref": "sources.sum20_articles + sum20_senses; exact rows in consumed",
                           "content_sha256": consumed},
+                "sum20_slovnyk_mirror": {"ref": "sources.sum20_mirror_articles rows served by sum20-mirror-rule-v1; "
+                                                "exact rows in consumed",
+                                         "content_sha256": consumed},
                 "vts_busel_slovnyk_me": {"ref": "sources.slovnyk_me_entries dictionary_slug=vts + "
                                                "hash-bound full local cache; exact witnesses in consumed",
                                         "content_sha256": consumed},

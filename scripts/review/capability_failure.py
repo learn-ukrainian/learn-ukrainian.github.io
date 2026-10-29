@@ -309,7 +309,7 @@ def record_capability_failure(
     check_texts(normalize_repository(repository), [comment], environment={})
     adapter = recorder.GitHubAdapter(Path.cwd())
     login = adapter.identity()
-    with recorder.sha_lock(repository, failure.sha, lock_root):
+    with recorder.pr_lock(repository, number, lock_root):
         try:
             comments = adapter.comments(repository, number)
         except recorder.SweepError as exc:

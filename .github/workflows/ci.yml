@@ -1,9 +1,9 @@
 name: CI
 
-# Every event runs the full supported pytest shards and Frontend, so a PR head is
-# validated before review. A PR also runs its changed-test guards (pr-affected) for
-# early signal; merge_group re-validates the queue candidate, which can include other
-# changes. Nightly and opt-in workflow_dispatch run the same full suite.
+# A PR runs Frontend, the admission checks and the affected tests (pr-affected: changed
+# tests, tests that import or read changed files, the guard list and repository
+# invariants), not the pytest shards. merge_group runs the full supported suite on the
+# queue candidate before it lands; nightly and opt-in workflow_dispatch run it too.
 # Every merge candidate must pass the same required "CI Gate" context.
 
 concurrency:
@@ -22,7 +22,9 @@ env:
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    # No `edited`: a title or body edit would restart the whole suite on an
+    # unchanged head. pr-publication-scan.yml scans publication fields on edits.
+    types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
     inputs:
@@ -305,7 +307,7 @@ jobs:
   # Lookup failure keeps the committed weights and exits 0; it must not fail CI.
   refresh-pytest-durations:
     name: Refresh pytest durations
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && github.event_name != 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -359,7 +361,7 @@ jobs:
   pytest:
     name: pytest (${{ matrix.shard }})
     needs: [refresh-pytest-durations]
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && github.event_name != 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # The same-run snapshot comes from actions/download-artifact, which needs no
@@ -715,3 +717,12 @@ jobs:
           mode=--pr
           [ "$EVENT_NAME" != merge_group ] || mode=--merge-group
           "$PYTHON_BIN" scripts/ci/check_agent_attribution.py "$mode" "$BASE_SHA" "$HEAD_SHA"
+      # Secret scan read the queue's PR metadata when this run started. A title or
+      # body edit made since then would otherwise reach the merge unscanned, so
+      # re-read every member's current metadata as the gate's last step.
+      - name: Re-scan queue publication fields
+        if: github.event_name == 'merge_group'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: '"$PYTHON_BIN" scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"'

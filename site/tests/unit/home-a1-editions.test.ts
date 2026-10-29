@@ -8,10 +8,16 @@ import CourseLayout from '../../src/layouts/CourseLayout.astro';
 import { CHROME_STRINGS } from '../../src/lib/i18n/chrome';
 import { readFileSync } from 'node:fs';
 import yaml from 'js-yaml';
-import arc from '../../src/data/arc-a1.json';
+import unpublished from '../fixtures/arc-a1/unpublished.json';
+import openingPublished from '../fixtures/arc-a1/opening-published.json';
 import { deriveA1PrimaryHref, levelEntryHref } from '../../src/lib/a1-entry';
 
 const editions = ['/a1/', '/a1-v1/'];
+
+// The suite never reads the live arc data: publication state comes from these fixtures.
+vi.mock('../../src/data/arc-a1.json', async () => ({
+  default: (await import('../fixtures/arc-a1/unpublished.json')).default,
+}));
 
 const windows: Window[] = [];
 
@@ -134,7 +140,8 @@ describe('public A1 edition entry points', () => {
     const opening = { position: 1, lesson_numbers: [1, 2], built_lessons: [] };
     const later = { position: 2, lesson_numbers: [1], built_lessons: [1] };
     expect(deriveA1PrimaryHref([])).toBe('/a1-v1/');
-    expect(deriveA1PrimaryHref(arc.positions)).toBe('/a1-v1/');
+    expect(deriveA1PrimaryHref(unpublished.positions)).toBe('/a1-v1/');
+    expect(deriveA1PrimaryHref(openingPublished.positions)).toBe('/a1/');
     expect(deriveA1PrimaryHref([opening, later])).toBe('/a1-v1/');
     expect(deriveA1PrimaryHref([{ ...opening, built_lessons: [1] }])).toBe('/a1-v1/');
     expect(deriveA1PrimaryHref([{ ...opening, lesson_numbers: [], built_lessons: [1, 2] }])).toBe('/a1-v1/');
@@ -146,9 +153,7 @@ describe('public A1 edition entry points', () => {
 
   test('publishing the opening module automatically promotes home, map, header, footer and picker together', async () => {
     vi.resetModules();
-    vi.doMock('../../src/data/arc-a1.json', () => ({
-      default: { ...arc, positions: [{ ...arc.positions[0], lesson_numbers: [1, 2], built_lessons: [1, 2] }] },
-    }));
+    vi.doMock('../../src/data/arc-a1.json', () => ({ default: openingPublished }));
     try {
       const { default: PromotedHome } = await import('../../src/pages/index.astro');
       const { levelEntryHref: promotedLevelHref } = await import('../../src/lib/a1-entry');
@@ -162,6 +167,7 @@ describe('public A1 edition entry points', () => {
       expect(promoted.querySelector('.track-column a')?.textContent).not.toContain('planned');
       expect(promoted.querySelector('header nav a[href="/a1/"] [data-loc="en"]')?.textContent).toBe('A1');
       expect(promoted.querySelector('footer a[href="/a1/"]')).not.toBeNull();
+      expect(promoted.querySelector('header nav a[href="/a1-v1/"] [data-loc="en"]')?.textContent).toBe('A1 previous');
       expect(promotedLevelHref('A1')).toBe('/a1/');
       expect(promoted.textContent).not.toContain('in preparation');
     } finally {

@@ -28,10 +28,14 @@ import urllib.request
 from pathlib import Path
 
 try:
-    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+    from scripts.common.repo_root import main_checkout_root
+    from scripts.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 except ModuleNotFoundError:  # run by path: put the repository root on sys.path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+    from scripts.common.repo_root import main_checkout_root
+    from scripts.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
+    from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -359,13 +363,28 @@ def fetch_for_track(track: str) -> int:
     return new_count
 
 
+def _open_sources_reader(explicit: Path | None = None) -> sqlite3.Connection:
+    """Read the Sources store. No argument selects the primary checkout's store."""
+    binding = None
+    if explicit is not None:
+        candidate = Path(explicit)
+        if not candidate.is_absolute():
+            candidate = Path.cwd() / candidate
+        binding = StoreBinding("sources", candidate)
+    resolved = resolve_store("sources", main_checkout_root(PROJECT_ROOT), binding=binding)
+    if isinstance(resolved, StoreRefusal):
+        raise FileNotFoundError(resolved.reason)
+    return open_readonly(resolved.path)
+
+
 def show_status() -> None:
     """Show Wikipedia fetch status."""
-    if not DB_PATH.exists():
+    try:
+        conn = _open_sources_reader()
+    except FileNotFoundError:
         print("Database not found. Run build_sources_db.py first.")
         return
 
-    conn = sqlite3.connect(str(DB_PATH))
     try:
         count = conn.execute("SELECT COUNT(*) FROM wikipedia").fetchone()[0]
         total_chars = conn.execute("SELECT SUM(char_count) FROM wikipedia").fetchone()[0] or 0
@@ -376,7 +395,8 @@ def show_status() -> None:
         print(f"Sample titles: {titles[:10]}")
     except sqlite3.OperationalError:
         print("Wikipedia table not yet created.")
-    conn.close()
+    finally:
+        conn.close()
 
 
 def main() -> None:

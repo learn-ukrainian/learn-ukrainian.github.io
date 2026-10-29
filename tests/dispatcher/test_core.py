@@ -218,9 +218,9 @@ def test_read_only_agy_run_needs_a_verified_boundary_receipt(sandbox, monkeypatc
         assert result["error"].startswith("agy_read_only_boundary: ")
 
 
-def await_file(path):
+def await_file(path, *, ready=lambda content: True):
     deadline = time.monotonic() + 10
-    while not path.exists() or not (content := path.read_text()):
+    while not path.exists() or not (content := path.read_text()) or not ready(content):
         assert time.monotonic() < deadline, f"stub did not populate {path.name}"
         time.sleep(0.02)
     return content
@@ -484,6 +484,56 @@ def test_lingering_provider_process_keeps_the_worktree_until_a_retry_proves_it_g
     settled = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
     assert not Path(record["worktree_path"]).exists()
+
+
+def settled_by_next_task(sandbox, retained_id, before_release=lambda _kept: None):
+    """Run one task to its end and return the retained record as that task's settlement retried it.
+
+    ``before_release`` sees the record as the dispatch's own retry left it; the settlement retry
+    rewrites the record file before the task turns terminal.
+    """
+    record_file = sandbox.tasks / f"{retained_id}.json"
+    task = sandbox.dispatch("blocked")
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    before = record_file.stat().st_ino
+    before_release(json.loads(record_file.read_text()))
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    sandbox.settle(task)
+    assert record_file.stat().st_ino != before, "settlement never retried the retained worktree"
+    return json.loads(record_file.read_text())
+
+
+def test_settlement_removes_a_transient_retained_worktree_once_its_cause_is_gone(sandbox):
+    """Defect: a tree kept for a transient cause waited for the next dispatch; any settlement now retries it."""
+    task = sandbox.dispatch("tree")
+    grandchild = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    record = sandbox.settle(task)
+    assert record["worktree_disposition_reason"] == "provider_processes_alive"
+
+    def end_the_cause(kept):
+        assert kept["worktree_disposition_reason"] == "provider_processes_alive"  # the dispatch's retry kept it
+        os.kill(grandchild, signal.SIGKILL)
+        deadline = time.monotonic() + 10
+        while worker._provider_alive(record):
+            assert time.monotonic() < deadline, "grandchild survived SIGKILL"
+            time.sleep(0.02)
+
+    settled = settled_by_next_task(sandbox, task[0], end_the_cause)
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert not Path(record["worktree_path"]).exists()
+
+
+@pytest.mark.parametrize("model,reason", [("pushed-dirty", "dirty"), ("unpushed", "unpublished")])
+def test_settlement_retry_keeps_a_worktree_that_still_holds_content(sandbox, model, reason):
+    """The retry removes only with settlement's proofs: uncommitted or unpublished work stays."""
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write"), expected=1)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", reason)
+    retried = settled_by_next_task(sandbox, record["task_id"])
+    assert (retried["worktree_disposition"], retried["worktree_disposition_reason"]) == ("retained", reason)
+    tree = Path(record["worktree_path"])
+    assert (tree / "delivered.txt").exists()
+    assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
 
 
 def test_next_dispatch_settles_terminal_task_left_by_crash(sandbox):
@@ -943,7 +993,10 @@ def _killed_review_supervisor(sandbox, tmp_path, model):
     child = int(await_file(sandbox.tasks / f"{task[0]}.started"))
     if model == "governed":
         assert await_file(sandbox.tasks / f"{task[0]}.joined") == "joined"
-    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    # The provider's start marker precedes the supervisor's record update.
+    record = json.loads(await_file(
+        sandbox.tasks / f"{task[0]}.json", ready=lambda content: "review_test_slots" in json.loads(content)
+    ))
     assert record["review_test_slots"]["outcome"] == "held"
     os.kill(record["pid"], signal.SIGKILL)
     deadline = time.monotonic() + 10

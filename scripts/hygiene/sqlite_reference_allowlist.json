@@ -80,8 +80,7 @@
     "target_db": "atlas.db",
     "reason": "writes local enrichment output",
     "calls": [
-      "sqlite3.connect(path)",
-      "sqlite3.connect(sources_db_path)"
+      "sqlite3.connect(path)"
     ]
   },
   {
@@ -462,6 +461,18 @@
     "reason": "persists GRAC frequency pages, provenance and resumable checkpoints (#9969)",
     "calls": [
       "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/sum20_mirror_import.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "candidate store file in data/ (online-backup copy of the selected generation, mirror import, WAL seal)",
+    "reason": "single writer of the sum20_mirror tables: builds and verifies a candidate under the store writer lock and publishes it with publish_generation; the selected generation is only read",
+    "calls": [
+      "sqlite3.connect(candidate)",
+      "sqlite3.connect(destination)",
+      "sqlite3.connect(path)"
     ]
   },
   {
@@ -1042,18 +1053,15 @@
   },
   {
     "path": "scripts/wiki/build_sources_db.py",
-    "reference_count": 14,
+    "reference_count": 12,
     "kind": "writer",
     "target_db": "sources.db; temporary rebuild DB",
     "reason": "builds source database before atomic replacement",
     "calls": [
       "sqlite3.connect(str(db_path))",
-      "sqlite3.connect(str(db))",
       "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db))",
-      "sqlite3.connect(str(db))",
-      "sqlite3.connect(str(tmp_db))",
-      "sqlite3.connect(str(db))"
+      "sqlite3.connect(str(tmp_db))"
     ]
   },
   {
@@ -1105,7 +1113,6 @@
     "target_db": "sources.db",
     "reason": "caches fetched Wikipedia articles",
     "calls": [
-      "sqlite3.connect(str(DB_PATH))",
       "sqlite3.connect(str(DB_PATH))"
     ]
   },
@@ -1180,7 +1187,6 @@
     "target_db": "sources.db",
     "reason": "ingests wiki passages and migrates schema",
     "calls": [
-      "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db_path))"
