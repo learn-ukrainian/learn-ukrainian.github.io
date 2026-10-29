@@ -188,10 +188,16 @@ def rendered_audit(mods: list[str]) -> tuple[list[dict], dict, dict, list[dict]]
                 problems = []
                 value = item if isinstance(item, dict) else {}
                 try:
+                    if kind in {"Quiz", "Translate", "FillIn", "ErrorCorrection", "OddOneOut"}:
+                        choices = value.get("words", []) if kind == "OddOneOut" else value.get("options", [])
+                        if not isinstance(choices, list):
+                            raise ValueError("options must be a list")
                     if kind in {"Quiz", "Translate"}:
                         quiz_correct_indices(value)
                     elif kind == "FillIn":
-                        if not value.get("options"):
+                        if not isinstance(value.get("answer"), str):
+                            problems.append("missing or non-string rendered fill-in key")
+                        elif not value.get("options"):
                             problems.append("empty options; reserved for dropdown gap")
                         elif value["options"].count(value["answer"]) != 1:
                             problems.append("rendered fill-in key missing or repeated")
@@ -199,7 +205,7 @@ def rendered_audit(mods: list[str]) -> tuple[list[dict], dict, dict, list[dict]]
                         problems.append("rendered truth key is not boolean")
                     elif kind == "MatchUp":
                         problems.extend(match_problems.get(ii, []))
-                        if not value.get("left") or not value.get("right"):
+                        if not all(isinstance(value.get(k), str) and value[k].strip() for k in ("left", "right")):
                             problems.append("empty matching side")
                     elif kind == "GroupSort":
                         if not isinstance(item, str) or not item:
@@ -225,7 +231,12 @@ def rendered_audit(mods: list[str]) -> tuple[list[dict], dict, dict, list[dict]]
                             problems.append(error)
                     elif kind == "ErrorCorrection":
                         error = value.get("errorWord")
-                        if error and error not in value["sentence"]:
+                        correction = value.get("correctForm")
+                        if not isinstance(correction, str) or not correction.strip():
+                            problems.append("missing rendered correction key")
+                        if not isinstance(error, str) or not error.strip():
+                            problems.append("missing rendered error span")
+                        elif not isinstance(value.get("sentence"), str) or error not in value["sentence"]:
                             problems.append("rendered error span absent from sentence")
                         if value.get("options") and value.get("correctForm") not in value["options"]:
                             problems.append("rendered correction key absent from choices")
@@ -398,6 +409,14 @@ def audit() -> dict:
                     if typ == "odd-one-out":
                         options = value.get("words", [])
                     try:
+                        if typ in {
+                            "quiz",
+                            "translate",
+                            "fill-in",
+                            "error-correction",
+                            "odd-one-out",
+                        } and not isinstance(options, list):
+                            raise ValueError("options must be a list")
                         if typ in {"quiz", "translate"}:
                             quiz_correct_indices(value)
                             add_check(row, "key")
@@ -426,7 +445,14 @@ def audit() -> dict:
                             correction = value.get("correction", value.get("answer"))
                             error = value.get("error")
                             problem = None
-                            if not correction or not error or error not in value.get("sentence", ""):
+                            if (
+                                not isinstance(correction, str)
+                                or not correction.strip()
+                                or not isinstance(error, str)
+                                or not error.strip()
+                                or not isinstance(value.get("sentence"), str)
+                                or error not in value["sentence"]
+                            ):
                                 problem = "missing correction or error span"
                             elif options and correction not in options:
                                 problem = "correction absent from options"
@@ -453,7 +479,11 @@ def audit() -> dict:
                             findings = match_problems.get(int(unit.split("/")[-1]), [])
                             add_check(row, "matching", "; ".join(findings) if findings else None)
                             add_check(
-                                row, "key", None if value.get("left") and value.get("right") else "empty matching side"
+                                row,
+                                "key",
+                                None
+                                if all(isinstance(value.get(k), str) and value[k].strip() for k in ("left", "right"))
+                                else "empty matching side",
                             )
                         elif typ == "group-sort":
                             problem = None if isinstance(item, str) and item else "invalid group member"
