@@ -73,6 +73,27 @@ files are validated at their resolved target. A linked worktree's own
 `data/<store>.db` file or symlink (including a dangling link) is refused.
 The resolver creates no files or connections and grants no write access.
 
+### Sources store generations
+
+`data/sources.db` becomes a selector: a relative symlink to exactly
+`sources-generations/sources.<utc>-<sha12>.db` inside the real directory
+`data/sources-generations/` (before the one-time bootstrap it is still a regular
+file). Generation names are never reused; generations stay WAL and are held
+`0444` at rest. Rules:
+
+1. **Write only under the store writer lock** (`data/.sources-writer.lock`). In
+   Python use `scripts.storage.generations.store_writer`; run any other writer
+   as `.venv/bin/python -m scripts.storage write -- <command>`. A writable open
+   of the store without the lock, or of a generation the selector does not
+   select, is refused.
+2. **Change the selection only through `publish_generation`**, holding the lock
+   from reading the current generation to the switch. Never rename, copy or
+   link over `data/sources.db` or a generation by hand.
+3. **Never delete a generation from automation.** Pruning is an explicit
+   operator command (not yet available).
+4. The bootstrap is an operator maintenance-window step; follow the runbook's
+   "Sources store generations" section exactly.
+
 ### Derived lexical store (`lexdata`)
 
 `data/lexdata.db` is a derived store (L1 staging, L2 crosswalk, L3 card

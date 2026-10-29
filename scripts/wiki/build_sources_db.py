@@ -28,14 +28,17 @@ Usage:
 By default, `--force` rebuilds everything EXCEPT the wikipedia and
 wikipedia_negative_cache tables — those are populated separately by
 scripts/wiki/fetch_wikipedia.py and are expensive to refetch (Wikipedia
-API rate-limits) — and the official DictUA live-query cache. Pass
---no-preserve-wiki to opt out of the Wikipedia preservation only.
+API rate-limits) — the official DictUA live-query cache, and every table
+whose name starts with `sum20_` (the official СУМ-20 articles, which cannot
+be re-imported). Pass --no-preserve-wiki to opt out of the Wikipedia
+preservation only; the DictUA cache and the `sum20_` tables are always kept.
 """
 
 import argparse
 import contextlib
 import json
 import os
+import re
 import sqlite3
 import sys
 import tempfile
@@ -54,7 +57,7 @@ except ModuleNotFoundError:
         require_production_eligible_entry,
     )
 
-from scripts.lib.readonly_sqlite import open_readonly
+from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
@@ -695,6 +698,90 @@ def _restore_wikipedia_snapshot(conn: sqlite3.Connection,
         )
 
 
+SUM20_TABLE_PREFIX = "sum20_"
+# Shadow tables of an external-content FTS5 index; it has no ``_content`` shadow,
+# so a table with that suffix is ordinary data.
+_FTS_SHADOW_SUFFIXES = ("_data", "_idx", "_docsize", "_config")
+_EXTERNAL_CONTENT_RE = re.compile(r"content\s*=\s*'[^']+'", re.IGNORECASE)
+_SUM20_COPY_BATCH = 5000
+
+
+def _quote_ident(name: str) -> str:
+    return '"' + name.replace('"', '""') + '"'
+
+
+def _carry_over_sum20_tables(conn: SQLiteConnection, old_db: Path) -> dict[str, int]:
+    """Copy every ``sum20_*`` object from ``old_db`` into the fresh build.
+
+    The official СУМ-20 rows cannot be re-imported, so a forced rebuild must
+    not drop them. The match is by name prefix on the table, or on the table an
+    index or trigger belongs to, which also covers tables added later. Tables,
+    views, indexes and triggers are recreated from the old DDL; external-content FTS5 indexes are rebuilt from their content table.
+    A ``sum20_`` FTS5 index that is not external-content cannot be rebuilt
+    from the carried rows, so it raises (the build then aborts and the live
+    DB stays untouched) rather than silently dropping its data.
+
+    Returns ``{table: copied_rows}`` for ``_validate_build``.
+    """
+    if not old_db.exists():
+        return {}
+    old = open_readonly(old_db)
+    try:
+        objects = old.execute(
+            "SELECT type, name, sql FROM sqlite_master "
+            "WHERE (substr(name, 1, ?) = ? OR substr(tbl_name, 1, ?) = ?) "
+            "AND sql IS NOT NULL ORDER BY rowid",
+            (len(SUM20_TABLE_PREFIX), SUM20_TABLE_PREFIX) * 2,
+        ).fetchall()
+        if not objects:
+            return {}
+
+        virtual = [n for t, n, sql in objects
+                   if t == "table" and sql.lstrip().upper().startswith("CREATE VIRTUAL TABLE")]
+        shadows = {f"{v}{suffix}" for v in virtual for suffix in _FTS_SHADOW_SUFFIXES}
+        for name in virtual:
+            sql = next(sql for _, n, sql in objects if n == name)
+            if "FTS5" not in sql.upper() or not _EXTERNAL_CONTENT_RE.search(sql):
+                raise BuildValidationError(
+                    f"{name} is a virtual table that cannot be rebuilt from carried rows; "
+                    "refusing to drop its data"
+                )
+        tables = [n for t, n, _ in objects if t == "table" and n not in virtual and n not in shadows]
+
+        existing = {row[0] for row in conn.execute("SELECT name FROM sqlite_master")}
+        ddl = {n: sql for _, n, sql in objects}
+
+        def create(names: list[str]) -> None:
+            for name in names:
+                if name not in existing:
+                    conn.execute(ddl[name])
+
+        create(tables)
+        create(virtual)
+        conn.execute("PRAGMA defer_foreign_keys=ON")
+        counts: dict[str, int] = {}
+        for table in tables:
+            old_cols = [r[1] for r in old.execute(f"PRAGMA table_info({_quote_ident(table)})")]
+            new_cols = {r[1] for r in conn.execute(f"PRAGMA table_info({_quote_ident(table)})")}
+            cols = ", ".join(_quote_ident(c) for c in old_cols if c in new_cols)
+            insert = (
+                f"INSERT INTO {_quote_ident(table)} ({cols}) "
+                f"VALUES ({', '.join('?' * len(cols.split(', ')))})"
+            )
+            cursor = old.execute(f"SELECT {cols} FROM {_quote_ident(table)}")
+            while batch := cursor.fetchmany(_SUM20_COPY_BATCH):
+                conn.executemany(insert, batch)
+            counts[table] = old.execute(f"SELECT COUNT(*) FROM {_quote_ident(table)}").fetchone()[0]
+        create([n for t, n, _ in objects if t in ("index", "view")])
+        create([n for t, n, _ in objects if t == "trigger"])
+        for name in virtual:
+            conn.execute(f"INSERT INTO {_quote_ident(name)}({_quote_ident(name)}) VALUES ('rebuild')")
+            conn.execute(f"INSERT INTO {_quote_ident(name)}({_quote_ident(name)}) VALUES ('integrity-check')")
+        return counts
+    finally:
+        old.close()
+
+
 class BuildValidationError(RuntimeError):
     """Raised when a freshly-built temp DB fails validation before swap.
 
@@ -796,6 +883,38 @@ def declare_wal(db: Path) -> str:
     return mode
 
 
+def _publishes_live_store(build_fn):
+    """Route a rebuild of the live Sources store through the generation publisher.
+
+    A selector target is rebuilt under the store writer lock, from the
+    generation it selects, and published as a new generation
+    (``scripts/storage/generations.py``). The pre-bootstrap live file is
+    refused: its in-place swap unlinks the sidecars and renames over a file
+    that readers hold open. Other targets (staged copies, fixtures) and dry
+    runs keep the in-place path.
+    """
+    import functools
+
+    from scripts.storage import generations
+
+    @functools.wraps(build_fn)
+    def build_routed(db_path=None, *args, dry_run=False, **kwargs):
+        ref = generations.store_kind(db_path or DB_PATH)
+        if ref.kind == "other" or dry_run:
+            return build_fn(db_path, *args, dry_run=dry_run, **kwargs)
+        if ref.kind != "selector" or ref.selector is None:
+            raise generations.GenerationError(
+                "rebuild_requires_selector",
+                "bootstrap the generation layout first (docs/runbooks/storage-topology.md)",
+            )
+        with generations.writer_lock(ref.selector) as held:
+            generations.require_free_space(held.data_dir, held.generation.stat().st_size)
+            return build_fn(db_path, *args, dry_run=dry_run, _held_writer=held, **kwargs)
+
+    return build_routed
+
+
+@_publishes_live_store
 def build(db_path: Path | None = None,
           external_dir: Path | None = None,
           textbook_dir: Path | None = None,
@@ -803,7 +922,8 @@ def build(db_path: Path | None = None,
           *,
           force: bool = False,
           dry_run: bool = False,
-          preserve_wiki: bool = True) -> Path:
+          preserve_wiki: bool = True,
+          _held_writer: object | None = None) -> Path:
     """Build the unified sources database.
 
     Safety:
@@ -816,6 +936,8 @@ def build(db_path: Path | None = None,
       refetch.
     - The DictUA live-query cache is always snapshotted and restored. It is
       content-addressed, official-source data and must survive corpus rebuilds.
+    - Every ``sum20_*`` table (official СУМ-20, not re-importable) is always
+      carried over; see ``_carry_over_sum20_tables``.
 
     Failure-atomicity (#4859): the rebuild is ingested and validated in a
     sibling temp file next to `db_path` (same filesystem, so the final
@@ -854,6 +976,7 @@ def build(db_path: Path | None = None,
             print("     no existing populated DB (fresh build)")
         print(f"     sources: {ext_dir}, {tb_dir}, {gd}")
         print(f"     preserve wikipedia: {preserve_wiki}")
+        print(f"     preserve {SUM20_TABLE_PREFIX}* tables: always")
         return db
 
     # Snapshot wikipedia data BEFORE touching anything on disk. `db` is
@@ -920,6 +1043,13 @@ def build(db_path: Path | None = None,
                 "  ✅ Restored DictUA snapshot: "
                 f"{len(ulif_entry_rows)} entries, {len(ulif_section_rows)} sections"
             )
+
+        sum20_counts = _carry_over_sum20_tables(conn, db)
+        if sum20_counts:
+            expected_counts.update(sum20_counts)
+            conn.commit()
+            print("  ✅ Restored sum20_* tables: "
+                  + ", ".join(f"{t} ({n} rows)" for t, n in sum20_counts.items()))
 
         total = 0
 
@@ -1102,16 +1232,27 @@ def build(db_path: Path | None = None,
     # leave a stray `.building` temp file (harmless — never mistaken for
     # a live DB, and cleaned up by the next successful build) rather than
     # a half-written live DB.
-    try:
-        for sidecar in (db.parent / f"{db.name}-wal", db.parent / f"{db.name}-shm"):
-            if sidecar.exists():
-                sidecar.unlink()
-        tmp_db.replace(db)
-    except BaseException:
-        _cleanup_tmp()
-        raise
-    print(f"  🔁 Atomically replaced {db.name} with the validated rebuild")
-    declare_wal(db)
+    if _held_writer is not None:
+        # The live store: publish a new generation; readers keep the old one.
+        from scripts.storage.generations import publish_generation
+
+        try:
+            publication = publish_generation(tmp_db, _held_writer)
+        except BaseException:
+            _cleanup_tmp()
+            raise
+        print(f"  🔁 Published generation {publication.generation.name} (journal_mode=wal)")
+    else:
+        try:
+            for sidecar in (db.parent / f"{db.name}-wal", db.parent / f"{db.name}-shm"):
+                if sidecar.exists():
+                    sidecar.unlink()
+            tmp_db.replace(db)
+        except BaseException:
+            _cleanup_tmp()
+            raise
+        print(f"  🔁 Atomically replaced {db.name} with the validated rebuild")
+        declare_wal(db)
 
     db_size = db.stat().st_size / 1024 / 1024
     ensure_ukrainian_wiki_manifest(DEFAULT_MANIFEST_DB)

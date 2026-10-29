@@ -14,6 +14,20 @@ rounds are deltas.
   state and concurrency, and only while an evidenced blocker on it stays open, or when the
   operator asks for it (`budget_tier: elevated`). Each round past the third cites the open
   finding id that justifies it. The author never raises the limit alone.
+- **How the recorder grants the elevated tier.** Security-sensitive changed paths give a PR
+  five rounds on their own. Any other change gets rounds four and five only through a sealed
+  designated grant (`scripts/review/budget_grant.py`): the CTO's typed ruling, issued as
+  `claude-cto` and bound to the repository, the PR, its head branch, the changed paths it
+  covers, the blocker class and the open finding id, plus a sealed APPROVE of that ruling from
+  the designated advisor outside the issuer's family. Print the ruling's digest with
+  `record_cf_verdict.py budget-grant digest <ruling.json>`, then dispatch the advisor
+  read-only with `--advisory-role review_budget_elevation --advisory-binding <digest>
+  --initiator claude-cto`. Each granted round needs the latest recorded verdict to be a
+  rejection that lists the granted finding at P0 or P1 and keeps it open in plain words
+  (`still open: <reason>`, or a newly raised finding); any closing word in that entry, such as
+  `resolved`, `fixed` or `declined`, refuses the round. A grant never
+  resets the rounds already counted, never covers a path outside its scope, and five rounds
+  stay the total.
 - **Stop early when only nits remain:** no open blocker means no further round beyond the verification review that a fixed blocker or a new head still requires. Remaining
   follow-ups never hold the merge.
 - **One reviewer of record per round, and no sub-reviewers.** The reviewer does not fan the
@@ -22,14 +36,33 @@ rounds are deltas.
   and adds no round.
 - **The end of the budget is never approval.** The author splits the PR, changes the
   approach, or escalates to the CTO and the advisors (rules core P6).
-- When a base conflict follows an approval in the last budgeted round, the recordable outcome
-  of that CTO-and-advisor escalation is one budget extension per lineage: a request committed
-  on the default branch under `batch_state/review-budget-extensions/` plus a sealed
-  `review_budget_extension` APPROVE from the non-author designated advisor, which the recorder
-  checks before it admits exactly one more round (`scripts/review/budget_extension.py`;
-  designated approval: advisory task cto-7eba-adv-extension2).
+- **One repair-verification round per lineage, outside the budget.** When a PR approved at its
+  last reviewed head A needs a new head N only for a CI fix or a conflict resolution, the
+  recorder admits one more round at N with no request PR (`scripts/review/repair_round.py`).
+  It needs: the review lineage before N on record, with A's APPROVE the latest verdict of every
+  seat; a CI fix tied to a failed run of the required CI workflow at A itself (a PR run) or of
+  this PR's merge-queue candidate built from A; or a conflict resolution whose merge tree differs from Git's own merge of its pinned
+  parents only in the paths Git reports conflicted. Any other change after approval, or a mix
+  of the two, is unclassifiable and escalates to the CTO. The round's reviewer covers the
+  whole repair delta (`git diff A N`), the callers it affects, the invariants it touches and any
+  weakened or deleted tests ([delta scope](#delta-scope)), plus the failed run or the conflicted
+  paths it names. An APPROVE in that round must carry the line
+  `REPAIR_VERIFIED: <delta_sha256>` with the digest `budget-check` reports: the reviewer's
+  statement that the complete delta is only the repair it names. Without it the recorder
+  refuses the APPROVE; a rejection needs no such line. The recorder writes a durable receipt for the round under the PR, its head
+  branch and every issue it closes, before it posts the verdict. That receipt is never removed:
+  another approval, a replacement PR or a new session never replenishes the round.
+- **A clean base merge consumes no round.** A head that descends from the last fully approved
+  head only through conflict-free merges of the default branch, each proven by Git to add
+  nothing beyond the merge, is reviewed without counting against the budget. It still needs
+  its own exact-head review and CI: no approval carries forward, a recorded rejection stands,
+  and verdict history is kept. A conflict, a manual edit inside a merge, any other commit, or
+  a missing object or failed proof makes the head count as a normal round.
 - **The verdict recorder refuses a round beyond the budget**, so an over-budget verdict is
-  never recorded.
+  never recorded. **Ask it before dispatching a reviewer:**
+  `record_cf_verdict.py budget-check --repository <owner/name> --pr <N>` returns the same
+  decision for the PR's current head (admitted, with any exemption, grant or repair-round
+  receipt, or the refusal that names what to escalate) and writes nothing.
 - The budget and the ledger follow the work (issue and branch lineage). A new reviewer, a
   replacement PR or a new session does not reset them.
 
@@ -39,6 +72,48 @@ A recorded `CHANGES_REQUESTED` or `BLOCKED` is cleared only by an APPROVE at a *
 the recorder refuses a same-head APPROVE after it. So an escalation ruling on a recorded
 rejection is followed by a head move (the fix, or a base update with
 `"$PY" -m scripts.publish pr-update-branch --number "$PR"`) and one more round at that head.
+
+## An unpublished verdict that its seat superseded
+
+A finished review whose verdict is never published refuses every later round of its lineage,
+unless its own seat recorded a later verdict at another head. A seat is one reviewer family on
+one review profile (code or Ukrainian), and only its latest recorded verdict counts. That run
+is then superseded and stops refusing (`review_lineage.superseded_runs`):
+
+- The superseding run is a finished run of the same family and profile, started strictly
+  later, at a different head, whose published verdict matches its own task record. A run at
+  the same head or an earlier one, a run of another family or profile, a run at the candidate
+  head of the round being recorded, and a damaged or unpublished run supersede nothing.
+- The superseded run is listed, never dropped: the repair-round receipt that `budget-check`
+  reports names its task id, pinned head, unpublished verdict and finding count, and the run
+  that superseded it. Its head stays a reviewed head and still counts against the budget.
+- A superseded rejection keeps its findings. They stay in the ledger until they are fixed,
+  declined or escalated; supersession resolves none of them.
+- A missing reply, an invalid reviewer identity, a digest mismatch, a run that is not `done`
+  but carries a verdict, and an unpublished run that its seat never superseded still refuse.
+  A superseded verdict is never published afterwards against a moved head.
+
+## A BLOCKED that only lacked a capability
+
+When the reviewer stopped only because a capability it needed was missing, the CTO may record a
+capability failure for the run instead of a verdict
+(`scripts/review/capability_failure.py`):
+
+```bash
+"$PY" scripts/review/record_cf_verdict.py capability-failure --task-id "$REVIEW_TASK" --pr "$PR" \
+  --capability <sources-mcp|test-execution|shell|browser|checkout-data> --authority claude-cto
+```
+
+- It qualifies only when the reply is `BLOCKED` with a known count of zero findings, which only a
+  structured `code-review-findings.v1` reply proves, and the missing capability is evidenced:
+  `sources-mcp` by the run's recorded count of zero Sources MCP calls on the Ukrainian profile,
+  any other capability by the reply's `missing_capabilities` list beside its findings. A prose
+  reply, any finding (P3 included) or "no in-scope blocker" does not qualify, and that BLOCKED is
+  handled as today.
+- The event is bound to the run, its reviewed head and its reply digest; the reply stays as it is.
+  It is not a verdict: it approves nothing, rejects nothing, opens no round and fills no seat, so
+  every required review still has to happen. A run with a published verdict cannot be
+  reclassified, and a classified run's verdict cannot be published.
 
 ## Ledger and stable finding ids
 
@@ -68,6 +143,8 @@ rejection is followed by a head move (the fix, or a base update with
 - `SECURITY_VERDICT FAIL` always blocks and is never downgraded to a follow-up.
 - INCONCLUSIVE (`BLOCKED` on the verdict line, naming the missing capability), a timeout, an
   error or no reply is never approval.
+  A capability-only BLOCKED may be recorded as a capability failure
+  ([above](#a-blocked-that-only-lacked-a-capability)).
 
 ## Gate of record
 

@@ -27,6 +27,7 @@ from zipfile import BadZipFile, ZipFile
 from lxml import etree
 
 from scripts.ingest._section_coverage import LessonSection, ensure_section_schema, link_lesson_sections
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 SOURCE_FILE = "private-teacher-lessons-a"
 AUTHOR = "private_teacher_lesson"
@@ -203,6 +204,7 @@ Related: #4850; scripts/ingest/ulp_lesson_notes_ingest.py.
               f"chars={sum(len(lesson.text) for lesson in parsed.lessons)}")
         if args.dry_run:
             return 0
+        refuse_writable_corpus_database(args.db.resolve().as_uri() + "?mode=rw", uri=True)
         conn = sqlite3.connect(args.db.resolve().as_uri() + "?mode=rw", uri=True, timeout=30)
         try:
             query = "SELECT COUNT(*) FROM textbooks WHERE source_file = ?"

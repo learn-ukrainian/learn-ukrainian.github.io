@@ -12,7 +12,17 @@ from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.dispatcher import admission, checks, git, headroom, host_admission, providers, store, worker
+from scripts.dispatcher import (
+    admission,
+    checks,
+    git,
+    headroom,
+    host_admission,
+    providers,
+    runtime_context,
+    store,
+    worker,
+)
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
@@ -84,8 +94,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-mode", None, "Review mode label (default: none)"),
         ("advisory-task", None, "Finished advisor task admitting this bounded worker, e.g. advice-42 (default: none)"),
         ("advisory-role", None, "Catalog advisory_roles decision this read-only task records, e.g. "
-         "review_budget_extension; needs --advisory-binding (default: none)"),
-        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget extension request digest "
+         "review_budget_elevation; needs --advisory-binding (default: none)"),
+        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget grant ruling digest "
          "(default: none)"),
         ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check scripts' (default: none)"),
     ):
@@ -306,7 +316,7 @@ def _dispatch(args) -> int:
     )
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
-        invocation = providers.load(agent).build(spec, child_env(spec))
+        invocation = runtime_context.build(spec, child_env(spec))
         plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")

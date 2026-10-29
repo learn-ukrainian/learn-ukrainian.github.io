@@ -180,3 +180,59 @@ def test_nul_path_returns_path_free_refusal(checkouts, store, injected):
     refusal(storage.resolve_store(store, worker,
         binding=storage.StoreBinding(store, Path(raw)) if injected else None,
         env={f'LU_{store.upper()}_DB': raw}), 'store_unavailable')
+
+
+GENERATION = 'sources.20260101T000000Z-0123456789ab.db'
+
+
+def make_selector(selector, text=f'sources-generations/{GENERATION}'):
+    directory = selector.with_name('sources-generations')
+    directory.mkdir(parents=True, exist_ok=True)
+    generation = make_db(directory / GENERATION)
+    selector.symlink_to(text)
+    return generation
+
+
+@pytest.mark.parametrize('linked', [False, True])
+def test_primary_selector_resolves_to_its_generation(checkouts, linked):
+    primary, worker = checkouts
+    generation = make_selector(primary / 'data' / 'sources.db')
+    result = storage.resolve_store('sources', worker if linked else primary, env={})
+    assert result == storage.StoreBinding('sources', generation, provenance='primary_checkout')
+    with closing(open_readonly(result.path)) as conn:
+        assert conn.execute('SELECT value FROM proof').fetchone() == ('intended',)
+
+
+@pytest.mark.parametrize('target,reason', [
+    ('absolute', 'selector_target_outside_generations'),
+    ('../escape.db', 'selector_target_outside_generations'),
+    ('sources-generations/other.db', 'selector_target_outside_generations'),
+    ('sources-generations/sources.20260102T000000Z-0123456789ab.db', 'selected_generation_missing'),
+])
+def test_primary_selector_outside_its_generation_directory_is_refused(checkouts, target, reason):
+    primary, worker = checkouts
+    elsewhere = make_db(primary / 'elsewhere.db')
+    make_selector(primary / 'data' / 'sources.db', str(elsewhere) if target == 'absolute' else target)
+    refusal(storage.resolve_store('sources', worker, env={}), reason)
+
+
+def test_override_selector_needs_a_real_generation_directory(checkouts, tmp_path):
+    _, worker = checkouts
+    store = tmp_path / 'store'
+    generation = make_selector(store / 'sources.db')
+    env = {'LU_SOURCES_DB': str(store / 'sources.db')}
+    assert storage.resolve_store('sources', worker, env=env).path == generation
+    real = store / 'real-generations'
+    (store / 'sources-generations').rename(real)
+    (store / 'sources-generations').symlink_to(real)
+    refusal(storage.resolve_store('sources', worker, env=env), 'generations_dir_not_real_directory')
+
+
+def test_selector_keeps_locality_and_worktree_refusals(checkouts, monkeypatch):
+    primary, worker = checkouts
+    generation = make_selector(primary / 'data' / 'sources.db')
+    monkeypatch.setattr(storage, '_fs_type_for_path', lambda path: 'nfs')
+    refusal(storage.resolve_store('sources', worker, env={}), 'locality_network')
+    monkeypatch.setattr(storage, '_fs_type_for_path', lambda path: 'ext4')
+    (worker / 'data' / 'sources.db').symlink_to(f'sources-generations/{generation.name}')
+    refusal(storage.resolve_store('sources', worker, env={}), 'worktree_local_store')

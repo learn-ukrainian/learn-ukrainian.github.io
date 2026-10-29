@@ -16,6 +16,7 @@ from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 import yaml
 
 from scripts.curriculum.evidence import codes, sources
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 CATALOGUES = (
     "podcasts/podcast_db.json",
@@ -658,6 +659,7 @@ Related: docs/corpus-inventory.md; docs/DICTIONARY-PIPELINE-STATUS.md; #9409.
     if not args.db.is_file():
         parser.error("database must already exist; use a local snapshot of sources.db")
     try:
+        refuse_writable_corpus_database(f"{args.db.resolve().as_uri()}?mode=rw", uri=True)
         with sqlite3.connect(f"{args.db.resolve().as_uri()}?mode=rw", uri=True) as conn:
             report = ingest(
                 conn, args.catalogue_root, no_network=args.no_network, workers=args.workers, timeout=args.timeout

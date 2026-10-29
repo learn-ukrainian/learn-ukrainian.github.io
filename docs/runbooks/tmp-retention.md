@@ -50,11 +50,29 @@ component.
 Operator retention decisions for #11297 and C-2447. The sweep looks only inside
 the two managed pytest namespaces, `pytest-runs/runs` and the legacy
 `pytest-runs/task-scratch`, below the existing scratch scan roots. It honors
-`LU_SCRATCH_SCAN_ROOT`. Ordinary self-contained fixture `.git` directories are
-disposable only when the existing lease and exclusive lock prove this run's
-owner dead on this boot. Linked worktrees, external Git directories, Git
-symlinks, alternate object stores and unfamiliar Git configuration remain
-protected as `git_metadata`. General temporary directories and older ledger
+`LU_SCRATCH_SCAN_ROOT`. Fixture `.git` metadata is disposable only when the
+existing lease and exclusive lock prove this run's owner dead on this boot, and
+only when it is custodian of nothing outside the run. The test is what the
+metadata would take with it, not whether its configuration is familiar:
+
+- Disposable: remotes and tracking branches, linked worktrees located in the
+  same run (their `.git` files and the registrations under `worktrees/`),
+  alternates naming an outside object store (the run depends on that store;
+  deleting the run leaves it untouched), `extensions.worktreeConfig` with a
+  `config.worktree`, hooks path, credential, alias and similar settings.
+- Judged by shape, not name: any directory holding `HEAD`, `objects` and `refs`
+  (a separate Git directory, a bare repository, a submodule's administrative
+  directory) gets the same checks as `.git`, and so does each linked worktree's own
+  `config.worktree`.
+- Kept as `git_metadata`: a worktree registered here that lives outside the run,
+  a `.git` file pointing outside it, a Git directory that is itself linked or
+  separate (`commondir`, `gitdir`), `core.worktree` resolving outside the run,
+  `include` or `includeIf` (the sweep does not read what they pull in), any
+  other `extensions.*`, `http-alternates`, a Git symlink, a config that does not
+  parse, and `core.bare` or `core.repositoryformatversion` other than the
+  ordinary values.
+
+General temporary directories and older ledger
 entries retain Git preservation, including `purge_problem` and its default
 `tree_facts` check; their quarantine timing and purge eligibility are unchanged.
 The existing pytest inflow settings remain `tmp_path_retention_policy = "failed"`
@@ -135,7 +153,10 @@ its own base temp. Other managed scratch is untouched.
 of these hold:
 
 - It is a regular file or a real directory. Symlinks, sockets, FIFOs and
-  devices are kept. A directory that contains a socket or FIFO is kept.
+  devices are kept. A directory that contains a socket or FIFO is kept; when
+  the socket is bound by a live listener the reason is `live_socket`, any
+  other socket or FIFO is `special_file` (see
+  [Listening sockets](#listening-sockets)).
 - The agent user owns the entry and everything inside it.
 - The entry itself is older than `--scratch-age-hours` (default 24), and
   nothing inside it was written for `--scratch-quiet-hours` (default 24).
@@ -156,6 +177,40 @@ of these hold:
 An entry whose name maps to a dispatch task still follows the task rules from
 #8755: it goes only once that task has settled. The scratch rule never
 overrides a task that is still unsettled.
+
+### Listening sockets
+
+A listening Unix socket never appears as a path in `/proc/<pid>/fd`, only as
+`socket:[inode]`, so the process scan cannot tell that a server still serves
+from a directory. Deleting that directory strands the server: it keeps
+running with no way for a client to connect. This is how a swept
+`/tmp/tmux-<uid>` left the CTO seat unrestartable.
+
+Both sweeps therefore read `/proc/net/unix` and treat every directory that
+contains, at any depth the sweep would remove, a socket node bound by a
+listener (flags word `00010000`, path column) as held. The bound path is
+compared as written and as resolved. Any other bound path, a relative one or
+an abstract `@name`, matches every socket node with the same final name,
+because the table does not say which directory it is relative to; this can
+hold a tree needlessly, never release one.
+
+- `tmp_leak_sweep`: a listener keeps the candidate (`live_process`); once the
+  listener is closed the stale socket file no longer holds the tree and the
+  age, ownership and process rules decide as usual.
+- `tmp_sweep`: a live listener is `live_socket`. Any other socket, including
+  the file a closed listener leaves behind, stays `special_file`, because the
+  ledger's manifest cannot describe a socket.
+- If `/proc/net/unix` cannot be read, its header is not the expected one, it
+  has no row or does not end in a newline (a truncated read; a live host
+  always has Unix sockets), or any row does not parse, the answer is unknown
+  and the candidate is kept (`liveness_unknown` in `tmp_leak_sweep`; a socket tree
+  stays `special_file` in `tmp_sweep`). Hosts without it, such as macOS,
+  remove nothing here.
+- The name exclusions above stay: `tmux-*`, `ssh-*`, `claude-*`, `systemd-*`
+  and dot entries are never candidates, listener or not.
+
+A socket bound without listening (datagram) is not in the listener set; in
+`tmp_sweep` it is still kept as `special_file`.
 
 ### Process coverage
 

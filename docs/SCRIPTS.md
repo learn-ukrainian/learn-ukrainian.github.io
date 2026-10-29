@@ -541,8 +541,11 @@ Wikipedia, and dictionary inputs.
   a populated DB.
 - `--force` rebuilds everything except the `wikipedia` and
   `wikipedia_negative_cache` tables (snapshot + restore across the
-  rebuild, since refetching costs Wikipedia API budget). Pass
-  `--no-preserve-wiki` to wipe those too.
+  rebuild, since refetching costs Wikipedia API budget), the official
+  DictUA cache, and every table whose name starts with `sum20_` (the
+  official СУМ-20 articles, which cannot be re-imported). Pass
+  `--no-preserve-wiki` to wipe the Wikipedia tables too; the DictUA cache
+  and the `sum20_` tables are always kept.
 
 ### Recovery: when `data/sources.db` is empty or corrupt
 
@@ -1829,6 +1832,18 @@ When the delegated task may edit files or run git commands:
 
 `dispatch.py status <task-id>` will include the `worktree_path` so operators can inspect or clean it up later.
 Use `dispatch.py status-or-fail <task-id>` before reporting async task state from memory; it exits 0 only when the Monitor API confirms the task is currently running, exits 1 when the task is done/missing/stale, and exits 2 when the Monitor API is unreachable.
+
+**Site dependencies.** A new dispatch worktree gets its own real `site/node_modules` made of hard links to a
+content-addressed store in the primary checkout's `.git/dispatch-dep-store` (about 530 MB once, near zero per
+worktree), so no `npm ci` is needed there. The store key covers the lockfile, `package.json`, project `.npmrc`,
+local inputs, Node/npm versions, platform and the whole npm configuration; a miss installs once with `npm ci`
+in a staging directory and a controlled environment (fixed locale and `PATH`, no ambient variables). Store files are read-only and hash-checked before every
+reuse, because hard links share one inode: do not edit package files in place (`chmod` and an edit changes them
+for every worktree holding that file). Before editing, patching or changing the permissions of package files,
+run `site_deps detach [--path <dir-or-file under site/node_modules>]` to turn them into private copies.
+`npm ci` or `rm -r` in a worktree is safe. A failure never blocks the task, and
+`LEARN_UKRAINIAN_SITE_DEPS=off` skips the step. `.venv/bin/python -m scripts.dispatcher.site_deps
+{ensure|status|prune|detach}` runs it by hand.
 
 ### Monitoring
 

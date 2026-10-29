@@ -5,15 +5,15 @@ inline:
     title: Запитай про колір
     instruction: Choose the natural question or short answer.
     items:
-      - prompt: "(Do not use є.) You point to a pencil and ask its color."
+      - prompt: "Ось олівець. Обери запитання про нього."
         options:
           - text: Якого кольору олівець?
             correct: true
           - text: Який колір є олівець?
             correct: false
-          - text: Якого кольору є олівець?
+          - text: Якого кольори олівець?
             correct: false
-        explanation: Learn Якого кольору...? as one question phrase without є.
+        explanation: "Use Якого кольору олівець? Якого and кольору agree. Кольори is plural, and Який колір є олівець does not form this question."
       - prompt: Якого кольору светр?
         options:
           - text: Синій.
@@ -243,7 +243,7 @@ workbook:
         right: grey hair
   - type: error-correction
     title: Виправ кольорові пастки
-    instruction: Choose the standard Ukrainian correction.
+    instruction: "Choose the standard Ukrainian correction. Capitals mark the stressed vowel."
     items:
       - sentence: Сукня є червона.
         error: Сукня є червона.
@@ -285,7 +285,7 @@ workbook:
           - У нього сіре волосся.
           - Він має сивий волосся.
         explanation: For grey hair, use the fixed phrase сиве волосся.
-      - sentence: ЧорнИй, білИй (keep the masculine forms; capitals mark stress)
+      - sentence: "ЧорнИй, білИй"
         error: ЧорнИй, білИй
         answer: ЧОрний, бІлий
         options:

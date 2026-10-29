@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
-import { parseMarkdown, shuffle } from './utils';
+import { parseMarkdown, useShuffledChoices, useShuffledLists } from './utils';
 import ActivityHelp from './ActivityHelp';
 
 // Generate consistent colors for option chips
@@ -47,14 +47,16 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
   const [showResult, setShowResult] = useState(false);
   const [draggedOption, setDraggedOption] = useState<string | null>(null);
 
-  // Shuffle and create colored option chips
-  const coloredOptions = useMemo(() => {
-    const shuffled = shuffle([...options]);
-    return shuffled.map((opt, idx) => ({
+  // Shuffle (fresh random order after hydration and on every retry) and create
+  // colored option chips
+  const { choices: shuffledOptions, reshuffle } = useShuffledChoices(options);
+  const coloredOptions = useMemo(
+    () => shuffledOptions.map((opt, idx) => ({
       text: opt,
       color: getChipColor(opt, idx)
-    }));
-  }, [options]);
+    })),
+    [shuffledOptions],
+  );
 
   const handleSelect = (option: string) => {
     if (showResult) return;
@@ -82,6 +84,7 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
   };
 
   const handleReset = () => {
+    reshuffle();
     setSelected(null);
     setShowResult(false);
   };
@@ -193,6 +196,10 @@ interface FillInProps {
 export default function FillIn({ items, instruction, isUkrainian }: FillInProps) {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
+  // One fresh random option order per blank, redrawn after hydration and on retry.
+  const { lists: shuffledOptionLists, reshuffle: reshuffleBlanks } = useShuffledLists(
+    items.map((item) => item.options || []),
+  );
 
   const handleSelect = (index: number, value: string) => {
     if (value === '') return; // the unset placeholder is not an answer
@@ -231,7 +238,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
                   disabled={showResults}
                 >
                   <option value="" disabled>{isUkrainian ? '— оберіть —' : '— choose —'}</option>
-                  {shuffle(item.options || []).map((opt, i) => (
+                  {shuffledOptionLists[index].map((opt, i) => (
                     <option key={i} value={opt === '' ? EMPTY_OPTION_VALUE : opt}>
                       {opt || BLANK_SLOT}
                     </option>
@@ -261,6 +268,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
             <button
               className={styles.retryButton}
               onClick={() => {
+                reshuffleBlanks();
                 setShowResults(false);
                 setAnswers({});
               }}

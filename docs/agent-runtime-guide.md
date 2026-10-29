@@ -1061,6 +1061,18 @@ Dispatch refuses it with `read_only_unenforceable` only on a host that cannot
 start that boundary. Research flags and owned paths record metadata; write-path claim
 admission and overlap overrides are retired.
 
+A read-only Codex run gets a per-task writable scratch and nothing else writable.
+The worker creates `<scratch root>/learn-ukrainian/codex-read-only-<task>` (owner-only, exclusive)
+just before launch and removes it at settlement; `scripts/agent_runtime/read_only_tmp.py` names,
+creates, validates and discards it. The provider replaces `-s read-only` with the same permissions
+profile the legacy adapter uses (`_read_only_tmp_flags`): the root is read-only, the scratch is the
+single writable path, and network is limited to GitHub. The environment exports the scratch as
+`TMPDIR`, so `git`, `gh`, pytest and any plugin that opens a unix socket work without a writable
+checkout. Test slots are still reserved by the worker outside the sandbox
+(`admission.hold_review_test_slots`); a read-only run that is not review-typed holds none and so
+cannot run governed pytest. Codex `workspace-write` is unchanged: it passes
+`--dangerously-bypass-approvals-and-sandbox` on purpose, because the dispatch worktree is its write boundary.
+
 Use `status TASK --run-nonce NONCE` and `wait TASK --run-nonce NONCE` to observe
 the exact run. `list --status running` reports active tasks. Write-task delivery
 requires a pushed branch; inspect the terminal record and Git evidence.
@@ -1078,13 +1090,14 @@ No additional worker exports beyond `scripts/dispatcher/environment.py` are
 promised. The provider adapter layer still serves its other callers.
 
 Bounded workers retain the v2 driver-brief and `--advisory-task` admission paths.
-Use `--print-advisory-binding` with the exact worker request. The legacy
-advisor-role switches for bounded envelopes are absent; include the requested
-envelope and binding in the read-only advisor's brief. `--advisory-role` and
-`--advisory-binding` serve only the catalog's `advisory_roles` decisions (today
-`review_budget_extension`, read by the verdict recorder): the read-only task records
-the role, route and bound digest, and its worker seals the result at finish
-(`bounded_advisory.seal_advisor_result`).
+Use `--print-advisory-binding` with the exact worker request, and run the
+read-only advisor with `--advisory-role bounded_advisory_envelope
+--advisory-binding <digest>`. `--advisory-role` and `--advisory-binding` serve the
+catalog's `advisory_roles` decisions (`bounded_advisory_envelope`, read by
+`--advisory-task` admission, and `review_budget_elevation`, read by the verdict
+recorder): the read-only task records the role, route and bound digest, and its
+worker seals the result at finish (`bounded_advisory.seal_advisor_result`). The
+fence and output fields come from the role's catalog entry.
 
 ### Review attempts: server and templates must match (#9163)
 

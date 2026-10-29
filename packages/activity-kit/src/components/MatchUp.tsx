@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './Activities.module.css';
-import { parseMarkdown, shuffle } from './utils';
+import { parseMarkdown, useShuffledChoices } from './utils';
 import ActivityHelp from './ActivityHelp';
 
 export interface MatchPair {
@@ -131,11 +131,18 @@ export default function MatchUp({
     hadIncorrectAttemptRef.current = false;
   }, [pairs]);
 
-  // Shuffle right side (deterministic — seeded by content)
-  const shuffledRight = useMemo(() => {
-    const indices = pairs.map((_, i) => i);
-    return shuffle(indices);
-  }, [pairs]);
+  // Right side: fresh random order after hydration (and whenever the board
+  // resets for new pairs). Entries carry their authored pair index, so matching
+  // still compares against the original pair.
+  const rightEntries = useMemo(
+    () => pairs.map((pair, originalIndex) => ({ right: pair.right, originalIndex })),
+    [pairs],
+  );
+  const { choices: shuffledRightEntries } = useShuffledChoices(rightEntries, (e) => e.right);
+  const shuffledRight = useMemo(
+    () => shuffledRightEntries.map((e) => e.originalIndex),
+    [shuffledRightEntries],
+  );
 
   const handleLeftClick = (index: number) => {
     if (disabled || matchedRef.current.has(index) || wrongPair) return;

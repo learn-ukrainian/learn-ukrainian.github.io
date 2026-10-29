@@ -1052,15 +1052,48 @@ MUSE_REVIEW_CANDIDATE = {
     "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high",
     "review_profiles": ["code"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
 }
-def _pop_budget_extension_role(catalog):
-    """Remove the review budget extension role (cto-7eba-adv-extension2) and return what it added."""
-    role = "review_budget_extension"
-    consult = catalog["review_scheduler"]["activity_roles"]["consult"]
-    consult.remove(role)
+def _pop_budget_elevation_role(catalog):
+    """Remove the elevated-tier grant role (cto-7923-adv-clog-sol, item 3b) and return what it added."""
+    role = "review_budget_elevation"
+    # The envelope role is the one advisory_roles entry of the bounded route; it is checked against the
+    # route's advisor, not frozen here, and the elevation's frozen receipt stays what it was.
+    envelope = catalog["advisory_roles"].pop("bounded_advisory_envelope")
+    advisor = catalog["execution_routing"]["sol_advised_bounded"]["advisor"]
+    assert (envelope["effort"], envelope["output_fields"]) == (advisor["effort"], advisor["output_fields"])
+    catalog["review_scheduler"]["activity_roles"]["consult"].remove(role)
     holders = sorted(model_id for model_id, model in catalog["models"].items() if role in model["roles"])
     for model_id in holders:
         catalog["models"][model_id]["roles"].remove(role)
-    return {"advisory_roles": catalog.pop("advisory_roles"), "consult": role, "holders": holders}
+    entry = catalog["advisory_roles"].pop(role)
+    # It is the only advisory role left once the envelope role is popped, so its key goes too.
+    assert catalog.pop("advisory_roles") == {}
+    return {"advisory_role": entry, "consult": role, "holders": holders}
+
+
+def with_advisory_roles(frozen):
+    """A frozen pre-advisory catalog plus the live ``advisory_roles`` section, its holders and consult roles.
+
+    Validation requires the section (bounded admission reads the envelope role from it), so the
+    historical pins are checked as the pin plus this overlay, and ``without_advisory_roles`` returns the pin.
+    """
+    live = load_model_catalog()
+    catalog = deepcopy(frozen)
+    catalog["advisory_roles"] = deepcopy(live["advisory_roles"])
+    consult = catalog["review_scheduler"]["activity_roles"]["consult"]
+    for role in catalog["advisory_roles"]:
+        for model_id, model in live["models"].items():
+            if role in model["roles"] and role not in catalog["models"][model_id]["roles"]:
+                catalog["models"][model_id]["roles"].append(role)
+        if role in live["review_scheduler"]["activity_roles"]["consult"] and role not in consult:
+            consult.append(role)
+    return catalog
+
+
+def without_advisory_roles(catalog):
+    """``with_advisory_roles`` undone: the frozen catalog the overlay was built from."""
+    catalog = deepcopy(catalog)
+    _pop_budget_elevation_role(catalog)
+    return catalog
 
 
 def assert_frozen_surfaces(actual, *, surfaces):
@@ -1072,10 +1105,10 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
-            # The advisory budget extension role is a consult role held by Sol and Opus; it moves no
-            # seat, route or review ranking.
-            extension = _pop_budget_extension_role(value)
-            assert hashlib.sha256(encode(extension)).hexdigest() == "8f8213328a04a6562564724e55ec083a00cdc11f0e228bba263bc5d5dedbf06c"
+            # The elevated-tier grant role is a consult role held by Sol and Opus; it moves no seat,
+            # route or review ranking. It replaced the retired budget extension role.
+            elevation = _pop_budget_elevation_role(value)
+            assert hashlib.sha256(encode(elevation)).hexdigest() == "4a395379ef040f47f69be6badd96376bcbc1041d8698ff0703bc9209e399592d"
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 

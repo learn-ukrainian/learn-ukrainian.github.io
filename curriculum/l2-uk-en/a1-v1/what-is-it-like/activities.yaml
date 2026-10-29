@@ -185,24 +185,24 @@ workbook:
     title: Модель речення
     instruction: Choose the natural A1 sentence.
     items:
-      - prompt: "(Do not use є.) The book is new."
+      - prompt: "Ось книга. Обери речення про неї."
         options:
           - text: Книга нова.
             correct: true
-          - text: Книга є нова.
+          - text: Книгу нова.
             correct: false
           - text: Книга новий.
             correct: false
-        explanation: Ukrainian usually leaves out є in this present-tense frame.
-      - prompt: "(Do not use є.) The table is clean."
+        explanation: "Книга нова has feminine nominative agreement. Книгу is accusative; новий is masculine."
+      - prompt: "Ось стіл. Обери речення про нього."
         options:
           - text: Стіл чистий.
             correct: true
           - text: Стіл чиста.
             correct: false
-          - text: Стіл є чистий.
+          - text: Столу чистий.
             correct: false
-        explanation: Стіл is masculine, and the no-є frame is natural.
+        explanation: "Стіл is masculine nominative, so use чистий. Чиста is feminine; столу is not the subject form."
       - prompt: The window is big.
         options:
           - text: Вікно велике.
@@ -271,13 +271,13 @@ workbook:
           - великий
           - велика
         explanation: Вікно is neuter.
-      - sentence: "(Contrast: whereas.) Книга дорога, ___ листівка дешева."
+      - sentence: "Книга дорога, ___ листівка дешева."
         answer: а
         options:
           - а
-          - і
+          - якого
           - яке
-        explanation: А contrasts two things.
+        explanation: "А joins the clauses about the expensive book and the cheap card. Якого and яке cannot connect these clauses."
       - sentence: У мене є ___ стіл і стара лампа.
         answer: новий
         options:
@@ -377,12 +377,12 @@ workbook:
           - правильна
           - вірна
         explanation: Use правильна відповідь for a correct answer.
-      - sentence: "(Any pencil, with no particular preference.) Дай мені, будь ласка, ___ олівець."
+      - sentence: "Мені все одно, який олівець. Дай мені, будь ласка, ___ олівець."
         answer: будь-який
         options:
           - будь-який
           - любий
-        explanation: Use the standard Ukrainian form for any.
+        explanation: "Будь-який means an unrestricted choice here. Любий means dear or beloved; it does not mean any pencil."
       - sentence: Сергій — ___ хлопчик.
         answer: розумний
         options:

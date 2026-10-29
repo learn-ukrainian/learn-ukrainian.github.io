@@ -22,6 +22,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 
 from scripts.audit.checks.cross_file_integrity import extract_ukrainian_words
 from scripts.audit.checks.russicism_detection import check_russicisms, check_ua_gec_calques
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 from scripts.rag.rag_batch_verify import vesum_batch_lookup
 from scripts.rag.source_query import pravopys_lookup
 from scripts.storage.artifacts import write_artifact
@@ -219,6 +220,7 @@ def migrate_ukrainian_wiki_corpus(
     manifest_db: Path = DEFAULT_MANIFEST_DB,
 ) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     try:
         ensure_ukrainian_wiki_schema(conn)
@@ -737,6 +739,7 @@ def ingest_article(
         min_chunk_chars=min_chunk_chars,
     )
 
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     try:
         _write_passages(conn, article_slug=article_path.stem, track=_infer_track(article_path), payload=payload)
@@ -1005,6 +1008,7 @@ def ingest_articles(
     migrate_ukrainian_wiki_corpus(db_path=db_path, manifest_db=manifest_db)
     article_paths = _collect_article_paths(article_root, recursive=recursive)
     _warn_cross_track_slug_collisions(article_paths)
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     results: list[ArticleIngestResult] = []
     try:

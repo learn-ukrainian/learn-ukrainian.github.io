@@ -26,6 +26,12 @@ from wiki.historical_sources import (
     validate_historical_fts,
 )
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
 RECEIPT_SCHEMA_VERSION = "incremental-historical-source-ingest.v1"
 
@@ -134,6 +140,7 @@ def ingest(
     if not db_path.is_file():
         raise HistoricalSourceError(f"database does not exist: {db_path}")
 
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path), timeout=60)
     conn.execute("PRAGMA foreign_keys=ON")
     try:

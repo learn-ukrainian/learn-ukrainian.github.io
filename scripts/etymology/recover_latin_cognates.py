@@ -6,9 +6,16 @@ import argparse
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 DEFAULT_DB = Path("data/sources.db")
 
@@ -260,6 +267,7 @@ def _load_forms(raw_json: str) -> dict[str, Any]:
 def recover_database(db_path: Path, dry_run: bool = False) -> dict[str, int | float]:
     """Populate esum_cognate_forms.cognate_forms_recovered from cognate_forms."""
 
+    refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     try:

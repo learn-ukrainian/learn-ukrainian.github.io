@@ -118,10 +118,10 @@ describe('ArcLanding', () => {
   it('lists positions by phase with links, titles, counts and states', () => {
     const { container } = render(<ArcLanding level="a1" positions={positions} previousEditionHref="/a1-v1/" />);
 
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('A1');
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('New A1 · in preparationНова A1 · готується');
     expect(screen.getByText('A1.1')).toBeTruthy();
     expect(screen.getByText('A1.2')).toBeTruthy();
-    expect(screen.getAllByRole('link', { name: /Previous A1|Попередня A1/ })).toHaveLength(1);
+    expect(screen.getAllByRole('link', { name: /A1 · available course|A1 · доступний курс/ })).toHaveLength(1);
 
     const alpha = screen.getByRole('link', { name: /Звуки/ });
     expect(alpha.getAttribute('href')).toBe('/a1/alpha/');
@@ -142,7 +142,7 @@ describe('ArcLanding', () => {
   it('marks checkpoints and omits the previous-edition link when none is given', () => {
     render(<ArcLanding level="a1" positions={positions} />);
     expect(within(screen.getByRole('link', { name: /Checkpoint one/ })).getAllByText('Checkpoint').length).toBeGreaterThan(0);
-    expect(screen.queryByRole('link', { name: /Previous A1/ })).toBeNull();
+    expect(screen.queryByRole('link', { name: /A1 · available course/ })).toBeNull();
   });
 });
 
@@ -156,7 +156,7 @@ describe('ArcModule', () => {
     expect(screen.getByText('Say hello')).toBeTruthy();
     expect(container.querySelector('[data-state="planned"]')).toBeTruthy();
     expect(container.querySelector('ol')).toBeNull();
-    expect(screen.getByRole('link', { name: /Previous A1|Попередня A1/ }).getAttribute('href')).toBe('/a1-v1/alpha/');
+    expect(screen.getByRole('link', { name: /A1 · available course|A1 · доступний курс/ }).getAttribute('href')).toBe('/a1-v1/alpha/');
   });
 
   it('links only the built lessons and shows the scope counts', () => {

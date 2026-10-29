@@ -23,6 +23,7 @@ Helpers:
 """
 
 import contextvars
+import functools
 import hashlib
 import json
 import os
@@ -30,7 +31,7 @@ import sqlite3
 import sys
 import threading
 from collections import defaultdict
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from pathlib import Path
@@ -57,6 +58,13 @@ from scripts.lib.readonly_sqlite import (
     SQLiteConnection,
     open_readonly,
     refuse_writable_corpus_database,
+)
+from scripts.storage.generations import (
+    GENERATIONS_DIRNAME,
+    one_generation,
+    reader_pin,
+    store_writer,
+    track_connection,
 )
 
 # ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
@@ -100,6 +108,17 @@ _conn_lock = threading.Lock()
 _active_connection: contextvars.ContextVar[sqlite3.Connection | None] = contextvars.ContextVar(
     "sources_db_active_connection", default=None
 )
+
+
+def _one_generation_lookup(function: Callable[..., Any]) -> Callable[..., Any]:
+    """Run a lookup that reads several times inside ``one_generation``."""
+
+    @functools.wraps(function)
+    def lookup(*args: Any, **kwargs: Any) -> Any:
+        with one_generation():
+            return function(*args, **kwargs)
+
+    return lookup
 
 
 @contextmanager
@@ -1878,6 +1897,8 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
         refuse_writable_corpus_database(db_path, factory="scripts/wiki/sources_db.py")
         options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
         conn = _open_writer_conn(db_path, options)
+        # The store writer lock closes it before release if its owner has not.
+        track_connection(db_path, conn)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition
@@ -1887,10 +1908,30 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
 
 
 def _get_conn() -> sqlite3.Connection:
-    """Reuse the cached reader until the database path, inode or mtime changes."""
+    """The request's connection, a pinned generation's reader, or the cached reader."""
     override = _active_connection.get()
     if override is not None:
         return override
+    pin = reader_pin()
+    if pin is None:
+        return _cached_reader()
+    with pin.lock:
+        reader = pin.readers.get(__name__)
+        if reader is None:
+            reader = _cached_reader()
+            path = Path(reader.execute("PRAGMA database_list").fetchone()[2])
+            if pin.generation is None:
+                pin.generation = path
+            elif path != pin.generation:
+                # Another thread or import name fixed the generation first and
+                # this cache has moved on since: read the pinned generation.
+                reader = _open_conn(pin.generation, read_only=True)
+            pin.readers[__name__] = reader
+        return reader
+
+
+def _cached_reader() -> SQLiteConnection:
+    """Reuse the cached reader until the selector's target, inode or mtime changes."""
     global _conn, _conn_state
     with _conn_lock:
         if _conn is not None and _conn_state is not None and _conn_state[0] is not _conn:
@@ -1902,6 +1943,17 @@ def _get_conn() -> sqlite3.Connection:
             except OSError:
                 _conn_state = (_conn, _conn_state[1], _conn_state[2])
         else:
+            if _conn is not None and _conn_state is not None and _conn_state[1].parent.name == GENERATIONS_DIRNAME:
+                # The cached reader holds a generation: re-resolve the selector on
+                # every request. After a publication, calls already running keep
+                # their reference to the old connection and its whole generation;
+                # dropping the cache's reference closes it once the last one ends.
+                reopen_path = _read_db_path()
+                if reopen_path != _conn_state[1]:
+                    fresh = _open_conn(reopen_path, read_only=True)
+                    stat = reopen_path.stat()
+                    _conn = fresh
+                    _conn_state = (fresh, reopen_path, (stat.st_ino, stat.st_mtime_ns, stat.st_size))
             # Stat the current connection path if open, else resolve via _read_db_path.
             path = _conn_state[1] if (_conn is not None and _conn_state is not None) else _read_db_path()
             try:
@@ -1948,6 +2000,7 @@ def ulif_stress_build() -> dict[str, Any]:
     return dict(row) if row is not None else {"state": "unbuilt"}
 
 
+@_one_generation_lookup
 def ulif_stress_rows(form: str) -> list[dict[str, Any]]:
     """Indexed per-form lookup of checked entries only (#8400 rule 3).
 
@@ -2713,6 +2766,7 @@ def _expand_to_chunk_candidates(
     return expanded
 
 
+@_one_generation_lookup
 def _dispatch_corpus_search(
     corpus: str,
     *,
@@ -2919,6 +2973,7 @@ def _expand_ukrainian_wiki_neighbors(match: dict) -> dict:
     }
 
 
+@_one_generation_lookup
 def _expand_neighbor_context(match: dict) -> dict:
     corpus = str(match.get("corpus", ""))
     if corpus in {"modern_literary", "archaic_literary"}:
@@ -2993,6 +3048,7 @@ def _is_textbook_section(match: dict) -> bool:
     return match.get("corpus") == "textbook_sections"
 
 
+@_one_generation_lookup
 def search_sources(
     query: str | Path,
     *,
@@ -3182,6 +3238,7 @@ def _fts_search(fts_table: str, data_table: str,
     raise last_exc
 
 
+@_one_generation_lookup
 def search_textbooks(
     ukr_keywords: set[str],
     max_total: int = 40,
@@ -3257,6 +3314,7 @@ def search_textbooks(
     return results
 
 
+@_one_generation_lookup
 def search_external(
     ukr_keywords: set[str],
     max_total: int = 10,
@@ -3382,6 +3440,7 @@ def search_literary(ukr_keywords: set[str], max_total: int = 20) -> list[dict]:
     return rows
 
 
+@_one_generation_lookup
 def search_wikipedia(ukr_keywords: set[str], max_total: int = 10) -> list[dict]:
     """Search Wikipedia articles via FTS5."""
     try:
@@ -3670,6 +3729,7 @@ def search_balla_en_uk_batch(
     return _batch_dict_lookup("balla_en_uk", words, limit=1, db_path=db_path)
 
 
+@_one_generation_lookup
 def search_dmklinger_uk_en_batch(
     words: list[str],
     *,
@@ -3738,6 +3798,7 @@ def search_dmklinger_uk_en_batch(
     return results
 
 
+@_one_generation_lookup
 def search_esum_batch(
     words: list[str],
     *,
@@ -3800,6 +3861,7 @@ def search_esum_batch(
     return results
 
 
+@_one_generation_lookup
 def search_slovnyk_me_entries_batch(
     words: list[str],
     *,
@@ -4028,6 +4090,7 @@ def _esum_match_tier(query: str, lemma: str) -> int:
     return 3
 
 
+@_one_generation_lookup
 def search_esum(
     query: str,
     volume: int | None = None,
@@ -4299,6 +4362,7 @@ def _resolved_slovnyk_dicts(dictionaries: list[str] | tuple[str, ...] | None) ->
     return resolved
 
 
+@_one_generation_lookup
 def _search_slovnyk_me_db(
     query: str,
     *,
@@ -4394,6 +4458,7 @@ def _search_slovnyk_me_db(
         _close_if_temporary(conn, db_path)
 
 
+@_one_generation_lookup
 def _dictionaries_not_recorded_missing(
     query: str,
     dictionaries: list[str] | tuple[str, ...] | None,
@@ -4452,6 +4517,7 @@ def search_slovnyk_me(
     return rows
 
 
+@_one_generation_lookup
 def search_slovnyk_me_with_status(
     query: str,
     limit: int = 10,
@@ -4648,6 +4714,7 @@ def _heritage_match_tier(query: str, headword: str) -> int:
     return 3
 
 
+@_one_generation_lookup
 def search_heritage(
     query: str,
     limit: int = 10,
@@ -4867,11 +4934,12 @@ def main(argv: list[str] | None = None) -> int:
     path = args.db if args.db is not None else SOURCES_DB_PATH
     if not path.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
-    conn = _open_conn(path)
-    try:
-        changed = migrate_ulif_dictua_entries(conn)
-    finally:
-        conn.close()
+    with store_writer(path) as target:
+        conn = _open_conn(target)
+        try:
+            changed = migrate_ulif_dictua_entries(conn)
+        finally:
+            conn.close()
     print("migrated" if changed else "already current")
     return 0
 

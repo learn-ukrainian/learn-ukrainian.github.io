@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -159,6 +160,73 @@ def test_guard_uses_final_main_pass_with_advisor_iterations(tmp_path: Path, toke
         assert reminder == ""
     else:
         assert "above this session's final rollover tier (~760k tokens)" in reminder
+
+
+def lane_environment(
+    tmp_path: Path,
+    project: Path,
+    *,
+    tmux_session: str = "cto",
+    registry: object = ...,
+    **extra: str,
+) -> dict[str, str]:
+    """A driver launcher's lane identity (SESSION_EPIC) inside a stubbed tmux session.
+
+    The project gets the real lane loader and registry, as the hooks read them with the guard's
+    own loader; ``registry`` is ``...`` for the real file, ``None`` for a malformed one, or a
+    function that edits the real lane list.
+    """
+    for relative in ("scripts/__init__.py", "scripts/ops/driver_lanes.py", "scripts/config/driver_lanes.json"):
+        target = project / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(PROJECT_ROOT / relative, target)
+    lanes_file = project / "scripts/config/driver_lanes.json"
+    if registry is None:
+        lanes_file.write_text(lanes_file.read_text(encoding="utf-8") + "{", encoding="utf-8")
+    elif registry is not ...:
+        data = json.loads(lanes_file.read_text(encoding="utf-8"))
+        data["lanes"] = registry(data["lanes"])  # type: ignore[operator]
+        lanes_file.write_text(json.dumps(data), encoding="utf-8")
+    stub_dir = tmp_path / "stub-bin"
+    stub_dir.mkdir(exist_ok=True)
+    tmux = stub_dir / "tmux"
+    tmux.write_text(f"#!/bin/sh\necho {tmux_session}\n", encoding="utf-8")
+    tmux.chmod(0o755)
+    return {
+        "PATH": f"{stub_dir}{os.pathsep}{os.environ['PATH']}",
+        "TMUX": "tmux-stub,1,0",
+        "TMUX_PANE": "%1",
+        "SESSION_EPIC": "epics",
+        **extra,
+    }
+
+
+def test_reminder_for_a_guard_managed_lane_names_handoff_done_not_the_operator(tmp_path: Path) -> None:
+    project, record_path = _project(tmp_path)
+
+    reminder = _reminder(_tier_three_prompt(project, record_path, **lane_environment(tmp_path, project)))
+
+    assert "post a standalone line reading HANDOFF-DONE cto, and end the turn" in reminder
+    assert "the context guard restarts this lane" in reminder
+    assert "tell the operator" not in reminder
+
+
+def test_reminder_outside_a_guard_managed_lane_still_tells_the_operator(tmp_path: Path) -> None:
+    project, record_path = _project(tmp_path)
+
+    reminder = _reminder(_tier_three_prompt(project, record_path, **lane_environment(tmp_path, project, tmux_session="scratch")))
+
+    assert "then tell the operator to restart the session" in reminder
+    assert "HANDOFF-DONE" not in reminder
+
+
+def test_reminder_with_a_registry_the_guard_rejects_still_tells_the_operator(tmp_path: Path) -> None:
+    project, record_path = _project(tmp_path)
+
+    reminder = _reminder(_tier_three_prompt(project, record_path, **lane_environment(tmp_path, project, registry=None)))
+
+    assert "then tell the operator to restart the session" in reminder
+    assert "HANDOFF-DONE" not in reminder
 
 
 @pytest.mark.parametrize("rollover_mode", ["continuation", None])

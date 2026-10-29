@@ -2,7 +2,7 @@
   "files": [
     {
       "path": "curriculum/l2-uk-en/a1-v1/a1-finale/activities.yaml",
-      "sha256": "fd61a15c8215ac4983d933bdaec9bbd4864f9ab1d282701db94e2f6427b1a28d"
+      "sha256": "c651cf56aea1d74785a19da94746d95b0893c1727dd870026236e6ff0480e908"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/a1-finale/module.md",
@@ -50,7 +50,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-actions/activities.yaml",
-      "sha256": "58293ab53b5dd8b5d85a40bd1f0f00ffb13f5481529b1620bd3348e45906d05a"
+      "sha256": "8be55c55bc29946d089daddc6ae8732c6734051cd4efe74edd40d4ba919e2f70"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-actions/module.md",
@@ -66,7 +66,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-communication/activities.yaml",
-      "sha256": "321804a1d8ed765bff1de1e7aff48adc62ef2f9f6933a1f3f9308920d4a2227c"
+      "sha256": "921077c1b0198e37dffd26686fbc6b65a78069e890367e83e25989620641d77f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-communication/module.md",
@@ -82,7 +82,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/activities.yaml",
-      "sha256": "8b1affc2b28098473966b765756ea47b8c7780bbd9a6ea9530547c74d9c2ca39"
+      "sha256": "40d77c376a1d46570f4bcdb1d880e0a56a2477e5918f8d9d46007fc2774849f0"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/module.md",
@@ -146,7 +146,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-time-nature/activities.yaml",
-      "sha256": "f8c45d45cee15531087eca9103ab6b6564804cd4f8ac42e83647f7e27cd78de1"
+      "sha256": "7d12ae94b63d4604792cd43b5954e14e0a3f9812113fb8d0a056b89f985b0197"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-time-nature/module.md",
@@ -162,7 +162,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/colors/activities.yaml",
-      "sha256": "4d7c1af430bbcf96b4a858118d2b21d8e3db0360da769139291e120c58edbe78"
+      "sha256": "e77d202ffe8e95b2461232c9ccdd5e528f309a33aa140f71f10a8da065997a1b"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/colors/module.md",
@@ -194,7 +194,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/emergencies/activities.yaml",
-      "sha256": "00e4df8cc1befd2e2ef09bc6ca08497aad0af545fb6ad32934a3ad6fb39958bb"
+      "sha256": "40ebffc7bc1efd107849ea672b4ae3d8038688bee1f34a20a9c12dbaddb99ea3"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/emergencies/module.md",
@@ -242,7 +242,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/free-time/activities.yaml",
-      "sha256": "4559bc77cfe9569abba785d46a99b00c01a40445e70a3a3b82d9561203dff7d9"
+      "sha256": "fa3a23773cf88a5f2380e1b21cc151916484444803644b9e64e48e8a578fd7c6"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/free-time/module.md",
@@ -258,7 +258,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/health/activities.yaml",
-      "sha256": "e503245f04c30fc8b50f7c55a53c47af3ccdb28fd315ef3c972d63f34127261e"
+      "sha256": "07d2f87217c6ceb1ba8dfddb682ca0060a49299202a98fd092cfb51dec18dcbd"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/health/module.md",
@@ -290,7 +290,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/holidays/activities.yaml",
-      "sha256": "1f30d16543b081462b7e2770d885fafa4a66d432f2fc122c5bd8c57b03c59fcb"
+      "sha256": "58e0f22606d65228bb39d8bca51f4c709c23bed34f3e20e775c798c7d2d4d79e"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/holidays/module.md",
@@ -306,7 +306,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/how-many/activities.yaml",
-      "sha256": "5e0217babcbcd5c2f0b61eec7d60cf899d9737ccbea28e7d76c11b3a275df92c"
+      "sha256": "2386790546cc6cf24cdc023f9728953eb3dc7ee328b153b82a1a357c19e4d79f"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/how-many/module.md",
@@ -338,7 +338,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/i-want-i-can/activities.yaml",
-      "sha256": "42a7b3d2264a8e49264bd2081470c6dcef9cad3065f48288c2990967d1ab2549"
+      "sha256": "000093f0d0367d4a25c6835ec06dcaf91f9b78668aa7368449ebf942c04d7a0d"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/i-want-i-can/module.md",
@@ -354,7 +354,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/linking-ideas/activities.yaml",
-      "sha256": "1517d3d38b297a2456a92d23ca02ccc6afea1d5ec28855a18a80eeec883fcc14"
+      "sha256": "62e8c9568807a927842b369fbceaf2b8ad8c678b99c4d1fc82320fef02441096"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/linking-ideas/module.md",
@@ -402,7 +402,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-day/activities.yaml",
-      "sha256": "314dd8b553a0446e5af47393bddb53dbad5484c6e3e7154fcf186e4eab998aae"
+      "sha256": "b493ccaead3be7db10e8f3a088f52a7037c974ae68a6a0d406099217edd7459e"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-day/module.md",
@@ -418,7 +418,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-family/activities.yaml",
-      "sha256": "58640b37b2ec4762f447041d41b1d8e8119963d93d8e728e5cafb23d68e78355"
+      "sha256": "25704656feaf98187af97601bb980f8ec9c751c1e4abaf02532088dd4ac0a527"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-family/module.md",
@@ -434,7 +434,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-morning/activities.yaml",
-      "sha256": "33f8deccc80c48766c1a574a440592ffa30a822b41a5dfa4972713311d3c8392"
+      "sha256": "6fd6c30203de70edaf52d6485b6fc7ef8097b5569876807846ce9f9f084fe2ab"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-morning/module.md",
@@ -450,7 +450,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-plans/activities.yaml",
-      "sha256": "1a4429e91b4dd950f7ec6423b26ff2de17c11db65ef5bfa095a3a77f0f84b40f"
+      "sha256": "7cc474ea1e77f90b93abf737288c2c3bf5a05474bb13658451b3a71493ebf36d"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-plans/module.md",
@@ -466,7 +466,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-story/activities.yaml",
-      "sha256": "3b6c00f8db4e85451817e9df9f08e67f222179e6af0090b93502df714332be10"
+      "sha256": "37214560ee5423a20e96cc78e9d6d3e86e004f8d02a603090e7f1e85d3520527"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-story/module.md",
@@ -498,7 +498,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/please-do-this/activities.yaml",
-      "sha256": "e2d964878e4ba3e650f2cacd03211e6c19628f0e74bfe7fab2b4cd27b1eeb166"
+      "sha256": "68a8ad997003b5c87f79b641b9963970314fe30e3ee6fcefe834c10f025a70eb"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/please-do-this/module.md",
@@ -514,7 +514,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/questions/activities.yaml",
-      "sha256": "e189ce9ba1ca56464452a1fa13578876e8e1d797bfc6a7fa922a8e7f2fdce84f"
+      "sha256": "59199de20c48cf2f49056abb27e1421c2fbc6d6b54f97b6a5f4121290b076d95"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/questions/module.md",
@@ -562,7 +562,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/activities.yaml",
-      "sha256": "e2082eeecd637a335850c9b5cfe4475592071e41745083344fdb80f0f582b26b"
+      "sha256": "a3ae17675c80da41c09611c12f83d2197562438660097d4713e660928eafe887"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/module.md",
@@ -594,7 +594,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/stress-and-melody/activities.yaml",
-      "sha256": "4ca3b898e7fd7888aaee61a7161be46920244e826857414f72a12b59c7771b94"
+      "sha256": "233cba647e8b0a56be8c0eca2dc8671e2a2a78d3fe9bab87adcfcf86db2bd241"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/stress-and-melody/module.md",
@@ -610,7 +610,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/things-have-gender/activities.yaml",
-      "sha256": "f7fd185d063f78c0a0d21d04c13cc6737c909b29d65e90c98abfb03696080b26"
+      "sha256": "153d4e5f00b2ac5d808076e43d4e4ed3fa519f5da87dcaa8a0f4ea28f0fba2b1"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/things-have-gender/module.md",
@@ -626,7 +626,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/this-and-that/activities.yaml",
-      "sha256": "e17c3b278fa333d89ee8061c343114dd816ebb790556317953f6270f96bbd9c1"
+      "sha256": "74fe4d62ad1ba96699632d5b13ffc7ea00f260c0a97a3691b2ad7b141efdbe8d"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/this-and-that/module.md",
@@ -690,7 +690,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/weather/activities.yaml",
-      "sha256": "5bb11a2dbaf4f33d7d85d9cad115b502a8249ed4118f9487669b0d0b2da3ddd8"
+      "sha256": "c7dcf3ec04b88189898f15f8e86ce1295c9536a10b833e35f472e509cee6e8d4"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/weather/module.md",
@@ -706,7 +706,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-happened/activities.yaml",
-      "sha256": "c9755f064b978f73aa87f91f6f1332fac9172fa0654c07d914e617eb47ae37d8"
+      "sha256": "e349a5632352615806f0a7a56e400290206574f33705e451d65e1ea25e110959"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-happened/module.md",
@@ -738,7 +738,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-is-it-like/activities.yaml",
-      "sha256": "dd9f935bfed8f32be701fa07debb4d8a78629e54696b6cdba69e78d6de794b5e"
+      "sha256": "1555a01a9a7179943e4190cfb5f698ebb78bd8d25c9676ac28540d413341353b"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-is-it-like/module.md",
@@ -770,7 +770,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-will-happen/activities.yaml",
-      "sha256": "a57a527cc64f78b5acea7e7c58222eabba68a7e82407a028ed0dfa2a1d9b0c4f"
+      "sha256": "816f4ebbad6735e16c903bb41e99e3247ec5e3b432d52da32d44c9e1a2abaab7"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/what-will-happen/module.md",
@@ -786,7 +786,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/when-and-where/activities.yaml",
-      "sha256": "5bc241f664767ecec67f245ddf8da6933a0d5ecb296f602b152cbeec100ec9b2"
+      "sha256": "605105bec57d0f2fddef4cc3bc7b4a87b114f33b9645be89c6c94c963cbba833"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/when-and-where/module.md",
@@ -850,7 +850,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/who-am-i/activities.yaml",
-      "sha256": "57b3ddc24436c02278ee144e491d5aae0ca10164ebb17b8aac565d44f2f0f21f"
+      "sha256": "1475cc7568fb8fb1a840e472fca092ad3e1d005d03a2c457f5865591581007f8"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/who-am-i/module.md",
@@ -866,7 +866,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/yesterday/activities.yaml",
-      "sha256": "e3331849f14b20bb5ccda92855affc5a913a82c8534100c1af42b6c16c2b720a"
+      "sha256": "934a60e247ab12a31f03afadfc8669ac6efe4cf2217a9f41c9cc2aeb1e8dca2a"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/yesterday/module.md",
@@ -13686,7 +13686,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/a1-finale.mdx",
-      "sha256": "afd0df0f20d5da5d50cb8e0d0de639a239ef57c8893ed590ab9d0bfbe10795ef"
+      "sha256": "d33fcb10df75fee686f819f5d794740cfdf136fd62dec84b318a2172262512cd"
     },
     {
       "path": "site/src/content/docs/a1-v1/around-the-city.mdx",
@@ -13698,15 +13698,15 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-actions.mdx",
-      "sha256": "14b66aca0dd3c043c8a9fe99ed78a774ada9eec26e0dd2c575051e7c18add6f5"
+      "sha256": "1ba68336928380ba0159ae7321d4a681f74b48f1cebcd8c3c81aed8ec19e6a86"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-communication.mdx",
-      "sha256": "a429de69a6d16d48f30b1679961c84aa1c30c238309803c19fb23af06e562845"
+      "sha256": "1192cc1e5a12124397c8b1cb89ab17214985daf69dd31b0cfd31d09c8d28c1c9"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-first-contact.mdx",
-      "sha256": "500bca883512f07b470b7cc350f73158ae75814a6b944b5a6a1d7b9d0e37b9c3"
+      "sha256": "6690761aeb665b459745d1612ac96a6f733c424ac428cf7b22d42a6f0074c29e"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-food-shopping.mdx",
@@ -13722,11 +13722,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-time-nature.mdx",
-      "sha256": "206f2a7b3791d96350a16bcc66fbec1d657ab64b228372a3db63e9c72bbec5aa"
+      "sha256": "4038f65d803ba9890d05df53d2c5529cd88bdaafe45f6effdb3f05f0c985445e"
     },
     {
       "path": "site/src/content/docs/a1-v1/colors.mdx",
-      "sha256": "cb598cb7058fec898eba8d5ad85fd7dc02aed52cb96a775151a4ab5eae5826c6"
+      "sha256": "a478fd6c54078f5e7324d49a74d9b334e26f356b74519e9584cb0fc5f02d2c44"
     },
     {
       "path": "site/src/content/docs/a1-v1/days-and-months.mdx",
@@ -13734,7 +13734,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/emergencies.mdx",
-      "sha256": "1428a45785b5f01b9de095fa478eb74cb0469d45d15604f09d1f49cc2efeb9f5"
+      "sha256": "1080538dae27045dc205fb2ae015a0d9af660ffcd51f4f6fd0172c78876b12e1"
     },
     {
       "path": "site/src/content/docs/a1-v1/euphony.mdx",
@@ -13746,11 +13746,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/free-time.mdx",
-      "sha256": "1c22a374134db7b6f92a1dd415584b4fbc8766766eb5939933a093e7938bbc90"
+      "sha256": "e65892c48856bc4e8ec8c3db70dbb32fa1848c3c050952cd787344115cc25a57"
     },
     {
       "path": "site/src/content/docs/a1-v1/health.mdx",
-      "sha256": "10db47d220d0782be6f0db68b8ce8199212c64cca5536e442f826cf59e01b877"
+      "sha256": "d550d0cab443ffb3781909f5cdd7d4de11ca641b775824c46edd17759180601d"
     },
     {
       "path": "site/src/content/docs/a1-v1/hey-friend.mdx",
@@ -13758,11 +13758,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/holidays.mdx",
-      "sha256": "a172fab10a1c3ff93b0353c71c287dd65fe61aad44c1b909091599483e884ebc"
+      "sha256": "90b5d07207c4820d280a6d407d7b00901d91dbba5a457885de32ccf76c34d631"
     },
     {
       "path": "site/src/content/docs/a1-v1/how-many.mdx",
-      "sha256": "bf0ecc81811bc1b99beda839ca6b87df86564e2f81938e168b3cc2374c4fdc42"
+      "sha256": "303e0664e8cb91732e5189178ad4726e5127471fcfe2b3c77f6858db028c0f9f"
     },
     {
       "path": "site/src/content/docs/a1-v1/i-eat-i-drink.mdx",
@@ -13770,15 +13770,15 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/i-want-i-can.mdx",
-      "sha256": "02a36a7c7e3dd68fad8a855054c4be6e8319cf04bcb48ef85be50c5a070b633f"
+      "sha256": "6a3d467948e93b30ae91ab8f3305b13ecedb5f9585af38da9b888dc05412df1b"
     },
     {
       "path": "site/src/content/docs/a1-v1/index.mdx",
-      "sha256": "f002f84a126bd13f58dc0ad6a8e356fede377f28e674f173143248cfaaf15fe3"
+      "sha256": "6429cbbbc9e9376001e7d0ef9d815193c9eaac8d52a4843c5fb6c775fa8b0a7f"
     },
     {
       "path": "site/src/content/docs/a1-v1/linking-ideas.mdx",
-      "sha256": "6dbd7547351b4a8c63dab0a4c0bfd97aced13178de5bf82f8f5b45f260f97653"
+      "sha256": "8d12ef5d3d4b4919b90c7f31d51396f20012f74d0b0c45395241db5c11bf906f"
     },
     {
       "path": "site/src/content/docs/a1-v1/many-things.mdx",
@@ -13790,23 +13790,23 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/my-day.mdx",
-      "sha256": "cb2f217501711402d0edadf4c6e29b7741c63399c0c33833568809f088057a75"
+      "sha256": "e6f2abbfd973a373826452214c21ce8d3b9360eb929977713f37680532d99a6d"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-family.mdx",
-      "sha256": "1339183b9f835cde2bf3d4795a81ab5d7ea33b4e34b13312f4ebfc4710cf086b"
+      "sha256": "e892496232e57070c1e7d8dacf934c103dcfbc01e73b361537ce8718802add64"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-morning.mdx",
-      "sha256": "7aadf42a803f00f606fd10463a458395d867a69e0f9318e071ef981e7144cc87"
+      "sha256": "d9b61f42dfeac3209a20193a9e926c133e0c32497b5b529c1dfdf0695f70522a"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-plans.mdx",
-      "sha256": "427a5f4cbdf2a782f4ec80fd96909690423616b99c30b692cad1d4029b3a7782"
+      "sha256": "1b57724bb1f25e8c9a73230ba72ff887a719ef5bbe2e5bf4f4000c24026cf8e7"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-story.mdx",
-      "sha256": "b98f4df8d224e2fbe4c15646bfaa43a6a48ac380e8b914ad4ca5794cd7dab99b"
+      "sha256": "8340dd153fd94a7c8905b581050e5da313278620bb973495e697994a4c9c6d84"
     },
     {
       "path": "site/src/content/docs/a1-v1/people-around-me.mdx",
@@ -13814,11 +13814,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/please-do-this.mdx",
-      "sha256": "8b3cdbc10c60516cbaa46ada6077321288dfe3cb220f4e3fcee296e93e969e2f"
+      "sha256": "fe4437153c0d29c0029031adeee34bd6dade21445b92625eab80dfcb3102c296"
     },
     {
       "path": "site/src/content/docs/a1-v1/questions.mdx",
-      "sha256": "1fee1109f072c593aea99ada07629762d3eb2622982e393fcb7fc6ebda52c604"
+      "sha256": "2c9daa31bd44056f67570349d107cd24dc981b3cc6117cba325786cc0559877b"
     },
     {
       "path": "site/src/content/docs/a1-v1/reading-ukrainian.mdx",
@@ -13830,7 +13830,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/sounds-letters-and-hello.mdx",
-      "sha256": "0b5696346292c87d0cd26108a8e6267d8467b2ef975416e59ccb9d125b2c4fb6"
+      "sha256": "e38fbca2d34a9273d107fcc3254b6fe298ec355116aac3515a7ebee4dea78259"
     },
     {
       "path": "site/src/content/docs/a1-v1/special-signs.mdx",
@@ -13838,15 +13838,15 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/stress-and-melody.mdx",
-      "sha256": "bc2d185b45ee1d85577dd298c84b89d927b3faefbc7974569d4b95b93d18c032"
+      "sha256": "0fe9ddac75fc31819560a037f620aa1847296c41866615e62e6e4892009b488e"
     },
     {
       "path": "site/src/content/docs/a1-v1/things-have-gender.mdx",
-      "sha256": "666f3919063773d0c85983271ad4a39f6e368d14ed97f5cb7d1b337eb0087c11"
+      "sha256": "f998c5532f27676e014f511318e47594dc3ac441011b4dc3cbf229eae273d3f7"
     },
     {
       "path": "site/src/content/docs/a1-v1/this-and-that.mdx",
-      "sha256": "0032e42415b734cfafce7e03e665f0ad84b7d94d93a6adefb44cff7815363d19"
+      "sha256": "a84dd3e8a3ae75cc9c1f3c953e0ff6223d2f3ec86af5d7dea35d0c3327dc45fd"
     },
     {
       "path": "site/src/content/docs/a1-v1/transport.mdx",
@@ -13862,11 +13862,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/weather.mdx",
-      "sha256": "7bc34b1bef304190921516bee9e57a801df8159cfcf81c2d72fa4c197183b8ce"
+      "sha256": "4285dff4c74be5c83794e624b75193ee7ed2c0c80084b69759b2a5bd2b7b25ea"
     },
     {
       "path": "site/src/content/docs/a1-v1/what-happened.mdx",
-      "sha256": "68ca813425cee7e86616b04f6c415e3079555ef4341161db4dfeca8128eaa835"
+      "sha256": "0099befd23aa0d252fd543dab4a3d6c6c95f67d1f98556fad5cfc3b92225d3f1"
     },
     {
       "path": "site/src/content/docs/a1-v1/what-i-like.mdx",
@@ -13874,7 +13874,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/what-is-it-like.mdx",
-      "sha256": "0a1333058612f2492bfe9e5efdc493f4d46b851304d4c476054c1c4dc26c3666"
+      "sha256": "93e15c20df310bb345e27fb7c6a29f433dc8ffec28b35218f9de9976d96d5e40"
     },
     {
       "path": "site/src/content/docs/a1-v1/what-time.mdx",
@@ -13882,11 +13882,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/what-will-happen.mdx",
-      "sha256": "b13e30d8469bbf7397a993299b3ce5b509285fec8f2ca6c99688697610c1973f"
+      "sha256": "a9ebd366fd2727783d76adb4f8e0c0c3c0ba9a959ca49f16cf030f24efc49b9f"
     },
     {
       "path": "site/src/content/docs/a1-v1/when-and-where.mdx",
-      "sha256": "b9bbf0b5e73448beeccdfcbbc31388386c20cdb3abe17d0c3d1ffc81b20af4c5"
+      "sha256": "34b2aef0ff376bcc059dc24252ade7a9dc78644d4ce71a61e12838c268e82e3a"
     },
     {
       "path": "site/src/content/docs/a1-v1/where-from.mdx",
@@ -13902,11 +13902,11 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/who-am-i.mdx",
-      "sha256": "84ed1c963b7755ac234933b609543560b22595a8fa32d606fe403b00fbbbc475"
+      "sha256": "835de03496ab8cb11f9dab584ebaaae3748e92e6ab7bb5dd819e7e981ca6eff5"
     },
     {
       "path": "site/src/content/docs/a1-v1/yesterday.mdx",
-      "sha256": "89b25062cd6a589af96a6b3eba5f384078f699713a556aa9ef953004bfa849cb"
+      "sha256": "4e59a4a96b30f3b4754ce12bc2d50f6ef2f01682b20fb126e81df47fe0c1e55a"
     },
     {
       "path": "site/src/content/docs/a1/a1-finale/index.mdx",

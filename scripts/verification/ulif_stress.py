@@ -7,13 +7,17 @@ from typing import Any
 
 from scripts.curriculum.evidence.tags import TagMapper
 from scripts.lexicon.runner.ulif_dictua_parse import lookup_ulif_label
-from scripts.wiki.sources_db import normalize_ulif_dictua_query, ulif_stress_rows
+from scripts.wiki.sources_db import normalize_ulif_dictua_query, one_generation, ulif_stress_rows
 
 
 def _features(row: dict) -> set[str]:
     """Map the existing parser's VESUM atoms and entry label to UD features."""
     atoms = set(json.loads(row["grammatical_tags"]))
-    label = row["grammatical_label"].split(",", 1)[0].strip()
+    label, *qualifiers = (part.strip() for part in row["grammatical_label"].split(","))
+    # "істота" marks an animate noun: an animate homonym (ко́са, common gender) must
+    # never join an inanimate VESUM analysis of the same spelling (коса́ 'braid').
+    if "істота" in qualifiers:
+        atoms.add("anim")
     grammar = lookup_ulif_label(label)
     if grammar:
         atoms.update(grammar.tags)
@@ -110,10 +114,11 @@ def readings(form: str, *, supplied: set[str], lemma: str | None, vesum: list[di
         _strip_stress,
     )
 
-    rows = ulif_stress_rows(form)
-    if lemma or form != form.lower():
-        for spelling in (form.lower(), form.title()):
-            rows += [row for row in ulif_stress_rows(spelling) if row not in rows]
+    with one_generation():  # every spelling is read from the same generation
+        rows = ulif_stress_rows(form)
+        if lemma or form != form.lower():
+            for spelling in (form.lower(), form.title()):
+                rows += [row for row in ulif_stress_rows(spelling) if row not in rows]
     selected: list[tuple[dict, set[str], list[dict]]] = []
     for row in rows:
         indices = json.loads(row["stress_vowel_indices"])

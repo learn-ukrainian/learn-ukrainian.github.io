@@ -962,6 +962,17 @@
     ]
   },
   {
+    "path": "scripts/storage/generations.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "unpublished Sources generation candidate; the pre-bootstrap Sources store file (bootstrap WAL checkpoint, under the store writer lock)",
+    "reason": "declares WAL on a candidate before it is published as a generation, and folds the pre-bootstrap WAL before the bootstrap",
+    "calls": [
+      "sqlite3.connect(candidate.resolve().as_uri() + '?mode=rw', uri=True, isolation_level=None)",
+      "sqlite3.connect(held.generation.resolve().as_uri() + '?mode=rw', uri=True, isolation_level=None)"
+    ]
+  },
+  {
     "path": "scripts/telemetry/legacy_bridge.py",
     "reference_count": 7,
     "kind": "writer",

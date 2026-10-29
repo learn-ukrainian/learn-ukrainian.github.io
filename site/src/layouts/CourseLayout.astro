@@ -2,6 +2,7 @@
 import '../styles/course.css';
 import ChromeText from '../components/chrome/ChromeText.astro';
 import type { ChromeKey } from '../lib/i18n/chrome';
+import { a1PrimaryHref, a1SecondaryEdition } from '../lib/a1-entry';
 
 type NavItem = {
   href: string;
@@ -71,8 +72,8 @@ const canonicalPath = currentPath.endsWith('/') ? currentPath : `${currentPath}/
 
 const topNav: { href: string; key: ChromeKey }[] = [
   { href: '/', key: 'nav.home' },
-  { href: '/a1/', key: 'nav.a1' },
-  { href: '/a1-v1/', key: 'nav.a1Previous' },
+  { href: a1PrimaryHref, key: 'nav.a1' },
+  { href: a1SecondaryEdition.href, key: a1SecondaryEdition.navKey },
   { href: '/a2/', key: 'nav.a2' },
   { href: '/b1/', key: 'nav.b1' },
   { href: '/b2/', key: 'nav.b2' },
@@ -438,7 +439,7 @@ const isActive = (href: string) => {
             </section>
             <section>
               <h3><ChromeText k="footer.courseHeading" /></h3>
-              <a href="/a1/"><ChromeText k="nav.a1" /></a>
+              <a href={a1PrimaryHref}><ChromeText k="nav.a1" /></a>
               <a href="/a2/"><ChromeText k="nav.a2" /></a>
               <a href="/b1/"><ChromeText k="nav.b1" /></a>
               <a href="/b2/"><ChromeText k="nav.b2" /></a>

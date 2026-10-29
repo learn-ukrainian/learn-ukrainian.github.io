@@ -17,6 +17,7 @@ import {
 } from './review-event-backfill';
 import { loadReviewEventLog, recordCardReviewEvent, type ReviewEventPresentation } from './review-events';
 import { PRACTICE_LEVELS } from './runtime-contract';
+import { retainWithdrawnPracticeOrigin } from './practice-report';
 import { z } from 'astro/zod';
 
 export const SRS_STORAGE_KEY = 'lu-lexicon-srs';
@@ -101,13 +102,16 @@ export function isPracticeModeEnabled(mode: PracticeModeFilter): boolean {
 export function withoutDisabledPracticeModes(deck: PracticeDeckData): PracticeDeckData {
   return {
     ...deck,
-    lexemes: MEANING_MODES_ENABLED ? deck.lexemes : deck.lexemes.map((entry) => ({
-      ...entry, gloss: '', glossClean: '', meaningMcEligible: false,
-    })),
-    index: deck.index.map((item) => ({
-      ...item,
-      modes: item.modes.filter(isPracticeModeEnabled),
-    })),
+    lexemes: MEANING_MODES_ENABLED ? deck.lexemes : deck.lexemes.map((entry) => {
+      const copy = { ...entry, gloss: '', glossClean: '', meaningMcEligible: false };
+      retainWithdrawnPracticeOrigin(entry, copy, 'lexeme');
+      return copy;
+    }),
+    index: deck.index.map((item) => {
+      const copy = { ...item, modes: item.modes.filter(isPracticeModeEnabled) };
+      retainWithdrawnPracticeOrigin(item, copy, 'index');
+      return copy;
+    }),
     synonym: SYNONYM_MODE_ENABLED ? deck.synonym : [],
   };
 }

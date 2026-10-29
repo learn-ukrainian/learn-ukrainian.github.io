@@ -111,6 +111,62 @@ def test_missing_session_is_logged_and_skipped(tmp_path: Path) -> None:
     assert h.fake.typed() == []
 
 
+def missing_lead_alert_times(h: Harness, minutes: int) -> list[int]:
+    """Tick every 5 minutes for ``minutes``; return the minutes at which claude-cto was alerted."""
+    times = []
+    for minute in range(0, minutes + 1, 5):
+        before = len(h.sent)
+        h.tick()
+        times += [minute] * sum(recipient == "claude-cto" for recipient, _ in h.sent[before:])
+        h.advance(5)
+    return times
+
+
+def test_missing_lead_lane_alerts_claude_cto_after_15_minutes_then_hourly(tmp_path: Path) -> None:
+    """Defect class: silent dead seat. The CTO session was missing for 13 hours and the guard only logged it."""
+    h = Harness(tmp_path)  # no session at all: every lane is missing
+    assert missing_lead_alert_times(h, 135) == [15, 75, 135]
+    assert {recipient for recipient, _ in h.sent} == {"claude-cto"}  # non-lead lanes only log
+    assert "lead lane cto has no tmux session cto for 15 min" in h.sent[0][1]
+    assert h.fake.typed() == []
+    assert not any(call[:2] in (["tmux", "new-session"], ["tmux", "respawn-pane"]) for call in h.fake.calls)
+    h.fake.sessions["cto"] = claude_pane(10)
+    h.tick("cto")
+    assert "missing_since" not in h.state["cto"]
+    del h.fake.sessions["cto"]
+    h.sent.clear()
+    assert missing_lead_alert_times(h, 15) == [15]  # a fresh absence waits its own 15 minutes
+
+
+def test_missing_lead_lane_alert_names_a_removed_socket_under_a_running_server(tmp_path: Path) -> None:
+    """Defect class: unreachable live tmux server. The socket file was deleted, the server kept running and
+    attached clients worked, but the guard's ``has-session`` could not connect and said only "missing"."""
+    (tmp_path / "tmux").mkdir()  # an existing prefix of a path with a space must not hide the removed socket
+    socket = tmp_path / "tmux space" / "tmux-1000" / "default"
+    h = Harness(tmp_path)
+    h.fake.servers = ["2793205 tmux new -s cto"]
+    h.fake.override["has-session"] = subprocess.CompletedProcess(
+        [], 1, "", f"error connecting to {socket} (No such file or directory)\n"
+    )
+    assert missing_lead_alert_times(h, 15) == [15]
+    body = h.sent[-1][1]
+    assert f"The socket file {socket} is gone while tmux server processes still run (2793205 tmux new -s cto)" in body
+    assert "kill -USR1" in body and f"parent directory of {socket} is missing" in body
+    assert "The guard sends no signal." in body
+    assert not any(call[0] in ("kill", "systemd-run") for call in h.fake.calls)
+    h.fake.override["pgrep"] = subprocess.CompletedProcess([], 2, "", "pgrep: cannot read the process table")
+    h.state.clear()
+    missing_lead_alert_times(h, 15)
+    assert "tmux server processes unknown (pgrep rc=2)" in h.sent[-1][1]  # a failed probe is not "no server"
+    del h.fake.override["pgrep"]
+    socket.parent.mkdir(parents=True)
+    socket.touch()  # a socket file that still exists is not the removed-socket case
+    h.state.clear()
+    h.sent.clear()
+    missing_lead_alert_times(h, 15)
+    assert "is gone" not in h.sent[-1][1] and str(socket) in h.sent[-1][1]
+
+
 # ---- Claude threshold -------------------------------------------------------------
 def test_claude_lanes_share_the_70_percent_threshold(tmp_path: Path) -> None:
     assert load_registry().settings["claude_handoff_pct"] == 70
@@ -208,13 +264,13 @@ def test_new_agent_process_resets_the_fleet_watch_window(tmp_path: Path) -> None
 # ---- handoff phase ----------------------------------------------------------------
 def test_handoff_now_is_resent_every_15_minutes_until_done(tmp_path: Path) -> None:
     h = Harness(tmp_path, **{"devops-muse": claude_pane(70)})
-    h.tick()
+    h.tick("devops-muse")  # the other lanes are absent; the absent lead lane would alert at +15
     for minutes in (5, 5):  # +5, +10: no reminder yet
         h.advance(minutes)
-        h.tick()
+        h.tick("devops-muse")
     assert len(h.fake.typed("devops-muse")) == 1
     h.advance(5)  # +15
-    h.tick()
+    h.tick("devops-muse")
     typed = h.fake.typed("devops-muse")
     assert len(typed) == 2 and typed[1].startswith("HANDOFF NOW (reminder 2,")
     assert len(h.sent) == 2

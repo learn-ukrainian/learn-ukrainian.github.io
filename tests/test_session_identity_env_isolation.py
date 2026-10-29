@@ -62,6 +62,7 @@ _HOST_CONFIG_EXPORTS = frozenset(
         "LU_MONITOR_HOST_ID",  # this host, shared by every session on it
         "LU_RUNTIME_TMP_BASE_ROOT",  # storage root
         "LU_RUNTIME_TMP_ROOT",  # storage root
+        "LU_TASKS_DIR",  # task-record storage root, shared by every session
     }
 )
 
