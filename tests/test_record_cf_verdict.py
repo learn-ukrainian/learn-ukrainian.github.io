@@ -412,6 +412,8 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
     monkeypatch.setattr(recorder, "_budget_extension", lambda **_kwargs: None)
     # No head proves a clean base merge descent unless a test builds a repository (exemption_case).
     monkeypatch.setattr(recorder, "_clean_merge_descent_prover", lambda *_a: lambda *_b: None)
+    # No elevated-tier grant exists unless a test seals one (grant_case).
+    monkeypatch.setattr(recorder, "_budget_grant", lambda **_kwargs: None)
 
     def fake_status(**kwargs):
         calls["statuses"] += 1
@@ -2951,6 +2953,7 @@ def test_unknown_history_excludes_all_possible_author_families():
 # Review budget extension (scripts/review/budget_extension.py): one round past the budget.
 _REAL_BUDGET_EXTENSION = recorder._budget_extension
 _REAL_DESCENT_PROVER = recorder._clean_merge_descent_prover
+_REAL_BUDGET_GRANT = recorder._budget_grant
 EXTENSION_ROLE = "review_budget_extension"
 
 
@@ -3467,3 +3470,194 @@ def test_ukrainian_head_is_fully_approved_only_by_both_seats():
         head: {"approved_head": approved, "base_merges": ["3" * 40]}
     }
     assert calls == [(approved, head)]
+
+
+# Elevated-tier grant (scripts/review/budget_grant.py): rounds 4 and 5 for one open qualifying blocker.
+GRANT_ROLE = "review_budget_elevation"
+GRANT_REQUEST = {
+    "repository": REPOSITORY,
+    "pr": 42,
+    "lineage_id": BRANCH,
+    "scope_paths": ["docs/readme.md"],
+    "finding_id": "F2",
+    "blocker_class": "state-concurrency",
+    "issuer": "claude-cto",
+    "issuer_model": "claude-opus-5-5",
+    "issued_at": "2026-10-29T01:00:00+00:00",
+}
+OPEN_F2 = "VERDICT: REQUEST_CHANGES\nF2 [P1] docs/readme.md:3 two writers race on the lock. Impact: lost update."
+
+
+def write_grant(tasks, request=GRANT_REQUEST, *, task_id="grant-approval", decision=(), seal=True, edited=False, **record):
+    """A finished elevation advisory task sealing ``request``, as the dispatcher seals it."""
+    from scripts.agent_runtime import bounded_advisory
+
+    digest = bounded_advisory.canonical_sha256(request)
+    typed = {"decision": "APPROVE", **request, "request_sha256": digest, **dict(decision)}
+    text = f"VERDICT: APPROVE\n\n```budget-elevation\n{json.dumps(typed)}\n```\n"
+    path = tasks / f"{task_id}.json"
+    data = {
+        "task_id": task_id,
+        "status": "done",
+        "agent": "codex",
+        "model": "gpt-6.1-sol",
+        "mode": "read-only",
+        "repository": REPOSITORY,
+        "initiator": "claude-cto",
+        "advisory_role": GRANT_ROLE,
+        "advisory_route": f"advisory_roles.{GRANT_ROLE}",
+        "advisory_binding_sha256": digest,
+        "run_nonce": f"{task_id}-run",
+        "result_file": str(path.with_suffix(".result")),
+        **record,
+    }
+    if seal:
+        data["advisory_seal"] = bounded_advisory.seal_advisor_result(
+            text, model=data["model"], run_nonce=data["run_nonce"], fence="budget-elevation"
+        )
+    path.with_suffix(".result").write_text(text + ("edited\n" if edited else ""))
+    path.write_text(json.dumps(data))
+
+
+def verdict_with_reply(sha, verdict, reply, *, task_id):
+    item = recorded_verdict(sha, verdict, task_id=task_id)
+    item["body"] = recorder.build_comment(
+        sha=sha,
+        task_id=task_id,
+        started="2026-09-23T11:00:00.000001+00:00",
+        verdict=verdict,
+        model="claude-opus-5-5",
+        family="anthropic",
+        reply=reply,
+    )
+    return item
+
+
+def grant_case(monkeypatch, tmp_path, *, last_reply=OPEN_F2, last_verdict="CHANGES_REQUESTED", changed=("docs/readme.md",)):
+    """Three spent rounds on a non-security change, the last one the cited rejection, and round 4 at SHA."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    monkeypatch.setattr(recorder, "_budget_grant", _REAL_BUDGET_GRANT)
+    facts = facts_for({"google"}, changed_paths=changed)
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    comments.extend(recorded_verdict(sha, "CHANGES_REQUESTED", task_id=f"round-{sha[0]}") for sha in ("1" * 40, "2" * 40))
+    comments.append(verdict_with_reply("3" * 40, last_verdict, last_reply, task_id="round-3"))
+    return tasks, comments, calls
+
+
+def test_elevated_grant_admits_rounds_four_and_five_only(monkeypatch, tmp_path):
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    write_grant(tasks)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    write_task(tasks, reply=OPEN_F2.replace("Impact", "Still open: the retry path. Impact"))
+    receipt = recorder.record("review-one", **kwargs)["budget_grant"]
+    assert receipt["grant_task"] == "grant-approval" and receipt["advisor_model"] == "gpt-6.1-sol"
+    assert receipt["finding_id"] == "F2" and receipt["cited_verdict_head"] == "3" * 40
+    # Round 5 cites the blocker round 4 left open; a second grant adds no round (F3 for another finding).
+    write_grant(tasks, {**GRANT_REQUEST, "finding_id": "F3"}, task_id="grant-two")
+    move_head(monkeypatch, "4" * 40)
+    write_task(tasks, task_id="round-five", worktree_base_sha="4" * 40, reply=OPEN_F2)
+    assert recorder.record("round-five", **kwargs)["budget_grant"]["cited_verdict_head"] == SHA
+    # Five budgeted rounds in total: round 6 refuses whatever grants exist.
+    move_head(monkeypatch, "5" * 40)
+    write_task(tasks, task_id="round-six", worktree_base_sha="5" * 40)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 5 heads"):
+        recorder.record("round-six", **kwargs)
+    assert calls["posts"] == 2
+
+
+def test_elevated_grant_needs_the_blocker_open_before_each_round(monkeypatch, tmp_path):
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    write_grant(tasks)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert "budget_grant" in recorder.record("review-one", **kwargs)
+    # Round 4 approved, so no evidenced open blocker justifies round 5.
+    move_head(monkeypatch, "4" * 40)
+    write_task(tasks, task_id="round-five", worktree_base_sha="4" * 40)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[blocker\].*\['F2'\]"):
+        recorder.record("round-five", **kwargs)
+    assert calls["posts"] == 1
+
+
+@pytest.mark.parametrize(
+    "case,reason",
+    [
+        ("session-issuer", r"\[issuer\].*is not the stable CTO identity"),
+        ("initiator", r"\[issuer\].*was dispatched by 'claude/cto-7923-worker', not the issuer"),
+        ("issuer-model", r"\[issuer\].*has no resolvable family"),
+        ("repository", r"\[binding\].*names repository 'owner/other'"),
+        ("lineage", r"\[binding\].*follows lineage 'codex/other'"),
+        ("binding", r"\[binding\].*is not bound to the ruling it carries"),
+        ("scope", r"\[scope\].*does not cover changed paths \['docs/readme.md'\]"),
+        ("resolved", r"\[blocker\]"),
+        ("p2", r"\[blocker\]"),
+        ("other-finding", r"\[blocker\].*\['F3'\]"),
+        ("latest-approved", r"\[blocker\]"),
+        ("same-family-advisor", r"\[approval\].*not the advisor gpt-6.1-sol"),
+        ("cursor", r"\[approval\].*ran on harness 'cursor', not a native one"),
+        ("unsealed", r"\[approval\].*no finish-time advisory_seal"),
+        ("edited", r"\[approval\].*result hashes to"),
+        ("refused", r"\[approval\].*decided decision='REFUSE'"),
+        ("blocker-class", r"\[request\].*blocker_class must be one of"),
+        ("extra-field", r"\[approval\].*must hold exactly"),
+    ],
+)
+def test_elevated_grant_refuses(monkeypatch, tmp_path, case, reason):
+    last = {
+        "resolved": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "resolved.")),
+        "p2": dict(last_reply=OPEN_F2.replace("[P1]", "[P2]")),
+        "latest-approved": dict(last_verdict="APPROVED", last_reply="VERDICT: APPROVE\nF2 [P1] still open"),
+    }.get(case, {})
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path, **last)
+    request = {
+        "session-issuer": {"issuer": "claude-cto-27b21508"},
+        "issuer-model": {"issuer_model": "not-a-model"},
+        "repository": {"repository": "owner/other"},
+        "lineage": {"lineage_id": "codex/other"},
+        "scope": {"scope_paths": ["docs/other.md"]},
+        "other-finding": {"finding_id": "F3"},
+        "blocker-class": {"blocker_class": "style"},
+    }.get(case, {})
+    options = {
+        "initiator": dict(initiator="claude/cto-7923-worker"),
+        "binding": dict(advisory_binding_sha256="e" * 64),
+        "same-family-advisor": dict(agent="claude", model="claude-opus-5-5"),
+        "cursor": dict(agent="cursor"),
+        "unsealed": dict(seal=False),
+        "edited": dict(edited=True),
+        "refused": dict(decision={"decision": "REFUSE"}),
+        "extra-field": dict(decision={"note": "fine"}),
+    }.get(case, {})
+    write_grant(tasks, {**GRANT_REQUEST, **request}, **options)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED" + reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("record", [dict(pr_number=None), dict(status="running")])
+def test_elevated_grant_for_another_pr_or_unfinished_is_not_this_prs(monkeypatch, tmp_path, record):
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    if record.get("pr_number", 0) is None:
+        write_grant(tasks, {**GRANT_REQUEST, "pr": 41})
+    else:
+        write_grant(tasks, **record)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED") as refused:
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert "BUDGET_GRANT" not in str(refused.value) and calls == {"posts": 0, "statuses": 0}
+
+
+def test_security_paths_keep_five_rounds_without_a_grant(monkeypatch, tmp_path):
+    tasks, _comments, _calls = grant_case(monkeypatch, tmp_path, changed=("scripts/review/record_cf_verdict.py",))
+    monkeypatch.setattr(recorder, "_budget_grant", lambda **_kwargs: pytest.fail("no grant is read"))
+    assert recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["verdict"] == "APPROVED"
+
+
+def test_budget_grant_digest_verb(tmp_path, capsys):
+    from scripts.agent_runtime import bounded_advisory
+
+    ruling = tmp_path / "ruling.json"
+    ruling.write_text(json.dumps(GRANT_REQUEST))
+    assert recorder.main(["budget-grant", "digest", str(ruling)]) == 0
+    assert capsys.readouterr().out.strip() == bounded_advisory.canonical_sha256(GRANT_REQUEST)
+    ruling.write_text(json.dumps({**GRANT_REQUEST, "scope_paths": ["b", "a"]}))
+    assert recorder.main(["budget-grant", "digest", str(ruling)]) == 1
+    assert "scope_paths must be a sorted list" in capsys.readouterr().out
