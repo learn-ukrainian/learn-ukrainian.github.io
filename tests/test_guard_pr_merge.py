@@ -610,6 +610,8 @@ def test_admin_merge_is_judged_by_pr_guard(monkeypatch):
         ("gh pr comment 5 --body note; gh pr merge 5 --squash", (["boundary-and-tests"], []), False),
         ("printf ready | gh pr merge 5 --squash", ([], ["Test (pytest)"]), False),
         ("gh pr comment 5 --body note\ngh pr merge 5 --squash", ([], ["Test (pytest)"]), False),
+        (r"echo $'\'' ; gh pr merge 5 ; echo \'", ([], []), False),
+        ('x="$(echo "\'")"; gh pr merge 5; x="$(echo "\'")"', ([], []), False),
     ],
 )
 def test_compound_merge_segments_are_judged(monkeypatch, command, checks, protected):

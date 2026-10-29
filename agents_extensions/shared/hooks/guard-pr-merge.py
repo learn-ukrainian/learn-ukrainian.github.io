@@ -619,6 +619,37 @@ def _shell_c_payload(seg: list[str]) -> str | None:
 _MAX_SHELL_DEPTH = 8
 
 
+def _unmodeled_quoting(command: str) -> bool:
+    """Stop before Bash-only quote contexts can desynchronize shlex."""
+    # Comments, heredoc data and continuing quotes can disagree about state
+    # across physical lines. Refuse multiline Bash-only syntax without using
+    # a guessed quote state to dismiss it as data.
+    if len(command.splitlines()) > 1:
+        probe = _join_line_continuations(command)
+        if any(marker in probe for marker in ("$'", "$(", "${", "$[", "`")):
+            return True
+    quote = ""
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if char == "\\" and quote != "'":
+            index += 2
+            continue
+        if quote != "'" and (
+            char == "`"
+            or command.startswith(("$'", "${", "$["), index)
+            or (quote == '"' and command.startswith("$(", index))
+        ):
+            return True
+        if quote:
+            if char == quote:
+                quote = ""
+        elif char in "'\"":
+            quote = char
+        index += 1
+    return False
+
+
 def _literal_gh_read(argv: list[str]) -> bool:
     start, _ = _invoked_start(argv)
     argv = argv[start:]
@@ -664,6 +695,13 @@ def _may_merge(command: str, depth: int = 0) -> bool:
     payloads are command text; ordinary arguments, JSON fields and searches are data.
     The judging pass retains its fail-closed policy for a recognized operation.
     """
+    # Keep both representations: preprocessing may expose split syntax or
+    # remove quote-bearing data, and may rewrite Bash-only syntax itself.
+    if _merge_candidate(command) and (
+        _unmodeled_quoting(command)
+        or _unmodeled_quoting(preprocess_shell_command(command))
+    ):
+        raise ShellPreprocessLimit("shell quoting cannot be read safely")
     if _literal_reads_only(command):
         return False
     for kind, argv in _scope_events(command, mark_redirect_unreadable=False):
@@ -1444,7 +1482,7 @@ def main() -> int:
     except ShellPreprocessLimit:
         sys.stderr.write(
             _block_msg(
-                "nested shell command could not be parsed safely",
+                "shell command cannot be read safely",
                 "Use a simpler literal merge command so the guard can check its target PR.",
             )
         )
