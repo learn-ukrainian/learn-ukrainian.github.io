@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
-import { shuffle } from './utils';
+import { useShuffledLists } from './utils';
 
 export interface ClozeBlank {
   /**
@@ -41,13 +41,13 @@ export interface ClozePassageProps {
 }
 
 export function ClozePassage({ text, blanks, isUkrainian, onComplete }: ClozePassageProps) {
-  // Pre-shuffle options for each blank on mount
-  const shuffledBlanks = useMemo(() =>
-    blanks.map(blank => ({
-      ...blank,
-      options: shuffle([...blank.options])
-    })),
-    [blanks]
+  // One fresh random option order per blank, redrawn after hydration and on retry
+  const { lists: shuffledOptionLists, reshuffle } = useShuffledLists(
+    blanks.map((blank) => blank.options),
+  );
+  const shuffledBlanks = useMemo(
+    () => blanks.map((blank, i) => ({ ...blank, options: shuffledOptionLists[i] })),
+    [blanks, shuffledOptionLists],
   );
 
   const [selections, setSelections] = useState<Map<number, string>>(new Map());
@@ -66,6 +66,7 @@ export function ClozePassage({ text, blanks, isUkrainian, onComplete }: ClozePas
   };
 
   const handleReset = () => {
+    reshuffle();
     setSelections(new Map());
     setSubmitted(false);
   };
