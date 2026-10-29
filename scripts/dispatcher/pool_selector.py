@@ -9,6 +9,10 @@ require explicit protection against drawing held credits. Policy and account
 assertions belong in host config, never in the repository.
 ``account`` binds an API pool to its actual dispatch account. ``cleared_at``
 is an optional UTC timestamp of an operator note clearing an exhaustion report.
+Optional grant metadata is ``amount``, ``granted_at`` and ``expires_at``.
+``last_operator_reading`` and ``last_operator_reading_at`` describe a remaining
+balance, with ``currency`` and ``operator_reading_confirmed``. Unconfirmed
+readings and date-only expiries are display evidence, never selectable capacity.
 """
 
 from __future__ import annotations
@@ -68,6 +72,13 @@ class Pool:
     check_command: str = ""
     account: str | None = None
     cleared_at: str | None = None
+    amount: float | None = None
+    granted_at: str | None = None
+    expires_at: str | None = None
+    last_operator_reading: float | None = None
+    last_operator_reading_at: str | None = None
+    operator_reading_confirmed: bool = False
+    currency: str = "USD"
 
 
 @dataclass(frozen=True)
@@ -202,7 +213,12 @@ def read_policy(path: Path | None = None) -> Policy:
                 or any(type(getattr(pool, name)) is not bool
                        for name in ("authorized", "binding_verified", "protects_held", "held"))
                 or (pool.account is not None and not isinstance(pool.account, str))
-                or (pool.cleared_at is not None and timestamp(pool.cleared_at) is None)):
+                or (pool.cleared_at is not None and timestamp(pool.cleared_at) is None)
+                or type(pool.operator_reading_confirmed) is not bool
+                or not isinstance(pool.currency, str)
+                or not isinstance(pool.check_command, str)
+                or any(value is not None and (_number(value) is None or value < 0)
+                       for value in (pool.amount, pool.last_operator_reading))):
             raise ValueError("invalid private pool policy")
         pools.append(pool)
     if len({p.key for p in pools}) != len(pools):
@@ -265,14 +281,31 @@ def budget_sources(budget: dict, now: datetime) -> dict[str, Meter]:
             result[f"{key}:held"] = Meter(observed, (Window("credit", balance, None, "credits"),), "unknown")
     for key, row in budget.get("api_accounts", {}).items():
         left = _number(row.get("account_remaining_usd"))
+        unit = "USD"
         if left is None:
             left = _number(row.get("total_balance"))
+            unit = row.get("currency") or "unknown currency"
         result[f"{key}:api"] = Meter(timestamp(row.get("fetched_at")),
-            (Window("balance", left, timestamp(row.get("expires_at") or row.get("limit_reset")), "USD"),),
+            (Window("balance", left, timestamp(row.get("expires_at") or row.get("limit_reset")), unit),),
             "ok" if row.get("freshness") == "fresh" and row.get("stale") is False else "unknown")
     for key in ("openai:api", "claude:api", "muse"):
         result.setdefault(key, Meter(None, ()))
     return result
+
+
+def pool_meters(policy: Policy, sources: dict[str, Meter]) -> dict[str, Meter]:
+    """Private operator snapshots can supplement sources without pretending to be probes."""
+    meters = {}
+    for pool in policy.pools:
+        meter = sources.get(pool.source, Meter(None, ()))
+        observed = timestamp(pool.last_operator_reading_at)
+        if pool.last_operator_reading is not None and (
+                meter.observed_at is None or (observed and observed > meter.observed_at)):
+            meter = Meter(observed, (Window("balance", pool.last_operator_reading,
+                                           timestamp(pool.expires_at), pool.currency),),
+                          "ok" if pool.operator_reading_confirmed else "unconfirmed")
+        meters[pool.key] = meter
+    return meters
 
 
 def pool_exhausted(message: str) -> bool:
@@ -333,7 +366,6 @@ def apply_exhaustion(meters: dict[str, Meter], policy: Policy, records: list[dic
             if (pool.kind != "api" or meter is None
                     or refreshed or (cleared and failed_at <= cleared <= now)
                     or (pool.agent, pool.provider) != (record.get("agent"), record.get("provider"))
-                    or (pool.models and record.get("model") not in pool.models)
                     or (pool.account is not None and pool.account != actual_account)
                     or (pool.agent in {"claude", "codex"} and pool.account is None)):
                 continue
@@ -357,7 +389,7 @@ def shadow_decision(record: dict) -> dict:
 
         policy = read_policy()
         sources = budget_sources(read_budget(), now)
-        meters = {p.key: sources[p.source] for p in policy.pools if p.source in sources}
+        meters = pool_meters(policy, sources)
         meters = apply_exhaustion(meters, policy, list_tasks(include_archive=True), now)
         with admission_lock(tasks_dir()):
             decision = choose_pool(Route(record["agent"], record["model"], record.get("provider")),
