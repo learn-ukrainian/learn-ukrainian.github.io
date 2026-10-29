@@ -57,10 +57,15 @@ def claude_config_dir(account: str, home: str | None = None) -> str | None:
 
 
 def child_env(spec: TaskSpec) -> dict[str, str]:
+    source = os.environ
+    if spec.agent == "codex":
+        from scripts.agent_runtime.codex_accounts import codex_account_env
+
+        source = codex_account_env(spec.codex_account, source)
     names = _CONTEXT + _AUTH[spec.agent]
     if spec.provider == "openrouter" and spec.agent == "opencode":
         names = (*_CONTEXT, "OPENROUTER_API_KEY")
-    env = {name: os.environ[name] for name in names if name in os.environ}
+    env = {name: source[name] for name in names if name in source}
     if spec.agent == "cursor" and not env.get("CURSOR_API_KEY", "").strip():
         from scripts.agent_runtime.adapters.cursor import _load_cursor_api_key_from_env_file
 
