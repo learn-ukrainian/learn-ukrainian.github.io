@@ -81,6 +81,9 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
 
     shutil.copytree(HOOK_DIR, repo / ".githooks")
     (repo / "scripts").mkdir()
+    from tests.githooks import install_message_scanner
+
+    install_message_scanner(repo)
     shutil.copy2(REPO_ROOT / "scripts/install_git_hooks.sh", repo / "scripts/install_git_hooks.sh")
     _write_executable(
         repo / "scripts/pre_commit/project_python.sh",

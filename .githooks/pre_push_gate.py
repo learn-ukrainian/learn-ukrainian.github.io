@@ -1818,5 +1818,43 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
     return status
 
 
+def message_gate(arguments: list[str]) -> int:
+    """Reuse the publication scanner for both hook entry points, without chaining hooks twice."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    try:
+        from scripts.opsec import git_push, prepublish
+    except Exception:
+        print("OPSEC: message scanner unavailable; operation refused.", file=sys.stderr)
+        return EXIT_REFUSED
+    try:
+        if arguments[0] == "--push-messages":
+            environment = dict(os.environ)
+            repository = git_push.Repository(git_push.real_git(environment), environment)
+            configured = repository.run("config", "--type=path", "--get", "core.hooksPath")
+            scanner_hooks = {
+                git_push.HOOKS.resolve(),
+                (prepublish.primary_root() / "scripts/opsec/push_hooks").resolve(),
+            }
+            # When Git selected the shared scanner's hook, it scanned these
+            # updates before chaining here. Scanning twice would consume its
+            # command-scoped false-positive override twice.
+            if configured.returncode == 0 and Path(configured.stdout.decode().rstrip("\n")).resolve() in scanner_hooks:
+                return 0
+            return git_push.main(arguments[1:], chain=lambda *_: 0)
+        with git_push.deadline(git_push.scan_timeout(dict(os.environ))):
+            prepublish.check_texts(
+                "unknown", [Path(arguments[1]).read_text(encoding="utf-8")], field_names=["commit.message"]
+            )
+        return 0
+    except prepublish.PublishBlocked as error:
+        print(str(error), file=sys.stderr)
+    except (Exception, git_push.ScanTimeout):
+        print("OPSEC: commit-message scan unavailable; commit refused.", file=sys.stderr)
+    print("Reword the commit message. A commit made with --no-verify will be caught at push.", file=sys.stderr)
+    return EXIT_REFUSED
+
+
 if __name__ == "__main__":
+    if sys.argv[1:2] in (["--commit-message"], ["--push-messages"]):
+        sys.exit(message_gate(sys.argv[1:]))
     sys.exit(scope_child(sys.argv[2:]) if sys.argv[1:2] == ["--scope-child"] else main())
