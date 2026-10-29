@@ -2386,6 +2386,22 @@ def test_api_paginate_object_pages_fall_through(tmp_path):
     assert calls and all(call[0] == "GET" for call in calls)
 
 
+def test_partial_check_runs_page_is_incomplete_not_an_empty_collection(tmp_path):
+    # Defect class: a partial body read as an empty collection. A single ``{}`` page carries
+    # neither the collection nor a total, so it must not read as "no check runs".
+    store, calls = client(tmp_path, [response({})])
+    result = gh._counted_pages(
+        store,
+        "repos/o/r/commits/abc/check-runs?per_page=100",
+        "check_runs",
+        incomplete="github_checks_incomplete",
+        timeout=2,
+        fresh=False,
+    )
+    assert result.error == "github_checks_incomplete"
+    assert len(calls) == 1
+
+
 def test_api_paginate_jq_falls_through_without_merging_pages(tmp_path):
     store, calls = client(tmp_path, [])
     args = ["gh", "api", "repos/o/r/issues", "--paginate", "--jq", "length"]
