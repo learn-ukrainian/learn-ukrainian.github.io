@@ -688,9 +688,13 @@ def _may_merge(command: str, depth: int = 0) -> bool:
     payloads are command text; ordinary arguments, JSON fields and searches are data.
     The judging pass retains its fail-closed policy for a recognized operation.
     """
-    # Inspect raw text before preprocessing or a read-only discharge can hide
-    # executable text behind quote rules that differ between Bash and shlex.
-    if _merge_candidate(command) and _unmodeled_quoting(command):
+    # Raw text protects syntax preprocessing might hide. Also inspect the
+    # scope reader's physical lines: comments and heredoc data must not carry
+    # a misleading quote state into an executable line.
+    if _merge_candidate(command) and (
+        _unmodeled_quoting(command)
+        or any(_unmodeled_quoting(line) for line in preprocess_shell_command(command).splitlines())
+    ):
         raise ShellPreprocessLimit("shell quoting cannot be read safely")
     if _literal_reads_only(command):
         return False
@@ -1472,7 +1476,7 @@ def main() -> int:
     except ShellPreprocessLimit:
         sys.stderr.write(
             _block_msg(
-                "nested shell command cannot be read safely",
+                "shell command cannot be read safely",
                 "Use a simpler literal merge command so the guard can check its target PR.",
             )
         )
