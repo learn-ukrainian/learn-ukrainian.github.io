@@ -77,6 +77,52 @@ function originOf(value: object): Origin | undefined {
     if (origin && JSON.stringify(value) === origin.snapshot && functions(value).length === origin.functions.length && functions(value).every((f, i) => f === origin.functions[i])) return origin;
   } catch { /* Changed or circular records have no public report identity. */ }
 }
+
+function plainFields(value: object): Record<string, PropertyDescriptor> | null {
+  if (Object.getPrototypeOf(value) !== Object.prototype || Object.getOwnPropertySymbols(value).length) return null;
+  const fields = Object.getOwnPropertyDescriptors(value);
+  return Object.values(fields).every((field) => 'value' in field) ? fields : null;
+}
+
+/**
+ * The built-in meaning withdrawal is the single approved provenance projection.
+ * No caller-defined predicate or mapping is accepted. Any new projection needs
+ * designated approval; arbitrary copies and imported records remain unbound.
+ */
+export function retainWithdrawnPracticeOrigin(original: object, copy: object, kind: 'lexeme' | 'index'): void {
+  if (origins.has(copy)) return;
+  const before = plainFields(original);
+  const after = plainFields(copy);
+  if (!before || !after) return;
+  const origin = originOf(original);
+  if (!origin || !isRecord(original) || !isRecord(copy) || !Object.is(idOf(copy), idOf(original))) return;
+  // This exception applies only to pointer-attested practice lexemes/indexes,
+  // never daily, teacher, bundled or imported records with similar fields.
+  const collection = kind === 'lexeme' ? 'lexemes' : 'items';
+  const artifact = kind === 'lexeme' ? 'lexemes' : 'index';
+  if (!new RegExp(`^/lexicon/practice-${artifact}\\.(A1|A2|B1|B2|C1)\\.json/${collection}/[0-9]+$`).test(origin.reference)) return;
+  const withdrawn = kind === 'lexeme' ? ['gloss', 'glossClean', 'meaningMcEligible'] : ['modes'];
+  const expectedKeys = new Set([...Object.keys(before), ...(kind === 'lexeme' ? withdrawn : [])]);
+  if (Object.keys(after).length !== expectedKeys.size || Object.keys(after).some((key) => !expectedKeys.has(key))) return;
+  // All other own fields retain value identity, including nested objects and functions.
+  if (Object.keys(before).some((key) => !withdrawn.includes(key) && !Object.is(before[key].value, after[key].value))) return;
+  if (kind === 'lexeme') {
+    if (copy.gloss !== '' || copy.glossClean !== '' || copy.meaningMcEligible !== false) return;
+  } else {
+    const modes = copy.modes;
+    const previous = original.modes;
+    if (!Array.isArray(modes) || !Array.isArray(previous) || new Set(modes).size !== modes.length) return;
+    let position = 0;
+    for (const mode of modes) {
+      const index = previous.indexOf(mode, position);
+      if (index < 0) return;
+      position = index + 1;
+    }
+  }
+  // Never inherit snapshots/functions: the projected object gets its own checks.
+  const { deck, version, digest, item, reference } = origin;
+  origins.set(copy, { deck, version, digest, item, reference, snapshot: JSON.stringify(copy), functions: functions(copy) });
+}
 export function publicRecordId(value: object): string | null { return originOf(value)?.item ?? null; }
 /** Checks every displayed record again, including after disclosure was opened. */
 export function practiceReportUrl(records: readonly object[], type: string, locale: 'en' | 'uk', item?: string): string | null {
