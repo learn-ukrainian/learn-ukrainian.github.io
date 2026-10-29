@@ -461,7 +461,7 @@ def merged_delivery(record: dict) -> dict | None:
             changed = _gh("api", "--paginate", f"repos/{repo}/pulls/{number}/files",
                           "--jq", ".[] | (.filename, (.previous_filename // empty)) | @json")
             return dict(repo=repo, number=number, merged_at=pr["mergedAt"],
-                        paths=sorted({json.loads(line) for line in changed.splitlines() if line}))
+                        paths=sorted({json.loads(line) for line in changed.split("\n") if line}))
     except (OSError, ValueError, KeyError, TypeError, AttributeError, RuntimeError, subprocess.SubprocessError):
         return None
     return None
