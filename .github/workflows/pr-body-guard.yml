@@ -1,15 +1,20 @@
 name: PR body guard
 
-# Negated-closing-reference guard (#8505). ci.yml used to run this check inside
-# its Secret scan job. CI now also checks publication fields on edits through
-# the normal PR admission tier. Direct pushes get a publication scan here.
+# Negated-closing-reference guard (#8505) and the edit-time publication scan.
+# ci.yml does not subscribe to `edited`, so a title or body edit re-checks only
+# the PR text here instead of restarting the full suite. ci.yml still scans
+# publication fields for PR pushes and the merge queue. Direct pushes get a
+# publication scan here.
 #
-# Status: advisory. "CI Gate" remains the only required check; promoting this
-# status to required is a deliberate branch-protection change for the operator.
+# "Scan PR publication fields" is the check that blocks a bad title or body
+# edit once branch protection requires it. It also runs for merge_group so a
+# required context reports on queue candidates. The closing-reference check
+# stays advisory.
 
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
+  merge_group:
   push:
 
 permissions:
@@ -17,7 +22,8 @@ permissions:
 
 concurrency:
   # Keyed by PR number: a rapid body edit cancels the previous guard run. The
-  # job is a two-second linter, so cancellation is cheap and safe.
+  # newer run checks the same or a newer head, so cancellation is safe. Push and
+  # queue runs are never cancelled.
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
@@ -51,6 +57,28 @@ jobs:
               print('PR body contains a negated closing reference; use Refs #N instead')
           raise SystemExit(bool(violations))
           PY
+
+  pr-publication:
+    # Reads title, body, branch and commit messages from the event and the
+    # current PR metadata; a queue run reads every member's current metadata.
+    name: Scan PR publication fields
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Full history for commit messages; no historical blobs.
+          fetch-depth: 0
+          filter: blob:none
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Scan publication fields
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"
 
   push-publication:
     name: Scan pushed publication fields

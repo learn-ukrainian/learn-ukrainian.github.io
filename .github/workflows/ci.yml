@@ -22,7 +22,9 @@ env:
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    # No `edited`: a title or body edit would restart the whole suite on an
+    # unchanged head. pr-body-guard.yml scans publication fields on edits.
+    types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
     inputs:

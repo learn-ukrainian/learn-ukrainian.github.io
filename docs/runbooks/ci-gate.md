@@ -25,13 +25,16 @@ files. Deleted files are reported.
 Unsafe paths, missing guards and symlinks fail closed. No import graph or
 component inventory chooses tests.
 
-PR title and body edits run the same admission checks as code updates. The
-Secret scan job reads title, body, branch and complete commit messages from
-the event and current PR metadata using the existing OPSEC rules. Queue scans
+CI does not run on PR title and body edits; an edit would restart the whole
+suite on an unchanged head. The `Scan PR publication fields` job in
+`pr-body-guard.yml` runs on every PR event, including edits, and on queue
+candidates. It and the CI Secret scan job read title, body, branch and complete
+commit messages from the event and current PR metadata using the existing OPSEC
+rules. Queue scans
 read every member of the first-parent squash chain and each member's current
 PR metadata and source commits. A missing field, incomplete checkout, unsupported
 event or unreadable range fails closed. Submitted values are never diagnostics
-or workflow environment inputs. The advisory PR-body guard also scans direct
+or workflow environment inputs. The PR-body guard also scans direct
 push branch names and complete commit ranges. A new topic branch uses its
 unique merge-base with the public default branch, as the pre-push gate does;
 an initial default-branch push scans all ancestry. Unresolved ranges refuse.

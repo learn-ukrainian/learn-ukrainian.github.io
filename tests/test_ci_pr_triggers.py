@@ -3,8 +3,9 @@
 Safety invariant under test: no event path may make the required "CI Gate"
 check green or skipped without every job required by the event tier running.
 
-- ci.yml runs the same admission checks for opened/synchronize/reopened/edited.
-  The negated-closing-reference body guard lives in pr-body-guard.yml.
+- ci.yml runs the same admission checks for opened/synchronize/reopened, never
+  `edited`. pr-body-guard.yml scans publication fields on title and body edits
+  and holds the negated-closing-reference body guard.
 - Exactly one job in any workflow is named "CI Gate". It uses `if: always()`
   and fails when a required job was cancelled or skipped unexpectedly;
   GitHub treats a skipped required job as success.
@@ -326,7 +327,7 @@ def _concurrency_group(github: dict[str, Any]) -> str:
 
 
 def test_metadata_edits_cannot_bypass_code_or_publication_checks() -> None:
-    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened", "edited"}
+    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened"}
     steps = _load("ci.yml")["jobs"]["secret-scan"]["steps"]
     scan = next(s for s in steps if s.get("name") == "Scan publication fields")
     for event in ("opened", "edited", "merge_group"):
