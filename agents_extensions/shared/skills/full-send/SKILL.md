@@ -54,7 +54,9 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 
 1. **Take the hand-off record** from the entry skill or brief
    ([delivery](references/delivery.md#hand-off-record)). Fill a missing field from the task
-   record, issue or PR, or send the work back to the entry stage. Never guess.
+   record, issue or PR, or send the work back to the entry stage. Never guess. A successor to
+   an existing PR first accepts it with `pr_ownership accept`; a refusal means another task may
+   still own it, so stop ([pr-watch](references/pr-watch.md#owner-changes)).
 2. **Make the smallest change that achieves the outcome**, in a dispatch worktree on a branch,
    never on `main`. Implementation and fixes go to the authoring lane: a worker makes them
    itself, a driver dispatches them (rules core P1). Fix the case that happened, not every case
@@ -94,7 +96,10 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 
    Never `--auto`, `--delete-branch` or `--admin`. Queued is not merged.
 9. **Confirm `MERGED`** and the merge SHA: `gh pr view "$PR" --json state,mergeCommit`. If the
-   queue ejects the PR, follow the kick recipe in [pr-watch](references/pr-watch.md).
+   queue ejects the PR, follow the kick recipe in [pr-watch](references/pr-watch.md). If
+   waiting in the queue is the only step left and the integration owner has accepted queue
+   custody, `pr_ownership queue-exit` may release you. Then report `QUEUED_UNDER_CUSTODY`, and
+   the custodian does steps 9 to 11 ([pr-watch](references/pr-watch.md#queue-custody)).
 10. **Close out.** After every other worker and reviewer process on the PR's worktrees has
     exited:
 
@@ -121,7 +126,9 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 
 Stop, and report `BLOCKED <reason>`, when: the proof cannot be obtained; the review budget is
 exhausted or a dispute is unresolved after two replies (`review-loop`); a breaker trips; ownership
-or stream membership is lost; CI fails a second time or for an unclear reason; another PR makes
+or stream membership is lost; the change's own checks fail a second time, or CI fails for an
+unclear reason (an evidenced infrastructure failure uses the head's one rerun and then escalates,
+[pr-watch](references/pr-watch.md#failing-ci)); another PR makes
 this one obsolete; or the next step is outside your authority or your brief. Escalate to the
 CTO and, for decisions in rules core P6, to the advisors. Reach the operator only for the
 operator-only list and for a review dispute unresolved after two replies.

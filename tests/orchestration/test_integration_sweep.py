@@ -353,9 +353,13 @@ def test_conflicting_rows_fail_closed():
                    {"check_suite": {"id": 124}}, {"check_suite": None},
                    {"started_at": None, "completed_at": None}, {"completed_at": None}):
         rows = project_check_runs([row, {**row, "id": 2, **change}])
+        # Unordered versions that agree (a push and a pull_request run of one
+        # workflow) give their shared result; versions that disagree stay unknown.
+        agreeing = set(change) <= {"check_suite", "started_at", "completed_at"}
         for ordered in (rows, rows[::-1]):
             assert collapse_status_rollup(ordered) == ordered
-            assert bound_rollup_states(pr(statusCheckRollup=ordered), SHA, "unit/repo", lambda _: None) is None
+            states = bound_rollup_states(pr(statusCheckRollup=ordered), SHA, "unit/repo", lambda _: None)
+            assert states == (([], []) if agreeing else None)
 
 
 def test_cross_workflow_in_progress_is_pending():

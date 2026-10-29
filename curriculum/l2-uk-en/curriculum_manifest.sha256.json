@@ -26,7 +26,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/resources.yaml",
-      "sha256": "3b65ca4e9451d3f04f953e2578106aba7b94ef141df80d814ed07668d0e34005"
+      "sha256": "828b48e351ad1deefa4480d8234a2681bd0ed0953ace049568f8821988cc294d"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/around-the-city/vocabulary.yaml",
@@ -346,7 +346,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/i-want-i-can/resources.yaml",
-      "sha256": "7b2022774515bb53ecfbef1e9d9bb7ed1775db5e5c0ec09b107b4518aacb27b9"
+      "sha256": "2142ceac79bad816d8ca97b08fcd17ce2e78fa1fd8e593c0fecb198b0c68ace3"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/i-want-i-can/vocabulary.yaml",
@@ -578,19 +578,19 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/activities.yaml",
-      "sha256": "b5fbcae8267d178d97ea5a2351a1f514ad6c3401491a06a1bdbd49e3961c21a6"
+      "sha256": "8eccc82572fd2bc8c76913746eb4f89b5b4365d83e8e9413fb50693925f43c12"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/module.md",
-      "sha256": "03f523cfaed0e7d2e1bdbac2562008e46eb860a02a5ee9a055d58a522e83bf9c"
+      "sha256": "fdd0721e7c538697d59d2a67bf5af278d9873b4eebc8f66b37145ba02c4ff7fe"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/resources.yaml",
-      "sha256": "21c905ba3a5f796228fcc0abc770f00627a0b8cda4ddc850ef7c2a5cd5ccb8ab"
+      "sha256": "482db727af234b7427e5faf9c81da7b1074acf1ed42879a336eaa3d36f1ef43b"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/vocabulary.yaml",
-      "sha256": "3d1f0cfb21e38620188fa4f7b1c90b298d3f9942f9e6ea9d89bd0cc99bc84841"
+      "sha256": "f849ab943026239edc34188540883f5e0730031802058d3e0b26596c7c93ad29"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/stress-and-melody/activities.yaml",
@@ -13690,7 +13690,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/around-the-city.mdx",
-      "sha256": "9a2cc150d43a7b8676a43e01e1c76d5e2aa8b2fd6e975737c894635fec3da710"
+      "sha256": "06f9deadb7566e54763818860d4e119b285336def26a567d6725af01a8ddd9ba"
     },
     {
       "path": "site/src/content/docs/a1-v1/at-the-cafe.mdx",
@@ -13770,7 +13770,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/i-want-i-can.mdx",
-      "sha256": "bde519a60b0197d5d5376764b1003d0fcb247487cceaaeaa642deff5a5389367"
+      "sha256": "6a3d467948e93b30ae91ab8f3305b13ecedb5f9585af38da9b888dc05412df1b"
     },
     {
       "path": "site/src/content/docs/a1-v1/index.mdx",
@@ -13834,7 +13834,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/special-signs.mdx",
-      "sha256": "e4496e75315a52b52c14412e4604ffbcb5dcdac6f91dbb8a94a3c62101a4fd6d"
+      "sha256": "09dbae44e5fcb35fe5899052443356d039a7f3a26221f332ec299d12057f454f"
     },
     {
       "path": "site/src/content/docs/a1-v1/stress-and-melody.mdx",

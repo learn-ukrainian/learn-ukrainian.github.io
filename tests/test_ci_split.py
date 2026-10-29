@@ -717,6 +717,18 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     (repo / affected.DURATIONS).write_text(json.dumps(weights))
     (repo / 'scripts/ci/pr_affected_tests.py').write_bytes(Path(affected.__file__).read_bytes())
     (repo / 'scripts/ci/gate.py').write_bytes((_REPO_ROOT / 'scripts/ci/gate.py').read_bytes())
+    (repo / 'pytest.ini').write_text(
+        '[pytest]\nmarkers =\n    repo_wide: repository invariant\n    slow: nightly test\n'
+        '    atlas_release: release test\n    site_toolchain: frontend test\n'
+    )
+    (repo / 'tests/build').mkdir()
+    (repo / 'tests/build/test_invariant.py').write_text(
+        'import pytest\n@pytest.mark.repo_wide\ndef test_invariant():\n    assert True\n'
+        'def test_unmarked():\n    assert False, "unmarked tests must not run"\n'
+        '@pytest.mark.repo_wide\n@pytest.mark.slow\ndef test_slow():\n    assert False, "nightly test"\n'
+        '@pytest.mark.repo_wide\n@pytest.mark.atlas_release\ndef test_release():\n    assert False, "release test"\n'
+        '@pytest.mark.repo_wide\n@pytest.mark.site_toolchain\ndef test_frontend():\n    assert False, "frontend test"\n'
+    )
     (repo / '.gitignore').write_text('ci-artifacts/\n')
     _git(repo, 'add', '.')
     _git(repo, *ident, 'commit', '-qm', 'base')
@@ -766,6 +778,16 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert record['skipped_cases'] == 0 and record['failed_cases'] == 0
     assert 'full pytest was not run' in (tmp_path / 'summary').read_text()
     assert 'deferred test-case count: UNKNOWN' in (tmp_path / 'summary').read_text()
+    # Duration deferral cannot suppress a marker, including under pytest's
+    # normally excluded build/ directory, or execute its unmarked neighbour.
+    with monkeypatch.context() as context:
+        context.setattr(affected, 'CAP_SECONDS', 1)
+        context.setattr(sys, 'argv', ['pr-affected', '--repo-wide'])
+        assert affected.main() == 0
+    marker = json.loads((repo / 'ci-artifacts/pr-repo-wide.json').read_text())
+    assert marker['reason'] == 'recorded estimate exceeds 600 second cap'
+    assert marker['reported_cases'] == 1 and marker['failed_cases'] == 0
+    (repo / 'ci-artifacts/pr-repo-wide.xml').unlink()
     assert affected.main() == 1  # stale report cannot masquerade as this execution
     monkeypatch.setenv('GITHUB_SHA', base)
     cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests'],
@@ -815,6 +837,15 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert workflow['execution_status'] == 'completed' and workflow['exit_code'] == 0
     assert workflow['failed_cases'] == 0 and workflow['skipped_cases'] == 0
     assert workflow['deferred_case_count'] is None
+    marker_cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests', '--repo-wide'],
+                                capture_output=True, text=True, timeout=60)
+    assert marker_cli.returncode == 0, marker_cli.stdout + marker_cli.stderr
+    marker = json.loads((repo / 'ci-artifacts/pr-repo-wide.json').read_text())
+    assert marker['reported_cases'] == 1 and marker['failed_cases'] == 0
+    assert marker['selection'] == 'repo_wide and not atlas_release and not slow and not site_toolchain'
+    assert marker['requested_paths'] == ['tests']
+    assert marker['reason'] == 'pytest infrastructure changed'
+    assert marker['candidate'] == workflow_candidate and marker['wall_seconds'] > 0
     (repo / 'untracked-note.txt').unlink()
     (repo / guards[0]).write_text('# dirty selected source\n')
     assert affected.main() == 1
@@ -822,6 +853,9 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     _git(repo, 'checkout', '-q', 'pr')
     (repo / 'tests/conftest.py').write_text('# infrastructure defers changed test files\n')
     (repo / guards[0]).write_text('def test_exact_candidate():\n    assert False, "candidate defect"\n')
+    invariant = repo / 'tests/build/test_invariant.py'
+    invariant.write_text(invariant.read_text().replace('assert True', 'assert False, "invariant defect"'))
+    _git(repo, 'add', 'tests/build/test_invariant.py')
     _git(repo, 'add', 'tests/conftest.py', guards[0])
     _git(repo, *ident, 'commit', '-qm', 'broken PR')
     broken_head = _git(repo, 'rev-parse', 'HEAD')
@@ -836,9 +870,16 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     failed = json.loads((repo / 'ci-artifacts/pr-affected.json').read_text())
     assert failed['failed_cases'] == 1 and failed['exit_code'] == 1
     assert failed['run_files'] == sorted(guards)
-    assert failed['deferred_files'] == ['tests/test_new.py', 'tests/test_space name.py']
+    assert failed['deferred_files'] == ['tests/build/test_invariant.py', 'tests/test_new.py', 'tests/test_space name.py']
     assert failed['reason'] == 'pytest infrastructure changed'
     assert failed['deferred_case_count'] is None
+    (repo / 'ci-artifacts/pr-repo-wide.xml').unlink()
+    marker_cli = subprocess.run([sys.executable, '-m', 'scripts.ci.pr_affected_tests', '--repo-wide'],
+                                capture_output=True, text=True, timeout=60)
+    assert marker_cli.returncode == 1
+    marker = json.loads((repo / 'ci-artifacts/pr-repo-wide.json').read_text())
+    assert marker['reported_cases'] == 1 and marker['failed_cases'] == 1
+    assert marker['exit_code'] == 1 and marker['candidate'] == broken_candidate
     # Missing JUnit must preserve an incomplete plan with unknown case counts.
     (repo / 'pytest.ini').write_text('[pytest]\naddopts = -p no:junitxml\n')
     (repo / guards[0]).write_text('def test_exact_candidate():\n    assert 2 + 2 == 4\n')
