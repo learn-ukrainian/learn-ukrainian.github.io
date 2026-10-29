@@ -774,10 +774,23 @@ def review_probes(root: Path) -> list[dict[str, Any]]:
         output = json.dumps(envelope | {"gaps": []}).replace('"rr-', '"\\u0072r-')
         result = _score(fx, _label(fx.item, fx.family, required=1), output, None)
         observed.append((result["response"], result["status"], result["counts"]["fabricated_receipts"]))
+    # A repeated key keeps only its last value when parsed, so the escaped id sits in the first copy.
+    output = output.replace('"another"', json.dumps(fx.item["item_id"])).replace('"]}]', '"], "receipts": []}]')
+    result = _score(fx, _label(fx.item, fx.family, required=1), output, None)
+    observed.append((result["response"], result["status"], result["counts"]["fabricated_receipts"]))
+    deep = Fixture(root, "probe-deep-receipt", "v7_module")
+    output = "[" * 1200 + '"\\u0072r-' + "a" * 20 + '"' + "]" * 1200  # within the caps, past the recursion limit
+    result = _score(deep, _label(deep.item, deep.family, required=1), output, None)
+    observed.append((result["response"], result["status"], result["counts"]["fabricated_receipts"]))
     cases.append(
         _case(
             "a receipt id cited in JSON escapes is authenticated, accepted or not",
-            [("accepted", INVALID_FABRICATED_RECEIPT, 1), ("malformed", INVALID_FABRICATED_RECEIPT, 1)],
+            [
+                ("accepted", INVALID_FABRICATED_RECEIPT, 1),
+                ("malformed", INVALID_FABRICATED_RECEIPT, 1),
+                ("accepted", INVALID_FABRICATED_RECEIPT, 1),
+                ("accepted", INVALID_FABRICATED_RECEIPT, 1),
+            ],
             observed,
         )
     )

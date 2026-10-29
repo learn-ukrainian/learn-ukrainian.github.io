@@ -21,10 +21,8 @@ The label interface (private, sealed under G1)::
 
 from __future__ import annotations
 
-import json
 import re
 from collections import Counter
-from collections.abc import Iterator
 from dataclasses import dataclass, field
 from typing import Any
 from unicodedata import normalize
@@ -56,7 +54,8 @@ from .reward import Components, quality, resolve_status, reward
 
 GAP_OUTCOMES = ("clean", "evidence_gap", "abstention")
 RECEIPT_ID = re.compile(r"\brr-[0-9a-f]{20}\b")
-JSON_START = re.compile(r"[{\[]")
+JSON_ESCAPE = re.compile(r'\\(?:u([0-9a-fA-F]{4})|(["\\/bfnrt]))')
+JSON_SIMPLE_ESCAPES = {'"': '"', "\\": "\\", "/": "/", "b": "\b", "f": "\f", "n": "\n", "r": "\r", "t": "\t"}
 
 
 class ScoringError(Exception):
@@ -101,38 +100,20 @@ def _check_label(family: str, label: dict[str, Any]) -> None:
         raise ScoringError("protected opportunities use the three strata")
 
 
-def _strings(value: Any) -> Iterator[str]:
-    """Every string a decoded JSON value holds, keys included."""
-    if isinstance(value, str):
-        yield value
-    elif isinstance(value, dict):
-        for key, child in value.items():
-            yield key
-            yield from _strings(child)
-    elif isinstance(value, list):
-        for child in value:
-            yield from _strings(child)
+def _unescaped(text: str) -> str:
+    """The text with every JSON string escape decoded, wherever it stands."""
+    return JSON_ESCAPE.sub(lambda m: chr(int(m[1], 16)) if m[1] else JSON_SIMPLE_ESCAPES[m[2]], text)
 
 
 def _cited_receipts(text: str, acceptance: adapters.Acceptance) -> set[str]:
     """Every receipt id the output cites, whether or not it is accepted.
 
-    The raw bytes are scanned, and so is every JSON object or array the output holds after
-    decoding, so an escaped id (``\\u0072r-…``) is caught too; the accepted envelope's own
+    The raw text is scanned as written and again with its JSON escapes decoded, so an escaped
+    id (``\\u0072r-…``) is caught too. Nothing is parsed, so a repeated JSON key cannot hide
+    an earlier citation and deep nesting cannot crash the scan; the accepted envelope's own
     citations are included.
     """
-    found = set(RECEIPT_ID.findall(text)) | set(acceptance.cited_receipts)
-    decoder = json.JSONDecoder()
-    start = JSON_START.search(text)
-    while start is not None:
-        try:
-            value, end = decoder.raw_decode(text, start.start())
-        except ValueError:
-            end = start.start() + 1
-        else:
-            found |= {rid for string in _strings(value) for rid in RECEIPT_ID.findall(string)}
-        start = JSON_START.search(text, end)
-    return found
+    return set(RECEIPT_ID.findall(text)) | set(RECEIPT_ID.findall(_unescaped(text))) | set(acceptance.cited_receipts)
 
 
 def _quoted(quote: str, text: str | None) -> bool:
