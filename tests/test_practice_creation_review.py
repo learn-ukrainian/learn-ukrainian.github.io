@@ -142,12 +142,14 @@ def test_current_grandfathered_source_identities_are_admitted():
             args = ('heritage', frame['sentence_with_slot'].strip(), frame['answer_form'].strip(), frame['calque_form'].strip())
             identities.add(frame_identity(*args))
             if frame_identity(*args) in policy.grandfathered:
-                assert policy.allows(*args, heritage_source(pair, frame))
+                withdrawn = policy.receipts.get(frame_identity(*args), {}).get('verdict') == 'fail'
+                assert policy.allows(*args, heritage_source(pair, frame)) is not withdrawn
     for row in rows:
         args = ('cloze', row['sentence'].strip(), row['form'].strip(), factory._plain(row['lemma']))
         identities.add(frame_identity(*args))
         if frame_identity(*args) in policy.grandfathered:
-            assert policy.allows(*args, row)
+            withdrawn = policy.receipts.get(frame_identity(*args), {}).get('verdict') == 'fail'
+            assert policy.allows(*args, row) is not withdrawn
     # Future source additions/removals must not require expanding the baseline.
     assert identities & policy.grandfathered
 
