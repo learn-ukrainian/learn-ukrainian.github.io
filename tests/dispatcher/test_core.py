@@ -90,7 +90,10 @@ def sandbox(tmp_path, hermetic_monitor):
     run_git(repo, "init", "--bare", "--initial-branch=main", str(remote))
     run_git(repo, "remote", "add", "origin", str(remote))
     run_git(repo, "push", "-u", "origin", "main")
-    env = {**os.environ, "LU_TASKS_DIR": str(tasks)}
+    # The dispatcher runs as a subprocess here, out of reach of the in-process probe stub
+    # (conftest ``dispatch_slice_probe``); without the forced fallback it asks the host user
+    # manager and starts every stub worker in a real ``lu-worker-*`` scope.
+    env = {**os.environ, "LU_TASKS_DIR": str(tasks), "LU_DISPATCH_ISOLATION": "fallback"}
     env.pop("PYTHONPATH", None)
 
     def cli(*args, expected=0, stdin=None):
@@ -351,6 +354,15 @@ def test_linked_worktree_entry_refuses_an_unresolvable_primary(sandbox, metadata
 
 def local_branches(repo):
     return run_git(repo, "for-each-ref", "--format=%(refname:short)", "refs/heads").split()
+
+
+def test_sandbox_dispatch_never_starts_a_host_systemd_scope(sandbox):
+    """Defect class: test sandbox escape. The dispatcher subprocess probed the host user manager and ran
+    the stub worker in a real ``lu-worker-*`` scope, outside the in-process probe stub."""
+    record = sandbox.settle(sandbox.dispatch())
+    assert record["status"] == "done"
+    assert record["launch_mode"] == "popen-fallback" and "launch_unit" not in record
+    assert record["launch_fallback_reason"] == "forced: LU_DISPATCH_ISOLATION=fallback"
 
 
 def test_read_only_task_removes_its_worktree_at_settle(sandbox):
