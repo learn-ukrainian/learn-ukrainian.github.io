@@ -3249,6 +3249,28 @@ def test_an_unreadable_receipt_under_any_key_refuses(monkeypatch, tmp_path):
     assert calls == {"posts": 0, "statuses": 0}
 
 
+def test_a_retried_round_rechecks_the_lineage(monkeypatch, tmp_path):
+    """An admitted round whose post failed is not admitted again once A is rejected (review round 2, F4)."""
+    from scripts.review import repair_round
+
+    tasks, comments, calls, approved, head, _run = repair_case(monkeypatch, tmp_path)
+    root = tasks.parent / "review-repair-rounds"
+    receipt = repair_round.admit_repair_round(
+        repository=REPOSITORY, number=42, branch=BRANCH, head=head, comments=comments, login="fleet",
+        task_root=tasks, repo_root=tmp_path / "repair-repo", receipt_root=root,
+    )
+    repair_round.record_admission(root, receipt)
+    write_task(tasks, task_id="late-seat", reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=approved,
+               model="claude-opus-5-5", agent="claude", pr=42, review_profile="code",
+               started_at="2026-09-23T11:59:00.000001+00:00")
+    late = recorded_verdict(approved, "CHANGES_REQUESTED", task_id="late-seat")
+    late["body"] = late["body"].replace("2026-09-23T11:00:00.000001+00:00", "2026-09-23T11:59:00.000001+00:00")
+    comments.append(late)
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[lineage\].*is not an approval of record"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0} and {item["state"] for item in receipts(tasks)} == {"admitted"}
+
+
 def test_an_admitted_round_whose_post_failed_is_retried_as_the_same_round(monkeypatch, tmp_path):
     from scripts.review import repair_round
 

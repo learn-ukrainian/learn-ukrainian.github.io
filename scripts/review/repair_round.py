@@ -352,10 +352,6 @@ def admit_repair_round(
                 f"lineage {key} used its one repair round at PR #{receipt.get('pr')} "
                 f"({receipt.get('approved_head')} to {receipt.get('candidate_head')}); escalate to the CTO",
             )
-    prior = next((receipt for receipt in found.values() if receipt is not None), None)
-    if prior is not None:
-        # A retry of the round admitted here: its receipt stands, and any key it lacks is added.
-        return {**prior, "lineage_keys": sorted({*prior.get("lineage_keys", ()), *keys}), "same_round": True}
     try:
         seats = check_lineage(
             runs=lineage_runs(task_root, repository=repository, number=number, branch=branch),
@@ -368,6 +364,12 @@ def admit_repair_round(
         raise RepairRefused(
             LINEAGE, f"the last reviewed head {approved} is not an approval of record: {exc.detail}"
         ) from None
+    prior = next((receipt for receipt in found.values() if receipt is not None), None)
+    if prior is not None:
+        # A retry of the round admitted here: the lineage is checked again above, its receipt
+        # stands, and any key it lacks is added.
+        keys = sorted({*prior.get("lineage_keys", ()), *keys})
+        return {**prior, "lineage_keys": keys, "approved_seats": seats, "same_round": True}
     base_tip, _ = recorder.default_branch_review_base(repo_root, head, fetch=fetch)
     delta = classify_delta(repo_root, approved=approved, candidate=head, base_tip=base_tip)
     kinds = delta.kinds
