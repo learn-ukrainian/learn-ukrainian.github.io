@@ -61,6 +61,7 @@ Each canonical dictionary owns `<root>/<dictionary>/`:
 | `staging.sqlite3` | Durable frozen specification, ordered results and attempt/outcome events |
 | `status.json` | Atomically replaced projection reconciled from SQLite |
 | `job.log` | Path-free structured state/count/retry log; no articles or exception bodies |
+| `progress.log` | Human-readable progress lines, append-only; the same lines `run`/`supervise` print to the console |
 | `writer.lock`, `supervisor.lock` | OS advisory exclusive writer and supervisor admission |
 
 The shared root also holds `slovnyk.lock/json`, `sum20ua.lock/json` for host-wide
@@ -123,13 +124,88 @@ use existing identifying User-Agent strings and an HTML Accept header; redirects
 environment proxies and implicit netrc credentials are disabled. There are no
 challenge workarounds or impersonation headers.
 
+## Console and progress log
+
+While `run` or `supervise` works, stderr (the tmux pane) and
+`<root>/<dictionary>/progress.log` receive identical, timestamped (UTC) lines:
+
+```text
+2026-10-29T09:30:01Z vts run: resuming at 8970/202270 (4.4%), job state running, attempts used on next target 0
+2026-10-29T09:30:05Z vts 8971/202270   4.4%  positive  слово http=200
+2026-10-29T09:30:09Z vts 8972/202270   4.4%  not_found слово2 http=404
+2026-10-29T09:30:13Z vts retry слово3 attempt 2/4 http=503; next attempt in 8s
+2026-10-29T09:31:01Z vts progress 8975/202270 (4.4%) rate=0.23/s eta=10d 3h last=слово4 retries=1 errors=0
+2026-10-29T09:31:30Z vts ERROR blocked слово5 reason=access_or_http_stop http=403; job stops here and needs the operator
+2026-10-29T09:31:30Z vts run: stopped, job state blocked (access_or_http_stop), exit 3
+```
+
+Each resolved target (`positive`, `not_found`), each retry and each terminal error
+gets one line. A `progress` summary follows every `--progress-interval` seconds
+(default 60; not part of the frozen input) and again when the run stops. `done` is
+the number of resolved targets; `rate` and `eta` are measured over the current
+process only, so downtime never distorts them, and `eta` is `unknown` until two
+targets resolve in this process. `supervise` adds `supervisor:` lines for each
+launch, child exit and relaunch delay, and the child's lines appear in the same
+pane. Lines carry targets (lemmas or wordids), HTTP codes and counters, never
+response bodies, exception text or filesystem paths. `progress.log` is a
+convenience for people: it is not state, nothing reads it, and a failure to
+write it only prints one warning while the job continues. Use `tail -f` on it
+from another terminal. It grows by roughly one line per target; rotate it only
+while the job is stopped. `status.json`, `job.log` and SQLite are unchanged.
+
+### Interrupting and resuming
+
+Stopping at any point is safe because every outcome is committed to SQLite before
+the next request and each attempt is reserved before its HTTP call. Ctrl-C
+(`SIGINT`), `SIGTERM` and `SIGHUP` (closing the terminal, `tmux kill-session`)
+log `interrupted by <signal> at <done>/<total>; progress is saved` and exit
+`128+signal` (130, 143, 129). `SIGKILL`, power loss and reboot log nothing and
+lose nothing. To continue, rerun the **same command**; there is no other step:
+`run` starts at the first unresolved target, never refetches a resolved one, and
+prints `resuming at <done>/<total>`. A request killed in flight stays counted as
+one used attempt of that target (attempt accounting is deliberately conservative),
+and its retry waits out the durable backoff first. Stopping a `supervise` that way
+stops its running child with it, and the stop adds one launch to the no-progress
+budget until the next target resolves. A supervisor killed with `SIGKILL` leaves
+its child running; that child keeps the writer lock, so a new `supervise` returns
+conflict (exit 6) until the child exits.
+
 ## Frozen input, reuse and restart
 
 The SQLite specification binds dictionary, manifest bytes or explicit range,
-ordered target fingerprint, parser and companion code hashes, seed-directory
-identity, timing and attempt/restart budgets. Repeating `run` or `supervise`
+ordered target fingerprint, parser code hash, seed-directory identity, timing and
+attempt/restart budgets, and a **transport identity**. The transport identity is
+the SHA-256 of the source text of exactly the companion functions that decide what
+is requested, reused and parsed (`TRANSPORT_FUNCTIONS`: `dictionary_name`,
+`make_spec`, `valid_slovnyk`, `seed_row`, `retry_after`, `fetch_once`). Logging,
+status projection, supervision and CLI text are not identity, so changing them
+never disturbs a running job. Repeating `run` or `supervise`
 rejects drift **before HTTP**. Keep the original manifest bytes and CLI options,
-and pin the checkout for the run. `status` needs no manifest and reconciles from
+and pin the checkout for the run.
+
+A checkout whose transport identity differs from the one frozen in the job
+(including any job frozen before the identity was narrowed to these functions,
+which hashed the whole file) is refused with `transport_changed` (exit 2) and
+makes no request. Review the change to those functions, stop the job, then accept
+it explicitly with the original options:
+
+```bash
+"$ACQ_PY" -m scripts.ingest.dictionary_acquisition rebind \
+  --root "$ACQ_ROOT" --dictionary vts --manifest "$ACQ_MANIFEST" \
+  --delay 4 --timeout 30 --backoff 4 --max-attempts 4 --max-restarts 3
+```
+
+`rebind` makes no request. It takes the same two locks as `resume`, so it refuses
+an active writer or supervisor. It requires every other frozen field and the
+stored targets to match, rewrites only the stored transport identity, and records
+a `transport_rebind` event and a `transport_rebinds` row holding the old and new
+hashes. Unlike `resume` it resets nothing: results, per-target attempts, launch
+counts and the no-progress budget stay exactly as they were. Running it again is a
+no-op. Then rerun the same `supervise` command from the new checkout.
+
+To move a running job onto newer code: stop it with Ctrl-C (or `SIGTERM`), wait
+for the process to exit, run `rebind` from the new checkout, then start the
+original `supervise` command from the new checkout. `status` needs no manifest and reconciles from
 the durable store. A busy writer returns conflict instead of competing for data;
 read the last atomic `status.json` until that writer exits.
 
@@ -226,13 +302,13 @@ Offline validation uses fake HTTP and disposable local storage:
 COVERAGE_FILE="${TMPDIR:?}/dictionary-acquisition.coverage" "$ACQ_PY" -m pytest \
   tests/test_dictionary_acquisition.py tests/test_sum20_official.py \
   tests/test_build_slovnyk_mirror.py \
-  --cov=scripts.ingest.dictionary_acquisition --cov-branch \
+  --cov=scripts.ingest.dictionary_acquisition --cov=scripts.ingest.acquisition_log --cov-branch \
   --cov-report=term-missing --cov-fail-under=80
 "$ACQ_PY" -m ruff check scripts/ingest/dictionary_acquisition.py \
-  scripts/wiki/sum20_official.py tests/test_dictionary_acquisition.py \
+  scripts/ingest/acquisition_log.py scripts/wiki/sum20_official.py tests/test_dictionary_acquisition.py \
   tests/test_sum20_official.py
 "$ACQ_PY" -m ruff format --check scripts/ingest/dictionary_acquisition.py \
-  scripts/wiki/sum20_official.py tests/test_dictionary_acquisition.py \
+  scripts/ingest/acquisition_log.py scripts/wiki/sum20_official.py tests/test_dictionary_acquisition.py \
   tests/test_sum20_official.py
 ```
 

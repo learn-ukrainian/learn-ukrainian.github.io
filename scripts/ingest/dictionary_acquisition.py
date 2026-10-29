@@ -2,11 +2,13 @@
 
 No live-store import. SQLite owns progress; JSON status is a replaceable projection.
 The local transport preserves HTTP distinctions erased by the legacy fetch helpers.
+Operators watch ``progress.log`` and the console (``acquisition_log``); neither is state.
 """
 
 from __future__ import annotations
 
 import argparse
+import ast
 import contextlib
 import fcntl
 import hashlib
@@ -31,6 +33,15 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.repo_root import project_interpreter
+from scripts.ingest.acquisition_log import (
+    DEFAULT_INTERVAL_SECONDS,
+    PROGRESS_FILE,
+    Interrupted,
+    ProgressLog,
+    interrupt_code,
+    interrupt_name,
+    operator_signals,
+)
 from scripts.lexicon.enrich_manifest import (
     _SLOVNYK_CACHE_SCHEMA_VERSION,
     _SLOVNYK_USER_AGENT,
@@ -62,6 +73,9 @@ EXIT = {
     "transient": 75,
     "running": 75,
 }
+# The code that decides what is requested, reused and parsed. Only these bodies are bound into
+# a job's frozen identity; logging, projection and retry plumbing elsewhere may change freely.
+TRANSPORT_FUNCTIONS = ("dictionary_name", "make_spec", "valid_slovnyk", "seed_row", "retry_after", "fetch_once")
 
 
 class JobError(ValueError):
@@ -110,6 +124,18 @@ def dictionary_name(value: str) -> str:
     if name != SUM20_SOURCE_ID and name not in SLOVNYK_ME_DICTS:
         raise JobError("invalid_dictionary")
     return name
+
+
+def transport_identity(source: str) -> str:
+    """SHA-256 of the exact source text of ``TRANSPORT_FUNCTIONS``; nothing else in the file counts."""
+    found = {
+        node.name: ast.get_source_segment(source, node)
+        for node in ast.parse(source).body
+        if isinstance(node, ast.FunctionDef) and node.name in TRANSPORT_FUNCTIONS
+    }
+    if set(found) != set(TRANSPORT_FUNCTIONS):
+        raise RuntimeError("transport_functions_missing")
+    return digest(packed([found[name] for name in TRANSPORT_FUNCTIONS]).encode())
 
 
 def make_spec(args: argparse.Namespace) -> tuple[dict[str, Any], list[tuple[str, str]]]:
@@ -167,7 +193,7 @@ def make_spec(args: argparse.Namespace) -> tuple[dict[str, Any], list[tuple[str,
         spec.update(manifest_sha256=digest(raw), cache_schema=_SLOVNYK_CACHE_SCHEMA_VERSION)
         parser_path = Path(_parse_slovnyk_entry.__code__.co_filename)
     spec["parser_sha256"] = digest(parser_path.read_bytes())
-    spec["transport_sha256"] = digest(Path(__file__).read_bytes())
+    spec["transport_sha256"] = transport_identity(Path(__file__).read_text(encoding="utf-8"))
     spec["targets_sha256"] = digest(packed(targets).encode())
     spec["denominator"] = len(targets)
     return spec, targets
@@ -240,7 +266,10 @@ def initialize(
     fingerprint = digest(packed(spec).encode())
     if row is not None:
         if row["fingerprint"] != fingerprint or row["spec"] != packed(spec):
-            raise JobError("frozen_input_mismatch")
+            # Only a changed transport identity is recoverable, and only through `rebind`.
+            raise JobError(
+                "transport_changed" if only_transport_differs(row["spec"], spec) else "frozen_input_mismatch"
+            )
         stored = [(r["target"], r["lookup"]) for r in conn.execute("SELECT * FROM results ORDER BY position")]
         if stored != targets:
             raise JobError("durable_targets_mismatch")
@@ -256,6 +285,39 @@ def initialize(
                 "INSERT INTO results(position,target,lookup,status,payload) VALUES(?,?,?,?,?)",
                 (index, target, lookup, "reused" if reused else "pending", packed(reused) if reused else None),
             )
+
+
+def only_transport_differs(stored: str, spec: dict[str, Any]) -> bool:
+    unbound = {"transport_sha256": None}
+    return {**json.loads(stored), **unbound} == {**spec, **unbound}
+
+
+def rebind_transport(conn, spec: dict[str, Any], targets: list[tuple[str, str]], now: float) -> bool:
+    """Explicit operator action: accept the current transport code for an existing job.
+
+    Like `resume` it needs both locks (the caller holds them) and leaves a durable event, but it
+    resets nothing: results, attempts, launches and the no-progress budget are untouched. Every
+    other frozen field, including the targets, must already match. Returns False when already bound.
+    """
+    row = conn.execute("SELECT * FROM job").fetchone()
+    if row["spec"] == packed(spec):
+        return False
+    if not only_transport_differs(row["spec"], spec):
+        raise JobError("frozen_input_mismatch")
+    if [(r["target"], r["lookup"]) for r in conn.execute("SELECT * FROM results ORDER BY position")] != targets:
+        raise JobError("durable_targets_mismatch")
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS transport_rebinds ("
+        "event_id INTEGER PRIMARY KEY, old_sha256 TEXT NOT NULL, new_sha256 TEXT NOT NULL)"
+    )
+    with conn:
+        event = conn.execute("INSERT INTO events(time,kind) VALUES(?,'transport_rebind')", (now,)).lastrowid
+        conn.execute(
+            "INSERT INTO transport_rebinds(event_id,old_sha256,new_sha256) VALUES(?,?,?)",
+            (event, json.loads(row["spec"])["transport_sha256"], spec["transport_sha256"]),
+        )
+        conn.execute("UPDATE job SET spec=?, fingerprint=?", (packed(spec), digest(packed(spec).encode())))
+    return True
 
 
 def no_progress_launches(conn: sqlite3.Connection) -> int:
@@ -450,8 +512,43 @@ def acquire(
     session: Any,
     clock: Callable[[], float],
     sleep: Callable[[float], None],
+    progress: ProgressLog | None = None,
 ) -> int:
-    """Run until resolved, terminal stop, or one transient result (exit 75)."""
+    """Run until resolved, terminal stop, or one transient result (exit 75); narrate it to `progress`."""
+    progress = progress or ProgressLog(directory / PROGRESS_FILE, label=directory.name, clock=clock)
+    total, done = conn.execute(
+        "SELECT COUNT(*), COALESCE(SUM(status IN ('positive','not_found','reused')),0) FROM results"
+    ).fetchone()
+    pending = conn.execute(
+        "SELECT attempts FROM results WHERE status NOT IN ('positive','not_found','reused') ORDER BY position LIMIT 1"
+    ).fetchone()
+    progress.begin(
+        done=done,
+        total=total,
+        state=conn.execute("SELECT state FROM job").fetchone()[0],
+        retries_used=pending[0] if pending else 0,
+    )
+    code = resolve_targets(conn, directory, root, session=session, clock=clock, sleep=sleep, progress=progress)
+    final = conn.execute("SELECT state, reason FROM job").fetchone()
+    progress.finished(
+        final["state"],
+        final["reason"],
+        code,
+        "rerun the same command to retry from the checkpoint" if code == 75 else "",
+    )
+    return code
+
+
+def resolve_targets(
+    conn,
+    directory: Path,
+    root: Path,
+    *,
+    session: Any,
+    clock: Callable[[], float],
+    sleep: Callable[[float], None],
+    progress: ProgressLog,
+) -> int:
     job = conn.execute("SELECT * FROM job").fetchone()
     if job["state"] not in {"running", "transient"}:
         report(conn, directory, clock())
@@ -528,6 +625,13 @@ def acquire(
             # Hold the host lock until outcome is durable, then permit the next host slot.
             atomic_json(throttle, {"next_request_at": finished + max(request_delay, retry)})
         report(conn, directory, clock())
+        if status in {"positive", "not_found"}:
+            progress.resolved(status, row["target"], http)
+        elif status == "transient_error":
+            progress.retry(row["target"], row["attempts"] + 1, spec["max_attempts"], http, delay)
+        else:
+            progress.failed(status, row["target"], reason, http)
+        progress.tick()
         if state != "running":
             return EXIT[state]
 
@@ -548,12 +652,14 @@ def supervise(
     launch: Callable[..., Any] = subprocess.run,
     sleep: Callable[[float], None] = time.sleep,
     clock: Callable[[], float] = time.time,
+    progress: ProgressLog | None = None,
 ) -> int:
     """Bounded child supervisor; both retry and crash budgets survive its own restart."""
     spec, targets = make_spec(args)
     root = args.root.resolve()
     directory = root / spec["dictionary"]
     directory.mkdir(parents=True, exist_ok=True)
+    progress = progress or ProgressLog(directory / PROGRESS_FILE, label=directory.name, clock=clock)
     with lock(directory / "supervisor.lock"):
         while True:
             with lock(directory / "writer.lock"), contextlib.closing(connect(directory)) as conn:
@@ -561,16 +667,24 @@ def supervise(
                 job = conn.execute("SELECT * FROM job").fetchone()
                 report(conn, directory, clock())
                 if job["state"] not in {"running", "transient"}:
+                    progress.emit(
+                        f"supervisor: job state {job['state']} is final, not launching; exit {EXIT[job['state']]}"
+                    )
                     return EXIT[job["state"]]
                 if no_progress_launches(conn) >= spec["max_restarts"] + 1:
                     code = stop(conn, "exhausted", "supervisor_budget")
                     report(conn, directory, clock())
+                    progress.emit(f"supervisor: ERROR {spec['max_restarts'] + 1} launches without progress; exhausted")
                     return code
                 # Count launches before spawn: unexpected child/supervisor crashes cannot reset it.
                 with conn:
                     conn.execute("UPDATE job SET restarts=restarts+1")
                     conn.execute("INSERT INTO events(time,kind) VALUES(?,'supervisor_launch')", (clock(),))
                 report(conn, directory, clock())
+                progress.emit(
+                    f"supervisor: launching run (launch {job['restarts'] + 1}, "
+                    f"{no_progress_launches(conn)}/{spec['max_restarts'] + 1} without progress)"
+                )
             command = [
                 str(project_interpreter()),
                 "-m",
@@ -597,12 +711,16 @@ def supervise(
                 command += ["--seed-cache", str(args.seed_cache)]
             if args.start_wordid is not None:
                 command += ["--start-wordid", str(args.start_wordid), "--end-wordid", str(args.end_wordid)]
+            command += ["--progress-interval", str(args.progress_interval)]
             result = launch(command, check=False)
             if result.returncode in {0, 2, 3, 4, 5, 6}:
+                progress.emit(f"supervisor: run exited {result.returncode}; stopping")
                 return result.returncode
             # A terminal durable state is checked above before another launch, even if a
             # killed child never delivered its terminal exit code. Never busy-loop.
-            sleep(max(2, args.backoff))
+            wait = max(2, args.backoff)
+            progress.emit(f"supervisor: run exited {result.returncode}; relaunching in {wait:g}s")
+            sleep(wait)
 
 
 class AcquisitionParser(argparse.ArgumentParser):
@@ -610,6 +728,13 @@ class AcquisitionParser(argparse.ArgumentParser):
         """Reject malformed CLI input without reflecting paths or secret arguments."""
         self.print_usage(sys.stderr)
         self.exit(2, packed({"state": "invalid", "terminal_reason": "invalid_arguments"}) + "\n")
+
+
+def progress_interval(value: str) -> float:
+    seconds = float(value)
+    if not math.isfinite(seconds) or seconds <= 0:
+        raise argparse.ArgumentTypeError("invalid_progress_interval")
+    return seconds
 
 
 def parser() -> argparse.ArgumentParser:
@@ -621,16 +746,20 @@ def parser() -> argparse.ArgumentParser:
   .venv/bin/python -m scripts.ingest.dictionary_acquisition run --root batch_state/acquisition --dictionary vts --manifest manifest.json
   .venv/bin/python -m scripts.ingest.dictionary_acquisition supervise --root batch_state/acquisition --dictionary sum20_official --start-wordid 5 --end-wordid 12
   .venv/bin/python -m scripts.ingest.dictionary_acquisition status --root batch_state/acquisition --dictionary vts
-Outputs: <root>/<dictionary>/{staging.sqlite3,status.json,job.log}; persistent locks and host throttle files.
+  .venv/bin/python -m scripts.ingest.dictionary_acquisition rebind --root batch_state/acquisition --dictionary vts --manifest manifest.json
+Outputs: <root>/<dictionary>/{staging.sqlite3,status.json,job.log,progress.log}; persistent locks and host throttle files.
+Progress: run/supervise print one line per resolved target or retry plus a periodic summary to stderr and progress.log.
 Exit codes: 0 complete/status/resume; 2 invalid/mismatch; 3 blocked HTTP; 4 parse error; 5 exhausted;
             6 conflicting writer/supervisor; 75 transient (run only). No terminal state resumes implicitly.
+Interrupt (Ctrl-C, SIGTERM, SIGHUP) exits 128+signal; rerun the same command to continue from the checkpoint.
 Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_mirror (foreground shared-cache tool).
 """,
     )
     result.add_argument(
         "action",
-        choices=("run", "supervise", "status", "resume"),
-        help="run once, supervise bounded restarts, reconcile status, or explicitly reset stopped work",
+        choices=("run", "supervise", "status", "resume", "rebind"),
+        help="run once, supervise bounded restarts, reconcile status, explicitly reset stopped work, "
+        "or explicitly accept changed transport code for an existing job",
     )
     result.add_argument(
         "--root",
@@ -680,6 +809,12 @@ Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_
         default=3,
         help="Durable restart cap without resolved-target progress; default 3 (four launches), range 0..10",
     )
+    result.add_argument(
+        "--progress-interval",
+        type=progress_interval,
+        default=DEFAULT_INTERVAL_SECONDS,
+        help="Seconds between summary lines on the console and in progress.log; default 60, e.g. 30. Not frozen",
+    )
     return result
 
 
@@ -692,20 +827,26 @@ def main(
     launch: Callable[..., Any] = subprocess.run,
 ) -> int:
     args = parser().parse_args(argv)
+    progress = None
     try:
         name = dictionary_name(args.dictionary)
-        if args.action == "supervise":
-            return supervise(args, launch=launch, sleep=sleep, clock=clock)
         root = args.root.resolve()
         directory = root / name
-        if args.action == "status" and not (directory / "staging.sqlite3").is_file():
-            raise JobError("job_not_found")
-        if args.action == "resume" and not (directory / "staging.sqlite3").is_file():
+        progress = ProgressLog(directory / PROGRESS_FILE, label=name, clock=clock, interval=args.progress_interval)
+        if args.action == "supervise":
+            with operator_signals():
+                return supervise(args, launch=launch, sleep=sleep, clock=clock, progress=progress)
+        if args.action in {"status", "resume", "rebind"} and not (directory / "staging.sqlite3").is_file():
             raise JobError("job_not_found")
         spec, targets = make_spec(args) if args.action != "status" else (None, None)
         directory.mkdir(parents=True, exist_ok=True)
-        resume_guard = lock(directory / "supervisor.lock") if args.action == "resume" else contextlib.nullcontext()
-        with resume_guard, lock(directory / "writer.lock"), contextlib.closing(connect(directory)) as conn:
+        guard = lock(directory / "supervisor.lock") if args.action in {"resume", "rebind"} else contextlib.nullcontext()
+        with guard, lock(directory / "writer.lock"), contextlib.closing(connect(directory)) as conn:
+            if args.action == "rebind":
+                changed = rebind_transport(conn, spec, targets, clock())
+                progress.emit("rebind: transport code accepted and recorded" if changed else "rebind: already bound")
+                print(packed(report(conn, directory, clock())))
+                return 0
             if spec is not None:
                 initialize(conn, spec, targets, args.seed_cache, clock())
             if args.action == "status":
@@ -713,12 +854,18 @@ def main(
                 return 0
             if args.action == "resume":
                 manual_resume(conn, clock())
+                progress.emit("resume: unresolved attempt budgets reset by operator")
                 print(packed(report(conn, directory, clock())))
                 return 0
-            with session_factory() as session:
+            with session_factory() as session, operator_signals():
                 # No environment proxy or implicit netrc credentials on this public transport.
                 session.trust_env = False
-                return acquire(conn, directory, root, session=session, clock=clock, sleep=sleep)
+                return acquire(conn, directory, root, session=session, clock=clock, sleep=sleep, progress=progress)
+    except (KeyboardInterrupt, Interrupted) as exc:
+        # Locks and the SQLite transaction already unwound; the durable checkpoint is the resume point.
+        if progress is not None and args.action in {"run", "supervise"}:
+            progress.interrupted(interrupt_name(exc), "supervisor" if args.action == "supervise" else "run")
+        return interrupt_code(exc)
     except JobError as exc:
         return refusal(args.root, "conflict" if str(exc) == "conflicting_writer" else "invalid", str(exc))
     except (OSError, ValueError, TypeError, sqlite3.Error):
