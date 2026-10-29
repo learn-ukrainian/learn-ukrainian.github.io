@@ -177,6 +177,22 @@ def test_validated_structured_count_in_skeleton(scanned_recorder, tmp_path, coun
     assert sent == [comments[0]["body"]] and calls == {"posts": 1, "statuses": 1}
 
 
+def test_approve_reply_with_one_p3_finding_records_approve_with_score(scanned_recorder, tmp_path):
+    """A P3 finding is a follow-up, so the reply's APPROVE and its score are recorded (#12022)."""
+    tasks, comments, _, sent, _ = scanned_recorder
+    payload = structured_review(1)
+    payload["overall"].update(
+        correctness="correct", explanation="VERDICT: APPROVE. SCORE: 9/10.\n\nOne non-blocking P3 follow-up."
+    )
+    payload["findings"][0]["priority"] = "P3"
+    write_task(tasks, reply=json.dumps(payload))
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    body = comments[0]["body"]
+    assert sent == [body]
+    assert result["verdict"] == sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+    assert result["score"] == 9 and "VERDICT: APPROVED\n" in body and "Review score: 9/10\n" in body
+
+
 @pytest.mark.parametrize("update", [
     {"findings": "not a list"}, {"findings": [None]}, {"verdict": "APPROVED"},
     {"verdict": "INVALID"}, {"overall": {}},
