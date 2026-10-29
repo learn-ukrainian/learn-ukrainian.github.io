@@ -66,7 +66,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-communication/activities.yaml",
-      "sha256": "73e486d9f444da3b4362c3dccd24dae46725d0cdd519936b00825ae412b4776c"
+      "sha256": "7c8d7c44471d6b003f5b40c71388d08f1c66645da9d6432bd9c9b500cc779451"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-communication/module.md",
@@ -194,7 +194,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/emergencies/activities.yaml",
-      "sha256": "76b4e5bc862065c3d27ba630f4eac56cd38f413dd3971cb4879c1dbfb410e7a3"
+      "sha256": "3ad2a4077bae09f3b159347ce8052f24bfd43be355780e4c08400e009c74edb0"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/emergencies/module.md",
@@ -498,7 +498,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/please-do-this/activities.yaml",
-      "sha256": "918b97654594335a44320a01122c64c1b4b5bef6f8ce229e4a7f0e67e2075895"
+      "sha256": "24af0db50310732850be918d39de4cca0f5d8e5eca37ca5225073fded7d46719"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/please-do-this/module.md",
@@ -13702,7 +13702,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-communication.mdx",
-      "sha256": "d4983176332181ddc201ef2478e7400c23225eb1259369745722c77b502c3afe"
+      "sha256": "77196eb98d7f40a352086cc4c389058985e9612ea6aa53b4f11f68dc830feacc"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-first-contact.mdx",
@@ -13734,7 +13734,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/emergencies.mdx",
-      "sha256": "ade904c94a764b28b05d74a0e698c40855e8a719f17fbdc132186a6cd90e4b8a"
+      "sha256": "31e67317f8978bad0eb2b97d6fdc256725b8e062fdcf4eb966c3829d2a3b192f"
     },
     {
       "path": "site/src/content/docs/a1-v1/euphony.mdx",
@@ -13814,7 +13814,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/please-do-this.mdx",
-      "sha256": "a54d241043cbf2559c8d7e7ff05282a112bb8cb27a6feb9ac209d26dd0089352"
+      "sha256": "0376e89a887610bf8eadb99b73ae806e05b0d6034c3d95d1163e681f40084da1"
     },
     {
       "path": "site/src/content/docs/a1-v1/questions.mdx",

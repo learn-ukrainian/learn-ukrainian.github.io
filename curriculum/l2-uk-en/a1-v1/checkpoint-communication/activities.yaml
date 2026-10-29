@@ -340,7 +340,7 @@ workbook:
         explanation: 'Use the fixed greeting З Новим роком.'
   - type: error-correction
     title: Repair the checkpoint
-    instruction: Keep explicit pronouns, named people, the holiday and intended message. Correct address, imperative command forms or punctuation.
+    instruction: Keep explicit pronouns, named people and the intended message. Correct address forms, command forms, agreement, case endings or punctuation.
     items:
       - sentence: 'Олена, принеси листівки.'
         error: 'Олена'

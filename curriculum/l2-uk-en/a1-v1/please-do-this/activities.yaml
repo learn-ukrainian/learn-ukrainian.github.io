@@ -161,7 +161,7 @@ inline:
   - id: act-4
     type: quiz
     title: Polite request sentences
-    instruction: Choose the imperative-mood form of the main action verb; keep the politeness phrase unchanged.
+    instruction: Choose the imperative-mood form of the main action verb; keep the politeness phrase unchanged where present.
     items:
       - prompt: Choose the imperative-mood form of the main action verb.
         options:
@@ -314,7 +314,7 @@ workbook:
         right: 'відкрий / відкрийте'
   - type: quiz
     title: Class and cafe requests
-    instruction: Choose the imperative-mood form of the main action verb; keep the politeness phrase unchanged.
+    instruction: Choose the imperative-mood form of the main action verb; keep the politeness phrase unchanged where present.
     items:
       - prompt: Choose the imperative-mood form of the main action verb.
         options:
@@ -342,7 +342,7 @@ workbook:
             correct: false
           - text: Писати три речення.
             correct: false
-        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms.
       - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Дайте мені меню, будь ласка.
@@ -378,7 +378,7 @@ workbook:
             correct: false
           - text: Олено, читати текст.
             correct: false
-        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms.
       - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Тарасе, дай меню, будь ласка.

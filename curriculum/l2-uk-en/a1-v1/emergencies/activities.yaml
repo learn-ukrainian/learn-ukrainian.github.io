@@ -270,7 +270,7 @@ workbook:
         explanation: 'Use Подзвоніть за номером...'
   - type: error-correction
     title: Repair emergency lines
-    instruction: Keep the action, people, location, number and intended emergency request. Correct the form or missing word.
+    instruction: Keep the action, people, location, number and intended emergency request. Correct word choice, word forms or missing words.
     items:
       - sentence: 'Мене номер Анна.'
         error: 'номер'
