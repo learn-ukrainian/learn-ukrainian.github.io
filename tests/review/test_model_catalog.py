@@ -1102,6 +1102,9 @@ def assert_frozen_surfaces(actual, *, surfaces):
     for surface in surfaces:
         value = deepcopy(actual[surface])
         if surface == "catalog":
+            # Carbon is held inventory only; every prior seat and route stays frozen.
+            carbon = value["models"].pop("gemini-4-carbon")
+            assert hashlib.sha256(encode(carbon)).hexdigest() == "5e7dd56ff656759fae9e85e0120c0eb74ae49ea78122db95c288ad3631c960b7"
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
