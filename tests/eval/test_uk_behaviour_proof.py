@@ -29,6 +29,12 @@ REQUIRED = [
     "off-contract padding that exhausts the judge is overproduction",
     "in-contract judge exhaustion is an evaluator failure",
     "verified harm scores -2 even in an unresolved cell",
+    "answer-position finding with derived key positions earns credit",
+    "answer-position finding with wrong key positions earns nothing",
+    "request-only leakage finding quoting the request earns credit",
+    "leakage finding misquoting the request earns nothing",
+    "pedagogy finding with every required anchor earns credit",
+    "pedagogy finding missing the video decision anchor earns nothing",
     "fresh writer gets exactly the production prompt over four inputs, no mode field",
     "a fresh writer that reached Sources is not scorable",
 ] + [f"{family}: maximum-size output with every claim off-label fits 32 calls" for family in FAMILIES]

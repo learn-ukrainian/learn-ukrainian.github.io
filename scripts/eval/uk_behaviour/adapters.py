@@ -30,6 +30,7 @@ from scripts.eval.uk_preamble.common import sha256_bytes, tokenize
 from scripts.eval.uk_preamble.prompts import extract_json
 
 from .contract import (
+    ANCHOR_KINDS,
     CARD_FACETS,
     EXERCISE_DEFECTS,
     FAMILIES,
@@ -222,6 +223,17 @@ _EDIT = {
         },
     ]
 }
+_ANCHOR = {
+    "type": "object",
+    "required": ["kind", "evidence", "receipt", "quote"],
+    "additionalProperties": False,
+    "properties": {
+        "kind": {"enum": list(ANCHOR_KINDS)},
+        "evidence": {"type": ["string", "null"]},
+        "receipt": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^rr-[0-9a-f]{20}$"}]},
+        "quote": {"type": "string", "minLength": 1},
+    },
+}
 _PASSAGE_FACETS = ("form", "stress", "meaning", "historical", "naturalness", "spelling_style")
 
 
@@ -236,13 +248,14 @@ def _finding_schema(family: str) -> dict[str, Any]:
     required = ["id", "location", "claim", "proposed_edit", "receipts"]
     if family == "exercise_review":
         properties["defect"] = {"enum": list(EXERCISE_DEFECTS)}
+        properties["key_positions"] = {"type": "array", "items": {"type": "integer", "minimum": 0}}
         required.append("defect")
     elif family == "pedagogy_review":
         properties["defect"] = {"enum": list(PEDAGOGY_DEFECTS)}
         properties["norm"] = {"enum": list(PEDAGOGY_NORMS)}
-        properties["anchor"] = {"type": "string", "minLength": 1}
+        properties["anchors"] = {"type": "array", "minItems": 1, "items": _ANCHOR}
         properties["proposed_edit"] = {"type": "null"}
-        required += ["defect", "norm", "anchor"]
+        required += ["defect", "norm", "anchors"]
     else:
         facets = CARD_FACETS if family == "card_review" else _PASSAGE_FACETS
         properties["facet"] = {"enum": list(facets)}
@@ -329,6 +342,7 @@ def accept(
         if problems:
             return Acceptance("malformed", problems)
         cited = [rid for part in ("findings", "gaps") for entry in parsed[part] for rid in entry["receipts"]]
+        cited += [a["receipt"] for f in parsed["findings"] for a in f.get("anchors", []) if a["receipt"]]
         return Acceptance("accepted", parsed=parsed, cited_receipts=cited)
     if output == "lesson-draft":
         if validate_draft is None:
@@ -343,6 +357,61 @@ def accept(
             return Acceptance("malformed", [f"lesson-draft-v1: {type(exc).__name__}"])
     # V7: the module's own audit gates are production checks; completion obligations are judged.
     return Acceptance("accepted", parsed=text)
+
+
+def _pointer_token(key: Any) -> str:
+    return str(key).replace("~", "~0").replace("/", "~1")
+
+
+def request_evidence(item: dict[str, Any]) -> dict[str, str]:
+    """Checkable request text by JSON pointer (scalars as text, subtrees as canonical JSON), and each
+    ``norm_evidence`` entry by id.
+
+    A finding's ``location`` and a pedagogy anchor's ``evidence`` resolve here; their quote must
+    occur in the text found. ``norm_evidence`` is a list of ``{"id", "kind", "locator", "text"}``.
+    """
+    found: dict[str, str] = {}
+
+    def walk(value: Any, pointer: str) -> None:
+        if isinstance(value, dict | list) and pointer:  # a block-level finding quotes inside its subtree
+            found[pointer] = json.dumps(value, ensure_ascii=False, sort_keys=True)
+        if isinstance(value, dict):
+            for key, child in value.items():
+                walk(child, f"{pointer}/{_pointer_token(key)}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                walk(child, f"{pointer}/{index}")
+        elif value is not None:
+            found[pointer] = value if isinstance(value, str) else json.dumps(value)
+
+    walk(item, "")
+    for entry in item.get("norm_evidence") or []:
+        if isinstance(entry, dict) and isinstance(entry.get("id"), str) and isinstance(entry.get("text"), str):
+            found[entry["id"]] = entry["text"]
+    return found
+
+
+def block_key_positions(item: dict[str, Any], pointer: str) -> list[int] | None:
+    """Zero-based key positions of the ordered block at ``pointer`` (items with ``options`` and ``key``)."""
+    node: Any = item
+    for token in pointer.split("/")[1:]:
+        token = token.replace("~1", "/").replace("~0", "~")
+        if isinstance(node, list) and token.isdigit() and int(token) < len(node):
+            node = node[int(token)]
+        elif isinstance(node, dict) and token in node:
+            node = node[token]
+        else:
+            return None
+    entries = node.get("items") if isinstance(node, dict) else node
+    if not isinstance(entries, list):
+        return None
+    positions = []
+    for entry in entries:
+        options = entry.get("options") if isinstance(entry, dict) else None
+        if not isinstance(options, list) or entry.get("key") not in options:
+            return None
+        positions.append(options.index(entry["key"]))
+    return positions
 
 
 def size_problems(family: str, text: str, *, individual: int, batched: int, edits: int) -> list[str]:

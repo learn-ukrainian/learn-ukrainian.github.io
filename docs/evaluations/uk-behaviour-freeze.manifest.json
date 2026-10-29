@@ -911,7 +911,7 @@
     },
     {
       "ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
-      "sha256": "382876883fb36e11db7039280a871c32c1f554cffb30ec3cbc9ccc1997d623cd",
+      "sha256": "6990a88571eacd3030a04151aaf1b2f146b54c32b07b09f253e10b45b3321b19",
       "status": "PINNED",
       "owner": "evaluation-maintainer"
     },
@@ -1287,15 +1287,15 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/adapters.py",
-        "sha256": "df8872061eae57046331247e2fa69deca8cad14a089a4e9b731a5bd5d14dfe59"
+        "sha256": "fbcc4b165056209b5af92376da5741fb14a001cc49b3a2c08cf5a2a61b20483d"
       },
       {
         "path": "scripts/eval/uk_behaviour/binding.py",
-        "sha256": "2280282398c03c749559cce76551cecba72997830dd4c417fb625556bcd8c868"
+        "sha256": "0a2006a3e29770835e50636a7805bb550107a4869600dbf73d27730d6ccc7b51"
       },
       {
         "path": "scripts/eval/uk_behaviour/contract.py",
-        "sha256": "6fba1fbda0fe7c8cee3d55f1350fb2de63e0c49e5839063001a6852a588ac03d"
+        "sha256": "7ef7104a89e3b51eb8997d7203aa907df76cc5c35da0a06d53aade22c77f630b"
       },
       {
         "path": "scripts/eval/uk_behaviour/coverage.py",
@@ -1311,7 +1311,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/prove.py",
-        "sha256": "f1b9fa795caaf01894956f8011dd16176e96590c59da2e409600e02deb1f78cc"
+        "sha256": "ca1da297ba71c73b348af1147353d32ffea9cb6389aad987b879c374c1604bca"
       },
       {
         "path": "scripts/eval/uk_behaviour/reward.py",
@@ -1327,7 +1327,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/scorer.py",
-        "sha256": "d2b45c3cb0a3c0f0afc3e667269a5feccd392cfa0f591e565e897be1f210e01d"
+        "sha256": "0add60ce0b501a3d333b2db67297c48465349db71fec55691673b43c252691a4"
       }
     ],
     "rubric_sha256": "978141f2d6f2d61c36a517a0dbfee6a51104a618312b98375ce7816240b1fe8f",

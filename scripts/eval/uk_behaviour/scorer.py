@@ -24,6 +24,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any
+from unicodedata import normalize
 
 from scripts.eval.uk_preamble.common import sha256_text
 from scripts.eval.uk_preamble.dataset import ReviewItem, _review_item
@@ -32,12 +33,15 @@ from scripts.eval.uk_preamble.scoring import review_counts
 from . import adapters
 from .binding import SUM11_POSITIVE, VERIFIED, LedgerIndex, check_binding
 from .contract import (
+    EXERCISE_REQUEST_DEFECTS,
     FAMILIES,
     INVALID_FABRICATED_RECEIPT,
     INVALID_OVERPRODUCTION,
+    PEDAGOGY_ANCHORS,
     SOURCES_CALLS_PER_PASS,
     STRATA,
     UNRESOLVED_EVALUATOR,
+    answer_position_pattern,
 )
 from .coverage import cost_class
 from .reward import Components, quality, resolve_status, reward
@@ -85,6 +89,53 @@ def _check_label(family: str, label: dict[str, Any]) -> None:
         raise ScoringError("protected opportunities use the three strata")
 
 
+def _quoted(quote: str, text: str | None) -> bool:
+    return text is not None and bool(quote) and normalize("NFC", quote) in normalize("NFC", text)
+
+
+def _candidate_evidence(
+    family: str,
+    finding: dict[str, Any],
+    verified: list[dict[str, Any]],
+    item: dict[str, Any],
+    evidence: dict[str, str],
+    index: LedgerIndex,
+) -> bool:
+    """Whether the finding carries its own checkable evidence (protocol lines 362-378).
+
+    Card and passage findings need a verified receipt they cite. Exercise and pedagogy
+    findings must also quote the request exactly at their location. A request-only exercise
+    defect rests on that quote (an answer-position finding also on key positions recomputed
+    from the block); a pedagogy finding needs every anchor its defect requires.
+    """
+    own = any(b["role"] == "candidate" and b.get("receipt_id") in finding["receipts"] for b in verified)
+    if family in ("card_review", "passage_review"):
+        return own
+    location = finding["location"]
+    if not _quoted(location["quote"], evidence.get(location["field"])):
+        return False
+    if family == "exercise_review":
+        if finding["defect"] == "answer_position_pattern":
+            derived = adapters.block_key_positions(item, location["field"])
+            return derived is not None and finding.get("key_positions") == derived and answer_position_pattern(derived)
+        return finding["defect"] in EXERCISE_REQUEST_DEFECTS or own
+    satisfied = set()
+    for anchor in finding["anchors"]:
+        if anchor["receipt"] is not None:
+            record = index.get("candidate", anchor["receipt"])
+            ok = (
+                anchor["kind"] == "textbook_page"
+                and anchor["receipt"] in finding["receipts"]
+                and record is not None
+                and _quoted(anchor["quote"], record.get("result"))
+            )
+        else:
+            ok = anchor["evidence"] is not None and _quoted(anchor["quote"], evidence.get(anchor["evidence"]))
+        if ok:
+            satisfied.add(anchor["kind"])
+    return all(any(kind in satisfied for kind in part) for part in PEDAGOGY_ANCHORS[finding["defect"]])
+
+
 def score_cell(
     family: str,
     *,
@@ -127,9 +178,11 @@ def score_cell(
     elif response == "accepted":
         tally.unresolved("accepted output has no judgement")
 
-    findings = {}
+    findings: dict[str, dict[str, Any]] = {}
     if isinstance(acceptance.parsed, dict):
-        findings = {entry["id"]: set(entry["receipts"]) for entry in acceptance.parsed.get("findings", [])}
+        findings = {entry["id"]: entry for entry in acceptance.parsed.get("findings", [])}
+    evidence = adapters.request_evidence(item)
+    index.request_evidence = {**evidence, **index.request_evidence}
     positive = {slot["slot_id"] for slot in label.get("positive_slots", [])}
     required = {slot["slot_id"] for slot in label.get("required_slots", [])}
     protected_ids = {entry["opportunity_id"] for entry in label.get("protected", [])}
@@ -193,9 +246,8 @@ def score_cell(
             tally.unresolved(f"assertion {a['id']}: a false correction or harm needs bound evidence")
             continue
         if contract.candidate_receipts_required:
-            cited = findings.get(a["finding_id"], set())
-            own = [b for b in verified if b["role"] == "candidate" and b.get("receipt_id") in cited]
-            has_receipt = bool(own)
+            finding = findings.get(a["finding_id"])
+            has_receipt = finding is not None and _candidate_evidence(family, finding, verified, item, evidence, index)
         else:
             has_receipt = bool(verified)
         if a["verdict"] == "unchecked":

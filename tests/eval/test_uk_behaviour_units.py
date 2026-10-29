@@ -99,6 +99,8 @@ def index(tmp_path: Path) -> tuple[LedgerIndex, dict[str, str]]:
         ("miss", "verify_words", "Found: 0/1\n- **y** — NOT FOUND"),
         ("sum11", "search_definitions", "СУМ-11 notice\nentry for x"),
         ("slovnyk", "search_slovnyk_me", "Source: СУМ-11\nentry for x"),
+        ("ulif", "verify_stress", '{"status": "ok", "matches": [{"source": "ulif", "stressed_form": "x"}]}'),
+        ("trie", "verify_stress", '{"status": "ok", "matches": [{"source": "trie", "stressed_form": "x"}]}'),
     ):
         receipts[name] = ledger.append(
             path,
@@ -153,10 +155,17 @@ def test_sum11_is_never_positive_authority(index) -> None:
     assert check_binding(named, "meaning", idx).status == SUM11_POSITIVE
 
 
-def test_request_evidence_supports_pedagogy_only(index) -> None:
+def test_stress_needs_ulif_provenance(index) -> None:
+    idx, receipts = index
+    assert check_binding(_binding(idx, receipts["ulif"], "stressed_form"), "stress", idx).status == VERIFIED
+    assert check_binding(_binding(idx, receipts["trie"], "stressed_form"), "stress", idx).status == EVIDENCE_INVALID
+
+
+def test_request_evidence_supports_pedagogy_and_exercise_only(index) -> None:
     idx, _ = index
     binding = {"role": "request", "evidence_id": "standard", "evidence_excerpt": "line 233", "source_locator": "s"}
     assert check_binding(binding, "pedagogy", idx).status == VERIFIED
+    assert check_binding(binding, "exercise", idx).status == VERIFIED
     assert check_binding(binding, "meaning", idx).status == EVIDENCE_INVALID
     assert check_binding(binding | {"evidence_id": "other"}, "pedagogy", idx).status == EVIDENCE_MISSING
 
@@ -213,6 +222,9 @@ def test_pinned_bytes_refuse_drift() -> None:
         adapters.pinned_bytes(b"q", sha256_text("p"), "x")
 
 
+ANCHOR = {"kind": "textbook_page", "evidence": None, "receipt": "rr-" + "1" * 20, "quote": "page 13"}
+
+
 def _envelope(**overrides) -> str:
     value = {"item_id": "c1", "judging_mode": "repair", "outcome": "clean", "findings": [], "gaps": []}
     return json.dumps(value | overrides)
@@ -235,16 +247,34 @@ def test_acceptance() -> None:
     }
     accepted = adapters.accept("card_review", _envelope(outcome="findings", findings=[finding]), CARD)
     assert accepted.cited_receipts == ["rr-" + "1" * 20]
-    pedagogy = finding | {"defect": "child_level", "norm": "ohoiko_method", "anchor": "practice 7"}
+    anchorless = finding | {"defect": "child_level", "norm": "ohoiko_method", "anchors": []}
+    anchorless.pop("facet")
+    pedagogy = finding | {"defect": "child_level", "norm": "ohoiko_method", "anchors": [ANCHOR]}
     pedagogy.pop("facet")
     item = {"item_id": "c1", "judging_mode": "repair", "level": "A1"}
     assert adapters.accept("pedagogy_review", _envelope(outcome="findings", findings=[pedagogy]), item).response == (
         "accepted"
     )
+    assert adapters.accept("pedagogy_review", _envelope(outcome="findings", findings=[anchorless]), item).response == (
+        "malformed"
+    )
     edited = pedagogy | {"proposed_edit": {"field": "/snippet", "replacement": "r"}}
     assert adapters.accept("pedagogy_review", _envelope(outcome="findings", findings=[edited]), item).response == (
         "malformed"
     )
+
+
+def test_request_evidence_and_block_key_positions() -> None:
+    item = {
+        "item_id": "e",
+        "exercise": {"items": [{"stem": "a/b", "options": ["x", "y"], "key": "y"}]},
+        "norm_evidence": [{"id": "std", "kind": "standard_lines", "locator": "l", "text": "line"}],
+    }
+    evidence = adapters.request_evidence(item)
+    assert evidence["/exercise/items/0/stem"] == "a/b" and evidence["std"] == "line"
+    assert '"stem": "a/b"' in evidence["/exercise"]
+    assert adapters.block_key_positions(item, "/exercise") == [1]
+    assert adapters.block_key_positions(item, "/missing") is None
 
 
 def test_every_family_cap_fits_the_judge_budget() -> None:

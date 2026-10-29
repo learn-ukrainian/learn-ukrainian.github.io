@@ -12,15 +12,17 @@ quotes.
 
 Ledger roles: ``candidate`` (the scored attempt's own calls), ``judge`` (the
 judge's calls), ``pack`` (pack-builder receipts behind a fresh writer's inputs)
-and ``label`` (receipts sealed with the G1 label). Pedagogy claims may also cite
-the normative evidence sealed in the request itself (role ``request``: a
-Standard excerpt with its line numbers, the video decision, the resource
-inventory), which is checked against those exact bytes.
+and ``label`` (receipts sealed with the G1 label). Pedagogy and exercise claims
+may also cite text of the request itself (role ``request``: a JSON pointer into
+the item, or a ``norm_evidence`` id such as the Standard lines, the video
+decision or the resource inventory), checked against those exact bytes.
+Positive stress evidence from ``verify_stress`` needs a ULIF reading.
 """
 
 from __future__ import annotations
 
 import hashlib
+import re
 import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
@@ -53,6 +55,8 @@ AUTHORITIES: dict[str, frozenset[str]] = {
 # these tools with ``polarity: negative``; the judge still owns the accusation checks.
 NEGATIVE_TOOLS = frozenset(REVIEW_TOOLS)
 SUM11_TOOL = "search_definitions"
+# verify_stress labels each reading's source; only a ULIF reading is dictionary provenance.
+_ULIF_READING = re.compile(r'"source"\s*:\s*"ulif"')
 _SUM11_MARKERS = ("сум-11", "сум11", "сум 11", "11 томах")
 
 VERIFIED = "verified"
@@ -173,12 +177,14 @@ def check_binding(binding: dict[str, Any], facet: str, index: LedgerIndex) -> Bi
             return BindingCheck(SUM11_POSITIVE, "slovnyk.me result is СУМ-11", sum11=True)
     if tool not in AUTHORITIES.get(facet, frozenset()):
         return BindingCheck(EVIDENCE_INVALID, f"{tool} is not a positive authority for {facet}")
+    if facet == "stress" and tool == "verify_stress" and not _ULIF_READING.search(result):
+        return BindingCheck(EVIDENCE_INVALID, "a stress reading needs ULIF provenance, not a fallback or override")
     return BindingCheck(VERIFIED, "")
 
 
 def _check_request_evidence(binding: dict[str, Any], facet: str, index: LedgerIndex) -> BindingCheck:
-    if facet != "pedagogy":
-        return BindingCheck(EVIDENCE_INVALID, "request evidence supports pedagogy claims only")
+    if facet not in ("pedagogy", "exercise"):
+        return BindingCheck(EVIDENCE_INVALID, "request evidence supports pedagogy and exercise claims only")
     text = index.request_evidence.get(str(binding.get("evidence_id")))
     if text is None:
         return BindingCheck(EVIDENCE_MISSING, "request evidence id is not sealed in the request")

@@ -76,7 +76,38 @@ PEDAGOGY_DEFECTS = (
     "hidden_player_audio_only",
     "ohoiko_presentation",
 )
+# Exercise defects that rest on the request alone (its exact text, or the key positions derived
+# from it); the others also need Sources receipts for their linguistic premise.
+EXERCISE_REQUEST_DEFECTS = frozenset(
+    {"stem_translates_answer", "stem_names_answer", "stem_describes_form", "giveaway_gloss", "answer_position_pattern"}
+)
 PEDAGOGY_NORMS = ("state_standard_2024", "ukrainian_school_textbooks", "ohoiko_method")
+ANCHOR_KINDS = (
+    "standard_lines",
+    "coverage_map",
+    "textbook_page",
+    "ohoiko_practice",
+    "ohoiko_progression",
+    "learner_state",
+    "adult_adaptation",
+    "video_resource",
+    "video_decision",
+    "leak",
+)
+# Required anchors per pedagogy defect (protocol roster, lines 206-215): each tuple is one
+# required part, satisfied by an anchor of any kind it lists.
+PEDAGOGY_ANCHORS: dict[str, tuple[tuple[str, ...], ...]] = {
+    "standard_coverage_or_sequencing": (("standard_lines",), ("coverage_map",)),
+    "textbook_sequencing": (("textbook_page",),),
+    "prerequisite_or_load": (("learner_state",), ("textbook_page", "ohoiko_progression")),
+    "child_level": (("textbook_page",), ("adult_adaptation",)),
+    "target_mismatch": (("standard_lines", "textbook_page"),),
+    "incomplete_or_unsuitable_section": (("standard_lines", "textbook_page"),),
+    "answer_given_away": (("ohoiko_practice",), ("leak",)),
+    "missing_planned_video": (("standard_lines",), ("ohoiko_practice",), ("video_resource",), ("video_decision",)),
+    "hidden_player_audio_only": (("standard_lines",), ("ohoiko_practice",), ("video_resource",), ("video_decision",)),
+    "ohoiko_presentation": (("ohoiko_practice",), ("ohoiko_progression",), ("learner_state",)),
+}
 CARD_FACETS = ("meaning", "stress", "form")
 
 
@@ -211,7 +242,8 @@ def answer_position_pattern(key_positions: list[int]) -> bool:
 
     It applies to an ordered block of at least six choice items. The block has the defect
     when one zero-based key position holds the key in at least 80% of the items (rounded
-    up), or when the whole sequence repeats a cycle of length 2 or 3 from first to last.
+    up), or when every item's position equals the position 2 (or 3) items earlier, from
+    the first item to the last; a final partial cycle counts.
     """
     count = len(key_positions)
     if count < 6:

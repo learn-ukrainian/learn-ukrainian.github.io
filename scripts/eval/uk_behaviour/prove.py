@@ -56,7 +56,8 @@ class Fixture:
         self.family = family
         self.item = {"item_id": f"syn-{name}", "judging_mode": FAMILIES[family].modes[0], "level": "A1"}
         if family == "exercise_review":
-            self.item |= {"exercise": {"items": []}, "target": "synthetic", "learner_state": {}}
+            items = [{"stem": f"stem w{n}", "options": ["a", "b", "c"], "key": "a"} for n in range(1, 21)]
+            self.item |= {"exercise": {"items": items}, "target": "synthetic", "learner_state": {}}
         elif family == "card_review":
             self.item |= {"card": {}, "context": "synthetic"}
         self.refs: list[LedgerRef] = []
@@ -99,13 +100,15 @@ def _envelope(item: dict[str, Any], findings: list[dict[str, Any]], outcome: str
     )
 
 
-def _finding(fid: str, claim: str, receipts: list[str], *, defect: str = "form", edit: bool = False) -> dict:
+def _finding(fid: str, n: int, claim: str, receipts: list[str], *, defect: str = "form", edit: bool = False) -> dict:
+    """An exercise finding located at item ``n``'s stem, quoting it exactly."""
+    field = f"/exercise/items/{n - 1}/stem"
     return {
         "id": fid,
         "defect": defect,
-        "location": {"field": f"/exercise/items/{fid}", "quote": "w"},
+        "location": {"field": field, "quote": f"w{n}"},
         "claim": claim,
-        "proposed_edit": {"field": f"/exercise/items/{fid}", "replacement": "z"} if edit else None,
+        "proposed_edit": {"field": field, "replacement": "z"} if edit else None,
         "receipts": receipts,
     }
 
@@ -186,13 +189,13 @@ def _slot_review(fx: Fixture, slots: int, *, extra_true: int = 0, false_edit: bo
     for i in range(1, slots + extra_true + 1):
         rid = fx.receipt("candidate", f"w{i}")
         cited = [] if i <= uncited else [rid]
-        findings.append(_finding(f"F{i}", f"claim number {i:02d} holds", cited))
+        findings.append(_finding(f"F{i}", i, f"claim number {i:02d} holds", cited))
         slot = f"s{i}" if i <= slots else None
         bindings = [_bind("candidate", rid)] if cited else []
         assertions.append(_assertion(f"A{i}", f"claim number {i:02d} holds", f"F{i}", slot_id=slot, bindings=bindings))
     if false_edit:
         rid = fx.receipt("judge", "wx")
-        findings.append(_finding("FX", "claim wx is a wrong form", [], edit=True))
+        findings.append(_finding("FX", 20, "claim wx is a wrong form", [], edit=True))
         assertions.append(
             _assertion(
                 "AX",
@@ -277,7 +280,7 @@ def worked_ordering(root: Path) -> list[dict[str, Any]]:
     for i in range(1, 11):
         rid = fx.receipt("judge", f"v{i}")
         claim = f"form v{i:02d} is wrong"
-        findings.append(_finding(f"F{i}", claim, []))
+        findings.append(_finding(f"F{i}", i, claim, []))
         assertions.append(
             _assertion(
                 f"A{i}",
@@ -399,7 +402,90 @@ def branches(root: Path) -> list[dict[str, Any]]:
     )
 
     cases += _passage_cases(root)
+    cases += _evidence_cases(root)
     cases += _size_cases(root)
+    return cases
+
+
+def _one_finding_cell(fx: Fixture, finding: dict[str, Any], quote: str, facet: str) -> dict[str, Any]:
+    output = _envelope(fx.item, [finding])
+    assertion = _assertion("A1", quote, finding["id"], facet=facet, slot_id="s1")
+    return _score(fx, _label(fx.item, fx.family, required=1), output, _reply(fx, [assertion]))
+
+
+def _evidence_cases(root: Path) -> list[dict[str, Any]]:
+    """Findings whose evidence is the request itself: exercise mechanics and pedagogy anchors."""
+    cases = []
+    keys = ["a", "a", "a", "a", "a", "b"]  # key positions 0,0,0,0,0,1 meet the 80% rule
+    block = {"items": [{"stem": f"s{n}", "options": ["a", "b", "c"], "key": key} for n, key in enumerate(keys)]}
+    for name, positions, expected in (
+        ("answer-position finding with derived key positions earns credit", [0, 0, 0, 0, 0, 1], 1.0),
+        ("answer-position finding with wrong key positions earns nothing", [0, 0, 0, 0, 0, 0], 0.1),
+    ):
+        fx = Fixture(root, f"position-{expected}", "exercise_review")
+        fx.item["exercise"] = block
+        finding = {
+            "id": "F1",
+            "defect": "answer_position_pattern",
+            "location": {"field": "/exercise", "quote": "s0"},
+            "claim": "the key sits first in five of six items",
+            "proposed_edit": None,
+            "receipts": [],
+            "key_positions": positions,
+        }
+        result = _one_finding_cell(fx, finding, "the key sits first in five of six items", "exercise")
+        cases.append(_case(name, expected, result["R"]))
+    for name, quote, expected in (
+        ("request-only leakage finding quoting the request earns credit", "w3", 1.0),
+        ("leakage finding misquoting the request earns nothing", "w99", 0.1),
+    ):
+        fx = Fixture(root, f"leak-{expected}", "exercise_review")
+        finding = _finding("F1", 3, "the gloss gives the answer away", [], defect="giveaway_gloss")
+        finding["location"]["quote"] = quote
+        result = _one_finding_cell(fx, finding, "the gloss gives the answer away", "exercise")
+        cases.append(_case(name, expected, result["R"]))
+
+    norm = [
+        {"id": "std-listening", "kind": "standard_lines", "locator": "lines 233-277", "text": "listening line"},
+        {"id": "ohoiko-4", "kind": "ohoiko_practice", "locator": "practice 4", "text": "dialogue before breakdown"},
+        {"id": "video-1", "kind": "video_resource", "locator": "resource 1", "text": "verified whole video"},
+        {"id": "decision", "kind": "video_decision", "locator": "issue comment", "text": "shown whole with sound"},
+    ]
+    anchors = [
+        {"kind": "standard_lines", "evidence": "std-listening", "receipt": None, "quote": "listening line"},
+        {"kind": "ohoiko_practice", "evidence": "ohoiko-4", "receipt": None, "quote": "dialogue before"},
+        {"kind": "video_resource", "evidence": "video-1", "receipt": None, "quote": "whole video"},
+        {"kind": "video_decision", "evidence": "decision", "receipt": None, "quote": "sound"},
+    ]
+    for name, used, expected in (
+        ("pedagogy finding with every required anchor earns credit", anchors, 1.0),
+        ("pedagogy finding missing the video decision anchor earns nothing", anchors[:3], 0.1),
+    ):
+        fx = Fixture(root, f"pedagogy-{len(used)}", "pedagogy_review")
+        fx.item = {
+            "item_id": "syn-pedagogy",
+            "judging_mode": "authoring",
+            "level": "A1",
+            "shape": "plan",
+            "snippet": {"plan": "listening step without the video"},
+            "target": "listening",
+            "learner_state": {},
+            "prerequisites": [],
+            "resources": [],
+            "norm_evidence": norm,
+        }
+        finding = {
+            "id": "F1",
+            "defect": "missing_planned_video",
+            "norm": "ohoiko_method",
+            "anchors": used,
+            "location": {"field": "/snippet/plan", "quote": "without the video"},
+            "claim": "the plan ignores the suitable video",
+            "proposed_edit": None,
+            "receipts": [],
+        }
+        result = _one_finding_cell(fx, finding, "the plan ignores the suitable video", "pedagogy")
+        cases.append(_case(name, expected, result["R"]))
     return cases
 
 
