@@ -104,8 +104,8 @@ _FAKE_CLAUDE = textwrap.dedent(
         if "local" in sources:
             scopes.append(("local", load(os.path.join(os.getcwd(), ".claude", "settings.local.json"))))
         flag = option("--settings")
-        if flag:
-            scopes.append(("flag", json.loads(flag)))
+        if flag:  # inline JSON, or a settings file path (probe, 2.1.312)
+            scopes.append(("flag", json.loads(flag) if flag.lstrip().startswith("{") else load(flag)))
         env, helper = dict(os.environ), None
         for scope, settings in scopes:
             for name, value in (settings.get("env") or {}).items():
@@ -118,7 +118,7 @@ _FAKE_CLAUDE = textwrap.dedent(
         if env.get("CLAUDE_CODE_USE_BEDROCK"):
             status.update(authMethod="third_party", apiProvider="bedrock")
         elif helper:
-            status["authMethod"] = "api_key_helper"
+            status.update(authMethod="api_key_helper", apiKeySource="apiKeyHelper")
         elif env.get("ANTHROPIC_API_KEY"):
             status.update(authMethod="api_key", apiKeySource="ANTHROPIC_API_KEY")
         elif os.path.exists(os.path.join(config_dir, ".credentials.json")):
@@ -137,8 +137,11 @@ _FAKE_CLAUDE = textwrap.dedent(
         if argv[-1] == "--json":
             print(json.dumps(status))
         else:
-            lines = ["Login method: Claude Max account"] if status["authMethod"] == "claude.ai" else []
-            lines += ["Email: fixture@example.invalid"]
+            if status["authMethod"] == "api_key_helper":  # the only line 2.1.312 prints for a helper
+                lines = ["Auth token: apiKeyHelper"]
+            else:
+                lines = ["Login method: Claude Max account"] if status["authMethod"] == "claude.ai" else []
+                lines += ["Email: fixture@example.invalid"]
             if env.get("ANTHROPIC_BASE_URL"):
                 lines.append("Anthropic base URL: " + env["ANTHROPIC_BASE_URL"])
             if env.get("HTTPS_PROXY"):

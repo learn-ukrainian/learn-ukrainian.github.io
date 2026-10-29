@@ -5,7 +5,7 @@ cross-source correspondence, source admission, or practice certification occurs.
 
 Modes: no flag verifies the committed registry; `--apply` creates the pilot allocation on a registry that has none
 (it refuses to regenerate existing identities); `--append-holding` is the append-only registry step for `unsplit`
-holding senses (schema.md §6, §13): it adds one holding sense to each pilot card whose source relation units cannot
+holding senses (schema.md §6, §13): it adds one holding sense to each pilot card whose source units cannot
 be aligned and that has none, under its own build id, keeping every existing identity and event. It is idempotent.
 """
 
@@ -19,6 +19,7 @@ import unicodedata
 from collections import Counter
 from contextlib import ExitStack
 from pathlib import Path
+from types import SimpleNamespace
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -26,7 +27,7 @@ if __package__ in (None, ""):
 from scripts.atlas import word_card_foundation as foundation
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
-from scripts.storage.topology import resolve_store
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 ROOT = Path.cwd()
 MANIFEST = ROOT / "registry/atlas/pilot/pilot-v1.json"
@@ -39,7 +40,7 @@ PILOT_ALLOCATION_DIGEST = "d094872dbfaabe71cbfacaf4951138f08861f17c032d04bf0182e
 # `identity_allocation_check`'s projection of the committed v3 registry. Its entries and events are the reviewed v2
 # allocation above plus the holding epoch `holding_check` admits against host-derived obligations. A fixed reviewed
 # value: never learned from a candidate, a manifest, the environment or an invocation.
-ASSEMBLY_ALLOCATION_DIGEST = "438b54e1995e5069076fb997454f6c3205fa4b5580dd7225ba86e3d295871ee6"
+ASSEMBLY_ALLOCATION_DIGEST = "1b239e5be01b9a04e54e211f6c159ac0848a8873b37e15d1d033bce83be47469"
 IDENTITY_REFUSAL = "Pilot allocation differs from frozen creation/mint evidence"
 BUILD_PREFIX = "pilot-identity-allocation-9402@sha256:"
 HOLDING_BUILD_PREFIX = "pilot-holding-sense-allocation-8981@sha256:"
@@ -187,7 +188,7 @@ def seeds(unit, anchor, proper=False):
             for i, part in enumerate(parts)]
 
 
-def holding_obligations(manifest, registry, sources_conn):
+def holding_obligations(manifest, registry, sources_conn, modern_inputs=None):
     """Pilot cards that need an `unsplit` holding sense: {card_id: unit locators that cannot be aligned}.
 
     Reads the frozen pilot entries' C3 relation units from the held sources (read-only) and applies the assembler's
@@ -220,6 +221,13 @@ def holding_obligations(manifest, registry, sources_conn):
             needs[entry["card_id"]] = sorted(
                 {f"ulif:section:{u.source_key.rpartition('=')[2]}" for us in by_kind.values() for u in us
                  if u.candidate.outcome == "accepted" and assembly.aligned_sense(seeds_only, us) is None})
+        elif modern_inputs is not None and assembly.holding_sense(seeds_only) is None:
+            from scripts.atlas.word_card_verify import meaning_witnesses
+
+            witnesses = meaning_witnesses(modern_inputs, unit)
+            locators = sorted(item["witness"]["locator"] for item in witnesses.values() if item["witness"])
+            if locators:
+                needs[entry["card_id"]] = locators
     return needs
 
 
@@ -376,8 +384,13 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
             "evidence": foundation.canonical(evidence).decode()})
 
     with ExitStack() as stack:
-        sources = foundation.readonly(stack, sources_db or resolve_store("sources").path)
-        vesum = foundation.readonly(stack, vesum_db or resolve_store("vesum").path)
+        bindings = {name: resolve_store(name, ROOT, binding=StoreBinding(name, path) if path else None)
+                    for name, path in (("sources", sources_db), ("vesum", vesum_db))}
+        foundation.require(not any(isinstance(b, StoreRefusal) for b in bindings.values()),
+                           "Local source store binding refused")
+        sources_path = bindings["sources"].path
+        sources = foundation.readonly(stack, sources_path)
+        vesum = foundation.readonly(stack, bindings["vesum"].path)
         source_rows_checked = 0
         for record in records.values():
             if record.get("database", "sources") != "sources":
@@ -435,7 +448,15 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
                     })
             registry["registry_version"] = before["registry_version"] + 1
 
-        needs = holding_obligations(manifest, registry, sources)
+        from scripts.atlas import word_card_assembly as assembly
+        from scripts.atlas import word_card_sources as src
+
+        raw = foundation.readonly(stack, assembly.raw_cache_path(sources_path))
+        modern_inputs = SimpleNamespace(records=records,
+            sources=src.PilotSources(sources, vesum, raw, sources_path.parent.parent),
+            entry_by_unit={unit["unit_key"]: next(e for e in registry["entries"]
+                if e["created_in_build"] == build and unit["unit_key"] in foundation.source_keys(e)) for unit in units})
+        needs = holding_obligations(manifest, registry, sources, modern_inputs)
         appended = 0
         if append:
             allocation = reviewed_allocation(registry, manifest)
@@ -528,7 +549,15 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.atlas.allocate_pilot_identities
+  .venv/bin/python -m scripts.atlas.allocate_pilot_identities --append-holding
+Outputs: append-only registry changes when requested; host-only allocation audit.
+Sources are read-only; there is no network lookup or publication.
+Exit codes: 0 allocation verified; nonzero refused input or failed invariant.
+Related: #11627; docs/atlas/word-cards/schema.md sections 6 and 13.
+""")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--apply", action="store_true", help="create the pilot allocation where none exists")
     mode.add_argument("--append-holding", action="store_true",

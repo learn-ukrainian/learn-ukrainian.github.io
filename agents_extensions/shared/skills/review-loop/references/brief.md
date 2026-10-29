@@ -22,6 +22,11 @@ SCORE: <n>/10 <one-line rationale>
 F1 [P0|P1|P2|P3] <path>:<line> <demonstrated failure>. Impact: <impact>. Required behaviour: <behaviour>.
 ```
 
+A reviewer replying in the structured `code-review-findings.v1` form that stops for a missing
+capability replies `uncertain` with no findings and adds a `missing_capabilities` list
+(`sources-mcp`, `test-execution`, `shell`, `browser`, `checkout-data`) beside them, so the run can
+be recorded as a capability failure ([policy](policy.md#a-blocked-that-only-lacked-a-capability)).
+
 Ids are stable: a later round reuses `F1` rather than renaming it. Paths are
 repository-relative with line suffixes. The `SCORE` line uses the council's anchored rubric
 ([decision report](../../drive-epic/references/decision-report.md#council-optional-independent-panel),

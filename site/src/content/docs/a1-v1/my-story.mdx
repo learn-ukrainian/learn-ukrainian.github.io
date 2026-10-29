@@ -83,9 +83,9 @@ Use the compound future only: **я буду жити**, **вона буде пр
 
 ## Діалоги
 
-### Choose the time signal
+### Complete the life story
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ я жив у Торонто.", "answer": "Раніше", "options": ["Раніше", "Зараз", "Далі"]}, {"sentence": "___ я живу в Києві.", "answer": "Зараз", "options": ["Зараз", "Учора", "Далі"]}, {"sentence": "___ я буду вчити українську.", "answer": "Далі", "options": ["Далі", "У дитинстві", "Раніше"]}, {"sentence": "___ я ходила в школу.", "answer": "У дитинстві", "options": ["У дитинстві", "Завтра", "Зараз"]}]`)} instruction={"Pick the word that matches the time of the sentence."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "П’ять років тому я був студентом. ___ я жив у Торонто, а тепер живу в Києві.", "answer": "Раніше", "options": ["Раніше", "Завтра", "Наступного року"], "explanation": "Раніше fits the previous Toronto period. Завтра and наступного року point after the present Kyiv period, contradicting жив and the contrast."}, {"sentence": "___ я живу в Києві.", "answer": "Зараз", "options": ["Зараз", "Києві", "Працював"], "explanation": "Зараз is a time adverb. Києві requires a preposition as a location; працював cannot modify живу as a time expression."}, {"sentence": "___ я буду вчити українську.", "answer": "Далі", "options": ["Далі", "У дитинстві", "Раніше"]}, {"sentence": "Тепер мені тридцять років. ___ я ходила в школу.", "answer": "У дитинстві", "options": ["У дитинстві", "Завтра", "Наступного року"], "explanation": "У дитинстві fits the recalled school years; завтра and наступного року conflict with the completed earlier period."}]`)} instruction={"Choose the word or phrase that completes each sentence."} isUkrainian={false} />
 
 ### Розкажи про себе
 
@@ -350,7 +350,7 @@ and **далі**.
 </TabItem>
 <TabItem label="Activities">
 
-### Choose the time signal
+### Complete the life story
 
 *(see lesson, §Діалоги)*
 
@@ -376,11 +376,11 @@ and **далі**.
 
 ### Complete the mini biography
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Я ___ у Львові.", "answer": "народилася", "options": ["народилася", "народжуся", "народжуюся"]}, {"sentence": "Раніше я ___ в Одесі.", "answer": "жила", "options": ["жила", "живу", "буду жити"]}, {"sentence": "Зараз я ___ в офісі.", "answer": "працюю", "options": ["працюю", "працювала", "буду працювати"]}, {"sentence": "Далі я ___ українську щодня.", "answer": "буду вчити", "options": ["буду вчити", "вчила", "вчу"]}]`)} instruction={"Choose the form that fits the time word."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олена: Я ___ у Львові тридцять років тому.", "answer": "народилася", "options": ["народилася", "народився", "народилися"], "explanation": "Олена selects feminine singular народилася. Народився is masculine singular; народилися is plural."}, {"sentence": "Олена: Раніше я ___ в Одесі.", "answer": "жила", "options": ["жила", "жив", "жили"], "explanation": "Олена selects feminine singular жила. Жив is masculine singular; жили is plural."}, {"sentence": "Зараз я ___ в офісі.", "answer": "працюю", "options": ["працюю", "працюєш", "працюють"], "explanation": "Я selects first-person singular працюю. Працюєш is second-person singular; працюють third-person plural."}, {"sentence": "Від завтра я ___ українську щодня.", "answer": "буду вчити", "options": ["буду вчити", "будеш вчити", "будемо вчити"], "explanation": "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged."}]`)} instruction={"Choose the form that completes the story."} isUkrainian={false} />
 
 ### Repair the story
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which sentence matches the time word?", "options": [{"text": "Зараз я живу в Києві.", "correct": true}, {"text": "Зараз я жив у Києві.", "correct": false}, {"text": "Зараз я буду живу в Києві.", "correct": false}], "explanation": "Зараз uses the present form живу."}, {"question": "Which sentence uses the A1 future?", "options": [{"text": "Далі я буду працювати.", "correct": true}, {"text": "Далі я працював.", "correct": false}, {"text": "Далі я працюю учора.", "correct": false}], "explanation": "Буду + infinitive is the A1 future."}, {"question": "Which is the natural name sentence?", "options": [{"text": "Мене звати Данило.", "correct": true}, {"text": "Моє ім'я є Данило.", "correct": false}, {"text": "Я звати Данило.", "correct": false}], "explanation": "Use the phrase Мене звати..."}]`)} instruction={"Choose the better A1 sentence."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "— Де ти живеш? — ___", "options": [{"text": "Зараз я живу в Києві.", "correct": true}, {"text": "Зараз я живеш у Києві.", "correct": false}, {"text": "Зараз я буду живу в Києві.", "correct": false}], "explanation": "Я agrees with живу. Живеш agrees with ти; буду живу incorrectly combines two personal forms."}, {"question": "— Що ти будеш робити далі? — ___", "options": [{"text": "Далі я буду працювати.", "correct": true}, {"text": "Далі я працював.", "correct": false}, {"text": "Далі я працюю учора.", "correct": false}], "explanation": "Буду + infinitive is the A1 future."}, {"question": "Which is the natural name sentence?", "options": [{"text": "Мене звати Данило.", "correct": true}, {"text": "Моє ім'я є Данило.", "correct": false}, {"text": "Я звати Данило.", "correct": false}], "explanation": "Use the phrase Мене звати..."}]`)} instruction={"Choose the better A1 sentence."} isUkrainian={false} />
 
 ### Say your story
 

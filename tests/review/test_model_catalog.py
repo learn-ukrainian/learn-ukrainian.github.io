@@ -378,8 +378,13 @@ WORD_CARD_TOOL_PATH = CAPACITY_FIXTURE / "word-card-tool-11084.json"
 WORD_CARD_TOOL_ROWS = [0, 4]
 
 
+# The ULIF tools became read-only when they stopped fetching and caching
+# (ULIF local-copy order, 2026-10-28, PR #11918).
+ULIF_LOCAL_TOOLS = ("query_ulif", "query_ulif_antonyms", "query_ulif_phraseology", "query_ulif_synonyms")
+
+
 def approved_sources_tool_baseline(baseline):
-    """Apply approved #11084 word-card and #9628 cached Wikipedia grants.
+    """Apply approved #11084 word-card, #9628 cached Wikipedia and #11918 local ULIF grants.
 
     Historical captures stay byte-pinned. Only the two Codex reader rows gain
     the explicitly approved tools; every other field and surface stays.
@@ -400,9 +405,9 @@ def approved_sources_tool_baseline(baseline):
         enabled = next(i for i, value in enumerate(cmd) if value.startswith("mcp_servers.sources.enabled_tools="))
         approvals = next(i for i, value in enumerate(cmd) if value.startswith("mcp_servers.sources.tools="))
         names = json.loads(cmd[enabled].split("=", 1)[1])
-        assert "query_wikipedia_cached" not in names
+        assert not {"query_wikipedia_cached", *ULIF_LOCAL_TOOLS} & set(names)
         assert cmd[approvals] == "mcp_servers.sources.tools={" + ",".join(f'{name}={{approval_mode="approve"}}' for name in names) + "}"
-        names = sorted([*names, "query_wikipedia_cached"])
+        names = sorted([*names, "query_wikipedia_cached", *ULIF_LOCAL_TOOLS])
         cmd[enabled] = "mcp_servers.sources.enabled_tools=" + json.dumps(names)
         cmd[approvals] = "mcp_servers.sources.tools={" + ",".join(f'{name}={{approval_mode="approve"}}' for name in names) + "}"
     return {**baseline, "adapters": adapters}
@@ -880,7 +885,9 @@ def test_sources_tool_overlay_adds_only_approved_read_only_grants(configuration)
         ]
         enabled, approvals = (new_cmd[k].split("=", 1)[1] for k in tokens)
         assert json.loads(enabled) == read_only
-        assert json.loads(enabled) == sorted([*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card", "query_wikipedia_cached"])
+        assert json.loads(enabled) == sorted(
+            [*json.loads(old_cmd[tokens[0]].split("=", 1)[1]), "word_card", "query_wikipedia_cached", *ULIF_LOCAL_TOOLS]
+        )
         assert approvals == "{" + ",".join(f'{name}={{approval_mode="approve"}}' for name in read_only) + "}"
 
 
@@ -1045,15 +1052,17 @@ MUSE_REVIEW_CANDIDATE = {
     "invocation": ".venv/bin/python scripts/dispatch.py dispatch --agent muse --model muse-wonder-full-1.0 --effort high",
     "review_profiles": ["code"], "capabilities": ["code_review"], "suitability_roles": ["routine_review"],
 }
-def _pop_budget_extension_role(catalog):
-    """Remove the review budget extension role (cto-7eba-adv-extension2) and return what it added."""
-    role = "review_budget_extension"
-    consult = catalog["review_scheduler"]["activity_roles"]["consult"]
-    consult.remove(role)
+def _pop_budget_elevation_role(catalog):
+    """Remove the elevated-tier grant role (cto-7923-adv-clog-sol, item 3b) and return what it added."""
+    role = "review_budget_elevation"
+    catalog["review_scheduler"]["activity_roles"]["consult"].remove(role)
     holders = sorted(model_id for model_id, model in catalog["models"].items() if role in model["roles"])
     for model_id in holders:
         catalog["models"][model_id]["roles"].remove(role)
-    return {"advisory_roles": catalog.pop("advisory_roles"), "consult": role, "holders": holders}
+    entry = catalog["advisory_roles"].pop(role)
+    # It is the only advisory role since the budget extension retired, so its key goes too.
+    assert catalog.pop("advisory_roles") == {}
+    return {"advisory_role": entry, "consult": role, "holders": holders}
 
 
 def assert_frozen_surfaces(actual, *, surfaces):
@@ -1065,10 +1074,10 @@ def assert_frozen_surfaces(actual, *, surfaces):
             # The coder-only Terra addition leaves every frozen seat and review route intact.
             terra = value["models"].pop("gpt-6.1-terra")
             assert hashlib.sha256(encode(terra)).hexdigest() == "5f22691f96e42246fb4cca6a474c8d9dab1465a75ba720ed7bc153f2c47b3f9d"
-            # The advisory budget extension role is a consult role held by Sol and Opus; it moves no
-            # seat, route or review ranking.
-            extension = _pop_budget_extension_role(value)
-            assert hashlib.sha256(encode(extension)).hexdigest() == "8f8213328a04a6562564724e55ec083a00cdc11f0e228bba263bc5d5dedbf06c"
+            # The elevated-tier grant role is a consult role held by Sol and Opus; it moves no seat,
+            # route or review ranking. It replaced the retired budget extension role.
+            elevation = _pop_budget_elevation_role(value)
+            assert hashlib.sha256(encode(elevation)).hexdigest() == "4a395379ef040f47f69be6badd96376bcbc1041d8698ff0703bc9209e399592d"
         assert value == CURRENT_BASELINE[surface], f"current surface differs: {surface}"
 
 

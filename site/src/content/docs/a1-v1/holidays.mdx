@@ -247,9 +247,9 @@ swap only the name and the holiday. This gives you a real message without
 inventing new grammar. It also keeps the tone warm and Ukrainian: short,
 direct, and personal.
 
-### Святкувати or на?
+### Complete the holiday sentence
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ми ___ Різдво вдома.", "answer": "святкуємо", "options": ["святкуємо", "на", "з"]}, {"sentence": "___ Різдво ми співаємо колядки.", "answer": "На", "options": ["На", "З", "Святкуємо"]}, {"sentence": "Ми ___ Великдень з родиною.", "answer": "святкуємо", "options": ["святкуємо", "на", "у"]}, {"sentence": "___ Великдень ми печемо паски.", "answer": "На", "options": ["На", "З", "Святкуємо"]}, {"sentence": "Я ___ День Незалежності України.", "answer": "святкую", "options": ["святкую", "на", "вітаю"]}, {"sentence": "___ Новий рік ми даруємо подарунки.", "answer": "На", "options": ["На", "З", "Святкуємо"]}]`)} instruction={"Choose the Ukrainian pattern."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ми ___ Різдво вдома.", "answer": "святкуємо", "options": ["святкуємо", "святкує", "святкуєш"], "explanation": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."}, {"sentence": "___ Різдво ми співаємо колядки.", "answer": "На", "options": ["На", "З", "Святкуємо"], "explanation": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."}, {"sentence": "Ми ___ Великдень з родиною.", "answer": "святкуємо", "options": ["святкуємо", "святкує", "святкуєш"], "explanation": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."}, {"sentence": "___ Великдень ми печемо паски.", "answer": "На", "options": ["На", "З", "Святкуємо"], "explanation": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."}, {"sentence": "Я ___ День Незалежності України.", "answer": "святкую", "options": ["святкую", "святкуєш", "святкують"], "explanation": "Я requires first-person singular святкую. Святкуєш is second-person singular and святкують third-person plural. Святкувати takes the holiday name as its direct object."}, {"sentence": "___ Новий рік ми даруємо подарунки.", "answer": "На", "options": ["На", "З", "Святкуємо"], "explanation": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."}]`)} instruction={"Choose the Ukrainian pattern."} isUkrainian={false} />
 
 ## Родинні свята
 
@@ -384,7 +384,7 @@ You can now do four practical things:
 
 *(see lesson, §Державне свято)*
 
-### Святкувати or на?
+### Complete the holiday sentence
 
 *(see lesson, §Формули привітання)*
 

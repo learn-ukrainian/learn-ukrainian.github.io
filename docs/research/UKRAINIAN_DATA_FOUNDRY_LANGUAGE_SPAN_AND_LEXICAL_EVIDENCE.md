@@ -237,11 +237,13 @@ and preserves semantic, grammatical, stylistic, and contextual distinctions.
 The repository already implements:
 
 - WebForms state replay and the `paradigm`, `synonyms`, `antonyms`, and
-  `phraseology` sections in `scripts/rag/source_query.py`;
+  `phraseology` sections, first in `scripts/rag/source_query.py` (retired
+  2026-10-28) and now in the register walk `scripts/lexicon/runner/fetch_ulif_homonyms.py`;
 - structured relation-group parsing in
   `scripts/lexicon/runner/ulif_dictua_parse.py`; and
 - a sequential one-second fetch policy in
-  `scripts/lexicon/runner/fetch_ulif_20k.py`.
+  `scripts/lexicon/runner/fetch_ulif_20k.py` (retired 2026-10-28; the register
+  walk in `scripts/lexicon/runner/fetch_ulif_homonyms.py` keeps that policy).
 
 An initial live `query_ulif("дуже", sections=["paradigm", "synonyms"])` probe
 returned structured synonym groups, register labels, citations, and content
@@ -347,11 +349,12 @@ The correction factory is not complete until tests and receipts cover:
 - VESUM and Russian-shadow interfaces:
   `scripts/verification/vesum.py` and
   `scripts/verification/check_ru_morph.py`.
-- ULIF live adapter: `scripts/rag/source_query.py`.
+- ULIF local reader (the live adapter was retired 2026-10-28):
+  `scripts/wiki/sources_db.py` `query_ulif_local`.
 - ULIF structured parser:
   `scripts/lexicon/runner/ulif_dictua_parse.py`.
-- Existing durable fetch lane:
-  `scripts/lexicon/runner/fetch_ulif_20k.py`.
+- The one DictUA refresh path (register walk):
+  `scripts/lexicon/runner/fetch_ulif_homonyms.py`.
 - Ukrainian authority and escalation rules:
   `agents_extensions/shared/rules/ukrainian-linguistics.md`.
 

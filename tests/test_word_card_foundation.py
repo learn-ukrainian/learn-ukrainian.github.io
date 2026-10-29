@@ -711,15 +711,15 @@ def test_committed_inputs_readonly_cli_guard(tmp_path, capsys):
     output = json.loads(result.stdout)
     assert output["counts"] == dict(units=150, source_records=272, atlas_articles=114, legacy_alias_rows=140)
     registry = json.loads(paths[1].read_bytes())
-    # v3 = the reviewed v2 allocation plus three appended holding-sense mints (#8981, append-only).
-    assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [264, 272, 694]
+    # v3 = the reviewed v2 allocation plus four appended holding-sense mints (#8981, #11627, append-only).
+    assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [264, 272, 695]
     assert registry["registry_version"] == 3
     # The source-partition allocation appends to, rather than rewriting, the bootstrap.
     assert sha(dict(entries=registry["entries"][:114], source_records=registry["source_records"],
                     events=registry["events"][:386])) == \
         "a349127ec24789b2bf180cf6edf7a4056e9025f1c2801e4232a11446be3dc5e1"
     assert len(output["unresolved_card_mappings"]) == 22 and output["heldout_isolation"] == "unverified"
-    assert output["foreign_build_events"] == 308  # Allocation and holding epochs; not bootstrap mint evidence.
+    assert output["foreign_build_events"] == 309  # Allocation and holding epochs; not bootstrap mint evidence.
     member, held = tmp_path / "membership.json", json.loads(paths[0].read_bytes())["selection"]["source_records"][0]
     save(member, dict(heldout=[held["locator"]], replay=[]))  # No committed owner carries an adjudication marker.
     assert foundation.main(["verify", "--manifest", str(paths[0]), "--registry", str(paths[1]),
@@ -745,7 +745,7 @@ def test_committed_pilot_source_partition_allocations():
         "4f7717c56ba723e4db22e89d1ca96baee21fc2731f24fdce078e9dc9021ca422"
     holding_build = "pilot-holding-sense-allocation-8981@sha256:" + manifest["manifest_sha256"]
     holding = {e["to"][0]: e for e in registry["events"] if e["build_id"] == holding_build}
-    assert len(holding) == 3 and all(e["kind"] == "sense_mint" for e in holding.values())
+    assert len(holding) == 4 and all(e["kind"] == "sense_mint" for e in holding.values())
     assert sum(e["card_kind"] == "mwe" for e in entries) == 15
     assert sum(e["card_kind"] == "proper_name" for e in entries) == 13
     assert sum(e["card_kind"] == "lexeme" for e in entries) == 122

@@ -105,13 +105,13 @@ def test_a_write_after_a_successful_lookup_fails_the_audit(tmp_path: Path) -> No
     assert sorted(_annotation_mismatches(results)) == sorted(injected)
 
 
-def test_wikipedia_and_dictua_cache_writes_are_detected(probe_results: dict[str, dict]) -> None:
-    """Positive controls: the probe sees the writes the review found, so a clean result means something."""
+def test_wikipedia_cache_writes_are_detected_and_ulif_reads_locally(probe_results: dict[str, dict]) -> None:
+    """Positive control: the probe sees the cache write, so a clean result means something."""
     assert any("wiki_cache.db" in write for write in probe_results["query_wikipedia"]["writes"])
-    for name in ("query_ulif", "query_ulif_synonyms", "query_ulif_antonyms", "query_ulif_phraseology"):
-        assert any(write.startswith("sqlite-write") for write in probe_results[name]["writes"]), name
-    # The cache_only-free records lookup reads the same table without storing.
-    assert probe_results["query_ulif_records"]["writes"] == []
+    # Every ULIF tool answers from the local DictUA copy: no store and no HTTP.
+    for name in ("query_ulif", "query_ulif_synonyms", "query_ulif_antonyms", "query_ulif_phraseology", "query_ulif_records"):
+        assert probe_results[name]["writes"] == [], name
+        assert probe_results[name]["network"] == [], name
 
 
 def test_probe_refuses_writes_outside_the_request_log(tmp_path: Path) -> None:

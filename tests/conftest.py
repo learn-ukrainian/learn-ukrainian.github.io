@@ -725,6 +725,21 @@ _LIVE_GITHUB_ALLOWED = False
 
 
 @pytest.fixture(autouse=True)
+def _restore_process_umask() -> Generator[None, None, None]:
+    """Give every test the umask it started with.
+
+    The umask is process-wide, and code run in-process can narrow it for good
+    (``scripts.dispatcher.worker.supervise`` sets 077 for its worker process).
+    Without this, every later test on the same xdist worker gets narrower
+    ``mkdir`` modes, so mode checks pass or fail by shard placement.
+    """
+    prior = os.umask(0)
+    os.umask(prior)
+    yield
+    os.umask(prior)
+
+
+@pytest.fixture(autouse=True)
 def _no_host_claude_default_account(monkeypatch: pytest.MonkeyPatch) -> None:
     """Keep claude dispatch tests off the host's default-account file (#10619); account tests opt in."""
     monkeypatch.setenv("LU_CLAUDE_DEFAULT_ACCOUNT_FILE", "")

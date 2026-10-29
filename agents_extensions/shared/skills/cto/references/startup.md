@@ -40,14 +40,23 @@ rollover candidate alone; archive one only through the `thread-rollover` skill.
 
 ## 4. Identity and inbox
 
-Your inbox worker identity is `claude-cto-<session id>`. Drain the launcher's registered
-slot and the epics recipients: `claude-epics` (`scripts/config/area_assignments.yaml`
-`epics.slots`), `epics`, `cto` and `claude-cto`. The Fleet authority service admits every
-exact recipient, even where a convenience CLI lists fewer. For each message run the
-authority-delivery procedure in `docs/runbooks/driver-seat-cli-move.md` § 5: claim, read
-the body, reconcile prior effects, apply or refuse, record the outcome, then ack with the
-returned fence. Never ack or consume a supervisory request: it belongs to the launcher and
-its watcher (`docs/runbooks/session-supervisor.md`).
+`claude-cto` is the one durable CTO recipient: every worker, keeper and tool addresses it,
+and the authority service refuses any publication to `claude-cto-<anything>`. Your session
+identity `claude-cto-<session id>` is only the consumer identity: pass it as `--worker-id`
+when you claim and acknowledge, never as a recipient and never to workers as an address.
+Drain the launcher's registered slot and the epics recipients: `claude-epics`
+(`scripts/config/area_assignments.yaml` `epics.slots`), `epics`, `cto` and `claude-cto`.
+The Fleet authority service admits every exact recipient, even where a convenience CLI
+lists fewer. For each message run the authority-delivery procedure in
+`docs/runbooks/driver-seat-cli-move.md` § 5: claim, read the body, reconcile prior effects,
+apply or refuse, record the outcome, then ack with the returned fence. Never ack or consume
+a supervisory request: it belongs to the launcher and its watcher
+(`docs/runbooks/session-supervisor.md`).
+
+Deliveries queued before this rule sit at old `claude-cto-<id>` names and stay claimable.
+Once per session, list them with `.venv/bin/python -m scripts.fleet_comms backlog` and drain
+each such name the same way (claim with `--recipient <old name>`, your own `--worker-id`).
+Do not publish to an old name and do not tell a worker to.
 
 ## 5. Skip lane-driver items
 

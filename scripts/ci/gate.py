@@ -1,4 +1,4 @@
-"""Require truthful PR admission or full-suite results for the checked-out candidate."""
+"""Require truthful full-suite results, plus PR guards on a PR, for the checked-out candidate."""
 
 from __future__ import annotations
 
@@ -97,7 +97,8 @@ def main() -> int:
             raise ValueError("missing or unexpected CI dependencies")
         failed = False
         for name, result in sorted(results.items()):
-            expected = "success" if name in COMMON or (name in FULL and tier == "full") or (
+            # Every event runs the full jobs; "admission" only adds the PR-only guards.
+            expected = "success" if name in COMMON or name in FULL or (
                 name == "queue-metadata-scan" and event == "merge_group"
             ) else "skipped"
             value = result.get("result")
@@ -106,7 +107,8 @@ def main() -> int:
                 if value == "cancelled":
                     print(f"::error::required job was cancelled: {name}")
                 failed = True
-        summary = ("PR admission: full pytest was not run. Full green merge-group CI is required before landing."
+        summary = ("PR CI: the full supported pytest suite, partition audits and Frontend ran on this head. "
+                   "Merge-group CI still validates the queue candidate before landing."
                    if tier == "admission" else "Full supported pytest suite and partition audits are required.")
         print(summary)
         if os.environ.get("GITHUB_STEP_SUMMARY"):

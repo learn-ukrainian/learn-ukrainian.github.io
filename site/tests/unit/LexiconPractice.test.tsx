@@ -1290,6 +1290,7 @@ describe('LexiconPractice', () => {
   test.each([null, 49, 50])('#10706 audio: actual Next cancels same-item playback with resumed history %s without another review', async (historyLength) => {
     const { resetManifestCacheForTesting } = await import('@site/src/lib/lexicon/pronunciation-player');
     resetManifestCacheForTesting();
+    const user = userEvent.setup();
     const pause = vi.fn();
     class AudioBoundary {
       currentTime = 0;
@@ -1314,22 +1315,22 @@ describe('LexiconPractice', () => {
     }
     const view = render(<LexiconPractice initialDeck={sampleDeckWithOnlyMode('knyha', 'flashcards')} autoStart={historyLength === null} initialMode={historyLength === null ? 'flashcards' : 'mixed'} />);
     try {
-      if (historyLength !== null) fireEvent.click(await screen.findByTestId('practice-start-session'));
+      if (historyLength !== null) await user.click(await screen.findByTestId('practice-start-session'));
       for (let round = 0; round < (historyLength === null ? 1 : 3); round++) {
         const card = await waitFor(() => {
           const element = view.container.querySelector<HTMLElement>('[data-activity="flashcard"]');
           expect(element).toBeVisible();
           return element!;
         });
-        fireEvent.click(card);
-        fireEvent.click(view.container.querySelector<HTMLButtonElement>('[data-rate="again"]')!);
+        await user.click(card);
+        const again = view.container.querySelector<HTMLButtonElement>('[data-rate="again"]');
+        expect(again).toBeEnabled();
+        await user.click(again!);
         const answered = localStorage.getItem(SRS_STORAGE_KEY);
-        fireEvent.click(await screen.findByRole('button', { name: 'Послухати вимову' }));
+        await user.click(await screen.findByRole('button', { name: 'Послухати вимову' }));
         await screen.findByRole('button', { name: 'Зупинити відтворення' });
         pause.mockClear();
-        // The advance button mounts once the rated outcome commits; a synchronous getBy
-        // here lost that race under CPU contention (#10517), so wait for it.
-        fireEvent.click(await screen.findByTestId('practice-advance-button'));
+        await user.click(await screen.findByTestId('practice-advance-button'));
         await waitFor(() => expect(view.container.querySelector('[data-activity="flashcard"]')).toHaveAttribute('data-rated', 'false'));
         expect(pause).toHaveBeenCalled();
         expect(screen.getByRole('button', { name: 'Послухати вимову' })).toBeVisible();

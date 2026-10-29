@@ -24,8 +24,9 @@ query_grac            2533, 2546, 2548,     status: "unavailable" (2533), freque
                       2564, 2573            "No concordance results for:" (2564),
                                             "No collocations found for:" (2573),
                                             "GRAC query failed for:" (2546)
-query_ulif            2593, 2607, 2625      status: "unavailable" (2593), status: "not_found" (2607),
-                                            f"No ULIF paradigm found for: '{word}'" (2625)
+query_ulif            handle_query_ulif     status: "not_found" (authoritative local miss),
+                                            f"No ULIF entry found for: '{word}'",
+                                            f"No ULIF paradigm found for: '{word}'"
 query_r2u             2690                  f"No r2u translation found for: '{word}'"
 query_sum20           2734                  f"No official offline СУМ-20 entry is currently ingested for '{word}'."
 query_pravopys        2838                  f"No pravopys section found for: '{topic}'"
@@ -407,7 +408,13 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
                     and all(isinstance(e, dict) for e in r["entries"]) for r in records
                 )
                 entries = [e for r in records for e in r["entries"]] if populated else []
-                if populated and entries and all(e.get("status") == "not_found" and e.get("retrieved_at") for e in entries):
+                local_copy = parsed.get("local_copy")
+                # Only a miss on the complete local DictUA copy is a statement about
+                # ULIF itself; a leftover per-query negative row is not.
+                if (
+                    isinstance(local_copy, dict) and local_copy.get("complete") is True
+                    and all(r.get("status") == "not_found" and r.get("authoritative") is True for r in records)
+                ):
                     outcome = "no_hits"
                 elif (
                     populated

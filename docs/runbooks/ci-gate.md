@@ -6,6 +6,13 @@ guard, attribution, lint and content contracts, dependency-audit scoping, and
 `pytest --collect-only`. Its summary states plainly that full pytest was not run.
 The parallel required `pr-affected` job executes literal changed existing
 `tests/**/test_*.py` files plus every path in `scripts/ci/pr-affected-guards.txt`.
+The same job also runs `pytest tests -m 'repo_wide and not atlas_release and not slow and not site_toolchain'`
+in a separate required step.
+This selects marked tests only, including marked functions in otherwise
+unmarked files. Its traversal includes `tests/build/`, which pytest normally
+excludes. It uses the same candidate identity and checkout-integrity checks.
+The invariant step runs even if changed tests defer or fail, unless the run
+is cancelled. Changed-file duration estimates never defer invariants.
 It verifies the checked-out candidate against `GITHUB_SHA` and the event's PR
 merge ref. The candidate must have two Git parents and its second parent must
 match the event's PR head. Its first parent supplies the actual tested base for
@@ -30,8 +37,8 @@ unique merge-base with the public default branch, as the pre-push gate does;
 an initial default-branch push scans all ancestry. Unresolved ranges refuse.
 No green-run receipt skips code checks or publication checks.
 
-The job has a ten-minute timeout and targets under five minutes on hosted
-runners. The committed serial file-duration sum plus 60 seconds for setup and
+The changed-test subprocess retains its 480-second timeout. The committed
+serial file-duration sum plus 60 seconds for setup and
 collection is the conservative estimate; a selected file with no recorded time
 (a new test file) counts at the median recorded file and still runs. If the
 estimate exceeds 600 seconds or pytest infrastructure changes, all guards still run
@@ -49,6 +56,22 @@ markers, quarantine and governor apply. Hosted duration and the independent
 30-day original-failed-head replay remain driver-owned proof requirements.
 The initial list includes all six runtime/catalog/global suites from the
 original failed group; later PR changes cannot establish old coverage.
+
+The `pr-affected-proof` artifact also contains `pr-repo-wide.json` and
+`pr-repo-wide.xml`. The JSON records the exact candidate, marker expression,
+requested paths, worker count, subprocess timeout, elapsed wall time,
+logical CPU count and initial load average, plus reported cases, failures and
+skips. The marker expression requires `repo_wide` and retains the supported
+tier's `atlas_release`, `slow` and `site_toolchain` exclusions. It does not
+broaden execution to unmarked tests or move nightly or release tests into PR CI.
+An empty selection, failed execution, stale report or missing JUnit fails CI.
+Both invocations use two pytest workers with work stealing. Invariants have
+a 1,500-second subprocess timeout; the combined job has a 40-minute timeout.
+The budget uses the hosted measurements on [PR #11922](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/11922):
+twice the initial superset's observed marker wall time, rounded up to five minutes, plus the
+existing 480-second changed-test ceiling, twice the observed setup time and
+one minute for report publication, again rounded up to five minutes.
+The same job runs both selections without additional PR jobs or shards.
 
 Every `merge_group` candidate runs the full supported non-slow pytest suite,
 frontend toolchain tests and partition audits.
@@ -84,7 +107,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Queue commit metadata scan | `merge_group` only. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
 | Checks | PR pytest collection, quarantine admission verification, and `scripts/ci/checks.sh` for every lint and content-contract gate on every tier; fails if any failed. |
-| PR changed tests and guards | PRs execute changed test files and all explicit guards; full tiers exit without duplicate execution. |
+| PR changed tests and guards | PRs execute changed test files, all explicit guards, and marker-only repository invariants; full tiers exit without duplicate execution. |
 | Frontend | Full tier only. Always runs the real MDX compiler regressions (`-m site_toolchain`); builds and tests the site only when the diff touches the frontend denominator. |
 | Refresh pytest durations | Full tier only. Freezes one file-weight snapshot for every shard (below). |
 | pytest (1..N) | Full tier only. The full `not atlas_release and not slow and not site_toolchain` suite, split over N static shards. |

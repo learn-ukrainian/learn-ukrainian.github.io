@@ -1,16 +1,16 @@
 inline:
   - id: act-1
     type: fill-in
-    title: Choose що, де, or коли
+    title: "Complete the sentence"
     instruction: Complete each A1 sentence with the right connector.
     items:
-      - sentence: 'Я знаю, ___ це кафе.'
+      - sentence: "Я знаю, ___ це кафе."
         answer: 'що'
         options:
           - 'що'
-          - 'де'
-          - 'коли'
-        explanation: 'Use що for a fact or content.'
+          - "якого"
+          - "якому"
+        explanation: "Що introduces the content clause; якого and якому cannot introduce це кафе."
       - sentence: 'Я не знаю, ___ парк.'
         answer: 'де'
         options:
@@ -18,13 +18,13 @@ inline:
           - 'що'
           - 'коли'
         explanation: 'Use де for a place.'
-      - sentence: 'Скажи, ___ урок.'
+      - sentence: "— Скажи, ___ урок. — О десятій."
         answer: 'коли'
         options:
           - 'коли'
           - 'де'
           - 'що'
-        explanation: 'Use коли for a time.'
+        explanation: "О десятій answers коли, not the location question де; що cannot introduce this time question."
       - sentence: 'Вона каже, ___ магазин близько.'
         answer: 'що'
         options:
@@ -32,27 +32,27 @@ inline:
           - 'коли'
           - 'де'
         explanation: 'Каже, що introduces what she says.'
-      - sentence: 'Я знаю, ___ ти живеш.'
+      - sentence: "— Я знаю, ___ ти живеш. — Так, ти вже був у мене вдома."
         answer: 'де'
         options:
           - 'де'
-          - 'що'
+          - "якому"
           - 'куди'
-        explanation: 'Живеш is a static place, so use де.'
-      - sentence: 'Ти знаєш, ___ зустріч?'
+        explanation: "Де refers to the home already visited; якому requires a noun and куди is a destination, not the location of живеш."
+      - sentence: "— Ти знаєш, ___ зустріч? — О другій."
         answer: 'коли'
         options:
           - 'коли'
           - 'що'
           - 'де'
-        explanation: 'A meeting needs a time.'
-      - sentence: 'Я думаю, ___ це правильно.'
+        explanation: "О другій is a time answer, so коли fits. Що cannot introduce the question; де asks for a place."
+      - sentence: "Я думаю, ___ це правильно."
         answer: 'що'
         options:
           - 'що'
-          - 'де'
-          - 'коли'
-        explanation: 'Думаю, що is a useful fact frame.'
+          - "якого"
+          - "якому"
+        explanation: "Що introduces the thought; якого and якому cannot introduce це правильно."
       - sentence: 'Скажи, ___ нове кафе.'
         answer: 'де'
         options:
@@ -169,9 +169,9 @@ inline:
   - id: act-4
     type: quiz
     title: Where does the comma go?
-    instruction: Choose the Ukrainian sentence with the correct comma.
+    instruction: "Choose the sentence with correct punctuation."
     items:
-      - prompt: 'I know where the cafe is.'
+      - prompt: "Обери речення з правильною пунктуацією."
         options:
           - text: 'Я знаю, де кафе.'
             correct: true
@@ -180,7 +180,7 @@ inline:
           - text: 'Я, знаю де кафе.'
             correct: false
         explanation: 'Put the comma before де.'
-      - prompt: 'I think that this is good.'
+      - prompt: "Обери речення з правильною пунктуацією."
         options:
           - text: 'Я думаю, що це добре.'
             correct: true
@@ -189,7 +189,7 @@ inline:
           - text: 'Я, думаю що це добре.'
             correct: false
         explanation: 'Put the comma before що.'
-      - prompt: 'Tell me when the lesson is.'
+      - prompt: "Обери речення з правильною пунктуацією."
         options:
           - text: 'Скажи, коли урок.'
             correct: true
@@ -198,7 +198,7 @@ inline:
           - text: 'Скажи коли, урок.'
             correct: false
         explanation: 'Put the comma before коли.'
-      - prompt: 'She says that the shop is close.'
+      - prompt: "Обери речення з правильною пунктуацією."
         options:
           - text: 'Вона каже, що магазин близько.'
             correct: true
@@ -225,8 +225,8 @@ workbook:
       - left: 'Скажи, коли...'
         right: 'Tell me when...'
   - type: fill-in
-    title: Guest directions frames
-    instruction: Choose що, де, or коли for each short apartment-direction sentence.
+    title: "Guest conversation frames"
+    instruction: "Choose the word that completes each sentence."
     items:
       - sentence: 'Я знаю, ___ парк.'
         answer: 'де'
@@ -235,20 +235,20 @@ workbook:
           - 'що'
           - 'коли'
         explanation: 'A park location needs де.'
-      - sentence: 'Скажи, ___ ти біля фонтану.'
+      - sentence: "— Скажи, ___ ти будеш біля фонтану. — О третій."
         answer: 'коли'
         options:
           - 'коли'
           - 'що'
           - 'де'
-        explanation: 'Use коли for the time when something happens.'
-      - sentence: 'Я бачу, ___ будинок близько.'
+        explanation: "О третій answers коли. Що cannot introduce this time question; де would ask for a place already supplied by біля фонтану."
+      - sentence: "Я бачу, ___ будинок близько."
         answer: 'що'
         options:
           - 'що'
-          - 'де'
-          - 'коли'
-        explanation: 'Use що for a fact.'
+          - "якого"
+          - "якому"
+        explanation: "Що introduces the observed fact; якого and якому cannot introduce будинок близько."
       - sentence: 'Ти знаєш, ___ вулиця Садова?'
         answer: 'де'
         options:
@@ -263,13 +263,13 @@ workbook:
           - 'коли'
           - 'де'
         explanation: 'Думаю, що introduces a thought.'
-      - sentence: 'Скажи, ___ зустріч у кафе.'
+      - sentence: "— Скажи, ___ зустріч у кафе. — О пів на шосту."
         answer: 'коли'
         options:
           - 'коли'
-          - 'що'
-          - 'де'
-        explanation: 'A meeting needs a time.'
+          - "де"
+          - "що"
+        explanation: "The answer о пів на шосту selects коли. Де asks for a place, already supplied by у кафе; що cannot introduce this time question."
   - type: match-up
     title: Recognition repair pairs
     instruction: Match each copied pattern with the Ukrainian repair.

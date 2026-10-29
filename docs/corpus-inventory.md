@@ -259,6 +259,68 @@ tool returns `status: error`, `error_code: resource_catalogue_missing`.
 | `grinchenko`/`goroh_etymology` | 41 | — | Горох etymology stubs (small). |
 | `paronyms_cache` | 6 | — | Paronym pair cache. |
 
+### ULIF DictUA: complete local copy, one refresh path (2026-10-28)
+
+We hold the whole ULIF «Словники України» register locally, so every Sources ULIF tool
+(`query_ulif`, `query_ulif_synonyms`, `query_ulif_antonyms`, `query_ulif_phraseology`,
+`query_ulif_records`) answers from `data/sources.db` alone and never calls
+`lcorp.ulif.org.ua`.
+
+| Table | Rows | What it holds |
+| --- | ---: | --- |
+| `ulif_dictua_entries` | 269,269 | 262,812 register entries from the walk (`homonym_checked = 1`; 262,735 `ok`, 77 `parse_error`), plus 6,457 rows left by the retired per-query cache, which the tools ignore. |
+| `ulif_dictua_sections` | 336,396 | Paradigm, synonym, antonym and phraseology groups. |
+| `ulif_forms` | 4,742,272 | Stressed inflected forms derived from the paradigms. |
+| `ulif_forms_failures` | 59 | Register entries whose article is empty in the source (`empty_visible_article`). |
+| `ulif_forms_build` | 1 | Build receipt: `complete`, parser `ulif-forms-v4`, 262,753 of 262,812 entries built, finished 2026-09-30T06:22:48Z, with a source fingerprint. |
+
+A word that is not a register headword gets an authoritative `not_found`, which cites the
+build receipt (`local_copy`). It says whether the entry is one of the 59 build failures, and
+names the headwords the word is an inflected form of. If the receipt is not complete, a miss
+is `unavailable` instead.
+
+**The one supported refresh path** is the DictUA register walk followed by the forms build:
+
+```bash
+.venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms walk \
+    --state-dir batch_state/ulif-homonyms/state --db data/sources.db --delay 1.0
+.venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms parse \
+    --state-dir batch_state/ulif-homonyms/state --db data/sources.db
+.venv/bin/python -m scripts.lexicon.runner.ulif_forms build --db data/sources.db
+```
+
+`fetch_ulif_homonyms run` refetches named spellings through the same client. No other code
+fetches DictUA.
+
+### Sources MCP tool backing (2026-10-28)
+
+Which store answers each Sources tool. Counts are live `sqlite3 -readonly` results.
+
+| Tool | Backing | Evidence |
+| --- | --- | --- |
+| `query_ulif`, `query_ulif_synonyms`, `query_ulif_antonyms`, `query_ulif_phraseology`, `query_ulif_records` | Complete local copy | ULIF tables and build receipt above. |
+| `verify_word`, `verify_words`, `verify_lemma`, `inspect_word`, `inspect_words`, `inspect_lemma`, `check_modern_form` | Complete local copy | `data/vesum.db` 6,632,807 forms / 408,202 lemmas; receipt `vesum_build_metadata`. |
+| `verify_stress`, `verify_stresses` | Complete local copy | `ukrainian-word-stress` trie plus `ulif_forms` (receipt above); the orthoepy overlay is the partial `slovnyk_me_entries` cache. |
+| `check_text`, `vet_vocabulary`, `check_russian_shadow` | Local | VESUM, ULIF forms, `ua_gec_errors` 8,937, `puls_cefr` 5,939, `sum11`, pymorphy3. |
+| `query_pravopys` | Complete local copy, live fallback | `pravopys_paragraphs` 168 of 168 (receipt `pravopys_sources`); 2019.pravopys.net only when the store is unavailable. |
+| `search_sources`, `search_text`, `search_literary`, `search_external`, `get_full_text`, `get_chunk_context`, `verify_quote` | Local curated corpora | `textbook_sections` 40,151; `textbooks` 54,127; `literary_texts` 137,723; `external_articles` 1,242; `wikipedia` 1,029; `ukrainian_wiki` 22,385. |
+| `search_definitions`, `search_grinchenko_1907`, `search_esum`, `search_idioms`, `search_synonyms`, `translate_en_uk`, `search_style_guide`, `query_cefr_level`, `search_ua_gec_errors` | Local | `sum11` 127,069; `grinchenko` 67,275; `esum_etymology` 36,177; `frazeolohichnyi` 24,683 + ULIF sections; `ukrajinet` 122,441; `balla_en_uk` 78,704; `style_guide` 342; `puls_cefr` 5,939; `ua_gec_errors` 8,937. No completeness receipts. |
+| `query_sum20` | Partial local copy | `sum20_articles` 2,380 (crawl checkpoint: 2,282 ok, 72 not_found, 1 transient). |
+| `query_wikipedia_cached` | Partial local cache | `data/wiki_cache.db` 8 rows plus `wikipedia` 1,029. |
+| `search_slovnyk_me` | Partial local cache, then network | `slovnyk_me_entries` 145,191 + `slovnyk_me_lookup_misses` 245,879; live slovnyk.me when `live` is true (default). |
+| `search_heritage`, `verify_source_attribution` | Local, then network | Local dictionaries, then live slovnyk.me (and Wikipedia for attribution). |
+| `query_grac` | Partial local snapshot, then network | `data/grac_frequency.db` 42,110 lemma items, checkpoint `complete=0` (expected 1,147,918); concordance and collocations are live only (sketch.uacorpus.org). |
+| `query_wikipedia` | Network, cache first | uk.wikipedia.org after `wiki_cache.db` and `wikipedia`; writes the cache. |
+| `query_r2u`, `query_e2u`, `query_slovnyk_me` | Network | r2u.org.ua, e2u.org.ua, slovnyk.me; no local copy is read. |
+| `search_resources`, `word_card`, `collection_stats`, `mcp_server_identity` | Local metadata / computed | `resource_catalogue` 1,086; the pinned word-card release; table counts; file hashes. |
+
+**Network-backed tools whose source we already hold completely:** `query_slovnyk_me` with
+`dict=newsum`, and the `newsum` part of `search_slovnyk_me`. The whole slovnyk.me СУМ-20
+mirror is in `data/sum20_slovnyk_staging.db` (`sum20_slovnyk_articles` 164,838, checkpoint
+164,838 complete), but neither tool reads it. `query_pravopys` is already local-first. No
+other network-backed tool has a complete local copy: r2u, e2u, GRAC, Wikipedia and the
+non-newsum slovnyk.me dictionaries are held partially or not at all.
+
 ### Usage advice & word pairs (lexicon / style grounding)
 
 | Database | Tables | Ingest module | What it is |

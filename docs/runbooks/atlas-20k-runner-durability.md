@@ -2,8 +2,8 @@
 
 Fixes #5884. Related incident: 2026-07-29 wipe (sole laptop copies fail).
 
-The `fetch_ulif_20k.py` / `reduce_ulif_20k.py` / `enrich_offline_20k.py`
-runners write their durable state under a work-dir on the remote runner VPS
+The `fetch_ulif_20k.py` (fetch phase retired 2026-10-28; its network cache stays
+readable) / `reduce_ulif_20k.py` / `enrich_offline_20k.py` runners write their durable state under a work-dir on the remote runner VPS
 (`$ATLAS_RUN_ROOT/$ATLAS_WORK_DIR_NAME`, default work-dir name `run-20k`;
 `ATLAS_RUN_ROOT` is required):
 
