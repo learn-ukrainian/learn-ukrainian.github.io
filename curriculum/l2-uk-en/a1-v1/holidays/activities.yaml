@@ -47,51 +47,51 @@ inline:
         explanation: 'The official greeting is З Днем Незалежності України.'
   - id: act-3
     type: fill-in
-    title: Святкувати or на?
+    title: "Complete the holiday sentence"
     instruction: Choose the Ukrainian pattern.
     items:
       - sentence: 'Ми ___ Різдво вдома.'
         answer: 'святкуємо'
         options:
           - 'святкуємо'
-          - 'на'
-          - 'з'
-        explanation: 'Use святкуємо Різдво without на.'
+          - "святкує"
+          - "святкуєш"
+        explanation: "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."
       - sentence: '___ Різдво ми співаємо колядки.'
         answer: 'На'
         options:
           - 'На'
           - 'З'
           - 'Святкуємо'
-        explanation: 'Use на when the holiday is the time.'
+        explanation: "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."
       - sentence: 'Ми ___ Великдень з родиною.'
         answer: 'святкуємо'
         options:
           - 'святкуємо'
-          - 'на'
-          - 'у'
-        explanation: 'Use святкуємо Великдень.'
+          - "святкує"
+          - "святкуєш"
+        explanation: "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."
       - sentence: '___ Великдень ми печемо паски.'
         answer: 'На'
         options:
           - 'На'
           - 'З'
           - 'Святкуємо'
-        explanation: 'Use на + holiday for a time phrase.'
+        explanation: "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."
       - sentence: 'Я ___ День Незалежності України.'
         answer: 'святкую'
         options:
           - 'святкую'
-          - 'на'
-          - 'вітаю'
-        explanation: 'Святкувати takes the holiday name directly.'
+          - "святкуєш"
+          - "святкують"
+        explanation: "Я requires first-person singular святкую. Святкуєш is second-person singular and святкують third-person plural. Святкувати takes the holiday name as its direct object."
       - sentence: '___ Новий рік ми даруємо подарунки.'
         answer: 'На'
         options:
           - 'На'
           - 'З'
           - 'Святкуємо'
-        explanation: 'This sentence talks about what happens at that time.'
+        explanation: "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."
   - id: act-4
     type: quiz
     title: What belongs to which holiday?

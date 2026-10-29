@@ -78,16 +78,16 @@ inline:
     title: Choose the emergency phrase
     instruction: Pick the clearest A1 phrase.
     items:
-      - prompt: 'You need to say: There is a fire here.'
+      - prompt: "— Що сталося? — ___"
         options:
           - text: 'Тут пожежа.'
             correct: true
-          - text: 'Тут паспорт.'
+          - text: "Тут пожежу."
             correct: false
           - text: 'Мене пожежа.'
             correct: false
         explanation: 'Тут пожежа is the short problem sentence.'
-      - prompt: 'You need police.'
+      - prompt: "У мене вкрали сумку з грошима. ___"
         options:
           - text: 'Потрібна поліція.'
             correct: true
@@ -96,7 +96,7 @@ inline:
           - text: 'Поліція болить.'
             correct: false
         explanation: 'Потрібна поліція asks for police help.'
-      - prompt: 'You want someone to call 103.'
+      - prompt: "— У мене немає телефона. ___ — Добре, зараз подзвоню."
         options:
           - text: 'Подзвоніть за номером 103, будь ласка.'
             correct: true
@@ -105,7 +105,7 @@ inline:
           - text: 'Сто три звати.'
             correct: false
         explanation: 'Use Подзвоніть за номером...'
-      - prompt: 'You need someone to summon an ambulance.'
+      - prompt: "— Тут людині дуже погано. ___ — Добре, зараз викличу."
         options:
           - text: 'Викличте швидку!'
             correct: true

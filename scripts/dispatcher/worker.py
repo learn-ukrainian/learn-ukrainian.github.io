@@ -1,6 +1,7 @@
 """Detached supervision, client waits and process-group cancellation."""
 
 import contextlib
+import hashlib
 import json
 import os
 import signal
@@ -15,7 +16,7 @@ from scripts.agent_runtime import bounded_advisory
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers, store
+from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers, runtime_context, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 from scripts.dispatcher.watchdog import DeadlineExpired, communicate, deadlines, liveness_paths
@@ -382,7 +383,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 status, error = "failed", "output schema binding invalid"
                 return
         provider = providers.load(spec.agent)
-        invocation = provider.build(spec, child_env(spec))
+        invocation = runtime_context.build(spec, child_env(spec))
+        record["runtime_input_sha256"] = hashlib.sha256(invocation.stdin or b"").hexdigest()
         try:
             invocation = admission.claude_launch(spec, invocation)
             if spec.agent == "claude" and spec.claude_account not in (None, "a"):

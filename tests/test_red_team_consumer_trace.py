@@ -30,6 +30,8 @@ HANDLING = {
     "scripts/review/record_cf_verdict.py": "accept-as-approval",
     # The lineage rule reads A's APPROVE as each seat's current verdict before an extension or carry-over.
     "scripts/review/review_lineage.py": "accept-as-approval",
+    # The elevated-tier grant reads the latest rejection only as open-blocker evidence, never as approval.
+    "scripts/review/budget_grant.py": "ignore",
     "scripts/fleet_comms/cli.py": "ignore",
     "scripts/fleet_comms/efficiency_metrics.py": "ignore",
     "scripts/ci/pr20_measurement.py": "ignore",

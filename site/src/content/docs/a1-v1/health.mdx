@@ -88,7 +88,7 @@ guess what the problem is or tell anyone what to do.
 
 ### Complete the health phrase
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене болить ___.", "answer": "голова", "options": ["голова", "лікар", "аптека"]}, {"sentence": "Мені потрібен ___.", "answer": "лікар", "options": ["лікар", "голова", "кашель"]}, {"sentence": "(Say that you have a fever.) У мене ___.", "answer": "температура", "options": ["температура", "праворуч", "квиток"], "explanation": "У мене температура is a fixed symptom phrase."}, {"sentence": "___, будь ласка.", "answer": "Повторіть", "options": ["Повторіть", "Болить", "Нежить"]}]`)} instruction={"Choose the word that completes the A1 phrase."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У мене болить ___.", "answer": "голова", "options": ["голова", "лікар", "аптека"]}, {"sentence": "Мені потрібен ___.", "answer": "лікар", "options": ["лікар", "голова", "кашель"]}, {"sentence": "У мене ___ 39 градусів.", "answer": "температура", "options": ["температура", "праворуч", "квиток"], "explanation": "Температура can be measured in degrees. Праворуч is a direction and квиток is not a temperature measurement."}, {"sentence": "___, будь ласка.", "answer": "Повторіть", "options": ["Повторіть", "Болить", "Нежить"]}]`)} instruction={"Choose the word that completes the A1 phrase."} isUkrainian={false} />
 
 ### Що у вас болить?
 
@@ -252,7 +252,7 @@ Clear short speech is better than a long sentence with many mistakes.
 
 ### Choose the clear A1 phrase
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "You want to say: My stomach hurts.", "options": [{"text": "У мене болить живіт.", "correct": true}, {"text": "Я живіт болить.", "correct": false}, {"text": "Мій живіт є болить.", "correct": false}], "explanation": "Use У мене болить + body part."}, {"question": "You need a doctor.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я потрібно лікар.", "correct": false}, {"text": "Лікар болить.", "correct": false}], "explanation": "Мені потрібен лікар is the fixed help phrase."}, {"question": "You do not understand.", "options": [{"text": "Я не розумію.", "correct": true}, {"text": "Я не аптека.", "correct": false}, {"text": "У мене розумію.", "correct": false}], "explanation": "Я не розумію is the repair phrase."}]`)} instruction={"Choose the phrase that communicates the problem clearly."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "— Де болить? — ___", "options": [{"text": "У мене болить живіт.", "correct": true}, {"text": "Я живіт болить.", "correct": false}, {"text": "Мій живіт є болить.", "correct": false}], "explanation": "Use У мене болить + body part."}, {"question": "— Що вам потрібно? — ___", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я потрібно лікар.", "correct": false}, {"text": "Лікар болить.", "correct": false}], "explanation": "Мені потрібен лікар is the fixed help phrase."}, {"question": "— Ви розумієте українську? — ___", "options": [{"text": "Я не розумію.", "correct": true}, {"text": "Я не аптека.", "correct": false}, {"text": "У мене розумію.", "correct": false}], "explanation": "Я не розумію is the repair phrase."}]`)} instruction={"Choose the phrase that communicates the problem clearly."} isUkrainian={false} />
 
 ## У мене болить...
 

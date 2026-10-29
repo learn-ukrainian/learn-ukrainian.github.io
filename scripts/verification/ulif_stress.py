@@ -13,7 +13,11 @@ from scripts.wiki.sources_db import normalize_ulif_dictua_query, ulif_stress_row
 def _features(row: dict) -> set[str]:
     """Map the existing parser's VESUM atoms and entry label to UD features."""
     atoms = set(json.loads(row["grammatical_tags"]))
-    label = row["grammatical_label"].split(",", 1)[0].strip()
+    label, *qualifiers = (part.strip() for part in row["grammatical_label"].split(","))
+    # "істота" marks an animate noun: an animate homonym (ко́са, common gender) must
+    # never join an inanimate VESUM analysis of the same spelling (коса́ 'braid').
+    if "істота" in qualifiers:
+        atoms.add("anim")
     grammar = lookup_ulif_label(label)
     if grammar:
         atoms.update(grammar.tags)
