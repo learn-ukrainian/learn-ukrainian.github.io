@@ -223,6 +223,52 @@ through `_validated_claude_selection`):
 | Sealed attempt boundary (`attempt_boundary.linux_claude_auth`) | Both lists. | `test_attempt_boundary.py::test_second_claude_account_refuses_auto_mode` |
 | Usage probe (`scripts/api/claude_account_usage.py`) | Not applied: CodexBar's OAuth source reads only the credential file, and no Claude Code process loads that directory's settings. | Not applicable. |
 
+## API-key labels `kk` and `szb` (C-2643)
+
+The two funded Anthropic API keys are labels of their own. Dispatch them with
+the label alone; no ambient `CLAUDE_CONFIG_DIR` is needed, and one that names a
+different directory is still refused (`claude_account_ambient_conflict`):
+
+```sh
+.venv/bin/python scripts/dispatch.py dispatch --agent claude --claude-account kk \
+  --model claude-haiku-5-5 --mode read-only --prompt "..."
+```
+
+Each label's directory lives only in the private binding file, as an entry with
+`config_dir` alone (an API key has no login account):
+
+```json
+{"schema_version": 1, "accounts": {"b": {"config_dir": "<absolute directory>", "account_uuid": "<account UUID>"},
+ "kk": {"config_dir": "<absolute directory>"}, "szb": {"config_dir": "<absolute directory>"}}}
+```
+
+Admission (`attempt_boundary._refuse_claude_api_key_launch`) requires the
+directory's `settings.json` to hold exactly one key, a non-empty
+`apiKeyHelper`, in a file not writable by group or others; anything else
+refuses value-free (`claude_account_credentials_missing`,
+`claude_account_settings_credential_source`, `claude_account_settings_invalid`,
+`claude_account_settings_not_private`). The global config's `env` map, a legacy
+`.config.json`, policy caches, profile stores, machine policy and WSL refuse
+exactly as for label `b`. The helper's command is never read into a record, an
+argument or a refusal.
+
+At launch (`scripts/dispatcher/admission.py`, `claude_launch`) the run keeps
+`--setting-sources project,local`, and its one `--settings` (repeats are
+last-wins) is that `settings.json` path: flag settings apply under
+`--restricted` too, so read-only and workspace-write runs both get the helper.
+`claude auth status` must report `authMethod` `api_key_helper`, `apiKeySource`
+`apiKeyHelper`, the bound directory and no other key, and its text exactly
+`Auth token: apiKeyHelper` (Claude Code 2.1.312); the launch digest binds the
+file, and the launch guard recomputes it. No plan is classified: Claude Code
+does not use a helper's key to fetch organisational policy (`claude doctor`:
+"apiKeyHelper keys are not used for it").
+
+Limits: an API-key label is never the fleet-wide default (the default file
+names `a` or `b` only); the ordinary runtime adapter and sealed review attempts
+refuse it (`claude_account_api_key_route_unsupported`), so only
+`dispatch.py dispatch` runs it; and the per-account usage meter has no row for
+it, because a key has no plan window. Its spend is billed per token to that key.
+
 ## Fleet-wide default account file
 
 A claude dispatch without `--claude-account` takes its label from one
@@ -258,8 +304,11 @@ new Claude dispatch to that account without changing any dispatch command.
   hosts. The manual `scripts/orchestration/job_host_exec.py` CLI remains
   available; pass the intended `--claude-account` explicitly when using it.
 - The worker adds `claude_account_auth` to its record: `label`, `source`,
-  `method` and `verified`, never a token, identity or path. `method` is
-  `subscription_login` when the adapter's launch preparation passed every check
+  `method` and `verified`, never a token, identity or path; a `dispatch.py
+  dispatch` record carries it for every label but `a`. `method` is
+  `api_key_helper` when an API-key label's launch passed the checks above
+  (the run is billed to that key), `subscription_login` when the adapter's
+  launch preparation passed every check
   above for this run (status probes, unchanged digest, the classified
   credential, no machine policy), `bound_account_token` when a sealed attempt's
   boundary verified the bound credential, `unverified` when no verification

@@ -31,6 +31,23 @@ reuse `scripts.lexicon.enrich_manifest`. For `sum20_official`, supply both
 inclusive integer bounds, at least 1. The denominator is every integer in that
 finite range. Neither denominator measures the full upstream dictionary.
 
+Source indexes can use `"source_headwords": true` at the manifest's top level.
+In this mode, `entries[].lemma` is the exact decoded article URL suffix, including
+case, underscores and closing parentheses. The request preserves that suffix;
+positive validation uses the existing dictionary normalization. Omit the field
+for learner-lemma normalization. An explicit value other than `true` is invalid.
+Source-headword mode refuses `--seed-cache`, because legacy cache locators use
+learner-lemma normalization. The lookup mode is part of the frozen specification.
+
+Before review, verify every source suffix against its original index URL after
+URL decoding. Source suffixes must have no slash, query or fragment characters,
+leading or trailing whitespace, or control and format characters. Keep the
+manifest bytes and their SHA-256 with the acquisition record. Do not substitute
+an estimated print word count for an enumerated article denominator.
+
+The [ВТС source snapshot](../sources/admissions/2026-10-28-vts-acquisition.md)
+records the full sitemap denominator and the СУМ-20 import boundary.
+
 Choose an operator-owned **local filesystem** staging root, outside live stores.
 All companion jobs on the same machine and upstream host must use this **same
 root**. Do not place SQLite on network storage. Source/archive placement follows

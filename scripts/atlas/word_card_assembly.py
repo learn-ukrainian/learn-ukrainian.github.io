@@ -36,6 +36,7 @@ if __package__ in (None, ""):
 import yaml
 
 from scripts.atlas import word_card_foundation as foundation
+from scripts.atlas import word_card_meanings as meanings
 from scripts.atlas import word_card_sources as src
 from scripts.atlas.allocate_pilot_identities import (
     BUILD_PREFIX,
@@ -51,8 +52,9 @@ from scripts.common.git_context import sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
-ASSEMBLER_VERSION = "pilot-assembly-v6"
+ASSEMBLER_VERSION = "pilot-assembly-v8"
 # CTO proper-name scope (#8977 / #8981, OO-38). Add learner names explicitly;
 # source CEFR evidence alone never expands this set.
 LEARNER_PROPER_NAME_ALLOWLIST = frozenset({"ЮНЕСКО"})
@@ -65,6 +67,8 @@ LINEAGE = {
     "vesum": ("G-VESUM", 1),
     "puls": ("G-PULS", 2),
     "ukrainian_word_stress": ("G-ULIF", 2),
+    "sum20": ("G-ULIF", 1),
+    "vts_busel_slovnyk_me": ("G-VTS?", 2),
 }
 GENDER_WORDS = {"чоловічого": "m", "жіночого": "f", "середнього": "n"}
 # ULIF label lead words that name a PULS part of speech (PULS prints «іменник», «дієслово (недок.)», «числівник»).
@@ -301,6 +305,10 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
     counts = foundation.selection_check(manifest["selection"], {s["id"] for s in register["sources"]})
     foundation.register_pin_check(manifest, register, manifest_path, counts)
     heldout = foundation.isolation([manifest, registry], heldout_manifest, ("registry",))
+    bindings = {name: resolve_store(name, Path(__file__).resolve().parents[2], binding=StoreBinding(name, path))
+                for name, path in (("sources", sources_db), ("vesum", vesum_db))}
+    need(not any(isinstance(b, StoreRefusal) for b in bindings.values()), "Local source store binding refused")
+    sources_db, vesum_db = bindings["sources"].path, bindings["vesum"].path
     sources_conn = foundation.readonly(stack, sources_db)
     vesum_conn = foundation.readonly(stack, vesum_db)
     atlas_conn = foundation.readonly(stack, atlas_db)
@@ -315,7 +323,7 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
         need(observed == [record["raw_row"]] and foundation.digest(observed[0]) == record["content_sha256"],
              "Source row drift against the frozen literal row; re-admit the source version")
         drift += 1
-    sources = src.PilotSources(sources_conn, vesum_conn, raw_conn)
+    sources = src.PilotSources(sources_conn, vesum_conn, raw_conn, sources_db.parent.parent)
     entry_ids = sorted(r["raw_row"]["id"] for r in manifest["selection"]["source_records"]
                        if r["table"] == "ulif_dictua_entries")
     extract = scratch / "pilot-wp3-extract.sqlite"
@@ -328,7 +336,7 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
         "atlas_file": sha_of_file(atlas_db),
         "registry_file": sha_of_file(registry_path),
         "register_entries": foundation.register_entries_digest(
-            register, sorted({r["source_id"] for r in manifest["selection"]["source_records"]})),
+            register, sorted({r["source_id"] for r in manifest["selection"]["source_records"]} | set(meanings.SOURCES))),
         "manifest": manifest["manifest_sha256"],
         "frozen_rows_verified": drift,
         "extract_rows": extracted["tables"],
@@ -779,6 +787,7 @@ def assemble_lexeme(inputs: Inputs, unit: dict, entry: dict, ledger: Ledger, hom
                  spelling_ambiguous=ambiguous if puls_keys else None)
 
     senses(inputs, b, unit, entry, anchor, srec, ledger)
+    attach_meanings(inputs, b, entry, raw["id"], homonyms, match, proper, ledger)
     relations(inputs, b, unit, entry, srec, ledger)
     for name in NOT_IN_FROZEN_INPUTS:
         if name in CARD_FIELDS:
@@ -806,15 +815,36 @@ def senses(inputs: Inputs, b: Builder, unit, entry, anchor, srec, ledger):
     ledger.field(card_id, "sense_label", "asserted" if labelled else "source_absent",
                  reason=None if labelled else "ULIF entry has no sense gloss; one unsplit sense",
                  senses=len(entry["senses"]))
-    spelling = entry["key_at_creation"]["spelling"].lower()
-    articles = [a for a in inputs.sources.sum20_articles() if src.unstressed(a["headword"]).lower() == spelling]
-    if articles:
-        ledger.field(card_id, "definition_uk", "held", "sum20_article_present_not_aligned",
-                     articles=[a["wordid"] for a in articles],
-                     quarantined=[a["wordid"] for a in articles if a["quarantine_reason"]])
-    else:
-        ledger.field(card_id, "definition_uk", "source_absent",
-                     "no СУМ-20 article for the lexeme in the held crawl; ВТС is not admitted (plan §6.1)")
+
+
+def attach_meanings(inputs, b, entry, entry_id, homonyms, match, proper, ledger):
+    """Retain source partitions on the frozen unsplit sense; never seed or align by position."""
+    card_id = entry["card_id"]
+    selected = meanings.select(inputs.sources, meanings.key(entry["key_at_creation"]["spelling"]),
+                               homonyms, entry_id, match["vesum_entry"] is not None and
+                               match["confidence"] != "unresolved", proper)
+    hold = holding_sense(entry["senses"])
+    accounting = {}
+    for source, item in selected.items():
+        witness = item["witness"]
+        reason = item["reason"]
+        if witness and hold is None:
+            reason = "unsplit_sense_unallocated"
+        used = witness is not None and reason is None
+        accounting[source] = {"has": item["has"], "used": used, "reason": reason}
+        if not used:
+            continue
+        accounting[source]["source_url"] = witness["url"]
+        b.add("sense", hold["sense_id"], "definition_uk", witness["text"], src.norm_v1(witness["text"]),
+              source, witness["snapshot"], witness["locator"], meanings.VERSION,
+              mapping=mapping("unresolved", "sense", ambiguous=True,
+                              note="resolved lexeme; source partition retained without cross-source sense alignment"))
+    shown = any(item["used"] for item in accounting.values())
+    reason = None if shown else next((x["reason"] for x in accounting.values()
+                                     if x["reason"] != "source_absent"), "source_absent")
+    disposition = "asserted" if shown else "source_absent" if reason == "source_absent" else "unresolved"
+    ledger.field(card_id, "definition_uk", disposition, reason,
+                 sources=accounting, identity_status=match["confidence"])
 
 
 def relations(inputs: Inputs, b: Builder, unit, entry, srec, ledger):
@@ -1010,6 +1040,10 @@ def refresh_sense_maps(card: dict) -> None:
             unit = {"source_id": "ulif", "source_sense_key": f"ulif:section:{section}", "mapped_by": rule}
             if unit not in by_sense[a["subject"]["id"]]:
                 by_sense[a["subject"]["id"]].append(unit)
+        elif a["subject"]["kind"] == "sense" and a["field"] == "definition_uk" and a["source_id"] in meanings.SOURCES \
+                and a["status"] == "active":
+            by_sense[a["subject"]["id"]].append({"source_id": a["source_id"],
+                "source_sense_key": a["locator"], "mapped_by": SENSE_RULE_HOLDING})
     for row in card["senses"]:
         registry_units = [u for u in row["sense_map"] if u["mapped_by"].startswith("registry:")]
         row["sense_map"] = registry_units + sorted(by_sense[row["sense_id"]], key=lambda u: u["source_sense_key"])
@@ -1084,7 +1118,8 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str
                                  "are re-read literally at every build; every other row read is in S.consumed"},
                 "consumed": {"ref": "every row lookup and query result the build read: ULIF homonym queries, "
                                     "ulif_forms rows with their entry fingerprint, raw manifest and raw page digests, "
-                                    "VESUM lemma queries (empty results included), СУМ-20 headers",
+                                    "VESUM lemma queries, SUM-20 articles and senses, admitted VTS rows and "
+                                    "authenticated full-cache text (empty results included)",
                              "content_sha256": consumed, "note": f"{reads} reads"},
                 "wp3_extract": {"ref": "verbatim rows of the pilot entries, their homonym siblings, their sections "
                                        "and the СУМ-20 tables read by the C3/C4 ingestion",
@@ -1094,6 +1129,11 @@ def build_block(inputs: Inputs, suppressions: dict, build_id: str, consumed: str
                                     "note": "frozen rows only"},
                 "atlas0": {"ref": "data/atlas.db enrichment", "content_sha256": frozen_atlas,
                            "note": "frozen row only"},
+                "sum20": {"ref": "sources.sum20_articles + sum20_senses; exact rows in consumed",
+                          "content_sha256": consumed},
+                "vts_busel_slovnyk_me": {"ref": "sources.slovnyk_me_entries dictionary_slug=vts + "
+                                               "hash-bound full local cache; exact witnesses in consumed",
+                                        "content_sha256": consumed},
             },
             "V": {"vesum": {"ref": "data/vesum.db vesum_build_metadata.canonical_jsonl_sha256",
                             "content_sha256": h["vesum_canonical"]}},
@@ -1471,10 +1511,40 @@ def write_output(output: Path, result: dict, report: dict, anchor: Path | None =
                                                 for key in result["cards"] if key not in cards}},
              "build-manifest.json": {"build_id": result["build_id"], "inputs": result["block"]["inputs"],
                                      "rules_version": result["block"]["rules_version"]},
-             "report.json": report}
+             "report.json": report, "meanings.json": meaning_report(result)}
     if result["takedown"]:
         files["takedown-report.json"] = {"build_id": result["build_id"], "suppressions": result["takedown"]}
     write_host_only(output, files, cards, anchor)
+
+
+def meaning_report(result: dict) -> dict:
+    """Per-lexeme availability, use and typed gaps, plus all retained source partitions."""
+    rows = []
+    for card_id, card in sorted(result["cards"].items()):
+        if card["card_kind"] == "mwe":
+            continue
+        field = result["ledger"].cards[card_id]["fields"]["definition_uk"]
+        assertions = [a for a in card["assertions"] if a["field"] == "definition_uk"
+                      and a["source_id"] in meanings.SOURCES and a["status"] == "active"]
+        sources = {s: {**item, "used": any(a["source_id"] == s for a in assertions),
+                       "reason": "source_suppressed" if item["used"] and not any(a["source_id"] == s
+                                   for a in assertions) else item["reason"]} for s, item in field["sources"].items()}
+        reason = field.get("reason") or ("source_suppressed" if not assertions else None)
+        rows.append({"card_id": card_id, "spelling": card["key_at_creation"]["spelling"],
+                     "identity_status": card["identity"]["confidence"], "sources": sources,
+                     "meanings_shown": bool(assertions), "unresolved_reason": reason,
+                     "partitions": [{"source_id": a["source_id"], "locator": a["locator"],
+                                     "source_url": sources[a["source_id"]]["source_url"],
+                                     "snapshot_id": a["snapshot_id"], "text": a["value"],
+                                     "sense_alignment": "unresolved"} for a in assertions]})
+    return {"lexemes": len(rows), "meanings_shown": sum(r["meanings_shown"] for r in rows),
+            "unresolved_by_reason": dict(sorted(Counter(r["unresolved_reason"] for r in rows
+                                                        if not r["meanings_shown"]).items())),
+            "sources": {s: {"has": sum(r["sources"][s]["has"] for r in rows),
+                            "used": sum(r["sources"][s]["used"] for r in rows),
+                            "unresolved_by_reason": dict(sorted(Counter(r["sources"][s]["reason"] for r in rows
+                                if not r["sources"][s]["used"]).items()))} for s in meanings.SOURCES},
+            "rows": rows}
 
 
 # --- CLI -----------------------------------------------------------------------------------------------

@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Resumable targeted ULIF fetch with homonym fan-out (#8400 step c).
 
+This is the only code that fetches DictUA. ``walk`` refreshes the complete
+local copy that the Sources ULIF tools read; ``run`` refetches named spellings.
+
 One spelling is one unit of work. ``tsearch`` positions the register, every
 matching row is opened from that page's pristine view state, and each tab
 present on the entry is fetched from the entry response — never by chaining
 tab postbacks. Response bodies and redacted request payloads are stored
 before parsing. ``parse`` is a separate offline pass over those bodies.
 
-The declared user agent is ``DictUAClient`` in ``fetch_ulif_20k.py``. Raw
-bodies use the separate ULIF raw cache: sha256 of the bytes, uncompressed.
+The declared user agent is ``USER_AGENT`` below. Raw bodies use the separate ULIF raw cache: sha256 of the bytes, uncompressed.
 View-state fields are replaced by their sha256 in the stored payload.
 """
 
@@ -41,7 +43,6 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.lexicon import ulif_raw_cache
-from scripts.lexicon.runner.fetch_ulif_20k import ULIF_URL, DictUAClient
 from scripts.lexicon.runner.ulif_dictua_parse import (
     ULIF_PARSER_VERSION,
     normalize_ulif_spelling,
@@ -52,6 +53,11 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
 )
 from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
+ULIF_URL = "https://lcorp.ulif.org.ua/dictua/"
+USER_AGENT = (
+    "learn-ukrainian-atlas/1.0 (noncommercial educational ULIF per-lemma fetch; issue #5230; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
 MIN_DELAY_SECONDS = 1.0
 REQUEST_TIMEOUT_SECONDS = 30
 MAX_HTTP_ATTEMPTS = 5
@@ -239,11 +245,8 @@ def _unblock_inherited_sigterm() -> None:
 
 
 def declared_user_agent() -> str:
-    """The user agent already declared by the 20k DictUA client."""
-    return DictUAClient(
-        delay_seconds=MIN_DELAY_SECONDS,
-        timeout_seconds=REQUEST_TIMEOUT_SECONDS,
-    ).headers["User-Agent"]
+    """The project's declared DictUA user agent."""
+    return USER_AGENT
 
 
 class Forbidden(Exception):
@@ -1193,7 +1196,14 @@ def status_text(
 
 
 def _tokens(html: str) -> dict[str, str] | None:
-    return DictUAClient._tokens(html)
+    """WebForms state of one DictUA page, or ``None`` when it is incomplete."""
+    soup = BeautifulSoup(html, "html.parser")
+    values: dict[str, str] = {}
+    for name in ("__VIEWSTATE", "__VIEWSTATEGENERATOR", "__EVENTVALIDATION"):
+        node = soup.find("input", attrs={"name": name})
+        if node is not None and node.get("value") is not None:
+            values[name] = str(node.get("value"))
+    return values if values.get("__VIEWSTATE") and values.get("__EVENTVALIDATION") else None
 
 
 def _register_size(html: str) -> int | None:

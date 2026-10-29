@@ -17,9 +17,9 @@ paths:
 
 ## Core tools (always use)
 - `mcp__sources__verify_word` / `mcp__sources__verify_words` / `mcp__sources__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Also surfaces `is_archaic` and `has_archaic_forms` metadata flags for forms tagged as historical.
-- `mcp__sources__query_ulif` — ULIF («Словники України on-line» УМІФ НАН України, 269K entries, 336K sections, 4.74M forms with normative stress where attested in `data/sources.db`). Serves inflectional paradigms with stress where attested, synonyms, antonyms, and phraseology. Core dual-backbone tool alongside VESUM.
+- `mcp__sources__query_ulif` — ULIF («Словники України on-line» УМІФ НАН України, 269K entries, 336K sections, 4.74M forms with normative stress where attested in `data/sources.db`). Serves inflectional paradigms with stress where attested, synonyms, antonyms, and phraseology from the complete local copy only (never the network). A miss is an authoritative `not_found` citing the forms build receipt: the word is not in ULIF. Core dual-backbone tool alongside VESUM.
 - `mcp__sources__check_modern_form` — VESUM metadata extraction to explicitly check if a word has modern codified forms vs only archaic forms.
-- `mcp__sources__verify_stress` — stress oracle: stressed form + 0-based stressed-vowel index for a word, from the offline `ukrainian-word-stress` dictionary (2.9M forms) + the project's manual override layer + a best-effort VESUM join. Returns JSON (unlike the other `verify_*` tools' prose). Pass `pos`/`tags` to disambiguate a heteronym (e.g. за́мок "castle" vs замо́к "lock").
+- `mcp__sources__verify_stress` / `mcp__sources__verify_stresses` — ULIF-first stress oracle. Exact-form overrides in `scripts/data/stress_overrides.yaml` take precedence, then homonym-checked ULIF readings selected by VESUM analyses and caller `lemma`/`pos`/`tags`; the offline `ukrainian-word-stress` trie is a labelled fallback for uncovered readings. No matching dictionary reading means `pending`, never a guess; unresolved stress choices remain `ambiguous`. Results identify the selected source in `stress_source` and each reading's `source`. The oracle does not consult СУМ-20; use `query_sum20` separately for accented headwords. Returns JSON.
 - `mcp__sources__search_sources` — **PREFERRED unified entry point** across textbooks, literary corpora, Wikipedia, external articles, and `ukrainian_wiki`
 - `mcp__sources__search_text` — textbook content search (23K chunks, Grades 1-11)
 - `mcp__sources__search_images` — textbook image search (14K images)
@@ -126,13 +126,13 @@ Audit report at `audit/sum11_sovietization_scan_<DATE>.md`.
 | **ULIF** | 269K entries, 336K sections, 4.74M forms | Normative morphological paradigms, canonical stress (where attested), synonyms, antonyms, phraseology (УМІФ НАН України) | `data/sources.db` (`ulif_dictua_*`, `ulif_forms`) |
 | **VESUM** | 409K lemmas, 6.7M forms | Morphological (POS, gender, inflections) | `data/vesum.db` (SQLite) |
 | **UA-GEC** | 8.9K high-signal pairs | Human-annotated errors (calques, cases, etc.) | `data/sources.db` FTS5 |
-| **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Ukrainian explanatory (definitions, citations) | `data/sources.db` FTS5 |
+| **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Sovietization detection and contrastive occupation context only; never modern meaning or stress verification | `data/sources.db` FTS5 |
 | **Грінченко** | 67K | Historical Ukrainian (1907, lexicographic) | `data/sources.db` FTS5 |
 | **ЕСУМ** | 36K entries, vols 1–6 (А–Я) | Etymological dictionary | `data/sources.db` FTS5 via `search_esum` |
 | **slovnyk.me** | bounded per-word rows + live direct lookup | Modern/regional dictionary aggregator; no bulk mirror | `data/sources.db` `slovnyk_me_entries` + live `/dict/{slug}/{word}` |
 | **Балла EN→UK** | 79K | English→Ukrainian translations | `data/sources.db` FTS5 |
 | **Антоненко-Давидович** | 342 structured + 169 prose chunks | Style guide (calques, Russianisms) — `style_guide` table (keyed entries) + `textbooks` table (source_file=`antonenko-davydovych-yak-my-hovorymo`, full-book prose) | `data/sources.db` FTS5 |
 | **Фразеологічний** | 25K | Ukrainian idioms and expressions | `data/sources.db` FTS5 |
-| **Stress dictionary** | 2.7M forms | Word stress for annotation | via `ukrainian-word-stress` |
+| **Stress dictionary** | 2.7M forms | Labelled fallback in the ULIF-first stress oracle | via `ukrainian-word-stress` |
 
 Source: [bakustarver/ukr-dictionaries-list-opensource](https://github.com/bakustarver/ukr-dictionaries-list-opensource) (СУМ-11, Балла, Фразеологічний)
