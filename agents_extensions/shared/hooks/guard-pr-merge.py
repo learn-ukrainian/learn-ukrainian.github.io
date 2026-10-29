@@ -621,6 +621,11 @@ _MAX_SHELL_DEPTH = 8
 
 def _unmodeled_quoting(command: str) -> bool:
     """Stop before Bash-only quote contexts can desynchronize shlex."""
+    # Comments, heredoc data and continuing quotes can disagree about state
+    # across physical lines. Refuse multiline Bash-only syntax without using
+    # a guessed quote state to dismiss it as data.
+    if len(command.splitlines()) > 1 and any(marker in command for marker in ("$'", "$(", "${", "$[", "`")):
+        return True
     quote = ""
     index = 0
     while index < len(command):
@@ -688,12 +693,11 @@ def _may_merge(command: str, depth: int = 0) -> bool:
     payloads are command text; ordinary arguments, JSON fields and searches are data.
     The judging pass retains its fail-closed policy for a recognized operation.
     """
-    # Raw text protects syntax preprocessing might hide. Also inspect the
-    # scope reader's physical lines: comments and heredoc data must not carry
-    # a misleading quote state into an executable line.
+    # Keep both representations: preprocessing may expose split syntax or
+    # remove quote-bearing data, and may rewrite Bash-only syntax itself.
     if _merge_candidate(command) and (
         _unmodeled_quoting(command)
-        or any(_unmodeled_quoting(line) for line in preprocess_shell_command(command).splitlines())
+        or _unmodeled_quoting(preprocess_shell_command(command))
     ):
         raise ShellPreprocessLimit("shell quoting cannot be read safely")
     if _literal_reads_only(command):
