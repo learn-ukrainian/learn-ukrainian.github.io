@@ -141,7 +141,8 @@ def test_missing_lead_lane_alerts_claude_cto_after_15_minutes_then_hourly(tmp_pa
 def test_missing_lead_lane_alert_names_a_removed_socket_under_a_running_server(tmp_path: Path) -> None:
     """Defect class: unreachable live tmux server. The socket file was deleted, the server kept running and
     attached clients worked, but the guard's ``has-session`` could not connect and said only "missing"."""
-    socket = tmp_path / "tmux-1000" / "default"
+    (tmp_path / "tmux").mkdir()  # an existing prefix of a path with a space must not hide the removed socket
+    socket = tmp_path / "tmux space" / "tmux-1000" / "default"
     h = Harness(tmp_path)
     h.fake.servers = ["2793205 tmux new -s cto"]
     h.fake.override["has-session"] = subprocess.CompletedProcess(
@@ -150,9 +151,15 @@ def test_missing_lead_lane_alert_names_a_removed_socket_under_a_running_server(t
     assert missing_lead_alert_times(h, 15) == [15]
     body = h.sent[-1][1]
     assert f"The socket file {socket} is gone while tmux server processes still run (2793205 tmux new -s cto)" in body
-    assert "kill -USR1" in body and "The guard sends no signal." in body
+    assert "kill -USR1" in body and f"parent directory of {socket} is missing" in body
+    assert "The guard sends no signal." in body
     assert not any(call[0] in ("kill", "systemd-run") for call in h.fake.calls)
-    socket.parent.mkdir()
+    h.fake.override["pgrep"] = subprocess.CompletedProcess([], 2, "", "pgrep: cannot read the process table")
+    h.state.clear()
+    missing_lead_alert_times(h, 15)
+    assert "tmux server processes unknown (pgrep rc=2)" in h.sent[-1][1]  # a failed probe is not "no server"
+    del h.fake.override["pgrep"]
+    socket.parent.mkdir(parents=True)
     socket.touch()  # a socket file that still exists is not the removed-socket case
     h.state.clear()
     h.sent.clear()

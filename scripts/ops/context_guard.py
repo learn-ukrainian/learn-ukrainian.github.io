@@ -116,7 +116,8 @@ ALERT_DETAIL_CHARS = 600
 LEAD_MISSING_ALERT_SECONDS = 900
 LEAD_MISSING_REALERT_SECONDS = 3600
 # tmux names its socket when it cannot reach a server: a stale socket file, or none at all.
-TMUX_SOCKET_ERROR_RE = re.compile(r"(?:no server running on|error connecting to) (\S+)")
+# The whole line is the path (it may hold spaces); tmux appends strerror in parentheses to the second form.
+TMUX_SOCKET_ERROR_RE = re.compile(r"^(?:no server running on (.+)|error connecting to (.+) \([^()]*\))$", re.MULTILINE)
 TMUX_SERVER_PGREP = ["pgrep", "-a", "-x", "tmux: server"]
 # lstart is five words (``Fri Oct 16 12:10:40 2026``) only in the C locale; comm stays last.
 PS_ARGV = ["env", "LC_ALL=C", "ps", "-eo", "pid=,ppid=,lstart=,comm="]
@@ -223,20 +224,24 @@ class Tmux:
         """
         detail = f"tmux: {error[-ALERT_DETAIL_CHARS:] or '(no error text)'}"
         match = TMUX_SOCKET_ERROR_RE.search(error)
-        if match is None or os.path.lexists(match.group(1)):
+        socket = match and (match.group(1) or match.group(2))
+        if not socket or os.path.lexists(socket):
             return detail
-        socket = match.group(1)
         try:
             servers = self.run(TMUX_SERVER_PGREP)
         except (subprocess.SubprocessError, OSError) as exc:
             return f"{detail}. The socket file {socket} is gone; tmux server processes unknown ({type(exc).__name__})."
         rows = [row[:160] for row in (servers.stdout or "").splitlines() if row.strip()]
-        if servers.returncode != 0 or not rows:
+        if servers.returncode not in (0, 1):  # pgrep: 1 is "no match", anything else failed
+            return f"{detail}. The socket file {socket} is gone; tmux server processes unknown (pgrep rc={servers.returncode})."
+        if not rows:
             return f"{detail}. The socket file {socket} is gone and no tmux server runs."
         return (
             f"{detail}. The socket file {socket} is gone while tmux server processes still run "
             f"({'; '.join(rows)}): attached clients keep working but no new client can reach the server. "
-            "Recoverable: kill -USR1 <pid of the server that owned it> recreates the socket. The guard sends no signal."
+            "Recoverable: kill -USR1 <pid of the server that owned it> recreates the socket; it fails while a parent "
+            f"directory of {socket} is missing, so restore those first (owner-only permissions). "
+            "The guard sends no signal."
         )
 
     def _query(self, argv: list[str], what: str) -> str:
