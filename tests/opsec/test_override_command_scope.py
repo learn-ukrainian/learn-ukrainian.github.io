@@ -391,11 +391,17 @@ def test_merge_readiness_reads_and_the_merge_receive_no_override(synthetic_opsec
     calls = []
 
     def runner(args, **kwargs):
-        calls.append((args[:3], kwargs["env"]))
+        calls.append((args, kwargs["env"]))
         if args[:3] == ["gh", "pr", "view"]:
             out = json.dumps({"number": 1, "isDraft": False, "headRefOid": head})
         elif args[:3] == ["gh", "pr", "checks"]:
             out = "[]"
+        elif args[:4] == ["gh", "api", "--method", "GET"]:
+            if args[4] == "repos/unit/public/issues/1/comments?per_page=100":
+                out = "[[]]"
+            else:
+                assert args[4] == "user?per_page=100"
+                out = json.dumps({"login": "unit"})
         elif args[:2] == ["gh", "api"]:
             pull = {
                 "headRefOid": head,
@@ -410,7 +416,10 @@ def test_merge_readiness_reads_and_the_merge_receive_no_override(synthetic_opsec
 
     env = {**os.environ, gate.OVERRIDE: REASON}
     pub.publish("pr-merge", repo="unit/public", number=1, runner=runner, env=env)
-    assert [argv for argv, _ in calls][-1] == ["gh", "pr", "merge"] and len(calls) >= 3, calls
+    assert calls[-1][0][:3] == ["gh", "pr", "merge"], calls
+    assert [argv[4] for argv, _ in calls if argv[:4] == ["gh", "api", "--method", "GET"]] == [
+        "repos/unit/public/issues/1/comments?per_page=100", "user?per_page=100",
+    ], calls
     for argv, environment in calls:
         assert not any(key.startswith(gate.OVERRIDE) for key in environment), argv
     assert len((tmp_path / "batch_state/opsec/overrides.jsonl").read_text().splitlines()) == 1

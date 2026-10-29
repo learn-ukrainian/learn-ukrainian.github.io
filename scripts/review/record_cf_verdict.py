@@ -50,9 +50,11 @@ from scripts.opsec.prepublish import (
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
+    NEEDS_SEAT,
     REJECTED,
     SHA,
     TRUSTED_ASSOCIATIONS,
+    UKRAINIAN_SEAT_FAMILIES,
     GitHubAdapter,
     SweepError,
     lookup_verdict,
@@ -1403,7 +1405,7 @@ def _require_qualified_reviewer(
     # Seat aliases (``grok-build``) name the canonical route the catalog lists.
     agent = normalize_seat(str(task.get("agent") or "")) or ""
     if profile == "ukrainian":
-        if agent not in {"claude", "codex", "agy"} or family not in {"anthropic", "openai", "google"}:
+        if agent not in {"claude", "codex", "agy"} or family not in UKRAINIAN_SEAT_FAMILIES:
             raise RecordError("reviewer not qualified: Ukrainian review needs a Claude, GPT or Gemini seat")
         if facts.subject_seats or facts.subject_families or is_security_sensitive_change(facts.changed_paths):
             raise RecordError("reviewer not qualified: protected scope needs a code-profile review")
@@ -1886,19 +1888,8 @@ def _clean_merge_descent_prover(
 
 
 def _fully_approved(comments: Sequence[Mapping[str, Any]], head: str, login: str) -> bool:
-    """Whether the keeper reads ``head`` as APPROVED and every seat its profile requires approved it."""
-    if lookup_verdict(comments, head, login).state != "APPROVED":
-        return False
-    at_head = [marker for _, marker in _trusted_markers(comments, login) if marker["sha"] == head]
-    # A learner-facing Ukrainian change seats two Ukrainian reviewers from two families
-    # (review-loop references/ukrainian.md § Seats); an approval of another profile fills no seat.
-    ukrainian = any(is_ukrainian_review(marker) for marker in at_head)
-    approving = {
-        marker["family"]
-        for marker in at_head
-        if marker["verdict"] == "APPROVED" and (not ukrainian or is_ukrainian_review(marker))
-    }
-    return len(approving) >= (2 if ukrainian else 1)
+    """Whether the keeper reads ``head`` as APPROVED, which needs every seat its profile requires (#12020)."""
+    return lookup_verdict(comments, head, login).state == "APPROVED"
 
 
 def budget_exempt_heads(
@@ -2320,8 +2311,8 @@ def _review_repository_root(repository: str, root: Path) -> Path:
         raise RecordError("review repository checkout unavailable") from None
 
 
-def _post_verdict(repository: str, number: int, comment: str, login: str) -> int:
-    """Post one verdict comment and read it back unedited from ``login``; returns its id."""
+def _post_verdict(repository: str, number: int, comment: str, login: str) -> dict[str, Any]:
+    """Post one verdict comment and read it back unedited from ``login``; returns the read-back comment."""
     data = _run_json(
         # The typed record is the publisher's only admitted marker carrier (#11127).
         Request("issue-comment-json", repo=repository, number=number, body=CfVerdictRecord(comment)),
@@ -2338,7 +2329,7 @@ def _post_verdict(repository: str, number: int, comment: str, login: str) -> int
         or readback.get("created_at") != readback.get("updated_at")
     ):
         raise RecordError("comment readback mismatch; publication state unknown")
-    return comment_id
+    return readback
 
 
 @publication_boundary(RecordError)
@@ -2547,14 +2538,22 @@ def record(
             # The admission receipt is durable before the verdict exists, so the round is spent even if posting fails.
             record_admission(_repair_receipts(task_root), repair)
         if existing is None:
-            comment_id = _post_verdict(repository, number, comment, login)
+            posted_comment = _post_verdict(repository, number, comment, login)
             posted = True
+            comments = [*comments, posted_comment]
         if repair is not None:
             from scripts.review.repair_round import record_consumption
 
             record_consumption(
-                _repair_receipts(task_root), repair, comment=str(comment_id if posted else existing.get("id"))
+                _repair_receipts(task_root), repair, comment=str(posted_comment["id"] if posted else existing.get("id"))
             )
+        state = "success" if verdict == "APPROVED" else "failure"
+        missing_seat = ""
+        if state == "success" and (current := lookup_verdict(comments, sha, login)).state == NEEDS_SEAT:
+            # The keeper's own reading: another Ukrainian seat must approve this head (#12020).
+            state = "pending"
+            open_seats = sorted(UKRAINIAN_SEAT_FAMILIES - set(current.ukrainian_seats) - facts.excluded_families)
+            missing_seat = f"; awaiting Ukrainian seat: {'/'.join(open_seats) or 'none eligible'}"
         description = (
             f"review_mode=red_team unknown_history={len(facts.unknown_history)} "
             if facts.unknown_history
@@ -2564,13 +2563,15 @@ def record(
             if ukrainian
             else f"VERDICT: {verdict} {family} {task_id}"
         )
+        # The task id can be long; the missing seat must survive the 140-character limit.
+        description = description[: 140 - len(missing_seat)] + missing_seat
         try:
             post_commit_status(
                 repository=repository,
                 head_sha=sha,
-                state="success" if verdict == "APPROVED" else "failure",
+                state=state,
                 context=DEFAULT_STATUS_CONTEXT,
-                description=description[:140],
+                description=description,
             )
             status = "posted"
         except Exception as exc:
@@ -2762,7 +2763,7 @@ def republish_withheld(
             return {**result, "comment": "existing"}
         if comments[markers[-1][0]] is not own[-1]:
             raise RecordError("a later verdict is recorded on this PR; republishing would reorder the verdicts")
-        comment_id = _post_verdict(review.repository, pr_number, comment, login)
+        comment_id = _post_verdict(review.repository, pr_number, comment, login)["id"]
     return {**result, "comment": "posted", "comment_id": comment_id}
 
 
