@@ -315,7 +315,7 @@ def _borrowed(record: dict) -> bool:
 
 # Dispositions that can change once other processes end, the tree is committed or reverted, the work is
 # published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
-# clears; the next dispatch's crash recovery settles these again, in a fresh process, and still removes
+# clears; every later dispatch and every settlement settles these again, and still removes
 # only with the proof. A tree that is still dirty is kept again, so only a changed tree is removed.
 RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
                            "unpublished", "remote_mismatch", "unknown", "removal_refused",
@@ -576,6 +576,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 store.replace(record, path)
                 _reap_settled(record, patience=SETTLE_PATIENCE)
                 store.replace(record, path)
+            # Settling a task also retries the trees earlier settlements kept for a cause that may
+            # have cleared, under the same proofs; this task's outcome is already published.
+            with contextlib.suppress(Exception):
+                settle_left_worktrees()
         finally:
             signal.signal(signal.SIGTERM, previous_term)
             signal.signal(signal.SIGINT, previous_int)
