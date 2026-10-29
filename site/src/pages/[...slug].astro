@@ -6,7 +6,7 @@ import ChromeText from '../components/chrome/ChromeText.astro';
 import { CHROME_STRINGS, formatLessonCount } from '../lib/i18n/chrome';
 import { isPublishedReading } from '../lib/readings';
 import { archiveBookmarkPaths } from '../lib/a1-archive-routes';
-import { a1NewIsPrimary, a1PrimaryHref } from '../lib/a1-entry';
+import { a1NewIsPrimary, a1PreviousEdition, a1PrimaryHref, levelEntryHref } from '../lib/a1-entry';
 import ArcLanding from '../components/ArcLanding';
 import ArcModule from '../components/ArcModule';
 import { lessonRoute, resolveNavHref } from '../lib/doc-nav';
@@ -67,9 +67,9 @@ const TRACKS: Record<string, TrackOverview> = {
   'a1-v1': {
     label: 'A1-v1',
     title: 'Перші кроки · First Steps',
-    eyebrow: 'Available A1 course',
+    eyebrow: a1PreviousEdition.courseLabel,
     subtitle: 'Beginner Ukrainian for sounds, reading, first conversations, everyday needs, and the A1 finale.',
-    status: 'Available beginner course',
+    status: a1PreviousEdition.courseStatus,
     family: 'core',
     state: 'released',
     heroVariant: 'core',
@@ -671,7 +671,7 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
       ? <section class="route-state-card" data-arc-state="retired">
           <h1>Retired</h1>
           <p>This module has been retired from the current course sequence.</p>
-          <a href={`/${arcFrontmatter.arc_level}/`}>View the current course</a>
+          <a href={levelEntryHref(String(arcFrontmatter.arc_level))}>View the current course</a>
         </section>
       : arcPosition
       ? <ArcModule level={String(arcFrontmatter.arc_level)} position={arcPosition} />

@@ -36,6 +36,9 @@ const current = {
 } satisfies Edition;
 export const a1PreviousEdition = {
   id: 'a1-v1', href: '/a1-v1/',
+  // Plain-English labels for pages that carry no chrome keys (the course landing and its metadata).
+  courseLabel: a1NewIsPrimary ? 'Previous A1 edition' : 'Available A1 course',
+  courseStatus: a1NewIsPrimary ? 'Previous beginner course' : 'Available beginner course',
   titleKey: a1NewIsPrimary ? 'home.track.a1Previous' : 'home.track.a1Available',
   actionKey: 'home.actionOpenA1Previous',
   navKey: a1NewIsPrimary ? 'nav.a1Previous' : 'nav.a1',
