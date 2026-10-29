@@ -17,8 +17,9 @@ handoff
     ``HANDOFF-DONE`` arrives; once it has, and the pane is idle, the guard checks
     a Codex lane's handoff with the launcher's own anchor selector
     (:func:`scripts.session_canary.grok_lane.check_handoff_anchors`) and only
-    then types ``/exit`` (Claude) or ``/quit`` (Codex), retrying it every
-    ``quit_retry_seconds``. After Claude's ``/exit``, it re-captures the pane for
+    then types ``/exit`` (Claude) or ``/quit`` (Codex). Claude retries on the next
+    tick; Codex retries every ``quit_retry_seconds``. After Claude's ``/exit``, it
+    re-captures the pane for
     up to 10 seconds in the same tick and answers an exit dialog with
     "Exit and stop tasks", with the same human and snapshot guards; the next
     tick's dialog check remains the fallback. A failing anchor check sends the
@@ -26,8 +27,10 @@ handoff
     is bounded and alerts ``epics`` once per distinct failure. A check error or a missing handoff fails
     open, with one alert, so the guard can never wedge a lane. When the agent and
     its launcher have exited, the pane is respawned with the lane's launcher
-    (fresh session; it reads its goal file). The guard never kills a driver; it
-    alerts ``epics`` once after ``handoff_alert_seconds``. After a respawn it
+    (fresh session; it reads its goal file). If the same idle Claude agent survives
+    two exits after HANDOFF-DONE, the same guarded respawn ends it and alerts
+    ``claude-cto`` once with a redacted pane tail. Other stalled handoffs alert
+    ``epics`` once after ``handoff_alert_seconds``. After a respawn it
     watches the launcher; a non-zero launcher exit alerts once with the pane's
     stderr tail and is not relaunched in a loop.
 
@@ -94,6 +97,7 @@ from scripts.ops.driver_lanes import (
     load_local_config,
     load_registry,
 )
+from scripts.secret_redactor import redact_text
 
 STATE_ENV = "LU_CONTEXT_GUARD_STATE_DIR"
 CAPTURE_LINES = 80
@@ -738,27 +742,58 @@ class Guard:
             }
             return
         if snap.agent is None:
+            s["done_seen"] = bool(s.get("done_seen")) or self.handoff_posted(
+                lane.sender, s.get("done_floor") or s["since"]
+            )
+            if not s["done_seen"]:
+                self.log(f"{lane.name} handoff ctx_pct={pct}: agent gone without HANDOFF-DONE; no relaunch")
+                return
             if snap.busy:
                 # Respawning now would kill the launcher's own exit path (lease release, handoff writes).
                 self.log(f"{lane.name} handoff ctx_pct={pct}: agent gone, launcher still exiting; relaunch next tick")
                 return
             self._relaunch(lane, st, s, pct, snap)
             return
+        tail = ""
+        if s.get("quit_sent") and lane.kind == "claude":
+            redacted = redact_text(text) or ""
+            tail = " | ".join(line.strip() for line in redacted.rstrip().splitlines()[-RELAUNCH_TAIL_LINES:])
+            tail = tail[-ALERT_DETAIL_CHARS:]
+            self.log(
+                f"{lane.name} handoff ctx_pct={pct}: agent survived /exit attempt {s.get('quit_attempts', 0)}; "
+                f"pane tail: {tail or '(none captured)'}"
+            )
         if s.get("anchor_blocked"):
             self.log(f"{lane.name} handoff ctx_pct={pct}: handoff cannot meet the anchor check; pane left as is")
-            return
-        if self._answer_exit_dialog(lane, text, pct, snap):
             return
         pane_done = self._pane_done(s, done_lines(text), snap)
         floor = s.get("done_floor") or s["since"]
         done = bool(s.get("done_seen")) or pane_done or self.handoff_posted(lane.sender, floor)
         s["done_seen"] = done
         idle = self._idle(lane, text)
-        quit_due = not s.get("quit_sent") or self._seconds_since(s.get("quit_sent")) >= self.setting(
-            "quit_retry_seconds"
+        # After two swallowed exits an idle, completed handoff takes the guarded
+        # relaunch path even if an exit dialog remains on screen.
+        force_exit = lane.kind == "claude" and done and idle and int(s.get("quit_attempts", 0)) >= 2
+        if not force_exit and self._answer_exit_dialog(lane, text, pct, snap):
+            return
+        quit_due = (
+            lane.kind == "claude"
+            or not s.get("quit_sent")
+            or self._seconds_since(s.get("quit_sent")) >= self.setting("quit_retry_seconds")
         )
         if done and idle and quit_due and not self._human(lane):
             if not self._anchor_gate(lane, s, text):
+                return
+            if force_exit:
+                self._relaunch(lane, st, s, pct, snap)
+                if st.get(lane.session) is not s:
+                    self.send(
+                        "claude-cto",
+                        f"CTO-ALERT {iso(self.now())}: {lane.name} survived two /exit attempts after "
+                        f"HANDOFF-DONE; idle agent ended through the relaunch path. "
+                        f"Pane tail: {tail or '(none captured)'}",
+                        f"failed-exit-{lane.name}-{s['since']}",
+                    )
                 return
             command = "/exit" if lane.kind == "claude" else "/quit"
             if not self._unchanged(lane, snap, command, pct):
@@ -825,12 +860,14 @@ class Guard:
         occurrence = uuid.uuid4().hex
         env_args.extend(("-e", f"{RELAUNCH_ID_ENV}={occurrence}"))
         result = self.tmux.tmux("respawn-pane", "-k", "-t", lane.target, "-c", plan.cwd, *env_args, *plan.pane_argv())
-        # Drop scrollback; visible predecessor lines may remain in later captures.
-        self.tmux.tmux("clear-history", "-t", lane.target)
         self.log(
             f"{lane.name} relaunch ctx_pct={pct}: respawn-pane rc={result.returncode} "
             f"source={'local-wrapper' if plan.wrapper else 'generic'} {(result.stderr or '').strip()[-200:]}"
         )
+        if result.returncode != 0:
+            return
+        # Drop scrollback; visible predecessor lines may remain in later captures.
+        self.tmux.tmux("clear-history", "-t", lane.target)
         stamp = iso(self.now())
         st[lane.session] = {
             "phase": "watch",

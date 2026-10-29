@@ -312,6 +312,51 @@ def test_codex_quit_is_retried_when_the_first_is_swallowed(tmp_path: Path) -> No
     assert h.state["atlas"]["quit_attempts"] == 2
 
 
+def test_agent_surviving_two_exits_after_handoff_done_is_relaunched(tmp_path: Path) -> None:
+    """Defect class: a swallowed Claude /exit leaves a completed handoff stuck forever."""
+    h = Harness(tmp_path, **{"cto": claude_pane(70)})
+    h.tick("cto")
+    h.advance(5)
+    h.tick("cto")
+    assert h.fake.typed("cto")[-1].startswith("HANDOFF NOW")
+    assert respawns(h) == []
+
+    secret = "sk-" + "testcredential" * 4
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto", "exit stayed open", f"API_KEY={secret}")
+    h.tick("cto")
+    assert h.fake.typed("cto")[-1] == "/exit"
+    assert respawns(h) == []
+
+    # The timer tick can be 299 seconds after a command typed a second into the previous tick.
+    h.advance(299 / 60)
+    h.tick("cto")
+    assert h.fake.typed("cto").count("/exit") == 2
+    assert any("exit stayed open" in line for line in h.logs)
+    assert secret not in "\n".join(h.logs)
+    assert respawns(h) == []  # the second attempt gets its own tick to exit
+
+    h.advance(5)
+    h.fake.clients = [("cto", int(h.moment.timestamp()))]
+    h.tick("cto")
+    assert respawns(h) == []
+    h.fake.clients.clear()
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto", busy=True)
+    h.tick("cto")
+    assert respawns(h) == []
+    h.pane("cto").text = claude_text(71, "HANDOFF-DONE cto", "exit stayed open", f"API_KEY={secret}")
+    h.tick("cto")
+    assert len(respawns(h)) == 1
+    assert respawns(h)[0][respawns(h)[0].index("-t") + 1] == "=cto:"
+    assert "./start-claude-cto.sh" in respawns(h)[0]
+    assert h.state["cto"]["phase"] == "watch"
+    alerts = [body for recipient, body in h.sent if recipient == "claude-cto"]
+    assert len(alerts) == 1 and "exit stayed open" in alerts[0]
+    assert secret not in alerts[0]
+    h.tick("cto")
+    assert len(respawns(h)) == 1
+    assert len([body for recipient, body in h.sent if recipient == "claude-cto"]) == 1
+
+
 def test_ctx_pct_is_logged_on_every_handoff_tick(tmp_path: Path) -> None:
     h = Harness(tmp_path, **{"infra-muse": claude_pane(70, busy=True)})
     h.tick("infra-muse")
