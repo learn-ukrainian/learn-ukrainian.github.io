@@ -62,6 +62,7 @@ from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.model_catalog import REVIEW_BUDGET_ELEVATION_ROLE, advisory_role_policy, canonical_model_id
 from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
+from scripts.review.verdict_parser import finding_entries
 
 # The CTO seat's stable Fleet Comms identity; session-specific slots are not issuers.
 ISSUERS = frozenset({"claude-cto"})
@@ -242,10 +243,6 @@ def _claimed_pr(path: Path) -> Any:
         return None
 
 
-# A finding entry starts at its id, optionally bulleted or bold, and runs to the next entry,
-# a blank line, or the verdict and score lines.
-_ENTRY_START = re.compile(r"^\s*(?:[-*]\s+)?\**(F[1-9][0-9]{0,3})\**(?:\s+\[(P[0-3])\])?(?![0-9])")
-_ENTRY_END = re.compile(r"^\s*$|^\s*(?:VERDICT|SCORE):")
 _STILL_OPEN = re.compile(
     r"\bstill open\b|\bremains open\b|\bunresolved\b|\bnot (?:yet )?(?:resolved|fixed|addressed)\b", re.I
 )
@@ -264,20 +261,6 @@ def finding_is_open(entry: str) -> bool:
     """
     opened = [match.span() for match in _STILL_OPEN.finditer(entry)]
     return not any(not any(start <= match.start() < end for start, end in opened) for match in _CLOSED.finditer(entry))
-
-
-def finding_entries(reply: str, finding_id: str) -> list[tuple[str | None, str]]:
-    """Every entry for ``finding_id`` in a reviewer reply, in order: its severity and its full text."""
-    entries: list[tuple[str, str | None, list[str]]] = []
-    for line in reply.splitlines():
-        start = _ENTRY_START.match(line)
-        if start:
-            entries.append((start[1], start[2], [line]))
-        elif entries and _ENTRY_END.match(line):
-            entries.append(("", None, []))
-        elif entries and entries[-1][0]:
-            entries[-1][2].append(line)
-    return [(severity, "\n".join(lines)) for found, severity, lines in entries if found == finding_id]
 
 
 def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, finding_id: str) -> str | None:

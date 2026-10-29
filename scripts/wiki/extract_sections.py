@@ -7,10 +7,17 @@ import argparse
 import math
 import re
 import sqlite3
+import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from statistics import mean, median
+
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -925,6 +932,7 @@ def extract_sections(
     rebuild: bool = False,
 ) -> ExtractionReport:
     """Compute, validate, and persist textbook parent sections."""
+    refuse_writable_corpus_database(str(db_path))
     with sqlite3.connect(str(db_path)) as conn:
         rows = load_textbook_rows(conn)
         assignments = assign_sections(rows)

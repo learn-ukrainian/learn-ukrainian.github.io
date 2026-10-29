@@ -847,6 +847,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "4c3503ba9ca216639ef3a294976dfcee2b8daabcb3249fca813b087ef39194ce:1",
     ),
     (
+        "scripts/path_safety.py",
+        "Path detector: the host tmux socket directory the delete guard refuses (tmux's system-temp fallback).",
+        "11dbdae01fba30c122ef54ba0be76454d6797aa4f60f90fc56d30390a2efe991:1",
+    ),
+    (
         "scripts/pipeline/state.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "0e4b1de953467de63e9c0d9f3c99d445e8468ea478c0b9233b56c4d9877130dc:1",
@@ -2000,6 +2005,11 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "tests/test_lint_prompts.py",
         "Existing literal or temp producer exposed by expanded lint; migration tracked in #9702.",
         "a4b24ada95971b11223fe6969f2f981509c635e03415ebcc849f4f44a5a69937:1",
+    ),
+    (
+        "tests/test_path_safety.py",
+        "Path detector fixture: the host tmux socket directory the delete guard must refuse; nothing is created.",
+        "624ce5dbff9d1b5ad423de03e72d029e474f040b0e82ca6a7b9f880d70b65801:1",
     ),
     (
         "tests/test_phase3_cycle007_evidence_validator.py",

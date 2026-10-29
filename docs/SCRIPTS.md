@@ -541,8 +541,11 @@ Wikipedia, and dictionary inputs.
   a populated DB.
 - `--force` rebuilds everything except the `wikipedia` and
   `wikipedia_negative_cache` tables (snapshot + restore across the
-  rebuild, since refetching costs Wikipedia API budget). Pass
-  `--no-preserve-wiki` to wipe those too.
+  rebuild, since refetching costs Wikipedia API budget), the official
+  DictUA cache, and every table whose name starts with `sum20_` (the
+  official СУМ-20 articles, which cannot be re-imported). Pass
+  `--no-preserve-wiki` to wipe the Wikipedia tables too; the DictUA cache
+  and the `sum20_` tables are always kept.
 
 ### Recovery: when `data/sources.db` is empty or corrupt
 

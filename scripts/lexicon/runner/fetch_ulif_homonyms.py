@@ -52,6 +52,7 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
     parse_ulif_relation_groups,
 )
 from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+from scripts.storage.generations import GenerationError, store_writer
 
 ULIF_URL = "https://lcorp.ulif.org.ua/dictua/"
 USER_AGENT = (
@@ -5520,27 +5521,31 @@ Related:
                 )
                 return EXIT_USAGE
             try:
-                code = run_fetch(
-                    spellings=spellings,
-                    state_dir=args.state_dir,
-                    db_path=args.db,
-                    delay_seconds=args.delay,
-                    max_spellings=args.max_spellings,
-                    max_requests=args.max_requests,
-                    refetch=args.refetch,
-                    break_stale_lock=args.break_stale_lock,
-                    quiet=args.quiet,
-                    spellings_file=args.spellings_file,
-                    resume_cmd=resume_cmd,
-                    progress_interval=args.progress_interval,
-                )
-                if code == EXIT_OK:
-                    ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
-                    try:
-                        print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
-                    finally:
-                        ledger.close()
-                return code
+                with store_writer(args.db):
+                    code = run_fetch(
+                        spellings=spellings,
+                        state_dir=args.state_dir,
+                        db_path=args.db,
+                        delay_seconds=args.delay,
+                        max_spellings=args.max_spellings,
+                        max_requests=args.max_requests,
+                        refetch=args.refetch,
+                        break_stale_lock=args.break_stale_lock,
+                        quiet=args.quiet,
+                        spellings_file=args.spellings_file,
+                        resume_cmd=resume_cmd,
+                        progress_interval=args.progress_interval,
+                    )
+                    if code == EXIT_OK:
+                        ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
+                        try:
+                            print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
+                        finally:
+                            ledger.close()
+                    return code
+            except GenerationError as exc:
+                print(f"refusing to write the Sources store: {exc}", file=sys.stderr)
+                return EXIT_USAGE
             except (KeyboardInterrupt, InterruptedByOperator):
                 return EXIT_INTERRUPTED
         finally:
@@ -5599,18 +5604,23 @@ Related:
                     resume_cmd=resume_cmd,
                 )
                 return EXIT_INTERRUPTED
-            code = run_walk(
-                state_dir=args.state_dir,
-                db_path=args.db,
-                delay_seconds=args.delay,
-                max_pages=args.max_pages,
-                max_requests=args.max_requests,
-                break_stale_lock=args.break_stale_lock,
-                quiet=args.quiet,
-                start_headword=args.start_headword,
-                resume_cmd=resume_cmd,
-                progress_interval=args.progress_interval,
-            )
+            try:
+                with store_writer(args.db):
+                    code = run_walk(
+                        state_dir=args.state_dir,
+                        db_path=args.db,
+                        delay_seconds=args.delay,
+                        max_pages=args.max_pages,
+                        max_requests=args.max_requests,
+                        break_stale_lock=args.break_stale_lock,
+                        quiet=args.quiet,
+                        start_headword=args.start_headword,
+                        resume_cmd=resume_cmd,
+                        progress_interval=args.progress_interval,
+                    )
+            except GenerationError as exc:
+                print(f"refusing to write the Sources store: {exc}", file=sys.stderr)
+                return EXIT_USAGE
             if code == EXIT_OK:
                 ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
                 try:
@@ -5623,17 +5633,22 @@ Related:
         finally:
             _restore_sigterm_handler(sigterm_handler)
     if args.command == "parse":
-        cache = prepare_database(args.db)
-        ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
         try:
-            try:
-                differing = parse_stored(ledger, cache, empty_headwords_only=args.empty_headwords_only)
-            except ValueError as exc:
-                print(f"refusing to parse: {exc}", file=sys.stderr)
-                return EXIT_USAGE
-        finally:
-            cache.close()
-            ledger.close()
+            with store_writer(args.db):
+                cache = prepare_database(args.db)
+                ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
+                try:
+                    try:
+                        differing = parse_stored(ledger, cache, empty_headwords_only=args.empty_headwords_only)
+                    except ValueError as exc:
+                        print(f"refusing to parse: {exc}", file=sys.stderr)
+                        return EXIT_USAGE
+                finally:
+                    cache.close()
+                    ledger.close()
+        except GenerationError as exc:
+            print(f"refusing to write the Sources store: {exc}", file=sys.stderr)
+            return EXIT_USAGE
         print(f"differing_content_hashes={differing}")
         return EXIT_OK
     if args.command == "verify-complete":

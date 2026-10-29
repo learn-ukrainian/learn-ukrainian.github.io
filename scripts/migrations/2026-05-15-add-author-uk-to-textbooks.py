@@ -40,6 +40,12 @@ from pathlib import Path
 
 from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
 
@@ -242,6 +248,8 @@ def main(argv: list[str] | None = None) -> int:
     if not args.db.exists():
         raise SystemExit(f"Sources DB not found: {args.db}")
 
+    if not args.dry_run:
+        refuse_writable_corpus_database(str(args.db))
     with sqlite3.connect(str(args.db)) as conn:
         status = apply(conn, dry_run=args.dry_run)
 

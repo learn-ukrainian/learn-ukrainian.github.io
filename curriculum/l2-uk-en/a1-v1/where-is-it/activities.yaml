@@ -62,12 +62,12 @@ inline:
         options:
           - text: 'на'
             correct: true
-          - text: 'в'
+          - text: "без"
             correct: false
           - text: 'до'
             correct: false
         explanation: The traditional phrase is на вокзалі.
-      - prompt: 'Марко ___ лікарні.'
+      - prompt: "Марко зараз ___ лікарні."
         options:
           - text: 'у'
             correct: true
@@ -114,13 +114,13 @@ inline:
       - sentence: 'Аптека ___ (вулиця).'
         answer: 'на вулиці'
         explanation: Street location uses на вулиці.
-      - sentence: 'Ми ___ (місто).'
+      - sentence: "Ми зараз ___ (місто)."
         answer: 'у місті'
         explanation: Static city/town location is у місті.
-      - sentence: 'Софія ___ (лікарня).'
+      - sentence: "Софія зараз ___ (лікарня)."
         answer: 'у лікарні'
         explanation: Лікарня changes to лікарні after у.
-      - sentence: 'Я живу ___ (Київ).'
+      - sentence: "Я зараз ___ (Київ)."
         answer: 'у Києві'
         explanation: 'Cities use в/у plus locative: у Києві.'
   - id: act-3
@@ -187,13 +187,13 @@ inline:
         explanation: Ukrainian locative place phrases normally need a preposition.
       - prompt: 'Де Марко живе?'
         options:
-          - text: 'Він живе у Києві.'
+          - text: "Він живе в Києві."
             correct: true
           - text: 'Він живе в Київ.'
             correct: false
           - text: 'Він живе у Київ.'
             correct: false
-        explanation: Static city location uses у Києві.
+        explanation: "After the vowel in живе, use в Києві for this static city location."
       - prompt: 'Де пошта?'
         options:
           - text: 'Пошта на площі.'

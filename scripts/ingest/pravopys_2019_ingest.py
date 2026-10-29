@@ -18,6 +18,12 @@ from pathlib import Path
 
 import requests
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -113,6 +119,7 @@ def ingest(
     if db_path is None:
         return receipt
     is_word = vesum_word_predicate(vesum_db) if vesum_db else None
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     try:
         conn.execute("PRAGMA busy_timeout = 30000")

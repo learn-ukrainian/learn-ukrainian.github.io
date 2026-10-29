@@ -7,6 +7,7 @@ import json
 import os
 import shlex
 import subprocess
+import sys
 import zlib
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
@@ -763,6 +764,31 @@ def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, se
             recorder.record("review-one", **kwargs)
         assert calls == {"posts": 0, "statuses": 0}
     else:
+        assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
+
+
+@pytest.mark.parametrize("orphan_head,refused", [("c" * 40, True), ("1" * 40, False)], ids=["own-head", "reviewed-head"])
+def test_a_superseded_runs_unpublished_only_head_still_counts_a_round(monkeypatch, tmp_path, capsys, orphan_head, refused):
+    """A head reviewed only by a superseded run is a reviewed head; a head already counted is not counted twice."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    seat = dict(model="claude-opus-5-5", agent="claude", pr=42, review_profile="code")
+    write_task(tasks, task_id="orphan", reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=orphan_head,
+               started_at="2026-09-23T10:00:00.000001+00:00", **seat)
+    for index in (1, 2):
+        sha = f"{index}" * 40
+        write_task(tasks, task_id=f"round-{index}", reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=sha,
+                   started_at="2026-09-23T11:00:00.000001+00:00", **seat)
+        comments.append(recorded_verdict(sha, "CHANGES_REQUESTED", task_id=f"round-{index}"))
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    check = ["budget-check", "--repository", REPOSITORY, "--pr", "42"]
+    monkeypatch.setattr(recorder, "budget_check", partial(recorder.budget_check, task_root=tasks))
+    if refused:
+        with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 3 heads"):
+            recorder.record("review-one", **kwargs)
+        assert recorder.main(check) == 1 and calls == {"posts": 0, "statuses": 0}
+        assert "REVIEW_BUDGET_EXHAUSTED" in json.loads(capsys.readouterr().out)["refusal"]
+    else:
+        assert recorder.main(check) == 0 and json.loads(capsys.readouterr().out)["reviewed_heads"] == 2
         assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
 
 
@@ -2580,6 +2606,121 @@ def test_ambiguous_filesystem_identity_stays_verbatim(citation_checkout, kind):
     assert recorder.repository_relative_reply(reply, task={}, primary_root=root) == reply
 
 
+def reviewed_checkout(tmp_path):
+    """A primary checkout whose reviewed commit holds ``scripts/unit.py``, and the removed reviewer worktree."""
+    root = tmp_path / "checkout"
+    (root / "scripts").mkdir(parents=True)
+    (root / "scripts/unit.py").write_text("# reviewed\n" * 20)
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1")
+    for args in (["init", "-q"], ["add", "."], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "r"]):
+        subprocess.run(["git", "-C", str(root), *args], check=True, capture_output=True, env=env, timeout=30)
+    sha = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "HEAD"], check=True, capture_output=True, text=True, env=env, timeout=30
+    ).stdout.strip()
+    # Only the reviewed commit vouches for the citation, not the primary checkout's own files.
+    (root / "scripts/unit.py").unlink()
+    return root, root / ".worktrees/dispatch/codex/review", sha
+
+
+def test_removed_reviewer_worktree_citations_publish_repository_relative(tmp_path, real_recorder_matcher):
+    from scripts.opsec import prepublish as gate
+
+    root, worktree, sha = reviewed_checkout(tmp_path)
+    review = {"worktree_path": str(worktree), "worktree_base_sha": sha}
+    reply = f"VERDICT: REQUEST_CHANGES\nF1 [P1] [scripts/unit.py:12]({worktree}/scripts/unit.py:12) fails.\n"
+
+    rewritten = recorder.repository_relative_reply(reply, task=review, primary_root=root)
+
+    assert rewritten == "VERDICT: REQUEST_CHANGES\nF1 [P1] [scripts/unit.py:12](scripts/unit.py:12) fails.\n"
+    comment = recorder.build_comment(
+        sha=sha,
+        task_id="review-one",
+        started="2026-10-29T12:01:07.927180+00:00",
+        verdict="CHANGES_REQUESTED",
+        model="gpt-6.1-sol",
+        family="openai",
+        reply=rewritten,
+    )
+    gate.check_texts("github.com/unit/public", [comment], tooling=real_recorder_matcher, environment={})
+    # The rewrite's protections still hold for a removed worktree.
+    for cited in ("missing.py:12", "scripts/unit.py:0", "../outside/unit.py", "scripts/../../outside/unit.py"):
+        text = f"`{worktree}/{cited}`"
+        assert recorder.repository_relative_reply(text, task=review, primary_root=root) == text
+    outside = tmp_path / "elsewhere/review"
+    text = f"`{outside}/scripts/unit.py`"
+    assert (
+        recorder.repository_relative_reply(text, task={**review, "worktree_path": str(outside)}, primary_root=root)
+        == text
+    )
+
+
+def test_withheld_verdict_republishes_its_findings_after_the_cause_is_fixed(
+    monkeypatch, tmp_path, real_recorder_matcher
+):
+    from scripts.review.budget_grant import open_blocker_cited
+
+    root, worktree, sha = reviewed_checkout(tmp_path)
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=sha)
+    reply = (
+        f"VERDICT: REQUEST_CHANGES\nF1 [P1] [scripts/unit.py:12]({worktree}/scripts/unit.py:12) still open: fails.\n"
+    )
+    sealed = {"worktree_path": str(worktree), "worktree_base_sha": sha}
+    write_task(tasks, reply=reply, result_sha256=hashlib.sha256(reply.encode()).hexdigest(), **sealed)
+    monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: root)
+    with monkeypatch.context() as before_fix:
+        # The recorder could not rewrite a removed worktree's citations, so the scan withheld the reply.
+        before_fix.setattr(recorder, "repository_relative_reply", lambda text, **_kwargs: text)
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    withheld = dict(comments[0])
+    assert "Findings are held privately." in withheld["body"]
+    assert open_blocker_cited(comments, "fleet", "F1") is None
+    # The author has pushed since; the withheld verdict stays recorded at the head it reviewed.
+    current = recorder._run_json
+    monkeypatch.setattr(
+        recorder,
+        "_run_json",
+        lambda args, **kwargs: (
+            {**current(args, **kwargs), "headRefOid": "b" * 40}
+            if isinstance(args, list) and args[:3] == ["gh", "pr", "view"]
+            else current(args, **kwargs)
+        ),
+    )
+    republish = partial(recorder.republish_withheld, pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    # Refused: an unsealed reply, a withheld comment the task does not produce, and a later verdict.
+    write_task(tasks, task_id="review-unsealed", reply=reply, **sealed)
+    with pytest.raises(recorder.RecordError, match="sealed reply digest"):
+        republish("review-unsealed")
+    comments[0]["body"] = withheld["body"].replace("Authored by: ", "Authored by: claude-fable-5-1, ")
+    with pytest.raises(recorder.RecordError, match="does not match its record and sealed reply"):
+        republish("review-one")
+    comments[0] = dict(withheld)
+    later = recorder.build_comment(
+        sha="c" * 40,
+        task_id="review-later",
+        started="2026-10-29T12:30:00.000000+00:00",
+        verdict="APPROVED",
+        model="gpt-6.1-sol",
+        family="openai",
+        reply="VERDICT: APPROVE",
+    )
+    comments.append({**withheld, "id": 9, "body": later})
+    with pytest.raises(recorder.RecordError, match="later verdict"):
+        republish("review-one")
+    comments.pop()
+    assert comments == [withheld] and calls["posts"] == 1
+
+    receipt = republish("review-one")
+
+    assert receipt["comment"] == "posted" and calls == {"posts": 2, "statuses": 1}
+    assert comments[0] == withheld
+    body = comments[1]["body"]
+    assert "F1 [P1] [scripts/unit.py:12](scripts/unit.py:12) still open: fails." in body and str(tmp_path) not in body
+    assert recorder.parse_marker(body) == recorder.parse_marker(withheld["body"])
+    assert open_blocker_cited(comments, "fleet", "F1") == sha
+    assert republish("review-one")["comment"] == "existing" and calls["posts"] == 2
+
+
 # --- #9739 A1: GitHub's listing must equal the local base..head enumeration ----------------------
 
 
@@ -3697,6 +3838,9 @@ def test_elevated_grant_needs_the_blocker_open_before_each_round(monkeypatch, tm
         ("scope", r"\[scope\].*does not cover changed paths \['docs/readme.md'\]"),
         ("resolved", r"\[blocker\]"),
         ("p2", r"\[blocker\]"),
+        # A delta round's plain-words disposition keeps the same rules (the severity follows `still open:`).
+        ("still-open-p2", r"\[blocker\]"),
+        ("still-open-resolved", r"\[blocker\]"),
         ("other-finding", r"\[blocker\].*does not leave F3 an open"),
         # The finding's complete current disposition decides, not its first line (review round 1, F1).
         ("resolved-next-line", r"\[blocker\]"),
@@ -3717,6 +3861,12 @@ def test_elevated_grant_refuses(monkeypatch, tmp_path, case, reason):
     last = {
         "resolved": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "resolved.")),
         "p2": dict(last_reply=OPEN_F2.replace("[P1]", "[P2]")),
+        "still-open-p2": dict(
+            last_reply="VERDICT: REQUEST_CHANGES\nF2 still open: [P2] docs/readme.md:3 the retry path still races."
+        ),
+        "still-open-resolved": dict(
+            last_reply="VERDICT: REQUEST_CHANGES\nF2 still open: [P1] docs/readme.md:3 the lock race is fixed."
+        ),
         "latest-approved": dict(last_verdict="APPROVED", last_reply="VERDICT: APPROVE\nF2 [P1] still open"),
         "resolved-next-line": dict(last_reply=OPEN_F2 + "\n  Status: resolved at the new head."),
         "fixed-with-evidence": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "fixed with evidence.")),
@@ -3786,8 +3936,11 @@ def test_budget_grant_digest_verb(tmp_path, capsys):
         OPEN_F2.replace("Impact: lost update.", "not resolved: the retry path still races."),
         "VERDICT: REQUEST_CHANGES\n- **F2** [P1] docs/readme.md:3 still open. Impact: lost update.",
         OPEN_F2 + "\n\nF1 [P2] docs/readme.md:9 resolved.",
+        # The wording review-loop policy tells a delta reviewer to use: the severity follows the disposition.
+        "VERDICT: REQUEST_CHANGES\nF1 resolved.\n\nF2 still open: [P1] `docs/readme.md:3` the retry path races.",
+        "VERDICT: REQUEST_CHANGES\nF2 (P1) still open: docs/readme.md:3 the retry path races.",
     ],
-    ids=["not-resolved", "bulleted", "other-finding-resolved"],
+    ids=["not-resolved", "bulleted", "other-finding-resolved", "still-open-then-severity", "parenthesised-severity"],
 )
 def test_elevated_grant_reads_an_open_finding(monkeypatch, tmp_path, reply):
     tasks, _comments, _calls = grant_case(monkeypatch, tmp_path, last_reply=reply)
@@ -3855,3 +4008,52 @@ def test_finding_disposition_refuses_any_closing_language(entry, open_):
     from scripts.review.budget_grant import finding_is_open
 
     assert finding_is_open(entry) is open_
+
+
+# The refusal classes live in other modules (``RepairRefused`` subclasses the package's ``RecordError``).
+# Run as a file or as ``-m``, the script's own copy of ``RecordError`` is a different class, so the CLI must
+# enter through the package module or those refusals escape as tracebacks. The launcher stands in for the
+# network and the fleet registry, then runs the entry exactly as the interpreter does for that form.
+_REFUSING_LAUNCHER = """
+import json, runpy, subprocess, sys
+
+import scripts.orchestration.fleet_repos as fleet_repos
+import scripts.publish.github as github
+
+OPEN_PR = {"headRefOid": "a" * 40, "headRefName": "claude/x", "state": "OPEN"}
+
+
+def refuse(*_args, **_kwargs):
+    from scripts.review.repair_round import RepairRefused
+
+    raise RepairRefused("unclassifiable", "refused by the fixture")
+
+
+github.request_run = lambda args, **_kw: subprocess.CompletedProcess(args, 0, json.dumps(OPEN_PR), "")
+fleet_repos.load_fleet_repos = refuse
+form, entry, *sys.argv[1:] = sys.argv[1:]
+sys.argv[0] = entry
+if form == "file":
+    runpy.run_path(entry, run_name="__main__")
+else:
+    runpy.run_module(entry, run_name="__main__", alter_sys=True)
+"""
+
+
+@pytest.mark.parametrize("form", ["file", "module"])
+def test_cli_prints_the_typed_refusal_in_every_invocation_form(form):
+    repo = Path(recorder.__file__).resolve().parents[2]
+    entry = str(repo / "scripts/review/record_cf_verdict.py") if form == "file" else "scripts.review.record_cf_verdict"
+    env = {**os.environ, "PYTHONPATH": os.pathsep.join(filter(None, [str(repo), os.environ.get("PYTHONPATH")]))}
+    done = subprocess.run(
+        [sys.executable, "-c", _REFUSING_LAUNCHER, form, entry, "budget-check", "--repository", REPOSITORY, "--pr", "42"],
+        capture_output=True,
+        text=True,
+        cwd=repo,
+        env=env,
+        check=False,
+        timeout=120,
+    )
+    assert done.returncode == 1 and "Traceback" not in done.stderr, done.stderr
+    refusal = json.loads(done.stdout)
+    assert refusal["admitted"] is False and "refused by the fixture" in refusal["refusal"]

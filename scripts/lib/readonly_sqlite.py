@@ -6,6 +6,7 @@ without importing a curriculum, crawler, or application package.
 
 from __future__ import annotations
 
+import fcntl
 import functools
 import importlib
 import inspect
@@ -220,6 +221,9 @@ def import_named_module(name: str) -> ModuleType:
 
 
 _CORPUS_DATABASE_NAMES = frozenset({"sources.db", "vesum.db"})
+# Published Sources generations (scripts/storage/generations.py) live under
+# this directory with names that are not sources.db.
+_GENERATIONS_DIRNAME = "sources-generations"
 _GUARD_PATH = "scripts/lib/readonly_sqlite.py"
 
 
@@ -227,17 +231,36 @@ class CorpusDatabaseWriteRefused(PermissionError):
     """A generic factory cannot open sources.db or vesum.db for writing."""
 
 
-def corpus_database_name(database: str | os.PathLike[str] | bytes) -> str | None:
-    """Return ``sources.db`` or ``vesum.db`` when ``database`` names one.
+def _filesystem_path(database: str | os.PathLike[str] | bytes) -> str:
+    """The filesystem path a connect target names.
 
     A filesystem path keeps ``?`` and ``#`` as literal characters. Only a
     ``file:`` URI separates those characters into the query and the fragment.
     """
     raw = os.fsdecode(os.fspath(database))
-    path = unquote(urlsplit(raw).path) if raw.startswith("file:") else raw
-    name = Path(path).name
-    if name in _CORPUS_DATABASE_NAMES:
-        return name
+    return unquote(urlsplit(raw).path) if raw.startswith("file:") else raw
+
+
+def corpus_database_name(database: str | os.PathLike[str] | bytes) -> str | None:
+    """Return ``sources.db`` or ``vesum.db`` when ``database`` names one.
+
+    The file the path resolves to decides first, so a link or a symlinked
+    parent directory cannot rename a corpus database. A file in a
+    ``sources-generations`` directory is a Sources generation and returns
+    ``sources.db``. The literal name still counts when the path cannot be
+    resolved.
+    """
+    path = Path(_filesystem_path(database))
+    with suppress(OSError, RuntimeError, ValueError):
+        resolved = path.resolve()
+        if resolved.parent.name == _GENERATIONS_DIRNAME:
+            return "sources.db"
+        if resolved.name in _CORPUS_DATABASE_NAMES:
+            return resolved.name
+    if path.parent.name == _GENERATIONS_DIRNAME:
+        return "sources.db"
+    if path.name in _CORPUS_DATABASE_NAMES:
+        return path.name
     return None
 
 
@@ -307,6 +330,95 @@ def _stack_may_write(factory: str | None) -> bool:
     return writer_on_stack
 
 
+# --- Sources store writer lock bookkeeping -------------------------------------
+# scripts/storage/generations.py takes the store-wide writer lock and registers
+# the selector here, so this guard can require the lock without importing it.
+STORE_WRITER_LOCK_NAME = ".sources-writer.lock"
+# Only the canonical selector carries the lock; another link in the same
+# directory never authorizes a write.
+STORE_SELECTOR_NAME = "sources.db"
+# A process started by ``python -m scripts.storage write`` inherits the
+# parent's locked descriptor and the selector it locked.
+ENV_STORE_WRITER_FD = "LU_SOURCES_WRITER_FD"
+ENV_STORE_WRITER_SELECTOR = "LU_SOURCES_WRITER_SELECTOR"
+_store_writers: dict[str, Path] = {}
+_store_writers_lock = threading.Lock()
+
+
+def register_store_writer(selector: Path) -> None:
+    """Record that this process holds the writer lock of ``selector``'s store."""
+    with _store_writers_lock:
+        _store_writers[os.path.realpath(selector.parent)] = selector
+
+
+def unregister_store_writer(selector: Path) -> None:
+    with _store_writers_lock:
+        _store_writers.pop(os.path.realpath(selector.parent), None)
+
+
+def inherited_store_writer(lock_dir: Path) -> tuple[int, Path] | None:
+    """The descriptor and selector a ``scripts.storage write`` parent passed down for this store."""
+    raw_fd = os.environ.get(ENV_STORE_WRITER_FD)
+    raw_selector = os.environ.get(ENV_STORE_WRITER_SELECTOR)
+    if raw_fd is None or raw_selector is None:
+        return None
+    selector = Path(raw_selector)
+    if (
+        not selector.is_absolute()
+        or selector.name != STORE_SELECTOR_NAME
+        or os.path.realpath(selector.parent) != os.path.realpath(lock_dir)
+    ):
+        return None
+    try:
+        fd = int(raw_fd)
+        held = os.fstat(fd)
+        expected = (lock_dir / STORE_WRITER_LOCK_NAME).lstat()
+    except (ValueError, OSError):
+        return None
+    if (held.st_dev, held.st_ino) != (expected.st_dev, expected.st_ino):
+        return None
+    try:
+        # The parent's open file description already holds LOCK_EX; taking it
+        # again through the same description succeeds, any other holder fails.
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return None
+    return fd, selector
+
+
+def writable_store_refusal(database: str | os.PathLike[str]) -> str | None:
+    """``None`` when ``database`` may be opened writable here, else a path-free reason.
+
+    Paths that are not the Sources store are always allowed by this check. The
+    store needs this process to hold its writer lock (or to have inherited it),
+    and the path must resolve to the generation the selector selects now.
+    """
+    from scripts.storage.topology import inspect_selector, store_kind
+
+    ref = store_kind(database)
+    if ref.kind == "other":
+        return None
+    if ref.lock_dir is None:
+        return "store_unavailable"
+    with _store_writers_lock:
+        selector = _store_writers.get(os.path.realpath(ref.lock_dir))
+    if selector is None:
+        inherited = inherited_store_writer(ref.lock_dir)
+        if inherited is None:
+            return "writer_lock_not_held"
+        selector = inherited[1]
+    state = inspect_selector(selector)
+    if state.generation is None:
+        return state.reason
+    try:
+        target = Path(os.fspath(database)).resolve()
+    except (OSError, RuntimeError, ValueError):
+        return "store_unavailable"
+    if target != state.generation.resolve():
+        return "not_selected_generation"
+    return None
+
+
 def refuse_writable_corpus_database(
     database: str | os.PathLike[str] | bytes,
     *,
@@ -320,7 +432,9 @@ def refuse_writable_corpus_database(
     the repo-relative file of a writer seam whose own ingest functions may
     write. Generic factories leave it unset and still allow a declared writer
     file on the stack. ``allow_declared_writers=False`` refuses every caller;
-    the control-plane store uses that.
+    the control-plane store uses that. The live Sources store (its selector, a
+    generation, or the pre-bootstrap file) also needs the store writer lock,
+    and only the generation the selector selects may be opened.
     """
     name = corpus_database_name(database)
     if name is None:
@@ -328,5 +442,10 @@ def refuse_writable_corpus_database(
     if uri and _uri_requests_read_only(database):
         return
     if allow_declared_writers and _stack_may_write(factory):
-        return
+        if name != "sources.db":
+            return
+        reason = writable_store_refusal(_filesystem_path(database))
+        if reason is None:
+            return
+        raise CorpusDatabaseWriteRefused(f"refusing writable open of the Sources store: {reason}")
     raise CorpusDatabaseWriteRefused(f"refusing writable open of corpus database {name}")

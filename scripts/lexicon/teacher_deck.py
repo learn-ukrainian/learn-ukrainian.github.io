@@ -39,6 +39,7 @@ from scripts.lexicon.sync_teacher_table_deck import (
     normalize_uk_key,
     site_data_bytes,
 )
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 from scripts.practice_deck import publish as release
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -78,6 +79,7 @@ def ingest(docx: Path, sources_db: Path) -> str:
     """Load the dated lessons into *sources_db*; replace the source only when it changed."""
 
     lessons = parse_docx(docx).lessons
+    refuse_writable_corpus_database(sources_db.resolve().as_uri() + "?mode=rw", uri=True)
     conn = sqlite3.connect(sources_db.resolve().as_uri() + "?mode=rw", uri=True, timeout=30)
     try:
         try:

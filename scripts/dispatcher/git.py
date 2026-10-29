@@ -2,6 +2,7 @@
 
 import errno
 import fcntl
+import json
 import logging
 import os
 import re
@@ -9,6 +10,7 @@ import shutil
 import stat
 import subprocess
 from contextlib import ExitStack, contextmanager, suppress
+from datetime import datetime
 from functools import partial
 from pathlib import Path, PurePosixPath
 
@@ -395,6 +397,74 @@ def snapshot_delivery(spec: TaskSpec, record: dict) -> dict:
         delivery["push_state"] = "unpushed"
         delivery["push_state_reason"] = "dirty_worktree"
     return delivery
+
+
+_REMOTE_SLUG = re.compile(r"(?:https://[^/]+/|git@[^:]+:|ssh://[^/]+/)([\w.-]+/[\w.-]+?)(?:\.git)?/?")
+
+
+def _gh(*args: str) -> str:
+    from scripts.common import github_client
+
+    proc = github_client.run(["gh", *args], capture_output=True, text=True, check=False, timeout=60)
+    if proc.returncode != 0:
+        raise ValueError("GitHub read failed")
+    return proc.stdout
+
+
+def _accepted_prs(task_id: str, repo: str) -> list[int]:
+    """Numbers of ``repo`` pull requests this task accepted through ``pr_ownership``, current or since cleared."""
+    from scripts.orchestration import pr_ownership
+
+    data = pr_ownership.load(pr_ownership.state_path())
+    keys = [key for key, handoff in data["handoffs"].items() if handoff.get("successor") == task_id]
+    keys += [entry["pr"] for entry in data["history"]
+             if entry.get("event") == "accepted" and entry.get("successor") == task_id]
+    return sorted({int(key.rpartition("#")[2]) for key in keys if key.rpartition("#")[0] == repo.casefold()})
+
+
+def merged_delivery(record: dict) -> dict | None:
+    """The merged pull request that carries this task's delivery, or None when none is proven.
+
+    A task that ends with its work merged has nothing left on its own branch to inspect: the
+    PR it accepted, or the one opened from its branch, is the delivery, and a worker may have
+    reset or deleted the branch after the merge. A candidate counts only when GitHub reports
+    it MERGED into the task's base after the task started. Any lookup failure is None, so the
+    caller falls back to refusing on the local evidence. ``paths`` is every path the PR
+    changed, rename sources included. The task's own head must also be published (nothing
+    ahead of the task start, or already in the PR or the base), so merged work never hides
+    further work that was not pushed.
+    """
+    try:
+        match = _REMOTE_SLUG.fullmatch(record["worktree_remote_url"])
+        if not match:
+            return None
+        repo = match.group(1)
+        base = record["worktree_base_ref"].removeprefix("refs/remotes/").removeprefix("origin/")
+        started = datetime.fromisoformat(record["started_at"].replace("Z", "+00:00"))
+        branches = {record["worktree_branch"], record.get("publish_branch")} - {None}
+        numbers = set(_accepted_prs(record["task_id"], repo))
+        for branch in sorted(branches):
+            listed = json.loads(_gh("pr", "list", "--repo", repo, "--head", branch, "--state", "merged",
+                                    "--json", "number,isCrossRepository,headRefName"))
+            numbers.update(pr["number"] for pr in listed if pr["headRefName"] == branch and not pr["isCrossRepository"])
+        for number in sorted(numbers):
+            pr = json.loads(_gh("pr", "view", str(number), "--repo", repo, "--json", "state,baseRefName,mergedAt"))
+            if (pr["state"] != "MERGED" or pr["baseRefName"] != base
+                    or datetime.fromisoformat(pr["mergedAt"].replace("Z", "+00:00")) < started):
+                continue
+            if record.get("commits_ahead") != 0:
+                tip, merged = _canonical_publication(
+                    record, f"refs/heads/{record.get('publish_branch') or record['worktree_branch']}", record["head_sha"])
+                if not (merged or tip == record["head_sha"]):
+                    return None
+            # One JSON string per line keeps a name with a newline or quote whole.
+            changed = _gh("api", "--paginate", f"repos/{repo}/pulls/{number}/files",
+                          "--jq", ".[] | (.filename, (.previous_filename // empty)) | @json")
+            return dict(repo=repo, number=number, merged_at=pr["mergedAt"],
+                        paths=sorted({json.loads(line) for line in changed.split("\n") if line}))
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, RuntimeError, subprocess.SubprocessError):
+        return None
+    return None
 
 
 def _tree_changes(tree: Path) -> tuple[list[str], list[str]]:

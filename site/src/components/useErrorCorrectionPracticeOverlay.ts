@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import { loadBundledPractice } from '../lib/lexicon/practice-report';
 import type { ErrorCorrectionDrill } from './ErrorCorrectionPractice';
 
 export async function loadErrorCorrectionDeck(): Promise<ErrorCorrectionDrill[]> {
-  const mod = await import('../data/practice-error-corrections.json');
-  return mod.default.drills as ErrorCorrectionDrill[];
+  return loadBundledPractice('practice-error-corrections.json', (data) => (data as { drills: ErrorCorrectionDrill[] }).drills);
 }
 
 export function useErrorCorrectionPracticeOverlay() {

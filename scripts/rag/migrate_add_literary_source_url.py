@@ -31,6 +31,12 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 LITERARY_DIR = PROJECT_ROOT / "data" / "literary_texts"
@@ -152,6 +158,7 @@ def run_migration(db_path: Path, *, dry_run: bool = False) -> dict[str, Any]:
     if not db_path.exists():
         return {"db_path": str(db_path), "existed": False, "added_column": False}
 
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     try:
         added = False

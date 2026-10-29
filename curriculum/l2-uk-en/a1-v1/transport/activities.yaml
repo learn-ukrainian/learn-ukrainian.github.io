@@ -116,7 +116,7 @@ inline:
           - 'три'
           - 'третє'
         explanation: 'Колія is feminine: третя.'
-      - sentence: 'О котрій ___?'
+      - sentence: "(Ask about departure time.) О котрій ___?"
         answer: 'відправлення'
         options:
           - 'відправлення'
@@ -128,7 +128,7 @@ inline:
     title: Автобусом чи на метро?
     instruction: Choose the natural travel model.
     items:
-      - prompt: 'How do you say by bus?'
+      - prompt: "(Use one word in the instrumental case.) How do you say by bus?"
         options:
           - text: 'автобусом'
             correct: true

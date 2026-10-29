@@ -22,7 +22,12 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
 
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_dictua_parse
-from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+from scripts.lib.readonly_sqlite import (
+    open_readonly as _shared_open_readonly,
+)
+from scripts.lib.readonly_sqlite import (
+    refuse_writable_corpus_database,
+)
 from scripts.wiki import sources_db
 
 ULIF_FORMS_PARSER_VERSION = ulif_dictua_parse.ULIF_FORMS_PARSER_VERSION
@@ -55,6 +60,7 @@ def build_ulif_forms(
     raw_conn: sqlite3.Connection | None = None
 
     try:
+        refuse_writable_corpus_database(str(target_db))
         conn = sqlite3.connect(str(target_db))
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA foreign_keys=ON")

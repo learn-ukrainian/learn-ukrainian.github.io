@@ -4,6 +4,7 @@ import styles from './Home.module.css';
 import curriculumStats from '../data/curriculum-stats.json';
 import ChromeText from '../lib/i18n/ChromeText';
 import { CHROME_STRINGS, type ChromeKey } from '../lib/i18n/chrome';
+import { a1PrimaryHref, levelEntryHref } from '../lib/a1-entry';
 
 /** Get module count from curriculum.yaml-generated stats */
 function mc(level: string): number {
@@ -21,7 +22,7 @@ function HomepageHeader() {
           Мова – душа народу • Language is the soul of a nation
         </p>
         <div className={styles.buttons}>
-          <a className={styles.primaryButton} href="/a1/">
+          <a className={styles.primaryButton} href={a1PrimaryHref}>
             <ChromeText k="home.heroStart" />
           </a>
           <a className={styles.secondaryButton} href="#levels">
@@ -78,7 +79,7 @@ function LevelCard({ level, nameKey, descKey, modules, color, preview }: {
 }) {
   return (
     <div style={{flex: '1 1 300px', marginBottom: '1.5rem'}}>
-      <a href={`/${level.toLowerCase()}/`} className={styles.levelLink}>
+      <a href={levelEntryHref(level)} className={styles.levelLink}>
         <div className={styles.levelCard} data-level={level.toLowerCase()}>
           <span className={styles.levelBadge} style={{ background: color }}>
             {level}
@@ -161,7 +162,7 @@ export default function Home(): ReactNode {
             <div className={styles.ctaContent}>
               <h2 style={{marginTop: 0}}><ChromeText k="home.ctaTitle" /></h2>
               <p><ChromeText k="home.ctaBody" /></p>
-              <a className={styles.primaryButton} href="/a1/">
+              <a className={styles.primaryButton} href={a1PrimaryHref}>
                 <ChromeText k="home.ctaBtn" />
               </a>
             </div>

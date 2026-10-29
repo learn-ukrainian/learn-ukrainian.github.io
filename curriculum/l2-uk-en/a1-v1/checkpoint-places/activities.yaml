@@ -117,9 +117,9 @@ inline:
         answer: 'в'
         options:
           - 'в'
-          - 'у'
+          - "до"
           - 'з'
-        explanation: 'Before the vowel in Одесі, в is the smoother choice.'
+        explanation: "В Одесі answers the static-location question де? in this sentence."
       - sentence: 'Я ___ Дерибасівській вулиці.'
         answer: 'на'
         options:
@@ -127,20 +127,20 @@ inline:
           - 'в'
           - 'з'
         explanation: 'Use на with street location: на вулиці.'
-      - sentence: 'Я йду ___ кафе.'
+      - sentence: "(You are leaving the cafe.) Я йду ___ кафе."
         answer: 'з'
         options:
           - 'з'
           - 'в'
           - 'на'
         explanation: 'Йду з кафе answers звідки?'
-      - sentence: 'Потім я йду ___ порт.'
+      - sentence: "Потім вони йдуть ___ порт."
         answer: 'у'
         options:
           - 'у'
-          - 'в'
+          - "без"
           - 'з'
-        explanation: 'Before a consonant, у порт is a smooth destination phrase.'
+        explanation: "Between the consonants in йдуть and порт, use у порт for the destination."
       - sentence: 'Після порту я йду ___ пляж.'
         answer: 'на'
         options:
@@ -148,7 +148,7 @@ inline:
           - 'в'
           - 'з'
         explanation: 'На пляж is the safe destination phrase.'
-      - sentence: 'Увечері я їду ___.'
+      - sentence: "(The station is your destination.) Увечері я їду ___."
         answer: 'на вокзал'
         options:
           - 'на вокзал'
@@ -244,15 +244,15 @@ workbook:
           - text: 'Я з школи.'
             correct: false
         explanation: 'Де? needs в/у plus the static place form.'
-      - prompt: 'Repair: Я іду в школі.'
+      - prompt: "(Give the destination: school.) Rephrase: Я йду в школі."
         options:
-          - text: 'Я іду в школу.'
+          - text: "Я йду в школу."
             correct: true
-          - text: 'Я іду в школі.'
+          - text: 'Я йду в школі.'
             correct: false
-          - text: 'Я іду зі школи.'
+          - text: 'Я йду зі школи.'
             correct: false
-        explanation: 'Іду asks куди?, so use the destination phrase.'
+        explanation: "For the destination, use в школу. After Я, the euphonic verb form is йду."
       - prompt: 'Repair: Я працюю в пошті.'
         options:
           - text: 'Я працюю на пошті.'
@@ -262,7 +262,7 @@ workbook:
           - text: 'Я працюю до пошти.'
             correct: false
         explanation: 'The safe Ukrainian phrase is на пошті.'
-      - prompt: 'Repair: Книга є на столі.'
+      - prompt: "(Give the shorter version without є.) Rephrase: Книга є на столі."
         options:
           - text: 'Книга на столі.'
             correct: true
@@ -270,7 +270,7 @@ workbook:
             correct: false
           - text: 'Книга в стіл.'
             correct: false
-        explanation: 'Ukrainian normally omits the present helper in this place line.'
+        explanation: "The requested A1 place pattern is Книга на столі."
       - prompt: 'Repair: Вона живе Київ.'
         options:
           - text: 'Вона живе в Києві.'
@@ -354,7 +354,7 @@ workbook:
         answer: 'в'
         options:
           - 'в'
-          - 'у'
+          - "до"
           - 'з'
         explanation: 'В музей is a learned destination phrase.'
       - sentence: 'Музей ___ площі.'
@@ -371,7 +371,7 @@ workbook:
           - 'з метро'
           - 'у метрою'
         explanation: 'На метро is the transport phrase.'
-      - sentence: 'Після музею вона їде ___.'
+      - sentence: "(The station is her destination.) Після музею вона їде ___."
         answer: 'на вокзал'
         options:
           - 'на вокзал'

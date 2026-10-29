@@ -28,6 +28,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_DB = REPO / "data" / "sources.db"
 
@@ -592,6 +598,7 @@ def ingest(adapter: Adapter, input_path: Path, db_path: Path, *, dry_run: bool, 
         return IngestResult(adapter.source, parsed=len(rows), inserted=0, skipped=0, dry_run=True)
 
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     try:
         with conn:

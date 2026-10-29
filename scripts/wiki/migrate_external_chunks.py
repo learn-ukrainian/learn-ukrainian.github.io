@@ -21,6 +21,12 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from wiki.channels import load_channels
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
 CHANNELS_PATH = PROJECT_ROOT / "registry" / "external_articles" / "channels.yaml"
@@ -462,6 +468,7 @@ def migrate_external_chunks(
     if dry_run:
         return stats
 
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     # Bootstrap schema FIRST — on a fresh clone the table doesn't exist yet,
     # so the rows_before COUNT(*) below would crash. Gemini review #354

@@ -41,21 +41,21 @@ inline:
           - 'вода'
           - 'водою'
         explanation: 'Вода becomes воду.'
-      - sentence: 'Мені ___, будь ласка.'
+      - sentence: "(Use the accusative singular.) Мені ___, будь ласка."
         answer: 'борщ'
         options:
           - 'борщ'
           - 'борщу'
           - 'борщем'
         explanation: 'Борщ is masculine inanimate and stays борщ.'
-      - sentence: 'Мені ___, будь ласка.'
+      - sentence: "(Use the accusative singular.) Мені ___, будь ласка."
         answer: 'салат'
         options:
           - 'салат'
           - 'салату'
           - 'салатом'
         explanation: 'Салат stays салат in this A1 pattern.'
-      - sentence: 'Дайте, будь ласка, ___.'
+      - sentence: "(Use the accusative singular.) Дайте, будь ласка, ___."
         answer: 'чай'
         options:
           - 'чай'
@@ -69,14 +69,14 @@ inline:
           - 'піца'
           - 'піці'
         explanation: 'Піца becomes піцу.'
-      - sentence: 'Можна ___?'
+      - sentence: "(Use the accusative singular.) Можна ___?"
         answer: 'хліб'
         options:
           - 'хліб'
           - 'хліба'
           - 'хлібом'
         explanation: 'Хліб stays хліб.'
-      - sentence: 'Мені ___ із собою, будь ласка.'
+      - sentence: "(Use the accusative singular.) Мені ___ із собою, будь ласка."
         answer: 'маленьку каву'
         options:
           - 'маленьку каву'
@@ -165,7 +165,7 @@ inline:
     title: Complete the cafe dialogue
     instruction: Choose the word or phrase that fits the dialogue.
     items:
-      - sentence: 'Добрий день! Ось ___.'
+      - sentence: "(The server brings the menu.) Добрий день! Ось ___."
         answer: 'меню'
         options:
           - 'меню'
@@ -200,7 +200,7 @@ inline:
           - 'читати'
           - 'платити'
         explanation: 'The server asks what you will drink.'
-      - sentence: 'Добре, одну ___.'
+      - sentence: "(Ask the customer to wait a moment.) Добре, одну ___."
         answer: 'хвилинку'
         options:
           - 'хвилинку'

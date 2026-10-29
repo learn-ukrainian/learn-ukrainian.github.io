@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { dailyReportRecords } from '../lib/lexicon/practice-report-daily';
+import ReportProblemAction from './practice/ReportProblemAction';
 import type {
   DailyPracticeDeckSnapshot,
   DailyPracticeRowState,
@@ -235,6 +237,7 @@ export default function PracticeDailyDeck({
         </div>
       </div>
 
+      {currentItem && <ReportProblemAction records={dailyReportRecords(currentItem, currentLexeme)} type="daily-preview" chromeLocale={chromeLocale} />}
       <details
         className="daily-deck-details"
         data-testid="practice-daily-details"

@@ -593,3 +593,108 @@ def test_shared_reader_cursor_and_transaction_methods_preserve_results(database)
         with pytest.raises(sqlite3.ProgrammingError, match="closed cursor"):
             cursor.fetchone()
         assert conn.execute("SELECT id FROM synthetic").fetchall() == [(7,)]
+
+
+def _generation_store(tmp_path):
+    """A selector over two generations, held read-only, as the publisher leaves them."""
+    from scripts.storage import generations
+
+    data = tmp_path / "data"
+    directory = data / "sources-generations"
+    directory.mkdir(parents=True)
+    names = ["sources.20260101T000000Z-000000000001.db", "sources.20260102T000000Z-000000000002.db"]
+    for name in names:
+        with closing(sqlite3.connect(directory / name)) as conn:
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("CREATE TABLE synthetic (id INTEGER)")
+            conn.commit()
+        generations.hold_database(directory / name)
+    (data / "sources.db").symlink_to(f"sources-generations/{names[1]}")
+    return data / "sources.db", directory / names[0], directory / names[1]
+
+
+def _as_declared_writer(path):
+    """Open ``path`` writable from a frame inside the declared writer sources_db.py."""
+    source = (
+        "def _review_generation_probe(path):\n"
+        "    from scripts.api.resilience import connect_sqlite\n"
+        "    return connect_sqlite(str(path))\n"
+    )
+    exec(compile(source, sources_db.__file__, "exec"), sources_db.__dict__)
+    try:
+        return sources_db._review_generation_probe(path)
+    finally:
+        del sources_db._review_generation_probe
+
+
+def test_generation_files_and_links_to_them_are_the_sources_corpus(tmp_path):
+    from scripts.lib.readonly_sqlite import corpus_database_name
+
+    selector, old, current = _generation_store(tmp_path)
+    alias = tmp_path / "alias.db"
+    alias.symlink_to(old)
+    assert corpus_database_name(selector) == "sources.db"
+    assert corpus_database_name(old) == "sources.db"
+    assert corpus_database_name(current.as_uri() + "?mode=rw") == "sources.db"
+    assert corpus_database_name(alias) == "sources.db"
+    assert corpus_database_name(tmp_path / "sources.20260101T000000Z-000000000001.db") is None
+
+
+def test_writable_generation_open_is_refused_even_for_a_declared_writer(tmp_path):
+    selector, old, current = _generation_store(tmp_path)
+    for path in (selector, old, current, current.as_uri()):
+        with pytest.raises(CorpusDatabaseWriteRefused, match="writer_lock_not_held"):
+            _as_declared_writer(path)
+    with closing(connect_sqlite(current.as_uri() + "?mode=ro", uri=True)) as reader:
+        assert reader.execute("SELECT COUNT(*) FROM synthetic").fetchone() == (0,)
+
+
+def test_lock_holder_may_open_only_the_selected_generation(tmp_path):
+    from scripts.storage import generations
+
+    selector, old, current = _generation_store(tmp_path)
+    with generations.writer_lock(selector, lift=True):
+        with pytest.raises(CorpusDatabaseWriteRefused, match="not_selected_generation"):
+            _as_declared_writer(old)
+        for path in (selector, current):
+            connection = _as_declared_writer(path)
+            connection.execute("INSERT INTO synthetic VALUES (1)")
+            connection.commit()
+            connection.close()
+        with pytest.raises(CorpusDatabaseWriteRefused, match=r"corpus database sources\.db"):
+            connect_sqlite(str(current))  # the lock alone does not make a caller a writer
+
+
+def test_pre_bootstrap_live_store_needs_the_lock(tmp_path, monkeypatch):
+    from scripts.storage import generations
+
+    live = tmp_path / "data" / "sources.db"
+    live.parent.mkdir()
+    with closing(sqlite3.connect(live)) as conn:
+        conn.execute("CREATE TABLE synthetic (id INTEGER)")
+    from scripts.storage import topology
+
+    monkeypatch.setattr(topology, "live_store_path", lambda: live)
+    with pytest.raises(CorpusDatabaseWriteRefused, match="writer_lock_not_held"):
+        _as_declared_writer(live)
+    with generations.writer_lock(live):
+        _as_declared_writer(live).close()
+    unrelated = tmp_path / "fixture" / "sources.db"
+    unrelated.parent.mkdir()
+    _as_declared_writer(unrelated).close()  # a fixture named sources.db is not the store
+
+
+def test_aliases_of_a_generation_still_need_the_lock(tmp_path):
+    """A link's own name or a symlinked parent directory cannot rename a generation."""
+    from scripts.lib.readonly_sqlite import corpus_database_name
+
+    _, old, current = _generation_store(tmp_path)
+    named_vesum = tmp_path / "vesum.db"
+    named_vesum.symlink_to(current)
+    linked_parent = tmp_path / "linked-generations"
+    linked_parent.symlink_to(current.parent)
+    for alias in (named_vesum, linked_parent / current.name, linked_parent / old.name):
+        assert corpus_database_name(alias) == "sources.db"
+        assert corpus_database_name(alias.as_uri() if alias.is_absolute() else alias) == "sources.db"
+        with pytest.raises(CorpusDatabaseWriteRefused, match="writer_lock_not_held"):
+            _as_declared_writer(alias)

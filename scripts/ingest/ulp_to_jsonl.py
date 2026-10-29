@@ -34,6 +34,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.common.jsonl import jsonl_lines
 from scripts.ingest import ulp_lesson_notes_ingest as ulp
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 DEFAULT_TARGET_CHARS = 1500
 DEFAULT_OVERLAP_CHARS = 120
@@ -149,6 +150,7 @@ def ingest_jsonl(path: Path, *, db_path: Path, force: bool) -> dict[str, int]:
     if not rows:
         return {"deleted": 0, "inserted": 0}
     source_file = str(rows[0]["source_file"])
+    refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path)
     try:
         before = conn.execute("SELECT COUNT(*) FROM textbooks WHERE source_file = ?", (source_file,)).fetchone()[0]

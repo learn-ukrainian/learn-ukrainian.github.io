@@ -299,3 +299,32 @@ def unsupported_verdict_tokens(response: str) -> list[str]:
         if match and len(match.group(1)) <= 64:
             tokens.append(match.group(1))
     return tokens
+
+
+# A ledger entry of the review-loop reply (``references/brief.md`` reply format, ``references/policy.md``
+# ledger) starts at its finding id, optionally bulleted or bold, and runs to the next entry, a blank
+# line, or the verdict and score lines. The severity sits right after the id (``F2 [P1] ...``,
+# ``F2 (P1) ...``) or after the plain-words disposition a delta round writes (``F2 still open: [P1] ...``).
+_LEDGER_ENTRY_START = re.compile(
+    r"^\s*(?:[-*]\s+)?\**(F[1-9][0-9]{0,3})(?![0-9])\**"
+    r"(?:\s*[:\u2014\u2013-]+)?(?:\s*(?:still|remains?)\s+open\s*[:\u2014\u2013-]?)?"
+    r"(?:\s*(?:\[(P[0-3])\]|\((P[0-3])\)))?"
+)
+_LEDGER_ENTRY_END = re.compile(r"^\s*$|^\s*(?:VERDICT|SCORE):")
+
+
+def finding_entries(reply: str, finding_id: str) -> list[tuple[str | None, str]]:
+    """Every ledger entry for ``finding_id`` in a reviewer reply, in order: its severity and its full text.
+
+    The severity is None when the entry states none; consumers decide what that means.
+    """
+    entries: list[tuple[str, str | None, list[str]]] = []
+    for line in _commonmark_lines(reply):
+        start = _LEDGER_ENTRY_START.match(line)
+        if start:
+            entries.append((start[1], start[2] or start[3], [line]))
+        elif entries and _LEDGER_ENTRY_END.match(line):
+            entries.append(("", None, []))
+        elif entries and entries[-1][0]:
+            entries[-1][2].append(line)
+    return [(severity, "\n".join(lines)) for found, severity, lines in entries if found == finding_id]

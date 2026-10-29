@@ -89,7 +89,8 @@ ADVISOR_OUTPUT_FIELDS = [
 ADVISORY_ROLES_KEY = "advisory_roles"
 ADVISORY_ROLE_KEYS = frozenset({"effort", "fence", "output_fields"})
 REVIEW_BUDGET_ELEVATION_ROLE = "review_budget_elevation"
-# Role -> (fence label, exact typed-object fields) the catalog entry must declare.
+BOUNDED_ADVISORY_ENVELOPE_ROLE = "bounded_advisory_envelope"
+# Role -> (fence label, exact typed-object fields, active holder families) the catalog entry must declare.
 ADVISORY_ROLE_SHAPES = {
     REVIEW_BUDGET_ELEVATION_ROLE: (
         "budget-elevation",
@@ -106,7 +107,10 @@ ADVISORY_ROLE_SHAPES = {
             "issued_at",
             "request_sha256",
         ],
+        2,
     ),
+    # The envelope has one advisor, the bounded_advisor seat's model, not a non-author pair.
+    BOUNDED_ADVISORY_ENVELOPE_ROLE: ("advisory-envelope", ADVISOR_OUTPUT_FIELDS, 1),
 }
 LUNA_TASK_TYPES = frozenset({"bounded_implementation", "bounded_investigation"})
 LUNA_PROHIBITED_DECISIONS = frozenset(
@@ -215,13 +219,11 @@ def _advisory_role_holders(models: dict[str, Any], role: str) -> dict[str, tuple
 
 
 def _validate_advisory_roles(raw: Any, models: dict[str, Any]) -> None:
-    if raw is None:
-        # A catalog without the section defines no advisory decision; its consumers refuse.
-        return
+    # Bounded admission reads the envelope role from this section, so it is required.
     roles = _require_mapping(raw, ADVISORY_ROLES_KEY)
     if set(roles) != set(ADVISORY_ROLE_SHAPES):
         raise ModelCatalogError(f"{ADVISORY_ROLES_KEY} must define exactly {sorted(ADVISORY_ROLE_SHAPES)}")
-    for role, (fence, fields) in ADVISORY_ROLE_SHAPES.items():
+    for role, (fence, fields, holder_families) in ADVISORY_ROLE_SHAPES.items():
         label = f"{ADVISORY_ROLES_KEY}.{role}"
         entry = _require_mapping(roles[role], label)
         _require_exact_keys(entry, ADVISORY_ROLE_KEYS, label)
@@ -230,11 +232,25 @@ def _validate_advisory_roles(raw: Any, models: dict[str, Any]) -> None:
             raise ModelCatalogError(f"{label}.fence must be {fence!r}")
         if entry["output_fields"] != fields:
             raise ModelCatalogError(f"{label}.output_fields must be exactly {fields!r}")
-        if len(_advisory_role_holders(models, role)) < 2:
+        if len(_advisory_role_holders(models, role)) < holder_families:
             raise ModelCatalogError(
-                f"{label} needs active holders in two families, so a non-author advisor exists "
-                "(operator-expectations item 12)"
+                f"{label} needs active holders in {holder_families} "
+                f"{'family' if holder_families == 1 else 'families'}"
+                + (", so a non-author advisor exists (operator-expectations item 12)" if holder_families > 1 else "")
             )
+
+
+def _validate_envelope_role_agrees(catalog: dict[str, Any]) -> None:
+    """The bounded advisor's duplicated effort and output fields equal the one ``advisory_roles`` entry."""
+    advisor = catalog["execution_routing"]["sol_advised_bounded"]["advisor"]
+    entry = catalog[ADVISORY_ROLES_KEY][BOUNDED_ADVISORY_ENVELOPE_ROLE]
+    if advisor["role"] != BOUNDED_ADVISORY_ENVELOPE_ROLE or any(
+        advisor[field] != entry[field] for field in ("effort", "output_fields")
+    ):
+        raise ModelCatalogError(
+            f"execution_routing.sol_advised_bounded.advisor must agree with {ADVISORY_ROLES_KEY}."
+            f"{BOUNDED_ADVISORY_ENVELOPE_ROLE} on role, effort and output_fields"
+        )
 
 
 def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
@@ -835,6 +851,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
 
     _validate_execution_routing(catalog.get("execution_routing"), models)
     _validate_advisory_roles(catalog.get(ADVISORY_ROLES_KEY), models)
+    _validate_envelope_role_agrees(catalog)
 
     candidates =_require_mapping(catalog.get("review_candidates"), "review_candidates")
     for name, raw in candidates.items():
@@ -1168,13 +1185,12 @@ class BoundedExecutionPolicy:
 
     advisor_model_id: str
     advisor_role: str
+    advisor_route: str
+    advisor_fence: str
     advisor_output_fields: tuple[str, ...]
     bounded_worker_model_id: str
     bounded_fallback_model_id: str
     non_bounded_task_families: frozenset[str]
-
-
-ADVISOR_ROUTE = "execution_routing.sol_advised_bounded.advisor"
 
 
 def driver_brief_models(catalog: dict[str, Any] | None = None) -> frozenset[str]:
@@ -1190,12 +1206,16 @@ def driver_brief_models(catalog: dict[str, Any] | None = None) -> frozenset[str]
 
 def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedExecutionPolicy:
     """The validated bounded-worker policy: who advises, which models need an envelope, and what it holds."""
-    route = (catalog or load_model_catalog())["execution_routing"]["sol_advised_bounded"]
+    catalog = catalog or load_model_catalog()
+    route = catalog["execution_routing"]["sol_advised_bounded"]
     fallback = route["bounded_fallback_worker"]
+    envelope = advisory_role_policy(BOUNDED_ADVISORY_ENVELOPE_ROLE, catalog)
     return BoundedExecutionPolicy(
         advisor_model_id=route["advisor"]["model_id"],
-        advisor_role=route["advisor"]["role"],
-        advisor_output_fields=tuple(route["advisor"]["output_fields"]),
+        advisor_role=envelope.role,
+        advisor_route=envelope.route,
+        advisor_fence=envelope.fence,
+        advisor_output_fields=envelope.output_fields,
         bounded_worker_model_id=route["preferred_worker"]["model_id"],
         bounded_fallback_model_id=fallback["model_id"],
         non_bounded_task_families=frozenset(family.strip() for family in fallback["non_bounded_task_families"]),

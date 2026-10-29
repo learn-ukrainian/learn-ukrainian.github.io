@@ -622,7 +622,8 @@
     "harness": "claude",
     "effort": "high",
     "sources_required": true,
-    "qualification": "UNVERIFIED"
+    "qualification": "QUALIFIED",
+    "qualification_ref": "private://uk-behaviour-v2/reviewer-qualification"
   },
   "future_candidate_configuration": [
     {
@@ -899,8 +900,8 @@
     },
     {
       "ref": "private://uk-behaviour-v2/reviewer-qualification",
-      "sha256": null,
-      "status": "MISSING",
+      "sha256": "6181ca6c19e0fda289b8c0315a3181d14c620b734473ec977554678fa14389aa",
+      "status": "SEALED",
       "owner": "reviewer-trial-custodian"
     },
     {
@@ -947,9 +948,10 @@
     },
     {
       "ref": "private://uk-behaviour-v2/audit-sample-and-dispute-seal",
-      "sha256": null,
-      "status": "MISSING",
-      "owner": "data-steward"
+      "sha256": "13ad0de7f8c4ba592865ccba061ea47708a062e36bfe317ca8d0b08c9031bfd0",
+      "status": "SEALED_WITH_RESIDUAL",
+      "owner": "data-steward",
+      "residual": "dispute adjudicator seat unassigned: no eligible model-distinct seat outside the scored family"
     },
     {
       "ref": "private://uk-behaviour-v2/final/adjudication-and-judge-transcripts",
@@ -1014,7 +1016,8 @@
     "harness": "agy",
     "effort": "high",
     "sources_required": true,
-    "qualification": "UNVERIFIED"
+    "qualification": "QUALIFIED",
+    "qualification_ref": "private://uk-behaviour-v2/reviewer-qualification"
   },
   "custody": {
     "final_excluded_label_and_judge_families": [

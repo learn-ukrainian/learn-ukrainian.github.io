@@ -10,6 +10,9 @@ import { Window } from 'happy-dom';
 import { describe, expect, it, vi } from 'vitest';
 import Route from '../../src/pages/[...slug].astro';
 import arc from '../../src/data/arc-a1.json';
+import { levelEntryHref } from '../../src/lib/a1-entry';
+import unpublished from '../fixtures/arc-a1/unpublished.json';
+import openingPublished from '../fixtures/arc-a1/opening-published.json';
 
 // Only collection I/O is synthetic. Route guards, generated JSON and HTML are production code.
 vi.mock('astro:content', () => ({
@@ -17,11 +20,11 @@ vi.mock('astro:content', () => ({
   render: async () => ({ Content: undefined }),
 }));
 
-async function renderPage(kind: string, slug?: string) {
+async function renderPage(kind: string, slug?: string, route: typeof Route = Route) {
   const renderers = await loadRenderers([getContainerRenderer()]);
   const container = await AstroContainer.create({ renderers });
   const id = slug ? `a1/${slug}/index` : 'a1/index';
-  return container.renderToString(Route, {
+  return container.renderToString(route, {
     props: {
       kind: slug ? 'doc' : 'landingDoc',
       entry: { id, data: { title: slug ?? 'A1', arc_kind: kind, arc_level: 'a1', arc_slug: slug } },
@@ -46,10 +49,29 @@ describe('production arc route rendering', () => {
     const notice = doc.querySelector('[data-arc-state="retired"]');
     expect(notice?.querySelector('h1')?.textContent).toBe('Retired');
     expect(notice?.querySelector('p')?.textContent).toBe('This module has been retired from the current course sequence.');
-    expect(notice?.querySelector('a')?.getAttribute('href')).toBe('/a1/');
+    expect(notice?.querySelector('a')?.getAttribute('href')).toBe(levelEntryHref('a1'));
     expect(doc.querySelector('[data-state="plan_reviewed"]')).toBeNull();
     expect(doc.querySelector('[data-state="built"]')).toBeNull();
     preserveRender(slug, html);
+  });
+
+  it('points the retired notice at the primary A1 entry for the publication state', async () => {
+    const hrefs: Record<string, string> = {};
+    for (const [state, data] of [['unpublished', unpublished], ['opening-published', openingPublished]] as const) {
+      vi.resetModules();
+      vi.doMock('../../src/data/arc-a1.json', () => ({ default: data }));
+      try {
+        const { default: StateRoute } = await import('../../src/pages/[...slug].astro');
+        const html = await renderPage('retired', 'special-signs', StateRoute);
+        const doc = new Window().document;
+        doc.write(html);
+        hrefs[state] = doc.querySelector('[data-arc-state="retired"] a')!.getAttribute('href')!;
+      } finally {
+        vi.doUnmock('../../src/data/arc-a1.json');
+        vi.resetModules();
+      }
+    }
+    expect(hrefs).toEqual({ unpublished: '/a1-v1/', 'opening-published': '/a1/' });
   });
 
   it('refuses an unrecorded retired slug instead of rendering a notice', async () => {

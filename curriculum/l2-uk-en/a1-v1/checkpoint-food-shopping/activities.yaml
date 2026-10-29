@@ -33,7 +33,7 @@ inline:
     title: Accusative checkpoint
     instruction: Choose the correct object form.
     items:
-      - prompt: 'Я їм ___.'
+      - prompt: "(Use the accusative singular.) Я їм ___."
         options:
           - text: 'салат'
             correct: true
@@ -51,7 +51,7 @@ inline:
           - text: 'брату'
             correct: false
         explanation: 'Брат is a male person, so use брата.'
-      - prompt: "Я п'ю ___."
+      - prompt: "(Use the accusative singular.) Я п'ю ___."
         options:
           - text: 'воду'
             correct: true
@@ -87,7 +87,7 @@ inline:
           - text: 'другу'
             correct: false
         explanation: 'Use друга for the person you are waiting for.'
-      - prompt: 'Я купую ___.'
+      - prompt: "(Use the accusative singular.) Я купую ___."
         options:
           - text: 'хліб'
             correct: true
@@ -105,7 +105,7 @@ inline:
           - text: 'лікарю'
             correct: false
         explanation: 'Use лікаря after бачу.'
-      - prompt: 'Я їм ___.'
+      - prompt: "(Use the accusative singular.) Я їм ___."
         options:
           - text: 'піцу'
             correct: true
@@ -128,7 +128,7 @@ inline:
     title: Market and cafe day
     instruction: Choose the word or phrase that completes the dialogue.
     items:
-      - sentence: "— Що ти їси на сніданок? — Я їм ___ і п'ю каву."
+      - sentence: "(Use the accusative singular.) — Що ти їси на сніданок? — Я їм ___ і п'ю каву."
         answer: 'кашу'
         options:
           - 'кашу'
@@ -297,7 +297,7 @@ workbook:
           - 'літр'
           - 'пляшку'
         explanation: 'Use шматок хліба.'
-      - sentence: 'Анна наливає ___ води.'
+      - sentence: "(Measure the water in one drinking glass.) Анна наливає ___ води."
         answer: 'склянку'
         options:
           - 'склянку'
@@ -380,7 +380,7 @@ workbook:
           - text: 'Я маю голодний.'
             correct: false
         explanation: 'Omit є in this present-tense state line.'
-      - prompt: "Repair: Моє ім'я є Джон, і я хочу меню."
+      - prompt: "(Use the Мене звати formula and an imperative request.) Rephrase: Моє ім'я є Джон, і я хочу меню."
         options:
           - text: 'Мене звати Джон, дайте меню.'
             correct: true
@@ -388,8 +388,8 @@ workbook:
             correct: false
           - text: 'Я є Джон і я маю меню.'
             correct: false
-        explanation: 'Use Мене звати for introducing yourself.'
-      - prompt: 'Repair: Чи не могли б ви дати мені рахунок?'
+        explanation: "Мене звати Джон is the requested name formula, and дайте is the requested imperative."
+      - prompt: "(Use a direct imperative with будь ласка.) Rephrase: Чи не могли б ви дати мені рахунок?"
         options:
           - text: 'Дайте, будь ласка, рахунок.'
             correct: true
@@ -397,8 +397,8 @@ workbook:
             correct: false
           - text: 'Дайте мені рахунком.'
             correct: false
-        explanation: 'The A1 service request is direct and polite.'
-      - prompt: 'Repair: Я плачу рублями.'
+        explanation: "The requested direct imperative is Дайте, будь ласка, рахунок. The conditional request is also grammatical and polite."
+      - prompt: "(Name the Ukrainian currency used for this payment.) Repair: Я плачу рублями."
         options:
           - text: 'Я плачу гривнями.'
             correct: true

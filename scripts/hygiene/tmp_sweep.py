@@ -76,6 +76,8 @@ from scripts.hygiene.tmp_sweep_ledger import (
 from scripts.orchestration.tmp_leak_sweep import (
     _process_state,
     _process_vanished,
+    listening_socket_paths,
+    socket_node_listening,
 )
 from scripts.orchestration.worktree_claims import _SUPERSEDED_RECORD_RE
 
@@ -424,6 +426,7 @@ def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float,
     reason = None
     git_directories = []
     git_files = []
+    listeners: frozenset[str] | None = None
     try:
         mounts = mount_points()
         if mounts is None:
@@ -445,7 +448,14 @@ def tree_facts(path: Path, *, disposable_git: bool = False) -> tuple[int, float,
                 reason = reason or "hardlinked_content"
             if not (stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode)):
                 # Socket descriptors name kernel inodes, not filesystem paths;
-                # a cwd/FD-path scan cannot prove such an endpoint unused.
+                # a cwd/FD-path scan cannot prove such an endpoint unused. Every
+                # special file keeps the tree, but a socket bound by a live
+                # listener (read from /proc/net/unix) says so; an unreadable
+                # listener table keeps the plain reason, never a clear answer.
+                if stat.S_ISSOCK(info.st_mode):
+                    listeners = listening_socket_paths() if listeners is None else listeners
+                    if listeners and socket_node_listening(node, listeners):
+                        reason = reason or "live_socket"
                 reason = reason or "special_file"
             if info.st_uid != os.geteuid():
                 reason = reason or "foreign_tree_owner"

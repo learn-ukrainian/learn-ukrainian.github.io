@@ -46,13 +46,13 @@ inline:
           - 'коштують'
           - 'коштуємо'
         explanation: 'Пляшка is one bottle.'
-      - sentence: 'Скільки ___ три пляшки води?'
+      - sentence: "(Use the plural verb form.) Скільки ___ три пляшки води?"
         answer: 'коштують'
         options:
           - 'коштують'
           - 'коштує'
           - 'коштувала'
-        explanation: 'Three bottles are plural in this price question.'
+        explanation: "The requested plural form is коштують. A singular predicate can also occur with a quantified subject."
       - sentence: 'Скільки ___ ця сукня?'
         answer: 'коштує'
         options:
@@ -170,21 +170,21 @@ inline:
           - 'одна пляшка'
           - 'один літр'
         explanation: 'Use один кілограм яблук as a buying phrase.'
-      - sentence: 'Дайте ___ молока.'
+      - sentence: "(Ask for one litre.) Дайте ___ молока."
         answer: 'літр'
         options:
           - 'літр'
           - 'пляшку'
           - 'буханку'
         explanation: 'Use літр молока.'
-      - sentence: 'Дайте ___ води.'
+      - sentence: "(Ask for one bottle.) Дайте ___ води."
         answer: 'пляшку'
         options:
           - 'пляшку'
           - 'кілограм'
           - 'буханку'
         explanation: 'Use пляшку води.'
-      - sentence: 'Дайте ___ чаю.'
+      - sentence: "(Ask for one packet of dry tea.) Дайте ___ чаю."
         answer: 'пачку'
         options:
           - 'пачку'

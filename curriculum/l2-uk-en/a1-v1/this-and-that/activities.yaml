@@ -219,15 +219,15 @@ inline:
     title: L2-пастки
     instruction: Choose the repaired Ukrainian sentence or the clearer variant.
     items:
-      - prompt: "Say 'This is an interesting book' without using є."
+      - prompt: "На столі лежить книга. Обери речення про неї."
         options:
           - text: Це цікава книга.
             correct: true
-          - text: Це є цікава книга.
+          - text: Це є цікава книгу.
             correct: false
           - text: Цей цікава книга.
             correct: false
-        explanation: "The requested pattern omits є. The version with є is also grammatical."
+        explanation: "Це цікава книга has matching nominative forms. Книгу is accusative; цей is masculine. A sentence with є can also be grammatical when its forms agree."
       - prompt: 'Fix the sentence: Я хочу купити цей сумку.'
         options:
           - text: Я хочу купити цю сумку.

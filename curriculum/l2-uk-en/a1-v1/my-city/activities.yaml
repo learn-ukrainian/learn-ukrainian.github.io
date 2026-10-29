@@ -47,7 +47,7 @@ inline:
         options:
           - text: 'Вона на вокзалі.'
             correct: true
-          - text: 'Вона у вокзалі.'
+          - text: "Вона до вокзалі."
             correct: false
           - text: 'Вона вокзал.'
             correct: false

@@ -73,9 +73,28 @@ the recorder refuses a same-head APPROVE after it. So an escalation ruling on a 
 rejection is followed by a head move (the fix, or a base update with
 `"$PY" -m scripts.publish pr-update-branch --number "$PR"`) and one more round at that head.
 
+## An unpublished verdict that its seat superseded
+
+A finished review whose verdict is never published refuses every later round of its lineage,
+unless its own seat recorded a later verdict at another head. A seat is one reviewer family on
+one review profile (code or Ukrainian), and only its latest recorded verdict counts. That run
+is then superseded and stops refusing (`review_lineage.superseded_runs`):
+
+- The superseding run is a finished run of the same family and profile, started strictly
+  later, at a different head, whose published verdict matches its own task record. A run at
+  the same head or an earlier one, a run of another family or profile, a run at the candidate
+  head of the round being recorded, and a damaged or unpublished run supersede nothing.
+- The superseded run is listed, never dropped: the repair-round receipt that `budget-check`
+  reports names its task id, pinned head, unpublished verdict and finding count, and the run
+  that superseded it. Its head stays a reviewed head and still counts against the budget.
+- A superseded rejection keeps its findings. They stay in the ledger until they are fixed,
+  declined or escalated; supersession resolves none of them.
+- A missing reply, an invalid reviewer identity, a digest mismatch, a run that is not `done`
+  but carries a verdict, and an unpublished run that its seat never superseded still refuse.
+  A superseded verdict is never published afterwards against a moved head.
+
 ## A BLOCKED that only lacked a capability
 
-A finished review whose verdict is never published refuses every later round of its lineage.
 When the reviewer stopped only because a capability it needed was missing, the CTO may record a
 capability failure for the run instead of a verdict
 (`scripts/review/capability_failure.py`):

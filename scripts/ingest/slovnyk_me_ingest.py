@@ -18,7 +18,7 @@ from urllib.parse import quote, urlparse
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly, refuse_writable_corpus_database
 from scripts.storage.topology import is_network_filesystem_path
 from scripts.wiki.slovnyk_me import (
     DEFAULT_SLOVNYK_ME_DICTS,
@@ -155,6 +155,7 @@ def ingest_words(
         return len(rows)
 
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     try:
         ensure_slovnyk_me_schema(conn)
@@ -365,6 +366,7 @@ def ingest_cache(
         raise ValueError("sources.db must stay on local storage")
     db_path.parent.mkdir(parents=True, exist_ok=True)
     existed = db_path.exists()
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     backup: Path | None = None
     try:
