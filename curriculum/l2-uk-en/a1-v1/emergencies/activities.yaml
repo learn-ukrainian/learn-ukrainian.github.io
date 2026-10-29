@@ -134,18 +134,46 @@ workbook:
       - statement: 'Подзвоніть за номером телефон.'
         answer: false
         explanation: 'A phone phrase needs a number.'
-  - type: unjumble
-    title: Build emergency lines
-    instruction: Put the words in a natural order.
+  - type: quiz
+    title: Choose emergency lines
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: 'Допоможіть!/Тут/аварія.'
-        answer: 'Допоможіть! Тут аварія.'
-      - words: 'Я/на/вулиці/Шевченка.'
-        answer: 'Я на вулиці Шевченка.'
-      - words: 'Мене/звати/Анна.'
-        answer: 'Мене звати Анна.'
-      - words: 'Подзвоніть/за/номером/112.'
-        answer: 'Подзвоніть за номером 112.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Допоможіть! Тут аварія.
+            correct: true
+          - text: Допоможіть! Тут аварію.
+            correct: false
+          - text: Допоможіть! Тут аварією.
+            correct: false
+        explanation: The construction takes аварія. The case forms аварію and аварією cannot replace it here.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Я на вулиці Шевченка.
+            correct: true
+          - text: Я на вулиця Шевченка.
+            correct: false
+          - text: Я на вулицею Шевченка.
+            correct: false
+        explanation: The construction takes вулиці. The case forms вулиця and вулицею cannot replace it here.
+      - prompt: — Як тебе звати? — ___
+        options:
+          - text: Мене звати Анна.
+            correct: true
+          - text: Мене звати Анну.
+            correct: false
+          - text: Мене звати Анні.
+            correct: false
+        explanation: This construction requires nominative Анна. Анну and Анні are different case forms.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Подзвоніть за номером 112.
+            correct: true
+          - text: Подзвоніть за номеру 112.
+            correct: false
+          - text: Подзвоніть за номер 112.
+            correct: false
+        explanation: The construction takes номером. The case forms номеру and номер cannot replace it here.
   - type: fill-in
     title: Location details
     instruction: Choose the location word that fits.
@@ -242,20 +270,21 @@ workbook:
         explanation: 'Use Подзвоніть за номером...'
   - type: error-correction
     title: Repair emergency lines
-    instruction: Fix the sentence by using the safe A1 emergency phrase.
+    instruction: Keep the action, people, location, number and intended emergency request. Correct word choice, word forms or missing words.
     items:
       - sentence: 'Мене номер Анна.'
-        error: 'Мене номер Анна'
-        correction: 'Мене звати Анна'
+        error: 'номер'
+        correction: 'звати'
       - sentence: 'Я на вулиця Шевченка.'
         error: 'на вулиця'
-        correction: 'на вулиці Шевченка'
+        correction: 'на вулиці'
       - sentence: 'Потрібен швидка.'
-        error: 'Потрібен швидка'
-        correction: 'Потрібна швидка'
-      - sentence: 'Я загубив паспорта.'
-        error: 'загубив паспорта'
-        correction: 'Я загубив паспорт'
+        error: 'Потрібен'
+        correction: 'Потрібна'
+      - sentence: 'Я загубив паспортом.'
+        error: 'паспортом'
+        correction: 'паспорт'
+        explanation: The lost object here is accusative паспорт. Паспортом is instrumental.
       - sentence: 'Подзвоніть номером 112.'
-        error: 'Подзвоніть номером'
-        correction: 'Подзвоніть за номером 112'
+        error: 'номером'
+        correction: 'за номером'

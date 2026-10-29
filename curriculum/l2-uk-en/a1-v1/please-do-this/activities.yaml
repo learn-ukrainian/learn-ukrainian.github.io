@@ -159,22 +159,64 @@ inline:
           - 'скажіть'
           - 'ідіть'
   - id: act-4
-    type: unjumble
-    title: Polite request order
-    instruction: Put the words in a natural order.
+    type: quiz
+    title: Polite request sentences
+    instruction: Choose the imperative-mood form of the main action verb; keep the politeness phrase unchanged where present.
     items:
-      - words: ['Олено', 'читай', 'будь', 'ласка']
-        answer: 'Олено, читай, будь ласка.'
-      - words: ['Пане', 'Іване', 'читайте', 'будь', 'ласка']
-        answer: 'Пане Іване, читайте, будь ласка.'
-      - words: ['Дайте', 'мені', 'меню', 'будь', 'ласка']
-        answer: 'Дайте мені меню, будь ласка.'
-      - words: ['Дай', 'мені', 'меню', 'будь', 'ласка']
-        answer: 'Дай мені меню, будь ласка.'
-      - words: ['Скажіть', 'ще', 'раз', 'будь', 'ласка']
-        answer: 'Скажіть ще раз, будь ласка.'
-      - words: ['Відкрийте', 'підручники', 'будь', 'ласка']
-        answer: 'Відкрийте підручники, будь ласка.'
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Олено, читай, будь ласка.
+            correct: true
+          - text: Олено, читаєш, будь ласка.
+            correct: false
+          - text: Олено, читати, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Пане Іване, читайте, будь ласка.
+            correct: true
+          - text: Пане Іване, читаєте, будь ласка.
+            correct: false
+          - text: Пане Іване, читати, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Дайте мені меню, будь ласка.
+            correct: true
+          - text: Даєте мені меню, будь ласка.
+            correct: false
+          - text: Дати мені меню, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Дай мені меню, будь ласка.
+            correct: true
+          - text: Даєш мені меню, будь ласка.
+            correct: false
+          - text: Дати мені меню, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Скажіть ще раз, будь ласка.
+            correct: true
+          - text: Кажете ще раз, будь ласка.
+            correct: false
+          - text: Сказати ще раз, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Відкрийте підручники, будь ласка.
+            correct: true
+          - text: Відкриваєте підручники, будь ласка.
+            correct: false
+          - text: Відкрити підручники, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
 workbook:
   - type: fill-in
     title: "Address and request"
@@ -201,7 +243,7 @@ workbook:
           - 'ідіть'
           - "іде"
         explanation: "Ти matches іди. Ідіть belongs to ви; іде is third-person indicative."
-      - sentence: "Друзі, ви вже готові? Тоді ___ в кафе."
+      - sentence: "Друзі, ви вже готові? Тоді ___ у кафе."
         answer: 'ідіть'
         options:
           - 'ідіть'
@@ -270,34 +312,90 @@ workbook:
         right: 'іди / ідіть'
       - left: 'відкрити'
         right: 'відкрий / відкрийте'
-  - type: unjumble
+  - type: quiz
     title: Class and cafe requests
-    instruction: Put each request in a natural order.
+    instruction: Choose the imperative-mood form of the main action verb; keep the politeness phrase unchanged where present.
     items:
-      - words: ['Відкрийте', 'підручники', 'будь', 'ласка']
-        answer: 'Відкрийте підручники, будь ласка.'
-      - words: ['Читайте', 'текст', 'будь', 'ласка']
-        answer: 'Читайте текст, будь ласка.'
-      - words: ['Пишіть', 'три', 'речення']
-        answer: 'Пишіть три речення.'
-      - words: ['Дайте', 'мені', 'меню', 'будь', 'ласка']
-        answer: 'Дайте мені меню, будь ласка.'
-      - words: ['Дайте', 'рахунок', 'будь', 'ласка']
-        answer: 'Дайте рахунок, будь ласка.'
-      - words: ['Скажіть', 'ще', 'раз', 'будь', 'ласка']
-        answer: 'Скажіть ще раз, будь ласка.'
-      - words: ['Олено', 'читай', 'текст']
-        answer: 'Олено, читай текст.'
-      - words: ['Тарасе', 'дай', 'меню', 'будь', 'ласка']
-        answer: 'Тарасе, дай меню, будь ласка.'
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Відкрийте підручники, будь ласка.
+            correct: true
+          - text: Відкриваєте підручники, будь ласка.
+            correct: false
+          - text: Відкрити підручники, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Читайте текст, будь ласка.
+            correct: true
+          - text: Читаєте текст, будь ласка.
+            correct: false
+          - text: Читати текст, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Пишіть три речення.
+            correct: true
+          - text: Пишете три речення.
+            correct: false
+          - text: Писати три речення.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Дайте мені меню, будь ласка.
+            correct: true
+          - text: Даєте мені меню, будь ласка.
+            correct: false
+          - text: Дати мені меню, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Дайте рахунок, будь ласка.
+            correct: true
+          - text: Даєте рахунок, будь ласка.
+            correct: false
+          - text: Дати рахунок, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Скажіть ще раз, будь ласка.
+            correct: true
+          - text: Кажете ще раз, будь ласка.
+            correct: false
+          - text: Сказати ще раз, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Олено, читай текст.
+            correct: true
+          - text: Олено, читаєш текст.
+            correct: false
+          - text: Олено, читати текст.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms.
+      - prompt: Choose the imperative-mood form of the main action verb.
+        options:
+          - text: Тарасе, дай меню, будь ласка.
+            correct: true
+          - text: Тарасе, даєш меню, будь ласка.
+            correct: false
+          - text: Тарасе, дати меню, будь ласка.
+            correct: false
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
   - type: match-up
     title: Repair imperative interference
     instruction: Match each learner mistake with the Ukrainian repair.
     pairs:
-      - left: 'Будь ласка, читати текст.'
-        right: 'Будь ласка, читай текст. / Будь ласка, читайте текст.'
-      - left: 'Давай робити це зараз.'
-        right: 'Робімо це зараз!'
+      - left: 'Олено, ти читайте текст.'
+        right: 'Олено, ти читай текст.'
+      - left: 'Друзі, я робімо це зараз.'
+        right: 'Друзі, робімо це зараз!'
       - left: 'Хай він працювати.'
         right: 'Хай він працює.'
       - left: 'Поставь книгу на стіл.'
@@ -308,20 +406,20 @@ workbook:
         right: 'Читаймо разом!'
   - type: error-correction
     title: Fix the request
-    instruction: Correct the command or request form.
+    instruction: Keep explicit ти/ви and the addressee. Correct the command form or spelling; use the imperative mood, or хай with a finite verb.
     items:
-      - sentence: 'Будь ласка, читати текст.'
-        error: 'читати'
+      - sentence: 'Олено, ти читайте текст.'
+        error: 'читайте'
         correction: 'читай'
-        explanation: 'Use читай with one familiar person, or читайте for polite ви.'
-      - sentence: 'Пане Іване, читати текст, будь ласка.'
-        error: 'читати'
+        explanation: 'Ти and читай address one familiar person; читайте addresses ви.'
+      - sentence: 'Пане Іване, ви читай текст, будь ласка.'
+        error: 'читай'
         correction: 'читайте'
-        explanation: 'Use читайте for polite address.'
-      - sentence: 'Давай робити це зараз.'
-        error: 'Давай робити'
-        correction: 'Робімо'
-        explanation: 'Use the fixed recognition repair Робімо це зараз!.'
+        explanation: 'The explicit polite subject ви requires читайте.'
+      - sentence: 'Друзі, я робімо це зараз.'
+        error: 'я робімо'
+        correction: 'робімо'
+        explanation: 'Робімо is a first-person plural command. Singular я conflicts with it; omit я for the shared invitation.'
       - sentence: 'Хай він працювати.'
         error: 'працювати'
         correction: 'працює'

@@ -12,7 +12,6 @@ import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
 import FillIn from '@site/src/components/FillIn';
 import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
 import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection from '@site/src/components/ErrorCorrection';
@@ -198,9 +197,9 @@ For your own answer, keep the easy M50 pattern: **я буду прибирати
 as invitation phrases you can recognize and reuse.
 :::
 
-### Invitations and answers
+### Invitations and questions
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Ходімо в кіно!", "right": "З задоволенням!"}, {"left": "Давай зустрінемося о п'ятій!", "right": "Чудово! До зустрічі!"}, {"left": "Ти будеш вільний у суботу?", "right": "На жаль, не можу."}, {"left": "Ходімо в кафе о шостій!", "right": "Добре! О шостій."}, {"left": "Ти будеш на вечірці?", "right": "Звичайно буду!"}]`)} instruction={"Match each invitation with a natural answer."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Ходімо в кіно!", "right": "Let's go to the cinema!"}, {"left": "Давай зустрінемося о п'ятій!", "right": "Let's meet at five!"}, {"left": "Ти будеш вільний у суботу?", "right": "Will you be free on Saturday?"}, {"left": "Ходімо в кафе о шостій!", "right": "Let's go to a cafe at six!"}, {"left": "Ти будеш на вечірці?", "right": "Will you be at the party?"}]`)} instruction={"Match each invitation or question with its English meaning."} isUkrainian={false} />
 
 ## Планування
 
@@ -226,7 +225,7 @@ Use these small planning frames.
 | **О шостій вони будуть дивитися кіно.** | At six they will watch a film. |
 | **Ввечері я буду відпочивати.** | In the evening I will rest. |
 
-### Invitations and answers
+### Invitations and questions
 
 Reuse invitations as phrases:
 
@@ -375,7 +374,7 @@ this module stays with plans, invitations, days, and times.
 
 *(see lesson, §Діалоги)*
 
-### Invitations and answers
+### Invitations and questions
 
 *(see lesson, §Груповий чат: плануємо вихідні)*
 
@@ -391,9 +390,9 @@ this module stays with plans, invitations, days, and times.
 
 <TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У суботу я буду прибирати квартиру.", "isTrue": true, "explanation": "Буду + прибирати is correct."}, {"statement": "У неділю ми будемо відпочивати.", "isTrue": true, "explanation": "Будемо + відпочивати is correct."}, {"statement": "О шостій ви будете дивитеся кіно.", "isTrue": false, "explanation": "After будете, use дивитися."}, {"statement": "У п'ятницю ввечері буде вечірка.", "isTrue": true, "explanation": "This is a clear scheduled event."}, {"statement": "У середу я буду вчу українську.", "isTrue": false, "explanation": "After буду, use вчити."}, {"statement": "Ти будеш вільний у суботу?", "isTrue": true, "explanation": "This asks about future availability."}]`)} instruction={"Decide whether each line is a clear A1 plan."} isUkrainian={false} />
 
-### Build planning lines
+### Choose planning lines
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "У / суботу / я / буду / прибирати / квартиру", "answer": "У суботу я буду прибирати квартиру."}, {"jumbled": "О / шостій / ми / будемо / дивитися / кіно", "answer": "О шостій ми будемо дивитися кіно."}, {"jumbled": "Ти / будеш / вільна / у / суботу", "answer": "Ти будеш вільна у суботу?"}, {"jumbled": "Давай / зустрінемося / о / п'ятій", "answer": "Давай зустрінемося о п'ятій!"}, {"jumbled": "На / жаль / не / можу", "answer": "На жаль, не можу."}]`)} instruction={"Put the words in a natural order."} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Обери правильно побудоване речення.", "options": [{"text": "У суботу я буду прибирати квартиру.", "correct": true}, {"text": "У суботу я будеш прибирати квартиру.", "correct": false}, {"text": "У суботу я будемо прибирати квартиру.", "correct": false}], "explanation": "The subject agrees with буду; будеш and будемо belong to different persons or numbers."}, {"question": "Обери правильно побудоване речення.", "options": [{"text": "О шостій ми будемо дивитися кіно.", "correct": true}, {"text": "О шостій ми буде дивитися кіно.", "correct": false}, {"text": "О шостій ми буду дивитися кіно.", "correct": false}], "explanation": "The subject agrees with будемо; буде and буду belong to different persons or numbers."}, {"question": "Обери правильно побудоване речення.", "options": [{"text": "Ти будеш вільна у суботу?", "correct": true}, {"text": "Ти буду вільна у суботу?", "correct": false}, {"text": "Ти будуть вільна у суботу?", "correct": false}], "explanation": "The subject agrees with будеш; буду and будуть belong to different persons or numbers."}, {"question": "Обери правильно побудоване речення.", "options": [{"text": "Давай зустрінемося о п'ятій!", "correct": true}, {"text": "Давай зустрінемося о п'ятого!", "correct": false}, {"text": "Давай зустрінемося о п'ятим!", "correct": false}], "explanation": "The construction takes п'ятій. The case forms п'ятого and п'ятим cannot replace it here."}, {"question": "Обери правильно побудоване речення.", "options": [{"text": "На жаль, не можу.", "correct": true}, {"text": "На жалю, не можу.", "correct": false}, {"text": "На жалем, не можу.", "correct": false}], "explanation": "The fixed introductory phrase is На жаль. Жалю and жалем cannot replace жаль in it."}]`)} instruction={"Choose the sentence whose words fit together."} isUkrainian={false} />
 
 ### Put the week in order
 
@@ -401,7 +400,7 @@ this module stays with plans, invitations, days, and times.
 
 ### Complete the week schedule
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Наступного вівторка я ___ українську.", "answer": "буду вчити", "options": ["буду вчити", "будеш вчити", "будемо вчити"], "explanation": "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged."}, {"sentence": "Наступної середи ми ___ вечерю.", "answer": "будемо готувати", "options": ["будемо готувати", "буде готувати", "буду готувати"], "explanation": "The subject ми agrees with будемо; буде and буду are other person/number forms. The infinitive remains unchanged."}, {"sentence": "Наступного четверга вона ___ допізна.", "answer": "буде працювати", "options": ["буде працювати", "будуть працювати", "будемо працювати"], "explanation": "The subject вона agrees with буде; будуть and будемо are other person/number forms. The infinitive remains unchanged."}, {"sentence": "___, не можу. У суботу я буду працювати.", "answer": "На жаль", "options": ["На жаль", "Звичайно", "З задоволенням"]}]`)} instruction={"Choose the future form or planning phrase."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Наступного вівторка я ___ українську.", "answer": "буду вчити", "options": ["буду вчити", "будеш вчити", "будемо вчити"], "explanation": "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged."}, {"sentence": "Наступної середи ми ___ вечерю.", "answer": "будемо готувати", "options": ["будемо готувати", "буде готувати", "буду готувати"], "explanation": "The subject ми agrees with будемо; буде and буду are other person/number forms. The infinitive remains unchanged."}, {"sentence": "Наступного четверга вона ___ допізна.", "answer": "буде працювати", "options": ["буде працювати", "будуть працювати", "будемо працювати"], "explanation": "The subject вона agrees with буде; будуть and будемо are other person/number forms. The infinitive remains unchanged."}, {"sentence": "___, не можу. У суботу я буду працювати.", "answer": "На жаль", "options": ["На жаль", "Мене", "Мою"], "explanation": "На жаль, не можу is a polite refusal."}]`)} instruction={"Choose the future form or planning phrase."} isUkrainian={false} />
 
 ### Say your plans
 
@@ -409,7 +408,7 @@ this module stays with plans, invitations, days, and times.
 
 ### Repair plan sentences
 
-<ErrorCorrection client:only='react' instruction="Fix the weekly plan by keeping the compound future." items={JSON.parse(`[{"sentence": "У суботу я буду прибираю квартиру.", "errorWord": "прибираю", "correctForm": "прибирати", "options": [], "explanation": "After буду, use the infinitive прибирати."}, {"sentence": "У неділю ми будемо відпочиваємо.", "errorWord": "відпочиваємо", "correctForm": "відпочивати", "options": [], "explanation": "After будемо, use відпочивати."}, {"sentence": "О шостій ви будете дивитеся кіно.", "errorWord": "дивитеся", "correctForm": "дивитися", "options": [], "explanation": "After будете, use дивитися."}, {"sentence": "Вони будуть готують на вечірку.", "errorWord": "готують", "correctForm": "готувати", "options": [], "explanation": "After будуть, use готувати."}, {"sentence": "У середу я буду вчу українську.", "errorWord": "вчу", "correctForm": "вчити", "options": [], "explanation": "After буду, use вчити."}, {"sentence": "Я буду роблю домашнє завдання.", "errorWord": "Я буду роблю домашнє завдання.", "correctForm": "Я буду робити домашнє завдання", "options": [], "explanation": "After буду, use the infinitive робити."}, {"sentence": "На понеділок я маю урок.", "errorWord": "На понеділок", "correctForm": "У понеділок", "options": [], "explanation": "Use у with weekdays: у понеділок."}, {"sentence": "На шостій ми будемо дивитися кіно.", "errorWord": "На шостій", "correctForm": "О шостій", "options": [], "explanation": "Use о with clock time: о шостій."}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Keep pronouns and the intended day/time. Correct the form or preposition; use the compound future for plans." items={JSON.parse(`[{"sentence": "У суботу я буду прибираю квартиру.", "errorWord": "прибираю", "correctForm": "прибирати", "options": [], "explanation": "After буду, use the infinitive прибирати."}, {"sentence": "У неділю ми будемо відпочиваємо.", "errorWord": "відпочиваємо", "correctForm": "відпочивати", "options": [], "explanation": "After будемо, use відпочивати."}, {"sentence": "О шостій ви будете дивитеся кіно.", "errorWord": "дивитеся", "correctForm": "дивитися", "options": [], "explanation": "After будете, use дивитися."}, {"sentence": "Вони будуть готують на вечірку.", "errorWord": "готують", "correctForm": "готувати", "options": [], "explanation": "After будуть, use готувати."}, {"sentence": "У середу я буду вчу українську.", "errorWord": "вчу", "correctForm": "вчити", "options": [], "explanation": "After буду, use вчити."}, {"sentence": "Я буду роблю домашнє завдання.", "errorWord": "роблю", "correctForm": "робити", "options": [], "explanation": "After буду, use the infinitive робити."}, {"sentence": "У понеділку я маю урок.", "errorWord": "понеділку", "correctForm": "понеділок", "options": [], "explanation": "The day-on-which expression uses у понеділок."}, {"sentence": "На шостій ми будемо дивитися кіно.", "errorWord": "На шостій", "correctForm": "О шостій", "options": [], "explanation": "Use о with clock time: о шостій."}]`)} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">
