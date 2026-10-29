@@ -586,8 +586,14 @@ def run_import(target: Target, expect_sha256: str) -> dict[str, Any]:
             try:
                 publication = generations.publish_generation(candidate, held)
             except BaseException as exc:
-                _remove([candidate, *_sidecars(candidate)])
-                if isinstance(exc, Exception) and (switched := _switched_to(target, current)) is not None:
+                # Read the selection first: a cleanup error must not hide that the new generation is selected.
+                switched = _switched_to(target, current) if isinstance(exc, Exception) else None
+                try:
+                    _remove([candidate, *_sidecars(candidate)])
+                except OSError:
+                    if switched is None:
+                        raise
+                if switched is not None:
                     reason = exc.reason if isinstance(exc, generations.GenerationError) else type(exc).__name__
                     raise PostSwitchFailure(reason, switched.name, current.name) from exc
                 raise
