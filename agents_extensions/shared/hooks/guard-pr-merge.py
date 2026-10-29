@@ -109,6 +109,7 @@ sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
         ShellPreprocessLimit,
+        preprocess_shell_command,
         skippable_heredoc_delimiters,
         strip_shell_comments,
         strip_skippable_heredoc_bodies,
@@ -634,9 +635,9 @@ def _literal_gh_read(argv: list[str]) -> bool:
 
 def _literal_reads_only(command: str) -> bool:
     """Discharge merge-word candidates only at proven read command positions."""
-    # Input redirects can introduce heredoc data, even across continuations.
-    # Never group their quotes, or carriage returns, into a proven read.
-    if "<" in command or "\r" in command:
+    # Group only untouched executable text: preprocessing can remove quotes
+    # that Bash still acts on. Input redirects may also leave heredoc data.
+    if "<" in command or "\r" in command or preprocess_shell_command(command) != command:
         return False
     found_read = False
     for kind, argv in scope_events(
