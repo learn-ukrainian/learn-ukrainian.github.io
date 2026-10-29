@@ -2751,6 +2751,56 @@ def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
     assert worker._identity(grandchild) is None
 
 
+def test_provider_process_lingers_after_its_final_result_settles_within_silence_bound(sandbox, monkeypatch):
+    """Defect class: provider process lingers after its final result while auxiliary activity continues."""
+    from scripts.dispatcher import watchdog
+    from scripts.dispatcher.providers import agy
+    from scripts.dispatcher.types import Invocation
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_runtime", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(watchdog, "_PROCESS_ACTIVITY_POLL_INTERVAL_S", 0.05)
+    spec = TaskSpec("agy-final-hang", "agy", "gemini-3.8-flash-high", None, "read-only", sandbox.repo,
+                    sandbox.repo / "agy-final-hang.prompt", sandbox.tasks / "agy-final-hang.result",
+                    options={"hard_timeout": "5", "silence_timeout": "0.5"})
+    spec.prompt_file.write_bytes(b"literal final response")
+    log = sandbox.repo / "provider.log"
+    code = (
+        "import json, sys, time\n"
+        "print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', "
+        "'response': 'literal final response'}}), flush=True)\n"
+        "with open(sys.argv[2], 'a') as log:\n"
+        "    while True:\n"
+        "        log.write('idle housekeeping\\n'); log.flush(); time.sleep(0.02)\n"
+    )
+    monkeypatch.setattr(agy, "build", lambda _spec, env: Invocation(
+        [sys.executable, "-c", code, "--log-file", str(log)],
+        b'{"event":"user","message":{"role":"user","content":[{"type":"text","text":""}]}}\n', env, None))
+    head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main", head,
+                              {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "agy-final-hang.prompt")
+    path = store.create(record, b"literal final response")
+    (sandbox.tasks / "logs").mkdir()
+
+    started = time.monotonic()
+    worker.supervise(path)
+    elapsed = time.monotonic() - started
+
+    result = json.loads(path.read_text())
+    assert result["status"] == "timeout"
+    assert result["kill_reason"] == "stdout_silence_timeout"
+    assert result["silence_timeout"] == 0.5
+    assert elapsed < result["silence_timeout"] + 2
+    assert result["returncode"] == -signal.SIGKILL
+    assert worker._identity(result["provider_pgid"]) is None
+    assert log.stat().st_size > 0
+    stdout = (sandbox.tasks / "logs/agy-final-hang.stdout.log").read_text()
+    assert agy.parse(stdout, "", 0, None).text == "literal final response"
+
+
 def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox):
     """Ported from tests/test_delegate.py with the same test name."""
     started = time.monotonic()
