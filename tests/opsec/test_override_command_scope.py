@@ -393,7 +393,8 @@ def test_merge_readiness_reads_and_the_merge_receive_no_override(synthetic_opsec
     def runner(args, **kwargs):
         calls.append((args, kwargs["env"]))
         if args[:3] == ["gh", "pr", "view"]:
-            out = json.dumps({"number": 1, "isDraft": False, "headRefOid": head})
+            # With no verdict recorded, the guard also reads the head's own rollup (#12020).
+            out = json.dumps({"number": 1, "isDraft": False, "headRefOid": head, "statusCheckRollup": []})
         elif args[:3] == ["gh", "pr", "checks"]:
             out = "[]"
         elif args[:4] == ["gh", "api", "--method", "GET"]:
