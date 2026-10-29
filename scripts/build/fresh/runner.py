@@ -289,7 +289,8 @@ def _normal_letters(value: str) -> str:
     from scripts.build.linear_pipeline import _VESUM_APOSTROPHE_TRANSLATION
 
     folded = unicodedata.normalize("NFD", value.translate(_VESUM_APOSTROPHE_TRANSLATION).casefold())
-    return "".join(char for char in folded if unicodedata.category(char)[0] in {"L", "N"})
+    unstressed = unicodedata.normalize("NFC", folded.replace("\u0301", "").replace("\u0300", ""))
+    return "".join(char for char in unstressed if unicodedata.category(char)[0] in {"L", "N"})
 
 
 def _choice_text(option: Any) -> str | None:

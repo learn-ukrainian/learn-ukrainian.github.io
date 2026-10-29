@@ -38,8 +38,8 @@ WORD = {"W-1": {"id": "W-1", "forms": [{"form": "слово", "tags": "noun:inan
         ),
         (
             "unjumble",
-            {"items": [{"words": list("слово"), "answer": "слово"}]},
-            lambda activity: activity["items"][0].update(answer="книга"),
+            {"items": [{"words": ["їй", "і"], "answer": "ї́й і"}]},
+            lambda activity: activity["items"][0].update(answer="іі и"),
             "unjumble_multiset_mismatch",
         ),
         (
