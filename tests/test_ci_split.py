@@ -939,3 +939,42 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     (repo / guards[0]).symlink_to(repo / guards[1])
     with pytest.raises(ValueError, match='symlinked test path'):
         affected.plan(base, candidate)
+
+
+def test_pr_importing_tests_fill_only_to_the_fill_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Durations that would fill to 595 s stop at the fill budget; the rest defer."""
+    from scripts.ci import pr_affected_tests as affected
+
+    guard = 'tests/test_guard.py'
+    importers = [f'tests/test_imp_{n}.py' for n in range(6)]
+    repo = tmp_path / 'fill'
+    (repo / 'scripts/ci').mkdir(parents=True)
+    (repo / 'tests').mkdir()
+    for name in [guard, *importers]:
+        (repo / name).write_text('def test_x():\n    pass\n')
+    (repo / 'module.py').write_text('X = 1\n')
+    (repo / affected.GUARDS).write_text(guard + '\n')
+    # 60 s reserve + 5 s guard + six 100 s importers: filling to the 600 s cap
+    # would keep five (565 s), too close to the kill limit.
+    durations = {guard: 5, **{name: 100 for name in importers}}
+    (repo / affected.DURATIONS).write_text(json.dumps(durations))
+    ident = ['-c', 'user.name=CI fixture', '-c', 'user.email=ci@example.invalid']
+    _git(repo, 'init', '-q', '-b', 'main')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'base')
+    base = _git(repo, 'rev-parse', 'HEAD')
+    (repo / 'module.py').write_text('X = 2\n')
+    _git(repo, 'add', '.')
+    _git(repo, *ident, 'commit', '-qm', 'change')
+    candidate = _git(repo, 'rev-parse', 'HEAD')
+    monkeypatch.chdir(repo)
+    monkeypatch.setattr(affected, 'importing_tests', lambda *_: importers)
+    selected = affected.plan(base, candidate)
+    # 65 s + two importers = 265 s fits 300 s; a third would reach 365 s.
+    assert selected['run_files'] == sorted([guard, *importers[:2]])
+    assert selected['deferred_files'] == importers[2:]
+    assert selected['estimate_seconds'] == 265
+    assert selected['reason'] == 'recorded estimate exceeds 600 second cap'
+    assert affected.CAP_SECONDS == 600
