@@ -431,6 +431,7 @@ same way.
 | 0 | Published |
 | 1 | Verification failed; the selection is unchanged |
 | 2 | Refused; the selection is unchanged |
+| 3 | Published: a step after the selector switch failed, and the output names the selected `generation` and its `previous`. The import happened; do not rerun it, check the receipt and roll back only if you want the previous generation |
 
 A full `scripts/wiki/build_sources_db.py --force` rebuild carries every
 `sum20_*` table, the mirror tables included.

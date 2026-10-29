@@ -27,7 +27,9 @@ Examples:
 
 Outputs: one JSON object on stdout.
 Exit codes: 0 published; 1 verification failed (selection unchanged); 2 refused
-(arguments, locality, layout, lock, staging, disk space, publication).
+(arguments, locality, layout, lock, staging, disk space, publication; selection
+unchanged); 3 published, but a step after the selector switch failed (the new
+generation is selected).
 """
 
 from __future__ import annotations
@@ -77,6 +79,16 @@ class Refused(RuntimeError):
         super().__init__(reason)
         self.reason = reason
         self.detail = detail
+
+
+class PostSwitchFailure(RuntimeError):
+    """The publisher failed after the selector switch: the new generation is already selected."""
+
+    def __init__(self, reason: str, generation: str, previous: str) -> None:
+        super().__init__(reason)
+        self.reason = reason
+        self.generation = generation
+        self.previous = previous
 
 
 class VerificationFailed(RuntimeError):
@@ -180,19 +192,21 @@ def snapshot_staging(target: Target, expect_sha256: str) -> tuple[Path, str]:
         raise Refused("staging_not_checkpointed")
     snapshot = target.data_dir / f".{STAGING_NAME}.{os.getpid()}.snapshot"
     digest = hashlib.sha256()
-    with resolved.path.open("rb") as source, snapshot.open("wb") as copy:
-        while chunk := source.read(CHUNK):
-            digest.update(chunk)
-            copy.write(chunk)
-        copy.flush()
-        os.fsync(copy.fileno())
-    if _staging_identity(resolved.path) != before:
+    try:
+        with resolved.path.open("rb") as source, snapshot.open("wb") as copy:
+            while chunk := source.read(CHUNK):
+                digest.update(chunk)
+                copy.write(chunk)
+            copy.flush()
+            os.fsync(copy.fileno())
+        if _staging_identity(resolved.path) != before:
+            raise Refused("staging_changed_during_snapshot")
+        if digest.hexdigest() != expect_sha256.lower():
+            raise Refused("staging_digest_mismatch")
+        snapshot.chmod(0o444)
+    except BaseException:
         _remove([snapshot])
-        raise Refused("staging_changed_during_snapshot")
-    if digest.hexdigest() != expect_sha256.lower():
-        _remove([snapshot])
-        raise Refused("staging_digest_mismatch")
-    snapshot.chmod(0o444)
+        raise
     return snapshot, digest.hexdigest()
 
 
@@ -538,13 +552,26 @@ def _build_candidate(target: Target, current: Path, expect_sha256: str) -> tuple
     return candidate, details
 
 
+def _switched_to(target: Target, previous: Path) -> Path | None:
+    """The generation now selected when it is not ``previous``; ``None`` when the selection is unchanged or unreadable."""
+    try:
+        state = generations.inspect_selector(target.selector)
+    except Exception:
+        return None
+    if state.layout != "selector" or state.generation is None or state.generation == previous:
+        return None
+    return state.generation
+
+
 def run_import(target: Target, expect_sha256: str) -> dict[str, Any]:
     """Build, verify and publish one new generation, holding the store writer lock throughout.
 
     The lock is taken before the selector is read and kept until the publisher
     has switched it, so no writer changes the generation the candidate was
     copied from. A refusal or failed verification leaves the selection as it
-    was; the candidate file is removed.
+    was; the candidate file is removed. An error raised by the publisher after
+    the selector switch is a ``PostSwitchFailure``, never a refusal: the new
+    generation is already selected.
     """
     try:
         with generations.writer_lock(target.selector) as held:
@@ -558,8 +585,11 @@ def run_import(target: Target, expect_sha256: str) -> dict[str, Any]:
             candidate, details = _build_candidate(target, current, expect_sha256)
             try:
                 publication = generations.publish_generation(candidate, held)
-            except BaseException:
+            except BaseException as exc:
                 _remove([candidate, *_sidecars(candidate)])
+                if isinstance(exc, Exception) and (switched := _switched_to(target, current)) is not None:
+                    reason = exc.reason if isinstance(exc, generations.GenerationError) else type(exc).__name__
+                    raise PostSwitchFailure(reason, switched.name, current.name) from exc
                 raise
     except generations.GenerationError as exc:
         raise Refused(exc.reason) from None
@@ -597,7 +627,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.ingest.sum20_mirror_import import --expect-staging-sha256 <sha256>\n"
             "  .venv/bin/python -m scripts.storage restore-generation data/sources-generations/<previous>  # rollback\n\n"
             "Outputs: JSON on stdout; the new generation under data/sources-generations/.\n"
-            "Exit codes: 0 published; 1 verification failed (selection unchanged); 2 refused.\n"
+            "Exit codes: 0 published; 1 verification failed (selection unchanged); 2 refused (selection unchanged);\n"
+            "3 published, but a step after the selector switch failed (the new generation is selected).\n"
             "Related: issue #8579; docs/runbooks/dictionary-acquisition.md; docs/runbooks/storage-topology.md."
         ),
     )
@@ -622,6 +653,19 @@ def main(argv: list[str] | None = None, *, test_data_dir: Path | None = None) ->
     except Refused as exc:
         print(json.dumps({"status": "refused", "reason": exc.reason, **exc.detail}, ensure_ascii=False))
         return 2
+    except PostSwitchFailure as exc:
+        print(
+            json.dumps(
+                {
+                    "status": "published_post_switch_failed",
+                    "reason": exc.reason,
+                    "generation": exc.generation,
+                    "previous": exc.previous,
+                },
+                ensure_ascii=False,
+            )
+        )
+        return 3
     except VerificationFailed as exc:
         print(json.dumps({"status": "verification_failed", "reason": str(exc), **exc.detail}, ensure_ascii=False))
         return 1
