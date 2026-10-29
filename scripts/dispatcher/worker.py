@@ -13,6 +13,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
@@ -77,12 +78,21 @@ def _observe(record: dict) -> dict:
         if current["status"] not in store.ACTIVE:
             return current
         record.update(status="crashed", finished_at=store.now(), error="supervisor exited without a result")
+        _discard_read_only_scratch(record)  # a killed supervisor never reached its own cleanup
         record["duration_s"] = (
             datetime.fromisoformat(record["finished_at"]) - datetime.fromisoformat(record["started_at"])
         ).total_seconds()
         record.update(git.snapshot_delivery(_spec(record, {}), record))
         store.replace(record)
     return record
+
+
+def _discard_read_only_scratch(record: dict) -> None:
+    """Remove a dispatched Codex read-only task's scratch; residue is recorded, never raised."""
+    if record["agent"] == "codex" and record["mode"] == "read-only" and (
+        residue := discard_dispatch_lease(record["task_id"])
+    ):
+        record["read_only_scratch_cleanup"] = residue
 
 
 def _spawn_expired(record: dict) -> bool:
@@ -173,14 +183,39 @@ def _spec(record: dict, options: dict) -> TaskSpec:
     )
 
 
+def _outside_cause(paths, owned) -> str | None:
+    from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
+    from scripts.secret_redactor import redact_text
+
+    outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
+    if not outside:
+        return None
+    cause = "outside_owned_paths: " + ", ".join(sanitize_for_display(redact_text(path)) for path in outside)
+    return cause if len(cause) <= 1024 else cause[:1009] + "... (truncated)"
+
+
+def _verification_cause(exc: Exception) -> str:
+    """Name what stopped the ownership check: the failing Git step, or the check's own refusal."""
+    if isinstance(exc, subprocess.TimeoutExpired):
+        detail = f"git {exc.cmd[1]} timed out"
+    elif isinstance(exc, subprocess.CalledProcessError):
+        detail = f"git {exc.cmd[1]} failed"
+    elif isinstance(exc, ValueError):
+        detail = str(exc)
+    elif isinstance(exc, KeyError):
+        detail = f"record field {exc} missing"
+    else:
+        detail = type(exc).__name__
+    return f"owned_paths_verification_failed: {detail}"[:200]
+
+
 def _enforce_delivery(record: dict) -> None:
     if record["mode"] == "read-only" or record["status"] != "done":
         return
     cause = None
-    if owned := record.get("owned_paths"):
-        from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
-        from scripts.secret_redactor import redact_text
-
+    owned = record.get("owned_paths")
+    # With no commits ahead there is nothing to verify, and the remote branch may never have existed.
+    if owned and (record.get("commits_ahead") or 0) > 0:
         try:
             with git.ownership_git(record) as run:
                 base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
@@ -199,24 +234,28 @@ def _enforce_delivery(record: dict) -> None:
                 ).split("\0")
                 if run("rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
                     raise ValueError("merge resolution paths cannot be verified")
-            outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
-            if outside:
-                cause = "outside_owned_paths: " + ", ".join(
-                    sanitize_for_display(redact_text(path)) for path in outside
-                )
-                if len(cause) > 1024:
-                    cause = cause[:1009] + "... (truncated)"
-        except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError):
-            cause = "owned_paths_verification_failed"
+            cause = _outside_cause(paths, owned)
+        except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError) as exc:
+            cause = _verification_cause(exc)
     if cause is None:
-        if record["worktree_dirty_on_exit"] is not False:
+        if record.get("worktree_dirty_on_exit") is not False:
             cause = "worktree_dirty_or_unknown"
-        elif record["commits_ahead"] is None or record["commits_ahead"] == 0:
+        elif not record.get("commits_ahead"):
             cause = "no_commits_or_unknown"
-        elif record["push_state"] != "pushed":
+        elif record.get("push_state") != "pushed":
             cause = "work_not_pushed_or_unknown"
+    # Merged work leaves nothing on the task branch to inspect (it may be reset or deleted), so the
+    # merged pull request is the evidence; it refuses an outside-owned path the same way.
+    if cause and cause.split(":", 1)[0] in MERGE_RESCUABLE and record.get("worktree_dirty_on_exit") is False and (
+            merged := git.merged_delivery(record)):
+        cause = _outside_cause(merged["paths"], owned) if owned else None
+        record["delivery_pr"] = f"{merged['repo']}#{merged['number']}"
     if cause:
         record.update(status="no_deliverable", error=cause, no_deliverable_reason=cause)
+
+
+# Refusals that a merged pull request answers: the local branch could not show the delivery.
+MERGE_RESCUABLE = frozenset({"owned_paths_verification_failed", "no_commits_or_unknown", "work_not_pushed_or_unknown"})
 
 
 def _cgroup(pid: int) -> str | None:
@@ -400,6 +439,12 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         except ValueError as exc:
             status, error = "failed", str(exc)
             return
+        if spec.agent == "codex" and spec.mode == "read-only":
+            try:
+                create_dispatch_lease(spec.task_id, spec.worktree)
+            except (OSError, ValueError) as exc:
+                status, error = "failed", f"read_only_scratch_unavailable: {exc}"
+                return
         slots, slots_record = admission.hold_review_test_slots(
             agent=spec.agent, mode=spec.mode, review_typed=admission.review_typed(record),
             sealed_attempt=bool(record.get("review_attempt")), task_id=spec.task_id,
@@ -493,6 +538,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             # A killed launcher leaves its scratch and token copy; residue is recorded, never raised.
             if spec.agent == "agy" and spec.mode == "read-only" and (residue := agy_sandbox.discard(spec.task_id)):
                 record["read_only_boundary_cleanup"] = residue
+            _discard_read_only_scratch(record)
             if slots is not None:
                 # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight
                 # keep their slots shared until they exit (test_slots).

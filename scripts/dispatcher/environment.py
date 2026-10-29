@@ -4,6 +4,7 @@ import os
 import sys
 from pathlib import Path
 
+from scripts.agent_runtime.read_only_tmp import dispatch_lease
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher.types import TaskSpec
 
@@ -92,6 +93,9 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         LEARN_UKRAINIAN_DISPATCH_AGENT=spec.agent,
         LU_TASKS_DIR=str(tasks_dir().resolve()),
     )
+    if spec.agent == "codex" and spec.mode == "read-only":
+        # Its sandbox leaves no writable temp, so git, gh and pytest need this lease; the worker creates it.
+        env["TMPDIR"] = str(dispatch_lease(spec.task_id))
     if spec.mode == "read-only":
         # Restrict explicit URLs too; a worktree or ref snapshot cannot observe an arbitrary remote push.
         env["GIT_ALLOW_PROTOCOL"] = "file"
