@@ -57,7 +57,7 @@ from scripts.agent_runtime.bounded_advisory import (
     load_sealed_result,
 )
 from scripts.opsec.prepublish import normalize_repository
-from scripts.orchestration.integration_sweep import REJECTED
+from scripts.orchestration.integration_sweep import REJECTED, lookup_verdict
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.review import record_cf_verdict as recorder
 from scripts.review.model_catalog import REVIEW_BUDGET_ELEVATION_ROLE, advisory_role_policy, canonical_model_id
@@ -122,7 +122,7 @@ def parse_request(request: Any, label: str) -> dict[str, Any]:
         raise GrantRefused(REQUEST, f"{label} scope_paths must be a sorted list of distinct repository paths")
     if not isinstance(request["finding_id"], str) or not FINDING_ID.fullmatch(request["finding_id"]):
         raise GrantRefused(REQUEST, f"{label} finding_id must match {FINDING_ID.pattern}")
-    if request["blocker_class"] not in BLOCKER_CLASSES:
+    if not isinstance(request["blocker_class"], str) or request["blocker_class"] not in BLOCKER_CLASSES:
         raise GrantRefused(REQUEST, f"{label} blocker_class must be one of {sorted(BLOCKER_CLASSES)}")
     try:
         stamp = datetime.fromisoformat(str(request["issued_at"]).replace("Z", "+00:00"))
@@ -242,21 +242,58 @@ def _claimed_pr(path: Path) -> Any:
         return None
 
 
+# A finding entry starts at its id, optionally bulleted or bold, and runs to the next entry,
+# a blank line, or the verdict and score lines.
+_ENTRY_START = re.compile(r"^\s*(?:[-*]\s+)?\**(F[1-9][0-9]{0,3})\**(?:\s+\[(P[0-3])\])?(?![0-9])")
+_ENTRY_END = re.compile(r"^\s*$|^\s*(?:VERDICT|SCORE):")
+_STILL_OPEN = re.compile(
+    r"\bstill open\b|\bremains open\b|\bunresolved\b|\bnot (?:yet )?(?:resolved|fixed|addressed)\b", re.I
+)
+_CLOSED = re.compile(r"\b(?:resolved|fixed|declined|withdrawn|closed|addressed|superseded)\b", re.I)
+
+
+def finding_entries(reply: str, finding_id: str) -> list[tuple[str | None, str]]:
+    """Every entry for ``finding_id`` in a reviewer reply, in order: its severity and its full text."""
+    entries: list[tuple[str, str | None, list[str]]] = []
+    for line in reply.splitlines():
+        start = _ENTRY_START.match(line)
+        if start:
+            entries.append((start[1], start[2], [line]))
+        elif entries and _ENTRY_END.match(line):
+            entries.append(("", None, []))
+        elif entries and entries[-1][0]:
+            entries[-1][2].append(line)
+    return [(severity, "\n".join(lines)) for found, severity, lines in entries if found == finding_id]
+
+
 def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, finding_id: str) -> str | None:
-    """The head of the latest recorded verdict when it is a rejection listing ``finding_id`` as an open P0/P1."""
+    """The head of the latest recorded verdict when it is a trusted rejection leaving ``finding_id`` an open P0/P1.
+
+    The keeper must read that head as rejected (an edited or unattested
+    marker reads as unknown), and the finding's last entry in the reply
+    decides its disposition: ``still open`` keeps it open, ``resolved``,
+    ``fixed``, ``declined`` or a like word closes it, and its last stated
+    severity must be P0 or P1. Withheld findings are no evidence.
+    """
     markers = recorder._trusted_markers(comments, login)
     if not markers:
         return None
     index, marker = markers[-1]
-    if marker["verdict"] not in REJECTED:
+    head = marker["sha"]
+    if marker["verdict"] not in REJECTED or lookup_verdict(comments, head, login).state not in REJECTED:
         return None
-    body = comments[index].get("body")
-    reply = body.partition("<details>")[2] if isinstance(body, str) else ""
-    pattern = re.compile(rf"(?m)^\s*{re.escape(finding_id)} \[(P[0-3])\](.*)$")
-    for severity, rest in pattern.findall(reply):
-        if severity in BLOCKING_SEVERITIES and not re.search(r"\bresolved\b", rest, re.IGNORECASE):
-            return marker["sha"]
-    return None
+    comment = comments[index]
+    if comment.get("created_at") != comment.get("updated_at"):
+        return None
+    body = comment.get("body")
+    entries = finding_entries(body.partition("<details>")[2] if isinstance(body, str) else "", finding_id)
+    severities = [severity for severity, _ in entries if severity]
+    if not entries or not severities or severities[-1] not in BLOCKING_SEVERITIES:
+        return None
+    last = entries[-1][1]
+    if not _STILL_OPEN.search(last) and _CLOSED.search(last):
+        return None
+    return head
 
 
 def admit_grant_round(
@@ -282,37 +319,54 @@ def admit_grant_round(
             continue
         if grant.request["pr"] == number:
             grants.append(grant)
-    if not grants:
-        if refusals:
-            raise GrantRefused(refusals[0].reason, "; ".join(exc.detail for exc in refusals))
-        return None
     for grant in grants:
-        request = grant.request
-        if normalize_repository(request["repository"]) != normalize_repository(repository):
-            raise GrantRefused(BINDING, f"grant {grant.task_id!r} names repository {request['repository']!r}")
-        if request["lineage_id"] != branch:
-            raise GrantRefused(
-                BINDING, f"grant {grant.task_id!r} follows lineage {request['lineage_id']!r}, not this PR's {branch!r}"
+        try:
+            return _admit(
+                grant, repository=repository, branch=branch, changed_paths=changed_paths, comments=comments, login=login
             )
-        outside = sorted(set(changed_paths) - set(request["scope_paths"]))
-        if outside:
-            raise GrantRefused(SCOPE, f"grant {grant.task_id!r} does not cover changed paths {outside}")
-    for grant in grants:
-        cited = open_blocker_cited(comments, login, grant.request["finding_id"])
-        if cited is not None:
-            return {
-                "grant_task": grant.task_id,
-                "request_sha256": grant.request_sha256,
-                "advisor_model": grant.advisor_model,
-                "approval_result_sha256": grant.result_sha256,
-                "finding_id": grant.request["finding_id"],
-                "blocker_class": grant.request["blocker_class"],
-                "cited_verdict_head": cited,
-            }
-    findings = sorted({grant.request["finding_id"] for grant in grants})
-    raise GrantRefused(
-        BLOCKER, f"the latest recorded verdict lists none of the granted findings {findings} as an open P0/P1 blocker"
-    )
+        except GrantRefused as exc:
+            refusals.append(exc)
+    if refusals:
+        raise GrantRefused(refusals[0].reason, "; ".join(exc.detail for exc in refusals))
+    return None
+
+
+def _admit(
+    grant: Grant,
+    *,
+    repository: str,
+    branch: str,
+    changed_paths: Sequence[str],
+    comments: Sequence[Mapping[str, Any]],
+    login: str,
+) -> dict[str, Any]:
+    """This one grant's receipt for the round, or why it does not apply."""
+    request = grant.request
+    if normalize_repository(request["repository"]) != normalize_repository(repository):
+        raise GrantRefused(BINDING, f"grant {grant.task_id!r} names repository {request['repository']!r}")
+    if request["lineage_id"] != branch:
+        raise GrantRefused(
+            BINDING, f"grant {grant.task_id!r} follows lineage {request['lineage_id']!r}, not this PR's {branch!r}"
+        )
+    outside = sorted(set(changed_paths) - set(request["scope_paths"]))
+    if outside:
+        raise GrantRefused(SCOPE, f"grant {grant.task_id!r} does not cover changed paths {outside}")
+    cited = open_blocker_cited(comments, login, request["finding_id"])
+    if cited is None:
+        raise GrantRefused(
+            BLOCKER,
+            f"grant {grant.task_id!r}: the latest recorded verdict does not leave {request['finding_id']} "
+            "an open P0/P1 blocker",
+        )
+    return {
+        "grant_task": grant.task_id,
+        "request_sha256": grant.request_sha256,
+        "advisor_model": grant.advisor_model,
+        "approval_result_sha256": grant.result_sha256,
+        "finding_id": request["finding_id"],
+        "blocker_class": request["blocker_class"],
+        "cited_verdict_head": cited,
+    }
 
 
 def main(argv: list[str] | None = None) -> int:

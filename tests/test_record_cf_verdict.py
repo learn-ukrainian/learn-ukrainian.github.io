@@ -3573,7 +3573,7 @@ def test_elevated_grant_needs_the_blocker_open_before_each_round(monkeypatch, tm
     # Round 4 approved, so no evidenced open blocker justifies round 5.
     move_head(monkeypatch, "4" * 40)
     write_task(tasks, task_id="round-five", worktree_base_sha="4" * 40)
-    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[blocker\].*\['F2'\]"):
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[blocker\].*does not leave F2 an open"):
         recorder.record("round-five", **kwargs)
     assert calls["posts"] == 1
 
@@ -3590,7 +3590,12 @@ def test_elevated_grant_needs_the_blocker_open_before_each_round(monkeypatch, tm
         ("scope", r"\[scope\].*does not cover changed paths \['docs/readme.md'\]"),
         ("resolved", r"\[blocker\]"),
         ("p2", r"\[blocker\]"),
-        ("other-finding", r"\[blocker\].*\['F3'\]"),
+        ("other-finding", r"\[blocker\].*does not leave F3 an open"),
+        # The finding's complete current disposition decides, not its first line (review round 1, F1).
+        ("resolved-next-line", r"\[blocker\]"),
+        ("fixed-with-evidence", r"\[blocker\]"),
+        ("resolved-later", r"\[blocker\]"),
+        ("edited-verdict", r"\[blocker\]"),
         ("latest-approved", r"\[blocker\]"),
         ("same-family-advisor", r"\[approval\].*not the advisor gpt-6.1-sol"),
         ("cursor", r"\[approval\].*ran on harness 'cursor', not a native one"),
@@ -3606,8 +3611,13 @@ def test_elevated_grant_refuses(monkeypatch, tmp_path, case, reason):
         "resolved": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "resolved.")),
         "p2": dict(last_reply=OPEN_F2.replace("[P1]", "[P2]")),
         "latest-approved": dict(last_verdict="APPROVED", last_reply="VERDICT: APPROVE\nF2 [P1] still open"),
+        "resolved-next-line": dict(last_reply=OPEN_F2 + "\n  Status: resolved at the new head."),
+        "fixed-with-evidence": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "fixed with evidence.")),
+        "resolved-later": dict(last_reply=OPEN_F2 + "\n\nF2 [P1] docs/readme.md:3 resolved."),
     }.get(case, {})
-    tasks, _comments, calls = grant_case(monkeypatch, tmp_path, **last)
+    tasks, comments, calls = grant_case(monkeypatch, tmp_path, **last)
+    if case == "edited-verdict":
+        comments[-1]["updated_at"] = "2026-09-23T11:59:00Z"
     request = {
         "session-issuer": {"issuer": "claude-cto-27b21508"},
         "issuer-model": {"issuer_model": "not-a-model"},
@@ -3661,3 +3671,54 @@ def test_budget_grant_digest_verb(tmp_path, capsys):
     ruling.write_text(json.dumps({**GRANT_REQUEST, "scope_paths": ["b", "a"]}))
     assert recorder.main(["budget-grant", "digest", str(ruling)]) == 1
     assert "scope_paths must be a sorted list" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        OPEN_F2.replace("Impact: lost update.", "not resolved: the retry path still races."),
+        "VERDICT: REQUEST_CHANGES\n- **F2** [P1] docs/readme.md:3 still open. Impact: lost update.",
+        OPEN_F2 + "\n\nF1 [P2] docs/readme.md:9 resolved.",
+    ],
+    ids=["not-resolved", "bulleted", "other-finding-resolved"],
+)
+def test_elevated_grant_reads_an_open_finding(monkeypatch, tmp_path, reply):
+    tasks, _comments, _calls = grant_case(monkeypatch, tmp_path, last_reply=reply)
+    write_grant(tasks)
+    assert "budget_grant" in recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+
+@pytest.mark.parametrize("other", ["repository", "scope", "malformed"])
+def test_one_valid_grant_admits_beside_unrelated_or_outdated_ones(monkeypatch, tmp_path, other):
+    """Each grant is judged on its own; a malformed grant for another PR is isolated (review round 1, F2 and F4)."""
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    if other == "repository":
+        write_grant(tasks, {**GRANT_REQUEST, "repository": "owner/other"}, task_id="grant-a")
+    elif other == "scope":
+        write_grant(tasks, {**GRANT_REQUEST, "scope_paths": ["docs/older.md"]}, task_id="grant-a")
+    else:
+        write_grant(tasks, {**GRANT_REQUEST, "pr": 999, "blocker_class": []}, task_id="grant-a")
+    write_grant(tasks, task_id="grant-b")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["budget_grant"]["grant_task"] == "grant-b" and calls["posts"] == 1
+
+
+@pytest.mark.parametrize("stem", ["grant-approval", "grant-approval.20261029T010000Z.archived"])
+def test_archived_grant_keeps_its_seal(monkeypatch, tmp_path, stem):
+    """Archiving moves the record and its result together and keeps the hot result_file (review round 1, F3)."""
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    write_grant(tasks)
+    archive = tasks / recorder.ARCHIVE_DIR_NAME
+    archive.mkdir()
+    (tasks / "grant-approval.json").rename(archive / f"{stem}.json")
+    (tasks / "grant-approval.result").rename(archive / f"{stem}.result")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["budget_grant"]["grant_task"] == "grant-approval" and calls["posts"] == 1
+    # An archived record whose result_file names another task's result still refuses.
+    record = json.loads((archive / f"{stem}.json").read_text())
+    record["result_file"] = str(tasks / "other.result")
+    (archive / f"{stem}.json").write_text(json.dumps(record))
+    move_head(monkeypatch, "4" * 40)
+    write_task(tasks, task_id="round-five", worktree_base_sha="4" * 40)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[approval\].*is not its canonical result"):
+        recorder.record("round-five", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
