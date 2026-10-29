@@ -732,7 +732,7 @@
     },
     {
       "path": "scripts/atlas/word_card_assembly.py",
-      "sha256": "8ddd255b48f2a5e9a18df82e7fc5cbff4eb4956d8623ca0d64a296c1d1a9c00a"
+      "sha256": "c8742ceb06607404ea2d420fbd7b6d342e3f88213c7ff582739ee009f67b72ba"
     },
     {
       "path": "scripts/atlas/word_card_contrasts.py",
