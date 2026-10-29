@@ -19,7 +19,13 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.lexicon import ulif_raw_cache
-from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+from scripts.lib.readonly_sqlite import (
+    open_readonly as _shared_open_readonly,
+)
+from scripts.lib.readonly_sqlite import (
+    refuse_writable_corpus_database,
+)
+from scripts.storage.generations import store_kind
 from scripts.wiki import sources_db
 
 GIB = 1024**3
@@ -73,9 +79,14 @@ def _checkpoint(conn: sqlite3.Connection, db: Path) -> None:
 
 
 def _preflight(db: Path) -> dict[str, int]:
+    if store_kind(db).kind in {"selector", "generation"}:
+        # This migration renames a compacted copy over the file; under the
+        # generation layout that would replace the selector link itself.
+        raise RuntimeError("sources.db is a generation selector; this migration must not rename over it")
     if not db.is_file():
         raise RuntimeError(f"sources database missing: {db}")
     _no_holders(db)
+    refuse_writable_corpus_database(db)
     conn = sqlite3.connect(db, timeout=0)
     try:
         if RAW_TABLE not in _table_counts(conn):
@@ -105,6 +116,7 @@ def _preflight(db: Path) -> dict[str, int]:
 
 def migrate(db: Path, cache: Path) -> dict:
     report: dict = {"source": str(db), "cache": str(cache), "preflight": _preflight(db)}
+    refuse_writable_corpus_database(db)
     conn = sqlite3.connect(db, timeout=0)
     raw = ulif_raw_cache.open_cache(cache)
     new = db.with_name(f"{db.name}.new")

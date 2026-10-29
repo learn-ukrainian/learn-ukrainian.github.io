@@ -444,3 +444,60 @@ def test_shared_read_only_connection_survives_threads(small_db: Path) -> None:
         t.join()
     conn.close()
     assert not errors, errors[:1]
+
+
+def test_cached_reader_follows_the_selector_and_keeps_calls_in_flight(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import gc
+    import weakref
+    from contextlib import closing
+
+    from scripts.storage import generations
+
+    monkeypatch.setenv("LU_EVIDENCE_FREE_DISK_FLOOR_BYTES", "0")
+    monkeypatch.setenv("LU_EVIDENCE_WAL_CEILING_BYTES", "0")
+    data = tmp_path / "data"
+    data.mkdir()
+    seed = data / "seed.db"
+    with closing(sqlite3.connect(seed)) as conn:
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("CREATE TABLE t (id INTEGER PRIMARY KEY, v TEXT)")
+        conn.executemany("INSERT INTO t VALUES (?, ?)", [(i, f"v{i}") for i in range(50)])
+        conn.commit()
+    selector = data / "sources.db"
+    seed.rename(selector)
+    generations.hold_database(selector)
+    with generations.writer_lock(selector) as held:
+        generations.checkpoint_legacy_store(held)
+        generations.publish_generation(selector, held, mode="bootstrap")
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", selector)
+    monkeypatch.setattr(sources_db, "_conn", None)
+    monkeypatch.setattr(sources_db, "_conn_state", None)
+
+    held_reader = sources_db._get_conn()
+    in_flight = held_reader.execute("SELECT v FROM t ORDER BY id")
+    assert in_flight.fetchone()[0] == "v0"
+    assert sources_db._get_conn() is held_reader  # an unchanged selector does not reopen
+
+    with generations.writer_lock(selector) as held:
+        stage = data / "stage.db"
+        with closing(open_readonly(held.generation)) as source, closing(sqlite3.connect(stage)) as copy:
+            source.backup(copy)
+            copy.execute("UPDATE t SET v = 'new' || id")
+            copy.commit()
+        generations.publish_generation(stage, held)
+
+    fresh = sources_db._get_conn()
+    try:
+        assert fresh is not held_reader
+        assert fresh.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "new0"
+        assert sources_db._get_conn() is fresh
+        assert [row[0] for row in in_flight.fetchmany(2)] == ["v1", "v2"]  # still the old generation
+        closed = weakref.ref(held_reader)
+        del in_flight, held_reader
+        gc.collect()
+        assert closed() is None  # the old connection closes once its last call ends
+    finally:
+        fresh.close()
+        sources_db._conn = None

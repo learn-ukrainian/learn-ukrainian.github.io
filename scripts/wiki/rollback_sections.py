@@ -7,6 +7,7 @@ import argparse
 import sqlite3
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 from scripts.wiki.extract_sections import DEFAULT_DB_PATH, column_exists, table_exists
 
 ORIGINAL_TEXTBOOKS_SCHEMA = """
@@ -53,6 +54,7 @@ def rebuild_textbooks_without_parent(conn: sqlite3.Connection) -> None:
 
 def rollback_schema(db_path: Path = DEFAULT_DB_PATH) -> None:
     """Remove textbook_sections and the textbooks.parent_section_id column."""
+    refuse_writable_corpus_database(str(db_path))
     with sqlite3.connect(str(db_path)) as conn, conn:
         if table_exists(conn, "textbook_sections"):
             conn.execute("DROP TABLE textbook_sections")

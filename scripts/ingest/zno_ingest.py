@@ -16,6 +16,7 @@ from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 from scripts.ingest.apply_zno_annotations import apply_worksheet_annotations
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 from scripts.storage.paths import REGISTRY_ROOT
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -1440,6 +1441,7 @@ def ingest(db_path: Path, cache_dir: Path) -> int:
     """
     Ingest ZNO booklet metadata and tasks.
     """
+    refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path)
     try:
         conn.execute("PRAGMA journal_mode=WAL")

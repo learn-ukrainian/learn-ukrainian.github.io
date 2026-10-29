@@ -12,6 +12,12 @@ from pathlib import Path
 
 import yaml
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 
 def load_annotations(worksheet_path: Path) -> list[dict[str, object]]:
     """Load the reviewed ZNO annotations from their checked-in worksheet."""
@@ -156,6 +162,7 @@ def main() -> int:
         return 1
 
     # Connect to SQLite
+    refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path)
     try:
         updates_to_apply, conflicts_found, db_tasks, skipped_count = plan_annotations(conn, annotations)

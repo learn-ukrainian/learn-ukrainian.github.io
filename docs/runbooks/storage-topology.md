@@ -90,7 +90,13 @@ afterwards: existing connections can retain writable file descriptors.
 `hold` sets the database and existing `-wal`, `-shm`, and `-journal` files to
 `0444`. `lift` sets the same files to `0644`. Missing companions are optional;
 a missing database is an error. JSON maps affected paths to octal mode strings.
-The commands refuse symlinks and non-regular files.
+The commands refuse symlinks and non-regular files, with one exception: the
+Sources store's selector `data/sources.db` (and, before the bootstrap, its
+regular file). For the store, both commands take the store writer lock and
+change the generation the selector selects; naming a generation file directly
+is refused (`generation_named_directly`). A lifted store cannot be published
+(`current_generation_writable`) until it is held again. See
+[Sources store generations](#sources-store-generations).
 
 The programmatic API exports `hold_database`, `lift_database`,
 `get_companion_paths`, and `inspect_database_permissions` from `scripts.storage`.
@@ -139,9 +145,11 @@ an accident of whichever ingest last touched the file (#8527):
   seeing the rows it started with. In **DELETE (rollback-journal) mode the same pinned
   read holds a SHARED lock**: the ULIF walk's commit waits `busy_timeout` (30 s) and then
   raises `database is locked` — a snapshot reader would stall the writer.
-- **Who declares it.** `scripts/wiki/build_sources_db.py` folds the temp DB back to
-  DELETE mode (one self-contained file to swap) and re-enables WAL on the live path
-  immediately after the atomic rename (`declare_wal`). `scripts/lexicon/runner/fetch_ulif_homonyms.py`
+- **Who declares it.** The generation publisher (`scripts/storage/generations.py`)
+  puts every candidate in WAL before it publishes it, so a published generation
+  is always WAL. `scripts/wiki/build_sources_db.py` folds its temp DB back to
+  DELETE mode and, for any target other than the live store, re-enables WAL
+  after the atomic rename (`declare_wal`). `scripts/lexicon/runner/fetch_ulif_homonyms.py`
   `prepare_database` sets `PRAGMA journal_mode=WAL` on every walk start. Both assert the
   PRAGMA **returns** `wal` and fail loudly otherwise. WAL is a persistent file property,
   so these are no-ops on a file that is already WAL.
@@ -156,6 +164,184 @@ an accident of whichever ingest last touched the file (#8527):
   fact by hand: `od -A d -t u1 -j 18 -N 2 data/sources.db` → `2 2`.
 - **Never** run a long-lived read transaction against a DELETE-mode `sources.db` while
   the walk runs, and never switch the live file back to DELETE mode.
+
+## Sources store generations
+
+The Sources store can be republished while readers and writers are live. No
+reader sees mixed data and no writer loses a commit. The code is
+`scripts/storage/generations.py`.
+
+### Layout
+
+| Path | What it is |
+| --- | --- |
+| `data/sources-generations/` | A real directory, never a symlink. It holds one file per published generation, named `sources.<utc>-<sha12>.db` (publication time and the first 12 hex digits of the file's SHA-256). A name is never reused. |
+| `data/sources.db` | The **selector**: a relative symlink whose text is exactly `sources-generations/<name>`. Any other link text, a missing target or a symlinked generation directory is refused (`resolve_store`, the writer lock and backup all apply the same check). |
+| `data/sources-generations/<name>.receipt.json` | The publication receipt: `previous` generation, `sha256`, `size_bytes`, `mode`, and `state` (`staged`, then `published`). |
+| `data/.sources-writer.lock` | The one store-wide writer lock. It is never a generation file. |
+
+SQLite resolves the selector when it opens the database and names the `-wal`
+and `-shm` sidecars after the generation file. A reader that resolved the
+selector before a switch therefore keeps a whole, unchanged old generation with
+its own sidecars. Generations stay in WAL mode and are held read-only (`0444`)
+at rest.
+
+Before the bootstrap (below), `data/sources.db` is still one regular file.
+Everything in this section also accepts that layout, except publication.
+
+### Readers
+
+Readers change nothing. `resolve_store("sources")` validates the selector and
+returns the selected generation. The Sources MCP reader cache checks the
+selector on every request once it holds a generation. After a switch, new
+calls get the new generation; a call already running keeps the old connection,
+which closes when that call ends. A pinned evidence session keeps its
+generation for the whole session.
+
+### Writers
+
+A writer takes the writer lock first, then resolves the selector, and closes its
+connections before it releases the lock. The lock is never waited for: a busy
+lock is the refusal `writer_lock_busy`.
+
+- **In-process writers** use `generations.store_writer(path)`. It locks, makes
+  the selected generation writable, yields it, and on exit closes tracked
+  connections and holds the generation again. The ULIF walk (`run`, `walk`,
+  `parse`) and `python -m scripts.wiki.sources_db --migrate` do this.
+- **Every other script** that opens the store writable calls the write guard
+  (`scripts.lib.readonly_sqlite.refuse_writable_corpus_database`) first. For
+  the store it refuses unless this process holds the lock, and only the
+  selected generation may be opened (`writer_lock_not_held`,
+  `not_selected_generation`). Run such a script under the lock:
+
+  ```bash
+  .venv/bin/python -m scripts.storage write -- .venv/bin/python scripts/ingest/<script>.py --db data/sources.db
+  ```
+
+  `write` refuses if the lock is busy. It makes the selected generation
+  writable, runs the command with the locked descriptor inherited, then holds
+  the generation again and releases the lock. The writer is killed after
+  `--timeout` seconds (default 24 hours, exit 124); SQLite rolls back an
+  interrupted transaction.
+- Fixtures, staged copies and any path that is not the store are not affected.
+
+### Publication
+
+`publish_generation(candidate, held)` is the only way to change the selector.
+The caller holds the writer lock from the moment it reads the current
+generation until the switch. It builds the candidate from that generation (for
+example with SQLite's backup API) as a closed file in `data/`. The publisher
+then:
+
+1. Refuses when the current generation changed since the lock was taken
+   (`current_generation_changed`), when it is writable
+   (`current_generation_writable`), or when the selector is still a regular file
+   (`selector_is_regular_file`; only the bootstrap accepts that).
+2. Refuses unless free space is at least the generation size, plus the 10 GiB
+   evidence free-disk floor, plus a 4 GiB WAL allowance
+   (`insufficient_free_space`; both limits come from
+   `scripts/curriculum/evidence/config.py`).
+3. Puts the candidate in WAL mode, holds it read-only, and hard-links it into the
+   generation directory under its new name. It fsyncs the file and the directory,
+   and writes a `staged` receipt.
+4. Creates a temporary link, `os.replace`s it onto `data/sources.db`, and fsyncs
+   `data/`. This is the commit point.
+5. Removes the staging name and marks the receipt `published`. A receipt left
+   `staged` on a selected generation is completed by the next publication.
+
+A failure before step 4 leaves the old selection in place, plus at most an
+unselected generation file (an orphan). A retry of the same candidate reuses its
+own link.
+
+`scripts/wiki/build_sources_db.py` publishes through this routine when its
+target is the selector. It refuses the pre-bootstrap live file
+(`rebuild_requires_selector`), because the old in-place swap unlinks the
+sidecars and renames over a file that readers have open.
+
+Retention: publication keeps every generation, and no automation deletes one.
+The free-space check makes publication fail safely when the disk fills up.
+Pruning old generations is a separate, operator-run command that is not
+available yet.
+
+`.venv/bin/python -m scripts.storage generations` (read-only) prints the layout,
+the selected generation, whether it is held, and each retained generation with
+its receipt state. Backup and restore are described in
+[`data-backup.md`](data-backup.md): a backup copies only the selected
+generation; a restore puts it back under its own name and switches the selector
+with `python -m scripts.storage restore-generation`.
+
+### Bootstrap (one maintenance window)
+
+The bootstrap turns the regular `data/sources.db` into the first generation. It
+hard-links the same file, so it copies nothing and needs no extra space. Run it
+once, from the primary checkout, with every Sources reader and writer stopped.
+
+1. **Stop every Sources client.** Stop the dispatcher and end every agent
+   session (each session runs its own stdio Sources MCP). Then stop the HTTP
+   Sources MCP and the timers that read the store:
+
+   ```bash
+   ./services.sh stop sources
+   systemctl --user stop learn-ukrainian-sources-watchdog.timer learn-ukrainian-data-tier.timer learn-ukrainian-backup.timer
+   ```
+
+   Stop any ULIF walk, ingest, rebuild or evidence run.
+2. **Prove that nothing has the store open.** This prints nothing when the
+   store is free:
+
+   ```bash
+   fuser -v data/sources.db data/sources.db-wal data/sources.db-shm
+   ```
+
+3. **Take a backup first** and check that it completed
+   (see [`data-backup.md`](data-backup.md)):
+
+   ```bash
+   ./scripts/backup-data.sh backup --execute
+   ./scripts/backup-data.sh snapshots
+   ```
+
+4. **Check the starting state.** Expect `layout: legacy_file` and `held=True`:
+
+   ```bash
+   .venv/bin/python -m scripts.storage generations
+   ```
+
+5. **Bootstrap:**
+
+   ```bash
+   .venv/bin/python -m scripts.storage bootstrap --maintenance-window
+   ```
+
+   This takes the writer lock and folds the WAL into the file. It refuses with
+   `store_in_use` (exit 3) if any connection still reads it. It then hashes the
+   file (about a minute for the current store), links it into
+   `data/sources-generations/`, and replaces `data/sources.db` with the
+   selector. Last, it removes the empty legacy `-wal`/`-shm` names. It prints
+   `selector now selects sources.<utc>-<sha12>.db`.
+6. **Verify.** `generations` must show `layout: selector`, `held=True` and
+   `receipt=published`; `status` must show `journal_mode: wal`;
+   `readlink data/sources.db` must print `sources-generations/<that name>`.
+
+   ```bash
+   .venv/bin/python -m scripts.storage generations --json
+   .venv/bin/python -m scripts.storage status
+   readlink data/sources.db
+   ```
+
+7. **Restart** what step 1 stopped (`./services.sh start sources`,
+   `systemctl --user start` for the three timers, then the dispatcher). Then
+   check one Sources MCP lookup.
+
+**Rollback** (before anything has written to the new layout): with every client
+stopped again, put the regular file back in one atomic rename:
+
+```bash
+ln data/sources-generations/<name> data/.sources.db.rollback
+mv -T data/.sources.db.rollback data/sources.db
+```
+
+The generation's hard link stays in place and costs no space.
 
 ## Bulk consumers and the old `data/` links (#8803)
 

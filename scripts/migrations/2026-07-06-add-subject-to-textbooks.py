@@ -23,6 +23,12 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from wiki.textbook_subjects import subject_for_source_file
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 
 class UnmappedTextbookSubjectsError(RuntimeError):
     """Raised when any existing ``source_file`` cannot be assigned a subject."""
@@ -202,6 +208,7 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"Sources DB not found: {args.db}")
 
     try:
+        refuse_writable_corpus_database(str(args.db))
         with sqlite3.connect(str(args.db)) as conn:
             status = apply(conn, dry_run=args.dry_run)
     except UnmappedTextbookSubjectsError as exc:

@@ -14,6 +14,12 @@ import sys
 import time
 from pathlib import Path
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -74,6 +80,7 @@ def ingest_wordids(
         raise ValueError("start_wordid must be at least 1")
 
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     counts = IngestCounts(ok=0, unchanged=0, not_found=0, transient_error=0, parse_error=0)

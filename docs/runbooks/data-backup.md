@@ -196,6 +196,16 @@ restic rclone path with that final directory name.
 - The legacy `data/textbooks` and `data/vesum` symlinks are excluded only when
   they resolve inside the old Drive backup. Other absolute or escaping
   symlinks stop the backup.
+- `data/sources.db` is a regular file before the storage bootstrap and the
+  Sources selector after it: a relative link to exactly
+  `sources-generations/<generation>` (see `docs/runbooks/storage-topology.md`).
+  The backup resolves the selector once and backs up only that generation,
+  under its own name `data/sources-generations/<generation>`, never the other
+  retained generations, the sidecars, the writer lock or the receipts. The run
+  receipt records it as `sources_selector: {path, generation}` (`null` for a
+  pre-bootstrap run). A publication that switches the selector during the
+  backup does not change the chosen generation, so its online copy stays
+  consistent. Any other link at `data/sources.db` stops the backup.
 - `.agent/` must be a real directory. Broken, absolute, or escaping symlinks
   below it, and unsupported special files, stop the backup before restic runs.
 - Restore accepts only an absolute empty or nonexistent directory outside the
@@ -446,7 +456,13 @@ is written, including when `--path` restores a directory and the file-phase
 snapshot follows the database batch. It then checks `PRAGMA integrity_check`
 by opening each restored database read-only, so the check sees a leftover
 sidecar the same way a normal reader would, and fails if any check is not
-`ok`. Inspect the receipt and expected data before any live import:
+`ok`. When the receipt records a Sources selector and its generation was
+restored, the restore then recreates `data/sources.db` over that generation
+with `python -m scripts.storage restore-generation`, which takes the store
+writer lock, holds the file read-only and switches the link atomically; it
+refuses when the target filesystem lacks the publisher's free-space margin.
+`--path data/sources.db` on such a run restores the recorded generation and
+its selector. Inspect the receipt and expected data before any live import:
 
 ```bash
 jq . /absolute/path/to/recovery-parent/restore-test/BACKUP-RECEIPT.json

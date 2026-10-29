@@ -16,11 +16,12 @@ import os
 import platform
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from types import MappingProxyType
 from typing import Any, Literal
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.storage.generations import GENERATIONS_DIRNAME, inspect_selector
 
 # Required top-level directories that identify a learn-ukrainian bulk root.
 # Both rebuild consumers and the Windows mirror use these as presence markers.
@@ -138,6 +139,8 @@ def _database_facts(path: Path) -> dict[str, Any]:
     """Size, journal mode, and WAL sidecar size of an on-disk SQLite file (never opens a connection)."""
     if not path.is_file():
         return {"size_bytes": None, "journal_mode": None, "wal_bytes": None}
+    # A selector's sidecars sit next to the generation it selects.
+    path = path.resolve()
     wal = path.with_name(f"{path.name}-wal")
     return {
         "size_bytes": path.stat().st_size,
@@ -541,6 +544,14 @@ def store_locality(path: Path) -> Literal["local", "network", "unknown"]:
     return _store_locality(path)
 
 
+def _names_selector(path: Path) -> bool:
+    """True for a symlink whose text points into a Sources generation directory."""
+    if not path.is_symlink():
+        return False
+    parts = PurePosixPath(os.readlink(path)).parts
+    return bool(parts) and parts[0] == GENERATIONS_DIRNAME
+
+
 def resolve_store(
     store: StoreId,
     repository_root: Path | None = None,
@@ -582,6 +593,14 @@ def resolve_store(
         path = Path(raw)
         if not path.is_absolute():
             return StoreRefusal(store, "relative_override")
+        if store == "sources" and (provenance == "primary_checkout" or _names_selector(path)):
+            # The primary store is a regular file (before the bootstrap) or a
+            # selector confined to its generation directory, never another link.
+            state = inspect_selector(path)
+            if state.layout == "missing":
+                return StoreRefusal(store, "store_missing")
+            if state.layout == "invalid":
+                return StoreRefusal(store, state.reason)
         path = path.resolve(strict=True)
         if not path.is_file():
             return StoreRefusal(store, "not_a_file")

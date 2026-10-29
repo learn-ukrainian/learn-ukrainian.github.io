@@ -36,6 +36,7 @@ from scripts.lexicon.relation_pairs import (
     is_exact_vesum_lemma,
     normalize_relation_word,
 )
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 from scripts.storage.paths import artifact_path
 
 DEFAULT_DB = ROOT / "data" / "sources.db"
@@ -420,6 +421,7 @@ def load_candidates(
     if dry_run:
         return summary, by_source_relation
 
+    refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path)
     try:
         ensure_relation_pairs_schema(conn)
@@ -473,6 +475,7 @@ def load_approved_synonym_verdicts(
     if dry_run:
         return summary
 
+    refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path)
     try:
         ensure_relation_pairs_schema(conn)

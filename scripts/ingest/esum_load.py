@@ -11,6 +11,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_JSONL = REPO / "data" / "processed" / "esum_vol1.jsonl"
 DEFAULT_DB = REPO / "data" / "sources.db"
@@ -53,6 +59,7 @@ def _entry_hash(row: dict[str, Any]) -> str:
 
 def load_esum(jsonl: Path, db: Path) -> int:
     rows = _load_jsonl(jsonl)
+    refuse_writable_corpus_database(str(db))
     conn = sqlite3.connect(str(db))
     try:
         _apply_migration(conn)

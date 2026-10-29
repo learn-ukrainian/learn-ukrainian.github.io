@@ -33,7 +33,7 @@ if __package__ in {None, ""}:
 
 from scripts.guardrails.worktree_containment import resolve_main_root
 from scripts.ingest import incremental_textbook_ingest as textbook_ingest
-from scripts.lib.readonly_sqlite import open_readonly
+from scripts.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
 from scripts.projects.open_model_data import phase3_vspu_source_materialization as materialization
 from scripts.projects.open_model_data import university_source_policy
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -523,6 +523,7 @@ def _cleanup_sidecars(path: Path) -> None:
 
 def _sqlite_backup(source: Path, target: Path) -> None:
     try:
+        refuse_writable_corpus_database(target)
         with open_readonly(source) as source_connection, sqlite3.connect(target) as target_connection:
             source_connection.backup(target_connection)
             target_connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")

@@ -6,9 +6,16 @@ import argparse
 import json
 import re
 import sqlite3
+import sys
 from collections import Counter
 from collections.abc import Iterable
 from pathlib import Path
+
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 try:
     from scripts.etymology.recover_latin_cognates import ensure_recovered_column, recover_cognate_forms
@@ -175,6 +182,7 @@ def _load_markers(cognates_json: str) -> list[str]:
 
 
 def extract_database(db_path: Path, telemetry_path: Path, min_coverage_pct: float = 65.0) -> dict[str, object]:
+    refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     try:

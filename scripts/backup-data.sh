@@ -158,6 +158,14 @@ RESTORE_TARGET_ROOT=""
 RESTORE_COMPLETED_DATABASES=()
 RUN_ID=""
 LINUX_MODE=0
+# The Sources store selector (scripts/storage/generations.py). After the
+# bootstrap, data/sources.db is a relative link to exactly
+# sources-generations/<generation>; the backup carries that one generation
+# under its own name and records the selection in the receipt.
+SOURCES_SELECTOR_PATH="data/sources.db"
+SOURCES_GENERATIONS_DIRNAME="sources-generations"
+SOURCES_GENERATION_NAME_RE='^sources\.[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}\.db$'
+SOURCES_SELECTED_GENERATION=""
 BACKUP_FAILURES=()
 
 # The interpreter that runs the runner mirror receipt writer.
@@ -1031,6 +1039,30 @@ refuse_leaf_symlink() {
   die "Recovery path must not be a symlink: $path"
 }
 
+# Return 0 and set SOURCES_SELECTED_GENERATION when RELATIVE is the Sources
+# selector, so the caller backs up the generation it selects instead. Return 1
+# when RELATIVE is not a link into the generation directory; the caller then
+# refuses any other symlink as before. A link into that directory that breaks
+# the selector rules of scripts/storage/generations.py is refused here.
+select_sources_generation() {
+  local relative=$1
+  local absolute="$PROJECT_ROOT/$relative" text name directory
+
+  [[ "$relative" == "$SOURCES_SELECTOR_PATH" && -L "$absolute" ]] || return 1
+  text="$(readlink "$absolute")" || die "Could not read the Sources selector: $relative"
+  [[ "$text" == "$SOURCES_GENERATIONS_DIRNAME"/* ]] || return 1
+  name=${text#"$SOURCES_GENERATIONS_DIRNAME"/}
+  [[ "$name" =~ $SOURCES_GENERATION_NAME_RE ]] ||
+    die "Required recovery path must not be a symlink: $relative (not a Sources generation selector: $text)"
+  directory="${absolute%/*}/$SOURCES_GENERATIONS_DIRNAME"
+  [[ -d "$directory" && ! -L "$directory" ]] ||
+    die "Required recovery path must not be a symlink: $relative (the generation directory is not a real directory)"
+  [[ -f "$directory/$name" && ! -L "$directory/$name" ]] ||
+    die "Required recovery path must not be a symlink: $relative (the selected generation is not a regular file: $name)"
+  SOURCES_SELECTED_GENERATION="${relative%/*}/$SOURCES_GENERATIONS_DIRNAME/$name"
+  info "Sources selector selects $SOURCES_SELECTED_GENERATION; backing up that generation only."
+}
+
 # Ancestors of an allowlisted path must be real directories. The leaf is
 # checked by the expander so a required symlink keeps its existing message.
 refuse_path_ancestors() {
@@ -1155,6 +1187,12 @@ expand_file() {
     allowlist_absent "$relative" "$required"
     return 0
   fi
+  # The selector is resolved once, here; a publication that switches it later
+  # leaves this generation unchanged, so its online copy stays consistent.
+  if select_sources_generation "$relative"; then
+    relative=$SOURCES_SELECTED_GENERATION
+    absolute="$PROJECT_ROOT/$relative"
+  fi
   refuse_leaf_symlink "$relative" "$required"
   [[ -f "$absolute" ]] || die "Allowlist file is not a regular file: $relative"
   reject_non_sqlite_name "$relative" "$absolute"
@@ -1268,6 +1306,7 @@ discover_backup_paths() {
   STAGED_RELATIVE_PATHS=()
   ALLOWLIST_TREE_ROOTS=()
   ALLOWLIST_FILE_ROOTS=()
+  SOURCES_SELECTED_GENERATION=""
   validate_allowlist_file
   while IFS=$'\t' read -r path kind required; do
     case "$kind" in
@@ -2161,6 +2200,8 @@ write_backup_receipt() {
     --argjson transient_count "${#SQLITE_TRANSIENT_SOURCES[@]}" \
     --argjson archived_count "${#SQLITE_ARCHIVED_SOURCES[@]}" \
     --slurpfile archives "$archives_file" \
+    --arg sources_selector "$SOURCES_SELECTOR_PATH" \
+    --arg sources_generation "$SOURCES_SELECTED_GENERATION" \
     '$database_inventory[0] as $databases | {
       schema_version: (if $linux_mode then 3 else 1 end),
       created_at_utc: $created_at,
@@ -2174,6 +2215,7 @@ write_backup_receipt() {
       known_missing_paths: $known_missing,
       exclusions: $exclusions,
       restore_command: "./scripts/backup-data.sh restore latest --to /absolute/empty/directory --execute",
+      sources_selector: (if $sources_generation == "" then null else {path: $sources_selector, generation: $sources_generation} end),
       linux_run: (if $linux_mode then {run_id: $run_id, base_snapshot_id: $base_snapshot_id, patch_snapshot_id: $patch_snapshot_id, databases: $databases, databases_backed_up: ($databases | length), transient_databases_skipped: $transient_count, archived_databases: $archived_count, database_archives: $archives} else null end)
     }' > "$STAGED_ROOT/BACKUP-RECEIPT.json"
   BACKUP_PATHS+=("BACKUP-RECEIPT.json")
@@ -2707,6 +2749,7 @@ run_restore() {
   local scope=${4:-}
   local scope_given=${5:-0}
   local target_real receipt receipt_json receipt_schema base_id patch_id database_id database_path database_mode database_target check_output
+  local sources_generation
   local manifest_id snapshots_json size_bytes path_info path_count index db_index
   local scope_is_database=0 databases_selected=0 step_count step_bytes
   local -a whole_ids=() step_ids=() step_includes=() step_ls_paths=() step_db_paths=()
@@ -2747,6 +2790,11 @@ run_restore() {
   # Schema 2 runs also restore through the shared-snapshot-aware plan below.
   [[ "$receipt_schema" == 1 || "$receipt_schema" == 2 || "$receipt_schema" == 3 ]] ||
     die "Unsupported restored receipt schema."
+  sources_generation="$(restored_sources_generation "$receipt_json")"
+  # data/sources.db was a selector: the run holds the generation it selected.
+  if [[ -n "$sources_generation" && "$scope" == "$SOURCES_SELECTOR_PATH" ]]; then
+    scope=$sources_generation
+  fi
 
   if [[ "$receipt_schema" == 1 ]]; then
     step_ids+=("$manifest_id")
@@ -2919,7 +2967,45 @@ run_restore() {
     integrity_check_restored_database "$database_path" "${database_path#"$target_real"/}"
   done < <(find "$target_real" -type f \( -name '*.db' -o -name '*.sqlite*' \) \
     ! -name '*-wal' ! -name '*-shm' ! -name '*-journal' -print0)
+  if [[ -n "$sources_generation" && -f "$target_real/$sources_generation" ]]; then
+    restore_sources_selector "$target_real" "$sources_generation"
+  fi
   info "Restore complete. Validate the staged data before any live import: $target_real"
+}
+
+# The recorded selected generation, or nothing for a pre-bootstrap run (whose
+# data/sources.db is a regular file and restores as one).
+restored_sources_generation() {
+  local receipt_json=$1 selector generation
+
+  jq -e '.sources_selector == null or (.sources_selector | type == "object"
+      and (.path | type == "string") and (.generation | type == "string"))' \
+    <<< "$receipt_json" >/dev/null || die "Restored receipt has an invalid Sources selector record."
+  selector="$(jq -r '.sources_selector.path // empty' <<< "$receipt_json")"
+  generation="$(jq -r '.sources_selector.generation // empty' <<< "$receipt_json")"
+  [[ -n "$generation" ]] || return 0
+  [[ "$selector" == "$SOURCES_SELECTOR_PATH" &&
+     "$generation" == "${SOURCES_SELECTOR_PATH%/*}/$SOURCES_GENERATIONS_DIRNAME/"* &&
+     "${generation##*/}" =~ $SOURCES_GENERATION_NAME_RE ]] ||
+    die "Restored receipt has an unsafe Sources selector record."
+  printf '%s\n' "$generation"
+}
+
+# Recreate the selector over the restored generation through the publisher
+# (python -m scripts.storage restore-generation), never by hand: it takes the
+# store writer lock, holds the file read-only and switches the link atomically.
+restore_sources_selector() {
+  local target_real=$1 generation=$2 project_python
+
+  [[ ! -e "$target_real/$SOURCES_SELECTOR_PATH" && ! -L "$target_real/$SOURCES_SELECTOR_PATH" ]] ||
+    die "Restored tree already has $SOURCES_SELECTOR_PATH; refusing to replace it."
+  project_python="$(runner_mirror_python)" || exit 1
+  info "Selecting the restored Sources generation: $generation"
+  (
+    cd "$REPO_ROOT" || exit 1
+    "$project_python" -m scripts.storage restore-generation \
+      "$target_real/$generation" --store "$target_real/$SOURCES_SELECTOR_PATH"
+  ) || die "Could not select the restored Sources generation: $generation"
 }
 
 run_init() {

@@ -19,6 +19,12 @@ from urllib.parse import quote
 import requests
 from bs4 import BeautifulSoup
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_DB = REPO / "data" / "sources.db"
 DEFAULT_MANIFEST = REPO / "site" / "src" / "data" / "lexicon-manifest.json"
@@ -288,6 +294,7 @@ def ingest_goroh_etymology(
     max_text_chars: int,
 ) -> tuple[int, int]:
     """Fetch Atlas-bounded Goroh etymology rows into sources.db."""
+    refuse_writable_corpus_database(str(db_path))
     conn = None if dry_run else sqlite3.connect(str(db_path))
     fetched = 0
     loaded = 0

@@ -55,6 +55,12 @@ from rag.scrape_ukrlib import (
 )
 from wiki.sources import build_literary_row, work_to_id
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 API = "https://uk.wikisource.org/w/api.php"
 WIKI_BASE_URL = "https://uk.wikisource.org/wiki"
 DEFAULT_FOLK_CATEGORY = "Категорія:Думи"
@@ -500,6 +506,7 @@ def ingest_jsonl(jsonl_path: Path, db_path: Path) -> int:
                  (chunk_id, title, text, source_file, source_url, author, work, work_id,
                   year, genre, language_period, char_count)
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     try:
         with conn:

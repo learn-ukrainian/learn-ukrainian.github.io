@@ -27,7 +27,12 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+from scripts.lib.readonly_sqlite import (
+    open_readonly as _shared_open_readonly,
+)
+from scripts.lib.readonly_sqlite import (
+    refuse_writable_corpus_database,
+)
 from scripts.wiki.sum20_official import QUARANTINE_COLUMN, ensure_sum20_quarantine_column
 
 REPO = Path(__file__).resolve().parents[2]
@@ -86,6 +91,7 @@ def quarantine(db_path: Path, *, apply: bool, expected: Mapping[int, str] = EXPE
     """Check (and with ``apply``, mark) the unverified rows; return a receipt."""
     if not db_path.is_file():
         raise QuarantineError(f"database not found: {db_path}")
+    refuse_writable_corpus_database(db_path)
     conn = sqlite3.connect(db_path, isolation_level=None) if apply else _shared_open_readonly(db_path.resolve())
     try:
         conn.execute("PRAGMA busy_timeout = 30000")

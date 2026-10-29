@@ -220,6 +220,9 @@ def import_named_module(name: str) -> ModuleType:
 
 
 _CORPUS_DATABASE_NAMES = frozenset({"sources.db", "vesum.db"})
+# Published Sources generations (scripts/storage/generations.py) live under
+# this directory with names that are not sources.db.
+_GENERATIONS_DIRNAME = "sources-generations"
 _GUARD_PATH = "scripts/lib/readonly_sqlite.py"
 
 
@@ -227,17 +230,30 @@ class CorpusDatabaseWriteRefused(PermissionError):
     """A generic factory cannot open sources.db or vesum.db for writing."""
 
 
-def corpus_database_name(database: str | os.PathLike[str] | bytes) -> str | None:
-    """Return ``sources.db`` or ``vesum.db`` when ``database`` names one.
+def _filesystem_path(database: str | os.PathLike[str] | bytes) -> str:
+    """The filesystem path a connect target names.
 
     A filesystem path keeps ``?`` and ``#`` as literal characters. Only a
     ``file:`` URI separates those characters into the query and the fragment.
     """
     raw = os.fsdecode(os.fspath(database))
-    path = unquote(urlsplit(raw).path) if raw.startswith("file:") else raw
-    name = Path(path).name
-    if name in _CORPUS_DATABASE_NAMES:
-        return name
+    return unquote(urlsplit(raw).path) if raw.startswith("file:") else raw
+
+
+def corpus_database_name(database: str | os.PathLike[str] | bytes) -> str | None:
+    """Return ``sources.db`` or ``vesum.db`` when ``database`` names one.
+
+    A file in a ``sources-generations`` directory, or a link that resolves to
+    one, is a Sources generation and returns ``sources.db``.
+    """
+    path = Path(_filesystem_path(database))
+    if path.name in _CORPUS_DATABASE_NAMES:
+        return path.name
+    if path.parent.name == _GENERATIONS_DIRNAME:
+        return "sources.db"
+    with suppress(OSError, RuntimeError, ValueError):
+        if path.is_symlink() and path.resolve().parent.name == _GENERATIONS_DIRNAME:
+            return "sources.db"
     return None
 
 
@@ -320,7 +336,9 @@ def refuse_writable_corpus_database(
     the repo-relative file of a writer seam whose own ingest functions may
     write. Generic factories leave it unset and still allow a declared writer
     file on the stack. ``allow_declared_writers=False`` refuses every caller;
-    the control-plane store uses that.
+    the control-plane store uses that. The live Sources store (its selector, a
+    generation, or the pre-bootstrap file) also needs the store writer lock,
+    and only the generation the selector selects may be opened.
     """
     name = corpus_database_name(database)
     if name is None:
@@ -328,5 +346,12 @@ def refuse_writable_corpus_database(
     if uri and _uri_requests_read_only(database):
         return
     if allow_declared_writers and _stack_may_write(factory):
-        return
+        if name != "sources.db":
+            return
+        from scripts.storage.generations import writable_open_refusal
+
+        reason = writable_open_refusal(_filesystem_path(database))
+        if reason is None:
+            return
+        raise CorpusDatabaseWriteRefused(f"refusing writable open of the Sources store: {reason}")
     raise CorpusDatabaseWriteRefused(f"refusing writable open of corpus database {name}")

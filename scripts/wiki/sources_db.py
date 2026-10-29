@@ -58,6 +58,7 @@ from scripts.lib.readonly_sqlite import (
     open_readonly,
     refuse_writable_corpus_database,
 )
+from scripts.storage.generations import GENERATIONS_DIRNAME, store_writer, track_connection
 
 # ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
 # The top-level ``audit/`` tree is a namespace package, so ``import audit``
@@ -1878,6 +1879,8 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
         refuse_writable_corpus_database(db_path, factory="scripts/wiki/sources_db.py")
         options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
         conn = _open_writer_conn(db_path, options)
+        # The store writer lock closes it before release if its owner has not.
+        track_connection(db_path, conn)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition
@@ -1887,7 +1890,7 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
 
 
 def _get_conn() -> sqlite3.Connection:
-    """Reuse the cached reader until the database path, inode or mtime changes."""
+    """Reuse the cached reader until the selector's target, inode or mtime changes."""
     override = _active_connection.get()
     if override is not None:
         return override
@@ -1902,6 +1905,17 @@ def _get_conn() -> sqlite3.Connection:
             except OSError:
                 _conn_state = (_conn, _conn_state[1], _conn_state[2])
         else:
+            if _conn is not None and _conn_state is not None and _conn_state[1].parent.name == GENERATIONS_DIRNAME:
+                # The cached reader holds a generation: re-resolve the selector on
+                # every request. After a publication, calls already running keep
+                # their reference to the old connection and its whole generation;
+                # dropping the cache's reference closes it once the last one ends.
+                reopen_path = _read_db_path()
+                if reopen_path != _conn_state[1]:
+                    fresh = _open_conn(reopen_path, read_only=True)
+                    stat = reopen_path.stat()
+                    _conn = fresh
+                    _conn_state = (fresh, reopen_path, (stat.st_ino, stat.st_mtime_ns, stat.st_size))
             # Stat the current connection path if open, else resolve via _read_db_path.
             path = _conn_state[1] if (_conn is not None and _conn_state is not None) else _read_db_path()
             try:
@@ -4846,11 +4860,12 @@ def main(argv: list[str] | None = None) -> int:
     path = args.db if args.db is not None else SOURCES_DB_PATH
     if not path.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
-    conn = _open_conn(path)
-    try:
-        changed = migrate_ulif_dictua_entries(conn)
-    finally:
-        conn.close()
+    with store_writer(path) as target:
+        conn = _open_conn(target)
+        try:
+            changed = migrate_ulif_dictua_entries(conn)
+        finally:
+            conn.close()
     print("migrated" if changed else "already current")
     return 0
 
