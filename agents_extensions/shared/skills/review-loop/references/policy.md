@@ -36,12 +36,22 @@ rounds are deltas.
   and adds no round.
 - **The end of the budget is never approval.** The author splits the PR, changes the
   approach, or escalates to the CTO and the advisors (rules core P6).
-- When a base conflict follows an approval in the last budgeted round, the recordable outcome
-  of that CTO-and-advisor escalation is one budget extension per lineage: a request committed
-  on the default branch under `batch_state/review-budget-extensions/` plus a sealed
-  `review_budget_extension` APPROVE from the non-author designated advisor, which the recorder
-  checks before it admits exactly one more round (`scripts/review/budget_extension.py`;
-  designated approval: advisory task cto-7eba-adv-extension2).
+- **One repair-verification round per lineage, outside the budget.** When a PR approved at its
+  last reviewed head A needs a new head N only for a CI fix or a conflict resolution, the
+  recorder admits one more round at N with no request PR (`scripts/review/repair_round.py`).
+  It needs: the review lineage before N on record, with A's APPROVE the latest verdict of every
+  seat; a CI fix tied to a failed run of the required CI workflow at A itself (a PR run) or of
+  this PR's merge-queue candidate built from A; or a conflict resolution whose merge tree differs from Git's own merge of its pinned
+  parents only in the paths Git reports conflicted. Any other change after approval, or a mix
+  of the two, is unclassifiable and escalates to the CTO. The round's reviewer covers the
+  whole repair delta (`git diff A N`), the callers it affects, the invariants it touches and any
+  weakened or deleted tests ([delta scope](#delta-scope)), plus the failed run or the conflicted
+  paths it names. An APPROVE in that round must carry the line
+  `REPAIR_VERIFIED: <delta_sha256>` with the digest `budget-check` reports: the reviewer's
+  statement that the complete delta is only the repair it names. Without it the recorder
+  refuses the APPROVE; a rejection needs no such line. The recorder writes a durable receipt for the round under the PR, its head
+  branch and every issue it closes, before it posts the verdict. That receipt is never removed:
+  another approval, a replacement PR or a new session never replenishes the round.
 - **A clean base merge consumes no round.** A head that descends from the last fully approved
   head only through conflict-free merges of the default branch, each proven by Git to add
   nothing beyond the merge, is reviewed without counting against the budget. It still needs
@@ -49,7 +59,10 @@ rounds are deltas.
   and verdict history is kept. A conflict, a manual edit inside a merge, any other commit, or
   a missing object or failed proof makes the head count as a normal round.
 - **The verdict recorder refuses a round beyond the budget**, so an over-budget verdict is
-  never recorded.
+  never recorded. **Ask it before dispatching a reviewer:**
+  `record_cf_verdict.py budget-check --repository <owner/name> --pr <N>` returns the same
+  decision for the PR's current head (admitted, with any exemption, grant or repair-round
+  receipt, or the refusal that names what to escalate) and writes nothing.
 - The budget and the ledger follow the work (issue and branch lineage). A new reviewer, a
   replacement PR or a new session does not reset them.
 

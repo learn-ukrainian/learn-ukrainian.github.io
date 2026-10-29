@@ -94,8 +94,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-mode", None, "Review mode label (default: none)"),
         ("advisory-task", None, "Finished advisor task admitting this bounded worker, e.g. advice-42 (default: none)"),
         ("advisory-role", None, "Catalog advisory_roles decision this read-only task records, e.g. "
-         "review_budget_extension; needs --advisory-binding (default: none)"),
-        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget extension request digest "
+         "review_budget_elevation; needs --advisory-binding (default: none)"),
+        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget grant ruling digest "
          "(default: none)"),
         ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check scripts' (default: none)"),
     ):

@@ -132,8 +132,10 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 
 ## Stop and escalate
 
-Stop, and report `BLOCKED <reason>`, when: the proof cannot be obtained; the review budget is
-exhausted or a dispute is unresolved after two replies (`review-loop`); a breaker trips; ownership
+Stop, and report `BLOCKED <reason>`, when: the proof cannot be obtained; the recorder's
+`budget-check` refuses the next review round, or a dispute is unresolved after two replies
+(`review-loop`; a base merge, a CI fix or a conflict resolution after approval is not a stop
+while `budget-check` admits it); a breaker trips; ownership
 or stream membership is lost; the change's own checks fail a second time, or CI fails for an
 unclear reason (an evidenced infrastructure failure uses the head's one rerun and then escalates,
 [pr-watch](references/pr-watch.md#failing-ci)); another PR makes

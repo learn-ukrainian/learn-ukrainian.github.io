@@ -1082,7 +1082,7 @@ Use `--print-advisory-binding` with the exact worker request. The legacy
 advisor-role switches for bounded envelopes are absent; include the requested
 envelope and binding in the read-only advisor's brief. `--advisory-role` and
 `--advisory-binding` serve only the catalog's `advisory_roles` decisions (today
-`review_budget_extension`, read by the verdict recorder): the read-only task records
+`review_budget_elevation`, read by the verdict recorder): the read-only task records
 the role, route and bound digest, and its worker seals the result at finish
 (`bounded_advisory.seal_advisor_result`).
 
