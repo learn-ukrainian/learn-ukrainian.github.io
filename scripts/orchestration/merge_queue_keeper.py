@@ -32,6 +32,7 @@ from scripts.opsec.prepublish import (
     publication_boundary,
     publication_cli,
 )
+from scripts.orchestration import pr_ownership
 from scripts.orchestration.integration_sweep import (
     COMMENTS_UNAVAILABLE,
     Verdict,
@@ -1273,7 +1274,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Guard and replenish approved, green pull requests in configured merge queues.\nUse --report to inspect and --apply only for authorized local scheduling.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nEnvironment: MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state, and runs the\nownerless-PR alert to the CTO inbox (pr_ownership.py, every 5 minutes).\nEnvironment: MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--report", action="store_true", help="Read-only report (default).")
@@ -1325,14 +1326,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         try:
             lines, failed = run(GitHub(root, args.repo), state_path, apply=args.apply)
         except GitHubRateLimited as exc:
-            print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
-            return 0
+            lines, failed = [f"merge queue keeper: skipped reset_at={exc.reset_at}"], False
         except KeeperError as exc:
-            print(f"merge queue keeper failed: {exc}")
-            return 1
-        for line in lines:
+            lines, failed = [f"merge queue keeper failed: {exc}"], True
+        # The ownerless-PR alert runs on its own cadence, whatever the queue pass did, and
+        # never hides the queue pass's result.
+        try:
+            ownership_lines, ownership_failed = pr_ownership.keeper_tick()
+        except Exception as exc:
+            ownership_lines, ownership_failed = [f"pr ownership: FAILED ({type(exc).__name__})"], True
+        for line in [*lines, *ownership_lines]:
             print(line)
-        return int(failed)
+        return int(failed or ownership_failed)
 
 
 if __name__ == "__main__":

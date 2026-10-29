@@ -1,9 +1,9 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
-  kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: ef7e42d55b4788f52c297147da6f22e1f35ce23a
+  kaikki_content_sha256: f46d122c51fda2c6972674a544583c9137efb3ace435256dbe37abf6f8a3e5d3
+  mcp_commit: d0ccabb946c968e4be775bc3a018a656ab00c6a1
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
-  russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
   sources_db: 8313bbccf6cfed4188796b07db9b4fbbbf5ece868226f53af42dfd88d51ca0e4
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
@@ -14355,31 +14355,31 @@ words:
   - form: кавам
     learner: true
     markers: []
-    stress_source: ulif
+    stress_source: trie
     stressed: ка́вам
     tags: noun:inanim:p:v_dav
   - form: кави
     learner: true
     markers: []
-    stress_source: ulif
+    stress_source: trie
     stressed: ка́ви
     tags: noun:inanim:p:v_kly
   - form: кавах
     learner: true
     markers: []
-    stress_source: ulif
+    stress_source: trie
     stressed: ка́вах
     tags: noun:inanim:p:v_mis
   - form: кави
     learner: true
     markers: []
-    stress_source: ulif
+    stress_source: trie
     stressed: ка́ви
     tags: noun:inanim:p:v_naz
   - form: кавами
     learner: true
     markers: []
-    stress_source: ulif
+    stress_source: trie
     stressed: ка́вами
     tags: noun:inanim:p:v_oru
   - form: кав
@@ -14391,7 +14391,7 @@ words:
   - form: кави
     learner: true
     markers: []
-    stress_source: ulif
+    stress_source: trie
     stressed: ка́ви
     tags: noun:inanim:p:v_zna
   gloss_en: coffee

@@ -18,13 +18,13 @@ inline:
           - 'голова'
           - 'кашель'
         explanation: 'Лікар means doctor.'
-      - sentence: "(Say that you have a fever.) У мене ___."
+      - sentence: "У мене ___ 39 градусів."
         answer: 'температура'
         options:
           - 'температура'
           - 'праворуч'
           - 'квиток'
-        explanation: 'У мене температура is a fixed symptom phrase.'
+        explanation: "Температура can be measured in degrees. Праворуч is a direction and квиток is not a temperature measurement."
       - sentence: '___, будь ласка.'
         answer: 'Повторіть'
         options:
@@ -81,7 +81,7 @@ inline:
     title: Choose the clear A1 phrase
     instruction: Choose the phrase that communicates the problem clearly.
     items:
-      - prompt: 'You want to say: My stomach hurts.'
+      - prompt: "— Де болить? — ___"
         options:
           - text: 'У мене болить живіт.'
             correct: true
@@ -90,7 +90,7 @@ inline:
           - text: 'Мій живіт є болить.'
             correct: false
         explanation: 'Use У мене болить + body part.'
-      - prompt: 'You need a doctor.'
+      - prompt: "— Що вам потрібно? — ___"
         options:
           - text: 'Мені потрібен лікар.'
             correct: true
@@ -99,7 +99,7 @@ inline:
           - text: 'Лікар болить.'
             correct: false
         explanation: 'Мені потрібен лікар is the fixed help phrase.'
-      - prompt: 'You do not understand.'
+      - prompt: "— Ви розумієте українську? — ___"
         options:
           - text: 'Я не розумію.'
             correct: true

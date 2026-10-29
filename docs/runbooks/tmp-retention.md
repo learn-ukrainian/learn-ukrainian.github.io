@@ -50,11 +50,29 @@ component.
 Operator retention decisions for #11297 and C-2447. The sweep looks only inside
 the two managed pytest namespaces, `pytest-runs/runs` and the legacy
 `pytest-runs/task-scratch`, below the existing scratch scan roots. It honors
-`LU_SCRATCH_SCAN_ROOT`. Ordinary self-contained fixture `.git` directories are
-disposable only when the existing lease and exclusive lock prove this run's
-owner dead on this boot. Linked worktrees, external Git directories, Git
-symlinks, alternate object stores and unfamiliar Git configuration remain
-protected as `git_metadata`. General temporary directories and older ledger
+`LU_SCRATCH_SCAN_ROOT`. Fixture `.git` metadata is disposable only when the
+existing lease and exclusive lock prove this run's owner dead on this boot, and
+only when it is custodian of nothing outside the run. The test is what the
+metadata would take with it, not whether its configuration is familiar:
+
+- Disposable: remotes and tracking branches, linked worktrees located in the
+  same run (their `.git` files and the registrations under `worktrees/`),
+  alternates naming an outside object store (the run depends on that store;
+  deleting the run leaves it untouched), `extensions.worktreeConfig` with a
+  `config.worktree`, hooks path, credential, alias and similar settings.
+- Judged by shape, not name: any directory holding `HEAD`, `objects` and `refs`
+  (a separate Git directory, a bare repository, a submodule's administrative
+  directory) gets the same checks as `.git`, and so does each linked worktree's own
+  `config.worktree`.
+- Kept as `git_metadata`: a worktree registered here that lives outside the run,
+  a `.git` file pointing outside it, a Git directory that is itself linked or
+  separate (`commondir`, `gitdir`), `core.worktree` resolving outside the run,
+  `include` or `includeIf` (the sweep does not read what they pull in), any
+  other `extensions.*`, `http-alternates`, a Git symlink, a config that does not
+  parse, and `core.bare` or `core.repositoryformatversion` other than the
+  ordinary values.
+
+General temporary directories and older ledger
 entries retain Git preservation, including `purge_problem` and its default
 `tree_facts` check; their quarantine timing and purge eligibility are unchanged.
 The existing pytest inflow settings remain `tmp_path_retention_policy = "failed"`

@@ -9,6 +9,7 @@ import shlex
 import subprocess
 import zlib
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -407,8 +408,12 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
     )
     monkeypatch.setattr(recorder.GitHubAdapter, "identity", lambda self: "fleet")
     monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda self, repository, number: list(comments))
-    # No budget extension request exists unless a test builds one (extension_case).
-    monkeypatch.setattr(recorder, "_budget_extension", lambda **_kwargs: None)
+    # No repair-verification round applies unless a test builds a repository (repair_case).
+    monkeypatch.setattr(recorder, "_repair_round", lambda **_kwargs: None)
+    # No head proves a clean base merge descent unless a test builds a repository (exemption_case).
+    monkeypatch.setattr(recorder, "_clean_merge_descent_prover", lambda *_a, **_k: lambda *_b: None)
+    # No elevated-tier grant exists unless a test seals one (grant_case).
+    monkeypatch.setattr(recorder, "_budget_grant", lambda **_kwargs: None)
 
     def fake_status(**kwargs):
         calls["statuses"] += 1
@@ -2945,14 +2950,15 @@ def test_unknown_history_excludes_all_possible_author_families():
     assert red_team.selected.concrete_model != "gpt-6-luna"
 
 
-# Review budget extension (scripts/review/budget_extension.py): one round past the budget.
-_REAL_BUDGET_EXTENSION = recorder._budget_extension
-EXTENSION_ROLE = "review_budget_extension"
+# Repair-verification round (scripts/review/repair_round.py): one round per lineage outside the budget.
+_REAL_REPAIR_ROUND = recorder._repair_round
+_REAL_DESCENT_PROVER = recorder._clean_merge_descent_prover
+_REAL_BUDGET_GRANT = recorder._budget_grant
 
 
-def extension_repo(tmp_path, *, author="claude/claude-opus-5-5", extra_requests=(), head_kind="merge"):
-    """A PR branch approved at A, then a base change on main with this PR's request, then head N."""
-    repo, origin = tmp_path / "ext-repo", tmp_path / "ext-origin.git"
+def repair_repo(tmp_path, *, head_kind, conflicting=True):
+    """A PR branch approved at A, a base change on main, then head N of ``head_kind``."""
+    repo, origin = tmp_path / "repair-repo", tmp_path / "repair-origin.git"
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env.update(
         GIT_AUTHOR_NAME="t",
@@ -2963,87 +2969,93 @@ def extension_repo(tmp_path, *, author="claude/claude-opus-5-5", extra_requests=
         GIT_CONFIG_NOSYSTEM="1",
     )
 
-    def run(*args):
+    def run(*args, check=True):
         command = ["git", "-C", str(repo), *args]
-        return subprocess.run(command, check=True, capture_output=True, text=True, env=env, timeout=30).stdout.strip()
+        return subprocess.run(command, check=check, capture_output=True, text=True, env=env, timeout=30).stdout.strip()
 
     def commit(path, text, message):
         (repo / path).parent.mkdir(parents=True, exist_ok=True)
         (repo / path).write_text(text)
         run("add", path)
-        run("commit", "-q", "-m", message)
+        run("commit", "-q", "-m", f"{message}\n\nX-Agent: codex/gpt-6.1-sol")
+        return run("rev-parse", "HEAD")
 
-    repo.mkdir()
+    repo.mkdir(parents=True)
     run("init", "-q", "-b", "main")
-    commit("shared.txt", "base\n", "root\n\nX-Agent: claude/claude-opus-5-5")
+    commit("shared.txt", "base\n", "root")
     run("init", "-q", "--bare", str(origin))
     run("--git-dir", str(origin), "symbolic-ref", "HEAD", "refs/heads/main")
     run("remote", "add", "origin", str(origin))
     run("checkout", "-q", "-b", "feature")
-    commit("feature.txt", "feature\n", "feature\n\nX-Agent: codex/gpt-6.1-sol")
-    approved = run("rev-parse", "HEAD")
+    commit("feature.txt", "feature\n", "feature")
+    approved = commit("shared.txt", "feature side\n", "feature shared")
     run("checkout", "-q", "main")
-    commit("shared.txt", "base changed\n", "base change\n\nX-Agent: claude/claude-opus-5-5")
-    request = {
-        "pr": 42,
-        "lineage_id": "issue-42",
-        "approved_head": approved,
-        "reason_class": "post-approval-base-conflict",
-        "grant": 1,
-        "requested_at": "2026-10-28T18:00:00+00:00",
-    }
-    folder = "batch_state/review-budget-extensions"
-    commit(f"{folder}/pr-42.json", json.dumps(request), f"request\n\nX-Agent: {author}\n\nX-Agent: {author}")
-    for name, extra in extra_requests:
-        commit(f"{folder}/{name}", json.dumps({**request, **extra}), "another request\n\nX-Agent: claude/claude-opus-5-5")
+    if conflicting:
+        commit("shared.txt", "base changed\n", "base change")
+    else:
+        commit("other.txt", "other\n", "base change")
     run("push", "-q", "origin", "main")
     run("checkout", "-q", "feature")
-    if head_kind == "merge":
-        run("merge", "-q", "--no-ff", "-m", "merge main\n\nX-Agent: codex/gpt-6.1-sol", "main")
+
+    def conflict_merge(extra=None):
+        run("merge", "-q", "--no-ff", "main", check=False)
+        if extra:
+            (repo / extra).write_text("edited inside the merge\n")
+            run("add", extra)
+        return commit("shared.txt", "base changed\nfeature side\n", "merge main")
+
+    if head_kind == "conflict":
+        head = conflict_merge()
+    elif head_kind == "conflict-extra":
+        head = conflict_merge(extra="feature.txt")
+    elif head_kind == "fix":
+        head = commit("feature.txt", "feature fixed\n", "fix the failing check")
+    elif head_kind == "fix-and-conflict":
+        commit("feature.txt", "feature fixed\n", "fix the failing check")
+        head = conflict_merge()
+    elif head_kind == "non-base-merge":
+        run("checkout", "-q", "-b", "side", approved)
+        commit("side.txt", "side\n", "side")
+        run("checkout", "-q", "feature")
+        run("merge", "-q", "--no-ff", "-m", "merge side", "side")
+        head = run("rev-parse", "HEAD")
     else:
-        commit("feature.txt", "feature fixed\n", "fix\n\nX-Agent: codex/gpt-6.1-sol")
-    return repo, approved, run("rev-parse", "HEAD"), request, run
+        raise AssertionError(head_kind)
+    return repo, approved, head, run
 
 
-def write_extension_approval(tasks, request, *, task_id="ext-approval", decision=(), text=None, seal=True, edited=False, **record):
-    """A finished advisory task for ``request``, sealed at finish as the dispatcher seals it."""
-    from scripts.agent_runtime import bounded_advisory
+def verified_approve(repo, approved, head):
+    """The repair round reviewer's APPROVE, naming the complete delta it verified as only the repair."""
+    from scripts.review import repair_round
 
-    digest = bounded_advisory.canonical_sha256(request)
-    typed = {"decision": "APPROVE", **{key: request[key] for key in ("pr", "lineage_id", "approved_head", "reason_class", "grant")}}
-    typed.update(request_sha256=digest, **dict(decision))
-    text = f"VERDICT: APPROVE\n\n```budget-extension\n{json.dumps(typed)}\n```\n" if text is None else text
-    path = tasks / f"{task_id}.json"
-    data = {
-        "task_id": task_id,
-        "status": "done",
-        "agent": "codex",
-        "model": "gpt-6.1-sol",
-        "mode": "read-only",
-        "repository": REPOSITORY,
-        "advisory_role": EXTENSION_ROLE,
-        "advisory_route": f"advisory_roles.{EXTENSION_ROLE}",
-        "advisory_binding_sha256": digest,
-        "run_nonce": f"{task_id}-run",
-        "result_file": str(path.with_suffix(".result")),
-        **record,
-    }
-    if seal:
-        data["advisory_seal"] = bounded_advisory.seal_advisor_result(
-            text, model=data["model"], run_nonce=data["run_nonce"], fence="budget-extension"
-        )
-    path.with_suffix(".result").write_text(text + ("edited\n" if edited else ""))
-    path.write_text(json.dumps(data))
+    return f"VERDICT: APPROVE\nREPAIR_VERIFIED: {repair_round._diff_sha256(repo, approved, head)}"
 
 
-def extension_case(monkeypatch, tmp_path, **repo_options):
-    """Three spent rounds ending in A's APPROVE, each a published run on record, and the round at N to record."""
-    repo, approved, head, request, run = extension_repo(tmp_path, **repo_options)
+CI_RUN = {"path": ".github/workflows/ci.yml", "conclusion": "failure"}
+
+
+def fake_github_reads(*, failed=(), queue=(), trees=None, issues=()):
+    from scripts.review import repair_round
+
+    return repair_round.GitHubReads(
+        failed_runs=lambda sha: [dict(run) for run in failed if run["head_sha"] == sha],
+        queue_runs=lambda: [dict(run) for run in queue],
+        commit_tree=lambda sha: (trees or {}).get(sha),
+        closing_issues=lambda: list(issues),
+    )
+
+
+def repair_case(monkeypatch, tmp_path, *, head_kind="conflict", conflicting=True, github=None, last_verdict="APPROVED"):
+    """Three spent rounds ending in A's verdict, each a published run on record, and the round at N to record."""
+    from scripts.review import repair_round
+
+    repo, approved, head, run = repair_repo(tmp_path, head_kind=head_kind, conflicting=conflicting)
     tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
-    monkeypatch.setattr(recorder, "_budget_extension", _REAL_BUDGET_EXTENSION)
+    monkeypatch.setattr(recorder, "_repair_round", _REAL_REPAIR_ROUND)
     monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: repo)
-    write_task(tasks, worktree_base_sha=head)
-    rounds = (("1" * 40, "CHANGES_REQUESTED"), ("2" * 40, "CHANGES_REQUESTED"), (approved, "APPROVED"))
+    monkeypatch.setattr(repair_round, "github_reads", lambda *_a: github or fake_github_reads())
+    write_task(tasks, worktree_base_sha=head, reply=verified_approve(repo, approved, head))
+    rounds = (("1" * 40, "CHANGES_REQUESTED"), ("2" * 40, "CHANGES_REQUESTED"), (approved, last_verdict))
     for index, (sha, verdict) in enumerate(rounds, start=1):
         write_task(
             tasks,
@@ -3059,128 +3071,240 @@ def extension_case(monkeypatch, tmp_path, **repo_options):
         item = recorded_verdict(sha, verdict, task_id=f"round-{index}")
         item["created_at"] = item["updated_at"] = f"2026-09-23T11:3{index}:00Z"
         comments.append(item)
-    return tasks, comments, calls, request, head, run
+    return tasks, comments, calls, approved, head, run
 
 
-def test_valid_budget_extension_admits_exactly_one_round(monkeypatch, tmp_path):
-    tasks, comments, calls, request, head, run = extension_case(monkeypatch, tmp_path)
-    write_extension_approval(tasks, request)
+def receipts(tasks):
+    folder = tasks.parent / "review-repair-rounds"
+    return [json.loads(path.read_text()) for path in sorted(folder.glob("*.json"))] if folder.exists() else []
+
+
+def test_conflict_resolution_after_approval_gets_one_repair_round(monkeypatch, tmp_path):
+    tasks, _comments, calls, approved, head, run = repair_case(monkeypatch, tmp_path)
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    objects = run("count-objects", "-v")
     result = recorder.record("review-one", **kwargs)
-    assert result["verdict"] == "APPROVED" and calls["posts"] == 1
-    receipt = result["budget_extension"]
-    assert receipt["approval_task"] == "ext-approval" and receipt["advisor_model"] == "gpt-6.1-sol"
-    assert receipt["approved_head"] == request["approved_head"] and receipt["seats"] == ["anthropic"]
-    # A second seat at N is the same round.
+    # Git's merges for the proof are written to a throwaway store, never the repository's.
+    assert run("count-objects", "-v") == objects
+    receipt = result["repair_round"]
+    assert receipt["class"] == "conflict-resolution" and receipt["conflicted_paths"] == ["shared.txt"]
+    assert (receipt["approved_head"], receipt["candidate_head"], receipt["approved_seats"]) == (approved, head, ["anthropic"])
+    assert len(receipt["delta_sha256"]) == 64 and [commit["kind"] for commit in receipt["commits"]] == ["conflict-merge"]
+    stored = receipts(tasks)
+    assert len(stored) == 2 and {item["state"] for item in stored} == {"consumed"}
+    assert {item["candidate_head"] for item in stored} == {head} and calls["posts"] == 1
+    # A second seat at N is the same round, and its APPROVE attests the delta too.
     write_task(tasks, task_id="seat-two", worktree_base_sha=head)
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[verification\]"):
+        recorder.record("seat-two", **kwargs)
+    write_task(tasks, task_id="seat-two", worktree_base_sha=head, reply=verified_approve(tmp_path / "repair-repo", approved, head))
     assert recorder.record("seat-two", **kwargs)["verdict"] == "APPROVED"
-    # Any later head is a second extension round, refused whatever round 4 decided.
-    later = tmp_path / "ext-repo" / "feature.txt"
-    later.write_text("after the extension round\n")
+    # The approval at N replenishes nothing: any later head refuses, whatever it changes.
+    later = tmp_path / "repair-repo" / "feature.txt"
+    later.write_text("after the repair round\n")
     run("commit", "-q", "-am", "more\n\nX-Agent: codex/gpt-6.1-sol")
-    tasks2, comments2, calls2 = tasks, list(comments), calls
     next_head = run("rev-parse", "HEAD")
-    monkeypatch.setattr(recorder.GitHubAdapter, "comments", lambda self, repository, number: list(comments2))
-    fake = recorder._run_json
-
-    def moved(args, *, input_text=None):
-        if isinstance(args, list) and args[:3] == ["gh", "pr", "view"]:
-            return {"number": 42, "headRefOid": next_head, "headRefName": BRANCH, "state": "OPEN"}
-        return fake(args, input_text=input_text)
-
-    monkeypatch.setattr(recorder, "_run_json", moved)
-    write_task(tasks2, task_id="round-five", worktree_base_sha=next_head)
-    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 4 heads"):
+    move_head(monkeypatch, next_head)
+    write_task(tasks, task_id="round-five", worktree_base_sha=next_head)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 3 heads"):
         recorder.record("round-five", **kwargs)
-    assert calls2["posts"] == 2
+    assert calls["posts"] == 2
 
 
-def test_budget_extension_follows_the_non_author_advisor(monkeypatch, tmp_path):
-    """An OpenAI-authored request needs Opus (operator-expectations item 12); Sol's approval refuses."""
-    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path, author="codex/gpt-6.1-sol")
-    write_extension_approval(tasks, request)
+def test_ci_fix_needs_a_failed_run_tied_to_the_approved_head(monkeypatch, tmp_path):
+    tasks, _comments, calls, approved, _head, _run = repair_case(
+        monkeypatch, tmp_path, head_kind="fix", conflicting=False, github=fake_github_reads()
+    )
     kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    with pytest.raises(recorder.RecordError, match=r"BUDGET_EXTENSION_REFUSED\[approval\].*not the advisor claude-opus-5-5"):
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[evidence\].*no failed CI run is tied"):
         recorder.record("review-one", **kwargs)
-    write_extension_approval(tasks, request, agent="claude", model="claude-opus-5-5")
-    assert recorder.record("review-one", **kwargs)["budget_extension"]["advisor_model"] == "claude-opus-5-5"
-    assert calls["posts"] == 1
+    assert receipts(tasks) == [] and calls["posts"] == 0
+    from scripts.review import repair_round
+
+    # A manual run, another workflow, or a cancelled run of CI is no evidence (review round 1, F1).
+    unrelated = [
+        {**CI_RUN, "id": 4, "head_sha": approved, "event": "workflow_dispatch"},
+        {**CI_RUN, "id": 5, "head_sha": approved, "event": "pull_request", "path": ".github/workflows/docs.yml"},
+        {**CI_RUN, "id": 6, "head_sha": approved, "event": "pull_request", "conclusion": "cancelled"},
+    ]
+    monkeypatch.setattr(repair_round, "github_reads", lambda *_a: fake_github_reads(failed=unrelated))
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[evidence\]"):
+        recorder.record("review-one", **kwargs)
+    failed = [*unrelated, {**CI_RUN, "id": 7, "head_sha": approved, "event": "pull_request"}]
+    monkeypatch.setattr(repair_round, "github_reads", lambda *_a: fake_github_reads(failed=failed))
+    receipt = recorder.record("review-one", **kwargs)["repair_round"]
+    assert receipt["class"] == "ci-fix" and receipt["failed_runs"] == [
+        {"run_id": 7, "event": "pull_request", "conclusion": "failure"}
+    ]
+
+
+def test_ci_fix_ties_a_failed_merge_queue_candidate_by_its_tree(monkeypatch, tmp_path):
+    from scripts.review import repair_round
+
+    tasks, _comments, _calls, approved, _head, run = repair_case(monkeypatch, tmp_path, head_kind="fix", conflicting=False)
+    base = run("rev-parse", "main")
+    tree = run("merge-tree", "--write-tree", base, approved)
+    queue = [
+        {**CI_RUN, "id": 8, "event": "merge_group", "head_branch": f"gh-readonly-queue/main/pr-42-{base}", "head_sha": "c" * 40},
+        # Another PR's candidate, and a candidate whose tree is not this head's, tie nothing.
+        {**CI_RUN, "id": 9, "event": "merge_group", "head_branch": f"gh-readonly-queue/main/pr-41-{base}", "head_sha": "c" * 40},
+        {**CI_RUN, "id": 10, "event": "merge_group", "head_branch": f"gh-readonly-queue/main/pr-42-{base}", "head_sha": "d" * 40},
+    ]
+    reads = fake_github_reads(queue=queue, trees={"c" * 40: tree, "d" * 40: "e" * 40})
+    monkeypatch.setattr(repair_round, "github_reads", lambda *_a: reads)
+    receipt = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["repair_round"]
+    assert receipt["failed_runs"] == [{"run_id": 8, "event": "merge_group", "conclusion": "failure"}]
 
 
 @pytest.mark.parametrize(
-    "case,reason",
+    "head_kind,reason",
     [
-        # A review APPROVE, or any untyped approval, is not an extension decision.
-        ("ordinary-review-approve", r"\[approval\].*exactly one finished approval task, found 0"),
-        ("untyped-approve", r"\[approval\].*holds no ```budget-extension block"),
-        ("wrong-role", r"\[approval\].*did not run as 'review_budget_extension'"),
-        ("wrong-model", r"\[approval\].*not the advisor gpt-6.1-sol"),
-        # A runtime-reported model decides the identity, and only native harnesses advise (F1).
-        ("runtime-model", r"\[approval\].*attests runtime model 'grok-4.7-high'"),
-        ("cursor-harness", r"\[approval\].*ran on harness 'cursor', not a native one"),
-        ("write-mode", r"\[approval\].*did not run read-only"),
-        ("unsealed", r"\[approval\].*no finish-time advisory_seal"),
-        ("edited-result", r"\[approval\].*result hashes to"),
-        ("wrong-field", r"\[approval\].*decided approved_head="),
-        ("wrong-type", r"\[approval\].*decided grant=True"),
-        ("extra-field", r"\[approval\].*must hold exactly"),
-        ("advisor-refused", r"\[approval\].*decided decision='REFUSE'"),
-        ("in-flight", r"\[approval\].*still in flight"),
-        ("second-approval", r"\[approval\].*found 2"),
-        ("changed-request", r"\[approval\].*found 0"),
-        ("second-extension", r"\[request\].*lineage 'issue-42' already has an extension request"),
-        ("bad-request", r"\[request\].*grant must be 1"),
-        ("no-advisor", r"\[approval\].*no single non-author designated advisor"),
-        ("lineage", r"\[lineage\].*round-late finished but its verdict is unpublished"),
-        # Every review the dispatcher or the recorder recognizes is lineage, legacy branch identity included (F2).
-        ("legacy-branch-run", r"\[lineage\].*review task legacy-seat is not terminal"),
-        ("risk-typed-run", r"\[lineage\].*review task risk-seat is not terminal"),
-        ("descent", r"\[descent\].*is not a two-parent merge"),
+        ("conflict-extra", r"\[unclassifiable\].*changes more than the paths its conflict left unresolved"),
+        ("fix-and-conflict", r"\[unclassifiable\].*mixes \['commit', 'conflict-merge'\]"),
+        ("non-base-merge", r"\[unclassifiable\].*which is not on the base"),
     ],
 )
-def test_budget_extension_refuses(monkeypatch, tmp_path, case, reason):
-    repo_options = {
-        "second-extension": {"extra_requests": [("pr-41.json", {"pr": 41})]},
-        "bad-request": {"extra_requests": [("pr-43.json", {"pr": 43, "grant": 2})]},
-        "no-advisor": {"author": "agy/gemini-3.8-flash-high"},
-        "descent": {"head_kind": "commit"},
-    }.get(case, {})
-    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path, **repo_options)
-    approval = {
-        "ordinary-review-approve": dict(
-            seal=False, advisory_role=None, advisory_route=None, advisory_binding_sha256=None, review_profile="code"
-        ),
-        "untyped-approve": dict(text="VERDICT: APPROVE\n\nApproved: one more round for PR #42 at its approved head.\n"),
-        "wrong-role": dict(advisory_role="bounded_advisory_envelope"),
-        "wrong-model": dict(agent="claude", model="claude-opus-5-5"),
-        "runtime-model": dict(agent="cursor", resolved_model="grok-4.7-high", resolved_model_known=True),
-        "cursor-harness": dict(agent="cursor", resolved_model="gpt-6.1-sol", resolved_model_known=True),
-        "write-mode": dict(mode="workspace-write"),
-        "unsealed": dict(seal=False),
-        "edited-result": dict(edited=True),
-        "wrong-field": dict(decision={"approved_head": "c" * 40}),
-        "wrong-type": dict(decision={"grant": True}),
-        "extra-field": dict(decision={"note": "fine"}),
-        "advisor-refused": dict(decision={"decision": "REFUSE"}),
-        "in-flight": dict(status="running"),
-    }.get(case, {})
-    if case == "changed-request":
-        write_extension_approval(tasks, {**request, "requested_at": "2026-10-28T17:00:00+00:00"})
-    else:
-        write_extension_approval(tasks, request, **approval)
-    if case == "second-approval":
-        write_extension_approval(tasks, request, task_id="ext-approval-retry")
-    if case == "lineage":
-        write_task(tasks, task_id="round-late", worktree_base_sha=request["approved_head"], pr=42, review_profile="code")
-    if case == "legacy-branch-run":
-        write_task(tasks, task_id="legacy-seat", worktree_base_sha=request["approved_head"], review_profile="code",
-                   status="running")
-    if case == "risk-typed-run":
-        write_task(tasks, task_id="risk-seat", worktree_base_sha=request["approved_head"], pr=42, review_risk="high",
-                   status="running", schema_version=2)
-    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_EXTENSION_REFUSED" + reason):
+def test_repair_round_refuses_an_unclassifiable_change(monkeypatch, tmp_path, head_kind, reason):
+    tasks, _comments, calls, *_ = repair_case(monkeypatch, tmp_path, head_kind=head_kind)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*REPAIR_ROUND_REFUSED" + reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert receipts(tasks) == [] and calls == {"posts": 0, "statuses": 0}
+
+
+def test_repair_round_needs_an_approval_of_record(monkeypatch, tmp_path):
+    tasks, _comments, calls, *_ = repair_case(monkeypatch, tmp_path, last_verdict="CHANGES_REQUESTED")
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[lineage\].*is not an approval of record"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("key", ["branch", "issue"])
+def test_a_replacement_pr_never_replenishes_the_repair_round(monkeypatch, tmp_path, key):
+    """A receipt of PR #41 on the same branch, or closing the same issue, spends this lineage's round."""
+    from scripts.review import repair_round
+
+    tasks, _comments, calls, _approved, _head, _run = repair_case(
+        monkeypatch, tmp_path, github=fake_github_reads(issues=[7])
+    )
+    keys = repair_round.lineage_keys(REPOSITORY, 41, BRANCH if key == "branch" else "codex/41", [7])
+    spent = {"schema": repair_round.RECEIPT_SCHEMA, "repository": REPOSITORY, "pr": 41, "branch": "x",
+             "lineage_keys": keys, "approved_head": "1" * 40, "candidate_head": "2" * 40, "state": "consumed"}
+    repair_round.record_admission(tasks.parent / "review-repair-rounds", spent)
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[spent\].*used its one repair round at PR #41"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("reply", ["VERDICT: APPROVE", "VERDICT: APPROVE\nREPAIR_VERIFIED: " + "0" * 64])
+def test_a_repair_round_approve_must_verify_the_delta(monkeypatch, tmp_path, reply):
+    """The non-author reviewer verifies the delta is only the repair (review round 1, F1)."""
+    tasks, _comments, calls, _approved, head, _run = repair_case(monkeypatch, tmp_path)
+    write_task(tasks, worktree_base_sha=head, reply=reply)
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[verification\].*REPAIR_VERIFIED: [0-9a-f]{64}"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert receipts(tasks) == [] and calls == {"posts": 0, "statuses": 0}
+
+
+def test_a_repair_round_rejection_needs_no_attestation_and_spends_the_round(monkeypatch, tmp_path):
+    tasks, _comments, calls, _approved, head, _run = repair_case(monkeypatch, tmp_path)
+    write_task(tasks, worktree_base_sha=head, reply="VERDICT: REQUEST_CHANGES\nF1 [P1] shared.txt:1 the merge drops a line.")
+    assert recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["verdict"] == "CHANGES_REQUESTED"
+    assert {item["state"] for item in receipts(tasks)} == {"consumed"} and calls["posts"] == 1
+
+
+def test_an_interrupted_admission_is_completed_under_every_key(monkeypatch, tmp_path):
+    """A retry writes every key the interrupted attempt missed, so a replacement PR finds the round spent (F2)."""
+    from scripts.review import repair_round
+
+    tasks, comments, _calls, _approved, head, _run = repair_case(monkeypatch, tmp_path, github=fake_github_reads(issues=[7]))
+    root = tasks.parent / "review-repair-rounds"
+    receipt = repair_round.admit_repair_round(
+        repository=REPOSITORY, number=42, branch=BRANCH, head=head, comments=comments, login="fleet",
+        task_root=tasks, repo_root=tmp_path / "repair-repo", receipt_root=root,
+    )
+    # Interrupted after the branch key alone.
+    repair_round.record_admission(root, {**receipt, "lineage_keys": [f"branch:{REPOSITORY}:{BRANCH}"]})
+    assert len(receipts(tasks)) == 1
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert len(receipts(tasks)) == 3 and {item["state"] for item in receipts(tasks)} == {"consumed"}
+    replacement = repair_round.lineage_keys(REPOSITORY, 43, "codex/43", [7])
+    with pytest.raises(repair_round.RepairRefused, match=r"\[spent\].*used its one repair round at PR #42"):
+        repair_round.admit_repair_round(
+            repository=REPOSITORY, number=43, branch="codex/43", head=head, comments=comments, login="fleet",
+            task_root=tasks, repo_root=tmp_path / "repair-repo", receipt_root=root,
+            github=fake_github_reads(issues=[7]),
+        )
+    assert any(key.startswith("issue:") for key in replacement)
+
+
+def test_an_unreadable_receipt_under_any_key_refuses(monkeypatch, tmp_path):
+    from scripts.review import repair_round
+
+    tasks, _comments, calls, *_ = repair_case(monkeypatch, tmp_path, github=fake_github_reads(issues=[7]))
+    root = tasks.parent / "review-repair-rounds"
+    root.mkdir()
+    repair_round._receipt_path(root, f"issue:{REPOSITORY}#7").write_text("not json")
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[spent\].*unreadable"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_a_retried_round_rechecks_the_lineage(monkeypatch, tmp_path):
+    """An admitted round whose post failed is not admitted again once A is rejected (review round 2, F4)."""
+    from scripts.review import repair_round
+
+    tasks, comments, calls, approved, head, _run = repair_case(monkeypatch, tmp_path)
+    root = tasks.parent / "review-repair-rounds"
+    receipt = repair_round.admit_repair_round(
+        repository=REPOSITORY, number=42, branch=BRANCH, head=head, comments=comments, login="fleet",
+        task_root=tasks, repo_root=tmp_path / "repair-repo", receipt_root=root,
+    )
+    repair_round.record_admission(root, receipt)
+    write_task(tasks, task_id="late-seat", reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=approved,
+               model="claude-opus-5-5", agent="claude", pr=42, review_profile="code",
+               started_at="2026-09-23T11:59:00.000001+00:00")
+    late = recorded_verdict(approved, "CHANGES_REQUESTED", task_id="late-seat")
+    late["body"] = late["body"].replace("2026-09-23T11:00:00.000001+00:00", "2026-09-23T11:59:00.000001+00:00")
+    comments.append(late)
+    with pytest.raises(recorder.RecordError, match=r"REPAIR_ROUND_REFUSED\[lineage\].*is not an approval of record"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0} and {item["state"] for item in receipts(tasks)} == {"admitted"}
+
+
+def test_an_admitted_round_whose_post_failed_is_retried_as_the_same_round(monkeypatch, tmp_path):
+    from scripts.review import repair_round
+
+    tasks, comments, calls, _approved, head, _run = repair_case(monkeypatch, tmp_path)
+    root = tasks.parent / "review-repair-rounds"
+    receipt = repair_round.admit_repair_round(
+        repository=REPOSITORY, number=42, branch=BRANCH, head=head, comments=comments, login="fleet",
+        task_root=tasks, repo_root=tmp_path / "repair-repo", receipt_root=root,
+    )
+    repair_round.record_admission(root, receipt)
+    assert {item["state"] for item in receipts(tasks)} == {"admitted"}
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["repair_round"]["same_round"] is True and calls["posts"] == 1
+    assert {item["state"] for item in receipts(tasks)} == {"consumed"}
+
+
+def test_budget_check_exposes_the_recorders_decision_before_dispatch(monkeypatch, tmp_path, capsys):
+    tasks, _comments, calls, _approved, head, _run = repair_case(monkeypatch, tmp_path)
+    monkeypatch.setattr(recorder, "budget_check", partial(recorder.budget_check, task_root=tasks))
+    steps = []
+    real_git = recorder._facts_git
+    monkeypatch.setattr(recorder, "_facts_git", lambda root, args, **kw: steps.append(args[0]) or real_git(root, args, **kw))
+    assert recorder.main(["budget-check", "--repository", REPOSITORY, "--pr", "42"]) == 0
+    # It never fetches into the shared repository (review round 1, F3).
+    assert "fetch" not in steps and "ls-remote" in steps
+    decision = json.loads(capsys.readouterr().out)
+    assert decision["admitted"] is True and decision["repair_round"]["candidate_head"] == head
+    # It reads only: no receipt and no verdict.
+    assert receipts(tasks) == [] and calls == {"posts": 0, "statuses": 0}
+    tasks2, _c, _calls, *_ = repair_case(monkeypatch, tmp_path / "two", head_kind="non-base-merge")
+    monkeypatch.setattr(recorder, "budget_check", partial(recorder.budget_check, task_root=tasks2))
+    assert recorder.main(["budget-check", "--repository", REPOSITORY, "--pr", "42"]) == 1
+    refused = json.loads(capsys.readouterr().out)
+    assert refused["admitted"] is False and "REPAIR_ROUND_REFUSED[unclassifiable]" in refused["refusal"]
 
 
 def _archive_run(tasks, task_id, stem):
@@ -3194,25 +3318,540 @@ def _archive_run(tasks, task_id, stem):
     (tasks / f"{task_id}.json").unlink()
 
 
-def test_budget_extension_reads_archived_lineage_runs_by_recorded_task_id(monkeypatch, tmp_path):
-    """An archived run keeps its published task id and its own reply beside it (F2)."""
-    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path)
+def test_repair_round_reads_archived_lineage_runs_by_recorded_task_id(monkeypatch, tmp_path):
+    """An archived run keeps its published task id and its own reply beside it."""
+    tasks, _comments, calls, *_ = repair_case(monkeypatch, tmp_path)
     _archive_run(tasks, "round-3", "round-3.20261028T120000Z.archived")
-    write_extension_approval(tasks, request)
     result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert result["budget_extension"]["seats"] == ["anthropic"] and calls["posts"] == 1
+    assert result["repair_round"]["approved_seats"] == ["anthropic"] and calls["posts"] == 1
 
 
-def test_budget_extension_never_reads_another_archived_runs_reply(monkeypatch, tmp_path):
-    """A stamped archived run is read with its own reply, not an older run's ``<task>.result`` (review round 2, F2)."""
-    tasks, _comments, calls, request, _head, _run = extension_case(monkeypatch, tmp_path)
-    write_task(tasks, task_id="seat", reply="no verdict here", worktree_base_sha=request["approved_head"], pr=42,
+def test_repair_round_never_reads_another_archived_runs_reply(monkeypatch, tmp_path):
+    """A stamped archived run is read with its own reply, not an older run's ``<task>.result``."""
+    tasks, _comments, calls, approved, *_ = repair_case(monkeypatch, tmp_path)
+    write_task(tasks, task_id="seat", reply="no verdict here", worktree_base_sha=approved, pr=42,
                review_profile="code", status="failed")
     _archive_run(tasks, "seat", "seat")
-    write_task(tasks, task_id="seat", reply="VERDICT: BLOCKED", worktree_base_sha=request["approved_head"], pr=42,
+    write_task(tasks, task_id="seat", reply="VERDICT: BLOCKED", worktree_base_sha=approved, pr=42,
                review_profile="code", status="failed")
     _archive_run(tasks, "seat", "seat.20261028T120000Z.archived")
-    write_extension_approval(tasks, request)
     with pytest.raises(recorder.RecordError, match=r"\[lineage\].*review task seat \(failed\) carries an unpublished verdict"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 0, "statuses": 0}
+
+
+# A head that only merges main cleanly after the last fully approved head consumes no round.
+class ExemptionRepo:
+    """A PR branch approved at A while main moves on files the branch does not touch."""
+
+    def __init__(self, tmp_path):
+        self.repo, origin = tmp_path / "exempt-repo", tmp_path / "exempt-origin.git"
+        self.env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+        self.env.update(
+            GIT_AUTHOR_NAME="t",
+            GIT_AUTHOR_EMAIL="t@example.invalid",
+            GIT_COMMITTER_NAME="t",
+            GIT_COMMITTER_EMAIL="t@example.invalid",
+            GIT_CONFIG_GLOBAL=os.devnull,
+            GIT_CONFIG_NOSYSTEM="1",
+        )
+        self.repo.mkdir()
+        self.run("init", "-q", "-b", "main")
+        self.commit("shared.txt", "base\n", "root")
+        self.run("init", "-q", "--bare", str(origin))
+        self.run("--git-dir", str(origin), "symbolic-ref", "HEAD", "refs/heads/main")
+        self.run("remote", "add", "origin", str(origin))
+        self.run("push", "-q", "origin", "main")
+        self.run("checkout", "-q", "-b", "feature")
+        self.approved = self.commit("feature.txt", "feature\n", "feature")
+
+    def run(self, *args, check=True):
+        command = ["git", "-C", str(self.repo), *args]
+        proc = subprocess.run(command, check=check, capture_output=True, text=True, env=self.env, timeout=30)
+        return proc.stdout.strip()
+
+    def commit(self, path, text, message):
+        (self.repo / path).write_text(text)
+        self.run("add", path)
+        self.run("commit", "-q", "-m", f"{message}\n\nX-Agent: codex/gpt-6.1-sol")
+        return self.run("rev-parse", "HEAD")
+
+    def main_moves(self, name):
+        """Advance origin's main by one commit on a file of its own and return to the feature branch."""
+        self.run("checkout", "-q", "main")
+        self.commit(f"{name}.txt", f"{name}\n", name)
+        self.run("push", "-q", "origin", "main")
+        self.run("checkout", "-q", "feature")
+        return self.run("rev-parse", "main")
+
+    def merge(self, ref="main"):
+        self.run("merge", "-q", "--no-ff", "-m", "merge main\n\nX-Agent: codex/gpt-6.1-sol", ref)
+        return self.run("rev-parse", "HEAD")
+
+
+def exemption_case(monkeypatch, tmp_path, git, head, history):
+    """Recorded ``history`` (sha, verdict) rounds and the round at ``head`` to record, with the real proof."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=head)
+    monkeypatch.setattr(recorder, "_clean_merge_descent_prover", _REAL_DESCENT_PROVER)
+    monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: git.repo)
+    write_task(tasks, worktree_base_sha=head)
+    comments.extend(recorded_verdict(sha, verdict, task_id=f"round-{index}") for index, (sha, verdict) in enumerate(history))
+    return tasks, comments, calls
+
+
+def move_head(monkeypatch, head):
+    fake = recorder._run_json
+
+    def moved(args, *, input_text=None):
+        if isinstance(args, list) and args[:3] == ["gh", "pr", "view"]:
+            return {"number": 42, "headRefOid": head, "headRefName": BRANCH, "state": "OPEN"}
+        return fake(args, input_text=input_text)
+
+    monkeypatch.setattr(recorder, "_run_json", moved)
+
+
+SPENT = (("1" * 40, "CHANGES_REQUESTED"), ("2" * 40, "CHANGES_REQUESTED"))
+
+
+def test_clean_base_merge_after_approval_consumes_no_round(monkeypatch, tmp_path):
+    from scripts.orchestration import integration_sweep as sweep
+
+    git = ExemptionRepo(tmp_path)
+    first_base = git.main_moves("base-one")
+    first = git.merge()
+    tasks, comments, calls = exemption_case(
+        monkeypatch, tmp_path, git, first, (*SPENT, (git.approved, "APPROVED"))
+    )
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    # No approval carries forward: the merge head has no verdict of its own yet.
+    assert sweep.lookup_verdict(comments, first, "fleet").state != "APPROVED"
+    result = recorder.record("review-one", **kwargs)
+    assert result["verdict"] == "APPROVED" and calls["posts"] == 1
+    assert result["budget_exemption"] == {
+        "reason": "clean-base-merge",
+        "approved_head": git.approved,
+        "base_merges": [first_base],
+    }
+    # A second clean merge is anchored to the exempt head, now the last fully approved one.
+    second_base = git.main_moves("base-two")
+    second = git.merge()
+    move_head(monkeypatch, second)
+    write_task(tasks, task_id="round-merge-two", worktree_base_sha=second)
+    result = recorder.record("round-merge-two", **kwargs)
+    assert result["budget_exemption"]["approved_head"] == first
+    assert result["budget_exemption"]["base_merges"] == [second_base]
+    # A real commit after them is round 4 of 3; the exempt heads are named but not counted.
+    fixed = git.commit("feature.txt", "feature fixed\n", "fix")
+    move_head(monkeypatch, fixed)
+    write_task(tasks, task_id="round-fix", worktree_base_sha=fixed)
+    with pytest.raises(
+        recorder.RecordError,
+        match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 3 heads \(and 2 clean base merge head",
+    ):
+        recorder.record("round-fix", **kwargs)
+    assert calls["posts"] == 2
+    # Verdict history is kept: every earlier head still reads as recorded.
+    assert [sweep.lookup_verdict(comments, sha, "fleet").state for sha in (git.approved, first, second)] == [
+        "APPROVED"
+    ] * 3
+
+
+def test_exempt_head_rejection_is_not_cleared(monkeypatch, tmp_path):
+    from scripts.orchestration import integration_sweep as sweep
+
+    git = ExemptionRepo(tmp_path)
+    git.main_moves("base-one")
+    head = git.merge()
+    tasks, comments, calls = exemption_case(monkeypatch, tmp_path, git, head, (*SPENT, (git.approved, "APPROVED")))
+    write_task(tasks, reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=head)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert recorder.record("review-one", **kwargs)["budget_exemption"]["approved_head"] == git.approved
+    write_task(tasks, task_id="seat-two", worktree_base_sha=head)
+    with pytest.raises(recorder.RecordError, match="only an APPROVE at a new head clears it"):
+        recorder.record("seat-two", **kwargs)
+    assert sweep.lookup_verdict(comments, head, "fleet").state == "CHANGES_REQUESTED" and calls["posts"] == 1
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "conflict",
+        "manual-merge-edit",
+        "unrelated-commit-after-merge",
+        "unrelated-commit-before-merge",
+        "non-base-merge",
+        "proof-error",
+        "anchor-rejected",
+        "anchor-rejected-after-approval",
+    ],
+)
+def test_clean_base_merge_exemption_refuses(monkeypatch, tmp_path, case):
+    git = ExemptionRepo(tmp_path)
+    history = [*SPENT, (git.approved, "APPROVED")]
+    if case == "conflict":
+        git.run("checkout", "-q", "main")
+        git.commit("feature.txt", "main side\n", "main edits the branch's file")
+        git.run("push", "-q", "origin", "main")
+        git.run("checkout", "-q", "feature")
+        git.run("merge", "-q", "main", check=False)
+        assert git.run("rev-parse", "--verify", "MERGE_HEAD")
+        head = git.commit("feature.txt", "resolved\n", "merge main")
+    elif case == "manual-merge-edit":
+        git.main_moves("base-one")
+        git.run("merge", "-q", "--no-ff", "--no-commit", "main")
+        head = git.commit("feature.txt", "edited inside the merge\n", "merge main")
+    elif case == "unrelated-commit-after-merge":
+        git.main_moves("base-one")
+        git.merge()
+        head = git.commit("feature.txt", "more\n", "more")
+    elif case == "unrelated-commit-before-merge":
+        git.commit("feature.txt", "more\n", "more")
+        git.main_moves("base-one")
+        head = git.merge()
+    elif case == "non-base-merge":
+        git.run("checkout", "-q", "-b", "side", "main")
+        git.commit("side.txt", "side\n", "side")
+        git.run("checkout", "-q", "feature")
+        head = git.merge("side")
+    else:
+        git.main_moves("base-one")
+        head = git.merge()
+        if case == "proof-error":
+            git.run("remote", "remove", "origin")
+        elif case == "anchor-rejected":
+            history[-1] = (git.approved, "CHANGES_REQUESTED")
+        else:
+            history.append((git.approved, "CHANGES_REQUESTED"))
+    tasks, _comments, calls = exemption_case(monkeypatch, tmp_path, git, head, history)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 3 heads and"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_clean_base_merge_descent_needs_every_object(tmp_path):
+    git = ExemptionRepo(tmp_path)
+    tip = git.main_moves("base-one")
+    head = git.merge()
+    prove = partial(recorder.clean_base_merge_descent, git.repo, base_tip=tip)
+    assert prove(approved=git.approved, head=head) == [tip]
+    # A head, approved head or base the object store lacks proves nothing.
+    assert prove(approved=git.approved, head="c" * 40) is None
+    assert prove(approved="c" * 40, head=head) is None
+    assert recorder.clean_base_merge_descent(git.repo, approved=git.approved, head=head, base_tip="c" * 40) is None
+    # The approved head itself adds no merge.
+    assert prove(approved=head, head=head) is None
+
+
+def test_ukrainian_head_is_fully_approved_only_by_both_seats():
+    approved, head = "1" * 40, "2" * 40
+
+    def seat(family, model, profile="ukrainian"):
+        body = recorder.build_comment(
+            sha=approved,
+            task_id=f"seat-{family}-{profile}",
+            started="2026-09-23T11:00:00.000001+00:00",
+            verdict="APPROVED",
+            model=model,
+            family=family,
+            reply="VERDICT: APPROVE",
+            review_profile=profile,
+            sources_mcp_call_count=3 if profile == "ukrainian" else None,
+        )
+        stamp = "2026-09-23T11:30:00Z"
+        return {"body": body, "user": {"login": "fleet"}, "author_association": "MEMBER", "created_at": stamp,
+                "updated_at": stamp}
+
+    calls = []
+
+    def prove(anchor, descendant):
+        calls.append((anchor, descendant))
+        return ["3" * 40]
+
+    one_seat = [seat("anthropic", "claude-opus-5-5")]
+    assert recorder.budget_exempt_heads(one_seat, head, "fleet", prove=prove) == {} and calls == []
+    # An approval of another profile from a second family fills no Ukrainian seat (review round 1, F1).
+    mixed = [*one_seat, seat("xai", "grok-4.7-high", profile="code")]
+    assert recorder.budget_exempt_heads(mixed, head, "fleet", prove=prove) == {} and calls == []
+    both = [*one_seat, seat("openai", "gpt-6.1-sol")]
+    assert recorder.budget_exempt_heads(both, head, "fleet", prove=prove) == {
+        head: {"approved_head": approved, "base_merges": ["3" * 40]}
+    }
+    assert calls == [(approved, head)]
+
+
+# Elevated-tier grant (scripts/review/budget_grant.py): rounds 4 and 5 for one open qualifying blocker.
+GRANT_ROLE = "review_budget_elevation"
+GRANT_REQUEST = {
+    "repository": REPOSITORY,
+    "pr": 42,
+    "lineage_id": BRANCH,
+    "scope_paths": ["docs/readme.md"],
+    "finding_id": "F2",
+    "blocker_class": "state-concurrency",
+    "issuer": "claude-cto",
+    "issuer_model": "claude-opus-5-5",
+    "issued_at": "2026-10-29T01:00:00+00:00",
+}
+OPEN_F2 = "VERDICT: REQUEST_CHANGES\nF2 [P1] docs/readme.md:3 two writers race on the lock. Impact: lost update."
+
+
+def write_grant(tasks, request=GRANT_REQUEST, *, task_id="grant-approval", decision=(), seal=True, edited=False, **record):
+    """A finished elevation advisory task sealing ``request``, as the dispatcher seals it."""
+    from scripts.agent_runtime import bounded_advisory
+
+    digest = bounded_advisory.canonical_sha256(request)
+    typed = {"decision": "APPROVE", **request, "request_sha256": digest, **dict(decision)}
+    text = f"VERDICT: APPROVE\n\n```budget-elevation\n{json.dumps(typed)}\n```\n"
+    path = tasks / f"{task_id}.json"
+    data = {
+        "task_id": task_id,
+        "status": "done",
+        "agent": "codex",
+        "model": "gpt-6.1-sol",
+        "mode": "read-only",
+        "repository": REPOSITORY,
+        "initiator": "claude-cto",
+        "advisory_role": GRANT_ROLE,
+        "advisory_route": f"advisory_roles.{GRANT_ROLE}",
+        "advisory_binding_sha256": digest,
+        "run_nonce": f"{task_id}-run",
+        "result_file": str(path.with_suffix(".result")),
+        **record,
+    }
+    if seal:
+        data["advisory_seal"] = bounded_advisory.seal_advisor_result(
+            text, model=data["model"], run_nonce=data["run_nonce"], fence="budget-elevation"
+        )
+    path.with_suffix(".result").write_text(text + ("edited\n" if edited else ""))
+    path.write_text(json.dumps(data))
+
+
+def verdict_with_reply(sha, verdict, reply, *, task_id):
+    item = recorded_verdict(sha, verdict, task_id=task_id)
+    item["body"] = recorder.build_comment(
+        sha=sha,
+        task_id=task_id,
+        started="2026-09-23T11:00:00.000001+00:00",
+        verdict=verdict,
+        model="claude-opus-5-5",
+        family="anthropic",
+        reply=reply,
+    )
+    return item
+
+
+def grant_case(monkeypatch, tmp_path, *, last_reply=OPEN_F2, last_verdict="CHANGES_REQUESTED", changed=("docs/readme.md",)):
+    """Three spent rounds on a non-security change, the last one the cited rejection, and round 4 at SHA."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    monkeypatch.setattr(recorder, "_budget_grant", _REAL_BUDGET_GRANT)
+    facts = facts_for({"google"}, changed_paths=changed)
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_a, **_k: facts)
+    comments.extend(recorded_verdict(sha, "CHANGES_REQUESTED", task_id=f"round-{sha[0]}") for sha in ("1" * 40, "2" * 40))
+    comments.append(verdict_with_reply("3" * 40, last_verdict, last_reply, task_id="round-3"))
+    return tasks, comments, calls
+
+
+def test_elevated_grant_admits_rounds_four_and_five_only(monkeypatch, tmp_path):
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    write_grant(tasks)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    write_task(tasks, reply=OPEN_F2.replace("Impact", "Still open: the retry path. Impact"))
+    receipt = recorder.record("review-one", **kwargs)["budget_grant"]
+    assert receipt["grant_task"] == "grant-approval" and receipt["advisor_model"] == "gpt-6.1-sol"
+    assert receipt["finding_id"] == "F2" and receipt["cited_verdict_head"] == "3" * 40
+    # Round 5 cites the blocker round 4 left open; a second grant adds no round (F3 for another finding).
+    write_grant(tasks, {**GRANT_REQUEST, "finding_id": "F3"}, task_id="grant-two")
+    move_head(monkeypatch, "4" * 40)
+    write_task(tasks, task_id="round-five", worktree_base_sha="4" * 40, reply=OPEN_F2)
+    assert recorder.record("round-five", **kwargs)["budget_grant"]["cited_verdict_head"] == SHA
+    # Five budgeted rounds in total: round 6 refuses whatever grants exist.
+    move_head(monkeypatch, "5" * 40)
+    write_task(tasks, task_id="round-six", worktree_base_sha="5" * 40)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 5 heads"):
+        recorder.record("round-six", **kwargs)
+    assert calls["posts"] == 2
+
+
+def test_elevated_grant_needs_the_blocker_open_before_each_round(monkeypatch, tmp_path):
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    write_grant(tasks)
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert "budget_grant" in recorder.record("review-one", **kwargs)
+    # Round 4 approved, so no evidenced open blocker justifies round 5.
+    move_head(monkeypatch, "4" * 40)
+    write_task(tasks, task_id="round-five", worktree_base_sha="4" * 40)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[blocker\].*does not leave F2 an open"):
+        recorder.record("round-five", **kwargs)
+    assert calls["posts"] == 1
+
+
+@pytest.mark.parametrize(
+    "case,reason",
+    [
+        ("session-issuer", r"\[issuer\].*is not the stable CTO identity"),
+        ("initiator", r"\[issuer\].*was dispatched by 'claude/cto-7923-worker', not the issuer"),
+        ("issuer-model", r"\[issuer\].*has no resolvable family"),
+        ("repository", r"\[binding\].*names repository 'owner/other'"),
+        ("lineage", r"\[binding\].*follows lineage 'codex/other'"),
+        ("binding", r"\[binding\].*is not bound to the ruling it carries"),
+        ("scope", r"\[scope\].*does not cover changed paths \['docs/readme.md'\]"),
+        ("resolved", r"\[blocker\]"),
+        ("p2", r"\[blocker\]"),
+        ("other-finding", r"\[blocker\].*does not leave F3 an open"),
+        # The finding's complete current disposition decides, not its first line (review round 1, F1).
+        ("resolved-next-line", r"\[blocker\]"),
+        ("fixed-with-evidence", r"\[blocker\]"),
+        ("resolved-later", r"\[blocker\]"),
+        ("edited-verdict", r"\[blocker\]"),
+        ("latest-approved", r"\[blocker\]"),
+        ("same-family-advisor", r"\[approval\].*not the advisor gpt-6.1-sol"),
+        ("cursor", r"\[approval\].*ran on harness 'cursor', not a native one"),
+        ("unsealed", r"\[approval\].*no finish-time advisory_seal"),
+        ("edited", r"\[approval\].*result hashes to"),
+        ("refused", r"\[approval\].*decided decision='REFUSE'"),
+        ("blocker-class", r"\[request\].*blocker_class must be one of"),
+        ("extra-field", r"\[approval\].*must hold exactly"),
+    ],
+)
+def test_elevated_grant_refuses(monkeypatch, tmp_path, case, reason):
+    last = {
+        "resolved": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "resolved.")),
+        "p2": dict(last_reply=OPEN_F2.replace("[P1]", "[P2]")),
+        "latest-approved": dict(last_verdict="APPROVED", last_reply="VERDICT: APPROVE\nF2 [P1] still open"),
+        "resolved-next-line": dict(last_reply=OPEN_F2 + "\n  Status: resolved at the new head."),
+        "fixed-with-evidence": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "fixed with evidence.")),
+        "resolved-later": dict(last_reply=OPEN_F2 + "\n\nF2 [P1] docs/readme.md:3 resolved."),
+    }.get(case, {})
+    tasks, comments, calls = grant_case(monkeypatch, tmp_path, **last)
+    if case == "edited-verdict":
+        comments[-1]["updated_at"] = "2026-09-23T11:59:00Z"
+    request = {
+        "session-issuer": {"issuer": "claude-cto-27b21508"},
+        "issuer-model": {"issuer_model": "not-a-model"},
+        "repository": {"repository": "owner/other"},
+        "lineage": {"lineage_id": "codex/other"},
+        "scope": {"scope_paths": ["docs/other.md"]},
+        "other-finding": {"finding_id": "F3"},
+        "blocker-class": {"blocker_class": "style"},
+    }.get(case, {})
+    options = {
+        "initiator": dict(initiator="claude/cto-7923-worker"),
+        "binding": dict(advisory_binding_sha256="e" * 64),
+        "same-family-advisor": dict(agent="claude", model="claude-opus-5-5"),
+        "cursor": dict(agent="cursor"),
+        "unsealed": dict(seal=False),
+        "edited": dict(edited=True),
+        "refused": dict(decision={"decision": "REFUSE"}),
+        "extra-field": dict(decision={"note": "fine"}),
+    }.get(case, {})
+    write_grant(tasks, {**GRANT_REQUEST, **request}, **options)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED.*BUDGET_GRANT_REFUSED" + reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("record", [dict(pr_number=None), dict(status="running")])
+def test_elevated_grant_for_another_pr_or_unfinished_is_not_this_prs(monkeypatch, tmp_path, record):
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    if record.get("pr_number", 0) is None:
+        write_grant(tasks, {**GRANT_REQUEST, "pr": 41})
+    else:
+        write_grant(tasks, **record)
+    with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED") as refused:
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert "BUDGET_GRANT" not in str(refused.value) and calls == {"posts": 0, "statuses": 0}
+
+
+def test_security_paths_keep_five_rounds_without_a_grant(monkeypatch, tmp_path):
+    tasks, _comments, _calls = grant_case(monkeypatch, tmp_path, changed=("scripts/review/record_cf_verdict.py",))
+    monkeypatch.setattr(recorder, "_budget_grant", lambda **_kwargs: pytest.fail("no grant is read"))
+    assert recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")["verdict"] == "APPROVED"
+
+
+def test_budget_grant_digest_verb(tmp_path, capsys):
+    from scripts.agent_runtime import bounded_advisory
+
+    ruling = tmp_path / "ruling.json"
+    ruling.write_text(json.dumps(GRANT_REQUEST))
+    assert recorder.main(["budget-grant", "digest", str(ruling)]) == 0
+    assert capsys.readouterr().out.strip() == bounded_advisory.canonical_sha256(GRANT_REQUEST)
+    ruling.write_text(json.dumps({**GRANT_REQUEST, "scope_paths": ["b", "a"]}))
+    assert recorder.main(["budget-grant", "digest", str(ruling)]) == 1
+    assert "scope_paths must be a sorted list" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        OPEN_F2.replace("Impact: lost update.", "not resolved: the retry path still races."),
+        "VERDICT: REQUEST_CHANGES\n- **F2** [P1] docs/readme.md:3 still open. Impact: lost update.",
+        OPEN_F2 + "\n\nF1 [P2] docs/readme.md:9 resolved.",
+    ],
+    ids=["not-resolved", "bulleted", "other-finding-resolved"],
+)
+def test_elevated_grant_reads_an_open_finding(monkeypatch, tmp_path, reply):
+    tasks, _comments, _calls = grant_case(monkeypatch, tmp_path, last_reply=reply)
+    write_grant(tasks)
+    assert "budget_grant" in recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+
+@pytest.mark.parametrize("other", ["repository", "scope", "malformed"])
+def test_one_valid_grant_admits_beside_unrelated_or_outdated_ones(monkeypatch, tmp_path, other):
+    """Each grant is judged on its own; a malformed grant for another PR is isolated (review round 1, F2 and F4)."""
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    if other == "repository":
+        write_grant(tasks, {**GRANT_REQUEST, "repository": "owner/other"}, task_id="grant-a")
+    elif other == "scope":
+        write_grant(tasks, {**GRANT_REQUEST, "scope_paths": ["docs/older.md"]}, task_id="grant-a")
+    else:
+        write_grant(tasks, {**GRANT_REQUEST, "pr": 999, "blocker_class": []}, task_id="grant-a")
+    write_grant(tasks, task_id="grant-b")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["budget_grant"]["grant_task"] == "grant-b" and calls["posts"] == 1
+
+
+@pytest.mark.parametrize("stem", ["grant-approval", "grant-approval.20261029T010000Z.archived"])
+def test_archived_grant_keeps_its_seal(monkeypatch, tmp_path, stem):
+    """Archiving moves the record and its result together and keeps the hot result_file (review round 1, F3)."""
+    tasks, _comments, calls = grant_case(monkeypatch, tmp_path)
+    write_grant(tasks)
+    archive = tasks / recorder.ARCHIVE_DIR_NAME
+    archive.mkdir()
+    (tasks / "grant-approval.json").rename(archive / f"{stem}.json")
+    (tasks / "grant-approval.result").rename(archive / f"{stem}.result")
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["budget_grant"]["grant_task"] == "grant-approval" and calls["posts"] == 1
+    # An archived record whose result_file names another task's result still refuses.
+    record = json.loads((archive / f"{stem}.json").read_text())
+    record["result_file"] = str(tasks / "other.result")
+    (archive / f"{stem}.json").write_text(json.dumps(record))
+    move_head(monkeypatch, "4" * 40)
+    write_task(tasks, task_id="round-five", worktree_base_sha="4" * 40)
+    with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[approval\].*is not its canonical result"):
+        recorder.record("round-five", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+
+@pytest.mark.parametrize(
+    "entry,open_",
+    [
+        # Review rounds 2 and 3, F1: any closing language closes the entry, whatever it is about.
+        ("F2 [P1] docs/readme.md:3 fixed with evidence; F3 remains open.", False),
+        ("F2 [P1] docs/readme.md:3 still open.\n  Status: resolved at the new head.", False),
+        ("F2 [P1] docs/readme.md:3 was not resolved in round 1; now fixed with evidence.", False),
+        ("F2 [P1] docs/readme.md:3 shares a cause with F3; F2 is resolved with evidence.", False),
+        ("F2 [P1] docs/readme.md:3 shares a cause with F3.\n  Status: resolved.", False),
+        ("F2 [P1] docs/readme.md:3 resolved.", False),
+        ("F2 [P1] docs/readme.md:3 declined with evidence at docs/readme.md:9.", False),
+        # Mixed language is ambiguous and refuses, even when it ends open.
+        ("F2 [P1] docs/readme.md:3 fixed in round 2, but still open: the retry path races.", False),
+        ("F2 [P1] docs/readme.md:3 still open: unchanged since F1 was resolved.", False),
+        # Plain open language, or a newly raised finding, is evidence.
+        ("F2 [P1] docs/readme.md:3 not resolved: the retry path still races.", True),
+        ("F2 [P1] docs/readme.md:3 still open: the retry path races. Impact: lost update.", True),
+        ("F2 [P1] docs/readme.md:3 two writers race on the lock. Impact: lost update.", True),
+    ],
+)
+def test_finding_disposition_refuses_any_closing_language(entry, open_):
+    from scripts.review.budget_grant import finding_is_open
+
+    assert finding_is_open(entry) is open_

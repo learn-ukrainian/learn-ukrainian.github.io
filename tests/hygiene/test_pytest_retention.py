@@ -8,6 +8,7 @@ import json
 import math
 import os
 import resource
+import shutil
 import stat
 import subprocess
 import sys
@@ -1617,13 +1618,92 @@ def test_reaped_lease_owner_is_reclaimed_without_all_process_visibility(area, mo
 
 
 @pytest.mark.parametrize("ns", [pytest_scratch.RUNS_DIRNAME, task_scratch.NAMESPACE_DIRNAME])
+@pytest.mark.parametrize("case", [
+    "remote_and_branch", "linked_worktrees_inside", "alternates_outside", "worktree_config", "hooks_path",
+    "core_worktree_inside", "submodule_style_gitfile", "separate_git_dir_inside", "bare_repo_with_remote",
+    "linked_worktree_config",
+])
+def test_self_contained_fixture_git_is_reclaimed_and_outside_is_untouched(area, monkeypatch, tmp_path, ns, case):
+    """Fixture repositories as the test suite really makes them: nothing here is custodian of outside data.
+
+    A remote, a branch tracking it, linked worktrees located in the same run, an
+    alternates file naming an outside object store, a per-worktree config and a
+    hooks path only describe the repository; deleting the run removes none of
+    what they name (host measurement: these kept most of tens of GiB of dead runs).
+    """
+    root, args = area
+    pid, start = reaped_pid()
+    run = leased(root, "fixture-self-contained", pid=pid, start_time=start, boot_id=current_boot(), ns=ns)
+    fixture = run / "scratch" / "fixture"
+    outside = tmp_path / "external"
+    (outside / "objects").mkdir(parents=True)
+    (outside / "sentinel").write_text("keep outside")
+
+    def git(*arguments, cwd=None):
+        return subprocess.run(["git", *map(str, arguments)], check=True, capture_output=True, timeout=10, cwd=cwd)
+
+    git("init", fixture)
+    metadata = fixture / ".git"
+    commit = ["-c", "user.name=Fixture", "-c", "user.email=fixture@example.test", "commit", "--allow-empty", "-m", "x"]
+    if case == "remote_and_branch":
+        git("remote", "add", "origin", "https://example.test/fixture.git", cwd=fixture)
+        git("config", "branch.main.remote", "origin", cwd=fixture)
+        git("config", "branch.main.merge", "refs/heads/main", cwd=fixture)
+    elif case == "linked_worktrees_inside":
+        git(*commit, cwd=fixture)
+        git("worktree", "add", "--detach", run / "scratch" / "linked-a", cwd=fixture)
+        git("worktree", "add", "--detach", fixture / "linked-b", cwd=fixture)
+    elif case == "alternates_outside":
+        (metadata / "objects" / "info").mkdir(exist_ok=True)
+        (metadata / "objects" / "info" / "alternates").write_text(str(outside / "objects") + "\n")
+    elif case == "worktree_config":
+        git("config", "extensions.worktreeConfig", "true", cwd=fixture)
+        git("config", "--file", metadata / "config.worktree", "core.sparseCheckout", "true")
+    elif case == "hooks_path":
+        git("config", "core.hooksPath", str(outside), cwd=fixture)
+        git("config", "credential.helper", "store", cwd=fixture)
+    elif case == "core_worktree_inside":
+        git("config", "--file", metadata / "config", "core.worktree", "../checkout")
+    elif case == "separate_git_dir_inside":
+        shutil.rmtree(fixture)
+        git("init", "--separate-git-dir", run / "scratch" / "meta", fixture)
+        git(*commit, cwd=fixture)
+        git("worktree", "add", "--detach", run / "scratch" / "linked", cwd=fixture)
+    elif case == "bare_repo_with_remote":
+        git("clone", "--bare", "--no-hardlinks", fixture, run / "scratch" / "canonical.git")
+        git("--git-dir", run / "scratch" / "canonical.git", "remote", "add", "mirror", "https://example.test/x.git")
+    elif case == "linked_worktree_config":
+        git(*commit, cwd=fixture)
+        git("config", "extensions.worktreeConfig", "true", cwd=fixture)
+        git("worktree", "add", "--detach", run / "scratch" / "linked", cwd=fixture)
+        (config,) = (metadata / "worktrees").glob("*/")
+        git("config", "--file", config / "config.worktree", "core.sparseCheckout", "true")
+    else:
+        (fixture / "module").mkdir()
+        (fixture / "module" / ".git").write_text("gitdir: ../.git/modules/module\n")
+    later(monkeypatch, 3 * HOUR)
+    before = tree_state(root, outside)
+    dry = tmp_sweep.sweep(**args)["pytest_retention"]
+    assert (row_for(dry, run)["decision"], row_for(dry, run)["reason"]) == ("would_delete", "inactive_pytest_scratch")
+    assert tree_state(root, outside) == before
+    report = tmp_sweep.sweep(**args, apply=True)["pytest_retention"]
+    assert row_for(report, run)["decision"] == "deleted" and not run.exists()
+    assert (outside / "sentinel").read_text() == "keep outside"
+    assert (outside / "objects").is_dir()
+
+
+@pytest.mark.parametrize("ns", [pytest_scratch.RUNS_DIRNAME, task_scratch.NAMESPACE_DIRNAME])
 @pytest.mark.parametrize("case,reason", [
     ("separate_git_dir", "git_metadata"), ("linked_worktree", "git_metadata"),
     ("external_worktree", "git_metadata"), ("git_symlink", "git_metadata"),
-    ("objects_symlink", "git_metadata"), ("alternates", "git_metadata"),
+    ("objects_symlink", "git_metadata"), ("http_alternates", "git_metadata"),
     ("commondir", "git_metadata"), ("core_worktree", "git_metadata"),
     ("include", "git_metadata"), ("extension", "git_metadata"),
-    ("unfamiliar_config", "git_metadata"), ("invalid_config", "git_metadata"),
+    ("worktree_config_redirect", "git_metadata"), ("gitfile_outside", "git_metadata"),
+    ("linked_config_redirect", "git_metadata"), ("linked_config_include", "git_metadata"),
+    ("separate_dir_outside_worktree", "git_metadata"), ("submodule_admin_outside_worktree", "git_metadata"),
+    ("bare_repo_outside_worktree", "git_metadata"),
+    ("invalid_config", "git_metadata"),
     ("no_owner", "git_metadata"), ("live_owner", "git_metadata"),
     ("unknown_owner", "git_metadata"), ("probe_failure", "git_metadata"),
     ("hardlink", "hardlinked_content"), ("fifo", "special_file"),
@@ -1644,6 +1724,20 @@ def test_fixture_git_custody_and_safety_preserve(area, monkeypatch, tmp_path, ns
 
     if case == "separate_git_dir":
         git("init", "--separate-git-dir", outside / "metadata", fixture)
+    elif case == "separate_dir_outside_worktree":
+        # The inside-run .git file passes containment; the separate directory it names holds the registration.
+        git("init", "--separate-git-dir", run / "scratch" / "meta", fixture)
+        git("-C", fixture, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
+            "commit", "--allow-empty", "-m", "fixture")
+        git("-C", fixture, "worktree", "add", "--detach", outside / "worktree")
+    elif case in {"submodule_admin_outside_worktree", "bare_repo_outside_worktree"}:
+        git("init", fixture)
+        git("-C", fixture, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
+            "commit", "--allow-empty", "-m", "fixture")
+        admin = fixture / ".git" / "modules" / "sub" if case.startswith("submodule") else run / "scratch" / "bare.git"
+        admin.parent.mkdir(parents=True, exist_ok=True)
+        git("clone", "--bare", "--no-hardlinks", fixture, admin)
+        git("--git-dir", admin, "worktree", "add", "--detach", outside / "worktree")
     elif case == "linked_worktree":
         git("init", outside / "source")
         git("-C", outside / "source", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
@@ -1656,22 +1750,38 @@ def test_fixture_git_custody_and_safety_preserve(area, monkeypatch, tmp_path, ns
             git("-C", fixture, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
                 "commit", "--allow-empty", "-m", "fixture")
             git("-C", fixture, "worktree", "add", "--detach", outside / "worktree")
+        elif case in {"linked_config_redirect", "linked_config_include"}:
+            git("-C", fixture, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
+                "commit", "--allow-empty", "-m", "fixture")
+            git("-C", fixture, "config", "extensions.worktreeConfig", "true")
+            git("-C", fixture, "worktree", "add", "--detach", run / "scratch" / "linked")
+            key, value = (
+                ("core.worktree", str(outside)) if case.endswith("redirect")
+                else ("include.path", str(outside / "sentinel"))
+            )
+            (config,) = (metadata / "worktrees").glob("*/")
+            git("config", "--file", config / "config.worktree", key, value)
         elif case == "git_symlink":
             metadata.rename(outside / "metadata")
             metadata.symlink_to(outside / "metadata", target_is_directory=True)
         elif case == "objects_symlink":
             (metadata / "objects").rename(outside / "objects")
             (metadata / "objects").symlink_to(outside / "objects", target_is_directory=True)
-        elif case == "alternates":
-            (metadata / "objects" / "info" / "alternates").write_text(str(outside) + "\n")
+        elif case == "http_alternates":
+            (metadata / "objects" / "info" / "http-alternates").write_text("https://example.test/objects\n")
+        elif case == "gitfile_outside":
+            (fixture / "nested").mkdir()
+            (fixture / "nested" / ".git").write_text(f"gitdir: {outside / 'metadata'}\n")
+        elif case == "worktree_config_redirect":
+            git("config", "--file", metadata / "config", "extensions.worktreeConfig", "true")
+            git("config", "--file", metadata / "config.worktree", "core.worktree", str(outside))
         elif case == "commondir":
             (metadata / "commondir").write_text(str(outside) + "\n")
-        elif case in {"core_worktree", "include", "extension", "unfamiliar_config"}:
+        elif case in {"core_worktree", "include", "extension"}:
             key, value = {
                 "core_worktree": ("core.worktree", str(outside)),
                 "include": ("include.path", str(outside / "sentinel")),
-                "extension": ("extensions.worktreeConfig", "true"),
-                "unfamiliar_config": ("core.hooksPath", str(outside)),
+                "extension": ("extensions.objectFormat", "sha256"),
             }[case]
             git("config", "--file", metadata / "config", key, value)
         elif case == "invalid_config":
