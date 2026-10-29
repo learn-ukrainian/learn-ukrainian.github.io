@@ -4445,6 +4445,8 @@ def _sum20_mirror_records(official, db_path: str | Path | None, key: str) -> lis
 
     mirror = open_sum20_mirror(official, db_path, repository_root=PROJECT_ROOT)
     if mirror is None:
+        return []
+    if mirror is official:
         return mirror_records(official, key)
     try:
         return mirror_records(mirror, key, official)

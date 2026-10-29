@@ -11,14 +11,19 @@ back the same way. The official ``sum20_*`` tables, their quarantine marks and
 the crawl tables are never written; verification proves them unchanged.
 
 **Exclusion.** The live store must be held (``scripts.storage hold``: no write
-bit on the file or its sidecars), and no process may hold a writable descriptor
-on it. This applies when ``build`` starts and again at publication. A
-publication also requires the live file to be identical to the one the
-candidate was copied from, with an empty WAL. Before the rename, ``--drain-unit``
-units are stopped and every other holder is awaited for ``--wait-drained``
-seconds. The units are started again afterwards, whatever the outcome. Only
-``--allow-readonly-holders`` lets a publication proceed while read-only
-descriptors remain; those readers keep the old inode until they reopen.
+bit on the file or its sidecars). ``build`` refuses a writable or unknown
+descriptor and any write lock. A publication needs a full drain: no process
+with a descriptor and no POSIX lock on the file or its sidecars. It waits up
+to ``--wait-drained`` seconds for other users to close, then stops the
+``--drain-unit`` units and checks again. It also requires the live file to be
+identical to the one the candidate was copied from, with an empty WAL.
+
+**Publication.** A journal is written before the previous generation is
+retained as a durable hard link. The old inode is then fenced at mode 000, so
+an open in the last instant fails instead of reading it. After a final check
+comes the rename. Every command first finishes or undoes a publication a crash
+interrupted. Units are started again whatever happens, and a failure to
+restart one is reported apart from the committed swap.
 
 The writer runs only from the primary checkout on a local filesystem, under an
 exclusive non-blocking lock. It makes no network request.
@@ -35,7 +40,8 @@ Examples:
 Outputs: one JSON object on stdout; candidates, backups and receipts under
 ``data/sources/``.
 Exit codes: 0 success; 1 verification failed (live store untouched);
-2 refused (arguments, locality, lock, staging, hold, holders, barrier).
+2 refused (arguments, locality, lock, staging, hold, holders, barrier, unit stop);
+3 published or restored, but a drained unit failed to start again.
 """
 
 from __future__ import annotations
@@ -97,6 +103,10 @@ class Refused(RuntimeError):
 
 class VerificationFailed(RuntimeError):
     """The new generation failed a check; the live store was not touched."""
+
+    def __init__(self, reason: str, **detail: Any) -> None:
+        super().__init__(reason)
+        self.detail = detail
 
 
 @dataclass(frozen=True)
@@ -273,12 +283,17 @@ def _require_quiet(identity: dict[str, int]) -> None:
 
 
 def holders(paths: Sequence[Path], proc: Path = Path("/proc")) -> dict[str, Any]:
-    """Processes with a descriptor on any of ``paths`` (matched by inode), and whether it is writable.
+    """Every observable use of ``paths`` (matched by inode), for the exclusion checks.
 
-    Processes whose descriptors cannot be read (another user) are counted, not
-    guessed. This process is excluded.
+    - ``holders``: processes with a descriptor on a path; ``writable`` is ``None``
+      when the descriptor's access mode cannot be read, and counts as unknown.
+    - ``locks``: POSIX locks on a path from ``/proc/locks``. That table covers every
+      process, including those whose descriptors cannot be listed, and SQLite
+      holds such locks for each connection that has read the database.
+    - ``unscannable``: live processes whose descriptor table cannot be listed.
+      Exited processes are skipped; this process is excluded.
     """
-    inodes = {}
+    inodes: dict[tuple[int, int], str] = {}
     for path in paths:
         try:
             info = path.stat()
@@ -286,39 +301,82 @@ def holders(paths: Sequence[Path], proc: Path = Path("/proc")) -> dict[str, Any]
             continue
         inodes[(info.st_dev, info.st_ino)] = path.name
     found: dict[int, dict[str, Any]] = {}
-    unreadable = 0
+    unscannable: list[dict[str, Any]] = []
     for entry in proc.iterdir():
         if not entry.name.isdigit() or int(entry.name) == os.getpid():
             continue
         try:
             descriptors = list((entry / "fd").iterdir())
         except PermissionError:
-            unreadable += 1
+            unscannable.append({"pid": int(entry.name), "command": _comm(proc, int(entry.name))})
             continue
         except (FileNotFoundError, ProcessLookupError):
             continue
         for descriptor in descriptors:
             try:
                 info = descriptor.stat()
+            except OSError:
+                continue  # closed between listing and reading
+            name = inodes.get((info.st_dev, info.st_ino))
+            if name is None:
+                continue
+            holder = found.setdefault(int(entry.name), {"pid": int(entry.name), "writable": False, "files": []})
+            try:
                 flags = next(
                     int(line.split()[1], 8)
                     for line in (entry / "fdinfo" / descriptor.name).read_text().splitlines()
                     if line.startswith("flags:")
                 )
+                writable: bool | None = (flags & os.O_ACCMODE) != os.O_RDONLY
+            except FileNotFoundError:
+                continue
             except (OSError, StopIteration, ValueError):
-                continue
-            if (info.st_dev, info.st_ino) not in inodes:
-                continue
-            holder = found.setdefault(int(entry.name), {"pid": int(entry.name), "writable": False, "files": []})
-            holder["writable"] = holder["writable"] or (flags & os.O_ACCMODE) != os.O_RDONLY
-            if inodes[(info.st_dev, info.st_ino)] not in holder["files"]:
-                holder["files"].append(inodes[(info.st_dev, info.st_ino)])
+                writable = None
+            if holder["writable"] is not True:
+                holder["writable"] = None if writable is None else (holder["writable"] or writable)
+            if name not in holder["files"]:
+                holder["files"].append(name)
     for pid, holder in found.items():
+        holder["command"] = _comm(proc, pid)
+    return {
+        "holders": sorted(found.values(), key=lambda h: h["pid"]),
+        "locks": _locks(inodes, proc / "locks"),
+        "unscannable": sorted(unscannable, key=lambda h: h["pid"]),
+    }
+
+
+def _comm(proc: Path, pid: int) -> str:
+    try:
+        return (proc / str(pid) / "comm").read_text().strip()
+    except OSError:
+        return ""
+
+
+def _locks(inodes: dict[tuple[int, int], str], table: Path) -> list[dict[str, Any]]:
+    """Entries of the kernel lock table on ``inodes`` (``major:minor:inode`` is hexadecimal device, decimal inode)."""
+    wanted = {(os.major(dev), os.minor(dev), ino): name for (dev, ino), name in inodes.items()}
+    found = []
+    try:
+        lines = table.read_text().splitlines()
+    except FileNotFoundError:
+        return found
+    for line in lines:
+        fields = line.split()
         try:
-            holder["command"] = (proc / str(pid) / "comm").read_text().strip()
-        except OSError:
-            holder["command"] = ""
-    return {"holders": sorted(found.values(), key=lambda h: h["pid"]), "unreadable_processes": unreadable}
+            at = next(i for i, field in enumerate(fields) if field.count(":") == 2)
+            major, minor, ino = fields[at].split(":")
+            key = (int(major, 16), int(minor, 16), int(ino))
+        except (StopIteration, ValueError):
+            continue
+        if key in wanted:
+            found.append(
+                {
+                    "pid": int(fields[at - 1]) if fields[at - 1].isdigit() else None,
+                    "access": fields[at - 2],
+                    "file": wanted[key],
+                }
+            )
+    return found
 
 
 def _live_files(target: Target) -> list[Path]:
@@ -326,9 +384,19 @@ def _live_files(target: Target) -> list[Path]:
 
 
 def _require_no_writers(target: Target, scan: Callable[[Sequence[Path]], dict[str, Any]]) -> None:
-    writers = [h for h in scan(_live_files(target))["holders"] if h["writable"]]
-    if writers:
-        raise Refused("live_store_has_writers", holders=writers)
+    """No writable or unknown descriptor and no write lock: nothing can commit while ``build`` copies."""
+    observed = scan(_live_files(target))
+    writers = [h for h in observed["holders"] if h["writable"] is not False]
+    if writers or any(lock["access"] == "WRITE" for lock in observed["locks"]):
+        raise Refused("live_store_has_writers", holders=writers, locks=observed["locks"])
+
+
+def _undrained(observed: dict[str, Any], allowed: Callable[[dict[str, Any]], bool]) -> dict[str, Any]:
+    """What still uses the live store, apart from processes of the units about to be drained."""
+    return {
+        "holders": [h for h in observed["holders"] if not allowed(h)],
+        "locks": [lock for lock in observed["locks"] if lock["pid"] is None or not allowed(lock)],
+    }
 
 
 # --- staging ---------------------------------------------------------------------------------------------
@@ -747,39 +815,46 @@ def systemctl(action: str, unit: str) -> None:
     )
 
 
-@contextmanager
-def drained(units: Sequence[str], control: Callable[[str, str], None]) -> Iterator[None]:
-    """Stop ``units`` for the duration; start them again in reverse order whatever happens."""
-    stopped: list[str] = []
-    try:
-        for unit in units:
-            control("stop", unit)
-            stopped.append(unit)
-        yield
-    finally:
-        for unit in reversed(stopped):
-            control("start", unit)
+class Drain:
+    """Stop units for a critical section and always try to start every one of them again.
 
+    A stop or start failure of one unit never skips another. Stop failures refuse
+    the section; start failures are collected in ``restart_errors`` and never
+    hide whether the section itself committed.
+    """
 
-def _await_holders(
-    target: Target,
-    scan: Callable[[Sequence[Path]], dict[str, Any]],
-    wait_s: float,
-    sleep: Callable[[float], None],
-    clock: Callable[[], float],
-    allowed: Callable[[dict[str, Any]], bool],
-) -> list[dict[str, Any]]:
-    """Poll until every holder is allowed or ``wait_s`` passes; return the holders that remain."""
-    deadline = clock() + wait_s
-    while True:
-        remaining = [h for h in scan(_live_files(target))["holders"] if not allowed(h)]
-        if not remaining or clock() >= deadline:
-            return remaining
-        sleep(DRAIN_POLL_S)
+    def __init__(self, units: Sequence[str], control: Callable[[str, str], None]) -> None:
+        self.units, self.control = list(units), control
+        self.restart_errors: list[str] = []
+
+    def __enter__(self) -> Drain:
+        stop_errors = []
+        for unit in self.units:
+            try:
+                self.control("stop", unit)
+            except Exception as exc:  # any failure leaves the unit's state unknown
+                stop_errors.append(f"stop {unit}: {type(exc).__name__}")
+        if stop_errors:
+            self._start_all()
+            raise Refused("unit_stop_failed", unit_errors=stop_errors + self.restart_errors)
+        return self
+
+    def __exit__(self, exc_type, exc, tb) -> bool:
+        self._start_all()
+        if isinstance(exc, (Refused, VerificationFailed)) and self.restart_errors:
+            exc.detail["unit_restart_errors"] = self.restart_errors
+        return False
+
+    def _start_all(self) -> None:
+        for unit in reversed(self.units):
+            try:
+                self.control("start", unit)
+            except Exception as exc:
+                self.restart_errors.append(f"start {unit}: {type(exc).__name__}")
 
 
 def _unit_pids(units: Sequence[str], proc: Path = Path("/proc")) -> Callable[[dict[str, Any]], bool]:
-    """Whether a holder runs inside one of ``units`` (its cgroup path ends in the unit name)."""
+    """Whether a holder or lock belongs to one of ``units`` (its cgroup path ends in the unit name)."""
 
     def allowed(holder: dict[str, Any]) -> bool:
         try:
@@ -791,6 +866,91 @@ def _unit_pids(units: Sequence[str], proc: Path = Path("/proc")) -> Callable[[di
     return allowed
 
 
+def _await_drain(target: Target, options: dict[str, Any], allowed: Callable[[dict[str, Any]], bool]) -> None:
+    """Poll until nothing but the drain units uses the live store, or refuse after ``wait_drained``."""
+    scan, sleep, clock = options["scan"], options.get("sleep", time.sleep), options.get("clock", time.monotonic)
+    deadline = clock() + options["wait_drained"]
+    while True:
+        left = _undrained(scan(_live_files(target)), allowed)
+        if not left["holders"] and not left["locks"]:
+            return
+        if clock() >= deadline:
+            raise Refused("live_store_in_use", **left)
+        sleep(DRAIN_POLL_S)
+
+
+def _barrier(target: Target, parent: dict[str, Any], scan: Callable[[Sequence[Path]], dict[str, Any]]) -> None:
+    """Unchanged, checkpointed, held, and used by no observable process or lock."""
+    now = live_identity(target.live)
+    if now != parent:
+        raise Refused("live_store_changed_since_candidate")
+    _require_quiet(now)
+    _require_held(target.live)
+    left = _undrained(scan(_live_files(target)), lambda holder: False)
+    if left["holders"] or left["locks"]:
+        raise Refused("live_store_in_use", **left)
+
+
+def _journal(target: Target) -> Path:
+    return target.work_dir / "publication.json"
+
+
+def recover(target: Target) -> dict[str, Any] | None:
+    """Finish or undo a publication that a crash interrupted; run under the lock before any other step.
+
+    If the rename did not happen, the live file gets its mode back and a backup
+    link sharing its inode is removed (a backup must never alias the live inode).
+    If it did, the retained file gets its mode back and the receipts are completed.
+    """
+    journal = _journal(target)
+    if not journal.is_file():
+        return None
+    state = _read_json(journal)
+    backup = target.backup(state["previous"])
+    live = target.live.stat()
+    if live.st_ino == state["old_ino"]:
+        target.live.chmod(state["old_mode"])
+        if backup.exists() and backup.stat().st_ino == live.st_ino:
+            backup.unlink()
+            _fsync(target.backups_dir, directory=True)
+        outcome = "rolled_back"
+    else:
+        if backup.exists():
+            backup.chmod(state["old_mode"])
+        _finish_receipts(target, state)
+        outcome = "rolled_forward"
+    journal.unlink()
+    _fsync(target.work_dir, directory=True)
+    return {"recovered": outcome, "previous": state["previous"]}
+
+
+def _finish_receipts(target: Target, state: dict[str, Any]) -> None:
+    if not target.receipt(state["previous"]).exists():
+        _write_json(
+            target.receipt(state["previous"]),
+            {
+                "generation": state["previous"],
+                "sha256": state["previous_sha256"],
+                "kind": state["kind"],
+                "state": "retained",
+                "recorded_at": _now(),
+            },
+        )
+    published = state.get("published")
+    if published and target.receipt(published).is_file():
+        receipt = _read_json(target.receipt(published))
+        if receipt.get("state") != "published":
+            receipt.update(
+                {
+                    "state": "published",
+                    "published_at": _now(),
+                    "previous": state["previous"],
+                    "inode": target.live.stat().st_ino,
+                }
+            )
+            _write_json(target.receipt(published), receipt)
+
+
 def _publish(
     target: Target,
     source: Path,
@@ -799,74 +959,56 @@ def _publish(
     parent_sha256: str,
     kind: str,
     options: dict[str, Any],
-) -> str:
-    """Wait for holders, drain units, check the barrier, retain the live inode and rename ``source`` over it.
+    published: str | None = None,
+) -> dict[str, Any]:
+    """Drain, retain the live inode durably, fence it, and rename ``source`` over it.
 
-    The barrier runs before the hard link and again after it, so a backup never
-    shares an inode that is being written; an unchanged identity also proves the
-    live bytes still hash to ``parent_sha256``. A backup created here is removed if
-    the rename does not happen. The old WAL is empty, so its sidecars carry nothing.
-    Both full-file digests run before any unit is drained.
+    Order: both digests before any unit stops; wait until only drain-unit
+    processes use the store; stop the units; barrier; journal the intent;
+    hard-link the live inode into backups and fsync that and the receipt; set the
+    old inode to mode 000, so a new open fails instead of reading it; barrier
+    again; rename; give the retained inode its mode back; finish the receipts.
+    ``recover`` completes or undoes any step a crash interrupts. An unchanged
+    identity proves the live bytes still hash to ``parent_sha256``.
     """
     if file_sha256(source) != expected_sha256:
         raise VerificationFailed("candidate_digest_mismatch")
-    scan, control = options["scan"], options["control"]
-    sleep, clock = options.get("sleep", time.sleep), options.get("clock", time.monotonic)
-    units = options["drain_units"]
-    remaining = _await_holders(target, scan, options["wait_drained"], sleep, clock, _unit_pids(units))
-    if any(h["writable"] for h in remaining):
-        raise Refused("live_store_has_writers", holders=remaining)
-    if remaining and not options["allow_readonly_holders"]:
-        raise Refused("live_store_has_readers", holders=remaining)
-
-    def barrier() -> None:
-        now = live_identity(target.live)
-        if now != parent:
-            raise Refused("live_store_changed_since_candidate")
-        _require_quiet(now)
-        _require_held(target.live)
-        left = scan(_live_files(target))["holders"]
-        if any(h["writable"] for h in left):
-            raise Refused("live_store_has_writers", holders=left)
-        if left and not options["allow_readonly_holders"]:
-            raise Refused("live_store_has_readers", holders=left)
-
-    with drained(units, control):
-        barrier()
-        previous_sha = parent_sha256
-        previous = generation_id(previous_sha)
-        backup = target.backup(previous)
+    scan = options["scan"]
+    allowed = _unit_pids(options["drain_units"])
+    _await_drain(target, options, allowed)
+    previous = generation_id(parent_sha256)
+    backup = target.backup(previous)
+    state = {
+        "previous": previous,
+        "previous_sha256": parent_sha256,
+        "old_ino": parent["ino"],
+        "old_mode": parent["mode"],
+        "kind": kind,
+        "published": published,
+    }
+    with Drain(options["drain_units"], options["control"]) as drain:
+        _barrier(target, parent, scan)
+        if backup.exists() and backup.stat().st_ino != parent["ino"] and file_sha256(backup) != parent_sha256:
+            raise Refused("backup_name_conflict")
         target.backups_dir.mkdir(parents=True, exist_ok=True)
-        created = False
-        if backup.exists():
-            if backup.stat().st_ino != parent["ino"] and file_sha256(backup) != previous_sha:
-                raise Refused("backup_name_conflict")
-        else:
-            os.link(target.live, backup)
-            created = True
+        _write_json(_journal(target), state)
         replaced = False
         try:
-            barrier()
-            if not target.receipt(previous).exists():
-                _write_json(
-                    target.receipt(previous),
-                    {
-                        "generation": previous,
-                        "sha256": previous_sha,
-                        "kind": kind,
-                        "state": "retained",
-                        "recorded_at": _now(),
-                    },
-                )
+            if not backup.exists():
+                os.link(target.live, backup)
+            _fsync(target.backups_dir, directory=True)
+            _finish_receipts(target, {**state, "published": None})
+            target.live.chmod(0)
+            _barrier(target, {**parent, "mode": 0}, scan)
             _remove(_sidecars(target.live))
             os.replace(source, target.live)
             replaced = True
             _fsync(target.data_dir, directory=True)
-            _fsync(target.backups_dir, directory=True)
         finally:
-            if created and not replaced:
-                backup.unlink()
-    return previous
+            recover(target)  # replaced: unfence the retained inode and finish; otherwise undo
+        if not replaced:
+            raise Refused("publication_not_completed")
+    return {"previous": previous, "unit_restart_errors": drain.restart_errors}
 
 
 def _publish_options(args: argparse.Namespace) -> dict[str, Any]:
@@ -875,19 +1017,19 @@ def _publish_options(args: argparse.Namespace) -> dict[str, Any]:
         "control": systemctl,
         "drain_units": list(args.drain_unit or []),
         "wait_drained": float(args.wait_drained),
-        "allow_readonly_holders": bool(args.allow_readonly_holders),
     }
 
 
 def publish(target: Target, generation: str, options: dict[str, Any]) -> dict[str, Any]:
     with build_lock(target):
+        recovered = recover(target)
         candidate, receipt_path = target.candidate(generation), target.receipt(generation)
         if candidate.is_symlink() or not candidate.is_file() or not receipt_path.is_file():
             raise Refused("candidate_unknown")
         receipt = _read_json(receipt_path)
         if receipt.get("state") != "candidate":
             raise Refused("candidate_unknown")
-        previous = _publish(
+        result = _publish(
             target,
             candidate,
             receipt["sha256"],
@@ -895,16 +1037,14 @@ def publish(target: Target, generation: str, options: dict[str, Any]) -> dict[st
             receipt["parent_sha256"],
             "retained_before_import",
             options,
+            published=generation,
         )
-        receipt.update(
-            {"state": "published", "published_at": _now(), "previous": previous, "inode": target.live.stat().st_ino}
-        )
-        _write_json(receipt_path, receipt)
         return {
             "status": "published",
             "generation": generation,
-            "previous": previous,
-            "default_reader": default_reader_check(receipt),
+            "recovered_first": recovered,
+            "default_reader": default_reader_check(_read_json(receipt_path)),
+            **result,
         }
 
 
@@ -921,6 +1061,7 @@ def default_reader_check(receipt: dict[str, Any]) -> dict[str, Any]:
 
 def restore(target: Target, generation: str, options: dict[str, Any]) -> dict[str, Any]:
     with build_lock(target):
+        recovered = recover(target)
         backup, receipt_path = target.backup(generation), target.receipt(generation)
         if backup.is_symlink() or not backup.is_file() or not receipt_path.is_file():
             raise Refused("generation_unknown")
@@ -936,31 +1077,38 @@ def restore(target: Target, generation: str, options: dict[str, Any]) -> dict[st
             shutil.copyfile(backup, temp)
             _fsync(temp)
             temp.chmod(parent["mode"])
-            previous = _publish(target, temp, expected, parent, parent_sha256, "retained_before_restore", options)
-        except BaseException:
+            result = _publish(target, temp, expected, parent, parent_sha256, "retained_before_restore", options)
+        finally:
             _remove([temp])
-            raise
-        return {"status": "restored", "generation": generation, "sha256": expected, "previous": previous}
+        return {
+            "status": "restored",
+            "generation": generation,
+            "sha256": expected,
+            "recovered_first": recovered,
+            **result,
+        }
 
 
 def generations(target: Target) -> dict[str, Any]:
-    live_ino = target.live.stat().st_ino
-    rows = []
-    for path in sorted(target.receipts_dir.glob("*.json")) if target.receipts_dir.is_dir() else []:
-        receipt = _read_json(path)
-        generation = receipt["generation"]
-        held = [p for p in (target.backup(generation), target.candidate(generation)) if p.is_file()]
-        rows.append(
-            {
-                "generation": generation,
-                "kind": receipt.get("kind"),
-                "state": receipt.get("state"),
-                "recorded_at": receipt.get("recorded_at"),
-                "live": receipt.get("inode") == live_ino or any(p.stat().st_ino == live_ino for p in held),
-                "restorable": target.backup(generation).is_file(),
-            }
-        )
-    return {"status": "generations", "generations": rows}
+    with build_lock(target):
+        recovered = recover(target)
+        live_ino = target.live.stat().st_ino
+        rows = []
+        for path in sorted(target.receipts_dir.glob("*.json")) if target.receipts_dir.is_dir() else []:
+            receipt = _read_json(path)
+            generation = receipt["generation"]
+            held = [p for p in (target.backup(generation), target.candidate(generation)) if p.is_file()]
+            rows.append(
+                {
+                    "generation": generation,
+                    "kind": receipt.get("kind"),
+                    "state": receipt.get("state"),
+                    "recorded_at": receipt.get("recorded_at"),
+                    "live": receipt.get("inode") == live_ino or any(p.stat().st_ino == live_ino for p in held),
+                    "restorable": target.backup(generation).is_file(),
+                }
+            )
+    return {"status": "generations", "recovered_first": recovered, "generations": rows}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -978,7 +1126,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.ingest.sum20_mirror_import restore --generation <id> "
             "--drain-unit learn-ukrainian-sources.service --wait-drained 900\n\n"
             "Outputs: JSON on stdout; candidates, backups and receipts under data/sources/.\n"
-            "Exit codes: 0 success; 1 verification failed (live store untouched); 2 refused.\n"
+            "Exit codes: 0 success; 1 verification failed (live store untouched); 2 refused; 3 swapped, unit restart failed.\n"
             "Related: issue #8579; docs/runbooks/dictionary-acquisition.md; scripts/wiki/sum20_mirror.py."
         ),
     )
@@ -1009,11 +1157,6 @@ def build_parser() -> argparse.ArgumentParser:
             default=0.0,
             help="Seconds to wait for other holders of the live store to exit (default 0).",
         )
-        cmd.add_argument(
-            "--allow-readonly-holders",
-            action="store_true",
-            help="Proceed while read-only descriptors remain; they keep the old inode (default refuse).",
-        )
     sub.add_parser("generations", help="List recorded generations and which one is live.")
     return parser
 
@@ -1033,16 +1176,14 @@ def main(argv: list[str] | None = None, *, test_data_dir: Path | None = None) ->
         else:
             payload = generations(target)
     except Refused as exc:
-        print(json.dumps({"status": "refused", "reason": exc.reason, **exc.detail}))
+        print(json.dumps({"status": "refused", "reason": exc.reason, **exc.detail}, ensure_ascii=False))
         return 2
     except VerificationFailed as exc:
-        print(json.dumps({"status": "verification_failed", "reason": str(exc)}))
+        print(json.dumps({"status": "verification_failed", "reason": str(exc), **exc.detail}, ensure_ascii=False))
         return 1
-    except subprocess.SubprocessError as exc:
-        print(json.dumps({"status": "refused", "reason": f"systemctl_failed:{type(exc).__name__}"}))
-        return 2
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
-    return 0
+    # The swap is committed either way; a unit that did not start again needs the operator.
+    return 3 if payload.get("unit_restart_errors") else 0
 
 
 if __name__ == "__main__":

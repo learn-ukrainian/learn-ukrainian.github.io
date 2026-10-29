@@ -316,21 +316,32 @@ Verification compares:
 - `PRAGMA integrity_check`;
 - sampled `query_sum20` lookups for each relation.
 
-**`publish`** refuses when:
+**`publish`** needs a full drain. Nothing but the `--drain-unit` processes may
+hold a descriptor on the live file or its sidecars. No POSIX lock may exist on
+them either; the kernel lock table covers processes whose descriptors cannot
+be listed. A descriptor with an unknown access mode counts as in use.
 
-- the live store changed since the copy;
-- the live store is not held;
-- its WAL holds frames;
-- any process holds a writable descriptor.
+Once nothing else uses the store, publication runs in this order:
 
-It waits up to `--wait-drained` seconds for other readers to close. It then
-stops the `--drain-unit` units and checks again. It hard-links the live inode
-into `data/sources/backups/` and renames the candidate over `data/sources.db`.
-It starts the units again whatever the outcome.
+1. It waits up to `--wait-drained` seconds for other users to close.
+2. It stops the units.
+3. It checks that the live store:
+   - is identical to the copy the candidate was built from;
+   - is held;
+   - has an empty WAL;
+   - is unused.
+4. It writes a journal.
+5. It hard-links the live inode into `data/sources/backups/` and fsyncs the
+   link and its receipt.
+6. It sets the old inode to mode 000, so a last-instant open fails instead of
+   reading it.
+7. It checks again.
+8. It renames the candidate over `data/sources.db`.
+9. It gives the retained inode its mode back.
 
-**Readers that stay open.** `--allow-readonly-holders` lets a publication
-proceed while read-only descriptors remain. Those readers keep the old inode
-until they reopen. Every refusal names the holding process ids.
+Every command first finishes or undoes a publication that a crash
+interrupted. The units start again whatever happens. A refusal names the
+holding process ids and locks.
 
 ### Restore
 
@@ -353,6 +364,7 @@ generation is a full store, and the off-site backup allowlist does not include i
 | 0 | Success |
 | 1 | Verification failed; the live store is untouched |
 | 2 | Refused before the swap |
+| 3 | Swapped, but a drained unit did not start; start it by hand |
 
 A full `scripts/wiki/build_sources_db.py --force` rebuild does not carry the
 `sum20_*` or `sum20_mirror_*` tables. Run the import again after such a rebuild.
