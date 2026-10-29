@@ -146,6 +146,31 @@ namespaces, are reported as `legacy_ownership_unknown` and never touched. An
 explicit `--basetemp` keeps its caller's ownership; the pre-push gate removes
 its own base temp. Other managed scratch is untouched.
 
+When pytest's main command returns, the session removes its own run if it
+passed under `tmp_path_retention_policy = "failed"`, through the scratch
+owner's descriptor-safe remover. This is the removal pytest documents for that
+policy; pytest skips it whenever `--basetemp` is set, and this plugin always
+sets it. A session passed only when the main command returned 0 without any
+exception, after every hook and every teardown cleanup had run, and its test
+loop and whole session-finish call (every implementation, wrapper and
+hook-call monitor) also returned without any exception. Every other session
+keeps its run for inspection, and the sweep above handles it: a failed,
+interrupted or killed session, one whose teardown cleanup failed, and one that
+a session-finish hook ended with an error or a `pytest.exit`, even when pytest
+still exits with status 0. Under the other retention policies every run is
+kept. A refused removal leaves the run preserved as before and never fails
+the session.
+
+One accepted exception: a session that registers this plugin only after the
+main command began, for example from a `pytest_configure` hook, keeps its run
+even when it passed. The plugin cannot observe that command's exit status or
+the cleanups registered before it, so removing the run there could delete a
+failed session's evidence; keeping it matches the earlier behaviour, and the
+hourly sweep handles it. Every supported loading path registers the plugin
+before the command and removes a passed run: a conftest's `pytest_plugins`
+(how this repository loads it, from `tests/conftest.py`), `-p`, and the
+`plugins` argument of `pytest.main()`.
+
 ### Other scratch
 
 `tmp_sweep` considers only direct children of the temp root. With

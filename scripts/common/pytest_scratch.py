@@ -30,9 +30,10 @@ import fcntl
 import os
 import secrets
 import stat
+import sys
 import tempfile
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from functools import partial
 from pathlib import Path
 from typing import Any
@@ -64,6 +65,11 @@ SHARED_MEMORY_TEMP = Path("/dev/shm")
 _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 # A read-only mount or a denied write. Any other failure stays loud.
 _UNWRITABLE_ERRNOS = frozenset({errno.EROFS, errno.EACCES})
+_RUN = pytest.StashKey[TaskScratch]()
+_POLICY_REMOVES_PASSED = pytest.StashKey[bool]()
+_IN_MAIN = pytest.StashKey[bool]()
+_LOOP_RETURNED = pytest.StashKey[bool]()
+_FINISH_RETURNED = pytest.StashKey[bool]()
 
 
 def _is_unwritable(exc: OSError) -> bool:
@@ -345,6 +351,104 @@ def _allocate_private_fallback() -> TaskScratch:
     )
 
 
+def _around_outermost_call(caller: Any, around: Callable[[Callable[[], Any], Mapping[str, Any]], Any]) -> None:
+    """Run each outermost call of a hook through ``around``, outside all of the hook's code.
+
+    ``around`` wraps the hook caller's executor (pluggy's private ``_hookexec``),
+    which runs every implementation, wrapper and hook-call monitor, whatever
+    their order, so it sees how the whole call ended, including a pytest.exit
+    that pytest catches later. A nested call of the same hook runs unobserved.
+    If pluggy stops providing or calling that executor, nothing is observed
+    and every session keeps its run.
+    """
+    inner = getattr(caller, "_hookexec", None)
+    if not callable(inner):
+        return
+    depth = 0
+
+    def hookexec(name: str, impls: Any, kwargs: Mapping[str, Any], firstresult: bool) -> Any:
+        nonlocal depth
+        if depth:
+            return inner(name, impls, kwargs, firstresult)
+        depth += 1
+        try:
+            return around(partial(inner, name, impls, kwargs, firstresult), kwargs)
+        finally:
+            depth -= 1
+
+    with contextlib.suppress(AttributeError):
+        caller._hookexec = hookexec
+
+
+def _record_return(stash: pytest.Stash, key: pytest.StashKey[bool]) -> Callable[..., Any]:
+    """Record in the stash whether every call returned normally; a later call never clears a failure."""
+
+    def around(call: Callable[[], Any], _kwargs: Mapping[str, Any]) -> Any:
+        returned = stash.get(key, True)
+        stash[key] = False
+        result = call()
+        stash[key] = returned
+        return result
+
+    return around
+
+
+def _release(scratch: TaskScratch, *, remove: bool) -> None:
+    """Remove a passed run, as pytest removes its own basetemp; keep any other run for inspection."""
+    try:
+        if remove:
+            with contextlib.suppress(OSError, TaskScratchError):
+                scratch.remove()
+    finally:
+        scratch.preserve()
+
+
+def _release_at_teardown(stash: pytest.Stash | None, scratch: TaskScratch) -> None:
+    """Keep the run, unless pytest's main command settles it once the command returns.
+
+    Accepted exception to removing every passed run: a plugin registered
+    after that command began, for example from pytest_configure, cannot
+    observe the command's exit status or the cleanups registered before it,
+    so removing the run there could delete a failed session's evidence; the
+    run of such a session is kept, as before. Every supported loading path
+    (a conftest's pytest_plugins, -p, pytest.main(plugins=...)) registers
+    before the command and removes a passed run.
+    """
+    if stash is None or not stash.get(_IN_MAIN, False):
+        scratch.preserve()
+
+
+def _settle_after_main(call: Callable[[], Any], kwargs: Mapping[str, Any]) -> Any:
+    """Run pytest's main command, then release the run, removing it only when the session passed.
+
+    Pytest itself deletes the basetemp of a passed session under the "failed"
+    retention policy, but only when no --basetemp was given, and this plugin
+    always gives one. Every hook and every config cleanup has run when the
+    command returns, so its return code is final and any failure among them
+    propagates out of it. The test loop and the whole session-finish call
+    must also have returned normally. Any other session keeps its run.
+    """
+    stash = getattr(kwargs.get("config"), "stash", None)
+    if stash is None:
+        return call()
+    stash[_IN_MAIN] = True
+    passed = False
+    try:
+        result = call()
+        passed = (
+            result == pytest.ExitCode.OK
+            and stash.get(_POLICY_REMOVES_PASSED, False)
+            and stash.get(_LOOP_RETURNED, False)
+            and stash.get(_FINISH_RETURNED, False)
+        )
+        return result
+    finally:
+        stash[_IN_MAIN] = False
+        scratch = stash.get(_RUN, None)
+        if scratch is not None:
+            _release(scratch, remove=passed)
+
+
 def _allocate_run() -> TaskScratch:
     root = _private_shared_root()
     if root is not None:
@@ -364,7 +468,12 @@ def pytest_configure(config: pytest.Config) -> None:
     scratch = _allocate_run()
     # Pytest recreates --basetemp. Keep ownership metadata outside that payload.
     config.option.basetemp = str(scratch.payload_dir / "base")
-    config.add_cleanup(scratch.preserve)
+    # A caller without a stash gets the plain preservation it always had.
+    stash = getattr(config, "stash", None)
+    if stash is not None:
+        stash[_RUN] = scratch
+        stash[_POLICY_REMOVES_PASSED] = config.getini("tmp_path_retention_policy") == "failed"
+    config.add_cleanup(partial(_release_at_teardown, stash, scratch))
     # Fixtures and ordinary tempfile users must share a containment root.
     # Workers inherit TMPDIR; this process may already have cached tempdir.
     previous_env = os.environ.get("TMPDIR")
@@ -380,3 +489,19 @@ def pytest_configure(config: pytest.Config) -> None:
             os.environ["TMPDIR"] = previous_env
 
     config.add_cleanup(restore_tempdir)
+
+
+def pytest_plugin_registered(plugin: object, manager: pytest.PytestPluginManager) -> None:
+    """Watch pytest's main command from outside; registration comes before the command runs."""
+    if plugin is sys.modules[__name__]:
+        _around_outermost_call(manager.hook.pytest_cmdline_main, _settle_after_main)
+
+
+def pytest_sessionstart(session: pytest.Session) -> None:
+    """Watch how the session's test loop and finish end."""
+    stash = getattr(session.config, "stash", None)
+    if stash is None or _RUN not in stash:
+        return
+    hook = session.config.pluginmanager.hook
+    _around_outermost_call(hook.pytest_runtestloop, _record_return(stash, _LOOP_RETURNED))
+    _around_outermost_call(hook.pytest_sessionfinish, _record_return(stash, _FINISH_RETURNED))
