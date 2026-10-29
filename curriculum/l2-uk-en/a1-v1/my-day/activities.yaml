@@ -26,67 +26,67 @@ inline:
     title: Послідовність дня
     instruction: Обери слово або дію, яка логічно продовжує день.
     items:
-      - sentence: "(First.) ___ я прокидаюся і вмиваюся."
-        answer: Спочатку
+      - sentence: "Я снідаю о восьмій, але ___ я прокидаюся о сьомій."
+        answer: "спочатку"
         options:
-          - Спочатку
-          - Потім
-          - Нарешті
-        explanation: День зазвичай починається з прокидання.
-      - sentence: "(I have breakfast.) Після того я ___."
+          - спочатку
+          - пізніше
+          - після цього
+        explanation: "The waking time comes before breakfast. Спочатку fits this order; пізніше and після цього would reverse it."
+      - sentence: "О восьмій ранку я сідаю за стіл із тарілкою каші. Після вмивання я ___."
         answer: снідаю
         options:
           - снідаю
           - вечеряю
           - лягаю спати
-        explanation: Після ранкового вмивання логічно снідати.
-      - sentence: "(I work.) Вдень я ___ в офісі."
+        explanation: "A morning meal after washing fits снідаю. Вечеряю denotes the evening meal; лягаю спати does not fit sitting down with breakfast."
+      - sentence: "З дев’ятої до п’ятої я в офісі. Увесь цей час я ___."
         answer: працюю
         options:
           - працюю
           - прокидаюся
           - снідаю
-        explanation: Робота в офісі логічно підходить до вдень.
-      - sentence: "(I have lunch.) О першій годині я ___."
+        explanation: "The full office workday fits працюю. Прокидаюся is waking, not an eight-hour activity; снідаю is a morning meal, not the whole workday."
+      - sentence: "Зараз перша година дня. Я сиджу за столом із тарілкою супу. Я ___."
         answer: обідаю
         options:
           - обідаю
           - вечеряю
           - прокидаюся
-        explanation: О першій зазвичай обідають.
-      - sentence: "(Then.) ___ я читаю книгу або дивлюся фільм."
-        answer: Потім
+        explanation: "The midday meal fits обідаю. Вечеряю denotes the evening meal, and прокидаюся is incompatible with already sitting and eating the meal."
+      - sentence: "Я працюю до п’ятої, а ___ я читаю книгу о шостій."
+        answer: "потім"
         options:
-          - Потім
-          - Спочатку
-          - Вранці
-        explanation: Потім продовжує розповідь після роботи або обіду.
-      - sentence: "(Finally.) ___ я лягаю спати о дванадцятій."
-        answer: Нарешті
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+      - sentence: "Я читаю книгу до одинадцятої, а ___ я лягаю спати о дванадцятій."
+        answer: "нарешті"
         options:
-          - Нарешті
-          - Спочатку
-          - Вдень
-        explanation: Лягати спати - остання дія дня.
+          - нарешті
+          - спочатку
+          - перед цим
+        explanation: "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."
   - id: act-3
     type: fill-in
     title: Частина доби
     instruction: Обери правильну частину доби для речення.
     items:
-      - sentence: "(In the morning.) Я п'ю каву ___."
+      - sentence: "На годиннику 07:00. Я п'ю каву ___."
         answer: вранці
         options:
           - вранці
           - вночі
           - ввечері
-        explanation: Кава найчастіше підходить до ранку.
-      - sentence: "(In the evening.) Ми вечеряємо ___."
+        explanation: "07:00 is morning: вранці. Вночі and ввечері refer to other parts of the day."
+      - sentence: "На годиннику 20:00. Ми вечеряємо ___."
         answer: ввечері
         options:
           - ввечері
           - вранці
           - вдень
-        explanation: Вечеря належить до вечора.
+        explanation: "20:00 is evening: ввечері. Вранці and вдень refer to other parts of the day."
       - sentence: "(09:00-17:00.) Вона працює з дев'ятої до п'ятої ___."
         answer: вдень
         options:
@@ -94,13 +94,13 @@ inline:
           - вночі
           - вранці
         explanation: Робочий день з дев'ятої до п'ятої - це вдень.
-      - sentence: "(After lunch.) Вони гуляють у парку ___."
+      - sentence: "Я обідаю о першій. Зараз друга година дня. Вони гуляють у парку ___."
         answer: після обіду
         options:
           - після обіду
           - вночі
           - вранці
-        explanation: Після обіду - природний час для прогулянки.
+        explanation: "Lunch has ended and it is two in the afternoon: після обіду. Вночі and вранці do not fit that time."
   - id: act-4
     type: fill-in
     title: Типові пари у розпорядку дня

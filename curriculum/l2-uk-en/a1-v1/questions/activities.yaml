@@ -5,16 +5,16 @@ inline:
     title: Обери питальне слово
     instruction: Choose the question word that completes each short question.
     items:
-      - prompt: "(Ask who the person is.) ___ ти?"
+      - prompt: "— ___ ти? — Я студент."
         options:
           - text: Хто
             correct: true
-          - text: Що
+          - text: Куди
             correct: false
           - text: Де
             correct: false
-        explanation: Хто asks for a person.
-      - prompt: "(Ask what the person studies.) ___ ти вивчаєш?"
+        explanation: "Я студент answers Хто ти? Куди asks for a destination; де asks for a location."
+      - prompt: "— ___ ти вивчаєш? — Українську мову."
         options:
           - text: Що
             correct: true
@@ -22,8 +22,8 @@ inline:
             correct: false
           - text: Коли
             correct: false
-        explanation: Що asks for the topic or action.
-      - prompt: "(Ask where the person lives.) ___ ти живеш?"
+        explanation: "Українську мову answers Що ти вивчаєш? Хто does not fit with вивчаєш; коли asks for time."
+      - prompt: "— ___ ти живеш? — У Києві."
         options:
           - text: Де
             correct: true
@@ -31,8 +31,8 @@ inline:
             correct: false
           - text: Чому
             correct: false
-        explanation: Де asks for a place.
-      - prompt: "(Ask about destination: where to.) ___ ти ходиш?"
+        explanation: "У Києві gives a location, answering Де. Куди asks for a destination; чому asks for a reason."
+      - prompt: "— ___ ти ходиш після уроків? — У парк."
         options:
           - text: Куди
             correct: true
@@ -40,8 +40,8 @@ inline:
             correct: false
           - text: Хто
             correct: false
-        explanation: Куди asks for direction after movement.
-      - prompt: "(Ask when the person works.) ___ ти працюєш?"
+        explanation: "У парк names the destination, so ask Куди. Де asks about a location; хто does not agree with ходиш."
+      - prompt: "— ___ ти працюєш? — Щодня з дев’ятої до п’ятої."
         options:
           - text: Коли
             correct: true
@@ -49,8 +49,8 @@ inline:
             correct: false
           - text: Як
             correct: false
-        explanation: Коли asks for time.
-      - prompt: "(Ask why.) ___ ти не працюєш?"
+        explanation: "The reply gives a time schedule, so ask Коли. Куди asks for a destination; як asks for manner."
+      - prompt: "— ___ ти не працюєш? — Тому що сьогодні неділя."
         options:
           - text: Чому
             correct: true
@@ -58,7 +58,7 @@ inline:
             correct: false
           - text: Хто
             correct: false
-        explanation: Чому asks for a reason.
+        explanation: "Тому що introduces the reason, so ask Чому. Куди asks for a destination; хто does not fit with працюєш."
       - prompt: ___ справи?
         options:
           - text: Як
@@ -68,7 +68,7 @@ inline:
           - text: Коли
             correct: false
         explanation: Як is part of the ready phrase Як справи?
-      - prompt: "(Ask which person speaks Ukrainian.) ___ говорить українською?"
+      - prompt: "— ___ говорить українською? — Олена."
         options:
           - text: Хто
             correct: true
@@ -76,7 +76,7 @@ inline:
             correct: false
           - text: Де
             correct: false
-        explanation: Хто asks which person speaks.
+        explanation: "Олена names the speaker, answering Хто. Що asks about a thing; де asks about a place."
   - id: act-2
     type: fill-in
     title: Утвори заперечення
