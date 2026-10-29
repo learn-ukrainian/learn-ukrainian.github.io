@@ -1674,9 +1674,27 @@ def _full_process_match(cmd: str, args: list[str]) -> bool:
     return False
 
 
-def _kill_consumer(cmd: str, args: list[str], *, depth: int = 0) -> bool:
+def _literal_pid_kill(args: list[str]) -> bool:
+    words = iter(_strip_quotes(arg) for arg in _without_redirects(args))
+    operands: list[str] = []
+    options = True
+    for word in words:
+        if options and word == "--":
+            options = False
+        elif options and word in {"-s", "--signal", "-n"}:
+            next(words, None)
+        elif options and word.startswith("-"):
+            continue
+        else:
+            operands.append(word)
+    return bool(operands) and all(re.fullmatch(r"[+-]?[0-9]+", word) for word in operands)
+
+
+def _kill_consumer(cmd: str, args: list[str], *, depth: int = 0, implicit_pids: bool = False) -> bool:
     if depth >= 12:
         return True
+    if cmd == "kill":
+        return implicit_pids or not _literal_pid_kill(args)
     if cmd == "xargs":
         words = iter(_without_redirects(args))
         for raw in words:
@@ -1703,7 +1721,7 @@ def _kill_consumer(cmd: str, args: list[str], *, depth: int = 0) -> bool:
             elif word == "--" or not word.startswith("-"):
                 target = next(words, "echo") if word == "--" else raw
                 found = _command_at([target, *words])
-                return bool(found and _kill_consumer(found[0], found[1], depth=depth + 1))
+                return bool(found and _kill_consumer(found[0], found[1], depth=depth + 1, implicit_pids=True))
     if cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
         for script in _shell_script(args):
             for pipeline in _pipelines(script):
@@ -1711,62 +1729,47 @@ def _kill_consumer(cmd: str, args: list[str], *, depth: int = 0) -> bool:
                     found = _command_at(segment)
                     if found and _kill_consumer(found[0], found[1], depth=depth + 1):
                         return True
-    return cmd == "kill"
-
-
-def _process_kill_refused(command: str, *, depth: int = 0, listing: bool = False) -> bool:
-    """Judge process selection using the guard's shared shell readers."""
-    if depth >= 12:
-        return True
-    executable, substitutions = _hide_substitutions(preprocess_shell_command(command))
-    selected_pids: set[str] = set()
-    for pipeline in _pipelines(executable):
-        matched = False
-        for segment in pipeline:
-            found = _command_at(segment)
-            if found is None:
-                continue
-            cmd, args, _ = found
-            full = _full_process_match(cmd, args)
-            if full and (cmd == "pkill" or listing):
-                return True
-            consumes = _kill_consumer(cmd, args)
-            if matched and consumes:
-                return True
-            if cmd == "read" and matched:
-                names = {
-                    _strip_quotes(arg) for arg in args if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", _strip_quotes(arg))
-                }
-                selected_pids.update(names or {"REPLY"})
-            if cmd == "kill" and any(_expanded_secret_var(arg, selected_pids) in selected_pids for arg in args):
-                return True
-            matched |= full and cmd == "pgrep"
-            for marker, (prefix, body) in substitutions.items():
-                if (
-                    segment[:1] == ["for"]
-                    and len(segment) >= 4
-                    and segment[2] == "in"
-                    and any(marker in token for token in segment[3:])
-                    and _process_kill_refused(body, depth=depth + 1, listing=True)
-                ):
-                    selected_pids.add(_strip_quotes(segment[1]))
-                if any(marker in token for token in segment) and (
-                    _process_kill_refused(body, depth=depth + 1)
-                    or (
-                        consumes
-                        and prefix in {"$(", "`", "<("}
-                        and _process_kill_refused(body, depth=depth + 1, listing=True)
-                    )
-                ):
-                    return True
-            if cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
-                for marker, (prefix, body) in substitutions.items():
-                    spelling = prefix + body + ("`" if prefix == "`" else ")")
-                    args = [arg.replace(marker, spelling) for arg in args]
-                for script in _shell_script(args):
-                    if _process_kill_refused(script, depth=depth + 1, listing=listing):
-                        return True
     return False
+
+
+def _process_kill_refused(command: str) -> bool:
+    """Pair full matching with nonliteral kill operands across one invocation."""
+    full_match = False
+    unsafe_kill = False
+
+    def scan(script: str, depth: int = 0) -> bool:
+        nonlocal full_match, unsafe_kill
+        if depth >= 12:
+            return True
+        executable, substitutions = _hide_substitutions(preprocess_shell_command(script))
+        for pipeline in _pipelines(executable):
+            for segment in pipeline:
+                # Assignments and reserved words can own executable substitutions
+                # even when they have no command for _command_at to return.
+                for marker, (_, body) in substitutions.items():
+                    if any(marker in token for token in segment) and scan(body, depth + 1):
+                        return True
+                found = _command_at(segment)
+                if found is None:
+                    continue
+                cmd, args, _ = found
+                full = _full_process_match(cmd, args)
+                if cmd == "pkill" and full:
+                    return True
+                full_match |= cmd == "pgrep" and full
+                unsafe_kill |= _kill_consumer(cmd, args)
+                if full_match and unsafe_kill:
+                    return True
+                if cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
+                    for marker, (prefix, body) in substitutions.items():
+                        spelling = prefix + body + ("`" if prefix == "`" else ")")
+                        args = [arg.replace(marker, spelling) for arg in args]
+                    for body in _shell_script(args):
+                        if scan(body, depth + 1):
+                            return True
+        return full_match and unsafe_kill
+
+    return scan(command)
 
 
 def _scan_command(
