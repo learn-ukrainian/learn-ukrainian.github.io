@@ -16,7 +16,7 @@ inline:
         options:
           - 'лікар'
           - 'голова'
-          - 'кашель'
+          - 'лікарю'
         explanation: 'Лікар means doctor.'
       - sentence: "У мене ___ 39 градусів."
         answer: 'температура'
@@ -116,30 +116,58 @@ workbook:
       - statement: 'У мене болить горло.'
         answer: true
         explanation: 'This follows У мене болить + body part.'
-      - statement: 'Моя голова болить.'
-        answer: false
-        explanation: 'Use the more natural A1 phrase: У мене болить голова.'
+      - statement: 'У мене болить голова.'
+        answer: true
+        explanation: 'This is the plain pattern У мене болить plus a body part.'
       - statement: 'У мене кашель.'
         answer: true
         explanation: 'This is a fixed symptom phrase.'
-      - statement: 'Я є хворий.'
-        answer: false
-        explanation: 'Drop є: Я хворий.'
+      - statement: 'Я хворий.'
+        answer: true
+        explanation: 'This is a plain A1 way for a male speaker to say he is ill.'
       - statement: 'Мені потрібен лікар.'
         answer: true
         explanation: 'This is the help phrase.'
-  - type: unjumble
-    title: Build health lines
-    instruction: Put the words in a natural order.
+  - type: quiz
+    title: Choose health lines
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: 'У/мене/болить/голова'
-        answer: 'У мене болить голова.'
-      - words: 'Мені/потрібен/лікар'
-        answer: 'Мені потрібен лікар.'
-      - words: 'Я/не/розумію'
-        answer: 'Я не розумію.'
-      - words: 'Повторіть/будь/ласка'
-        answer: 'Повторіть, будь ласка.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: У мене болить голова.
+            correct: true
+          - text: У мене болить головою.
+            correct: false
+          - text: У мене болить голові.
+            correct: false
+        explanation: This construction requires nominative голова. головою and голові are different case forms.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Мені потрібен лікар.
+            correct: true
+          - text: Мені потрібен лікарю.
+            correct: false
+          - text: Мені потрібен лікарям.
+            correct: false
+        explanation: This construction requires nominative лікар. лікарю and лікарям are different case forms.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Я не розумію.
+            correct: true
+          - text: Я не розумієш.
+            correct: false
+          - text: Я не розуміють.
+            correct: false
+        explanation: The stated subject agrees with розумію, not with the person/number forms розумієш or розуміють.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Повторіть, будь ласка.
+            correct: true
+          - text: Повторіть, будь ласку.
+            correct: false
+          - text: Повторіть, будь ласки.
+            correct: false
+        explanation: Both alternatives break the fixed request phrase будь ласка.
   - type: fill-in
     title: Doctor or pharmacy phrases
     instruction: Choose the phrase that fits the short situation.
@@ -155,8 +183,8 @@ workbook:
         answer: 'аптека'
         options:
           - 'аптека'
-          - 'болить'
-          - 'нога'
+          - 'аптеку'
+          - 'аптекою'
         explanation: 'Де тут аптека? asks for the pharmacy.'
       - sentence: 'Мені ___.'
         answer: 'погано'
@@ -176,7 +204,7 @@ workbook:
     title: Repair health phrases
     instruction: Choose the natural Ukrainian repair.
     items:
-      - prompt: 'Repair: Моя рука болить.'
+      - prompt: 'Repair: У мене болить рукою.'
         options:
           - text: 'У мене болить рука.'
             correct: true
@@ -194,7 +222,7 @@ workbook:
           - text: 'Лікар потрібно я.'
             correct: false
         explanation: 'Use the fixed phrase Мені потрібен лікар.'
-      - prompt: 'Repair: У мене є нежить.'
+      - prompt: 'Repair: У мене є нежитю.'
         options:
           - text: 'У мене нежить.'
             correct: true
@@ -236,25 +264,25 @@ workbook:
         explanation: 'Use Повторіть, будь ласка.'
   - type: error-correction
     title: Repair health phrases
-    instruction: Fix the sentence by using the safe A1 health phrase.
+    instruction: Keep the speaker, the singular body part and the named illness or professional. Correct the form using a plain A1 health phrase.
     items:
-      - sentence: 'Моя голова болить.'
-        error: 'Моя голова болить'
-        correction: 'У мене болить голова'
-        explanation: 'Use У мене болить + body part.'
-      - sentence: 'Я маю біль голова.'
-        error: 'Я маю біль голова'
-        correction: 'У мене болить голова'
-        explanation: 'Use the natural Ukrainian health phrase.'
-      - sentence: 'Я є хворий.'
-        error: 'Я є хворий'
-        correction: 'Я хворий'
-        explanation: 'Say Я хворий without є.'
+      - sentence: 'У мене болять голова.'
+        error: 'болять'
+        correction: 'болить'
+        explanation: 'Singular голова takes singular болить.'
+      - sentence: 'У мене болить головою.'
+        error: 'головою'
+        correction: 'голова'
+        explanation: 'The body part is nominative голова here, not instrumental головою.'
+      - sentence: 'Тарас: Я хвора.'
+        error: 'хвора'
+        correction: 'хворий'
+        explanation: 'The stated male speaker Тарас uses хворий.'
       - sentence: 'Я потрібно лікар.'
-        error: 'Я потрібно лікар'
-        correction: 'Мені потрібен лікар'
-        explanation: 'Use the fixed help phrase.'
-      - sentence: 'У мене є нежить.'
-        error: 'У мене є нежить'
-        correction: 'У мене нежить'
-        explanation: 'Say У мене нежить without є.'
+        error: 'Я потрібно'
+        correction: 'Мені потрібен'
+        explanation: 'Use Мені потрібен before лікар.'
+      - sentence: 'У мене нежитю.'
+        error: 'нежитю'
+        correction: 'нежить'
+        explanation: 'Use nominative нежить to name the symptom.'

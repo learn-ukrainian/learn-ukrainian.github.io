@@ -547,7 +547,15 @@ def publication_texts(payload: dict, event: str) -> list[tuple[str, str]]:
                 publication_git("cat-file", "-e", f"{before}^{{commit}}")
             return [("branch", ref)]
         new_branch = before == "0" * 40
-        if new_branch:
+        # A force push withdraws `before`, so no fetched ref carries it; the branch
+        # is then scanned from the same base a new branch uses.
+        rebase = new_branch
+        if not new_branch:
+            try:
+                publication_git("cat-file", "-e", f"{before}^{{commit}}")
+            except subprocess.CalledProcessError:
+                rebase = True
+        if rebase:
             default = payload["repository"]["default_branch"]
             if not isinstance(default, str) or not default:
                 raise ValueError("invalid default branch")
@@ -558,7 +566,9 @@ def publication_texts(payload: dict, event: str) -> list[tuple[str, str]]:
                     if len(bases) != 1:
                         raise ValueError("new branch range unavailable")
                     before = publication_sha(bases[0])
-        return [("branch", ref), ("commit", publication_messages(before, after, new_branch=new_branch))]
+            elif not new_branch:
+                raise ValueError("default branch base unavailable")
+        return [("branch", ref), ("commit", publication_messages(before, after, new_branch=rebase))]
     if event not in {"pull_request", "merge_group"}:
         raise ValueError("unsupported publication event")
     repository = payload["repository"]["full_name"]

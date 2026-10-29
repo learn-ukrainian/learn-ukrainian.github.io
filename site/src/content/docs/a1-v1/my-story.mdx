@@ -12,7 +12,6 @@ import Quiz from '@site/src/components/Quiz';
 import MatchUp from '@site/src/components/MatchUp';
 import FillIn from '@site/src/components/FillIn';
 import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
 import GroupSort from '@site/src/components/GroupSort';
 import Anagram from '@site/src/components/Anagram';
 import ErrorCorrection from '@site/src/components/ErrorCorrection';
@@ -245,13 +244,13 @@ You can keep the past very small:
 The future verb after **буду / буде / будемо** stays in the infinitive:
 **жити**, **вчити**, **працювати**, **подорожувати**.
 
-### Match the tense
+### Story phrases
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я народився", "right": "past"}, {"left": "я жила", "right": "past"}, {"left": "я живу", "right": "present"}, {"left": "я працюю", "right": "present"}, {"left": "я буду подорожувати", "right": "future"}, {"left": "ми будемо вчити", "right": "future"}]`)} instruction={"Match each phrase with its time."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "я народився", "right": "I was born"}, {"left": "я жила", "right": "I lived (female speaker)"}, {"left": "я живу", "right": "I live"}, {"left": "я працюю", "right": "I work"}, {"left": "я буду подорожувати", "right": "I will travel"}, {"left": "ми будемо вчити", "right": "we will study"}]`)} instruction={"Match each Ukrainian phrase with its English meaning."} isUkrainian={false} />
 
 ### Sort story pieces
 
-<GroupSort client:only='react' groups={JSON.parse(`{"past": ["я народився", "я жила", "переїхав", "у дитинстві"], "present": ["зараз", "я живу", "я працюю", "я вивчаю"], "future": ["далі", "я буду жити", "ми будемо вчити", "вона буде працювати"]}`)} instruction={"Put each phrase into the right story group."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"past": ["я народився", "я жила", "переїхав", "у дитинстві"], "present": ["зараз я живу в Києві", "я живу", "я працюю", "я вивчаю"], "future": ["далі я буду подорожувати", "я буду жити", "ми будемо вчити", "вона буде працювати"]}`)} instruction={"Put each phrase into the right story group."} isUkrainian={false} />
 
 ## Моя історія
 
@@ -358,7 +357,7 @@ and **далі**.
 
 *(see lesson, §Дідусь розповідає)*
 
-### Match the tense
+### Story phrases
 
 *(see lesson, §Future forms for your story)*
 
@@ -368,11 +367,11 @@ and **далі**.
 
 ### A1 story check
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Раніше я жив у Варшаві.", "isTrue": true, "explanation": "Раніше plus past жив is a clear past sentence."}, {"statement": "Зараз я буду живу в Києві.", "isTrue": false, "explanation": "Do not put буду before a present form. Use Зараз я живу."}, {"statement": "Далі я буду подорожувати.", "isTrue": true, "explanation": "Буду + infinitive is the A1 future pattern."}, {"statement": "Мене звати Софія.", "isTrue": true, "explanation": "This is the normal A1 name phrase."}, {"statement": "Моє ім'я є Софія.", "isTrue": false, "explanation": "Use Мене звати..., not an English-style my-name-is sentence."}]`)} instruction={"Decide whether the sentence stays in the A1 story frame."} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Раніше я жив у Варшаві.", "isTrue": true, "explanation": "Раніше plus past жив is a clear past sentence."}, {"statement": "Зараз я буду живу в Києві.", "isTrue": false, "explanation": "Do not put буду before a present form. Use Зараз я живу."}, {"statement": "Далі я буду подорожувати.", "isTrue": true, "explanation": "Буду + infinitive is the A1 future pattern."}, {"statement": "Мене звати Софія.", "isTrue": true, "explanation": "This is the normal A1 name phrase."}, {"statement": "Мене звати Софію.", "isTrue": false, "explanation": "With Мене звати, the name here is nominative Софія, not accusative Софію."}]`)} instruction={"Decide whether the sentence stays in the A1 story frame."} isUkrainian={false} />
 
-### Build story lines
+### Choose story lines
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Раніше / я / жив / у / Торонто", "answer": "Раніше я жив у Торонто."}, {"jumbled": "Зараз / я / живу / в / Києві", "answer": "Зараз я живу в Києві."}, {"jumbled": "Далі / я / буду / вчити / українську", "answer": "Далі я буду вчити українську."}, {"jumbled": "Мене / звати / Софія", "answer": "Мене звати Софія."}]`)} instruction={"Put the words in a natural order."} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Обери правильно побудоване речення.", "options": [{"text": "Раніше я жив у Торонто.", "correct": true}, {"text": "Раніше я жили у Торонто.", "correct": false}, {"text": "Раніше ми жив у Торонто.", "correct": false}], "explanation": "The key has matching subject and verb forms. я жили and ми жив combine a singular subject with a plural verb or a plural subject with a singular verb."}, {"question": "Обери правильно побудоване речення.", "options": [{"text": "Зараз я живу в Києві.", "correct": true}, {"text": "Зараз я живеш в Києві.", "correct": false}, {"text": "Зараз я живуть в Києві.", "correct": false}], "explanation": "The stated subject agrees with живу, not with the person/number forms живеш or живуть."}, {"question": "Обери правильно побудоване речення.", "options": [{"text": "Далі я буду вчити українську.", "correct": true}, {"text": "Далі я будеш вчити українську.", "correct": false}, {"text": "Далі я будемо вчити українську.", "correct": false}], "explanation": "The subject agrees with буду; будеш and будемо belong to different persons or numbers."}, {"question": "— Як тебе звати? — ___", "options": [{"text": "Мене звати Софія.", "correct": true}, {"text": "Мене звати Софію.", "correct": false}, {"text": "Мене звати Софії.", "correct": false}], "explanation": "This construction requires nominative Софія. Софію and Софії are different case forms."}]`)} instruction={"Choose the sentence whose words fit together."} isUkrainian={false} />
 
 ### Complete the mini biography
 
@@ -380,7 +379,7 @@ and **далі**.
 
 ### Repair the story
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "— Де ти живеш? — ___", "options": [{"text": "Зараз я живу в Києві.", "correct": true}, {"text": "Зараз я живеш у Києві.", "correct": false}, {"text": "Зараз я буду живу в Києві.", "correct": false}], "explanation": "Я agrees with живу. Живеш agrees with ти; буду живу incorrectly combines two personal forms."}, {"question": "— Що ти будеш робити далі? — ___", "options": [{"text": "Далі я буду працювати.", "correct": true}, {"text": "Далі я працював.", "correct": false}, {"text": "Далі я працюю учора.", "correct": false}], "explanation": "Буду + infinitive is the A1 future."}, {"question": "Which is the natural name sentence?", "options": [{"text": "Мене звати Данило.", "correct": true}, {"text": "Моє ім'я є Данило.", "correct": false}, {"text": "Я звати Данило.", "correct": false}], "explanation": "Use the phrase Мене звати..."}]`)} instruction={"Choose the better A1 sentence."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "— Де ти живеш? — ___", "options": [{"text": "Зараз я живу в Києві.", "correct": true}, {"text": "Зараз я живеш у Києві.", "correct": false}, {"text": "Зараз я буду живу в Києві.", "correct": false}], "explanation": "Я agrees with живу. Живеш agrees with ти; буду живу incorrectly combines two personal forms."}, {"question": "— Що ти будеш робити далі? — ___", "options": [{"text": "Далі я буду працювати.", "correct": true}, {"text": "Далі я працював.", "correct": false}, {"text": "Далі я працюю учора.", "correct": false}], "explanation": "Буду + infinitive is the A1 future."}, {"question": "Which is the natural name sentence?", "options": [{"text": "Мене звати Данило.", "correct": true}, {"text": "Мене звати Данилу.", "correct": false}, {"text": "Я звати Данило.", "correct": false}], "explanation": "Use the phrase Мене звати..."}]`)} instruction={"Choose the better A1 sentence."} isUkrainian={false} />
 
 ### Say your story
 
@@ -388,7 +387,7 @@ and **далі**.
 
 ### Repair the timeline
 
-<ErrorCorrection client:only='react' instruction="Fix the time word and verb so the story stays clear." items={JSON.parse(`[{"sentence": "Раніше я живу в Канаді.", "errorWord": "живу", "correctForm": "жив / жила", "options": [], "explanation": "Раніше points to the past."}, {"sentence": "Зараз я жив у Києві.", "errorWord": "жив", "correctForm": "живу", "options": [], "explanation": "Зараз points to the present."}, {"sentence": "Далі я працював тут.", "errorWord": "працював", "correctForm": "буду працювати", "options": [], "explanation": "Далі points to a future plan."}, {"sentence": "Я буду працюю в офісі.", "errorWord": "працюю", "correctForm": "працювати", "options": [], "explanation": "After буду, use the infinitive працювати."}, {"sentence": "Моє ім'я є Софія.", "errorWord": "Моє ім'я є", "correctForm": "Мене звати", "options": [], "explanation": "Use the familiar A1 name phrase Мене звати."}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Keep the named speaker, subject and time words. Correct forms; use the compound future for future plans." items={JSON.parse(`[{"sentence": "Раніше Олена жив у Канаді.", "errorWord": "жив", "correctForm": "жила", "options": [], "explanation": "Олена agrees with feminine singular жила, not masculine жив."}, {"sentence": "Зараз я живеш у Києві.", "errorWord": "живеш", "correctForm": "живу", "options": [], "explanation": "Я agrees with first-person живу, not second-person живеш."}, {"sentence": "Завтра я буду працює тут.", "errorWord": "працює", "correctForm": "працювати", "options": [], "explanation": "Буду combines with infinitive працювати, not finite працює."}, {"sentence": "Я буду працюю в офісі.", "errorWord": "працюю", "correctForm": "працювати", "options": [], "explanation": "After буду, use the infinitive працювати."}, {"sentence": "Мене звати Софію.", "errorWord": "Софію", "correctForm": "Софія", "options": [], "explanation": "The name in Мене звати Софія is nominative."}]`)} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Resources">

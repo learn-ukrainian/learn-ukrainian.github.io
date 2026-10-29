@@ -41,19 +41,19 @@ inline:
         explanation: "Вечірка is the nominative subject of буде. Вечірку is accusative and вечіркою instrumental."
   - id: act-2
     type: match-up
-    title: Invitations and answers
-    instruction: Match each invitation with a natural answer.
+    title: Invitations and questions
+    instruction: Match each invitation or question with its English meaning.
     pairs:
       - left: 'Ходімо в кіно!'
-        right: 'З задоволенням!'
+        right: 'Let''s go to the cinema!'
       - left: "Давай зустрінемося о п'ятій!"
-        right: 'Чудово! До зустрічі!'
+        right: 'Let''s meet at five!'
       - left: 'Ти будеш вільний у суботу?'
-        right: 'На жаль, не можу.'
+        right: 'Will you be free on Saturday?'
       - left: 'Ходімо в кафе о шостій!'
-        right: 'Добре! О шостій.'
+        right: 'Let''s go to a cafe at six!'
       - left: 'Ти будеш на вечірці?'
-        right: 'Звичайно буду!'
+        right: 'Will you be at the party?'
   - id: act-3
     type: quiz
     title: Planning pattern
@@ -144,20 +144,55 @@ workbook:
       - statement: 'Ти будеш вільний у суботу?'
         answer: true
         explanation: 'This asks about future availability.'
-  - type: unjumble
-    title: Build planning lines
-    instruction: Put the words in a natural order.
+  - type: quiz
+    title: Choose planning lines
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: ['У', 'суботу', 'я', 'буду', 'прибирати', 'квартиру']
-        answer: 'У суботу я буду прибирати квартиру.'
-      - words: ['О', 'шостій', 'ми', 'будемо', 'дивитися', 'кіно']
-        answer: 'О шостій ми будемо дивитися кіно.'
-      - words: ['Ти', 'будеш', 'вільна', 'у', 'суботу']
-        answer: 'Ти будеш вільна у суботу?'
-      - words: ['Давай', 'зустрінемося', 'о', "п'ятій"]
-        answer: "Давай зустрінемося о п'ятій!"
-      - words: ['На', 'жаль', 'не', 'можу']
-        answer: 'На жаль, не можу.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: У суботу я буду прибирати квартиру.
+            correct: true
+          - text: У суботу я будеш прибирати квартиру.
+            correct: false
+          - text: У суботу я будемо прибирати квартиру.
+            correct: false
+        explanation: The subject agrees with буду; будеш and будемо belong to different persons or numbers.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: О шостій ми будемо дивитися кіно.
+            correct: true
+          - text: О шостій ми буде дивитися кіно.
+            correct: false
+          - text: О шостій ми буду дивитися кіно.
+            correct: false
+        explanation: The subject agrees with будемо; буде and буду belong to different persons or numbers.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Ти будеш вільна у суботу?
+            correct: true
+          - text: Ти буду вільна у суботу?
+            correct: false
+          - text: Ти будуть вільна у суботу?
+            correct: false
+        explanation: The subject agrees with будеш; буду and будуть belong to different persons or numbers.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Давай зустрінемося о п'ятій!
+            correct: true
+          - text: Давай зустрінемося о п'ятого!
+            correct: false
+          - text: Давай зустрінемося о п'ятим!
+            correct: false
+        explanation: The construction takes п'ятій. The case forms п'ятого and п'ятим cannot replace it here.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: На жаль, не можу.
+            correct: true
+          - text: На жалю, не можу.
+            correct: false
+          - text: На жалем, не можу.
+            correct: false
+        explanation: The fixed introductory phrase is На жаль. Жалю and жалем cannot replace жаль in it.
   - type: order
     title: Put the week in order
     instruction: Arrange the days from Monday to Sunday.
@@ -199,8 +234,8 @@ workbook:
         answer: 'На жаль'
         options:
           - 'На жаль'
-          - 'Звичайно'
-          - 'З задоволенням'
+          - 'Мене'
+          - 'Мою'
         explanation: 'На жаль, не можу is a polite refusal.'
   - type: translate
     title: Say your plans
@@ -244,7 +279,7 @@ workbook:
         explanation: 'На жаль, не можу is the polite refusal.'
   - type: error-correction
     title: Repair plan sentences
-    instruction: Fix the weekly plan by keeping the compound future.
+    instruction: Keep pronouns and the intended day/time. Correct the form or preposition; use the compound future for plans.
     items:
       - sentence: 'У суботу я буду прибираю квартиру.'
         error: 'прибираю'
@@ -267,13 +302,13 @@ workbook:
         correction: 'вчити'
         explanation: 'After буду, use вчити.'
       - sentence: 'Я буду роблю домашнє завдання.'
-        error: 'Я буду роблю домашнє завдання.'
-        correction: 'Я буду робити домашнє завдання.'
+        error: 'роблю'
+        correction: 'робити'
         explanation: 'After буду, use the infinitive робити.'
-      - sentence: 'На понеділок я маю урок.'
-        error: 'На понеділок'
-        correction: 'У понеділок'
-        explanation: 'Use у with weekdays: у понеділок.'
+      - sentence: 'У понеділку я маю урок.'
+        error: 'понеділку'
+        correction: 'понеділок'
+        explanation: 'The day-on-which expression uses у понеділок.'
       - sentence: 'На шостій ми будемо дивитися кіно.'
         error: 'На шостій'
         correction: 'О шостій'

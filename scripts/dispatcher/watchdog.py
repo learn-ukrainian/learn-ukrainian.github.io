@@ -65,8 +65,11 @@ def liveness_paths(spec, invocation):
 
 
 def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
-                initial_response_timeout, liveness, output_sizes, terminal_result=None):
-    """Wait for a file-fed child while observing I/O, session files and tree work."""
+                initial_response_timeout, liveness, output_sizes, terminal_result=None, checkpoint=None):
+    """Wait for a file-fed child while observing I/O, session files and tree work.
+
+    ``checkpoint`` runs between waits; whatever it raises ends the wait with the child still running.
+    """
     started = time.monotonic()
     state = WatchdogState(start_time=started, last_activity=started)
     paths = (stdout_path, stderr_path)
@@ -93,6 +96,8 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
             return
         except subprocess.TimeoutExpired:
             pass
+        if checkpoint:
+            checkpoint()
         now = time.monotonic()
         if not terminal_seen and terminal_result and terminal_result():
             terminal_seen = True

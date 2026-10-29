@@ -109,6 +109,7 @@ sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
         ShellPreprocessLimit,
+        preprocess_shell_command,
         skippable_heredoc_delimiters,
         strip_shell_comments,
         strip_skippable_heredoc_bodies,
@@ -118,13 +119,14 @@ except Exception as exc:
     raise SystemExit(2) from exc
 
 try:
-    from shell_redirects import scope_events
+    from shell_redirects import literal_lines, scope_events
 except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
 try:
     from scripts.ci.advisory_checks import is_advisory as is_advisory
+    from scripts.common.github_client import _gh_api_call
     from scripts.publish.merge_guard import (
         _checks_json_unsupported,
         _parse_status_rollup_rows,
@@ -617,6 +619,44 @@ def _shell_c_payload(seg: list[str]) -> str | None:
 _MAX_SHELL_DEPTH = 8
 
 
+def _literal_gh_read(argv: list[str]) -> bool:
+    start, _ = _invoked_start(argv)
+    argv = argv[start:]
+    if argv[:2] == ["gh", "pr"]:
+        return argv[2:3] in (["view"], ["list"], ["checks"])
+    if argv[:2] != ["gh", "api"]:
+        return False
+    try:
+        call = _gh_api_call(argv[2:], stdin=None, cwd=None)
+    except RecursionError:
+        return False
+    return call is not None and call.method == "GET"
+
+
+def _literal_reads_only(command: str) -> bool:
+    """Discharge merge-word candidates only at proven read command positions."""
+    # Group only untouched executable text: preprocessing can remove quotes
+    # that Bash still acts on. Input redirects may also leave heredoc data.
+    if "<" in command or "\r" in command or preprocess_shell_command(command) != command:
+        return False
+    found_read = False
+    for kind, argv in scope_events(
+        command,
+        mark_redirect_unreadable=False,
+        unreadable_marker=_UNREADABLE_MARKER,
+        unparsed=_UNPARSED,
+        may_match=_merge_candidate,
+        line_reader=literal_lines,
+    ):
+        if kind == "unreadable":
+            return False
+        if kind == "segment" and _merge_candidate(shlex.join(argv)):
+            if not _literal_gh_read(argv):
+                return False
+            found_read = True
+    return found_read
+
+
 def _may_merge(command: str, depth: int = 0) -> bool:
     """Recognize merge operations before applying cwd or readiness refusals.
 
@@ -624,6 +664,8 @@ def _may_merge(command: str, depth: int = 0) -> bool:
     payloads are command text; ordinary arguments, JSON fields and searches are data.
     The judging pass retains its fail-closed policy for a recognized operation.
     """
+    if _literal_reads_only(command):
+        return False
     for kind, argv in _scope_events(command, mark_redirect_unreadable=False):
         if kind != "segment":
             continue

@@ -1,7 +1,7 @@
 {
   "schema": "uk-behaviour-freeze/2",
   "status": "PROTOCOL_FROZEN_DATA_UNSEALED",
-  "observed_base_sha": "d0ccabb946c968e4be775bc3a018a656ab00c6a1",
+  "observed_base_sha": "4ba600e9824b5e2a58d46d59d5ddbff20d2f0eda",
   "protocol": "uk-behaviour/2",
   "scorer": "uk-behaviour-score/2",
   "baseline_authorized_by_this_artifact": false,
@@ -652,7 +652,7 @@
   "assets": [
     {
       "path": "docs/evaluations/uk-preamble.md",
-      "sha256": "6286bcdc81feaf4a8edee790a70c789e2452e2102091fc6b90c5e788b28df847"
+      "sha256": "a05dd20903c998351c6bb726e68e8baf8b54f2201816315103c2e809c17230be"
     },
     {
       "path": "docs/evaluations/lesson-ab.md",
@@ -684,11 +684,11 @@
     },
     {
       "path": "tests/test_ulif_stress_oracle.py",
-      "sha256": "43846dc861fb45a5683b7021468976e2171a7d91001ec6b068e64e529854a2ec"
+      "sha256": "c132eeca3aff2b8911383ffe8e4d8ad0150adf88d1cb6fdb036eb2d7155e4941"
     },
     {
       "path": "agents_extensions/shared/rules/core.md",
-      "sha256": "2529a665c5257836fc475a59bef270e087da05561aaaea79394714ba687d70fe"
+      "sha256": "eea64a0574eef4c1ea65bef96272aecb5c41762449a73aef112d126422739f48"
     },
     {
       "path": "agents_extensions/shared/rules/core-curriculum.md",
@@ -696,7 +696,7 @@
     },
     {
       "path": "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",
-      "sha256": "73077dcfffcdab66dd1598f836daab7f4a181264b98fe3fc15cf82665992106f"
+      "sha256": "f2e63ded6b2481c1c116ccfa5b72fc56cf0c69c3c37be209aa1a77249bcd06b0"
     },
     {
       "path": "agents_extensions/shared/rules/ukrainian-linguistics.md",
@@ -704,7 +704,7 @@
     },
     {
       "path": "agents_extensions/shared/rules/storage-topology.md",
-      "sha256": "b024ec40d3791f6f7db858c5179baef1a40556175d204fb657a14d3f5d1fc847"
+      "sha256": "72284564fc69c574f59d07bdf4f6e3abdf75f93d156cedd740ca5bd80b2d8483"
     },
     {
       "path": "agents_extensions/shared/agents/curriculum-writer.md",
@@ -732,7 +732,7 @@
     },
     {
       "path": "scripts/atlas/word_card_assembly.py",
-      "sha256": "60dd1d6701f8a4a483b13967ba3bb6ec7eb2fa3d8a6fbe37940e781169e0fd1d"
+      "sha256": "c8742ceb06607404ea2d420fbd7b6d342e3f88213c7ff582739ee009f67b72ba"
     },
     {
       "path": "scripts/atlas/word_card_contrasts.py",
@@ -744,7 +744,7 @@
     },
     {
       "path": "scripts/review/receipts/outcomes.py",
-      "sha256": "487d6840ce6d963554ce438460dd63f59b76b667be37494a9cc8d5633c192567"
+      "sha256": "cfa806c9af821ef3c060b97b54b059fed7b808eb5c190128f76f58b456db5420"
     },
     {
       "path": "scripts/eval/uk_preamble/__init__.py",
@@ -912,8 +912,8 @@
     },
     {
       "ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
-      "sha256": null,
-      "status": "MISSING",
+      "sha256": "0f55c4e5a59110cdccd56c0bea55d28ef71bfa7030a9e8cee972f3459a0709f7",
+      "status": "PINNED",
       "owner": "evaluation-maintainer"
     },
     {
@@ -930,14 +930,14 @@
     },
     {
       "ref": "private://uk-behaviour-v2/card-review-prompt",
-      "sha256": null,
-      "status": "MISSING",
+      "sha256": "d76190af4bd9ac9c13c1a9cfb205dd1a2e6d24e3d0f0aeb9e1ed286daf9d1399",
+      "status": "PINNED",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
       "ref": "private://uk-behaviour-v2/exercise-review-prompt",
-      "sha256": null,
-      "status": "MISSING",
+      "sha256": "fd5bfb6170280721f401943660ec154c35325d82f16e7dc8d2493ae8d91cbcff",
+      "status": "PINNED",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
@@ -961,8 +961,8 @@
     },
     {
       "ref": "private://uk-behaviour-v2/pedagogy-review-prompt",
-      "sha256": null,
-      "status": "MISSING",
+      "sha256": "201afd85c8c37f444aa8926426698c68d1b363daefda5c3f303f30e205b8c9a2",
+      "status": "PINNED",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
@@ -1274,5 +1274,184 @@
       "judging_mode",
       "primary_defect_kind"
     ]
+  },
+  "g3": {
+    "status": "PINNED",
+    "harness": "uk-behaviour-harness/1",
+    "scorer": "uk-behaviour-score/2",
+    "code": [
+      {
+        "path": "scripts/eval/uk_behaviour/__init__.py",
+        "sha256": "cfb95667ccdd0c77919107ea4744785acf6722e8c5c3f582afacc401de226352"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/__main__.py",
+        "sha256": "05e47f09ec3b797b8f7adb588ace7e520e3456c1550003c61fb10e44b798c651"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/adapters.py",
+        "sha256": "9e46e464f5edbadb272d00c93f7b91a1e93eb2d82e311c5cb328db82a12a583e"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/binding.py",
+        "sha256": "ae9607d96a418f12e7706f2029a85881678ce8a9911d2651902dd75ae4e60ded"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/contract.py",
+        "sha256": "d3f3ce3a522f7aeef805507ee867ef26143c0caabda3db2a856bd8a8412d2aa2"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/coverage.py",
+        "sha256": "3eea6e288f6e86331ea73061f0c7da5b1b62ca2f3f81a3d1aeaa5eccce93030d"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/judge.py",
+        "sha256": "c256ce8e914c7c3c9fc58d2d046757bcebe2659ec65af1335a651977554e8823"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/pins.py",
+        "sha256": "e5ba8b903063c544fa3b4073c87bde95cd1bb832a2c1a1c42f515b6ba669d041"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/prove.py",
+        "sha256": "57d27f74dbdb40ffc6f4092a30711526ee53adb44b23122c44e0ec4314cf0171"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/reward.py",
+        "sha256": "7805e54674c3ce5de1fdd36956c712540e897d4b3a7641739a7d367d05a303e6"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/rubric.py",
+        "sha256": "2759598c6571b627445ce6805f34939fa3eefd354b668ecae189a2eaa5140390"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/runner.py",
+        "sha256": "623e4e2ff301080b8aa3530df34cc12e2d63843d62b638922c0a101606f5783d"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/scorer.py",
+        "sha256": "0e44a9a0a229881058f3b9770d4943eb48e0f699b0bc5cd41d3a363506cb6e5e"
+      }
+    ],
+    "rubric_sha256": "cbe49a10920c76e2778a7d067dc15c7d1524af5d3dae816b948ae1436cc875d7",
+    "judge_template_sha256": "2332a0cfec2aa7126e9d5f9cc7aeb591c4528357989a0113fd3de00c1860126c",
+    "judge_template_ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
+    "review_prompts": [
+      {
+        "family": "card_review",
+        "ref": "private://uk-behaviour-v2/card-review-prompt",
+        "sha256": "d76190af4bd9ac9c13c1a9cfb205dd1a2e6d24e3d0f0aeb9e1ed286daf9d1399",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 5,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-5",
+          "sha256": "168c69b9eae74bb756f468a8cce82be5f67b26b153ee2bb0d2c03d5bbbb21b73"
+        }
+      },
+      {
+        "family": "exercise_review",
+        "ref": "private://uk-behaviour-v2/exercise-review-prompt",
+        "sha256": "fd5bfb6170280721f401943660ec154c35325d82f16e7dc8d2493ae8d91cbcff",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 5,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-5",
+          "sha256": "168c69b9eae74bb756f468a8cce82be5f67b26b153ee2bb0d2c03d5bbbb21b73"
+        }
+      },
+      {
+        "family": "pedagogy_review",
+        "ref": "private://uk-behaviour-v2/pedagogy-review-prompt",
+        "sha256": "201afd85c8c37f444aa8926426698c68d1b363daefda5c3f303f30e205b8c9a2",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 3,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-3",
+          "sha256": "d7fbfd5f347e2b2ab7bac81ddb78ca09b4bfece0627b1e691791c605b154bb83"
+        }
+      }
+    ],
+    "caps": {
+      "fresh_lesson": {
+        "max_bytes": 65536,
+        "max_tokens": 16384,
+        "max_claims": 12,
+        "max_edits": 0,
+        "batched": 400
+      },
+      "fresh_activities": {
+        "max_bytes": 65536,
+        "max_tokens": 16384,
+        "max_claims": 12,
+        "max_edits": 0,
+        "batched": 400
+      },
+      "v7_module": {
+        "max_bytes": 131072,
+        "max_tokens": 40000,
+        "max_claims": 10,
+        "max_edits": 0,
+        "batched": 400
+      },
+      "exercise_review": {
+        "max_bytes": 24576,
+        "max_tokens": 6144,
+        "max_claims": 12,
+        "max_edits": 12,
+        "batched": 0
+      },
+      "card_review": {
+        "max_bytes": 16384,
+        "max_tokens": 4096,
+        "max_claims": 8,
+        "max_edits": 8,
+        "batched": 0
+      },
+      "passage_review": {
+        "max_bytes": 32768,
+        "max_tokens": 8192,
+        "max_claims": 14,
+        "max_edits": 14,
+        "batched": 0
+      },
+      "pedagogy_review": {
+        "max_bytes": 24576,
+        "max_tokens": 6144,
+        "max_claims": 10,
+        "max_edits": 0,
+        "batched": 0
+      }
+    },
+    "cap_units": {
+      "max_bytes": "UTF-8 bytes of the output",
+      "max_tokens": "uk-preamble scoring tokens",
+      "max_claims": "individually checked assertions, every repetition counted",
+      "batched": "batch-checked form and sense assertions (writer families only)",
+      "max_edits": "proposed or applied edits"
+    },
+    "judge_sources_calls_worst_case": {
+      "fresh_lesson": 27,
+      "fresh_activities": 27,
+      "v7_module": 23,
+      "exercise_review": 25,
+      "card_review": 17,
+      "passage_review": 29,
+      "pedagogy_review": 21
+    },
+    "answer_position_rule": "Ordered block of at least six choice items: defect when one zero-based key position holds the key in at least ceil(0.8 n) items, or the whole key-position sequence repeats a cycle of length 2 or 3 from first to last item.",
+    "no_paid_proof": {
+      "command": ".venv/bin/python -m scripts.eval.uk_behaviour prove",
+      "tests": "tests/eval/test_uk_behaviour_proof.py",
+      "provider_calls": 0
+    }
   }
 }

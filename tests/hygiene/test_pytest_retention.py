@@ -1579,6 +1579,60 @@ def test_payload(tmp_path):
     assert list(runs_dir.iterdir()) == runs
 
 
+@pytest.mark.parametrize(
+    ("finish", "returncode", "kept"),
+    [
+        pytest.param("", pytest.ExitCode.OK, False, id="clean_pass_removes"),
+        pytest.param("later_monitor_usage_error", pytest.ExitCode.USAGE_ERROR, True, id="later_hook_usage_error_keeps"),
+        # Pytest catches this exit and leaves the exit status at 0.
+        pytest.param("hook_exit", pytest.ExitCode.OK, True, id="finish_hook_exit_keeps"),
+    ],
+)
+def test_only_a_passed_session_removes_its_run(pytester, area, finish, returncode, kept):
+    root, _args = area
+    pytester.makeini("[pytest]\ntmp_path_retention_policy = failed\n")
+    pytester.makeconftest(f'''
+import os
+import sys
+import pytest
+sys.path.insert(0, {str(REPO)!r})
+pytest_plugins = ["scripts.common.pytest_scratch"]
+FINISH = os.environ.get("SESSION_FINISH")
+
+# Outermost, so this monitor is added last and wraps every other one.
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtestloop(session):
+    result = yield
+    if FINISH == "later_monitor_usage_error":
+        def after(outcome, hook_name, _impls, kwargs):
+            if hook_name == "pytest_sessionfinish":
+                raise pytest.UsageError("a later session-finish monitor failed")
+        session.config.pluginmanager.add_hookcall_monitoring(lambda *_: None, after)
+    return result
+
+def pytest_sessionfinish(session):
+    if FINISH == "hook_exit":
+        pytest.exit("abort")
+''')
+    pytester.makepyfile("def test_passes(tmp_path):\n    (tmp_path / 'payload').write_text('hello')\n")
+    (root / "pytest-runs").mkdir(mode=0o700)
+    runs_dir = root / "pytest-runs" / "runs"
+
+    # Pytester's runner injects --basetemp, which intentionally opts out of ownership.
+    result = subprocess.run(
+        [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider"],
+        cwd=pytester.path, capture_output=True, text=True, timeout=60,
+        env={**os.environ, "LU_SCRATCH_ROOT": str(root), "SESSION_FINISH": finish},
+    )
+    assert result.returncode == returncode, result.stdout + result.stderr
+    runs = list(runs_dir.iterdir())
+    if kept:
+        (run,) = runs
+        assert (run / "scratch" / "base").is_dir()
+    else:
+        assert not runs
+
+
 def use_real_proc(monkeypatch) -> None:
     """Judge lease liveness against the real process table, never a fabricated one."""
     monkeypatch.setattr(pytest_retention, "PROC_ROOT", Path("/proc"))

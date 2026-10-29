@@ -45,21 +45,21 @@ inline:
     correct_order: [0, 1, 2, 3, 4]
   - id: act-3
     type: match-up
-    title: Match the tense
-    instruction: Match each phrase with its time.
+    title: Story phrases
+    instruction: Match each Ukrainian phrase with its English meaning.
     pairs:
       - left: 'я народився'
-        right: 'past'
+        right: 'I was born'
       - left: 'я жила'
-        right: 'past'
+        right: 'I lived (female speaker)'
       - left: 'я живу'
-        right: 'present'
+        right: 'I live'
       - left: 'я працюю'
-        right: 'present'
+        right: 'I work'
       - left: 'я буду подорожувати'
-        right: 'future'
+        right: 'I will travel'
       - left: 'ми будемо вчити'
-        right: 'future'
+        right: 'we will study'
   - id: act-4
     type: group-sort
     title: Sort story pieces
@@ -73,13 +73,13 @@ inline:
           - 'у дитинстві'
       - name: 'present'
         items:
-          - 'зараз'
+          - 'зараз я живу в Києві'
           - 'я живу'
           - 'я працюю'
           - 'я вивчаю'
       - name: 'future'
         items:
-          - 'далі'
+          - 'далі я буду подорожувати'
           - 'я буду жити'
           - 'ми будемо вчити'
           - 'вона буде працювати'
@@ -100,21 +100,49 @@ workbook:
       - statement: 'Мене звати Софія.'
         answer: true
         explanation: 'This is the normal A1 name phrase.'
-      - statement: "Моє ім'я є Софія."
+      - statement: "Мене звати Софію."
         answer: false
-        explanation: 'Use Мене звати..., not an English-style my-name-is sentence.'
-  - type: unjumble
-    title: Build story lines
-    instruction: Put the words in a natural order.
+        explanation: 'With Мене звати, the name here is nominative Софія, not accusative Софію.'
+  - type: quiz
+    title: Choose story lines
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: 'Раніше/я/жив/у/Торонто'
-        answer: 'Раніше я жив у Торонто.'
-      - words: 'Зараз/я/живу/в/Києві'
-        answer: 'Зараз я живу в Києві.'
-      - words: 'Далі/я/буду/вчити/українську'
-        answer: 'Далі я буду вчити українську.'
-      - words: 'Мене/звати/Софія'
-        answer: 'Мене звати Софія.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Раніше я жив у Торонто.
+            correct: true
+          - text: Раніше я жили у Торонто.
+            correct: false
+          - text: Раніше ми жив у Торонто.
+            correct: false
+        explanation: The key has matching subject and verb forms. я жили and ми жив combine a singular subject with a plural verb or a plural subject with a singular verb.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Зараз я живу в Києві.
+            correct: true
+          - text: Зараз я живеш в Києві.
+            correct: false
+          - text: Зараз я живуть в Києві.
+            correct: false
+        explanation: The stated subject agrees with живу, not with the person/number forms живеш or живуть.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Далі я буду вчити українську.
+            correct: true
+          - text: Далі я будеш вчити українську.
+            correct: false
+          - text: Далі я будемо вчити українську.
+            correct: false
+        explanation: The subject agrees with буду; будеш and будемо belong to different persons or numbers.
+      - prompt: — Як тебе звати? — ___
+        options:
+          - text: Мене звати Софія.
+            correct: true
+          - text: Мене звати Софію.
+            correct: false
+          - text: Мене звати Софії.
+            correct: false
+        explanation: This construction requires nominative Софія. Софію and Софії are different case forms.
   - type: fill-in
     title: Complete the mini biography
     instruction: "Choose the form that completes the story."
@@ -173,7 +201,7 @@ workbook:
         options:
           - text: 'Мене звати Данило.'
             correct: true
-          - text: "Моє ім'я є Данило."
+          - text: "Мене звати Данилу."
             correct: false
           - text: 'Я звати Данило.'
             correct: false
@@ -211,25 +239,25 @@ workbook:
         explanation: 'Use буду + infinitive for the future.'
   - type: error-correction
     title: Repair the timeline
-    instruction: Fix the time word and verb so the story stays clear.
+    instruction: Keep the named speaker, subject and time words. Correct forms; use the compound future for future plans.
     items:
-      - sentence: 'Раніше я живу в Канаді.'
-        error: 'живу'
-        correction: 'жив / жила'
-        explanation: 'Раніше points to the past.'
-      - sentence: 'Зараз я жив у Києві.'
+      - sentence: 'Раніше Олена жив у Канаді.'
         error: 'жив'
+        correction: 'жила'
+        explanation: 'Олена agrees with feminine singular жила, not masculine жив.'
+      - sentence: 'Зараз я живеш у Києві.'
+        error: 'живеш'
         correction: 'живу'
-        explanation: 'Зараз points to the present.'
-      - sentence: 'Далі я працював тут.'
-        error: 'працював'
-        correction: 'буду працювати'
-        explanation: 'Далі points to a future plan.'
+        explanation: 'Я agrees with first-person живу, not second-person живеш.'
+      - sentence: 'Завтра я буду працює тут.'
+        error: 'працює'
+        correction: 'працювати'
+        explanation: 'Буду combines with infinitive працювати, not finite працює.'
       - sentence: 'Я буду працюю в офісі.'
         error: 'працюю'
         correction: 'працювати'
         explanation: 'After буду, use the infinitive працювати.'
-      - sentence: 'Моє ім''я є Софія.'
-        error: 'Моє ім''я є'
-        correction: 'Мене звати'
-        explanation: 'Use the familiar A1 name phrase Мене звати.'
+      - sentence: 'Мене звати Софію.'
+        error: 'Софію'
+        correction: 'Софія'
+        explanation: 'The name in Мене звати Софія is nominative.'

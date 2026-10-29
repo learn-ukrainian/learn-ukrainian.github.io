@@ -1,25 +1,25 @@
 inline:
   - id: act-1
     type: match-up
-    title: Past endings map
-    instruction: Match each subject with the regular past-tense ending.
+    title: Match the past form
+    instruction: Match each subject and infinitive with the corresponding past form.
     pairs:
-      - left: 'він'
-        right: '-в'
-      - left: 'вона'
-        right: '-ла'
-      - left: 'воно'
-        right: '-ло'
-      - left: 'вони'
-        right: '-ли'
-      - left: 'ми'
-        right: '-ли'
-      - left: 'Олена'
-        right: '-ла'
-      - left: 'Тарас'
-        right: '-в'
-      - left: 'друзі'
-        right: '-ли'
+      - left: 'він (читати)'
+        right: 'читав'
+      - left: 'вона (готувати)'
+        right: 'готувала'
+      - left: 'воно (працювати)'
+        right: 'працювало'
+      - left: 'вони (говорити)'
+        right: 'говорили'
+      - left: 'ми (гуляти)'
+        right: 'гуляли'
+      - left: 'Олена (слухати)'
+        right: 'слухала'
+      - left: 'Тарас (писати)'
+        right: 'писав'
+      - left: 'друзі (дивитися)'
+        right: 'дивилися'
   - id: act-2
     type: fill-in
     title: Choose the past form
@@ -156,39 +156,84 @@ workbook:
       - statement: 'Я буду читав завтра.'
         answer: false
         explanation: 'After буду, use the infinitive: буду читати.'
-  - type: unjumble
-    title: Build short past sentences
-    instruction: Put the words in a natural order.
+  - type: quiz
+    title: Choose short past sentences
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: ['Учора', 'Тарас', 'читав', 'книжку']
-        answer: 'Учора Тарас читав книжку.'
-      - words: ['Олена', 'готувала', 'вечерю']
-        answer: 'Олена готувала вечерю.'
-      - words: ['Ми', 'гуляли', 'в', 'парку']
-        answer: 'Ми гуляли в парку.'
-      - words: ['Вони', 'працювали', 'разом']
-        answer: 'Вони працювали разом.'
-      - words: ['Що', 'ти', 'робив', 'учора']
-        answer: 'Що ти робив учора?'
-      - words: ['Що', 'ти', 'робила', 'учора']
-        answer: 'Що ти робила учора?'
-  - type: order
-    title: From one subject to many
-    instruction: Put the transformation path in order.
-    items:
-      - 'він читав'
-      - 'вона читала'
-      - 'воно читало'
-      - 'вони читали'
-    correct_order: [0, 1, 2, 3]
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Учора Тарас читав книжку.
+            correct: true
+          - text: Учора Тарас читала книжку.
+            correct: false
+          - text: Учора Тарас читали книжку.
+            correct: false
+        explanation: The stated subject requires читав; читала and читали have a different past-tense gender or number.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Олена готувала вечерю.
+            correct: true
+          - text: Олена готував вечерю.
+            correct: false
+          - text: Олена готували вечерю.
+            correct: false
+        explanation: The stated subject requires готувала; готував and готували have a different past-tense gender or number.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Ми гуляли в парку.
+            correct: true
+          - text: Ми гуляв в парку.
+            correct: false
+          - text: Ми гуляла в парку.
+            correct: false
+        explanation: The stated subject requires гуляли; гуляв and гуляла have a different past-tense gender or number.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Вони працювали разом.
+            correct: true
+          - text: Вони працював разом.
+            correct: false
+          - text: Вони працювала разом.
+            correct: false
+        explanation: The stated subject requires працювали; працював and працювала have a different past-tense gender or number.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Що ти робив учора?
+            correct: true
+          - text: Що я робили учора?
+            correct: false
+          - text: Що ми робив учора?
+            correct: false
+        explanation: The key has matching subject and verb forms. я робили and ми робив combine a singular subject with a plural verb or a plural subject with a singular verb.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Що ти робила учора?
+            correct: true
+          - text: Що я робили учора?
+            correct: false
+          - text: Що ми робила учора?
+            correct: false
+        explanation: The key has matching subject and verb forms. я робили and ми робила combine a singular subject with a plural verb or a plural subject with a singular verb.
+  - type: match-up
+    title: One subject or many?
+    instruction: Match the subject with its past-tense form.
+    pairs:
+      - left: він
+        right: читав
+      - left: вона
+        right: читала
+      - left: воно
+        right: читало
+      - left: вони
+        right: читали
   - type: error-correction
     title: Repair the A1 past tense
-    instruction: Fix the sentence by choosing the correct A1 form.
+    instruction: Keep the stated speaker, subject, time words and future auxiliary. Correct the verb form or spelling.
     items:
-      - sentence: 'Чоловік: Я читала. Жінка: Я читав.'
-        error: 'Чоловік: Я читала. Жінка: Я читав.'
-        correction: 'Чоловік: Я читав. Жінка: Я читала.'
-        explanation: 'The male speaker uses читав; the female speaker uses читала.'
+      - sentence: 'Жінка: Я читав книжку.'
+        error: 'читав'
+        correction: 'читала'
+        explanation: 'The stated female speaker uses читала.'
       - sentence: 'Чоловік: Я читала.'
         error: 'читала'
         correction: 'читав'
@@ -207,16 +252,20 @@ workbook:
         explanation: 'Past plural is читали; do not add present endings.'
       - sentence: 'Сонце встав.'
         error: 'встав'
-        correction: 'Сонце встало.'
+        correction: 'встало'
         explanation: 'Сонце is neuter, so use -ло.'
       - sentence: 'Я буду читав завтра.'
         error: 'читав'
         correction: 'читати'
         explanation: 'After буду, use the infinitive читати.'
-      - sentence: 'Він принісв книгу. або Він везв сумку.'
-        error: 'принісв / везв'
-        correction: 'Він приніс книгу. / Він віз сумку.'
-        explanation: 'This is later recognition only; do not build these forms by the A1 regular pattern.'
+      - sentence: 'Він принісв книгу.'
+        error: 'принісв'
+        correction: 'приніс'
+        explanation: 'The masculine past form is приніс. It does not add another -в.'
+        options:
+          - приніс
+          - принесла
+          - принесли
   - type: translate
     title: Say it in Ukrainian
     instruction: Choose the Ukrainian line that matches the English prompt.
@@ -254,7 +303,7 @@ workbook:
             correct: true
           - text: 'Що ти робила учора?'
             correct: false
-          - text: 'Що ви робили учора?'
+          - text: 'Що ми робили учора?'
             correct: false
         explanation: 'Ivan is male, so the question uses робив.'
       - source: 'What were you doing yesterday? (to Olena)'

@@ -147,6 +147,24 @@ def test_merge_substrings_and_literal_arguments_do_not_engage_guard(monkeypatch,
 
 
 @pytest.mark.parametrize(
+    "command",
+    [
+        'cd /repo && for t in a b; do echo "$t"; done; '
+        'gh pr view 11978 --json state,mergedAt --jq "\n{state,mergedAt}\n"',
+        'cd /repo && .venv/bin/python -c "import json; print(json.dumps(dict()))"; '
+        'tail -c 2500 file; gh pr view 11971 --json headRefOid,statusCheckRollup,mergeStateStatus '
+        '--jq "\n{headRefOid,statusCheckRollup,mergeStateStatus}\n"',
+    ],
+)
+def test_multiline_jq_fields_do_not_fabricate_an_unreadable_merge(monkeypatch, command):
+    """AC-03: quoted jq newlines in the two reported compound reads are data."""
+    monkeypatch.setattr(guard, "_pr_snapshot", lambda *a, **kw: pytest.fail("read-only command reached PR lookup"))
+    assert not guard._may_merge(command)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 0
+
+
+@pytest.mark.parametrize(
     "shape",
     [
         "echo $((1 << EOF))\n{payload}\nEOF",

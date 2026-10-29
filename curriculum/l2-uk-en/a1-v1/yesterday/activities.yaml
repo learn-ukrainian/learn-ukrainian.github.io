@@ -4,12 +4,12 @@ inline:
     title: Put the day in order
     instruction: Arrange Анна's yesterday from morning to night.
     items:
-      - 'Зранку я прокинулася о сьомій.'
-      - 'Спочатку я поснідала.'
-      - 'Потім я пішла на роботу.'
-      - 'Вдень я обідала з колегою.'
-      - 'Ввечері я повернулася додому.'
-      - 'Нарешті я лягла спати.'
+      - 'О сьомій ранку я прокинулася.'
+      - 'О восьмій ранку я поснідала.'
+      - 'Потім, о дев’ятій ранку, я пішла на роботу.'
+      - 'Вдень, о першій, я обідала з колегою.'
+      - 'Ввечері, о шостій, я повернулася додому.'
+      - 'Нарешті, об одинадцятій вечора, я лягла спати.'
     correct_order: [0, 1, 2, 3, 4, 5]
   - id: act-2
     type: fill-in
@@ -156,21 +156,56 @@ workbook:
         explanation: 'Лягла matches the female speaker.'
       - statement: 'Учора я працює в офісі.'
         answer: false
-        explanation: 'Учора needs a past form: працювала.'
-  - type: unjumble
-    title: Build yesterday sentences
-    instruction: Put the words in a natural order.
+        explanation: 'Я cannot agree with third-person працює. In this female-speaker past story, use працювала.'
+  - type: quiz
+    title: Choose yesterday sentences
+    instruction: Choose the sentence whose words fit together.
     items:
-      - words: ['Учора', 'я', 'прокинулася', 'о', 'сьомій']
-        answer: 'Учора я прокинулася о сьомій.'
-      - words: ['Потім', 'я', 'поснідала']
-        answer: 'Потім я поснідала.'
-      - words: ['Вдень', 'я', 'обідала', 'з', 'колегою']
-        answer: 'Вдень я обідала з колегою.'
-      - words: ['Ввечері', 'я', 'купила', 'продукти']
-        answer: 'Ввечері я купила продукти.'
-      - words: ['Нарешті', 'я', 'лягла', 'спати']
-        answer: 'Нарешті я лягла спати.'
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Учора я прокинулася о сьомій.
+            correct: true
+          - text: Учора я прокинулися о сьомій.
+            correct: false
+          - text: Учора ми прокинулася о сьомій.
+            correct: false
+        explanation: The key has matching subject and verb forms. я прокинулися and ми прокинулася combine a singular subject with a plural verb or a plural subject with a singular verb.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Потім я поснідала.
+            correct: true
+          - text: Потім я поснідали.
+            correct: false
+          - text: Потім ми поснідала.
+            correct: false
+        explanation: The key has matching subject and verb forms. я поснідали and ми поснідала combine a singular subject with a plural verb or a plural subject with a singular verb.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Вдень я обідала з колегою.
+            correct: true
+          - text: Вдень я обідали з колегою.
+            correct: false
+          - text: Вдень ми обідала з колегою.
+            correct: false
+        explanation: The key has matching subject and verb forms. я обідали and ми обідала combine a singular subject with a plural verb or a plural subject with a singular verb.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Ввечері я купила продукти.
+            correct: true
+          - text: Ввечері я купили продукти.
+            correct: false
+          - text: Ввечері ми купила продукти.
+            correct: false
+        explanation: The key has matching subject and verb forms. я купили and ми купила combine a singular subject with a plural verb or a plural subject with a singular verb.
+      - prompt: Обери правильно побудоване речення.
+        options:
+          - text: Нарешті я лягла спати.
+            correct: true
+          - text: Нарешті я лягли спати.
+            correct: false
+          - text: Нарешті ми лягла спати.
+            correct: false
+        explanation: The key has matching subject and verb forms. я лягли and ми лягла combine a singular subject with a plural verb or a plural subject with a singular verb.
   - type: translate
     title: Say the day in Ukrainian
     instruction: Choose the Ukrainian sentence that matches the English prompt.
@@ -181,7 +216,7 @@ workbook:
             correct: true
           - text: 'Учора я прокинувся о сьомій.'
             correct: false
-          - text: 'Учора я прокидаюся о сьомій.'
+          - text: 'Учора ми прокинулися о сьомій.'
             correct: false
         explanation: 'For a female speaker in the past, use прокинулася.'
       - source: 'Then I had breakfast. (female speaker)'
@@ -190,7 +225,7 @@ workbook:
             correct: true
           - text: 'Потім я поснідав.'
             correct: false
-          - text: 'Потім я снідаю.'
+          - text: 'Потім вона поснідала.'
             correct: false
         explanation: 'Поснідала fits the female speaker.'
       - source: 'In the afternoon I had lunch with a colleague. (female speaker)'
@@ -208,7 +243,7 @@ workbook:
             correct: true
           - text: 'Ввечері я дивився серіал.'
             correct: false
-          - text: 'Ввечері я дивлюся серіал.'
+          - text: 'Ввечері вони дивилися серіал.'
             correct: false
         explanation: 'Дивилася matches the female speaker.'
   - type: fill-in
@@ -252,7 +287,7 @@ workbook:
         explanation: 'Лягла fits a female speaker.'
   - type: error-correction
     title: Repair the yesterday narrative
-    instruction: Fix the sentence so it matches one female speaker's day.
+    instruction: Keep the female speaker, subject and time words. Correct the past-tense verb.
     items:
       - sentence: 'Зранку я прокинувся о сьомій.'
         error: 'прокинувся'

@@ -29,8 +29,8 @@ inline:
         answer: 'бо'
         options:
           - 'бо'
-          - 'а'
-          - 'або'
+          - 'якого'
+          - 'котрому'
         explanation: 'Use бо to answer чому?'
       - sentence: 'Мама ___ тато вдома.'
         answer: 'й'
@@ -169,52 +169,94 @@ inline:
   - id: act-4
     type: group-sort
     title: Connector shelves
-    instruction: Sort each connector by its A1 job.
+    instruction: Sort each complete sentence by the relationship expressed by its connector.
     groups:
-      - name: 'add'
+      - name: 'addition'
         items:
-          - 'і'
-          - 'й'
-          - 'та'
-      - name: 'compare or contrast'
+          - 'Я читаю і пишу.'
+          - 'Мама й тато вдома.'
+          - 'Хліб та масло на столі.'
+      - name: 'comparison or contrast'
         items:
-          - 'а'
-          - 'але'
+          - Я працюю, а брат навчається.
+          - Я хочу, але не можу.
+          - Я хочу, проте не можу.
+          - Тут холодно, зате вдома тепло.
+          - Я хочу, однак не можу.
       - name: 'choice'
         items:
-          - 'або'
-          - 'чи'
+          - 'Кава або чай?'
+          - 'Ви студент чи лікар?'
       - name: 'reason'
         items:
-          - 'бо'
-          - 'тому що'
-      - name: 'recognize later'
+          - 'Я вдома, бо я хворий.'
+          - 'Ми вдома, тому що йде дощ.'
+      - name: 'time, condition or purpose'
         items:
-          - 'проте'
-          - 'зате'
-          - 'однак'
-          - 'щоб'
-          - 'якщо'
-          - 'коли'
-          - 'поки'
-          - 'відколи'
+          - Я читаю, щоб знати більше.
+          - Якщо буде дощ, я буду вдома.
+          - Коли буде дощ, я буду вдома.
+          - Поки йде дощ, я вдома.
+          - Відколи я тут, я вчу українську.
 workbook:
-  - type: unjumble
-    title: Build connected sentences
-    instruction: Put the words in a natural order.
+  - type: quiz
+    title: Choose connected sentences
+    instruction: Choose standard punctuation for these neutral sentences.
     items:
-      - words: ['Я', 'читаю', 'і', 'пишу']
-        answer: 'Я читаю і пишу.'
-      - words: ['Я', 'хочу', 'каву', 'а', 'ти']
-        answer: 'Я хочу каву, а ти?'
-      - words: ['Гори', 'гарні', 'але', 'далеко']
-        answer: 'Гори гарні, але далеко.'
-      - words: ['Море', 'тепле', 'бо', 'літо']
-        answer: 'Море тепле, бо літо.'
-      - words: ['Ви', 'студент', 'чи', 'лікар']
-        answer: 'Ви студент чи лікар?'
-      - words: ['Ми', 'вдома', 'тому', 'що', 'йде', 'дощ']
-        answer: 'Ми вдома, тому що йде дощ.'
+      - prompt: Choose the standard punctuation for this neutral sentence.
+        options:
+          - text: Я читаю і пишу.
+            correct: true
+          - text: Я, читаю і пишу.
+            correct: false
+          - text: Я читаю і, пишу.
+            correct: false
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
+        options:
+          - text: Я хочу каву, а ти?
+            correct: true
+          - text: Я хочу каву а ти?
+            correct: false
+          - text: Я хочу, каву а ти?
+            correct: false
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
+        options:
+          - text: Гори гарні, але далеко.
+            correct: true
+          - text: Гори гарні але далеко.
+            correct: false
+          - text: Гори, гарні але далеко.
+            correct: false
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
+        options:
+          - text: Море тепле, бо літо.
+            correct: true
+          - text: Море тепле бо літо.
+            correct: false
+          - text: Море тепле бо, літо.
+            correct: false
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
+        options:
+          - text: Ви студент чи лікар?
+            correct: true
+          - text: Ви студент чи, лікар?
+            correct: false
+          - text: Ви студент, чи, лікар?
+            correct: false
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
+        options:
+          - text: Ми вдома, тому що йде дощ.
+            correct: true
+          - text: Ми вдома тому що йде дощ.
+            correct: false
+          - text: Ми вдома тому що, йде дощ.
+            correct: false
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
   - type: fill-in
     title: Travel plan connectors
     instruction: Choose the connector that fits the short travel sentence.
@@ -237,8 +279,8 @@ workbook:
         answer: 'бо'
         options:
           - 'бо'
-          - 'а'
-          - 'та'
+          - 'якого'
+          - 'котрому'
         explanation: 'Use бо to give the reason.'
       - sentence: 'Я хочу в гори, ___ ти?'
         answer: 'а'
@@ -247,19 +289,19 @@ workbook:
           - 'або'
           - 'бо'
         explanation: 'Use а to compare two choices.'
-      - sentence: 'Карпати ___ море - дві хороші ідеї.'
+      - sentence: 'Карпати ___ море — дві хороші ідеї.'
         answer: 'і'
         options:
           - 'і'
-          - 'але'
-          - 'чи'
+          - 'якого'
+          - 'котрому'
         explanation: 'Use і to add both ideas.'
       - sentence: 'Поїдемо в Карпати, ___ там дешевше.'
         answer: 'бо'
         options:
           - 'бо'
-          - 'та'
-          - 'а'
+          - 'якого'
+          - 'котрому'
         explanation: 'Use бо to explain why.'
   - type: match-up
     title: Comma habit repairs
@@ -281,17 +323,17 @@ workbook:
     title: Repair linking interference
     instruction: Match each learner mistake with the Ukrainian repair.
     pairs:
-      - left: 'Він вивчає українську, тому що це є цікаво.'
-        right: 'Він вивчає українську, тому що це цікаво.'
-      - left: 'Я не прийшов, що я захворів.'
-        right: 'Я не прийшов, бо я захворів. (або тому що)'
+      - left: 'Я вивчаю українську, тому що я любить Україну.'
+        right: 'Я вивчаю українську, тому що я люблю Україну.'
+      - left: 'Я не прийшов, бо я захворіли.'
+        right: 'Я не прийшов, бо я захворів.'
       - left: 'Я поважаю його за те що він дуже сміливий.'
         right: 'Я поважаю його за те, що він дуже сміливий.'
       - left: 'Я працюю а мій брат навчається в університеті.'
         right: 'Я працюю, а мій брат навчається в університеті.'
       - left: 'Він дуже хоче що б ми всі прийшли.'
         right: 'Він дуже хоче, щоб ми всі прийшли.'
-      - left: 'Добрий день, я маю 20 років, і я студент.'
+      - left: 'Добрий день, мені 20 роки, і я студент.'
         right: 'Добрий день, мені 20 років, і я студент.'
       - left: 'Я купив яблука і банани і груші.'
         right: 'Я купив яблука, банани і груші.'
@@ -325,16 +367,16 @@ workbook:
         explanation: 'Use commas, then one final і.'
   - type: error-correction
     title: Fix the linked sentence
-    instruction: Correct the connector, comma, or copied structure.
+    instruction: Keep the pronouns, numerals and intended people. Correct the verb form, noun case, connector spelling or punctuation.
     items:
-      - sentence: 'Він вивчає українську, тому що це є цікаво.'
-        error: 'є'
-        correction: ''
-        explanation: 'Do not copy present-tense is into це цікаво.'
-      - sentence: 'Я не прийшов, що я захворів.'
-        error: 'що'
-        correction: 'бо'
-        explanation: 'Use бо or тому що for a reason.'
+      - sentence: 'Я вивчаю українську, тому що я любить Україну.'
+        error: 'любить'
+        correction: 'люблю'
+        explanation: 'With the stated я, use first-person singular люблю.'
+      - sentence: 'Я не прийшов, бо я захворіли.'
+        error: 'захворіли'
+        correction: 'захворів'
+        explanation: 'Я не прийшов identifies one male speaker, requiring masculine singular захворів. Захворіли is plural.'
       - sentence: 'Я поважаю його за те що він дуже сміливий.'
         error: 'за те що'
         correction: 'за те, що'
@@ -344,13 +386,13 @@ workbook:
         correction: 'працюю, а'
         explanation: 'Add the comma before а.'
       - sentence: 'Він дуже хоче що б ми всі прийшли.'
-        error: 'що б'
-        correction: 'щоб'
-        explanation: 'Use щоб together in this purpose sentence, with a comma before it in the full repair.'
-      - sentence: 'Добрий день, я маю 20 років, і я студент.'
-        error: 'я маю 20 років'
-        correction: 'мені 20 років'
-        explanation: 'Use мені 20 років for age.'
+        error: 'хоче що б'
+        correction: 'хоче, щоб'
+        explanation: 'Write щоб as one conjunction and put a comma after хоче.'
+      - sentence: 'Добрий день, мені 20 роки, і я студент.'
+        error: 'роки'
+        correction: 'років'
+        explanation: '20 requires genitive plural років.'
       - sentence: 'Я купив яблука і банани і груші.'
         error: 'яблука і банани і груші'
         correction: 'яблука, банани і груші'
