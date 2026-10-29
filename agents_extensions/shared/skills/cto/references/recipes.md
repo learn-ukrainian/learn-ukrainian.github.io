@@ -106,4 +106,4 @@ Briefs state expected eligible PR lines and files; require a one-line size justi
 above the `workflow.md` small-batch threshold, including data files.
 Limit worker-local checks to Ruff and explicitly named test files for the changed module,
 under a 10-minute timeout. Never expand to all importers. PR CI Gate runs admission checks
-and pytest collection; the merge-group CI Gate runs the full suite.
+and the affected tests; the merge-group CI Gate runs the full suite.

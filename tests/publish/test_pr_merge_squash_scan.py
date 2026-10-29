@@ -147,3 +147,68 @@ def test_override_is_logged_and_single_use(synthetic_opsec, tmp_path, monkeypatc
             "pr-merge", repo="unit/public", number=1, env=dict(env), runner=transport(calls, subject=TOKEN + " (#1)")
         )
     assert len(calls) == 1
+
+
+def priority_transport(calls, *, labels, timeline):
+    """A queue repository with one recorded approval of HEAD; records either enqueue write."""
+    base = transport(calls, queue=True)
+    marker = (
+        f"### Cross-family review\nhead: {HEAD}\nReviewer family: openai\nVERDICT: APPROVED\n"
+        "Reviewer model: gpt-6.1-sol\nTask id: review-one\n\n"
+        f"<!-- cf-verdict v1 sha={HEAD} task=review-one started=2026-10-29T10:00:00.000001+00:00 "
+        "verdict=APPROVED model=gpt-6.1-sol family=openai -->"
+    )
+    approval = {"id": 1, "body": marker, "user": {"login": "fleet"}, "author_association": "OWNER",
+                "created_at": "2026-10-29T10:05:00Z", "updated_at": "2026-10-29T10:05:00Z"}
+    pages = {"/comments": [[approval]], "/timeline": [timeline]}
+
+    def send(args, **kwargs):
+        if args[:3] == ["gh", "pr", "view"] and "labels" in args[args.index("--json") + 1]:
+            return subprocess.CompletedProcess(args, 0, json.dumps({
+                "id": "PR_node", "headRefOid": HEAD, "isCrossRepository": False, "baseRefName": "main",
+                "labels": [{"name": name} for name in labels],
+            }), "")
+        if args[:4] == ["gh", "api", "--method", "GET"]:
+            if args[4].startswith("user"):
+                return subprocess.CompletedProcess(args, 0, json.dumps({"login": "fleet"}), "")
+            page = next(value for key, value in pages.items() if key + "?" in args[4])
+            return subprocess.CompletedProcess(args, 0, json.dumps(page), "")
+        if args[:5] == ["gh", "api", "--method", "POST", "graphql"]:
+            document = json.loads(Path(args[6]).read_text())
+            if "enqueuePullRequest" in document["query"]:
+                calls.append({"argv": args, "jump": "jump:true" in document["query"], "variables": document["variables"]})
+                return subprocess.CompletedProcess(args, 0, "{}", "")
+        return base(args, **kwargs)
+
+    return send
+
+
+def labeled(at):
+    return {"event": "labeled", "label": {"name": "merge-priority"}, "actor": {"login": "fleet"}, "created_at": at}
+
+
+def test_labelled_approved_pr_is_enqueued_with_jump(synthetic_opsec):
+    calls = []
+    result = pub.publish("pr-merge", repo="unit/public", number=1, match_head=HEAD,
+                         runner=priority_transport(calls, labels=["merge-priority"],
+                                                   timeline=[labeled("2026-10-29T10:10:00Z")]))
+    assert calls == [{"argv": calls[0]["argv"], "jump": True, "variables": {"id": "PR_node", "head": HEAD}}]
+    assert result.queue_jump is True
+
+
+def test_unlabelled_pr_is_enqueued_without_jump(synthetic_opsec):
+    calls = []
+    result = pub.publish("pr-merge", repo="unit/public", number=1, match_head=HEAD,
+                         runner=priority_transport(calls, labels=[], timeline=[]))
+    assert len(calls) == 1 and calls[0]["argv"][:3] == ["gh", "pr", "merge"]
+    assert not getattr(result, "queue_jump", False)
+
+
+def test_label_applied_after_an_earlier_heads_approval_does_not_jump(synthetic_opsec):
+    """Labelled after approving an old head; this head's approval came later, so the label predates it."""
+    calls = []
+    old_head_label = labeled("2026-10-29T10:03:00Z")
+    result = pub.publish("pr-merge", repo="unit/public", number=1, match_head=HEAD,
+                         runner=priority_transport(calls, labels=["merge-priority"], timeline=[old_head_label]))
+    assert len(calls) == 1 and calls[0]["argv"][:3] == ["gh", "pr", "merge"]
+    assert not getattr(result, "queue_jump", False)

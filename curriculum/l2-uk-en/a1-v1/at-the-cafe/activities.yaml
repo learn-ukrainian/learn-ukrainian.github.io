@@ -41,27 +41,27 @@ inline:
           - 'вода'
           - 'водою'
         explanation: 'Вода becomes воду.'
-      - sentence: 'Мені ___, будь ласка.'
+      - sentence: "Мені цей ___, будь ласка."
         answer: 'борщ'
         options:
           - 'борщ'
           - 'борщу'
           - 'борщем'
-        explanation: 'Борщ is masculine inanimate and stays борщ.'
-      - sentence: 'Мені ___, будь ласка.'
+        explanation: "Цей requires a matching masculine inanimate accusative/nominative-shaped noun: борщ. Борщу and борщем do not agree in case with цей here."
+      - sentence: "Мені цей ___, будь ласка."
         answer: 'салат'
         options:
           - 'салат'
           - 'салату'
           - 'салатом'
-        explanation: 'Салат stays салат in this A1 pattern.'
-      - sentence: 'Дайте, будь ласка, ___.'
+        explanation: "Цей selects the matching singular masculine object салат. Салату is oblique and салатом is instrumental; neither agrees with цей."
+      - sentence: "Дайте, будь ласка, цей ___."
         answer: 'чай'
         options:
           - 'чай'
           - 'чаю'
           - 'чаєм'
-        explanation: 'Чай stays чай.'
+        explanation: "Цей identifies a whole singular masculine object, selecting чай. Чаю and чаєм do not agree with цей here."
       - sentence: 'Я буду ___.'
         answer: 'піцу'
         options:
@@ -69,20 +69,20 @@ inline:
           - 'піца'
           - 'піці'
         explanation: 'Піца becomes піцу.'
-      - sentence: 'Можна ___?'
+      - sentence: "Можна цей ___?"
         answer: 'хліб'
         options:
           - 'хліб'
           - 'хліба'
           - 'хлібом'
-        explanation: 'Хліб stays хліб.'
-      - sentence: 'Мені ___ із собою, будь ласка.'
+        explanation: "Цей selects хліб as the specific singular masculine object. Хліба and хлібом do not agree with цей."
+      - sentence: "Мені цю ___ із собою, будь ласка."
         answer: 'маленьку каву'
         options:
           - 'маленьку каву'
           - 'маленька кава'
           - 'маленької кави'
-        explanation: 'Use маленьку каву as one ordering phrase.'
+        explanation: "Цю requires feminine accusative маленьку каву. Маленька кава is nominative and маленької кави is genitive, so neither agrees with цю."
   - id: act-3
     type: quiz
     title: What do you say?
@@ -165,13 +165,13 @@ inline:
     title: Complete the cafe dialogue
     instruction: Choose the word or phrase that fits the dialogue.
     items:
-      - sentence: 'Добрий день! Ось ___.'
+      - sentence: "Гість: Я щойно сів за стіл і хочу вибрати страву. Офіціант: Добрий день! Ось ___."
         answer: 'меню'
         options:
-          - 'меню'
-          - 'рахунок'
-          - 'картка'
-        explanation: 'The server gives the menu first.'
+          - меню
+          - рахунок
+          - карткою
+        explanation: "The guest has not chosen a dish, so меню supplies the choices. Рахунок is a bill after an order, rather than dish choices; instrumental карткою cannot be the subject of ось."
       - sentence: 'Дякую. Що ви ___?'
         answer: 'рекомендуєте'
         options:
@@ -200,13 +200,13 @@ inline:
           - 'читати'
           - 'платити'
         explanation: 'The server asks what you will drink.'
-      - sentence: 'Добре, одну ___.'
+      - sentence: "Офіціант: Добре, одну ___. Суп уже готовий, зараз принесу."
         answer: 'хвилинку'
         options:
           - 'хвилинку'
           - 'годину'
           - 'картку'
-        explanation: 'Одну хвилинку means one moment.'
+        explanation: "The food is ready and will be brought now, so the short wait одну хвилинку fits. Одну годину contradicts the immediate-ready context; одну картку is not a waiting interval."
 workbook:
   - type: true-false
     title: Cafe culture checks

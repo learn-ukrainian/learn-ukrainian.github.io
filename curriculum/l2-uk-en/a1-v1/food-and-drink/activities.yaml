@@ -235,13 +235,13 @@ workbook:
           - 'обідаю'
           - 'вечеряю'
         explanation: 'Morning meal: я снідаю.'
-      - sentence: 'Вдень я ___.'
+      - sentence: "Зараз перша година дня. Я сиджу за столом і їм суп. Вдень я ___."
         answer: 'обідаю'
         options:
           - 'обідаю'
           - 'вечеряю'
           - "п'ю"
-        explanation: 'Lunch: я обідаю.'
+        explanation: "The stated midday meal fits обідаю. Вечеряю is the evening meal, and п’ю is drinking rather than the explicitly stated eating of soup."
       - sentence: 'Увечері я ___.'
         answer: 'вечеряю'
         options:
@@ -249,13 +249,13 @@ workbook:
           - 'снідаю'
           - 'їм чай'
         explanation: 'Dinner: я вечеряю.'
-      - sentence: 'Я ___ борщ.'
+      - sentence: "Я ___ борщ."
         answer: 'їм'
         options:
-          - 'їм'
-          - "п'ю"
-          - 'снідаю'
-        explanation: 'Soup and borscht are eaten.'
+          - їм
+          - їси
+          - їсть
+        explanation: "Я requires first-person singular їм. Їси is second-person singular; їсть is third-person singular. The legitimate drink/eat alternatives are not condemned generally."
       - sentence: "Я ___ чай."
         answer: "п'ю"
         options:
@@ -263,13 +263,13 @@ workbook:
           - 'їм'
           - 'вечеряю'
         explanation: 'Tea is drunk.'
-      - sentence: 'Я хочу каву ___.'
+      - sentence: "Я хочу каву ___."
         answer: 'з молоком'
         options:
-          - 'з молоком'
-          - 'без цукру'
-          - 'смачна'
-        explanation: 'Кава з молоком is a whole drink phrase.'
+          - з молоком
+          - з молоко
+          - смачна
+        explanation: "З молоком has instrumental after з for the additive milk. З молоко uses nominative/accusative instead; смачна is nominative and cannot agree with accusative каву here."
   - type: unjumble
     title: Build safe food lines
     instruction: Put the words in a natural A1 order.

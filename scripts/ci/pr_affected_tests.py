@@ -32,6 +32,7 @@ INFRA = {
     ".python-version",
 }
 CAP_SECONDS = 600
+TEST = re.compile(r"tests/(?:[^/]+/)*test_[^/]+\.py")
 
 
 def git(*args: str) -> bytes:
@@ -53,7 +54,33 @@ def safe_path(name: str) -> str:
     return name
 
 
-def plan(base: str, candidate: str) -> dict:
+def importing_tests(targets: set[str], deleted: set[str], base: str, entries: dict[str, str]) -> list[str]:
+    """Tests that directly import, load, read or run a changed file, by static scan.
+
+    Direct edges only: the transitive closure spans most of the suite, which the
+    merge group already runs. A deleted file has no edges in the candidate, so its
+    surviving dependents come from a scan of the base tree.
+    """
+    from scripts.ci import components
+
+    edges = components.scan_imports(components.python_sources(), set(components.tracked_paths()))["file_edges"]
+    if deleted:
+        tree = {}
+        for row in git("ls-tree", "-rz", base).split(b"\0"):
+            if row:
+                meta, name = row.decode("utf-8").split("\t", 1)
+                tree[name] = meta.split()
+        blobs = tuple((name, meta[2]) for name, meta in tree.items() if name.endswith(".py") and meta[1] == "blob")
+        sources = components.indexed_python_sources(str(components.ROOT), blobs, ())
+        edges = [*edges, *(edge for edge in components.scan_imports(sources, set(tree))["file_edges"]
+                           if edge[1] in deleted)]
+    return sorted({
+        importer for importer, target in edges
+        if target in targets and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
+    })
+
+
+def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
     """Use only the original base-to-candidate diff, never a current branch tip."""
     entries = {}
     for row in git("ls-tree", "-rz", candidate, "--", "tests").split(b"\0"):
@@ -68,9 +95,9 @@ def plan(base: str, candidate: str) -> dict:
     guards = [safe_path(line) for line in GUARDS.read_text(encoding="utf-8").splitlines()]
     if not guards or len(set(guards)) != len(guards):
         raise ValueError("empty or duplicate guard list")
-    tests = sorted(p for p in changed if re.fullmatch(r"tests/(?:[^/]+/)*test_[^/]+\.py", p) and p in entries)
+    tests = sorted(p for p in changed if TEST.fullmatch(p) and p in entries)
     for name in set(guards) | set(tests):
-        if not re.fullmatch(r"tests/(?:[^/]+/)*test_[^/]+\.py", name) or entries.get(name) not in {"100644", "100755"}:
+        if not TEST.fullmatch(name) or entries.get(name) not in {"100644", "100755"}:
             raise ValueError("test is not a tracked regular file")
         path = Path(name)
         if not path.is_file() or any(p.is_symlink() for p in (path, *path.parents)):
@@ -105,16 +132,43 @@ def plan(base: str, candidate: str) -> dict:
         if estimate > CAP_SECONDS
         else None
     )
-    run = sorted(set(guards) if reason else set(selected))
+    run = set(guards) if reason else set(selected)
+    # Tests for changed code fill the cap's remaining budget, cheapest first; the
+    # rest defer to merge-group pytest. Infrastructure changes run guards only.
+    sources = {p for p in changed if not TEST.fullmatch(p)}
+    deleted = {
+        safe_path(p.decode("utf-8"))
+        for p in git("diff", "--no-renames", "--diff-filter=D", "--name-only", "-z", base, candidate, "--").split(b"\0")
+        if p
+    } & sources
+    imported = (
+        [p for p in importing_tests(sources, deleted, base, entries) if p not in run]
+        if importers and sources and not reason
+        else []
+    )
+    unknown += [p for p in imported if p not in durations]
+    for p in imported:
+        value = durations.get(p, default)
+        if type(value) not in {int, float} or not math.isfinite(value) or value < 0:
+            raise ValueError("invalid recorded duration")
+    budget = estimate
+    for p in sorted(imported, key=lambda p: (durations.get(p, default), p)):
+        if budget + durations.get(p, default) <= CAP_SECONDS:
+            run.add(p)
+            budget += durations.get(p, default)
+    if set(imported) - run:
+        reason = "recorded estimate exceeds 600 second cap"
+    run = sorted(run)
     return {
         "candidate": candidate,
         "base": base,
         "guards": guards,
         "changed_test_files": tests,
+        "importing_test_files": imported,
         "run_files": run,
-        "deferred_files": sorted(set(tests) - set(run)),
+        "deferred_files": sorted((set(tests) | set(imported)) - set(run)),
         "reason": reason,
-        "estimate_seconds": estimate,
+        "estimate_seconds": budget,
         "unknown_duration_files": unknown,
         "deleted_test_files": sorted(
             p for p in changed if p.startswith("tests/") and p.endswith(".py") and p not in entries
@@ -124,8 +178,8 @@ def plan(base: str, candidate: str) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Run changed test files and guards, or marker-only repository invariants for a PR candidate.\n"
-        "Use in PR CI for early signal; the full pytest shards run in their own jobs.",
+        description="Run changed tests, tests that import changed files and guards, or marker-only\n"
+        "repository invariants for a PR candidate. PR CI runs no pytest shards; merge-group CI runs the full suite.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Example: .venv/bin/python -m scripts.ci.pr_affected_tests\n"
         "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF.\n"
@@ -154,7 +208,7 @@ def main() -> int:
         stage, reason = "clean_checkout", "dirty_checkout"
         subprocess.run(["git", "diff", "--quiet", actual, "--"], check=True, capture_output=True, timeout=30)
         stage, reason = "test_plan", "invalid_paths_tests_or_durations"
-        record = plan(base, actual)
+        record = plan(base, actual, importers=not args.repo_wide)
         record["event_base"] = pr["base"]["sha"]
         marker = "not atlas_release and not slow and not site_toolchain"
         if args.repo_wide:
@@ -217,7 +271,7 @@ def main() -> int:
         stage, reason = "proof_output", "proof_output_incomplete"
         report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         summary = (
-            "PR changed tests and guards: the full pytest shards run in their own jobs.\n"
+            "PR changed tests and guards: the full pytest suite runs in merge-group CI.\n"
             f"Candidate: {actual}\nMarker selection: {marker}\nRequested paths ({len(paths)}): "
             + ", ".join(paths)
             + "\n"

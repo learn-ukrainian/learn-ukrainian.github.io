@@ -71,8 +71,9 @@ and will refuse the write, which is a guard working correctly, not a bug to rout
 > implement "never merge an untested combination", and does not fix a cancelled required check. Do
 > not present worktree discipline as the answer to any of those.
 
-**8.3 — For a task whose deliverable is a CHANGE, "done" means PUSHED:** a pushed branch, an open PR,
-and CI triggered on it (or an entry in the merge queue). Such a task ending without that has **FAILED**,
+**8.3 — For a task whose deliverable is a CHANGE, "done" requires Git delivery:** a pushed branch,
+an open PR and CI triggered on it (or an entry in the merge queue), or a verified merged PR.
+Such a task ending without either has **FAILED**,
 whatever its status field says; the change delivered only as a chat reply is worth nothing. **Commit
 early and often** — uncommitted work in a worktree is lost work.
 
@@ -84,7 +85,7 @@ own mode plus whether its worktree is dirty — not a judgement about intent.
 
 **Dispatch v2 terminal statuses; do not collapse them into `done`:**
 - **`done`** — the worker completed successfully. Write tasks also passed Git delivery verification;
-  independently verify the pushed branch, open PR and CI required above.
+  independently verify the pushed branch, open PR and CI, or the merged PR required above.
 - **`no_deliverable`** — a write task failed delivery verification. In `scripts/dispatcher/worker.py`,
   dirty or unknown worktree state gives `worktree_dirty_or_unknown`, zero or unknown commits gives
   `no_commits_or_unknown`, and unpushed or unknown push state gives `work_not_pushed_or_unknown`.

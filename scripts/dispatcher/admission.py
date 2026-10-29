@@ -30,6 +30,25 @@ def review_typed(record: dict) -> bool:
     )
 
 
+def codex_account(agent: str, explicit: str | None) -> dict:
+    """Resolve the label and refuse ambient conflicts before creating any task or worktree."""
+    import os
+
+    from scripts.agent_runtime.codex_accounts import (
+        CodexAccountRefused,
+        codex_account_env,
+        resolve_codex_account_label,
+    )
+
+    if agent != "codex":
+        if explicit is not None:
+            raise CodexAccountRefused("codex_account_seat_unsupported")
+        return {}
+    label = resolve_codex_account_label(explicit)
+    codex_account_env(label, os.environ)
+    return {"codex_account": label}
+
+
 def claude_account(agent: str, explicit: str | None) -> dict:
     """The resolved account fields recorded by dispatch v2.
 

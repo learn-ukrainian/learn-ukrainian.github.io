@@ -218,8 +218,11 @@ def recognized_verdicts(response: str) -> list[str]:
     return verdicts or _findings_json_verdicts(response)
 
 
-def _findings_json_verdicts(response: str) -> list[str]:
-    """Read whole JSON replies and top-level JSON blocks, never quoted examples."""
+def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list[str]:
+    """Read whole JSON replies and top-level JSON blocks, never quoted examples.
+
+    ``stated`` is the reply's own canonical verdict line, if any (see ``resolve_verdict_and_evidence``).
+    """
     from markdown_it import MarkdownIt
 
     from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
@@ -242,7 +245,7 @@ def _findings_json_verdicts(response: str) -> list[str]:
         payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
         try:
             validate_reviewer_payload(payload)
-            verdict, _ = resolve_verdict_and_evidence(payload)
+            verdict, _ = resolve_verdict_and_evidence(payload, stated=stated)
         except (ContractError, ReviewPublicationError):
             continue
         verdicts.append(
@@ -264,11 +267,45 @@ _REVIEW_SCORE_LINE_RE = re.compile(
 )
 
 
+# Inside a structured reply the score sits in ``overall.explanation`` prose, often
+# mid-line (``VERDICT: APPROVE. SCORE: 9/10.``). Every uppercase SCORE word there
+# declares a score and must read exactly ``SCORE: n/10``; a sentence's closing
+# period may follow, a decimal or any other continuation may not.
+_STRUCTURED_SCORE_LABEL_RE = re.compile(r"\bSCORE\b")
+_STRUCTURED_SCORE_RE = re.compile(r"SCORE\s*:\s*(\d{1,2})\s*/\s*10(?![\w/]|\.\w)")
+
+
+def _structured_explanation(response: str) -> str | None:
+    """A whole ``code-review-findings.v1`` reply's explanation, or None for any other reply."""
+    from scripts.fleet_comms.review_publication import REVIEW_SCHEMA_VERSION
+
+    try:
+        payload = json.loads(response)
+    except (ValueError, RecursionError):
+        return None
+    if not isinstance(payload, dict) or payload.get("schema_version") != REVIEW_SCHEMA_VERSION:
+        return None
+    overall = payload.get("overall")
+    explanation = overall.get("explanation") if isinstance(overall, dict) else None
+    return explanation if isinstance(explanation, str) else None
+
+
 def review_score(response: str) -> int | None:
     """Return the reply's one ``SCORE`` value, or None when absent, malformed or ambiguous.
 
     A score never gates a review, so this reader never raises.
     """
+    structured = _structured_explanation(response)
+    if structured is not None:
+        declared = [
+            _STRUCTURED_SCORE_RE.match(structured, label.start())
+            for label in _STRUCTURED_SCORE_LABEL_RE.finditer(structured)
+        ]
+        if None in declared:
+            return None
+        scores = {int(match.group(1)) for match in declared if match is not None}
+        score = scores.pop() if len(scores) == 1 else None
+        return score if score is not None and 1 <= score <= 10 else None
     try:
         lines = _commonmark_lines(_without_code_fences(response, keep_unclosed=False))
     except (ValueError, ImportError):

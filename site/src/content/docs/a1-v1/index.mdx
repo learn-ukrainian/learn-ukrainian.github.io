@@ -7,13 +7,14 @@ template: splash
 [Explore the new A1 lesson edition](/a1/)
 
 import LevelLanding from '@site/src/components/LevelLanding';
+import { a1PreviousEdition } from '@site/src/lib/a1-entry';
 
 <LevelLanding
   client:load
   level="A1-v1"
   title="Перші кроки · First Steps"
-  subtitle="Available A1 course · 55 learner pages available · 55 modules"
-  progressTitle="Available A1 course"
+  subtitle={`${a1PreviousEdition.courseLabel} · 55 learner pages available · 55 modules`}
+  progressTitle={a1PreviousEdition.courseLabel}
   progressDescription="55 available · 0 reviewed · 0 planned"
   moduleCount={55}
   wordTarget={1200}

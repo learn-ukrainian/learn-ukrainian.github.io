@@ -199,10 +199,11 @@ with `review-loop` for review rounds and the budget.
    from the shared bot identity when it also authored the PR; do not use
    `gh pr review --approve` for this publication. The comment records independent
    cross-family review, not self-approval. Require the **PR CI Gate green**
-   on that **same** head. PR CI runs the full supported pytest shards, Frontend, the
-   changed-test guards and the admission checks. The real merge-group candidate must
-   pass the same required **CI Gate** before landing, and nightly and opt-in
-   `workflow_dispatch` runs run the same suite.
+   on that **same** head. PR CI runs Frontend, the admission checks and the affected
+   tests (changed test files, tests that import or read changed files, the guards and
+   the `repo_wide` invariants), not the pytest shards. The real merge-group candidate
+   must pass the required **CI Gate**, which runs the full supported pytest suite,
+   before landing; nightly and opt-in `workflow_dispatch` runs run the full suite too.
 3. Only then enqueue. Never arm auto-merge ahead of either gate —
 early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
 voids both approval and CI; re-establish both on the new head. Automated merge pipelines cannot replace review gates; enqueue
@@ -214,7 +215,11 @@ only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or ap
 Only non-draft PRs with no unresolved BLOCKING finding may enqueue. Pending
 or cancelled required checks fail the gate; never use `--admin` to bypass CI.
 Queued is not MERGED: diagnose conflicts, changed bases, failed checks or queue
-ejection, and re-establish the gates before re-enqueueing. The rules core's
+ejection, and re-establish the gates before re-enqueueing.
+**Priority line (#12019):** only the CTO seat applies the `merge-priority` label, to a
+machinery fix, after the exact-head approval is recorded; `pr-merge` (and so the keeper)
+then enqueues that head at the front of the queue, while every gate, including the
+merge-group CI Gate, still applies, and a label applied before that head's approval does nothing. The rules core's
 unchanged-head CI recovery allowance and evidence requirements still bind.
 
 **Small batches (trial until 2026-11-05).** One behaviour per PR. Before review,
@@ -595,11 +600,12 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    path without operator approval. Repairs to existing gates are permitted. A gate
    is removed or relaxed only with a demonstrated replacement or an approved
    removal; zero catches alone are not enough for a security gate.
-   **Test placement:** pre-push runs no tests. PR CI Gate runs the full supported
-   pytest shards and Frontend, plus the admission checks, changed-test files and
-   explicit guards. Merge-group CI Gate runs the same suite on the real queue
-   candidate. Nightly and opt-in manual runs also run the full suite.
-   Operator approval under the gate freeze, 2026-10-23.
+   **Test placement:** pre-push runs no tests. PR CI Gate runs Frontend, the
+   admission checks and the affected tests: changed test files, tests that import or
+   read changed files, the explicit guards and the `repo_wide` invariants; it runs no
+   pytest shards. Merge-group CI Gate runs the full supported pytest suite on the real
+   queue candidate. Nightly and opt-in manual runs also run the full suite.
+   Operator decision, 2026-10-29.
    Queue failure recovery must diagnose the whole group's original event base-to-candidate
    diff, including renamed paths, before attributing a failure to a service.
    A single PR diff or matching failed jobs does not establish that diagnosis.

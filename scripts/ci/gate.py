@@ -1,4 +1,4 @@
-"""Require truthful full-suite results, plus PR guards on a PR, for the checked-out candidate."""
+"""Require truthful PR admission or full-suite results for the checked-out candidate."""
 
 from __future__ import annotations
 
@@ -11,8 +11,8 @@ import sys
 from pathlib import Path
 
 SHA = re.compile(r"[0-9a-f]{40}\Z")
-COMMON = frozenset({"secret-scan", "checks", "dependency-audit", "pr-affected"})
-FULL = frozenset({"frontend", "refresh-pytest-durations", "pytest", "pytest-report"})
+COMMON = frozenset({"secret-scan", "checks", "dependency-audit", "pr-affected", "frontend"})
+FULL = frozenset({"refresh-pytest-durations", "pytest", "pytest-report"})
 
 
 def event_tier(event: str, payload: dict, sha: str, ref: str, actual: str) -> str:
@@ -97,8 +97,8 @@ def main() -> int:
             raise ValueError("missing or unexpected CI dependencies")
         failed = False
         for name, result in sorted(results.items()):
-            # Every event runs the full jobs; "admission" only adds the PR-only guards.
-            expected = "success" if name in COMMON or name in FULL or (
+            # A PR runs the affected tests instead of the shards; the full tier runs both.
+            expected = "success" if name in COMMON or (name in FULL and tier == "full") or (
                 name == "queue-metadata-scan" and event == "merge_group"
             ) else "skipped"
             value = result.get("result")
@@ -107,8 +107,8 @@ def main() -> int:
                 if value == "cancelled":
                     print(f"::error::required job was cancelled: {name}")
                 failed = True
-        summary = ("PR CI: the full supported pytest suite, partition audits and Frontend ran on this head. "
-                   "Merge-group CI still validates the queue candidate before landing."
+        summary = ("PR CI: affected tests, guards, repository invariants and Frontend ran on this head; "
+                   "the full pytest suite was not run. Full green merge-group CI is required before landing."
                    if tier == "admission" else "Full supported pytest suite and partition audits are required.")
         print(summary)
         if os.environ.get("GITHUB_STEP_SUMMARY"):

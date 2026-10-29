@@ -218,9 +218,9 @@ def test_read_only_agy_run_needs_a_verified_boundary_receipt(sandbox, monkeypatc
         assert result["error"].startswith("agy_read_only_boundary: ")
 
 
-def await_file(path):
+def await_file(path, *, ready=lambda content: True):
     deadline = time.monotonic() + 10
-    while not path.exists() or not (content := path.read_text()):
+    while not path.exists() or not (content := path.read_text()) or not ready(content):
         assert time.monotonic() < deadline, f"stub did not populate {path.name}"
         time.sleep(0.02)
     return content
@@ -484,6 +484,56 @@ def test_lingering_provider_process_keeps_the_worktree_until_a_retry_proves_it_g
     settled = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
     assert not Path(record["worktree_path"]).exists()
+
+
+def settled_by_next_task(sandbox, retained_id, before_release=lambda _kept: None):
+    """Run one task to its end and return the retained record as that task's settlement retried it.
+
+    ``before_release`` sees the record as the dispatch's own retry left it; the settlement retry
+    rewrites the record file before the task turns terminal.
+    """
+    record_file = sandbox.tasks / f"{retained_id}.json"
+    task = sandbox.dispatch("blocked")
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    before = record_file.stat().st_ino
+    before_release(json.loads(record_file.read_text()))
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    sandbox.settle(task)
+    assert record_file.stat().st_ino != before, "settlement never retried the retained worktree"
+    return json.loads(record_file.read_text())
+
+
+def test_settlement_removes_a_transient_retained_worktree_once_its_cause_is_gone(sandbox):
+    """Defect: a tree kept for a transient cause waited for the next dispatch; any settlement now retries it."""
+    task = sandbox.dispatch("tree")
+    grandchild = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    record = sandbox.settle(task)
+    assert record["worktree_disposition_reason"] == "provider_processes_alive"
+
+    def end_the_cause(kept):
+        assert kept["worktree_disposition_reason"] == "provider_processes_alive"  # the dispatch's retry kept it
+        os.kill(grandchild, signal.SIGKILL)
+        deadline = time.monotonic() + 10
+        while worker._provider_alive(record):
+            assert time.monotonic() < deadline, "grandchild survived SIGKILL"
+            time.sleep(0.02)
+
+    settled = settled_by_next_task(sandbox, task[0], end_the_cause)
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert not Path(record["worktree_path"]).exists()
+
+
+@pytest.mark.parametrize("model,reason", [("pushed-dirty", "dirty"), ("unpushed", "unpublished")])
+def test_settlement_retry_keeps_a_worktree_that_still_holds_content(sandbox, model, reason):
+    """The retry removes only with settlement's proofs: uncommitted or unpublished work stays."""
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write"), expected=1)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", reason)
+    retried = settled_by_next_task(sandbox, record["task_id"])
+    assert (retried["worktree_disposition"], retried["worktree_disposition_reason"]) == ("retained", reason)
+    tree = Path(record["worktree_path"])
+    assert (tree / "delivered.txt").exists()
+    assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
 
 
 def test_next_dispatch_settles_terminal_task_left_by_crash(sandbox):
@@ -943,7 +993,10 @@ def _killed_review_supervisor(sandbox, tmp_path, model):
     child = int(await_file(sandbox.tasks / f"{task[0]}.started"))
     if model == "governed":
         assert await_file(sandbox.tasks / f"{task[0]}.joined") == "joined"
-    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    # The provider's start marker precedes the supervisor's record update.
+    record = json.loads(await_file(
+        sandbox.tasks / f"{task[0]}.json", ready=lambda content: "review_test_slots" in json.loads(content)
+    ))
     assert record["review_test_slots"]["outcome"] == "held"
     os.kill(record["pid"], signal.SIGKILL)
     deadline = time.monotonic() + 10
@@ -2749,6 +2802,56 @@ def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
     assert record["silence_timeout"] == 1
     grandchild = int(Path(record["prompt_file"]).with_suffix(".grandchild").read_text())
     assert worker._identity(grandchild) is None
+
+
+def test_provider_process_lingers_after_its_final_result_settles_within_silence_bound(sandbox, monkeypatch):
+    """Defect class: provider process lingers after its final result while auxiliary activity continues."""
+    from scripts.dispatcher import watchdog
+    from scripts.dispatcher.providers import agy
+    from scripts.dispatcher.types import Invocation
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_runtime", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(watchdog, "_PROCESS_ACTIVITY_POLL_INTERVAL_S", 0.05)
+    spec = TaskSpec("agy-final-hang", "agy", "gemini-3.8-flash-high", None, "read-only", sandbox.repo,
+                    sandbox.repo / "agy-final-hang.prompt", sandbox.tasks / "agy-final-hang.result",
+                    options={"hard_timeout": "5", "silence_timeout": "0.5"})
+    spec.prompt_file.write_bytes(b"literal final response")
+    log = sandbox.repo / "provider.log"
+    code = (
+        "import json, sys, time\n"
+        "print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', "
+        "'response': 'literal final response'}}), flush=True)\n"
+        "with open(sys.argv[2], 'a') as log:\n"
+        "    while True:\n"
+        "        log.write('idle housekeeping\\n'); log.flush(); time.sleep(0.02)\n"
+    )
+    monkeypatch.setattr(agy, "build", lambda _spec, env: Invocation(
+        [sys.executable, "-c", code, "--log-file", str(log)],
+        b'{"event":"user","message":{"role":"user","content":[{"type":"text","text":""}]}}\n', env, None))
+    head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main", head,
+                              {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "agy-final-hang.prompt")
+    path = store.create(record, b"literal final response")
+    (sandbox.tasks / "logs").mkdir()
+
+    started = time.monotonic()
+    worker.supervise(path)
+    elapsed = time.monotonic() - started
+
+    result = json.loads(path.read_text())
+    assert result["status"] == "timeout"
+    assert result["kill_reason"] == "stdout_silence_timeout"
+    assert result["silence_timeout"] == 0.5
+    assert elapsed < result["silence_timeout"] + 2
+    assert result["returncode"] == -signal.SIGKILL
+    assert worker._identity(result["provider_pgid"]) is None
+    assert log.stat().st_size > 0
+    stdout = (sandbox.tasks / "logs/agy-final-hang.stdout.log").read_text()
+    assert agy.parse(stdout, "", 0, None).text == "literal final response"
 
 
 def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox):

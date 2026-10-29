@@ -1,0 +1,650 @@
+[
+  {
+    "id": "around-the-city/inline/act-1/0",
+    "type": "fill-in",
+    "instruction": "Complete each direction line.",
+    "prompt": "Музей перед вами, а не ліворуч чи праворуч. Ідіть ___, до музею.",
+    "options": [
+      "прямо",
+      "наліво",
+      "направо"
+    ],
+    "title": "Direction words"
+  },
+  {
+    "id": "around-the-city/inline/act-1/3",
+    "type": "fill-in",
+    "instruction": "Complete each direction line.",
+    "prompt": "Школа праворуч від вас. На перехресті йдіть ___, до школи.",
+    "options": [
+      "направо",
+      "наліво",
+      "назад"
+    ],
+    "title": "Direction words"
+  },
+  {
+    "id": "around-the-city/inline/act-2/1",
+    "type": "quiz",
+    "instruction": "Choose the phrase that fits the sentence.",
+    "prompt": "— Куди ти йдеш? — Я йду...",
+    "options": [
+      "в магазин",
+      "в магазині",
+      "на магазині"
+    ],
+    "title": "Де or куди in context"
+  },
+  {
+    "id": "around-the-city/inline/act-2/3",
+    "type": "quiz",
+    "instruction": "Choose the phrase that fits the sentence.",
+    "prompt": "— Куди ти їдеш потім? — Потім їду на...",
+    "options": [
+      "роботу",
+      "роботі",
+      "робота"
+    ],
+    "title": "Де or куди in context"
+  },
+  {
+    "id": "around-the-city/inline/act-2/5",
+    "type": "quiz",
+    "instruction": "Choose the phrase that fits the sentence.",
+    "prompt": "— Куди вона йде? — Вона йде в...",
+    "options": [
+      "офіс",
+      "офісі",
+      "офісу"
+    ],
+    "title": "Де or куди in context"
+  },
+  {
+    "id": "around-the-city/inline/act-5/0",
+    "type": "fill-in",
+    "instruction": "Complete each city location or route line.",
+    "prompt": "Я вдома. Аптека ___: вона на першому поверсі нашого будинку.",
+    "options": [
+      "близько",
+      "далеко",
+      "їдьте"
+    ],
+    "title": "Close, far, or on the corner"
+  },
+  {
+    "id": "around-the-city/inline/act-5/1",
+    "type": "fill-in",
+    "instruction": "Complete each city location or route line.",
+    "prompt": "Я вдома, а вокзал за двадцять кілометрів від мого дому. Вокзал ___.",
+    "options": [
+      "далеко",
+      "поруч",
+      "їдьте"
+    ],
+    "title": "Close, far, or on the corner"
+  },
+  {
+    "id": "around-the-city/inline/act-5/2",
+    "type": "fill-in",
+    "instruction": "Complete each city location or route line.",
+    "prompt": "Я вдома. Кафе ___. Воно біля мого дому.",
+    "options": [
+      "поруч",
+      "їдьте",
+      "далеко"
+    ],
+    "title": "Close, far, or on the corner"
+  },
+  {
+    "id": "around-the-city/inline/act-5/4",
+    "type": "fill-in",
+    "instruction": "Complete each city location or route line.",
+    "prompt": "Банк перед вами, а не ліворуч чи праворуч. Ідіть ___, до банку.",
+    "options": [
+      "прямо",
+      "наліво",
+      "направо"
+    ],
+    "title": "Close, far, or on the corner"
+  },
+  {
+    "id": "at-the-cafe/inline/act-2/2",
+    "type": "fill-in",
+    "instruction": "Choose the form that completes the cafe order.",
+    "prompt": "Мені цей ___, будь ласка.",
+    "options": [
+      "борщ",
+      "борщу",
+      "борщем"
+    ],
+    "title": "Order with мені"
+  },
+  {
+    "id": "at-the-cafe/inline/act-2/3",
+    "type": "fill-in",
+    "instruction": "Choose the form that completes the cafe order.",
+    "prompt": "Мені цей ___, будь ласка.",
+    "options": [
+      "салат",
+      "салату",
+      "салатом"
+    ],
+    "title": "Order with мені"
+  },
+  {
+    "id": "at-the-cafe/inline/act-2/4",
+    "type": "fill-in",
+    "instruction": "Choose the form that completes the cafe order.",
+    "prompt": "Дайте, будь ласка, цей ___.",
+    "options": [
+      "чай",
+      "чаю",
+      "чаєм"
+    ],
+    "title": "Order with мені"
+  },
+  {
+    "id": "at-the-cafe/inline/act-2/6",
+    "type": "fill-in",
+    "instruction": "Choose the form that completes the cafe order.",
+    "prompt": "Можна цей ___?",
+    "options": [
+      "хліб",
+      "хліба",
+      "хлібом"
+    ],
+    "title": "Order with мені"
+  },
+  {
+    "id": "at-the-cafe/inline/act-2/7",
+    "type": "fill-in",
+    "instruction": "Choose the form that completes the cafe order.",
+    "prompt": "Мені цю ___ із собою, будь ласка.",
+    "options": [
+      "маленьку каву",
+      "маленька кава",
+      "маленької кави"
+    ],
+    "title": "Order with мені"
+  },
+  {
+    "id": "checkpoint-food-shopping/inline/act-2/0",
+    "type": "quiz",
+    "instruction": "Choose the correct object form.",
+    "prompt": "Я їм цей ___.",
+    "options": [
+      "салат",
+      "салата",
+      "салату"
+    ],
+    "title": "Accusative checkpoint"
+  },
+  {
+    "id": "checkpoint-food-shopping/inline/act-2/2",
+    "type": "quiz",
+    "instruction": "Choose the correct object form.",
+    "prompt": "Я п'ю цю ___.",
+    "options": [
+      "воду",
+      "вода",
+      "води"
+    ],
+    "title": "Accusative checkpoint"
+  },
+  {
+    "id": "checkpoint-food-shopping/inline/act-2/6",
+    "type": "quiz",
+    "instruction": "Choose the correct object form.",
+    "prompt": "Я купую цей ___.",
+    "options": [
+      "хліб",
+      "хліба",
+      "хлібу"
+    ],
+    "title": "Accusative checkpoint"
+  },
+  {
+    "id": "checkpoint-food-shopping/inline/act-2/8",
+    "type": "quiz",
+    "instruction": "Choose the correct object form.",
+    "prompt": "Я їм цю ___.",
+    "options": [
+      "піцу",
+      "піца",
+      "піци"
+    ],
+    "title": "Accusative checkpoint"
+  },
+  {
+    "id": "checkpoint-food-shopping/inline/act-3/0",
+    "type": "fill-in",
+    "instruction": "Choose the word or phrase that completes the dialogue.",
+    "prompt": "— Що ти їси на сніданок? — Я їм цю ___ і п'ю каву.",
+    "options": [
+      "кашу",
+      "каша",
+      "каші"
+    ],
+    "title": "Market and cafe day"
+  },
+  {
+    "id": "i-eat-i-drink/inline/act-1/4",
+    "type": "fill-in",
+    "instruction": "Choose the correct direct-object form after їсти or пити.",
+    "prompt": "Вони їдять цю ___.",
+    "options": [
+      "кашу",
+      "каша",
+      "каші"
+    ],
+    "title": "Direct object endings"
+  },
+  {
+    "id": "i-eat-i-drink/inline/act-1/6",
+    "type": "fill-in",
+    "instruction": "Choose the correct direct-object form after їсти or пити.",
+    "prompt": "Я їм цей ___.",
+    "options": [
+      "суп",
+      "супу",
+      "супом"
+    ],
+    "title": "Direct object endings"
+  },
+  {
+    "id": "i-eat-i-drink/inline/act-1/7",
+    "type": "fill-in",
+    "instruction": "Choose the correct direct-object form after їсти or пити.",
+    "prompt": "Вона їсть цю ___.",
+    "options": [
+      "картоплю",
+      "картопля",
+      "картоплі"
+    ],
+    "title": "Direct object endings"
+  },
+  {
+    "id": "i-eat-i-drink/inline/act-2/0",
+    "type": "quiz",
+    "instruction": "Pick the natural A1 line.",
+    "prompt": "Я п'ю цю...",
+    "options": [
+      "каву",
+      "кава",
+      "кави"
+    ],
+    "title": "Choose the food line"
+  },
+  {
+    "id": "i-eat-i-drink/inline/act-2/2",
+    "type": "quiz",
+    "instruction": "Pick the natural A1 line.",
+    "prompt": "Ми п'ємо цей...",
+    "options": [
+      "сік",
+      "соку",
+      "соком"
+    ],
+    "title": "Choose the food line"
+  },
+  {
+    "id": "i-eat-i-drink/inline/act-2/3",
+    "type": "quiz",
+    "instruction": "Pick the natural A1 line.",
+    "prompt": "Вона їсть це...",
+    "options": [
+      "м'ясо",
+      "м'ясу",
+      "м'яса"
+    ],
+    "title": "Choose the food line"
+  },
+  {
+    "id": "i-eat-i-drink/inline/act-2/5",
+    "type": "quiz",
+    "instruction": "Pick the natural A1 line.",
+    "prompt": "Ти їси цю...",
+    "options": [
+      "кашу",
+      "каша",
+      "каші"
+    ],
+    "title": "Choose the food line"
+  },
+  {
+    "id": "at-the-cafe/inline/act-4/0",
+    "type": "fill-in",
+    "instruction": "Choose the word or phrase that fits the dialogue.",
+    "prompt": "Гість: Я щойно сів за стіл і хочу вибрати страву. Офіціант: Добрий день! Ось ___.",
+    "options": [
+      "меню",
+      "рахунок",
+      "карткою"
+    ],
+    "title": "Complete the cafe dialogue"
+  },
+  {
+    "id": "at-the-cafe/inline/act-4/5",
+    "type": "fill-in",
+    "instruction": "Choose the word or phrase that fits the dialogue.",
+    "prompt": "Офіціант: Добре, одну ___. Суп уже готовий, зараз принесу.",
+    "options": [
+      "хвилинку",
+      "годину",
+      "картку"
+    ],
+    "title": "Complete the cafe dialogue"
+  },
+  {
+    "id": "checkpoint-food-shopping/workbook/2/5",
+    "type": "fill-in",
+    "instruction": "Complete the dinner scene.",
+    "prompt": "Анна наливає одну ___ води.",
+    "options": [
+      "склянку",
+      "кілограм",
+      "буханку"
+    ],
+    "title": "Serve the table"
+  },
+  {
+    "id": "checkpoint-food-shopping/workbook/5/4",
+    "type": "quiz",
+    "instruction": "Pick the A1.6 sentence you would actually say.",
+    "prompt": "Офіціант: Як вас звати? Що вам принести? Джон: ___",
+    "options": [
+      "Мене звати Джон, дайте меню.",
+      "Мені звати Джон, дайте меню.",
+      "Я є Джон і я маю меню."
+    ],
+    "title": "Repair A1.6 interference"
+  },
+  {
+    "id": "checkpoint-food-shopping/workbook/5/5",
+    "type": "quiz",
+    "instruction": "Pick the A1.6 sentence you would actually say.",
+    "prompt": "У кафе двоє офіціантів. Джон звертається до обох: ___",
+    "options": [
+      "Дайте, будь ласка, рахунок.",
+      "Дай, будь ласка, рахунок.",
+      "Дайте мені рахунком."
+    ],
+    "title": "Repair A1.6 interference"
+  },
+  {
+    "id": "checkpoint-food-shopping/workbook/5/6",
+    "type": "quiz",
+    "instruction": "Pick the A1.6 sentence you would actually say.",
+    "prompt": "Київ. На ціннику написано «20 ₴». Я плачу й кажу: ___",
+    "options": [
+      "Я плачу гривнями.",
+      "Я плачу рублями.",
+      "Я плачу гривень."
+    ],
+    "title": "Repair A1.6 interference"
+  },
+  {
+    "id": "checkpoint-places/inline/act-4/2",
+    "type": "fill-in",
+    "instruction": "Choose the phrase that completes the video call.",
+    "prompt": "Я випив каву. Тепер я йду ___ кафе додому.",
+    "options": [
+      "з",
+      "в",
+      "на"
+    ],
+    "title": "Odesa call gaps"
+  },
+  {
+    "id": "checkpoint-places/inline/act-4/5",
+    "type": "fill-in",
+    "instruction": "Choose the phrase that completes the video call.",
+    "prompt": "— Куди ти їдеш? — Увечері я їду ___.",
+    "options": [
+      "на вокзал",
+      "на вокзалі",
+      "з вокзалу"
+    ],
+    "title": "Odesa call gaps"
+  },
+  {
+    "id": "checkpoint-places/workbook/2/1",
+    "type": "quiz",
+    "instruction": "Choose the natural Ukrainian repair.",
+    "prompt": "— Куди ти йдеш? — ___",
+    "options": [
+      "Я йду в школу.",
+      "Я йду в школі.",
+      "Я йду зі школи."
+    ],
+    "title": "Repair checkpoint-places interference"
+  },
+  {
+    "id": "checkpoint-places/workbook/2/3",
+    "type": "quiz",
+    "instruction": "Choose the natural Ukrainian repair.",
+    "prompt": "— Де книга? — ___",
+    "options": [
+      "Книга на столі.",
+      "Книга на столом.",
+      "Книга в стіл."
+    ],
+    "title": "Repair checkpoint-places interference"
+  },
+  {
+    "id": "checkpoint-places/workbook/4/5",
+    "type": "fill-in",
+    "instruction": "Complete the checkpoint story with learned place phrases.",
+    "prompt": "— Куди вона їде після музею? — Після музею вона їде ___.",
+    "options": [
+      "на вокзал",
+      "на вокзалі",
+      "з вокзалу"
+    ],
+    "title": "One city story phrases"
+  },
+  {
+    "id": "food-and-drink/workbook/3/1",
+    "type": "fill-in",
+    "instruction": "Choose the natural short line.",
+    "prompt": "Зараз перша година дня. Я сиджу за столом і їм суп. Вдень я ___.",
+    "options": [
+      "обідаю",
+      "вечеряю",
+      "п'ю"
+    ],
+    "title": "Meal verb rhythm"
+  },
+  {
+    "id": "food-and-drink/workbook/3/3",
+    "type": "fill-in",
+    "instruction": "Choose the natural short line.",
+    "prompt": "Я ___ борщ.",
+    "options": [
+      "їм",
+      "їси",
+      "їсть"
+    ],
+    "title": "Meal verb rhythm"
+  },
+  {
+    "id": "food-and-drink/workbook/3/5",
+    "type": "fill-in",
+    "instruction": "Choose the natural short line.",
+    "prompt": "Я хочу каву ___.",
+    "options": [
+      "з молоком",
+      "з молоко",
+      "смачна"
+    ],
+    "title": "Meal verb rhythm"
+  },
+  {
+    "id": "shopping/inline/act-1/6",
+    "type": "fill-in",
+    "instruction": "Choose the word that completes each shopping question.",
+    "prompt": "Скільки ___ ці пляшки води?",
+    "options": [
+      "коштують",
+      "коштує",
+      "коштувала"
+    ],
+    "title": "Price questions"
+  },
+  {
+    "id": "shopping/inline/act-4/1",
+    "type": "fill-in",
+    "instruction": "Choose the quantity word or phrase that fits the product.",
+    "prompt": "Дайте один ___ молока.",
+    "options": [
+      "літр",
+      "пляшку",
+      "буханку"
+    ],
+    "title": "Quantity phrases"
+  },
+  {
+    "id": "shopping/inline/act-4/2",
+    "type": "fill-in",
+    "instruction": "Choose the quantity word or phrase that fits the product.",
+    "prompt": "Дайте одну ___ води.",
+    "options": [
+      "пляшку",
+      "кілограм",
+      "буханку"
+    ],
+    "title": "Quantity phrases"
+  },
+  {
+    "id": "shopping/inline/act-4/3",
+    "type": "fill-in",
+    "instruction": "Choose the quantity word or phrase that fits the product.",
+    "prompt": "Дайте одну ___ чаю.",
+    "options": [
+      "пачку",
+      "літр",
+      "пачкою"
+    ],
+    "title": "Quantity phrases"
+  },
+  {
+    "id": "transport/inline/act-2/5",
+    "type": "fill-in",
+    "instruction": "Complete the ticket-buying lines.",
+    "prompt": "О котрій ___?",
+    "options": [
+      "відправлення",
+      "відправленням",
+      "відправленню"
+    ],
+    "title": "Ticket window"
+  },
+  {
+    "id": "transport/inline/act-3/0",
+    "type": "quiz",
+    "instruction": "Choose the natural travel model.",
+    "prompt": "Ми їдемо...",
+    "options": [
+      "автобусом",
+      "автобусу",
+      "автобуса"
+    ],
+    "title": "Як ми їдемо?"
+  },
+  {
+    "id": "where-from/workbook/4/0",
+    "type": "fill-in",
+    "instruction": "Complete each short introduction with a safe learned phrase.",
+    "prompt": "— Звідки ти? — Я ___.",
+    "options": [
+      "з України",
+      "в Україні",
+      "в Україну"
+    ],
+    "title": "Country, city, current home"
+  },
+  {
+    "id": "where-from/workbook/4/1",
+    "type": "fill-in",
+    "instruction": "Complete each short introduction with a safe learned phrase.",
+    "prompt": "— Звідки Анна? — Вона ___.",
+    "options": [
+      "з Канади",
+      "у Канаді",
+      "до Канади"
+    ],
+    "title": "Country, city, current home"
+  },
+  {
+    "id": "where-from/workbook/4/2",
+    "type": "fill-in",
+    "instruction": "Complete each short introduction with a safe learned phrase.",
+    "prompt": "— Звідки Олена? — Вона ___.",
+    "options": [
+      "зі Львова",
+      "у Львові",
+      "до Львова"
+    ],
+    "title": "Country, city, current home"
+  },
+  {
+    "id": "where-from/workbook/4/4",
+    "type": "fill-in",
+    "instruction": "Complete each short introduction with a safe learned phrase.",
+    "prompt": "— Звідки Джон? — Він ___.",
+    "options": [
+      "зі США",
+      "у США",
+      "до США"
+    ],
+    "title": "Country, city, current home"
+  },
+  {
+    "id": "where-from/workbook/4/5",
+    "type": "fill-in",
+    "instruction": "Complete each short introduction with a safe learned phrase.",
+    "prompt": "— Звідки Марко? — Він ___.",
+    "options": [
+      "з Києва",
+      "у Києві",
+      "у Київ"
+    ],
+    "title": "Country, city, current home"
+  },
+  {
+    "id": "transport/workbook/3/0",
+    "type": "error-correction",
+    "instruction": "Choose the natural Ukrainian transport sentence.",
+    "prompt": "Я їду в автобусом до школи.",
+    "options": [
+      "Я їду автобусом до школи.",
+      "Я їду автобусу до школи.",
+      "Я їду автобусом до школі."
+    ],
+    "title": "Repair transport interference"
+  },
+  {
+    "id": "transport/workbook/3/1",
+    "type": "error-correction",
+    "instruction": "Choose the natural Ukrainian transport sentence.",
+    "prompt": "Я сиджу в цьому автобусі і їду за цим автобусом.",
+    "options": [
+      "їду цим автобусом",
+      "їду цим автобусу",
+      "їду біля цього автобуса"
+    ],
+    "title": "Repair transport interference"
+  },
+  {
+    "id": "transport/workbook/3/2",
+    "type": "error-correction",
+    "instruction": "Choose the natural Ukrainian transport sentence.",
+    "prompt": "Я їду в таксію, а потім на метрі.",
+    "options": [
+      "в таксі, а потім на метро",
+      "в таксієм, а потім на метро",
+      "в таксі, а потім на метрою"
+    ],
+    "title": "Repair transport interference"
+  }
+]
