@@ -478,7 +478,6 @@ def publication_sha(value: object) -> str:
     return value
 
 
-@publication_stage("commit-message read")
 def publication_messages(base: object, head: object, *, new_branch: bool = False) -> str:
     base, head = publication_sha(base), publication_sha(head)
     if head == "0" * 40 or (base == head and not new_branch):
@@ -494,7 +493,8 @@ def publication_messages(base: object, head: object, *, new_branch: bool = False
             publication_git("cat-file", "-e", f"{base}^{{commit}}")
             publication_git("merge-base", base, head)
         span = f"{base}..{head}"
-    return publication_git("log", "--format=%B%x00", span)
+    with publication_stage("commit-message read"):
+        return publication_git("log", "--format=%B%x00", span)
 
 
 def current_publication_pr(repository: str, number: int) -> dict:
