@@ -2519,7 +2519,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
         assert argv[argv.index("--log-file") + 1] == str(agy_sandbox.log_file("ro"))  # private scratch
         assert argv.index("--dangerously-skip-permissions") > split
     elif agent == "codex":
-        assert argv[argv.index("-s") + 1] == "read-only"
+        assert 'sandbox_mode="read-only"' in argv and "--dangerously-bypass-approvals-and-sandbox" not in argv
     elif agent == "cursor":
         assert argv[argv.index("--mode") + 1] == "ask"
     elif agent == "muse":

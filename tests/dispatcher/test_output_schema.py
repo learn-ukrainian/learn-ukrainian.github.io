@@ -19,6 +19,8 @@ def dispatch(tmp_path, monkeypatch):
     monkeypatch.setattr(checks, "check_resources", lambda _: None)
     start = Mock(side_effect=lambda spec, record, prompt, timeout: store.create(record, prompt))
     monkeypatch.setattr(worker, "start", start)
+    # The checkout is tmp_path itself, so the scratch under the test's scratch root would nest in it.
+    monkeypatch.setattr(worker, "create_dispatch_lease", lambda *a: None)
     schema = tmp_path / "schema.json"
     schema.write_text('{"type":"object","required":["verdict"]}')
 
@@ -77,7 +79,7 @@ def test_explicit_external_absolute_schema_allowed(dispatch):
     path.write_text('{}')
     spec, record = dispatch.invoke(path)
     assert record["output_schema_path"] == str(path)
-    assert codex.build(spec, {}).argv[-2:] == ["-s", "read-only"]
+    assert 'sandbox_mode="read-only"' in codex.build(spec, {}).argv
 
 
 def test_schema_symlink_substitution_after_binding_refused(dispatch):

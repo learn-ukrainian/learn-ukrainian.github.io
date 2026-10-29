@@ -9,6 +9,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
+from scripts.agent_runtime.read_only_tmp import dispatch_lease
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.dispatcher import runtime_context
 from scripts.dispatcher.providers import load
@@ -169,7 +171,11 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     if provider == "codex":
         if effort:
             expected += ["-c", "model_reasoning_effort=high"]
-        expected += ["-s", "read-only"] if mode == "read-only" else ["--dangerously-bypass-approvals-and-sandbox"]
+        expected += (
+            _read_only_tmp_flags(dispatch_lease(spec.task_id))
+            if mode == "read-only"
+            else ["--dangerously-bypass-approvals-and-sandbox"]
+        )
     elif provider == "claude":
         if effort:
             expected += ["--effort", "high"]

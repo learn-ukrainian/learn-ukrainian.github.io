@@ -13,6 +13,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
@@ -77,12 +78,21 @@ def _observe(record: dict) -> dict:
         if current["status"] not in store.ACTIVE:
             return current
         record.update(status="crashed", finished_at=store.now(), error="supervisor exited without a result")
+        _discard_read_only_scratch(record)  # a killed supervisor never reached its own cleanup
         record["duration_s"] = (
             datetime.fromisoformat(record["finished_at"]) - datetime.fromisoformat(record["started_at"])
         ).total_seconds()
         record.update(git.snapshot_delivery(_spec(record, {}), record))
         store.replace(record)
     return record
+
+
+def _discard_read_only_scratch(record: dict) -> None:
+    """Remove a dispatched Codex read-only task's scratch; residue is recorded, never raised."""
+    if record["agent"] == "codex" and record["mode"] == "read-only" and (
+        residue := discard_dispatch_lease(record["task_id"])
+    ):
+        record["read_only_scratch_cleanup"] = residue
 
 
 def _spawn_expired(record: dict) -> bool:
@@ -400,6 +410,12 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
         except ValueError as exc:
             status, error = "failed", str(exc)
             return
+        if spec.agent == "codex" and spec.mode == "read-only":
+            try:
+                create_dispatch_lease(spec.task_id, spec.worktree)
+            except (OSError, ValueError) as exc:
+                status, error = "failed", f"read_only_scratch_unavailable: {exc}"
+                return
         slots, slots_record = admission.hold_review_test_slots(
             agent=spec.agent, mode=spec.mode, review_typed=admission.review_typed(record),
             sealed_attempt=bool(record.get("review_attempt")), task_id=spec.task_id,
@@ -493,6 +509,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             # A killed launcher leaves its scratch and token copy; residue is recorded, never raised.
             if spec.agent == "agy" and spec.mode == "read-only" and (residue := agy_sandbox.discard(spec.task_id)):
                 record["read_only_boundary_cleanup"] = residue
+            _discard_read_only_scratch(record)
             if slots is not None:
                 # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight
                 # keep their slots shared until they exit (test_slots).
