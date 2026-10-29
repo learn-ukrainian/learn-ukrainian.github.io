@@ -2606,6 +2606,121 @@ def test_ambiguous_filesystem_identity_stays_verbatim(citation_checkout, kind):
     assert recorder.repository_relative_reply(reply, task={}, primary_root=root) == reply
 
 
+def reviewed_checkout(tmp_path):
+    """A primary checkout whose reviewed commit holds ``scripts/unit.py``, and the removed reviewer worktree."""
+    root = tmp_path / "checkout"
+    (root / "scripts").mkdir(parents=True)
+    (root / "scripts/unit.py").write_text("# reviewed\n" * 20)
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1")
+    for args in (["init", "-q"], ["add", "."], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "r"]):
+        subprocess.run(["git", "-C", str(root), *args], check=True, capture_output=True, env=env, timeout=30)
+    sha = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "HEAD"], check=True, capture_output=True, text=True, env=env, timeout=30
+    ).stdout.strip()
+    # Only the reviewed commit vouches for the citation, not the primary checkout's own files.
+    (root / "scripts/unit.py").unlink()
+    return root, root / ".worktrees/dispatch/codex/review", sha
+
+
+def test_removed_reviewer_worktree_citations_publish_repository_relative(tmp_path, real_recorder_matcher):
+    from scripts.opsec import prepublish as gate
+
+    root, worktree, sha = reviewed_checkout(tmp_path)
+    review = {"worktree_path": str(worktree), "worktree_base_sha": sha}
+    reply = f"VERDICT: REQUEST_CHANGES\nF1 [P1] [scripts/unit.py:12]({worktree}/scripts/unit.py:12) fails.\n"
+
+    rewritten = recorder.repository_relative_reply(reply, task=review, primary_root=root)
+
+    assert rewritten == "VERDICT: REQUEST_CHANGES\nF1 [P1] [scripts/unit.py:12](scripts/unit.py:12) fails.\n"
+    comment = recorder.build_comment(
+        sha=sha,
+        task_id="review-one",
+        started="2026-10-29T12:01:07.927180+00:00",
+        verdict="CHANGES_REQUESTED",
+        model="gpt-6.1-sol",
+        family="openai",
+        reply=rewritten,
+    )
+    gate.check_texts("github.com/unit/public", [comment], tooling=real_recorder_matcher, environment={})
+    # The rewrite's protections still hold for a removed worktree.
+    for cited in ("missing.py:12", "scripts/unit.py:0", "../outside/unit.py", "scripts/../../outside/unit.py"):
+        text = f"`{worktree}/{cited}`"
+        assert recorder.repository_relative_reply(text, task=review, primary_root=root) == text
+    outside = tmp_path / "elsewhere/review"
+    text = f"`{outside}/scripts/unit.py`"
+    assert (
+        recorder.repository_relative_reply(text, task={**review, "worktree_path": str(outside)}, primary_root=root)
+        == text
+    )
+
+
+def test_withheld_verdict_republishes_its_findings_after_the_cause_is_fixed(
+    monkeypatch, tmp_path, real_recorder_matcher
+):
+    from scripts.review.budget_grant import open_blocker_cited
+
+    root, worktree, sha = reviewed_checkout(tmp_path)
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, head=sha)
+    reply = (
+        f"VERDICT: REQUEST_CHANGES\nF1 [P1] [scripts/unit.py:12]({worktree}/scripts/unit.py:12) still open: fails.\n"
+    )
+    sealed = {"worktree_path": str(worktree), "worktree_base_sha": sha}
+    write_task(tasks, reply=reply, result_sha256=hashlib.sha256(reply.encode()).hexdigest(), **sealed)
+    monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: root)
+    with monkeypatch.context() as before_fix:
+        # The recorder could not rewrite a removed worktree's citations, so the scan withheld the reply.
+        before_fix.setattr(recorder, "repository_relative_reply", lambda text, **_kwargs: text)
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    withheld = dict(comments[0])
+    assert "Findings are held privately." in withheld["body"]
+    assert open_blocker_cited(comments, "fleet", "F1") is None
+    # The author has pushed since; the withheld verdict stays recorded at the head it reviewed.
+    current = recorder._run_json
+    monkeypatch.setattr(
+        recorder,
+        "_run_json",
+        lambda args, **kwargs: (
+            {**current(args, **kwargs), "headRefOid": "b" * 40}
+            if isinstance(args, list) and args[:3] == ["gh", "pr", "view"]
+            else current(args, **kwargs)
+        ),
+    )
+    republish = partial(recorder.republish_withheld, pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    # Refused: an unsealed reply, a withheld comment the task does not produce, and a later verdict.
+    write_task(tasks, task_id="review-unsealed", reply=reply, **sealed)
+    with pytest.raises(recorder.RecordError, match="sealed reply digest"):
+        republish("review-unsealed")
+    comments[0]["body"] = withheld["body"].replace("Authored by: ", "Authored by: claude-fable-5-1, ")
+    with pytest.raises(recorder.RecordError, match="does not match its record and sealed reply"):
+        republish("review-one")
+    comments[0] = dict(withheld)
+    later = recorder.build_comment(
+        sha="c" * 40,
+        task_id="review-later",
+        started="2026-10-29T12:30:00.000000+00:00",
+        verdict="APPROVED",
+        model="gpt-6.1-sol",
+        family="openai",
+        reply="VERDICT: APPROVE",
+    )
+    comments.append({**withheld, "id": 9, "body": later})
+    with pytest.raises(recorder.RecordError, match="later verdict"):
+        republish("review-one")
+    comments.pop()
+    assert comments == [withheld] and calls["posts"] == 1
+
+    receipt = republish("review-one")
+
+    assert receipt["comment"] == "posted" and calls == {"posts": 2, "statuses": 1}
+    assert comments[0] == withheld
+    body = comments[1]["body"]
+    assert "F1 [P1] [scripts/unit.py:12](scripts/unit.py:12) still open: fails." in body and str(tmp_path) not in body
+    assert recorder.parse_marker(body) == recorder.parse_marker(withheld["body"])
+    assert open_blocker_cited(comments, "fleet", "F1") == sha
+    assert republish("review-one")["comment"] == "existing" and calls["posts"] == 2
+
+
 # --- #9739 A1: GitHub's listing must equal the local base..head enumeration ----------------------
 
 
