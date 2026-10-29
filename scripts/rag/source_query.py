@@ -1094,11 +1094,13 @@ def pravopys_lookup(topic: str, *, report_unavailable: bool = False) -> dict[str
 
 
 def query_sum20(word: str, *, db_path: str | None = None) -> list[dict[str, Any]]:
-    """Read exact official СУМ-20 records from the offline sources collection.
+    """Read exact СУМ-20 records from the offline sources collection.
 
     This function deliberately has no network path or alternate-source
-    fallback.  Its output is therefore limited to locally ingested official
-    ``sum20ua.com`` records and preserves their fetch provenance.
+    fallback. Official ``sum20ua.com`` records come first and preserve their
+    fetch provenance. Imported slovnyk.me mirror records follow under
+    ``sum20-mirror-rule-v1``, marked ``source_role: "mirror"`` with their own
+    ``source_id``, mirror URL and fetch time; they are never official records.
     """
     try:
         from wiki.sources_db import query_sum20 as offline_query_sum20
