@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { cardKey, loadState, rateCard, type PracticeRating } from '../lib/lexicon/srs';
+import ReportProblemAction from './practice/ReportProblemAction';
 import { ErrorCorrectionItem } from './ErrorCorrection';
 
 export interface ErrorCorrectionDrill {
@@ -177,6 +178,7 @@ export default function ErrorCorrectionPractice({
         />
       </div>
 
+      <ReportProblemAction records={[currentItem]} type="error-correction" chromeLocale={chromeLocale} />
       {rated && (
         <div className="error-correction-action-footer">
           <button

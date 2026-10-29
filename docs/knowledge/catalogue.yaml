@@ -1885,10 +1885,10 @@ entries:
   - id: data-ulif-dumps
     kind: data_store
     store: [data/ulif_dump.db, data/ulif_scrape.log]
-    producer: [scripts/lexicon/tools/dump_ulif.py]
-    producer_note: dump_ulif.py writes ulif_dump.db; legacy ulif_dump_all.db is retired (#8798); canonical entries reside in sources.db.
+    producer: []
+    producer_note: The standalone dump crawler that wrote ulif_dump.db was retired on 2026-10-28; the DictUA register walk (scripts/lexicon/runner/fetch_ulif_homonyms.py) refreshes sources.db directly. Legacy ulif_dump_all.db is retired (#8798).
     local_only: true
-    purpose: Local ULIF dictionary crawler dumps and scrape log; canonical entries reside in sources.db.
+    purpose: Leftover ULIF crawler dump and scrape log; canonical entries reside in sources.db.
     keywords: [ULIF dump, ULIF dictionary]
     lifecycle: active
     owner: atlas-practice
@@ -2704,10 +2704,11 @@ store_registry:
       activity: dormant
       presence: present
       catalogue_entry: data-ulif-dumps
-      writers: [scripts/lexicon/tools/dump_ulif.py:DumpDB.__init__]
+      writers: []
+      writer_note: Its crawler (dump_ulif.py) was retired on 2026-10-28; the DictUA walk writes sources.db instead.
       journal: wal
-      busy_ms: 5000
-      busy_source: explicit
+      busy_ms: null
+      busy_source: no_writer
       protection: rebuild
       backup: none
       retention: Crawler dump (1 row); canonical entries reside in sources.db.

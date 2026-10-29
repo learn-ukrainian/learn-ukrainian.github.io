@@ -3,8 +3,9 @@
 Safety invariant under test: no event path may make the required "CI Gate"
 check green or skipped without every job required by the event tier running.
 
-- ci.yml runs the same admission checks for opened/synchronize/reopened/edited.
-  The negated-closing-reference body guard lives in pr-body-guard.yml.
+- ci.yml runs the same admission checks for opened/synchronize/reopened, never
+  `edited`. pr-publication-scan.yml scans publication fields on title and body
+  edits. The negated-closing-reference body guard lives in pr-body-guard.yml.
 - Exactly one job in any workflow is named "CI Gate". It uses `if: always()`
   and fails when a required job was cancelled or skipped unexpectedly;
   GitHub treats a skipped required job as success.
@@ -326,7 +327,7 @@ def _concurrency_group(github: dict[str, Any]) -> str:
 
 
 def test_metadata_edits_cannot_bypass_code_or_publication_checks() -> None:
-    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened", "edited"}
+    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened"}
     steps = _load("ci.yml")["jobs"]["secret-scan"]["steps"]
     scan = next(s for s in steps if s.get("name") == "Scan publication fields")
     for event in ("opened", "edited", "merge_group"):
@@ -362,7 +363,7 @@ def test_every_event_runs_every_job(event: str) -> None:
     skipped = {job for job, result in results.items() if result != "success"}
     expected = set() if event == "merge_group" else {"queue-metadata-scan"}
     if event in {"opened", "synchronize", "reopened", "edited"}:
-        expected |= {"frontend", "refresh-pytest-durations", "pytest", "pytest-report"}
+        expected |= {"refresh-pytest-durations", "pytest", "pytest-report"}
     assert skipped == expected
     assert names["ci-gate"] == "CI Gate"
 
@@ -458,7 +459,7 @@ def _run_gate(event: str, *, action: str = "opened", **results: str) -> subproce
             payload["ref"] = "refs/heads/main"
         jobs = {**_GREEN, "REFRESH": "success", "METADATA_SCAN": "success" if event == "merge_group" else "skipped"}
         if event == "pull_request":
-            jobs.update({name: "skipped" for name in ("FRONTEND", "REFRESH", "PYTEST", "PYTEST_REPORT")})
+            jobs.update({name: "skipped" for name in ("REFRESH", "PYTEST", "PYTEST_REPORT")})
         # Existing test bodies can corrupt the real entry-point event and candidate.
         overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_") or key == "NEEDS_JSON"}
         raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
@@ -473,7 +474,7 @@ def _run_gate(event: str, *, action: str = "opened", **results: str) -> subproce
         )
         if result.returncode == 0:
             summary = (Path(directory) / "summary").read_text()
-            assert ("full pytest was not run" in summary) == (event == "pull_request")
+            assert ("ran on this head" in summary) == (event == "pull_request")
         return result
 
 
@@ -483,14 +484,14 @@ def test_gate_passes_a_green_pull_request_run(action: str) -> None:
     result = _run_gate("pull_request", action=action)
     assert result.returncode == 0, result.stdout
     assert "CI Gate green" in result.stdout
-    assert "full pytest was not run" in result.stdout
+    assert "ran on this head" in result.stdout
 
 
 @pytest.mark.parametrize(
     "overrides",
     [
         {"PYTEST": "failure"}, {"PYTEST": "success"}, {"PYTEST_REPORT": "success"},
-        {"CHECKS": "cancelled"}, {"SECRET_SCAN": ""}, {"FRONTEND": "success"},
+        {"CHECKS": "cancelled"}, {"SECRET_SCAN": ""}, {"FRONTEND": "failure"}, {"FRONTEND": "skipped"},
         {"DEPENDENCY_AUDIT": "failure"}, {"DEPENDENCY_AUDIT": "skipped"},
         {"REFRESH": "success"}, {"METADATA_SCAN": "success"},
     ],
@@ -649,12 +650,16 @@ def test_ci_gate_guard_steps_lack_continue_on_error() -> None:
 def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     """Missing or non-success changed-test proof must never admit a PR."""
     job = _load('ci.yml')['jobs']['pr-affected']
-    assert job['timeout-minutes'] == 10
+    assert job['timeout-minutes'] == 40
     assert 'needs' not in job
     assert 'continue-on-error' not in job
     assert 'pr-affected' in _ci_gate_job()['needs']
     checkout = next(s for s in job['steps'] if str(s.get('uses', '')).startswith('actions/checkout@'))
-    assert checkout['with'] == {'persist-credentials': False, 'fetch-depth': 0}
+    assert checkout['with'] == {
+        'persist-credentials': False,
+        'fetch-depth': 0,
+        'filter': "${{ github.event_name != 'pull_request' && 'blob:none' || '' }}",
+    }
     setup = next(s for s in job['steps'] if s.get('name') == 'Set up bubblewrap')
     assert setup['if'] == "github.event_name == 'pull_request'"
     assert setup['run'] == 'bash scripts/ci/setup_bubblewrap.sh'
@@ -669,12 +674,19 @@ def test_pr_affected_checks_are_required_and_defer_truthfully() -> None:
     assert job['steps'].index(setup) < job['steps'].index(step)
     assert '.venv/bin/python -m scripts.ci.pr_affected_tests' in step['run']
     assert '"$EVENT_NAME" = pull_request' in step['run']
+    invariants = next(s for s in job['steps'] if s.get('name') == 'Run repository invariants')
+    assert invariants['run'] == '.venv/bin/python -m scripts.ci.pr_affected_tests --repo-wide'
+    assert job['steps'].index(step) < job['steps'].index(invariants)
+    for event, status, expected in [('pull_request', 'success', True), ('pull_request', 'failure', True),
+                                    ('pull_request', 'cancelled', False), ('merge_group', 'success', False)]:
+        assert _condition(invariants['if'], {'github': {'event_name': event}, 'job': {'status': status}}) is expected
+    assert not invariants.get('continue-on-error', False)
     for status in ('failure', 'skipped', 'cancelled', '', 'unknown'):
         result = _run_gate('pull_request', PR_AFFECTED=status)
         assert result.returncode == 1, result.stdout
     result = _run_gate('pull_request', PR_AFFECTED='success')
     assert result.returncode == 0
-    assert 'full pytest was not run' in result.stdout
+    assert 'ran on this head' in result.stdout
     # An absent dependency is distinct from a present dependency with no result.
     from scripts.ci.gate import COMMON
     assert 'pr-affected' in COMMON

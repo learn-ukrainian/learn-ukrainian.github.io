@@ -2,7 +2,9 @@
 
 import json
 
+from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
 from scripts.agent_runtime.adapters.codex_events import classify_provider_message
+from scripts.agent_runtime.read_only_tmp import dispatch_lease
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
@@ -20,7 +22,8 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.effort is not None:
         argv += ["-c", f"model_reasoning_effort={spec.effort}"]
     if spec.mode == "read-only":
-        argv += ["-s", "read-only"]
+        # The checkout stays read-only; the task's own lease is the only other writable root (and TMPDIR).
+        argv += _read_only_tmp_flags(dispatch_lease(spec.task_id))
     elif spec.mode == "workspace-write":
         argv += ["--dangerously-bypass-approvals-and-sandbox"]
     else:

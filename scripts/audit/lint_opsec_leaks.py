@@ -25,6 +25,7 @@ import re
 import subprocess
 import sys
 import unicodedata
+from contextlib import contextmanager
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -441,6 +442,28 @@ def get_public_personal_identifier_paths(revision: str = "") -> list[str]:
     return [path for path in paths if is_public_personal_identifier_path(path)]
 
 
+_PUBLICATION_INPUT_ERRORS = (
+    KeyError, TypeError, ValueError, OSError, subprocess.SubprocessError, RuntimeError,
+)
+
+
+class PublicationInputError(RuntimeError):
+    """Carry only a fixed stage and exception class, never submitted values."""
+
+    def __init__(self, stage: str, error: Exception):
+        super().__init__(f"{stage} ({type(error).__name__})")
+
+
+@contextmanager
+def publication_stage(stage: str):
+    try:
+        yield
+    except PublicationInputError:
+        raise
+    except _PUBLICATION_INPUT_ERRORS as error:
+        raise PublicationInputError(stage, error) from None
+
+
 def publication_git(*args: str) -> str:
     """Capture Git output so failures never print submitted messages or refs."""
     return subprocess.run(
@@ -461,14 +484,17 @@ def publication_messages(base: object, head: object, *, new_branch: bool = False
         raise ValueError("empty publication range")
     if publication_git("rev-parse", "--is-shallow-repository").strip() != "false":
         raise ValueError("incomplete publication history")
-    publication_git("cat-file", "-e", f"{head}^{{commit}}")
+    with publication_stage("git verify head"):
+        publication_git("cat-file", "-e", f"{head}^{{commit}}")
     if base == "0" * 40 and new_branch:
         span = head
     else:
-        publication_git("cat-file", "-e", f"{base}^{{commit}}")
-        publication_git("merge-base", base, head)
+        with publication_stage("git verify base"):
+            publication_git("cat-file", "-e", f"{base}^{{commit}}")
+            publication_git("merge-base", base, head)
         span = f"{base}..{head}"
-    return publication_git("log", "--format=%B%x00", span)
+    with publication_stage("commit-message read"):
+        return publication_git("log", "--format=%B%x00", span)
 
 
 def current_publication_pr(repository: str, number: int) -> dict:
@@ -497,11 +523,13 @@ def publication_pr_texts(pr: dict, *, live: bool = False) -> list[tuple[str, str
         raise ValueError("invalid publication body")
     base, head = publication_sha(pr["base"]["sha"]), publication_sha(pr["head"]["sha"])
     if live:
-        for sha in (base, head):
-            try:
-                publication_git("cat-file", "-e", f"{sha}^{{commit}}")
-            except subprocess.CalledProcessError:
-                publication_git("fetch", "--no-tags", "--quiet", "origin", sha)
+        for role, sha in (("base", base), ("head", head)):
+            with publication_stage(f"git verify {role}"):
+                try:
+                    publication_git("cat-file", "-e", f"{sha}^{{commit}}")
+                except subprocess.CalledProcessError:
+                    with publication_stage(f"git fetch {role}"):
+                        publication_git("fetch", "--no-tags", "--quiet", "origin", sha)
     return [("title", title), ("body", body or ""), ("branch", branch),
             ("commit", publication_messages(base, head))]
 
@@ -515,20 +543,32 @@ def publication_texts(payload: dict, event: str) -> list[tuple[str, str]]:
         publication_git("check-ref-format", ref)
         before, after = publication_sha(payload["before"]), publication_sha(payload["after"])
         if after == "0" * 40 and payload.get("deleted") is True:
-            publication_git("cat-file", "-e", f"{before}^{{commit}}")
+            with publication_stage("git verify base"):
+                publication_git("cat-file", "-e", f"{before}^{{commit}}")
             return [("branch", ref)]
         new_branch = before == "0" * 40
-        if new_branch:
+        # A force push withdraws `before`, so no fetched ref carries it; the branch
+        # is then scanned from the same base a new branch uses.
+        rebase = new_branch
+        if not new_branch:
+            try:
+                publication_git("cat-file", "-e", f"{before}^{{commit}}")
+            except subprocess.CalledProcessError:
+                rebase = True
+        if rebase:
             default = payload["repository"]["default_branch"]
             if not isinstance(default, str) or not default:
                 raise ValueError("invalid default branch")
             publication_git("check-ref-format", f"refs/heads/{default}")
             if ref != f"refs/heads/{default}":
-                bases = publication_git("merge-base", "--all", f"refs/remotes/origin/{default}", after).split()
-                if len(bases) != 1:
-                    raise ValueError("new branch range unavailable")
-                before = publication_sha(bases[0])
-        return [("branch", ref), ("commit", publication_messages(before, after, new_branch=new_branch))]
+                with publication_stage("git verify base"):
+                    bases = publication_git("merge-base", "--all", f"refs/remotes/origin/{default}", after).split()
+                    if len(bases) != 1:
+                        raise ValueError("new branch range unavailable")
+                    before = publication_sha(bases[0])
+            elif not new_branch:
+                raise ValueError("default branch base unavailable")
+        return [("branch", ref), ("commit", publication_messages(before, after, new_branch=rebase))]
     if event not in {"pull_request", "merge_group"}:
         raise ValueError("unsupported publication event")
     repository = payload["repository"]["full_name"]
@@ -541,26 +581,33 @@ def publication_texts(payload: dict, event: str) -> list[tuple[str, str]]:
         number = pr["number"]
         if type(number) is not int or number < 1:
             raise ValueError("invalid publication PR")
-        return publication_pr_texts(pr) + publication_pr_texts(current_publication_pr(repository, number), live=True)
+        texts = publication_pr_texts(pr)
+        with publication_stage("live PR fetch"):
+            live_pr = current_publication_pr(repository, number)
+            live_texts = publication_pr_texts(live_pr, live=True)
+        return texts + live_texts
     if payload["action"] != "checks_requested":
         raise ValueError("unsupported queue action")
     group = payload["merge_group"]
     base, head = publication_sha(group["base_sha"]), publication_sha(group["head_sha"])
     texts = [("commit", publication_messages(base, head))]
-    publication_git("merge-base", "--is-ancestor", base, head)
-    chain = publication_git("rev-list", "--first-parent", f"{base}..{head}").split()
-    if not chain:
-        raise ValueError("empty queue chain")
+    with publication_stage("queue-chain read"):
+        publication_git("merge-base", "--is-ancestor", base, head)
+        chain = publication_git("rev-list", "--first-parent", f"{base}..{head}").split()
+        if not chain:
+            raise ValueError("empty queue chain")
     # Same squash-chain convention as check_agent_attribution, without its
     # Markdown dependency. Every queue member, not just the ref's PR, is read.
     for sha in chain:
-        if len(publication_git("rev-list", "--parents", "-n", "1", sha).split()) != 2:
-            raise ValueError("unsupported queue commit")
-        subject = publication_git("log", "-1", "--format=%s", sha).strip()
-        match = re.search(r"\(#([1-9][0-9]*)\)$", subject)
-        if not match:
-            raise ValueError("queue PR unavailable")
-        texts.extend(publication_pr_texts(current_publication_pr(repository, int(match[1])), live=True))
+        with publication_stage("queue-chain read"):
+            if len(publication_git("rev-list", "--parents", "-n", "1", sha).split()) != 2:
+                raise ValueError("unsupported queue commit")
+            subject = publication_git("log", "-1", "--format=%s", sha).strip()
+            match = re.search(r"\(#([1-9][0-9]*)\)$", subject)
+            if not match:
+                raise ValueError("queue PR unavailable")
+        with publication_stage("live PR fetch"):
+            texts.extend(publication_pr_texts(current_publication_pr(repository, int(match[1])), live=True))
     ref = group["head_ref"]
     if not isinstance(ref, str) or not ref.startswith("refs/heads/gh-readonly-queue/"):
         raise ValueError("invalid queue ref")
@@ -581,8 +628,9 @@ def scan_publication_event(event_file: str) -> int:
                 print(f"OPSEC publication: {field} line={line} rule={rule}")
                 failed = True
         return int(failed)
-    except (KeyError, TypeError, ValueError, OSError, subprocess.SubprocessError, RuntimeError):
-        print("OPSEC publication: required input unavailable or invalid", file=sys.stderr)
+    except _PUBLICATION_INPUT_ERRORS as error:
+        failure = error if isinstance(error, PublicationInputError) else PublicationInputError("event parse", error)
+        print(f"OPSEC publication: required input unavailable or invalid: {failure}", file=sys.stderr)
         return 1
 
 

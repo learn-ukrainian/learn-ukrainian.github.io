@@ -10,6 +10,12 @@ import sqlite3
 import sys
 from pathlib import Path
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 
@@ -122,6 +128,7 @@ def restore_literary_metadata(
     *,
     literary_dir: Path | None = None,
 ) -> dict[str, object]:
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     try:
         before_hashes = _sha256_text_hashes(conn)

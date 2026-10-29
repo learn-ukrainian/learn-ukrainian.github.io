@@ -12,6 +12,30 @@ _BACKGROUND_TERMINATED_RE = re.compile(r"terminating (?P<count>\d+) background t
 _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in progress")
 
 
+def terminal_result_observer(stdout_path):
+    """Observe complete terminal envelopes incrementally, without granting success."""
+    offset, pending = 0, b""
+
+    def observed():
+        nonlocal offset, pending
+        with stdout_path.open("rb") as stream:
+            stream.seek(offset)
+            chunk = stream.read()
+            offset = stream.tell()
+        lines = (pending + chunk).split(b"\n")
+        pending = lines.pop()
+        for line in lines:
+            try:
+                event = json.loads(line)
+            except (ValueError, UnicodeDecodeError):
+                continue
+            if isinstance(event, dict) and event.get("event") == "result":
+                return True
+        return False
+
+    return observed
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["agy", "--mode", "auto", "--input-format", "stream-json", "--output-format", "stream-json"]
     argv += ["--model", spec.model]

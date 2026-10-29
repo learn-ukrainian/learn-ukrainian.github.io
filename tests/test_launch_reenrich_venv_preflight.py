@@ -17,12 +17,14 @@ immediately when invoked as the "driver".
 
 from __future__ import annotations
 
+import os
 import subprocess
 from pathlib import Path
 
 import pytest
 
 from tests.helpers.restore_import_state import restore_import_state
+from tests.test_lexicon_runner_memory_caps_config import _fake_systemd, _launcher_env
 
 pytestmark = pytest.mark.reads_content
 
@@ -74,8 +76,10 @@ def _build_fixture(tmp_path: Path, *, repo_stub: str | None, code_stub: str | No
     if code_stub is not None:
         _write_venv(code, code_stub)
 
+    binaries, record = _fake_systemd(tmp_path)
     return {
-        "PATH": "/usr/bin:/bin",
+        "PATH": f"{binaries}:/usr/bin:/bin",
+        "TEST_SCOPE_ARGV": str(record),
         "ATLAS_RUN_ROOT": str(tmp_path),
         "ATLAS_REPO": str(repo),
         "ATLAS_RE_ENRICH_WORK_DIR": str(work),
@@ -145,6 +149,48 @@ def test_runner_python_override_wins(tmp_path: Path) -> None:
     env["ATLAS_RE_ENRICH_RUNNER_PYTHON"] = str(override)
     proc = _run_launcher(env)
     assert proc.returncode == 0, proc.stdout + proc.stderr
+
+
+@pytest.mark.parametrize("launcher", ["launch_enrich.sh", "launch_reduce.sh", "launch_reenrich_class_b.sh"])
+def test_detached_launcher_requests_pool_and_verifies_before_driver(tmp_path: Path, launcher: str) -> None:
+    if launcher == "launch_reenrich_class_b.sh":
+        env = _build_fixture(tmp_path, repo_stub=_STUB_OK)
+        record = Path(env["TEST_SCOPE_ARGV"])
+    else:
+        binaries, record = _fake_systemd(tmp_path)
+        env = _launcher_env(tmp_path, binaries)
+    result = subprocess.run(
+        ["bash", str(LOCAL_LAUNCHER.with_name(launcher))],
+        env=env, capture_output=True, text=True, timeout=15, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    argv = record.read_text().splitlines()
+    assert "--slice=lu.slice" in argv
+    assert "--property=MemorySwapMax=0" in argv
+    entry_at = next(i for i, arg in enumerate(argv) if arg.endswith("/scripts/lib/job_memory_scope.sh"))
+    assert argv[entry_at + 1:entry_at + 3] == [str(1792 * 1024**2), "--"]
+    assert argv[entry_at + 3] in ("/usr/bin/nice", "/bin/bash")
+
+
+@pytest.mark.parametrize("launcher", ["launch_enrich.sh", "launch_reduce.sh", "launch_reenrich_class_b.sh"])
+def test_unavailable_manager_starts_no_detached_fallback(tmp_path: Path, launcher: str) -> None:
+    if launcher == "launch_reenrich_class_b.sh":
+        env = _build_fixture(tmp_path, repo_stub=_STUB_OK)
+        record = Path(env["TEST_SCOPE_ARGV"])
+        binaries = Path(env["PATH"].split(os.pathsep)[0])
+    else:
+        binaries, record = _fake_systemd(tmp_path)
+        env = _launcher_env(tmp_path, binaries)
+    (binaries / "systemctl").write_text("#!/bin/bash\nexit 1\n")
+    result = subprocess.run(
+        ["bash", str(LOCAL_LAUNCHER.with_name(launcher))],
+        env=env, capture_output=True, text=True, timeout=15, check=False,
+    )
+    assert result.returncode == 6, result.stdout + result.stderr
+    assert "JOB_SCOPE_REFUSED" in result.stderr
+    assert "pid=" not in result.stdout
+    assert not record.exists()
+    assert not list(tmp_path.rglob("*-driver.pid"))
 
 
 def test_launcher_wrapped_command_has_pipefail() -> None:

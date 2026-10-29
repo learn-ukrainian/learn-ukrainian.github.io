@@ -17,6 +17,13 @@ ACCEPTED_VERDICT_TOKENS = (
     "BLOCKED",
 )
 
+# A structured reply that stopped for a missing capability may name it in this
+# list beside the canonical findings fields (``scripts/review/capability_failure.py``).
+# Every structured reader drops the field before schema validation, whatever its
+# form, so it never hides the reply's verdict; the classifier checks its form.
+MISSING_CAPABILITIES_FIELD = "missing_capabilities"
+REVIEW_CAPABILITIES = frozenset({"sources-mcp", "test-execution", "shell", "browser", "checkout-data"})
+
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
 # APPROVED / CHANGES_REQUESTED / BLOCKED by
@@ -211,8 +218,11 @@ def recognized_verdicts(response: str) -> list[str]:
     return verdicts or _findings_json_verdicts(response)
 
 
-def _findings_json_verdicts(response: str) -> list[str]:
-    """Read whole JSON replies and top-level JSON blocks, never quoted examples."""
+def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list[str]:
+    """Read whole JSON replies and top-level JSON blocks, never quoted examples.
+
+    ``stated`` is the reply's own canonical verdict line, if any (see ``resolve_verdict_and_evidence``).
+    """
     from markdown_it import MarkdownIt
 
     from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
@@ -232,9 +242,10 @@ def _findings_json_verdicts(response: str) -> list[str]:
             continue
         if not isinstance(payload, dict):
             continue
+        payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
         try:
             validate_reviewer_payload(payload)
-            verdict, _ = resolve_verdict_and_evidence(payload)
+            verdict, _ = resolve_verdict_and_evidence(payload, stated=stated)
         except (ContractError, ReviewPublicationError):
             continue
         verdicts.append(
@@ -256,11 +267,45 @@ _REVIEW_SCORE_LINE_RE = re.compile(
 )
 
 
+# Inside a structured reply the score sits in ``overall.explanation`` prose, often
+# mid-line (``VERDICT: APPROVE. SCORE: 9/10.``). Every uppercase SCORE word there
+# declares a score and must read exactly ``SCORE: n/10``; a sentence's closing
+# period may follow, a decimal or any other continuation may not.
+_STRUCTURED_SCORE_LABEL_RE = re.compile(r"\bSCORE\b")
+_STRUCTURED_SCORE_RE = re.compile(r"SCORE\s*:\s*(\d{1,2})\s*/\s*10(?![\w/]|\.\w)")
+
+
+def _structured_explanation(response: str) -> str | None:
+    """A whole ``code-review-findings.v1`` reply's explanation, or None for any other reply."""
+    from scripts.fleet_comms.review_publication import REVIEW_SCHEMA_VERSION
+
+    try:
+        payload = json.loads(response)
+    except (ValueError, RecursionError):
+        return None
+    if not isinstance(payload, dict) or payload.get("schema_version") != REVIEW_SCHEMA_VERSION:
+        return None
+    overall = payload.get("overall")
+    explanation = overall.get("explanation") if isinstance(overall, dict) else None
+    return explanation if isinstance(explanation, str) else None
+
+
 def review_score(response: str) -> int | None:
     """Return the reply's one ``SCORE`` value, or None when absent, malformed or ambiguous.
 
     A score never gates a review, so this reader never raises.
     """
+    structured = _structured_explanation(response)
+    if structured is not None:
+        declared = [
+            _STRUCTURED_SCORE_RE.match(structured, label.start())
+            for label in _STRUCTURED_SCORE_LABEL_RE.finditer(structured)
+        ]
+        if None in declared:
+            return None
+        scores = {int(match.group(1)) for match in declared if match is not None}
+        score = scores.pop() if len(scores) == 1 else None
+        return score if score is not None and 1 <= score <= 10 else None
     try:
         lines = _commonmark_lines(_without_code_fences(response, keep_unclosed=False))
     except (ValueError, ImportError):
@@ -291,3 +336,32 @@ def unsupported_verdict_tokens(response: str) -> list[str]:
         if match and len(match.group(1)) <= 64:
             tokens.append(match.group(1))
     return tokens
+
+
+# A ledger entry of the review-loop reply (``references/brief.md`` reply format, ``references/policy.md``
+# ledger) starts at its finding id, optionally bulleted or bold, and runs to the next entry, a blank
+# line, or the verdict and score lines. The severity sits right after the id (``F2 [P1] ...``,
+# ``F2 (P1) ...``) or after the plain-words disposition a delta round writes (``F2 still open: [P1] ...``).
+_LEDGER_ENTRY_START = re.compile(
+    r"^\s*(?:[-*]\s+)?\**(F[1-9][0-9]{0,3})(?![0-9])\**"
+    r"(?:\s*[:\u2014\u2013-]+)?(?:\s*(?:still|remains?)\s+open\s*[:\u2014\u2013-]?)?"
+    r"(?:\s*(?:\[(P[0-3])\]|\((P[0-3])\)))?"
+)
+_LEDGER_ENTRY_END = re.compile(r"^\s*$|^\s*(?:VERDICT|SCORE):")
+
+
+def finding_entries(reply: str, finding_id: str) -> list[tuple[str | None, str]]:
+    """Every ledger entry for ``finding_id`` in a reviewer reply, in order: its severity and its full text.
+
+    The severity is None when the entry states none; consumers decide what that means.
+    """
+    entries: list[tuple[str, str | None, list[str]]] = []
+    for line in _commonmark_lines(reply):
+        start = _LEDGER_ENTRY_START.match(line)
+        if start:
+            entries.append((start[1], start[2] or start[3], [line]))
+        elif entries and _LEDGER_ENTRY_END.match(line):
+            entries.append(("", None, []))
+        elif entries and entries[-1][0]:
+            entries[-1][2].append(line)
+    return [(severity, "\n".join(lines)) for found, severity, lines in entries if found == finding_id]

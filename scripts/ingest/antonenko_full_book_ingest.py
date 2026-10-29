@@ -76,6 +76,7 @@ from scripts.ingest._section_coverage import (
     ensure_section_schema,
     link_lesson_sections,
 )
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -250,6 +251,7 @@ def _run(*, db_path: Path, dry_run: bool, force: bool) -> int:
         return 0
 
     print(f"\n🗃️  Writing to {db_path}")
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     try:
         before = conn.execute(

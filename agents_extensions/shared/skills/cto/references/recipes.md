@@ -30,7 +30,14 @@ publish_order() {
 publish_order "$TMPDIR/order.txt" "<registered-slot>" "<unique-order-key>"
 ```
 
+`$LU_INBOX_WORKER` is the sender (your consumer identity), never a recipient; the CTO's own
+recipient is `claude-cto`.
+
 Preserve required message references per `docs/runbooks/driver-seat-cli-move.md` § 5.
+
+Clear system temp only through `scripts.hygiene.tmp_sweep` (or a reviewed change to it), never
+with an ad-hoc deleter: a one-off script that removed `/tmp/tmux-1000` left the context guard
+unable to see or restart the seat for 13 hours.
 
 ## CI recovery
 
@@ -66,6 +73,10 @@ A finished task's worktree and branch lease end when the dispatcher settles it a
 worktree. Before dispatching the same branch again, read its `worktree_disposition`; if the
 worktree was retained, remove it only after confirming its content is published
 (`workflow.md` § Post-merge cleanup, `docs/runbooks/worktree-cleanup.md`).
+A retained worktree with modified tracked files is left for the dispatcher or reported to the
+operator. Never discard its changes (or run any other command under "Dangerous Commands" in
+`docs/best-practices/gitflow.md`) without the operator's explicit yes, even to satisfy the
+guarded remover.
 
 ## Dispatch helpers
 
@@ -76,10 +87,17 @@ FULL run nonce with `note <id> <text>` so the tracker handoff can re-arm its wai
 Run every dispatch through the scratch table helper. It builds each
 `dispatch.py dispatch` argv from a table and logs stdout and stderr per task; grep the log
 for `run_nonce=`, `SUBSTITUTE` and `queued behind`. Record the actual substituted identity.
+Run Claude-account dispatches from the seat as `env -u CLAUDE_CONFIG_DIR .venv/bin/python
+scripts/dispatch.py dispatch ... --claude-account <label>`: the launcher exports
+`CLAUDE_CONFIG_DIR` into the seat's shells, and the dispatcher refuses an explicit account
+while that ambient value is set (`claude_account_ambient_conflict`).
 Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can
 update the tests that pin the changed behaviour.
+Retained evidence, evaluation material and anything a later session needs goes under
+`/home/ops/ops-state/<topic>/` (mode 0700 when private), never a session scratchpad, and the
+brief names that path.
 Before writing a brief from a tracker item, read its full history with `lu-driver-state show <id>`
 (all notes): operator amendments are recorded as notes.
 Each brief also sets the worker's follow-up cap: how many follow-up tasks it may start and in
@@ -88,4 +106,4 @@ Briefs state expected eligible PR lines and files; require a one-line size justi
 above the `workflow.md` small-batch threshold, including data files.
 Limit worker-local checks to Ruff and explicitly named test files for the changed module,
 under a 10-minute timeout. Never expand to all importers. PR CI Gate runs admission checks
-and pytest collection; the merge-group CI Gate runs the full suite.
+and the affected tests; the merge-group CI Gate runs the full suite.

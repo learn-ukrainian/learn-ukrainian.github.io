@@ -757,9 +757,15 @@ def verify_pack(
     standard_path: Path | None = None,
     offline: bool = False,
     strict: bool = False,
+    require_plan: bool = True,
     report: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
-    """Verify integrity of a module evidence pack against sources, locks, and State Standard."""
+    """Verify integrity of a module evidence pack against sources, locks, and State Standard.
+
+    The provisional lock is taken before the plan exists (fresh-build program §5 step 2a), so
+    ``require_plan=False`` reports an absent plan's planned quote use as not_checked. Plan
+    review keeps the default and fails closed on it; an existing unreadable plan always fails.
+    """
     plans_base = (
         Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
     )
@@ -985,7 +991,13 @@ def verify_pack(
         except PlanError as exc:
             if exc.code != plan_codes.PLAN_NOT_FOUND:
                 raise
-            errors.append(f"{codes.PUBLICATION_PLAN_UNRESOLVED}: cannot resolve planned quote use: {exc.code}")
+            if require_plan:
+                errors.append(f"{codes.PUBLICATION_PLAN_UNRESOLVED}: cannot resolve planned quote use: {exc.code}")
+            else:
+                not_checked.append("planned_quote_use")
+                reports.append(
+                    f"{codes.NOT_CHECKED}: planned quote use not checked: no plan yet (plan review checks it)"
+                )
         except (OSError, ValueError, yaml.YAMLError, AttributeError, TypeError) as exc:
             errors.append(
                 f"{codes.PUBLICATION_PLAN_UNRESOLVED}: cannot resolve planned quote use: {type(exc).__name__}"
@@ -1168,7 +1180,8 @@ def main_pack(argv: list[str] | None = None) -> int:
             "Outputs:\n"
             "  None (read-only verification check)\n\n"
             "Exit codes:\n"
-            "  0: Pack verified cleanly (or source_changed/legacy_identity/open_unsupported under non-strict)\n"
+            "  0: Pack verified cleanly (or source_changed/legacy_identity/open_unsupported under non-strict;\n"
+            "     with no plan yet, planned quote use is not_checked and plan review checks it)\n"
             "  1: Lock mismatch, quote mismatch, error mismatch, standard mismatch, open unsupported under --strict, or refused --strict --offline\n\n"
             "Outcome Codes:\n"
             f"{codes.help_text()}\n"
@@ -1209,6 +1222,7 @@ def main_pack(argv: list[str] | None = None) -> int:
             standard_path=args.standard_path,
             offline=args.offline,
             strict=args.strict,
+            require_plan=False,
             report=report,
         )
     except Exception as exc:

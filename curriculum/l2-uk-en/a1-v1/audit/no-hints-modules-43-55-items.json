@@ -1,0 +1,6254 @@
+{
+  "schema": "a1-no-hints-repairs.v1",
+  "base": "109d0ab4f8086b463a255c78892c87ce72914d22",
+  "merged_passes": [
+    "e5d74a7d442e3b5ed3e663c234c19d16da3882de"
+  ],
+  "counts": {
+    "hints_found": 110,
+    "merged_hints_removed": 48,
+    "earlier_finale_hint_removed": 1,
+    "older_prompts_reworded": 61,
+    "items_reworded": 110,
+    "items_replaced": 0
+  },
+  "items": [
+    {
+      "id": "please-do-this/workbook/0/0",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 0,
+      "type": "fill-in",
+      "instruction": "Choose the word that completes each request.",
+      "before": {
+        "sentence": "(Use the ти command form.) Олено, ___ книжку!",
+        "answer": "дай",
+        "options": [
+          "дай",
+          "дайте",
+          "дати"
+        ],
+        "explanation": "Олено points to one familiar person."
+      },
+      "after": {
+        "sentence": "Олено, ти вже тут? ___ мені книжку, будь ласка.",
+        "answer": "дай",
+        "options": [
+          "дай",
+          "дайте",
+          "дає"
+        ],
+        "explanation": "Ти matches дай. Дайте belongs to ви; дає is third-person indicative."
+      },
+      "disposition": "reworded",
+      "key": "дай",
+      "distractors": [
+        "дайте",
+        "дає"
+      ],
+      "reason": "The explicit ти address licenses дай; дайте conflicts with ти and дає is third-person indicative.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Address and request"
+    },
+    {
+      "id": "please-do-this/workbook/0/2",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the word that completes each request.",
+      "before": {
+        "sentence": "(Use the ти command form.) Тарасе, ___ в кафе.",
+        "answer": "іди",
+        "options": [
+          "іди",
+          "ідіть",
+          "іти"
+        ],
+        "explanation": "Use іди with one familiar person."
+      },
+      "after": {
+        "sentence": "Тарасе, ти вже готовий? ___ в кафе зі мною.",
+        "answer": "іди",
+        "options": [
+          "іди",
+          "ідіть",
+          "іде"
+        ],
+        "explanation": "Ти matches іди. Ідіть belongs to ви; іде is third-person indicative."
+      },
+      "disposition": "reworded",
+      "key": "іди",
+      "distractors": [
+        "ідіть",
+        "іде"
+      ],
+      "reason": "Ти and готовий identify one familiar addressee; ідіть conflicts with ти and іде is third-person indicative.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Address and request"
+    },
+    {
+      "id": "please-do-this/inline/act-2/0",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 0,
+      "type": "quiz",
+      "instruction": "Choose the form that fits the situation.",
+      "before": {
+        "prompt": "You ask one friend to read.",
+        "options": [
+          {
+            "text": "Читай, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Читайте, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Читати, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "One friend takes the ти form читай."
+      },
+      "after": {
+        "prompt": "Олено, ти вже тут? Ось текст. ___",
+        "options": [
+          {
+            "text": "Читай, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Читайте, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Читай тексту, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "One friend takes the ти form читай."
+      },
+      "disposition": "reworded",
+      "key": "Читай, будь ласка.",
+      "distractors": [
+        "Читайте, будь ласка.",
+        "Читай тексту, будь ласка."
+      ],
+      "reason": "Ти fixes familiar address: читайте conflicts with it; тексту is genitive/dative rather than the direct object текст.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
+    },
+    {
+      "id": "please-do-this/inline/act-2/1",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 1,
+      "type": "quiz",
+      "instruction": "Choose the form that fits the situation.",
+      "before": {
+        "prompt": "You ask a teacher to read.",
+        "options": [
+          {
+            "text": "Читайте, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Читай, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Читаєте, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "A teacher takes polite ви."
+      },
+      "after": {
+        "prompt": "Пане Іване, ви вже тут? Ось текст. ___",
+        "options": [
+          {
+            "text": "Читайте, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Читай, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Читайте тексту, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "A teacher takes polite ви."
+      },
+      "disposition": "reworded",
+      "key": "Читайте, будь ласка.",
+      "distractors": [
+        "Читай, будь ласка.",
+        "Читайте тексту, будь ласка."
+      ],
+      "reason": "Пане Іване sets courteous address: читай switches to ти; тексту is not the direct object of читайте.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
+    },
+    {
+      "id": "please-do-this/inline/act-2/2",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 2,
+      "type": "quiz",
+      "instruction": "Choose the form that fits the situation.",
+      "before": {
+        "prompt": "You ask a server for the bill.",
+        "options": [
+          {
+            "text": "Дайте рахунок, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Дай рахунок, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Дати рахунок, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use polite дайте with a server."
+      },
+      "after": {
+        "prompt": "Пане офіціанте, ви можете підійти? Ми вже поїли. ___",
+        "options": [
+          {
+            "text": "Дайте рахунок, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Дай рахунок, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Дайте рахунком, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use polite дайте with a server."
+      },
+      "disposition": "reworded",
+      "key": "Дайте рахунок, будь ласка.",
+      "distractors": [
+        "Дай рахунок, будь ласка.",
+        "Дайте рахунком, будь ласка."
+      ],
+      "reason": "Courteous address to the server selects дайте; дай switches register and рахунком is instrumental rather than the direct object рахунок.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
+    },
+    {
+      "id": "please-do-this/inline/act-2/3",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 3,
+      "type": "quiz",
+      "instruction": "Choose the form that fits the situation.",
+      "before": {
+        "prompt": "You ask one close friend for the menu.",
+        "options": [
+          {
+            "text": "Дай меню, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Дайте меню, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Даєш меню, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use дай with one close person."
+      },
+      "after": {
+        "prompt": "Тарасе, ти вже тут? Ось наш столик. ___",
+        "options": [
+          {
+            "text": "Дай меню, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Дайте меню, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Дай книжкою, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use дай with one close person."
+      },
+      "disposition": "reworded",
+      "key": "Дай меню, будь ласка.",
+      "distractors": [
+        "Дайте меню, будь ласка.",
+        "Дай книжкою, будь ласка."
+      ],
+      "reason": "Explicit ти selects дай; дайте conflicts with that address and книжкою is instrumental rather than the required direct object.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
+    },
+    {
+      "id": "please-do-this/inline/act-2/4",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 4,
+      "type": "quiz",
+      "instruction": "Choose the form that fits the situation.",
+      "before": {
+        "prompt": "A teacher gives a class instruction.",
+        "options": [
+          {
+            "text": "Пишіть речення.",
+            "correct": true
+          },
+          {
+            "text": "Пиши речення.",
+            "correct": false
+          },
+          {
+            "text": "Писати речення.",
+            "correct": false
+          }
+        ],
+        "explanation": "The class takes the plural form пишіть."
+      },
+      "after": {
+        "prompt": "Діти, ви вже готові? ___",
+        "options": [
+          {
+            "text": "Пишіть речення.",
+            "correct": true
+          },
+          {
+            "text": "Пиши речення.",
+            "correct": false
+          },
+          {
+            "text": "Пишіть реченню.",
+            "correct": false
+          }
+        ],
+        "explanation": "The class takes the plural form пишіть."
+      },
+      "disposition": "reworded",
+      "key": "Пишіть речення.",
+      "distractors": [
+        "Пиши речення.",
+        "Пишіть реченню."
+      ],
+      "reason": "Діти and ви identify several addressees: пиши is singular and реченню is dative rather than the direct object речення.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
+    },
+    {
+      "id": "please-do-this/inline/act-2/5",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 5,
+      "type": "quiz",
+      "instruction": "Choose the form that fits the situation.",
+      "before": {
+        "prompt": "A friend asks you to look.",
+        "options": [
+          {
+            "text": "Подивись!",
+            "correct": true
+          },
+          {
+            "text": "Дивитися!",
+            "correct": false
+          },
+          {
+            "text": "Дивишся!",
+            "correct": false
+          }
+        ],
+        "explanation": "Подивись is a useful ти command."
+      },
+      "after": {
+        "prompt": "Олено, ти бачиш он той будинок? ___",
+        "options": [
+          {
+            "text": "Подивись!",
+            "correct": true
+          },
+          {
+            "text": "Подивись будинком!",
+            "correct": false
+          },
+          {
+            "text": "Подивись будинком, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Подивись is a useful ти command."
+      },
+      "disposition": "reworded",
+      "key": "Подивись!",
+      "distractors": [
+        "Подивись будинком!",
+        "Подивись будинком, будь ласка."
+      ],
+      "reason": "The preceding ти dialogue licenses подивись; both будинком alternatives put an instrumental noun after подивись rather than на будинок.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
+    },
+    {
+      "id": "please-do-this/inline/act-2/6",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 6,
+      "type": "quiz",
+      "instruction": "Choose the form that fits the situation.",
+      "before": {
+        "prompt": "You politely ask someone to say it again.",
+        "options": [
+          {
+            "text": "Скажіть ще раз, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Сказати ще раз, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Скажете ще раз, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Скажіть is the polite command form."
+      },
+      "after": {
+        "prompt": "Пане Іване, я не все почув. ___",
+        "options": [
+          {
+            "text": "Скажіть ще раз, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Скажіть ще разу, будь ласка.",
+            "correct": false
+          },
+          {
+            "text": "Скажіть ще разів, будь ласка.",
+            "correct": false
+          }
+        ],
+        "explanation": "Ще раз expresses repetition. Разу and разів are genitive forms and cannot replace раз after ще without the required construction."
+      },
+      "disposition": "reworded",
+      "key": "Скажіть ще раз, будь ласка.",
+      "distractors": [
+        "Скажіть ще разу, будь ласка.",
+        "Скажіть ще разів, будь ласка."
+      ],
+      "reason": "Ще раз expresses repetition. Разу and разів are genitive forms and cannot replace раз after ще without the required construction.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
+    },
+    {
+      "id": "please-do-this/inline/act-2/7",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 7,
+      "type": "quiz",
+      "instruction": "Choose the form that fits the situation.",
+      "before": {
+        "prompt": "A coach asks the team to open the door.",
+        "options": [
+          {
+            "text": "Відкрийте двері.",
+            "correct": true
+          },
+          {
+            "text": "Відкрий двері.",
+            "correct": false
+          },
+          {
+            "text": "Відкрити двері.",
+            "correct": false
+          }
+        ],
+        "explanation": "The team takes the plural command відкрийте."
+      },
+      "after": {
+        "prompt": "Друзі, тут дуже душно. ___",
+        "options": [
+          {
+            "text": "Відкрийте двері.",
+            "correct": true
+          },
+          {
+            "text": "Відкрий двері.",
+            "correct": false
+          },
+          {
+            "text": "Відкрийте дверима.",
+            "correct": false
+          }
+        ],
+        "explanation": "The team takes the plural command відкрийте."
+      },
+      "disposition": "reworded",
+      "key": "Відкрийте двері.",
+      "distractors": [
+        "Відкрий двері.",
+        "Відкрийте дверима."
+      ],
+      "reason": "Друзі identifies several people: відкрий is singular; дверима is instrumental instead of direct-object двері.",
+      "sources": [
+        "G4a",
+        "G6",
+        "G7",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Ti or vy?"
+    },
+    {
+      "id": "linking-ideas/inline/act-1/7",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 7,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the A1 sentence.",
+      "before": {
+        "sentence": "(Ask which ONE profession applies.) Ви студент ___ лікар?",
+        "answer": "чи",
+        "options": [
+          "чи",
+          "бо",
+          "та"
+        ],
+        "explanation": "Use чи in many choice questions."
+      },
+      "after": {
+        "sentence": "Ви студент ___ лікар?",
+        "answer": "чи",
+        "options": [
+          "чи",
+          "бо",
+          "якого"
+        ],
+        "explanation": "Чи joins alternatives in a question. Бо cannot link these two nouns; якого cannot coordinate them."
+      },
+      "disposition": "reworded",
+      "key": "чи",
+      "distractors": [
+        "бо",
+        "якого"
+      ],
+      "reason": "Чи links the alternatives. Бо requires a reason clause and якого cannot coordinate the predicate nouns.",
+      "sources": [
+        "D1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Pick the connector"
+    },
+    {
+      "id": "when-and-where/inline/act-1/0",
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "type": "fill-in",
+      "instruction": "Complete each A1 sentence with the right connector.",
+      "before": {
+        "sentence": "(I know that this is a cafe.) Я знаю, ___ це кафе.",
+        "answer": "що",
+        "options": [
+          "що",
+          "де",
+          "коли"
+        ],
+        "explanation": "Use що for a fact or content."
+      },
+      "after": {
+        "sentence": "Я знаю, ___ це кафе.",
+        "answer": "що",
+        "options": [
+          "що",
+          "якого",
+          "якому"
+        ],
+        "explanation": "Що introduces the content clause; якого and якому cannot introduce це кафе."
+      },
+      "disposition": "reworded",
+      "key": "що",
+      "distractors": [
+        "якого",
+        "якому"
+      ],
+      "reason": "Що introduces the content clause; якого and якому cannot introduce це кафе.",
+      "sources": [
+        "D2",
+        "D3",
+        "D4",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
+    },
+    {
+      "id": "when-and-where/inline/act-1/2",
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Complete each A1 sentence with the right connector.",
+      "before": {
+        "sentence": "(Tell me when the lesson is.) Скажи, ___ урок.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "де",
+          "що"
+        ],
+        "explanation": "Use коли for a time."
+      },
+      "after": {
+        "sentence": "— Скажи, ___ урок. — О десятій.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "де",
+          "що"
+        ],
+        "explanation": "О десятій answers коли, not the location question де; що cannot introduce this time question."
+      },
+      "disposition": "reworded",
+      "key": "коли",
+      "distractors": [
+        "де",
+        "що"
+      ],
+      "reason": "О десятій answers коли, not the location question де; що cannot introduce this time question.",
+      "sources": [
+        "D2",
+        "D3",
+        "D4",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
+    },
+    {
+      "id": "when-and-where/inline/act-1/4",
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 4,
+      "type": "fill-in",
+      "instruction": "Complete each A1 sentence with the right connector.",
+      "before": {
+        "sentence": "(I know where you live.) Я знаю, ___ ти живеш.",
+        "answer": "де",
+        "options": [
+          "де",
+          "що",
+          "куди"
+        ],
+        "explanation": "Живеш is a static place, so use де."
+      },
+      "after": {
+        "sentence": "— Я знаю, ___ ти живеш. — Так, ти вже був у мене вдома.",
+        "answer": "де",
+        "options": [
+          "де",
+          "якому",
+          "куди"
+        ],
+        "explanation": "Де refers to the home already visited; якому requires a noun and куди is a destination, not the location of живеш."
+      },
+      "disposition": "reworded",
+      "key": "де",
+      "distractors": [
+        "якому",
+        "куди"
+      ],
+      "reason": "Де refers to the home already visited; якому requires a noun and куди is a destination, not the location of живеш.",
+      "sources": [
+        "D2",
+        "D3",
+        "D4",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
+    },
+    {
+      "id": "when-and-where/inline/act-1/5",
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 5,
+      "type": "fill-in",
+      "instruction": "Complete each A1 sentence with the right connector.",
+      "before": {
+        "sentence": "(Do you know when the meeting is?) Ти знаєш, ___ зустріч?",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "що",
+          "де"
+        ],
+        "explanation": "A meeting needs a time."
+      },
+      "after": {
+        "sentence": "— Ти знаєш, ___ зустріч? — О другій.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "що",
+          "де"
+        ],
+        "explanation": "О другій is a time answer, so коли fits. Що cannot introduce the question; де asks for a place."
+      },
+      "disposition": "reworded",
+      "key": "коли",
+      "distractors": [
+        "що",
+        "де"
+      ],
+      "reason": "О другій is a time answer, so коли fits. Що cannot introduce the question; де asks for a place.",
+      "sources": [
+        "D2",
+        "D3",
+        "D4",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
+    },
+    {
+      "id": "when-and-where/inline/act-1/6",
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 6,
+      "type": "fill-in",
+      "instruction": "Complete each A1 sentence with the right connector.",
+      "before": {
+        "sentence": "(I think that this is correct.) Я думаю, ___ це правильно.",
+        "answer": "що",
+        "options": [
+          "що",
+          "де",
+          "коли"
+        ],
+        "explanation": "Думаю, що is a useful fact frame."
+      },
+      "after": {
+        "sentence": "Я думаю, ___ це правильно.",
+        "answer": "що",
+        "options": [
+          "що",
+          "якого",
+          "якому"
+        ],
+        "explanation": "Що introduces the thought; якого and якому cannot introduce це правильно."
+      },
+      "disposition": "reworded",
+      "key": "що",
+      "distractors": [
+        "якого",
+        "якому"
+      ],
+      "reason": "Що introduces the thought; якого and якому cannot introduce це правильно.",
+      "sources": [
+        "D2",
+        "D3",
+        "D4",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the sentence"
+    },
+    {
+      "id": "when-and-where/workbook/1/1",
+      "module": "when-and-where",
+      "section": "workbook",
+      "activity_index": 1,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the word that completes each sentence.",
+      "before": {
+        "sentence": "(Tell me when you are by the fountain.) Скажи, ___ ти біля фонтану.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "що",
+          "де"
+        ],
+        "explanation": "Use коли for the time when something happens."
+      },
+      "after": {
+        "sentence": "— Скажи, ___ ти будеш біля фонтану. — О третій.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "що",
+          "де"
+        ],
+        "explanation": "О третій answers коли. Що cannot introduce this time question; де would ask for a place already supplied by біля фонтану."
+      },
+      "disposition": "reworded",
+      "key": "коли",
+      "distractors": [
+        "що",
+        "де"
+      ],
+      "reason": "О третій answers коли. Що cannot introduce this time question; де would ask for a place already supplied by біля фонтану.",
+      "sources": [
+        "D2",
+        "D3",
+        "D4",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Guest conversation frames"
+    },
+    {
+      "id": "when-and-where/workbook/1/2",
+      "module": "when-and-where",
+      "section": "workbook",
+      "activity_index": 1,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the word that completes each sentence.",
+      "before": {
+        "sentence": "(I see that the building is close.) Я бачу, ___ будинок близько.",
+        "answer": "що",
+        "options": [
+          "що",
+          "де",
+          "коли"
+        ],
+        "explanation": "Use що for a fact."
+      },
+      "after": {
+        "sentence": "Я бачу, ___ будинок близько.",
+        "answer": "що",
+        "options": [
+          "що",
+          "якого",
+          "якому"
+        ],
+        "explanation": "Що introduces the observed fact; якого and якому cannot introduce будинок близько."
+      },
+      "disposition": "reworded",
+      "key": "що",
+      "distractors": [
+        "якого",
+        "якому"
+      ],
+      "reason": "Що introduces the observed fact; якого and якому cannot introduce будинок близько.",
+      "sources": [
+        "D2",
+        "D3",
+        "D4",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Guest conversation frames"
+    },
+    {
+      "id": "when-and-where/workbook/1/5",
+      "module": "when-and-where",
+      "section": "workbook",
+      "activity_index": 1,
+      "item_index": 5,
+      "type": "fill-in",
+      "instruction": "Choose the word that completes each sentence.",
+      "before": {
+        "sentence": "(Tell me when the meeting in the cafe is.) Скажи, ___ зустріч у кафе.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "що",
+          "де"
+        ],
+        "explanation": "A meeting needs a time."
+      },
+      "after": {
+        "sentence": "— Скажи, ___ зустріч у кафе. — О пів на шосту.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "де",
+          "що"
+        ],
+        "explanation": "The answer о пів на шосту selects коли. Де asks for a place, already supplied by у кафе; що cannot introduce this time question."
+      },
+      "disposition": "reworded",
+      "key": "коли",
+      "distractors": [
+        "де",
+        "що"
+      ],
+      "reason": "The answer о пів на шосту selects коли. Де asks for a place, already supplied by у кафе; що cannot introduce this time question.",
+      "sources": [
+        "D2",
+        "D3",
+        "D4",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Guest conversation frames"
+    },
+    {
+      "id": "when-and-where/inline/act-4/0",
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 0,
+      "type": "quiz",
+      "instruction": "Choose the sentence with correct punctuation.",
+      "before": {
+        "prompt": "I know where the cafe is.",
+        "options": [
+          {
+            "text": "Я знаю, де кафе.",
+            "correct": true
+          },
+          {
+            "text": "Я знаю де кафе.",
+            "correct": false
+          },
+          {
+            "text": "Я, знаю де кафе.",
+            "correct": false
+          }
+        ],
+        "explanation": "Put the comma before де."
+      },
+      "after": {
+        "prompt": "Обери речення з правильною пунктуацією.",
+        "options": [
+          {
+            "text": "Я знаю, де кафе.",
+            "correct": true
+          },
+          {
+            "text": "Я знаю де кафе.",
+            "correct": false
+          },
+          {
+            "text": "Я, знаю де кафе.",
+            "correct": false
+          }
+        ],
+        "explanation": "Put the comma before де."
+      },
+      "disposition": "reworded",
+      "key": "Я знаю, де кафе.",
+      "distractors": [
+        "Я знаю де кафе.",
+        "Я, знаю де кафе."
+      ],
+      "reason": "The key places a comma before the subordinate connector. The second option omits that comma; the third separates the subject from its predicate or the connector from its clause.",
+      "sources": [
+        "G5",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Where does the comma go?"
+    },
+    {
+      "id": "when-and-where/inline/act-4/1",
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 1,
+      "type": "quiz",
+      "instruction": "Choose the sentence with correct punctuation.",
+      "before": {
+        "prompt": "I think that this is good.",
+        "options": [
+          {
+            "text": "Я думаю, що це добре.",
+            "correct": true
+          },
+          {
+            "text": "Я думаю що це добре.",
+            "correct": false
+          },
+          {
+            "text": "Я, думаю що це добре.",
+            "correct": false
+          }
+        ],
+        "explanation": "Put the comma before що."
+      },
+      "after": {
+        "prompt": "Обери речення з правильною пунктуацією.",
+        "options": [
+          {
+            "text": "Я думаю, що це добре.",
+            "correct": true
+          },
+          {
+            "text": "Я думаю що це добре.",
+            "correct": false
+          },
+          {
+            "text": "Я, думаю що це добре.",
+            "correct": false
+          }
+        ],
+        "explanation": "Put the comma before що."
+      },
+      "disposition": "reworded",
+      "key": "Я думаю, що це добре.",
+      "distractors": [
+        "Я думаю що це добре.",
+        "Я, думаю що це добре."
+      ],
+      "reason": "The key places a comma before the subordinate connector. The second option omits that comma; the third separates the subject from its predicate or the connector from its clause.",
+      "sources": [
+        "G5",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Where does the comma go?"
+    },
+    {
+      "id": "when-and-where/inline/act-4/2",
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 2,
+      "type": "quiz",
+      "instruction": "Choose the sentence with correct punctuation.",
+      "before": {
+        "prompt": "Tell me when the lesson is.",
+        "options": [
+          {
+            "text": "Скажи, коли урок.",
+            "correct": true
+          },
+          {
+            "text": "Скажи коли урок.",
+            "correct": false
+          },
+          {
+            "text": "Скажи коли, урок.",
+            "correct": false
+          }
+        ],
+        "explanation": "Put the comma before коли."
+      },
+      "after": {
+        "prompt": "Обери речення з правильною пунктуацією.",
+        "options": [
+          {
+            "text": "Скажи, коли урок.",
+            "correct": true
+          },
+          {
+            "text": "Скажи коли урок.",
+            "correct": false
+          },
+          {
+            "text": "Скажи коли, урок.",
+            "correct": false
+          }
+        ],
+        "explanation": "Put the comma before коли."
+      },
+      "disposition": "reworded",
+      "key": "Скажи, коли урок.",
+      "distractors": [
+        "Скажи коли урок.",
+        "Скажи коли, урок."
+      ],
+      "reason": "The key places a comma before the subordinate connector. The second option omits that comma; the third separates the subject from its predicate or the connector from its clause.",
+      "sources": [
+        "G5",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Where does the comma go?"
+    },
+    {
+      "id": "when-and-where/inline/act-4/3",
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 3,
+      "type": "quiz",
+      "instruction": "Choose the sentence with correct punctuation.",
+      "before": {
+        "prompt": "She says that the shop is close.",
+        "options": [
+          {
+            "text": "Вона каже, що магазин близько.",
+            "correct": true
+          },
+          {
+            "text": "Вона каже що магазин близько.",
+            "correct": false
+          },
+          {
+            "text": "Вона, каже що магазин близько.",
+            "correct": false
+          }
+        ],
+        "explanation": "Каже, що uses a comma before що."
+      },
+      "after": {
+        "prompt": "Обери речення з правильною пунктуацією.",
+        "options": [
+          {
+            "text": "Вона каже, що магазин близько.",
+            "correct": true
+          },
+          {
+            "text": "Вона каже що магазин близько.",
+            "correct": false
+          },
+          {
+            "text": "Вона, каже що магазин близько.",
+            "correct": false
+          }
+        ],
+        "explanation": "Каже, що uses a comma before що."
+      },
+      "disposition": "reworded",
+      "key": "Вона каже, що магазин близько.",
+      "distractors": [
+        "Вона каже що магазин близько.",
+        "Вона, каже що магазин близько."
+      ],
+      "reason": "The key places a comma before the subordinate connector. The second option omits that comma; the third separates the subject from its predicate or the connector from its clause.",
+      "sources": [
+        "G5",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Where does the comma go?"
+    },
+    {
+      "id": "checkpoint-communication/inline/act-2/2",
+      "module": "checkpoint-communication",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 2,
+      "type": "quiz",
+      "instruction": "Choose the connector that fits the checkpoint sentence.",
+      "before": {
+        "prompt": "(Give the reason for putting out a table.) Тарас ставить стіл, ___ людей багато.",
+        "options": [
+          {
+            "text": "бо",
+            "correct": true
+          },
+          {
+            "text": "а",
+            "correct": false
+          },
+          {
+            "text": "що",
+            "correct": false
+          }
+        ],
+        "explanation": "Use бо for a reason."
+      },
+      "after": {
+        "prompt": "Тарас ставить стіл, ___ людей багато.",
+        "options": [
+          {
+            "text": "бо",
+            "correct": true
+          },
+          {
+            "text": "якого",
+            "correct": false
+          },
+          {
+            "text": "котрий",
+            "correct": false
+          }
+        ],
+        "explanation": "Бо introduces the reason. Якого and котрий cannot introduce the impersonal clause людей багато."
+      },
+      "disposition": "reworded",
+      "key": "бо",
+      "distractors": [
+        "якого",
+        "котрий"
+      ],
+      "reason": "Бо introduces the reason. Якого and котрий cannot introduce the impersonal clause людей багато.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Which connector?"
+    },
+    {
+      "id": "checkpoint-communication/inline/act-2/3",
+      "module": "checkpoint-communication",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 3,
+      "type": "quiz",
+      "instruction": "Choose the connector that fits the checkpoint sentence.",
+      "before": {
+        "prompt": "(Compare the two people; do not give a time or a choice.) Марія пише, ___ Тарас ставить стіл.",
+        "options": [
+          {
+            "text": "а",
+            "correct": true
+          },
+          {
+            "text": "коли",
+            "correct": false
+          },
+          {
+            "text": "або",
+            "correct": false
+          }
+        ],
+        "explanation": "Use а to compare two people or actions."
+      },
+      "after": {
+        "prompt": "Марія пише, ___ Тарас ставить стіл.",
+        "options": [
+          {
+            "text": "а",
+            "correct": true
+          },
+          {
+            "text": "якого",
+            "correct": false
+          },
+          {
+            "text": "котрого",
+            "correct": false
+          }
+        ],
+        "explanation": "А coordinates the two subject-predicate clauses; якого and котрого have no grammatical role in the second clause."
+      },
+      "disposition": "reworded",
+      "key": "а",
+      "distractors": [
+        "якого",
+        "котрого"
+      ],
+      "reason": "А coordinates the two subject-predicate clauses; якого and котрого have no grammatical role in the second clause.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Which connector?"
+    },
+    {
+      "id": "checkpoint-communication/inline/act-2/4",
+      "module": "checkpoint-communication",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 4,
+      "type": "quiz",
+      "instruction": "Choose the connector that fits the checkpoint sentence.",
+      "before": {
+        "prompt": "(Give the reason for taking the marker.) Я беру маркер, ___ пишу листівку.",
+        "options": [
+          {
+            "text": "тому що",
+            "correct": true
+          },
+          {
+            "text": "чи",
+            "correct": false
+          },
+          {
+            "text": "де",
+            "correct": false
+          }
+        ],
+        "explanation": "Use тому що for a reason."
+      },
+      "after": {
+        "prompt": "Я беру маркер, ___ пишу листівку.",
+        "options": [
+          {
+            "text": "тому що",
+            "correct": true
+          },
+          {
+            "text": "якого",
+            "correct": false
+          },
+          {
+            "text": "котрому",
+            "correct": false
+          }
+        ],
+        "explanation": "Тому що introduces the reason. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "тому що",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Тому що introduces the reason. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Which connector?"
+    },
+    {
+      "id": "checkpoint-communication/inline/act-3/1",
+      "module": "checkpoint-communication",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Complete each short detail frame.",
+      "before": {
+        "sentence": "(I think that everything is ready.) Я думаю, ___ все готово.",
+        "answer": "що",
+        "options": [
+          "що",
+          "де",
+          "коли"
+        ],
+        "explanation": "Use що for a fact."
+      },
+      "after": {
+        "sentence": "Я думаю, ___ все готово.",
+        "answer": "що",
+        "options": [
+          "що",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Що introduces the thought; якого and котрому cannot introduce все готово."
+      },
+      "disposition": "reworded",
+      "key": "що",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Що introduces the thought; якого and котрому cannot introduce все готово.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the conversation"
+    },
+    {
+      "id": "checkpoint-communication/inline/act-3/2",
+      "module": "checkpoint-communication",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Complete each short detail frame.",
+      "before": {
+        "sentence": "(Tell me when the meeting is.) Скажи, ___ зустріч.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "де",
+          "що"
+        ],
+        "explanation": "Use коли for a time."
+      },
+      "after": {
+        "sentence": "— Скажи, ___ зустріч. — О третій.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "де",
+          "що"
+        ],
+        "explanation": "О третій answers коли. Де asks for a place and що cannot introduce this time question."
+      },
+      "disposition": "reworded",
+      "key": "коли",
+      "distractors": [
+        "де",
+        "що"
+      ],
+      "reason": "О третій answers коли. Де asks for a place and що cannot introduce this time question.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the conversation"
+    },
+    {
+      "id": "checkpoint-communication/inline/act-3/4",
+      "module": "checkpoint-communication",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 4,
+      "type": "fill-in",
+      "instruction": "Complete each short detail frame.",
+      "before": {
+        "sentence": "(I do not know what to write.) Я не знаю, ___ писати.",
+        "answer": "що",
+        "options": [
+          "що",
+          "де",
+          "коли"
+        ],
+        "explanation": "Use що for what to write."
+      },
+      "after": {
+        "sentence": "— Я не знаю, ___ писати. — Напиши: «З Новим роком!»",
+        "answer": "що",
+        "options": [
+          "що",
+          "де",
+          "коли"
+        ],
+        "explanation": "The reply supplies the greeting text, answering що; it gives neither a location for де nor a time for коли."
+      },
+      "disposition": "reworded",
+      "key": "що",
+      "distractors": [
+        "де",
+        "коли"
+      ],
+      "reason": "The reply supplies the greeting text, answering що; it gives neither a location for де nor a time for коли.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the conversation"
+    },
+    {
+      "id": "checkpoint-communication/inline/act-3/5",
+      "module": "checkpoint-communication",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 5,
+      "type": "fill-in",
+      "instruction": "Complete each short detail frame.",
+      "before": {
+        "sentence": "(Tell us when you are free.) Скажіть, ___ ви вільні.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "де",
+          "що"
+        ],
+        "explanation": "Use коли for time."
+      },
+      "after": {
+        "sentence": "— Скажіть, ___ ви вільні. — У суботу після обіду.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "де",
+          "що"
+        ],
+        "explanation": "The reply gives a time, answering коли rather than де; що cannot introduce this time question."
+      },
+      "disposition": "reworded",
+      "key": "коли",
+      "distractors": [
+        "де",
+        "що"
+      ],
+      "reason": "The reply gives a time, answering коли rather than де; що cannot introduce this time question.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the conversation"
+    },
+    {
+      "id": "checkpoint-communication/workbook/4/1",
+      "module": "checkpoint-communication",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the checkpoint word that completes each line.",
+      "before": {
+        "sentence": "(Give the reason for putting out the tables.) Тарасе, постав столи, ___ людей багато.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "де",
+          "а"
+        ],
+        "explanation": "Use бо for a reason."
+      },
+      "after": {
+        "sentence": "Тарасе, постав столи, ___ людей багато.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "якого",
+          "котрий"
+        ],
+        "explanation": "Бо introduces the reason. Якого and котрий cannot introduce людей багато."
+      },
+      "disposition": "reworded",
+      "key": "бо",
+      "distractors": [
+        "якого",
+        "котрий"
+      ],
+      "reason": "Бо introduces the reason. Якого and котрий cannot introduce людей багато.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Holiday table mini-dialogue"
+    },
+    {
+      "id": "checkpoint-communication/workbook/4/2",
+      "module": "checkpoint-communication",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the checkpoint word that completes each line.",
+      "before": {
+        "sentence": "(I think that everything is ready.) Я думаю, ___ все готово.",
+        "answer": "що",
+        "options": [
+          "що",
+          "коли",
+          "але"
+        ],
+        "explanation": "Use що for a fact."
+      },
+      "after": {
+        "sentence": "Я думаю, ___ все готово.",
+        "answer": "що",
+        "options": [
+          "що",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Що introduces the thought; якого and котрому cannot introduce все готово."
+      },
+      "disposition": "reworded",
+      "key": "що",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Що introduces the thought; якого and котрому cannot introduce все готово.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Holiday table mini-dialogue"
+    },
+    {
+      "id": "checkpoint-communication/workbook/4/3",
+      "module": "checkpoint-communication",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 3,
+      "type": "fill-in",
+      "instruction": "Choose the checkpoint word that completes each line.",
+      "before": {
+        "sentence": "(Compare the two people; do not describe a location.) Марія пише привітання, ___ Тарас ставить стіл.",
+        "answer": "а",
+        "options": [
+          "а",
+          "що",
+          "де"
+        ],
+        "explanation": "Use а to compare two actions."
+      },
+      "after": {
+        "sentence": "Марія пише привітання, ___ Тарас ставить стіл.",
+        "answer": "а",
+        "options": [
+          "а",
+          "якого",
+          "котрого"
+        ],
+        "explanation": "А coordinates the clauses. Neither якого nor котрого has a role in Тарас ставить стіл."
+      },
+      "disposition": "reworded",
+      "key": "а",
+      "distractors": [
+        "якого",
+        "котрого"
+      ],
+      "reason": "А coordinates the clauses. Neither якого nor котрого has a role in Тарас ставить стіл.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Holiday table mini-dialogue"
+    },
+    {
+      "id": "checkpoint-communication/workbook/4/4",
+      "module": "checkpoint-communication",
+      "section": "workbook",
+      "activity_index": 4,
+      "item_index": 4,
+      "type": "fill-in",
+      "instruction": "Choose the checkpoint word that completes each line.",
+      "before": {
+        "sentence": "(Tell us WHEN you are free.) Скажіть, ___ ви вільні.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "бо",
+          "але"
+        ],
+        "explanation": "Use коли for time."
+      },
+      "after": {
+        "sentence": "— Скажіть, ___ ви вільні. — У неділю о другій.",
+        "answer": "коли",
+        "options": [
+          "коли",
+          "бо",
+          "але"
+        ],
+        "explanation": "The reply gives a time, answering коли. Бо would assert a reason and але a contrast, neither requests the time supplied by the reply."
+      },
+      "disposition": "reworded",
+      "key": "коли",
+      "distractors": [
+        "бо",
+        "але"
+      ],
+      "reason": "The reply gives a time, answering коли. Бо would assert a reason and але a contrast, neither requests the time supplied by the reply.",
+      "sources": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D25",
+        "D26",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Holiday table mini-dialogue"
+    },
+    {
+      "id": "yesterday/inline/act-2/0",
+      "module": "yesterday",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 0,
+      "type": "fill-in",
+      "instruction": "Choose the time word that fits each part of the day.",
+      "before": {
+        "sentence": "(In the morning.) ___ я прокинулася о сьомій.",
+        "answer": "Зранку",
+        "options": [
+          "Зранку",
+          "Ввечері",
+          "Нарешті"
+        ],
+        "explanation": "Зранку marks the morning."
+      },
+      "after": {
+        "sentence": "___ я прокинулася о сьомій.",
+        "answer": "Зранку",
+        "options": [
+          "Зранку",
+          "Ранок",
+          "Ранковий"
+        ],
+        "explanation": "Зранку is the time adverb. Ранок is a noun and ранковий an adjective; neither modifies прокинулася as a time expression."
+      },
+      "disposition": "reworded",
+      "key": "Зранку",
+      "distractors": [
+        "Ранок",
+        "Ранковий"
+      ],
+      "reason": "Зранку is the time adverb. Ранок is a noun and ранковий an adjective; neither modifies прокинулася as a time expression.",
+      "sources": [
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
+    },
+    {
+      "id": "yesterday/inline/act-2/1",
+      "module": "yesterday",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the time word that fits each part of the day.",
+      "before": {
+        "sentence": "(Then, after breakfast.) ___ я пішла на роботу.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "Учора",
+          "Вночі"
+        ],
+        "explanation": "Потім moves the story to the next action."
+      },
+      "after": {
+        "sentence": "Я поснідала о восьмій. ___, о дев’ятій, я пішла на роботу.",
+        "answer": "Потім",
+        "options": [
+          "Потім",
+          "До цього",
+          "Напередодні"
+        ],
+        "explanation": "Nine follows eight, selecting потім. До цього reverses the order; напередодні shifts the event to the previous day."
+      },
+      "disposition": "reworded",
+      "key": "Потім",
+      "distractors": [
+        "До цього",
+        "Напередодні"
+      ],
+      "reason": "Nine follows eight, selecting потім. До цього reverses the order; напередодні shifts the event to the previous day.",
+      "sources": [
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
+    },
+    {
+      "id": "yesterday/inline/act-2/2",
+      "module": "yesterday",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the time word that fits each part of the day.",
+      "before": {
+        "sentence": "(During the daytime.) ___ я обідала в кафе.",
+        "answer": "Вдень",
+        "options": [
+          "Вдень",
+          "Зранку",
+          "Нарешті"
+        ],
+        "explanation": "Вдень fits lunch or the middle of the day."
+      },
+      "after": {
+        "sentence": "___ я обідала в кафе о першій годині дня.",
+        "answer": "Вдень",
+        "options": [
+          "Вдень",
+          "Вночі",
+          "Зранку"
+        ],
+        "explanation": "The one-in-the-afternoon clock expression selects вдень. Вночі and зранку conflict with that time."
+      },
+      "disposition": "reworded",
+      "key": "Вдень",
+      "distractors": [
+        "Вночі",
+        "Зранку"
+      ],
+      "reason": "The one-in-the-afternoon clock expression selects вдень. Вночі and зранку conflict with that time.",
+      "sources": [
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
+    },
+    {
+      "id": "yesterday/inline/act-2/3",
+      "module": "yesterday",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 3,
+      "type": "fill-in",
+      "instruction": "Choose the time word that fits each part of the day.",
+      "before": {
+        "sentence": "(In the evening.) ___ я повернулася додому.",
+        "answer": "Ввечері",
+        "options": [
+          "Ввечері",
+          "Спочатку",
+          "Зранку"
+        ],
+        "explanation": "Ввечері marks the evening."
+      },
+      "after": {
+        "sentence": "___, о дев’ятій вечора, я повернулася додому.",
+        "answer": "Ввечері",
+        "options": [
+          "Ввечері",
+          "Вдень",
+          "Зранку"
+        ],
+        "explanation": "Nine in the evening selects ввечері. Вдень and зранку conflict with that clock expression."
+      },
+      "disposition": "reworded",
+      "key": "Ввечері",
+      "distractors": [
+        "Вдень",
+        "Зранку"
+      ],
+      "reason": "Nine in the evening selects ввечері. Вдень and зранку conflict with that clock expression.",
+      "sources": [
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
+    },
+    {
+      "id": "yesterday/inline/act-2/4",
+      "module": "yesterday",
+      "section": "inline",
+      "activity_index": 1,
+      "item_index": 4,
+      "type": "fill-in",
+      "instruction": "Choose the time word that fits each part of the day.",
+      "before": {
+        "sentence": "(Finally, at the end of the day.) ___ я лягла спати.",
+        "answer": "Нарешті",
+        "options": [
+          "Нарешті",
+          "Вдень",
+          "Після цього"
+        ],
+        "explanation": "Нарешті can mark the last action."
+      },
+      "after": {
+        "sentence": "Я довго не мала часу відпочити. ___ о другій ночі я лягла спати.",
+        "answer": "Нарешті",
+        "options": [
+          "Нарешті",
+          "Вдень",
+          "Зранку"
+        ],
+        "explanation": "Нарешті marks reaching rest after the stated delay. Вдень and зранку conflict with the clock expression о другій ночі."
+      },
+      "disposition": "reworded",
+      "key": "Нарешті",
+      "distractors": [
+        "Вдень",
+        "Зранку"
+      ],
+      "reason": "Нарешті marks reaching rest after the stated delay. Вдень and зранку conflict with the clock expression о другій ночі.",
+      "sources": [
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "W2",
+        "T1",
+        "P1",
+        "R2W",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Time words for yesterday"
+    },
+    {
+      "id": "yesterday/inline/act-4/1",
+      "module": "yesterday",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 1,
+      "type": "quiz",
+      "instruction": "Choose the line that keeps Анна's story in the same speaker pattern.",
+      "before": {
+        "prompt": "Which pair fits one female speaker?",
+        "options": [
+          {
+            "text": "Я пішла. Я повернулася.",
+            "correct": true
+          },
+          {
+            "text": "Я пішла. Я повернувся.",
+            "correct": false
+          },
+          {
+            "text": "Я пішов. Я повернулася.",
+            "correct": false
+          }
+        ],
+        "explanation": "Both verbs stay feminine."
+      },
+      "after": {
+        "prompt": "Анна розповідає про вчорашній день. Обери її речення.",
+        "options": [
+          {
+            "text": "Я пішла. Я повернулася.",
+            "correct": true
+          },
+          {
+            "text": "Я пішла. Я повернувся.",
+            "correct": false
+          },
+          {
+            "text": "Я пішов. Я повернулася.",
+            "correct": false
+          }
+        ],
+        "explanation": "Both verbs stay feminine."
+      },
+      "disposition": "reworded",
+      "key": "Я пішла. Я повернулася.",
+      "distractors": [
+        "Я пішла. Я повернувся.",
+        "Я пішов. Я повернулася."
+      ],
+      "reason": "Анна supplies the named female referent consistent with the activity instruction. Both verbs in the key agree with her; the second alternative has masculine повернувся and the third masculine пішов.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "R2W",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Keep the speaker consistent"
+    },
+    {
+      "id": "my-plans/inline/act-1/4",
+      "module": "my-plans",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 4,
+      "type": "fill-in",
+      "instruction": "Choose the word that completes the plan.",
+      "before": {
+        "sentence": "(There will be a party.) У п'ятницю ввечері буде ___.",
+        "answer": "вечірка",
+        "options": [
+          "вечірка",
+          "квартира",
+          "тиждень"
+        ],
+        "explanation": "Вечірка means party."
+      },
+      "after": {
+        "sentence": "У п'ятницю ввечері буде ___.",
+        "answer": "вечірка",
+        "options": [
+          "вечірка",
+          "вечірку",
+          "вечіркою"
+        ],
+        "explanation": "Вечірка is the nominative subject of буде. Вечірку is accusative and вечіркою instrumental."
+      },
+      "disposition": "reworded",
+      "key": "вечірка",
+      "distractors": [
+        "вечірку",
+        "вечіркою"
+      ],
+      "reason": "Вечірка is the nominative subject. Вечірку and вечіркою are oblique forms, not subjects here.",
+      "sources": [
+        "D10",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Build a dated plan"
+    },
+    {
+      "id": "my-plans/workbook/3/0",
+      "module": "my-plans",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 0,
+      "type": "fill-in",
+      "instruction": "Choose the future form or planning phrase.",
+      "before": {
+        "sentence": "(Use the compound future: бути + infinitive.) У вівторок я ___ українську.",
+        "answer": "буду вчити",
+        "options": [
+          "буду вчити",
+          "вчив",
+          "вчу"
+        ],
+        "explanation": "Use буду + infinitive for a future plan."
+      },
+      "after": {
+        "sentence": "Наступного вівторка я ___ українську.",
+        "answer": "буду вчити",
+        "options": [
+          "буду вчити",
+          "будеш вчити",
+          "будемо вчити"
+        ],
+        "explanation": "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged."
+      },
+      "disposition": "reworded",
+      "key": "буду вчити",
+      "distractors": [
+        "будеш вчити",
+        "будемо вчити"
+      ],
+      "reason": "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged.",
+      "sources": [
+        "G2",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the week schedule"
+    },
+    {
+      "id": "my-plans/workbook/3/1",
+      "module": "my-plans",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the future form or planning phrase.",
+      "before": {
+        "sentence": "(Use the compound future: бути + infinitive.) У середу ми ___ вечерю.",
+        "answer": "будемо готувати",
+        "options": [
+          "будемо готувати",
+          "готували",
+          "готуємо"
+        ],
+        "explanation": "Use будемо + infinitive."
+      },
+      "after": {
+        "sentence": "Наступної середи ми ___ вечерю.",
+        "answer": "будемо готувати",
+        "options": [
+          "будемо готувати",
+          "буде готувати",
+          "буду готувати"
+        ],
+        "explanation": "The subject ми agrees with будемо; буде and буду are other person/number forms. The infinitive remains unchanged."
+      },
+      "disposition": "reworded",
+      "key": "будемо готувати",
+      "distractors": [
+        "буде готувати",
+        "буду готувати"
+      ],
+      "reason": "The subject ми agrees with будемо; буде and буду are other person/number forms. The infinitive remains unchanged.",
+      "sources": [
+        "G2",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the week schedule"
+    },
+    {
+      "id": "my-plans/workbook/3/2",
+      "module": "my-plans",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the future form or planning phrase.",
+      "before": {
+        "sentence": "(Use the compound future: бути + infinitive.) У четвер вона ___ допізна.",
+        "answer": "буде працювати",
+        "options": [
+          "буде працювати",
+          "працювала",
+          "працює"
+        ],
+        "explanation": "Use буде + infinitive."
+      },
+      "after": {
+        "sentence": "Наступного четверга вона ___ допізна.",
+        "answer": "буде працювати",
+        "options": [
+          "буде працювати",
+          "будуть працювати",
+          "будемо працювати"
+        ],
+        "explanation": "The subject вона agrees with буде; будуть and будемо are other person/number forms. The infinitive remains unchanged."
+      },
+      "disposition": "reworded",
+      "key": "буде працювати",
+      "distractors": [
+        "будуть працювати",
+        "будемо працювати"
+      ],
+      "reason": "The subject вона agrees with буде; будуть and будемо are other person/number forms. The infinitive remains unchanged.",
+      "sources": [
+        "G2",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the week schedule"
+    },
+    {
+      "id": "my-story/workbook/2/3",
+      "module": "my-story",
+      "section": "workbook",
+      "activity_index": 2,
+      "item_index": 3,
+      "type": "fill-in",
+      "instruction": "Choose the form that completes the story.",
+      "before": {
+        "sentence": "(Use the compound future: бути + infinitive.) Далі я ___ українську щодня.",
+        "answer": "буду вчити",
+        "options": [
+          "буду вчити",
+          "вчила",
+          "вчу"
+        ],
+        "explanation": "Далі points to the future."
+      },
+      "after": {
+        "sentence": "Від завтра я ___ українську щодня.",
+        "answer": "буду вчити",
+        "options": [
+          "буду вчити",
+          "будеш вчити",
+          "будемо вчити"
+        ],
+        "explanation": "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged."
+      },
+      "disposition": "reworded",
+      "key": "буду вчити",
+      "distractors": [
+        "будеш вчити",
+        "будемо вчити"
+      ],
+      "reason": "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged.",
+      "sources": [
+        "G2",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the mini biography"
+    },
+    {
+      "id": "a1-finale/inline/act-1/3",
+      "module": "a1-finale",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 3,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that fits the time and situation.",
+      "before": {
+        "sentence": "(Use the compound future: бути + infinitive.) Завтра я ___ по Україні.",
+        "answer": "буду подорожувати",
+        "options": [
+          "буду подорожувати",
+          "подорожував",
+          "подорожую"
+        ],
+        "explanation": "Завтра pairs with буду + infinitive."
+      },
+      "after": {
+        "sentence": "Завтра я ___ по Україні.",
+        "answer": "буду подорожувати",
+        "options": [
+          "буду подорожувати",
+          "будеш подорожувати",
+          "будемо подорожувати"
+        ],
+        "explanation": "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged."
+      },
+      "disposition": "reworded",
+      "key": "буду подорожувати",
+      "distractors": [
+        "будеш подорожувати",
+        "будемо подорожувати"
+      ],
+      "reason": "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged.",
+      "sources": [
+        "G2",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
+    },
+    {
+      "id": "my-plans/inline/act-3/0",
+      "module": "my-plans",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "type": "quiz",
+      "instruction": "Choose the sentence that stays in the A1 planning pattern.",
+      "before": {
+        "prompt": "Which line gives a day, time, and compound future?",
+        "options": [
+          {
+            "text": "У суботу о третій я буду готувати.",
+            "correct": true
+          },
+          {
+            "text": "У суботу о третій я готую вчора.",
+            "correct": false
+          },
+          {
+            "text": "У суботу о третій я готував.",
+            "correct": false
+          }
+        ],
+        "explanation": "The plan uses day + time + буду + infinitive."
+      },
+      "after": {
+        "prompt": "— Що ти будеш робити наступної суботи? — ___",
+        "options": [
+          {
+            "text": "У суботу о третій я буду готувати.",
+            "correct": true
+          },
+          {
+            "text": "У суботу о третій я готую вчора.",
+            "correct": false
+          },
+          {
+            "text": "У суботу о третій я готував.",
+            "correct": false
+          }
+        ],
+        "explanation": "Буду готувати answers the future question. Готую вчора conflicts in time; готував answers about a past event."
+      },
+      "disposition": "reworded",
+      "key": "У суботу о третій я буду готувати.",
+      "distractors": [
+        "У суботу о третій я готую вчора.",
+        "У суботу о третій я готував."
+      ],
+      "reason": "Буду готувати answers the future question. Готую вчора conflicts in time; готував refers to a past event rather than the requested plan.",
+      "sources": [
+        "G1",
+        "G2",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Planning pattern"
+    },
+    {
+      "id": "my-plans/inline/act-3/1",
+      "module": "my-plans",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "type": "quiz",
+      "instruction": "Choose the sentence that stays in the A1 planning pattern.",
+      "before": {
+        "prompt": "Which invitation reuses the M43 phrase?",
+        "options": [
+          {
+            "text": "Ходімо в кіно!",
+            "correct": true
+          },
+          {
+            "text": "Я буду кіно.",
+            "correct": false
+          },
+          {
+            "text": "Кіно буде прибирати.",
+            "correct": false
+          }
+        ],
+        "explanation": "Ходімо is a familiar invitation phrase."
+      },
+      "after": {
+        "prompt": "— У мене два квитки на фільм. — ___",
+        "options": [
+          {
+            "text": "Ходімо в кіно!",
+            "correct": true
+          },
+          {
+            "text": "Я буду кіно.",
+            "correct": false
+          },
+          {
+            "text": "Кіно буде прибирати.",
+            "correct": false
+          }
+        ],
+        "explanation": "Ходімо is a familiar invitation phrase."
+      },
+      "disposition": "reworded",
+      "key": "Ходімо в кіно!",
+      "distractors": [
+        "Я буду кіно.",
+        "Кіно буде прибирати."
+      ],
+      "reason": "Two film tickets motivate Ходімо в кіно. Я буду кіно identifies a person as cinema; Кіно буде прибирати assigns cleaning to cinema rather than forming an invitation.",
+      "sources": [
+        "G2",
+        "D11",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Planning pattern"
+    },
+    {
+      "id": "my-plans/inline/act-3/2",
+      "module": "my-plans",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "type": "quiz",
+      "instruction": "Choose the sentence that stays in the A1 planning pattern.",
+      "before": {
+        "prompt": "Which answer politely refuses?",
+        "options": [
+          {
+            "text": "На жаль, не можу.",
+            "correct": true
+          },
+          {
+            "text": "З задоволенням!",
+            "correct": false
+          },
+          {
+            "text": "Звичайно буду!",
+            "correct": false
+          }
+        ],
+        "explanation": "На жаль, не можу is a polite refusal."
+      },
+      "after": {
+        "prompt": "— Ходімо завтра о третій в кафе! — ___ О третій у мене іспит.",
+        "options": [
+          {
+            "text": "На жаль, не можу.",
+            "correct": true
+          },
+          {
+            "text": "З задоволенням!",
+            "correct": false
+          },
+          {
+            "text": "Звичайно буду!",
+            "correct": false
+          }
+        ],
+        "explanation": "На жаль, не можу is a polite refusal."
+      },
+      "disposition": "reworded",
+      "key": "На жаль, не можу.",
+      "distractors": [
+        "З задоволенням!",
+        "Звичайно буду!"
+      ],
+      "reason": "The exam and absence explain На жаль, не можу. З задоволенням and Звичайно буду accept an invitation that the continuation rules out.",
+      "sources": [
+        "D12",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Planning pattern"
+    },
+    {
+      "id": "my-plans/inline/act-3/3",
+      "module": "my-plans",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "type": "quiz",
+      "instruction": "Choose the sentence that stays in the A1 planning pattern.",
+      "before": {
+        "prompt": "Which phrase asks about future availability?",
+        "options": [
+          {
+            "text": "Ти будеш вільна у суботу?",
+            "correct": true
+          },
+          {
+            "text": "Ти була вільна учора?",
+            "correct": false
+          },
+          {
+            "text": "Ти вільна о вчора?",
+            "correct": false
+          }
+        ],
+        "explanation": "Будеш вільна asks about future availability."
+      },
+      "after": {
+        "prompt": "— ___ — Так, у суботу я не буду працювати.",
+        "options": [
+          {
+            "text": "Ти будеш вільна у суботу?",
+            "correct": true
+          },
+          {
+            "text": "Ти була вільна учора?",
+            "correct": false
+          },
+          {
+            "text": "Ти вільна о вчора?",
+            "correct": false
+          }
+        ],
+        "explanation": "Будеш вільна asks about future availability."
+      },
+      "disposition": "reworded",
+      "key": "Ти будеш вільна у суботу?",
+      "distractors": [
+        "Ти була вільна учора?",
+        "Ти вільна о вчора?"
+      ],
+      "reason": "The reply supplies future Saturday availability. Була ... учора asks about yesterday, not that Saturday; о вчора misuses the clock-time preposition with an adverb.",
+      "sources": [
+        "G1",
+        "G2",
+        "D13",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Planning pattern"
+    },
+    {
+      "id": "my-story/inline/act-1/0",
+      "module": "my-story",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that completes each sentence.",
+      "before": {
+        "sentence": "(Earlier, before the present period.) ___ я жив у Торонто.",
+        "answer": "Раніше",
+        "options": [
+          "Раніше",
+          "Зараз",
+          "Далі"
+        ],
+        "explanation": "Раніше points to the past."
+      },
+      "after": {
+        "sentence": "П’ять років тому я був студентом. ___ я жив у Торонто, а тепер живу в Києві.",
+        "answer": "Раніше",
+        "options": [
+          "Раніше",
+          "Завтра",
+          "Наступного року"
+        ],
+        "explanation": "Раніше fits the previous Toronto period. Завтра and наступного року point after the present Kyiv period, contradicting жив and the contrast."
+      },
+      "disposition": "reworded",
+      "key": "Раніше",
+      "distractors": [
+        "Завтра",
+        "Наступного року"
+      ],
+      "reason": "Раніше fits the previous Toronto period. Завтра and наступного року point after the present Kyiv period, contradicting жив and the contrast.",
+      "sources": [
+        "G1",
+        "D14",
+        "D15",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the life story"
+    },
+    {
+      "id": "my-story/inline/act-1/1",
+      "module": "my-story",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that completes each sentence.",
+      "before": {
+        "sentence": "(Now, in the present period.) ___ я живу в Києві.",
+        "answer": "Зараз",
+        "options": [
+          "Зараз",
+          "Учора",
+          "Далі"
+        ],
+        "explanation": "Зараз points to the present."
+      },
+      "after": {
+        "sentence": "___ я живу в Києві.",
+        "answer": "Зараз",
+        "options": [
+          "Зараз",
+          "Києві",
+          "Працював"
+        ],
+        "explanation": "Зараз is a time adverb. Києві requires a preposition as a location; працював cannot modify живу as a time expression."
+      },
+      "disposition": "reworded",
+      "key": "Зараз",
+      "distractors": [
+        "Києві",
+        "Працював"
+      ],
+      "reason": "Зараз is a time adverb. Києві requires a preposition as a location; працював cannot modify живу as a time expression.",
+      "sources": [
+        "G1",
+        "D14",
+        "D15",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the life story"
+    },
+    {
+      "id": "my-story/inline/act-1/3",
+      "module": "my-story",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 3,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that completes each sentence.",
+      "before": {
+        "sentence": "(During childhood.) ___ я ходила в школу.",
+        "answer": "У дитинстві",
+        "options": [
+          "У дитинстві",
+          "Завтра",
+          "Зараз"
+        ],
+        "explanation": "У дитинстві is a past-life signal."
+      },
+      "after": {
+        "sentence": "Тепер мені тридцять років. ___ я ходила в школу.",
+        "answer": "У дитинстві",
+        "options": [
+          "У дитинстві",
+          "Завтра",
+          "Наступного року"
+        ],
+        "explanation": "У дитинстві fits the recalled school years; завтра and наступного року conflict with the completed earlier period."
+      },
+      "disposition": "reworded",
+      "key": "У дитинстві",
+      "distractors": [
+        "Завтра",
+        "Наступного року"
+      ],
+      "reason": "У дитинстві fits the recalled school years; завтра and наступного року conflict with the completed earlier period.",
+      "sources": [
+        "G1",
+        "D14",
+        "D15",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the life story"
+    },
+    {
+      "id": "my-story/workbook/2/0",
+      "module": "my-story",
+      "section": "workbook",
+      "activity_index": 2,
+      "item_index": 0,
+      "type": "fill-in",
+      "instruction": "Choose the form that completes the story.",
+      "before": {
+        "sentence": "(Past tense, female speaker.) Я ___ у Львові.",
+        "answer": "народилася",
+        "options": [
+          "народилася",
+          "народжуся",
+          "народжуюся"
+        ],
+        "explanation": "Use the familiar past phrase народилася."
+      },
+      "after": {
+        "sentence": "Олена: Я ___ у Львові тридцять років тому.",
+        "answer": "народилася",
+        "options": [
+          "народилася",
+          "народився",
+          "народилися"
+        ],
+        "explanation": "Олена selects feminine singular народилася. Народився is masculine singular; народилися is plural."
+      },
+      "disposition": "reworded",
+      "key": "народилася",
+      "distractors": [
+        "народився",
+        "народилися"
+      ],
+      "reason": "Олена selects feminine singular народилася. Народився is masculine singular; народилися is plural.",
+      "sources": [
+        "G1",
+        "D14",
+        "D15",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the mini biography"
+    },
+    {
+      "id": "my-story/workbook/2/1",
+      "module": "my-story",
+      "section": "workbook",
+      "activity_index": 2,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the form that completes the story.",
+      "before": {
+        "sentence": "(Use past tense.) Раніше я ___ в Одесі.",
+        "answer": "жила",
+        "options": [
+          "жила",
+          "живу",
+          "буду жити"
+        ],
+        "explanation": "Раніше points to the past."
+      },
+      "after": {
+        "sentence": "Олена: Раніше я ___ в Одесі.",
+        "answer": "жила",
+        "options": [
+          "жила",
+          "жив",
+          "жили"
+        ],
+        "explanation": "Олена selects feminine singular жила. Жив is masculine singular; жили is plural."
+      },
+      "disposition": "reworded",
+      "key": "жила",
+      "distractors": [
+        "жив",
+        "жили"
+      ],
+      "reason": "Олена selects feminine singular жила. Жив is masculine singular; жили is plural.",
+      "sources": [
+        "G1",
+        "D14",
+        "D15",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the mini biography"
+    },
+    {
+      "id": "my-story/workbook/2/2",
+      "module": "my-story",
+      "section": "workbook",
+      "activity_index": 2,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the form that completes the story.",
+      "before": {
+        "sentence": "(Use present tense.) Зараз я ___ в офісі.",
+        "answer": "працюю",
+        "options": [
+          "працюю",
+          "працювала",
+          "буду працювати"
+        ],
+        "explanation": "Зараз points to the present."
+      },
+      "after": {
+        "sentence": "Зараз я ___ в офісі.",
+        "answer": "працюю",
+        "options": [
+          "працюю",
+          "працюєш",
+          "працюють"
+        ],
+        "explanation": "Я selects first-person singular працюю. Працюєш is second-person singular; працюють third-person plural."
+      },
+      "disposition": "reworded",
+      "key": "працюю",
+      "distractors": [
+        "працюєш",
+        "працюють"
+      ],
+      "reason": "Я selects first-person singular працюю. Працюєш is second-person singular; працюють third-person plural.",
+      "sources": [
+        "G1",
+        "D14",
+        "D15",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the mini biography"
+    },
+    {
+      "id": "my-story/workbook/3/0",
+      "module": "my-story",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 0,
+      "type": "quiz",
+      "instruction": "Choose the better A1 sentence.",
+      "before": {
+        "prompt": "Which sentence uses a present-tense verb with зараз?",
+        "options": [
+          {
+            "text": "Зараз я живу в Києві.",
+            "correct": true
+          },
+          {
+            "text": "Зараз я жив у Києві.",
+            "correct": false
+          },
+          {
+            "text": "Зараз я буду живу в Києві.",
+            "correct": false
+          }
+        ],
+        "explanation": "Зараз uses the present form живу."
+      },
+      "after": {
+        "prompt": "— Де ти живеш? — ___",
+        "options": [
+          {
+            "text": "Зараз я живу в Києві.",
+            "correct": true
+          },
+          {
+            "text": "Зараз я живеш у Києві.",
+            "correct": false
+          },
+          {
+            "text": "Зараз я буду живу в Києві.",
+            "correct": false
+          }
+        ],
+        "explanation": "Я agrees with живу. Живеш agrees with ти; буду живу incorrectly combines two personal forms."
+      },
+      "disposition": "reworded",
+      "key": "Зараз я живу в Києві.",
+      "distractors": [
+        "Зараз я живеш у Києві.",
+        "Зараз я буду живу в Києві."
+      ],
+      "reason": "The present location question is answered by я живу. Живеш disagrees with я; буду живу combines two finite forms instead of auxiliary plus infinitive.",
+      "sources": [
+        "G1",
+        "G2",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Repair the story"
+    },
+    {
+      "id": "my-story/workbook/3/1",
+      "module": "my-story",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 1,
+      "type": "quiz",
+      "instruction": "Choose the better A1 sentence.",
+      "before": {
+        "prompt": "Which sentence uses the A1 future?",
+        "options": [
+          {
+            "text": "Далі я буду працювати.",
+            "correct": true
+          },
+          {
+            "text": "Далі я працював.",
+            "correct": false
+          },
+          {
+            "text": "Далі я працюю учора.",
+            "correct": false
+          }
+        ],
+        "explanation": "Буду + infinitive is the A1 future."
+      },
+      "after": {
+        "prompt": "— Що ти будеш робити далі? — ___",
+        "options": [
+          {
+            "text": "Далі я буду працювати.",
+            "correct": true
+          },
+          {
+            "text": "Далі я працював.",
+            "correct": false
+          },
+          {
+            "text": "Далі я працюю учора.",
+            "correct": false
+          }
+        ],
+        "explanation": "Буду + infinitive is the A1 future."
+      },
+      "disposition": "reworded",
+      "key": "Далі я буду працювати.",
+      "distractors": [
+        "Далі я працював.",
+        "Далі я працюю учора."
+      ],
+      "reason": "Буду працювати answers the future question. Працював describes a past action; працюю учора mismatches the time and does not answer the plan question.",
+      "sources": [
+        "G1",
+        "G2",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Repair the story"
+    },
+    {
+      "id": "what-happened/inline/act-3/1",
+      "module": "what-happened",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "type": "quiz",
+      "instruction": "Choose the best answer.",
+      "before": {
+        "prompt": "Which form fits a female speaker saying I read?",
+        "options": [
+          {
+            "text": "Я читала.",
+            "correct": true
+          },
+          {
+            "text": "Я читав.",
+            "correct": false
+          },
+          {
+            "text": "Я читали.",
+            "correct": false
+          }
+        ],
+        "explanation": "A female speaker uses the feminine form читала."
+      },
+      "after": {
+        "prompt": "Олена: Учора я була вдома. ___",
+        "options": [
+          {
+            "text": "Я читала.",
+            "correct": true
+          },
+          {
+            "text": "Я читав.",
+            "correct": false
+          },
+          {
+            "text": "Я читали.",
+            "correct": false
+          }
+        ],
+        "explanation": "A female speaker uses the feminine form читала."
+      },
+      "disposition": "reworded",
+      "key": "Я читала.",
+      "distractors": [
+        "Я читав.",
+        "Я читали."
+      ],
+      "reason": "Named Олена and була establish feminine singular читала. Читав is masculine and читали plural.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the answer"
+    },
+    {
+      "id": "what-happened/inline/act-3/2",
+      "module": "what-happened",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "type": "quiz",
+      "instruction": "Choose the best answer.",
+      "before": {
+        "prompt": "Which form fits a group?",
+        "options": [
+          {
+            "text": "Ми читали.",
+            "correct": true
+          },
+          {
+            "text": "Ми читав.",
+            "correct": false
+          },
+          {
+            "text": "Ми читала.",
+            "correct": false
+          }
+        ],
+        "explanation": "Plural past uses -ли."
+      },
+      "after": {
+        "prompt": "Олена і Тарас: ___",
+        "options": [
+          {
+            "text": "Ми читали.",
+            "correct": true
+          },
+          {
+            "text": "Ми читав.",
+            "correct": false
+          },
+          {
+            "text": "Ми читала.",
+            "correct": false
+          }
+        ],
+        "explanation": "Plural past uses -ли."
+      },
+      "disposition": "reworded",
+      "key": "Ми читали.",
+      "distractors": [
+        "Ми читав.",
+        "Ми читала."
+      ],
+      "reason": "The two named speakers require plural ми читали. Ми читав and ми читала combine a plural pronoun with singular past verbs.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the answer"
+    },
+    {
+      "id": "what-will-happen/inline/act-3/0",
+      "module": "what-will-happen",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "type": "quiz",
+      "instruction": "Choose the best answer.",
+      "before": {
+        "prompt": "Which sentence means I will read?",
+        "options": [
+          {
+            "text": "Я буду читати.",
+            "correct": true
+          },
+          {
+            "text": "Я буду читаю.",
+            "correct": false
+          },
+          {
+            "text": "Я читаю завтра.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use буду + infinitive: буду читати."
+      },
+      "after": {
+        "prompt": "— Що ти будеш робити завтра? — ___",
+        "options": [
+          {
+            "text": "Я буду читати.",
+            "correct": true
+          },
+          {
+            "text": "Я буду читаю.",
+            "correct": false
+          },
+          {
+            "text": "Я будемо читати.",
+            "correct": false
+          }
+        ],
+        "explanation": "Буду читати combines first-person singular буду with an infinitive. Буду читаю has two finite forms; я будемо disagrees in number."
+      },
+      "disposition": "reworded",
+      "key": "Я буду читати.",
+      "distractors": [
+        "Я буду читаю.",
+        "Я будемо читати."
+      ],
+      "reason": "Буду читати answers the question. Буду читаю wrongly combines finite verbs; я будемо mismatches person and number. The grammatical scheduled-present alternative is removed.",
+      "sources": [
+        "G2",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the answer"
+    },
+    {
+      "id": "health/inline/act-1/2",
+      "module": "health",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the word that completes the A1 phrase.",
+      "before": {
+        "sentence": "(Say that you have a fever.) У мене ___.",
+        "answer": "температура",
+        "options": [
+          "температура",
+          "праворуч",
+          "квиток"
+        ],
+        "explanation": "У мене температура is a fixed symptom phrase."
+      },
+      "after": {
+        "sentence": "У мене ___ 39 градусів.",
+        "answer": "температура",
+        "options": [
+          "температура",
+          "праворуч",
+          "квиток"
+        ],
+        "explanation": "Температура can be measured in degrees. Праворуч is a direction and квиток is not a temperature measurement."
+      },
+      "disposition": "reworded",
+      "key": "температура",
+      "distractors": [
+        "праворуч",
+        "квиток"
+      ],
+      "reason": "Температура combines with 39 градусів. Праворуч is a direction adverb; квиток cannot have a measurement in degrees.",
+      "sources": [
+        "D16",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the health phrase"
+    },
+    {
+      "id": "health/inline/act-4/0",
+      "module": "health",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 0,
+      "type": "quiz",
+      "instruction": "Choose the phrase that communicates the problem clearly.",
+      "before": {
+        "prompt": "You want to say: My stomach hurts.",
+        "options": [
+          {
+            "text": "У мене болить живіт.",
+            "correct": true
+          },
+          {
+            "text": "Я живіт болить.",
+            "correct": false
+          },
+          {
+            "text": "Мій живіт є болить.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use У мене болить + body part."
+      },
+      "after": {
+        "prompt": "— Де болить? — ___",
+        "options": [
+          {
+            "text": "У мене болить живіт.",
+            "correct": true
+          },
+          {
+            "text": "Я живіт болить.",
+            "correct": false
+          },
+          {
+            "text": "Мій живіт є болить.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use У мене болить + body part."
+      },
+      "disposition": "reworded",
+      "key": "У мене болить живіт.",
+      "distractors": [
+        "Я живіт болить.",
+        "Мій живіт є болить."
+      ],
+      "reason": "The key answers the doctor’s question with a grammatical pain construction. Я живіт болить wrongly joins я with the third-person predicate; є болить joins incompatible finite predicates.",
+      "sources": [
+        "D17",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the clear A1 phrase"
+    },
+    {
+      "id": "health/inline/act-4/1",
+      "module": "health",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 1,
+      "type": "quiz",
+      "instruction": "Choose the phrase that communicates the problem clearly.",
+      "before": {
+        "prompt": "You need a doctor.",
+        "options": [
+          {
+            "text": "Мені потрібен лікар.",
+            "correct": true
+          },
+          {
+            "text": "Я потрібно лікар.",
+            "correct": false
+          },
+          {
+            "text": "Лікар болить.",
+            "correct": false
+          }
+        ],
+        "explanation": "Мені потрібен лікар is the fixed help phrase."
+      },
+      "after": {
+        "prompt": "— Що вам потрібно? — ___",
+        "options": [
+          {
+            "text": "Мені потрібен лікар.",
+            "correct": true
+          },
+          {
+            "text": "Я потрібно лікар.",
+            "correct": false
+          },
+          {
+            "text": "Лікар болить.",
+            "correct": false
+          }
+        ],
+        "explanation": "Мені потрібен лікар is the fixed help phrase."
+      },
+      "disposition": "reworded",
+      "key": "Мені потрібен лікар.",
+      "distractors": [
+        "Я потрібно лікар.",
+        "Лікар болить."
+      ],
+      "reason": "Мені потрібен лікар agrees in masculine singular with лікар and marks the experiencer in the dative. Я потрібно лікар has the wrong experiencer and agreement; лікар болить does not answer what is needed.",
+      "sources": [
+        "D18",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the clear A1 phrase"
+    },
+    {
+      "id": "health/inline/act-4/2",
+      "module": "health",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 2,
+      "type": "quiz",
+      "instruction": "Choose the phrase that communicates the problem clearly.",
+      "before": {
+        "prompt": "You do not understand.",
+        "options": [
+          {
+            "text": "Я не розумію.",
+            "correct": true
+          },
+          {
+            "text": "Я не аптека.",
+            "correct": false
+          },
+          {
+            "text": "У мене розумію.",
+            "correct": false
+          }
+        ],
+        "explanation": "Я не розумію is the repair phrase."
+      },
+      "after": {
+        "prompt": "— Ви розумієте українську? — ___",
+        "options": [
+          {
+            "text": "Я не розумію.",
+            "correct": true
+          },
+          {
+            "text": "Я не аптека.",
+            "correct": false
+          },
+          {
+            "text": "У мене розумію.",
+            "correct": false
+          }
+        ],
+        "explanation": "Я не розумію is the repair phrase."
+      },
+      "disposition": "reworded",
+      "key": "Я не розумію.",
+      "distractors": [
+        "Я не аптека.",
+        "У мене розумію."
+      ],
+      "reason": "Я не розумію answers the understanding question. Я не аптека denies being a pharmacy; у мене розумію places a first-person verb without a nominative subject.",
+      "sources": [
+        "D19",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the clear A1 phrase"
+    },
+    {
+      "id": "emergencies/inline/act-4/0",
+      "module": "emergencies",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 0,
+      "type": "quiz",
+      "instruction": "Pick the clearest A1 phrase.",
+      "before": {
+        "prompt": "You need to say: There is a fire here.",
+        "options": [
+          {
+            "text": "Тут пожежа.",
+            "correct": true
+          },
+          {
+            "text": "Тут паспорт.",
+            "correct": false
+          },
+          {
+            "text": "Мене пожежа.",
+            "correct": false
+          }
+        ],
+        "explanation": "Тут пожежа is the short problem sentence."
+      },
+      "after": {
+        "prompt": "— Що сталося? — ___",
+        "options": [
+          {
+            "text": "Тут пожежа.",
+            "correct": true
+          },
+          {
+            "text": "Тут пожежу.",
+            "correct": false
+          },
+          {
+            "text": "Мене пожежа.",
+            "correct": false
+          }
+        ],
+        "explanation": "Тут пожежа is the short problem sentence."
+      },
+      "disposition": "reworded",
+      "key": "Тут пожежа.",
+      "distractors": [
+        "Тут пожежу.",
+        "Мене пожежа."
+      ],
+      "reason": "The key has nominative пожежа as subject. Пожежу is accusative; мене is an oblique pronoun and cannot form the location/incident statement.",
+      "sources": [
+        "D20",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the emergency phrase"
+    },
+    {
+      "id": "emergencies/inline/act-4/1",
+      "module": "emergencies",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 1,
+      "type": "quiz",
+      "instruction": "Pick the clearest A1 phrase.",
+      "before": {
+        "prompt": "You need police.",
+        "options": [
+          {
+            "text": "Потрібна поліція.",
+            "correct": true
+          },
+          {
+            "text": "Потрібна аптека.",
+            "correct": false
+          },
+          {
+            "text": "Поліція болить.",
+            "correct": false
+          }
+        ],
+        "explanation": "Потрібна поліція asks for police help."
+      },
+      "after": {
+        "prompt": "У мене вкрали сумку з грошима. ___",
+        "options": [
+          {
+            "text": "Потрібна поліція.",
+            "correct": true
+          },
+          {
+            "text": "Потрібна аптека.",
+            "correct": false
+          },
+          {
+            "text": "Поліція болить.",
+            "correct": false
+          }
+        ],
+        "explanation": "Потрібна поліція asks for police help."
+      },
+      "disposition": "reworded",
+      "key": "Потрібна поліція.",
+      "distractors": [
+        "Потрібна аптека.",
+        "Поліція болить."
+      ],
+      "reason": "Police help fits the theft situation. A pharmacy does not handle theft and поліція болить uses a pain predicate with the service.",
+      "sources": [
+        "D21",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the emergency phrase"
+    },
+    {
+      "id": "emergencies/inline/act-4/2",
+      "module": "emergencies",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 2,
+      "type": "quiz",
+      "instruction": "Pick the clearest A1 phrase.",
+      "before": {
+        "prompt": "You want someone to call 103.",
+        "options": [
+          {
+            "text": "Подзвоніть за номером 103, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Я номер сто три.",
+            "correct": false
+          },
+          {
+            "text": "Сто три звати.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use Подзвоніть за номером..."
+      },
+      "after": {
+        "prompt": "— У мене немає телефона. ___ — Добре, зараз подзвоню.",
+        "options": [
+          {
+            "text": "Подзвоніть за номером 103, будь ласка.",
+            "correct": true
+          },
+          {
+            "text": "Я номер сто три.",
+            "correct": false
+          },
+          {
+            "text": "Сто три звати.",
+            "correct": false
+          }
+        ],
+        "explanation": "Use Подзвоніть за номером..."
+      },
+      "disposition": "reworded",
+      "key": "Подзвоніть за номером 103, будь ласка.",
+      "distractors": [
+        "Я номер сто три.",
+        "Сто три звати."
+      ],
+      "reason": "The complete request подзвоніть за номером 103 fits the promise to call. Я номер сто три identifies a person as a number; сто три звати incorrectly uses a name construction.",
+      "sources": [
+        "D22",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the emergency phrase"
+    },
+    {
+      "id": "emergencies/inline/act-4/3",
+      "module": "emergencies",
+      "section": "inline",
+      "activity_index": 3,
+      "item_index": 3,
+      "type": "quiz",
+      "instruction": "Pick the clearest A1 phrase.",
+      "before": {
+        "prompt": "You need someone to summon an ambulance.",
+        "options": [
+          {
+            "text": "Викличте швидку!",
+            "correct": true
+          },
+          {
+            "text": "Швидка звати!",
+            "correct": false
+          },
+          {
+            "text": "Паспорт швидку!",
+            "correct": false
+          }
+        ],
+        "explanation": "Викличте швидку asks someone to summon an ambulance."
+      },
+      "after": {
+        "prompt": "— Тут людині дуже погано. ___ — Добре, зараз викличу.",
+        "options": [
+          {
+            "text": "Викличте швидку!",
+            "correct": true
+          },
+          {
+            "text": "Швидка звати!",
+            "correct": false
+          },
+          {
+            "text": "Паспорт швидку!",
+            "correct": false
+          }
+        ],
+        "explanation": "Викличте швидку asks someone to summon an ambulance."
+      },
+      "disposition": "reworded",
+      "key": "Викличте швидку!",
+      "distractors": [
+        "Швидка звати!",
+        "Паспорт швидку!"
+      ],
+      "reason": "Викличте швидку is the request completed by зараз викличу. Швидка звати has an incompatible nominative/name construction; паспорт швидку contains two unrelated nouns without a predicate.",
+      "sources": [
+        "D23",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the emergency phrase"
+    },
+    {
+      "id": "a1-finale/inline/act-1/0",
+      "module": "a1-finale",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that fits the time and situation.",
+      "before": {
+        "sentence": "(Past tense, male speaker.) Учора зранку я ___ у кафе.",
+        "answer": "снідав",
+        "options": [
+          "снідав",
+          "буду снідати",
+          "снідаю"
+        ],
+        "explanation": "Учора and the past-tense cue fix a past morning; the male-speaker cue selects снідав."
+      },
+      "after": {
+        "sentence": "Адам: Учора зранку я ___ у кафе.",
+        "answer": "снідав",
+        "options": [
+          "снідав",
+          "снідала",
+          "снідали"
+        ],
+        "explanation": "Адам selects masculine singular снідав. Снідала is feminine and снідали plural."
+      },
+      "disposition": "reworded",
+      "key": "снідав",
+      "distractors": [
+        "снідала",
+        "снідали"
+      ],
+      "reason": "Адам selects masculine singular снідав. Снідала is feminine and снідали plural.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "bdd5f82a",
+      "activity_title": "Complete the A1 line"
+    },
+    {
+      "id": "a1-finale/inline/act-1/1",
+      "module": "a1-finale",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that fits the time and situation.",
+      "before": {
+        "sentence": "(Use present tense.) Зараз я ___ по Хрещатику.",
+        "answer": "гуляю",
+        "options": [
+          "гуляю",
+          "гуляв",
+          "буду гуляти"
+        ],
+        "explanation": "Зараз points to the present."
+      },
+      "after": {
+        "sentence": "Зараз я ___ по Хрещатику.",
+        "answer": "гуляю",
+        "options": [
+          "гуляю",
+          "гуляєш",
+          "гуляють"
+        ],
+        "explanation": "Я selects first-person singular гуляю. Гуляєш is second-person singular; гуляють third-person plural."
+      },
+      "disposition": "reworded",
+      "key": "гуляю",
+      "distractors": [
+        "гуляєш",
+        "гуляють"
+      ],
+      "reason": "Я selects first-person singular гуляю. Гуляєш is second-person singular; гуляють third-person plural.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
+    },
+    {
+      "id": "a1-finale/inline/act-1/2",
+      "module": "a1-finale",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that fits the time and situation.",
+      "before": {
+        "sentence": "(Use past tense, male speaker.) Учора я ___ квиток.",
+        "answer": "купив",
+        "options": [
+          "купив",
+          "купую",
+          "буду купувати"
+        ],
+        "explanation": "Учора points to the past."
+      },
+      "after": {
+        "sentence": "Адам: Учора я ___ квиток.",
+        "answer": "купив",
+        "options": [
+          "купив",
+          "купила",
+          "купили"
+        ],
+        "explanation": "Адам selects masculine singular купив. Купила is feminine; купили plural."
+      },
+      "disposition": "reworded",
+      "key": "купив",
+      "distractors": [
+        "купила",
+        "купили"
+      ],
+      "reason": "Адам selects masculine singular купив. Купила is feminine; купили plural.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
+    },
+    {
+      "id": "a1-finale/inline/act-1/4",
+      "module": "a1-finale",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 4,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that fits the time and situation.",
+      "before": {
+        "sentence": "(Use past tense.) Учора ввечері ми ___ в кіно.",
+        "answer": "ходили",
+        "options": [
+          "ходили",
+          "ходимо",
+          "будемо ходити"
+        ],
+        "explanation": "This line reports what happened in the evening."
+      },
+      "after": {
+        "sentence": "Учора ввечері ми ___ в кіно.",
+        "answer": "ходили",
+        "options": [
+          "ходили",
+          "ходив",
+          "ходила"
+        ],
+        "explanation": "Ми selects plural ходили. Ходив and ходила are singular."
+      },
+      "disposition": "reworded",
+      "key": "ходили",
+      "distractors": [
+        "ходив",
+        "ходила"
+      ],
+      "reason": "Ми selects plural ходили. Ходив and ходила are singular.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
+    },
+    {
+      "id": "a1-finale/inline/act-1/5",
+      "module": "a1-finale",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 5,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that fits the time and situation.",
+      "before": {
+        "sentence": "(Use present tense.) Зараз Олена ___ борщ і салат.",
+        "answer": "замовляє",
+        "options": [
+          "замовляє",
+          "замовляла",
+          "буде замовляти"
+        ],
+        "explanation": "Зараз points to the present."
+      },
+      "after": {
+        "sentence": "Зараз Олена ___ борщ і салат.",
+        "answer": "замовляє",
+        "options": [
+          "замовляє",
+          "замовляю",
+          "замовляєш"
+        ],
+        "explanation": "Олена selects third-person singular замовляє. Замовляю is first-person and замовляєш second-person."
+      },
+      "disposition": "reworded",
+      "key": "замовляє",
+      "distractors": [
+        "замовляю",
+        "замовляєш"
+      ],
+      "reason": "Олена selects third-person singular замовляє. Замовляю is first-person and замовляєш second-person.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
+    },
+    {
+      "id": "a1-finale/inline/act-1/6",
+      "module": "a1-finale",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 6,
+      "type": "fill-in",
+      "instruction": "Choose the word or phrase that fits the time and situation.",
+      "before": {
+        "sentence": "(Use past tense.) Учора була гарна погода, і ми ___ в парку.",
+        "answer": "гуляли",
+        "options": [
+          "гуляли",
+          "гуляємо",
+          "будемо гуляти"
+        ],
+        "explanation": "Учора була sets the past frame."
+      },
+      "after": {
+        "sentence": "Учора була гарна погода, і ми ___ в парку.",
+        "answer": "гуляли",
+        "options": [
+          "гуляли",
+          "гуляв",
+          "гуляла"
+        ],
+        "explanation": "Ми selects plural гуляли. Гуляв and гуляла are singular."
+      },
+      "disposition": "reworded",
+      "key": "гуляли",
+      "distractors": [
+        "гуляв",
+        "гуляла"
+      ],
+      "reason": "Ми selects plural гуляли. Гуляв and гуляла are singular.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Complete the A1 line"
+    },
+    {
+      "id": "a1-finale/workbook/3/1",
+      "module": "a1-finale",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the phrase that completes the ten-sentence story frame.",
+      "before": {
+        "sentence": "(Past tense, male speaker.) Учора зранку я ___ у кафе.",
+        "answer": "снідав",
+        "options": [
+          "снідав",
+          "кафе",
+          "буду"
+        ],
+        "explanation": "This is a past line in the story."
+      },
+      "after": {
+        "sentence": "Адам: Учора зранку я ___ у кафе.",
+        "answer": "снідав",
+        "options": [
+          "снідав",
+          "кафе",
+          "буду"
+        ],
+        "explanation": "Адам selects masculine singular снідав. Кафе is a place noun, not a predicate here; буду requires an infinitive absent from the line."
+      },
+      "disposition": "reworded",
+      "key": "снідав",
+      "distractors": [
+        "кафе",
+        "буду"
+      ],
+      "reason": "Адам selects masculine singular снідав. Кафе is a place noun, not a predicate here; буду requires an infinitive absent from the line.",
+      "sources": [
+        "G1",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "e5d74a7d",
+      "activity_title": "Final story frame"
+    },
+    {
+      "id": "a1-finale/workbook/0/0",
+      "module": "a1-finale",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 0,
+      "type": "quiz",
+      "instruction": "Choose the best answer.",
+      "before": {
+        "prompt": "How do you ask about the price of a ticket?",
+        "options": [
+          {
+            "text": "Скільки коштує квиток?",
+            "correct": true
+          },
+          {
+            "text": "Де тут квиток?",
+            "correct": false
+          },
+          {
+            "text": "Дайте один квиток.",
+            "correct": false
+          }
+        ],
+        "explanation": "Скільки коштує...? asks the price."
+      },
+      "after": {
+        "prompt": "— ___ — Квиток коштує сто гривень.",
+        "options": [
+          {
+            "text": "Скільки коштує квиток?",
+            "correct": true
+          },
+          {
+            "text": "Де тут квиток?",
+            "correct": false
+          },
+          {
+            "text": "Дайте один квиток.",
+            "correct": false
+          }
+        ],
+        "explanation": "Скільки коштує...? asks the price."
+      },
+      "disposition": "reworded",
+      "key": "Скільки коштує квиток?",
+      "distractors": [
+        "Де тут квиток?",
+        "Дайте один квиток."
+      ],
+      "reason": "The answer gives a price, matching скільки коштує. Де asks for location; дайте is a purchase request rather than a price question.",
+      "sources": [
+        "D17",
+        "D24",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the A1 response"
+    },
+    {
+      "id": "a1-finale/workbook/0/1",
+      "module": "a1-finale",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 1,
+      "type": "quiz",
+      "instruction": "Choose the best answer.",
+      "before": {
+        "prompt": "You invite a friend to a cafe.",
+        "options": [
+          {
+            "text": "Ходімо в кафе!",
+            "correct": true
+          },
+          {
+            "text": "Я був у кафе.",
+            "correct": false
+          },
+          {
+            "text": "Де кафе?",
+            "correct": false
+          }
+        ],
+        "explanation": "Ходімо... is the A1 invitation phrase."
+      },
+      "after": {
+        "prompt": "— У мене є година. — ___ — Добре, я теж хочу кави.",
+        "options": [
+          {
+            "text": "Ходімо в кафе!",
+            "correct": true
+          },
+          {
+            "text": "Я був у кафе.",
+            "correct": false
+          },
+          {
+            "text": "Де кафе?",
+            "correct": false
+          }
+        ],
+        "explanation": "Ходімо... is the A1 invitation phrase."
+      },
+      "disposition": "reworded",
+      "key": "Ходімо в кафе!",
+      "distractors": [
+        "Я був у кафе.",
+        "Де кафе?"
+      ],
+      "reason": "Ходімо в кафе makes the invitation accepted by добре. Я був у кафе reports a past visit; де кафе asks for location.",
+      "sources": [
+        "D17",
+        "D24",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the A1 response"
+    },
+    {
+      "id": "a1-finale/workbook/0/2",
+      "module": "a1-finale",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 2,
+      "type": "quiz",
+      "instruction": "Choose the best answer.",
+      "before": {
+        "prompt": "How do you say: My head hurts?",
+        "options": [
+          {
+            "text": "У мене болить голова.",
+            "correct": true
+          },
+          {
+            "text": "У мене температура.",
+            "correct": false
+          },
+          {
+            "text": "Я хворий.",
+            "correct": false
+          }
+        ],
+        "explanation": "У мене болить голова is the practiced health phrase."
+      },
+      "after": {
+        "prompt": "— Де болить? — ___",
+        "options": [
+          {
+            "text": "У мене болить голова.",
+            "correct": true
+          },
+          {
+            "text": "У мене болить головою.",
+            "correct": false
+          },
+          {
+            "text": "У мене болить голові.",
+            "correct": false
+          }
+        ],
+        "explanation": "Голова is the nominative subject of болить. Головою is instrumental and голові dative; neither can be its subject here."
+      },
+      "disposition": "reworded",
+      "key": "У мене болить голова.",
+      "distractors": [
+        "У мене болить головою.",
+        "У мене болить голові."
+      ],
+      "reason": "Голова is the nominative subject of болить. Головою is instrumental and голові dative; neither can be its subject here.",
+      "sources": [
+        "D17",
+        "W2",
+        "T1",
+        "P1",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the A1 response"
+    },
+    {
+      "id": "what-will-happen/inline/act-3/3",
+      "module": "what-will-happen",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "type": "quiz",
+      "instruction": "Choose the best answer.",
+      "before": {
+        "prompt": "Which question asks about tomorrow?",
+        "options": [
+          {
+            "text": "Що ти будеш робити завтра?",
+            "correct": true
+          },
+          {
+            "text": "Що ти робиш учора?",
+            "correct": false
+          },
+          {
+            "text": "Що ти робив зараз?",
+            "correct": false
+          }
+        ],
+        "explanation": "Будеш робити завтра is the future question."
+      },
+      "after": {
+        "prompt": "— ___ — Завтра я буду читати книжку.",
+        "options": [
+          {
+            "text": "Що ти будеш робити завтра?",
+            "correct": true
+          },
+          {
+            "text": "Що ти робиш учора?",
+            "correct": false
+          },
+          {
+            "text": "Що ти робив зараз?",
+            "correct": false
+          }
+        ],
+        "explanation": "Будеш робити завтра is the future question."
+      },
+      "disposition": "reworded",
+      "key": "Що ти будеш робити завтра?",
+      "distractors": [
+        "Що ти робиш учора?",
+        "Що ти робив зараз?"
+      ],
+      "reason": "The reply supplies a plan for tomorrow, answering Що ти будеш робити завтра? The second question робиш учора mismatches its time expression; the third робив зараз asks about a recent action rather than the stated tomorrow plan.",
+      "sources": [
+        "G1",
+        "G2",
+        "W2",
+        "R2W",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older prompt",
+      "activity_title": "Choose the answer"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/0",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Я вчу українську, ___ люблю Україну.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "а",
+          "але"
+        ],
+        "explanation": "Бо gives the reason."
+      },
+      "after": {
+        "sentence": "Я вчу українську, ___ люблю Україну.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "бо",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/1",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Ми не гуляємо, ___ йде дощ.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "чи",
+          "і"
+        ],
+        "explanation": "Тому що gives the reason."
+      },
+      "after": {
+        "sentence": "Ми не гуляємо, ___ йде дощ.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "тому що",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/2",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Олена читає, ___ має іспит.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "або",
+          "та"
+        ],
+        "explanation": "Бо answers why Olena is reading."
+      },
+      "after": {
+        "sentence": "Олена читає, ___ має іспит.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "бо",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/3",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Я вдома, ___ я хворий.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "а",
+          "чи"
+        ],
+        "explanation": "Тому що means because."
+      },
+      "after": {
+        "sentence": "Я вдома, ___ я хворий.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "тому що",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/4",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 4,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Марко купує воду, ___ хоче пити.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "але",
+          "й"
+        ],
+        "explanation": "Бо introduces the reason."
+      },
+      "after": {
+        "sentence": "Марко купує воду, ___ хоче пити.",
+        "answer": "бо",
+        "options": [
+          "бо",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "бо",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Бо introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "linking-ideas/inline/act-3/5",
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 5,
+      "type": "fill-in",
+      "instruction": "Choose the connector that completes the sentence.",
+      "activity_title": "Complete the sentence",
+      "before": {
+        "sentence": "Вони чекають, ___ автобус спізнюється.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "або",
+          "та"
+        ],
+        "explanation": "Тому що introduces the reason."
+      },
+      "after": {
+        "sentence": "Вони чекають, ___ автобус спізнюється.",
+        "answer": "тому що",
+        "options": [
+          "тому що",
+          "якого",
+          "котрому"
+        ],
+        "explanation": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause."
+      },
+      "disposition": "reworded",
+      "key": "тому що",
+      "distractors": [
+        "якого",
+        "котрому"
+      ],
+      "reason": "Тому що introduces the reason clause. Якого and котрому have no compatible antecedent or syntactic role in this clause.",
+      "sources": [
+        "D25",
+        "W2",
+        "R2W",
+        "W3",
+        "P2",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older shared instruction"
+    },
+    {
+      "id": "please-do-this/inline/act-1/0",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Олено, ___ текст, будь ласка.",
+        "answer": "читай",
+        "options": [
+          "читай",
+          "читати",
+          "читаєш"
+        ],
+        "explanation": "Use читай with one familiar person."
+      },
+      "after": {
+        "sentence": "Олено, ти вже тут? Тоді ___ текст, будь ласка.",
+        "answer": "читай",
+        "options": [
+          "читай",
+          "читайте",
+          "книжку"
+        ],
+        "explanation": "Explicit ти selects читай; читайте switches to ви. Книжку is a noun, not a predicate for this request."
+      },
+      "disposition": "reworded",
+      "key": "читай",
+      "distractors": [
+        "читайте",
+        "книжку"
+      ],
+      "reason": "Explicit ти selects читай; читайте switches to ви. Книжку is a noun, not a predicate for this request.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/1",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 1,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Пане Іване, ___ текст, будь ласка.",
+        "answer": "читайте",
+        "options": [
+          "читайте",
+          "читати",
+          "читаєте"
+        ],
+        "explanation": "Use читайте for polite ви."
+      },
+      "after": {
+        "sentence": "Пане Іване, ви вже готові? Тоді ___ текст, будь ласка.",
+        "answer": "читайте",
+        "options": [
+          "читайте",
+          "читай",
+          "книжку"
+        ],
+        "explanation": "Explicit ви selects читайте; читай switches to ти. Книжку is a noun and cannot supply the missing predicate."
+      },
+      "disposition": "reworded",
+      "key": "читайте",
+      "distractors": [
+        "читай",
+        "книжку"
+      ],
+      "reason": "Explicit ви selects читайте; читай switches to ти. Книжку is a noun and cannot supply the missing predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/2",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 2,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Тарасе, ___ речення.",
+        "answer": "пиши",
+        "options": [
+          "пиши",
+          "писати",
+          "пишеш"
+        ],
+        "explanation": "Пиши is the ти command."
+      },
+      "after": {
+        "sentence": "Тарасе, ти вже готовий? Тоді ___ речення.",
+        "answer": "пиши",
+        "options": [
+          "пиши",
+          "пишіть",
+          "реченню"
+        ],
+        "explanation": "Explicit ти selects пиши; пишіть switches to ви. Реченню is a dative noun, not the missing predicate."
+      },
+      "disposition": "reworded",
+      "key": "пиши",
+      "distractors": [
+        "пишіть",
+        "реченню"
+      ],
+      "reason": "Explicit ти selects пиши; пишіть switches to ви. Реченню is a dative noun, not the missing predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/3",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 3,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Студенти, ___ речення.",
+        "answer": "пишіть",
+        "options": [
+          "пишіть",
+          "писати",
+          "пишете"
+        ],
+        "explanation": "Пишіть is the ви or plural command."
+      },
+      "after": {
+        "sentence": "Студенти, ___ речення, будь ласка.",
+        "answer": "пишіть",
+        "options": [
+          "пишіть",
+          "пиши",
+          "реченню"
+        ],
+        "explanation": "Студенти addresses several people, selecting пишіть. Пиши is singular; реченню is a dative noun, not a predicate."
+      },
+      "disposition": "reworded",
+      "key": "пишіть",
+      "distractors": [
+        "пиши",
+        "реченню"
+      ],
+      "reason": "Студенти addresses several people, selecting пишіть. Пиши is singular; реченню is a dative noun, not a predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/4",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 4,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Маріє, ___ мене, будь ласка.",
+        "answer": "слухай",
+        "options": [
+          "слухай",
+          "слухати",
+          "слухаєш"
+        ],
+        "explanation": "Use слухай with one familiar person."
+      },
+      "after": {
+        "sentence": "Маріє, ти мене чуєш? Тоді ___ мене, будь ласка.",
+        "answer": "слухай",
+        "options": [
+          "слухай",
+          "слухайте",
+          "текст"
+        ],
+        "explanation": "Ти selects слухай; слухайте switches to ви. Текст is a noun and cannot complete the request predicate."
+      },
+      "disposition": "reworded",
+      "key": "слухай",
+      "distractors": [
+        "слухайте",
+        "текст"
+      ],
+      "reason": "Ти selects слухай; слухайте switches to ви. Текст is a noun and cannot complete the request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/5",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 5,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Друзі, ___ мене.",
+        "answer": "слухайте",
+        "options": [
+          "слухайте",
+          "слухати",
+          "слухаєте"
+        ],
+        "explanation": "Use слухайте for more than one person."
+      },
+      "after": {
+        "sentence": "Друзі, ___ мене, будь ласка.",
+        "answer": "слухайте",
+        "options": [
+          "слухайте",
+          "слухай",
+          "текст"
+        ],
+        "explanation": "Друзі addresses several people, selecting слухайте. Слухай is singular; текст is a noun, not a request predicate."
+      },
+      "disposition": "reworded",
+      "key": "слухайте",
+      "distractors": [
+        "слухай",
+        "текст"
+      ],
+      "reason": "Друзі addresses several people, selecting слухайте. Слухай is singular; текст is a noun, not a request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/6",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 6,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___ меню, будь ласка.",
+        "answer": "Дайте",
+        "options": [
+          "Дайте",
+          "Дати",
+          "Даєте"
+        ],
+        "explanation": "Дайте is a polite request."
+      },
+      "after": {
+        "sentence": "Пане офіціанте, ви вже тут? ___ меню, будь ласка.",
+        "answer": "Дайте",
+        "options": [
+          "Дайте",
+          "Дай",
+          "Реченню"
+        ],
+        "explanation": "Explicit ви selects Дайте; Дай switches to ти. Реченню is a dative noun and cannot be the request predicate."
+      },
+      "disposition": "reworded",
+      "key": "Дайте",
+      "distractors": [
+        "Дай",
+        "Реченню"
+      ],
+      "reason": "Explicit ви selects Дайте; Дай switches to ти. Реченню is a dative noun and cannot be the request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/7",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 7,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___, що ти хочеш.",
+        "answer": "Скажи",
+        "options": [
+          "Скажи",
+          "Сказати",
+          "Скажеш"
+        ],
+        "explanation": "Скажи is the ти command."
+      },
+      "after": {
+        "sentence": "Олено, ти вже готова? ___, що ти хочеш.",
+        "answer": "Скажи",
+        "options": [
+          "Скажи",
+          "Скажіть",
+          "Книжкою"
+        ],
+        "explanation": "Explicit ти selects Скажи; Скажіть switches to ви. Книжкою is an instrumental noun and cannot introduce the content clause as its predicate."
+      },
+      "disposition": "reworded",
+      "key": "Скажи",
+      "distractors": [
+        "Скажіть",
+        "Книжкою"
+      ],
+      "reason": "Explicit ти selects Скажи; Скажіть switches to ви. Книжкою is an instrumental noun and cannot introduce the content clause as its predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/workbook/0/1",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 1,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Пане Іване, ___ книжку!",
+        "answer": "дайте",
+        "options": [
+          "дайте",
+          "дай",
+          "дати"
+        ],
+        "explanation": "Пане Іване takes polite ви."
+      },
+      "after": {
+        "sentence": "Пане Іване, ви вже тут? Тоді ___ книжку, будь ласка.",
+        "answer": "дайте",
+        "options": [
+          "дайте",
+          "дай",
+          "книжкою"
+        ],
+        "explanation": "Explicit ви selects дайте. Дай switches to ти; книжкою is an instrumental noun, not the request predicate."
+      },
+      "disposition": "reworded",
+      "key": "дайте",
+      "distractors": [
+        "дай",
+        "книжкою"
+      ],
+      "reason": "Explicit ви selects дайте. Дай switches to ти; книжкою is an instrumental noun, not the request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Address and request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/workbook/0/3",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 3,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Друзі, ___ в кафе.",
+        "answer": "ідіть",
+        "options": [
+          "ідіть",
+          "іди",
+          "іти"
+        ],
+        "explanation": "Use ідіть for a group."
+      },
+      "after": {
+        "sentence": "Друзі, ви вже готові? Тоді ___ в кафе.",
+        "answer": "ідіть",
+        "options": [
+          "ідіть",
+          "іди",
+          "книжку"
+        ],
+        "explanation": "Друзі and ви identify several addressees. Ідіть agrees; іди is singular and книжку is a noun, not the missing predicate."
+      },
+      "disposition": "reworded",
+      "key": "ідіть",
+      "distractors": [
+        "іди",
+        "книжку"
+      ],
+      "reason": "Друзі and ви identify several addressees. Ідіть agrees; іди is singular and книжку is a noun, not the missing predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Address and request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/workbook/0/4",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 4,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Маріє, ___, що ти хочеш.",
+        "answer": "скажи",
+        "options": [
+          "скажи",
+          "скажіть",
+          "сказати"
+        ],
+        "explanation": "Use скажи with one familiar person."
+      },
+      "after": {
+        "sentence": "Маріє, ___, що ти хочеш.",
+        "answer": "скажи",
+        "options": [
+          "скажи",
+          "скажіть",
+          "книжкою"
+        ],
+        "explanation": "The embedded ти identifies a familiar singular addressee, matching скажи. Скажіть switches to ви; книжкою cannot be the predicate introducing the content clause."
+      },
+      "disposition": "reworded",
+      "key": "скажи",
+      "distractors": [
+        "скажіть",
+        "книжкою"
+      ],
+      "reason": "The embedded ти identifies a familiar singular addressee, matching скажи. Скажіть switches to ви; книжкою cannot be the predicate introducing the content clause.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Address and request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/workbook/0/5",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 5,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Пані Оксано, ___, будь ласка.",
+        "answer": "скажіть",
+        "options": [
+          "скажіть",
+          "скажи",
+          "сказати"
+        ],
+        "explanation": "Use скажіть for polite address."
+      },
+      "after": {
+        "sentence": "Пані Оксано, ви мене чуєте? Тоді ___, будь ласка.",
+        "answer": "скажіть",
+        "options": [
+          "скажіть",
+          "скажи",
+          "книжкою"
+        ],
+        "explanation": "Explicit ви selects скажіть. Скажи switches to ти; книжкою is a noun and cannot supply the request predicate."
+      },
+      "disposition": "reworded",
+      "key": "скажіть",
+      "distractors": [
+        "скажи",
+        "книжкою"
+      ],
+      "reason": "Explicit ви selects скажіть. Скажи switches to ти; книжкою is a noun and cannot supply the request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Address and request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "what-will-happen/workbook/3/0",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 0,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Я буду ___ завтра.",
+        "answer": "читати",
+        "options": [
+          "читати",
+          "читаю",
+          "читав"
+        ],
+        "explanation": "After буду, use the infinitive читати."
+      },
+      "after": {
+        "sentence": "Я буду ___ завтра.",
+        "answer": "читати",
+        "options": [
+          "читати",
+          "читаю",
+          "читав"
+        ],
+        "explanation": "The given future auxiliary takes infinitive читати. читаю is a finite present form and читав a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "читати",
+      "distractors": [
+        "читаю",
+        "читав"
+      ],
+      "reason": "The given future auxiliary takes infinitive читати. читаю is a finite present form and читав a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-will-happen/workbook/3/1",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 1,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Ти будеш ___ ввечері?",
+        "answer": "робити",
+        "options": [
+          "робити",
+          "робиш",
+          "робив"
+        ],
+        "explanation": "After будеш, use робити."
+      },
+      "after": {
+        "sentence": "Ти будеш ___ ввечері?",
+        "answer": "робити",
+        "options": [
+          "робити",
+          "робиш",
+          "робив"
+        ],
+        "explanation": "The given future auxiliary takes infinitive робити. робиш is a finite present form and робив a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "робити",
+      "distractors": [
+        "робиш",
+        "робив"
+      ],
+      "reason": "The given future auxiliary takes infinitive робити. робиш is a finite present form and робив a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-will-happen/workbook/3/2",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 2,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Вона буде ___ вечерю.",
+        "answer": "готувати",
+        "options": [
+          "готувати",
+          "готує",
+          "готувала"
+        ],
+        "explanation": "After буде, use готувати."
+      },
+      "after": {
+        "sentence": "Вона буде ___ вечерю.",
+        "answer": "готувати",
+        "options": [
+          "готувати",
+          "готує",
+          "готувала"
+        ],
+        "explanation": "The given future auxiliary takes infinitive готувати. готує is a finite present form and готувала a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "готувати",
+      "distractors": [
+        "готує",
+        "готувала"
+      ],
+      "reason": "The given future auxiliary takes infinitive готувати. готує is a finite present form and готувала a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-will-happen/workbook/3/3",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 3,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Ми будемо ___ футбол.",
+        "answer": "дивитися",
+        "options": [
+          "дивитися",
+          "дивимося",
+          "дивилися"
+        ],
+        "explanation": "After будемо, use дивитися."
+      },
+      "after": {
+        "sentence": "Ми будемо ___ футбол.",
+        "answer": "дивитися",
+        "options": [
+          "дивитися",
+          "дивимося",
+          "дивилися"
+        ],
+        "explanation": "The given future auxiliary takes infinitive дивитися. дивимося is a finite present form and дивилися a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "дивитися",
+      "distractors": [
+        "дивимося",
+        "дивилися"
+      ],
+      "reason": "The given future auxiliary takes infinitive дивитися. дивимося is a finite present form and дивилися a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-will-happen/workbook/3/4",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 4,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Вони будуть ___.",
+        "answer": "відпочивати",
+        "options": [
+          "відпочивати",
+          "відпочивають",
+          "відпочивали"
+        ],
+        "explanation": "After будуть, use відпочивати."
+      },
+      "after": {
+        "sentence": "Вони будуть ___.",
+        "answer": "відпочивати",
+        "options": [
+          "відпочивати",
+          "відпочивають",
+          "відпочивали"
+        ],
+        "explanation": "The given future auxiliary takes infinitive відпочивати. відпочивають is a finite present form and відпочивали a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "відпочивати",
+      "distractors": [
+        "відпочивають",
+        "відпочивали"
+      ],
+      "reason": "The given future auxiliary takes infinitive відпочивати. відпочивають is a finite present form and відпочивали a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-happened/inline/act-3/0",
+      "module": "what-happened",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "type": "quiz",
+      "before": {
+        "prompt": "Why can я читав and ти читав have the same ending?",
+        "options": [
+          {
+            "text": "Because past tense marks masculine singular here.",
+            "correct": true
+          },
+          {
+            "text": "Because я and ти always use one ending.",
+            "correct": false
+          },
+          {
+            "text": "Because Ukrainian has no person forms.",
+            "correct": false
+          }
+        ],
+        "explanation": "The past ending shows gender in the singular, not person."
+      },
+      "after": {
+        "prompt": "Why can я читав and ти читав have the same ending?",
+        "options": [
+          {
+            "text": "Because past tense marks masculine singular here.",
+            "correct": true
+          },
+          {
+            "text": "Because я and ти always use one ending.",
+            "correct": false
+          },
+          {
+            "text": "Because Ukrainian has no person forms.",
+            "correct": false
+          }
+        ],
+        "explanation": "The two examples share masculine singular past читав even though я and ти are different persons. The second option falsely generalizes across all tenses; the third denies the attested Ukrainian personal present/future forms."
+      },
+      "disposition": "reworded",
+      "key": "Because past tense marks masculine singular here.",
+      "distractors": [
+        "Because я and ти always use one ending.",
+        "Because Ukrainian has no person forms."
+      ],
+      "reason": "The two examples share masculine singular past читав even though я and ти are different persons. The second option falsely generalizes across all tenses; the third denies the attested Ukrainian personal present/future forms.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Choose the answer",
+      "instruction": "Choose the best answer."
+    },
+    {
+      "id": "holidays/inline/act-3/0",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Ми ___ Різдво вдома.",
+        "answer": "святкуємо",
+        "options": [
+          "святкуємо",
+          "на",
+          "з"
+        ],
+        "explanation": "Use святкуємо Різдво without на."
+      },
+      "after": {
+        "sentence": "Ми ___ Різдво вдома.",
+        "answer": "святкуємо",
+        "options": [
+          "святкуємо",
+          "святкує",
+          "святкуєш"
+        ],
+        "explanation": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."
+      },
+      "disposition": "reworded",
+      "key": "святкуємо",
+      "distractors": [
+        "святкує",
+        "святкуєш"
+      ],
+      "reason": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/1",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___ Різдво ми співаємо колядки.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "Use на when the holiday is the time."
+      },
+      "after": {
+        "sentence": "___ Різдво ми співаємо колядки.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."
+      },
+      "disposition": "reworded",
+      "key": "На",
+      "distractors": [
+        "З",
+        "Святкуємо"
+      ],
+      "reason": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/2",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Ми ___ Великдень з родиною.",
+        "answer": "святкуємо",
+        "options": [
+          "святкуємо",
+          "на",
+          "у"
+        ],
+        "explanation": "Use святкуємо Великдень."
+      },
+      "after": {
+        "sentence": "Ми ___ Великдень з родиною.",
+        "answer": "святкуємо",
+        "options": [
+          "святкуємо",
+          "святкує",
+          "святкуєш"
+        ],
+        "explanation": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."
+      },
+      "disposition": "reworded",
+      "key": "святкуємо",
+      "distractors": [
+        "святкує",
+        "святкуєш"
+      ],
+      "reason": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/3",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___ Великдень ми печемо паски.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "Use на + holiday for a time phrase."
+      },
+      "after": {
+        "sentence": "___ Великдень ми печемо паски.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."
+      },
+      "disposition": "reworded",
+      "key": "На",
+      "distractors": [
+        "З",
+        "Святкуємо"
+      ],
+      "reason": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/4",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 4,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Я ___ День Незалежності України.",
+        "answer": "святкую",
+        "options": [
+          "святкую",
+          "на",
+          "вітаю"
+        ],
+        "explanation": "Святкувати takes the holiday name directly."
+      },
+      "after": {
+        "sentence": "Я ___ День Незалежності України.",
+        "answer": "святкую",
+        "options": [
+          "святкую",
+          "святкуєш",
+          "святкують"
+        ],
+        "explanation": "Я requires first-person singular святкую. Святкуєш is second-person singular and святкують third-person plural. Святкувати takes the holiday name as its direct object."
+      },
+      "disposition": "reworded",
+      "key": "святкую",
+      "distractors": [
+        "святкуєш",
+        "святкують"
+      ],
+      "reason": "Я requires first-person singular святкую. Святкуєш is second-person singular and святкують third-person plural. Святкувати takes the holiday name as its direct object.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/5",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 5,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___ Новий рік ми даруємо подарунки.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "This sentence talks about what happens at that time."
+      },
+      "after": {
+        "sentence": "___ Новий рік ми даруємо подарунки.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."
+      },
+      "disposition": "reworded",
+      "key": "На",
+      "distractors": [
+        "З",
+        "Святкуємо"
+      ],
+      "reason": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    }
+  ],
+  "modules": [
+    "please-do-this",
+    "linking-ideas",
+    "when-and-where",
+    "holidays",
+    "checkpoint-communication",
+    "what-happened",
+    "yesterday",
+    "what-will-happen",
+    "my-plans",
+    "my-story",
+    "health",
+    "emergencies",
+    "a1-finale"
+  ],
+  "activity_metadata_repairs": [
+    {
+      "module": "when-and-where",
+      "section": "inline",
+      "activity_index": 0,
+      "after": {
+        "title": "Complete the sentence"
+      }
+    },
+    {
+      "module": "when-and-where",
+      "section": "workbook",
+      "activity_index": 1,
+      "after": {
+        "title": "Guest conversation frames",
+        "instruction": "Choose the word that completes each sentence."
+      }
+    },
+    {
+      "module": "checkpoint-communication",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Complete the conversation"
+      }
+    },
+    {
+      "module": "my-story",
+      "section": "workbook",
+      "activity_index": 2,
+      "after": {
+        "instruction": "Choose the form that completes the story."
+      }
+    },
+    {
+      "module": "a1-finale",
+      "section": "workbook",
+      "activity_index": 0,
+      "after": {
+        "instruction": "Choose the best answer."
+      }
+    },
+    {
+      "module": "linking-ideas",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Complete the sentence",
+        "instruction": "Choose the connector that completes the sentence."
+      }
+    },
+    {
+      "module": "what-will-happen",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Choose the answer",
+        "instruction": "Choose the best answer."
+      }
+    },
+    {
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "after": {
+        "title": "Complete the sentence",
+        "instruction": "Choose the word that completes each sentence."
+      }
+    },
+    {
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "after": {
+        "title": "Complete the request",
+        "instruction": "Choose the word that completes each request."
+      }
+    },
+    {
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "after": {
+        "title": "Address and request",
+        "instruction": "Choose the word that completes each request."
+      }
+    },
+    {
+      "module": "what-happened",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Choose the answer",
+        "instruction": "Choose the best answer."
+      }
+    },
+    {
+      "module": "my-story",
+      "section": "inline",
+      "activity_index": 0,
+      "after": {
+        "title": "Complete the life story",
+        "instruction": "Choose the word or phrase that completes each sentence."
+      }
+    },
+    {
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Complete the holiday sentence"
+      }
+    }
+  ],
+  "review_fixes": {
+    "F1": "Neutral activity headings/instructions no longer single out the key. The same visible-label scan found a shared legacy instruction naming the key in six linking items. Its labels are neutral and its alternatives now fit only the key.",
+    "F2": "Feedback uses о другій ночі.",
+    "F3": "The remaining tomorrow gloss becomes a Ukrainian dialogue reply.",
+    "F4": "Анна matches the activity speaker.",
+    "F5": "Instruction parity is checked per component; the unrelated Translate instruction is restored.",
+    "F6": "Neutral future labels. The same class is removed from request, infinitive and biography tasks; imperative alternatives no longer rely on a form-prescribing instruction. The all-label scan also removes the partial holiday answer list; the verb blanks use person agreement so that no valid temporal reading is marked wrong.",
+    "F7": "The five infinitive blanks have neutral labels and auxiliary-based key evidence. General no-choice error-correction instructions remain ordinary A1 task instructions under the explicit operator exception.",
+    "F8": "Nonblocking distractor-variety preference retained with the curriculum coordinator; clearly wrong distractors are expressly authorized in this task.",
+    "F9": "Every one of 260 labels receives the observed-cue-pattern check. Literal key-name checks cover all 235 fill-in/quiz items and require every option to be covered when a key is named. The partial holiday list was removed rather than exempted. Heading parity uses complete lines. Mechanical guards remain distinct from independent semantic review."
+  }
+}

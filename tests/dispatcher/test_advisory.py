@@ -66,9 +66,11 @@ def test_sealed_envelope_admission_and_record(launch, capsys, tmp_path, defect, 
     policy = advisory.bounded_execution_policy()
     path.write_text(json.dumps(dict(
         task_id="advisor", status="done", mode="read-only", model=policy.advisor_model_id,
-        advisory_role=policy.advisor_role, advisory_route=advisory.ADVISOR_ROUTE,
+        advisory_role=policy.advisor_role, advisory_route=policy.advisor_route,
         advisory_binding_sha256=binding, result_file=str(path.with_suffix(".result")), run_nonce="advisor-run",
-        advisory_seal=advisory.seal_advisor_result(result, model=policy.advisor_model_id, run_nonce="advisor-run"),
+        advisory_seal=advisory.seal_advisor_result(
+            result, model=policy.advisor_model_id, run_nonce="advisor-run", fence=policy.advisor_fence
+        ),
     )))
     if defect == "binding":
         launch[launch.index("--prompt") + 1] = "Different instructions"
@@ -145,11 +147,11 @@ def test_driver_brief_exception_requires_acceptance_command(launch, complete, ca
 
 
 @pytest.mark.parametrize("flags,reason", [
-    (["--advisory-role", "review_budget_extension"], "required together"),
+    (["--advisory-role", "review_budget_elevation"], "required together"),
     (["--advisory-binding", "e" * 64], "required together"),
     (["--advisory-role", "consequential_advisory", "--advisory-binding", "e" * 64], "not a catalog advisory_roles"),
-    (["--advisory-role", "review_budget_extension", "--advisory-binding", "E" * 64], "lowercase sha256"),
-    (["--advisory-role", "review_budget_extension", "--advisory-binding", "e" * 64, "--mode", "workspace-write"],
+    (["--advisory-role", "review_budget_elevation", "--advisory-binding", "E" * 64], "lowercase sha256"),
+    (["--advisory-role", "review_budget_elevation", "--advisory-binding", "e" * 64, "--mode", "workspace-write"],
      "runs read-only"),
 ])
 def test_advisory_role_dispatch_refuses_unbound_or_writable_decisions(launch, capsys, flags, reason):
@@ -164,7 +166,7 @@ def test_advisory_role_dispatch_runs_only_on_a_native_harness(launch, capsys):
     """Defect: a runtime-reported harness seals the requested model, not the one that ran (review F1)."""
     launch[launch.index("--agent") + 1] = "cursor"
     launch[launch.index("--model") + 1] = "gpt-6.1-sol"
-    assert cli.main([*launch[:-2], "--advisory-role", "review_budget_extension", "--advisory-binding", "e" * 64]) == 2
+    assert cli.main([*launch[:-2], "--advisory-role", "review_budget_elevation", "--advisory-binding", "e" * 64]) == 2
     assert "native harness" in capsys.readouterr().err
     worker.start.assert_not_called()
 
@@ -173,25 +175,59 @@ def test_advisory_role_dispatch_records_role_route_and_binding(launch):
     """Defect: dispatch v2 records no advisory role or binding, so no consumer can find a bound decision."""
     launch[launch.index("--model") + 1] = "gpt-6.1-sol"
     digest = "e" * 64
-    assert cli.main([*launch[:-2], "--advisory-role", "review_budget_extension", "--advisory-binding", digest]) == 0
+    assert cli.main([*launch[:-2], "--advisory-role", "review_budget_elevation", "--advisory-binding", digest]) == 0
     record = store.read("worker")
     assert (record["advisory_role"], record["advisory_route"], record["advisory_binding_sha256"]) == (
-        "review_budget_extension", "advisory_roles.review_budget_extension", digest,
+        "review_budget_elevation", "advisory_roles.review_budget_elevation", digest,
     )
 
 
 def test_worker_seals_an_advisory_decision_as_written(tmp_path):
     """Defect: the finish-time seal was lost with the legacy launcher, so every advisory result reads as unsealed."""
     result = tmp_path / "advisor.result"
-    text = 'Decision follows.\n\n```budget-extension\n{"decision": "APPROVE"}\n```\n'
+    text = 'Decision follows.\n\n```budget-elevation\n{"decision": "APPROVE"}\n```\n'
     result.write_text(text)
-    record = dict(advisory_role="review_budget_extension", model="gpt-6.1-sol", run_nonce="advisor-run")
+    record = dict(advisory_role="review_budget_elevation", model="gpt-6.1-sol", run_nonce="advisor-run")
     worker._seal_advisory_result(record, result)
     assert record[advisory.SEAL_FIELD] == advisory.seal_advisor_result(
-        text, model="gpt-6.1-sol", run_nonce="advisor-run", fence="budget-extension",
+        text, model="gpt-6.1-sol", run_nonce="advisor-run", fence="budget-elevation",
     )
     assert record[advisory.SEAL_FIELD]["envelope_sha256"] == advisory.canonical_sha256({"decision": "APPROVE"})
     # A role the catalog no longer defines leaves the result unsealed, never the record unsettled.
     unknown = dict(advisory_role="retired_role", model="gpt-6.1-sol", run_nonce="advisor-run")
     worker._seal_advisory_result(unknown, result)
     assert advisory.SEAL_FIELD not in unknown and unknown["advisory_seal_error"].startswith("KeyError")
+
+
+def test_envelope_role_is_dispatched_sealed_and_admits_a_bounded_flash_worker(launch, capsys):
+    """Defect: the catalog dropped the role the envelope loader needs, so the documented advisor dispatch was refused.
+
+    The advisor is dispatched with the documented flags, its worker seals the result it wrote, and
+    a bounded Flash dispatch is admitted with ``--advisory-task``: dispatch, seal and load all read
+    the one catalog ``advisory_roles`` entry.
+    """
+    launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
+    assert cli.main([*launch, "--print-advisory-binding"]) == 0
+    binding = capsys.readouterr().out.strip()
+    role = "bounded_advisory_envelope"
+    advisor = ["dispatch", "--agent", "codex", "--model", "gpt-6.1-sol", "--mode", "read-only", "--task-id", "advisor",
+               "--prompt", advisory.advisor_prompt_block(binding), "--advisory-role", role,
+               "--advisory-binding", binding]
+    assert cli.main([*advisor, "--dry-run"]) == 0
+    assert cli.main(advisor) == 0
+    record = store.read("advisor")
+    policy = advisory.bounded_execution_policy()
+    assert (record["advisory_role"], record["advisory_route"]) == (role, policy.advisor_route)
+    assert policy.advisor_route == f"advisory_roles.{role}"
+    envelope = dict(task_contract="Inspect one document", owned_paths=["docs/example.md"],
+                    acceptance_evidence=["Report findings"], constraints=["Escalate scope changes"],
+                    risk_boundaries=["Do not edit code"], escalation_triggers=["Ambiguous scope"],
+                    max_changed_files=1, max_non_test_loc=20, dispatch_args_sha256=binding)
+    result_path = store.record_path("advisor").with_suffix(".result")
+    result_path.write_text(f"```{policy.advisor_fence}\n{json.dumps(envelope)}\n```\n")
+    record.update(status="done", result_file=str(result_path))
+    worker._seal_advisory_result(record, result_path)
+    assert record[advisory.SEAL_FIELD]["envelope_sha256"] == advisory.canonical_sha256(envelope)
+    store.record_path("advisor").write_text(json.dumps(record))
+    assert cli.main([*launch, "--advisory-task", "advisor"]) == 0
+    assert store.read("worker")["advisory_envelope"]["advisor_task_id"] == "advisor"

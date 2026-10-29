@@ -157,71 +157,71 @@ inline:
     title: Порядок ранку
     instruction: Choose the sequence word that fits the routine.
     items:
-      - sentence: ___ я прокидаюся о сьомій.
-        answer: Спочатку
+      - sentence: "Я снідаю о десятій, але ___ я прокидаюся о сьомій."
+        answer: "спочатку"
         options:
-          - Спочатку
-          - Після цього
-          - Нарешті
-        explanation: Спочатку starts the story.
-      - sentence: ___ я вмиваюся.
-        answer: Потім
+          - спочатку
+          - пізніше
+          - після цього
+        explanation: "The waking time comes before breakfast. Спочатку fits this order; пізніше and після цього would reverse it."
+      - sentence: "Я прокидаюся о сьомій, а ___ я вмиваюся о восьмій."
+        answer: "потім"
         options:
-          - Потім
-          - Нарешті
-          - Спочатку
-        explanation: Потім gives the next action.
-      - sentence: ___ я одягаюся.
-        answer: Після цього
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+      - sentence: "Я вмиваюся о восьмій, а ___ я одягаюся о дев’ятій."
+        answer: "після цього"
         options:
-          - Після цього
-          - Спочатку
-          - Нарешті
-        explanation: Після цього means after that.
-      - sentence: ___ я снідаю.
-        answer: Потім
+          - після цього
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+      - sentence: "Я одягаюся о дев’ятій, а ___ я снідаю о десятій."
+        answer: "потім"
         options:
-          - Потім
-          - Нарешті
-          - Спочатку
-        explanation: Потім can introduce another middle step.
-      - sentence: ___ я йду на роботу.
-        answer: Нарешті
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+      - sentence: "Я снідаю о десятій, а ___ я йду на роботу об одинадцятій."
+        answer: "нарешті"
         options:
-          - Нарешті
-          - Спочатку
-          - Після цього
-        explanation: Нарешті marks the final step.
-      - sentence: Спочатку я прокидаюся. ___ я вмиваюся.
-        answer: Потім
+          - нарешті
+          - спочатку
+          - перед цим
+        explanation: "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."
+      - sentence: "Я прокидаюся о сьомій, а ___ я вмиваюся о восьмій."
+        answer: "потім"
         options:
-          - Потім
-          - Нарешті
-          - Після цього
-        explanation: Потім links the second action.
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
   - id: act-4
     type: fill-in
     title: Три речення про ранок
     instruction: Complete the three-sentence morning story.
     items:
-      - sentence: ___ я прокидаюся о восьмій.
-        answer: Спочатку
+      - sentence: "Я снідаю о дев’ятій, але ___ я прокидаюся о восьмій."
+        answer: "спочатку"
         options:
-          - Спочатку
-          - Нарешті
-          - Після цього
-        explanation: Start the story with Спочатку.
-      - sentence: ___ я вмиваюся і снідаю.
-        answer: Потім
+          - спочатку
+          - пізніше
+          - після цього
+        explanation: "The waking time comes before breakfast. Спочатку fits this order; пізніше and після цього would reverse it."
+      - sentence: "Я прокидаюся о восьмій, а ___ я вмиваюся і снідаю о дев’ятій."
+        answer: "потім"
         options:
-          - Потім
-          - Нарешті
-          - Спочатку
-        explanation: Потім gives the next action.
-      - sentence: ___ я йду в університет.
-        answer: Нарешті
+          - потім
+          - перед цим
+          - до цього
+        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
+      - sentence: "Я снідаю о дев’ятій, а ___ я йду в університет о десятій."
+        answer: "нарешті"
         options:
-          - Нарешті
-          - Потім
-          - Спочатку
-        explanation: Нарешті marks the last sentence.
+          - нарешті
+          - спочатку
+          - перед цим
+        explanation: "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."

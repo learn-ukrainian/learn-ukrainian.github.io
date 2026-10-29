@@ -676,6 +676,10 @@ def test_main_json_carries_credit_fields(monkeypatch, capsys):
 
     budget = _budget()
     budget["agents"]["codex"]["reset_credits"]["fetched_at"] = datetime.now(UTC).isoformat()
+    # Derive the free-reset expiries from the real clock so the reset credits stay live.
+    budget["agents"]["codex"]["reset_credits"]["expires_at"] = [
+        (datetime.now(UTC) + timedelta(hours=hours)).isoformat() for hours in (12, 48)
+    ]
     _live(budget["agents"]["codex"])
     budget["agents"]["codex"]["codexbar"]["weekly_resets_at"] = (datetime.now(UTC) + timedelta(hours=24)).isoformat()
     monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: budget)

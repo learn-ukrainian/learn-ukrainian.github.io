@@ -9,6 +9,7 @@ constructed directly, so the tests cover assembly and verification, not the foun
 """
 
 import copy
+import hashlib
 import json
 import shutil
 import sqlite3
@@ -23,6 +24,7 @@ from jsonschema import Draft202012Validator
 from scripts.atlas import allocate_pilot_identities as allocator
 from scripts.atlas import word_card_assembly as wa
 from scripts.atlas import word_card_foundation as foundation
+from scripts.atlas import word_card_meanings as meanings
 from scripts.atlas import word_card_sources as src
 from scripts.atlas import word_card_verify as verify
 from scripts.atlas.allocate_pilot_identities import BUILD_PREFIX, HOLDING_BASIS, HOLDING_BUILD_PREFIX
@@ -31,6 +33,7 @@ from scripts.common.git_context import sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.storage.topology import StoreBinding, resolve_store
+from scripts.wiki import sum20_mirror
 from tests.test_word_card_sources import (
     ENTRY_DDL,
     FAILURES_DDL,
@@ -53,7 +56,8 @@ SNAP = "selected-row@sha256:"
 
 SUM20_DDL = (
     """CREATE TABLE sum20_articles (id INTEGER PRIMARY KEY, wordid INTEGER, headword TEXT, stressed_headword TEXT,
- pos TEXT, grammar TEXT, article_html TEXT, official_url TEXT, fetched_at TEXT, quarantine_reason TEXT)""",
+ pos TEXT, grammar TEXT, article_html TEXT, official_url TEXT, fetched_at TEXT, quarantine_reason TEXT,
+ normalized_lookup_key TEXT, article_text TEXT)""",
     "CREATE TABLE sum20_senses (id INTEGER PRIMARY KEY, article_id INTEGER, sense_order INTEGER, definition TEXT, "
     "register_labels TEXT)",
     "CREATE TABLE sum20_citations (id INTEGER PRIMARY KEY, article_id INTEGER, sense_ref INTEGER, \"order\" INTEGER, "
@@ -91,6 +95,9 @@ class World:
         self.records, self.units, self.entries, self.sr, self.events = [], [], [], [], []
         self.counter = 0
         self.sources.executescript(";".join((ENTRY_DDL, SECTION_DDL, FORMS_DDL, FAILURES_DDL, *SUM20_DDL)) + ";")
+        self.sources.execute("CREATE TABLE slovnyk_me_entries (id INTEGER PRIMARY KEY, normalized_word TEXT, "
+                             "word TEXT, dictionary_slug TEXT, source_url TEXT, text TEXT, "
+                             "content_sha256 TEXT, cache_path TEXT)")
         self.sources.execute("CREATE TABLE puls_cefr (id INTEGER PRIMARY KEY, word TEXT, guideword TEXT, level TEXT, "
                              "pos TEXT, type TEXT, text TEXT, source TEXT)")
         self.sources.execute("CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word TEXT, definition TEXT, "
@@ -272,7 +279,8 @@ def make_inputs(w, scratch, registry=None):
                             "events": w.events}
     register = {"schema_version": 2, "sources": [
         {"id": s, "appears_in": ["internal", "site", "dataset"]}
-        for s in ("ulif", "vesum", "puls", "frazeolohichnyi", "ukrainian_word_stress")]}
+        for s in ("ulif", "vesum", "puls", "frazeolohichnyi", "ukrainian_word_stress", "sum20",
+                  "sum20_slovnyk_mirror", "vts_busel_slovnyk_me")]}
     scratch.mkdir(parents=True, exist_ok=True)
     extract = scratch / "extract.sqlite"
     entry_ids = sorted(r["raw_row"]["id"] for r in w.records if r["table"] == "ulif_dictua_entries")
@@ -530,10 +538,139 @@ def test_unmatched_phraseology_is_accounted(result):
 def test_missing_modern_meaning_is_explicit_never_filled(result):
     card = card_of(result, "бета")
     entry = result["ledger"].cards[card["card_id"]]["fields"]["definition_uk"]
-    assert entry["disposition"] == "source_absent"
+    assert entry["disposition"] == "unresolved" and entry["reason"] == "identity_unresolved"
+    assert all(not item["has"] and not item["used"] for item in entry["sources"].values())
     assert not [a for a in card["assertions"] if a["field"] == "definition_uk"]
     assert result["ledger"].cards[card["card_id"]]["fields"]["russification_exposed"]["disposition"] == \
         "not_in_frozen_inputs"
+
+
+@pytest.fixture
+def meaning_inputs(tmp_path):
+    """Two placeholder homonyms with source-local partitions; no real definitions."""
+    w = build_world()
+    for i, head in enumerate((f"а{A}льфа", f"альфа{A}"), 1):
+        insert(w.sources, "sum20_articles", {"id": i, "wordid": i + 100, "headword": "альфа",
+            "stressed_headword": head, "normalized_lookup_key": "альфа", "pos": "ч.", "grammar": "ч.",
+            "article_text": f"Complete SUM20 witness {i}. Including every shade and citation.",
+            "article_html": "", "quarantine_reason": "", "official_url": f"https://sum20ua.com/?wordid={i+100}",
+            "fetched_at": "2026-01-01"})
+    text = (f"альфа I а{A}льфа -и, ч. 1》 Witness A. II альфа{A} -у, ч. 1》 Witness B. "
+            "Джерело: Великий тлумачний словник сучасної української мови на Slovnyk.me")
+    insert(w.sources, "slovnyk_me_entries", {"id": 1, "word": "альфа", "normalized_word": "альфа",
+        "dictionary_slug": "vts", "text": text, "content_sha256": hashlib.sha256(text.encode()).hexdigest(),
+        "cache_path": "", "source_url": "https://slovnyk.me/dict/vts/test"})
+    # One imported СУМ-20 mirror article that differs from the official rows, so the rule serves it.
+    w.sources.executescript(sum20_mirror.SCHEMA_SQL)
+    insert(w.sources, "sum20_mirror_imports", {"id": 1, "generation": "fixture", "rule_version": "fixture",
+        "staging_sha256": "0" * 64, "staging_records": 1, "checkpoint_count": 1, "checkpoint_last_url": "fixture",
+        "checkpoint_updated_at": "fixture", "official_digest": "fixture", "relation_counts": "{}",
+        "imported_at": "fixture"})
+    mirror_text = (f"альфа А{A}ЛЬФА, и, ж. Mirror witness. "
+                   "Джерело: Словник української мови (СУМ-20) на Slovnyk.me")
+    insert(w.sources, "sum20_mirror_articles", {"id": 1, "mirror_url": "https://slovnyk.me/dict/newsum/test",
+        "source_url": "https://slovnyk.me/dict/newsum/test", "mirror": "slovnyk.me newsum", "lemma": "альфа",
+        "headword": "альфа", "normalized_lookup_key": "альфа", "title": "fixture", "article_text": mirror_text,
+        "senses_json": "{}", "fetched_at": "2026-01-01", "content_sha256": "fixture", "import_id": 1})
+    yield make_inputs(w, tmp_path)
+    w.sources.close()
+    w.vesum.close()
+    w.raw.close()
+
+
+def test_modern_meanings_preserve_homonym_partitions_and_all_source_text(meaning_inputs):
+    result = wa.build(meaning_inputs)
+    first = card_of(result, "альфа")
+    definitions = {a["source_id"]: a for a in first["assertions"] if a["field"] == "definition_uk"}
+    assert set(definitions) == {"sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me"}
+    assert definitions["sum20"]["value"] == "Complete SUM20 witness 1. Including every shade and citation."
+    # The mirror witness keeps its own source id, without the page's lookup word or source footer.
+    assert definitions["sum20_slovnyk_mirror"]["value"] == f"А{A}ЛЬФА, и, ж. Mirror witness."
+    start, end = map(int, definitions["sum20_slovnyk_mirror"]["locator"].removesuffix("]").split(":")[-2:])
+    stored = meaning_inputs.sources.sources.execute("SELECT article_text FROM sum20_mirror_articles").fetchone()[0]
+    assert stored[start:end] == definitions["sum20_slovnyk_mirror"]["value"]
+    assert definitions["vts_busel_slovnyk_me"]["value"] == f"I а{A}льфа -и, ч. 1》 Witness A."
+    assert "Witness B" not in json.dumps(definitions)
+    assert all(a["subject"]["id"] == wa.holding_sense(first["senses"])["sense_id"] for a in definitions.values())
+    assert all(a["mapping"]["confidence"] == "unresolved" for a in definitions.values())
+    assert verify.verify(meaning_inputs, result)["passed"]
+    report = wa.meaning_report(result)
+    row = next(r for r in report["rows"] if r["card_id"] == first["card_id"])
+    assert row["meanings_shown"] and row["sources"]["sum20"] == {
+        "has": True, "used": True, "reason": None, "source_url": "https://sum20ua.com/?wordid=101"}
+
+
+@pytest.mark.parametrize("damage", ["other_homonym", "text", "snapshot", "omission", "sense"])
+def test_modern_meaning_verifier_rejects_misattribution_or_missing_witness(meaning_inputs, damage):
+    result = wa.build(meaning_inputs)
+    card = card_of(result, "альфа")
+    a = next(a for a in card["assertions"] if a["source_id"] == "sum20")
+    if damage == "other_homonym":
+        a["locator"] = "sum20:sum20_articles:id:2 [article_text]"
+    elif damage == "text":
+        a["value"] = "Invented definition"
+    elif damage == "snapshot":
+        a["snapshot_id"] = "sum20-article@sha256:" + "0" * 64
+    elif damage == "omission":
+        card["assertions"].remove(a)
+    else:
+        a["subject"]["id"] = card["senses"][0]["sense_id"]
+    assert not verify.verify(meaning_inputs, result)["meanings"]["passed"]
+
+
+def test_mirror_pages_split_only_at_numbered_homonyms():
+    """Placeholder pages: each witness stays inside its own homonym; unnumbered extra headers hold the page."""
+    footer = " Джерело: Словник української мови (СУМ-20) на Slovnyk.me"
+    numbered = f"бета БЕ{A}ТА¹, и, ж. Noun witness. БЕТА{A}², а{A}ю, недок. Verb witness.{footer}"
+    parts = meanings.mirror_partitions({"article_text": numbered, "headword": "бета"}, "бета")
+    assert [(p["partition"], p["pos"], p["aspect"]) for p in parts] == [
+        (f"БЕ{A}ТА¹", "noun", None), (f"БЕТА{A}²", "verb", "imperf")]
+    assert [numbered[slice(*p["span"])] for p in parts] == [p["text"] for p in parts]
+    assert "Verb" not in parts[0]["text"] and "Noun" not in parts[1]["text"]
+    unnumbered = f"гама ГА{A}МА, и, ж. First witness. ГАМА{A}, и, ж. Second witness.{footer}"
+    assert meanings.mirror_partitions({"article_text": unnumbered, "headword": "гама"}, "гама") == []
+    single = f"дельта ДЕ{A}ЛЬТА, и, ж. Only witness.{footer}"
+    (part,) = meanings.mirror_partitions({"article_text": single, "headword": "дельта"}, "дельта")
+    assert part["partition"] == "article" and part["text"] == f"ДЕ{A}ЛЬТА, и, ж. Only witness."
+
+
+def test_modern_meanings_withhold_unresolved_identity_and_ambiguous_source(meaning_inputs):
+    # No lexical identity may be decided by dictionary availability or meaning.
+    homonyms = {1: {"row": {"grammatical_label": LABEL_M}, "head": f"а{A}льфа", "aspect": None}}
+    row = meanings.select(meaning_inputs.sources, "альфа", homonyms, 1, False, False)
+    assert all(x["has"] and x["witness"] is None and x["reason"] == "identity_unresolved" for x in row.values())
+    meaning_inputs.sources.sources.execute("UPDATE sum20_articles SET stressed_headword='альфа'")
+    homonyms[2] = {"row": {"grammatical_label": LABEL_M}, "head": f"альфа{A}", "aspect": None}
+    row = meanings.select(meaning_inputs.sources, "альфа", homonyms, 1, True, False)
+    assert row["sum20"]["reason"] == "source_correspondence_unresolved"
+    assert row["sum20"]["witness"] is None
+
+
+def test_vts_bounded_text_requires_authentic_full_local_witness(meaning_inputs, tmp_path):
+    row = dict(meaning_inputs.sources.sources.execute("SELECT * FROM slovnyk_me_entries").fetchone())
+    full = row["text"]
+    row["text"] = full[:20] + "…"
+    assert meanings.full_vts(row, None) == (None, "full_source_unavailable")
+    row["cache_path"] = "data/lexicon/slovnyk_cache/test.json"
+    path = tmp_path / row["cache_path"]
+    path.parent.mkdir(parents=True)
+    lookup = {"dictionary_slug": "vts", "word": "альфа", "source_url": row["source_url"], "text": full}
+    path.write_text(json.dumps({"lookups": {"vts": lookup}}))
+    assert meanings.full_vts(row, tmp_path) == (full, None)
+    lookup["text"] += " altered"
+    path.write_text(json.dumps({"lookups": {"vts": lookup}}))
+    assert meanings.full_vts(row, tmp_path) == (None, "source_snapshot_mismatch")
+
+
+def test_vts_definition_boundaries_exclude_mirror_key_and_footer():
+    """Mirror page wrappers must never become dictionary definitions (F1)."""
+    body = "швидка́ -ої, ж., розм. 1》 Служба швидкої медичної допомоги. 2》 Машина швидкої допомоги."
+    text = "швидка " + body + " Джерело: Великий тлумачний словник сучасної української мови на Slovnyk.me"
+    (partition,) = meanings.vts_partitions(text, "швидка")
+    assert partition["text"] == body
+    assert partition["span"] == [7, 94]
+    assert text[slice(*partition["span"])] == body
+    assert "Джерело:" not in partition["text"] and not partition["text"].startswith("швидка ")
 
 
 def test_ledger_covers_every_applicable_field(result):
@@ -1234,6 +1371,7 @@ def test_cli_rehearse_and_build_writes_are_guarded(monkeypatch, tmp_path):
     calls.clear()
     result = {"build_id": "b", "ledger": wa.Ledger(), "block": {"inputs": {}, "rules_version": "r"}, "takedown": [],
               "cards": {"wc_x": {"card_kind": "lexeme", "links": []}}}
+    monkeypatch.setattr(wa, "meaning_report", lambda _: {"lexemes": 1})
     wa.write_output(tmp_path / "build", result, {})
     assert tmp_path / "build" / "cards" / "wc_x.json" in calls[0]
 
@@ -1299,6 +1437,14 @@ def test_host_pilot_builds_and_verifies_end_to_end(host_scratch, capsys, monkeyp
     assert [c["key_at_creation"]["spelling"] for c in published
             if c["key_at_creation"]["spelling"].casefold() == "мама"] == ["мама"]
     assert built["relation_units"]["on_card_subject"] == 0 and built["heldout_isolation"] == "unverified"
+    meanings_report = json.loads((host_scratch / "pilot/meanings.json").read_text())
+    assert meanings_report["lexemes"] == 135
+    repaired = next(row for row in meanings_report["rows"] if row["card_id"] == "wc_ppr39m6qsr4e")
+    assert repaired["identity_status"] == "high" and repaired["sources"]["vts_busel_slovnyk_me"]["used"]
+    (partition,) = repaired["partitions"]
+    assert "Служба швидкої медичної допомоги." in partition["text"]
+    assert "Машина швидкої допомоги." in partition["text"]
+    assert partition["sense_alignment"] == "unresolved"
     assert wa.main(["verify", *args]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["passed"] is True
@@ -1826,7 +1972,9 @@ def test_r3f1_unchanged_draft_allocations_remain_valid(inputs, result):
     (antonym,) = assertions(card_of(result, "ета"), "antonyms")
     assert antonym["mapping"]["confidence"] == "unresolved"  # an unsplit-only card holds its one group
     beta = result["ledger"].cards[card_of(result, "бета")["card_id"]]["fields"]
-    assert beta["definition_uk"]["disposition"] == "source_absent"
+    assert beta["definition_uk"]["disposition"] == "unresolved"
+    assert beta["definition_uk"]["reason"] == "identity_unresolved"
+    assert all(not item["has"] for item in beta["definition_uk"]["sources"].values())
     assert all(c["quality"]["practice_eligibility"] == [] for c in result["cards"].values())
 
 
@@ -1902,6 +2050,8 @@ def tampered_pilot(committed_pilot, tamper, directory):
 def test_r3f1_loader_refuses_allocation_tampering_before_source_reads(committed_pilot, source_sentinel, tmp_path,
                                                                        tamper):
     stores = [tmp_path / f"{name}.db" for name in ("sources", "vesum", "atlas")]
+    for path in stores:
+        path.touch()  # Valid local bindings; the sentinel still intercepts every attempted database open.
     scratch = tmp_path / "scratch"
     scratch.mkdir()
     paths = committed_pilot

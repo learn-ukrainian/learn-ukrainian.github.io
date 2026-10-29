@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
-import { optionsWithoutSpottedError, shuffle } from './utils';
+import { optionsWithoutSpottedError, useShuffledChoices } from './utils';
 
 interface ErrorCorrectionItemProps {
   /**
@@ -46,11 +46,13 @@ export function ErrorCorrectionItem({
   explanation,
   isUkrainian
 }: ErrorCorrectionItemProps) {
-  // Shuffle options on mount, minus the error the learner already spotted.
-  const shuffledOptions = useMemo(
-    () => shuffle(optionsWithoutSpottedError(options, errorWord, correctForm)),
+  // Fresh random order after hydration and on every retry, minus the error the
+  // learner already spotted.
+  const survivingOptions = useMemo(
+    () => optionsWithoutSpottedError(options, errorWord, correctForm),
     [options, errorWord, correctForm],
   );
+  const { choices: shuffledOptions, reshuffle } = useShuffledChoices(survivingOptions);
 
   const [step, setStep] = useState<Step>('identify');
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
@@ -122,6 +124,7 @@ export function ErrorCorrectionItem({
   };
 
   const handleReset = () => {
+    reshuffle();
     setStep('identify');
     setSelectedWord(null);
     setSelectedFix(null);

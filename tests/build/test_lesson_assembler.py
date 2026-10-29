@@ -152,7 +152,9 @@ const selected = tree.statements.filter(statement => {
 }).map(statement => statement.getText(tree)).join('\n').replace('export async function', 'async function').replaceAll('import.meta.env.PROD', 'true');
 const helper = demodule(fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8'));
 const nav = demodule(fs.readFileSync('site/src/lib/doc-nav.ts', 'utf8'));
-const compiled = ts.transpileModule(helper + '\n' + nav + '\n' + selected, {
+const entry = demodule(fs.readFileSync('site/src/lib/a1-entry.ts', 'utf8'));
+const arc = JSON.parse(fs.readFileSync('site/src/data/arc-a1.json', 'utf8'));
+const compiled = ts.transpileModule(helper + '\n' + nav + '\n' + entry + '\n' + selected, {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
 }).outputText.replace(/^\s*exports?\.[^\n]*\n/gm, '').replace(/^\s*export\s*\{\s*\}\s*;?\s*$/gm, '');
 const docs = JSON.parse(fs.readFileSync(0, 'utf8'));
@@ -162,8 +164,8 @@ const lessonId = 'a1/things-have-gender/2';
 const prelude = `const props = {kind: 'doc', entry: allDocs.find(e => normalizeId(e.id) === '${lessonId}')};
 const docRoute = '${lessonId}'; const docTrack = 'a1';`;
 const body = compiled.replace(/^const sidebar\b/m, prelude + '\nconst sidebar');
-new AsyncFunction('getCollection', 'moduleCount', 'formatLessonCount', body + '\nreturn {routes: (await getStaticPaths()).map(r => ({params: r.params, kind: r.props.kind, arc: r.props.entry?.data ?? {}})), sidebar, visible: [...deployedDocsByTrack.keys()]};')(
- async name => name === 'docs' ? docs : [], () => 0, count => ({en: `${count} lessons`, uk: `${count} уроки`})
+new AsyncFunction('getCollection', 'moduleCount', 'formatLessonCount', 'arc', body + '\nreturn {routes: (await getStaticPaths()).map(r => ({params: r.params, kind: r.props.kind, arc: r.props.entry?.data ?? {}})), sidebar, visible: [...deployedDocsByTrack.keys()]};')(
+ async name => name === 'docs' ? docs : [], () => 0, count => ({en: `${count} lessons`, uk: `${count} уроки`}), arc
 ).then(result => process.stdout.write(JSON.stringify(result))).catch(error => {console.error(error); process.exitCode = 1;});
 '''
     module, plan = gold

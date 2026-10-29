@@ -62,7 +62,7 @@ _ULIF_PROVENANCE = {
     "origin_url": "https://lcorp.ulif.org.ua/dictua/",
     "ingest_code": [
         "scripts/wiki/sources_db.py (store_ulif_dictua_entry)",
-        "scripts/lexicon/tools/import_ulif_dump.py",
+        "scripts/lexicon/runner/fetch_ulif_homonyms.py (DictUA register walk)",
     ],
     "per_row_hash": "ulif_dictua_entries.response_sha256 / content_sha256",
 }

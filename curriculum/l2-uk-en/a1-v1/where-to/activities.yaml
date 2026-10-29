@@ -81,7 +81,7 @@ inline:
     title: Static and direction phrases
     instruction: Complete each sentence with the correct place phrase.
     items:
-      - sentence: 'Я йду ___ банк.'
+      - sentence: "Вони йдуть ___ банк."
         answer: 'у'
         options:
           - 'у'
@@ -102,7 +102,7 @@ inline:
           - 'аптеці'
           - 'аптека'
         explanation: 'Куди? changes аптека to аптеку.'
-      - sentence: 'Степан йде у ___.'
+      - sentence: "Вони йдуть у ___."
         answer: 'бібліотеку'
         options:
           - 'бібліотеку'
@@ -113,8 +113,8 @@ inline:
         answer: 'на'
         options:
           - 'на'
-          - 'в'
-          - 'у'
+          - "до"
+          - "біля"
         explanation: 'The route phrase is на вокзал.'
       - sentence: 'Марко йде ___ зупинку.'
         answer: 'на'
@@ -204,13 +204,13 @@ inline:
         explanation: 'By train uses їде.'
       - prompt: 'Stepan is walking to the post office.'
         options:
-          - text: 'Степан йде на пошту.'
+          - text: "Степан іде на пошту."
             correct: true
           - text: 'Степан їде на пошту.'
             correct: false
           - text: 'Степан на пошті.'
             correct: false
-        explanation: 'Walking uses йде.'
+        explanation: "Walking uses іде here. After the consonant in Степан, choose the euphonic іде form."
       - prompt: 'They are going to the park on foot.'
         options:
           - text: 'Вони йдуть у парк.'

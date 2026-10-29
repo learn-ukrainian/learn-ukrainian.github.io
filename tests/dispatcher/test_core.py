@@ -90,7 +90,10 @@ def sandbox(tmp_path, hermetic_monitor):
     run_git(repo, "init", "--bare", "--initial-branch=main", str(remote))
     run_git(repo, "remote", "add", "origin", str(remote))
     run_git(repo, "push", "-u", "origin", "main")
-    env = {**os.environ, "LU_TASKS_DIR": str(tasks)}
+    # The dispatcher runs as a subprocess here, out of reach of the in-process probe stub
+    # (conftest ``dispatch_slice_probe``); without the forced fallback it asks the host user
+    # manager and starts every stub worker in a real ``lu-worker-*`` scope.
+    env = {**os.environ, "LU_TASKS_DIR": str(tasks), "LU_DISPATCH_ISOLATION": "fallback"}
     env.pop("PYTHONPATH", None)
 
     def cli(*args, expected=0, stdin=None):
@@ -215,9 +218,9 @@ def test_read_only_agy_run_needs_a_verified_boundary_receipt(sandbox, monkeypatc
         assert result["error"].startswith("agy_read_only_boundary: ")
 
 
-def await_file(path):
+def await_file(path, *, ready=lambda content: True):
     deadline = time.monotonic() + 10
-    while not path.exists() or not (content := path.read_text()):
+    while not path.exists() or not (content := path.read_text()) or not ready(content):
         assert time.monotonic() < deadline, f"stub did not populate {path.name}"
         time.sleep(0.02)
     return content
@@ -353,6 +356,15 @@ def local_branches(repo):
     return run_git(repo, "for-each-ref", "--format=%(refname:short)", "refs/heads").split()
 
 
+def test_sandbox_dispatch_never_starts_a_host_systemd_scope(sandbox):
+    """Defect class: test sandbox escape. The dispatcher subprocess probed the host user manager and ran
+    the stub worker in a real ``lu-worker-*`` scope, outside the in-process probe stub."""
+    record = sandbox.settle(sandbox.dispatch())
+    assert record["status"] == "done"
+    assert record["launch_mode"] == "popen-fallback" and "launch_unit" not in record
+    assert record["launch_fallback_reason"] == "forced: LU_DISPATCH_ISOLATION=fallback"
+
+
 def test_read_only_task_removes_its_worktree_at_settle(sandbox):
     """Defect: the dispatcher left every task worktree it created for a separate reaper."""
     record = sandbox.settle(sandbox.dispatch())
@@ -396,6 +408,28 @@ def test_dirty_or_unpublished_write_task_keeps_worktree_with_reason(sandbox, mod
     assert (tree / "delivered.txt").exists()
     assert record["worktree_branch"] in local_branches(sandbox.repo)
     assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
+
+
+def test_dirty_worktree_is_retried_and_removed_once_its_changes_are_gone(sandbox):
+    """Defect: a tree retained as dirty was never looked at again, even after only ignored files were left."""
+    record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert record["worktree_disposition_detail"]
+    tree = Path(record["worktree_path"])
+    sandbox.settle(sandbox.dispatch())  # the retry finds the same change and keeps the tree
+    kept = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (kept["worktree_disposition"], kept["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert tree.is_dir()
+    run_git(tree, "reset", "--hard")
+    run_git(tree, "clean", "-fd")
+    (tree / ".pytest_cache").mkdir()
+    (tree / ".pytest_cache/ignored.txt").write_text("ignored output\n")
+    (sandbox.repo / ".git/info/exclude").write_text("/.pytest_cache/\n")
+    sandbox.settle(sandbox.dispatch())
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert "worktree_disposition_detail" not in settled
+    assert not tree.exists()
 
 
 def preserved_copy(sandbox, record, relative):
@@ -450,6 +484,56 @@ def test_lingering_provider_process_keeps_the_worktree_until_a_retry_proves_it_g
     settled = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
     assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
     assert not Path(record["worktree_path"]).exists()
+
+
+def settled_by_next_task(sandbox, retained_id, before_release=lambda _kept: None):
+    """Run one task to its end and return the retained record as that task's settlement retried it.
+
+    ``before_release`` sees the record as the dispatch's own retry left it; the settlement retry
+    rewrites the record file before the task turns terminal.
+    """
+    record_file = sandbox.tasks / f"{retained_id}.json"
+    task = sandbox.dispatch("blocked")
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    before = record_file.stat().st_ino
+    before_release(json.loads(record_file.read_text()))
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    sandbox.settle(task)
+    assert record_file.stat().st_ino != before, "settlement never retried the retained worktree"
+    return json.loads(record_file.read_text())
+
+
+def test_settlement_removes_a_transient_retained_worktree_once_its_cause_is_gone(sandbox):
+    """Defect: a tree kept for a transient cause waited for the next dispatch; any settlement now retries it."""
+    task = sandbox.dispatch("tree")
+    grandchild = int(await_file(sandbox.tasks / f"{task[0]}.grandchild"))
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    record = sandbox.settle(task)
+    assert record["worktree_disposition_reason"] == "provider_processes_alive"
+
+    def end_the_cause(kept):
+        assert kept["worktree_disposition_reason"] == "provider_processes_alive"  # the dispatch's retry kept it
+        os.kill(grandchild, signal.SIGKILL)
+        deadline = time.monotonic() + 10
+        while worker._provider_alive(record):
+            assert time.monotonic() < deadline, "grandchild survived SIGKILL"
+            time.sleep(0.02)
+
+    settled = settled_by_next_task(sandbox, task[0], end_the_cause)
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert not Path(record["worktree_path"]).exists()
+
+
+@pytest.mark.parametrize("model,reason", [("pushed-dirty", "dirty"), ("unpushed", "unpublished")])
+def test_settlement_retry_keeps_a_worktree_that_still_holds_content(sandbox, model, reason):
+    """The retry removes only with settlement's proofs: uncommitted or unpublished work stays."""
+    record = sandbox.settle(sandbox.dispatch(model, "--mode", "workspace-write"), expected=1)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", reason)
+    retried = settled_by_next_task(sandbox, record["task_id"])
+    assert (retried["worktree_disposition"], retried["worktree_disposition_reason"]) == ("retained", reason)
+    tree = Path(record["worktree_path"])
+    assert (tree / "delivered.txt").exists()
+    assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
 
 
 def test_next_dispatch_settles_terminal_task_left_by_crash(sandbox):
@@ -909,7 +993,10 @@ def _killed_review_supervisor(sandbox, tmp_path, model):
     child = int(await_file(sandbox.tasks / f"{task[0]}.started"))
     if model == "governed":
         assert await_file(sandbox.tasks / f"{task[0]}.joined") == "joined"
-    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    # The provider's start marker precedes the supervisor's record update.
+    record = json.loads(await_file(
+        sandbox.tasks / f"{task[0]}.json", ready=lambda content: "review_test_slots" in json.loads(content)
+    ))
     assert record["review_test_slots"]["outcome"] == "held"
     os.kill(record["pid"], signal.SIGKILL)
     deadline = time.monotonic() + 10
@@ -1171,7 +1258,7 @@ def test_scope_verification_failure_only_rejects_success(delivery_settle, monkey
     monkeypatch.setattr(git, "_verification_git", broken)
     worker._enforce_delivery(record)
     assert record["status"] == ("no_deliverable" if status == "done" else status)
-    assert record["error"] == ("owned_paths_verification_failed" if status == "done" else "original cause")
+    assert record["error"] == (f"owned_paths_verification_failed: git {command} failed" if status == "done" else "original cause")
 
 
 @pytest.mark.parametrize("history", ["conflict", "no-commit", "unrelated", "parentless", "clean"])
@@ -1222,7 +1309,128 @@ def test_merge_resolution_and_root_paths_cannot_escape_scope(sandbox, delivery_s
                         "git version 2.35.0" if command == "version" else original(path, command, *args, **kw))
     result.update(status="done", error=None)
     worker._enforce_delivery(result)
-    assert (result["status"], result["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert (result["status"], result["error"]) == ("no_deliverable", "owned_paths_verification_failed: merge resolution paths cannot be verified")
+
+
+@pytest.fixture
+def merged_delivery_world(tmp_path, monkeypatch):
+    """A write task whose branch cannot show its delivery, with a scripted GitHub and ownership ledger."""
+    from scripts.common import github_client
+    from scripts.orchestration import pr_ownership
+
+    world = SimpleNamespace(
+        prs={}, files={}, listed=[], published=(None, True), lookup_error=None,
+        record={
+            "task_id": "merge-probe", "mode": "workspace-write", "status": "done", "error": None,
+            "owned_paths": ["docs/owned.md"], "worktree_remote_url": "https://github.com/org/repo.git",
+            "worktree_base_ref": "origin/main", "worktree_branch": "claude/merge-probe", "publish_branch": None,
+            "started_at": "2026-10-29T08:00:00+00:00", "head_sha": "a" * 40, "commits_ahead": 0,
+            "push_state": "unpushed", "worktree_dirty_on_exit": False,
+        },
+    )
+
+    def gh(args, **_):
+        if world.lookup_error:
+            raise world.lookup_error
+        words = args[1:]
+        out = (json.dumps(world.listed) if words[:2] == ["pr", "list"]
+               else json.dumps(world.prs[int(words[2])]) if words[:2] == ["pr", "view"]
+               else "\n".join(json.dumps(name) for name in world.files[int(words[2].split("/")[4])]))
+        return SimpleNamespace(returncode=0, stdout=out, stderr="")
+
+    state = tmp_path / "state.json"
+    monkeypatch.setattr(pr_ownership, "state_path", lambda: state)
+    monkeypatch.setattr(github_client, "run", gh)
+    monkeypatch.setattr(git, "_canonical_publication", lambda *_: world.published)
+    monkeypatch.setattr(git, "ownership_git", Mock(side_effect=subprocess.CalledProcessError(
+        128, ["git", "fetch"], stderr="branch gone")))
+
+    def accept(*numbers):
+        history = [{"event": "accepted", "pr": f"org/repo#{n}", "successor": "merge-probe"} for n in numbers]
+        state.write_text(json.dumps({"schema": 1, "last_tick": None, "episodes": {}, "handoffs": {},
+                                     "history": history, "outbox": []}))
+
+    world.accept = accept
+    return world
+
+
+MERGED = {"state": "MERGED", "baseRefName": "main", "mergedAt": "2026-10-29T09:00:00Z"}
+
+
+def test_accepted_merged_pr_without_new_commits_is_delivered(merged_delivery_world):
+    """Defect class: a task that landed a PR it accepted, with no commits of its own, was marked no_deliverable."""
+    world = merged_delivery_world
+    world.accept(77)
+    world.prs[77], world.files[77] = MERGED, ["docs/owned.md"]
+    worker._enforce_delivery(world.record)
+    assert (world.record["status"], world.record["error"]) == ("done", None)
+    assert world.record["delivery_pr"] == "org/repo#77"
+
+
+def test_branch_reset_or_deleted_after_merge_is_delivered(merged_delivery_world):
+    """Defect class: the task's own PR merged, then the branch was reset or deleted, so the check read a git error."""
+    world = merged_delivery_world
+    world.record["commits_ahead"] = 2
+    world.listed = [{"number": 78, "isCrossRepository": False, "headRefName": "claude/merge-probe"}]
+    world.prs[78], world.files[78] = MERGED, ["docs/owned.md"]
+    worker._enforce_delivery(world.record)
+    assert (world.record["status"], world.record["error"]) == ("done", None)
+    assert world.record["delivery_pr"] == "org/repo#78"
+
+
+def test_merged_pr_outside_owned_paths_is_still_refused(merged_delivery_world):
+    """Control: a merged PR is no licence to change paths outside the task's ownership."""
+    world = merged_delivery_world
+    world.accept(79)
+    world.prs[79], world.files[79] = MERGED, ["docs/owned.md", "scripts/elsewhere.py"]
+    worker._enforce_delivery(world.record)
+    assert (world.record["status"], world.record["error"]) == (
+        "no_deliverable", "outside_owned_paths: scripts/elsewhere.py")
+    # A name that only differs from an owned path by a trailing newline is not that path.
+    world.record.update(status="done", error=None)
+    world.files[79] = ["docs/owned.md\n"]
+    worker._enforce_delivery(world.record)
+    assert world.record["status"] == "no_deliverable"
+    assert world.record["error"].startswith("outside_owned_paths: docs/owned.md")
+
+
+@pytest.mark.parametrize("fault", [
+    "open-pr", "merged-before-start", "foreign-base", "unpublished-head", "github-timeout", "ledger-unreadable",
+    "missing-field",
+])
+def test_unpushed_change_without_a_provable_merged_delivery_is_still_refused(merged_delivery_world, fault):
+    """Control: unpushed work, even beside a merged, stale or foreign PR or a failed lookup, keeps its exact refusal."""
+    from scripts.orchestration import pr_ownership
+
+    world = merged_delivery_world
+    world.accept(80)
+    world.prs[80], world.files[80] = dict(MERGED), ["docs/owned.md"]
+    world.record["commits_ahead"] = 1
+    expected = "owned_paths_verification_failed: git fetch failed"
+    if fault == "open-pr":
+        world.prs[80]["state"] = "OPEN"
+    elif fault == "merged-before-start":
+        world.prs[80]["mergedAt"] = "2026-10-29T07:00:00Z"
+    elif fault == "foreign-base":
+        world.prs[80]["baseRefName"] = "other"
+    elif fault == "unpublished-head":
+        # Merged work must not hide a further local commit that was never pushed.
+        world.published = (None, False)
+    elif fault == "github-timeout":
+        world.lookup_error = subprocess.TimeoutExpired(["gh"], 60)
+    elif fault == "ledger-unreadable":
+        pr_ownership.state_path().write_text("{")
+    else:
+        del world.record["commits_ahead"]
+        world.published = (None, False)
+        expected = "no_commits_or_unknown"
+    worker._enforce_delivery(world.record)
+    assert (world.record["status"], world.record["error"]) == ("no_deliverable", expected)
+    assert "delivery_pr" not in world.record
+    if fault == "open-pr":
+        world.record.update(status="done", owned_paths=None)
+        worker._enforce_delivery(world.record)
+        assert world.record["error"] == "work_not_pushed_or_unknown"
 
 
 @pytest.mark.parametrize("reuse_cwd", [False, True])
@@ -1423,7 +1631,7 @@ def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, mon
     assert record["error"].endswith("... (truncated)")
     record.update(status="done", worktree_base_ref="main")
     worker._enforce_delivery(record)
-    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed: ownership verification requires an origin base")
 
 
 @pytest.mark.parametrize("transport", ["ssh", "https"])
@@ -1484,7 +1692,8 @@ def test_prior_worker_origin_poisoning_refuses_dispatch_and_fails_closed(sandbox
     assert run_git(fake, "rev-parse", "main") == record["head_sha"]
     assert run_git(sandbox.remote, "rev-parse", "main") == record["worktree_base_sha"]
     worker._enforce_delivery(record)
-    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert record["status"] == "no_deliverable"
+    assert record["error"].startswith("owned_paths_verification_failed: ")
 
 
 @pytest.mark.parametrize("attack", ["alias-shell", "alias-empty", "replace", "origin", "insteadOf", "pushInsteadOf"])
@@ -1514,8 +1723,9 @@ def test_worker_git_state_cannot_hide_outside_commit(sandbox, delivery_settle, a
             run_git(tree, "config", f"url.{fake}.{attack}", str(sandbox.remote))
     record.update(status="done", error=None)
     worker._enforce_delivery(record)
-    expected = "outside_owned_paths: outside.txt" if attack == "replace" else "owned_paths_verification_failed"
-    assert (record["status"], record["error"]) == ("no_deliverable", expected)
+    assert record["status"] == "no_deliverable"
+    assert record["error"].startswith(
+        "outside_owned_paths: outside.txt" if attack == "replace" else "owned_paths_verification_failed: ")
 
 
 def test_ownership_walk_verifies_distinct_publish_branch(sandbox, delivery_settle):
@@ -1555,7 +1765,7 @@ def test_ownership_walk_requires_distinct_refs_and_nonempty_range(sandbox, deliv
     rejected = settle()
     assert rejected["remote_ref"] == f"refs/heads/{publish_branch}"
     assert rejected["commits_ahead"] == 1
-    assert (rejected["status"], rejected["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert (rejected["status"], rejected["error"]) == ("no_deliverable", ("owned_paths_verification_failed: delivery ref must differ from base ref" if publish_branch == "release" else "owned_paths_verification_failed: empty ownership range with recorded commits ahead"))
 
 
 def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandbox, delivery_settle, monkeypatch):
@@ -1836,7 +2046,10 @@ def test_missing_ownership_protection_fails_closed(delivery_settle, monkeypatch,
     else:
         record.pop(missing)
     worker._enforce_delivery(record)
-    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert (record["status"], record["error"]) == ("no_deliverable",
+        "owned_paths_verification_failed: " + {
+            "worktree_remote_url": "record field 'worktree_remote_url' missing", "git-binary": "system Git unavailable",
+            "scratch": "TaskScratchError", "remote-tip": "remote delivery tip does not match snapshot"}[missing])
 
 
 @pytest.mark.parametrize("remote_available", [True, False])
@@ -2485,7 +2698,7 @@ def test_read_only_mode_denies_edits_on_every_provider(sandbox, tmp_path, monkey
         assert argv[argv.index("--log-file") + 1] == str(agy_sandbox.log_file("ro"))  # private scratch
         assert argv.index("--dangerously-skip-permissions") > split
     elif agent == "codex":
-        assert argv[argv.index("-s") + 1] == "read-only"
+        assert 'sandbox_mode="read-only"' in argv and "--dangerously-bypass-approvals-and-sandbox" not in argv
     elif agent == "cursor":
         assert argv[argv.index("--mode") + 1] == "ask"
     elif agent == "muse":
@@ -2589,6 +2802,56 @@ def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
     assert record["silence_timeout"] == 1
     grandchild = int(Path(record["prompt_file"]).with_suffix(".grandchild").read_text())
     assert worker._identity(grandchild) is None
+
+
+def test_provider_process_lingers_after_its_final_result_settles_within_silence_bound(sandbox, monkeypatch):
+    """Defect class: provider process lingers after its final result while auxiliary activity continues."""
+    from scripts.dispatcher import watchdog
+    from scripts.dispatcher.providers import agy
+    from scripts.dispatcher.types import Invocation
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_runtime", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(watchdog, "_PROCESS_ACTIVITY_POLL_INTERVAL_S", 0.05)
+    spec = TaskSpec("agy-final-hang", "agy", "gemini-3.8-flash-high", None, "read-only", sandbox.repo,
+                    sandbox.repo / "agy-final-hang.prompt", sandbox.tasks / "agy-final-hang.result",
+                    options={"hard_timeout": "5", "silence_timeout": "0.5"})
+    spec.prompt_file.write_bytes(b"literal final response")
+    log = sandbox.repo / "provider.log"
+    code = (
+        "import json, sys, time\n"
+        "print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', "
+        "'response': 'literal final response'}}), flush=True)\n"
+        "with open(sys.argv[2], 'a') as log:\n"
+        "    while True:\n"
+        "        log.write('idle housekeeping\\n'); log.flush(); time.sleep(0.02)\n"
+    )
+    monkeypatch.setattr(agy, "build", lambda _spec, env: Invocation(
+        [sys.executable, "-c", code, "--log-file", str(log)],
+        b'{"event":"user","message":{"role":"user","content":[{"type":"text","text":""}]}}\n', env, None))
+    head = run_git(sandbox.repo, "rev-parse", "HEAD")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main", head,
+                              {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "agy-final-hang.prompt")
+    path = store.create(record, b"literal final response")
+    (sandbox.tasks / "logs").mkdir()
+
+    started = time.monotonic()
+    worker.supervise(path)
+    elapsed = time.monotonic() - started
+
+    result = json.loads(path.read_text())
+    assert result["status"] == "timeout"
+    assert result["kill_reason"] == "stdout_silence_timeout"
+    assert result["silence_timeout"] == 0.5
+    assert elapsed < result["silence_timeout"] + 2
+    assert result["returncode"] == -signal.SIGKILL
+    assert worker._identity(result["provider_pgid"]) is None
+    assert log.stat().st_size > 0
+    stdout = (sandbox.tasks / "logs/agy-final-hang.stdout.log").read_text()
+    assert agy.parse(stdout, "", 0, None).text == "literal final response"
 
 
 def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox):
@@ -2881,6 +3144,11 @@ def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeyp
         (["--agent", "claude", "--claude-account", "B"], "claude_account_unknown"),
         (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
         (["--agent", "claude", "--claude-account", "b"], "claude_account_ambient_conflict"),
+        # API-key labels (C-2643): the same guard, and only their exact names.
+        (["--agent", "claude", "--claude-account", "kk"], "claude_account_ambient_conflict"),
+        (["--agent", "claude", "--claude-account", "szb"], "claude_account_ambient_conflict"),
+        (["--agent", "claude", "--claude-account", "KK"], "claude_account_unknown"),
+        (["--agent", "codex", "--claude-account", "szb"], "claude_account_seat_unsupported"),
     ],
 )
 def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkeypatch, capsys, extra, code):
@@ -3300,3 +3568,120 @@ def test_read_only_dispatch_on_an_overloaded_host_is_exempt(admission_dispatch, 
     monkeypatch.setattr(dispatch_admission, "probe_host", lambda: overloaded)
     assert admission_dispatch.dispatch(mode="read-only") == 0
     assert "admission" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("failure", ["prompt-collision", "log-directory", "interrupted-setup"])
+def test_spawn_setup_failure_never_strands_published_record(tmp_path, monkeypatch, failure):
+    """Setup can fail after record publication but before any supervisor exists."""
+    spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "setup-failure")
+    path.parent.mkdir()
+    if failure == "prompt-collision":
+        spec.prompt_file.write_bytes(b"original prompt")
+        expected = FileExistsError
+    elif failure == "log-directory":
+        (path.parent / "logs").touch()
+        expected = FileExistsError
+    else:
+        create = store.create
+
+        def interrupted(*args):
+            create(*args)
+            raise KeyboardInterrupt
+
+        monkeypatch.setattr(store, "create", interrupted)
+        expected = KeyboardInterrupt
+    with pytest.raises(expected):
+        worker.start(spec, record, b"submitted prompt", 60)
+    state = store.read(spec.task_id)
+    assert state["status"] == "failed"
+    assert state["returncode_reason"] == "spawn_setup_failed"
+    assert state["pid"] is None
+    assert state["finished_at"]
+    assert "admission_hold" not in state
+    if failure == "prompt-collision":
+        assert spec.prompt_file.read_bytes() == b"original prompt"
+
+
+def test_spawn_setup_failure_does_not_overwrite_existing_run(tmp_path, monkeypatch):
+    spec, record, path = _spawn_refused_record(tmp_path, monkeypatch, "duplicate-run")
+    other = {**record, "run_nonce": "other-run"}
+    store.create(other, b"original")
+    before = path.read_bytes()
+    with pytest.raises(ValueError, match="task id already exists"):
+        worker.start(spec, record, b"duplicate", 60)
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("command", ["list", "status", "wait", "list-active"])
+def test_cli_recovers_old_spawn_without_process(sandbox, command):
+    """Existing ownerless records settle through the actual dispatcher entry point."""
+    sandbox.tasks.mkdir(exist_ok=True)
+    path = sandbox.tasks / "old-spawn.json"
+    path.write_text(json.dumps(dict(schema_version=2, task_id="old-spawn", run_nonce="old-nonce",
+                                   status="spawning", pid=None, started_at="2026-01-01T00:00:00Z")))
+    args = {"list": ["list"], "status": ["status", "old-spawn"],
+            "wait": ["wait", "old-spawn", "--run-nonce", "old-nonce", "--timeout", "0.1"],
+            "list-active": ["list", "--status", "spawning"]}[command]
+    response = json.loads(sandbox.cli(*args, expected=1 if command == "wait" else 0).stdout)
+    if command == "list-active":
+        assert response == []
+    else:
+        state = response[0] if command == "list" else response
+        assert state["status"] == "crashed"
+        assert state["returncode_reason"] == "spawn_process_missing"
+        assert state["finished_at"]
+    saved = json.loads(path.read_text())
+    assert saved["status"] == "crashed"
+    assert saved["run_nonce"] == "old-nonce"
+
+
+@pytest.mark.parametrize("case", ["recent", "live-owner", "unknown-owner", "pid", "terminal", "legacy"])
+def test_stale_spawn_recovery_preserves_unproven_or_live_records(tmp_path, monkeypatch, case):
+    from scripts.orchestration.dispatch_admission import new_admission_hold
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    record = dict(schema_version=2, task_id="preserved", run_nonce="same-run", status="spawning",
+                  pid=None, started_at="2026-01-01T00:00:00Z")
+    if case == "recent":
+        record["started_at"] = store.now()
+    elif case == "live-owner":
+        record["admission_hold"] = new_admission_hold("same-run")
+    elif case == "unknown-owner":
+        record["admission_hold"] = {"run_nonce": "same-run", "owner_pid": os.getpid(), "owner_identity": "unverifiable"}
+    elif case == "pid":
+        record.update(pid=os.getpid(), process_start=worker._identity(os.getpid()))
+    elif case == "terminal":
+        record["status"] = "failed"
+    else:
+        record.pop("schema_version")
+    store.replace(record)
+    before = store.record_path("preserved").read_bytes()
+    assert worker._observe(record)["status"] == record["status"]
+    assert store.record_path("preserved").read_bytes() == before
+
+
+def test_stale_spawn_recovery_rechecks_process_before_terminalizing(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    stale = dict(schema_version=2, task_id="racing-spawn", run_nonce="same-run", status="spawning",
+                 pid=None, started_at="2026-01-01T00:00:00Z")
+    current = {**stale, "status": "running", "pid": os.getpid(),
+               "process_start": worker._identity(os.getpid())}
+    store.replace(current)
+    assert worker._observe(stale)["status"] == "running"
+    assert store.read("racing-spawn")["status"] == "running"
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_dispatch_prompt_destination_collision_settles_failed_spawn(sandbox, mode):
+    """The submitted prompt can already occupy the exclusive task-prompt destination."""
+    sandbox.tasks.mkdir(exist_ok=True)
+    prompt = sandbox.tasks / "prompt-collision.prompt"
+    prompt.write_text("the operator's submitted prompt")
+    sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--task-id", "prompt-collision",
+                "--mode", mode, "--prompt-file", str(prompt), expected=2)
+    state = json.loads(sandbox.cli("status", "prompt-collision").stdout)
+    assert state["status"] == "failed"
+    assert state["returncode_reason"] == "spawn_setup_failed"
+    assert state["pid"] is None
+    assert state["finished_at"]
+    assert prompt.read_text() == "the operator's submitted prompt"

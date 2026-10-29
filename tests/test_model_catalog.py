@@ -14,6 +14,8 @@ from scripts.agent_runtime.registry import AGENTS
 from scripts.review.model_catalog import (
     ModelCatalogError,
     activity_role_refusal,
+    advisory_role_policy,
+    bounded_execution_policy,
     canonical_model_id,
     cursor_non_dispatch_model_refusal,
     glm_model_aliases,
@@ -720,6 +722,45 @@ def test_catalog_rejects_malformed_sol_advised_route(
     else:
         target[field] = value
 
+    with pytest.raises(ModelCatalogError, match=message):
+        validate_catalog(broken)
+
+
+def test_bounded_policy_reads_the_one_advisory_roles_entry():
+    """Defect: the envelope loader kept its own fence, route and fields, so a catalog change broke dispatch."""
+    catalog = load_model_catalog()
+    entry = catalog["advisory_roles"]["bounded_advisory_envelope"]
+    advisor = catalog["execution_routing"]["sol_advised_bounded"]["advisor"]
+    policy = bounded_execution_policy(catalog)
+    assert (policy.advisor_role, policy.advisor_route, policy.advisor_fence) == (
+        "bounded_advisory_envelope", "advisory_roles.bounded_advisory_envelope", entry["fence"],
+    )
+    assert list(policy.advisor_output_fields) == entry["output_fields"] == advisor["output_fields"]
+    assert advisor["effort"] == entry["effort"]
+    assert policy.advisor_model_id in advisory_role_policy("bounded_advisory_envelope", catalog).advisor_models
+
+
+@pytest.mark.parametrize(
+    ("mutate", "message"),
+    [
+        (lambda c: c["advisory_roles"].pop("bounded_advisory_envelope"), "advisory_roles must define exactly"),
+        (lambda c: c.pop("advisory_roles"), "advisory_roles must be a mapping"),
+        (lambda c: c.update(advisory_roles=None), "advisory_roles must be a mapping"),
+        (lambda c: c["advisory_roles"]["bounded_advisory_envelope"].update(fence="other"), "fence must be"),
+        (
+            lambda c: c["advisory_roles"]["bounded_advisory_envelope"].update(effort="medium"),
+            "advisor must agree with advisory_roles.bounded_advisory_envelope",
+        ),
+        (
+            lambda c: c["execution_routing"]["sol_advised_bounded"]["advisor"].update(effort="medium"),
+            "advisor must agree with advisory_roles.bounded_advisory_envelope",
+        ),
+    ],
+    ids=["role-missing", "section-missing", "section-null", "fence", "entry-effort", "advisor-effort"],
+)
+def test_catalog_holds_the_bounded_envelope_role_and_advisor_in_agreement(mutate, message):
+    broken = deepcopy(load_model_catalog())
+    mutate(broken)
     with pytest.raises(ModelCatalogError, match=message):
         validate_catalog(broken)
 

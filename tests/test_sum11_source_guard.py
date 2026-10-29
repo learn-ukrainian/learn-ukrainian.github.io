@@ -56,7 +56,7 @@ RULE_CONTEXT_LINES = {
         "Every `search_definitions` result row carries:",
         "`.venv/bin/python scripts/audit/sum11_sovietization_scan.py --db data/sources.db`.",
         "Audit report at `audit/sum11_sovietization_scan_<DATE>.md`.",
-        "| **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Ukrainian explanatory (definitions, citations) | `data/sources.db` FTS5 |",
+        "| **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Sovietization detection and contrastive occupation context only; never modern meaning or stress verification | `data/sources.db` FTS5 |",
         "Source: [bakustarver/ukr-dictionaries-list-opensource](https://github.com/bakustarver/ukr-dictionaries-list-opensource) (СУМ-11, Балла, Фразеологічний)",
     }),
     # Always-loaded core: the contrast-only prohibition and the historical-dictionaries context line.
@@ -67,7 +67,7 @@ RULE_CONTEXT_LINES = {
     # Prohibitions and contrast-only use.
     "agents_extensions/shared/rules/non-negotiable-rules.md": frozenset({
         "The project has VESUM (6.7M forms), СУМ-20, ВТС, Грінченко (67K), ЕСУМ, Monitor API, full code corpus, deterministic scripts. **Use them.** (СУМ-11 is strictly for Sovietization detection and contrastive colonization context — NEVER for modern Ukrainian verification).",
-        "| Definitions / modern meaning | `query_sum20`, `search_slovnyk_me`, `search_grinchenko_1907`, `search_esum` (`search_definitions` is Soviet СУМ-11: use only for Soviet colonization analysis) |",
+        "| Definitions / modern meaning | `query_sum20`, then ВТС / ULIF and `search_slovnyk_me`; `search_grinchenko_1907` is historical attestation, `search_esum` is etymology (`search_definitions` is Soviet СУМ-11: use only for Soviet colonization analysis) |",
     }),
     # Prohibitions and contrastive context.
     "agents_extensions/shared/rules/ukrainian-linguistics.md": frozenset({

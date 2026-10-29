@@ -65,7 +65,7 @@ def liveness_paths(spec, invocation):
 
 
 def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
-                initial_response_timeout, liveness, output_sizes):
+                initial_response_timeout, liveness, output_sizes, terminal_result=None):
     """Wait for a file-fed child while observing I/O, session files and tree work."""
     started = time.monotonic()
     state = WatchdogState(start_time=started, last_activity=started)
@@ -78,6 +78,7 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
         except OSError:
             mtimes[Path(path)] = 0
     next_activity_poll = started
+    terminal_seen = False
     while True:
         now = time.monotonic()
         waits = [0.1]
@@ -93,7 +94,12 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
         except subprocess.TimeoutExpired:
             pass
         now = time.monotonic()
+        if not terminal_seen and terminal_result and terminal_result():
+            terminal_seen = True
+            state.last_activity, state.observed_io = now, True
         for path in paths:
+            if terminal_seen:
+                break
             try:
                 size = path.stat().st_size
             except OSError:
@@ -101,7 +107,9 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
             if size != sizes[path]:
                 state.last_activity, state.observed_io = now, True
                 sizes[path] = size
-        if now >= next_activity_poll:
+        # A terminal envelope ends provider work. Housekeeping cannot extend its exit deadline;
+        # normal exit and parsing still decide success, otherwise the configured timeout settles it.
+        if not terminal_seen and now >= next_activity_poll:
             if _process_tree_has_activity(child, primed, cpu, io):
                 state.last_activity, state.observed_io = now, True
             for path in tuple(liveness())[:_MAX_LIVENESS_PATHS]:

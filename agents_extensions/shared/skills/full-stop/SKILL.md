@@ -1,6 +1,6 @@
 ---
 name: full-stop
-description: Do the full-send work on a change but stop with the PR ready to merge, never merging it. Use when told "full stop", when a brief says to stop at ready-to-merge, or when the merge belongs to another driver.
+description: Do the full-send work on a change but stop with the PR ready to merge, never merging it. Use when told "full stop" (a closing "Full stop." from the person who gave the order counts, even when it reads as emphasis), when a brief says to stop at ready-to-merge, or when the merge belongs to another driver.
 argument-hint: "[pr <number> | issue <number> | branch <name>]"
 ---
 
@@ -58,7 +58,7 @@ then add the `hold` label and verify it before any approval is recorded:
 Check the gate in [delivery](../full-send/references/delivery.md#the-gate) on the live head.
 Fetch the base, then read the live PR's state, head, base, checks, reviews and mergeability.
 `READY_TO_MERGE` means all of these hold on the current head: a recorded exact-head APPROVE,
-same-head admission CI green, proof complete, and protection verified. The future merge-group
+same-head green PR CI Gate (affected tests, not the full suite), proof complete, and protection verified. The future merge-group
 CI is not yet proven; say so.
 
 End in exactly one of these states, naming the receiving driver:

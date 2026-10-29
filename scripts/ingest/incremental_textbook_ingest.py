@@ -79,6 +79,12 @@ from wiki.extract_sections import (
 )
 from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 # The canonical chunk store is the Google Drive corpus mount. Keep this
 # constant patchable for local fixtures, but do not assume the absent
 # repo-local data/textbook_chunks directory is the production source.
@@ -544,6 +550,7 @@ def ingest(
             )
         except UniversitySourcePolicyError as exc:
             raise IngestError(str(exc)) from exc
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path), timeout=30.0)
     committed = False
     checkpoint: list[int] | None = None
@@ -774,6 +781,7 @@ def quarantine_native_anomaly_chunks(
     )
     db_path = Path(db_path)
     per_source: list[dict[str, Any]] = []
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path), timeout=30.0)
     committed = False
     checkpoint: list[int] | None = None

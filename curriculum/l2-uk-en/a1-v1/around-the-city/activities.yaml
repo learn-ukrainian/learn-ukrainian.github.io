@@ -4,13 +4,13 @@ inline:
     title: Direction words
     instruction: Complete each direction line.
     items:
-      - sentence: 'Ідіть ___, потім направо.'
+      - sentence: "Музей перед вами, а не ліворуч чи праворуч. Ідіть ___, до музею."
         answer: 'прямо'
         options:
-          - 'прямо'
-          - 'пішки'
-          - 'поруч'
-        explanation: 'Прямо means straight ahead.'
+          - прямо
+          - наліво
+          - направо
+        explanation: "The museum is directly ahead, rather than to either side. Прямо follows that route; наліво and направо lead away from the stated position."
       - sentence: 'Вибачте, як ___ до музею?'
         answer: 'дістатися'
         options:
@@ -25,13 +25,13 @@ inline:
           - 'район'
           - 'центр'
         explanation: "П'ять хвилин пішки is a route phrase."
-      - sentence: 'Потім ідіть ___, школа там.'
+      - sentence: "Школа праворуч від вас. На перехресті йдіть ___, до школи."
         answer: 'направо'
         options:
-          - 'направо'
-          - 'пішки'
-          - 'вдома'
-        explanation: 'Направо means to the right.'
+          - направо
+          - наліво
+          - назад
+        explanation: "The school is on the right. Направо gives movement toward it; наліво and назад give other directions."
       - sentence: 'Йдіть прямо, а потім ___.'
         answer: 'наліво'
         options:
@@ -60,7 +60,7 @@ inline:
           - text: 'до парку'
             correct: false
         explanation: 'Зараз asks де?'
-      - prompt: 'Я йду...'
+      - prompt: "— Куди ти йдеш? — Я йду..."
         options:
           - text: 'в магазин'
             correct: true
@@ -68,7 +68,7 @@ inline:
             correct: false
           - text: 'на магазині'
             correct: false
-        explanation: 'Йду asks куди?'
+        explanation: "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination."
       - prompt: 'Магазин на...'
         options:
           - text: 'вулиці'
@@ -78,7 +78,7 @@ inline:
           - text: 'вулиця'
             correct: false
         explanation: 'На вулиці answers де?'
-      - prompt: 'Потім їду на...'
+      - prompt: "— Куди ти їдеш потім? — Потім їду на..."
         options:
           - text: 'роботу'
             correct: true
@@ -86,7 +86,7 @@ inline:
             correct: false
           - text: 'робота'
             correct: false
-        explanation: 'Їду на роботу answers куди?'
+        explanation: "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination."
       - prompt: 'Ми зараз у...'
         options:
           - text: 'центрі'
@@ -96,7 +96,7 @@ inline:
           - text: 'центру'
             correct: false
         explanation: 'Зараз у центрі is static.'
-      - prompt: 'Вона йде в...'
+      - prompt: "— Куди вона йде? — Вона йде в..."
         options:
           - text: 'офіс'
             correct: true
@@ -104,7 +104,7 @@ inline:
             correct: false
           - text: 'офісу'
             correct: false
-        explanation: 'Йде в офіс answers куди?'
+        explanation: "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination."
   - id: act-3
     type: match-up
     title: City questions
@@ -140,27 +140,27 @@ inline:
     title: Close, far, or on the corner
     instruction: Complete each city location or route line.
     items:
-      - sentence: "Аптека ___. П'ять хвилин пішки."
+      - sentence: "Я вдома. Аптека ___: вона на першому поверсі нашого будинку."
         answer: 'близько'
         options:
-          - 'близько'
-          - 'далеко'
-          - 'наліво'
-        explanation: "П'ять хвилин пішки means the place is close."
-      - sentence: 'Вокзал ___. Їдьте на метро.'
+          - близько
+          - далеко
+          - їдьте
+        explanation: "The pharmacy is in the speaker’s own building, so близько fits this scene. Далеко contradicts that location; їдьте is an imperative, not a location predicate."
+      - sentence: "Я вдома, а вокзал за двадцять кілометрів від мого дому. Вокзал ___."
         answer: 'далеко'
         options:
-          - 'далеко'
-          - 'поруч'
-          - 'прямо'
-        explanation: 'If you need metro, the station is far.'
-      - sentence: 'Кафе ___. Воно біля дому.'
+          - далеко
+          - поруч
+          - їдьте
+        explanation: "Twenty kilometres from home is the stated city-distance contrast: далеко fits; поруч does not. Їдьте is an imperative, not a predicate locating the station."
+      - sentence: "Я вдома. Кафе ___. Воно біля мого дому."
         answer: 'поруч'
         options:
-          - 'поруч'
-          - 'їдьте'
-          - 'направо'
-        explanation: 'Поруч means nearby.'
+          - поруч
+          - їдьте
+          - далеко
+        explanation: "The cafe is next to the speaker’s home and the speaker is at home, so поруч fits. Далеко contradicts that relation; їдьте is an imperative rather than a location predicate."
       - sentence: 'Бібліотека ___ розі.'
         answer: 'на'
         options:
@@ -168,13 +168,13 @@ inline:
           - 'до'
           - 'автобусом'
         explanation: 'The phrase is на розі.'
-      - sentence: 'Ідіть ___, потім наліво.'
+      - sentence: "Банк перед вами, а не ліворуч чи праворуч. Ідіть ___, до банку."
         answer: 'прямо'
         options:
-          - 'прямо'
-          - 'поруч'
-          - 'центр'
-        explanation: 'Прямо is a direction word.'
+          - прямо
+          - наліво
+          - направо
+        explanation: "The bank is directly ahead. Прямо follows the stated route; наліво and направо turn away from it."
       - sentence: 'Музей ___ центрі.'
         answer: 'у'
         options:

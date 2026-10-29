@@ -4,6 +4,8 @@ import os
 import sys
 from pathlib import Path
 
+from scripts.agent_runtime.read_only_tmp import dispatch_lease
+from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher.types import TaskSpec
 
 _CONTEXT = ("PATH", "HOME", "LANG", "TERM", "TMPDIR")
@@ -33,17 +35,37 @@ def npm_shim_dir() -> Path | None:
     return None
 
 
-def claude_config_dir(account: str, home: str | None = None) -> str:
-    """The login directory a Claude account runs in until ``admission.claude_launch`` binds the verified one."""
+def claude_config_dir(account: str, home: str | None = None) -> str | None:
+    """The login directory a Claude account runs in until ``admission.claude_launch`` binds the verified one.
+
+    An API-key label's directory exists only in its private binding (C-2643), so the read-only policy
+    check before launch examines that directory; an unbound one is ``None``, and admission refuses it.
+    """
+    from scripts.agent_runtime.attempt_boundary import (
+        CLAUDE_API_KEY_ACCOUNT_LABELS,
+        ClaudeAccountRefused,
+        load_claude_account_binding,
+    )
+
+    if account in CLAUDE_API_KEY_ACCOUNT_LABELS:
+        try:
+            return str(load_claude_account_binding(account).config_dir)
+        except ClaudeAccountRefused:
+            return None
     suffix = "" if account == "a" else "-b"
     return str(Path(home or os.environ.get("HOME") or str(Path.home())) / f".claude{suffix}")
 
 
 def child_env(spec: TaskSpec) -> dict[str, str]:
+    source = os.environ
+    if spec.agent == "codex":
+        from scripts.agent_runtime.codex_accounts import codex_account_env
+
+        source = codex_account_env(spec.codex_account, source)
     names = _CONTEXT + _AUTH[spec.agent]
     if spec.provider == "openrouter" and spec.agent == "opencode":
         names = (*_CONTEXT, "OPENROUTER_API_KEY")
-    env = {name: os.environ[name] for name in names if name in os.environ}
+    env = {name: source[name] for name in names if name in source}
     if spec.agent == "cursor" and not env.get("CURSOR_API_KEY", "").strip():
         from scripts.agent_runtime.adapters.cursor import _load_cursor_api_key_from_env_file
 
@@ -52,7 +74,11 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
         if file_key:
             env["CURSOR_API_KEY"] = file_key
     if spec.agent == "claude" and spec.claude_account:
-        env["CLAUDE_CONFIG_DIR"] = claude_config_dir(spec.claude_account, env.get("HOME"))
+        config_dir = claude_config_dir(spec.claude_account, env.get("HOME"))
+        if config_dir is None:
+            env.pop("CLAUDE_CONFIG_DIR", None)
+        else:
+            env["CLAUDE_CONFIG_DIR"] = config_dir
     shims = npm_shim_dir()
     if shims is not None:
         original_path = os.pathsep.join(
@@ -70,7 +96,11 @@ def child_env(spec: TaskSpec) -> dict[str, str]:
     env.update(
         LEARN_UKRAINIAN_DISPATCH_TASK_ID=spec.task_id,
         LEARN_UKRAINIAN_DISPATCH_AGENT=spec.agent,
+        LU_TASKS_DIR=str(tasks_dir().resolve()),
     )
+    if spec.agent == "codex" and spec.mode == "read-only":
+        # Its sandbox leaves no writable temp, so git, gh and pytest need this lease; the worker creates it.
+        env["TMPDIR"] = str(dispatch_lease(spec.task_id))
     if spec.mode == "read-only":
         # Restrict explicit URLs too; a worktree or ref snapshot cannot observe an arbitrary remote push.
         env["GIT_ALLOW_PROTOCOL"] = "file"

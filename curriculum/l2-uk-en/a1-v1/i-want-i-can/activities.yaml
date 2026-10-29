@@ -150,48 +150,48 @@ inline:
     title: Доповни речення
     instruction: Choose хочу, можу, or мушу in the right form.
     items:
-      - sentence: Я ___ гуляти, але не можу сьогодні.
+      - sentence: "Я не можу гуляти сьогодні й не мушу гуляти, але я ___ гуляти."
         answer: хочу
         options:
           - хочу
           - можу
           - мушу
-        explanation: The first part gives desire.
-      - sentence: Я хочу піти, але не ___.
+        explanation: "Хочу or хоче expresses desire. The other choices contradict the earlier statements that the speaker cannot act and has no obligation to act."
+      - sentence: "Я хочу піти й мушу піти, але не ___."
         answer: можу
         options:
           - можу
           - хочу
           - мушу
-        explanation: Але не можу gives the practical block.
-      - sentence: "Я не можу: я ___ працювати."
+        explanation: "The speaker wants to go and has to go. Не можу or не може expresses the remaining problem: inability. Denying desire or obligation would contradict the first clauses."
+      - sentence: "Я не хочу працювати й не можу працювати, але ___ працювати."
         answer: мушу
         options:
           - мушу
           - можу
           - хочу
-        explanation: The reason is an obligation.
-      - sentence: Оля ___ гуляти, але не може сьогодні.
+        explanation: "Мушу or мусять expresses obligation despite lacking desire and ability. The other choices contradict the earlier negative statements."
+      - sentence: "Оля не може гуляти й не мусить гуляти, але ___ гуляти."
         answer: хоче
         options:
           - хоче
           - може
           - мусить
-        explanation: The first part gives her desire.
-      - sentence: "Денис не ___ піти: він мусить працювати."
+        explanation: "Хочу or хоче expresses desire. The other choices contradict the earlier statements that the speaker cannot act and has no obligation to act."
+      - sentence: "Денис хоче піти й мусить піти, але не ___."
         answer: може
         options:
           - може
           - хоче
           - мусить
-        explanation: Не може gives the practical block.
-      - sentence: Вони хочуть гуляти, але ___ працювати.
+        explanation: "The speaker wants to go and has to go. Не можу or не може expresses the remaining problem: inability. Denying desire or obligation would contradict the first clauses."
+      - sentence: "Вони не хочуть працювати й не можуть працювати, але ___ працювати."
         answer: мусять
         options:
           - мусять
           - можуть
           - хочуть
-        explanation: Але marks the obligation that blocks the plan.
+        explanation: "Мушу or мусять expresses obligation despite lacking desire and ability. The other choices contradict the earlier negative statements."
   - id: act-4
     type: quiz
     title: Правильне чи особливе дієслово?

@@ -28,6 +28,8 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.ingest import incremental_historical_source_ingest as ingest
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+from scripts.storage.generations import store_kind
 from scripts.wiki import historical_sources
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -277,6 +279,7 @@ def _sqlite_backup(source: Path, target: Path) -> None:
     """Copy a closed SQLite snapshot while preserving *target*'s inode."""
     source_uri = Path(source).resolve().as_uri() + "?mode=ro"
     try:
+        refuse_writable_corpus_database(target)
         with sqlite3.connect(source_uri, uri=True) as source_connection, sqlite3.connect(target) as target_connection:
             source_connection.backup(target_connection)
             target_connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
@@ -443,6 +446,12 @@ def reconcile(
     require(output_receipt_path is not None, "output receipt is required for apply")
     mode = "in_place_sqlite_backup" if apply_in_place else "candidate_atomic_replace"
     target = Path(database_path)
+    # The atomic replace renames a candidate over the target; under the
+    # generation layout that would replace the selector link itself.
+    require(
+        not apply or store_kind(target).kind not in {"selector", "generation"},
+        "sources.db is a generation selector; use --apply-in-place under the store writer lock",
+    )
     candidate: Path | None = None
     candidate_ingest_receipt: Path | None = None
     rollback: Path | None = None

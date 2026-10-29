@@ -40,6 +40,8 @@ from tests.review.test_model_catalog import (
     assert_frozen_surfaces,
     encode,
     observed,
+    with_advisory_roles,
+    without_advisory_roles,
 )
 
 
@@ -49,7 +51,7 @@ def catalog():
 
 
 def test_v1_without_extension_and_v11_with_extension_are_accepted(catalog):
-    assert validate_catalog(deepcopy(BASELINE["catalog"])) == BASELINE["catalog"]
+    assert without_advisory_roles(validate_catalog(with_advisory_roles(BASELINE["catalog"]))) == BASELINE["catalog"]
     catalog["schema_version"] = "model-catalog.v1.1"
     assert validate_catalog(catalog)["schema_version"] == "model-catalog.v1.1"
     assert_frozen_surfaces({"catalog": expanded_legacy_view(catalog)}, surfaces=("catalog",))
@@ -61,7 +63,7 @@ def test_expansion_is_independent_and_does_not_mutate_catalog(catalog):
     assert_frozen_surfaces({"catalog": expanded}, surfaces=("catalog",))
     expanded["models"]["gpt-6.1-sol"]["roles"].clear()
     assert catalog == before
-    assert expanded_legacy_view(BASELINE["catalog"]) == BASELINE["catalog"]
+    assert without_advisory_roles(expanded_legacy_view(with_advisory_roles(BASELINE["catalog"]))) == BASELINE["catalog"]
 
 
 def test_roles_and_identity_aliases_remain_distinct():
@@ -232,7 +234,7 @@ def test_invalid_purpose_and_legacy_catalog_without_roles():
     with pytest.raises(ModelCatalogError, match="purpose"):
         resolve_role("bounded_advisor", purpose="execute")
     with pytest.raises(ModelCatalogError, match="no routing roles"):
-        resolve_role("bounded_advisor", catalog=BASELINE["catalog"], purpose="inspect")
+        resolve_role("bounded_advisor", catalog=with_advisory_roles(BASELINE["catalog"]), purpose="inspect")
     with pytest.raises(ValueError, match="unsupported health status"):
         resolve_role("bounded_advisor", purpose="inspect", health={"codex": "stale"})
 

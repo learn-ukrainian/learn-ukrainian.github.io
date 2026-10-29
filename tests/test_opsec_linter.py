@@ -125,7 +125,65 @@ def test_incomplete_live_enrichment_fails_closed(publication, capsys, field):
     run, payload, live, _git = publication
     del live[field]
     assert run(payload) == 1
-    assert capsys.readouterr().err == "OPSEC publication: required input unavailable or invalid\n"
+    assert capsys.readouterr().err == "OPSEC publication: required input unavailable or invalid: live PR fetch (KeyError)\n"
+
+
+@pytest.mark.parametrize("stage", [
+    "event parse", "live PR fetch", "git verify base", "git verify head",
+    "git fetch base", "git fetch head", "commit-message read", "queue-chain read",
+])
+def test_publication_input_failure_names_stage_without_disclosing_content(publication, monkeypatch, capsys, stage):
+    """Opaque input failures must identify their stage and still block publication."""
+    run, payload, _live, _git = publication
+    private = "synthetic-private-field-content"
+    error = OSError(private)
+    if stage.startswith("git fetch"):
+        error = subprocess.CalledProcessError(1, [private], output=private, stderr=private)
+    elif stage == "commit-message read":
+        error = subprocess.TimeoutExpired([private], 30, output=private, stderr=private)
+    elif stage == "live PR fetch":
+        error = RuntimeError(private)
+
+    def fail(*args, **kwargs):
+        raise error
+
+    event = "pull_request"
+    if stage == "event parse":
+        monkeypatch.setattr(Path, "read_text", fail)
+    elif stage == "live PR fetch":
+        monkeypatch.setattr(opsec_linter, "current_publication_pr", fail)
+    else:
+        real_git = opsec_linter.publication_git
+        pr = payload["pull_request"]
+        target = pr["base" if stage.endswith("base") else "head"]["sha"]
+        verifications = 0
+
+        def git(*args):
+            nonlocal verifications
+            if args == ("cat-file", "-e", f"{target}^{{commit}}"):
+                verifications += 1
+                if stage.startswith("git verify"):
+                    raise error
+                if stage.startswith("git fetch") and verifications == 2:
+                    raise subprocess.CalledProcessError(1, [private])
+            if ((stage.startswith("git fetch") and args[0] == "fetch")
+                    or (stage == "commit-message read" and args[0] == "log")
+                    or (stage == "queue-chain read" and args[0] == "rev-list")):
+                raise error
+            return real_git(*args)
+
+        monkeypatch.setattr(opsec_linter, "publication_git", git)
+        if stage == "queue-chain read":
+            event = "merge_group"
+            payload = {"repository": payload["repository"], "action": "checks_requested",
+                       "merge_group": {"base_sha": pr["base"]["sha"], "head_sha": pr["head"]["sha"],
+                                       "head_ref": "refs/heads/gh-readonly-queue/main/pr-1-" + "a" * 40}}
+
+    assert run(payload, event) == 1
+    output = capsys.readouterr()
+    assert output.out == ""
+    assert output.err == f"OPSEC publication: required input unavailable or invalid: {stage} ({type(error).__name__})\n"
+    assert private not in output.out + output.err
 
 
 @pytest.mark.parametrize("event,payload", [("unknown", {}), ("push", {}), ("pull_request", []),
@@ -160,6 +218,21 @@ def test_new_branch_scans_complete_delta_and_shallow_history_is_rejected(publica
     git_dir = Path(git("rev-parse", "--absolute-git-dir"))
     (git_dir / "shallow").write_text(push["after"] + "\n")
     assert run(push, "push") == 1
+
+
+@pytest.mark.parametrize("planted", [False, True])
+def test_force_push_with_missing_before_scans_merge_base_to_after(publication, capsys, planted):
+    run, payload, _live, git = publication
+    marker = "10." + "23.45.67"
+    git("update-ref", "refs/remotes/origin/main", payload["pull_request"]["base"]["sha"])
+    git("commit", "--allow-empty", "-m", "subject", "-m", marker if planted else "clean body")
+    git("commit", "--allow-empty", "-m", "clean tip")
+    push = {"ref": "refs/heads/topic", "before": "c" * 40, "after": git("rev-parse", "HEAD"),
+            "repository": {"default_branch": "main"}}
+    assert run(push, "push") == int(planted)
+    output = capsys.readouterr()
+    assert marker not in output.out + output.err
+    assert ("publication: commit " in output.out) is planted
 
 
 @pytest.mark.parametrize("kind", ["topic", "initial", "unresolved"])
@@ -223,7 +296,7 @@ def test_direct_script_publication_mode_needs_no_site_packages(tmp_path):
                             env={**os.environ, "GITHUB_EVENT_NAME": "unsupported"},
                             capture_output=True, text=True, timeout=30)
     assert result.returncode == 1
-    assert result.stderr == "OPSEC publication: required input unavailable or invalid\n"
+    assert result.stderr == "OPSEC publication: required input unavailable or invalid: event parse (ValueError)\n"
     # Exercise the live-metadata import closure too, without network or site packages.
     code = """
 import runpy, sys

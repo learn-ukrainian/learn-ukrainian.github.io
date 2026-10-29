@@ -1,4 +1,4 @@
-"""Run literal changed PR test files and the checked-in guards on the PR candidate."""
+"""Run changed tests and guards, or mandatory marker-only repository invariants."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ import re
 import statistics
 import subprocess
 import sys
+import time
 import unicodedata
 import xml.etree.ElementTree as ET
 from pathlib import Path, PurePosixPath
@@ -31,6 +32,7 @@ INFRA = {
     ".python-version",
 }
 CAP_SECONDS = 600
+TEST = re.compile(r"tests/(?:[^/]+/)*test_[^/]+\.py")
 
 
 def git(*args: str) -> bytes:
@@ -52,7 +54,33 @@ def safe_path(name: str) -> str:
     return name
 
 
-def plan(base: str, candidate: str) -> dict:
+def importing_tests(targets: set[str], deleted: set[str], base: str, entries: dict[str, str]) -> list[str]:
+    """Tests that directly import, load, read or run a changed file, by static scan.
+
+    Direct edges only: the transitive closure spans most of the suite, which the
+    merge group already runs. A deleted file has no edges in the candidate, so its
+    surviving dependents come from a scan of the base tree.
+    """
+    from scripts.ci import components
+
+    edges = components.scan_imports(components.python_sources(), set(components.tracked_paths()))["file_edges"]
+    if deleted:
+        tree = {}
+        for row in git("ls-tree", "-rz", base).split(b"\0"):
+            if row:
+                meta, name = row.decode("utf-8").split("\t", 1)
+                tree[name] = meta.split()
+        blobs = tuple((name, meta[2]) for name, meta in tree.items() if name.endswith(".py") and meta[1] == "blob")
+        sources = components.indexed_python_sources(str(components.ROOT), blobs, ())
+        edges = [*edges, *(edge for edge in components.scan_imports(sources, set(tree))["file_edges"]
+                           if edge[1] in deleted)]
+    return sorted({
+        importer for importer, target in edges
+        if target in targets and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
+    })
+
+
+def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
     """Use only the original base-to-candidate diff, never a current branch tip."""
     entries = {}
     for row in git("ls-tree", "-rz", candidate, "--", "tests").split(b"\0"):
@@ -67,9 +95,9 @@ def plan(base: str, candidate: str) -> dict:
     guards = [safe_path(line) for line in GUARDS.read_text(encoding="utf-8").splitlines()]
     if not guards or len(set(guards)) != len(guards):
         raise ValueError("empty or duplicate guard list")
-    tests = sorted(p for p in changed if re.fullmatch(r"tests/(?:[^/]+/)*test_[^/]+\.py", p) and p in entries)
+    tests = sorted(p for p in changed if TEST.fullmatch(p) and p in entries)
     for name in set(guards) | set(tests):
-        if not re.fullmatch(r"tests/(?:[^/]+/)*test_[^/]+\.py", name) or entries.get(name) not in {"100644", "100755"}:
+        if not TEST.fullmatch(name) or entries.get(name) not in {"100644", "100755"}:
             raise ValueError("test is not a tracked regular file")
         path = Path(name)
         if not path.is_file() or any(p.is_symlink() for p in (path, *path.parents)):
@@ -104,16 +132,43 @@ def plan(base: str, candidate: str) -> dict:
         if estimate > CAP_SECONDS
         else None
     )
-    run = sorted(set(guards) if reason else set(selected))
+    run = set(guards) if reason else set(selected)
+    # Tests for changed code fill the cap's remaining budget, cheapest first; the
+    # rest defer to merge-group pytest. Infrastructure changes run guards only.
+    sources = {p for p in changed if not TEST.fullmatch(p)}
+    deleted = {
+        safe_path(p.decode("utf-8"))
+        for p in git("diff", "--no-renames", "--diff-filter=D", "--name-only", "-z", base, candidate, "--").split(b"\0")
+        if p
+    } & sources
+    imported = (
+        [p for p in importing_tests(sources, deleted, base, entries) if p not in run]
+        if importers and sources and not reason
+        else []
+    )
+    unknown += [p for p in imported if p not in durations]
+    for p in imported:
+        value = durations.get(p, default)
+        if type(value) not in {int, float} or not math.isfinite(value) or value < 0:
+            raise ValueError("invalid recorded duration")
+    budget = estimate
+    for p in sorted(imported, key=lambda p: (durations.get(p, default), p)):
+        if budget + durations.get(p, default) <= CAP_SECONDS:
+            run.add(p)
+            budget += durations.get(p, default)
+    if set(imported) - run:
+        reason = "recorded estimate exceeds 600 second cap"
+    run = sorted(run)
     return {
         "candidate": candidate,
         "base": base,
         "guards": guards,
         "changed_test_files": tests,
+        "importing_test_files": imported,
         "run_files": run,
-        "deferred_files": sorted(set(tests) - set(run)),
+        "deferred_files": sorted((set(tests) | set(imported)) - set(run)),
         "reason": reason,
-        "estimate_seconds": estimate,
+        "estimate_seconds": budget,
         "unknown_duration_files": unknown,
         "deleted_test_files": sorted(
             p for p in changed if p.startswith("tests/") and p.endswith(".py") and p not in entries
@@ -123,16 +178,17 @@ def plan(base: str, candidate: str) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Run changed test files and fixed guards for a PR candidate.\n"
-        "Use in CI admission; this never replaces full merge-group pytest.",
+        description="Run changed tests, tests that import changed files and guards, or marker-only\n"
+        "repository invariants for a PR candidate. PR CI runs no pytest shards; merge-group CI runs the full suite.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Example: .venv/bin/python -m scripts.ci.pr_affected_tests\n"
         "Inputs: EVENT_NAME, GITHUB_EVENT_PATH, GITHUB_SHA, GITHUB_REF.\n"
-        "Outputs: ci-artifacts/pr-affected.json, pr-affected.xml and GITHUB_STEP_SUMMARY.\n"
+        "Outputs: ci-artifacts/pr-affected.* or pr-repo-wide.* and GITHUB_STEP_SUMMARY.\n"
         "Exit codes: 0 required execution passed; 1 invalid proof or failed execution; 2 invalid arguments.\n"
         "Related: scripts/ci/pr-affected-guards.txt; docs/runbooks/ci-gate.md.",
     )
-    parser.parse_args()
+    parser.add_argument("--repo-wide", action="store_true", help="Run only repo_wide marked tests, independent of changed-file deferral.")
+    args = parser.parse_args()
     stage, reason = "event_identity", "invalid_event_or_candidate"
     try:
         actual = git("rev-parse", "HEAD").decode().strip()
@@ -152,24 +208,38 @@ def main() -> int:
         stage, reason = "clean_checkout", "dirty_checkout"
         subprocess.run(["git", "diff", "--quiet", actual, "--"], check=True, capture_output=True, timeout=30)
         stage, reason = "test_plan", "invalid_paths_tests_or_durations"
-        record = plan(base, actual)
+        record = plan(base, actual, importers=not args.repo_wide)
         record["event_base"] = pr["base"]["sha"]
+        marker = "not atlas_release and not slow and not site_toolchain"
+        if args.repo_wide:
+            # Keep nightly, release and frontend tests in their existing tiers.
+            marker = "repo_wide and " + marker
+        paths = ["tests"] if args.repo_wide else record["run_files"]
+        # pytest excludes build/ by default; it contains registered invariants.
+        collection = ["--override-ini=norecursedirs=.* node_modules"] if args.repo_wide else []
+        timeout = 1500 if args.repo_wide else 480
+        record.update(selection=marker, requested_paths=paths, workers=2, timeout_seconds=timeout,
+                      logical_cpus=os.cpu_count(), load_average=os.getloadavg())
         stage, reason = "fresh_report", "stale_or_unwritable_report"
         output = Path("ci-artifacts")
         output.mkdir(exist_ok=True)
-        junit = output / "pr-affected.xml"
+        stem = "pr-repo-wide" if args.repo_wide else "pr-affected"
+        junit = output / f"{stem}.xml"
+        report = output / f"{stem}.json"
         if junit.exists():
             raise ValueError("stale PR pytest report")
         record.update(exit_code=None, reported_cases=None, skipped_cases=None, failed_cases=None,
                       deferred_case_count=None, execution_status="incomplete")
-        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         stage, reason = "pytest_execution", "execution_incomplete"
+        started = time.monotonic()
         result = subprocess.run(
             [
                 sys.executable,
                 "-m",
                 "pytest",
-                *record["run_files"],
+                *paths,
+                *collection,
                 "-n",
                 "2",
                 "--dist=worksteal",
@@ -177,16 +247,18 @@ def main() -> int:
                 "--timeout=120",
                 "--timeout-method=thread",
                 "-m",
-                "not atlas_release and not slow and not site_toolchain",
+                marker,
                 "--strict-markers",
+                "--durations=25",
                 "--junitxml=" + str(junit),
             ],
             check=False,
-            timeout=480,
+            timeout=timeout,
         )
+        record["wall_seconds"] = round(time.monotonic() - started, 3)
         stage, reason = "pytest_report", "missing_or_invalid_junit"
         record["exit_code"] = result.returncode
-        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         cases = list(ET.parse(junit).getroot().iter("testcase"))
         record.update(
             exit_code=result.returncode,
@@ -197,12 +269,13 @@ def main() -> int:
             execution_status="completed",
         )
         stage, reason = "proof_output", "proof_output_incomplete"
-        (output / "pr-affected.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         summary = (
-            "PR admission: full pytest was not run.\n"
-            f"Candidate: {actual}\nRequested files ({len(record['run_files'])}): "
-            + ", ".join(record["run_files"])
+            "PR changed tests and guards: the full pytest suite runs in merge-group CI.\n"
+            f"Candidate: {actual}\nMarker selection: {marker}\nRequested paths ({len(paths)}): "
+            + ", ".join(paths)
             + "\n"
+            + f"Wall seconds: {record['wall_seconds']}; workers: 2; subprocess timeout: {timeout}s.\n"
             + f"Reported cases: {len(cases)}; skipped: {record['skipped_cases']}; failed: {record['failed_cases']}; exit: {result.returncode}.\n"
             + f"Deferred changed files ({len(record['deferred_files'])}): "
             + (", ".join(record["deferred_files"]) or "none")

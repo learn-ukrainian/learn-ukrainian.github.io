@@ -248,12 +248,15 @@ and records `worktree_disposition: retained` with one of these reasons:
   another unfinished record claims the tree, or artifact preservation failed);
   `worktree_disposition_detail` carries its reason.
 
-A failed removal is recorded as `error` (`worktree_remove_failed`, with
-`worktree_disposition_detail`). The next dispatch retries settlement for every
-reason except `borrowed_worktree` and `dirty` (`worker.RETRY_REASONS`,
-`worker.settle_left_worktrees`); a `dirty` tree stays for its owner. The guarded removers in `worktree_claims` also refuse while an
+A failed removal is recorded as `error` (`worktree_remove_failed` with
+`worktree_disposition_detail`, or `settlement_failed`). Every later dispatch and
+every task settlement retries settlement for every reason except
+`borrowed_worktree` (`worker.RETRY_REASONS`, `worker.settle_left_worktrees`),
+under the same proofs: a tree that is still dirty or unpublished stays for its
+owner. `scripts/dispatch.py worktrees` lists every linked worktree with its
+owning task and disposition ([dispatch v2](../design/dispatch-v2.md)). The guarded removers in `worktree_claims` also refuse while an
 unfinished task record names the checkout, including a non-terminal review
-attempt that reads from it. The task record claims the deepest registered linked checkout containing each of these inputs, including subdirectories and symlink spellings: its `review_contract.input_root`, and every `review_input_paths` entry, namely the attempt manifest (dispatch resolves its path once at admission, so every later read and the worker use the symlink target, never the supplied spelling) and the worker's own code checkout (it runs from there for the whole attempt). A formal attempt takes no output schema (`--review-attempt` with `--output-schema` is refused). Inputs in the primary checkout, or outside any registered checkout, claim nothing. Before it reserves the attempt id, dispatch refuses a review contract without an `input_root`, and refuses the attempt when the fleet scratch root (`LU_SCRATCH_ROOT`, which holds the worker's runtime tmp lease) lies inside a registered linked checkout (`review_scratch_root_in_worktree`). It holds the shared removal lock of every claimed checkout during input preparation until the task record publishes the claims. Only a terminal task status ends the protection; an owner or settled-claim exemption does not, and a record with an unreadable or malformed claim, or an unavailable worktree registration, refuses removal rather than releasing it.
+attempt that reads from it. The task record claims the deepest registered linked checkout containing each of these inputs, including subdirectories and symlink spellings: its `review_contract.input_root`, and every `review_input_paths` entry, namely the attempt manifest (dispatch resolves its path once at admission, so every later read and the worker use the symlink target, never the supplied spelling) and the worker's own code checkout (it runs from there for the whole attempt). A formal attempt takes no output schema (`--review-attempt` with `--output-schema` is refused). Inputs in the primary checkout, or outside any registered checkout, claim nothing. Before it reserves the attempt id, dispatch refuses a review contract without an `input_root`, and refuses the attempt when the fleet scratch root (`LU_SCRATCH_ROOT`, which holds the worker's runtime tmp lease) lies inside a registered linked checkout (`review_scratch_root_in_worktree`). It holds the shared removal lock of every claimed checkout during input preparation until the task record publishes the claims. Only a terminal task status ends the protection; an owner or settled-claim exemption does not, and a record with an unreadable or malformed claim, or an unavailable worktree registration, refuses removal rather than releasing it. A file in the task-record directory that parses as JSON but is not an object (a worker's proof list) is no task record and claims nothing; bytes that do not parse still refuse.
 
 ### Finished branch-holder scratch hand-off (#10227, first slice)
 

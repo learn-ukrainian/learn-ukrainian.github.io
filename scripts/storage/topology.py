@@ -12,11 +12,14 @@ Contract (storage topology v1):
 
 from __future__ import annotations
 
+import functools
 import os
 import platform
+import re
+import stat
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from types import MappingProxyType
 from typing import Any, Literal
 
@@ -138,6 +141,8 @@ def _database_facts(path: Path) -> dict[str, Any]:
     """Size, journal mode, and WAL sidecar size of an on-disk SQLite file (never opens a connection)."""
     if not path.is_file():
         return {"size_bytes": None, "journal_mode": None, "wal_bytes": None}
+    # A selector's sidecars sit next to the generation it selects.
+    path = path.resolve()
     wal = path.with_name(f"{path.name}-wal")
     return {
         "size_bytes": path.stat().st_size,
@@ -541,6 +546,110 @@ def store_locality(path: Path) -> Literal["local", "network", "unknown"]:
     return _store_locality(path)
 
 
+# --- Sources store selector (generations are published by scripts/storage/generations.py) ---
+
+GENERATIONS_DIRNAME = "sources-generations"
+SELECTOR_NAME = "sources.db"
+_GENERATION_NAME = re.compile(r"sources\.\d{8}T\d{6}Z-[0-9a-f]{12}\.db")
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+
+StoreKind = Literal["selector", "generation", "legacy_live", "other"]
+Layout = Literal["selector", "legacy_file", "missing"]
+
+
+def is_generation_name(name: str) -> bool:
+    return bool(_GENERATION_NAME.fullmatch(name))
+
+
+@dataclass(frozen=True)
+class SelectorState:
+    """What a selector path is right now; ``generation`` is the file it selects."""
+
+    layout: Layout | Literal["invalid"]
+    reason: str
+    generation: Path | None = None
+
+
+def inspect_selector(selector: Path) -> SelectorState:
+    """Classify the selector without following anything outside the generation directory."""
+    try:
+        info = selector.lstat()
+    except FileNotFoundError:
+        return SelectorState("missing", "selector_missing")
+    if stat.S_ISREG(info.st_mode):
+        return SelectorState("legacy_file", "regular_file", selector)
+    if not stat.S_ISLNK(info.st_mode):
+        return SelectorState("invalid", "selector_not_file_or_link")
+    # The link text itself must be exact: no "./", doubled or trailing slashes.
+    text = os.readlink(selector)
+    prefix = f"{GENERATIONS_DIRNAME}/"
+    name = text[len(prefix):] if text.startswith(prefix) else ""
+    if not is_generation_name(name):
+        return SelectorState("invalid", "selector_target_outside_generations")
+    directory = selector.parent / GENERATIONS_DIRNAME
+    try:
+        if not stat.S_ISDIR(directory.lstat().st_mode):
+            return SelectorState("invalid", "generations_dir_not_real_directory")
+        target_info = (directory / name).lstat()
+    except FileNotFoundError:
+        return SelectorState("invalid", "selected_generation_missing")
+    if not stat.S_ISREG(target_info.st_mode):
+        return SelectorState("invalid", "selected_generation_not_regular_file")
+    return SelectorState("selector", "selector", directory / name)
+
+
+@functools.cache
+def live_store_path() -> Path:
+    """The primary checkout's store path (selector, or the regular file before the bootstrap)."""
+    return resolve_active_sources_db(main_checkout_root(_REPO_ROOT), env={}).path
+
+
+@dataclass(frozen=True)
+class StoreRef:
+    """Whether a path names the Sources store; ``lock_dir`` holds its writer lock."""
+
+    kind: StoreKind
+    selector: Path | None = None
+    lock_dir: Path | None = None
+
+
+def store_kind(path: str | os.PathLike[str]) -> StoreRef:
+    """Say whether ``path`` names the Sources store.
+
+    A selector is a link named ``sources.db`` whose text starts with the
+    generation directory. A generation is any path that resolves into a
+    generation directory (a differently named link to one included). Before the
+    bootstrap the store is the primary checkout's regular ``data/sources.db``.
+    Every other path (fixtures, staged copies, temporary builds) is ``other``.
+    """
+    raw = Path(os.path.abspath(os.fspath(path)))
+    try:
+        if raw.name == SELECTOR_NAME and raw.is_symlink():
+            parts = PurePosixPath(os.readlink(raw)).parts
+            if parts and parts[0] == GENERATIONS_DIRNAME:
+                return StoreRef("selector", raw, raw.parent)
+        resolved = raw.resolve()
+    except (OSError, RuntimeError, ValueError):
+        return StoreRef("other")
+    if resolved.parent.name == GENERATIONS_DIRNAME and is_generation_name(resolved.name):
+        return StoreRef("generation", None, resolved.parent.parent)
+    try:
+        live = live_store_path()
+        if resolved == live.resolve() and live.is_file() and not live.is_symlink():
+            return StoreRef("legacy_live", live, live.parent)
+    except (OSError, RuntimeError, ValueError):
+        return StoreRef("other")
+    return StoreRef("other")
+
+
+def _names_selector(path: Path) -> bool:
+    """True for a symlink whose text points into a Sources generation directory."""
+    if not path.is_symlink():
+        return False
+    parts = PurePosixPath(os.readlink(path)).parts
+    return bool(parts) and parts[0] == GENERATIONS_DIRNAME
+
+
 def resolve_store(
     store: StoreId,
     repository_root: Path | None = None,
@@ -582,6 +691,14 @@ def resolve_store(
         path = Path(raw)
         if not path.is_absolute():
             return StoreRefusal(store, "relative_override")
+        if store == "sources" and (provenance == "primary_checkout" or _names_selector(path)):
+            # The primary store is a regular file (before the bootstrap) or a
+            # selector confined to its generation directory, never another link.
+            state = inspect_selector(path)
+            if state.layout == "missing":
+                return StoreRefusal(store, "store_missing")
+            if state.layout == "invalid":
+                return StoreRefusal(store, state.reason)
         path = path.resolve(strict=True)
         if not path.is_file():
             return StoreRefusal(store, "not_a_file")

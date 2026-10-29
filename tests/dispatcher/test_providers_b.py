@@ -9,8 +9,12 @@ from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime.adapters.codex import _read_only_tmp_flags
+from scripts.agent_runtime.read_only_tmp import dispatch_lease
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
+from scripts.dispatcher import runtime_context
 from scripts.dispatcher.providers import load
+from scripts.dispatcher.runtime_context import read_roots
 from scripts.dispatcher.types import ParsedResult, TaskSpec
 from scripts.lib import rules_core
 
@@ -55,6 +59,62 @@ if "-o" in sys.argv:
     pathlib.Path(sys.argv[sys.argv.index("-o") + 1]).write_text("Finished.")
 sys.stdout.write(os.environ["STUB_STREAM"])
 """
+
+
+@pytest.mark.parametrize("provider", ["claude", "codex", "cursor", "agy"])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_private_repo_workers_can_load_shared_skills_and_task_records(tmp_path, monkeypatch, provider, mode):
+    """Regression: retargeting Git must not strand workers without shared skills or task records."""
+    from scripts.dispatcher import agy_sandbox
+    from scripts.dispatcher.environment import child_env
+
+    primary, private = tmp_path / "control plane", tmp_path / "private checkout"
+    private.mkdir()
+    shared = primary / "agents_extensions/shared"
+    for name in ("takeover", "full-send", "review-loop"):
+        skill = shared / "skills" / name / "SKILL.md"
+        skill.parent.mkdir(parents=True)
+        skill.write_text(f"---\nname: {name}\ndescription: Load {name}.\n---\n{name} instructions\n")
+    tasks = primary / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    (tasks / "previous.result").write_text("prior worker evidence")
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    source_path = rules_core.source_path
+    monkeypatch.setattr(rules_core, "source_path", lambda rel, root=None:
+                        shared if rel == "agents_extensions/shared" else source_path(rel, root))
+    # Exercise the structured AGY provider message here; the real read-only boundary is tested below.
+    monkeypatch.setattr(agy_sandbox, "unavailable", lambda: None)
+    monkeypatch.setattr(agy_sandbox, "launcher", lambda spec, argv: argv)
+    prompt = tmp_path / "prompt"
+    original = b"List the loaded skills.\r\nRead previous.result from the shared task store."
+    prompt.write_bytes(original)
+    spec = TaskSpec("context", provider, "stub", "high", mode, private, prompt, tmp_path / "final")
+    invocation = runtime_context.build(spec, child_env(spec))
+    # A real child interprets the advertised catalog and opens its files, rather than just
+    # asserting that a helper was called or that environment keys were set.
+    child = r'''
+import json, os, pathlib, sys
+raw = sys.stdin.buffer.read()
+if sys.argv[1] == "agy":
+    raw = json.loads(raw)["message"]["content"][0]["text"].encode()
+context = json.loads(raw.split(b"<dispatch-context>\n", 1)[1].split(b"\n</dispatch-context>", 1)[0])
+skills = {item["name"]: pathlib.Path(item["path"]).read_text().split("---\n")[-1].strip()
+          for item in context["skills"]}
+tasks = pathlib.Path(context["tasks_dir"])
+assert tasks == pathlib.Path(os.environ["LU_TASKS_DIR"])
+print(json.dumps({"skills": skills, "prior": (tasks / "previous.result").read_text()}))
+'''
+    result = subprocess.run([sys.executable, "-c", child, provider], cwd=private, env=invocation.env,
+                            input=invocation.stdin, capture_output=True, timeout=10)
+    assert result.returncode == 0, result.stderr.decode()
+    assert json.loads(result.stdout) == {
+        "skills": {name: f"{name} instructions" for name in ("takeover", "full-send", "review-loop")},
+        "prior": "prior worker evidence",
+    }
+    assert prompt.read_bytes() == original
+    if provider == "claude" and mode == "read-only":
+        directories = [invocation.argv[i + 1] for i, arg in enumerate(invocation.argv) if arg == "--add-dir"]
+        assert str(shared) in directories and str(tasks) in directories
 
 
 # Read-only AGY runs only inside its bubblewrap boundary, covered below (C-3027).
@@ -111,7 +171,11 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
     if provider == "codex":
         if effort:
             expected += ["-c", "model_reasoning_effort=high"]
-        expected += ["-s", "read-only"] if mode == "read-only" else ["--dangerously-bypass-approvals-and-sandbox"]
+        expected += (
+            _read_only_tmp_flags(dispatch_lease(spec.task_id))
+            if mode == "read-only"
+            else ["--dangerously-bypass-approvals-and-sandbox"]
+        )
     elif provider == "claude":
         if effort:
             expected += ["--effort", "high"]
@@ -169,7 +233,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
             json.dumps(
                 {
                     "event": "user",
-                    "message": {"role": "user", "content": [{"type": "text", "text": prompt_bytes.decode()}]},
+                    "message": {"role": "user", "content": [{"type": "text", "text": expected_stdin.decode()}]},
                 }
             )
             + "\n"
@@ -747,17 +811,30 @@ def test_agy_read_only_launcher_refuses_without_bubblewrap_and_never_runs_agy(tm
 
 
 @pytest.mark.skipif(not _bwrap_usable(), reason="needs a usable unprivileged bubblewrap")
-def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tmp_path):
+@pytest.mark.parametrize("has_databases", [False, True])
+def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tmp_path, has_databases):
     """C-3027: inside the boundary the worktree, Git metadata and database target refuse writes; a killed
     launcher takes the whole sandbox with it."""
+    import shlex
     import signal
     import time
 
     worktree, head = _linked_worktree(tmp_path)
+    if not has_databases:
+        for name in ("sources.db", "vesum.db"):
+            (worktree / "data" / name).unlink()
+            (tmp_path / "repo/data" / name).unlink()
+    shared, tasks = read_roots()
+    tasks.mkdir(parents=True, exist_ok=True)
+    prior = tasks / "context.result"
+    prior.write_text("prior evidence\n")
+    skill = shlex.quote(str(shared / "skills/takeover/SKILL.md"))
     attempts = (
         "echo x >> README.md; echo x >> data/sources.db; touch new; rm -f README.md; "
         "git -c user.email=s@example.invalid -c user.name=S commit -q --allow-empty -m x; "
         "git config --get-regexp 'remote|credential' >&2; git log --oneline -1 >/dev/null || echo nolog >&2; "
+        f"cat {skill} >/dev/null || exit 5; "
+        'cat "$LU_TASKS_DIR/context.result"; echo overwrite >> "$LU_TASKS_DIR/context.result"; '
         "echo scratch > $TMPDIR/ok && cat $TMPDIR/ok"
     )
     argv, env = _launch(tmp_path, worktree, "holds", ["/bin/sh", "-c", attempts])
@@ -765,13 +842,15 @@ def test_agy_read_only_boundary_holds_the_worktree_and_kills_every_descendant(tm
     receipt = json.loads((tmp_path / "holds.sandbox.json").read_text())
     assert (run.returncode, receipt["status"]) == (0, "ran"), (receipt.get("reason"), run.stderr)
     assert receipt["canary"]["passed"] is True
-    assert run.stdout.strip() == "scratch"
+    assert run.stdout.splitlines() == ["prior evidence", "scratch"]
+    assert prior.read_text() == "prior evidence\n"
     assert run.stderr.count("Read-only file system") >= 4
     assert "marker" not in run.stderr and "nolog" not in run.stderr
     assert receipt["input"] == {"start": {"head": head, "clean": True}, "end": {"head": head, "clean": True}}
     outcomes = {(probe["op"], probe["path"]): probe["outcome"] for probe in receipt["canary"]["probes"]}
     target = str((tmp_path / "repo" / "data" / "sources.db").resolve())
-    assert outcomes[("chmod", target)] == outcomes[("write_open", target)] == "EROFS"
+    if has_databases:
+        assert outcomes[("chmod", target)] == outcomes[("write_open", target)] == "EROFS"
     assert (worktree / "README.md").read_text() == "reviewed\n" and not (worktree / "new").exists()
     assert not (tmp_path / "scratch-holds").exists()
 

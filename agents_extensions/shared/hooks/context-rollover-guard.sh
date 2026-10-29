@@ -62,6 +62,13 @@ if [ "$TOKENS" -gt 0 ] && [ $((TOKENS * 100)) -lt $((LAST_TOKENS * 60)) ]; then
   exit 0
 fi
 [ "$TOKENS" -gt 0 ] || TOKENS="$LAST_TOKENS"
-MSG="Context is above this session's final rollover tier (~$((TOKENS / 1000))k tokens) and the handoff should already be prepared. Only answer briefly; do not start new work or dispatches. If the handoff is not prepared yet, prepare it now, then tell the operator to restart the session."
+LANE_NAME=$(context_driver_lane_name "$PROJECT_DIR")
+if [ -n "$LANE_NAME" ]; then
+  # A guard-managed driver lane is restarted by scripts/ops/context_guard.py once
+  # it sees a standalone HANDOFF-DONE line, not by the operator.
+  MSG="Context is above this session's final rollover tier (~$((TOKENS / 1000))k tokens) and the handoff should already be prepared. Only answer briefly; do not start new work or dispatches. If the handoff is not finished yet, finish it now, post a standalone line reading HANDOFF-DONE ${LANE_NAME}, and end the turn; the context guard restarts this lane."
+else
+  MSG="Context is above this session's final rollover tier (~$((TOKENS / 1000))k tokens) and the handoff should already be prepared. Only answer briefly; do not start new work or dispatches. If the handoff is not prepared yet, prepare it now, then tell the operator to restart the session."
+fi
 jq -n --arg msg "$MSG" '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":$msg}}'
 exit 0

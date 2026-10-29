@@ -1,0 +1,1457 @@
+{
+  "schema": "uk-behaviour-freeze/2",
+  "status": "PROTOCOL_FROZEN_DATA_UNSEALED",
+  "observed_base_sha": "4ba600e9824b5e2a58d46d59d5ddbff20d2f0eda",
+  "protocol": "uk-behaviour/2",
+  "scorer": "uk-behaviour-score/2",
+  "baseline_authorized_by_this_artifact": false,
+  "splits": {
+    "development": {
+      "fresh_lesson": 2,
+      "fresh_activities": 2,
+      "v7_module": 1,
+      "exercise_review": 12,
+      "card_review": 7,
+      "passage_review": 12,
+      "items": 52,
+      "levels": {
+        "A1": 46,
+        "A2": 6
+      },
+      "passage_seeds": 64,
+      "exercise_labelled_defect_requests": 10,
+      "exercise_clean_requests": 2,
+      "card_facets": [
+        "meaning",
+        "stress",
+        "form"
+      ],
+      "passage_protected": {
+        "dialect": 16,
+        "heritage": 16,
+        "rare_valid": 16
+      },
+      "protected_by_family": {
+        "fresh_lesson": {
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
+        },
+        "fresh_activities": {
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
+        },
+        "v7_module": {
+          "dialect": 1,
+          "heritage": 1,
+          "rare_valid": 1
+        },
+        "exercise_review": {
+          "dialect": 12,
+          "heritage": 12,
+          "rare_valid": 12
+        },
+        "card_review": {
+          "dialect": 7,
+          "heritage": 7,
+          "rare_valid": 7
+        },
+        "passage_review": {
+          "dialect": 16,
+          "heritage": 16,
+          "rare_valid": 16
+        },
+        "pedagogy_review": {
+          "dialect": 16,
+          "heritage": 16,
+          "rare_valid": 16
+        }
+      },
+      "protected_opportunities": 168,
+      "pedagogy_review": 16,
+      "modes": {
+        "repair": 33,
+        "authoring": 19
+      },
+      "modes_by_family": {
+        "fresh_lesson": {
+          "repair": 0,
+          "authoring": 2
+        },
+        "fresh_activities": {
+          "repair": 0,
+          "authoring": 2
+        },
+        "v7_module": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "exercise_review": {
+          "repair": 12,
+          "authoring": 0
+        },
+        "card_review": {
+          "repair": 7,
+          "authoring": 0
+        },
+        "passage_review": {
+          "repair": 8,
+          "authoring": 4
+        },
+        "pedagogy_review": {
+          "repair": 6,
+          "authoring": 10
+        }
+      },
+      "levels_by_mode": {
+        "repair": {
+          "A1": 33,
+          "A2": 0
+        },
+        "authoring": {
+          "A1": 13,
+          "A2": 6
+        }
+      },
+      "pedagogy_defects": 13,
+      "pedagogy_clean_requests": 3,
+      "pedagogy_defects_by_kind_and_mode": {
+        "standard_coverage_or_sequencing": {
+          "repair": 1,
+          "authoring": 0
+        },
+        "textbook_sequencing": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "prerequisite_or_load": {
+          "repair": 1,
+          "authoring": 1
+        },
+        "child_level": {
+          "repair": 1,
+          "authoring": 1
+        },
+        "target_mismatch": {
+          "repair": 1,
+          "authoring": 1
+        },
+        "incomplete_or_unsuitable_section": {
+          "repair": 1,
+          "authoring": 0
+        },
+        "answer_given_away": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "missing_planned_video": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "hidden_player_audio_only": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "ohoiko_presentation": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "clean": {
+          "repair": 1,
+          "authoring": 2
+        }
+      },
+      "pedagogy_snippet_shapes": {
+        "lesson": 6,
+        "plan": 5,
+        "exercise": 5
+      },
+      "exercise_defects_by_kind": {
+        "stem_translates_answer": 1,
+        "stem_names_answer": 1,
+        "stem_describes_form": 1,
+        "giveaway_gloss": 1,
+        "distractor_agreement_leak": 1,
+        "ambiguous_key": 1,
+        "wrong_key": 1,
+        "stress": 1,
+        "form": 1,
+        "answer_position_pattern": 1
+      }
+    },
+    "selection": {
+      "fresh_lesson": 2,
+      "fresh_activities": 2,
+      "v7_module": 1,
+      "exercise_review": 12,
+      "card_review": 7,
+      "passage_review": 12,
+      "items": 52,
+      "levels": {
+        "A1": 46,
+        "A2": 6
+      },
+      "passage_seeds": 64,
+      "exercise_labelled_defect_requests": 10,
+      "exercise_clean_requests": 2,
+      "card_facets": [
+        "meaning",
+        "stress",
+        "form"
+      ],
+      "passage_protected": {
+        "dialect": 16,
+        "heritage": 16,
+        "rare_valid": 16
+      },
+      "protected_by_family": {
+        "fresh_lesson": {
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
+        },
+        "fresh_activities": {
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
+        },
+        "v7_module": {
+          "dialect": 1,
+          "heritage": 1,
+          "rare_valid": 1
+        },
+        "exercise_review": {
+          "dialect": 12,
+          "heritage": 12,
+          "rare_valid": 12
+        },
+        "card_review": {
+          "dialect": 7,
+          "heritage": 7,
+          "rare_valid": 7
+        },
+        "passage_review": {
+          "dialect": 16,
+          "heritage": 16,
+          "rare_valid": 16
+        },
+        "pedagogy_review": {
+          "dialect": 16,
+          "heritage": 16,
+          "rare_valid": 16
+        }
+      },
+      "protected_opportunities": 168,
+      "pedagogy_review": 16,
+      "modes": {
+        "repair": 33,
+        "authoring": 19
+      },
+      "modes_by_family": {
+        "fresh_lesson": {
+          "repair": 0,
+          "authoring": 2
+        },
+        "fresh_activities": {
+          "repair": 0,
+          "authoring": 2
+        },
+        "v7_module": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "exercise_review": {
+          "repair": 12,
+          "authoring": 0
+        },
+        "card_review": {
+          "repair": 7,
+          "authoring": 0
+        },
+        "passage_review": {
+          "repair": 8,
+          "authoring": 4
+        },
+        "pedagogy_review": {
+          "repair": 6,
+          "authoring": 10
+        }
+      },
+      "levels_by_mode": {
+        "repair": {
+          "A1": 33,
+          "A2": 0
+        },
+        "authoring": {
+          "A1": 13,
+          "A2": 6
+        }
+      },
+      "pedagogy_defects": 13,
+      "pedagogy_clean_requests": 3,
+      "pedagogy_defects_by_kind_and_mode": {
+        "standard_coverage_or_sequencing": {
+          "repair": 1,
+          "authoring": 0
+        },
+        "textbook_sequencing": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "prerequisite_or_load": {
+          "repair": 1,
+          "authoring": 1
+        },
+        "child_level": {
+          "repair": 1,
+          "authoring": 1
+        },
+        "target_mismatch": {
+          "repair": 1,
+          "authoring": 1
+        },
+        "incomplete_or_unsuitable_section": {
+          "repair": 1,
+          "authoring": 0
+        },
+        "answer_given_away": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "missing_planned_video": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "hidden_player_audio_only": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "ohoiko_presentation": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "clean": {
+          "repair": 1,
+          "authoring": 2
+        }
+      },
+      "pedagogy_snippet_shapes": {
+        "lesson": 6,
+        "plan": 5,
+        "exercise": 5
+      },
+      "exercise_defects_by_kind": {
+        "stem_translates_answer": 1,
+        "stem_names_answer": 1,
+        "stem_describes_form": 1,
+        "giveaway_gloss": 1,
+        "distractor_agreement_leak": 1,
+        "ambiguous_key": 1,
+        "wrong_key": 1,
+        "stress": 1,
+        "form": 1,
+        "answer_position_pattern": 1
+      }
+    },
+    "final": {
+      "fresh_lesson": 2,
+      "fresh_activities": 2,
+      "v7_module": 1,
+      "exercise_review": 12,
+      "card_review": 7,
+      "passage_review": 12,
+      "items": 52,
+      "levels": {
+        "A1": 46,
+        "A2": 6
+      },
+      "passage_seeds": 64,
+      "exercise_labelled_defect_requests": 10,
+      "exercise_clean_requests": 2,
+      "card_facets": [
+        "meaning",
+        "stress",
+        "form"
+      ],
+      "passage_protected": {
+        "dialect": 16,
+        "heritage": 16,
+        "rare_valid": 16
+      },
+      "protected_by_family": {
+        "fresh_lesson": {
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
+        },
+        "fresh_activities": {
+          "dialect": 2,
+          "heritage": 2,
+          "rare_valid": 2
+        },
+        "v7_module": {
+          "dialect": 1,
+          "heritage": 1,
+          "rare_valid": 1
+        },
+        "exercise_review": {
+          "dialect": 12,
+          "heritage": 12,
+          "rare_valid": 12
+        },
+        "card_review": {
+          "dialect": 7,
+          "heritage": 7,
+          "rare_valid": 7
+        },
+        "passage_review": {
+          "dialect": 16,
+          "heritage": 16,
+          "rare_valid": 16
+        },
+        "pedagogy_review": {
+          "dialect": 16,
+          "heritage": 16,
+          "rare_valid": 16
+        }
+      },
+      "protected_opportunities": 168,
+      "pedagogy_review": 16,
+      "modes": {
+        "repair": 33,
+        "authoring": 19
+      },
+      "modes_by_family": {
+        "fresh_lesson": {
+          "repair": 0,
+          "authoring": 2
+        },
+        "fresh_activities": {
+          "repair": 0,
+          "authoring": 2
+        },
+        "v7_module": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "exercise_review": {
+          "repair": 12,
+          "authoring": 0
+        },
+        "card_review": {
+          "repair": 7,
+          "authoring": 0
+        },
+        "passage_review": {
+          "repair": 8,
+          "authoring": 4
+        },
+        "pedagogy_review": {
+          "repair": 6,
+          "authoring": 10
+        }
+      },
+      "levels_by_mode": {
+        "repair": {
+          "A1": 33,
+          "A2": 0
+        },
+        "authoring": {
+          "A1": 13,
+          "A2": 6
+        }
+      },
+      "pedagogy_defects": 13,
+      "pedagogy_clean_requests": 3,
+      "pedagogy_defects_by_kind_and_mode": {
+        "standard_coverage_or_sequencing": {
+          "repair": 1,
+          "authoring": 0
+        },
+        "textbook_sequencing": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "prerequisite_or_load": {
+          "repair": 1,
+          "authoring": 1
+        },
+        "child_level": {
+          "repair": 1,
+          "authoring": 1
+        },
+        "target_mismatch": {
+          "repair": 1,
+          "authoring": 1
+        },
+        "incomplete_or_unsuitable_section": {
+          "repair": 1,
+          "authoring": 0
+        },
+        "answer_given_away": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "missing_planned_video": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "hidden_player_audio_only": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "ohoiko_presentation": {
+          "repair": 0,
+          "authoring": 1
+        },
+        "clean": {
+          "repair": 1,
+          "authoring": 2
+        }
+      },
+      "pedagogy_snippet_shapes": {
+        "lesson": 6,
+        "plan": 5,
+        "exercise": 5
+      },
+      "exercise_defects_by_kind": {
+        "stem_translates_answer": 1,
+        "stem_names_answer": 1,
+        "stem_describes_form": 1,
+        "giveaway_gloss": 1,
+        "distractor_agreement_leak": 1,
+        "ambiguous_key": 1,
+        "wrong_key": 1,
+        "stress": 1,
+        "form": 1,
+        "answer_position_pattern": 1
+      }
+    }
+  },
+  "repeats": 3,
+  "totals": {
+    "items": 156,
+    "candidate_outcomes_per_row_all_splits": 468,
+    "passage_seeds": 192,
+    "passage_protected_spans": 144,
+    "protected_opportunities": 504,
+    "repeated_protected_opportunities_per_row": 1512,
+    "initial_candidate_calls_including_canary": 638,
+    "deferred_final_candidate_calls_max": 624,
+    "programme_candidate_calls_max": 1262,
+    "programme_primary_judge_calls_max": 1262,
+    "scheduled_audits": 130,
+    "reserved_dispute_calls": 12,
+    "pedagogy_defects": 39,
+    "pedagogy_clean_requests": 9,
+    "repeated_pedagogy_defects_per_row": 117,
+    "repeated_pedagogy_controls_per_row": 27
+  },
+  "budget": {
+    "phases": {
+      "development_canary": {
+        "candidate_calls": 14,
+        "primary_judge_calls": 14,
+        "audit_or_dispute_calls": 2,
+        "paid_calls": 30,
+        "wall_seconds": 36000
+      },
+      "development": {
+        "candidate_calls": 312,
+        "primary_judge_calls": 312,
+        "audit_or_dispute_calls": 32,
+        "paid_calls": 656,
+        "wall_seconds": 787200
+      },
+      "selection_baseline": {
+        "candidate_calls": 312,
+        "primary_judge_calls": 312,
+        "audit_or_dispute_calls": 32,
+        "paid_calls": 656,
+        "wall_seconds": 787200
+      },
+      "deferred_final": {
+        "candidate_calls": 624,
+        "primary_judge_calls": 624,
+        "audit_or_dispute_calls": 64,
+        "paid_calls": 1312,
+        "wall_seconds": 1574400
+      },
+      "dispute_reserve": {
+        "candidate_calls": 0,
+        "primary_judge_calls": 0,
+        "audit_or_dispute_calls": 12,
+        "paid_calls": 12,
+        "wall_seconds": 14400
+      }
+    },
+    "candidate_calls": 1262,
+    "primary_judge_calls": 1262,
+    "audit_calls": 130,
+    "dispute_calls": 12,
+    "total_paid_invocations": 2666,
+    "initial_paid_invocations_excluding_disputes": 1342,
+    "hard_timeout_seconds": 1200,
+    "execution_wall_seconds_sum": 3199200,
+    "concurrency": 2,
+    "per_provider_concurrency": 1,
+    "tool_enabled_candidate_calls": 1162,
+    "fresh_writer_calls": 100,
+    "sources_calls_per_pass": 32,
+    "deterministic_scoring_passes": 1262,
+    "sources_calls_total_ceiling": 122496,
+    "retry_calls": 0,
+    "selection_consultations_max": 3,
+    "tool_enabled_candidate_calls_by_phase": {
+      "development_canary": 10,
+      "development": 288,
+      "selection_baseline": 288,
+      "deferred_final": 576
+    },
+    "fresh_writer_calls_by_phase": {
+      "development_canary": 4,
+      "development": 24,
+      "selection_baseline": 24,
+      "deferred_final": 48
+    }
+  },
+  "judge": {
+    "model": "claude-opus-5-5",
+    "family": "anthropic",
+    "harness": "claude",
+    "effort": "high",
+    "sources_required": true,
+    "qualification": "QUALIFIED",
+    "qualification_ref": "private://uk-behaviour-v2/reviewer-qualification"
+  },
+  "future_candidate_configuration": [
+    {
+      "family": "anthropic",
+      "harness": "claude",
+      "model_role": "Opus or Sonnet",
+      "enabled": false,
+      "judge_family_exclusions": [
+        "openai",
+        "anthropic"
+      ],
+      "exclude_all_scored_families": true
+    },
+    {
+      "family": "google",
+      "harness": "agy",
+      "model_role": "Gemini",
+      "enabled": false,
+      "judge_family_exclusions": [
+        "openai",
+        "google"
+      ],
+      "exclude_all_scored_families": true
+    }
+  ],
+  "assets": [
+    {
+      "path": "docs/evaluations/uk-preamble.md",
+      "sha256": "a05dd20903c998351c6bb726e68e8baf8b54f2201816315103c2e809c17230be"
+    },
+    {
+      "path": "docs/evaluations/lesson-ab.md",
+      "sha256": "294e5fd0ba31c7f1cbc946d7eb0ed089cc3cc4c0a102d08cd72a14e197401e03"
+    },
+    {
+      "path": "docs/evaluations/uk-behaviour-freeze.md",
+      "sha256": "2801ace94376ef9bf08bd270fc6b6e17bdd07f6783000bdedc160171f897a8e4"
+    },
+    {
+      "path": "docs/projects/ua-eval-harness/V0_2_EVIDENCE_PLAN.md",
+      "sha256": "3c744f6fac3083ccc0f541c7a330172e6be6001be6dd7fa6847efd1e621f223b"
+    },
+    {
+      "path": "docs/atlas/word-cards/golden-set-spec.md",
+      "sha256": "9d6ac185f13c97b56bb31aeb4a862e84cbf62e632660ff437808f36988031d71"
+    },
+    {
+      "path": "eval/russianism/calibration-cases-h2c.README.md",
+      "sha256": "c2d8768771a255c9eab7b71c42a6e72a6edb000a01eeb5d85111471881df4ceb"
+    },
+    {
+      "path": "eval/russianism/calibration-cases-h2c.jsonl",
+      "sha256": "f7f835dfac250f6bafe809e109e67684b7da0b597c6bdf96f645e2d3b7cbf5ac"
+    },
+    {
+      "path": "tests/test_heritage_classifier.py",
+      "sha256": "bf9ce6e2d389097eaedd36c0ca5e77e858787886a7a7f8478dcf5118107b81cd"
+    },
+    {
+      "path": "tests/test_ulif_stress_oracle.py",
+      "sha256": "c132eeca3aff2b8911383ffe8e4d8ad0150adf88d1cb6fdb036eb2d7155e4941"
+    },
+    {
+      "path": "agents_extensions/shared/rules/core.md",
+      "sha256": "eea64a0574eef4c1ea65bef96272aecb5c41762449a73aef112d126422739f48"
+    },
+    {
+      "path": "agents_extensions/shared/rules/core-curriculum.md",
+      "sha256": "1797271b152a5aace3ee6ec301d7ce789892faf6b5d24ea11ff22e9ff0691b52"
+    },
+    {
+      "path": "agents_extensions/shared/rules/mcp-sources-and-dictionaries.md",
+      "sha256": "f2e63ded6b2481c1c116ccfa5b72fc56cf0c69c3c37be209aa1a77249bcd06b0"
+    },
+    {
+      "path": "agents_extensions/shared/rules/ukrainian-linguistics.md",
+      "sha256": "6c3d9873099a2a00714ac3bb02ec71c68f09a03df05306c170b2d3bfec05b3f2"
+    },
+    {
+      "path": "agents_extensions/shared/rules/storage-topology.md",
+      "sha256": "72284564fc69c574f59d07bdf4f6e3abdf75f93d156cedd740ca5bd80b2d8483"
+    },
+    {
+      "path": "agents_extensions/shared/agents/curriculum-writer.md",
+      "sha256": "0ded8fb60fea6dd34459b11fd573dc65424dae0f6c6276814e7b846a6afc8d83"
+    },
+    {
+      "path": "agents_extensions/shared/skills/content-review/content-review-prompt.md",
+      "sha256": "585705337e8e4428d19a85a3ca01b0452d4baed93eff8e80d65cc4361c87e1e9"
+    },
+    {
+      "path": "agents_extensions/shared/skills/review-loop/references/ukrainian.md",
+      "sha256": "9344bf994c1667b811d908689466f7f78845129f92f1870e88481b54eab051a8"
+    },
+    {
+      "path": "docs/epics/fresh-build-writer-contract.md",
+      "sha256": "cc5859e2968f144e3c745c4d944fb923f5e1003a2f9bfd6c1178725c5951861b"
+    },
+    {
+      "path": "scripts/build/fresh/writer.py",
+      "sha256": "884e5ba31c4ea079f1e2af1f912cab6b954dc4eab76cc4af61238bcd633f286e"
+    },
+    {
+      "path": "scripts/build/fresh/prompts/lesson-writer.md.j2",
+      "sha256": "aaed7266f8ad68d2c4d9fe6ba1627f91fc5a59869dcee2e655f8b32729edf9b6"
+    },
+    {
+      "path": "scripts/atlas/word_card_assembly.py",
+      "sha256": "c8742ceb06607404ea2d420fbd7b6d342e3f88213c7ff582739ee009f67b72ba"
+    },
+    {
+      "path": "scripts/atlas/word_card_contrasts.py",
+      "sha256": "3f99afecce289a429977f3d8227758b4a19777fa2b52bd3349d451f3b00fae79"
+    },
+    {
+      "path": "scripts/review/receipts/ledger.py",
+      "sha256": "b259e2b35ab101227b692191f63152e9ddc09a2d66fda86ce29ad43011a3adad"
+    },
+    {
+      "path": "scripts/review/receipts/outcomes.py",
+      "sha256": "cfa806c9af821ef3c060b97b54b059fed7b808eb5c190128f76f58b456db5420"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/__init__.py",
+      "sha256": "db24eb39c2a2e333451cde51063b653cc5952d30fe1bffca10c3fb77a1997371"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/__main__.py",
+      "sha256": "add3c749ebc224994644df32f390cd127ee5c6dd49a1099dd2e4644b2f25a701"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/common.py",
+      "sha256": "2b7b72df721b4a945aa9fafa6e4895e6bcfd0f183871b1e64a29782e2df905ba"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/convert.py",
+      "sha256": "91274d6480eb3896de0fde627078d94da34a24ad546906f081c182ed5bed052f"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/dataset.py",
+      "sha256": "e387dc3c799e6099c1c225a0f0488546a214c178456d36c92ad7d959fbeddf14"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/dispatch.py",
+      "sha256": "7d1f5012b784f2a39915f48d483aed231c22d96f16d0ca933c875060ccc9ddd7"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/prompts.py",
+      "sha256": "fe75b27ba0e9207267993812ce8c023575f1edb3eeb1ac544d6dd27a80721c1c"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/report.py",
+      "sha256": "267ac905be2ff81f8b69bee3ea5fefd4d90ec11c8515dc6c2ccb0126228edbd2"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/runner.py",
+      "sha256": "33efef2f1e78311ce6214fee345883e7c830638d39200e9e2ddb19b0bc1c9f58"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/scoring.py",
+      "sha256": "2ed9f66fcd2f0ec69774a0d9a5800bcde10531333c96cac401bf08d53fe50e3e"
+    },
+    {
+      "path": "docs/north-star.md",
+      "sha256": "88da2a708cdee5a6c7141444e6ff83a7f23867cf0897c23ddef6d12c2f215af9"
+    },
+    {
+      "path": "docs/best-practices/ulp-presentation-pattern.md",
+      "sha256": "1b4f4841838f279b1c8add2775266e9a965bbe41e4d1e396473d334288535fe2"
+    },
+    {
+      "path": "docs/l2-uk-en/state-standard-2024-mapping.yaml",
+      "sha256": "64eac58ed8678233d3e18c11862dd82d40f6092607a1a2ca63f6c7f2d1f288e5"
+    },
+    {
+      "path": "docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt",
+      "sha256": "29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac"
+    },
+    {
+      "path": "docs/epics/fresh-build-a1-arc.md",
+      "sha256": "6059900baab73cbf142b65c83e7ba828538b48528d4a05f978050b20d9c33b10"
+    },
+    {
+      "path": "docs/resources/external_resources.yaml",
+      "sha256": "cdd2859a35e787b3c3804e19a5b7ce7f8f3c79fe7e188af89ec6e7413d4d8d48"
+    },
+    {
+      "path": "docs/resources/ulp-alphabet.yaml",
+      "sha256": "07cfffbf8c3f7de98781b276af66c1d0a012295a3af83257cb1bbf5046284e16"
+    },
+    {
+      "path": "docs/l2-uk-direct/textbook-reading-notes/bolshakova-bukvar-mapping.md",
+      "sha256": "a7a0337737be28570f985c26337f292d4ecee8cc8cd6f86d502d886714e421ca"
+    },
+    {
+      "path": "docs/l2-uk-direct/textbook-reading-notes/cross-reference-synthesis.md",
+      "sha256": "007cdf9002a76ff02ba25ddc7598c6500058383ede094d25a34b02ff291ac55f"
+    },
+    {
+      "path": "docs/l2-uk-direct/textbook-reading-notes/grade-3-part-2-vashulenko-2020.md",
+      "sha256": "8c9526b994cedc5307a4c91806b6cb76379d1fdeca9f52620101a30f9d6072e7"
+    },
+    {
+      "path": "docs/l2-uk-direct/textbook-reading-notes/grade-4-kravtsova-savchenko-2021.md",
+      "sha256": "50f0bfb421fa3aa9fdb63ce4428bc24bfeeac281a9ede02a62a1045234b0deab"
+    },
+    {
+      "path": "docs/l2-uk-direct/textbook-reading-notes/grade-5-avramenko-2022.md",
+      "sha256": "bc7596fdda0486c81d427de2998d44c98182ca9c161aa51bfb17cdc300db423f"
+    },
+    {
+      "path": "docs/l2-uk-direct/textbook-reading-notes/grade-6-avramenko-2023.md",
+      "sha256": "75ab46f8d7c014271780bd1b3c9eb6643a52f2734868acb36c332d99103afe30"
+    },
+    {
+      "path": "docs/l2-uk-direct/textbook-reading-notes/state-standard-2024-notes.md",
+      "sha256": "a3144b332b863d60022d14e8ad474fb95c7d1915a75259a42b1aa5f48a82c1ab"
+    }
+  ],
+  "private_references": [
+    {
+      "ref": "private://uk-behaviour-v2/development/requests",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/development/labels",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/development/exposure",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/selection/requests",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/selection/labels",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/selection/exposure",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/final/requests",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/final/labels",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/final/exposure",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/reviewer-qualification",
+      "sha256": "6181ca6c19e0fda289b8c0315a3181d14c620b734473ec977554678fa14389aa",
+      "status": "SEALED",
+      "owner": "reviewer-trial-custodian"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/runtime-and-prompts",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "baseline-runner"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
+      "sha256": "0f55c4e5a59110cdccd56c0bea55d28ef71bfa7030a9e8cee972f3459a0709f7",
+      "status": "PINNED",
+      "owner": "evaluation-maintainer"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/source-evidence-ledgers",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "sources-custodian"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/final-isolation-proof",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/card-review-prompt",
+      "sha256": "d76190af4bd9ac9c13c1a9cfb205dd1a2e6d24e3d0f0aeb9e1ed286daf9d1399",
+      "status": "PINNED",
+      "owner": "coordinator-and-evaluation-maintainer"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/exercise-review-prompt",
+      "sha256": "fd5bfb6170280721f401943660ec154c35325d82f16e7dc8d2493ae8d91cbcff",
+      "status": "PINNED",
+      "owner": "coordinator-and-evaluation-maintainer"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/sources-snapshot",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "sources-custodian"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/audit-sample-and-dispute-seal",
+      "sha256": "13ad0de7f8c4ba592865ccba061ea47708a062e36bfe317ca8d0b08c9031bfd0",
+      "status": "SEALED_WITH_RESIDUAL",
+      "owner": "data-steward",
+      "residual": "dispute adjudicator seat unassigned: no eligible model-distinct seat outside the scored family"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/final/adjudication-and-judge-transcripts",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/pedagogy-review-prompt",
+      "sha256": "201afd85c8c37f444aa8926426698c68d1b363daefda5c3f303f30e205b8c9a2",
+      "status": "PINNED",
+      "owner": "coordinator-and-evaluation-maintainer"
+    },
+    {
+      "ref": "private://uk-behaviour-v2/pedagogy-label-anchors-and-video-evidence",
+      "sha256": null,
+      "status": "MISSING",
+      "owner": "data-steward-and-sources-custodian"
+    }
+  ],
+  "approval_references": [
+    {
+      "ref": "private://ordered-approval/uk-behaviour/approval",
+      "sha256": "7925e13a38a37befb0ecf54ede9efbf3273db9fac756b085c7463180c8d63ee7"
+    },
+    {
+      "ref": "private://ordered-approval/uk-behaviour/proposal",
+      "sha256": "815e206c9985d7cf0c29da3098dd9244909f0154b8f0a752928a2191ccc709fe"
+    }
+  ],
+  "located_private_assets": [
+    {
+      "ref": "private://ua-eval-harness/heldout_manifest_v1.json",
+      "sha256": "56eb4fc17a5ed6967c5c13fbdc9fde964d1b8fb08bde7da7f15cf535486735dd",
+      "eligibility": "development-only pending adjudication; no held-out reuse asserted"
+    },
+    {
+      "ref": "private://ua-eval-harness/v0.2/review_packet_priority_v1.jsonl",
+      "sha256": "9b436a1a6c7c442f3dafaa468d358446a8cb66995562749e2801eac07b211add",
+      "eligibility": "development-only pending adjudication; no held-out reuse asserted"
+    }
+  ],
+  "candidates": [
+    {
+      "model": "gpt-6.1-sol",
+      "family": "openai",
+      "harness": "codex",
+      "effort": "high",
+      "role": "evaluation-candidate"
+    },
+    {
+      "model": "gpt-6.1-terra",
+      "family": "openai",
+      "harness": "codex",
+      "effort": "high",
+      "role": "evaluation-candidate"
+    }
+  ],
+  "audit_judge": {
+    "model": "gemini-3.8-flash-high",
+    "family": "google",
+    "harness": "agy",
+    "effort": "high",
+    "sources_required": true,
+    "qualification": "QUALIFIED",
+    "qualification_ref": "private://uk-behaviour-v2/reviewer-qualification"
+  },
+  "custody": {
+    "final_excluded_label_and_judge_families": [
+      "openai"
+    ],
+    "adjudication_and_judge_transcripts_in_final_custody": true,
+    "sources_snapshot_frozen_from_labels_through_final": true,
+    "initial_final_execution": false,
+    "final_baselines_and_selected_variants_simultaneous": true,
+    "output_shuffle_seed": 10453,
+    "audit_selection_seed": 10454
+  },
+  "canary": {
+    "items_per_model": 7,
+    "repeats": 1,
+    "split": "development",
+    "unresolved_evaluator_early_stop_fraction_exclusive": 0.1,
+    "all_cells_must_resolve_before_full_spend": true,
+    "projection_overhead_fraction": 0.1,
+    "stop_on_any": [
+      "fabricated_receipt",
+      "contamination",
+      "snapshot_drift",
+      "protected_harm",
+      "material_audit_disagreement",
+      "unknown_required_route_tool_or_quota",
+      "phase_wall_projection_exceeded",
+      "timeout_prevents_projection"
+    ],
+    "pedagogy_mode": "authoring",
+    "pedagogy_case": "video"
+  },
+  "scoring": {
+    "required_claim_coverage_when_none_required": 1,
+    "correctness_for_verified_clean_or_gap_without_emitted_claims": 1,
+    "opportunity_denominator": "G1 pre-output seal; never candidate-controlled",
+    "quality": "C*P*(1-min(1,F/O))*(1-min(1,S/O))*(1-min(1,X/O))",
+    "reward": {
+      "verified_harm": -2,
+      "fabrication_or_overproduction": -1.5,
+      "answerable_refusal_or_missing": -1,
+      "accepted_incomplete": "-0.5+0.5*Q",
+      "complete_safety_passing": "0.1+0.9*Q"
+    },
+    "worked_ordering": [
+      {
+        "case": "perfect_or_clean",
+        "T": 1,
+        "C": 1,
+        "P": 1,
+        "F": 0,
+        "S": 0,
+        "X": 0,
+        "H": 0,
+        "O": 10,
+        "R": 1
+      },
+      {
+        "case": "good_one_error",
+        "T": 1,
+        "C": 0.9,
+        "P": 1,
+        "F": 1,
+        "S": 0,
+        "X": 0,
+        "H": 0,
+        "O": 10,
+        "R": 0.829
+      },
+      {
+        "case": "padder",
+        "T": 1,
+        "C": 1,
+        "P": 1,
+        "F": 0,
+        "S": 0,
+        "X": 8,
+        "H": 0,
+        "O": 10,
+        "R": 0.28
+      },
+      {
+        "case": "refusal",
+        "T": 0,
+        "C": 0,
+        "P": 0,
+        "F": 0,
+        "S": 0,
+        "X": 0,
+        "H": 0,
+        "O": 10,
+        "R": -1
+      },
+      {
+        "case": "accuse_everything",
+        "T": 0,
+        "C": 0,
+        "P": 0,
+        "F": 10,
+        "S": 0,
+        "X": 0,
+        "H": 1,
+        "O": 10,
+        "R": -2
+      }
+    ],
+    "acceptance": {
+      "correctness": "equal-family macro paired 95% CI lower bound > 0",
+      "completion": "per-family point difference >= 0",
+      "false_corrections": "per-family sum(F)/sum(O) point difference <= 0",
+      "safety": "zero new harms per matched item-repeat and stratum",
+      "complete_valid_cells_required": true
+    },
+    "padding": "Assertions outside frozen positive-credit slots incur X even within a facet; true extras never raise correctness",
+    "macro_family_count": 7,
+    "pedagogy": "Dedicated review dimension; source-backed required claims, false corrections and receipt rules unchanged; detection, clean-control false alarms and source entailment reported by mode and kind"
+  },
+  "pedagogy": {
+    "norms": [
+      "state_standard_2024",
+      "ukrainian_school_textbooks",
+      "ohoiko_method"
+    ],
+    "precedence": {
+      "coverage": "state_standard_2024",
+      "presentation_and_schedule": "ohoiko_method"
+    },
+    "learner": "self-driven adult or older teen who reads English; may know no Ukrainian or Cyrillic",
+    "modes": [
+      "repair",
+      "authoring"
+    ],
+    "mode_visible_in_request": true,
+    "mode_sealed_in_label": true,
+    "repair_requires_present_learner_harm": true,
+    "repair_ohoiko_sequence_deviation_alone_is_defect": false,
+    "authoring_all_three_norms_bind": true,
+    "ohoiko_practices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "ohoiko_progression": "S1 to S6; S1-S2 grounding; unsampled later trends are not thresholds",
+    "ohoiko_text_grounding_only": true,
+    "video_decision": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8425#issuecomment-5977822358",
+    "video_requires_whole_visible_sound_and_picture": true,
+    "hidden_player_audio_only_permitted": false,
+    "video_suitability_and_availability_sealed": true,
+    "source_entailment_required_per_defect": true,
+    "roster": [
+      {
+        "kind": "standard_coverage_or_sequencing",
+        "shape": "plan",
+        "repair": 1,
+        "authoring": 0
+      },
+      {
+        "kind": "textbook_sequencing",
+        "shape": "lesson",
+        "repair": 0,
+        "authoring": 1
+      },
+      {
+        "kind": "prerequisite_or_load",
+        "shape": "lesson",
+        "repair": 1,
+        "authoring": 0
+      },
+      {
+        "kind": "prerequisite_or_load",
+        "shape": "plan",
+        "repair": 0,
+        "authoring": 1
+      },
+      {
+        "kind": "child_level",
+        "shape": "lesson",
+        "repair": 1,
+        "authoring": 0
+      },
+      {
+        "kind": "child_level",
+        "shape": "exercise",
+        "repair": 0,
+        "authoring": 1
+      },
+      {
+        "kind": "target_mismatch",
+        "shape": "exercise",
+        "repair": 1,
+        "authoring": 1
+      },
+      {
+        "kind": "incomplete_or_unsuitable_section",
+        "shape": "lesson",
+        "repair": 1,
+        "authoring": 0
+      },
+      {
+        "kind": "answer_given_away",
+        "shape": "exercise",
+        "repair": 0,
+        "authoring": 1
+      },
+      {
+        "kind": "missing_planned_video",
+        "shape": "plan",
+        "repair": 0,
+        "authoring": 1
+      },
+      {
+        "kind": "hidden_player_audio_only",
+        "shape": "plan",
+        "repair": 0,
+        "authoring": 1
+      },
+      {
+        "kind": "ohoiko_presentation",
+        "shape": "lesson",
+        "repair": 0,
+        "authoring": 1
+      },
+      {
+        "kind": "clean",
+        "shape": "lesson",
+        "repair": 1,
+        "authoring": 0
+      },
+      {
+        "kind": "clean",
+        "shape": "plan",
+        "repair": 0,
+        "authoring": 1
+      },
+      {
+        "kind": "clean",
+        "shape": "exercise",
+        "repair": 0,
+        "authoring": 1
+      }
+    ],
+    "normative_references_may_be_shared_but_evaluated_snippet_clusters_must_be_disjoint": true,
+    "judge_and_label_qualification_includes_both_modes": true,
+    "audit_pedagogy_modes_per_row": [
+      "repair",
+      "authoring"
+    ],
+    "report_by": [
+      "family",
+      "judging_mode",
+      "primary_defect_kind"
+    ]
+  },
+  "g3": {
+    "status": "PINNED",
+    "harness": "uk-behaviour-harness/1",
+    "scorer": "uk-behaviour-score/2",
+    "code": [
+      {
+        "path": "scripts/eval/uk_behaviour/__init__.py",
+        "sha256": "cfb95667ccdd0c77919107ea4744785acf6722e8c5c3f582afacc401de226352"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/__main__.py",
+        "sha256": "05e47f09ec3b797b8f7adb588ace7e520e3456c1550003c61fb10e44b798c651"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/adapters.py",
+        "sha256": "9e46e464f5edbadb272d00c93f7b91a1e93eb2d82e311c5cb328db82a12a583e"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/binding.py",
+        "sha256": "ae9607d96a418f12e7706f2029a85881678ce8a9911d2651902dd75ae4e60ded"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/contract.py",
+        "sha256": "d3f3ce3a522f7aeef805507ee867ef26143c0caabda3db2a856bd8a8412d2aa2"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/coverage.py",
+        "sha256": "3eea6e288f6e86331ea73061f0c7da5b1b62ca2f3f81a3d1aeaa5eccce93030d"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/judge.py",
+        "sha256": "c256ce8e914c7c3c9fc58d2d046757bcebe2659ec65af1335a651977554e8823"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/pins.py",
+        "sha256": "e5ba8b903063c544fa3b4073c87bde95cd1bb832a2c1a1c42f515b6ba669d041"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/prove.py",
+        "sha256": "57d27f74dbdb40ffc6f4092a30711526ee53adb44b23122c44e0ec4314cf0171"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/reward.py",
+        "sha256": "7805e54674c3ce5de1fdd36956c712540e897d4b3a7641739a7d367d05a303e6"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/rubric.py",
+        "sha256": "2759598c6571b627445ce6805f34939fa3eefd354b668ecae189a2eaa5140390"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/runner.py",
+        "sha256": "623e4e2ff301080b8aa3530df34cc12e2d63843d62b638922c0a101606f5783d"
+      },
+      {
+        "path": "scripts/eval/uk_behaviour/scorer.py",
+        "sha256": "0e44a9a0a229881058f3b9770d4943eb48e0f699b0bc5cd41d3a363506cb6e5e"
+      }
+    ],
+    "rubric_sha256": "cbe49a10920c76e2778a7d067dc15c7d1524af5d3dae816b948ae1436cc875d7",
+    "judge_template_sha256": "2332a0cfec2aa7126e9d5f9cc7aeb591c4528357989a0113fd3de00c1860126c",
+    "judge_template_ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
+    "review_prompts": [
+      {
+        "family": "card_review",
+        "ref": "private://uk-behaviour-v2/card-review-prompt",
+        "sha256": "d76190af4bd9ac9c13c1a9cfb205dd1a2e6d24e3d0f0aeb9e1ed286daf9d1399",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 5,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-5",
+          "sha256": "168c69b9eae74bb756f468a8cce82be5f67b26b153ee2bb0d2c03d5bbbb21b73"
+        }
+      },
+      {
+        "family": "exercise_review",
+        "ref": "private://uk-behaviour-v2/exercise-review-prompt",
+        "sha256": "fd5bfb6170280721f401943660ec154c35325d82f16e7dc8d2493ae8d91cbcff",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 5,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-5",
+          "sha256": "168c69b9eae74bb756f468a8cce82be5f67b26b153ee2bb0d2c03d5bbbb21b73"
+        }
+      },
+      {
+        "family": "pedagogy_review",
+        "ref": "private://uk-behaviour-v2/pedagogy-review-prompt",
+        "sha256": "201afd85c8c37f444aa8926426698c68d1b363daefda5c3f303f30e205b8c9a2",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 3,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-3",
+          "sha256": "d7fbfd5f347e2b2ab7bac81ddb78ca09b4bfece0627b1e691791c605b154bb83"
+        }
+      }
+    ],
+    "caps": {
+      "fresh_lesson": {
+        "max_bytes": 65536,
+        "max_tokens": 16384,
+        "max_claims": 12,
+        "max_edits": 0,
+        "batched": 400
+      },
+      "fresh_activities": {
+        "max_bytes": 65536,
+        "max_tokens": 16384,
+        "max_claims": 12,
+        "max_edits": 0,
+        "batched": 400
+      },
+      "v7_module": {
+        "max_bytes": 131072,
+        "max_tokens": 40000,
+        "max_claims": 10,
+        "max_edits": 0,
+        "batched": 400
+      },
+      "exercise_review": {
+        "max_bytes": 24576,
+        "max_tokens": 6144,
+        "max_claims": 12,
+        "max_edits": 12,
+        "batched": 0
+      },
+      "card_review": {
+        "max_bytes": 16384,
+        "max_tokens": 4096,
+        "max_claims": 8,
+        "max_edits": 8,
+        "batched": 0
+      },
+      "passage_review": {
+        "max_bytes": 32768,
+        "max_tokens": 8192,
+        "max_claims": 14,
+        "max_edits": 14,
+        "batched": 0
+      },
+      "pedagogy_review": {
+        "max_bytes": 24576,
+        "max_tokens": 6144,
+        "max_claims": 10,
+        "max_edits": 0,
+        "batched": 0
+      }
+    },
+    "cap_units": {
+      "max_bytes": "UTF-8 bytes of the output",
+      "max_tokens": "uk-preamble scoring tokens",
+      "max_claims": "individually checked assertions, every repetition counted",
+      "batched": "batch-checked form and sense assertions (writer families only)",
+      "max_edits": "proposed or applied edits"
+    },
+    "judge_sources_calls_worst_case": {
+      "fresh_lesson": 27,
+      "fresh_activities": 27,
+      "v7_module": 23,
+      "exercise_review": 25,
+      "card_review": 17,
+      "passage_review": 29,
+      "pedagogy_review": 21
+    },
+    "answer_position_rule": "Ordered block of at least six choice items: defect when one zero-based key position holds the key in at least ceil(0.8 n) items, or the whole key-position sequence repeats a cycle of length 2 or 3 from first to last item.",
+    "no_paid_proof": {
+      "command": ".venv/bin/python -m scripts.eval.uk_behaviour prove",
+      "tests": "tests/eval/test_uk_behaviour_proof.py",
+      "provider_calls": 0
+    }
+  }
+}

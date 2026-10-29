@@ -32,6 +32,7 @@ from scripts.opsec.prepublish import (
     publication_boundary,
     publication_cli,
 )
+from scripts.orchestration import pr_ownership
 from scripts.orchestration.integration_sweep import (
     COMMENTS_UNAVAILABLE,
     Verdict,
@@ -148,6 +149,7 @@ def _auto_merge_armed(row: Mapping[str, Any]) -> bool:
 class GitHub:
     def __init__(self, root: Path, repository: str) -> None:
         self.root, self.repository = root, repository
+        self.queue_jump = False
 
     @publication_boundary(KeeperError)
     def call(self, *args: str) -> str:
@@ -170,6 +172,7 @@ class GitHub:
         cleanup = getattr(result, "enqueue_cleanup", None)
         if cleanup is not None:
             print(f"enqueue-cleanup removed={cleanup['removed']} retained={cleanup['retained']} receipt={cleanup['receipt']}", file=sys.stderr)
+        self.queue_jump = getattr(result, "queue_jump", False) is True
         return result.stdout
 
     def json(self, *args: str) -> Any:
@@ -311,8 +314,10 @@ class GitHub:
             return None
         return False
 
-    def enqueue(self, number: int, head: str) -> None:
+    def enqueue(self, number: int, head: str) -> bool:
+        """Enqueue through pr-merge; True when the publisher put the PR at the front of the queue."""
         self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head))
+        return self.queue_jump
 
     def dequeue(self, node_id: str) -> None:
         data = self.json(Request("pr-dequeue", repo=self.repository, node_id=node_id))
@@ -1151,7 +1156,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
             elif reason == "ready":
-                gh.enqueue(number, head)
+                jumped = gh.enqueue(number, head)
                 if not gh.membership(number):
                     after_enqueue = gh.current(number)
                     if _auto_merge_armed(after_enqueue):
@@ -1160,7 +1165,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         raise KeeperError("enqueue returned success without queue membership or armed auto-merge")
                 else:
                     queued_now[key] = head
-                    lines.append(f"#{number} enqueued")
+                    lines.append(f"#{number} enqueued" + (" at the front (priority)" if jumped else ""))
                 estimated_remaining -= 30
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
             if (
@@ -1273,7 +1278,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Guard and replenish approved, green pull requests in configured merge queues.\nUse --report to inspect and --apply only for authorized local scheduling.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nEnvironment: MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state, and runs the\nownerless-PR alert to the CTO inbox (pr_ownership.py, every 5 minutes).\nEnvironment: MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--report", action="store_true", help="Read-only report (default).")
@@ -1325,14 +1330,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         try:
             lines, failed = run(GitHub(root, args.repo), state_path, apply=args.apply)
         except GitHubRateLimited as exc:
-            print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
-            return 0
+            lines, failed = [f"merge queue keeper: skipped reset_at={exc.reset_at}"], False
         except KeeperError as exc:
-            print(f"merge queue keeper failed: {exc}")
-            return 1
-        for line in lines:
+            lines, failed = [f"merge queue keeper failed: {exc}"], True
+        # The ownerless-PR alert runs on its own cadence, whatever the queue pass did, and
+        # never hides the queue pass's result.
+        try:
+            ownership_lines, ownership_failed = pr_ownership.keeper_tick()
+        except Exception as exc:
+            ownership_lines, ownership_failed = [f"pr ownership: FAILED ({type(exc).__name__})"], True
+        for line in [*lines, *ownership_lines]:
             print(line)
-        return int(failed)
+        return int(failed or ownership_failed)
 
 
 if __name__ == "__main__":

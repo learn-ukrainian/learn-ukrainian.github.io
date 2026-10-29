@@ -3,16 +3,29 @@
 import argparse
 import contextlib
 import json
+import os
 import re
 import subprocess
 import sys
+import time
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import get_args
 
 from scripts.common.git_context import validate_plain_branch_name
-from scripts.dispatcher import admission, checks, git, headroom, host_admission, providers, store, worker
+from scripts.dispatcher import (
+    admission,
+    checks,
+    git,
+    headroom,
+    host_admission,
+    pool_selector,
+    providers,
+    runtime_context,
+    store,
+    worker,
+)
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
@@ -71,7 +84,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("pinned-head", None, "Exact review commit (default: branch or base)"),
         ("cwd", None, "Existing dispatch worktree root (default: create one)"),
         ("review-author-model", None, "Author model for family check (default: no review check)"),
-        ("claude-account", None, "Claude account a or b (default: inherited configuration)"),
+        ("codex-account", None, "Codex account: sub or api (default: sub; api requires a private codex_accounts.json binding)"),
+        ("claude-account", None, "Claude account: subscription a or b, or API key kk or szb (default: inherited configuration)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
         ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
         ("research-role", None, "Research role metadata (default: none)"),
@@ -84,8 +98,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-mode", None, "Review mode label (default: none)"),
         ("advisory-task", None, "Finished advisor task admitting this bounded worker, e.g. advice-42 (default: none)"),
         ("advisory-role", None, "Catalog advisory_roles decision this read-only task records, e.g. "
-         "review_budget_extension; needs --advisory-binding (default: none)"),
-        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget extension request digest "
+         "review_budget_elevation; needs --advisory-binding (default: none)"),
+        ("advisory-binding", None, "SHA-256 the advisory decision binds, e.g. a budget grant ruling digest "
          "(default: none)"),
         ("verify-command", None, "Acceptance command for a bounded driver brief, e.g. 'ruff check scripts' (default: none)"),
     ):
@@ -171,7 +185,60 @@ def build_parser() -> argparse.ArgumentParser:
     sof.add_argument("task_id", help="Task ID to verify, e.g. review-123")
     sof.add_argument("--run-nonce", help="Expected run identity (default: omit nonce check)")
     sof.add_argument("--verbose", action="store_true", help="Print structured status JSON (default: quiet)")
+    trees = subs.add_parser(
+        "worktrees",
+        help="List linked worktrees with their owning task",
+        description="List every linked worktree of a repository with its owning task record.\n"
+        "Read-only: changes no record and removes nothing.",
+        epilog="Examples:\n  .venv/bin/python scripts/dispatch.py worktrees\n"
+        "  .venv/bin/python scripts/dispatch.py worktrees --repo public --all\n"
+        "Outputs: JSON list; per tree: path, task_id, borrowers, status, worktree_disposition,\n"
+        "  worktree_disposition_reason, age_s, size_bytes and no_task_record (no record names it).\n"
+        "Exit codes: 0 listed, 2 repository or records unavailable.\n"
+        "Related: docs/design/dispatch-v2.md.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    trees.add_argument("--repo", help="fleet_repos.yaml key (default: public primary)")
+    trees.add_argument("--all", action="store_true", help="Also match archived records (default: hot only)")
     return parser
+
+
+def _tree_size(tree: str) -> int | None:
+    try:
+        output = subprocess.run(["du", "-s", "-B1", "-x", "--", tree], capture_output=True, text=True,
+                                timeout=60, check=True).stdout
+        return int(output.split()[0])
+    except (OSError, ValueError, IndexError, subprocess.SubprocessError):
+        return None
+
+
+def _worktrees(repo_key: str | None, include_archive: bool) -> list[dict]:
+    """Join the repository's registered linked worktrees with the task records that name them."""
+    from scripts.orchestration.worktree_claims import repository_registration
+
+    main_root, registered = repository_registration(git.resolve_repo(repo_key)[0])
+    named: dict[str, list[dict]] = {}
+    for record in store.list_tasks(include_archive=include_archive):
+        if isinstance(path := record.get("worktree_path"), str) and path:
+            named.setdefault(os.path.realpath(path), []).append(record)
+    rows = []
+    for tree in sorted(str(tree) for tree in registered if tree != main_root):
+        # The owner created the tree; a task dispatched into it with --cwd only borrows it.
+        records = sorted(named.get(os.path.realpath(tree), []),
+                         key=lambda r: (not (r.get("options") or {}).get("cwd"), str(r.get("started_at") or "")))
+        owner = records[-1] if records else {}
+        try:
+            age = round(time.time() - os.lstat(os.path.join(tree, ".git")).st_mtime)
+        except OSError:
+            age = None
+        rows.append(dict(
+            path=tree, task_id=owner.get("task_id"),
+            borrowers=[r.get("task_id") for r in records if r is not owner],
+            status=owner.get("status"), worktree_disposition=owner.get("worktree_disposition"),
+            worktree_disposition_reason=owner.get("worktree_disposition_reason"),
+            age_s=age, size_bytes=_tree_size(tree), no_task_record=not records,
+        ))
+    return rows
 
 
 def _dispatch(args) -> int:
@@ -219,6 +286,8 @@ def _dispatch(args) -> int:
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
     account_fields = admission.claude_account(agent, args.claude_account)
     args.claude_account = account_fields.get("claude_account", args.claude_account)
+    account_fields.update(admission.codex_account(agent, args.codex_account))
+    args.codex_account = account_fields.get("codex_account")
     if args.print_advisory_binding:
         if not args.task_id or source == "-":
             raise ValueError("--print-advisory-binding requires --task-id and a non-stdin prompt")
@@ -266,7 +335,7 @@ def _dispatch(args) -> int:
         from scripts.dispatcher.output_schema import bind
 
         options.update(bind(args.output_schema, repo))
-    fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider")}
+    fields = {name: getattr(args, name) for name in ("model", "effort", "mode", "claude_account", "provider", "codex_account")}
     spec = TaskSpec(
         task_id,
         agent,
@@ -306,7 +375,7 @@ def _dispatch(args) -> int:
     )
     if args.dry_run:
         # The real run re-checks child_env after worktree creation in worker.py.
-        invocation = providers.load(agent).build(spec, child_env(spec))
+        invocation = runtime_context.build(spec, child_env(spec))
         plan = dict(worktree=str(worktree), argv=invocation.argv, record_path=str(path))
         if binding:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
@@ -327,6 +396,7 @@ def _dispatch(args) -> int:
         if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:
             raise ValueError("write task with owned paths refused: origin must match the registered canonical repository URL")
         record.update(advisory_fields, **account_fields)
+        record["pool_shadow"] = pool_selector.shadow_decision(record)
         if agent == "muse":
             record["contributor_mode"] = spec.options.get("contributor_mode", "off")
         try:
@@ -399,8 +469,12 @@ def main(argv=None) -> int:
         if args.command == "dispatch":
             return _dispatch(args)
         code = 0
-        if args.command == "list":
-            result = store.list_tasks(args.status, args.all)
+        if args.command == "worktrees":
+            result = _worktrees(args.repo, args.all)
+        elif args.command == "list":
+            result = [worker._observe(record) for record in store.list_tasks(include_archive=args.all)]
+            if args.status is not None:
+                result = [record for record in result if record.get("status") == args.status]
         elif args.command == "wait":
             if args.timeout < 0 or args.poll_interval <= 0:
                 raise ValueError("timeout must be nonnegative and poll interval positive")

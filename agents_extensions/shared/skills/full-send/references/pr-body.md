@@ -38,5 +38,5 @@ or the operator's words in a title or body (rules core P8).
 "$PY" -m scripts.publish pr-edit --number "$PR" --body-file "$BODY"
 ```
 
-`pr-create` takes no labels. Open a non-draft PR so admission CI and review bots run, unless the
+`pr-create` takes no labels. Open a non-draft PR so PR CI and review bots run, unless the
 skill you run says otherwise (`full-stop` opens with a `[hold]` title).

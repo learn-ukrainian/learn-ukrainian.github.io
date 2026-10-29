@@ -6,6 +6,7 @@ import ChromeText from '../components/chrome/ChromeText.astro';
 import { CHROME_STRINGS, formatLessonCount } from '../lib/i18n/chrome';
 import { isPublishedReading } from '../lib/readings';
 import { archiveBookmarkPaths } from '../lib/a1-archive-routes';
+import { a1NewIsPrimary, a1PreviousEdition, a1PrimaryHref, levelEntryHref } from '../lib/a1-entry';
 import ArcLanding from '../components/ArcLanding';
 import ArcModule from '../components/ArcModule';
 import { lessonRoute, resolveNavHref } from '../lib/doc-nav';
@@ -66,24 +67,27 @@ const TRACKS: Record<string, TrackOverview> = {
   'a1-v1': {
     label: 'A1-v1',
     title: 'Перші кроки · First Steps',
-    eyebrow: 'Previous A1 edition',
+    eyebrow: a1PreviousEdition.courseLabel,
     subtitle: 'Beginner Ukrainian for sounds, reading, first conversations, everyday needs, and the A1 finale.',
-    status: 'Archived beginner course',
+    status: a1PreviousEdition.courseStatus,
     family: 'core',
     state: 'released',
     heroVariant: 'core',
     primaryAction: { href: '/a1-v1/sounds-letters-and-hello/', label: 'Start Module 1' },
     secondaryAction: { href: '/lexicon/', label: 'Open Word Atlas' },
     points: [
-      'The previous A1 edition remains available here during the lesson rollout.',
+      'All 55 modules are available for study.',
       'Lessons keep Ukrainian first with English support where it helps beginners move.',
       'Self-study is supported, but trained native Ukrainian teachers are still the best path.',
     ],
     pattern: ['tabs', 'dialogue', 'rule cards', 'vocabulary', 'workbook practice', 'prev/next'],
   },
   a1: {
-    label: 'A1', title: 'A1 · 60-minute lessons', eyebrow: 'A1 course',
-    subtitle: 'Expanded lessons grouped under module landings.', status: 'Lesson rollout',
+    label: 'A1',
+    title: a1NewIsPrimary ? 'A1 · 60-minute lessons' : 'A1 · new edition in preparation',
+    eyebrow: 'A1 course',
+    subtitle: 'Expanded lessons grouped under module landings.',
+    status: a1NewIsPrimary ? 'Opening module available' : 'New edition in preparation',
     family: 'core', state: 'test', heroVariant: 'core', points: [], pattern: ['lessons', 'four tabs'],
   },
   a2: {
@@ -96,7 +100,7 @@ const TRACKS: Record<string, TrackOverview> = {
     state: 'released',
     heroVariant: 'core',
     primaryAction: { href: '/a2/a2-bridge/', label: 'Start A2' },
-    secondaryAction: { href: '/a1/', label: 'Use A1 First' },
+    secondaryAction: { href: a1PrimaryHref, label: 'Use A1 First' },
     points: [
       'A2 is the released public pre-intermediate track after A1.',
       'All 69 modules are available, from the bridge module through the A2 finale.',
@@ -114,7 +118,7 @@ const TRACKS: Record<string, TrackOverview> = {
     state: 'released',
     heroVariant: 'core',
     primaryAction: { href: '/b1/', label: 'Open B1' },
-    secondaryAction: { href: '/a1/', label: 'Start With A1' },
+    secondaryAction: { href: a1PrimaryHref, label: 'Start With A1' },
     points: [
       'B1 is the released public intermediate track after A2.',
       'All 94 modules are available, from baseline review through the B1 practice exam.',
@@ -150,7 +154,7 @@ const TRACKS: Record<string, TrackOverview> = {
     state: 'released',
     heroVariant: 'core',
     primaryAction: { href: '/c1/', label: 'Open C1' },
-    secondaryAction: { href: '/a1/', label: 'Start With A1' },
+    secondaryAction: { href: a1PrimaryHref, label: 'Start With A1' },
     points: [
       'C1 is a live advanced course map after the released A1–B2 ladder.',
       'All 132 modules are visible in curriculum order; modules are built progressively.',
@@ -168,7 +172,7 @@ const TRACKS: Record<string, TrackOverview> = {
     state: 'released',
     heroVariant: 'core',
     primaryAction: { href: '/c2/', label: 'Open C2' },
-    secondaryAction: { href: '/a1/', label: 'Start With A1' },
+    secondaryAction: { href: a1PrimaryHref, label: 'Start With A1' },
     points: [
       'C2 is a live mastery course map after the released A1–B2 ladder.',
       'All 110 modules are visible in curriculum order; modules are built progressively.',
@@ -667,7 +671,7 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
       ? <section class="route-state-card" data-arc-state="retired">
           <h1>Retired</h1>
           <p>This module has been retired from the current course sequence.</p>
-          <a href={`/${arcFrontmatter.arc_level}/`}>View the current course</a>
+          <a href={levelEntryHref(String(arcFrontmatter.arc_level))}>View the current course</a>
         </section>
       : arcPosition
       ? <ArcModule level={String(arcFrontmatter.arc_level)} position={arcPosition} />
@@ -817,7 +821,7 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
             : <ChromeText k="state.emptyBody" />}
       </p>
       <div class="state-actions">
-        <a href="/a1/"><ChromeText k="nav.a1" /></a>
+        <a href={a1PrimaryHref}><ChromeText k="nav.a1" /></a>
         <a href="/b1/"><ChromeText k="nav.b1" /></a>
         <a href="/search/"><ChromeText k="nav.search" /></a>
         <a href="/lexicon/"><ChromeText k="nav.atlas" /></a>

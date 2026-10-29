@@ -14,11 +14,18 @@ import sys
 import time
 from pathlib import Path
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 try:
     from scripts.wiki.sum20_official import (
+        MIN_CRAWL_DELAY_S,
         Sum20ParseError,
         advance_crawl_checkpoint,
         crawl_resume_wordid,
@@ -30,6 +37,7 @@ try:
     )
 except ImportError:  # pragma: no cover - direct script execution
     from wiki.sum20_official import (
+        MIN_CRAWL_DELAY_S,
         Sum20ParseError,
         advance_crawl_checkpoint,
         crawl_resume_wordid,
@@ -55,7 +63,7 @@ def ingest_wordids(
     *,
     start_wordid: int | None = None,
     limit: int = 100,
-    delay_s: float = 2.0,
+    delay_s: float = MIN_CRAWL_DELAY_S,
     retries: int = 3,
     retry_backoff_s: float = 2.0,
     sleep: callable = time.sleep,
@@ -72,6 +80,7 @@ def ingest_wordids(
         raise ValueError("start_wordid must be at least 1")
 
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    refuse_writable_corpus_database(str(db_path))
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     counts = IngestCounts(ok=0, unchanged=0, not_found=0, transient_error=0, parse_error=0)
@@ -123,8 +132,8 @@ def ingest_wordids(
                 counts.exit_code = 4 if outcome.status == "parse_error" else (3 if outcome.terminal else 1)
                 break
             wordid += 1
-            if (limit == 0 or attempted < limit) and delay_s > 0:
-                sleep(delay_s)
+            if limit == 0 or attempted < limit:
+                sleep(max(MIN_CRAWL_DELAY_S, delay_s))
         return counts
     finally:
         conn.close()
@@ -164,8 +173,8 @@ Related: scripts.ingest.dictionary_acquisition; docs/runbooks/dictionary-acquisi
     parser.add_argument(
         "--delay",
         type=float,
-        default=2.0,
-        help="Minimum seconds between requests (default: 2.0).",
+        default=MIN_CRAWL_DELAY_S,
+        help="Seconds between articles; values below the recorded crawl-delay are raised to 10 (default: 10).",
     )
     parser.add_argument("--retries", type=int, default=3, help="Retries after transient failures (default: 3).")
     parser.add_argument(

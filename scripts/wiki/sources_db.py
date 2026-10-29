@@ -23,6 +23,7 @@ Helpers:
 """
 
 import contextvars
+import functools
 import hashlib
 import json
 import os
@@ -30,7 +31,7 @@ import sqlite3
 import sys
 import threading
 from collections import defaultdict
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from pathlib import Path
@@ -57,6 +58,13 @@ from scripts.lib.readonly_sqlite import (
     SQLiteConnection,
     open_readonly,
     refuse_writable_corpus_database,
+)
+from scripts.storage.generations import (
+    GENERATIONS_DIRNAME,
+    one_generation,
+    reader_pin,
+    store_writer,
+    track_connection,
 )
 
 # ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
@@ -100,6 +108,17 @@ _conn_lock = threading.Lock()
 _active_connection: contextvars.ContextVar[sqlite3.Connection | None] = contextvars.ContextVar(
     "sources_db_active_connection", default=None
 )
+
+
+def _one_generation_lookup(function: Callable[..., Any]) -> Callable[..., Any]:
+    """Run a lookup that reads several times inside ``one_generation``."""
+
+    @functools.wraps(function)
+    def lookup(*args: Any, **kwargs: Any) -> Any:
+        with one_generation():
+            return function(*args, **kwargs)
+
+    return lookup
 
 
 @contextmanager
@@ -1018,27 +1037,23 @@ def get_ulif_word_records(
                 for w in word_list
             ]
 
-        has_forms_build = _ulif_table_exists(conn, "ulif_forms_build")
-        has_forms_table = _ulif_table_exists(conn, "ulif_forms")
         has_failures_table = _ulif_table_exists(conn, "ulif_forms_failures")
         has_sections_table = _ulif_table_exists(conn, "ulif_dictua_sections")
 
-        if not has_forms_build or not has_forms_table or not has_failures_table or not has_sections_table:
-            global_forms_state = "missing_table"
+        # One reading of the receipt for both the forms state and the miss
+        # authority; it tolerates a legacy receipt without newer columns.
+        local_copy = ulif_local_copy(conn)
+        copy_complete = local_copy["complete"]
+        if copy_complete:
+            global_forms_state = "complete"
+        elif local_copy["state"] in {"missing_table", "unmigrated_entries", "unbuilt"}:
+            global_forms_state = str(local_copy["state"])
+        elif local_copy.get("state") != "complete":
+            global_forms_state = str(local_copy.get("state"))
+        elif local_copy.get("parser_version") != ULIF_FORMS_PARSER_VERSION:
+            global_forms_state = "stale_parser_version"
         else:
-            build_row = conn.execute(
-                "SELECT state, parser_version, source_fingerprint FROM ulif_forms_build WHERE id = 1"
-            ).fetchone()
-            if build_row is None:
-                global_forms_state = "unbuilt"
-            elif build_row["state"] != "complete":
-                global_forms_state = str(build_row["state"])
-            elif build_row["parser_version"] != ULIF_FORMS_PARSER_VERSION:
-                global_forms_state = "stale_parser_version"
-            elif not build_row["source_fingerprint"]:
-                global_forms_state = "missing_source_fingerprint"
-            else:
-                global_forms_state = "complete"
+            global_forms_state = "missing_source_fingerprint"
 
         records: list[dict] = []
         for word in word_list:
@@ -1054,16 +1069,22 @@ def get_ulif_word_records(
                 })
                 continue
 
-            rows = _load_ulif_dictua_rows(conn, normalized)
+            # The register key first: a leftover per-query row stored under a
+            # stress-marked spelling must not hide the checked register entry.
+            rows = _load_ulif_dictua_rows(conn, ulif_lookup_key(word)) or _load_ulif_dictua_rows(conn, normalized)
             if not rows:
-                records.append({
+                miss = {
                     "word": word,
                     "normalized_query": normalized,
-                    "status": "not_found",
+                    "status": "not_found" if copy_complete else "unavailable",
+                    "authoritative": copy_complete,
                     "verified": False,
                     "entry_count": 0,
                     "entries": [],
-                })
+                }
+                if not copy_complete:
+                    miss["reason"] = "local_copy_incomplete"
+                records.append(miss)
                 continue
 
             entries: list[dict] = []
@@ -1623,6 +1644,173 @@ def search_ulif_dictua_sections(
     return matches
 
 
+# ── Local ULIF copy: the only answer path of the Sources ULIF tools ---------
+
+_ULIF_APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'"})
+#: Inflected-form owners listed for a non-headword query.
+_ULIF_FORM_OWNER_LIMIT = 20
+
+
+def ulif_lookup_key(word: str) -> str:
+    """Return the register key of *word*: unstressed, ASCII apostrophe, casefolded.
+
+    The DictUA walk stores every checked headword under this shape, so a
+    stress-marked or typographic-apostrophe query reaches the same entry.
+    """
+    return normalize_ulif_dictua_query(word.replace("́", "").translate(_ULIF_APOSTROPHES))
+
+
+_ULIF_LOCAL_COPY_TABLES = ("ulif_dictua_entries", "ulif_dictua_sections", "ulif_forms", "ulif_forms_failures")
+
+
+def ulif_local_copy(conn: sqlite3.Connection) -> dict[str, Any]:
+    """Identity of the local DictUA copy, from the forms build receipt.
+
+    ``complete`` is true only when every table of the copy is present, the
+    entries table has its register flag, and the receipt is a finished build of
+    the current parser with a source fingerprint. Only then is a miss a
+    statement about ULIF itself.
+    """
+    missing = [name for name in (*_ULIF_LOCAL_COPY_TABLES, "ulif_forms_build") if not _ulif_table_exists(conn, name)]
+    if missing:
+        return {"state": "missing_table", "missing_tables": missing, "complete": False}
+    if "homonym_checked" not in _ulif_entry_columns(conn):
+        return {"state": "unmigrated_entries", "complete": False}
+    row = conn.execute("SELECT * FROM ulif_forms_build WHERE id = 1").fetchone()
+    if row is None:
+        return {"state": "unbuilt", "complete": False}
+    columns = row.keys()
+    identity = {
+        key: row[key]
+        for key in (
+            "state", "parser_version", "started_at", "finished_at", "source_fingerprint",
+            "total_entries", "entries_done", "entries_failed", "total_forms",
+        )
+        if key in columns
+    }
+    identity["complete"] = (
+        identity.get("state") == "complete"
+        and identity.get("parser_version") == ULIF_FORMS_PARSER_VERSION
+        and bool(identity.get("source_fingerprint"))
+    )
+    return identity
+
+
+def _ulif_forms_build_failure(conn: sqlite3.Connection, entry_id: int) -> dict | None:
+    if not _ulif_table_exists(conn, "ulif_forms_failures"):
+        return None
+    row = conn.execute(
+        "SELECT reason, locator FROM ulif_forms_failures WHERE entry_id = ?", (entry_id,)
+    ).fetchone()
+    return {"reason": row["reason"], "locator": row["locator"]} if row is not None else None
+
+
+def _ulif_form_owners(conn: sqlite3.Connection, word: str) -> list[dict]:
+    """Checked headwords that list *word* as one of their forms."""
+    if not _ulif_table_exists(conn, "ulif_forms"):
+        return []
+    cleaned = " ".join(word.replace("́", "").translate(_ULIF_APOSTROPHES).split())
+    for candidate in dict.fromkeys((cleaned, cleaned.lower(), cleaned.title())):
+        rows = conn.execute(
+            """SELECT DISTINCT e.id, e.canonical_headword, e.homonym_index, e.grammatical_label
+               FROM ulif_forms AS f JOIN ulif_dictua_entries AS e ON e.id = f.entry_id
+               WHERE f.form_unstressed = ? AND e.homonym_checked = 1
+               ORDER BY e.id LIMIT ?""",
+            (candidate, _ULIF_FORM_OWNER_LIMIT),
+        ).fetchall()
+        if rows:
+            return [
+                {
+                    "entry_id": row["id"],
+                    "canonical_headword": row["canonical_headword"],
+                    "homonym_index": row["homonym_index"],
+                    "grammatical_label": row["grammatical_label"],
+                }
+                for row in rows
+            ]
+    return []
+
+
+def _ulif_source_fields() -> dict[str, str]:
+    return {
+        "source_id": ULIF_DICTUA_SOURCE_ID,
+        "official_url": ULIF_DICTUA_OFFICIAL_URL,
+        "attribution_label": ULIF_DICTUA_ATTRIBUTION_LABEL,
+    }
+
+
+def read_ulif_local_copy(*, db_path: str | Path | None = None) -> dict[str, Any]:
+    """Open the sources DB read-only and return :func:`ulif_local_copy`."""
+    conn = _ulif_dictua_conn(db_path)
+    if conn is None:
+        return {"state": "unavailable", "complete": False}
+    try:
+        return ulif_local_copy(conn)
+    finally:
+        conn.close()
+
+
+def query_ulif_local(
+    word: str,
+    sections: tuple[str, ...] | list[str] = ULIF_DICTUA_SECTION_KINDS,
+    *,
+    db_path: str | Path | None = None,
+) -> dict:
+    """Answer a ULIF lookup from the local DictUA copy only; never the network.
+
+    Only register rows from the walk (``homonym_checked = 1``) count. A hit is
+    the stored entry with the requested sections, ``ambiguous`` lists the
+    homonyms, and a miss is ``not_found`` with ``authoritative`` set when the
+    forms build receipt is complete. A miss on an incomplete copy is
+    ``unavailable``. Every answer carries ``local_copy`` (the receipt) and each
+    entry its ``forms_build_failure`` (``None`` unless it is a recorded failure).
+    """
+    requested = tuple(dict.fromkeys(sections))
+    unknown = set(requested) - set(ULIF_DICTUA_SECTION_KINDS)
+    if unknown:
+        raise ValueError(f"Unknown ULIF sections: {', '.join(sorted(unknown))}")
+    key = ulif_lookup_key(word)
+    base = {"word": word, "normalized_query": key, **_ulif_source_fields()}
+    conn = _ulif_dictua_conn(db_path)
+    if conn is None:
+        return {**base, "status": "unavailable", "reason": "sources_db_missing", "sections": {}}
+    try:
+        local_copy = ulif_local_copy(conn)
+        # An un-migrated table has no homonym_checked column and therefore no register rows.
+        checked = "homonym_checked" in _ulif_entry_columns(conn) if key else False
+        rows = [row for row in _load_ulif_dictua_rows(conn, key) if row["homonym_checked"] == 1] if checked else []
+        if len(rows) > 1:
+            entries = []
+            for row in rows:
+                identity = _ulif_entry_identity(row)
+                identity["status"] = row["status"]
+                identity["forms_build_failure"] = _ulif_forms_build_failure(conn, row["id"])
+                entries.append(identity)
+            return {**base, "status": "ambiguous", "entries": entries, "local_copy": local_copy}
+        if rows:
+            entry = _materialize_ulif_dictua_entry(conn, rows[0])
+            entry["sections"] = {kind: entry["sections"][kind] for kind in requested if kind in entry["sections"]}
+            entry["forms_build_failure"] = _ulif_forms_build_failure(conn, rows[0]["id"])
+            entry["local_copy"] = local_copy
+            return entry
+        if not local_copy["complete"]:
+            return {
+                **base, "status": "unavailable", "reason": "local_copy_incomplete",
+                "sections": {}, "local_copy": local_copy,
+            }
+        return {
+            **base,
+            "status": "not_found",
+            "authoritative": True,
+            "sections": {},
+            "forms_build_failure": None,
+            "inflected_form_of": _ulif_form_owners(conn, word) if key else [],
+            "local_copy": local_copy,
+        }
+    finally:
+        conn.close()
+
+
 #: Max wait (ms) for SQLite to acquire a shared read lock when another
 #: process holds it (e.g. a concurrent `build_sources_db.py` ingest
 #: during #1188 Diasporiana that rebuilt `literary_texts` FTS5 indices
@@ -1709,6 +1897,8 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
         refuse_writable_corpus_database(db_path, factory="scripts/wiki/sources_db.py")
         options: dict[str, Any] = {} if _connection_factory is None else {"factory": _connection_factory}
         conn = _open_writer_conn(db_path, options)
+        # The store writer lock closes it before release if its owner has not.
+        track_connection(db_path, conn)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition
@@ -1718,10 +1908,30 @@ def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
 
 
 def _get_conn() -> sqlite3.Connection:
-    """Reuse the cached reader until the database path, inode or mtime changes."""
+    """The request's connection, a pinned generation's reader, or the cached reader."""
     override = _active_connection.get()
     if override is not None:
         return override
+    pin = reader_pin()
+    if pin is None:
+        return _cached_reader()
+    with pin.lock:
+        reader = pin.readers.get(__name__)
+        if reader is None:
+            reader = _cached_reader()
+            path = Path(reader.execute("PRAGMA database_list").fetchone()[2])
+            if pin.generation is None:
+                pin.generation = path
+            elif path != pin.generation:
+                # Another thread or import name fixed the generation first and
+                # this cache has moved on since: read the pinned generation.
+                reader = _open_conn(pin.generation, read_only=True)
+            pin.readers[__name__] = reader
+        return reader
+
+
+def _cached_reader() -> SQLiteConnection:
+    """Reuse the cached reader until the selector's target, inode or mtime changes."""
     global _conn, _conn_state
     with _conn_lock:
         if _conn is not None and _conn_state is not None and _conn_state[0] is not _conn:
@@ -1733,6 +1943,17 @@ def _get_conn() -> sqlite3.Connection:
             except OSError:
                 _conn_state = (_conn, _conn_state[1], _conn_state[2])
         else:
+            if _conn is not None and _conn_state is not None and _conn_state[1].parent.name == GENERATIONS_DIRNAME:
+                # The cached reader holds a generation: re-resolve the selector on
+                # every request. After a publication, calls already running keep
+                # their reference to the old connection and its whole generation;
+                # dropping the cache's reference closes it once the last one ends.
+                reopen_path = _read_db_path()
+                if reopen_path != _conn_state[1]:
+                    fresh = _open_conn(reopen_path, read_only=True)
+                    stat = reopen_path.stat()
+                    _conn = fresh
+                    _conn_state = (fresh, reopen_path, (stat.st_ino, stat.st_mtime_ns, stat.st_size))
             # Stat the current connection path if open, else resolve via _read_db_path.
             path = _conn_state[1] if (_conn is not None and _conn_state is not None) else _read_db_path()
             try:
@@ -1779,6 +2000,7 @@ def ulif_stress_build() -> dict[str, Any]:
     return dict(row) if row is not None else {"state": "unbuilt"}
 
 
+@_one_generation_lookup
 def ulif_stress_rows(form: str) -> list[dict[str, Any]]:
     """Indexed per-form lookup of checked entries only (#8400 rule 3).
 
@@ -2544,6 +2766,7 @@ def _expand_to_chunk_candidates(
     return expanded
 
 
+@_one_generation_lookup
 def _dispatch_corpus_search(
     corpus: str,
     *,
@@ -2750,6 +2973,7 @@ def _expand_ukrainian_wiki_neighbors(match: dict) -> dict:
     }
 
 
+@_one_generation_lookup
 def _expand_neighbor_context(match: dict) -> dict:
     corpus = str(match.get("corpus", ""))
     if corpus in {"modern_literary", "archaic_literary"}:
@@ -2824,6 +3048,7 @@ def _is_textbook_section(match: dict) -> bool:
     return match.get("corpus") == "textbook_sections"
 
 
+@_one_generation_lookup
 def search_sources(
     query: str | Path,
     *,
@@ -3013,6 +3238,7 @@ def _fts_search(fts_table: str, data_table: str,
     raise last_exc
 
 
+@_one_generation_lookup
 def search_textbooks(
     ukr_keywords: set[str],
     max_total: int = 40,
@@ -3088,6 +3314,7 @@ def search_textbooks(
     return results
 
 
+@_one_generation_lookup
 def search_external(
     ukr_keywords: set[str],
     max_total: int = 10,
@@ -3213,6 +3440,7 @@ def search_literary(ukr_keywords: set[str], max_total: int = 20) -> list[dict]:
     return rows
 
 
+@_one_generation_lookup
 def search_wikipedia(ukr_keywords: set[str], max_total: int = 10) -> list[dict]:
     """Search Wikipedia articles via FTS5."""
     try:
@@ -3501,6 +3729,7 @@ def search_balla_en_uk_batch(
     return _batch_dict_lookup("balla_en_uk", words, limit=1, db_path=db_path)
 
 
+@_one_generation_lookup
 def search_dmklinger_uk_en_batch(
     words: list[str],
     *,
@@ -3569,6 +3798,7 @@ def search_dmklinger_uk_en_batch(
     return results
 
 
+@_one_generation_lookup
 def search_esum_batch(
     words: list[str],
     *,
@@ -3631,6 +3861,7 @@ def search_esum_batch(
     return results
 
 
+@_one_generation_lookup
 def search_slovnyk_me_entries_batch(
     words: list[str],
     *,
@@ -3859,6 +4090,7 @@ def _esum_match_tier(query: str, lemma: str) -> int:
     return 3
 
 
+@_one_generation_lookup
 def search_esum(
     query: str,
     volume: int | None = None,
@@ -4130,6 +4362,7 @@ def _resolved_slovnyk_dicts(dictionaries: list[str] | tuple[str, ...] | None) ->
     return resolved
 
 
+@_one_generation_lookup
 def _search_slovnyk_me_db(
     query: str,
     *,
@@ -4225,6 +4458,7 @@ def _search_slovnyk_me_db(
         _close_if_temporary(conn, db_path)
 
 
+@_one_generation_lookup
 def _dictionaries_not_recorded_missing(
     query: str,
     dictionaries: list[str] | tuple[str, ...] | None,
@@ -4283,6 +4517,7 @@ def search_slovnyk_me(
     return rows
 
 
+@_one_generation_lookup
 def search_slovnyk_me_with_status(
     query: str,
     limit: int = 10,
@@ -4350,10 +4585,13 @@ def _json_string_list(value: object) -> list[str]:
 
 
 def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
-    """Return every exact-matching article from the offline official СУМ-20 collection.
+    """Return every exact-matching СУМ-20 article: official records, then served mirror records.
 
-    The collection is populated only by an explicit ingest. This reader has no
-    live fallback, so its provenance is the stored official ``wordid`` record.
+    Both collections are populated only by explicit offline writers; this
+    reader has no live fallback. Official records carry their stored ``wordid``
+    provenance. Imported mirror records follow ``sum20-mirror-rule-v1``
+    (``scripts.wiki.sum20_mirror``) and carry their mirror URL, fetch time and
+    ``official_relation``; they never use the official ``source_id``.
     An omitted ``db_path`` uses ``data/lexdata.db`` when that file already holds
     ``sum20_articles``; otherwise it uses the read-only sources collection.
     ``LEXDATA_DB_PATH`` is exclusive and never falls back.
@@ -4367,7 +4605,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
     try:
         columns = {str(row["name"]) for row in conn.execute("PRAGMA table_info(sum20_articles)").fetchall()}
         if not columns:
-            return []
+            return _sum20_mirror_records(conn, db_path, normalized_lookup_key)
         where = sum20_live_article_where(columns, prefix=False)
         articles = conn.execute(
             f"SELECT * FROM sum20_articles WHERE {where} ORDER BY wordid",
@@ -4412,6 +4650,7 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
             records.append(
                 {
                     "source_id": SUM20_SOURCE_ID,
+                    "source_role": "official",
                     "source_record_id": str(article["wordid"]),
                     "headword": str(article["headword"]),
                     "stressed_headword": str(article["stressed_headword"]),
@@ -4428,9 +4667,26 @@ def query_sum20(query: str, *, db_path: str | Path | None = None) -> list[dict]:
                     "attribution_label": SUM20_ATTRIBUTION_LABEL,
                 }
             )
+        records.extend(_sum20_mirror_records(conn, db_path, normalized_lookup_key))
         return records
     finally:
         conn.close()
+
+
+def _sum20_mirror_records(official, db_path: str | Path | None, key: str) -> list[dict]:
+    """Served mirror records, judged against the official rows ``official`` returned (sum20-mirror-rule-v1)."""
+    from scripts.lexicon.sum20_store import open_sum20_mirror
+    from scripts.wiki.sum20_mirror import mirror_records
+
+    mirror = open_sum20_mirror(official, db_path, repository_root=PROJECT_ROOT)
+    if mirror is None:
+        return []
+    if mirror is official:
+        return mirror_records(official, key)
+    try:
+        return mirror_records(mirror, key, official)
+    finally:
+        mirror.close()
 
 
 def _heritage_text(hit: dict) -> str:
@@ -4458,6 +4714,7 @@ def _heritage_match_tier(query: str, headword: str) -> int:
     return 3
 
 
+@_one_generation_lookup
 def search_heritage(
     query: str,
     limit: int = 10,
@@ -4677,11 +4934,12 @@ def main(argv: list[str] | None = None) -> int:
     path = args.db if args.db is not None else SOURCES_DB_PATH
     if not path.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
-    conn = _open_conn(path)
-    try:
-        changed = migrate_ulif_dictua_entries(conn)
-    finally:
-        conn.close()
+    with store_writer(path) as target:
+        conn = _open_conn(target)
+        try:
+            changed = migrate_ulif_dictua_entries(conn)
+        finally:
+            conn.close()
     print("migrated" if changed else "already current")
     return 0
 

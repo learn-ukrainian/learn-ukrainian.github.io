@@ -6,6 +6,7 @@ import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import { ArcLessonCount, ArcStateBadge } from './ArcLanding';
 import { formatArcScopeCount, type ArcScopeKind } from '../lib/i18n/chrome';
 import { lessonHref, type ArcPosition } from '../lib/arc';
+import { a1PreviousEdition } from '../lib/a1-entry';
 
 type ArcModuleProps = {
   level: string;
@@ -66,7 +67,7 @@ export default function ArcModule({ level, position }: ArcModuleProps): ReactNod
 
       {position.previous_edition_href && (
         <p>
-          <a href={position.previous_edition_href}><ChromeText k="home.track.a1Previous" /></a>
+          <a href={position.previous_edition_href}><ChromeText k={a1PreviousEdition.titleKey} /></a>
         </p>
       )}
     </div>

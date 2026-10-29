@@ -5,8 +5,12 @@ from __future__ import annotations
 import ast
 import contextlib
 import json
+import os
+import signal
 import subprocess
 import sys
+import threading
+import time
 from itertools import pairwise
 from pathlib import Path
 from types import SimpleNamespace
@@ -306,11 +310,22 @@ def test_official_positive_payload_and_bounded_range(tmp_path):
     assert result["next_wordid"] is None
     assert result["counts"]["positive"] == result["counts"]["miss"] == 1
     assert http.calls[0][2]["params"] == {"page": 0}
+    assert [call[0] for call in http.calls] == [1000, 1010]
     with database(tmp_path, "sum20_official") as conn:
         payload = json.loads(conn.execute("SELECT payload FROM results WHERE position=0").fetchone()[0])
         assert payload["article"]["wordid"] == 5
         assert payload["parser_version"] == acquisition.PARSER_VERSION
         assert payload["content_sha256"]
+
+
+@pytest.mark.parametrize("retry_after,expected", [("1", 10), ("25", 25)])
+def test_official_retry_spacing_survives_process_restart(tmp_path, retry_after, expected):
+    clock = Clock()
+    argv = arguments(tmp_path, "sum20_official")
+    http = HTTP([response(503, headers={"Retry-After": retry_after}), response(404), response(404)], clock)
+    assert invoke("run", argv, http, clock) == 75
+    assert invoke("run", argv, http, clock) == 0
+    assert [call[0] for call in http.calls] == [1000, 1000 + expected, 1010 + expected]
 
 
 def test_transient_backoff_exhaustion_survives_process_invocations(tmp_path):
@@ -479,8 +494,7 @@ def test_interrupted_attempt_counts_and_event_budget(tmp_path):
     clock = Clock()
     argv = arguments(tmp_path, "vts", ("sample",), "--max-attempts", "1")
     http = HTTP([KeyboardInterrupt()], clock)
-    with pytest.raises(KeyboardInterrupt):
-        invoke("run", argv, http, clock)
+    assert invoke("run", argv, http, clock) == 130
     assert status(tmp_path)["retry"]["attempts"] == 1
     assert status(tmp_path)["terminal_reason"] == ""
     assert invoke("run", argv, HTTP([], clock), clock) == 5
@@ -602,10 +616,10 @@ def test_restart_after_progress_then_crashes_retains_no_progress_cap(tmp_path):
     http = HTTP([response(), KeyboardInterrupt()], clock)
 
     def progress_then_interrupt(command, **_kwargs):
-        invoke("run", command[4:], http, clock)
+        assert invoke("run", command[4:], http, clock) == 130
+        raise KeyboardInterrupt
 
-    with pytest.raises(KeyboardInterrupt):
-        invoke("supervise", argv, http, clock, launch=progress_then_interrupt)
+    assert invoke("supervise", argv, http, clock, launch=progress_then_interrupt) == 130
     assert status(tmp_path)["checkpoint"] == 1
     assert status(tmp_path)["retry"]["supervisor_launches"] == 1
     assert status(tmp_path)["retry"]["no_progress_launches"] == 0
@@ -615,8 +629,7 @@ def test_restart_after_progress_then_crashes_retains_no_progress_cap(tmp_path):
         raise KeyboardInterrupt
 
     for used in (1, 2):
-        with pytest.raises(KeyboardInterrupt):
-            invoke("supervise", argv, HTTP([], clock), clock, launch=interrupt)
+        assert invoke("supervise", argv, HTTP([], clock), clock, launch=interrupt) == 130
         assert status(tmp_path)["retry"]["no_progress_launches"] == used
         assert status(tmp_path)["retry"]["supervisor_launches"] == used + 1
     assert invoke("supervise", argv, HTTP([], clock), clock, launch=lambda *_a, **_k: pytest.fail("cap reset")) == 5
@@ -871,3 +884,350 @@ def test_transport_ambiguity_and_network_semantics_match(monkeypatch, dictionary
         result = em._fetch_slovnyk_outcome("sample", "sample", "vts")
     assert result.status == expected
     assert result.http_status == numeric
+
+
+# --- operator progress lines, frozen transport identity and kill-and-rerun resume ---
+
+
+def progress_lines(tmp_path, dictionary="vts"):
+    return (tmp_path / "staging" / dictionary / "progress.log").read_text().splitlines()
+
+
+def test_console_and_progress_file_carry_the_same_readable_lines(tmp_path, capsys):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a", "b", "c", "d"), "--progress-interval", "1")
+    secret = response(200, SLOVNYK_HTML.replace("synthetic", "private secret"))
+    assert invoke("run", argv, HTTP([secret, response(503)], clock), clock) == 75
+    first = capsys.readouterr().err.splitlines()
+    assert progress_lines(tmp_path) == first
+    assert "run: starting at 0/4 (0.0%)" in first[0]
+    assert any("1/4  25.0%  positive  a http=200" in line for line in first)
+    assert any("retry b attempt 1/4 http=503; next attempt in" in line for line in first)
+    assert any("progress 1/4 (25.0%) rate=" in line and "eta=unknown" in line and "last=a" in line for line in first)
+    assert "job state transient (retryable_request), exit 75" in first[-1]
+
+    assert invoke("run", argv, HTTP([response(), response(404), response()], clock), clock) == 0
+    second = capsys.readouterr().err.splitlines()
+    assert progress_lines(tmp_path) == first + second
+    assert "run: resuming at 1/4 (25.0%), job state transient, attempts used on next target 1" in second[0]
+    assert any("not_found c http=404" in line for line in second)
+    assert any(line.endswith("4/4 100.0%  positive  d http=200") for line in second)
+    assert any(" eta=" in line and "eta=unknown" not in line for line in second)
+    assert "job state complete (target_resolved), exit 0" in second[-1]
+    assert "private secret" not in "\n".join(first + second)
+    # The machine projections keep their shape for existing readers.
+    assert json.loads((tmp_path / "staging" / "vts" / "job.log").read_text().splitlines()[-1])["state"] == "complete"
+    assert status(tmp_path)["checkpoint"] == 4
+
+
+def test_unwritable_progress_file_never_stops_the_job(tmp_path, capsys):
+    clock = Clock()
+    argv = arguments(tmp_path)
+    (tmp_path / "staging" / "vts").mkdir(parents=True)
+    (tmp_path / "staging" / "vts" / "progress.log").mkdir()
+    assert invoke("run", argv, HTTP([response()], clock), clock) == 0
+    err = capsys.readouterr().err
+    assert err.count("warning: progress file unwritable") == 1
+    assert "positive  sample" in err
+
+
+def test_progress_interval_must_be_positive_and_finite(capsys):
+    for bad in ("0", "-1", "nan", "inf"):
+        with pytest.raises(SystemExit) as exc:
+            acquisition.main(["status", "--root", "r", "--dictionary", "vts", "--progress-interval", bad])
+        assert exc.value.code == 2
+    assert "invalid_arguments" in capsys.readouterr().err
+
+
+def test_transport_identity_binds_only_fetch_and_parse_code():
+    source = Path(acquisition.__file__).read_text(encoding="utf-8")
+    base = acquisition.transport_identity(source)
+    # Logging, status projection, retry plumbing, CLI text and unrelated code are not identity.
+    for unbound in (
+        source + "\n\ndef added():\n    return 1\n",
+        source.replace('"job.log"', '"other.log"'),
+        source.replace("def report(", "# note\ndef report(").replace("def acquire(", "# note\ndef acquire("),
+        source.replace("run once, supervise", "run one pass, supervise"),
+        source.replace("progress.tick()", "progress.summary()"),
+    ):
+        assert unbound != source
+        assert acquisition.transport_identity(unbound) == base
+    # What is requested, reused and parsed is identity.
+    for bound in (
+        source.replace("allow_redirects=False", "allow_redirects=True"),
+        source.replace('"Accept": "text/html,application/xhtml+xml"', '"Accept": "*/*"'),
+        source.replace('"invalid_budget"', '"invalid_limits"'),
+        source.replace('provenance="observed_http"', 'provenance="observed"'),
+        source.replace('"legacy_positive"', '"legacy"'),
+        source.replace("max(0, seconds) if math.isfinite(seconds) else 0", "max(0, seconds)"),
+    ):
+        assert bound != source
+        assert acquisition.transport_identity(bound) != base
+    with pytest.raises(RuntimeError, match="transport_functions_missing"):
+        acquisition.transport_identity(source.replace("def fetch_once(", "def fetch_other("))
+
+
+def freeze_previous_transport(tmp_path, dictionary="vts"):
+    """Rewrite the stored identity to a different transport hash, as an older checkout would have frozen."""
+    with database(tmp_path, dictionary) as conn, conn:
+        spec = json.loads(conn.execute("SELECT spec FROM job").fetchone()["spec"])
+        spec["transport_sha256"] = acquisition.digest(b"whole file of the earlier checkout")
+        text = acquisition.packed(spec)
+        conn.execute("UPDATE job SET spec=?, fingerprint=?", (text, acquisition.digest(text.encode())))
+    return spec["transport_sha256"]
+
+
+def durable_progress(tmp_path):
+    with database(tmp_path) as conn:
+        return (
+            [tuple(row) for row in conn.execute("SELECT * FROM results ORDER BY position")],
+            [tuple(row) for row in conn.execute("SELECT * FROM events ORDER BY id")],
+            tuple(conn.execute("SELECT restarts, state, reason, started FROM job").fetchone()),
+        )
+
+
+def test_changed_transport_is_refused_until_an_explicit_recorded_rebind(tmp_path):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a", "b", "c"))
+    assert invoke("run", argv, HTTP([response(), response(503)], clock), clock) == 75
+    previous = freeze_previous_transport(tmp_path)
+    results, events, job = durable_progress(tmp_path)
+    before = status(tmp_path)
+
+    for action in ("run", "supervise", "resume"):
+        no_http = HTTP([], clock)
+        launch = lambda *_a, **_k: pytest.fail("launched against drifted transport")  # noqa: E731
+        assert invoke(action, argv, no_http, clock, launch=launch) == 2
+        assert json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"] == "transport_changed"
+    assert durable_progress(tmp_path) == (results, events, job)
+
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 0
+    after_results, after_events, after_job = durable_progress(tmp_path)
+    assert after_results == results
+    assert after_job == job  # launches, state and start time untouched
+    assert after_events[:-1] == events
+    assert after_events[-1][3] == "transport_rebind"
+    with database(tmp_path) as conn:
+        rebinds = [tuple(r) for r in conn.execute("SELECT * FROM transport_rebinds")]
+    current = acquisition.transport_identity(Path(acquisition.__file__).read_text(encoding="utf-8"))
+    assert rebinds == [(after_events[-1][0], previous, current)]
+    now = status(tmp_path)
+    assert now["retry"] == before["retry"]  # no budget reset
+    assert now["counts"] == before["counts"]
+    assert now["checkpoint"] == before["checkpoint"] == 1
+
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 0  # idempotent, records nothing
+    assert durable_progress(tmp_path)[1] == after_events
+    assert "rebind: already bound" in progress_lines(tmp_path)[-1]
+
+    assert invoke("run", argv, HTTP([response(), response()], clock), clock) == 0
+    assert status(tmp_path)["state"] == "complete"
+    assert status(tmp_path)["retry"]["attempts"] == 0
+
+
+def test_rebind_never_hides_other_drift_or_a_busy_job(tmp_path):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a", "b"))
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 2  # no job yet
+    assert invoke("run", argv, HTTP([response(503)], clock), clock) == 75
+    freeze_previous_transport(tmp_path)
+    frozen = durable_progress(tmp_path)
+
+    manifest = tmp_path / "manifest.json"
+    original = manifest.read_text()
+    manifest.write_text(original + " ")
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 2
+    assert json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"] == "frozen_input_mismatch"
+    manifest.write_text(original)
+    assert invoke("rebind", [*argv, "--max-attempts", "9"], HTTP([], clock), clock) == 2
+
+    directory = tmp_path / "staging" / "vts"
+    for held in ("writer.lock", "supervisor.lock"):
+        with acquisition.lock(directory / held):
+            assert invoke("rebind", argv, HTTP([], clock), clock) == 6
+    with database(tmp_path) as conn, conn:
+        conn.execute("UPDATE results SET target='other' WHERE position=0")
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 2
+    assert (
+        json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"] == "durable_targets_mismatch"
+    )
+    with database(tmp_path) as conn, conn:
+        conn.execute("UPDATE results SET target='a' WHERE position=0")
+    assert durable_progress(tmp_path) == frozen
+    with database(tmp_path) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM sqlite_master WHERE name='transport_rebinds'").fetchone()[0] == 0
+
+
+def test_rebind_validates_the_whole_stored_job_even_when_the_spec_matches(tmp_path):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a", "b"))
+    assert invoke("run", argv, HTTP([response(503)], clock), clock) == 75
+    # Same spec, altered durable target: `run` refuses it, so `rebind` must not call it "already bound".
+    with database(tmp_path) as conn, conn:
+        conn.execute("UPDATE results SET target='other' WHERE position=1")
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 2
+    assert (
+        json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"] == "durable_targets_mismatch"
+    )
+    with database(tmp_path) as conn, conn:
+        conn.execute("UPDATE results SET target='b' WHERE position=1")
+        conn.execute("UPDATE job SET fingerprint='tampered'")
+    for _ in range(2):  # a bad fingerprint is refused every time, never reported as success
+        assert invoke("rebind", argv, HTTP([], clock), clock) == 2
+        assert (
+            json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"]
+            == "frozen_input_mismatch"
+        )
+    assert invoke("run", argv, HTTP([], clock), clock) == 2
+
+
+def test_summaries_continue_through_a_long_backoff_without_changing_request_time(tmp_path, capsys):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a",), "--progress-interval", "600")
+    assert invoke("run", argv, HTTP([response(503, headers={"Retry-After": "3600"})], clock), clock) == 75
+    capsys.readouterr()
+    clock.sleeps.clear()
+    http = HTTP([response()], clock)
+    assert invoke("run", argv, http, clock) == 0
+    lines = capsys.readouterr().err.splitlines()
+    before_request = lines[: next(i for i, line in enumerate(lines) if "positive  a" in line)]
+    assert sum("progress 0/1" in line for line in before_request) >= 5
+    assert max(clock.sleeps) <= 600
+    assert http.calls[0][0] == 1000 + 3600  # first failure ended at 1000; the retry still waits exactly 3600s
+
+
+def test_summaries_continue_while_another_job_holds_the_host_slot(tmp_path, capsys):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a",), "--progress-interval", "1")
+    holder = contextlib.ExitStack()
+    (tmp_path / "staging").mkdir()
+    holder.enter_context(acquisition.lock(tmp_path / "staging" / "slovnyk.lock"))
+    polls = []
+
+    def sleep(seconds):
+        clock.sleep(seconds)
+        polls.append(seconds)
+        if len(polls) == 4:
+            holder.close()
+
+    http = HTTP([response()], clock)
+    assert acquisition.main(["run", *argv], session_factory=lambda: http, clock=clock, sleep=sleep) == 0
+    lines = capsys.readouterr().err.splitlines()
+    before_request = lines[: next(i for i, line in enumerate(lines) if "positive  a" in line)]
+    assert polls[:4] == [acquisition.HOST_POLL_SECONDS] * 4
+    assert sum("progress 0/1" in line for line in before_request) >= 1
+
+
+def test_summaries_continue_while_one_request_is_in_flight(tmp_path, capsys):
+    argv = arguments(tmp_path, "vts", ("a",), "--progress-interval", "0.05")
+    log = tmp_path / "staging" / "vts" / "progress.log"
+
+    class Slow(HTTP):
+        def get(self, url, **kwargs):
+            deadline = time.monotonic() + 20
+            while (log.read_text().count("progress 0/1") if log.exists() else 0) < 2:
+                assert time.monotonic() < deadline, "no summary while the request was in flight"
+                time.sleep(0.01)
+            return response()
+
+    assert acquisition.main(["run", *argv], session_factory=lambda: Slow([], None), sleep=lambda _s: None) == 0
+    lines = capsys.readouterr().err.splitlines()
+    first_result = next(i for i, line in enumerate(lines) if "positive  a" in line)
+    assert sum("progress 0/1" in line for line in lines[:first_result]) >= 2
+    assert progress_lines(tmp_path) == lines
+    assert not [t for t in threading.enumerate() if t.name == "acquisition-heartbeat"]  # always joined
+
+
+KILL_RUNNER = """
+import subprocess, sys, time
+from pathlib import Path
+from types import SimpleNamespace
+
+sys.path.insert(0, str(Path.cwd()))
+from scripts.ingest.dictionary_acquisition import main
+
+root = Path(sys.argv[sys.argv.index("--root") + 1])
+root.mkdir(parents=True, exist_ok=True)
+timer = [1000.0]
+def sleep(seconds):
+    timer[0] += seconds
+class HTTP:
+    def __enter__(self):
+        return self
+    def __exit__(self, *_):
+        pass
+    def get(self, url, **kwargs):
+        with (root / "fake_requests.log").open("a") as handle:
+            handle.write(url.rsplit("/", 1)[-1] + "\\n")
+        if len((root / "fake_requests.log").read_text().split()) == 3 and not (root / "unblocked").exists():
+            (root / "blocked").write_text("x")
+            time.sleep(120)
+        return SimpleNamespace(status_code=200, text=HTML, headers={})
+def launch(command, **kwargs):
+    return subprocess.run([sys.executable, __file__, *command[3:]], **kwargs)
+raise SystemExit(main(sys.argv[1:], session_factory=HTTP, launch=launch, clock=lambda: timer[0], sleep=sleep))
+"""
+
+
+@pytest.mark.parametrize(
+    "action,signum,code,handled",
+    [
+        ("run", signal.SIGINT, 130, True),
+        ("run", signal.SIGTERM, 143, True),
+        ("run", signal.SIGHUP, 129, True),
+        ("run", signal.SIGKILL, -9, False),
+        ("supervise", signal.SIGTERM, 143, True),
+        ("supervise", signal.SIGKILL, -9, False),
+    ],
+)
+def test_kill_during_a_request_then_rerun_resumes_from_the_durable_checkpoint(tmp_path, action, signum, code, handled):
+    lemmas = ("one", "two", "three", "four", "five")
+    argv = arguments(tmp_path, "vts", lemmas)
+    root = tmp_path / "staging"
+    runner = tmp_path / "kill_runner.py"
+    runner.write_text(f"HTML = {SLOVNYK_HTML!r}\n" + KILL_RUNNER)
+    command = [sys.executable, str(runner), action, *argv]
+    repo = Path(__file__).resolve().parents[1]
+
+    # Own session so a hard kill takes the supervisor's child with it, as a reboot or tmux kill does.
+    first = subprocess.Popen(command, cwd=repo, stderr=subprocess.PIPE, text=True, start_new_session=True)
+    deadline = time.monotonic() + 30
+    while not (root / "blocked").exists():
+        assert first.poll() is None and time.monotonic() < deadline, "runner never reached the third request"
+        time.sleep(0.05)
+    if handled:
+        first.send_signal(signum)
+    else:
+        os.killpg(first.pid, signum)
+    err = first.communicate(timeout=30)[1]
+    assert first.returncode == code
+    interrupted = [line for line in progress_lines(tmp_path) if "interrupted by" in line]
+    if handled:
+        name = signal.Signals(signum).name
+        assert len(interrupted) == 1 and f"interrupted by {name}" in interrupted[0]
+        assert ("at 2/5 (40.0%)" in interrupted[0]) == (action == "run")
+        assert "progress is saved. Rerun the same command" in interrupted[0]
+        assert interrupted[0] in err
+    else:
+        assert interrupted == []
+    # Two targets are durable; the killed request is an unresolved, already-counted attempt.
+    with database(tmp_path) as conn:
+        assert [tuple(r) for r in conn.execute("SELECT target,status,attempts FROM results ORDER BY position")] == [
+            ("one", "positive", 1),
+            ("two", "positive", 1),
+            ("three", "transient_error", 1),
+            ("four", "pending", 0),
+            ("five", "pending", 0),
+        ]
+
+    (root / "unblocked").write_text("x")
+    second = subprocess.run(command, cwd=repo, capture_output=True, text=True, timeout=60)
+    assert second.returncode == 0, second.stderr
+    assert "run: resuming at 2/5 (40.0%)" in second.stderr
+    assert "job state complete (target_resolved), exit 0" in second.stderr
+    # Resolved targets are never refetched; only the interrupted one is requested again.
+    assert (root / "fake_requests.log").read_text().split() == ["one", "two", "three", "three", "four", "five"]
+    final = status(tmp_path)
+    assert (final["state"], final["checkpoint"], final["denominator"]) == ("complete", 5, 5)
+    assert final["counts"]["positive"] == 5
+    assert final["request_attempts"] == 6

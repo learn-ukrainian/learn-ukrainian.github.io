@@ -62,6 +62,7 @@ import scripts.wiki.sources_db as sources_db_full_name
 import wiki.sources_db as sources_db_short_name
 from scripts.lib.readonly_sqlite import SerializedConnection, SerializedCursor
 from scripts.rag.call_governor import CallGovernor, CallRefused, GovernorLimits
+from scripts.storage.generations import one_generation as one_sources_generation
 from scripts.verification.check_ru_morph import is_russian_pattern
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
 
@@ -94,8 +95,8 @@ server: Server
 # A sources tool is read-only unless a lookup persists what it fetched.
 _READ_ONLY_TOOL = ToolAnnotations(readOnlyHint=True, destructiveHint=False)
 # Persists a live fetch: query_wikipedia writes data/wiki_cache.db (creates its table,
-# evicts expired rows, inserts results); the DictUA tools store a cache miss in
-# sources.db. Additive cache writes, so not destructive, but not read-only (#9551).
+# evicts expired rows, inserts results). Additive cache writes, so not destructive,
+# but not read-only (#9551). The ULIF tools read the local DictUA copy and write nothing.
 # tests/mcp/test_sources_tool_side_effects.py checks this against observed writes.
 _PERSISTING_LOOKUP_TOOL = ToolAnnotations(readOnlyHint=False, destructiveHint=False)
 SUM11_AUTHORITY_NOTICE = (
@@ -862,10 +863,12 @@ async def list_tools() -> list[Tool]:
         ),
         _tool(
             name="query_ulif",
-            annotations=_PERSISTING_LOOKUP_TOOL,
             description=(
-                "Query official DictUA data from ULIF. Omit sections for the legacy plain paradigm "
-                "table or no-result text; pass sections explicitly for structured source-attributed JSON."
+                "Query official DictUA data from the complete local ULIF copy (never the network). "
+                "Omit sections for the legacy plain paradigm table or miss text; pass sections "
+                "explicitly for structured source-attributed JSON. A miss is an authoritative "
+                "not_found that cites the forms build receipt and lists the headwords the word "
+                "is an inflected form of."
             ),
             inputSchema={
                 "type": "object",
@@ -882,24 +885,16 @@ async def list_tools() -> list[Tool]:
                             "the response is structured source-attributed JSON."
                         ),
                     },
-                    "cache_only": {
-                        "type": "boolean",
-                        "default": False,
-                        "description": (
-                            "Never make a live ULIF fetch — answer only from the local "
-                            "ulif_dictua_entries cache. Returns JSON "
-                            "{status: attested|not_found|unavailable, entry}. A cache miss is "
-                            "'not_found', never fetched live."
-                        ),
-                    },
                 },
                 "required": ["word"],
             },
         ),
         _tool(
             name="query_ulif_synonyms",
-            annotations=_PERSISTING_LOOKUP_TOOL,
-            description="Return official DictUA synonym groups as structured, source-attributed JSON.",
+            description=(
+                "Return official DictUA synonym groups from the local ULIF copy as structured, "
+                "source-attributed JSON."
+            ),
             inputSchema={
                 "type": "object",
                 "properties": {"word": {"type": "string"}},
@@ -908,8 +903,10 @@ async def list_tools() -> list[Tool]:
         ),
         _tool(
             name="query_ulif_antonyms",
-            annotations=_PERSISTING_LOOKUP_TOOL,
-            description="Return official DictUA antonym groups as structured, source-attributed JSON.",
+            description=(
+                "Return official DictUA antonym groups from the local ULIF copy as structured, "
+                "source-attributed JSON."
+            ),
             inputSchema={
                 "type": "object",
                 "properties": {"word": {"type": "string"}},
@@ -918,8 +915,10 @@ async def list_tools() -> list[Tool]:
         ),
         _tool(
             name="query_ulif_phraseology",
-            annotations=_PERSISTING_LOOKUP_TOOL,
-            description="Return official DictUA phraseology groups as structured, source-attributed JSON.",
+            description=(
+                "Return official DictUA phraseology groups from the local ULIF copy as structured, "
+                "source-attributed JSON."
+            ),
             inputSchema={
                 "type": "object",
                 "properties": {"word": {"type": "string"}},
@@ -930,10 +929,10 @@ async def list_tools() -> list[Tool]:
             name="query_ulif_records",
             description=(
                 "Query complete ULIF source word records for one or more Ukrainian words from the local "
-                "canonical cache. Exposes all harvested homonyms, grammatical labels, complete sense glosses, "
+                "ULIF copy. Exposes all harvested homonyms, grammatical labels, complete sense glosses, "
                 "every paradigm/form/stress alternative, every synonym group, every antonym group, and every "
                 "phraseology group with its full text/examples/labels/source ordering and provenance. "
-                "Never fetches live."
+                "Never fetches live; a miss on a complete copy is marked authoritative."
             ),
             inputSchema={
                 "type": "object",
@@ -1223,15 +1222,19 @@ async def list_tools() -> list[Tool]:
                 "collection built from sum20ua.com sequential wordid articles. "
                 "Coverage: volumes 1–16 (А–Р); vols 17–20 (С–Я) not yet "
                 "published online. Results are exact offline matches only: this tool never "
-                "performs a live lookup or falls back to another dictionary. Each article "
-                "includes its official URL, retrieval time, content hash, and parser version."
+                "performs a live lookup or falls back to another dictionary. Each official article "
+                "includes its official URL, retrieval time, content hash, and parser version. "
+                "Imported slovnyk.me СУМ-20 mirror articles follow the official ones, marked "
+                "source role mirror with their mirror URL, retrieval time and relation to the "
+                "official rows (sum20-mirror-rule-v1); a mirror article that agrees with a live "
+                "official article is not repeated, and a mirror article is never official verification."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "word": {
                         "type": "string",
-                        "description": "Ukrainian headword to look up in СУМ-20 (must be in А–Р range)",
+                        "description": "Ukrainian headword to look up in СУМ-20 (official coverage А–Р; mirror rows may cover more)",
                     },
                 },
                 "required": ["word"],
@@ -2169,7 +2172,11 @@ async def _run_attempt(handler: Any, markers: tuple[str, ...]) -> Any:
     attempt = _AttemptDamage(markers)
     token = _ATTEMPT_DAMAGE.set(attempt)
     try:
-        result = await handler()
+        # One attempt reads one Sources generation, through either import name of
+        # sources_db and in every worker thread; a retry after a heal is a new
+        # attempt and may read a newer one.
+        with one_sources_generation():
+            result = await handler()
     except Exception as exc:
         if attempt.errors and not isinstance(exc, sqlite3.DatabaseError):
             raise attempt.errors[0] from exc  # the swallowed damage is the cause of whatever broke next
@@ -3751,83 +3758,98 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text="\n".join(lines))]
 
 
-def _ulif_unavailable_text(word: str) -> str:
-    """Outage wording for ULIF DictUA lookups (#9005, #9016)."""
+def _ulif_local_copy_line(local_copy: dict) -> str:
+    """One-line citation of the forms build receipt behind a ULIF answer."""
     return (
-        f"ULIF DictUA (lcorp.ulif.org.ua) is unavailable for '{word}' (network "
-        "error or HTTP failure). Treat as unknown, not a negative — do not cite "
-        "this as 'no paradigm'."
+        f"Local ULIF copy: forms build {local_copy.get('state')}, finished_at "
+        f"{local_copy.get('finished_at') or '-'}, parser_version {local_copy.get('parser_version') or '-'}, "
+        f"source_fingerprint {local_copy.get('source_fingerprint') or '-'}, entries "
+        f"{local_copy.get('entries_done', 0):,}/{local_copy.get('total_entries', 0):,} built, "
+        f"{local_copy.get('entries_failed', 0):,} recorded build failures."
     )
 
 
-async def handle_query_ulif(args: dict) -> list[TextContent]:
+def _ulif_failure_note(failure: dict | None) -> str:
+    if not failure:
+        return "not one of the recorded forms build failures"
+    return f"a recorded forms build failure ({failure.get('reason')}, {failure.get('locator')})"
+
+
+def _ulif_miss_text(word: str, result: dict) -> str:
+    """Plain-text rendering of a ULIF miss: authoritative, or an incomplete local copy."""
+    local_copy = result.get("local_copy") or {}
+    if result.get("status") == "unavailable":
+        return (
+            f"ULIF local copy cannot decide '{word}' ({result.get('reason')}). Treat as unknown, "
+            "not a negative.\n" + (_ulif_local_copy_line(local_copy) if local_copy else "")
+        ).rstrip()
+    lines = [
+        f"No ULIF entry found for: '{word}'. Authoritative miss: the word is not a headword of "
+        f"the complete local DictUA copy and is {_ulif_failure_note(None)}.",
+    ]
+    owners = result.get("inflected_form_of") or []
+    if owners:
+        heads = ", ".join(
+            f"{owner.get('canonical_headword')} (entry {owner.get('entry_id')})" for owner in owners
+        )
+        lines.append(f"'{word}' is an inflected form of: {heads}.")
+    lines.append(_ulif_local_copy_line(local_copy))
+    return "\n".join(lines)
+
+
+async def _query_ulif_local(word: str, sections) -> dict | list[TextContent]:
+    """Run the local ULIF lookup, or return the missing-database reply."""
     from scripts.storage.topology import ActiveDatabaseNetworkError
-    from wiki.sources_db import _read_db_path
+    from wiki.sources_db import _read_db_path, query_ulif_local
 
     try:
         _read_db_path()
     except ActiveDatabaseNetworkError:
         return [TextContent(type="text", text="Sources database not found.")]
+    return await asyncio.to_thread(query_ulif_local, word, sections)
 
+
+async def handle_query_ulif(args: dict) -> list[TextContent]:
     word = args["word"]
-    if args.get("cache_only"):
-        # Cache-only: never a live ULIF fetch. A missing/unreadable cache
-        # table is "unavailable"; a present table with no matching row is
-        # "not_found" — neither is ever escalated to a live HTTP call.
-        from wiki.sources_db import _table_columns, get_ulif_dictua_entry
+    if "sections" in args:
+        result = await _query_ulif_local(word, args["sections"])
+        if isinstance(result, list):
+            return result
+        return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
 
-        try:
-            has_table = bool(await asyncio.to_thread(_table_columns, "ulif_dictua_entries"))
-        except Exception:
-            has_table = False
-        if not has_table:
-            payload = {"status": "unavailable", "entry": None}
-        else:
-            try:
-                entry = await asyncio.to_thread(get_ulif_dictua_entry, word)
-            except Exception:
-                payload = {"status": "unavailable", "entry": None}
-            else:
-                if entry and entry.get("status") == "ambiguous":
-                    payload = {
-                        "status": "ambiguous",
-                        "entry": None,
-                        "entries": entry.get("entries", []),
-                    }
-                else:
-                    payload = {"status": "attested" if entry else "not_found", "entry": entry}
-        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
-    if "sections" not in args:
-        from rag.source_query import ulif_paradigm
-
-        result = await asyncio.to_thread(ulif_paradigm, word)
-        if isinstance(result, dict) and result.get("status") == "ambiguous":
-            lines = [f"Ambiguous ULIF spelling '{word}':"]
-            for item in result.get("entries", []):
-                gloss = item.get("sense_gloss") or ""
-                label = item.get("grammatical_label") or ""
-                detail = " ".join(part for part in (label, gloss) if part)
-                lines.append(
-                    f"- {item.get('homonym_index')}: {item.get('canonical_headword', '')}"
-                    + (f" {detail}" if detail else "")
-                )
-            return [TextContent(type="text", text="\n".join(lines))]
-        if isinstance(result, dict) and result.get("status") in {"unavailable", "transient_error"}:
-            return [TextContent(type="text", text=_ulif_unavailable_text(word))]
-        if not result or "rows" not in result:
-            return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
-
-        lines = [f"Paradigm for '{word}':\n"]
-        for row in result["rows"]:
-            lines.append(" | ".join(cell for cell in row))
+    result = await _query_ulif_local(word, ("paradigm",))
+    if isinstance(result, list):
+        return result
+    status = result.get("status")
+    if status == "ambiguous":
+        lines = [f"Ambiguous ULIF spelling '{word}':"]
+        for item in result.get("entries", []):
+            gloss = item.get("sense_gloss") or ""
+            label = item.get("grammatical_label") or ""
+            detail = " ".join(part for part in (label, gloss) if part)
+            failure = item.get("forms_build_failure")
+            lines.append(
+                f"- {item.get('homonym_index')}: {item.get('canonical_headword', '')}"
+                + (f" {detail}" if detail else "")
+                + (f" [{_ulif_failure_note(failure)}]" if failure else "")
+            )
         return [TextContent(type="text", text="\n".join(lines))]
+    if status in {"not_found", "unavailable"}:
+        return [TextContent(type="text", text=_ulif_miss_text(word, result))]
 
-    from rag.source_query import query_ulif
-
-    result = await asyncio.to_thread(query_ulif, word, args["sections"])
-    if isinstance(result, dict) and result.get("status") in {"unavailable", "transient_error"}:
-        return [TextContent(type="text", text=_ulif_unavailable_text(word))]
-    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+    paradigm = result.get("sections", {}).get("paradigm")
+    rows = paradigm.get("rows") if isinstance(paradigm, dict) else None
+    if not isinstance(rows, list) or not rows:
+        headword = result.get("canonical_headword") or word
+        return [TextContent(type="text", text=(
+            f"No ULIF paradigm found for: '{word}'. The headword {headword} exists in the local "
+            f"DictUA copy (status {status}) without a paradigm table; it is "
+            f"{_ulif_failure_note(result.get('forms_build_failure'))}."
+        ))]
+    lines = [f"Paradigm for '{word}':\n"]
+    for row in rows:
+        lines.append(" | ".join(cell for cell in row))
+    return [TextContent(type="text", text="\n".join(lines))]
 
 
 def _render_ulif_relation_records(records: list[dict], kind: str) -> str:
@@ -3846,36 +3868,31 @@ def _render_ulif_relation_records(records: list[dict], kind: str) -> str:
     return "\n\n".join(blocks)
 
 
-async def _handle_ulif_relation(word: str, kind: str, lookup) -> list[TextContent]:
-    """Render every cached homonym that has *kind*, or the single lookup record."""
-    result = await asyncio.to_thread(lookup, word)
-    if isinstance(result, dict) and result.get("status") in {"unavailable", "transient_error"}:
-        return [TextContent(type="text", text=_ulif_unavailable_text(word))]
-    if isinstance(result, dict) and result.get("status") == "ambiguous":
+async def _handle_ulif_relation(word: str, kind: str) -> list[TextContent]:
+    """Render every checked homonym that has *kind*, or the single local record."""
+    result = await _query_ulif_local(word, (kind,))
+    if isinstance(result, list):
+        return result
+    if result.get("status") == "ambiguous":
         from wiki.sources_db import search_ulif_dictua_sections
 
-        records = await asyncio.to_thread(search_ulif_dictua_sections, word, kind)
+        records = await asyncio.to_thread(search_ulif_dictua_sections, result["normalized_query"], kind)
+        records = [record for record in records if record.get("homonym_checked") == 1]
         if records:
             return [TextContent(type="text", text=_render_ulif_relation_records(records, kind))]
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
 
 
 async def handle_query_ulif_synonyms(args: dict) -> list[TextContent]:
-    from rag.source_query import query_ulif_synonyms
-
-    return await _handle_ulif_relation(args["word"], "synonyms", query_ulif_synonyms)
+    return await _handle_ulif_relation(args["word"], "synonyms")
 
 
 async def handle_query_ulif_antonyms(args: dict) -> list[TextContent]:
-    from rag.source_query import query_ulif_antonyms
-
-    return await _handle_ulif_relation(args["word"], "antonyms", query_ulif_antonyms)
+    return await _handle_ulif_relation(args["word"], "antonyms")
 
 
 async def handle_query_ulif_phraseology(args: dict) -> list[TextContent]:
-    from rag.source_query import query_ulif_phraseology
-
-    return await _handle_ulif_relation(args["word"], "phraseology", query_ulif_phraseology)
+    return await _handle_ulif_relation(args["word"], "phraseology")
 
 
 async def handle_query_ulif_records(args: dict) -> list[TextContent]:
@@ -3887,6 +3904,7 @@ async def handle_query_ulif_records(args: dict) -> list[TextContent]:
         ULIF_DICTUA_SOURCE_ID,
         _read_db_path,
         get_ulif_word_records,
+        read_ulif_local_copy,
     )
 
     try:
@@ -3931,6 +3949,7 @@ async def handle_query_ulif_records(args: dict) -> list[TextContent]:
             "official_url": ULIF_DICTUA_OFFICIAL_URL,
             "attribution_label": ULIF_DICTUA_ATTRIBUTION_LABEL,
         },
+        "local_copy": await asyncio.to_thread(read_ulif_local_copy),
         "detail": detail,
         "record_count": len(records),
         "records": records,
@@ -4000,7 +4019,7 @@ async def handle_query_e2u(args: dict) -> list[TextContent]:
 
 
 async def handle_query_sum20(args: dict) -> list[TextContent]:
-    """Read every exact-match official СУМ-20 article from sources.db."""
+    """Read every exact-match СУМ-20 article from sources.db: official, then served mirror rows."""
     word = args.get("word") if isinstance(args, dict) else None
     if not isinstance(word, str) or not word.strip():
         payload = {
@@ -4027,8 +4046,27 @@ async def handle_query_sum20(args: dict) -> list[TextContent]:
             )
         ]
 
-    lines = [f"**Official СУМ-20 entries for '{word}'**"]
+    if records[0].get("source_role") == "mirror":
+        lines = [f"**СУМ-20 mirror entries for '{word}'** (slovnyk.me copy; no official record is served)"]
+    else:
+        lines = [f"**Official СУМ-20 entries for '{word}'**"]
     for record in records:
+        if record.get("source_role") == "mirror":
+            # Imported mirror rows (sum20-mirror-rule-v1): provenance first, then the verbatim article.
+            lines.extend(
+                [
+                    "",
+                    f"**{record['stressed_headword'] or record['headword']}** — mirror · {record['official_relation']}",
+                    f"**Source**: {record['attribution_label']}",
+                    f"**URL**: {record['source_url']}",
+                    (
+                        f"**Record**: {record['mirror']} · retrieved {record['retrieved_at']} · "
+                        f"sha256 {record['content_sha256']} · {record['rule_version']}"
+                    ),
+                    record["article_text"],
+                ]
+            )
+            continue
         lines.extend(
             [
                 "",

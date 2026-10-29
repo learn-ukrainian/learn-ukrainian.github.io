@@ -1,3 +1,4 @@
+import ReportProblemAction from './practice/ReportProblemAction';
 import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import { CHROME_STRINGS, type ChromeLocale } from '../lib/i18n/chrome';
 import type { PracticeLexeme } from '../lib/lexicon/srs';
@@ -8,6 +9,7 @@ import type { PracticeLexeme } from '../lib/lexicon/srs';
  * onward instead of a dead end.
  */
 export interface SessionMissItem {
+  report?: { records: object[]; type: string; item: string };
   lemmaId: string;
   lemma: string;
   gloss: string;
@@ -115,6 +117,7 @@ export default function PracticeSessionSummary({
             {stats.misses.map((miss) => (
               <li key={miss.lemmaId}>
                 <span lang="uk">{miss.lemma}</span>
+                {miss.report && <ReportProblemAction {...miss.report} context={miss.lemma} chromeLocale={chromeLocale} />}
                 {showMissGloss ? (
                   <span className="lexicon-session-miss-gloss"> — {miss.gloss}</span>
                 ) : null}

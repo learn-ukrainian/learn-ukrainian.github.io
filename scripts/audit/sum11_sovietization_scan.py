@@ -65,6 +65,12 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 # Soviet-era keyword stems. Each entry is a Cyrillic stem that triggers a
 # match. We use SQL LIKE / Python regex with explicit suffix wildcards so
 # inflected forms (ленінська, більшовицький, радянського, etc.) all match.
@@ -382,6 +388,7 @@ def main() -> int:
     )
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
+    refuse_writable_corpus_database(args.db)
     conn = sqlite3.connect(args.db)
     try:
         verify_migration_columns(conn)

@@ -1,7 +1,9 @@
 name: CI
 
-# PRs run admission checks and collect pytest without executing the full suite.
-# merge_group, nightly and opt-in workflow_dispatch run the full supported suite.
+# A PR runs Frontend, the admission checks and the affected tests (pr-affected: changed
+# tests, tests that import or read changed files, the guard list and repository
+# invariants), not the pytest shards. merge_group runs the full supported suite on the
+# queue candidate before it lands; nightly and opt-in workflow_dispatch run it too.
 # Every merge candidate must pass the same required "CI Gate" context.
 
 concurrency:
@@ -20,7 +22,9 @@ env:
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    # No `edited`: a title or body edit would restart the whole suite on an
+    # unchanged head. pr-publication-scan.yml scans publication fields on edits.
+    types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
     inputs:
@@ -47,7 +51,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Commits and trees, and only the job's own scripts (FR-58): the ancestry
+          # check and the empty-diff metadata commit read no file content.
           fetch-depth: 0  # verify the original group base is an ancestor of the candidate
+          filter: blob:none
+          sparse-checkout: |
+            scripts/
+            .python-version
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -64,6 +75,11 @@ jobs:
           retention-days: 14
       - id: metadata
         run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
+      - name: Fetch and verify the blobs the scan reads
+        env:
+          SCAN_BASE: ${{ steps.metadata.outputs.parent }}
+          SCAN_HEAD: ${{ steps.metadata.outputs.commit }}
+        run: python3 -m scripts.ci.secret_scan_scope materialize
       # `version` is the scanner image tag. The uses SHA pins this action's
       # script only; omitting version pulls :latest. Bump: set both TruffleHog
       # steps to the newest trufflesecurity/trufflehog release (3.99.0 or
@@ -74,7 +90,9 @@ jobs:
           version: "3.99.0"
           base: ${{ steps.metadata.outputs.parent }}
           head: ${{ steps.metadata.outputs.commit }}
-          extra_args: --results=verified,unknown --exclude-detectors=Lob
+          # Scan the blobless checkout in place; TruffleHog's own clone of a partial clone
+          # fails. In place, a git config go-git cannot read is a scan error, not a pass.
+          extra_args: --results=verified,unknown --exclude-detectors=Lob --trust-local-git-config --fail-on-scan-errors
 
   secret-scan:
     permissions:
@@ -86,10 +104,14 @@ jobs:
     # Only a deliberate manual audit gets the full-history budget.
     timeout-minutes: ${{ github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit' && 60 || 5 }}
     steps:
+      # Full history, blobless (FR-58): the step after the scope fetches the blobs
+      # of the scanned range. The full-history audit reads every blob, so it keeps
+      # a full clone.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           fetch-depth: 0
+          filter: ${{ !(github.event_name == 'workflow_dispatch' && inputs.secret_scan_mode == 'full-history-audit') && 'blob:none' || '' }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -101,8 +123,8 @@ jobs:
       # Schedule scans at least the ancestry window, widening to the last
       # successfully scanned head. Unknown coverage or git failures fail.
       # Manual dispatches use the default-branch merge-base through github.sha;
-      # main refs or equal heads reuse the schedule window. Full checkout above
-      # fetches all branch refs, including origin/main. Resolution errors fail.
+      # main refs or equal heads reuse the schedule window. The full-history
+      # checkout above fetches all branch refs, including origin/main. Resolution errors fail.
       # Only secret_scan_mode=full-history-audit selects the explicit audit scope.
       - name: Resolve secret scan commit scope
         id: secret-scan-scope
@@ -118,6 +140,13 @@ jobs:
           DEFAULT_BRANCH_REF: refs/heads/${{ github.event.repository.default_branch }}
           GH_TOKEN: ${{ github.event_name == 'schedule' && github.token || '' }}
         run: python3 -m scripts.ci.secret_scan_scope
+      # The range TruffleHog scans: the scope above, or the action's own
+      # pull_request base and head. Fails unless every blob it reads is local.
+      - name: Fetch and verify the blobs the scan reads
+        env:
+          SCAN_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || steps.secret-scan-scope.outputs.trufflehog_base }}
+          SCAN_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || steps.secret-scan-scope.outputs.trufflehog_head }}
+        run: python3 -m scripts.ci.secret_scan_scope materialize
       - name: Gate scrubbed public identifiers
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -141,7 +170,9 @@ jobs:
           version: "3.99.0"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
-          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+          extra_args: >-
+            --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+            --trust-local-git-config --fail-on-scan-errors
 
       - name: Record successfully scanned head
         if: >-
@@ -181,6 +212,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0  # origin/main merge-base diffs
+          filter: blob:none  # git fetches the few old blobs the checks read
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -215,7 +247,7 @@ jobs:
     # Builds only when the diff touches scripts/ci/frontend_change_denominator.json
     # (site/ plus the backend inputs hydrate reads) or the base is unknown.
     name: Frontend
-    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -223,6 +255,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          filter: blob:none
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -274,7 +307,7 @@ jobs:
   # Lookup failure keeps the committed weights and exits 0; it must not fail CI.
   refresh-pytest-durations:
     name: Refresh pytest durations
-    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() && github.event_name != 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -328,7 +361,7 @@ jobs:
   pytest:
     name: pytest (${{ matrix.shard }})
     needs: [refresh-pytest-durations]
-    if: ${{ !cancelled() && (github.event_name == 'merge_group' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !cancelled() && github.event_name != 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # The same-run snapshot comes from actions/download-artifact, which needs no
@@ -342,13 +375,16 @@ jobs:
     env:
       LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
       LU_PYTEST_TMP_BUDGET_GB: "5"
+      PYTEST_BREADCRUMB_DIR: ci-artifacts/pytest-shard-${{ matrix.shard }}-breadcrumbs
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           # Shard 1 alone gets full history for the files in
           # scripts/ci/history-tests.txt (split_tests.py pins them there);
-          # every other shard is shallow. Never fetched lazily (#9062).
+          # every other shard is shallow. Never fetched lazily (#9062): one
+          # history test sizes ~1 GB of old data/ blobs, one fetch per blob
+          # in a blobless clone (FR-58).
           fetch-depth: ${{ matrix.shard != 1 && 1 || 0 }}
       # PostgreSQL 16/bubblewrap and npm ci run in the background during the Python install.
       - run: bash scripts/ci/test_env.sh start postgres
@@ -440,16 +476,31 @@ jobs:
         env:
           SHARD: ${{ matrix.shard }}
         run: python3 -m scripts.ci.junit_results ci-artifacts/pytest-shard-*.xml --title "pytest (${SHARD})" >> "$GITHUB_STEP_SUMMARY"
+      - name: Show pytest cancellation diagnostics
+        if: ${{ failure() || cancelled() }}
+        timeout-minutes: 1
+        run: |
+          # Breadcrumbs are flushed during each test, even if JUnit never finishes.
+          # A final START without FINISH names the test interrupted on that worker.
+          shopt -s nullglob
+          for breadcrumb in "$PYTEST_BREADCRUMB_DIR"/breadcrumb_*.txt; do
+            printf '%s: ' "${breadcrumb##*/}"
+            tail -n 1 "$breadcrumb"
+          done
       - name: Upload pytest JUnit report
-        if: ${{ !cancelled() }}
+        if: ${{ always() }}
+        timeout-minutes: 2
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pytest-junit-shard-${{ matrix.shard }}
+          # A retry replaces the cancelled attempt's incomplete shard artifact.
+          overwrite: true
           path: |
             ci-artifacts/pytest-shard-*.xml
             ci-artifacts/pytest-shard-*-files.txt
             ci-artifacts/pytest-shard-*-needs-artifact.txt
             ci-artifacts/pytest-shard-*-weights.json
+            ci-artifacts/pytest-shard-*-breadcrumbs/
           if-no-files-found: error
           retention-days: 14
 
@@ -501,21 +552,42 @@ jobs:
     name: PR changed tests and guards
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # PR #11922 measured supported selection at 402s/567s and a 660s superset
+    # with two workers. The 1,500s invariant subprocess ceiling plus 480s changed
+    # tests and setup fit this job budget.
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           fetch-depth: 0
+          # Changed test files may be history tests (scripts/ci/history-tests.txt),
+          # which read old blobs, so PR runs keep a full clone. Other events run no
+          # tests here and fetch commits and trees only (FR-58).
+          filter: ${{ github.event_name != 'pull_request' && 'blob:none' || '' }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
+      # Changed tests run with the same root node_modules as the pytest shards
+      # (tests that spawn `node` with require('typescript') resolve it from the repo
+      # root); npm ci runs in the background during the Python install.
+      - if: github.event_name == 'pull_request'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - if: github.event_name == 'pull_request'
+        run: bash scripts/ci/test_env.sh start npm
       - name: Python CI environment
         if: github.event_name == 'pull_request'
         uses: ./.github/actions/python-ci-env
       - name: Set up bubblewrap
         if: github.event_name == 'pull_request'
         run: bash scripts/ci/setup_bubblewrap.sh
+      - if: github.event_name == 'pull_request'
+        run: bash scripts/ci/test_env.sh wait
+        timeout-minutes: 5
       - name: Run changed test files and guards
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -525,11 +597,18 @@ jobs:
           else
             echo 'Full tier: full pytest jobs remain required.'
           fi
+      - name: Run repository invariants
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: .venv/bin/python -m scripts.ci.pr_affected_tests --repo-wide
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ always() && github.event_name == 'pull_request' }}
         with:
           name: pr-affected-proof
-          path: ci-artifacts/pr-affected.*
+          path: |
+            ci-artifacts/pr-affected.*
+            ci-artifacts/pr-repo-wide.*
           if-no-files-found: error
           retention-days: 14
 
@@ -546,6 +625,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          filter: blob:none
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
@@ -637,3 +717,12 @@ jobs:
           mode=--pr
           [ "$EVENT_NAME" != merge_group ] || mode=--merge-group
           "$PYTHON_BIN" scripts/ci/check_agent_attribution.py "$mode" "$BASE_SHA" "$HEAD_SHA"
+      # Secret scan read the queue's PR metadata when this run started. A title or
+      # body edit made since then would otherwise reach the merge unscanned, so
+      # re-read every member's current metadata as the gate's last step.
+      - name: Re-scan queue publication fields
+        if: github.event_name == 'merge_group'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: '"$PYTHON_BIN" scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"'

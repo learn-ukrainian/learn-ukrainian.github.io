@@ -35,16 +35,12 @@ inline:
   - id: act-2
     type: match-up
     title: Що робить ь
-    instruction: З'єднай кожне слово з підказкою про м'яки́й знак.
+    instruction: З'єднай слово з поясненням. — Match each word with its explanation.
     pairs:
-      - left: день
-        right: soft [n'] in «день»
-      - left: кінь
-        right: soft [n'] in «кінь»
-      - left: сіль
-        right: soft [l'] in «сіль»
-      - left: вчи́тель
-        right: soft [l'] in «вчи́тель»
+      - left: день / кінь
+        right: final soft [n']
+      - left: сіль / вчи́тель
+        right: final soft [l']
       - left: ь (soft sign)
         right: has no sound of its own
   - id: act-3
@@ -57,23 +53,23 @@ inline:
         options:
           - "'"
           - ь
-          - без знака — no sign
+          - ""
       - sentence: ден___
         answer: ь
         options:
           - ь
           - "'"
-          - без знака — no sign
+          - ""
       - sentence: п___ять
         answer: "'"
         options:
           - "'"
           - ь
-          - без знака — no sign
-      - sentence: У слові свя́то правильний вибір — ___ . — In the word "свя́то", the correct choice is […].
-        answer: без знака — no sign
+          - ""
+      - sentence: св___ято
+        answer: ""
         options:
-          - без знака — no sign
+          - ""
           - "'"
           - ь
   - id: act-4
@@ -109,19 +105,6 @@ inline:
           - ло́жка
           - льожка
         explanation: Ло́жка не має м'якого знака після л. — Ло́жка has no soft sign after л.
-  - id: act-5
-    type: divide-words
-    title: Практика переносу слів
-    instruction: Обери підготовлену модель переносу.
-    items:
-      - word: Мар'я́на
-        answer: Мар'-яна
-      - word: дерев'я́ний
-        answer: дере-в'яний
-      - word: бур'я́н
-        answer: бур'-ян
-      - word: па́льці
-        answer: паль-ці
 workbook:
   - type: group-sort
     title: Сортуй за знаком — Sort by sign
@@ -230,50 +213,50 @@ workbook:
         options:
           - "'"
           - ь
-          - без знака — no sign
+          - ""
       - sentence: комп___ютер
         answer: "'"
         options:
           - "'"
           - ь
-          - без знака — no sign
+          - ""
       - sentence: ім___я
         answer: "'"
         options:
           - "'"
           - ь
-          - без знака — no sign
-      - sentence: У слові мален_кий потрібен ___ . — In the word "мален_кий", […] is needed.
+          - ""
+      - sentence: мален___кий
         answer: ь
         options:
           - ь
           - "'"
-          - без знака — no sign
-      - sentence: У слові цвях правильний вибір — ___ . — In the word "цвях", the correct choice is […].
-        answer: без знака — no sign
+          - ""
+      - sentence: цв___ях
+        answer: ""
         options:
-          - без знака — no sign
+          - ""
           - "'"
           - ь
   - type: quiz
     title: Правильна форма
     instruction: Обери правильно написане слово.
     items:
-      - prompt: Сім'я́ — яка́ фо́рма пра́вильна? — Сім'я́ — which form is correct?
+      - prompt: Which spelling is correct?
         options:
           - text: сім'я́
             correct: true
           - text: сімя
             correct: false
         explanation: Сім'я́ потребує апо́строфа.
-      - prompt: День — яка́ фо́рма пра́вильна? — День — which form is correct?
+      - prompt: Which spelling is correct?
         options:
           - text: ден
             correct: false
           - text: день
             correct: true
         explanation: День потребує м'якого знака.
-      - prompt: Сло́во без апо́строфа? — Which word is without an apostrophe?
+      - prompt: Which spelling is correct?
         options:
           - text: св'ято
             correct: false

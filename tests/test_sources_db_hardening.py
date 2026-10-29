@@ -444,3 +444,145 @@ def test_shared_read_only_connection_survives_threads(small_db: Path) -> None:
         t.join()
     conn.close()
     assert not errors, errors[:1]
+
+
+def _selector_store(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """A bootstrapped generation store with ``t`` = v0..v49, cached by ``sources_db``."""
+    from contextlib import closing
+
+    from scripts.storage import generations
+
+    monkeypatch.setenv("LU_EVIDENCE_FREE_DISK_FLOOR_BYTES", "0")
+    monkeypatch.setenv("LU_EVIDENCE_WAL_CEILING_BYTES", "0")
+    data = tmp_path / "data"
+    data.mkdir()
+    seed = data / "seed.db"
+    with closing(sqlite3.connect(seed)) as conn:
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("CREATE TABLE t (id INTEGER PRIMARY KEY, v TEXT)")
+        conn.executemany("INSERT INTO t VALUES (?, ?)", [(i, f"v{i}") for i in range(50)])
+        conn.commit()
+    selector = data / "sources.db"
+    seed.rename(selector)
+    generations.hold_database(selector)
+    with generations.writer_lock(selector) as held:
+        generations.checkpoint_legacy_store(held)
+        generations.publish_generation(selector, held, mode="bootstrap")
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", selector)
+    monkeypatch.setattr(sources_db, "_conn", None)
+    monkeypatch.setattr(sources_db, "_conn_state", None)
+    return selector
+
+
+def _publish_new(selector: Path) -> None:
+    """Publish a generation whose ``t`` rows read new0..new49."""
+    from contextlib import closing
+
+    from scripts.storage import generations
+
+    with generations.writer_lock(selector) as held:
+        stage = selector.with_name("stage.db")
+        with closing(open_readonly(held.generation)) as source, closing(sqlite3.connect(stage)) as copy:
+            source.backup(copy)
+            copy.execute("UPDATE t SET v = 'new' || id")
+            copy.commit()
+        generations.publish_generation(stage, held)
+
+
+def test_one_lookup_reads_one_generation_across_a_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    selector = _selector_store(tmp_path, monkeypatch)
+    with sources_db.one_generation():
+        first = sources_db._get_conn()
+        _publish_new(selector)
+        again = sources_db._get_conn()
+        assert again is first
+        assert again.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "v0"
+    fresh = sources_db._get_conn()
+    try:
+        assert fresh is not first
+        assert fresh.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "new0"
+        # Lookups that read more than once run inside one generation.
+        assert sources_db.ulif_stress_rows.__wrapped__ is not None
+        assert sources_db.search_sources.__wrapped__ is not None
+    finally:
+        first.close()
+        fresh.close()
+        sources_db._conn = None
+
+
+def test_cached_reader_follows_the_selector_and_keeps_calls_in_flight(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import gc
+    import weakref
+
+    selector = _selector_store(tmp_path, monkeypatch)
+    held_reader = sources_db._get_conn()
+    in_flight = held_reader.execute("SELECT v FROM t ORDER BY id")
+    assert in_flight.fetchone()[0] == "v0"
+    assert sources_db._get_conn() is held_reader  # an unchanged selector does not reopen
+
+    _publish_new(selector)
+
+    fresh = sources_db._get_conn()
+    try:
+        assert fresh is not held_reader
+        assert fresh.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "new0"
+        assert sources_db._get_conn() is fresh
+        assert [row[0] for row in in_flight.fetchmany(2)] == ["v1", "v2"]  # still the old generation
+        closed = weakref.ref(held_reader)
+        del in_flight, held_reader
+        gc.collect()
+        assert closed() is None  # the old connection closes once its last call ends
+    finally:
+        fresh.close()
+        sources_db._conn = None
+
+
+def test_parallel_workers_of_one_lookup_share_its_generation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A worker that starts after a publication still reads the lookup's generation."""
+    import contextvars
+
+    selector = _selector_store(tmp_path, monkeypatch)
+    old = sources_db._get_conn()
+    real = sources_db._cached_reader
+    paused, release = threading.Event(), threading.Event()
+
+    def reader() -> sqlite3.Connection:
+        conn = real()
+        if threading.current_thread().name == "worker-a":
+            paused.set()  # worker A has its connection but has not pinned it yet
+            assert release.wait(timeout=30)
+        return conn
+
+    monkeypatch.setattr(sources_db, "_cached_reader", reader)
+    results: dict[str, sqlite3.Connection] = {}
+
+    def worker(name: str, context: contextvars.Context) -> threading.Thread:
+        thread = threading.Thread(
+            name=name, target=lambda: results.__setitem__(name, context.run(sources_db._get_conn))
+        )
+        thread.start()
+        return thread
+
+    with sources_db.one_generation():
+        a = worker("worker-a", contextvars.copy_context())
+        assert paused.wait(timeout=30)
+        _publish_new(selector)
+        fresh = contextvars.Context().run(sources_db._get_conn)  # an unpinned request refreshes the cache
+        assert fresh.execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "new0"
+        b = worker("worker-b", contextvars.copy_context())
+        release.set()
+        a.join(timeout=30)
+        b.join(timeout=30)
+    try:
+        assert results["worker-a"] is results["worker-b"] is old
+        assert results["worker-b"].execute("SELECT v FROM t WHERE id = 0").fetchone()[0] == "v0"
+    finally:
+        old.close()
+        fresh.close()
+        sources_db._conn = None

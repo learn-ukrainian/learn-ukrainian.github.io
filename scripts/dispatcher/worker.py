@@ -1,6 +1,7 @@
 """Detached supervision, client waits and process-group cancellation."""
 
 import contextlib
+import hashlib
 import json
 import os
 import signal
@@ -8,14 +9,15 @@ import subprocess
 import sys
 import tempfile
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers, store
+from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers, runtime_context, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 from scripts.dispatcher.watchdog import DeadlineExpired, communicate, deadlines, liveness_paths
@@ -51,6 +53,15 @@ def _identity(pid: int | None) -> str | None:
 
 
 def _observe(record: dict) -> dict:
+    if _spawn_expired(record):
+        path = store.record_path(record["task_id"])
+        with store.task_state_lock(path):
+            current = store.read(record["task_id"], record["run_nonce"])
+            if current.get("started_at") == record.get("started_at") and _spawn_expired(current):
+                current.update(status="crashed", finished_at=store.now(),
+                               returncode_reason="spawn_process_missing", error="spawn never produced a supervisor")
+                store.replace(current, path)
+            record = current
     if (record.get("schema_version") == 2 and record.get("status") in store.ACTIVE
             and record.get("pid") is None and record.get("admission_hold")):
         from scripts.dispatcher.host_admission import heal_dead
@@ -67,6 +78,7 @@ def _observe(record: dict) -> dict:
         if current["status"] not in store.ACTIVE:
             return current
         record.update(status="crashed", finished_at=store.now(), error="supervisor exited without a result")
+        _discard_read_only_scratch(record)  # a killed supervisor never reached its own cleanup
         record["duration_s"] = (
             datetime.fromisoformat(record["finished_at"]) - datetime.fromisoformat(record["started_at"])
         ).total_seconds()
@@ -75,13 +87,42 @@ def _observe(record: dict) -> dict:
     return record
 
 
+def _discard_read_only_scratch(record: dict) -> None:
+    """Remove a dispatched Codex read-only task's scratch; residue is recorded, never raised."""
+    if record["agent"] == "codex" and record["mode"] == "read-only" and (
+        residue := discard_dispatch_lease(record["task_id"])
+    ):
+        record["read_only_scratch_cleanup"] = residue
+
+
+def _spawn_expired(record: dict) -> bool:
+    """Recover old pid-less launches, preserving a live or unprovable setup owner."""
+    from scripts.orchestration import dispatch_admission
+
+    if (record.get("schema_version") != 2 or record.get("status") != "spawning"
+            or record.get("pid") is not None or record.get("admission_hold") or record.get("worktree_prep")
+            or any(name.startswith("launch_") for name in record)):
+        return False
+    try:
+        started = datetime.fromisoformat(record["started_at"].replace("Z", "+00:00"))
+        age = (datetime.now(UTC) - started.replace(tzinfo=started.tzinfo or UTC)).total_seconds()
+    except (KeyError, TypeError, ValueError, AttributeError):
+        return False
+    return age > dispatch_admission.PIDLESS_SPAWNING_GRACE_S
+
+
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
+    from scripts.orchestration.dispatch_admission import new_admission_hold
+
     if spec.agent == "cursor":
         record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
-    path = store.create(record, prompt)
+    if not record.get("admission_hold"):
+        record["admission_hold"] = new_admission_hold(record["run_nonce"])
+    path = store.record_path(spec.task_id)
     logs = path.parent / "logs"
-    logs.mkdir(exist_ok=True, mode=0o700)
     try:
+        store.create(record, prompt)
+        logs.mkdir(exist_ok=True, mode=0o700)
         with open(logs / f"{spec.task_id}.stderr.log", "ab", opener=lambda p, f: os.open(p, f, 0o600)) as err:
             mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM, signal.SIGINT})
             try:
@@ -103,13 +144,22 @@ def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> N
         payload = json.dumps({"options": spec.options, "hard_timeout": hard_timeout}).encode()
         process.stdin.write(payload)
         process.stdin.close()
-    except admission.LaunchRefused as exc:
-        record.update(exc.fields, finished_at=store.now())
-        store.replace(record, path)
-        raise
-    except Exception:
-        record.update(status="crashed", finished_at=store.now(), error="supervisor launch failed")
-        store.replace(record, path)
+    except BaseException as exc:
+        # create() can publish the record before prompt/log setup fails. Never
+        # overwrite another run, or a supervisor that has already settled.
+        with store.task_state_lock(path):
+            current = store.read(spec.task_id, missing_ok=True)
+            if (current is not None and current.get("run_nonce") == record["run_nonce"]
+                    and current.get("status") in store.ACTIVE):
+                fields = (exc.fields if isinstance(exc, admission.LaunchRefused) else
+                          dict(status="failed" if current.get("pid") is None else "crashed",
+                               error="supervisor launch failed"))
+                reason = (fields["error"].split(":", 1)[0] if isinstance(exc, admission.LaunchRefused) else
+                          "spawn_setup_failed" if current.get("pid") is None else "supervisor_launch_failed")
+                if not isinstance(exc, admission.LaunchRefused):
+                    fields["error"] = f"{reason}: {type(exc).__name__}"
+                current.update(fields, finished_at=store.now(), returncode_reason=reason)
+                store.replace(current, path)
         raise
 
 
@@ -130,17 +180,43 @@ def _spec(record: dict, options: dict) -> TaskSpec:
         record["claude_account"],
         record["provider"],
         {**record.get("options", {}), **options},
+        codex_account=record.get("codex_account"),
     )
+
+
+def _outside_cause(paths, owned) -> str | None:
+    from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
+    from scripts.secret_redactor import redact_text
+
+    outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
+    if not outside:
+        return None
+    cause = "outside_owned_paths: " + ", ".join(sanitize_for_display(redact_text(path)) for path in outside)
+    return cause if len(cause) <= 1024 else cause[:1009] + "... (truncated)"
+
+
+def _verification_cause(exc: Exception) -> str:
+    """Name what stopped the ownership check: the failing Git step, or the check's own refusal."""
+    if isinstance(exc, subprocess.TimeoutExpired):
+        detail = f"git {exc.cmd[1]} timed out"
+    elif isinstance(exc, subprocess.CalledProcessError):
+        detail = f"git {exc.cmd[1]} failed"
+    elif isinstance(exc, ValueError):
+        detail = str(exc)
+    elif isinstance(exc, KeyError):
+        detail = f"record field {exc} missing"
+    else:
+        detail = type(exc).__name__
+    return f"owned_paths_verification_failed: {detail}"[:200]
 
 
 def _enforce_delivery(record: dict) -> None:
     if record["mode"] == "read-only" or record["status"] != "done":
         return
     cause = None
-    if owned := record.get("owned_paths"):
-        from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
-        from scripts.secret_redactor import redact_text
-
+    owned = record.get("owned_paths")
+    # With no commits ahead there is nothing to verify, and the remote branch may never have existed.
+    if owned and (record.get("commits_ahead") or 0) > 0:
         try:
             with git.ownership_git(record) as run:
                 base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
@@ -159,24 +235,28 @@ def _enforce_delivery(record: dict) -> None:
                 ).split("\0")
                 if run("rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
                     raise ValueError("merge resolution paths cannot be verified")
-            outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
-            if outside:
-                cause = "outside_owned_paths: " + ", ".join(
-                    sanitize_for_display(redact_text(path)) for path in outside
-                )
-                if len(cause) > 1024:
-                    cause = cause[:1009] + "... (truncated)"
-        except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError):
-            cause = "owned_paths_verification_failed"
+            cause = _outside_cause(paths, owned)
+        except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError) as exc:
+            cause = _verification_cause(exc)
     if cause is None:
-        if record["worktree_dirty_on_exit"] is not False:
+        if record.get("worktree_dirty_on_exit") is not False:
             cause = "worktree_dirty_or_unknown"
-        elif record["commits_ahead"] is None or record["commits_ahead"] == 0:
+        elif not record.get("commits_ahead"):
             cause = "no_commits_or_unknown"
-        elif record["push_state"] != "pushed":
+        elif record.get("push_state") != "pushed":
             cause = "work_not_pushed_or_unknown"
+    # Merged work leaves nothing on the task branch to inspect (it may be reset or deleted), so the
+    # merged pull request is the evidence; it refuses an outside-owned path the same way.
+    if cause and cause.split(":", 1)[0] in MERGE_RESCUABLE and record.get("worktree_dirty_on_exit") is False and (
+            merged := git.merged_delivery(record)):
+        cause = _outside_cause(merged["paths"], owned) if owned else None
+        record["delivery_pr"] = f"{merged['repo']}#{merged['number']}"
     if cause:
         record.update(status="no_deliverable", error=cause, no_deliverable_reason=cause)
+
+
+# Refusals that a merged pull request answers: the local branch could not show the delivery.
+MERGE_RESCUABLE = frozenset({"owned_paths_verification_failed", "no_commits_or_unknown", "work_not_pushed_or_unknown"})
 
 
 def _cgroup(pid: int) -> str | None:
@@ -234,11 +314,13 @@ def _borrowed(record: dict) -> bool:
         for other in store.list_tasks())
 
 
-# Dispositions that can change once other processes end, the work is published (pushed or merged
-# after the task ended), or a transient Git, lock or claim refusal clears; the next dispatch's crash
-# recovery settles these again and still removes only with the proof.
-RETRY_REASONS = frozenset({"provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
-                           "unpublished", "remote_mismatch", "unknown", "removal_refused"})
+# Dispositions that can change once other processes end, the tree is committed or reverted, the work is
+# published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
+# clears; every later dispatch and every settlement settles these again, and still removes
+# only with the proof. A tree that is still dirty is kept again, so only a changed tree is removed.
+RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
+                           "unpublished", "remote_mismatch", "unknown", "removal_refused",
+                           "worktree_remove_failed", "settlement_failed"})
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
 SETTLE_PATIENCE = 10
 
@@ -341,15 +423,29 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 status, error = "failed", "output schema binding invalid"
                 return
         provider = providers.load(spec.agent)
-        invocation = provider.build(spec, child_env(spec))
+        invocation = runtime_context.build(spec, child_env(spec))
+        record["runtime_input_sha256"] = hashlib.sha256(invocation.stdin or b"").hexdigest()
         try:
             invocation = admission.claude_launch(spec, invocation)
+            if spec.agent == "claude" and spec.claude_account not in (None, "a"):
+                from scripts.agent_runtime.attempt_boundary import claude_account_auth_receipt
+
+                # Value-free: label, source and the verified method (``api_key_helper`` bills that key).
+                record["claude_account_auth"] = claude_account_auth_receipt(
+                    spec.claude_account, source=record.get("claude_account_source")
+                )
             # Checked again with the launch's own environment: a managed policy may appear after dispatch.
             if spec.mode == "read-only" and (refusal := providers.read_only_refusal(spec.agent, invocation.env)):
                 raise ValueError(refusal)
         except ValueError as exc:
             status, error = "failed", str(exc)
             return
+        if spec.agent == "codex" and spec.mode == "read-only":
+            try:
+                create_dispatch_lease(spec.task_id, spec.worktree)
+            except (OSError, ValueError) as exc:
+                status, error = "failed", f"read_only_scratch_unavailable: {exc}"
+                return
         slots, slots_record = admission.hold_review_test_slots(
             agent=spec.agent, mode=spec.mode, review_typed=admission.review_typed(record),
             sealed_attempt=bool(record.get("review_attempt")), task_id=spec.task_id,
@@ -372,8 +468,10 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             )
             record.update(status="running", provider_pgid=child.pid)
             store.replace(record, path)
+            terminal_observer = getattr(provider, "terminal_result_observer", None)
             communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
-                        initial_response_timeout, liveness_paths(spec, invocation), output_sizes)
+                        initial_response_timeout, liveness_paths(spec, invocation), output_sizes,
+                        terminal_observer(stdout_path) if terminal_observer else None)
         returncode = child.returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
@@ -443,6 +541,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             # A killed launcher leaves its scratch and token copy; residue is recorded, never raised.
             if spec.agent == "agy" and spec.mode == "read-only" and (residue := agy_sandbox.discard(spec.task_id)):
                 record["read_only_boundary_cleanup"] = residue
+            _discard_read_only_scratch(record)
             if slots is not None:
                 # The hold is the supervisor's: a killed supervisor ends it, and the governed runs in flight
                 # keep their slots shared until they exit (test_slots).
@@ -472,6 +571,11 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                     resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
                 )
             record["provider_pgid"] = child.pid if child else None
+            # Settling a task first retries the trees earlier settlements kept for a cause that may have
+            # cleared, under the same proofs. It runs before this task's record turns terminal, holding no
+            # record lock, so the supervisor exits as soon as its own tree is settled.
+            with contextlib.suppress(Exception):
+                settle_left_worktrees()
             # The removal chokepoint releases a tree only to a finished owner record, so publish it, then
             # settle; wait() reads a terminal record under this lock and never sees the tree mid-removal.
             with store.task_state_lock(path):
@@ -521,5 +625,8 @@ def cancel(task_id: str, nonce: str | None = None) -> dict:
 
 
 if __name__ == "__main__":
+    # Run as -m, this module is __main__; a later `import scripts.dispatcher.worker` (the removal chokepoint's
+    # liveness proof) must get this running copy, not a second one loaded from a checkout that has moved since.
+    sys.modules.setdefault("scripts.dispatcher.worker", sys.modules[__name__])
     settings = json.load(sys.stdin)
     supervise(Path(sys.argv[1]), **settings)

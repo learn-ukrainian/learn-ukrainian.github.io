@@ -1,23 +1,23 @@
 inline:
   - id: act-1
     type: fill-in
-    title: Choose the time signal
-    instruction: Pick the word that matches the time of the sentence.
+    title: "Complete the life story"
+    instruction: "Choose the word or phrase that completes each sentence."
     items:
-      - sentence: '___ я жив у Торонто.'
+      - sentence: "П’ять років тому я був студентом. ___ я жив у Торонто, а тепер живу в Києві."
         answer: 'Раніше'
         options:
           - 'Раніше'
-          - 'Зараз'
-          - 'Далі'
-        explanation: 'Раніше points to the past.'
-      - sentence: '___ я живу в Києві.'
+          - "Завтра"
+          - "Наступного року"
+        explanation: "Раніше fits the previous Toronto period. Завтра and наступного року point after the present Kyiv period, contradicting жив and the contrast."
+      - sentence: "___ я живу в Києві."
         answer: 'Зараз'
         options:
           - 'Зараз'
-          - 'Учора'
-          - 'Далі'
-        explanation: 'Зараз points to the present.'
+          - "Києві"
+          - "Працював"
+        explanation: "Зараз is a time adverb. Києві requires a preposition as a location; працював cannot modify живу as a time expression."
       - sentence: '___ я буду вчити українську.'
         answer: 'Далі'
         options:
@@ -25,13 +25,13 @@ inline:
           - 'У дитинстві'
           - 'Раніше'
         explanation: 'Далі points to a future plan.'
-      - sentence: '___ я ходила в школу.'
+      - sentence: "Тепер мені тридцять років. ___ я ходила в школу."
         answer: 'У дитинстві'
         options:
           - 'У дитинстві'
           - 'Завтра'
-          - 'Зараз'
-        explanation: 'У дитинстві is a past-life signal.'
+          - "Наступного року"
+        explanation: "У дитинстві fits the recalled school years; завтра and наступного року conflict with the completed earlier period."
   - id: act-2
     type: order
     title: Put the life story in order
@@ -117,50 +117,50 @@ workbook:
         answer: 'Мене звати Софія.'
   - type: fill-in
     title: Complete the mini biography
-    instruction: Choose the form that fits the time word.
+    instruction: "Choose the form that completes the story."
     items:
-      - sentence: 'Я ___ у Львові.'
+      - sentence: "Олена: Я ___ у Львові тридцять років тому."
         answer: 'народилася'
         options:
           - 'народилася'
-          - 'народжуся'
-          - 'народжуюся'
-        explanation: 'Use the familiar past phrase народилася.'
-      - sentence: 'Раніше я ___ в Одесі.'
+          - "народився"
+          - "народилися"
+        explanation: "Олена selects feminine singular народилася. Народився is masculine singular; народилися is plural."
+      - sentence: "Олена: Раніше я ___ в Одесі."
         answer: 'жила'
         options:
           - 'жила'
-          - 'живу'
-          - 'буду жити'
-        explanation: 'Раніше points to the past.'
-      - sentence: 'Зараз я ___ в офісі.'
+          - "жив"
+          - "жили"
+        explanation: "Олена selects feminine singular жила. Жив is masculine singular; жили is plural."
+      - sentence: "Зараз я ___ в офісі."
         answer: 'працюю'
         options:
           - 'працюю'
-          - 'працювала'
-          - 'буду працювати'
-        explanation: 'Зараз points to the present.'
-      - sentence: 'Далі я ___ українську щодня.'
+          - "працюєш"
+          - "працюють"
+        explanation: "Я selects first-person singular працюю. Працюєш is second-person singular; працюють third-person plural."
+      - sentence: "Від завтра я ___ українську щодня."
         answer: 'буду вчити'
         options:
           - 'буду вчити'
-          - 'вчила'
-          - 'вчу'
-        explanation: 'Далі points to the future.'
+          - "будеш вчити"
+          - "будемо вчити"
+        explanation: "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged."
   - type: quiz
     title: Repair the story
     instruction: Choose the better A1 sentence.
     items:
-      - prompt: 'Which sentence matches the time word?'
+      - prompt: "— Де ти живеш? — ___"
         options:
           - text: 'Зараз я живу в Києві.'
             correct: true
-          - text: 'Зараз я жив у Києві.'
+          - text: "Зараз я живеш у Києві."
             correct: false
           - text: 'Зараз я буду живу в Києві.'
             correct: false
-        explanation: 'Зараз uses the present form живу.'
-      - prompt: 'Which sentence uses the A1 future?'
+        explanation: "Я agrees with живу. Живеш agrees with ти; буду живу incorrectly combines two personal forms."
+      - prompt: "— Що ти будеш робити далі? — ___"
         options:
           - text: 'Далі я буду працювати.'
             correct: true

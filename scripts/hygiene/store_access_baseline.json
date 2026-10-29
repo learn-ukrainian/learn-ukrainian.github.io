@@ -1156,13 +1156,6 @@
       "occurrence": 1
     },
     {
-      "path": "scripts/lexicon/tools/import_ulif_dump.py",
-      "kind": "store_path",
-      "scope": "main",
-      "fingerprint": "111be4f11d5bbf2743c7a957c0c2351741dc99bef3dcecb33adfa1dbd6c28436",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/lexicon/tools/migrate_ulif_raw.py",
       "kind": "store_path",
       "scope": "<module>",
@@ -2182,13 +2175,6 @@
       "kind": "store_path",
       "scope": "fetch_for_track",
       "fingerprint": "4d56d57aa692015f67b656661ece78f7010c244bbcd4716c272725e9e626ac7d",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/wiki/fetch_wikipedia.py",
-      "kind": "raw_store_constructor",
-      "scope": "show_status",
-      "fingerprint": "588886214fe0937e24de535d57314b2d2a13f780fd3715454f49bb1c691483c2",
       "occurrence": 0
     },
     {

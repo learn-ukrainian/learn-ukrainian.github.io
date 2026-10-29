@@ -116,27 +116,27 @@ inline:
           - 'три'
           - 'третє'
         explanation: 'Колія is feminine: третя.'
-      - sentence: 'О котрій ___?'
+      - sentence: "О котрій ___?"
         answer: 'відправлення'
         options:
-          - 'відправлення'
-          - 'зупинка'
-          - 'станція'
-        explanation: 'О котрій відправлення? asks the departure time.'
+          - відправлення
+          - відправленням
+          - відправленню
+        explanation: "The departure event is the nominative subject відправлення in this time question. Instrumental відправленням and dative відправленню cannot be its subject."
   - id: act-3
     type: quiz
-    title: Автобусом чи на метро?
+    title: Як ми їдемо?
     instruction: Choose the natural travel model.
     items:
-      - prompt: 'How do you say by bus?'
+      - prompt: "Ми їдемо..."
         options:
-          - text: 'автобусом'
+          - text: автобусом
             correct: true
-          - text: 'за автобусом'
+          - text: автобусу
             correct: false
-          - text: 'на автобусі'
+          - text: автобуса
             correct: false
-        explanation: 'Use the instrumental: автобусом.'
+        explanation: "Автобусом is the instrumental form for the means of transport. Автобусу and автобуса are not instrumental forms."
       - prompt: 'How do you say by metro?'
         options:
           - text: 'на метро'
@@ -297,30 +297,30 @@ workbook:
     title: Repair transport interference
     instruction: Choose the natural Ukrainian transport sentence.
     items:
-      - sentence: 'Брати автобус (Take a bus)'
-        error: 'брати автобус'
-        correction: 'Їхати автобусом / Сідати в автобус'
+      - sentence: "Я їду в автобусом до школи."
+        error: "Я їду в автобусом до школи."
+        correction: "Я їду автобусом до школи."
         options:
-          - 'Їхати автобусом / Сідати в автобус'
-          - 'Брати автобус'
-          - 'Їхати за автобусом'
-        explanation: 'Ukrainian uses the transport as means or says to get into it.'
-      - sentence: 'Їхати за автобусом (Travel by bus)'
-        error: 'за автобусом'
-        correction: 'Їхати автобусом'
+          - Я їду автобусом до школи.
+          - Я їду автобусу до школи.
+          - Я їду автобусом до школі.
+        explanation: "Автобусом expresses the means without в. Автобусу is not the instrumental; до requires genitive школи, not locative школі."
+      - sentence: "Я сиджу в цьому автобусі і їду за цим автобусом."
+        error: "їду за цим автобусом"
+        correction: "їду цим автобусом"
         options:
-          - 'Їхати автобусом'
-          - 'Їхати за автобусом'
-          - 'Їхати біля автобуса'
-        explanation: 'Means of transport uses the instrumental without a preposition.'
-      - sentence: 'В таксію / на метрі (In the taxi / on the metro)'
-        error: 'таксію / метрі'
-        correction: 'У таксі / на метро'
+          - їду цим автобусом
+          - їду цим автобусу
+          - їду біля цього автобуса
+        explanation: "The speaker is inside this same bus, so їду цим автобусом expresses transport by it. Цим автобусу fails agreement; біля цього автобуса places the traveler outside the bus."
+      - sentence: "Я їду в таксію, а потім на метрі."
+        error: "в таксію, а потім на метрі"
+        correction: "в таксі, а потім на метро"
         options:
-          - 'У таксі / на метро'
-          - 'В таксію / на метрі'
-          - 'У таксієм / на метрою'
-        explanation: 'Таксі and метро do not change.'
+          - в таксі, а потім на метро
+          - в таксієм, а потім на метро
+          - в таксі, а потім на метрою
+        explanation: "Таксі and метро are indeclinable transport nouns. Таксію/таксієм and метрою wrongly add endings; метрі is a form of the unit метр, not the transport noun метро."
       - sentence: 'Де остановка?'
         error: 'остановка'
         correction: 'Де зупинка?'

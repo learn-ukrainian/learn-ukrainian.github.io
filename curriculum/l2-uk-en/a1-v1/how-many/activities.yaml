@@ -261,14 +261,14 @@ workbook:
     title: Виправ числові пастки
     instruction: Choose the standard Ukrainian correction.
     items:
-      - sentence: п'ять столи / п'ять студентів (якщо вжито як Називний множини)
+      - sentence: "п'ять столи"
         error: п'ять столи
-        answer: п'ять столів / п'ять студентів
+        answer: "п'ять столів"
         options:
-          - п'ять столів / п'ять студентів
-          - п'ять столи / п'ять студенти
-          - п'ять стола / п'ять студент
-        explanation: With 5+, use the memorized phrase п'ять столів.
+          - п'ять столів
+          - п'ять столами
+          - п'ять стола
+        explanation: "After п’ять use genitive plural столів. Столами is instrumental plural; стола is singular, so neither fits."
       - sentence: сімдесят гривні / сімдесят гривень
         error: сімдесят гривні
         answer: сімдесят гривень

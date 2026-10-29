@@ -36,9 +36,9 @@ inline:
         answer: 'вечірка'
         options:
           - 'вечірка'
-          - 'квартира'
-          - 'тиждень'
-        explanation: 'Вечірка means party.'
+          - "вечірку"
+          - "вечіркою"
+        explanation: "Вечірка is the nominative subject of буде. Вечірку is accusative and вечіркою instrumental."
   - id: act-2
     type: match-up
     title: Invitations and answers
@@ -59,7 +59,7 @@ inline:
     title: Planning pattern
     instruction: Choose the sentence that stays in the A1 planning pattern.
     items:
-      - prompt: 'Which line gives a day, time, and compound future?'
+      - prompt: "— Що ти будеш робити наступної суботи? — ___"
         options:
           - text: 'У суботу о третій я буду готувати.'
             correct: true
@@ -67,8 +67,8 @@ inline:
             correct: false
           - text: 'У суботу о третій я готував.'
             correct: false
-        explanation: 'The plan uses day + time + буду + infinitive.'
-      - prompt: 'Which invitation reuses the M43 phrase?'
+        explanation: "Буду готувати answers the future question. Готую вчора conflicts in time; готував answers about a past event."
+      - prompt: "— У мене два квитки на фільм. — ___"
         options:
           - text: 'Ходімо в кіно!'
             correct: true
@@ -77,7 +77,7 @@ inline:
           - text: 'Кіно буде прибирати.'
             correct: false
         explanation: 'Ходімо is a familiar invitation phrase.'
-      - prompt: 'Which answer politely refuses?'
+      - prompt: "— Ходімо завтра о третій в кафе! — ___ О третій у мене іспит."
         options:
           - text: 'На жаль, не можу.'
             correct: true
@@ -86,7 +86,7 @@ inline:
           - text: 'Звичайно буду!'
             correct: false
         explanation: 'На жаль, не можу is a polite refusal.'
-      - prompt: 'Which phrase asks about availability?'
+      - prompt: "— ___ — Так, у суботу я не буду працювати."
         options:
           - text: 'Ти будеш вільна у суботу?'
             correct: true
@@ -174,27 +174,27 @@ workbook:
     title: Complete the week schedule
     instruction: Choose the future form or planning phrase.
     items:
-      - sentence: 'У вівторок я ___ українську.'
+      - sentence: "Наступного вівторка я ___ українську."
         answer: 'буду вчити'
         options:
           - 'буду вчити'
-          - 'вчив'
-          - 'вчу'
-        explanation: 'Use буду + infinitive for a future plan.'
-      - sentence: 'У середу ми ___ вечерю.'
+          - "будеш вчити"
+          - "будемо вчити"
+        explanation: "The subject я agrees with буду; будеш and будемо are other person/number forms. The infinitive remains unchanged."
+      - sentence: "Наступної середи ми ___ вечерю."
         answer: 'будемо готувати'
         options:
           - 'будемо готувати'
-          - 'готували'
-          - 'готуємо'
-        explanation: 'Use будемо + infinitive.'
-      - sentence: 'У четвер вона ___ допізна.'
+          - "буде готувати"
+          - "буду готувати"
+        explanation: "The subject ми agrees with будемо; буде and буду are other person/number forms. The infinitive remains unchanged."
+      - sentence: "Наступного четверга вона ___ допізна."
         answer: 'буде працювати'
         options:
           - 'буде працювати'
-          - 'працювала'
-          - 'працює'
-        explanation: 'Use буде + infinitive.'
+          - "будуть працювати"
+          - "будемо працювати"
+        explanation: "The subject вона agrees with буде; будуть and будемо are other person/number forms. The infinitive remains unchanged."
       - sentence: '___, не можу. У суботу я буду працювати.'
         answer: 'На жаль'
         options:

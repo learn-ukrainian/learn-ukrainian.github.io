@@ -259,7 +259,7 @@
       },
       {
         "path": "scripts/lexicon/load_relation_candidates.py",
-        "sha256": "beedc61541f47a20e7248fd80f588f4945843b12ecc50c1392877f502d78170f"
+        "sha256": "ab24faaacd15ce79dde9d4b01e5efd3a043e06a7fa6515f09906105daf2f8b45"
       },
       {
         "path": "scripts/lexicon/manifest_fingerprint.py",
@@ -287,7 +287,7 @@
       },
       {
         "path": "scripts/lexicon/migrate_sum11_sovietization.py",
-        "sha256": "4919c84c88b8cf0bc1508250e6da4c80860e8a33a4a4df49402c8aedef3e9e68"
+        "sha256": "d6ca0e45a4c5ffde1ed8313bcbccaade1382f4581e2daa92bf157b1869f1f0cd"
       },
       {
         "path": "scripts/lexicon/mine_wikipedia_relations.py",
@@ -387,7 +387,7 @@
       },
       {
         "path": "scripts/lexicon/sum20_store.py",
-        "sha256": "a3edc8176527384b81367395e943cdc0b18a84b42e7f42739be518e237614bd4"
+        "sha256": "0c50e5287a4131ae7e6b8c5370b9b22e6198b54d3050fe77ac124344b77d6bde"
       },
       {
         "path": "scripts/lexicon/sync_curated_heteronyms_ts.py",
@@ -399,7 +399,7 @@
       },
       {
         "path": "scripts/lexicon/teacher_deck.py",
-        "sha256": "7ed1a359b632eacffbeb433e4edef36217dad6251fbb4a6248ce2eb559702b91"
+        "sha256": "728dc3e98dededa98d621e04eaf2e20ad55146ea42d3d6c215573ee7bd13d4fd"
       },
       {
         "path": "scripts/lexicon/teacher_deck_shard.py",
@@ -407,7 +407,7 @@
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",
-        "sha256": "701e35bf28cc7dbc7b8736732b2f71fd6611150facde3d82101bd957ca79950f"
+        "sha256": "f16c8a4d9e9905ee296a764b7aa1009a60f7406ff3add07c56df10eed62a4e05"
       },
       {
         "path": "scripts/lexicon/triage_needs_review.py",

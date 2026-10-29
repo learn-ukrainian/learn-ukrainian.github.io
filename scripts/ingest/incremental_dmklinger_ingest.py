@@ -18,7 +18,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.scratch import ensure_scratch_root
-from scripts.lib.readonly_sqlite import open_readonly
+from scripts.lib.readonly_sqlite import open_readonly, refuse_writable_corpus_database
 from scripts.projects.open_model_data.textbook_native_exactness import atomic_write
 from scripts.wiki.build_sources_db import SCHEMA, _ingest_jsonl
 
@@ -137,6 +137,8 @@ def ingest(
     # become a refusal after input has been read.
     db_path = resolved_db
     expected, schema = _expected_input(input_path, input_sha256)
+    if apply:
+        refuse_writable_corpus_database(db_path.resolve().as_uri() + "?mode=rw", uri=True)
     conn = (
         sqlite3.connect(db_path.resolve().as_uri() + "?mode=rw", uri=True, isolation_level=None)
         if apply else open_readonly(db_path, isolation_level=None)

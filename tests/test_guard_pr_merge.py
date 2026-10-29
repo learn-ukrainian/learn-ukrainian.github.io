@@ -79,7 +79,19 @@ _ISSUE_9461_SUFFIXES = [
 
 @pytest.mark.parametrize("dependency", ["scripts.publish.merge_guard", "shell_shlex"])
 @pytest.mark.parametrize(
-    "command,expected", [("echo fixture", 0), ("", 0), ("gh pr checks 5", 0), ("gh pr merge 5", 2)]
+    "command,expected",
+    [
+        ("echo fixture", 0),
+        ("", 0),
+        ("gh pr checks 5", 0),
+        ("gh pr view 11907 --json mergeStateStatus,mergeable", 0),
+        ('gh pr list -R owner/private --state merged --search "merged:>=2026-10-28"', 0),
+        ('gh pr list --search "gh pr merge"', 0),
+        ("gh pr merge 5", 2),
+        ("gh pr view 5 # comment\ngh pr merge 5", 2),
+        ("gh pr view 5; gh pr merge 5", 2),
+        ('gh pr view "$(gh pr merge 5)"', 2),
+    ],
 )
 def test_missing_dependency_only_blocks_merge_commands(dependency, command, expected):
     bootstrap = """
@@ -105,6 +117,36 @@ runpy.run_path(sys.argv[1], run_name="__main__")
 
 
 @pytest.mark.parametrize(
+    "command",
+    [
+        "gh pr view 11907 --json mergeStateStatus,mergeable",
+        'gh pr list -R owner/private --state merged --search "merged:>=2026-10-28"',
+        'gh pr list --search "gh pr merge"',
+        'echo "gh pr merge 5"',
+        "echo gh pr merge 5",
+        "env echo gh pr merge 5",
+        'env gh pr list --search "gh pr merge"',
+        "env -i echo gh pr merge 5",
+        "env -S echo gh pr merge 5",
+        "env -i -S echo gh pr merge 5",
+        "xargs env -S echo gh pr merge 5",
+        "env A-B=1 echo gh pr merge 5",
+        "env --ignore echo gh pr merge 5",
+        "env --split-string=echo gh pr merge 5",
+        "sudo --non echo gh pr merge 5",
+        "nice -10 echo gh pr merge 5",
+    ],
+)
+@pytest.mark.parametrize("wrapper", ["{command}", 'cd "$DIR"; eval \'{command}\''])
+def test_merge_substrings_and_literal_arguments_do_not_engage_guard(monkeypatch, command, wrapper):
+    command = wrapper.format(command=command)
+    monkeypatch.setattr(guard, "_pr_snapshot", lambda *a, **kw: pytest.fail("read-only command reached PR lookup"))
+    assert not guard._may_merge(command)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 0
+
+
+@pytest.mark.parametrize(
     "shape",
     [
         "echo $((1 << EOF))\n{payload}\nEOF",
@@ -112,6 +154,7 @@ runpy.run_path(sys.argv[1], run_name="__main__")
         "echo ${x#<<EOF }\n{payload}\nEOF",
         "let 'x=1<<EOF'\n{payload}\nEOF",
         "true # <<EOF\n{payload}\nEOF",
+        "gh pr view 5 # comment\n{payload}",
         ": <<EOF; \\\n{payload}\nnote\nEOF",
         ": <<EOF\n$({payload})\nEOF",
         ": <<EOF\n`{payload}`\nEOF",
@@ -806,12 +849,70 @@ def test_admin_equals_true_is_judged_by_pr_guard(monkeypatch):
         "sudo -u bot gh pr merge 5 --squash",
         "env -i gh pr merge 5 --squash",
         "env -u FOO gh pr merge 5 --auto",
+        "exec -a fixture gh pr merge 5 --squash",
+        "sudo -p P gh pr merge 5 --squash",
+        "sudo --prompt P gh pr merge 5 --squash",
+        "sudo -D other gh pr merge 5 --squash",
+        "sudo --chdir other gh pr merge 5 --squash",
+        "sudo -R other gh pr merge 5 --squash",
+        "sudo --chroot other gh pr merge 5 --squash",
+        "sudo -h host gh pr merge 5 --squash",
+        "sudo --host host gh pr merge 5 --squash",
+        "sudo -U bot gh pr merge 5 --squash",
+        "sudo --other-user bot gh pr merge 5 --squash",
+        "sudo -nu bot gh pr merge 5 --squash",
+        "sudo -Eu bot gh pr merge 5 --squash",
+        "env -iu FOO gh pr merge 5 --squash",
+        "exec -la fixture gh pr merge 5 --squash",
+        "env -a fixture gh pr merge 5 --squash",
+        "env --argv0=fixture gh pr merge 5 --squash",
+        "env -f fixture gh pr merge 5 --squash",
+        "env -S 'nice -n 0' gh pr merge 5 --squash",
+        "env -iS 'nice -n 0' gh pr merge 5 --squash",
+        "env --split-string='nice -n 0' gh pr merge 5 --squash",
+        "xargs env -S 'nice -n 0' gh pr merge 5 --squash",
+        "env - gh pr merge 5 --squash",
+        "nice -10 gh pr merge 5 --squash",
+        # getopt_long and clap accept any unambiguous long-option prefix.
+        "env --un FOO gh pr merge 5 --squash",
+        "env --ch other gh pr merge 5 --squash",
+        "env --arg fixture gh pr merge 5 --squash",
+        "env --fi fixture gh pr merge 5 --squash",
+        "sudo --us bot gh pr merge 5 --squash",
+        "sudo --login-class C gh pr merge 5 --squash",
+        "nice --adj 5 gh pr merge 5 --squash",
+        "stdbuf --out L gh pr merge 5 --squash",
+        "time --out f gh pr merge 5 --squash",
+        "env --sp 'gh pr merge 5 --squash'",
+        "env --split='nice -n 0' gh pr merge 5 --squash",
+        "env -S 'sudo --us bot' gh pr merge 5 --squash",
+        "xargs sudo --us bot gh pr merge 5 --squash",
+        # Options the grammar cannot place fail closed.
+        "sudo --unknown bot gh pr merge 5 --squash",
+        "sudo -xu bot gh pr merge 5 --squash",
+        "env --d gh pr merge 5 --squash",
+        "sudo --us bot bash -c 'gh pr merge 5 --squash'",
+        # GNU env splits these spellings; uutils env drops the value and runs the rest.
+        "env --sp IGNORED gh pr merge 5 --squash",
+        "env --sp=IGNORED gh pr merge 5 --squash",
+        "env --split IGNORED gh pr merge 5 --squash",
+        "env -iS IGNORED gh pr merge 5 --squash",
+        "env -iSIGNORED gh pr merge 5 --squash",
+        "env -iS echo gh pr merge 5 --squash",
+        # env and sudo read any operand containing `=` as an assignment.
+        "env A-B=1 gh pr merge 5 --squash",
+        "env =x gh pr merge 5 --squash",
+        "env -- A-B=1 gh pr merge 5 --squash",
+        "sudo A-B=1 gh pr merge 5 --squash",
+        "env -S=IGNORED gh pr merge 5 --squash",
+        "env -S 'A-B=1' gh pr merge 5 --squash",
     ],
 )
-def test_wrapper_with_options_is_still_judged(cmd):
+def test_wrapper_with_options_is_still_judged(monkeypatch, cmd):
     # F002: _skip_command_prefix consumed the wrapper but not its options, so the
     # `['gh','pr','merge']` match failed and the merge was never judged.
-    assert _any_merge(cmd)
+    assert _any_judged_merge(cmd)
+    assert _run(monkeypatch, cmd, checks=(["CI Gate"], [])) == 2
 
 
 @pytest.mark.parametrize(
@@ -1528,8 +1629,18 @@ def test_unclosed_heredoc_does_not_hide_merge():
     assert _any_merge("cat <<'NOEND'\nnote\ngh pr merge 5 --squash")
 
 
-def test_backslash_continuation_merge_detected():
-    assert _any_merge("gh pr merge 5 \\\n  --auto --squash")
+@pytest.mark.parametrize(
+    "command",
+    [
+        "gh pr merge 5 \\\n  --auto --squash",
+        "g\\\nh pr merge 5 --subject gh",
+        "gh p\\\nr merge 5 --subject pr",
+        "gh pr m\\\nerge 5 --subject merge",
+    ],
+)
+def test_backslash_continuation_merge_detected(monkeypatch, command):
+    assert _any_merge(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
 
 
 # --- colorized gh output (review B1, PR #5324) ------------------------------
@@ -1753,6 +1864,50 @@ def test_shell_c_payload_inherits_cwd_but_does_not_export_it(monkeypatch):
     ) == [("1", "/inner"), ("2", "/outer")]
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cd /safe; env -S echo cd /wrong; gh pr merge 5",
+        "cd /safe; env --split-string=echo cd /wrong; gh pr merge 5",
+        "cd /safe; env --sp echo cd /wrong; gh pr merge 5",
+        "cd /safe; env -S 'cd /wrong'; gh pr merge 5",
+        "cd /safe; env -S echo eval cd /wrong; gh pr merge 5",
+        # A child wrapper cannot run the cd builtin, whatever precedes the cd.
+        "cd /safe; env A-B=1 cd /wrong; gh pr merge 5",
+        "cd /safe; env =x cd /wrong; gh pr merge 5",
+        "cd /safe; env -- A-B=1 cd /wrong; gh pr merge 5",
+        "cd /safe; env -u FOO A-B=1 cd /wrong; gh pr merge 5",
+        "cd /safe; sudo A-B=1 cd /wrong; gh pr merge 5",
+        "cd /safe; env cd /wrong; gh pr merge 5",
+        "cd /safe; sudo -u bot cd /wrong; gh pr merge 5",
+        "cd /safe; nice -n 1 cd /wrong; gh pr merge 5",
+        "cd /safe; env cd \"$DIR\"; gh pr merge 5",
+    ],
+)
+def test_child_wrapper_cd_does_not_change_parent_cwd(monkeypatch, command):
+    """env -S and other child wrappers run their words in a child, so they never move this shell's cwd."""
+    assert _judged_cwds(monkeypatch, command) == [("5", "/safe")]
+
+
+@pytest.mark.parametrize(
+    "command,cwd",
+    [
+        ("cd /safe; command cd /inner; gh pr merge 5", "/inner"),
+        ("cd /safe; time -p cd /inner; gh pr merge 5", "/inner"),
+        ("cd /safe; A=1 cd /inner; gh pr merge 5", "/inner"),
+    ],
+)
+def test_shell_level_prefix_cd_still_moves_cwd(monkeypatch, command, cwd):
+    """`command`, the `time` keyword and assignments keep cd in this shell."""
+    assert _judged_cwds(monkeypatch, command) == [("5", cwd)]
+
+
+def test_unparsed_wrapper_option_names_the_refusal(monkeypatch, capsys):
+    monkeypatch.setattr(guard, "_pr_snapshot", lambda *a, **kw: pytest.fail("unparsed wrapper reached PR lookup"))
+    assert _run(monkeypatch, "sudo --unknown bot gh pr merge 5 --squash") == 2
+    assert "wrapper\noption this guard cannot parse" in capsys.readouterr().err
+
+
 def test_merge_inside_subshell_is_judged_in_the_subshell_cwd(monkeypatch):
     """Scoping must not overshoot: a merge INSIDE the cd's scope is judged there."""
     assert _judged_cwds(monkeypatch, "(cd /inner && gh pr merge 5)") == [("5", "/inner")]
@@ -1961,7 +2116,20 @@ def test_issue_9480_target_argv_matches_bash(monkeypatch, tmp_path, command, exp
 
 @pytest.mark.parametrize("suffix", ["", " >out", " | cat"])
 @pytest.mark.parametrize(
-    "command", ["eval 'gh pr merge 5 >f'", "eval gh pr merge 5", "bash -c \"eval 'gh pr merge 5'\""]
+    "command",
+    [
+        "eval 'gh pr merge 5 >f'",
+        "eval gh pr merge 5",
+        "bash -c \"eval 'gh pr merge 5'\"",
+        'CMD="gh pr merge 5"; eval "$CMD"',
+        "eval $(printf 'gh pr merge %s' 5)",
+        'A=gh; eval "$A pr merge 5"',
+        "A=gh; bash -c 'eval \"$A pr merge 5\"'",
+        "eval -- 'gh pr merge 5'",
+        "eval '{gh,} pr merge 5'",
+        'A=ghx; eval "${A%x} pr merge 5"',
+        'P=scripts.publish; eval "python -m $P pr-merge --number 5"',
+    ],
 )
 def test_issue_9480_eval_merge_is_refused(monkeypatch, capsys, command, suffix):
     monkeypatch.setattr(guard, "_pr_snapshot", lambda *args, **kwargs: pytest.fail("unreadable eval reached lookup"))

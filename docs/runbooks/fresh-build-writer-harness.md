@@ -10,6 +10,25 @@ its task records and sidecar as local diagnostic evidence, and fix the underlyin
 only `lesson-N.writer-harness.yaml` and its `.lock` digest from that lesson's evidence state directory
 and retry once. Keep the regeneration ledger and `.mutex` files; removing a mutex can defeat locking.
 
+## A1 requires confirmation (#9157)
+
+When check 7 needs an independent form confirmation, `build` reports
+`awaiting_requires_confirmation` with the questions file and confirming prompt.
+The draft stays in place and the pause spends no writer regeneration budget.
+Repeating `build` before confirmation leaves it paused on the same draft.
+
+Dispatch the emitted `lesson-N.requires-confirm.prompt.md` to a language seat
+whose family differs from the recorded lesson writer. The seat uses Sources to
+answer every item in `lesson-N.requires-questions.yaml`. Record its answers with
+`requires-record <level> <slug> --lesson N --answers <answers.yaml> --seat <seat>
+--family <family> --writer-seat <writer-seat> --writer-family <writer-family>`.
+Then repeat the original `build` command. With unchanged inputs, draft bytes,
+writer seat and effort, it resumes check 7 without dispatching the writer.
+
+A deliberate rewrite invalidates the saved draft. An old confirmation fails as
+`requires_receipt_stale`; a denial still fails as `requires_receipt_denied`.
+Checks 9–12 still follow confirmation, so the pause does not certify those checks.
+
 ## Source quote admission (#8425)
 
 The existing `kind: quote` block and `ref` identify a displayed source span.

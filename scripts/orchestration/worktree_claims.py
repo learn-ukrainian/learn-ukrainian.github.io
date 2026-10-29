@@ -372,7 +372,9 @@ def active_worktree_claim_refusal(
     with the same task ID remains a claim. ``None`` exempts nothing. Only
     candidate records (:func:`record_may_claim_worktree`)
     are parsed, so an unrelated finished corrupt record never blocks removal,
-    while a candidate that cannot be read, parsed, or resolved does. Every
+    while a candidate that cannot be read, parsed, or resolved does. A
+    candidate that parses as JSON but is not an object is no task record
+    and claims nothing. Every
     failure is a skip reason, never an exception. Returns ``None`` when
     removal may proceed.
     """
@@ -420,9 +422,13 @@ def active_worktree_claim_refusal(
         try:
             record = json.loads(raw)
         except (ValueError, RecursionError):
-            record = None
+            return refused(state_file, "unreadable")
+        if not isinstance(record, dict):
+            # Valid JSON that is not an object (a worker's proof list) is no task record; a
+            # record cut short by a failed write never parses, so it still refuses above.
+            continue
         claimed_path = record.get("worktree_path") if isinstance(record, dict) else None
-        if not isinstance(record, dict) or not isinstance(claimed_path, str | None):
+        if not isinstance(claimed_path, str | None):
             return refused(state_file, "unreadable")
         status = record.get("status")
         if (

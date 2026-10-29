@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -57,6 +58,25 @@ def test_delete_guard_refuses_catastrophic_or_unapproved_targets(
 
     with pytest.raises(ValueError, match=message):
         assert_delete_target(target_factory(repo_root), repo_root=repo_root)
+
+
+def test_delete_guard_refuses_the_host_tmux_socket_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Defect class: host runtime socket deletion. With ``TMPDIR`` at the system temp area the guard approved
+    removing tmux's ``tmux-<uid>`` there; the server kept running but no new client (the context guard) reached it."""
+    repo_root = tmp_path / "repo"
+    socket_dir = Path("/tmp") / f"tmux-{os.getuid()}"
+    monkeypatch.delenv("TMUX_TMPDIR", raising=False)
+    monkeypatch.setenv("TMPDIR", str(socket_dir.parent))
+    for target in (socket_dir, socket_dir / "default"):
+        with pytest.raises(ValueError, match="tmux server socket directory"):
+            assert_delete_target(target, repo_root=repo_root)
+    tmux_base = tmp_path / "process-tmp" / "tmux-base"
+    monkeypatch.setenv("TMPDIR", str(tmp_path / "process-tmp"))
+    monkeypatch.setenv("TMUX_TMPDIR", str(tmux_base))
+    with pytest.raises(ValueError, match="tmux server socket directory"):
+        assert_delete_target(tmux_base, repo_root=repo_root)
+    sibling = tmp_path / "process-tmp" / "payload"
+    assert assert_delete_target(sibling, repo_root=repo_root) == sibling.resolve()
 
 
 def test_symlink_escape_is_blocked(tmp_path: Path) -> None:

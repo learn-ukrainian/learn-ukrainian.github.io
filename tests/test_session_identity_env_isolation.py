@@ -55,6 +55,7 @@ _HOST_CONFIG_EXPORTS = frozenset(
     {
         "CODEX_CANONICAL_REPO_ROOT",  # checkout path, not a session
         "CODEX_CC_AUTH_SOURCE",  # credential provenance label
+        "CODEX_HOME",  # selects a host account configuration
         "LU_AGENT_GITHUB_IDENTITY_SOURCE",  # credential provenance label
         "LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS",  # SessionStart-local subprocess bound
         "LU_DRIVER_STATE_PYTHON",  # interpreter configuration, shared across sessions
@@ -62,6 +63,7 @@ _HOST_CONFIG_EXPORTS = frozenset(
         "LU_MONITOR_HOST_ID",  # this host, shared by every session on it
         "LU_RUNTIME_TMP_BASE_ROOT",  # storage root
         "LU_RUNTIME_TMP_ROOT",  # storage root
+        "LU_TASKS_DIR",  # task-record storage root, shared by every session
     }
 )
 

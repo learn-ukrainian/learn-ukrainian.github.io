@@ -190,12 +190,46 @@ def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
     assert resolution == json.loads(proc.stdout)
 
 
-def test_code_reviewer_without_target_or_owned_path_refuses_with_typed_reason(tmp_path):
+@pytest.mark.parametrize("profile", ["code", "Code", " CODE ", "infra", "InFrA"])
+@pytest.mark.parametrize("existing_state", [False, True])
+def test_reviewer_without_target_or_owned_path_refuses_with_typed_reason(tmp_path, profile, existing_state):
     state = tmp_path / "state.json"
-    proc = _run_cli(state, "resolve-reviewer", "--author-model", "gpt-6.1-sol", "--risk", "low")
+    if existing_state:
+        state.write_text("{}", encoding="utf-8")
+    proc = _run_cli(
+        state, "resolve-reviewer", "--author-model", "gpt-6.1-sol", "--risk", "low", "--review-profile", profile
+    )
     assert proc.returncode == 1
-    assert json.loads(proc.stderr)["error"].startswith("review_target_required:")
-    assert not state.exists()
+    assert json.loads(proc.stderr) == {
+        "error": "review_target_required: resolve the target first or supply --owned-path"
+    }
+    if existing_state:
+        assert state.read_text(encoding="utf-8") == "{}"
+    else:
+        assert not state.exists()
+
+
+@pytest.mark.parametrize("profile", ["code", "Code", " CODE ", "infra", "InFrA"])
+@pytest.mark.parametrize("owned_path,risk", [("ordinary.py", "low"), ("scripts/dispatch.py", "critical")])
+def test_reviewer_with_owned_path_preserves_security_floor(tmp_path, profile, owned_path, risk):
+    state = tmp_path / "state.json"
+    proc = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "claude-opus-5-5",
+        "--risk",
+        "low",
+        "--review-profile",
+        profile,
+        "--owned-path",
+        owned_path,
+    )
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["resolved_risk"] == risk
+    assert payload["selected"]["concrete_model"] == "gpt-6.1-sol"
+    assert json.loads(state.read_text(encoding="utf-8"))["resolved_reviewer"] == payload
 
 
 @pytest.mark.parametrize("field", ["base_sha", "head_sha"])
@@ -262,9 +296,7 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
             "critical",
             (
                 *reviewer_resolver.REVIEW_LADDERS["critical"],
-                (
-                    reviewer_resolver.GROK_4_7_CURSOR_FALLBACK,
-                ),
+                (reviewer_resolver.GROK_4_7_CURSOR_FALLBACK,),
             ),
         )
     state_file = tmp_path / "state.json"
@@ -339,6 +371,7 @@ def test_resolve_reviewer_cli_rejects_learner_semantic_profile_before_dispatch(t
     assert payload["trace"] == []
     assert "unsupported local-code-review profile" in payload["fail_closed_reason"]
     assert "post-build-review" in payload["fail_closed_reason"]
+    assert "review-loop/references/ukrainian.md, § Seats" in payload["fail_closed_reason"]
 
 
 def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
