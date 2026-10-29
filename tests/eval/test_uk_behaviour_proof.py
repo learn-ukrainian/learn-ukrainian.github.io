@@ -42,6 +42,7 @@ REQUIRED = (
         "a textbook-page anchor with its search_text receipt earns credit",
         "learner-state text relabelled as the coverage map earns nothing",
         "an exercise stress finding on a verify_stress receipt earns nothing, whatever the judge's facet",
+        "an exercise stress finding on a verify_stress miss earns nothing",
         "an exercise stress finding on a СУМ-20 record earns credit",
         "labelled harm counts even when the judge names an unknown slot",
         "a request-only finding cannot take a stress slot",

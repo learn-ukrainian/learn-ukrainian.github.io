@@ -30,7 +30,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.review.receipts.ledger import REVIEW_TOOLS, LedgerError, dumps, records
+from scripts.review.receipts.ledger import LedgerError, dumps, records
 from scripts.review.receipts.outcomes import search_outcome
 
 ROLES = ("candidate", "judge", "pack", "label")
@@ -55,9 +55,13 @@ AUTHORITIES: dict[str, frozenset[str]] = {
     "spelling_style": frozenset({"query_pravopys", "search_style_guide"}),
     "exercise": _FORM | _STRESS | _MEANING,
 }
-# Evidence of absence (a VESUM miss before a form accusation, a Sovietism signal) uses
-# these tools with ``polarity: negative``; the judge still owns the accusation checks.
-NEGATIVE_TOOLS = frozenset(REVIEW_TOOLS)
+# Evidence of absence (``polarity: negative``) is admitted only for a form claim, as a VESUM miss
+# before a form accusation; the judge still owns the other pre-accusation checks. For every other
+# facet a missing hit is a coverage gap, never a negative label (protocol L341), so no absence can
+# substantiate a stress, meaning or other defect.
+NEGATIVE_AUTHORITIES: dict[str, frozenset[str]] = {
+    "form": frozenset({"verify_words", "verify_word", "verify_lemma", "inspect_word", "inspect_words"}),
+}
 SUM11_TOOL = "search_definitions"
 # Markdown results are lists of entries; one entry is one evidence unit.
 _UNIT_BREAKS = {"query_sum20": re.compile(r"\n\n(?=\*\*)")}
@@ -172,7 +176,9 @@ def check_binding(binding: dict[str, Any], facet: str, index: LedgerIndex) -> Bi
     outcome = search_outcome(str(record.get("status")), record.get("outcome_facts") or {})
     polarity = binding.get("polarity", "positive")
     if polarity == "negative":
-        if tool not in NEGATIVE_TOOLS or outcome != "no_hits":
+        if tool not in NEGATIVE_AUTHORITIES.get(facet, frozenset()):
+            return BindingCheck(EVIDENCE_INVALID, f"absence from {tool} is no evidence for a {facet} claim")
+        if outcome != "no_hits":
             return BindingCheck(EVIDENCE_INVALID, "evidence of absence needs a completed call with no hits")
         return BindingCheck(VERIFIED, "")
     if polarity != "positive":

@@ -159,6 +159,8 @@ def test_binding_verifies_and_types_each_failure(index) -> None:
     miss = _binding(idx, receipts["miss"], "NOT FOUND")
     assert check_binding(miss, "form", idx).status == EVIDENCE_INVALID  # absence is not positive evidence
     assert check_binding(miss | {"polarity": "negative"}, "form", idx).status == VERIFIED
+    for facet in ("stress", "meaning", "exercise", "pedagogy"):  # absence is a coverage gap there
+        assert check_binding(miss | {"polarity": "negative"}, facet, idx).status == EVIDENCE_INVALID
 
 
 def test_sum11_is_never_positive_authority(index) -> None:

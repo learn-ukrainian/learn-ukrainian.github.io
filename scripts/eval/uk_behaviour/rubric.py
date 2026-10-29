@@ -36,6 +36,8 @@ RUBRIC: dict[str, Any] = {
         "of a JSON result (name it with evidence_pointer) or one entry of a Markdown result.",
         "GRAC is never a stress authority; frequency never establishes correctness or CEFR suitability.",
         "A missing MCP hit for СУМ-20 or ВТС is a coverage gap, never a negative label.",
+        "polarity negative (evidence of absence) supports only a form claim, as a VESUM miss; for every "
+        "other facet a missing hit is a coverage gap.",
     ],
     "slots": (
         "slot_id names the label's positive-credit slot the assertion addresses, or null. An assertion beyond "

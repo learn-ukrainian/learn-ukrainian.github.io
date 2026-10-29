@@ -596,17 +596,20 @@ def _evidence_cases(root: Path) -> list[dict[str, Any]]:
     result = _one_finding_cell(fx, finding, "the plan defers promised coverage", "pedagogy")
     cases.append(_case("learner-state text relabelled as the coverage map earns nothing", 0.1, result["R"]))
 
-    for name, tool, expected in (
+    for name, tool, polarity, expected in (
         (
             "an exercise stress finding on a verify_stress receipt earns nothing, whatever the judge's facet",
             "verify_stress",
+            "positive",
             0.1,
         ),
-        ("an exercise stress finding on a СУМ-20 record earns credit", "query_sum20", 1.0),
+        ("an exercise stress finding on a verify_stress miss earns nothing", "verify_stress", "negative", 0.1),
+        ("an exercise stress finding on a СУМ-20 record earns credit", "query_sum20", "positive", 1.0),
     ):
-        fx = Fixture(root, f"stress-{tool}", "exercise_review")
+        fx = Fixture(root, f"stress-{tool}-{polarity}", "exercise_review")
         if tool == "verify_stress":  # its receipt keeps one summary line, never the reading's source
-            result, excerpt, locator = "w5 — ok: w5x", "w5 — ok: w5x", "w5"
+            line = "w5 — ok: w5x" if polarity == "positive" else "w5 — not_found"
+            result, excerpt, locator = line, line, "w5"
         else:
             result = _sum20("w5")
             excerpt, locator = "**w5x** (noun)", "https://sum20.example/w5"
@@ -615,7 +618,7 @@ def _evidence_cases(root: Path) -> list[dict[str, Any]]:
         binding = {
             "role": "candidate",
             "receipt_id": rid,
-            "polarity": "positive",
+            "polarity": polarity,
             "evidence_excerpt": excerpt,
             "source_locator": locator,
         }
