@@ -87,6 +87,10 @@ FULL run nonce with `note <id> <text>` so the tracker handoff can re-arm its wai
 Run every dispatch through the scratch table helper. It builds each
 `dispatch.py dispatch` argv from a table and logs stdout and stderr per task; grep the log
 for `run_nonce=`, `SUBSTITUTE` and `queued behind`. Record the actual substituted identity.
+Run Claude-account dispatches from the seat as `env -u CLAUDE_CONFIG_DIR .venv/bin/python
+scripts/dispatch.py dispatch ... --claude-account <label>`: the launcher exports
+`CLAUDE_CONFIG_DIR` into the seat's shells, and the dispatcher refuses an explicit account
+while that ambient value is set (`claude_account_ambient_conflict`).
 Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can
