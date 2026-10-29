@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from functools import cache, partial
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from tempfile import TemporaryDirectory
 from typing import Any, Literal
 
@@ -1227,6 +1227,7 @@ def pr_review_facts(
     subject_families: Iterable[str] = (),
     unknown_history: Iterable[str] = (),
     fetch: bool = True,
+    current_head: bool = True,
 ) -> BranchReviewFacts:
     """Facts for an open PR's frozen head, bound to GitHub's listing of its commits (A1).
 
@@ -1235,10 +1236,12 @@ def pr_review_facts(
     the author can retarget. Membership comes from the local ``git rev-list``.
     Any difference from GitHub's listing refuses, so a PR whose base is not the
     default branch is refused rather than attributed over a shorter range.
+    With ``current_head=False`` the facts are those of an earlier head the PR
+    still contains: every commit of its range must be in GitHub's listing.
     """
     pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "headRefOid"])
     head = pr.get("headRefOid") if isinstance(pr, dict) else None
-    if head != head_sha:
+    if current_head and head != head_sha:
         raise RecordError("PR head moved since review; re-run exact-head review")
     listed = _pages(Request("read-commits", repo=repository, number=pr_number))
     if not listed:
@@ -1261,6 +1264,11 @@ def pr_review_facts(
         app_bot_login=listing_app_bot_login(listed, repository),
     )
     refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
+    if not current_head:
+        # Commits pushed after the reviewed head need not be local; the reviewed range must be listed.
+        if head_sha not in github_shas or not {commit.sha or "" for commit in facts.commits} <= set(github_shas):
+            raise RecordError("PR no longer contains the reviewed head's commits")
+        return facts
     differs = RecordError(
         "PR commit set differs from the local base..head enumeration from the default branch; "
         "target the default branch, or fetch and retry"
@@ -1435,9 +1443,10 @@ def _repo_root() -> Path:
 
 
 @contextmanager
-def sha_lock(repository: str, sha: str, lock_root: Path):
+def pr_lock(repository: str, number: int, lock_root: Path):
+    """Serialize publication on one PR across its heads, so the comments a poster checked still hold."""
     lock_root.mkdir(parents=True, exist_ok=True)
-    name = hashlib.sha256(f"{repository}\0{sha}".encode()).hexdigest() + ".lock"
+    name = hashlib.sha256(f"{repository}\0pr\0{number}".encode()).hexdigest() + ".lock"
     with (lock_root / name).open("a+") as lock_file:
         fcntl.flock(lock_file, fcntl.LOCK_EX)
         try:
@@ -1523,12 +1532,58 @@ def build_comment(
     return prefix + reply + suffix
 
 
+def _reviewed_tree_entries(primary_root: Path, sha: str, directory: PurePosixPath) -> dict[str, str]:
+    """Git mode of each entry in one directory of the reviewed commit; empty when unreadable."""
+    listed = [] if directory == PurePosixPath(".") else ["--", f"{directory}/"]
+    try:
+        output = _facts_git(
+            primary_root,
+            ["--literal-pathspecs", "ls-tree", "-z", sha, *listed],
+            deadline=time.monotonic() + _GIT_STEP_TIMEOUT_S,
+            code=FACTS_TARGET_UNKNOWN,
+        )
+    except BranchFactsError:
+        return {}
+    entries = {}
+    for entry in output.decode("utf-8", errors="surrogateescape").split("\0"):
+        meta, tab, name = entry.partition("\t")
+        if tab:
+            entries[name] = meta.split(" ", 1)[0]
+    return entries
+
+
+def _removed_checkout_root(root: Path, primary_root: Path, sha: object) -> bool:
+    """Whether ``root`` is a reviewed checkout that no longer exists, recorded inside the primary checkout.
+
+    The dispatcher removes a read-only reviewer's worktree when its task settles,
+    usually before the verdict is recorded. Its citations are then checked
+    against the reviewed commit, which is what that worktree held.
+    """
+    if not isinstance(sha, str) or not SHA.fullmatch(sha) or ".." in root.parts or os.path.lexists(root):
+        return False
+    resolved_primary = primary_root.resolve(strict=True)
+    # Existing ancestors resolve, so a symlinked parent cannot carry the root outside.
+    resolved_root = root.resolve()
+    return resolved_root != resolved_primary and resolved_root.is_relative_to(resolved_primary)
+
+
 def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root: Path) -> str:
     """Rewrite checkout citations on scanner-stable lines; scan the final text."""
     checkout = task.get("worktree_path")
     roots = [primary_root]
     if isinstance(checkout, str) and Path(checkout).is_absolute():
         roots.insert(0, Path(checkout))
+    reviewed = task.get("worktree_base_sha")
+
+    def removed_checkout_citation(cited: PurePosixPath, suffix: str) -> bool:
+        if cited == PurePosixPath("."):
+            return not suffix
+        entries = _reviewed_tree_entries(primary_root, reviewed, cited.parent)
+        mode = entries.get(cited.as_posix())
+        if suffix:
+            # A file literally named with the annotation would make the citation ambiguous.
+            return mode in {"100644", "100755"} and f"{cited}{suffix}" not in entries
+        return mode in {"100644", "100755", "120000", "040000"}
 
     def replace(token: str) -> str:
         # The scanner alone owns boundaries. Only interpret a terminal citation
@@ -1545,6 +1600,9 @@ def repository_relative_reply(reply: str, *, task: dict[str, Any], primary_root:
             if not path.is_relative_to(root):
                 continue
             try:
+                if root is not primary_root and _removed_checkout_root(root, primary_root, reviewed):
+                    cited = PurePosixPath(path.relative_to(root).as_posix())
+                    return cited.as_posix() + suffix if removed_checkout_citation(cited, suffix) else token
                 resolved_root = root.resolve(strict=True)
                 resolved_primary = primary_root.resolve(strict=True)
                 if (
@@ -2202,6 +2260,87 @@ def reviewer_identity(task: Mapping[str, Any]) -> tuple[str, str]:
     return model, family
 
 
+@dataclass(frozen=True)
+class _TaskVerdict:
+    repository: str
+    branch: str
+    sha: str
+    model: str
+    family: str
+    verdict: str
+    finding_count: int | Literal["unknown"]
+    ukrainian: bool
+    sources_count: int | None
+    started: str
+
+
+def _task_verdict(task: dict[str, Any], reply: str) -> _TaskVerdict:
+    """The verdict a finished review task's record and sealed reply attest, or a refusal."""
+    repository = task.get("repository")
+    branch = _review_branch(task)
+    sha = task.get("worktree_base_sha")
+    if not isinstance(repository, str) or "/" not in repository:
+        raise RecordError("review repository unavailable")
+    if not isinstance(sha, str) or not SHA.fullmatch(sha):
+        raise RecordError("reviewed SHA missing or invalid")
+    if task.get("pinned_head") is not None and task["pinned_head"] != sha:
+        raise RecordError("reviewed SHA conflicts with pinned head")
+    model, family = reviewer_identity(task)
+    verdict, finding_count = _review_verdict_and_count(reply)
+    _require_sources_mcp_calls(task)
+    sources_count = task.get("sources_mcp_call_count")
+    if type(sources_count) is not int or sources_count < 0:
+        sources_count = None
+    started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
+    if started_dt.tzinfo is None:
+        raise RecordError("review start timestamp missing timezone")
+    started = started_dt.astimezone(UTC).isoformat(timespec="microseconds")
+    return _TaskVerdict(
+        repository,
+        branch,
+        sha,
+        model,
+        family,
+        verdict,
+        finding_count,
+        is_ukrainian_review(task),
+        sources_count,
+        started,
+    )
+
+
+def _review_repository_root(repository: str, root: Path) -> Path:
+    """The registered primary checkout of the task's target repository."""
+    try:
+        repo_keys = [key for key, repo in load_fleet_repos().items() if repo.github.casefold() == repository.casefold()]
+        if len(repo_keys) != 1:
+            raise RecordError("review repository is not uniquely registered")
+        return resolve_review_repository(root, repo_keys[0], mode="pr")
+    except (FleetRepoError, TargetResolutionError, OSError, subprocess.TimeoutExpired):
+        raise RecordError("review repository checkout unavailable") from None
+
+
+def _post_verdict(repository: str, number: int, comment: str, login: str) -> int:
+    """Post one verdict comment and read it back unedited from ``login``; returns its id."""
+    data = _run_json(
+        # The typed record is the publisher's only admitted marker carrier (#11127).
+        Request("issue-comment-json", repo=repository, number=number, body=CfVerdictRecord(comment)),
+    )
+    comment_id = data.get("id") if isinstance(data, dict) else None
+    if not isinstance(comment_id, int):
+        raise RecordError("comment post response lacked id; retry to reconcile")
+    readback = _run_json(Request("read-comment", repo=repository, number=comment_id))
+    if (
+        not isinstance(readback, dict)
+        or readback.get("body") != comment
+        or readback.get("user", {}).get("login") != login
+        or readback.get("author_association") not in TRUSTED_ASSOCIATIONS
+        or readback.get("created_at") != readback.get("updated_at")
+    ):
+        raise RecordError("comment readback mismatch; publication state unknown")
+    return comment_id
+
+
 @publication_boundary(RecordError)
 def record(
     task_id: str,
@@ -2239,26 +2378,10 @@ def record(
             raise RecordError("red-team prompt digest does not match completed review task")
     elif red_team_prompt is not None:
         raise RecordError("red-team prompt requires review_mode=red_team")
-    repository = task.get("repository")
-    branch = _review_branch(task)
-    sha = task.get("worktree_base_sha")
-    if not isinstance(repository, str) or "/" not in repository:
-        raise RecordError("review repository unavailable")
-    if not isinstance(sha, str) or not SHA.fullmatch(sha):
-        raise RecordError("reviewed SHA missing or invalid")
-    if task.get("pinned_head") is not None and task["pinned_head"] != sha:
-        raise RecordError("reviewed SHA conflicts with pinned head")
-    model, family = reviewer_identity(task)
-    verdict, finding_count = _review_verdict_and_count(reply)
-    _require_sources_mcp_calls(task)
-    ukrainian = is_ukrainian_review(task)
-    sources_count = task.get("sources_mcp_call_count")
-    if type(sources_count) is not int or sources_count < 0:
-        sources_count = None
-    started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
-    if started_dt.tzinfo is None:
-        raise RecordError("review start timestamp missing timezone")
-    started = started_dt.astimezone(UTC).isoformat(timespec="microseconds")
+    review = _task_verdict(task, reply)
+    repository, branch, sha = review.repository, review.branch, review.sha
+    model, family, verdict, finding_count = review.model, review.family, review.verdict, review.finding_count
+    ukrainian, sources_count, started = review.ukrainian, review.sources_count, review.started
     pr = _pr(repository, branch, pr_number)
     if pr.get("headRefName") != branch:
         raise RecordError("review branch does not match PR head ref")
@@ -2269,13 +2392,7 @@ def record(
         raise RecordError("PR number unavailable")
     # Task records and SHA locks stay in the provenance checkout. Git facts
     # and citations belong to the task's registered target repository.
-    try:
-        repo_keys = [key for key, repo in load_fleet_repos().items() if repo.github.casefold() == repository.casefold()]
-        if len(repo_keys) != 1:
-            raise RecordError("review repository is not uniquely registered")
-        review_root = resolve_review_repository(root or _repo_root(), repo_keys[0], mode="pr")
-    except (FleetRepoError, TargetResolutionError, OSError, subprocess.TimeoutExpired):
-        raise RecordError("review repository checkout unavailable") from None
+    review_root = _review_repository_root(repository, root or _repo_root())
     unknown_history = (
         admitted_unknown_history(
             repository=repository,
@@ -2358,7 +2475,7 @@ def record(
         comment = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=finding_count)
         check_texts(destination, [comment], environment={})
     posted = False
-    with sha_lock(repository, sha, lock_root):
+    with pr_lock(repository, number, lock_root):
         # The PR may move while an earlier recorder owns the lock.
         current = _pr(repository, branch, number)
         if current.get("headRefOid") != sha:
@@ -2430,22 +2547,7 @@ def record(
             # The admission receipt is durable before the verdict exists, so the round is spent even if posting fails.
             record_admission(_repair_receipts(task_root), repair)
         if existing is None:
-            data = _run_json(
-                # The typed record is the publisher's only admitted marker carrier (#11127).
-                Request("issue-comment-json", repo=repository, number=number, body=CfVerdictRecord(comment)),
-            )
-            comment_id = data.get("id") if isinstance(data, dict) else None
-            if not isinstance(comment_id, int):
-                raise RecordError("comment post response lacked id; retry to reconcile")
-            readback = _run_json(Request("read-comment", repo=repository, number=comment_id))
-            if (
-                not isinstance(readback, dict)
-                or readback.get("body") != comment
-                or readback.get("user", {}).get("login") != login
-                or readback.get("author_association") not in TRUSTED_ASSOCIATIONS
-                or readback.get("created_at") != readback.get("updated_at")
-            ):
-                raise RecordError("comment readback mismatch; publication state unknown")
+            comment_id = _post_verdict(repository, number, comment, login)
             posted = True
         if repair is not None:
             from scripts.review.repair_round import record_consumption
@@ -2500,13 +2602,7 @@ def budget_check(repository: str, number: int, *, task_root: Path | None = None)
     sha, branch = pr.get("headRefOid"), pr.get("headRefName")
     if not isinstance(sha, str) or not SHA.fullmatch(sha) or not isinstance(branch, str) or not branch:
         raise RecordError("PR head unavailable")
-    try:
-        repo_keys = [key for key, repo in load_fleet_repos().items() if repo.github.casefold() == repository.casefold()]
-        if len(repo_keys) != 1:
-            raise RecordError("review repository is not uniquely registered")
-        review_root = resolve_review_repository(root, repo_keys[0], mode="pr")
-    except (FleetRepoError, TargetResolutionError, OSError, subprocess.TimeoutExpired):
-        raise RecordError("review repository checkout unavailable") from None
+    review_root = _review_repository_root(repository, root)
     # Read-only: the default-branch ref is read as it is, never fetched; a stale or missing one refuses.
     facts = pr_review_facts(repository, number, head_sha=sha, task_root=task_root, repo_root=review_root, fetch=False)
     adapter = GitHubAdapter(Path.cwd())
@@ -2577,11 +2673,130 @@ def budget_check_main(argv: list[str]) -> int:
     return 0
 
 
+@publication_boundary(RecordError)
+def republish_withheld(
+    task_id: str, *, pr_number: int, task_root: Path | None = None, lock_root: Path | None = None
+) -> dict[str, Any]:
+    """Publish the findings of a verdict that was recorded withheld, from the task's sealed reply.
+
+    Nothing is recorded again: the reviewed head may have moved, no round,
+    receipt or commit status is written, and the withheld comment stays as it
+    is (a verdict comment is never edited). The new comment is exactly what the
+    recorder publishes for this task now, with the branch facts re-derived at
+    the reviewed head, which the PR must still contain. It is refused unless
+    the reply's digest is sealed, every recorded verdict of this task is that
+    comment or its withheld form, the withheld one is the PR's latest verdict,
+    and the reply passes the publication scan.
+    """
+    root = _repo_root() if task_root is None or lock_root is None else None
+    task_root = task_root or root / "batch_state" / "tasks"
+    lock_root = lock_root or root / "batch_state" / "locks"
+    task, reply = _task(task_id, task_root)
+    if not isinstance(task.get("result_sha256"), str):
+        raise RecordError("republication requires the review task's sealed reply digest")
+    review = _task_verdict(task, reply)
+    review_mode = task.get("review_mode", "cross_family")
+    pr = _pr(review.repository, review.branch, pr_number)
+    if pr.get("headRefName") != review.branch:
+        raise RecordError("review branch does not match PR head ref")
+    review_root = _review_repository_root(review.repository, root or _repo_root())
+    facts = pr_review_facts(
+        review.repository,
+        pr_number,
+        head_sha=review.sha,
+        task_root=task_root,
+        repo_root=review_root,
+        subject_seats=_task_flag_values(task, "review_subject_seats"),
+        subject_families=_task_flag_values(task, "review_subject_families"),
+        unknown_history=(
+            admitted_unknown_history(
+                repository=review.repository,
+                branch=review.branch,
+                head_sha=review.sha,
+                task_root=task_root,
+                repo_root=review_root,
+            )
+            if review_mode == "red_team"
+            else ()
+        ),
+        current_head=False,
+    )
+    reply = repository_relative_reply(reply, task=task, primary_root=review_root)
+    comment_fields = dict(
+        sha=review.sha,
+        task_id=task_id,
+        started=review.started,
+        verdict=review.verdict,
+        model=review.model,
+        family=review.family,
+        reply=reply,
+        review_mode=review_mode,
+        review_profile="ukrainian" if review.ukrainian else "code",
+        sources_mcp_call_count=review.sources_count,
+        unknown_history=facts.unknown_history,
+        app_bot=bool(facts.app_bot_commits),
+        score=review_score(reply),
+        author_models=facts.author_models,
+    )
+    withheld = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=review.finding_count)
+    comment = build_comment(**comment_fields)
+    check_texts(normalize_repository(review.repository), [comment], environment={})
+    adapter = GitHubAdapter(Path.cwd())
+    login = adapter.identity()
+    result = {"pr": pr_number, "head": review.sha, "task": task_id, "verdict": review.verdict}
+    # The PR lock keeps a verdict at another head from landing between the order check and the post.
+    with pr_lock(review.repository, pr_number, lock_root):
+        try:
+            comments = adapter.comments(review.repository, pr_number)
+        except SweepError as exc:
+            raise RecordError(f"comment lookup failed: {exc}") from exc
+        markers = _trusted_markers(comments, login)
+        own = [comments[index] for index, marker in markers if (marker["sha"], marker["task"]) == (review.sha, task_id)]
+        if not own:
+            raise RecordError("no verdict of this task is recorded at its head")
+        if any(item.get("created_at") != item.get("updated_at") for item in own):
+            raise RecordError("existing verdict marker was edited")
+        if any(item["body"] not in (withheld, comment) for item in own):
+            raise RecordError("a recorded verdict of this task does not match its record and sealed reply")
+        if any(item["body"] == comment for item in own):
+            return {**result, "comment": "existing"}
+        if comments[markers[-1][0]] is not own[-1]:
+            raise RecordError("a later verdict is recorded on this PR; republishing would reorder the verdicts")
+        comment_id = _post_verdict(review.repository, pr_number, comment, login)
+    return {**result, "comment": "posted", "comment_id": comment_id}
+
+
+def republish_withheld_main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        prog="record_cf_verdict.py republish-withheld",
+        description="Publish the findings of a verdict recorded as withheld, once the cause is fixed.\n"
+        "Posts the sealed reply beside the withheld comment; records no new verdict, round or status.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py republish-withheld "
+        "--task-id review-unit --pr 42\n"
+        "Outputs: JSON on stdout: the PR, head, task, verdict and whether a comment was posted.\n"
+        "Exit codes: 0: posted, or the findings were already published; 1: refused.\n"
+        "Related: agents_extensions/shared/skills/review-loop/SKILL.md",
+    )
+    parser.add_argument("--task-id", required=True, help="Review task whose verdict was recorded withheld")
+    parser.add_argument("--pr", type=int, required=True, help="Open PR number the verdict is recorded on")
+    args = parser.parse_args(argv)
+    try:
+        result = republish_withheld(args.task_id, pr_number=args.pr)
+    except (RecordError, SweepError, ValueError) as exc:
+        print(f"CF verdict republication refused: {exc}")
+        return 1
+    print(json.dumps(result, sort_keys=True))
+    return 0
+
+
 @publication_cli(RecordError)
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     if argv[:1] == ["budget-check"]:
         return budget_check_main(argv[1:])
+    if argv[:1] == ["republish-withheld"]:
+        return republish_withheld_main(argv[1:])
     if argv[:1] == ["budget-grant"]:
         # The grant verb builds on this module, so it is imported only when chosen.
         from scripts.review.budget_grant import main as budget_grant_main
@@ -2603,6 +2818,8 @@ def main(argv: list[str] | None = None) -> int:
         "    (whether the next review round is admitted, before dispatch; see budget-check --help)\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py budget-grant digest <ruling.json>\n"
         "    (an elevated-tier grant ruling's digest; see budget-grant --help)\n"
+        "  .venv/bin/python scripts/review/record_cf_verdict.py republish-withheld --task-id review-unit --pr 1\n"
+        "    (publish the findings of a verdict recorded withheld; see republish-withheld --help)\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py capability-failure --task-id review-unit --pr 1 "
         "--capability test-execution --authority claude-cto\n"
         "    (classify a finished run that only lacked a capability; see capability-failure --help)\n"
