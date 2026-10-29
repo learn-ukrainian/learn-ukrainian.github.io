@@ -149,6 +149,7 @@ def _auto_merge_armed(row: Mapping[str, Any]) -> bool:
 class GitHub:
     def __init__(self, root: Path, repository: str) -> None:
         self.root, self.repository = root, repository
+        self.queue_jump = False
 
     @publication_boundary(KeeperError)
     def call(self, *args: str) -> str:
@@ -171,6 +172,7 @@ class GitHub:
         cleanup = getattr(result, "enqueue_cleanup", None)
         if cleanup is not None:
             print(f"enqueue-cleanup removed={cleanup['removed']} retained={cleanup['retained']} receipt={cleanup['receipt']}", file=sys.stderr)
+        self.queue_jump = getattr(result, "queue_jump", False) is True
         return result.stdout
 
     def json(self, *args: str) -> Any:
@@ -312,8 +314,10 @@ class GitHub:
             return None
         return False
 
-    def enqueue(self, number: int, head: str) -> None:
+    def enqueue(self, number: int, head: str) -> bool:
+        """Enqueue through pr-merge; True when the publisher put the PR at the front of the queue."""
         self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head))
+        return self.queue_jump
 
     def dequeue(self, node_id: str) -> None:
         data = self.json(Request("pr-dequeue", repo=self.repository, node_id=node_id))
@@ -1152,7 +1156,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}" + _cf_unknown_detail(reason, current_verdict))
             elif reason == "ready":
-                gh.enqueue(number, head)
+                jumped = gh.enqueue(number, head)
                 if not gh.membership(number):
                     after_enqueue = gh.current(number)
                     if _auto_merge_armed(after_enqueue):
@@ -1161,7 +1165,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         raise KeeperError("enqueue returned success without queue membership or armed auto-merge")
                 else:
                     queued_now[key] = head
-                    lines.append(f"#{number} enqueued")
+                    lines.append(f"#{number} enqueued" + (" at the front (priority)" if jumped else ""))
                 estimated_remaining -= 30
             _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
             if (
