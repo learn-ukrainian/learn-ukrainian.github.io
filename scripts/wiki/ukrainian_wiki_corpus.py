@@ -819,7 +819,7 @@ def _open_sources_reader(path: Path) -> sqlite3.Connection:
     """Read the Sources store. ``path`` is the canonical store or a fixture."""
     candidate = Path(path)
     if not candidate.is_absolute():
-        candidate = (Path.cwd() / candidate).resolve()
+        candidate = Path.cwd() / candidate
     resolved = resolve_store(
         "sources",
         main_checkout_root(PROJECT_ROOT),

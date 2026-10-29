@@ -369,7 +369,7 @@ def _open_sources_reader(explicit: Path | None = None) -> sqlite3.Connection:
     if explicit is not None:
         candidate = Path(explicit)
         if not candidate.is_absolute():
-            candidate = (Path.cwd() / candidate).resolve()
+            candidate = Path.cwd() / candidate
         binding = StoreBinding("sources", candidate)
     resolved = resolve_store("sources", main_checkout_root(PROJECT_ROOT), binding=binding)
     if isinstance(resolved, StoreRefusal):

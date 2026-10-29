@@ -115,7 +115,7 @@ def _open_sources_reader(path: Path) -> sqlite3.Connection:
     """Read the Sources store. An explicit path is a fixture or override."""
     candidate = Path(path)
     if not candidate.is_absolute():
-        candidate = (Path.cwd() / candidate).resolve()
+        candidate = Path.cwd() / candidate
     resolved = resolve_store(
         "sources",
         main_checkout_root(Path(__file__).resolve().parents[2]),
