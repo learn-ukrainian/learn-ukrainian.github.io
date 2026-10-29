@@ -1205,7 +1205,7 @@ def test_scope_verification_failure_only_rejects_success(delivery_settle, monkey
     monkeypatch.setattr(git, "_verification_git", broken)
     worker._enforce_delivery(record)
     assert record["status"] == ("no_deliverable" if status == "done" else status)
-    assert record["error"] == ("owned_paths_verification_failed" if status == "done" else "original cause")
+    assert record["error"] == (f"owned_paths_verification_failed: git {command} failed" if status == "done" else "original cause")
 
 
 @pytest.mark.parametrize("history", ["conflict", "no-commit", "unrelated", "parentless", "clean"])
@@ -1256,7 +1256,128 @@ def test_merge_resolution_and_root_paths_cannot_escape_scope(sandbox, delivery_s
                         "git version 2.35.0" if command == "version" else original(path, command, *args, **kw))
     result.update(status="done", error=None)
     worker._enforce_delivery(result)
-    assert (result["status"], result["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert (result["status"], result["error"]) == ("no_deliverable", "owned_paths_verification_failed: merge resolution paths cannot be verified")
+
+
+@pytest.fixture
+def merged_delivery_world(tmp_path, monkeypatch):
+    """A write task whose branch cannot show its delivery, with a scripted GitHub and ownership ledger."""
+    from scripts.common import github_client
+    from scripts.orchestration import pr_ownership
+
+    world = SimpleNamespace(
+        prs={}, files={}, listed=[], published=(None, True), lookup_error=None,
+        record={
+            "task_id": "merge-probe", "mode": "workspace-write", "status": "done", "error": None,
+            "owned_paths": ["docs/owned.md"], "worktree_remote_url": "https://github.com/org/repo.git",
+            "worktree_base_ref": "origin/main", "worktree_branch": "claude/merge-probe", "publish_branch": None,
+            "started_at": "2026-10-29T08:00:00+00:00", "head_sha": "a" * 40, "commits_ahead": 0,
+            "push_state": "unpushed", "worktree_dirty_on_exit": False,
+        },
+    )
+
+    def gh(args, **_):
+        if world.lookup_error:
+            raise world.lookup_error
+        words = args[1:]
+        out = (json.dumps(world.listed) if words[:2] == ["pr", "list"]
+               else json.dumps(world.prs[int(words[2])]) if words[:2] == ["pr", "view"]
+               else "\n".join(json.dumps(name) for name in world.files[int(words[2].split("/")[4])]))
+        return SimpleNamespace(returncode=0, stdout=out, stderr="")
+
+    state = tmp_path / "state.json"
+    monkeypatch.setattr(pr_ownership, "state_path", lambda: state)
+    monkeypatch.setattr(github_client, "run", gh)
+    monkeypatch.setattr(git, "_canonical_publication", lambda *_: world.published)
+    monkeypatch.setattr(git, "ownership_git", Mock(side_effect=subprocess.CalledProcessError(
+        128, ["git", "fetch"], stderr="branch gone")))
+
+    def accept(*numbers):
+        history = [{"event": "accepted", "pr": f"org/repo#{n}", "successor": "merge-probe"} for n in numbers]
+        state.write_text(json.dumps({"schema": 1, "last_tick": None, "episodes": {}, "handoffs": {},
+                                     "history": history, "outbox": []}))
+
+    world.accept = accept
+    return world
+
+
+MERGED = {"state": "MERGED", "baseRefName": "main", "mergedAt": "2026-10-29T09:00:00Z"}
+
+
+def test_accepted_merged_pr_without_new_commits_is_delivered(merged_delivery_world):
+    """Defect class: a task that landed a PR it accepted, with no commits of its own, was marked no_deliverable."""
+    world = merged_delivery_world
+    world.accept(77)
+    world.prs[77], world.files[77] = MERGED, ["docs/owned.md"]
+    worker._enforce_delivery(world.record)
+    assert (world.record["status"], world.record["error"]) == ("done", None)
+    assert world.record["delivery_pr"] == "org/repo#77"
+
+
+def test_branch_reset_or_deleted_after_merge_is_delivered(merged_delivery_world):
+    """Defect class: the task's own PR merged, then the branch was reset or deleted, so the check read a git error."""
+    world = merged_delivery_world
+    world.record["commits_ahead"] = 2
+    world.listed = [{"number": 78, "isCrossRepository": False, "headRefName": "claude/merge-probe"}]
+    world.prs[78], world.files[78] = MERGED, ["docs/owned.md"]
+    worker._enforce_delivery(world.record)
+    assert (world.record["status"], world.record["error"]) == ("done", None)
+    assert world.record["delivery_pr"] == "org/repo#78"
+
+
+def test_merged_pr_outside_owned_paths_is_still_refused(merged_delivery_world):
+    """Control: a merged PR is no licence to change paths outside the task's ownership."""
+    world = merged_delivery_world
+    world.accept(79)
+    world.prs[79], world.files[79] = MERGED, ["docs/owned.md", "scripts/elsewhere.py"]
+    worker._enforce_delivery(world.record)
+    assert (world.record["status"], world.record["error"]) == (
+        "no_deliverable", "outside_owned_paths: scripts/elsewhere.py")
+    # A name that only differs from an owned path by a trailing newline is not that path.
+    world.record.update(status="done", error=None)
+    world.files[79] = ["docs/owned.md\n"]
+    worker._enforce_delivery(world.record)
+    assert world.record["status"] == "no_deliverable"
+    assert world.record["error"].startswith("outside_owned_paths: docs/owned.md")
+
+
+@pytest.mark.parametrize("fault", [
+    "open-pr", "merged-before-start", "foreign-base", "unpublished-head", "github-timeout", "ledger-unreadable",
+    "missing-field",
+])
+def test_unpushed_change_without_a_provable_merged_delivery_is_still_refused(merged_delivery_world, fault):
+    """Control: unpushed work, even beside a merged, stale or foreign PR or a failed lookup, keeps its exact refusal."""
+    from scripts.orchestration import pr_ownership
+
+    world = merged_delivery_world
+    world.accept(80)
+    world.prs[80], world.files[80] = dict(MERGED), ["docs/owned.md"]
+    world.record["commits_ahead"] = 1
+    expected = "owned_paths_verification_failed: git fetch failed"
+    if fault == "open-pr":
+        world.prs[80]["state"] = "OPEN"
+    elif fault == "merged-before-start":
+        world.prs[80]["mergedAt"] = "2026-10-29T07:00:00Z"
+    elif fault == "foreign-base":
+        world.prs[80]["baseRefName"] = "other"
+    elif fault == "unpublished-head":
+        # Merged work must not hide a further local commit that was never pushed.
+        world.published = (None, False)
+    elif fault == "github-timeout":
+        world.lookup_error = subprocess.TimeoutExpired(["gh"], 60)
+    elif fault == "ledger-unreadable":
+        pr_ownership.state_path().write_text("{")
+    else:
+        del world.record["commits_ahead"]
+        world.published = (None, False)
+        expected = "no_commits_or_unknown"
+    worker._enforce_delivery(world.record)
+    assert (world.record["status"], world.record["error"]) == ("no_deliverable", expected)
+    assert "delivery_pr" not in world.record
+    if fault == "open-pr":
+        world.record.update(status="done", owned_paths=None)
+        worker._enforce_delivery(world.record)
+        assert world.record["error"] == "work_not_pushed_or_unknown"
 
 
 @pytest.mark.parametrize("reuse_cwd", [False, True])
@@ -1457,7 +1578,7 @@ def test_scope_error_is_bounded_and_local_base_fails_closed(delivery_settle, mon
     assert record["error"].endswith("... (truncated)")
     record.update(status="done", worktree_base_ref="main")
     worker._enforce_delivery(record)
-    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed: ownership verification requires an origin base")
 
 
 @pytest.mark.parametrize("transport", ["ssh", "https"])
@@ -1518,7 +1639,8 @@ def test_prior_worker_origin_poisoning_refuses_dispatch_and_fails_closed(sandbox
     assert run_git(fake, "rev-parse", "main") == record["head_sha"]
     assert run_git(sandbox.remote, "rev-parse", "main") == record["worktree_base_sha"]
     worker._enforce_delivery(record)
-    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert record["status"] == "no_deliverable"
+    assert record["error"].startswith("owned_paths_verification_failed: ")
 
 
 @pytest.mark.parametrize("attack", ["alias-shell", "alias-empty", "replace", "origin", "insteadOf", "pushInsteadOf"])
@@ -1548,8 +1670,9 @@ def test_worker_git_state_cannot_hide_outside_commit(sandbox, delivery_settle, a
             run_git(tree, "config", f"url.{fake}.{attack}", str(sandbox.remote))
     record.update(status="done", error=None)
     worker._enforce_delivery(record)
-    expected = "outside_owned_paths: outside.txt" if attack == "replace" else "owned_paths_verification_failed"
-    assert (record["status"], record["error"]) == ("no_deliverable", expected)
+    assert record["status"] == "no_deliverable"
+    assert record["error"].startswith(
+        "outside_owned_paths: outside.txt" if attack == "replace" else "owned_paths_verification_failed: ")
 
 
 def test_ownership_walk_verifies_distinct_publish_branch(sandbox, delivery_settle):
@@ -1589,7 +1712,7 @@ def test_ownership_walk_requires_distinct_refs_and_nonempty_range(sandbox, deliv
     rejected = settle()
     assert rejected["remote_ref"] == f"refs/heads/{publish_branch}"
     assert rejected["commits_ahead"] == 1
-    assert (rejected["status"], rejected["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert (rejected["status"], rejected["error"]) == ("no_deliverable", ("owned_paths_verification_failed: delivery ref must differ from base ref" if publish_branch == "release" else "owned_paths_verification_failed: empty ownership range with recorded commits ahead"))
 
 
 def test_ownership_walk_ignores_worker_config_includes_and_ambient_git_env(sandbox, delivery_settle, monkeypatch):
@@ -1870,7 +1993,10 @@ def test_missing_ownership_protection_fails_closed(delivery_settle, monkeypatch,
     else:
         record.pop(missing)
     worker._enforce_delivery(record)
-    assert (record["status"], record["error"]) == ("no_deliverable", "owned_paths_verification_failed")
+    assert (record["status"], record["error"]) == ("no_deliverable",
+        "owned_paths_verification_failed: " + {
+            "worktree_remote_url": "record field 'worktree_remote_url' missing", "git-binary": "system Git unavailable",
+            "scratch": "TaskScratchError", "remote-tip": "remote delivery tip does not match snapshot"}[missing])
 
 
 @pytest.mark.parametrize("remote_available", [True, False])

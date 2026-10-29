@@ -183,14 +183,39 @@ def _spec(record: dict, options: dict) -> TaskSpec:
     )
 
 
+def _outside_cause(paths, owned) -> str | None:
+    from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
+    from scripts.secret_redactor import redact_text
+
+    outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
+    if not outside:
+        return None
+    cause = "outside_owned_paths: " + ", ".join(sanitize_for_display(redact_text(path)) for path in outside)
+    return cause if len(cause) <= 1024 else cause[:1009] + "... (truncated)"
+
+
+def _verification_cause(exc: Exception) -> str:
+    """Name what stopped the ownership check: the failing Git step, or the check's own refusal."""
+    if isinstance(exc, subprocess.TimeoutExpired):
+        detail = f"git {exc.cmd[1]} timed out"
+    elif isinstance(exc, subprocess.CalledProcessError):
+        detail = f"git {exc.cmd[1]} failed"
+    elif isinstance(exc, ValueError):
+        detail = str(exc)
+    elif isinstance(exc, KeyError):
+        detail = f"record field {exc} missing"
+    else:
+        detail = type(exc).__name__
+    return f"owned_paths_verification_failed: {detail}"[:200]
+
+
 def _enforce_delivery(record: dict) -> None:
     if record["mode"] == "read-only" or record["status"] != "done":
         return
     cause = None
-    if owned := record.get("owned_paths"):
-        from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
-        from scripts.secret_redactor import redact_text
-
+    owned = record.get("owned_paths")
+    # With no commits ahead there is nothing to verify, and the remote branch may never have existed.
+    if owned and (record.get("commits_ahead") or 0) > 0:
         try:
             with git.ownership_git(record) as run:
                 base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
@@ -209,24 +234,28 @@ def _enforce_delivery(record: dict) -> None:
                 ).split("\0")
                 if run("rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
                     raise ValueError("merge resolution paths cannot be verified")
-            outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
-            if outside:
-                cause = "outside_owned_paths: " + ", ".join(
-                    sanitize_for_display(redact_text(path)) for path in outside
-                )
-                if len(cause) > 1024:
-                    cause = cause[:1009] + "... (truncated)"
-        except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError):
-            cause = "owned_paths_verification_failed"
+            cause = _outside_cause(paths, owned)
+        except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError) as exc:
+            cause = _verification_cause(exc)
     if cause is None:
-        if record["worktree_dirty_on_exit"] is not False:
+        if record.get("worktree_dirty_on_exit") is not False:
             cause = "worktree_dirty_or_unknown"
-        elif record["commits_ahead"] is None or record["commits_ahead"] == 0:
+        elif not record.get("commits_ahead"):
             cause = "no_commits_or_unknown"
-        elif record["push_state"] != "pushed":
+        elif record.get("push_state") != "pushed":
             cause = "work_not_pushed_or_unknown"
+    # Merged work leaves nothing on the task branch to inspect (it may be reset or deleted), so the
+    # merged pull request is the evidence; it refuses an outside-owned path the same way.
+    if cause and cause.split(":", 1)[0] in MERGE_RESCUABLE and record.get("worktree_dirty_on_exit") is False and (
+            merged := git.merged_delivery(record)):
+        cause = _outside_cause(merged["paths"], owned) if owned else None
+        record["delivery_pr"] = f"{merged['repo']}#{merged['number']}"
     if cause:
         record.update(status="no_deliverable", error=cause, no_deliverable_reason=cause)
+
+
+# Refusals that a merged pull request answers: the local branch could not show the delivery.
+MERGE_RESCUABLE = frozenset({"owned_paths_verification_failed", "no_commits_or_unknown", "work_not_pushed_or_unknown"})
 
 
 def _cgroup(pid: int) -> str | None:
