@@ -42,8 +42,11 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.atlas import atlas_db
+from scripts.common.repo_root import main_checkout_root
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.source_attribution import cites_soviet_dictionary_outside_context
+from scripts.lib.readonly_sqlite import open_readonly
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
 DEFAULT_DB = atlas_db.DEFAULT_DB
 DEFAULT_SOURCES_DB = enrich_manifest.SOURCES_DB
@@ -106,6 +109,21 @@ def _connect(path: Path) -> sqlite3.Connection:
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def _open_sources_reader(path: Path) -> sqlite3.Connection:
+    """Read the Sources store. An explicit path is a fixture or override."""
+    candidate = Path(path)
+    if not candidate.is_absolute():
+        candidate = (Path.cwd() / candidate).resolve()
+    resolved = resolve_store(
+        "sources",
+        main_checkout_root(Path(__file__).resolve().parents[2]),
+        binding=StoreBinding("sources", candidate),
+    )
+    if isinstance(resolved, StoreRefusal):
+        raise FileNotFoundError(resolved.reason)
+    return open_readonly(resolved.path)
 
 
 def _article_rows(conn: sqlite3.Connection, slug: str | None) -> list[sqlite3.Row]:
@@ -401,7 +419,7 @@ def _fill_local(
     slug: str | None = None,
     refresh: bool = False,
 ) -> FillResult:
-    with _connect(db_path) as atlas_conn, sqlite3.connect(sources_db_path) as sources_conn:
+    with _connect(db_path) as atlas_conn, _open_sources_reader(sources_db_path) as sources_conn:
         articles = _article_rows(atlas_conn, slug)
         if slug and not articles:
             raise ValueError(f"slug not found in atlas DB: {slug}")
