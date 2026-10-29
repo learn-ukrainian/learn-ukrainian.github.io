@@ -118,7 +118,7 @@ except Exception as exc:
     raise SystemExit(2) from exc
 
 try:
-    from shell_redirects import scope_events
+    from shell_redirects import literal_lines, scope_events
 except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -617,6 +617,48 @@ def _shell_c_payload(seg: list[str]) -> str | None:
 _MAX_SHELL_DEPTH = 8
 
 
+def _literal_gh_read(argv: list[str]) -> bool:
+    start, _ = _invoked_start(argv)
+    argv = argv[start:]
+    if argv[:2] == ["gh", "pr"]:
+        return argv[2:3] in (["view"], ["list"], ["checks"])
+    if argv[:2] != ["gh", "api"]:
+        return False
+    args = argv[2:]
+    for index, arg in enumerate(args):
+        if arg in {"-f", "-F", "--field", "--raw-field", "--input"} or arg.startswith(
+            ("-f", "-F", "--field=", "--raw-field=", "--input=")
+        ):
+            return False
+        if arg in {"-X", "--method"} and (index + 1 >= len(args) or args[index + 1].upper() != "GET"):
+            return False
+        if arg.startswith("--method=") and arg.partition("=")[2].upper() != "GET":
+            return False
+        if arg.startswith("-X") and len(arg) > 2 and arg[2:].upper() != "GET":
+            return False
+    return True
+
+
+def _literal_reads_only(command: str) -> bool:
+    """Discharge merge-word candidates only at proven read command positions."""
+    found_read = False
+    for kind, argv in scope_events(
+        command,
+        mark_redirect_unreadable=False,
+        unreadable_marker=_UNREADABLE_MARKER,
+        unparsed=_UNPARSED,
+        may_match=_merge_candidate,
+        line_reader=literal_lines,
+    ):
+        if kind == "unreadable":
+            return False
+        if kind == "segment" and _merge_candidate(shlex.join(argv)):
+            if not _literal_gh_read(argv):
+                return False
+            found_read = True
+    return found_read
+
+
 def _may_merge(command: str, depth: int = 0) -> bool:
     """Recognize merge operations before applying cwd or readiness refusals.
 
@@ -624,6 +666,8 @@ def _may_merge(command: str, depth: int = 0) -> bool:
     payloads are command text; ordinary arguments, JSON fields and searches are data.
     The judging pass retains its fail-closed policy for a recognized operation.
     """
+    if _literal_reads_only(command):
+        return False
     for kind, argv in _scope_events(command, mark_redirect_unreadable=False):
         if kind != "segment":
             continue
