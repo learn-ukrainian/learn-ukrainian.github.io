@@ -3722,6 +3722,9 @@ def test_elevated_grant_needs_the_blocker_open_before_each_round(monkeypatch, tm
         ("scope", r"\[scope\].*does not cover changed paths \['docs/readme.md'\]"),
         ("resolved", r"\[blocker\]"),
         ("p2", r"\[blocker\]"),
+        # A delta round's plain-words disposition keeps the same rules (the severity follows `still open:`).
+        ("still-open-p2", r"\[blocker\]"),
+        ("still-open-resolved", r"\[blocker\]"),
         ("other-finding", r"\[blocker\].*does not leave F3 an open"),
         # The finding's complete current disposition decides, not its first line (review round 1, F1).
         ("resolved-next-line", r"\[blocker\]"),
@@ -3742,6 +3745,12 @@ def test_elevated_grant_refuses(monkeypatch, tmp_path, case, reason):
     last = {
         "resolved": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "resolved.")),
         "p2": dict(last_reply=OPEN_F2.replace("[P1]", "[P2]")),
+        "still-open-p2": dict(
+            last_reply="VERDICT: REQUEST_CHANGES\nF2 still open: [P2] docs/readme.md:3 the retry path still races."
+        ),
+        "still-open-resolved": dict(
+            last_reply="VERDICT: REQUEST_CHANGES\nF2 still open: [P1] docs/readme.md:3 the lock race is fixed."
+        ),
         "latest-approved": dict(last_verdict="APPROVED", last_reply="VERDICT: APPROVE\nF2 [P1] still open"),
         "resolved-next-line": dict(last_reply=OPEN_F2 + "\n  Status: resolved at the new head."),
         "fixed-with-evidence": dict(last_reply=OPEN_F2.replace("Impact: lost update.", "fixed with evidence.")),
@@ -3811,8 +3820,11 @@ def test_budget_grant_digest_verb(tmp_path, capsys):
         OPEN_F2.replace("Impact: lost update.", "not resolved: the retry path still races."),
         "VERDICT: REQUEST_CHANGES\n- **F2** [P1] docs/readme.md:3 still open. Impact: lost update.",
         OPEN_F2 + "\n\nF1 [P2] docs/readme.md:9 resolved.",
+        # The wording review-loop policy tells a delta reviewer to use: the severity follows the disposition.
+        "VERDICT: REQUEST_CHANGES\nF1 resolved.\n\nF2 still open: [P1] `docs/readme.md:3` the retry path races.",
+        "VERDICT: REQUEST_CHANGES\nF2 (P1) still open: docs/readme.md:3 the retry path races.",
     ],
-    ids=["not-resolved", "bulleted", "other-finding-resolved"],
+    ids=["not-resolved", "bulleted", "other-finding-resolved", "still-open-then-severity", "parenthesised-severity"],
 )
 def test_elevated_grant_reads_an_open_finding(monkeypatch, tmp_path, reply):
     tasks, _comments, _calls = grant_case(monkeypatch, tmp_path, last_reply=reply)
