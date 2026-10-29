@@ -125,6 +125,7 @@ except Exception as exc:
 
 try:
     from scripts.ci.advisory_checks import is_advisory as is_advisory
+    from scripts.common.github_client import _gh_api_call
     from scripts.publish.merge_guard import (
         _checks_json_unsupported,
         _parse_status_rollup_rows,
@@ -624,19 +625,11 @@ def _literal_gh_read(argv: list[str]) -> bool:
         return argv[2:3] in (["view"], ["list"], ["checks"])
     if argv[:2] != ["gh", "api"]:
         return False
-    args = argv[2:]
-    for index, arg in enumerate(args):
-        if arg in {"-f", "-F", "--field", "--raw-field", "--input"} or arg.startswith(
-            ("-f", "-F", "--field=", "--raw-field=", "--input=")
-        ):
-            return False
-        if arg in {"-X", "--method"} and (index + 1 >= len(args) or args[index + 1].upper() != "GET"):
-            return False
-        if arg.startswith("--method=") and arg.partition("=")[2].upper() != "GET":
-            return False
-        if arg.startswith("-X") and len(arg) > 2 and arg[2:].upper() != "GET":
-            return False
-    return True
+    try:
+        call = _gh_api_call(argv[2:], stdin=None, cwd=None)
+    except RecursionError:
+        return False
+    return call is not None and call.method == "GET"
 
 
 def _literal_reads_only(command: str) -> bool:
