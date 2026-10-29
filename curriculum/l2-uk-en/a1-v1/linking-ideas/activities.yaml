@@ -234,20 +234,20 @@ workbook:
         options:
           - text: Море тепле, бо літо.
             correct: true
-          - text: Море тепла, бо літо.
+          - text: Море теплими, бо літо.
             correct: false
           - text: Море теплий, бо літо.
             correct: false
-        explanation: The subject requires тепле. тепла and теплий have a different gender or number.
+        explanation: The subject requires тепле. теплими and теплий have a different gender or number.
       - prompt: Обери правильно побудоване речення.
         options:
           - text: Ви студент чи лікар?
             correct: true
           - text: Ви студент чи лікарю?
             correct: false
-          - text: Ви студент чи лікарем?
+          - text: Ви студент чи лікарям?
             correct: false
-        explanation: This construction requires nominative лікар. лікарю and лікарем are different case forms.
+        explanation: This construction requires nominative лікар. лікарю and лікарям are different case forms.
       - prompt: Обери правильно побудоване речення.
         options:
           - text: Ми вдома, тому що йде дощ.

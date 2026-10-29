@@ -147,9 +147,9 @@ workbook:
             correct: true
           - text: Мені потрібен лікарю.
             correct: false
-          - text: Мені потрібен лікарем.
+          - text: Мені потрібен лікарям.
             correct: false
-        explanation: This construction requires nominative лікар. лікарю and лікарем are different case forms.
+        explanation: This construction requires nominative лікар. лікарю and лікарям are different case forms.
       - prompt: Обери правильно побудоване речення.
         options:
           - text: Я не розумію.
