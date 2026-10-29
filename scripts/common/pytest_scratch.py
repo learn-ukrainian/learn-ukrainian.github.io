@@ -30,6 +30,7 @@ import fcntl
 import os
 import secrets
 import stat
+import sys
 import tempfile
 import time
 from collections.abc import Callable
@@ -351,13 +352,17 @@ def _passed(stash: pytest.Stash | None) -> bool:
     """Whether the session passed under the "failed" retention policy.
 
     Pytest itself deletes the basetemp of such a session, but only when no
-    --basetemp was given, and this plugin always gives one. The session is
-    known only once the whole sessionfinish call returned normally, and
-    cleanups run after it, so the exit status read here is final.
+    --basetemp was given, and this plugin always gives one. Cleanups run after
+    every sessionfinish implementation and wrapper, so the exit status read
+    here is the one pytest returns. A hook that raises can end pytest with an
+    error while that status still reads OK, and the error is still propagating
+    when the cleanups run, whichever hook or monitor raised it and in
+    whatever order: the run of such a session is kept.
     """
     session = stash.get(_SESSION, None) if stash is not None else None
     return (
         session is not None
+        and sys.exception() is None
         and session.exitstatus == pytest.ExitCode.OK
         and session.config.getini("tmp_path_retention_policy") == "failed"
     )
@@ -414,23 +419,7 @@ def pytest_configure(config: pytest.Config) -> None:
     config.add_cleanup(restore_tempdir)
 
 
-@pytest.hookimpl(wrapper=True)
-def pytest_runtestloop(session: pytest.Session):
-    """After a completed test loop, watch the whole sessionfinish call.
-
-    A hook monitor sees the outcome of the entire call, outside every
-    implementation and wrapper whatever their order. Only a call that ends
-    without any exception keeps the session for teardown: a raising hook can
-    end pytest with an error while the session status still reads OK. The
-    monitor is never undone, since undoing would also drop monitors added
-    after it; it lives as long as this plugin manager.
-    """
-    result = yield
+def pytest_sessionstart(session: pytest.Session) -> None:
+    """Keep the session so teardown can read its final exit status."""
     if _RUN in session.config.stash:
-
-        def after(outcome, hook_name, _impls, kwargs) -> None:
-            if hook_name == "pytest_sessionfinish" and outcome.exception is None:
-                session.config.stash[_SESSION] = kwargs["session"]
-
-        session.config.pluginmanager.add_hookcall_monitoring(lambda *_: None, after)
-    return result
+        session.config.stash[_SESSION] = session

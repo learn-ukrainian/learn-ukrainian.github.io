@@ -133,8 +133,9 @@ At teardown the session removes its own run when it passed (final exit status
 descriptor-safe remover. This is the removal pytest documents for that policy;
 pytest skips it whenever `--basetemp` is set, and this plugin always sets it.
 A failed, interrupted or killed session keeps its run for inspection, and the
-sweep above handles it. A refused removal leaves the run
-preserved as before.
+sweep above handles it, and so does a session that ends with an error raised by
+a session-finish hook while its exit status still reads 0. A refused removal
+leaves the run preserved as before.
 
 ### Other scratch
 
