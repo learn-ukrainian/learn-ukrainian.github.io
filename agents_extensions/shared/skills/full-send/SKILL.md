@@ -64,10 +64,11 @@ dispatch. After one denial, retry once in a literal form before you stop; a seco
 3. **Prove it** ([delivery](references/delivery.md#proof)): reproduce, fix, the same check
    passes; behaviour proof for a user-visible surface. Add a test only with the CTO's approval
    of that specific test.
-4. **Open or update the PR and get full green CI first** ([pr-body](references/pr-body.md)).
-   Push the branch and open a non-draft PR so CI runs on the exact head. PR CI runs the
-   full supported pytest shards and Frontend, not only the changed tests, so a failure the
-   diff causes shows up now and not after approval. An open PR is not approval.
+4. **Open or update the PR and get green CI first** ([pr-body](references/pr-body.md)).
+   Push the branch and open a non-draft PR so CI runs on the exact head. PR CI runs
+   Frontend and the affected tests (changed tests, tests that import or read changed files,
+   the guards and the repository invariants); the full pytest suite runs only in the merge
+   group, so a failure there can still eject the PR. An open PR is not approval.
 
    ```bash
    "$PY" -m scripts.publish pr-create --title "$TITLE" --body-file "$BODY" \

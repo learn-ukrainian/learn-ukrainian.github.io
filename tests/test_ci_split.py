@@ -616,12 +616,13 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
     assert any(step.get("with", {}).get("name") == "ci-tested-tree" for step in steps)
 
 
-def test_pytest_and_frontend_run_on_every_event() -> None:
+def test_pytest_is_skipped_only_on_pull_requests() -> None:
     jobs = _jobs_of_ci()
     assert "reuse" not in jobs
     assert jobs["pytest"]["needs"] == ["refresh-pytest-durations"]
-    for name in ("pytest", "refresh-pytest-durations", "frontend"):
-        assert jobs[name]["if"] == "${{ !cancelled() }}"
+    for name in ("pytest", "refresh-pytest-durations"):
+        assert jobs[name]["if"] == "${{ !cancelled() && github.event_name != 'pull_request' }}"
+    assert jobs["frontend"]["if"] == "${{ !cancelled() }}"
     refresh = jobs["refresh-pytest-durations"]
     assert all("if" not in step for step in refresh["steps"])
     collection = next(step for step in jobs["checks"]["steps"] if step.get("name") == "Collect pytest for PR admission")
@@ -775,7 +776,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert record['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
     assert record['execution_status'] == 'completed' and record['exit_code'] == 0
     assert record['skipped_cases'] == 0 and record['failed_cases'] == 0
-    assert 'the full pytest shards run in their own jobs' in (tmp_path / 'summary').read_text()
+    assert 'the full pytest suite runs in merge-group CI' in (tmp_path / 'summary').read_text()
     assert 'deferred test-case count: UNKNOWN' in (tmp_path / 'summary').read_text()
     # Duration deferral cannot suppress a marker, including under pytest's
     # normally excluded build/ directory, or execute its unmarked neighbour.

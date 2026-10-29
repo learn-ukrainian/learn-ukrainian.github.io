@@ -361,6 +361,8 @@ def test_every_event_runs_every_job(event: str) -> None:
     results, names = _simulate(_EVENTS[event])
     skipped = {job for job, result in results.items() if result != "success"}
     expected = set() if event == "merge_group" else {"queue-metadata-scan"}
+    if event in {"opened", "synchronize", "reopened", "edited"}:
+        expected |= {"refresh-pytest-durations", "pytest", "pytest-report"}
     assert skipped == expected
     assert names["ci-gate"] == "CI Gate"
 
@@ -455,6 +457,8 @@ def _run_gate(event: str, *, action: str = "opened", **results: str) -> subproce
         elif event == "workflow_dispatch":
             payload["ref"] = "refs/heads/main"
         jobs = {**_GREEN, "REFRESH": "success", "METADATA_SCAN": "success" if event == "merge_group" else "skipped"}
+        if event == "pull_request":
+            jobs.update({name: "skipped" for name in ("REFRESH", "PYTEST", "PYTEST_REPORT")})
         # Existing test bodies can corrupt the real entry-point event and candidate.
         overrides = {key: results.pop(key) for key in list(results) if key.startswith("GITHUB_") or key == "NEEDS_JSON"}
         raw_payload = overrides.pop("GITHUB_EVENT_JSON", json.dumps(payload))
@@ -485,10 +489,10 @@ def test_gate_passes_a_green_pull_request_run(action: str) -> None:
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"PYTEST": "failure"}, {"PYTEST": "skipped"}, {"PYTEST_REPORT": "skipped"},
+        {"PYTEST": "failure"}, {"PYTEST": "success"}, {"PYTEST_REPORT": "success"},
         {"CHECKS": "cancelled"}, {"SECRET_SCAN": ""}, {"FRONTEND": "failure"}, {"FRONTEND": "skipped"},
         {"DEPENDENCY_AUDIT": "failure"}, {"DEPENDENCY_AUDIT": "skipped"},
-        {"REFRESH": "skipped"}, {"METADATA_SCAN": "success"},
+        {"REFRESH": "success"}, {"METADATA_SCAN": "success"},
     ],
 )
 def test_gate_fails_a_pull_request_run_missing_any_job(overrides: dict[str, str]) -> None:

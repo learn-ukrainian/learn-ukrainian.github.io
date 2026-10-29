@@ -88,7 +88,7 @@ Every item must hold on the **current** head. A moved head voids the verdict and
 1. Proof covers every change in the diff.
 2. A recorded exact-head APPROVE from the reviewer of record (`review-loop`), with no open
    blocker in the ledger.
-3. Same-head PR CI Gate green, which includes the full supported pytest shards and Frontend. It
+3. Same-head PR CI Gate green, which includes the affected tests and Frontend, not the full suite. It
    was green **before** the reviewed round started, and it is still green on the live head. PR CI
    never replaces the merge-group CI Gate on the real queue candidate (`workflow.md` § Merge policy).
 4. Follow-ups sent to the CTO through Fleet Comms, or recorded on the parent issue when they
