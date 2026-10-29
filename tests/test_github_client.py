@@ -63,6 +63,22 @@ def test_conditional_cache_survives_new_client(tmp_path):
         assert db.execute("SELECT remaining FROM budget").fetchone() == (100,)
 
 
+def test_usage_counts_callers_separately_and_top_orders_them(tmp_path, monkeypatch, capsys):
+    from scripts.common import github_usage
+
+    for task, count in (("task-light", 1), ("task-heavy", 3)):
+        monkeypatch.setenv(github_usage.TASK_ENV, task)
+        store, _ = client(tmp_path, [response([]) for _ in range(count)])
+        for number in range(count):
+            store.request("GET", f"repos/o/r/actions/runs/{number + 1}")
+    assert github_usage.main(["top", "--dir", str(tmp_path), "--json"]) == 0
+    rows = json.loads(capsys.readouterr().out)
+    assert [(row["caller"].split(" ")[0], row["endpoint"], row["requests"], row["charged"]) for row in rows] == [
+        ("task-heavy", "GET repos/:repo/actions/runs/:n", 3, 3),
+        ("task-light", "GET repos/:repo/actions/runs/:n", 1, 1),
+    ]
+
+
 def test_low_budget_cached_stale_and_no_cache_typed(tmp_path):
     store, calls = client(tmp_path, [response([1], remaining=0)])
     store.request("GET", "repos/o/r/issues")

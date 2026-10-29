@@ -144,6 +144,24 @@ fresh or healthy.
   the owner's `routing_facts` for the record grant credit relief as verified
   capacity; the published `credit` leaf is not read.
 
+## GitHub REST budget: who spends it
+
+The shared GitHub client (`scripts/common/github_client.py`) counts every request it sends to
+the REST core pool in a private ledger (`batch_state/github-client/usage.sqlite3`, owner-only,
+kept for a day). Each row names the caller (the dispatched task id with its command, else the
+calling command; for the `gh` shim, the command that ran `gh`) and an endpoint template such as
+`GET repos/:repo/actions/runs/:n`. Print the top consumers of the last hour:
+
+```bash
+.venv/bin/python -m scripts.common.github_usage top            # --hours 3, --limit 50, --json
+```
+
+`charged` excludes `304` responses, which GitHub does not charge; `landing` counts calls made
+for a landing operation, which the landing reserve never refuses. A native `gh` command
+counts once, however many requests gh makes for it. A cache file SQLite reports as damaged
+is set aside as `cache.sqlite3.corrupt` and rebuilt, because without it every read is charged
+in full and budget observations stop reaching other callers.
+
 ## Git hooks
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
