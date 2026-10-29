@@ -2,11 +2,16 @@ import { render, screen, within } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import ArcLanding from '@site/src/components/ArcLanding';
 import ArcModule from '@site/src/components/ArcModule';
 import { groupByPhase, type ArcData, type ArcPosition } from '@site/src/lib/arc';
 import { formatArcScopeCount, formatLessonCount } from '@site/src/lib/i18n/chrome';
+
+// Edition labels follow publication state; pin it to a fixture so publishing a real module cannot break this suite.
+vi.mock('@site/src/data/arc-a1.json', async () => ({
+  default: (await import('../fixtures/arc-a1/unpublished.json')).default,
+}));
 
 const here = dirname(fileURLToPath(import.meta.url));
 const src = (path: string) => resolve(here, '../../src', path);

@@ -1,0 +1,60 @@
+{
+  "level": "a1",
+  "positions": [
+    {
+      "position": 1,
+      "slug": "opening",
+      "phase": "A1.1",
+      "title_uk": null,
+      "title_en": "Opening",
+      "job": "Say hello",
+      "skills": [],
+      "is_checkpoint": false,
+      "est_lessons": 2,
+      "lessons": 2,
+      "built_lessons": [
+        1,
+        2
+      ],
+      "lesson_numbers": [
+        1,
+        2
+      ],
+      "lesson_titles": [
+        "Lesson 1",
+        "Lesson 2"
+      ],
+      "scope": null,
+      "state": "built",
+      "previous_edition_href": "/a1-v1/opening/"
+    },
+    {
+      "position": 2,
+      "slug": "second",
+      "phase": "A1.1",
+      "title_uk": null,
+      "title_en": "Second",
+      "job": "Say hello",
+      "skills": [],
+      "is_checkpoint": false,
+      "est_lessons": 1,
+      "lessons": 1,
+      "built_lessons": [],
+      "lesson_numbers": [
+        3
+      ],
+      "lesson_titles": [
+        "Lesson 3"
+      ],
+      "scope": null,
+      "state": "planned",
+      "previous_edition_href": "/a1-v1/second/"
+    }
+  ],
+  "retired": [
+    {
+      "slug": "special-signs",
+      "old_position": 3
+    }
+  ]
+}
