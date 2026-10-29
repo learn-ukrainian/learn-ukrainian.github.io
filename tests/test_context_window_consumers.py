@@ -650,6 +650,79 @@ def test_context_monitor_operator_restart_tiers_hand_off_and_wait(tmp_path: Path
     assert state_file.read_text(encoding="utf-8") == "3 760000\n"
 
 
+LANES = {
+    "lanes": [
+        {"session": "cto", "name": "cto", "kind": "claude", "epic": "epics"},
+        {"session": "harness", "name": "harness", "kind": "codex", "epic": "monitor"},
+    ]
+}
+
+
+def _lane_environment(tmp_path: Path, project: Path, *, tmux_session: str = "cto", **extra: str) -> dict[str, str]:
+    """A driver launcher's lane identity (SESSION_EPIC) inside a stubbed tmux session."""
+    lanes_file = project / "scripts/config/driver_lanes.json"
+    lanes_file.parent.mkdir(parents=True, exist_ok=True)
+    lanes_file.write_text(json.dumps(LANES), encoding="utf-8")
+    stub_dir = tmp_path / "stub-bin"
+    stub_dir.mkdir(exist_ok=True)
+    tmux = stub_dir / "tmux"
+    tmux.write_text(f"#!/bin/sh\necho {tmux_session}\n", encoding="utf-8")
+    tmux.chmod(0o755)
+    return {
+        "PATH": f"{stub_dir}{os.pathsep}{os.environ['PATH']}",
+        "TMUX": "tmux-stub,1,0",
+        "TMUX_PANE": "%1",
+        "SESSION_EPIC": "epics",
+        **extra,
+    }
+
+
+def test_context_monitor_guard_managed_lane_posts_handoff_done_and_does_not_wait(tmp_path: Path) -> None:
+    """A driver lane the context guard restarts finishes its handoff; no human restarts it."""
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+    env = _lane_environment(tmp_path, project)
+    transcript = tmp_path / "native.jsonl"
+
+    critical = _monitor(project, record_path, transcript, 705_000, **env)
+    assert critical.startswith("CRITICAL: Context is at 70%")
+    assert "posts a standalone HANDOFF-DONE cto line, and ends the turn" in critical
+    assert "tells the operator" not in critical
+
+    emergency = _monitor(project, record_path, transcript, 760_000, **env)
+    assert emergency.startswith("EMERGENCY: Context is at 76%")
+    assert "guard-managed driver lane cto" in emergency
+    assert "Refresh your lane handoff file" in emergency
+    assert "thread_handoff.py prepare" in emergency
+    assert "reading: HANDOFF-DONE cto" in emergency
+    assert "END THE TURN. Do not tell the operator to restart and do not wait for one" in emergency
+    assert "Tell the operator in one plain message" not in emergency
+    assert "wait for the operator to restart the session" not in emergency
+
+
+@pytest.mark.parametrize(
+    "case",
+    ["session-not-a-lane", "epic-differs", "not-in-tmux", "lane-is-not-claude"],
+)
+def test_context_monitor_unmanaged_session_keeps_operator_restart_text(tmp_path: Path, case: str) -> None:
+    project, record_path = _fake_project(tmp_path, _native_claude_record())
+    env = _lane_environment(
+        tmp_path,
+        project,
+        tmux_session={"session-not-a-lane": "scratch", "lane-is-not-claude": "harness"}.get(case, "cto"),
+        SESSION_EPIC={"epic-differs": "infra", "lane-is-not-claude": "monitor"}.get(case, "epics"),
+    )
+    if case == "not-in-tmux":
+        env["TMUX"] = ""
+        env["TMUX_PANE"] = ""
+
+    emergency = _monitor(project, record_path, tmp_path / "native.jsonl", 760_000, **env)
+
+    assert "waits for the operator to restart it" in emergency
+    assert "Tell the operator in one plain message" in emergency
+    assert "END THE TURN and wait for the operator to restart the session" in emergency
+    assert "HANDOFF-DONE" not in emergency
+
+
 def test_context_monitor_dispatched_worker_keeps_continuation_text(tmp_path: Path) -> None:
     """A delegated worker has no operator to restart it, so it never waits for one."""
     project, record_path = _fake_project(tmp_path, _native_claude_record())

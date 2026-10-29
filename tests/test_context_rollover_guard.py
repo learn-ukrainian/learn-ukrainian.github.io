@@ -161,6 +161,43 @@ def test_guard_uses_final_main_pass_with_advisor_iterations(tmp_path: Path, toke
         assert "above this session's final rollover tier (~760k tokens)" in reminder
 
 
+def _lane_env(tmp_path: Path, project: Path, tmux_session: str) -> dict[str, str]:
+    """A driver launcher's lane identity (SESSION_EPIC) inside a stubbed tmux session."""
+    lanes = {"lanes": [{"session": "cto", "name": "cto", "kind": "claude", "epic": "epics"}]}
+    (project / "scripts/config").mkdir(parents=True)
+    (project / "scripts/config/driver_lanes.json").write_text(json.dumps(lanes), encoding="utf-8")
+    stub_dir = tmp_path / "stub-bin"
+    stub_dir.mkdir()
+    tmux = stub_dir / "tmux"
+    tmux.write_text(f"#!/bin/sh\necho {tmux_session}\n", encoding="utf-8")
+    tmux.chmod(0o755)
+    return {
+        "PATH": f"{stub_dir}{os.pathsep}{os.environ['PATH']}",
+        "TMUX": "tmux-stub,1,0",
+        "TMUX_PANE": "%1",
+        "SESSION_EPIC": "epics",
+    }
+
+
+def test_reminder_for_a_guard_managed_lane_names_handoff_done_not_the_operator(tmp_path: Path) -> None:
+    project, record_path = _project(tmp_path)
+
+    reminder = _reminder(_tier_three_prompt(project, record_path, **_lane_env(tmp_path, project, "cto")))
+
+    assert "post a standalone line reading HANDOFF-DONE cto, and end the turn" in reminder
+    assert "the context guard restarts this lane" in reminder
+    assert "tell the operator" not in reminder
+
+
+def test_reminder_outside_a_guard_managed_lane_still_tells_the_operator(tmp_path: Path) -> None:
+    project, record_path = _project(tmp_path)
+
+    reminder = _reminder(_tier_three_prompt(project, record_path, **_lane_env(tmp_path, project, "scratch")))
+
+    assert "then tell the operator to restart the session" in reminder
+    assert "HANDOFF-DONE" not in reminder
+
+
 @pytest.mark.parametrize("rollover_mode", ["continuation", None])
 def test_reminder_never_fires_for_continuation_profiles(tmp_path: Path, rollover_mode: str | None) -> None:
     project, record_path = _project(tmp_path, rollover_mode=rollover_mode)

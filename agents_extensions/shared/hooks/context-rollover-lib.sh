@@ -89,3 +89,21 @@ context_effective_rollover_mode() {
     printf 'continuation\n'
   fi
 }
+
+# The name of the guard-managed driver lane this session runs in, or nothing.
+# scripts/ops/context_guard.py hands off and restarts the lanes in
+# scripts/config/driver_lanes.json by tmux session name, so the operator is not
+# the one who restarts such a session. Both facts must hold: the launcher's
+# exported SESSION_EPIC names a lane epic, and this pane's tmux session is that
+# lane's session. Anything missing or unreadable means "not guard-managed".
+context_driver_lane_name() {
+  local project_dir="$1" lanes_file session
+  lanes_file="$project_dir/scripts/config/driver_lanes.json"
+  [ -n "${SESSION_EPIC:-}" ] && [ -n "${TMUX:-}" ] && [ -n "${TMUX_PANE:-}" ] || return 0
+  [ -f "$lanes_file" ] && command -v tmux >/dev/null 2>&1 || return 0
+  session=$(tmux display-message -p -t "$TMUX_PANE" '#{session_name}' 2>/dev/null) || return 0
+  [ -n "$session" ] || return 0
+  jq -r --arg session "$session" --arg epic "$SESSION_EPIC" '
+    [.lanes[]? | select(.session == $session and .epic == $epic and .kind == "claude") | .name][0] // empty
+  ' "$lanes_file" 2>/dev/null || true
+}
