@@ -31,6 +31,12 @@ handoff
     watches the launcher; a non-zero launcher exit alerts once with the pane's
     stderr tail and is not relaunched in a loop.
 
+A missing session is logged on every tick. For a lead lane (the CTO) it also
+alerts ``claude-cto`` once it has been missing for 15 minutes, then hourly, with
+what tmux reported; a socket file gone while tmux servers still run is named as
+the recoverable case (SIGUSR1 to that server recreates it). The guard itself
+never signals or starts anything for a missing session.
+
 ``HANDOFF-DONE`` counts only as a standalone response line, never as the echo
 of the guard's own prompt. ``ctx_pct`` is logged on every tick in both phases.
 No input is typed while a human typed into that tmux session within
@@ -106,6 +112,12 @@ ANCHOR_SENDBACK_PREFIX = "ANCHOR CHECK"
 RELAUNCH_SETTLE_SECONDS = 900
 RELAUNCH_TAIL_LINES = 6
 ALERT_DETAIL_CHARS = 600
+# A lead lane (the CTO) whose session is missing alerts claude-cto after this long, then hourly.
+LEAD_MISSING_ALERT_SECONDS = 900
+LEAD_MISSING_REALERT_SECONDS = 3600
+# tmux names its socket when it cannot reach a server: a stale socket file, or none at all.
+TMUX_SOCKET_ERROR_RE = re.compile(r"(?:no server running on|error connecting to) (\S+)")
+TMUX_SERVER_PGREP = ["pgrep", "-a", "-x", "tmux: server"]
 # lstart is five words (``Fri Oct 16 12:10:40 2026``) only in the C locale; comm stays last.
 PS_ARGV = ["env", "LC_ALL=C", "ps", "-eo", "pid=,ppid=,lstart=,comm="]
 LSTART_FORMAT = "%a %b %d %H:%M:%S %Y"
@@ -194,8 +206,38 @@ class Tmux:
     def tmux(self, *args: str) -> subprocess.CompletedProcess[str]:
         return self.run(["tmux", *args])
 
+    def has_session(self, session: str) -> tuple[bool, str]:
+        """Whether ``session`` exists, and tmux's error text when it does not."""
+        result = self.tmux("has-session", "-t", f"={session}")
+        return result.returncode == 0, (result.stderr or "").strip()
+
     def session_exists(self, session: str) -> bool:
-        return self.tmux("has-session", "-t", f"={session}").returncode == 0
+        return self.has_session(session)[0]
+
+    def server_diagnosis(self, error: str) -> str:
+        """Explain a failed ``has-session`` for an alert, without touching the server.
+
+        The recoverable case is a socket file removed under a running server:
+        attached clients keep working, new clients (this guard) cannot connect,
+        and SIGUSR1 makes the server recreate its socket.
+        """
+        detail = f"tmux: {error[-ALERT_DETAIL_CHARS:] or '(no error text)'}"
+        match = TMUX_SOCKET_ERROR_RE.search(error)
+        if match is None or os.path.lexists(match.group(1)):
+            return detail
+        socket = match.group(1)
+        try:
+            servers = self.run(TMUX_SERVER_PGREP)
+        except (subprocess.SubprocessError, OSError) as exc:
+            return f"{detail}. The socket file {socket} is gone; tmux server processes unknown ({type(exc).__name__})."
+        rows = [row[:160] for row in (servers.stdout or "").splitlines() if row.strip()]
+        if servers.returncode != 0 or not rows:
+            return f"{detail}. The socket file {socket} is gone and no tmux server runs."
+        return (
+            f"{detail}. The socket file {socket} is gone while tmux server processes still run "
+            f"({'; '.join(rows)}): attached clients keep working but no new client can reach the server. "
+            "Recoverable: kill -USR1 <pid of the server that owned it> recreates the socket. The guard sends no signal."
+        )
 
     def _query(self, argv: list[str], what: str) -> str:
         """Run a telemetry command; any failure raises ``TelemetryUnavailable``."""
@@ -534,9 +576,14 @@ class Guard:
     def tick(self, lane: Lane, st: dict[str, Any]) -> None:
         s = st.setdefault(lane.session, {"phase": "watch"})
         s.setdefault("watch_since", iso(self.now()))
-        if not self.tmux.session_exists(lane.session):
+        present, error = self.tmux.has_session(lane.session)
+        if not present:
             self.log(f"{lane.name} {s['phase']}: tmux session {lane.session} missing")
+            if lane.lead:
+                self._lead_missing_alert(lane, s, error)
             return
+        s.pop("missing_since", None)
+        s.pop("missing_alerted", None)
         try:
             text = self.tmux.capture(lane.target)
             pct = context_pct(lane.kind, text)
@@ -547,6 +594,29 @@ class Guard:
                 self._handoff(lane, st, s, text, pct, snap)
         except TelemetryUnavailable as exc:
             self.log(f"{lane.name} {s['phase']}: telemetry unavailable ({exc}); no input or respawn, retry next tick")
+
+    def _lead_missing_alert(self, lane: Lane, s: dict[str, Any], error: str) -> None:
+        """Alert claude-cto once a lead lane's session is missing for 15 minutes, then hourly.
+
+        A missing session leaves the guard nothing to hand off or relaunch, so a
+        log line alone let the CTO seat sit idle all night unnoticed.
+        """
+        s.setdefault("missing_since", iso(self.now()))
+        missing = self._seconds_since(s["missing_since"])
+        if missing < LEAD_MISSING_ALERT_SECONDS:
+            return
+        if self._seconds_since(s.get("missing_alerted")) < LEAD_MISSING_REALERT_SECONDS:
+            return
+        stamp = iso(self.now())
+        s["missing_alerted"] = stamp
+        self.log(f"{lane.name} {s['phase']}: session {lane.session} missing {int(missing)}s; alerting claude-cto")
+        self.send(
+            "claude-cto",
+            f"CTO-ALERT {stamp}: lead lane {lane.name} has no tmux session {lane.session} for {int(missing // 60)} min "
+            f"(since {s['missing_since']}); the guard cannot hand it off or relaunch it. "
+            f"{self.tmux.server_diagnosis(error)}",
+            f"lead-missing-{lane.name}-{stamp}",
+        )
 
     def _watch(self, lane: Lane, s: dict[str, Any], text: str, pct: int | None, snap: PaneSnapshot) -> None:
         if snap.agent is not None:
