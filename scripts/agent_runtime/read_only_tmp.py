@@ -21,22 +21,24 @@ _TASK_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 DISPATCH_LEASE_PREFIX = "codex-read-only-"
 
 
-def _namespace() -> Path:
+def _base() -> Path:
     from scripts.common.scratch import resolve_scratch_root
 
-    return Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT") or resolve_scratch_root()) / "learn-ukrainian"
+    return Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT") or resolve_scratch_root())
 
 
 def dispatch_lease(task_id: str) -> Path:
     """The path of a dispatched task's lease; nothing is created here, so a dry run leaves no residue."""
     if not _TASK_ID.fullmatch(task_id):
         raise ValueError("read-only tmp lease: the task id is unsafe as a lease name")
-    return _namespace() / f"{DISPATCH_LEASE_PREFIX}{task_id}"
+    return _base() / "learn-ukrainian" / f"{DISPATCH_LEASE_PREFIX}{task_id}"
 
 
 def create_dispatch_lease(task_id: str, cwd: Path) -> Path:
     """Create the task's private lease (exclusive, owner-only) and return it validated against ``cwd``."""
     lease = dispatch_lease(task_id)
+    if lease.parent.is_symlink():
+        raise ValueError("read-only tmp lease: the runtime tmp namespace must not be a symlink")
     lease.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
     lease.mkdir(mode=0o700)
     return (
@@ -77,7 +79,7 @@ def validate_read_only_tmp_root(
         return None
     root = Path(str(raw))
     resolved = root.resolve()
-    namespace = _namespace().resolve()
+    namespace = _base().resolve() / "learn-ukrainian"
     checkout = cwd.resolve()
     if (
         mode != "read-only"

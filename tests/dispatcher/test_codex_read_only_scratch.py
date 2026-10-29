@@ -1,6 +1,7 @@
 """A dispatched Codex read-only task gets a per-task writable scratch; the checkout stays read-only."""
 
 import os
+import shutil
 import subprocess
 import sys
 import tomllib
@@ -47,6 +48,15 @@ def test_scratch_is_present_private_and_outside_the_checkout(worktree):
         create_dispatch_lease(TASK_ID, worktree)  # one task's scratch is never shared or reused
     assert discard_dispatch_lease(TASK_ID) is None
     assert not lease.exists()
+    # A symlinked namespace would place the writable scratch wherever it points.
+    namespace = lease.parent
+    shutil.rmtree(namespace)
+    elsewhere = namespace.parent / "elsewhere"
+    elsewhere.mkdir()
+    namespace.symlink_to(elsewhere)
+    with pytest.raises(ValueError, match="symlink"):
+        create_dispatch_lease(TASK_ID, worktree)
+    assert not any(elsewhere.iterdir())
 
 
 def test_checkout_stays_read_only_and_only_the_scratch_is_writable(worktree):
