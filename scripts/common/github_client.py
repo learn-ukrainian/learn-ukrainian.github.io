@@ -1347,14 +1347,14 @@ class GitHubClient:
                 except OSError:
                     self.cache_dir = None
                     path = ":memory:"
-            generation = None
+            # The file this connection is about to open: only it may be set aside as damaged. Read
+            # before connecting, so a replacement that appears afterwards is never taken for it.
+            generation = github_usage.file_identity(path) if self.cache_dir is not None else None
             try:
                 db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
                 if self.cache_dir is None:
                     self._memory_db = db
                 else:
-                    # The file this connection opened: only it may be set aside as damaged.
-                    generation = github_usage.file_identity(path)
                     with suppress(OSError):
                         os.chmod(path, 0o600)
                 for statement in CACHE_SCHEMA:
@@ -1393,6 +1393,17 @@ class GitHubClient:
         finally:
             if self.cache_dir is not None:
                 db.close()
+
+    def _read(self, work):
+        """Run ``work(db)`` on the cache; a file found damaged mid-use is set aside and ``work`` reruns in memory."""
+        for attempt in range(2):
+            try:
+                with self._db() as db:
+                    return work(db)
+            except sqlite3.DatabaseError as error:
+                if attempt or self.cache_dir is None or not github_usage.corrupt(error):
+                    raise
+                self.cache_dir = None
 
     def _send(self, method, endpoint, headers, body, timeout):
         if self.transport:
@@ -1485,26 +1496,29 @@ class GitHubClient:
             and not re.search(r"/(?:releases/assets/\d+|artifacts/\d+/zip)$", resource_path)
         )
         now = self.clock()
+
+        def admit(db):
+            cached = (
+                db.execute(
+                    f"SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND ({_CACHE_RESPONSE}) "
+                    "AND at>? AND (? IS NULL OR length(body)<=?)",
+                    (
+                        self.scope,
+                        key,
+                        now - self.cache_ttl_seconds,
+                        self.max_response_bytes,
+                        self.max_response_bytes,
+                    ),
+                ).fetchone()
+                if cacheable
+                else None
+            )
+            if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
+                cached = None
+            return cached, _admit(db, self.scope, normalized, now)
+
         try:
-            with self._db() as db:
-                cached = (
-                    db.execute(
-                        f"SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND ({_CACHE_RESPONSE}) "
-                        "AND at>? AND (? IS NULL OR length(body)<=?)",
-                        (
-                            self.scope,
-                            key,
-                            now - self.cache_ttl_seconds,
-                            self.max_response_bytes,
-                            self.max_response_bytes,
-                        ),
-                    ).fetchone()
-                    if cacheable
-                    else None
-                )
-                if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
-                    cached = None
-                refusal = _admit(db, self.scope, normalized, now)
+            cached, refusal = self._read(admit)
         except GitHubUnpreparedRequest as refused:
             return _unprepared(refused.reason)
 
@@ -1544,18 +1558,25 @@ class GitHubClient:
         for persist_attempt in range(2):
             try:
                 with self._db() as db:
-                    if resource == "core" and response.status != 599:
-                        # 599 is this client's own transport failure: nothing reached GitHub.
+                    if budget is not None:
+                        remaining, reset = budget
+                        _store_budget(
+                            db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset, now=now
+                        )
+                    # 599 is this client's own transport failure: nothing reached GitHub. Counted
+                    # after the budget, so a refused row never costs the observation; a landing
+                    # call is counted only once this transaction already holds the write lock, so
+                    # counting never adds a wait to it.
+                    if (
+                        resource == "core"
+                        and response.status != 599
+                        and (normalized.call_class != "landing" or db.in_transaction)
+                    ):
                         github_usage.record(
                             db,
                             endpoint=github_usage.endpoint_template(method, resource_path),
                             status=response.status,
                             landing=normalized.call_class == "landing",
-                        )
-                    if budget is not None:
-                        remaining, reset = budget
-                        _store_budget(
-                            db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset, now=now
                         )
                     if limit is not None:
                         holds, reset, reason = limit
@@ -3309,8 +3330,7 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
     pools = sorted(_native_buckets(args, client.host) - {_SYNTHETIC_HOLD})
     request = _normalize_native(args, client.host, pools, stdin=kwargs.get("input"), cwd=client.cwd)
     try:
-        with client._db() as db:
-            refusal = _admit(db, client.scope, request, client.clock())
+        refusal = client._read(lambda db: _admit(db, client.scope, request, client.clock()))
     except GitHubUnpreparedRequest as refused:
         return _result_process(args, _unprepared(refused.reason), {}, kwargs)
     if refusal is not None:

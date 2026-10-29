@@ -3,10 +3,11 @@
 Every request the shared client (:mod:`scripts.common.github_client`) sends to GitHub's core
 pool adds one row: when, who called and which endpoint. The caller is the dispatched task id
 when there is one, else the calling command (a module or script name, never its arguments). The
-endpoint is a template: owner, repository, numbers, commit SHAs and ref names are replaced. A
-``304`` is counted but not charged, because GitHub does not charge a conditional request that
-returns it; a native ``gh`` command has no status here and counts once, as charged, unless it
-is on the landing path, where it is not counted.
+endpoint is a template: owner, repository, numbers, commit SHAs and every named account, branch,
+tag or label are replaced. A ``304`` is counted but not charged, because GitHub does not charge
+a conditional request that returns it; a native ``gh`` command has no status here and counts once, as charged, unless it
+is on the landing path, where it is not counted. A landing request is counted only when its
+transaction already writes the budget, so counting never adds a lock wait to it.
 
 The rows live in the client's own cache file, owner-only. A request's row is written in the
 transaction the client already opens to persist its response; a native command's row is written
@@ -21,6 +22,7 @@ Print the top consumers of the last hour::
 from __future__ import annotations
 
 import argparse
+import fcntl
 import functools
 import json
 import os
@@ -39,9 +41,8 @@ SCHEMA = (
 )
 _REPOSITORY = Path(__file__).resolve().parents[2]
 _GH_ENTRY = "scripts/opsec/gh_entry.py"
-_INTERPRETER = re.compile(r"python[0-9.]*|bash|dash|sh|zsh")
-_VALUED_OPTIONS = frozenset({"-X", "-W", "-o", "-O"})
-"""Interpreter options that take the next argument (Python's ``-X``/``-W``, the shells' ``-o``/``-O``)."""
+_PYTHON = re.compile(r"python[0-9.]*")
+_SHELL = re.compile(r"bash|dash|sh|zsh")
 _CORRUPT = frozenset({11, 26})
 """SQLite's primary result codes for a damaged file: ``SQLITE_CORRUPT`` and ``SQLITE_NOTADB``."""
 
@@ -65,15 +66,22 @@ def set_aside(path, identity):
     """Move the damaged file ``identity`` (:func:`file_identity`) to its one ``.corrupt`` slot.
 
     Only while ``path`` still names that file: once another process has set it aside and a
-    fresh file replaced it, the replacement is left alone. One slot per file keeps disk use
-    bounded. A journal is left in place: SQLite discards a journal beside an empty database,
-    and moving it could take a live transaction's journal from a process that still has the
-    old file open.
+    fresh file replaced it, the replacement is left alone. The check and the move happen under
+    one exclusive lock on the directory, so two clients that found the same damage cannot
+    interleave them. One slot per file keeps disk use bounded. A journal is left in place:
+    SQLite discards a journal beside an empty database, and moving it could take a live
+    transaction's journal from a process that still has the old file open.
     """
-    if identity is None or file_identity(path) != identity:
+    if identity is None:
         return
     with suppress(OSError):
-        os.replace(path, f"{path}.corrupt")
+        directory = os.open(os.path.dirname(os.fspath(path)) or ".", os.O_RDONLY)
+        try:
+            fcntl.flock(directory, fcntl.LOCK_EX)
+            if file_identity(path) == identity:
+                os.replace(path, f"{path}.corrupt")
+        finally:
+            os.close(directory)
 
 
 def _script_name(arg):
@@ -84,28 +92,62 @@ def _script_name(arg):
     return path.relative_to(_REPOSITORY).as_posix() if path.is_relative_to(_REPOSITORY) else path.name
 
 
+def _python_target(options, program):
+    """The module or script of a Python command line, read in the interpreter's own option grammar."""
+    for arg in options:
+        if arg == "--":
+            return _script_name(next(options, program))
+        if arg == "-" or not arg.startswith("-"):
+            return _script_name(arg)
+        if arg.startswith("--"):
+            if arg == "--check-hash-based-pycs":
+                next(options, None)
+            continue
+        for index, flag in enumerate(arg[1:], 1):
+            if flag == "c":
+                return f"{program} -c"
+            if flag == "m":
+                return arg[index + 1 :] or next(options, program)
+            if flag in "WX":
+                if index + 1 == len(arg):
+                    next(options, None)
+                break
+    return program
+
+
+def _shell_target(options, program):
+    """The script of a shell command line; ``-c`` and its inline text are never read."""
+    for arg in options:
+        if arg == "--":
+            return _script_name(next(options, program))
+        if arg.startswith("--"):
+            if arg in ("--rcfile", "--init-file"):
+                next(options, None)
+        elif arg[:1] in ("-", "+") and len(arg) > 1:
+            if arg[0] == "-" and "c" in arg:
+                return f"{program} -c"
+            if arg[-1] in "oO":
+                next(options, None)
+        else:
+            return _script_name(arg)
+    return program
+
+
 def _command_name(argv):
     """A command's module or script, read only from the interpreter's own position in ``argv``.
 
-    Arguments after the module or script belong to the application and are never read.
+    Arguments after the module or script, and inline code, belong to the application and are
+    never read.
     """
     argv = [str(arg) for arg in argv]
     if not argv:
         return "unknown"
     program = Path(argv[0]).name
-    if not _INTERPRETER.fullmatch(program):
-        return _script_name(argv[0])
-    options = iter(argv[1:])
-    for arg in options:
-        if arg == "-c":
-            return f"{program} -c"
-        if arg == "-m":
-            return next(options, program)
-        if arg in _VALUED_OPTIONS:
-            next(options, None)
-        elif not arg.startswith("-"):
-            return _script_name(arg)
-    return program
+    if _PYTHON.fullmatch(program):
+        return _python_target(iter(argv[1:]), program)
+    if _SHELL.fullmatch(program):
+        return _shell_target(iter(argv[1:]), program)
+    return _script_name(argv[0])
 
 
 @functools.cache
@@ -132,8 +174,32 @@ def caller():
     return f"{task} ({_command()})" if task else _command()
 
 
+_NAMED_AFTER = frozenset(
+    {
+        "assignees",
+        "blobs",
+        "collaborators",
+        "commits",
+        "environments",
+        "labels",
+        "members",
+        "orgs",
+        "ref",
+        "refs",
+        "statuses",
+        "tarball",
+        "teams",
+        "trees",
+        "users",
+        "workflows",
+        "zipball",
+    }
+)
+"""Path words whose next segment names an account, branch, tag, label or commit-ish."""
+
+
 def endpoint_template(method, path):
-    """``METHOD path`` with the repository, numbers, SHAs and ref names replaced."""
+    """``METHOD path`` with the repository, numbers, SHAs and every named component replaced."""
     path = str(path or "").split("?", 1)[0].strip("/")
     path = re.sub(r"^repos/[^/]+/[^/]+", "repos/:repo", path)
     path = re.sub(r"/(heads|tags|branches|compare|contents)/.*$", r"/\1/:ref", path)
@@ -141,10 +207,10 @@ def endpoint_template(method, path):
     for segment in path.split("/"):
         if segment.isdigit():
             segment = ":n"
-        elif re.fullmatch(r"(?=.*\d)[0-9a-f]{7,64}", segment):
+        elif re.fullmatch(r"[0-9a-f]{7,64}", segment):
             segment = ":sha"
-        elif segments[-1:] == ["commits"]:
-            segment = ":ref"
+        elif segments[-1:] and segments[-1] in _NAMED_AFTER:
+            segment = ":name"
         segments.append(segment)
     return f"{str(method).upper()} {'/'.join(segments)}"
 
@@ -152,12 +218,17 @@ def endpoint_template(method, path):
 def record(db, *, endpoint, status, landing, now=None):
     """Count one request on a cache connection the client opened.
 
-    An error reaches the client's handling of that transaction, which sets a damaged file
-    aside and never fails the call.
+    A statement SQLite refuses drops the row and never fails the call or the writes beside it.
+    Damage to the file is the exception: it reaches the client's handling of that transaction,
+    which sets the file aside.
     """
     now = time.time() if now is None else now
-    db.execute("INSERT INTO usage VALUES(?,?,?,?,?)", (now, caller(), endpoint, status, int(bool(landing))))
-    db.execute("DELETE FROM usage WHERE at<?", (now - RETENTION_SECONDS,))
+    try:
+        db.execute("INSERT INTO usage VALUES(?,?,?,?,?)", (now, caller(), endpoint, status, int(bool(landing))))
+        db.execute("DELETE FROM usage WHERE at<?", (now - RETENTION_SECONDS,))
+    except sqlite3.Error as error:
+        if corrupt(error):
+            raise
 
 
 def top(directory, *, hours=1.0, limit=20, now=None):
