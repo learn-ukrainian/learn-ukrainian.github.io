@@ -30,52 +30,6 @@ _PASS_BUCKETS = {"pass", "success", "skipping", "skipped", "neutral"}
 _ROLLUP_FAIL = {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED", "ERROR", "STARTUP_FAILURE"}
 _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "REQUESTED", "STALE"}
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
-# Only the CTO seat applies this label, to a machinery fix that should land first (#12019).
-PRIORITY_LABEL = "merge-priority"
-
-
-def priority_jump(labels, timeline, comments, head, login) -> bool:
-    """Whether an enqueue of ``head`` goes to the front of the merge queue.
-
-    The priority label must be on the PR, its latest application must come from the
-    fleet login, and it must postdate a recorded approval of exactly ``head`` that
-    still stands. A label applied before that approval, including at an earlier
-    head, does not jump: the CTO re-applies it once the head to land is approved.
-    """
-    from scripts.orchestration.integration_sweep import _timestamp, lookup_verdict, parse_marker
-
-    if not login or PRIORITY_LABEL not in {row.get("name") for row in labels if isinstance(row, dict)}:
-        return False
-    if lookup_verdict(comments, head, login).state != "APPROVED":
-        return False
-    approved = [
-        _timestamp(row.get("created_at"))
-        for row in comments
-        if isinstance(row, dict)
-        and isinstance(row.get("body"), str)
-        and (marker := parse_marker(row["body"])) is not None
-        and marker["sha"] == head
-        and lookup_verdict([row], head, login).state == "APPROVED"
-    ]
-    events = [
-        (_timestamp(row.get("created_at")), row)
-        for row in timeline
-        if isinstance(row, dict)
-        and row.get("event") in {"labeled", "unlabeled"}
-        and isinstance(row.get("label"), dict)
-        and row["label"].get("name") == PRIORITY_LABEL
-    ]
-    if not events or not approved or None in approved or any(at is None for at, _ in events):
-        return False
-    # A stable sort keeps the timeline's own order for same-second events.
-    labeled_at, last = sorted(events, key=lambda item: item[0])[-1]
-    actor = last.get("actor")
-    return (
-        last["event"] == "labeled"
-        and isinstance(actor, dict)
-        and actor.get("login") == login
-        and labeled_at > min(approved)
-    )
 
 
 def _checks_json_unsupported(out: subprocess.CompletedProcess[str]) -> bool:

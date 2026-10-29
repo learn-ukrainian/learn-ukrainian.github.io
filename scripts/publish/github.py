@@ -576,7 +576,7 @@ def publish(
 
         def queue_jump(pull):
             """Whether this enqueue jumps the queue; unreadable evidence never jumps."""
-            from scripts.publish.merge_guard import PRIORITY_LABEL, priority_jump
+            from scripts.orchestration.integration_sweep import PRIORITY_LABEL, priority_jump
 
             labels = pull.get("labels")
             if not isinstance(labels, list) or PRIORITY_LABEL not in {
