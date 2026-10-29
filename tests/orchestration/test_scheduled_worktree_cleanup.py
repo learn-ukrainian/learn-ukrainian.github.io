@@ -402,6 +402,38 @@ def test_squash_parent_is_deleted_and_main_ancestor_is_not_called_contained(
     assert "contained" not in by_branch[on_main]["reason"]
 
 
+def test_branch_with_commits_after_its_merged_pr_head_is_kept(tmp_path: Path, monkeypatch) -> None:
+    """#12043 AC-06b: a merged pull request covers only the commits up to its head, never later ones."""
+    repo = _repo(tmp_path)
+    branch = "claude/after-merge"
+    _git(repo, "checkout", "-b", branch)
+    (repo / "merged.txt").write_text("merged\n", encoding="utf-8")
+    _git(repo, "add", "merged.txt")
+    _git(repo, "commit", "-m", "merged work")
+    merged_head = _git(repo, "rev-parse", "HEAD")
+    (repo / "later.txt").write_text("later\n", encoding="utf-8")
+    _git(repo, "add", "later.txt")
+    _git(repo, "commit", "-m", "work after the merge")
+    tip = _git(repo, "rev-parse", "HEAD")
+    _git(repo, "checkout", "main")
+    monkeypatch.setattr(
+        cleanup.worktree_git,
+        "_query_pr_states",
+        lambda _repo, candidate: (
+            [cleanup.worktree_git.PullRequestState(number=9, state="MERGED", head_sha=merged_head)]
+            if candidate == branch
+            else [],
+            None,
+        ),
+    )
+
+    result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
+
+    row = next(item for item in result if item["branch"] == branch)
+    assert row["action"] == "skipped"
+    assert _git(repo, "rev-parse", f"refs/heads/{branch}") == tip
+
+
 def test_unproven_gone_branch_is_preserved(
     tmp_path: Path,
     monkeypatch,
@@ -547,7 +579,7 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
     public = tmp_path / "public"
     private = tmp_path / "private"
 
-    def fake_repo_result(repo_root: Path, *, apply: bool):
+    def fake_repo_result(repo_root: Path, *, apply: bool, github=None):
         return {
             "repo_root": str(repo_root),
             "fetch": {"ok": True, "detail": None},
@@ -576,6 +608,11 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
         "task_scratch_reaped": 0,
         "task_scratch_bytes_freed": 0,
         "task_scratch_preserved": 0,
+        "retained_count": 0,
+        "retained_safety_stops": 0,
+        "retained_complete": False,
+        "github_degraded": False,
+        "branches_deferred": 0,
     }
     assert receipt["mode"] == "apply"
 

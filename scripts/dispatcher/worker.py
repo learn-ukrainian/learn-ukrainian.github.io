@@ -318,18 +318,22 @@ def _borrowed(record: dict) -> bool:
 # published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
 # clears; every later dispatch and every settlement settles these again, and still removes
 # only with the proof. A tree that is still dirty is kept again, so only a changed tree is removed.
+# The hourly hygiene run's salvage reasons retry the same way.
 RETRY_REASONS = frozenset({"dirty", "provider_processes_alive", "provider_liveness_unknown", "borrowed_by_live_task",
                            "unpublished", "remote_mismatch", "unknown", "removal_refused",
-                           "worktree_remove_failed", "settlement_failed"})
+                           "worktree_remove_failed", "settlement_failed",
+                           "salvage_failed", "salvage_unverified", "large_ignored_output",
+                           "nested_repository_unpushed", "github_deferred"})
 # Seconds settlement waits for a provider's lingering processes to exit before it retains the tree.
 SETTLE_PATIENCE = 10
 
 
-def _reap_settled(record: dict, patience: float = 0) -> None:
+def _reap_settled(record: dict, patience: float = 0, salvage: bool = False) -> None:
     """Record the task worktree's disposition; never changes the task's execution status.
 
     The worktree goes only once the provider's whole process tree is proven gone; liveness that
-    cannot be proven either way keeps it.
+    cannot be proven either way keeps it. With salvage (git.settle_worktree), that proof is taken
+    again with the borrower check, before the salvage push and under the removal lock.
     """
     deadline = time.monotonic() + patience
     record.pop("worktree_disposition_detail", None)  # a retry replaces an earlier attempt's detail
@@ -339,8 +343,12 @@ def _reap_settled(record: dict, patience: float = 0) -> None:
         reason = "provider_processes_alive" if alive else "provider_liveness_unknown"
         record.update(worktree_disposition="retained", worktree_disposition_reason=reason)
         return
+
+    def borrowed() -> bool:
+        return (salvage and _provider_alive(record) is not False) or _borrowed(record)
+
     try:
-        record.update(git.settle_worktree(record, borrowed=lambda: _borrowed(record)))
+        record.update(git.settle_worktree(record, borrowed=borrowed, salvage=salvage))
     except Exception:
         record.update(worktree_disposition="error", worktree_disposition_reason="settlement_failed")
 
@@ -350,8 +358,11 @@ def _unsettled(record: dict) -> bool:
         "worktree_disposition" not in record or record.get("worktree_disposition_reason") in RETRY_REASONS)
 
 
-def settle_left_worktrees() -> None:
-    """Settle worktrees of finished tasks whose supervisor ended before settling them."""
+def settle_left_worktrees(salvage: bool = False) -> None:
+    """Settle worktrees of finished tasks whose supervisor ended before settling them.
+
+    The hourly hygiene run passes salvage (git.settle_worktree) for the trees settlement keeps.
+    """
     records = []
     for record in store.list_tasks():
         if record.get("schema_version") == 2:
@@ -366,7 +377,7 @@ def settle_left_worktrees() -> None:
         with contextlib.suppress(OSError, ValueError, KeyError), store.task_state_lock(path):
             current = json.loads(path.read_text())
             if _unsettled(current):
-                _reap_settled(current)
+                _reap_settled(current, salvage=salvage)
                 store.replace(current, path)
 
 
