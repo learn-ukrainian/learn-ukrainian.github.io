@@ -178,6 +178,37 @@ def test_supervise_restores_signal_handlers_after_cleanup(sandbox, monkeypatch):
         signal.signal(signal.SIGINT, original_int)
 
 
+def test_cancel_during_a_callee_that_absorbs_exceptions_still_cancels_before_launch(sandbox, monkeypatch):
+    """#11994: the handler raised at an arbitrary bytecode, so a callee's broad handler absorbed the cancel."""
+    from tests.dispatcher import stub_provider
+
+    def absorbing_check(*_args, **_kwargs):
+        with contextlib.suppress(Exception):  # a callee's broad handler
+            signal.raise_signal(signal.SIGTERM)  # the handler runs before this call returns
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(worker.providers, "load", lambda _agent: stub_provider)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_runtime", absorbing_check)
+    spec = TaskSpec("absorbed-cancel", "codex", "echo", None, "read-only", sandbox.repo,
+                    sandbox.repo / "absorbed-cancel.prompt", sandbox.tasks / "absorbed-cancel.result")
+    spec.prompt_file.write_bytes(b"literal final response")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main",
+                              run_git(sandbox.repo, "rev-parse", "HEAD"), {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "absorbed-cancel.prompt")
+    path = store.create(record, b"literal final response")
+    (sandbox.tasks / "logs").mkdir()
+    original_term, original_int = signal.getsignal(signal.SIGTERM), signal.getsignal(signal.SIGINT)
+    try:
+        worker.supervise(path, {}, 10)
+    finally:
+        signal.signal(signal.SIGTERM, original_term)
+        signal.signal(signal.SIGINT, original_int)
+    result = json.loads(path.read_text())
+    assert (result["status"], result["error"], result["provider_pgid"]) == ("cancelled", "cancelled by client", None)
+    assert not (sandbox.tasks / "absorbed-cancel.started").exists()
+
+
 @pytest.mark.parametrize("receipt", [None, "refused", "ran"])
 def test_read_only_agy_run_needs_a_verified_boundary_receipt(sandbox, monkeypatch, receipt):
     """C-3027: the receipt, never the provider's output, decides a read-only AGY run and its Sources count."""
@@ -608,7 +639,12 @@ def test_crash_recovery_keeps_worktree_while_the_orphaned_provider_runs(sandbox)
     """Defect (F2): recovery removed a crashed task's worktree without proving its provider had exited."""
     task = sandbox.dispatch("blocked")
     provider = int(await_file(sandbox.tasks / f"{task[0]}.started"))
-    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    # The provider can write its marker before Popen returns and the supervisor records its group; a
+    # supervisor killed before that record leaves liveness unknown, which this test does not cover.
+    deadline = time.monotonic() + 10
+    while "provider_pgid" not in (record := json.loads((sandbox.tasks / f"{task[0]}.json").read_text())):
+        assert time.monotonic() < deadline, "supervisor never recorded its provider"
+        time.sleep(0.02)
     os.kill(record["pid"], signal.SIGKILL)
     deadline = time.monotonic() + 10
     while worker._identity(record["pid"]) == record["process_start"]:

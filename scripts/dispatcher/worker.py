@@ -383,12 +383,21 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     slots = None
     resolved_model = sources_calls = None
     started = time.monotonic()
+    cancel_requested = interruptible = False
 
     def cancelled(_signum, _frame):
-        # One cancellation per run: a later signal cannot interrupt cleanup.
-        signal.signal(signal.SIGTERM, signal.SIG_IGN)
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
-        raise _Cancelled()
+        # A handler's exception lands at an arbitrary bytecode, where Python can drop it (a weakref
+        # callback) or a caller can convert it (#11994). Record the request; checkpoint() raises it,
+        # and only a wait marked interruptible, built to unwind there, is stopped in place.
+        nonlocal cancel_requested, interruptible
+        cancel_requested = True
+        if interruptible:
+            interruptible = False  # one raise per run: a later signal cannot interrupt cleanup
+            raise _Cancelled()
+
+    def checkpoint():
+        if cancel_requested:
+            raise _Cancelled()
 
     def terminate():
         # Only an unreaped leader still pins its group id; a reaped one's id may name another group.
@@ -445,10 +454,17 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             except (OSError, ValueError) as exc:
                 status, error = "failed", f"read_only_scratch_unavailable: {exc}"
                 return
-        slots, slots_record = admission.hold_review_test_slots(
-            agent=spec.agent, mode=spec.mode, review_typed=admission.review_typed(record),
-            sealed_attempt=bool(record.get("review_attempt")), task_id=spec.task_id,
-        )
+        checkpoint()
+        # The slot queue can wait for an hour and discards its ticket on any exception, so cancel stops it in place.
+        interruptible = True
+        try:
+            slots, slots_record = admission.hold_review_test_slots(
+                agent=spec.agent, mode=spec.mode, review_typed=admission.review_typed(record),
+                sealed_attempt=bool(record.get("review_attempt")), task_id=spec.task_id,
+            )
+        finally:
+            interruptible = False
+        checkpoint()  # the last one before the provider starts: a cancelled run launches nothing
         if slots_record is not None:
             record["review_test_slots"] = slots_record
         with tempfile.TemporaryFile(dir=ensure_scratch_root()) as stdin, stdout_path.open("wb") as out, stderr_path.open("ab") as err:
@@ -470,7 +486,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             terminal_observer = getattr(provider, "terminal_result_observer", None)
             communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
                         initial_response_timeout, liveness_paths(spec, invocation), output_sizes,
-                        terminal_observer(stdout_path) if terminal_observer else None)
+                        terminal_observer(stdout_path) if terminal_observer else None, checkpoint)
         returncode = child.returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
@@ -528,11 +544,6 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     except Exception:
         status, error = "crashed", "supervisor or provider processing failed"
     finally:
-        try:
-            signal.signal(signal.SIGTERM, signal.SIG_IGN)
-            signal.signal(signal.SIGINT, signal.SIG_IGN)
-        except _Cancelled:
-            pass  # The work already ended; the handler ignored further signals before raising.
         try:
             if child and (child.returncode is None or status in {"cancelled", "timeout", "crashed"}):
                 terminate()
