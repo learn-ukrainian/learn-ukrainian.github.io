@@ -11,6 +11,12 @@ updates_file="$(mktemp "$tmp_root/learn-uk-pre-push.XXXXXX")"
 trap 'rm -f "$updates_file"' EXIT
 tee "$updates_file" >/dev/null
 
+# Scan the exact Git-supplied updates before any cached validation can return.
+# The shared publication scanner covers commit messages, including intermediate
+# commits, and retains its verified-public-history exclusions and masked errors.
+if [[ $# -ne 0 ]]; then
+  run_project_python "$source_root/.githooks/pre_push_gate.py" --push-messages "$@" <"$updates_file"
+fi
 run_project_python "$hook_dir/check-pytest-stamp.py" "$@" <"$updates_file"
 # The gate runs the pre-commit pre-push stage over the explicit outgoing range,
 # with the per-commit OPSEC and internal-ID scans (#10033). It runs no tests of
