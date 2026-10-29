@@ -9,9 +9,12 @@ another-origin-ref proof re-verified against the live remote with
 ``git ls-remote``, and writes an immutable
 JSON receipt. When this run's ``fetch --prune`` fails, every deletion that
 relies on remote containment is skipped as ``fetch_failed_no_remote_proof``.
-Orphaned ``.worktrees/**`` directories are reported but never deleted, and
-no worktree is removed: the dispatcher removes each task's own worktree when
-the task settles (FR-01b).
+Orphaned ``.worktrees/**`` directories are reported but never deleted. Finished
+tasks' worktrees go only through the dispatcher's settlement retry, which this
+run invokes with salvage for the control plane whose records the dispatcher
+reads; every tree it keeps is listed with its reason (``retained``). Once the
+shared GitHub client's admission refuses a read, the run is degraded: no later
+GitHub read is sent and pull-request-dependent deletions are deferred.
 The separate ``--git-maintenance`` mode runs only bounded foreground GC.
 """
 
@@ -159,7 +162,8 @@ def _worktree_prune(repo_root: Path, *, apply: bool) -> dict[str, Any]:
 
 
 _PROTECTED_BRANCHES = frozenset({"main", "master"})
-_PROTECTED_LOCAL_PREFIXES = ("entire/",)
+# salvage/* holds work settlement pushed instead of discarding it; only the operator deletes it.
+_PROTECTED_LOCAL_PREFIXES = ("entire/", "salvage/")
 _REVIEW_CHECKOUT_RE = re.compile(r"^(?:pr|review)-(\d+)(?:-review|-tmp)?$")
 
 
@@ -195,7 +199,7 @@ def _gone_local_branches(repo_root: Path) -> list[tuple[str, str]]:
         if len(parts) != 3:
             continue
         branch, head_sha, upstream = parts
-        if branch in {"main", "master"} or not upstream.startswith("refs/remotes/origin/"):
+        if _is_protected_local_branch(branch) or not upstream.startswith("refs/remotes/origin/"):
             continue
         exists = _run_git(repo_root, "show-ref", "--verify", "--quiet", upstream)
         if exists.returncode == 1:
@@ -556,13 +560,109 @@ def report_terminal_worktrees(repo_root: Path) -> dict[str, Any]:
     return {"summary": {"candidate": sum(row["action"] == "report" for row in rows)}, "tasks": rows}
 
 
+GITHUB_DEFERRED = "github admission refused; pull-request-dependent deletion deferred"
+
+
+class GitHubReads:
+    """The run's pull-request reads and its one degraded mode.
+
+    The first read the shared GitHub client refuses (its reserve or hold admission, which
+    serializes the refusal as ``github_rate_limited``) degrades the run: no later read is sent,
+    and each deletion that needs a pull-request answer is deferred instead of reported as an
+    error. Git-proven local work continues.
+    """
+
+    def __init__(self) -> None:
+        self.refusal: str | None = None
+
+    def _degrade(self, error: str | None) -> bool:
+        if error is not None and github_client.GitHubRateLimited.code in error:
+            self.refusal = error
+        return self.refusal is not None
+
+    def pr_states(self, repo_root: Path, branch: str) -> tuple[list[worktree_git.PullRequestState] | None, str | None]:
+        """``worktree_git._query_pr_states``; ``(None, GITHUB_DEFERRED)`` once the run is degraded."""
+        if self.refusal is None:
+            states, error = worktree_git._query_pr_states(repo_root, branch)
+            if not self._degrade(error):
+                return states, error
+        return None, GITHUB_DEFERRED
+
+    def pr_by_number(self, repo_root: Path, number: int) -> tuple[list[worktree_git.PullRequestState] | None, str | None]:
+        """``_query_pr_by_number``; ``(None, GITHUB_DEFERRED)`` once the run is degraded."""
+        if self.refusal is None:
+            try:
+                states, error = _query_pr_by_number(repo_root, number)
+            except github_client.GitHubRateLimited as exc:  # its message starts with the code
+                states, error = [], str(exc)
+            if not self._degrade(error):
+                return states, error
+        return None, GITHUB_DEFERRED
+
+
+def _deferred(branch: str, head_sha: str) -> dict[str, Any]:
+    return {"action": "deferred", "branch": branch, "head_sha": head_sha, "reason": GITHUB_DEFERRED}
+
+
+# Retained reasons the alert hook reports at once: salvage or a removal guard stopped on content
+# that could be lost, rather than waiting for a cause to clear.
+SAFETY_STOP_REASONS = frozenset({"salvage_failed", "salvage_unverified", "large_ignored_output",
+                                 "nested_repository_unpushed", "worktree_remove_failed", "settlement_failed"})
+
+
+def settle_terminal_worktrees(repo_root: Path, *, apply: bool) -> dict[str, Any] | None:
+    """Run the dispatcher's settlement retry with salvage, then list every finished task's tree still on disk.
+
+    Only the control plane whose task records the dispatcher itself reads runs it (``None``
+    otherwise), so a sibling repository or another checkout never settles that tree set; a
+    dry run only lists. Settlement keeps every tree whose work it cannot prove is on the
+    canonical remote. A borrowed tree is its creator's and is not listed twice. ``complete``
+    is false when the retry failed, so a consumer must not read the list as exhaustive.
+    """
+    from scripts.common.task_store_paths import tasks_dir
+    from scripts.dispatcher import store, worker
+
+    try:
+        if (repo_root / "batch_state" / "tasks").resolve() != tasks_dir().resolve():
+            return None
+    except (OSError, RuntimeError):
+        return None
+    complete, error = True, None
+    try:
+        if apply:
+            worker.settle_left_worktrees(salvage=True)
+    except Exception as exc:  # one failed record must not hide the others' state
+        complete, error = False, f"settlement retry failed ({type(exc).__name__})"
+    trees: list[dict[str, Any]] = []
+    # The same record set settlement reads (dispatch v2); legacy records name trees it never settles.
+    for record in store.list_tasks():
+        path = record.get("worktree_path")
+        if (record.get("schema_version") != 2 or record.get("status") in store.ACTIVE
+                or (record.get("options") or {}).get("cwd")
+                or not isinstance(path, str) or not Path(path).is_dir()):
+            continue
+        reason = record.get("worktree_disposition_reason") or "unsettled"
+        trees.append({
+            "identity": record.get("task_id"),
+            "task_id": record.get("task_id"),
+            "worktree_path": path,
+            "disposition": record.get("worktree_disposition"),
+            "reason": reason,
+            "detail": record.get("worktree_disposition_detail"),
+            "safety_stop": record.get("worktree_disposition") == "error" or reason in SAFETY_STOP_REASONS,
+        })
+    return {"complete": complete, "error": error, "trees": trees}
+
+
 def cleanup_stale_origin_branches(
     repo_root: Path,
     *,
     apply: bool,
     fetch_ok: bool = True,
+    github: GitHubReads | None = None,
 ) -> list[dict[str, Any]]:
     """Delete origin heads only with merged/closed, ancestry, or remote-ref proof."""
+    github = github or GitHubReads()
     checked_out = _checked_out_branches(repo_root)
     results: list[dict[str, Any]] = []
     for branch, head_sha in _origin_heads(repo_root):
@@ -576,7 +676,10 @@ def cleanup_stale_origin_branches(
                 }
             )
             continue
-        prs, pr_error = worktree_git._query_pr_states(repo_root, branch)
+        prs, pr_error = github.pr_states(repo_root, branch)
+        if prs is None:
+            results.append(_deferred(branch, head_sha))
+            continue
         if pr_error is not None:
             results.append(
                 {
@@ -617,7 +720,10 @@ def cleanup_stale_origin_branches(
                 }
             )
             continue
-        prs_now, pr_error_now = worktree_git._query_pr_states(repo_root, branch)
+        prs_now, pr_error_now = github.pr_states(repo_root, branch)
+        if prs_now is None:
+            results.append(_deferred(branch, head_sha))
+            continue
         if pr_error_now is not None:
             results.append(
                 {
@@ -700,8 +806,10 @@ def cleanup_gone_local_branches(
     *,
     apply: bool,
     fetch_ok: bool = True,
+    github: GitHubReads | None = None,
 ) -> list[dict[str, Any]]:
     """Delete gone-upstream branches only with containment proof, never by name."""
+    github = github or GitHubReads()
     checked_out = _checked_out_branches(repo_root)
     results: list[dict[str, Any]] = []
     for branch, head_sha in _gone_local_branches(repo_root):
@@ -716,7 +824,10 @@ def cleanup_gone_local_branches(
             )
             continue
 
-        prs, pr_error = worktree_git._query_pr_states(repo_root, branch)
+        prs, pr_error = github.pr_states(repo_root, branch)
+        if prs is None:
+            results.append(_deferred(branch, head_sha))
+            continue
         if pr_error is not None:
             results.append(
                 {
@@ -847,8 +958,10 @@ def cleanup_untracked_local_branches(
     *,
     apply: bool,
     fetch_ok: bool = True,
+    github: GitHubReads | None = None,
 ) -> list[dict[str, Any]]:
     """Delete never-tracked local branches only with containment proof."""
+    github = github or GitHubReads()
     checked_out = _checked_out_branches(repo_root)
     results: list[dict[str, Any]] = []
     for branch, head_sha in _untracked_local_branches(repo_root):
@@ -862,7 +975,10 @@ def cleanup_untracked_local_branches(
                 }
             )
             continue
-        prs, pr_error = worktree_git._query_pr_states(repo_root, branch)
+        prs, pr_error = github.pr_states(repo_root, branch)
+        if prs is None:
+            results.append(_deferred(branch, head_sha))
+            continue
         if pr_error is not None:
             results.append(
                 {
@@ -876,7 +992,10 @@ def cleanup_untracked_local_branches(
             continue
         review_number = _review_checkout_pr_number(branch)
         if review_number is not None:
-            extra, extra_error = _query_pr_by_number(repo_root, review_number)
+            extra, extra_error = github.pr_by_number(repo_root, review_number)
+            if extra is None:
+                results.append(_deferred(branch, head_sha))
+                continue
             if extra_error is not None:
                 results.append(
                     {
@@ -1111,6 +1230,8 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "errors": [],
         "reaper_disabled": False,
         "rescue": None,
+        "retained": None,
+        "github_degraded": None,
     }
 
 
@@ -1149,17 +1270,27 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         result["errors"].append("worktree prune failed; cleanup skipped")
         return result
 
-    if apply and os.environ.get("LU_REAPER_DISABLED") != "1":
+    reaper = os.environ.get("LU_REAPER_DISABLED") != "1"
+    try:
+        result["retained"] = settle_terminal_worktrees(repo_root, apply=apply and reaper)
+    except Exception as exc:  # an unreadable record set leaves the list incomplete, never the run stopped
+        result["retained"] = {"complete": False, "error": f"retained worktree scan failed ({type(exc).__name__})",
+                              "trees": []}
+    if result["retained"] and result["retained"]["error"]:
+        result["errors"].append(result["retained"]["error"])
+
+    if apply and reaper:
         result["rescue"] = report_terminal_worktrees(repo_root)
         result["errors"].extend(row["error"] for row in result["rescue"]["tasks"] if row["action"] == "error")
 
+    github = GitHubReads()
     try:
-        if apply and os.environ.get("LU_REAPER_DISABLED") == "1":
+        if apply and not reaper:
             origin_branches: list[dict[str, Any]] = []
             branches: list[dict[str, Any]] = []
             result["reaper_disabled"] = True
         else:
-            origin_branches = cleanup_stale_origin_branches(repo_root, apply=apply, fetch_ok=fetch_ok)
+            origin_branches = cleanup_stale_origin_branches(repo_root, apply=apply, fetch_ok=fetch_ok, github=github)
             if apply:
                 if any(row.get("action") == "deleted" for row in origin_branches):
                     try:
@@ -1169,9 +1300,10 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 prune_after = _fetch_origin(repo_root)
                 if prune_after.returncode != 0:
                     result["errors"].append(f"post-origin prune failed ({_failure(prune_after)})")
-            branches = cleanup_gone_local_branches(repo_root, apply=apply, fetch_ok=fetch_ok) + (
-                cleanup_untracked_local_branches(repo_root, apply=apply, fetch_ok=fetch_ok)
+            branches = cleanup_gone_local_branches(repo_root, apply=apply, fetch_ok=fetch_ok, github=github) + (
+                cleanup_untracked_local_branches(repo_root, apply=apply, fetch_ok=fetch_ok, github=github)
             )
+        result["github_degraded"] = github.refusal
         result["origin_branches"] = origin_branches
         result["branches"] = branches
         result["errors"].extend(
@@ -1284,6 +1416,9 @@ def build_receipt(
     task_scratch_preserved = sum(
         (repository.get("task_scratch_recovery") or {}).get("preserved", 0) for repository in repositories
     )
+    # Per-tree reasons stay in this private receipt; the summary carries counts only.
+    retained = [repository["retained"] for repository in repositories if repository.get("retained")]
+    retained_trees = [tree for scan in retained for tree in scan["trees"]]
     return {
         "schema_version": SCHEMA_VERSION,
         "observed_at": timestamp,
@@ -1299,6 +1434,16 @@ def build_receipt(
             "task_scratch_reaped": task_scratch_reaped,
             "task_scratch_bytes_freed": task_scratch_bytes_freed,
             "task_scratch_preserved": task_scratch_preserved,
+            "retained_count": len(retained_trees),
+            "retained_safety_stops": sum(tree["safety_stop"] for tree in retained_trees),
+            # False when no scan ran or one was incomplete: retention history must not be cleared from it.
+            "retained_complete": bool(retained) and all(scan["complete"] for scan in retained),
+            "github_degraded": any(repository.get("github_degraded") for repository in repositories),
+            "branches_deferred": sum(
+                row["action"] == "deferred"
+                for repository in repositories
+                for row in (*repository.get("branches", []), *repository.get("origin_branches", []))
+            ),
         },
         "repositories": repositories,
     }
@@ -1448,6 +1593,11 @@ def build_public_summary(
             "task_scratch_reaped": summary.get("task_scratch_reaped", 0),
             "task_scratch_bytes_freed": summary.get("task_scratch_bytes_freed", 0),
             "task_scratch_preserved": summary.get("task_scratch_preserved", 0),
+            "retained_count": summary.get("retained_count", 0),
+            "retained_safety_stops": summary.get("retained_safety_stops", 0),
+            "retained_complete": summary.get("retained_complete", False),
+            "github_degraded": summary.get("github_degraded", False),
+            "branches_deferred": summary.get("branches_deferred", 0),
         },
         "repositories": repos_summary,
     }

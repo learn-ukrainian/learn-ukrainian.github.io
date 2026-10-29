@@ -636,6 +636,39 @@ def test_settlement_ignores_setup_links_and_regenerable_caches_and_records_unkno
     assert recorded == (["unknown-output/artifact"] if unknown else [])
 
 
+def test_hourly_salvage_removes_a_dirty_tree_only_after_its_work_is_on_a_new_salvage_ref(sandbox, monkeypatch):
+    """#12043 AC-06a: a finished task's dirty tree stayed forever; a failed salvage push must still keep it."""
+    record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)
+    assert record["worktree_disposition_reason"] == "dirty"
+    tree, ref = Path(record["worktree_path"]), f"refs/heads/salvage/{record['task_id']}"
+    (tree / "notes.txt").write_text("untracked note\n")
+    in_process_repo(sandbox, monkeypatch)
+    verification_git = git._verification_git
+
+    def refused_push(path, *args, **kwargs):
+        if args[0] == "push":
+            raise subprocess.CalledProcessError(1, ["git", "push"])
+        return verification_git(path, *args, **kwargs)
+
+    def settled():
+        return json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+
+    monkeypatch.setattr(git, "_verification_git", refused_push)
+    worker.settle_left_worktrees(salvage=True)
+    assert (settled()["worktree_disposition"], settled()["worktree_disposition_reason"]) == (
+        "retained", "salvage_failed")
+    assert tree.is_dir() and run_git(sandbox.remote, "for-each-ref", ref) == ""
+
+    monkeypatch.setattr(git, "_verification_git", verification_git)
+    worker.settle_left_worktrees(salvage=True)
+    assert (settled()["worktree_disposition"], settled()["worktree_disposition_reason"]) == ("removed", "salvaged")
+    assert not tree.exists()
+    salvaged = run_git(sandbox.remote, "rev-parse", ref)
+    assert run_git(sandbox.remote, "rev-parse", f"{salvaged}^") == record["head_sha"]
+    assert run_git(sandbox.remote, "show", f"{salvaged}:delivered.txt") == "uncommitted delivery"
+    assert run_git(sandbox.remote, "show", f"{salvaged}:notes.txt") == "untracked note"
+
+
 @pytest.mark.parametrize("pull_ref,disposition", [(True, ("removed", "clean")), (False, ("retained", "unpublished"))])
 def test_recovery_removes_squash_merged_write_task_only_when_a_pull_ref_holds_its_head(sandbox, pull_ref, disposition):
     """CTO residual: after a squash merge and branch deletion, D3 never fired, so the worktree stayed forever."""
