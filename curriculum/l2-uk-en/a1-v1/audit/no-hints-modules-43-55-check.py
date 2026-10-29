@@ -16,7 +16,7 @@ from scripts.generate_mdx.converters import yaml_activities_to_jsx
 from scripts.yaml_activities import ActivityParser
 
 PAYLOAD = re.compile(r"(?:items|questions)=\{JSON.parse\(`(.*?)`\)\}")
-HINT = re.compile(r"\([^)]*(?:tense|speaker|Use |Say |I |Then|During|Earlier|Now|morning|evening|Finally|reason|Compare|Tell|Ask)[^)]*\)|\b(?:Which sentence means|Which question asks about tomorrow|You want to say|How do you say|You need to say)\b", re.I)
+HINT = re.compile(r"\([^)]*(?:tense|speaker|Use |Say |I |Then|During|Earlier|Now|morning|evening|Finally|reason|Compare|Tell|Ask)[^)]*\)|\b(?:Which sentence means|Which question asks about tomorrow|keeps the A1 compound future|Choose the infinitive|Keep the infinitive|You want to say|How do you say|You need to say)\b", re.I)
 
 
 def parse_payload(value):
@@ -40,6 +40,7 @@ def main():
     cache = {}
     fields = 0
     labels = 0
+    literal_label_checks = 0
     for slug in modules:
         source = ROOT / f"curriculum/l2-uk-en/a1-v1/{slug}/activities.yaml"
         raw = yaml.safe_load(source.read_text())
@@ -50,9 +51,19 @@ def main():
             offset += len(activities)
             for activity in activities:
                 labels += len([field for field in ("title", "instruction") if field in activity])
+                for field in ("title", "instruction"):
+                    assert not HINT.search(activity.get(field, "")), (slug, section, activity.get("id"), field)
+                label = activity.get("title", "") + " " + activity.get("instruction", "")
                 for item in activity.get("items", []):
                     if not isinstance(item, dict):
                         continue
+                    if activity.get("type") in ("fill-in", "quiz"):
+                        options = [o["text"] if isinstance(o, dict) else o for o in item.get("options", [])]
+                        key = item.get("answer") if activity["type"] == "fill-in" else next(o["text"] for o in item["options"] if o["correct"])
+                        named = [o for o in options if re.search("[А-Яа-яІіЇїЄєҐґ]", o) and re.search(r"(?<!\w)" + re.escape(o) + r"(?!\w)", label, re.I)]
+                        literal_label_checks += 1
+                        if key in named and set(named) != set(options):
+                            raise AssertionError((slug, section, activity.get("id"), "label excludes alternatives"))
                     for field in ("sentence", "prompt", "statement", "text", "context", "hint"):
                         if field in item:
                             fields += 1
@@ -73,7 +84,7 @@ def main():
         assert source_activity["items"][row["item_index"]] == row["after"], row["id"]
         assert row["activity_title"] == source_activity["title"], row["id"]
         assert row["instruction"] == source_activity["instruction"], row["id"]
-        assert "### " + source_activity["title"] in page, (row["id"], "heading parity")
+        assert "### " + source_activity["title"] in page.splitlines(), (row["id"], "heading parity")
         assert row["sources"] and all(s in evidence for s in row["sources"]), row["id"]
         activity = activities[offsets[row["section"]] + row["activity_index"]]
         generated = yaml_activities_to_jsx([activity], is_ukrainian_forced=False)
@@ -82,13 +93,13 @@ def main():
         assert any(expected in items and "instruction={" + json.dumps(row["instruction"], ensure_ascii=False) + "}" in line for line, items in component_lines), (row["id"], "instruction parity")
         options = [option["text"] if isinstance(option, dict) else option for option in expected["options"]]
         named = [option for option in options if re.search("[А-Яа-яІіЇїЄєҐґ]", option) and re.search(r"(?<!\w)" + re.escape(option) + r"(?!\w)", row["activity_title"] + " " + row["instruction"], re.I)]
-        assert len(named) != 1 or named[0] != row["key"], (row["id"], "visible label singles out key")
+        assert row["key"] not in named or set(named) == set(options), (row["id"], "visible label singles out key")
         blind.append({"id": row["id"], "type": row["type"], "activity_title": row["activity_title"], "instruction": row["instruction"], "prompt": expected.get("question", expected.get("sentence")), "options": options})
     assert len(blind) == ledger["counts"]["items_reworded"] + ledger["counts"]["items_replaced"]
     if args.blind:
         print(json.dumps(blind, ensure_ascii=False, indent=2))
     else:
-        print(json.dumps({"items": len(blind), "modules": len(modules), "prompt_fields_scanned": fields, "activity_labels_scanned": labels, "pattern_hints_remaining": 0, "source_and_payload_parity": "PASS", "counts": ledger["counts"]}))
+        print(json.dumps({"items": len(blind), "modules": len(modules), "prompt_fields_scanned": fields, "activity_labels_scanned": labels, "choice_items_checked_for_literal_label_disclosure": literal_label_checks, "pattern_hints_remaining": 0, "source_and_payload_parity": "PASS", "counts": ledger["counts"]}))
 
 
 if __name__ == "__main__":

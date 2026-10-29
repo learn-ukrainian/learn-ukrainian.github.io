@@ -85,9 +85,9 @@ action + **будь ласка** is clear and friendly.
 
 ## Діалоги
 
-### Build the command
+### Complete the request
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олено, ___ текст, будь ласка.", "answer": "читай", "options": ["читай", "читати", "читаєш"]}, {"sentence": "Пане Іване, ___ текст, будь ласка.", "answer": "читайте", "options": ["читайте", "читати", "читаєте"]}, {"sentence": "Тарасе, ___ речення.", "answer": "пиши", "options": ["пиши", "писати", "пишеш"]}, {"sentence": "Студенти, ___ речення.", "answer": "пишіть", "options": ["пишіть", "писати", "пишете"]}, {"sentence": "Маріє, ___ мене, будь ласка.", "answer": "слухай", "options": ["слухай", "слухати", "слухаєш"]}, {"sentence": "Друзі, ___ мене.", "answer": "слухайте", "options": ["слухайте", "слухати", "слухаєте"]}, {"sentence": "___ меню, будь ласка.", "answer": "Дайте", "options": ["Дайте", "Дати", "Даєте"]}, {"sentence": "___, що ти хочеш.", "answer": "Скажи", "options": ["Скажи", "Сказати", "Скажеш"]}]`)} instruction={"Choose the command form that completes the request."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олено, ти вже тут? Тоді ___ текст, будь ласка.", "answer": "читай", "options": ["читай", "читайте", "книжку"], "explanation": "Explicit ти selects читай; читайте switches to ви. Книжку is a noun, not a predicate for this request."}, {"sentence": "Пане Іване, ви вже готові? Тоді ___ текст, будь ласка.", "answer": "читайте", "options": ["читайте", "читай", "книжку"], "explanation": "Explicit ви selects читайте; читай switches to ти. Книжку is a noun and cannot supply the missing predicate."}, {"sentence": "Тарасе, ти вже готовий? Тоді ___ речення.", "answer": "пиши", "options": ["пиши", "пишіть", "реченню"], "explanation": "Explicit ти selects пиши; пишіть switches to ви. Реченню is a dative noun, not the missing predicate."}, {"sentence": "Студенти, ___ речення, будь ласка.", "answer": "пишіть", "options": ["пишіть", "пиши", "реченню"], "explanation": "Студенти addresses several people, selecting пишіть. Пиши is singular; реченню is a dative noun, not a predicate."}, {"sentence": "Маріє, ти мене чуєш? Тоді ___ мене, будь ласка.", "answer": "слухай", "options": ["слухай", "слухайте", "текст"], "explanation": "Ти selects слухай; слухайте switches to ви. Текст is a noun and cannot complete the request predicate."}, {"sentence": "Друзі, ___ мене, будь ласка.", "answer": "слухайте", "options": ["слухайте", "слухай", "текст"], "explanation": "Друзі addresses several people, selecting слухайте. Слухай is singular; текст is a noun, not a request predicate."}, {"sentence": "Пане офіціанте, ви вже тут? ___ меню, будь ласка.", "answer": "Дайте", "options": ["Дайте", "Дай", "Реченню"], "explanation": "Explicit ви selects Дайте; Дай switches to ти. Реченню is a dative noun and cannot be the request predicate."}, {"sentence": "Олено, ти вже готова? ___, що ти хочеш.", "answer": "Скажи", "options": ["Скажи", "Скажіть", "Книжкою"], "explanation": "Explicit ти selects Скажи; Скажіть switches to ви. Книжкою is an instrumental noun and cannot introduce the content clause as its predicate."}]`)} instruction={"Choose the word that completes each request."} isUkrainian={false} />
 
 ### У класі
 
@@ -347,7 +347,7 @@ Next module links short ideas. You will be able to say:
 </TabItem>
 <TabItem label="Activities">
 
-### Build the command
+### Complete the request
 
 *(see lesson, §Діалоги)*
 
@@ -363,9 +363,9 @@ Next module links short ideas. You will be able to say:
 
 *(see lesson, §Recognition-only repairs)*
 
-### Address plus command
+### Address and request
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олено, ти вже тут? ___ мені книжку, будь ласка.", "answer": "дай", "options": ["дай", "дайте", "дає"], "explanation": "Ти matches дай. Дайте belongs to ви; дає is third-person indicative."}, {"sentence": "Пане Іване, ___ книжку!", "answer": "дайте", "options": ["дайте", "дай", "дати"]}, {"sentence": "Тарасе, ти вже готовий? ___ в кафе зі мною.", "answer": "іди", "options": ["іди", "ідіть", "іде"], "explanation": "Ти matches іди. Ідіть belongs to ви; іде is third-person indicative."}, {"sentence": "Друзі, ___ в кафе.", "answer": "ідіть", "options": ["ідіть", "іди", "іти"]}, {"sentence": "Маріє, ___, що ти хочеш.", "answer": "скажи", "options": ["скажи", "скажіть", "сказати"]}, {"sentence": "Пані Оксано, ___, будь ласка.", "answer": "скажіть", "options": ["скажіть", "скажи", "сказати"]}]`)} instruction={"Choose the command form that matches the address."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Олено, ти вже тут? ___ мені книжку, будь ласка.", "answer": "дай", "options": ["дай", "дайте", "дає"], "explanation": "Ти matches дай. Дайте belongs to ви; дає is third-person indicative."}, {"sentence": "Пане Іване, ви вже тут? Тоді ___ книжку, будь ласка.", "answer": "дайте", "options": ["дайте", "дай", "книжкою"], "explanation": "Explicit ви selects дайте. Дай switches to ти; книжкою is an instrumental noun, not the request predicate."}, {"sentence": "Тарасе, ти вже готовий? ___ в кафе зі мною.", "answer": "іди", "options": ["іди", "ідіть", "іде"], "explanation": "Ти matches іди. Ідіть belongs to ви; іде is third-person indicative."}, {"sentence": "Друзі, ви вже готові? Тоді ___ в кафе.", "answer": "ідіть", "options": ["ідіть", "іди", "книжку"], "explanation": "Друзі and ви identify several addressees. Ідіть agrees; іди is singular and книжку is a noun, not the missing predicate."}, {"sentence": "Маріє, ___, що ти хочеш.", "answer": "скажи", "options": ["скажи", "скажіть", "книжкою"], "explanation": "The embedded ти identifies a familiar singular addressee, matching скажи. Скажіть switches to ви; книжкою cannot be the predicate introducing the content clause."}, {"sentence": "Пані Оксано, ви мене чуєте? Тоді ___, будь ласка.", "answer": "скажіть", "options": ["скажіть", "скажи", "книжкою"], "explanation": "Explicit ви selects скажіть. Скажи switches to ти; книжкою is a noun and cannot supply the request predicate."}]`)} instruction={"Choose the word that completes each request."} isUkrainian={false} />
 
 ### Request checks
 

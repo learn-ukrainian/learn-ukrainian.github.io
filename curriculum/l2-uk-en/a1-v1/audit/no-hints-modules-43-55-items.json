@@ -5,11 +5,11 @@
     "e5d74a7d442e3b5ed3e663c234c19d16da3882de"
   ],
   "counts": {
-    "hints_found": 86,
+    "hints_found": 110,
     "merged_hints_removed": 48,
     "earlier_finale_hint_removed": 1,
-    "older_prompts_reworded": 37,
-    "items_reworded": 86,
+    "older_prompts_reworded": 61,
+    "items_reworded": 110,
     "items_replaced": 0
   },
   "items": [
@@ -20,7 +20,7 @@
       "activity_index": 0,
       "item_index": 0,
       "type": "fill-in",
-      "instruction": "Choose the command form that matches the address.",
+      "instruction": "Choose the word that completes each request.",
       "before": {
         "sentence": "(Use the ти command form.) Олено, ___ книжку!",
         "answer": "дай",
@@ -56,10 +56,13 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
-      "activity_title": "Address plus command"
+      "activity_title": "Address and request"
     },
     {
       "id": "please-do-this/workbook/0/2",
@@ -68,7 +71,7 @@
       "activity_index": 0,
       "item_index": 2,
       "type": "fill-in",
-      "instruction": "Choose the command form that matches the address.",
+      "instruction": "Choose the word that completes each request.",
       "before": {
         "sentence": "(Use the ти command form.) Тарасе, ___ в кафе.",
         "answer": "іди",
@@ -104,10 +107,13 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
-      "activity_title": "Address plus command"
+      "activity_title": "Address and request"
     },
     {
       "id": "please-do-this/inline/act-2/0",
@@ -168,7 +174,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Ti or vy?"
@@ -232,7 +241,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Ti or vy?"
@@ -296,7 +308,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Ti or vy?"
@@ -360,7 +375,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Ti or vy?"
@@ -424,7 +442,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Ti or vy?"
@@ -488,7 +509,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Ti or vy?"
@@ -552,7 +576,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Ti or vy?"
@@ -616,7 +643,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Ti or vy?"
@@ -662,7 +692,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Pick the connector"
@@ -710,7 +743,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the sentence"
@@ -758,7 +794,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the sentence"
@@ -806,7 +845,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the sentence"
@@ -854,7 +896,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the sentence"
@@ -902,7 +947,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the sentence"
@@ -950,7 +998,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Guest conversation frames"
@@ -998,7 +1049,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Guest conversation frames"
@@ -1046,7 +1100,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Guest conversation frames"
@@ -1108,7 +1165,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Where does the comma go?"
@@ -1170,7 +1230,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Where does the comma go?"
@@ -1232,7 +1295,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Where does the comma go?"
@@ -1294,7 +1360,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Where does the comma go?"
@@ -1361,7 +1430,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Which connector?"
@@ -1428,7 +1500,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Which connector?"
@@ -1495,7 +1570,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Which connector?"
@@ -1546,7 +1624,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the conversation"
@@ -1597,7 +1678,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the conversation"
@@ -1648,7 +1732,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the conversation"
@@ -1699,7 +1786,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the conversation"
@@ -1750,7 +1840,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Holiday table mini-dialogue"
@@ -1801,7 +1894,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Holiday table mini-dialogue"
@@ -1852,7 +1948,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Holiday table mini-dialogue"
@@ -1903,7 +2002,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Holiday table mini-dialogue"
@@ -1953,7 +2055,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Time words for yesterday"
@@ -2003,7 +2108,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Time words for yesterday"
@@ -2053,7 +2161,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Time words for yesterday"
@@ -2103,7 +2214,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Time words for yesterday"
@@ -2154,7 +2268,10 @@
         "P1",
         "R2W",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Time words for yesterday"
@@ -2217,7 +2334,10 @@
         "P1",
         "R2W",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Keep the speaker consistent"
@@ -2263,7 +2383,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Build a dated plan"
@@ -2309,7 +2432,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the week schedule"
@@ -2355,7 +2481,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the week schedule"
@@ -2401,7 +2530,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the week schedule"
@@ -2447,7 +2579,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the mini biography"
@@ -2493,7 +2628,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the A1 line"
@@ -2556,7 +2694,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Planning pattern"
@@ -2619,7 +2760,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Planning pattern"
@@ -2681,7 +2825,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Planning pattern"
@@ -2745,7 +2892,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Planning pattern"
@@ -2757,7 +2907,7 @@
       "activity_index": 0,
       "item_index": 0,
       "type": "fill-in",
-      "instruction": "Pick the word that matches the time of the sentence.",
+      "instruction": "Choose the word or phrase that completes each sentence.",
       "before": {
         "sentence": "(Earlier, before the present period.) ___ я жив у Торонто.",
         "answer": "Раніше",
@@ -2793,10 +2943,13 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
-      "activity_title": "Choose the time signal"
+      "activity_title": "Complete the life story"
     },
     {
       "id": "my-story/inline/act-1/1",
@@ -2805,7 +2958,7 @@
       "activity_index": 0,
       "item_index": 1,
       "type": "fill-in",
-      "instruction": "Pick the word that matches the time of the sentence.",
+      "instruction": "Choose the word or phrase that completes each sentence.",
       "before": {
         "sentence": "(Now, in the present period.) ___ я живу в Києві.",
         "answer": "Зараз",
@@ -2841,10 +2994,13 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
-      "activity_title": "Choose the time signal"
+      "activity_title": "Complete the life story"
     },
     {
       "id": "my-story/inline/act-1/3",
@@ -2853,7 +3009,7 @@
       "activity_index": 0,
       "item_index": 3,
       "type": "fill-in",
-      "instruction": "Pick the word that matches the time of the sentence.",
+      "instruction": "Choose the word or phrase that completes each sentence.",
       "before": {
         "sentence": "(During childhood.) ___ я ходила в школу.",
         "answer": "У дитинстві",
@@ -2889,10 +3045,13 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
-      "activity_title": "Choose the time signal"
+      "activity_title": "Complete the life story"
     },
     {
       "id": "my-story/workbook/2/0",
@@ -2937,7 +3096,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the mini biography"
@@ -2985,7 +3147,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the mini biography"
@@ -3033,7 +3198,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the mini biography"
@@ -3096,7 +3264,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Repair the story"
@@ -3159,7 +3330,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Repair the story"
@@ -3171,7 +3345,7 @@
       "activity_index": 2,
       "item_index": 1,
       "type": "quiz",
-      "instruction": "Choose the statement that matches the A1 past-tense rule.",
+      "instruction": "Choose the best answer.",
       "before": {
         "prompt": "Which form fits a female speaker saying I read?",
         "options": [
@@ -3221,10 +3395,13 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
-      "activity_title": "Gender, not person"
+      "activity_title": "Choose the answer"
     },
     {
       "id": "what-happened/inline/act-3/2",
@@ -3233,7 +3410,7 @@
       "activity_index": 2,
       "item_index": 2,
       "type": "quiz",
-      "instruction": "Choose the statement that matches the A1 past-tense rule.",
+      "instruction": "Choose the best answer.",
       "before": {
         "prompt": "Which form fits a group?",
         "options": [
@@ -3283,10 +3460,13 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
-      "activity_title": "Gender, not person"
+      "activity_title": "Choose the answer"
     },
     {
       "id": "what-will-happen/inline/act-3/0",
@@ -3295,7 +3475,7 @@
       "activity_index": 2,
       "item_index": 0,
       "type": "quiz",
-      "instruction": "Choose the answer that keeps the A1 compound future.",
+      "instruction": "Choose the best answer.",
       "before": {
         "prompt": "Which sentence means I will read?",
         "options": [
@@ -3345,10 +3525,13 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
-      "activity_title": "Future pattern check"
+      "activity_title": "Choose the answer"
     },
     {
       "id": "health/inline/act-1/2",
@@ -3391,7 +3574,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the health phrase"
@@ -3453,7 +3639,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the clear A1 phrase"
@@ -3515,7 +3704,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the clear A1 phrase"
@@ -3577,7 +3769,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the clear A1 phrase"
@@ -3639,7 +3834,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the emergency phrase"
@@ -3701,7 +3899,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the emergency phrase"
@@ -3763,7 +3964,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the emergency phrase"
@@ -3825,7 +4029,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the emergency phrase"
@@ -3871,7 +4078,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "bdd5f82a",
       "activity_title": "Complete the A1 line"
@@ -3917,7 +4127,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the A1 line"
@@ -3963,7 +4176,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the A1 line"
@@ -4009,7 +4225,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the A1 line"
@@ -4055,7 +4274,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the A1 line"
@@ -4101,7 +4323,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Complete the A1 line"
@@ -4147,7 +4372,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "e5d74a7d",
       "activity_title": "Final story frame"
@@ -4210,7 +4438,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the A1 response"
@@ -4273,7 +4504,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the A1 response"
@@ -4335,7 +4569,10 @@
         "T1",
         "P1",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
       "activity_title": "Choose the A1 response"
@@ -4347,7 +4584,7 @@
       "activity_index": 2,
       "item_index": 3,
       "type": "quiz",
-      "instruction": "Choose the answer that keeps the A1 compound future.",
+      "instruction": "Choose the best answer.",
       "before": {
         "prompt": "Which question asks about tomorrow?",
         "options": [
@@ -4397,10 +4634,13 @@
         "W2",
         "R2W",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older prompt",
-      "activity_title": "Future pattern check"
+      "activity_title": "Choose the answer"
     },
     {
       "id": "linking-ideas/inline/act-3/0",
@@ -4443,7 +4683,10 @@
         "W2",
         "R2W",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older shared instruction"
     },
@@ -4488,7 +4731,10 @@
         "W2",
         "R2W",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older shared instruction"
     },
@@ -4533,7 +4779,10 @@
         "W2",
         "R2W",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older shared instruction"
     },
@@ -4578,7 +4827,10 @@
         "W2",
         "R2W",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older shared instruction"
     },
@@ -4623,7 +4875,10 @@
         "W2",
         "R2W",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older shared instruction"
     },
@@ -4668,9 +4923,1192 @@
         "W2",
         "R2W",
         "W3",
-        "P2"
+        "P2",
+        "W5",
+        "W6",
+        "P3"
       ],
       "origin": "older shared instruction"
+    },
+    {
+      "id": "please-do-this/inline/act-1/0",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 0,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Олено, ___ текст, будь ласка.",
+        "answer": "читай",
+        "options": [
+          "читай",
+          "читати",
+          "читаєш"
+        ],
+        "explanation": "Use читай with one familiar person."
+      },
+      "after": {
+        "sentence": "Олено, ти вже тут? Тоді ___ текст, будь ласка.",
+        "answer": "читай",
+        "options": [
+          "читай",
+          "читайте",
+          "книжку"
+        ],
+        "explanation": "Explicit ти selects читай; читайте switches to ви. Книжку is a noun, not a predicate for this request."
+      },
+      "disposition": "reworded",
+      "key": "читай",
+      "distractors": [
+        "читайте",
+        "книжку"
+      ],
+      "reason": "Explicit ти selects читай; читайте switches to ви. Книжку is a noun, not a predicate for this request.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/1",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 1,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Пане Іване, ___ текст, будь ласка.",
+        "answer": "читайте",
+        "options": [
+          "читайте",
+          "читати",
+          "читаєте"
+        ],
+        "explanation": "Use читайте for polite ви."
+      },
+      "after": {
+        "sentence": "Пане Іване, ви вже готові? Тоді ___ текст, будь ласка.",
+        "answer": "читайте",
+        "options": [
+          "читайте",
+          "читай",
+          "книжку"
+        ],
+        "explanation": "Explicit ви selects читайте; читай switches to ти. Книжку is a noun and cannot supply the missing predicate."
+      },
+      "disposition": "reworded",
+      "key": "читайте",
+      "distractors": [
+        "читай",
+        "книжку"
+      ],
+      "reason": "Explicit ви selects читайте; читай switches to ти. Книжку is a noun and cannot supply the missing predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/2",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 2,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Тарасе, ___ речення.",
+        "answer": "пиши",
+        "options": [
+          "пиши",
+          "писати",
+          "пишеш"
+        ],
+        "explanation": "Пиши is the ти command."
+      },
+      "after": {
+        "sentence": "Тарасе, ти вже готовий? Тоді ___ речення.",
+        "answer": "пиши",
+        "options": [
+          "пиши",
+          "пишіть",
+          "реченню"
+        ],
+        "explanation": "Explicit ти selects пиши; пишіть switches to ви. Реченню is a dative noun, not the missing predicate."
+      },
+      "disposition": "reworded",
+      "key": "пиши",
+      "distractors": [
+        "пишіть",
+        "реченню"
+      ],
+      "reason": "Explicit ти selects пиши; пишіть switches to ви. Реченню is a dative noun, not the missing predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/3",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 3,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Студенти, ___ речення.",
+        "answer": "пишіть",
+        "options": [
+          "пишіть",
+          "писати",
+          "пишете"
+        ],
+        "explanation": "Пишіть is the ви or plural command."
+      },
+      "after": {
+        "sentence": "Студенти, ___ речення, будь ласка.",
+        "answer": "пишіть",
+        "options": [
+          "пишіть",
+          "пиши",
+          "реченню"
+        ],
+        "explanation": "Студенти addresses several people, selecting пишіть. Пиши is singular; реченню is a dative noun, not a predicate."
+      },
+      "disposition": "reworded",
+      "key": "пишіть",
+      "distractors": [
+        "пиши",
+        "реченню"
+      ],
+      "reason": "Студенти addresses several people, selecting пишіть. Пиши is singular; реченню is a dative noun, not a predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/4",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 4,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Маріє, ___ мене, будь ласка.",
+        "answer": "слухай",
+        "options": [
+          "слухай",
+          "слухати",
+          "слухаєш"
+        ],
+        "explanation": "Use слухай with one familiar person."
+      },
+      "after": {
+        "sentence": "Маріє, ти мене чуєш? Тоді ___ мене, будь ласка.",
+        "answer": "слухай",
+        "options": [
+          "слухай",
+          "слухайте",
+          "текст"
+        ],
+        "explanation": "Ти selects слухай; слухайте switches to ви. Текст is a noun and cannot complete the request predicate."
+      },
+      "disposition": "reworded",
+      "key": "слухай",
+      "distractors": [
+        "слухайте",
+        "текст"
+      ],
+      "reason": "Ти selects слухай; слухайте switches to ви. Текст is a noun and cannot complete the request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/5",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 5,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Друзі, ___ мене.",
+        "answer": "слухайте",
+        "options": [
+          "слухайте",
+          "слухати",
+          "слухаєте"
+        ],
+        "explanation": "Use слухайте for more than one person."
+      },
+      "after": {
+        "sentence": "Друзі, ___ мене, будь ласка.",
+        "answer": "слухайте",
+        "options": [
+          "слухайте",
+          "слухай",
+          "текст"
+        ],
+        "explanation": "Друзі addresses several people, selecting слухайте. Слухай is singular; текст is a noun, not a request predicate."
+      },
+      "disposition": "reworded",
+      "key": "слухайте",
+      "distractors": [
+        "слухай",
+        "текст"
+      ],
+      "reason": "Друзі addresses several people, selecting слухайте. Слухай is singular; текст is a noun, not a request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/6",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 6,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___ меню, будь ласка.",
+        "answer": "Дайте",
+        "options": [
+          "Дайте",
+          "Дати",
+          "Даєте"
+        ],
+        "explanation": "Дайте is a polite request."
+      },
+      "after": {
+        "sentence": "Пане офіціанте, ви вже тут? ___ меню, будь ласка.",
+        "answer": "Дайте",
+        "options": [
+          "Дайте",
+          "Дай",
+          "Реченню"
+        ],
+        "explanation": "Explicit ви selects Дайте; Дай switches to ти. Реченню is a dative noun and cannot be the request predicate."
+      },
+      "disposition": "reworded",
+      "key": "Дайте",
+      "distractors": [
+        "Дай",
+        "Реченню"
+      ],
+      "reason": "Explicit ви selects Дайте; Дай switches to ти. Реченню is a dative noun and cannot be the request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/inline/act-1/7",
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "item_index": 7,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___, що ти хочеш.",
+        "answer": "Скажи",
+        "options": [
+          "Скажи",
+          "Сказати",
+          "Скажеш"
+        ],
+        "explanation": "Скажи is the ти command."
+      },
+      "after": {
+        "sentence": "Олено, ти вже готова? ___, що ти хочеш.",
+        "answer": "Скажи",
+        "options": [
+          "Скажи",
+          "Скажіть",
+          "Книжкою"
+        ],
+        "explanation": "Explicit ти selects Скажи; Скажіть switches to ви. Книжкою is an instrumental noun and cannot introduce the content clause as its predicate."
+      },
+      "disposition": "reworded",
+      "key": "Скажи",
+      "distractors": [
+        "Скажіть",
+        "Книжкою"
+      ],
+      "reason": "Explicit ти selects Скажи; Скажіть switches to ви. Книжкою is an instrumental noun and cannot introduce the content clause as its predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/workbook/0/1",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 1,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Пане Іване, ___ книжку!",
+        "answer": "дайте",
+        "options": [
+          "дайте",
+          "дай",
+          "дати"
+        ],
+        "explanation": "Пане Іване takes polite ви."
+      },
+      "after": {
+        "sentence": "Пане Іване, ви вже тут? Тоді ___ книжку, будь ласка.",
+        "answer": "дайте",
+        "options": [
+          "дайте",
+          "дай",
+          "книжкою"
+        ],
+        "explanation": "Explicit ви selects дайте. Дай switches to ти; книжкою is an instrumental noun, not the request predicate."
+      },
+      "disposition": "reworded",
+      "key": "дайте",
+      "distractors": [
+        "дай",
+        "книжкою"
+      ],
+      "reason": "Explicit ви selects дайте. Дай switches to ти; книжкою is an instrumental noun, not the request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Address and request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/workbook/0/3",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 3,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Друзі, ___ в кафе.",
+        "answer": "ідіть",
+        "options": [
+          "ідіть",
+          "іди",
+          "іти"
+        ],
+        "explanation": "Use ідіть for a group."
+      },
+      "after": {
+        "sentence": "Друзі, ви вже готові? Тоді ___ в кафе.",
+        "answer": "ідіть",
+        "options": [
+          "ідіть",
+          "іди",
+          "книжку"
+        ],
+        "explanation": "Друзі and ви identify several addressees. Ідіть agrees; іди is singular and книжку is a noun, not the missing predicate."
+      },
+      "disposition": "reworded",
+      "key": "ідіть",
+      "distractors": [
+        "іди",
+        "книжку"
+      ],
+      "reason": "Друзі and ви identify several addressees. Ідіть agrees; іди is singular and книжку is a noun, not the missing predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Address and request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/workbook/0/4",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 4,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Маріє, ___, що ти хочеш.",
+        "answer": "скажи",
+        "options": [
+          "скажи",
+          "скажіть",
+          "сказати"
+        ],
+        "explanation": "Use скажи with one familiar person."
+      },
+      "after": {
+        "sentence": "Маріє, ___, що ти хочеш.",
+        "answer": "скажи",
+        "options": [
+          "скажи",
+          "скажіть",
+          "книжкою"
+        ],
+        "explanation": "The embedded ти identifies a familiar singular addressee, matching скажи. Скажіть switches to ви; книжкою cannot be the predicate introducing the content clause."
+      },
+      "disposition": "reworded",
+      "key": "скажи",
+      "distractors": [
+        "скажіть",
+        "книжкою"
+      ],
+      "reason": "The embedded ти identifies a familiar singular addressee, matching скажи. Скажіть switches to ви; книжкою cannot be the predicate introducing the content clause.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Address and request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "please-do-this/workbook/0/5",
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "item_index": 5,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Пані Оксано, ___, будь ласка.",
+        "answer": "скажіть",
+        "options": [
+          "скажіть",
+          "скажи",
+          "сказати"
+        ],
+        "explanation": "Use скажіть for polite address."
+      },
+      "after": {
+        "sentence": "Пані Оксано, ви мене чуєте? Тоді ___, будь ласка.",
+        "answer": "скажіть",
+        "options": [
+          "скажіть",
+          "скажи",
+          "книжкою"
+        ],
+        "explanation": "Explicit ви selects скажіть. Скажи switches to ти; книжкою is a noun and cannot supply the request predicate."
+      },
+      "disposition": "reworded",
+      "key": "скажіть",
+      "distractors": [
+        "скажи",
+        "книжкою"
+      ],
+      "reason": "Explicit ви selects скажіть. Скажи switches to ти; книжкою is a noun and cannot supply the request predicate.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Address and request",
+      "instruction": "Choose the word that completes each request."
+    },
+    {
+      "id": "what-will-happen/workbook/3/0",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 0,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Я буду ___ завтра.",
+        "answer": "читати",
+        "options": [
+          "читати",
+          "читаю",
+          "читав"
+        ],
+        "explanation": "After буду, use the infinitive читати."
+      },
+      "after": {
+        "sentence": "Я буду ___ завтра.",
+        "answer": "читати",
+        "options": [
+          "читати",
+          "читаю",
+          "читав"
+        ],
+        "explanation": "The given future auxiliary takes infinitive читати. читаю is a finite present form and читав a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "читати",
+      "distractors": [
+        "читаю",
+        "читав"
+      ],
+      "reason": "The given future auxiliary takes infinitive читати. читаю is a finite present form and читав a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-will-happen/workbook/3/1",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 1,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Ти будеш ___ ввечері?",
+        "answer": "робити",
+        "options": [
+          "робити",
+          "робиш",
+          "робив"
+        ],
+        "explanation": "After будеш, use робити."
+      },
+      "after": {
+        "sentence": "Ти будеш ___ ввечері?",
+        "answer": "робити",
+        "options": [
+          "робити",
+          "робиш",
+          "робив"
+        ],
+        "explanation": "The given future auxiliary takes infinitive робити. робиш is a finite present form and робив a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "робити",
+      "distractors": [
+        "робиш",
+        "робив"
+      ],
+      "reason": "The given future auxiliary takes infinitive робити. робиш is a finite present form and робив a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-will-happen/workbook/3/2",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 2,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Вона буде ___ вечерю.",
+        "answer": "готувати",
+        "options": [
+          "готувати",
+          "готує",
+          "готувала"
+        ],
+        "explanation": "After буде, use готувати."
+      },
+      "after": {
+        "sentence": "Вона буде ___ вечерю.",
+        "answer": "готувати",
+        "options": [
+          "готувати",
+          "готує",
+          "готувала"
+        ],
+        "explanation": "The given future auxiliary takes infinitive готувати. готує is a finite present form and готувала a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "готувати",
+      "distractors": [
+        "готує",
+        "готувала"
+      ],
+      "reason": "The given future auxiliary takes infinitive готувати. готує is a finite present form and готувала a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-will-happen/workbook/3/3",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 3,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Ми будемо ___ футбол.",
+        "answer": "дивитися",
+        "options": [
+          "дивитися",
+          "дивимося",
+          "дивилися"
+        ],
+        "explanation": "After будемо, use дивитися."
+      },
+      "after": {
+        "sentence": "Ми будемо ___ футбол.",
+        "answer": "дивитися",
+        "options": [
+          "дивитися",
+          "дивимося",
+          "дивилися"
+        ],
+        "explanation": "The given future auxiliary takes infinitive дивитися. дивимося is a finite present form and дивилися a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "дивитися",
+      "distractors": [
+        "дивимося",
+        "дивилися"
+      ],
+      "reason": "The given future auxiliary takes infinitive дивитися. дивимося is a finite present form and дивилися a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-will-happen/workbook/3/4",
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "item_index": 4,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Вони будуть ___.",
+        "answer": "відпочивати",
+        "options": [
+          "відпочивати",
+          "відпочивають",
+          "відпочивали"
+        ],
+        "explanation": "After будуть, use відпочивати."
+      },
+      "after": {
+        "sentence": "Вони будуть ___.",
+        "answer": "відпочивати",
+        "options": [
+          "відпочивати",
+          "відпочивають",
+          "відпочивали"
+        ],
+        "explanation": "The given future auxiliary takes infinitive відпочивати. відпочивають is a finite present form and відпочивали a finite past form; neither combines with that auxiliary."
+      },
+      "disposition": "reworded",
+      "key": "відпочивати",
+      "distractors": [
+        "відпочивають",
+        "відпочивали"
+      ],
+      "reason": "The given future auxiliary takes infinitive відпочивати. відпочивають is a finite present form and відпочивали a finite past form; neither combines with that auxiliary.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Complete the sentence",
+      "instruction": "Choose the word that completes each sentence."
+    },
+    {
+      "id": "what-happened/inline/act-3/0",
+      "module": "what-happened",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "type": "quiz",
+      "before": {
+        "prompt": "Why can я читав and ти читав have the same ending?",
+        "options": [
+          {
+            "text": "Because past tense marks masculine singular here.",
+            "correct": true
+          },
+          {
+            "text": "Because я and ти always use one ending.",
+            "correct": false
+          },
+          {
+            "text": "Because Ukrainian has no person forms.",
+            "correct": false
+          }
+        ],
+        "explanation": "The past ending shows gender in the singular, not person."
+      },
+      "after": {
+        "prompt": "Why can я читав and ти читав have the same ending?",
+        "options": [
+          {
+            "text": "Because past tense marks masculine singular here.",
+            "correct": true
+          },
+          {
+            "text": "Because я and ти always use one ending.",
+            "correct": false
+          },
+          {
+            "text": "Because Ukrainian has no person forms.",
+            "correct": false
+          }
+        ],
+        "explanation": "The two examples share masculine singular past читав even though я and ти are different persons. The second option falsely generalizes across all tenses; the third denies the attested Ukrainian personal present/future forms."
+      },
+      "disposition": "reworded",
+      "key": "Because past tense marks masculine singular here.",
+      "distractors": [
+        "Because я and ти always use one ending.",
+        "Because Ukrainian has no person forms."
+      ],
+      "reason": "The two examples share masculine singular past читав even though я and ти are different persons. The second option falsely generalizes across all tenses; the third denies the attested Ukrainian personal present/future forms.",
+      "sources": [
+        "G1",
+        "G2",
+        "G4a",
+        "G6",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "label_only": false,
+      "activity_title": "Choose the answer",
+      "instruction": "Choose the best answer."
+    },
+    {
+      "id": "holidays/inline/act-3/0",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 0,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Ми ___ Різдво вдома.",
+        "answer": "святкуємо",
+        "options": [
+          "святкуємо",
+          "на",
+          "з"
+        ],
+        "explanation": "Use святкуємо Різдво without на."
+      },
+      "after": {
+        "sentence": "Ми ___ Різдво вдома.",
+        "answer": "святкуємо",
+        "options": [
+          "святкуємо",
+          "святкує",
+          "святкуєш"
+        ],
+        "explanation": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."
+      },
+      "disposition": "reworded",
+      "key": "святкуємо",
+      "distractors": [
+        "святкує",
+        "святкуєш"
+      ],
+      "reason": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/1",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 1,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___ Різдво ми співаємо колядки.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "Use на when the holiday is the time."
+      },
+      "after": {
+        "sentence": "___ Різдво ми співаємо колядки.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."
+      },
+      "disposition": "reworded",
+      "key": "На",
+      "distractors": [
+        "З",
+        "Святкуємо"
+      ],
+      "reason": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/2",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 2,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Ми ___ Великдень з родиною.",
+        "answer": "святкуємо",
+        "options": [
+          "святкуємо",
+          "на",
+          "у"
+        ],
+        "explanation": "Use святкуємо Великдень."
+      },
+      "after": {
+        "sentence": "Ми ___ Великдень з родиною.",
+        "answer": "святкуємо",
+        "options": [
+          "святкуємо",
+          "святкує",
+          "святкуєш"
+        ],
+        "explanation": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed."
+      },
+      "disposition": "reworded",
+      "key": "святкуємо",
+      "distractors": [
+        "святкує",
+        "святкуєш"
+      ],
+      "reason": "Ми requires first-person plural святкуємо. Святкує is third-person singular and святкуєш second-person singular. The two valid temporal-preposition alternatives are removed.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/3",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 3,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___ Великдень ми печемо паски.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "Use на + holiday for a time phrase."
+      },
+      "after": {
+        "sentence": "___ Великдень ми печемо паски.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."
+      },
+      "disposition": "reworded",
+      "key": "На",
+      "distractors": [
+        "З",
+        "Святкуємо"
+      ],
+      "reason": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/4",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 4,
+      "type": "fill-in",
+      "before": {
+        "sentence": "Я ___ День Незалежності України.",
+        "answer": "святкую",
+        "options": [
+          "святкую",
+          "на",
+          "вітаю"
+        ],
+        "explanation": "Святкувати takes the holiday name directly."
+      },
+      "after": {
+        "sentence": "Я ___ День Незалежності України.",
+        "answer": "святкую",
+        "options": [
+          "святкую",
+          "святкуєш",
+          "святкують"
+        ],
+        "explanation": "Я requires first-person singular святкую. Святкуєш is second-person singular and святкують third-person plural. Святкувати takes the holiday name as its direct object."
+      },
+      "disposition": "reworded",
+      "key": "святкую",
+      "distractors": [
+        "святкуєш",
+        "святкують"
+      ],
+      "reason": "Я requires first-person singular святкую. Святкуєш is second-person singular and святкують third-person plural. Святкувати takes the holiday name as its direct object.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
+    },
+    {
+      "id": "holidays/inline/act-3/5",
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "item_index": 5,
+      "type": "fill-in",
+      "before": {
+        "sentence": "___ Новий рік ми даруємо подарунки.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "This sentence talks about what happens at that time."
+      },
+      "after": {
+        "sentence": "___ Новий рік ми даруємо подарунки.",
+        "answer": "На",
+        "options": [
+          "На",
+          "З",
+          "Святкуємо"
+        ],
+        "explanation": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb."
+      },
+      "disposition": "reworded",
+      "key": "На",
+      "distractors": [
+        "З",
+        "Святкуємо"
+      ],
+      "reason": "На introduces the holiday as a time expression with the accusative. З would require the instrumental holiday form; Святкуємо would create a second finite predicate without a conjunction before ми and its verb.",
+      "sources": [
+        "G7",
+        "D28",
+        "D29",
+        "W4",
+        "W5",
+        "W6",
+        "P3"
+      ],
+      "origin": "older activity label",
+      "activity_title": "Complete the holiday sentence",
+      "instruction": "Choose the Ukrainian pattern."
     }
   ],
   "modules": [
@@ -4738,6 +6176,68 @@
         "title": "Complete the sentence",
         "instruction": "Choose the connector that completes the sentence."
       }
+    },
+    {
+      "module": "what-will-happen",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Choose the answer",
+        "instruction": "Choose the best answer."
+      }
+    },
+    {
+      "module": "what-will-happen",
+      "section": "workbook",
+      "activity_index": 3,
+      "after": {
+        "title": "Complete the sentence",
+        "instruction": "Choose the word that completes each sentence."
+      }
+    },
+    {
+      "module": "please-do-this",
+      "section": "inline",
+      "activity_index": 0,
+      "after": {
+        "title": "Complete the request",
+        "instruction": "Choose the word that completes each request."
+      }
+    },
+    {
+      "module": "please-do-this",
+      "section": "workbook",
+      "activity_index": 0,
+      "after": {
+        "title": "Address and request",
+        "instruction": "Choose the word that completes each request."
+      }
+    },
+    {
+      "module": "what-happened",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Choose the answer",
+        "instruction": "Choose the best answer."
+      }
+    },
+    {
+      "module": "my-story",
+      "section": "inline",
+      "activity_index": 0,
+      "after": {
+        "title": "Complete the life story",
+        "instruction": "Choose the word or phrase that completes each sentence."
+      }
+    },
+    {
+      "module": "holidays",
+      "section": "inline",
+      "activity_index": 2,
+      "after": {
+        "title": "Complete the holiday sentence"
+      }
     }
   ],
   "review_fixes": {
@@ -4745,6 +6245,10 @@
     "F2": "Feedback uses о другій ночі.",
     "F3": "The remaining tomorrow gloss becomes a Ukrainian dialogue reply.",
     "F4": "Анна matches the activity speaker.",
-    "F5": "Instruction parity is checked per component; the unrelated Translate instruction is restored."
+    "F5": "Instruction parity is checked per component; the unrelated Translate instruction is restored.",
+    "F6": "Neutral future labels. The same class is removed from request, infinitive and biography tasks; imperative alternatives no longer rely on a form-prescribing instruction. The all-label scan also removes the partial holiday answer list; the verb blanks use person agreement so that no valid temporal reading is marked wrong.",
+    "F7": "The five infinitive blanks have neutral labels and auxiliary-based key evidence. General no-choice error-correction instructions remain ordinary A1 task instructions under the explicit operator exception.",
+    "F8": "Nonblocking distractor-variety preference retained with the curriculum coordinator; clearly wrong distractors are expressly authorized in this task.",
+    "F9": "Every one of 260 labels receives the observed-cue-pattern check. Literal key-name checks cover all 235 fill-in/quiz items and require every option to be covered when a key is named. The partial holiday list was removed rather than exempted. Heading parity uses complete lines. Mechanical guards remain distinct from independent semantic review."
   }
 }

@@ -1,8 +1,8 @@
 inline:
   - id: act-1
     type: fill-in
-    title: Choose the time signal
-    instruction: Pick the word that matches the time of the sentence.
+    title: "Complete the life story"
+    instruction: "Choose the word or phrase that completes each sentence."
     items:
       - sentence: "П’ять років тому я був студентом. ___ я жив у Торонто, а тепер живу в Києві."
         answer: 'Раніше'

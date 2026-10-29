@@ -1,65 +1,65 @@
 inline:
   - id: act-1
     type: fill-in
-    title: Build the command
-    instruction: Choose the command form that completes the request.
+    title: "Complete the request"
+    instruction: "Choose the word that completes each request."
     items:
-      - sentence: 'Олено, ___ текст, будь ласка.'
+      - sentence: "Олено, ти вже тут? Тоді ___ текст, будь ласка."
         answer: 'читай'
         options:
           - 'читай'
-          - 'читати'
-          - 'читаєш'
-        explanation: 'Use читай with one familiar person.'
-      - sentence: 'Пане Іване, ___ текст, будь ласка.'
+          - "читайте"
+          - "книжку"
+        explanation: "Explicit ти selects читай; читайте switches to ви. Книжку is a noun, not a predicate for this request."
+      - sentence: "Пане Іване, ви вже готові? Тоді ___ текст, будь ласка."
         answer: 'читайте'
         options:
           - 'читайте'
-          - 'читати'
-          - 'читаєте'
-        explanation: 'Use читайте for polite ви.'
-      - sentence: 'Тарасе, ___ речення.'
+          - "читай"
+          - "книжку"
+        explanation: "Explicit ви selects читайте; читай switches to ти. Книжку is a noun and cannot supply the missing predicate."
+      - sentence: "Тарасе, ти вже готовий? Тоді ___ речення."
         answer: 'пиши'
         options:
           - 'пиши'
-          - 'писати'
-          - 'пишеш'
-        explanation: 'Пиши is the ти command.'
-      - sentence: 'Студенти, ___ речення.'
+          - "пишіть"
+          - "реченню"
+        explanation: "Explicit ти selects пиши; пишіть switches to ви. Реченню is a dative noun, not the missing predicate."
+      - sentence: "Студенти, ___ речення, будь ласка."
         answer: 'пишіть'
         options:
           - 'пишіть'
-          - 'писати'
-          - 'пишете'
-        explanation: 'Пишіть is the ви or plural command.'
-      - sentence: 'Маріє, ___ мене, будь ласка.'
+          - "пиши"
+          - "реченню"
+        explanation: "Студенти addresses several people, selecting пишіть. Пиши is singular; реченню is a dative noun, not a predicate."
+      - sentence: "Маріє, ти мене чуєш? Тоді ___ мене, будь ласка."
         answer: 'слухай'
         options:
           - 'слухай'
-          - 'слухати'
-          - 'слухаєш'
-        explanation: 'Use слухай with one familiar person.'
-      - sentence: 'Друзі, ___ мене.'
+          - "слухайте"
+          - "текст"
+        explanation: "Ти selects слухай; слухайте switches to ви. Текст is a noun and cannot complete the request predicate."
+      - sentence: "Друзі, ___ мене, будь ласка."
         answer: 'слухайте'
         options:
           - 'слухайте'
-          - 'слухати'
-          - 'слухаєте'
-        explanation: 'Use слухайте for more than one person.'
-      - sentence: '___ меню, будь ласка.'
+          - "слухай"
+          - "текст"
+        explanation: "Друзі addresses several people, selecting слухайте. Слухай is singular; текст is a noun, not a request predicate."
+      - sentence: "Пане офіціанте, ви вже тут? ___ меню, будь ласка."
         answer: 'Дайте'
         options:
           - 'Дайте'
-          - 'Дати'
-          - 'Даєте'
-        explanation: 'Дайте is a polite request.'
-      - sentence: '___, що ти хочеш.'
+          - "Дай"
+          - "Реченню"
+        explanation: "Explicit ви selects Дайте; Дай switches to ти. Реченню is a dative noun and cannot be the request predicate."
+      - sentence: "Олено, ти вже готова? ___, що ти хочеш."
         answer: 'Скажи'
         options:
           - 'Скажи'
-          - 'Сказати'
-          - 'Скажеш'
-        explanation: 'Скажи is the ти command.'
+          - "Скажіть"
+          - "Книжкою"
+        explanation: "Explicit ти selects Скажи; Скажіть switches to ви. Книжкою is an instrumental noun and cannot introduce the content clause as its predicate."
   - id: act-2
     type: quiz
     title: Ti or vy?
@@ -177,8 +177,8 @@ inline:
         answer: 'Відкрийте підручники, будь ласка.'
 workbook:
   - type: fill-in
-    title: Address plus command
-    instruction: Choose the command form that matches the address.
+    title: "Address and request"
+    instruction: "Choose the word that completes each request."
     items:
       - sentence: "Олено, ти вже тут? ___ мені книжку, будь ласка."
         answer: 'дай'
@@ -187,13 +187,13 @@ workbook:
           - 'дайте'
           - "дає"
         explanation: "Ти matches дай. Дайте belongs to ви; дає is third-person indicative."
-      - sentence: 'Пане Іване, ___ книжку!'
+      - sentence: "Пане Іване, ви вже тут? Тоді ___ книжку, будь ласка."
         answer: 'дайте'
         options:
           - 'дайте'
           - 'дай'
-          - 'дати'
-        explanation: 'Пане Іване takes polite ви.'
+          - "книжкою"
+        explanation: "Explicit ви selects дайте. Дай switches to ти; книжкою is an instrumental noun, not the request predicate."
       - sentence: "Тарасе, ти вже готовий? ___ в кафе зі мною."
         answer: 'іди'
         options:
@@ -201,27 +201,27 @@ workbook:
           - 'ідіть'
           - "іде"
         explanation: "Ти matches іди. Ідіть belongs to ви; іде is third-person indicative."
-      - sentence: 'Друзі, ___ в кафе.'
+      - sentence: "Друзі, ви вже готові? Тоді ___ в кафе."
         answer: 'ідіть'
         options:
           - 'ідіть'
           - 'іди'
-          - 'іти'
-        explanation: 'Use ідіть for a group.'
+          - "книжку"
+        explanation: "Друзі and ви identify several addressees. Ідіть agrees; іди is singular and книжку is a noun, not the missing predicate."
       - sentence: 'Маріє, ___, що ти хочеш.'
         answer: 'скажи'
         options:
           - 'скажи'
           - 'скажіть'
-          - 'сказати'
-        explanation: 'Use скажи with one familiar person.'
-      - sentence: 'Пані Оксано, ___, будь ласка.'
+          - "книжкою"
+        explanation: "The embedded ти identifies a familiar singular addressee, matching скажи. Скажіть switches to ви; книжкою cannot be the predicate introducing the content clause."
+      - sentence: "Пані Оксано, ви мене чуєте? Тоді ___, будь ласка."
         answer: 'скажіть'
         options:
           - 'скажіть'
           - 'скажи'
-          - 'сказати'
-        explanation: 'Use скажіть for polite address.'
+          - "книжкою"
+        explanation: "Explicit ви selects скажіть. Скажи switches to ти; книжкою is a noun and cannot supply the request predicate."
   - type: true-false
     title: Request checks
     instruction: Decide whether each statement fits this A1 lesson.

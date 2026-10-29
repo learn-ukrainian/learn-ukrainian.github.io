@@ -83,9 +83,9 @@ Use the compound future only: **я буду жити**, **вона буде пр
 
 ## Діалоги
 
-### Choose the time signal
+### Complete the life story
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "П’ять років тому я був студентом. ___ я жив у Торонто, а тепер живу в Києві.", "answer": "Раніше", "options": ["Раніше", "Завтра", "Наступного року"], "explanation": "Раніше fits the previous Toronto period. Завтра and наступного року point after the present Kyiv period, contradicting жив and the contrast."}, {"sentence": "___ я живу в Києві.", "answer": "Зараз", "options": ["Зараз", "Києві", "Працював"], "explanation": "Зараз is a time adverb. Києві requires a preposition as a location; працював cannot modify живу as a time expression."}, {"sentence": "___ я буду вчити українську.", "answer": "Далі", "options": ["Далі", "У дитинстві", "Раніше"]}, {"sentence": "Тепер мені тридцять років. ___ я ходила в школу.", "answer": "У дитинстві", "options": ["У дитинстві", "Завтра", "Наступного року"], "explanation": "У дитинстві fits the recalled school years; завтра and наступного року conflict with the completed earlier period."}]`)} instruction={"Pick the word that matches the time of the sentence."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "П’ять років тому я був студентом. ___ я жив у Торонто, а тепер живу в Києві.", "answer": "Раніше", "options": ["Раніше", "Завтра", "Наступного року"], "explanation": "Раніше fits the previous Toronto period. Завтра and наступного року point after the present Kyiv period, contradicting жив and the contrast."}, {"sentence": "___ я живу в Києві.", "answer": "Зараз", "options": ["Зараз", "Києві", "Працював"], "explanation": "Зараз is a time adverb. Києві requires a preposition as a location; працював cannot modify живу as a time expression."}, {"sentence": "___ я буду вчити українську.", "answer": "Далі", "options": ["Далі", "У дитинстві", "Раніше"]}, {"sentence": "Тепер мені тридцять років. ___ я ходила в школу.", "answer": "У дитинстві", "options": ["У дитинстві", "Завтра", "Наступного року"], "explanation": "У дитинстві fits the recalled school years; завтра and наступного року conflict with the completed earlier period."}]`)} instruction={"Choose the word or phrase that completes each sentence."} isUkrainian={false} />
 
 ### Розкажи про себе
 
@@ -350,7 +350,7 @@ and **далі**.
 </TabItem>
 <TabItem label="Activities">
 
-### Choose the time signal
+### Complete the life story
 
 *(see lesson, §Діалоги)*
 
