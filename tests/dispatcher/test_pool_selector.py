@@ -47,6 +47,7 @@ def meter(left=50, *, end=LATER, age=0, **kw):
     ("reset_before_api", s.ResetRequired, "second", "window_exhausted"),
     ("headless_api", s.Selected, "second", "headless_requires_api"),
     ("api_overflow", s.Selected, "second", "window_exhausted"),
+    ("api_pool_exhausted", s.Refused, None, "pool_exhausted"),
 ])
 def test_selector_acceptance_table(case, expected, chosen, rejection):
     first, second = pool("first"), pool("second")
@@ -72,6 +73,20 @@ def test_selector_acceptance_table(case, expected, chosen, rejection):
         meters["first"] = replace(meter(), windows=(*meter().windows, s.Window("session", 0, SOON)))
     elif case == "unverified_protection":
         pools = [replace(first, protects_held=False)]
+    elif case == "api_pool_exhausted":
+        pools = [pool("first", kind="api", account="synthetic-api")]
+        assertion = s.Policy("test-policy", tuple(pools))
+        failed = {"status": "failed", "finished_at": (NOW - timedelta(seconds=1)).isoformat(),
+                  "agent": "codex", "model": "approved-model", "codex_account": "synthetic-api"}
+        for error in ("credit balance is too low", "insufficient_quota", "HTTP 429: billing limit reached"):
+            failed["error"] = error
+            depleted = s.apply_exhaustion({"first": meter(age=10)}, assertion, [failed], NOW)
+            assert depleted["first"].status == "pool_exhausted"
+            assert s.apply_exhaustion({"first": meter()}, assertion, [failed], NOW)["first"].status == "ok"
+            cleared = replace(assertion, pools=(replace(pools[0], cleared_at=NOW.isoformat()),))
+            assert s.apply_exhaustion({"first": meter(age=10)}, cleared, [failed], NOW)["first"].status == "ok"
+        assert not s.pool_exhausted("HTTP 429: five-hour window rate limit")
+        meters = depleted
     else:
         pools = [first, second]
         if case == "expiry_boundary":

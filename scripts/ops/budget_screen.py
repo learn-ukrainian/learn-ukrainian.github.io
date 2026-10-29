@@ -15,12 +15,10 @@ if __package__ in {None, ""}:
 from scripts.dispatcher import pool_selector as selector
 
 
-def shadow_history(now: datetime, pool_sources: dict[str, str]) -> tuple[Counter, dict]:
-    from scripts.dispatcher.store import list_tasks
-
+def shadow_history(now: datetime, pool_sources: dict[str, str], records: list[dict]) -> tuple[Counter, dict]:
     counts = Counter()
     samples = {}
-    for record in list_tasks(include_archive=True):
+    for record in records:
         shadow = record.get("pool_shadow") or {}
         observed = selector.timestamp(shadow.get("observed_at"))
         if (observed and now - timedelta(hours=24) <= observed <= now
@@ -74,12 +72,18 @@ def screen(policy_path: Path | None = None, *, redact: bool = False) -> str:
         sources = selector.budget_sources(selector.read_budget(), now)
     except Exception:
         sources = {}
-    counts, history = shadow_history(now, {p.key: p.source for p in policy.pools} if policy else {})
+    from scripts.dispatcher.store import list_tasks
+
+    records = list_tasks(include_archive=True)
+    counts, history = shadow_history(now, {p.key: p.source for p in policy.pools} if policy else {}, records)
+    meters = selector.apply_exhaustion({p.key: sources[p.source] for p in policy.pools if p.source in sources},
+                                        policy, records, now) if policy else {}
     entries = [(p.key, p.source, p) for p in policy.pools] if policy else []
     mapped = {source for _, source, _ in entries}
     entries.extend((source, source, None) for source in sources if source not in mapped)
     for label, source, pool in sorted(entries, key=lambda entry: entry[0]):
-        meter = sources.get(source, selector.Meter(None, ()))
+        meter = meters.get(pool.key) if pool else sources.get(source)
+        meter = meter or selector.Meter(None, ())
         if redact:
             label = f"pool-{len(rows) + 1}"
         left = ", ".join(f"{w.name}:{w.left:g}{w.unit}" for w in meter.windows if w.left is not None)
@@ -87,6 +91,8 @@ def screen(policy_path: Path | None = None, *, redact: bool = False) -> str:
             left = "[redacted]"
         if meter.status != "ok":
             left = "NOT CHECKED"
+        if meter.status == "pool_exhausted":
+            left = "POOL EXHAUSTED"
         if (pool and (pool.held or pool.kind == "held")) or source.endswith(":held"):
             left = "HELD " + left
         max_age = policy.max_age_s if policy else 720
@@ -100,7 +106,7 @@ def screen(policy_path: Path | None = None, *, redact: bool = False) -> str:
         pace = burn_pace(meter, previous)
         provider = source.split(":", 1)[0]
         check = ""
-        if not left or "NOT CHECKED" in left or "STALE" in left:
+        if not left or any(status in left for status in ("NOT CHECKED", "STALE", "POOL EXHAUSTED")):
             check = (pool.check_command if pool else "") or (
                 f"codexbar usage --provider {shlex.quote(provider)} --format json --no-color")
             if redact and pool and pool.check_command:

@@ -7,6 +7,8 @@ Private ``budget_pools.json`` has ``version``, ``max_age_s``,
 are ``provider``, ``models``, ``held`` and ``protects_held``. Subscription pools
 require explicit protection against drawing held credits. Policy and account
 assertions belong in host config, never in the repository.
+``account`` binds an API pool to its actual dispatch account. ``cleared_at``
+is an optional UTC timestamp of an operator note clearing an exhaustion report.
 """
 
 from __future__ import annotations
@@ -15,8 +17,9 @@ import hashlib
 import json
 import math
 import os
+import re
 import urllib.request
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
@@ -63,6 +66,8 @@ class Pool:
     provider: str | None = None
     models: tuple[str, ...] = ()
     check_command: str = ""
+    account: str | None = None
+    cleared_at: str | None = None
 
 
 @dataclass(frozen=True)
@@ -121,6 +126,8 @@ def choose_pool(route: Route, task: Task, meters: dict[str, Meter], policy: Poli
             reason = "headless_requires_api"
         elif pool.kind == "subscription" and not pool.protects_held:
             reason = "held_credit_protection_not_checked"
+        elif meter is not None and meter.status == "pool_exhausted":
+            reason = "pool_exhausted"
         elif meter is None or meter.status != "ok" or meter.observed_at is None:
             reason = "meter_not_checked"
         elif not 0 <= (now - meter.observed_at).total_seconds() < policy.max_age_s:
@@ -193,7 +200,9 @@ def read_policy(path: Path | None = None) -> Policy:
         if (not isinstance(pool.key, str) or not pool.key or pool.kind not in {"subscription", "api", "reset", "held"}
                 or not all(isinstance(v, str) for v in (pool.agent, pool.source, *pool.required_windows, *pool.models))
                 or any(type(getattr(pool, name)) is not bool
-                       for name in ("authorized", "binding_verified", "protects_held", "held"))):
+                       for name in ("authorized", "binding_verified", "protects_held", "held"))
+                or (pool.account is not None and not isinstance(pool.account, str))
+                or (pool.cleared_at is not None and timestamp(pool.cleared_at) is None)):
             raise ValueError("invalid private pool policy")
         pools.append(pool)
     if len({p.key for p in pools}) != len(pools):
@@ -266,6 +275,75 @@ def budget_sources(budget: dict, now: datetime) -> dict[str, Meter]:
     return result
 
 
+def pool_exhausted(message: str) -> bool:
+    """Provider billing exhaustion, never a five-hour limit or an ordinary 429."""
+    text = message.casefold()
+    return ("credit balance is too low" in text or "insufficient_quota" in text
+            or (re.search(r"\bbilling\b", text) is not None and re.search(r"\b429\b", text) is not None))
+
+
+def _provider_exhausted(record: dict) -> bool:
+    if pool_exhausted(str(record.get("error") or "")):
+        return True
+    # Existing parsers can retain only a generic failure. Inspect provider error
+    # events, never assistant/tool text or a whole transcript substring search.
+    from scripts.dispatcher.store import record_path
+
+    try:
+        path = record_path(record["task_id"]).parent / "logs" / f"{record['task_id']}.stdout.log"
+        with path.open("rb") as stream:
+            start = max(0, path.stat().st_size - 1024 * 1024)
+            stream.seek(start)
+            if start:
+                stream.readline()  # discard a partial JSON line
+            lines = stream.read(1024 * 1024).splitlines()
+        for line in lines:
+            try:
+                event = json.loads(line)
+            except ValueError:
+                continue
+            if not isinstance(event, dict):
+                continue
+            provider_error = ((record["agent"] == "codex" and event.get("type") == "turn.failed")
+                              or (record["agent"] == "claude" and (event.get("type") == "error"
+                                  or (event.get("type") == "result" and event.get("is_error") is True))))
+            if provider_error and pool_exhausted(json.dumps({k: event.get(k) for k in
+                    ("error", "errors", "result", "message", "api_error_status")})):
+                return True
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    return False
+
+
+def apply_exhaustion(meters: dict[str, Meter], policy: Policy, records: list[dict], now: datetime) -> dict[str, Meter]:
+    """Derive exhaustion from existing failed attempts; no new persistent state."""
+    result = {p.key: meters.get(p.key, Meter(None, ())) for p in policy.pools}
+    for record in records:
+        failed_at = timestamp(record.get("finished_at"))
+        if record.get("status") not in {"failed", "rate_limited"} or failed_at is None or failed_at > now:
+            continue
+        matching = []
+        for pool in policy.pools:
+            meter = result.get(pool.key)
+            cleared = timestamp(pool.cleared_at)
+            actual_account = record.get(f"{pool.agent}_account")
+            refreshed = (meter is not None and meter.status == "ok" and meter.observed_at is not None
+                         and meter.observed_at > failed_at
+                         and 0 <= (now - meter.observed_at).total_seconds() < policy.max_age_s)
+            if (pool.kind != "api" or meter is None
+                    or refreshed or (cleared and failed_at <= cleared <= now)
+                    or (pool.agent, pool.provider) != (record.get("agent"), record.get("provider"))
+                    or (pool.models and record.get("model") not in pool.models)
+                    or (pool.account is not None and pool.account != actual_account)
+                    or (pool.agent in {"claude", "codex"} and pool.account is None)):
+                continue
+            matching.append(pool)
+        if matching and _provider_exhausted(record):
+            for pool in matching:
+                result[pool.key] = replace(result[pool.key], status="pool_exhausted")
+    return result
+
+
 def shadow_decision(record: dict) -> dict:
     """Read and decide under the existing admission lock; never mutate the record."""
     from scripts.common.task_store_paths import tasks_dir
@@ -275,10 +353,13 @@ def shadow_decision(record: dict) -> dict:
     result = {"schema": "pool-shadow.v1", "observed_at": now.isoformat(), "shadow_only": True,
               "policy_version": None, "meter_sha256": None, "meters": {}}
     try:
+        from scripts.dispatcher.store import list_tasks
+
+        policy = read_policy()
+        sources = budget_sources(read_budget(), now)
+        meters = {p.key: sources[p.source] for p in policy.pools if p.source in sources}
+        meters = apply_exhaustion(meters, policy, list_tasks(include_archive=True), now)
         with admission_lock(tasks_dir()):
-            policy = read_policy()
-            sources = budget_sources(read_budget(), now)
-            meters = {p.key: sources[p.source] for p in policy.pools if p.source in sources}
             decision = choose_pool(Route(record["agent"], record["model"], record.get("provider")),
                                    Task(headless=True), meters, policy, now)
             result.update(decision=type(decision).__name__, **asdict(decision), policy_version=policy.version,
