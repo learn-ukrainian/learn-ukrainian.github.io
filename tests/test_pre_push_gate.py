@@ -4331,6 +4331,41 @@ def _remote_feature(repo: Path) -> str:
     return _git(repo, "ls-remote", "origin", "refs/heads/feature").stdout.strip()
 
 
+def test_commit_message_scan_ignores_discarded_comments_and_diff(tmp_path: Path) -> None:
+    """Generated editor text must not refuse a clean message; kept text must still refuse."""
+    from tests.githooks import install_message_scanner
+    from tests.opsec_fixtures import TOKEN
+
+    root = tmp_path / "repo"
+    root.mkdir()
+    _git(root, "init")
+    shutil.copytree(HOOK_DIR, root / ".githooks")
+    install_message_scanner(root)
+    message = root / ".git/test-message"
+
+    def scan(text: str) -> subprocess.CompletedProcess[str]:
+        message.write_text(text, encoding="utf-8")
+        return subprocess.run(
+            [sys.executable, str(root / ".githooks/pre_push_gate.py"), "--commit-message", str(message)],
+            cwd=root, env=_env(), capture_output=True, text=True, timeout=60,
+        )
+
+    for comment in ("#", "!"):
+        _git(root, "config", "core.commentChar", comment)
+        discarded = f"safe subject\n\n{comment} {TOKEN}\n{comment} ------------------------ >8 ------------------------\n{TOKEN}\n"
+        accepted = scan(discarded)
+        assert accepted.returncode == 0, accepted.stderr
+        refused = scan("safe subject\n\n" + TOKEN)
+        assert refused.returncode != 0
+        assert "rule=synthetic-rule" in refused.stderr and TOKEN not in refused.stderr
+        for cleanup in ("verbatim", "whitespace"):
+            _git(root, "config", "commit.cleanup", cleanup)
+            refused = scan(f"safe subject\n\n{comment} {TOKEN}\n")
+            assert refused.returncode != 0
+            assert "rule=synthetic-rule" in refused.stderr and TOKEN not in refused.stderr
+        _git(root, "config", "--unset", "commit.cleanup")
+
+
 def test_push_refuses_a_flagged_message_committed_with_no_verify(push_repo: Path) -> None:
     """A skipped commit-msg check must not publish a flagged intermediate message."""
     from tests.opsec_fixtures import TOKEN
