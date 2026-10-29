@@ -468,7 +468,7 @@
     "path": "scripts/ingest/sum20_mirror_import.py",
     "reference_count": 3,
     "kind": "writer",
-    "target_db": "sources.db candidate file in data/ (online-backup copy, mirror import, WAL seal)",
+    "target_db": "candidate store file in data/ (online-backup copy of the selected generation, mirror import, WAL seal)",
     "reason": "single writer of the sum20_mirror tables: builds and verifies a candidate under the store writer lock and publishes it with publish_generation; the selected generation is only read",
     "calls": [
       "sqlite3.connect(candidate)",
