@@ -50,6 +50,8 @@ def discard_dispatch_lease(task_id: str) -> str | None:
     """Remove the task's lease; never raises, so cleanup cannot stop the worker publishing the task."""
     try:
         lease = dispatch_lease(task_id)
+        if lease.parent.is_symlink():
+            return "lease left in place: the runtime tmp namespace is a symlink"  # never delete through it
         if lease.is_symlink():
             lease.unlink()
         else:

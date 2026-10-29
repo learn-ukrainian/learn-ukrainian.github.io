@@ -57,6 +57,12 @@ def test_scratch_is_present_private_and_outside_the_checkout(worktree):
     with pytest.raises(ValueError, match="symlink"):
         create_dispatch_lease(TASK_ID, worktree)
     assert not any(elsewhere.iterdir())
+    # Cleanup never deletes through it either: a same-named directory at the target survives.
+    survivor = elsewhere / lease.name
+    survivor.mkdir()
+    (survivor / "keep.txt").write_text("kept")
+    assert "symlink" in discard_dispatch_lease(TASK_ID)
+    assert (survivor / "keep.txt").read_text() == "kept"
 
 
 def test_checkout_stays_read_only_and_only_the_scratch_is_writable(worktree):
