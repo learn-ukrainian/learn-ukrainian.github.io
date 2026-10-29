@@ -36,6 +36,12 @@ REQUIRED = [
     "leakage finding misquoting the request earns nothing",
     "pedagogy finding with every required anchor earns credit",
     "pedagogy finding missing the video decision anchor earns nothing",
+    "learner-state text labelled as a textbook page earns nothing",
+    "a textbook-page anchor needs a search_text receipt with hits",
+    "a textbook-page anchor with its search_text receipt earns credit",
+    "learner-state text relabelled as the coverage map earns nothing",
+    "an exercise stress finding on a fallback reading earns nothing, whatever the judge's facet",
+    "an exercise stress finding on a ULIF reading earns credit",
     "fresh writer gets exactly the production prompt over four inputs, no mode field",
     "a fresh writer that reached Sources is not scorable",
 ] + [f"{family}: maximum-size output with every claim off-label fits 32 calls" for family in FAMILIES]

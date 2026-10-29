@@ -81,6 +81,14 @@ PEDAGOGY_DEFECTS = (
 EXERCISE_REQUEST_DEFECTS = frozenset(
     {"stem_translates_answer", "stem_names_answer", "stem_describes_form", "giveaway_gloss", "answer_position_pattern"}
 )
+# The facet whose authorities a linguistic exercise defect's own receipt must satisfy.
+EXERCISE_DEFECT_FACETS = {
+    "distractor_agreement_leak": "form",
+    "ambiguous_key": "meaning",
+    "wrong_key": "meaning",
+    "stress": "stress",
+    "form": "form",
+}
 PEDAGOGY_NORMS = ("state_standard_2024", "ukrainian_school_textbooks", "ohoiko_method")
 ANCHOR_KINDS = (
     "standard_lines",
@@ -94,6 +102,11 @@ ANCHOR_KINDS = (
     "video_decision",
     "leak",
 )
+# The one permitted source of each anchor kind: a Sources receipt (``search_text``) for a
+# textbook page, a JSON pointer below the named request field, or else a ``norm_evidence``
+# entry of the same kind.
+ANCHOR_RECEIPT_KINDS = frozenset({"textbook_page"})
+ANCHOR_POINTER_ROOTS = {"learner_state": "/learner_state", "leak": "/snippet"}
 # Required anchors per pedagogy defect (protocol roster, lines 206-215): each tuple is one
 # required part, satisfied by an anchor of any kind it lists.
 PEDAGOGY_ANCHORS: dict[str, tuple[tuple[str, ...], ...]] = {

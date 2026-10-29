@@ -911,7 +911,7 @@
     },
     {
       "ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
-      "sha256": "c2e28fd8fce19313474fe9c175615d08f757b7927fa49e5908906c665220faa6",
+      "sha256": "4676816a307aa7d6539c12f52bc07a10f86cc10587bc991b19b4c7971c89e44a",
       "status": "PINNED",
       "owner": "evaluation-maintainer"
     },
@@ -929,8 +929,8 @@
     },
     {
       "ref": "private://uk-behaviour-v2/card-review-prompt",
-      "sha256": null,
-      "status": "MISSING",
+      "sha256": "ad5045f2918c961a9dac936d39af408b2cce5304f3ff1ad7bca1e9323568ecf8",
+      "status": "PINNED",
       "owner": "coordinator-and-evaluation-maintainer"
     },
     {
@@ -1291,11 +1291,11 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/binding.py",
-        "sha256": "a3222c1ece7e3d3b9071f510f45058f35c64dc52f2bcbc3331e57d4c54d487ee"
+        "sha256": "b5a04acb44d68b597c0febca8f07a3b5b1a6d259b2976ad7b997deceabc63042"
       },
       {
         "path": "scripts/eval/uk_behaviour/contract.py",
-        "sha256": "7ef7104a89e3b51eb8997d7203aa907df76cc5c35da0a06d53aade22c77f630b"
+        "sha256": "d3f3ce3a522f7aeef805507ee867ef26143c0caabda3db2a856bd8a8412d2aa2"
       },
       {
         "path": "scripts/eval/uk_behaviour/coverage.py",
@@ -1311,7 +1311,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/prove.py",
-        "sha256": "6aa1c0a2f643136e4bddbbf7d64066fe85fb661626e888190242f68939282c9b"
+        "sha256": "8d6b48145087c3b11cb09082b964aafefac38bab020f18274c658d4d585aa3a3"
       },
       {
         "path": "scripts/eval/uk_behaviour/reward.py",
@@ -1327,7 +1327,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/scorer.py",
-        "sha256": "3fb98530c2ed23a38edbf11528809243fec4d51ada92f1d5589c9d9ee0a0fb47"
+        "sha256": "f532c517a85c7e8a524f550b17b174c18003d7ca171d8a364e0aa5d956f8d41c"
       }
     ],
     "rubric_sha256": "978141f2d6f2d61c36a517a0dbfee6a51104a618312b98375ce7816240b1fe8f",
@@ -1337,8 +1337,16 @@
       {
         "family": "card_review",
         "ref": "private://uk-behaviour-v2/card-review-prompt",
-        "sha256": null,
-        "acceptance": null
+        "sha256": "ad5045f2918c961a9dac936d39af408b2cce5304f3ff1ad7bca1e9323568ecf8",
+        "acceptance": {
+          "advisor": "gpt-6.1-sol",
+          "family": "openai",
+          "harness": "codex",
+          "round": 2,
+          "verdict": "ACCEPT",
+          "ref": "private://uk-behaviour-v2/prompt-acceptance/round-2",
+          "sha256": "7cb37b301be7f1832d7d9915300dc4d13003f80b954c2253223b70456b04abbd"
+        }
       },
       {
         "family": "exercise_review",

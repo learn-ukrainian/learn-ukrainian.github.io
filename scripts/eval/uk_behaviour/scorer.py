@@ -29,10 +29,14 @@ from unicodedata import normalize
 from scripts.eval.uk_preamble.common import sha256_text
 from scripts.eval.uk_preamble.dataset import ReviewItem, _review_item
 from scripts.eval.uk_preamble.scoring import review_counts
+from scripts.review.receipts.outcomes import search_outcome
 
 from . import adapters
 from .binding import SUM11_POSITIVE, VERIFIED, LedgerIndex, check_binding
 from .contract import (
+    ANCHOR_POINTER_ROOTS,
+    ANCHOR_RECEIPT_KINDS,
+    EXERCISE_DEFECT_FACETS,
     EXERCISE_REQUEST_DEFECTS,
     FAMILIES,
     INVALID_FABRICATED_RECEIPT,
@@ -103,37 +107,65 @@ def _candidate_evidence(
 ) -> bool:
     """Whether the finding carries its own checkable evidence (protocol lines 362-378).
 
-    Card and passage findings need a verified receipt they cite. Exercise and pedagogy
-    findings must also quote the request exactly at their location. A request-only exercise
-    defect rests on that quote (an answer-position finding also on key positions recomputed
-    from the block); a pedagogy finding needs every anchor its defect requires.
+    Its own receipts are checked against the authorities of the facet or defect the finding
+    itself declares, whatever facet the judge assigned. Card and passage findings need such a
+    receipt. Exercise and pedagogy findings must also quote the request exactly at their
+    location. A request-only exercise defect rests on that quote (an answer-position finding
+    also on key positions recomputed from the block); a linguistic exercise defect also needs
+    a receipt for its facet. A pedagogy finding needs every anchor its defect requires.
     """
-    own = any(b["role"] == "candidate" and b.get("receipt_id") in finding["receipts"] for b in verified)
+
+    def own(facet: str) -> bool:
+        return any(
+            b["role"] == "candidate"
+            and b.get("receipt_id") in finding["receipts"]
+            and check_binding(b, facet, index).status == VERIFIED
+            for b in verified
+        )
+
     if family in ("card_review", "passage_review"):
-        return own
+        return own(finding["facet"])
     location = finding["location"]
     if not _quoted(location["quote"], evidence.get(location["field"])):
         return False
     if family == "exercise_review":
-        if finding["defect"] == "answer_position_pattern":
+        defect = finding["defect"]
+        if defect == "answer_position_pattern":
             derived = adapters.block_key_positions(item, location["field"])
             return derived is not None and finding.get("key_positions") == derived and answer_position_pattern(derived)
-        return finding["defect"] in EXERCISE_REQUEST_DEFECTS or own
-    satisfied = set()
-    for anchor in finding["anchors"]:
-        if anchor["receipt"] is not None:
-            record = index.get("candidate", anchor["receipt"])
-            ok = (
-                anchor["kind"] == "textbook_page"
-                and anchor["receipt"] in finding["receipts"]
-                and record is not None
-                and _quoted(anchor["quote"], record.get("result"))
-            )
-        else:
-            ok = anchor["evidence"] is not None and _quoted(anchor["quote"], evidence.get(anchor["evidence"]))
-        if ok:
-            satisfied.add(anchor["kind"])
+        return defect in EXERCISE_REQUEST_DEFECTS or own(EXERCISE_DEFECT_FACETS[defect])
+    kinds = {entry["id"]: entry.get("kind") for entry in item.get("norm_evidence") or [] if isinstance(entry, dict)}
+    satisfied = {anchor["kind"] for anchor in finding["anchors"] if _anchor_ok(anchor, finding, evidence, kinds, index)}
     return all(any(kind in satisfied for kind in part) for part in PEDAGOGY_ANCHORS[finding["defect"]])
+
+
+def _anchor_ok(
+    anchor: dict[str, Any],
+    finding: dict[str, Any],
+    evidence: dict[str, str],
+    kinds: dict[str, Any],
+    index: LedgerIndex,
+) -> bool:
+    """One anchor through the single source its kind permits (``contract.ANCHOR_*``)."""
+    kind, receipt, source = anchor["kind"], anchor["receipt"], anchor["evidence"]
+    if (receipt is None) == (source is None):
+        return False  # exactly one source
+    if kind in ANCHOR_RECEIPT_KINDS:
+        record = index.get("candidate", receipt) if receipt is not None else None
+        return (
+            record is not None
+            and receipt in finding["receipts"]
+            and record.get("tool") == "search_text"
+            and search_outcome(str(record.get("status")), record.get("outcome_facts") or {}) == "hits_but_no_support"
+            and _quoted(anchor["quote"], record.get("result"))
+        )
+    if receipt is not None:
+        return False
+    root = ANCHOR_POINTER_ROOTS.get(kind)
+    if root is not None:
+        in_field = source == root or source.startswith(root + "/")
+        return in_field and _quoted(anchor["quote"], evidence.get(source))
+    return kinds.get(source) == kind and _quoted(anchor["quote"], evidence.get(source))
 
 
 def score_cell(

@@ -498,6 +498,123 @@ def _evidence_cases(root: Path) -> list[dict[str, Any]]:
         }
         result = _one_finding_cell(fx, finding, "the plan ignores the suitable video", "pedagogy")
         cases.append(_case(name, expected, result["R"]))
+
+    # The advisor's round-2 probes: anchors must take the one source their kind permits.
+    learner = {"steps": "knows no letters yet"}
+    textbook = [{"kind": "textbook_page", "evidence": None, "receipt": None, "quote": "x"}]
+    for name, anchors_used, receipt_tool, expected in (
+        (
+            "learner-state text labelled as a textbook page earns nothing",
+            [{"kind": "textbook_page", "evidence": "/learner_state/steps", "receipt": None, "quote": "no letters"}],
+            None,
+            0.1,
+        ),
+        ("a textbook-page anchor needs a search_text receipt with hits", textbook, "verify_words", 0.1),
+        ("a textbook-page anchor with its search_text receipt earns credit", textbook, "search_text", 1.0),
+    ):
+        fx = Fixture(root, f"textbook-{len(cases)}", "pedagogy_review")
+        fx.item = {
+            "item_id": "syn-pedagogy-t",
+            "judging_mode": "authoring",
+            "level": "A1",
+            "shape": "lesson",
+            "snippet": {"lesson": "letters before sounds"},
+            "target": "decoding",
+            "learner_state": learner,
+            "prerequisites": [],
+            "resources": [],
+            "norm_evidence": [],
+        }
+        receipts = []
+        used = [dict(anchor) for anchor in anchors_used]
+        if receipt_tool:
+            rid = ledger.append(
+                fx.paths["candidate"],
+                review_id=fx.paths["candidate"].parent.name,
+                attempt_id="candidate",
+                manifest_sha256=MANIFEST_SHA,
+                tool=receipt_tool,
+                server_version="fixture",
+                arguments={"query": "p"},
+                snapshots={},
+                status="ok",
+                result="Found 1 results for: p\nprinted page 13: sounds before letters",
+            )
+            receipts = [rid]
+            used[0] |= {"receipt": rid, "quote": "sounds before letters"}
+        finding = {
+            "id": "F1",
+            "defect": "textbook_sequencing",
+            "norm": "ukrainian_school_textbooks",
+            "anchors": used,
+            "location": {"field": "/snippet/lesson", "quote": "letters before sounds"},
+            "claim": "letters come before their sounds",
+            "proposed_edit": None,
+            "receipts": receipts,
+        }
+        result = _one_finding_cell(fx, finding, "letters come before their sounds", "pedagogy")
+        cases.append(_case(name, expected, result["R"]))
+
+    fx = Fixture(root, "relabel", "pedagogy_review")
+    fx.item = {
+        "item_id": "syn-pedagogy-r",
+        "judging_mode": "repair",
+        "level": "A1",
+        "shape": "plan",
+        "snippet": {"plan": "case system in week one"},
+        "target": "cases",
+        "learner_state": learner,
+        "prerequisites": [],
+        "resources": [],
+        "norm_evidence": [{"id": "std", "kind": "standard_lines", "locator": "l", "text": "case lines"}],
+    }
+    finding = {
+        "id": "F1",
+        "defect": "standard_coverage_or_sequencing",
+        "norm": "state_standard_2024",
+        "anchors": [
+            {"kind": "standard_lines", "evidence": "std", "receipt": None, "quote": "case lines"},
+            {"kind": "coverage_map", "evidence": "/learner_state/steps", "receipt": None, "quote": "no letters"},
+        ],
+        "location": {"field": "/snippet/plan", "quote": "case system"},
+        "claim": "the plan defers promised coverage",
+        "proposed_edit": None,
+        "receipts": [],
+    }
+    result = _one_finding_cell(fx, finding, "the plan defers promised coverage", "pedagogy")
+    cases.append(_case("learner-state text relabelled as the coverage map earns nothing", 0.1, result["R"]))
+
+    for name, reading, expected in (
+        ("an exercise stress finding on a fallback reading earns nothing, whatever the judge's facet", "trie", 0.1),
+        ("an exercise stress finding on a ULIF reading earns credit", "ulif", 1.0),
+    ):
+        fx = Fixture(root, f"stress-{reading}", "exercise_review")
+        rid = ledger.append(
+            fx.paths["candidate"],
+            review_id=fx.paths["candidate"].parent.name,
+            attempt_id="candidate",
+            manifest_sha256=MANIFEST_SHA,
+            tool="verify_stress",
+            server_version="fixture",
+            arguments={"words": ["w5"]},
+            snapshots={},
+            status="ok",
+            result=json.dumps({"status": "ok", "matches": [{"source": reading, "stressed_form": "w5"}]}),
+        )
+        finding = _finding("F1", 5, "the stress of w5 is wrong", [rid], defect="stress")
+        output = _envelope(fx.item, [finding])
+        binding = {
+            "role": "candidate",
+            "receipt_id": rid,
+            "polarity": "positive",
+            "evidence_excerpt": "stressed_form",
+            "source_locator": "ULIF",
+        }
+        assertion = _assertion(
+            "A1", "the stress of w5 is wrong", "F1", facet="exercise", slot_id="s1", bindings=[binding]
+        )
+        result = _score(fx, _label(fx.item, fx.family, required=1), output, _reply(fx, [assertion]))
+        cases.append(_case(name, expected, result["R"]))
     return cases
 
 
@@ -521,7 +638,7 @@ def _passage_cases(root: Path) -> list[dict[str, Any]]:
         findings = [
             {
                 "id": "F1",
-                "facet": "spelling_style",
+                "facet": "form",
                 "location": {"field": "/passage", "quote": "bb"},
                 "claim": "claim bb is misspelt",
                 "proposed_edit": {"field": "/passage", "replacement": "BB"},

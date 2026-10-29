@@ -184,7 +184,7 @@ def check_binding(binding: dict[str, Any], facet: str, index: LedgerIndex) -> Bi
             return BindingCheck(SUM11_POSITIVE, "slovnyk.me result is СУМ-11", sum11=True)
     if tool not in AUTHORITIES.get(facet, frozenset()):
         return BindingCheck(EVIDENCE_INVALID, f"{tool} is not a positive authority for {facet}")
-    if facet == "stress" and tool == "verify_stress" and not _ULIF_READING.search(result):
+    if tool == "verify_stress" and not _ULIF_READING.search(result):  # whatever facet the claim carries
         return BindingCheck(EVIDENCE_INVALID, "a stress reading needs ULIF provenance, not a fallback or override")
     return BindingCheck(VERIFIED, "")
 
