@@ -321,6 +321,7 @@ jobs:
             scripts/__init__.py
             scripts/common/__init__.py
             scripts/common/github_client.py
+            scripts/common/github_usage.py
             scripts/common/scratch.py
             scripts/opsec/__init__.py
             scripts/opsec/gh_snapshot.py

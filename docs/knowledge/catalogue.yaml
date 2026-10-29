@@ -2381,7 +2381,7 @@ store_registry:
       busy_source: explicit
       protection: rebuild
       backup: drop
-      retention: Unbounded today (no row eviction); a logical bound is DB plan step 5, and destructive eviction needs operator authorization.
+      retention: Unbounded today (no row eviction); a logical bound is DB plan step 5, and destructive eviction needs operator authorization. Its usage table (REST core requests per caller) keeps six hours.
     - path: data/wiki_cache.db
       owner: corpus-channels
       kind: cache
@@ -3049,6 +3049,12 @@ store_registry:
       owner: infra-harness
       backup: keep
       retention: coverage.py data inside review-closeout evidence, copied incidentally by the .agent tree.
+    - id: github-client-damaged-cache
+      class: backup_copy
+      paths: [batch_state/github-client/cache.sqlite3.corrupt]
+      owner: devops
+      backup: drop
+      retention: The one slot where the GitHub client sets aside a cache file SQLite reported as damaged before rebuilding it; each later damage replaces it. Kept for diagnosis, never read.
     - id: data-backup-copies
       class: backup_copy
       glob: data/backups/*.db

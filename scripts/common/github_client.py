@@ -13,7 +13,7 @@ then scope/key ascending. Oversized responses are returned without retention.
 These bounds never prune budgets or compact SQLite's allocated file. Records
 whose stored types/headers cannot identify a response are retained untouched.
 A cache file SQLite reports as damaged is set aside and rebuilt empty. Every REST
-core request sent is counted per caller in a private ledger (``scripts.common.github_usage``).
+core request sent is counted per caller in the cache's ``usage`` table (``scripts.common.github_usage``).
 
 Every request path (REST, injected transports and native gh) is normalized once
 (``_normalize``) and admitted by one decision, ``_refusal``. Only GitHub's own
@@ -63,6 +63,7 @@ CACHE_SCHEMA = (
     "CREATE TABLE cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))",
     "CREATE TABLE budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))",
     f"CREATE INDEX cache_retention ON cache(at,scope,key,{_CACHE_BYTES}) WHERE {_CACHE_RESPONSE}",
+    *github_usage.SCHEMA,
 )
 
 RESERVE = 10
@@ -1307,8 +1308,6 @@ class GitHubClient:
         self.max_response_bytes = max_response_bytes
         self._configure_host(canonical_host(self.env.get("GH_HOST", "github.com")))
         self.cache_dir = Path(cache_dir) if cache_dir is not None else _cache_directory()
-        # The usage ledger keeps the directory resolved here, even after the cache falls back to memory.
-        self.usage_dir = self.cache_dir
         self._memory_db = None
 
     def _configure_host(self, host):
@@ -1526,13 +1525,6 @@ class GitHubClient:
             if old_headers.get("etag"):
                 headers["If-None-Match"] = old_headers["etag"]
         response = self._send(method, endpoint, headers, raw, timeout)
-        if resource == "core" and response.status != 599:
-            github_usage.record(
-                self.usage_dir,
-                endpoint=github_usage.endpoint_template(method, resource_path),
-                status=response.status,
-                landing=normalized.call_class == "landing",
-            )
         h = {k.lower(): v for k, v in response.headers.items()}
         budget = _budget_headers(h)
         reset = None
@@ -1549,6 +1541,14 @@ class GitHubClient:
         for persist_attempt in range(2):
             try:
                 with self._db() as db:
+                    if resource == "core" and response.status != 599:
+                        # 599 is this client's own transport failure: nothing reached GitHub.
+                        github_usage.record(
+                            db,
+                            endpoint=github_usage.endpoint_template(method, resource_path),
+                            status=response.status,
+                            landing=normalized.call_class == "landing",
+                        )
                     if budget is not None:
                         remaining, reset = budget
                         _store_budget(
@@ -3308,6 +3308,14 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
     try:
         with client._db() as db:
             refusal = _admit(db, client.scope, request, client.clock())
+            if refusal is None and "core" in pools:
+                # Counted once when admitted, however many requests gh makes for it. A raw
+                # ``gh api`` that admission could not read is named by its verb alone.
+                if request.path:
+                    endpoint = github_usage.endpoint_template(request.method, request.path)
+                else:
+                    endpoint = "gh api" if str(args[1]) == "api" else " ".join(["gh", *map(str, args[1:3])])
+                github_usage.record(db, endpoint=endpoint, status=None, landing=request.call_class == "landing")
     except GitHubUnpreparedRequest as refused:
         return _result_process(args, _unprepared(refused.reason), {}, kwargs)
     if refusal is not None:
@@ -3355,19 +3363,6 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
         else None
     )
     response = framed[0] if framed is not None else None
-    if "core" in pools:
-        # A native command counts once, however many requests gh makes for it. A raw
-        # ``gh api`` that admission could not read is named by its verb alone.
-        if request.path:
-            endpoint = github_usage.endpoint_template(request.method, request.path)
-        else:
-            endpoint = "gh api" if str(args[1]) == "api" else " ".join(["gh", *map(str, args[1:3])])
-        github_usage.record(
-            client.usage_dir,
-            endpoint=endpoint,
-            status=response.status if response is not None else None,
-            landing=request.call_class == "landing",
-        )
     if injected and framed is not None:
         output = output[framed[1] :]
     if native.returncode:

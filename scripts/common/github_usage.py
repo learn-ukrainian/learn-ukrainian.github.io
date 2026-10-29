@@ -5,8 +5,11 @@ pool adds one row: when, who called and which endpoint. The caller is the dispat
 when there is one, else the calling command (a module or script name, never its arguments). The
 endpoint is a template: owner, repository, numbers, commit SHAs and ref names are replaced. A
 ``304`` is counted but not charged, because GitHub does not charge a conditional request that
-returns it. The ledger is its own file beside the client's cache, owner-only, so a damaged cache
-never loses the count, and it keeps a day. Recording never fails or holds a GitHub call.
+returns it; a native ``gh`` command has no status here and counts as charged.
+
+The rows live in the client's own cache file, owner-only, written in the transaction the client
+already opens for each request, so counting adds no connection and no wait to any call. Each
+write drops rows older than :data:`RETENTION_SECONDS`.
 
 Print the top consumers of the last hour::
 
@@ -26,14 +29,11 @@ import time
 from contextlib import suppress
 from pathlib import Path
 
-FILENAME = "usage.sqlite3"
-RETENTION_SECONDS = 24 * 60 * 60
-BUSY_SECONDS = 0.1
-"""Longest a record waits for another writer before it is dropped: the count never holds a call."""
+RETENTION_SECONDS = 6 * 60 * 60
 TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
-_SCHEMA = (
-    "CREATE TABLE IF NOT EXISTS request (at REAL, caller TEXT, endpoint TEXT, status INTEGER, landing INTEGER)",
-    "CREATE INDEX IF NOT EXISTS request_at ON request(at)",
+SCHEMA = (
+    "CREATE TABLE usage (at REAL, caller TEXT, endpoint TEXT, status INTEGER, landing INTEGER)",
+    "CREATE INDEX usage_at ON usage(at)",
 )
 _REPOSITORY = Path(__file__).resolve().parents[2]
 _GH_ENTRY = "scripts/opsec/gh_entry.py"
@@ -102,44 +102,33 @@ def endpoint_template(method, path):
     return f"{str(method).upper()} {'/'.join(segments)}"
 
 
-def record(directory, *, endpoint, status, landing, now=None):
-    """Count one request sent to the core pool. Best effort: an error or a busy ledger drops it."""
-    if directory is None:
-        return
-    path = Path(directory) / FILENAME
+def record(db, *, endpoint, status, landing, now=None):
+    """Count one request sent to the core pool on the client's open cache connection.
+
+    Best effort: a statement SQLite refuses (a read-only or damaged file) drops the row and
+    never fails the call, so a transaction that was read-only before still cannot fail here.
+    """
     now = time.time() if now is None else now
-    try:
-        Path(directory).mkdir(parents=True, exist_ok=True, mode=0o700)
-        db = sqlite3.connect(path, timeout=BUSY_SECONDS)
-        try:
-            with suppress(OSError):
-                os.chmod(path, 0o600)
-            with db:
-                for statement in _SCHEMA:
-                    db.execute(statement)
-                db.execute(
-                    "INSERT INTO request VALUES(?,?,?,?,?)",
-                    (now, caller(), endpoint, status, int(bool(landing))),
-                )
-                db.execute("DELETE FROM request WHERE at<?", (now - RETENTION_SECONDS,))
-        finally:
-            db.close()
-    except (sqlite3.Error, OSError) as error:
-        if corrupt(error):
-            set_aside(path)
+    with suppress(sqlite3.Error):
+        db.execute("INSERT INTO usage VALUES(?,?,?,?,?)", (now, caller(), endpoint, status, int(bool(landing))))
+        db.execute("DELETE FROM usage WHERE at<?", (now - RETENTION_SECONDS,))
 
 
 def top(directory, *, hours=1.0, limit=20, now=None):
     """The heaviest callers and endpoints of the last ``hours``, most charged first."""
-    path = Path(directory) / FILENAME
+    from scripts.lib.readonly_sqlite import open_readonly
+
+    path = Path(directory) / "cache.sqlite3"
     if not path.is_file():
         return []
     now = time.time() if now is None else now
-    db = sqlite3.connect(f"file:{path}?mode=ro", uri=True, timeout=5)
+    db = open_readonly(path)
     try:
+        if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='usage'").fetchone() is None:
+            return []
         rows = db.execute(
             """SELECT caller, endpoint, count(*) AS requests, sum(status IS NOT 304) AS charged, sum(landing) AS landing
-            FROM request WHERE at>=? GROUP BY caller, endpoint
+            FROM usage WHERE at>=? GROUP BY caller, endpoint
             ORDER BY charged DESC, requests DESC, caller, endpoint LIMIT ?""",
             (now - hours * 3600, limit),
         ).fetchall()
@@ -152,9 +141,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n", 1)[0])
     commands = parser.add_subparsers(dest="command", required=True)
     report = commands.add_parser("top", help="print the top REST core consumers")
-    report.add_argument("--hours", type=float, default=1.0, help="window to count (default: 1)")
+    report.add_argument("--hours", type=float, default=1.0, help="window to count (default: 1, at most 6)")
     report.add_argument("--limit", type=int, default=20, help="rows to print (default: 20)")
-    report.add_argument("--dir", type=Path, help="ledger directory (default: the GitHub client's cache directory)")
+    report.add_argument("--dir", type=Path, help="cache directory (default: the GitHub client's)")
     report.add_argument("--json", action="store_true", help="print JSON rows")
     args = parser.parse_args(argv)
     directory = args.dir
