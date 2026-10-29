@@ -371,6 +371,7 @@ def test_resolve_reviewer_cli_rejects_learner_semantic_profile_before_dispatch(t
     assert payload["trace"] == []
     assert "unsupported local-code-review profile" in payload["fail_closed_reason"]
     assert "post-build-review" in payload["fail_closed_reason"]
+    assert "review-loop/references/ukrainian.md, § Seats" in payload["fail_closed_reason"]
 
 
 def test_behavior_proof_recording_round_trips_into_receipt(tmp_path):
