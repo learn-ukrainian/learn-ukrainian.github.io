@@ -688,7 +688,7 @@
     },
     {
       "path": "agents_extensions/shared/rules/core.md",
-      "sha256": "2529a665c5257836fc475a59bef270e087da05561aaaea79394714ba687d70fe"
+      "sha256": "eea64a0574eef4c1ea65bef96272aecb5c41762449a73aef112d126422739f48"
     },
     {
       "path": "agents_extensions/shared/rules/core-curriculum.md",
@@ -704,7 +704,7 @@
     },
     {
       "path": "agents_extensions/shared/rules/storage-topology.md",
-      "sha256": "b024ec40d3791f6f7db858c5179baef1a40556175d204fb657a14d3f5d1fc847"
+      "sha256": "72284564fc69c574f59d07bdf4f6e3abdf75f93d156cedd740ca5bd80b2d8483"
     },
     {
       "path": "agents_extensions/shared/agents/curriculum-writer.md",
@@ -912,7 +912,7 @@
     },
     {
       "ref": "private://uk-behaviour-v2/semantic-scorer-and-judge-template",
-      "sha256": "938f3efee056827b968e20c96c5d0bac9dc21593178d9101ab1f5a64ab0a5f11",
+      "sha256": "c82c759b333db8d6b088c630ae99cff24fc266edc32a01dca3256966f9fb22f2",
       "status": "PINNED",
       "owner": "evaluation-maintainer"
     },
@@ -1290,7 +1290,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/adapters.py",
-        "sha256": "1d7c77931187d5376965e5a365b0e5edf22549a51c3f44e2bb184d10ba522514"
+        "sha256": "9e46e464f5edbadb272d00c93f7b91a1e93eb2d82e311c5cb328db82a12a583e"
       },
       {
         "path": "scripts/eval/uk_behaviour/binding.py",
@@ -1314,7 +1314,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/prove.py",
-        "sha256": "2070c77728ad817ff0e15b1bcc519d7de8ac1b7beddf32d59d2c449dc1a04c7e"
+        "sha256": "2e5b35548925cb9508503f5ff325507339b852181a9b27c71d70a243026e4f2b"
       },
       {
         "path": "scripts/eval/uk_behaviour/reward.py",
@@ -1330,7 +1330,7 @@
       },
       {
         "path": "scripts/eval/uk_behaviour/scorer.py",
-        "sha256": "fbd8cd45a23144fecca396b81a62813e930aebf1f507a2e081fab38b3d657958"
+        "sha256": "0c088e8e754424aeec97feaa1259266caa21daf3bff490598ad4d60f95362f75"
       }
     ],
     "rubric_sha256": "cbe49a10920c76e2778a7d067dc15c7d1524af5d3dae816b948ae1436cc875d7",
