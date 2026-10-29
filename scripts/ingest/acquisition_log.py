@@ -79,6 +79,22 @@ def duration(seconds: float | None) -> str:
     return f"{secs}s"
 
 
+def sleep_in_slices(
+    seconds: float, *, sleep: Callable[[float], None], interval: float, each: Callable[[float], None]
+) -> None:
+    """Sleep ``seconds`` in slices of at most ``interval`` and call ``each(seconds_left)`` after every
+    slice, so a long durable backoff still produces periodic output. A wait that fits in one
+    slice is a single ``sleep`` call, exactly as before."""
+    left = max(0.0, seconds)
+    while True:
+        step = min(left, interval)
+        sleep(step)
+        left -= step
+        each(left)
+        if left <= 0:
+            return
+
+
 class ProgressLog:
     """Human-readable progress for one dictionary job, written to stderr and ``path``.
 

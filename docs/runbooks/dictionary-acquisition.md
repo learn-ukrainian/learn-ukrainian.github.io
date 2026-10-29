@@ -141,7 +141,10 @@ While `run` or `supervise` works, stderr (the tmux pane) and
 
 Each resolved target (`positive`, `not_found`), each retry and each terminal error
 gets one line. A `progress` summary follows every `--progress-interval` seconds
-(default 60; not part of the frozen input) and again when the run stops. `done` is
+(default 60; not part of the frozen input) and again when the run stops. Summaries
+continue through long waits: a durable backoff or `Retry-After` is slept in
+interval-sized slices, and a job waiting for another job's host slot polls it every
+half second instead of blocking silently. Neither changes when a request is sent. `done` is
 the number of resolved targets; `rate` and `eta` are measured over the current
 process only, so downtime never distorts them, and `eta` is `unknown` until two
 targets resolve in this process. `supervise` adds `supervisor:` lines for each

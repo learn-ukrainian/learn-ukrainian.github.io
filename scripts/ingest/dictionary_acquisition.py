@@ -38,9 +38,11 @@ from scripts.ingest.acquisition_log import (
     PROGRESS_FILE,
     Interrupted,
     ProgressLog,
+    duration,
     interrupt_code,
     interrupt_name,
     operator_signals,
+    sleep_in_slices,
 )
 from scripts.lexicon.enrich_manifest import (
     _SLOVNYK_CACHE_SCHEMA_VERSION,
@@ -75,6 +77,7 @@ EXIT = {
 }
 # The code that decides what is requested, reused and parsed. Only these bodies are bound into
 # a job's frozen identity; logging, projection and retry plumbing elsewhere may change freely.
+HOST_POLL_SECONDS = 0.5
 TRANSPORT_FUNCTIONS = ("dictionary_name", "make_spec", "valid_slovnyk", "seed_row", "retry_after", "fetch_once")
 
 
@@ -106,13 +109,20 @@ def atomic_json(path: Path, value: Any) -> None:
 
 
 @contextlib.contextmanager
-def lock(path: Path, *, blocking: bool = False) -> Iterator[None]:
-    """Never unlink lock files: flock admission is released by the OS on crash."""
+def lock(path: Path, *, blocking: bool = False, idle: Callable[[], None] | None = None) -> Iterator[None]:
+    """Never unlink lock files: flock admission is released by the OS on crash.
+
+    A blocking lock with ``idle`` polls instead of parking in the kernel, calling ``idle`` (which
+    sleeps) between attempts so the caller can keep reporting progress while another job holds it."""
     with path.open("a") as handle:
-        try:
-            fcntl.flock(handle, fcntl.LOCK_EX | (0 if blocking else fcntl.LOCK_NB))
-        except BlockingIOError as exc:
-            raise JobError("conflicting_writer") from exc
+        while True:
+            try:
+                fcntl.flock(handle, fcntl.LOCK_EX | (0 if blocking and idle is None else fcntl.LOCK_NB))
+                break
+            except BlockingIOError as exc:
+                if not (blocking and idle):
+                    raise JobError("conflicting_writer") from exc
+                idle()
         try:
             yield
         finally:
@@ -300,12 +310,16 @@ def rebind_transport(conn, spec: dict[str, Any], targets: list[tuple[str, str]],
     other frozen field, including the targets, must already match. Returns False when already bound.
     """
     row = conn.execute("SELECT * FROM job").fetchone()
-    if row["spec"] == packed(spec):
-        return False
-    if not only_transport_differs(row["spec"], spec):
+    # Validate the stored job completely before reporting "already bound": a job that `run` would
+    # refuse for any reason other than the transport hash is never acceptable here.
+    if row["spec"] != packed(spec) and not only_transport_differs(row["spec"], spec):
+        raise JobError("frozen_input_mismatch")
+    if row["fingerprint"] != digest(row["spec"].encode()):
         raise JobError("frozen_input_mismatch")
     if [(r["target"], r["lookup"]) for r in conn.execute("SELECT * FROM results ORDER BY position")] != targets:
         raise JobError("durable_targets_mismatch")
+    if row["spec"] == packed(spec):
+        return False
     conn.execute(
         "CREATE TABLE IF NOT EXISTS transport_rebinds ("
         "event_id INTEGER PRIMARY KEY, old_sha256 TEXT NOT NULL, new_sha256 TEXT NOT NULL)"
@@ -575,11 +589,15 @@ def resolve_targets(
             report(conn, directory, clock())
             return code
         report(conn, directory, clock())
-        with lock(root / f"{host}.lock", blocking=True):
+        # Both waits below can last minutes (another job's Retry-After, this target's durable
+        # backoff); they keep the periodic summary going without changing when a request is sent.
+        with lock(root / f"{host}.lock", blocking=True, idle=lambda: (sleep(HOST_POLL_SECONDS), progress.tick())):
             throttle = root / f"{host}.json"
             gate = json.loads(throttle.read_text()) if throttle.exists() else {"next_request_at": 0}
             deadline = max(gate["next_request_at"], row["next_attempt_at"])
-            sleep(max(0, deadline - clock()))
+            sleep_in_slices(
+                max(0, deadline - clock()), sleep=sleep, interval=progress.interval, each=lambda _left: progress.tick()
+            )
             now = clock()
             # Reserve before GET, including a worst-case request timeout. A killed GET cannot
             # leave the next process sending a request immediately into the same host.
@@ -720,7 +738,12 @@ def supervise(
             # killed child never delivered its terminal exit code. Never busy-loop.
             wait = max(2, args.backoff)
             progress.emit(f"supervisor: run exited {result.returncode}; relaunching in {wait:g}s")
-            sleep(wait)
+            sleep_in_slices(
+                wait,
+                sleep=sleep,
+                interval=progress.interval,
+                each=lambda left: left > 0 and progress.emit(f"supervisor: relaunching in {duration(left)}"),
+            )
 
 
 class AcquisitionParser(argparse.ArgumentParser):

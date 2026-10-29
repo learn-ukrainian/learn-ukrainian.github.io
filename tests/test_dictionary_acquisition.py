@@ -1057,6 +1057,66 @@ def test_rebind_never_hides_other_drift_or_a_busy_job(tmp_path):
         assert conn.execute("SELECT COUNT(*) FROM sqlite_master WHERE name='transport_rebinds'").fetchone()[0] == 0
 
 
+def test_rebind_validates_the_whole_stored_job_even_when_the_spec_matches(tmp_path):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a", "b"))
+    assert invoke("run", argv, HTTP([response(503)], clock), clock) == 75
+    # Same spec, altered durable target: `run` refuses it, so `rebind` must not call it "already bound".
+    with database(tmp_path) as conn, conn:
+        conn.execute("UPDATE results SET target='other' WHERE position=1")
+    assert invoke("rebind", argv, HTTP([], clock), clock) == 2
+    assert (
+        json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"] == "durable_targets_mismatch"
+    )
+    with database(tmp_path) as conn, conn:
+        conn.execute("UPDATE results SET target='b' WHERE position=1")
+        conn.execute("UPDATE job SET fingerprint='tampered'")
+    for _ in range(2):  # a bad fingerprint is refused every time, never reported as success
+        assert invoke("rebind", argv, HTTP([], clock), clock) == 2
+        assert (
+            json.loads((tmp_path / "staging" / "refusal.json").read_text())["terminal_reason"]
+            == "frozen_input_mismatch"
+        )
+    assert invoke("run", argv, HTTP([], clock), clock) == 2
+
+
+def test_summaries_continue_through_a_long_backoff_without_changing_request_time(tmp_path, capsys):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a",), "--progress-interval", "600")
+    assert invoke("run", argv, HTTP([response(503, headers={"Retry-After": "3600"})], clock), clock) == 75
+    capsys.readouterr()
+    clock.sleeps.clear()
+    http = HTTP([response()], clock)
+    assert invoke("run", argv, http, clock) == 0
+    lines = capsys.readouterr().err.splitlines()
+    before_request = lines[: next(i for i, line in enumerate(lines) if "positive  a" in line)]
+    assert sum("progress 0/1" in line for line in before_request) >= 5
+    assert max(clock.sleeps) <= 600
+    assert http.calls[0][0] == 1000 + 3600  # first failure ended at 1000; the retry still waits exactly 3600s
+
+
+def test_summaries_continue_while_another_job_holds_the_host_slot(tmp_path, capsys):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("a",), "--progress-interval", "1")
+    holder = contextlib.ExitStack()
+    (tmp_path / "staging").mkdir()
+    holder.enter_context(acquisition.lock(tmp_path / "staging" / "slovnyk.lock"))
+    polls = []
+
+    def sleep(seconds):
+        clock.sleep(seconds)
+        polls.append(seconds)
+        if len(polls) == 4:
+            holder.close()
+
+    http = HTTP([response()], clock)
+    assert acquisition.main(["run", *argv], session_factory=lambda: http, clock=clock, sleep=sleep) == 0
+    lines = capsys.readouterr().err.splitlines()
+    before_request = lines[: next(i for i, line in enumerate(lines) if "positive  a" in line)]
+    assert polls[:4] == [acquisition.HOST_POLL_SECONDS] * 4
+    assert sum("progress 0/1" in line for line in before_request) >= 1
+
+
 KILL_RUNNER = """
 import subprocess, sys, time
 from pathlib import Path
