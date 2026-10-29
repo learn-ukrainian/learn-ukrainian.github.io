@@ -201,62 +201,62 @@ inline:
 workbook:
   - type: quiz
     title: Choose connected sentences
-    instruction: Choose the sentence whose words fit together.
+    instruction: Choose standard punctuation for these neutral sentences.
     items:
-      - prompt: Обери правильно побудоване речення.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Я читаю і пишу.
             correct: true
-          - text: Я читаєш і пишу.
+          - text: Я, читаю і пишу.
             correct: false
-          - text: Я читають і пишу.
+          - text: Я читаю і, пишу.
             correct: false
-        explanation: The stated subject agrees with читаю, not with the person/number forms читаєш or читають.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Я хочу каву, а ти?
             correct: true
-          - text: Я хочеш каву, а ти?
+          - text: Я хочу каву а ти?
             correct: false
-          - text: Я хочуть каву, а ти?
+          - text: Я хочу, каву а ти?
             correct: false
-        explanation: The stated subject agrees with хочу, not with the person/number forms хочеш or хочуть.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Гори гарні, але далеко.
             correct: true
-          - text: Гори гарна, але далеко.
+          - text: Гори гарні але далеко.
             correct: false
-          - text: Гори гарний, але далеко.
+          - text: Гори, гарні але далеко.
             correct: false
-        explanation: The subject requires гарні. гарна and гарний have a different gender or number.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Море тепле, бо літо.
             correct: true
-          - text: Море теплими, бо літо.
+          - text: Море тепле бо літо.
             correct: false
-          - text: Море теплий, бо літо.
+          - text: Море тепле бо, літо.
             correct: false
-        explanation: The subject requires тепле. теплими and теплий have a different gender or number.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Ви студент чи лікар?
             correct: true
-          - text: Ви студент чи лікарю?
+          - text: Ви студент чи, лікар?
             correct: false
-          - text: Ви студент чи лікарям?
+          - text: Ви студент, чи, лікар?
             correct: false
-        explanation: This construction requires nominative лікар. лікарю and лікарям are different case forms.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Ми вдома, тому що йде дощ.
             correct: true
-          - text: Ми вдома, тому що йдуть дощ.
+          - text: Ми вдома тому що йде дощ.
             correct: false
-          - text: Ми вдома, тому що йдеш дощ.
+          - text: Ми вдома тому що, йде дощ.
             correct: false
-        explanation: Singular дощ agrees with third-person singular йде, not plural йдуть or second-person йдеш.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
   - type: fill-in
     title: Travel plan connectors
     instruction: Choose the connector that fits the short travel sentence.
@@ -289,7 +289,7 @@ workbook:
           - 'або'
           - 'бо'
         explanation: 'Use а to compare two choices.'
-      - sentence: 'Карпати ___ море - дві хороші ідеї.'
+      - sentence: 'Карпати ___ море — дві хороші ідеї.'
         answer: 'і'
         options:
           - 'і'
@@ -323,8 +323,8 @@ workbook:
     title: Repair linking interference
     instruction: Match each learner mistake with the Ukrainian repair.
     pairs:
-      - left: 'Він вивчає українську, тому що я любить Україну.'
-        right: 'Він вивчає українську, тому що я люблю Україну.'
+      - left: 'Я вивчаю українську, тому що я любить Україну.'
+        right: 'Я вивчаю українську, тому що я люблю Україну.'
       - left: 'Я не прийшов, бо я захворіли.'
         right: 'Я не прийшов, бо я захворів.'
       - left: 'Я поважаю його за те що він дуже сміливий.'
@@ -367,16 +367,16 @@ workbook:
         explanation: 'Use commas, then one final і.'
   - type: error-correction
     title: Fix the linked sentence
-    instruction: Correct the connector, comma, or copied structure.
+    instruction: Keep the pronouns, numerals and intended people. Correct the verb form, noun case, connector spelling or punctuation.
     items:
-      - sentence: 'Він вивчає українську, тому що я любить Україну.'
+      - sentence: 'Я вивчаю українську, тому що я любить Україну.'
         error: 'любить'
         correction: 'люблю'
-        explanation: 'Я agrees with люблю. Любить is third-person singular.'
+        explanation: 'With the stated я, use first-person singular люблю.'
       - sentence: 'Я не прийшов, бо я захворіли.'
         error: 'захворіли'
         correction: 'захворів'
-        explanation: 'Я не прийшов identifies one male speaker, requiring masculine singular захворів. Захворіли is plural; що itself can introduce a causal clause.'
+        explanation: 'Я не прийшов identifies one male speaker, requiring masculine singular захворів. Захворіли is plural.'
       - sentence: 'Я поважаю його за те що він дуже сміливий.'
         error: 'за те що'
         correction: 'за те, що'
@@ -386,13 +386,13 @@ workbook:
         correction: 'працюю, а'
         explanation: 'Add the comma before а.'
       - sentence: 'Він дуже хоче що б ми всі прийшли.'
-        error: 'Він дуже хоче що б ми всі прийшли.'
-        correction: 'Він дуже хоче, щоб ми всі прийшли.'
-        explanation: 'Щоб is one conjunction here. The complete repair also separates the subordinate clause with a comma.'
+        error: 'хоче що б'
+        correction: 'хоче, щоб'
+        explanation: 'Write щоб as one conjunction and put a comma after хоче.'
       - sentence: 'Добрий день, мені 20 роки, і я студент.'
         error: 'роки'
         correction: 'років'
-        explanation: '20 requires genitive plural років. Both мені 20 років and я маю 20 років can express age.'
+        explanation: '20 requires genitive plural років.'
       - sentence: 'Я купив яблука і банани і груші.'
         error: 'яблука і банани і груші'
         correction: 'яблука, банани і груші'

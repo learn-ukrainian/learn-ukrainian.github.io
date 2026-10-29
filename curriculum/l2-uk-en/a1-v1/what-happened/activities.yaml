@@ -228,12 +228,12 @@ workbook:
         right: читали
   - type: error-correction
     title: Repair the A1 past tense
-    instruction: Fix the sentence by choosing the correct A1 form.
+    instruction: Keep the stated speaker, subject, time words and future auxiliary. Correct the verb form or spelling.
     items:
-      - sentence: 'Чоловік: Я читала. Жінка: Я читав.'
-        error: 'Чоловік: Я читала. Жінка: Я читав.'
-        correction: 'Чоловік: Я читав. Жінка: Я читала.'
-        explanation: 'The male speaker uses читав; the female speaker uses читала.'
+      - sentence: 'Жінка: Я читав книжку.'
+        error: 'читав'
+        correction: 'читала'
+        explanation: 'The stated female speaker uses читала.'
       - sentence: 'Чоловік: Я читала.'
         error: 'читала'
         correction: 'читав'

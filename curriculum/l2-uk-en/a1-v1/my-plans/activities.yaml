@@ -279,7 +279,7 @@ workbook:
         explanation: 'На жаль, не можу is the polite refusal.'
   - type: error-correction
     title: Repair plan sentences
-    instruction: Fix the weekly plan by keeping the compound future.
+    instruction: Keep pronouns and the intended day/time. Correct the form or preposition; use the compound future for plans.
     items:
       - sentence: 'У суботу я буду прибираю квартиру.'
         error: 'прибираю'
@@ -302,8 +302,8 @@ workbook:
         correction: 'вчити'
         explanation: 'After буду, use вчити.'
       - sentence: 'Я буду роблю домашнє завдання.'
-        error: 'Я буду роблю домашнє завдання.'
-        correction: 'Я буду робити домашнє завдання.'
+        error: 'роблю'
+        correction: 'робити'
         explanation: 'After буду, use the infinitive робити.'
       - sentence: 'У понеділку я маю урок.'
         error: 'понеділку'

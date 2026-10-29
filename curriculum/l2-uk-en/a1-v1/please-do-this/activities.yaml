@@ -161,62 +161,62 @@ inline:
   - id: act-4
     type: quiz
     title: Polite request sentences
-    instruction: Choose the sentence whose words fit together.
+    instruction: Choose the imperative-mood form of the main action verb; keep the politeness phrase unchanged.
     items:
-      - prompt: Обери правильно побудоване речення.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Олено, читай, будь ласка.
             correct: true
-          - text: Олено, читай, будь ласку.
+          - text: Олено, читаєш, будь ласка.
             correct: false
-          - text: Олено, читай, будь ласки.
+          - text: Олено, читати, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Пане Іване, читайте, будь ласка.
             correct: true
-          - text: Пане Іване, читайте, будь ласку.
+          - text: Пане Іване, читаєте, будь ласка.
             correct: false
-          - text: Пане Іване, читайте, будь ласки.
+          - text: Пане Іване, читати, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Дайте мені меню, будь ласка.
             correct: true
-          - text: Дайте мені меню, будь ласку.
+          - text: Даєте мені меню, будь ласка.
             correct: false
-          - text: Дайте мені меню, будь ласки.
+          - text: Дати мені меню, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Дай мені меню, будь ласка.
             correct: true
-          - text: Дай мені меню, будь ласку.
+          - text: Даєш мені меню, будь ласка.
             correct: false
-          - text: Дай мені меню, будь ласки.
+          - text: Дати мені меню, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Скажіть ще раз, будь ласка.
             correct: true
-          - text: Скажіть ще раз, будь ласку.
+          - text: Кажете ще раз, будь ласка.
             correct: false
-          - text: Скажіть ще раз, будь ласки.
+          - text: Сказати ще раз, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Відкрийте підручники, будь ласка.
             correct: true
-          - text: Відкрийте підручники, будь ласку.
+          - text: Відкриваєте підручники, будь ласка.
             correct: false
-          - text: Відкрийте підручники, будь ласки.
+          - text: Відкрити підручники, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
 workbook:
   - type: fill-in
     title: "Address and request"
@@ -314,80 +314,80 @@ workbook:
         right: 'відкрий / відкрийте'
   - type: quiz
     title: Class and cafe requests
-    instruction: Choose the sentence whose words fit together.
+    instruction: Choose the imperative-mood form of the main action verb; keep the politeness phrase unchanged.
     items:
-      - prompt: Обери правильно побудоване речення.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Відкрийте підручники, будь ласка.
             correct: true
-          - text: Відкрийте підручники, будь ласку.
+          - text: Відкриваєте підручники, будь ласка.
             correct: false
-          - text: Відкрийте підручники, будь ласки.
+          - text: Відкрити підручники, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Читайте текст, будь ласка.
             correct: true
-          - text: Читайте текст, будь ласку.
+          - text: Читаєте текст, будь ласка.
             correct: false
-          - text: Читайте текст, будь ласки.
+          - text: Читати текст, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Пишіть три речення.
             correct: true
-          - text: Пишіть три реченню.
+          - text: Пишете три речення.
             correct: false
-          - text: Пишіть три реченням.
+          - text: Писати три речення.
             correct: false
-        explanation: The construction takes речення. The case forms реченню and реченням cannot replace it here.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Дайте мені меню, будь ласка.
             correct: true
-          - text: Дайте мені меню, будь ласку.
+          - text: Даєте мені меню, будь ласка.
             correct: false
-          - text: Дайте мені меню, будь ласки.
+          - text: Дати мені меню, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Дайте рахунок, будь ласка.
             correct: true
-          - text: Дайте рахунок, будь ласку.
+          - text: Даєте рахунок, будь ласка.
             correct: false
-          - text: Дайте рахунок, будь ласки.
+          - text: Дати рахунок, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Скажіть ще раз, будь ласка.
             correct: true
-          - text: Скажіть ще раз, будь ласку.
+          - text: Кажете ще раз, будь ласка.
             correct: false
-          - text: Скажіть ще раз, будь ласки.
+          - text: Сказати ще раз, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Олено, читай текст.
             correct: true
-          - text: Олено, читай текстом.
+          - text: Олено, читаєш текст.
             correct: false
-          - text: Олено, читай тексту.
+          - text: Олено, читати текст.
             correct: false
-        explanation: The construction takes текст. The case forms текстом and тексту cannot replace it here.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
+      - prompt: Choose the imperative-mood form of the main action verb.
         options:
           - text: Тарасе, дай меню, будь ласка.
             correct: true
-          - text: Тарасе, дай меню, будь ласку.
+          - text: Тарасе, даєш меню, будь ласка.
             correct: false
-          - text: Тарасе, дай меню, будь ласки.
+          - text: Тарасе, дати меню, будь ласка.
             correct: false
-        explanation: Both alternatives break the fixed request phrase будь ласка.
+        explanation: The main action uses an inflected imperative. The other action verbs are indicative or infinitive forms; the politeness phrase stays unchanged.
   - type: match-up
     title: Repair imperative interference
     instruction: Match each learner mistake with the Ukrainian repair.
@@ -406,7 +406,7 @@ workbook:
         right: 'Читаймо разом!'
   - type: error-correction
     title: Fix the request
-    instruction: Correct the command or request form.
+    instruction: Keep explicit ти/ви and the addressee. Correct the command form or spelling; use the imperative mood, or хай with a finite verb.
     items:
       - sentence: 'Олено, ти читайте текст.'
         error: 'читайте'
@@ -415,7 +415,7 @@ workbook:
       - sentence: 'Пане Іване, ви читай текст, будь ласка.'
         error: 'читай'
         correction: 'читайте'
-        explanation: 'The explicit polite subject ви requires читайте. An infinitive command is not inherently ungrammatical.'
+        explanation: 'The explicit polite subject ви requires читайте.'
       - sentence: 'Друзі, я робімо це зараз.'
         error: 'я робімо'
         correction: 'робімо'

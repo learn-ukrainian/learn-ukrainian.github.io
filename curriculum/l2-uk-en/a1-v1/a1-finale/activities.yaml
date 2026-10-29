@@ -181,7 +181,7 @@ workbook:
         explanation: 'This is clear A1 identity language.'
       - statement: 'Вчора я снідає у кафе.'
         answer: false
-        explanation: 'Я does not agree with third-person снідає. In a past narrative, я снідав or я снідала is usual; narrative present is also possible.'
+        explanation: 'Я does not agree with third-person снідає.'
       - statement: 'Зараз я їду на метро.'
         answer: true
         explanation: 'Зараз plus present їду is clear.'
@@ -296,7 +296,7 @@ workbook:
         explanation: 'Use завтра + буду читати.'
   - type: error-correction
     title: Repair final A1 lines
-    instruction: Fix the common finale mistake.
+    instruction: Keep the named speaker, subject and time words. Correct forms; use the compound future for future plans.
     items:
       - sentence: "Мене звати Адаму."
         error: "Адаму"
@@ -309,12 +309,12 @@ workbook:
       - sentence: 'Завтра я гуляв у парку.'
         error: 'гуляв'
         correction: 'буду гуляти'
-        explanation: 'Use буду + infinitive for tomorrow.'
+        explanation: 'Keep Завтра. The compound future is буду гуляти.'
       - sentence: 'Я буду читаю українську.'
         error: 'читаю'
         correction: 'читати'
-        explanation: 'After буду, use the infinitive.'
-      - sentence: 'Я маю Канада.'
-        error: 'маю Канада'
-        correction: 'з Канади'
-        explanation: 'Use Я з Канади for country of origin.'
+        explanation: 'In the requested compound future, use буду plus infinitive читати.'
+      - sentence: 'Я з Канада.'
+        error: 'Канада'
+        correction: 'Канади'
+        explanation: 'After з for origin, use genitive Канади.'

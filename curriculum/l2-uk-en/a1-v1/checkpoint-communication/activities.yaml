@@ -220,30 +220,30 @@ workbook:
             correct: false
         explanation: The construction takes Новим роком. The case forms Новий рік and Новому році cannot replace it here.
   - type: group-sort
-    title: Which module does it review?
-    instruction: Sort each item by the A1.7 module it reviews.
+    title: Sort communication functions
+    instruction: Sort each word or phrase by the function it expresses.
     groups:
-      - name: 'M42 calling'
+      - name: 'calling a person'
         items:
           - 'Олено!'
           - 'Тарасе!'
           - 'Друже!'
-      - name: 'M43 requests'
+      - name: 'commands'
         items:
           - 'принеси'
           - 'постав'
           - 'дайте'
-      - name: 'M44 connectors'
+      - name: 'addition, contrast or a reason'
         items:
-          - 'і'
-          - 'але'
-          - 'бо'
-      - name: 'M45 details'
+          - 'Я читаю і пишу.'
+          - 'Я хочу, але не можу.'
+          - 'Я вдома, бо я хворий.'
+      - name: 'knowing a fact, place or time'
         items:
-          - 'що'
-          - 'де'
-          - 'коли'
-      - name: 'M46 holidays'
+          - 'Я знаю, що урок сьогодні.'
+          - 'Я знаю, де кафе.'
+          - 'Я знаю, коли урок.'
+      - name: 'holiday greetings and names'
         items:
           - 'З Новим роком!'
           - 'З Великоднем!'
@@ -340,7 +340,7 @@ workbook:
         explanation: 'Use the fixed greeting З Новим роком.'
   - type: error-correction
     title: Repair the checkpoint
-    instruction: Correct the A1.7 communication mistake.
+    instruction: Keep explicit pronouns, named people, the holiday and intended message. Correct address, imperative command forms or punctuation.
     items:
       - sentence: 'Олена, принеси листівки.'
         error: 'Олена'
@@ -362,10 +362,10 @@ workbook:
         error: 'Новий рік'
         correction: 'Новим роком'
         explanation: 'Use the fixed greeting form.'
-      - sentence: 'Маріє, принести маркери.'
-        error: 'принести'
+      - sentence: 'Маріє, ти принесіть маркери.'
+        error: 'принесіть'
         correction: 'принеси'
-        explanation: 'Use the command form принеси.'
+        explanation: 'The explicit familiar ти takes the singular imperative принеси.'
       - sentence: 'Я думаю що все готово.'
         error: 'думаю що'
         correction: 'думаю, що'

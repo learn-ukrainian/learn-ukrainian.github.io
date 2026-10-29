@@ -288,62 +288,62 @@ workbook:
         right: 'Він читає відтоді.'
   - type: quiz
     title: Choose short complex sentences
-    instruction: Choose the sentence whose words fit together.
+    instruction: Choose standard punctuation for these neutral sentences.
     items:
-      - prompt: Обери правильно побудоване речення.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Я знаю, що це кафе.
             correct: true
-          - text: Я знаєш, що це кафе.
+          - text: Я знаю що це кафе.
             correct: false
-          - text: Я знають, що це кафе.
+          - text: Я знаю що, це кафе.
             correct: false
-        explanation: The stated subject agrees with знаю, not with the person/number forms знаєш or знають.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Я не знаю, де парк.
             correct: true
-          - text: Я не знаєш, де парк.
+          - text: Я не знаю де парк.
             correct: false
-          - text: Я не знають, де парк.
+          - text: Я не знаю де, парк.
             correct: false
-        explanation: The stated subject agrees with знаю, not with the person/number forms знаєш or знають.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Скажи, коли урок.
             correct: true
-          - text: Скажи, якого урок.
+          - text: Скажи коли урок.
             correct: false
-          - text: Скажи, котрому урок.
+          - text: Скажи коли, урок.
             correct: false
-        explanation: Коли introduces the time question. Якого and котрому have no compatible noun or syntactic role here.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Вона каже, що магазин близько.
             correct: true
-          - text: Вона кажеш, що магазин близько.
+          - text: Вона каже що магазин близько.
             correct: false
-          - text: Вона кажуть, що магазин близько.
+          - text: Вона каже що, магазин близько.
             correct: false
-        explanation: The stated subject agrees with каже, not with the person/number forms кажеш or кажуть.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Ти знаєш, де нове кафе?
             correct: true
-          - text: Ти знаю, де нове кафе?
+          - text: Ти знаєш де нове кафе?
             correct: false
-          - text: Ти знає, де нове кафе?
+          - text: Ти знаєш де, нове кафе?
             correct: false
-        explanation: The stated subject agrees with знаєш, not with the person/number forms знаю or знає.
-      - prompt: Обери правильно побудоване речення.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
+      - prompt: Choose the standard punctuation for this neutral sentence.
         options:
           - text: Я думаю, що це правильно.
             correct: true
-          - text: Я думаєш, що це правильно.
+          - text: Я думаю що це правильно.
             correct: false
-          - text: Я думають, що це правильно.
+          - text: Я думаю що, це правильно.
             correct: false
-        explanation: The stated subject agrees with думаю, not with the person/number forms думаєш or думають.
+        explanation: The key places commas at clause boundaries and does not separate a subject from its predicate or a connector from its clause.
   - type: true-false
     title: Connector checks
     instruction: Decide whether each statement fits this A1 module.
@@ -374,7 +374,7 @@ workbook:
         explanation: 'It is short and practical.'
   - type: error-correction
     title: Repair what, where, when
-    instruction: Correct the connector, comma, or place/time word.
+    instruction: Keep the named place, event and time. Correct the connector, comma or place/time word.
     items:
       - sentence: 'Я знаю де кафе.'
         error: 'знаю де'

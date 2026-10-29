@@ -166,7 +166,7 @@ workbook:
           - 'Великдень'
           - 'Великодні'
         explanation: 'Use З Великоднем.'
-      - sentence: 'Двадцять четвертого серпня - День ___ України.'
+      - sentence: 'Двадцять четвертого серпня — День ___ України.'
         answer: 'Незалежності'
         options:
           - 'Незалежності'
@@ -271,7 +271,7 @@ workbook:
         explanation: 'Паски belong with Великдень.'
   - type: error-correction
     title: Repair holiday interference
-    instruction: Correct the greeting, pattern, or holiday word.
+    instruction: Keep the people, named holiday and stated action (such as singing or baking). Correct forms, holiday words, capitals, punctuation or dates.
     items:
       - sentence: 'Вітаю з Новий рік!'
         error: 'Новий рік'
@@ -301,7 +301,7 @@ workbook:
         error: 'писанки'
         correction: 'паски'
         explanation: 'Паски are baked. Писанки are decorated eggs.'
-      - sentence: 'День Незалежності України - 22 січня.'
+      - sentence: 'День Незалежності України — 22 січня.'
         error: '22 січня'
         correction: '24 серпня'
         explanation: '24 серпня is Independence Day of Ukraine.'

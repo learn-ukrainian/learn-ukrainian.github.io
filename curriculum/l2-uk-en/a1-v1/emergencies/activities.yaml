@@ -270,21 +270,21 @@ workbook:
         explanation: 'Use Подзвоніть за номером...'
   - type: error-correction
     title: Repair emergency lines
-    instruction: Fix the sentence by using the safe A1 emergency phrase.
+    instruction: Keep the action, people, location, number and intended emergency request. Correct the form or missing word.
     items:
       - sentence: 'Мене номер Анна.'
-        error: 'Мене номер Анна'
-        correction: 'Мене звати Анна'
+        error: 'номер'
+        correction: 'звати'
       - sentence: 'Я на вулиця Шевченка.'
         error: 'на вулиця'
         correction: 'на вулиці'
       - sentence: 'Потрібен швидка.'
-        error: 'Потрібен швидка'
-        correction: 'Потрібна швидка'
+        error: 'Потрібен'
+        correction: 'Потрібна'
       - sentence: 'Я загубив паспортом.'
         error: 'паспортом'
         correction: 'паспорт'
-        explanation: The lost object here is accusative паспорт. Паспортом is instrumental; паспорта is an attested accusative variant and is not condemned.
+        explanation: The lost object here is accusative паспорт. Паспортом is instrumental.
       - sentence: 'Подзвоніть номером 112.'
-        error: 'Подзвоніть номером'
-        correction: 'Подзвоніть за номером'
+        error: 'номером'
+        correction: 'за номером'

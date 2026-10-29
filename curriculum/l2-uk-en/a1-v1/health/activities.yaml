@@ -116,15 +116,15 @@ workbook:
       - statement: 'У мене болить горло.'
         answer: true
         explanation: 'This follows У мене болить + body part.'
-      - statement: 'Моя голова болить.'
+      - statement: 'У мене болить голова.'
         answer: true
-        explanation: 'Моя голова болить and У мене болить голова can both describe a headache.'
+        explanation: 'This is the plain pattern У мене болить plus a body part.'
       - statement: 'У мене кашель.'
         answer: true
         explanation: 'This is a fixed symptom phrase.'
-      - statement: 'Я є хворий.'
+      - statement: 'Я хворий.'
         answer: true
-        explanation: 'Я є хворий is grammatical. The copula є may also be omitted: Я хворий.'
+        explanation: 'This is a plain A1 way for a male speaker to say he is ill.'
       - statement: 'Мені потрібен лікар.'
         answer: true
         explanation: 'This is the help phrase.'
@@ -264,25 +264,25 @@ workbook:
         explanation: 'Use Повторіть, будь ласка.'
   - type: error-correction
     title: Repair health phrases
-    instruction: Fix the sentence by using the safe A1 health phrase.
+    instruction: Keep the speaker, the singular body part and the named illness or professional. Correct the form using a plain A1 health phrase.
     items:
-      - sentence: 'Моя голова болять.'
+      - sentence: 'У мене болять голова.'
         error: 'болять'
         correction: 'болить'
-        explanation: 'Singular голова agrees with болить, not plural болять.'
-      - sentence: 'Я маю біль голова.'
-        error: 'Я маю біль голова'
-        correction: 'У мене болить голова'
-        explanation: 'Use the natural Ukrainian health phrase.'
-      - sentence: 'Я є хворого.'
-        error: 'хворого'
+        explanation: 'Singular голова takes singular болить.'
+      - sentence: 'У мене болить головою.'
+        error: 'головою'
+        correction: 'голова'
+        explanation: 'The body part is nominative голова here, not instrumental головою.'
+      - sentence: 'Тарас: Я хвора.'
+        error: 'хвора'
         correction: 'хворий'
-        explanation: 'The predicate adjective here is nominative хворий. Є may be present or omitted.'
+        explanation: 'The stated male speaker Тарас uses хворий.'
       - sentence: 'Я потрібно лікар.'
-        error: 'Я потрібно лікар'
-        correction: 'Мені потрібен лікар'
-        explanation: 'Use the fixed help phrase.'
-      - sentence: 'У мене є нежитю.'
+        error: 'Я потрібно'
+        correction: 'Мені потрібен'
+        explanation: 'Use Мені потрібен before лікар.'
+      - sentence: 'У мене нежитю.'
         error: 'нежитю'
         correction: 'нежить'
-        explanation: 'The symptom noun is nominative нежить after є.'
+        explanation: 'Use nominative нежить to name the symptom.'

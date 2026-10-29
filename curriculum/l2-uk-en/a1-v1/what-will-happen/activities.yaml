@@ -283,7 +283,7 @@ workbook:
         explanation: 'Use будуть відпочивати.'
   - type: error-correction
     title: Repair future forms
-    instruction: Fix the sentence by using буду + infinitive.
+    instruction: 'Keep pronouns and time words. Repair the compound future: an agreed auxiliary plus an infinitive.'
     items:
       - sentence: 'Я буду читаю завтра.'
         error: 'читаю'
@@ -302,9 +302,9 @@ workbook:
         correction: 'дивитися'
         explanation: 'After будемо, use дивитися.'
       - sentence: 'Ми будемо читаємо текст.'
-        error: 'Ми будемо читаємо текст.'
-        correction: 'Ми будемо читати текст.'
-        explanation: 'In the compound future, only будемо changes; the second verb stays читати.'
+        error: 'читаємо'
+        correction: 'читати'
+        explanation: 'After будемо, use the infinitive читати.'
       - sentence: 'Вони будуть працюють.'
         error: 'працюють'
         correction: 'працювати'

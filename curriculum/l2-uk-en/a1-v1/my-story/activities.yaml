@@ -239,7 +239,7 @@ workbook:
         explanation: 'Use буду + infinitive for the future.'
   - type: error-correction
     title: Repair the timeline
-    instruction: Fix the time word and verb so the story stays clear.
+    instruction: Keep the named speaker, subject and time words. Correct forms; use the compound future for future plans.
     items:
       - sentence: 'Раніше Олена жив у Канаді.'
         error: 'жив'

@@ -287,7 +287,7 @@ workbook:
         explanation: 'Лягла fits a female speaker.'
   - type: error-correction
     title: Repair the yesterday narrative
-    instruction: Fix the sentence so it matches one female speaker's day.
+    instruction: Keep the female speaker, subject and time words. Correct the past-tense verb.
     items:
       - sentence: 'Зранку я прокинувся о сьомій.'
         error: 'прокинувся'
