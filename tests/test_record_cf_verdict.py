@@ -3722,3 +3722,24 @@ def test_archived_grant_keeps_its_seal(monkeypatch, tmp_path, stem):
     write_task(tasks, task_id="round-five", worktree_base_sha="4" * 40)
     with pytest.raises(recorder.RecordError, match=r"BUDGET_GRANT_REFUSED\[approval\].*is not its canonical result"):
         recorder.record("round-five", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+
+
+@pytest.mark.parametrize(
+    "entry,open_",
+    [
+        # Review round 2, F1: another finding's state and earlier language never reopen F2.
+        ("F2 [P1] docs/readme.md:3 fixed with evidence; F3 remains open.", False),
+        ("F2 [P1] docs/readme.md:3 still open.\n  Status: resolved at the new head.", False),
+        ("F2 [P1] docs/readme.md:3 was not resolved in round 1; now fixed with evidence.", False),
+        ("F2 [P1] docs/readme.md:3 resolved.", False),
+        ("F2 [P1] docs/readme.md:3 declined with evidence at docs/readme.md:9.", False),
+        ("F2 [P1] docs/readme.md:3 fixed in round 2, but still open: the retry path races.", True),
+        ("F2 [P1] docs/readme.md:3 not resolved: the retry path still races.", True),
+        ("F2 [P1] docs/readme.md:3 still open: unchanged since F1 was resolved.", True),
+        ("F2 [P1] docs/readme.md:3 two writers race on the lock. Impact: lost update.", True),
+    ],
+)
+def test_finding_disposition_is_its_own_last_one(entry, open_):
+    from scripts.review.budget_grant import finding_is_open
+
+    assert finding_is_open(entry, "F2") is open_

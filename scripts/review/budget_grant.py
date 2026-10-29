@@ -250,6 +250,29 @@ _STILL_OPEN = re.compile(
     r"\bstill open\b|\bremains open\b|\bunresolved\b|\bnot (?:yet )?(?:resolved|fixed|addressed)\b", re.I
 )
 _CLOSED = re.compile(r"\b(?:resolved|fixed|declined|withdrawn|closed|addressed|superseded)\b", re.I)
+_FINDING_MENTION = re.compile(r"\bF[1-9][0-9]{0,3}\b")
+
+
+def finding_is_open(entry: str, finding_id: str) -> bool:
+    """Whether an entry leaves ``finding_id`` open: its last disposition, about this finding only.
+
+    The text is cut at the first mention of another finding, so another
+    finding's state never counts. A closing word (``resolved``, ``fixed``,
+    ``declined`` …) after the last open marker (``still open``,
+    ``unresolved``, ``not resolved`` …) closes the finding; an open marker
+    after it, or no disposition at all (a newly raised finding), leaves it open.
+    """
+    others = [match.start() for match in _FINDING_MENTION.finditer(entry) if match[0] != finding_id]
+    text = entry[: others[0]] if others else entry
+    opened = [match.span() for match in _STILL_OPEN.finditer(text)]
+    closed = [
+        match.start()
+        for match in _CLOSED.finditer(text)
+        if not any(start <= match.start() < end for start, end in opened)
+    ]
+    if not closed:
+        return True
+    return bool(opened) and opened[-1][0] > closed[-1]
 
 
 def finding_entries(reply: str, finding_id: str) -> list[tuple[str | None, str]]:
@@ -271,8 +294,7 @@ def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, findin
 
     The keeper must read that head as rejected (an edited or unattested
     marker reads as unknown), and the finding's last entry in the reply
-    decides its disposition: ``still open`` keeps it open, ``resolved``,
-    ``fixed``, ``declined`` or a like word closes it, and its last stated
+    decides its disposition (:func:`finding_is_open`), and its last stated
     severity must be P0 or P1. Withheld findings are no evidence.
     """
     markers = recorder._trusted_markers(comments, login)
@@ -290,10 +312,7 @@ def open_blocker_cited(comments: Sequence[Mapping[str, Any]], login: str, findin
     severities = [severity for severity, _ in entries if severity]
     if not entries or not severities or severities[-1] not in BLOCKING_SEVERITIES:
         return None
-    last = entries[-1][1]
-    if not _STILL_OPEN.search(last) and _CLOSED.search(last):
-        return None
-    return head
+    return head if finding_is_open(entries[-1][1], finding_id) else None
 
 
 def admit_grant_round(
