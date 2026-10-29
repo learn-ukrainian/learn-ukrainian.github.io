@@ -32,7 +32,8 @@ def transport(calls, *, subject="clean (#1)", body="* clean", queue=False, head=
             assert "isInMergeQueue" not in args[args.index("--json") + 1].split(",")
             return subprocess.CompletedProcess(
                 args, 0, json.dumps({"number": 1, "isDraft": False, "headRefOid": HEAD, "state": "OPEN",
-                                    "baseRefName": "main", "isCrossRepository": False, "headRefName": "codex/fixture"}), ""
+                                    "baseRefName": "main", "isCrossRepository": False, "headRefName": "codex/fixture",
+                                    "statusCheckRollup": []}), ""
             )
         if args[:3] == ["gh", "pr", "checks"]:
             return subprocess.CompletedProcess(args, 0, "[]", "")

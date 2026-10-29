@@ -3467,13 +3467,16 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
             f"real-gh pr merge 1234 --repo unit/public --squash --subject=clean (#1234) --match-head-commit={head}"
         )
         # Squash text, then the recorded review seats (#12020); with none recorded, the
-        # checks again for a review status left behind; then the merge.
-        assert [record["argv"][:5] for record in sent[5:8]] == [
+        # head's own rollup for a review status left behind; then the merge.
+        assert [record["argv"][:5] for record in sent[5:11]] == [
             ["api", "--include", "--method", "POST", "graphql"],
             ["api", "--include", "--method", "GET", "repos/unit/public/issues/1234/comments?per_page=100"],
             ["api", "--include", "--method", "GET", "user?per_page=100"],
+            ["api", "--include", "--method", "GET", "repos/unit/public/pulls/1234"],
+            ["api", "--include", "--method", "GET", f"repos/unit/public/commits/{head}/check-runs?per_page=100"],
+            ["api", "--include", "--method", "GET", f"repos/unit/public/commits/{head}/status?per_page=100"],
         ]
-        assert [record["argv"][:2] for record in sent[8:]] == [["pr", "checks"], ["pr", "merge"]]
+        assert [record["argv"][:2] for record in sent[11:]] == [["pr", "merge"]]
         assert sent[-1]["--body-file"] == "* clean"
     elif readiness.startswith("squash-"):
         assert proc.returncode != 0

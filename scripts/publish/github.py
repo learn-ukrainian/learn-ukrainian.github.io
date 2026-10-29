@@ -371,8 +371,8 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
     status at all. Every reading but an exact-head approval refuses: an incomplete seat
     set, a rejection, unverifiable evidence and reviews of other heads only. A PR with no
     recorded review is outside the recorder's regime and is not refused here, unless the
-    head carries the recorder's status: then its record was removed or rewritten, and the
-    status alone is unverifiable.
+    head's own rollup carries the recorder's status: then its record was removed or
+    rewritten, and the status alone is unverifiable.
     """
     from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
     from scripts.orchestration.integration_sweep import NEEDS_SEAT, lookup_verdict
@@ -404,22 +404,26 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
     if state not in {"APPROVED", "needs-CF"}:
         raise gate.PublishBlocked(f"OPSEC: merge refused: recorded review verdict is {state} at this head.")
     if state == "needs-CF":
-        argv = ["gh", "pr", "checks", str(number), "--json", "name,bucket,state,workflow", "--repo", dest.split("/", 1)[1]]
+        from scripts.publish.merge_guard import _rollup_name
+
+        argv = ["gh", "pr", "view", str(number), "--json", "headRefOid,statusCheckRollup", "--repo", dest.split("/", 1)[1]]
         # As in the readiness read: forced colour would wrap the JSON in escape codes.
         env = {key: value for key, value in environment.items() if key not in {"CLICOLOR_FORCE", "FORCE_COLOR"}}
         env.update(NO_COLOR="1", CLICOLOR="0")
         try:
             result = runner(argv, cwd=cwd, env=env, capture_output=True, text=True, check=False, timeout=30)
-            rows = json.loads(result.stdout)
-            # gh exits 0, 1 (failing) or 8 (pending) after a complete read.
-            if result.returncode not in {0, 1, 8} or not isinstance(rows, list):
+            bound = json.loads(result.stdout)
+            rows = bound["statusCheckRollup"]
+            # The rollup and its head arrive in one response, so these rows are the judged head's.
+            if result.returncode or bound["headRefOid"].lower() != head.lower() or not isinstance(rows, list):
                 raise ValueError
-            names = {row["name"] for row in rows}
+            if any(not isinstance(row, dict) or _rollup_name(row) is None for row in rows):
+                raise ValueError
         except github_client.GitHubRateLimited:
             raise
         except Exception:
             raise gate.PublishBlocked("OPSEC: merge refused: review seats unverifiable.") from None
-        if DEFAULT_STATUS_CONTEXT in names:
+        if any(DEFAULT_STATUS_CONTEXT in (row.get("name"), row.get("context")) for row in rows):
             raise gate.PublishBlocked("OPSEC: merge refused: this head's review status has no verdict record.")
 
 

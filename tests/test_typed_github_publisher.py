@@ -79,6 +79,9 @@ def spy(calls, *, comment_edit=False, merge=False):
             return subprocess.CompletedProcess(
                 args, 0, json.dumps({"number": int(args[3]), "isDraft": False, "headRefOid": "a" * 40}), ""
             )
+        if merge and args[:3] == ["gh", "pr", "view"] and args[args.index("--json") + 1] == "headRefOid,statusCheckRollup":
+            # With no verdict recorded, the guard also reads the head's own rollup (#12020).
+            return subprocess.CompletedProcess(args, 0, json.dumps({"headRefOid": "a" * 40, "statusCheckRollup": []}), "")
         if (
             args[:3] == ["gh", "pr", "checks"]
             and "--json" in args
