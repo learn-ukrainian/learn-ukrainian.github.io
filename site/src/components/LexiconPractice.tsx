@@ -118,8 +118,11 @@ import {
   type CustomSet,
 } from '../lib/lexicon/custom-decks';
 import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken, isGoogleSyncConfigured } from '../lib/lexicon/google-drive-sync';
+import ReportProblemAction from './practice/ReportProblemAction';
+import { selectionReport } from '../lib/lexicon/practice-report-selection';
+import { bindDailyReport } from '../lib/lexicon/practice-report-daily';
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
-import { selectHeritagePracticePresentation, type HeritagePracticeContext } from '../lib/lexicon/practice-activity-adapters';
+import { heritageMatchPairSource, selectHeritagePracticePresentation, type HeritagePracticeContext } from '../lib/lexicon/practice-activity-adapters';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
 import {
   appendDrillFields,
@@ -1273,6 +1276,7 @@ function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData, lea
     left: displayPracticeForm(entry.lemma, learnerLevel),
     right: practiceDisplayGloss(entry, true),
     lemmaId: entry.lemmaId,
+    source: entry,
   }));
 }
 
@@ -3246,7 +3250,7 @@ function LexiconPracticeIsland({
           level: learnerLevel,
           deckVersion: deckLemmaKeys !== null ? selectedDeckFilter : 'daily-pool',
           createdAt,
-          items: displayablePicks.map((word) => ({
+          items: displayablePicks.map((word) => bindDailyReport({
             lemmaId: word.slug,
             origin: classifyDailyPracticeOrigin(word.slug, indexSource, state.cards, now),
             lemma: word.lemma,
@@ -3258,7 +3262,7 @@ function LexiconPracticeIsland({
             exampleEn: word.exampleEn ?? null,
             exampleProvenance: word.exampleProvenance ?? null,
             etymology: word.etymology ?? null,
-          })),
+          }, word)),
         };
 
         if (cancelled) return;
@@ -4232,7 +4236,7 @@ function LexiconPracticeIsland({
         // #6722: surface on the results screen — dedupe by lemma, keep the latest miss.
         setSessionMisses((items) => [
           ...items.filter((entry) => entry.lemmaId !== current.lemma.lemmaId),
-          { lemmaId: current.lemma.lemmaId, lemma: current.lemma.lemma, gloss: practiceDisplayGloss(current.lemma, true) },
+          { lemmaId: current.lemma.lemmaId, lemma: current.lemma.lemma, gloss: practiceDisplayGloss(current.lemma, true), report: selectionReport(current, current.mode === 'heritage' && current.heritage && mode === 'mixed' ? selectHeritagePracticePresentation(current.heritage, sessionSeed, deck?.heritage ?? [], heritageContext).kind : 'mc') },
         ]);
       }
       if (wasNew && rating !== 'again') {
@@ -5476,12 +5480,42 @@ function LexiconPracticeIsland({
               ) : (
                 renderPracticeEmptyState('practice.allCaughtUp', 'practice-all-caught-up')
               )}
+              {selection && !loading && <PracticeItemReports selection={selection} deck={deck} pairs={pairs} sessionSeed={sessionSeed} presentationVariants={mode === 'mixed'} heritageContext={heritageContext} learnerLevel={learnerLevel} chromeLocale={chromeLocale} />}
             </div>
           )}
         </div>
       )}
     </section>
   );
+}
+
+function PracticeItemReports({ selection, deck, pairs, sessionSeed, presentationVariants, heritageContext, learnerLevel, chromeLocale }: {
+  selection: PracticeSelection; deck: PracticeDeckData; pairs: ReturnType<typeof matchingPairs>;
+  sessionSeed: number; presentationVariants: boolean; heritageContext: HeritagePracticeContext;
+  learnerLevel: CefrLevel; chromeLocale: 'en' | 'uk';
+}) {
+  const report = selectionReport(selection);
+  if (!report.records.length) return null;
+  if (selection.mode === 'matching') return <ul>{pairs.map((pair) => <li key={pair.lemmaId}>
+    <span lang="uk">{pair.left}</span>
+    <ReportProblemAction records={[pair.source]} type="matching-pair" context={pair.left} chromeLocale={chromeLocale} />
+  </li>)}</ul>;
+  if (selection.mode === 'heritage' && selection.heritage) {
+    const presentation = presentationVariants
+      ? selectHeritagePracticePresentation(selection.heritage, sessionSeed, deck.heritage ?? [], heritageContext)
+      : { kind: 'mc' as const };
+    if (presentation.kind === 'match-up') return <ul>{presentation.item.pairs.map((pair, i) => {
+      const source = heritageMatchPairSource(pair);
+      return <li key={i}><span lang="uk">{pair.left}</span><ReportProblemAction records={source ? [source] : []} type="heritage:match-up" context={pair.left} chromeLocale={chromeLocale} /></li>;
+    })}</ul>;
+    return <ReportProblemAction {...report} type={`heritage:${presentation.kind}`} chromeLocale={chromeLocale} />;
+  }
+  const hasDrill = report.records.length > 2;
+  if (selection.mode !== 'flashcards' && !hasDrill) {
+    if (selection.mode === 'synonym' || selection.mode === 'imperative' || !orderedChoiceOptions(selection, deck, selection.choicePolarity, sessionSeed, learnerLevel).length) return null;
+    return <ReportProblemAction {...report} records={[...report.records, ...meaningDistractors(selection.lemma, deck, 3)]} type="meaning-choice" chromeLocale={chromeLocale} />;
+  }
+  return <ReportProblemAction {...report} chromeLocale={chromeLocale} />;
 }
 
 function formatNextDueLabel(nextDue: Date | null): { uk: string; en: string } | null {

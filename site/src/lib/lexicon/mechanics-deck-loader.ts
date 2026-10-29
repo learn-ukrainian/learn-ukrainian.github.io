@@ -1,3 +1,4 @@
+import { loadBundledPractice } from './practice-report';
 import {
   nounMechanicsFeedbackFor,
   type PracticeNounMechanicsCard,
@@ -160,24 +161,13 @@ export const MECHANICS_DECK_META: Record<MechanicsPosKey, MechanicsDeckMeta> = {
   },
 };
 
-const MECHANICS_LOADERS: Record<MechanicsPosKey, () => Promise<{ default: any }>> = {
-  noun: () => import('../../data/practice-mechanics/noun_mechanics_deck.json'),
-  adjective: () => import('../../data/practice-mechanics/adjective_mechanics_deck.json'),
-  verb: () => import('../../data/practice-mechanics/verb_mechanics_deck.json'),
-  pronoun: () => import('../../data/practice-mechanics/pronoun_mechanics_deck.json'),
-  numeral: () => import('../../data/practice-mechanics/numeral_mechanics_deck.json'),
-  adverb: () => import('../../data/practice-mechanics/adverb_mechanics_deck.json'),
-  function_words: () => import('../../data/practice-mechanics/function_words_deck.json'),
-  interjection: () => import('../../data/practice-mechanics/interjection_mechanics_deck.json'),
-};
-
 export async function loadMechanicsDeck(pos: MechanicsPosKey): Promise<NormalizedMechanicsCard[]> {
-  const loader = MECHANICS_LOADERS[pos];
-  if (!loader) return [];
-  const mod = await loader();
-  const raw = mod.default;
-  const rawCards: any[] = raw.cards ?? [];
+  const name = pos === 'function_words' ? 'function_words_deck' : `${pos}_mechanics_deck`;
+  return loadBundledPractice(`practice-mechanics/${name}.json`, (data) => normalizeMechanicsDeck(data, pos));
+}
 
+function normalizeMechanicsDeck(raw: unknown, pos: MechanicsPosKey): NormalizedMechanicsCard[] {
+  const rawCards = (raw as { cards?: unknown[] }).cards ?? [];
   return rawCards.map((c: any): NormalizedMechanicsCard => {
     switch (pos) {
       case 'noun': {

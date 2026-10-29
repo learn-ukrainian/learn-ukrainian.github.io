@@ -2,6 +2,8 @@ import { useEffect, useImperativeHandle, useMemo, useRef, useState, type ReactNo
 import { cardKey, loadState, rateCard, readZnoSessionSnapshot, writeZnoSessionSnapshot, selectZnoSessionTaskIds, type ZnoSessionSnapshot } from '../lib/lexicon/srs';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import { useChromeLocale } from '../lib/i18n/useChromeLocale';
+import { loadBundledPractice } from '../lib/lexicon/practice-report';
+import ReportProblemAction from './practice/ReportProblemAction';
 import znoDeckMeta from '../data/practice-zno-meta.json';
 
 export interface ZnoCharMark {
@@ -75,25 +77,10 @@ export interface ZnoPracticeDeckMeta {
  */
 export const ZNO_PRACTICE_DECK_META = znoDeckMeta as ZnoPracticeDeckMeta[];
 
-/** One dynamic-import chunk per deck, so opening one deck never pulls in the rest. */
-const ZNO_DECK_LOADERS: Record<string, () => Promise<{ default: ZnoPracticeDeck }>> = {
-  'zno-stress': () => import('../data/practice-zno.stress.json') as Promise<{ default: ZnoPracticeDeck }>,
-  'zno-paronym': () => import('../data/practice-zno.paronym.json') as Promise<{ default: ZnoPracticeDeck }>,
-  'zno-lexical-norm': () => import('../data/practice-zno.lexical-norm.json') as Promise<{ default: ZnoPracticeDeck }>,
-  'zno-morphological-norm': () => import('../data/practice-zno.morphological-norm.json') as Promise<{ default: ZnoPracticeDeck }>,
-  'zno-syntactic-norm': () => import('../data/practice-zno.syntactic-norm.json') as Promise<{ default: ZnoPracticeDeck }>,
-  'zno-orthography': () => import('../data/practice-zno.orthography.json') as Promise<{ default: ZnoPracticeDeck }>,
-  'zno-morphology': () => import('../data/practice-zno.morphology.json') as Promise<{ default: ZnoPracticeDeck }>,
-  'zno-syntax': () => import('../data/practice-zno.syntax.json') as Promise<{ default: ZnoPracticeDeck }>,
-  'zno-phonetics': () => import('../data/practice-zno.phonetics.json') as Promise<{ default: ZnoPracticeDeck }>,
-};
-
-/** Loads one ZNO deck's full task content on demand. `null` for an unknown deckId. */
+/** Loads only the selected tracked dataset. */
 export async function loadZnoDeck(deckId: string): Promise<ZnoPracticeDeck | null> {
-  const loader = ZNO_DECK_LOADERS[deckId];
-  if (!loader) return null;
-  const mod = await loader();
-  return mod.default;
+  if (!ZNO_PRACTICE_DECK_META.some((deck) => deck.deckId === deckId)) return null;
+  return loadBundledPractice(`practice-zno.${deckId.slice(4)}.json`, (data) => data as ZnoPracticeDeck);
 }
 
 function dayKey(now = new Date()): string {
@@ -482,6 +469,7 @@ function ZnoSession({ deck, initialSession, onExit, sessionControlsRef }: {
         </div>
       ) : null}
       <p className="zno-practice-attribution" lang="uk">{currentItem.attribution}</p>
+      <ReportProblemAction records={[currentItem]} type="zno-choice" chromeLocale={chromeLocale} />
       <div className="zno-practice-actions">
         <button type="button" className="zno-practice-next" onClick={next} disabled={!rated}>{chrome['zno.nextTask']}</button>
         <button type="button" className="zno-practice-back" onClick={() => setSession({ ...session, phase: { kind: 'summary' } })}>

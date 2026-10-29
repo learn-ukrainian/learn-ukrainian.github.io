@@ -2173,3 +2173,48 @@ test('F1 CDN media failure plus throwing speech fallback reports error promptly 
   expect(uncaught).toEqual([]);
   await test.info().attach('f1-browser-control.json', { body: JSON.stringify({ requests, uncaught, media: await page.evaluate(() => window.practiceAudioProbe.media.map((record) => ({ src: record.element.src, events: record.events, promises: record.promises }))) }), contentType: 'application/json' });
 });
+
+
+for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+  test(`item report keeps its public identity through grading at ${viewport.width}px (#10704)`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto('/practice/');
+    await page.evaluate(() => localStorage.setItem('private-report-test-progress', 'private-answer-sentinel'));
+    await page.locator('button[data-mode="cloze"]').click();
+    const report = page.locator('.lexicon-practice-stage .practice-report');
+    await expect(report).toBeVisible();
+    const action = report.getByRole('button');
+    await action.focus();
+    await page.keyboard.press('Enter');
+    await expect(report).toContainText(/public on GitHub|публічним на GitHub/);
+    const link = report.getByRole('link');
+    const href = (await link.getAttribute('href'))!;
+    const url = new URL(href);
+    expect(url.origin + url.pathname).toBe('https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/new');
+    expect(url.searchParams.get('template')).toBe('');
+    const body = url.searchParams.get('body')!;
+    expect(body.split('\n').map((line) => line.split(': ')[0])).toEqual(['deck', 'version', 'digest', 'item', 'type', 'interface-locale', 'public-prompt-reference-id']);
+    expect(body).not.toMatch(/private-report-test-progress|private-answer-sentinel/);
+    expect(body.split('\n')).toContain('type: cloze');
+    const item = decodeURIComponent(body.split('\n').find((line) => line.startsWith('item: '))!.slice('item: '.length));
+    expect(item).toMatch(/^[^:]+:cloze:.+$/u);
+    const input = page.getByTestId('practice-cloze').locator('input');
+    await input.fill('private-answer-sentinel');
+    await input.press('Enter');
+    await expect(page.locator('.lexicon-cloze-feedback')).toBeVisible();
+    const atlasHref = await page.getByTestId('practice-cloze').locator('a[href^="/lexicon/"]').getAttribute('href');
+    const lemmaId = decodeURIComponent(new URL(atlasHref!, page.url()).pathname.split('/')[2]);
+    expect(item.split(':').slice(0, 2)).toEqual([lemmaId, 'cloze']);
+    await expect(link).toHaveAttribute('href', href);
+    expect(await action.evaluate((element) => element.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
+    await page.context().route('https://github.com/**', (route) => route.fulfill({ status: 200, contentType: 'text/plain', body: 'Navigation intercepted. No issue submitted.' }));
+    const popupPromise = page.waitForEvent('popup');
+    await link.focus();
+    await page.keyboard.press('Enter');
+    const popup = await popupPromise;
+    await popup.waitForLoadState();
+    expect(popup.url()).toBe(href);
+    await expect(popup.locator('body')).toContainText('No issue submitted.');
+    await popup.close();
+  });
+}

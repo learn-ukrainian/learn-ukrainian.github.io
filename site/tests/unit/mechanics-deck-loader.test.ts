@@ -1,3 +1,6 @@
+import { webcrypto } from 'node:crypto';
+import { vi } from 'vitest';
+import { practiceReportUrl } from '../../src/lib/lexicon/practice-report';
 import { describe, it, expect } from 'vitest';
 import {
   ALL_MECHANICS_POS_KEYS,
@@ -24,6 +27,7 @@ describe('mechanics-deck-loader', () => {
   it.each(ALL_MECHANICS_POS_KEYS)(
     'loads and normalizes %s mechanics deck correctly with exact count and valid sentence blanks',
     async (pos: MechanicsPosKey) => {
+      vi.stubGlobal('crypto', webcrypto);
       const cards = await loadMechanicsDeck(pos);
       const meta = MECHANICS_DECK_META[pos];
 
@@ -46,6 +50,11 @@ describe('mechanics-deck-loader', () => {
       }
 
       const firstCard = cards[0];
+      const report = practiceReportUrl([firstCard], `mechanics:${pos}`, 'en');
+      expect(report).not.toBeNull();
+      if (pos === 'noun') expect(decodeURIComponent(new URL(report!).searchParams.get('body')!)).toContain('public-prompt-reference-id: site/src/data/practice-mechanics/noun_mechanics_deck.json/cards/0');
+      expect(new URL(report!).searchParams.get('body')).toContain(`item: ${firstCard.id}`);
+      expect(practiceReportUrl([{ ...firstCard }], `mechanics:${pos}`, 'en')).toBeNull();
       // Verify evaluation: correct pick
       const correctEval = firstCard.evaluate(firstCard.correctAnswer, 'uk');
       expect(correctEval.isCorrect).toBe(true);
