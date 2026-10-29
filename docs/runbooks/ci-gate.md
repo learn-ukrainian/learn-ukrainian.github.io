@@ -32,11 +32,15 @@ which the merge group runs. A deleted file has no edges in the candidate, so the
 surviving tests that depended on it come from the same scan of the base tree.
 The component inventory chooses no tests.
 
-PR title and body edits run the same admission checks as code updates. The
-Secret scan job reads title, body, branch and complete commit messages from
-the event and current PR metadata using the existing OPSEC rules. Queue scans
+CI does not run on PR title and body edits; an edit would restart the whole
+suite on an unchanged head. The `Scan PR publication fields` job in
+`pr-publication-scan.yml` runs on every PR event, including edits, and on queue
+candidates. It and the CI Secret scan job read title, body, branch and complete
+commit messages from the event and current PR metadata using the existing OPSEC
+rules. Queue scans
 read every member of the first-parent squash chain and each member's current
-PR metadata and source commits. A missing field, incomplete checkout, unsupported
+PR metadata and source commits. On `merge_group`, CI Gate repeats that scan as
+its last step, so an edit made while the queue run was testing still blocks. A missing field, incomplete checkout, unsupported
 event or unreadable range fails closed. Submitted values are never diagnostics
 or workflow environment inputs. The advisory PR-body guard also scans direct
 push branch names and complete commit ranges. A new topic branch uses its
