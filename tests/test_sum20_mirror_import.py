@@ -462,3 +462,41 @@ def test_stores_without_mirror_tables_serve_no_mirror_rows(store):
     with closing(open_readonly(target.selector)) as conn:
         assert sum20_mirror.served_rows(conn, "берег") == []
     assert generations.is_held(_selected(target))
+
+
+def test_a_failed_staging_snapshot_removes_its_partial_file(store, monkeypatch):
+    target, sha = store
+    previous = _selected(target)
+
+    def disk_full(fd):
+        raise OSError(28, "No space left on device")
+
+    monkeypatch.setattr(importer.os, "fsync", disk_full)
+    with pytest.raises(OSError):
+        importer.run_import(target, sha)
+    assert _selected(target) == previous and not _leftovers(target)
+
+
+def test_an_error_after_the_selector_switch_is_reported_as_published(store, monkeypatch, capsys):
+    target, sha = store
+    previous = _selected(target)
+    real_complete = generations._complete_receipt
+    calls = []
+
+    def fail_after_the_switch(generation):
+        calls.append(generation)
+        if len(calls) > 1:  # the publisher's first call completes the previous receipt, before the switch
+            raise generations.GenerationError("receipt_write_failed")
+        real_complete(generation)
+
+    monkeypatch.setattr(generations, "_complete_receipt", fail_after_the_switch)
+    assert importer.main(["import", "--expect-staging-sha256", sha], test_data_dir=target.data_dir) == 3
+    report = json.loads(capsys.readouterr().out)
+    selected = _selected(target)
+    assert selected != previous and not _leftovers(target)
+    assert report == {
+        "status": "published_post_switch_failed",
+        "reason": "receipt_write_failed",
+        "generation": selected.name,
+        "previous": previous.name,
+    }

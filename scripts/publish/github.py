@@ -548,7 +548,7 @@ def publish(
         def queue_probe():
             identity = readiness_runner(
                 ["gh", "pr", "view", str(fields["number"]), "--repo", gh_repo,
-                 "--json", "headRefOid,isCrossRepository,baseRefName"],
+                 "--json", "id,headRefOid,isCrossRepository,baseRefName,labels"],
                 cwd=cwd, env=environment, capture_output=True, text=True, check=False, timeout=15,
             )
             if identity.returncode:
@@ -567,10 +567,50 @@ def publish(
             current = document["data"]["repository"]["pullRequest"]
             if document.get("errors") or not isinstance(current, dict) or current.get("headRefOid") != identity["headRefOid"]:
                 raise ValueError("queue state unavailable or head changed")
-            return {**current, "isCrossRepository": identity["isCrossRepository"]}
+            return {
+                **current,
+                "isCrossRepository": identity["isCrossRepository"],
+                "id": identity.get("id"),
+                "labels": identity.get("labels"),
+            }
+
+        def queue_jump(pull):
+            """Whether this enqueue jumps the queue; unreadable evidence never jumps."""
+            from scripts.orchestration.integration_sweep import PRIORITY_LABEL, priority_jump
+
+            labels = pull.get("labels")
+            if not isinstance(labels, list) or PRIORITY_LABEL not in {
+                row.get("name") for row in labels if isinstance(row, dict)
+            }:
+                return False
+            if not isinstance(pull.get("id"), str):
+                raise ValueError("node id unavailable")
+            documents = {}
+            for name in ("identity", "comments", "timeline"):
+                result = read(
+                    name, repo=gh_repo, runner=readiness_runner, cwd=cwd, env=environment,
+                    capture_output=True, text=True, check=False, timeout=15,
+                    **({} if name == "identity" else {"number": fields["number"], "paginate": True, "slurp": True}),
+                )
+                if result.returncode:
+                    raise ValueError(f"{name} unavailable")
+                value = json.loads(result.stdout)
+                documents[name] = value if name == "identity" else [row for page in value for row in page]
+            jumped = priority_jump(
+                labels, documents["timeline"], documents["comments"], fields["match_head"],
+                documents["identity"].get("login"),
+            )
+            if not jumped:
+                print(
+                    f"queue-jump: refused; {PRIORITY_LABEL} was not applied by the fleet login"
+                    " after the approval of this exact head",
+                    file=sys.stderr,
+                )
+            return jumped
 
         recovery_queue = False
         already_queued = False
+        jump = False
         if verb == "pr-merge":
             from scripts.publish.merge_guard import ensure_merge_ready
 
@@ -597,6 +637,13 @@ def publish(
                     already_queued = before["isInMergeQueue"]
                 except Exception:
                     raise gate.PublishBlocked("QUEUE_STATE_UNKNOWN: enqueue refused before publication") from None
+                if not already_queued:
+                    try:
+                        jump = queue_jump(before)
+                    except github_client.GitHubRateLimited:
+                        raise
+                    except Exception:
+                        print("queue-jump: priority evidence unreadable; enqueuing without jump", file=sys.stderr)
             for key in ("subject", "body"):
                 if key not in fields:
                     fields[key] = default[key]
@@ -699,6 +746,15 @@ def publish(
         elif verb == "issue-close":
             option("comment")
             option("reason")
+        elif verb == "pr-merge" and jump:
+            # gh pr merge cannot jump; the queue composes the squash text scanned above.
+            frozen = temp / "enqueue.json"
+            frozen.write_bytes(json.dumps({
+                "query": "mutation($id:ID!,$head:GitObjectID!){enqueuePullRequest(input:"
+                "{pullRequestId:$id,expectedHeadOid:$head,jump:true}){mergeQueueEntry{position jump}}}",
+                "variables": {"id": before["id"], "head": fields["match_head"]},
+            }).encode("utf-8"))
+            argv = ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen), *_hostname_flag(dest)]
         elif verb == "pr-merge":
             argv.append("--squash")
             option("subject")
@@ -801,6 +857,9 @@ def publish(
             stdout=stdout,
             stderr=stderr,
         )
+        if jump and result.returncode == 0:
+            result.queue_jump = True
+            print(f"queue-jump: enqueued at the front of the merge queue at {fields['match_head']}", file=sys.stderr)
         return result
 
 

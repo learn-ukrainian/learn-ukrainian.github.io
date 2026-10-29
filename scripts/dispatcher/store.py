@@ -97,7 +97,7 @@ def new_record(
             record["worktree_remote_url"] = origin if origin in canonical_origins(repository) else None
         except (OSError, ValueError, subprocess.SubprocessError):
             record["worktree_remote_url"] = None
-    fields = ("task_id", "agent", "provider", "model", "effort", "mode", "claude_account")
+    fields = ("task_id", "agent", "provider", "model", "effort", "mode", "claude_account", "codex_account")
     record.update({name: getattr(spec, name) for name in fields})
     from scripts.dispatcher.watchdog import deadlines
 
