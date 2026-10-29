@@ -1,0 +1,48 @@
+name: PR publication scan
+
+# The edit-time publication scan. ci.yml does not subscribe to `edited`, so a
+# PR title or body edit re-checks only the PR text here instead of restarting
+# the full suite. ci.yml still scans publication fields for PR pushes and the
+# merge queue.
+#
+# "Scan PR publication fields" blocks a bad title or body edit once branch
+# protection requires it. It also runs for merge_group, so the required
+# context reports on queue candidates. No push trigger: a push run would add a
+# skipped check of the same name to the head, and a skipped check counts as
+# success for a required context.
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+  merge_group:
+
+permissions:
+  contents: read
+
+concurrency:
+  # Keyed by PR number: a rapid edit cancels the previous scan, and the newer
+  # run checks the same or a newer head. Queue runs are never cancelled.
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  pr-publication:
+    # Reads title, body, branch and commit messages from the event and the
+    # current PR metadata; a queue run reads every member's current metadata.
+    name: Scan PR publication fields
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Full history for commit messages; no historical blobs.
+          fetch-depth: 0
+          filter: blob:none
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Scan publication fields
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"

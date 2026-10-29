@@ -4,8 +4,8 @@ Safety invariant under test: no event path may make the required "CI Gate"
 check green or skipped without every job required by the event tier running.
 
 - ci.yml runs the same admission checks for opened/synchronize/reopened, never
-  `edited`. pr-body-guard.yml scans publication fields on title and body edits
-  and holds the negated-closing-reference body guard.
+  `edited`. pr-publication-scan.yml scans publication fields on title and body
+  edits. The negated-closing-reference body guard lives in pr-body-guard.yml.
 - Exactly one job in any workflow is named "CI Gate". It uses `if: always()`
   and fails when a required job was cancelled or skipped unexpectedly;
   GitHub treats a skipped required job as success.
