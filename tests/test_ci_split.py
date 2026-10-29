@@ -775,7 +775,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
     assert record['run_files'] == sorted([*guards, 'tests/test_new.py', 'tests/test_space name.py'])
     assert record['execution_status'] == 'completed' and record['exit_code'] == 0
     assert record['skipped_cases'] == 0 and record['failed_cases'] == 0
-    assert 'full pytest was not run' in (tmp_path / 'summary').read_text()
+    assert 'the full pytest shards run in their own jobs' in (tmp_path / 'summary').read_text()
     assert 'deferred test-case count: UNKNOWN' in (tmp_path / 'summary').read_text()
     # Duration deferral cannot suppress a marker, including under pytest's
     # normally excluded build/ directory, or execute its unmarked neighbour.
