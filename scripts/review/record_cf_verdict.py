@@ -132,7 +132,9 @@ def normalize_verdict(reply: str) -> str:
     tokens = {NORMALIZED[token.upper()] for token in recognized_verdicts(reply)}
     visible = _without_code_fences(reply, keep_unclosed=False)
     if any(_REVIEW_VERDICT_LINE_RE.match(line) for line in _commonmark_lines(visible)):
-        findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply)}
+        # The verdict line is the reply's stated verdict; it holds a findings block that approves with follow-ups.
+        stated = next(iter(tokens)) if len(tokens) == 1 else None
+        findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply, stated=stated)}
         offset = 0
         for line in _commonmark_lines(visible, keepends=True):
             line_start = offset
@@ -145,7 +147,7 @@ def normalize_verdict(reply: str) -> str:
                 _, end = json.JSONDecoder().raw_decode(visible, start)
             except ValueError:
                 continue
-            findings.update(NORMALIZED[token] for token in _findings_json_verdicts(visible[start:end]))
+            findings.update(NORMALIZED[token] for token in _findings_json_verdicts(visible[start:end], stated=stated))
         if findings and findings != tokens:
             raise RecordError("reply carries a findings payload contradicting a verdict line")
     if len(tokens) != 1:
