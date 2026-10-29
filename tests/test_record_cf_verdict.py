@@ -766,6 +766,31 @@ def test_verdict_beyond_review_budget_is_refused(monkeypatch, tmp_path, risk, se
         assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
 
 
+@pytest.mark.parametrize("orphan_head,refused", [("c" * 40, True), ("1" * 40, False)], ids=["own-head", "reviewed-head"])
+def test_a_superseded_runs_unpublished_only_head_still_counts_a_round(monkeypatch, tmp_path, capsys, orphan_head, refused):
+    """A head reviewed only by a superseded run is a reviewed head; a head already counted is not counted twice."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    seat = dict(model="claude-opus-5-5", agent="claude", pr=42, review_profile="code")
+    write_task(tasks, task_id="orphan", reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=orphan_head,
+               started_at="2026-09-23T10:00:00.000001+00:00", **seat)
+    for index in (1, 2):
+        sha = f"{index}" * 40
+        write_task(tasks, task_id=f"round-{index}", reply="VERDICT: REQUEST_CHANGES", worktree_base_sha=sha,
+                   started_at="2026-09-23T11:00:00.000001+00:00", **seat)
+        comments.append(recorded_verdict(sha, "CHANGES_REQUESTED", task_id=f"round-{index}"))
+    kwargs = dict(pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    check = ["budget-check", "--repository", REPOSITORY, "--pr", "42"]
+    monkeypatch.setattr(recorder, "budget_check", partial(recorder.budget_check, task_root=tasks))
+    if refused:
+        with pytest.raises(recorder.RecordError, match=r"REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 3 heads"):
+            recorder.record("review-one", **kwargs)
+        assert recorder.main(check) == 1 and calls == {"posts": 0, "statuses": 0}
+        assert "REVIEW_BUDGET_EXHAUSTED" in json.loads(capsys.readouterr().out)["refusal"]
+    else:
+        assert recorder.main(check) == 0 and json.loads(capsys.readouterr().out)["reviewed_heads"] == 2
+        assert recorder.record("review-one", **kwargs)["verdict"] == "APPROVED"
+
+
 @pytest.mark.parametrize("body", [None, "<!-- cf-verdict v1 unreadable -->"])
 def test_red_team_unreadable_marker_history_refused(monkeypatch, tmp_path, body):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)

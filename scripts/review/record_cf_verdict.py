@@ -17,7 +17,7 @@ from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
-from functools import partial
+from functools import cache, partial
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any, Literal
@@ -1900,14 +1900,18 @@ def require_review_round_within_budget(
     grant: Callable[[], dict[str, Any] | None] | None = None,
     repair: Callable[[], dict[str, Any] | None] | None = None,
     repair_heads: frozenset[str] = frozenset(),
+    superseded_heads: Callable[[], frozenset[str]] | None = None,
 ) -> dict[str, Any]:
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
     A round is one reviewed head: trusted verdicts on this PR are counted
     across heads, and more verdicts at an already reviewed head (a quorum seat
-    or a retried publication) open no new round. Earlier PRs are not read: no
-    GitHub listing finds them reliably (search index lag, the 250-commit PR
-    listing cap). Budget end is never approval.
+    or a retried publication) open no new round. The head of a finished run
+    whose unpublished verdict a later verdict of its seat superseded
+    (``review_lineage.superseded_runs``) was reviewed too and counts:
+    ``superseded_heads`` returns those heads, read only for a new head.
+    Earlier PRs are not read: no GitHub listing finds them reliably (search
+    index lag, the 250-commit PR listing cap). Budget end is never approval.
 
     A head that only merges the base branch cleanly after the last fully
     approved head consumes no round (:func:`budget_exempt_heads`, proven with
@@ -1921,7 +1925,11 @@ def require_review_round_within_budget(
     Returns the result fields that record the exception used, else nothing.
     """
     heads = _trusted_verdict_shas(comments, login)
-    if sha in heads or len(heads) < budget:
+    if sha in heads:
+        return {}
+    if superseded_heads is not None:
+        heads |= superseded_heads()
+    if len(heads) < budget:
         return {}
     exempt = budget_exempt_heads(comments, sha, login, prove=prove_merge_only) if prove_merge_only else {}
     if sha in exempt:
@@ -1967,6 +1975,29 @@ def _repair_round(**kwargs: Any) -> dict[str, Any] | None:
     return admit_repair_round(**kwargs)
 
 
+def _superseded_heads(
+    *,
+    task_root: Path,
+    repository: str,
+    number: int,
+    branch: str,
+    comments: Sequence[Mapping[str, Any]],
+    login: str,
+    sha: str,
+) -> frozenset[str]:
+    """Heads before ``sha`` whose finished run's unpublished verdict its seat's later verdict superseded.
+
+    An unreadable task ledger or reply refuses: those heads cannot be counted.
+    """
+    # The lineage reader builds on this module, so it is imported only when a new head is counted.
+    from scripts.review.review_lineage import lineage_runs, superseded_runs
+
+    runs = lineage_runs(task_root, repository=repository, number=number, branch=branch)
+    return frozenset(
+        item["head"] for item in superseded_runs(runs=runs, comments=comments, login=login, exclude_head=sha)
+    )
+
+
 def _repair_receipts(task_root: Path) -> Path:
     """Where the repair rounds' durable receipts live: beside the task ledger, never removed."""
     from scripts.review.repair_round import RECEIPT_DIR
@@ -1986,10 +2017,12 @@ def budget_admission(
     task_root: Path,
     review_root: Path,
     fetch: bool = True,
+    superseded: Callable[[], frozenset[str]] | None = None,
 ) -> dict[str, Any]:
     """The round decision for a verdict at ``sha``, shared by the recorder and ``budget-check``.
 
     It writes nothing; ``fetch=False`` also leaves the default-branch ref as it is.
+    ``superseded`` is the caller's own :func:`_superseded_heads` read, when it reports them too.
     """
     from scripts.review.repair_round import repair_heads
 
@@ -2029,6 +2062,17 @@ def budget_admission(
             fetch=fetch,
         ),
         repair_heads=repair_heads(receipts, repository=repository, number=number, branch=branch),
+        superseded_heads=superseded
+        or partial(
+            _superseded_heads,
+            task_root=task_root,
+            repository=repository,
+            number=number,
+            branch=branch,
+            comments=comments,
+            login=login,
+            sha=sha,
+        ),
     )
 
 
@@ -2472,6 +2516,18 @@ def budget_check(repository: str, number: int, *, task_root: Path | None = None)
     except SweepError as exc:
         raise RecordError(f"comment lookup failed: {exc}") from exc
     heads = _trusted_verdict_shas(comments, login)
+    superseded = cache(
+        partial(
+            _superseded_heads,
+            task_root=task_root,
+            repository=repository,
+            number=number,
+            branch=branch,
+            comments=comments,
+            login=login,
+            sha=sha,
+        )
+    )
     receipt = budget_admission(
         repository=repository,
         number=number,
@@ -2483,14 +2539,16 @@ def budget_check(repository: str, number: int, *, task_root: Path | None = None)
         task_root=task_root,
         review_root=review_root,
         fetch=False,
+        superseded=superseded,
     )
+    already = sha in heads
     return {
         "pr": number,
         "head": sha,
         "admitted": True,
-        "reviewed_heads": len(heads),
+        "reviewed_heads": len(heads if already else heads | superseded()),
         "budget": review_round_budget(facts),
-        "head_already_reviewed": sha in heads,
+        "head_already_reviewed": already,
         **receipt,
     }
 
