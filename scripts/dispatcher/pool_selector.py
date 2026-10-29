@@ -28,6 +28,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
 
+from scripts.common.jsonl import jsonl_lines
+
 
 @dataclass(frozen=True)
 class Route:
@@ -329,7 +331,7 @@ def _provider_exhausted(record: dict) -> bool:
             stream.seek(start)
             if start:
                 stream.readline()  # discard a partial JSON line
-            lines = stream.read(1024 * 1024).splitlines()
+            lines = jsonl_lines(stream.read(1024 * 1024).decode("utf-8", errors="replace"))
         for line in lines:
             try:
                 event = json.loads(line)
