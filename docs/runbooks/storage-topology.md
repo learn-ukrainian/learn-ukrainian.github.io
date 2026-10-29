@@ -314,7 +314,8 @@ once, from the primary checkout, with every Sources reader and writer stopped.
    ```
 
    This takes the writer lock and folds the WAL into the file. It refuses with
-   `store_in_use` (exit 3) if any connection still reads it. It then hashes the
+   `store_in_use` (exit 3) if any other connection still has the file open, idle
+   or reading. It then hashes the
    file (about a minute for the current store), links it into
    `data/sources-generations/`, and replaces `data/sources.db` with the
    selector. Last, it removes the empty legacy `-wal`/`-shm` names. It prints

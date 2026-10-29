@@ -643,7 +643,12 @@ def publish_generation(
 
 
 def checkpoint_legacy_store(held: HeldWriter) -> None:
-    """Fold the pre-bootstrap file's WAL into it; refuse while another connection reads it."""
+    """Fold the pre-bootstrap file's WAL into it; refuse while any other connection has it open.
+
+    SQLite deletes the WAL and the shared-memory index when the last connection
+    in WAL mode closes. A sidecar still present after this connection closes
+    therefore means another process still has the store open, idle or not.
+    """
     if held.layout != "legacy_file" or held.generation is None or held.lifted:
         raise GenerationError("bootstrap_requires_legacy_file")
     was_held = is_held(held.generation)
@@ -660,6 +665,8 @@ def checkpoint_legacy_store(held: HeldWriter) -> None:
             hold_database(held.generation, strict=False)
     if busy:
         raise GenerationError("store_in_use", "a reader or writer is still connected")
+    if any(Path(f"{held.generation}{suffix}").exists() for suffix in ("-wal", "-shm")):
+        raise GenerationError("store_in_use", "another connection still has the store open")
     held.fingerprint = fingerprint(held.generation)
 
 

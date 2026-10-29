@@ -192,6 +192,16 @@ def test_publication_refuses_a_regular_file_except_in_bootstrap(tmp_path):
     assert not selector.is_symlink()
 
 
+def test_bootstrap_refuses_while_an_idle_reader_is_connected(tmp_path):
+    selector = _legacy_store(tmp_path / "data" / "sources.db")
+    with closing(open_readonly(selector)) as reader:
+        assert reader.execute("SELECT v FROM t").fetchone() == ("g0",)  # connected, no transaction
+        with generations.writer_lock(selector) as held:
+            with pytest.raises(generations.GenerationError, match="store_in_use"):
+                generations.checkpoint_legacy_store(held)
+    assert not selector.is_symlink()
+
+
 def test_bootstrap_refuses_while_a_reader_holds_a_transaction(tmp_path):
     selector = _legacy_store(tmp_path / "data" / "sources.db")
     with closing(open_readonly(selector, isolation_level=None)) as reader:
