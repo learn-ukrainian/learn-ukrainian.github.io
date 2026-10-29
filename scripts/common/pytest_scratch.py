@@ -30,6 +30,7 @@ import fcntl
 import os
 import secrets
 import stat
+import sys
 import tempfile
 import time
 from collections.abc import Callable
@@ -64,6 +65,10 @@ SHARED_MEMORY_TEMP = Path("/dev/shm")
 _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 # A read-only mount or a denied write. Any other failure stays loud.
 _UNWRITABLE_ERRNOS = frozenset({errno.EROFS, errno.EACCES})
+_RUN = pytest.StashKey[TaskScratch]()
+_SESSION = pytest.StashKey[pytest.Session]()
+_LOOP_RETURNED = pytest.StashKey[bool]()
+_FINISH_RETURNED = pytest.StashKey[bool]()
 
 
 def _is_unwritable(exc: OSError) -> bool:
@@ -345,6 +350,62 @@ def _allocate_private_fallback() -> TaskScratch:
     )
 
 
+def _record_return(stash: pytest.Stash, key: pytest.StashKey[bool], caller: Any) -> None:
+    """Record in the stash whether the latest call of a hook returned normally.
+
+    The record is taken around the hook caller's executor (pluggy's private
+    ``_hookexec``), which runs every implementation, wrapper and hook-call
+    monitor, whatever their order. Any exception raised in the call leaves it
+    False, including a pytest.exit that pytest then catches without changing
+    the exit status. If pluggy stops providing or calling that executor,
+    nothing is recorded and every session keeps its run.
+    """
+    inner = getattr(caller, "_hookexec", None)
+    if not callable(inner):
+        return
+
+    def hookexec(*args: Any) -> Any:
+        stash[key] = False
+        result = inner(*args)
+        stash[key] = True
+        return result
+
+    with contextlib.suppress(AttributeError):
+        caller._hookexec = hookexec
+
+
+def _passed(stash: pytest.Stash | None) -> bool:
+    """Whether the session passed under the "failed" retention policy.
+
+    Pytest itself deletes the basetemp of such a session, but only when no
+    --basetemp was given, and this plugin always gives one. The test loop and
+    the whole session-finish call must have returned normally, the exit
+    status read here, after both, must be OK, and no error may be propagating
+    through the teardown that runs this check. Any other session keeps its run.
+    """
+    if stash is None:
+        return False
+    session = stash.get(_SESSION, None)
+    return (
+        session is not None
+        and stash.get(_LOOP_RETURNED, False)
+        and stash.get(_FINISH_RETURNED, False)
+        and sys.exception() is None
+        and session.exitstatus == pytest.ExitCode.OK
+        and session.config.getini("tmp_path_retention_policy") == "failed"
+    )
+
+
+def _release(stash: pytest.Stash | None, scratch: TaskScratch) -> None:
+    """Remove a passed run, as pytest removes its own basetemp; keep any other run for inspection."""
+    try:
+        if _passed(stash):
+            with contextlib.suppress(OSError, TaskScratchError):
+                scratch.remove()
+    finally:
+        scratch.preserve()
+
+
 def _allocate_run() -> TaskScratch:
     root = _private_shared_root()
     if root is not None:
@@ -364,7 +425,11 @@ def pytest_configure(config: pytest.Config) -> None:
     scratch = _allocate_run()
     # Pytest recreates --basetemp. Keep ownership metadata outside that payload.
     config.option.basetemp = str(scratch.payload_dir / "base")
-    config.add_cleanup(scratch.preserve)
+    # A caller without a stash gets the plain preservation it always had.
+    stash = getattr(config, "stash", None)
+    if stash is not None:
+        stash[_RUN] = scratch
+    config.add_cleanup(partial(_release, stash, scratch))
     # Fixtures and ordinary tempfile users must share a containment root.
     # Workers inherit TMPDIR; this process may already have cached tempdir.
     previous_env = os.environ.get("TMPDIR")
@@ -380,3 +445,14 @@ def pytest_configure(config: pytest.Config) -> None:
             os.environ["TMPDIR"] = previous_env
 
     config.add_cleanup(restore_tempdir)
+
+
+def pytest_sessionstart(session: pytest.Session) -> None:
+    """Keep the session and watch how its test loop and finish end, for teardown."""
+    stash = session.config.stash
+    if _RUN not in stash:
+        return
+    stash[_SESSION] = session
+    hook = session.config.pluginmanager.hook
+    _record_return(stash, _LOOP_RETURNED, hook.pytest_runtestloop)
+    _record_return(stash, _FINISH_RETURNED, hook.pytest_sessionfinish)
