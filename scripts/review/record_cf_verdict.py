@@ -2547,13 +2547,18 @@ def record(
             record_consumption(
                 _repair_receipts(task_root), repair, comment=str(posted_comment["id"] if posted else existing.get("id"))
             )
-        state = "success" if verdict == "APPROVED" else "failure"
-        missing_seat = ""
-        if state == "success" and (current := lookup_verdict(comments, sha, login)).state == NEEDS_SEAT:
-            # The keeper's own reading: another Ukrainian seat must approve this head (#12020).
-            state = "pending"
-            open_seats = sorted(UKRAINIAN_SEAT_FAMILIES - set(current.ukrainian_seats) - facts.excluded_families)
-            missing_seat = f"; awaiting Ukrainian seat: {'/'.join(open_seats) or 'none eligible'}"
+        state = "failure"
+        pending_reason = ""
+        if verdict == "APPROVED":
+            # Success is the keeper's own reading of the head with this record, never this
+            # approval alone: another Ukrainian seat may still be missing (#12020).
+            current = lookup_verdict(comments, sha, login)
+            state = "success" if current.state == "APPROVED" else "pending"
+            if current.state == NEEDS_SEAT:
+                open_seats = sorted(UKRAINIAN_SEAT_FAMILIES - set(current.ukrainian_seats) - facts.excluded_families)
+                pending_reason = f"; awaiting Ukrainian seat: {'/'.join(open_seats) or 'none eligible'}"
+            elif state == "pending":
+                pending_reason = f"; head reads {current.state}"
         description = (
             f"review_mode=red_team unknown_history={len(facts.unknown_history)} "
             if facts.unknown_history
@@ -2563,8 +2568,8 @@ def record(
             if ukrainian
             else f"VERDICT: {verdict} {family} {task_id}"
         )
-        # The task id can be long; the missing seat must survive the 140-character limit.
-        description = description[: 140 - len(missing_seat)] + missing_seat
+        # The task id can be long; the pending reason must survive the 140-character limit.
+        description = description[: 140 - len(pending_reason)] + pending_reason
         try:
             post_commit_status(
                 repository=repository,

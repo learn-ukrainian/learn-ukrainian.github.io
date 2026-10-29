@@ -367,10 +367,12 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
     """Refuse a head the merge-queue keeper would not land on its recorded verdicts (#12020).
 
     An earlier recorder posted ``fleet/cross-family-review`` success after one seat,
-    so the check rollup alone cannot prove the seat set. An incomplete seat set, a
-    recorded rejection and unverifiable evidence all refuse; no recorded verdict does not.
+    so the check rollup alone cannot prove the seat set, and a moved head carries no
+    status at all. Every reading but an exact-head approval refuses: an incomplete seat
+    set, a rejection, unverifiable evidence and reviews of other heads only. A PR with no
+    recorded review is outside the recorder's regime and is not refused here.
     """
-    from scripts.orchestration.integration_sweep import NEEDS_SEAT, REJECTED, lookup_verdict
+    from scripts.orchestration.integration_sweep import NEEDS_SEAT, lookup_verdict
 
     try:
         documents = []
@@ -384,14 +386,19 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
                 raise ValueError
             documents.append(json.loads(result.stdout))
         pages, identity = documents
-        state = lookup_verdict([item for page in pages for item in page], head, identity["login"]).state
+        login = identity.get("login") if isinstance(identity, dict) else None
+        if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
+            raise ValueError
+        if not isinstance(login, str) or not re.fullmatch(r"\S+", login):
+            raise ValueError
+        state = lookup_verdict([item for page in pages for item in page], head, login).state
     except github_client.GitHubRateLimited:
         raise
     except Exception:
         raise gate.PublishBlocked("OPSEC: merge refused: review seats unverifiable.") from None
     if state == NEEDS_SEAT:
         raise gate.PublishBlocked("OPSEC: merge refused: a Ukrainian review seat has not approved this head.")
-    if state == "unknown" or state in REJECTED:
+    if state not in {"APPROVED", "needs-CF"}:
         raise gate.PublishBlocked(f"OPSEC: merge refused: recorded review verdict is {state} at this head.")
 
 
