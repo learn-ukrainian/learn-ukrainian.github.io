@@ -32,6 +32,9 @@ INFRA = {
     ".python-version",
 }
 CAP_SECONDS = 600
+# Importing tests fill only to half the cap: the cap is also the kill limit, so a
+# selection estimated at the cap has no room for runner speed variance.
+FILL_SECONDS = CAP_SECONDS / 2
 TEST = re.compile(r"tests/(?:[^/]+/)*test_[^/]+\.py")
 
 
@@ -133,7 +136,7 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         else None
     )
     run = set(guards) if reason else set(selected)
-    # Tests for changed code fill the cap's remaining budget, cheapest first; the
+    # Tests for changed code fill the fill budget, cheapest first; the
     # rest defer to merge-group pytest. Infrastructure changes run guards only.
     sources = {p for p in changed if not TEST.fullmatch(p)}
     deleted = {
@@ -153,7 +156,7 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
             raise ValueError("invalid recorded duration")
     budget = estimate
     for p in sorted(imported, key=lambda p: (durations.get(p, default), p)):
-        if budget + durations.get(p, default) <= CAP_SECONDS:
+        if budget + durations.get(p, default) <= FILL_SECONDS:
             run.add(p)
             budget += durations.get(p, default)
     if set(imported) - run:

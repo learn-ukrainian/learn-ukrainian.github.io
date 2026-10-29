@@ -22,7 +22,9 @@ env:
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    # No `edited`: a title or body edit would restart the whole suite on an
+    # unchanged head. pr-publication-scan.yml scans publication fields on edits.
+    types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
     inputs:
@@ -715,3 +717,12 @@ jobs:
           mode=--pr
           [ "$EVENT_NAME" != merge_group ] || mode=--merge-group
           "$PYTHON_BIN" scripts/ci/check_agent_attribution.py "$mode" "$BASE_SHA" "$HEAD_SHA"
+      # Secret scan read the queue's PR metadata when this run started. A title or
+      # body edit made since then would otherwise reach the merge unscanned, so
+      # re-read every member's current metadata as the gate's last step.
+      - name: Re-scan queue publication fields
+        if: github.event_name == 'merge_group'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHON_BIN: ${{ steps.setup-python-gate.outputs.python-path }}
+        run: '"$PYTHON_BIN" scripts/audit/lint_opsec_leaks.py --event-file "$GITHUB_EVENT_PATH"'

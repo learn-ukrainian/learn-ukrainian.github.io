@@ -21,9 +21,12 @@ and Ohoiko's adult presentation method, with labelled repair and authoring
 modes and whole visible video as planned listening input.
 Both Sources judges and final adjudicators exclude scored families. Its
 zero-new-harmful-corrections gate supersedes the tolerance below only for
-that evaluation. It is a specification, not an implemented runner extension
-or permission to execute a baseline. Its private-data admission gaps remain
-blocking until the coordinator seals the referenced inputs.
+that evaluation. Its runner extension, `scripts/eval/uk_behaviour/`, adds the
+production adapters, receipt binding, the semantic sidecar scorer and a no-paid
+proof (`python -m scripts.eval.uk_behaviour prove`); it reuses this harness's
+private results directory and executor and leaves its scoring unchanged. None
+of that is permission to execute a baseline. The private-data admission gaps
+remain blocking until the coordinator seals the referenced inputs.
 
 ## Commands
 

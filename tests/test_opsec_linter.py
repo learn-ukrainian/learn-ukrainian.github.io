@@ -220,6 +220,21 @@ def test_new_branch_scans_complete_delta_and_shallow_history_is_rejected(publica
     assert run(push, "push") == 1
 
 
+@pytest.mark.parametrize("planted", [False, True])
+def test_force_push_with_missing_before_scans_merge_base_to_after(publication, capsys, planted):
+    run, payload, _live, git = publication
+    marker = "10." + "23.45.67"
+    git("update-ref", "refs/remotes/origin/main", payload["pull_request"]["base"]["sha"])
+    git("commit", "--allow-empty", "-m", "subject", "-m", marker if planted else "clean body")
+    git("commit", "--allow-empty", "-m", "clean tip")
+    push = {"ref": "refs/heads/topic", "before": "c" * 40, "after": git("rev-parse", "HEAD"),
+            "repository": {"default_branch": "main"}}
+    assert run(push, "push") == int(planted)
+    output = capsys.readouterr()
+    assert marker not in output.out + output.err
+    assert ("publication: commit " in output.out) is planted
+
+
 @pytest.mark.parametrize("kind", ["topic", "initial", "unresolved"])
 def test_new_push_never_omits_earlier_commit_messages(publication, capsys, kind):
     run, payload, _live, git = publication
