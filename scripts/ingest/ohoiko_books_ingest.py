@@ -46,6 +46,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.lexicon.ohoiko_quality_enrichment import normalize_chunk_lines
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -450,6 +451,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     print(f"\n🗃️  Writing to {args.db}")
+    refuse_writable_corpus_database(str(args.db))
     conn = sqlite3.connect(str(args.db))
     try:
         # Deterministic BEFORE evidence

@@ -11,6 +11,7 @@ import html
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 import xml.etree.ElementTree as ET
 from collections import defaultdict
@@ -18,6 +19,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import quote
 from urllib.request import Request, urlopen
+
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_DB = REPO / "data" / "sources.db"
@@ -668,6 +675,8 @@ def ingest_wiktionary_etymology(
     max_text_chars: int,
 ) -> tuple[int, int, int]:
     """Load Atlas-bounded uk.wiktionary etymology rows into sources.db."""
+    if not dry_run:
+        refuse_writable_corpus_database(str(db_path))
     conn = None if dry_run else sqlite3.connect(str(db_path))
     skipped_phrases = 0
     loaded = 0

@@ -29,6 +29,7 @@ from lxml import etree
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.curriculum.evidence.publication import load_owned_rights
 from scripts.ingest._section_coverage import LessonSection, ensure_section_schema, link_lesson_sections
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 from scripts.storage.topology import is_network_filesystem_path
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -729,6 +730,7 @@ def run(args: argparse.Namespace) -> tuple[dict, int]:
         if not rows:
             raise IngestError("unknown_id")
     reports = []
+    refuse_writable_corpus_database(args.db.resolve().as_uri() + ("?mode=ro" if args.check or args.dry_run else "?mode=rw"), uri=True)
     with contextlib.closing(
         sqlite3.connect(
             args.db.resolve().as_uri() + ("?mode=ro" if args.check or args.dry_run else "?mode=rw"), uri=True

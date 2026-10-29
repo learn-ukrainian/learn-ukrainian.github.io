@@ -85,6 +85,7 @@ from scripts.ingest.pohribnyi_tooling import (
     validate_notation,
     validate_rows,
 )
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 REFERENCES_DIR = PROJECT_ROOT / "docs" / "references" / "private"
@@ -476,6 +477,7 @@ def _run(*, db_path: Path, dry_run: bool, force: bool) -> int:
         return 0
 
     print(f"\n🗃️  Writing to {db_path}")
+    refuse_writable_corpus_database(db_path.resolve().as_uri() + "?mode=rw", uri=True)
     conn = sqlite3.connect(db_path.resolve().as_uri() + "?mode=rw", uri=True)
     try:
         before = conn.execute(
@@ -608,6 +610,7 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"Validated {len(rows)} adjudicated paragraphs; no database writes")
             else:
                 # mode=rw refuses accidental creation of an empty sources.db.
+                refuse_writable_corpus_database(args.db.resolve().as_uri() + "?mode=rw", uri=True)
                 with sqlite3.connect(args.db.resolve().as_uri() + "?mode=rw", uri=True) as conn:
                     inserted, skipped = ingest_adjudicated(conn, packet, table, census_counts=census_counts)
                 print(f"Adjudicated paragraphs: inserted={inserted}, skipped={skipped}")

@@ -27,6 +27,12 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+try:
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+except ModuleNotFoundError:  # run by path: put the repository root on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -274,6 +280,7 @@ def _extract_topics_from_plans(track: str) -> list[str]:
 
 def fetch_for_track(track: str) -> int:
     """Fetch Wikipedia articles for a track. Returns count of new articles."""
+    refuse_writable_corpus_database(str(DB_PATH))
     conn = sqlite3.connect(str(DB_PATH))
     conn.execute("PRAGMA journal_mode=WAL")
     _ensure_table(conn)

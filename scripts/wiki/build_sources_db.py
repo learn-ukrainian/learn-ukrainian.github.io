@@ -883,6 +883,38 @@ def declare_wal(db: Path) -> str:
     return mode
 
 
+def _publishes_live_store(build_fn):
+    """Route a rebuild of the live Sources store through the generation publisher.
+
+    A selector target is rebuilt under the store writer lock, from the
+    generation it selects, and published as a new generation
+    (``scripts/storage/generations.py``). The pre-bootstrap live file is
+    refused: its in-place swap unlinks the sidecars and renames over a file
+    that readers hold open. Other targets (staged copies, fixtures) and dry
+    runs keep the in-place path.
+    """
+    import functools
+
+    from scripts.storage import generations
+
+    @functools.wraps(build_fn)
+    def build_routed(db_path=None, *args, dry_run=False, **kwargs):
+        ref = generations.store_kind(db_path or DB_PATH)
+        if ref.kind == "other" or dry_run:
+            return build_fn(db_path, *args, dry_run=dry_run, **kwargs)
+        if ref.kind != "selector" or ref.selector is None:
+            raise generations.GenerationError(
+                "rebuild_requires_selector",
+                "bootstrap the generation layout first (docs/runbooks/storage-topology.md)",
+            )
+        with generations.writer_lock(ref.selector) as held:
+            generations.require_free_space(held.data_dir, held.generation.stat().st_size)
+            return build_fn(db_path, *args, dry_run=dry_run, _held_writer=held, **kwargs)
+
+    return build_routed
+
+
+@_publishes_live_store
 def build(db_path: Path | None = None,
           external_dir: Path | None = None,
           textbook_dir: Path | None = None,
@@ -890,7 +922,8 @@ def build(db_path: Path | None = None,
           *,
           force: bool = False,
           dry_run: bool = False,
-          preserve_wiki: bool = True) -> Path:
+          preserve_wiki: bool = True,
+          _held_writer: object | None = None) -> Path:
     """Build the unified sources database.
 
     Safety:
@@ -1199,16 +1232,27 @@ def build(db_path: Path | None = None,
     # leave a stray `.building` temp file (harmless — never mistaken for
     # a live DB, and cleaned up by the next successful build) rather than
     # a half-written live DB.
-    try:
-        for sidecar in (db.parent / f"{db.name}-wal", db.parent / f"{db.name}-shm"):
-            if sidecar.exists():
-                sidecar.unlink()
-        tmp_db.replace(db)
-    except BaseException:
-        _cleanup_tmp()
-        raise
-    print(f"  🔁 Atomically replaced {db.name} with the validated rebuild")
-    declare_wal(db)
+    if _held_writer is not None:
+        # The live store: publish a new generation; readers keep the old one.
+        from scripts.storage.generations import publish_generation
+
+        try:
+            publication = publish_generation(tmp_db, _held_writer)
+        except BaseException:
+            _cleanup_tmp()
+            raise
+        print(f"  🔁 Published generation {publication.generation.name} (journal_mode=wal)")
+    else:
+        try:
+            for sidecar in (db.parent / f"{db.name}-wal", db.parent / f"{db.name}-shm"):
+                if sidecar.exists():
+                    sidecar.unlink()
+            tmp_db.replace(db)
+        except BaseException:
+            _cleanup_tmp()
+            raise
+        print(f"  🔁 Atomically replaced {db.name} with the validated rebuild")
+        declare_wal(db)
 
     db_size = db.stat().st_size / 1024 / 1024
     ensure_ukrainian_wiki_manifest(DEFAULT_MANIFEST_DB)

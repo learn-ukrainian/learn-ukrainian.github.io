@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from scripts.audit.sum11_sovietization_scan import scan_and_update, write_audit_report
+from scripts.lib.readonly_sqlite import refuse_writable_corpus_database
 
 DEFAULT_DB = ROOT / "data" / "sources.db"
 
@@ -108,6 +109,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: DB file not found: {args.db}", file=sys.stderr)
         return 2
 
+    refuse_writable_corpus_database(args.db)
     conn = sqlite3.connect(args.db)
     try:
         actions = ensure_sum11_sovietization_columns(conn, dry_run=args.dry_run)
