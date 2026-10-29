@@ -341,6 +341,14 @@ execution_routing:
 # `output_fields`, sealed at finish. The advisor is the active holder of the
 # role outside the proposal author's family (operator-expectations item 12).
 advisory_roles:
+  # The sealed envelope that admits a bounded worker (scripts/agent_runtime/
+  # bounded_advisory.py reads the fence and fields from here); its advisor is the
+  # bounded_advisor seat's model, and execution_routing repeats effort and fields
+  # for the seat, which the catalog validator holds equal.
+  bounded_advisory_envelope:
+    effort: high
+    fence: advisory-envelope
+    output_fields: [task_contract, owned_paths, max_changed_files, max_non_test_loc, constraints, risk_boundaries, acceptance_evidence, escalation_triggers]
   # Rounds 4 and 5 for one PR's open qualifying blocker, by the CTO's ruling and
   # this sealed non-author APPROVE; read by the verdict recorder
   # (scripts/review/budget_grant.py). Designated approval: CTO proposal, Sol 6.1

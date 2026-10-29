@@ -66,9 +66,11 @@ def test_sealed_envelope_admission_and_record(launch, capsys, tmp_path, defect, 
     policy = advisory.bounded_execution_policy()
     path.write_text(json.dumps(dict(
         task_id="advisor", status="done", mode="read-only", model=policy.advisor_model_id,
-        advisory_role=policy.advisor_role, advisory_route=advisory.ADVISOR_ROUTE,
+        advisory_role=policy.advisor_role, advisory_route=policy.advisor_route,
         advisory_binding_sha256=binding, result_file=str(path.with_suffix(".result")), run_nonce="advisor-run",
-        advisory_seal=advisory.seal_advisor_result(result, model=policy.advisor_model_id, run_nonce="advisor-run"),
+        advisory_seal=advisory.seal_advisor_result(
+            result, model=policy.advisor_model_id, run_nonce="advisor-run", fence=policy.advisor_fence
+        ),
     )))
     if defect == "binding":
         launch[launch.index("--prompt") + 1] = "Different instructions"
@@ -195,3 +197,37 @@ def test_worker_seals_an_advisory_decision_as_written(tmp_path):
     unknown = dict(advisory_role="retired_role", model="gpt-6.1-sol", run_nonce="advisor-run")
     worker._seal_advisory_result(unknown, result)
     assert advisory.SEAL_FIELD not in unknown and unknown["advisory_seal_error"].startswith("KeyError")
+
+
+def test_envelope_role_is_dispatched_sealed_and_admits_a_bounded_flash_worker(launch, capsys):
+    """Defect: the catalog dropped the role the envelope loader needs, so the documented advisor dispatch was refused.
+
+    The advisor is dispatched with the documented flags, its worker seals the result it wrote, and
+    a bounded Flash dispatch is admitted with ``--advisory-task``: dispatch, seal and load all read
+    the one catalog ``advisory_roles`` entry.
+    """
+    launch[launch.index("--model") + 1] = "gemini-3.8-flash-high"
+    assert cli.main([*launch, "--print-advisory-binding"]) == 0
+    binding = capsys.readouterr().out.strip()
+    role = "bounded_advisory_envelope"
+    advisor = ["dispatch", "--agent", "codex", "--model", "gpt-6.1-sol", "--mode", "read-only", "--task-id", "advisor",
+               "--prompt", advisory.advisor_prompt_block(binding), "--advisory-role", role,
+               "--advisory-binding", binding]
+    assert cli.main([*advisor, "--dry-run"]) == 0
+    assert cli.main(advisor) == 0
+    record = store.read("advisor")
+    policy = advisory.bounded_execution_policy()
+    assert (record["advisory_role"], record["advisory_route"]) == (role, policy.advisor_route)
+    assert policy.advisor_route == f"advisory_roles.{role}"
+    envelope = dict(task_contract="Inspect one document", owned_paths=["docs/example.md"],
+                    acceptance_evidence=["Report findings"], constraints=["Escalate scope changes"],
+                    risk_boundaries=["Do not edit code"], escalation_triggers=["Ambiguous scope"],
+                    max_changed_files=1, max_non_test_loc=20, dispatch_args_sha256=binding)
+    result_path = store.record_path("advisor").with_suffix(".result")
+    result_path.write_text(f"```{policy.advisor_fence}\n{json.dumps(envelope)}\n```\n")
+    record.update(status="done", result_file=str(result_path))
+    worker._seal_advisory_result(record, result_path)
+    assert record[advisory.SEAL_FIELD]["envelope_sha256"] == advisory.canonical_sha256(envelope)
+    store.record_path("advisor").write_text(json.dumps(record))
+    assert cli.main([*launch, "--advisory-task", "advisor"]) == 0
+    assert store.read("worker")["advisory_envelope"]["advisor_task_id"] == "advisor"

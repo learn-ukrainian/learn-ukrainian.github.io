@@ -1055,14 +1055,45 @@ MUSE_REVIEW_CANDIDATE = {
 def _pop_budget_elevation_role(catalog):
     """Remove the elevated-tier grant role (cto-7923-adv-clog-sol, item 3b) and return what it added."""
     role = "review_budget_elevation"
+    # The envelope role is the one advisory_roles entry of the bounded route; it is checked against the
+    # route's advisor, not frozen here, and the elevation's frozen receipt stays what it was.
+    envelope = catalog["advisory_roles"].pop("bounded_advisory_envelope")
+    advisor = catalog["execution_routing"]["sol_advised_bounded"]["advisor"]
+    assert (envelope["effort"], envelope["output_fields"]) == (advisor["effort"], advisor["output_fields"])
     catalog["review_scheduler"]["activity_roles"]["consult"].remove(role)
     holders = sorted(model_id for model_id, model in catalog["models"].items() if role in model["roles"])
     for model_id in holders:
         catalog["models"][model_id]["roles"].remove(role)
     entry = catalog["advisory_roles"].pop(role)
-    # It is the only advisory role since the budget extension retired, so its key goes too.
+    # It is the only advisory role left once the envelope role is popped, so its key goes too.
     assert catalog.pop("advisory_roles") == {}
     return {"advisory_role": entry, "consult": role, "holders": holders}
+
+
+def with_advisory_roles(frozen):
+    """A frozen pre-advisory catalog plus the live ``advisory_roles`` section, its holders and consult roles.
+
+    Validation requires the section (bounded admission reads the envelope role from it), so the
+    historical pins are checked as the pin plus this overlay, and ``without_advisory_roles`` returns the pin.
+    """
+    live = load_model_catalog()
+    catalog = deepcopy(frozen)
+    catalog["advisory_roles"] = deepcopy(live["advisory_roles"])
+    consult = catalog["review_scheduler"]["activity_roles"]["consult"]
+    for role in catalog["advisory_roles"]:
+        for model_id, model in live["models"].items():
+            if role in model["roles"] and role not in catalog["models"][model_id]["roles"]:
+                catalog["models"][model_id]["roles"].append(role)
+        if role in live["review_scheduler"]["activity_roles"]["consult"] and role not in consult:
+            consult.append(role)
+    return catalog
+
+
+def without_advisory_roles(catalog):
+    """``with_advisory_roles`` undone: the frozen catalog the overlay was built from."""
+    catalog = deepcopy(catalog)
+    _pop_budget_elevation_role(catalog)
+    return catalog
 
 
 def assert_frozen_surfaces(actual, *, surfaces):

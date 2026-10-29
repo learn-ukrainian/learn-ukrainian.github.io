@@ -170,8 +170,9 @@ def test_catalog_file_path_role_validation_is_clean_exit_two(tmp_path, bad, entr
 
 def test_legacy_allowlist_cannot_expand_from_injected_cursor_candidates():
     from tests.review.test_model_catalog import CURRENT_BASELINE as APPROVED_BASELINE
+    from tests.review.test_model_catalog import with_advisory_roles
 
-    catalog = deepcopy(APPROVED_BASELINE["catalog"])
+    catalog = with_advisory_roles(APPROVED_BASELINE["catalog"])
     new_id = "grok-99"
     catalog["models"][new_id] = deepcopy(catalog["models"]["grok-4.7"])
     catalog["models"][new_id]["aliases"] = []
