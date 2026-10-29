@@ -13,7 +13,7 @@ import stat
 import subprocess
 import sys
 import time
-from collections.abc import Callable, Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
@@ -245,6 +245,40 @@ def _merge_proof_object_store(start: Path | None = None) -> Path:
     raise OSError("Git checkout unavailable")
 
 
+@contextmanager
+def isolated_object_store(checkout: Path | None = None) -> Iterator[dict[str, str]]:
+    """A Git environment that reads the checkout's objects and writes only to a throwaway store.
+
+    The bare repository imports no init templates, config, refs, grafts,
+    attributes or index from the writable shared Git dir, and objects a proof
+    writes (``merge-tree --write-tree``) never reach the shared store. Raises
+    ``OSError`` when the checkout's object store is unavailable.
+    """
+    objects = _merge_proof_object_store(checkout)
+    with TemporaryDirectory(prefix="cf-merge-") as isolated:
+        proof_dir = Path(isolated)
+        (proof_dir / "objects/info").mkdir(parents=True)
+        (proof_dir / "refs").mkdir()
+        (proof_dir / "HEAD").write_text("ref: refs/heads/proof\n", encoding="utf-8")
+        (proof_dir / "config").write_text(
+            "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
+            # Commit graphs can also be read from the alternate object store.
+            f"\tcommitGraph = false\n\tattributesFile = {os.devnull}\n",
+            encoding="utf-8",
+        )
+        (proof_dir / "objects/info/alternates").write_text(
+            json.dumps(str(objects), ensure_ascii=False) + "\n", encoding="utf-8"
+        )
+        yield {
+            **{key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+            "GIT_DIR": isolated,
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": str(proof_dir / "no-global-config"),
+            "GIT_ATTR_NOSYSTEM": "1",
+            "GIT_NO_LAZY_FETCH": "1",
+        }
+
+
 CLEAN_BASE_MERGE = "clean-base-merge"
 CLEAN_SYNC_MERGE = "clean-sync-merge"
 
@@ -283,31 +317,7 @@ def _clean_merge_source(
         return None
     git = ["git"]
     try:
-        objects = _merge_proof_object_store(checkout)
-        with TemporaryDirectory(prefix="cf-merge-") as isolated:
-            # Construct a bare repository without importing init templates, config,
-            # refs, grafts, attributes, or an index from the writable shared Git dir.
-            proof_dir = Path(isolated)
-            (proof_dir / "objects/info").mkdir(parents=True)
-            (proof_dir / "refs").mkdir()
-            (proof_dir / "HEAD").write_text("ref: refs/heads/proof\n", encoding="utf-8")
-            (proof_dir / "config").write_text(
-                "[core]\n\trepositoryformatversion = 0\n\tbare = true\n"
-                # Commit graphs can also be read from the alternate object store.
-                f"\tcommitGraph = false\n\tattributesFile = {os.devnull}\n",
-                encoding="utf-8",
-            )
-            (proof_dir / "objects/info/alternates").write_text(
-                json.dumps(str(objects), ensure_ascii=False) + "\n", encoding="utf-8"
-            )
-            env = {
-                **{key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
-                "GIT_DIR": isolated,
-                "GIT_CONFIG_NOSYSTEM": "1",
-                "GIT_CONFIG_GLOBAL": str(proof_dir / "no-global-config"),
-                "GIT_ATTR_NOSYSTEM": "1",
-                "GIT_NO_LAZY_FETCH": "1",
-            }
+        with isolated_object_store(checkout) as env:
             commit = subprocess.run(
                 [*git, "cat-file", "commit", commit_sha],
                 env=env,
@@ -1088,7 +1098,7 @@ def authorship_exclude_sha(repo_root: Path, *, base_branch: str | None) -> str |
     return sha
 
 
-def default_branch_review_base(repo_root: Path, head_sha: str) -> tuple[str, str]:
+def default_branch_review_base(repo_root: Path, head_sha: str, *, fetch: bool = True) -> tuple[str, str]:
     """The fetched default-branch tip and its merge-base with ``head_sha`` (C-2902 F6).
 
     Every branch review is attributed over ``merge-base..head`` with that tip
@@ -1096,6 +1106,8 @@ def default_branch_review_base(repo_root: Path, head_sha: str) -> tuple[str, str
     advertises as ``HEAD``, fetched fresh into ``origin/<default>``. A caller's
     ``--base`` and the PR's base are never read: the author chooses both. Raises
     ``BranchFactsError`` when the remote, the fetch or a shared history is unavailable.
+    ``fetch=False`` reads the existing ``origin/<default>`` without writing any ref
+    or object, for read-only callers such as ``budget-check``.
     """
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
 
@@ -1111,12 +1123,13 @@ def default_branch_review_base(repo_root: Path, head_sha: str) -> tuple[str, str
     if name is None:
         raise BranchFactsError(FACTS_TARGET_UNKNOWN, "origin advertises no default branch")
     tracking = f"refs/remotes/origin/{name}"
-    _facts_git(
-        repo_root,
-        ["fetch", "--no-tags", "--no-write-fetch-head", "origin", f"+refs/heads/{name}:{tracking}"],
-        deadline=deadline,
-        code=FACTS_TARGET_UNKNOWN,
-    )
+    if fetch:
+        _facts_git(
+            repo_root,
+            ["fetch", "--no-tags", "--no-write-fetch-head", "origin", f"+refs/heads/{name}:{tracking}"],
+            deadline=deadline,
+            code=FACTS_TARGET_UNKNOWN,
+        )
     tip = (
         _facts_git(
             repo_root, ["rev-parse", "--verify", f"{tracking}^{{commit}}"], deadline=deadline, code=FACTS_TARGET_UNKNOWN
@@ -1213,6 +1226,7 @@ def pr_review_facts(
     subject_seats: Iterable[str] = (),
     subject_families: Iterable[str] = (),
     unknown_history: Iterable[str] = (),
+    fetch: bool = True,
 ) -> BranchReviewFacts:
     """Facts for an open PR's frozen head, bound to GitHub's listing of its commits (A1).
 
@@ -1232,7 +1246,7 @@ def pr_review_facts(
     github_shas = [entry.get("sha") for entry in listed]
     if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in github_shas):
         raise RecordError("PR commit set malformed")
-    exclude, base = default_branch_review_base(repo_root, head_sha)
+    exclude, base = default_branch_review_base(repo_root, head_sha, fetch=fetch)
     facts = collect_branch_review_facts(
         repository=repository,
         repo_root=repo_root,
@@ -1739,10 +1753,10 @@ def review_round_budget(facts: BranchReviewFacts) -> int:
     return DEFAULT_REVIEW_ROUNDS
 
 
-def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> set[str]:
-    """Heads named by verdict markers ``login`` posted with a trusted association."""
-    heads: set[str] = set()
-    for item in comments:
+def _trusted_markers(comments: Sequence[Mapping[str, Any]], login: str) -> list[tuple[int, dict[str, Any]]]:
+    """Comment index and parsed marker of each verdict ``login`` posted with a trusted association."""
+    markers: list[tuple[int, dict[str, Any]]] = []
+    for index, item in enumerate(comments):
         body = item.get("body") if isinstance(item, Mapping) else None
         if not isinstance(body, str) or MARKER_PREFIX not in body:
             continue
@@ -1750,8 +1764,129 @@ def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> 
             continue
         marker = parse_marker(body)
         if marker is not None:
-            heads.add(marker["sha"])
-    return heads
+            markers.append((index, marker))
+    return markers
+
+
+def _trusted_verdict_shas(comments: Sequence[Mapping[str, Any]], login: str) -> set[str]:
+    """Heads named by verdict markers ``login`` posted with a trusted association."""
+    return {marker["sha"] for _, marker in _trusted_markers(comments, login)}
+
+
+# A post-approval base update is one merge, or a few; a longer first-parent walk is not one.
+MAX_EXEMPT_BASE_MERGES = 10
+
+
+def clean_base_merge_descent(repo_root: Path, *, approved: str, head: str, base_tip: str) -> list[str] | None:
+    """The base commits ``head`` merges after ``approved``, when that is all it adds; else None.
+
+    Every commit on the first-parent path from ``head`` back to ``approved``
+    must be a Git-proven conflict-free merge of the base branch
+    (:func:`_clean_merge_source`): its second parent is on ``base_tip`` and its
+    tree is exactly Git's merge of its parents. A missing object, a conflict, a
+    manual edit in a merge, any other commit, a path longer than
+    ``MAX_EXEMPT_BASE_MERGES`` or a proof error proves nothing.
+    """
+    merged: list[str] = []
+    current = head
+    deadline = time.monotonic() + BRANCH_FACTS_TIMEOUT_S
+    try:
+        while current != approved:
+            if len(merged) >= MAX_EXEMPT_BASE_MERGES:
+                return None
+            entry = _read_commit_entries(repo_root, [current], deadline=deadline)[0]
+            if _clean_merge_source(entry, base_tip, checkout=repo_root) != CLEAN_BASE_MERGE:
+                return None
+            merged.append(entry["parents"][1]["sha"])
+            current = entry["parents"][0]["sha"]
+    except RecordError:
+        return None
+    return merged or None
+
+
+def _clean_merge_descent_prover(
+    repo_root: Path, head: str, *, fetch: bool = True
+) -> Callable[[str, str], list[str] | None]:
+    """:func:`clean_base_merge_descent` bound to the fetched default-branch tip, fetched once on first use.
+
+    A tip that cannot be fetched proves no descent.
+    """
+    tip: list[str | None] = []
+
+    def prove(approved: str, descendant: str) -> list[str] | None:
+        if not tip:
+            try:
+                tip.append(default_branch_review_base(repo_root, head, fetch=fetch)[0])
+            except RecordError:
+                tip.append(None)
+        base_tip = tip[0]
+        if base_tip is None:
+            return None
+        return clean_base_merge_descent(repo_root, approved=approved, head=descendant, base_tip=base_tip)
+
+    return prove
+
+
+def _fully_approved(comments: Sequence[Mapping[str, Any]], head: str, login: str) -> bool:
+    """Whether the keeper reads ``head`` as APPROVED and every seat its profile requires approved it."""
+    if lookup_verdict(comments, head, login).state != "APPROVED":
+        return False
+    at_head = [marker for _, marker in _trusted_markers(comments, login) if marker["sha"] == head]
+    # A learner-facing Ukrainian change seats two Ukrainian reviewers from two families
+    # (review-loop references/ukrainian.md § Seats); an approval of another profile fills no seat.
+    ukrainian = any(is_ukrainian_review(marker) for marker in at_head)
+    approving = {
+        marker["family"]
+        for marker in at_head
+        if marker["verdict"] == "APPROVED" and (not ukrainian or is_ukrainian_review(marker))
+    }
+    return len(approving) >= (2 if ukrainian else 1)
+
+
+def budget_exempt_heads(
+    comments: Sequence[Mapping[str, Any]],
+    sha: str,
+    login: str,
+    *,
+    prove: Callable[[str, str], list[str] | None],
+) -> dict[str, dict[str, Any]]:
+    """The reviewed heads, and ``sha``, that consume no review round, each with its receipt.
+
+    A head is exempt when it descends from the last fully approved head before
+    its first verdict only through clean merges of the base branch (``prove``,
+    :func:`clean_base_merge_descent`). The exemption changes accounting only:
+    every head still needs its own exact-head verdict, no approval carries
+    forward, a recorded rejection stands, and no verdict is dropped. Exemptions
+    are re-proven from Git on every call, so a head whose proof is lost counts.
+    """
+    markers = _trusted_markers(comments, login)
+    first: dict[str, int] = {}
+    for index, marker in markers:
+        first.setdefault(marker["sha"], index)
+    order = sorted(first.items(), key=lambda item: item[1])
+    if sha not in first:
+        order.append((sha, len(comments)))
+    exempt: dict[str, dict[str, Any]] = {}
+    for head, start in order:
+        prefix = comments[:start]
+        latest: dict[str, int] = {}
+        for index, marker in markers:
+            if index < start:
+                latest[marker["sha"]] = index
+        anchor = next(
+            (
+                candidate
+                for candidate, _ in sorted(latest.items(), key=lambda item: item[1], reverse=True)
+                if _fully_approved(prefix, candidate, login)
+            ),
+            None,
+        )
+        if anchor is None:
+            continue
+        merges = prove(anchor, head)
+        if merges:
+            exempt[head] = {"approved_head": anchor, "base_merges": merges}
+    return exempt
 
 
 def require_review_round_within_budget(
@@ -1761,8 +1896,11 @@ def require_review_round_within_budget(
     *,
     budget: int,
     pr: int,
-    extension: Callable[[], dict[str, Any] | None] | None = None,
-) -> dict[str, Any] | None:
+    prove_merge_only: Callable[[str, str], list[str] | None] | None = None,
+    grant: Callable[[], dict[str, Any] | None] | None = None,
+    repair: Callable[[], dict[str, Any] | None] | None = None,
+    repair_heads: frozenset[str] = frozenset(),
+) -> dict[str, Any]:
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
     A round is one reviewed head: trusted verdicts on this PR are counted
@@ -1771,32 +1909,127 @@ def require_review_round_within_budget(
     GitHub listing finds them reliably (search index lag, the 250-commit PR
     listing cap). Budget end is never approval.
 
-    The one exception is round ``budget + 1`` under an approved budget
-    extension (``scripts/review/budget_extension.py``): ``extension`` returns
-    its receipt, None when the PR has no extension request, or refuses.
+    A head that only merges the base branch cleanly after the last fully
+    approved head consumes no round (:func:`budget_exempt_heads`, proven with
+    ``prove_merge_only``); it is checked only once the counted heads reach the
+    budget. A sealed elevated-tier grant (``scripts/review/budget_grant.py``)
+    admits rounds up to ``ELEVATED_REVIEW_ROUNDS`` in total: ``grant`` returns
+    its receipt, None when the PR has no grant, or refuses. The lineage's one
+    repair-verification round (``scripts/review/repair_round.py``) is outside
+    the budget: ``repair`` returns its receipt or refuses, and ``repair_heads``
+    names the heads it already admitted, which count as no budgeted round.
+    Returns the result fields that record the exception used, else nothing.
     """
     heads = _trusted_verdict_shas(comments, login)
-    if sha not in heads and len(heads) >= budget:
-        exhausted = (
-            f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(heads)} heads and its budget "
-            f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(heads) + 1}"
+    if sha in heads or len(heads) < budget:
+        return {}
+    exempt = budget_exempt_heads(comments, sha, login, prove=prove_merge_only) if prove_merge_only else {}
+    if sha in exempt:
+        return {"budget_exemption": {"reason": CLEAN_BASE_MERGE, **exempt[sha]}}
+    counted = heads - set(exempt) - repair_heads
+    if len(counted) < budget:
+        return {}
+    note = f" (and {len(exempt)} clean base merge head(s), which consume no round)" if exempt else ""
+    exhausted = (
+        f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(counted)} heads{note} and its budget "
+        f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(counted) + 1}"
+    )
+    refusals: list[str] = []
+    admissions = (
+        ("budget_grant", grant, budget < len(counted) + 1 <= ELEVATED_REVIEW_ROUNDS),
+        # Once per lineage: only a retry of the round already admitted at this head may run it again.
+        ("repair_round", repair, not repair_heads - {sha}),
+    )
+    for field, admit, applies in admissions:
+        if admit is None or not applies:
+            continue
+        try:
+            receipt = admit()
+        except RecordError as exc:
+            refusals.append(str(exc))
+            continue
+        if receipt is not None:
+            return {field: receipt}
+    raise RecordError("; ".join([exhausted, *refusals]))
+
+
+def _budget_grant(**kwargs: Any) -> dict[str, Any] | None:
+    # The grant check builds on this module, so it is imported only when the default budget is spent.
+    from scripts.review.budget_grant import admit_grant_round
+
+    return admit_grant_round(**kwargs)
+
+
+def _repair_round(**kwargs: Any) -> dict[str, Any] | None:
+    # The repair round builds on this module, so it is imported only when the budget is spent.
+    from scripts.review.repair_round import admit_repair_round
+
+    return admit_repair_round(**kwargs)
+
+
+def _repair_receipts(task_root: Path) -> Path:
+    """Where the repair rounds' durable receipts live: beside the task ledger, never removed."""
+    from scripts.review.repair_round import RECEIPT_DIR
+
+    return task_root.parent / RECEIPT_DIR
+
+
+def budget_admission(
+    *,
+    repository: str,
+    number: int,
+    branch: str,
+    sha: str,
+    facts: BranchReviewFacts,
+    comments: Sequence[Mapping[str, Any]],
+    login: str,
+    task_root: Path,
+    review_root: Path,
+    fetch: bool = True,
+) -> dict[str, Any]:
+    """The round decision for a verdict at ``sha``, shared by the recorder and ``budget-check``.
+
+    It writes nothing; ``fetch=False`` also leaves the default-branch ref as it is.
+    """
+    from scripts.review.repair_round import repair_heads
+
+    budget = review_round_budget(facts)
+    receipts = _repair_receipts(task_root)
+    return require_review_round_within_budget(
+        comments,
+        sha,
+        login,
+        budget=budget,
+        pr=number,
+        prove_merge_only=_clean_merge_descent_prover(review_root, sha, fetch=fetch),
+        # A change whose paths already give it five rounds needs no grant.
+        grant=partial(
+            _budget_grant,
+            repository=repository,
+            number=number,
+            branch=branch,
+            changed_paths=facts.changed_paths,
+            comments=comments,
+            login=login,
+            task_root=task_root,
         )
-        if extension is not None and len(heads) == budget:
-            try:
-                receipt = extension()
-            except RecordError as exc:
-                raise RecordError(f"{exhausted}; {exc}") from exc
-            if receipt is not None:
-                return receipt
-        raise RecordError(exhausted)
-    return None
-
-
-def _budget_extension(**kwargs: Any) -> dict[str, Any] | None:
-    # The extension check builds on this module, so it is imported only when the budget is spent.
-    from scripts.review.budget_extension import admit_extension_round
-
-    return admit_extension_round(**kwargs)
+        if budget < ELEVATED_REVIEW_ROUNDS
+        else None,
+        repair=partial(
+            _repair_round,
+            repository=repository,
+            number=number,
+            branch=branch,
+            head=sha,
+            comments=comments,
+            login=login,
+            task_root=task_root,
+            repo_root=review_root,
+            receipt_root=receipts,
+            fetch=fetch,
+        ),
+        repair_heads=repair_heads(receipts, repository=repository, number=number, branch=branch),
+    )
 
 
 def require_no_outside_review_in_flight(task_root: Path, repository: str, sha: str) -> None:
@@ -2090,26 +2323,23 @@ def record(
             comments = adapter.comments(repository, number)
         except SweepError as exc:
             raise RecordError(f"comment lookup failed: {exc}") from exc
+        # The capability failure module builds on this one, so it is imported only here.
+        from scripts.review.capability_failure import require_unclassified
+
+        require_unclassified(comments, login, task=task_id, started=started)
         if review_mode == "red_team":
             require_no_outside_rejection(comments, sha)
             require_no_outside_review_in_flight(task_root, repository, sha)
-        extension = require_review_round_within_budget(
-            comments,
-            sha,
-            login,
-            budget=review_round_budget(facts),
-            pr=number,
-            extension=partial(
-                _budget_extension,
-                repository=repository,
-                number=number,
-                branch=branch,
-                head=sha,
-                comments=comments,
-                login=login,
-                task_root=task_root,
-                repo_root=review_root,
-            ),
+        budget_receipt = budget_admission(
+            repository=repository,
+            number=number,
+            branch=branch,
+            sha=sha,
+            facts=facts,
+            comments=comments,
+            login=login,
+            task_root=task_root,
+            review_root=review_root,
         )
         existing = None
         for item in comments:
@@ -2143,6 +2373,18 @@ def record(
                     existing = item
                     break
         require_no_same_head_rejection(comments, sha, login, verdict)
+        from scripts.review.repair_round import receipt_at, record_admission, require_repair_verified
+
+        repair = budget_receipt.get("repair_round")
+        repaired = repair or receipt_at(
+            _repair_receipts(task_root), repository=repository, number=number, branch=branch, head=sha
+        )
+        if repaired is not None and verdict == "APPROVED":
+            # The non-author reviewer, not the recorder, verifies that the delta is only the repair.
+            require_repair_verified(reply, repaired)
+        if repair is not None:
+            # The admission receipt is durable before the verdict exists, so the round is spent even if posting fails.
+            record_admission(_repair_receipts(task_root), repair)
         if existing is None:
             data = _run_json(
                 # The typed record is the publisher's only admitted marker carrier (#11127).
@@ -2161,6 +2403,12 @@ def record(
             ):
                 raise RecordError("comment readback mismatch; publication state unknown")
             posted = True
+        if repair is not None:
+            from scripts.review.repair_round import record_consumption
+
+            record_consumption(
+                _repair_receipts(task_root), repair, comment=str(comment_id if posted else existing.get("id"))
+            )
         description = (
             f"review_mode=red_team unknown_history={len(facts.unknown_history)} "
             if facts.unknown_history
@@ -2194,19 +2442,98 @@ def record(
     }
     if facts.app_bot_commits:
         result.update({"authorship": VERIFIED_APP_BOT, "app_bot_commits": list(facts.app_bot_commits)})
-    if extension is not None:
-        result["budget_extension"] = extension
+    result.update(budget_receipt)
     return result
+
+
+def budget_check(repository: str, number: int, *, task_root: Path | None = None) -> dict[str, Any]:
+    """The recorder's round decision for a verdict at the PR's current head, before any review runs."""
+    root = _repo_root()
+    task_root = task_root or root / "batch_state" / "tasks"
+    pr = _run_json(["gh", "pr", "view", str(number), "--repo", repository, "--json", "headRefOid,headRefName,state"])
+    if not isinstance(pr, dict) or pr.get("state") != "OPEN":
+        raise RecordError(f"PR #{number} is not open")
+    sha, branch = pr.get("headRefOid"), pr.get("headRefName")
+    if not isinstance(sha, str) or not SHA.fullmatch(sha) or not isinstance(branch, str) or not branch:
+        raise RecordError("PR head unavailable")
+    try:
+        repo_keys = [key for key, repo in load_fleet_repos().items() if repo.github.casefold() == repository.casefold()]
+        if len(repo_keys) != 1:
+            raise RecordError("review repository is not uniquely registered")
+        review_root = resolve_review_repository(root, repo_keys[0], mode="pr")
+    except (FleetRepoError, TargetResolutionError, OSError, subprocess.TimeoutExpired):
+        raise RecordError("review repository checkout unavailable") from None
+    # Read-only: the default-branch ref is read as it is, never fetched; a stale or missing one refuses.
+    facts = pr_review_facts(repository, number, head_sha=sha, task_root=task_root, repo_root=review_root, fetch=False)
+    adapter = GitHubAdapter(Path.cwd())
+    login = adapter.identity()
+    try:
+        comments = adapter.comments(repository, number)
+    except SweepError as exc:
+        raise RecordError(f"comment lookup failed: {exc}") from exc
+    heads = _trusted_verdict_shas(comments, login)
+    receipt = budget_admission(
+        repository=repository,
+        number=number,
+        branch=branch,
+        sha=sha,
+        facts=facts,
+        comments=comments,
+        login=login,
+        task_root=task_root,
+        review_root=review_root,
+        fetch=False,
+    )
+    return {
+        "pr": number,
+        "head": sha,
+        "admitted": True,
+        "reviewed_heads": len(heads),
+        "budget": review_round_budget(facts),
+        "head_already_reviewed": sha in heads,
+        **receipt,
+    }
+
+
+def budget_check_main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        prog="record_cf_verdict.py budget-check",
+        description="Ask the verdict recorder whether a review round at the PR's current head would be admitted.\n"
+        "Run it before dispatching a reviewer; it reads only and writes no receipt.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py budget-check "
+        "--repository learn-ukrainian/learn-ukrainian.github.io --pr 42\n"
+        "Outputs: JSON on stdout: admitted, the budget, and any exemption, grant or repair-round receipt.\n"
+        "Exit codes: 0: admitted; 1: refused (the reason names what to escalate).\n"
+        "Related: agents_extensions/shared/skills/review-loop/references/policy.md",
+    )
+    parser.add_argument("--repository", required=True, help="GitHub owner/name of the PR")
+    parser.add_argument("--pr", type=int, required=True, help="Open PR number")
+    args = parser.parse_args(argv)
+    try:
+        result = budget_check(args.repository, args.pr)
+    except (RecordError, SweepError, ValueError) as exc:
+        print(json.dumps({"pr": args.pr, "admitted": False, "refusal": str(exc)}, sort_keys=True))
+        return 1
+    print(json.dumps(result, sort_keys=True))
+    return 0
 
 
 @publication_cli(RecordError)
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
-    if argv[:1] == ["budget-extension"]:
-        # The extension verb builds on this module, so it is imported only when chosen.
-        from scripts.review.budget_extension import main as budget_extension_main
+    if argv[:1] == ["budget-check"]:
+        return budget_check_main(argv[1:])
+    if argv[:1] == ["budget-grant"]:
+        # The grant verb builds on this module, so it is imported only when chosen.
+        from scripts.review.budget_grant import main as budget_grant_main
 
-        return budget_extension_main(argv[1:])
+        return budget_grant_main(argv[1:])
+    if argv[:1] == ["capability-failure"]:
+        # The capability failure verb builds on this module, so it is imported only when chosen.
+        from scripts.review.capability_failure import main as capability_failure_main
+
+        return capability_failure_main(argv[1:])
     parser = argparse.ArgumentParser(
         description="Publish a completed exact-head verdict; cross-family is the default.\n"
         "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
@@ -2214,8 +2541,13 @@ def main(argv: list[str] | None = None) -> int:
         epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
         "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
         "--review-mode red_team --red-team-prompt brief.md\n"
-        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-extension digest <request.json>\n"
-        "    (a budget extension request's digest; see budget-extension --help)\n"
+        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-check --repository owner/name --pr 1\n"
+        "    (whether the next review round is admitted, before dispatch; see budget-check --help)\n"
+        "  .venv/bin/python scripts/review/record_cf_verdict.py budget-grant digest <ruling.json>\n"
+        "    (an elevated-tier grant ruling's digest; see budget-grant --help)\n"
+        "  .venv/bin/python scripts/review/record_cf_verdict.py capability-failure --task-id review-unit --pr 1 "
+        "--capability test-execution --authority claude-cto\n"
+        "    (classify a finished run that only lacked a capability; see capability-failure --help)\n"
         "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
         "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
     )

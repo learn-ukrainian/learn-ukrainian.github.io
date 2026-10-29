@@ -398,6 +398,28 @@ def test_dirty_or_unpublished_write_task_keeps_worktree_with_reason(sandbox, mod
     assert run_git(tree, "rev-parse", "HEAD") == record["head_sha"]
 
 
+def test_dirty_worktree_is_retried_and_removed_once_its_changes_are_gone(sandbox):
+    """Defect: a tree retained as dirty was never looked at again, even after only ignored files were left."""
+    record = sandbox.settle(sandbox.dispatch("pushed-dirty", "--mode", "workspace-write"), expected=1)
+    assert (record["worktree_disposition"], record["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert record["worktree_disposition_detail"]
+    tree = Path(record["worktree_path"])
+    sandbox.settle(sandbox.dispatch())  # the retry finds the same change and keeps the tree
+    kept = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (kept["worktree_disposition"], kept["worktree_disposition_reason"]) == ("retained", "dirty")
+    assert tree.is_dir()
+    run_git(tree, "reset", "--hard")
+    run_git(tree, "clean", "-fd")
+    (tree / ".pytest_cache").mkdir()
+    (tree / ".pytest_cache/ignored.txt").write_text("ignored output\n")
+    (sandbox.repo / ".git/info/exclude").write_text("/.pytest_cache/\n")
+    sandbox.settle(sandbox.dispatch())
+    settled = json.loads((sandbox.tasks / f"{record['task_id']}.json").read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert "worktree_disposition_detail" not in settled
+    assert not tree.exists()
+
+
 def preserved_copy(sandbox, record, relative):
     """The bytes settlement copied out of the task's worktree before removing it."""
     receipt = record["branch_holder_archive"]
@@ -2881,6 +2903,11 @@ def test_a_dispatched_worker_never_inherits_its_dispatchers_marker(spec, monkeyp
         (["--agent", "claude", "--claude-account", "B"], "claude_account_unknown"),
         (["--agent", "codex", "--claude-account", "b"], "claude_account_seat_unsupported"),
         (["--agent", "claude", "--claude-account", "b"], "claude_account_ambient_conflict"),
+        # API-key labels (C-2643): the same guard, and only their exact names.
+        (["--agent", "claude", "--claude-account", "kk"], "claude_account_ambient_conflict"),
+        (["--agent", "claude", "--claude-account", "szb"], "claude_account_ambient_conflict"),
+        (["--agent", "claude", "--claude-account", "KK"], "claude_account_unknown"),
+        (["--agent", "codex", "--claude-account", "szb"], "claude_account_seat_unsupported"),
     ],
 )
 def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkeypatch, capsys, extra, code):

@@ -73,13 +73,15 @@ sources:
 
   - id: ulif
     name: ULIF dictionary portal
-    type: live
+    type: indexed
     url: https://lcorp.ulif.org.ua/dictua
     description: >
       Ukrainian Lingua-Information Fund. Declension/conjugation paradigm
-      tables with all case forms (називний through кличний).
-    coverage: Morphological paradigms
-    query_function: ulif_paradigm
+      tables with all case forms (називний through кличний), synonyms,
+      antonyms and phraseology, served from the complete local copy in
+      sources.db (refreshed only by the DictUA register walk).
+    coverage: Morphological paradigms, synonyms, antonyms, phraseology
+    query_function: query_ulif_local
     mcp_tool: query_ulif
 
   - id: r2u

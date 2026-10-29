@@ -262,7 +262,6 @@ def test_runner_clis_read_no_cap_environment_directly() -> None:
 CAP_MODULES = (
     "contracts.py",
     "enrich_offline_20k.py",
-    "fetch_ulif_20k.py",
     "memory.py",
     "offline_engine.py",
     "reduce_ulif_20k.py",

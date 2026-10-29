@@ -50,8 +50,8 @@ def test_lesson_map_filter_drops_the_line_break_lesson_but_keeps_budgets():
     assert lesson_map["lessons"][1]["sections"] == ["Перенос і письмо", "Далі"]  # input untouched
 
 
-def test_upgrade_input_lesson_map_still_points_at_the_dropped_original():
-    """The gate must cope with this row as-is; nobody removes it by hand."""
+def test_upgrade_input_lesson_map_covers_any_remaining_line_break_originals():
+    """Historical provenance covers any line-break drills still in the live source."""
     from scripts.build.lesson_map import _normalize_activities
 
     root = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en"
@@ -60,7 +60,7 @@ def test_upgrade_input_lesson_map_still_points_at_the_dropped_original():
                                  yaml.safe_load((source / "activities.yaml").read_text(encoding="utf-8")))
     dropped = am.line_break_original_keys(base)
     lesson_map = _special_signs_upgrade_input_lesson_map()
-    assert dropped and dropped <= {(p["placement"], p["index"]) for p in lesson_map["provenance"]}
+    assert dropped <= {(p["placement"], p["index"]) for p in lesson_map["provenance"]}
 
 
 # --- #8236: the writer never sees a worded empty-sign choice or divide-words as allowed ---

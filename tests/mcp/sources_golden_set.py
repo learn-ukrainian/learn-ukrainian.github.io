@@ -4,7 +4,7 @@ Calls the handlers in process against the local ``data/sources.db`` and
 ``data/vesum.db`` opened read-only.
 
 Determinism & Crawl Isolation:
-The ULIF crawler (`fetch_ulif_homonyms` / `import_ulif_dump`) writes
+The ULIF crawler (`fetch_ulif_homonyms`) writes
 continuously to ``spellings``, ``responses``, ``meta``, ``register_pages``,
 ``register_rows``, and ``ulif_dictua_*`` tables.
 To remain deterministic while the crawl runs, this golden set is restricted

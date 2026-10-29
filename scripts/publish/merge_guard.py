@@ -66,13 +66,48 @@ def _rollup_timestamp(row: dict):
     return rollup_timestamp(row)
 
 
+def _rollup_result(row: dict) -> str | None:
+    """``SUCCESS``, ``FAILURE`` or ``PENDING`` for one rollup row; None for an unknown or mixed shape."""
+    state = _rollup_value(row.get("state"))
+    if state:
+        if row.get("status") not in (None, "") or row.get("conclusion") not in (None, ""):
+            return None
+        result = state
+    else:
+        status = _rollup_value(row.get("status"))
+        conclusion = _rollup_value(row.get("conclusion"))
+        if conclusion in _ROLLUP_FAIL or status in _ROLLUP_FAIL:
+            return "FAILURE"
+        if status in _ROLLUP_PENDING:
+            return None if conclusion else "PENDING"
+        if status == "COMPLETED" and conclusion in _ROLLUP_PASS:
+            return "SUCCESS"
+        return None
+    if result in _ROLLUP_FAIL:
+        return "FAILURE"
+    if result in _ROLLUP_PENDING:
+        return "PENDING"
+    return "SUCCESS" if result in _ROLLUP_PASS else None
+
+
 def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
-    """Use the shared reducer; ambiguous surviving versions remain unknown."""
+    """Use the shared reducer; surviving versions that disagree remain unknown.
+
+    Start times have one-second resolution, so a push run and a pull_request run of
+    one workflow (both fired by a branch update) can tie as the latest version of a
+    job. Tied versions that all reach the same result give that result, and every
+    one of them is still judged; versions that disagree cannot be ordered.
+    """
     latest = collapse_status_rollup([
         {**row, "workflowName": row.get("workflowName") or row.get("workflow")} for row in rows
     ])
-    identities = [rollup_identity(row) or ("unresolved", _rollup_name(row)) for row in latest]
-    if any(_rollup_name(row) is None for row in latest) or len(set(identities)) != len(identities):
+    if any(_rollup_name(row) is None for row in latest):
+        return None
+    versions: dict[tuple, list[str | None]] = {}
+    for row in latest:
+        identity = rollup_identity(row) or ("unresolved", _rollup_name(row))
+        versions.setdefault(identity, []).append(_rollup_result(row))
+    if any(len(found) > 1 and (None in found or len(set(found)) > 1) for found in versions.values()):
         return None
     return latest
 
@@ -222,30 +257,13 @@ def _parse_status_rollup_rows(
     for row in latest:
         name = _rollup_name(row)
         assert name is not None
-        state = _rollup_value(row.get("state"))
-        if state:
-            if row.get("status") not in (None, "") or row.get("conclusion") not in (None, ""):
-                return None
-            result = state
-        else:
-            status = _rollup_value(row.get("status"))
-            conclusion = _rollup_value(row.get("conclusion"))
-            if conclusion in _ROLLUP_FAIL or status in _ROLLUP_FAIL:
-                result = "FAILURE"
-            elif status in _ROLLUP_PENDING:
-                if conclusion:
-                    return None
-                result = "PENDING"
-            elif status == "COMPLETED" and conclusion in _ROLLUP_PASS:
-                result = "SUCCESS"
-            else:
-                return None
-        if result in _ROLLUP_FAIL:
-            failing.append(name)
-        elif result in _ROLLUP_PENDING:
-            pending.append(name)
-        elif result not in _ROLLUP_PASS:
+        result = _rollup_result(row)
+        if result is None:
             return None
+        if result == "FAILURE":
+            failing.append(name)
+        elif result == "PENDING":
+            pending.append(name)
     return failing, pending
 
 

@@ -17,6 +17,13 @@ ACCEPTED_VERDICT_TOKENS = (
     "BLOCKED",
 )
 
+# A structured reply that stopped for a missing capability may name it in this
+# list beside the canonical findings fields (``scripts/review/capability_failure.py``).
+# Every structured reader drops the field before schema validation, whatever its
+# form, so it never hides the reply's verdict; the classifier checks its form.
+MISSING_CAPABILITIES_FIELD = "missing_capabilities"
+REVIEW_CAPABILITIES = frozenset({"sources-mcp", "test-execution", "shell", "browser", "checkout-data"})
+
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
 # APPROVED / CHANGES_REQUESTED / BLOCKED by
@@ -232,6 +239,7 @@ def _findings_json_verdicts(response: str) -> list[str]:
             continue
         if not isinstance(payload, dict):
             continue
+        payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
         try:
             validate_reviewer_payload(payload)
             verdict, _ = resolve_verdict_and_evidence(payload)

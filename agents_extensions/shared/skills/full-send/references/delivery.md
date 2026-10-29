@@ -65,8 +65,9 @@ replace them.
 proof, catalog risk and budget tier, the finding ledger, and credit. Everything else, such as
 worktree paths, host details and private task metadata, stays in the task result (rules core P8).
 
-The ledger and budget follow the work: a replacement PR, a new reviewer or a new session
-carries them forward.
+The ledger and budget follow the work: a replacement PR, a new reviewer, a new session or an
+accepted successor (`pr_ownership accept`) carries them forward, along with the head's CI rerun
+allowance. A handoff never resets a budget.
 
 ## Proof
 
@@ -87,8 +88,9 @@ Every item must hold on the **current** head. A moved head voids the verdict and
 1. Proof covers every change in the diff.
 2. A recorded exact-head APPROVE from the reviewer of record (`review-loop`), with no open
    blocker in the ledger.
-3. Same-head PR admission CI Gate green. Admission CI does not run the full suite and never
-   replaces the merge-group CI Gate (`workflow.md` § Merge policy).
+3. Same-head PR CI Gate green, which includes the full supported pytest shards and Frontend. It
+   was green **before** the reviewed round started, and it is still green on the live head. PR CI
+   never replaces the merge-group CI Gate on the real queue candidate (`workflow.md` § Merge policy).
 4. Follow-ups sent to the CTO through Fleet Comms, or recorded on the parent issue when they
    share its outcome. A non-blocking follow-up never holds the merge.
 5. The PR is open, not a draft, mergeable and not BEHIND or DIRTY against its base.
@@ -98,7 +100,9 @@ merge-group CI is not yet proven at that point.
 
 ## Terminal states
 
-- `full-send`: `MERGED` with a clean closeout receipt, or `BLOCKED <reason>`.
+- `full-send`: `MERGED` with a clean closeout receipt, `BLOCKED <reason>`, or
+  `QUEUED_UNDER_CUSTODY` after `pr_ownership queue-exit` released the owner. In that case the
+  custodian owns `MERGED` and the closeout.
 - `full-stop`: exactly one of `READY_TO_MERGE`, `WAITING_ON <named approval>`,
   `BLOCKED <reason>`, `ALREADY_MERGED_EXTERNALLY`, naming the receiving driver.
 - Neither skill ends on "Next:". Ready is never reported as delivered.

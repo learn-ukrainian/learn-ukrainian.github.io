@@ -443,6 +443,14 @@ SOURCES_ROWS: dict[str, list[dict[str, Any]]] = {
             "sense_or_group_id": "phraseology:1",
             "payload_json": _json({"phrase": "рідна мова", "citations": []}),
         },
+        {
+            "id": 3,
+            "entry_id": 1,
+            "kind": "antonyms",
+            "source_order": 0,
+            "sense_or_group_id": "antonyms:1",
+            "payload_json": _json({"words": ["німота"], "citations": []}),
+        },
     ],
     "ulif_forms": [
         {
