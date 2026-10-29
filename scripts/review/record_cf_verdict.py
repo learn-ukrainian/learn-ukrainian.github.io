@@ -1227,6 +1227,7 @@ def pr_review_facts(
     subject_families: Iterable[str] = (),
     unknown_history: Iterable[str] = (),
     fetch: bool = True,
+    current_head: bool = True,
 ) -> BranchReviewFacts:
     """Facts for an open PR's frozen head, bound to GitHub's listing of its commits (A1).
 
@@ -1235,10 +1236,12 @@ def pr_review_facts(
     the author can retarget. Membership comes from the local ``git rev-list``.
     Any difference from GitHub's listing refuses, so a PR whose base is not the
     default branch is refused rather than attributed over a shorter range.
+    With ``current_head=False`` the facts are those of an earlier head the PR
+    still contains: every commit of its range must be in GitHub's listing.
     """
     pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "headRefOid"])
     head = pr.get("headRefOid") if isinstance(pr, dict) else None
-    if head != head_sha:
+    if current_head and head != head_sha:
         raise RecordError("PR head moved since review; re-run exact-head review")
     listed = _pages(Request("read-commits", repo=repository, number=pr_number))
     if not listed:
@@ -1261,6 +1264,11 @@ def pr_review_facts(
         app_bot_login=listing_app_bot_login(listed, repository),
     )
     refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
+    if not current_head:
+        # Commits pushed after the reviewed head need not be local; the reviewed range must be listed.
+        if head_sha not in github_shas or not {commit.sha or "" for commit in facts.commits} <= set(github_shas):
+            raise RecordError("PR no longer contains the reviewed head's commits")
+        return facts
     differs = RecordError(
         "PR commit set differs from the local base..head enumeration from the default branch; "
         "target the default branch, or fetch and retry"
@@ -1435,9 +1443,10 @@ def _repo_root() -> Path:
 
 
 @contextmanager
-def sha_lock(repository: str, sha: str, lock_root: Path):
+def pr_lock(repository: str, number: int, lock_root: Path):
+    """Serialize publication on one PR across its heads, so the comments a poster checked still hold."""
     lock_root.mkdir(parents=True, exist_ok=True)
-    name = hashlib.sha256(f"{repository}\0{sha}".encode()).hexdigest() + ".lock"
+    name = hashlib.sha256(f"{repository}\0pr\0{number}".encode()).hexdigest() + ".lock"
     with (lock_root / name).open("a+") as lock_file:
         fcntl.flock(lock_file, fcntl.LOCK_EX)
         try:
@@ -2466,7 +2475,7 @@ def record(
         comment = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=finding_count)
         check_texts(destination, [comment], environment={})
     posted = False
-    with sha_lock(repository, sha, lock_root):
+    with pr_lock(repository, number, lock_root):
         # The PR may move while an earlier recorder owns the lock.
         current = _pr(repository, branch, number)
         if current.get("headRefOid") != sha:
@@ -2664,9 +2673,6 @@ def budget_check_main(argv: list[str]) -> int:
     return 0
 
 
-WITHHELD_REPLY = "\nFindings are held privately.\n\n" + MARKER_PREFIX
-
-
 @publication_boundary(RecordError)
 def republish_withheld(
     task_id: str, *, pr_number: int, task_root: Path | None = None, lock_root: Path | None = None
@@ -2675,25 +2681,71 @@ def republish_withheld(
 
     Nothing is recorded again: the reviewed head may have moved, no round,
     receipt or commit status is written, and the withheld comment stays as it
-    is (a verdict comment is never edited). The new comment repeats the
-    recorded readable fields and marker verbatim and adds the reply. It is
-    refused unless the withheld comment is the PR's latest recorded verdict,
-    is exactly what this task's record and sealed reply produce withheld, and
-    the reply now passes the publication scan.
+    is (a verdict comment is never edited). The new comment is exactly what the
+    recorder publishes for this task now, with the branch facts re-derived at
+    the reviewed head, which the PR must still contain. It is refused unless
+    the reply's digest is sealed, every recorded verdict of this task is that
+    comment or its withheld form, the withheld one is the PR's latest verdict,
+    and the reply passes the publication scan.
     """
     root = _repo_root() if task_root is None or lock_root is None else None
     task_root = task_root or root / "batch_state" / "tasks"
     lock_root = lock_root or root / "batch_state" / "locks"
     task, reply = _task(task_id, task_root)
+    if not isinstance(task.get("result_sha256"), str):
+        raise RecordError("republication requires the review task's sealed reply digest")
     review = _task_verdict(task, reply)
+    review_mode = task.get("review_mode", "cross_family")
     pr = _pr(review.repository, review.branch, pr_number)
     if pr.get("headRefName") != review.branch:
         raise RecordError("review branch does not match PR head ref")
     review_root = _review_repository_root(review.repository, root or _repo_root())
+    facts = pr_review_facts(
+        review.repository,
+        pr_number,
+        head_sha=review.sha,
+        task_root=task_root,
+        repo_root=review_root,
+        subject_seats=_task_flag_values(task, "review_subject_seats"),
+        subject_families=_task_flag_values(task, "review_subject_families"),
+        unknown_history=(
+            admitted_unknown_history(
+                repository=review.repository,
+                branch=review.branch,
+                head_sha=review.sha,
+                task_root=task_root,
+                repo_root=review_root,
+            )
+            if review_mode == "red_team"
+            else ()
+        ),
+        current_head=False,
+    )
     reply = repository_relative_reply(reply, task=task, primary_root=review_root)
+    comment_fields = dict(
+        sha=review.sha,
+        task_id=task_id,
+        started=review.started,
+        verdict=review.verdict,
+        model=review.model,
+        family=review.family,
+        reply=reply,
+        review_mode=review_mode,
+        review_profile="ukrainian" if review.ukrainian else "code",
+        sources_mcp_call_count=review.sources_count,
+        unknown_history=facts.unknown_history,
+        app_bot=bool(facts.app_bot_commits),
+        score=review_score(reply),
+        author_models=facts.author_models,
+    )
+    withheld = build_comment(**{**comment_fields, "reply": ""}, withheld_findings=review.finding_count)
+    comment = build_comment(**comment_fields)
+    check_texts(normalize_repository(review.repository), [comment], environment={})
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
-    with sha_lock(review.repository, review.sha, lock_root):
+    result = {"pr": pr_number, "head": review.sha, "task": task_id, "verdict": review.verdict}
+    # The PR lock keeps a verdict at another head from landing between the order check and the post.
+    with pr_lock(review.repository, pr_number, lock_root):
         try:
             comments = adapter.comments(review.repository, pr_number)
         except SweepError as exc:
@@ -2704,36 +2756,12 @@ def republish_withheld(
             raise RecordError("no verdict of this task is recorded at its head")
         if any(item.get("created_at") != item.get("updated_at") for item in own):
             raise RecordError("existing verdict marker was edited")
-        result = {"pr": pr_number, "head": review.sha, "task": task_id, "verdict": review.verdict}
-        if any(WITHHELD_REPLY not in item["body"] for item in own):
+        if any(item["body"] not in (withheld, comment) for item in own):
+            raise RecordError("a recorded verdict of this task does not match its record and sealed reply")
+        if any(item["body"] == comment for item in own):
             return {**result, "comment": "existing"}
-        latest_index, marker = markers[-1]
-        if comments[latest_index] is not own[-1]:
+        if comments[markers[-1][0]] is not own[-1]:
             raise RecordError("a later verdict is recorded on this PR; republishing would reorder the verdicts")
-        body = own[-1]["body"]
-        authored = re.search(r"^Authored by: (.+)$", body.partition(MARKER_PREFIX)[0], re.MULTILINE)
-        comment_fields = dict(
-            sha=review.sha,
-            task_id=task_id,
-            started=review.started,
-            verdict=review.verdict,
-            model=review.model,
-            family=review.family,
-            reply=reply,
-            review_mode=task.get("review_mode", "cross_family"),
-            review_profile="ukrainian" if review.ukrainian else "code",
-            sources_mcp_call_count=review.sources_count,
-            # Branch facts are read from the recorded comment, never re-derived at a moved head;
-            # the exact match below binds every other field to this task's record and reply.
-            unknown_history=marker.get("unknown_history", ()),
-            app_bot=marker.get("authorship") == VERIFIED_APP_BOT,
-            score=review_score(reply),
-            author_models=authored.group(1).split(", ") if authored else (),
-        )
-        if build_comment(**{**comment_fields, "reply": ""}, withheld_findings=review.finding_count) != body:
-            raise RecordError("withheld verdict does not match its task's record and sealed reply")
-        comment = build_comment(**comment_fields)
-        check_texts(normalize_repository(review.repository), [comment], environment={})
         comment_id = _post_verdict(review.repository, pr_number, comment, login)
     return {**result, "comment": "posted", "comment_id": comment_id}
 

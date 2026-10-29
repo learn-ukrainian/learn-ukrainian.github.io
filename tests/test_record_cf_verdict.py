@@ -2665,7 +2665,8 @@ def test_withheld_verdict_republishes_its_findings_after_the_cause_is_fixed(
     reply = (
         f"VERDICT: REQUEST_CHANGES\nF1 [P1] [scripts/unit.py:12]({worktree}/scripts/unit.py:12) still open: fails.\n"
     )
-    write_task(tasks, reply=reply, worktree_path=str(worktree), worktree_base_sha=sha)
+    sealed = {"worktree_path": str(worktree), "worktree_base_sha": sha}
+    write_task(tasks, reply=reply, result_sha256=hashlib.sha256(reply.encode()).hexdigest(), **sealed)
     monkeypatch.setattr(recorder, "resolve_review_repository", lambda _root, _key, **_kwargs: root)
     with monkeypatch.context() as before_fix:
         # The recorder could not rewrite a removed worktree's citations, so the scan withheld the reply.
@@ -2685,8 +2686,31 @@ def test_withheld_verdict_republishes_its_findings_after_the_cause_is_fixed(
             else current(args, **kwargs)
         ),
     )
+    republish = partial(recorder.republish_withheld, pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    # Refused: an unsealed reply, a withheld comment the task does not produce, and a later verdict.
+    write_task(tasks, task_id="review-unsealed", reply=reply, **sealed)
+    with pytest.raises(recorder.RecordError, match="sealed reply digest"):
+        republish("review-unsealed")
+    comments[0]["body"] = withheld["body"].replace("Authored by: ", "Authored by: claude-fable-5-1, ")
+    with pytest.raises(recorder.RecordError, match="does not match its record and sealed reply"):
+        republish("review-one")
+    comments[0] = dict(withheld)
+    later = recorder.build_comment(
+        sha="c" * 40,
+        task_id="review-later",
+        started="2026-10-29T12:30:00.000000+00:00",
+        verdict="APPROVED",
+        model="gpt-6.1-sol",
+        family="openai",
+        reply="VERDICT: APPROVE",
+    )
+    comments.append({**withheld, "id": 9, "body": later})
+    with pytest.raises(recorder.RecordError, match="later verdict"):
+        republish("review-one")
+    comments.pop()
+    assert comments == [withheld] and calls["posts"] == 1
 
-    receipt = recorder.republish_withheld("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    receipt = republish("review-one")
 
     assert receipt["comment"] == "posted" and calls == {"posts": 2, "statuses": 1}
     assert comments[0] == withheld
@@ -2694,8 +2718,7 @@ def test_withheld_verdict_republishes_its_findings_after_the_cause_is_fixed(
     assert "F1 [P1] [scripts/unit.py:12](scripts/unit.py:12) still open: fails." in body and str(tmp_path) not in body
     assert recorder.parse_marker(body) == recorder.parse_marker(withheld["body"])
     assert open_blocker_cited(comments, "fleet", "F1") == sha
-    again = recorder.republish_withheld("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert again["comment"] == "existing" and calls["posts"] == 2
+    assert republish("review-one")["comment"] == "existing" and calls["posts"] == 2
 
 
 # --- #9739 A1: GitHub's listing must equal the local base..head enumeration ----------------------
