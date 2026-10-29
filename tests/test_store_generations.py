@@ -21,6 +21,7 @@ import pytest
 from scripts.lib.readonly_sqlite import CorpusDatabaseWriteRefused, open_readonly, refuse_writable_corpus_database
 from scripts.storage import cli as storage_cli
 from scripts.storage import generations
+from scripts.storage import topology as storage_topology
 from tests.test_sources_db import sample_data, sources_report_log_dir  # noqa: F401  (fixtures)
 
 SPAWN = multiprocessing.get_context("spawn")
@@ -473,7 +474,7 @@ def test_rebuild_publishes_a_generation_and_refuses_the_legacy_live_file(
     data.mkdir()
     legacy = data / "sources.db"
     bdb.build(legacy, *inputs)  # an ordinary path: the in-place build is unchanged
-    monkeypatch.setattr(generations, "live_store_path", lambda: legacy)
+    monkeypatch.setattr(storage_topology, "live_store_path", lambda: legacy)
     with pytest.raises(generations.GenerationError, match="rebuild_requires_selector"):
         bdb.build(legacy, *inputs, force=True)
     generations.hold_database(legacy, strict=False)

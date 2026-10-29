@@ -16,9 +16,9 @@ generation until the selector is switched, and refuses when the current
 generation changed under it (``publish_generation``). A writable open of the
 store without the lock is refused by ``scripts.lib.readonly_sqlite``.
 
-Every function takes the selector path (``data/sources.db``) it works on; only
-``live_store_path`` names the primary checkout's store, through the sanctioned
-resolver in ``scripts.storage.topology``.
+Every function takes the selector path (``data/sources.db``) it works on. The
+selector checks and ``live_store_path`` live in ``scripts.storage.topology`` (the
+resolver); the lock bookkeeping the write guard reads lives in ``scripts.lib.readonly_sqlite``.
 
 Retention: publication keeps every generation. Pruning is a separate,
 operator-run command and is not part of this module.
@@ -28,11 +28,9 @@ from __future__ import annotations
 
 import contextlib
 import fcntl
-import functools
 import hashlib
 import json
 import os
-import re
 import secrets
 import shutil
 import sqlite3
@@ -41,29 +39,66 @@ import threading
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 from typing import Any, Literal
 
-from scripts.common.repo_root import main_checkout_root
-from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import (
+    ENV_STORE_WRITER_FD,
+    ENV_STORE_WRITER_SELECTOR,
+    STORE_WRITER_LOCK_NAME,
+    SQLiteConnection,
+    inherited_store_writer,
+    register_store_writer,
+    unregister_store_writer,
+    writable_store_refusal,
+)
+from scripts.storage.topology import (
+    GENERATIONS_DIRNAME,
+    SELECTOR_NAME,
+    Layout,
+    SelectorState,
+    StoreKind,
+    StoreRef,
+    inspect_selector,
+    is_generation_name,
+    live_store_path,
+    store_kind,
+)
 from scripts.storage.wal_permissions import get_companion_paths, hold_database, lift_database
 
-GENERATIONS_DIRNAME = "sources-generations"
-SELECTOR_NAME = "sources.db"
-WRITER_LOCK_NAME = ".sources-writer.lock"
+__all__ = [
+    "GENERATIONS_DIRNAME",
+    "SELECTOR_NAME",
+    "GenerationError",
+    "HeldWriter",
+    "Layout",
+    "Publication",
+    "SelectorState",
+    "StoreKind",
+    "StoreRef",
+    "inspect_selector",
+    "is_generation_name",
+    "live_store_path",
+    "publish_generation",
+    "store_kind",
+    "store_writer",
+    "writable_open_refusal",
+    "writer_lock",
+]
+
+# The write guard in scripts.lib.readonly_sqlite owns the check; this is its name here.
+writable_open_refusal = writable_store_refusal
+
+WRITER_LOCK_NAME = STORE_WRITER_LOCK_NAME
 RECEIPT_SUFFIX = ".receipt.json"
 RECEIPT_SCHEMA = "sources-generation.receipt.v1"
 # A process started by ``python -m scripts.storage write`` inherits the
 # parent's locked descriptor and the selector it locked.
-ENV_WRITER_FD = "LU_SOURCES_WRITER_FD"
-ENV_WRITER_SELECTOR = "LU_SOURCES_WRITER_SELECTOR"
+ENV_WRITER_FD = ENV_STORE_WRITER_FD
+ENV_WRITER_SELECTOR = ENV_STORE_WRITER_SELECTOR
 
-_GENERATION_NAME = re.compile(r"sources\.\d{8}T\d{6}Z-[0-9a-f]{12}\.db")
-_REPO_ROOT = Path(__file__).resolve().parents[2]
 _WRITE_BITS = stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH
 
-StoreKind = Literal["selector", "generation", "legacy_live", "other"]
-Layout = Literal["selector", "legacy_file", "missing"]
 PublishMode = Literal["publish", "bootstrap", "restore"]
 
 
@@ -75,93 +110,9 @@ class GenerationError(RuntimeError):
         super().__init__(f"{reason}: {detail}" if detail else reason)
 
 
-def is_generation_name(name: str) -> bool:
-    return bool(_GENERATION_NAME.fullmatch(name))
-
-
 def generation_name(sha256_hex: str, published_at: datetime) -> str:
     stamp = published_at.astimezone(UTC).strftime("%Y%m%dT%H%M%SZ")
     return f"sources.{stamp}-{sha256_hex[:12]}.db"
-
-
-@dataclass(frozen=True)
-class SelectorState:
-    """What a selector path is right now; ``generation`` is the file it selects."""
-
-    layout: Layout | Literal["invalid"]
-    reason: str
-    generation: Path | None = None
-
-
-def inspect_selector(selector: Path) -> SelectorState:
-    """Classify the selector without following anything outside the generation directory."""
-    try:
-        info = selector.lstat()
-    except FileNotFoundError:
-        return SelectorState("missing", "selector_missing")
-    if stat.S_ISREG(info.st_mode):
-        return SelectorState("legacy_file", "regular_file", selector)
-    if not stat.S_ISLNK(info.st_mode):
-        return SelectorState("invalid", "selector_not_file_or_link")
-    parts = PurePosixPath(os.readlink(selector)).parts
-    if len(parts) != 2 or parts[0] != GENERATIONS_DIRNAME or not is_generation_name(parts[1]):
-        return SelectorState("invalid", "selector_target_outside_generations")
-    directory = selector.parent / GENERATIONS_DIRNAME
-    try:
-        if not stat.S_ISDIR(directory.lstat().st_mode):
-            return SelectorState("invalid", "generations_dir_not_real_directory")
-        target_info = (directory / parts[1]).lstat()
-    except FileNotFoundError:
-        return SelectorState("invalid", "selected_generation_missing")
-    if not stat.S_ISREG(target_info.st_mode):
-        return SelectorState("invalid", "selected_generation_not_regular_file")
-    return SelectorState("selector", "selector", directory / parts[1])
-
-
-@functools.cache
-def live_store_path() -> Path:
-    """The primary checkout's store path (selector, or the regular file before the bootstrap)."""
-    from scripts.storage.topology import resolve_active_sources_db
-
-    return resolve_active_sources_db(main_checkout_root(_REPO_ROOT), env={}).path
-
-
-@dataclass(frozen=True)
-class StoreRef:
-    """Whether a path names the Sources store; ``lock_dir`` holds its writer lock."""
-
-    kind: StoreKind
-    selector: Path | None = None
-    lock_dir: Path | None = None
-
-
-def store_kind(path: str | os.PathLike[str]) -> StoreRef:
-    """Say whether ``path`` names the Sources store.
-
-    A selector is a link named ``sources.db`` whose text starts with the
-    generation directory. A generation is any path that resolves into a
-    generation directory (a differently named link to one included). Before the
-    bootstrap the store is the primary checkout's regular ``data/sources.db``.
-    Every other path (fixtures, staged copies, temporary builds) is ``other``.
-    """
-    raw = Path(os.path.abspath(os.fspath(path)))
-    try:
-        if raw.name == SELECTOR_NAME and raw.is_symlink():
-            parts = PurePosixPath(os.readlink(raw)).parts
-            if parts and parts[0] == GENERATIONS_DIRNAME:
-                return StoreRef("selector", raw, raw.parent)
-        resolved = raw.resolve()
-    except (OSError, RuntimeError, ValueError):
-        return StoreRef("other")
-    if resolved.parent.name == GENERATIONS_DIRNAME and is_generation_name(resolved.name):
-        return StoreRef("generation", None, resolved.parent.parent)
-    try:
-        live = live_store_path()
-        if resolved == live.resolve() and live.is_file() and not live.is_symlink():
-            return StoreRef("legacy_live", live, live.parent)
-    except (OSError, RuntimeError, ValueError):
-        return StoreRef("other")
-    return StoreRef("other")
 
 
 def _wal_identity(generation: Path) -> tuple[int, int, int] | None:
@@ -234,38 +185,12 @@ def _open_lock(directory: Path) -> int:
     return fd
 
 
-def _inherited(directory: Path) -> tuple[int, Path] | None:
-    """The descriptor and selector a ``scripts.storage write`` parent passed down for this store."""
-    raw_fd = os.environ.get(ENV_WRITER_FD)
-    raw_selector = os.environ.get(ENV_WRITER_SELECTOR)
-    if raw_fd is None or raw_selector is None:
-        return None
-    selector = Path(raw_selector)
-    if not selector.is_absolute() or _key(selector.parent) != _key(directory):
-        return None
-    try:
-        fd = int(raw_fd)
-        held = os.fstat(fd)
-        expected = _lock_path(directory).lstat()
-    except (ValueError, OSError):
-        return None
-    if (held.st_dev, held.st_ino) != (expected.st_dev, expected.st_ino):
-        return None
-    try:
-        # The parent's open file description already holds LOCK_EX; taking it
-        # again through the same description succeeds, any other holder fails.
-        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError:
-        return None
-    return fd, selector
-
-
 def _current(directory: Path) -> HeldWriter | None:
     with _held_lock:
         held = _held.get(_key(directory))
     if held is not None:
         return held
-    inherited = _inherited(directory)
+    inherited = inherited_store_writer(directory)
     if inherited is None:
         return None
     fd, selector = inherited
@@ -295,7 +220,7 @@ def writer_lock(
     with _held_lock:
         if key in _held:
             raise GenerationError("writer_lock_busy", "already held by this process")
-    inherited = _inherited(directory)
+    inherited = inherited_store_writer(directory)
     fd = inherited[0] if inherited is not None else _open_lock(directory)
     try:
         if inherited is None:
@@ -320,11 +245,13 @@ def writer_lock(
             held.lifted = True
         with _held_lock:
             _held[key] = held
+            register_store_writer(selector)
         try:
             yield held
         finally:
             with _held_lock:
                 _held.pop(key, None)
+                unregister_store_writer(selector)
             held._released = True
             errors: list[Exception] = []
             for connection in held._connections:
@@ -378,33 +305,6 @@ def track_connection(path: str | os.PathLike[str], connection: SQLiteConnection)
     held = _current(ref.lock_dir)
     if held is not None and not held.inherited:
         held.track(connection)
-
-
-def writable_open_refusal(database: str | os.PathLike[str]) -> str | None:
-    """``None`` when ``database`` may be opened writable here, else a path-free reason.
-
-    Paths that are not the store are always allowed by this check. The store
-    needs this process to hold the writer lock (or to have inherited it), and
-    the path must resolve to the generation the selector selects now.
-    """
-    ref = store_kind(database)
-    if ref.kind == "other":
-        return None
-    if ref.lock_dir is None:
-        return "store_unavailable"
-    held = _current(ref.lock_dir)
-    if held is None:
-        return "writer_lock_not_held"
-    state = inspect_selector(held.selector)
-    if state.generation is None:
-        return state.reason
-    try:
-        target = Path(os.fspath(database)).resolve()
-    except (OSError, RuntimeError, ValueError):
-        return "store_unavailable"
-    if target != state.generation.resolve():
-        return "not_selected_generation"
-    return None
 
 
 def required_free_bytes(generation_bytes: int) -> int:

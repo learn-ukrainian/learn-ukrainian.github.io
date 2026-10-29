@@ -672,7 +672,9 @@ def test_pre_bootstrap_live_store_needs_the_lock(tmp_path, monkeypatch):
     live.parent.mkdir()
     with closing(sqlite3.connect(live)) as conn:
         conn.execute("CREATE TABLE synthetic (id INTEGER)")
-    monkeypatch.setattr(generations, "live_store_path", lambda: live)
+    from scripts.storage import topology
+
+    monkeypatch.setattr(topology, "live_store_path", lambda: live)
     with pytest.raises(CorpusDatabaseWriteRefused, match="writer_lock_not_held"):
         _as_declared_writer(live)
     with generations.writer_lock(live):
