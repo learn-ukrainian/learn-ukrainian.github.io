@@ -9,6 +9,7 @@ import re
 import shutil
 import stat
 import subprocess
+import tempfile
 from contextlib import ExitStack, contextmanager, suppress
 from datetime import datetime
 from functools import partial
@@ -219,14 +220,15 @@ def sparse_excludes(includes=(), owned_paths=()) -> list[str]:
     return sorted(SPARSE_EXCLUDE_DEFAULT - includes)
 
 
-def _git(path: Path, *args: str, isolate: bool = False, strip: bool = True) -> str:
+def _git(path: Path, *args: str, isolate: bool = False, strip: bool = True, env: dict | None = None) -> str:
     output = subprocess.run(
         ["git", "-C", str(path), *args],
         capture_output=True,
         text=True,
         check=True,
         timeout=30,
-        env={**(sanitized_git_env(strip_config_injection=True) if isolate else os.environ), "GIT_TERMINAL_PROMPT": "0"},
+        env={**(sanitized_git_env(strip_config_injection=True) if isolate else os.environ), "GIT_TERMINAL_PROMPT": "0",
+             **(env or {})},
     ).stdout
     return output.strip() if strip else output
 
@@ -411,6 +413,13 @@ def _gh(*args: str) -> str:
     return proc.stdout
 
 
+def _repo_and_base(record: dict) -> tuple[str | None, str]:
+    """The GitHub repository of the remote recorded at dispatch (None when it names none) and the task's base branch."""
+    match = _REMOTE_SLUG.fullmatch(record["worktree_remote_url"])
+    return (match.group(1) if match else None,
+            record["worktree_base_ref"].removeprefix("refs/remotes/").removeprefix("origin/"))
+
+
 def _accepted_prs(task_id: str, repo: str) -> list[int]:
     """Numbers of ``repo`` pull requests this task accepted through ``pr_ownership``, current or since cleared."""
     from scripts.orchestration import pr_ownership
@@ -435,11 +444,9 @@ def merged_delivery(record: dict) -> dict | None:
     further work that was not pushed.
     """
     try:
-        match = _REMOTE_SLUG.fullmatch(record["worktree_remote_url"])
-        if not match:
+        repo, base = _repo_and_base(record)
+        if repo is None:
             return None
-        repo = match.group(1)
-        base = record["worktree_base_ref"].removeprefix("refs/remotes/").removeprefix("origin/")
         started = datetime.fromisoformat(record["started_at"].replace("Z", "+00:00"))
         branches = {record["worktree_branch"], record.get("publish_branch")} - {None}
         numbers = set(_accepted_prs(record["task_id"], repo))
@@ -488,7 +495,8 @@ def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | Non
     Only the URL recorded at dispatch is read, in a private Git namespace, so neither the worktree's
     mutable origin nor a configured URL rewrite can redirect the proof. A merged branch may since have
     been deleted, so head also counts as published when a pull-request head ref advertises it exactly
-    (GitHub keeps refs/pull/N/head after a squash merge) or, fetched commits-only, main contains it.
+    (GitHub keeps refs/pull/N/head after a squash merge), when, fetched commits-only, main contains it,
+    or when the final head of a pull request the task accepted contains it (_accepted_pr_contains).
     """
     remote = record["worktree_remote_url"]
     if not remote:
@@ -502,10 +510,131 @@ def _canonical_publication(record: dict, ref: str, head: str) -> tuple[str | Non
             return tip, True
         run("fetch", "--no-tags", "--no-write-fetch-head", "--filter=tree:0", "--", "origin",
             f"+{MAIN_REF}:{MAIN_REF}", timeout=VERIFICATION_FETCH_TIMEOUT)
-        return tip, head in run("rev-list", MAIN_REF).split()
+        if head in run("rev-list", MAIN_REF).split():
+            return tip, True
+        return tip, _accepted_pr_contains(record, run, dict((name, sha) for sha, name in advertised), head)
 
 
-def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
+def _accepted_pr_contains(record: dict, run, pull_heads: dict[str, str], head: str) -> bool:
+    """Whether a pull request the task accepted merged into its base with head among its commits.
+
+    A worker that accepts a pull request pushes to that pull request's branch, not its own, and the
+    branch may gain commits after it before a squash merge; head is then neither main's nor the pull
+    head's exact commit. GitHub must report the pull request MERGED into the task's base with the
+    final head that the recorded remote advertises at refs/pull/N/head, and that head, fetched
+    commits-only, must contain head. Merged state alone, or the same changes in other commits, is not
+    proof. A failed GitHub read raises, so the tree is kept as unknown.
+    """
+    repo, base = _repo_and_base(record)
+    if repo is None:
+        return False
+    try:
+        numbers = _accepted_prs(record["task_id"], repo)
+    except RuntimeError as exc:  # pr_ownership's unreadable or malformed state
+        raise ValueError("pull-request ownership state unreadable") from exc
+    for number in numbers:
+        ref = f"refs/pull/{number}/head"
+        if ref not in pull_heads:
+            continue
+        pr = json.loads(_gh("pr", "view", str(number), "--repo", repo, "--json", "state,baseRefName,headRefOid"))
+        if pr["state"] != "MERGED" or pr["baseRefName"] != base or pr["headRefOid"] != pull_heads[ref]:
+            continue
+        run("fetch", "--no-tags", "--no-write-fetch-head", "--filter=tree:0", "--", "origin", f"+{ref}:{ref}",
+            timeout=VERIFICATION_FETCH_TIMEOUT)
+        if run("rev-parse", ref) == pull_heads[ref] and head in run("rev-list", ref, "--not", MAIN_REF).split():
+            return True
+    return False
+
+
+# Branches the hourly hygiene run pushes a finished task's otherwise unpublished work to; only the operator
+# deletes them.
+SALVAGE_PREFIX = "refs/heads/salvage/"
+# Meaningful ignored output (outside caches and provisioned links) above this keeps a tree for its owner: the
+# removal chokepoint would copy all of it into the task's preserved archive.
+SALVAGE_IGNORED_LIMIT = 100 * 1024 * 1024
+_SALVAGE_AUTHOR = dict(GIT_AUTHOR_NAME="lu-worktree-gc", GIT_AUTHOR_EMAIL="worktree-gc@learn-ukrainian.invalid",
+                       GIT_COMMITTER_NAME="lu-worktree-gc", GIT_COMMITTER_EMAIL="worktree-gc@learn-ukrainian.invalid")
+
+
+class _Kept(Exception):
+    """A tree salvage could not make safe to remove, with the disposition reason and detail to record."""
+
+    def __init__(self, reason: str, detail: str | None = None):
+        super().__init__(reason)
+        self.reason, self.detail = reason, detail
+
+
+def _snapshot_tree(tree: Path) -> str:
+    """The tree object of the checkout's tracked and untracked (not ignored) files.
+
+    They are staged in a scratch copy of the checkout's index, so its own index, HEAD and branch stay as they were.
+    """
+    index = _git(tree, "rev-parse", "--path-format=absolute", "--git-path", "index", isolate=True)
+    with tempfile.TemporaryDirectory(prefix="lu-salvage-") as scratch:
+        env = {"GIT_INDEX_FILE": str(shutil.copyfile(index, Path(scratch) / "index"))}
+        _git(tree, "add", "--all", isolate=True, env=env)
+        return _git(tree, "write-tree", isolate=True, env=env)
+
+
+def _ignored_bytes(tree: Path, primary: Path, limit: int) -> int:
+    """Bytes of the tree's ignored files outside caches and provisioned links, counted until they pass limit."""
+    from scripts.orchestration.worktree_artifacts import is_disposable_path
+
+    total = 0
+    listing = _git(tree, "ls-files", "-z", "--others", "--ignored", "--exclude-standard", isolate=True, strip=False)
+    for name in listing.split("\0"):
+        if name and not is_disposable_path(Path(name), worktree=tree, primary=primary):
+            total += os.lstat(tree / name).st_size
+            if total > limit:
+                break
+    return total
+
+
+def _salvage(record: dict, tree: Path, head: str, changed: list[str]) -> tuple[str, str]:
+    """Push the tree's commits and uncommitted work to a new salvage branch; return the commit and its tree.
+
+    The commit is head itself when nothing is uncommitted, else one commit on head holding the tracked
+    and untracked files, with a fixed author and date so a retry builds the same commit. It goes to the
+    URL recorded at dispatch without force, never over a salvage branch that holds another commit, and
+    counts only once that remote advertises exactly it.
+    """
+    task_id, remote = record["task_id"], record["worktree_remote_url"]
+    ref = SALVAGE_PREFIX + task_id
+    if any(entry.startswith("hidden ") for entry in changed):
+        raise _Kept("salvage_unverified", "an assume-unchanged or skip-worktree edit cannot be staged")
+    try:
+        _git(tree, "check-ref-format", ref, isolate=True)
+        if not remote or verification_origin(tree) != remote:
+            raise _Kept("salvage_unverified", "origin URL changed since dispatch")
+        snapshot, commit = _snapshot_tree(tree), head
+        if snapshot != _git(tree, "rev-parse", "HEAD^{tree}", isolate=True):
+            when = record.get("finished_at") or record["started_at"]
+            commit = _git(tree, "commit-tree", snapshot, "-p", head, "-m", f"salvage: unpublished work of {task_id}",
+                          isolate=True, env={**_SALVAGE_AUTHOR, "GIT_AUTHOR_DATE": when, "GIT_COMMITTER_DATE": when})
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as exc:
+        raise _Kept("salvage_unverified", f"salvage commit not built ({type(exc).__name__})") from None
+
+    def advertised() -> str | None:
+        listing = _verification_git(tree, "ls-remote", "--", remote, ref, credential_remote=remote,
+                                    timeout=VERIFICATION_FETCH_TIMEOUT)
+        return next((sha for sha, name in (line.split() for line in listing.splitlines()) if name == ref), None)
+
+    try:
+        existing = advertised()
+        if existing not in (None, commit):
+            raise _Kept("salvage_failed", f"{ref} already holds another commit")
+        if existing is None:
+            _verification_git(tree, "push", "--quiet", "--", remote, f"{commit}:{ref}", credential_remote=remote,
+                              timeout=VERIFICATION_FETCH_TIMEOUT)
+        verified = advertised()
+    except (OSError, ValueError, subprocess.SubprocessError):
+        raise _Kept("salvage_failed", f"push of {ref} to the recorded remote failed") from None
+    if verified != commit:
+        raise _Kept("salvage_unverified", f"{ref} does not advertise the salvage commit")
+    return commit, snapshot
+
+
+def settle_worktree(record: dict, borrowed=lambda: False, salvage: bool = False) -> dict:
     """Remove the task's own worktree when nothing in it can be lost; otherwise record why it stays.
 
     Runs from outside the worktree after the provider has exited. Uncommitted tracked changes keep the
@@ -516,6 +645,12 @@ def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
     provider may still work in this tree. Removal goes through the guarded chokepoint
     (worktree_claims.remove_unclaimed_worktree), which records ignored output and copies untracked
     files into the task's preserved archive before it removes the checkout.
+
+    With salvage (the hourly hygiene run), a tree kept for uncommitted or unpublished work is pushed to
+    a new salvage/<task-id> branch on that remote instead (_salvage), after borrowed() and the worktree
+    claims admit it, and is removed only while its content still equals what that branch holds; a
+    failed or unproven salvage keeps it. Salvage also keeps a tree whose meaningful ignored output
+    passes SALVAGE_IGNORED_LIMIT.
     """
     def disposition(state, reason, detail=None):
         return dict(worktree_disposition=state, worktree_disposition_reason=reason,
@@ -527,31 +662,54 @@ def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
         repo, tree, branch = resolve_repo(record.get("repo"))[0], Path(record["worktree_path"]), record["worktree_branch"]
         changed, untracked = _tree_changes(tree)
         head, remote, merged = _git(tree, "rev-parse", "HEAD", isolate=True), None, False
-        if changed:
+        if changed and not salvage:
             return disposition("retained", "dirty", "; ".join(changed[:5]))
         committed = head != record.get("worktree_start_sha", record["worktree_base_sha"])
-        if record["mode"] != "read-only" and committed:
+        if not changed and record["mode"] != "read-only" and committed:
             remote, merged = _canonical_publication(record, f"refs/heads/{record.get('publish_branch') or branch}", head)
+        ignored = _ignored_bytes(tree, repo, SALVAGE_IGNORED_LIMIT) if salvage else 0
     except (OSError, ValueError, KeyError, subprocess.SubprocessError):
         return disposition("retained", "unknown")
     published = head == remote or merged
-    if record["mode"] != "read-only" and committed and not published:
+    unpublished = not changed and record["mode"] != "read-only" and committed and not published
+    if unpublished and not salvage:
         return disposition("retained", "unpublished" if remote is None else "remote_mismatch")
+    if ignored > SALVAGE_IGNORED_LIMIT:
+        return disposition("retained", "large_ignored_output", f"over {SALVAGE_IGNORED_LIMIT} bytes outside caches")
+
+    from scripts.orchestration import worktree_claims
+
+    salvaged = None
+    if changed or unpublished:
+        # Claims are checked before the salvage push, and again under the lock before removal.
+        if borrowed():
+            return disposition("retained", "borrowed_by_live_task")
+        refusal = worktree_claims.active_worktree_claim_refusal(
+            tree, tasks_dir=tasks_dir(), repo_root=repo, owner_task_id=record["task_id"])
+        if refusal is not None:
+            return disposition("retained", "removal_refused", refusal)
+        try:
+            salvaged = _salvage(record, tree, head, changed)
+        except _Kept as kept:
+            return disposition("retained", kept.reason, kept.detail)
+        published = True
+    salvage_detail = f"{SALVAGE_PREFIX}{record['task_id']} {salvaged[0]}" if salvaged else None
 
     def changed_since_inventory(path: Path) -> bool | None:
         with suppress(OSError, subprocess.SubprocessError):
+            if salvaged:
+                return _snapshot_tree(path) != salvaged[1] or any(
+                    entry.startswith("hidden ") for entry in _tree_changes(path)[0])
             return _tree_changes(path) != ([], untracked)
         return None
-
-    from scripts.orchestration import worktree_claims
 
     with worktree_lock(repo):
         if borrowed():
             return disposition("retained", "borrowed_by_live_task")
-        # Untracked files block a plain removal; the forced one runs only after they are copied.
+        # Untracked files and salvaged edits block a plain removal; the forced one runs only after the dirty probe.
         removal = worktree_claims.remove_unclaimed_worktree(
             tree, repo_root=repo, reason="dispatch settlement", owner_task_id=record["task_id"],
-            force=bool(untracked), dirty_probe=changed_since_inventory, tasks_dir=tasks_dir(),
+            force=bool(untracked or changed), dirty_probe=changed_since_inventory, tasks_dir=tasks_dir(),
             task_record=record, preserve_files=untracked or None,
         )
     if removal.action == "skipped":
@@ -565,5 +723,5 @@ def settle_worktree(record: dict, borrowed=lambda: False) -> dict:
             return disposition("removed", "branch_kept_unmerged")
         _git(repo, "update-ref", "-d", f"refs/heads/{branch}", head, isolate=True)
     except (OSError, subprocess.SubprocessError):
-        return disposition("removed", "branch_delete_failed")
-    return disposition("removed", "clean")
+        return disposition("removed", "branch_delete_failed", salvage_detail)
+    return disposition("removed", "salvaged", salvage_detail) if salvaged else disposition("removed", "clean")
