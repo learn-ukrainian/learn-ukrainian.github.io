@@ -588,6 +588,11 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             # The removal chokepoint releases a tree only to a finished owner record, so publish it, then
             # settle; wait() reads a terminal record under this lock and never sees the tree mid-removal.
             with store.task_state_lock(path):
+                if cancel_requested and record["status"] != "cancelled":
+                    # It arrived during cleanup. Publication is the last point it decides the run: a published
+                    # terminal record is never rewritten, and cancel() returns one unchanged.
+                    record.pop("no_deliverable_reason", None)
+                    record.update(status="cancelled", error="cancelled by client")
                 store.replace(record, path)
                 _reap_settled(record, patience=SETTLE_PATIENCE)
                 store.replace(record, path)
