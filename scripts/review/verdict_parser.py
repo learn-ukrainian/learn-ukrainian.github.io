@@ -259,6 +259,29 @@ _FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
 _JSON_VALUE_START_RE = re.compile(r" {0,3}[\[{]")
 
 
+def _json_value_end(text: str, start: int) -> int:
+    """End of the bracketed value at ``start`` by bracket matching, for one the decoder's depth limit rejects."""
+    depth, in_string, escaped = 0, False, False
+    for index in range(start, len(text)):
+        char = text[index]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+        elif char == '"':
+            in_string = True
+        elif char in "[{":
+            depth += 1
+        elif char in "]}":
+            depth -= 1
+            if depth == 0:
+                return index + 1
+    return len(text)
+
+
 def invalid_findings_blocks(response: str, *, stated: str | None = None) -> list[str]:
     """Reasons for each top-level JSON block offered as a findings envelope that fails validation.
 
@@ -292,7 +315,10 @@ def invalid_findings_blocks(response: str, *, stated: str | None = None) -> list
                 start = starts[number] + match.end() - 1
                 try:
                     _, consumed = json.JSONDecoder().raw_decode(text, start)
-                except (ValueError, RecursionError):
+                except ValueError:
+                    continue
+                except RecursionError:
+                    consumed = _json_value_end(text, start)
                     continue
                 candidates.append(text[start:consumed])
     invalid: list[str] = []
