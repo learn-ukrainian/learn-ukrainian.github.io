@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Iterator
+from itertools import accumulate
 from typing import Any
 
 ACCEPTED_VERDICT_TOKENS = (
@@ -257,31 +258,38 @@ def _findings_json_verdicts(response: str, *, stated: str | None = None) -> list
 
 # A top-level JSON object carrying any of these keys is offered as a findings envelope.
 _FINDINGS_ENVELOPE_KEYS = frozenset({"schema_version", "overall", "findings"})
-_JSON_VALUE_START_RE = re.compile(r"^ {0,3}[\[{]", re.MULTILINE)
+_JSON_VALUE_START_RE = re.compile(r" {0,3}[\[{]")
 
 
 def _top_level_json_values(response: str) -> Iterator[Any]:
     """Decoded JSON of each top-level block: a ``json`` or bare fence, or a value that starts a paragraph line.
 
     Top level is CommonMark level 0: quotes, list items and values nested in another value are examples.
+    A value is decoded from the whole reply, so blank lines inside it do not end it.
     """
     from markdown_it import MarkdownIt
 
+    lines = _commonmark_lines(response)
+    text = "\n".join(lines)
+    starts = list(accumulate((len(line) + 1 for line in lines), initial=0))
     decoder = json.JSONDecoder()
-    for token in MarkdownIt("commonmark").parse("\n".join(_commonmark_lines(response))):
-        if token.type == "fence" and token.level == 0 and token.info.strip() in {"", "json"}:
+    consumed = 0
+    for token in MarkdownIt("commonmark").parse(text):
+        if token.level:
+            continue
+        if token.type == "fence" and token.info.strip() in {"", "json"}:
             try:
                 value = json.loads(token.content)
             except ValueError:
                 continue
             yield value
-        elif token.type == "inline" and token.level == 1:
-            consumed = 0
-            for match in _JSON_VALUE_START_RE.finditer(token.content):
-                if match.end() <= consumed:
+        elif token.type in {"paragraph_open", "heading_open"} and token.map:
+            for number in range(*token.map):
+                match = _JSON_VALUE_START_RE.match(lines[number])
+                if match is None or starts[number] < consumed:
                     continue
                 try:
-                    value, consumed = decoder.raw_decode(token.content, match.end() - 1)
+                    value, consumed = decoder.raw_decode(text, starts[number] + match.end() - 1)
                 except ValueError:
                     continue
                 yield value
