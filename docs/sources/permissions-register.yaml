@@ -2077,3 +2077,64 @@ sources:
   open_questions:
   - Print edition attribution (ВТФ «Перун» / за ред. В. Т. Бусела, 2005) not established from electronic mirror colophon; edition verification prerequisite remains open for formal bibliographic citation.
   - Commercial/public-dataset redistribution licence status remains unconfirmed with rights holder (ВТФ «Перун»); blocks Phase 7 public dataset release only.
+- id: sum20_slovnyk_mirror
+  permission_status: pending-expert-contact
+  permission_note: The same work and rights holder as `sum20`; slovnyk.me is only the retrieval route (see the `slovnyk_me`
+    aggregator entry). Use follows the operator's source decision of 2026-09-27 (#8977); this entry is a provenance and
+    takedown record.
+  name: «Словник української мови у 20 томах» (СУМ-20) via slovnyk.me (newsum)
+  organisation: 'Український мовно-інформаційний фонд НАН України with the Інститут мовознавства ім. О. О. Потебні
+    НАН України (the `sum20` work); digital copy hosted by slovnyk.me'
+  role: Modern Ukrainian definitions beside the official offline collection. query_sum20 and the Sources MCP serve each
+    mirror row under rule sum20-mirror-rule-v1, and internal word cards use it as a separate meaning source. It is never
+    official verification.
+  fields_used:
+  - headword
+  - definition_text
+  appears_in:
+  - internal
+  appears_note: query_sum20 and the Sources MCP label every record `source_role` mirror with its mirror URL and fetch
+    time; internal word cards carry it as source `sum20_slovnyk_mirror` (lineage G-ULIF, tier 2), so it never counts as
+    independent corroboration of `sum20`.
+  stored_in:
+  - data/sum20_slovnyk_staging.db sum20_slovnyk_articles (164,838 articles, complete checkpoint)
+  - data/sources.db sum20_mirror_articles (scripts/ingest/sum20_mirror_import.py)
+  provenance:
+    urls:
+    - https://slovnyk.me/dict/newsum/
+    retrieved: '2026-10-12'
+    retrieved_evidence: sum20_slovnyk_articles.fetched_at spans 2026-08-06 to 2026-10-12; 164,838 rows, every one with
+      outcome ok; staging file SHA-256 32e77a09e004a7ad740fa8acd350d0f5a743cb13f751e9d134ffcec5db595194
+      (docs/sources/admissions/2026-10-28-vts-acquisition.md).
+  terms:
+    found: true
+    licence:
+      name: All rights reserved (© ULIF, the `sum20` work); no open licence on the slovnyk.me aggregator
+      spdx: null
+      verbatim_quote: null
+    conditions:
+      share_alike: null
+      non_commercial: null
+      other:
+      - Definitions are quoted with the work's name, the mirror URL and marked quotation boundaries, referencing Art.
+        22(2)(1) of Law 2811-IX.
+    quotes:
+    - id: sum20_slovnyk_me_attribution
+      quote: 'Джерело: Словник української мови (СУМ-20) на Slovnyk.me'
+      gloss_en: The attribution tag slovnyk.me appends to every staged СУМ-20 article (read from the stored articles).
+      url: https://slovnyk.me/dict/newsum/
+      read_on: '2026-10-29'
+    searched:
+    - https://slovnyk.me/terms (recorded as slovnyk_terms_2024 in the slovnyk_me entry)
+    legal_refs:
+    - law_art22_quotation
+  citation:
+    form: Словник української мови у 20 томах (електронна копія на Slovnyk.me, https://slovnyk.me/dict/newsum/).
+    shown_label: Словник української мови у 20 томах — копія slovnyk.me
+  removal:
+    route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
+    scope: Mirror records served by query_sum20 and the Sources MCP, word-card meanings with source sum20_slovnyk_mirror,
+      and the stored copies in data/sum20_slovnyk_staging.db and data/sources.db.
+  open_questions:
+  - The copy covers the 164,838 articles of its own crawl list, not the whole dictionary; common lemmas such as день, дім
+    and знати have no article in it.
