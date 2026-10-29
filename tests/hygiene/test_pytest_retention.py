@@ -1578,6 +1578,49 @@ def test_payload(tmp_path):
     assert list(runs_dir.iterdir()) == runs
 
 
+def test_session_ended_by_a_later_finish_monitor_keeps_its_run_but_a_clean_pass_removes_it(pytester, area):
+    root, _args = area
+    pytester.makeini("[pytest]\ntmp_path_retention_policy = failed\n")
+    pytester.makeconftest(f'''
+import os
+import sys
+import pytest
+sys.path.insert(0, {str(REPO)!r})
+pytest_plugins = ["scripts.common.pytest_scratch"]
+
+# Outermost, so this monitor is added after the plugin's own and sees its result.
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtestloop(session):
+    result = yield
+    if os.environ.get("LATE_FINISH_MONITOR"):
+        def after(outcome, hook_name, _impls, kwargs):
+            if hook_name == "pytest_sessionfinish":
+                raise pytest.UsageError("a later session-finish monitor failed")
+        session.config.pluginmanager.add_hookcall_monitoring(lambda *_: None, after)
+    return result
+''')
+    pytester.makepyfile("def test_passes(tmp_path):\n    (tmp_path / 'payload').write_text('hello')\n")
+    (root / "pytest-runs").mkdir(mode=0o700)
+    runs_dir = root / "pytest-runs" / "runs"
+
+    def session(**env) -> subprocess.CompletedProcess:
+        # Pytester's runner injects --basetemp, which intentionally opts out of ownership.
+        return subprocess.run(
+            [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider"],
+            cwd=pytester.path, capture_output=True, text=True, timeout=60,
+            env={**os.environ, "LU_SCRATCH_ROOT": str(root), **env},
+        )
+
+    clean = session()
+    assert clean.returncode == 0, clean.stdout + clean.stderr
+    assert not list(runs_dir.iterdir())
+
+    ended = session(LATE_FINISH_MONITOR="1")
+    assert ended.returncode == pytest.ExitCode.USAGE_ERROR, ended.stdout + ended.stderr
+    (run,) = runs_dir.iterdir()
+    assert (run / "scratch" / "base").is_dir()
+
+
 def use_real_proc(monkeypatch) -> None:
     """Judge lease liveness against the real process table, never a fabricated one."""
     monkeypatch.setattr(pytest_retention, "PROC_ROOT", Path("/proc"))
