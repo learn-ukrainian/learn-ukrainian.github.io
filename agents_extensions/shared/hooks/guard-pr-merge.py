@@ -634,9 +634,9 @@ def _literal_gh_read(argv: list[str]) -> bool:
 
 def _literal_reads_only(command: str) -> bool:
     """Discharge merge-word candidates only at proven read command positions."""
-    # Shared preprocessing can preserve ambiguous heredoc data. Never group its
-    # quotes, or carriage-return contexts, into an executable read command.
-    if "<<" in command or "\r" in command:
+    # Input redirects can introduce heredoc data, even across continuations.
+    # Never group their quotes, or carriage returns, into a proven read.
+    if "<" in command or "\r" in command:
         return False
     found_read = False
     for kind, argv in scope_events(
