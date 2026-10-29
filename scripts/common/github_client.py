@@ -1405,6 +1405,16 @@ class GitHubClient:
                     raise
                 self.cache_dir = None
 
+    def _count(self, endpoint, status):
+        """Count one request in a short transaction of its own, after the call's writes committed.
+
+        Best effort: it waits at most a quarter second for the write lock, and a row SQLite
+        refuses, or a damaged file, drops the row and never fails or slows the call further.
+        """
+        with suppress(sqlite3.Error, OSError), self._db() as db:
+            db.execute("PRAGMA busy_timeout=250")
+            github_usage.record(db, endpoint=endpoint, status=status)
+
     def _send(self, method, endpoint, headers, body, timeout):
         if self.transport:
             response = self.transport(method, endpoint, headers, body, timeout)
@@ -1555,71 +1565,69 @@ class GitHubClient:
             now=now,
         )
         value = result.value
-        for persist_attempt in range(2):
-            try:
-                with self._db() as db:
-                    # Counted first, so a row SQLite refuses (even one whose rollback takes the
-                    # whole transaction) costs no budget observation and never adds a second lock
-                    # wait. 599 is this client's own transport failure: nothing reached GitHub. A
-                    # landing call is not counted, so counting never adds a wait to it.
-                    if resource == "core" and response.status != 599 and normalized.call_class != "landing":
-                        github_usage.record(
-                            db,
-                            endpoint=github_usage.endpoint_template(method, resource_path),
-                            status=response.status,
-                        )
-                    if budget is not None:
-                        remaining, reset = budget
-                        _store_budget(
-                            db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset, now=now
-                        )
+        # Counted once the call's own writes are committed, in a transaction of its own: a row SQLite
+        # refuses, or space it takes, can never cost the budget observation. 599 is this client's own
+        # transport failure: nothing reached GitHub. A landing call is not counted at all.
+        counted = resource == "core" and response.status != 599 and normalized.call_class != "landing"
+        try:
+            for persist_attempt in range(2):
+                try:
+                    with self._db() as db:
+                        if budget is not None:
+                            remaining, reset = budget
+                            _store_budget(
+                                db, self.scope, h.get("x-ratelimit-resource", resource), remaining, reset, now=now
+                            )
+                        if limit is not None:
+                            holds, reset, reason = limit
+                            for hold in holds:
+                                _store_budget(db, self.scope, hold, 0, reset, now=now)
+                            return deferred(reason, reset)
+                        if response.status == 304:
+                            if not cached or self.clock() - cached[2] >= self.cache_ttl_seconds:
+                                return Result(status=304, error="github_cache_miss", headers=h)
+                            # 304 is authoritative freshness; its remaining header is used,
+                            # never decremented locally.
+                            h = {**json.loads(cached[1]), **h}
+                            db.execute(
+                                "UPDATE cache SET at=?,headers=? WHERE scope=? AND key=? AND at<=? "
+                                "AND at=? AND body=? AND headers=?",
+                                (now, json.dumps(h), self.scope, key, now, cached[2], cached[0], cached[1]),
+                            )
+                            return Result(_cached_value(cached), status=304, headers=h)
+                        if result.error == "github_rate_limited":
+                            reset = result.reset_at
+                            _store_budget(db, self.scope, resource, 0, reset, now=now)
+                            return deferred("pool_exhausted", reset)
+                        if result.error or isinstance(value, bytes):
+                            return result
+                        if resource_path == "rate_limit" and isinstance(value, dict):
+                            for name, rate in value.get("resources", {}).items():
+                                if (
+                                    isinstance(rate, dict)
+                                    and type(rate.get("remaining")) is int
+                                    and type(rate.get("reset")) is int
+                                ):
+                                    _store_budget(db, self.scope, name, rate["remaining"], rate["reset"], now=now)
+                        if cacheable:
+                            _store_cache(db, self.scope, key, response.body, h, now)
+                        else:
+                            # Any write can affect list/detail cache entries. Retain them
+                            # for stale status, but never treat them as fresh without GET.
+                            pass
+                    break
+                except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
+                    if self.cache_dir is not None:
+                        self.cache_dir = None
+                        if persist_attempt == 0:
+                            continue
                     if limit is not None:
-                        holds, reset, reason = limit
-                        for hold in holds:
-                            _store_budget(db, self.scope, hold, 0, reset, now=now)
-                        return deferred(reason, reset)
-                    if response.status == 304:
-                        if not cached or self.clock() - cached[2] >= self.cache_ttl_seconds:
-                            return Result(status=304, error="github_cache_miss", headers=h)
-                        # 304 is authoritative freshness; its remaining header is used,
-                        # never decremented locally.
-                        h = {**json.loads(cached[1]), **h}
-                        db.execute(
-                            "UPDATE cache SET at=?,headers=? WHERE scope=? AND key=? AND at<=? "
-                            "AND at=? AND body=? AND headers=?",
-                            (now, json.dumps(h), self.scope, key, now, cached[2], cached[0], cached[1]),
-                        )
-                        return Result(_cached_value(cached), status=304, headers=h)
-                    if result.error == "github_rate_limited":
-                        reset = result.reset_at
-                        _store_budget(db, self.scope, resource, 0, reset, now=now)
-                        return deferred("pool_exhausted", reset)
-                    if result.error or isinstance(value, bytes):
-                        return result
-                    if resource_path == "rate_limit" and isinstance(value, dict):
-                        for name, rate in value.get("resources", {}).items():
-                            if (
-                                isinstance(rate, dict)
-                                and type(rate.get("remaining")) is int
-                                and type(rate.get("reset")) is int
-                            ):
-                                _store_budget(db, self.scope, name, rate["remaining"], rate["reset"], now=now)
-                    if cacheable:
-                        _store_cache(db, self.scope, key, response.body, h, now)
-                    else:
-                        # Any write can affect list/detail cache entries. Retain them
-                        # for stale status, but never treat them as fresh without GET.
-                        pass
-                break
-            except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
-                if self.cache_dir is not None:
-                    self.cache_dir = None
-                    if persist_attempt == 0:
-                        continue
-                if limit is not None:
-                    return deferred(limit[2], limit[1])
-                return result
-        return result
+                        return deferred(limit[2], limit[1])
+                    return result
+            return result
+        finally:
+            if counted:
+                self._count(github_usage.endpoint_template(method, resource_path), response.status)
 
 
 def _api_hosts(host):
@@ -3361,15 +3369,12 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
         native = executor(command, **call)
     if "core" in pools and request.call_class != "landing":
         # Counted once, after it ran, however many requests gh made for it. A landing command is
-        # not counted, so counting never adds a lock wait to the landing path. A raw ``gh api``
-        # that admission could not read is named by its verb alone.
+        # not counted. A raw ``gh api`` that admission could not read is named by its verb alone.
         if request.path:
             endpoint = github_usage.endpoint_template(request.method, request.path)
         else:
             endpoint = "gh api" if str(args[1]) == "api" else " ".join(["gh", *map(str, args[1:3])])
-        # Admission stayed read-only; a failure here drops the row, never the command's result.
-        with suppress(sqlite3.Error, OSError), client._db() as db:
-            github_usage.record(db, endpoint=endpoint, status=None)
+        client._count(endpoint, None)
     output, error = (
         value.encode() if isinstance(value, str) else value or b"" for value in (native.stdout, native.stderr)
     )

@@ -148,11 +148,11 @@ fresh or healthy.
 
 The shared GitHub client (`scripts/common/github_client.py`) counts every request it sends to
 the REST core pool in a `usage` table of its own cache (`batch_state/github-client/cache.sqlite3`,
-owner-only, rows kept six hours). A request's row is written in the transaction the client
-already opens to persist its response, before the budget observation; a native `gh` command's row
-is written after it ran, so its admission stays read-only. Each row names the caller (the
-dispatched task id with its command, else the calling command's module or script, never its
-arguments; for the `gh` shim, the command that ran `gh`) and an endpoint template such as
+owner-only, rows kept six hours). A request's row is written in a short transaction of its own,
+after the call's budget observation and cache writes committed, and never waits more than a quarter
+second for the write lock. Each row names the caller (the dispatched task id with its command, else
+the calling command's module or script, never its arguments; for the `gh` shim, the command that
+ran `gh`) and an endpoint template such as
 `GET repos/:repo/actions/runs/:n`, in which the repository, numbers, commit SHAs and every named
 account, branch, tag or label (a ref with slashes included) are replaced. Print the top consumers
 of the last hour:
@@ -164,8 +164,8 @@ of the last hour:
 `charged` excludes `304` responses, which GitHub does not charge. A landing call (a PR merge,
 review, update-branch or rerun) is never counted, so counting never adds a wait to the landing
 path. A native `gh` command counts once, as charged, however many requests gh makes for it. A
-write SQLite refuses drops its row rather than fail the call; the row is written before the
-budget observation, so it cannot cost it. A cache file SQLite reports as damaged, whether at open
+write SQLite refuses drops its row rather than fail the call; the row follows the budget
+observation, so it cannot cost it. A cache file SQLite reports as damaged, whether at open
 or mid-use, is set aside as `cache.sqlite3.corrupt` and rebuilt, because without it every read is
 charged in full and budget observations stop reaching other callers; the call itself continues in
 memory. Only the damaged file is moved, under a directory lock a client never waits for: a fresh

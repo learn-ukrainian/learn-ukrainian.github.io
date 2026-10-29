@@ -5,14 +5,13 @@ pool adds one row: when, who called and which endpoint. The caller is the dispat
 when there is one, else the calling command (a module or script name, never its arguments). The
 endpoint is a template: owner, repository, numbers, commit SHAs and every named account, branch,
 tag or label are replaced. A ``304`` is counted but not charged, because GitHub does not charge
-a conditional request that returns it; a native ``gh`` command has no status here and counts once, as charged, unless it
-is on the landing path, where it is not counted. A landing request is never counted, so counting
-never adds a lock wait to it.
+a conditional request that returns it; a native ``gh`` command has no status here and counts once,
+as charged. A landing call is never counted, so counting never adds a lock wait to it.
 
-The rows live in the client's own cache file, owner-only. A request's row is written in the
-transaction the client already opens to persist its response; a native command's row is written
-after it ran, so its admission stays read-only. Counting never fails a call. Each write drops
-rows older than :data:`RETENTION_SECONDS`.
+The rows live in the client's own cache file, owner-only. Each is written in a short transaction of
+its own, after the call's budget observation and cache writes committed, that waits at most a quarter
+second for the write lock: a row SQLite refuses is dropped and never fails the call or costs an
+observation. Each write drops rows older than :data:`RETENTION_SECONDS`.
 
 Print the top consumers of the last hour::
 
