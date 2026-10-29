@@ -278,8 +278,10 @@ official text keep filtering on `source_id == "sum20_official"`.
 source `sum20_slovnyk_mirror` (`scripts/atlas/word_card_meanings.py`). Its
 permissions-register entry and its lineage are `G-ULIF`, tier 2: a copy of
 СУМ-20, never independent corroboration. The witness is the article body,
-without the page's lookup word or source footer. It is attached only when its
-head and grammar match the card's lexeme uniquely.
+without the page's lookup word or source footer. A page splits only at
+homonym headers numbered ¹, ², … in order, and any other page with several
+entries is held unresolved. A partition is attached only when its head and
+grammar match the card's lexeme uniquely.
 
 **Store selection.** When official rows come from a lexdata generation, mirror
 rows still come from the default sources store and are judged against the

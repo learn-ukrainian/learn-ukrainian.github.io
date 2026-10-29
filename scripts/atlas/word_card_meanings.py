@@ -19,7 +19,9 @@ from scripts.wiki import sum20_mirror
 
 SOURCES = ("sum20", "sum20_slovnyk_mirror", "vts_busel_slovnyk_me")
 VERSION = "pilot-meanings-v3"
-HEAD_TOKEN = re.compile(r"[А-Яа-яІіЇїЄєҐґ'’ʼ`́-]+")
+SUPERSCRIPTS = "¹²³⁴⁵⁶⁷⁸⁹"
+# A headword in capitals (stress marks allowed), an optional homonym number, then its grammar.
+MIRROR_HEADER = re.compile(r"(?<!\S)([А-ЯІЇЄҐ'’ʼ`́-]{2,})([¹²³⁴⁵⁶⁷⁸⁹]?)(?=,)")
 SOURCE_TAIL = re.compile(r"\s+Джерело:.*$", re.IGNORECASE | re.DOTALL)
 
 
@@ -97,30 +99,37 @@ def vts_partitions(text: str, spelling: str) -> list[dict]:
     return out
 
 
-def mirror_partition(row: dict, spelling: str) -> dict:
-    """The article body of one served СУМ-20 mirror row, bounded like the ВТС spans.
+def mirror_partitions(row: dict, spelling: str) -> list[dict]:
+    """Source-local homonym partitions of one served СУМ-20 mirror page; ``[]`` holds the page unresolved.
 
     The page repeats its headword before the article and appends a source
-    footer; neither belongs to the witness. The head is the article's first
-    word, and the grammar is the text up to its first full stop. A head that does
-    not spell the card's lexeme leaves the partition unresolved.
+    footer; neither belongs to a witness. A header is the card's spelling in
+    capitals followed by its grammar. One header gives one partition. Several
+    headers split the page only when they are numbered ¹, ², … in order, so each
+    witness stays within its own homonym. Unnumbered or out-of-order headers
+    (``АТЛА́С`` … ``А́ТЛАС``) cannot be told from references and hold the page.
     """
     text = row["article_text"]
     lookup = re.match(rf"\s*{re.escape(row['headword'])}\s+", text, re.IGNORECASE)
     start = lookup.end() if lookup else 0
     footer = SOURCE_TAIL.search(text, start)
     end = footer.start() if footer else len(text)
-    body = text[start:end].strip()
-    start = text.index(body, start) if body else start
-    head = HEAD_TOKEN.match(body)
-    stressed = src.nfc(head[0].lower()) if head else ""
-    if not body or key(stressed) != spelling:
-        return {"text": None, "head": "", "pos": None, "aspect": None, "partition": "unresolved", "span": [0, 0],
-                "reason": "source_partition_unresolved"}
-    grammar = body[len(head[0]):].partition(".")[0] + "."
-    return {"text": body, "head": stressed, "pos": grammar_pos(grammar),
-            "aspect": "imperf" if "недок." in grammar else "perf" if "док." in grammar else None,
-            "partition": "article", "span": [start, start + len(body)], "reason": None}
+    headers = [m for m in MIRROR_HEADER.finditer(text, start, end) if key(m[1].lower()) == spelling]
+    if not headers or headers[0].start() != start:
+        return []
+    if len(headers) > 1 and [m[2] for m in headers] != list(SUPERSCRIPTS[: len(headers)]):
+        return []
+    out = []
+    for i, header in enumerate(headers):
+        first = header.start()
+        last = headers[i + 1].start() if i + 1 < len(headers) else end
+        body = text[first:last].rstrip()
+        grammar = text[header.end():first + len(body)].partition(".")[0] + "."
+        out.append({"text": body, "head": src.nfc(header[1].lower()), "pos": grammar_pos(grammar),
+                    "aspect": "imperf" if "недок." in grammar else "perf" if "док." in grammar else None,
+                    "partition": header[1] + header[2] if len(headers) > 1 else "article",
+                    "span": [first, first + len(body)], "reason": None})
+    return out
 
 
 def full_vts(row: dict, root: Path | None) -> tuple[str | None, str | None]:
@@ -172,11 +181,14 @@ def candidates(sources: src.PilotSources, spelling: str) -> dict[str, list[dict]
     served = sum20_mirror.served_rows(sources.sources, sum20_mirror.mirror_key(spelling))
     sources._use(f"meaning:sum20_mirror:{spelling}", [[row, relation] for row, relation in served])
     for row, relation in served:
-        part = mirror_partition(row, spelling)
-        start, end = part["span"]
-        out["sum20_slovnyk_mirror"].append({**part, "row": row, "relation": relation,
-            "locator": f"sum20_slovnyk_mirror:sum20_mirror_articles:id:{row['id']} [article_text:{start}:{end}]",
-            "snapshot": "sum20-mirror-article@sha256:" + foundation.digest(row), "url": row["source_url"]})
+        parts = mirror_partitions(row, spelling) or [{
+            "text": None, "head": "", "pos": None, "aspect": None, "partition": "unresolved", "span": [0, 0],
+            "reason": "source_partition_unresolved"}]
+        for part in parts:
+            start, end = part["span"]
+            out["sum20_slovnyk_mirror"].append({**part, "row": row, "relation": relation,
+                "locator": f"sum20_slovnyk_mirror:sum20_mirror_articles:id:{row['id']} [article_text:{start}:{end}]",
+                "snapshot": "sum20-mirror-article@sha256:" + foundation.digest(row), "url": row["source_url"]})
     rows = [src.row_dict(r) for r in sources.sources.execute(
         "SELECT * FROM slovnyk_me_entries WHERE dictionary_slug='vts' AND normalized_word=? ORDER BY id",
         (spelling,))]

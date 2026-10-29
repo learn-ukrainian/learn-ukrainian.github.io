@@ -618,6 +618,22 @@ def test_modern_meaning_verifier_rejects_misattribution_or_missing_witness(meani
     assert not verify.verify(meaning_inputs, result)["meanings"]["passed"]
 
 
+def test_mirror_pages_split_only_at_numbered_homonyms():
+    """Placeholder pages: each witness stays inside its own homonym; unnumbered extra headers hold the page."""
+    footer = " Джерело: Словник української мови (СУМ-20) на Slovnyk.me"
+    numbered = f"бета БЕ{A}ТА¹, и, ж. Noun witness. БЕТА{A}², а{A}ю, недок. Verb witness.{footer}"
+    parts = meanings.mirror_partitions({"article_text": numbered, "headword": "бета"}, "бета")
+    assert [(p["partition"], p["pos"], p["aspect"]) for p in parts] == [
+        (f"БЕ{A}ТА¹", "noun", None), (f"БЕТА{A}²", "verb", "imperf")]
+    assert [numbered[slice(*p["span"])] for p in parts] == [p["text"] for p in parts]
+    assert "Verb" not in parts[0]["text"] and "Noun" not in parts[1]["text"]
+    unnumbered = f"гама ГА{A}МА, и, ж. First witness. ГАМА{A}, и, ж. Second witness.{footer}"
+    assert meanings.mirror_partitions({"article_text": unnumbered, "headword": "гама"}, "гама") == []
+    single = f"дельта ДЕ{A}ЛЬТА, и, ж. Only witness.{footer}"
+    (part,) = meanings.mirror_partitions({"article_text": single, "headword": "дельта"}, "дельта")
+    assert part["partition"] == "article" and part["text"] == f"ДЕ{A}ЛЬТА, и, ж. Only witness."
+
+
 def test_modern_meanings_withhold_unresolved_identity_and_ambiguous_source(meaning_inputs):
     # No lexical identity may be decided by dictionary availability or meaning.
     homonyms = {1: {"row": {"grammatical_label": LABEL_M}, "head": f"а{A}льфа", "aspect": None}}
