@@ -44,6 +44,22 @@ _VERDICT_LINE_RE = re.compile(
     re.IGNORECASE,
 )
 
+# A verdict a reviewer states inside a structured reply's explanation, in the
+# review brief's vocabulary (``VERDICT: APPROVE``, ``VERDICT: REQUEST_CHANGES``).
+_STATED_VERDICT_RE = re.compile(
+    r"\bVERDICT\s*:\s*(APPROVED?|REQUEST_CHANGES|CHANGES_REQUESTED|BLOCKED)\b",
+    re.IGNORECASE,
+)
+_STATED_VERDICT_TOKENS = {
+    "APPROVE": "APPROVED",
+    "APPROVED": "APPROVED",
+    "REQUEST_CHANGES": "CHANGES_REQUESTED",
+    "CHANGES_REQUESTED": "CHANGES_REQUESTED",
+    "BLOCKED": "BLOCKED",
+}
+# Finding priorities that block a merge; P2 and P3 are follow-ups.
+BLOCKING_PRIORITIES = frozenset({"P0", "P1"})
+
 PublicationAction = Literal["publish", "skip_idempotent", "refuse_stale"]
 CommitStatusState = Literal["success", "failure", "error", "pending"]
 
@@ -364,12 +380,27 @@ def parse_review_evidence(payload: Mapping[str, Any]) -> ReviewEvidence | None:
 
 
 def verdict_from_review_evidence(evidence: ReviewEvidence) -> str:
-    """Derive the only gate verdict consistent with canonical review evidence."""
-    if evidence.findings or evidence.correctness == "incorrect":
+    """Derive the only gate verdict consistent with canonical review evidence.
+
+    P0 and P1 findings block. P2 and P3 findings are follow-ups (review-loop
+    policy, Severity), so code judged correct still approves with them; on code
+    judged uncertain they request changes.
+    """
+    if evidence.correctness == "incorrect" or any(
+        finding.priority in BLOCKING_PRIORITIES for finding in evidence.findings
+    ):
         return "CHANGES_REQUESTED"
     if evidence.correctness == "correct":
         return "APPROVED"
-    return "BLOCKED"
+    return "CHANGES_REQUESTED" if evidence.findings else "BLOCKED"
+
+
+def _stated_verdicts(explanation: str) -> set[str]:
+    """The canonical verdicts a reviewer's explanation states in prose."""
+    return {
+        _STATED_VERDICT_TOKENS[token.upper()]
+        for token in _STATED_VERDICT_RE.findall(explanation)
+    }
 
 
 def _verdict_from_degenerate_evidence(_payload: Mapping[str, Any]) -> str:
@@ -381,12 +412,15 @@ def _verdict_from_degenerate_evidence(_payload: Mapping[str, Any]) -> str:
     return "BLOCKED"
 
 
-def resolve_verdict_and_evidence(payload: Mapping[str, Any]) -> tuple[str, ReviewEvidence | None]:
+def resolve_verdict_and_evidence(
+    payload: Mapping[str, Any], *, stated: str | None = None
+) -> tuple[str, ReviewEvidence | None]:
     """Resolve a verdict and retain any canonical evidence from one payload.
 
     Legacy payloads may still carry only a top-level ``verdict``. Canonical
     ``code-review-findings.v1`` payloads derive the verdict from their verified
-    meaning; an explicit conflicting token fails closed.
+    meaning; an explicit conflicting token fails closed. ``stated`` is the
+    reply's canonical verdict line outside the payload, if any.
     """
     raw_verdict = payload.get("verdict")
     explicit = normalize_verdict(raw_verdict) if raw_verdict is not None else None
@@ -403,6 +437,13 @@ def resolve_verdict_and_evidence(payload: Mapping[str, Any]) -> tuple[str, Revie
         if evidence is not None
         else _verdict_from_degenerate_evidence(payload)
     )
+    if derived == "APPROVED" and evidence is not None and evidence.findings:
+        # An approval that carries follow-ups never outranks the reviewer's own
+        # stated verdict: a stated rejection holds the change on those findings.
+        claim = explicit or stated
+        claimed = {claim} if claim is not None else _stated_verdicts(evidence.explanation)
+        if claimed - {"APPROVED"}:
+            derived = "CHANGES_REQUESTED"
     if explicit is not None and explicit != derived:
         raise ReviewPublicationError(
             f"review_evidence_verdict_mismatch: verdict={explicit} evidence={derived}"
