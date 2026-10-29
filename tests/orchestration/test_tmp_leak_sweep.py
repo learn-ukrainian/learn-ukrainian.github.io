@@ -696,3 +696,140 @@ def test_scratch_git_marker_disposition(temp_deletion_layout, marker):
             expected_dev=target.lstat().st_dev, expected_ino=target.lstat().st_ino,
         )
         assert not target.exists()
+
+
+def _listening_socket(directory: Path, candidate: Path, monkeypatch):
+    """Bind and listen on ``directory/s`` below ``candidate``, which is aged again; the caller closes it. Skips where AF_UNIX is forbidden."""
+    import socket
+
+    try:
+        endpoint = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    except PermissionError as error:
+        pytest.skip(f"this sandbox forbids AF_UNIX socket creation: {error}")
+    try:
+        endpoint.bind(str(directory / "s"))
+    except OSError:  # path longer than sun_path: bind relative to the directory instead
+        monkeypatch.chdir(directory)
+        endpoint.bind("s")
+    endpoint.listen()
+    past = time.time() - 10_000
+    os.utime(candidate, (past, past))  # creating entries refreshed the mtime the age gate reads
+    return endpoint
+
+
+def test_directory_holding_a_live_listening_socket_is_refused_then_removed_once_it_closes(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """A listener is no fd path, so only /proc/net/unix shows that the tree is held."""
+    _quiet_pgrep(monkeypatch)
+    _clear_proc_probe(monkeypatch)
+    target = tmp_path / "review-4004"
+    _touch_old(target, age_s=10_000)
+    nested = target / "deep" / "er"
+    nested.mkdir(parents=True)
+    endpoint = _listening_socket(nested, target, monkeypatch)
+    try:
+        assert tls.path_liveness(target) == tls.LIVENESS_LIVE
+        report = tls.sweep_tmp_leaks(apply=True, tmp_roots=[tmp_path], now=time.time(), min_age_s=3600, min_free_gb=0.0)
+        assert report["roots_reaped"] == 0 and report["skipped_live"] == 1
+        assert report["skipped"] == [{"path": str(target), "reason": "live_process"}]
+        assert (nested / "s").exists()
+    finally:
+        endpoint.close()  # the socket file stays behind, as after a crashed server
+    assert (nested / "s").exists()
+    assert tls.path_liveness(target) == tls.LIVENESS_CLEAR
+    report = tls.sweep_tmp_leaks(apply=True, tmp_roots=[tmp_path], now=time.time(), min_age_s=3600, min_free_gb=0.0)
+    assert report["roots_reaped"] == 1 and report["errors"] == 0
+    assert not target.exists()
+
+
+def test_unreadable_listener_table_refuses_a_directory_holding_a_socket(tmp_path: Path, monkeypatch) -> None:
+    _quiet_pgrep(monkeypatch)
+    _clear_proc_probe(monkeypatch)
+    target = tmp_path / "review-5005"
+    _touch_old(target, age_s=10_000)
+    endpoint = _listening_socket(target, target, monkeypatch)
+    endpoint.close()
+    assert tls.path_liveness(target) == tls.LIVENESS_CLEAR  # readable table, nothing listening
+    monkeypatch.setattr(tls, "_NET_UNIX", tmp_path / "no-such-net-unix")
+    assert tls.listening_socket_paths() is None
+    assert tls.path_liveness(target) == tls.LIVENESS_UNKNOWN
+    for apply in (False, True):
+        report = tls.sweep_tmp_leaks(
+            apply=apply, tmp_roots=[tmp_path], now=time.time(), min_age_s=3600, min_free_gb=0.0
+        )
+        assert report["roots_reaped"] == 0 and report["reaped"] == []
+        assert report["skipped"] == [{"path": str(target), "reason": "liveness_unknown"}]
+    assert target.exists()
+
+
+_NET_UNIX_HEADER = "Num       RefCount Protocol Flags    Type St Inode Path\n"
+
+
+def _net_unix_row(flags: int, inode: int, path: str | None) -> str:
+    """One /proc/net/unix row as the kernel prints it."""
+    row = f"0000000000000000: 00000002 00000000 {flags:08X} 0001 01 {inode:5d}"
+    return row + (f" {path}" if path is not None else "") + "\n"
+
+
+@pytest.mark.parametrize(
+    "table",
+    [
+        "",
+        "not a header\n",
+        "Num\n",  # truncated header
+        _NET_UNIX_HEADER + "0000: 00000002 00000000 zzzz 0001 01 1 /x\n",
+        _NET_UNIX_HEADER + "short line\n",
+        # A table cut at a line boundary or inside a row must not read as complete,
+        # even when the surviving prefix still matches the row format.
+        _NET_UNIX_HEADER,
+        _NET_UNIX_HEADER.rstrip("\n"),
+        _NET_UNIX_HEADER + "0000000000000000: 00000002 00000000 00010000 0001 01 12345",
+        _NET_UNIX_HEADER + _net_unix_row(0, 1, "/run/a") + "0000000000000000: 00000002 00000000 00010000 0001 01 12",
+        _NET_UNIX_HEADER + _net_unix_row(0x10000, 1, "/run/a").rstrip("\n"),
+        # A row that lost its inode column must not read as a pathless socket.
+        _NET_UNIX_HEADER + "0000000000000000: 00000002 00000000 00010000 0001 01 /srv/review-4004/s\n",
+        # A bound path holding a newline splits into a second, unparsable line.
+        _NET_UNIX_HEADER + _net_unix_row(0x10000, 1, "/run/a\nb"),
+    ],
+)
+def test_malformed_listener_table_is_unknown(tmp_path: Path, table: str) -> None:
+    net_unix = tmp_path / "unix"
+    net_unix.write_text(table, encoding="utf-8")
+    assert tls.listening_socket_paths(net_unix) is None
+
+
+def test_listener_table_parsing_keeps_only_bound_listening_paths(tmp_path: Path) -> None:
+    net_unix = tmp_path / "unix"
+    net_unix.write_text(
+        _NET_UNIX_HEADER
+        + _net_unix_row(0x10000, 1, "/run/a b/listen")
+        + _net_unix_row(0, 2, "/run/connected")
+        + _net_unix_row(0x10000, 3, "@abstract")
+        + _net_unix_row(0x10000, 4, None)
+        + _net_unix_row(0x10000, 5, "rel/sock")
+        + _net_unix_row(0x10000, 6, " lead")
+        + _net_unix_row(0x10001, 7, "/run/flagged"),
+        encoding="utf-8",
+    )
+    paths = tls.listening_socket_paths(net_unix)
+    assert paths is not None
+    assert {"/run/a b/listen", "@abstract", "rel/sock", " lead", "/run/flagged"} <= paths
+    assert "/run/connected" not in paths
+
+
+@pytest.mark.parametrize(
+    "bound",
+    ["s", "./s", "deep/../s", "deep//s", "../review-4004/s", "/srv/../srv/review-4004/s", " s", "@s"],
+)
+def test_equivalent_spellings_of_a_listener_path_hold_the_node(tmp_path: Path, bound: str) -> None:
+    """A table spelling of the bound path that differs from the node's still holds the tree."""
+    node = tmp_path / "review-4004" / bound.rpartition("/")[2]
+    net_unix = tmp_path / "unix"
+    net_unix.write_text(_NET_UNIX_HEADER + _net_unix_row(0x10000, 1, bound), encoding="utf-8")
+    listeners = tls.listening_socket_paths(net_unix)
+    assert listeners is not None
+    if bound.startswith("/"):
+        node = Path(os.path.realpath(bound))
+    assert tls.socket_node_listening(node, listeners)
+    assert not tls.socket_node_listening(node.with_name("other"), listeners)

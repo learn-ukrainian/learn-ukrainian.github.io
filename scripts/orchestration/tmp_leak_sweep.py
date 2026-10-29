@@ -9,8 +9,12 @@ manifests, so these names never drain without manual intervention.
 This module is age-gated, name-pattern scoped, and fails closed on liveness:
 a path is deleted only when ``pgrep -f`` is negative AND a ``/proc`` walk fully
 probed every process (any owner: state, command line, cwd, environment, open
-descriptors) without finding a reference.  No ``/proc`` (macOS), or any process
-that refuses inspection, is an unknown answer, and unknown preserves the path.
+descriptors) without finding a reference, and no socket below it is bound by a
+live listener.  A listening Unix socket never appears as a path in
+``/proc/<pid>/fd`` (only ``socket:[inode]``), so the process walk cannot see it;
+``/proc/net/unix`` names every bound listener and is read separately.  No
+``/proc`` (macOS), an unreadable ``/proc/net/unix``, or any process that refuses
+inspection is an unknown answer, and unknown preserves the path.
 It is not a blanket ``rm -rf /tmp/*``.
 
 Atlas/QA legacy residue (#8738): only the exact large names left by the
@@ -32,6 +36,7 @@ import stat
 import subprocess
 import tempfile
 import time
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -105,6 +110,9 @@ CANDIDATE_KIND_LEGACY_EXACT = "legacy_exact"
 CANDIDATE_KIND_LEGACY_INVENTORY = "legacy_inventory"
 
 _PROC_ROOT = Path("/proc")
+_NET_UNIX = Path("/proc/net/unix")
+# ``Flags`` column of /proc/net/unix: __SO_ACCEPTCON, set while the socket listens.
+_SO_ACCEPTCON = 0x00010000
 
 
 @dataclass(frozen=True)
@@ -366,14 +374,129 @@ LIVENESS_UNKNOWN = "unknown"
 LIVENESS_CLEAR = "clear"
 
 
+_NET_UNIX_HEADER = ["Num", "RefCount", "Protocol", "Flags", "Type", "St", "Inode", "Path"]
+# One row as the kernel prints it: "%pK: %08X %08X %08X %04X %02X %5lu", then a single
+# space and the bound path when there is one. The path is kept byte for byte,
+# leading whitespace included.
+_NET_UNIX_ROW = re.compile(
+    r"(\S+): ([0-9A-Fa-f]{8}) ([0-9A-Fa-f]{8}) ([0-9A-Fa-f]{8}) ([0-9A-Fa-f]{4}) ([0-9A-Fa-f]{2}) +(\d+)(?: (.*))?",
+    re.DOTALL,
+)
+
+
+def listening_socket_paths(net_unix: Path | None = None) -> frozenset[str] | None:
+    """Return the bound paths of every listening Unix socket, or ``None`` when unknown.
+
+    A listener is invisible to the ``/proc/<pid>/fd`` path scan, which shows only
+    ``socket:[inode]``, so deleting its directory strands a running server (a
+    tmux server whose socket directory was swept). ``/proc/net/unix`` lists
+    each socket with a ``Flags`` word (``00010000`` while listening) and the
+    path it was bound to. An absolute bound path is returned as written and
+    resolved, since the node on disk may be reached through a symlinked
+    directory. Any other path is returned as written, including an abstract
+    ``@name``: a filesystem socket may also be named like that, and the
+    over-match only holds a tree longer. Rows are split on newlines alone, so a
+    bound path that contains one fails the row check. A file that cannot be
+    read, one that does not end in a newline, one with a header and no row (a
+    live host always has Unix sockets, and a header alone cannot be told from a
+    table cut after it), a header that is not the expected one, or any row that
+    does not parse is unknown: never an empty or partial set.
+    """
+    source = _NET_UNIX if net_unix is None else net_unix
+    try:
+        raw = source.read_bytes()
+    except OSError:
+        return None
+    # The kernel ends every row with a newline, so an unterminated last line is a
+    # truncated read, even when its prefix still matches the row format.
+    if not raw.endswith(b"\n"):
+        return None
+    lines = raw.decode("utf-8", errors="surrogateescape").split("\n")[:-1]
+    if len(lines) < 2 or lines[0].split() != _NET_UNIX_HEADER:
+        return None
+    paths: set[str] = set()
+    for line in lines[1:]:
+        row = _NET_UNIX_ROW.fullmatch(line)
+        if row is None:
+            return None
+        bound = row.group(8)
+        if not int(row.group(4), 16) & _SO_ACCEPTCON or not bound:
+            continue
+        paths.add(bound)
+        if bound.startswith("/"):
+            paths.add(os.path.realpath(bound))
+    return frozenset(paths)
+
+
+def socket_node_listening(node: Path, listeners: frozenset[str]) -> bool:
+    """Return True when the socket file ``node`` may be a bound listener.
+
+    A listener bound with a relative ``sun_path`` shows only that text, which
+    can spell its directory many ways (``./s``, ``d/../s``, ``d//s``) and
+    depends on a working directory the table does not record. It therefore
+    matches any node with the same final name: a false hold is harmless, a
+    missed listener strands a server.
+    """
+    if str(node) in listeners or os.path.realpath(node) in listeners:
+        return True
+    return any(not bound.startswith("/") and bound.rpartition("/")[2] == node.name for bound in listeners)
+
+
+def tree_socket_nodes(path: Path) -> Iterator[Path]:
+    """Yield every socket file at ``path`` or below it, never following symlinks.
+
+    A node that vanished meanwhile holds nothing. Raises any other ``OSError``,
+    such as a directory that cannot be listed.
+    """
+    pending = [path]
+    while pending:
+        node = pending.pop()
+        try:
+            info = node.lstat()
+            if stat.S_ISSOCK(info.st_mode):
+                yield node
+            elif stat.S_ISDIR(info.st_mode):
+                with os.scandir(node) as entries:
+                    pending.extend(
+                        Path(entry.path)
+                        for entry in entries
+                        if not entry.is_symlink() and not entry.is_file(follow_symlinks=False)
+                    )
+        except FileNotFoundError:
+            continue
+
+
+def listener_liveness(path: Path, *, net_unix: Path | None = None) -> str:
+    """Classify ``path`` by the listening Unix sockets at or below it.
+
+    ``live`` when any socket node there is a bound listener, ``unknown`` when
+    ``/proc/net/unix`` cannot be read or the tree cannot be walked, else
+    ``clear``. An empty listener table is ``clear`` without walking the tree.
+    """
+    listeners = listening_socket_paths(net_unix)
+    if listeners is None:
+        return LIVENESS_UNKNOWN
+    if not listeners:
+        return LIVENESS_CLEAR
+    try:
+        for node in tree_socket_nodes(path):
+            if socket_node_listening(node, listeners):
+                return LIVENESS_LIVE
+    except OSError:
+        return LIVENESS_UNKNOWN
+    return LIVENESS_CLEAR
+
+
 def path_liveness(path: Path, *, proc_root: Path | None = None) -> str:
     """Classify ``path`` as ``live``, ``unknown`` or ``clear``.
 
     Combines ``pgrep -f`` (command lines of every user) with the ``/proc``
     probe (state, cwd, open files, environment and command line of every
-    process). Only ``clear`` permits deletion, and ``clear`` requires both a
-    negative ``pgrep`` and a ``/proc`` walk in which every process was fully
-    probed and none referenced the path.
+    process) with the listening sockets of ``/proc/net/unix``. Only ``clear``
+    permits deletion, and ``clear`` requires a negative ``pgrep``, a ``/proc``
+    walk in which every process was fully probed and none referenced the path,
+    and no socket at or below it bound by a live listener (a listener holds no
+    fd path, so the walk cannot see it).
 
     A negative ``pgrep`` alone is not proof: it only sees command lines, so a
     process holding the path as its cwd or through an open descriptor is
@@ -384,9 +507,12 @@ def path_liveness(path: Path, *, proc_root: Path | None = None) -> str:
     if _pgrep_references(path):
         return LIVENESS_LIVE
     verdict = proc_references(path, proc_root=proc_root)
-    if verdict is None:
-        return LIVENESS_UNKNOWN
-    return LIVENESS_LIVE if verdict else LIVENESS_CLEAR
+    if verdict:
+        return LIVENESS_LIVE
+    sockets = listener_liveness(path)
+    if sockets == LIVENESS_LIVE:
+        return LIVENESS_LIVE
+    return LIVENESS_UNKNOWN if verdict is None or sockets == LIVENESS_UNKNOWN else LIVENESS_CLEAR
 
 
 def path_has_live_process(path: Path) -> bool:
