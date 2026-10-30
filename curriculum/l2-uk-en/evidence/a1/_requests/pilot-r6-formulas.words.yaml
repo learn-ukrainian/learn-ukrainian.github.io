@@ -1,0 +1,278 @@
+request_schema: 1
+level: a1
+words:
+- lemma: як
+  pos: adv
+  entry:
+    source: vesum
+    entry_id: 436942
+  want: new
+  meaning: how
+  note: A fixed formula constituent, not a new grammatical system or independently
+    taught numeral.
+- lemma: жаль
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 115096
+  want: new
+  meaning: regret
+  note: A fixed formula constituent, not a new grammatical system or independently
+    taught numeral.
+- lemma: солодкий
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 365798
+  want: new
+  meaning: sweet
+  note: A fixed formula constituent, not a new grammatical system or independently
+    taught numeral.
+- lemma: дати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 87938
+  want: new
+  meaning: to give
+  note: A fixed formula constituent, not a new grammatical system or independently
+    taught numeral.
+- lemma: п’ять
+  pos: numr
+  entry:
+    source: vesum
+    entry_id: 328909
+  want: new
+  meaning: five
+  note: A fixed formula constituent, not a new grammatical system or independently
+    taught numeral.
+- lemma: передати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 266376
+  want: new
+  meaning: to pass
+  note: A fixed formula constituent, not a new grammatical system or independently
+    taught numeral.
+- lemma: так
+  pos: adv
+  entry:
+    source: vesum
+    entry_id: 381081
+  want: new
+  meaning: so
+  note: A fixed formula constituent, not a new grammatical system or independently
+    taught numeral.
+- lemma: це
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 415958
+  want: new
+  meaning: this
+  note: A fixed formula constituent, not a new grammatical system or independently
+    taught numeral.
+- kind: formula
+  text: Добрий день!
+  parts:
+  - lemma: добрий
+    pos: adj
+  - lemma: день
+    pos: noun
+  want: new
+  note: Hello!
+- kind: formula
+  text: Доброго ранку!
+  parts:
+  - lemma: добрий
+    pos: adj
+  - lemma: ранок
+    pos: noun
+  want: new
+  note: Good morning!
+- kind: formula
+  text: Добрий вечір!
+  parts:
+  - lemma: добрий
+    pos: adj
+  - lemma: вечір
+    pos: noun
+  want: new
+  note: Good evening!
+- kind: formula
+  text: До побачення!
+  parts:
+  - lemma: до
+    pos: prep
+  - lemma: побачення
+    pos: noun
+  want: new
+  note: Goodbye!
+- kind: formula
+  text: Будь ласка!
+  parts:
+  - lemma: бути
+    pos: verb
+  - lemma: ласка
+    pos: noun
+  want: new
+  note: Please!
+- kind: formula
+  text: Дякую!
+  parts:
+  - lemma: дякувати
+    pos: verb
+  want: new
+  note: Thank you!
+- kind: formula
+  text: Вибачте!
+  parts:
+  - lemma: вибачити
+    pos: verb
+  want: new
+  note: Excuse me!
+- kind: formula
+  text: Бувай!
+  parts:
+  - lemma: бувати
+    pos: verb
+  want: new
+  note: Bye!
+- kind: formula
+  text: Вітаю!
+  parts:
+  - lemma: вітати
+    pos: verb
+  want: new
+  note: Hello!
+- kind: formula
+  text: Мене звати...
+  parts:
+  - lemma: я
+    pos: noun
+  - lemma: звати
+    pos: verb
+  want: new
+  note: My name is
+- kind: formula
+  text: Моє прізвище...
+  parts:
+  - lemma: мій
+    pos: adj
+  - lemma: прізвище
+    pos: noun
+  want: new
+  note: My surname is
+- kind: formula
+  text: Як вас звати?
+  parts:
+  - lemma: як
+    pos: adv
+  - lemma: ви
+    pos: noun
+  - lemma: звати
+    pos: verb
+  want: new
+  note: What is your name?
+- kind: formula
+  text: Хто це?
+  parts:
+  - lemma: хто
+    pos: noun
+  - lemma: це
+    pos: noun
+  want: new
+  note: Who is this?
+- kind: formula
+  text: Що це?
+  parts:
+  - lemma: що
+    pos: noun
+  - lemma: це
+    pos: noun
+  want: new
+  note: What is this?
+- kind: formula
+  text: У мене є...
+  parts:
+  - lemma: у
+    pos: prep
+  - lemma: я
+    pos: noun
+  - lemma: бути
+    pos: verb
+  want: new
+  note: I have
+- kind: formula
+  text: Що нового?
+  parts:
+  - lemma: що
+    pos: noun
+  - lemma: новий
+    pos: adj
+  want: new
+  note: What is new?
+- kind: formula
+  text: Так собі.
+  parts:
+  - lemma: так
+    pos: adv
+  - lemma: себе
+    pos: noun
+  want: new
+  note: So-so.
+- kind: formula
+  text: На жаль.
+  parts:
+  - lemma: на
+    pos: prep
+  - lemma: жаль
+    pos: noun
+  want: new
+  note: Unfortunately.
+- kind: formula
+  text: Дуже приємно!
+  parts:
+  - lemma: дуже
+    pos: adv
+  - lemma: приємно
+    pos: adv
+  want: new
+  note: Nice to meet you!
+- kind: formula
+  text: Гарного дня!
+  parts:
+  - lemma: гарний
+    pos: adj
+  - lemma: день
+    pos: noun
+  want: new
+  note: Have a nice day!
+- kind: formula
+  text: Солодких снів!
+  parts:
+  - lemma: солодкий
+    pos: adj
+  - lemma: сон
+    pos: noun
+  want: new
+  note: Sweet dreams!
+- kind: formula
+  text: Дати п’ять!
+  parts:
+  - lemma: дати
+    pos: verb
+  - lemma: п’ять
+    pos: numr
+  want: new
+  note: High five!
+- kind: formula
+  text: Передати привіт.
+  parts:
+  - lemma: передати
+    pos: verb
+  - lemma: привіт
+    pos: noun
+  want: new
+  note: Send regards.

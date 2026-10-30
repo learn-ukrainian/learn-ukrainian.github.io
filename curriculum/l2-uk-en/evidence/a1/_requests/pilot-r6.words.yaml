@@ -1,0 +1,822 @@
+request_schema: 1
+level: a1
+words:
+- lemma: вишиванка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 51684
+  want: new
+  meaning: embroidered shirt
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: герб
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 75545
+  want: new
+  meaning: coat of arms
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: ім’я
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 153660
+  want: new
+  meaning: name
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: калина
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 158856
+  want: new
+  meaning: viburnum
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: лелека
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 185777
+  want: new
+  meaning: stork
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: писанка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 275822
+  want: new
+  meaning: Ukrainian Easter egg
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: прапор
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 309206
+  want: new
+  meaning: flag
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: Канада
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 159689
+  want: new
+  meaning: Canada
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: мова
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 205716
+  want: new
+  meaning: language
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: Польща
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 295702
+  want: new
+  meaning: Poland
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: українець
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 397247
+  want: new
+  meaning: Ukrainian
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: українка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 397281
+  want: new
+  meaning: Ukrainian
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: вечір
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 39972
+  want: new
+  meaning: evening
+  note: 'Pilot #8425 arc r6 position 2; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: дим
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 95644
+  want: new
+  meaning: smoke
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: дитина
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 96584
+  want: new
+  meaning: child
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: кіт
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 167171
+  want: new
+  meaning: cat
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: книжка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 168709
+  want: new
+  meaning: book
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: родина
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 337323
+  want: new
+  meaning: family
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: сестра
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 356837
+  want: new
+  meaning: sister
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: телефон
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 383748
+  want: new
+  meaning: phone
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: шафа
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 423467
+  want: new
+  meaning: closet
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: комп’ютер
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 172123
+  want: new
+  meaning: computer
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: мати
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 197296
+  want: new
+  meaning: mother
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: рюкзак
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 348457
+  want: new
+  meaning: backpack
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: Франція
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 409441
+  want: new
+  meaning: France
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: юрист
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 436286
+  want: new
+  meaning: lawyer
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: юристка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 436287
+  want: new
+  meaning: lawyer
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: юшка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 436547
+  want: new
+  meaning: soup
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: ґудзик
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 87007
+  want: new
+  meaning: button
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: дзвінок
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 94856
+  want: new
+  meaning: bell
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: дзеркало
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 94974
+  want: new
+  meaning: mirror
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: жук
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 117237
+  want: new
+  meaning: bug
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: ніч
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 239760
+  want: new
+  meaning: night
+  note: 'Pilot #8425 arc r6 position 2; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: ручка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 348397
+  want: new
+  meaning: pen
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: батько
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 18184
+  want: new
+  meaning: father
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: булька
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 32022
+  want: new
+  meaning: bubble
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: лампа
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 184106
+  want: new
+  meaning: lamp
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: стіл
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 373931
+  want: new
+  meaning: table
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: студент
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 376091
+  want: new
+  meaning: student
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: студентка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 376093
+  want: new
+  meaning: student
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: гаманець
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 72658
+  want: new
+  meaning: wallet
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: донька
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 101943
+  want: new
+  meaning: daughter
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: олівець
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 252996
+  want: new
+  meaning: pencil
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: стілець
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 373932
+  want: new
+  meaning: chair
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: його
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 157469
+  want: new
+  meaning: his
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: чоловік
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 421109
+  want: new
+  meaning: man
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: бабуся
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 14322
+  want: new
+  meaning: grandmother
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: дідусь
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 97383
+  want: new
+  meaning: grandfather
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: добре
+  pos: adv
+  entry:
+    source: vesum
+    entry_id: 98276
+  want: new
+  meaning: good
+  note: 'Pilot #8425 arc r6 position 2; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: ранок
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 330855
+  want: new
+  meaning: morning
+  note: 'Pilot #8425 arc r6 position 2; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: чудово
+  pos: adv
+  entry:
+    source: vesum
+    entry_id: 422198
+  want: new
+  meaning: great
+  note: 'Pilot #8425 arc r6 position 6; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: брат
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 29314
+  want: new
+  meaning: brother
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: дружина
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 105932
+  want: new
+  meaning: wife
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: книга
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 168631
+  want: new
+  meaning: book
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: булава
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 31824
+  want: new
+  meaning: mace
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: викладач
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 43968
+  want: new
+  meaning: university teacher
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: викладачка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 43969
+  want: new
+  meaning: university teacher
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: лікар
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 187809
+  want: new
+  meaning: doctor
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: лікарка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 187816
+  want: new
+  meaning: doctor
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: пес
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 274609
+  want: new
+  meaning: dog
+  note: 'Pilot #8425 arc r6 position 4; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: ліжко
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 187738
+  want: new
+  meaning: bed
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: папір
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 261345
+  want: new
+  meaning: paper
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: сон
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 366185
+  want: new
+  meaning: sleep
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: вікно
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 59992
+  want: new
+  meaning: window
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: підручник
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 280719
+  want: new
+  meaning: textbook
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: дуб
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 106125
+  want: new
+  meaning: oak
+  note: 'Pilot #8425 arc r6 position 5; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: диван
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 95277
+  want: new
+  meaning: sofa
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: зошит
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 149755
+  want: new
+  meaning: notebook
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: словник
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 363533
+  want: new
+  meaning: dictionary
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: дошка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 104629
+  want: new
+  meaning: board
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: незручність
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 232061
+  want: new
+  meaning: inconvenience
+  note: 'Pilot #8425 arc r6 position 6; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: айтівець
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 4714
+  want: new
+  meaning: IT professional
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: інженер
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 154301
+  want: new
+  meaning: engineer
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: дизайнер
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 95481
+  want: new
+  meaning: designer
+  note: 'Pilot #8425 arc r6 position 3; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: ноутбук
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 241414
+  want: new
+  meaning: laptop
+  note: 'Pilot #8425 arc r6 position 8; VESUM analysis and ULIF local-copy evidence
+    checked through Sources.'
+- lemma: вибачити
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 40876
+  want: new
+  meaning: to excuse
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: дякувати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 107353
+  want: new
+  meaning: to thank
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: бувати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 31043
+  want: new
+  meaning: to be
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: вітати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 61178
+  want: new
+  meaning: to greet
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: бути
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 32902
+  want: new
+  meaning: to be
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: ласка
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 184490
+  want: new
+  meaning: kindness
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: побачення
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 285608
+  want: new
+  meaning: meeting
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: звати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 141291
+  want: new
+  meaning: to call
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: прізвище
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 317122
+  want: new
+  meaning: surname
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: приємно
+  pos: adv
+  entry:
+    source: vesum
+    entry_id: 311786
+  want: new
+  meaning: pleasantly
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: добраніч
+  pos: intj
+  entry:
+    source: vesum
+    entry_id: 98270
+  want: new
+  meaning: good night
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: па-па
+  pos: intj
+  entry:
+    source: vesum
+    entry_id: 261286
+  want: new
+  meaning: bye-bye
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: новий
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 239967
+  want: new
+  meaning: new
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: дуже
+  pos: adv
+  entry:
+    source: vesum
+    entry_id: 106559
+  want: new
+  meaning: very
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: гарний
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 73502
+  want: new
+  meaning: nice
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'
+- lemma: її
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 157322
+  want: new
+  meaning: her
+  note: 'Fixed formula constituent for pilot #8425; not introduced independently into
+    learner state.'

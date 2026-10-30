@@ -1,51 +1,182 @@
 - id: G-a1-001
   point: An audible sound and a visible letter are different units, even when a letter represents that sound.
-  introduced_at: {position: 1, lesson: sounds-and-letters}
+  introduced_at:
+    position: 1
+    lesson: sounds-and-letters
+  superseded_by: G-a1-012
 - id: G-a1-002
   point: Vowels and consonants are different sound classes identified by hearing before sorting their letters.
-  introduced_at: {position: 1, lesson: vowels-and-first-syllables}
+  introduced_at:
+    position: 1
+    lesson: vowels-and-first-syllables
+  superseded_by: G-a1-013
 - id: G-a1-003
   point: The two Ukrainian vowel letters introduced here represent different sounds and are not interchangeable.
-  introduced_at: {position: 1, lesson: vowels-and-first-syllables}
+  introduced_at:
+    position: 1
+    lesson: vowels-and-first-syllables
+  superseded_by: G-a1-013
 - id: G-a1-004
   point: The two new consonant letters represent different sounds and must be distinguished when reading.
-  introduced_at: {position: 2, lesson: two-g-sounds}
+  introduced_at:
+    position: 2
+    lesson: two-g-sounds
+  superseded_by: G-a1-022
 - id: G-a1-005
   point: The soft sign has no sound of its own and marks the preceding consonant as soft; hard and soft consonant
     sounds are distinguished by ear.
   introduced_at:
     position: 3
     lesson: soft-sign-and-sound-pairs
+  superseded_by: G-a1-016
 - id: G-a1-006
   point: The letter with the two dots always represents two sounds and never softens a preceding consonant.
   introduced_at:
     position: 3
     lesson: yi-and-ya
+  superseded_by: G-a1-019
 - id: G-a1-007
   point: Three vowel letters represent a vowel with preceding consonant softness after a consonant, or two sounds
     at word start and after a vowel, apostrophe or soft sign where applicable.
   introduced_at:
     position: 3
     lesson: yi-and-ya
+  superseded_by: G-a1-019
 - id: G-a1-008
   point: The last hushing letter introduced here always represents two consonant sounds.
   introduced_at:
     position: 3
     lesson: ts-shch-f
+  superseded_by: G-a1-023
 - id: G-a1-009
   point: The two new digraphs each represent a joined consonant sound in these source words; the second has a paired
     soft sound and the first has no paired soft consonant.
   introduced_at:
     position: 3
     lesson: joined-digraphs
+  superseded_by: G-a1-024
 - id: G-a1-010
   point: 'The apostrophe marks separate pronunciation: the consonant remains hard and the following vowel letter
     represents two sounds.'
   introduced_at:
     position: 3
     lesson: apostrophe-and-whole-sentence
+  superseded_by: G-a1-020
 - id: G-a1-011
   point: The alphabet has a fixed dictionary order and letter names that are distinct from sound models.
   introduced_at:
     position: 3
     lesson: alphabet-order-and-names
+  superseded_by: G-a1-025
+- id: G-a1-012
+  point: An audible sound and a visible letter are different units; an alphabet overview does not make every displayed
+    letter acquired.
+  introduced_at:
+    position: 2
+    lesson: hello-and-alphabet
+- id: G-a1-013
+  point: Six Ukrainian vowel sounds are distinguished by hearing; the staged vowel letters connect heard sounds
+    to print.
+  introduced_at:
+    position: 2
+    lesson: vowels-and-first-words
+- id: G-a1-014
+  point: A word has an audible stressed syllable; statements, questions and exclamations have source-modelled speech
+    contours.
+  introduced_at:
+    position: 2
+    lesson: stress-and-speech-melody
+- id: G-a1-015
+  point: Consonants before the vowel represented by the letter acquired in position 2 stay hard in the source models.
+  introduced_at:
+    position: 3
+    lesson: names-and-professions
+- id: G-a1-016
+  point: Hard and soft consonants are contrasted by hearing; the soft sign marks softness and has no sound of its
+    own.
+  introduced_at:
+    position: 3
+    lesson: origin-and-softness
+- id: G-a1-017
+  point: A spoken syllable contains a vowel sound; segmenting a familiar word supports pronunciation and stress
+    without teaching line breaking.
+  introduced_at:
+    position: 3
+    lesson: syllables-for-speaking
+- id: G-a1-018
+  point: The source-paired consonant families for the three newly acquired voiced letters contrast voice and noise
+    with noise alone.
+  introduced_at:
+    position: 3
+    lesson: voiced-and-voiceless-pairs
+- id: G-a1-019
+  point: The newly acquired iotated vowel letters are interpreted from source sound models; the letter with two
+    dots always represents two sounds.
+  introduced_at:
+    position: 4
+    lesson: people-in-my-circle
+- id: G-a1-020
+  point: 'An apostrophe marks separate pronunciation: the preceding consonant remains hard and the following iotated
+    vowel letter represents two sounds.'
+  introduced_at:
+    position: 4
+    lesson: family-and-apostrophe
+- id: G-a1-021
+  point: The newly acquired voiced consonant and its previously acquired voiceless partner are contrasted by voice
+    in source-modelled family words.
+  introduced_at:
+    position: 4
+    lesson: family-voice-pair
+- id: G-a1-022
+  point: The two g-type consonants and the newly completed hushing voice pairs have distinct source-modelled pronunciations.
+  introduced_at:
+    position: 5
+    lesson: last-consonants
+- id: G-a1-023
+  point: The last hushing letter represents two consonant sounds; it is distinguished from the other hushing letters
+    in acquired print.
+  introduced_at:
+    position: 5
+    lesson: hushing-letters
+- id: G-a1-024
+  point: The two digraphs each represent a joined consonant sound in the cited source words; their voiced and voiceless
+    families are rehearsed.
+  introduced_at:
+    position: 5
+    lesson: joined-sounds
+- id: G-a1-025
+  point: The alphabet has a fixed order and letter names; printed and handwritten capitals and small letters are
+    recognised, with source-grounded capitalisation of names.
+  introduced_at:
+    position: 5
+    lesson: names-labels-and-alphabet
+- id: G-a1-026
+  point: Stressed and unstressed vowel pronunciations are contrasted in the two specified vowel families while familiar
+    conversation chunks are recycled.
+  introduced_at:
+    position: 6
+    lesson: a-formal-first-conversation
+- id: G-a1-027
+  point: Familiar singular nouns have masculine, feminine or neuter grammatical gender; source paradigms settle
+    the gender rather than the physical object.
+  introduced_at:
+    position: 8
+    lesson: familiar-things-and-gender
+- id: G-a1-028
+  point: The first- and second-person singular possessive forms agree with the gender of the possessed singular
+    noun.
+  introduced_at:
+    position: 8
+    lesson: mine-and-yours
+- id: G-a1-029
+  point: The possessives for our, polite or plural your, and their agree with the gender of the possessed singular
+    noun.
+  introduced_at:
+    position: 8
+    lesson: ours-yours-and-theirs
+- id: G-a1-030
+  point: The possessives for his and her keep their form across singular noun genders; they are distinguished from
+    the agreeing possessive set.
+  introduced_at:
+    position: 8
+    lesson: his-hers-and-my-desk

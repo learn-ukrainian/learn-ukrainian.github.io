@@ -511,6 +511,156 @@ bindings:
   match: dictionary
   method: ohoiko_reference
   word: W-184
+- atom_index: 0
+  candidates_sha256: d0df61b314e4544654c5f2d364e11b29c194bcaffd6ee48bf1bd23bfa570ed8f
+  definition_sha256: c8b4c3ef83161c43c860cc91e8fd4285881f5b827fd62abed716b144ca854248
+  id: 27796
+  method: formula_row.v1
+  row_sha256: e259216b1c8ef76eec2c774b19007c3fb51f88c0295f3d28afe80a0a675f6ff5
+  span: hello
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-287
+- atom_index: 0
+  candidates_sha256: 941daf30f5c029a04e2f8c2a3ebfdce057c62f4eb2f590b93d605379075a6fab
+  definition_sha256: 9b09d59d3cbee1b5df5e2cf7fc1f28ffef4de63a1c197b2cdf5f7cecc417b285
+  id: 28779
+  method: formula_row.v1
+  row_sha256: 0dcab0fd51f8ee105803776af68cfb036869e0626c326525c218a0dab70218d1
+  span: good morning
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-288
+- atom_index: 0
+  candidates_sha256: 04752528d047a519d2cfb20218289dd864df2b4765c45b6d440a7d4df473fda2
+  definition_sha256: 101324c517491645b04f95c564d05a178f3516faac54179b5729672cd15969de
+  id: 28348
+  method: formula_row.v1
+  row_sha256: f86aa4dd0105d4c3f1ab40a54141981739181c07c7c6f08d50367e5361719756
+  span: good evening
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-289
+- atom_index: 0
+  candidates_sha256: 6bc2f45b9d1082e2482e085b1a445fb4278372a76669487c9e36193d5cd19cec
+  definition_sha256: 6f02951da3098130e07d82ec25a88484a2290b72a6ceb67e527ae6f93c96c27e
+  id: 27794
+  method: formula_row.v1
+  row_sha256: 9f051af7fefcb0c1a452896c627d25d22f9f7e294f0502f86ded18d07cb7be30
+  span: goodbye
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-290
+- atom_index: 0
+  candidates_sha256: c6e1330e20970b9d19eabbf25e52960f8d8ee9738c4ed5cb383d129517d3ec8b
+  definition_sha256: 54391d8b5eeecf0a3e30c1560880231dc0801879f146a60b4323336e9b1be65f
+  id: 25998
+  method: formula_row.v1
+  row_sha256: 05e34d0585d097dfb8f9ff32fa13f42912778cfec3d8845c5829c748560b10ba
+  span: please
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-291
+- atom_index: 0
+  candidates_sha256: 5366324c94c1644257a8a2d7b6c2d10f07f50ed4330170991f7f7938fdd4083e
+  definition_sha256: 9b61169b5e51b72f8207834ad9aafa9a875cd0130ee1a72d202c071a654e1b07
+  id: 20168
+  method: formula_row.v1
+  row_sha256: ac9d4a7fc2b8ddedf23a755c818616d55b8cc8073a6b6436b486ff6462a5da52
+  span: thank you
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-292
+- atom_index: 0
+  candidates_sha256: 8dd65b818b86958cee549e4d8fb0c56b0a183a7ea8af2b2954c25c0e86dbb2de
+  definition_sha256: a6c987b141ae8f643f642052891d4abef028a2a4e93f4ec5b722c19d0d9189a5
+  id: 22212
+  method: formula_row.v1
+  row_sha256: 189d55a50b86cfcb4e5c066036af1aa9721fd499bc8fc91cdbd654666a7529ed
+  span: excuse me
+  span_index: 1
+  table: dmklinger_uk_en
+  word: W-293
+- atom_index: 0
+  candidates_sha256: a4557434f0c7f5bc41fc8c6629c055f7cc94f8676bde2b39eed9cd934036d0ee
+  definition_sha256: 7b70a3f36d66a767f6104fd62a6e2c20161614e21f084f33d70ec7d7622df7d1
+  id: 20063
+  method: formula_row.v1
+  row_sha256: 5f84320291d202becd2f57c2b26c1c7d6d829e0c2b615f8cafd50bb781f19c31
+  span: cheers
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-294
+- atom_index: 0
+  candidates_sha256: cc5042186a811424912d729d20f1156b47b93196fd060ad0be7732f1db985005
+  definition_sha256: 1f46fecc8c6ea930d24f6085a60216e57797c07ca5942d74b60f734bb12b6af4
+  id: 20112
+  method: formula_row.v1
+  row_sha256: 91cc27fd77280bc2798359e6654b05211b110036c023877cda4f4a50454f6243
+  span: hello
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-295
+- atom_index: 0
+  candidates_sha256: f5b808b85e474f92f947d0b090c07550c8c58b1d8cda6d9d824dd86b8183dc2b
+  definition_sha256: 70f7e7e86d74014c6b7a6c0117c814bf8fd9fad74a4a78c259aac9e8d52c370e
+  id: 25195
+  method: formula_row.v1
+  row_sha256: 9304bab09b4010512888498b1516a5244917d3980dcd36c53e86c28eb0702a7d
+  span: my name is
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-296
+- atom_index: 0
+  candidates_sha256: 34bb549ac65879a51f058060e81e24dbaf2593681df89fcd1a71bd12c85f9a63
+  definition_sha256: 614cde06b74b8f7666376d6ecf96a45154b1ac158681821ca67f542542043aec
+  id: 20645
+  method: formula_row.v1
+  row_sha256: ed651eede69aa67de3203692290a66ea5b8ffbf19048991fcdd12a50f3d8ad2e
+  span: what is that?
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-300
+- atom_index: 0
+  candidates_sha256: 85ecec0993093d638c48ba4f8ffa4c3c41aa689c9fc366ffc5cb71ce20cf80c2
+  definition_sha256: 2c24d058910e42c396fa9d05e17076be5f62c5803964c24f34e682171c835669
+  id: 24334
+  method: formula_row.v1
+  row_sha256: 6edc91376b925dc3e4cbcac9d81f756f1ec6ed66f45bb43f791431686b2939f1
+  span: so-so
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-303
+- atom_index: 0
+  candidates_sha256: f197bdf0414ddfb83e5f0f60be908c6b8a48f4581976bc722f5025fd9b659ca7
+  definition_sha256: 41e0999244290c4e1bffe562c0db224be7f9b4e471d0829dc09ac0c6787b1eb3
+  id: 22643
+  method: formula_row.v1
+  row_sha256: ee96a88eff134f2839557ea83b5b56532c8cc297ccf7bde0eeb460956223b2cd
+  span: unfortunately
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-304
+- atom_index: 0
+  candidates_sha256: 95140b159251c60c53a3f51162721aafb13bba1c3eac0f76ae1890dba67d3e63
+  definition_sha256: f7920fe538d556bd01bfddf57d6e0d46c57b0d9896c45a734548bea65f4aa07b
+  id: 28352
+  method: formula_row.v1
+  row_sha256: 362addd18fded8a1823e7812cfcafde5d48f8e824d193de11e84217d43b54a2a
+  span: nice to meet you
+  span_index: 2
+  table: dmklinger_uk_en
+  word: W-305
+- atom_index: 0
+  candidates_sha256: b4ce6a169daae5ae1faef75c48ae4881de7ae395dc79d818c54fbeb9fd072773
+  definition_sha256: ea1a2d3f3b1d0da242ffa64a3e4204d725028e81119e3abf99cbb847258ae769
+  id: 27024
+  method: formula_row.v1
+  row_sha256: fc58772a75ad2783991457bcb125a5aadb409787f87887835291713f302c3935
+  span: have a nice day
+  span_index: 0
+  table: dmklinger_uk_en
+  word: W-306
 bindings_schema: 1
 level: a1
 matcher: reference_sense_v1

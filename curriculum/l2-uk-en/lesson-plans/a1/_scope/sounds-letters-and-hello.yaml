@@ -2,26 +2,25 @@ scope_schema: 1
 level: a1
 module: sounds-letters-and-hello
 letters:
-  count: 13
+  count: 12
   list:
   - А
-  - О
-  - У
-  - И
-  - М
   - І
+  - Я
+  - М
+  - Е
+  - И
+  - О
+  - Т
   - Н
   - В
-  - Л
-  - С
-  - К
   - П
   - Р
 grammar:
   count: 3
   ids:
-  - G-a1-001
-  - G-a1-002
-  - G-a1-003
+  - G-a1-012
+  - G-a1-013
+  - G-a1-014
 vocabulary:
-  core_count: 9
+  core_count: 19

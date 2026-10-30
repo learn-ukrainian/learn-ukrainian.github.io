@@ -1,0 +1,134 @@
+request_schema: 1
+module: a1/sounds-letters-and-hello
+texts:
+- id: T-101
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+  span:
+    first_words: На письмі звуки
+    last_words: В українському алфавіті 33 букви.
+  supports: Sound and letter are different units; the alphabet overview shows 33 letters
+    without claiming acquired decoding.
+- id: T-102
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+  span:
+    first_words: 'Мовні звуки: голосні та приголосні'
+    last_words: Який у тебе сьогодні настрій? Вибери.
+  supports: Begin with hearing and saying a sound, then connect it with its visible
+    letter; adapt the operation to adult communication.
+- id: T-103
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0069
+  span:
+    first_words: Вимову одного
+    last_words: називають наголошеним,
+  supports: Stress is audible prominence; first model it by ear, and display stress
+    marking only after the target word is decodable.
+- id: T-104
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0134
+  span:
+    first_words: 403. А. Прочитайте
+    last_words: питальних.
+  supports: The same spoken material can convey a statement or question through its
+    contour; no sentence analysis is taught.
+- id: T-105
+  source:
+    table: textbooks
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0136
+  span:
+    first_words: Окличні речення виражають
+    last_words: речення ставимо знак оклику.
+  supports: An exclamation conveys emotion with a distinct speech contour; the plan
+    uses already familiar greetings rather than the source's literary sentences.
+- id: T-106
+  source:
+    table: textbooks
+    chunk_id: 8-klas-ukrmova-avramenko-2025_s0104
+  span:
+    first_words: Успішному діалогові
+    last_words: До побачення!
+  supports: A useful exchange has a greeting, a purpose and a farewell, with courtesy
+    appropriate to the relationship.
+exercises:
+- id: X-101
+  source:
+    table: textbooks
+    chunk_id: 8-klas-ukrmova-avramenko-2025_s0104
+  span:
+    first_words: 2. Визначте етикетні
+    last_words: На все добре!
+  pattern: Choose a greeting, thanks or farewell for a real interlocutor; adapt the
+    school setting to an adult peer or receptionist.
+- id: X-102
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0008
+  span:
+    first_words: Що «зайве»?
+    last_words: наголошений склад.
+  pattern: Notice the stronger vowel in source-verified familiar spoken words; no
+    written syllable division or line breaking at this position.
+videos:
+- id: V-101
+  url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
+  channel: Speak Ukrainian
+  use: Whole visible video as a listening preview alongside the full alphabet chart;
+    only the plan's staged letters enter acquired inventory. No claim that the video
+    models every letter or a scored greeting.
+- id: V-102
+  url: https://www.youtube.com/watch?v=GMcB5rsb3HM
+  channel: Ukrainian Lessons
+  use: 'Whole visible ULP 1-02 listening input for morning, day and evening greetings,
+    thanks and farewell; repeat only the selected fixed chunks, without analysing
+    pronouns or cases from the rest. Corpus listening witness: ext-ulp_youtube-302.'
+  models:
+    letters: []
+    words:
+    - W-287
+    - W-288
+    - W-289
+    - W-290
+    - W-291
+    - W-292
+    - W-096
+    segment: null
+- id: V-103
+  url: https://www.youtube.com/watch?v=dtufctJhBrY
+  channel: Ukrainian Lessons
+  use: 'Whole visible FMU 1-50 listening input for the familiar greeting and the neutral
+    greeting formula; other playful expressions are exposure only. Corpus listening
+    witness: ext-ulp_youtube-64.'
+  models:
+    letters: []
+    words:
+    - W-074
+    - W-295
+    segment: null
+- id: V-104
+  url: https://www.youtube.com/watch?v=_w8gRvkBFB4
+  channel: Ukrainian Lessons
+  use: 'Whole visible ULP 1-17 models the excuse-me, please and thanks chunks; the
+    learner does not learn directions or case grammar from its incidental context.
+    Corpus listening witness: ext-ulp_youtube-287.'
+  models:
+    letters: []
+    words:
+    - W-293
+    - W-291
+    - W-292
+    - W-096
+    segment: null
+standard:
+- id: S-101
+  lines: 586-586
+- id: S-102
+  lines: 596-596
+- id: S-103
+  lines: 571-572
+unsupported: []

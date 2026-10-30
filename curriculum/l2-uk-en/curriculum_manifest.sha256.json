@@ -5710,7 +5710,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml",
-      "sha256": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f"
+      "sha256": "cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_retired.yaml",
@@ -5726,7 +5726,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml",
-      "sha256": "84e7dcdc47f03ceea16a51811d2c327b1b84a57e0df6d88f57a751e1efeb8455"
+      "sha256": "f5ca4e8e8fc3e8555a4d7f8f0cc9ecee9b8b555f39ef65269beed5ca9f67b6c4"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/special-signs.yaml",
@@ -5746,7 +5746,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml",
-      "sha256": "23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75"
+      "sha256": "27d1698a46352940d55735c327ae9bdea3246a4cbd0804b69bac00c6936ed5af"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml",
