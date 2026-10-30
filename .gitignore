@@ -397,9 +397,12 @@ data/*.db.pre-*
 # Sources store generation layout is local runtime (#12150). The *.db rule
 # ignores generation databases, not the publication receipts beside them,
 # the store-wide writer lock, or the SUM-20 importer's transient snapshots.
+# The negations keep a same-named directory and its contents visible.
 data/.sources-writer.lock
+!data/.sources-writer.lock/
 data/sources-generations/
 data/.*.snapshot
+!data/.*.snapshot/
 # Test-only SQLite WAL/SHM sidecars (e.g. test_wal.db-* from pytest fixtures)
 test_*.db-shm
 test_*.db-wal
