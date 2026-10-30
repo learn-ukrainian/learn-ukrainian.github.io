@@ -15,13 +15,14 @@ describe('route inventory producer', () => {
   it('lists every emitted route of a controlled release once, with each card disposition', () => {
     const result = routeInventory(releasePreviewInputs(controlled), bytes);
     expect(result.routes).toEqual([
+      ['', 'landing'],
       ['compare/release/', 'compare-release-summary'], ['compare/release/wc_0123456789ab/', 'compare-card-diagnostic'],
       ['compare/release/wc_0123456789ac/', 'compare-card-diagnostic'], ['compare/word/fixture-head/', 'compare-word-page'],
       ['release/', 'release-summary'], ['release/wc_0123456789ab/', 'card-diagnostic'], ['release/wc_0123456789ac/', 'card-diagnostic'],
       ['word/fixture-head/', 'word-page'],
     ].map(([path, name]) => ({ path: `/lexicon-v2/${path}`, href: `/lexicon-v2/${path}`, class: name })));
     expect(result.cards.map(c => [c.card_id, c.page, c.entry, c.listed])).toEqual([['wc_0123456789ab', 'fixture-head', 1, true], ['wc_0123456789ac', 'fixture-head', 2, true]]);
-    expect(result.counts).toMatchObject({ source_cards: 2, page_keys: 1, learner_pages: 1, visible_entries: 2, proper_only_unlisted: 0, emitted_routes: 8 });
+    expect(result.counts).toMatchObject({ source_cards: 2, page_keys: 1, learner_pages: 1, visible_entries: 2, proper_only_unlisted: 0, emitted_routes: 9 });
     expect(result.release).toEqual({ ...pins.jsonl, ...bytes });
   });
   it('has no inventory for a refused release', () => {
@@ -52,21 +53,21 @@ describe('committed public route inventory', () => {
     expect(Object.keys(inventory.counts.routes_by_class)).toEqual(ROUTE_CLASSES);
     for (const name of ROUTE_CLASSES) expect(inventory.counts.routes_by_class[name], name).toBe(inventory.routes.filter(r => r.class === name).length);
   });
-  it('derives every route from a source card or a learner page and nothing else', () => {
-    const expected = ['', 'compare/'].flatMap(prefix => [`/lexicon-v2/${prefix}release/`,
-      ...inventory.cards.map(c => `/lexicon-v2/${prefix}release/${c.card_id}/`), ...pages.map(page => `/lexicon-v2/${prefix}word/${page}/`)]);
+  it('derives every route from the landing page, a source card or a learner page', () => {
+    const expected = ['/lexicon-v2/', ...['', 'compare/'].flatMap(prefix => [`/lexicon-v2/${prefix}release/`,
+      ...inventory.cards.map(c => `/lexicon-v2/${prefix}release/${c.card_id}/`), ...pages.map(page => `/lexicon-v2/${prefix}word/${page}/`)])];
     expect(routeDifferences(expected, paths)).toEqual({ missing: [], unexpected: [], duplicated: [] });
     for (const route of inventory.routes.filter(r => r.class.endsWith('word-page'))) {
       const [, compare, key] = /^\/lexicon-v2\/(compare\/)?word\/(.+)\/$/.exec(route.path) ?? [];
       expect(route.href).toBe(pagePath(key!, Boolean(compare)));
     }
   });
-  it('binds C37 search to all 568 word/card routes and keeps the two summaries separate', () => {
+  it('binds C37 search to all 568 word/card routes and keeps the summaries and landing page separate', () => {
     expect(inventory.counts.routes_by_class).toEqual({ 'release-summary': 1, 'compare-release-summary': 1,
-      'card-diagnostic': 150, 'compare-card-diagnostic': 150, 'word-page': 134, 'compare-word-page': 134 });
+      'card-diagnostic': 150, 'compare-card-diagnostic': 150, 'word-page': 134, 'compare-word-page': 134, landing: 1 });
     const search = ['card-diagnostic', 'compare-card-diagnostic', 'word-page', 'compare-word-page']
       .reduce((n, name) => n + inventory.counts.routes_by_class[name]!, 0);
-    expect([search, inventory.counts.emitted_routes - search]).toEqual([568, 2]);
+    expect([search, inventory.counts.emitted_routes - search]).toEqual([568, 3]);
   });
   it('separates the source-card, learner-page, entry and route denominators', () => {
     const listed = inventory.cards.filter(c => c.listed);
@@ -75,7 +76,7 @@ describe('committed public route inventory', () => {
       150, 134, 148, [['wc_bz5ypsm3wyj7', 'proper_name', 'шуба'], ['wc_sye0ppkx0dwh', 'proper_name', 'юнеско']]]);
     expect(inventory.counts).toMatchObject({ source_cards: 150, citations: 2978, page_keys: 136, learner_pages: 134, visible_entries: 148,
       proper_entries_listed: listed.filter(c => c.card_kind === 'proper_name').length, proper_only_unlisted: 2, refused_without_key: 0 });
-    expect(inventory.counts.emitted_routes).toBe(2 * (1 + inventory.counts.source_cards + inventory.counts.learner_pages));
+    expect(inventory.counts.emitted_routes).toBe(2 * (1 + inventory.counts.source_cards + inventory.counts.learner_pages) + 1);
   });
 });
 

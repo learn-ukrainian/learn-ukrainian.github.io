@@ -64,9 +64,10 @@ DOWNLOAD_ATTEMPTS = 3
 _REPOSITORY = re.compile(r"^[A-Za-z0-9-]+/[A-Za-z0-9._-]+$")
 _TAG = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
-# One or more non-empty segments under the preview prefix, each ending in "/".
+# The landing route is exactly "/{prefix}/". Every other route is one or more
+# non-empty segments under that prefix, each ending in "/".
 # Word-page keys may hold spaces (multi-word expressions); escapes and controls may not.
-_ROUTE_PATH = re.compile(rf"^/{PREVIEW_PREFIX}/(?:[^/%?#\\]+/)+$")
+_ROUTE_PATH = re.compile(rf"^/{PREVIEW_PREFIX}/(?:[^/%?#\\]+/)*$")
 # encodeURIComponent leaves these unescaped besides letters, digits and "-_.~".
 _HREF_SAFE = "!*'()"
 

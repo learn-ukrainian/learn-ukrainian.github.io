@@ -91,6 +91,11 @@ Run Claude-account dispatches from the seat as `env -u CLAUDE_CONFIG_DIR .venv/b
 scripts/dispatch.py dispatch ... --claude-account <label>`: the launcher exports
 `CLAUDE_CONFIG_DIR` into the seat's shells, and the dispatcher refuses an explicit account
 while that ambient value is set (`claude_account_ambient_conflict`).
+Dispatch every takeover successor with `--base origin/main`, never the PR branch as base;
+the `takeover` skill checks out the PR branch.
+`delivered_paths` in `scripts/dispatcher/ownership.py` excludes commits reachable from the
+base and task start, so using the PR branch as base can make the ownership check count newer
+main commits as the worker's changes and refuse the push when the worker brings main into its branch.
 Use exact owned file paths; never claim a shared subtree for an optional edit.
 Before choosing owned paths, `git grep` the changed modules' names in `tests/`, including the
 root `tests/*.py` files, and make every file that matches an owned path, so the worker can

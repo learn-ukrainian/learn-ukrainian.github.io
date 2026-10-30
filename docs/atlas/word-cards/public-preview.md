@@ -28,6 +28,21 @@ publication wiring, deployment and deployed noindex proof. Local route-only
 browser builds use the same route, components and Astro configuration without
 reading protected stores or hydrating the rest of the site.
 
+## Local preview command
+
+From the repository root, this one command downloads the pinned `v0.1.0-pilot`
+release and serves the site with the preview flag on. Leave
+`PUBLIC_ATLAS_WORD_CARD_PREVIEW_CONTROLS` unset.
+
+```bash
+d=$(mktemp -d) && .venv/bin/python scripts/deploy/prepare_word_card_preview.py prepare --dest "$d" && ATLAS_WORD_CARD_PREVIEW=1 ATLAS_WORD_CARD_RELEASE_PATH="$d" npm run dev --prefix site
+```
+
+Open `http://localhost:4321/lexicon-v2/`. That page lists every card in the
+release (headword, part of speech, status) and links to the card. The same
+flag builds the card pages. Without `ATLAS_WORD_CARD_PREVIEW=1`, the build
+emits no `/lexicon-v2/` pages.
+
 ## Pages publication
 
 Every `deploy-pages.yml` run publishes this preview with the ordinary site;

@@ -20,6 +20,7 @@ from scripts.dispatcher import (
     git,
     headroom,
     host_admission,
+    ownership,
     pool_selector,
     providers,
     review_attempt,
@@ -423,6 +424,10 @@ def _dispatch(args) -> int:
             git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout,
                                 sparse_include=git.SPARSE_EXCLUDE_DEFAULT - set(excluded), **exact_start)
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
+        # A task dispatched from inside another task's run names that run, whose settlement then names it while
+        # it still runs (worker._running_children, #12156).
+        if (parent := os.environ.get(ownership.TASK_ID_ENV)) and parent != task_id:
+            record["parent_task_id"] = parent
         if review_contract is not None:
             record["review_contract"] = review_contract
         if publish_remote is not None:
