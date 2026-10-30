@@ -22,6 +22,7 @@ from scripts.dispatcher import (
     host_admission,
     pool_selector,
     providers,
+    review_attempt,
     runtime_context,
     store,
     worker,
@@ -125,10 +126,10 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--require-review-verdict", action="store_true", default=None,
                           help="Mark a review as requiring a verdict; read-only, metadata only (default: off)")
     for flag in ("review-id", "attempt-id", "review-attempt"):
-        dispatch.add_argument(f"--{flag}", help="Bound review: id or manifest file for --review-attempt; "
-                              "all three required; dry-run only until runtime isolation is wired (default: none)")
+        dispatch.add_argument(f"--{flag}", help="Bound review: id or manifest file for --review-attempt; all three "
+                              "required, with a rendered --prompt-file; runs inside the attempt boundary (default: none)")
     dispatch.add_argument("--review-access", choices=get_args(ReviewAccess),
-                          help="Bound review access; dry-run only (default: isolated for bound attempts)")
+                          help="Bound review access; full needs --full-checkout (default: isolated for bound attempts)")
     dispatch.add_argument(
         "--force-admission", metavar="REASON",
         help="Override host admission with a recorded non-empty reason; never overrides a full worktree disk (default: off)",
@@ -246,11 +247,8 @@ def _worktrees(repo_key: str | None, include_archive: bool) -> list[dict]:
 def _dispatch(args) -> int:
     if binding := store.review_binding(vars(args)):
         store.check_review_attempt(binding)
-        # STAGE 1: dry-run-only binding; bound launches exit 2 until the port adds
-        # the manifest-only runtime boundary, scoped home, Sources receipts,
-        # review_contract/review_input_paths and the no-reuse marker.
-        if not args.dry_run:
-            raise ValueError("review_attempt_runtime_unavailable: v2 review isolation is not wired")
+        # The supervisor re-reads the manifest from another working directory.
+        args.review_attempt = str(Path(args.review_attempt).resolve())
     if args.require_review_verdict and args.mode != "read-only":
         raise ValueError("--require-review-verdict requires --mode read-only")
     excluded = git.sparse_excludes(args.sparse_include, [*args.owned_path, *args.research_owned_path])
@@ -357,6 +355,9 @@ def _dispatch(args) -> int:
     checks.check_private_input(spec, info["key"])
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent, child_env(spec))):
         raise ValueError(refusal)
+    # A bound attempt is admitted before anything exists: its prompt is the exact render of its manifest
+    # with these ids, its tools are granted and its pins are the commit's bytes (#12114).
+    review_contract = review_attempt.admit(args, prompt, binding, repo, sha) if binding and not args.dry_run else None
     checks.check_review_family(args.review_author_model, args.model)
     # Every read-only review of a change, dry runs included, whichever review flag types it (F10). A change is
     # named by --branch (stored as review_branch, the only identity the verdict recorder publishes for), a PR, or a
@@ -400,11 +401,13 @@ def _dispatch(args) -> int:
         disk_guard=lambda: not (args.worktree is not None and (worktree / ".git").exists()),
     ) as hold:
         if binding:
-            store.check_review_attempt(binding, claim=True)
+            store.check_review_attempt(binding)  # the supervisor claims it (review_attempt.run)
         if not args.cwd:
             git.create_worktree(repo, worktree, branch, sha, full_checkout=args.full_checkout,
                                 sparse_include=git.SPARSE_EXCLUDE_DEFAULT - set(excluded), **exact_start)
         record = store.new_record(spec, info, branch, sha, vars(args), binding=binding, admission_hold=hold)
+        if review_contract is not None:
+            record["review_contract"] = review_contract
         if publish_remote is not None:
             record["worktree_remote_url"] = publish_remote
         if args.mode != "read-only" and args.owned_path and record["worktree_remote_url"] is None:

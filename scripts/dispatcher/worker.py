@@ -425,6 +425,21 @@ def _end_lingering(child: subprocess.Popen, spec: TaskSpec) -> None:
         child.wait()
 
 
+def _verdict_failure(record: dict, text: str | None) -> str | None:
+    """Why a successful review must fail its requested verdict gate (``--require-review-verdict``), or None."""
+    if record.get("schema_version") != 2 or record.get("require_review_verdict") is not True:
+        return None
+    try:
+        from scripts.review.verdict_parser import recognized_verdicts
+
+        verdicts = set(recognized_verdicts(text))
+    except Exception:
+        return "review_gate_error"
+    if not verdicts:
+        return "review_missing_verdict_line"
+    return "review_ambiguous_verdict" if len(verdicts) > 1 else None
+
+
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
@@ -477,6 +492,26 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             return
         except headroom.RateLimitedError as exc:
             status, error = "rate_limited", str(exc)
+            return
+        if record.get("review_attempt"):
+            # A bound formal attempt runs only inside the agent runtime's attempt boundary, with the rendered
+            # prompt's exact bytes: no dispatch context, no task-store grant, no ordinary launch (#12114).
+            from scripts.dispatcher import review_attempt
+
+            prompt = spec.prompt_file.read_bytes()
+            record.update(status="running", runtime_input_sha256=hashlib.sha256(prompt).hexdigest())
+            store.replace(record, path)
+            interruptible = True  # cancel unwinds the runtime, which kills the seat and tears the boundary down
+            try:
+                checkpoint()
+                outcome = review_attempt.run(spec, record, prompt.decode("utf-8"),
+                                             (hard_timeout, silence_timeout, initial_response_timeout))
+            finally:
+                interruptible = False
+            status, error, text, sources_calls = outcome.status, outcome.error, outcome.text, outcome.sources_calls
+            record.update(outcome.identity)
+            if status == "done" and (refusal := _verdict_failure(record, text)):
+                status, error = "failed", refusal
             return
         schema = None
         if options.get("output_schema_path") is not None:
@@ -605,17 +640,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
 
             if refusal := identity_failure(spec.model, resolved_model):
                 status, error = "failed", refusal
-        if status == "done" and record.get("schema_version") == 2 and record.get("require_review_verdict") is True:
-            try:
-                from scripts.review.verdict_parser import recognized_verdicts
-
-                verdicts = set(recognized_verdicts(text))
-                if not verdicts:
-                    status, error = "failed", "review_missing_verdict_line"
-                elif len(verdicts) > 1:
-                    status, error = "failed", "review_ambiguous_verdict"
-            except Exception:
-                status, error = "failed", "review_gate_error"
+        if status == "done" and (refusal := _verdict_failure(record, text)):
+            status, error = "failed", refusal
     except _Cancelled:
         status, error = "cancelled", "cancelled by client"
     except DeadlineExpired as exc:
