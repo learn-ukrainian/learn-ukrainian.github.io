@@ -267,32 +267,52 @@ def _cgroup(pid: int) -> str | None:
     return None
 
 
+def _scope_cgroups(unit: str) -> list[str] | None:
+    """Every cgroup the tree holds for ``unit``'s scope; None when the traversal was not complete."""
+    root, failed, found = "/sys/fs/cgroup", [], []
+
+    def refused(error: OSError) -> None:
+        failed.append(error)
+
+    for directory, _names, _files in os.walk(root, onerror=refused):
+        if os.path.basename(directory) == f"{unit}.scope":
+            found.append(directory.removeprefix(root))
+    return None if failed else found
+
+
 def _provider_alive(record: dict) -> bool | None:
     """Whether the provider's process tree still runs, from the identity recorded for it; None when unknown."""
     if record.get("launch_mode") == "scope":
         # The scope holds every descendant, including ones that left the provider's process group.
-        cgroup = record.get("launch_cgroup")
         unit = record.get("launch_unit")
-        if not cgroup:
+        if cgroup := record.get("launch_cgroup"):
+            cgroups = [cgroup]
+        elif isinstance(unit, str) and re.fullmatch(r"lu-worker-[A-Za-z0-9._-]+", unit):
             # A supervisor that ended before it read the provider's cgroup still named the scope's unit,
-            # which is found wherever it was placed; a scope that is no longer there held nothing.
-            if not isinstance(unit, str) or not re.fullmatch(r"lu-worker-[A-Za-z0-9._-]+", unit):
+            # which is found wherever it was placed.
+            cgroups = _scope_cgroups(unit)
+            if cgroups is None:
                 return None
-            found = sorted(Path("/sys/fs/cgroup").rglob(f"{unit}.scope"))
-            if not found:
-                return False if Path("/sys/fs/cgroup/cgroup.controllers").exists() else None
-            cgroup = "/" + found[0].relative_to("/sys/fs/cgroup").as_posix()
-        try:
-            procs = Path("/sys/fs/cgroup" + cgroup, "cgroup.procs").read_text().split()
-        except FileNotFoundError:
-            # The kernel refuses to remove a cgroup that still holds processes, so a gone scope is empty.
-            return False if Path("/sys/fs/cgroup/cgroup.controllers").exists() else None
-        except OSError:
+        else:
             return None
-        return any(int(pid) != os.getpid() for pid in procs)
+        controllers = Path("/sys/fs/cgroup/cgroup.controllers").exists()
+        alive = False
+        for cgroup in cgroups:
+            try:
+                procs = Path("/sys/fs/cgroup" + cgroup, "cgroup.procs").read_text().split()
+            except FileNotFoundError:
+                # The kernel refuses to remove a cgroup that still holds processes, so a gone scope is empty.
+                if not controllers:
+                    return None
+                continue
+            except OSError:
+                return None
+            alive = alive or any(int(pid) != os.getpid() for pid in procs)
+        # No scope under the unit's name is a gone scope, which held nothing, on a cgroup v2 host.
+        return alive if cgroups or controllers else None
     if "provider_pgid" not in record:
-        # The supervisor ended before recording whether it started a provider, unless it never started.
-        return False if record.get("pid") is None else None
+        # The supervisor ended before recording whether it started a provider; it never did if it never ran.
+        return False if record.get("pid") is None and record.get("process_start") is None else None
     if record["provider_pgid"] is None:
         return False
     try:
