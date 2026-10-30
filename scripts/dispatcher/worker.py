@@ -311,8 +311,10 @@ def _provider_alive(record: dict) -> bool | None:
         # No scope under the unit's name is a gone scope, which held nothing, on a cgroup v2 host.
         return alive if cgroups or controllers else None
     if "provider_pgid" not in record:
-        # The supervisor ended before recording whether it started a provider; it never did if it never ran.
-        return False if record.get("pid") is None and record.get("process_start") is None else None
+        # The supervisor ended before recording whether it started a provider. A launch that the
+        # dispatcher itself recorded as never having produced a supervisor started none.
+        never_ran = record.get("returncode_reason") in {"spawn_process_missing", "dispatch_died_after_admission"}
+        return False if never_ran and record.get("pid") is None and record.get("process_start") is None else None
     if record["provider_pgid"] is None:
         return False
     try:
