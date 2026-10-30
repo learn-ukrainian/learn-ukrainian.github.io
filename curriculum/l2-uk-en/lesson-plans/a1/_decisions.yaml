@@ -10,7 +10,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-build-program.md
     line: '| Arcs A1, A2, B1, B2 | `docs/epics/fresh-build-{a1,a2,b1,b2}-arc.md` | all four accepted by the operator 2026-09-21; only A1 has its generated `_arc.yaml` |'
-  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
+  doc_sha256: b4a6caa240d42653eb3914f5f6b7662e8846ca4d4d6e49fedaf0e02a58d987b7
   section_sha256: 00fed5fff3c40c72a392710fe16d7641be380cbfb8c8179ffede60d07d12fd5d
   text: |+
     ## 2. Decisions
@@ -75,7 +75,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: '## 6. Decisions on the six open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)'
-  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
+  doc_sha256: b4a6caa240d42653eb3914f5f6b7662e8846ca4d4d6e49fedaf0e02a58d987b7
   section_sha256: dcb7c50f6fce61ff44312d31a5c8c38484c9618dc0bda1eaada15a23bd3c7d67
   text: |+
     ## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)
@@ -95,7 +95,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10108)'
-  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
+  doc_sha256: b4a6caa240d42653eb3914f5f6b7662e8846ca4d4d6e49fedaf0e02a58d987b7
   section_sha256: 68be6519acea2552fb29ffea396de48249dcd5ba59271189a5f018ce1d087976
   text: |+
     ## 8. Revision r4 (#10108)
@@ -152,7 +152,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10105)'
-  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
+  doc_sha256: b4a6caa240d42653eb3914f5f6b7662e8846ca4d4d6e49fedaf0e02a58d987b7
   section_sha256: aff360b85ef72a42ab69d7f71f6491b7cb47935d4d25c15d9d8b657117ce0d86
   text: |
     ## 9. Revision r3.1: A1 practical recap (#10105)
@@ -182,7 +182,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)'
-  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
+  doc_sha256: b4a6caa240d42653eb3914f5f6b7662e8846ca4d4d6e49fedaf0e02a58d987b7
   section_sha256: 5e3e01c2a07a36eaf3e9d187522e236ba94706a2dbe2a2310e774fd358f634eb
   text: |+
     ## 10. Revision r4.1: Staged phonetic facets (#10108)
@@ -228,14 +228,18 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: Operator decision 2026-10-30
-  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
-  section_sha256: 6e00981f62a6fd3011a1585469a63f9a2e54a7978d99278498b314f50e5dd3a5
+  doc_sha256: b4a6caa240d42653eb3914f5f6b7662e8846ca4d4d6e49fedaf0e02a58d987b7
+  section_sha256: 0b7df01d19de72ffc35989208b920bc88fc4cd5d4d5be3a708737f5ae655eac0
   text: |
     ## 12. Revision r6 (OHO)
 
     Operator decision 2026-10-30
 
     Revision r6 grounds the A1 arc in Anna Ohoiko's *Oho! Ukrainian Grammar & Workbook A1* (`owned-oho-a1-workbook`), the primary adult/teen pedagogical grammar baseline for Ukrainian L2. It addresses issue #10108 AC-03 by reconciling the arc with OHO's authentic vocabulary, case sequence, first-ten conversational prerequisites, alphabet presentation, pacing rules, and grammar scope.
+
+    ### Precedence and Superseded Provisions
+
+    This revision supersedes §6 item 3 (case ordering: accusative before locative per (b) below), §11's early-letter introduction pacing cap (2–3 letters at most) per (d) and (e), §11's case-ownership rows (reassigning locative of place from 29–30 to 38–40, and accusative destination from 31 to 29–31, with animate accusative objects at 40), and any conflicting provisions in §8 and §10. Historical accepted §2 and §6 remain verbatim with their original acceptance dates in their respective sections; this revision explicitly overrides §6 item 3 in binding arc law.
 
     ### Core Invariants Preserved
     1. Arc remains 55 positions (1 orientation + 46 instructional + 7 checkpoints + 1 finale).
@@ -279,9 +283,9 @@ sources:
     - **OHO evidence:** OHO Unit 5 Lesson 33 (chunk W0087: SVO sentence frame with direct object, *Я люблю борщ*, *Я люблю Україну*); Unit 6 Lessons 45–48 (chunks W0113–W0122: Accusative case for inanimate objects, direction with в/на, days of the week, animate objects, agreeing adjectives, personal pronouns); Unit 7 Lessons 49–55 (chunks W0123–W0138: Locative case with у/в/на, months, masculine -у/-ю, consonant alternations г->з, к->ц, х->с, vowel alternations о/е->і, locative adjectives).
     - **Adopted sequence (following OHO, per the adopted decision):**
       - An early inanimate direct-object model at positions 15 and 16 alongside present-tense verbs (*Я люблю Україну*, *Я читаю книжку*).
-      - The accusative system at positions 29 to 31 (directional motion with *в/на* and transitive direct objects).
-      - The locative system at positions 38 to 40 (locative of place with *в/на* in dining, shopping, and everyday environments).
-      - The ULP alternative (retaining locative-first before accusative) is removed.
+      - The accusative system at positions 29 to 31 (directional motion with *в/на* and destinations), 37 (inanimate food/drink direct objects), and 40 (animate objects and personal pronouns *мене, тебе, нас, вас*).
+      - The locative system at positions 38 to 40 (locative of place with *в/на* in dining, shopping, and personal settings).
+      - The ULP alternative (retaining locative-first before accusative) is removed; §6 item 3 is explicitly superseded in binding arc law.
 
     ### (c) First-ten conversational prerequisites
 
@@ -303,7 +307,7 @@ sources:
       - Positions 2–5 stage the phonetic topics:
         - Position 2: Full alphabet overview + 6 vowel sounds, stressed vs unstressed vowels, statement/question intonation.
         - Position 3: Hard vs soft consonants, hardness before [е], syllable division and stress rules, voiced/voiceless pairs д–т, з–с, г–х.
-        - Position 4: Jotated vowels (я, ю, є, ї), apostrophe, pair б–п.
+        - Position 4: Remaining iotated vowels (ю, є; with я acquired at 2 and ї at 5), apostrophe, pair б–п.
         - Position 5: Affricates (дж, дз), consonants ґ, ж, ч, ш, щ, ц, ф, letter names, cursive recognition and handwriting practice.
 
     ### (e) Pacing rules made explicit

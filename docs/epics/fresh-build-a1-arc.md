@@ -90,7 +90,7 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Ordinal gender forms перший, перша, перше; другий, друга, друге; третій, третя, третє (time, dates) | system; oblique date forms remain chunks | 22; dates recycled 23 | `:652-654`, `:664-665` |
 | Cardinal numerals | systematic cardinals at 22 (0–1000); earlier modules keep fixed chunks only (prices, age, phone numbers); no numeral + noun agreement system | 22 (chunks at 11, 39) | cardinals with nouns are A2 `:1271-1272` |
 | Locative: place | system | 38–40 | `:690-695` |
-| Accusative: direction, inanimate object, animate object | system | 15–16 (early direct object), 29–31 (system) | `:678-688` |
+| Accusative: direction, destination, inanimate and animate objects | system | 15–16 (early direct object), 29–31 (direction, destination), 37 (inanimate food/drink direct object), 40 (animate object) | `:678-688` |
 | `про` + accusative with думати, мріяти | system (small) | 40, recycled 51 | `:687-688` |
 | Locative with months; accusative with days of the week | chunk at 23, recognised as system after 29–31 (accusative) and 38–40 (locative) | 23 | `:678-695` |
 | Clock time `о / об` + locative ordinal | chunk at 22, recognised as system after 38–40 | 22 | inside the Standard's A1 (time with у / в `:693`, ordinals `:652-654`); ULP systematises it at S2 L67 |
@@ -179,7 +179,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 37 | `i-eat-i-drink` | A1.6 | Say what you eat and drink: food and beverage choices, ordering language, and transitive direct objects | — (`:610-630`, `:639-650`, `:680`) | 3 |
 | 38 | `at-the-cafe` | A1.6 | Order and pay in a café; locative case of place with в, у, на in dining environments (у кафе, в ресторані) | Li, S, R, W (guest/customer exchanges and short notes; extract menu/bill information; `:310-311`, `:379-388`) (`:536-539`, `:272-275`, `:690-692`) | 3 |
 | 39 | `shopping` | A1.6 | Ask prices and buy food, toiletries including шампунь, and stationery; locative of place in shops and markets (у магазині, на базарі) | Li, S, R, W (customer roles; seller in speaking; price tags; `:531-533`; illustrated advertisements, promotions and product-choice instructions; `:261-266`, `:318-321`, `:379-388`, `:447-448`) (`:528-534`, `:690-692`) | 3 |
-| 40 | `people-around-me` | A1.6 | Talk about people you know and living/working environments: locative of place in personal settings (на роботі, вдома) and agreeing adjectives; мене, тебе, нас, вас; `про` + accusative | — (`:610-650`, `:656-657`, `:687-688`, `:690-692`) | 3 |
+| 40 | `people-around-me` | A1.6 | Talk about people you see and know: accusative animate nouns and personal pronouns (мене, тебе, нас, вас); locative of place in personal settings (на роботі, вдома) and agreeing adjectives; `про` + accusative | — (`:610-650`, `:656-657`, `:678-688`, `:690-692`) | 3 |
 | 41 | `checkpoint-food-shopping` | A1.6 | Self-check: order and buy | R | 2 |
 | 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |
 | 43 | `please-do-this` | A1.7 | Ask someone to do something and prohibit an action; all Standard imperative pairs, second person singular and plural | Li, S, R, W (illustrated instructions and prohibitions; copy familiar signs; `:264-266`, `:299`, `:314-315`, `:362-364`) (`:721-725`, `:475`) | 3 |
@@ -366,7 +366,7 @@ immersion remain intact.
 
 This amendment records ownership; it does not certify lesson delivery.
 All 55 positions, slugs and letter inventories/order remain. Early lessons introduce
-2-3 letters at most, with the existing one-letter remainder lessons retained; new
+Cyrillic letters with staged phonetics (with letter pacing cap superseded by r6 per §12(d)/(e)); new
 facets are short teaching/practice steps before the recap. Recaps introduce nothing.
 Appearance at 10 uses nominative descriptions, not an oblique-pronoun system.
 Position 3 owns syllables; 6 owns unstressed [е]/[и]; 20 owns line breaking.
@@ -374,8 +374,8 @@ This amendment supersedes §8's 'outside the tables' wording for `:588`: positio
 Position 5 completes writing one's own and others' names (`:343-344`) and capital-letter
 use, including Київ/київський and Україна/українець (`:571-572`), alongside printed
 and handwritten letter recognition. Position 6 explicitly teaches
-Добраніч (`:459`). Positions 29, 31, 37 and 40 cover both adjective groups in all
-three genders; 48 explicitly includes the reflexive past at `:714`; 50 includes
+Добраніч (`:459`). Positions 29–31, 37 and 40 cover accusative nouns and adjectives (inanimate and animate); 38–40 cover
+locative nouns and adjectives in all three genders; 48 explicitly includes the reflexive past at `:714`; 50 includes
 all future forms of бути (`:710-711`); 51 owns the selected perfective futures.
 Present-tense paradigms belong to 16 (читати, працювати, іти, їхати),
 17 (сидіти, дивитися, including reflexive forms), and 18 (могти) (`:704-709`).
@@ -468,14 +468,14 @@ are local clause identifiers, not official Standard numbering.
 | `phonetics.syllable` | 588 | Syllables 3; line breaking 20 |
 | `phonetics.euphony` | 590–594 | 28 |
 | `phonetics.intonation` | 596 | 2; subsequent recycling |
-| `morphology.noun_declension` | 603–631 | Gender 8; plural/alternation 13; locative 29; accusative 31, 37, 40; vocative 42 |
-| `morphology.adjective_declension` | 633–650 | Nominative 9–10; plural 13; locative 29; accusative 31, 37, 40 |
+| `morphology.noun_declension` | 603–631 | Gender 8; plural/alternation 13; accusative 29–31, 37, 40; locative 38–40; vocative 42 |
+| `morphology.adjective_declension` | 633–650 | Nominative 9–10; plural 13; accusative 29–31, 37, 40; locative 38–40 |
 | `morphology.numeral` | 652–654 | Gender forms 22; date chunks 23 |
 | `morphology.pronoun` | 656–657 | Accusative 40; dative forms inside constructions 11, 15, 43, 54 |
 | `morphology.pronoun_gender_number` | 659–667 | Possessives 8; demonstratives 12; plurals 13; ordinals 22 |
 | `cases.nominative` | 672–676 | 8–10; active-subject use 16 |
-| `cases.accusative` | 678–688 | Object 37, 40; direction 31; weekdays 23; про 40 |
-| `cases.locative` | 690–695 | Place 29–30; months 23 |
+| `cases.accusative` | 678–688 | Direction/destination 29–31; object 15–16, 37, 40; weekdays 23; про 40 |
+| `cases.locative` | 690–695 | Place 38–40; months 23 |
 | `cases.vocative` | 697–699 | 42 |
 | `verbs.indicative` | 703–719 | Present 16–18; past 48; future бути/compound 50; selected perfectives 51 |
 | `verbs.imperative` | 721–725 | 43 |
@@ -537,6 +537,10 @@ Operator decision 2026-10-30
 
 Revision r6 grounds the A1 arc in Anna Ohoiko's *Oho! Ukrainian Grammar & Workbook A1* (`owned-oho-a1-workbook`), the primary adult/teen pedagogical grammar baseline for Ukrainian L2. It addresses issue #10108 AC-03 by reconciling the arc with OHO's authentic vocabulary, case sequence, first-ten conversational prerequisites, alphabet presentation, pacing rules, and grammar scope.
 
+### Precedence and Superseded Provisions
+
+This revision supersedes §6 item 3 (case ordering: accusative before locative per (b) below), §11's early-letter introduction pacing cap (2–3 letters at most) per (d) and (e), §11's case-ownership rows (reassigning locative of place from 29–30 to 38–40, and accusative destination from 31 to 29–31, with animate accusative objects at 40), and any conflicting provisions in §8 and §10. Historical accepted §2 and §6 remain verbatim with their original acceptance dates in their respective sections; this revision explicitly overrides §6 item 3 in binding arc law.
+
 ### Core Invariants Preserved
 1. Arc remains 55 positions (1 orientation + 46 instructional + 7 checkpoints + 1 finale).
 2. Orientation (position 1), checkpoints (positions 7, 14, 21, 27, 35, 41, 47), and finale (position 55) introduce 0 new Ukrainian vocabulary items (preserving invariant D4).
@@ -579,9 +583,9 @@ Each of the seven subsections (a)–(g) below reflects the OHO baseline and inco
 - **OHO evidence:** OHO Unit 5 Lesson 33 (chunk W0087: SVO sentence frame with direct object, *Я люблю борщ*, *Я люблю Україну*); Unit 6 Lessons 45–48 (chunks W0113–W0122: Accusative case for inanimate objects, direction with в/на, days of the week, animate objects, agreeing adjectives, personal pronouns); Unit 7 Lessons 49–55 (chunks W0123–W0138: Locative case with у/в/на, months, masculine -у/-ю, consonant alternations г->з, к->ц, х->с, vowel alternations о/е->і, locative adjectives).
 - **Adopted sequence (following OHO, per the adopted decision):**
   - An early inanimate direct-object model at positions 15 and 16 alongside present-tense verbs (*Я люблю Україну*, *Я читаю книжку*).
-  - The accusative system at positions 29 to 31 (directional motion with *в/на* and transitive direct objects).
-  - The locative system at positions 38 to 40 (locative of place with *в/на* in dining, shopping, and everyday environments).
-  - The ULP alternative (retaining locative-first before accusative) is removed.
+  - The accusative system at positions 29 to 31 (directional motion with *в/на* and destinations), 37 (inanimate food/drink direct objects), and 40 (animate objects and personal pronouns *мене, тебе, нас, вас*).
+  - The locative system at positions 38 to 40 (locative of place with *в/на* in dining, shopping, and personal settings).
+  - The ULP alternative (retaining locative-first before accusative) is removed; §6 item 3 is explicitly superseded in binding arc law.
 
 ### (c) First-ten conversational prerequisites
 
@@ -603,7 +607,7 @@ Each of the seven subsections (a)–(g) below reflects the OHO baseline and inco
   - Positions 2–5 stage the phonetic topics:
     - Position 2: Full alphabet overview + 6 vowel sounds, stressed vs unstressed vowels, statement/question intonation.
     - Position 3: Hard vs soft consonants, hardness before [е], syllable division and stress rules, voiced/voiceless pairs д–т, з–с, г–х.
-    - Position 4: Jotated vowels (я, ю, є, ї), apostrophe, pair б–п.
+    - Position 4: Remaining iotated vowels (ю, є; with я acquired at 2 and ї at 5), apostrophe, pair б–п.
     - Position 5: Affricates (дж, дз), consonants ґ, ж, ч, ш, щ, ц, ф, letter names, cursive recognition and handwriting practice.
 
 ### (e) Pacing rules made explicit

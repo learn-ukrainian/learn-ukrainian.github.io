@@ -2,7 +2,7 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
+  sha256: b4a6caa240d42653eb3914f5f6b7662e8846ca4d4d6e49fedaf0e02a58d987b7
 est_lessons_total: 162
 positions:
 - position: 1
@@ -616,17 +616,17 @@ positions:
 - position: 40
   slug: people-around-me
   est_lessons: 3
-  job: 'Talk about people you know and living/working environments: locative of place in personal settings (на роботі, вдома) and agreeing adjectives; мене, тебе, нас, вас; `про` + accusative'
+  job: 'Talk about people you see and know: accusative animate nouns and personal pronouns (мене, тебе, нас, вас); locative of place in personal settings (на роботі, вдома) and agreeing adjectives; `про` + accusative'
   inventory_text: null
   phase: A1.6
-  skills_text: — (`:610-650`, `:656-657`, `:687-688`, `:690-692`)
+  skills_text: — (`:610-650`, `:656-657`, `:678-688`, `:690-692`)
   skills: []
   standard_line_refs:
   - - 610
     - 650
   - - 656
     - 657
-  - - 687
+  - - 678
     - 688
   - - 690
     - 692
