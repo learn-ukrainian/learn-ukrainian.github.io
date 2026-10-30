@@ -23,9 +23,11 @@ if __package__ in (None, ""):
 
 from scripts.atlas import word_card_assembly as assembly
 from scripts.atlas import word_card_sources as pilot_sources
+from scripts.common.jsonl import physical_lines
 from scripts.common.repo_root import main_checkout_root
 from scripts.lexicon import ulif_raw_cache
 from scripts.lib.readonly_sqlite import open_readonly
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 from scripts.verification import vesum
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -84,7 +86,7 @@ def git(root: Path, *args: str) -> bytes:
 
 
 def frozen_rows(root: Path, revision: str = FREEZE) -> tuple[list[dict], list[dict]]:
-    paths = git(root, "ls-tree", "-r", "--name-only", revision, VOCABULARY).decode().splitlines()
+    paths = physical_lines(git(root, "ls-tree", "-r", "--name-only", revision, VOCABULARY).decode())
     files, inventory = [], []
     for path in sorted(p for p in paths if p.endswith("/vocabulary.yaml")):
         body = git(root, "show", f"{revision}:{path}")
@@ -279,14 +281,21 @@ Exit codes: 0 generated or identical; 1 unavailable/drifted input or mismatch; 2
 Related: #11943 AC-01; docs/atlas/word-cards/a1-v1-inventory.md
 """)
     parser.add_argument("--check", action="store_true", help="Compare to committed inventory without writing JSON (default: off)")
-    parser.add_argument("--vesum-db", type=Path, default=primary / "data/vesum.db",
-                        help="Read-only VESUM store (default: primary data/vesum.db); example: fixtures/vesum.db")
-    parser.add_argument("--sources-db", type=Path, default=primary / "data/sources.db",
-                        help="Read-only Sources store (default: primary data/sources.db); example: fixtures/sources.db")
+    parser.add_argument("--vesum-db", type=Path,
+                        help="Read-only VESUM store binding (default: topology resolver); example: /fixtures/morphology.db")
+    parser.add_argument("--sources-db", type=Path,
+                        help="Read-only Sources store binding (default: topology resolver); example: /fixtures/dictionary.db")
     parser.add_argument("--raw-cache", type=Path, default=ulif_raw_cache.cache_path(),
                         help="Read-only authenticated ULIF raw cache (default: shared cache); example: fixtures/ulif_raw.sqlite")
     args = parser.parse_args(argv)
     try:
+        bindings = {}
+        for name, path in (("sources", args.sources_db), ("vesum", args.vesum_db)):
+            explicit = StoreBinding(name, path) if path is not None else None
+            binding = resolve_store(name, primary, binding=explicit)
+            if isinstance(binding, StoreRefusal):
+                raise ValueError(f"{name} store binding refused: {binding.reason}")
+            bindings[name] = binding.path
         documents = {}
         for path, expected in PINS.items():
             body = (ROOT / path).read_bytes()
@@ -296,16 +305,16 @@ Related: #11943 AC-01; docs/atlas/word-cards/a1-v1-inventory.md
         files, rows = frozen_rows(ROOT)
         with ExitStack() as stack:
             connections = [stack.enter_context(open_readonly(p.resolve()))
-                           for p in (args.sources_db, args.vesum_db, args.raw_cache)]
+                           for p in (bindings["sources"], bindings["vesum"], args.raw_cache)]
             for connection in connections:
                 connection.execute("BEGIN")
             sources = pilot_sources.PilotSources(*connections)
             links = PilotLinks(documents[str(PILOT)], documents[str(REGISTRY)], sources)
             # The Sources backend and the pilot matcher must see the same held
             # VESUM snapshot even if the store binding changes during a run.
-            with vesum.get_vesum_connection(args.vesum_db) as connection:
+            with vesum.get_vesum_connection(bindings["vesum"]) as connection:
                 connection.execute("BEGIN")
-                result = build(Evidence(args.vesum_db), links, files, rows)
+                result = build(Evidence(bindings["vesum"]), links, files, rows)
         body = serialize(result)
         if args.check:
             if (ROOT / OUTPUT).read_text(encoding="utf-8") != body:
