@@ -15,6 +15,14 @@ ENV = {key: value for key, value in os.environ.items() if key != "LEARN_UK_SECRE
 ALTERNATIVES = ("exact numeric PIDs read in an earlier command", "harness's own stop tool")
 
 
+def nested_backticks(levels: int) -> str:
+    """Backticks nested past the shared parser's depth limit."""
+    body = ":"
+    for _ in range(levels):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    return body
+
+
 @pytest.mark.parametrize(
     ("command", "refused"),
     [
@@ -58,6 +66,9 @@ ALTERNATIVES = ("exact numeric PIDs read in an earlier command", "harness's own 
         ("pkill -f worker; " + "xargs " * 11 + "sh -c ':'", True),
         ("pkill -f worker; echo " + "$(" * 12 + ":" + ")" * 12, True),
         ("sudo 2>/dev/null -n pkill -f worker", True),
+        ("env -u 2>/dev/null X pkill -f worker", True),
+        ("pgrep -f worker | xargs sh -c 'echo x; kill $1' _", True),
+        (r"$'\x70kill' -f worker; echo " + nested_backticks(17), True),
         ("pgrep -f worker", False),
         ("pgrep --full worker | sort", False),
         ("pgrep -f worker | xargs echo kill", False),

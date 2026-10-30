@@ -67,8 +67,11 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # grep -c TOKEN .env and cp .env backup remain conservative denials even though
 # those operations do not print values.
 # Process-kill facts are collected per invocation without data flow, so a
-# full-match pgrep beside any nonliteral kill is refused. eval, scripts fed to
-# a shell on stdin and abbreviated long options are not modeled.
+# full-match pgrep beside any nonliteral kill is refused. eval, `env -S`,
+# scripts fed to a shell on stdin and abbreviated long options are not
+# modeled. Only the launchers in _WRAPPER_OPTIONS plus `env` and `xargs` are
+# resolved; others such as setsid, doas or find -exec are not.
+# Quote-spliced command words (`'k'ill`) are a shared tokenizer limit.
 
 from __future__ import annotations
 
@@ -628,6 +631,7 @@ _WRAPPER_OPTIONS = {
     "command": ("", set(), {"-v", "-V"}, 0),
     "nohup": ("", set(), set(), 0),
     "builtin": ("", set(), set(), 0),
+    "busybox": ("", set(), {"--help", "--install", "--list", "--list-full"}, 0),
 }
 
 
@@ -728,6 +732,7 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
             continue
         if wrapper == "env":
             j = i + 1
+            value_pending = False
             while j < len(seg):
                 token = _strip_quotes(seg[j])
                 skip = _redirection_skip_count(seg[j])
@@ -735,17 +740,23 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
                     redirects.extend(seg[j : j + skip])
                     j += skip
                     continue
+                if value_pending:
+                    # The value of -u, -C or -S is the next non-redirect word.
+                    value_pending = False
+                    j += 1
+                    continue
                 if token.isdigit():
                     return "env", redirects + seg[i + 1 :], i
                 if _is_assignment(seg[j]):
                     j += 1
-                elif token in {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"} and j + 1 < len(seg):
-                    j += 2
-                elif (
-                    token.startswith(("--unset=", "--chdir=", "--split-string="))
-                    or token in {"-i", "-0", "--ignore-environment", "--null"}
-                    or token.startswith("-")
-                ):
+                elif token.startswith("--"):
+                    value_pending = token in {"--unset", "--chdir", "--split-string"}
+                    j += 1
+                elif token.startswith("-"):
+                    for index, letter in enumerate(token[1:], 1):
+                        if letter in "uCS":
+                            value_pending = index == len(token) - 1
+                            break
                     j += 1
                 else:
                     break
@@ -758,8 +769,6 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
         return None
 
     cmd = _strip_quotes(seg[i]).rsplit("/", 1)[-1]
-    if cmd == "busybox" and i + 1 < len(seg) and _strip_quotes(seg[i + 1]) == "sh":
-        return "sh", redirects + seg[i + 2 :], i + 1
     return cmd, redirects + seg[i + 1 :], i
 
 
@@ -962,6 +971,11 @@ def _has_safe_downstream(pipeline: list[list[str]], seg_index: int) -> bool:
 
 
 def _without_redirects(args: list[str]) -> list[str]:
+    return [_strip_quotes(arg) for arg in _raw_without_redirects(args)]
+
+
+def _raw_without_redirects(args: list[str]) -> list[str]:
+    """Drop redirections, keeping each remaining word's quoting."""
     result = []
     index = 0
     while index < len(args):
@@ -969,7 +983,7 @@ def _without_redirects(args: list[str]) -> list[str]:
         if skip:
             index += skip
         else:
-            result.append(_strip_quotes(args[index]))
+            result.append(args[index])
             index += 1
     return result
 
@@ -1693,16 +1707,7 @@ def _shell_script(args: list[str]) -> list[str]:
     """Extract the script operand of a shell -c invocation."""
 
     # Redirections may precede or sit among the options (`sh 2>/dev/null -c ...`).
-    raw: list[str] = []
-    i = 0
-    while i < len(args):
-        skip = _redirection_skip_count(args[i])
-        if skip:
-            i += skip
-        else:
-            raw.append(args[i])
-            i += 1
-    args = raw
+    args = _raw_without_redirects(args)
     i = 0
     while i < len(args):
         option = _strip_quotes(args[i])
@@ -1755,12 +1760,11 @@ _XARGS_VALUE_OPTIONS = {
     "-s",
     "--arg-file",
     "--delimiter",
-    "--eof",
-    "--replace",
     "--max-lines",
     "--max-args",
     "--max-procs",
     "--max-chars",
+    "--process-slot-var",
 }
 PROCESS_KILL_MESSAGE = (
     "BLOCKED by guard-secret-print (#M-5): full-command-line process kills can match "
@@ -1812,7 +1816,7 @@ def _literal_pid_kill(args: list[str]) -> bool:
 
 def _xargs_target(args: list[str]) -> list[str]:
     """Return the command words xargs runs, after its own options."""
-    words = _without_redirects(args)
+    words = _raw_without_redirects(args)
     index = 0
     while index < len(words):
         word = _strip_quotes(words[index])
@@ -1820,8 +1824,15 @@ def _xargs_target(args: list[str]) -> list[str]:
             return words[index + 1 :]
         if word in _XARGS_VALUE_OPTIONS:
             index += 2
+        elif word.startswith("--") or word == "-":
+            index += 1
         elif word.startswith("-"):
             index += 1
+            # A value letter ends a short cluster; at its end the value is the next word.
+            for position, letter in enumerate(word[1:], 1):
+                if letter in "adEILnPs":
+                    index += position == len(word) - 1
+                    break
         else:
             return words[index:]
     return []
@@ -1876,8 +1887,12 @@ def _process_facts(command: str, *, depth: int = 0) -> set[str]:
 def _process_kill_refused(command: str, facts: set[str]) -> bool:
     if "pkill" in facts or {"pgrep", "kill"} <= facts:
         return True
-    # A part that could not be read may hold the kill; any mention refuses.
-    return "limit" in facts and re.search(r"\bp(?:kill|grep)\b", command) is not None
+    if "limit" not in facts:
+        return False
+    # A part that could not be read may hold the kill; any mention refuses,
+    # after the decoding and quote removal the shell itself would apply.
+    text = _decode_ansi_c_quotes(_collapse_shell_line_continuations(command))
+    return re.search(r"\bp(?:kill|grep)\b", re.sub(r"[\\'\"]", "", text)) is not None
 
 
 def _scan_command(
