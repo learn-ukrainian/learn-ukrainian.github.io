@@ -82,14 +82,14 @@ def _same_target(path: Path, original: os.stat_result) -> os.stat_result:
 
 
 def _schema(db: sqlite3.Connection) -> None:
-    """Require the owner's exact tables and optional retention index, not lookalikes."""
+    """Require the owner's exact tables, optional retention index and usage count, not lookalikes."""
 
     def normalize(sql):
         return " ".join(sql.split())
 
     actual = {normalize(sql) for (sql,) in db.execute("SELECT sql FROM sqlite_schema WHERE sql IS NOT NULL")}
     required = {normalize(sql) for sql in owner.CACHE_SCHEMA[:2]}
-    allowed = {normalize(sql) for sql in owner.CACHE_SCHEMA}
+    allowed = {normalize(sql) for sql in (*owner.CACHE_SCHEMA, *owner.github_usage.SCHEMA)}
     if not required <= actual <= allowed:
         raise _Refused("wrong_schema")
 

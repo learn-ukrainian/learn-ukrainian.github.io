@@ -63,7 +63,6 @@ CACHE_SCHEMA = (
     "CREATE TABLE cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))",
     "CREATE TABLE budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))",
     f"CREATE INDEX cache_retention ON cache(at,scope,key,{_CACHE_BYTES}) WHERE {_CACHE_RESPONSE}",
-    *github_usage.SCHEMA,
 )
 
 RESERVE = 10
@@ -3361,12 +3360,13 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
         native = executor(command, **call)
     if "core" in pools and request.call_class != "landing":
         # Counted once, after it ran, however many requests gh made for it. A landing command is
-        # not counted. A raw ``gh api`` that admission could not read is named by its verb alone.
-        if request.path:
-            endpoint = github_usage.endpoint_template(request.method, request.path)
-        else:
-            endpoint = "gh api" if str(args[1]) == "api" else " ".join(["gh", *map(str, args[1:3])])
-        client._count(endpoint, None)
+        # not counted. A command whose request admission could not read is named by its known command words.
+        client._count(
+            github_usage.endpoint_template(request.method, request.path)
+            if request.path
+            else github_usage.command_label(args),
+            None,
+        )
     output, error = (
         value.encode() if isinstance(value, str) else value or b"" for value in (native.stdout, native.stderr)
     )

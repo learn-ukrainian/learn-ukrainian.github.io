@@ -154,8 +154,10 @@ lock together wait at most a quarter second, and counting never changes where th
 budget. Each row names the caller (the dispatched task id with its command, else
 the calling command's module or script, never its arguments; for the `gh` shim, the command that
 ran `gh`) and an endpoint template such as
-`GET repos/:repo/actions/runs/:n`, in which the repository, numbers, commit SHAs and every named
-account, branch, tag or label (a ref with slashes included) are replaced. Print the top consumers
+`GET repos/:repo/actions/runs/:n`, which keeps only GitHub's own REST path words: the repository,
+numbers, commit SHAs and every other segment (an account, team, branch, tag or label, a ref with
+slashes included) are replaced. A native `gh` command with no readable request is named by its
+known command words alone (`gh pr view`), never by an argument. Print the top consumers
 of the last hour:
 
 ```bash
@@ -166,7 +168,8 @@ of the last hour:
 review, update-branch or rerun) is never counted, so counting never adds a wait to the landing
 path. A native `gh` command counts once, as charged, however many requests gh makes for it. A
 write SQLite refuses drops its row rather than fail the call; the row follows the budget
-observation, so it cannot cost it.
+observation, so it cannot cost it. The `usage` table is created by the count itself, never by the
+client's ordinary cache access, so a cache from before this change is read and written exactly as it was.
 
 ## Git hooks
 

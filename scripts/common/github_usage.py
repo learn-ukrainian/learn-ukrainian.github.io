@@ -129,10 +129,15 @@ def _command():
         return "gh via unknown"
 
 
+def _text(value):
+    """``value`` as text SQLite can store: an undecodable byte becomes a replacement character."""
+    return str(value).encode("utf-8", "replace").decode("utf-8")
+
+
 def caller():
     """The dispatched task id with its command, else the calling command."""
-    task = os.environ.get(TASK_ENV, "").strip()
-    return f"{task} ({_command()})" if task else _command()
+    task = _text(os.environ.get(TASK_ENV, "")).strip()
+    return f"{task} ({_command()})" if task else _text(_command())
 
 
 _NAMED_AFTER = frozenset(
@@ -159,8 +164,35 @@ _COMMIT_TAILS = frozenset({"branches-where-head", "check-runs", "check-suites", 
 """What may follow a commit SHA in ``commits/<sha>/...``."""
 
 
+_WORDS = frozenset(
+    {
+        "access_tokens", "actions", "alerts", "annotations", "app", "approve", "artifacts", "assets", "assignees",
+        "attempts", "blobs", "blocks", "branches", "branches-where-head", "cache", "caches", "cancel", "check-runs",
+        "check-suites", "code", "code-scanning", "collaborators", "comments", "commits", "community", "compare",
+        "contents", "contributors", "copilot", "dependabot", "deployments", "dispatches", "disable", "emails",
+        "enable", "environments", "events", "files", "followers", "following", "forks", "force-cancel", "git",
+        "gists", "graphql", "hooks", "installation", "installations", "invitations", "issues", "jobs", "keys",
+        "labels", "languages", "latest", "license", "lock", "logs", "matching-refs", "media", "members", "memberships",
+        "merge", "merge-upstream", "merges", "meta", "milestones", "notifications", "orgs", "outside_collaborators",
+        "packages", "pages", "participation", "pending_deployments", "projects", "pulls", "rate_limit", "reactions",
+        "readme", "ref", "refs", "releases", "rerun", "rerun-failed-jobs", "rerequest", "repos", "repositories",
+        "requested_reviewers", "requested_teams", "reviews", "rulesets", "rules", "runners", "runs", "search",
+        "secret-scanning", "secrets", "sites", "starred", "stargazers", "stats", "status", "statuses", "subscribers",
+        "subscription", "tags", "tarball", "teams", "threads", "timeline", "timing", "topics", "traffic",
+        "trees", "update-branch", "usage", "user", "users", "variables", "workflows", "zip", "zipball",
+    }
+)
+"""Every word an endpoint template may keep (GitHub's REST path vocabulary); any other segment is a name."""
+_PLACEHOLDERS = frozenset({":repo", ":n", ":sha", ":name", ":ref"})
+
+
 def endpoint_template(method, path):
-    """``METHOD path`` with the repository, numbers, SHAs and every named component replaced."""
+    """``METHOD path`` with the repository, numbers, SHAs and every named component replaced.
+
+    The privacy rule is on the output: only vocabulary words (:data:`_WORDS`) and placeholders are
+    kept, so a name nobody listed (an account, repository, branch, team or label, however deep in
+    the route) is replaced whatever precedes it.
+    """
     path = str(path or "").split("?", 1)[0].strip("/")
     path = re.sub(r"^repos/[^/]+/[^/]+", "repos/:repo", path)
     path = re.sub(r"/(heads|tags|branches|compare|contents)/.*$", r"/\1/:ref", path)
@@ -188,17 +220,71 @@ def endpoint_template(method, path):
         elif previous in _NAMED_AFTER or previous == "commits":
             segment = ":name"
         segments.append(segment)
-    return f"{str(method).upper()} {'/'.join(segments)}"
+    kept = []
+    for segment in segments:
+        segment = segment if segment in _WORDS or segment in _PLACEHOLDERS else ":name"
+        if segment != ":name" or kept[-1:] != [":name"]:
+            kept.append(segment)
+    return f"{_text(method).upper()} {'/'.join(kept)}"
+
+
+_GH_COMMANDS = {
+    "api": (),
+    "auth": ("login", "logout", "refresh", "setup-git", "status", "switch", "token"),
+    "browse": (),
+    "cache": ("delete", "list"),
+    "gist": ("clone", "create", "delete", "edit", "list", "rename", "view"),
+    "issue": (
+        "close", "comment", "create", "delete", "develop", "edit", "list", "lock", "pin", "reopen",
+        "status", "transfer", "unlock", "unpin", "view",
+    ),
+    "label": ("clone", "create", "delete", "edit", "list"),
+    "pr": (
+        "checkout", "checks", "close", "comment", "create", "diff", "edit", "list", "lock", "merge",
+        "ready", "reopen", "revert", "review", "status", "unlock", "update-branch", "view",
+    ),
+    "release": ("create", "delete", "delete-asset", "download", "edit", "list", "upload", "verify", "view"),
+    "repo": (
+        "archive", "clone", "create", "delete", "edit", "fork", "list", "rename", "set-default", "sync",
+        "unarchive", "view",
+    ),
+    "ruleset": ("check", "list", "view"),
+    "run": ("cancel", "delete", "download", "list", "rerun", "view", "watch"),
+    "search": ("code", "commits", "issues", "prs", "repos"),
+    "secret": ("delete", "list", "set"),
+    "status": (),
+    "variable": ("delete", "get", "list", "set"),
+    "workflow": ("disable", "enable", "list", "run", "view"),
+}
+"""The ``gh`` commands a native count may name; any other word on the command line is an argument."""
+
+
+def command_label(args):
+    """The ``gh`` command a count names: a known command and subcommand, never an argument or flag value."""
+    words = [_text(arg) for arg in args[1:3]]
+    subcommands = _GH_COMMANDS.get(words[0] if words else "")
+    if subcommands is None:
+        return "gh"
+    return f"gh {words[0]} {words[1]}" if len(words) > 1 and words[1] in subcommands else f"gh {words[0]}"
 
 
 def record(db, *, endpoint, status, now=None):
     """Count one request on a cache connection the client opened.
 
-    A statement SQLite refuses drops the row and never fails the call or the writes beside it.
+    The table is created here, on the counting connection only: the client's ordinary cache access
+    (admission, budget storage, landing calls) never touches it. A statement SQLite refuses, a table
+    that is not the expected one, or text it cannot store drops the row and never fails the call or
+    the writes beside it.
     """
     now = time.time() if now is None else now
-    with suppress(sqlite3.Error):
-        db.execute("INSERT INTO usage VALUES(?,?,?,?)", (now, caller(), endpoint, status))
+    with suppress(sqlite3.Error, ValueError):
+        for statement in SCHEMA:
+            db.execute(
+                statement.replace("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ").replace(
+                    "CREATE INDEX ", "CREATE INDEX IF NOT EXISTS "
+                )
+            )
+        db.execute("INSERT INTO usage VALUES(?,?,?,?)", (now, caller(), _text(endpoint), status))
         db.execute("DELETE FROM usage WHERE at<?", (now - RETENTION_SECONDS,))
 
 
