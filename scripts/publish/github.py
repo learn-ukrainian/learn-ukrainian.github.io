@@ -188,6 +188,34 @@ def _declared_workflow_input(name: object, spec: object) -> tuple[object, bool] 
     return None
 
 
+def _workflow_yaml_loader() -> type[yaml.SafeLoader]:
+    """Safe loader that keeps the trigger key as the string ``on``.
+
+    PyYAML 1.1 treats ``on``, ``yes`` and ``true`` as the same boolean, and
+    ``True == 1 == 1.0``, so a lookup of that boolean also matches numeric
+    keys. Only ``true`` and ``false`` stay booleans. A file whose trigger is
+    any other spelling does not match the string key ``on``.
+    """
+
+    class Loader(yaml.SafeLoader):
+        pass
+
+    resolvers = {
+        key: [(tag, regexp) for tag, regexp in values if tag != "tag:yaml.org,2002:bool"]
+        for key, values in yaml.SafeLoader.yaml_implicit_resolvers.items()
+    }
+    Loader.yaml_implicit_resolvers = resolvers
+    Loader.add_implicit_resolver(
+        "tag:yaml.org,2002:bool",
+        re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"),
+        list("tTfF"),
+    )
+    return Loader
+
+
+_WORKFLOW_YAML_LOADER = _workflow_yaml_loader()
+
+
 def _workflow_input_schema(workflow: str) -> dict[str, tuple[object, bool]] | None:
     """Input schema for an allowlisted workflow, read from its file.
 
@@ -198,13 +226,12 @@ def _workflow_input_schema(workflow: str) -> dict[str, tuple[object, bool]] | No
         return None
     path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / workflow
     try:
-        document = yaml.safe_load(path.read_text(encoding="utf-8"))
+        document = yaml.load(path.read_text(encoding="utf-8"), Loader=_WORKFLOW_YAML_LOADER)
     except (OSError, UnicodeError, yaml.YAMLError):
         return None
     if not isinstance(document, dict):
         return None
-    # PyYAML 1.1 parses a bare ``on:`` key as the boolean True.
-    triggers = document.get("on", document.get(True))
+    triggers = document.get("on")
     if not isinstance(triggers, dict) or "workflow_dispatch" not in triggers:
         return None
     dispatch = triggers["workflow_dispatch"]
