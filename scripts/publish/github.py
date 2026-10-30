@@ -19,6 +19,8 @@ import zipfile
 from pathlib import Path
 from urllib.parse import quote
 
+import yaml
+
 from scripts.common import github_client
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails.worktree_containment import NotAGitRepositoryError, resolve_main_root_without_git
@@ -119,15 +121,18 @@ SCHEMAS = {
     ),
     "issue-unlink": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
 }
-# workflow -> {input name: (kind, required)}. Kinds other than "bool" name a
-# PATTERNS entry. coverage-ref's contexts input is an optional typed boolean.
-WORKFLOWS = {
-    "ci.yml": {},
-    "deploy-pages.yml": {},
-    "pytest-slow-nightly.yml": {},
-    "stale-branch-cleanup.yml": {},
-    "coverage-ref.yml": {"sha": ("sha", True), "contexts": ("bool", False)},
-}
+# Workflows this publisher may start. workflow_dispatch input names, required
+# flags, booleans and choice options are read from each workflow file. There
+# is no second copy of that schema. A string input is admitted only when its
+# name is a PATTERNS key (coverage-ref's sha). Any other declared input makes
+# that workflow refuse every dispatch.
+WORKFLOWS = frozenset({
+    "ci.yml",
+    "deploy-pages.yml",
+    "pytest-slow-nightly.yml",
+    "stale-branch-cleanup.yml",
+    "coverage-ref.yml",
+})
 # The merge-queue reader trusts review-verdict markers from the shared fleet login, so
 # only scripts/review/record_cf_verdict.py may write them (#11127). Comment fields
 # refuse the prefix unless the value is a CfVerdictRecord on the recorder's verb.
@@ -156,6 +161,109 @@ PATTERNS = {
     "node": r"[A-Za-z0-9_=-]+",
     "color": r"[0-9a-fA-F]{6}",
 }
+
+
+def _declared_workflow_input(name: object, spec: object) -> tuple[object, bool] | None:
+    """One workflow_dispatch input the publisher can constrain, or None."""
+    if not isinstance(name, str) or not name or not isinstance(spec, dict):
+        return None
+    required = spec.get("required", False)
+    if type(required) is not bool:
+        return None
+    kind = spec.get("type", "string")
+    if kind == "boolean":
+        return ("bool", required)
+    if kind == "choice":
+        options = spec.get("options")
+        if (
+            not isinstance(options, list)
+            or not options
+            or any(type(option) is not str or not option for option in options)
+            or len(set(options)) != len(options)
+        ):
+            return None
+        return (("choice", tuple(options)), required)
+    if kind == "string" and name in PATTERNS:
+        return (name, required)
+    return None
+
+
+def _workflow_yaml_loader() -> type[yaml.SafeLoader]:
+    """Safe loader that keeps the trigger key as the string ``on``.
+
+    PyYAML 1.1 treats ``on``, ``yes`` and ``true`` as the same boolean, and
+    ``True == 1 == 1.0``, so a lookup of that boolean also matches numeric
+    keys. Only ``true`` and ``false`` stay booleans. A file whose trigger is
+    any other spelling does not match the string key ``on``.
+    """
+
+    class Loader(yaml.SafeLoader):
+        pass
+
+    resolvers = {
+        key: [(tag, regexp) for tag, regexp in values if tag != "tag:yaml.org,2002:bool"]
+        for key, values in yaml.SafeLoader.yaml_implicit_resolvers.items()
+    }
+    Loader.yaml_implicit_resolvers = resolvers
+    Loader.add_implicit_resolver(
+        "tag:yaml.org,2002:bool",
+        re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"),
+        list("tTfF"),
+    )
+    return Loader
+
+
+_WORKFLOW_YAML_LOADER = _workflow_yaml_loader()
+
+
+def _workflow_input_schema(workflow: str) -> dict[str, tuple[object, bool]] | None:
+    """Input schema for an allowlisted workflow, read from its file.
+
+    None refuses every dispatch of that workflow, including an empty input
+    object. A workflow with no declared inputs returns an empty schema.
+    """
+    if workflow not in WORKFLOWS or "/" in workflow or workflow.startswith("."):
+        return None
+    path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / workflow
+    try:
+        document = yaml.load(path.read_text(encoding="utf-8"), Loader=_WORKFLOW_YAML_LOADER)
+    except (OSError, UnicodeError, yaml.YAMLError):
+        return None
+    if not isinstance(document, dict):
+        return None
+    triggers = document.get("on")
+    if not isinstance(triggers, dict) or "workflow_dispatch" not in triggers:
+        return None
+    dispatch = triggers["workflow_dispatch"]
+    if dispatch is None:
+        return {}
+    if not isinstance(dispatch, dict):
+        return None
+    declared = dispatch.get("inputs", {})
+    if declared is None:
+        return {}
+    if not isinstance(declared, dict):
+        return None
+    schema: dict[str, tuple[object, bool]] = {}
+    for name, spec in declared.items():
+        parsed = _declared_workflow_input(name, spec)
+        if parsed is None:
+            return None
+        schema[name] = parsed
+    return schema
+
+
+def _workflow_input_accepted(kind: object, raw: object) -> bool:
+    if kind == "bool":
+        return type(raw) is bool
+    if isinstance(kind, tuple) and len(kind) == 2 and kind[0] == "choice" and isinstance(kind[1], tuple):
+        return isinstance(raw, str) and raw in kind[1]
+    return (
+        isinstance(kind, str)
+        and kind in PATTERNS
+        and isinstance(raw, str)
+        and re.fullmatch(PATTERNS[kind], raw) is not None
+    )
 
 
 def _validated_environment(env) -> dict[str, str]:
@@ -203,14 +311,14 @@ def _validate(verb, fields):
             valid = isinstance(value, (list, tuple)) and all(isinstance(x, str) for x in value)
         elif kind == "workflow_inputs":
             workflow = fields["workflow"]
-            input_schema = WORKFLOWS.get(workflow) if isinstance(workflow, str) else None
+            input_schema = (
+                _workflow_input_schema(workflow) if isinstance(workflow, str) and workflow in WORKFLOWS else None
+            )
             valid = isinstance(value, dict) and input_schema is not None and set(value) <= set(input_schema)
             if valid:
-                required = {name for name, (_, is_required) in input_schema.items() if is_required}
-                valid = required <= set(value) and all(
-                    type(value[name]) is bool
-                    if input_kind == "bool"
-                    else isinstance(value[name], str) and re.fullmatch(PATTERNS[input_kind], value[name]) is not None
+                required_inputs = {name for name, (_, is_required) in input_schema.items() if is_required}
+                valid = required_inputs <= set(value) and all(
+                    _workflow_input_accepted(input_kind, value[name])
                     for name, (input_kind, _) in input_schema.items()
                     if name in value
                 )
@@ -1081,6 +1189,21 @@ def main(argv=None, *, runner=None):
                 "Outputs: PATCH the same comment ID with the scanned body; temporary payload removed on exit.\n"
                 "Exit codes: 0 success; 1 GitHub failure; 2 invalid input, publishing refusal or transport error.\n"
                 "Related: docs/dev/agent-public-text.md; read comment."
+            )
+        if verb == "workflow-run":
+            sub.description = (
+                "Start one allowlisted workflow on an explicit ref.\n"
+                "Inputs are that workflow file's workflow_dispatch inputs, passed as one JSON object."
+            )
+            sub.formatter_class = argparse.RawDescriptionHelpFormatter
+            sub.epilog = (
+                "Examples:\n"
+                "  .venv/bin/python -m scripts.publish workflow-run --repo unit/public --workflow ci.yml --ref main "
+                "--inputs '{\"secret_scan_mode\": \"full-history-audit\"}'\n"
+                "Outputs: a workflow_dispatch request. A choice value must be one of the options that input declares.\n"
+                "  Other workflows and other values are refused before transport.\n"
+                "Exit codes: 0 request accepted; 1 gh failure; 2 invalid input or publishing refusal.\n"
+                "Related: docs/dev/agent-public-text.md."
             )
         if verb == "run-cancel":
             sub.description = (
