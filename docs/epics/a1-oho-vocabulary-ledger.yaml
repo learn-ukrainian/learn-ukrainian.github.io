@@ -6159,7 +6159,7 @@ ledger:
   owning_slug: what-is-it-like
   oho_locator: p0204 Урок 10–12
   gloss: delicious
-  sense: Який має приємний смак; апетитно, дуже смачно.
+  sense: Із приємним смаком; апетитно.
   reuse_schedule:
   - 19
   - 55
@@ -8984,7 +8984,7 @@ ledger:
   owning_slug: verbs-group-two
   oho_locator: p0206 Урок 18–20
   gloss: to translate (he translates)
-  sense: Відтворювати усне або писемне мовлення засобами іншої мови; тлумачити текст.
+  sense: Відтворювати усне або писемне мовлення засобами іншої мови; передавати текст іншою мовою.
   reuse_schedule:
   - 28
   - 55
@@ -16584,7 +16584,7 @@ ledger:
   owning_slug: please-do-this
   oho_locator: p0212 Урок 49–53
   gloss: Crimea (peninsula in Ukraine)
-  sense: Автономна Республіка на півострові на півдні України між Чорним та Азовським морями.
+  sense: Півострів на півдні України, що омивається Чорним та Азовським морями.
   reuse_schedule:
   - 53
   - 55
@@ -18422,7 +18422,7 @@ ledger:
   owning_slug: what-happened
   oho_locator: p0213 Урок 54–59
   gloss: school
-  sense: Стосовний до школи, призначений для учнів або навчання (навчальний зошит, учнівський вік).
+  sense: Стосовний до школи, пов’язаний із навчанням у школі.
   reuse_schedule:
   - 55
 - lemma: аудиторія
@@ -18455,7 +18455,7 @@ ledger:
   owning_slug: what-happened
   oho_locator: p0213 Урок 54–59
   gloss: branch office
-  sense: Самостійна частина установи чи підприємства; підрозділ (наприклад, поштовий пункт).
+  sense: Самостійна частина установи чи підприємства; окремий підрозділ.
   reuse_schedule:
   - 55
 - lemma: дев’ятиповерховий
@@ -19860,7 +19860,7 @@ ledger:
   owning_slug: my-story
   oho_locator: p0215 Урок 68–74
   gloss: to offer
-  sense: Подати ідею, висловити пропозицію або надати допомогу чи послугу.
+  sense: Виявити готовність допомогти кому-небудь або подати задум на розгляд.
   reuse_schedule:
   - 53
   - 55
