@@ -20,6 +20,12 @@ nothing strips, expands, normalizes or resolves it, because each of those can
 name a directory other than the one supplied. A value that cannot be carried
 that way (empty, relative, holding a NUL or an unencodable character, or too
 long for the kernel to resolve whole) is skipped for the next candidate.
+
+An explicit ``--basetemp`` keeps its caller's ownership, but not inside a
+directory the nightly data backup reads (#12153): a pytest base temp holds
+absolute ``*current`` symlinks, which that backup refuses, so one run there
+fails every later backup. Such a base temp is refused before anything is
+created, and the message names the managed scratch to use instead.
 """
 
 from __future__ import annotations
@@ -61,6 +67,9 @@ NAMESPACE = "pytest-runs"
 RUNS_DIRNAME = "runs"
 PRIVATE_MODE = 0o700
 FALLBACK_PREFIX = "lu-pytest-"
+# Top-level directories of a checkout that scripts/config/backup-allowlist.json
+# keeps; scripts/backup-data.sh reads everything beneath them.
+BACKED_UP_ROOTS = (".agent", ".claude", "batch_state", "data")
 SHARED_MEMORY_TEMP = Path("/dev/shm")
 _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 # A read-only mount or a denied write. Any other failure stays loud.
@@ -121,6 +130,23 @@ def _private_shared_root() -> Path | None:
     finally:
         os.close(fd)
     return root
+
+
+def _backed_up_root_holding(basetemp: str) -> Path | None:
+    """The backed-up directory of a checkout that holds ``basetemp``, else None.
+
+    Every ancestor with a ``.git`` directory counts as a checkout (a worktree's
+    ``.git`` is a file), so a repository extraction kept inside ``.agent`` does
+    not hide the primary checkout above it. Symlinks in ``basetemp`` are followed.
+    """
+    path = Path(os.path.realpath(basetemp))
+    for ancestor in path.parents:
+        if not (ancestor / ".git").is_dir():
+            continue
+        top = path.relative_to(ancestor).parts[0]
+        if top in BACKED_UP_ROOTS:
+            return ancestor / top
+    return None
 
 
 def _others_can_rename_in(mode: int) -> bool:
@@ -463,7 +489,16 @@ def _allocate_run() -> TaskScratch:
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config: pytest.Config) -> None:
     """Hold one invocation lock until teardown; explicit base temps retain their owner."""
-    if hasattr(config, "workerinput") or config.option.basetemp is not None:
+    if hasattr(config, "workerinput"):
+        return
+    if config.option.basetemp is not None:
+        held_by = _backed_up_root_holding(str(config.option.basetemp))
+        if held_by is not None:
+            raise pytest.UsageError(
+                f"--basetemp {config.option.basetemp} is inside {held_by}, which the data backup reads "
+                "and refuses for the absolute symlinks pytest leaves there. Omit --basetemp, or put it under "
+                "$TMPDIR, the managed scratch."
+            )
         return
     scratch = _allocate_run()
     # Pytest recreates --basetemp. Keep ownership metadata outside that payload.
