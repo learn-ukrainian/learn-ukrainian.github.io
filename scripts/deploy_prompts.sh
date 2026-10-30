@@ -199,11 +199,67 @@ materialize_agy_rules() {
     local script status
     script="$(mktemp "${TMPDIR}/agy-rules.XXXXXX.py")"
     cat > "$script" <<'PY'
+import contextlib
 import json
+import os
+import secrets
+import stat
 import sys
 from pathlib import Path
 
 root, agent_root = Path(sys.argv[1]), Path(sys.argv[2])
+sys.path.insert(0, str(root / "scripts" / "deploy"))
+from agent_directory import open_agent_directory
+
+
+def open_child_directory(parent_fd: int, name: str) -> int:
+    """Open one child directory without following a swapped symlink."""
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    try:
+        return os.open(name, flags, dir_fd=parent_fd)
+    except FileNotFoundError:
+        with contextlib.suppress(FileExistsError):
+            os.mkdir(name, dir_fd=parent_fd)
+        return os.open(name, flags, dir_fd=parent_fd)
+
+
+def read_leaf(dir_fd: int, name: str) -> bytes | None:
+    """Read a regular file. A symlink is not a readable leaf."""
+    flags = os.O_RDONLY | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    try:
+        fd = os.open(name, flags, dir_fd=dir_fd)
+    except (FileNotFoundError, OSError):
+        return None
+    try:
+        chunks = []
+        while chunk := os.read(fd, 1024 * 1024):
+            chunks.append(chunk)
+        return b"".join(chunks)
+    finally:
+        os.close(fd)
+
+
+def write_leaf(dir_fd: int, name: str, blob: bytes) -> None:
+    """Replace one directory entry. The replacement does not follow a symlink."""
+    temporary = f".{name}.{os.getpid()}.{secrets.token_hex(8)}.tmp"
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    fd = os.open(temporary, flags, 0o644, dir_fd=dir_fd)
+    try:
+        with os.fdopen(fd, "wb") as destination:
+            destination.write(blob)
+            destination.flush()
+            os.fsync(destination.fileno())
+        os.replace(temporary, name, src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
+    except BaseException:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(temporary, dir_fd=dir_fd)
+        raise
 limit = 24_000
 excluded = ("core.md", "model-assignment.md", "workflow.md")
 source = root / "agents_extensions/shared/rules/core.md"
@@ -252,33 +308,41 @@ for _attempt in range(4):
 if files is None:
     raise SystemExit("AGY rule parts do not fit the rule file limit")
 
-rules_dir = agent_root / "rules"
-rules_dir.mkdir(parents=True, exist_ok=True)
-keep = {name for name, _blob, _body in files}
-for stale in rules_dir.glob("core-part-*.md"):
-    if stale.name not in keep:
-        stale.unlink()
-for name, blob, _body in files:
-    path = rules_dir / name
-    if not path.is_file() or path.read_bytes() != blob:
-        path.write_bytes(blob)
-
-rules_json = agent_root / "rules.json"
-existing = {}
-if rules_json.is_file():
-    loaded = json.loads(rules_json.read_text(encoding="utf-8"))
-    if not isinstance(loaded, dict):
-        raise SystemExit("AGY rules.json must be an object")
-    existing = loaded
-exclude = existing.get("exclude", [])
-if isinstance(exclude, str):
-    exclude = [exclude]
-if not isinstance(exclude, list) or any(not isinstance(item, str) for item in exclude):
-    raise SystemExit("AGY rules.json exclude must be a list of strings")
-existing["exclude"] = sorted(set(exclude).union(excluded))
-rendered = (json.dumps(existing, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
-if not rules_json.is_file() or rules_json.read_bytes() != rendered:
-    rules_json.write_bytes(rendered)
+agent_fd = open_agent_directory(str(agent_root))
+try:
+    rules_fd = open_child_directory(agent_fd, "rules")
+    try:
+        keep = {name for name, _blob, _body in files}
+        for stale in os.listdir(rules_fd):
+            if not (stale.startswith("core-part-") and stale.endswith(".md")) or stale in keep:
+                continue
+            info = os.stat(stale, dir_fd=rules_fd, follow_symlinks=False)
+            if not (stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode)):
+                raise SystemExit(f"AGY rule part {stale} is not a file")
+            os.unlink(stale, dir_fd=rules_fd)
+        for name, blob, _body in files:
+            if read_leaf(rules_fd, name) != blob:
+                write_leaf(rules_fd, name, blob)
+        current = read_leaf(agent_fd, "rules.json")
+        existing = {}
+        if current is not None:
+            loaded = json.loads(current.decode("utf-8"))
+            if not isinstance(loaded, dict):
+                raise SystemExit("AGY rules.json must be an object")
+            existing = loaded
+        exclude = existing.get("exclude", [])
+        if isinstance(exclude, str):
+            exclude = [exclude]
+        if not isinstance(exclude, list) or any(not isinstance(item, str) for item in exclude):
+            raise SystemExit("AGY rules.json exclude must be a list of strings")
+        existing["exclude"] = sorted(set(exclude).union(excluded))
+        rendered = (json.dumps(existing, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+        if current != rendered:
+            write_leaf(agent_fd, "rules.json", rendered)
+    finally:
+        os.close(rules_fd)
+finally:
+    os.close(agent_fd)
 PY
     "$PROJECT_PYTHON" "$script" "$PROJECT_ROOT" .agent && status=0 || status=$?
     rm -f "$script"
