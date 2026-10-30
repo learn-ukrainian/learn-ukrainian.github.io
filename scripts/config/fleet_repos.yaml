@@ -7,6 +7,12 @@
 # Control plane (batch_state, Monitor, fleet-comms) remains on the public
 # primary that owns `scripts/dispatch.py`. `--repo` retargets git worktree
 # creation and `gh` remotes only.
+#
+# `verdict_recorder` (required, boolean) says whether the repository's PRs carry
+# review verdicts from scripts/review/record_cf_verdict.py. When true,
+# `python -m scripts.publish pr-merge` refuses a head without a recorded
+# exact-head cross-family APPROVE; when false, a head with no recorded verdict
+# keeps the publisher's older behaviour.
 
 version: 1
 
@@ -16,14 +22,17 @@ repos:
     local_name: learn-ukrainian
     transport: ssh
     role: public-monorepo
+    verdict_recorder: true
     default: true
   infra-private:
     github: learn-ukrainian/learn-ukrainian-infra-private
     local_name: learn-ukrainian-infra-private
     transport: https
     role: private-infra
+    verdict_recorder: true
   hramatka:
     github: learn-ukrainian/hramatka
     local_name: hramatka
     transport: ssh
     role: private-product
+    verdict_recorder: false

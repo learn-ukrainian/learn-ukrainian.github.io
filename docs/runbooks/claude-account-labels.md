@@ -63,9 +63,9 @@ the worker runs on. For label `b` the adapter
 - passes `--setting-sources project,local`, which turns the login directory's
   user scope off: its env, key helper, hooks, permission rules, plugins and
   user MCP servers are not loaded as settings, and the worker gets the harness
-  flags and checkout settings. The flag does not stop every reader: Claude Code
-  still reads some names from that file directly (`autoMode`, see below), which
-  is why the file is held to the allowlist. Restrictive user rules are dropped
+  flags and checkout settings. The flag has not stopped every reader: Claude
+  Code 2.1.300 read some names from that file directly (`autoMode`, see below),
+  which is why the file is held to the allowlist. Restrictive user rules are dropped
   too; the task record carries `claude_account_user_scope_omitted: true`;
 - runs `claude auth status` (JSON and text) with the worker's settings
   arguments, working directory and environment: the JSON must name the
@@ -189,9 +189,27 @@ env -i PATH="$PATH" HOME=<empty dir> CLAUDE_CONFIG_DIR=<fixture login dir> \
 
 prints a JSON object whose four lists are exactly the four fixture lists. With
 the fixture `settings.json` moved away, none of the fixture values appear.
-`tests/agent_runtime/test_claude_account_worker.py::test_real_cli_reads_auto_mode_whatever_the_setting_sources`
-runs the same check with the labelled run's own `--settings` and
-`--setting-sources` arguments, then requires the guard to refuse.
+
+Claude Code 2.1.314 (2026-10-30) honours the flag here: the same command
+prints the built-in lists (`claude auto-mode defaults`), and the classifier's
+user settings getter now returns nothing when the user source is off. Without
+the flag, or with `--setting-sources user`, the fixture lists still apply, as
+do lists passed through `--settings`. The refusal stays: the file's lists are
+classifier policy wherever its scope loads, an earlier CLI applied them under
+the labelled arguments, and the labelled contract forbids them either way.
+`tests/agent_runtime/test_claude_account_worker.py::test_real_cli_unloads_the_labelled_user_auto_mode`
+loads the fixture lists with the user scope on, shows that the labelled run's
+own `--settings` and `--setting-sources` arguments leave the built-in lists,
+then requires the guard to refuse.
+
+Which lists a dispatched worker gets (2.1.314): a default-label worker loads
+the host's user settings, so its `auto-mode config` carries the host's
+`autoMode` entries. A labelled worker gets the built-in lists, as it did on
+2.1.300, because its login directory may not carry `autoMode`. Neither consults
+these lists today: the classifier runs only in `auto` and `plan` modes, and the
+harness launches Claude workers and reviewers in `dontAsk` (read-only runs in the
+print-mode default, `danger` runs with permissions skipped), with no
+`defaultMode` in the host or checkout settings.
 
 If a labelled login refuses at dispatch with
 
@@ -262,6 +280,26 @@ last-wins) is that `settings.json` path: flag settings apply under
 file, and the launch guard recomputes it. No plan is classified: Claude Code
 does not use a helper's key to fetch organisational policy (`claude doctor`:
 "apiKeyHelper keys are not used for it").
+
+### Spend cap and prompt cache
+
+An API-key run is billed per token, so every dispatch on `kk` or `szb` passes
+Claude Code `--max-budget-usd` (print mode stops the run at that spend). The
+default is `CLAUDE_API_KEY_BUDGET_USD` in `scripts/agent_runtime/attempt_boundary.py`,
+beside the label list: 20 USD per run for each label. A dispatch can lower it with
+`dispatch.py dispatch --max-budget-usd <amount>`; an amount above the configured
+one, a non-positive, non-numeric or finer-than-a-cent one, or a label with no configured amount
+refuses before any worktree exists, naming the account
+(`claude_account_budget_cap_invalid`, `claude_account_budget_cap_unresolved`). The
+flag on a subscription label (`a`, `b`) or another seat is refused; those runs are
+unchanged and carry no cap.
+
+Workspace-write runs on an API-key label also set
+`CLAUDE_CODE_PROMPT_CACHE_TTL=1h`. Print mode gives an API key the 5 minute cache
+lifetime (only subscription logins get an hour), so a code worker whose tests run
+longer than 5 minutes between model requests would pay for the cache write again
+each time. Read-only runs are short and keep the default. See
+[Claude Code prompt caching](https://code.claude.com/docs/en/prompt-caching).
 
 Limits: an API-key label is never the fleet-wide default (the default file
 names `a` or `b` only); the ordinary runtime adapter and sealed review attempts

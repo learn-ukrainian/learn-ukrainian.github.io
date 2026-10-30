@@ -29,7 +29,9 @@ DEFAULT_REPO_KEYS = ("public", "infra-private")
 _ACTIVE = {"spawning", "running"}
 _GH_TIMEOUT_SECONDS = 60
 _PR_LIMIT = 200
-_PR_FIELDS = "number,title,headRefName,isCrossRepository,isDraft,url"
+# ``headRefOid`` lets the ownerless alert fetch the head commit's X-Agent trailer. Never list
+# ``commits`` here: with 200 PRs it exceeds GitHub's GraphQL node limit.
+_PR_FIELDS = "number,title,headRefName,headRefOid,isCrossRepository,isDraft,url"
 
 
 @dataclass(frozen=True)
@@ -105,7 +107,7 @@ def fetch_open_prs(slug: str) -> list[dict]:
     """Open PRs of one repository; raises RuntimeError when GitHub cannot be read."""
     try:
         proc = github_client.run(
-            ["gh", "pr", "list", "--repo", slug, "--state", "open", "--limit", str(_PR_LIMIT), "--json", _PR_FIELDS],
+            ["gh", "pr", "list", "--repo", slug, "--state", "open", "--limit", str(_PR_LIMIT + 1), "--json", _PR_FIELDS],
             capture_output=True, text=True, check=False, timeout=_GH_TIMEOUT_SECONDS,
         )
     except (subprocess.SubprocessError, OSError) as exc:
@@ -116,8 +118,8 @@ def fetch_open_prs(slug: str) -> list[dict]:
         prs = None
     if not isinstance(prs, list) or not all(_usable_pr(pr) for pr in prs):
         raise RuntimeError(f"cannot list open PRs of {slug}: {(proc.stderr or '').strip()[:200]}")
-    if len(prs) >= _PR_LIMIT:
-        raise RuntimeError(f"{slug} has at least {_PR_LIMIT} open PRs; the list may be truncated")
+    if len(prs) > _PR_LIMIT:  # one extra row is requested, so a full 200 is a complete list
+        raise RuntimeError(f"{slug} has more than {_PR_LIMIT} open PRs; the list may be truncated")
     return prs
 
 

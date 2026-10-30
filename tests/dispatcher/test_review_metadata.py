@@ -3,6 +3,7 @@
 import json
 import os
 import subprocess
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
 
@@ -250,3 +251,26 @@ def test_typed_dispatch_without_a_reviewed_change_checks_no_branch_authorship(di
 
     monkeypatch.setattr(checks, "check_branch_author_families", unexpected)
     dispatch("--mode", "read-only", *flags, "--pinned-head", "a" * 40, agent="codex", model="gpt-6.1-sol")
+
+
+def test_fourth_default_tier_review_dispatch_is_refused_without_any_recorded_verdict(dispatch, monkeypatch, capsys):
+    """Defect class: unbounded review spend through unrecorded rounds (#12098)."""
+    heads = iter(f"{index}" * 40 for index in range(1, 5))
+    monkeypatch.setattr(git, "worktree_plan", lambda *a: (Path("/nonexistent"), "codex/review", next(heads)))
+    review = ("--mode", "read-only", "--branch", "codex/fix", "--pr", "42", "--risk", "medium",
+              "--require-review-verdict", "--prompt", "Review this change")
+    for round_number in (1, 2, 3):
+        assert cli.main(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", "--task-id", f"round-{round_number}",
+                         *review]) == 0
+    # GitHub knows the PR at the fourth head, with a default-tier diff and no recorded verdict at all.
+    monkeypatch.setattr(cf, "_run_json", lambda args, **_k: dict(headRefOid="4" * 40, headRefName="codex/fix",
+                                                                 state="OPEN"))
+    monkeypatch.setattr(cf, "_review_repository_root", lambda *_a: Path("/nonexistent"))
+    monkeypatch.setattr(cf, "pr_review_facts", lambda *_a, **_k: SimpleNamespace(changed_paths=("docs/readme.md",),
+                                                                                 scope_paths=()))
+    monkeypatch.setattr(cf.GitHubAdapter, "identity", lambda self: "fleet")
+    monkeypatch.setattr(cf.GitHubAdapter, "comments", lambda self, repository, number: [])
+    assert cli.main(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", "--task-id", "round-4", *review]) == 2
+    assert "review dispatch refused: REVIEW_BUDGET_EXHAUSTED: PR #42 already has verdicts at 3 heads (3 dispatched " \
+           "with no recorded verdict" in capsys.readouterr().err
+    assert store.read("round-4", missing_ok=True) is None

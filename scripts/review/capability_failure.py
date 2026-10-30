@@ -23,9 +23,10 @@ recording authority may publish this classification for the run instead.
    exactly from the record and reply, and refuses a missing event, an event
    with no run, several events for one run, or an event beside a published
    verdict. The verdict recorder refuses to publish a verdict for a classified
-   run. Round counting and the merge-queue keeper read only verdict markers, so
-   a capability failure opens no round, approves nothing, rejects nothing and
-   fills no reviewer seat: every required review still has to happen.
+   run. Round counting skips a classified run and the merge-queue keeper reads
+   only verdict markers, so a capability failure opens no round, approves
+   nothing, rejects nothing and fills no reviewer seat: every required review
+   still has to happen.
 
 Cooperative threat model, as in ``scripts/agent_runtime/bounded_advisory.py``:
 the authority is recorded, not authenticated, so a process that rewrites task

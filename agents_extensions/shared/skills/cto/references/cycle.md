@@ -64,14 +64,18 @@ never fine.
    PRs, 2 is unknown). It is the replacement-owner check `scripts.fleet.pr_owner_check` with
    accepted handoffs counted, and an owner whose supervisor cannot be observed is unknown, not
    ownerless. Dispatch an owner for every ownerless PR, replacing any owner that ended failed,
-   timed out or was cancelled. Ownership is the live task record or an accepted handoff, never
+   timed out or was cancelled. Ownership is the live task on the PR branch, the running task
+   named by the X-Agent trailer on the PR head, an accepted handoff, or recorded custody, never
    the author or branch prefix. The merge-queue keeper runs the same check every 5 minutes. It
    alerts the CTO inbox when a PR has had no live owning task for 15 minutes, and repeats the
    alert hourly. Re-seat each alerted PR this cycle with one successor (the integration owner
    for queue work in CTO-only mode). Start the successor's brief with
-   `scripts.orchestration.pr_ownership accept --pr <N>`. The alert clears only on that recorded
-   acceptance, or when the PR closes; `pr_ownership status` lists the alerts still
-   outstanding. The successor inherits the PR's review budget and the head's rerun allowance.
+   `scripts.orchestration.pr_ownership accept --pr <N>`. A PR waiting on a named decision,
+   with no live task, is recorded from this seat with no dispatch task:
+   `accept --pr <N> --reason "<why>" --decision-owner "<who>"`. The alert clears on that
+   acceptance or custody, or when the PR closes; `--release` ends recorded custody, and
+   `pr_ownership status` lists the alerts still outstanding. The successor inherits the PR's
+   review budget and the head's rerun allowance.
    A queue custodian also covers ejection, stale approval, merge confirmation and closeout for
    the owners it releases ([pr-watch](../../full-send/references/pr-watch.md#queue-custody)).
 5. **Live workers.** Active dispatches from the Monitor API, then

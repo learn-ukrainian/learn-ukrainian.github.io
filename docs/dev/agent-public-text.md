@@ -259,6 +259,14 @@ pending check states refuse the merge. `AGENT_NO_MERGE=1` refuses it before
 any transport. A ready merge pins the observed head with `--match-head-commit`.
 The hook recognises the publisher command and uses the same readiness parser.
 
+`pr-merge` also reads the head's recorded review verdicts
+(`scripts/review/record_cf_verdict.py`). A rejection, an incomplete seat set or
+unverifiable evidence refuses the merge. Each row of
+`scripts/config/fleet_repos.yaml` sets `verdict_recorder`: where it is `true`, a
+head with no recorded exact-head cross-family APPROVE is refused too; where it
+is `false`, a head with no recorded verdict is not. A missing or non-boolean
+setting refuses.
+
 After readiness, `pr-merge` reads GitHub's default squash subject and body
 for the pinned head (`viewerMergeHeadlineText` and `viewerMergeBodyText`).
 An omitted subject or body is filled with that default and sent explicitly,

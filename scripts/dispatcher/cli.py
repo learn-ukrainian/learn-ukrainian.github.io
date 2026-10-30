@@ -86,6 +86,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("review-author-model", None, "Author model for family check (default: no review check)"),
         ("codex-account", None, "Codex account: sub or api (default: sub; api requires a private codex_accounts.json binding)"),
         ("claude-account", None, "Claude account: subscription a or b, or API key kk or szb (default: inherited configuration)"),
+        ("max-budget-usd", None, "Spend cap in USD for a Claude API-key account, at most its configured amount "
+         "(default: that amount)"),
         ("provider", None, "Explicit upstream, e.g. openrouter (default: native)"),
         ("output-schema", None, "Codex-only JSON object schema: repo-relative or absolute readable file (default: none)"),
         ("research-role", None, "Research role metadata (default: none)"),
@@ -270,6 +272,11 @@ def _dispatch(args) -> int:
     except rules_core.RulesCoreMissing as exc:
         raise ValueError(f"dispatch refused: {exc}; the rules core is required.") from None
     agent = ALIASES.get(args.agent, args.agent)
+    if agent == "agy":
+        # The requested Claude id is the catalog's AGY wire id, not the bare catalog id.
+        from scripts.dispatcher.providers.agy import transport_model
+
+        args.model = transport_model(args.model)
     # An unknown Claude account label reaches admission, which refuses it typed (claude_account_unknown).
     if agent not in providers.PROVIDERS:
         aliases = ", ".join(f"{name}={target}" for name, target in ALIASES.items())
@@ -286,6 +293,8 @@ def _dispatch(args) -> int:
         raise ValueError("invalid process deadline or conflicting existing-worktree options")
     account_fields = admission.claude_account(agent, args.claude_account)
     args.claude_account = account_fields.get("claude_account", args.claude_account)
+    if admission.claude_budget(args.claude_account, args.max_budget_usd) is None and args.max_budget_usd is not None:
+        raise ValueError("--max-budget-usd applies only to a Claude API-key account")
     account_fields.update(admission.codex_account(agent, args.codex_account))
     args.codex_account = account_fields.get("codex_account")
     if args.print_advisory_binding:
@@ -381,6 +390,11 @@ def _dispatch(args) -> int:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
         return 0
+    # A review round is spent at dispatch, so the budget is checked here and not only when a verdict is recorded.
+    if args.mode == "read-only" and (args.pr or args.branch) and not args.advisory_role and (
+        admission.review_typed(vars(args)) or args.risk or args.review_mode
+    ):
+        checks.check_review_budget(args, info, sha)
     with host_admission.reserve(
         task_id, args.mode, decision, agent=agent, force_reason=force_reason,
         disk_guard=lambda: not (args.worktree is not None and (worktree / ".git").exists()),

@@ -75,11 +75,13 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
    "$PY" scripts/dispatch.py dispatch \
      --agent "$REVIEW_AGENT" --model "$REVIEW_MODEL" --effort high \
      --mode read-only --worktree --task-id "$REVIEW_TASK" \
-     --prompt-file "$REVIEW_BRIEF" --branch "$BRANCH" --pinned-head "$HEAD_SHA" \
+     --prompt-file "$REVIEW_BRIEF" --branch "$BRANCH" --pinned-head "$HEAD_SHA" --pr "$PR" \
      --review-profile "$REVIEW_PROFILE" --review-author-model "$AUTHOR_MODEL" --risk "$RISK" \
      --review-mode cross_family --require-review-verdict
    ```
 
+   The dispatcher refuses a review past the PR's round budget, counting every review dispatched
+   for the PR whether or not its verdict was recorded ([policy](references/policy.md#budget)).
    Stdout is two lines: the task id, then the run nonce. Record both.
 4. **Wait on that task and nonce.** Never re-dispatch.
 
@@ -137,8 +139,8 @@ silence or approval proves nothing. Making it mandatory needs the operator's app
 ## Review profiles
 
 - `code` and `infra`: this skill as written.
-- `ukrainian`: two independent cross-family seats and tool-verified findings, seated from
-  [ukrainian](references/ukrainian.md) instead of the resolver; the rest of this skill applies.
+- `ukrainian`: the independent cross-family seats named in
+  [ukrainian](references/ukrainian.md), with tool-verified findings, seated from that page instead of the resolver; the rest of this skill applies.
 
 ## Stop and report
 

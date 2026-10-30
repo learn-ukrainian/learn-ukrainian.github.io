@@ -7,17 +7,25 @@ cards, dataset rows). What blocks, reporting by class and evidence stay in
 
 ## Seats
 
-- **Two independent reviewers from two different families, neither in the author's family.**
-  Each reviews the same exact head from the same frozen brief without the other's findings.
-- Default, and for an Anthropic author: Gemini (AGY) + Sol. Author OpenAI: Gemini (AGY) +
-  Opus 5.5. Author Google: Sol + Opus 5.5. Any other author: Gemini (AGY) + Sol.
+- **Reviewers are independent and outside the author's family.**
+  Each named seat reviews the same exact head from the same frozen brief without another seat's findings.
+
+| Author | Seats |
+| --- | --- |
+| Anthropic, or any author outside OpenAI and Google | Gemini (AGY) + Sol |
+| OpenAI | Gemini (AGY) |
+| Google | Sol |
+
+- No Claude seat for any author.
+- Every seat keeps the Sources tools and the exact-head recording rule.
+- A reply too long for one answer is split into chunks of at most 250 answer rows, never splitting an activity. The seat's verdict is the union of the chunks, checked by the unchanged comparator over every row.
 - Grok is not a language seat. Native Grok dispatch is retired. Cursor `grok-4.7-high`
   stays off language seats (`model-assignment.md`, Grok language routing;
   `scripts/config/model_catalog.yaml` review profiles). Admitting Grok via Cursor for Ukrainian needs a
   separate catalog change backed by the measurement below (Grok 25/27, Sources tools
   reachable).
   Muse is advisory only, never a seat, until it can call the Sources tools.
-- `closeout_cli resolve-reviewer` refuses content profiles, so these pairs are the seat source.
+- `closeout_cli resolve-reviewer` refuses content profiles, so this table is the seat source.
   Dispatch each seat with `--review-profile ukrainian` and record each verdict.
 
 ## Findings

@@ -673,8 +673,8 @@ def review_dispatch(tmp_path):
         "review_profile": "ukrainian",
         "review_author_model": "gpt-6.1-sol",
         "effort": "high",
-        "model": "claude-opus-5-5",
-        "agent": "claude",
+        "model": "gemini-3.8-flash-high",
+        "agent": "agy",
         "finished_at": "2026-10-03T00:00:00Z",
         "result_file": str(result),
         "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
@@ -718,7 +718,7 @@ def review_dispatch(tmp_path):
 def test_reviewed_binding_derives_identity_and_approving_subject(review_dispatch):
     tasks, pool, _record, _result, task, _verdict = review_dispatch
     bound = bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, "gpt-6.1-sol")
-    assert bound["reviewer"]["family"] == "anthropic"
+    assert bound["reviewer"]["family"] == "google"
     assert bound["reviewer"]["model"] == task["model"]
     assert bound["span"] == "target"
 

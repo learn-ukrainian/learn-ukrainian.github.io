@@ -70,7 +70,7 @@ Never use a fixed unordered list that can pick the author’s family.
 | Moonshot (K3 retired, Cursor Composer) | Grok, OpenAI, Anthropic, GLM local, Gemini | Composer self-family; K3 is not a reviewer |
 | Zhipu (GLM) | Grok, OpenAI, Anthropic, Gemini | GLM self-family |
 
-**Task-family qualification overrides:** language CF must be LANGUAGE-LANES-qualified; FOLK remains GPT↔Claude per folk rubric.
+**Task-family qualification overrides:** language CF must be LANGUAGE-LANES-qualified; FOLK uses the review-loop ukrainian seats, with no Claude seat, per the folk rubric.
 
 ---
 

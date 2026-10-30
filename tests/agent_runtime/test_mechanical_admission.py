@@ -53,7 +53,7 @@ def test_routine_fallback_and_recon_peer_preserve_envelope_routes():
 def test_standalone_catalog_resolves_haiku_without_runtime_package(tmp_path, entrypoint):
     review = tmp_path / "scripts/review"
     review.mkdir(parents=True)
-    for name in ("model_catalog.py", "role_resolution.py", "family_exclusions.py", "__init__.py"):
+    for name in ("model_catalog.py", "role_resolution.py", "family_exclusions.py", "ukrainian_seats.py", "__init__.py"):
         shutil.copyfile(ROOT / "scripts/review" / name, review / name)
     config = tmp_path / "scripts/config"
     config.mkdir()

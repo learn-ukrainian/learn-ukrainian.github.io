@@ -67,6 +67,9 @@ CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS = ("a", "b")
 # only an ``apiKeyHelper``, the run's one credential, billed to that key.
 CLAUDE_API_KEY_ACCOUNT_LABELS = ("kk", "szb")
 CLAUDE_ACCOUNT_LABELS = (*CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS, *CLAUDE_API_KEY_ACCOUNT_LABELS)
+# Per-dispatch spend cap in USD for each API-key label, passed as ``--max-budget-usd``. A
+# dispatch may lower it, never raise it; a label with no entry here refuses (``resolve_claude_budget_usd``).
+CLAUDE_API_KEY_BUDGET_USD = {"kk": 20.0, "szb": 20.0}
 ENV_CLAUDE_ACCOUNTS_FILE = "LU_CLAUDE_ACCOUNTS_FILE"
 CLAUDE_ACCOUNTS_FILE_NAME = "claude_accounts.json"
 CLAUDE_ACCOUNTS_SCHEMA_VERSION = 1
@@ -147,7 +150,7 @@ CLAUDE_LABELLED_ENV_ALLOWLIST = frozenset(
     }
 )
 # Top-level user settings keys the login directory may carry. A labelled run
-# turns that scope off, but Claude Code still reads some names from it
+# turns that scope off, but Claude Code 2.1.300 read some names from it
 # directly: ``autoMode`` (auto mode classifier rules) is one, so it is not
 # here. Each key's reason is in docs/runbooks/claude-account-labels.md.
 _CLAUDE_LABELLED_USER_SETTINGS_KEYS = frozenset(
@@ -220,6 +223,8 @@ CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
         "claude_account_record_conflict",
         "claude_account_forward_unsupported",
         "claude_account_api_key_route_unsupported",
+        "claude_account_budget_cap_unresolved",
+        "claude_account_budget_cap_invalid",
         *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
         *(
             f"claude_account_{kind}_{failure}"
@@ -267,6 +272,30 @@ def resolve_claude_account_label(raw: object) -> str:
     if isinstance(raw, str) and raw in CLAUDE_ACCOUNT_LABELS:
         return raw
     raise ClaudeAccountRefused("claude_account_unknown")
+
+
+def resolve_claude_budget_usd(label: str, requested: object = None) -> float | None:
+    """The ``--max-budget-usd`` amount for a run on ``label``; ``None`` for a subscription label.
+
+    An API-key label is billed per token, so its run always has a cap: the label's configured
+    amount, or the lower ``requested`` one. A label with no configured amount, or a request that is
+    not a positive finite number of whole cents or exceeds the configured amount, refuses.
+    """
+    if label not in CLAUDE_API_KEY_ACCOUNT_LABELS:
+        return None
+    cap = CLAUDE_API_KEY_BUDGET_USD.get(label)
+    if not isinstance(cap, (int, float)) or isinstance(cap, bool) or not 0 < cap < float("inf"):
+        raise ClaudeAccountRefused("claude_account_budget_cap_unresolved")
+    if requested is None:
+        return float(cap)
+    try:
+        amount = float(requested)  # type: ignore[arg-type]  # a CLI string or a number
+    except (TypeError, ValueError):
+        raise ClaudeAccountRefused("claude_account_budget_cap_invalid") from None
+    # The flag is passed in whole cents, so a finer amount would round, possibly to a zero cap.
+    if not 0 < amount <= cap or round(amount, 2) != amount:
+        raise ClaudeAccountRefused("claude_account_budget_cap_invalid")
+    return amount
 
 
 def _user_config_file(environ: Mapping[str, str] | None, override: str, name: str) -> Path | None:
@@ -514,8 +543,8 @@ def _refuse_unlisted_env(data: dict, code: str) -> None:
 def _refuse_claude_settings_credential_source(directory: int) -> None:
     """Refuse a login directory whose user settings carry anything off the allowlist (#10619).
 
-    A labelled run turns this scope off, yet Claude Code reads some names
-    from it regardless (``autoMode``), so any key, helper, provider switch,
+    A labelled run turns this scope off, yet Claude Code 2.1.300 read some
+    names from it regardless (``autoMode``), so any key, helper, provider switch,
     endpoint, classifier rule or unknown setting refuses. Only
     names are inspected; no value is kept or reported. The file may be
     readable by others, not writable by them.

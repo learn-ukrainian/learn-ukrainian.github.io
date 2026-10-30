@@ -25,6 +25,7 @@ from scripts.dispatcher.providers import muse
 from scripts.dispatcher.types import TaskSpec
 from scripts.lib import rules_core
 from scripts.review.record_cf_verdict import _review_branch
+from tests.dispatcher.worker_reap import reap_root
 
 SOURCE = Path(__file__).resolve().parents[2]
 
@@ -115,11 +116,17 @@ def sandbox(tmp_path, hermetic_monitor):
         return task_id, nonce
 
     def settle(task, expected=0):
-        return json.loads(
+        deadline = time.monotonic() + 15
+        record = json.loads(
             cli(
                 "wait", task[0], "--run-nonce", task[1], "--timeout", "15", "--poll-interval", "0.02", expected=expected
             ).stdout
         )
+        # A terminal record precedes supervisor exit; recovery must see its claim released (#12121).
+        while worker._identity(record["pid"]) == record["process_start"]:
+            assert time.monotonic() < deadline, "supervisor still alive after settlement"
+            time.sleep(0.02)
+        return record
 
     def review_models(*models):
         """File the stub reviewer ``models`` under OpenAI in the sandbox catalog copy only."""
@@ -139,12 +146,12 @@ def sandbox(tmp_path, hermetic_monitor):
 
     box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle,
                           review_models=review_models, review_target=review_target)
-    yield box
-    # Reap detached test supervisors, including a test interrupted by an assertion.
-    for path in tasks.glob("*.json"):
-        record = json.loads(path.read_text())
-        if record["status"] in store.ACTIVE and worker._identity(record.get("pid")) == record.get("process_start"):
-            cli("cancel", record["task_id"], "--run-nonce", record["run_nonce"])
+    try:
+        yield box
+    finally:
+        # cancel() only signals a supervisor that is still the recorded process. The provider
+        # is its own session, and pytest-timeout's os._exit never reaches this fixture.
+        reap_root(tmp_path)
 
 
 def test_supervise_restores_signal_handlers_after_cleanup(sandbox, monkeypatch):
@@ -963,6 +970,35 @@ def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_a
     release.touch()
     settled = sandbox.settle(author, expected=1)
     assert settled["resolved_model_known"] is attested
+
+
+def test_agy_stream_from_another_model_family_settles_as_a_failure(sandbox):
+    """Defect: a silently substituted model was credited as the requested one."""
+    binary_dir = sandbox.repo.parent / "bin"
+    binary_dir.mkdir()
+    events = [
+        {"event": "init", "init": {"model": "gemini-3.8-flash-high"}},
+        {"event": "result", "result": {"status": "SUCCESS", "response": "done"}},
+    ]
+    stdout = "\n".join(json.dumps(event) for event in events) + "\n"
+    executable = binary_dir / "agy"
+    executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r}, end='')\n")
+    executable.chmod(0o755)
+    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+    dispatched = sandbox.cli(
+        "dispatch", "--agent", "agy", "--model", "claude-sonnet-5-5", "--prompt", "Reply with one word.",
+        "--mode", "workspace-write",
+    )
+    record = sandbox.settle(dispatched.stdout.splitlines(), expected=1)
+    assert record["status"] == "failed"
+    assert record["model"] == "claude-sonnet-5-5-high"
+    assert record["resolved_model"] == "gemini-3.8-flash-high"
+    assert record["resolved_model_known"] is True
+    assert record["resolved_model_source"] == "agy-stream-json"
+    assert record["error"] == (
+        "agy_model_identity_unverified: "
+        "requested claude-sonnet-5-5-high (anthropic), attested gemini-3.8-flash-high (google)"
+    )
 
 
 @pytest.mark.parametrize(
@@ -2968,6 +3004,7 @@ def test_provider_process_lingering_after_its_final_result_settles_with_that_res
     log = sandbox.repo / "provider.log"
     code = (
         "import json, sys, time\n"
+        "print(json.dumps({'event': 'init', 'init': {'model': 'gemini-3.8-flash-high'}}), flush=True)\n"
         "print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', "
         "'response': 'literal final response'}}), flush=True)\n"
         "with open(sys.argv[2], 'a') as log:\n"
@@ -3310,6 +3347,26 @@ def test_dispatch_refuses_claude_account_before_any_side_effect(tmp_path, monkey
     assert f"CLAUDE_ACCOUNT_REFUSED: {code}\n" in err
     assert "fixture-ambient" not in err
     assert not tasks.exists()
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp_path, mode):
+    """An uncapped paid run is the defect: only an API-key label carries ``--max-budget-usd``."""
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_API_KEY_BUDGET_USD
+
+    spec = TaskSpec("cap", "claude", "m", None, mode, tmp_path, tmp_path / "p", tmp_path / "f")
+    spec.prompt_file.write_bytes(b"prompt")
+    build = providers.load("claude").build
+    for label, amount in CLAUDE_API_KEY_BUDGET_USD.items():
+        invocation = build(dataclasses.replace(spec, claude_account=label), {})
+        assert invocation.argv[invocation.argv.index("--max-budget-usd") + 1] == f"{amount:.2f}"
+        assert invocation.env.get("CLAUDE_CODE_PROMPT_CACHE_TTL") == ("1h" if mode == "workspace-write" else None)
+    lowered = dataclasses.replace(spec, claude_account="kk", options={"max_budget_usd": "2.5"})
+    assert build(lowered, {}).argv[build(lowered, {}).argv.index("--max-budget-usd") + 1] == "2.50"
+    for label in ("a", "b", None):
+        invocation = build(dataclasses.replace(spec, claude_account=label), {})
+        assert "--max-budget-usd" not in invocation.argv
+        assert "CLAUDE_CODE_PROMPT_CACHE_TTL" not in invocation.env
 
 
 def _spawn_refused_record(tmp_path, monkeypatch, task_id):

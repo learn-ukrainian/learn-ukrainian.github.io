@@ -176,8 +176,12 @@ def validate_reviewer_payload(
     if errors:
         first = errors[0]
         path = ".".join(str(p) for p in first.absolute_path) or "(root)"
+        message = first.message
+        if first.validator == "additionalProperties":
+            # Name the allowed fields so the reviewer can correct the reply in the same round.
+            message += f"; allowed: {sorted(first.schema.get('properties', {}))}"
         raise ContractError(
-            f"schema_violation:{path}:{first.message}",
+            f"schema_violation:{path}:{message}",
             exit_code=EXIT_INVALID,
         )
 

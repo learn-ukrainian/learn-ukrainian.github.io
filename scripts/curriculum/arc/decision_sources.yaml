@@ -36,6 +36,12 @@ levels:
       accepted_evidence:
         doc: docs/epics/fresh-build-a1-arc.md
         line: "Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)"
+    - doc: docs/epics/fresh-build-a1-arc.md
+      heading: "## 12. Revision r6 (OHO)"
+      accepted: "2026-10-30"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-a1-arc.md
+        line: "Operator decision 2026-10-30"
   a2:
     - doc: docs/epics/fresh-build-a2-arc.md
       heading: "## 2. Decisions"

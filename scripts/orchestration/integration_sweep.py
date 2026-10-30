@@ -51,6 +51,11 @@ from scripts.common.github_client import GitHubRateLimited, timer
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.publish.github import CF_VERDICT_MARKER_PREFIX, Request, request_run
 from scripts.review.language_lane import is_ukrainian_review
+from scripts.review.ukrainian_seats import (
+    UKRAINIAN_SEAT_FAMILIES,
+    attested_author_families,
+    required_ukrainian_seats,
+)
 
 Runner = Callable[[list[str]], str]
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -91,11 +96,7 @@ REJECTED = frozenset({"CHANGES_REQUESTED", "BLOCKED"})
 # The recorder normalizes APPROVE to APPROVED, but older trailers carry the reviewer's raw token (#10119).
 VERDICT_ALIASES = {"APPROVE": "APPROVED"}
 SUCCESSFUL = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
-# review-loop references/ukrainian.md § Seats: two of the Claude, GPT and Gemini families
-# approve the same head in cross-family review.
-UKRAINIAN_SEAT_FAMILIES = frozenset({"anthropic", "openai", "google"})
-UKRAINIAN_REVIEW_SEATS = 2
-# A Ukrainian-profile head with fewer approving seat families than that; never approval.
+# A Ukrainian-profile head whose recorded seats do not cover the author rule; never approval.
 NEEDS_SEAT = "needs-seat"
 # Recorder headings; a body that opens with one is a verdict record, never informal prose.
 RECORD_HEADINGS = ("### Cross-family review\n", "### Adversarial red-team review\n")
@@ -301,6 +302,10 @@ def parse_marker(body: str) -> dict[str, Any] | None:
     }
     if any(line not in fixed and not FREE_RECORD_LINES.fullmatch(line) for line in readable):
         return None
+    authored = [line for line in readable if line.startswith("Authored by: ")]
+    if len(authored) > 1:
+        return None
+    item["author_models"] = tuple(authored[0].removeprefix("Authored by: ").split(", ")) if authored else ()
     item["verdict"] = VERDICT_ALIASES.get(item["verdict"], item["verdict"])
     return item
 
@@ -423,8 +428,8 @@ def lookup_verdict(
     state = marker["verdict"]
     profiled = [item[2] for item in approvals if is_ukrainian_review(item[2])]
     seats = () if standing else tuple(sorted(ukrainian_seat_families(profiled)))
-    if not standing and profiled and len(seats) < UKRAINIAN_REVIEW_SEATS:
-        # A Ukrainian-profile head is approved only once every seat has approved it (#12020).
+    if not standing and profiled and not required_ukrainian_seats(attested_author_families(profiled)) <= set(seats):
+        # A Ukrainian-profile head is approved only once every required seat has approved it.
         state = NEEDS_SEAT
     return Verdict(
         state,
