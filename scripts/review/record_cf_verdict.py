@@ -1929,12 +1929,15 @@ def budget_exempt_heads(
     login: str,
     *,
     prove: Callable[[str, str], list[str] | None],
+    unrecorded: Iterable[str] = (),
 ) -> dict[str, dict[str, Any]]:
     """The reviewed heads, and ``sha``, that consume no review round, each with its receipt.
 
     A head is exempt when it descends from the last fully approved head before
     its first verdict only through clean merges of the base branch (``prove``,
-    :func:`clean_base_merge_descent`). The exemption changes accounting only:
+    :func:`clean_base_merge_descent`). A head dispatched for review with no
+    recorded verdict (``unrecorded``) is weighed like ``sha``, against the last
+    fully approved head on record. The exemption changes accounting only:
     every head still needs its own exact-head verdict, no approval carries
     forward, a recorded rejection stands, and no verdict is dropped. Exemptions
     are re-proven from Git on every call, so a head whose proof is lost counts.
@@ -1944,8 +1947,7 @@ def budget_exempt_heads(
     for index, marker in markers:
         first.setdefault(marker["sha"], index)
     order = sorted(first.items(), key=lambda item: item[1])
-    if sha not in first:
-        order.append((sha, len(comments)))
+    order.extend((head, len(comments)) for head in dict.fromkeys([*sorted(unrecorded), sha]) if head not in first)
     exempt: dict[str, dict[str, Any]] = {}
     for head, start in order:
         prefix = comments[:start]
@@ -2011,7 +2013,11 @@ def require_review_round_within_budget(
     heads = recorded | (dispatched_heads() if dispatched_heads is not None else frozenset())
     if len(heads) < budget:
         return {}
-    exempt = budget_exempt_heads(comments, sha, login, prove=prove_merge_only) if prove_merge_only else {}
+    exempt = (
+        budget_exempt_heads(comments, sha, login, prove=prove_merge_only, unrecorded=heads - recorded)
+        if prove_merge_only
+        else {}
+    )
     if sha in exempt:
         return {"budget_exemption": {"reason": CLEAN_BASE_MERGE, **exempt[sha]}}
     counted = heads - set(exempt) - repair_heads
@@ -2702,26 +2708,48 @@ def budget_check(
     }
 
 
+def _open_pr_number(repository: str, branch: str) -> int | None:
+    """The number of the one open PR whose head is ``branch``, None when it has none."""
+    matches = _run_json(
+        ["gh", "pr", "list", "--repo", repository, "--state", "open", "--head", branch, "--limit", "2", "--json", "number"]
+    )
+    if not isinstance(matches, list) or len(matches) > 1:
+        raise RecordError("branch must identify at most one open PR; pass --pr N")
+    return matches[0]["number"] if matches else None
+
+
 def dispatch_budget_check(
     repository: str, *, number: int | None, branch: str | None, head: str, task_root: Path
 ) -> dict[str, Any] | None:
     """Refuse a review dispatch at ``head`` once its PR's review dispatches, recorded or not, reach the budget (#12098).
 
-    The dispatcher's own task records name each run's PR or review branch and its head. A head
-    that already has a run opens no round, and while the other dispatched heads stay under the
-    default budget only the task ledger is read. From there the recorder's own decision at the
-    PR's current head applies (:func:`budget_check`), so the PR's tier, a clean base merge, a
-    designated grant or the lineage's repair round may still admit the round. A dispatch that
-    names no PR is counted against the one open PR of its branch.
+    The dispatcher's own task records name each run's PR or review branch and its head
+    (``review_lineage.dispatched_rounds``). A dispatch that names only one of PR and branch has
+    the other read from GitHub first, so runs recorded under either count; with no review run of
+    the repository on record, no round has been spent and nothing more is read. A head that
+    already has a run opens no round, and while the other dispatched heads stay under the default
+    budget the round is admitted. From there the recorder's own decision at the PR's current head
+    applies (:func:`budget_check`), so the PR's tier, a clean base merge, a designated grant or the
+    lineage's repair round may still admit it. A branch with no open PR gets the default budget.
     """
-    from scripts.review.review_lineage import lineage_runs
+    from scripts.review.review_lineage import dispatched_rounds, lineage_runs, review_records
 
-    runs = lineage_runs(task_root, repository=repository, number=number, branch=branch)
-    heads = {run.record.get("worktree_base_sha") for run in runs} - {None}
+    records = review_records(task_root, repository=repository)
+    if not records:
+        return None
+    if number is None and branch is not None:
+        number = _open_pr_number(repository, branch)
+    elif number is not None and branch is None:
+        branch = _pr(repository, "", number)["headRefName"]
+    runs = lineage_runs(task_root, repository=repository, number=number, branch=branch, records=records)
+    heads = dispatched_rounds(runs=runs, comments=(), login="")
     if head in heads or len(heads) < DEFAULT_REVIEW_ROUNDS:
         return None
     if number is None:
-        number = _pr(repository, str(branch), None)["number"]
+        raise RecordError(
+            f"REVIEW_BUDGET_EXHAUSTED: branch {branch} has review dispatches at {len(heads)} heads and no open PR; "
+            f"its budget is {DEFAULT_REVIEW_ROUNDS} rounds; budget end is never approval, escalate instead"
+        )
     return budget_check(repository, number, task_root=task_root, head=head)
 
 

@@ -111,17 +111,13 @@ def _read_run(path: Path, record: Mapping[str, Any]) -> ReviewRun:
     return ReviewRun(task_id, record, reply)
 
 
-def lineage_runs(task_root: Path, *, repository: str, number: int | None, branch: str | None) -> list[ReviewRun]:
-    """Every hot and archived review run of this PR; an archived run is kept beside a hot one.
-
-    A run belongs to the PR by its recorded ``pr`` or its review branch; a dispatch that knows
-    only one of them passes None for the other.
-    """
+def review_records(task_root: Path, *, repository: str) -> list[tuple[Path, dict[str, Any]]]:
+    """Every hot and archived review task record of this repository, with its path."""
     try:
         paths = [*sorted((task_root / ARCHIVE_DIR_NAME).glob("*.json")), *sorted(task_root.glob("*.json"))]
     except OSError as exc:
         raise LineageRefused(f"task ledger unavailable: {exc}") from None
-    runs = []
+    records = []
     for path in paths:
         try:
             record = json.loads(path.read_text(encoding="utf-8"))
@@ -137,9 +133,31 @@ def lineage_runs(task_root: Path, *, repository: str, number: int | None, branch
             record["repository"]
         ) != normalize_repository(repository):
             continue
-        if (number is not None and record.get("pr") == number) or branch in _review_branches(record):
-            runs.append(_read_run(path, record))
-    return runs
+        records.append((path, record))
+    return records
+
+
+def lineage_runs(
+    task_root: Path,
+    *,
+    repository: str,
+    number: int | None,
+    branch: str | None,
+    records: Sequence[tuple[Path, Mapping[str, Any]]] | None = None,
+) -> list[ReviewRun]:
+    """Every hot and archived review run of this PR; an archived run is kept beside a hot one.
+
+    A run belongs to the PR by its recorded ``pr`` or its review branch; a caller that knows
+    only one of them passes None for the other. ``records`` is the caller's own
+    :func:`review_records` read, when it has one.
+    """
+    if records is None:
+        records = review_records(task_root, repository=repository)
+    return [
+        _read_run(path, record)
+        for path, record in records
+        if (number is not None and record.get("pr") == number) or branch in _review_branches(record)
+    ]
 
 
 def _trusted_markers(
@@ -301,8 +319,9 @@ def dispatched_rounds(
     """Each head a review run on record was dispatched at, with its runs' task ids, recorded or not (#12098).
 
     A round is one reviewer dispatch at one exact head (review-loop policy), so a run counts from its
-    dispatch, whatever its status and whether its verdict was ever published. A run whose published
-    capability failure classifies it opens no round. ``exclude_head`` drops the round being decided.
+    dispatch, whatever its status and whether its verdict was ever published. A writing task is not
+    a reviewer dispatch, and a run whose published capability failure classifies it opens no round.
+    ``exclude_head`` drops the round being decided.
     """
     try:
         events = {(e.task, e.started) for e in capability_failure.events(comments, login)}
@@ -313,6 +332,8 @@ def dispatched_rounds(
     for run in runs:
         head = run.record.get("worktree_base_sha")
         if not isinstance(head, str) or not SHA.fullmatch(head) or head == exclude_head:
+            continue
+        if run.record.get("mode") == "workspace-write":
             continue
         if (run.task_id, _started(run.record)) not in events:
             rounds.setdefault(head, []).append(run.task_id)
