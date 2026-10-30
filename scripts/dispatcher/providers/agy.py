@@ -1,6 +1,7 @@
 """AGY headless user-event envelope and terminal result extraction."""
 
 import json
+import math
 import re
 
 from scripts.common.jsonl import jsonl_lines
@@ -9,6 +10,7 @@ from scripts.dispatcher.providers import read_only_refusal
 from scripts.dispatcher.providers.stream_json import model_observer as _observe
 from scripts.dispatcher.providers.stream_json import one_model
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+from scripts.dispatcher.watchdog import deadlines
 
 MODEL_SOURCE = "agy-stream-json"
 
@@ -150,10 +152,24 @@ def terminal_result_observer(stdout_path):
     return observed
 
 
+# AGY moves any command still running after its ``WaitMsBeforeAsync`` (at most 10 s) to a background task, and
+# a headless run waits for background tasks only until its ``--print-timeout`` deadline, counted from launch.
+# There agy 1.4.11 exits 0 with the interim reply as a SUCCESS result, no ``finished_reason`` and nothing on
+# stderr, so a worker waiting on a task it dispatched ended mid-chain (#12156). The deadline is therefore the
+# task's own hard timeout plus this margin: the supervisor's deadline, which settles a cut run as ``timeout``,
+# always comes first, and a task with no hard timeout leaves AGY unbounded too.
+PRINT_TIMEOUT_MARGIN_S = 60
+
+
+def _print_timeout(spec: TaskSpec) -> str:
+    hard_timeout = deadlines(spec.options)[0]
+    return f"{math.ceil(hard_timeout) + PRINT_TIMEOUT_MARGIN_S}s" if hard_timeout > 0 else "0s"
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["agy", "--mode", "auto", "--input-format", "stream-json", "--output-format", "stream-json"]
     argv += ["--model", transport_model(spec.model)]
-    argv += ["--dangerously-skip-permissions", "--print-timeout", "120m"]
+    argv += ["--dangerously-skip-permissions", "--print-timeout", _print_timeout(spec)]
     if spec.mode == "workspace-write":
         argv += ["--log-file", str(spec.final_file.with_suffix(".log"))]
     elif spec.mode == "read-only":

@@ -71,6 +71,10 @@ PY="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/
 3. **Dispatch the reviewer read-only at the exact pushed head**, passing the same
    `$REVIEW_PROFILE`. The dispatcher removes the review worktree when the task settles.
 
+   For bound Contract 1 plan or Contract 2 lesson attempts using `--review-id`, `--attempt-id`
+   and `--review-attempt`, follow [Running a bound attempt](../../../../docs/runbooks/formal-review-attempt-isolation.md#running-a-bound-attempt)
+   exactly. Do not add `--require-review-verdict` to these bound attempts.
+
    ```bash
    "$PY" scripts/dispatch.py dispatch \
      --agent "$REVIEW_AGENT" --model "$REVIEW_MODEL" --effort high \
