@@ -77,6 +77,11 @@ F7_SHELL_OPTIONS = [
     "bash -c \"$OPT\" 'pkill -f worker'",
     "bash -rcfile /dev/null -c 'pkill -f worker'",
     "bash -restricted -c 'pkill -f worker'",
+    "OLDPWD=-c; bash ~- 'pkill -f worker'",
+    "PWD=-c; bash ~+ 'pkill -f worker'",
+    "HOME=-c; bash ~ 'pkill -f worker'",
+    "OLDPWD=-c; bash -e ~- 'pkill -f worker'",
+    "OLDPWD=-c; bash ~- 'pgrep -f worker | xargs kill'",
 ]
 # Review F10: ANSI-C escapes whose Bash meaning the decoder does not model.
 F10_ANSI_C = [
