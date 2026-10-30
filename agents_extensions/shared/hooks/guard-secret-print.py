@@ -1728,34 +1728,38 @@ def _shell_script(args: list[str]) -> list[str]:
 
     # Redirections may precede or sit among the options (`sh 2>/dev/null -c ...`).
     args = _raw_without_redirects(args)
+
+    def unreadable(index: int) -> bool:
+        """Whether Bash may split, drop or reinterpret a word before the script."""
+        word = args[index]
+        if re.fullmatch(r"'[^']*'", word):
+            return False
+        if re.fullmatch(r'"[^"]*"', word):
+            # One argument whose value may be unknown: harmless only as the last word.
+            return index + 1 < len(args) and bool(re.search(r"[\\$`]|__GUARD_SUBSTITUTION_", word))
+        return bool(re.search(r"[\\'\"$`*?\[{]|__GUARD_SUBSTITUTION_", word))
+
     i = 0
     while i < len(args):
         option = _strip_quotes(args[i])
-        if re.search(r"[\\'\"$`*?\[{]|__GUARD_SUBSTITUTION_", option):
-            # An escaped, partly quoted or expanded word (`\+x`, `$FLAGS`) may still become
-            # an option; with more words after it, the script is unreadable.
-            if i + 1 < len(args):
-                return ["__UNDECIDABLE_SECRET_COMMAND__"]
-            break
-        if option in {"-o", "-O", "+O", "--rcfile", "--init-file"}:
-            i += 2
-            continue
-        if option.startswith(("--rcfile=", "--init-file=")):
-            i += 1
-            continue
-        if option.startswith("--"):
-            i += 1
-            continue
-        if option.startswith("-") and not option.startswith("--"):
-            script_index = i + 1 + sum(flag in {"o", "O"} for flag in option[1:])
-            if "c" in option[1:]:
-                return _script_words(args, script_index)
-            i = script_index
-            continue
-        if option.startswith("+"):
+        if option.startswith("+") and option != "+O":
             # Set-style options (`+e`, `+o posix`) are not modelled: the script is unreadable.
             return ["__UNDECIDABLE_SECRET_COMMAND__"]
-        break
+        if option in {"-o", "-O", "+O", "--rcfile", "--init-file"}:
+            end = i + 2
+        elif option.startswith("-"):
+            end = i + 1 + (0 if option.startswith("--") else sum(flag in "oO" for flag in option[1:]))
+        else:
+            # The script file ends the options.
+            end = i + 1
+        # Every word read or skipped here must keep its place and meaning.
+        if any(unreadable(index) for index in range(i, min(end, len(args)))):
+            return ["__UNDECIDABLE_SECRET_COMMAND__"]
+        if not option.startswith(("-", "+")):
+            break
+        if not option.startswith("--") and "c" in option[1:]:
+            return _script_words(args, end)
+        i = end
     return []
 
 
