@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 4c0fc7ee11f6e6a233f7106776d18deea633d317
+  mcp_commit: 3158a61b8404113f9b545cb507a345f4c0c22c98
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
-  sources_db: ae2e7a1d90f8dc19aa63db55c9cacfb1211c705dd26e5e9f4d88e5d0b88ca7cb
+  sources_db: bfac6b0331483b412afdeee4f8eb2c37c6f8e0165e361c56403e9e60f106c838
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
@@ -80,3 +80,33 @@ texts:
     row_sha256: 2eb89a7c1bcf30a54afe73aa9600e1d98eed8b700e56e55f29e758bd07751c37
     section_id: 12961
   supports: Speech sounds versus non-speech sounds and gestures; primer printed page 13.
+- id: T-004
+  quote: 'Алфавіт
+
+    На письмі звуки позначаємо буквами.
+
+    Сукупність букв, розташованих у встановленому для
+
+    певної мови порядку, називають алфавітом (азбукою, абет-
+
+    кою). В українському алфавіті 33 букви.
+
+    За алфавітом розміщують слова у словниках, складають
+
+    списки, каталоги, довідники тощо.
+
+    Зверніть увагу!
+
+    Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо­ .'
+  sha256: 69ab8ccaa747f48d86b105216747b612c41282be3bcfd7b3033d756fde2d0b01
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 86
+    row_sha256: 5d17fe32ef3fdc0d31a28d84f995bac352ce6b7f9ca47cdc1c742a8a016caf50
+    section_id: 38992
+  supports: The alphabet has 33 letters; speech sounds are heard and pronounced, while letters are seen and written. Grounding
+    only, with no requirement to acquire letters in orientation.

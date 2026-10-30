@@ -24,20 +24,20 @@
   "verifier_reads": [],
   "render_contract": {
     "version": 4,
-    "render_checkout": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy",
-    "input_root": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy",
-    "prompts_dir": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy/scripts/review/prompts",
+    "render_checkout": "/home/ops/learn-ukrainian/.worktrees/dispatch/codex/cto-7a97-i8425c-sol",
+    "input_root": "/home/ops/learn-ukrainian/.worktrees/dispatch/codex/cto-7a97-i8425c-sol",
+    "prompts_dir": "/home/ops/learn-ukrainian/.worktrees/dispatch/codex/cto-7a97-i8425c-sol/scripts/review/prompts",
     "templates": {
       "plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
     },
     "template_digest": "sha256:84daaf1143e631518f15fc43368d50646af3b531d7f845a4da57085a12124f50",
-    "server_digest": "sha256:bed6f2bdf808e877fe1326ecc48c4bb19bc412843e850f7cc2a17b02ad2de242",
+    "server_digest": "sha256:bd7a72de7d1c12a18f422ed9c7b57d5886986efc7dcfc2505c325741ec77d7d8",
     "server_components": {
-      "repository": "sha256:8a7d9bb5d3a5165179222bd0129c172ee90d33087a2088a8e6605355a366e5f5",
-      "requirements-lock.txt": "sha256:3e5c02571a48293fe2bde91910f0fed96e4fa8e89c55f0f030c22d3d94c75d96"
+      "repository": "sha256:8f4e3f294b6feb676d698b379a615dd5a39c783b867852140d5c3527f2fe146a",
+      "requirements-lock.txt": "sha256:2f3d1377434c09431d9ee3c680dca4569d3330124160810589efa670cc2b0601"
     },
-    "prompt_sha256": "4d27ccbeb69c64132de2d3f1f3f7343b5fba5622cf75bc4cec77372bf9e9d694",
+    "prompt_sha256": "16ee1c935708eb7bfe886fa6cef53ced871579fcf0e9116ea16fd63c611a6e5e",
     "review_id": "rev-20261030-introduction-to-ukrainian",
-    "attempt_id": "sol-att-4"
+    "attempt_id": "agy-att-5"
   }
 }

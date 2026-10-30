@@ -80,12 +80,12 @@
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f",
-    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml": "a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645",
-    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml.lock": "8522af0e7db34b4d88a0b021bc7f1c8c2495e462dcf2d54d12c23b59bf713c4f",
+    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml": "c9c517d801fa6a54c629331f65d81be3e032414fcd49b8f2017b4349de88c970",
+    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml.lock": "ef7f51199f0a46405c634f6831ff2d172693bce65b1fb14a053e7eb0b439937a",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml": "a191226dd4df0b4b43834f3c196c8ab9803b382d70c2112e2e3837ed5c0504f2",
-    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "5af278d0aa4776419082719df5dda561a21efd751f0fd5c0a0d3585e4e97fb2f",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "3657d51d65696e1284fa164ed0dd0ee02936a719c7c1ef41d6cce501f1e7d144",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -119,7 +119,7 @@
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645 and the provisional pack's sha256 is c9c517d801fa6a54c629331f65d81be3e032414fcd49b8f2017b4349de88c970; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],

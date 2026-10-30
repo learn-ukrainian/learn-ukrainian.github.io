@@ -13,3 +13,7 @@ texts:
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0010}
   span: {first_words: 'Звуки. Немовні звуки. Жести', last_words: 'Мова без слів (жести)'}
   supports: 'Speech sounds versus non-speech sounds and gestures; primer printed page 13.'
+- id: T-004
+  source: {table: textbooks, chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062}
+  span: {first_words: 'Алфавіт', last_words: 'а букви бачимо й пишемо­ .'}
+  supports: 'The alphabet has 33 letters; speech sounds are heard and pronounced, while letters are seen and written. Grounding only, with no requirement to acquire letters in orientation.'

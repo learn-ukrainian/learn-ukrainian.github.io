@@ -4,7 +4,7 @@ The fresh path has no word or activity target: judge size by job adequacy agains
 
 Kind: plan
 Module: a1/introduction-to-ukrainian (Position 1)
-Manifest SHA256: c32ae362bad72a64e03719f0945f5fab689372f6c193560e9aa6cef4257e3808
+Manifest SHA256: 487b9560fa286b680cf0b5327074b20230332ca3d6f1998eb8a88349a7caf270
 
 You are the independent cross-family content reviewer for a fresh curriculum module plan (Contract 1, fresh-build review contracts #8430 r4).
 You evaluate whether the module plan serves the learning goals before any lesson writer runs.
@@ -204,8 +204,8 @@ taxonomy: 1
 kind: plan
 attempt:
   review_id: "rev-20261030-introduction-to-ukrainian"
-  attempt_id: "sol-att-4"
-  manifest_sha256: "c32ae362bad72a64e03719f0945f5fab689372f6c193560e9aa6cef4257e3808"
+  attempt_id: "agy-att-5"
+  manifest_sha256: "487b9560fa286b680cf0b5327074b20230332ca3d6f1998eb8a88349a7caf270"
   previous_attempt_id: null
 reviewer:
   resolved_model: "<model>"
@@ -249,23 +249,24 @@ module: introduction-to-ukrainian
 level: a1
 sequence: 1
 slug: introduction-to-ukrainian
-version: '1'
+version: '2'
 title: 'вступ до української'
 subtitle: 'Orientation, state symbols, and alphabet overview'
 focus: 'Orient yourself in English: national symbols, textbook orientation, speech sounds vs letters, alphabet overview, and study habits'
 objectives:
 - 'Recognize Ukraine’s national symbols: flag, coat of arms, and anthem.'
 - 'Distinguish speech sounds, non-speech sounds, gestures, and the 33 letters of the Cyrillic alphabet.'
-- 'Establish effective study habits focusing on speech sounds before letters and active practice with course materials.'
+- 'Plan active listening, speaking, reading, and writing practice with course materials.'
 connects_to: []
 prerequisites: []
 register: 'English orientation at A1.'
 changelog:
 - 'Position 1 orientation module plan authored under arc revision r6.'
+- 'Revision 2: clarify audible practice and cite the textbook distinction between sounds and letters; support a personalized study routine without prescribing a universal daily order.'
 arc_ref: {level: a1, position: 1}
 evidence_ref:
   path: evidence/a1/introduction-to-ukrainian.yaml
-  sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+  sha256: "a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645"
 lessons:
 - n: 1
   slug: language-identity-and-roots
@@ -325,27 +326,27 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'We distinguish speech sounds (звуки) from non-speech sounds and gestures (мова без слів). In studying Ukrainian, speech sounds come first: we listen to sounds and spoken words before learning the letters that represent them. The alphabet brings together 33 letters: consonants, vowels, and special signs.'
+    teach: 'We distinguish speech sounds (звуки) from non-speech sounds and gestures (мова без слів). We hear and pronounce speech sounds, and see and write letters. The Ukrainian alphabet contains 33 letters. This is an overview, not a requirement to learn the alphabet here.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-003']
+    evidence: ['T-003', 'T-004']
     practice: ['a1']
   - id: s2
     kind: recap
-    teach: 'Practical closing task: distinguish between hearing/speaking speech sounds and seeing/writing letters, and establish your daily oral-first study routine.'
+    teach: 'Practical closing task: distinguish between hearing/speaking speech sounds and seeing/writing letters, and plan your daily listening, speaking, reading, and writing practice.'
     task:
       id: 'orientation-recap-task'
       action: 'read_and_use'
       context_en: 'Distinguishing speech sounds, letters, and gestures as you begin learning Ukrainian.'
-      instruction_en: 'Distinguish situations where learners hear and pronounce speech sounds from situations where they see and write letters, and schedule your oral practice before print.'
+      instruction_en: 'Distinguish situations where learners hear and pronounce speech sounds from situations where they see and write letters, and choose when you will practise each during your day.'
       response_mode: 'written'
       success_criteria_en:
       - 'Distinguish hearing and speaking speech sounds from seeing and writing letters'
-      - 'Apply the sound-before-letter progression by scheduling oral repetition before print'
+      - 'Choose realistic daily opportunities for listening and speaking as well as reading and writing'
       learner_reads: []
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-002', 'T-003']
+    evidence: ['T-002', 'T-003', 'T-004']
     practice: ['a2']
   activities:
   - id: a1
@@ -364,7 +365,7 @@ lessons:
     - 'Writing letters on a worksheet'
     - 'Listening to spoken words in native audio'
     - 'Repeating speech sounds aloud after a model speaker'
-    - 'Focusing on high-frequency conversational phrases'
+    - 'Listening to a recorded conversational phrase and repeating it aloud'
 ```
 
 ### Operator Accepted Decisions
@@ -1285,12 +1286,12 @@ later get the next free id; ids are never reused.
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f",
-    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml": "a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645",
-    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml.lock": "8522af0e7db34b4d88a0b021bc7f1c8c2495e462dcf2d54d12c23b59bf713c4f",
+    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml": "c9c517d801fa6a54c629331f65d81be3e032414fcd49b8f2017b4349de88c970",
+    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml.lock": "ef7f51199f0a46405c634f6831ff2d172693bce65b1fb14a053e7eb0b439937a",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml": "a191226dd4df0b4b43834f3c196c8ab9803b382d70c2112e2e3837ed5c0504f2",
-    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "5af278d0aa4776419082719df5dda561a21efd751f0fd5c0a0d3585e4e97fb2f",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "3657d51d65696e1284fa164ed0dd0ee02936a719c7c1ef41d6cce501f1e7d144",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -1324,7 +1325,7 @@ later get the next free id; ids are never reused.
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645 and the provisional pack's sha256 is c9c517d801fa6a54c629331f65d81be3e032414fcd49b8f2017b4349de88c970; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],
@@ -1366,7 +1367,7 @@ v1_totals_schema: 1
     "exercises_count": 0,
     "notes_count": 0,
     "standard_count": 0,
-    "texts_count": 3,
+    "texts_count": 4,
     "unsupported_open_count": 0,
     "unsupported_resolved_count": 0,
     "videos_count": 0
@@ -1377,11 +1378,11 @@ v1_totals_schema: 1
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml",
-    "sha256": "a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645"
+    "sha256": "c9c517d801fa6a54c629331f65d81be3e032414fcd49b8f2017b4349de88c970"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml.lock",
-    "sha256": "8522af0e7db34b4d88a0b021bc7f1c8c2495e462dcf2d54d12c23b59bf713c4f"
+    "sha256": "ef7f51199f0a46405c634f6831ff2d172693bce65b1fb14a053e7eb0b439937a"
   },
   "report_schema": 1,
   "reports": [],
@@ -1466,6 +1467,36 @@ T-003:
     row_sha256: 2eb89a7c1bcf30a54afe73aa9600e1d98eed8b700e56e55f29e758bd07751c37
     section_id: 12961
   supports: Speech sounds versus non-speech sounds and gestures; primer printed page 13.
+T-004:
+  id: T-004
+  quote: 'Алфавіт
+
+    На письмі звуки позначаємо буквами.
+
+    Сукупність букв, розташованих у встановленому для
+
+    певної мови порядку, називають алфавітом (азбукою, абет-
+
+    кою). В українському алфавіті 33 букви.
+
+    За алфавітом розміщують слова у словниках, складають
+
+    списки, каталоги, довідники тощо.
+
+    Зверніть увагу!
+
+    Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо­ .'
+  sha256: 69ab8ccaa747f48d86b105216747b612c41282be3bcfd7b3033d756fde2d0b01
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0062
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 86
+    row_sha256: 5d17fe32ef3fdc0d31a28d84f995bac352ce6b7f9ca47cdc1c742a8a016caf50
+    section_id: 38992
+  supports: The alphabet has 33 letters; speech sounds are heard and pronounced, while letters are seen and written. Grounding only, with no requirement to acquire letters in orientation.
 ```
 
 ### Provisional Word Records The Plan Cites
