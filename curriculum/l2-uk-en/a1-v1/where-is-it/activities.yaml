@@ -101,27 +101,59 @@ inline:
     items:
       - sentence: 'Олена ___ (школа).'
         answer: 'в школі'
+        options:
+          - "в школі"
+          - "в школою"
+          - "в школам"
         explanation: Школа changes to школі after в.
       - sentence: 'Тарас ___ (робота).'
         answer: 'на роботі'
+        options:
+          - "на роботі"
+          - "на роботою"
+          - "на роботам"
         explanation: The common phrase is на роботі.
       - sentence: 'Максим ___ (банк).'
         answer: 'у банку'
+        options:
+          - "у банку"
+          - "у банком"
+          - "у банкам"
         explanation: Bank as a contained institution uses у банку.
       - sentence: 'Я ___ (магазин).'
         answer: 'в магазині'
+        options:
+          - "в магазині"
+          - "в магазином"
+          - "в магазинам"
         explanation: Static location uses the locative form магазині.
       - sentence: 'Аптека ___ (вулиця).'
         answer: 'на вулиці'
+        options:
+          - "на вулиці"
+          - "на вулицею"
+          - "на вулицям"
         explanation: Street location uses на вулиці.
       - sentence: "Ми зараз ___ (місто)."
         answer: 'у місті'
+        options:
+          - "у місті"
+          - "у містом"
+          - "у містам"
         explanation: Static city/town location is у місті.
       - sentence: "Софія зараз ___ (лікарня)."
         answer: 'у лікарні'
+        options:
+          - "у лікарні"
+          - "у лікарнею"
+          - "у лікарням"
         explanation: Лікарня changes to лікарні after у.
       - sentence: "Я зараз ___ (Київ)."
         answer: 'у Києві'
+        options:
+          - "у Києві"
+          - "у Києвом"
+          - "у Києву"
         explanation: 'Cities use в/у plus locative: у Києві.'
   - id: act-3
     type: match-up
