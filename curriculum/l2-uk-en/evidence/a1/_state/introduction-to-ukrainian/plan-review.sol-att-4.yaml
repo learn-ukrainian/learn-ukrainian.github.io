@@ -1,0 +1,134 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-introduction-to-ukrainian"
+  attempt_id: "sol-att-4"
+  manifest_sha256: "c32ae362bad72a64e03719f0945f5fab689372f6c193560e9aa6cef4257e3808"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "GPT-6 (exact resolved variant unavailable)"
+  harness: "codex"
+  family: "openai"
+  prompt_sha256: "4d27ccbeb69c64132de2d3f1f3f7343b5fba5622cf75bc4cec77372bf9e9d694"
+checks:
+  # Embedded closure is proportionate: learners classify situations and personalize
+  # a study routine in English. Orientation requires no Ukrainian production.
+  closing_shape: clean
+
+  # Titles describe the planned orientation jobs. Ukrainian parentheticals identify
+  # glossed terms rather than replacing ordinary English narration.
+  # search_text, 1-klas-bukvar-zaharijchuk-2025-1_s0001,
+  # receipt rr-84741c1c538140ff1b6e: "ДЕРЖАВНІ СИМВОЛИ УКРАЇНИ".
+  # query_ulif_records, ulif:section:58178, receipt rr-69e824d57f436df7a4b8:
+  # "вступ до курсу будь - якої науки".
+  title_describes_job: clean
+
+  # No inventory quantity is stated in a module or lesson title/subtitle.
+  title_quantities: clean
+
+  # verify_words receipt rr-e80a329482a30b443775: "Found: 11/11".
+  # inspect_words receipt rr-55b446b2f2ebd9dd9993 supplies marker-aware analyses.
+  # The contextual flag sense uses clean VESUM entry 309206,
+  # noun:inanim:m:v_naz; the slang homonym is a different analysis.
+  # The linguistic sense of звуки has clean entry 142144.
+  quoted_forms: clean
+
+  # The learner needs no prior decoding or grammar to perform these English tasks.
+  # Overview exemplars are not analysed as acquired vocabulary or grammar.
+  # search_text, 5-klas-ukrmova-zabolotnyi-2023_s0062,
+  # receipt rr-25d35ac44104cb68a890:
+  # "Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо".
+  sequencing: clean
+
+  # Cultural/course orientation and sound/print study preparation have distinct jobs.
+  # Neither requires padding to approach the advisory duration.
+  # Legacy word_target values are disregarded.
+  sizing: clean
+
+  # Glossed state-symbol and linguistic labels serve as overview metalanguage;
+  # activities do not require their Ukrainian recall. Recycling is unnecessary
+  # before any earlier lesson has been completed.
+  # Context: search_text receipt rr-84741c1c538140ff1b6e, chunk s0001;
+  # morphology: inspect_words receipt rr-55b446b2f2ebd9dd9993.
+  inventory: clean
+
+  # Report read: workbook operations rotate from matching to classification.
+  # Repeated quizzes recognize different concepts; lesson 2's repeated modality
+  # distinction is reasonable consolidation, subject to F-01's model ambiguity.
+  # The closing task adds personalized written planning.
+  # Comparison evidence gap: the supplied mapping has no v1 counterpart;
+  # response opportunities are unavailable, so no reduction can be established.
+  activities:
+    - F-01
+
+  evidence_fit:
+    - F-02
+
+  # The pinned arc assigns no Standard lines to this orientation position.
+  # No later grammatical system or early construction requiring ULP precedent
+  # is explained here. The alphabet count itself is independently supported:
+  # search_text, owned-oho-a1-workbook_f1_p0015_c0001,
+  # receipt rr-9aad21e4a629ffaf3ecc:
+  # "has 33 letters".
+  standard_and_ulp: clean
+
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 2
+        activity: a2
+        quote: "Focusing on high-frequency conversational phrases"
+    dimension: activity
+    severity: MINOR
+    claim: >-
+      This option does not specify whether the learner reads phrases or listens
+      to and pronounces them. It therefore cannot be classified reliably by the
+      workbook's stated speech-versus-print criterion. The source distinction
+      is explicit in search_text,
+      5-klas-ukrmova-zabolotnyi-2023_s0062: "Звуки ми чуємо й вимовляємо,
+      а букви бачимо й пишемо". Clarify the option's observable operation so
+      the odd-one-out model tests the intended distinction fairly.
+    evidence:
+      receipt: "rr-25d35ac44104cb68a890"
+    could_be_a_gate: "no"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "we listen to sounds and spoken words before learning the letters that represent them."
+      - lesson: 2
+        step: s1
+        quote: "The alphabet brings together 33 letters: consonants, vowels, and special signs."
+      - lesson: 2
+        step: s2
+        quote: "Apply the sound-before-letter progression by scheduling oral repetition before print"
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      T-003 is the sole teaching citation for the alphabet statement and the
+      prescribed sound-before-letter progression, but its supplied quotation
+      concerns sounds, train imitation and gestures. T-002 concerns exploring
+      a primer, without establishing the prescribed daily ordering. Scoped
+      search_text searches did not retrieve supporting material for that
+      ordering. Independently retrieved OHO chunk
+      owned-oho-a1-workbook_f1_p0015_c0001 supports the alphabet count and
+      supplies an alphabet presentation, but it is not cited by this plan and
+      does not establish the daily scheduling prescription. Route this support
+      and citation gap to the pack builder and settle process; the searches
+      do not establish that the learner advice is false or independently
+      justify changing it.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-882a502bb7a957b2759b"
+          outcome: "no_hits"
+        - receipt: "rr-a6acb11e458296464d38"
+          outcome: "no_hits"
+        - receipt: "rr-24697909aac2ae3c02bc"
+          outcome: "hits_but_no_support"
+        - receipt: "rr-9aad21e4a629ffaf3ecc"
+          outcome: "hits_but_no_support"
+    could_be_a_gate: "no"

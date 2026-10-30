@@ -1,0 +1,121 @@
+plan_schema: 2
+module: introduction-to-ukrainian
+level: a1
+sequence: 1
+slug: introduction-to-ukrainian
+version: '1'
+title: 'вступ до української'
+subtitle: 'Orientation, state symbols, and alphabet overview'
+focus: 'Orient yourself in English: national symbols, textbook orientation, speech sounds vs letters, alphabet overview, and study habits'
+objectives:
+- 'Recognize Ukraine’s national symbols: flag, coat of arms, and anthem.'
+- 'Distinguish speech sounds, non-speech sounds, gestures, and the 33 letters of the Cyrillic alphabet.'
+- 'Establish effective study habits focusing on speech sounds before letters and active practice with course materials.'
+connects_to: []
+prerequisites: []
+register: 'English orientation at A1.'
+changelog:
+- 'Position 1 orientation module plan authored under arc revision r6.'
+arc_ref: {level: a1, position: 1}
+evidence_ref:
+  path: evidence/a1/introduction-to-ukrainian.yaml
+  sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+lessons:
+- n: 1
+  slug: language-identity-and-roots
+  title: 'State symbols and course orientation'
+  kind: teach
+  job: 'Introduce Ukraine’s state symbols and orient the learner on working with course materials.'
+  rationale: 'Orientation introduces learners to Ukraine’s national symbols and textbook learning structure before phonetic mechanics.'
+  word_target: 200
+  inventory:
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Welcome to Ukrainian. We begin with Ukraine’s national symbols: the state flag (державний прапор), the state coat of arms (державний герб), and the state anthem (державний гімн).'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-001']
+    practice: ['a1']
+  - id: s2
+    kind: teach
+    teach: 'Orientation on working with the textbook and course materials: exploring pictures, letters, and texts, guided step by step to build your understanding of the language.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-002']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Identify the state symbols of Ukraine introduced in the lesson.'
+    options:
+    - 'State flag, state coat of arms, and state anthem'
+    - 'National currency, passport, and constitution'
+    - 'Capital city, postal system, and geographical map'
+  - id: a2
+    type: match-up
+    placement: workbook
+    focus: 'Match the components of learning with the course materials.'
+- n: 2
+  slug: alphabet-overview-and-study-method
+  title: 'Alphabet overview and study method'
+  kind: teach
+  closes_with_recap: true
+  job: 'Survey the 33 Cyrillic letters and establish effective study habits for pronunciation and writing.'
+  rationale: 'Gives an overview of the Cyrillic alphabet and sets learner expectations before letter acquisition starts in position 2.'
+  word_target: 200
+  inventory:
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'We distinguish speech sounds (звуки) from non-speech sounds and gestures (мова без слів). In studying Ukrainian, speech sounds come first: we listen to sounds and spoken words before learning the letters that represent them. The alphabet brings together 33 letters: consonants, vowels, and special signs.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-003']
+    practice: ['a1']
+  - id: s2
+    kind: recap
+    teach: 'Practical closing task: distinguish between hearing/speaking speech sounds and seeing/writing letters, and establish your daily oral-first study routine.'
+    task:
+      id: 'orientation-recap-task'
+      action: 'read_and_use'
+      context_en: 'Distinguishing speech sounds, letters, and gestures as you begin learning Ukrainian.'
+      instruction_en: 'Distinguish situations where learners hear and pronounce speech sounds from situations where they see and write letters, and schedule your oral practice before print.'
+      response_mode: 'written'
+      success_criteria_en:
+      - 'Distinguish hearing and speaking speech sounds from seeing and writing letters'
+      - 'Apply the sound-before-letter progression by scheduling oral repetition before print'
+      learner_reads: []
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-002', 'T-003']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Distinguish when communication uses hearing and speaking speech sounds versus seeing and writing letters.'
+    options:
+    - 'Hearing and pronouncing words aloud uses speech sounds; seeing and writing words uses letters'
+    - 'Hearing and pronouncing words uses written letters; reading silently uses speech sounds'
+    - 'Seeing and writing words on paper uses non-speech sounds; hand gestures use letters'
+  - id: a2
+    type: odd-one-out
+    placement: workbook
+    focus: 'Identify the activity that involves seeing and writing letters rather than hearing and pronouncing speech sounds.'
+    options:
+    - 'Writing letters on a worksheet'
+    - 'Listening to spoken words in native audio'
+    - 'Repeating speech sounds aloud after a model speaker'
+    - 'Focusing on high-frequency conversational phrases'

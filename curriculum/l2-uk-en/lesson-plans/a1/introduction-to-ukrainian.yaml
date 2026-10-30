@@ -19,7 +19,7 @@ changelog:
 arc_ref: {level: a1, position: 1}
 evidence_ref:
   path: evidence/a1/introduction-to-ukrainian.yaml
-  sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+  sha256: "a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645"
 lessons:
 - n: 1
   slug: language-identity-and-roots

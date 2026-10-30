@@ -1,0 +1,10 @@
+attempt_id: sol-att-4
+harness: codex
+manifest_sha256: c32ae362bad72a64e03719f0945f5fab689372f6c193560e9aa6cef4257e3808
+pack_sha256: a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645
+promoted_at: '2026-10-30T18:02:21+00:00'
+promoted_plan_sha256: b716c55def2f736ce0e741821a4fa5d120bd3e6a9293fbcb88f035516f8baa34
+review_access: full
+reviewed_plan_sha256: 5af278d0aa4776419082719df5dda561a21efd751f0fd5c0a0d3585e4e97fb2f
+reviewer_family: openai
+reviewer_model: gpt-6.1-sol

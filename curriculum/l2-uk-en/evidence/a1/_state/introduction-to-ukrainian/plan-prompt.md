@@ -4,7 +4,7 @@ The fresh path has no word or activity target: judge size by job adequacy agains
 
 Kind: plan
 Module: a1/introduction-to-ukrainian (Position 1)
-Manifest SHA256: 904fb2d37d4c770def2e26cca3ff427d6fad1c535006e273110e89b261c69e7d
+Manifest SHA256: c32ae362bad72a64e03719f0945f5fab689372f6c193560e9aa6cef4257e3808
 
 You are the independent cross-family content reviewer for a fresh curriculum module plan (Contract 1, fresh-build review contracts #8430 r4).
 You evaluate whether the module plan serves the learning goals before any lesson writer runs.
@@ -204,8 +204,8 @@ taxonomy: 1
 kind: plan
 attempt:
   review_id: "rev-20261030-introduction-to-ukrainian"
-  attempt_id: "sol-att-3"
-  manifest_sha256: "904fb2d37d4c770def2e26cca3ff427d6fad1c535006e273110e89b261c69e7d"
+  attempt_id: "sol-att-4"
+  manifest_sha256: "c32ae362bad72a64e03719f0945f5fab689372f6c193560e9aa6cef4257e3808"
   previous_attempt_id: null
 reviewer:
   resolved_model: "<model>"
@@ -332,16 +332,16 @@ lessons:
     practice: ['a1']
   - id: s2
     kind: recap
-    teach: 'Practical closing task: apply the taught sound-before-letter study method to select and establish your daily personal practice routine.'
+    teach: 'Practical closing task: distinguish between hearing/speaking speech sounds and seeing/writing letters, and establish your daily oral-first study routine.'
     task:
       id: 'orientation-recap-task'
       action: 'read_and_use'
-      context_en: 'Beginning your journey into the Ukrainian language.'
-      instruction_en: 'Apply the taught study method and alphabet overview to select your daily oral and written practice routine.'
+      context_en: 'Distinguishing speech sounds, letters, and gestures as you begin learning Ukrainian.'
+      instruction_en: 'Distinguish situations where learners hear and pronounce speech sounds from situations where they see and write letters, and schedule your oral practice before print.'
       response_mode: 'written'
       success_criteria_en:
-      - 'Distinguish speech sounds from non-speech sounds, focusing on oral sounds before print'
-      - 'Schedule regular practice working with illustrations, letters, and texts'
+      - 'Distinguish hearing and speaking speech sounds from seeing and writing letters'
+      - 'Apply the sound-before-letter progression by scheduling oral repetition before print'
       learner_reads: []
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
@@ -351,19 +351,19 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Survey the 33 letters of the Ukrainian alphabet and letter classes.'
+    focus: 'Distinguish when communication uses hearing and speaking speech sounds versus seeing and writing letters.'
     options:
-    - '33 letters representing speech sounds: consonants, vowels, and special signs'
-    - '26 letters like the English alphabet'
-    - '30 letters with no special signs'
+    - 'Hearing and pronouncing words aloud uses speech sounds; seeing and writing words uses letters'
+    - 'Hearing and pronouncing words uses written letters; reading silently uses speech sounds'
+    - 'Seeing and writing words on paper uses non-speech sounds; hand gestures use letters'
   - id: a2
     type: odd-one-out
     placement: workbook
-    focus: 'Identify the study habit that contradicts the taught sound-before-letter progression.'
+    focus: 'Identify the activity that involves seeing and writing letters rather than hearing and pronouncing speech sounds.'
     options:
-    - 'Translating written texts with a dictionary before hearing speech sounds'
-    - 'Listening to speech sounds and practicing oral repetition before print'
-    - 'Working through illustrations and letters step by step'
+    - 'Writing letters on a worksheet'
+    - 'Listening to spoken words in native audio'
+    - 'Repeating speech sounds aloud after a model speaker'
     - 'Focusing on high-frequency conversational phrases'
 ```
 
@@ -1290,7 +1290,7 @@ later get the next free id; ids are never reused.
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml": "a191226dd4df0b4b43834f3c196c8ab9803b382d70c2112e2e3837ed5c0504f2",
-    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "197fcc0fe2bb41fd0b141208f521102b292f9e9f6f9bef66e2944ee276f36ddb",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "5af278d0aa4776419082719df5dda561a21efd751f0fd5c0a0d3585e4e97fb2f",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
