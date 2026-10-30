@@ -1765,7 +1765,8 @@ def _shell_script(args: list[str]) -> list[str]:
         """
         word = args[index]
         expands = bool(re.search(r"[$`\\]|__GUARD_SUBSTITUTION_", word))
-        if re.fullmatch(r"'[^']*'", word) or (re.fullmatch(r"[\w./:=%,+~-]+", word) and not expands):
+        # A plain word has no expanding character; `~` is out because tilde reads HOME, PWD and OLDPWD.
+        if re.fullmatch(r"'[^']*'", word) or (re.fullmatch(r"[\w./:=%,+-]+", word) and not expands):
             return "literal"
         if re.fullmatch(r'"[^"]*"', word):
             return "literal" if not expands else "unknown" if "@" in word else "one"
