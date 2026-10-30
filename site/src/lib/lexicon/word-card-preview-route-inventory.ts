@@ -1,10 +1,10 @@
-import { previewStaticPaths, type PreviewInput } from './word-card-preview-inputs';
+import { previewIndexPaths, previewStaticPaths, type PreviewInput } from './word-card-preview-inputs';
 import { groupReleasePages } from './word-card-readable';
 import type { ReleasePin } from './word-card-release';
 
 export const ROUTE_INVENTORY_SCHEMA = 'word-card-preview-route-inventory.v1';
 const CLASSES: Record<string, string> = { release: 'release-summary', 'release-card': 'card-diagnostic', 'release-page': 'word-page' };
-export const ROUTE_CLASSES = Object.values(CLASSES).flatMap(name => [name, `compare-${name}`]);
+export const ROUTE_CLASSES = [...Object.values(CLASSES).flatMap(name => [name, `compare-${name}`]), 'landing'];
 
 export type InventoryRoute = { path: string; href: string; class: string };
 export type InventoryCard = { card_id: string; card_kind: string; page: string | null; entry: number | null; listed: boolean; reason: string };
@@ -30,11 +30,15 @@ export function routeInventory(inputs: PreviewInput[], bytes: { dataset_bytes: n
   const summary = inputs.find(input => input.card.kind === 'release')?.card;
   if (summary?.kind !== 'release') throw Error('No pinned release among the preview inputs');
   const { pages, dispositions } = groupReleasePages(summary.rows);
-  const routes = previewStaticPaths(inputs).map(({ params, props }) => {
-    const base = CLASSES[props.card.kind];
+  const routes = [...previewStaticPaths(inputs), ...previewIndexPaths(inputs)].map(({ params, props }) => {
+    const base = props.card.kind === 'release-index' ? 'landing' : CLASSES[props.card.kind];
     if (!base) throw Error(`Unexpected preview input ${props.name}`);
-    return { path: `/lexicon-v2/${params.path}/`, href: `/lexicon-v2/${params.path.split('/').map(encodeURIComponent).join('/')}/`,
-      class: props.compare ? `compare-${base}` : base };
+    const segment = params.path;
+    return {
+      path: segment ? `/lexicon-v2/${segment}/` : '/lexicon-v2/',
+      href: segment ? `/lexicon-v2/${segment.split('/').map(encodeURIComponent).join('/')}/` : '/lexicon-v2/',
+      class: props.compare ? `compare-${base}` : base,
+    };
   }).sort(byPath);
   const duplicated = routeDifferences(routes.map(r => r.path), routes.map(r => r.path)).duplicated;
   if (duplicated.length) throw Error(`Duplicate preview routes: ${duplicated.join(', ')}`);

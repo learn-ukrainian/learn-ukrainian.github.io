@@ -17,17 +17,23 @@
   "proper_entries_listed": 11,
   "proper_only_unlisted": 2,
   "refused_without_key": 0,
-  "emitted_routes": 570,
+  "emitted_routes": 571,
   "routes_by_class": {
    "release-summary": 1,
    "compare-release-summary": 1,
    "card-diagnostic": 150,
    "compare-card-diagnostic": 150,
    "word-page": 134,
-   "compare-word-page": 134
+   "compare-word-page": 134,
+   "landing": 1
   }
  },
  "routes": [
+  {
+   "path": "/lexicon-v2/",
+   "href": "/lexicon-v2/",
+   "class": "landing"
+  },
   {
    "path": "/lexicon-v2/compare/release/",
    "href": "/lexicon-v2/compare/release/",
