@@ -57,6 +57,7 @@ def check_review_binding(
     ``ReviewStateUnavailable`` when this host has no findings database for the level.
     """
     from scripts.common.task_store_paths import tasks_dir as dispatch_tasks_dir
+    from scripts.lib.readonly_sqlite import open_readonly
     from scripts.orchestration.task_record_store import relocated_result_file
     from scripts.review import findings_db, fixloop
     from scripts.review import record as recorder
@@ -77,7 +78,7 @@ def check_review_binding(
         )
 
     directory = pm.state_dir(root, level, slug)
-    conn = sqlite3.connect(f"{database.as_uri()}?mode=ro", uri=True)
+    conn = open_readonly(database)
     conn.row_factory = sqlite3.Row
     try:
         latest = findings_db.latest_accepted(conn, level, slug, "plan", None)
