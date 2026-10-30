@@ -113,6 +113,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Muse contributor mode, on or off; Muse only (default: omitted, provider default off)",
     )
     dispatch.add_argument(
+        "--advisor",
+        choices=("opus",),
+        help="Ask for the Opus 5.5 advisor on a workspace-write Claude Haiku 5.5 run; a Sonnet 5.5 "
+        "workspace-write run always has it, any other run never does (default: omitted)",
+    )
+    dispatch.add_argument(
         "--mode",
         choices=("read-only", "workspace-write"),
         default="read-only",
@@ -282,6 +288,10 @@ def _dispatch(args) -> int:
                          f"(aliases: {aliases}); dispatch Grok as --agent cursor --model grok-4.7-high")
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
+    if args.advisor is not None and not (
+        agent == "claude" and args.mode == "workspace-write" and providers.load("claude").model_id(args.model) == "claude-haiku-5-5"
+    ):
+        raise ValueError("--advisor is supported only for a workspace-write Claude Haiku 5.5 run")
     if args.output_schema is not None and agent != "codex":
         raise ValueError("--output-schema is supported only with the effective codex agent")
     if args.mode == "read-only" and (refusal := providers.read_only_refusal(agent)):
