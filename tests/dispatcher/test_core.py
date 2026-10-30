@@ -3036,6 +3036,49 @@ def test_provider_process_lingering_after_its_final_result_settles_with_that_res
     assert spec.final_file.read_text() == "literal final response"
 
 
+@pytest.mark.parametrize(("mode", "status"), [("read-only", "done"), ("workspace-write", "no_deliverable")])
+def test_a_run_settling_while_a_task_it_dispatched_still_runs_names_that_task(sandbox, mode, status):
+    """Defect class: a worker's result orphaned by its own end read as a bare no_deliverable (#12156)."""
+    sandbox.env.pop("LEARN_UKRAINIAN_DISPATCH_TASK_ID", None)  # the parent is dispatched from outside any run
+    parent = sandbox.dispatch("blocked", "--mode", mode)
+    await_file(sandbox.tasks / f"{parent[0]}.started")
+    # The child is dispatched from inside the parent's run, which hands its commands the parent's task id.
+    result = subprocess.run(
+        [sys.executable, "scripts/dispatch.py", "dispatch", "--agent", "sol", "--model", "blocked",
+         "--prompt", "literal child request"],
+        cwd=sandbox.repo, env={**sandbox.env, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": parent[0]},
+        text=True, capture_output=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    child = tuple(result.stdout.splitlines())
+    await_file(sandbox.tasks / f"{child[0]}.started")
+    assert json.loads((sandbox.tasks / f"{child[0]}.json").read_text())["parent_task_id"] == parent[0]
+    assert "parent_task_id" not in json.loads((sandbox.tasks / f"{parent[0]}.json").read_text())
+
+    (sandbox.tasks / f"{parent[0]}.release").touch()
+    record = sandbox.settle(parent, expected=0 if status == "done" else 1)
+    assert record["status"] == status
+    assert record["orphaned_child_tasks"] == [child[0]]
+    if status == "done":
+        assert record["error"] is None
+    else:
+        assert record["error"] == f"orphaned_child_tasks: {child[0]}; {record['no_deliverable_reason']}"
+
+    (sandbox.tasks / f"{child[0]}.release").touch()
+    assert "orphaned_child_tasks" not in sandbox.settle(child)
+
+
+@pytest.mark.parametrize(("inherited", "parent"), [("dispatching-run", "dispatching-run"), ("self-run", None),
+                                                    (None, None)])
+def test_dispatch_records_the_run_it_was_dispatched_from_never_itself(sandbox, inherited, parent):
+    """Defect class: orphan detection silently disabled, or a task that names itself as its parent (#12156)."""
+    sandbox.env.pop("LEARN_UKRAINIAN_DISPATCH_TASK_ID", None)
+    if inherited is not None:
+        sandbox.env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = inherited
+    task = sandbox.dispatch("echo", "--task-id", "self-run")
+    assert sandbox.settle(task).get("parent_task_id") == parent
+
+
 def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox):
     """Ported from tests/test_delegate.py with the same test name."""
     started = time.monotonic()

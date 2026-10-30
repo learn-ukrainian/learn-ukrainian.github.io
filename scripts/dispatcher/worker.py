@@ -340,6 +340,14 @@ def _borrowed(record: dict) -> bool:
         for other in store.list_tasks())
 
 
+def _running_children(record: dict) -> list[str]:
+    """Tasks this run dispatched that are still running as it settles: no one is left to read their results."""
+    with contextlib.suppress(OSError, ValueError):
+        return sorted(other["task_id"] for other in store.list_tasks()
+                      if other.get("parent_task_id") == record["task_id"] and other.get("status") in store.ACTIVE)
+    return []
+
+
 # Dispositions that can change once other processes end, the tree is committed or reverted, the work is
 # published (pushed or merged after the task ended), or a transient Git, lock, claim or removal failure
 # clears; every later dispatch and every settlement settles these again, and still removes
@@ -697,6 +705,11 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 record["sources_mcp_call_count"] = sources_calls
             record.update(git.snapshot_delivery(spec, record))
             _enforce_delivery(record)
+            if children := _running_children(record):
+                # A run that ends while a task it dispatched still runs left that result unconsumed (#12156).
+                record["orphaned_child_tasks"] = children
+                if record["status"] != "done":
+                    record["error"] = f"orphaned_child_tasks: {', '.join(children)}; {record['error']}"
             if source:
                 record.update(_stream_attestation(source, resolved_model))
             record["provider_pgid"] = child.pid if child else None

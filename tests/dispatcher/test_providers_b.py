@@ -212,7 +212,7 @@ def test_cli_prompt_or_mode_regression(tmp_path, monkeypatch, provider, mode, ef
         expected += ["--mode", "ask"] if mode == "read-only" else ["--approve-mcps", "--sandbox", "disabled", "--force"]
     else:
         expected += ["--dangerously-skip-permissions"]
-        expected += ["--print-timeout", "120m", "--log-file", str(final.with_suffix(".log"))]
+        expected += ["--print-timeout", "7260s", "--log-file", str(final.with_suffix(".log"))]
     proc = subprocess.run(
         invocation.argv, input=invocation.stdin, env=invocation.env, cwd=worktree, capture_output=True, timeout=10
     )
@@ -446,6 +446,17 @@ def test_codex_terminal_not_last_rejected_without_overwriting_completion_usage(l
     assert load("codex").parse(stdout + later + "\n", "", 0, "Finished.") == ParsedResult(
         "Finished.", {"input_tokens": 4, "output_tokens": 2}, error
     )
+
+
+@pytest.mark.parametrize(("hard_timeout", "print_timeout"), [("21600", "21660s"), ("90.5", "151s"), ("0", "0s")])
+def test_agy_waits_for_background_work_until_after_the_dispatcher_deadline(tmp_path, hard_timeout, print_timeout):
+    """agy-print-timeout: AGY's own deadline never cuts a wait the task's deadline still allows (#12156)."""
+    prompt = tmp_path / "prompt.txt"
+    prompt.write_text("literal request")
+    spec = TaskSpec("agy-deadline", "agy", "gemini-3.8-flash-high", None, "workspace-write", tmp_path, prompt,
+                    tmp_path / "final.txt", options={"hard_timeout": hard_timeout})
+    argv = load("agy").build(spec, {}).argv
+    assert argv[argv.index("--print-timeout") + 1] == print_timeout
 
 
 @pytest.mark.parametrize(
