@@ -143,8 +143,13 @@ and child processes, by the exported `TMPDIR`. New invocations use the neutral
 `runs` component so emitted fixture paths do not contain secret-token
 prefixes. Pytest folders directly below a scratch root, outside the two
 namespaces, are reported as `legacy_ownership_unknown` and never touched. An
-explicit `--basetemp` keeps its caller's ownership; the pre-push gate removes
-its own base temp. Other managed scratch is untouched.
+explicit `--basetemp` keeps its caller's ownership, except that one inside
+`.agent`, `.claude`, `batch_state` or `data` of a checkout (a directory that
+holds a `.git` directory, so a linked worktree does not count) is refused:
+pytest exits 4 before creating anything, because the nightly data backup
+refuses the absolute symlinks a base temp holds ([data backup](data-backup.md)).
+The pre-push gate removes its own base temp. Other managed scratch is
+untouched.
 
 When pytest's main command returns, the session removes its own run if it
 passed under `tmp_path_retention_policy = "failed"`, through the scratch
