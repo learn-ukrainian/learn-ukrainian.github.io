@@ -60,13 +60,17 @@ def safe_path(name: str) -> str:
 def importing_tests(targets: set[str], deleted: set[str], base: str, entries: dict[str, str]) -> list[str]:
     """Tests that directly import, load, read or run a changed file, by static scan.
 
+    A test that loads a computed path also depends on every file under the
+    directories its constants name (`components.directory_edges`).
+
     Direct edges only: the transitive closure spans most of the suite, which the
     merge group already runs. A deleted file has no edges in the candidate, so its
     surviving dependents come from a scan of the base tree.
     """
     from scripts.ci import components
 
-    edges = components.scan_imports(components.python_sources(), set(components.tracked_paths()))["file_edges"]
+    scan = components.scan_imports(components.python_sources(), set(components.tracked_paths()))
+    edges, directories = scan["file_edges"], scan["directory_edges"]
     if deleted:
         tree = {}
         for row in git("ls-tree", "-rz", base).split(b"\0"):
@@ -75,11 +79,16 @@ def importing_tests(targets: set[str], deleted: set[str], base: str, entries: di
                 tree[name] = meta.split()
         blobs = tuple((name, meta[2]) for name, meta in tree.items() if name.endswith(".py") and meta[1] == "blob")
         sources = components.indexed_python_sources(str(components.ROOT), blobs, ())
-        edges = [*edges, *(edge for edge in components.scan_imports(sources, set(tree))["file_edges"]
-                           if edge[1] in deleted)]
+        scan = components.scan_imports(sources, set(tree))
+        edges = [*edges, *(edge for edge in scan["file_edges"] if edge[1] in deleted)]
+        directories = [*directories, *scan["directory_edges"]]
     return sorted({
         importer for importer, target in edges
         if target in targets and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
+    } | {
+        importer for importer, directory in directories
+        if any(target.startswith(directory + "/") for target in targets)
+        and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
     })
 
 
