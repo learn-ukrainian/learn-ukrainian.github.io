@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 3c3457d5c8d47560320e12bee2bf78ed8e3d5c44
+  mcp_commit: 2dd1bff1652f29644720dcb142462ddbc07f1ba6
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
-  sources_db: 3f67f024da76b08c7ad4032d3c6f4f5b7eda9830190b34cce87534871e7aff1d
+  sources_db: c917cffbef25f8f1697148487e7df5181ed67aae6d9770cc84107d9056e59464
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
@@ -215,6 +215,14 @@ standard:
   text: '      вживати стандартні мовні формули привітання, прощання, подяки,
 
     вибачення і побажання;'
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-004
+  lines: 586-586
+  text: '     4.1.5. Наголос.'
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-005
+  lines: 596-596
+  text: '     4.1.8. Інтонація (розповідна, питальна, оклична).'
 texts:
 - id: T-001
   quote: 'Мовні звуки: голосні та приголосні
@@ -1081,6 +1089,68 @@ texts:
     row_sha256: b8ab07469541d67870b8c08599aaaeb1bf36a054a88fc59bb2001671bd64035b
     section_id: 57361
   supports: 'OHO adult workbook glossary: informal farewells Бувай, Па-па, and greeting Вітаю.'
+- id: T-049
+  quote: "Ukrainian has six vowel sounds (голосні́ зву́ки), and their pronunciation is generally straightforward. \nHowever,\
+    \ stress (на́голос) plays an important role. To indicate stress in language learning materials or \ndictionaries, a special\
+    \ stress mark (´) is placed above the stressed vowel. For example, ма́ма shows that \nthe stress falls on the first syllable.\n\
+    The sounds [е] and [и] are special: in unstressed positions, they tend to merge slightly ― [е] takes on a hint of \n[и]\
+    \ (transcribed as [еи]), and [и] takes on a hint of [е] (transcribed as [ие])."
+  sha256: 69d0e8e6aa3f6a1ecdd34f993f477fed50c31a4bb4215c245a49d1ff047054dd
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0019_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: f12e4c1dd4d8228c20f264726b176a5014167e79733aa3373180d213fd56b6a4
+    section_id: 57163
+  supports: 'Oho Unit 1 page 19: six vowel sounds and stressed vs unstressed vowel pronunciation.'
+- id: T-050
+  quote: "You are in the city looking for different things. Ask, “Excuse me, where is…?”. Record \nyourself saying each question.\
+    \ Compare your recording to       03.8.\nшапка\nвісім\nкилим\nворог\nдвісті\nколега\nдити́на\nпиво\nномер\nтуалет\nлимон\n\
+    бік / бик\nдім / дим\nкіт / кит\nліс / лис\nтінь / тинь\nсобака\nдерево\nпрапор\nмолоко\nковбаса\nморозиво\nбутерброд\n\
+    вареники\nвишиванка\nуніверситет\nтеатр\nметро \nаптека\nвулиця\n1\n2\n3\n4\n5\n1\n2\n3\n4\n1\n2\n3\n4\n1\n2\n3\n4\n5\n\
+    6\nкінотеа́тр\nсуперма́ркет\nбібліоте́ка \nтаксі́\nавто́бусна зупи́нка\nбуди́нок но́мер 1 (оди́н)\n\U0001F3A5\n\U0001F6D2\
+    \n\U0001F4DA \n\U0001F695\n\U0001F68C\n\U0001F3E0\n7\n8\n9\n10\n11\n12\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n5\n6 \n7\n\
+    8\n9\n10\n11\n12\nсі́но / си́ньо \nмі́на / ми́на\nвіно́ / вино́\nве́чір / ве́чир\nджі́нси / джи́нси\n5\n6\n7\n8\n9\nпіані́но\
+    \ / піани́но \nкві́тка / кви́тка\nквіто́к / квито́к\nтурі́ст / тури́ст\nпріва́тний / прива́тний\n10\n11\n12\n13\n14\n\
+    Вправи\n1\n5\n3\n7\n9\n2\n6\n4\n8\n10́\nе\n1\n3\n4\n2\n5\nбудинок\nтелефон\nчетвер\nнеділя\nВи́бачте, де метро́?\nListen\
+    \ to       03.4 and choose the sound that the noun begins with.\nListen to       03.5 and underline the word you hear.\
+    \ After checking, practice reading the correct words \nwith and without the audio.\nListen to       03.7. Add a stress\
+    \ mark (´) to the stressed vowels and write a small е / и above the \nunstressed е / и, as in the example.\nListen to\
+    \       03.6 and place a stress mark (´) on the correct vowel in each word."
+  sha256: 062a6e708b4b3ba85aac5a1edd28106f039d618d96eba01073ba399509ec6d97
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0020_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 5fb0ce3a4ce2bbf6dff029306667f397bfdd315a5091f2062143793cdaf401a9
+    section_id: 57164
+  supports: 'Oho Unit 1 page 20: adult city context for vowel and consonant reading with rhythm and stress aids.'
+- id: T-051
+  quote: "What do you say if I say to you:\n                                                                I will include\
+    \ the answers in the next episode’s\n 1         Приві́т!                                             lesson notes.\n \
+    \                                                               Fill in the blanks. Feel free to use the dictionary\n\
+    \                                                                or the bonus vocabulary below to get some new\n 2   \
+    \      Як спра́ви?                                          and useful words:\n\n                                    \
+    \                                Олег:        ____________________________\n 3         Ра́да тебе́ ба́чити!\n        \
+    \                                                            Марічка: Привіт!\n                                      \
+    \                              Олег:        ____________________________\nThe possible answers:"
+  sha256: 728acb0e0986b9ecced291db9e882be089211b79a29f1f6b0612e66aa54de061
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0001_w005
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: c879dc54dcca458d0b30938154b360c61c9ceed871f4c4db1467510f2cced0c5
+    section_id: null
+  supports: 'ULP 1-01 page 5: oral greeting response practice model (What do you say if I say to you: ...).'
 unsupported:
 - claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and
     lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos establish their named

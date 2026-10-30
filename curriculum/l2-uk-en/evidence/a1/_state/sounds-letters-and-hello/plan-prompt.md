@@ -4,7 +4,7 @@ The fresh path has no word or activity target: judge size by job adequacy agains
 
 Kind: plan
 Module: a1/sounds-letters-and-hello (Position 2)
-Manifest SHA256: dcbef549333a7113550f650eb7e8c042b73a9f6cc8847fe9e51daacfc68a8cea
+Manifest SHA256: 2dc0f91821071b4c1cab634b5cfc8919587c52fbec487259f71e8be6adb45c15
 
 You are the independent cross-family content reviewer for a fresh curriculum module plan (Contract 1, fresh-build review contracts #8430 r4).
 You evaluate whether the module plan serves the learning goals before any lesson writer runs.
@@ -204,8 +204,8 @@ taxonomy: 1
 kind: plan
 attempt:
   review_id: "rev-20261030-sounds-letters-and-hello"
-  attempt_id: "sol-att-3"
-  manifest_sha256: "dcbef549333a7113550f650eb7e8c042b73a9f6cc8847fe9e51daacfc68a8cea"
+  attempt_id: "sol-att-4"
+  manifest_sha256: "2dc0f91821071b4c1cab634b5cfc8919587c52fbec487259f71e8be6adb45c15"
   previous_attempt_id: null
 reviewer:
   resolved_model: "<model>"
@@ -287,25 +287,25 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Hear the informal greeting Привіт! and friendly farewells Бувай! or Па-па! used with friends, peers, and family. Notice statement, question, and exclamation intonation contours in first speech turns. Practice polar responses: так (yes) and ні (no).'
+    teach: 'Hear the informal greeting Привіт! and friendly farewells Бувай! or Па-па! used with friends, peers, and family. Notice statement, question, and exclamation intonation contours in first speech turns. Practice polar responses: так (yes) and ні (no). Practice choosing and saying the appropriate informal greeting aloud in response to situational prompts ("What do you say if I say to you: ...").'
     introduces: {letters: [], grammar: [], vocabulary: ['W-074']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-002', 'T-048', 'V-001', 'V-021']
+    evidence: ['T-002', 'T-048', 'T-051', 'V-001', 'V-021']
     practice: ['a1']
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Hear the formal greeting Добрий день!, greeting Вітаю!, and formal farewell До побачення! used for polite and respectful public interactions. Learn core politeness chunks: Дякую! (Thank you!), Будь ласка! (Please / You are welcome!), and Вибачте! (Excuse me / Sorry!).'
+    teach: 'Hear the formal greeting Добрий день!, greeting Вітаю!, and formal farewell До побачення! used for polite and respectful public interactions. Learn core politeness chunks: Дякую! (Thank you!), Будь ласка! (Please / You are welcome!), and Вибачте! (Excuse me / Sorry!). Practice choosing and saying the appropriate formal greeting aloud in response to situational prompts ("What do you say if I say to you: ...").'
     introduces: {letters: [], grammar: [], vocabulary: ['W-075', 'W-076']}
     uses: {grammar: [], vocabulary: ['W-074']}
-    evidence: ['T-003', 'T-041', 'T-045', 'T-048', 'V-002', 'V-020']
+    evidence: ['T-003', 'T-041', 'T-045', 'T-048', 'T-051', 'V-002', 'V-020']
     practice: ['a2']
     needs: [video]
   activities:
   - id: a1
     type: watch-and-repeat
     placement: inline
-    focus: 'Hear and say the informal greeting aloud.'
+    focus: 'Listen to and repeat Ukrainian greetings aloud with native video models, responding aloud to prompt situations in both informal and formal registers ("What do you say if I say to you: ...").'
     model: X-001
   - id: a2
     type: match-up
@@ -340,10 +340,10 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Survey the 33 letters of the Cyrillic alphabet with printed and cursive models and traditional letter names. Ukrainian phonetics features six basic vowel sounds ([а], [о], [у], [е], [и], [і]). Observe stressed vowels which sound clear and prolonged, versus unstressed vowels. Learn and observe the primary vowel letters А, О, Е, И, І with native video models.'
+    teach: 'Survey the 33 letters of the Cyrillic alphabet with printed and cursive models and traditional letter names. Ukrainian phonetics features six basic vowel sounds ([а], [о], [у], [е], [и], [і]). Observe that stressed vowels carry a stress mark (´) as in мама, while unstressed vowels [е] and [и] tend to merge slightly. Learn and observe the primary vowel letters А, О, Е, И, І with native video models.'
     introduces: {letters: ['А', 'Е', 'И', 'І', 'О'], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-001', 'T-006', 'T-007', 'T-009', 'T-011', 'T-042', 'T-046', 'V-004', 'V-005', 'V-007', 'V-009', 'V-017']
+    evidence: ['T-001', 'T-006', 'T-007', 'T-009', 'T-011', 'T-042', 'T-046', 'T-049', 'S-004', 'V-004', 'V-005', 'V-007', 'V-009', 'V-017']
     practice: ['a1']
     needs: [video]
   - id: s2
@@ -351,7 +351,7 @@ lessons:
     teach: 'Practice distinguishing vowel sounds: clear [і] versus deeper [и], and open [а], [о], [е]. Practice statement, question, and exclamation intonation contours with emotional expressiveness. Copy the taught vowel letters А, О, Е, И, І into your notebook as supported offline writing practice.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-004', 'T-047']
+    evidence: ['T-004', 'T-047', 'S-005']
     practice: ['a2']
   activities:
   - id: a1
@@ -377,8 +377,8 @@ lessons:
   slug: first-consonants-and-syllables
   title: 'перші приголосні'
   kind: teach
-  job: 'Introduce consonants М, Н, В and read first CV syllables and familiar names.'
-  rationale: 'Combines taught vowels with first sonorants and voiced fricative to build readable syllables and personal names.'
+  job: 'Introduce consonants М, Н, В and read first CV syllables and familiar names in community welcome contexts.'
+  rationale: 'Combines taught vowels with first sonorants and voiced fricative to build readable syllables and personal names, using syllables as pronunciation and rhythm aids.'
   word_target: 220
   inventory:
     phonetics:
@@ -397,18 +397,18 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Consonants М and Н: read syllables ма, мо, ме, ми, мі and на, но, не, ни, ні; read мама, Ніна, Нонна. Copy the word мама into your notebook as supported writing practice.'
+    teach: 'Welcoming community members and reading badges in social spaces: read participant names Ніна, Нонна and family reference мама. Practice syllables ма, мо, ме, ми, мі and на, но, не, ни, ні as rhythm and pronunciation scaffolds for confident speech. Copy the word мама into your notebook as supported writing practice.'
     introduces: {letters: ['М', 'Н'], grammar: [], vocabulary: ['W-081', 'W-091', 'W-092']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-010', 'T-012', 'T-019', 'V-008', 'V-010']
+    evidence: ['T-010', 'T-012', 'T-019', 'T-050', 'V-008', 'V-010']
     practice: ['a1']
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Consonant В: read syllables ва, во, ве, ви, ві and decodable names Іван, Вова. Copy the name Вова into your notebook as supported writing practice.'
+    teach: 'Consonant В in community interactions: read syllables ва, во, ве, ви, ві and decodable names Іван, Вова in welcoming contexts. Copy the name Вова into your notebook as supported writing practice.'
     introduces: {letters: ['В'], grammar: [], vocabulary: ['W-093', 'W-094']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-013', 'T-019', 'V-011']
+    evidence: ['T-013', 'T-019', 'T-050', 'V-011']
     practice: ['a2']
     needs: [video]
   activities:
@@ -436,8 +436,8 @@ lessons:
   slug: consonants-and-pronoun
   title: 'приголосні П, Р, Т і займенник я'
   kind: teach
-  job: 'Introduce voiceless stops П and Т, vibrant Р, and iotated vowel Я, and read decodable words and pronoun я.'
-  rationale: 'Completes position 2 letter allocation with П, Р, Т, Я and decodable words before module recap.'
+  job: 'Introduce voiceless stops П and Т, vibrant Р, and iotated vowel Я, and read decodable words and pronoun я in adult navigation and identity contexts.'
+  rationale: 'Completes position 2 letter allocation with П, Р, Т, Я and decodable words for adult community navigation and personal identity, using syllables as rhythm aids.'
   word_target: 210
   inventory:
     phonetics:
@@ -453,18 +453,18 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Pronounce consonants П, Р, and Т with native video models. Read syllables with П, Р, Т (па, по, пе, пи, пі; та, то, те, ти, ті; ра, ро, ре, ри, рі) and decodable family noun тато. Copy тато into your notebook as supported writing practice.'
+    teach: 'Adult navigation and communication: pronounce consonants П, Р, and Т with native video models. Read syllables (па, по, пе, пи, пі; та, то, те, ти, ті; ра, ро, ре, ри, рі) as rhythm and pronunciation scaffolds, and read decodable family noun тато. Copy тато into your notebook as supported writing practice.'
     introduces: {letters: ['П', 'Р', 'Т'], grammar: [], vocabulary: ['W-101']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-017', 'T-018', 'T-043', 'V-015', 'V-016', 'V-018']
+    evidence: ['T-017', 'T-018', 'T-043', 'T-050', 'V-015', 'V-016', 'V-018']
     practice: ['a1', 'a2']
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Pronounce iotated vowel Я with native video model. Read the personal pronoun я. Copy the letter Я and word я into your notebook as supported offline writing practice.'
+    teach: 'Establishing speaker identity in city and community interactions: pronounce iotated vowel Я with native video model. Read personal pronoun я ("Я..."). Copy the letter Я and word я into your notebook as supported offline writing practice.'
     introduces: {letters: ['Я'], grammar: [], vocabulary: ['W-001']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-044', 'T-005', 'V-019']
+    evidence: ['T-044', 'T-005', 'T-050', 'V-019']
     practice: ['a3']
     needs: [video]
   activities:
@@ -519,21 +519,21 @@ lessons:
     needs: [video]
   - id: s2
     kind: recap
-    teach: 'Practical closing task: read connected personal names and phrases using all 12 taught letters (А, О, Е, И, І, М, Н, В, П, Р, Т, Я) and transcribe them into your notebook as supported writing practice.'
+    teach: 'Practical closing task: greet someone aloud in formal and informal social contexts and read community member names using all 12 taught letters (А, О, Е, И, І, М, Н, В, П, Р, Т, Я).'
     task:
       id: 'sounds-letters-recap-task'
       action: 'read_and_use'
-      context_en: 'Greeting community members and reading a list of names.'
-      instruction_en: 'Distinguish informal from formal greetings, read the decodable names aloud, and write them in your notebook.'
+      context_en: 'Greeting community members and reading a list of names at a community event.'
+      instruction_en: 'Choose and say the appropriate greeting aloud (formal "Добрий день!" vs informal "Привіт!") for each social situation, read the decodable names aloud, and write them in your notebook.'
       response_mode: 'spoken_or_written'
       success_criteria_en:
-      - 'Select the appropriate greeting for informal and formal situations'
-      - 'Decode and pronounce familiar names using all twelve taught letters'
+      - 'Choose and say the appropriate greeting aloud for both informal (Привіт!) and formal (Добрий день!) situations'
+      - 'Decode and pronounce familiar names aloud using all twelve taught letters'
       - 'Copy model words and names into a notebook with correct Cyrillic letter forms'
       learner_reads: []
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: ['W-081', 'W-091', 'W-092', 'W-093', 'W-094', 'W-101', 'W-001']}
-    evidence: ['T-019', 'T-018', 'T-043', 'T-044']
+    evidence: ['T-019', 'T-018', 'T-043', 'T-044', 'T-051']
     practice: ['a2', 'a3']
   activities:
   - id: a1
@@ -1599,13 +1599,13 @@ later get the next free id; ids are never reused.
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "6aba37953b1ae0598a357720733381968802829bc3f48b5a23fe738407ad0f8d",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "64ea850926312c7c96c26b8d99ebd54deab3dc0a77caea8156ef476a7ef3d612",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "b56eb4e030a22343f4de6c461520b5f509035e9c0431738f0a871c28b1c1f1a2",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "1d43386e67c10cd8fd91f5c5c6f999f568a900e8e49e1dfcef1f70dd78baf5b8",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "1833ed5eb2bc0c29225955e846baf227ef7625a7778089bb2855af1faa4c6960",
     "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "b716c55def2f736ce0e741821a4fa5d120bd3e6a9293fbcb88f035516f8baa34",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "05fd88b68ccb9ebd1e41613bc9098373c03920cc7a7f357940065e05f36062e5",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "3c83f38d42f477e270a138f56bede8f00bb16076966d753b27b167c968c859b5",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -1639,7 +1639,7 @@ later get the next free id; ids are never reused.
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 6aba37953b1ae0598a357720733381968802829bc3f48b5a23fe738407ad0f8d; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is b56eb4e030a22343f4de6c461520b5f509035e9c0431738f0a871c28b1c1f1a2; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     },
     {
@@ -1650,6 +1650,12 @@ later get the next free id; ids are never reused.
     }
   ],
   "notes": [
+    {
+      "code": "recap_task_quoted_ukrainian",
+      "lesson": 5,
+      "message": "Quoted Ukrainian ['Добрий', 'Привіт', 'день']: teacher metalanguage, not learner print or inventory evidence; review must confirm each form and construction is taught before this step",
+      "step": "s2"
+    },
     {
       "code": "a1_reference_word_missing",
       "lesson": 1,
@@ -1757,8 +1763,8 @@ v1_totals_schema: 1
     "examples_count": 0,
     "exercises_count": 6,
     "notes_count": 0,
-    "standard_count": 3,
-    "texts_count": 48,
+    "standard_count": 5,
+    "texts_count": 51,
     "unsupported_open_count": 0,
     "unsupported_resolved_count": 1,
     "videos_count": 20
@@ -1769,11 +1775,11 @@ v1_totals_schema: 1
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml",
-    "sha256": "6aba37953b1ae0598a357720733381968802829bc3f48b5a23fe738407ad0f8d"
+    "sha256": "b56eb4e030a22343f4de6c461520b5f509035e9c0431738f0a871c28b1c1f1a2"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock",
-    "sha256": "64ea850926312c7c96c26b8d99ebd54deab3dc0a77caea8156ef476a7ef3d612"
+    "sha256": "1d43386e67c10cd8fd91f5c5c6f999f568a900e8e49e1dfcef1f70dd78baf5b8"
   },
   "report_schema": 1,
   "reports": [],
@@ -1786,6 +1792,16 @@ v1_totals_schema: 1
 
 ### Provisional Evidence Pack Records The Plan Cites
 ```yaml
+S-004:
+  file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-004
+  lines: 586-586
+  text: '     4.1.5. Наголос.'
+S-005:
+  file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-005
+  lines: 596-596
+  text: '     4.1.8. Інтонація (розповідна, питальна, оклична).'
 T-001:
   id: T-001
   quote: 'Мовні звуки: голосні та приголосні
@@ -2230,6 +2246,48 @@ T-048:
     row_sha256: b8ab07469541d67870b8c08599aaaeb1bf36a054a88fc59bb2001671bd64035b
     section_id: 57361
   supports: 'OHO adult workbook glossary: informal farewells Бувай, Па-па, and greeting Вітаю.'
+T-049:
+  id: T-049
+  quote: "Ukrainian has six vowel sounds (голосні́ зву́ки), and their pronunciation is generally straightforward. \nHowever, stress (на́голос) plays an important role. To indicate stress in language learning materials or \ndictionaries, a special stress mark (´) is placed above the stressed vowel. For example, ма́ма shows that \nthe stress falls on the first syllable.\nThe sounds [е] and [и] are special: in unstressed positions, they tend to merge slightly ― [е] takes on a hint of \n[и] (transcribed as [еи]), and [и] takes on a hint of [е] (transcribed as [ие])."
+  sha256: 69d0e8e6aa3f6a1ecdd34f993f477fed50c31a4bb4215c245a49d1ff047054dd
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0019_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: f12e4c1dd4d8228c20f264726b176a5014167e79733aa3373180d213fd56b6a4
+    section_id: 57163
+  supports: 'Oho Unit 1 page 19: six vowel sounds and stressed vs unstressed vowel pronunciation.'
+T-050:
+  id: T-050
+  quote: "You are in the city looking for different things. Ask, “Excuse me, where is…?”. Record \nyourself saying each question. Compare your recording to       03.8.\nшапка\nвісім\nкилим\nворог\nдвісті\nколега\nдити́на\nпиво\nномер\nтуалет\nлимон\nбік / бик\nдім / дим\nкіт / кит\nліс / лис\nтінь / тинь\nсобака\nдерево\nпрапор\nмолоко\nковбаса\nморозиво\nбутерброд\nвареники\nвишиванка\nуніверситет\nтеатр\nметро \nаптека\nвулиця\n1\n2\n3\n4\n5\n1\n2\n3\n4\n1\n2\n3\n4\n1\n2\n3\n4\n5\n6\nкінотеа́тр\nсуперма́ркет\nбібліоте́ка \nтаксі́\nавто́бусна зупи́нка\nбуди́нок но́мер 1 (оди́н)\n\U0001F3A5\n\U0001F6D2\n\U0001F4DA \n\U0001F695\n\U0001F68C\n\U0001F3E0\n7\n8\n9\n10\n11\n12\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n5\n6 \n7\n8\n9\n10\n11\n12\nсі́но / си́ньо \nмі́на / ми́на\nвіно́ / вино́\nве́чір / ве́чир\nджі́нси / джи́нси\n5\n6\n7\n8\n9\nпіані́но / піани́но \nкві́тка / кви́тка\nквіто́к / квито́к\nтурі́ст / тури́ст\nпріва́тний / прива́тний\n10\n11\n12\n13\n14\nВправи\n1\n5\n3\n7\n9\n2\n6\n4\n8\n10́\nе\n1\n3\n4\n2\n5\nбудинок\nтелефон\nчетвер\nнеділя\nВи́бачте, де метро́?\nListen to       03.4 and choose the sound that the noun begins with.\nListen to       03.5 and underline the word you hear. After checking, practice reading the correct words \nwith and without the audio.\nListen to       03.7. Add a stress mark (´) to the stressed vowels and write a small е / и above the \nunstressed е / и, as in the example.\nListen to       03.6 and place a stress mark (´) on the correct vowel in each word."
+  sha256: 062a6e708b4b3ba85aac5a1edd28106f039d618d96eba01073ba399509ec6d97
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0020_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 5fb0ce3a4ce2bbf6dff029306667f397bfdd315a5091f2062143793cdaf401a9
+    section_id: 57164
+  supports: 'Oho Unit 1 page 20: adult city context for vowel and consonant reading with rhythm and stress aids.'
+T-051:
+  id: T-051
+  quote: "What do you say if I say to you:\n                                                                I will include the answers in the next episode’s\n 1         Приві́т!                                             lesson notes.\n                                                                Fill in the blanks. Feel free to use the dictionary\n                                                                or the bonus vocabulary below to get some new\n 2         Як спра́ви?                                          and useful words:\n\n                                                                    Олег:        ____________________________\n 3         Ра́да тебе́ ба́чити!\n                                                                    Марічка: Привіт!\n                                                                    Олег:        ____________________________\nThe possible answers:"
+  sha256: 728acb0e0986b9ecced291db9e882be089211b79a29f1f6b0612e66aa54de061
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0001_w005
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: c879dc54dcca458d0b30938154b360c61c9ceed871f4c4db1467510f2cced0c5
+    section_id: null
+  supports: 'ULP 1-01 page 5: oral greeting response practice model (What do you say if I say to you: ...).'
 V-001:
   channel: Ukrainian Lessons Podcast
   checked:

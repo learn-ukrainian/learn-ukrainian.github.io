@@ -1,0 +1,168 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-sounds-letters-and-hello"
+  attempt_id: "sol-att-3"
+  manifest_sha256: "dcbef549333a7113550f650eb7e8c042b73a9f6cc8847fe9e51daacfc68a8cea"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "GPT-6"
+  harness: "Codex"
+  family: "OpenAI"
+  prompt_sha256: "2c11c5fdb7d281dd0ac28474253ef588a6db8eb479ca715aca72fe0bcc6d5e71"
+checks:
+  # The practical task combines a contextual register choice with reading and
+  # supported writing. Its shape is justified; spoken-response adequacy is F-01.
+  # search_text: ulp-1-00-lesson-notes_l0002_w001,
+  # receipt rr-0fda2bbbde561f0b405e: "between a receptionist and a guest."
+  closing_shape: clean
+
+  # Titles describe greeting, vowel, consonant and consolidation jobs.
+  # English prose quotes Ukrainian as the language item being taught.
+  title_describes_job: clean
+
+  # No title or subtitle states an inventory quantity.
+  title_quantities: clean
+
+  # verify_words receipt rr-e09b39e12fc12179ac20: "Found: 20/20".
+  # inspect_words receipt rr-a1c74ed744d8a4bc2d56 reports CLEAN analyses
+  # for the 32 checked lexical forms, including titles and oral formulas.
+  # Sense examples: до/prep at VESUM 1548342-1548342;
+  # Ніна/nominative/personal-name; привіт/nominative.
+  # search_text receipt rr-64f8bdcca59f20f6b45b,
+  # owned-oho-a1-workbook_f1_p0216_c0001: "Віта́ю!, Hello!"
+  quoted_forms: clean
+
+  # Oral chunks precede decoding without grammatical analysis. The full-alphabet
+  # overview follows accepted r6 and does not imply acquisition of every letter.
+  # search_text receipt rr-d0033ca6500246e25abf,
+  # owned-oho-a1-workbook_f1_p0015_c0001:
+  # "Alphabet: printed and handwritten letters".
+  sequencing: clean
+
+  # Judged by distinct learning jobs, without word/activity/item/time quotas.
+  # The inventory does not establish overload by itself. Exact learner-work
+  # duration remains unmeasured; no duration claim is made.
+  sizing: clean
+
+  inventory:
+    - F-03
+
+  # Rotation progresses through audio recognition, sound-symbol matching,
+  # syllable selection, semantic sorting and a quiz. Repeated selection types
+  # have a plausible progression across new letters; repetition alone is no defect.
+  # Fresh: 6 workbook activities versus mapped v1's 0; 12 activities overall
+  # versus 10. Reduced inline volume reflects relocation into workbook practice.
+  # Evidence gap: fresh response opportunities are unavailable at plan stage,
+  # so comparison with v1's 62 responses remains unverified.
+  # The recap's contextual greeting choice is useful; its spoken outcome is F-01.
+  activities:
+    - F-01
+
+  evidence_fit:
+    - F-02
+
+  standard_and_ulp:
+    - F-04
+
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 1
+        activity: a2
+        quote: "Match social situations to appropriate Ukrainian greetings heard in audio recordings."
+      - lesson: 5
+        step: s2
+        quote: "Distinguish informal from formal greetings, read the decodable names aloud, and write them in your notebook."
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      The planned practice does not demonstrate the promised ability to give an
+      appropriate formal greeting aloud. Lesson 1's explicit speaking activity
+      covers the informal greeting; its formal practice is matching. The closing
+      task requires names to be spoken but asks only for greeting discrimination.
+      This also limits the closing task's fulfilment of the module's oral job.
+      search_text, ulp-1-00-lesson-notes_l0001_w005, supplies the response model
+      "What do you say if I say to you:". Extend an existing oral routine to require
+      learners to choose and say a taught greeting in both social contexts, and
+      make that outcome observable in the recap. No additional activity count
+      is required.
+    evidence:
+      receipt: "rr-36501cae4b576aefc7c7"
+    could_be_a_gate: "no"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "Ukrainian phonetics features six basic vowel sounds ([а], [о], [у], [е], [и], [і]). Observe stressed vowels which sound clear and prolonged, versus unstressed vowels."
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: >-
+      The cited pack excerpts do not ground this combined teaching point.
+      T-001 distinguishes sound classes, the individual letter records model
+      isolated correspondences, and T-046 presents the alphabet. They do not
+      explain the six-sound system or the stressed/unstressed contrast.
+      search_text, owned-oho-a1-workbook_f1_p0019_c0001, provides an adult
+      pedagogical source stating "Ukrainian has six vowel sounds" and explaining
+      stress and unstressed vowel pronunciation. The pack-builder must add
+      appropriate quoted evidence and the plan must cite it. The particular
+      assertion "clear and prolonged" also needs explicit support before the
+      writer is required to teach it.
+    evidence:
+      receipt: "rr-b0cc031e350091fef826"
+    could_be_a_gate: "no"
+
+  - id: F-03
+    status: active
+    locations:
+      - lesson: 3
+        step: s1
+        quote: "Consonants М and Н: read syllables ма, мо, ме, ми, мі and на, но, не, ни, ні; read мама, Ніна, Нонна."
+      - lesson: 4
+        step: s1
+        quote: "Read syllables with П, Р, Т (па, по, пе, пи, пі; та, то, те, ти, ті; ра, ро, ре, ри, рі) and decodable family noun тато."
+    dimension: learner_fit
+    severity: MAJOR
+    claim: >-
+      The instructional literacy strand remains organised around syllable grids,
+      family words and primer names, without the adult survival framing required
+      by accepted arc revision r6 section (g). The community-members context
+      appears only in the closing task. The words and names themselves are
+      attested; the defect is their pedagogical role and framing.
+      search_text, owned-oho-a1-workbook_f1_p0020_c0001, integrates early vowel
+      work with a city task: "You are in the city looking for different things."
+      Reframe the instructional reading and pronunciation tasks around a
+      sourced adult/teen use, retaining syllables as pronunciation and rhythm
+      aids. Additional lexical evidence, where needed, belongs to the pack-builder.
+    evidence:
+      receipt: "rr-eff3df3e59867ddc7085"
+    could_be_a_gate: "no"
+
+  - id: F-04
+    status: active
+    locations: []
+    scope:
+      lesson: 2
+      step: s1
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      Independent verification of the exact State Standard passages cited as
+      :586 and :596 remains unavailable. The supplied arc assigns stress and
+      intonation duties, but the ledgered search_text search for the Standard
+      retrieved its bibliographic reference in
+      owned-oho-a1-workbook_f1_p0224_c0001 rather than the normative passages;
+      search_resources found no catalogue entry. Provide retrievable Standard
+      excerpts for the approval-critical comparison. This gap alone does not
+      establish a defect in learner content.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-cb0a4085b1698aece8b1"
+          outcome: hits_but_no_support
+        - receipt: "rr-2a2f1fefb1f786edf21b"
+          outcome: no_hits
+    could_be_a_gate: "no"

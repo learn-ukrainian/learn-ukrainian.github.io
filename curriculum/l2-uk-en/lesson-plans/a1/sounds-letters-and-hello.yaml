@@ -41,25 +41,25 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Hear the informal greeting Привіт! and friendly farewells Бувай! or Па-па! used with friends, peers, and family. Notice statement, question, and exclamation intonation contours in first speech turns. Practice polar responses: так (yes) and ні (no).'
+    teach: 'Hear the informal greeting Привіт! and friendly farewells Бувай! or Па-па! used with friends, peers, and family. Notice statement, question, and exclamation intonation contours in first speech turns. Practice polar responses: так (yes) and ні (no). Practice choosing and saying the appropriate informal greeting aloud in response to situational prompts ("What do you say if I say to you: ...").'
     introduces: {letters: [], grammar: [], vocabulary: ['W-074']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-002', 'T-048', 'V-001', 'V-021']
+    evidence: ['T-002', 'T-048', 'T-051', 'V-001', 'V-021']
     practice: ['a1']
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Hear the formal greeting Добрий день!, greeting Вітаю!, and formal farewell До побачення! used for polite and respectful public interactions. Learn core politeness chunks: Дякую! (Thank you!), Будь ласка! (Please / You are welcome!), and Вибачте! (Excuse me / Sorry!).'
+    teach: 'Hear the formal greeting Добрий день!, greeting Вітаю!, and formal farewell До побачення! used for polite and respectful public interactions. Learn core politeness chunks: Дякую! (Thank you!), Будь ласка! (Please / You are welcome!), and Вибачте! (Excuse me / Sorry!). Practice choosing and saying the appropriate formal greeting aloud in response to situational prompts ("What do you say if I say to you: ...").'
     introduces: {letters: [], grammar: [], vocabulary: ['W-075', 'W-076']}
     uses: {grammar: [], vocabulary: ['W-074']}
-    evidence: ['T-003', 'T-041', 'T-045', 'T-048', 'V-002', 'V-020']
+    evidence: ['T-003', 'T-041', 'T-045', 'T-048', 'T-051', 'V-002', 'V-020']
     practice: ['a2']
     needs: [video]
   activities:
   - id: a1
     type: watch-and-repeat
     placement: inline
-    focus: 'Hear and say the informal greeting aloud.'
+    focus: 'Listen to and repeat Ukrainian greetings aloud with native video models, responding aloud to prompt situations in both informal and formal registers ("What do you say if I say to you: ...").'
     model: X-001
   - id: a2
     type: match-up
@@ -94,10 +94,10 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Survey the 33 letters of the Cyrillic alphabet with printed and cursive models and traditional letter names. Ukrainian phonetics features six basic vowel sounds ([а], [о], [у], [е], [и], [і]). Observe stressed vowels which sound clear and prolonged, versus unstressed vowels. Learn and observe the primary vowel letters А, О, Е, И, І with native video models.'
+    teach: 'Survey the 33 letters of the Cyrillic alphabet with printed and cursive models and traditional letter names. Ukrainian phonetics features six basic vowel sounds ([а], [о], [у], [е], [и], [і]). Observe that stressed vowels carry a stress mark (´) as in мама, while unstressed vowels [е] and [и] tend to merge slightly. Learn and observe the primary vowel letters А, О, Е, И, І with native video models.'
     introduces: {letters: ['А', 'Е', 'И', 'І', 'О'], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-001', 'T-006', 'T-007', 'T-009', 'T-011', 'T-042', 'T-046', 'V-004', 'V-005', 'V-007', 'V-009', 'V-017']
+    evidence: ['T-001', 'T-006', 'T-007', 'T-009', 'T-011', 'T-042', 'T-046', 'T-049', 'S-004', 'V-004', 'V-005', 'V-007', 'V-009', 'V-017']
     practice: ['a1']
     needs: [video]
   - id: s2
@@ -105,7 +105,7 @@ lessons:
     teach: 'Practice distinguishing vowel sounds: clear [і] versus deeper [и], and open [а], [о], [е]. Practice statement, question, and exclamation intonation contours with emotional expressiveness. Copy the taught vowel letters А, О, Е, И, І into your notebook as supported offline writing practice.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-004', 'T-047']
+    evidence: ['T-004', 'T-047', 'S-005']
     practice: ['a2']
   activities:
   - id: a1
@@ -131,8 +131,8 @@ lessons:
   slug: first-consonants-and-syllables
   title: 'перші приголосні'
   kind: teach
-  job: 'Introduce consonants М, Н, В and read first CV syllables and familiar names.'
-  rationale: 'Combines taught vowels with first sonorants and voiced fricative to build readable syllables and personal names.'
+  job: 'Introduce consonants М, Н, В and read first CV syllables and familiar names in community welcome contexts.'
+  rationale: 'Combines taught vowels with first sonorants and voiced fricative to build readable syllables and personal names, using syllables as pronunciation and rhythm aids.'
   word_target: 220
   inventory:
     phonetics:
@@ -151,18 +151,18 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Consonants М and Н: read syllables ма, мо, ме, ми, мі and на, но, не, ни, ні; read мама, Ніна, Нонна. Copy the word мама into your notebook as supported writing practice.'
+    teach: 'Welcoming community members and reading badges in social spaces: read participant names Ніна, Нонна and family reference мама. Practice syllables ма, мо, ме, ми, мі and на, но, не, ни, ні as rhythm and pronunciation scaffolds for confident speech. Copy the word мама into your notebook as supported writing practice.'
     introduces: {letters: ['М', 'Н'], grammar: [], vocabulary: ['W-081', 'W-091', 'W-092']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-010', 'T-012', 'T-019', 'V-008', 'V-010']
+    evidence: ['T-010', 'T-012', 'T-019', 'T-050', 'V-008', 'V-010']
     practice: ['a1']
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Consonant В: read syllables ва, во, ве, ви, ві and decodable names Іван, Вова. Copy the name Вова into your notebook as supported writing practice.'
+    teach: 'Consonant В in community interactions: read syllables ва, во, ве, ви, ві and decodable names Іван, Вова in welcoming contexts. Copy the name Вова into your notebook as supported writing practice.'
     introduces: {letters: ['В'], grammar: [], vocabulary: ['W-093', 'W-094']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-013', 'T-019', 'V-011']
+    evidence: ['T-013', 'T-019', 'T-050', 'V-011']
     practice: ['a2']
     needs: [video]
   activities:
@@ -190,8 +190,8 @@ lessons:
   slug: consonants-and-pronoun
   title: 'приголосні П, Р, Т і займенник я'
   kind: teach
-  job: 'Introduce voiceless stops П and Т, vibrant Р, and iotated vowel Я, and read decodable words and pronoun я.'
-  rationale: 'Completes position 2 letter allocation with П, Р, Т, Я and decodable words before module recap.'
+  job: 'Introduce voiceless stops П and Т, vibrant Р, and iotated vowel Я, and read decodable words and pronoun я in adult navigation and identity contexts.'
+  rationale: 'Completes position 2 letter allocation with П, Р, Т, Я and decodable words for adult community navigation and personal identity, using syllables as rhythm aids.'
   word_target: 210
   inventory:
     phonetics:
@@ -207,18 +207,18 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Pronounce consonants П, Р, and Т with native video models. Read syllables with П, Р, Т (па, по, пе, пи, пі; та, то, те, ти, ті; ра, ро, ре, ри, рі) and decodable family noun тато. Copy тато into your notebook as supported writing practice.'
+    teach: 'Adult navigation and communication: pronounce consonants П, Р, and Т with native video models. Read syllables (па, по, пе, пи, пі; та, то, те, ти, ті; ра, ро, ре, ри, рі) as rhythm and pronunciation scaffolds, and read decodable family noun тато. Copy тато into your notebook as supported writing practice.'
     introduces: {letters: ['П', 'Р', 'Т'], grammar: [], vocabulary: ['W-101']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-017', 'T-018', 'T-043', 'V-015', 'V-016', 'V-018']
+    evidence: ['T-017', 'T-018', 'T-043', 'T-050', 'V-015', 'V-016', 'V-018']
     practice: ['a1', 'a2']
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Pronounce iotated vowel Я with native video model. Read the personal pronoun я. Copy the letter Я and word я into your notebook as supported offline writing practice.'
+    teach: 'Establishing speaker identity in city and community interactions: pronounce iotated vowel Я with native video model. Read personal pronoun я ("Я..."). Copy the letter Я and word я into your notebook as supported offline writing practice.'
     introduces: {letters: ['Я'], grammar: [], vocabulary: ['W-001']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-044', 'T-005', 'V-019']
+    evidence: ['T-044', 'T-005', 'T-050', 'V-019']
     practice: ['a3']
     needs: [video]
   activities:
@@ -273,21 +273,21 @@ lessons:
     needs: [video]
   - id: s2
     kind: recap
-    teach: 'Practical closing task: read connected personal names and phrases using all 12 taught letters (А, О, Е, И, І, М, Н, В, П, Р, Т, Я) and transcribe them into your notebook as supported writing practice.'
+    teach: 'Practical closing task: greet someone aloud in formal and informal social contexts and read community member names using all 12 taught letters (А, О, Е, И, І, М, Н, В, П, Р, Т, Я).'
     task:
       id: 'sounds-letters-recap-task'
       action: 'read_and_use'
-      context_en: 'Greeting community members and reading a list of names.'
-      instruction_en: 'Distinguish informal from formal greetings, read the decodable names aloud, and write them in your notebook.'
+      context_en: 'Greeting community members and reading a list of names at a community event.'
+      instruction_en: 'Choose and say the appropriate greeting aloud (formal "Добрий день!" vs informal "Привіт!") for each social situation, read the decodable names aloud, and write them in your notebook.'
       response_mode: 'spoken_or_written'
       success_criteria_en:
-      - 'Select the appropriate greeting for informal and formal situations'
-      - 'Decode and pronounce familiar names using all twelve taught letters'
+      - 'Choose and say the appropriate greeting aloud for both informal (Привіт!) and formal (Добрий день!) situations'
+      - 'Decode and pronounce familiar names aloud using all twelve taught letters'
       - 'Copy model words and names into a notebook with correct Cyrillic letter forms'
       learner_reads: []
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: ['W-081', 'W-091', 'W-092', 'W-093', 'W-094', 'W-101', 'W-001']}
-    evidence: ['T-019', 'T-018', 'T-043', 'T-044']
+    evidence: ['T-019', 'T-018', 'T-043', 'T-044', 'T-051']
     practice: ['a2', 'a3']
   activities:
   - id: a1

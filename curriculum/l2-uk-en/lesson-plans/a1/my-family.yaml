@@ -44,7 +44,7 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Observe consonants Б and Й. Read syllables ба, бо, бу, би, бі and contrast voiced Б with voiceless П.'
+    teach: 'Observe consonants Б and Й. Read syllables ба, бо, бу, би, бі and contrast voiced Б with voiceless П. Copy letters Б and Й into your notebook.'
     introduces: {letters: ['Б', 'Й'], grammar: [], vocabulary: ['W-110']}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-001', 'T-002', 'V-001', 'V-002']
@@ -52,7 +52,7 @@ lessons:
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Read possessive words мій, моя, твій, твоя with family words тато and мама.'
+    teach: 'Read possessive words мій, моя, твій, твоя with family words тато and мама. Copy short possessive phrases into your notebook.'
     introduces: {letters: [], grammar: [], vocabulary: ['W-010', 'W-011']}
     uses: {grammar: [], vocabulary: ['W-081', 'W-101']}
     evidence: ['T-006']
@@ -93,7 +93,7 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Learn letter Ї which always represents two sounds [йі]. Read proper names Україна and Київ.'
+    teach: 'Learn letter Ї which always represents two sounds [йі]. Read proper names Україна and Київ. Copy letter Ї and geographical names into your notebook.'
     introduces: {letters: ['Ї'], grammar: [], vocabulary: ['W-183', 'W-184']}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-003', 'V-003']
@@ -144,7 +144,7 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Observe vowel letters Ю and Є. Read words єнот and буква.'
+    teach: 'Observe vowel letters Ю and Є. Read words єнот and буква. Copy letters Ю and Є into your notebook.'
     introduces: {letters: ['Ю', 'Є'], grammar: [], vocabulary: ['W-127', 'W-171']}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-004', 'T-005', 'V-004', 'V-005']
@@ -192,7 +192,7 @@ lessons:
   steps:
   - id: s1
     kind: recap
-    teach: 'Review family words тато, мама, Іван and possessives мій, моя, твій, твоя.'
+    teach: 'Review family words тато, мама, Іван and possessives мій, моя, твій, твоя. Copy family descriptions into your notebook as supported writing practice.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: ['W-010', 'W-011', 'W-081', 'W-101', 'W-093']}
     evidence: ['T-006']
@@ -222,7 +222,7 @@ lessons:
     options:
     - 'мій тато'
     - 'моя тато'
-    - 'моє тато'
+    - 'твоя тато'
   - id: a2
     type: group-sort
     placement: workbook

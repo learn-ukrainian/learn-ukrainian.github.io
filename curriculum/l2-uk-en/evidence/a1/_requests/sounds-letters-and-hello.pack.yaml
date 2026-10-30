@@ -292,6 +292,18 @@ texts:
   source: {table: textbooks, chunk_id: owned-oho-a1-workbook_f1_p0216_c0001}
   span: {first_words: '216', last_words: 'Урок 75'}
   supports: 'OHO adult workbook glossary: informal farewells Бувай, Па-па, and greeting Вітаю.'
+- id: T-049
+  source: {table: textbooks, chunk_id: owned-oho-a1-workbook_f1_p0019_c0001}
+  span: {first_words: 'Ukrainian has six vowel sounds', last_words: '(transcribed as [ие]).'}
+  supports: 'Oho Unit 1 page 19: six vowel sounds and stressed vs unstressed vowel pronunciation.'
+- id: T-050
+  source: {table: textbooks, chunk_id: owned-oho-a1-workbook_f1_p0020_c0001}
+  span: {first_words: 'You are in the city looking for different things.', last_words: 'place a stress mark (´) on the correct vowel in each word.'}
+  supports: 'Oho Unit 1 page 20: adult city context for vowel and consonant reading with rhythm and stress aids.'
+- id: T-051
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}
+  span: {first_words: 'What do you say if I say to you:', last_words: 'The possible answers:'}
+  supports: 'ULP 1-01 page 5: oral greeting response practice model (What do you say if I say to you: ...).'
 exercises:
 - id: X-001
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}
@@ -520,6 +532,8 @@ standard:
 - {id: S-001, lines: '342-344'}
 - {id: S-002, lines: '348-350'}
 - {id: S-003, lines: '420-421'}
+- {id: S-004, lines: '586-586'}
+- {id: S-005, lines: '596-596'}
 unsupported:
 - id: U-001
   claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and lesson 5
