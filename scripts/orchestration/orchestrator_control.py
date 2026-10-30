@@ -840,7 +840,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Pass through to dispatch v2: first-response deadline in seconds (default: dispatch v2 default 600); 0 disables it.",
     )
-    dispatch.add_argument("--max-budget-usd", type=float, help="GAP: unsupported by dispatch v2.")
+    dispatch.add_argument(
+        "--max-budget-usd",
+        type=float,
+        help="Pass through to dispatch v2: spend cap in USD for a Claude API-key account, at most its configured "
+        "amount (default: that amount).",
+    )
     dispatch.add_argument(
         "--lifecycle-file",
         help="GAP: v2 lacks lifecycle-file propagation; forwarded unchanged and refused by v2.",
