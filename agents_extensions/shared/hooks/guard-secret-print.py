@@ -1871,6 +1871,8 @@ _PARAMETER = re.compile(r"\$(?:\{([A-Za-z_][A-Za-z0-9_]*)(?:(:?-)([^}$`\\]*))?\}
 _MAX_WORD_CANDIDATES = 16
 # Tools that write every file operand, and tools that write only their last operand.
 _FILE_WRITERS = {"tee", "touch"}
+# Launchers that run their command under other user or group IDs.
+_CREDENTIAL_LAUNCHERS = {"sudo", "doas", "su", "runuser", "setpriv", "pkexec", "sg", "newgrp", "setuidgid", "chpst"}
 # Programs that only read, copy or describe their file operands, never run them.
 _FILE_TOOLS = {
     "cp",
@@ -2036,6 +2038,7 @@ class _ProcessFacts:
         self.launched: list[str] = []
         self.executable: set[str] = set()
         self.startup_unknown = False
+        self.credential_change = False
         # Copies of executables, and files whose content the command writes.
         self.executable_copies: set[str] = set()
         self.content_written: set[str] = set()
@@ -2723,8 +2726,9 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
     """Record the files a command writes, the directories it enters and its startup scripts."""
 
     def write(word: str, *, content: bool = True) -> None:
-        if (_shell_word_value(word) or "").startswith("/dev/"):
-            # A device such as /dev/null holds no script.
+        value = _shell_word_value(word)
+        if value is not None and re.fullmatch(r"/dev/(?:null|zero|tty|stdout|stderr|fd/\d+)", os.path.normpath(value)):
+            # A device holds no script.
             return
         if content:
             facts.content_written.update(os.path.basename(name) for name in _effect_names(word, facts) or [""])
@@ -2778,6 +2782,8 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
                     program == "wget" and "-O" not in values
                 ):
                     facts.unknown_write = True
+        if set(programs) & _CREDENTIAL_LAUNCHERS:
+            facts.credential_change = True
         for index, program in enumerate(programs):
             if program in {"chmod", "install"}:
                 for word in segment[index + 1 :]:
@@ -2785,8 +2791,12 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
                     facts.executable.update(os.path.basename(name) for name in names or [])
                     if names is None:
                         facts.executable.add("")
-        if programs[:1] in (["cd"], ["pushd"]):
-            targets = [word for word in segment[1:] if not (_shell_word_value(word) or "x").startswith("-")]
+        # cd behind a wrapper or control word (`builtin cd`, `if cd ...`) still moves.
+        moves = [index for index, program in enumerate(programs) if program in {"cd", "pushd", "popd"}]
+        if moves and programs[moves[0]] == "popd":
+            facts.unknown_directory = True
+        elif moves:
+            targets = [word for word in segment[moves[0] + 1 :] if not (_shell_word_value(word) or "x").startswith("-")]
             names = _word_candidates(targets[0], facts) if targets else [os.environ.get("HOME", "")]
             if targets and _under_proc(targets[0], facts):
                 # Relative writes there rename processes.
@@ -3070,8 +3080,10 @@ class _ProcessTable:
     only properties a stand-in shares with it (name, credentials) are queried.
     """
 
-    def __init__(self, exec_names: set[str] = frozenset()) -> None:  # type: ignore[assignment]
+    def __init__(self, exec_names: set[str] = frozenset(), *, any_user: bool = False) -> None:  # type: ignore[assignment]
         self.exec_names = {name for name in exec_names if name}
+        # The command changes credentials, so ID filters cannot tell the shell apart.
+        self.any_user = any_user
         self._ancestors: list[_Process] | None = None
         self._stand_ins: list[subprocess.Popen[str]] = []
         self._stand_in_processes: list[_Process] | None = None
@@ -3205,7 +3217,9 @@ def _procps_signal(word: str) -> bool:
     return match is not None and 0 <= int(match.group(1)) <= 127 - signal.SIGRTMIN
 
 
-def _pgrep_selection(values: list[str], *, pkill: bool) -> tuple[list[str], set[int] | None] | None:
+def _pgrep_selection(
+    values: list[str], *, pkill: bool, any_user: bool = False
+) -> tuple[list[str], set[int] | None] | None:
     """Rebuild a pgrep or pkill selection as canonical pgrep arguments, or refuse it."""
     if pkill:
         # procps signal_option(): the first dashed word that names a signal is removed.
@@ -3235,8 +3249,14 @@ def _pgrep_selection(values: list[str], *, pkill: bool) -> tuple[list[str], set[
         if option in _PGREP_SELECTION:
             if _PGREP_SELECTION[option] not in selection:
                 selection.append(_PGREP_SELECTION[option])
-        elif option in _PGREP_SELECTION_VALUES:
+        elif option in _PGREP_SELECTION_VALUES and not any_user:
             selection += [_PGREP_SELECTION_VALUES[option], value]
+        elif option in _PGREP_SELECTION_VALUES:
+            # Under sudo or another credential launcher the shell's IDs are not the
+            # stand-ins', so an ID filter is dropped, as any narrowing is.
+            if inverse:
+                raise _Unresolvable
+            dropped = True
         elif option in _PGREP_OUTPUT:
             continue
         elif inverse:
@@ -3296,7 +3316,7 @@ def _killall_selects(values: list[str], table: _ProcessTable) -> bool:
         return left.lower() == right.lower() if ignore_case else left == right
 
     for process in table.protected():
-        if uid is not None and process.ruid != uid:
+        if uid is not None and not table.any_user and process.ruid != uid:
             continue
         program = process.argv0.rsplit("/", 1)[-1]
         # A superset of match_process_name(): the comm, its 15-character prefix,
@@ -3350,10 +3370,13 @@ def _kill_operands(raw: tuple[str, ...], fed: bool, table: _ProcessTable) -> tup
         if _SELF_PID_EXPANSION.search(word):
             return _SELF_MATCH, True
         value = _shell_word_value(word)
-        if value is None or not re.fullmatch(r"-?\d+", value):
+        # Bash reads kill operands with its integer parser: surrounding whitespace,
+        # a sign and leading zeros are allowed (`+0`, `" -1"`).
+        match = re.fullmatch(r"\s*([+-]?\d+)\s*", value or "")
+        if match is None:
             dynamic = True
             continue
-        number = int(value)
+        number = int(match.group(1))
         if number in {0, -1}:
             return _SELF_MATCH, dynamic
         if number > 0 and number in {process.pid for process in table.ancestors}:
@@ -3378,15 +3401,18 @@ def _resolve_process_calls(calls: list[tuple[str, tuple[str, ...], bool]], table
             if reason:
                 return reason
             nonliteral = nonliteral or dynamic
-        elif (name == "pkill" and table.pgrep_selects(_pgrep_selection(_process_values(raw), pkill=True))) or (
-            name == "killall" and _killall_selects(_process_values(raw), table)
-        ):
+        elif (
+            name == "pkill"
+            and table.pgrep_selects(_pgrep_selection(_process_values(raw), pkill=True, any_user=table.any_user))
+        ) or (name == "killall" and _killall_selects(_process_values(raw), table)):
             return _SELF_MATCH
     # A kill whose PIDs come from elsewhere is paired with every selector in the
     # invocation, however the PIDs travel between them.
     if nonliteral:
         for name, raw, _ in calls:
-            if name == "pgrep" and table.pgrep_selects(_pgrep_selection(_process_values(raw), pkill=False)):
+            if name == "pgrep" and table.pgrep_selects(
+                _pgrep_selection(_process_values(raw), pkill=False, any_user=table.any_user)
+            ):
                 return _SELF_MATCH
             if name == "pidof" and table.pidof_selects(_pidof_selection(_process_values(raw))):
                 return _SELF_MATCH
@@ -3423,7 +3449,7 @@ def _process_refusal(command: str, cwd: str | None = None) -> str | None:
     if not facts.calls:
         return None
     try:
-        with _ProcessTable(facts.exec_names) as table:
+        with _ProcessTable(facts.exec_names, any_user=facts.credential_change) as table:
             return _resolve_process_calls(facts.calls, table)
     except _Unresolvable as exc:
         return exc.args[0] if exc.args else "a process kill could not be resolved against the live process table"
