@@ -261,3 +261,16 @@ def test_delivery_read_returns_body_only_to_the_current_lease_holder(plane, caps
     invoke(capsys, *fenced("ack", delivery))
     result = read_body(capsys, delivery, expected=EXIT_ERROR)
     assert result == {"content_included": False, "error": "stale_delivery_lease"}
+
+
+def test_delivery_read_missing_body_file_is_storage_error(plane, capsys):
+    publish(plane)
+    delivery = claim(capsys)
+    body_files = [path for path in (plane / "blobs").rglob("*") if path.is_file()]
+    assert body_files
+    for path in body_files:
+        path.unlink()
+    result = read_body(capsys, delivery, expected=EXIT_ERROR)
+    assert result == {"content_included": False, "error": "delivery_store_unavailable"}
+    assert "body" not in result
+    assert "private body sentinel" not in json.dumps(result)

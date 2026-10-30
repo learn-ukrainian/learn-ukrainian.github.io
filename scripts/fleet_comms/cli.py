@@ -797,6 +797,7 @@ def cmd_deliveries(args: argparse.Namespace) -> int:
     from datetime import UTC, datetime
 
     from scripts.control_plane.storage import ControlPlaneError
+    from scripts.fleet_comms.artifacts import ArtifactStoreError
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
     if args.deliveries_command == "claim":
@@ -850,7 +851,7 @@ def cmd_deliveries(args: argparse.Namespace) -> int:
     except AuthorityServiceError as exc:
         sys.stdout.write(_json_dump({"error": str(exc), "content_included": False}))
         return EXIT_NOT_FOUND if str(exc) == "delivery_not_found" else EXIT_ERROR
-    except (OSError, sqlite3.Error, PlaneRootAnchorError, ControlPlaneError):
+    except (OSError, sqlite3.Error, PlaneRootAnchorError, ControlPlaneError, ArtifactStoreError):
         # Storage exceptions may contain private paths or SQL; never echo them.
         sys.stdout.write(_json_dump({"error": "delivery_store_unavailable", "content_included": False}))
         return EXIT_ERROR
