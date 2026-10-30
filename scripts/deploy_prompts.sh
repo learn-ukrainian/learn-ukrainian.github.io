@@ -182,6 +182,109 @@ sync_shared_agent_mirror() {
         --agent-root .agent
 }
 
+# AGY truncates each rule file at 24,000 bytes. Split the served core into
+# always-on parts and exclude the oversized originals from discovery. The
+# source files stay mirrored byte for byte; the parts are deploy output.
+materialize_agy_rules() {
+    # A partial deploy fixture has no core to split. A real checkout always does.
+    # The body is the served core: one source, trailing whitespace stripped, one
+    # trailing newline. That is scripts/lib/rules_core.py assemble for the core seat.
+    if [[ ! -f "$PROJECT_ROOT/agents_extensions/shared/rules/core.md" ]]; then
+        return 0
+    fi
+    mkdir -p "$DEPLOY_STATE_DIR"
+    if [[ -z "${TMPDIR:-}" ]]; then
+        TMPDIR="$DEPLOY_STATE_DIR"
+    fi
+    local script status
+    script="$(mktemp "${TMPDIR}/agy-rules.XXXXXX.py")"
+    cat > "$script" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+root, agent_root = Path(sys.argv[1]), Path(sys.argv[2])
+limit = 24_000
+excluded = ("core.md", "model-assignment.md", "workflow.md")
+source = root / "agents_extensions/shared/rules/core.md"
+text = source.read_text(encoding="utf-8").rstrip() + "\n"
+
+
+def frontmatter(index: int, count: int) -> str:
+    return (
+        "---\n"
+        "trigger: always_on\n"
+        f"description: Binding rules core, part {index} of {count}.\n"
+        "---\n"
+    )
+
+
+pieces = text.split("\n")
+lines = [piece + "\n" for piece in pieces[:-1]]
+if pieces[-1]:
+    lines.append(pieces[-1])
+overhead = len(frontmatter(99, 99).encode("utf-8"))
+files = None
+for _attempt in range(4):
+    body_limit = limit - overhead
+    if body_limit < 1 or any(len(line.encode("utf-8")) > body_limit for line in lines):
+        break
+    bodies, current, size = [], [], 0
+    for line in lines:
+        piece_size = len(line.encode("utf-8"))
+        if current and size + piece_size > body_limit:
+            bodies.append("".join(current))
+            current, size = [line], piece_size
+        else:
+            current.append(line)
+            size += piece_size
+    if current:
+        bodies.append("".join(current))
+    count = len(bodies)
+    packed = []
+    for index, body in enumerate(bodies, start=1):
+        blob = (frontmatter(index, count) + body).encode("utf-8")
+        packed.append((f"core-part-{index:02d}.md", blob, body))
+    if "".join(bodies) == text and max(len(blob) for _name, blob, _body in packed) <= limit:
+        files = packed
+        break
+    overhead += 1
+if files is None:
+    raise SystemExit("AGY rule parts do not fit the rule file limit")
+
+rules_dir = agent_root / "rules"
+rules_dir.mkdir(parents=True, exist_ok=True)
+keep = {name for name, _blob, _body in files}
+for stale in rules_dir.glob("core-part-*.md"):
+    if stale.name not in keep:
+        stale.unlink()
+for name, blob, _body in files:
+    path = rules_dir / name
+    if not path.is_file() or path.read_bytes() != blob:
+        path.write_bytes(blob)
+
+rules_json = agent_root / "rules.json"
+existing = {}
+if rules_json.is_file():
+    loaded = json.loads(rules_json.read_text(encoding="utf-8"))
+    if not isinstance(loaded, dict):
+        raise SystemExit("AGY rules.json must be an object")
+    existing = loaded
+exclude = existing.get("exclude", [])
+if isinstance(exclude, str):
+    exclude = [exclude]
+if not isinstance(exclude, list) or any(not isinstance(item, str) for item in exclude):
+    raise SystemExit("AGY rules.json exclude must be a list of strings")
+existing["exclude"] = sorted(set(exclude).union(excluded))
+rendered = (json.dumps(existing, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+if not rules_json.is_file() or rules_json.read_bytes() != rendered:
+    rules_json.write_bytes(rendered)
+PY
+    "$PROJECT_PYTHON" "$script" "$PROJECT_ROOT" .agent && status=0 || status=$?
+    rm -f "$script"
+    return "$status"
+}
+
 remove_claude_autoload_rules() {
     local p
     for p in "${CLAUDE_RULE_AUTOLOAD_EXCLUDES[@]}"; do
@@ -340,7 +443,7 @@ echo "=== Deploy diff ==="
 has_changes=false
 
 diff_dirs() {
-    local src="$1" dst="$2" label="$3" orphans="$4"
+    local src="$1" dst="$2" label="$3" orphans="$4" generated="${5:-}"
     if [[ ! -d "$dst" ]]; then
         echo "  $label: destination does not exist yet (will be created)"
         has_changes=true
@@ -353,6 +456,14 @@ diff_dirs() {
     while IFS= read -r name; do
         diff_args+=(--exclude="$name")
     done < <(declared_diff_excludes "$src" "$dst" "$orphans")
+    # Generated deploy output. diff matches --exclude on the basename, so a
+    # glob covers every core part without hiding a source file of another name.
+    local generated_name
+    local -
+    set -f
+    for generated_name in $generated; do
+        diff_args+=(--exclude="$generated_name")
+    done
     local diff_out
     diff_out=$(diff "${diff_args[@]}" "$src" "$dst" 2>/dev/null | filter_pycache_only_diff || true)
     if [[ -n "$diff_out" ]]; then
@@ -434,7 +545,7 @@ diff_dirs \
     "$SHARED_EXTENSIONS → .claude" \
     "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS"
 # .agent/ diff is best-effort (no declared orphans, preserve-by-default)
-diff_dirs "$SHARED_EXTENSIONS" ".agent" "$SHARED_EXTENSIONS → .agent" ""
+diff_dirs "$SHARED_EXTENSIONS" ".agent" "$SHARED_EXTENSIONS → .agent" "" "core-part-*.md rules.json"
 diff_dirs "$SHARED_EXTENSIONS/skills" ".agents/skills" "$SHARED_EXTENSIONS/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
 diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES"
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
@@ -452,6 +563,12 @@ echo ""
 if [[ -d .codex/skills ]]; then
     echo "  .codex/skills: verified legacy discovery mirror will be captured into retained storage"
     has_changes=true
+fi
+
+# A mirror that is already current still refreshes AGY parts, so a core that
+# was synced earlier is not left over the rule-file limit.
+if [[ "$DRY_RUN" == false && -d .agent/rules ]]; then
+    materialize_agy_rules
 fi
 
 if [[ "$has_changes" == false ]]; then
@@ -481,6 +598,7 @@ reap_retired_shared_agent_paths
 # after the check and redirect a path-based write outside this repository.
 sync_shared_agent_mirror
 write_shared_agent_manifest
+materialize_agy_rules
 # shellcheck disable=SC2046
 "$RSYNC" -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
