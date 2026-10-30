@@ -450,10 +450,12 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
 
         from scripts.atlas import word_card_assembly as assembly
         from scripts.atlas import word_card_sources as src
+        from scripts.storage.topology import store_data_dir
 
         raw = foundation.readonly(stack, assembly.raw_cache_path(sources_path))
         modern_inputs = SimpleNamespace(records=records,
-            sources=src.PilotSources(sources, vesum, raw, sources_path.parent.parent),
+            sources=src.PilotSources(sources, vesum, raw,
+                store_data_dir(sources_path).parent),
             entry_by_unit={unit["unit_key"]: next(e for e in registry["entries"]
                 if e["created_in_build"] == build and unit["unit_key"] in foundation.source_keys(e)) for unit in units})
         needs = holding_obligations(manifest, registry, sources, modern_inputs)

@@ -415,7 +415,7 @@
       },
       {
         "path": "scripts/lexicon/ulif_raw_cache.py",
-        "sha256": "7f29130cc7c5223e5c8e79d3dfc70c1ac79553a796bd29a68cf695295c75faef"
+        "sha256": "f4f0f0cf4c53d717c8b7630ff25da3ea277318539e63c51a182e2948cfcf7f7e"
       },
       {
         "path": "scripts/lexicon/ulp_glossary_parse.py",
