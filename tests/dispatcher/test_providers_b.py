@@ -592,6 +592,10 @@ def test_agy_quota_error_settles_rate_limited_and_a_real_failure_stays_failed():
     assert (prose.rate_limited, prose.error) == (False, "agy: terminal result unsuccessful")
     dirty = load("agy").parse(stdout + "not json\n", stderr, 0, None)
     assert dirty.rate_limited is False
+    boolean_code = stderr.replace('"error_code": 429', '"error_code": true')
+    assert boolean_code != stderr
+    malformed = load("agy").parse(stdout, boolean_code, 0, None)
+    assert malformed.rate_limited is False
 
 
 # --- AGY read-only boundary (C-3027) -------------------------------------------------------------

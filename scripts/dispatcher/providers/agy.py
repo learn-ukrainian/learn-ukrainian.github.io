@@ -46,9 +46,13 @@ def _stderr_capacity(stderr: str) -> bool:
     if len(payloads) != 1:
         return False
     status, code = payloads[0].get("status"), payloads[0].get("error_code")
+    # bool is an int. A true/false code is malformed even when the status name
+    # is a capacity status, so it must not classify.
+    if isinstance(code, bool):
+        return False
     if isinstance(status, str) and status in _CAPACITY_STATUSES:
         return True
-    return isinstance(code, int) and not isinstance(code, bool) and code in _CAPACITY_CODES
+    return isinstance(code, int) and code in _CAPACITY_CODES
 
 
 def transport_model(model: str) -> str:
