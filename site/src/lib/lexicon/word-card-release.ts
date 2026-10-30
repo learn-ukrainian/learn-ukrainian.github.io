@@ -44,6 +44,7 @@ export type LoadedRelease = { kind: 'release'; pin: ReleasePin; rows: ReleaseRow
   filteredAssertions?: z.infer<typeof manifestSchema>['source_breakdown'] };
 export type ReleaseResult = LoadedRelease | { kind: 'disabled' } | { kind: 'unavailable'; reason: string };
 export type ReleaseCard = { kind: 'release-card'; row: ReleaseRow } & Pick<LoadedRelease, 'pin' | 'withdrawalNotice'>;
+export type ReleaseIndex = { kind: 'release-index' } & Pick<LoadedRelease, 'rows' | 'pin' | 'withdrawalNotice'>;
 
 class Refusal extends Error {}
 function refuse(reason: string): never { throw new Refusal(reason); }

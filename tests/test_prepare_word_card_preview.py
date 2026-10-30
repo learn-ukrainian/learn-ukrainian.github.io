@@ -479,7 +479,7 @@ class Built:
 
 def test_verify_dist_accepts_exactly_the_inventoried_noindex_preview(tmp_path: Path, capsys) -> None:
     built = Built(tmp_path)
-    assert built.verify() == {
+    accepted = {
         "routes": 10,
         "cards": 3,
         "citations": 4,
@@ -488,11 +488,23 @@ def test_verify_dist_accepts_exactly_the_inventoried_noindex_preview(tmp_path: P
         "sitemaps": 2,
         "scripts_scanned": 1,
     }
+    assert built.verify() == accepted
     assert built.cli("--inventory", str(built.inventory_path)) == 0
     assert capsys.readouterr().out.strip() == (
         "word-card preview: 10 inventoried noindex routes for 3 cards (4 citations, 1 learner pages, "
         "2 visible entries); 2 sitemaps exclude them; 1 scripts fixture-free"
     )
+    # The bare landing route is an inventoried preview path. The release summary
+    # page moves to it; every other route guard still applies to the rest.
+    inventory = built.inventory()
+    inventory["routes"][5]["path"] = "/lexicon-v2/"
+    inventory["routes"][5]["href"] = "/lexicon-v2/"
+    built.write_inventory(inventory)
+    release_page = built.dist / "lexicon-v2" / "release" / "index.html"
+    landing_page = built.dist / "lexicon-v2" / "index.html"
+    landing_page.write_text(release_page.read_text(encoding="utf-8"), encoding="utf-8")
+    release_page.unlink()
+    assert built.verify() == accepted
 
 
 def _dist_mutations():
@@ -587,7 +599,6 @@ def _inventory_mutations():
         (lambda inv: inv["routes"][0].pop("href"), "exactly path, href and class"),
         (_route_at(5, path="/lexicon/release/", href="/lexicon/release/"), "is not a /lexicon-v2/ route path"),
         (_route_at(5, path="/lexicon-v2/release", href="/lexicon-v2/release"), "not a /lexicon-v2/ route path"),
-        (_route_at(5, path="/lexicon-v2/", href="/lexicon-v2/"), "not a /lexicon-v2/ route path"),
         (_route_at(5, path="/lexicon-v2/../x/", href="/lexicon-v2/../x/"), "not a /lexicon-v2/ route path"),
         (_route_at(5, path="/lexicon-v2/./x/", href="/lexicon-v2/./x/"), "not a /lexicon-v2/ route path"),
         (_route_at(5, path="/lexicon-v2//x/", href="/lexicon-v2//x/"), "not a /lexicon-v2/ route path"),
