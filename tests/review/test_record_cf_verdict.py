@@ -233,6 +233,15 @@ def test_finding_with_extra_status_field_is_refused_naming_it(beside_verdict_lin
         recorder._review_verdict_and_count(reply)
 
 
+def test_correct_reply_declaring_missing_capabilities_is_refused():
+    """A reviewer that reports missing capabilities cannot approve (#12084)."""
+    payload = structured_review(0)
+    payload["overall"]["correctness"] = "correct"
+    payload["missing_capabilities"] = ["test-execution"]
+    with pytest.raises(recorder.RecordError, match=r"'missing_capabilities' was unexpected"):
+        recorder._review_verdict_and_count(json.dumps(payload))
+
+
 @pytest.mark.parametrize("payload,expected", [
     ("VERDICT: APPROVE\n- prose item\n- another prose item", "APPROVED"),
 ])

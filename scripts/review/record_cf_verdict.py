@@ -35,7 +35,6 @@ from scripts.fleet_comms.review_publication import (
     DEFAULT_STATUS_CONTEXT,
     REVIEW_SCHEMA_VERSION,
     ReviewPublicationError,
-    resolve_verdict_and_evidence,
 )
 from scripts.fleet_comms.review_publisher import post_commit_status
 from scripts.opsec.prepublish import (
@@ -70,7 +69,7 @@ from scripts.review.model_catalog import (
     load_model_catalog,
     resolve_catalog_model_id,
 )
-from scripts.review.review_contract import ContractError, validate_reviewer_payload
+from scripts.review.review_contract import ContractError
 from scripts.review.reviewer_resolver import (
     FORMAL_CURSOR_REVIEW_MODELS,
     REVIEW_CANDIDATES,
@@ -92,10 +91,10 @@ from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
 from scripts.review.verdict_parser import (
     _REVIEW_VERDICT_LINE_RE,
-    MISSING_CAPABILITIES_FIELD,
     _commonmark_lines,
     _findings_json_verdicts,
     _without_code_fences,
+    checked_findings_payload,
     invalid_findings_block,
     recognized_verdicts,
     review_score,
@@ -131,7 +130,18 @@ class RecordError(RuntimeError):
     """A review cannot be bound to a trustworthy exact-head verdict."""
 
 
+NESTED_TOO_DEEPLY = "review reply is nested too deeply to read its verdict"
+
+
 def normalize_verdict(reply: str) -> str:
+    try:
+        return _normalize_verdict(reply)
+    except RecursionError:
+        # The JSON decoder's depth limit: the verdict cannot be read, so it is refused by name.
+        raise RecordError(NESTED_TOO_DEEPLY) from None
+
+
+def _normalize_verdict(reply: str) -> str:
     tokens = {NORMALIZED[token.upper()] for token in recognized_verdicts(reply)}
     visible = _without_code_fences(reply, keep_unclosed=False)
     verdict_line = any(_REVIEW_VERDICT_LINE_RE.match(line) for line in _commonmark_lines(visible))
@@ -169,12 +179,12 @@ def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]
         payload = json.loads(reply)
     except ValueError:
         payload = None
+    except RecursionError:
+        raise RecordError(NESTED_TOO_DEEPLY) from None
     if isinstance(payload, dict) and payload.get("schema_version") == REVIEW_SCHEMA_VERSION:
         # The closeout verifier's schema judges the reply itself, not a canonical subset of it.
-        payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
         try:
-            validate_reviewer_payload(payload)
-            verdict, evidence = resolve_verdict_and_evidence(payload)
+            verdict, evidence = checked_findings_payload(payload)
         except ContractError as exc:
             raise RecordError(f"structured review verdict or findings invalid: {exc}") from None
         except ReviewPublicationError:

@@ -143,7 +143,8 @@ def test_sources_mcp_without_runtime_evidence_refuses(updates):
         # "No in-scope blocker" is not zero findings.
         ("VERDICT: BLOCKED\nNo in-scope blocker.\nF1 [P3] scripts/unit.py:1 a follow-up.", r"\[findings\]"),
         ("VERDICT: APPROVE", r"\[verdict\].*APPROVED, not BLOCKED"),
-        (structured(correctness="incorrect", findings=[FINDING]), r"\[verdict\].*CHANGES_REQUESTED"),
+        # Only a BLOCKED reply may declare missing capabilities (#12084).
+        (structured(correctness="incorrect", findings=[FINDING]), r"\[run\].*'missing_capabilities' was unexpected"),
         ('{"schema_version": "code-review-findings.v1", "overall": {}}', r"\[run\].*evidence refused"),
     ],
     ids=["prose-zero", "prose-findings", "approve", "structured-findings", "malformed"],
