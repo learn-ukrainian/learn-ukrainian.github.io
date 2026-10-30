@@ -54,7 +54,7 @@ collection is the conservative estimate; a selected file with no recorded time
 (a new test file) counts at the median recorded file and still runs. If the
 estimate exceeds 600 seconds or pytest infrastructure changes, all guards still run
 and changed files outside the guards defer to merge-group pytest. Otherwise the
-importing tests fill the remaining budget up to half the cap (300 seconds, leaving room for runner variance), cheapest recorded duration first; the
+importing tests fill half of the room the guards and changed tests leave under the cap (leaving room for runner variance), cheapest recorded duration first; the
 rest defer with the same reason and are listed in `importing_test_files` and
 `deferred_files`. The recorded estimate includes the importing tests that run, and
 `unknown_duration_files` includes every importing test with no recorded time. Infrastructure

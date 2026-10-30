@@ -32,9 +32,11 @@ INFRA = {
     ".python-version",
 }
 CAP_SECONDS = 600
-# Importing tests fill only to half the cap: the cap is also the kill limit, so a
-# selection estimated at the cap has no room for runner speed variance.
-FILL_SECONDS = CAP_SECONDS / 2
+# Importing tests fill only half the room the guards and changed tests leave under
+# the cap: the cap is also the kill limit, so a selection estimated at the cap has no
+# room for runner speed variance. Measured from the mandatory selection, not from
+# zero, so a heavy guard list never starves every importing test.
+FILL_SHARE = 0.5
 TEST = re.compile(r"tests/(?:[^/]+/)*test_[^/]+\.py")
 
 
@@ -164,8 +166,9 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         if type(value) not in {int, float} or not math.isfinite(value) or value < 0:
             raise ValueError("invalid recorded duration")
     budget = estimate
+    fill_limit = estimate + (CAP_SECONDS - estimate) * FILL_SHARE
     for p in sorted(imported, key=lambda p: (durations.get(p, default), p)):
-        if budget + durations.get(p, default) <= FILL_SECONDS:
+        if budget + durations.get(p, default) <= fill_limit:
             run.add(p)
             budget += durations.get(p, default)
     if set(imported) - run:
