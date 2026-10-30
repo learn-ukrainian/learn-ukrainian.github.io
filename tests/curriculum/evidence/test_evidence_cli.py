@@ -6,12 +6,20 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
-from scripts.curriculum.evidence import __main__, words
+from scripts.curriculum.evidence import __main__, config, words
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PYTHON = sys.executable
+
+
+@pytest.fixture(autouse=True)
+def _no_free_disk_floor(monkeypatch):
+    # The snapshot refuses below the floor on the runner's real free disk; the floor
+    # itself is tested in test_sources.py. The subprocess cases inherit this value.
+    monkeypatch.setenv(config.FREE_DISK_FLOOR_ENV, "0")
 
 
 def _db_flags(sources_db: Path, vesum_db: Path) -> list[str]:
