@@ -54,10 +54,17 @@ _BACKGROUND_DENIES = "Monitor,ScheduleWakeup,CronCreate,Workflow"
 # guard and ``claude auth status`` read the run's ``--settings``, so a labelled run always carries one.
 _LABELLED_SETTING_SOURCES = "project,local"
 _LABELLED_SETTINGS = json.dumps({"permissions": {"deny": _BACKGROUND_DENIES.split(",")}}, separators=(",", ":"))
-_BACKGROUND_ENV = {
-    "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
-    "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
-}
+_BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
+_ADVISOR_OFF_ENV = {"CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1"}
+# Opus 5.5 advises headless workspace-write workers on Sonnet 5.5, and on Haiku 5.5 only when the dispatch
+# asks with --advisor opus (#12094, operator decision 2026-10-30). Every other run, read-only reviews and
+# Opus included, keeps the advisor disabled. The advisor needs Claude Code's feature-flag fetch: the child
+# environment is an allowlist that carries no telemetry opt-out, and the flag is silently inert if
+# DISABLE_TELEMETRY is set (https://code.claude.com/docs/en/advisor). Claude Code has no call cap, so
+# the worker brief limits consultations to two.
+_ADVISOR_MODEL = "opus"
+_ADVISED_MODEL = "claude-sonnet-5-5"
+_ADVISED_ON_REQUEST_MODEL = "claude-haiku-5-5"
 # The managed sources --restricted keeps (https://code.claude.com/docs/en/managed-settings, "Where each
 # mechanism stores the policy"): on Linux the files under /etc/claude-code, which env_sanitize checks
 # as one root, and server-managed settings, cached in the config directory and fetched at start
@@ -111,6 +118,16 @@ def _sources_mcp_config() -> str:
     return json.dumps({"mcpServers": {_SOURCES_SERVER: servers[_SOURCES_SERVER]}}, separators=(",", ":"))
 
 
+def advisor_enabled(spec: TaskSpec) -> bool:
+    """Whether this run gets the Opus advisor: a workspace-write Sonnet 5.5, or a Haiku 5.5 that asked for it."""
+    from scripts.review.model_catalog import canonical_model_id
+
+    if spec.mode != "workspace-write":
+        return False
+    model = canonical_model_id(spec.model)
+    return model == _ADVISED_MODEL or (model == _ADVISED_ON_REQUEST_MODEL and spec.options.get("advisor") == _ADVISOR_MODEL)
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     from scripts.agent_runtime.attempt_boundary import resolve_claude_budget_usd
 
@@ -136,6 +153,11 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.claude_account not in (None, "a"):
         argv += ["--settings", _LABELLED_SETTINGS, "--setting-sources", _LABELLED_SETTING_SOURCES]
     env = {**env, **_BACKGROUND_ENV}
+    if advisor_enabled(spec):
+        argv += ["--advisor", _ADVISOR_MODEL]
+        env.pop("CLAUDE_CODE_DISABLE_ADVISOR_TOOL", None)
+    else:
+        env.update(_ADVISOR_OFF_ENV)
     if (budget := resolve_claude_budget_usd(spec.claude_account, spec.options.get("max_budget_usd"))) is not None:
         # An API-key run is billed per token: cap it, and keep its cache for an hour, since a test run
         # between two requests can outlast the 5 minute default that print mode gives an API key

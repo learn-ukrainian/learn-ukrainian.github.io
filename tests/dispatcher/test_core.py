@@ -3333,6 +3333,31 @@ def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp
         assert "CLAUDE_CODE_PROMPT_CACHE_TTL" not in invocation.env
 
 
+@pytest.mark.parametrize(
+    ("model", "mode", "options", "advised"),
+    [
+        ("claude-sonnet-5-5", "workspace-write", {}, True),
+        ("claude-sonnet-5-5", "read-only", {}, False),
+        ("claude-opus-5-5", "workspace-write", {}, False),
+        ("claude-haiku-5-5", "workspace-write", {}, False),
+        ("claude-haiku-5-5", "workspace-write", {"advisor": "opus"}, True),
+    ],
+)
+def test_claude_advisor_is_attached_only_to_the_approved_runs(tmp_path, model, mode, options, advised):
+    """Advisor spend outside the approved scope is the defect: only the approved runs carry ``--advisor opus``."""
+    spec = TaskSpec("adv", "claude", model, None, mode, tmp_path, tmp_path / "p", tmp_path / "f", options=options)
+    spec.prompt_file.write_bytes(b"prompt")
+    for label in (None, "kk"):
+        invocation = providers.load("claude").build(dataclasses.replace(spec, claude_account=label), {})
+        assert ("--advisor" in invocation.argv) is advised
+        if advised:
+            assert invocation.argv[invocation.argv.index("--advisor") + 1] == "opus"
+            assert "CLAUDE_CODE_DISABLE_ADVISOR_TOOL" not in invocation.env
+            assert "DISABLE_TELEMETRY" not in invocation.env
+        else:
+            assert invocation.env["CLAUDE_CODE_DISABLE_ADVISOR_TOOL"] == "1"
+
+
 def _spawn_refused_record(tmp_path, monkeypatch, task_id):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     path = store.record_path(task_id)
