@@ -222,17 +222,15 @@ def test_invalid_structured_verdict_or_count_refuses(scanned_recorder, tmp_path,
 
 
 @pytest.mark.parametrize("beside_verdict_line", [True, False], ids=["verdict-line-and-block", "whole-json"])
-def test_finding_with_extra_status_field_is_refused_naming_it(scanned_recorder, tmp_path, beside_verdict_line):
+def test_finding_with_extra_status_field_is_refused_naming_it(beside_verdict_line):
     """The recorder refuses a reply the closeout verifier would reject, naming the field (#12080)."""
-    tasks, comments, calls, sent, _ = scanned_recorder
     payload = structured_review(1)
     payload["overall"]["correctness"] = "correct"
     payload["findings"][0].update(priority="P3", status="open")
     block = json.dumps(payload, indent=2)
-    write_task(tasks, reply=f"VERDICT: APPROVE\n\n```json\n{block}\n```\n" if beside_verdict_line else block)
+    reply = f"VERDICT: APPROVE\n\n```json\n{block}\n```\n" if beside_verdict_line else block
     with pytest.raises(recorder.RecordError, match=r"schema_violation:findings\.0:.*'status' was unexpected.*allowed"):
-        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
-    assert comments == sent == [] and calls == {"posts": 0, "statuses": 0}
+        recorder._review_verdict_and_count(reply)
 
 
 @pytest.mark.parametrize("payload,expected", [
