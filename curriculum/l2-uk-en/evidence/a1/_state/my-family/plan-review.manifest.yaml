@@ -25,7 +25,7 @@ inputs:
     sha256: 73b260394416e6297aa87b4a1e2d2148a1c7950466bc6a26047866523f46a03c
   plan:
     path: curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml
-    sha256: 19920dc2fabc335b8f19d04db0073a33b3b250cb6d0cc0d47cde288b5cbc542c
+    sha256: 4531361513fcfa71b7da9c35f824e22b40b5f7077c9753ad018c9555af7d084d
   requirements:
     path: docs/epics/fresh-build-requirements.md
     sha256: d0d5008aefd21a34fa5cea307254bbd9b044ac9c3eef3db1d1e6e9a3d02d629f
@@ -37,7 +37,7 @@ inputs:
     sha256: 58df15eb511a9f4c59ca63630fa4c748bb6b4c50324343d25604726bed192335
   validate_report:
     path: curriculum/l2-uk-en/evidence/a1/_state/my-family/plan-validate.report.json
-    sha256: a9de04ae05311d40ca5069f43452a3ea7cb62a543ee664fada44d4810dc0bd5c
+    sha256: 8efede1a904068086253190880945a4feec575d1035982a61e09ee43f3f18b60
   words:
     path: curriculum/l2-uk-en/evidence/a1/_words.yaml
     sha256: 3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490

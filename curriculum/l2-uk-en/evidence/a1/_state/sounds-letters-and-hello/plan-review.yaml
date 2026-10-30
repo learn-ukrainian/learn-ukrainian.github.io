@@ -1,8 +1,8 @@
 access: full
-attempt_id: sol-att-5
+attempt_id: sol-att-6
 harness: codex
-manifest_sha256: 4cdb88235ac488f0dc9eaadd21a2253b16c05129d4ddaa59d1b623f2977f85c7
+manifest_sha256: bf488e3767cdb11b685412f92bc76913342c04c4c9f12fe507f2c8b1c9d3f70f
 reviewer_family: openai
 reviewer_model: gpt-6.1-sol
-validated_at: '2026-10-30T19:47:53+00:00'
+validated_at: '2026-10-30T20:00:15+00:00'
 verdict: REVISE

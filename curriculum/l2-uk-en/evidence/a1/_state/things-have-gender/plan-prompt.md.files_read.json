@@ -1,0 +1,48 @@
+{
+  "files_read": [
+    "curriculum/l2-uk-en/lesson-plans/a1/things-have-gender.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/things-have-gender.yaml",
+    "docs/epics/fresh-build-requirements.md",
+    "docs/epics/fresh-build-a1-arc.md",
+    "curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/things-have-gender.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml",
+    "curriculum/l2-uk-en/evidence/a1/_state/things-have-gender/plan-validate.report.json",
+    "curriculum/l2-uk-en/evidence/a1/_state/things-have-gender/pack-verify.report.json",
+    "curriculum/l2-uk-en/evidence/a1/_state/things-have-gender/plan-review.v1-totals.yaml",
+    "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml.lock",
+    "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml",
+    "curriculum/l2-uk-en/evidence/a1/_state/things-have-gender/plan-review.learner-state.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml",
+    "scripts/review/prompts/plan-review.md.j2"
+  ],
+  "template_sha256": {
+    "scripts/review/prompts/plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
+  },
+  "verifier_reads": [
+    "curriculum/l2-uk-en/curriculum.yaml",
+    "scripts/review/prompts/lesson-rereview.md.j2",
+    "scripts/review/prompts/lesson-review.md.j2",
+    "scripts/review/prompts/settle.md.j2"
+  ],
+  "render_contract": {
+    "version": 4,
+    "render_checkout": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy",
+    "input_root": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy",
+    "prompts_dir": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy/scripts/review/prompts",
+    "templates": {
+      "plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
+    },
+    "template_digest": "sha256:84daaf1143e631518f15fc43368d50646af3b531d7f845a4da57085a12124f50",
+    "server_digest": "sha256:8ef8c413726e8623cc2896794e0657e38b4eb671c42f756f9d05c475fcd78fb1",
+    "server_components": {
+      "repository": "sha256:8f4e3f294b6feb676d698b379a615dd5a39c783b867852140d5c3527f2fe146a",
+      "requirements-lock.txt": "sha256:3e5c02571a48293fe2bde91910f0fed96e4fa8e89c55f0f030c22d3d94c75d96"
+    },
+    "prompt_sha256": "817882ff7d662acb0a696321b36b3153794eedce125c426a86984ed06d2c19e9",
+    "review_id": "rev-20261030-things-have-gender",
+    "attempt_id": "sol-att-1"
+  }
+}

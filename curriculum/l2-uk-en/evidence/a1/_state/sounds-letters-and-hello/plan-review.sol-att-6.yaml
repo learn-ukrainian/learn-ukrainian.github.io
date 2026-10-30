@@ -1,0 +1,161 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-sounds-letters-and-hello"
+  attempt_id: "sol-att-6"
+  manifest_sha256: "bf488e3767cdb11b685412f92bc76913342c04c4c9f12fe507f2c8b1c9d3f70f"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gpt-6"
+  harness: "codex"
+  family: "openai"
+  prompt_sha256: "f96c26f5d62269948786ef8ad08f53eaecaedfe6c83e6a4f02dcb9e55dfe1eaa"
+checks:
+  # The practical closing task requires a contextual register choice and spoken
+  # decoding; copying is supplementary. Greetings precede it in lesson 1.
+  # search_text: ulp-1-00-lesson-notes_l0001_w001,
+  # receipt rr-af61035e43ed4a66d48e; l0002_w002,
+  # receipt rr-ea10a23140b52ce1968e.
+  # Names: 1-klas-bukvar-zaharijchuk-2025-1_s0058,
+  # receipt rr-94f54c155ec03a655889.
+  closing_shape: clean
+
+  # Titles describe greetings, phonetics and reading. Ukrainian items in English
+  # prose name the forms being taught rather than replace English referents.
+  title_describes_job: clean
+
+  # No title or subtitle states an inventory quantity.
+  title_quantities: clean
+
+  # verify_words: receipts rr-d116612181f3c657ca35 and
+  # rr-3e310b71f1af5b7e54e0; sentence-initial common words checked lowercase.
+  # inspect_words: rr-c3ca13e1951ccede3bdc reports clean analyses for the
+  # quoted lexical forms, including the personal names.
+  # Prepositional до specifically: VESUM entry 98118,
+  # inspect_word receipt rr-8949ccfe0d7a91279d3c.
+  # Greeting senses: ULP l0001_w001, rr-af61035e43ed4a66d48e;
+  # l0002_w003, rr-37c0ad885e8395acc2d0;
+  # OHO p0216, rr-2b181f72f40ac5e27225.
+  quoted_forms: clean
+
+  sequencing:
+    - F-01
+
+  # Jobs support distinct oral, listening, decoding and supported-writing work.
+  # No demonstrated cramming or redundant lesson warrants restructuring.
+  # Deprecated word_target values are ignored; 45 minutes is guidance only.
+  sizing: clean
+
+  # PULS exact A1 headwords:
+  # добрий rr-f869123362fcfc171cf8; день rr-a0963ef1911345451854;
+  # мама rr-a0b0bdfc88b99e1ec850; тато rr-4fce8deae9db94da81fb;
+  # я rr-1fe0d076f814628e4988.
+  # The привіт query returned the different headword привітання, so it does
+  # not establish привіт's CEFR level. ULP l0001_w001 explicitly teaches
+  # привіт at first contact and describes frequent use:
+  # search_text receipt rr-af61035e43ed4a66d48e.
+  # Names function as decoding exemplars, supported by primer s0058,
+  # receipt rr-94f54c155ec03a655889; no frequency ranking is inferred.
+  inventory: clean
+
+  # Read the supplied activity report. Workbook operations vary from social
+  # matching to auditory discrimination, syllable selection, semantic sorting
+  # and greeting identification. Repeated fill-in applies decoding to successive
+  # consonant groups; it is not merely a count increase. The recap includes
+  # the R-19 quiz model and contextual spoken production.
+  # Model grounding: ULP l0001_w005, rr-209bd8c8147f1a2bb08a;
+  # OHO p0020, rr-f38b81b9478e0544ff83.
+  # Supplied comparison: fresh has 12 activities, including 6 workbook;
+  # mapped v1 has 10, all classified inline, and no workbook.
+  # Response-opportunity comparison is an evidence gap: fresh item totals
+  # are unavailable; v1 reports 62. No reduction or parity is inferred.
+  # The lesson-2 accessibility defect is recorded once under sequencing.
+  activities: clean
+
+  evidence_fit:
+    - F-02
+
+  standard_and_ulp:
+    - F-03
+
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 2
+        activity: a2
+        quote: "Identify stressed versus unstressed vowels by placing a stress mark (´) on stressed syllables"
+    dimension: learner_fit
+    severity: MAJOR
+    claim: >-
+      The written stress operation has no specified accessible material at this
+      learner state. Before this activity, learners have acquired only five vowel
+      letters; greetings remain oral chunks and decodable words arrive in lesson
+      3. T-050's actual model is a whole-word listening-and-annotation exercise:
+      search_text, owned-oho-a1-workbook_f1_p0020_c0001, states “Listen to
+      03.6 and place a stress mark (´) on the correct vowel in each word.”
+      Importing that operation without a stated adaptation makes the writer
+      supply a missing instructional scaffold, contrary to R-27. Specify an
+      audio-led response using accessible vowel-only or non-reading scaffolding,
+      or place written word annotation after suitable decoding material within
+      this module. Preserve the arc's early stress teaching.
+    evidence:
+      receipt: "rr-f38b81b9478e0544ff83"
+    could_be_a_gate: "no"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 1
+        step: s2
+        quote: "Вітаю!"
+      - lesson: 1
+        step: s2
+        quote: "Вибачте!"
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      Bounded native pronunciation models for these two oral-first chunks remain
+      unverified. The supplied V-002 and V-020 descriptions establish other
+      greeting, farewell and politeness targets, but do not identify playback
+      containing these forms. search_resources for “Вітаю Вибачте” returned
+      unrelated later episodes; search_text transcript searches did not locate
+      the claimed early episode material. This does not challenge either form's
+      validity or require removing it. The pack builder should establish the
+      applicable recordings and excerpts before oral-first lesson production.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-142df952e3b282cf8705"
+          outcome: hits_but_no_support
+        - receipt: "rr-3f168d3da9c98a33a2bd"
+          outcome: no_hits
+        - receipt: "rr-bc3af6c47156bf1d0f34"
+          outcome: no_hits
+    could_be_a_gate: "no"
+
+  - id: F-03
+    status: active
+    locations: []
+    scope:
+      lesson: 2
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      The supplied Standard records S-004 and S-005 identify the intended stress
+      and intonation duties, which the plan addresses, but independent ledgered
+      confirmation of the official Standard locators was unavailable through
+      the searches performed. search_resources found no reference entry for
+      “Державний стандарт”; the scoped search_text query for “Наголос”
+      and “4.1.5” returned no hits. This is a verification gap, not evidence of
+      missing curricular coverage. The pack builder or review harness should
+      expose a resolvable official Standard receipt. ULP's first-contact
+      scheduling is otherwise supported by the verified lesson-1 and lesson-2
+      notes.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-aa896a54e3fb89c1d508"
+          outcome: no_hits
+        - receipt: "rr-ebe14b289b706807e852"
+          outcome: no_hits
+    could_be_a_gate: "no"

@@ -14,16 +14,7 @@
   "errors": [],
   "kind": "pack-verify",
   "level": "a1",
-  "not_checked": [
-    "W-006:private_commitment",
-    "W-065:private_commitment",
-    "W-076:private_commitment",
-    "W-081:private_commitment",
-    "W-096:private_commitment",
-    "W-101:private_commitment",
-    "W-138:private_commitment",
-    "W-163:private_commitment"
-  ],
+  "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml",
     "sha256": "d9206a1eb95c0d015b5a94f50667cd9ce2590a4816abe8605fa6e9797731f717"
@@ -35,16 +26,7 @@
   "report_schema": 1,
   "reports": [],
   "slug": "checkpoint-first-contact",
-  "status": "warning",
+  "status": "ok",
   "strict": true,
-  "warnings": [
-    "a1/checkpoint-first-contact W-006: unverifiable in CI (local receipt required)",
-    "a1/checkpoint-first-contact W-065: unverifiable in CI (local receipt required)",
-    "a1/checkpoint-first-contact W-076: unverifiable in CI (local receipt required)",
-    "a1/checkpoint-first-contact W-081: unverifiable in CI (local receipt required)",
-    "a1/checkpoint-first-contact W-096: unverifiable in CI (local receipt required)",
-    "a1/checkpoint-first-contact W-101: unverifiable in CI (local receipt required)",
-    "a1/checkpoint-first-contact W-138: unverifiable in CI (local receipt required)",
-    "a1/checkpoint-first-contact W-163: unverifiable in CI (local receipt required)"
-  ]
+  "warnings": []
 }
