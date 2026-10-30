@@ -8,6 +8,7 @@ Use this template when creating issues for large-scale audits or quality reviews
 .venv/bin/python -m scripts.publish issue-create \
   --title "review(level): Batch quality review - scope description" \
   --body-file /tmp/issue-body.md \
+  --parent <stream-epic-number> \
   --label "enhancement" \
   --label "curriculum" \
   --label "agent:gemini"

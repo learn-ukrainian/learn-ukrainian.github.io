@@ -8,6 +8,7 @@ Use this template when creating issues for new tools, scripts, or infrastructure
 .venv/bin/python -m scripts.publish issue-create \
   --title "feat(scope): Brief description of tool/feature" \
   --body-file /tmp/issue-body.md \
+  --parent <stream-epic-number> \
   --label "enhancement" \
   --label "infrastructure" \
   --label "agent:claude"

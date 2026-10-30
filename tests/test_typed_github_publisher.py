@@ -58,6 +58,12 @@ def catalog(monkeypatch):
     monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
 
 
+def stub_parent_epic(monkeypatch):
+    """Accept any parent epic and skip the link step; the epic check and the link have their own proof."""
+    monkeypatch.setattr(pub, "_parent_epic_node", lambda *args: "PARENT_NODE")
+    monkeypatch.setattr(pub, "_link_created_issue", lambda *args: None)
+
+
 def spy(calls, *, comment_edit=False, merge=False):
     def send(args, **kwargs):
         if comment_edit and args[:4] == ["gh", "api", "--method", "GET"]:
@@ -111,7 +117,7 @@ def spy(calls, *, comment_edit=False, merge=False):
 
 
 VERBS = [
-    ("issue-create", {"title": "clean", "body": "clean", "labels": ["unit"]}),
+    ("issue-create", {"title": "clean", "body": "clean", "labels": ["unit"], "parent": 10453}),
     ("issue-edit", {"number": 1, "title": "clean", "body": "clean", "milestone": "unit"}),
     ("issue-comment", {"number": 1, "body": "clean"}),
     ("issue-comment-json", {"number": 1, "body": "clean"}),
@@ -138,6 +144,7 @@ VERBS = [
 
 @pytest.mark.parametrize("verb,fields", VERBS)
 def test_each_typed_verb_delivers_fixed_payload(synthetic_opsec, verb, fields, github_transport, monkeypatch):
+    stub_parent_epic(monkeypatch)
     calls = []
     sender = spy(calls, merge=verb == "pr-merge")
     expected_requests = {
@@ -192,7 +199,8 @@ TEXT_CASES = [
 
 @pytest.mark.parametrize("verb,fields,key", TEXT_CASES)
 @pytest.mark.parametrize("payload", [TOKEN, TOKEN + "/unit", "--" + TOKEN, "123/" + TOKEN, "unit\n" + TOKEN])
-def test_every_public_field_blocks_even_word_shaped(synthetic_opsec, verb, fields, key, payload):
+def test_every_public_field_blocks_even_word_shaped(synthetic_opsec, verb, fields, key, payload, monkeypatch):
+    stub_parent_epic(monkeypatch)
     fields = dict(fields)
     fields[key] = [payload] if pub.SCHEMAS[verb][1][key] == "texts" else payload
     calls = []
@@ -898,7 +906,13 @@ def test_issue_create_refuses_unreadable_acceptance_criterion_before_publishing(
         pub.publish("issue-create", repo="unit/public", title="clean", body=body, runner=lambda *a, **k: pytest.fail("send"))
 
 
+def test_issue_create_without_parent_is_refused_before_publishing(synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="PARENT_REQUIRED"):
+        pub.publish("issue-create", repo="unit/public", title="clean", body="clean", runner=lambda *a, **k: pytest.fail("send"))
+
+
 def test_scanned_label_list_is_frozen(synthetic_opsec, monkeypatch):
+    stub_parent_epic(monkeypatch)
     labels = ["unit"]
     original = gate.check_texts
 
@@ -908,7 +922,9 @@ def test_scanned_label_list_is_frozen(synthetic_opsec, monkeypatch):
 
     monkeypatch.setattr(gate, "check_texts", mutate)
     calls = []
-    pub.publish("issue-create", repo="unit/public", title="clean", body="clean", labels=labels, runner=spy(calls))
+    pub.publish(
+        "issue-create", repo="unit/public", title="clean", body="clean", labels=labels, parent=10453, runner=spy(calls)
+    )
     assert "--label=unit" in calls[0]["argv"] and TOKEN not in " ".join(calls[0]["argv"])
 
 
@@ -950,6 +966,8 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
 ):
     """Blocked text never reaches transport; the recorder can publish a scanned skeleton."""
     import importlib
+
+    stub_parent_epic(monkeypatch)
 
     from scripts.publish.github import Request
 

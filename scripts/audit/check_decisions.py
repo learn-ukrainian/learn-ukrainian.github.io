@@ -33,6 +33,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from scripts.common import github_client
 from scripts.opsec.prepublish import PublishBlocked, publication_cli
+from scripts.orchestration import issue_stream_audit
 from scripts.publish.github import Request, request_run
 
 DECISIONS_FILE = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
@@ -41,6 +42,9 @@ STACK_PINS_FILE = PROJECT_ROOT / "scripts" / "config" / "stack_pins.yaml"
 BUDGET_WARN = 40
 BUDGET_MAX = 50
 STALE_LABEL = "decision:stale"
+# The decision journal is cross-epic governance, owned by the epics lane (area_assignments.yaml);
+# its stale-decision issues join that stream's registered epic in issue_streams.yaml.
+DECISION_STREAM = "epics"
 PIN_OWNERS = frozenset({"DevOps", "Infra", "Monitor"})
 _PIN_TEXT_FIELDS = ("pinned", "source", "note")
 
@@ -192,8 +196,20 @@ def _ensure_label_exists() -> None:
         )
 
 
+def _parent_epic() -> int | None:
+    """Return the open epic of the decision stream from the stream registry, or None if unreadable."""
+    try:
+        return issue_stream_audit.load_registry(audit_only=True)[DECISION_STREAM][0]
+    except (KeyError, IndexError, ValueError, OSError, yaml.YAMLError) as exc:
+        print(f"no parent epic for stream {DECISION_STREAM!r}: {exc}", file=sys.stderr)
+        return None
+
+
 def create_issue(dec: dict) -> str | None:
-    """Create a GH issue for a stale decision. Returns issue URL or None."""
+    """Create a GH issue for a stale decision linked to its stream epic. Returns issue URL or None."""
+    parent = _parent_epic()
+    if parent is None:
+        return None
     dec_id = dec["id"]
     title = f"{dec_id}: {dec['title']} (expired {dec['expires']})"
 
@@ -229,7 +245,7 @@ def create_issue(dec: dict) -> str | None:
 
     try:
         result = request_run(
-            Request("issue-create", title=title, body=body, labels=[STALE_LABEL, "area:docs"]),
+            Request("issue-create", title=title, body=body, labels=[STALE_LABEL, "area:docs"], parent=parent),
             capture_output=True,
             text=True,
             timeout=30,
