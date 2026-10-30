@@ -619,6 +619,10 @@ def _shell_c_payload(seg: list[str]) -> str | None:
 _MAX_SHELL_DEPTH = 8
 
 
+class _SplitQuoting(ShellPreprocessLimit):
+    """A merge candidate whose quoting the line reader cannot group as Bash does."""
+
+
 def _unmodeled_quoting(command: str) -> bool:
     """Stop before Bash-only quote contexts can desynchronize shlex."""
     # Comments, heredoc data and continuing quotes can disagree about state
@@ -704,7 +708,14 @@ def _may_merge(command: str, depth: int = 0) -> bool:
         raise ShellPreprocessLimit("shell quoting cannot be read safely")
     if _literal_reads_only(command):
         return False
-    for kind, argv in _scope_events(command, mark_redirect_unreadable=False):
+    events = _scope_events(command, mark_redirect_unreadable=False)
+    # The reader starts each physical line outside any quote. After a line it
+    # cannot tokenize, Bash may still be inside that line's quote, so no later
+    # line is read as Bash reads it: refuse rather than call it data. Count raw
+    # lines: preprocessing can drop the later lines as heredoc data.
+    if _merge_candidate(command) and ("unreadable", []) in events and len(command.splitlines()) > 1:
+        raise _SplitQuoting("quoting spans lines")
+    for kind, argv in events:
         if kind != "segment":
             continue
         if _merge_args(argv) is not None:
@@ -1479,6 +1490,15 @@ def main() -> int:
         if not _may_merge(command):
             return 0
         segments = _judged_segments(command)
+    except _SplitQuoting:
+        sys.stderr.write(
+            _block_msg(
+                "a quote in this multi-line command cannot be read as Bash groups it",
+                "Put the merge command on its own single line, outside any quote that spans\n"
+                "lines, so the guard can check its target PR.",
+            )
+        )
+        return 2
     except ShellPreprocessLimit:
         sys.stderr.write(
             _block_msg(
