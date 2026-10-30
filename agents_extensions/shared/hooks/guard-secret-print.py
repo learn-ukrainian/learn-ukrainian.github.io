@@ -1973,39 +1973,23 @@ class _Unresolvable(Exception):
 class _ProcessFacts:
     """Kill sites, selectors and unreadable parts found in one invocation."""
 
-    def __init__(self, command: str) -> None:
+    def __init__(self, command: str, cwd: str | None = None) -> None:
         self.command = command
         self.limit = False
         self.opaque = False
         self.unresolved = False
+        self.exec_names: set[str] = set()
         self.calls: list[tuple[str, tuple[str, ...], bool]] = []
         # The raw value words assigned to each parameter, or None when one is not a plain assignment.
         self.assignments: dict[str, list[str] | None] = {}
         self._documents: dict[str, list[tuple[str, bool]]] | None = None
-        self._written_paths: set[str] | None = None
-
-    def written_paths(self) -> set[str]:
-        """Normalized paths the command writes: output redirections and file-writing tools' operands."""
-        if self._written_paths is None:
-            written: set[str] = set()
-            try:
-                pipelines = _process_pipelines(preprocess_shell_command(self.command))
-            except (ValueError, ShellPreprocessLimit):
-                pipelines = []
-            for segment in (segment for pipeline in pipelines for segment in pipeline):
-                for index, word in enumerate(segment[:-1]):
-                    if re.fullmatch(r"\d*(?:>|>>|>\||&>|&>>)", word):
-                        written.add(segment[index + 1])
-                program = _shell_word_value(segment[0])
-                if program in _FILE_WRITERS:
-                    written.update(segment[1:])
-                elif program in _FILE_COPIERS:
-                    written.update(segment[-1:])
-                elif program == "dd":
-                    written.update(word[3:] for word in segment if word.startswith("of="))
-            values = (_shell_word_value(word) for word in written)
-            self._written_paths = {os.path.normpath(value) for value in values if value}
-        return self._written_paths
+        # Scripts the command runs: (word, read by a shell), and what it writes.
+        self.scripts: list[tuple[str, bool]] = []
+        self.written: set[str] = set()
+        self.unknown_write = False
+        self.directories: set[str] = set()
+        self.unknown_directory = False
+        self.cwd = cwd or os.getcwd()
 
     def documents(self) -> dict[str, list[tuple[str, bool]]]:
         if self._documents is None:
@@ -2150,8 +2134,9 @@ def _word_candidates(word: str, facts: _ProcessFacts, depth: int = 0) -> list[st
             if default is None:
                 return None
             values = [value or default for value in values] if match.group(2) == ":-" else [*values, default]
-        # Unquoted expansions are split into words and globbed.
-        if not quoted and any(re.search(r"[\s*?[]", value) for value in values):
+        # Unquoted expansions are split into words and globbed; a command that sets
+        # IFS can split them anywhere.
+        if not quoted and ("IFS" in facts.command or any(re.search(r"[\s*?[]", value) for value in values)):
             return None
         candidates = [candidate + value for candidate in candidates for value in values]
         if len(candidates) > _MAX_WORD_CANDIDATES:
@@ -2170,8 +2155,9 @@ def _command_names(word: str, facts: _ProcessFacts, depth: int = 0) -> list[str]
     parts = _word_parts(word)
     if parts is None or depth > 4:
         return None
-    if len(parts) == 1 and parts[0][0] == "param":
-        # A lone parameter names whatever program each of its assigned words names.
+    if len(parts) == 1 and parts[0][0] == "param" and parts[0][1].startswith('"'):
+        # A lone quoted parameter names whatever program each of its assigned words
+        # names. Unquoted, a partly unknown value could split into other words.
         match = _PARAMETER.match(parts[0][1].lstrip('"'))
         assert match is not None
         words = None if match.group(2) else facts.parameter_words(match.group(1) or match.group(4))
@@ -2269,12 +2255,6 @@ def _stdin_scripts(args: list[str], facts: _ProcessFacts) -> list[str] | None:
                 return None
             scripts.append(body)
     return scripts
-
-
-def _written_here(word: str, facts: _ProcessFacts) -> bool:
-    """Whether the command itself writes the script it runs."""
-    value = _shell_word_value(word)
-    return value is not None and os.path.normpath(value) in facts.written_paths()
 
 
 _SHELL_OPERATORS = sorted(
@@ -2461,6 +2441,13 @@ def _segment_process_facts(words: list[str], facts: _ProcessFacts, depth: int, *
     if names is None:
         facts.unresolved = True
         return
+    leading = [_shell_word_value(word) for word in words[:index] if not _is_assignment(word)]
+    if "exec" in leading:
+        # exec keeps the shell's PID under the new program's name (and `-a` name).
+        facts.exec_names.update(names)
+        position = leading.index("exec")
+        if leading[position + 1 : position + 2] == ["-a"] and len(leading) > position + 2:
+            facts.exec_names.add(leading[position + 2] or "")
     for name in names:
         if name in _TEXT_BUILTINS and "/" in words[index]:
             name = ""
@@ -2490,8 +2477,8 @@ def _program_process_facts(
             if operand is None:
                 scripts = _stdin_scripts(args, facts) or []
                 facts.opaque = facts.opaque or not scripts
-            elif _written_here(operand, facts):
-                facts.opaque = True
+            else:
+                facts.scripts.append((operand, True))
         for script in scripts:
             _collect_process_facts(script, facts, depth + 1)
     elif name in {"eval", "alias", "trap"}:
@@ -2519,8 +2506,8 @@ def _program_process_facts(
         # Both can bind a command name to another program.
         facts.opaque = True
     elif name not in _PROCESS_DATA_COMMANDS:
-        if "/" in words[index] and _written_here(words[index], facts):
-            facts.opaque = True
+        if "/" in words[index]:
+            facts.scripts.append((words[index], False))
         # Another program may run a later word as a command (`setsid pkill`, `find -exec`).
         for later in range(index + 1, len(words)):
             starts = _PROCESS_COMMAND_STARTS - (_TEXT_BUILTINS if "/" in words[later] else set())
@@ -2556,6 +2543,130 @@ def _record_assignments(executable: str, facts: _ProcessFacts) -> None:
                 key, raw = word.split("=", 1)
                 known = facts.assignments.get(key, [])
                 facts.assignments[key] = None if known is None else [*known, raw]
+
+
+def _effect_names(word: str, facts: _ProcessFacts) -> list[str] | None:
+    """File names a word can denote: its values, or a literal last path component."""
+    values = _word_candidates(word, facts)
+    if values is not None:
+        return [os.path.normpath(value) for value in values]
+    names = _command_names(word, facts)
+    return names or None
+
+
+def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> None:
+    """Record the files a command writes, the directories it enters and its startup scripts."""
+
+    def write(word: str) -> None:
+        names = _effect_names(word, facts)
+        if names is None:
+            facts.unknown_write = True
+        else:
+            facts.written.update(os.path.basename(name) for name in names)
+
+    for segment in (segment for pipeline in pipelines for segment in pipeline):
+        values = [_shell_word_value(word) for word in segment]
+        programs = [(value or "").rsplit("/", 1)[-1] for value in values]
+        for index, word in enumerate(segment[:-1]):
+            if re.fullmatch(r"\d*(?:>|>>|>\||&>|&>>|<>)", word):
+                write(segment[index + 1])
+        for index, program in enumerate(programs):
+            operands = [word for word in segment[index + 1 :] if not (_shell_word_value(word) or "-").startswith("-")]
+            if program in {"tee", "touch"}:
+                for word in operands:
+                    write(word)
+            elif program in {"cp", "mv", "install", "ln"} and operands:
+                write(operands[-1])
+            elif program == "dd":
+                for word in segment[index + 1 :]:
+                    if (_shell_word_value(word) or "of=").startswith("of="):
+                        write(word.split("=", 1)[-1])
+            elif program in {"sed", "perl"} and any(
+                re.fullmatch(r"-[A-Za-z]*i.*|--in-place.*", value or "-i") for value in values[index + 1 :]
+            ):
+                for word in operands:
+                    write(word)
+            elif program in {"curl", "wget"}:
+                for flag, target in zip(values[index + 1 :], segment[index + 2 :], strict=False):
+                    if flag in {"-o", "--output", "-O", "--output-document"}:
+                        write(target)
+                if any(value in {"-O", "--remote-name", "-J"} for value in values[index + 1 :]) or (
+                    program == "wget" and "-O" not in values
+                ):
+                    facts.unknown_write = True
+        if programs[:1] in (["cd"], ["pushd"]):
+            targets = [word for word in segment[1:] if not (_shell_word_value(word) or "x").startswith("-")]
+            names = _word_candidates(targets[0], facts) if targets else [os.environ.get("HOME", "")]
+            if names is None:
+                facts.unknown_directory = True
+            else:
+                facts.directories.update(os.path.join(facts.cwd, name) for name in names)
+        for word in segment:
+            if _is_assignment(word) and word.split("=", 1)[0] in {"BASH_ENV", "ENV"}:
+                facts.scripts.append((word.split("=", 1)[1], True))
+
+
+def _script_reason(facts: _ProcessFacts) -> str | None:
+    """Check each script the command runs: refuse one it writes or creates, read one it does not."""
+    seen: set[tuple[str, bool]] = set()
+    while facts.scripts:
+        word, by_shell = facts.scripts.pop()
+        if (word, by_shell) in seen:
+            continue
+        seen.add((word, by_shell))
+        names = _effect_names(word, facts)
+        if names is None or any(os.path.basename(name) in facts.written for name in names):
+            return "the command runs a script it writes itself, which the guard cannot read"
+        values = _word_candidates(word, facts)
+        if by_shell and facts.unknown_write:
+            # A write to an unknown path could be this script.
+            return "the command runs a script it writes itself, which the guard cannot read"
+        for value in values or []:
+            directories = {facts.cwd, *facts.directories}
+            paths = [value] if os.path.isabs(value) else [os.path.join(directory, value) for directory in directories]
+            existing = [path for path in paths if os.path.isfile(path)]
+            if not existing:
+                # Not there yet, so this command would have to create it. Its kill text
+                # comes from the command text, or from data or another language's code.
+                if not facts.unknown_directory and _mentions_process_kill(facts.command):
+                    return "the command runs a script it writes itself, which the guard cannot read"
+                continue
+            for path in existing:
+                text = _shell_script_text(path, by_shell)
+                if text is not None and not by_shell and facts.unknown_write:
+                    return "the command runs a script it writes itself, which the guard cannot read"
+                if text is not None and _mentions_process_kill(text):
+                    _collect_process_facts(text, facts, 1)
+    return None
+
+
+def _shell_script_text(path: str, by_shell: bool) -> str | None:
+    """The text of a script a shell reads, or of an executable shell script; None otherwise."""
+    try:
+        with open(path, "rb") as handle:
+            data = handle.read(1_048_577)
+    except OSError:
+        return None
+    if len(data) > 1_048_576 or b"\0" in data[:4096]:
+        return None
+    text = data.decode(errors="replace")
+    first = text.split("\n", 1)[0]
+    if not by_shell and first.startswith("#!"):
+        interpreter = first[2:].split()
+        names = [os.path.basename(word) for word in interpreter[:2]]
+        if not set(names) & _PROCESS_SHELLS:
+            return None
+    return text
+
+
+def _mentions_process_kill(text: str) -> bool:
+    """Whether text names a kill program or selector as a word once quoting is removed."""
+    try:
+        text = _decode_ansi_c_quotes(text)
+    except ValueError:
+        return True
+    text = re.sub(r"\\\n|['\"\\]", "", text)
+    return bool(re.search(r"(?<![\w.-])(?:kill|pkill|killall|pgrep|pidof)(?![\w.-])", text))
 
 
 def _echo_output(body: str) -> str | None:
@@ -2607,12 +2718,16 @@ def _collect_process_facts(command: str, facts: _ProcessFacts, depth: int = 0) -
         facts.limit = True
         return
     try:
-        pipelines = _process_pipelines(_decode_ansi_c_quotes(_inline_echo_substitutions(executable, substitutions)))
+        if not re.search(r"(?<![\w-])echo\s*\(\s*\)|\bfunction\s+echo\b|\balias\b|\benable\b", facts.command):
+            # Only while the command cannot rebind `echo` to something else.
+            executable = _inline_echo_substitutions(executable, substitutions)
+        pipelines = _process_pipelines(_decode_ansi_c_quotes(executable))
     except ValueError:
         facts.limit = True
         return
     if depth == 0:
         _record_assignments(executable, facts)
+    _record_effects(pipelines, facts)
     for _, body in substitutions.values():
         _collect_process_facts(body, facts, depth + 1)
     # Bash's own words read a spliced word whole (`'pk'"ill"`). The shared
@@ -2667,9 +2782,10 @@ class _ProcessTable:
     only properties a stand-in shares with it (name, credentials) are queried.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, exec_names: set[str] = frozenset()) -> None:  # type: ignore[assignment]
+        self.exec_names = {name for name in exec_names if name}
         self._ancestors: list[_Process] | None = None
-        self._stand_ins: list[subprocess.Popen[bytes]] = []
+        self._stand_ins: list[subprocess.Popen[str]] = []
         self._stand_in_processes: list[_Process] | None = None
 
     def __enter__(self) -> _ProcessTable:
@@ -2701,23 +2817,35 @@ class _ProcessTable:
 
     def protected(self) -> list[_Process]:
         if self._stand_in_processes is None:
-            for shell in sorted(_PROCESS_SHELLS):
-                path = shutil.which(shell)
-                if path is None:
-                    continue
-                try:
-                    self._stand_ins.append(
-                        subprocess.Popen(
-                            [path, "-c", "read -r line"],
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.DEVNULL,
-                            stderr=subprocess.DEVNULL,
-                        )
-                    )
-                except OSError as exc:
-                    raise _Unresolvable from exc
-            if not self._stand_ins:
+            bash = shutil.which("bash")
+            if bash is None:
                 raise _Unresolvable
+            launches = [
+                ([path, "-c", "echo ready; read -r line"], path)
+                for path in map(shutil.which, sorted(_PROCESS_SHELLS))
+                if path
+            ]
+            # A program the command execs takes over the shell's PID: a stand-in
+            # renames itself to that program's comm and argv0.
+            launches += [
+                ([name, "-c", 'printf %s "${0##*/}" > /proc/self/comm; echo ready; read -r line'], bash)
+                for name in sorted(self.exec_names)
+            ]
+            for argv, executable in launches:
+                try:
+                    stand_in = subprocess.Popen(
+                        argv,
+                        executable=executable,
+                        stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.DEVNULL,
+                        text=True,
+                    )
+                except (OSError, ValueError) as exc:
+                    raise _Unresolvable from exc
+                self._stand_ins.append(stand_in)
+                if stand_in.stdout is None or stand_in.stdout.readline() != "ready\n":
+                    raise _Unresolvable
             self._stand_in_processes = [_Process(stand_in.pid) for stand_in in self._stand_ins]
         return [*self._stand_in_processes, *self.ancestors]
 
@@ -2808,27 +2936,38 @@ def _pgrep_selection(values: list[str], *, pkill: bool) -> tuple[list[str], set[
         return None
     selection: list[str] = []
     parents: set[int] | None = None
+    inverse = any(option in {"-v", "--inverse"} for option, _ in options)
+    dropped = False
     for option, value in options:
-        if option in {"-P", "--parent"}:
-            if not re.fullmatch(r"\d+(?:,\d+)*", value):
-                raise _Unresolvable
-            parents = (parents or set()) | {int(pid) for pid in value.split(",")}
-        elif option in _PGREP_SELECTION:
+        if option in {"-f", "--full"}:
+            raise _Unresolvable(_FULL_MATCH)
+        if option in {"-w", "--lightweight"}:
+            # Threads carry their own names, which the stand-ins do not have.
+            raise _Unresolvable
+        if option in _PGREP_SELECTION:
             if _PGREP_SELECTION[option] not in selection:
                 selection.append(_PGREP_SELECTION[option])
         elif option in _PGREP_SELECTION_VALUES:
             selection += [_PGREP_SELECTION_VALUES[option], value]
-        elif option in {"-f", "--full"}:
-            raise _Unresolvable(_FULL_MATCH)
-        elif option not in _PGREP_OUTPUT:
-            # Sessions, groups, terminals, ages, states, pidfiles, threads, namespaces
-            # and signal handlers differ between the agent's shell and its stand-in or
-            # change before the command runs.
+        elif option in _PGREP_OUTPUT:
+            continue
+        elif inverse:
+            # Under -v, dropping a restriction would narrow the selection.
             raise _Unresolvable
-    if not operands and parents is None and not any(option in _PGREP_SELECTION_VALUES for option, _ in options):
+        elif option in {"-P", "--parent"}:
+            if not re.fullmatch(r"\d+(?:,\d+)*", value):
+                raise _Unresolvable
+            parents = (parents or set()) | {int(pid) for pid in value.split(",")}
+        else:
+            # Sessions, groups, terminals, ages, states, pidfiles, ranking, namespaces
+            # and handlers only narrow a selection; the query without them covers it.
+            dropped = True
+    if not (
+        operands or parents is not None or dropped or any(option in _PGREP_SELECTION_VALUES for option, _ in options)
+    ):
         # procps refuses a selection without criteria, so nothing is signalled.
         return None
-    # A parent restriction alone selects every process, filtered by the table.
+    # A selection by other criteria alone matches every name, filtered as above.
     return [*selection, "--", *(operands or [""])], parents
 
 
@@ -2966,20 +3105,23 @@ def _resolve_process_calls(calls: list[tuple[str, tuple[str, ...], bool]], table
     return None
 
 
-def _process_refusal(command: str) -> str | None:
+def _process_refusal(command: str, cwd: str | None = None) -> str | None:
     """Return why a command's process kills are refused, or None to allow them."""
-    facts = _ProcessFacts(command)
+    facts = _ProcessFacts(command, cwd)
     _collect_process_facts(command, facts)
+    script_reason = _script_reason(facts)
     if facts.limit:
         return "nested shell command could not be parsed safely"
     if facts.opaque:
         return "the command runs shell text the guard cannot read, which could stop the agent's own process"
     if facts.unresolved:
         return "a command name the guard cannot resolve could stop the agent's own process"
+    if script_reason:
+        return script_reason
     if not facts.calls:
         return None
     try:
-        with _ProcessTable() as table:
+        with _ProcessTable(facts.exec_names) as table:
             return _resolve_process_calls(facts.calls, table)
     except _Unresolvable as exc:
         return exc.args[0] if exc.args else "a process kill could not be resolved against the live process table"
@@ -3105,7 +3247,8 @@ def _main(argv: list[str] | None = None) -> int:
 
     # Fail closed: the override never covers a process kill or a command the
     # process reader cannot read whole.
-    process_reason = _process_refusal(command)
+    cwd = payload.get("cwd")
+    process_reason = _process_refusal(command, cwd if isinstance(cwd, str) and os.path.isabs(cwd) else None)
     if process_reason:
         sys.stderr.write(_process_block_msg(process_reason))
         return 2
