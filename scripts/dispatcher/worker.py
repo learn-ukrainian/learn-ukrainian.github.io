@@ -111,11 +111,17 @@ def _spawn_expired(record: dict) -> bool:
     return age > dispatch_admission.PIDLESS_SPAWNING_GRACE_S
 
 
+def _cursor_model(model: str | None) -> dict:
+    """A Cursor record's model attestation: only the run's own stream-json init events attest one."""
+    return dict(resolved_model=model if model is not None else "unknown", resolved_model_known=model is not None,
+                resolved_model_source="cursor-stream-json" if model is not None else "pending")
+
+
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
     from scripts.orchestration.dispatch_admission import new_admission_hold
 
     if spec.agent == "cursor":
-        record.update(resolved_model="unknown", resolved_model_known=False, resolved_model_source="pending")
+        record.update(_cursor_model(None))
     if not record.get("admission_hold"):
         record["admission_hold"] = new_admission_hold(record["run_nonce"])
     path = store.record_path(spec.task_id)
@@ -497,9 +503,23 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             record.update(status="running", provider_pgid=child.pid)
             store.replace(record, path)
             terminal_observer = getattr(provider, "terminal_result_observer", None)
+            observe_model = provider.model_observer(stdout_path) if spec.agent == "cursor" else None
+
+            def watch():
+                # A running author's commits are reviewable only once its record attests the model (#12014).
+                nonlocal resolved_model
+                checkpoint()
+                if observe_model is None:
+                    return
+                resolved_model = observe_model()
+                fields = _cursor_model(resolved_model)
+                if any(record.get(key) != value for key, value in fields.items()):
+                    record.update(fields)
+                    store.replace(record, path)
+
             communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
                         initial_response_timeout, liveness_paths(spec, invocation), output_sizes,
-                        terminal_observer(stdout_path) if terminal_observer else None, checkpoint)
+                        terminal_observer(stdout_path) if terminal_observer else None, watch)
         returncode = child.returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
@@ -591,11 +611,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             record.update(git.snapshot_delivery(spec, record))
             _enforce_delivery(record)
             if spec.agent == "cursor":
-                record.update(
-                    resolved_model=resolved_model if resolved_model is not None else "unknown",
-                    resolved_model_known=resolved_model is not None,
-                    resolved_model_source="cursor-stream-json" if resolved_model is not None else "pending",
-                )
+                record.update(_cursor_model(resolved_model))
             record["provider_pgid"] = child.pid if child else None
             # Settling a task first retries the trees earlier settlements kept for a cause that may have
             # cleared, under the same proofs. It runs before this task's record turns terminal, holding no

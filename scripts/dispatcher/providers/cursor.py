@@ -6,6 +6,44 @@ from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
 
 
+def _init_model(event: object) -> str | None:
+    """The model a ``system``/``init`` event reports; no other event attests one."""
+    if isinstance(event, dict) and event.get("type") == "system" and event.get("subtype") == "init":
+        model = event.get("model")
+        if isinstance(model, str) and model.strip():
+            return model
+    return None
+
+
+def model_observer(stdout_path):
+    """Attest the running task's model from complete init events, under ``parse``'s exactly-one rule.
+
+    The review recorder resolves a Cursor author from its task record, so a running author's PR is
+    reviewable only once the record carries this attestation (#12014); settlement re-derives it from
+    the whole stream.
+    """
+    offset, pending, models = 0, b"", set()
+
+    def observed():
+        nonlocal offset, pending
+        with stdout_path.open("rb") as stream:
+            stream.seek(offset)
+            chunk = stream.read()
+            offset = stream.tell()
+        lines = (pending + chunk).split(b"\n")
+        pending = lines.pop()
+        for line in lines:
+            try:
+                model = _init_model(json.loads(line.decode(errors="replace")))
+            except ValueError:
+                continue
+            if model is not None:
+                models.add(model)
+        return next(iter(models)) if len(models) == 1 else None
+
+    return observed
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["cursor-agent", "-p", "--model", spec.model, "--output-format", "stream-json", "--trust"]
     argv += ["--workspace", str(spec.worktree)]
@@ -33,8 +71,7 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             error = "cursor: invalid event"
             continue
         if event.get("type") == "system" and event.get("subtype") == "init":
-            model = event.get("model")
-            if isinstance(model, str) and model.strip():
+            if (model := _init_model(event)) is not None:
                 models.add(model)
         elif event.get("type") == "result":
             result = event
