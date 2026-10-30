@@ -1439,9 +1439,11 @@ def _require_qualified_reviewer(
     profile = str(task.get("review_profile") or "code").strip().casefold()
     # Seat aliases (``grok-build``) name the canonical route the catalog lists.
     agent = normalize_seat(str(task.get("agent") or "")) or ""
+    # Lane flags and task-family aliases classify a review as Ukrainian even
+    # when the profile field says code. The seat allowlist covers that too.
+    if is_ukrainian_review(task) and (agent, family) not in UKRAINIAN_SEAT_ROUTES:
+        raise RecordError("reviewer not qualified: Ukrainian review needs a Gemini or Sol seat")
     if profile == "ukrainian":
-        if (agent, family) not in UKRAINIAN_SEAT_ROUTES:
-            raise RecordError("reviewer not qualified: Ukrainian review needs a Gemini or Sol seat")
         if facts.subject_seats or facts.subject_families or is_security_sensitive_change(facts.changed_paths):
             raise RecordError("reviewer not qualified: protected scope needs a code-profile review")
         return

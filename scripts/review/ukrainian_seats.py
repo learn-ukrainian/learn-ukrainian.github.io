@@ -54,8 +54,13 @@ def attested_author_families(markers: Iterable[Mapping[str, Any]]) -> frozenset[
 
     models: list[str] = []
     for marker in markers:
-        recorded = marker.get("author_models") or ()
-        if isinstance(recorded, str) or not isinstance(recorded, (tuple, list)):
+        # A missing or empty attestation is not "no extra authors". One blank
+        # marker beside an attested one would otherwise drop the blank and
+        # approve on a single seat.
+        if "author_models" not in marker:
+            return frozenset({UNKNOWN_AUTHOR_FAMILY})
+        recorded = marker["author_models"]
+        if not isinstance(recorded, (tuple, list)) or not recorded:
             return frozenset({UNKNOWN_AUTHOR_FAMILY})
         if not all(isinstance(model, str) and model for model in recorded):
             return frozenset({UNKNOWN_AUTHOR_FAMILY})

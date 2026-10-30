@@ -13,6 +13,11 @@ import pytest
 from scripts.orchestration import integration_sweep as sweep
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.review import record_cf_verdict as recorder
+from scripts.review.ukrainian_seats import (
+    UKRAINIAN_SEAT_FAMILIES,
+    attested_author_families,
+    required_ukrainian_seats,
+)
 from tests.test_record_cf_verdict import SHA, setup_record, write_task
 
 
@@ -603,6 +608,67 @@ def test_sol_authored_gemini_approval_passes_and_gemini_author_needs_sol(monkeyp
     assert verdict.ukrainian_seats == ("google",)
     with pytest.raises(gate.PublishBlocked, match="Ukrainian review seat has not approved"):
         merge(monkeypatch, comments)
+
+
+def test_a_blank_author_beside_an_attested_marker_still_needs_both_seats():
+    """One missing attestation is not dropped when another marker names an author."""
+    known = {"author_models": ("gpt-6.1-sol",)}
+    blanks = (
+        {},
+        {"author_models": None},
+        {"author_models": ()},
+        {"author_models": []},
+        {"author_models": ""},
+        {"author_models": {}},
+        {"author_models": 0},
+        {"author_models": False},
+    )
+    for blank in blanks:
+        assert required_ukrainian_seats(attested_author_families([blank, known])) == UKRAINIAN_SEAT_FAMILIES
+
+    def comment(body, number):
+        stamp = "2026-09-23T13:00:00Z"
+        return {
+            "id": number, "body": body, "user": {"login": "fleet"}, "author_association": "MEMBER",
+            "created_at": stamp, "updated_at": stamp,
+        }
+
+    bare = recorder.build_comment(
+        sha=SHA, task_id="review-bare", started="2026-09-23T12:00:00.000001+00:00",
+        verdict="APPROVED", model="gemini-3.8-flash-high", family="google", reply="VERDICT: APPROVE",
+        review_profile="ukrainian", sources_mcp_call_count=3,
+    )
+    named = recorder.build_comment(
+        sha=SHA, task_id="review-named", started="2026-09-23T12:00:01.000001+00:00",
+        verdict="APPROVED", model="gemini-3.8-flash-high", family="google", reply="VERDICT: APPROVE",
+        review_profile="ukrainian", sources_mcp_call_count=3, author_models=("gpt-6.1-sol",),
+    )
+    alone = sweep.lookup_verdict([comment(bare, 1)], SHA, "fleet")
+    assert alone.state == sweep.NEEDS_SEAT
+    combined = sweep.lookup_verdict([comment(bare, 1), comment(named, 2)], SHA, "fleet")
+    assert combined.state == sweep.NEEDS_SEAT
+    assert combined.ukrainian_seats == ("google",)
+
+
+@pytest.mark.parametrize("alias", [
+    {"review_language_lane": True},
+    {"language_lane": True},
+    {"research_task_family": "ukrainian-review"},
+    {"research_task_family": "ukrainian-authoring"},
+    {"task_family": "ukrainian-review"},
+    {"task_family": "ukrainian-authoring"},
+])
+def test_a_claude_ukrainian_alias_cannot_record_a_verdict(monkeypatch, tmp_path, alias):
+    """A code-profile task that the lane still classifies as Ukrainian needs a seat."""
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    write_task(
+        tasks, reply="VERDICT: REQUEST_CHANGES", agent="claude", model="claude-opus-5-5",
+        review_profile="code", sources_mcp_call_count=3, **alias,
+    )
+    with pytest.raises(recorder.RecordError, match="Gemini or Sol"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert not comments
+    assert calls == {"posts": 0, "statuses": 0}
 
 
 @pytest.mark.parametrize("verdict", ["APPROVE", "REQUEST_CHANGES", "BLOCKED"])
