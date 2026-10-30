@@ -71,6 +71,12 @@ F7_SHELL_OPTIONS = [
     "set -- c 'pkill -f worker'; bash \"-$@\"",
     "set -- extglob -c 'pkill -f worker'; bash +O \"$@\"",
     "set -- /dev/null -c 'pkill -f worker'; bash --init-file \"$@\"",
+    "bash -c -e 'pkill -f worker'",
+    "bash -c -o pipefail 'pkill -f worker'",
+    "bash -c -- 'pkill -f worker'",
+    "bash -c \"$OPT\" 'pkill -f worker'",
+    "bash -rcfile /dev/null -c 'pkill -f worker'",
+    "bash -restricted -c 'pkill -f worker'",
 ]
 # Review F10: ANSI-C escapes whose Bash meaning the decoder does not model.
 F10_ANSI_C = [
@@ -154,6 +160,8 @@ F10_ANSI_C = [
         ("bash -e -c 'echo ok'", False),
         ('bash "$HOME/run.sh"', False),
         ("bash -o pipefail +O extglob -c 'echo ok'", False),
+        ("bash --norc --noprofile -c 'echo ok'", False),
+        ('bash -c "echo $X" _ y', False),
         (r"printf $'ok\t\x41\101\n'", False),
     ]
     + [(command, True) for command in F7_SHELL_OPTIONS + F10_ANSI_C]
