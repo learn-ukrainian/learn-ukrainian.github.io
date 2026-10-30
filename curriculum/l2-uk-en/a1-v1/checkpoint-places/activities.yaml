@@ -181,9 +181,9 @@ workbook:
       - statement: Ідіть прямо, потім направо.
         answer: true
         explanation: This is a clear route instruction.
-      - statement: Я з США.
-        answer: false
-        explanation: Use зі США to avoid the heavy cluster.
+      - statement: Before США, зі is normally preferred to з.
+        answer: true
+        explanation: Зі США avoids a difficult consonant cluster. This is the normal euphony preference, not a claim that every use of з here is impossible.
   - type: odd-one-out
     title: Find the route mismatch
     instruction: Choose the line that does not fit the route pattern.

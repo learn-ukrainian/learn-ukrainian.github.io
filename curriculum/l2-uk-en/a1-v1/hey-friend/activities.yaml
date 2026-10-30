@@ -299,9 +299,9 @@ workbook:
       - statement: Пані Оксано uses пані plus the calling form Оксано.
         answer: true
         explanation: Пані stays пані; the name changes.
-      - statement: Мамо is the full Ukrainian address phrase for Mom.
+      - statement: Мамо is the calling form of мама.
         answer: true
-        explanation: Мамо is the full address form practiced here. Ukrainian also has the attested short vocative ма.
+        explanation: Мамо is the vocative form used when speaking directly to мама. The attested short vocative ма does not make мамо incorrect.
       - statement: Привіт, Надія! is the target A1 address form.
         answer: false
         explanation: Use Привіт, Надіє!

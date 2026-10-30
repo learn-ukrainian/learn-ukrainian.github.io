@@ -130,7 +130,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/activities.yaml",
-      "sha256": "8abb6372c1b4a499ca254bb2f0726b9c76d4d748a6af75ee2e486c444910e4be"
+      "sha256": "6b55dfc33175fe45949827a5975c1bc2364d99aaa5ae59c1dce2a2fe76433789"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/checkpoint-places/module.md",
@@ -210,7 +210,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/euphony/activities.yaml",
-      "sha256": "1e1780f4fd6798ad6173633d414e82574fa691f2a293531bc483d384cad37093"
+      "sha256": "a5d3148e443b9dea8b1d247c7877747c07f4fb8a2b80794dea3f9160e72e9662"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/euphony/module.md",
@@ -274,7 +274,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/hey-friend/activities.yaml",
-      "sha256": "79b0b186c334cdfdbd3074b44ec7dc30a699b54eee0337056ccae9be4980d539"
+      "sha256": "18761e47594ec6476e488b9c758adc2b891cbca10609391778d231a6daad8bd6"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/hey-friend/module.md",
@@ -578,7 +578,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/activities.yaml",
-      "sha256": "8eccc82572fd2bc8c76913746eb4f89b5b4365d83e8e9413fb50693925f43c12"
+      "sha256": "5fe52a747c4709b2d9cc0bd9be88bd8c4346f1c2c2e3d78dac7a0f02d41a8092"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/module.md",
@@ -642,7 +642,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/transport/activities.yaml",
-      "sha256": "b9fc8c818f5f0d8ac163b2b391baf5e92b8bddc624f4def8cae5efbbb903c796"
+      "sha256": "f94024f5ed6085aaaac783b37cbefe8895b8e34227e8661d41a53563707cf01e"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/transport/module.md",
@@ -13718,7 +13718,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-places.mdx",
-      "sha256": "9c0796ced37faba3b112285ca53e5139c65798a99aea67bd8a1c655d1a256223"
+      "sha256": "6350426f591faa323fa177cb5269876165ec69dd174fba29bc7c4a49c16a25b7"
     },
     {
       "path": "site/src/content/docs/a1-v1/checkpoint-time-nature.mdx",
@@ -13738,7 +13738,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/euphony.mdx",
-      "sha256": "d75a299d7d44c38a1fa81ffdff30082294246df3975fc0b0891b21c38e2dd4e3"
+      "sha256": "adcd421e013e51d80da3a36858f8d42d64d6ac28c192f663174154d12c11caa9"
     },
     {
       "path": "site/src/content/docs/a1-v1/food-and-drink.mdx",
@@ -13754,7 +13754,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/hey-friend.mdx",
-      "sha256": "b3ea9705d0ab22b749748cf9018c4ad107c391545acfb2955b6baabb5a823c8f"
+      "sha256": "ef68f6f2d59f630b6d2ed546f9664d727be1bd4756088abe1775573f456e2891"
     },
     {
       "path": "site/src/content/docs/a1-v1/holidays.mdx",
@@ -13834,7 +13834,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/special-signs.mdx",
-      "sha256": "09dbae44e5fcb35fe5899052443356d039a7f3a26221f332ec299d12057f454f"
+      "sha256": "cd1eb708f7692d4fecd16d5062452bb8fbf0cc97d88d9c2684b9ffc3ede0e5e9"
     },
     {
       "path": "site/src/content/docs/a1-v1/stress-and-melody.mdx",
@@ -13850,7 +13850,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/transport.mdx",
-      "sha256": "2831825d74e05c9eccd029b65d2702b5c28fea29c530a62f64e0028076c53eb9"
+      "sha256": "e7755a770758c9e5e1635ac73a19f09994741a160dc8b04da22043f5b1de5078"
     },
     {
       "path": "site/src/content/docs/a1-v1/verbs-group-one.mdx",

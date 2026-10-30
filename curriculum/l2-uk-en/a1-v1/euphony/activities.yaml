@@ -99,7 +99,7 @@ inline:
     title: І чи й?
     instruction: Choose the smoother connector.
     items:
-      - prompt: 'Брат ___ сестра в школі.'
+      - prompt: Брат ___ сестра в школі.
         options:
           - text: і
             correct: true
@@ -108,16 +108,16 @@ inline:
           - text: у
             correct: false
         explanation: Between consonants, і is easier than й.
-      - prompt: 'Мама ___ тато в театрі.'
+      - prompt: Мама ___ тато в театрі.
         options:
           - text: й
             correct: true
-          - text: і
+          - text: до
             correct: false
           - text: з
             correct: false
-        explanation: After мама, й тато sounds smooth.
-      - prompt: 'Ти ___ Олена йдете в театр?'
+        explanation: Мама й тато joins two nominative subjects. The prepositions до and з do not fit the following nominative тато.
+      - prompt: Ти ___ Олена йдете в театр?
         options:
           - text: й
             correct: true
@@ -126,7 +126,7 @@ inline:
           - text: у
             correct: false
         explanation: Ти й Олена is the planned smooth pattern.
-      - prompt: 'Я ___ Максим ідемо в парк.'
+      - prompt: Я ___ Максим ідемо в парк.
         options:
           - text: і
             correct: true
@@ -135,7 +135,7 @@ inline:
           - text: в
             correct: false
         explanation: Я і Максим keeps the й-sound from crowding the line.
-      - prompt: 'Марія ___ Яна в місті.'
+      - prompt: Марія ___ Яна в місті.
         options:
           - text: і
             correct: true
@@ -144,7 +144,7 @@ inline:
           - text: з
             correct: false
         explanation: Before Яна, keep і because я begins with a й-sound.
-      - prompt: 'Іван ___ Яна в офісі.'
+      - prompt: Іван ___ Яна в офісі.
         options:
           - text: і
             correct: true
@@ -153,7 +153,7 @@ inline:
           - text: у
             correct: false
         explanation: Before Яна, і is safer and clearer.
-      - prompt: 'Олена ___ Анна вдома.'
+      - prompt: Олена ___ Анна вдома.
         options:
           - text: й
             correct: true
@@ -162,7 +162,7 @@ inline:
           - text: в
             correct: false
         explanation: After a vowel before Анна, й makes the line smoother.
-      - prompt: '___ він іде?'
+      - prompt: ___ він іде?
         options:
           - text: І
             correct: true
@@ -223,58 +223,58 @@ inline:
     title: Which line sounds natural?
     instruction: Choose the smoother complete sentence.
     items:
-      - prompt: 'Choose the natural place line.'
+      - prompt: Choose the natural place line.
         options:
-          - text: 'Я живу в Києві.'
+          - text: Я живу в Києві.
             correct: true
-          - text: 'Я живу у Києві.'
+          - text: Я живу у Києві.
             correct: false
-          - text: 'Я живу з Києві.'
+          - text: Я живу з Києві.
             correct: false
         explanation: After живу, в Києві is smoother.
-      - prompt: 'Choose the natural Lviv line.'
+      - prompt: Choose the natural Lviv line.
         options:
-          - text: 'Сестра у Львові.'
+          - text: Сестра у Львові.
             correct: true
-          - text: 'Сестра в Львові.'
+          - text: Сестра в Львові.
             correct: false
-          - text: 'Сестра зі Львові.'
+          - text: Сестра зі Львові.
             correct: false
         explanation: Use у before Львові.
-      - prompt: 'Choose the natural family line.'
+      - prompt: Choose the natural family line.
         options:
-          - text: 'Брат і сестра в школі.'
+          - text: Брат і сестра в школі.
             correct: true
-          - text: 'Брат й сестра в школі.'
+          - text: Брат й сестра в школі.
             correct: false
-          - text: 'Брат у сестра в школі.'
+          - text: Брат у сестра в школі.
             correct: false
         explanation: Between consonants, use і.
-      - prompt: 'Choose the natural parents line.'
+      - prompt: Choose the natural parents line.
         options:
-          - text: 'Мама й тато в театрі.'
+          - text: Мама й тато в театрі.
             correct: true
-          - text: 'Мама і тато в театрі.'
+          - text: Мама і татом в театрі.
             correct: false
-          - text: 'Мама з тато в театрі.'
+          - text: Мама з тато в театрі.
             correct: false
-        explanation: Мама й тато is the smoother pattern here.
-      - prompt: 'Choose the natural school line.'
+        explanation: Мама й тато coordinates two nominative subjects. The alternatives і татом and з тато do not fit that construction.
+      - prompt: Choose the natural school line.
         options:
-          - text: 'Я йду зі школи.'
+          - text: Я йду зі школи.
             correct: true
-          - text: 'Я йду з школи.'
+          - text: Я йду з школи.
             correct: false
-          - text: 'Я йду в школи.'
+          - text: Я йду в школи.
             correct: false
         explanation: Зі школи avoids the hard з шк cluster.
-      - prompt: 'Choose the natural greeting.'
+      - prompt: Choose the natural greeting.
         options:
-          - text: 'Зі святом!'
+          - text: Зі святом!
             correct: true
-          - text: 'З святом!'
+          - text: З святом!
             correct: false
-          - text: 'Й святом!'
+          - text: Й святом!
             correct: false
         explanation: Зі святом is the fixed smooth greeting.
 workbook:
