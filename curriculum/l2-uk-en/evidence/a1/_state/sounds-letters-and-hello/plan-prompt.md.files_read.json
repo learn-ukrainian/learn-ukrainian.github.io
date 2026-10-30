@@ -36,9 +36,9 @@
       "plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
     },
     "template_digest": "sha256:84daaf1143e631518f15fc43368d50646af3b531d7f845a4da57085a12124f50",
-    "server_digest": "sha256:aa17916c06a5e35280759cbffeb03f9b6566bb4d56becd9f4e5d4b7bdd1d8824",
+    "server_digest": "sha256:8ef8c413726e8623cc2896794e0657e38b4eb671c42f756f9d05c475fcd78fb1",
     "server_components": {
-      "repository": "sha256:beb4af15c2cb05d03c200a35845f49f789d73286ffc1bb5ccbbe663b4b70d9e5",
+      "repository": "sha256:8f4e3f294b6feb676d698b379a615dd5a39c783b867852140d5c3527f2fe146a",
       "requirements-lock.txt": "sha256:3e5c02571a48293fe2bde91910f0fed96e4fa8e89c55f0f030c22d3d94c75d96"
     },
     "prompt_sha256": "bf1370bd14cb5416cc40172f56732f9c20587438c9430437a722ff0e16b8445f",
