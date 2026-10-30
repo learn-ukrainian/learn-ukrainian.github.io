@@ -1205,3 +1205,38 @@ def test_plan_validator_recap_source_admission(tmp_path, case):
         assert report.ok, report.render_text()
     else:
         assert codes.RECAP_TASK_PRINT in report.codes(), report.render_text()
+
+
+def test_load_words_reads_a_formula_record_as_its_printed_text(tmp_path):
+    from scripts.curriculum.validate.loader import PlanError
+    from scripts.curriculum.validate.pack import load_words
+
+    formula = {
+        "id": "W-287",
+        "kind": "formula",
+        "text": "Добрий день!",
+        "parts": [{"word": "W-075", "form": "Добрий"}, {"word": "W-076", "form": "день"}],
+        "gloss_en": "hello",
+    }
+
+    def store(*words):
+        path = tmp_path / "_words.yaml"
+        path.write_text(yaml.safe_dump({"words": list(words)}, allow_unicode=True), encoding="utf-8")
+        return path
+
+    record = load_words(store(formula)).records["W-287"]
+    assert (record.lemma, record.form_tags, record.form_texts, record.gloss_en) == (
+        "Добрий день!",
+        frozenset(),
+        (),
+        "hello",
+    )
+    for broken in (
+        {key: value for key, value in formula.items() if key != "text"},
+        {key: value for key, value in formula.items() if key != "parts"},
+        {**formula, "parts": []},
+        {"id": "W-100", "forms": []},
+    ):
+        with pytest.raises(PlanError) as error:
+            load_words(store(broken))
+        assert error.value.code == codes.WORDS_MALFORMED
