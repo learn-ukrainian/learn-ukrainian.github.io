@@ -187,6 +187,9 @@ def make_spec(args: argparse.Namespace) -> tuple[dict[str, Any], list[tuple[str,
         if source_headwords and args.seed_cache:
             raise JobError("source_headwords_seed_unsupported")
         spec["lookup_mode"] = "source_headword" if source_headwords else "lemma"
+        # Article paths spell these three apostrophes as "_", as in м_ясо. Source-headword
+        # suffixes stay the exact manifest text.
+        article_apostrophe = str.maketrans({"'": "_", "\u2019": "_", "\u02bc": "_"})
         targets = []
         seen = set()
         for entry in manifest["entries"]:
@@ -194,7 +197,11 @@ def make_spec(args: argparse.Namespace) -> tuple[dict[str, Any], list[tuple[str,
                 raise JobError("invalid_manifest_lemma")
             lemma = entry["lemma"]
             if lemma not in seen:
-                lookup = normalize_word(lemma) if source_headwords else _slovnyk_lookup_word(lemma)
+                lookup = (
+                    normalize_word(lemma)
+                    if source_headwords
+                    else _slovnyk_lookup_word(lemma.translate(article_apostrophe))
+                )
                 if not lookup:
                     raise JobError("empty_lookup")
                 targets.append((lemma, lookup))
