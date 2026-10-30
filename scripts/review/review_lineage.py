@@ -111,8 +111,12 @@ def _read_run(path: Path, record: Mapping[str, Any]) -> ReviewRun:
     return ReviewRun(task_id, record, reply)
 
 
-def lineage_runs(task_root: Path, *, repository: str, number: int, branch: str) -> list[ReviewRun]:
-    """Every hot and archived review run of this PR; an archived run is kept beside a hot one."""
+def lineage_runs(task_root: Path, *, repository: str, number: int | None, branch: str | None) -> list[ReviewRun]:
+    """Every hot and archived review run of this PR; an archived run is kept beside a hot one.
+
+    A run belongs to the PR by its recorded ``pr`` or its review branch; a dispatch that knows
+    only one of them passes None for the other.
+    """
     try:
         paths = [*sorted((task_root / ARCHIVE_DIR_NAME).glob("*.json")), *sorted(task_root.glob("*.json"))]
     except OSError as exc:
@@ -133,7 +137,7 @@ def lineage_runs(task_root: Path, *, repository: str, number: int, branch: str) 
             record["repository"]
         ) != normalize_repository(repository):
             continue
-        if record.get("pr") == number or branch in _review_branches(record):
+        if (number is not None and record.get("pr") == number) or branch in _review_branches(record):
             runs.append(_read_run(path, record))
     return runs
 
@@ -289,6 +293,30 @@ def superseded_runs(
         events = set()
     runs = [run for run in runs if exclude_head is None or run.record.get("worktree_base_sha") != exclude_head]
     return _supersede(runs, markers, events)
+
+
+def dispatched_rounds(
+    *, runs: Sequence[ReviewRun], comments: Sequence[Mapping[str, Any]], login: str, exclude_head: str | None = None
+) -> dict[str, list[str]]:
+    """Each head a review run on record was dispatched at, with its runs' task ids, recorded or not (#12098).
+
+    A round is one reviewer dispatch at one exact head (review-loop policy), so a run counts from its
+    dispatch, whatever its status and whether its verdict was ever published. A run whose published
+    capability failure classifies it opens no round. ``exclude_head`` drops the round being decided.
+    """
+    try:
+        events = {(e.task, e.started) for e in capability_failure.events(comments, login)}
+    except recorder.RecordError:
+        # Unreadable events classify no run here, so more heads count; check_lineage refuses them.
+        events = set()
+    rounds: dict[str, list[str]] = {}
+    for run in runs:
+        head = run.record.get("worktree_base_sha")
+        if not isinstance(head, str) or not SHA.fullmatch(head) or head == exclude_head:
+            continue
+        if (run.task_id, _started(run.record)) not in events:
+            rounds.setdefault(head, []).append(run.task_id)
+    return rounds
 
 
 def check_lineage(
