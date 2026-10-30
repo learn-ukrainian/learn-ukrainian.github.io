@@ -599,7 +599,8 @@ def _pipelines(command: str) -> list[list[list[str]]]:
 
 
 # Wrapper: (short options taking a value, long options taking a value,
-# short and long options that only look a command up and never run it).
+# short and long options that only look a command up and never run it,
+# positional operands before the command).
 _WRAPPER_OPTIONS = {
     "sudo": (
         "CDghpRrtTUu",
@@ -617,40 +618,61 @@ _WRAPPER_OPTIONS = {
             "--user",
         },
         {"-e", "-K", "-l", "-V", "-v", "--edit", "--list", "--remove-timestamp", "--validate", "--version"},
+        0,
     ),
-    "exec": ("a", set(), set()),
-    "time": ("fo", {"--format", "--output"}, set()),
-    "nice": ("n", {"--adjustment"}, set()),
-    "stdbuf": ("ioe", {"--input", "--output", "--error"}, set()),
-    "command": ("", set(), {"-v", "-V"}),
-    "nohup": ("", set(), set()),
-    "builtin": ("", set(), set()),
+    "exec": ("a", set(), set(), 0),
+    "time": ("fo", {"--format", "--output"}, set(), 0),
+    "nice": ("n", {"--adjustment"}, set(), 0),
+    "stdbuf": ("ioe", {"--input", "--output", "--error"}, set(), 0),
+    "timeout": ("ks", {"--kill-after", "--signal"}, set(), 1),
+    "command": ("", set(), {"-v", "-V"}, 0),
+    "nohup": ("", set(), set(), 0),
+    "builtin": ("", set(), set(), 0),
 }
 
 
-def _after_wrapper_options(seg: list[str], i: int, wrapper: str) -> int:
-    """Return the index after a wrapper's own options, or -1 for a lookup."""
-    value_letters, value_longs, lookups = _WRAPPER_OPTIONS[wrapper]
+def _after_wrapper_options(seg: list[str], i: int, wrapper: str, redirects: list[str]) -> int:
+    """Return the index after a wrapper's options and operands, or -1 for a lookup.
+
+    Redirections may sit anywhere among them; they are moved to `redirects`.
+    """
+    value_letters, value_longs, lookups, positionals = _WRAPPER_OPTIONS[wrapper]
+    value_pending = False
+    options = True
     while i < len(seg):
+        skip = _redirection_skip_count(seg[i])
+        if skip:
+            redirects.extend(seg[i : i + skip])
+            i += skip
+            continue
         word = _strip_quotes(seg[i])
-        if word == "--":
-            return i + 1
-        if not word.startswith("-") or word == "-":
-            return i
+        if value_pending:
+            value_pending = False
+            i += 1
+            continue
+        if options and word == "--":
+            options = False
+            i += 1
+            continue
+        if not options or not word.startswith("-") or word == "-":
+            if not positionals:
+                return i
+            positionals -= 1
+            options = False
+            i += 1
+            continue
         i += 1
         if word.startswith("--"):
             name = word.split("=", 1)[0]
             if name in lookups:
                 return -1
-            if name in value_longs and "=" not in word:
-                i += 1
+            value_pending = name in value_longs and "=" not in word
             continue
         for index, letter in enumerate(word[1:], 1):
             if f"-{letter}" in lookups:
                 return -1
             if letter in value_letters:
-                if index == len(word) - 1:
-                    i += 1
+                value_pending = index == len(word) - 1
                 break
     return i
 
@@ -700,15 +722,9 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
             continue
         wrapper = _strip_quotes(seg[i]).rsplit("/", 1)[-1]
         if wrapper in _WRAPPER_OPTIONS:
-            i = _after_wrapper_options(seg, i + 1, wrapper)
+            i = _after_wrapper_options(seg, i + 1, wrapper, redirects)
             if i < 0:
                 return None
-            continue
-        if wrapper == "timeout":
-            i += 1
-            while i < len(seg) and _strip_quotes(seg[i]).startswith("-"):
-                i += 2 if _strip_quotes(seg[i]) in {"-s", "--signal", "-k", "--kill-after"} else 1
-            i += 1  # duration
             continue
         if wrapper == "env":
             j = i + 1
@@ -1676,6 +1692,17 @@ def _script_words(args: list[str], index: int) -> list[str]:
 def _shell_script(args: list[str]) -> list[str]:
     """Extract the script operand of a shell -c invocation."""
 
+    # Redirections may precede or sit among the options (`sh 2>/dev/null -c ...`).
+    raw: list[str] = []
+    i = 0
+    while i < len(args):
+        skip = _redirection_skip_count(args[i])
+        if skip:
+            i += skip
+        else:
+            raw.append(args[i])
+            i += 1
+    args = raw
     i = 0
     while i < len(args):
         option = _strip_quotes(args[i])
@@ -1800,10 +1827,13 @@ def _xargs_target(args: list[str]) -> list[str]:
     return []
 
 
-def _segment_process_facts(segment: list[str], depth: int, *, fed: bool = False) -> set[str]:
-    if depth >= 12:
-        return {"limit"}
+def _segment_process_facts(segment: list[str], depth: int) -> set[str]:
     found = _command_at(segment)
+    fed = False
+    while found is not None and found[0] == "xargs":
+        target = _xargs_target(found[1])
+        found = _command_at(target) if target else None
+        fed = True
     if found is None:
         return set()
     cmd, args, _ = found
@@ -1812,9 +1842,6 @@ def _segment_process_facts(segment: list[str], depth: int, *, fed: bool = False)
     if cmd == "kill":
         # xargs appends its input to the operands, so a fed kill is never literal.
         return {"kill"} if fed or not _literal_pid_kill(args) else set()
-    if cmd == "xargs":
-        target = _xargs_target(args)
-        return _segment_process_facts(target, depth + 1, fed=True) if target else set()
     if cmd in _PROCESS_SHELLS:
         facts: set[str] = set()
         for script in _shell_script(args):
@@ -1846,8 +1873,11 @@ def _process_facts(command: str, *, depth: int = 0) -> set[str]:
     return facts
 
 
-def _process_kill_refused(facts: set[str]) -> bool:
-    return "pkill" in facts or {"pgrep", "kill"} <= facts
+def _process_kill_refused(command: str, facts: set[str]) -> bool:
+    if "pkill" in facts or {"pgrep", "kill"} <= facts:
+        return True
+    # A part that could not be read may hold the kill; any mention refuses.
+    return "limit" in facts and re.search(r"\bp(?:kill|grep)\b", command) is not None
 
 
 def _scan_command(
@@ -1954,7 +1984,7 @@ def _main(argv: list[str] | None = None) -> int:
         return 0
 
     process_facts = _process_facts(command)
-    if _process_kill_refused(process_facts):
+    if _process_kill_refused(command, process_facts):
         sys.stderr.write(PROCESS_KILL_MESSAGE)
         return 2
     if override:
