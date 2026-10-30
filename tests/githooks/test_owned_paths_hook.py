@@ -27,9 +27,10 @@ def test_dispatched_commit_outside_owned_paths_is_refused_at_commit_time(tmp_pat
     (repo / ".pre-commit-config.yaml").write_text("repos: []\n", encoding="utf-8")
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env.pop("LEARN_UKRAINIAN_DISPATCH_TASK_ID", None)
+    # The base commit is made before the tracked hooks are enabled; only the commit under test runs them.
     for args in (("init", "-q", "-b", "main"), ("config", "user.email", "hook-test@example.invalid"),
-                 ("config", "user.name", "Hook Test"), ("config", "core.hooksPath", ".githooks"),
-                 ("commit", "-q", "--allow-empty", "-m", "base")):
+                 ("config", "user.name", "Hook Test"), ("commit", "-q", "--allow-empty", "-m", "base"),
+                 ("config", "core.hooksPath", ".githooks")):
         assert _git(repo, *args, env=env).returncode == 0
     base = _git(repo, "rev-parse", "HEAD", env=env).stdout.strip()
 
