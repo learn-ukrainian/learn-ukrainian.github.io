@@ -966,6 +966,35 @@ def test_review_dispatch_resolves_a_running_cursor_author_only_from_its_stream_a
     assert settled["resolved_model_known"] is attested
 
 
+def test_agy_stream_from_another_model_family_settles_as_a_failure(sandbox):
+    """Defect: a silently substituted model was credited as the requested one."""
+    binary_dir = sandbox.repo.parent / "bin"
+    binary_dir.mkdir()
+    events = [
+        {"event": "init", "init": {"model": "gemini-3.8-flash-high"}},
+        {"event": "result", "result": {"status": "SUCCESS", "response": "done"}},
+    ]
+    stdout = "\n".join(json.dumps(event) for event in events) + "\n"
+    executable = binary_dir / "agy"
+    executable.write_text(f"#!{sys.executable}\nimport sys\nsys.stdin.read()\nprint({stdout!r}, end='')\n")
+    executable.chmod(0o755)
+    sandbox.env["PATH"] = str(binary_dir) + os.pathsep + os.defpath
+    dispatched = sandbox.cli(
+        "dispatch", "--agent", "agy", "--model", "claude-sonnet-5-5", "--prompt", "Reply with one word.",
+        "--mode", "workspace-write",
+    )
+    record = sandbox.settle(dispatched.stdout.splitlines(), expected=1)
+    assert record["status"] == "failed"
+    assert record["model"] == "claude-sonnet-5-5-high"
+    assert record["resolved_model"] == "gemini-3.8-flash-high"
+    assert record["resolved_model_known"] is True
+    assert record["resolved_model_source"] == "agy-stream-json"
+    assert record["error"] == (
+        "agy_model_identity_unverified: "
+        "requested claude-sonnet-5-5-high (anthropic), attested gemini-3.8-flash-high (google)"
+    )
+
+
 @pytest.mark.parametrize(
     ("model", "state", "code"),
     [("fail", "failed", 17), ("error", "failed", 0), ("empty", "failed", 0), ("crash", "crashed", -9)],
@@ -2969,6 +2998,7 @@ def test_provider_process_lingering_after_its_final_result_settles_with_that_res
     log = sandbox.repo / "provider.log"
     code = (
         "import json, sys, time\n"
+        "print(json.dumps({'event': 'init', 'init': {'model': 'gemini-3.8-flash-high'}}), flush=True)\n"
         "print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', "
         "'response': 'literal final response'}}), flush=True)\n"
         "with open(sys.argv[2], 'a') as log:\n"

@@ -3,7 +3,11 @@
 import json
 
 from scripts.common.jsonl import jsonl_lines
+from scripts.dispatcher.providers.stream_json import model_observer as _observe
+from scripts.dispatcher.providers.stream_json import one_model
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+
+MODEL_SOURCE = "cursor-stream-json"
 
 
 def _init_model(event: object) -> str | None:
@@ -15,6 +19,11 @@ def _init_model(event: object) -> str | None:
     return None
 
 
+def _reported(event: object) -> tuple[str, ...]:
+    model = _init_model(event)
+    return () if model is None else (model,)
+
+
 def model_observer(stdout_path):
     """Attest the running task's model from complete init events, under ``parse``'s exactly-one rule.
 
@@ -22,26 +31,7 @@ def model_observer(stdout_path):
     reviewable only once the record carries this attestation (#12014); settlement re-derives it from
     the whole stream.
     """
-    offset, pending, models = 0, b"", set()
-
-    def observed():
-        nonlocal offset, pending
-        with stdout_path.open("rb") as stream:
-            stream.seek(offset)
-            chunk = stream.read()
-            offset = stream.tell()
-        lines = (pending + chunk).split(b"\n")
-        pending = lines.pop()
-        for line in lines:
-            try:
-                model = _init_model(json.loads(line.decode()))
-            except ValueError:  # invalid JSON or invalid UTF-8: not a valid record, so it attests nothing
-                continue
-            if model is not None:
-                models.add(model)
-        return next(iter(models)) if len(models) == 1 else None
-
-    return observed
+    return _observe(stdout_path, _reported)
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
@@ -108,5 +98,5 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
         text,
         usage,
         error or (None if result and text else "cursor: missing result"),
-        next(iter(models)) if len(models) == 1 else None,
+        one_model(models),
     )
