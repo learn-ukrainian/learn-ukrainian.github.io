@@ -147,7 +147,7 @@ def test_catalog_file_path_role_validation_is_clean_exit_two(tmp_path, bad, entr
     root = Path(__file__).resolve().parents[2]
     review = tmp_path / "scripts/review"
     review.mkdir(parents=True)
-    for name in ("model_catalog.py", "role_resolution.py", "family_exclusions.py", "__init__.py"):
+    for name in ("model_catalog.py", "role_resolution.py", "family_exclusions.py", "ukrainian_seats.py", "__init__.py"):
         shutil.copyfile(root / "scripts/review" / name, review / name)
     config = tmp_path / "scripts/config"
     config.mkdir()
