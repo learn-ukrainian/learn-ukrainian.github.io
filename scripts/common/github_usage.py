@@ -21,6 +21,7 @@ Print the top consumers of the last hour::
 from __future__ import annotations
 
 import argparse
+import fcntl
 import functools
 import json
 import os
@@ -41,6 +42,46 @@ _REPOSITORY = Path(__file__).resolve().parents[2]
 _GH_ENTRY = "scripts/opsec/gh_entry.py"
 _PYTHON = re.compile(r"python[0-9.]*")
 _SHELL = re.compile(r"bash|dash|sh|zsh")
+_CORRUPT = frozenset({11, 26})
+"""SQLite's primary result codes for a damaged file: ``SQLITE_CORRUPT`` and ``SQLITE_NOTADB``."""
+
+
+def corrupt(error):
+    """Whether a SQLite error says the database file itself is damaged."""
+    code = getattr(error, "sqlite_errorcode", None)
+    return isinstance(error, sqlite3.DatabaseError) and type(code) is int and code & 0xFF in _CORRUPT
+
+
+def file_identity(path):
+    """The file ``path`` names now, as ``(device, inode)``, else ``None``."""
+    try:
+        status = os.stat(path)
+    except OSError:
+        return None
+    return status.st_dev, status.st_ino
+
+
+def set_aside(path, identity):
+    """Move the damaged file ``identity`` (:func:`file_identity`) to its one ``.corrupt`` slot.
+
+    Only while ``path`` still names that file: once another process has set it aside and a
+    fresh file replaced it, the replacement is left alone. The check and the move happen under
+    one exclusive lock on the directory, so two clients that found the same damage cannot
+    interleave them; a client that finds the lock taken leaves the move to the holder. One slot per file keeps disk use bounded. A journal is left in place:
+    SQLite discards a journal beside an empty database, and moving it could take a live
+    transaction's journal from a process that still has the old file open.
+    """
+    if identity is None:
+        return
+    with suppress(OSError):
+        directory = os.open(os.path.dirname(os.fspath(path)) or ".", os.O_RDONLY)
+        try:
+            # Contended: another client is moving the file, so this one never waits for it.
+            fcntl.flock(directory, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            if file_identity(path) == identity:
+                os.replace(path, f"{path}.corrupt")
+        finally:
+            os.close(directory)
 
 
 def _script_name(arg):
@@ -278,10 +319,11 @@ def record(db, *, endpoint, status, now=None):
     The table is created here, on the counting connection only: the client's ordinary cache access
     (admission, budget storage, landing calls) never touches it. A statement SQLite refuses, a table
     that is not the expected one, or text it cannot store drops the row and never fails the call or
-    the writes beside it.
+    the writes beside it. Damage to the file is the exception: it reaches the client's handling of
+    that transaction, which sets the file aside.
     """
     now = time.time() if now is None else now
-    with suppress(sqlite3.Error, ValueError):
+    try:
         for statement in SCHEMA:
             db.execute(
                 statement.replace("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ").replace(
@@ -290,6 +332,9 @@ def record(db, *, endpoint, status, now=None):
             )
         db.execute("INSERT INTO usage VALUES(?,?,?,?)", (now, caller(), _text(endpoint), status))
         db.execute("DELETE FROM usage WHERE at<?", (now - RETENTION_SECONDS,))
+    except (sqlite3.Error, ValueError) as error:
+        if corrupt(error):
+            raise
 
 
 def top(directory, *, hours=1.0, limit=20, now=None):

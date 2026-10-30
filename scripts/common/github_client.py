@@ -12,8 +12,8 @@ logical body bytes plus persisted header UTF-8 bytes, oldest validation first,
 then scope/key ascending. Oversized responses are returned without retention.
 These bounds never prune budgets or compact SQLite's allocated file. Records
 whose stored types/headers cannot identify a response are retained untouched.
-Every REST core request sent is counted per caller in the cache's ``usage`` table
-(``scripts.common.github_usage``).
+A cache file SQLite reports as damaged is set aside and rebuilt empty. Every REST
+core request sent is counted per caller in the cache's ``usage`` table (``scripts.common.github_usage``).
 
 Every request path (REST, injected transports and native gh) is normalized once
 (``_normalize``) and admitted by one decision, ``_refusal``. Only GitHub's own
@@ -1351,6 +1351,9 @@ class GitHubClient:
                 except OSError:
                     self.cache_dir = None
                     path = ":memory:"
+            # The file this connection is about to open: only it may be set aside as damaged. Read
+            # before connecting, so a replacement that appears afterwards is never taken for it.
+            generation = github_usage.file_identity(path) if self.cache_dir is not None else None
             try:
                 db = self._memory_db if self._memory_db is not None else _open_cache(path)
                 if quick:
@@ -1369,11 +1372,16 @@ class GitHubClient:
                     )
                 _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
                 break
-            except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
+            except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError) as error:
                 if self.cache_dir is not None:
                     if "db" in locals() and db is not self._memory_db:
                         with suppress(Exception):
                             db.close()
+                    if github_usage.corrupt(error):
+                        # A damaged cache is rebuilt, not abandoned: without it every read is
+                        # charged in full and budget observations stop reaching other callers.
+                        # This client continues in memory; the next one opens a fresh file.
+                        github_usage.set_aside(path, generation)
                     self.cache_dir = None
                     if attempt == 0:
                         continue
@@ -1384,9 +1392,25 @@ class GitHubClient:
                 yield db
                 if db.total_changes != changes:
                     _maintain_cache(db, self.clock(), self.cache_ttl_seconds, self.cache_max_bytes)
+        except sqlite3.DatabaseError as error:
+            # As above: the caller falls back to memory, and the next client opens a fresh file.
+            if self.cache_dir is not None and github_usage.corrupt(error):
+                github_usage.set_aside(self.cache_dir / "cache.sqlite3", generation)
+            raise
         finally:
             if self.cache_dir is not None:
                 db.close()
+
+    def _read(self, work):
+        """Run ``work(db)`` on the cache; a file found damaged mid-use is set aside and ``work`` reruns in memory."""
+        for attempt in range(2):
+            try:
+                with self._db() as db:
+                    return work(db)
+            except sqlite3.DatabaseError as error:
+                if attempt or self.cache_dir is None or not github_usage.corrupt(error):
+                    raise
+                self.cache_dir = None
 
     def _count(self, endpoint, status):
         """Count one request in a short transaction of its own, after the call's writes committed.
@@ -1394,7 +1418,7 @@ class GitHubClient:
         Best effort: the connection and the write lock together wait at most a quarter second, and
         a row SQLite refuses, or a file that cannot be opened in that time, drops the row. Counting
         never changes where this client keeps its budget: whatever it did to the cache connection
-        state (a lock, a file that cannot be opened), the client's own view stays as it was.
+        state (a lock, a file set aside as damaged), the client's own view stays as it was.
         """
         kept = self.cache_dir, self._memory_db
         try:
@@ -1494,26 +1518,28 @@ class GitHubClient:
             and not re.search(r"/(?:releases/assets/\d+|artifacts/\d+/zip)$", resource_path)
         )
         now = self.clock()
+        def admit(db):
+            cached = (
+                db.execute(
+                    f"SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND ({_CACHE_RESPONSE}) "
+                    "AND at>? AND (? IS NULL OR length(body)<=?)",
+                    (
+                        self.scope,
+                        key,
+                        now - self.cache_ttl_seconds,
+                        self.max_response_bytes,
+                        self.max_response_bytes,
+                    ),
+                ).fetchone()
+                if cacheable
+                else None
+            )
+            if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
+                cached = None
+            return cached, _admit(db, self.scope, normalized, now)
+
         try:
-            with self._db() as db:
-                cached = (
-                    db.execute(
-                        f"SELECT body,headers,at FROM cache WHERE scope=? AND key=? AND ({_CACHE_RESPONSE}) "
-                        "AND at>? AND (? IS NULL OR length(body)<=?)",
-                        (
-                            self.scope,
-                            key,
-                            now - self.cache_ttl_seconds,
-                            self.max_response_bytes,
-                            self.max_response_bytes,
-                        ),
-                    ).fetchone()
-                    if cacheable
-                    else None
-                )
-                if not cacheable or (cached and json.loads(cached[1]).get("_github_binary")):
-                    cached = None
-                refusal = _admit(db, self.scope, normalized, now)
+            cached, refusal = self._read(admit)
         except GitHubUnpreparedRequest as refused:
             return _unprepared(refused.reason)
 
@@ -3323,8 +3349,7 @@ def _native_command(args, client, runner, kwargs, *, preserve_argv=False):
     pools = sorted(_native_buckets(args, client.host) - {_SYNTHETIC_HOLD})
     request = _normalize_native(args, client.host, pools, stdin=kwargs.get("input"), cwd=client.cwd)
     try:
-        with client._db() as db:
-            refusal = _admit(db, client.scope, request, client.clock())
+        refusal = client._read(lambda db: _admit(db, client.scope, request, client.clock()))
     except GitHubUnpreparedRequest as refused:
         return _result_process(args, _unprepared(refused.reason), {}, kwargs)
     if refusal is not None:

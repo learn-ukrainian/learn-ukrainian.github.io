@@ -171,6 +171,10 @@ path. A native `gh` command counts once, as charged, however many requests gh ma
 write SQLite refuses drops its row rather than fail the call; the row follows the budget
 observation, so it cannot cost it. The `usage` table is created by the count itself, never by the
 client's ordinary cache access, so a cache from before this change is read and written exactly as it was.
+A cache file SQLite reports as damaged, whether at open or mid-use, is set aside as `cache.sqlite3.corrupt`
+and rebuilt, because without it every read is charged in full and budget observations stop reaching
+other callers; the call itself continues in memory. Only the damaged file is moved, under a directory
+lock a client never waits for: a fresh file another process already put in its place is left alone.
 
 ## Git hooks
 
