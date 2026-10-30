@@ -799,8 +799,8 @@ For Ukrainian-language Gemini-family review or support, use AGY through
 `scripts/dispatch.py dispatch --model <catalog-model> --agent agy ...`.
 
 Direct `agy --model` calls use display labels from `agy models`, such as
-`Gemini 3.1 Pro (High)` and `Gemini 3.5 Flash (High)`. The bridge and runtime
-may accept slugs such as `gemini-3.1-pro-high` and map them to AGY display
+`Gemini 3.8 Flash (High)`. The bridge and runtime
+may accept slugs such as `gemini-3.8-flash-high` and map them to AGY display
 labels before invoking AGY.
 
 ---

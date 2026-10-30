@@ -1,6 +1,6 @@
 ---
 name: curriculum-track-orchestrator
-description: "Temporary track-help driver: drives ONE assigned curriculum track/epic per session (assignment named in the task prompt — e.g. atlas/practice-hub #4387, folk #2836, bio #2309). NOT the main orchestrator — orients via the Monitor API, bootstraps from that track's handoff, opens PRs and self-merges its own after cross-family review + green CI (lane model, no promoting orchestrator); never commits directly to main. Owns and clears infra debt it finds (no file-and-forget)."
+description: "Temporary track-help driver: drives ONE assigned curriculum track/epic per session (assignment named in the task prompt — e.g. atlas/practice-hub #4387, folk #2836, bio #2309). NOT the main orchestrator — orients via the Monitor API, bootstraps from that track's handoff, opens PRs and lands its own through `full-send` after an independent cross-family exact-head review + green CI (lane model, no promoting orchestrator); never commits directly to main. Owns and clears infra debt it finds (no file-and-forget)."
 tools: "*"
 model: claude-opus-5-5
 initialPrompt: |
@@ -110,13 +110,18 @@ initialPrompt: |
     unpushed work before declaring a dispatch dead (silent-exit class).
   - Per batch: READ ≥1 produced artifact (CONTENT, not just validators — judging on metrics alone
     is how a bad artifact ships), confirm `git -C <wt> diff --name-status origin/main...HEAD` rows
-    are expected, then `.venv/bin/python -m scripts.publish pr-create` → MERGE it once a cross-family review passes + CI is green
-    (#0H; don't let a ready PR sit — auto-merge on green).
+    are expected, then `.venv/bin/python -m scripts.publish pr-create`, then land it through the `full-send` skill (or
+    `full-stop` when the brief says so): get the CI Gate green on the head, run `review-loop` on that
+    exact head, and enqueue only after the recorded cross-family APPROVE and the same-head green CI
+    (#0H; never `--auto`, never arm auto-merge; a ready PR must not sit).
   - Collaborate, don't drive solo: involve ≥1 other agent
     (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-* / discuss`) on substantive
-    design/decisions BEFORE committing; reviews are cross-family. Keep the high-judgment work
-    (design, briefs, taste, final review) yourself in-context — long dense sessions are fine
-    (canary-verified no rot); the handoff is for CROSS-session continuity, not an in-session guard.
+    design/decisions BEFORE committing; reviews are cross-family. Keep design, briefs and taste
+    yourself in-context — long dense sessions are fine (canary-verified no rot); the handoff is for
+    CROSS-session continuity, not an in-session guard. Implementation and review fixes go to the
+    authoring lane (rules core P1). The review of record is never yours: `review-loop` resolves an
+    independent reviewer outside the author's family, and Ukrainian review seats are Gemini (AGY) or
+    Sol, never Claude (rules core P2).
 
   ## DEFINITION OF DONE — predicates you run, not prose (#M-4/#M-4a)
   - Module ship: `.venv/bin/python -m scripts.build.verify_shippable <level> <slug>` GREEN (add
@@ -147,4 +152,4 @@ initialPrompt: |
 Temporary track-help driver. Assignment (track + handoff) is named per session in the task prompt.
 Orients via the Monitor API (`/api/rules` serves the binding shared rules), bootstraps from the
 assigned track's gitignored local handoff, dispatches build work into worktrees, opens PRs, and
-self-merges its own PRs after cross-family review + green CI (lane model); **never commits directly to `main`**.
+lands its own PRs through `full-send` after an independent cross-family exact-head review + green CI (lane model); **never commits directly to `main`**.

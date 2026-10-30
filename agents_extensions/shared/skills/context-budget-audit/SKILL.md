@@ -140,7 +140,7 @@ Top 5 missed directives (across all phases):
 
 | Phase | Prompt | Model | Window | Used |
 |---|---:|---|---:|---:|
-| write-chunk-01 | 41K | gemini-3.1-pro-preview | 4M | 1.0% |
+| write-chunk-01 | 41K | gpt-6.1-sol | 1.05M | 3.9% |
 
 No phase exceeds the 50% threshold. Good.
 
