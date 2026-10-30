@@ -4,7 +4,7 @@ The fresh path has no word or activity target: judge size by job adequacy agains
 
 Kind: plan
 Module: a1/introduction-to-ukrainian (Position 1)
-Manifest SHA256: 13fbd356899fd71742e066b5b66e15352fdbeeea81620c0d59c04879f4d2aea7
+Manifest SHA256: 069da89828bae539503a9e3cf507dce52debc1e0c71b2c90e1f9f17581c0813f
 
 You are the independent cross-family content reviewer for a fresh curriculum module plan (Contract 1, fresh-build review contracts #8430 r4).
 You evaluate whether the module plan serves the learning goals before any lesson writer runs.
@@ -204,8 +204,8 @@ taxonomy: 1
 kind: plan
 attempt:
   review_id: "rev-20261030-introduction-to-ukrainian"
-  attempt_id: "sol-att-1"
-  manifest_sha256: "13fbd356899fd71742e066b5b66e15352fdbeeea81620c0d59c04879f4d2aea7"
+  attempt_id: "sol-att-2"
+  manifest_sha256: "069da89828bae539503a9e3cf507dce52debc1e0c71b2c90e1f9f17581c0813f"
   previous_attempt_id: null
 reviewer:
   resolved_model: "<model>"
@@ -325,23 +325,23 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'The Ukrainian alphabet has 33 letters: 21 consonants, 10 vowels, 1 semivowel (й), and the soft sign (ь). We distinguish what is heard (speech sounds) from what is written (letters).'
+    teach: 'The Ukrainian alphabet has 33 letters: 21 consonants, 10 vowels, 1 semivowel (й), and the soft sign (ь). We distinguish what is heard (speech sounds) from what is written (letters). When studying Ukrainian, follow a sound-before-letter progression: listen to native audio and repeat aloud before analyzing written print, practicing varied exercises with regular oral repetition.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-003']
     practice: ['a1']
   - id: s2
     kind: recap
-    teach: 'Practical closing task: establish your personal study goals and understand sound-before-letter progression.'
+    teach: 'Practical closing task: apply the taught sound-before-letter study method to select and establish your daily personal practice routine.'
     task:
       id: 'orientation-recap-task'
       action: 'read_and_use'
       context_en: 'Beginning your journey into the Ukrainian language.'
-      instruction_en: 'Review the alphabet structure and note down your daily practice routine.'
+      instruction_en: 'Apply the taught study method and alphabet overview to select your daily oral and written practice routine.'
       response_mode: 'written'
       success_criteria_en:
       - 'Identify that Ukrainian has 33 letters including vowels, consonants, and the soft sign'
-      - 'Commit to oral repetition before reading print'
+      - 'Apply the sound-before-letter progression by scheduling oral repetition before print'
       learner_reads: []
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
@@ -359,7 +359,7 @@ lessons:
   - id: a2
     type: odd-one-out
     placement: workbook
-    focus: 'Identify the study habit that contradicts the sound-before-letter progression.'
+    focus: 'Identify the study habit that contradicts the taught sound-before-letter progression.'
     options:
     - 'Translating full written texts with a dictionary on day one'
     - 'Listening to native audio before reading print'
@@ -1290,7 +1290,7 @@ later get the next free id; ids are never reused.
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml": "a191226dd4df0b4b43834f3c196c8ab9803b382d70c2112e2e3837ed5c0504f2",
-    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "eb2576066a190c51c24bfcd726f1a988447a154f76c7bbb5fbba03f490bf2ae1",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "f1cd9b10c3d5771da34a7a71b7442fd3b43cb182a941a85c39ab7b404569d3a9",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",

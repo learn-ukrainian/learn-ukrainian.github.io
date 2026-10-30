@@ -1,0 +1,144 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-introduction-to-ukrainian"
+  attempt_id: "sol-att-2"
+  manifest_sha256: "069da89828bae539503a9e3cf507dce52debc1e0c71b2c90e1f9f17581c0813f"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "GPT-6 (exact runtime identifier unavailable)"
+  harness: "codex"
+  family: "openai"
+  prompt_sha256: "ac87fae1c424d430e7ab2a0ba24fced830ab6ae880e00c664f7555c0db08dd37"
+checks:
+  # The personal daily routine is a useful English orientation application.
+  # Embedding it in lesson 2 avoids an unnecessary standalone recap lesson.
+  closing_shape: clean
+
+  # Titles describe orientation and study preparation. Prose sentences remain
+  # in one language; parenthesized letters are legitimate metalanguage.
+  # search_slovnyk_me, vts/вступ, rr-790fb8af056da6be3919:
+  # "Початкова частина книжки, статті, музичного твору"
+  title_describes_job: clean
+
+  # No title or subtitle states an inventory quantity.
+  title_quantities: clean
+
+  # verify_words, vesum:e7d478879eeadd1e2bc06a36f404c7f41a719fcdd4999b26c71829ac9e0f3902,
+  # receipt rr-69a456763ee6018fcbfb: "Found: 3/3".
+  # Matching unmarked analyses: вступ noun:inanim:m:v_naz;
+  # до prep; української noun:inanim:f:v_rod.
+  # Letter exemplars: search_text, 5-klas-ukrmova-avramenko-2022_s0076,
+  # rr-e394540f3b324ced3c74, includes "[л′], [н′], [р′] та [й]".
+  # search_text, 5-klas-ukrmova-zabolotnyi-2023_s0063,
+  # rr-f983aee788caa7e591ed: "ь М’якість приголосного".
+  quoted_forms: clean
+
+  # English orientation requires no prior Ukrainian decoding. The alphabet
+  # remains an overview; no letter acquisition or later grammar is analysed.
+  sequencing: clean
+
+  # The two jobs are distinct: language context, then study preparation.
+  # Neither requires padding toward 45 minutes. Deprecated word_target values
+  # supply no reason to reject, expand or merge these lessons.
+  sizing: clean
+
+  # Zero acquired vocabulary suits the accepted orientation role.
+  # There is no previous core inventory requiring recycling here.
+  inventory: clean
+
+  # Supplied report: workbook match-up followed by odd-one-out.
+  # Matching factual descriptions and rejecting an unsuitable study habit
+  # require different operations. Repeated inline quizzes recognize different
+  # concepts; the recap adds personal written application.
+  # Lesson 2/s2 asks learners to select their own daily routine and observably
+  # schedule oral repetition before print. English is appropriate to orientation.
+  # Mapped v1 comparison is unavailable: no mapped activities file exists.
+  # Response opportunities are unavailable at plan stage; no totals are inferred.
+  activities: clean
+
+  evidence_fit: [F-01, F-02, F-03]
+
+  # Position 1 has no assigned Standard lines and teaches no early grammar
+  # system requiring a ULP scheduling precedent. The accepted orientation
+  # duties are represented; their evidence-fit defects are recorded above.
+  standard_and_ulp: clean
+
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 1
+        step: s1
+        quote: "Ukrainian is an East Slavic language spoken by over 40 million people in Ukraine and across the global diaspora."
+    dimension: evidence_use
+    severity: MAJOR
+    claim: >-
+      The sole citation T-001 does not support this step's language-family,
+      speaker-population or diaspora teaching. search_text retrieved its source,
+      1-klas-bukvar-zaharijchuk-2025-1_s0001, headed
+      “ДЕРЖАВНІ СИМВОЛИ УКРАЇНИ”, followed by flag, coat-of-arms and anthem
+      material. The citation's semantic mismatch breaks R-08 and evidence_fit;
+      pack verification does not establish support for these assertions.
+      Their factual truth is separate from this citation defect.
+    evidence:
+      receipt: "rr-bd814f6692020100c2da"
+    expected: "ДЕРЖАВНІ СИМВОЛИ УКРАЇНИ"
+    could_be_a_gate: "no"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 1
+        step: s2
+        quote: "Orientation on language history, state symbols, and modern standard Ukrainian."
+    dimension: evidence_use
+    severity: MAJOR
+    claim: >-
+      T-002 supplies a welcome to a first-grade textbook, rather than evidence
+      for the history, state-symbol or modern-standard content assigned to this
+      step. search_text retrieved
+      1-klas-bukvar-zaharijchuk-2025-1_s0003, beginning
+      “Дорогий першокласнику!” and describing working with pictures, letters
+      and texts. That introduction does not ground the promised historical
+      teaching. This is an evidence-fit defect requiring suitable grounding
+      for the existing orientation job.
+    evidence:
+      receipt: "rr-d44e52c4312e672ce387"
+    expected: "Дорогий першокласнику!"
+    could_be_a_gate: "no"
+
+  - id: F-03
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "21 consonants, 10 vowels, 1 semivowel (й)"
+      - lesson: 2
+        step: s1
+        quote: "listen to native audio and repeat aloud before analyzing written print"
+      - lesson: 2
+        step: s2
+        quote: "Apply the sound-before-letter progression by scheduling oral repetition before print"
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      The supplied T-003 excerpt concerns non-speech sounds and gestures;
+      it does not substantiate the precise alphabet partition or the prescribed
+      audio-before-print study sequence. The closing task also cites T-002,
+      whose primer welcome does not establish that sequence. search_text for
+      “semivowel” and “sound-before-letter” returned no hits; the Ukrainian
+      sequence search returned sound-letter exercises without support for this
+      study prescription. Evidence supporting these specific teaching points
+      remains a pack-builder gap. This finding establishes neither that the
+      English semivowel taxonomy is false nor that the study method must change.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-0af1a7dfb4d1e7b96fad"
+          outcome: "no_hits"
+        - receipt: "rr-a530bd6df6c48f665ed4"
+          outcome: "no_hits"
+        - receipt: "rr-e7dea1862430b5f18714"
+          outcome: "hits_but_no_support"
+    could_be_a_gate: "no"
