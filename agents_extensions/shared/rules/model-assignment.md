@@ -35,8 +35,8 @@ This interim seat stands until a code-capable Gemini model is admitted. Gemini P
 
 **Grok language routing:** native Grok dispatch is retired. The former native measurement
 exception supplies no executable dispatch route. Cursor `grok-4.7-high` stays off language seats.
-Route Ukrainian language, culture and heritage work through Claude, GPT or Gemini with the
-Sources MCP. Review of Grok-authored work stays cross-family and non-xAI.
+Route Ukrainian language, culture and heritage authoring through Claude, GPT or Gemini with the
+Sources MCP. Review and judging seats are GPT or Gemini. Review of Grok-authored work stays cross-family and non-xAI.
 Critical and security final sign-off retain the review admission limits above.
 `review_scheduler.risk_reviewer_models` admits Opus 5.5, Sol 6.1 and Grok 4.7 at high;
 critical eligibility requires the catalog's `critical_review` role. These eligibility gates
@@ -227,7 +227,7 @@ role and are not a last resort for any of them.
   agent explicitly for its reserved seat; stream launchers select their driver agent.
 - **Reserved repository agents**: `curriculum-orchestrator`,
   `curriculum-track-orchestrator` and `curriculum-writer` pin
-  `model: claude-opus-5-5`, so Ukrainian writing/judgment seats never inherit
+  `model: claude-opus-5-5`, so Ukrainian writing seats never inherit
   the routine interactive model. `infra-orchestrator` pins
   `model: claude-sonnet-5-5`, matching its frontmatter. This infra-orchestrator
   subagent has an approved router-only exception (CTO decision, 2026-10-09):
@@ -512,7 +512,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
-  | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes hard Claude-lane coding, architecture, and deep code review where relevant | **`gpt-6.1-sol` @ high** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Opus / Sol take advice and Ukrainian judgment. Orchestration alone does not confer approval authority |
+  | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes hard Claude-lane coding, architecture, and deep code review where relevant | **`gpt-6.1-sol` @ high** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Opus and Sol take advice. Sol takes Ukrainian judgment; Claude takes no Ukrainian review or judging seat. Orchestration alone does not confer approval authority |
   | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | GPT-6.1 Sol orchestrates, does advanced work, and handles ordinary advice (#9275 envelope unchanged). Luna @ high scouts. Never co-owns a live lease |
   | **grok** | `grok-4.7` @ high | same SKU | Native interactive/bridge callers retain their interfaces; detached dispatch uses `--agent cursor --model grok-4.7-high` (no `grok` agent) |
   | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Driver seat through `start-gemini-driver.sh` (2026-10-08 approval): the driver defaults to and accepts only `gemini-3.8-flash-high`. As a worker it is not a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is the worker default and deep pin (2026-09-22: 3.8 Flash High outperforms 3.1 Pro) |

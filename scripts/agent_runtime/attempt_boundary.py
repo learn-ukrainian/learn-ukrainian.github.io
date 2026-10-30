@@ -150,7 +150,7 @@ CLAUDE_LABELLED_ENV_ALLOWLIST = frozenset(
     }
 )
 # Top-level user settings keys the login directory may carry. A labelled run
-# turns that scope off, but Claude Code still reads some names from it
+# turns that scope off, but Claude Code 2.1.300 read some names from it
 # directly: ``autoMode`` (auto mode classifier rules) is one, so it is not
 # here. Each key's reason is in docs/runbooks/claude-account-labels.md.
 _CLAUDE_LABELLED_USER_SETTINGS_KEYS = frozenset(
@@ -543,8 +543,8 @@ def _refuse_unlisted_env(data: dict, code: str) -> None:
 def _refuse_claude_settings_credential_source(directory: int) -> None:
     """Refuse a login directory whose user settings carry anything off the allowlist (#10619).
 
-    A labelled run turns this scope off, yet Claude Code reads some names
-    from it regardless (``autoMode``), so any key, helper, provider switch,
+    A labelled run turns this scope off, yet Claude Code 2.1.300 read some
+    names from it regardless (``autoMode``), so any key, helper, provider switch,
     endpoint, classifier rule or unknown setting refuses. Only
     names are inspected; no value is kept or reported. The file may be
     readable by others, not writable by them.

@@ -7,7 +7,8 @@ mention the budget point here; do not restate it.
 ## Budget
 
 A round is one reviewer dispatch at one exact head: round 1 is the full review, later
-rounds are deltas.
+rounds are deltas. A round is spent when its reviewer is dispatched, whether or not its
+verdict is ever recorded; more seats or a retry at a head already dispatched open no round.
 
 - **Default: three rounds** (`budget_tier: default` in the hand-off record).
 - **Up to five rounds** for a change to security, permissions, authentication, data loss, or
@@ -59,10 +60,13 @@ rounds are deltas.
   and verdict history is kept. A conflict, a manual edit inside a merge, any other commit, or
   a missing object or failed proof makes the head count as a normal round.
 - **The verdict recorder refuses a round beyond the budget**, so an over-budget verdict is
-  never recorded. **Ask it before dispatching a reviewer:**
+  never recorded, and **the dispatcher refuses an over-budget review dispatch** with the same
+  decision, naming the PR and the count. Both count every review run on record for the PR (its
+  `pr` or head branch), recorded or not. **Ask before dispatching a reviewer:**
   `record_cf_verdict.py budget-check --repository <owner/name> --pr <N>` returns the same
   decision for the PR's current head (admitted, with any exemption, grant or repair-round
-  receipt, or the refusal that names what to escalate) and writes nothing.
+  receipt, or the refusal that names what to escalate), lists each head reviewed without a
+  recorded verdict under `unrecorded_rounds`, and writes nothing.
 - The budget and the ledger follow the work (issue and branch lineage). A new reviewer, a
   replacement PR or a new session does not reset them.
 
