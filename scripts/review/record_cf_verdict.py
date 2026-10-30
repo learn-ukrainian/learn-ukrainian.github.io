@@ -134,11 +134,14 @@ class RecordError(RuntimeError):
 def normalize_verdict(reply: str) -> str:
     tokens = {NORMALIZED[token.upper()] for token in recognized_verdicts(reply)}
     visible = _without_code_fences(reply, keep_unclosed=False)
-    if any(_REVIEW_VERDICT_LINE_RE.match(line) for line in _commonmark_lines(visible)):
-        # The verdict line is the reply's stated verdict; it holds a findings block that approves with follow-ups.
-        stated = next(iter(tokens)) if len(tokens) == 1 else None
-        if reason := invalid_findings_block(reply, stated=stated):
-            raise RecordError(f"reply carries an invalid findings block beside a verdict line: {reason}")
+    verdict_line = any(_REVIEW_VERDICT_LINE_RE.match(line) for line in _commonmark_lines(visible))
+    # The verdict line is the reply's stated verdict; it holds a findings block that approves with follow-ups.
+    stated = next(iter(tokens)) if verdict_line and len(tokens) == 1 else None
+    # Every top-level findings block must pass the verifier's schema, whether or not a verdict line is present.
+    if reason := invalid_findings_block(reply, stated=stated):
+        beside = " beside a verdict line" if verdict_line else ""
+        raise RecordError(f"reply carries an invalid findings block{beside}: {reason}")
+    if verdict_line:
         findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply, stated=stated)}
         offset = 0
         for line in _commonmark_lines(visible, keepends=True):
