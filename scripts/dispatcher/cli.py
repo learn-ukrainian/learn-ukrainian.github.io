@@ -370,8 +370,8 @@ def _dispatch(args) -> int:
     ):
         checks.check_branch_author_families(args, repo, info, sha, args.model)
     review = any((args.review_profile, args.language_lane, args.review_author_model, args.risk,
-                                   args.review_mode, args.pr, args.require_review_verdict, args.subject_seat,
-                                   args.subject_family))
+                  args.review_mode, args.pr, args.require_review_verdict, args.subject_seat,
+                  args.subject_family))
     # A read-only review resolves its subjects from owned paths, and a bounded or advisory task has them sealed
     # by its envelope; any other read-only task cannot write them, so owned paths there mean the mode was
     # forgotten (#12141).
