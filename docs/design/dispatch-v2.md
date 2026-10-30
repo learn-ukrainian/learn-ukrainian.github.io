@@ -32,6 +32,22 @@ it refuses when a candidate record cannot be read or parsed. A file in the
 task-record directory that parses as JSON but is not an object, such as a
 worker's proof list, is no task record and never blocks a removal.
 
+## Tasks a run dispatches
+
+A task dispatched from inside another task's run (its environment carries
+`LEARN_UKRAINIAN_DISPATCH_TASK_ID`) records that run as `parent_task_id`. When
+the parent settles while such a child is still `spawning` or `running`, the
+parent's record lists it in `orphaned_child_tasks`; a parent that did not end
+`done` also has its `error` start with `orphaned_child_tasks: <ids>;`, so the
+coordinator sees a result nobody consumed rather than a bare refusal.
+
+An AGY worker waits for a child with `scripts/dispatch.py wait`. AGY moves any
+command that runs past 10 seconds to a background task, and a headless run waits
+for background tasks only until its `--print-timeout`; when that expires, agy
+exits 0 with the interim reply as its result. The dispatcher therefore sets the
+print timeout to the task's hard timeout plus 60 seconds, so the dispatcher's
+own deadline always ends the run first and settles it as `timeout` (#12156).
+
 ## Seeing worktrees
 
 ```bash
