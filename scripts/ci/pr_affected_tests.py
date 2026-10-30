@@ -32,10 +32,11 @@ INFRA = {
     ".python-version",
 }
 CAP_SECONDS = 600
+TIMEOUT_SECONDS = 480
 # Importing tests fill only half the room the guards and changed tests leave under
-# the cap: the cap is also the kill limit, so a selection estimated at the cap has no
-# room for runner speed variance. Measured from the mandatory selection, not from
-# zero, so a heavy guard list never starves every importing test.
+# the cap, and never past the pytest timeout: a selection estimated at the kill limit
+# has no room for runner speed variance. Measured from the mandatory selection, not
+# from zero, so a heavy guard list never starves every importing test.
 FILL_SHARE = 0.5
 TEST = re.compile(r"tests/(?:[^/]+/)*test_[^/]+\.py")
 
@@ -166,7 +167,7 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         if type(value) not in {int, float} or not math.isfinite(value) or value < 0:
             raise ValueError("invalid recorded duration")
     budget = estimate
-    fill_limit = estimate + (CAP_SECONDS - estimate) * FILL_SHARE
+    fill_limit = min(estimate + (CAP_SECONDS - estimate) * FILL_SHARE, TIMEOUT_SECONDS)
     for p in sorted(imported, key=lambda p: (durations.get(p, default), p)):
         if budget + durations.get(p, default) <= fill_limit:
             run.add(p)
@@ -232,7 +233,7 @@ def main() -> int:
         paths = ["tests"] if args.repo_wide else record["run_files"]
         # pytest excludes build/ by default; it contains registered invariants.
         collection = ["--override-ini=norecursedirs=.* node_modules"] if args.repo_wide else []
-        timeout = 1500 if args.repo_wide else 480
+        timeout = 1500 if args.repo_wide else TIMEOUT_SECONDS
         record.update(selection=marker, requested_paths=paths, workers=2, timeout_seconds=timeout,
                       logical_cpus=os.cpu_count(), load_average=os.getloadavg())
         stage, reason = "fresh_report", "stale_or_unwritable_report"
