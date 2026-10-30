@@ -55,6 +55,15 @@ F7_SHELL_OPTIONS = [
     r"bash -o posix \+e -c 'pkill -f worker'",
     r"bash \+O extglob -c 'pkill -f worker'",
     "bash $FLAGS -c 'pkill -f worker'",
+    "FLAGS='e -c pkill${IFS}-f${IFS}worker'; bash +$FLAGS",
+    "FLAGS='-c pkill${IFS}-f${IFS}worker'; bash ${FLAGS}",
+    "bash $(printf '%s' '-c pkill${IFS}-f${IFS}worker')",
+    "FLAGS='errexit -c'; bash -o $FLAGS 'pkill -f worker'",
+    "FLAGS='extglob -c'; bash -eO $FLAGS 'pkill -f worker'",
+    "FLAGS='/dev/null -c'; bash --rcfile $FLAGS 'pkill -f worker'",
+    "bash +O $(printf 'extglob -c') 'pkill -f worker'",
+    "bash -o {errexit,-c} 'pkill -f worker'",
+    "bash -o ${REVIEW_UNUSED-} errexit -c 'pkill -f worker'",
 ]
 # Review F10: ANSI-C escapes whose Bash meaning the decoder does not model.
 F10_ANSI_C = [
@@ -137,6 +146,7 @@ F10_ANSI_C = [
         ("cat <<EOF\npkill -f worker\nEOF", False),
         ("bash -e -c 'echo ok'", False),
         ('bash "$HOME/run.sh"', False),
+        ("bash -o pipefail +O extglob -c 'echo ok'", False),
         (r"printf $'ok\t\x41\101\n'", False),
     ]
     + [(command, True) for command in F7_SHELL_OPTIONS + F10_ANSI_C]
