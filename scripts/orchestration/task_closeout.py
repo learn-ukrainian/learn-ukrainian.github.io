@@ -506,16 +506,22 @@ class GhGitHubAdapter:
             # so a merged task's cleanup comes from what merge_closeout verifies.
             from scripts.orchestration import merge_closeout
 
-            local.update(merge_closeout.observe_cleanup(
+            # Only the PR's own head branch is verified; a different caller
+            # branch can never establish that the PR's branches are gone.
+            head_branch = pr.get("head_branch")
+            cleanup = merge_closeout.observe_cleanup(
                 self.repo_root,
                 merge_closeout.PullRequestInfo(
                     number=pr["number"],
                     state="MERGED",
-                    head_ref_name=branch or pr.get("head_branch"),
+                    head_ref_name=head_branch,
                     head_sha=pr.get("head_sha"),
                     repository=merge_closeout.canonical_repository(github["repository"]),
                 ),
-            ))
+            )
+            if branch and branch != head_branch:
+                cleanup = dict.fromkeys(cleanup, True)
+            local.update(cleanup)
         return {
             "schema_version": task_lifecycle.OBSERVATION_SCHEMA_VERSION,
             "observed_at": now,
