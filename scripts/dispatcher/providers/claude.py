@@ -118,13 +118,22 @@ def _sources_mcp_config() -> str:
     return json.dumps({"mcpServers": {_SOURCES_SERVER: servers[_SOURCES_SERVER]}}, separators=(",", ":"))
 
 
-def advisor_enabled(spec: TaskSpec) -> bool:
-    """Whether this run gets the Opus advisor: a workspace-write Sonnet 5.5, or a Haiku 5.5 that asked for it."""
+def model_id(model: str) -> str | None:
+    """The catalog id a ``--model`` value runs: a native alias (``sonnet``, ``haiku[1m]``) is its family's newest model."""
+    from scripts.agent_runtime.model_pause import _newest_claude
     from scripts.review.model_catalog import canonical_model_id
 
+    alias = model.strip().casefold().split("[", 1)[0]
+    if alias in {"haiku", "opus", "sonnet", "fable"}:
+        return _newest_claude(alias)
+    return canonical_model_id(model)
+
+
+def advisor_enabled(spec: TaskSpec) -> bool:
+    """Whether this run gets the Opus advisor: a workspace-write Sonnet 5.5, or a Haiku 5.5 that asked for it."""
     if spec.mode != "workspace-write":
         return False
-    model = canonical_model_id(spec.model)
+    model = model_id(spec.model)
     return model == _ADVISED_MODEL or (model == _ADVISED_ON_REQUEST_MODEL and spec.options.get("advisor") == _ADVISOR_MODEL)
 
 

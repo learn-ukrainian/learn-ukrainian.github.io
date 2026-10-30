@@ -3341,6 +3341,9 @@ def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp
         ("claude-opus-5-5", "workspace-write", {}, False),
         ("claude-haiku-5-5", "workspace-write", {}, False),
         ("claude-haiku-5-5", "workspace-write", {"advisor": "opus"}, True),
+        ("sonnet[1m]", "workspace-write", {}, True),
+        ("haiku", "workspace-write", {}, False),
+        ("haiku", "workspace-write", {"advisor": "opus"}, True),
     ],
 )
 def test_claude_advisor_is_attached_only_to_the_approved_runs(tmp_path, model, mode, options, advised):

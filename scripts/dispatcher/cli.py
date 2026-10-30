@@ -29,7 +29,6 @@ from scripts.dispatcher import (
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import ReviewAccess, TaskSpec
 from scripts.dispatcher.watchdog import DEFAULT_INITIAL_RESPONSE_TIMEOUT_S, DEFAULT_SILENCE_TIMEOUT_S, deadlines
-from scripts.review.model_catalog import canonical_model_id
 
 # Grok runs through Cursor's TUI: --agent cursor --model grok-4.7-high (grok-build is the separate Grok TUI).
 ALIASES = dict(sol="codex", gemini="agy", deepseek="opencode", openrouter="hermes")
@@ -287,7 +286,7 @@ def _dispatch(args) -> int:
     if args.contributor_mode is not None and agent != "muse":
         raise ValueError("--contributor-mode is only supported with --agent muse")
     if args.advisor is not None and not (
-        agent == "claude" and args.mode == "workspace-write" and canonical_model_id(args.model) == "claude-haiku-5-5"
+        agent == "claude" and args.mode == "workspace-write" and providers.load("claude").model_id(args.model) == "claude-haiku-5-5"
     ):
         raise ValueError("--advisor is supported only for a workspace-write Claude Haiku 5.5 run")
     if args.output_schema is not None and agent != "codex":
