@@ -142,6 +142,49 @@ def test_unknown_reviewer_marker_never_approves(mode):
     assert sweep.lookup_verdict([comment(review_mode=mode, family="unknown")], SHA, "fleet").state == "unknown"
 
 
+def gemini_seat():
+    """A Ukrainian-profile Gemini approval of an OpenAI-authored head, its one required seat."""
+    item = comment(task="review-uk", family="google")
+    item["body"] = build_comment(
+        sha=SHA,
+        task_id="review-uk",
+        started=START,
+        verdict="APPROVED",
+        model="gemini-3.8-flash-high",
+        family="google",
+        reply="VERDICT: APPROVE",
+        review_profile="ukrainian",
+        sources_mcp_call_count=3,
+        author_models=["gpt-6.1-sol"],
+    )
+    return item
+
+
+@pytest.mark.parametrize(
+    "rows,seated,state",
+    [
+        ([{"filename": "scripts/example.py"}], False, "APPROVED"),
+        ([{"filename": "registry/atlas/a1-v1-inventory.json"}], False, sweep.NEEDS_SEAT),
+        ([{"filename": "site/src/data/lexicon-practice-deck.pointer.json"}], False, "APPROVED"),
+        ([{"filename": "scripts/moved.md", "previous_filename": "curriculum/moved.md"}], False, sweep.NEEDS_SEAT),
+        ([{"filename": "curriculum/l2-uk-en/a1/example.md"}], True, "APPROVED"),
+        ([{"filename": "scripts/example.py"}] * sweep.PR_FILES_LIMIT, False, None),
+    ],
+)
+def test_learner_content_needs_its_ukrainian_seats_without_a_ukrainian_verdict(rows, seated, state):
+    # #12181: the changed paths, not the recorded verdicts, decide that the seats are needed.
+    if state is None:
+        with pytest.raises(ValueError, match="partial"):
+            sweep.pr_file_paths(rows)
+        return
+    content = sweep.changes_learner_content(sweep.pr_file_paths(rows))
+    comments = [comment(), gemini_seat()] if seated else [comment()]
+    verdict = sweep.lookup_verdict(comments, SHA, "fleet", learner_content=content)
+    assert verdict.state == state
+    expected = "ready" if state == "APPROVED" else sweep.NEEDS_SEAT
+    assert sweep.classify_pr(pr(), verdict, queued=False, observed_at=START).state == expected
+
+
 def pr(**updates):
     data = {
         "number": 42,
@@ -689,6 +732,9 @@ def test_report_names_unknown_reason_and_comment_without_bodies(monkeypatch, cap
 
         def comments(self, repository, number):
             return [*issue_11127_markers(), recorded(5000), malformed]
+
+        def pr_files(self, repository, number):
+            return ["scripts/example.py"]
 
         def queue_membership(self, repository, item):
             return False
