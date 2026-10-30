@@ -250,58 +250,64 @@ workbook:
           - 'Odessa'
         answer: 'Odessa'
         explanation: 'Use Odesa for the Ukrainian city name in English.'
-  - type: error-correction
+  - type: quiz
     title: Repair where-from interference
-    instruction: Choose the natural Ukrainian repair.
+    instruction: Choose the correct Ukrainian version of each line.
     anchor_id: repair-where-from-interference
     items:
-      - sentence: Я з Київ.
-        error: Київ
-        answer: Я з Києва.
+      - prompt: 'Choose the correct Ukrainian version: Я з Київ.'
         options:
-          - Я з Києва.
-          - Я з Київ.
-          - Я в Києва.
+          - text: Я з Києва.
+            correct: true
+          - text: Я з Київ.
+            correct: false
+          - text: Я в Києва.
+            correct: false
         explanation: Звідки? uses the from-place form Києва.
-      - sentence: Я з Україну.
-        error: Україну
-        answer: Я з України.
+      - prompt: 'Choose the correct Ukrainian version: Я з Україну.'
         options:
-          - Я з України.
-          - Я з Україну.
-          - Я з Україною.
+          - text: Я з України.
+            correct: true
+          - text: Я з Україну.
+            correct: false
+          - text: Я з Україною.
+            correct: false
         explanation: З takes the genitive form України.
-      - sentence: Він живе в Київ.
-        error: Київ
-        answer: Він живе в Києві.
+      - prompt: 'Choose the correct Ukrainian version: Він живе в Київ.'
         options:
-          - Він живе в Києві.
-          - Він живе в Київ.
-          - Він живе з Києва.
+          - text: Він живе в Києві.
+            correct: true
+          - text: Він живе в Київ.
+            correct: false
+          - text: Він живе з Києва.
+            correct: false
         explanation: Живе answers де?, so use в Києві.
-      - sentence: Вона львів'янин.
-        error: львів'янин
-        answer: Вона львів'янка.
+      - prompt: "Choose the correct Ukrainian version: Вона львів'янин."
         options:
-          - Вона львів'янка.
-          - Вона львів'янин.
-          - Вона з львів'янин.
+          - text: Вона львів'янка.
+            correct: true
+          - text: Вона львів'янин.
+            correct: false
+          - text: Вона з львів'янин.
+            correct: false
         explanation: Use the feminine demonym for вона.
-      - sentence: — Звідки ти? — Я з США.
-        error: з
-        answer: — Звідки ти? — Я зі США.
+      - prompt: 'Choose the correct Ukrainian version: — Звідки ти? — Я з США.'
         options:
-          - — Звідки ти? — Я зі США.
-          - — Звідки ти? — Я з США.
-          - — Звідки ти? — Я у США.
+          - text: — Звідки ти? — Я зі США.
+            correct: true
+          - text: — Звідки ти? — Я з США.
+            correct: false
+          - text: — Звідки ти? — Я у США.
+            correct: false
         explanation: Зі avoids the consonant cluster before США. The question asks for origin; у США gives location.
-      - sentence: Я з місто Львів.
-        error: місто Львів
-        answer: Я зі Львова.
+      - prompt: 'Choose the correct Ukrainian version: Я з місто Львів.'
         options:
-          - Я зі Львова.
-          - Я зі Львів.
-          - Я з міста Львові.
+          - text: Я зі Львова.
+            correct: true
+          - text: Я зі Львів.
+            correct: false
+          - text: Я з міста Львові.
+            correct: false
         explanation: Зі takes the genitive form Львова.
   - type: fill-in
     title: Country, city, current home

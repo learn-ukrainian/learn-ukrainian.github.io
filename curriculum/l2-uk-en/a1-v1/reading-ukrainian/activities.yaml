@@ -53,38 +53,38 @@ inline:
       - word: бібліоте́ка
         answer: бі блі о те ка
   - id: act-4
-    type: error-correction
+    type: quiz
     title: Пастки читання
-    instruction: Обери безпечнішу українську читацьку звичку.
+    instruction: Choose the correct pronunciation advice.
     items:
-      - sentence: Не читай молоко́ як малоко.
-        error: малоко
-        correction: молоко
+      - prompt: How should you pronounce the о sounds in молоко́?
         options:
-          - молоко
-          - нечітке о
-        explanation: Українське о залишається чистим; читай молоко́ у три відкриті удари.
-      - sentence: Не читай дж у слові джерело́ як д плюс ж.
-        error: д плюс ж
-        correction: один злитий звук
+          - text: Keep each о clear.
+            correct: true
+          - text: Replace unstressed о with а.
+            correct: false
+        explanation: Українське о залишається чистим; читай молоко́ у три відкриті удари. — For this word, keep the о vowels; do not replace them with а.
+      - prompt: What does дж represent in джерело́?
         options:
-          - один злитий звук
-          - д плюс ж
-        explanation: ДЖ читаємо як один злитий звук у словах як джерело́.
-      - sentence: Украї́на — не читай ї як просте і.
-        error: просте і
-        correction: '[йі]'
+          - text: One joined sound.
+            correct: true
+          - text: Separate д and ж sounds.
+            correct: false
+        explanation: ДЖ читаємо як один злитий звук у словах як джерело́. — Here дж represents one joined consonant sound.
+      - prompt: How is ї read in Украї́на?
         options:
-          - '[йі]'
-          - '[і]'
-        explanation: Ї завжди читаємо як [йі].
-      - sentence: День — не треба додати голосний після нь.
-        error: додати голосний
-        correction: пом'якшити н і зупинитися
+          - text: '[йі]'
+            correct: true
+          - text: '[і]'
+            correct: false
+        explanation: Ї завжди читаємо як [йі]. — Ї represents the sounds й + і.
+      - prompt: What should you do at the end of день?
         options:
-          - пом'якшити н і зупинитися
-          - додати і після нь
-        explanation: Ь не має власного звука; він м'якшить попередній при́голосний.
+          - text: Make н soft, then stop.
+            correct: true
+          - text: Add an і sound after н.
+            correct: false
+        explanation: Ь не має власного звука; він м'якшить попередній при́голосний. — Ь marks a soft consonant and has no sound of its own.
 workbook:
   - type: group-sort
     title: Один, два чи три склади́

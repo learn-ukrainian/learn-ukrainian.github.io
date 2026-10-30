@@ -383,47 +383,52 @@ workbook:
           - Той
           - Та
         explanation: Plural far things use ті.
-  - type: error-correction
+  - type: quiz
     title: Виправ демонстративні пастки
-    instruction: Read the learner trap and choose the repaired Ukrainian phrase.
+    instruction: Choose the correct Ukrainian version of each line.
     items:
-      - sentence: Це є цікава книгу
-        error: книгу
-        answer: Це цікава книга
+      - prompt: 'Choose the correct Ukrainian version: Це є цікава книгу'
         options:
-          - Це цікава книга
-          - Цей цікава книга
-          - Це є цікава книгу
+          - text: Це цікава книга
+            correct: true
+          - text: Цей цікава книга
+            correct: false
+          - text: Це є цікава книгу
+            correct: false
         explanation: Use nominative книга with цікава. Є may be present or omitted; it is not the error.
-      - sentence: Я хочу купити цей сумку
-        error: цей
-        answer: Я хочу купити цю сумку
+      - prompt: 'Choose the correct Ukrainian version: Я хочу купити цей сумку'
         options:
-          - Я хочу купити цю сумку
-          - Я хочу купити цей сумку
-          - Я хочу купити це сумку
+          - text: Я хочу купити цю сумку
+            correct: true
+          - text: Я хочу купити цей сумку
+            correct: false
+          - text: Я хочу купити це сумку
+            correct: false
         explanation: Use the safe phrase цю сумку.
-      - sentence: Ця біль у спині сильний
-        error: Ця
-        answer: Цей біль у спині сильний
+      - prompt: 'Choose the correct Ukrainian version: Ця біль у спині сильний'
         options:
-          - Цей біль у спині сильний
-          - Ця біль у спині сильний
-          - Ці біль у спині сильний
+          - text: Цей біль у спині сильний
+            correct: true
+          - text: Ця біль у спині сильний
+            correct: false
+          - text: Ці біль у спині сильний
+            correct: false
         explanation: Біль meaning pain is masculine, so use Цей with сильний. Ця is feminine; Ці is plural.
-      - sentence: Что это? — Это стіл
-        error: Что это? — Это
-        answer: Що це? — Це стіл
+      - prompt: 'Choose the correct Ukrainian version: Что это? — Это стіл'
         options:
-          - Що це? — Це стіл
-          - Что это? — Это стіл
-          - Що этот? — Этот стіл
+          - text: Що це? — Це стіл
+            correct: true
+          - text: Что это? — Это стіл
+            correct: false
+          - text: Що этот? — Этот стіл
+            correct: false
         explanation: Keep the whole sentence in Ukrainian.
-      - sentence: У кімнаті є той книга і ручка
-        error: той
-        answer: У кімнаті є та книга і ручка
+      - prompt: 'Choose the correct Ukrainian version: У кімнаті є той книга і ручка'
         options:
-          - У кімнаті є та книга і ручка
-          - У кімнаті є той книга і ручка
-          - У кімнаті є ця книга ця ручка
+          - text: У кімнаті є та книга і ручка
+            correct: true
+          - text: У кімнаті є той книга і ручка
+            correct: false
+          - text: У кімнаті є ця книга ця ручка
+            correct: false
         explanation: Книга is feminine, so use та here. Той is masculine. Both і and та can connect list items; the error repaired here is agreement.

@@ -330,55 +330,61 @@ workbook:
           - 'у Києві'
         answer: 'у Києві'
         explanation: 'У Києві is static; the others are directions.'
-  - type: error-correction
+  - type: quiz
     title: Repair where-to interference
-    instruction: Choose the natural Ukrainian sentence.
+    instruction: Choose the correct Ukrainian version of each line.
     items:
-      - sentence: — Куди ти йдеш? — Я йду в школі.
-        error: школі
-        correction: — Куди ти йдеш? — Я йду в школу.
+      - prompt: 'Choose the correct Ukrainian version: — Куди ти йдеш? — Я йду в школі.'
         options:
-          - — Куди ти йдеш? — Я йду в школу.
-          - — Куди ти йдеш? — Я йду в школі.
-          - — Куди ти йдеш? — Я йду школа.
+          - text: — Куди ти йдеш? — Я йду в школу.
+            correct: true
+          - text: — Куди ти йдеш? — Я йду в школі.
+            correct: false
+          - text: — Куди ти йдеш? — Я йду школа.
+            correct: false
         explanation: The question куди? requests a destination. A locative phrase can describe where movement happens, but it does not answer this destination question.
-      - sentence: Я живу Київ.
-        error: Київ
-        correction: Я живу в Києві. (або у Києві)
+      - prompt: 'Choose the correct Ukrainian version: Я живу Київ.'
         options:
-          - Я живу в Києві. (або у Києві)
-          - Я живу Київ.
-          - Я живу до Києва.
+          - text: Я живу в Києві.
+            correct: true
+          - text: Я живу Київ.
+            correct: false
+          - text: Я живу до Києва.
+            correct: false
         explanation: Жити answers де? and needs в/у plus locative.
-      - sentence: — Куди ти йдеш? — Я йду в бібліотеці.
-        error: бібліотеці
-        correction: — Куди ти йдеш? — Я йду в бібліотеку.
+      - prompt: 'Choose the correct Ukrainian version: — Куди ти йдеш? — Я йду в бібліотеці.'
         options:
-          - — Куди ти йдеш? — Я йду в бібліотеку.
-          - — Куди ти йдеш? — Я йду в бібліотеці.
-          - — Куди ти йдеш? — Я йду бібліотека.
+          - text: — Куди ти йдеш? — Я йду в бібліотеку.
+            correct: true
+          - text: — Куди ти йдеш? — Я йду в бібліотеці.
+            correct: false
+          - text: — Куди ти йдеш? — Я йду бібліотека.
+            correct: false
         explanation: The question куди? requests a destination. A locative phrase can describe where movement happens, but it does not answer this destination question.
-      - sentence: Ми були в концерті.
-        error: в
-        correction: Ми були на концерті.
+      - prompt: 'Choose the correct Ukrainian version: Ми були в концерті.'
         options:
-          - Ми були на концерті.
-          - Ми були в концерті.
-          - Ми були до концерту.
+          - text: Ми були на концерті.
+            correct: true
+          - text: Ми були в концерті.
+            correct: false
+          - text: Ми були до концерту.
+            correct: false
         explanation: The familiar event phrase is на концерті.
-      - sentence: Книжка на столу.
-        error: столу
-        correction: Книжка на столі.
+      - prompt: 'Choose the correct Ukrainian version: Книжка на столу.'
         options:
-          - Книжка на столі.
-          - Книжка на столу.
-          - Книжка в стіл.
+          - text: Книжка на столі.
+            correct: true
+          - text: Книжка на столу.
+            correct: false
+          - text: Книжка в стіл.
+            correct: false
         explanation: Static surface location uses на столі.
-      - sentence: Аптека — в аптекі.
-        error: аптекі
-        correction: Аптека — в аптеці.
+      - prompt: 'Choose the correct Ukrainian version: Аптека — в аптекі.'
         options:
-          - Аптека — в аптеці.
-          - Аптека — в аптекі.
-          - Аптека — в аптеку.
+          - text: Аптека — в аптеці.
+            correct: true
+          - text: Аптека — в аптекі.
+            correct: false
+          - text: Аптека — в аптеку.
+            correct: false
         explanation: Аптека changes to в аптеці for де?

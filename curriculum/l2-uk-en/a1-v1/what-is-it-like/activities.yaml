@@ -285,57 +285,63 @@ workbook:
           - нова
           - нове
         explanation: Стіл is masculine.
-  - type: error-correction
+  - type: quiz
     title: Виправ узгодження прикметників
-    instruction: Fix the adjective or sentence frame.
+    instruction: Choose the correct Ukrainian version of each line.
     items:
-      - sentence: Він є добра студент.
-        error: добра
-        answer: Він добрий студент.
+      - prompt: 'Choose the correct Ukrainian version: Він є добра студент.'
         options:
-          - Він добрий студент.
-          - Він добра студент.
-          - Він є добра студент.
+          - text: Він добрий студент.
+            correct: true
+          - text: Він добра студент.
+            correct: false
+          - text: Він є добра студент.
+            correct: false
         explanation: Студент is masculine, so use добрий. Є may be present or omitted.
-      - sentence: Це гарна хлопець.
-        error: гарна
-        answer: Це гарний хлопець.
+      - prompt: 'Choose the correct Ukrainian version: Це гарна хлопець.'
         options:
-          - Це гарний хлопець.
-          - Це гарне хлопець.
-          - Це гарна хлопець.
+          - text: Це гарний хлопець.
+            correct: true
+          - text: Це гарне хлопець.
+            correct: false
+          - text: Це гарна хлопець.
+            correct: false
         explanation: Хлопець is masculine.
-      - sentence: Який твоє ім'я?
-        error: Який
-        answer: Яке твоє ім'я?
+      - prompt: "Choose the correct Ukrainian version: Який твоє ім'я?"
         options:
-          - Яке твоє ім'я?
-          - Яка твоє ім'я?
-          - Який твоє ім'я?
+          - text: Яке твоє ім'я?
+            correct: true
+          - text: Яка твоє ім'я?
+            correct: false
+          - text: Який твоє ім'я?
+            correct: false
         explanation: Ім'я is neuter, so use Яке. Як тебе звати? is another natural question for an introduction.
-      - sentence: Це цікавий книга.
-        error: цікавий
-        answer: Це цікава книга.
+      - prompt: 'Choose the correct Ukrainian version: Це цікавий книга.'
         options:
-          - Це цікава книга.
-          - Це цікавий книга.
-          - Це цікаве книга.
+          - text: Це цікава книга.
+            correct: true
+          - text: Це цікавий книга.
+            correct: false
+          - text: Це цікаве книга.
+            correct: false
         explanation: Книга is feminine, so use цікава.
-      - sentence: Моя кава смачний.
-        error: смачний
-        answer: Моя кава смачна.
+      - prompt: 'Choose the correct Ukrainian version: Моя кава смачний.'
         options:
-          - Моя кава смачна.
-          - Моя кава смачний.
-          - Моя кава смачне.
+          - text: Моя кава смачна.
+            correct: true
+          - text: Моя кава смачний.
+            correct: false
+          - text: Моя кава смачне.
+            correct: false
         explanation: Кава is feminine, so use смачна.
-      - sentence: Це мій новий ручка.
-        error: мій новий
-        answer: Це моя нова ручка.
+      - prompt: 'Choose the correct Ukrainian version: Це мій новий ручка.'
         options:
-          - Це моя нова ручка.
-          - Це мій новий ручка.
-          - Це моє нове ручка.
+          - text: Це моя нова ручка.
+            correct: true
+          - text: Це мій новий ручка.
+            correct: false
+          - text: Це моє нове ручка.
+            correct: false
         explanation: Ручка is feminine, so use моя and нова.
   - type: fill-in
     title: Прикметники в реченнях — Adjectives in sentences

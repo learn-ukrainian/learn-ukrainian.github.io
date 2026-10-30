@@ -241,57 +241,63 @@ workbook:
         right: fair or light-brown hair
       - left: сиве волосся
         right: grey hair
-  - type: error-correction
+  - type: quiz
     title: Виправ кольорові пастки
-    instruction: Choose the standard Ukrainian correction. Capitals mark the stressed vowel.
+    instruction: Choose the correct Ukrainian version of each line.
     items:
-      - sentence: Сукня є червоний.
-        error: червоний
-        answer: Сукня червона.
+      - prompt: 'Choose the correct Ukrainian version: Сукня є червоний.'
         options:
-          - Сукня червона.
-          - Сукня червоний.
-          - Сукня є червоний.
+          - text: Сукня червона.
+            correct: true
+          - text: Сукня червоний.
+            correct: false
+          - text: Сукня є червоний.
+            correct: false
         explanation: Сукня is feminine, so use червона. Є may be present or omitted.
-      - sentence: Якого кольори є светр?
-        error: кольори
-        answer: Якого кольору светр?
+      - prompt: 'Choose the correct Ukrainian version: Якого кольори є светр?'
         options:
-          - Якого кольору светр?
-          - Яка кольору светр?
-          - Якого кольори є светр?
+          - text: Якого кольору светр?
+            correct: true
+          - text: Яка кольору светр?
+            correct: false
+          - text: Якого кольори є светр?
+            correct: false
         explanation: Use the phrase Якого кольору. Кольори does not fit that phrase. Якого кольору є светр? is also grammatical.
-      - sentence: Синьо-жовта прапор.
-        error: Синьо-жовта
-        answer: Синьо-жовтий прапор.
+      - prompt: 'Choose the correct Ukrainian version: Синьо-жовта прапор.'
         options:
-          - Синьо-жовтий прапор.
-          - Синьо-жовта прапор.
-          - Синьо-жовте прапор.
+          - text: Синьо-жовтий прапор.
+            correct: true
+          - text: Синьо-жовта прапор.
+            correct: false
+          - text: Синьо-жовте прапор.
+            correct: false
         explanation: Прапор is masculine, so use синьо-жовтий. Блакитно-жовтий can also describe a flag; the error here is agreement.
-      - sentence: У мене погана настрій.
-        error: погана
-        answer: У мене поганий настрій.
+      - prompt: 'Choose the correct Ukrainian version: У мене погана настрій.'
         options:
-          - У мене поганий настрій.
-          - У мене погана настрій.
-          - У мене погане настрій.
+          - text: У мене поганий настрій.
+            correct: true
+          - text: У мене погана настрій.
+            correct: false
+          - text: У мене погане настрій.
+            correct: false
         explanation: Настрій is masculine, so use поганий. Погана and погане do not agree with настрій.
-      - sentence: У нього сірий волосся.
-        error: сірий
-        answer: У нього сиве волосся.
+      - prompt: 'Choose the correct Ukrainian version: У нього сірий волосся.'
         options:
-          - У нього сиве волосся.
-          - У нього сірий волосся.
-          - Він має сивий волосся.
+          - text: У нього сиве волосся.
+            correct: true
+          - text: У нього сірий волосся.
+            correct: false
+          - text: Він має сивий волосся.
+            correct: false
         explanation: Волосся is neuter, so use сиве or сіре. Сіре волосся is also a valid description; the wrong options have masculine agreement.
-      - sentence: ЧорнИй, білИй
-        error: ЧорнИй, білИй
-        answer: ЧОрний, бІлий
+      - prompt: 'Keep the two masculine forms. Choose their correct stress: ЧорнИй, білИй'
         options:
-          - ЧОрний, бІлий
-          - чОрна, бІла
-          - чОрне, бІле
+          - text: ЧОрний, бІлий
+            correct: true
+          - text: чОрна, бІла
+            correct: false
+          - text: чОрне, бІле
+            correct: false
         explanation: Keep the masculine forms чорний, білий and stress the root. The other options change the gender.
   - type: fill-in
     title: Кольори кімнати й одягу
@@ -418,9 +424,9 @@ workbook:
       - statement: Якого кольору светр?
         answer: true
         explanation: This is the standard color question phrase.
-      - statement: Якого кольору є светр?
+      - statement: In "Якого кольору є светр?", кольору is a genitive form.
         answer: true
-        explanation: Якого кольору є светр? is grammatical. The question can also omit є.
+        explanation: Кольору is the genitive singular form of колір.
       - statement: Ручка синя.
         answer: true
         explanation: Ручка is feminine, and синій becomes синя.

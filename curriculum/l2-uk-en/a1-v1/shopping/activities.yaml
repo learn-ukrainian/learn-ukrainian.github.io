@@ -443,72 +443,80 @@ workbook:
           - картка
           - картки
         explanation: Карткою expresses the payment method.
-  - type: error-correction
+  - type: quiz
     title: Repair shopping interference
-    instruction: Choose the clean Ukrainian repair.
+    instruction: Choose the correct Ukrainian version of each line.
     anchor_id: repair-shopping-interference
     items:
-      - sentence: Скільки це є?
-        error: є
-        answer: Скільки це коштує?
+      - prompt: Choose the correct question about the price.
         options:
-          - Скільки це коштує?
-          - Скільки це є?
-          - Скільки це має?
+          - text: Скільки це коштує?
+            correct: true
+          - text: Скільки це є?
+            correct: false
+          - text: Скільки це має?
+            correct: false
         explanation: Use коштує for price questions.
-      - sentence: Я маю 20 гривнів.
-        error: гривнів
-        answer: Я маю 20 гривень.
+      - prompt: 'Choose the correct Ukrainian version: Я маю 20 гривнів.'
         options:
-          - Я маю 20 гривень.
-          - Я маю 20 гривнів.
-          - Я маю 20 гривні.
+          - text: Я маю 20 гривень.
+            correct: true
+          - text: Я маю 20 гривнів.
+            correct: false
+          - text: Я маю 20 гривні.
+            correct: false
         explanation: 20 takes гривень. Маю expresses possession.
-      - sentence: У вас є цей хлібом?
-        error: хлібом
-        answer: У вас є цей хліб?
+      - prompt: 'Choose the correct Ukrainian version: У вас є цей хлібом?'
         options:
-          - У вас є цей хліб?
-          - У вас є цей хлібом?
-          - У вас є цей хліба?
+          - text: У вас є цей хліб?
+            correct: true
+          - text: У вас є цей хлібом?
+            correct: false
+          - text: У вас є цей хліба?
+            correct: false
         explanation: Цей takes the matching masculine singular subject хліб.
-      - sentence: Я плачу з карткою.
-        error: з
-        answer: Карткою, будь ласка.
+      - prompt: How do you ask to pay by card?
         options:
-          - Карткою, будь ласка.
-          - Я плачу з карткою.
-          - З карткою, будь ласка.
+          - text: Карткою, будь ласка.
+            correct: true
+          - text: Я плачу з карткою.
+            correct: false
+          - text: З карткою, будь ласка.
+            correct: false
         explanation: At checkout, use the phrase Карткою, будь ласка.
-      - sentence: Дайте один кілограм яблука.
-        error: яблука
-        answer: Дайте, будь ласка, один кілограм яблук.
+      - prompt: 'Choose the correct Ukrainian version: Дайте один кілограм яблука.'
         options:
-          - Дайте, будь ласка, один кілограм яблук.
-          - Дайте один кілограм яблука.
-          - Дайте одна кілограм яблук.
+          - text: Дайте, будь ласка, один кілограм яблук.
+            correct: true
+          - text: Дайте один кілограм яблука.
+            correct: false
+          - text: Дайте одна кілограм яблук.
+            correct: false
         explanation: Use the whole phrase один кілограм яблук.
-      - sentence: Це коштує 50 гривн.
-        error: гривн
-        answer: Це коштує 50 гривень.
+      - prompt: 'Choose the correct Ukrainian version: Це коштує 50 гривн.'
         options:
-          - Це коштує 50 гривень.
-          - Це коштує 50 гривн.
-          - Це коштує 50 гривні.
+          - text: Це коштує 50 гривень.
+            correct: true
+          - text: Це коштує 50 гривн.
+            correct: false
+          - text: Це коштує 50 гривні.
+            correct: false
         explanation: The money word is гривня; 50 uses гривень.
-      - sentence: Я хочу приміряю пальто.
-        error: приміряю
-        answer: Я хочу приміряти пальто.
+      - prompt: 'Choose the correct Ukrainian version: Я хочу приміряю пальто.'
         options:
-          - Я хочу приміряти пальто.
-          - Я хочу приміряю пальто.
-          - Я хочу приміряєш пальто.
+          - text: Я хочу приміряти пальто.
+            correct: true
+          - text: Я хочу приміряю пальто.
+            correct: false
+          - text: Я хочу приміряєш пальто.
+            correct: false
         explanation: Хочу takes the infinitive приміряти.
-      - sentence: Ці яблука коштує сорок гривень.
-        error: коштує
-        answer: Ці яблука коштують сорок гривень.
+      - prompt: 'Choose the correct Ukrainian version: Ці яблука коштує сорок гривень.'
         options:
-          - Ці яблука коштують сорок гривень.
-          - Ці яблука коштує сорок гривень.
-          - Ці яблука коштувати сорок гривень.
+          - text: Ці яблука коштують сорок гривень.
+            correct: true
+          - text: Ці яблука коштує сорок гривень.
+            correct: false
+          - text: Ці яблука коштувати сорок гривень.
+            correct: false
         explanation: The plural subject ці яблука takes коштують.

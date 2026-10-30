@@ -450,9 +450,9 @@ workbook:
       - statement: Мені двадцять чотири роки.
         answer: true
         explanation: Numbers ending in 2-4 use роки, except 12-14.
-      - statement: Я маю двадцять років.
+      - statement: Мені двадцять років.
         answer: true
-        explanation: Я маю двадцять років and Мені двадцять років both express age.
+        explanation: Мені introduces the age; twenty takes років.
       - statement: Нуль дев'яносто сім.
         answer: true
         explanation: This is a natural phone-number group.

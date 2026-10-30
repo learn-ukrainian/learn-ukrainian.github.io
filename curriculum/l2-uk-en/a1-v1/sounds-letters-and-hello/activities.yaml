@@ -413,51 +413,42 @@
       correct: false
     explanation: Ра́да is the form a female speaker uses in this phrase.
 - id: act-10
-  type: error-correction
+  type: quiz
   title: Pronunciation traps
-  instruction: Choose the safer Ukrainian habit.
+  instruction: Choose the correct pronunciation advice.
   items:
-  - sentence: Do not call А, О, У голосними літерами.
-    error: голосними літерами
-    correction: літерами, що позначають голосні звуки
+  - prompt: What do the letters А, О, У represent?
     options:
-    - літерами, що позначають голосні звуки
-    - приголосними літерами
-    explanation: >-
-      Safer habit: sounds are голосні or приголосні. Letters represent sounds,
-      so call А, О, У letters that mark vowel sounds.
-  - sentence: Do not say м[а]локо for молоко.
-    error: м[а]локо
-    correction: молоко́
+    - text: Vowel sounds.
+      correct: true
+    - text: Consonant sounds.
+      correct: false
+    explanation: 'Safer habit: sounds are голосні or приголосні. Letters represent sounds, so call А, О, У letters that mark vowel sounds.'
+  - prompt: Which option puts the stress correctly in молоко?
     options:
-    - моло́ко
-    - молоко́
-    explanation: >-
-      Safer habit: keep Ukrainian о clean. Say молоко́ with three clear о
-      sounds: мо-ло-ко́.
-  - sentence: Do not add a tiny sound after день.
-    error: add a tiny sound after день
-    correction: soften н, then stop
+    - text: моло́ко
+      correct: false
+    - text: молоко́
+      correct: true
+    explanation: 'Safer habit: keep Ukrainian о clean. Say молоко́ with three clear о sounds: мо-ло-ко́.'
+  - prompt: What should you do at the end of день?
     options:
-    - soften н, then stop
-    - add і after нь
-    explanation: >-
-      Safer habit: ь has no sound of its own. In день, soften н and stop;
-      do not add a tiny vowel after it.
-  - sentence: Do not treat Ї as a softening letter.
-    error: treat Ї as a softening letter
-    correction: read Ї as [йі]
+    - text: soften н, then stop
+      correct: true
+    - text: add і after нь
+      correct: false
+    explanation: 'Safer habit: ь has no sound of its own. In день, soften н and stop; do not add a tiny vowel after it.'
+  - prompt: How is Ї pronounced?
     options:
-    - read Ї as [йі]
-    - read Ї as plain [і]
-    explanation: >-
-      Safer habit: Ї is not a softening letter. Read it as [йі] every time.
-  - sentence: Do not make one fixed glad phrase for every speaker.
-    error: one fixed glad phrase
-    correction: Радий тебе бачити / Рада тебе бачити
+    - text: read Ї as [йі]
+      correct: true
+    - text: read Ї as plain [і]
+      correct: false
+    explanation: 'Safer habit: Ї is not a softening letter. Read it as [йі] every time.'
+  - prompt: Which pair uses the glad phrase that matches the speaker's gender?
     options:
-    - Радий тебе бачити / Рада тебе бачити
-    - Радий тебе бачити for everyone
-    explanation: >-
-      Safer habit: match the phrase to the speaker. A male speaker says
-      Радий тебе бачити; a female speaker says Рада тебе бачити.
+    - text: Радий тебе бачити / Рада тебе бачити
+      correct: true
+    - text: Радий тебе бачити for everyone
+      correct: false
+    explanation: 'Safer habit: match the phrase to the speaker. A male speaker says Радий тебе бачити; a female speaker says Рада тебе бачити.'

@@ -129,53 +129,54 @@ inline:
             correct: false
         explanation: Вона вказує на жінку або дівчину.
 workbook:
-  - type: error-correction
+  - type: quiz
     title: Обери українське речення
     anchor_id: fix-common-l2-traps
-    instruction: Обери безпечніший український рядок про ідентичність.
+    instruction: Choose the correct Ukrainian version of each line.
     items:
-      - sentence: Я є студента.
-        error: студента
-        correction: Я студент.
+      - prompt: 'Choose the correct Ukrainian version: Я є студента.'
         options:
-          - Я студент.
-          - Я є студента.
+          - text: Я студент.
+            correct: true
+          - text: Я є студента.
+            correct: false
         explanation: Студент is nominative here. Є may be present or omitted; студента does not fit this identity sentence.
-      - sentence: Мені звати Джон.
-        error: Мені
-        correction: Мене звати Джон.
+      - prompt: 'Choose the correct Ukrainian version: Мені звати Джон.'
         options:
-          - Мене звати Джон.
-          - Мені звати Джон.
+          - text: Мене звати Джон.
+            correct: true
+          - text: Мені звати Джон.
+            correct: false
         explanation: 'Use Мене звати Джон. The person named is the object of звати: мене fits; dative мені does not. A grammatical sentence with є is not an error.'
-      - sentence: Як ти звати?
-        error: ти
-        correction: Як тебе звати?
+      - prompt: 'Choose the correct Ukrainian version: Як ти звати?'
         options:
-          - Як тебе звати?
-          - Як ти звати?
+          - text: Як тебе звати?
+            correct: true
+          - text: Як ти звати?
+            correct: false
         explanation: The person named is the object of звати, so use тебе here; ти is the subject form.
-      - sentence: 'Оксана каже: «Я лікарку».'
-        error: лікарку
-        correction: Я лікарка.
+      - prompt: 'Choose the correct Ukrainian version: Оксана каже: «Я лікарку».'
         options:
-          - Я лікарка.
-          - Я лікарку.
-          - Мене лікарка.
+          - text: Я лікарка.
+            correct: true
+          - text: Я лікарку.
+            correct: false
+          - text: Мене лікарка.
+            correct: false
         explanation: Я лікарка uses the nominative subject and profession noun. Лікарку is accusative; мене is not the subject form.
-      - sentence: Воно мій тато.
-        error: Воно
-        correction: Це мій тато.
+      - prompt: 'Choose the correct Ukrainian version: Воно мій тато.'
         options:
-          - Це мій тато.
-          - Воно мій тато.
+          - text: Це мій тато.
+            correct: true
+          - text: Воно мій тато.
+            correct: false
         explanation: Для першого називання людини вживай це; він можливе після цього.
-      - sentence: Добрий день, пане професора!
-        error: професора
-        correction: Добрий день, пане професоре!
+      - prompt: 'Choose the correct Ukrainian version: Добрий день, пане професора!'
         options:
-          - Добрий день, пане професоре!
-          - Добрий день, пане професора!
+          - text: Добрий день, пане професоре!
+            correct: true
+          - text: Добрий день, пане професора!
+            correct: false
         explanation: Direct address uses the vocative професоре. Професора is an oblique case form.
   - type: match-up
     title: Пари назв людей — Pairs of words for people

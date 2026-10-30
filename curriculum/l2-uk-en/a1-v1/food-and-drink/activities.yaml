@@ -370,136 +370,152 @@ workbook:
           - Де пошта?
           - Куди ти їдеш?
         explanation: Смачного! is the meal wish; the alternatives ask about a place or destination.
-  - type: error-correction
+  - type: quiz
     title: Repair food and drink interference
-    instruction: Choose the clean Ukrainian repair.
+    instruction: Choose the correct Ukrainian version of each line.
     anchor_id: repair-food-and-drink-interference
     items:
-      - sentence: Я є хочу їсти.
-        error: є
-        answer: Я хочу їсти.
+      - prompt: 'Choose the correct Ukrainian version: Я є хочу їсти.'
         options:
-          - Я хочу їсти.
-          - Я є хочу їсти.
-          - Я є хочеш їсти.
+          - text: Я хочу їсти.
+            correct: true
+          - text: Я є хочу їсти.
+            correct: false
+          - text: Я є хочеш їсти.
+            correct: false
         explanation: Хочу is already a conjugated verb. Use Я хочу їсти.
-      - sentence: Кіт п'є теплий молоко.
-        error: теплий
-        answer: Кіт п'є тепле молоко.
+      - prompt: "Choose the correct Ukrainian version: Кіт п'є теплий молоко."
         options:
-          - Кіт п'є тепле молоко.
-          - Кіт п'є теплий молоко.
-          - Кіт п'є тепла молоко.
+          - text: Кіт п'є тепле молоко.
+            correct: true
+          - text: Кіт п'є теплий молоко.
+            correct: false
+          - text: Кіт п'є тепла молоко.
+            correct: false
         explanation: Молоко is neuter, so use тепле молоко.
-      - sentence: Вареники з творогом.
-        error: творогом
-        answer: Вареники із сиром.
+      - prompt: 'Choose the correct Ukrainian version: Вареники з творогом.'
         options:
-          - Вареники із сиром.
-          - Вареники з творогом.
-          - Вареники із сир.
+          - text: Вареники із сиром.
+            correct: true
+          - text: Вареники з творогом.
+            correct: false
+          - text: Вареники із сир.
+            correct: false
         explanation: Use сир in this food context.
-      - sentence: Я люблю творог.
-        error: творог
-        answer: Я люблю сир.
+      - prompt: 'Choose the correct Ukrainian version: Я люблю творог.'
         options:
-          - Я люблю сир.
-          - Я люблю творог.
-          - Я люблю сиром.
+          - text: Я люблю сир.
+            correct: true
+          - text: Я люблю творог.
+            correct: false
+          - text: Я люблю сиром.
+            correct: false
         explanation: Use сир as the everyday Ukrainian food word.
-      - sentence: На столі смажений картопля.
-        error: смажений
-        answer: На столі смажена картопля.
+      - prompt: 'Choose the correct Ukrainian version: На столі смажений картопля.'
         options:
-          - На столі смажена картопля.
-          - На столі смажений картопля.
-          - На столі смажене картопля.
+          - text: На столі смажена картопля.
+            correct: true
+          - text: На столі смажений картопля.
+            correct: false
+          - text: На столі смажене картопля.
+            correct: false
         explanation: Картопля is feminine, so смажена agrees with it.
-      - sentence: Смажене картопля.
-        error: Смажене
-        answer: Смажена картопля.
+      - prompt: 'Choose the correct Ukrainian version: Смажене картопля.'
         options:
-          - Смажена картопля.
-          - Смажене картопля.
-          - Смажений картопля.
+          - text: Смажена картопля.
+            correct: true
+          - text: Смажене картопля.
+            correct: false
+          - text: Смажений картопля.
+            correct: false
         explanation: Картопля is feminine, so use смажена.
-      - sentence: Дайте мені один воду.
-        error: один
-        answer: Дайте мені одну воду. (або склянку води)
+      - prompt: 'Choose the correct Ukrainian version: Дайте мені один воду.'
         options:
-          - Дайте мені одну воду. (або склянку води)
-          - Дайте мені один воду.
-          - Дайте мені одне воду.
+          - text: Дайте мені одну воду.
+            correct: true
+          - text: Дайте мені один воду.
+            correct: false
+          - text: Дайте мені одне воду.
+            correct: false
         explanation: Use одну воду, or ask for a glass of water.
-      - sentence: Суп з картофель.
-        error: картофель
-        answer: Суп із картоплею. Або картопляний суп.
+      - prompt: 'Choose the correct Ukrainian version: Суп з картофель.'
         options:
-          - Суп із картоплею. Або картопляний суп.
-          - Суп з картофель.
-          - Суп із картофель.
+          - text: Суп із картоплею.
+            correct: true
+          - text: Суп з картофель.
+            correct: false
+          - text: Суп із картофель.
+            correct: false
         explanation: Use картопля / картоплею or картопляний.
-      - sentence: Я снідає о сьомій.
-        error: снідає
-        answer: Я снідаю о сьомій.
+      - prompt: 'Choose the correct Ukrainian version: Я снідає о сьомій.'
         options:
-          - Я снідаю о сьомій.
-          - Я снідає о сьомій.
-          - Я снідаєш о сьомій.
+          - text: Я снідаю о сьомій.
+            correct: true
+          - text: Я снідає о сьомій.
+            correct: false
+          - text: Я снідаєш о сьомій.
+            correct: false
         explanation: Я takes снідаю.
-      - sentence: Я їси борщ.
-        error: їси
-        answer: Я їм борщ.
+      - prompt: 'Choose the correct Ukrainian version: Я їси борщ.'
         options:
-          - Я їм борщ.
-          - Я їси борщ.
-          - Я їсть борщ.
+          - text: Я їм борщ.
+            correct: true
+          - text: Я їси борщ.
+            correct: false
+          - text: Я їсть борщ.
+            correct: false
         explanation: Я takes first-person їм.
-      - sentence: Клубнічний джем.
-        error: Клубнічний
-        answer: Полуничний джем.
+      - prompt: 'Choose the correct Ukrainian version: Клубнічний джем.'
         options:
-          - Полуничний джем.
-          - Клубнічний джем.
-          - Клубніка джем.
+          - text: Полуничний джем.
+            correct: true
+          - text: Клубнічний джем.
+            correct: false
+          - text: Клубніка джем.
+            correct: false
         explanation: Use полуниця / полуничний, not the Russian-root form.
-      - sentence: Дайте чай без цукор.
-        error: цукор
-        answer: Дайте чай без цукру.
+      - prompt: 'Choose the correct Ukrainian version: Дайте чай без цукор.'
         options:
-          - Дайте чай без цукру.
-          - Дайте чай без цукор.
-          - Дайте чай з цукру.
+          - text: Дайте чай без цукру.
+            correct: true
+          - text: Дайте чай без цукор.
+            correct: false
+          - text: Дайте чай з цукру.
+            correct: false
         explanation: Без цукру is memorized as a whole phrase.
-      - sentence: Чай з цукор.
-        error: цукор
-        answer: Чай з цукром.
+      - prompt: 'Choose the correct Ukrainian version: Чай з цукор.'
         options:
-          - Чай з цукром.
-          - Чай з цукор.
-          - Чай без цукром.
+          - text: Чай з цукром.
+            correct: true
+          - text: Чай з цукор.
+            correct: false
+          - text: Чай без цукром.
+            correct: false
         explanation: Чай з цукром is a whole drink phrase.
-      - sentence: Борщ дуже смачно.
-        error: смачно
-        answer: Борщ дуже смачний.
+      - prompt: 'Choose the correct Ukrainian version: Борщ дуже смачно.'
         options:
-          - Борщ дуже смачний.
-          - Борщ дуже смачно.
-          - Борщ дуже смачна.
+          - text: Борщ дуже смачний.
+            correct: true
+          - text: Борщ дуже смачно.
+            correct: false
+          - text: Борщ дуже смачна.
+            correct: false
         explanation: With the noun борщ, use смачний.
-      - sentence: Каша дуже смачний.
-        error: смачний
-        answer: Каша дуже смачна.
+      - prompt: 'Choose the correct Ukrainian version: Каша дуже смачний.'
         options:
-          - Каша дуже смачна.
-          - Каша дуже смачний.
-          - Каша дуже смачно.
+          - text: Каша дуже смачна.
+            correct: true
+          - text: Каша дуже смачний.
+            correct: false
+          - text: Каша дуже смачно.
+            correct: false
         explanation: With the noun каша, use смачна.
-      - sentence: Смачьного!
-        error: Смачьного
-        answer: Смачного!
+      - prompt: 'Choose the correct Ukrainian version: Смачьного!'
         options:
-          - Смачного!
-          - Смачьного!
-          - Смачьному!
+          - text: Смачного!
+            correct: true
+          - text: Смачьного!
+            correct: false
+          - text: Смачьному!
+            correct: false
         explanation: Write Смачного! without ь after ч. This is a traditional wish before a meal.

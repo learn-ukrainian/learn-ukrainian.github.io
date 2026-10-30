@@ -456,72 +456,72 @@ workbook:
     explanation: Вікно́ — сере́дній рід, тому́ вжива́ємо «воно́». — "Вікно́" is neuter,
       so use "воно́".
 - id: act-w4
-  type: error-correction
+  type: quiz
   title: Ви́прав па́стки ро́ду — Fix the gender traps
-  instruction: Обері́ть прави́льне украї́нське ре́чення. — Choose the safer Ukrainian sentence.
+  instruction: Choose the correct Ukrainian version of each line.
   items:
-  - sentence: Моя́ кни́га, мій ру́чка.
-    error: мій
-    correction: Моя́ кни́га, моя́ ру́чка.
+  - prompt: 'Choose the correct Ukrainian version: Моя́ кни́га, мій ру́чка.'
     options:
-    - Моя́ кни́га, моя́ ру́чка.
-    - Моя́ кни́га, моє́ ру́чка.
+    - text: Моя́ кни́га, моя́ ру́чка.
+      correct: true
+    - text: Моя́ кни́га, моє́ ру́чка.
+      correct: false
     explanation: Присві́йний займе́нник узго́джується з іме́нником (кни́га, ру́чка), а не з мо́вцем. — The possessive follows the nouns кни́га and ру́чка, not the speaker.
-  - sentence: Мій кни́га тут.
-    error: Мій
-    correction: Моя́ кни́га тут.
+  - prompt: 'Choose the correct Ukrainian version: Мій кни́га тут.'
     options:
-    - Моя́ кни́га тут.
-    - Мій кни́га тут.
+    - text: Моя́ кни́га тут.
+      correct: true
+    - text: Мій кни́га тут.
+      correct: false
     explanation: Кни́га — жіно́чий рід, тому́ «моя́ кни́га». — "Кни́га" is feminine, so use "моя́".
-  - sentence: Мій ру́чка там.
-    error: Мій
-    correction: Моя́ ру́чка там.
+  - prompt: 'Choose the correct Ukrainian version: Мій ру́чка там.'
     options:
-    - Моя́ ру́чка там.
-    - Мій ру́чка там.
+    - text: Моя́ ру́чка там.
+      correct: true
+    - text: Мій ру́чка там.
+      correct: false
     explanation: Ру́чка — жіно́чий рід, тому́ «моя́ ру́чка». — "Ру́чка" is feminine, so use "моя́".
-  - sentence: Де стіл? — Воно́ там. (Where is the table? — It is there.)
-    error: Воно́
-    correction: Де стіл? — Він там.
+  - prompt: 'Choose the correct Ukrainian version: Де стіл? — Воно́ там. (Where is the table? — It is there.)'
     options:
-    - Де стіл? — Він там.
-    - Де стіл? — Воно́ там.
+    - text: Де стіл? — Він там.
+      correct: true
+    - text: Де стіл? — Воно́ там.
+      correct: false
     explanation: Стіл — чолові́чий рід, тому́ вжива́ємо «він». — "Стіл" is masculine, so the pronoun is він.
-  - sentence: Це моя́ та́то.
-    error: моя́
-    correction: Це мій та́то.
+  - prompt: 'Choose the correct Ukrainian version: Це моя́ та́то.'
     options:
-    - Це мій та́то.
-    - Це моя́ та́то.
+    - text: Це мій та́то.
+      correct: true
+    - text: Це моя́ та́то.
+      correct: false
     explanation: Та́то — чолові́к, тому́ «мій та́то». — "Та́то" is masculine.
-  - sentence: Вона́ Мико́ла.
-    error: Вона́
-    correction: Він Мико́ла.
+  - prompt: 'Choose the correct Ukrainian version: Вона́ Мико́ла.'
     options:
-    - Він Мико́ла.
-    - Вона́ Мико́ла.
+    - text: Він Мико́ла.
+      correct: true
+    - text: Вона́ Мико́ла.
+      correct: false
     explanation: Мико́ла — чолові́че ім'я́, тому́ «він». — "Мико́ла" is a masculine name.
-  - sentence: Моє собака дуже гарний.
-    error: Моє
-    correction: Мій соба́ка ду́же га́рний.
+  - prompt: 'Choose the correct Ukrainian version: Моє собака дуже гарний.'
     options:
-    - Мій соба́ка ду́же га́рний.
-    - Моє собака дуже гарний.
+    - text: Мій соба́ка ду́же га́рний.
+      correct: true
+    - text: Моє собака дуже гарний.
+      correct: false
     explanation: Собака can be masculine or feminine. Мій собака дуже гарний and Моя собака дуже гарна are both valid; neuter моє does not agree with собака.
-  - sentence: Я є студента.
-    error: студента
-    correction: Я студе́нт.
+  - prompt: 'Choose the correct Ukrainian version: Я є студента.'
     options:
-    - Я студе́нт.
-    - Я є студента.
+    - text: Я студе́нт.
+      correct: true
+    - text: Я є студента.
+      correct: false
     explanation: Студент is nominative here; студента is an oblique case. Є may be present or omitted.
-  - sentence: Мені звати Джон.
-    error: Мені
-    correction: Мене́ зва́ти Джон.
+  - prompt: 'Choose the correct Ukrainian version: Мені звати Джон.'
     options:
-    - Мене́ зва́ти Джон.
-    - Мені звати Джон.
+    - text: Мене́ зва́ти Джон.
+      correct: true
+    - text: Мені звати Джон.
+      correct: false
     explanation: 'Use Мене звати Джон. The person named is the object of звати: мене fits; dative мені does not. A grammatical sentence with є is not an error.'
 - id: act-w5
   type: quiz

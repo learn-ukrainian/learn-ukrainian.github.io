@@ -158,7 +158,7 @@ inline:
 workbook:
   - type: true-false
     title: Ready checkpoint lines
-    instruction: Decide whether each line is ready for an A1.5 place answer.
+    instruction: Decide whether each statement or Ukrainian place expression is correct.
     items:
       - statement: Музей у центрі.
         answer: true
@@ -175,9 +175,9 @@ workbook:
       - statement: Я з Канади.
         answer: true
         explanation: Звідки? uses з/із/зі plus the learned родовий form.
-      - statement: Книга є на столі.
+      - statement: In "Книга є на столі.", столі is a locative form.
         answer: true
-        explanation: Є can express that the book is present on the table. The shorter Книга на столі is also correct.
+        explanation: На столі answers де? and uses the locative.
       - statement: Ідіть прямо, потім направо.
         answer: true
         explanation: This is a clear route instruction.
