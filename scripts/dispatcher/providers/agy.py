@@ -6,10 +6,124 @@ import re
 from scripts.common.jsonl import jsonl_lines
 from scripts.dispatcher import agy_sandbox
 from scripts.dispatcher.providers import read_only_refusal
+from scripts.dispatcher.providers.stream_json import model_observer as _observe
+from scripts.dispatcher.providers.stream_json import one_model
 from scripts.dispatcher.types import Invocation, ParsedResult, TaskSpec
+
+MODEL_SOURCE = "agy-stream-json"
 
 _BACKGROUND_TERMINATED_RE = re.compile(r"terminating (?P<count>\d+) background task\(s\)")
 _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in progress")
+# One structured diagnostic line the CLI writes beside the terminal result.
+# Status and code are the provider's own classification, the same role as
+# Claude's api_error_status and Codex's terminal failure message.
+_AGY_ERROR_PREFIX = "AGY_ERROR:"
+_CAPACITY_STATUSES = frozenset({"RESOURCE_EXHAUSTED", "UNAVAILABLE"})
+_CAPACITY_CODES = frozenset({429, 529})
+
+
+def _stderr_capacity(stderr: str) -> bool:
+    """True when stderr has exactly one AGY_ERROR naming a quota or capacity limit.
+
+    A missing line, a malformed line, or more than one line is not that signal.
+    Prose on stderr is never read: only this structured diagnostic classifies.
+    """
+    payloads = []
+    # Newline only. str.splitlines() also breaks on U+2028/U+2029/U+0085, which
+    # can sit inside the JSON this diagnostic parses (scripts JSONL guard).
+    for line in stderr.split("\n"):
+        if line.endswith("\r"):
+            line = line[:-1]
+        if not line.startswith(_AGY_ERROR_PREFIX):
+            continue
+        try:
+            payload = json.loads(line[len(_AGY_ERROR_PREFIX) :].strip())
+        except ValueError:
+            return False
+        if not isinstance(payload, dict):
+            return False
+        payloads.append(payload)
+    if len(payloads) != 1:
+        return False
+    status, code = payloads[0].get("status"), payloads[0].get("error_code")
+    # bool is an int. A true/false code is malformed even when the status name
+    # is a capacity status, so it must not classify.
+    if isinstance(code, bool):
+        return False
+    if isinstance(status, str) and status in _CAPACITY_STATUSES:
+        return True
+    return isinstance(code, int) and code in _CAPACITY_CODES
+
+
+def transport_model(model: str) -> str:
+    """The catalog's AGY wire id for a catalog model; any other request is unchanged.
+
+    ``claude-sonnet-5-5`` is the catalog id and ``claude-sonnet-5-5-high`` is the id
+    ``agy --model`` lists. They are not the same model. A request that is already the
+    wire id stays that id.
+    """
+    from scripts.review.model_catalog import load_model_catalog
+
+    text = model.strip()
+    if not text:
+        return model
+    models = load_model_catalog()["models"]
+    wires = {
+        spec.get("routing_wire_ids", {}).get("agy")
+        for spec in models.values()
+        if isinstance(spec.get("routing_wire_ids", {}).get("agy"), str)
+    }
+    if text in wires:
+        return text
+    folded = text.casefold()
+    for model_id, spec in models.items():
+        names = (model_id, *spec.get("aliases", []))
+        if any(isinstance(name, str) and name.casefold() == folded for name in names):
+            wire = spec.get("routing_wire_ids", {}).get("agy")
+            return wire if isinstance(wire, str) and wire else model
+    return model
+
+
+def _init_models(event: object) -> tuple[str, ...]:
+    """Model strings an ``init`` event reports. No other event attests one."""
+    if not isinstance(event, dict) or event.get("event") != "init":
+        return ()
+    reported = []
+    nested = event.get("init")
+    for metadata in (nested, event):
+        if not isinstance(metadata, dict):
+            continue
+        model = metadata.get("model")
+        if isinstance(model, str) and model.strip():
+            reported.append(model)
+    return tuple(reported)
+
+
+def model_observer(stdout_path):
+    """Attest the running task's model from complete init events, under ``parse``'s exactly-one rule."""
+    return _observe(stdout_path, _init_models)
+
+
+def identity_failure(requested: str, attested: str | None) -> str | None:
+    """A typed failure naming both models, or None when the attested family is the requested one.
+
+    No attested model, an unknown family, or a different family is never success under the
+    requested name. The same known family, Claude or Gemini, is success and the record keeps
+    both ids.
+    """
+    from scripts.dispatcher.checks import _model_families
+
+    families = _model_families()
+    requested_family = families.get(requested)
+    attested_family = families.get(attested) if isinstance(attested, str) else None
+    if isinstance(attested, str) and requested_family and attested_family == requested_family:
+        return None
+    shown = attested if isinstance(attested, str) else "none"
+    return (
+        "agy_model_identity_unverified: "
+        f"requested {requested} ({requested_family or 'unknown'}), "
+        f"attested {shown} ({attested_family or 'unknown'})"
+    )
 
 
 def terminal_result_observer(stdout_path):
@@ -38,7 +152,7 @@ def terminal_result_observer(stdout_path):
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv = ["agy", "--mode", "auto", "--input-format", "stream-json", "--output-format", "stream-json"]
-    argv += ["--model", spec.model]
+    argv += ["--model", transport_model(spec.model)]
     argv += ["--dangerously-skip-permissions", "--print-timeout", "120m"]
     if spec.mode == "workspace-write":
         argv += ["--log-file", str(spec.final_file.with_suffix(".log"))]
@@ -57,8 +171,8 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
 
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
-    result, error = {}, None
-    terminal_seen = False
+    result, error, models = {}, None, set()
+    terminal_seen, stream_clean = False, True
     for line in jsonl_lines(stdout):
         if not line.strip():
             continue
@@ -66,10 +180,17 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             event = json.loads(line)
         except ValueError:
             error = error or "agy: invalid JSON stream"
+            stream_clean = False
             continue
         if not isinstance(event, dict):
             error = error or "agy: invalid event"
-        elif event.get("event") == "result":
+            stream_clean = False
+            continue
+        if terminal_seen:
+            # Anything after the terminal result makes a capacity classification untrustworthy.
+            stream_clean = False
+        models.update(_init_models(event))
+        if event.get("event") == "result":
             if terminal_seen:
                 error = error or "agy: duplicate terminal result"
                 continue
@@ -77,21 +198,48 @@ def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> 
             terminal = event.get("result")
             if not isinstance(terminal, dict):
                 error = error or "agy: invalid terminal result"
+                stream_clean = False
                 continue
             result = terminal
             if result.get("status") != "SUCCESS" or result.get("error"):
                 error = error or "agy: terminal result unsuccessful"
         elif event.get("event") == "error":
             error = error or "agy: terminal error"
+            stream_clean = False
     text = result.get("response")
     text = text if isinstance(text, str) and text.strip() else None
     usage = result.get("usage")
-    if _PRINT_TIMEOUT_PARTIAL_RE.search(stderr) or any(
-        int(match["count"]) > 0 for match in _BACKGROUND_TERMINATED_RE.finditer(stderr)
-    ):
+    incomplete = bool(
+        _PRINT_TIMEOUT_PARTIAL_RE.search(stderr)
+        or any(int(match["count"]) > 0 for match in _BACKGROUND_TERMINATED_RE.finditer(stderr))
+    )
+    if incomplete:
         error = error or "agy: incomplete run"
+    quota_message = result.get("error")
+    if (
+        stream_clean
+        and terminal_seen
+        and not incomplete
+        and result.get("status") != "SUCCESS"
+        and error == "agy: terminal result unsuccessful"
+        and isinstance(quota_message, str)
+        and quota_message.strip()
+        and _stderr_capacity(stderr)
+    ):
+        # Before the exit-status overwrite, as Claude and Codex do. The terminal
+        # error is the provider's reset hint; the AGY_ERROR line is the classification.
+        return ParsedResult(
+            None,
+            usage if isinstance(usage, dict) else None,
+            f"agy: {quota_message}",
+            one_model(models),
+            rate_limited=True,
+        )
     if returncode:
         error = f"agy: exited with status {returncode}"
     return ParsedResult(
-        text, usage if isinstance(usage, dict) else None, error or (None if text else "agy: missing final text")
+        text,
+        usage if isinstance(usage, dict) else None,
+        error or (None if text else "agy: missing final text"),
+        one_model(models),
     )

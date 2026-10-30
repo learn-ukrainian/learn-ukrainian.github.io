@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-09-25" />
+<meta name="report-date" content="2026-10-28" />
 
 <meta name="report-status" content="migrated" />
 
@@ -116,7 +116,7 @@
   <header class="hero">
     <div class="title-block">
       <h1>Agent Cooperation Best Practices</h1>
-      <div class="sub">Migrated from Markdown on 2026-09-25</div>
+      <div class="sub">Migrated from Markdown on 2026-10-28</div>
     </div>
     <div class="meta">
       <div>Source: docs/best-practices/agent-cooperation.md</div>
@@ -136,7 +136,7 @@ If you're touching an agent subprocess, read <a href="../agent-runtime-guide.md"
 <p><strong>Seat onboarding (canonical ownership matrix):</strong>
 <a href="../runbooks/agent-seat-onboarding.md"><code>docs/runbooks/agent-seat-onboarding.md</code></a> —
 <code>discuss</code> vs <code>dispatch.py</code> vs fleet-comms/file handoffs vs experimental ACPX vs
-Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
+Buzz deferred; Kimi and KimiCC are retired (OO-58, #11327); formal CF via
 <code>ask-* --type review</code> (shielded <code>review-pr</code> RETIRED); fresh-agent smoke.</p>
 </blockquote>
 <hr />
@@ -221,7 +221,7 @@ the independent review gate.</p>
 <tr>
 <td>⚙️ <strong>Code review lane</strong></td>
 <td>Qualified outside-family reviewer from <code>closeout_cli resolve-reviewer</code></td>
-<td>Latest DeepSeek V4.1 Flash coding through opencode is allowed on the direct DeepSeek API or OpenRouter with a named US provider allow-list. Never send private-repository content or secrets. Review-of-record and Ukrainian work need measured evidence first; Pro and older ids stay retired. <code>ask-deepseek</code> is consult-only for non-language work. Budget substitution never selects DeepSeek. <code>scripts/ai_agent_bridge/routing_guard.py</code> still refuses <code>openrouter/deepseek</code> until that allow-list exists.</td>
+<td>DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first; <code>ask-deepseek</code> is consult-only for non-language work</td>
 </tr>
 </tbody>
 </table>
@@ -611,9 +611,9 @@ invoked through <code>scripts/agent_runtime/runner.invoke()</code>. This applies
 </ul>
 <p><strong>If you find yourself writing <code>subprocess.Popen([... &quot;claude&quot;, ...])</code> or similar — stop.</strong> Use <code>runner.invoke()</code>. The runtime owns stall detection, usage logging, rate-limit headroom checks, mode validation, and resume-policy enforcement uniformly across all agents.</p>
 <p>Full guide: <a href="../agent-runtime-guide.md"><code>docs/agent-runtime-guide.md</code></a>.</p>
-<h3>Claude Code version gotchas (affects <code>dispatch.py dispatch --agent claude</code>)</h3>
+<h3>Claude Code version gotchas (affects <code>dispatch.py dispatch --model &lt;catalog-model&gt; --agent claude</code>)</h3>
 <ul>
-<li><strong>CC 2.1.119+: <code>--print</code> mode honors subagent <code>tools:</code> / <code>disallowedTools:</code> frontmatter.</strong> Previously print mode ignored those restrictions — they only applied in interactive subagent invocations. Our dispatched-Claude pattern (<code>dispatch.py dispatch --agent claude</code> → <code>claude -p ...</code>) now enforces them. The curriculum orchestrator declares <code>tools: &quot;*&quot;</code>, while restricted writer agents must be treated as intentionally tool-limited in dispatch mode. Don't declare <code>tools: [Read, Grep]</code> on a subagent you plan to dispatch unless that limit is intentional for dispatched runs too.</li>
+<li><strong>CC 2.1.119+: <code>--print</code> mode honors subagent <code>tools:</code> / <code>disallowedTools:</code> frontmatter.</strong> Previously print mode ignored those restrictions — they only applied in interactive subagent invocations. Our dispatched-Claude pattern (<code>dispatch.py dispatch --model &lt;catalog-model&gt; --agent claude</code> → <code>claude -p ...</code>) now enforces them. The curriculum orchestrator declares <code>tools: &quot;*&quot;</code>, while restricted writer agents must be treated as intentionally tool-limited in dispatch mode. Don't declare <code>tools: [Read, Grep]</code> on a subagent you plan to dispatch unless that limit is intentional for dispatched runs too.</li>
 <li><strong>CC 2.1.119+: <code>--agent &lt;name&gt;</code> honors agent definition's <code>permissionMode</code> for built-in agents.</strong> We pass <code>--mode workspace-write</code> explicitly on every dispatch, so this is a no-op for us. Don't remove the explicit <code>--mode workspace-write</code> and expect the agent definition to carry it — not every dispatch target is a built-in agent.</li>
 <li><strong>CC 2.1.119+: <code>Agent</code> tool with <code>isolation: &quot;worktree&quot;</code> no longer reuses stale worktrees from prior sessions.</strong> Until this fix we avoided the built-in Agent-tool isolation and hand-rolled <code>git worktree add</code> (see <code>.claude/rules/dispatch-must-use-worktree.md</code>). The hand-rolled pattern is still correct — it survives across sessions, shows up in <code>git worktree list</code>, and matches our dispatch conventions — but the Agent-tool built-in is now a safe alternative for short-lived, same-session isolation.</li>
 </ul>
@@ -943,13 +943,13 @@ mcp__memory__search_nodes(query=&quot;next session todo&quot;)
 <h2>Issue Claiming Protocol</h2>
 <p><strong>Agents never self-assign.</strong> Only the user or orchestrator assigns work.</p>
 <p>When starting an issue:</p>
-<pre><code class="language-bash">gh issue edit {N} --add-label &quot;working:{agent}&quot;
-gh issue comment {N} --body &quot;Starting work on X&quot;
+<pre><code class="language-bash">.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels &quot;working:{agent}&quot;
+.venv/bin/python -m scripts.publish issue-comment --number {N} --body &quot;Starting work on X&quot;
 </code></pre>
 <p>When done:</p>
-<pre><code class="language-bash">gh issue edit {N} --remove-label &quot;working:{agent}&quot;
-gh issue edit {N} --add-label &quot;review:{reviewer}&quot;  # or review:human
-# or: gh issue close {N}
+<pre><code class="language-bash">.venv/bin/python -m scripts.publish issue-edit --number {N} --remove-labels &quot;working:{agent}&quot;
+.venv/bin/python -m scripts.publish issue-edit --number {N} --add-labels &quot;review:{reviewer}&quot;  # or review:human
+# or: .venv/bin/python -m scripts.publish issue-close --number {N}
 </code></pre>
 <hr />
 <h2>Cross-Review Requirements</h2>
@@ -1004,10 +1004,10 @@ research = _extract_delimiter(output, &quot;===RESEARCH_START===&quot;, &quot;==
 <p>Gemini CLI and Gemini Code Assist are unsupported for current project work.
 For Ukrainian-language Gemini-family review or support, use AGY through
 <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...</code> or
-<code>scripts/dispatch.py dispatch --agent agy ...</code>.</p>
+<code>scripts/dispatch.py dispatch --model &lt;catalog-model&gt; --agent agy ...</code>.</p>
 <p>Direct <code>agy --model</code> calls use display labels from <code>agy models</code>, such as
-<code>Gemini 3.1 Pro (High)</code> and <code>Gemini 3.5 Flash (High)</code>. The bridge and runtime
-may accept slugs such as <code>gemini-3.1-pro-high</code> and map them to AGY display
+<code>Gemini 3.8 Flash (High)</code>. The bridge and runtime
+may accept slugs such as <code>gemini-3.8-flash-high</code> and map them to AGY display
 labels before invoking AGY.</p>
 <hr />
 <h2>MCP Writer Observability</h2>
@@ -1048,7 +1048,8 @@ runtime init show the expected <code>sources</code> server.</li>
 <p>Post on the relevant GH issue explaining what was stuck and why.</p>
 <h2>Dispatch handoff: GPT-6 Luna workers + fleet settle</h2>
 <p><strong>Luna (<code>gpt-6-luna</code> @ high)</strong> is a high-volume <strong>bounded coding worker</strong>, not a solo epic driver.
-The worker runs its brief's chain (<code>full-send</code>, or <code>full-stop</code> when the brief says so); orchestrators keep acceptance and residual truth. Every Luna dispatch needs a complete GPT-6.1 Sol advisory envelope bound to it (<code>--advisory-task</code>; operator decision 2026-09-30, #9275);
+The worker runs its brief's chain (<code>full-send</code>, or <code>full-stop</code> when the brief says so); orchestrators keep acceptance and residual truth. Every Luna dispatch needs a complete
+GPT-6.1 Sol advisory envelope bound to it (<code>--advisory-task</code>; operator decision 2026-09-30, #9275);
 see <code>agents_extensions/shared/rules/fleet-driver-routing.md</code> §2.</p>
 <h3>Briefing Luna</h3>
 <p>Append <a href="../dispatch-briefs/luna-max-closeout-contract.md"><code>docs/dispatch-briefs/luna-max-closeout-contract.md</code></a>
@@ -1062,10 +1063,13 @@ current content specifies GPT-6 Luna @ high. Require the <code>CLOSEOUT</code> l
 </code></pre>
 <p>Nobody arms auto-merge; the formal CF verdict is recorded with <code>review-loop</code>, and the owner of the delivery enqueues.</p>
 <h3>Formal CF budget rotation (Codex-authored PRs)</h3>
-<p>Current sealed reviewer routes are <code>codex|claude|glm|grok</code>; the canonical
-<code>review_scheduler.endpoints</code> catalog remains authoritative. <code>agy</code> is a
-recognized request identity that is not formally eligible. Kimi is not a
-reviewer: Kimi seats take web, UI and backend coding only.
+<p>Current formal reviewer endpoints are <code>codex|claude|glm|grok|cursor</code>; the canonical
+<code>review_scheduler.endpoints</code> catalog remains authoritative. Native <code>grok</code> is
+a regular reviewer at every risk with runtime modelUsage attestation; <code>cursor</code> is
+formal for its pinned, runtime-attested <code>grok-4.7-high</code> seat at every risk
+(operator decision 2026-10-05, #9769). <code>agy</code> is a
+recognized request identity that is not formally eligible. Kimi is retired
+(OO-58, #11327) and is not a reviewer or a coding lane.
 For <strong>Codex/Luna-authored</strong> PRs, use the deterministic routing budget rather
 than default-stacking one provider. An explicit <code>--model</code> may select another
 formally eligible model on the requested native route, but still requires

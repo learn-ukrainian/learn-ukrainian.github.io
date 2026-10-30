@@ -446,4 +446,4 @@ A clean run prints zero `WOULD DROP` lines. If any appear, decide case-by-case: 
 
 ## 6. History
 
-- **2026-04-10 (issue [#1185](https://github.com/anthropics/learn-ukrainian/issues/1185))** — One-shot comprehensive tuning of `ACTIVITY_CONFIGS` for all 14 levels. Adversarial review by Gemini (`gemini-3.1-pro-preview`) found 7 fixable issues plus a schema gap (dictation). All 7 fixes applied; dictation tracked separately as a schema ticket.
+- **2026-04-10 (issue [#1185](https://github.com/anthropics/learn-ukrainian/issues/1185))** — One-shot comprehensive tuning of `ACTIVITY_CONFIGS` for all 14 levels. Adversarial review by Gemini (`gemini-3.1-pro-preview`, a model since retired) found 7 fixable issues plus a schema gap (dictation). All 7 fixes applied; dictation tracked separately as a schema ticket.

@@ -434,7 +434,10 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Promote the reviewed provisional pack hash into the plan (transactional)",
         description=(
             "After an APPROVE plan review, set the plan's evidence_ref.sha256 to the reviewed provisional pack's.\n"
-            "Use once, after the review's plan-review.yaml (verdict, manifest_sha256, attempt_id) is recorded.\n"
+            "Use once, after scripts.review.record has recorded the review (plan-review.yaml is its projection).\n"
+            "Refuses (review_unbound, naming what is missing) unless plan-review.yaml projects an accepted attempt\n"
+            "of the host's findings database whose done, full-access dispatch record, saved result, saved return\n"
+            "and Sources receipt ledger all bind to it; review_state_unavailable when this host has no database.\n"
             "Refuses unless the review approved the current manifest and every manifest input (plan, locks, arc,\n"
             "decisions, scope, grammar, both reports) and the planned learner state are unchanged; the promoted\n"
             "bytes (only evidence_ref.sha256 differs) must pass the full strict validation in memory before\n"
@@ -453,7 +456,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  1: Refused, nothing written (inputs_changed_since_review names each changed path)\n\n"
             "Related:\n"
             "  docs/epics/fresh-build-review-contracts.md (Contract 1, Timing), scripts/build/fresh/plan_promote.py,\n"
-            "  issues #8397 #8430"
+            "  scripts/build/fresh/review_binding.py, issues #8397 #8430 #12114"
         ),
     )
     p_plan_status = subparsers.add_parser(

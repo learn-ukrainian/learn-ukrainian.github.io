@@ -208,8 +208,8 @@ it in the report so a substitution is never silent.
 
 Dispatch the actual review to `selected.concrete_model` (or the advisory
 model, clearly labeled as advisory, if `selected` is null); for Ukrainian-content
-changes, never hand the review to a non-Claude/GPT/Gemini model, including an
-advisory seat. Ask it to find
+changes, hand the review only to a GPT or Gemini seat, never to Claude and never
+to any other model, including an advisory seat. Ask it to find
 bugs, logic errors, missed edge cases, and security/reuse issues in the
 frozen target's diff — nothing outside `frozen_files`.
 

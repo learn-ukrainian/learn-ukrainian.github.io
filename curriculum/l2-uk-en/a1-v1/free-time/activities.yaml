@@ -26,48 +26,48 @@ inline:
     title: Частота і запрошення
     instruction: Обери слово або фразу, які найкраще завершують речення.
     items:
-      - sentence: "Кожна неділя — вихідний. Я ___ працюю у неділю."
+      - sentence: Кожна неділя — вихідний. Я ___ працюю у неділю.
         answer: ніколи не
         options:
           - ніколи не
           - завжди
           - часто
-        explanation: "Every Sunday is a day off, so ніколи не fits. Завжди and часто would say there is regular Sunday work."
-      - sentence: 'Вона грає у теніс двічі ___.'
+        explanation: Every Sunday is a day off, so ніколи не fits. Завжди and часто would say there is regular Sunday work.
+      - sentence: Вона грає у теніс двічі ___.
         answer: на тиждень
         options:
           - на тиждень
           - на тижнем
           - на тижнями
-        explanation: "Двічі на тиждень means twice a week. На тиждень names the frequency period."
-      - sentence: '— ___ в кіно у суботу! — Добре!'
+        explanation: Двічі на тиждень means twice a week. На тиждень names the frequency period.
+      - sentence: — ___ в кіно у суботу! — Добре!
         answer: Ходімо
         options:
           - Ходімо
           - Ходжу
           - Ходиш
-        explanation: "Ходімо invites us to go together. Ходжу and ходиш describe who goes."
-      - sentence: "Я люблю спорт, тому ___ граю у баскетбол."
+        explanation: Ходімо invites us to go together. Ходжу and ходиш describe who goes.
+      - sentence: Я люблю спорт, тому ___ граю у баскетбол.
         answer: часто
         options:
           - часто
-          - ніколи
-          - рідко
-        explanation: "Якщо людина любить спорт, часто логічно підходить."
-      - sentence: "Я не маю часу, тому ___ читаю книги."
+          - частий
+          - часта
+        explanation: Часто describes how frequently the action happens. Частий and часта do not complete this sentence.
+      - sentence: Я не маю часу, тому ___ читаю книги.
         answer: рідко
         options:
           - рідко
-          - часто
-          - завжди
-        explanation: "Коли часу мало, дія відбувається рідко."
-      - sentence: '— Що ти робиш ___? — Відпочиваю.'
+          - рідкий
+          - рідка
+        explanation: Рідко describes how frequently the action happens. Рідкий and рідка do not complete this sentence.
+      - sentence: — Що ти робиш ___? — Відпочиваю.
         answer: у вихідні
         options:
           - у вихідні
           - вихідні
           - у вихідних
-        explanation: "У вихідні means on weekends. Here у takes the plural accusative вихідні."
+        explanation: У вихідні means on weekends. Here у takes the plural accusative вихідні.
   - id: act-3
     type: fill-in
     title: Прийменник у фразі

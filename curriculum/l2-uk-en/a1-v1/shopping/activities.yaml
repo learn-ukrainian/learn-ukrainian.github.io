@@ -138,26 +138,82 @@ inline:
             correct: false
         explanation: '54 ends like 4: гривні.'
   - id: act-3
-    type: match-up
+    type: quiz
     title: Where do you buy it?
-    instruction: Match each item with a likely place or department.
-    pairs:
-      - left: 'помідори'
-        right: 'ринок'
-      - left: "м'ясо"
-        right: "м'ясний відділ"
-      - left: 'сир'
-        right: 'молочний відділ'
-      - left: 'хліб'
-        right: 'крамниця'
-      - left: 'молоко'
-        right: 'супермаркет'
-      - left: 'вода'
-        right: 'магазин'
-      - left: 'сукня'
-        right: 'магазин одягу'
-      - left: 'книжка'
-        right: 'книгарня'
+    instruction: Choose an ordinary place for buying the named product from the three options. Other suitable shops may exist.
+    items:
+      - prompt: 'помідори: where would you ordinarily shop for this?'
+        options:
+          - text: ринок
+            correct: true
+          - text: театр
+            correct: false
+          - text: бібліотека
+            correct: false
+        explanation: Of these three choices, ринок is the ordinary shopping place for this product. This does not rule out other suitable stores.
+      - prompt: "м'ясо: where would you ordinarily shop for this?"
+        options:
+          - text: м'ясний відділ
+            correct: true
+          - text: театр
+            correct: false
+          - text: бібліотека
+            correct: false
+        explanation: Of these three choices, м'ясний відділ is the ordinary shopping place for this product. This does not rule out other suitable stores.
+      - prompt: 'сир: where would you ordinarily shop for this?'
+        options:
+          - text: молочний відділ
+            correct: true
+          - text: театр
+            correct: false
+          - text: вокзал
+            correct: false
+        explanation: Of these three choices, молочний відділ is the ordinary shopping place for this product. This does not rule out other suitable stores.
+      - prompt: 'хліб: where would you ordinarily shop for this?'
+        options:
+          - text: крамниця
+            correct: true
+          - text: музей
+            correct: false
+          - text: театр
+            correct: false
+        explanation: Of these three choices, крамниця is the ordinary shopping place for this product. This does not rule out other suitable stores.
+      - prompt: 'молоко: where would you ordinarily shop for this?'
+        options:
+          - text: супермаркет
+            correct: true
+          - text: музей
+            correct: false
+          - text: театр
+            correct: false
+        explanation: Of these three choices, супермаркет is the ordinary shopping place for this product. This does not rule out other suitable stores.
+      - prompt: 'вода: where would you ordinarily shop for this?'
+        options:
+          - text: магазин
+            correct: true
+          - text: музей
+            correct: false
+          - text: бібліотека
+            correct: false
+        explanation: Of these three choices, магазин is the ordinary shopping place for this product. This does not rule out other suitable stores.
+      - prompt: 'сукня: where would you ordinarily shop for this?'
+        options:
+          - text: магазин одягу
+            correct: true
+          - text: м'ясний відділ
+            correct: false
+          - text: молочний відділ
+            correct: false
+        explanation: Of these three choices, магазин одягу is the ordinary shopping place for this product. This does not rule out other suitable stores.
+      - prompt: 'книжка: where would you ordinarily shop for this?'
+        options:
+          - text: книгарня
+            correct: true
+          - text: м'ясний відділ
+            correct: false
+          - text: молочний відділ
+            correct: false
+        explanation: Of these three choices, книгарня is the ordinary shopping place for this product. This does not rule out other suitable stores.
   - id: act-4
     type: fill-in
     title: Quantity phrases
@@ -237,20 +293,66 @@ workbook:
           - 'З вас сто сім гривень.'
           - 'Можна карткою?'
           - 'Карткою, будь ласка.'
-  - type: order
+  - type: fill-in
     title: One shopping visit
-    instruction: Put the shopping visit in order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Добрий день! У вас є яблука?'
-      - 'Так, є.'
-      - 'Скільки коштує кілограм яблук?'
-      - 'Сорок гривень.'
-      - 'Дайте, будь ласка, один кілограм яблук.'
-      - 'З вас сорок гривень.'
-      - 'Можна карткою?'
-      - 'Карткою, будь ласка.'
-    correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
+      - sentence: Добрий день! У ___ є яблука?
+        answer: вас
+        options:
+          - вас
+          - ви
+          - вам
+        explanation: У takes the genitive pronoun вас.
+      - sentence: — У вас є яблука? — Так, яблука ___.
+        answer: є
+        options:
+          - є
+          - має
+          - маєте
+        explanation: Є states that the apples are available; має and маєте do not agree with the plural subject яблука.
+      - sentence: Скільки ___ кілограм яблук?
+        answer: коштує
+        options:
+          - коштує
+          - коштують
+          - коштувати
+        explanation: The singular subject кілограм takes коштує.
+      - sentence: Сорок ___.
+        answer: гривень
+        options:
+          - гривень
+          - гривня
+          - гривні
+        explanation: Сорок takes гривень.
+      - sentence: Дайте, будь ласка, один ___ яблук.
+        answer: кілограм
+        options:
+          - кілограм
+          - кілограма
+          - кілограмом
+        explanation: Один takes the matching masculine singular object кілограм.
+      - sentence: З вас сорок ___.
+        answer: гривень
+        options:
+          - гривень
+          - гривня
+          - гривні
+        explanation: Сорок takes гривень.
+      - sentence: Я хочу заплатити карткою. Можна ___?
+        answer: карткою
+        options:
+          - карткою
+          - картка
+          - картки
+        explanation: Карткою expresses the payment method.
+      - sentence: Плачу ___, будь ласка.
+        answer: карткою
+        options:
+          - карткою
+          - картка
+          - картки
+        explanation: Карткою expresses the payment method.
   - type: true-false
     title: Shopping decisions
     instruction: Decide whether each statement fits this module.
@@ -295,109 +397,126 @@ workbook:
         right: 'пачка чаю'
       - left: 'хліб'
         right: 'буханка хліба'
-  - type: unjumble
+  - type: fill-in
     title: Build shopping lines
-    instruction: Put the words in a natural shopping order.
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - words:
-          - 'Скільки'
-          - 'коштує'
-          - 'хліб'
-        answer: 'Скільки коштує хліб'
-      - words:
-          - 'У'
-          - 'вас'
-          - 'є'
-          - 'яблука'
-        answer: 'У вас є яблука'
-      - words:
-          - 'Дайте'
-          - 'будь ласка'
-          - 'один'
-          - 'кілограм'
-          - 'яблук'
-        answer: 'Дайте, будь ласка, один кілограм яблук'
-      - words:
-          - 'З'
-          - 'вас'
-          - 'сто'
-          - 'сім'
-          - 'гривень'
-        answer: 'З вас сто сім гривень'
-      - words:
-          - 'Можна'
-          - 'карткою'
-        answer: 'Можна карткою'
-      - words:
-          - 'Карткою'
-          - 'будь ласка'
-        answer: 'Карткою, будь ласка'
-  - type: error-correction
+      - answer: коштує
+        sentence: Скільки ___ хліб?
+        options:
+          - коштує
+          - коштують
+          - коштувати
+        explanation: The singular subject хліб takes коштує.
+      - answer: є
+        sentence: У вас ___ яблука?
+        options:
+          - є
+          - їси
+          - їдеш
+        explanation: Є asks whether apples are available; їси and їдеш do not fit this availability question.
+      - answer: кілограм
+        sentence: Дайте, будь ласка, один ___ яблук.
+        options:
+          - кілограм
+          - кілограма
+          - кілограмом
+        explanation: Один takes the matching singular object кілограм.
+      - answer: гривень
+        sentence: З вас сто сім ___.
+        options:
+          - гривень
+          - гривня
+          - гривні
+        explanation: Сто сім takes гривень.
+      - answer: карткою
+        sentence: Я хочу заплатити карткою. Можна ___?
+        options:
+          - карткою
+          - картка
+          - картки
+        explanation: Карткою expresses the payment method.
+      - answer: карткою
+        sentence: Плачу ___, будь ласка.
+        options:
+          - карткою
+          - картка
+          - картки
+        explanation: Карткою expresses the payment method.
+  - type: quiz
     title: Repair shopping interference
-    instruction: Choose the clean Ukrainian repair.
+    instruction: Choose the correct Ukrainian version of each line.
     anchor_id: repair-shopping-interference
     items:
-      - sentence: 'Скільки це є?'
-        error: 'Скільки це є?'
-        answer: 'Скільки це коштує?'
+      - prompt: Choose the correct question about the price.
         options:
-          - 'Скільки це коштує?'
-          - 'Скільки це є?'
-          - 'Скільки це має?'
-        explanation: 'Use коштує for price questions.'
-      - sentence: 'Я маю 20 гривнів.'
-        error: 'Я маю 20 гривнів.'
-        answer: 'У мене є 20 гривень.'
+          - text: Скільки це коштує?
+            correct: true
+          - text: Скільки це є?
+            correct: false
+          - text: Скільки це має?
+            correct: false
+        explanation: Use коштує for price questions.
+      - prompt: 'Choose the correct Ukrainian version: Я маю 20 гривнів.'
         options:
-          - 'У мене є 20 гривень.'
-          - 'Я маю 20 гривнів.'
-          - 'У мене 20 гривні.'
-        explanation: 'Use У мене є and гривень.'
-      - sentence: 'Ви маєте хліб?'
-        error: 'Ви маєте хліб?'
-        answer: 'У вас є хліб?'
+          - text: Я маю 20 гривень.
+            correct: true
+          - text: Я маю 20 гривнів.
+            correct: false
+          - text: Я маю 20 гривні.
+            correct: false
+        explanation: 20 takes гривень. Маю expresses possession.
+      - prompt: 'Choose the correct Ukrainian version: У вас є цей хлібом?'
         options:
-          - 'У вас є хліб?'
-          - 'Ви маєте хліб?'
-          - 'Вас є хліб?'
-        explanation: 'Use the shop availability phrase У вас є.'
-      - sentence: 'Я плачу з карткою.'
-        error: 'Я плачу з карткою.'
-        answer: 'Карткою, будь ласка.'
+          - text: У вас є цей хліб?
+            correct: true
+          - text: У вас є цей хлібом?
+            correct: false
+          - text: У вас є цей хліба?
+            correct: false
+        explanation: Цей takes the matching masculine singular subject хліб.
+      - prompt: How do you ask to pay by card?
         options:
-          - 'Карткою, будь ласка.'
-          - 'Я плачу з карткою.'
-          - 'З карткою, будь ласка.'
-        explanation: 'At checkout, use the phrase Карткою, будь ласка.'
-      - sentence: 'Дайте один кілограм яблука.'
-        error: 'Дайте один кілограм яблука.'
-        answer: 'Дайте, будь ласка, один кілограм яблук.'
+          - text: Карткою, будь ласка.
+            correct: true
+          - text: Я плачу з карткою.
+            correct: false
+          - text: З карткою, будь ласка.
+            correct: false
+        explanation: At checkout, use the phrase Карткою, будь ласка.
+      - prompt: 'Choose the correct Ukrainian version: Дайте один кілограм яблука.'
         options:
-          - 'Дайте, будь ласка, один кілограм яблук.'
-          - 'Дайте один кілограм яблука.'
-          - 'Дайте одна кілограм яблук.'
-        explanation: 'Use the whole phrase один кілограм яблук.'
-      - sentence: 'Це коштує 50 гривн.'
-        error: 'Це коштує 50 гривн.'
-        answer: 'Це коштує 50 гривень.'
+          - text: Дайте, будь ласка, один кілограм яблук.
+            correct: true
+          - text: Дайте один кілограм яблука.
+            correct: false
+          - text: Дайте одна кілограм яблук.
+            correct: false
+        explanation: Use the whole phrase один кілограм яблук.
+      - prompt: 'Choose the correct Ukrainian version: Це коштує 50 гривн.'
         options:
-          - 'Це коштує 50 гривень.'
-          - 'Це коштує 50 гривн.'
-          - 'Це коштує 50 гривні.'
-        explanation: 'The money word is гривня; 50 uses гривень.'
-      - sentence: 'Я хочу поміряти пальто.'
-        error: 'поміряти'
-        answer: 'Я хочу приміряти пальто.'
+          - text: Це коштує 50 гривень.
+            correct: true
+          - text: Це коштує 50 гривн.
+            correct: false
+          - text: Це коштує 50 гривні.
+            correct: false
+        explanation: The money word is гривня; 50 uses гривень.
+      - prompt: 'Choose the correct Ukrainian version: Я хочу приміряю пальто.'
         options:
-          - 'Я хочу приміряти пальто.'
-          - 'Я хочу поміряти пальто.'
-          - 'Я хочу міряти пальто.'
-        explanation: 'Use приміряти for trying on clothes.'
-      - sentence: 'Два яблука коштує сорок гривень.'
-        error: 'коштує'
-        answer: 'Два яблука коштують сорок гривень.'
+          - text: Я хочу приміряти пальто.
+            correct: true
+          - text: Я хочу приміряю пальто.
+            correct: false
+          - text: Я хочу приміряєш пальто.
+            correct: false
+        explanation: Хочу takes the infinitive приміряти.
+      - prompt: 'Choose the correct Ukrainian version: Ці яблука коштує сорок гривень.'
         options:
-          - 'Два яблука коштують сорок гривень.'
-          - 'Два яблука коштує сорок гривень.'
-          - 'Два яблука коштувати сорок гривень.'
-        explanation: 'Use коштують with plural apples.'
+          - text: Ці яблука коштують сорок гривень.
+            correct: true
+          - text: Ці яблука коштує сорок гривень.
+            correct: false
+          - text: Ці яблука коштувати сорок гривень.
+            correct: false
+        explanation: The plural subject ці яблука takes коштують.

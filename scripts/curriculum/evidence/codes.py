@@ -42,6 +42,7 @@ WORDS_FIELD_FORBIDDEN = "words_field_forbidden"
 OPEN_UNSUPPORTED = "open_unsupported"
 LEGACY_IDENTITY = "legacy_identity"
 SNAPSHOT_LIMIT = "snapshot_limit"
+SENSE_PROOF_INVALID = "sense_proof_invalid"
 
 DESCRIPTIONS = {
     INVALID_REQUEST: "failure: the request is invalid",
@@ -86,6 +87,7 @@ DESCRIPTIONS = {
     OPEN_UNSUPPORTED: "open (failure under --strict): unsupported claim remains open",
     LEGACY_IDENTITY: "warning (failure under --strict): built_with.sources_db is a file digest; rebuild for rows-v2",
     SNAPSHOT_LIMIT: "failure: the pinned sources.db snapshot exceeded its WAL or free-disk budget",
+    SENSE_PROOF_INVALID: "failure: a sense binding's host-local proof (receipt or review provenance) is present but does not verify",
 }
 
 EXCLUDING_MARKERS = frozenset({"alt", "arch", "bad", "dialect", "obsc", "slang", "subst", "vulg"})

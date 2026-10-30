@@ -4,78 +4,78 @@ inline:
     title: Де or куди?
     instruction: Choose the question that matches the sentence.
     items:
-      - prompt: 'Я йду в банк.'
+      - prompt: Я йду в банк.
         options:
-          - text: 'Куди?'
+          - text: Куди?
             correct: true
-          - text: 'Де?'
+          - text: Де?
             correct: false
-          - text: 'Хто?'
+          - text: Хто?
             correct: false
-        explanation: 'Йду shows movement, so ask куди?'
-      - prompt: 'Оксана на пошті.'
+        explanation: В банк gives the destination and answers куди?. The movement verb alone does not determine the place question.
+      - prompt: Оксана на пошті.
         options:
-          - text: 'Де?'
+          - text: Де?
             correct: true
-          - text: 'Куди?'
+          - text: Куди?
             correct: false
-          - text: 'Коли?'
+          - text: Коли?
             correct: false
-        explanation: 'На пошті is a static location.'
-      - prompt: 'Ми їдемо у Львів.'
+        explanation: На пошті is a static location.
+      - prompt: Ми їдемо у Львів.
         options:
-          - text: 'Куди?'
+          - text: Куди?
             correct: true
-          - text: 'Де?'
+          - text: Де?
             correct: false
-          - text: 'Що?'
+          - text: Що?
             correct: false
-        explanation: 'Їдемо is movement by transport.'
-      - prompt: 'Книжка на столі.'
+        explanation: У Львів gives the destination and answers куди?. Їдемо describes travel by transport.
+      - prompt: Книжка на столі.
         options:
-          - text: 'Де?'
+          - text: Де?
             correct: true
-          - text: 'Куди?'
+          - text: Куди?
             correct: false
-          - text: 'Звідки?'
+          - text: Звідки?
             correct: false
-        explanation: 'На столі answers where the book is.'
-      - prompt: 'Марко їде на вокзал.'
+        explanation: На столі answers where the book is.
+      - prompt: Марко їде на вокзал.
         options:
-          - text: 'Куди?'
+          - text: Куди?
             correct: true
-          - text: 'Де?'
+          - text: Де?
             correct: false
-          - text: 'Який?'
+          - text: Який?
             correct: false
-        explanation: 'Їде на вокзал is movement toward a place.'
-      - prompt: 'Я працюю в офісі.'
+        explanation: Їде на вокзал is movement toward a place.
+      - prompt: Я працюю в офісі.
         options:
-          - text: 'Де?'
+          - text: Де?
             correct: true
-          - text: 'Куди?'
+          - text: Куди?
             correct: false
-          - text: 'Коли?'
+          - text: Коли?
             correct: false
-        explanation: 'Працюю shows a static place.'
-      - prompt: 'Олена йде в аптеку.'
+        explanation: Працюю shows a static place.
+      - prompt: Олена йде в аптеку.
         options:
-          - text: 'Куди?'
+          - text: Куди?
             correct: true
-          - text: 'Де?'
+          - text: Де?
             correct: false
-          - text: 'Хто?'
+          - text: Хто?
             correct: false
-        explanation: 'Йде в аптеку is movement toward a place.'
-      - prompt: 'Степан на роботі.'
+        explanation: Йде в аптеку is movement toward a place.
+      - prompt: Степан на роботі.
         options:
-          - text: 'Де?'
+          - text: Де?
             correct: true
-          - text: 'Куди?'
+          - text: Куди?
             correct: false
-          - text: 'Що?'
+          - text: Що?
             correct: false
-        explanation: 'На роботі answers де?'
+        explanation: На роботі answers де?
   - id: act-2
     type: fill-in
     title: Static and direction phrases
@@ -252,18 +252,52 @@ workbook:
       - statement: 'Kyiv is the Ukrainian English form for Київ.'
         answer: true
         explanation: 'Use Київ / Kyiv.'
-  - type: order
+  - type: fill-in
     title: Saturday errands
-    instruction: Put the route in a natural order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Спочатку я йду в банк.'
-      - 'Потім я йду на пошту.'
-      - 'Після цього йду в аптеку.'
-      - 'Потім їду на вокзал.'
-      - 'Увечері йду в кафе.'
-      - 'Нарешті повертаюся додому.'
-    correct_order: [0, 1, 2, 3, 4, 5]
+      - sentence: — Куди ти йдеш спочатку? — Спочатку я йду в ___.
+        answer: банк
+        options:
+          - банк
+          - банку
+          - банком
+        explanation: 'Куди requests a destination: в банк.'
+      - sentence: — Куди ти йдеш потім? — Потім я йду на ___.
+        answer: пошту
+        options:
+          - пошту
+          - пошті
+          - пошта
+        explanation: 'Куди requests a destination: на пошту.'
+      - sentence: — Куди ти йдеш після цього? — Після цього йду в ___.
+        answer: аптеку
+        options:
+          - аптеку
+          - аптеці
+          - аптека
+        explanation: 'Куди requests a destination: в аптеку.'
+      - sentence: — Куди ти їдеш потім? — Потім їду на ___.
+        answer: вокзал
+        options:
+          - вокзал
+          - вокзалі
+          - вокзалом
+        explanation: 'Куди requests a destination: на вокзал.'
+      - sentence: — Куди ти йдеш увечері? — Увечері йду ___ кафе.
+        answer: в
+        options:
+          - в
+          - із
+          - без
+        explanation: В кафе gives the destination requested by куди; із кафе gives an origin.
+      - sentence: — Куди ти повертаєшся нарешті? — Нарешті повертаюся ___.
+        answer: додому
+        options:
+          - додому
+          - вдома
+          - з дому
+        explanation: Додому answers куди; вдома gives location and з дому gives origin.
   - type: odd-one-out
     title: Find the wrong route
     instruction: Choose the phrase that does not fit the pattern.
@@ -296,55 +330,61 @@ workbook:
           - 'у Києві'
         answer: 'у Києві'
         explanation: 'У Києві is static; the others are directions.'
-  - type: error-correction
+  - type: quiz
     title: Repair where-to interference
-    instruction: Choose the natural Ukrainian sentence.
+    instruction: Choose the correct Ukrainian version of each line.
     items:
-      - sentence: 'Я йду в школі.'
-        error: 'в школі'
-        correction: 'Я йду у школу.'
+      - prompt: 'Choose the correct Ukrainian version: — Куди ти йдеш? — Я йду в школі.'
         options:
-          - 'Я йду у школу.'
-          - 'Я йду в школі.'
-          - 'Я йду школа.'
-        explanation: 'Йду asks куди?, so use у школу.'
-      - sentence: 'Я живу Київ.'
-        error: 'живу Київ'
-        correction: 'Я живу в Києві. (або у Києві)'
+          - text: — Куди ти йдеш? — Я йду в школу.
+            correct: true
+          - text: — Куди ти йдеш? — Я йду в школі.
+            correct: false
+          - text: — Куди ти йдеш? — Я йду школа.
+            correct: false
+        explanation: The question куди? requests a destination. A locative phrase can describe where movement happens, but it does not answer this destination question.
+      - prompt: 'Choose the correct Ukrainian version: Я живу Київ.'
         options:
-          - 'Я живу в Києві. (або у Києві)'
-          - 'Я живу Київ.'
-          - 'Я живу до Києва.'
-        explanation: 'Жити answers де? and needs в/у plus locative.'
-      - sentence: 'Я йду в бібліотеці.'
-        error: 'в бібліотеці'
-        correction: 'Я йду в бібліотеку.'
+          - text: Я живу в Києві.
+            correct: true
+          - text: Я живу Київ.
+            correct: false
+          - text: Я живу до Києва.
+            correct: false
+        explanation: Жити answers де? and needs в/у plus locative.
+      - prompt: 'Choose the correct Ukrainian version: — Куди ти йдеш? — Я йду в бібліотеці.'
         options:
-          - 'Я йду в бібліотеку.'
-          - 'Я йду в бібліотеці.'
-          - 'Я йду бібліотека.'
-        explanation: 'Йду asks куди?, so use в бібліотеку.'
-      - sentence: 'Ми були в концерті.'
-        error: 'в концерті'
-        correction: 'Ми були на концерті.'
+          - text: — Куди ти йдеш? — Я йду в бібліотеку.
+            correct: true
+          - text: — Куди ти йдеш? — Я йду в бібліотеці.
+            correct: false
+          - text: — Куди ти йдеш? — Я йду бібліотека.
+            correct: false
+        explanation: The question куди? requests a destination. A locative phrase can describe where movement happens, but it does not answer this destination question.
+      - prompt: 'Choose the correct Ukrainian version: Ми були в концерті.'
         options:
-          - 'Ми були на концерті.'
-          - 'Ми були в концерті.'
-          - 'Ми були до концерту.'
-        explanation: 'The familiar event phrase is на концерті.'
-      - sentence: 'Книжка на столу.'
-        error: 'на столу'
-        correction: 'Книжка на столі.'
+          - text: Ми були на концерті.
+            correct: true
+          - text: Ми були в концерті.
+            correct: false
+          - text: Ми були до концерту.
+            correct: false
+        explanation: The familiar event phrase is на концерті.
+      - prompt: 'Choose the correct Ukrainian version: Книжка на столу.'
         options:
-          - 'Книжка на столі.'
-          - 'Книжка на столу.'
-          - 'Книжка в стіл.'
-        explanation: 'Static surface location uses на столі.'
-      - sentence: 'Аптека — в аптекі.'
-        error: 'в аптекі'
-        correction: 'Аптека — в аптеці.'
+          - text: Книжка на столі.
+            correct: true
+          - text: Книжка на столу.
+            correct: false
+          - text: Книжка в стіл.
+            correct: false
+        explanation: Static surface location uses на столі.
+      - prompt: 'Choose the correct Ukrainian version: Аптека — в аптекі.'
         options:
-          - 'Аптека — в аптеці.'
-          - 'Аптека — в аптекі.'
-          - 'Аптека — в аптеку.'
-        explanation: 'Аптека changes to в аптеці for де?'
+          - text: Аптека — в аптеці.
+            correct: true
+          - text: Аптека — в аптекі.
+            correct: false
+          - text: Аптека — в аптеку.
+            correct: false
+        explanation: Аптека changes to в аптеці for де?

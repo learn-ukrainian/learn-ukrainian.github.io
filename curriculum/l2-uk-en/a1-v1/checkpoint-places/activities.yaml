@@ -158,32 +158,32 @@ inline:
 workbook:
   - type: true-false
     title: Ready checkpoint lines
-    instruction: Decide whether each line is ready for an A1.5 place answer.
+    instruction: Decide whether each statement or Ukrainian place expression is correct.
     items:
-      - statement: 'Музей у центрі.'
+      - statement: Музей у центрі.
         answer: true
-        explanation: 'This answers де? with a static place phrase.'
-      - statement: 'Я йду в школу.'
+        explanation: This answers де? with a static place phrase.
+      - statement: Я йду в школу.
         answer: true
-        explanation: 'Йду asks куди?, so в школу is correct.'
-      - statement: 'Я в школа.'
+        explanation: В школу gives the destination and answers куди?.
+      - statement: Я в школа.
         answer: false
-        explanation: 'Static place needs в школі.'
-      - statement: 'Вона працює на пошті.'
+        explanation: Static place needs в школі.
+      - statement: Вона працює на пошті.
         answer: true
-        explanation: 'На пошті is the safe Ukrainian phrase.'
-      - statement: 'Я з Канади.'
+        explanation: На пошті is the safe Ukrainian phrase.
+      - statement: Я з Канади.
         answer: true
-        explanation: 'Звідки? uses з/із/зі plus the learned родовий form.'
-      - statement: 'Книга є на столі.'
-        answer: false
-        explanation: 'A natural A1 location line is Книга на столі.'
-      - statement: 'Ідіть прямо, потім направо.'
+        explanation: Звідки? uses з/із/зі plus the learned родовий form.
+      - statement: In "Книга є на столі.", столі is a locative form.
         answer: true
-        explanation: 'This is a clear route instruction.'
-      - statement: 'Я з США.'
-        answer: false
-        explanation: 'Use зі США to avoid the heavy cluster.'
+        explanation: На столі answers де? and uses the locative.
+      - statement: Ідіть прямо, потім направо.
+        answer: true
+        explanation: This is a clear route instruction.
+      - statement: Before США, зі is normally preferred to з.
+        answer: true
+        explanation: Зі США avoids a difficult consonant cluster. This is the normal euphony preference, not a claim that every use of з here is impossible.
   - type: odd-one-out
     title: Find the route mismatch
     instruction: Choose the line that does not fit the route pattern.
@@ -237,32 +237,32 @@ workbook:
     items:
       - prompt: 'Repair: Я в школа.'
         options:
-          - text: 'Я в школі.'
+          - text: Я в школі.
             correct: true
-          - text: 'Я в школа.'
+          - text: Я в школа.
             correct: false
-          - text: 'Я з школи.'
+          - text: Я з школи.
             correct: false
-        explanation: 'Де? needs в/у plus the static place form.'
-      - prompt: "— Куди ти йдеш? — ___"
+        explanation: Де? needs в/у plus the static place form.
+      - prompt: — Куди ти йдеш? — ___
         options:
-          - text: "Я йду в школу."
+          - text: Я йду в школу.
             correct: true
-          - text: 'Я йду в школі.'
+          - text: Я йду в школі.
             correct: false
-          - text: 'Я йду зі школи.'
+          - text: Я йду зі школи.
             correct: false
-        explanation: "Куди asks for the destination. Я йду в школу answers it; в школі gives a location and зі школи gives an origin."
-      - prompt: 'Repair: Я працюю в пошті.'
+        explanation: Куди asks for the destination. Я йду в школу answers it; в школі gives a location and зі школи gives an origin.
+      - prompt: 'Repair: Я працюю на пошта.'
         options:
-          - text: 'Я працюю на пошті.'
+          - text: Я працюю на пошті.
             correct: true
-          - text: 'Я працюю в пошті.'
+          - text: Я працюю на пошта.
             correct: false
-          - text: 'Я працюю до пошти.'
+          - text: Я працюю до пошті.
             correct: false
-        explanation: 'The safe Ukrainian phrase is на пошті.'
-      - prompt: "— Де книга? — ___"
+        explanation: Use the common place phrase на пошті.
+      - prompt: — Де книга? — ___
         options:
           - text: Книга на столі.
             correct: true
@@ -270,114 +270,117 @@ workbook:
             correct: false
           - text: Книга в стіл.
             correct: false
-        explanation: "Де asks for location, answered by locative на столі. На does not govern instrumental столом; в стіл is accusative direction rather than the requested location."
+        explanation: Де asks for location, answered by locative на столі. На does not govern instrumental столом; в стіл is accusative direction rather than the requested location.
       - prompt: 'Repair: Вона живе Київ.'
         options:
-          - text: 'Вона живе в Києві.'
+          - text: Вона живе в Києві.
             correct: true
-          - text: 'Вона живе Київ.'
+          - text: Вона живе Київ.
             correct: false
-          - text: 'Вона живе в Київ.'
+          - text: Вона живе в Київ.
             correct: false
-        explanation: 'Живе answers де? and needs в/у plus locative.'
+        explanation: Живе answers де? and needs в/у plus locative.
       - prompt: 'Repair: Я з Канаді.'
         options:
-          - text: 'Я з Канади.'
+          - text: Я з Канади.
             correct: true
-          - text: 'Я з Канаді.'
+          - text: Я з Канаді.
             correct: false
-          - text: 'Я в Канаду.'
+          - text: Я в Канаду.
             correct: false
-        explanation: 'Звідки? uses the learned родовий form, not the static place form.'
-  - type: unjumble
+        explanation: Звідки? uses the learned родовий form, not the static place form.
+  - type: fill-in
     title: Rebuild final city lines
-    instruction: Put the words in a safe A1.5 order.
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - words:
-          - 'Я'
-          - 'в'
-          - 'Києві'
-          - 'у'
-          - 'центрі'
-        answer: 'Я в Києві у центрі'
-      - words:
-          - 'Я'
-          - 'йду'
-          - 'в'
-          - 'музей'
-        answer: 'Я йду в музей'
-      - words:
-          - 'Я'
-          - 'з'
-          - 'України'
-        answer: 'Я з України'
-      - words:
-          - 'Ідіть'
-          - 'прямо'
-          - 'потім'
-          - 'направо'
-        answer: 'Ідіть прямо потім направо'
-      - words:
-          - 'Увечері'
-          - 'я'
-          - 'їду'
-          - 'на'
-          - 'метро'
-          - 'на'
-          - 'вокзал'
-        answer: 'Увечері я їду на метро на вокзал'
-      - words:
-          - 'Вона'
-          - 'йде'
-          - 'зі'
-          - 'школи'
-        answer: 'Вона йде зі школи'
+      - answer: центрі
+        sentence: Я в Києві, у ___.
+        options:
+          - центрі
+          - центр
+          - центром
+        explanation: Use the place phrase у центрі.
+      - answer: музей
+        sentence: — Куди ти йдеш? — Я йду в ___.
+        options:
+          - музей
+          - музеї
+          - музеєм
+        explanation: Куди requests the destination в музей.
+      - answer: України
+        sentence: — Звідки ти? — Я з ___.
+        options:
+          - України
+          - Україна
+          - Україною
+        explanation: З takes the genitive form України.
+      - answer: направо
+        sentence: Банк праворуч від нас. Ідіть прямо, потім ___, до банку.
+        options:
+          - направо
+          - наліво
+          - назад
+        explanation: Направо follows the stated direction toward the bank.
+      - answer: метро
+        sentence: Увечері я їду на ___ на вокзал.
+        options:
+          - метро
+          - метром
+          - метрі
+        explanation: The transport noun метро is indeclinable.
+      - answer: школи
+        sentence: — Звідки вона йде? — Вона йде зі ___.
+        options:
+          - школи
+          - школу
+          - школою
+        explanation: Зі takes the genitive form школи.
   - type: fill-in
     title: One city story phrases
     instruction: Complete the checkpoint story with learned place phrases.
     items:
-      - sentence: 'Сьогодні Анна ___ Києві.'
-        answer: 'в'
+      - sentence: Сьогодні Анна ___ Києві.
+        answer: в
         options:
-          - 'в'
-          - 'з'
-          - 'на'
-        explanation: 'Before the vowel in Києві, в is smooth and answers де?'
-      - sentence: 'Вона ___ Канади, із Торонто.'
-        answer: 'з'
+          - в
+          - з
+          - на
+        explanation: After the vowel in Анна, use в Києві for this static location. Києві begins with the consonant К.
+      - sentence: Вона ___ Канади, із Торонто.
+        answer: з
         options:
-          - 'з'
-          - 'в'
-          - 'на'
+          - з
+          - в
+          - на
         explanation: 'Origin answers звідки?: з Канади.'
-      - sentence: 'Анна йде ___ музей.'
-        answer: 'в'
+      - sentence: Анна йде ___ музей.
+        answer: в
         options:
-          - 'в'
-          - "до"
-          - 'з'
-        explanation: 'В музей is a learned destination phrase.'
-      - sentence: 'Музей ___ площі.'
-        answer: 'на'
+          - в
+          - до
+          - з
+        explanation: В музей is a learned destination phrase.
+      - sentence: Музей ___ площі.
+        answer: на
         options:
-          - 'на'
-          - 'в'
-          - 'з'
-        explanation: 'На площі answers де?'
-      - sentence: 'До центру вона їде ___.'
-        answer: 'на метро'
+          - на
+          - в
+          - з
+        explanation: На площі answers де?
+      - sentence: До центру вона їде ___.
+        answer: на метро
         options:
-          - 'на метро'
-          - 'з метро'
-          - 'у метрою'
-        explanation: 'На метро is the transport phrase.'
-      - sentence: "— Куди вона їде після музею? — Після музею вона їде ___."
-        answer: 'на вокзал'
+          - на метро
+          - з метро
+          - у метрою
+        explanation: На метро is the transport phrase.
+      - sentence: — Куди вона їде після музею? — Після музею вона їде ___.
+        answer: на вокзал
         options:
-          - 'на вокзал'
-          - 'на вокзалі'
-          - 'з вокзалу'
-        explanation: "Куди asks for destination, so на вокзал fits. На вокзалі denotes location; з вокзалу denotes departure."
+          - на вокзал
+          - на вокзалі
+          - з вокзалу
+        explanation: Куди asks for destination, so на вокзал fits. На вокзалі denotes location; з вокзалу denotes departure.
   - type: group-sort
     title: Function check
     instruction: Sort each phrase under the question it answers.

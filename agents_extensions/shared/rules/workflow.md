@@ -167,10 +167,11 @@ Resolve the qualified reviewer before dispatch and pass its explicit model,
 Verify the exact pushed head against the task's reviewed head before recording
 the result. Subject-seat and subject-family exclusions remain explicit inputs.
 
-Dispatch v2 refuses protected bound-review execution using `--review-id`,
-`--attempt-id` and `--review-attempt`; these options are dry-run-only. A plain
-read-only dispatch does not provide protected isolation, Sources receipts or
-legacy authoring-review admission. Missing required evidence blocks closeout.
+A formal review runs as a dispatch v2 bound attempt (`--review-id`, `--attempt-id`,
+`--review-attempt`, a rendered `--prompt-file`), recorded by `scripts.review.record`;
+the recipe is `docs/runbooks/formal-review-attempt-isolation.md` § Running a bound
+attempt. A plain read-only dispatch does not provide protected isolation, Sources
+receipts or legacy authoring-review admission. Missing required evidence blocks closeout.
 
 ## Merge policy — ready PRs must not sit (#4703; landing order #7450)
 

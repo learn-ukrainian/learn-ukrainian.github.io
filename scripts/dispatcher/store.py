@@ -52,13 +52,22 @@ def review_binding(metadata: dict) -> ReviewAttempt | None:
     return ReviewAttempt(review_id=metadata["review_id"], attempt_id=metadata["attempt_id"], manifest_sha256=sha)
 
 
-def check_review_attempt(binding: ReviewAttempt, *, claim=False) -> None:
-    """Any legacy receipt artifact or hot/archived binding spends the review/attempt pair."""
+def receipts_root() -> Path:
+    """Where attempt ledgers live: beside the task store (``review-receipts/<review_id>/<attempt_id>.jsonl``)."""
+    return tasks_dir().parent / "review-receipts"
+
+
+def check_review_attempt(binding: ReviewAttempt, *, claim=False, owner: str | None = None) -> None:
+    """Any legacy receipt artifact or hot/archived binding spends the review/attempt pair.
+
+    ``owner`` is the task claiming the pair from its own supervisor: its own record does not spend it.
+    """
     for record in list_tasks(include_archive=True, strict=True):
         bound = record.get("review_attempt")
-        if isinstance(bound, dict) and all(bound.get(key) == binding[key] for key in ("review_id", "attempt_id")):
+        if (isinstance(bound, dict) and record.get("task_id") != owner
+                and all(bound.get(key) == binding[key] for key in ("review_id", "attempt_id"))):
             raise ValueError("review attempt already spent")
-    root = tasks_dir().parent / "review-receipts" / binding["review_id"]
+    root = receipts_root() / binding["review_id"]
     # Legacy prepare_review_attempt checks all five, including dangling symlinks,
     # before creating anything; failed/partial preparation still spends the pair.
     for suffix in (".jsonl", ".jsonl.sha256", ".mcp.json", ".codex-home", ".agy-home"):

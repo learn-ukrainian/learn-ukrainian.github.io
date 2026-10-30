@@ -182,6 +182,180 @@ sync_shared_agent_mirror() {
         --agent-root .agent
 }
 
+# AGY truncates each rule file at 24,000 bytes. Split the served core into
+# always-on parts and exclude the oversized originals from discovery. The
+# source files stay mirrored byte for byte; the parts are deploy output.
+materialize_agy_rules() {
+    # A partial deploy fixture has no core to split. A real checkout always does.
+    # The body is the served core: one source, trailing whitespace stripped, one
+    # trailing newline. That is scripts/lib/rules_core.py assemble for the core seat.
+    if [[ ! -f "$PROJECT_ROOT/agents_extensions/shared/rules/core.md" ]]; then
+        return 0
+    fi
+    mkdir -p "$DEPLOY_STATE_DIR"
+    if [[ -z "${TMPDIR:-}" ]]; then
+        TMPDIR="$DEPLOY_STATE_DIR"
+    fi
+    local script status
+    script="$(mktemp "${TMPDIR}/agy-rules.XXXXXX.py")"
+    cat > "$script" <<'PY'
+import contextlib
+import errno
+import json
+import os
+import secrets
+import stat
+import sys
+from pathlib import Path
+
+root, agent_root = Path(sys.argv[1]), Path(sys.argv[2])
+sys.path.insert(0, str(root / "scripts" / "deploy"))
+from agent_directory import open_agent_directory
+
+
+def open_child_directory(parent_fd: int, name: str) -> int:
+    """Open one child directory without following a swapped symlink."""
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    try:
+        return os.open(name, flags, dir_fd=parent_fd)
+    except FileNotFoundError:
+        with contextlib.suppress(FileExistsError):
+            os.mkdir(name, dir_fd=parent_fd)
+        return os.open(name, flags, dir_fd=parent_fd)
+
+
+def read_leaf(dir_fd: int, name: str) -> bytes | None:
+    """Read a regular file. A symlink is not a readable leaf."""
+    flags = os.O_RDONLY | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    try:
+        fd = os.open(name, flags, dir_fd=dir_fd)
+    except FileNotFoundError:
+        return None
+    except OSError as exc:
+        # A symlink must be replaced, not followed. Any other read failure
+        # leaves the existing entry in place.
+        if exc.errno == errno.ELOOP:
+            return None
+        raise
+    try:
+        chunks = []
+        while chunk := os.read(fd, 1024 * 1024):
+            chunks.append(chunk)
+        return b"".join(chunks)
+    finally:
+        os.close(fd)
+
+
+def write_leaf(dir_fd: int, name: str, blob: bytes) -> None:
+    """Replace one directory entry. The replacement does not follow a symlink."""
+    temporary = f".{name}.{os.getpid()}.{secrets.token_hex(8)}.tmp"
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    fd = os.open(temporary, flags, 0o644, dir_fd=dir_fd)
+    try:
+        with os.fdopen(fd, "wb") as destination:
+            destination.write(blob)
+            destination.flush()
+            os.fsync(destination.fileno())
+        os.replace(temporary, name, src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
+    except BaseException:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(temporary, dir_fd=dir_fd)
+        raise
+limit = 24_000
+excluded = ("core.md", "model-assignment.md", "workflow.md")
+source = root / "agents_extensions/shared/rules/core.md"
+text = source.read_text(encoding="utf-8").rstrip() + "\n"
+
+
+def frontmatter(index: int, count: int) -> str:
+    return (
+        "---\n"
+        "trigger: always_on\n"
+        f"description: Binding rules core, part {index} of {count}.\n"
+        "---\n"
+    )
+
+
+pieces = text.split("\n")
+lines = [piece + "\n" for piece in pieces[:-1]]
+if pieces[-1]:
+    lines.append(pieces[-1])
+overhead = len(frontmatter(99, 99).encode("utf-8"))
+files = None
+for _attempt in range(4):
+    body_limit = limit - overhead
+    if body_limit < 1 or any(len(line.encode("utf-8")) > body_limit for line in lines):
+        break
+    bodies, current, size = [], [], 0
+    for line in lines:
+        piece_size = len(line.encode("utf-8"))
+        if current and size + piece_size > body_limit:
+            bodies.append("".join(current))
+            current, size = [line], piece_size
+        else:
+            current.append(line)
+            size += piece_size
+    if current:
+        bodies.append("".join(current))
+    count = len(bodies)
+    packed = []
+    for index, body in enumerate(bodies, start=1):
+        blob = (frontmatter(index, count) + body).encode("utf-8")
+        packed.append((f"core-part-{index:02d}.md", blob, body))
+    if "".join(bodies) == text and max(len(blob) for _name, blob, _body in packed) <= limit:
+        files = packed
+        break
+    overhead += 1
+if files is None:
+    raise SystemExit("AGY rule parts do not fit the rule file limit")
+
+agent_fd = open_agent_directory(str(agent_root))
+try:
+    rules_fd = open_child_directory(agent_fd, "rules")
+    try:
+        current = read_leaf(agent_fd, "rules.json")
+        existing = {}
+        if current is not None:
+            loaded = json.loads(current.decode("utf-8"))
+            if not isinstance(loaded, dict):
+                raise SystemExit("AGY rules.json must be an object")
+            existing = loaded
+        exclude = existing.get("exclude", [])
+        if isinstance(exclude, str):
+            exclude = [exclude]
+        if not isinstance(exclude, list) or any(not isinstance(item, str) for item in exclude):
+            raise SystemExit("AGY rules.json exclude must be a list of strings")
+        existing["exclude"] = sorted(set(exclude).union(excluded))
+        rendered = (json.dumps(existing, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+        keep = {name for name, _blob, _body in files}
+        for stale in os.listdir(rules_fd):
+            if not (stale.startswith("core-part-") and stale.endswith(".md")) or stale in keep:
+                continue
+            info = os.stat(stale, dir_fd=rules_fd, follow_symlinks=False)
+            if not (stat.S_ISREG(info.st_mode) or stat.S_ISLNK(info.st_mode)):
+                raise SystemExit(f"AGY rule part {stale} is not a file")
+            os.unlink(stale, dir_fd=rules_fd)
+        for name, blob, _body in files:
+            if read_leaf(rules_fd, name) != blob:
+                write_leaf(rules_fd, name, blob)
+        if current != rendered:
+            write_leaf(agent_fd, "rules.json", rendered)
+    finally:
+        os.close(rules_fd)
+finally:
+    os.close(agent_fd)
+PY
+    "$PROJECT_PYTHON" "$script" "$PROJECT_ROOT" .agent && status=0 || status=$?
+    rm -f "$script"
+    return "$status"
+}
+
 remove_claude_autoload_rules() {
     local p
     for p in "${CLAUDE_RULE_AUTOLOAD_EXCLUDES[@]}"; do
@@ -340,7 +514,7 @@ echo "=== Deploy diff ==="
 has_changes=false
 
 diff_dirs() {
-    local src="$1" dst="$2" label="$3" orphans="$4"
+    local src="$1" dst="$2" label="$3" orphans="$4" generated="${5:-}"
     if [[ ! -d "$dst" ]]; then
         echo "  $label: destination does not exist yet (will be created)"
         has_changes=true
@@ -353,6 +527,14 @@ diff_dirs() {
     while IFS= read -r name; do
         diff_args+=(--exclude="$name")
     done < <(declared_diff_excludes "$src" "$dst" "$orphans")
+    # Generated deploy output. diff matches --exclude on the basename, so a
+    # glob covers every core part without hiding a source file of another name.
+    local generated_name
+    local -
+    set -f
+    for generated_name in $generated; do
+        diff_args+=(--exclude="$generated_name")
+    done
     local diff_out
     diff_out=$(diff "${diff_args[@]}" "$src" "$dst" 2>/dev/null | filter_pycache_only_diff || true)
     if [[ -n "$diff_out" ]]; then
@@ -434,7 +616,7 @@ diff_dirs \
     "$SHARED_EXTENSIONS → .claude" \
     "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS"
 # .agent/ diff is best-effort (no declared orphans, preserve-by-default)
-diff_dirs "$SHARED_EXTENSIONS" ".agent" "$SHARED_EXTENSIONS → .agent" ""
+diff_dirs "$SHARED_EXTENSIONS" ".agent" "$SHARED_EXTENSIONS → .agent" "" "core-part-*.md rules.json"
 diff_dirs "$SHARED_EXTENSIONS/skills" ".agents/skills" "$SHARED_EXTENSIONS/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
 diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES"
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
@@ -452,6 +634,12 @@ echo ""
 if [[ -d .codex/skills ]]; then
     echo "  .codex/skills: verified legacy discovery mirror will be captured into retained storage"
     has_changes=true
+fi
+
+# A mirror that is already current still refreshes AGY parts, so a core that
+# was synced earlier is not left over the rule-file limit.
+if [[ "$DRY_RUN" == false && -d .agent/rules ]]; then
+    materialize_agy_rules
 fi
 
 if [[ "$has_changes" == false ]]; then
@@ -481,6 +669,7 @@ reap_retired_shared_agent_paths
 # after the check and redirect a path-based write outside this repository.
 sync_shared_agent_mirror
 write_shared_agent_manifest
+materialize_agy_rules
 # shellcheck disable=SC2046
 "$RSYNC" -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then

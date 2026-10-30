@@ -240,3 +240,37 @@ def test_delivery_cli_subprocess_claim_ack_and_usage(plane):
         result = subprocess.run([*command, operation, *args], capture_output=True, text=True, check=False, timeout=30)
         assert result.returncode == 2
         assert "required" in result.stderr
+
+
+def read_body(capsys, delivery, *, worker="seat-1", token=None, expected=EXIT_OK):
+    assert main(["deliveries", *fenced("read", delivery, worker=worker, token=token)]) == expected
+    output = capsys.readouterr()
+    assert output.err == ""
+    return json.loads(output.out)
+
+
+def test_delivery_read_returns_body_only_to_the_current_lease_holder(plane, capsys):
+    publish(plane)
+    delivery = claim(capsys)
+    for overrides in ({"worker": "other"}, {"token": delivery["fence_token"] + 1}):
+        result = read_body(capsys, delivery, expected=EXIT_ERROR, **overrides)
+        assert result == {"content_included": False, "error": "stale_delivery_lease"}
+    held = read_body(capsys, delivery)
+    assert held["body"] == "private body sentinel"
+    assert held["content_included"] is True
+    invoke(capsys, *fenced("ack", delivery))
+    result = read_body(capsys, delivery, expected=EXIT_ERROR)
+    assert result == {"content_included": False, "error": "stale_delivery_lease"}
+
+
+def test_delivery_read_missing_body_file_is_storage_error(plane, capsys):
+    publish(plane)
+    delivery = claim(capsys)
+    body_files = [path for path in (plane / "blobs").rglob("*") if path.is_file()]
+    assert body_files
+    for path in body_files:
+        path.unlink()
+    result = read_body(capsys, delivery, expected=EXIT_ERROR)
+    assert result == {"content_included": False, "error": "delivery_store_unavailable"}
+    assert "body" not in result
+    assert "private body sentinel" not in json.dumps(result)

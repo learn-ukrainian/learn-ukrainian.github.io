@@ -1,9 +1,9 @@
 # Formal review attempt isolation
 
-Dispatch v2 does not execute protected bound attempts. The retained rendering,
-MCP and recorder helpers below serve their other callers; the v2 binding flags
-are dry-run-only. A plain read-only launch cannot supply their Sources receipts
-or isolation proof. The accountable driver owns that execution gap.
+Dispatch v2 executes a bound attempt (`--review-id`, `--attempt-id`,
+`--review-attempt`) only inside the agent runtime's attempt boundary described
+below (#12114); there is no ordinary-launch fallback. The recipe is under
+[Running a bound attempt](#running-a-bound-attempt).
 
 ## Curriculum reviews use full access
 
@@ -209,13 +209,12 @@ runner-owned manifest boundary, rather than enabling that unsupported mode.
 
 ## Artifact binding at admission and recording
 
-For `--branch B --review-attempt <manifest>`, render from a detached worktree
-at the exact commit (`git worktree add --detach <render-worktree> <commit>`).
-The render worktree must not hold the dispatch's target branch. Dispatch
-protects a branch holder containing the attempt manifest or the render record's
-`input_root` or `render_checkout` and refuses before admission with
-`review_attempt_branch_holder_conflict`, suggesting a detached render worktree
-(#9388). Ordinary dispatches retain their stale-holder release behavior.
+Render from a detached worktree at the exact commit
+(`git worktree add --detach <render-worktree> <commit>`) and dispatch with
+`--pinned-head <commit>`. Dispatch v2 creates its own task branch at that commit
+and never checks out or releases the reviewed branch, so the render worktree
+stays in place; keep it until the attempt is recorded, because the supervisor
+reads the manifest again at launch.
 
 Issues #9012, #9025 and #9242 bind each artifact to the same attempt. A render
 manifest prompt is admitted through `check_prompt` with the dispatch review and
@@ -492,7 +491,45 @@ present in that reply, and at least one successful `verify_words` ledger row.
 in ignored local storage. This proves full-mode permission and receipt transport;
 it does not certify a plan's semantic review or replace the post-landing proof.
 
-The former live bound-attempt recipe has no dispatch v2 execution equivalent.
-Use the renderer and recorder helpers only through a caller that supplies their
-required isolation, immutable task binding and Sources evidence. A dry run
-validates a binding without starting a seat or establishing execution proof.
+## Running a bound attempt
+
+`scripts/dispatch.py dispatch` admits a bound attempt before it creates anything
+(`scripts/dispatcher/review_attempt.py`, `admit`):
+
+- `--mode read-only`, a fresh worktree (no `--cwd`), all three binding flags, and an
+  unspent review and attempt pair;
+- a rendered `--prompt-file` whose bytes `check_review_contract` and `check_prompt`
+  re-render exactly from the server checkout's templates, with these ids and this access;
+- granted Sources tool requirements (`check_review_tool_requirements`), no `--output-schema`;
+- `--full-checkout` for full access, and every manifest pin equal to the dispatch
+  commit's bytes (`full_review_tree_mismatch`), so a refused tree spends nothing.
+
+The task's supervisor then verifies the actual checkout (`verify_full_review_tree`),
+claims the attempt by creating its empty ledger exclusively beside the task store
+(`review-receipts/<review_id>/<attempt_id>.jsonl`), prepares the per-attempt Sources
+server, sidecar and scoped home on that claim (`prepare_review_attempt(claimed=True)`),
+and runs the seat through `agent_runtime.runner.invoke` with
+`review_attempt_tool_config`. The seat receives the rendered prompt's exact bytes, with
+no dispatch context and no task-store grant. From the claim on, any failure spends the
+attempt. Runner failover is off, and a cancel unwinds the runtime, which kills the seat
+and tears the boundary down. The record attests a model only when the runtime observed it
+from the provider, and counts the ledger's receipts in `sources_mcp_call_count`. The seat's
+tool-call trace (names and arguments, redacted, no outputs) replaces the provider stream in
+the task's private stdout log, as evidence of its repository and Git context reads.
+
+```bash
+"$PROJECT_PYTHON" -m scripts.review.prompts.render <manifest> --review-id R --attempt-id A \
+  --review-access full --repo-root <checkout> --output <prompt>   # <checkout>: detached, at the reviewed commit
+"$PROJECT_PYTHON" scripts/dispatch.py dispatch --agent sol --model gpt-6.1-sol --effort high \
+  --mode read-only --full-checkout --pinned-head <commit> --review-access full \
+  --review-id R --attempt-id A --review-attempt <manifest> --prompt-file <prompt> --task-id T
+"$PROJECT_PYTHON" scripts/dispatch.py wait T
+"$PROJECT_PYTHON" -m scripts.review.record <tasks>/T.result --manifest <manifest> \
+  --ledger <tasks>/../review-receipts/R/A.jsonl --task-id T
+```
+
+Record the raw saved result; the recorder binds it to the done task, its ids, manifest
+hash, result hash and the fresh render. `plan-promote` then refuses a plan review whose
+projection, dispatch record, saved result, saved return or Sources ledger does not bind
+(`review_unbound`). A dry run validates the binding only; it starts no seat and is no
+execution proof.

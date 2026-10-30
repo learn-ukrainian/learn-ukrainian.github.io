@@ -123,7 +123,7 @@ with a season: **Мені подобається літо**, **Мені подо
 
 ### Діалог про погоду
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Яка сьогодні ___? — Сьогодні тепло.", "answer": "погода", "options": ["погода", "сонце", "дощ"]}, {"sentence": "— Завтра ___ сонячно. — Добре, гуляємо!", "answer": "буде", "options": ["буде", "є", "був"]}, {"sentence": "— Яка пора року тобі ___? — Літо.", "answer": "подобається", "options": ["подобається", "любить", "робить"]}, {"sentence": "— На вулиці +25 °C. На небі немає хмар. Яка сьогодні погода? — Сьогодні ___.", "answer": "сонячно", "options": ["сонячно", "холодно", "хмарно"], "explanation": "Daylight and a cloudless warm sky fit сонячно. Холодно contradicts +25; хмарно contradicts the stated absence of clouds."}]`)} instruction={"Доповни короткий діалог про погоду."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Яка сьогодні ___? — Сьогодні тепло.", "answer": "погода", "options": ["погода", "сонце", "дощ"], "explanation": "Яка сьогодні погода? is the target question."}, {"sentence": "— Завтра ___ сонячно. — Добре, гуляємо!", "answer": "буде", "options": ["буде", "є", "був"], "explanation": "Завтра буде... is the simple future weather frame."}, {"sentence": "— Яка пора року тобі ___? — Літо.", "answer": "подобається", "options": ["подобається", "любить", "робить"], "explanation": "Use the phrase тобі подобається."}, {"sentence": "Зараз день. На вулиці +25 °C. На небі немає хмар. Яка сьогодні погода? — Сьогодні ___.", "answer": "сонячно", "options": ["сонячно", "сонячна", "хмарно"], "explanation": "It is daytime and the sky has no clouds. Сонячно fits; хмарно contradicts the stated absence of clouds, and сонячна does not complete the sentence."}]`)} instruction={"Доповни короткий діалог про погоду."} isUkrainian={false} />
 
 ## Яка погода?
 
@@ -197,9 +197,9 @@ Support after the Ukrainian lines:
 
 This is a ready phrase. Do not say **Я є холодно** or **Я маю холодно**.
 
-### Погода і контекст
+### Погода: значення виразів
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "іде дощ", "right": "холодно і мокро"}, {"left": "іде сніг", "right": "зима"}, {"left": "світить сонце", "right": "сонячно"}, {"left": "дме вітер", "right": "прохолодно"}, {"left": "мінус десять", "right": "холодно"}, {"left": "плюс тридцять", "right": "спекотно"}, {"left": "плюс двадцять", "right": "тепло"}, {"left": "хмарно", "right": "сонце не світить"}]`)} instruction={"З'єднай вираз про погоду з логічним контекстом або порою року."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "іде дощ", "right": "it is raining"}, {"left": "іде сніг", "right": "it is snowing"}, {"left": "світить сонце", "right": "the sun is shining"}, {"left": "дме вітер", "right": "the wind is blowing"}, {"left": "мінус десять", "right": "minus ten"}, {"left": "плюс тридцять", "right": "plus thirty"}, {"left": "плюс двадцять", "right": "plus twenty"}, {"left": "хмарно", "right": "it is cloudy"}]`)} instruction={"З’єднай кожен український вираз із його англійським значенням. / Match each Ukrainian expression with its English meaning."} isUkrainian={false} />
 
 ## Погода і пори року
 
@@ -260,7 +260,7 @@ parts: time, weather, and plan.
 
 ### Погода і пора року
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "На вулиці мінус десять. Уже ніч, темно. Дорога стає білою: ___.", "answer": "іде сніг", "options": ["іде сніг", "іде дощ", "світить сонце"], "explanation": "The scene is dark and below freezing, and the road is becoming white. Іде сніг fits these observations; rain does not make a white snow-covered road in this scene, and sunlight contradicts the night."}, {"sentence": "На термометрі +35 °C. Я весь час хочу пити, тому що надворі ___.", "answer": "спекотно", "options": ["спекотно", "холодно", "хмарно"], "explanation": "The stated temperature and thirst establish heat. Холодно contradicts +35; хмарно does not explain the stated heat-related thirst."}, {"sentence": "На вулиці +20 °C. Я гуляю, і мій одяг стає мокрим: зараз ___.", "answer": "іде дощ", "options": ["іде дощ", "іде сніг", "сонячно"], "explanation": "The clothes are getting wet during the walk at+20 °C. Іде дощ explains that situation. Snow conflicts with the warm scene; sunny weather does not explain the ongoing wetting."}, {"sentence": "На термометрі +18 °C. Навесні ___ і красиво.", "answer": "тепло", "options": ["тепло", "холодно", "спекотно"], "explanation": "The moderate positive temperature fits тепло. Холодно and спекотно describe the contrasting cold/heat extremes in this A1 weather scale."}, {"sentence": "Сьогодні мінус п'ять, дуже ___.", "answer": "холодно", "options": ["холодно", "тепло", "спекотно"]}, {"sentence": "Сьогодні плюс двадцять п'ять, ___.", "answer": "тепло", "options": ["тепло", "прохолодно", "холодно"]}]`)} instruction={"Обери логічну погоду для кожної пори року або температури."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "На вулиці мінус десять. Уже ніч, темно. Дорога стає білою: ___.", "answer": "іде сніг", "options": ["іде сніг", "іде дощ", "світить сонце"], "explanation": "The scene is dark and below freezing, and the road is becoming white. Іде сніг fits these observations; rain does not make a white snow-covered road in this scene, and sunlight contradicts the night."}, {"sentence": "На термометрі +35 °C. Я весь час хочу пити, тому що надворі ___.", "answer": "спекотно", "options": ["спекотно", "холодно", "хмарно"], "explanation": "The stated temperature and thirst establish heat. Холодно contradicts +35; хмарно does not explain the stated heat-related thirst."}, {"sentence": "На вулиці +20 °C. Я гуляю, і мій одяг стає мокрим: зараз ___.", "answer": "іде дощ", "options": ["іде дощ", "іде сніг", "сонячно"], "explanation": "The clothes are getting wet during the walk at+20 °C. Іде дощ explains that situation. Snow conflicts with the warm scene; sunny weather does not explain the ongoing wetting."}, {"sentence": "На термометрі +18 °C. Навесні ___ і красиво.", "answer": "тепло", "options": ["тепло", "теплий", "тепла"], "explanation": "Тепло completes this weather sentence. Теплий and тепла do not fit here."}, {"sentence": "Сьогодні мінус п'ять, дуже ___.", "answer": "холодно", "options": ["холодно", "тепло", "спекотно"], "explanation": "Мінус п'ять points to холодно."}, {"sentence": "Сьогодні плюс двадцять п'ять, ___.", "answer": "тепло", "options": ["тепло", "теплий", "тепла"], "explanation": "Тепло completes this weather sentence. Теплий and тепла do not fit here."}]`)} instruction={"Обери логічну погоду для кожної пори року або температури."} isUkrainian={false} />
 
 ## 📋 Підсумок
 
@@ -326,7 +326,7 @@ Support after the Ukrainian lines:
 </TabItem>
 <TabItem label="Activities">
 
-### Погода і контекст
+### Погода: значення виразів
 
 *(see lesson, §Яка погода?)*
 

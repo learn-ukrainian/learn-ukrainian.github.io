@@ -32,9 +32,12 @@ INFRA = {
     ".python-version",
 }
 CAP_SECONDS = 600
-# Importing tests fill only to half the cap: the cap is also the kill limit, so a
-# selection estimated at the cap has no room for runner speed variance.
-FILL_SECONDS = CAP_SECONDS / 2
+TIMEOUT_SECONDS = 480
+# Importing tests fill only half the room the guards and changed tests leave under
+# the cap, and never past the pytest timeout: a selection estimated at the kill limit
+# has no room for runner speed variance. Measured from the mandatory selection, not
+# from zero, so a heavy guard list never starves every importing test.
+FILL_SHARE = 0.5
 TEST = re.compile(r"tests/(?:[^/]+/)*test_[^/]+\.py")
 
 
@@ -60,13 +63,17 @@ def safe_path(name: str) -> str:
 def importing_tests(targets: set[str], deleted: set[str], base: str, entries: dict[str, str]) -> list[str]:
     """Tests that directly import, load, read or run a changed file, by static scan.
 
+    A test that loads a computed path also depends on every file under the
+    directories its constants name (`components.directory_edges`).
+
     Direct edges only: the transitive closure spans most of the suite, which the
     merge group already runs. A deleted file has no edges in the candidate, so its
     surviving dependents come from a scan of the base tree.
     """
     from scripts.ci import components
 
-    edges = components.scan_imports(components.python_sources(), set(components.tracked_paths()))["file_edges"]
+    scan = components.scan_imports(components.python_sources(), set(components.tracked_paths()))
+    edges, directories = scan["file_edges"], scan["directory_edges"]
     if deleted:
         tree = {}
         for row in git("ls-tree", "-rz", base).split(b"\0"):
@@ -75,11 +82,16 @@ def importing_tests(targets: set[str], deleted: set[str], base: str, entries: di
                 tree[name] = meta.split()
         blobs = tuple((name, meta[2]) for name, meta in tree.items() if name.endswith(".py") and meta[1] == "blob")
         sources = components.indexed_python_sources(str(components.ROOT), blobs, ())
-        edges = [*edges, *(edge for edge in components.scan_imports(sources, set(tree))["file_edges"]
-                           if edge[1] in deleted)]
+        scan = components.scan_imports(sources, set(tree))
+        edges = [*edges, *(edge for edge in scan["file_edges"] if edge[1] in deleted)]
+        directories = [*directories, *scan["directory_edges"]]
     return sorted({
         importer for importer, target in edges
         if target in targets and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
+    } | {
+        importer for importer, directory in directories
+        if any(target.startswith(directory + "/") for target in targets)
+        and TEST.fullmatch(importer) and entries.get(importer) in {"100644", "100755"}
     })
 
 
@@ -155,8 +167,9 @@ def plan(base: str, candidate: str, *, importers: bool = True) -> dict:
         if type(value) not in {int, float} or not math.isfinite(value) or value < 0:
             raise ValueError("invalid recorded duration")
     budget = estimate
+    fill_limit = min(estimate + (CAP_SECONDS - estimate) * FILL_SHARE, TIMEOUT_SECONDS)
     for p in sorted(imported, key=lambda p: (durations.get(p, default), p)):
-        if budget + durations.get(p, default) <= FILL_SECONDS:
+        if budget + durations.get(p, default) <= fill_limit:
             run.add(p)
             budget += durations.get(p, default)
     if set(imported) - run:
@@ -220,7 +233,7 @@ def main() -> int:
         paths = ["tests"] if args.repo_wide else record["run_files"]
         # pytest excludes build/ by default; it contains registered invariants.
         collection = ["--override-ini=norecursedirs=.* node_modules"] if args.repo_wide else []
-        timeout = 1500 if args.repo_wide else 480
+        timeout = 1500 if args.repo_wide else TIMEOUT_SECONDS
         record.update(selection=marker, requested_paths=paths, workers=2, timeout_seconds=timeout,
                       logical_cpus=os.cpu_count(), load_average=os.getloadavg())
         stage, reason = "fresh_report", "stale_or_unwritable_report"

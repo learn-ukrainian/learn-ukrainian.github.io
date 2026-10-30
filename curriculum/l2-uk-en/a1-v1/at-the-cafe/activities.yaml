@@ -236,160 +236,220 @@ workbook:
       - statement: 'Перепрошую is a polite way to get attention.'
         answer: true
         explanation: 'It is a neutral service-scene attention getter.'
-  - type: order
+  - type: fill-in
     title: One cafe visit
-    instruction: Put the cafe visit in order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Добрий день! Можна меню?'
-      - 'Що ви рекомендуєте?'
-      - 'Мені борщ і хліб, будь ласка.'
-      - 'А мені маленьку каву із собою.'
-      - 'Рахунок, будь ласка.'
-      - 'Можна карткою?'
-      - 'Дякую, все було дуже смачно!'
-      - 'До побачення!'
-    correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
+      - sentence: Добрий ___! Можна меню?
+        answer: день
+        options:
+          - день
+          - дня
+          - днем
+        explanation: Добрий agrees with день in this greeting.
+      - sentence: Що ви ___?
+        answer: рекомендуєте
+        options:
+          - рекомендуєте
+          - рекомендує
+          - рекомендую
+        explanation: Ви takes рекомендуєте.
+      - sentence: ___ борщ і хліб, будь ласка.
+        answer: Мені
+        options:
+          - Мені
+          - Я
+          - Мною
+        explanation: Мені introduces the request.
+      - sentence: А мені цю ___ із собою.
+        answer: маленьку каву
+        options:
+          - маленьку каву
+          - маленька кава
+          - маленької кави
+        explanation: Цю takes matching feminine accusative маленьку каву.
+      - sentence: Я поїв і хочу розрахуватися. Дайте, будь ласка, цей ___.
+        answer: рахунок
+        options:
+          - рахунок
+          - рахунку
+          - рахунком
+        explanation: Цей takes the matching object рахунок.
+      - sentence: Я хочу заплатити карткою. Можна ___?
+        answer: карткою
+        options:
+          - карткою
+          - картка
+          - картки
+        explanation: Карткою expresses the payment method.
+      - sentence: Дякую, усе було дуже ___!
+        answer: смачно
+        options:
+          - смачно
+          - смачний
+          - смачна
+        explanation: Смачно fits the impersonal food-praise line.
+      - sentence: До ___!
+        answer: побачення
+        options:
+          - побачення
+          - побаченню
+          - побаченням
+        explanation: До takes the genitive form побачення.
   - type: group-sort
     title: Cafe shelves
     instruction: Sort each phrase by its cafe job.
     groups:
-      - name: 'Greeting or attention'
+      - name: Greeting or attention
         items:
-          - 'Добрий день!'
-          - 'Доброго ранку!'
-          - 'Перепрошую.'
-      - name: 'Ordering'
+          - Добрий день!
+          - Доброго ранку!
+          - Перепрошую.
+      - name: Ordering
         items:
-          - 'Мені каву, будь ласка.'
-          - 'Дайте, будь ласка, борщ.'
-          - 'Велику каву із собою.'
-      - name: 'Questions'
+          - Мені каву, будь ласка.
+          - Дайте, будь ласка, борщ.
+          - Велику каву із собою.
+      - name: Questions about food or price
         items:
-          - 'Що ви рекомендуєте?'
-          - 'Скільки коштує?'
-          - 'Це гостре?'
-      - name: 'Payment or closing'
+          - Що ви рекомендуєте?
+          - Скільки коштує?
+          - Це гостре?
+      - name: Payment or closing
         items:
-          - 'Рахунок, будь ласка.'
-          - 'Можна карткою?'
-          - 'До побачення!'
+          - Рахунок, будь ласка.
+          - Можна карткою?
+          - До побачення!
   - type: match-up
     title: Cafe repair pairs
     instruction: Match the repair form with the course cafe form.
     pairs:
-      - left: 'счет'
-        right: 'рахунок'
-      - left: 'кава на винос'
-        right: 'кава із собою'
-      - left: 'пірожене'
-        right: 'тістечко'
-      - left: 'кулечок'
-        right: 'пакетик'
-      - left: 'вкусна кава'
-        right: 'смачна кава'
-      - left: 'трубочка'
-        right: 'соломинка'
-      - left: 'чашку кофе'
-        right: 'чашку кави'
-  - type: unjumble
+      - left: счет
+        right: рахунок
+      - left: Мені кава із собою.
+        right: Мені каву із собою.
+      - left: пірожене
+        right: тістечко
+      - left: Дайте цей пакетиком.
+        right: Дайте цей пакетик.
+      - left: вкусна кава
+        right: смачна кава
+      - left: Можна цю соломинкою?
+        right: Можна цю соломинку?
+      - left: чашку кофе
+        right: чашку кави
+  - type: fill-in
     title: Build cafe lines
-    instruction: Put the words in a natural cafe order.
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - words:
-          - 'Мені'
-          - 'каву'
-          - 'будь ласка'
-        answer: 'Мені каву, будь ласка'
-      - words:
-          - 'Дайте'
-          - 'будь ласка'
-          - 'борщ'
-        answer: 'Дайте, будь ласка, борщ'
-      - words:
-          - 'Можна'
-          - 'воду'
-        answer: 'Можна воду'
-      - words:
-          - 'Велику'
-          - 'каву'
-          - 'із собою'
-          - 'будь ласка'
-        answer: 'Велику каву із собою, будь ласка'
-      - words:
-          - 'Рахунок'
-          - 'будь ласка'
-        answer: 'Рахунок, будь ласка'
-      - words:
-          - 'Можна'
-          - 'карткою'
-        answer: 'Можна карткою'
+      - answer: каву
+        sentence: Мені ___, будь ласка.
+        options:
+          - каву
+          - кава
+          - каві
+        explanation: Use the request object каву.
+      - answer: борщ
+        sentence: Дайте, будь ласка, цей ___.
+        options:
+          - борщ
+          - борщу
+          - борщем
+        explanation: Цей takes the matching masculine object борщ.
+      - answer: воду
+        sentence: Можна цю ___?
+        options:
+          - воду
+          - вода
+          - воді
+        explanation: Цю takes matching feminine singular воду.
+      - answer: велику каву
+        sentence: Цю ___ із собою, будь ласка.
+        options:
+          - велику каву
+          - велика кава
+          - великою кавою
+        explanation: Цю takes matching feminine accusative велику каву.
+      - answer: рахунок
+        sentence: Дайте, будь ласка, цей ___.
+        options:
+          - рахунок
+          - рахунку
+          - рахунком
+        explanation: Цей takes the matching masculine object рахунок.
+      - answer: карткою
+        sentence: Я хочу заплатити карткою. Можна ___?
+        options:
+          - карткою
+          - картка
+          - картки
+        explanation: Карткою expresses the payment method.
   - type: error-correction
     title: Repair cafe interference
     instruction: Choose the clean Ukrainian repair.
     anchor_id: repair-at-the-cafe-interference
     items:
-      - sentence: 'Мені кава, будь ласка.'
-        error: 'кава'
-        answer: 'Мені каву, будь ласка.'
+      - sentence: Мені кава, будь ласка.
+        error: кава
+        answer: Мені каву, будь ласка.
         options:
-          - 'Мені каву, будь ласка.'
-          - 'Мені кава, будь ласка.'
-          - 'Мені каві, будь ласка.'
-        explanation: 'Кава becomes каву in this order frame.'
-      - sentence: 'Можна счет?'
-        error: 'счет'
-        answer: 'Можна рахунок?'
+          - Мені каву, будь ласка.
+          - Мені кава, будь ласка.
+          - Мені каві, будь ласка.
+        explanation: Кава becomes каву in this order frame.
+      - sentence: Можна цей рахунком?
+        error: рахунком
+        answer: Можна цей рахунок?
         options:
-          - 'Можна рахунок?'
-          - 'Можна счет?'
-          - 'Можна рахунка?'
-        explanation: 'Use рахунок.'
-      - sentence: 'Кава на винос.'
-        error: 'на винос'
-        answer: 'Кава із собою.'
+          - Можна цей рахунок?
+          - Можна цей рахунком?
+          - Можна цей рахунка?
+        explanation: Цей takes the matching masculine object рахунок.
+      - sentence: Мені кава із собою.
+        error: кава
+        answer: Мені каву із собою.
         options:
-          - 'Кава із собою.'
-          - 'Кава на винос.'
-          - 'Кава з себе.'
-        explanation: 'The course phrase is із собою.'
-      - sentence: 'Дайте пірожене.'
-        error: 'пірожене'
-        answer: 'Дайте тістечко.'
+          - Мені каву із собою.
+          - Мені кава із собою.
+          - Мені каві із собою.
+        explanation: Мені takes the request object каву.
+      - sentence: Дайте пірожене.
+        error: пірожене
+        answer: Дайте тістечко.
         options:
-          - 'Дайте тістечко.'
-          - 'Дайте пірожене.'
-          - 'Дайте тісто.'
-        explanation: 'Use тістечко.'
-      - sentence: 'Дайте кулечок.'
-        error: 'кулечок'
-        answer: 'Дайте пакетик.'
+          - Дайте тістечко.
+          - Дайте пірожене.
+          - Дайте тісто.
+        explanation: Use тістечко.
+      - sentence: Дайте цей пакетиком.
+        error: пакетиком
+        answer: Дайте цей пакетик.
         options:
-          - 'Дайте пакетик.'
-          - 'Дайте кулечок.'
-          - 'Дайте пакет.'
-        explanation: 'Use пакетик for a small bag.'
-      - sentence: 'Кава вкусна.'
-        error: 'вкусна'
-        answer: 'Кава смачна.'
+          - Дайте цей пакетик.
+          - Дайте цей пакетиком.
+          - Дайте цей пакетика.
+        explanation: Цей takes the matching masculine object пакетик.
+      - sentence: Кава вкусна.
+        error: вкусна
+        answer: Кава смачна.
         options:
-          - 'Кава смачна.'
-          - 'Кава вкусна.'
-          - 'Кава смачно.'
-        explanation: 'Use смачна with кава.'
-      - sentence: 'Можна трубочку?'
-        error: 'трубочку'
-        answer: 'Можна соломинку?'
+          - Кава смачна.
+          - Кава вкусна.
+          - Кава смачно.
+        explanation: Use смачна with кава.
+      - sentence: Можна цю соломинкою?
+        error: соломинкою
+        answer: Можна цю соломинку?
         options:
-          - 'Можна соломинку?'
-          - 'Можна трубочку?'
-          - 'Можна соломинкою?'
-        explanation: 'Use соломинку for a drinking straw.'
-      - sentence: 'Одну чашку кофе, будь ласка.'
-        error: 'кофе'
-        answer: 'Одну чашку кави, будь ласка.'
+          - Можна цю соломинку?
+          - Можна цю соломинкою?
+          - Можна цю соломинка?
+        explanation: Цю takes the matching feminine object соломинку.
+      - sentence: Одну чашку кофе, будь ласка.
+        error: кофе
+        answer: Одну чашку кави, будь ласка.
         options:
-          - 'Одну чашку кави, будь ласка.'
-          - 'Одну чашку кофе, будь ласка.'
-          - 'Одну чашка кави, будь ласка.'
-        explanation: 'Use кави in чашку кави.'
+          - Одну чашку кави, будь ласка.
+          - Одну чашку кофе, будь ласка.
+          - Одну чашка кави, будь ласка.
+        explanation: Use кави in чашку кави.

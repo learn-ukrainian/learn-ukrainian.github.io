@@ -197,6 +197,18 @@ def check_branch_author_families(args, repo: Path, repository: dict, head_sha: s
         )
 
 
+def check_review_budget(args, repository: dict, head_sha: str) -> None:
+    """Refuse a review dispatch past its PR's review round budget, recorded verdicts or not (#12098)."""
+    from scripts.orchestration.integration_sweep import SweepError
+    from scripts.review.record_cf_verdict import RecordError, dispatch_budget_check
+
+    try:
+        dispatch_budget_check(repository["github"], number=args.pr, branch=args.branch, head=head_sha,
+                              task_root=store.tasks_dir())
+    except (RecordError, SweepError, OSError, subprocess.SubprocessError) as exc:
+        raise ValueError(f"review dispatch refused: {exc}") from None
+
+
 def check_review_subjects(agent, model, seats, families, owned_paths, *, review=False):
     from types import SimpleNamespace
 

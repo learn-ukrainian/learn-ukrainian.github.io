@@ -869,6 +869,7 @@ def prepare_review_attempt(
     review_contract: Mapping[str, Any] | None = None,
     review_access: str = "isolated",
     checkout_root: Path | str | None = None,
+    claimed: bool = False,
 ) -> ReviewMcpPlan:
     """Prepare the per-attempt stdio sources MCP config, empty ledger, and sidecar.
 
@@ -884,6 +885,9 @@ def prepare_review_attempt(
         review_contract: What admission checked (``check_review_contract``). When given, the sources server is
             digested again from the checkout and interpreter this config launches, and a difference refuses
             before any file is written (#9163).
+        claimed: The caller has already claimed the attempt by creating its empty ledger exclusively (dispatch
+            v2, #12114). That ledger must exist, empty and ours; everything else is created as usual, and a
+            rollback never removes the claimed ledger, so a failed preparation still spends the attempt.
 
     Returns:
         ReviewMcpPlan containing the written config path and adapter options.
@@ -953,7 +957,7 @@ def prepare_review_attempt(
             f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
         )
 
-    existing = [ledger_name, sidecar_name, config_name]
+    existing = [sidecar_name, config_name] if claimed else [ledger_name, sidecar_name, config_name]
     existing += [home.name for home in (codex_home, agy_home) if home is not None]
     # Preserve specific directory and duplicate-attempt refusals before server
     # validation, without provisioning anything for an invalid launch. The
@@ -1004,8 +1008,13 @@ def prepare_review_attempt(
         # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
         if any(_lexists(name, review_fd) for name in existing):
             raise _already_exists()
+        if claimed:
+            claim = os.stat(ledger_name, dir_fd=review_fd, follow_symlinks=False)
+            if not stat.S_ISREG(claim.st_mode) or claim.st_uid != os.getuid() or claim.st_size or claim.st_nlink != 1:
+                raise ValueError(f"review attempt refused: {_ATTEMPT_PATHS_CHANGED} (claimed ledger) (#12114)")
 
-        for name, payload in ((ledger_name, b""), (sidecar_name, sidecar_bytes), (config_name, config_bytes)):
+        files = ((sidecar_name, sidecar_bytes), (config_name, config_bytes))
+        for name, payload in files if claimed else ((ledger_name, b""), *files):
             _create_file(name, review_fd, payload)
             created.append(name)
 

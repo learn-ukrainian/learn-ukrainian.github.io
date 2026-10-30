@@ -63,9 +63,9 @@ the worker runs on. For label `b` the adapter
 - passes `--setting-sources project,local`, which turns the login directory's
   user scope off: its env, key helper, hooks, permission rules, plugins and
   user MCP servers are not loaded as settings, and the worker gets the harness
-  flags and checkout settings. The flag does not stop every reader: Claude Code
-  still reads some names from that file directly (`autoMode`, see below), which
-  is why the file is held to the allowlist. Restrictive user rules are dropped
+  flags and checkout settings. The flag has not stopped every reader: Claude
+  Code 2.1.300 read some names from that file directly (`autoMode`, see below),
+  which is why the file is held to the allowlist. Restrictive user rules are dropped
   too; the task record carries `claude_account_user_scope_omitted: true`;
 - runs `claude auth status` (JSON and text) with the worker's settings
   arguments, working directory and environment: the JSON must name the
@@ -189,9 +189,27 @@ env -i PATH="$PATH" HOME=<empty dir> CLAUDE_CONFIG_DIR=<fixture login dir> \
 
 prints a JSON object whose four lists are exactly the four fixture lists. With
 the fixture `settings.json` moved away, none of the fixture values appear.
-`tests/agent_runtime/test_claude_account_worker.py::test_real_cli_reads_auto_mode_whatever_the_setting_sources`
-runs the same check with the labelled run's own `--settings` and
-`--setting-sources` arguments, then requires the guard to refuse.
+
+Claude Code 2.1.314 (2026-10-30) honours the flag here: the same command
+prints the built-in lists (`claude auto-mode defaults`), and the classifier's
+user settings getter now returns nothing when the user source is off. Without
+the flag, or with `--setting-sources user`, the fixture lists still apply, as
+do lists passed through `--settings`. The refusal stays: the file's lists are
+classifier policy wherever its scope loads, an earlier CLI applied them under
+the labelled arguments, and the labelled contract forbids them either way.
+`tests/agent_runtime/test_claude_account_worker.py::test_real_cli_unloads_the_labelled_user_auto_mode`
+loads the fixture lists with the user scope on, shows that the labelled run's
+own `--settings` and `--setting-sources` arguments leave the built-in lists,
+then requires the guard to refuse.
+
+Which lists a dispatched worker gets (2.1.314): a default-label worker loads
+the host's user settings, so its `auto-mode config` carries the host's
+`autoMode` entries. A labelled worker gets the built-in lists, as it did on
+2.1.300, because its login directory may not carry `autoMode`. Neither consults
+these lists today: the classifier runs only in `auto` and `plan` modes, and the
+harness launches Claude workers and reviewers in `dontAsk` (read-only runs in the
+print-mode default, `danger` runs with permissions skipped), with no
+`defaultMode` in the host or checkout settings.
 
 If a labelled login refuses at dispatch with
 

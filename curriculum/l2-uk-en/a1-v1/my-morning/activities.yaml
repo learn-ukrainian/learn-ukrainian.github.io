@@ -9,7 +9,7 @@ inline:
         answer: ся
         options:
           - ся
-          - сь
+          - ти
           - не
         explanation: The active full form is я вмиваюся.
       - sentence: ти одягаєш__
@@ -30,14 +30,14 @@ inline:
         answer: ся
         options:
           - ся
-          - сь
+          - ти
           - не
         explanation: The ми form is ми збираємося.
       - sentence: ви вмиваєте__
         answer: ся
         options:
           - ся
-          - сь
+          - ти
           - не
         explanation: The ви form is ви вмиваєтеся.
       - sentence: вони прокидають__
@@ -51,7 +51,7 @@ inline:
         answer: ся
         options:
           - ся
-          - сь
+          - ти
           - не
         explanation: Use the full classroom form прокидаюся.
       - sentence: вона одягаєть__
@@ -72,7 +72,7 @@ inline:
         answer: ся
         options:
           - ся
-          - сь
+          - ти
           - не
         explanation: The ми form is повертаємося.
   - id: act-2

@@ -1,4 +1,4 @@
-"""Bound review admission must preserve isolation while the v2 runtime is pending."""
+"""Bound review attempts: admission, single-use identity and execution inside the attempt boundary."""
 
 import json
 from concurrent.futures import ThreadPoolExecutor
@@ -33,12 +33,77 @@ def test_attempt_cannot_write_or_reuse_a_worktree(attempt, monkeypatch, capsys, 
     launch.assert_not_called()
 
 
-def test_bound_launch_refuses_until_runtime_isolation_is_wired(attempt, monkeypatch, capsys):
-    create = Mock()
-    monkeypatch.setattr(git, "create_worktree", create)
-    assert invoke(attempt) == 2
-    assert "review_attempt_runtime_unavailable" in capsys.readouterr().err
-    create.assert_not_called()
+def test_bound_attempt_runs_only_inside_the_attempt_boundary_with_the_exact_prompt(attempt, tmp_path, monkeypatch):
+    """A bound attempt is claimed, prepared and run by the runtime's boundary, and its record binds the result.
+
+    Defect class: a bound review executes outside isolation, or with altered prompt bytes (#12114).
+    """
+    from types import SimpleNamespace
+
+    from scripts.agent_runtime import attempt_boundary, review_mcp, runner
+    from scripts.dispatcher import headroom
+
+    args = cli.build_parser().parse_args(["dispatch", "--agent", "sol", "--model", "gpt-6.1-sol", *attempt,
+                                          "--review-access", "full"])
+    binding = store.review_binding(vars(args))
+    rendered = b"Rendered review prompt\nattempt: review/attempt\n"
+    prompt = cli._PromptPath(tmp_path / "tasks" / "task.prompt")
+    prompt.content = rendered
+    workspace = tmp_path / "checkout"
+    workspace.mkdir()
+    spec = TaskSpec("task", "codex", "gpt-6.1-sol", "high", "read-only", workspace, prompt,
+                    tmp_path / "tasks" / "task.result", options=dict(review_attempt=str(tmp_path / "manifest.yaml")))
+    record = store.new_record(spec, dict(key="public", github="example/public"), "codex/task", "a" * 40,
+                              dict(vars(args), research_owned_path=[]), binding=binding)
+    record["review_contract"] = dict(input_root=str(tmp_path))
+    path = store.create(record, rendered)
+
+    for name in ("check_plan", "check_runtime"):
+        monkeypatch.setattr(headroom, name, lambda *_a, **_k: None)
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_a, **_k: None)
+    monkeypatch.setattr(worker, "settle_left_worktrees", lambda *_a, **_k: None)
+    monkeypatch.setattr(git, "snapshot_delivery", lambda *_a: {})
+    trees = []
+    monkeypatch.setattr(attempt_boundary, "verify_full_review_tree", lambda *a: trees.append(a))
+    receipts = tmp_path / "review-receipts" / "review"
+
+    def prepare(review_id, attempt_id, manifest, harness, **kwargs):
+        # The supervisor has claimed the attempt before preparing it on that claim.
+        assert (receipts / "attempt.jsonl").read_bytes() == b"" and kwargs["claimed"] is True
+        assert kwargs["receipts_root"] == tmp_path / "review-receipts" and kwargs["review_access"] == "full"
+        config = receipts / "attempt.mcp.json"
+        config.write_text("{}")
+        (receipts / "attempt.jsonl.sha256").write_text(store.digest(b"") + "\n")  # as preparation writes it
+        return review_mcp.ReviewMcpPlan(config, {}, receipts / "attempt.jsonl", receipts / "attempt.jsonl.sha256",
+                                        binding["manifest_sha256"], review_id, attempt_id, harness)
+
+    monkeypatch.setattr(review_mcp, "prepare_review_attempt", prepare)
+    calls = []
+
+    def invoke_runtime(agent, text, **kwargs):
+        calls.append((agent, text, kwargs))
+        return SimpleNamespace(ok=True, response="review: done\n", identity_state="unknown", observed_model=None,
+                               observed_model_source=None, failure_code=None, stderr_excerpt=None)
+
+    monkeypatch.setattr(runner, "invoke", invoke_runtime)
+    worker.supervise(path, {}, 60)
+
+    assert trees == [(tmp_path / "manifest.yaml", workspace)]
+    [(agent, text, kwargs)] = calls
+    assert (agent, text) == ("codex", rendered.decode())  # verbatim: no dispatch-context header
+    config = kwargs["tool_config"]
+    assert {key: config[key] for key in ("review_id", "attempt_id", "review_access", "review_cwd")} == dict(
+        review_id="review", attempt_id="attempt", review_access="full", review_cwd=str(workspace))
+    assert config["strict_mcp_config"] is True and config["mcp_server_names"] == ["sources"]
+    assert (kwargs["mode"], kwargs["cwd"], kwargs["allow_runner_failover"]) == ("read-only", workspace, False)
+    done = store.read("task")
+    assert done["status"] == "done" and done["resolved_model_known"] is False
+    assert spec.final_file.read_bytes() == b"review: done\n"
+    assert done["result_sha256"] == store.digest(b"review: done\n") and done["sources_mcp_call_count"] == 0
+    # The recorder's binding accepts exactly this saved result for this attempt.
+    from scripts.review.record import _verify_task_return
+
+    _verify_task_return(b"review: done\n", "task", prompt.parent, **binding)
 
 
 def test_dry_run_reports_binding_without_spending_attempt(attempt, tmp_path, monkeypatch, capsys):

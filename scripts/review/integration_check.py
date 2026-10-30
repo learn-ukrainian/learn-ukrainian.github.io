@@ -56,7 +56,6 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
-from scripts.agent_runtime import review_mcp
 from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh.cli import main as fresh_cli
@@ -73,7 +72,8 @@ from scripts.curriculum.validate.validate import main as validate_main
 from scripts.review import findings_db, fixloop, record, second_seat, settle
 from scripts.review.prompts import check as prompt_check
 from scripts.review.prompts import render as prompt_render
-from scripts.review.receipts.ledger import LedgerError, create_empty_ledger, records
+from scripts.review.receipts.ledger import LedgerError, records
+from tests.build.plan_review_records import record_plan_review
 from tests.build.test_fresh_assemble import (
     make_text_record,
     validate_fixture_draft,
@@ -86,13 +86,12 @@ from tests.build.test_fresh_runner import _FixtureSources
 from tests.curriculum import test_plan_validate as plan_fixture
 from tests.curriculum.resolver.evidence_helpers import receipt_source_paths
 from tests.helpers import plan_review_world
-from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _dump, _review
+from tests.review.test_r1_schema_ledger import _dump
 from tests.review.test_record import LEVEL, PROSE, SLUG, World, finding, unsupported
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PRIMARY = resolve_repo_root(Path(__file__), 2)  # batch_state lives here, never in a worktree copy
 # where a receipt-recording seat writes its ledger: prepare_review_attempt anchors it to the primary checkout
-RECEIPTS_ROOT = resolve_repo_root(Path(review_mcp.__file__), 2) / "batch_state" / "review-receipts"
 PYTHON = project_interpreter()
 STATE_NAME = "integration-state.json"
 BUDGET_TERMINAL = "budget_terminal"  # the named refusal of a review past a terminal budget (#8774), pinned by name
@@ -471,44 +470,30 @@ class ModuleWorld(World):
         return self.state_dir / "plan-review.manifest.yaml"
 
     def promote_crafted(self) -> dict[str, Any]:
-        """A crafted plan review recorded through ``record`` and accepted by ``plan-promote``."""
-        review_id, attempt_id = "review-plan", "attempt-plan"
-        ledger = self.ledgers / review_id / f"{attempt_id}.jsonl"
-        create_empty_ledger(ledger)
-        review = self.out / "plan.return.yaml"
-        _dump(
-            review,
-            _review(
-                kind="plan",
-                manifest_hash=self.plan_review_digest,
-                checks={name: "clean" for name in PLAN_CHECKS},
-                findings=[],
-                attempt_id=attempt_id,
-                review_id=review_id,
-            ),
-        )
-        self.task("plan-review-claude", "claude", "claude-sonnet-5-5")
-        recorded = run_main(
-            record.main,
-            [
-                str(review),
-                "--manifest",
-                str(self.plan_manifest_path),
-                "--ledger",
-                str(ledger),
-                "--task-id",
-                "plan-review-claude",
-                *self.location_args(),
-            ],
-        )
-        if recorded.code != 0:
-            raise RuntimeError(
-                f"the crafted plan review was not recorded: {recorded.err.strip()} {recorded.out[-300:]}"
+        """A crafted plan review recorded through ``record`` and accepted by ``plan-promote``.
+
+        The crafted attempt is bound like a real one (#12114): a done full-access dispatch record, its saved
+        result and an ok Sources receipt, which ``plan-promote`` verifies before promoting.
+        """
+        try:
+            record_plan_review(
+                self.root,
+                LEVEL,
+                SLUG,
+                self.plan_review_digest,
+                review_id="review-plan",
+                attempt_id="attempt-plan",
+                seat=("claude", "claude-sonnet-5-5"),
+                tasks=self.tasks_dir,
             )
+        except AssertionError as error:
+            raise RuntimeError(f"the crafted plan review was not recorded: {error}") from error
         return self.promote()
 
     def promote(self) -> dict[str, Any]:
-        promoted = run_main(fresh_cli, ["plan-promote", LEVEL, SLUG, "--repo-root", str(self.root)])
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setenv("LU_TASKS_DIR", str(self.tasks_dir))  # the world's own dispatch records
+            promoted = run_main(fresh_cli, ["plan-promote", LEVEL, SLUG, "--repo-root", str(self.root)])
         if promoted.code != 0:
             raise RuntimeError(f"plan-promote refused: {promoted.err.strip()[-500:]}")
         return promoted.json()
@@ -1098,7 +1083,8 @@ class Seat:
 
     @property
     def ledger(self) -> Path:
-        return RECEIPTS_ROOT / self.review_id / f"{self.attempt_id}.jsonl"
+        # Beside the dispatch task store, where dispatch claims an attempt's ledger and plan-promote reads it (#12114).
+        return tasks_dir().parent / "review-receipts" / self.review_id / f"{self.attempt_id}.jsonl"
 
 
 def make_card(
@@ -1214,6 +1200,7 @@ def prepare_plan_card(out: Path, token: str, agent: str) -> tuple[dict[str, Any]
             "review_id": seat.review_id,
             "attempt_id": seat.attempt_id,
             "manifest_sha256": card["manifest_sha256"],
+            "tasks_dir": str(tasks_dir()),
         }
         return card, state
 
@@ -1439,6 +1426,7 @@ def finish_plan(c: Case, info: dict[str, Any]) -> None:
                 f"the seat's verdict is {written['verdict']}: plan-promote refuses it (tooling worked; the driver decides whether to re-dispatch)",
             )
             return
+        mp.setenv("LU_TASKS_DIR", info["tasks_dir"])  # the dispatch records the card's seat was recorded from
         promoted = run_main(fresh_cli, ["plan-promote", LEVEL, SLUG, "--repo-root", str(root)])
         c.expect(promoted.code == 0, f"plan-promote refused the recorded review: {promoted.err.strip()[-400:]}")
         status = run_main(fresh_cli, ["plan-review-status", LEVEL, SLUG, "--repo-root", str(root)]).json()

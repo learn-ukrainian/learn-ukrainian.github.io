@@ -33,96 +33,96 @@ inline:
     title: Accusative checkpoint
     instruction: Choose the correct object form.
     items:
-      - prompt: "Я їм цей ___."
+      - prompt: Я їм цей ___.
         options:
-          - text: 'салат'
+          - text: салат
             correct: true
-          - text: 'салата'
+          - text: салата
             correct: false
-          - text: 'салату'
+          - text: салату
             correct: false
-        explanation: "Цей identifies a masculine inanimate accusative object: салат. Салата and салату are not the matching case in this phrase."
-      - prompt: 'Я бачу ___.'
+        explanation: 'Цей identifies a masculine inanimate accusative object: салат. Салата and салату are not the matching case in this phrase.'
+      - prompt: Я бачу ___.
         options:
-          - text: 'брата'
+          - text: брата
             correct: true
-          - text: 'брат'
+          - text: брат
             correct: false
-          - text: 'брату'
+          - text: брату
             correct: false
-        explanation: 'Брат is a male person, so use брата.'
-      - prompt: "Я п'ю цю ___."
+        explanation: Брат is a male person, so use брата.
+      - prompt: Я п'ю цю ___.
         options:
-          - text: 'воду'
+          - text: воду
             correct: true
-          - text: 'вода'
+          - text: вода
             correct: false
-          - text: 'води'
+          - text: води
             correct: false
-        explanation: "Цю takes matching feminine accusative воду. Вода is nominative; води is not feminine singular accusative."
-      - prompt: 'Я знаю ___.'
+        explanation: Цю takes matching feminine accusative воду. Вода is nominative; води is not feminine singular accusative.
+      - prompt: Я знаю ___.
         options:
-          - text: 'Олену'
+          - text: Олену
             correct: true
-          - text: 'Олена'
+          - text: Олена
             correct: false
-          - text: 'Олени'
+          - text: Олени
             correct: false
-        explanation: 'Use Олену after знаю.'
-      - prompt: 'Я люблю ___.'
+        explanation: Use Олену after знаю.
+      - prompt: Я люблю ___.
         options:
-          - text: 'борщ'
+          - text: борщ
             correct: true
-          - text: 'борщу'
+          - text: борщу
             correct: false
-          - text: 'борщем'
+          - text: борщем
             correct: false
-        explanation: 'Борщ is food and stays борщ.'
-      - prompt: 'Я чекаю ___.'
+        explanation: Борщ is food and stays борщ.
+      - prompt: Я чекаю ___.
         options:
-          - text: 'друга'
+          - text: друга
             correct: true
-          - text: 'друг'
+          - text: друг
             correct: false
-          - text: 'другу'
+          - text: другу
             correct: false
-        explanation: 'Use друга for the person you are waiting for.'
-      - prompt: "Я купую цей ___."
+        explanation: Use друга for the person you are waiting for.
+      - prompt: Я купую цей ___.
         options:
-          - text: 'хліб'
+          - text: хліб
             correct: true
-          - text: 'хліба'
+          - text: хліба
             correct: false
-          - text: 'хлібу'
+          - text: хлібу
             correct: false
-        explanation: "Цей identifies the singular masculine accusative object хліб. Хліба and хлібу do not agree in case with цей."
-      - prompt: 'Я бачу ___.'
+        explanation: Цей identifies the singular masculine accusative object хліб. Хліба and хлібу do not agree in case with цей.
+      - prompt: Я бачу ___.
         options:
-          - text: 'лікаря'
+          - text: лікаря
             correct: true
-          - text: 'лікар'
+          - text: лікар
             correct: false
-          - text: 'лікарю'
+          - text: лікарю
             correct: false
-        explanation: 'Use лікаря after бачу.'
-      - prompt: "Я їм цю ___."
+        explanation: Use лікаря after бачу.
+      - prompt: Я їм цю ___.
         options:
-          - text: 'піцу'
+          - text: піцу
             correct: true
-          - text: 'піца'
+          - text: піца
             correct: false
-          - text: 'піци'
+          - text: піци
             correct: false
-        explanation: "Цю requires feminine accusative піцу. Піца is nominative; піци is not feminine singular accusative."
-      - prompt: 'Я люблю ___.'
+        explanation: Цю requires feminine accusative піцу. Піца is nominative; піци is not feminine singular accusative.
+      - prompt: Я люблю цю ___.
         options:
-          - text: 'маму'
+          - text: маму
             correct: true
-          - text: 'мама'
+          - text: мама
             correct: false
-          - text: 'мами'
+          - text: мами
             correct: false
-        explanation: 'Use маму as the direct object.'
+        explanation: Цю identifies one feminine object and takes singular accusative маму.
   - id: act-3
     type: fill-in
     title: Market and cafe day
@@ -234,76 +234,126 @@ workbook:
       - statement: 'This checkpoint starts A1.7 phone and email content.'
         answer: false
         explanation: 'A1.7 comes next; this checkpoint closes A1.6.'
-  - type: unjumble
+  - type: fill-in
     title: Build food-shopping lines
-    instruction: Put each line in the correct word order.
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - words: ['Анна', 'йде', 'на', 'ринок']
-        answer: 'Анна йде на ринок.'
-      - words: ['Вона', 'купує', 'помідори', 'сир', 'і', 'хліб']
-        answer: 'Вона купує помідори, сир і хліб.'
-      - words: ['З', 'вас', 'сто', 'сорок', 'гривень']
-        answer: 'З вас сто сорок гривень.'
-      - words: ['Анна', 'платить', 'карткою']
-        answer: 'Анна платить карткою.'
-      - words: ['Потім', 'Анна', 'йде', 'в', 'кафе']
-        answer: 'Потім Анна йде в кафе.'
-      - words: ['Вона', 'замовляє', 'борщ', 'і', 'каву', 'з', 'молоком']
-        answer: 'Вона замовляє борщ і каву з молоком.'
-      - words: ['У', 'кафе', 'Анна', 'бачить', 'Олену']
-        answer: 'У кафе Анна бачить Олену.'
-      - words: ['Анна', 'готує', 'вареники', 'з', 'картоплею']
-        answer: 'Анна готує вареники з картоплею.'
-      - words: ['Гості', 'беруть', 'тарілки', 'і', 'склянки']
-        answer: 'Гості беруть тарілки і склянки.'
-      - words: ['Анна', 'каже', 'Смачного']
-        answer: 'Анна каже: Смачного!'
+      - answer: ринок
+        sentence: — Куди йде Анна? — Анна йде на ___.
+        options:
+          - ринок
+          - ринку
+          - ринком
+        explanation: Куди requests the destination на ринок.
+      - answer: купує
+        sentence: Вона ___ помідори, сир і хліб.
+        options:
+          - купує
+          - купую
+          - купують
+        explanation: Вона takes купує.
+      - answer: гривень
+        sentence: З вас сто сорок ___.
+        options:
+          - гривень
+          - гривня
+          - гривні
+        explanation: Сто сорок takes гривень.
+      - answer: карткою
+        sentence: Анна платить ___.
+        options:
+          - карткою
+          - картка
+          - картки
+        explanation: Карткою expresses the payment method.
+      - answer: в
+        sentence: — Куди потім іде Анна? — Потім Анна йде ___ кафе.
+        options:
+          - в
+          - з
+          - без
+        explanation: В кафе gives the destination; з кафе gives an origin.
+      - answer: борщ
+        sentence: Вона замовляє цей ___ і каву з молоком.
+        options:
+          - борщ
+          - борщу
+          - борщем
+        explanation: Цей takes the matching masculine object борщ.
+      - answer: Олену
+        sentence: У кафе Анна бачить ___.
+        options:
+          - Олену
+          - Олена
+          - Оленою
+        explanation: The person object is Олену.
+      - answer: з картоплею
+        sentence: Анна готує вареники ___.
+        options:
+          - з картоплею
+          - з картопля
+          - з картоплю
+        explanation: Use the additive phrase з картоплею.
+      - answer: беруть
+        sentence: Гості ___ тарілки і склянки.
+        options:
+          - беруть
+          - бере
+          - берете
+        explanation: Гості takes беруть.
+      - answer: Смачного!
+        sentence: 'Гості сідають за стіл обідати. Анна каже: «___»'
+        options:
+          - Смачного!
+          - Де пошта?
+          - Куди ти їдеш?
+        explanation: Смачного! is the meal wish. Inline direct speech is enclosed in quotation marks.
   - type: fill-in
     title: Serve the table
     instruction: Complete the dinner scene.
     items:
-      - sentence: 'Анна готує ___ з картоплею.'
-        answer: 'вареники'
+      - sentence: Анна готує ___ з картоплею.
+        answer: вареники
         options:
-          - 'вареники'
-          - 'рахунок'
-          - 'картку'
-        explanation: 'Вареники з картоплею is the food phrase.'
-      - sentence: 'Вона ставить на стіл ___.'
-        answer: 'тарілки'
+          - вареники
+          - рахунок
+          - картку
+        explanation: Вареники з картоплею is the food phrase.
+      - sentence: Вона ставить на стіл ___.
+        answer: тарілки
         options:
-          - 'тарілки'
-          - 'гривні'
-          - 'лікаря'
-        explanation: 'Тарілки go on the table.'
-      - sentence: 'Гості беруть ___.'
-        answer: 'склянки'
+          - тарілки
+          - гривні
+          - лікаря
+        explanation: Тарілки go on the table.
+      - sentence: Гості беруть ___.
+        answer: склянки
         options:
-          - 'склянки'
-          - 'магазин'
-          - 'брата'
-        explanation: 'Склянки are glasses.'
-      - sentence: 'Анна каже: ___'
-        answer: 'Смачного!'
+          - склянки
+          - магазин
+          - брата
+        explanation: Склянки are glasses.
+      - sentence: 'Гості сідають за стіл обідати. Анна каже: «___»'
+        answer: Смачного!
         options:
-          - 'Смачного!'
-          - 'Скільки коштує?'
-          - 'Плачу карткою.'
-        explanation: 'Смачного! is the meal line.'
-      - sentence: 'Олена бере ___ хліба.'
-        answer: 'шматок'
+          - Смачного!
+          - Скільки коштує?
+          - Плачу карткою.
+        explanation: Смачного! is the meal wish. Inline direct speech is enclosed in quotation marks.
+      - sentence: Олена бере ___ хліба.
+        answer: шматок
         options:
-          - 'шматок'
-          - 'літр'
-          - 'пляшку'
-        explanation: 'Use шматок хліба.'
-      - sentence: "Анна наливає одну ___ води."
-        answer: 'склянку'
+          - шматок
+          - літр
+          - пляшку
+        explanation: Use шматок хліба.
+      - sentence: Анна наливає одну ___ води.
+        answer: склянку
         options:
-          - 'склянку'
-          - 'кілограм'
-          - 'буханку'
-        explanation: "Одну agrees with feminine accusative склянку. Masculine кілограм would need один; буханка is a loaf and cannot be a measure/container of poured water."
+          - склянку
+          - кілограм
+          - буханку
+        explanation: Одну agrees with feminine accusative склянку. Masculine кілограм would need один; буханка is a loaf and cannot be a measure/container of poured water.
   - type: match-up
     title: From market to cafe
     instruction: Match each moment in the day with the line that fits.
@@ -346,41 +396,41 @@ workbook:
     items:
       - prompt: 'Repair: Я хочу вода.'
         options:
-          - text: 'Я хочу воду.'
+          - text: Я хочу воду.
             correct: true
-          - text: 'Я хочу вода.'
+          - text: Я хочу вода.
             correct: false
-          - text: 'Я хочу водою.'
+          - text: Я хочу водою.
             correct: false
-        explanation: 'Use the direct-object form or the memorized service phrase.'
+        explanation: Use the direct-object form or the memorized service phrase.
       - prompt: 'Repair: Я люблю борща.'
         options:
-          - text: 'Я люблю борщ.'
+          - text: Я люблю борщ.
             correct: true
-          - text: 'Я люблю борща.'
+          - text: Я люблю борща.
             correct: false
-          - text: 'Я люблю борщу.'
+          - text: Я люблю борщу.
             correct: false
-        explanation: 'Борщ stays борщ as a food object.'
+        explanation: Борщ stays борщ as a food object.
       - prompt: 'Repair: Смачний кава.'
         options:
-          - text: 'Смачна кава.'
+          - text: Смачна кава.
             correct: true
-          - text: 'Смачний кава.'
+          - text: Смачний кава.
             correct: false
-          - text: 'Смачне кава.'
+          - text: Смачне кава.
             correct: false
         explanation: 'Кава is feminine: смачна кава.'
-      - prompt: 'Repair: Я є голодний.'
+      - prompt: 'Repair: Я хочу їда.'
         options:
-          - text: 'Я голодний. (Або: Я хочу їсти).'
+          - text: Я хочу їсти.
             correct: true
-          - text: 'Я є голодний.'
+          - text: Я хочу їда.
             correct: false
-          - text: 'Я маю голодний.'
+          - text: Я хочу їси.
             correct: false
-        explanation: 'Omit є in this present-tense state line.'
-      - prompt: "Офіціант: Як вас звати? Що вам принести? Джон: ___"
+        explanation: Хотіти can take the infinitive їсти.
+      - prompt: 'Офіціант: Як вас звати? Що вам принести? Джон: ___'
         options:
           - text: Мене звати Джон, дайте меню.
             correct: true
@@ -388,8 +438,8 @@ workbook:
             correct: false
           - text: Я є Джон і я маю меню.
             correct: false
-        explanation: "The key gives a name and requests the menu. Мені has the wrong case with звати; the possession statement я маю меню does not answer the server’s request for what to bring."
-      - prompt: "У кафе двоє офіціантів. Джон звертається до обох: ___"
+        explanation: The key gives a name and requests the menu. Мені has the wrong case with звати; the possession statement я маю меню does not answer the server’s request for what to bring.
+      - prompt: 'У кафе двоє офіціантів. Джон звертається до обох: ___'
         options:
           - text: Дайте, будь ласка, рахунок.
             correct: true
@@ -397,13 +447,13 @@ workbook:
             correct: false
           - text: Дайте мені рахунком.
             correct: false
-        explanation: "Дайте addresses both servers. Дай is singular and cannot address both; рахунком is instrumental instead of the direct object рахунок after дайте."
-      - prompt: "Київ. На ціннику написано «20 ₴». Я плачу й кажу: ___"
+        explanation: Дайте addresses both servers. Дай is singular and cannot address both; рахунком is instrumental instead of the direct object рахунок after дайте.
+      - prompt: 'Київ. На ціннику написано «20 ₴». Я плачу й кажу: ___'
         options:
-          - text: 'Я плачу гривнями.'
+          - text: Я плачу гривнями.
             correct: true
-          - text: 'Я плачу рублями.'
+          - text: Я плачу рублями.
             correct: false
-          - text: 'Я плачу гривень.'
+          - text: Я плачу гривень.
             correct: false
-        explanation: "The price is denominated in hryvnias, so Я плачу гривнями fits. Рублями names another currency, not this price’s unit; гривень is genitive rather than the payment instrumental."
+        explanation: The price is denominated in hryvnias, so Я плачу гривнями fits. Рублями names another currency, not this price’s unit; гривень is genitive rather than the payment instrumental.

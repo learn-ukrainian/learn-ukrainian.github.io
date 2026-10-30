@@ -49,7 +49,7 @@
 | **Claude Haiku** | Fast cheap recon/triage on Anthropic lane; good for log/search skim | Never sole architecture/security/language/release authority | Anthropic | Recon (with Luna / 3.5 Flash) |
 | **Sonnet 5.5** | Well-scoped everyday coding and bug fixes; polished English reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, design review of pages/artifacts; faster and uses fewer tokens than Sonnet 5 | Weaker than Opus 5.5 on complex, open-ended work; security-sensitive code authoring (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions) goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Opus 5.5 for Claude); escalate hard judgment to Opus 5.5 / Sol 6.1; designated approval remains separate | Anthropic | Provisional practical worker: after 10 recorded Sonnet 5.5 review or implementation outcomes, adopt or demote with evidence (#9111) |
 | **Grok 4.7** | Strong coding agent; token-efficient; good CF review value | Prefer worker/reviewer not sole orchestrator; native and Cursor code/infra review at every risk with runtime attestation | xAI; SuperGrok Heavy = capacity entitlement (re-verify) | Worker; code/infra CF review via native CLI or attested Cursor `grok-4.7-high` at every risk (operator decision 2026-10-05, #9769) |
-| **Gemini 3.8 Flash High** | Multilingual / designated UA language seat; semantic review | Not bulk CRUD default; language outputs need sources | Google / AGY | Language lane (3.1 Pro only on explicit request (operator 2026-09-22)) |
+| **Gemini 3.8 Flash High** | Multilingual / designated UA language seat; semantic review | Not bulk CRUD default; language outputs need sources | Google / AGY | Language lane (3.1 Pro is retired, not subscribed, operator 2026-10-23) |
 | **K3** | Retired (OO-58, #11327) | No executable route and no substitution | Moonshot | Not a lane |
 | **GLM-5.3** | Deep bug/security; large-context code coherence | Weak UA pedagogy; **LOCAL-ONLY** China-egress | Zhipu / opencode local | Local CF code only; never CI |
 | **DeepSeek V4.1 Flash** | Latest Flash coding through opencode; `ask-deepseek` is consult-only for non-language work | Never private-repository content or secrets; review-of-record and Ukrainian work need measured evidence first; Pro and older ids retired | Direct DeepSeek API or OpenRouter with a named US provider allow-list; `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until that allow-list exists | Coding execution only; no review or budget substitution |
@@ -70,7 +70,7 @@ Never use a fixed unordered list that can pick the author’s family.
 | Moonshot (K3 retired, Cursor Composer) | Grok, OpenAI, Anthropic, GLM local, Gemini | Composer self-family; K3 is not a reviewer |
 | Zhipu (GLM) | Grok, OpenAI, Anthropic, Gemini | GLM self-family |
 
-**Task-family qualification overrides:** language CF must be LANGUAGE-LANES-qualified; FOLK remains GPT↔Claude per folk rubric.
+**Task-family qualification overrides:** language CF must be LANGUAGE-LANES-qualified; FOLK uses the review-loop ukrainian seats, with no Claude seat, per the folk rubric.
 
 ---
 
@@ -160,7 +160,7 @@ Ukrainian curriculum      → sanctioned language lanes; Opus 5.5 for Claude (ne
 Hard code                 → GPT-6.1 Sol high | Claude Opus 5.5 high; Opus/Sol advice
 Orchestrate stream        → GPT-6.1 Sol high | Claude Opus 5.5 high (exactly one)
 UI / visual product       → Opus/Sol design → K3 or Sol/Opus/Grok implement web/UI code → Opus/Sol first if systems-hard
-UA language                 → Gemini 3.8 Flash High (AGY) + VESUM/sources (3.1 Pro only on explicit request, operator 2026-09-22)
+UA language                 → Gemini 3.8 Flash High (AGY) + VESUM/sources (3.1 Pro is retired, not subscribed, operator 2026-10-23)
 Security/bug CF             → author-family-conditional (Grok/GLM/Opus/…)
 Architecture decision       → Opus/Sol advice → designated approval (operator, or Opus 5.5 + Sol 6.1: the non-author's approval when one authored it, both otherwise) → orchestrator integrates
 Recon                     → GPT-6 Luna high (Sol envelope) | Claude Haiku | Gemini 3.8 Flash (Sol envelope)

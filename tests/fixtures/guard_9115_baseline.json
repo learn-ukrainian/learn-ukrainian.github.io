@@ -1561,6 +1561,72 @@
       "command_index": 256,
       "before": true,
       "after": false
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 439,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 440,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 442,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 443,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 444,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 445,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 450,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 454,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 662,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 1291,
+      "before": false,
+      "after": true
+    },
+    {
+      "guard": "secret_print",
+      "command_index": 1451,
+      "before": false,
+      "after": true
     }
   ]
 }

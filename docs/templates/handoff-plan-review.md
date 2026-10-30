@@ -9,6 +9,7 @@ This is a high-leverage point - catching issues here prevents costly rework late
 .venv/bin/python -m scripts.publish issue-create \
   --title "review(plans): Level/module plan review - scope" \
   --body-file /tmp/issue-body.md \
+  --parent <stream-epic-number> \
   --label "enhancement" \
   --label "curriculum" \
   --label "agent:claude"

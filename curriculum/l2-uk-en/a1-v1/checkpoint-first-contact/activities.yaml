@@ -350,13 +350,13 @@ inline:
         explanation: А ти? повертає питання про походження.
       - prompt: 'Рядок: У мене є брат.'
         options:
-          - text: Дуже приємно. До побачення!
+          - text: У мене теж є брат.
             correct: true
           - text: Моє ім'я є брат.
             correct: false
           - text: Я маю брат років.
             correct: false
-        explanation: Після родинного рядка пасує ввічливе завершення.
+        explanation: У мене теж є брат. keeps the family topic and adds a shared fact.
 workbook:
   - type: quiz
     title: Швидкий переклад

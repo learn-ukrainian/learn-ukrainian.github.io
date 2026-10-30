@@ -5,42 +5,42 @@ inline:
     title: Час, дні і погода
     instruction: Обери правильний варіант для повторення A1.4.
     items:
-      - sentence: 'Зустріч ___ годині.'
-        answer: "о п'ятій"
+      - sentence: Зустріч ___ годині.
+        answer: о п'ятій
         options:
-          - "о п'ятій"
-          - "в п'ятій"
-          - 'у п''ята'
-        explanation: Для часу зустрічі вживаємо о/об + годинний чанк.
-      - sentence: 'Ми йдемо в кіно ___.'
+          - о п'ятій
+          - в п'ятій
+          - у п'ята
+        explanation: Для часу зустрічі тут уживаємо о п'ятій годині.
+      - sentence: Ми йдемо в кіно ___.
         answer: у суботу
         options:
           - у суботу
           - в суботі
           - на суботу
         explanation: Для дня тижня тут уживаємо у/в + день.
-      - sentence: 'Мій день народження ___.'
+      - sentence: Мій день народження ___.
         answer: у січні
         options:
           - у січні
           - в січень
           - січень
         explanation: Для місяця вживаємо у/в + форму місяця.
-      - sentence: 'Сьогодні ___ і холодно.'
+      - sentence: Сьогодні ___ і холодно.
         answer: іде дощ
         options:
           - іде дощ
           - іде дощова
           - ідуть дощ
-        explanation: Іде дощ - безпечний чанк для погоди.
-      - sentence: "На вулиці мінус двадцять градусів. Тут дуже ___."
+        explanation: Іде дощ describes rainy weather.
+      - sentence: На вулиці мінус двадцять градусів. Тут дуже ___.
         answer: холодно
         options:
           - холодно
           - спекотно
           - тепло
-        explanation: "At minus twenty degrees, холодно fits. Спекотно and тепло describe different temperature conditions."
-      - sentence: 'Я прокидаюся о сьомій ___.'
+        explanation: At minus twenty degrees, холодно fits. Спекотно and тепло describe different temperature conditions.
+      - sentence: Я прокидаюся о сьомій ___.
         answer: ранку
         options:
           - ранку
@@ -50,7 +50,7 @@ inline:
   - id: act-2
     type: match-up
     title: Питання і відповідь
-    instruction: З'єднай питання з логічною відповіддю.
+    instruction: Сьогодні понеділок. З'єднай питання з логічною відповіддю.
     pairs:
       - left: Котра година?
         right: Десята тридцять.
@@ -61,64 +61,64 @@ inline:
       - left: Коли твій день народження?
         right: У жовтні.
       - left: Що ти робиш у суботу?
-        right: Граю у футбол.
+        right: У суботу граю у футбол.
       - left: Як часто ти читаєш?
         right: Кожного дня ввечері.
       - left: Ходімо в парк!
         right: Добре, о котрій?
       - left: Що ти будеш робити завтра?
-        right: Буду працювати.
+        right: У вівторок буду працювати.
   - id: act-3
     type: fill-in
     title: Абзац про день
     instruction: Обери слово або фразу, які завершують опис дня.
     items:
-      - sentence: "Я снідаю о восьмій, але ___ я прокидаюся о сьомій."
-        answer: "спочатку"
+      - sentence: Я снідаю о восьмій, але ___ я прокидаюся о сьомій.
+        answer: спочатку
         options:
           - спочатку
           - пізніше
           - після цього
-        explanation: "The waking time comes before breakfast. Спочатку fits this order; пізніше and після цього would reverse it."
-      - sentence: "Я снідаю о восьмій, а ___ я йду на роботу о дев’ятій."
-        answer: "потім"
+        explanation: The waking time comes before breakfast. Спочатку fits this order; пізніше and після цього would reverse it.
+      - sentence: Я снідаю о восьмій, а ___ я йду на роботу о дев’ятій.
+        answer: потім
         options:
           - потім
           - перед цим
           - до цього
-        explanation: "The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order."
-      - sentence: "Я працюю з дев'ятої ___ п'ятої."
+        explanation: The second action has a later clock time. Потім or після цього puts it after the first action; перед цим and до цього would reverse the order.
+      - sentence: Я працюю з дев'ятої ___ п'ятої.
         answer: до
         options:
           - до
           - і
           - по
-        explanation: У цьому чанку вживаємо з дев'ятої до п'ятої.
-      - sentence: "Я обідаю о першій. Зараз друга година дня. ___ я гуляю в парку."
+        explanation: У цьому реченні вживаємо з дев'ятої до п'ятої.
+      - sentence: Я обідаю о першій. Зараз друга година дня. ___ я гуляю в парку.
         answer: Після обіду
         options:
           - Після обіду
           - Вранці
           - Вночі
-        explanation: "Lunch has ended and it is two in the afternoon. Після обіду fits; вранці and вночі contradict that time."
-      - sentence: "На вулиці двадцять градусів. Я гуляю, тому що сьогодні ___ і сонячно."
+        explanation: Lunch has ended and it is two in the afternoon. Після обіду fits; вранці and вночі contradict that time.
+      - sentence: На вулиці двадцять градусів. Я гуляю, тому що сьогодні ___ і сонячно.
         answer: тепло
         options:
           - тепло
-          - холодно
-          - дощ
-        explanation: "Twenty degrees and a pleasant walk fit тепло. Холодно conflicts with this temperature. Дощ denotes rain; although Сьогодні дощ can be grammatical, rain does not provide the stated pleasant-weather reason for this walk."
-      - sentence: "Уже двадцята година. ___ я вечеряю і слухаю музику."
+          - теплий
+          - тепла
+        explanation: Тепло completes this weather sentence. Теплий and тепла do not fit here.
+      - sentence: Уже двадцята година. ___ я вечеряю і слухаю музику.
         answer: Ввечері
         options:
           - Ввечері
           - Вдень
           - Вранці
-        explanation: "Twenty hundred hours is evening, so Ввечері fits. Вдень and Вранці describe other parts of the day."
-      - sentence: "Я слухаю музику до одинадцятої, а ___ я лягаю спати о дванадцятій."
-        answer: "нарешті"
+        explanation: Twenty hundred hours is evening, so Ввечері fits. Вдень and Вранці describe other parts of the day.
+      - sentence: Я слухаю музику до одинадцятої, а ___ я лягаю спати о дванадцятій.
+        answer: нарешті
         options:
           - нарешті
           - спочатку
           - перед цим
-        explanation: "Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it."
+        explanation: Нарешті marks the last step after the previous activity. Спочатку and перед цим would put this later clock time before it.

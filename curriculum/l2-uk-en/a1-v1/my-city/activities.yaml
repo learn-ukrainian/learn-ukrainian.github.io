@@ -25,76 +25,76 @@ inline:
     title: В or на in the city
     instruction: Choose the correct city phrase.
     items:
-      - prompt: 'Where do you buy medicine?'
+      - prompt: Where do you buy medicine?
         options:
-          - text: 'в аптеці'
+          - text: в аптеці
             correct: true
-          - text: 'на аптеці'
+          - text: на аптеці
             correct: false
-          - text: 'в аптека'
+          - text: в аптека
             correct: false
         explanation: 'Аптека is a contained place: в аптеці.'
-      - prompt: 'Where are you at the post office?'
+      - prompt: Where are you at the post office?
         options:
-          - text: 'на пошті'
+          - text: на пошті
             correct: true
-          - text: 'у пошті'
+          - text: до пошті
             correct: false
-          - text: 'на пошта'
+          - text: на пошта
             correct: false
         explanation: The common phrase is на пошті.
-      - prompt: 'Where is the train station sentence?'
+      - prompt: Where is the train station sentence?
         options:
-          - text: 'Вона на вокзалі.'
+          - text: Вона на вокзалі.
             correct: true
-          - text: "Вона до вокзалі."
+          - text: Вона до вокзалі.
             correct: false
-          - text: 'Вона вокзал.'
+          - text: Вона вокзал.
             correct: false
         explanation: Learn вокзал with на вокзалі.
-      - prompt: 'Where do students read?'
+      - prompt: Where do students read?
         options:
-          - text: 'у бібліотеці'
+          - text: у бібліотеці
             correct: true
-          - text: 'на бібліотеці'
+          - text: на бібліотеці
             correct: false
-          - text: 'у бібліотека'
+          - text: у бібліотека
             correct: false
         explanation: Бібліотека changes to бібліотеці.
-      - prompt: 'Where is someone in the hospital?'
+      - prompt: Where is someone in the hospital?
         options:
-          - text: 'у лікарні'
+          - text: у лікарні
             correct: true
-          - text: 'на лікарні'
+          - text: на лікарні
             correct: false
-          - text: 'у лікарня'
+          - text: у лікарня
             correct: false
         explanation: Лікарня changes to лікарні.
-      - prompt: 'Where do you buy bread?'
+      - prompt: Where do you buy bread?
         options:
-          - text: 'у магазині'
+          - text: у магазині
             correct: true
-          - text: 'на магазині'
+          - text: на магазині
             correct: false
-          - text: 'у магазин'
+          - text: у магазин
             correct: false
         explanation: Магазин uses the location phrase у магазині.
-      - prompt: 'Where does a tourist sleep?'
+      - prompt: Where does a tourist sleep?
         options:
-          - text: 'у готелі'
+          - text: у готелі
             correct: true
-          - text: 'на готелі'
+          - text: на готелі
             correct: false
-          - text: 'у готель'
+          - text: у готель
             correct: false
         explanation: Готель changes to готелі.
-      - prompt: 'Where is the match?'
+      - prompt: Where is the match?
         options:
-          - text: 'на стадіоні'
+          - text: на стадіоні
             correct: true
-          - text: 'у стадіоні'
+          - text: у стадіоні
             correct: false
-          - text: 'на стадіон'
+          - text: на стадіон
             correct: false
         explanation: Learn стадіон with на стадіоні.
   - id: act-3
@@ -102,47 +102,47 @@ inline:
     title: У моєму місті є
     instruction: Complete each city sentence.
     items:
-      - sentence: 'У моєму місті є великий ___.'
-        answer: 'парк'
+      - sentence: У моєму місті є великий ___.
+        answer: парк
         options:
-          - "парк"
-          - "парком"
-          - "парками"
-        explanation: 'After є, name the object: парк.'
-      - sentence: 'Бібліотека ___ університету.'
-        answer: 'біля'
+          - парк
+          - парком
+          - парками
+        explanation: 'After є, name what there is: парк.'
+      - sentence: Бібліотека ___ університету.
+        answer: біля
         options:
-          - "біля"
-          - "перед"
-          - "через"
+          - біля
+          - перед
+          - через
         explanation: Біля connects two places.
-      - sentence: 'Аптека ___ розі.'
-        answer: 'на'
+      - sentence: Аптека ___ розі.
+        answer: на
         options:
-          - "на"
-          - "без"
-          - "перед"
+          - на
+          - без
+          - перед
         explanation: The phrase is на розі.
-      - sentence: 'Магазин тут, ___ дому.'
-        answer: 'біля'
+      - sentence: Магазин тут, ___ дому.
+        answer: біля
         options:
-          - "біля"
-          - "перед"
-          - "через"
-        explanation: Біля дому is a fixed A1 phrase.
-      - sentence: 'Школа далеко, ___ центрі міста.'
-        answer: 'у'
+          - біля
+          - перед
+          - через
+        explanation: 'Біля takes the genitive here: біля дому.'
+      - sentence: Школа далеко, ___ центрі міста.
+        answer: у
         options:
-          - "у"
-          - "до"
-          - "з"
+          - у
+          - до
+          - з
         explanation: Use у центрі міста.
-      - sentence: 'У місті ___ багато парків.'
-        answer: 'є'
+      - sentence: У місті ___ багато парків.
+        answer: є
         options:
-          - "є"
-          - "був"
-          - "була"
+          - є
+          - був
+          - була
         explanation: Use є for existence.
   - id: act-4
     type: quiz
@@ -208,36 +208,70 @@ workbook:
     title: City shelves
     instruction: Sort the city words by use.
     groups:
-      - name: 'Places'
+      - name: Places
         items:
-          - 'аптека'
-          - 'бібліотека'
-          - 'музей'
-          - 'готель'
-      - name: 'Location words'
+          - аптека
+          - бібліотека
+          - музей
+          - готель
+      - name: Location words
         items:
-          - 'тут'
-          - 'там'
-          - 'далеко'
-          - 'близько'
-      - name: 'Near-place phrases'
+          - тут
+          - там
+          - далеко
+          - близько
+      - name: Position or distance phrases
         items:
-          - 'біля дому'
-          - 'біля парку'
-          - 'поруч із площею'
-          - 'далеко від дому'
-  - type: order
+          - біля дому
+          - біля парку
+          - поруч із площею
+          - далеко від дому
+  - type: fill-in
     title: Mini-map note
-    instruction: Put the city note in a natural order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'У моєму місті є парк.'
-      - 'Біля парку є бібліотека.'
-      - 'Аптека на розі.'
-      - 'Магазин тут, біля дому.'
-      - 'Вокзал далеко.'
-      - 'Музей у центрі міста.'
-    correct_order: [0, 1, 2, 3, 4, 5]
+      - sentence: У моєму місті є великий ___.
+        answer: парк
+        options:
+          - парк
+          - парком
+          - парку
+        explanation: Великий agrees with the subject парк.
+      - sentence: Біля парку є ___.
+        answer: бібліотека
+        options:
+          - бібліотека
+          - бібліотеку
+          - бібліотекою
+        explanation: Бібліотека is the subject after є.
+      - sentence: Аптека на ___.
+        answer: розі
+        options:
+          - розі
+          - ріг
+          - рогом
+        explanation: Use the place phrase на розі.
+      - sentence: Магазин тут, біля ___.
+        answer: дому
+        options:
+          - дому
+          - дім
+          - домом
+        explanation: Біля takes the genitive form дому.
+      - sentence: ___ далеко.
+        answer: Вокзал
+        options:
+          - Вокзал
+          - Вокзалу
+          - Вокзалом
+        explanation: Вокзал is the subject of this location sentence.
+      - sentence: Музей у центрі ___.
+        answer: міста
+        options:
+          - міста
+          - місто
+          - містом
+        explanation: Use the phrase у центрі міста.
   - type: true-false
     title: City language guardrails
     instruction: Decide whether the statement fits the lesson.
@@ -261,43 +295,43 @@ workbook:
     title: Repair city interference
     instruction: Choose the natural Ukrainian city sentence.
     items:
-      - sentence: 'Я живу в вулиці Шевченка.'
-        error: 'в вулиці'
-        correction: 'Я живу на вулиці Шевченка.'
+      - sentence: Я живу в вулиці Шевченка.
+        error: в
+        correction: Я живу на вулиці Шевченка.
         options:
-          - 'Я живу на вулиці Шевченка.'
-          - 'Я живу в вулиці Шевченка.'
-          - 'Я живу до вулиці Шевченка.'
+          - Я живу на вулиці Шевченка.
+          - Я живу в вулиці Шевченка.
+          - Я живу до вулиці Шевченка.
         explanation: Use на вулиці for street location.
-      - sentence: 'Моє місто є Київ.'
-        error: 'є Київ'
-        correction: 'Моє місто — Київ.'
+      - sentence: Моє місто — Києві.
+        error: Києві
+        correction: Моє місто — Київ.
         options:
-          - 'Моє місто — Київ.'
-          - 'Моє місто є Київ.'
-          - 'Моє місто на Київ.'
-        explanation: Ukrainian can identify the city without є.
-      - sentence: 'Я в аптека.'
-        error: 'аптека'
-        correction: 'Я в аптеці.'
+          - Моє місто — Київ.
+          - Моє місто — Києві.
+          - Моє місто — Києву.
+        explanation: Київ names the city in this identity sentence.
+      - sentence: Я в аптека.
+        error: аптека
+        correction: Я в аптеці.
         options:
-          - 'Я в аптеці.'
-          - 'Я в аптека.'
-          - 'Я на аптеці.'
+          - Я в аптеці.
+          - Я в аптека.
+          - Я на аптеці.
         explanation: For location, аптека changes to аптеці.
-      - sentence: 'Магазин біля парк.'
-        error: 'біля парк'
-        correction: 'Магазин біля парку.'
+      - sentence: Магазин біля парк.
+        error: парк
+        correction: Магазин біля парку.
         options:
-          - 'Магазин біля парку.'
-          - 'Магазин біля парк.'
-          - 'Магазин на парк.'
+          - Магазин біля парку.
+          - Магазин біля парк.
+          - Магазин на парк.
         explanation: Біля takes the changed form парку.
-      - sentence: 'У місті має багато парків.'
-        error: 'має'
-        correction: 'У місті є багато парків.'
+      - sentence: У місті має багато парків.
+        error: має
+        correction: У місті є багато парків.
         options:
-          - 'У місті є багато парків.'
-          - 'У місті має багато парків.'
-          - 'Місто є багато парків.'
+          - У місті є багато парків.
+          - У місті має багато парків.
+          - Місто є багато парків.
         explanation: Use є for existence in a place.

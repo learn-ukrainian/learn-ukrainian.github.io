@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import os
 import re
 import subprocess
 from dataclasses import dataclass, replace
@@ -33,6 +34,11 @@ LOCAL_PROOF_METHODS = {
     "reviewed.v1": "review_provenance",
 }
 CI_NOTICE = "unverifiable in CI (local receipt required)"
+# The host-local proof directory (--sense-proof-dir, else this variable): the commitment key, the
+# private meanings and one sealed receipt per level, under the names sense-select writes them with.
+PROOF_DIR_ENV = "LU_SENSE_PROOF_DIR"
+PROOF_KEY = "sense-commitment.key"
+PROOF_PRIVATE_INPUT = "reference-meanings.jsonl"
 
 
 def local_proof(binding: dict) -> str | None:
@@ -522,3 +528,90 @@ def verify_receipt(path: Path, payload: dict, key: bytes) -> bool:
         return receipt["payload"] == payload and hmac.compare_digest(receipt["seal"], keyed(payload, key))
     except (OSError, ValueError, KeyError, TypeError):
         return False
+
+
+def proof_receipt_name(level: str) -> str:
+    return f"sense-receipt-{level}.json"
+
+
+class LocalProof:
+    """Checks on this host what CI cannot (``local_proof``), for pack-verify.
+
+    ``check`` returns None when the proof is absent (the CI notice stays), True when it
+    verifies and False when it is present but does not. A private commitment's proof is the
+    level receipt in the proof directory: its seal under the key, the current bindings bytes,
+    the private input's keyed digest, the matcher version, and the binding's own commitment
+    and key id. The sealed head is not compared: it is the head ``sense-select --check`` ran
+    on, which a squash merge never keeps. A ``reviewed.v1`` binding's proof is its review
+    dispatch in the task store, re-derived with ``reviewed_binding``. The key is only read;
+    nothing here names a path or prints private bytes.
+    """
+
+    def __init__(self, level: str, evidence_dir: Path, inventory: list[dict], directory: Path | None, tasks: Path):
+        self.level, self.evidence_dir, self.inventory = level, evidence_dir, inventory
+        self.directory, self.tasks = directory, tasks
+        self._receipt_read = False
+        self._sealed: tuple[bytes, dict, dict] | None = None
+
+    @staticmethod
+    def directory_from(explicit: Path | None) -> Path | None:
+        """The proof directory: --sense-proof-dir, else LU_SENSE_PROOF_DIR, else none."""
+        if explicit is not None:
+            return Path(explicit)
+        value = os.environ.get(PROOF_DIR_ENV)
+        return Path(value) if value else None
+
+    def _receipt(self) -> tuple[bytes, dict, dict] | None:
+        """(key, private entries, sealed payload) of a receipt that verifies; None when it does not."""
+        receipt_path = self.directory / proof_receipt_name(self.level)
+        try:
+            key = (self.directory / PROOF_KEY).read_bytes()
+            private = private_entries(self.directory / PROOF_PRIVATE_INPUT, self.inventory)
+            sealed = json.loads(receipt_path.read_bytes())["payload"]
+            expected = {
+                **sealed,
+                "bindings_sha256": hashlib.sha256((self.evidence_dir / BINDINGS).read_bytes()).hexdigest(),
+                "private_input_commitment": keyed(private, key),
+                "matcher": matcher.VERSION,
+            }
+        except (OSError, ValueError, KeyError, TypeError):
+            return None
+        return (key, private, sealed) if verify_receipt(receipt_path, expected, key) else None
+
+    def check(self, word: dict | None, binding: dict, api: sources.Sources) -> bool | None:
+        kind = local_proof(binding)
+        if kind == "private_commitment":
+            if self.directory is None or not (self.directory / proof_receipt_name(self.level)).is_file():
+                return None
+            if not self._receipt_read:
+                self._sealed, self._receipt_read = self._receipt(), True
+            if self._sealed is None:
+                return False
+            key, private, sealed = self._sealed
+            entry = private.get(binding.get("locator"))
+            return (
+                entry is not None
+                and binding.get("key_id") == sealed.get("key_id")
+                and hmac.compare_digest(str(binding.get("commitment")), keyed(entry, key))
+            )
+        if kind == "review_provenance":
+            task_id = (binding.get("reviewer") or {}).get("task_id")
+            if not isinstance(task_id, str) or not (self.tasks / f"{task_id}.json").is_file():
+                return None
+            if word is None:
+                return False
+            try:
+                pool = candidate_list(word, rows_for(word, api))
+                current = reviewed_binding(
+                    word,
+                    pool,
+                    binding["id"],
+                    binding["span_index"],
+                    task_id,
+                    self.tasks,
+                    atom_index=binding["atom_index"],
+                )
+            except (OSError, ValueError, KeyError, TypeError, ledger.LedgerError):
+                return False
+            return current == binding
+        return None

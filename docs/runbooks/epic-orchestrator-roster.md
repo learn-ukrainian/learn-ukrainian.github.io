@@ -114,9 +114,8 @@ Forwarded model, settings and fallback-model selectors are refused: choose the
 startup model through the launcher `--model` or `LAUNCHER_MODEL`. Attached `-m`
 values are also refused because they can replace the admitted startup model.
 
-† **folk carve-out:** the *driver* may be Grok, but folk content **review** stays
-cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) — the
-`drive-epic` skill enforces this.
+† **folk carve-out:** the *driver* may be Grok, but folk content **review** uses
+the review-loop ukrainian seats, with no Claude seat (no DeepSeek, and Grok is never a judge seat).
 
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
 - **Fable 5.1** — parked: not routed by default, explicit pin only (`--model claude-fable-5-1`); reintroduction or a successor model is an operator decision. **Opus 5.5 is the orchestrator and complex-coding/deep-review dispatch seat**

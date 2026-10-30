@@ -2,102 +2,102 @@
 inline:
   - id: act-1
     type: match-up
-    title: Погода і контекст
-    instruction: З'єднай вираз про погоду з логічним контекстом або порою року.
+    title: 'Погода: значення виразів'
+    instruction: З’єднай кожен український вираз із його англійським значенням. / Match each Ukrainian expression with its English meaning.
     pairs:
       - left: іде дощ
-        right: холодно і мокро
+        right: it is raining
       - left: іде сніг
-        right: зима
+        right: it is snowing
       - left: світить сонце
-        right: сонячно
+        right: the sun is shining
       - left: дме вітер
-        right: прохолодно
+        right: the wind is blowing
       - left: мінус десять
-        right: холодно
+        right: minus ten
       - left: плюс тридцять
-        right: спекотно
+        right: plus thirty
       - left: плюс двадцять
-        right: тепло
+        right: plus twenty
       - left: хмарно
-        right: сонце не світить
+        right: it is cloudy
   - id: act-2
     type: fill-in
     title: Погода і пора року
     instruction: Обери логічну погоду для кожної пори року або температури.
     items:
-      - sentence: "На вулиці мінус десять. Уже ніч, темно. Дорога стає білою: ___."
+      - sentence: 'На вулиці мінус десять. Уже ніч, темно. Дорога стає білою: ___.'
         answer: іде сніг
         options:
           - іде сніг
           - іде дощ
           - світить сонце
-        explanation: "The scene is dark and below freezing, and the road is becoming white. Іде сніг fits these observations; rain does not make a white snow-covered road in this scene, and sunlight contradicts the night."
-      - sentence: "На термометрі +35 °C. Я весь час хочу пити, тому що надворі ___."
+        explanation: The scene is dark and below freezing, and the road is becoming white. Іде сніг fits these observations; rain does not make a white snow-covered road in this scene, and sunlight contradicts the night.
+      - sentence: На термометрі +35 °C. Я весь час хочу пити, тому що надворі ___.
         answer: спекотно
         options:
           - спекотно
           - холодно
           - хмарно
-        explanation: "The stated temperature and thirst establish heat. Холодно contradicts +35; хмарно does not explain the stated heat-related thirst."
-      - sentence: "На вулиці +20 °C. Я гуляю, і мій одяг стає мокрим: зараз ___."
+        explanation: The stated temperature and thirst establish heat. Холодно contradicts +35; хмарно does not explain the stated heat-related thirst.
+      - sentence: 'На вулиці +20 °C. Я гуляю, і мій одяг стає мокрим: зараз ___.'
         answer: іде дощ
         options:
           - іде дощ
           - іде сніг
           - сонячно
-        explanation: "The clothes are getting wet during the walk at+20 °C. Іде дощ explains that situation. Snow conflicts with the warm scene; sunny weather does not explain the ongoing wetting."
-      - sentence: "На термометрі +18 °C. Навесні ___ і красиво."
+        explanation: The clothes are getting wet during the walk at+20 °C. Іде дощ explains that situation. Snow conflicts with the warm scene; sunny weather does not explain the ongoing wetting.
+      - sentence: На термометрі +18 °C. Навесні ___ і красиво.
         answer: тепло
         options:
           - тепло
-          - холодно
-          - спекотно
-        explanation: "The moderate positive temperature fits тепло. Холодно and спекотно describe the contrasting cold/heat extremes in this A1 weather scale."
-      - sentence: 'Сьогодні мінус п''ять, дуже ___.'
+          - теплий
+          - тепла
+        explanation: Тепло completes this weather sentence. Теплий and тепла do not fit here.
+      - sentence: Сьогодні мінус п'ять, дуже ___.
         answer: холодно
         options:
           - холодно
           - тепло
           - спекотно
-        explanation: 'Мінус п''ять points to холодно.'
-      - sentence: 'Сьогодні плюс двадцять п''ять, ___.'
+        explanation: Мінус п'ять points to холодно.
+      - sentence: Сьогодні плюс двадцять п'ять, ___.
         answer: тепло
         options:
           - тепло
-          - прохолодно
-          - холодно
-        explanation: 'Плюс двадцять п''ять can be described as тепло here.'
+          - теплий
+          - тепла
+        explanation: Тепло completes this weather sentence. Теплий and тепла do not fit here.
   - id: act-3
     type: fill-in
     title: Діалог про погоду
     instruction: Доповни короткий діалог про погоду.
     items:
-      - sentence: '— Яка сьогодні ___? — Сьогодні тепло.'
+      - sentence: — Яка сьогодні ___? — Сьогодні тепло.
         answer: погода
         options:
           - погода
           - сонце
           - дощ
-        explanation: 'Яка сьогодні погода? is the target question.'
-      - sentence: '— Завтра ___ сонячно. — Добре, гуляємо!'
+        explanation: Яка сьогодні погода? is the target question.
+      - sentence: — Завтра ___ сонячно. — Добре, гуляємо!
         answer: буде
         options:
           - буде
           - є
           - був
-        explanation: 'Завтра буде... is the simple future weather frame.'
-      - sentence: '— Яка пора року тобі ___? — Літо.'
+        explanation: Завтра буде... is the simple future weather frame.
+      - sentence: — Яка пора року тобі ___? — Літо.
         answer: подобається
         options:
           - подобається
           - любить
           - робить
-        explanation: 'Use the phrase тобі подобається.'
-      - sentence: "— На вулиці +25 °C. На небі немає хмар. Яка сьогодні погода? — Сьогодні ___."
+        explanation: Use the phrase тобі подобається.
+      - sentence: Зараз день. На вулиці +25 °C. На небі немає хмар. Яка сьогодні погода? — Сьогодні ___.
         answer: сонячно
         options:
           - сонячно
-          - холодно
+          - сонячна
           - хмарно
-        explanation: "Daylight and a cloudless warm sky fit сонячно. Холодно contradicts +25; хмарно contradicts the stated absence of clouds."
+        explanation: It is daytime and the sky has no clouds. Сонячно fits; хмарно contradicts the stated absence of clouds, and сонячна does not complete the sentence.

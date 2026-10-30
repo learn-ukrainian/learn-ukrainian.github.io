@@ -20,7 +20,7 @@ from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_d
 from scripts.common.repo_root import project_interpreter
 from scripts.common.scratch import ensure_scratch_root
 from scripts.common.task_scratch import TaskScratchError
-from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers, runtime_context, store
+from scripts.dispatcher import admission, agy_sandbox, git, headroom, ownership, providers, runtime_context, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
 from scripts.dispatcher.watchdog import (
@@ -120,17 +120,18 @@ def _spawn_expired(record: dict) -> bool:
     return age > dispatch_admission.PIDLESS_SPAWNING_GRACE_S
 
 
-def _cursor_model(model: str | None) -> dict:
-    """A Cursor record's model attestation: only the run's own stream-json init events attest one."""
+def _stream_attestation(source: str, model: str | None) -> dict:
+    """A record's model attestation from that provider's own stream-json, pending until the stream names one."""
     return dict(resolved_model=model if model is not None else "unknown", resolved_model_known=model is not None,
-                resolved_model_source="cursor-stream-json" if model is not None else "pending")
+                resolved_model_source=source if model is not None else "pending")
 
 
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
     from scripts.orchestration.dispatch_admission import new_admission_hold
 
-    if spec.agent == "cursor":
-        record.update(_cursor_model(None))
+    source = getattr(providers.load(spec.agent), "MODEL_SOURCE", None)
+    if source:
+        record.update(_stream_attestation(source, None))
     if not record.get("admission_hold"):
         record["admission_hold"] = new_admission_hold(record["run_nonce"])
     path = store.record_path(spec.task_id)
@@ -200,10 +201,10 @@ def _spec(record: dict, options: dict) -> TaskSpec:
 
 
 def _outside_cause(paths, owned) -> str | None:
-    from scripts.guardrails.delegate_ownership import path_is_owned, sanitize_for_display
+    from scripts.guardrails.delegate_ownership import sanitize_for_display
     from scripts.secret_redactor import redact_text
 
-    outside = sorted(path for path in set(paths) if path and not path_is_owned(path, owned))
+    outside = ownership.outside_owned(paths, owned)
     if not outside:
         return None
     cause = "outside_owned_paths: " + ", ".join(sanitize_for_display(redact_text(path)) for path in outside)
@@ -212,17 +213,7 @@ def _outside_cause(paths, owned) -> str | None:
 
 def _verification_cause(exc: Exception) -> str:
     """Name what stopped the ownership check: the failing Git step, or the check's own refusal."""
-    if isinstance(exc, subprocess.TimeoutExpired):
-        detail = f"git {exc.cmd[1]} timed out"
-    elif isinstance(exc, subprocess.CalledProcessError):
-        detail = f"git {exc.cmd[1]} failed"
-    elif isinstance(exc, ValueError):
-        detail = str(exc)
-    elif isinstance(exc, KeyError):
-        detail = f"record field {exc} missing"
-    else:
-        detail = type(exc).__name__
-    return f"owned_paths_verification_failed: {detail}"[:200]
+    return f"owned_paths_verification_failed: {ownership.failure_detail(exc)}"[:200]
 
 
 def _enforce_delivery(record: dict) -> None:
@@ -235,21 +226,9 @@ def _enforce_delivery(record: dict) -> None:
         try:
             with git.ownership_git(record) as run:
                 base_sha = run("rev-parse", "--verify", "refs/heads/base^{commit}")
-                merge_base = run("merge-base", record["head_sha"], base_sha)
                 start_sha = record.get("worktree_start_sha", record["worktree_base_sha"])
-                revision_range = (record["head_sha"], "--not", merge_base, start_sha)
-                if (record["commits_ahead"] or 0) > 0 and not run("rev-list", "--max-count=1", *revision_range):
-                    raise ValueError("empty ownership range with recorded commits ahead")
-                version = tuple(int(part) for part in run("version").split()[2].split(".")[:2])
-                remerge = version >= (2, 36)
-                # Remerge diffs isolate edits made during a merge from clean upstream changes.
-                # Older Git and octopus merges cannot prove the absence of resolution edits.
-                paths = run(
-                    "log", "--format=", "--name-only", "-z", "-r", "--no-renames", "--root",
-                    "--remerge-diff" if remerge else "--cc", *revision_range, strip=False,
-                ).split("\0")
-                if run("rev-list", "--min-parents=3" if remerge else "--min-parents=2", *revision_range):
-                    raise ValueError("merge resolution paths cannot be verified")
+                paths = ownership.delivered_paths(run, record["head_sha"], base_sha, start_sha,
+                                                  commits_expected=True)
             cause = _outside_cause(paths, owned)
         except (OSError, ValueError, TypeError, IndexError, KeyError, TaskScratchError, subprocess.SubprocessError) as exc:
             cause = _verification_cause(exc)
@@ -446,6 +425,21 @@ def _end_lingering(child: subprocess.Popen, spec: TaskSpec) -> None:
         child.wait()
 
 
+def _verdict_failure(record: dict, text: str | None) -> str | None:
+    """Why a successful review must fail its requested verdict gate (``--require-review-verdict``), or None."""
+    if record.get("schema_version") != 2 or record.get("require_review_verdict") is not True:
+        return None
+    try:
+        from scripts.review.verdict_parser import recognized_verdicts
+
+        verdicts = set(recognized_verdicts(text))
+    except Exception:
+        return "review_gate_error"
+    if not verdicts:
+        return "review_missing_verdict_line"
+    return "review_ambiguous_verdict" if len(verdicts) > 1 else None
+
+
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
@@ -458,7 +452,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     })
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     slots = None
-    resolved_model = sources_calls = None
+    resolved_model = sources_calls = source = None
     started = time.monotonic()
     cancel_requested = interruptible = False
 
@@ -498,6 +492,31 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             return
         except headroom.RateLimitedError as exc:
             status, error = "rate_limited", str(exc)
+            return
+        if record.get("review_attempt"):
+            # A bound formal attempt runs only inside the agent runtime's attempt boundary, with the rendered
+            # prompt's exact bytes: no dispatch context, no task-store grant, no ordinary launch (#12114).
+            from scripts.dispatcher import review_attempt
+
+            prompt = spec.prompt_file.read_bytes()
+            record.update(status="running", runtime_input_sha256=hashlib.sha256(prompt).hexdigest())
+            store.replace(record, path)
+            interruptible = True  # cancel unwinds the runtime, which kills the seat and tears the boundary down
+            try:
+                checkpoint()
+                outcome = review_attempt.run(spec, record, prompt.decode("utf-8"),
+                                             (hard_timeout, silence_timeout, initial_response_timeout))
+            finally:
+                interruptible = False
+            status, error, text, sources_calls = outcome.status, outcome.error, outcome.text, outcome.sources_calls
+            record.update(outcome.identity)
+            if outcome.trace:
+                # The runtime keeps the seat's stream to itself; its redacted tool-call trace takes the stream's
+                # place in the task's private stdout log.
+                with stdout_path.open("w", encoding="utf-8") as trace:
+                    trace.writelines(json.dumps(call, ensure_ascii=False) + "\n" for call in outcome.trace)
+            if status == "done" and (refusal := _verdict_failure(record, text)):
+                status, error = "failed", refusal
             return
         schema = None
         if options.get("output_schema_path") is not None:
@@ -562,16 +581,17 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             record.update(status="running", provider_pgid=child.pid)
             store.replace(record, path)
             terminal_observer = getattr(provider, "terminal_result_observer", None)
-            observe_model = provider.model_observer(stdout_path) if spec.agent == "cursor" else None
+            source = getattr(provider, "MODEL_SOURCE", None)
+            observe_model = provider.model_observer(stdout_path) if source else None
 
             def watch():
                 # A running author's commits are reviewable only once its record attests the model (#12014).
                 nonlocal resolved_model
                 checkpoint()
-                if observe_model is None:
+                if observe_model is None or source is None:
                     return
                 resolved_model = observe_model()
-                fields = _cursor_model(resolved_model)
+                fields = _stream_attestation(source, resolved_model)
                 if any(record.get(key) != value for key, value in fields.items()):
                     record.update(fields)
                     store.replace(record, path)
@@ -620,17 +640,13 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             error = parsed.error or (
                 "provider exited unsuccessfully" if exit_code else "provider returned no successful final response"
             )
-        if status == "done" and record.get("schema_version") == 2 and record.get("require_review_verdict") is True:
-            try:
-                from scripts.review.verdict_parser import recognized_verdicts
+        if status == "done" and source == "agy-stream-json":
+            from scripts.dispatcher.providers.agy import identity_failure
 
-                verdicts = set(recognized_verdicts(text))
-                if not verdicts:
-                    status, error = "failed", "review_missing_verdict_line"
-                elif len(verdicts) > 1:
-                    status, error = "failed", "review_ambiguous_verdict"
-            except Exception:
-                status, error = "failed", "review_gate_error"
+            if refusal := identity_failure(spec.model, resolved_model):
+                status, error = "failed", refusal
+        if status == "done" and (refusal := _verdict_failure(record, text)):
+            status, error = "failed", refusal
     except _Cancelled:
         status, error = "cancelled", "cancelled by client"
     except DeadlineExpired as exc:
@@ -674,8 +690,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 record["sources_mcp_call_count"] = sources_calls
             record.update(git.snapshot_delivery(spec, record))
             _enforce_delivery(record)
-            if spec.agent == "cursor":
-                record.update(_cursor_model(resolved_model))
+            if source:
+                record.update(_stream_attestation(source, resolved_model))
             record["provider_pgid"] = child.pid if child else None
             # Settling a task first retries the trees earlier settlements kept for a cause that may have
             # cleared, under the same proofs. It runs before this task's record turns terminal, holding no

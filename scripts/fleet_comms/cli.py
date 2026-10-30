@@ -793,8 +793,11 @@ def _refuse_kimi_recipients(recipients: list[str] | tuple[str, ...]) -> None:
 
 
 def cmd_deliveries(args: argparse.Namespace) -> int:
-    """Expose authority delivery operations without loading message bodies."""
+    """Expose authority delivery operations; only read returns a body, to the lease holder."""
+    from datetime import UTC, datetime
+
     from scripts.control_plane.storage import ControlPlaneError
+    from scripts.fleet_comms.artifacts import ArtifactStoreError
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
     if args.deliveries_command == "claim":
@@ -819,6 +822,24 @@ def cmd_deliveries(args: argparse.Namespace) -> int:
                     args.delivery_id, worker_id=args.worker_id,
                     fence_token=args.fence_token, driver_generation=args.driver_generation,
                 )
+            elif args.deliveries_command == "read":
+                # Only the current lease holder reads a body; a stale lease reads nothing.
+                delivery = service.get_delivery(args.delivery_id)
+                if (
+                    delivery.state != "running"
+                    or delivery.lease_owner != args.worker_id
+                    or delivery.fence_token != args.fence_token
+                    or delivery.lease_expires_at is None
+                    or delivery.lease_expires_at <= datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+                ):
+                    raise AuthorityServiceError("stale_delivery_lease")
+                sys.stdout.write(_json_dump({
+                    "delivery_id": delivery.delivery_id,
+                    "message_id": delivery.message_id,
+                    "body": service.read_message_body(delivery.message_id),
+                    "content_included": True,
+                }))
+                return EXIT_OK
             elif args.deliveries_command == "ack":
                 payload = asdict(service.acknowledge_delivery(
                     args.delivery_id, worker_id=args.worker_id,
@@ -830,7 +851,7 @@ def cmd_deliveries(args: argparse.Namespace) -> int:
     except AuthorityServiceError as exc:
         sys.stdout.write(_json_dump({"error": str(exc), "content_included": False}))
         return EXIT_NOT_FOUND if str(exc) == "delivery_not_found" else EXIT_ERROR
-    except (OSError, sqlite3.Error, PlaneRootAnchorError, ControlPlaneError):
+    except (OSError, sqlite3.Error, PlaneRootAnchorError, ControlPlaneError, ArtifactStoreError):
         # Storage exceptions may contain private paths or SQL; never echo them.
         sys.stdout.write(_json_dump({"error": "delivery_store_unavailable", "content_included": False}))
         return EXIT_ERROR
@@ -841,7 +862,7 @@ def cmd_deliveries(args: argparse.Namespace) -> int:
 
 def _add_deliveries_parser(sub: Any) -> None:
     description = (
-        "Claim, inspect, consume, and acknowledge durable authority deliveries.\n"
+        "Claim, inspect, read, consume, and acknowledge durable authority deliveries.\n"
         "Use for seat delivery processing; legacy inbox/wake receipts are not authority proof."
     )
     epilog = (
@@ -849,7 +870,9 @@ def _add_deliveries_parser(sub: Any) -> None:
         "  .venv/bin/python -m scripts.fleet_comms deliveries claim --recipient codex --worker-id seat-1\n"
         "  .venv/bin/python -m scripts.fleet_comms deliveries consume DELIVERY --worker-id seat-1 --fence-token 1 --driver-generation gen-1\n"
         "  .venv/bin/python -m scripts.fleet_comms deliveries ack DELIVERY --worker-id seat-1 --fence-token 1\n"
-        "Outputs: JSON metadata and artifact references on stdout; never message bodies.\n"
+        "  .venv/bin/python -m scripts.fleet_comms deliveries read DELIVERY --worker-id seat-1 --fence-token 1\n"
+        "Outputs: JSON metadata and artifact references on stdout; message bodies only from read.\n"
+        "  Read prints the body of a delivery you hold a current lease on; it refuses a stale lease.\n"
         "  Claim leases one delivery and reclaims expired leases (defaults: 300 seconds, 3 attempts).\n"
         "  Consume records supervisory intent before any side effect. On replay/reconciliation,\n"
         "  inspect the external outcome before repeating an action. Ack records its verified outcome;\n"
@@ -860,7 +883,7 @@ def _add_deliveries_parser(sub: Any) -> None:
         "Related: scripts.fleet_comms.authority.AuthorityService; channels publish; plane-status."
     )
     deliveries = sub.add_parser(
-        "deliveries", help="Process fenced authority deliveries without message bodies",
+        "deliveries", help="Process fenced authority deliveries (bodies only via read)",
         description=description, epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -868,6 +891,7 @@ def _add_deliveries_parser(sub: Any) -> None:
     for name, summary in (
         ("claim", "Lease the next eligible delivery for a recipient"),
         ("status", "Read one delivery's current metadata"),
+        ("read", "Read the body of a delivery you hold a lease on"),
         ("consume", "Record supervisory consumption before acting"),
         ("ack", "Acknowledge a delivery after verifying its outcome"),
     ):
@@ -887,7 +911,7 @@ def _add_deliveries_parser(sub: Any) -> None:
             operation.add_argument("delivery_id", help="Exact delivery_id returned by claim")
         if name != "status":
             operation.add_argument("--worker-id", required=True, help="Lease owner identity; reuse the claim value, e.g. seat-1")
-        if name in {"consume", "ack"}:
+        if name in {"read", "consume", "ack"}:
             operation.add_argument("--fence-token", type=int, required=True, help="Positive fence_token returned by the current claim, e.g. 1")
         if name == "consume":
             operation.add_argument("--driver-generation", required=True, help="Driver generation consuming the request, e.g. gen-1")

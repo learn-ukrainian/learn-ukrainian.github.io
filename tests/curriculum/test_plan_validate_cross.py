@@ -24,6 +24,7 @@ import pytest
 import yaml
 
 from scripts.curriculum.validate import codes
+from scripts.curriculum.validate import validate as validate_module
 from scripts.curriculum.validate.scope import compute_scope, write_scope_sidecar
 from scripts.curriculum.validate.validate import Report, validate_plan
 from scripts.curriculum.validate.validate import main as validate_main
@@ -1064,6 +1065,17 @@ def run_git_scenario(root: Path, scenario: GitScenario) -> Report:
     return validate_plan(LEVEL, SLUG, plan_path=paths[SLUG], strict=True)
 
 
+@pytest.fixture
+def review_of_record_not_under_test(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Strict runs of a synthetic plan that carries its pack's sha256 with no review chain (#12114).
+
+    These tests are about other gates; the review-of-record check has its own test
+    (test_plan_validate_review_of_record.py).
+    """
+    monkeypatch.setattr(validate_module, "_check_review_of_record", lambda *args, **kwargs: None)
+
+
+@pytest.mark.usefixtures("review_of_record_not_under_test")
 @pytest.mark.parametrize("scenario", GIT_SCENARIOS, ids=lambda scenario: scenario.name)
 def test_git_scenario(tmp_path: Path, scenario: GitScenario) -> None:
     report = run_git_scenario(tmp_path, scenario)

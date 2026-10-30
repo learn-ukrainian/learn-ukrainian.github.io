@@ -73,8 +73,8 @@ Current adapter policy for discussion calls:
 
 - Codex: `read-only` maps to `codex exec -s read-only`.
 - AGY: discussion calls route through the AGY adapter. Direct `agy --model`
-  uses display labels such as `Gemini 3.1 Pro (High)`; bridge/runtime calls
-  may pass slugs such as `gemini-3.1-pro-high` for adapter mapping.
+  uses display labels such as `Gemini 3.8 Flash (High)`; bridge/runtime calls
+  may pass slugs such as `gemini-3.8-flash-high` for adapter mapping.
 - Claude: discussion calls restrict built-in tools to read/list/search
   tools. They do not use Claude plan mode because discussion replies are
   comments, not implementation plans; the restricted tool list plus the

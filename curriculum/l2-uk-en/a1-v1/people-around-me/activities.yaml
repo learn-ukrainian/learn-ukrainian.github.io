@@ -65,76 +65,76 @@ inline:
     title: Я бачу...
     instruction: Choose the object form that completes the sentence.
     items:
-      - sentence: 'Я бачу ___.'
-        answer: 'маму'
+      - sentence: Я бачу цю ___.
+        answer: маму
         options:
-          - 'маму'
-          - 'мама'
-          - 'мами'
-        explanation: 'Мама becomes маму.'
-      - sentence: 'Я бачу ___.'
-        answer: 'брата'
+          - маму
+          - мама
+          - мами
+        explanation: Цю identifies one feminine object and takes the matching singular accusative form.
+      - sentence: Я бачу ___.
+        answer: брата
         options:
-          - 'брата'
-          - 'брат'
-          - 'брату'
+          - брата
+          - брат
+          - брату
         explanation: 'A male person changes: брат -> брата.'
-      - sentence: 'Я знаю ___.'
-        answer: 'Олену'
+      - sentence: Я знаю цю ___.
+        answer: Олену
         options:
-          - 'Олену'
-          - 'Олена'
-          - 'Олени'
-        explanation: 'Олена becomes Олену.'
-      - sentence: 'Я знаю ___.'
-        answer: 'друга'
+          - Олену
+          - Олена
+          - Олени
+        explanation: Цю identifies one feminine object and takes the matching singular accusative form.
+      - sentence: Я знаю ___.
+        answer: друга
         options:
-          - 'друга'
-          - 'друг'
-          - 'другу'
-        explanation: 'Друг becomes друга.'
-      - sentence: 'Я люблю ___.'
-        answer: 'тата'
+          - друга
+          - друг
+          - другу
+        explanation: Друг becomes друга.
+      - sentence: Я люблю ___.
+        answer: тата
         options:
-          - 'тата'
-          - 'тато'
-          - 'таті'
-        explanation: 'Тато becomes тата.'
-      - sentence: 'Я чекаю ___.'
-        answer: 'вчителя'
+          - тата
+          - тато
+          - таті
+        explanation: Тато becomes тата.
+      - sentence: Я чекаю ___.
+        answer: вчителя
         options:
-          - 'вчителя'
-          - 'вчитель'
-          - 'вчителю'
-        explanation: 'Вчитель becomes вчителя.'
-      - sentence: 'Я шукаю ___.'
-        answer: 'подругу'
+          - вчителя
+          - вчитель
+          - вчителю
+        explanation: Вчитель becomes вчителя.
+      - sentence: Я шукаю цю ___.
+        answer: подругу
         options:
-          - 'подругу'
-          - 'подруга'
-          - 'подруги'
-        explanation: 'Подруга becomes подругу.'
-      - sentence: 'Я бачу ___.'
-        answer: 'сусіда'
+          - подругу
+          - подруга
+          - подруги
+        explanation: Цю identifies one feminine object and takes the matching singular accusative form.
+      - sentence: Я бачу цього ___.
+        answer: сусіда
         options:
-          - 'сусіда'
-          - 'сусід'
-          - 'сусіду'
-        explanation: 'Сусід becomes сусіда.'
-      - sentence: 'Я чекаю ___.'
-        answer: 'лікаря'
+          - сусіда
+          - сусідом
+          - сусідові
+        explanation: Цього identifies one male person and requires the matching animate object сусіда.
+      - sentence: Я чекаю ___.
+        answer: лікаря
         options:
-          - 'лікаря'
-          - 'лікар'
-          - 'лікарю'
-        explanation: 'Лікар becomes лікаря.'
-      - sentence: 'Я знаю ___.'
-        answer: 'сестру'
+          - лікаря
+          - лікар
+          - лікарю
+        explanation: Лікар becomes лікаря.
+      - sentence: Я знаю цю ___.
+        answer: сестру
         options:
-          - 'сестру'
-          - 'сестра'
-          - 'сестри'
-        explanation: 'Сестра becomes сестру.'
+          - сестру
+          - сестра
+          - сестри
+        explanation: Цю identifies one feminine object and takes the matching singular accusative form.
   - id: act-3
     type: group-sort
     title: Кого or що shelves
@@ -266,119 +266,171 @@ workbook:
           - хліб
           - дерево
           - каву
-  - type: unjumble
+  - type: fill-in
     title: Build people lines
-    instruction: Put the words in a natural order.
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - words:
-          - 'Кого'
-          - 'ти'
-          - 'бачиш'
-        answer: 'Кого ти бачиш'
-      - words:
-          - 'Я'
-          - 'бачу'
-          - 'маму'
-        answer: 'Я бачу маму'
-      - words:
-          - 'Я'
-          - 'знаю'
-          - 'друга'
-        answer: 'Я знаю друга'
-      - words:
-          - 'Я'
-          - 'чекаю'
-          - 'лікаря'
-        answer: 'Я чекаю лікаря'
-      - words:
-          - 'Вона'
-          - 'знає'
-          - 'мене'
-        answer: 'Вона знає мене'
-      - words:
-          - 'Я'
-          - 'бачу'
-          - 'хліб'
-        answer: 'Я бачу хліб'
-  - type: order
+      - answer: бачиш
+        sentence: Кого ти ___?
+        options:
+          - бачиш
+          - бачу
+          - бачить
+        explanation: Ти takes бачиш.
+      - answer: маму
+        sentence: Я бачу цю ___.
+        options:
+          - маму
+          - мама
+          - мами
+        explanation: Цю identifies one feminine object and takes маму.
+      - answer: друга
+        sentence: Я знаю цього ___.
+        options:
+          - друга
+          - друг
+          - другом
+        explanation: Цього takes the matching singular animate object друга.
+      - answer: лікаря
+        sentence: Я чекаю цього ___.
+        options:
+          - лікаря
+          - лікар
+          - лікарем
+        explanation: Цього takes the matching singular animate object лікаря.
+      - answer: мене
+        sentence: Вона знає ___.
+        options:
+          - мене
+          - я
+          - мною
+        explanation: Use the object pronoun мене.
+      - answer: хліб
+        sentence: Я бачу цей ___.
+        options:
+          - хліб
+          - хліба
+          - хлібом
+        explanation: Цей takes the matching masculine inanimate object хліб.
+  - type: fill-in
     title: Introduce a brother
-    instruction: Put the dialogue in order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Кого ти бачиш на фото?'
-      - 'Я бачу маму і тата.'
-      - 'А хто це?'
-      - 'Це мій брат.'
-      - 'Ти знаєш мого брата?'
-      - 'Ні, я не знаю твого брата.'
-      - 'Ходімо, я тебе познайомлю!'
-    correct_order: [0, 1, 2, 3, 4, 5, 6]
+      - sentence: Кого ти ___ на фото?
+        answer: бачиш
+        options:
+          - бачиш
+          - бачу
+          - бачить
+        explanation: Ти takes бачиш.
+      - sentence: Я ___ маму і тата.
+        answer: бачу
+        options:
+          - бачу
+          - бачиш
+          - бачить
+        explanation: Я takes бачу.
+      - sentence: А ___ це? На фото людина.
+        answer: хто
+        options:
+          - хто
+          - де
+          - коли
+        explanation: Хто asks about the person in the photo.
+      - sentence: Це мій ___.
+        answer: брат
+        options:
+          - брат
+          - брата
+          - братом
+        explanation: Мій agrees with the naming form брат.
+      - sentence: Ти знаєш мого ___?
+        answer: брата
+        options:
+          - брата
+          - брат
+          - братом
+        explanation: Мого requires the matching animate object брата.
+      - sentence: Ні, я не ___ твого брата.
+        answer: знаю
+        options:
+          - знаю
+          - знає
+          - знати
+        explanation: Я takes знаю.
+      - sentence: Ходімо, я ___ познайомлю з братом!
+        answer: тебе
+        options:
+          - тебе
+          - ти
+          - тобі
+        explanation: Познайомлю кого? takes the object pronoun тебе.
   - type: error-correction
     title: Repair people-around-me interference
     instruction: Choose the clean Ukrainian repair.
     anchor_id: repair-people-around-me-interference
     items:
-      - sentence: 'Я бачу мій брат.'
-        error: 'Я бачу мій брат.'
-        answer: 'Я бачу мого брата.'
+      - sentence: Я бачу мій брат.
+        error: мій брат
+        answer: Я бачу мого брата.
         options:
-          - 'Я бачу мого брата.'
-          - 'Я бачу мій брат.'
-          - 'Я бачу моїм братом.'
-        explanation: 'Use the object phrase мого брата.'
-      - sentence: 'Дерево — це хто?'
-        error: 'Дерево — це хто?'
-        answer: 'Дерево — це що?'
+          - Я бачу мого брата.
+          - Я бачу мій брат.
+          - Я бачу моїм братом.
+        explanation: Use the object phrase мого брата.
+      - sentence: Дерево — це хто?
+        error: хто
+        answer: Дерево — це що?
         options:
-          - 'Дерево — це що?'
-          - 'Дерево — це хто?'
-          - 'Дерево — це кого?'
-        explanation: 'Plants answer що? in Ukrainian grammar.'
-      - sentence: 'Я люблю він.'
-        error: 'Я люблю він.'
-        answer: 'Я люблю його.'
+          - Дерево — це що?
+          - Дерево — це хто?
+          - Дерево — це кого?
+        explanation: Plants answer що? in Ukrainian grammar.
+      - sentence: Я люблю він.
+        error: він
+        answer: Я люблю його.
         options:
-          - 'Я люблю його.'
-          - 'Я люблю він.'
-          - 'Я люблю йому.'
-        explanation: 'Use the object pronoun його.'
-      - sentence: 'Я чекаю лікар.'
-        error: 'Я чекаю лікар.'
-        answer: 'Я чекаю лікаря.'
+          - Я люблю його.
+          - Я люблю він.
+          - Я люблю йому.
+        explanation: Use the object pronoun його.
+      - sentence: Я чекаю лікар.
+        error: лікар
+        answer: Я чекаю лікаря.
         options:
-          - 'Я чекаю лікаря.'
-          - 'Я чекаю лікар.'
-          - 'Я чекаю лікарем.'
-        explanation: 'Лікар becomes лікаря.'
-      - sentence: 'Я бачу сусіду.'
-        error: 'Я бачу сусіду.'
-        answer: 'Я бачу сусіда.'
+          - Я чекаю лікаря.
+          - Я чекаю лікар.
+          - Я чекаю лікарем.
+        explanation: Лікар becomes лікаря.
+      - sentence: Я бачу сусідом.
+        error: сусідом
+        answer: Я бачу сусіда.
         options:
-          - 'Я бачу сусіда.'
-          - 'Я бачу сусіду.'
-          - 'Я бачу сусідом.'
-        explanation: 'Сусід becomes сусіда.'
-      - sentence: 'Він має 20 років.'
-        error: 'Він має 20 років.'
-        answer: 'Йому 20 років.'
+          - Я бачу сусіда.
+          - Я бачу сусідом.
+          - Я бачу сусідові.
+        explanation: The object of бачу is accusative сусіда.
+      - sentence: Його 20 років.
+        error: Його
+        answer: Йому 20 років.
         options:
-          - 'Йому 20 років.'
-          - 'Він має 20 років.'
-          - 'Його 20 років.'
-        explanation: 'Age uses йому in this phrase.'
-      - sentence: 'Я є студент.'
-        error: 'Я є студент.'
-        answer: 'Я студент.'
+          - Йому 20 років.
+          - Його 20 років.
+          - Він 20 років.
+        explanation: Use the age phrase Йому 20 років.
+      - sentence: Я студенті.
+        error: студенті
+        answer: Я студент.
         options:
-          - 'Я студент.'
-          - 'Я є студент.'
-          - 'Я маю студент.'
-        explanation: 'In this basic identity line, omit є.'
-      - sentence: 'Яка твоя фамілія?'
-        error: 'Яка твоя фамілія?'
-        answer: 'Яке твоє прізвище?'
+          - Я студент.
+          - Я студенті.
+          - Я студента.
+        explanation: Студент names the speaker in this identity sentence.
+      - sentence: Який твоє прізвище?
+        error: Який
+        answer: Яке твоє прізвище?
         options:
-          - 'Яке твоє прізвище?'
-          - 'Яка твоя фамілія?'
-          - 'Який твій фамілія?'
-        explanation: 'Use прізвище for surname.'
+          - Яке твоє прізвище?
+          - Який твоє прізвище?
+          - Яка твоє прізвище?
+        explanation: Прізвище is neuter and takes яке.

@@ -45,11 +45,13 @@ from scripts.review import record_cf_verdict as recorder
 from scripts.review.capability_failure import run_started as _started
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.reviewer_resolver import resolve_family
+from scripts.review.ukrainian_seats import (
+    UKRAINIAN_SEAT_FAMILIES,
+    attested_author_families,
+    required_ukrainian_seats,
+)
 from scripts.review.verdict_parser import recognized_verdicts
 
-# A learner-facing Ukrainian change seats two reviewers from two families
-# (review-loop references/ukrainian.md § Seats); every other profile seats one.
-UKRAINIAN_SEATS = 2
 UNATTESTED_FAMILIES = frozenset({"unknown", "unattested", "ambiguous", "conflicting"})
 
 
@@ -111,13 +113,13 @@ def _read_run(path: Path, record: Mapping[str, Any]) -> ReviewRun:
     return ReviewRun(task_id, record, reply)
 
 
-def lineage_runs(task_root: Path, *, repository: str, number: int, branch: str) -> list[ReviewRun]:
-    """Every hot and archived review run of this PR; an archived run is kept beside a hot one."""
+def review_records(task_root: Path, *, repository: str) -> list[tuple[Path, dict[str, Any]]]:
+    """Every hot and archived review task record of this repository, with its path."""
     try:
         paths = [*sorted((task_root / ARCHIVE_DIR_NAME).glob("*.json")), *sorted(task_root.glob("*.json"))]
     except OSError as exc:
         raise LineageRefused(f"task ledger unavailable: {exc}") from None
-    runs = []
+    records = []
     for path in paths:
         try:
             record = json.loads(path.read_text(encoding="utf-8"))
@@ -133,9 +135,31 @@ def lineage_runs(task_root: Path, *, repository: str, number: int, branch: str) 
             record["repository"]
         ) != normalize_repository(repository):
             continue
-        if record.get("pr") == number or branch in _review_branches(record):
-            runs.append(_read_run(path, record))
-    return runs
+        records.append((path, record))
+    return records
+
+
+def lineage_runs(
+    task_root: Path,
+    *,
+    repository: str,
+    number: int | None,
+    branch: str | None,
+    records: Sequence[tuple[Path, Mapping[str, Any]]] | None = None,
+) -> list[ReviewRun]:
+    """Every hot and archived review run of this PR; an archived run is kept beside a hot one.
+
+    A run belongs to the PR by its recorded ``pr`` or its review branch; a caller that knows
+    only one of them passes None for the other. ``records`` is the caller's own
+    :func:`review_records` read, when it has one.
+    """
+    if records is None:
+        records = review_records(task_root, repository=repository)
+    return [
+        _read_run(path, record)
+        for path, record in records
+        if (number is not None and record.get("pr") == number) or branch in _review_branches(record)
+    ]
 
 
 def _trusted_markers(
@@ -291,6 +315,33 @@ def superseded_runs(
     return _supersede(runs, markers, events)
 
 
+def dispatched_rounds(
+    *, runs: Sequence[ReviewRun], comments: Sequence[Mapping[str, Any]], login: str, exclude_head: str | None = None
+) -> dict[str, list[str]]:
+    """Each head a review run on record was dispatched at, with its runs' task ids, recorded or not (#12098).
+
+    A round is one reviewer dispatch at one exact head (review-loop policy), so a run counts from its
+    dispatch, whatever its status and whether its verdict was ever published. A writing task is not
+    a reviewer dispatch, and a run whose published capability failure classifies it opens no round.
+    ``exclude_head`` drops the round being decided.
+    """
+    try:
+        events = {(e.task, e.started) for e in capability_failure.events(comments, login)}
+    except recorder.RecordError:
+        # Unreadable events classify no run here, so more heads count; check_lineage refuses them.
+        events = set()
+    rounds: dict[str, list[str]] = {}
+    for run in runs:
+        head = run.record.get("worktree_base_sha")
+        if not isinstance(head, str) or not SHA.fullmatch(head) or head == exclude_head:
+            continue
+        if run.record.get("mode") == "workspace-write":
+            continue
+        if (run.task_id, _started(run.record)) not in events:
+            rounds.setdefault(head, []).append(run.task_id)
+    return rounds
+
+
 def check_lineage(
     *,
     runs: Sequence[ReviewRun],
@@ -384,7 +435,23 @@ def check_lineage(
     ukrainian = any(marker["sha"] == approved and is_ukrainian_review(marker) for _, marker in markers) or any(
         run.record.get("worktree_base_sha") == approved and is_ukrainian_review(run.record) for run in runs
     )
-    required = UKRAINIAN_SEATS if ukrainian else 1
-    if len(seats) < required:
-        raise LineageRefused(f"{len(seats)} seat(s) approved {approved}; this profile requires {required}")
+    if ukrainian:
+        approving = {
+            family
+            for family, marker in latest.items()
+            if marker["sha"] == approved
+            and marker["verdict"] not in REJECTED
+            and family in UKRAINIAN_SEAT_FAMILIES
+            and is_ukrainian_review(marker)
+        }
+        head_markers = [
+            marker for _, marker in markers if marker["sha"] == approved and is_ukrainian_review(marker)
+        ]
+        missing = sorted(required_ukrainian_seats(attested_author_families(head_markers)) - approving)
+        if missing:
+            raise LineageRefused(
+                f"{len(approving)} Ukrainian seat(s) approved {approved}; missing {','.join(missing)}"
+            )
+    elif not seats:
+        raise LineageRefused(f"0 seat(s) approved {approved}; this profile requires 1")
     return seats

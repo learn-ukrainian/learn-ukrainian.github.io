@@ -248,19 +248,59 @@ workbook:
       - statement: 'Я хочу воду is also possible.'
         answer: true
         explanation: 'Вода becomes воду as the object of хочу.'
-  - type: order
+  - type: fill-in
     title: Lunch-box conversation
-    instruction: Put the conversation in a natural order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Що ти їси на обід?'
-      - 'Я їм суп і салат.'
-      - "А що ти п'єш?"
-      - "Я п'ю воду або сік."
-      - 'Олена їсть хліб з маслом.'
-      - "Діти п'ють молоко."
-      - 'Смачного!'
-    correct_order: [0, 1, 2, 3, 4, 5, 6]
+      - sentence: Що ти ___ на обід?
+        answer: їси
+        options:
+          - їси
+          - їм
+          - їсть
+        explanation: Ти takes їси.
+      - sentence: Я ___ суп і салат.
+        answer: їм
+        options:
+          - їм
+          - їси
+          - їсть
+        explanation: Я takes їм.
+      - sentence: А що ти ___?
+        answer: п'єш
+        options:
+          - п'єш
+          - п'ю
+          - п'ють
+        explanation: Ти takes п'єш.
+      - sentence: Я ___ воду або сік.
+        answer: п'ю
+        options:
+          - п'ю
+          - п'єш
+          - п'ємо
+        explanation: Я takes п'ю.
+      - sentence: Олена ___ хліб з маслом.
+        answer: їсть
+        options:
+          - їсть
+          - їм
+          - їсте
+        explanation: Олена takes їсть.
+      - sentence: Діти ___ молоко.
+        answer: п'ють
+        options:
+          - п'ють
+          - п'є
+          - п'єш
+        explanation: Діти takes п'ють.
+      - sentence: 'Друзі сідають обідати. Побажай їм доброго обіду: «___»'
+        answer: Смачного!
+        options:
+          - Смачного!
+          - Де пошта?
+          - Куди ти їдеш?
+        explanation: Смачного! is the meal wish; the alternatives ask about a place or destination.
   - type: match-up
     title: Food-day object pairs
     instruction: Match the starter with the clean food or drink line.
@@ -281,92 +321,108 @@ workbook:
         right: 'діти п''ють молоко'
       - left: 'він п''є + сік'
         right: 'він п''є сік'
-  - type: unjumble
+  - type: fill-in
     title: Build food and drink lines
-    instruction: Put the words in a natural A1 order.
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - words:
-          - 'Я'
-          - 'їм'
-          - 'кашу'
-        answer: 'Я їм кашу'
-      - words:
-          - 'Вона'
-          - "п'є"
-          - 'воду'
-        answer: "Вона п'є воду"
-      - words:
-          - 'Ми'
-          - 'їмо'
-          - 'суп'
-          - 'і'
-          - 'салат'
-        answer: 'Ми їмо суп і салат'
-      - words:
-          - 'Діти'
-          - "п'ють"
-          - 'молоко'
-        answer: "Діти п'ють молоко"
-      - words:
-          - 'Я'
-          - 'хочу'
-          - 'воду'
-        answer: 'Я хочу воду'
-      - words:
-          - 'Ти'
-          - 'їси'
-          - 'рибу'
-        answer: 'Ти їси рибу'
-  - type: error-correction
+      - answer: кашу
+        sentence: Я їм цю ___.
+        options:
+          - кашу
+          - каша
+          - каші
+        explanation: Цю takes matching feminine singular кашу.
+      - answer: воду
+        sentence: Вона п'є цю ___.
+        options:
+          - воду
+          - вода
+          - води
+        explanation: Цю takes matching feminine singular воду.
+      - answer: їмо
+        sentence: Ми ___ суп і салат.
+        options:
+          - їмо
+          - їсте
+          - їдять
+        explanation: Ми takes їмо.
+      - answer: п'ють
+        sentence: Діти ___ молоко.
+        options:
+          - п'ють
+          - п'є
+          - п'єте
+        explanation: Діти takes п'ють.
+      - answer: воду
+        sentence: Я хочу цю ___.
+        options:
+          - воду
+          - вода
+          - води
+        explanation: Цю takes matching feminine singular воду.
+      - answer: їси
+        sentence: Ти ___ рибу.
+        options:
+          - їси
+          - їм
+          - їсть
+        explanation: Ти takes їси.
+  - type: quiz
     title: Repair eat and drink interference
-    instruction: Choose the clean Ukrainian repair.
+    instruction: Choose the correct Ukrainian version of each line.
     anchor_id: repair-i-eat-i-drink-interference
     items:
-      - sentence: 'Я є їм хліб.'
-        error: 'Я є їм хліб.'
-        answer: 'Я їм хліб.'
+      - prompt: 'Choose the correct Ukrainian version: Я є їм хліб.'
         options:
-          - 'Я їм хліб.'
-          - 'Я є їм хліб.'
-          - 'Я є їсти хліб.'
-        explanation: 'Do not use є as an English-style helper.'
-      - sentence: 'Я хочу вода.'
-        error: 'Я хочу вода.'
-        answer: 'Я хочу пити. або Я хочу воду.'
+          - text: Я їм хліб.
+            correct: true
+          - text: Я є їм хліб.
+            correct: false
+          - text: Я є їсти хліб.
+            correct: false
+        explanation: Do not use є as an English-style helper.
+      - prompt: 'Choose the correct Ukrainian version: Я хочу вода.'
         options:
-          - 'Я хочу пити. або Я хочу воду.'
-          - 'Я хочу вода.'
-          - 'Я хочу воді.'
-        explanation: 'Use an infinitive or the direct object воду.'
-      - sentence: 'Він їст суп.'
-        error: 'Він їст суп.'
-        answer: 'Він їсть суп.'
+          - text: Я хочу воду.
+            correct: true
+          - text: Я хочу вода.
+            correct: false
+          - text: Я хочу воді.
+            correct: false
+        explanation: Use an infinitive or the direct object воду.
+      - prompt: 'Choose the correct Ukrainian version: Він їст суп.'
         options:
-          - 'Він їсть суп.'
-          - 'Він їст суп.'
-          - 'Він їси суп.'
-        explanation: 'Write їсть with the soft sign.'
-      - sentence: 'Ти їсиш яблуко.'
-        error: 'Ти їсиш яблуко.'
-        answer: 'Ти їси яблуко.'
+          - text: Він їсть суп.
+            correct: true
+          - text: Він їст суп.
+            correct: false
+          - text: Він їси суп.
+            correct: false
+        explanation: Write їсть with the soft sign.
+      - prompt: 'Choose the correct Ukrainian version: Ти їсиш яблуко.'
         options:
-          - 'Ти їси яблуко.'
-          - 'Ти їсиш яблуко.'
-          - 'Ти їсть яблуко.'
-        explanation: 'The form is ти їси.'
-      - sentence: "Я п'ю вода."
-        error: "Я п'ю вода."
-        answer: "Я п'ю воду."
+          - text: Ти їси яблуко.
+            correct: true
+          - text: Ти їсиш яблуко.
+            correct: false
+          - text: Ти їсть яблуко.
+            correct: false
+        explanation: The form is ти їси.
+      - prompt: "Choose the correct Ukrainian version: Я п'ю вода."
         options:
-          - "Я п'ю воду."
-          - "Я п'ю вода."
-          - "Я п'ю воді."
-        explanation: "Вода becomes воду after п'ю."
-      - sentence: "На перерві: Я п'ю кава."
-        error: "Я п'ю кава."
-        answer: "Я п'ю каву."
+          - text: Я п'ю воду.
+            correct: true
+          - text: Я п'ю вода.
+            correct: false
+          - text: Я п'ю воді.
+            correct: false
+        explanation: Вода becomes воду after п'ю.
+      - prompt: "Choose the correct Ukrainian version: На перерві: Я п'ю кава."
         options:
-          - "Я п'ю кава."
-          - "Я п'ю каві."
-          - "Я п'ю каву."
-        explanation: "Кава becomes каву after п'ю."
+          - text: Я п'ю кава.
+            correct: false
+          - text: Я п'ю каві.
+            correct: false
+          - text: Я п'ю каву.
+            correct: true
+        explanation: Кава becomes каву after п'ю.

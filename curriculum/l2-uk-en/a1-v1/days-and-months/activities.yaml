@@ -57,7 +57,7 @@ inline:
   - id: act-2
     type: group-sort
     title: Місяць і пора року
-    instruction: Розподіли назви місяців за порами року в Україні.
+    instruction: Розподіли назви місяців за порами року в Україні. / Sort the month names by season in Ukraine.
     groups:
       - label: зима
         items:
