@@ -54,10 +54,18 @@ _BACKGROUND_DENIES = "Monitor,ScheduleWakeup,CronCreate,Workflow"
 # guard and ``claude auth status`` read the run's ``--settings``, so a labelled run always carries one.
 _LABELLED_SETTING_SOURCES = "project,local"
 _LABELLED_SETTINGS = json.dumps({"permissions": {"deny": _BACKGROUND_DENIES.split(",")}}, separators=(",", ":"))
-_BACKGROUND_ENV = {
-    "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
-    "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
-}
+_BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
+_ADVISOR_OFF_ENV = {"CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1"}
+# Opus 5.5 advises headless workspace-write workers on Sonnet 5.5, and on Haiku 5.5 only when the dispatch
+# asks with --advisor opus (#12094, operator decision 2026-10-30). Every other run, read-only reviews and
+# Opus included, keeps the advisor disabled. The advisor needs Claude Code's feature-flag fetch: the child
+# environment is an allowlist that carries no telemetry opt-out, and the flag is silently inert if
+# DISABLE_TELEMETRY is set (https://code.claude.com/docs/en/advisor). Claude Code has no call cap, so
+# the worker brief limits consultations to two.
+_ADVISOR_MODEL = "opus"
+_ADVISED_MODEL = "claude-sonnet-5-5"
+_ADVISED_ON_REQUEST_MODEL = "claude-haiku-5-5"
+MODEL_USAGE_SOURCE = "claude-result-model-usage"
 # The managed sources --restricted keeps (https://code.claude.com/docs/en/managed-settings, "Where each
 # mechanism stores the policy"): on Linux the files under /etc/claude-code, which env_sanitize checks
 # as one root, and server-managed settings, cached in the config directory and fetched at start
@@ -111,6 +119,67 @@ def _sources_mcp_config() -> str:
     return json.dumps({"mcpServers": {_SOURCES_SERVER: servers[_SOURCES_SERVER]}}, separators=(",", ":"))
 
 
+def model_id(model: str) -> str | None:
+    """The catalog id a ``--model`` value runs: a native alias (``sonnet``, ``haiku[1m]``) is its family's newest model."""
+    from scripts.agent_runtime.model_pause import _newest_claude
+    from scripts.review.model_catalog import canonical_model_id
+
+    alias = model.strip().casefold().split("[", 1)[0]
+    if alias in {"haiku", "opus", "sonnet", "fable"}:
+        return _newest_claude(alias)
+    return canonical_model_id(model)
+
+
+def advisor_enabled(spec: TaskSpec) -> bool:
+    """Whether this run gets the Opus advisor: a workspace-write Sonnet 5.5, or a Haiku 5.5 that asked for it.
+
+    No settings file is read: a settings remap of the model is caught after the run, by ``executor_failure``.
+    """
+    if spec.mode != "workspace-write":
+        return False
+    model = model_id(spec.model)
+    return model == _ADVISED_MODEL or (model == _ADVISED_ON_REQUEST_MODEL and spec.options.get("advisor") == _ADVISOR_MODEL)
+
+
+def _advised_model_arg(model: str) -> str:
+    """The ``--model`` value of an advised run: the approved catalog id, never a native alias.
+
+    Claude Code maps an alias such as ``sonnet`` through the project's ``ANTHROPIC_DEFAULT_SONNET_MODEL``,
+    so it may run another model than the one that earned the advisor; the id keeps its context suffix.
+    """
+    return model_id(model) + model[model.index("["):] if "[" in model else model_id(model)
+
+
+def executor_failure(spec: TaskSpec, stdout: str) -> tuple[str | None, str | None] | None:
+    """The executor model an advised run's terminal result attests, and a failure naming both ids unless it is the approved one.
+
+    A settings file can remap which model an id runs (https://code.claude.com/docs/en/model-config). The dispatcher
+    reads none of them; the run's own ``modelUsage`` must report the approved id instead. It reports the advisor's
+    model too, so a mismatch names the one other model as the executor, or none. None for a run without the advisor.
+    """
+    if not advisor_enabled(spec):
+        return None
+    approved, result = model_id(spec.model), {}
+    for line in jsonl_lines(stdout):
+        try:
+            event = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(event, dict) and event.get("type") == "result":
+            result = event
+    usage = result.get("modelUsage")
+    reported = sorted({
+        (entry.get("canonicalModel") if isinstance(entry, dict) and isinstance(entry.get("canonicalModel"), str)
+         else name).split("[", 1)[0]
+        for name, entry in usage.items()
+    }) if isinstance(usage, dict) else []
+    if approved in reported:
+        return approved, None
+    executors = [model for model in reported if model != model_id(_ADVISOR_MODEL)]
+    return (executors[0] if len(executors) == 1 else None,
+            f"claude_advisor_executor_unverified: approved {approved}, reported {', '.join(reported) or 'none'}")
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     from scripts.agent_runtime.attempt_boundary import resolve_claude_budget_usd
 
@@ -136,6 +205,12 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.claude_account not in (None, "a"):
         argv += ["--settings", _LABELLED_SETTINGS, "--setting-sources", _LABELLED_SETTING_SOURCES]
     env = {**env, **_BACKGROUND_ENV}
+    if advisor_enabled(spec):
+        argv += ["--advisor", _ADVISOR_MODEL]
+        argv[argv.index("--model") + 1] = _advised_model_arg(spec.model)
+        env.pop("CLAUDE_CODE_DISABLE_ADVISOR_TOOL", None)
+    else:
+        env.update(_ADVISOR_OFF_ENV)
     if (budget := resolve_claude_budget_usd(spec.claude_account, spec.options.get("max_budget_usd"))) is not None:
         # An API-key run is billed per token: cap it, and keep its cache for an hour, since a test run
         # between two requests can outlast the 5 minute default that print mode gives an API key

@@ -22,7 +22,7 @@ from scripts.dispatcher import agy_sandbox, checks, cli, git, providers, store, 
 from scripts.dispatcher.cli import ALIASES, build_parser
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.providers import muse
-from scripts.dispatcher.types import TaskSpec
+from scripts.dispatcher.types import Invocation, TaskSpec
 from scripts.lib import rules_core
 from scripts.review.record_cf_verdict import _review_branch
 from tests.dispatcher.worker_reap import reap_root
@@ -3368,6 +3368,67 @@ def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp
         assert "--max-budget-usd" not in invocation.argv
         assert "CLAUDE_CODE_PROMPT_CACHE_TTL" not in invocation.env
 
+
+@pytest.mark.parametrize(
+    ("model", "mode", "options", "advised"),
+    [
+        ("claude-sonnet-5-5", "workspace-write", {}, True),
+        ("claude-sonnet-5-5", "read-only", {}, False),
+        ("claude-opus-5-5", "workspace-write", {}, False),
+        ("claude-haiku-5-5", "workspace-write", {}, False),
+        ("claude-haiku-5-5", "workspace-write", {"advisor": "opus"}, True),
+        ("sonnet[1m]", "workspace-write", {}, True),
+        ("haiku", "workspace-write", {}, False),
+        ("haiku", "workspace-write", {"advisor": "opus"}, True),
+    ],
+)
+def test_claude_advisor_is_attached_only_to_the_approved_runs(tmp_path, model, mode, options, advised):
+    """Advisor spend outside the approved scope is the defect: only the approved runs carry ``--advisor opus``."""
+    spec = TaskSpec("adv", "claude", model, None, mode, tmp_path, tmp_path / "p", tmp_path / "f", options=options)
+    spec.prompt_file.write_bytes(b"prompt")
+    for label in (None, "kk"):
+        invocation = providers.load("claude").build(dataclasses.replace(spec, claude_account=label), {})
+        assert ("--advisor" in invocation.argv) is advised
+        if advised:
+            assert invocation.argv[invocation.argv.index("--advisor") + 1] == "opus"
+            assert invocation.argv[invocation.argv.index("--model") + 1].startswith(("claude-sonnet-5-5", "claude-haiku-5-5"))
+            assert "CLAUDE_CODE_DISABLE_ADVISOR_TOOL" not in invocation.env
+            assert "DISABLE_TELEMETRY" not in invocation.env
+        else:
+            assert invocation.env["CLAUDE_CODE_DISABLE_ADVISOR_TOOL"] == "1"
+
+
+
+def test_advised_claude_run_on_another_executor_model_settles_as_a_failure(sandbox, monkeypatch):
+    """Defect: an advised run silently executing on an unapproved model settled done."""
+    from scripts.dispatcher.providers import claude
+
+    result = {"type": "result", "subtype": "success", "is_error": False, "result": "done", "usage": {},
+              "modelUsage": {"claude-sonnet-4-6": {"canonicalModel": "claude-sonnet-4-6"},
+                             "claude-opus-5-5": {"canonicalModel": "claude-opus-5-5"}}}
+    code = f"import sys\nsys.stdin.read()\nprint({json.dumps(result)!r})\n"
+    monkeypatch.setenv("LU_TASKS_DIR", str(sandbox.tasks))
+    monkeypatch.setattr(claude, "build", lambda spec, env: Invocation([sys.executable, "-c", code], b"", env, None))
+    monkeypatch.setattr(worker, "_reap_settled", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(worker.headroom, "check_runtime", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(git, "snapshot_delivery", lambda *_args: {})
+    spec = TaskSpec("advised", "claude", "sonnet", None, "workspace-write", sandbox.repo,
+                    sandbox.repo / "advised.prompt", sandbox.tasks / "advised.result")
+    spec.prompt_file.write_bytes(b"prompt")
+    record = store.new_record(spec, {"key": "public", "github": str(sandbox.remote)}, "main",
+                              run_git(sandbox.repo, "rev-parse", "HEAD"), {"research_owned_path": []})
+    record["prompt_file"] = str(sandbox.tasks / "advised.prompt")
+    path = store.create(record, b"prompt")
+    (sandbox.tasks / "logs").mkdir()
+    worker.supervise(path, {}, 10)
+    settled = json.loads(path.read_text())
+    assert settled["status"] == "failed"
+    assert settled["error"] == (
+        "claude_advisor_executor_unverified: approved claude-sonnet-5-5, reported claude-opus-5-5, claude-sonnet-4-6"
+    )
+    assert (settled["resolved_model"], settled["resolved_model_known"], settled["resolved_model_source"]) == (
+        "claude-sonnet-4-6", True, "claude-result-model-usage")
 
 def _spawn_refused_record(tmp_path, monkeypatch, task_id):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))

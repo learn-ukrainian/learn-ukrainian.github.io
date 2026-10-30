@@ -102,6 +102,10 @@ Before writing a brief from a tracker item, read its full history with `lu-drive
 (all notes): operator amendments are recorded as notes.
 Each brief also sets the worker's follow-up cap: how many follow-up tasks it may start and in
 which owned paths (rules core P1).
+A brief for a Sonnet 5.5 workspace-write worker, or a Haiku 5.5 one dispatched with `--advisor opus`,
+tells it that it has an Opus advisor and may consult it at most twice per task: before committing
+to an approach and before declaring done. Claude Code has no call-cap setting, so the brief is the
+only limit (`model-assignment.md`, Claude headless advisor).
 Briefs state expected eligible PR lines and files; require a one-line size justification
 above the `workflow.md` small-batch threshold, including data files.
 A brief or acceptance criterion never orders a worker to regenerate or deploy gitignored copies
