@@ -29,7 +29,7 @@ def terminal_result_observer(stdout_path):
                 event = json.loads(line)
             except (ValueError, UnicodeDecodeError):
                 continue
-            if isinstance(event, dict) and event.get("event") == "result":
+            if isinstance(event, dict) and event.get("event") == "result" and isinstance(event.get("result"), dict):
                 return True
         return False
 

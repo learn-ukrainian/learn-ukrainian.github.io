@@ -12,6 +12,8 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
+import psutil
+
 from scripts.agent_runtime import bounded_advisory
 from scripts.agent_runtime.read_only_tmp import create_dispatch_lease, discard_dispatch_lease
 from scripts.common.repo_root import project_interpreter
@@ -20,7 +22,13 @@ from scripts.common.task_scratch import TaskScratchError
 from scripts.dispatcher import admission, agy_sandbox, git, headroom, providers, runtime_context, store
 from scripts.dispatcher.environment import child_env
 from scripts.dispatcher.types import TaskSpec
-from scripts.dispatcher.watchdog import DeadlineExpired, communicate, deadlines, liveness_paths
+from scripts.dispatcher.watchdog import (
+    TERMINAL_EXIT_GRACE_S,
+    DeadlineExpired,
+    communicate,
+    deadlines,
+    liveness_paths,
+)
 from scripts.review.model_catalog import advisory_role_policy
 
 
@@ -387,6 +395,24 @@ def settle_left_worktrees(salvage: bool = False) -> None:
                 store.replace(current, path)
 
 
+def _end_lingering(child: subprocess.Popen, spec: TaskSpec) -> None:
+    """End a provider that outlived its terminal result, keeping what its launcher still has to write.
+
+    The read-only AGY launcher records its boundary receipt once AGY exits, so only AGY's own tree is
+    killed and the launcher is given time to finish; anything still alive after that is killed whole.
+    """
+    if spec.agent == "agy" and spec.mode == "read-only":
+        with contextlib.suppress(psutil.Error):
+            for process in psutil.Process(child.pid).children():
+                process.kill()
+        with contextlib.suppress(subprocess.TimeoutExpired):
+            child.wait(timeout=TERMINAL_EXIT_GRACE_S)
+    if child.returncode is None:
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(child.pid, signal.SIGKILL)
+        child.wait()
+
+
 def supervise(path: Path, options: dict | None = None, hard_timeout: float | None = None) -> None:
     os.umask(0o077)
     record = json.loads(path.read_text())
@@ -517,14 +543,18 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                     record.update(fields)
                     store.replace(record, path)
 
-            communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
-                        initial_response_timeout, liveness_paths(spec, invocation), output_sizes,
-                        terminal_observer(stdout_path) if terminal_observer else None, watch)
+            lingered = communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silence_timeout,
+                                   initial_response_timeout, liveness_paths(spec, invocation), output_sizes,
+                                   terminal_observer(stdout_path) if terminal_observer else None, watch)
+        if lingered:
+            _end_lingering(child, spec)
         returncode = child.returncode
+        # A provider ended after its terminal result is judged by that result, not by how it was ended.
+        exit_code = 0 if lingered else returncode
         final = invocation.final_file
         final_text = final.read_text(errors="replace") if final and final.exists() else None
         parsed = provider.parse(
-            stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), returncode, final_text
+            stdout_path.read_text(errors="replace"), stderr_path.read_text(errors="replace"), exit_code, final_text
         )
         text, usage, sources_calls = parsed.text, parsed.usage, parsed.sources_mcp_call_count
         # Once parsed, the whole stream decides the model, whatever settlement follows (not the running value).
@@ -537,25 +567,25 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if refusal:
                 status, error = "failed", refusal
                 return
-        if parsed.rate_limited and returncode >= 0:
+        if parsed.rate_limited and exit_code >= 0:
             # Before the schema check, which would record the same terminal failure as invalid output.
             status, error = "rate_limited", parsed.error
             return
         if schema is not None:
             from scripts.agent_runtime.adapters._output_schema import json_value, structured_result
 
-            result = structured_result(json_value(text), schema, returncode=returncode, terminal_ok=not parsed.error)
+            result = structured_result(json_value(text), schema, returncode=exit_code, terminal_ok=not parsed.error)
             text = result.response
             if not result.ok:
                 error = f"{result.failure_code}: {result.stderr_excerpt}"
                 status = "failed"
                 return
-        status = "done" if returncode == 0 and not parsed.error and text and text.strip() else "failed"
-        if returncode < 0:
+        status = "done" if exit_code == 0 and not parsed.error and text and text.strip() else "failed"
+        if exit_code < 0:
             status = "crashed"
         if status != "done":
             error = parsed.error or (
-                "provider exited unsuccessfully" if returncode else "provider returned no successful final response"
+                "provider exited unsuccessfully" if exit_code else "provider returned no successful final response"
             )
         if status == "done" and record.get("schema_version") == 2 and record.get("require_review_verdict") is True:
             try:

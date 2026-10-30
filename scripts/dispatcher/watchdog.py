@@ -16,6 +16,8 @@ from scripts.agent_runtime.watchdog import (
 DEFAULT_HARD_TIMEOUT_S = 7200
 DEFAULT_SILENCE_TIMEOUT_S = 3600
 DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 600
+# How long a provider may stay alive after its terminal result before the supervisor ends it.
+TERMINAL_EXIT_GRACE_S = 30
 
 
 class DeadlineExpired(subprocess.TimeoutExpired):
@@ -69,6 +71,8 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
     """Wait for a file-fed child while observing I/O, session files and tree work.
 
     ``checkpoint`` runs between waits; whatever it raises ends the wait with the child still running.
+    Returns True when the child was still alive ``TERMINAL_EXIT_GRACE_S`` after its terminal result, so
+    the caller ends it and settles on that result; None when the child exited by itself.
     """
     started = time.monotonic()
     state = WatchdogState(start_time=started, last_activity=started)
@@ -81,7 +85,7 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
         except OSError:
             mtimes[Path(path)] = 0
     next_activity_poll = started
-    terminal_seen = False
+    terminal_at = None
     while True:
         now = time.monotonic()
         waits = [0.1]
@@ -99,11 +103,13 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
         if checkpoint:
             checkpoint()
         now = time.monotonic()
-        if not terminal_seen and terminal_result and terminal_result():
-            terminal_seen = True
+        if terminal_at is None and terminal_result and terminal_result():
+            terminal_at = now
             state.last_activity, state.observed_io = now, True
+        elif terminal_at is not None and now - terminal_at >= TERMINAL_EXIT_GRACE_S:
+            return True
         for path in paths:
-            if terminal_seen:
+            if terminal_at is not None:
                 break
             try:
                 size = path.stat().st_size
@@ -114,7 +120,7 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
                 sizes[path] = size
         # A terminal envelope ends provider work. Housekeeping cannot extend its exit deadline;
         # normal exit and parsing still decide success, otherwise the configured timeout settles it.
-        if not terminal_seen and now >= next_activity_poll:
+        if terminal_at is None and now >= next_activity_poll:
             if _process_tree_has_activity(child, primed, cpu, io):
                 state.last_activity, state.observed_io = now, True
             for path in tuple(liveness())[:_MAX_LIVENESS_PATHS]:
