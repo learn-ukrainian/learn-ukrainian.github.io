@@ -2,7 +2,7 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: b4a6caa240d42653eb3914f5f6b7662e8846ca4d4d6e49fedaf0e02a58d987b7
+  sha256: 27a6b725e50682166adb1470ff6a674a42f84aed869f861f72673ff171f2465d
 est_lessons_total: 162
 positions:
 - position: 1
@@ -461,7 +461,7 @@ positions:
 - position: 31
   slug: where-to
   est_lessons: 3
-  job: 'Say where you are going: accusative direction with в, у, на and transitive motion verbs; де vs куди contrast'
+  job: 'Say where you are going: accusative direction with в, у, на and transitive motion verbs (іти, їхати)'
   inventory_text: null
   phase: A1.5
   skills_text: — (`:610-630`, `:639-650`, `:683-684`)
@@ -616,7 +616,7 @@ positions:
 - position: 40
   slug: people-around-me
   est_lessons: 3
-  job: 'Talk about people you see and know: accusative animate nouns and personal pronouns (мене, тебе, нас, вас); locative of place in personal settings (на роботі, вдома) and agreeing adjectives; `про` + accusative'
+  job: 'Talk about people you see and know: accusative animate nouns and personal pronouns (мене, тебе, нас, вас); locative of place in personal settings (на роботі, у парку) and agreeing adjectives; `про` + accusative'
   inventory_text: null
   phase: A1.6
   skills_text: — (`:610-650`, `:656-657`, `:678-688`, `:690-692`)

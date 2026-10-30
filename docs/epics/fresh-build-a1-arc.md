@@ -80,7 +80,7 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Item | Status at A1 | Where (position) | Standard |
 | --- | --- | --- | --- |
 | Gender of nouns; adjective agreement (hard and soft group), nominative | system | 8–10 | §4.2.1 `:603-650` |
-| Adjective agreement in the **accusative** and **locative** (hard and soft group) | system | early direct object 15–16; accusative 29–31; locative 38–40 | `:633-650`, examples `:680`, `:691` |
+| Adjective agreement in the **accusative** and **locative** (hard and soft group) | system | early direct object 15–16; accusative 29–31, 37, 40; locative 38–40 | `:633-650`, examples `:680`, `:691` |
 | Personal pronouns 1st / 2nd person, accusative forms (мене, тебе, нас, вас) | system | 40 (first met in the chunk `мене звати` at 3) | `:656-657` |
 | Personal pronouns 1st / 2nd person, dative forms (мені, тобі, нам, вам) | **forms taught as pronoun forms inside their constructions** (`мені подобається`, `мені … років`, and the "I need" chunk); no noun dative | 11, 15, 43, 54 | `:656-657`; noun dative stays A2 (mapping `:97-102`) |
 | Possessive gender forms мій, моя, моє; твій, твоя, твоє; наш, наша, наше; ваш, ваша, ваше; їхній, їхня, їхнє; demonstratives | system | possessives 8 (chunks at 4); demonstratives 12; plurals 13 | `:659-667` |
@@ -170,7 +170,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 28 | `euphony` | A1.5 | Choose у / в, і / й, з / із / зі | — | 2 |
 | 29 | `where-is-it` | A1.5 | Express destination and direction: accusative case with в, у, на and agreeing hard/soft-group adjectives in all three genders | — (`:610-630`, `:639-650`, `:683-684`) | 4 |
 | 30 | `my-city` | A1.5 | Name city institutions, worship buildings, public facilities and streets; directional motion and destinations in the city | Li, S, R, W (city signs/map, short city description and captions; `:372-376`, `:496-503`) (`:496-498`, `:499-500`, `:503`) | 3 |
-| 31 | `where-to` | A1.5 | Say where you are going: accusative direction with в, у, на and transitive motion verbs; де vs куди contrast | — (`:610-630`, `:639-650`, `:683-684`) | 3 |
+| 31 | `where-to` | A1.5 | Say where you are going: accusative direction with в, у, на and transitive motion verbs (іти, їхати) | — (`:610-630`, `:639-650`, `:683-684`) | 3 |
 | 32 | `transport` | A1.5 | Get around: travel hubs including автовокзал, public transport and taxi; іти, їхати in basic phrases | Li, S, R, W (traveller/passenger roles; tickets, timetables, illustrated advertisements; slow clear announcements for topic/detail; `:245-252`, `:310-321`, `:379-388`) (`:522`, `:501-502`, `:524`) | 3 |
 | 33 | `around-the-city` | A1.5 | Ask for and follow directions | Li | 3 |
 | 34 | `where-from` | A1.5 | Say where you and things are from; parts of the world (continents); at the border | W (`:523-525`; full address: country, city, street, house/building-section/apartment numbers; form and envelope; `:345-346`, `:352`, `:361`, `:377`) | 3 |
@@ -179,7 +179,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 37 | `i-eat-i-drink` | A1.6 | Say what you eat and drink: food and beverage choices, ordering language, and transitive direct objects | — (`:610-630`, `:639-650`, `:680`) | 3 |
 | 38 | `at-the-cafe` | A1.6 | Order and pay in a café; locative case of place with в, у, на in dining environments (у кафе, в ресторані) | Li, S, R, W (guest/customer exchanges and short notes; extract menu/bill information; `:310-311`, `:379-388`) (`:536-539`, `:272-275`, `:690-692`) | 3 |
 | 39 | `shopping` | A1.6 | Ask prices and buy food, toiletries including шампунь, and stationery; locative of place in shops and markets (у магазині, на базарі) | Li, S, R, W (customer roles; seller in speaking; price tags; `:531-533`; illustrated advertisements, promotions and product-choice instructions; `:261-266`, `:318-321`, `:379-388`, `:447-448`) (`:528-534`, `:690-692`) | 3 |
-| 40 | `people-around-me` | A1.6 | Talk about people you see and know: accusative animate nouns and personal pronouns (мене, тебе, нас, вас); locative of place in personal settings (на роботі, вдома) and agreeing adjectives; `про` + accusative | — (`:610-650`, `:656-657`, `:678-688`, `:690-692`) | 3 |
+| 40 | `people-around-me` | A1.6 | Talk about people you see and know: accusative animate nouns and personal pronouns (мене, тебе, нас, вас); locative of place in personal settings (на роботі, у парку) and agreeing adjectives; `про` + accusative | — (`:610-650`, `:656-657`, `:678-688`, `:690-692`) | 3 |
 | 41 | `checkpoint-food-shopping` | A1.6 | Self-check: order and buy | R | 2 |
 | 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |
 | 43 | `please-do-this` | A1.7 | Ask someone to do something and prohibit an action; all Standard imperative pairs, second person singular and plural | Li, S, R, W (illustrated instructions and prohibitions; copy familiar signs; `:264-266`, `:299`, `:314-315`, `:362-364`) (`:721-725`, `:475`) | 3 |
@@ -458,7 +458,7 @@ are local clause identifiers, not official Standard numbering.
 | `intentions[13]` preferences | 472–473 | 15 |
 | `intentions[14]` requests for action | 474 | 43 |
 | `intentions[15]` prohibition | 475 | 43 |
-| `intentions[16]` spatial meanings | 476 | 29–33 |
+| `intentions[16]` spatial meanings | 476 | 29–33, 38–40 |
 | `intentions[17]` temporal meanings | 477 | 23, 25, 48–51 |
 | `phonetics.alphabet` | 571–572 | 2–5; capital-letter use and handwriting 5 |
 | `phonetics.apostrophe` | 574 | 4 |
@@ -607,7 +607,7 @@ Each of the seven subsections (a)–(g) below reflects the OHO baseline and inco
   - Positions 2–5 stage the phonetic topics:
     - Position 2: Full alphabet overview + 6 vowel sounds, stressed vs unstressed vowels, statement/question intonation.
     - Position 3: Hard vs soft consonants, hardness before [е], syllable division and stress rules, voiced/voiceless pairs д–т, з–с, г–х.
-    - Position 4: Remaining iotated vowels (ю, є; with я acquired at 2 and ї at 5), apostrophe, pair б–п.
+    - Position 4: Remaining iotated vowels (ї, ю, є; with я acquired at 2), apostrophe, pair б–п.
     - Position 5: Affricates (дж, дз), consonants ґ, ж, ч, ш, щ, ц, ф, letter names, cursive recognition and handwriting practice.
 
 ### (e) Pacing rules made explicit

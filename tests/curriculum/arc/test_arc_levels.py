@@ -33,7 +33,7 @@ FIRST_BAND_KEY = {"a2": "a2-bridge", "b1": "b1-core", "b2": "b2+"}
 A1_ARC_DOC = REPO_ROOT / "docs/epics/fresh-build-a1-arc.md"
 A1_ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
 # All 55 generated rows after the #10108 r6 floor ownership amendment and review reconciliations.
-A1_POSITIONS_BLOCK_SHA256 = "84e5b78a450981a793adb4d6f1891c1b43d4b049ef2c3d30cc7688872a630210"
+A1_POSITIONS_BLOCK_SHA256 = "cf2553d4a46ea20950da0ac2dae78e444f9a0ce8a6d8cd7fc4ae96fde8b4f2ed"
 NON_A1_ARC_SHA256 = {
     "a2": "1ef2873d9643e70a5fec13a5240bbad0e3375977bc81429201c2d33a3f53fb30",
     "b1": "274cbfdf28f7c7193d5efd4b4cd623d4ebb0933fd20e391303d3cd36bcf5390f",
