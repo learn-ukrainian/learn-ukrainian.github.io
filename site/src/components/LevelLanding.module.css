@@ -61,9 +61,15 @@
   margin-bottom: 0.5rem;
 }
 
-.progressHeader h3 {
+.progressHeader .progressTitle {
+  /* Beat .lu-content h2 so this label stays the small progress caption. */
   font-size: 0.9rem;
+  font-weight: 700;
   margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--lu-text);
+  line-height: 1.25;
 }
 
 .progressHeader span {

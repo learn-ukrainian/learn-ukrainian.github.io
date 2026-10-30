@@ -19,6 +19,7 @@ const SURFACES = [
   { path: '/', ready: 'main' },
   { path: '/a1/', ready: 'main' },
   { path: '/a1-v1/what-time/', ready: '[data-activity="fillin-row"] select' },
+  { path: '/a1-v1/yesterday/', ready: '[data-activity="order-selected"]' },
   { path: '/a2/dative-nouns/', ready: '[data-activity="fillin-row"] select' },
   { path: '/folk/charivni-kazky/', ready: 'main' },
   { path: '/readings/', ready: 'main' },
