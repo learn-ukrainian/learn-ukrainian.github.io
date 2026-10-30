@@ -103,6 +103,17 @@ I12118_REFUSED = [
     'pkill -f "$PATTERN"',
     'pgrep -f "$P" | xargs kill',
     "pkill -USR1 -H -x python",
+    # Review F3/F4: a computed command word beside a kill, at any depth.
+    'D=:; D=cd; "$D" /proc/$$; printf r2hidden > comm; pkill -x r2hidden; :',
+    'D=:; D=pushd; "$D" /proc/$$; "$D" /dev; P=:; P=popd; "$P"; printf r2hidden > comm; pkill -x r2hidden; :',
+    'D=:; D=cd; builtin "$D" /proc/$$; printf r2hidden > comm; pkill -x r2hidden',
+    'D=:; D=cd; "$D" scripts/lib; bash driver_scope.sh',
+    'cd "$(printf /dev)"; bash no-such-script-12118.sh',
+    'L=:; L=sudo; "$L" -u nobody bash -c "pkill -u nobody -x bash; :"',
+    'L=:; L=doas; "$L" -u nobody bash -c "killall -u nobody bash; :"',
+    "L=:; L=sudo; \"$L\" -u nobody bash -c 'kill $(pgrep -U nobody -x bash); :'",
+    'L=:; L=sudo; eval \'"$L" -u nobody bash -c "pkill -u nobody -x bash; :"\'',
+    'L=:; L=sudo; find /dev/null -exec "$L" -u nobody bash -c "pkill -u nobody -x bash; :" \\;',
 ]
 I12118_ALLOWED = [
     "pkill -x no-such-process-12118",
@@ -111,6 +122,9 @@ I12118_ALLOWED = [
     "pkill -P 1 -x no-such-process-12118",
     # A wrapper before a shell running an existing script with no kill in it.
     "timeout 120 bash scripts/ci/linux_fs_parity.sh",
+    # Review F3/F4: a computed command word without a kill is unaffected.
+    'D=:; D=cd; "$D" /dev; pgrep -x no-such-process-12118',
+    '[ -n "$(pgrep -x no-such-process-12118)" ] && pkill -x no-such-process-12118',
 ]
 
 

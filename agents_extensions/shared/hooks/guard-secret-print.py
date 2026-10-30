@@ -1866,6 +1866,10 @@ _WRITTEN_SCRIPT = (
     "the command writes a script and runs it or makes it executable, so the guard cannot read it; "
     "write the script in one command and run it in the next"
 )
+_UNKNOWN_DIRECTORY_SCRIPT = (
+    "the command runs a script by a relative path from a directory the guard cannot determine, so it "
+    "cannot read the script; run it by its absolute path, or change directory with a literal cd"
+)
 _FULL_MATCH = "full-command-line process kills can match the agent's own shell, whose command line holds the command"
 _PARAMETER = re.compile(r"\$(?:\{([A-Za-z_][A-Za-z0-9_]*)(?:(:?-)([^}$`\\]*))?\}|([A-Za-z_][A-Za-z0-9_]*))")
 _MAX_WORD_CANDIDATES = 16
@@ -1873,6 +1877,8 @@ _MAX_WORD_CANDIDATES = 16
 _FILE_WRITERS = {"tee", "touch"}
 # Launchers that run their command under other user or group IDs.
 _CREDENTIAL_LAUNCHERS = {"sudo", "doas", "su", "runuser", "setpriv", "pkexec", "sg", "newgrp", "setuidgid", "chpst"}
+# Names a program's operand can take that make it a command the reader follows.
+_LAUNCHABLE = _PROCESS_COMMAND_STARTS | set(_WRAPPER_OPTIONS) | _CREDENTIAL_LAUNCHERS
 # Programs that only read, copy or describe their file operands, never run them.
 _FILE_TOOLS = {
     "cp",
@@ -2045,6 +2051,8 @@ class _ProcessFacts:
         self.limit = False
         self.opaque = False
         self.unresolved = False
+        # A command word computed by an expansion (`"$D"`, `${L}`, `"$(...)/x"`), at any depth.
+        self.computed = False
         self.exec_names: set[str] = set()
         self.calls: list[tuple[str, tuple[str, ...], bool]] = []
         # The raw value words assigned to each parameter, or None when one is not a plain assignment.
@@ -2250,6 +2258,12 @@ def _splits(word: str) -> bool:
             return True
         index += 1
     return False
+
+
+def _computed(word: str) -> bool:
+    """Whether a word's value comes from an expansion or substitution, not from its text."""
+    parts = _word_parts(word)
+    return parts is None or any(kind != "lit" for kind, _ in parts)
 
 
 def _command_names(word: str, facts: _ProcessFacts, depth: int = 0) -> list[str] | None:
@@ -2548,6 +2562,7 @@ def _segment_process_facts(words: list[str], facts: _ProcessFacts, depth: int, *
     if cmd == "__UNDECIDABLE_SECRET_COMMAND__":
         facts.limit = True
         return
+    facts.computed = facts.computed or _computed(words[index])
     names = _command_names(words[index], facts)
     if names is None:
         facts.unresolved = True
@@ -2679,7 +2694,12 @@ def _program_process_facts(
             facts.launched.extend(words[index + 1 :])
         for later in range(index + 1, len(words)):
             starts = _PROCESS_COMMAND_STARTS - (_TEXT_BUILTINS if "/" in words[later] else set())
-            if set(_command_names(words[later], facts) or ()) & starts:
+            names = _command_names(words[later], facts)
+            runs_operands = name not in _FILE_TOOLS | {"[", "test", "cd", "pushd", "popd"}
+            if runs_operands and _computed(words[later]) and (names is None or set(names) & _LAUNCHABLE):
+                # A computed word the program may run as a command (`find -exec "$L"`).
+                facts.computed = True
+            if set(names or ()) & starts:
                 _segment_process_facts(words[later:], facts, depth + 1, fed=fed)
 
 
@@ -2743,12 +2763,17 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
 
     for segment in (segment for pipeline in pipelines for segment in pipeline):
         values = [_shell_word_value(word) for word in segment]
-        # Program names resolved through quoting and parameters (`"$P"` for tee).
-        programs = [(_command_names(word, facts) or [""])[0] for word in segment]
+        # Every program name each word can take, through quoting and parameters
+        # (`"$P"` for tee): a word that may be one of several names counts as each.
+        programs = [
+            (index, name)
+            for index, word in enumerate(segment)
+            for name in sorted(set(_command_names(word, facts) or ()))
+        ]
         for index, word in enumerate(segment[:-1]):
             if re.fullmatch(r"\d*(?:>|>>|>\||&>|&>>|<>)", word):
                 write(segment[index + 1])
-        for index, program in enumerate(programs):
+        for index, program in programs:
             # A word the reader cannot read counts as an operand, never as an option.
             operands = [word for word in segment[index + 1 :] if not (_shell_word_value(word) or "").startswith("-")]
             if program in {"tee", "touch"}:
@@ -2782,9 +2807,9 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
                     program == "wget" and "-O" not in values
                 ):
                     facts.unknown_write = True
-        if set(programs) & _CREDENTIAL_LAUNCHERS:
+        if {name for _, name in programs} & _CREDENTIAL_LAUNCHERS:
             facts.credential_change = True
-        for index, program in enumerate(programs):
+        for index, program in programs:
             if program in {"chmod", "install"}:
                 for word in segment[index + 1 :]:
                     names = _effect_names(word, facts)
@@ -2792,10 +2817,10 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
                     if names is None:
                         facts.executable.add("")
         # cd behind a wrapper or control word (`builtin cd`, `if cd ...`) still moves.
-        moves = [index for index, program in enumerate(programs) if program in {"cd", "pushd", "popd"}]
-        if moves and programs[moves[0]] == "popd":
+        moves = [index for index, program in programs if program in {"cd", "pushd", "popd"}]
+        if any(program == "popd" for _, program in programs):
             facts.unknown_directory = True
-        elif moves:
+        if moves:
             targets = [word for word in segment[moves[0] + 1 :] if not (_shell_word_value(word) or "x").startswith("-")]
             names = _word_candidates(targets[0], facts) if targets else [os.environ.get("HOME", "")]
             if targets and _under_proc(targets[0], facts):
@@ -2868,6 +2893,9 @@ def _script_reason(facts: _ProcessFacts) -> str | None:
             # A write to an unknown path could be this script.
             return _WRITTEN_SCRIPT
         for value in values or []:
+            if not os.path.isabs(value) and facts.unknown_directory:
+                # The file that runs depends on a directory the reader cannot know.
+                return _UNKNOWN_DIRECTORY_SCRIPT
             directories = {facts.cwd, *facts.directories}
             paths = [value] if os.path.isabs(value) else [os.path.join(directory, value) for directory in directories]
             existing = [path for path in paths if os.path.isfile(path)]
@@ -3443,6 +3471,14 @@ def _process_refusal(command: str, cwd: str | None = None) -> str | None:
         return (
             "a command name the guard cannot resolve could stop the agent's own process; "
             'name the program literally, or quote an expansion ("$PY", not $PY)'
+        )
+    if facts.computed and any(name in _KILL_COMMANDS for name, _, _ in facts.calls):
+        # A computed command can change the directory or credentials the kill
+        # runs under in ways the reader does not model, so the class is refused whole.
+        return (
+            "a command name, or a word another program may run, is computed at run time beside a "
+            "process kill and could change what the kill reaches; name every program in this command "
+            'literally (cd, not "$D"), or run the kill in a separate command'
         )
     if script_reason:
         return script_reason
