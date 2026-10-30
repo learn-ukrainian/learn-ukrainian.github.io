@@ -343,6 +343,39 @@ def test_dispatch_without_a_curriculum_path_keeps_curriculum_inputs_excluded(san
     assert sandbox.settle(task, expected=1)["worktree_disposition"] == "removed"
 
 
+@pytest.mark.parametrize("owned,gains", [
+    ("scripts/lexicon", True), ("scripts/lexicon/x.py", True), ("scripts/**", True),
+    ("scripts/dispatcher/cli.py", False),
+])
+def test_owning_a_lexicon_path_also_owns_the_fingerprint_its_gate_regenerates(sandbox, owned, gains):
+    """The fingerprint is added once, so the record, the sparse checkout and the advisory binding agree (#12169)."""
+    fingerprint = "site/src/data/lexicon-manifest.fingerprint.json"
+    for relative in ("scripts/lexicon/x.py", fingerprint):
+        (sandbox.repo / relative).parent.mkdir(parents=True, exist_ok=True)
+        (sandbox.repo / relative).write_text("tracked fixture")
+    run_git(sandbox.repo, "add", ".")
+    run_git(sandbox.repo, "commit", "-m", "lexicon fixture")
+    run_git(sandbox.repo, "push", "origin", "main")
+
+    def binding(*paths):
+        flags = [flag for path in paths for flag in ("--owned-path", path)]
+        return sandbox.cli("dispatch", "--agent", "sol", "--model", "echo", "--mode", "workspace-write",
+                           "--task-id", "binding", "--prompt", "literal final response",
+                           "--print-advisory-binding", *flags).stdout
+
+    assert (binding(owned) == binding(owned, fingerprint)) is gains
+    result = sandbox.cli("dispatch", "--agent", "sol", "--model", "blocked", "--prompt", "literal final response",
+                         "--mode", "workspace-write", "--owned-path", owned)
+    task = tuple(result.stdout.splitlines())
+    assert (fingerprint in result.stderr) is gains
+    record = json.loads((sandbox.tasks / f"{task[0]}.json").read_text())
+    assert record["owned_paths"] == ([owned, fingerprint] if gains else [owned])
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    assert (Path(record["cwd"]) / fingerprint).exists() is gains
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    assert sandbox.settle(task, expected=1)["worktree_disposition"] == "removed"
+
+
 @pytest.mark.parametrize("redirected", [False, True])
 def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_with_git_redirects(sandbox, monkeypatch, redirected):
     tracked = sandbox.repo / "curriculum/tracked.txt"
