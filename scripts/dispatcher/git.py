@@ -35,6 +35,16 @@ SPARSE_EXCLUDE_DEFAULT = frozenset({
     "registry/projects", "registry/lexicon/source-inventory",
     "registry/lexicon/source-inventory-review-decisions", "site/src/content", "site/src/data",
 })
+# Excluded trees a tool reads from the worktree when an owned path is this prefix
+# or under it. Curriculum was measured by running the validator and the fresh-build
+# engine: both open registry/lexicon/source-inventory, and the engine opens
+# site/src/content for built lesson pages. data/lexicon stays excluded; the evidence
+# reader uses the primary checkout when the worktree has no copy.
+OWNED_PATH_INPUTS = {
+    "curriculum": frozenset({"registry/lexicon/source-inventory", "site/src/content"}),
+    "tests/projects/open_model_data": frozenset({"data/projects"}),
+    "scripts/projects/open_model_data": frozenset({"data/projects"}),
+}
 GIT_BINARY = shutil.which("git", path=os.defpath)
 # Bound for each explicit fetch of the ownership walk. On the 8 GB public repository
 # the bounded fetch measured about one second and the blob-less full-history fallback
@@ -214,9 +224,9 @@ def sparse_excludes(includes=(), owned_paths=()) -> list[str]:
         root = "/".join(literal)
         includes.update(tree for tree in SPARSE_EXCLUDE_DEFAULT
                         if root == tree or root.startswith(tree + "/") or tree.startswith(root + "/"))
-        if any(root == prefix or root.startswith(prefix + "/") for prefix in
-               ("tests/projects/open_model_data", "scripts/projects/open_model_data")):
-            includes.add("data/projects")
+        for prefix, trees in OWNED_PATH_INPUTS.items():
+            if root == prefix or root.startswith(prefix + "/"):
+                includes.update(trees)
     return sorted(SPARSE_EXCLUDE_DEFAULT - includes)
 
 

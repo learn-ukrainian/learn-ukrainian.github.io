@@ -273,7 +273,8 @@ def await_file(path, *, ready=lambda content: True):
     (["--owned-path", "tests/projects/open_model_data/test_mine.py"], {"data/projects"}),
     (["--research-owned-path", "scripts/projects/open_model_data/**"], {"data/projects"}),
     (["--owned-path", "site"], {"site/src/content", "site/src/data"}),
-    (["--owned-path", "curriculum/**", "--sparse-include", "data/projects"], {"curriculum", "data/projects"}),
+    (["--owned-path", "curriculum/**", "--sparse-include", "data/projects"],
+     {"curriculum", "data/projects", "registry/lexicon/source-inventory", "site/src/content"}),
     (["--owned-path", "data/projects-other", "--research-owned-path", "scripts/projects/open_model_database"], set()),
     (["--owned-path", "../data/projects", "--research-owned-path", "/data/projects"], set()),
 ])
@@ -318,6 +319,28 @@ def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_wo
     (sandbox.tasks / f"{task[0]}.release").touch()
     # A write task that commits nothing settles as undelivered; the sparse checkout is what this test covers.
     assert sandbox.settle(task, expected=1 if mode else 0)["worktree_disposition"] == "removed"
+
+
+def test_dispatch_without_a_curriculum_path_keeps_curriculum_inputs_excluded(sandbox):
+    """A dispatch that owns no curriculum path does not gain the curriculum input trees."""
+    owned = sandbox.repo / "docs/owned.md"
+    owned.parent.mkdir()
+    owned.write_text("owned")
+    for directory in ("registry/lexicon/source-inventory", "site/src/content"):
+        path = sandbox.repo / directory / "fixture.txt"
+        path.parent.mkdir(parents=True)
+        path.write_text("tracked fixture")
+    run_git(sandbox.repo, "add", ".")
+    run_git(sandbox.repo, "commit", "-m", "non-curriculum owned path")
+    run_git(sandbox.repo, "push", "origin", "main")
+    task = sandbox.dispatch("blocked", "--mode", "workspace-write", "--owned-path", "docs/owned.md")
+    worktree = Path(json.loads((sandbox.tasks / f"{task[0]}.json").read_text())["cwd"])
+    await_file(sandbox.tasks / f"{task[0]}.started")
+    assert (worktree / "docs/owned.md").read_text() == "owned"
+    assert not (worktree / "registry/lexicon/source-inventory/fixture.txt").exists()
+    assert not (worktree / "site/src/content/fixture.txt").exists()
+    (sandbox.tasks / f"{task[0]}.release").touch()
+    assert sandbox.settle(task, expected=1)["worktree_disposition"] == "removed"
 
 
 @pytest.mark.parametrize("redirected", [False, True])
