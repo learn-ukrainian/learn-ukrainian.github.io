@@ -9,8 +9,10 @@ and it never reaches a provider whose supervisor was already killed. Both keep
 running (the ``blocked`` stub waits forever).
 
 Fixture teardown kills every process started from the test's temporary directory,
-and the session leader's group when that process still leads it. A child of the
-test process holds the other end of a pipe and does the same kill when the pipe
+and the session leader's group when that process still leads it. The scan repeats,
+because that leader can fork a new session after the snapshot and before the
+signal. The root stays armed for the parent-death child until a scan sees nobody.
+That child holds the other end of a pipe and does the same kill when the pipe
 closes, which is what ``os._exit`` does to the test process.
 """
 
@@ -79,18 +81,7 @@ def pids_under(root: str, *, skip: set[int] | None = None) -> list[int]:
     return found
 
 
-def reap_root(root: Path | str, *, skip: set[int] | None = None) -> list[int]:
-    """SIGKILL processes started from ``root``. A living group leader takes its group.
-
-    Returns the pids that were live. A leader's group id is still its own pid, so
-    ``killpg`` cannot hit a reused id. Followers are signalled individually: their
-    group may be the test process.
-    """
-    root = str(Path(root).resolve())
-    skip = set(skip or ())
-    skip.add(os.getpid())
-    own_group = os.getpgrp()
-    found = pids_under(root, skip=skip)
+def _signal(found: list[int], own_group: int) -> None:
     leaders = []
     followers = []
     for pid in found:
@@ -111,7 +102,44 @@ def reap_root(root: Path | str, *, skip: set[int] | None = None) -> list[int]:
     for pid in found:
         with contextlib.suppress(ChildProcessError):
             os.waitpid(pid, os.WNOHANG)
-    return found
+
+
+def reap_root(root: Path | str, *, skip: set[int] | None = None) -> list[int]:
+    """SIGKILL processes started from ``root``, including a session forked during the scan.
+
+    One snapshot is not enough. The worker is in that snapshot and can fork a new
+    session before the signal lands, and the signal is not visible in ``/proc``
+    on the next scan. The pass repeats until a scan sees nobody, or the same
+    pids survive several signals. A living group leader takes its group.
+    Its group id is still its own pid, so ``killpg`` cannot hit a reused id.
+    Followers are signalled individually: their group may be the test process.
+
+    Returns every pid a scan found.
+    """
+    root = str(Path(root).resolve())
+    skip = set(skip or ())
+    skip.add(os.getpid())
+    own_group = os.getpgrp()
+    seen: list[int] = []
+    last: set[int] | None = None
+    repeats = 0
+    while True:
+        found = pids_under(root, skip=skip)
+        if not found:
+            return seen
+        current = set(found)
+        if current == last:
+            repeats += 1
+            # An unkillable pid must not hang teardown. A few repeats cover a
+            # signal that has not shown up in /proc yet, and a child forked in
+            # that window (its pid changes ``current`` and resets the count).
+            if repeats >= 4:
+                return seen
+        else:
+            repeats = 0
+        last = current
+        _signal(found, own_group)
+        seen.extend(found)
 
 
 def _reap_listed(path: str) -> None:
@@ -195,7 +223,12 @@ class Reaper:
     def reap(self, root: Path) -> None:
         resolved = str(root.resolve())
         self.history.setdefault(resolved, self.active.get(resolved, resolved))
-        reap_root(resolved, skip={os.getpid(), self._proc.pid})
+        skip = {os.getpid(), self._proc.pid}
+        reap_root(resolved, skip=skip)
+        # A child forked after the last empty scan keeps the root armed for the
+        # parent-death watchdog. Dropping it here is how that child survives os._exit.
+        if pids_under(resolved, skip=skip):
+            return
         self.active.pop(resolved, None)
         self._flush()
 
