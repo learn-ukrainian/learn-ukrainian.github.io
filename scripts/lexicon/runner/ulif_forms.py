@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import json
+import os
 import sqlite3
 import sys
 from datetime import UTC, datetime
@@ -28,6 +29,7 @@ from scripts.lib.readonly_sqlite import (
 from scripts.lib.readonly_sqlite import (
     refuse_writable_corpus_database,
 )
+from scripts.storage.topology import store_kind
 from scripts.wiki import sources_db
 
 ULIF_FORMS_PARSER_VERSION = ulif_dictua_parse.ULIF_FORMS_PARSER_VERSION
@@ -49,7 +51,9 @@ def build_ulif_forms(
 
     raw_cache = Path(raw_cache_path).resolve() if raw_cache_path is not None else ulif_raw_cache.cache_path(target_db)
 
-    lock_file = Path(f"{target_db}.build.lock")
+    # The lock sits beside the store as named: for the selector, next to it, never inside the generation directory.
+    lock_base = Path(os.path.abspath(db_path)) if store_kind(db_path).kind == "selector" else target_db
+    lock_file = Path(f"{lock_base}.build.lock")
     lock = FileLock(str(lock_file), timeout=0)
     try:
         lock.acquire(timeout=0)

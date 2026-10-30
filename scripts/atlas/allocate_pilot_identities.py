@@ -27,7 +27,7 @@ if __package__ in (None, ""):
 from scripts.atlas import word_card_foundation as foundation
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, store_kind
 
 ROOT = Path.cwd()
 MANIFEST = ROOT / "registry/atlas/pilot/pilot-v1.json"
@@ -453,7 +453,7 @@ def run(apply, append=False, sources_db=None, vesum_db=None):
 
         raw = foundation.readonly(stack, assembly.raw_cache_path(sources_path))
         modern_inputs = SimpleNamespace(records=records,
-            sources=src.PilotSources(sources, vesum, raw, sources_path.parent.parent),
+            sources=src.PilotSources(sources, vesum, raw, (store_kind(sources_path).lock_dir or sources_path.parent).parent),
             entry_by_unit={unit["unit_key"]: next(e for e in registry["entries"]
                 if e["created_in_build"] == build and unit["unit_key"] in foundation.source_keys(e)) for unit in units})
         needs = holding_obligations(manifest, registry, sources, modern_inputs)
