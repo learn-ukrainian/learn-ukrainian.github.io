@@ -58,6 +58,8 @@ F7_SHELL_OPTIONS = [
     "bash -rcfile /dev/null -c 'pkill -f worker'",
     "bash -posix -c 'pkill -f worker'",
     "OLDPWD=-c; bash ~- 'pkill -f worker'",
+    "pgrep -f worker; bash -c kill",
+    "bash -e'c' 'pkill -f worker'",
 ]
 # Review F10: ANSI-C escapes whose Bash meaning the decoder does not model.
 F10_ANSI_C = [

@@ -360,8 +360,12 @@ def _collapse_shell_line_continuations(command: str) -> str:
     return "".join(out)
 
 
-def _separate_program_flag_quotes(command: str) -> str:
-    """Give shlex's non-POSIX lexer a word boundary before attached scripts."""
+def _separate_program_flag_quotes(command: str, *, keep_plain: bool = False) -> str:
+    """Give shlex's non-POSIX lexer a word boundary before attached scripts.
+
+    With `keep_plain`, a flag whose attached quote holds no blank, operator or
+    escape stays one word, as the shell reads it (`-e'c'` is `-ec`).
+    """
     out = []
     quote = ""
     index = 0
@@ -375,6 +379,12 @@ def _separate_program_flag_quotes(command: str) -> str:
             # Options are opaque here; quote handling must not depend on the
             # interpreter's option letters or their position in a cluster.
             flag = re.match(r"(-{1,2}[A-Za-z][A-Za-z0-9_-]*=?)(?=[\"'])", command[index:])
+            if (
+                flag
+                and keep_plain
+                and re.match(r"""'[^'\s();&|<>]*'|"[^"\\\s();&|<>]*\"""", command[index + flag.end() :])
+            ):
+                flag = None
             if flag:
                 out.append(flag[0].rstrip("=") + " ")
                 index += flag.end()
@@ -391,10 +401,12 @@ def _separate_program_flag_quotes(command: str) -> str:
     return "".join(out)
 
 
-def _tokenize(command: str) -> list[str]:
+def _tokenize(command: str, *, keep_plain_flags: bool = False) -> list[str]:
     try:
         executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
-        protected, parameters = _protect_parameters(_separate_program_flag_quotes(executable))
+        protected, parameters = _protect_parameters(
+            _separate_program_flag_quotes(executable, keep_plain=keep_plain_flags)
+        )
 
         def descriptor_word(descriptor: str, operator: str) -> str:
             marker = f"\ue000{len(parameters)}\ue001"
@@ -588,11 +600,13 @@ def _is_command_brace(token: str, segment: list[str]) -> bool:
     )
 
 
-def _pipelines(command: str) -> list[list[list[str]]]:
+def _pipelines(command: str, *, keep_plain_flags: bool = False) -> list[list[list[str]]]:
     """Return command pipelines, split quote-aware on pipes and separators."""
     # shlex groups adjacent punctuation into runs such as `);`. Split those
     # before segmenting, or a command after a substitution can be hidden.
-    tokens = [part for token in _tokenize(command) for part in split_operator_run(token)]
+    tokens = [
+        part for token in _tokenize(command, keep_plain_flags=keep_plain_flags) for part in split_operator_run(token)
+    ]
     pipelines: list[list[list[str]]] = []
     pipeline: list[list[str]] = []
     segment: list[str] = []
@@ -1735,32 +1749,36 @@ def _shell_script(args: list[str]) -> list[str]:
 
     Every word before the script must be a plain literal word of letters,
     digits and dashes, so no expansion can add or hide an option. The first
-    other word is the script, or the script file when no option holds `c`. It
-    must start with a literal character that is not an option sign. Anything
-    else makes the script unreadable.
+    other word ends that region; it must start with a literal character that
+    is not an option sign, or the script is unreadable. When an option holds
+    `c`, that word and every plain non-option word before it are read as the
+    script, since a plain word may be an option's operand or the script itself.
     """
     # Redirections may precede or sit among the options (`sh 2>/dev/null -c ...`).
     args = _raw_without_redirects(args)
     command = False
     operands = 0
+    scripts: list[str] = []
     for index, word in enumerate(args):
-        if re.fullmatch(r"[A-Za-z0-9-]+", word):
-            # A `c` counts in every single-dash word, operands and long options
-            # (`-posix`) included, so the reader can only over-report a script.
-            command = command or (re.match(r"-[^-]", word) is not None and "c" in word)
-            if operands:
-                operands -= 1
-            elif word.startswith("-"):
-                name = word.lstrip("-")
-                if name in _SHELL_VALUE_OPTIONS:
-                    operands = 1
-                elif not word.startswith("--"):
-                    operands = sum(letter in "oO" for letter in name)
-            continue
-        if operands or not _SCRIPT_START.match(word):
-            return ["__UNDECIDABLE_SECRET_COMMAND__"]
-        return _script_words(args, index) if command else []
-    return []
+        if not re.fullmatch(r"[A-Za-z0-9-]+", word):
+            if operands or not _SCRIPT_START.match(word):
+                return ["__UNDECIDABLE_SECRET_COMMAND__"]
+            scripts.extend(_script_words(args, index))
+            break
+        pending = max(operands - 1, 0)
+        if word.startswith("-"):
+            # Every single-dash word counts, operands and long options (`-posix`)
+            # included, so the reader can only over-report options and operands.
+            command = command or (not word.startswith("--") and "c" in word)
+            name = word.lstrip("-")
+            if name in _SHELL_VALUE_OPTIONS:
+                operands = max(pending, 1)
+            else:
+                operands = max(pending, 0 if word.startswith("--") else sum(letter in "oO" for letter in name))
+        else:
+            scripts.append(word)
+            operands = pending
+    return scripts if command else []
 
 
 def _hide_substitutions(command: str) -> tuple[str, dict[str, tuple[str, str]]]:
@@ -1907,7 +1925,8 @@ def _process_facts(command: str, *, depth: int = 0) -> set[str]:
     facts: set[str] = set()
     for _, body in substitutions.values():
         facts |= _process_facts(body, depth=depth + 1)
-    for pipeline in _pipelines(executable):
+    # A flag glued to a quote stays one word, so a quote in a shell's options is seen.
+    for pipeline in _pipelines(executable, keep_plain_flags=True):
         for segment in pipeline:
             facts |= _segment_process_facts(segment, depth)
     return facts
