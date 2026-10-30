@@ -1,4 +1,4 @@
-# Content Quality Review Prompt (Claude + RAG)
+# Content Quality Review Prompt
 
 You are reviewing a BUILT Ukrainian language course module. The module has already passed pipeline audit gates (word count, activity count, VESUM coverage). Your job is to find quality issues the pipeline CANNOT catch: pedagogical quality, plan adherence, linguistic accuracy, content coherence, and engagement.
 
