@@ -386,7 +386,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-city/activities.yaml",
-      "sha256": "b33db97c7cf00cb7ad7fd6bb24671e02804cee31948a378205cb5bb868ffec31"
+      "sha256": "be3fcbeb7a6b28fb83aacec5e0ed07a2d48b2afa49f38e1065f786025f473fa0"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-city/module.md",
@@ -818,7 +818,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-is-it/activities.yaml",
-      "sha256": "122b8555b113631417feb47bc500d57bfc6b2b641d5d94553e87db900319315a"
+      "sha256": "ea122f8bc31bc1cb57ffa2e16f2d75d16b3705f4a3bd487a6c284c5b0e47bec2"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/where-is-it/module.md",
@@ -13786,7 +13786,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/my-city.mdx",
-      "sha256": "fec7fdbc83da8795049338f40498b22212d8ae8103b457bdefe075233729235a"
+      "sha256": "b028881f3cbab3d67984a47add4ebe182c38f0ac4081fc5f5bca272931b90dff"
     },
     {
       "path": "site/src/content/docs/a1-v1/my-day.mdx",
@@ -13894,7 +13894,7 @@
     },
     {
       "path": "site/src/content/docs/a1-v1/where-is-it.mdx",
-      "sha256": "1cdb1d324f93caf2ae7d8ecbba3c2d0297671c0800c21e0f27463daca437a78e"
+      "sha256": "cca69f4673fdb700ed48ede2f808609c5723d6a4f3a05ccb357185d23d4e489f"
     },
     {
       "path": "site/src/content/docs/a1-v1/where-to.mdx",

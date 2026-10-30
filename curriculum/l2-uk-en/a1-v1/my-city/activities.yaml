@@ -104,21 +104,45 @@ inline:
     items:
       - sentence: 'У моєму місті є великий ___.'
         answer: 'парк'
+        options:
+          - "парк"
+          - "парком"
+          - "парками"
         explanation: 'After є, name the object: парк.'
       - sentence: 'Бібліотека ___ університету.'
         answer: 'біля'
+        options:
+          - "біля"
+          - "перед"
+          - "через"
         explanation: Біля connects two places.
       - sentence: 'Аптека ___ розі.'
         answer: 'на'
+        options:
+          - "на"
+          - "без"
+          - "перед"
         explanation: The phrase is на розі.
       - sentence: 'Магазин тут, ___ дому.'
         answer: 'біля'
+        options:
+          - "біля"
+          - "перед"
+          - "через"
         explanation: Біля дому is a fixed A1 phrase.
       - sentence: 'Школа далеко, ___ центрі міста.'
         answer: 'у'
+        options:
+          - "у"
+          - "до"
+          - "з"
         explanation: Use у центрі міста.
       - sentence: 'У місті ___ багато парків.'
         answer: 'є'
+        options:
+          - "є"
+          - "був"
+          - "була"
         explanation: Use є for existence.
   - id: act-4
     type: quiz

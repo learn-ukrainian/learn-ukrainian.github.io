@@ -212,7 +212,7 @@ full street directions. If you need one more detail, add **у центрі** or 
 
 ### У моєму місті є
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У моєму місті є великий ___.", "answer": "парк", "options": []}, {"sentence": "Бібліотека ___ університету.", "answer": "біля", "options": []}, {"sentence": "Аптека ___ розі.", "answer": "на", "options": []}, {"sentence": "Магазин тут, ___ дому.", "answer": "біля", "options": []}, {"sentence": "Школа далеко, ___ центрі міста.", "answer": "у", "options": []}, {"sentence": "У місті ___ багато парків.", "answer": "є", "options": []}]`)} instruction={"Complete each city sentence."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У моєму місті є великий ___.", "answer": "парк", "options": ["парк", "парком", "парками"], "explanation": "After є, name the object: парк."}, {"sentence": "Бібліотека ___ університету.", "answer": "біля", "options": ["біля", "перед", "через"], "explanation": "Біля connects two places."}, {"sentence": "Аптека ___ розі.", "answer": "на", "options": ["на", "без", "перед"], "explanation": "The phrase is на розі."}, {"sentence": "Магазин тут, ___ дому.", "answer": "біля", "options": ["біля", "перед", "через"], "explanation": "Біля дому is a fixed A1 phrase."}, {"sentence": "Школа далеко, ___ центрі міста.", "answer": "у", "options": ["у", "до", "з"], "explanation": "Use у центрі міста."}, {"sentence": "У місті ___ багато парків.", "answer": "є", "options": ["є", "був", "була"], "explanation": "Use є for existence."}]`)} instruction={"Complete each city sentence."} isUkrainian={false} />
 
 When someone asks which place you need, choose the noun first:
 **аптека**, **бібліотека**, **магазин**, **ресторан**, **вокзал**, **готель**.
