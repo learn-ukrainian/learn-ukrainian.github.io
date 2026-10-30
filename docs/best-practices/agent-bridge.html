@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-09-26" />
+<meta name="report-date" content="2026-10-28" />
 
 <meta name="report-status" content="migrated" />
 
@@ -116,7 +116,7 @@
   <header class="hero">
     <div class="title-block">
       <h1>Agent Bridge — Channel Communication</h1>
-      <div class="sub">Migrated from Markdown on 2026-09-26</div>
+      <div class="sub">Migrated from Markdown on 2026-10-28</div>
     </div>
     <div class="meta">
       <div>Source: docs/best-practices/agent-bridge.md</div>
@@ -194,8 +194,8 @@ through discussion.</p>
 <ul>
 <li>Codex: <code>read-only</code> maps to <code>codex exec -s read-only</code>.</li>
 <li>AGY: discussion calls route through the AGY adapter. Direct <code>agy --model</code>
-uses display labels such as <code>Gemini 3.1 Pro (High)</code>; bridge/runtime calls
-may pass slugs such as <code>gemini-3.1-pro-high</code> for adapter mapping.</li>
+uses display labels such as <code>Gemini 3.8 Flash (High)</code>; bridge/runtime calls
+may pass slugs such as <code>gemini-3.8-flash-high</code> for adapter mapping.</li>
 <li>Claude: discussion calls restrict built-in tools to read/list/search
 tools. They do not use Claude plan mode because discussion replies are
 comments, not implementation plans; the restricted tool list plus the
@@ -257,12 +257,12 @@ SSE replay, and attachments.</p>
 assignment enforced by tooling instead of memory.</p>
 <p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix &lt;issue-or-task-id&gt; [--brief-file PATH]</code> dispatches a
 Codex worktree implementation run for &quot;fix this and ship a PR&quot; tasks.
-It hardcodes <code>scripts/dispatch.py dispatch --agent codex --mode workspace-write --worktree --base origin/main --effort high</code>, and every generated
+It hardcodes <code>scripts/dispatch.py dispatch --model &lt;catalog-model&gt; --agent codex --mode workspace-write --worktree --base origin/main --effort high</code>, and every generated
 brief includes the commit, push, and PR checklist. If <code>--brief-file</code>
 is omitted, the wrapper builds <code>/tmp/dispatch-fix-&lt;task-id&gt;.md</code> from
 <code>gh issue view &lt;issue&gt; --json title,body</code>.</p>
 <p>Exact-head cross-family review through <code>ask-&lt;lane&gt; --type review</code> (headless dispatch via
-<code>scripts/dispatch.py dispatch --agent &lt;reviewer&gt; --mode read-only --worktree --branch &lt;branch&gt;</code>)
+<code>scripts/dispatch.py dispatch --model &lt;catalog-model&gt; --agent &lt;reviewer&gt; --mode read-only --worktree --branch &lt;branch&gt;</code>)
 is the <strong>canonical formal PR review entry</strong> (sealed <code>review-pr</code> and <code>publish-review-verdict</code>
 were removed in #8520):</p>
 <ul>
@@ -289,7 +289,7 @@ prints a <strong>warning</strong> and still delivers the ask — rejecting after
 already wrote a formal review wastes work (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520; the direct <code>ask-&lt;lane&gt; --type review</code> round is the formal path).
 <strong>Size caps remain fail-closed</strong> for oversized bodies/attachments. Silence the
 steering warning with <code>BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1</code>.</p>
-<p><strong>Formal CF PR review:</strong> request formal CF via direct <code>ask-&lt;lane&gt; - --type review --pr &lt;N&gt;</code> or <code>ask-&lt;lane&gt; - --task-id review-&lt;N&gt; --type review</code>, then post the resulting verdict and findings as a PR comment (<code>gh pr comment</code> or <code>gh pr review</code>) bound to the exact head SHA (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520). <code>ask-agy --review</code> is not a code-review route
+<p><strong>Formal CF PR review:</strong> request formal CF via direct <code>ask-&lt;lane&gt; - --type review --pr &lt;N&gt;</code> or <code>ask-&lt;lane&gt; - --task-id review-&lt;N&gt; --type review</code>, then post the resulting verdict and findings as a PR comment (<code>.venv/bin/python -m scripts.publish pr-comment --number &lt;N&gt;</code> or <code>.venv/bin/python -m scripts.publish pr-review --number &lt;N&gt;</code>) bound to the exact head SHA (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520). <code>ask-agy --review</code> is not a code-review route
 (operator 2026-09-25): a missing <code>--review-profile</code> is refused, <code>code</code> is
 refused, and Ukrainian content review must pass <code>--review-profile ukrainian</code>.
 <code>scripts/audit/llm_reviewer_dispatch.py</code> content-review routes remain
@@ -446,7 +446,93 @@ Claude for API-key users.</p>
 <code>InvocationPlan.env_overrides</code>; the runner applies overrides, sanitizes,
 then applies explicit <code>InvocationPlan.env_unsets</code>. The merge guard runs
 after sanitization so its <code>gh</code>/<code>git</code> shims still receive the final <code>PATH</code>
-and can stamp <code>AGENT_NO_MERGE</code>, <code>AGENT_REAL_GH</code>, and <code>AGENT_REAL_GIT</code>.</p>
+and can stamp <code>AGENT_NO_MERGE</code>, <code>AGENT_REAL_GH</code>, and <code>AGENT_REAL_GIT</code>.
+The same directory holds the <code>npm</code>/<code>npx</code> shim (#9460), active in every shell
+that has it on <code>PATH</code>. It decides from the filesystem, not from npm's
+arguments or from git: it walks every ancestor of the working directory (the
+physical path, and <code>$PWD</code> when it names the same directory through a symlink)
+up to the filesystem root, and when <code>node_modules</code> or <code>site/node_modules</code> of
+any ancestor resolves outside that ancestor (the symlinks into the primary
+checkout that dispatch worktrees receive), only clearly read-only calls run — <code>--version</code>
+or <code>--help</code>, and an allowlisted subcommand such as <code>run</code>, <code>test</code>, <code>ls</code>,
+<code>view</code> or <code>config get</code> with no install-like word (<code>ci</code>, <code>install</code>, <code>update</code>,
+<code>prune</code>, …) anywhere in the arguments. <code>npx</code>, <code>npm exec</code> and <code>npm x</code> run
+only a closed allowlist of programs this repository uses that way
+(<code>EXEC_PROGRAMS</code> in the guard: <code>vitest</code>, <code>tsc</code>, <code>playwright</code>,
+<code>markdownlint-cli2</code> and the Claude adapter's <code>@anthropic-ai/claude-code</code>
+fallback), as in <code>npm --prefix site exec -- vitest run</code> or
+<code>npx @anthropic-ai/claude-code@latest</code>; they launch an existing binary or
+fetch one into npm's own cache, not into the project's <code>node_modules</code>. The
+guard never reads shell text: the program is the first word after the options
+(or after <code>--</code>), and only <code>-y</code>/<code>--yes</code>, <code>--no</code>, <code>--no-install</code>, <code>--no-fund</code>,
+<code>--no-audit</code>, <code>--prefix</code>/<code>-C</code> and <code>--</code> may appear where npm parses options.
+<code>-c</code>/<code>--call</code>, <code>-p</code>/<code>--package</code>, <code>--shell</code>, <code>--node-options</code> and any other
+option are refused whatever their value, and so is a call with no program
+(npm would run a shell or the configured <code>call</code>). A shell, interpreter or
+package manager (<code>sh</code>, <code>bash</code>, <code>env</code>, <code>node</code>, <code>npm</code>, <code>pnpm</code>, <code>yarn</code>, …) is
+simply not on the list; a version spec (<code>vitest@3</code>) or path whose last part
+is an allowlisted name is accepted, an <code>npm:</code> alias, URL, <code>git</code> spec or
+foreign scope is not. An argument of the program that names a package manager
+or is an install word still refuses the call. Known false positives:
+<code>npx playwright install</code>, any tool not on the list (such as <code>eslint</code>), and
+<code>npx --no vitest</code> (write <code>npx --no -- vitest</code>). Everything else is refused,
+including global installs (<code>npm i -g</code>), and so are read-only calls the guard
+cannot classify, such as <code>npm view ci</code> or options with a separate value
+before the subcommand (write <code>--key=value</code>; <code>--prefix</code> and <code>--workspace</code> are
+understood). So a worktree whose <code>node_modules</code> links outward now runs only
+these allowlisted <code>exec</code>/<code>npx</code> programs. To
+install, <code>unlink</code> the link inside the worktree first so npm creates a
+worktree-local folder, or run the command outside the worktree. Without such
+a link every call passes through untouched. Because git is never asked
+where the worktree is, a nested repository, <code>core.worktree</code>, <code>GIT_DIR</code> or
+<code>GIT_WORK_TREE</code> cannot hide a link. A working directory that cannot be read
+(deleted, for example) is treated as protected: npm cannot run there either,
+so only clearly read-only calls are let through. The decision lives in
+<code>scripts/agent_runtime/npm_guard.py</code>. The shim runs it with the interpreter
+the <code>git</code> shim uses, looked up in the same order: <code>AGENT_GIT_SHIM_PYTHON</code>
+(the runner stamps it), else the main checkout's <code>.venv</code> found through the git
+common dir (so a linked worktree needs no <code>.venv</code> of its own), else the shim
+checkout's; with none of them it refuses to run npm. <code>AGENT_REAL_NPM</code>/
+<code>AGENT_REAL_NPX</code> optionally pin the real tool; the guard runs before the pin
+is read, so a pin chooses the binary but never skips the guard. Shim
+directories on <code>PATH</code> are recognised by physical path, so a spelling such as
+<code>shims/.</code>, <code>shims//</code> or a symlink to the directory cannot make the shim find
+itself. <code>npx</code> is a regular file that runs the sibling <code>npm</code> shim by its
+physical path with <code>AGENT_SHIM_TOOL=npx</code>; the npm shim accepts only <code>npm</code> or
+<code>npx</code> from that variable (anything else means npm), tells the guard which,
+and unsets it before the real tool runs. The wrapper runs its sibling only
+when that sibling is a regular file (not a symlink), executable, carries the
+npm shim's fixed marker line <code># agent-runtime guarded npm shim (#9460)</code>, and
+<code>npm_guard.py</code> sits beside the shim directory; otherwise it prints an error
+and exits 127 without running anything, so a copy of <code>npx</code> placed next to the
+real npm (or a symlink to it) fails closed.</p>
+<p>Not covered (owner <code>claude-infra</code>, each tracked under the #9460 follow-up):</p>
+<ul>
+<li>calling npm by absolute path or through <code>node</code>, or a <code>node_modules/.bin/npm</code>;</li>
+<li>a stripped <code>PATH</code> without the shim directory, and pnpm, yarn or bun called
+directly;</li>
+<li>an allowlisted program that starts a package manager itself (an inner <code>npm</code>
+on <code>PATH</code> still reaches the shim; pnpm, yarn or an npm by path do not), or a
+local file with an allowlisted name (<code>./x/vitest</code>) that is something else;</li>
+<li>npm config from the environment or an <code>.npmrc</code>, such as <code>script-shell</code>,
+replacing the shell npm runs the program with (a configured <code>call</code> no longer
+applies: the guard requires a program and npm refuses <code>call</code> together with
+one);</li>
+<li>running from a checkout with a real <code>node_modules</code>, such as the primary,
+with <code>--prefix</code>/<code>-C</code> pointing into a dispatch worktree (that call passes
+through; workers do not run from there);</li>
+<li>a working directory physically inside the shared folder (reached through the
+link) while <code>$PWD</code> is missing, stale or forged, so it does not name the same
+directory through the worktree: only the physical path is visible and every
+call passes through;</li>
+<li><code>AGENT_GIT_SHIM_PYTHON</code> naming a program that is not a Python interpreter
+(for example one that always exits 0), which replaces the guard's verdict.</li>
+<li>a sibling <code>npm</code> that forges the marker line (a regular file copied beside
+<code>npx</code> that carries the marker but is not the guarded shim), or an
+<code>npm_guard.py</code> beside it that is not the guard: the same class as a
+hostile interpreter, since whoever can write the shim directory can
+replace the shims themselves.</li>
+</ul>
 <h2>Context file conventions</h2>
 <p><code>docs/agent-channels/{channel}/context.md</code> should contain:</p>
 <ul>

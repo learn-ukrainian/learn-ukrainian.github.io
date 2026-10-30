@@ -140,7 +140,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 | Slot | Agent | F1 / accuracy | Last verified | Evidence |
 | --- | --- | --- | --- | --- |
 | Historical | Claude Opus 4.7 | **F1=86%, 100% case accuracy** on 12-case Russianism set | 2026-05-15 | `audit/2026-05-15-russianism-judge-calibration/REPORT.md` |
-| Runner-up 1 | AGY Gemini 3.1 Pro (High) | F1=84% (greeting-FP issue) | 2026-05-15 | same; H2 won at 2026-05-17 — `audit/2026-05-17-judge-calibration-h2/COMPARISON.md` |
+| Runner-up 1 | AGY Gemini 3.1 Pro (High, retired 2026-10-23; historical result) | F1=84% (greeting-FP issue) | 2026-05-15 | same; H2 won at 2026-05-17 — `audit/2026-05-17-judge-calibration-h2/COMPARISON.md` |
 | Runner-up 2 | GPT-5.5 (Codex) | high precision, lower recall (conservative) | 2026-05-15 | same |
 | Runner-up 3 | Grok-4.3 | F1=77% (middle of pack) | 2026-05-15 | `audit/2026-05-15-grok-4.3-judge-calibration/REPORT.md` |
 
@@ -234,7 +234,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
 | **Primary (routine)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | metered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
-| **Primary (deep)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | qualitative | ongoing | same | Default for deep work too (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request); Codex/Claude high for higher stakes; Opus / Sol advice. |
+| **Primary (deep)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | qualitative | ongoing | same | Default for deep work too (operator 2026-09-22: 3.8 Flash High outperformed 3.1 Pro; Pro is retired, not subscribed, operator 2026-10-23); Codex/Claude high for higher stakes; Opus / Sol advice. |
 | Runner-up 1 | Codex via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
 | Runner-up 2 | Claude inline | when orchestrator IS Claude | ongoing | same | The Q&A is me; no round-trip. |
 
@@ -348,7 +348,7 @@ retired. Use the current catalog and `model-assignment.md` for routing.
 | Rank | Model | F1 | Precision | Recall | Case acc | Cost | Notes |
 | --- | --- | ---: | ---: | ---: | ---: | --- | --- |
 | 1 ✅ | Claude Opus 4.7 | **86%** | 79% | 94% | 100% | $$$ | Highest recall in the 2026-05-15 set. Not a current judge seat. |
-| 2 ✅ | AGY Gemini 3.1 Pro (High) | **84%** | 81% | 87% | 92% | 0$ | Greeting-FP issue. |
+| 2 ✅ | AGY Gemini 3.1 Pro (High, retired 2026-10-23; historical result) | **84%** | 81% | 87% | 92% | 0$ | Greeting-FP issue. |
 | 3 ✅ | GPT-5.5 (Codex) | **78%** | 90% | 69% | 83% | $$ | Conservative, high precision. |
 | 4 ✅ | Grok-4.3 | **77%** | — | — | — | $ | Middle of pack (2026-05-15 calibration). |
 | 5 ✅ | Qwen-3.6-plus | **69%** | 90% | 56% | 92% | $ | **NEW 2026-05-19 (`audit/2026-05-19-qwen-3.6-judge-calibration/`).** Most conservative judge in the field — ties Codex on precision but lowest recall (misses ~half of sev≥2 issues). 1 spurious flag on `cal_clean_with_lure`. NOT primary; viable as cheap second-opinion screen where precision matters more than recall. |
@@ -408,7 +408,7 @@ retired. Use the current catalog and `model-assignment.md` for routing.
 | Rank routine | Model | Cost |
 | --- | --- | --- |
 | 1 ✅ | AGY Gemini 3.8 Flash (High) | metered |
-| 1 deep ✅ | AGY Gemini 3.8 Flash (High) (3.1 Pro only on explicit request, operator 2026-09-22) | metered |
+| 1 deep ✅ | AGY Gemini 3.8 Flash (High) (3.1 Pro is retired, not subscribed, operator 2026-10-23) | metered |
 | 2 ✅ | Codex GPT-5.5 (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`) | $$ |
 | ❓ | Qwen-3.6-plus | $ |
 

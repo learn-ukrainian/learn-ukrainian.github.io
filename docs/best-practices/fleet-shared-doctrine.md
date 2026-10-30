@@ -173,7 +173,7 @@ Authoritative CF quality ladder remains in `model-assignment.md`; this doctrine 
 ## 7. Language + evidence
 
 - **LANGUAGE-LANES** for Ukrainian authoring: `agy` / `codex` / `claude`. Review and judging seats are `agy` or `codex`, with no Claude seat (see model-assignment).
-- **Gemini 3.1 Pro via AGY** is the designated UA specialist; outputs remain **hypotheses until VESUM/`sources`-backed**.
+- **Gemini 3.8 Flash High (`gemini-3.8-flash-high`) via AGY** is the designated UA review specialist (Pro is retired, not subscribed); outputs remain **hypotheses until VESUM/`sources`-backed**.
 - Code review and CF seat eligibility follow `model-assignment.md` Code review row.
 - VESUM validates **morphology/attestation** — not arbitrary cultural or historical claims.
 - FOLK: the review-loop ukrainian seats, with no Claude seat; **no DeepSeek** for folk culture.

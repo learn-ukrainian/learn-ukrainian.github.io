@@ -320,7 +320,7 @@ Code-profile `closeout_cli resolve-reviewer` requires a resolved target or an ow
     Following #11→#9. Text Arena overall #7 (1494) vs Opus 5 High #8 (1492) and
     3.7 Flash High #10 (1491). Agent Arena #14 (+5.94%) vs 3.7 at #32 (+0.84%)
     is supporting agentic evidence, not the Ukrainian-lane reason.
-    Operator 2026-09-22: 3.8 Flash High is better than 3.1 Pro; Flash is the deep default.
+    Operator 2026-09-22: 3.8 Flash High is better than 3.1 Pro (since retired, 2026-10-23); Flash is the deep default.
   * The **fresh-build lesson writer** defaults to **GPT-6.1 Sol @ high** (operator
     2026-09-27), confirmed or reversed by the measured writer selection in the
     pilot (#8425); Gemini's Ukrainian strength above is used for Ukrainian review.
@@ -505,7 +505,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes hard Claude-lane coding, architecture, and deep code review where relevant | **`gpt-6.1-sol` @ high** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Opus and Sol take advice. Sol takes Ukrainian judgment; Claude takes no Ukrainian review or judging seat. Orchestration alone does not confer approval authority |
   | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | GPT-6.1 Sol orchestrates, does advanced work, and handles ordinary advice (#9275 envelope unchanged). Luna @ high scouts. Never co-owns a live lease |
   | **grok** | `grok-4.7` @ high | same SKU | Native interactive/bridge callers retain their interfaces; detached dispatch uses `--agent cursor --model grok-4.7-high` (no `grok` agent) |
-  | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Driver seat through `start-gemini-driver.sh` (2026-10-08 approval): the driver defaults to and accepts only `gemini-3.8-flash-high`. As a worker it is not a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is the worker default and deep pin (2026-09-22: 3.8 Flash High outperforms 3.1 Pro) |
+  | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Driver seat through `start-gemini-driver.sh` (2026-10-08 approval): the driver defaults to and accepts only `gemini-3.8-flash-high`. As a worker it is not a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is the worker default and deep pin (2026-09-22: 3.8 Flash High outperformed 3.1 Pro, since retired) |
   | **cursor** | `grok-4.7` @ high (launcher pin `grok-4.7-high`; Auto only for a well-defined coding dispatch, operator decision 2026-09-30) | **`gpt-6.1-sol` @ high** | Driver seat never runs Auto; driver-of-record requires attested `resolved_model`; Auto authors use the Cursor family (#9951); concurrency 1 |
 
   <!-- fleet-roster-projection:begin orchestrator_seats -->
@@ -912,10 +912,10 @@ Consequences:
 `scripts/config/model_catalog.yaml`; its 30-day lint prevents this prose from being treated as a
 permanent capability claim. Confirm exact live strings in native CLI catalogs and bridge probes.
 
-## Gemini 3.8 Flash vs 3.1 Pro (default updated 2026-09-02)
+## Gemini 3.8 Flash vs 3.1 Pro (default updated 2026-09-02; 3.1 Pro retired 2026-10-23)
 
 Operator directive: **Gemini 3.8 Flash is the AGY top default** (agentic workhorse).
-Operator 2026-09-22: 3.8 Flash High is better than 3.1 Pro; Flash is the deep default.
+Operator 2026-09-22: 3.8 Flash High is better than 3.1 Pro (since retired, 2026-10-23); Flash is the deep default.
 Gemini 3.7, 3.6 and 3.5 Flash are retired; use Gemini 3.8 Flash.
 
 | Model | Catalog slug | Tier | Use |
@@ -926,7 +926,7 @@ Gemini 3.7, 3.6 and 3.5 Flash are retired; use Gemini 3.8 Flash.
 | Gemini 3.1 Pro (High) | `gemini-3.1-pro-high` | `frontier_practical` | Retired, not subscribed (operator 2026-10-23) |
 | Gemini 3.5 Flash (High) | `gemini-3.5-flash-high` | `strong_efficient` | Retired; use `gemini-3.8-flash-high` |
 
-**Tier calibration (operator claim checked):** 3.8 Flash is roughly **Terra / Sonnet 5 class** for agentic coding throughput — **not** Sol/Opus authority, but operator 2026-09-22 confirmed 3.8 Flash High outperforms 3.1 Pro; Flash is the default for routine AND deep work. Escalate cross-family to Opus / Sol when critical authority is required; Pro is retired, not subscribed.
+**Tier calibration (operator claim checked):** 3.8 Flash is roughly **Terra / Sonnet 5 class** for agentic coding throughput — **not** Sol/Opus authority, but operator 2026-09-22 confirmed 3.8 Flash High outperformed 3.1 Pro (since retired); Flash is the default for routine AND deep work. Escalate cross-family to Opus / Sol when critical authority is required; Pro is retired, not subscribed.
 
 ## Codex routing — GPT-6 driver, workers, reviewer, and advisor
 

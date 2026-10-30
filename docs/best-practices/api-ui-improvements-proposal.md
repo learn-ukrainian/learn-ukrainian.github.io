@@ -89,7 +89,7 @@ One page, four panels, refresh-on-load. Kubedojo aesthetic (already in repo per 
 | BAKEOFF EVIDENCE                       |
 | 2026-05-12 night: claude-tools wins    |
 | 2026-05-15 russianism: opus-4-7 wins   |
-| 2026-05-17 h2: gemini-3.1-pro wins     |
+| 2026-05-17 h2: gemini-3.1-pro (retired)|
 +----------------------------------------+
 ```
 

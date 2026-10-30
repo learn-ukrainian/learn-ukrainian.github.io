@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-05-09" />
+<meta name="report-date" content="2026-09-27" />
 
 <meta name="report-status" content="migrated" />
 
@@ -93,11 +93,11 @@
 
   h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
   h3 { font-size: 18px; margin-top: 32px; }
-  
+
   table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
   th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
   td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
-  
+
   .callout {
     padding: 16px;
     border-radius: 4px;
@@ -116,10 +116,10 @@
   <header class="hero">
     <div class="title-block">
       <h1>Activity Pedagogy — Type System and Allowlist Matrix</h1>
-      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+      <div class="sub">Migrated from Markdown on 2026-09-27</div>
     </div>
     <div class="meta">
-      <div>Source: activity-pedagogy.html</div>
+      <div>Source: docs/best-practices/activity-pedagogy.md</div>
       <div>Author: Gemini (Yellow Team)</div>
     </div>
   </header>
@@ -137,28 +137,87 @@
 <p>These are the rules that govern the level → type allowlist matrix in <code>ACTIVITY_CONFIGS</code>. Every change to the matrix must keep all eight principles intact. The +1 is a known gap (dictation) that is tracked separately.</p>
 <h3>Principle 1 — Puzzle-gamification fades with level</h3>
 <p>Pure puzzle types — <code>anagram</code>, <code>unjumble</code>, <code>order</code>, <code>odd-one-out</code>, <code>observe</code>, <code>phrase-table</code>, <code>classify</code> — are beginner dopamine hits. They decrease as the learner matures.</p>
-<p>| Level | Puzzle density |
-|---|---|
-| A1, A2 | Heavy |
-| B1 | Present (sparingly, one per module for variety) |
-| B2 and above | Gone |</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Puzzle density</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A1, A2</td>
+<td>Heavy</td>
+</tr>
+<tr>
+<td>B1</td>
+<td>Present (sparingly, one per module for variety)</td>
+</tr>
+<tr>
+<td>B2 and above</td>
+<td>Gone</td>
+</tr>
+</tbody>
+</table>
 <p><code>match-up</code> and <code>group-sort</code> are <strong>not</strong> puzzle-gamification — they are legitimate comprehension checks used in Ukrainian academic materials and ZNO exams through C2.</p>
 <h3>Principle 2 — A1 phonetics never reappear</h3>
 <p><code>image-to-letter</code>, <code>letter-grid</code>, <code>watch-and-repeat</code>, <code>divide-words</code>, <code>count-syllables</code>, <code>pick-syllables</code> are A1-only tools for learning to read Cyrillic. Forbidden at A2 and above — the learner already decodes fluently.</p>
 <h3>Principle 3 — Metalinguistic analysis earns in at B1</h3>
-<p>| Type | First allowed |
-|---|---|
-| <code>mark-the-words</code> | A2 (sparingly, grammar spotting) |
-| <code>grammar-identify</code> | B1 |
-| <code>highlight-morphemes</code> | B1 |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>First allowed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mark-the-words</code></td>
+<td>A2 (sparingly, grammar spotting)</td>
+</tr>
+<tr>
+<td><code>grammar-identify</code></td>
+<td>B1</td>
+</tr>
+<tr>
+<td><code>highlight-morphemes</code></td>
+<td>B1</td>
+</tr>
+</tbody>
+</table>
 <p>These require naming grammatical categories in Ukrainian — wait until the learner has the metalanguage.</p>
 <h3>Principle 4 — Production-long earns in at B1</h3>
-<p>| Type | First allowed | Rationale |
-|---|---|---|
-| <code>essay-response</code> | B1 | Learner has enough morphology to write a paragraph |
-| <code>reading</code> (long passage) | B2 | Learner can process 200+ word passages |
-| <code>translation-critique</code> | B2 | Requires register awareness |
-| <code>critical-analysis</code> | C1 | Requires academic Ukrainian |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>First allowed</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>essay-response</code></td>
+<td>B1</td>
+<td>Learner has enough morphology to write a paragraph</td>
+</tr>
+<tr>
+<td><code>reading</code> (long passage)</td>
+<td>B2</td>
+<td>Learner can process 200+ word passages</td>
+</tr>
+<tr>
+<td><code>translation-critique</code></td>
+<td>B2</td>
+<td>Requires register awareness</td>
+</tr>
+<tr>
+<td><code>critical-analysis</code></td>
+<td>C1</td>
+<td>Requires academic Ukrainian</td>
+</tr>
+</tbody>
+</table>
 <p>These take 10–15 minutes each. They live in the workbook, never inline.</p>
 <h3>Principle 5 — Zero gamification in seminars</h3>
 <p>HIST, BIO, ISTORIO, LIT, OES, RUTH are <strong>content tracks</strong>. Zero puzzle types. Only reading → evaluation → writing. The &quot;tab&quot; metaphor (inline/workbook) stays; the puzzle metaphor goes.</p>
@@ -171,14 +230,34 @@
 <li><code>critical-analysis</code> — from C1</li>
 </ul>
 <h3>Principle 7 — Philological types are track-gated</h3>
-<p>| Type | Allowed tracks |
-|---|---|
-| <code>etymology-trace</code> | C1, C2 (as &quot;word history&quot;), OES, RUTH (as discipline) |
-| <code>paleography-analysis</code> | OES, RUTH only |
-| <code>transcription</code> | OES, RUTH only |
-| <code>dialect-comparison</code> | RUTH only |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Allowed tracks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>etymology-trace</code></td>
+<td>C1, C2 (as &quot;word history&quot;), OES, RUTH (as discipline)</td>
+</tr>
+<tr>
+<td><code>paleography-analysis</code></td>
+<td>OES, RUTH only</td>
+</tr>
+<tr>
+<td><code>transcription</code></td>
+<td>OES, RUTH only</td>
+</tr>
+<tr>
+<td><code>dialect-comparison</code></td>
+<td>RUTH only</td>
+</tr>
+</tbody>
+</table>
 <h3>Principle 8 — ZNO (TODO, deferred schema)</h3>
-<p>Issue <a href="https://github.com/anthropics/learn-ukrainian/issues/715">#715</a> tracks ZNO integration. The plan is a dedicated <code>zno</code> type with 8 subcategories (наголос, пароніми, орфографія, case endings, lexical choice, phonetics, word formation, punctuation), added at the schema level before the B2 content build. When the type lands, append it to the WORKBOOK allowlists for B2, C1, C2, B2-PRO, C1-PRO.</p>
+<p>Issue <a href="https://github.com/anthropics/learn-ukrainian/issues/715">#715</a> tracks ZNO integration. The plan is a dedicated <code>zno</code> type with 8 subcategories (наголос, пароніми, орфографія, case endings, lexical choice, phonetics, word formation, punctuation), added at the schema level before the B2 content build. When the type lands, append it to the WORKBOOK allowlists for B2, C1, C2.</p>
 <p>Interim: ZNO questions are generated as <code>quiz</code> with a ZNO-style question bank.</p>
 <h3>Principle +1 — Dictation (диктант) is a known gap</h3>
 <p>Ukrainian pedagogy's most iconic exercise has no schema type yet. A <code>dictation</code> type (audio → text input with stress and orthography checking) is required and will be central at A1–B1. Tracked separately from <a href="https://github.com/anthropics/learn-ukrainian/issues/1185">#1185</a>; file a schema ticket before the next A1 revision batch.</p>
@@ -186,74 +265,349 @@
 <h2>2. Activity Types Classified by Pedagogical DNA</h2>
 <p>37 types total (36 active + 1 deprecated). Each entry: purpose, level range.</p>
 <h3>Phonetics / Alphabet (A1 only)</h3>
-<p>| Type | Purpose | Where |
-|---|---|---|
-| <code>image-to-letter</code> | Click the picture whose name starts with a given Cyrillic letter | A1 inline |
-| <code>letter-grid</code> | Alphabet reference grid with hover/click audio | A1 inline |
-| <code>watch-and-repeat</code> | Pronunciation video with repeat prompt | A1 inline |
-| <code>divide-words</code> | Split a word into syllables visually | A1 inline + workbook |
-| <code>count-syllables</code> | Count syllables in a word | A1 inline + workbook |
-| <code>pick-syllables</code> | Choose the correct syllable to complete a word | A1 inline + workbook |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>image-to-letter</code></td>
+<td>Click the picture whose name starts with a given Cyrillic letter</td>
+<td>A1 inline</td>
+</tr>
+<tr>
+<td><code>letter-grid</code></td>
+<td>Alphabet reference grid with hover/click audio</td>
+<td>A1 inline</td>
+</tr>
+<tr>
+<td><code>watch-and-repeat</code></td>
+<td>Pronunciation video with repeat prompt</td>
+<td>A1 inline</td>
+</tr>
+<tr>
+<td><code>divide-words</code></td>
+<td>Split a word into syllables visually</td>
+<td>A1 inline + workbook</td>
+</tr>
+<tr>
+<td><code>count-syllables</code></td>
+<td>Count syllables in a word</td>
+<td>A1 inline + workbook</td>
+</tr>
+<tr>
+<td><code>pick-syllables</code></td>
+<td>Choose the correct syllable to complete a word</td>
+<td>A1 inline + workbook</td>
+</tr>
+</tbody>
+</table>
 <p>Gone forever from A2 onward. Principle 2.</p>
 <h3>Puzzle-gamification (fades by B2)</h3>
-<p>| Type | Purpose | Where |
-|---|---|---|
-| <code>anagram</code> | Unscramble letters into a word | A1 workbook only |
-| <code>unjumble</code> | Reorder shuffled words into a correct sentence | A1–B1 |
-| <code>order</code> | Put items in correct sequence (chronological, logical) | A1–B1 |
-| <code>odd-one-out</code> | Pick the item that doesn't belong with the rest | A1–B1 |
-| <code>observe</code> | Study a picture/diagram and answer | A1–A2 |
-| <code>phrase-table</code> | Fill cells in a substitution table | A1–A2 |
-| <code>classify</code> | Assign items to categories (listed in comment, not currently in any allowlist; deprecated in favor of <code>group-sort</code>) | — |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>anagram</code></td>
+<td>Unscramble letters into a word</td>
+<td>A1 workbook only</td>
+</tr>
+<tr>
+<td><code>unjumble</code></td>
+<td>Reorder shuffled words into a correct sentence</td>
+<td>A1–B1</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>Put items in correct sequence (chronological, logical)</td>
+<td>A1–B1</td>
+</tr>
+<tr>
+<td><code>odd-one-out</code></td>
+<td>Pick the item that doesn't belong with the rest</td>
+<td>A1–B1</td>
+</tr>
+<tr>
+<td><code>observe</code></td>
+<td>Study a picture/diagram and answer</td>
+<td>A1–A2</td>
+</tr>
+<tr>
+<td><code>phrase-table</code></td>
+<td>Fill cells in a substitution table</td>
+<td>A1–A2</td>
+</tr>
+<tr>
+<td><code>classify</code></td>
+<td>Legacy category assignment; deprecated in favor of <code>group-sort</code> and forbidden in new plans even where a legacy level schema defines it</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
 <h3>Sort / Match (not gamification, runs through C2)</h3>
-<p>| Type | Purpose | Where |
-|---|---|---|
-| <code>match-up</code> | Pair items between two columns (word↔translation, question↔answer, term↔definition) | A1 through seminars and C1-core |
-| <code>group-sort</code> | Assign items to 2+ bins (gender, case, aspect, register) | A1 through B2-PRO |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>match-up</code></td>
+<td>Pair items between two columns (word↔translation, question↔answer, term↔definition)</td>
+<td>A1 through seminars and C1-core</td>
+</tr>
+<tr>
+<td><code>group-sort</code></td>
+<td>Assign items to 2+ bins (gender, case, aspect, register)</td>
+<td>A1 through B2</td>
+</tr>
+</tbody>
+</table>
 <p>These survive because Ukrainian school materials and ZNO exams use them at every level. They are comprehension, not puzzle.</p>
 <h3>Core comprehension checks</h3>
-<p>| Type | Purpose | Where |
-|---|---|---|
-| <code>quiz</code> | Multiple-choice question with 2–5 options | All tracks, all levels |
-| <code>true-false</code> | Judge a statement against the text | A1–B2, all seminars except C1/C2-core |
-| <code>fill-in</code> | Short-answer blank in a single sentence | All tracks, all levels |
-| <code>mark-the-words</code> | Click every word matching a criterion in a passage | A2 onward, all tracks |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>quiz</code></td>
+<td>Multiple-choice question with 2–5 options</td>
+<td>All tracks, all levels</td>
+</tr>
+<tr>
+<td><code>true-false</code></td>
+<td>Post-text check only. The statement is judged against the dialogue or a quote. The explanation is required and cites that text. At most 4 items per activity at A1–B1 (the B2 cap is decided with the first B2 plans). A lesson has no more of these activities than it has text-hosting steps, and two are never consecutive in consolidation</td>
+<td>A1–B2, all seminars except C1/C2-core</td>
+</tr>
+<tr>
+<td><code>fill-in</code></td>
+<td>One blank, tapped from a closed list. <code>form-choice</code>: 2–4 forms of one word-store record (exactly 4 at B2). <code>orthography</code> (A1 only): one of five closed two-way lists (и</td>
+<td>і deferred: no Правопис/primer contrast record at A1). No free typing inline at A1–A2; workbook <code>cloze</code> at B1+ keeps typing. The explanation is required, in the level's register</td>
+</tr>
+<tr>
+<td><code>mark-the-words</code></td>
+<td>Click every word matching a criterion in a passage</td>
+<td>A2 onward, all tracks</td>
+</tr>
+</tbody>
+</table>
+<p>Fresh-build lessons bind <code>fill-in</code> and <code>true-false</code> through <code>schemas/fresh-activity-constraints-v1.json</code> (the <code>activity_fresh_constraints</code> check) and through the plan-validate placement rule. Existing modules are unchanged. The level→type matrix in §3 is unchanged.</p>
+<p>Explanation register, by level: A1 uses scaffolded patterns with English support where the immersion rule allows, and no grammatical terminology. A2 uses scaffolded patterns, with English support only where the immersion rule allows, and no grammatical terminology. B1+ uses Ukrainian with Ukrainian grammatical terms.</p>
+<p>A true-false statement is not checked against a bilingual passage or against a video or culture aside.</p>
 <h3>Production (short → long)</h3>
-<p>| Type | Purpose | Where |
-|---|---|---|
-| <code>error-correction</code> | Find and fix errors in given sentences | A1 workbook onward, core tracks only |
-| <code>cloze</code> | Multi-blank passage, 14+ gaps | A2–C1, workbook only (Principle 4) |
-| <code>translate</code> | Translate sentences between UK and EN | A1–C1, workbook only. <strong>Gone at C2</strong> — at C2 translation is professional, not exercise; use <code>translation-critique</code> |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error-correction</code></td>
+<td>Find and fix errors in given sentences</td>
+<td>A1 workbook onward, core tracks only</td>
+</tr>
+<tr>
+<td><code>cloze</code></td>
+<td>Multi-blank passage, 14+ gaps</td>
+<td>A2–C1, workbook only (Principle 4)</td>
+</tr>
+<tr>
+<td><code>translate</code></td>
+<td>Translate sentences between UK and EN</td>
+<td>A1–C1, workbook only. <strong>Gone at C2</strong> — at C2 translation is professional, not exercise; use <code>translation-critique</code></td>
+</tr>
+</tbody>
+</table>
 <h3>Metalinguistic (earns in at B1)</h3>
-<p>| Type | Purpose | Where |
-|---|---|---|
-| <code>grammar-identify</code> | Name the grammatical category of a highlighted form (case, aspect, tense) | B1–C2 core, B2/C1-PRO, OES, RUTH |
-| <code>highlight-morphemes</code> | Mark prefix/root/suffix/ending in words | B1 onward in core, central in OES/RUTH |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grammar-identify</code></td>
+<td>Name the grammatical category of a highlighted form (case, aspect, tense)</td>
+<td>B1-C2 core, OES, RUTH</td>
+</tr>
+<tr>
+<td><code>highlight-morphemes</code></td>
+<td>Mark prefix/root/suffix/ending in words</td>
+<td>B1 onward in core, central in OES/RUTH</td>
+</tr>
+</tbody>
+</table>
 <h3>Academic / long-form</h3>
-<p>| Type | Purpose | Where |
-|---|---|---|
-| <code>essay-response</code> | 50–500 word free writing to a prompt | B1+ and all seminars, workbook only |
-| <code>reading</code> | Long passage (200+ words) + comprehension questions | B2+ and all seminars, workbook only |
-| <code>critical-analysis</code> | Deep argumentative response to a claim or source | C1+, all seminars, workbook only |
-| <code>translation-critique</code> | Compare two translations of the same Ukrainian text | B2+, LIT, workbook only |
-| <code>comparative-study</code> | Multi-text comparison | C1+, all seminars except pure HIST early, workbook only |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>essay-response</code></td>
+<td>50–500 word free writing to a prompt</td>
+<td>B1+ and all seminars, workbook only</td>
+</tr>
+<tr>
+<td><code>reading</code></td>
+<td>Long passage (200+ words) + comprehension questions</td>
+<td>B2+ and seminar tracks except FOLK, workbook only</td>
+</tr>
+<tr>
+<td><code>critical-analysis</code></td>
+<td>Deep argumentative response to a claim or source</td>
+<td>C1+, all seminars, workbook only</td>
+</tr>
+<tr>
+<td><code>translation-critique</code></td>
+<td>Compare two translations of the same Ukrainian text</td>
+<td>B2+, LIT, workbook only</td>
+</tr>
+<tr>
+<td><code>comparative-study</code></td>
+<td>Multi-text comparison</td>
+<td>C1+, all seminars except pure HIST early, workbook only</td>
+</tr>
+</tbody>
+</table>
+<h3>Folk-experiential (FOLK)</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ritual-sequencing</code></td>
+<td>Order the steps of a rite or seasonal practice</td>
+<td>FOLK, inline and workbook</td>
+</tr>
+<tr>
+<td><code>variant-comparison</code></td>
+<td>Compare regional or textual variants of a song, rite, or formula</td>
+<td>FOLK, workbook only</td>
+</tr>
+<tr>
+<td><code>motif-formula</code></td>
+<td>Identify a recurring formula or motif in a passage</td>
+<td>FOLK, inline and workbook</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td>Perform or recite a fragment with self-review criteria</td>
+<td>FOLK, workbook only</td>
+</tr>
+</tbody>
+</table>
 <h3>Seminar-specific</h3>
-<p>| Type | Purpose | Where |
-|---|---|---|
-| <code>source-evaluation</code> | Scholarly evaluation of a primary source's reliability | HIST, BIO, ISTORIO, workbook only |
-| <code>authorial-intent</code> | Analyze why an author wrote something a particular way | C2, BIO, LIT, workbook only |
-| <code>debate</code> | Multi-turn argumentative exchange on a thesis | C2, LIT, workbook only |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source-evaluation</code></td>
+<td>Scholarly evaluation of a primary source's reliability</td>
+<td>HIST, BIO, ISTORIO, workbook only</td>
+</tr>
+<tr>
+<td><code>authorial-intent</code></td>
+<td>Analyze why an author wrote something a particular way</td>
+<td>C2, BIO, LIT, workbook only</td>
+</tr>
+<tr>
+<td><code>debate</code></td>
+<td>Multi-turn argumentative exchange on a thesis</td>
+<td>C2, LIT, workbook only</td>
+</tr>
+</tbody>
+</table>
 <h3>Philological (OES / RUTH)</h3>
-<p>| Type | Purpose | Where |
-|---|---|---|
-| <code>etymology-trace</code> | Trace a word through historical stages | C1, C2, OES, RUTH, workbook only |
-| <code>paleography-analysis</code> | Analyze script / manuscript features | OES, RUTH, workbook only |
-| <code>transcription</code> | Transcribe from old orthography to modern | OES, RUTH, workbook only |
-| <code>dialect-comparison</code> | Compare forms across Ukrainian dialects | RUTH only, workbook only |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>etymology-trace</code></td>
+<td>Trace a word through historical stages</td>
+<td>C1, C2, OES, RUTH, workbook only</td>
+</tr>
+<tr>
+<td><code>paleography-analysis</code></td>
+<td>Analyze script / manuscript features</td>
+<td>OES, RUTH, workbook only</td>
+</tr>
+<tr>
+<td><code>transcription</code></td>
+<td>Transcribe from old orthography to modern</td>
+<td>OES, RUTH, workbook only</td>
+</tr>
+<tr>
+<td><code>dialect-comparison</code></td>
+<td>Compare forms across Ukrainian dialects</td>
+<td>RUTH only, workbook only</td>
+</tr>
+</tbody>
+</table>
 <h3>Deprecated</h3>
-<p>| Type | Status |
-|---|---|
-| <code>select</code> | Legacy, subsumed by <code>mark-the-words</code>. Listed in every level's <code>FORBIDDEN_ACTIVITY_TYPES</code>. New content must not produce it. |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>select</code></td>
+<td>Legacy, subsumed by <code>mark-the-words</code>. Listed in every level's <code>FORBIDDEN_ACTIVITY_TYPES</code>. New content must not produce it.</td>
+</tr>
+<tr>
+<td><code>classify</code></td>
+<td>Legacy category assignment; use <code>group-sort</code> in new plans. The A1 legacy schema still defines it, but fresh-plan placement is <code>forbidden</code>.</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2>3. Full Allowlist Matrix</h2>
 <p>Rows = levels, columns = activity types. Cell legend:</p>
@@ -265,70 +619,806 @@
 </ul>
 <p>This matrix is generated directly from <code>ACTIVITY_CONFIGS</code>. To regenerate, see the script in section 5.</p>
 <h3>Counts per level</h3>
-<p>| Level | Total | Inline min–max | Workbook min–max | Items min | Vocab target |
-|---|---|---|---|---|---|
-| a1 | 10 | 4–6 | 6–9 | 6 | 20 |
-| a2 | 12 | 4–6 | 8–11 | 8 | 25 |
-| b1-core | 16 | 5–7 | 11–15 | 8 | 30 |
-| b2 | 16 | 5–7 | 11–15 | 8 | 30 |
-| c1-core | 16 | 5–7 | 11–15 | 8 | 30 |
-| c2 | 12 | 4–5 | 8–10 | 6 | 30 |
-| hist | 10 | 3–4 | 7–9 | 4 | 25 |
-| bio | 10 | 3–4 | 7–9 | 4 | 30 |
-| istorio | 10 | 3–4 | 7–9 | 4 | 30 |
-| lit | 10 | 3–4 | 7–9 | 4 | 0 (no vocab gate) |
-| b2-pro | 12 | 4–5 | 8–10 | 6 | 35 |
-| c1-pro | 12 | 4–5 | 8–10 | 6 | 40 |
-| oes | 10 | 3–4 | 7–9 | 4 | 35 |
-| ruth | 10 | 3–4 | 7–9 | 4 | 35 |</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Total</th>
+<th>Inline min–max</th>
+<th>Workbook min–max</th>
+<th>Items min</th>
+<th>Vocab target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a1</td>
+<td>10</td>
+<td>4–6</td>
+<td>6–9</td>
+<td>6</td>
+<td>20</td>
+</tr>
+<tr>
+<td>a2</td>
+<td>12</td>
+<td>4–6</td>
+<td>8–11</td>
+<td>8</td>
+<td>25</td>
+</tr>
+<tr>
+<td>b1-core</td>
+<td>16</td>
+<td>5–7</td>
+<td>11–15</td>
+<td>8</td>
+<td>30</td>
+</tr>
+<tr>
+<td>b2</td>
+<td>16</td>
+<td>5–7</td>
+<td>11–15</td>
+<td>8</td>
+<td>30</td>
+</tr>
+<tr>
+<td>c1-core</td>
+<td>16</td>
+<td>5–7</td>
+<td>11–15</td>
+<td>8</td>
+<td>30</td>
+</tr>
+<tr>
+<td>c2</td>
+<td>12</td>
+<td>4–5</td>
+<td>8–10</td>
+<td>6</td>
+<td>30</td>
+</tr>
+<tr>
+<td>hist</td>
+<td>10</td>
+<td>3–4</td>
+<td>7–9</td>
+<td>4</td>
+<td>25</td>
+</tr>
+<tr>
+<td>bio</td>
+<td>10</td>
+<td>3–4</td>
+<td>7–9</td>
+<td>4</td>
+<td>30</td>
+</tr>
+<tr>
+<td>istorio</td>
+<td>10</td>
+<td>3–4</td>
+<td>7–9</td>
+<td>4</td>
+<td>30</td>
+</tr>
+<tr>
+<td>lit</td>
+<td>10</td>
+<td>3–4</td>
+<td>7–9</td>
+<td>4</td>
+<td>0 (no vocab gate)</td>
+</tr>
+<tr>
+<td>folk</td>
+<td>10</td>
+<td>3–4</td>
+<td>7–9</td>
+<td>4</td>
+<td>35</td>
+</tr>
+<tr>
+<td>oes</td>
+<td>10</td>
+<td>3–4</td>
+<td>7–9</td>
+<td>4</td>
+<td>35</td>
+</tr>
+<tr>
+<td>ruth</td>
+<td>10</td>
+<td>3–4</td>
+<td>7–9</td>
+<td>4</td>
+<td>35</td>
+</tr>
+</tbody>
+</table>
 <h3>Type → level matrix</h3>
-<p>| Type | a1 | a2 | b1-core | b2 | c1-core | c2 | hist | bio | istorio | lit | b2-pro | c1-pro | oes | ruth |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| image-to-letter      | I | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| letter-grid          | I | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| watch-and-repeat     | I | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| divide-words         | B | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| count-syllables      | B | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| pick-syllables       | B | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| anagram              | W | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| unjumble             | B | B | B | - | - | - | - | - | - | - | - | - | - | - |
-| order                | B | B | B | - | - | - | - | - | - | - | - | - | - | - |
-| odd-one-out          | B | B | W | - | - | - | - | - | - | - | - | - | - | - |
-| observe              | B | B | - | - | - | - | - | - | - | - | - | - | - | - |
-| phrase-table         | B | W | - | - | - | - | - | - | - | - | - | - | - | - |
-| classify             | - | - | - | - | - | - | - | - | - | - | - | - | - | - |
-| match-up             | B | B | B | B | I | - | I | I | I | I | B | I | - | - |
-| group-sort           | B | B | B | B | - | - | - | - | - | - | W | - | - | - |
-| quiz                 | B | B | B | I | I | I | I | I | I | I | I | I | I | I |
-| true-false           | B | B | B | B | - | - | I | I | I | I | I | - | I | I |
-| fill-in              | B | B | B | B | B | I | I | I | I | I | B | B | I | I |
-| mark-the-words       | - | B | B | B | B | I | B | B | B | B | B | B | B | B |
-| error-correction     | W | B | B | B | B | W | - | - | - | - | B | B | - | - |
-| cloze                | - | W | W | W | W | W | - | - | - | - | W | W | - | - |
-| translate            | W | W | W | W | W | - | - | - | - | - | W | W | - | - |
-| grammar-identify     | - | - | B | B | B | B | - | - | - | - | B | B | B | B |
-| highlight-morphemes  | - | - | B | B | B | B | - | - | - | - | B | B | B | B |
-| essay-response       | - | - | W | W | W | W | W | W | W | W | W | W | W | W |
-| reading              | - | - | - | W | W | W | W | W | W | W | W | W | W | W |
-| critical-analysis    | - | - | - | - | W | W | W | W | W | W | - | W | W | W |
-| translation-critique | - | - | - | W | W | W | - | - | - | W | W | W | - | - |
-| comparative-study    | - | - | - | - | W | W | W | W | W | W | - | W | W | W |
-| source-evaluation    | - | - | - | - | - | - | W | W | W | - | - | - | - | - |
-| authorial-intent     | - | - | - | - | - | W | - | W | - | W | - | - | - | - |
-| debate               | - | - | - | - | - | W | - | - | - | W | - | - | - | - |
-| etymology-trace      | - | - | - | - | W | W | - | - | - | - | - | - | W | W |
-| paleography-analysis | - | - | - | - | - | - | - | - | - | - | - | - | W | W |
-| dialect-comparison   | - | - | - | - | - | - | - | - | - | - | - | - | - | W |
-| transcription        | - | - | - | - | - | - | - | - | - | - | - | - | W | W |</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>a1</th>
+<th>a2</th>
+<th>b1-core</th>
+<th>b2</th>
+<th>c1-core</th>
+<th>c2</th>
+<th>hist</th>
+<th>bio</th>
+<th>istorio</th>
+<th>lit</th>
+<th>folk</th>
+<th>oes</th>
+<th>ruth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>image-to-letter</td>
+<td>I</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>letter-grid</td>
+<td>I</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>watch-and-repeat</td>
+<td>I</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>divide-words</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>count-syllables</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>pick-syllables</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>anagram</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>unjumble</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>order</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>odd-one-out</td>
+<td>B</td>
+<td>B</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>observe</td>
+<td>B</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>phrase-table</td>
+<td>B</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>classify</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>match-up</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>I</td>
+<td>-</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>group-sort</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>quiz</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>-</td>
+<td>I</td>
+<td>I</td>
+</tr>
+<tr>
+<td>true-false</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>-</td>
+<td>I</td>
+<td>I</td>
+</tr>
+<tr>
+<td>fill-in</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>I</td>
+<td>-</td>
+<td>I</td>
+<td>I</td>
+</tr>
+<tr>
+<td>mark-the-words</td>
+<td>-</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>I</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>-</td>
+<td>B</td>
+<td>B</td>
+</tr>
+<tr>
+<td>error-correction</td>
+<td>W</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>cloze</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>translate</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>grammar-identify</td>
+<td>-</td>
+<td>-</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>B</td>
+<td>B</td>
+</tr>
+<tr>
+<td>highlight-morphemes</td>
+<td>-</td>
+<td>-</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>B</td>
+<td>B</td>
+</tr>
+<tr>
+<td>essay-response</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+</tr>
+<tr>
+<td>reading</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+</tr>
+<tr>
+<td>critical-analysis</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+</tr>
+<tr>
+<td>translation-critique</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>comparative-study</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+</tr>
+<tr>
+<td>source-evaluation</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>authorial-intent</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>-</td>
+<td>W</td>
+<td>-</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>debate</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>etymology-trace</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+</tr>
+<tr>
+<td>ritual-sequencing</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>variant-comparison</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>motif-formula</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>B</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>performance</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>paleography-analysis</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+</tr>
+<tr>
+<td>dialect-comparison</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+</tr>
+<tr>
+<td>transcription</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>W</td>
+<td>W</td>
+</tr>
+</tbody>
+</table>
 <p>Reading the matrix:</p>
 <ul>
 <li>A column full of <code>-</code> except for A1 means a phonetics type (Principle 2).</li>
 <li>Puzzle-gamification types (<code>anagram</code>, <code>unjumble</code>, <code>order</code>, <code>odd-one-out</code>, <code>observe</code>, <code>phrase-table</code>) form a triangle shrinking from A1 to B1, then empty from B2 onward (Principle 1).</li>
 <li><code>quiz</code>, <code>fill-in</code>, <code>mark-the-words</code>, <code>match-up</code> are the backbone rows — present at almost every level.</li>
+<li>FOLK uses <code>ritual-sequencing</code>, <code>variant-comparison</code>, <code>motif-formula</code>, and <code>performance</code> instead of the generic seminar true-false/group-sort/match-up pattern.</li>
 <li>The bottom block (<code>essay-response</code> through <code>transcription</code>) is strictly workbook-only production/academic types, earning in at progressively higher levels (Principles 4, 6, 7).</li>
 </ul>
 <hr />
 <h2>4. Special Rules (Semantic Placement)</h2>
+<p>For fresh A1 plans (#8889 §B2), generate the placement table from the pedagogical rows
+above intersected with the definitions in <code>schemas/activities-a1.schema.json</code>. Values are
+<code>inline</code>, <code>workbook</code>, <code>both</code>, and <code>forbidden</code>; the generated table lists every schema-versus-
+pedagogy discrepancy and its resolution. <code>classify</code> is explicitly <code>forbidden</code> despite its
+legacy A1 schema definition. <code>translate</code>, <code>anagram</code>, and <code>error-correction</code> are workbook only;
+<code>image-to-letter</code>, <code>letter-grid</code>, and <code>watch-and-repeat</code> are inline only; all other permitted
+A1 types in the §3 matrix are <code>both</code>. The plan validator enforces that generated table for
+fresh plans. The §3 matrix and the legacy repair behavior below remain references for existing
+modules and do not override the fresh table.</p>
 <p>Two sets in <code>config_tables.py</code> override the per-level allowlist for <strong>placement only</strong>. A type in these sets is restricted regardless of level config.</p>
 <h3><code>INLINE_ONLY_TYPES</code></h3>
 <pre><code>image-to-letter, letter-grid, watch-and-repeat
@@ -337,7 +1427,7 @@
 <h3><code>WORKBOOK_ONLY_TYPES</code></h3>
 <pre><code>essay-response, reading, cloze, critical-analysis,
 source-evaluation, debate, comparative-study,
-authorial-intent, translation-critique,
+authorial-intent, translation-critique, variant-comparison, performance,
 etymology-trace, paleography-analysis,
 transcription, dialect-comparison
 </code></pre>
@@ -456,15 +1546,14 @@ def survey(level: str) -&gt; None:
             print(f&quot;    {slug}: {i} inline, {w} workbook&quot;)
 
 for lvl in [&quot;a1&quot;, &quot;a2&quot;, &quot;b1-core&quot;, &quot;b2&quot;, &quot;c1-core&quot;, &quot;c2&quot;,
-            &quot;hist&quot;, &quot;bio&quot;, &quot;istorio&quot;, &quot;lit&quot;, &quot;b2-pro&quot;, &quot;c1-pro&quot;,
-            &quot;oes&quot;, &quot;ruth&quot;]:
+            &quot;hist&quot;, &quot;bio&quot;, &quot;istorio&quot;, &quot;lit&quot;, &quot;oes&quot;, &quot;ruth&quot;]:
     survey(lvl)
 </code></pre>
 <p>A clean run prints zero <code>WOULD DROP</code> lines. If any appear, decide case-by-case: drop is intentional (content is stale under the new rules → regen those modules) or unintentional (config is too strict → relax).</p>
 <hr />
 <h2>6. History</h2>
 <ul>
-<li><strong>2026-04-10 (issue <a href="https://github.com/anthropics/learn-ukrainian/issues/1185">#1185</a>)</strong> — One-shot comprehensive tuning of <code>ACTIVITY_CONFIGS</code> for all 14 levels. Adversarial review by Gemini (<code>gemini-3.1-pro-preview</code>) found 7 fixable issues plus a schema gap (dictation). All 7 fixes applied; dictation tracked separately as a schema ticket.</li>
+<li><strong>2026-04-10 (issue <a href="https://github.com/anthropics/learn-ukrainian/issues/1185">#1185</a>)</strong> — One-shot comprehensive tuning of <code>ACTIVITY_CONFIGS</code> for all 14 levels. Adversarial review by Gemini (<code>gemini-3.1-pro-preview</code>, a model since retired) found 7 fixable issues plus a schema gap (dictation). All 7 fixes applied; dictation tracked separately as a schema ticket.</li>
 </ul>
 
   </main>
