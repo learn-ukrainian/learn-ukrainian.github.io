@@ -2,10 +2,43 @@
 
 import os
 import sys
+from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 
+from tests.dispatcher.worker_reap import Reaper
+
 DOCTOR_NOT_FETCHED = "Managed settings (remote): not fetched — requires an Enterprise or Team subscription"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def dispatcher_worker_reaper() -> Iterator[Reaper]:
+    """Fail the session if a dispatcher test left a detached worker alive.
+
+    Defect class: a test leaks a detached worker process. The failure names that
+    test and the pid. Per-test teardown kills the worker's group; this check is
+    what remains at session end.
+    """
+    reaper = Reaper.start()
+    try:
+        yield reaper
+    finally:
+        reaper.finish()
+
+
+@pytest.fixture(autouse=True)
+def end_detached_dispatcher_workers(request: pytest.FixtureRequest, tmp_path: Path, dispatcher_worker_reaper: Reaper):
+    """End workers this test detached, including when pytest-timeout uses ``os._exit``.
+
+    The reaper is armed before the test body. Fixture teardown kills the groups.
+    ``os._exit`` skips that teardown; the reaper's parent-death pipe does not.
+    """
+    dispatcher_worker_reaper.activate(tmp_path, request.node.nodeid)
+    try:
+        yield
+    finally:
+        dispatcher_worker_reaper.reap(tmp_path)
 
 
 @pytest.fixture(autouse=True)

@@ -25,6 +25,7 @@ from scripts.dispatcher.providers import muse
 from scripts.dispatcher.types import TaskSpec
 from scripts.lib import rules_core
 from scripts.review.record_cf_verdict import _review_branch
+from tests.dispatcher.worker_reap import reap_root
 
 SOURCE = Path(__file__).resolve().parents[2]
 
@@ -139,12 +140,12 @@ def sandbox(tmp_path, hermetic_monitor):
 
     box = SimpleNamespace(repo=repo, tasks=tasks, remote=remote, env=env, cli=cli, dispatch=dispatch, settle=settle,
                           review_models=review_models, review_target=review_target)
-    yield box
-    # Reap detached test supervisors, including a test interrupted by an assertion.
-    for path in tasks.glob("*.json"):
-        record = json.loads(path.read_text())
-        if record["status"] in store.ACTIVE and worker._identity(record.get("pid")) == record.get("process_start"):
-            cli("cancel", record["task_id"], "--run-nonce", record["run_nonce"])
+    try:
+        yield box
+    finally:
+        # cancel() only signals a supervisor that is still the recorded process. The provider
+        # is its own session, and pytest-timeout's os._exit never reaches this fixture.
+        reap_root(tmp_path)
 
 
 def test_supervise_restores_signal_handlers_after_cleanup(sandbox, monkeypatch):
