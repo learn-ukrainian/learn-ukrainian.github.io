@@ -21,8 +21,9 @@ ACCEPTED_VERDICT_TOKENS = (
 
 # A structured reply that stopped for a missing capability may name it in this
 # list beside the canonical findings fields (``scripts/review/capability_failure.py``).
-# Every structured reader drops the field before schema validation, whatever its
-# form, so it never hides the reply's verdict; the classifier checks its form.
+# The verdict readers drop the field before schema validation, whatever its form,
+# so it never hides the reply's verdict; the classifier checks its form. The
+# verdict recorder accepts it only on a BLOCKED reply (``checked_findings_payload``).
 MISSING_CAPABILITIES_FIELD = "missing_capabilities"
 REVIEW_CAPABILITIES = frozenset({"sources-mcp", "test-execution", "shell", "browser", "checkout-data"})
 
@@ -301,22 +302,52 @@ def invalid_findings_block(response: str, *, stated: str | None = None) -> str |
     Fails closed: when the scan cannot decide the top-level blocks (the decoder's depth limit), the reply
     is treated as carrying an invalid block. ``stated`` is as in ``_findings_json_verdicts``.
     """
-    from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
-    from scripts.review.review_contract import ContractError, validate_reviewer_payload
+    from scripts.fleet_comms.review_publication import ReviewPublicationError
+    from scripts.review.review_contract import ContractError
 
     try:
         for payload in _top_level_json_values(response):
             if not isinstance(payload, dict) or not _FINDINGS_ENVELOPE_KEYS & payload.keys():
                 continue
-            payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
             try:
-                validate_reviewer_payload(payload)
-                resolve_verdict_and_evidence(payload, stated=stated)
+                checked_findings_payload(payload, stated=stated)
             except (ContractError, ReviewPublicationError) as exc:
                 return f"top-level findings block fails validation: {exc}"
     except RecursionError:
         return "top-level blocks cannot be decided"
     return None
+
+
+def declares_missing_capabilities(response: str) -> bool:
+    """Whether any top-level JSON object in the reply carries ``MISSING_CAPABILITIES_FIELD``, in any form."""
+    return any(
+        isinstance(value, dict) and MISSING_CAPABILITIES_FIELD in value for value in _top_level_json_values(response)
+    )
+
+
+def checked_findings_payload(payload: dict[str, Any], *, stated: str | None = None) -> tuple[str, Any]:
+    """The verdict and evidence of a findings payload the closeout verifier's schema accepts.
+
+    A reviewer that reports missing capabilities cannot approve: only a BLOCKED payload sets
+    ``MISSING_CAPABILITIES_FIELD`` aside, and any other payload meets the schema with the key, which
+    refuses it by name. Raises ``ContractError`` or ``ReviewPublicationError``. ``stated`` is as in
+    ``_findings_json_verdicts``.
+    """
+    from scripts.fleet_comms.review_publication import ReviewPublicationError, resolve_verdict_and_evidence
+    from scripts.review.review_contract import validate_reviewer_payload
+
+    try:
+        verdict, evidence = resolve_verdict_and_evidence(payload, stated=stated)
+        unresolved = None
+    except ReviewPublicationError as exc:
+        # The schema check below names the faulty field when there is one.
+        verdict, evidence, unresolved = None, None, exc
+    if verdict == "BLOCKED":
+        payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
+    validate_reviewer_payload(payload)
+    if unresolved is not None:
+        raise unresolved
+    return verdict, evidence
 
 
 # The review-loop reply's advisory ``SCORE: n/10`` line (C-3020), with the same
