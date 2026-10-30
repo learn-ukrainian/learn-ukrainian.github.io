@@ -4,7 +4,7 @@ The fresh path has no word or activity target: judge size by job adequacy agains
 
 Kind: plan
 Module: a1/sounds-letters-and-hello (Position 2)
-Manifest SHA256: 2dc0f91821071b4c1cab634b5cfc8919587c52fbec487259f71e8be6adb45c15
+Manifest SHA256: 4cdb88235ac488f0dc9eaadd21a2253b16c05129d4ddaa59d1b623f2977f85c7
 
 You are the independent cross-family content reviewer for a fresh curriculum module plan (Contract 1, fresh-build review contracts #8430 r4).
 You evaluate whether the module plan serves the learning goals before any lesson writer runs.
@@ -204,8 +204,8 @@ taxonomy: 1
 kind: plan
 attempt:
   review_id: "rev-20261030-sounds-letters-and-hello"
-  attempt_id: "sol-att-4"
-  manifest_sha256: "2dc0f91821071b4c1cab634b5cfc8919587c52fbec487259f71e8be6adb45c15"
+  attempt_id: "sol-att-5"
+  manifest_sha256: "4cdb88235ac488f0dc9eaadd21a2253b16c05129d4ddaa59d1b623f2977f85c7"
   previous_attempt_id: null
 reviewer:
   resolved_model: "<model>"
@@ -290,7 +290,7 @@ lessons:
     teach: 'Hear the informal greeting Привіт! and friendly farewells Бувай! or Па-па! used with friends, peers, and family. Notice statement, question, and exclamation intonation contours in first speech turns. Practice polar responses: так (yes) and ні (no). Practice choosing and saying the appropriate informal greeting aloud in response to situational prompts ("What do you say if I say to you: ...").'
     introduces: {letters: [], grammar: [], vocabulary: ['W-074']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-002', 'T-048', 'T-051', 'V-001', 'V-021']
+    evidence: ['T-002', 'T-048', 'T-051', 'V-001']
     practice: ['a1']
     needs: [video]
   - id: s2
@@ -305,7 +305,7 @@ lessons:
   - id: a1
     type: watch-and-repeat
     placement: inline
-    focus: 'Listen to and repeat Ukrainian greetings aloud with native video models, responding aloud to prompt situations in both informal and formal registers ("What do you say if I say to you: ...").'
+    focus: 'Listen to and repeat Ukrainian informal greetings aloud with native video models, responding aloud to prompt situations in the informal register ("What do you say if I say to you: ...").'
     model: X-001
   - id: a2
     type: match-up
@@ -319,8 +319,6 @@ lessons:
     use: 'Formal greeting demonstration.'
   - evidence: V-020
     use: 'Formal farewell До побачення and politeness chunks in ULP 1-02, publisher repeat-after-me excerpt 05:40–06:15.'
-  - evidence: V-021
-    use: 'Informal farewells and conversational turns in ULP 1-01, publisher repeat-after-me excerpt 06:10–06:35.'
 - n: 2
   slug: first-vowels
   title: 'голосні звуки'
@@ -340,7 +338,7 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Survey the 33 letters of the Cyrillic alphabet with printed and cursive models and traditional letter names. Ukrainian phonetics features six basic vowel sounds ([а], [о], [у], [е], [и], [і]). Observe that stressed vowels carry a stress mark (´) as in мама, while unstressed vowels [е] and [и] tend to merge slightly. Learn and observe the primary vowel letters А, О, Е, И, І with native video models.'
+    teach: 'Survey the 33 letters of the Cyrillic alphabet with printed and cursive models and traditional letter names. Ukrainian phonetics features six basic vowel sounds ([а], [о], [у], [е], [и], [і]). Observe orally that stressed vowels are pronounced with greater prominence, while unstressed vowels [е] and [и] tend to merge slightly. Learn and observe the primary vowel letters А, О, Е, И, І with native video models.'
     introduces: {letters: ['А', 'Е', 'И', 'І', 'О'], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-001', 'T-006', 'T-007', 'T-009', 'T-011', 'T-042', 'T-046', 'T-049', 'S-004', 'V-004', 'V-005', 'V-007', 'V-009', 'V-017']
@@ -397,7 +395,7 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Welcoming community members and reading badges in social spaces: read participant names Ніна, Нонна and family reference мама. Practice syllables ма, мо, ме, ми, мі and на, но, не, ни, ні as rhythm and pronunciation scaffolds for confident speech. Copy the word мама into your notebook as supported writing practice.'
+    teach: 'Welcoming community members and reading badges in social spaces: read participant names Ніна, Нонна and family reference мама. Observe that stressed vowels carry a stress mark (´) in print as in мама. Practice syllables ма, мо, ме, ми, мі and на, но, не, ни, ні as rhythm and pronunciation scaffolds for confident speech. Copy the word мама into your notebook as supported writing practice.'
     introduces: {letters: ['М', 'Н'], grammar: [], vocabulary: ['W-081', 'W-091', 'W-092']}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-010', 'T-012', 'T-019', 'T-050', 'V-008', 'V-010']
@@ -530,7 +528,13 @@ lessons:
       - 'Choose and say the appropriate greeting aloud for both informal (Привіт!) and formal (Добрий день!) situations'
       - 'Decode and pronounce familiar names aloud using all twelve taught letters'
       - 'Copy model words and names into a notebook with correct Cyrillic letter forms'
-      learner_reads: []
+      learner_reads:
+      - ref: T-019
+        words:
+        - 'Іван'
+        - 'Вова'
+        - 'Ніна'
+        - 'Нонна'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: ['W-081', 'W-091', 'W-092', 'W-093', 'W-094', 'W-101', 'W-001']}
     evidence: ['T-019', 'T-018', 'T-043', 'T-044', 'T-051']
@@ -1605,7 +1609,7 @@ later get the next free id; ids are never reused.
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "1833ed5eb2bc0c29225955e846baf227ef7625a7778089bb2855af1faa4c6960",
     "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "b716c55def2f736ce0e741821a4fa5d120bd3e6a9293fbcb88f035516f8baa34",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "3c83f38d42f477e270a138f56bede8f00bb16076966d753b27b167c968c859b5",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "920d868b2b05ee7985ae698f5c8070d2ec275ab013f21f559edd2599e4301fa2",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -2513,20 +2517,6 @@ V-020:
     words: []
   url: https://www.ukrainianlessons.com/episode2/
   use: Formal farewell До побачення and politeness chunks in ULP 1-02, publisher repeat-after-me excerpt 05:40–06:15.
-V-021:
-  channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.ukrainianlessons.com/episode1/
-    http_status: 200
-  id: V-021
-  models:
-    letters: []
-    segment: 06:10–06:35
-    words: []
-  url: https://www.ukrainianlessons.com/episode1/
-  use: Informal farewells and conversational turns in ULP 1-01, publisher repeat-after-me excerpt 06:10–06:35.
 X-001:
   id: X-001
   items_sample:

@@ -21,7 +21,12 @@
   "template_sha256": {
     "scripts/review/prompts/plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
   },
-  "verifier_reads": [],
+  "verifier_reads": [
+    "curriculum/l2-uk-en/curriculum.yaml",
+    "scripts/review/prompts/lesson-rereview.md.j2",
+    "scripts/review/prompts/lesson-review.md.j2",
+    "scripts/review/prompts/settle.md.j2"
+  ],
   "render_contract": {
     "version": 4,
     "render_checkout": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy",
@@ -36,8 +41,8 @@
       "repository": "sha256:beb4af15c2cb05d03c200a35845f49f789d73286ffc1bb5ccbbe663b4b70d9e5",
       "requirements-lock.txt": "sha256:3e5c02571a48293fe2bde91910f0fed96e4fa8e89c55f0f030c22d3d94c75d96"
     },
-    "prompt_sha256": "ff1eaff4448b11378d0cbaf6f15ebc48adbca69cae9e1b66e495b98e802fc998",
+    "prompt_sha256": "bf1370bd14cb5416cc40172f56732f9c20587438c9430437a722ff0e16b8445f",
     "review_id": "rev-20261030-sounds-letters-and-hello",
-    "attempt_id": "sol-att-4"
+    "attempt_id": "sol-att-5"
   }
 }

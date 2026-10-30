@@ -1,0 +1,177 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-sounds-letters-and-hello"
+  attempt_id: "sol-att-4"
+  manifest_sha256: "2dc0f91821071b4c1cab634b5cfc8919587c52fbec487259f71e8be6adb45c15"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gpt-6.1-sol"
+  harness: "codex"
+  family: "openai"
+  prompt_sha256: "ff1eaff4448b11378d0cbaf6f15ebc48adbca69cae9e1b66e495b98e802fc998"
+checks:
+  # Practical greeting choices plus reading are an appropriate closing shape.
+  # search_text, ulp-1-00-lesson-notes_l0001_w005,
+  # rr-ae627eed72e76d8cc109: "What do you say if I say to you:"
+  # The task's missing reading stimulus is recorded under activities.
+  closing_shape: clean
+
+  # Titles describe the actual greeting, vowel, consonant and consolidation jobs.
+  # English prose quotes Ukrainian items as objects of instruction.
+  title_describes_job: clean
+
+  # No title or subtitle states an inventory quantity.
+  title_quantities: clean
+
+  # verify_words: rr-3f442f350cdf80ab2038 and rr-e342005aed95fe38f707.
+  # inspect_words, rr-b949605b0f5c4b67b867:
+  # "мама — CLEAN (clean=1, marked=0)" and corresponding clean analyses
+  # for the other quoted lexical forms.
+  # Whole-chunk meanings are supported by search_text:
+  # ulp-1-00-lesson-notes_l0002_w006, rr-7f81fec9e859a060dee7:
+  # "Будь ла́ска!" / "1) You’re welcome! 2) Please!"
+  # owned-oho-a1-workbook_f1_p0216_c0001, rr-e23b6ddf24ffb55493a4:
+  # "Віта́ю!, Hello!"
+  quoted_forms: clean
+
+  sequencing: [F-01, F-02]
+
+  # The oral, vowel, blending, remaining-letter and integrated-recap jobs
+  # justify distinct lessons. No word, activity, item or duration quota applied.
+  # The accepted full-alphabet overview is supported by search_text,
+  # owned-oho-a1-workbook_f1_p0015_c0001, rr-27b3cb10744dac8ba170:
+  # "The Ukrainian alphabet ... has 33 letters."
+  sizing: clean
+
+  # Basic greeting chunks and decodable names have immediate instructional use.
+  # query_cefr_level confirms A1:
+  # мама rr-56922208a4d459960e58; тато rr-a24af5abcd446622d433;
+  # я rr-eacd8489723b126bc90f; добрий rr-8a98a5acdc7b375322a3;
+  # день rr-89a3aef3b47e961bf626.
+  # search_text, 1-klas-bukvar-zaharijchuk-2025-1_s0058,
+  # rr-f47d7af326f55ad2ac98: "Іван Вова Ніна Нонна".
+  # Frequency evidence remains unavailable: query_grac returned
+  # "frequency absence is not zero", rr-db04e4242a491c39c983
+  # and rr-e3a5e3b18fc6e874dabb. No frequency ranking is asserted.
+  inventory: clean
+
+  # Workbook rotation is pedagogically defensible: contextual recognition,
+  # sound-symbol matching, syllable selection, lexical sorting and retrieval.
+  # Repeated match-up types change the operation; repeated fill-in types
+  # extend decoding to newly acquired consonants. The closing quiz provides
+  # an R-19 model appropriate to this material.
+  # X-001 supports prompted oral response rather than repetition alone:
+  # search_text, ulp-1-00-lesson-notes_l0001_w005,
+  # rr-ae627eed72e76d8cc109: "What do you say if I say to you:"
+  # Supplied reports show fresh 12 activities, including 6 workbook,
+  # versus v1 10 inline and 0 workbook. Reduced inline volume is justified
+  # by redistribution into workbook practice and the narrower staged scope.
+  # Response-opportunity comparison is an evidence gap: fresh item totals
+  # are unavailable at plan stage; the downstream builder owns that comparison.
+  activities: [F-03]
+
+  evidence_fit: [F-04]
+
+  # Supplied S-004/S-005 duties are assigned to lessons 1–2.
+  # search_text, owned-oho-a1-workbook_f1_p0019_c0001,
+  # rr-11b5cb15637344e0ae53:
+  # "a special stress mark (´) is placed above the stressed vowel."
+  # search_text, 2-klas-ukrmova-vashulenko-2019-1_s0112,
+  # rr-dcee64a8e5da4a0cc382:
+  # "Вимов їх з особливим захопленням."
+  # ULP lessons 1–2 support early formulaic greetings:
+  # rr-bb885c12ab7fe3ee7c00 and rr-c1b60e4c92dadacaa844.
+  # No case or agreement system is analysed.
+  standard_and_ulp: clean
+
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "Observe that stressed vowels carry a stress mark (´) as in мама"
+    dimension: learner_fit
+    severity: MAJOR
+    claim: >-
+      The printed stress example requires мама before М is acquired in lesson
+      3. The full-alphabet survey is an overview, not acquisition of every
+      sound-letter correspondence. This conflicts with the accepted staged
+      reading rule that printed words follow their constituent letters.
+      search_text, owned-oho-a1-workbook_f1_p0019_c0001, confirms the source
+      example; it does not establish its suitability before this learner knows
+      М. Retain oral stress noticing here and place the written whole-word
+      example after its letters are acquired.
+    evidence:
+      receipt: "rr-11b5cb15637344e0ae53"
+    could_be_a_gate: "no"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 1
+        activity: a1
+        quote: "responding aloud to prompt situations in both informal and formal registers"
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      Activity a1 is the practice for s1, but it requires formal-register
+      responses before s2 teaches the formal greeting. The defect is the
+      activity's semantic demand at that point, not its mechanical linkage.
+      search_text, ulp-1-00-lesson-notes_l0002_w001, identifies formal greetings
+      as the subsequent teaching slice. Scope the first response practice to
+      the informal material, then require formal responses after s2.
+    evidence:
+      receipt: "rr-c1b60e4c92dadacaa844"
+    could_be_a_gate: "no"
+
+  - id: F-03
+    status: active
+    locations:
+      - lesson: 5
+        step: s2
+        quote: "read the decodable names aloud, and write them in your notebook."
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      The closing task requires reading a community-event name list, but
+      learner_reads is empty and the task supplies no permitted name list.
+      Its quoted greetings in English instructions are teacher metalanguage,
+      not reading stimuli. The reading and copying criteria therefore lack
+      an executable stimulus. search_text,
+      1-klas-bukvar-zaharijchuk-2025-1_s0058, supplies the already-taught
+      names, so this can be repaired without adding inventory. Declare the
+      actual taught-name stimulus in the task's permitted learner print.
+      This also affects execution of the otherwise appropriate closing_shape.
+    evidence:
+      receipt: "rr-f47d7af326f55ad2ac98"
+    could_be_a_gate: "no"
+
+  - id: F-04
+    status: active
+    locations:
+      - lesson: 1
+        field: videos.3.use
+        quote: "Informal farewells and conversational turns in ULP 1-01, publisher repeat-after-me excerpt 06:10–06:35."
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      V-021's assigned informal-farewell model remains unverified.
+      search_resources establishes the identity of episode 1, but does not
+      establish the content of this bounded excerpt; searches for its cited
+      transcript and farewell content returned no hits. The pack builder
+      should verify the target forms in the actual excerpt before the writer
+      relies on it. This finding does not establish that the recording,
+      timestamp or Ukrainian forms are wrong and cannot alone require a
+      learner-content change.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-d12e8f94efbbf9bc5c75"
+          outcome: hits_but_no_support
+        - receipt: "rr-04ec5776a762018dad45"
+          outcome: no_hits
+        - receipt: "rr-f89468e9f00a6d6dd6f8"
+          outcome: no_hits
+    could_be_a_gate: "no"
