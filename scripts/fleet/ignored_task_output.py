@@ -36,6 +36,9 @@ from scripts.orchestration.task_record_store import task_record_path
 # Bound automatic disk duplication. Larger outputs require owner disposition;
 # the complete source checkout survives rather than receiving a partial copy.
 MAX_PRESERVED_BYTES = 256 * 1024 * 1024
+# A nightly data-tier checkout holds a snapshot of the host databases beside its tests.
+MAX_UNRECORDED_PRESERVED_BYTES = 4 * 1024 * 1024 * 1024
+_DATA_TIER_CHECKOUT = re.compile(r"run-[0-9a-f]{32}")
 MAX_RESIDUE_RECEIPT_BYTES = 10 * 1024 * 1024
 # A detached bundle gets the same ceiling as the existing output payload budget.
 # It is a separate artifact; neither budget permits a partial preservation.
@@ -519,8 +522,42 @@ def resolve_worktree_record(
                     return current[0]
         if creators:
             return reused_worktree_creator(matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir)
-        return None, {}
+        return legacy_worktree_creator(matches, worktree, repo_root=repo_root) or (None, {})
     return matches[0] if matches else (None, {})
+
+
+def legacy_worktree_creator(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, repo_root: Path
+) -> tuple[Path, dict[str, Any]] | None:
+    """The one dispatcher record that created the tree, when only finished continuations share it.
+
+    Dispatcher records never wrote ``worktree_reused``, so their continuations (dispatched with
+    ``--cwd``) carry no reuse flag either. Settlement already names the creator by the same rule
+    (``worktree_claims._created_worktree``); every other record must be a finished borrower of
+    this checkout and branch, so a second creator or a live continuation stays ambiguous.
+    """
+    from scripts.orchestration.worktree_claims import (
+        RELEASED_TASK_STATUSES,
+        _created_worktree,
+        resolve_claim_path,
+    )
+
+    creators = [match for match in matches if match[1].get("worktree_reused") is None and _created_worktree(match[1])]
+    if len(creators) != 1:
+        return None
+    target = worktree.resolve(strict=True)
+    branch = creators[0][1].get("worktree_branch")
+    for _, record in matches:
+        location = record.get("worktree_path") or record.get("cwd")
+        if (
+            not isinstance(location, str)
+            or resolve_claim_path(location, repo_root=repo_root) != target
+            or record.get("worktree_branch") != branch
+            or record.get("worktree_reused") is not None
+            or (record is not creators[0][1] and record.get("status") not in RELEASED_TASK_STATUSES)
+        ):
+            return None
+    return creators[0]
 
 
 def creation_inventory(worktree: Path, *, primary: Path, task_id: str, run_nonce: str) -> dict[str, Any]:
@@ -1497,6 +1534,11 @@ def _bound_residue_receipt(metadata: dict[str, Any]) -> bool:
     return True
 
 
+def unrecorded_data_tier_checkout(worktree: Path, primary: Path) -> bool:
+    """Whether ``worktree`` is one of the nightly data-tier job's own checkouts, which no task record names."""
+    return worktree.parent == primary / ".worktrees" / "data-tier" and bool(_DATA_TIER_CHECKOUT.fullmatch(worktree.name))
+
+
 def preserve_worktree_artifacts(
     worktree: Path,
     *,
@@ -1622,7 +1664,11 @@ def preserve_worktree_artifacts(
                 "absent_paths": absent,
             }
         )
-        if (
+        unrecorded = not matches and unrecorded_data_tier_checkout(worktree, primary)
+        if unrecorded:
+            # No task ever named this nightly checkout; it is its own owner, and removal waits for a verified copy.
+            identity = f"data-tier-{worktree.name}"
+        elif (
             not isinstance(identity, str)
             or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", identity)
             or record_path
@@ -1637,15 +1683,16 @@ def preserve_worktree_artifacts(
                 "worktree_sha256": hashlib.sha256(str(worktree).encode()).hexdigest(),
             }
         )
-        copy_required = disposition == "abandon" or extra_files is not None
+        copy_required = disposition == "abandon" or extra_files is not None or unrecorded
         if copy_required:
             # Untracked scratch and terminal-abandon bytes retain the legacy archive.
             for key in ("mode", "copied_bytes", "inventory_complete", "entries_truncated"):
                 metadata.pop(key, None)
         total_bytes = metadata["bytes"]
-        if copy_required and total_bytes > MAX_PRESERVED_BYTES:
+        cap = MAX_UNRECORDED_PRESERVED_BYTES if unrecorded else MAX_PRESERVED_BYTES
+        if copy_required and total_bytes > cap:
             metadata["next_condition"] = "owner retrieves output exceeding the preservation cap"
-            raise ValueError(f"ignored output exceeds preservation cap ({total_bytes} > {MAX_PRESERVED_BYTES} bytes)")
+            raise ValueError(f"ignored output exceeds preservation cap ({total_bytes} > {cap} bytes)")
         if copy_required and (files or absent or kept):
             parent = primary / "batch_state" / "preserved" / identity
             if parent.is_relative_to(worktree):
@@ -1703,6 +1750,18 @@ def preserve_worktree_artifacts(
                     json.dump(metadata, manifest, sort_keys=True)
                     manifest.write("\n")
             metadata["manifest_path"] = location.with_suffix(".manifest.json").relative_to(primary).as_posix()
+        if unrecorded:
+            # There is no task record to carry the receipt; the verified copy's locator returns to the caller.
+            metadata.update(retention_disposition="retrieved", next_condition="none")
+            if files != output_files() or _byte_identity(_path_inventory(worktree, files)) != _byte_identity(paths):
+                raise ValueError("ignored output changed during preservation")
+            if not _bound_residue_receipt(metadata):
+                raise ValueError("residue receipt metadata exceeds limit")
+            print(
+                f"Preserved {len(files)} files ({metadata['bytes']} bytes); retrieval SHA-256: {metadata.get('retrieval_proof_sha256')}",
+                file=sys.stderr,
+            )
+            return True, "", metadata
         if not copy_required:
             metadata.update(
                 inventory_complete=True,
