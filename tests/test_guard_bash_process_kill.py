@@ -77,6 +77,42 @@ F10_ANSI_C = [
     r"$'\x70kill' -f worker",
 ]
 
+# #12118: forms that hid a kill from the text reader, kills resolved against the
+# live table, and selections the table cannot answer.
+I12118_REFUSED = [
+    "'sudo'\"\" pkill -f worker",
+    "'command'\"\" pkill -f worker",
+    "pgrep -f worker | xargs 'env'\"\" kill",
+    "eval 'pkill -f worker'",
+    'eval "$(echo pkill -f worker)"',
+    "env -S 'pkill -f worker'",
+    "echo 'pkill -f worker' | bash",
+    "bash <<'EOF'\npkill -f worker\nEOF",
+    ". /dev/stdin <<'EOF'\npkill -f worker\nEOF",
+    'K=pkill; "$K" -f worker',
+    "printf '%s%s -f worker\\n' pki ll | bash",
+    "pkill --ful worker",
+    "pgrep --ful worker | xargs kill",
+    "setsid pkill -f worker",
+    "find /dev/null -name command -o -path -v -o -exec pkill -f worker \\;",
+    "killall bash",
+    "kill $$",
+    "kill -9 $PPID",
+    "kill 0",
+    "kill -9 -1",
+    'pkill -f "$PATTERN"',
+    'pgrep -f "$P" | xargs kill',
+    "pkill -USR1 -H -x python",
+]
+I12118_ALLOWED = [
+    "pkill -x no-such-process-12118",
+    "pgrep -x no-such-process-12118 | xargs kill",
+    "killall no-such-process-12118",
+    "pkill -P 1 -x no-such-process-12118",
+    # A wrapper before a shell running an existing script with no kill in it.
+    "timeout 120 bash scripts/ci/linux_fs_parity.sh",
+]
+
 
 @pytest.mark.parametrize(
     ("command", "refused"),
@@ -132,11 +168,13 @@ F10_ANSI_C = [
         ('pgrep -f worker | while read p; do echo "$p"; done', False),
         ('pgrep -f worker | while read -r; do echo "$REPLY"; done', False),
         ('for p in $(pgrep -f worker); do echo "$p"; done', False),
-        ("pgrep -f worker; kill 12345", False),
-        ("pkill worker", False),
-        ("pkill -x worker", False),
-        ("kill -TERM 12345 12346", False),
-        ("pgrep worker | xargs kill", False),
+        # #12118: these kills are resolved against the live table, so their targets
+        # are a name no process holds and PIDs above the Linux ceiling.
+        ("pgrep -f worker; kill 4194305", False),
+        ("pkill no-such-process-12118", False),
+        ("pkill -x no-such-process-12118", False),
+        ("kill -TERM 4194305 4194306", False),
+        ("pgrep no-such-process-12118 | xargs kill", False),
         ("pkill -- -foo", False),
         ('echo "pkill -f worker; pgrep -f worker | xargs kill"', False),
         ("printf '%s\\n' 'kill $(pgrep -f worker)'", False),
@@ -150,7 +188,8 @@ F10_ANSI_C = [
         ('bash -c "echo $X" _ y', False),
         (r"printf $'ok\t\x41\101\n'", False),
     ]
-    + [(command, True) for command in F7_SHELL_OPTIONS + F10_ANSI_C]
+    + [(command, True) for command in F7_SHELL_OPTIONS + F10_ANSI_C + I12118_REFUSED]
+    + [(command, False) for command in I12118_ALLOWED]
     + [(kill + "; " + DEEP, True) for kill in F7_KILLS]
     + [(DEEP + "; " + kill, True) for kill in F7_KILLS],
 )
