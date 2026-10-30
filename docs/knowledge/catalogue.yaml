@@ -2376,12 +2376,13 @@ store_registry:
       activity: active
       presence: present
       writers: [scripts/common/github_client.py:GitHubClient._db]
+      busy_setters: [scripts/common/github_client.py:_open_cache]
       journal: delete
       busy_ms: 5000
       busy_source: explicit
       protection: rebuild
       backup: drop
-      retention: Unbounded today (no row eviction); a logical bound is DB plan step 5, and destructive eviction needs operator authorization.
+      retention: Unbounded today (no row eviction); a logical bound is DB plan step 5, and destructive eviction needs operator authorization. Its usage table (REST core requests per caller) keeps six hours; the count opens the file with a quarter-second timeout instead.
     - path: data/wiki_cache.db
       owner: corpus-channels
       kind: cache

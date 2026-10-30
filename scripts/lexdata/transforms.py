@@ -94,6 +94,7 @@ _OHOIKO_PARSER_MODULES = (
     "scripts/atlas/word_card_certification.py",
     "scripts/atlas/word_card_golden_set.py",
     "scripts/common/github_client.py",
+    "scripts/common/github_usage.py",
     "scripts/common/repo_root.py",
     "scripts/common/scratch.py",
     "scripts/lib/readonly_sqlite.py",
