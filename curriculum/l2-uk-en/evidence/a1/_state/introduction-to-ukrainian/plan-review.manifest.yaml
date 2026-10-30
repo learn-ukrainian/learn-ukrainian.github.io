@@ -37,13 +37,13 @@ inputs:
     sha256: c8d1531f60027cd1605aaf1ec22dad4d39d1ba097f6da90ecd10be70a063f047
   validate_report:
     path: curriculum/l2-uk-en/evidence/a1/_state/introduction-to-ukrainian/plan-validate.report.json
-    sha256: 86c2708e4162167fd26fcb0faa89b5f6940d5ecb0f5b866d189fb062ac7c9e26
+    sha256: a332728f0c6feb99c68047dc7a16c20e82fa775cef80b66a9a2fe15d39a5f1d6
   words:
     path: curriculum/l2-uk-en/evidence/a1/_words.yaml
-    sha256: df4505d20db9dd4d34e7904cd26dd0620ef0ea38bc511e4d72461522e1600881
+    sha256: f2a27c370bd40222f46975880636091c5316de7f9cbfef3fdec0b11d4ff9e591
   words_lock:
     path: curriculum/l2-uk-en/evidence/a1/_words.yaml.lock
-    sha256: 9e4c8cb1498cdfa78f0e493d8a83f674eeba5ed81dd8aa362950c8149d3a6748
+    sha256: 75649f9a739529e4c12f2ef6c13b9c193d35f41ac569d4c6addb026a634fd4d4
 kind: plan
 learner_state:
   sha256: d26c8a7312023c6c1b4d85712b88bc067d182597ee5610907d658b88393599b3
