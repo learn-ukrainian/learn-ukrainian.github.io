@@ -18,6 +18,11 @@ This guard is deliberately narrow. It catches high-confidence dump shapes only:
   - `scripts.session_supervisor worker-env` environment views, including the
     explicit `--all` form
 
+It also refuses full-command-line process kills that can match the invoking
+shell: `pkill -f`, and a `pgrep -f` anywhere in the same invocation as a `kill`
+whose operands are not literal numeric PIDs. The secret override does not
+apply to them.
+
 Quote-aware tokenization keeps dangerous-looking strings inside a quoted commit
 message from becoming false positives. This is defense-in-depth, not a sandbox.
 """
@@ -1659,6 +1664,136 @@ def _hide_substitutions(command: str) -> tuple[str, dict[str, tuple[str, str]]]:
     return "".join(out), substitutions
 
 
+# procps pgrep/pkill short options whose value follows the letter or the next word.
+_PROCESS_VALUE_OPTIONS = set("dgGPstuUFOrq")
+_XARGS_VALUE_OPTIONS = {
+    "-a",
+    "-d",
+    "-E",
+    "-I",
+    "-L",
+    "-n",
+    "-P",
+    "-s",
+    "--arg-file",
+    "--delimiter",
+    "--eof",
+    "--replace",
+    "--max-lines",
+    "--max-args",
+    "--max-procs",
+    "--max-chars",
+}
+PROCESS_KILL_MESSAGE = (
+    "BLOCKED by guard-secret-print (#M-5): full-command-line process kills can match "
+    "the invoking shell.\n\n"
+    "Kill exact numeric PIDs read in an earlier command, or stop a harness background "
+    "task with the harness's own stop tool.\n"
+)
+
+
+def _full_process_match(args: list[str]) -> bool:
+    """Whether pgrep/pkill options select by full command line (-f, --full)."""
+    words = iter(_strip_quotes(arg) for arg in _without_redirects(args))
+    for word in words:
+        if word == "--":
+            return False
+        if word == "--full":
+            return True
+        # Signals (-9, -TERM, -SIGHUP) and long options carry no -f letter.
+        if word.startswith("--") or not word.startswith("-") or re.fullmatch(r"-[A-Z0-9+]+", word):
+            continue
+        for index, letter in enumerate(word[1:], 1):
+            if letter == "f":
+                return True
+            if letter in _PROCESS_VALUE_OPTIONS:
+                if index == len(word) - 1:
+                    next(words, None)
+                break
+    return False
+
+
+def _literal_pid_kill(args: list[str]) -> bool:
+    """Whether kill names only literal numeric PIDs, as in `kill -TERM 123`."""
+    words = [_strip_quotes(arg) for arg in _without_redirects(args)]
+    pids = 0
+    expect_value = False
+    for word in words:
+        if expect_value:
+            expect_value = False
+            if not re.fullmatch(r"[A-Za-z0-9+]+", word):
+                return False
+        elif word in {"-s", "-n", "--signal"}:
+            expect_value = True
+        elif re.fullmatch(r"\d+", word):
+            pids += 1
+        elif not (word == "--" or re.fullmatch(r"-[A-Za-z0-9+]+", word)):
+            return False
+    return pids > 0 and not expect_value
+
+
+def _xargs_target(args: list[str]) -> list[str]:
+    """Return the command words xargs runs, after its own options."""
+    words = _without_redirects(args)
+    index = 0
+    while index < len(words):
+        word = _strip_quotes(words[index])
+        if word == "--":
+            return words[index + 1 :]
+        if word in _XARGS_VALUE_OPTIONS:
+            index += 2
+        elif word.startswith("-"):
+            index += 1
+        else:
+            return words[index:]
+    return []
+
+
+def _segment_process_facts(segment: list[str], depth: int, *, fed: bool = False) -> set[str]:
+    found = _command_at(segment)
+    if found is None:
+        return set()
+    cmd, args, _ = found
+    if cmd in {"pkill", "pgrep"}:
+        return {cmd} if _full_process_match(args) else set()
+    if cmd == "kill":
+        # xargs appends its input to the operands, so a fed kill is never literal.
+        return {"kill"} if fed or not _literal_pid_kill(args) else set()
+    if cmd == "xargs":
+        target = _xargs_target(args)
+        return _segment_process_facts(target, depth + 1, fed=True) if target else set()
+    if cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
+        facts: set[str] = set()
+        for script in _shell_script(args):
+            facts |= _process_facts(script, depth=depth + 1)
+        return facts
+    return set()
+
+
+def _process_facts(command: str, *, depth: int = 0) -> set[str]:
+    """Collect full-match selections and nonliteral kills across one invocation.
+
+    Facts are gathered from every statement, substitution and nested shell
+    script, ignoring pipes, loops, groups and assignments between them, so a
+    selection reaches its kill however the command routes the PIDs.
+    """
+    if depth >= 12:
+        return {"pkill"}
+    executable, substitutions = _hide_substitutions(preprocess_shell_command(command))
+    facts: set[str] = set()
+    for _, body in substitutions.values():
+        facts |= _process_facts(body, depth=depth + 1)
+    for pipeline in _pipelines(executable):
+        for segment in pipeline:
+            facts |= _segment_process_facts(segment, depth)
+    return facts
+
+
+def _process_kill_refused(command: str) -> bool:
+    facts = _process_facts(command)
+    return "pkill" in facts or {"pgrep", "kill"} <= facts
+
+
 def _scan_command(
     command: str,
     copied: set[str],
@@ -1744,18 +1879,33 @@ def _main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     if args == ["--self-test"]:
         return _self_test()
-    if os.environ.get("LEARN_UK_SECRETS_OK") == "1":
-        return 0
+    # The secret-output override does not cover process kills.
+    override = os.environ.get("LEARN_UK_SECRETS_OK") == "1"
 
     payload = _read_payload()
     if payload is None or not isinstance(payload.get("tool_input", {}), dict):
+        if override:
+            return 0
         sys.stderr.write(_block_msg("malformed hook payload"))
         return 2
     if not isinstance(payload.get("tool_input", {}).get("command", ""), str):
+        if override:
+            return 0
         sys.stderr.write(_block_msg("malformed hook command"))
         return 2
     command = _command(payload)
     if not command:
+        return 0
+
+    try:
+        refused = _process_kill_refused(command)
+    except ShellPreprocessLimit:
+        # The secret scan below reports the same parse limit.
+        refused = False
+    if refused:
+        sys.stderr.write(PROCESS_KILL_MESSAGE)
+        return 2
+    if override:
         return 0
 
     try:
