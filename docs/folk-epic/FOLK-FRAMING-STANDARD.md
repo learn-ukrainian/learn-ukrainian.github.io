@@ -149,6 +149,6 @@ those, keep the good text.
   preflight, the framing checks in production/remediation, and flag any violation in quality audit.
 - **Reviewers** (`docs/folk-epic/folk-review-rubric.md`): the framing standard is a **hard, fail-the-
   artifact gate** — a single pagan-survival / magic / occult / demonology-as-belief framing = BLOCK.
-  Reviewer is **cross-family to the writer (GPT↔Claude); NO DeepSeek for folk culture.**
+  Reviewer is **the review-loop ukrainian seats, outside the writer's family, with no Claude seat; NO DeepSeek for folk culture.**
 - **Exemplar** (`docs/folk-epic/EXEMPLAR-STANDARD.md`): describes the mechanical shape; this doc governs
   the editorial framing of whatever fills that shape.

@@ -137,8 +137,8 @@ silence or approval proves nothing. Making it mandatory needs the operator's app
 ## Review profiles
 
 - `code` and `infra`: this skill as written.
-- `ukrainian`: two independent cross-family seats and tool-verified findings, seated from
-  [ukrainian](references/ukrainian.md) instead of the resolver; the rest of this skill applies.
+- `ukrainian`: the independent cross-family seats named in
+  [ukrainian](references/ukrainian.md), with tool-verified findings, seated from that page instead of the resolver; the rest of this skill applies.
 
 ## Stop and report
 

@@ -121,4 +121,4 @@ is everything. Modules are GPT's to build against the `folk-experiential` archet
 `narodni-viruvannia-mifolohiia-demonolohiia` → `koliadky-shchedrivky` →
 `rodynna-obriadovist-zvychai` → `dumy-nevilnytski-lytsarski`.
 Writer = **GPT now / Claude after June 8** (Claude content-writing benched until the June 8 reset).
-Cross-family review = the other model (GPT↔Claude; **no DeepSeek for culture**).
+Cross-family review uses the review-loop ukrainian seats, with no Claude seat (**no DeepSeek for culture**).
