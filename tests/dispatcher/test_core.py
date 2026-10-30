@@ -296,7 +296,8 @@ def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_wo
     run_git(sandbox.repo, "worktree", "add", "-b", "sibling", str(sibling))
     untracked = sandbox.repo / "curriculum/untracked.txt"
     untracked.write_text("uncommitted primary file")
-    task = sandbox.dispatch("blocked", *flags)
+    mode = ["--mode", "workspace-write"] if "--owned-path" in flags else []
+    task = sandbox.dispatch("blocked", *mode, *flags)
     worktree = Path(json.loads((sandbox.tasks / f"{task[0]}.json").read_text())["cwd"])
     await_file(sandbox.tasks / f"{task[0]}.started")
     for directory in excluded:
@@ -315,7 +316,8 @@ def test_sparse_dispatch_never_turns_on_sparse_checkout_in_primary_or_sibling_wo
         origin = run_git(worktree, "config", "--show-origin", "--get", "core.sparseCheckout")
         assert origin.endswith("/config.worktree\ttrue")
     (sandbox.tasks / f"{task[0]}.release").touch()
-    assert sandbox.settle(task)["worktree_disposition"] == "removed"
+    # A write task that commits nothing settles as undelivered; the sparse checkout is what this test covers.
+    assert sandbox.settle(task, expected=1 if mode else 0)["worktree_disposition"] == "removed"
 
 
 @pytest.mark.parametrize("redirected", [False, True])
@@ -1305,9 +1307,9 @@ def test_delivery_observes_actual_remote_and_dirty_worktree(sandbox, model, push
     ("pushed", "workspace-write", ["delivered"], "no_deliverable", "outside_owned_paths: delivered.txt"),
     ("pushed-nested", "workspace-write", ["src/"], "done", None),
     ("pushed-dirty", "workspace-write", [], "no_deliverable", "worktree_dirty_or_unknown"),
-    ("echo", "read-only", ["other/"], "done", None),
-    ("dirty", "read-only", ["other/"], "done", None),
-    ("pushed", "read-only", ["other/"], "done", None),
+    ("echo", "read-only", [], "done", None),
+    ("dirty", "read-only", [], "done", None),
+    ("pushed", "read-only", [], "done", None),
 ])
 def test_settle_rejects_out_of_scope_or_unpublished_write_delivery(sandbox, model, mode, owned, state, cause):
     """A provider's successful response cannot hide scope violations or undelivered work."""

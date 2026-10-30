@@ -48,5 +48,5 @@ def test_dispatched_commit_outside_owned_paths_is_refused_at_commit_time(tmp_pat
 
     assert commit.returncode != 0
     assert "outside.txt" in commit.stderr
-    assert "Drop the change" in commit.stderr and "re-scope" in commit.stderr
+    assert "Drop the change" in commit.stderr and "start a new task with wider owned paths" in commit.stderr
     assert _git(repo, "rev-parse", "HEAD", env=env).stdout.strip() == base
