@@ -2930,12 +2930,12 @@ def test_provider_process_lingering_after_its_final_result_settles_with_that_res
     monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(worker.headroom, "check_runtime", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(watchdog, "_PROCESS_ACTIVITY_POLL_INTERVAL_S", 0.05)
-    monkeypatch.setattr(watchdog, "TERMINAL_EXIT_GRACE_S", 0.3)
-    monkeypatch.setattr(worker, "TERMINAL_EXIT_GRACE_S", 0.3)
+    monkeypatch.setattr(watchdog, "TERMINAL_EXIT_GRACE_S", 1)
+    monkeypatch.setattr(worker, "TERMINAL_EXIT_GRACE_S", 1)
     monkeypatch.setattr(worker.agy_sandbox, "verify", lambda *_args: ({}, None, None))
     spec = TaskSpec("agy-final-hang", "agy", "gemini-3.8-flash-high", None, "read-only", sandbox.repo,
                     sandbox.repo / "agy-final-hang.prompt", sandbox.tasks / "agy-final-hang.result",
-                    options={"hard_timeout": "5"})
+                    options={"hard_timeout": "5", "silence_timeout": "0.5"})
     spec.prompt_file.write_bytes(b"literal final response")
     log = sandbox.repo / "provider.log"
     code = (

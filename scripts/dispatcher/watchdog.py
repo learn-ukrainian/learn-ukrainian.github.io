@@ -89,12 +89,14 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
     while True:
         now = time.monotonic()
         waits = [0.1]
-        if hard_timeout > 0:
-            waits.append(hard_timeout - (now - started))
-        if initial_response_timeout > 0 and not state.observed_io:
-            waits.append(initial_response_timeout - (now - started))
-        if silence_timeout > 0:
-            waits.append(silence_timeout - (now - state.last_activity))
+        # After a terminal result only the exit grace bounds the wait; the run is already settled by it.
+        if terminal_at is None:
+            if hard_timeout > 0:
+                waits.append(hard_timeout - (now - started))
+            if initial_response_timeout > 0 and not state.observed_io:
+                waits.append(initial_response_timeout - (now - started))
+            if silence_timeout > 0:
+                waits.append(silence_timeout - (now - state.last_activity))
         try:
             child.wait(timeout=max(0, min(waits)))
             return
@@ -134,10 +136,10 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
                     state.last_activity, state.observed_io = now, True
                     mtimes[path] = mtime
             next_activity_poll = now + _PROCESS_ACTIVITY_POLL_INTERVAL_S
-        if reason := should_kill(
+        if terminal_at is None and (reason := should_kill(
             state, stall_timeout=0, hard_timeout=hard_timeout or math.inf,
             stdout_silence_timeout=silence_timeout, initial_response_timeout=initial_response_timeout,
-        ):
+        )):
             seconds = {"hard_timeout": hard_timeout, "stdout_silence_timeout": silence_timeout,
                        "initial_response_timeout": initial_response_timeout}[reason]
             raise DeadlineExpired(invocation.argv, reason, seconds)
