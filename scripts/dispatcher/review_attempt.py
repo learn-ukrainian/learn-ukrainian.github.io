@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import hashlib
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -41,6 +42,9 @@ def admit(args: Any, prompt: bytes, binding: dict, repo: Path, sha: str) -> dict
         raise ValueError("review_attempt_full_checkout_required: full review access needs --full-checkout")
     if args.output_schema is not None:
         raise ValueError("attempt_output_schema_unsupported: a bound attempt returns its review document")
+    if args.codex_account not in (None, "sub"):
+        # The runtime boundary stages only the default Codex login; another account is refused, never substituted.
+        raise ValueError(f"review_attempt_account_unsupported: codex account {args.codex_account!r}")
     if args.prompt_file in (None, "-"):
         raise ValueError("review_attempt_prompt_file_required: a bound attempt's prompt is a rendered --prompt-file")
     text = prompt.decode("utf-8")
@@ -92,6 +96,11 @@ class Outcome:
 
 def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int]) -> Outcome:
     """Claim, prepare and run the bound attempt of ``record``; never falls back to an unbounded launch."""
+    # runner.py imports the top-level ``ai_llm`` package (``scripts/ai_llm``), and the supervisor runs as
+    # ``python -m`` from the repository root, which does not put ``scripts/`` on ``sys.path``.
+    scripts_dir = str(Path(__file__).resolve().parents[1])
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
     from scripts.agent_runtime import runner
     from scripts.agent_runtime.attempt_boundary import verify_full_review_tree
     from scripts.agent_runtime.errors import (
@@ -123,7 +132,7 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
             plan, manifest_path=manifest, input_root=record["review_contract"]["input_root"], cwd=workspace,
             task_id=record["task_id"], model=spec.model, effort=spec.effort, review_access=access,
             review_profile=record.get("review_profile") or "code",
-            base_tool_config={"run_nonce": record["run_nonce"]},
+            base_tool_config=_route(spec, record),
         )
     except (OSError, ValueError, ReviewIsolationError) as exc:
         return Outcome("failed", f"review_attempt_refused: {exc}"[:500], None, None, unknown)
@@ -152,6 +161,21 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     error = None if ok else (result.failure_code or result.stderr_excerpt or "provider returned no successful response")
     return Outcome("done" if ok else "failed", error, result.response if ok else None,
                    _ledger_count(ledger, plan.ledger_path), identity)
+
+
+def _route(spec: Any, record: dict) -> dict:
+    """The admitted credential route, carried into the runtime exactly as dispatch recorded it."""
+    from scripts.agent_runtime.attempt_boundary import CLAUDE_ACCOUNT_KEY, resolve_claude_account_label
+    from scripts.dispatcher import admission
+
+    route: dict = {"run_nonce": record["run_nonce"]}
+    if spec.agent == "claude":
+        # The boundary authenticates as this label and verifies its binding again at use.
+        route[CLAUDE_ACCOUNT_KEY] = resolve_claude_account_label(spec.claude_account)
+        budget = admission.claude_budget(spec.claude_account, spec.options.get("max_budget_usd"))
+        if budget is not None:
+            route["max_budget_usd"] = budget
+    return route
 
 
 def _ledger_count(ledger: Any, path: Path) -> int | None:

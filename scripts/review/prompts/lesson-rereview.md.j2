@@ -201,7 +201,7 @@ Exactly one of:
 - `unsupported_by_source: { searches: [ { receipt: "<receipt_id>", outcome: "no_hits" | "hits_but_no_support" | "unavailable" | "error" } ] }`
 - `source_conflict: { a: { receipt: "<id1>" }, b: { receipt: "<id2>" } }`
 
-Could be a gate:
+Could be a gate (optional field `could_be_a_gate`; no other spelling is accepted):
 Either `"no"` or `"yes — <what a script would check>"` (matching `^yes .+$`).
 
 ### Rules the validator enforces on the return
