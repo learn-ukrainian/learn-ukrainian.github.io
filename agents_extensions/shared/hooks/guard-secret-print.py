@@ -1879,6 +1879,8 @@ _FILE_WRITERS = {"tee", "touch"}
 _CREDENTIAL_LAUNCHERS = {"sudo", "doas", "su", "runuser", "setpriv", "pkexec", "sg", "newgrp", "setuidgid", "chpst"}
 # Names a program's operand can take that make it a command the reader follows.
 _LAUNCHABLE = _PROCESS_COMMAND_STARTS | set(_WRAPPER_OPTIONS) | _CREDENTIAL_LAUNCHERS
+# Words `_command_at` steps over by name to reach a command word.
+_STEPPED = set(_WRAPPER_OPTIONS) | {"env"}
 # Programs that only read, copy or describe their file operands, never run them.
 _FILE_TOOLS = {
     "cp",
@@ -2487,6 +2489,16 @@ def _process_tokens(text: str) -> list[str]:
 _CASE_OPENERS = {"do", "then", "else", "{", "!", "time"}
 # Builtins that run or bind shell text; a path never reaches them.
 _TEXT_BUILTINS = {"eval", "alias", "trap", "hash", "enable", "source", "."}
+# Programs that never run an operand as a command, or whose operands the reader reads itself.
+_RUNS_NO_OPERAND = (
+    _PROCESS_DATA_COMMANDS
+    | _FILE_TOOLS
+    | _KILL_COMMANDS
+    | _PROCESS_SELECTORS
+    | _PROCESS_SHELLS
+    | _TEXT_BUILTINS
+    | {"xargs", "env", "eval", "alias", "trap", "[", "test", "cd", "pushd", "popd"}
+)
 
 
 def _process_pipelines(text: str) -> list[list[list[str]]]:
@@ -2540,8 +2552,8 @@ def _segment_process_facts(words: list[str], facts: _ProcessFacts, depth: int, *
         return
     # `env -S` splits a string into a command the reader never sees.
     for index, word in enumerate(words):
-        # By the name the word runs, so a computed path (`"$P"/env`) counts too.
-        if "env" not in (_command_names(word, facts) or []):
+        # As `_command_at` recognizes it, so a computed path (`"$P"/env`) counts too.
+        if _strip_quotes(word).rsplit("/", 1)[-1] != "env":
             continue
         for option in words[index + 1 :]:
             if _is_assignment(option):
@@ -2563,9 +2575,7 @@ def _segment_process_facts(words: list[str], facts: _ProcessFacts, depth: int, *
     if cmd == "__UNDECIDABLE_SECRET_COMMAND__":
         facts.limit = True
         return
-    # The wrapper words `_command_at` steps over count too (`"$P"/env`, `"$T"/timeout`).
-    stepped = _raw_without_redirects([word for word in words[: index + 1] if not _is_assignment(word)])
-    facts.computed = facts.computed or any(_computed(word) for word in stepped)
+    facts.computed = facts.computed or _computed_command(words, index, facts)
     names = _command_names(words[index], facts)
     if names is None:
         facts.unresolved = True
@@ -2599,6 +2609,28 @@ def _segment_process_facts(words: list[str], facts: _ProcessFacts, depth: int, *
             _segment_process_facts([*words[:index], shlex.quote(name), *words[index + 1 :]], facts, depth + 1, fed=fed)
         else:
             _program_process_facts(name, words, index, args, facts, depth, fed)
+
+
+def _computed_command(words: list[str], index: int, facts: _ProcessFacts, markers: list[str] | None = None) -> bool:
+    """Whether a command word is computed at run time: the word itself, a wrapper
+    `_command_at` stepped over to reach it (`"$P"/env`), or a word its program may
+    run as a command (`find -exec "$L"`). With markers, only words holding one count."""
+
+    def computed(word: str) -> bool:
+        return any(marker in word for marker in markers) if markers is not None else _computed(word)
+
+    stepped = [
+        word for word in _raw_without_redirects(words[:index]) if _strip_quotes(word).rsplit("/", 1)[-1] in _STEPPED
+    ]
+    if any(computed(word) for word in [*stepped, words[index]]):
+        return True
+    if not set(_command_names(words[index], facts) or ()) - _RUNS_NO_OPERAND:
+        return False
+    for word in words[index + 1 :]:
+        names = _command_names(word, facts) if computed(word) else []
+        if names is None or set(names) & _LAUNCHABLE:
+            return True
+    return False
 
 
 def _record_assigning(words: list[str], index: int, names: list[str], facts: _ProcessFacts) -> None:
@@ -2697,12 +2729,7 @@ def _program_process_facts(
             facts.launched.extend(words[index + 1 :])
         for later in range(index + 1, len(words)):
             starts = _PROCESS_COMMAND_STARTS - (_TEXT_BUILTINS if "/" in words[later] else set())
-            names = _command_names(words[later], facts)
-            runs_operands = name not in _FILE_TOOLS | {"[", "test", "cd", "pushd", "popd"}
-            if runs_operands and _computed(words[later]) and (names is None or set(names) & _LAUNCHABLE):
-                # A computed word the program may run as a command (`find -exec "$L"`).
-                facts.computed = True
-            if set(names or ()) & starts:
+            if set(_command_names(words[later], facts) or ()) & starts:
                 _segment_process_facts(words[later:], facts, depth + 1, fed=fed)
 
 
@@ -3046,13 +3073,11 @@ def _collect_process_facts(command: str, facts: _ProcessFacts, depth: int = 0) -
         # Effects carried at this level count for the whole invocation.
         facts.ifs_set = facts.ifs_set or _may_set_ifs(command)
         facts.echo_rebound = facts.echo_rebound or _may_rebind_echo(command)
+        raw = executable
         prior_rebound = facts.prior is not None and facts.prior.echo_rebound
         if not (_may_rebind_echo(facts.command) or prior_rebound or facts.echo_rebound):
             # Only while the command cannot rebind `echo` to something else.
-            inlined = _inline_echo_substitutions(executable, substitutions)
-            # A substitution's output is computed, even when the reader can predict it.
-            facts.computed = facts.computed or inlined != executable
-            executable = inlined
+            executable = _inline_echo_substitutions(executable, substitutions)
         pipelines = _process_pipelines(_decode_ansi_c_quotes(executable))
     except ValueError:
         facts.limit = True
@@ -3072,6 +3097,18 @@ def _collect_process_facts(command: str, facts: _ProcessFacts, depth: int = 0) -
         for segment in pipeline:
             if segment != [next(iter(fillers & set(segment)), None)]:
                 _segment_process_facts(segment, facts, depth)
+    inlined = [marker for marker in substitutions if marker in raw and marker not in executable]
+    if inlined:
+        # A substitution's output stays computed where it stands as a command word,
+        # even when the reader predicts it (`$(echo cd)`), so read those positions unreplaced.
+        for segment in (segment for pipeline in _process_pipelines(_decode_ansi_c_quotes(raw)) for segment in pipeline):
+            found = _command_at(segment)
+            if (
+                found is not None
+                and found[0] != "__UNDECIDABLE_SECRET_COMMAND__"
+                and segment not in [[m] for m in fillers]
+            ):
+                facts.computed = facts.computed or _computed_command(segment, found[2], facts, inlined)
     for pipeline in _pipelines(executable):
         for segment in pipeline:
             found = _command_at(segment)

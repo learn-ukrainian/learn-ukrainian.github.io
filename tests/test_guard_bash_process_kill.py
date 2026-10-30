@@ -120,6 +120,12 @@ I12118_REFUSED = [
     "$(echo cd) /dev; pkill -x no-such-process-12118",
     "bash -c '`echo cd` /dev; pkill -x no-such-process-12118'",
     'find /dev/null -exec "$(echo sudo)" -u nobody bash -c "pkill -u nobody -x bash" \\;',
+    # Review round 4: a redirection target shaped like an assignment before the command word.
+    'D=cd; > X=Y "$D" /dev; pkill -x no-such-process-12118',
+    'T=true; > X=Y "$T"; pkill -x no-such-process-12118',
+    'P=/usr/bin; 2> X=Y "$P"/env pkill -x no-such-process-12118',
+    'T=/usr/bin; >X=Y "$T"/timeout 1 pkill -x no-such-process-12118; :',
+    "P=/usr/bin; > X=Y \"$P\"/env -C /proc/self bash -c 'printf r4guard12118 > comm; pkill -x r4guard12118; :'",
 ]
 I12118_ALLOWED = [
     "pkill -x no-such-process-12118",
@@ -131,6 +137,11 @@ I12118_ALLOWED = [
     # Review F3/F4: a computed command word without a kill is unaffected.
     'D=:; D=cd; "$D" /dev; pgrep -x no-such-process-12118',
     '[ -n "$(pgrep -x no-such-process-12118)" ] && pkill -x no-such-process-12118',
+    # Review F6: computed data, assignments and option values are not command words.
+    'printf "%s\\n" "$(echo ok)"; pkill -x no-such-process-12118',
+    "X=$(echo ok); pkill -x no-such-process-12118",
+    'T=1; timeout "$T" true; pkill -x no-such-process-12118',
+    'E=env; echo "$E" -S hi',
 ]
 
 
