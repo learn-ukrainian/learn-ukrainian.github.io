@@ -944,7 +944,7 @@ def test_pr_changed_test_files_and_guard_list_are_selected_without_selector(
 def test_pr_importing_tests_fill_only_to_the_fill_budget(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Durations that would fill to 595 s stop at the fill budget; the rest defer."""
+    """Durations that would fill to 595 s stop at the fill limit; the rest defer."""
     from scripts.ci import pr_affected_tests as affected
 
     guard = 'tests/test_guard.py'
@@ -972,7 +972,8 @@ def test_pr_importing_tests_fill_only_to_the_fill_budget(
     monkeypatch.chdir(repo)
     monkeypatch.setattr(affected, 'importing_tests', lambda *_: importers)
     selected = affected.plan(base, candidate)
-    # 65 s + two importers = 265 s fits 300 s; a third would reach 365 s.
+    # 65 s + two importers = 265 s fits the 332.5 s fill limit (half the room under
+    # the cap); a third would reach 365 s.
     assert selected['run_files'] == sorted([guard, *importers[:2]])
     assert selected['deferred_files'] == importers[2:]
     assert selected['estimate_seconds'] == 265

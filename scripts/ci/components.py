@@ -290,6 +290,7 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                 for index in range(1, len(name.split(".")))}
     edges = set()
     unresolved = set()
+    loads_unproven = {}
     bare_packages = {name.split(".")[1] for name in packages if name.startswith("scripts.")}
 
     def resolve(module):
@@ -386,9 +387,31 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
                     edges.add((path, target))
             elif value is None or kind == "file" or str(value).startswith("scripts."):
                 unresolved.add((path, node.lineno, "nonliteral-or-missing-load"))
+                if kind == "file":
+                    loads_unproven[path] = bindings
     return {"file_edges": sorted(edges), "unresolved_edges": [
         {"path": path, "line": line, "reason": reason} for path, line, reason in sorted(unresolved)
-    ], "python_files": len(sources)}
+    ], "directory_edges": directory_edges(set(sources) if known_paths is None else known_paths, loads_unproven),
+        "python_files": len(sources)}
+
+
+def directory_edges(known_paths: set[str], loaders: dict[str, dict]) -> list[tuple[str, str]]:
+    """Bound a file that loads a computed path by the directories it names.
+
+    `importlib.util.spec_from_file_location(name, DIR / f"guard-{x}.py")` has no
+    literal target, so the file edge is unprovable. The file's literal path
+    constants that name a repository directory bound it: any change below that
+    directory is a dependency. Kept apart from `file_edges`, which feeds the
+    component graph, so only test selection reads it.
+    """
+    directories = {str(parent) for name in known_paths for parent in PurePosixPath(name).parents} - {"."}
+    edges = set()
+    for path, bindings in loaders.items():
+        for values in bindings.values():
+            value = literal_target(values[0], bindings, path) if len(values) == 1 else None
+            if isinstance(value, PurePosixPath) and str(value) in directories:
+                edges.add((path, str(value)))
+    return sorted(edges)
 
 
 def import_graph(manifest: dict, root: Path = ROOT) -> dict:
