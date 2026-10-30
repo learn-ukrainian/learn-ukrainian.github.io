@@ -733,6 +733,33 @@ def _validate_budget_substitution_models(raw: Any, catalog: dict[str, Any]) -> N
                 )
 
 
+def _validate_ukrainian_seat_catalog(models: Mapping[str, Any]) -> None:
+    """The catalog may not grant a Claude model a Ukrainian seat.
+
+    Eligible families come from ``ukrainian_seats``. Grok may keep the role
+    because that role grants it no language route.
+    """
+    from scripts.review.ukrainian_seats import UKRAINIAN_SEAT_FAMILIES
+
+    held: set[str] = set()
+    for model_id, model in models.items():
+        roles = model.get("roles") or []
+        if "ukrainian_review" not in roles:
+            continue
+        family = model.get("family")
+        if family == "anthropic":
+            raise ModelCatalogError(
+                f"models.{model_id} holds ukrainian_review, but Ukrainian seats are {sorted(UKRAINIAN_SEAT_FAMILIES)}"
+            )
+        if family in UKRAINIAN_SEAT_FAMILIES and model.get("lifecycle") in {"active", "fallback"}:
+            held.add(family)
+    missing = UKRAINIAN_SEAT_FAMILIES - held
+    if missing:
+        raise ModelCatalogError(
+            f"Ukrainian seat families {sorted(missing)} have no active model with ukrainian_review"
+        )
+
+
 def validate_catalog(data: Any) -> dict[str, Any]:
     """Validate the catalog structure without enforcing wall-clock freshness."""
     # Normalize the top-level date without mutating the caller's object. This
@@ -1020,6 +1047,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
     from scripts.review.role_resolution import validate_role_catalog
 
     validate_role_catalog(catalog)
+    _validate_ukrainian_seat_catalog(catalog["models"])
     return catalog
 
 

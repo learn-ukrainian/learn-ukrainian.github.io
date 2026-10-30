@@ -3708,7 +3708,7 @@ def test_ukrainian_head_is_fully_approved_only_by_both_seats():
         calls.append((anchor, descendant))
         return ["3" * 40]
 
-    one_seat = [seat("anthropic", "claude-opus-5-5")]
+    one_seat = [seat("google", "gemini-3.8-flash-high")]
     assert recorder.budget_exempt_heads(one_seat, head, "fleet", prove=prove) == {} and calls == []
     # An approval of another profile from a second family fills no Ukrainian seat (review round 1, F1).
     mixed = [*one_seat, seat("xai", "grok-4.7-high", profile="code")]
