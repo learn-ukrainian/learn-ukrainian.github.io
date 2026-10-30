@@ -136,96 +136,100 @@ def _text(value):
 
 def caller():
     """The dispatched task id with its command, else the calling command."""
-    task = _text(os.environ.get(TASK_ENV, "")).strip()
-    return f"{task} ({_command()})" if task else _text(_command())
+    task = os.environ.get(TASK_ENV, "").strip()
+    return _text(f"{task} ({_command()})" if task else _command())
 
 
-_NAMED_AFTER = frozenset(
-    {
-        "assignees",
-        "collaborators",
-        "environments",
-        "following",
-        "labels",
-        "members",
-        "orgs",
-        "secrets",
-        "statuses",
-        "teams",
-        "users",
-        "variables",
-        "workflows",
-    }
+_ROUTES = {
+    "": (
+        "rate_limit", "notifications", "notifications/threads/:n", "gists", "gists/:name", "repositories", "meta",
+        "graphql", "app", "app/installations", "app/installations/:n/access_tokens", "installation/repositories",
+        "search/code", "search/commits", "search/issues", "search/labels", "search/repositories", "search/topics",
+        "search/users", "teams/:n", "teams/:n/members", "teams/:n/repos", "user", "user/blocks", "user/blocks/:name",
+        "user/emails", "user/followers", "user/following", "user/following/:name", "user/installations",
+        "user/issues", "user/keys", "user/memberships/orgs", "user/memberships/orgs/:name", "user/orgs",
+        "user/repos", "user/starred", "user/starred/:repo", "user/subscriptions", "user/teams",
+    ),
+    "users/:name": (
+        "", "events", "followers", "following", "following/:name", "gists", "keys", "orgs", "received_events",
+        "repos", "starred",
+    ),
+    "orgs/:name": (
+        "", "actions/runners", "actions/secrets", "actions/secrets/:name", "actions/variables",
+        "actions/variables/:name", "events", "hooks", "hooks/:n", "installations", "invitations", "members",
+        "members/:name", "memberships/:name", "outside_collaborators", "outside_collaborators/:name",
+        "properties/schema", "repos", "rulesets", "rulesets/:n", "teams", "teams/:name", "teams/:name/members",
+        "teams/:name/memberships/:name", "teams/:name/repos", "teams/:name/repos/:repo",
+    ),
+    "repos/:repo": (
+        "", "actions/artifacts", "actions/artifacts/:n", "actions/artifacts/:n/:name", "actions/caches",
+        "actions/caches/:n", "actions/jobs/:n", "actions/jobs/:n/logs", "actions/jobs/:n/rerun",
+        "actions/permissions", "actions/runners", "actions/runs", "actions/runs/:n", "actions/runs/:n/approve",
+        "actions/runs/:n/artifacts", "actions/runs/:n/attempts/:n", "actions/runs/:n/attempts/:n/jobs",
+        "actions/runs/:n/attempts/:n/logs", "actions/runs/:n/cancel", "actions/runs/:n/force-cancel",
+        "actions/runs/:n/jobs", "actions/runs/:n/logs", "actions/runs/:n/pending_deployments",
+        "actions/runs/:n/rerun", "actions/runs/:n/rerun-failed-jobs", "actions/runs/:n/timing",
+        "actions/secrets", "actions/secrets/:name", "actions/variables", "actions/variables/:name",
+        "actions/workflows", "actions/workflows/:name", "actions/workflows/:name/dispatches",
+        "actions/workflows/:name/disable", "actions/workflows/:name/enable", "actions/workflows/:name/runs",
+        "actions/workflows/:name/timing", "assignees", "assignees/:name", "branches", "branches/:ref",
+        "check-runs/:n", "check-runs/:n/annotations", "check-suites/:n", "check-suites/:n/check-runs",
+        "check-suites/:n/rerequest", "code-scanning/alerts", "code-scanning/alerts/:n", "collaborators",
+        "collaborators/:name", "collaborators/:name/permission", "comments", "comments/:n", "community/profile",
+        "compare/:ref", "contents", "contents/:ref", "contributors", "dependabot/alerts", "dependabot/alerts/:n",
+        "deployments", "deployments/:n", "deployments/:n/statuses", "dispatches", "environments",
+        "environments/:name", "events", "forks", "git/blobs/:sha", "git/commits/:sha", "git/matching-refs/:ref",
+        "git/ref/:ref", "git/refs", "git/refs/:ref", "git/tags/:sha", "git/trees/:ref", "hooks", "hooks/:n",
+        "invitations", "issues", "issues/:n", "issues/:n/comments", "issues/:n/events", "issues/:n/labels",
+        "issues/:n/labels/:name", "issues/:n/timeline", "issues/comments", "issues/comments/:n", "issues/events",
+        "keys", "labels", "labels/:name", "languages", "license", "merge-upstream", "merges", "milestones",
+        "milestones/:n", "pages", "pulls", "pulls/:n", "pulls/:n/comments", "pulls/:n/commits", "pulls/:n/files",
+        "pulls/:n/merge", "pulls/:n/requested_reviewers", "pulls/:n/reviews", "pulls/:n/reviews/:n",
+        "pulls/:n/reviews/:n/comments", "pulls/:n/update-branch", "pulls/comments", "pulls/comments/:n",
+        "readme", "readme/:ref", "releases", "releases/:n", "releases/:n/assets", "releases/assets/:n",
+        "releases/latest", "releases/tags/:ref", "rules/branches/:ref", "rulesets", "rulesets/:n",
+        "secret-scanning/alerts", "secret-scanning/alerts/:n", "stargazers", "stats/contributors",
+        "statuses/:ref", "subscribers", "subscription", "tags", "tarball", "tarball/:ref", "topics",
+        "traffic/clones", "traffic/views", "zipball", "zipball/:ref", "commits", "commits/:sha",
+        "commits/:sha/branches-where-head", "commits/:sha/check-runs", "commits/:sha/check-suites",
+        "commits/:sha/comments", "commits/:sha/pulls", "commits/:sha/status", "commits/:sha/statuses",
+        "commits/:ref",
+    ),
+}  # fmt: skip
+"""The REST routes a template may name; ``:n`` is a number, ``:sha`` a hex SHA, ``:name`` one segment,
+``:repo`` an owner and repository, and ``:ref`` the rest of the path (a ref may hold slashes)."""
+_KINDS = {":n": r"\d+", ":sha": r"[0-9a-f]{7,64}", ":name": r"[^/]+", ":repo": r"[^/]+/[^/]+", ":ref": r".+"}
+_ROOTS = frozenset({"repos", "orgs", "users", "user", "teams", "search", "notifications", "gists", "app", "installation"})
+
+
+def _compile(route):
+    return re.compile("/".join(_KINDS.get(part, re.escape(part)) for part in route.split("/")))
+
+
+_PATTERNS = sorted(
+    (
+        (f"{prefix}/{rest}".strip("/"), _compile(f"{prefix}/{rest}".strip("/")))
+        for prefix, rests in _ROUTES.items()
+        for rest in rests
+    ),
+    key=lambda route: (":ref" in route[0], -len(route[0])),
 )
-"""Path words whose next segment names an account, label, team, workflow, secret or variable."""
-_REF_AFTER = frozenset({"blobs", "matching-refs", "readme", "ref", "refs", "starred", "tarball", "trees", "zipball"})
-"""Path words after which the rest of the path is one ref, whose own name may contain slashes."""
-_COMMIT_TAILS = frozenset({"branches-where-head", "check-runs", "check-suites", "comments", "pulls", "status", "statuses"})
-"""What may follow a commit SHA in ``commits/<sha>/...``."""
-
-
-_WORDS = frozenset(
-    {
-        "access_tokens", "actions", "alerts", "annotations", "app", "approve", "artifacts", "assets", "assignees",
-        "attempts", "blobs", "blocks", "branches", "branches-where-head", "cache", "caches", "cancel", "check-runs",
-        "check-suites", "code", "code-scanning", "collaborators", "comments", "commits", "community", "compare",
-        "contents", "contributors", "copilot", "dependabot", "deployments", "dispatches", "disable", "emails",
-        "enable", "environments", "events", "files", "followers", "following", "forks", "force-cancel", "git",
-        "gists", "graphql", "hooks", "installation", "installations", "invitations", "issues", "jobs", "keys",
-        "labels", "languages", "latest", "license", "lock", "logs", "matching-refs", "media", "members", "memberships",
-        "merge", "merge-upstream", "merges", "meta", "milestones", "notifications", "orgs", "outside_collaborators",
-        "packages", "pages", "participation", "pending_deployments", "projects", "pulls", "rate_limit", "reactions",
-        "readme", "ref", "refs", "releases", "rerun", "rerun-failed-jobs", "rerequest", "repos", "repositories",
-        "requested_reviewers", "requested_teams", "reviews", "rulesets", "rules", "runners", "runs", "search",
-        "secret-scanning", "secrets", "sites", "starred", "stargazers", "stats", "status", "statuses", "subscribers",
-        "subscription", "tags", "tarball", "teams", "threads", "timeline", "timing", "topics", "traffic",
-        "trees", "update-branch", "usage", "user", "users", "variables", "workflows", "zip", "zipball",
-    }
-)
-"""Every word an endpoint template may keep (GitHub's REST path vocabulary); any other segment is a name."""
-_PLACEHOLDERS = frozenset({":repo", ":n", ":sha", ":name", ":ref"})
 
 
 def endpoint_template(method, path):
-    """``METHOD path`` with the repository, numbers, SHAs and every named component replaced.
+    """``METHOD route`` for a request path, where the route names the endpoint and nothing else.
 
-    The privacy rule is on the output: only vocabulary words (:data:`_WORDS`) and placeholders are
-    kept, so a name nobody listed (an account, repository, branch, team or label, however deep in
-    the route) is replaced whatever precedes it.
+    A path is matched against :data:`_ROUTES`, so a name is replaced by the position it holds in
+    the route, however it is spelled and however deep it sits: an account called ``actions`` is
+    still a name. A path no route matches keeps only its root and is ``:other`` after it.
     """
-    path = str(path or "").split("?", 1)[0].strip("/")
-    path = re.sub(r"^repos/[^/]+/[^/]+", "repos/:repo", path)
-    path = re.sub(r"/(heads|tags|branches|compare|contents)/.*$", r"/\1/:ref", path)
-    parts = path.split("/")
-    segments = []
-    index = 0
-    while index < len(parts):
-        segment, previous, index = parts[index], segments[-1] if segments else "", index + 1
-        if previous in _REF_AFTER:
-            segments.append(":name")
-            break
-        if previous == "commits":
-            # A commit SHA, with at most one tail word, keeps its shape. Anything else is a ref whose
-            # own name may hold slashes and tail words, so it is replaced whole.
-            rest = parts[index - 1 :]
-            if re.fullmatch(r"[0-9a-f]{7,64}", rest[0]) and (len(rest) == 1 or (len(rest) == 2 and rest[1] in _COMMIT_TAILS)):
-                segments.extend([":sha", *rest[1:]])
-            else:
-                segments.append(":name")
-            break
-        if segment.isdigit():
-            segment = ":n"
-        elif re.fullmatch(r"[0-9a-f]{7,64}", segment):
-            segment = ":sha"
-        elif previous in _NAMED_AFTER or previous == "commits":
-            segment = ":name"
-        segments.append(segment)
-    kept = []
-    for segment in segments:
-        segment = segment if segment in _WORDS or segment in _PLACEHOLDERS else ":name"
-        if segment != ":name" or kept[-1:] != [":name"]:
-            kept.append(segment)
-    return f"{_text(method).upper()} {'/'.join(kept)}"
+    path = _text(path or "").split("?", 1)[0].strip("/")
+    for route, pattern in _PATTERNS:
+        if pattern.fullmatch(path):
+            return f"{_text(method).upper()} {route}"
+    root = path.split("/", 1)[0]
+    shape = "repos/:repo/:other" if root == "repos" and path.count("/") >= 2 else f"{root}/:other"
+    return f"{_text(method).upper()} {shape if root in _ROOTS else ':other'}"
 
 
 _GH_COMMANDS = {

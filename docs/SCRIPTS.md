@@ -154,9 +154,10 @@ lock together wait at most a quarter second, and counting never changes where th
 budget. Each row names the caller (the dispatched task id with its command, else
 the calling command's module or script, never its arguments; for the `gh` shim, the command that
 ran `gh`) and an endpoint template such as
-`GET repos/:repo/actions/runs/:n`, which keeps only GitHub's own REST path words: the repository,
-numbers, commit SHAs and every other segment (an account, team, branch, tag or label, a ref with
-slashes included) are replaced. A native `gh` command with no readable request is named by its
+`GET repos/:repo/actions/runs/:n`. The template is the route the path matches in a table of
+GitHub's REST routes (`_ROUTES` in `scripts/common/github_usage.py`), so a repository, number, SHA, account,
+team, branch, tag or label (a ref with slashes included) is replaced by the position it holds,
+however it is spelled; a path no route matches keeps only its root (`repos/:repo/:other`). A native `gh` command with no readable request is named by its
 known command words alone (`gh pr view`), never by an argument. Print the top consumers
 of the last hour:
 
