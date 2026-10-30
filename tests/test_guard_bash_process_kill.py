@@ -61,6 +61,7 @@ F7_SHELL_OPTIONS = [
     "pgrep -f worker; bash -c kill",
     "bash -e'c' 'pkill -f worker'",
     "pgrep -f worker; bash -posix -c 'kill' _",
+    "bash -c 'pkill worker --'full _",
 ]
 # Review F10: ANSI-C escapes whose Bash meaning the decoder does not model.
 F10_ANSI_C = [

@@ -401,12 +401,34 @@ def _separate_program_flag_quotes(command: str, *, keep_plain: bool = False) -> 
     return "".join(out)
 
 
-def _tokenize(command: str, *, keep_plain_flags: bool = False) -> list[str]:
+def _join_shell_words(text: str, tokens: list[str]) -> list[str]:
+    """Rejoin the quote fragments of one shell word (`'pk'"ill"`) that the lexer split.
+
+    The lexer ends a token after its closing quote, so tokens that touch in
+    `text` belong to one word unless either is an operator.
+    """
+    words: list[str] = []
+    end = 0
+    joinable = False
+    for token in tokens:
+        start = text.find(token, end)
+        if start < 0:
+            raise ValueError("token not found in its source text")
+        word = not set(token) <= set("();&|<>\n")
+        if joinable and word and start == end:
+            words[-1] += token
+        else:
+            words.append(token)
+        end = start + len(token)
+        joinable = word
+    return words
+
+
+def _tokenize(command: str, *, shell_words: bool = False) -> list[str]:
+    """Split a command into tokens; with `shell_words`, into the words the shell reads."""
     try:
         executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
-        protected, parameters = _protect_parameters(
-            _separate_program_flag_quotes(executable, keep_plain=keep_plain_flags)
-        )
+        protected, parameters = _protect_parameters(_separate_program_flag_quotes(executable, keep_plain=shell_words))
 
         def descriptor_word(descriptor: str, operator: str) -> str:
             marker = f"\ue000{len(parameters)}\ue001"
@@ -417,6 +439,8 @@ def _tokenize(command: str, *, keep_plain_flags: bool = False) -> list[str]:
 
         protected = normalize_io_descriptors(protected, descriptor_word)
         tokens = split_quote_preserving(protected, punctuation_chars="();&|<>\n", whitespace=" \t")
+        if shell_words:
+            tokens = _join_shell_words(protected, tokens)
         restored = [_restore_parameters(token, parameters) for token in tokens]
         # shlex can combine an arithmetic close and newline as one punctuation
         # run (`))\n`). The newline still starts a new executable command.
@@ -600,13 +624,11 @@ def _is_command_brace(token: str, segment: list[str]) -> bool:
     )
 
 
-def _pipelines(command: str, *, keep_plain_flags: bool = False) -> list[list[list[str]]]:
+def _pipelines(command: str, *, shell_words: bool = False) -> list[list[list[str]]]:
     """Return command pipelines, split quote-aware on pipes and separators."""
     # shlex groups adjacent punctuation into runs such as `);`. Split those
     # before segmenting, or a command after a substitution can be hidden.
-    tokens = [
-        part for token in _tokenize(command, keep_plain_flags=keep_plain_flags) for part in split_operator_run(token)
-    ]
+    tokens = [part for token in _tokenize(command, shell_words=shell_words) for part in split_operator_run(token)]
     pipelines: list[list[list[str]]] = []
     pipeline: list[list[str]] = []
     segment: list[str] = []
@@ -1929,8 +1951,9 @@ def _process_facts(command: str, *, depth: int = 0) -> set[str]:
     facts: set[str] = set()
     for _, body in substitutions.values():
         facts |= _process_facts(body, depth=depth + 1)
-    # A flag glued to a quote stays one word, so a quote in a shell's options is seen.
-    for pipeline in _pipelines(executable, keep_plain_flags=True):
+    # Read words as the shell does, so a quote in a shell's options is seen and
+    # a script spliced from quote fragments (`'pkill -'f`) is read whole.
+    for pipeline in _pipelines(executable, shell_words=True):
         for segment in pipeline:
             facts |= _segment_process_facts(segment, depth)
     return facts
