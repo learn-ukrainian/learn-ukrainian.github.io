@@ -25,7 +25,7 @@ from scripts.common.task_scratch import allocate
 from scripts.common.task_store_paths import tasks_dir
 from scripts.dispatcher import site_deps
 from scripts.dispatcher.types import TaskSpec
-from scripts.storage.topology import STORE_FILES
+from scripts.storage.topology import STORE_FILES, inspect_selector, store_kind
 
 ROOT = resolve_repo_root(Path(__file__), 2)
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "fleet_repos.yaml"
@@ -358,7 +358,13 @@ def provision_links(repo: Path, worktree: Path) -> None:
                 for part in parts[:-1]:
                     source = open_directory(part, source)
                 target = os.stat(parts[-1], dir_fd=source, follow_symlinks=False)
-                if not (stat.S_ISREG(target.st_mode) or stat.S_ISDIR(target.st_mode)):
+                selector = (
+                    relative == f"data/{STORE_FILES['sources'][0]}"
+                    and stat.S_ISLNK(target.st_mode)
+                    and store_kind(repo / relative).kind == "selector"
+                    and inspect_selector(repo / relative).layout == "selector"
+                )
+                if not (stat.S_ISREG(target.st_mode) or stat.S_ISDIR(target.st_mode) or selector):
                     logging.getLogger(__name__).warning("Skipping link %s: source is not a real file or directory", relative)
                     continue
                 destination = open_directory(worktree)
