@@ -338,7 +338,13 @@ unknown` with exit 0. Hook input and output are never written to temporary files
 
 Deploy the canonical overlay with `npm run agents:deploy`, which copies
 `agents_extensions/agy/hooks.json` into the workspace `.agents/hooks.json`
-alongside the shared agent configuration. Local synthetic tests prove the
+alongside the shared agent configuration. The same deploy splits the served
+rules core into always-on parts under `.agent/rules/` so each file stays
+within AGY's 24,000-byte rule limit. `core.md` stays the source. The parts'
+bodies, in lexical order, are that served core byte for byte.
+`workflow.md` and `model-assignment.md` stay mirrored for task-scoped reads
+and are excluded from AGY discovery, the same way other seats load them by
+task rather than as always-on rules. Local synthetic tests prove the
 read-only announcement contract; issue #10558 requires a separate live AGY
 proof of the next-call timing before certification.
 
