@@ -1983,13 +1983,28 @@ class _ProcessFacts:
         # The raw value words assigned to each parameter, or None when one is not a plain assignment.
         self.assignments: dict[str, list[str] | None] = {}
         self._documents: dict[str, list[tuple[str, bool]]] | None = None
+        self._may_set_ifs: bool | None = None
         # Scripts the command runs: (word, read by a shell), and what it writes.
         self.scripts: list[tuple[str, bool]] = []
+        self.programs: list[str] = []
+        self.renames = False
         self.written: set[str] = set()
         self.unknown_write = False
         self.directories: set[str] = set()
         self.unknown_directory = False
         self.cwd = cwd or os.getcwd()
+
+    def may_set_ifs(self) -> bool:
+        """Whether the command can change IFS, which splits unquoted expansions.
+
+        It can when its quote-removed text names IFS, or when one of Bash's
+        assigning forms targets a name the reader cannot read: `printf -v`, `read`,
+        `mapfile`, `readarray`, `getopts`, the declaration builtins, `let`, and
+        arithmetic with an expansion in it.
+        """
+        if self._may_set_ifs is None:
+            self._may_set_ifs = _may_set_ifs(self.command)
+        return self._may_set_ifs
 
     def documents(self) -> dict[str, list[tuple[str, bool]]]:
         if self._documents is None:
@@ -2134,14 +2149,31 @@ def _word_candidates(word: str, facts: _ProcessFacts, depth: int = 0) -> list[st
             if default is None:
                 return None
             values = [value or default for value in values] if match.group(2) == ":-" else [*values, default]
-        # Unquoted expansions are split into words and globbed; a command that sets
-        # IFS can split them anywhere.
-        if not quoted and ("IFS" in facts.command or any(re.search(r"[\s*?[]", value) for value in values)):
+        # Unquoted expansions are split at IFS characters and globbed.
+        if not quoted and (facts.may_set_ifs() or any(re.search(r"[\s*?[]", value) for value in values)):
             return None
         candidates = [candidate + value for candidate in candidates for value in values]
         if len(candidates) > _MAX_WORD_CANDIDATES:
             return None
     return candidates
+
+
+def _splits(word: str) -> bool:
+    """Whether a word holds an unquoted expansion or substitution, which IFS can split."""
+    quote = ""
+    index = 0
+    while index < len(word):
+        char = word[index]
+        if quote == "'":
+            quote = "" if char == "'" else quote
+        elif char == "\\":
+            index += 1
+        elif char in "'\"" and (not quote or char == quote):
+            quote = "" if quote else char
+        elif not quote and (char in "$`" or _SUBSTITUTION_MARKER.match(word, index)):
+            return True
+        index += 1
+    return False
 
 
 def _command_names(word: str, facts: _ProcessFacts, depth: int = 0) -> list[str] | None:
@@ -2168,9 +2200,10 @@ def _command_names(word: str, facts: _ProcessFacts, depth: int = 0) -> list[str]
                 return None
             names.update(found)
         return sorted(names) if words is not None else None
-    # A path whose last component is literal names its program whatever the directory.
+    # A path whose last component is literal names its program whatever the
+    # directory, provided no unquoted expansion can split the word.
     slashes = [index for index, (kind, text) in enumerate(parts) if kind == "lit" and "/" in text]
-    if not slashes or any(kind != "lit" for kind, _ in parts[slashes[-1] + 1 :]):
+    if not slashes or any(kind != "lit" for kind, _ in parts[slashes[-1] + 1 :]) or _splits(word):
         return None
     name = parts[slashes[-1]][1].rsplit("/", 1)[-1] + "".join(text for _, text in parts[slashes[-1] + 1 :])
     return [name] if name else []
@@ -2443,11 +2476,16 @@ def _segment_process_facts(words: list[str], facts: _ProcessFacts, depth: int, *
         return
     leading = [_shell_word_value(word) for word in words[:index] if not _is_assignment(word)]
     if "exec" in leading:
-        # exec keeps the shell's PID under the new program's name (and `-a` name).
-        facts.exec_names.update(names)
-        position = leading.index("exec")
-        if leading[position + 1 : position + 2] == ["-a"] and len(leading) > position + 2:
-            facts.exec_names.add(leading[position + 2] or "")
+        # exec keeps the shell's PID under the new program's name, and a launcher it
+        # runs (`exec chrt ... sleep`) may exec again: every later word may name it.
+        for word in words[leading.index("exec") + 1 :]:
+            value = _shell_word_value(word)
+            if value is None:
+                facts.unresolved = True
+            elif value and not value.startswith("-") and not value.isdigit():
+                facts.exec_names.add(value.rsplit("/", 1)[-1])
+        if len(facts.exec_names) > _MAX_WORD_CANDIDATES:
+            facts.unresolved = True
     for name in names:
         if name in _TEXT_BUILTINS and "/" in words[index]:
             name = ""
@@ -2506,8 +2544,12 @@ def _program_process_facts(
         # Both can bind a command name to another program.
         facts.opaque = True
     elif name not in _PROCESS_DATA_COMMANDS:
-        if "/" in words[index]:
+        values = _word_candidates(words[index], facts)
+        if "/" in words[index] or any("/" in value for value in values or []):
             facts.scripts.append((words[index], False))
+        else:
+            # A bare name runs whatever PATH finds, which may be a file this command writes.
+            facts.programs.append(name)
         # Another program may run a later word as a command (`setsid pkill`, `find -exec`).
         for later in range(index + 1, len(words)):
             starts = _PROCESS_COMMAND_STARTS - (_TEXT_BUILTINS if "/" in words[later] else set())
@@ -2558,6 +2600,9 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
     """Record the files a command writes, the directories it enters and its startup scripts."""
 
     def write(word: str) -> None:
+        if re.search(r"(?:^|/)proc(?:/|$)", word):
+            # A process's name or attributes, such as /proc/$$/comm.
+            facts.renames = True
         names = _effect_names(word, facts)
         if names is None:
             facts.unknown_write = True
@@ -2608,6 +2653,10 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
 
 def _script_reason(facts: _ProcessFacts) -> str | None:
     """Check each script the command runs: refuse one it writes or creates, read one it does not."""
+    if any(name in facts.written for name in facts.programs):
+        return "the command runs a script it writes itself, which the guard cannot read"
+    if facts.renames:
+        return "the command renames a process through /proc, which the guard cannot follow"
     seen: set[tuple[str, bool]] = set()
     while facts.scripts:
         word, by_shell = facts.scripts.pop()
@@ -2669,6 +2718,66 @@ def _mentions_process_kill(text: str) -> bool:
     return bool(re.search(r"(?<![\w.-])(?:kill|pkill|killall|pgrep|pidof)(?![\w.-])", text))
 
 
+_ASSIGNING_BUILTINS = {
+    "read",
+    "mapfile",
+    "readarray",
+    "getopts",
+    "declare",
+    "typeset",
+    "local",
+    "export",
+    "readonly",
+    "let",
+}
+
+
+def _may_set_ifs(command: str) -> bool:
+    try:
+        plain = _decode_ansi_c_quotes(command)
+        tokens = _process_tokens(command)
+    except ValueError:
+        return True
+    plain = re.sub(r"\\\n|['\"\\]", "", plain)
+    if "IFS" in plain or re.search(r"\(\([^)]*[$`]", plain):
+        return True
+    values = [_shell_word_value(token) for token in tokens]
+    for index, value in enumerate(values):
+        if value == "printf":
+            # `printf -v NAME` or `-vNAME`.
+            following = values[index + 1 : index + 3]
+            if following[:1] == ["-v"] and (len(following) < 2 or following[1] is None):
+                return True
+            glued = tokens[index + 1] if index + 1 < len(tokens) else ""
+            if (following[:1] or [""])[0] is None or re.match(r"-v.*[$`]", glued):
+                return True
+        elif value in _ASSIGNING_BUILTINS:
+            for token, word in zip(tokens[index + 1 :], values[index + 1 :], strict=False):
+                if token in SEPARATORS or token in {"|", "|&", "(", ")", ";;"}:
+                    break
+                if word is None and re.match(r"[^=]*[$`]", token):
+                    return True
+    return False
+
+
+def _may_rebind_echo(command: str) -> bool:
+    """Whether the command defines a function, alias or builtin that could be `echo`."""
+    try:
+        tokens = _process_tokens(command)
+    except ValueError:
+        return True
+    values = [_shell_word_value(token) for token in tokens]
+    for index, value in enumerate(values):
+        if value in {"alias", "enable"}:
+            return True
+        # `NAME() ...` and `function NAME`: a name the reader cannot read could be echo.
+        if tokens[index + 1 : index + 3] == ["(", ")"] and value in {None, "echo"}:
+            return True
+        if value == "function" and index + 1 < len(values) and values[index + 1] in {None, "echo"}:
+            return True
+    return False
+
+
 def _echo_output(body: str) -> str | None:
     """The output of a substitution that is one plain `echo` of literal words, else None."""
     try:
@@ -2718,7 +2827,7 @@ def _collect_process_facts(command: str, facts: _ProcessFacts, depth: int = 0) -
         facts.limit = True
         return
     try:
-        if not re.search(r"(?<![\w-])echo\s*\(\s*\)|\bfunction\s+echo\b|\balias\b|\benable\b", facts.command):
+        if not _may_rebind_echo(facts.command):
             # Only while the command cannot rebind `echo` to something else.
             executable = _inline_echo_substitutions(executable, substitutions)
         pipelines = _process_pipelines(_decode_ansi_c_quotes(executable))
@@ -3115,7 +3224,10 @@ def _process_refusal(command: str, cwd: str | None = None) -> str | None:
     if facts.opaque:
         return "the command runs shell text the guard cannot read, which could stop the agent's own process"
     if facts.unresolved:
-        return "a command name the guard cannot resolve could stop the agent's own process"
+        return (
+            "a command name the guard cannot resolve could stop the agent's own process; "
+            'name the program literally, or quote an expansion ("$PY", not $PY)'
+        )
     if script_reason:
         return script_reason
     if not facts.calls:
