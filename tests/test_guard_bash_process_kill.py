@@ -64,6 +64,13 @@ F7_SHELL_OPTIONS = [
     "bash +O $(printf 'extglob -c') 'pkill -f worker'",
     "bash -o {errexit,-c} 'pkill -f worker'",
     "bash -o ${REVIEW_UNUSED-} errexit -c 'pkill -f worker'",
+    "set -- -c 'pkill -f worker'; bash \"$@\"",
+    "set -- pipefail -c 'pkill -f worker'; bash -o \"$@\"",
+    "set -- -c 'pkill -f worker'; sh \"${@:1}\"",
+    "args=(-c 'pkill -f worker'); bash \"${args[@]}\"",
+    "set -- c 'pkill -f worker'; bash \"-$@\"",
+    "set -- extglob -c 'pkill -f worker'; bash +O \"$@\"",
+    "set -- /dev/null -c 'pkill -f worker'; bash --init-file \"$@\"",
 ]
 # Review F10: ANSI-C escapes whose Bash meaning the decoder does not model.
 F10_ANSI_C = [
