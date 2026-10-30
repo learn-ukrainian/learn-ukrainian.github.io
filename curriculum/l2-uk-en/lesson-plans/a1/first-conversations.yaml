@@ -58,23 +58,14 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Recognise greetings and partings.'
-    options:
-    - 'Добрий день'
-    - 'Привіт'
-    - 'Добраніч'
-    - 'До побачення'
+    focus: 'Hear and repeat greetings and partings with native video models.'
   - id: a2
-    type: quiz
+    type: match-up
     placement: workbook
-    focus: 'Respond to simple questions with так and ні.'
-    options:
-    - 'Так'
-    - 'Ні'
-    - 'Так, я тут'
-    - 'Ні, не я'
+    focus: 'Match conversational greeting turns with their appropriate responses.'
+    targets: ['W-074', 'W-075', 'W-096', 'W-061']
   videos:
   - evidence: V-001
     use: 'Pronunciation model for informal greetings and dialogue.'
@@ -120,21 +111,20 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Identify words with unstressed [е] and [и].'
-    options:
-    - 'зима'
-    - 'весна'
-    - 'сестра'
-    - 'жито'
-  - id: a2
-    type: quiz
-    placement: workbook
-    focus: 'Ask and point to family and belongings.'
+    focus: 'Distinguish question word де from presentation particle ось.'
     options:
     - 'Де тато?'
     - 'Ось тато'
-    - 'Де мама?'
-    - 'Ось моя сім’я'
+    - 'Хто тато?'
+  - id: a2
+    type: fill-in
+    placement: workbook
+    focus: 'Complete location and pointing exchanges with де and ось.'
+    options:
+    - 'де'
+    - 'ось'
+    - 'хто'
+    targets: ['W-163', 'W-065', 'W-138']
   videos: []
 - n: 3
   slug: first-conversations-recap
@@ -179,21 +169,12 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: unjumble
     placement: inline
-    focus: 'Select appropriate dialogue turns.'
-    options:
-    - 'Привіт! Як справи?'
-    - 'Добре, дякую.'
-    - 'Ось мій тато.'
-    - 'До побачення!'
+    focus: 'Unjumble a 4-turn greeting and self-introduction exchange into coherent conversational sequence.'
   - id: a2
-    type: quiz
+    type: group-sort
     placement: workbook
-    focus: 'Complete conversational exchanges.'
-    options:
-    - 'Добрий день!'
-    - 'Так, це я.'
-    - 'Ось моя сім’я.'
-    - 'Добраніч!'
+    focus: 'Sort dialogue turns into greetings, location inquiries, and parting wishes.'
+    targets: ['W-074', 'W-075', 'W-163', 'W-065']
   videos: []

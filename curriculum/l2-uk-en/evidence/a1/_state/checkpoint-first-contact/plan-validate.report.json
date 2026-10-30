@@ -12,12 +12,13 @@
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "match-up": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
+          "match-up",
           "quiz"
         ],
         "has_workbook": true,
@@ -35,12 +36,13 @@
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "fill-in": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
+          "fill-in",
           "quiz"
         ],
         "has_workbook": true,
@@ -51,18 +53,21 @@
     ],
     "module": {
       "all_distinct_types": [
+        "fill-in",
+        "match-up",
         "quiz"
       ],
       "inline_activities": 2,
-      "largest_workbook_type": "quiz",
-      "largest_workbook_type_share": 1.0,
-      "longest_same_type_workbook_run": 2,
-      "longest_same_type_workbook_run_type": "quiz",
+      "largest_workbook_type": "match-up",
+      "largest_workbook_type_share": 0.5,
+      "longest_same_type_workbook_run": 1,
+      "longest_same_type_workbook_run_type": "match-up",
       "non_recap_lessons": 2,
       "non_recap_lessons_with_workbook": 2,
       "workbook_activities": 2,
       "workbook_distinct_types": [
-        "quiz"
+        "fill-in",
+        "match-up"
       ],
       "workbook_presence_complete": true
     },
@@ -78,15 +83,15 @@
     "curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml": "d9206a1eb95c0d015b5a94f50667cd9ce2590a4816abe8605fa6e9797731f717",
     "curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml.lock": "fcdc4764886610018e3e3c8568a8bffcc8802d81c6c120b6fc019adeb169a69a",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
-    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/checkpoint-first-contact.yaml": "e695ef74a9ee5af4c8c5af38d3afa6e1071177a9cfaf0e82988d85160abc272c",
-    "curriculum/l2-uk-en/lesson-plans/a1/checkpoint-first-contact.yaml": "5ac63df2462a731af8533b6e143e1534b4b63c884611ddfb250b9fcfa7ead323",
-    "curriculum/l2-uk-en/lesson-plans/a1/first-conversations.yaml": "29b7e6d9c136a4877c51bf0d1b45112b36579f5a3aac429aab70c96092edcdf2",
-    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "ad4733673f8bc177abe46e8ce7737c2e645f0eef8390ac6b5a9e0edcf34b8bb0",
-    "curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml": "0be0b28a220180213f109dc6dea7b30aa991f5d540f2190612f27946fcb45ee8",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "37f75d0eb870e7315ecf80e17b095f3da6cd4d6050f062098ba9b46aa4b4669a",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "8c0a16cce7609885e2cc723203218c035e2a2b02dd1b877b24dd676d5f61e78a",
-    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "93f40e2dcd4bb3bfa61c18b859938b168559679bf8f7a9f399d61b860b42746a",
+    "curriculum/l2-uk-en/lesson-plans/a1/checkpoint-first-contact.yaml": "f176f93bd7b4277d1d5d97fdda8e66bf3833109fde4a5d7215c33ed976c55749",
+    "curriculum/l2-uk-en/lesson-plans/a1/first-conversations.yaml": "d4610f3e0e66956fd9fceb2529c1917c2c482b1b98a6c2e5bdb63d6cd8c1d83b",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "eb2576066a190c51c24bfcd726f1a988447a154f76c7bbb5fbba03f490bf2ae1",
+    "curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml": "19920dc2fabc335b8f19d04db0073a33b3b250cb6d0cc0d47cde288b5cbc542c",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "4cfdca398581ab17c0b98e67fec32e29451bc9c3754cda096bef849c7b2e57c4",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "5c7e50112e724ffb0081dd02ced52f24be33265e2d9fc99edffff20107ffce68",
+    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "7006a1cfa92a8608aec328080ca198a70314ba626c6dec4b592339a271a86ad2",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -94,7 +99,7 @@
     "schemas/module-plan-v2.schema.json": "112982f5ff3a7477596a52dce0003e3c7cf9579c98a41eca068a31f6087776e2",
     "scripts/curriculum/validate/config.py": "18fb421107953159b11c01ebb4620ed3213e0a37491f85f1dce38b207cebd6b0",
     "scripts/curriculum/validate/data/a1-closed-class.yaml": "c64d951304b79000dda4222a9db9b5f358c748c4fe9ef82378a541e85c599582",
-    "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
+    "scripts/curriculum/validate/placement_table.yaml": "b3268a3feae54e4a91f28d5a0858989f291ed3280412345ef07f031075543234"
   },
   "level": "a1",
   "mode": "provisional",

@@ -59,23 +59,14 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read syllables with consonants Б and Й.'
-    options:
-    - 'ба'
-    - 'бо'
-    - 'ай'
-    - 'ій'
+    focus: 'Hear and pronounce voiced stop Б and approximant Й in syllables with model videos.'
   - id: a2
-    type: quiz
+    type: match-up
     placement: workbook
-    focus: 'Read possessive phrases with family words.'
-    options:
-    - 'мій тато'
-    - 'моя мама'
-    - 'твій тато'
-    - 'твоя мама'
+    focus: 'Match possessive phrases to their English translations.'
+    targets: ['W-010', 'W-011', 'W-081', 'W-101']
   videos:
   - evidence: V-001
     use: 'Pronunciation model for consonant Б.'
@@ -117,23 +108,18 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read words with letter Ї.'
-    options:
-    - 'Київ'
-    - 'Україна'
-    - 'він тут'
-    - 'вона тут'
+    focus: 'Pronounce letter Ї and read proper names Україна and Київ.'
   - id: a2
-    type: quiz
+    type: fill-in
     placement: workbook
-    focus: 'Recognise proper nouns and vocabulary.'
+    focus: 'Complete proper geographical names by selecting the missing letter Ї, І, or И.'
     options:
-    - 'Київ'
-    - 'Україна'
-    - 'хліб'
-    - 'зима'
+    - 'Ї'
+    - 'І'
+    - 'И'
+    targets: ['W-183', 'W-184']
   videos:
   - evidence: V-003
     use: 'Pronunciation model for vowel Ї.'
@@ -173,22 +159,17 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read words with letters Ю and Є.'
-    options:
-    - 'єнот'
-    - 'буква'
-    - 'рука'
-    - 'хто'
+    focus: 'Observe and pronounce iotated vowels Ю and Є in short words.'
   - id: a2
-    type: quiz
+    type: odd-one-out
     placement: workbook
-    focus: 'Distinguish vowel letters.'
+    focus: 'Identify the letter Ї that always represents two sounds among iotated vowels.'
     options:
+    - 'Ї'
     - 'Ю'
     - 'Є'
-    - 'Ї'
     - 'Я'
   videos:
   - evidence: V-004
@@ -237,18 +218,13 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Review possessive phrases with family words.'
-    options:
-    - 'Ось мій тато'
-    - 'Ось моя мама'
-    - 'Ось Іван'
-    - 'Ось Київ'
-  - id: a2
-    type: quiz
-    placement: workbook
-    focus: 'Read vocabulary from the module.'
+    focus: 'Select the correct possessive form agreeing with family nouns.'
     options:
     - 'мій тато'
-    - 'моя мама'
-    - 'Київ'
-    - 'Україна'
+    - 'моя тато'
+    - 'моє тато'
+  - id: a2
+    type: group-sort
+    placement: workbook
+    focus: 'Sort taught vocabulary into proper geographical names and common nouns.'
+    targets: ['W-183', 'W-184', 'W-110', 'W-127', 'W-171']

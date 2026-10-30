@@ -74,21 +74,16 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Classify nouns by grammatical gender.'
+    focus: 'Classify nouns by grammatical gender using pronouns він, вона, воно.'
     options:
     - 'хліб — він'
-    - 'чай — він'
-    - 'м’яч — він'
-    - 'воно — neuter'
+    - 'хліб — вона'
+    - 'хліб — воно'
   - id: a2
-    type: quiz
+    type: group-sort
     placement: workbook
-    focus: 'Recognise feminine and neuter noun endings.'
-    options:
-    - 'кава — вона'
-    - 'свято — воно'
-    - 'жито — воно'
-    - 'мама — вона'
+    focus: 'Sort familiar nouns by grammatical gender into masculine, feminine, and neuter categories.'
+    targets: ['W-139', 'W-151', 'W-181', 'W-109', 'W-110', 'W-111']
   videos:
   - evidence: V-001
     use: 'Model for noun gender endings in Ukrainian.'
@@ -146,18 +141,13 @@ lessons:
     focus: 'Select first-person possessive agreement.'
     options:
     - 'наш м’яч'
-    - 'наша кава'
-    - 'наше свято'
-    - 'мій хліб'
+    - 'наша м’яч'
+    - 'наше м’яч'
   - id: a2
-    type: quiz
+    type: match-up
     placement: workbook
-    focus: 'Select second-person possessive agreement.'
-    options:
-    - 'ваш м’яч'
-    - 'ваша кава'
-    - 'ваше свято'
-    - 'твій чай'
+    focus: 'Match agreeing second-person possessives ваш, ваша, ваше to nouns by gender.'
+    targets: ['W-014', 'W-139', 'W-151', 'W-181']
   videos:
   - evidence: V-002
     use: 'Model for Ukrainian possessive pronouns and agreement.'
@@ -211,21 +201,20 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Identify invariable possessives його and її with demonstrative цей.'
+    focus: 'Contrast invariable possessives його and її with demonstrative цей.'
     options:
     - 'цей його м’яч'
-    - 'ця її кава'
-    - 'це його свято'
-    - 'це її свято'
+    - 'ця його м’яч'
+    - 'це його м’яч'
   - id: a2
-    type: quiz
+    type: fill-in
     placement: workbook
-    focus: 'Select variable forms of їхній.'
+    focus: 'Complete phrases with variable third-person plural possessives їхній, їхня, їхнє.'
     options:
-    - 'їхній м’яч'
-    - 'їхня кава'
-    - 'їхнє свято'
-    - 'їхній чай'
+    - 'їхній'
+    - 'їхня'
+    - 'їхнє'
+    targets: ['W-015', 'W-139', 'W-151', 'W-181']
   videos: []
 - n: 4
   slug: things-have-gender-recap
@@ -285,16 +274,11 @@ lessons:
     focus: 'Review possessive agreement across persons.'
     options:
     - 'Це мій м’яч.'
-    - 'Це наша кава.'
-    - 'Це ваше свято.'
-    - 'Це його хліб.'
+    - 'Це моя м’яч.'
+    - 'Це моє м’яч.'
   - id: a2
-    type: quiz
+    type: group-sort
     placement: workbook
-    focus: 'Identify belongings with complete possessive set.'
-    options:
-    - 'Це їхній м’яч.'
-    - 'Це їхня кава.'
-    - 'Це їхнє свято.'
-    - 'Це наше свято.'
+    focus: 'Sort belongings by possessive gender agreement.'
+    targets: ['W-013', 'W-014', 'W-015', 'W-139', 'W-151', 'W-181']
   videos: []

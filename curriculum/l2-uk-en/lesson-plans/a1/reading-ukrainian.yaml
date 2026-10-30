@@ -62,23 +62,14 @@ lessons:
     needs: [video]
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read words with letter Ґ.'
-    options:
-    - 'ґава'
-    - 'ґрати'
-    - 'ґрунт'
-    - 'гора'
+    focus: 'Hear and pronounce consonants Ґ and Ж with native video demonstrations.'
   - id: a2
-    type: quiz
+    type: match-up
     placement: workbook
-    focus: 'Read words with letter Ж and greetings.'
-    options:
-    - 'жито'
-    - 'жабка'
-    - 'добрий день'
-    - 'привіт'
+    focus: 'Match words containing Ґ and Ж to their English glosses.'
+    targets: ['W-107', 'W-111', 'W-115']
   videos:
   - evidence: V-001
     use: 'Pronunciation model for letter Ґ.'
@@ -122,23 +113,18 @@ lessons:
     needs: [video]
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read syllables and words with letter Ч.'
-    options:
-    - 'чобіт'
-    - 'чай'
-    - 'ча'
-    - 'чо'
+    focus: 'Hear and pronounce postalveolar affricate Ч and fricative Ш with video models.'
   - id: a2
-    type: quiz
+    type: fill-in
     placement: workbook
-    focus: 'Read syllables and words with letter Ш.'
+    focus: 'Complete words with postalveolar consonants Ч and Ш.'
     options:
-    - 'комиш'
-    - 'ша'
-    - 'шо'
-    - 'ґава'
+    - 'ч'
+    - 'ш'
+    - 'ж'
+    targets: ['W-108', 'W-109', 'W-112']
   videos:
   - evidence: V-003
     use: 'Pronunciation model for consonant Ч.'
@@ -183,23 +169,18 @@ lessons:
     needs: [video]
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read words with letter Щ.'
-    options:
-    - 'щука'
-    - 'дощ'
-    - 'ща'
-    - 'щу'
+    focus: 'Observe and pronounce consonants Щ, Ц, and Ф with native video models.'
   - id: a2
-    type: quiz
+    type: odd-one-out
     placement: workbook
-    focus: 'Read words with letters Ц and Ф.'
+    focus: 'Identify the letter Щ representing cluster [шч] among single consonants including Ц and Ф.'
     options:
-    - 'цимбали'
-    - 'ферма'
-    - 'чобіт'
-    - 'чай'
+    - 'щ'
+    - 'ц'
+    - 'ф'
+    - 'ч'
   videos:
   - evidence: V-005
     use: 'Pronunciation model for consonant Щ.'
@@ -244,23 +225,14 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: observe
     placement: inline
-    focus: 'Read words with digraphs дж and дз.'
-    options:
-    - 'джміль'
-    - 'джем'
-    - 'дзиґа'
-    - 'дзвін'
+    focus: 'Notice digraphs [дж] and [дз] functioning as single phonological units.'
   - id: a2
-    type: quiz
+    type: order
     placement: workbook
-    focus: 'Read words across the completed alphabet.'
-    options:
-    - 'алфавіт'
-    - 'ґава'
-    - 'цимбали'
-    - 'ферма'
+    focus: 'Sequence words into alphabetical order using the full 33-letter Ukrainian alphabet.'
+    targets: ['W-173', 'W-107', 'W-128', 'W-131']
   videos: []
 - n: 5
   slug: reading-ukrainian-recap
@@ -307,19 +279,14 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Decode words and greetings from familiar signs.'
+    focus: 'Decode words and greetings from familiar street signs.'
     options:
     - 'добрий день'
     - 'привіт'
-    - 'ґава'
-    - 'чай'
+    - 'до побачення'
   - id: a2
-    type: quiz
+    type: group-sort
     placement: workbook
-    focus: 'Identify vocabulary words across the completed alphabet.'
-    options:
-    - 'жито'
-    - 'цимбали'
-    - 'щука'
-    - 'ферма'
+    focus: 'Sort vocabulary items across the completed alphabet into natural living things and inanimate objects.'
+    targets: ['W-115', 'W-129', 'W-132', 'W-108', 'W-109', 'W-128']
   videos: []

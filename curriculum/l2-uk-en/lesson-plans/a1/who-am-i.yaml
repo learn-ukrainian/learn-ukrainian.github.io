@@ -59,23 +59,14 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read syllables with letters У, Л, С.'
-    options:
-    - 'лу'
-    - 'су'
-    - 'ла'
-    - 'са'
+    focus: 'Hear and repeat vowel У and sonorants Л, С in syllables aloud with native video recordings.'
   - id: a2
-    type: quiz
+    type: match-up
     placement: workbook
-    focus: 'Recognise personal pronouns.'
-    options:
-    - 'я'
-    - 'ти'
-    - 'він'
-    - 'вона'
+    focus: 'Match Ukrainian subject pronouns я, ти, він, вона to their English equivalents.'
+    targets: ['W-001', 'W-002', 'W-003', 'W-004']
   videos:
   - evidence: V-001
     use: 'Pronunciation model for letter У.'
@@ -120,23 +111,18 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read syllables with consonants К, Д, З.'
-    options:
-    - 'ка'
-    - 'да'
-    - 'за'
-    - 'ку'
+    focus: 'Hear and pronounce consonants К, Д, З in open syllables with model videos.'
   - id: a2
-    type: quiz
+    type: fill-in
     placement: workbook
-    focus: 'Read taught words зима, рука, коса.'
+    focus: 'Complete taught words by selecting the correct initial consonant letter from К, Д, З, or Р.'
     options:
-    - 'зима'
-    - 'рука'
-    - 'коса'
-    - 'мама'
+    - 'з'
+    - 'р'
+    - 'к'
+    targets: ['W-104', 'W-084', 'W-097']
   videos:
   - evidence: V-004
     use: 'Pronunciation model for consonant К.'
@@ -181,18 +167,13 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read words with consonants Х, Г and soft sign ь.'
-    options:
-    - 'тінь'
-    - 'рись'
-    - 'день'
-    - 'клен'
+    focus: 'Observe and pronounce consonants Х, Г, and softening with soft sign ь in decodable words.'
   - id: a2
-    type: quiz
+    type: odd-one-out
     placement: workbook
-    focus: 'Identify who-question word хто and pronouns.'
+    focus: 'Identify the question word хто among personal subject pronouns.'
     options:
     - 'хто'
     - 'він'
@@ -245,18 +226,13 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Review identity questions and pronouns.'
+    focus: 'Review personal identity questions and pronouns.'
     options:
     - 'Хто він?'
-    - 'Я тут'
+    - 'Я Іван'
     - 'Він тут'
-    - 'Вона тут'
   - id: a2
-    type: quiz
+    type: group-sort
     placement: workbook
-    focus: 'Read decodable words with taught letters.'
-    options:
-    - 'зима'
-    - 'рука'
-    - 'тінь'
-    - 'рись'
+    focus: 'Sort taught vocabulary into personal pronouns and concrete nouns.'
+    targets: ['W-001', 'W-002', 'W-003', 'W-004', 'W-104', 'W-084', 'W-120']

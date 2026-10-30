@@ -6,19 +6,20 @@
         "activities": {
           "inline": {
             "by_type": {
-              "quiz": 1
+              "watch-and-repeat": 1
             },
             "total": 1
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "match-up": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
-          "quiz"
+          "match-up",
+          "watch-and-repeat"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -29,19 +30,20 @@
         "activities": {
           "inline": {
             "by_type": {
-              "quiz": 1
+              "watch-and-repeat": 1
             },
             "total": 1
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "fill-in": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
-          "quiz"
+          "fill-in",
+          "watch-and-repeat"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -52,19 +54,20 @@
         "activities": {
           "inline": {
             "by_type": {
-              "quiz": 1
+              "watch-and-repeat": 1
             },
             "total": 1
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "odd-one-out": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
-          "quiz"
+          "odd-one-out",
+          "watch-and-repeat"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -81,12 +84,13 @@
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "group-sort": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
+          "group-sort",
           "quiz"
         ],
         "has_workbook": true,
@@ -97,18 +101,26 @@
     ],
     "module": {
       "all_distinct_types": [
-        "quiz"
+        "fill-in",
+        "group-sort",
+        "match-up",
+        "odd-one-out",
+        "quiz",
+        "watch-and-repeat"
       ],
       "inline_activities": 4,
-      "largest_workbook_type": "quiz",
-      "largest_workbook_type_share": 1.0,
-      "longest_same_type_workbook_run": 4,
-      "longest_same_type_workbook_run_type": "quiz",
+      "largest_workbook_type": "match-up",
+      "largest_workbook_type_share": 0.25,
+      "longest_same_type_workbook_run": 1,
+      "longest_same_type_workbook_run_type": "match-up",
       "non_recap_lessons": 3,
       "non_recap_lessons_with_workbook": 3,
       "workbook_activities": 4,
       "workbook_distinct_types": [
-        "quiz"
+        "fill-in",
+        "group-sort",
+        "match-up",
+        "odd-one-out"
       ],
       "workbook_presence_complete": true
     },
@@ -124,11 +136,11 @@
     "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml": "1dc9cee014b77701303836739c28a31a7cdd6a112f1309f183bdc1241ad75a6b",
     "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml.lock": "39c64230be2c8c841fe386e67f9e49449e88bf4a7b3da1e6e1d39ba8ba25662d",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
-    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/who-am-i.yaml": "f48d55305764ac85b0ba673bba2d57136b81c08561c5197b54f7ee2a1ab7ca04",
-    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "ad4733673f8bc177abe46e8ce7737c2e645f0eef8390ac6b5a9e0edcf34b8bb0",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "8c0a16cce7609885e2cc723203218c035e2a2b02dd1b877b24dd676d5f61e78a",
-    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "52e00ff57f1b08e7c86f8dea20aec87b08666666b325e674d4f53653dc0dc428",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "eb2576066a190c51c24bfcd726f1a988447a154f76c7bbb5fbba03f490bf2ae1",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "5c7e50112e724ffb0081dd02ced52f24be33265e2d9fc99edffff20107ffce68",
+    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "7006a1cfa92a8608aec328080ca198a70314ba626c6dec4b592339a271a86ad2",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -136,7 +148,7 @@
     "schemas/module-plan-v2.schema.json": "112982f5ff3a7477596a52dce0003e3c7cf9579c98a41eca068a31f6087776e2",
     "scripts/curriculum/validate/config.py": "18fb421107953159b11c01ebb4620ed3213e0a37491f85f1dce38b207cebd6b0",
     "scripts/curriculum/validate/data/a1-closed-class.yaml": "c64d951304b79000dda4222a9db9b5f358c748c4fe9ef82378a541e85c599582",
-    "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
+    "scripts/curriculum/validate/placement_table.yaml": "b3268a3feae54e4a91f28d5a0858989f291ed3280412345ef07f031075543234"
   },
   "level": "a1",
   "mode": "provisional",

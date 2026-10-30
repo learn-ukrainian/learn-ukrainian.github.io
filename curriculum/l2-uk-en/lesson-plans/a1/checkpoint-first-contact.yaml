@@ -69,17 +69,12 @@ lessons:
     options:
     - 'Привіт!'
     - 'Добрий день!'
-    - 'До побачення!'
     - 'Добраніч!'
   - id: a2
-    type: quiz
+    type: match-up
     placement: workbook
-    focus: 'Verify identity statements.'
-    options:
-    - 'Так, це я.'
-    - 'Ні, не я.'
-    - 'Так, ви тут.'
-    - 'Ні, ви там.'
+    focus: 'Match spoken identity statements with written dialogue responses.'
+    targets: ['W-096', 'W-061', 'W-007', 'W-001', 'W-002']
   videos: []
 - n: 2
   slug: first-contact-expressive-production
@@ -130,15 +125,14 @@ lessons:
     options:
     - 'Де мій тато?'
     - 'Ось твій тато.'
-    - 'Де моя сім’я?'
-    - 'Ось твоя сім’я.'
+    - 'Хто мій тато?'
   - id: a2
-    type: quiz
+    type: fill-in
     placement: workbook
-    focus: 'Complete conversational roleplay responses.'
+    focus: 'Complete conversational roleplay responses with taught family nouns.'
     options:
-    - 'Добрий день! Мене звати Іван.'
-    - 'Ось моя сім’я: мама і тато.'
-    - 'Ми тут разом.'
-    - 'До побачення, гарного дня!'
+    - 'тато'
+    - 'мама'
+    - 'сім’я'
+    targets: ['W-081', 'W-101', 'W-138']
   videos: []

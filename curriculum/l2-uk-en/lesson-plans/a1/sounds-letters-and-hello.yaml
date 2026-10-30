@@ -68,6 +68,7 @@ lessons:
     options:
     - 'Polite time-of-day greeting: Good day'
     - 'Informal friendly greeting: Hi'
+    - 'Casual late-evening parting: Good night'
   videos:
   - evidence: V-001
     use: 'Informal greeting demonstration.'
@@ -111,15 +112,9 @@ lessons:
     placement: inline
     focus: 'Notice the vowel shapes А, О, Е, И, І.'
   - id: a2
-    type: quiz
+    type: match-up
     placement: workbook
-    focus: 'Distinguish vowel letters by shape and sound.'
-    options:
-    - 'А'
-    - 'О'
-    - 'Е'
-    - 'И'
-    - 'І'
+    focus: 'Match uppercase to lowercase forms of taught vowel letters А, О, Е, И, І.'
   videos:
   - evidence: V-004
     use: 'Pronunciation model for letter А.'
@@ -169,23 +164,18 @@ lessons:
     needs: [video]
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read syllables with М and Н.'
+    focus: 'Model syllables with consonants М and Н aloud with native video recordings.'
+  - id: a2
+    type: fill-in
+    placement: workbook
+    focus: 'Complete names and family words by supplying the missing initial syllable with В, М, or Н.'
     options:
     - 'ма'
     - 'на'
-    - 'мі'
-    - 'ні'
-  - id: a2
-    type: quiz
-    placement: workbook
-    focus: 'Read taught names using vowels and М, Н, В.'
-    options:
-    - 'мама'
-    - 'Ніна'
-    - 'Іван'
-    - 'Вова'
+    - 'ва'
+    targets: ['W-081', 'W-091', 'W-093']
   videos:
   - evidence: V-008
     use: 'Pronunciation model for consonant М.'
@@ -229,23 +219,18 @@ lessons:
     practice: ['a2']
   activities:
   - id: a1
-    type: quiz
+    type: watch-and-repeat
     placement: inline
-    focus: 'Read decodable words with П, Р, Т.'
-    options:
-    - 'тато'
-    - 'па'
-    - 'ра'
-    - 'та'
+    focus: 'Pronounce voiceless stops П, Т, vibrant Р, and vowel Я aloud.'
   - id: a2
-    type: quiz
+    type: odd-one-out
     placement: workbook
-    focus: 'Recognise the vowel letter Я.'
+    focus: 'Identify the personal pronoun with vowel letter Я among single-syllable vowel letters.'
     options:
-    - 'Я'
-    - 'А'
-    - 'Е'
-    - 'О'
+    - 'я'
+    - 'а'
+    - 'е'
+    - 'о'
   videos:
   - evidence: V-015
     use: 'Pronunciation model for consonant П.'
@@ -294,19 +279,16 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Review formal and informal greetings.'
+    focus: 'Review formal and informal greetings in social context.'
     options:
     - 'Good day greeting'
     - 'Informal Hi greeting'
+    - 'Late evening parting'
   - id: a2
-    type: quiz
+    type: group-sort
     placement: workbook
-    focus: 'Read taught names and words.'
-    options:
-    - 'мама'
-    - 'Іван'
-    - 'Ніна'
-    - 'тато'
+    focus: 'Sort taught vocabulary into family terms and personal names.'
+    targets: ['W-081', 'W-101', 'W-091', 'W-093']
   videos:
   - evidence: V-001
     use: 'Review informal greeting demonstration.'

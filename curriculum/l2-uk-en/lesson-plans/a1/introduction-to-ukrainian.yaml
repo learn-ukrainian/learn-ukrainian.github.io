@@ -59,13 +59,9 @@ lessons:
     - 'South Slavic language spoken in the Balkans'
     - 'West Germanic language spoken in Western Europe'
   - id: a2
-    type: quiz
+    type: match-up
     placement: workbook
-    focus: 'Reflect on core cultural and linguistic features of modern Ukrainian.'
-    options:
-    - 'Official state language of Ukraine with over 40 million speakers'
-    - 'A minority dialect without official status'
-    - 'An extinct language preserved only in liturgical texts'
+    focus: 'Match core sociolinguistic facts of modern Ukrainian with their descriptions.'
 - n: 2
   slug: alphabet-overview-and-study-method
   title: 'Alphabet overview and study method'
@@ -115,10 +111,11 @@ lessons:
     - '26 letters like the English alphabet'
     - '30 letters with no special signs'
   - id: a2
-    type: quiz
+    type: odd-one-out
     placement: workbook
-    focus: 'Reinforce the sound-before-letter principle for effective study.'
+    focus: 'Identify the study habit that contradicts the sound-before-letter progression.'
     options:
-    - 'Hear and repeat spoken models aloud before analyzing spelling'
-    - 'Memorize spelling rules before listening to native speakers'
-    - 'Rely solely on silent reading without spoken practice'
+    - 'Translating full written texts with a dictionary on day one'
+    - 'Listening to native audio before reading print'
+    - 'Repeating speech sounds aloud with model recordings'
+    - 'Focusing on high-frequency conversational phrases'
