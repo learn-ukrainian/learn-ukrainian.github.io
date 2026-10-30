@@ -150,40 +150,74 @@ inline:
       - left: 'школа'
         right: 'зі школи'
 workbook:
-  - type: order
+  - type: fill-in
     title: International meet-up
-    instruction: Put the introduction exchange in a natural order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Добрий день! Мене звати Анна.'
-      - 'Дуже приємно. Мене звати Марко.'
-      - 'Звідки ти, Анно?'
-      - 'Я з Канади, із Торонто. А ти?'
-      - 'Я з України, з Києва.'
-      - 'Чудово. Говорімо українською.'
-    correct_order: [0, 1, 2, 3, 4, 5]
+      - sentence: Добрий день! ___ звати Анна.
+        answer: Мене
+        options:
+          - Мене
+          - Мені
+          - Мною
+        explanation: The naming phrase is Мене звати.
+      - sentence: Дуже приємно. Мене ___ Марко.
+        answer: звати
+        options:
+          - звати
+          - зватися
+          - звуся
+        explanation: Use the naming phrase Мене звати Марко.
+      - sentence: Звідки ___, Анно?
+        answer: ти
+        options:
+          - ти
+          - тебе
+          - тобі
+        explanation: Ти is the subject of the origin question.
+      - sentence: — Звідки ти? — Я з ___, із Торонто. А ти?
+        answer: Канади
+        options:
+          - Канади
+          - Канада
+          - Канадою
+        explanation: З takes the genitive form Канади.
+      - sentence: — Звідки ти? — Я з ___, з Києва.
+        answer: України
+        options:
+          - України
+          - Україна
+          - Україною
+        explanation: З takes the genitive form України.
+      - sentence: Чудово. Говорімо українською! Марко з ___.
+        answer: Києва
+        options:
+          - Києва
+          - Київ
+          - Києвом
+        explanation: З takes the genitive form Києва.
   - type: true-false
     title: Toponym and identity guardrails
     instruction: Decide whether the statement fits this lesson.
     items:
-      - statement: 'Україна, Київ, Львів, and Канада are proper names and use capital letters.'
+      - statement: Україна, Київ, Львів, and Канада are proper names and use capital letters.
         correct: true
-        explanation: 'Country and city names are proper names.'
-      - statement: 'Я з Києва is the safe answer to Звідки ти?'
+        explanation: Country and city names are proper names.
+      - statement: Я з Києва is the safe answer to Звідки ти?
         correct: true
-        explanation: 'Київ changes to Києва after з.'
-      - statement: 'Я є з України is the natural A1 identity line.'
+        explanation: Київ changes to Києва after з.
+      - statement: Я з України can state origin without є.
+        correct: true
+        explanation: Є can be omitted here. Its omission is the short A1 model, rather than a ban on є.
+      - statement: Вона львів'янка matches a woman from Lviv.
+        correct: true
+        explanation: Use the feminine demonym.
+      - statement: Kiev is the course English spelling for Київ.
         correct: false
-        explanation: 'Say Я з України without є.'
-      - statement: "Вона львів'янка matches a woman from Lviv."
+        explanation: Use Kyiv / Київ.
+      - statement: Зі США is easier and safer than з США.
         correct: true
-        explanation: 'Use the feminine demonym.'
-      - statement: 'Kiev is the course English spelling for Київ.'
-        correct: false
-        explanation: 'Use Kyiv / Київ.'
-      - statement: 'Зі США is easier and safer than з США.'
-        correct: true
-        explanation: 'Зі avoids a hard consonant cluster.'
+        explanation: Зі avoids a hard consonant cluster.
   - type: odd-one-out
     title: Find the from-place mismatch
     instruction: Choose the line that does not fit the pattern.
@@ -216,59 +250,65 @@ workbook:
           - 'Odessa'
         answer: 'Odessa'
         explanation: 'Use Odesa for the Ukrainian city name in English.'
-  - type: error-correction
+  - type: quiz
     title: Repair where-from interference
-    instruction: Choose the natural Ukrainian repair.
+    instruction: Choose the correct Ukrainian version of each line.
     anchor_id: repair-where-from-interference
     items:
-      - sentence: 'Я з Київ.'
-        error: 'з Київ'
-        answer: 'Я з Києва.'
+      - prompt: 'Choose the correct Ukrainian version: Я з Київ.'
         options:
-          - 'Я з Києва.'
-          - 'Я з Київ.'
-          - 'Я в Києва.'
-        explanation: 'Звідки? uses the from-place form Києва.'
-      - sentence: 'Я є з України.'
-        error: 'є'
-        answer: 'Я з України.'
+          - text: Я з Києва.
+            correct: true
+          - text: Я з Київ.
+            correct: false
+          - text: Я в Києва.
+            correct: false
+        explanation: Звідки? uses the from-place form Києва.
+      - prompt: 'Choose the correct Ukrainian version: Я з Україну.'
         options:
-          - 'Я з України.'
-          - 'Я є з України.'
-          - 'Я маю з України.'
-        explanation: 'Drop є in this present identity line.'
-      - sentence: 'Він живе в Київ.'
-        error: 'в Київ'
-        answer: 'Він живе в Києві.'
+          - text: Я з України.
+            correct: true
+          - text: Я з Україну.
+            correct: false
+          - text: Я з Україною.
+            correct: false
+        explanation: З takes the genitive form України.
+      - prompt: 'Choose the correct Ukrainian version: Він живе в Київ.'
         options:
-          - 'Він живе в Києві.'
-          - 'Він живе в Київ.'
-          - 'Він живе з Києва.'
-        explanation: 'Живе answers де?, so use в Києві.'
-      - sentence: "Вона львів'янин."
-        error: "львів'янин"
-        answer: "Вона львів'янка."
+          - text: Він живе в Києві.
+            correct: true
+          - text: Він живе в Київ.
+            correct: false
+          - text: Він живе з Києва.
+            correct: false
+        explanation: Живе answers де?, so use в Києві.
+      - prompt: "Choose the correct Ukrainian version: Вона львів'янин."
         options:
-          - "Вона львів'янка."
-          - "Вона львів'янин."
-          - "Вона з львів'янин."
-        explanation: 'Use the feminine demonym for вона.'
-      - sentence: 'Я з США. (Вимова: з-США)'
-        error: 'з США'
-        answer: 'Я зі США.'
+          - text: Вона львів'янка.
+            correct: true
+          - text: Вона львів'янин.
+            correct: false
+          - text: Вона з львів'янин.
+            correct: false
+        explanation: Use the feminine demonym for вона.
+      - prompt: 'Choose the correct Ukrainian version: — Звідки ти? — Я з США.'
         options:
-          - 'Я зі США.'
-          - 'Я з США.'
-          - 'Я в США.'
-        explanation: 'Use зі before США.'
-      - sentence: 'Я з місто Львів.'
-        error: 'з місто Львів'
-        answer: 'Я зі Львова. (або Я з міста Львова)'
+          - text: — Звідки ти? — Я зі США.
+            correct: true
+          - text: — Звідки ти? — Я з США.
+            correct: false
+          - text: — Звідки ти? — Я у США.
+            correct: false
+        explanation: Зі avoids the consonant cluster before США. The question asks for origin; у США gives location.
+      - prompt: 'Choose the correct Ukrainian version: Я з місто Львів.'
         options:
-          - 'Я зі Львова. (або Я з міста Львова)'
-          - 'Я зі Львова.'
-          - 'Я з місто Львів.'
-        explanation: 'In speech, say the city name in the from-place form.'
+          - text: Я зі Львова.
+            correct: true
+          - text: Я зі Львів.
+            correct: false
+          - text: Я з міста Львові.
+            correct: false
+        explanation: Зі takes the genitive form Львова.
   - type: fill-in
     title: Country, city, current home
     instruction: Complete each short introduction with a safe learned phrase.
@@ -319,15 +359,15 @@ workbook:
     title: Ask the right place question
     instruction: Match each answer with the question it answers.
     pairs:
-      - left: 'Я в Україні.'
-        right: 'Де ти?'
-      - left: 'Я їду в Україну.'
-        right: 'Куди ти їдеш?'
-      - left: 'Я з України.'
-        right: 'Звідки ти?'
-      - left: 'Я у Києві.'
-        right: 'Де ти зараз живеш?'
-      - left: 'Я з Києва.'
-        right: 'З якого міста ти?'
-      - left: 'Я йду з роботи.'
-        right: 'Звідки ти йдеш?'
+      - left: Я в Україні.
+        right: У якій країні ти зараз?
+      - left: Я їду в Україну.
+        right: Куди ти їдеш?
+      - left: Я з України.
+        right: З якої країни ти?
+      - left: Я у Києві.
+        right: У якому місті ти зараз живеш?
+      - left: Я з Києва.
+        right: З якого міста ти?
+      - left: Я йду з роботи.
+        right: Звідки ти йдеш?

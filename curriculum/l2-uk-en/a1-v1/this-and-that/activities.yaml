@@ -3,7 +3,7 @@ inline:
   - id: act-1
     type: quiz
     title: Цей, ця чи це?
-    instruction: Choose the near pointing word for the noun.
+    instruction: Choose the near pointing word that agrees with the noun.
     items:
       - prompt: стіл
         options:
@@ -11,7 +11,7 @@ inline:
             correct: true
           - text: ця стіл
             correct: false
-          - text: це стіл
+          - text: ці стіл
             correct: false
         explanation: Стіл is masculine, so use цей.
       - prompt: книга
@@ -20,7 +20,7 @@ inline:
             correct: true
           - text: цей книга
             correct: false
-          - text: це книга
+          - text: ці книга
             correct: false
         explanation: Книга is feminine, so use ця.
       - prompt: вікно
@@ -47,7 +47,7 @@ inline:
             correct: true
           - text: ця телефон
             correct: false
-          - text: це телефон
+          - text: ці телефон
             correct: false
         explanation: Телефон is masculine, so use цей.
       - prompt: сумка
@@ -56,7 +56,7 @@ inline:
             correct: true
           - text: цей сумка
             correct: false
-          - text: це сумка
+          - text: ці сумка
             correct: false
         explanation: Сумка is feminine, so use ця.
       - prompt: рюкзак
@@ -65,7 +65,7 @@ inline:
             correct: true
           - text: ця рюкзак
             correct: false
-          - text: це рюкзак
+          - text: ці рюкзак
             correct: false
         explanation: Рюкзак is masculine, so use цей.
       - prompt: дерево
@@ -217,9 +217,9 @@ inline:
   - id: act-5
     type: quiz
     title: L2-пастки
-    instruction: Choose the repaired Ukrainian sentence or the clearer variant.
+    instruction: Choose the repaired Ukrainian sentence.
     items:
-      - prompt: "На столі лежить книга. Обери речення про неї."
+      - prompt: На столі лежить книга. Обери речення про неї.
         options:
           - text: Це цікава книга.
             correct: true
@@ -227,7 +227,7 @@ inline:
             correct: false
           - text: Цей цікава книга.
             correct: false
-        explanation: "Це цікава книга has matching nominative forms. Книгу is accusative; цей is masculine. A sentence with є can also be grammatical when its forms agree."
+        explanation: Це цікава книга has matching nominative forms. Книгу is accusative; цей is masculine. A sentence with є can also be grammatical when its forms agree.
       - prompt: 'Fix the sentence: Я хочу купити цей сумку.'
         options:
           - text: Я хочу купити цю сумку.
@@ -255,15 +255,15 @@ inline:
           - text: Що этот? — Этот стіл.
             correct: false
         explanation: Keep the whole question and answer in Ukrainian.
-      - prompt: Choose the unambiguous variant.
+      - prompt: Choose the sentence whose pointing word agrees with книга.
         options:
           - text: У кімнаті є та книга і ручка.
             correct: true
-          - text: У кімнаті є та книга та ручка.
+          - text: У кімнаті є той книга і ручка.
             correct: false
           - text: У кімнаті є ця книга ця ручка.
             correct: false
-        explanation: Use і for the list when та already means that.
+        explanation: Книга is feminine, so use та here. Той is masculine.
 workbook:
   - type: quiz
     title: Чіткий вибір із «чи»
@@ -305,15 +305,15 @@ workbook:
           - text: Який ручки — цей синій чи той зелений?
             correct: false
         explanation: Ручки is plural, so use які, ці, ті.
-      - prompt: Make the list clearer.
+      - prompt: Choose the sentence whose pointing word agrees with книга.
         options:
           - text: У кімнаті є та книга і ручка.
             correct: true
-          - text: У кімнаті є та книга та ручка.
+          - text: У кімнаті є той книга і ручка.
             correct: false
           - text: У кімнаті є ця книга ця ручка.
             correct: false
-        explanation: Use і for the list when та already means that.
+        explanation: Книга is feminine, so use та here. Той is masculine.
       - prompt: Which phone, this one or that one?
         options:
           - text: Який телефон — цей чи той?
@@ -383,47 +383,52 @@ workbook:
           - Той
           - Та
         explanation: Plural far things use ті.
-  - type: error-correction
+  - type: quiz
     title: Виправ демонстративні пастки
-    instruction: Read the learner trap and choose the repaired Ukrainian phrase.
+    instruction: Choose the correct Ukrainian version of each line.
     items:
-      - sentence: Це є цікава книга
-        error: Це є цікава книга
-        answer: Це цікава книга
+      - prompt: 'Choose the correct Ukrainian version: Це є цікава книгу'
         options:
-          - Це цікава книга
-          - Цей цікава книга
-          - Це є цікава книга
-        explanation: Drop є in this present-tense sentence.
-      - sentence: Я хочу купити цей сумку
-        error: Я хочу купити цей сумку
-        answer: Я хочу купити цю сумку
+          - text: Це цікава книга
+            correct: true
+          - text: Цей цікава книга
+            correct: false
+          - text: Це є цікава книгу
+            correct: false
+        explanation: Use nominative книга with цікава. Є may be present or omitted; it is not the error.
+      - prompt: 'Choose the correct Ukrainian version: Я хочу купити цей сумку'
         options:
-          - Я хочу купити цю сумку
-          - Я хочу купити цей сумку
-          - Я хочу купити це сумку
+          - text: Я хочу купити цю сумку
+            correct: true
+          - text: Я хочу купити цей сумку
+            correct: false
+          - text: Я хочу купити це сумку
+            correct: false
         explanation: Use the safe phrase цю сумку.
-      - sentence: Ця біль у спині сильна
-        error: Ця біль у спині сильна
-        answer: Цей біль у спині сильний
+      - prompt: 'Choose the correct Ukrainian version: Ця біль у спині сильний'
         options:
-          - Цей біль у спині сильний
-          - Ця біль у спині сильна
-          - Це біль у спині сильне
-        explanation: Біль is masculine.
-      - sentence: Что это? — Это стіл
-        error: Что это? — Это стіл
-        answer: Що це? — Це стіл
+          - text: Цей біль у спині сильний
+            correct: true
+          - text: Ця біль у спині сильний
+            correct: false
+          - text: Ці біль у спині сильний
+            correct: false
+        explanation: Біль meaning pain is masculine, so use Цей with сильний. Ця is feminine; Ці is plural.
+      - prompt: 'Choose the correct Ukrainian version: Что это? — Это стіл'
         options:
-          - Що це? — Це стіл
-          - Что это? — Это стіл
-          - Що этот? — Этот стіл
+          - text: Що це? — Це стіл
+            correct: true
+          - text: Что это? — Это стіл
+            correct: false
+          - text: Що этот? — Этот стіл
+            correct: false
         explanation: Keep the whole sentence in Ukrainian.
-      - sentence: У кімнаті є та книга та ручка
-        error: У кімнаті є та книга та ручка
-        answer: У кімнаті є та книга і ручка
+      - prompt: 'Choose the correct Ukrainian version: У кімнаті є той книга і ручка'
         options:
-          - У кімнаті є та книга і ручка
-          - У кімнаті є та книга та ручка
-          - У кімнаті є ця книга ця ручка
-        explanation: This is a style repair for clarity, not a grammar ban.
+          - text: У кімнаті є та книга і ручка
+            correct: true
+          - text: У кімнаті є той книга і ручка
+            correct: false
+          - text: У кімнаті є ця книга ця ручка
+            correct: false
+        explanation: Книга is feminine, so use та here. Той is masculine. Both і and та can connect list items; the error repaired here is agreement.

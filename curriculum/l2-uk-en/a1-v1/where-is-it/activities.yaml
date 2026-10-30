@@ -236,18 +236,52 @@ inline:
             correct: false
         explanation: Площа changes to площі after на.
 workbook:
-  - type: order
+  - type: fill-in
     title: Build the neighbor note
-    instruction: Put the note in an order that moves from greeting to places to personal context.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Добрий день! Де банк?'
-      - 'Банк у центрі, біля пошти.'
-      - 'Пошта на площі.'
-      - 'Я працюю в офісі.'
-      - 'Моя сестра вчиться в школі.'
-      - 'Ми живемо в Україні, у Києві.'
-    correct_order: [0, 1, 2, 3, 4, 5]
+      - sentence: Добрий день! Де ___?
+        answer: банк
+        options:
+          - банк
+          - банку
+          - банком
+        explanation: Банк is the subject of the question.
+      - sentence: Банк у ___, біля пошти.
+        answer: центрі
+        options:
+          - центрі
+          - центр
+          - центром
+        explanation: Use the place phrase у центрі.
+      - sentence: Пошта на ___.
+        answer: площі
+        options:
+          - площі
+          - площа
+          - площею
+        explanation: Use the place phrase на площі.
+      - sentence: Я ___ в офісі.
+        answer: працюю
+        options:
+          - працюю
+          - працює
+          - працюють
+        explanation: Я takes працюю.
+      - sentence: Моя сестра ___ в школі.
+        answer: вчиться
+        options:
+          - вчиться
+          - вчишся
+          - вчаться
+        explanation: Моя сестра takes вчиться.
+      - sentence: Ми ___ в Україні, у Києві.
+        answer: живемо
+        options:
+          - живемо
+          - живе
+          - живеш
+        explanation: Ми takes живемо.
   - type: odd-one-out
     title: Which question fits?
     instruction: Choose the line that does not match the question pattern.
@@ -299,35 +333,35 @@ workbook:
     title: Repair locative forms
     instruction: Choose the natural Ukrainian repair for each learner sentence.
     items:
-      - sentence: 'Я живу в Київ.'
-        error: 'в Київ'
-        correction: 'Я живу в Києві.'
+      - sentence: Я живу в Київ.
+        error: Київ
+        correction: Я живу в Києві.
         options:
-          - 'Я живу в Києві.'
-          - 'Я живу в Київ.'
-          - 'Я живу у Київ.'
+          - Я живу в Києві.
+          - Я живу в Київ.
+          - Я живу у Київ.
         explanation: Static city location needs the locative form Києві.
-      - sentence: 'Книга столі.'
-        error: 'столі'
-        correction: 'Книга на столі.'
+      - sentence: Книга столі.
+        error: столі
+        correction: Книга на столі.
         options:
-          - 'Книга на столі.'
-          - 'Книга столі.'
-          - 'Книга в стіл.'
+          - Книга на столі.
+          - Книга столі.
+          - Книга в стіл.
         explanation: Ukrainian locative place phrases normally need a preposition.
-      - sentence: 'Я в пошті.'
-        error: 'в пошті'
-        correction: 'Я на пошті.'
+      - sentence: Я на пошта.
+        error: пошта
+        correction: Я на пошті.
         options:
-          - 'Я на пошті.'
-          - 'Я в пошті.'
-          - 'Я у пошта.'
-        explanation: The common institution phrase is на пошті.
-      - sentence: 'Він іде в школі.'
-        error: 'в школі'
-        correction: 'Він іде в школу.'
+          - Я на пошті.
+          - Я на пошта.
+          - Я до пошті.
+        explanation: Use the common place phrase на пошті.
+      - sentence: — Куди він іде? — Він іде в школі.
+        error: школі
+        correction: — Куди він іде? — Він іде в школу.
         options:
-          - 'Він іде в школу.'
-          - 'Він іде в школі.'
-          - 'Він є в школі.'
-        explanation: Іде asks Куди?, so this is direction, not static Де?
+          - — Куди він іде? — Він іде в школу.
+          - — Куди він іде? — Він іде в школі.
+          - — Куди він іде? — Він іде школа.
+        explanation: The question куди? requests a destination. A locative phrase can describe where movement happens, but it does not answer this destination question.

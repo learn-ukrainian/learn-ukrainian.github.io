@@ -86,7 +86,7 @@ inline:
             correct: true
           - text: стола
             correct: false
-          - text: столів
+          - text: стіл
             correct: false
         explanation: The A1 pair is стіл - столи.
       - prompt: книга
@@ -122,7 +122,7 @@ inline:
             correct: true
           - text: телефона
             correct: false
-          - text: телефонів
+          - text: телефон
             correct: false
         explanation: Телефон becomes телефони in this nominative plural pattern.
       - prompt: зошит
@@ -131,7 +131,7 @@ inline:
             correct: true
           - text: зошита
             correct: false
-          - text: зошитів
+          - text: зошит
             correct: false
         explanation: Зошит becomes зошити.
       - prompt: ручка
@@ -216,24 +216,24 @@ inline:
   - id: act-4
     type: group-sort
     title: Однина чи множина
-    instruction: Sort each noun as one thing or many things.
+    instruction: Sort each pointing phrase as one thing or many things.
     groups:
       - label: Однина
         items:
-          - стіл
-          - книга
-          - вікно
-          - стілець
-          - лампа
-          - крісло
+          - цей стіл
+          - ця книга
+          - це вікно
+          - цей стілець
+          - ця лампа
+          - це крісло
       - label: Множина
         items:
-          - столи
-          - книги
-          - вікна
-          - стільці
-          - лампи
-          - крісла
+          - ці столи
+          - ці книги
+          - ці вікна
+          - ці стільці
+          - ці лампи
+          - ці крісла
 workbook:
   - type: match-up
     title: Пари для пам'яті

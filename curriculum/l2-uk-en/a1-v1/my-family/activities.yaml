@@ -210,99 +210,100 @@ inline:
           - твоє
         explanation: Родичі — множина.
 workbook:
-  - type: error-correction
+  - type: quiz
     title: Обери українське родинне речення
-    instruction: Обери безпечніший український рядок.
+    instruction: Choose the correct Ukrainian version of each line.
     items:
-      - sentence: Моє ім'я є Джон.
-        error: Моє ім'я є Джон.
-        correction: Мене звати Джон.
+      - prompt: 'Choose the correct Ukrainian version: Мені звати Джон.'
         options:
-          - Мене звати Джон.
-          - Моє ім'я є Джон.
-        explanation: Мене звати... — природна модель першого представлення.
-      - sentence: Я маю брата.
-        error: Я маю брата.
-        correction: У мене є брат.
+          - text: Мене звати Джон.
+            correct: true
+          - text: Мені звати Джон.
+            correct: false
+        explanation: 'Use Мене звати Джон. The person named is the object of звати: мене fits; dative мені does not. A grammatical sentence with є is not an error.'
+      - prompt: 'Choose the correct Ukrainian version: Я маю брат.'
         options:
-          - У мене є брат.
-          - Я маю брата.
-        explanation: Для родини на A1 вживай безпечний блок У мене є...
-      - sentence: Це мій мама.
-        error: Це мій мама.
-        correction: Це моя мама.
+          - text: Я маю брата.
+            correct: true
+          - text: Я маю брат.
+            correct: false
+        explanation: 'Мати can express possession. Use брата as the object: Я маю брата. У мене є брат is another valid expression.'
+      - prompt: 'Choose the correct Ukrainian version: Це мій мама.'
         options:
-          - Це моя мама.
-          - Це мій мама.
+          - text: Це моя мама.
+            correct: true
+          - text: Це мій мама.
+            correct: false
         explanation: Мама — жіночого роду, тому вживай моя.
-      - sentence: Це є мій брат.
-        error: Це є мій брат.
-        correction: Це мій брат.
+      - prompt: 'Choose the correct Ukrainian version: Це є мій брати.'
         options:
-          - Це мій брат.
-          - Це є мій брат.
-        explanation: У простому фото-реченні є не потрібне.
-      - sentence: "Це мій батьки. Його звати Петро."
-        error: "Це мій батьки."
-        correction: "Це мій батько."
+          - text: Це мій брат.
+            correct: true
+          - text: Це є мій брати.
+            correct: false
+        explanation: Мій is singular, so use брат. Both Це мій брат and Це є мій брат can identify one brother.
+      - prompt: 'Choose the correct Ukrainian version: Це мій батьки. Його звати Петро.'
         options:
-          - Це мій батько.
-          - Це моє батько.
-          - Це моя батько.
-        explanation: "Батьки means parents or several fathers. Його звати Петро establishes one man, so use singular батько with мій. Моє is neuter; моя is feminine."
-      - sentence: У мене немає брат.
-        error: У мене немає брат.
-        correction: Ні.
+          - text: Це мій батько.
+            correct: true
+          - text: Це моє батько.
+            correct: false
+          - text: Це моя батько.
+            correct: false
+        explanation: Батьки means parents or several fathers. Його звати Петро establishes one man, so use singular батько with мій. Моє is neuter; моя is feminine.
+      - prompt: 'Choose the correct Ukrainian version: У мене немає брат.'
         options:
-          - Ні.
-          - У мене немає брат.
-        explanation: На A1 відповідай коротко; повний блок із немає буде пізніше.
+          - text: У мене немає брата.
+            correct: true
+          - text: У мене немає брат.
+            correct: false
+        explanation: Use the phrase У мене немає брата. Брата is the form used after немає here; the complete sentence preserves the original assertion.
   - type: fill-in
-    title: Обери українську родинну норму
-    instruction: Обери українське слово для звичайної родинної розмови.
+    title: Родинні слова в реченнях — Family words in sentences
+    instruction: Обери слово, яке підходить до речення. — Choose the word that fits the sentence.
     items:
       - sentence: Моя ___ — вчителька.
         answer: дружина
         options:
           - дружина
-          - жена
-        explanation: Для wife вживай дружина; жена — російська форма.
+          - дружину
+        explanation: Моя needs nominative дружина here. Дружину is accusative.
       - sentence: Мій ___ працює в лікарні.
         answer: чоловік
         options:
           - чоловік
-          - муж
-        explanation: У звичайній родинній розмові вживай чоловік; муж — старше або піднесене слово.
+          - чоловіка
+        explanation: The subject is Мій чоловік. Чоловіка is an oblique case form.
       - sentence: Це моя ___ Тетяна.
         answer: бабуся
         options:
           - бабуся
-          - бабушка
-        explanation: Бабуся — українське слово для grandmother.
+          - бабусю
+        explanation: Use nominative бабуся after Це моя. Бабусю does not fit this sentence frame.
       - sentence: У нас велика родина — близько десяти ___.
         answer: родичів
         options:
           - родичів
-          - родственників
-        explanation: Родичі — українське слово для relatives; у цьому реченні форма родичів уже дана як готовий блок.
+          - родичі
+        explanation: Близько десяти takes родичів here. Родичі does not fit this quantity phrase.
       - sentence: Це ще маленька ___.
         answer: дитина
         options:
           - дитина
-          - ребьонок
-        explanation: Дитина — українське слово для child.
+          - дитину
+        explanation: Use nominative дитина with маленька. Дитину is accusative.
       - sentence: Це мій ___ брат.
         answer: молодший
         options:
           - молодший
-          - младший
-        explanation: Молодший означає менший за віком.
+          - молодша
+        explanation: Брат is masculine, so use молодший. Молодша is feminine.
       - sentence: Мій старший брат уже ___.
         answer: одружений
         options:
           - одружений
-          - женатий
-        explanation: Для married у цьому родинному реченні вживай одружений.
+          - одружена
+        explanation: Брат is masculine, so use одружений. Одружена is feminine.
   - type: group-sort
     title: Один / одна / два / дві
     instruction: Розподіли родинні фрази за числівником.

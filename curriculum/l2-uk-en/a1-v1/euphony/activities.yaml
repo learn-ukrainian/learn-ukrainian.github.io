@@ -99,7 +99,7 @@ inline:
     title: І чи й?
     instruction: Choose the smoother connector.
     items:
-      - prompt: 'Брат ___ сестра в школі.'
+      - prompt: Брат ___ сестра в школі.
         options:
           - text: і
             correct: true
@@ -108,16 +108,16 @@ inline:
           - text: у
             correct: false
         explanation: Between consonants, і is easier than й.
-      - prompt: 'Мама ___ тато в театрі.'
+      - prompt: Мама ___ тато в театрі.
         options:
           - text: й
             correct: true
-          - text: і
+          - text: до
             correct: false
           - text: з
             correct: false
-        explanation: After мама, й тато sounds smooth.
-      - prompt: 'Ти ___ Олена йдете в театр?'
+        explanation: Мама й тато joins two nominative subjects. The prepositions до and з do not fit the following nominative тато.
+      - prompt: Ти ___ Олена йдете в театр?
         options:
           - text: й
             correct: true
@@ -126,7 +126,7 @@ inline:
           - text: у
             correct: false
         explanation: Ти й Олена is the planned smooth pattern.
-      - prompt: 'Я ___ Максим ідемо в парк.'
+      - prompt: Я ___ Максим ідемо в парк.
         options:
           - text: і
             correct: true
@@ -135,7 +135,7 @@ inline:
           - text: в
             correct: false
         explanation: Я і Максим keeps the й-sound from crowding the line.
-      - prompt: 'Марія ___ Яна в місті.'
+      - prompt: Марія ___ Яна в місті.
         options:
           - text: і
             correct: true
@@ -144,7 +144,7 @@ inline:
           - text: з
             correct: false
         explanation: Before Яна, keep і because я begins with a й-sound.
-      - prompt: 'Іван ___ Яна в офісі.'
+      - prompt: Іван ___ Яна в офісі.
         options:
           - text: і
             correct: true
@@ -153,7 +153,7 @@ inline:
           - text: у
             correct: false
         explanation: Before Яна, і is safer and clearer.
-      - prompt: 'Олена ___ Анна вдома.'
+      - prompt: Олена ___ Анна вдома.
         options:
           - text: й
             correct: true
@@ -162,7 +162,7 @@ inline:
           - text: в
             correct: false
         explanation: After a vowel before Анна, й makes the line smoother.
-      - prompt: '___ він іде?'
+      - prompt: ___ він іде?
         options:
           - text: І
             correct: true
@@ -176,42 +176,42 @@ inline:
     title: З, із чи зі?
     instruction: Complete each short phrase with the smooth form.
     items:
-      - sentence: 'Я йду ___ школи.'
+      - sentence: Я йду ___ школи.
         answer: зі
         options:
           - зі
           - з
           - на
         explanation: Зі школи is a common smooth A1 phrase.
-      - sentence: 'Софія ___ мною.'
+      - sentence: Софія ___ мною.
         answer: зі
         options:
           - зі
-          - з
-          - із
-        explanation: Зі мною is the common smooth form.
-      - sentence: 'Він ___ Одеси.'
+          - до
+          - від
+        explanation: Зі мною is the familiar phrase here. До and від do not fit the form мною.
+      - sentence: Він ___ Одеси.
         answer: з
         options:
           - з
           - зі
           - в
         explanation: Before a vowel, з Одеси is smooth.
-      - sentence: 'Іван ___ другом.'
+      - sentence: Я ___ другом.
         answer: з
         options:
           - з
-          - зі
-          - й
-        explanation: З другом is a simple smooth phrase.
-      - sentence: 'Максим ___ сестрою.'
+          - до
+          - від
+        explanation: After the vowel in Я, з другом is smooth. До and від do not fit the form другом.
+      - sentence: Максим ___ сестрою.
         answer: із
         options:
           - із
           - з
           - в
         explanation: Із сестрою avoids a hard consonant cluster.
-      - sentence: '___ святом!'
+      - sentence: ___ святом!
         answer: Зі
         options:
           - Зі
@@ -223,58 +223,58 @@ inline:
     title: Which line sounds natural?
     instruction: Choose the smoother complete sentence.
     items:
-      - prompt: 'Choose the natural place line.'
+      - prompt: Choose the natural place line.
         options:
-          - text: 'Я живу в Києві.'
+          - text: Я живу в Києві.
             correct: true
-          - text: 'Я живу у Києві.'
+          - text: Я живу у Києві.
             correct: false
-          - text: 'Я живу з Києві.'
+          - text: Я живу з Києві.
             correct: false
         explanation: After живу, в Києві is smoother.
-      - prompt: 'Choose the natural Lviv line.'
+      - prompt: Choose the natural Lviv line.
         options:
-          - text: 'Сестра у Львові.'
+          - text: Сестра у Львові.
             correct: true
-          - text: 'Сестра в Львові.'
+          - text: Сестра в Львові.
             correct: false
-          - text: 'Сестра зі Львові.'
+          - text: Сестра зі Львові.
             correct: false
         explanation: Use у before Львові.
-      - prompt: 'Choose the natural family line.'
+      - prompt: Choose the natural family line.
         options:
-          - text: 'Брат і сестра в школі.'
+          - text: Брат і сестра в школі.
             correct: true
-          - text: 'Брат й сестра в школі.'
+          - text: Брат й сестра в школі.
             correct: false
-          - text: 'Брат у сестра в школі.'
+          - text: Брат у сестра в школі.
             correct: false
         explanation: Between consonants, use і.
-      - prompt: 'Choose the natural parents line.'
+      - prompt: Choose the natural parents line.
         options:
-          - text: 'Мама й тато в театрі.'
+          - text: Мама й тато в театрі.
             correct: true
-          - text: 'Мама і тато в театрі.'
+          - text: Мама і татом в театрі.
             correct: false
-          - text: 'Мама з тато в театрі.'
+          - text: Мама з тато в театрі.
             correct: false
-        explanation: Мама й тато is the smoother pattern here.
-      - prompt: 'Choose the natural school line.'
+        explanation: Мама й тато coordinates two nominative subjects. The alternatives і татом and з тато do not fit that construction.
+      - prompt: Choose the natural school line.
         options:
-          - text: 'Я йду зі школи.'
+          - text: Я йду зі школи.
             correct: true
-          - text: 'Я йду з школи.'
+          - text: Я йду з школи.
             correct: false
-          - text: 'Я йду в школи.'
+          - text: Я йду в школи.
             correct: false
         explanation: Зі школи avoids the hard з шк cluster.
-      - prompt: 'Choose the natural greeting.'
+      - prompt: Choose the natural greeting.
         options:
-          - text: 'Зі святом!'
+          - text: Зі святом!
             correct: true
-          - text: 'З святом!'
+          - text: З святом!
             correct: false
-          - text: 'Й святом!'
+          - text: Й святом!
             correct: false
         explanation: Зі святом is the fixed smooth greeting.
 workbook:
@@ -283,108 +283,114 @@ workbook:
     instruction: Choose the line that does not sound smooth.
     items:
       - words:
-          - 'Я живу в Києві.'
-          - 'Я живу у Львові.'
-          - 'У місті цікаво.'
-          - 'Сестра в Львові.'
-        answer: 'Сестра в Львові.'
+          - Я живу в Києві.
+          - Я живу у Львові.
+          - У місті цікаво.
+          - Сестра в Львові.
+        answer: Сестра в Львові.
         explanation: Use у Львові to avoid the heavy cluster.
       - words:
-          - 'Брат і сестра.'
-          - 'Мама й тато.'
-          - 'Марія і Яна.'
-          - 'Брат й сестра.'
-        answer: 'Брат й сестра.'
+          - Брат і сестра.
+          - Мама й тато.
+          - Марія і Яна.
+          - Брат й сестра.
+        answer: Брат й сестра.
         explanation: Between consonants, use і.
       - words:
-          - 'Вона в школі.'
-          - 'Тарас у школі.'
-          - 'Максим у банку.'
-          - 'Вона у школі.'
-        answer: 'Вона у школі.'
+          - Вона в школі.
+          - Тарас у школі.
+          - Максим у банку.
+          - Вона у школі.
+        answer: Вона у школі.
         explanation: After Вона, use в школі.
       - words:
-          - 'зі мною'
-          - 'зі святом'
-          - 'з Одеси'
-          - 'з мною'
-        answer: 'з мною'
-        explanation: Зі мною is the common smooth phrase.
+          - зі мною
+          - зі святом
+          - з Одеси
+          - до мною
+        answer: до мною
+        explanation: До does not fit the form мною. Зі мною is the familiar smooth phrase.
   - type: true-false
     title: Pause and beginning checks
     instruction: Decide whether the euphony choice fits the sentence edge or pause.
     items:
-      - statement: 'У парку тепло.'
+      - statement: У парку тепло.
         answer: true
         explanation: At the start before a consonant, У is smooth.
-      - statement: 'В офісі тихо.'
+      - statement: В офісі тихо.
         answer: true
         explanation: At the start before a vowel, В is smooth.
-      - statement: 'Так, у нас є час.'
+      - statement: Так, у нас є час.
         answer: true
         explanation: After a pause, у нас is natural.
-      - statement: 'В місті цікаво.'
+      - statement: В Львові цікаво.
         answer: false
-        explanation: At the start before місті, use У місті.
-      - statement: 'І він іде.'
+        explanation: 'Before Львові, use У regardless of the preceding sound: У Львові цікаво.'
+      - statement: І він іде.
         answer: true
         explanation: At the beginning, І is safe.
-      - statement: 'Марія й Яна в аптеці.'
+      - statement: Марія й Яна в аптеці.
         answer: false
         explanation: 'Before Яна, keep і: Марія і Яна.'
   - type: order
     title: Read the city note aloud
-    instruction: Put the note in an order that moves from place to people to plan.
+    instruction: Put these events from the same afternoon in time order.
     is_ukrainian: true
     items:
-      - 'У місті є школа.'
-      - 'В офісі працює Іван.'
-      - 'Мама й тато в парку.'
-      - 'Брат і сестра йдуть у театр.'
-      - 'Софія зі мною.'
-      - 'У вівторок ми йдемо в кіно.'
-    correct_order: [0, 1, 2, 3, 4, 5]
+      - О першій я гуляю у Львові.
+      - О другій я працюю в офісі.
+      - О третій мама й тато в парку.
+      - О четвертій брат і сестра йдуть у театр.
+      - О п'ятій Софія зі мною.
+      - О шостій ми йдемо в кіно.
+    correct_order:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
   - type: error-correction
     title: Repair euphony interference
     instruction: Choose the smooth Ukrainian repair for each learner sentence.
     items:
-      - sentence: 'Вона у школі.'
-        error: 'у школі'
-        correction: 'Вона в школі.'
+      - sentence: Вона у школі.
+        error: у школі
+        correction: Вона в школі.
         options:
-          - 'Вона в школі.'
-          - 'Вона у школі.'
-          - 'Вона й школі.'
+          - Вона в школі.
+          - Вона у школі.
+          - Вона й школі.
         explanation: Вона ends in a vowel, so use в школі.
-      - sentence: 'Брат й сестра.'
-        error: 'й сестра'
-        correction: 'Брат і сестра.'
+      - sentence: Брат й сестра.
+        error: й сестра
+        correction: Брат і сестра.
         options:
-          - 'Брат і сестра.'
-          - 'Брат й сестра.'
-          - 'Брат у сестра.'
+          - Брат і сестра.
+          - Брат й сестра.
+          - Брат у сестра.
         explanation: Between consonants, use і.
-      - sentence: 'В місті цікаво.'
-        error: 'В місті'
-        correction: 'У місті цікаво.'
+      - sentence: В Львові цікаво.
+        error: В
+        correction: У Львові цікаво.
         options:
-          - 'У місті цікаво.'
-          - 'В місті цікаво.'
-          - 'Й місті цікаво.'
-        explanation: At the start before a consonant, use У.
-      - sentence: 'Я йду з школи.'
-        error: 'з школи'
-        correction: 'Я йду зі школи.'
+          - У Львові цікаво.
+          - В Львові цікаво.
+          - Й Львові цікаво.
+        explanation: Before Львові, use У regardless of the preceding sound.
+      - sentence: Я йду з школи.
+        error: з школи
+        correction: Я йду зі школи.
         options:
-          - 'Я йду зі школи.'
-          - 'Я йду з школи.'
-          - 'Я йду в школи.'
+          - Я йду зі школи.
+          - Я йду з школи.
+          - Я йду в школи.
         explanation: Зі школи avoids the hard з шк cluster.
-      - sentence: 'З святом!'
-        error: 'З святом'
-        correction: 'Зі святом!'
+      - sentence: З святом!
+        error: З
+        correction: Зі святом!
         options:
-          - 'Зі святом!'
-          - 'З святом!'
-          - 'Й святом!'
+          - Зі святом!
+          - З святом!
+          - Й святом!
         explanation: Зі святом is the fixed smooth greeting.

@@ -105,7 +105,7 @@ inline:
         options:
           - Ця
           - Цей
-          - "Ці"
+          - Ці
         explanation: Вишиванка is feminine in this checkpoint scene.
       - sentence: ___ глечик старий.
         answer: Той
@@ -120,13 +120,13 @@ inline:
           - Це
           - Ця
           - Цей
-        explanation: Намисто is neuter, and це also works as "this is."
+        explanation: Намисто is neuter, so use це before намисто.
       - sentence: ___ писанки червоні.
         answer: Ці
         options:
           - Ці
           - Ця
-          - "Цей"
+          - Цей
         explanation: Писанки is plural, so use ці.
       - sentence: Ця сумка ___.
         answer: червона

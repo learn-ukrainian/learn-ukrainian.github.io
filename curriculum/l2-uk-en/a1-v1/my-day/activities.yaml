@@ -3,7 +3,7 @@ inline:
   - id: act-1
     type: group-sort
     title: Дія і час доби
-    instruction: Розподіли речення за часом доби. Години подано у 24-годинному форматі.
+    instruction: Розподіли речення за часом доби. Години подано у 24-годинному форматі. / Sort the sentences by part of the day. Times use the 24-hour format.
     groups:
       - label: ранок
         items:
@@ -106,51 +106,51 @@ inline:
     title: Типові пари у розпорядку дня
     instruction: Обери нормативну українську форму.
     items:
-      - sentence: 'Вранці я ___.'
+      - sentence: Вранці я ___.
         answer: беру душ
         options:
           - беру душ
           - бере душ
-        explanation: "With я, use беру. Бере is the third-person form."
-      - sentence: 'Коли я хворий, я ___.'
-        answer: "п'ю ліки"
+        explanation: With я, use беру. Бере is the third-person form.
+      - sentence: Коли я хворий, я ___.
+        answer: п'ю ліки
         options:
           - п'ю ліки
           - п'є ліки
-        explanation: "With я, use п'ю. П'є goes with він or вона."
-      - sentence: '___ зараз? — Восьма.'
+        explanation: With я, use п'ю. П'є goes with він or вона.
+      - sentence: ___ зараз? — Восьма.
         answer: Котра година
         options:
           - Котра година
           - Який час
         explanation: Для запитання про годинник уживаємо Котра година?
-      - sentence: '___ в парк після обіду!'
+      - sentence: ___ в парк після обіду!
         answer: Ходімо
         options:
           - Ходімо
           - Давайте підемо
-        explanation: Ходімо! подається як готовий чанк-запрошення.
-      - sentence: 'О восьмій годині я їм ___.'
+        explanation: Ходімо! is an invitation to go together.
+      - sentence: О восьмій годині я їм ___.
         answer: сніданок
         options:
           - сніданок
           - завтрак
         explanation: Українське слово - сніданок.
-      - sentence: 'Мама готує дуже ___ обід.'
+      - sentence: Мама готує дуже ___ обід.
         answer: смачний
         options:
           - смачний
           - вкусний
         explanation: Українське слово - смачний.
-      - sentence: 'Ввечері я хочу ___.'
+      - sentence: Ввечері я хочу ___.
         answer: поїсти
         options:
           - поїсти
           - поїла
-        explanation: "After хочу, use the infinitive поїсти. Поїла is a feminine past-tense form."
-      - sentence: 'О сьомій я ___ і встав.'
+        explanation: After хочу, use the infinitive поїсти. Поїла is a feminine past-tense form.
+      - sentence: О сьомій я ___ і встав.
         answer: прокинувся
         options:
           - прокинувся
           - прокинулася
-        explanation: "Встав is masculine past, so pair it with прокинувся. Прокинулася is feminine."
+        explanation: Встав is masculine past, so pair it with прокинувся. Прокинулася is feminine.
