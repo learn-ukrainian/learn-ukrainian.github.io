@@ -513,7 +513,9 @@ and runs the seat through `agent_runtime.runner.invoke` with
 no dispatch context and no task-store grant. From the claim on, any failure spends the
 attempt. Runner failover is off, and a cancel unwinds the runtime, which kills the seat
 and tears the boundary down. The record attests a model only when the runtime observed it
-from the provider, and counts the ledger's receipts in `sources_mcp_call_count`.
+from the provider, and counts the ledger's receipts in `sources_mcp_call_count`. The seat's
+tool-call trace (names and arguments, redacted, no outputs) replaces the provider stream in
+the task's private stdout log, as evidence of its repository and Git context reads.
 
 ```bash
 "$PROJECT_PYTHON" -m scripts.review.prompts.render <manifest> --review-id R --attempt-id A \

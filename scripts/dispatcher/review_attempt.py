@@ -21,7 +21,7 @@ from __future__ import annotations
 import hashlib
 import subprocess
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -92,6 +92,7 @@ class Outcome:
     text: str | None
     sources_calls: int | None
     identity: dict
+    trace: list = field(default_factory=list)
 
 
 def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int]) -> Outcome:
@@ -159,8 +160,11 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     )
     ok = result.ok and bool(result.response.strip())
     error = None if ok else (result.failure_code or result.stderr_excerpt or "provider returned no successful response")
+    # Which tools the seat called with which arguments (no outputs): the evidence of its context reads.
+    calls = getattr(result, "tool_calls", None) or ()
+    trace = [{key: call.get(key) for key in ("name", "arguments", "timestamp")} for call in calls]
     return Outcome("done" if ok else "failed", error, result.response if ok else None,
-                   _ledger_count(ledger, plan.ledger_path), identity)
+                   _ledger_count(ledger, plan.ledger_path), identity, trace)
 
 
 def _route(spec: Any, record: dict) -> dict:
