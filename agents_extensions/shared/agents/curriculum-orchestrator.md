@@ -74,7 +74,7 @@ exists.
   the four-tab lesson structure; deployed pre-V7 output is not the target.
 - Maximum Ukrainian immersion except A1, where English scaffolding is by design; from A2 never raise
   the English share.
-- Folk content review is cross-family GPT ↔ Claude per `docs/folk-epic/folk-review-rubric.md`;
+- Folk content review uses the review-loop ukrainian seats, with no Claude seat (`docs/folk-epic/folk-review-rubric.md`);
   DeepSeek never reviews folk culture.
 - Ukrainian linguistic verification is inline, through `mcp__sources__*`: admit uncertainty and verify
   instead of inventing; treat Russianisms, Surzhyk, calques and paronyms as separate checks; authority

@@ -42,7 +42,7 @@ Policy here; facts: `scripts/config/model_catalog.yaml`; changes need `model-ass
 | Classification/triage; read-only recon/search | `claude-haiku-5-5` (recon peer: Luna) | — |
 | Routine code, English prose | `claude-sonnet-5-5` | `gpt-6.1-sol` |
 | Ukrainian authoring | `gpt-6.1-sol` · `gemini-3.8-flash-high` (A1–A2) | `claude-opus-5-5` |
-| Ukrainian review | `gemini-3.8-flash-high` + `sources` | `gpt-6.1-sol` · `claude-opus-5-5`; folk: GPT ↔ Claude |
+| Ukrainian review | `gemini-3.8-flash-high` + `sources` | `gpt-6.1-sol` |
 
 Claude Ukrainian: Opus 5.5. Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. Never routed or selected by resolvers, substitutions or ladders; no advisory, approval or review role (operator 2026-10-21). Former Astra: no advice, approval or review. Sol 6.1 @ high: orchestration, advanced coding, Ukrainian authoring and red-team. Luna @ high: scouting and bounded repeatable work; max only for unusually hard scouting. Luna/Haiku read-only recon/classification or workspace-write `bounded_implementation`: brief, owned paths, `--verify-command`; caller/brief SHA logged, no `--advisory-task`. No security, Ukrainian, review, design or driver roles. Other Luna/non-Ukrainian Flash needs a bound Sol envelope (`--advisory-task`). `start-claude-driver.sh`: `claude-opus-5-5[1m]` @ high; `--model`/`--effort` or `LAUNCHER_MODEL`/`LAUNCHER_EFFORT` override. `start-claude.sh`: Sonnet 5.5 + Opus advisor default; designated advice is separate. Claude workers: Sonnet 5.5; Opus 5.5 for complex or security work (2026-10-16). <!-- p2-table: M04 -->
 

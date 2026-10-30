@@ -176,7 +176,7 @@ Authoritative CF quality ladder remains in `model-assignment.md`; this doctrine 
 - **Gemini 3.1 Pro via AGY** is the designated UA specialist; outputs remain **hypotheses until VESUM/`sources`-backed**.
 - Code review and CF seat eligibility follow `model-assignment.md` Code review row.
 - VESUM validates **morphology/attestation** — not arbitrary cultural or historical claims.
-- FOLK: GPT↔Claude cultural gate; **no DeepSeek** for folk culture.
+- FOLK: the review-loop ukrainian seats, with no Claude seat; **no DeepSeek** for folk culture.
 
 ---
 

@@ -119,6 +119,26 @@ def test_accepted_successor_owns_from_another_branch_while_live():
     assert find(fork, records, {(REPO.casefold(), 42): "succ"}) == []
 
 
+def test_running_task_on_another_branch_is_not_ownerless_when_the_head_names_it():
+    """Defect class: a live owner reported as ownerless.
+
+    A running task whose PR is on a different branch, with that task's trailer on the PR head,
+    is not reported ownerless.
+    """
+    prs = [{
+        "number": 42,
+        "headRefName": "codex/x-rebuild",
+        "isCrossRepository": False,
+        "headRefOid": HEAD,
+        "commits": [{
+            "oid": HEAD,
+            "messageHeadline": "rebuild the branch",
+            "messageBody": "X-Agent: codex/worker-1",
+        }],
+    }]
+    assert find(prs, [task("worker-1", "codex/worker-1")]) == []
+
+
 def fake_proc(monkeypatch, files):
     """Serve /proc reads from ``files``: a string is content, an exception is raised."""
     real = own.Path.read_text
