@@ -25,6 +25,7 @@ from scripts.dispatcher import (
     providers,
     review_attempt,
     runtime_context,
+    scope,
     store,
     worker,
 )
@@ -258,6 +259,12 @@ def _dispatch(args) -> int:
         args.review_attempt = str(Path(args.review_attempt).resolve())
     if args.require_review_verdict and args.mode != "read-only":
         raise ValueError("--require-review-verdict requires --mode read-only")
+    # Resolved once, before anything reads the owned paths: the advisory binding, bounded admission, the
+    # sparse checkout and the task record all see this set, and hooks and settlement read it from the record.
+    args.owned_path, generated = scope.with_generated_outputs(args.owned_path)
+    for output in generated:
+        print(f"dispatcher: owned paths include {output}; a commit gate regenerates it from the owned paths",
+              file=sys.stderr)
     excluded = git.sparse_excludes(args.sparse_include, [*args.owned_path, *args.research_owned_path])
     if (args.prompt is None) == (args.prompt_file is None):
         raise ValueError("provide exactly one of --prompt or --prompt-file")
