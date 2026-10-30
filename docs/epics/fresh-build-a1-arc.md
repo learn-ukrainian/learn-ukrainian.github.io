@@ -531,13 +531,13 @@ and independent unseen-task evaluation remain with the curriculum-upgrade driver
 
 ## 12. Revision r5 (OHO)
 
-This revision grounds the A1 arc in Anna Ohoiko's *Oho! Ukrainian Grammar & Workbook A1* (2026; Sources store `owned-oho-a1-workbook`, chunks `p0001`–`p0230`; companion transcripts `owned-oho-a1-transcripts`, chunks `p0001`–`p0011`), evaluated alongside two independent read-only checks: Sol (`cto-e1f7-arcoho-sol.result`) and Gemini (`cto-e1f7-arcoho2-agy.result`).
+Revision r5 grounds the A1 course design in Anna Ohoiko's *Oho! Ukrainian Grammar & Workbook A1* (2024; repository artifact `owned-oho-a1-workbook`), providing an adult-oriented communicative foundation directly grounded in a modern L2 pedagogical textbook.
 
-Operator rules govern this revision:
-1. The OHO workbook glossary (pp. 200–216, chunks `p0200`–`p0216`) is the A1 minimum vocabulary floor.
-2. Items in *500 Verbs* and *1000 Words* outside this glossary belong to A2 and later.
-3. A1 retains English scaffolding throughout.
-4. Content is strictly A1; beyond-minimum items are acknowledged as A1+ departures or deferred to A2.
+The r5 design adheres to four principles:
+1. Anna Ohoiko's workbook glossary is the authoritative A1 minimum vocabulary baseline.
+2. Structure follows OHO where pedagogically advantageous for adult L2 learners, preserving clear alternatives where existing curriculum structures (such as ULP case ordering) hold distinct advantages.
+3. Every vocabulary entry has an explicit owning lesson position, contextual sense, and downstream reuse schedule.
+4. Content is strictly A1; beyond-minimum items are acknowledged as A1+ departures or deferred to A2 / B1.
 
 Each of the seven subsections (a)–(g) below is drafted with its exact OHO evidence as a separable decision for operator determination.
 
@@ -550,16 +550,21 @@ Each of the seven subsections (a)–(g) below is drafted with its exact OHO evid
   - **1,744** distinct headwords / lexical entries in the verified reference inventory (`registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml`), consisting of **1,652** single words and **92** multiword expressions/phrases, expanding gender pairs (e.g. `австралієць, ч.` / `австралійка, ж.`).
   - **1,750** members if the 6 orthographic/spelling variant pairs printed on the same line (`сільниця, сільничка`, `вчора, учора`, `вночі, уночі`, `ввечері, увечері`, `вранці, уранці`, `удень, вдень`) are expanded as distinct rows.
   - **1,738** unique base lemmas.
-  - **299** verb pairs in OHO's verb appendix (pp. 217–223), which are excluded from A1 and assigned to A2+ per the operator's rule.
+  - **299** verb pair members across **147** pair groups in OHO's verb appendix (pp. 217–223), which are excluded from A1 and assigned to A2+ per the operator's rule.
   - *Correction of prior reports:* Sol's check left full coverage unverified (`NOT CHECKED`). Gemini's check cited the 1,744 figure without line verification and hallucinated «ринва» as a phonetic drill word (neither «ринва» nor any derivative appears in the glossary or workbook text).
-- **Unplaceable entries: 0.** Every one of the 1,744 glossary entries is assigned to a specific owning position (1–55) with its contextual sense and downstream reuse positions:
-  - Cultural realia and state symbols (`герб`, `тризуб`, `прапор`, `писанка`, `вишиванка`, `калина`, `лелека`, `булава`, `Тарас Шевченко`) are owned by position 1 (`introduction-to-ukrainian`) as English-scaffolded cultural symbols, and position 5 (`reading-ukrainian`), with later reuse in 46 (`holidays`) and 55 (`a1-finale`).
-  - Clothing items (`блузка`, `кофта`, `куртка`, `майка`, `сорочка`, `спідниця`, `футболка`, `шарф`, `шкарпетка`, `шорти`, `штани`) are owned by position 39 (`shopping`), with reuse in 41 and 55.
-  - Digital, civic, and administrative terms (`інтернет`, `пароль`, `пін-код`, `онлайн`, `канал`, `натиснути`, `бюджет`, `резюме`, `кар'єра`, `зарплата`, `декрет`, `орендувати`, `коворкінг`, `конференція`) are owned by position 52 (`my-story`), position 5 (`reading-ukrainian`), and position 26 (`free-time`).
-  - Crisis, emergency, and contemporary defense terms (`військо`, `укриття`, `каска`, `повітряна тривога`) are owned by position 54 (`emergencies`); civic giving (`донатити`) is owned by position 26 (`free-time`).
-  - Phonetic demonstration words from Unit 1 (`ґава`, `ґанок`, `ґедзь`, `ґрунт`, `ґудзик`, `джміль`, `джерело`, `дзвін`, `дзвоник`, `дзеркало`, `хрущ`, `жук`, `рись`, `тин`, `булька`, `бук`) are owned by position 5 (`reading-ukrainian`) and position 24 (`weather`), exercising taught Cyrillic letters.
-  - Colloquial formulas (`байдуже` at 15; `дати п'ять`, `солодких снів` at 6) are owned by their conversational modules.
-  - Checkpoint modules (7, 14, 21, 27, 35, 41, 47) and finale (55) introduce 0 new entries, preserving invariant D4.
+- **Unplaceable entries: 0.** Every one of the 1,744 glossary entries is assigned to a specific owning position (2–54) with a verified Ukrainian contextual sense and downstream reuse schedule:
+  - Cultural realia and state symbols (`герб`, `тризуб` [stressed `тризу́б`], `прапор`, `писанка`, `вишиванка`, `калина`, `лелека`, `булава`, `Тарас Шевченко`) are owned by position 5 (`reading-ukrainian`) as reading demonstration words and cultural models, with downstream reuse in 46 (`holidays`) and 55 (`a1-finale`). Orientation position 1 introduces cultural concepts with English scaffolding and introduces 0 new Ukrainian vocabulary entries.
+  - Greetings and core politeness (`Добрий день!`, `Привіт!`, `Добрий ранок!`, `Добрий вечір!`, `До побачення!`, `Бувай!`, `Бувайте!`, `Дякую!`, `Будь ласка!`, `Перепрошую!`, `Вибачте!`, `так`, `ні`) are owned by position 2 (`sounds-letters-and-hello`).
+  - Personal identity and self-introduction (`Мене звати...`, `Моє прізвище...`, `Як вас звати?`, `Хто це?`, `Хто ви?`, `я`, `ти`, `він`, `вона`, `студент`, `викладач`, `інженер`, `лікар`, `українець`, `українка`, `австралієць`, `австралійка`, `Україна`, `Аргентина`, `Канада`, `Польща`) are owned by position 3 (`who-am-i`).
+  - Kinship and possession (`мама`, `тато`, `батько`, `мати`, `брат`, `сестра`, `родина`, `сім'я`, `бабуся`, `дідусь`, `син`, `дочка`, `коханий`, `кохана`, `чоловік`, `дружина`, `домашня тварина`, `пес`, `кіт`, `мій`, `твій`, `наш`, `ваш`) are owned by position 4 (`my-family`).
+  - Phonetic demonstration words from Unit 1 (`ґудзик`, `джем`, `дзеркало`, `дзвінок`, `юшка`, `їжа`, `бук`, `дуб`, `сон`, `дим`, `жук`, `рись`, `тин`, `булька`, `борщ`) are owned by position 5 (`reading-ukrainian`), exercising taught Cyrillic letters and sounds. (Earlier phantom words `ґанок`, `ґедзь`, `ґрунт`, `джміль`, `дзвін`, `дзвоник`, `хрущ`, `ґава` are absent from OHO and removed).
+  - Conversational turn-taking formulas (`Як справи?`, `Як ти?`, `Як ви?`, `Все добре`, `Чудово!`, `так собі`, `Дуже приємно!`, `дати п'ять`, `передати привіт`, `Солодких снів!`, `На добраніч!`) are owned by position 6 (`first-conversations`).
+  - Classroom, desk, and household objects with grammatical gender (`стіл`, `стілець`, `шафа`, `вікно`, `двері`, `зошит`, `підручник`, `ручка`, `олівець`, `книга`, `словник`, `дошка`, `папір`, `комп'ютер`, `телефон`, `лампа`, `диван`, `ліжко`, `рюкзак`, `гаманець`) are owned by position 8 (`things-have-gender`).
+  - Clothing and commercial transactions (`блузка`, `кофта`, `куртка`, `майка`, `сорочка`, `спідниця`, `футболка`, `шарф`, `шкарпетка`, `шорти`, `штани`, `взуття`, `кросівок`, `одяг`, `розмір`, `ціна`, `коштувати`, `знижка`, `купувати`, `продати`) are owned by position 39 (`shopping`), with downstream reuse in 41 and 55.
+  - Digital, civic, and professional identity terms (`інтернет`, `пароль`, `пін-код`, `онлайн`, `канал`, `натиснути`, `вайфай`, `сайт`, `пошта`, `електронна пошта`, `електронний лист`, `імейл`, `номер телефону`, `відеозвернення`, `знімати відео`, `бюджет`, `резюме`, `кар'єра`, `зарплата`, `декрет`, `орендувати`, `коворкінг`, `конференція`) are owned by position 52 (`my-story`), with downstream reuse in 55.
+  - Health, medical care, and bodily well-being (`здоров'я`, `хворий`, `боліти`, `голова`, `горло`, `живіт`, `рука`, `нога`, `спина`, `око`, `вухо`, `зуб`, `температура`, `лікар`, `ліки`, `таблетка`, `аптека`, `рецепт`, `карантин`, `застуда`) are owned by position 53 (`health`).
+  - Crisis, civil defense, emergency, and contemporary defense terms (`військо`, `укриття`, `каска`, `повітряна тривога`, `сирена`, `евакуація`, `безпека`, `поліція`, `поліціянтка`, `швидка допомога`, `пожежа`, `пожежна машина`, `повномасштабна війна`, `атомна війна`, `донатити` [colloquial]) are owned by position 54 (`emergencies`), with downstream reuse in 55.
+  - Checkpoint modules (7, 14, 21, 27, 35, 41, 47) and finale (55) introduce 0 new entries, strictly preserving invariant D4.
 
 ### (b) Case order
 
@@ -573,17 +578,28 @@ Each of the seven subsections (a)–(g) below is drafted with its exact OHO evid
     - Positions 38–40: Locative case system (place with в/на, city institutions, housing and rooms).
 - **Alternative (retaining ULP order):**
   - Keep Locative before Accusative: Place (positions 29–30) → Direction (position 31) → Object (positions 37, 40).
-  - *Stated reason for ULP alternative:* The locative case in Ukrainian has only prepositional uses (`у/в`, `на`) answering the essential communicative inquiry *де?* (у Києві, на роботі, в кімнаті). Its singular endings are uniform and regular, avoiding early case syncretism (accusative animate masculine matching genitive, and inanimate masculine/neuter matching nominative). Learning static location first provides learners a stable inflected noun foundation before tackling transitive direct objects and directional motion.
+  - *Pedagogical rationale for ULP alternative:* The locative case in Ukrainian serves the foundational communicative function of spatial orientation answering *де?* (*у Києві*, *на роботі*, *в кімнаті*). It uses a single prepositional frame (*у/в*, *на*) and lacks an animacy distinction for inanimate places (avoiding early case syncretism where accusative masculine animate matches genitive and inanimate matches nominative). Although locative singular exhibits multiple endings (`-і/-ї`, `-у/-ю`, `-ові/-еві`) and consonant alternations (*г→з, к→ц, х→с*), which OHO introduces progressively in Lesson 51 (pp. 123–125), learning static location first provides learners a stable spatial anchor before tackling directional motion and transitive direct objects.
+- **Comparison mapping:**
+
+| Position | Slug | OHO-following Sequence | Baseline / ULP Sequence |
+| :--- | :--- | :--- | :--- |
+| **15–16** | `what-i-like`, `verbs-group-one` | Early SVO inanimate direct object (*Я люблю каву*) | Early SVO inanimate direct object (*Я люблю каву*) |
+| **29** | `where-is-it` | Accusative of Direction (*куди? в/на*) | Locative of Static Place (*де? в/на*) |
+| **30** | `my-city` | Direction to City Places (*у місто, на пошту*) | Static Location in City (*у місті, на пошті*) |
+| **31** | `where-to` | Directional Motion (*їхати в Одесу*) | Directional Motion with Accusative (*їхати в Одесу*) |
+| **32–33** | `transport`, `around-the-city` | Transport Modes & Navigation | Transport Modes & Navigation |
+| **36–37** | `food-and-drink`, `i-eat-i-drink` | Transitive Objects (*їсти борщ, пити каву*) | Transitive Objects (*їсти борщ, пити каву*) |
+| **38–40** | `at-the-cafe`, `shopping`, `people-around-me` | Locative System (*у кафе, в магазині, на роботі*) | Genitive / Prepositional extensions |
 
 ### (c) First-ten conversational prerequisites
 
 - **OHO evidence:** OHO Unit 2 Lessons 11–17 (chunks W0037–W0050): personal pronouns and formal/informal address (*Як справи?*, *Як ти?*, *Як ви?*, Lesson 11); accusative personal pronouns (*Мене звати...*, *Як вас звати?*, Lesson 12); prepositional genitive pronouns of possession (*У мене є...*, Lesson 13); animate/inanimate questions (*Хто це?*, *Що це?*, Lesson 14); negation and polar yes/no questions (*Це ти? Ні, це не я.*, Lesson 15); conjunctions *і*, *й*, *та*, *а*, *або*, *чи* and alternative questions (*Це кава чи чай?*, Lessons 16–17).
 - **Arc adjustment:**
   - Shift conversational prerequisites into positions 2–6 before the first-contact checkpoint at position 7:
-    - **Position 2 (`sounds-letters-and-hello`):** Greeting formulas (*Привіт!*, *Добрий день!*, *Добрий ранок!*, *Добрий вечір!*), core gratitude and politeness (*Дякую!*, *Будь ласка!*), polar tokens (*Так*, *Ні*).
-    - **Position 3 (`who-am-i`):** Identity questions (*Хто це?*, *Хто ви?*, *Як вас звати? / Як тебе звати?*), formal/informal pronoun distinction (*ти* vs *ви*), first-person replies (*Мене звати...*, *Я студент...*), and basic negation (*Ні, я не...*).
-    - **Position 4 (`my-family`):** Possession questions (*Чи є у вас...?*, *У вас є...?*), affirmative possession (*У мене є...*), family address, and coordinating conjunction *і / й*.
-    - **Position 6 (`first-conversations`):** Sustained 4–6 turn exchanges combining formal and informal registers (*Як ви?* vs *Як ти?*), yes/no inquiries (*чи*), polar denial (*Це не я*), and basic contrastive/additive linking (*і*, *а*, *але*), completing the communicative prerequisite inventory prior to position 7 (`checkpoint-first-contact`).
+    - **Position 2 (`sounds-letters-and-hello`):** Greeting formulas (*Привіт!*, *Добрий день!*, *Добрий ранок!*, *Добрий вечір!*), core gratitude and politeness (*Дякую!*, *Будь ласка!*, *Перепрошую!*, *Вибачте!*), polar tokens (*Так*, *Ні*). Early greetings are taught as fixed oral formulaic chunks before all constituent letters are decoded.
+    - **Position 3 (`who-am-i`):** Identity questions (*Хто це?*, *Хто ви?*, *Як вас звати? / Як тебе звати?*), formal/informal pronoun distinction (*ти* vs *ви*), first-person replies (*Мене звати...*, *Моє прізвище...*, *Я студент...*), and basic negation (*Ні, я не...*). Learned as formulaic self-introduction patterns prior to case analysis.
+    - **Position 4 (`my-family`):** Possession questions (*Чи є у вас...?*, *У вас є...?*), affirmative possession (*У мене є...*), family address, personal pronouns, and coordinating conjunction *і / й*.
+    - **Position 6 (`first-conversations`):** Sustained 4–6 turn exchanges combining formal and informal registers (*Як ви?* vs *Як ти?*), status inquiries (*Все добре*, *Чудово!*, *так собі*), courtesy expressions (*Дуже приємно!*, *Солодких снів!*, *На добраніч!*), yes/no inquiries (*чи*), polar denial (*Це не я*), and basic contrastive/additive linking (*і*, *а*, *але*), completing the communicative prerequisite inventory prior to position 7 (`checkpoint-first-contact`).
 
 ### (d) Alphabet (Operator choice)
 
@@ -609,24 +625,25 @@ Each of the seven subsections (a)–(g) below is drafted with its exact OHO evid
 - **Positions 2–3 allocation:**
   - Pos 2: 12 letters across 5 estimated lessons (4 teaching + 1 recap) = exactly 3 letters per teaching lesson.
   - Pos 3: 9 letters across 4 estimated lessons (3 teaching + 1 recap) = exactly 3 letters per teaching lesson.
-  - *Result:* Positions 2–3 have zero spare teaching lessons if the recap is a standalone lesson.
-  - *Explicit rule:* In lessons introducing 3 new letters, no new grammar slice may be introduced; communicative phrases in positions 2–3 (greetings, *Мене звати*) must be handled as fixed lexical chunks. If a module embeds its recap in the final lesson (reducing Pos 2 to 4 lessons or Pos 3 to 3 lessons), either lesson count estimates must be expanded or the full-alphabet overview in subsection (d) adopted.
+  - *Result:* Positions 2–3 have zero spare teaching lessons if the recap is a dedicated standalone lesson.
+  - *Explicit rule:* In lessons introducing 3 new letters, no new grammar slice may be introduced; communicative phrases in positions 2–3 (greetings, *Мене звати*) must be handled as fixed lexical chunks.
+  - *Recap lesson integration:* Embedding recap and communicative integration within instructional lessons frees a full instructional lesson for conversational practice, avoiding standalone dead-end recaps.
 
 ### (f) OHO's A1+ items and numerals placement
 
 - **OHO evidence:** OHO chunk W0010 (author notes grammar scope is "A1+" with items exceeding the minimum standard); Unit 8 Lessons 56–60 (numerals); Unit 9 Lessons 63–65 (aspect pairs) and Lesson 67 (synthetic future); Unit 10 Lesson 72 (first-person plural imperative).
 - **Analysis against State Standard 2024:**
   1. **Verb Aspect Pairs** (OHO Lessons 63–65):
-     - *Standard reference:* Systematic aspect pair formation belongs to **A2** (`lines 1367–1375`). A1 includes only "first awareness" and "a few perfective futures" (`lines 718–719`).
+     - *Standard reference:* Systematic aspect pair formation (*робити – зробити*) belongs to **A2** (`lines 1380–1381`). Lines 1367–1375 treat degrees of comparison of adjectives. Standard A1 includes only "first awareness" and "a few perfective futures" (`lines 718–719`).
      - *Status:* **A1 retains first awareness only (selected perfectives at Pos 51); systematic aspect pairs begin at A2.**
   2. **Synthetic Future** (*питиму*, *робитиму*; OHO Lesson 67):
      - *Standard reference:* Standard A1 specifies only compound imperfective future with *бути* (`lines 715–717`). The synthetic future is classified at **B1** (`lines 2287–2289`), treated in ULP at Season 3 Lesson 98.
-     - *Status:* **A1 includes compound future only (Pos 50); synthetic future is excluded from A1 and deferred to B1/A2.**
+     - *Status:* **A1 includes compound future only (Pos 50); synthetic future is excluded from A1 and deferred to B1.**
   3. **First-Person Plural Imperative** (*ходімо!*, *перевірмо!*, *зробімо!*; OHO Lesson 72):
-     - *Standard reference:* Standard A1 imperative mood is restricted to **second person singular and plural only** (`lines 721–725`). First-person plural imperatives belong to **A2** (`lines 1380–1385`).
-     - *Status:* **A1 includes second person singular and plural only (Pos 43); first-person plural imperative belongs to A2.**
+     - *Standard reference:* Standard A1 imperative mood is restricted to **second person singular and plural only** (`lines 721–725`). First-person plural imperatives belong to **B1** (`lines 2293–2295`), inside the B1 section that begins at line 1434. Standard A2 (`lines 1361–1365`) covers second person (*роби/робіть*) and third person (*хай/нехай*) only.
+     - *Status:* **A1 includes second person singular and plural only (Pos 43); first-person plural imperative belongs to B1.**
   4. **Numerals Placement** (OHO Unit 8 vs Arc Pos 11):
-     - *Standard reference:* Cardinal numerals for prices, age, and phone numbers are listed under A1.2 (`lines 652–654`).
+     - *Standard reference:* Cardinal numerals for basic quantities, prices, age, and phone numbers are listed under A1 (`lines 638–645`). Line 629 indicates general morphological classes, while lines 652–654 specify ordinal numerals (*перший*, *перша*, *перше*).
      - *Status:* State both options:
        - *Option 1 (Keep at Pos 11):* Serves immediate communicative needs for age, phone numbers, and prices early in the course (ULP Season 1 Lesson 11).
        - *Option 2 (OHO placement):* Defer systematic 0–1000 cardinals to Unit 8 / Pos 22 (prior to clock time), keeping only fixed age and price formulas in early modules to reduce cognitive load.
