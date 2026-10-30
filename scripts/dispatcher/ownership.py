@@ -131,7 +131,8 @@ def _refusal(stage: str, record: dict, outside: list[str]) -> str:
         "Owned paths: " + ", ".join(shown(path) for path in record["owned_paths"]),
         "Settlement refuses any delivery that touches these paths. Resolve it one of two ways:",
         f"  1. Drop the change: {drop}.",
-        "  2. Stop and ask the coordinator that dispatched this task to re-scope it.",
+        "  2. Stop and report the path you need to the coordinator that dispatched this task. It can answer, "
+        "or start a new task with wider owned paths; it cannot widen this one.",
         "Never widen the owned paths yourself or bypass this hook.",
     ]
     if stage == "push":

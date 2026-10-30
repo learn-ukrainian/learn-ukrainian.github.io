@@ -96,6 +96,8 @@ def test_non_bounded_model_needs_no_advisory(launch, model):
     launch[launch.index("--model") + 1] = model
     if model == "gemini-3.8-flash-high":
         launch = [*launch[:-2], "--research-task-family", "ukrainian-authoring"]
+    else:
+        launch = launch[:-2]  # owned paths on a read-only non-review task are refused (#12141)
     assert cli.main(launch) == 0
     assert "advisory_envelope" not in store.read("worker")
 

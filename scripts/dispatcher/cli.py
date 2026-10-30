@@ -369,11 +369,18 @@ def _dispatch(args) -> int:
         or any((args.risk, args.review_mode, args.language_lane, args.subject_seat, args.subject_family, args.branch))
     ):
         checks.check_branch_author_families(args, repo, info, sha, args.model)
+    review = any((args.review_profile, args.language_lane, args.review_author_model, args.risk,
+                                   args.review_mode, args.pr, args.require_review_verdict, args.subject_seat,
+                                   args.subject_family))
+    # A read-only review resolves its subjects from owned paths, and a bounded or advisory task has them sealed
+    # by its envelope; any other read-only task cannot write them, so owned paths there mean the mode was
+    # forgotten (#12141).
+    if args.mode == "read-only" and args.owned_path and not (review or binding or advisory_fields):
+        raise ValueError("--owned-path on a read-only task that is not a review: a task that writes needs "
+                         "--mode workspace-write; owned paths on a read-only task only name a review's subjects")
     if args.subject_seat or args.subject_family or (args.mode == "read-only" and args.owned_path):
         exclusion = checks.check_review_subjects(agent, args.model, args.subject_seat, args.subject_family,
-                                                args.owned_path, review=any((args.review_profile, args.language_lane,
-                                                args.review_author_model, args.risk, args.review_mode, args.pr,
-                                                args.require_review_verdict, args.subject_seat, args.subject_family)))
+                                                args.owned_path, review=review)
         args.subject_seat, args.subject_family = sorted(exclusion.seats), sorted(exclusion.families)
         if (exclusion.seats or exclusion.families) and (
             (args.review_profile or "").strip().casefold() == "ukrainian" or args.language_lane
