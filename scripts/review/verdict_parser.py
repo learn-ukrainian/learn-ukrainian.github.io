@@ -312,8 +312,8 @@ def invalid_findings_block(response: str, *, stated: str | None = None) -> str |
             try:
                 validate_reviewer_payload(payload)
                 resolve_verdict_and_evidence(payload, stated=stated)
-            except (ContractError, ReviewPublicationError):
-                return "top-level findings block fails validation"
+            except (ContractError, ReviewPublicationError) as exc:
+                return f"top-level findings block fails validation: {exc}"
     except RecursionError:
         return "top-level blocks cannot be decided"
     return None

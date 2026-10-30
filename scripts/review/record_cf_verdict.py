@@ -70,6 +70,7 @@ from scripts.review.model_catalog import (
     load_model_catalog,
     resolve_catalog_model_id,
 )
+from scripts.review.review_contract import ContractError, validate_reviewer_payload
 from scripts.review.reviewer_resolver import (
     FORMAL_CURSOR_REVIEW_MODELS,
     REVIEW_CANDIDATES,
@@ -91,6 +92,7 @@ from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
 from scripts.review.verdict_parser import (
     _REVIEW_VERDICT_LINE_RE,
+    MISSING_CAPABILITIES_FIELD,
     _commonmark_lines,
     _findings_json_verdicts,
     _without_code_fences,
@@ -132,11 +134,14 @@ class RecordError(RuntimeError):
 def normalize_verdict(reply: str) -> str:
     tokens = {NORMALIZED[token.upper()] for token in recognized_verdicts(reply)}
     visible = _without_code_fences(reply, keep_unclosed=False)
-    if any(_REVIEW_VERDICT_LINE_RE.match(line) for line in _commonmark_lines(visible)):
-        # The verdict line is the reply's stated verdict; it holds a findings block that approves with follow-ups.
-        stated = next(iter(tokens)) if len(tokens) == 1 else None
-        if reason := invalid_findings_block(reply, stated=stated):
-            raise RecordError(f"reply carries an invalid findings block beside a verdict line: {reason}")
+    verdict_line = any(_REVIEW_VERDICT_LINE_RE.match(line) for line in _commonmark_lines(visible))
+    # The verdict line is the reply's stated verdict; it holds a findings block that approves with follow-ups.
+    stated = next(iter(tokens)) if verdict_line and len(tokens) == 1 else None
+    # Every top-level findings block must pass the verifier's schema, whether or not a verdict line is present.
+    if reason := invalid_findings_block(reply, stated=stated):
+        beside = " beside a verdict line" if verdict_line else ""
+        raise RecordError(f"reply carries an invalid findings block{beside}: {reason}")
+    if verdict_line:
         findings = {NORMALIZED[token] for token in _findings_json_verdicts(reply, stated=stated)}
         offset = 0
         for line in _commonmark_lines(visible, keepends=True):
@@ -165,8 +170,13 @@ def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]
     except ValueError:
         payload = None
     if isinstance(payload, dict) and payload.get("schema_version") == REVIEW_SCHEMA_VERSION:
+        # The closeout verifier's schema judges the reply itself, not a canonical subset of it.
+        payload = {key: value for key, value in payload.items() if key != MISSING_CAPABILITIES_FIELD}
         try:
+            validate_reviewer_payload(payload)
             verdict, evidence = resolve_verdict_and_evidence(payload)
+        except ContractError as exc:
+            raise RecordError(f"structured review verdict or findings invalid: {exc}") from None
         except ReviewPublicationError:
             raise RecordError("structured review verdict or findings invalid") from None
         return verdict, len(evidence.findings) if evidence is not None else "unknown"
