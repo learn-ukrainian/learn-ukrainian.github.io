@@ -4,6 +4,7 @@ import contextlib
 import hashlib
 import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -266,83 +267,21 @@ def _cgroup(pid: int) -> str | None:
     return None
 
 
-def _supervisor_gone(record: dict) -> bool:
-    """Whether the supervisor recorded for the task provably ended: never started, or its pid now has another start."""
-    if not record.get("pid"):
-        return record.get("pid") is None and record.get("process_start") is None
-    return bool(record.get("process_start")) and _identity(record["pid"]) != record["process_start"]
-
-
-def _real_uid(pid: str) -> int | None:
-    with contextlib.suppress(OSError, ValueError, IndexError):
-        return int(next(line for line in Path(f"/proc/{pid}/status").read_text().splitlines()
-                        if line.startswith("Uid:")).split()[1])
-    return None
-
-
-def _started_at(pid: str) -> float | None:
-    """When the process began, as a POSIX time; None when /proc cannot say."""
-    with contextlib.suppress(OSError, ValueError, IndexError, StopIteration):
-        ticks = int(Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[19])
-        boot = int(next(line for line in Path("/proc/stat").read_text().splitlines()
-                        if line.startswith("btime ")).split()[1])
-        return boot + ticks / os.sysconf("SC_CLK_TCK")
-    return None
-
-
-def _tree_in_use(record: dict) -> bool | None:
-    """Whether any process of this host works inside the task's checkout; None when /proc cannot say.
-
-    A process whose working directory is hidden from us (it dropped its dumpable flag) counts as
-    unknown unless another user owns it or it began before the task did, so it cannot be the task's own.
-    """
-    tree = os.path.realpath(record.get("worktree_path") or "")
-    if not tree or tree == os.sep:
-        return None
-    try:
-        task_began = datetime.fromisoformat(record["started_at"]).timestamp()
-    except (KeyError, TypeError, ValueError):
-        task_began = None
-    try:
-        entries = [entry for entry in os.listdir("/proc") if entry.isdigit()]
-    except OSError:
-        return None
-    for entry in entries:
-        try:
-            cwd = os.path.realpath(os.readlink(f"/proc/{entry}/cwd").removesuffix(" (deleted)"))
-        except FileNotFoundError:
-            continue  # the process ended
-        except PermissionError:
-            owner, began = _real_uid(entry), _started_at(entry)
-            if owner is None or (owner == os.getuid() and (began is None or task_began is None or began >= task_began)):
-                return None
-            continue
-        except OSError:
-            return None  # a process whose cwd cannot be read could be working in the tree
-        if cwd == tree or cwd.startswith(tree + os.sep):
-            return True
-    return False
-
-
 def _provider_alive(record: dict) -> bool | None:
-    """Whether the provider's process tree still runs; None when unknown.
-
-    The identity recorded for the provider answers. When it cannot (no launch record) and the
-    recorded pid and start time prove the supervisor gone, nothing is left to start a provider, so
-    the checkout is held only while some process still works inside it: a lost record cannot
-    retain it forever.
-    """
-    alive = _recorded_provider_alive(record)
-    if alive is None and _supervisor_gone(record):
-        return _tree_in_use(record)
-    return alive
-
-
-def _recorded_provider_alive(record: dict) -> bool | None:
+    """Whether the provider's process tree still runs, from the identity recorded for it; None when unknown."""
     if record.get("launch_mode") == "scope":
         # The scope holds every descendant, including ones that left the provider's process group.
-        if not (cgroup := record.get("launch_cgroup")):
-            return None
+        cgroup = record.get("launch_cgroup")
+        unit = record.get("launch_unit")
+        if not cgroup:
+            # A supervisor that ended before it read the provider's cgroup still named the scope's unit.
+            # The unit sits in the same slice as every worker's, and a scope that is no longer there held nothing.
+            if not isinstance(unit, str) or not re.fullmatch(r"lu-worker-[A-Za-z0-9._-]+", unit):
+                return None
+            found = sorted(Path("/sys/fs/cgroup").glob(f"user.slice/user-*.slice/user@*.service/lu.slice/*/{unit}.scope"))
+            if not found:
+                return False if Path("/sys/fs/cgroup/cgroup.controllers").exists() else None
+            cgroup = "/" + found[0].relative_to("/sys/fs/cgroup").as_posix()
         try:
             procs = Path("/sys/fs/cgroup" + cgroup, "cgroup.procs").read_text().split()
         except FileNotFoundError:
@@ -352,7 +291,8 @@ def _recorded_provider_alive(record: dict) -> bool | None:
             return None
         return any(int(pid) != os.getpid() for pid in procs)
     if "provider_pgid" not in record:
-        return None  # the supervisor ended before recording whether it started a provider
+        # The supervisor ended before recording whether it started a provider, unless it never started.
+        return False if record.get("pid") is None else None
     if record["provider_pgid"] is None:
         return False
     try:
