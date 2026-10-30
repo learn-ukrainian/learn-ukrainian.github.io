@@ -6,6 +6,8 @@ import sqlite3
 
 import pytest
 
+from scripts.curriculum.evidence import config
+
 
 @pytest.fixture(autouse=True)
 def synthetic_kaikki_side_db(tmp_path_factory, monkeypatch):
@@ -240,3 +242,13 @@ def synthetic_standard(tmp_path):
 def no_host_sense_proof(monkeypatch):
     """Never read the host's private sense-binding proof directory (#12114)."""
     monkeypatch.delenv("LU_SENSE_PROOF_DIR", raising=False)
+
+
+@pytest.fixture(autouse=True)
+def no_free_disk_floor(monkeypatch):
+    """Drop the free-disk floor so a snapshot does not depend on the runner's disk.
+
+    The floor itself is tested in test_sources.py, which sets the value it tests.
+    Subprocess cases inherit this value.
+    """
+    monkeypatch.setenv(config.FREE_DISK_FLOOR_ENV, "0")
