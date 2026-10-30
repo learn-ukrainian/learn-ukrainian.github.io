@@ -484,6 +484,26 @@ def _strip_quotes(token: str) -> str:
     return token
 
 
+# ANSI-C escapes that unicode_escape decodes as Bash does: named controls, quotes,
+# and two-digit hex or octal for a nonzero ASCII byte. Bash truncates at NUL, wraps
+# octal past \377, emits raw bytes past \x7f and reads \e, \c, \u and \? differently.
+_ANSI_C_MODELLED_ESCAPE = re.compile(r"\\(?:[abfnrtv\\'\"]|x([0-9A-Fa-f]{2})|([0-7]{1,3}))")
+
+
+def _ansi_c_modelled(body: str) -> bool:
+    index = body.find("\\")
+    while index >= 0:
+        match = _ANSI_C_MODELLED_ESCAPE.match(body, index)
+        if match is None:
+            return False
+        if match[1] or match[2]:
+            value = int(match[1], 16) if match[1] else int(match[2], 8)
+            if not 0 < value < 0x80:
+                return False
+        index = body.find("\\", match.end())
+    return True
+
+
 def _decode_ansi_c_quotes(command: str) -> str:
     """Turn Bash ANSI-C words into shell-quoted decoded words before parsing."""
     out: list[str] = []
@@ -505,10 +525,10 @@ def _decode_ansi_c_quotes(command: str) -> str:
                 else:
                     end += 1
             if end < len(command):
-                try:
-                    value = codecs.decode(command[i + 2 : end], "unicode_escape")
-                except UnicodeError:
-                    value = command[i + 2 : end]
+                body = command[i + 2 : end]
+                if not _ansi_c_modelled(body):
+                    raise ValueError("ANSI-C escape whose Bash meaning is not modelled")
+                value = codecs.decode(body, "unicode_escape")
                 quoted = shlex.quote(value)
                 out.append(quoted if quoted.startswith("'") else "'" + quoted + "'")
                 i = end + 1
@@ -1726,6 +1746,9 @@ def _shell_script(args: list[str]) -> list[str]:
                 return _script_words(args, script_index)
             i = script_index
             continue
+        if option.startswith("+"):
+            # Set-style options (`+e`, `+o posix`) are not modelled: the script is unreadable.
+            return ["__UNDECIDABLE_SECRET_COMMAND__"]
         break
     return []
 
