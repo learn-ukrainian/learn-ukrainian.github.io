@@ -23,6 +23,7 @@ import pytest
 import yaml
 
 from scripts.curriculum.validate import codes, quote_bytes, review_gates
+from scripts.curriculum.validate import validate as validate_module
 from scripts.curriculum.validate.report import Report
 from scripts.curriculum.validate.review_gates import ReviewGates
 from scripts.curriculum.validate.validate import main as validate_main
@@ -1310,9 +1311,20 @@ def _vesum_unreadable(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(quote_bytes, "vesum_lookup", unavailable)
 
 
+@pytest.fixture
+def review_of_record_not_under_test(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Strict runs of a synthetic plan that carries its pack's sha256 with no review chain (#12114).
+
+    These tests are about other gates; the review-of-record check has its own test
+    (test_plan_validate_review_of_record.py).
+    """
+    monkeypatch.setattr(validate_module, "_check_review_of_record", lambda *args, **kwargs: None)
+
+
 DECLARE_NO_VESUM = ["--not-checked-when-unavailable", "vesum"]
 
 
+@pytest.mark.usefixtures("review_of_record_not_under_test")
 def test_strict_cli_fails_an_undecided_vesum_gate_unless_declared(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
@@ -1334,6 +1346,7 @@ def test_strict_cli_fails_an_undecided_vesum_gate_unless_declared(
     assert undecided[0].endswith("no database (declared by --not-checked-when-unavailable vesum)"), undecided
 
 
+@pytest.mark.usefixtures("review_of_record_not_under_test")
 def test_declared_vesum_unavailable_lists_each_undecided_gate_in_the_report(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
@@ -1357,6 +1370,7 @@ def test_declared_vesum_unavailable_never_hides_another_strict_failure(
     assert "NOT_CHECKED vesum_unavailable: gate C12" in out
 
 
+@pytest.mark.usefixtures("review_of_record_not_under_test")
 def test_all_mode_prints_declared_undecided_gates_of_a_passing_plan(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
@@ -1496,6 +1510,7 @@ def test_c11_initial_sound(word: str, sound: str | None) -> None:
         ),
     ],
 )
+@pytest.mark.usefixtures("review_of_record_not_under_test")
 @pytest.mark.parametrize("strict", [False, True])
 def test_prose_targets_and_options_are_notes_with_their_span(
     tmp_path: Path, focus: str, code: str, span: str, strict: bool

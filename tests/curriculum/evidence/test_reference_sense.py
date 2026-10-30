@@ -11,7 +11,7 @@ import pytest
 import yaml
 
 from scripts.build.fresh import assemble, runner
-from scripts.curriculum.evidence import pack, sense_cli, sources, verify, words
+from scripts.curriculum.evidence import codes, pack, sense_cli, sources, verify, words
 from scripts.curriculum.evidence import reference_sense_v1 as matcher
 from scripts.curriculum.evidence import sense_bindings as bindings
 from scripts.curriculum.validate import a1_reference
@@ -288,6 +288,95 @@ def test_builder_verifier_pack_gate_render_and_immersion_same_string(bound, monk
     assert "unchecked override" not in rendered_page.artifacts["mdx"]
     record["gloss_en"] = "wrong"
     assert verify.verify_plan_glosses(plan, store, "a1/synthetic", api, binding_context=context)
+
+
+def test_pack_verify_checks_the_local_sense_proof_when_present(bound, monkeypatch, tmp_path_factory):
+    """Defect class: honest packs blocked, or the pass condition widened (#12114 AC-03).
+
+    A cited gloss with a private commitment is a CI notice warning without its local proof,
+    ``ok`` when the proof verifies, and a failure when a present proof does not verify.
+    """
+    root, api, b = bound
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda w, **kw: {
+            "status": "ok",
+            "matches": [
+                {
+                    "stressed_form": f"{w}-stressed",
+                    "unstressed_form": w,
+                    "vowel_index": 0,
+                    "vowel_indices": [0],
+                    "vesum": None,
+                    "required_tags": [],
+                    "override_applied": False,
+                }
+            ],
+            "source": {"digest": "t" * 64},
+        },
+    )
+    request = root / "request.yaml"
+    request.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {"lemma": "synthetic", "pos": "noun", "want": "new", "entry": {"source": "vesum", "entry_id": 10}}
+                ],
+            }
+        )
+    )
+    words.build_words("a1", request, evidence_dir=root, sources_instance=api, mcp_commit="a" * 40)
+    plans_dir = root / "plans"
+    plans_dir.mkdir()
+    (plans_dir / "synthetic.yaml").write_text(yaml.safe_dump({"vocabulary": {"core": ["W-001"]}}))
+    pack_request = root / "pack-request.yaml"
+    pack_request.write_text(yaml.safe_dump({"request_schema": 1, "module": "a1/synthetic"}))
+    pack.build_pack("a1", "synthetic", pack_request, evidence_dir=root, sources_instance=api, offline=True)
+
+    def verified(proof_dir=None) -> dict:
+        return verify.verify_pack(
+            "a1",
+            "synthetic",
+            evidence_dir=root,
+            plans_dir=plans_dir,
+            sources_instance=api,
+            offline=True,
+            sense_proof_dir=proof_dir,
+        )
+
+    absent = verified()
+    assert absent["status"] == "warning" and not absent["errors"], absent
+    assert "W-001:private_commitment" in absent["not_checked"]
+    assert any(bindings.CI_NOTICE in w for w in absent["warnings"])
+
+    proof = tmp_path_factory.mktemp("sense-proof")
+    (proof / bindings.PROOF_KEY).write_bytes(KEY)
+    (proof / bindings.PROOF_PRIVATE_INPUT).write_text(json.dumps(FIXTURE["private"]) + "\n")
+    payload = {
+        "head": "a" * 40,
+        "bindings_sha256": hashlib.sha256((root / bindings.BINDINGS).read_bytes()).hexdigest(),
+        "private_input_commitment": bindings.keyed({FIXTURE["private"]["locator"]: FIXTURE["private"]}, KEY),
+        "matcher": matcher.VERSION,
+        "key_id": b["key_id"],
+        "leak_scan_scope": {"kind": "diff", "merge_base": "d" * 40, "head": "a" * 40, "changed_path_count": 2},
+    }
+    receipt = proof / bindings.proof_receipt_name("a1")
+    bindings.write_receipt(receipt, payload, KEY)
+    present = verified(proof)
+    assert present["status"] == "ok", present
+    assert "W-001:private_commitment" not in present["not_checked"]
+    monkeypatch.setenv(bindings.PROOF_DIR_ENV, str(proof))  # the variable names the same directory
+    assert verified()["status"] == "ok"
+    monkeypatch.delenv(bindings.PROOF_DIR_ENV)
+
+    bindings.write_receipt(receipt, {**payload, "bindings_sha256": "0" * 64}, KEY)
+    stale = verified(proof)
+    assert stale["status"] == "failed"
+    assert [e for e in stale["errors"] if e.startswith(f"{codes.SENSE_PROOF_INVALID}: a1/synthetic W-001: ")]
+    assert str(proof) not in json.dumps(stale)
 
 
 def test_private_coverage_and_keyed_commitment(bound):
