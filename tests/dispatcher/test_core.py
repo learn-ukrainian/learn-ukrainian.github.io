@@ -3355,6 +3355,7 @@ def test_claude_advisor_is_attached_only_to_the_approved_runs(tmp_path, model, m
         assert ("--advisor" in invocation.argv) is advised
         if advised:
             assert invocation.argv[invocation.argv.index("--advisor") + 1] == "opus"
+            assert invocation.argv[invocation.argv.index("--model") + 1].startswith(("claude-sonnet-5-5", "claude-haiku-5-5"))
             assert "CLAUDE_CODE_DISABLE_ADVISOR_TOOL" not in invocation.env
             assert "DISABLE_TELEMETRY" not in invocation.env
         else:

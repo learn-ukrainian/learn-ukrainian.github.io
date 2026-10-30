@@ -137,6 +137,15 @@ def advisor_enabled(spec: TaskSpec) -> bool:
     return model == _ADVISED_MODEL or (model == _ADVISED_ON_REQUEST_MODEL and spec.options.get("advisor") == _ADVISOR_MODEL)
 
 
+def _advised_model_arg(model: str) -> str:
+    """The ``--model`` value of an advised run: the approved catalog id, never a native alias.
+
+    Claude Code maps an alias such as ``sonnet`` through the project's ``ANTHROPIC_DEFAULT_SONNET_MODEL``,
+    so it may run another model than the one that earned the advisor; the id keeps its context suffix.
+    """
+    return model_id(model) + model[model.index("["):] if "[" in model else model_id(model)
+
+
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     from scripts.agent_runtime.attempt_boundary import resolve_claude_budget_usd
 
@@ -164,6 +173,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     env = {**env, **_BACKGROUND_ENV}
     if advisor_enabled(spec):
         argv += ["--advisor", _ADVISOR_MODEL]
+        argv[argv.index("--model") + 1] = _advised_model_arg(spec.model)
         env.pop("CLAUDE_CODE_DISABLE_ADVISOR_TOOL", None)
     else:
         env.update(_ADVISOR_OFF_ENV)
