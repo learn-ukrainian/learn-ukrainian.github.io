@@ -100,10 +100,10 @@ lessons:
     needs: [video]
   - id: s2
     kind: practice
-    teach: 'Practice distinguishing vowel sounds: clear [і] versus deeper [и], and open [а], [о], [е]. Practice statement, question, and exclamation intonation contours with emotional expressiveness. Copy the taught vowel letters А, О, Е, И, І into your notebook as supported offline writing practice.'
+    teach: 'Practice distinguishing vowel sounds: clear [і] versus deeper [и], and open [а], [о], [е]. Practice placing a stress mark (´) on stressed vowels and distinguishing statement, question, and exclamation intonation contours with emotional expressiveness using spoken models (T-050, T-047). Copy the taught vowel letters А, О, Е, И, І into your notebook as supported offline writing practice.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-004', 'T-047', 'S-005']
+    evidence: ['T-004', 'T-047', 'T-050', 'S-005']
     practice: ['a2']
   activities:
   - id: a1
@@ -113,7 +113,8 @@ lessons:
   - id: a2
     type: match-up
     placement: workbook
-    focus: 'Match vowel sounds to their articulatory descriptions and letter representations.'
+    focus: 'Identify stressed versus unstressed vowels by placing a stress mark (´) on stressed syllables, and match statement, question, and exclamation intonation contours to spoken sentence models.'
+    model: T-050
   videos:
   - evidence: V-004
     use: 'Pronunciation model for letter А.'
@@ -251,7 +252,7 @@ lessons:
   slug: greetings-and-reading-recap
   title: 'закріплення: розмова і читання'
   kind: recap
-  job: 'Consolidate formulaic greetings and farewells in social context, and read and transcribe familiar names and words using all 12 taught letters.'
+  job: 'Consolidate formulaic greetings and farewells in social context, and read and transcribe familiar names and words using taught letters.'
   rationale: 'R-03 consolidation integrates oral communicative formulas and Cyrillic decoding without introducing new inventory.'
   word_target: 220
   inventory:
@@ -271,7 +272,7 @@ lessons:
     needs: [video]
   - id: s2
     kind: recap
-    teach: 'Practical closing task: greet someone aloud in formal and informal social contexts and read community member names using all 12 taught letters (А, О, Е, И, І, М, Н, В, П, Р, Т, Я).'
+    teach: 'Practical closing task: greet someone aloud in formal and informal social contexts and read decodable community member names aloud using taught letters.'
     task:
       id: 'sounds-letters-recap-task'
       action: 'read_and_use'
@@ -280,7 +281,7 @@ lessons:
       response_mode: 'spoken_or_written'
       success_criteria_en:
       - 'Choose and say the appropriate greeting aloud for both informal (Привіт!) and formal (Добрий день!) situations'
-      - 'Decode and pronounce familiar names aloud using all twelve taught letters'
+      - 'Decode and pronounce familiar names aloud using taught letters'
       - 'Copy model words and names into a notebook with correct Cyrillic letter forms'
       learner_reads:
       - ref: T-019

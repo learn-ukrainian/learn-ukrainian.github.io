@@ -4,7 +4,7 @@ The fresh path has no word or activity target: judge size by job adequacy agains
 
 Kind: plan
 Module: a1/sounds-letters-and-hello (Position 2)
-Manifest SHA256: 4cdb88235ac488f0dc9eaadd21a2253b16c05129d4ddaa59d1b623f2977f85c7
+Manifest SHA256: bf488e3767cdb11b685412f92bc76913342c04c4c9f12fe507f2c8b1c9d3f70f
 
 You are the independent cross-family content reviewer for a fresh curriculum module plan (Contract 1, fresh-build review contracts #8430 r4).
 You evaluate whether the module plan serves the learning goals before any lesson writer runs.
@@ -204,8 +204,8 @@ taxonomy: 1
 kind: plan
 attempt:
   review_id: "rev-20261030-sounds-letters-and-hello"
-  attempt_id: "sol-att-5"
-  manifest_sha256: "4cdb88235ac488f0dc9eaadd21a2253b16c05129d4ddaa59d1b623f2977f85c7"
+  attempt_id: "sol-att-6"
+  manifest_sha256: "bf488e3767cdb11b685412f92bc76913342c04c4c9f12fe507f2c8b1c9d3f70f"
   previous_attempt_id: null
 reviewer:
   resolved_model: "<model>"
@@ -346,10 +346,10 @@ lessons:
     needs: [video]
   - id: s2
     kind: practice
-    teach: 'Practice distinguishing vowel sounds: clear [і] versus deeper [и], and open [а], [о], [е]. Practice statement, question, and exclamation intonation contours with emotional expressiveness. Copy the taught vowel letters А, О, Е, И, І into your notebook as supported offline writing practice.'
+    teach: 'Practice distinguishing vowel sounds: clear [і] versus deeper [и], and open [а], [о], [е]. Practice placing a stress mark (´) on stressed vowels and distinguishing statement, question, and exclamation intonation contours with emotional expressiveness using spoken models (T-050, T-047). Copy the taught vowel letters А, О, Е, И, І into your notebook as supported offline writing practice.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-004', 'T-047', 'S-005']
+    evidence: ['T-004', 'T-047', 'T-050', 'S-005']
     practice: ['a2']
   activities:
   - id: a1
@@ -359,7 +359,8 @@ lessons:
   - id: a2
     type: match-up
     placement: workbook
-    focus: 'Match vowel sounds to their articulatory descriptions and letter representations.'
+    focus: 'Identify stressed versus unstressed vowels by placing a stress mark (´) on stressed syllables, and match statement, question, and exclamation intonation contours to spoken sentence models.'
+    model: T-050
   videos:
   - evidence: V-004
     use: 'Pronunciation model for letter А.'
@@ -497,7 +498,7 @@ lessons:
   slug: greetings-and-reading-recap
   title: 'закріплення: розмова і читання'
   kind: recap
-  job: 'Consolidate formulaic greetings and farewells in social context, and read and transcribe familiar names and words using all 12 taught letters.'
+  job: 'Consolidate formulaic greetings and farewells in social context, and read and transcribe familiar names and words using taught letters.'
   rationale: 'R-03 consolidation integrates oral communicative formulas and Cyrillic decoding without introducing new inventory.'
   word_target: 220
   inventory:
@@ -517,7 +518,7 @@ lessons:
     needs: [video]
   - id: s2
     kind: recap
-    teach: 'Practical closing task: greet someone aloud in formal and informal social contexts and read community member names using all 12 taught letters (А, О, Е, И, І, М, Н, В, П, Р, Т, Я).'
+    teach: 'Practical closing task: greet someone aloud in formal and informal social contexts and read decodable community member names aloud using taught letters.'
     task:
       id: 'sounds-letters-recap-task'
       action: 'read_and_use'
@@ -526,7 +527,7 @@ lessons:
       response_mode: 'spoken_or_written'
       success_criteria_en:
       - 'Choose and say the appropriate greeting aloud for both informal (Привіт!) and formal (Добрий день!) situations'
-      - 'Decode and pronounce familiar names aloud using all twelve taught letters'
+      - 'Decode and pronounce familiar names aloud using taught letters'
       - 'Copy model words and names into a notebook with correct Cyrillic letter forms'
       learner_reads:
       - ref: T-019
@@ -1609,7 +1610,7 @@ later get the next free id; ids are never reused.
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "1833ed5eb2bc0c29225955e846baf227ef7625a7778089bb2855af1faa4c6960",
     "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "b716c55def2f736ce0e741821a4fa5d120bd3e6a9293fbcb88f035516f8baa34",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "920d868b2b05ee7985ae698f5c8070d2ec275ab013f21f559edd2599e4301fa2",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "113872e498e5ed69afd90b76172a042634fa46d75b7d24d134c6dd627f21edb9",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",

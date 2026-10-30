@@ -1,0 +1,144 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-sounds-letters-and-hello"
+  attempt_id: "sol-att-5"
+  manifest_sha256: "4cdb88235ac488f0dc9eaadd21a2253b16c05129d4ddaa59d1b623f2977f85c7"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gpt-6.1-sol"
+  harness: "codex"
+  family: "openai"
+  prompt_sha256: "bf1370bd14cb5416cc40172f56732f9c20587438c9430437a722ff0e16b8445f"
+checks:
+  # Standalone practical recap: greeting choice requires Ukrainian production;
+  # reading and copying support that contextual task rather than replace it.
+  # search_text, ulp-1-00-lesson-notes_l0001_w005:
+  # "What do you say if I say to you:"; receipt rr-09dad48f5735cf005ad9.
+  closing_shape: clean
+
+  # Titles describe greetings, sounds and early reading. Ukrainian items in
+  # English prose name the forms being taught, read or pronounced.
+  title_describes_job: clean
+
+  # No title or subtitle states an inventory quantity.
+  title_quantities: clean
+
+  # inspect_words: title forms and personal names have matching CLEAN analyses;
+  # receipt rr-67f8b783abc92721ae38. Sentence-initial common forms were also
+  # inspected in lowercase: "бувай", "па-па", "добрий", "вітаю", "дякую",
+  # "будь", "вибачте"; CLEAN, receipt rr-4c6354bbf6785b05ceff.
+  # verify_stress, мама: "мама — ok: ма́ма";
+  # receipt rr-32844a350cec5b7a6107.
+  quoted_forms: clean
+
+  # Oral chunks precede decoding without grammatical analysis. Acquired vowels
+  # precede syllable reading; the full alphabet survey follows accepted r6.
+  # search_text, owned-oho-a1-workbook_f1_p0015_c0001:
+  # "The Ukrainian alphabet ... has 33 letters";
+  # receipt rr-c2235a6db4cb26cc393a.
+  # ULP first-response model: receipt rr-09dad48f5735cf005ad9.
+  sequencing: clean
+
+  # No overload or unnecessary lesson division established. Alphabet overview
+  # is distinguished from acquired reading inventory. Deprecated word_target
+  # metadata is ignored; no word, activity, item or time quota is applied.
+  sizing: clean
+
+  # Greetings have first-contact value grounded in ULP lessons 1–2.
+  # search_text, ulp-1-00-lesson-notes_l0001_w001:
+  # "The basic informal “Hi!” in Ukrainian is:"; rr-fcbec7a7204d30efccb6.
+  # PULS: "мама (A1, іменник)", rr-dbd5c4d377dc897e78b0;
+  # "тато (A1, іменник)", rr-71d82d04029a6f7217a0.
+  # Names serve supported decoding rather than a claimed CEFR vocabulary tier.
+  # GRAC frequency evidence is unavailable, not zero:
+  # rr-813099c576d27170866a, rr-f75468264363c213d418,
+  # rr-7bf5448c37a670281de6. No frequency ranking is asserted.
+  inventory: clean
+
+  # Report read: workbook operations move from situational/audio recognition
+  # to syllable selection, then lexical sorting and a greeting quiz.
+  # Repeated match-up and fill-in types apply familiar operations to new
+  # material; their repetition alone is not a defect. The recap quiz supplies
+  # an R-19 model appropriate to this inventory.
+  # Mapped v1: 10 inline activities, 0 workbook activities, 62 responses.
+  # Fresh report: 6 inline and 6 workbook activities. The inline reduction is
+  # pedagogically reasonable because practice moves into lesson workbooks
+  # alongside spoken and notebook work. Fresh response opportunities are
+  # unavailable at plan stage: response-volume comparison remains an evidence
+  # gap, with no invented totals or quota-based finding.
+  activities:
+    - F-01
+    - F-02
+
+  # Retrieved sources support the alphabet overview, vowel/stress explanation,
+  # names and greeting meanings/registers:
+  # owned-oho-a1-workbook_f1_p0019_c0001, rr-f1df3e9a079c15aaae15;
+  # 1-klas-bukvar-zaharijchuk-2025-1_s0058, rr-e7664b13d43566d8863f;
+  # ulp-1-00-lesson-notes_l0002_w003, rr-0ef8e85193469571a1f6.
+  evidence_fit: clean
+
+  # S-004/S-005 obligations are explicitly assigned in teaching steps.
+  # search_text supports their pedagogical substance:
+  # owned-oho-a1-workbook_f1_p0019_c0001, rr-f1df3e9a079c15aaae15;
+  # 2-klas-ukrmova-vashulenko-2019-1_s0112,
+  # rr-b217cd953332366ca856.
+  # ULP lessons 1–2 support early intact greeting exchanges.
+  # The adequacy of planned prosody practice is addressed under activities.
+  standard_and_ulp: clean
+
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "Observe orally that stressed vowels are pronounced with greater prominence, while unstressed vowels [е] and [и] tend to merge slightly."
+      - lesson: 2
+        step: s2
+        quote: "Practice statement, question, and exclamation intonation contours with emotional expressiveness."
+      - lesson: 2
+        activity: a2
+        quote: "Match vowel sounds to their articulatory descriptions and letter representations."
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      The planned response task does not exercise the stress and intonation
+      work assigned to this lesson. Vowel-to-description matching can succeed
+      without identifying a stressed syllable, hearing the stressed/unstressed
+      contrast, or producing distinguishable speech contours. The prose says
+      to practise contours, but supplies no corresponding activity focus or
+      source-bounded speech model for that performance. Later activities and
+      the recap do not close this gap. This is practice adequacy under R-27,
+      not an activity-count requirement. search_text, T-050 /
+      owned-oho-a1-workbook_f1_p0020_c0001, demonstrates distinct response
+      operations: “place a stress mark (´) on the correct vowel in each word”
+      and “Record yourself saying each question.”
+    evidence:
+      receipt: "rr-566029d25de820bc9692"
+    could_be_a_gate: "no"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 5
+        step: s2
+        quote: "Decode and pronounce familiar names aloud using all twelve taught letters"
+    dimension: plan_defect
+    severity: MAJOR
+    claim: >-
+      This success criterion cannot be demonstrated by the approved task's
+      reading material. Its permitted print consists of the four names
+      already read in lesson 3; it supplies no name containing Е, П, Р, Т
+      or Я. Saying a memorised greeting does not demonstrate decoding those
+      letters. The contextual greeting choice is useful, but completion of
+      this task cannot establish the reading performance its criterion
+      promises. This concerns the meaning and observability of task success,
+      not the declared inventory's mechanically checked coverage.
+      search_text, T-019 /
+      1-klas-bukvar-zaharijchuk-2025-1_s0058, confirms the source list:
+      “Іван Вова Ніна Нонна”.
+    evidence:
+      receipt: "rr-e7664b13d43566d8863f"
+    could_be_a_gate: "no"
