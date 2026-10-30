@@ -62,15 +62,15 @@ is the single source of truth for membership (auditor:
 | epics | #10453 | Epic coordination |
 | atlas-practice | #4387, #12166 (overflow epic for the existing stream; #4387 is at GitHub's 100 native sub-issue limit) | Word Atlas + Practice Hub product & UX (intake epics #4220, #4378, #5224 and UX epic #4700 folded into umbrella #4387) |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
-| infra-harness | #6943 (successor to closed #4707), #9737 (nested program; #6943 is at GitHub's 100 sub-issue limit), #11254 (overflow epic for the existing stream; #6943, #9737 and #10535 are at GitHub's 100 native sub-issue limit) | Infra & fleet reliability (hooks, dispatch, routing). CI speed/reliability program (#8875): [`ci-speed-program.md`](epics/ci-speed-program.md) |
-| docs-knowledge | #5535 | Repository knowledge system — curated docs authority, plain-Astro truth, optional OpenWiki layer |
-| devops | #5703, #10844 (overflow epic for the existing stream; #5703 is at GitHub's 100 native sub-issue limit) | DevOps automation, CI, release & launcher reliability |
-| monitor (`ops-api` alias) | #7919 (successor to closed #7177) | **Ops API + UI** — operator API (`scripts/api`) + dashboards; Monitor routes are a subset |
+| infra-harness | #6943 (successor to closed #4707), #9737, #11254 (all three closed; remain registered for launcher selectors) | Infra & fleet reliability (hooks, dispatch, routing). CI speed/reliability program (#8875): [`ci-speed-program.md`](epics/ci-speed-program.md) |
+| docs-knowledge | #5535 (closed; remains registered for launcher and session consumers) | Repository knowledge system — curated docs authority, plain-Astro truth, optional OpenWiki layer |
+| devops | #5703, #10844 (both closed; remain registered for launcher and session consumers) | DevOps automation, CI, release & launcher reliability |
+| monitor (`ops-api` alias) | #7919 (closed; remains registered; successor to closed #7177) | **Ops API + UI** — operator API (`scripts/api`) + dashboards; Monitor routes are a subset |
 | open-model-data | #6321, #7423 (#7423 closed; #6164 and #6056 historical) | Ukrainian open-model data infrastructure; #7423 is completed historical dataset-delivery work and remains registered for session continuity. Model evaluation authority lives here; #6375/Cycle007 is historical evaluation evidence, #6333 is historical `ENGINE_READY` evidence, and Phase 4 remains blocked. |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | curriculum-upgrade | #7994 | The fresh lesson-based build (#8397): A1–B2 core modules built fresh from new lesson plans by the fresh-build engine; `--upgrade` is abandoned. Build program: [`docs/epics/fresh-build-build-program.md`](epics/fresh-build-build-program.md) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
-| seminars-bio | #4431, #4215 | BIO readiness + builds |
+| seminars-bio | #4431, #4215 (#4215 closed) | BIO readiness + builds |
 | seminars-cross | #3120, #3079 | Cross-seminar gates |
 | hramatka | #4542 | Teacher lesson service, production-path qualification, and teacher-ready release |
 
