@@ -38,6 +38,29 @@ F7_KILLS = [
     r"$'\560grep' -f worker | xargs kill",
     r"$'p\153ill\0suffix' -f worker",
 ]
+# Review F7, too: shell options the reader does not model hide the child script.
+F7_SHELL_OPTIONS = [
+    "bash +e -c 'pkill -f worker'",
+    """bash +e -c 'echo "'""",
+    "bash +x -c 'pkill -f worker'",
+    "bash +o posix -c 'pkill -f worker'",
+    "bash -e +x -c 'pkill -f worker'",
+    "sudo -n bash +e -c 'pkill -f worker'",
+    "env -u REVIEW_UNUSED bash +e -c 'pkill -f worker'",
+    """pgrep -f worker | xargs bash +e -c 'kill "$1"' _""",
+]
+# Review F10: ANSI-C escapes whose Bash meaning the decoder does not model.
+F10_ANSI_C = [
+    r"$'p\153ill\0suffix' -f worker",
+    r"$'p\147rep\0suffix' -f worker | xargs kill",
+    r"$'\560kill' -f worker",
+    r"$'\560grep' -f worker | xargs kill",
+    r"$'pkill\400' -f worker",
+    r"$'pgrep\400' -f worker | xargs kill",
+    r"pkill $'\455f' worker",
+    r"pgrep $'\455f' worker | xargs kill",
+    r"$'\x70kill' -f worker",
+]
 
 
 @pytest.mark.parametrize(
@@ -105,7 +128,10 @@ F7_KILLS = [
         ('git commit -m "refuse pkill -f and pgrep --full | kill"', False),
         ("cat <<'EOF'\npkill -f worker\nkill $(pgrep -f worker)\nEOF", False),
         ("cat <<EOF\npkill -f worker\nEOF", False),
+        ("bash -e -c 'echo ok'", False),
+        (r"printf $'ok\t\x41\101\n'", False),
     ]
+    + [(command, True) for command in F7_SHELL_OPTIONS + F10_ANSI_C]
     + [(kill + "; " + DEEP, True) for kill in F7_KILLS]
     + [(DEEP + "; " + kill, True) for kill in F7_KILLS],
 )
