@@ -17,13 +17,6 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 from typing import Any
 
-from learn_ukrainian_v4_runtime.identity import (
-    _VALID_CONCRETE_FAMILIES,
-    UNKNOWN_AUTHOR_FAMILY,
-    UNRESOLVED_AUTHOR_FAMILIES,
-    resolve_author_family,
-)
-
 GEMINI = "google"
 SOL = "openai"
 # Families that can fill a Ukrainian seat. Anthropic is never one of them.
@@ -48,7 +41,17 @@ def attested_author_families(markers: Iterable[Mapping[str, Any]]) -> frozenset[
     A missing, malformed or unresolved author is unattested, which requires both
     seats. The markers are the recorder's own comments, so the names are the
     models it wrote on ``Authored by``.
+
+    The identity import stays inside this function. Catalog validation imports
+    this module, and the freshness check does not install the runtime package.
     """
+    from learn_ukrainian_v4_runtime.identity import (
+        _VALID_CONCRETE_FAMILIES,
+        UNKNOWN_AUTHOR_FAMILY,
+        UNRESOLVED_AUTHOR_FAMILIES,
+        resolve_author_family,
+    )
+
     models: list[str] = []
     for marker in markers:
         recorded = marker.get("author_models") or ()
