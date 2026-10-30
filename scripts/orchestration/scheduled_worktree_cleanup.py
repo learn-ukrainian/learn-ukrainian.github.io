@@ -688,6 +688,43 @@ def settle_terminal_worktrees(repo_root: Path, *, apply: bool, github: GitHubRea
     return {"complete": complete, "error": error, "unreadable": unreadable, "trees": trees}
 
 
+def settle_unrecorded_worktrees(repo_root: Path, *, apply: bool) -> list[dict[str, Any]]:
+    """Remove the nightly data-tier job's abandoned checkouts, which no task record names.
+
+    The job's own pruning decides which are abandoned (idle, and no nightly scope active). The
+    guarded remover removes one only after its ignored output has a verified copy, and each row
+    carries that copy's locator, size and file count. A checkout the remover refuses stays listed
+    with the reason. A dry run lists nothing, because only the pruning knows what is abandoned.
+    """
+    if not apply or not (repo_root / ".worktrees" / "data-tier").is_dir():
+        return []
+    from scripts.ci import data_tier
+
+    removals: list[Any] = []
+    stopped = None
+    try:
+        data_tier.prune_stale_worktrees(repo_root, removals)
+    except data_tier.DataTierError as exc:
+        stopped = str(exc)
+    rows: list[dict[str, Any]] = [
+        {
+            "worktree_path": Path(removal.path).relative_to(repo_root).as_posix(),
+            "action": removal.action,
+            "preserved": {
+                key: (removal.preserved_artifacts or {}).get(key)
+                for key in ("count", "bytes", "location", "content_sha256", "retrieval_proof_sha256")
+            },
+        }
+        for removal in removals
+    ]
+    if stopped is not None:
+        # A running nightly scope only defers the pruning; a refused removal is an error.
+        refused = stopped.startswith("checkout cleanup")
+        rows.append({"worktree_path": None, "action": "error" if refused else "withheld",
+                     "error" if refused else "reason": stopped})
+    return rows
+
+
 def cleanup_stale_origin_branches(
     repo_root: Path,
     *,
@@ -1265,6 +1302,7 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "reaper_disabled": False,
         "rescue": None,
         "retained": None,
+        "unrecorded": [],
         "github_degraded": None,
     }
 
@@ -1313,6 +1351,11 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool, github: GitHubReads |
                               "unreadable": [], "trees": []}
     if result["retained"] and result["retained"]["error"]:
         result["errors"].append(result["retained"]["error"])
+    try:
+        result["unrecorded"] = settle_unrecorded_worktrees(repo_root, apply=apply and reaper)
+    except Exception as exc:  # the data-tier checkouts are independent of the task trees
+        result["unrecorded"] = [{"worktree_path": None, "action": "error", "error": type(exc).__name__}]
+    result["errors"].extend(f"data-tier checkout: {row['error']}" for row in result["unrecorded"] if row.get("error"))
 
     if apply and reaper:
         result["rescue"] = report_terminal_worktrees(repo_root)

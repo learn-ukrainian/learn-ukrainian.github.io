@@ -718,6 +718,34 @@ def test_recovery_removes_squash_merged_write_task_only_when_a_pull_ref_holds_it
     assert (branch in local_branches(sandbox.repo)) is not pull_ref
 
 
+def test_continuation_records_sharing_a_landed_tree_resolve_to_the_creator_and_the_tree_is_removed(sandbox):
+    """#12063 AC-06: continuations beside their creator left no single owner, so a landed tree stayed forever."""
+    record = sandbox.settle(sandbox.dispatch("unpushed", "--mode", "workspace-write"), expected=1)
+    tree, branch = Path(record["worktree_path"]), record["worktree_branch"]
+    (tree / "unknown-output").mkdir()
+    (tree / "unknown-output" / "artifact").write_text("ignored output")
+    (sandbox.repo / ".git/info/exclude").write_text("/unknown-output/\n")
+    squash = run_git(tree, "commit-tree", "HEAD^{tree}", "-p", record["worktree_base_sha"], "-m", "squash (#7)")
+    run_git(tree, "push", str(sandbox.remote), f"HEAD:refs/heads/{branch}", f"{squash}:refs/heads/main")
+    run_git(tree, "push", str(sandbox.remote), "HEAD:refs/pull/7/head")
+    run_git(tree, "push", str(sandbox.remote), f":refs/heads/{branch}")
+    # Dispatcher records written before the reuse flag and creation inventory existed.
+    creator_file = sandbox.tasks / f"{record['task_id']}.json"
+    creator = json.loads(creator_file.read_text())
+    creator.pop("worktree_reused", None)
+    creator.pop("ignored_output_baseline", None)
+    creator_file.write_text(json.dumps(creator))
+    for suffix in ("c", "d"):
+        continuation = dict(creator, task_id=f"{record['task_id']}{suffix}", run_nonce=f"{suffix}" * 32,
+                            worktree_disposition="retained", worktree_disposition_reason="borrowed_worktree",
+                            options=dict(creator["options"], cwd=str(tree), task_id=f"{record['task_id']}{suffix}"))
+        (sandbox.tasks / f"{continuation['task_id']}.json").write_text(json.dumps(continuation))
+    sandbox.settle(sandbox.dispatch())
+    settled = json.loads(creator_file.read_text())
+    assert (settled["worktree_disposition"], settled["worktree_disposition_reason"]) == ("removed", "clean")
+    assert not tree.exists()
+
+
 def test_crash_recovery_keeps_worktree_while_the_orphaned_provider_runs(sandbox):
     """Defect (F2): recovery removed a crashed task's worktree without proving its provider had exited."""
     task = sandbox.dispatch("blocked")

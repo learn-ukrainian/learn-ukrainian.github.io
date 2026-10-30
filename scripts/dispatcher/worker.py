@@ -266,8 +266,49 @@ def _cgroup(pid: int) -> str | None:
     return None
 
 
+def _supervisor_gone(record: dict) -> bool:
+    """Whether the supervisor recorded for the task provably ended: never started, or its pid now has another start."""
+    if not record.get("pid"):
+        return record.get("pid") is None and record.get("process_start") is None
+    return bool(record.get("process_start")) and _identity(record["pid"]) != record["process_start"]
+
+
+def _tree_in_use(record: dict) -> bool | None:
+    """Whether any process of this host works inside the task's checkout; None when /proc cannot say."""
+    tree = os.path.realpath(record.get("worktree_path") or "")
+    if not tree or tree == os.sep:
+        return None
+    try:
+        entries = [entry for entry in os.listdir("/proc") if entry.isdigit()]
+    except OSError:
+        return None
+    for entry in entries:
+        try:
+            cwd = os.path.realpath(os.readlink(f"/proc/{entry}/cwd").removesuffix(" (deleted)"))
+        except (FileNotFoundError, PermissionError):
+            continue  # the process ended, or belongs to another user, which dispatched no provider
+        except OSError:
+            return None  # a process whose cwd cannot be read could be working in the tree
+        if cwd == tree or cwd.startswith(tree + os.sep):
+            return True
+    return False
+
+
 def _provider_alive(record: dict) -> bool | None:
-    """Whether the provider's process tree still runs, from the identity recorded for it; None when unknown."""
+    """Whether the provider's process tree still runs; None when unknown.
+
+    The identity recorded for the provider answers. When it cannot (no launch record) and the
+    recorded pid and start time prove the supervisor gone, nothing is left to start a provider, so
+    the checkout is held only while some process still works inside it: a lost record cannot
+    retain it forever.
+    """
+    alive = _recorded_provider_alive(record)
+    if alive is None and _supervisor_gone(record):
+        return _tree_in_use(record)
+    return alive
+
+
+def _recorded_provider_alive(record: dict) -> bool | None:
     if record.get("launch_mode") == "scope":
         # The scope holds every descendant, including ones that left the provider's process group.
         if not (cgroup := record.get("launch_cgroup")):

@@ -268,6 +268,15 @@ client's admission refused keeps a tree as `github_deferred` in any
 settlement. The run's private receipt lists every
 finished task's tree still on disk with its reason; the summary carries
 `retained_count`, `retained_safety_stops` and `retained_complete`.
+The same run prunes the nightly data-tier job's abandoned checkouts
+(`.worktrees/data-tier/run-*`), which no task record names: the remover removes
+one only after its ignored output is in a verified copy under
+`batch_state/preserved/data-tier-run-<id>/` (up to 4 GiB), and the receipt's
+`unrecorded` list gives each checkout's path, the copy's size and its locator.
+Task records that share one tree resolve to the one dispatcher record that
+created it when every other record is a finished continuation. A provider whose
+liveness is unknown holds the tree only until the recorded supervisor pid and
+start time prove it gone and no process works inside the tree.
 `scripts/dispatch.py worktrees` lists every linked worktree with its
 owning task and disposition ([dispatch v2](../design/dispatch-v2.md)). The guarded removers in `worktree_claims` also refuse while an
 unfinished task record names the checkout, including a non-terminal review

@@ -1,8 +1,8 @@
-"""Durable, fail-closed state for the merged-worktree reaper.
+"""Journal and recovery refs left from the retired merged-worktree reaper.
 
-State intentionally lives in ignored ``batch_state/`` rather than a database:
-the JSONL journal is append-only, while the small pending/cap files provide the
-atomic coordination needed around a destructive ``git worktree remove``.
+State intentionally lives in ignored ``batch_state/`` rather than a database.
+The reaper's reservation and daily-cap files went with it (FR-01b): the
+dispatcher settles each task's own worktree.
 """
 
 from __future__ import annotations
@@ -12,27 +12,15 @@ import json
 import os
 import re
 import subprocess
-from collections.abc import Iterator
-from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration import worktree_claims
 from scripts.orchestration.execution_safe_git import primary_repository
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 _STATE_RELATIVE = Path("batch_state") / "worktree-reaper"
-_PENDING_NAME = "reap-pending.json"
-_LEGACY_PENDING_STALE_SECONDS = 3600
-_CAP_NAME = "first-class-cap.json"
 _JOURNAL_NAME = "journal.jsonl"
-_FIRST_CLASS_DAYS = 7
-_DEFAULT_MAX_REAPS_PER_DAY = 25
-# Hard blast-radius ceiling for the dynamic cap: a day may expand to at most
-# this multiple of the configured base, no matter how large the backlog is.
-# Deliberately NOT env-configurable so a runaway is always stopped.
-_CAP_EXPANSION_MULTIPLIER = 2
 DEFAULT_GIT_TIMEOUT_SECONDS = 30.0
 
 
@@ -48,14 +36,6 @@ def journal_path(repo_root: Path) -> Path:
     return _state_dir(repo_root) / _JOURNAL_NAME
 
 
-def pending_path(repo_root: Path) -> Path:
-    return _state_dir(repo_root) / _PENDING_NAME
-
-
-def _cap_path(repo_root: Path) -> Path:
-    return _state_dir(repo_root) / _CAP_NAME
-
-
 def _atomic_write(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
@@ -65,14 +45,6 @@ def _atomic_write(path: Path, payload: dict[str, Any]) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
-
-
-def _read_mapping(path: Path) -> dict[str, Any]:
-    try:
-        loaded = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-    return loaded if isinstance(loaded, dict) else {}
 
 
 def append_journal(repo_root: Path, event: str, **evidence: Any) -> None:
@@ -91,216 +63,6 @@ def append_journal(repo_root: Path, event: str, **evidence: Any) -> None:
         handle.flush()
         os.fsync(handle.fileno())
         fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
-
-
-@contextmanager
-def _pending_entries(repo_root: Path) -> Iterator[dict[str, Any]]:
-    """Serialize read/replace transactions on an inode that is never replaced."""
-    path = pending_path(repo_root)
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    with path.with_suffix(".lock").open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-        try:
-            try:
-                current = json.loads(path.read_text(encoding="utf-8"))
-            except FileNotFoundError:
-                current = {"paths": {}}
-            if not isinstance(current, dict) or not isinstance(current.get("paths"), dict):
-                raise ValueError("invalid reap-pending state; refusing reservation mutation")
-            yield current["paths"]
-        finally:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
-
-
-def mark_reap_pending(
-    repo_root: Path,
-    *,
-    worktree_path: Path,
-    branch: str | None,
-    head: str | None,
-    task_id: str | None,
-) -> bool:
-    """Atomically reserve a path before its final deletion checks.
-
-    Consumers that bind dispatch paths can call :func:`is_reap_pending` and
-    refuse reuse while this reservation exists.  The reaper clears it after a
-    terminal remove or any abort path.
-    """
-    with _pending_entries(repo_root) as entries:
-        key = str(worktree_path.resolve())
-        if key in entries:
-            return False
-        entries[key] = {
-            "branch": branch,
-            "head": head,
-            "task_id": task_id,
-            "marked_at": utc_now().replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-            "pid": os.getpid(),
-        }
-        _atomic_write(pending_path(repo_root), {"schema_version": "worktree-reaper-pending.v1", "paths": entries})
-        return True
-
-
-def clear_reap_pending(repo_root: Path, worktree_path: Path) -> None:
-    path = pending_path(repo_root)
-    if not path.exists():
-        return
-    with _pending_entries(repo_root) as entries:
-        key = str(worktree_path.resolve())
-        entry = entries.get(key)
-        if isinstance(entry, dict) and entry.get("pid") == os.getpid():
-            entries.pop(key)
-            _atomic_write(path, {"schema_version": "worktree-reaper-pending.v1", "paths": entries})
-
-
-def _orphan_reason(entry: Any, now: datetime) -> str | None:
-    """Require absent PID; legacy entries also require a stale UTC timestamp."""
-    if not isinstance(entry, dict):
-        return None
-    if "pid" in entry:
-        pid = entry["pid"]
-        if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
-            return None
-        try:
-            os.kill(pid, 0)
-        except ProcessLookupError:
-            return "holding PID absent"
-        except (OSError, OverflowError):
-            return None
-        return None
-    try:
-        marked = datetime.fromisoformat(str(entry.get("marked_at")).replace("Z", "+00:00"))
-    except ValueError:
-        return None
-    if marked.tzinfo is None or (now - marked).total_seconds() < _LEGACY_PENDING_STALE_SECONDS:
-        return None
-    return "legacy reservation stale with no active reaper/worktree lock"
-
-
-def recover_orphaned_reap_pending(
-    repo_root: Path,
-    worktree_path: Path,
-    *,
-    lock_dir: Path,
-) -> bool:
-    """Release an orphan, never delete a tree; caller holds the sweep's reaper lock.
-
-    Recheck the entry under both the stable state lock and the attachment lock.
-    Journal before mutation: an unavailable journal leaves the reservation intact.
-    Live or unverifiable PIDs remain protected regardless of age (including PID
-    reuse). Legacy PID-less entries require age plus the caller's reaper lock.
-    """
-    if not is_reap_pending(repo_root, worktree_path):
-        return False
-    try:
-        with (
-            worktree_claims.worktree_lock(worktree_path, lock_dir=lock_dir, timeout_s=0),
-            _pending_entries(repo_root) as entries,
-        ):
-            key = str(worktree_path.resolve())
-            entry = entries.get(key)
-            reason = _orphan_reason(entry, utc_now())
-            if reason is None:
-                return False
-            append_journal(
-                repo_root,
-                "reservation-recovery",
-                path=key,
-                decision="release for normal safety evaluation",
-                reason=reason,
-                reservation=entry,
-            )
-            entries.pop(key)
-            _atomic_write(pending_path(repo_root), {"schema_version": "worktree-reaper-pending.v1", "paths": entries})
-            return True
-    except worktree_claims.WorktreeLockError:
-        return False
-
-
-def is_reap_pending(repo_root: Path, worktree_path: Path) -> bool:
-    entries = _read_mapping(pending_path(repo_root)).get("paths")
-    return isinstance(entries, dict) and str(worktree_path.resolve()) in entries
-
-
-def _max_reaps_per_day() -> int:
-    raw = os.environ.get("LU_REAPER_MAX_REAPS_PER_DAY")
-    if raw is None:
-        return _DEFAULT_MAX_REAPS_PER_DAY
-    try:
-        parsed = int(raw)
-    except ValueError:
-        return _DEFAULT_MAX_REAPS_PER_DAY
-    return max(0, parsed)
-
-
-def cap_allows_reap(
-    repo_root: Path,
-    *,
-    now: datetime | None = None,
-    eligible_backlog: int | None = None,
-) -> tuple[bool, str | None]:
-    """Apply the first-seven-days daily cap unless the policy flag lifts it.
-
-    The cap is dynamic: when the eligible backlog (worktrees that already
-    passed every reap safety proof in this run) exceeds the remaining daily
-    budget, the cap may expand — journaled with the justifying backlog size —
-    but never beyond a hard ceiling of 2x the configured base.  The ceiling
-    is not env-expandable, and any doubt about the backlog count means no
-    expansion.
-    """
-    if os.environ.get("LU_REAPER_LIFT_FIRST_CLASS_CAP") == "1":
-        return True, None
-    current = now or utc_now()
-    state = _read_mapping(_cap_path(repo_root))
-    enabled_raw = state.get("enabled_at")
-    try:
-        enabled_at = datetime.fromisoformat(str(enabled_raw).replace("Z", "+00:00"))
-    except ValueError:
-        enabled_at = current
-    if (current - enabled_at).days >= _FIRST_CLASS_DAYS:
-        return True, None
-    counts = state.get("counts")
-    count = counts.get(current.date().isoformat(), 0) if isinstance(counts, dict) else 0
-    if not isinstance(count, int) or isinstance(count, bool):
-        count = 0
-    base = _max_reaps_per_day()
-    ceiling = base * _CAP_EXPANSION_MULTIPLIER
-    if count >= ceiling:
-        return False, f"first-class daily reap cap ceiling reached ({ceiling})"
-    remaining = max(base - count, 0)
-    backlog_known = (
-        isinstance(eligible_backlog, int) and not isinstance(eligible_backlog, bool) and eligible_backlog >= 0
-    )
-    if backlog_known and eligible_backlog > remaining:
-        append_journal(
-            repo_root,
-            "cap-expansion",
-            day=current.date().isoformat(),
-            backlog=eligible_backlog,
-            base=base,
-            ceiling=ceiling,
-            day_count=count,
-        )
-        return True, None
-    if count >= base:
-        return False, f"first-class daily reap cap reached ({base})"
-    return True, None
-
-
-def record_reap_for_cap(repo_root: Path, *, now: datetime | None = None) -> None:
-    current = now or utc_now()
-    path = _cap_path(repo_root)
-    state = _read_mapping(path)
-    counts = state.get("counts") if isinstance(state.get("counts"), dict) else {}
-    day = current.date().isoformat()
-    previous = counts.get(day, 0)
-    counts[day] = previous + 1 if isinstance(previous, int) else 1
-    state = {
-        "schema_version": "worktree-reaper-first-class-cap.v1",
-        "enabled_at": state.get("enabled_at") or current.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-        "counts": counts,
-    }
-    _atomic_write(path, state)
 
 
 def create_recovery_ref(

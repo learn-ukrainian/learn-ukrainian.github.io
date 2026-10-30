@@ -861,12 +861,8 @@ def _activity_reason(
     info: WorktreeInfo,
     active_ids: set[str] | None,
     live_cwds: set[Path] | None,
-    check_pending: bool = True,
     probe_attachment_lock: bool = False,
 ) -> str | None:
-    if check_pending and reaper_lifecycle.is_reap_pending(repo_root, info.path):
-        return "active reap reservation"
-
     primary = primary_checkout_root(repo_root)
     try:
         control_root = worktree_claims.control_plane_root(primary)

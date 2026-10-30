@@ -190,8 +190,12 @@ def require_pool_headroom() -> None:
         raise DataTierError(pool.failure())
 
 
-def prune_stale_worktrees(primary: Path) -> None:
-    """Reap abandoned nightly checkouts only when no nightly scope is active."""
+def prune_stale_worktrees(primary: Path, removed: list[worktree_claims.WorktreeRemoval] | None = None) -> None:
+    """Reap abandoned nightly checkouts only when no nightly scope is active.
+
+    Each removal is appended to ``removed`` as it happens, so a caller keeps the earlier receipts when a
+    later checkout is refused and this raises.
+    """
     parent = primary / ".worktrees" / "data-tier"
     if not parent.is_dir():
         return
@@ -207,10 +211,12 @@ def prune_stale_worktrees(primary: Path) -> None:
         # Leave a concurrent or recently interrupted runner's checkout alone.
         if time.time() - checkout.stat().st_mtime < 9 * 3600:
             continue
-        remove_test_worktree(primary, checkout)
+        removal = remove_test_worktree(primary, checkout)
+        if removed is not None:
+            removed.append(removal)
 
 
-def remove_test_worktree(primary: Path, checkout: Path) -> None:
+def remove_test_worktree(primary: Path, checkout: Path) -> worktree_claims.WorktreeRemoval:
     removal = worktree_claims.remove_unclaimed_worktree(
         checkout,
         repo_root=primary,
@@ -221,6 +227,7 @@ def remove_test_worktree(primary: Path, checkout: Path) -> None:
     if removal.action != "removed":
         detail = f"{removal.reason}: {removal.error}" if removal.error else removal.reason
         raise DataTierError(f"checkout cleanup {removal.action}: {detail}")
+    return removal
 
 
 def stop_scope(unit: str) -> None:
