@@ -39,10 +39,13 @@ plan_validate() {
   # The runner has no VESUM (data/vesum.db is not in the repo): the VESUM lookups of
   # gates C12 and C23 are declared not_checked and printed, never passed. Every other
   # strict failure still fails, and plan-promote never declares it.
+  # Nor has it the host-local review state (findings database, dispatch records, Sources
+  # ledger): a promoted plan's dispatch binding is declared not_checked and printed, and
+  # its committed promotion chain (plan-review-status reviewed_promoted) is still checked.
   for level_dir in curriculum/l2-uk-en/lesson-plans/*/; do
     if find "$level_dir" -maxdepth 1 -name '*.yaml' ! -name '_*' | grep -q .; then
       .venv/bin/python -m scripts.curriculum.validate "$(basename "$level_dir")" --all --strict \
-        --not-checked-when-unavailable vesum || status=1
+        --not-checked-when-unavailable vesum --not-checked-when-unavailable dispatch_records || status=1
     fi
   done
   return "$status"

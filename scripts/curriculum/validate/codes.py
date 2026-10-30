@@ -33,6 +33,9 @@ DUPLICATE_PACK_ID = "duplicate_pack_id"
 PACK_LOCK_MISMATCH = "pack_lock_mismatch"
 PACK_HASH_MISMATCH = "pack_hash_mismatch"
 PACK_PATH_MISMATCH = "pack_path_mismatch"
+# --strict on a promoted plan: the committed promotion chain and the review's dispatch binding (#12114)
+PLAN_REVIEW_NOT_PROMOTED = "plan_review_not_promoted"
+REVIEW_UNBOUND = "review_unbound"
 WORDS_NOT_FOUND = "words_not_found"
 WORDS_YAML_INVALID = "words_yaml_invalid"
 WORDS_MALFORMED = "words_malformed"
@@ -215,6 +218,8 @@ TOKEN_UNRESOLVED = "token_unresolved"
 MECHANICAL_RULE_NOT_CHECKED = "mechanical_rule_not_checked"
 # not_checked outside --strict, a failure under --strict (C12, C23, #9487)
 VESUM_UNAVAILABLE = "vesum_unavailable"
+# a failure under --strict unless the run declares host-local review state unavailable (CI, #12114)
+REVIEW_STATE_UNAVAILABLE = "review_state_unavailable"
 
 # Structured activity declarations (#9541); optional-field policy notes become failures in PR2.
 TARGET_NOT_AVAILABLE = "target_not_available"
@@ -265,6 +270,8 @@ DESCRIPTIONS = {
     PACK_LOCK_MISMATCH: "failure: the pack file's bytes disagree with its .lock sidecar",
     PACK_HASH_MISMATCH: "failure: the pack file's sha256 disagrees with the plan's evidence_ref.sha256",
     PACK_PATH_MISMATCH: "failure (rule 3): the --pack override does not match the plan's evidence_ref.path",
+    PLAN_REVIEW_NOT_PROMOTED: "failure (--strict, #12114): the plan carries its pack's sha256 but plan-review-status is not reviewed_promoted (no APPROVE, a stale review, or no receipt-proven promotion)",
+    REVIEW_UNBOUND: "failure (--strict, #12114): the promoted plan's review of record is not the recorder's projection of a done full-access dispatch with its saved result, saved return and ok Sources receipts",
     WORDS_NOT_FOUND: "failure: the level word store does not exist",
     WORDS_YAML_INVALID: "failure: the word store file is not valid YAML",
     WORDS_MALFORMED: "failure: a word record is malformed (missing id, lemma or forms)",
@@ -393,6 +400,7 @@ DESCRIPTIONS = {
     ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY: "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
     TITLE_QUANTITIES_NOT_PARSED: "not_checked: digit quantities in the title/subtitle are not parsed; any ASCII digits found are quoted (§2a)",
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
+    REVIEW_STATE_UNAVAILABLE: "not_checked only when declared, else a failure under --strict (#12114): the host-local review state (findings database, dispatch records, Sources ledger) is absent, so the promoted plan's dispatch binding cannot be checked; only a run that declares it (--not-checked-when-unavailable dispatch_records; CI, whose runner has none) keeps it a printed not_checked line, and the committed promotion chain is still checked",
     PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
     TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record, or is spelled like a taught syllable and matches only out-of-allowlist words (a syllable or sound is not a word); a person confirms it",
     VESUM_UNAVAILABLE: "not_checked, and a failure under --strict (gates C12, C23, #9487): VESUM could not be read, so the gate's lookup is undecided; findings the gate decided from the word store and the pack are still reported, and strict validation (plan-promote) never passes an undecided gate; only a run that declares an environment without VESUM (--not-checked-when-unavailable vesum; CI, whose runner has none) keeps it a printed not_checked line under --strict",
@@ -451,6 +459,7 @@ NOT_CHECKED_CODES = frozenset(
         TOKEN_UNRESOLVED,
         MECHANICAL_RULE_NOT_CHECKED,
         VESUM_UNAVAILABLE,
+        REVIEW_STATE_UNAVAILABLE,
     }
 )
 
