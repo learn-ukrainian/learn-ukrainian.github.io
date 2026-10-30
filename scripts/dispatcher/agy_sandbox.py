@@ -631,6 +631,11 @@ class _Boundary:
         argv = wrap_argv_with_sandbox(inner, sandbox)
         masks = [argument for path in hidden for argument in ("--tmpfs", str(path), "--remount-ro", str(path))]
         masks += [argument for copy, source in overlays for argument in ("--ro-bind", str(copy), str(source))]
+        for link, target in databases:
+            primary = repository / link.relative_to(self.worktree)
+            if primary != target:
+                # The worktree link names the selector, while only its selected file is mounted.
+                masks += ["--ro-bind", str(target), str(primary)]
         argv[-len(inner):-len(inner)] = [
             *masks, "--ro-bind", str(boundary / "passwd"), "/etc/passwd", "--ro-bind", str(boundary / "group"),
             "/etc/group", "--cap-drop", "ALL", "--proc", "/proc", "--chdir", str(self.worktree),
