@@ -48,6 +48,13 @@ F7_SHELL_OPTIONS = [
     "sudo -n bash +e -c 'pkill -f worker'",
     "env -u REVIEW_UNUSED bash +e -c 'pkill -f worker'",
     """pgrep -f worker | xargs bash +e -c 'kill "$1"' _""",
+    r"bash \+e -c 'pkill -f worker'",
+    r"bash -e \+x -c 'pkill -f worker'",
+    r"bash \+o posix -c 'pkill -f worker'",
+    r"bash \-e -c 'pkill -f worker'",
+    r"bash -o posix \+e -c 'pkill -f worker'",
+    r"bash \+O extglob -c 'pkill -f worker'",
+    "bash $FLAGS -c 'pkill -f worker'",
 ]
 # Review F10: ANSI-C escapes whose Bash meaning the decoder does not model.
 F10_ANSI_C = [
@@ -129,6 +136,7 @@ F10_ANSI_C = [
         ("cat <<'EOF'\npkill -f worker\nkill $(pgrep -f worker)\nEOF", False),
         ("cat <<EOF\npkill -f worker\nEOF", False),
         ("bash -e -c 'echo ok'", False),
+        ('bash "$HOME/run.sh"', False),
         (r"printf $'ok\t\x41\101\n'", False),
     ]
     + [(command, True) for command in F7_SHELL_OPTIONS + F10_ANSI_C]
