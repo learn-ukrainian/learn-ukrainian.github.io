@@ -20,7 +20,7 @@ from pathlib import Path
 import pytest
 
 from scripts.common import github_client as gh
-from tests.opsec_fixtures import CATALOG
+from tests.opsec_fixtures import CATALOG, recorded_approval
 
 ROOT = Path(__file__).resolve().parents[1]
 NOW = 1_000
@@ -692,16 +692,11 @@ def publisher(tmp_path, monkeypatch, synthetic_opsec):
             return gh.Response(
                 200, {}, json.dumps({"number": 1, "draft": False, "head": {"sha": HEAD}, "base": {}}).encode()
             )
-        # The #12020 seat read: no recorded verdicts, and the fleet identity.
+        # The #12020 seat read: an exact-head recorded approval (#12031), and the fleet identity.
         if endpoint.startswith("repos/unit/public/issues/1/comments"):
-            return gh.Response(200, {}, b"[]")
+            return gh.Response(200, {}, json.dumps([recorded_approval(HEAD)]).encode())
         if endpoint.startswith("user"):
             return gh.Response(200, {}, json.dumps({"login": "unit"}).encode())
-        # With none recorded, the head's own rollup: no check runs and no statuses.
-        if endpoint == f"repos/unit/public/commits/{HEAD}/check-runs?per_page=100":
-            return gh.Response(200, {}, json.dumps({"total_count": 0, "check_runs": []}).encode())
-        if endpoint == f"repos/unit/public/commits/{HEAD}/status?per_page=100":
-            return gh.Response(200, {}, json.dumps({"total_count": 0, "statuses": []}).encode())
         pull = {
             "headRefOid": HEAD,
             "isMergeQueueEnabled": False,
@@ -732,18 +727,14 @@ def test_publisher_merge_proceeds_at_zero_with_every_readiness_read(publisher):
         text=True,
     )
     assert result.returncode == 0, result.stderr
-    assert wire.sent[:8] == [
+    assert wire.sent[:5] == [
         ("http", "GET", "repos/unit/public/pulls/1"),
         ("native", "pr", "checks", "1", "--json", "name,bucket,state,workflow", "--repo", "unit/public"),
         ("http", "POST", "graphql"),
         ("http", "GET", "repos/unit/public/issues/1/comments?per_page=100"),
         ("http", "GET", "user?per_page=100"),
-        # No verdict is recorded, so the guard reads the head's own rollup for a review status left behind.
-        ("http", "GET", "repos/unit/public/pulls/1"),
-        ("http", "GET", f"repos/unit/public/commits/{HEAD}/check-runs?per_page=100"),
-        ("http", "GET", f"repos/unit/public/commits/{HEAD}/status?per_page=100"),
     ]
-    assert wire.sent[8][:4] == ("native", "pr", "merge", "1") and len(wire.sent) == 9
+    assert wire.sent[5][:4] == ("native", "pr", "merge", "1") and len(wire.sent) == 6
     # The operation ended with the verb: a non-landing verb is refused with its typed reason.
     refused(
         pub.publish(
@@ -757,7 +748,7 @@ def test_publisher_merge_proceeds_at_zero_with_every_readiness_read(publisher):
         ),
         "secondary_hold",
     )
-    assert len(wire.sent) == 9
+    assert len(wire.sent) == 6
 
 
 def test_publisher_merge_honours_only_an_authentic_hold_with_its_reason(publisher):

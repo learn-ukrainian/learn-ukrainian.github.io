@@ -24,6 +24,7 @@ from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.publish import github as publisher
 from scripts.publish import recovery
 from scripts.review.record_cf_verdict import build_comment
+from tests.opsec_fixtures import CATALOG
 
 HEAD = "a" * 40
 RUN_URL = "https://github.com/unit/public/actions/runs/321"
@@ -180,6 +181,8 @@ class Subject(keeper.GitHub):
 @pytest.fixture
 def transport(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_opsec, publisher_transport) -> Transport:
     monkeypatch.setenv("GH_REPO", "unit/public")
+    # The publisher's merge guard reads the registry's verdict_recorder for unit/public (#12031).
+    monkeypatch.setattr(publisher.gate, "catalog", lambda: CATALOG)
     common = tmp_path / ".git"
     common.mkdir()
     monkeypatch.setattr(recovery, "ledger_path", lambda cwd: common / "ci-recovery.sqlite3")
