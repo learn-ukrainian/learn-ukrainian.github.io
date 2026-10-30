@@ -1666,6 +1666,8 @@ def _hide_substitutions(command: str) -> tuple[str, dict[str, tuple[str, str]]]:
 
 # procps pgrep/pkill short options whose value follows the letter or the next word.
 _PROCESS_VALUE_OPTIONS = set("dgGPstuUFOrq")
+_PROCESS_SHELLS = {"bash", "sh", "dash", "zsh", "ksh"}
+_PROCESS_COMMANDS = {"pkill", "pgrep", "kill", "xargs", *_PROCESS_SHELLS}
 _XARGS_VALUE_OPTIONS = {
     "-a",
     "-d",
@@ -1749,8 +1751,20 @@ def _xargs_target(args: list[str]) -> list[str]:
     return []
 
 
-def _segment_process_facts(segment: list[str], depth: int, *, fed: bool = False) -> set[str]:
+def _process_command_at(segment: list[str]) -> tuple[str, list[str], int] | None:
     found = _command_at(segment)
+    if found is None or not found[0].startswith("-"):
+        return found
+    # A wrapper option (sudo -n, nice --adjustment=5, exec -a name) hid the
+    # command; resume at the first process-relevant word after it.
+    for index, word in enumerate(found[1]):
+        if _strip_quotes(word).rsplit("/", 1)[-1] in _PROCESS_COMMANDS:
+            return _command_at(found[1][index:])
+    return None
+
+
+def _segment_process_facts(segment: list[str], depth: int, *, fed: bool = False) -> set[str]:
+    found = _process_command_at(segment)
     if found is None:
         return set()
     cmd, args, _ = found
@@ -1762,7 +1776,7 @@ def _segment_process_facts(segment: list[str], depth: int, *, fed: bool = False)
     if cmd == "xargs":
         target = _xargs_target(args)
         return _segment_process_facts(target, depth + 1, fed=True) if target else set()
-    if cmd in {"bash", "sh", "dash", "zsh", "ksh"}:
+    if cmd in _PROCESS_SHELLS:
         facts: set[str] = set()
         for script in _shell_script(args):
             facts |= _process_facts(script, depth=depth + 1)
@@ -1778,7 +1792,8 @@ def _process_facts(command: str, *, depth: int = 0) -> set[str]:
     selection reaches its kill however the command routes the PIDs.
     """
     if depth >= 12:
-        return {"pkill"}
+        # Keep the existing parse-limit handling; the secret scan refuses it.
+        raise ShellPreprocessLimit("process-kill scan reached its depth limit")
     executable, substitutions = _hide_substitutions(preprocess_shell_command(command))
     facts: set[str] = set()
     for _, body in substitutions.values():
