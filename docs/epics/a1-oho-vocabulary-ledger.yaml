@@ -478,7 +478,7 @@ ledger:
   owning_slug: my-city
   oho_locator: p0200 Урок 01–03
   gloss: apartment
-  sense: Частина житлового будинку, що складається з однієї чи кількох кімнат, кухні, передпокою тощо, з окремим ходом; квартира, помешкання, хата.
+  sense: Окреме житлове приміщення в будинку, що складається з однієї або кількох кімнат, кухні та передпокою.
   reuse_schedule:
   - 42
   - 55
@@ -501,8 +501,8 @@ ledger:
   owning_position: 3
   owning_slug: who-am-i
   oho_locator: p0200 Урок 01–03
-  gloss: Kyiv
-  sense: Прикметник до Київ; пов’язаний із містом Києвом, характерний для нього.
+  gloss: Kyiv (adjective)
+  sense: Який стосується міста Києва, його жителів або створений у Києві.
   reuse_schedule:
   - 29
   - 55
@@ -1039,7 +1039,7 @@ ledger:
   owning_slug: health
   oho_locator: p0200 Урок 01–03
   gloss: pharmacy
-  sense: Заклад охорони здоров'я для виготовлення, зберігання та продажу лікарських засобів.
+  sense: Заклад охорони здоров’я для виготовлення, зберігання та продажу лікарських засобів.
   reuse_schedule:
   - 54
   - 55
@@ -1709,7 +1709,7 @@ ledger:
   owning_slug: reading-ukrainian
   oho_locator: p0201 Урок 04
   gloss: tablet
-  sense: Портативний персональний комп'ютер із сенсорним екраном.
+  sense: Портативний персональний комп’ютер із сенсорним екраном.
   reuse_schedule:
   - 30
   - 55
@@ -2120,7 +2120,7 @@ ledger:
   owning_slug: reading-ukrainian
   oho_locator: p0201 Урок 04
   gloss: idea
-  sense: Поняття, уявлення, що відбивають дійсність у свідомості людини та виражають ставлення її до навколишнього світу.
+  sense: Думка, задум або намір зробити що-небудь.
   reuse_schedule:
   - 30
   - 55
@@ -2826,7 +2826,7 @@ ledger:
   owning_slug: reading-ukrainian
   oho_locator: p0202 Урок 05–06
   gloss: to take
-  sense: Схоплювати, приймати або брати руками чи якимось знаряддям.
+  sense: Схоплювати, приймати або утримувати руками чи якимось знаряддям.
   reuse_schedule:
   - 30
   - 55
@@ -4138,7 +4138,7 @@ ledger:
   owning_slug: things-have-gender
   oho_locator: p0203 Урок 07–09
   gloss: whole
-  sense: Означає весь обсяг, щось як ціле, повне й неподільне; у повному складі.
+  sense: Повний обсяг, щось як єдине ціле, неподільне; у повному складі.
   reuse_schedule:
   - 31
   - 55
@@ -5967,7 +5967,7 @@ ledger:
   owning_slug: what-is-it-like
   oho_locator: p0204 Урок 10–12
   gloss: cocoa
-  sense: Тропічне вічнозелене дерево, з насіння якого виготовляють шоколад; шоколадне дерево.
+  sense: Поживний солодкий напій із какаового порошку та молока або води, а також порошок для його приготування.
   reuse_schedule:
   - 19
   - 55
@@ -6159,7 +6159,7 @@ ledger:
   owning_slug: what-is-it-like
   oho_locator: p0204 Урок 10–12
   gloss: delicious
-  sense: З апетитом, охоче.
+  sense: Який має приємний смак; апетитно, дуже смачно.
   reuse_schedule:
   - 19
   - 55
@@ -6586,7 +6586,7 @@ ledger:
   owning_slug: what-is-it-like
   oho_locator: p0204 Урок 10–12
   gloss: programmer
-  sense: Фахівець зі створення комп'ютерних програм та алгоритмів.
+  sense: Фахівець зі створення комп’ютерних програм та алгоритмів.
   reuse_schedule:
   - 19
   - 55
@@ -6915,7 +6915,7 @@ ledger:
   owning_slug: verbs-group-one
   oho_locator: p0205 Урок 13–17
   gloss: question
-  sense: Звернення до кого-небудь з метою з'ясування чогось або одержання відповіді.
+  sense: Звернення до кого-небудь з метою з’ясування чогось або одержання відповіді.
   reuse_schedule:
   - 26
   - 55
@@ -8984,7 +8984,7 @@ ledger:
   owning_slug: verbs-group-two
   oho_locator: p0206 Урок 18–20
   gloss: to translate (he translates)
-  sense: Відтворювати усне або писемне мовлення засобами іншої мови; перекладати текст.
+  sense: Відтворювати усне або писемне мовлення засобами іншої мови; тлумачити текст.
   reuse_schedule:
   - 28
   - 55
@@ -9389,7 +9389,7 @@ ledger:
   owning_slug: verbs-group-two
   oho_locator: p0206 Урок 18–20
   gloss: to watch (I watch)
-  sense: Спрямовувати погляд на кого- або що-небудь, прагнучи побачити; дивитися.
+  sense: Спрямовувати погляд на кого- або що-небудь, прагнучи побачити; спостерігати.
   reuse_schedule:
   - 28
   - 55
@@ -12178,7 +12178,7 @@ ledger:
   owning_slug: free-time
   oho_locator: p0208 Урок 27–31
   gloss: Dnipro (river in Ukraine)
-  sense: Велике місто на однойменній річці в центрально-східній частині України.
+  sense: Головна річка України, одна з найбільших річок Європи, що впадає в Чорне море.
   reuse_schedule:
   - 36
   - 55
@@ -13183,7 +13183,7 @@ ledger:
   owning_slug: my-city
   oho_locator: p0209 Урок 32–37
   gloss: to have breakfast
-  sense: і розмовне Їсти вранці, з’їдати сніданок.
+  sense: Споживати їжу вранці; їсти сніданок.
   reuse_schedule:
   - 42
   - 55
@@ -13975,7 +13975,7 @@ ledger:
   owning_slug: how-many
   oho_locator: p0210 Урок 38–43
   gloss: (one) time
-  sense: Одиниця ліку, що позначає однократність дії; один раз.
+  sense: Одиниця ліку, що позначає однократність дії; окремий випадок.
   reuse_schedule:
   - 22
   - 55
@@ -14991,7 +14991,7 @@ ledger:
   owning_slug: at-the-cafe
   oho_locator: p0211 Урок 44–48
   gloss: Vinnytsia (city in central Ukraine)
-  sense: Місто в центральній частині України на берегах Південного.
+  sense: Місто в центральній частині України на берегах Південного Бугу.
   reuse_schedule:
   - 48
   - 55
@@ -16584,7 +16584,7 @@ ledger:
   owning_slug: please-do-this
   oho_locator: p0212 Урок 49–53
   gloss: Crimea (peninsula in Ukraine)
-  sense: Автономна Республіка Крим; півострів на півдні України між Чорним та Азовським морями.
+  sense: Автономна Республіка на півострові на півдні України між Чорним та Азовським морями.
   reuse_schedule:
   - 53
   - 55
@@ -17017,7 +17017,7 @@ ledger:
   owning_slug: emergencies
   oho_locator: p0212 Урок 49–53
   gloss: defender
-  sense: Жінка, яка обороняє або захищає когось чи щось; військова захисниця.
+  sense: Жінка, яка обороняє або захищає когось чи щось; оборонниця.
   reuse_schedule:
   - 55
 - lemma: захід
@@ -17088,7 +17088,7 @@ ledger:
   owning_slug: please-do-this
   oho_locator: p0212 Урок 49–53
   gloss: Mykolaiv (city in southern Ukraine)
-  sense: Місто суднобудівників на півдні України біля злиття Інгулу й Південного.
+  sense: Місто на півдні України біля злиття річок Інгул та Південний Буг.
   reuse_schedule:
   - 53
   - 55
@@ -17885,7 +17885,7 @@ ledger:
   owning_slug: food-and-drink
   oho_locator: p0213 Урок 54–59
   gloss: fish (diminutive)
-  sense: Пестливе звертання до дівчини, жінки.
+  sense: Маленька риба; кулінарна страва з невеликої риби.
   reuse_schedule:
   - 45
   - 55
@@ -18422,7 +18422,7 @@ ledger:
   owning_slug: what-happened
   oho_locator: p0213 Урок 54–59
   gloss: school
-  sense: Стосовний до школи, призначений для учнів або навчання в школі (шкільний зошит, шкільний вік).
+  sense: Стосовний до школи, призначений для учнів або навчання (навчальний зошит, учнівський вік).
   reuse_schedule:
   - 55
 - lemma: аудиторія
@@ -18455,7 +18455,7 @@ ledger:
   owning_slug: what-happened
   oho_locator: p0213 Урок 54–59
   gloss: branch office
-  sense: Самостійна частина установи чи підприємства; підрозділ (наприклад, поштове відділення).
+  sense: Самостійна частина установи чи підприємства; підрозділ (наприклад, поштовий пункт).
   reuse_schedule:
   - 55
 - lemma: дев’ятиповерховий
@@ -18722,7 +18722,7 @@ ledger:
   owning_slug: my-plans
   oho_locator: p0214 Урок 60–67
   gloss: Ottawa (capital of Canada)
-  sense: Столиця Канади, розташована у провінції Онтаріо на річці Оттава.
+  sense: Столиця Канади, розташована у провінції Онтаріо на однойменній річці.
   reuse_schedule:
   - 55
 - lemma: Панама
@@ -18733,7 +18733,7 @@ ledger:
   owning_slug: my-plans
   oho_locator: p0214 Урок 60–67
   gloss: Panama
-  sense: Держава в Центральній Америці на Панамському перешийку між Карибським морем і Тихим океаном зі столицею в місті Панама.
+  sense: Держава в Центральній Америці на однойменному перешийку між Карибським морем і Тихим океаном.
   reuse_schedule:
   - 55
 - lemma: прокидатися
@@ -19153,8 +19153,8 @@ ledger:
   owning_position: 51
   owning_slug: my-plans
   oho_locator: p0214 Урок 60–67
-  gloss: Christmas
-  sense: Прикметник до Різдво; пов’язаний із зимовим християнським святом Різдва.
+  gloss: Christmas (adjective)
+  sense: Який стосується свята Різдва Христового, пов’язаний із різдвяними звичаями.
   reuse_schedule:
   - 55
 - lemma: частіше
@@ -19860,7 +19860,7 @@ ledger:
   owning_slug: my-story
   oho_locator: p0215 Урок 68–74
   gloss: to offer
-  sense: Подати ідею, висловити пропозицію або запропонувати допомогу чи послугу.
+  sense: Подати ідею, висловити пропозицію або надати допомогу чи послугу.
   reuse_schedule:
   - 53
   - 55
@@ -20327,7 +20327,7 @@ ledger:
   owning_slug: my-story
   oho_locator: p0215 Урок 68–74
   gloss: to take (vitamins)
-  sense: Брати до рук або одержувати передане; приймати гостей чи ліки.
+  sense: Брати до рук або одержувати передане; зустрічати гостей чи вживати ліки.
   reuse_schedule:
   - 53
   - 55
@@ -21004,7 +21004,7 @@ ledger:
   owning_slug: verbs-group-one
   oho_locator: p0205 Урок 13–17
   gloss: to have
-  sense: Мати що-небудь у своєму володінні, користуванні чи розпорядженні; володіти.
+  sense: Володіти чим-небудь, утримувати у своєму розпорядженні або користуванні.
   reuse_schedule:
   - 29
   - 55

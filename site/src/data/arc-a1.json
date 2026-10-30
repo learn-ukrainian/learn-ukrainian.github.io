@@ -622,7 +622,7 @@
       "phase": "A1.5",
       "title_uk": null,
       "title_en": "Where to?",
-      "job": "Say where you are going: accusative direction with в, у, на and transitive motion verbs (іти, їхати)",
+      "job": "Say where you are going: motion verbs (іти, їхати) with в, у, на and accusative direction",
       "skills": [],
       "is_checkpoint": false,
       "est_lessons": 3,

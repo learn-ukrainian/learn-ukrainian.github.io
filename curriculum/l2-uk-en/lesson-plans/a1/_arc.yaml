@@ -2,7 +2,7 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: 27a6b725e50682166adb1470ff6a674a42f84aed869f861f72673ff171f2465d
+  sha256: 03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d
 est_lessons_total: 162
 positions:
 - position: 1
@@ -461,7 +461,7 @@ positions:
 - position: 31
   slug: where-to
   est_lessons: 3
-  job: 'Say where you are going: accusative direction with в, у, на and transitive motion verbs (іти, їхати)'
+  job: 'Say where you are going: motion verbs (іти, їхати) with в, у, на and accusative direction'
   inventory_text: null
   phase: A1.5
   skills_text: — (`:610-630`, `:639-650`, `:683-684`)

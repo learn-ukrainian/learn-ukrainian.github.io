@@ -170,7 +170,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 28 | `euphony` | A1.5 | Choose у / в, і / й, з / із / зі | — | 2 |
 | 29 | `where-is-it` | A1.5 | Express destination and direction: accusative case with в, у, на and agreeing hard/soft-group adjectives in all three genders | — (`:610-630`, `:639-650`, `:683-684`) | 4 |
 | 30 | `my-city` | A1.5 | Name city institutions, worship buildings, public facilities and streets; directional motion and destinations in the city | Li, S, R, W (city signs/map, short city description and captions; `:372-376`, `:496-503`) (`:496-498`, `:499-500`, `:503`) | 3 |
-| 31 | `where-to` | A1.5 | Say where you are going: accusative direction with в, у, на and transitive motion verbs (іти, їхати) | — (`:610-630`, `:639-650`, `:683-684`) | 3 |
+| 31 | `where-to` | A1.5 | Say where you are going: motion verbs (іти, їхати) with в, у, на and accusative direction | — (`:610-630`, `:639-650`, `:683-684`) | 3 |
 | 32 | `transport` | A1.5 | Get around: travel hubs including автовокзал, public transport and taxi; іти, їхати in basic phrases | Li, S, R, W (traveller/passenger roles; tickets, timetables, illustrated advertisements; slow clear announcements for topic/detail; `:245-252`, `:310-321`, `:379-388`) (`:522`, `:501-502`, `:524`) | 3 |
 | 33 | `around-the-city` | A1.5 | Ask for and follow directions | Li | 3 |
 | 34 | `where-from` | A1.5 | Say where you and things are from; parts of the world (continents); at the border | W (`:523-525`; full address: country, city, street, house/building-section/apartment numbers; form and envelope; `:345-346`, `:352`, `:361`, `:377`) | 3 |

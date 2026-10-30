@@ -5702,11 +5702,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml",
-      "sha256": "f70cb4964b6d6a626f6a8d3b56c7661348eeab4a08b210cf6f38ee9d22dbb469"
+      "sha256": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml",
-      "sha256": "e4a6f02ca6c11a88a620284fcefc0f61c67cd5c9848bb80ef92cf985fd4f2247"
+      "sha256": "9608ea4b8bc86bff2fd327196f28f9bc126b310ad08d5f2f0ce19f862d9b061d"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml",
@@ -14130,7 +14130,7 @@
     },
     {
       "path": "site/src/content/docs/a1/where-to/index.mdx",
-      "sha256": "c057a829ca2a04bf75cb2b2fccf90990739868894eb7e022ff97003aa5423cb7"
+      "sha256": "20bd37d3460c5b87f30dea1e2177e5ea37cdf72f7c4870736f16f0a33191d32e"
     },
     {
       "path": "site/src/content/docs/a1/who-am-i/index.mdx",
