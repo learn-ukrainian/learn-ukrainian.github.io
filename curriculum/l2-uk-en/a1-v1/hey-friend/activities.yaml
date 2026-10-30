@@ -260,96 +260,136 @@ workbook:
     title: Repair address mistakes
     instruction: Match each learner mistake with a natural Ukrainian repair.
     pairs:
-      - left: 'Привіт, Антон!'
-        right: 'Привіт, Антоне!'
-      - left: 'Я є Джон.'
-        right: 'Мене звати Джон.'
-      - left: 'Добрий ранок, мій друг!'
-        right: 'Добрий ранок, мій друже!'
-      - left: 'Шановному пане Іване!'
-        right: 'Шановний пане Іване!'
-      - left: 'Пане Сергій!'
-        right: 'Пане Сергію!'
-      - left: 'Привіт, Надія!'
-        right: 'Привіт, Надіє!'
-      - left: 'Маша, привіт!'
-        right: 'Марійко, привіт!'
-      - left: 'Свєта, добрий день!'
-        right: 'Світлано, добрий день!'
-      - left: 'Ма, де телефон?'
-        right: 'Мамо, де телефон?'
-      - left: 'Тьотя Свєта, привіт!'
-        right: 'Тітко Світлано, привіт!'
+      - left: Привіт, Антон!
+        right: Привіт, Антоне!
+      - left: Мені звати Джон.
+        right: Мене звати Джон.
+      - left: Добрий ранок, мій друг!
+        right: Добрий ранок, мій друже!
+      - left: Шановному пане Іване!
+        right: Шановний пане Іване!
+      - left: Пане Сергій!
+        right: Пане Сергію!
+      - left: Привіт, Надія!
+        right: Привіт, Надіє!
+      - left: Марійка, привіт!
+        right: Марійко, привіт!
+      - left: Світлана, добрий день!
+        right: Світлано, добрий день!
+      - left: Мама, де телефон?
+        right: Мамо, де телефон?
+      - left: Тітка Світлана, привіт!
+        right: Тітко Світлано, привіт!
   - type: true-false
     title: Calling form checks
     instruction: Decide whether each statement fits this lesson.
     items:
-      - statement: 'Олена is the form for talking about Olena; Олено is for speaking to her.'
+      - statement: Олена is the form for talking about Olena; Олено is for speaking to her.
         answer: true
-        explanation: 'Use Олено in direct address.'
-      - statement: 'Гей, друже! is a useful friend-address phrase.'
+        explanation: Use Олено in direct address.
+      - statement: Гей, друже! is a useful friend-address phrase.
         answer: true
-        explanation: "Друже is the module's anchor calling form."
-      - statement: 'At A1, you must explain every vocative ending from a full case table.'
+        explanation: Друже is the module's anchor calling form.
+      - statement: At A1, you must explain every vocative ending from a full case table.
         answer: false
-        explanation: 'This lesson uses practical calling forms, not a full lecture.'
-      - statement: 'Пане Іване is a polite address to Ivan.'
+        explanation: This lesson uses practical calling forms, not a full lecture.
+      - statement: Пане Іване is a polite address to Ivan.
         answer: true
-        explanation: 'Both пане and Іване are address forms.'
-      - statement: 'Пані Оксано uses пані plus the calling form Оксано.'
+        explanation: Both пане and Іване are address forms.
+      - statement: Пані Оксано uses пані plus the calling form Оксано.
         answer: true
-        explanation: 'Пані stays пані; the name changes.'
-      - statement: 'Мамо is the full Ukrainian address phrase for Mom.'
+        explanation: Пані stays пані; the name changes.
+      - statement: Мамо is the full Ukrainian address phrase for Mom.
         answer: true
-        explanation: 'Use Мамо, not a clipped form.'
-      - statement: 'Привіт, Надія! is the target A1 address form.'
+        explanation: Мамо is the full address form practiced here. Ukrainian also has the attested short vocative ма.
+      - statement: Привіт, Надія! is the target A1 address form.
         answer: false
-        explanation: 'Use Привіт, Надіє!'
-      - statement: 'Добрий день and До побачення are the clean etiquette forms here.'
+        explanation: Use Привіт, Надіє!
+      - statement: Добрий день and До побачення are the clean etiquette forms here.
         answer: true
-        explanation: 'The lesson keeps Ukrainian greeting and goodbye language clean.'
+        explanation: The lesson keeps Ukrainian greeting and goodbye language clean.
   - type: group-sort
     title: Address register
-    instruction: Sort each address by the situation where it fits best.
+    instruction: Sort each address by the situation explicitly shown in the line.
     groups:
-      - name: 'Family address'
+      - name: Family address
         items:
-          - 'мамо'
-          - 'тату'
-          - 'бабусю'
-          - 'дідусю'
-      - name: 'Friend or classmate address'
+          - мамо
+          - тату
+          - бабусю
+          - дідусю
+      - name: Friend or classmate address
         items:
-          - 'друже'
-          - 'Олено'
-          - 'Тарасе'
-          - 'Маріє'
-      - name: 'Polite service address'
+          - друже
+          - Олено, ми в одному класі.
+          - Тарасе, ми в одному класі.
+          - Маріє, ми в одному класі.
+      - name: Polite service address
         items:
-          - 'пане Іване'
-          - 'пане Сергію'
-          - 'пані Оксано'
-          - 'пані Маріє'
-  - type: unjumble
+          - пане Іване
+          - пане Сергію
+          - пані Оксано
+          - пані Маріє
+  - type: fill-in
     title: Build address lines
-    instruction: Put each line in a natural order.
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - words: ['Олено', 'привіт']
-        answer: 'Олено, привіт!'
-      - words: ['Тарасе', 'ходи', 'сюди']
-        answer: 'Тарасе, ходи сюди.'
-      - words: ['Мамо', 'де', 'телефон']
-        answer: 'Мамо, де телефон?'
-      - words: ['Гей', 'друже']
-        answer: 'Гей, друже!'
-      - words: ['Добрий', 'день', 'пане', 'Іване']
-        answer: 'Добрий день, пане Іване!'
-      - words: ['Пані', 'Оксано', 'ось', 'меню']
-        answer: 'Пані Оксано, ось меню.'
-      - words: ['Маріє', 'радий', 'тебе', 'бачити']
-        answer: 'Маріє, радий тебе бачити!'
-      - words: ['Андрію', 'дякую']
-        answer: 'Андрію, дякую.'
+      - answer: Олено
+        sentence: ___, привіт!
+        options:
+          - Олено
+          - Олена
+          - Олену
+        explanation: Олено is the direct-address form.
+      - answer: Тарасе
+        sentence: ___, ходи сюди.
+        options:
+          - Тарасе
+          - Тарас
+          - Тарасу
+        explanation: Тарасе is the direct-address form.
+      - answer: Мамо
+        sentence: ___, де телефон?
+        options:
+          - Мамо
+          - Мама
+          - Маму
+        explanation: Мамо is the full direct-address form.
+      - answer: друже
+        sentence: Гей, ___!
+        options:
+          - друже
+          - друг
+          - другу
+        explanation: Друже is the direct-address form.
+      - answer: пане
+        sentence: Добрий день, ___ Іване!
+        options:
+          - пане
+          - пан
+          - пану
+        explanation: Use пане Іване in direct address.
+      - answer: Оксано
+        sentence: Пані ___, ось меню.
+        options:
+          - Оксано
+          - Оксана
+          - Оксану
+        explanation: The name takes the direct-address form Оксано.
+      - answer: Маріє
+        sentence: ___, радий тебе бачити!
+        options:
+          - Маріє
+          - Марія
+          - Марію
+        explanation: Маріє is the direct-address form.
+      - answer: Андрію
+        sentence: ___, дякую.
+        options:
+          - Андрію
+          - Андрій
+          - Андрія
+        explanation: Андрію is the direct-address form.
   - type: error-correction
     title: Fix the address
     instruction: Correct the address form in each sentence.

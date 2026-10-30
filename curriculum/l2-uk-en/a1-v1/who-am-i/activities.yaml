@@ -78,9 +78,9 @@ inline:
     instruction: З'єднай український рядок із його роботою.
     pairs:
       - left: Це Андрій.
-        right: представити людину
-      - left: Це Оксана.
         right: представити іншу людину
+      - left: Мене звати Оксана.
+        right: назвати своє ім'я
       - left: Хто це?
         right: запитати про людину
       - left: Що це?
@@ -134,35 +134,35 @@ workbook:
     anchor_id: fix-common-l2-traps
     instruction: Обери безпечніший український рядок про ідентичність.
     items:
-      - sentence: Я є студент.
-        error: Я є студент.
+      - sentence: Я є студента.
+        error: студента
         correction: Я студент.
         options:
           - Я студент.
-          - Я є студент.
-        explanation: У теперішній ідентичності кажи Я студент або Я — студент.
-      - sentence: Моє ім'я є Джон.
-        error: Моє ім'я є Джон.
+          - Я є студента.
+        explanation: Студент is nominative here. Є may be present or omitted; студента does not fit this identity sentence.
+      - sentence: Мені звати Джон.
+        error: Мені
         correction: Мене звати Джон.
         options:
           - Мене звати Джон.
-          - Моє ім'я є Джон.
-        explanation: Мене звати... — частотна модель першого представлення.
-      - sentence: Мене звати Марко. А у тебе?
-        error: А у тебе?
-        correction: А тебе?
+          - Мені звати Джон.
+        explanation: 'Use Мене звати Джон. The person named is the object of звати: мене fits; dative мені does not. A grammatical sentence with є is not an error.'
+      - sentence: Як ти звати?
+        error: ти
+        correction: Як тебе звати?
         options:
-          - А тебе?
-          - А у тебе?
-        explanation: На A1 уживай короткий відлунний блок А тебе?; форму з у вивчатимемо пізніше.
-      - sentence: "Оксана каже: «Я лікарку»."
-        error: "Я лікарку"
+          - Як тебе звати?
+          - Як ти звати?
+        explanation: The person named is the object of звати, so use тебе here; ти is the subject form.
+      - sentence: 'Оксана каже: «Я лікарку».'
+        error: лікарку
         correction: Я лікарка.
         options:
           - Я лікарка.
           - Я лікарку.
           - Мене лікарка.
-        explanation: "Я лікарка uses the nominative subject and profession noun. Лікарку is accusative; мене is not the subject form."
+        explanation: Я лікарка uses the nominative subject and profession noun. Лікарку is accusative; мене is not the subject form.
       - sentence: Воно мій тато.
         error: Воно
         correction: Це мій тато.
@@ -170,16 +170,16 @@ workbook:
           - Це мій тато.
           - Воно мій тато.
         explanation: Для першого називання людини вживай це; він можливе після цього.
-      - sentence: Привіт, пане професоре!
-        error: Привіт
+      - sentence: Добрий день, пане професора!
+        error: професора
         correction: Добрий день, пане професоре!
         options:
           - Добрий день, пане професоре!
-          - Привіт, пане професоре!
-        explanation: З професором або незнайомим дорослим уживай Добрий день.
+          - Добрий день, пане професора!
+        explanation: Direct address uses the vocative професоре. Професора is an oblique case form.
   - type: match-up
-    title: Пари професій
-    instruction: З'єднай чоловічу і жіночу форму професії.
+    title: Пари назв людей — Pairs of words for people
+    instruction: З'єднай чоловічу і жіночу форму слова. — Match the masculine and feminine forms of each word.
     pairs:
       - left: студент
         right: студентка
@@ -258,45 +258,45 @@ workbook:
           - Що
         explanation: Звідки питає, звідки людина.
   - type: fill-in
-    title: Обери українську норму
-    instruction: Заповни речення українським вибором.
+    title: Слова знайомства — Words for introductions
+    instruction: Доповни речення. — Complete each sentence.
     items:
       - sentence: Це моя ___ Марія.
         answer: дружина
         options:
           - дружина
-          - жена
-        explanation: Дружина — природний український вибір для жінки в шлюбі.
-      - sentence: ___, як вас звати?
-        answer: Вибачте
+          - дружину
+        explanation: Use nominative дружина after Це моя. Дружину is accusative.
+      - sentence: Вибачте, як ___ звати?
+        answer: вас
         options:
-          - Вибачте
-          - Ізвиніть
-        explanation: Вибачте і пробачте — безпечні українські вибори.
-      - sentence: ___, дуже приємно!
-        answer: Дякую
+          - вас
+          - ви
+        explanation: Use вас as the object of звати. Ви is the subject form; the polite name question is Вибачте, як вас звати?
+      - sentence: Я ___ вам за допомогу.
+        answer: дякую
         options:
-          - Дякую
-          - Спасібо
-        explanation: Дякую і спасибі — безпечні українські вибори.
+          - дякую
+          - дякує
+        explanation: Я takes first-person дякую. Дякує is the third-person form.
       - sentence: Мені ___ приємно.
         answer: теж
         options:
           - теж
           - тоже
         explanation: Теж і також — безпечні українські вибори.
-      - sentence: "Оксана — ___."
+      - sentence: Оксана — ___.
         answer: інженерка
         options:
           - інженерка
           - інженерку
-        explanation: "Оксана — інженерка uses a nominative profession noun. Інженерку is accusative."
+        explanation: Оксана — інженерка uses a nominative profession noun. Інженерку is accusative.
       - sentence: Це мій ___.
         answer: лікар
         options:
           - лікар
-          - врач
-        explanation: Лікар — українська форма; врач — російське слово.
+          - лікаря
+        explanation: Use nominative лікар after Це мій. Лікаря is an oblique case form.
   - type: translate
     title: Лексика знайомства
     instruction: Обери англійське значення.

@@ -230,18 +230,52 @@ inline:
           - 'коштує'
         explanation: 'Мені виходити тут? asks if this is your stop.'
 workbook:
-  - type: order
+  - type: fill-in
     title: Airport to hotel route
-    instruction: Put the route instructions in a helpful order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Вийдіть з аеропорту.'
-      - 'Знайдіть зупинку автобуса.'
-      - 'Їдьте автобусом до метро.'
-      - 'Потім їдьте на метро до центру.'
-      - 'На станції йдіть прямо.'
-      - 'Готель праворуч.'
-    correct_order: [0, 1, 2, 3, 4, 5]
+      - sentence: Шановні гості, ___ з аеропорту.
+        answer: вийдіть
+        options:
+          - вийдіть
+          - вийди
+          - виходжу
+        explanation: Вийдіть addresses both guests; вийди addresses one person and виходжу describes the speaker.
+      - sentence: Шановні гості, ___ зупинку автобуса.
+        answer: знайдіть
+        options:
+          - знайдіть
+          - знайди
+          - знаходжу
+        explanation: Знайдіть addresses both guests.
+      - sentence: Шановні гості, ___ автобусом до метро.
+        answer: їдьте
+        options:
+          - їдьте
+          - їдь
+          - їду
+        explanation: Їдьте addresses both guests.
+      - sentence: Шановні гості, потім ___ на метро до центру.
+        answer: їдьте
+        options:
+          - їдьте
+          - їдь
+          - їду
+        explanation: Їдьте addresses both guests.
+      - sentence: Шановні гості, на станції ___ прямо.
+        answer: ідіть
+        options:
+          - ідіть
+          - іди
+          - іду
+        explanation: Ідіть addresses both guests.
+      - sentence: Готель з правого боку від нас. Готель ___.
+        answer: праворуч
+        options:
+          - праворуч
+          - ліворуч
+          - позаду
+        explanation: Праворуч matches the stated position on the right.
   - type: true-false
     title: Transport culture
     instruction: Decide whether the statement fits the lesson.
@@ -266,74 +300,74 @@ workbook:
     instruction: Choose the phrase that does not fit the pattern.
     items:
       - words:
-          - 'автобусом'
-          - 'потягом'
-          - 'трамваєм'
-          - 'на метрі'
-        answer: 'на метрі'
-        explanation: 'Use на метро.'
+          - автобусом
+          - потягом
+          - трамваєм
+          - на метрі
+        answer: на метрі
+        explanation: Use на метро.
       - words:
-          - 'квиток'
-          - 'зупинка'
-          - 'вокзал'
-          - 'білет'
-        answer: 'білет'
-        explanation: 'Use квиток in this lesson.'
+          - квиток
+          - зупинка
+          - вокзал
+          - книга
+        answer: книга
+        explanation: The first three are transport words. Книга names a book.
       - words:
-          - 'у таксі'
-          - 'на метро'
-          - 'у метро'
-          - 'в таксію'
-        answer: 'в таксію'
-        explanation: 'Таксі does not change.'
+          - у таксі
+          - на метро
+          - у метро
+          - в таксію
+        answer: в таксію
+        explanation: Таксі does not change.
       - words:
-          - 'Як дістатися до вокзалу?'
-          - 'Де зупинка?'
-          - 'Ідіть прямо.'
-          - 'брати автобус'
-        answer: 'брати автобус'
-        explanation: 'Use їхати автобусом or сідати в автобус.'
+          - Як дістатися до вокзалу?
+          - Де зупинка?
+          - Ідіть прямо.
+          - Як дістатися до вокзал?
+        answer: Як дістатися до вокзал?
+        explanation: До takes the genitive вокзалу, not the dictionary form вокзал.
   - type: error-correction
     title: Repair transport interference
     instruction: Choose the natural Ukrainian transport sentence.
     items:
-      - sentence: "Я їду в автобусом до школи."
-        error: "Я їду в автобусом до школи."
-        correction: "Я їду автобусом до школи."
+      - sentence: Я їду в автобусом до школи.
+        error: в
+        correction: Я їду автобусом до школи.
         options:
           - Я їду автобусом до школи.
           - Я їду автобусу до школи.
           - Я їду автобусом до школі.
-        explanation: "Автобусом expresses the means without в. Автобусу is not the instrumental; до requires genitive школи, not locative школі."
-      - sentence: "Я сиджу в цьому автобусі і їду за цим автобусом."
-        error: "їду за цим автобусом"
-        correction: "їду цим автобусом"
+        explanation: Автобусом expresses the means without в. Автобусу is not the instrumental; до requires genitive школи, not locative школі.
+      - sentence: Я сиджу в цьому автобусі і їду за цим автобусом.
+        error: за
+        correction: Я сиджу в цьому автобусі і їду цим автобусом.
         options:
-          - їду цим автобусом
-          - їду цим автобусу
-          - їду біля цього автобуса
-        explanation: "The speaker is inside this same bus, so їду цим автобусом expresses transport by it. Цим автобусу fails agreement; біля цього автобуса places the traveler outside the bus."
-      - sentence: "Я їду в таксію, а потім на метрі."
-        error: "в таксію, а потім на метрі"
-        correction: "в таксі, а потім на метро"
+          - Я сиджу в цьому автобусі і їду цим автобусом.
+          - Я сиджу в цьому автобусі і їду цим автобусу.
+          - Я сиджу в цьому автобусі і їду за цим автобусом.
+        explanation: The speaker is inside this same bus, so їду цим автобусом expresses transport by it. Цим автобусу fails agreement; біля цього автобуса places the traveler outside the bus.
+      - sentence: Я їду в таксію, а потім на метро.
+        error: таксію
+        correction: Я їду в таксі, а потім на метро.
         options:
-          - в таксі, а потім на метро
-          - в таксієм, а потім на метро
-          - в таксі, а потім на метрою
-        explanation: "Таксі and метро are indeclinable transport nouns. Таксію/таксієм and метрою wrongly add endings; метрі is a form of the unit метр, not the transport noun метро."
-      - sentence: 'Де остановка?'
-        error: 'остановка'
-        correction: 'Де зупинка?'
+          - Я їду в таксі, а потім на метро.
+          - Я їду в таксієм, а потім на метро.
+          - Я їду в таксію, а потім на метро.
+        explanation: Таксі and метро are indeclinable. Here only таксію needs repair; the rest of the sentence provides context.
+      - sentence: Де остановка?
+        error: остановка
+        correction: Де зупинка?
         options:
-          - 'Де зупинка?'
-          - 'Де остановка?'
-          - 'Куди зупинка?'
-        explanation: 'Use зупинка for a stop.'
-      - sentence: 'Один білет, будь ласка.'
-        error: 'білет'
-        correction: 'Один квиток, будь ласка.'
+          - Де зупинка?
+          - Де остановка?
+          - Куди зупинка?
+        explanation: Use зупинка for a stop.
+      - sentence: Один квитків, будь ласка.
+        error: квитків
+        correction: Один квиток, будь ласка.
         options:
-          - 'Один квиток, будь ласка.'
-          - 'Один білет, будь ласка.'
-          - 'Одна зупинка, будь ласка.'
-        explanation: 'Use квиток for this lesson.'
+          - Один квиток, будь ласка.
+          - Один квитків, будь ласка.
+          - Одна квиток, будь ласка.
+        explanation: Один takes the matching masculine singular квиток.

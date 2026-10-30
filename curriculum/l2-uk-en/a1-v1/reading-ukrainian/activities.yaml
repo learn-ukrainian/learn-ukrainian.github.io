@@ -149,9 +149,9 @@ workbook:
       - statement: У молоко́ звук о залишається чистим.
         correct: true
         explanation: Не перетворюй о на нечіткий голосни́й.
-      - statement: ДЖ і ДЗ читаємо як злиті одиниці.
+      - statement: У словах джерело і дзвін ДЖ і ДЗ читаємо як злиті звуки. — In джерело and дзвін, дж and дз are each one combined sound.
         correct: true
-        explanation: ДЖ і ДЗ читаємо як злиті одиниці.
+        explanation: У цих словах ДЖ і ДЗ — злиті звуки. — In these words, дж and дз each form one sound. Other words can contain two separate sounds.
   - type: match-up
     title: Друк і зошит
     instruction: З'єднай друковане слово з підказкою в зо́шиті.
@@ -192,7 +192,7 @@ workbook:
         video: https://www.youtube.com/watch?v=ksXIXj7CXwc
   - id: act-5
     type: quiz
-    title: Мініпереві́рка читання
+    title: Reading check
     instruction: Обери правильну відповідь.
     items:
       - prompt: Склад — що це?

@@ -1,33 +1,41 @@
 inline:
   - id: act-1
-    type: group-sort
+    type: match-up
     title: Food, drink, and meal words
-    instruction: Sort each word by the shelf it belongs on.
-    groups:
-      - name: 'Їжа'
-        items:
-          - 'хліб'
-          - 'риба'
-          - "м'ясо"
-          - 'каша'
-          - 'сир'
-      - name: 'Напої'
-        items:
-          - 'кава'
-          - 'чай'
-          - 'вода'
-          - 'сік'
-          - 'молоко'
-      - name: 'Прийоми їжі'
-        items:
-          - 'сніданок'
-          - 'обід'
-          - 'вечеря'
-      - name: 'Українські страви'
-        items:
-          - 'борщ'
-          - 'вареники'
-          - 'сало'
+    instruction: Match each Ukrainian food, drink, or meal word with its English meaning.
+    pairs:
+      - left: хліб
+        right: bread
+      - left: риба
+        right: fish
+      - left: м'ясо
+        right: meat
+      - left: каша
+        right: porridge
+      - left: сир
+        right: cheese
+      - left: кава
+        right: coffee
+      - left: чай
+        right: tea
+      - left: вода
+        right: water
+      - left: сік
+        right: juice
+      - left: молоко
+        right: milk
+      - left: сніданок
+        right: breakfast
+      - left: обід
+        right: midday meal
+      - left: вечеря
+        right: evening meal
+      - left: борщ
+        right: Ukrainian vegetable soup
+      - left: вареники
+        right: boiled filled dough parcels
+      - left: сало
+        right: pork fat
   - id: act-2
     type: match-up
     title: Breakfast table pairs
@@ -101,30 +109,30 @@ inline:
     title: Food guardrails
     instruction: Decide whether each statement fits this module.
     items:
-      - statement: 'Борщ is a Ukrainian cultural dish in this module.'
+      - statement: Борщ is a Ukrainian cultural dish in this module.
         answer: true
-        explanation: 'It is named as Ukrainian family and cultural food.'
-      - statement: 'Без цукру is practiced as a full phrase.'
+        explanation: It is named as Ukrainian family and cultural food.
+      - statement: Без цукру is practiced as a full phrase.
         answer: true
-        explanation: 'Practice the whole phrase as a service line.'
-      - statement: 'Творог is the standard course word for cheese.'
+        explanation: Practice the whole phrase as a service line.
+      - statement: Творог is the standard course word for cheese.
         answer: false
-        explanation: 'Use сир, or кисломолочний сир when needed.'
-      - statement: 'Смажена картопля is the clean Ukrainian form.'
+        explanation: Use сир, or кисломолочний сир when needed.
+      - statement: Смажена картопля is the clean Ukrainian form.
         answer: true
-        explanation: 'Use смажена картопля for fried potatoes.'
-      - statement: "Я п'ю борщ is the natural line for soup."
+        explanation: Use смажена картопля for fried potatoes.
+      - statement: Я їм борщ is a natural line for eating soup.
+        answer: true
+        explanation: Їсти describes eating a bowl of borscht with a spoon.
+      - statement: Смачного! is the natural meal formula.
+        answer: true
+        explanation: Use Смачного! when people begin eating.
+      - statement: Я снідаю means I have breakfast.
+        answer: true
+        explanation: Use the compact meal verb.
+      - statement: Борщ дуже смачно is the best sentence.
         answer: false
-        explanation: 'Ukrainian says я їм борщ.'
-      - statement: 'Смачного! is the natural meal formula.'
-        answer: true
-        explanation: 'Use Смачного! when people begin eating.'
-      - statement: 'Я снідаю means I have breakfast.'
-        answer: true
-        explanation: 'Use the compact meal verb.'
-      - statement: 'Борщ дуже смачно is the best sentence.'
-        answer: false
-        explanation: 'Say Борщ дуже смачний for the noun борщ.'
+        explanation: Say Борщ дуже смачний for the noun борщ.
 workbook:
   - type: quiz
     title: Daily meal choices
@@ -184,20 +192,66 @@ workbook:
           - text: 'До побачення!'
             correct: false
         explanation: 'Смачного! is the meal formula.'
-  - type: order
+  - type: fill-in
     title: One food day
-    instruction: Put the food day from morning to evening.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Вранці я снідаю вдома.'
-      - 'Я їм кашу і яблуко.'
-      - "Я п'ю каву з молоком."
-      - 'Вдень я обідаю на роботі.'
-      - 'На обід я їм борщ зі сметаною.'
-      - 'Увечері я вечеряю вдома.'
-      - 'Я їм рибу з рисом.'
-      - "Я п'ю чай без цукру."
-    correct_order: [0, 1, 2, 3, 4, 5, 6, 7]
+      - sentence: Вранці я ___ вдома.
+        answer: снідаю
+        options:
+          - снідаю
+          - снідає
+          - снідаєш
+        explanation: Я takes снідаю.
+      - sentence: Я їм цю ___ і яблуко.
+        answer: кашу
+        options:
+          - кашу
+          - каша
+          - каші
+        explanation: Цю takes the matching feminine singular object кашу.
+      - sentence: Я п'ю каву ___.
+        answer: з молоком
+        options:
+          - з молоком
+          - з молоко
+          - без молоко
+        explanation: Use the additive phrase з молоком.
+      - sentence: Вдень я ___ на роботі.
+        answer: обідаю
+        options:
+          - обідаю
+          - обідає
+          - обідаєте
+        explanation: Я takes обідаю.
+      - sentence: На обід я їм борщ ___.
+        answer: зі сметаною
+        options:
+          - зі сметаною
+          - зі сметана
+          - зі сметану
+        explanation: Use the additive phrase зі сметаною.
+      - sentence: Увечері я ___ вдома.
+        answer: вечеряю
+        options:
+          - вечеряю
+          - вечеряє
+          - вечеряють
+        explanation: Я takes вечеряю.
+      - sentence: Я їм рибу ___.
+        answer: з рисом
+        options:
+          - з рисом
+          - з рис
+          - без рисом
+        explanation: Use the additive phrase з рисом.
+      - sentence: Я п'ю чай ___.
+        answer: без цукру
+        options:
+          - без цукру
+          - без цукор
+          - без цукром
+        explanation: Без takes the genitive form цукру.
   - type: match-up
     title: Extra food-table glosses
     instruction: Match the food word with its English support.
@@ -270,171 +324,182 @@ workbook:
           - з молоко
           - смачна
         explanation: "З молоком has instrumental after з for the additive milk. З молоко uses nominative/accusative instead; смачна is nominative and cannot agree with accusative каву here."
-  - type: unjumble
+  - type: fill-in
     title: Build safe food lines
-    instruction: Put the words in a natural A1 order.
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - words:
-          - 'Я'
-          - 'снідаю'
-          - 'вдома'
-        answer: 'Я снідаю вдома'
-      - words:
-          - 'Мені'
-          - 'каву'
-          - 'з'
-          - 'молоком'
-          - 'будь ласка'
-        answer: 'Мені каву з молоком, будь ласка'
-      - words:
-          - 'Борщ'
-          - 'дуже'
-          - 'смачний'
-        answer: 'Борщ дуже смачний'
-      - words:
-          - 'Я'
-          - 'їм'
-          - 'борщ'
-        answer: 'Я їм борщ'
-      - words:
-          - 'Чай'
-          - 'без'
-          - 'цукру'
-          - 'будь ласка'
-        answer: 'Чай без цукру, будь ласка'
-      - words:
-          - 'Смачного!'
-        answer: 'Смачного!'
+      - answer: снідаю
+        sentence: Я ___ вдома.
+        options:
+          - снідаю
+          - снідає
+          - снідаєш
+        explanation: Я takes снідаю.
+      - answer: з молоком
+        sentence: Мені каву ___, будь ласка.
+        options:
+          - з молоком
+          - з молоко
+          - без молоко
+        explanation: Use the additive phrase з молоком.
+      - answer: смачний
+        sentence: Борщ дуже ___.
+        options:
+          - смачний
+          - смачна
+          - смачне
+        explanation: Смачний agrees with masculine борщ.
+      - answer: їм
+        sentence: Я ___ борщ.
+        options:
+          - їм
+          - їси
+          - їсть
+        explanation: Я takes їм.
+      - answer: без цукру
+        sentence: Чай ___, будь ласка.
+        options:
+          - без цукру
+          - без цукор
+          - без цукром
+        explanation: Без takes the genitive form цукру.
+      - answer: Смачного!
+        sentence: 'Друзі сідають обідати. Побажай їм доброго обіду: «___»'
+        options:
+          - Смачного!
+          - Де пошта?
+          - Куди ти їдеш?
+        explanation: Смачного! is the meal wish; the alternatives ask about a place or destination.
   - type: error-correction
     title: Repair food and drink interference
     instruction: Choose the clean Ukrainian repair.
     anchor_id: repair-food-and-drink-interference
     items:
-      - sentence: 'Я маю голод. / Я є голодний.'
-        error: 'Я маю голод. / Я є голодний.'
-        answer: 'Я хочу їсти. / Я голодний.'
+      - sentence: Я є хочу їсти.
+        error: є
+        answer: Я хочу їсти.
         options:
-          - 'Я хочу їсти. / Я голодний.'
-          - 'Я маю голод. / Я є голодний.'
-          - 'Я є хочу їсти. / Я маю голодний.'
-        explanation: 'Use Я хочу їсти or Я голодний for hunger.'
-      - sentence: "Кіт п'є теплий молоко."
-        error: 'теплий молоко'
-        answer: "Кіт п'є тепле молоко."
+          - Я хочу їсти.
+          - Я є хочу їсти.
+          - Я є хочеш їсти.
+        explanation: Хочу is already a conjugated verb. Use Я хочу їсти.
+      - sentence: Кіт п'є теплий молоко.
+        error: теплий
+        answer: Кіт п'є тепле молоко.
         options:
-          - "Кіт п'є тепле молоко."
-          - "Кіт п'є теплий молоко."
-          - "Кіт п'є тепла молоко."
-        explanation: 'Молоко is neuter, so use тепле молоко.'
-      - sentence: 'Вареники з творогом.'
-        error: 'творогом'
-        answer: 'Вареники із сиром.'
+          - Кіт п'є тепле молоко.
+          - Кіт п'є теплий молоко.
+          - Кіт п'є тепла молоко.
+        explanation: Молоко is neuter, so use тепле молоко.
+      - sentence: Вареники з творогом.
+        error: творогом
+        answer: Вареники із сиром.
         options:
-          - 'Вареники із сиром.'
-          - 'Вареники з творогом.'
-          - 'Вареники із сир.'
-        explanation: 'Use сир in this food context.'
-      - sentence: 'Я люблю творог.'
-        error: 'творог'
-        answer: 'Я люблю сир.'
+          - Вареники із сиром.
+          - Вареники з творогом.
+          - Вареники із сир.
+        explanation: Use сир in this food context.
+      - sentence: Я люблю творог.
+        error: творог
+        answer: Я люблю сир.
         options:
-          - 'Я люблю сир.'
-          - 'Я люблю творог.'
-          - 'Я люблю сиром.'
-        explanation: 'Use сир as the everyday Ukrainian food word.'
-      - sentence: 'На столі жарена картопля.'
-        error: 'жарена'
-        answer: 'На столі смажена картопля.'
+          - Я люблю сир.
+          - Я люблю творог.
+          - Я люблю сиром.
+        explanation: Use сир as the everyday Ukrainian food word.
+      - sentence: На столі смажений картопля.
+        error: смажений
+        answer: На столі смажена картопля.
         options:
-          - 'На столі смажена картопля.'
-          - 'На столі жарена картопля.'
-          - 'На столі смажений картопля.'
-        explanation: 'Use смажена картопля.'
-      - sentence: 'Жарена картопля.'
-        error: 'Жарена'
-        answer: 'Смажена картопля.'
+          - На столі смажена картопля.
+          - На столі смажений картопля.
+          - На столі смажене картопля.
+        explanation: Картопля is feminine, so смажена agrees with it.
+      - sentence: Смажене картопля.
+        error: Смажене
+        answer: Смажена картопля.
         options:
-          - 'Смажена картопля.'
-          - 'Жарена картопля.'
-          - 'Смажений картопля.'
-        explanation: 'The clean Ukrainian phrase is смажена картопля.'
-      - sentence: 'Дайте мені один воду.'
-        error: 'один воду'
-        answer: 'Дайте мені одну воду. (або склянку води)'
+          - Смажена картопля.
+          - Смажене картопля.
+          - Смажений картопля.
+        explanation: Картопля is feminine, so use смажена.
+      - sentence: Дайте мені один воду.
+        error: один
+        answer: Дайте мені одну воду. (або склянку води)
         options:
-          - 'Дайте мені одну воду. (або склянку води)'
-          - 'Дайте мені один воду.'
-          - 'Дайте мені одне воду.'
-        explanation: 'Use одну воду, or ask for a glass of water.'
-      - sentence: 'Суп з картофель.'
-        error: 'картофель'
-        answer: 'Суп із картоплею. Або картопляний суп.'
+          - Дайте мені одну воду. (або склянку води)
+          - Дайте мені один воду.
+          - Дайте мені одне воду.
+        explanation: Use одну воду, or ask for a glass of water.
+      - sentence: Суп з картофель.
+        error: картофель
+        answer: Суп із картоплею. Або картопляний суп.
         options:
-          - 'Суп із картоплею. Або картопляний суп.'
-          - 'Суп з картофель.'
-          - 'Суп із картофель.'
-        explanation: 'Use картопля / картоплею or картопляний.'
-      - sentence: 'Я їм сніданок о сьомій.'
-        error: 'їм сніданок'
-        answer: 'Я снідаю о сьомій.'
+          - Суп із картоплею. Або картопляний суп.
+          - Суп з картофель.
+          - Суп із картофель.
+        explanation: Use картопля / картоплею or картопляний.
+      - sentence: Я снідає о сьомій.
+        error: снідає
+        answer: Я снідаю о сьомій.
         options:
-          - 'Я снідаю о сьомій.'
-          - 'Я їм сніданок о сьомій.'
-          - 'Я сніданок о сьомій.'
-        explanation: 'Use the meal verb снідати.'
-      - sentence: "Я п'ю борщ."
-        error: "п'ю"
-        answer: 'Я їм борщ.'
+          - Я снідаю о сьомій.
+          - Я снідає о сьомій.
+          - Я снідаєш о сьомій.
+        explanation: Я takes снідаю.
+      - sentence: Я їси борщ.
+        error: їси
+        answer: Я їм борщ.
         options:
-          - 'Я їм борщ.'
-          - "Я п'ю борщ."
-          - "Я п'ю суп."
-        explanation: 'Soup is eaten in Ukrainian.'
-      - sentence: 'Клубнічний джем.'
-        error: 'Клубнічний'
-        answer: 'Полуничний джем.'
+          - Я їм борщ.
+          - Я їси борщ.
+          - Я їсть борщ.
+        explanation: Я takes first-person їм.
+      - sentence: Клубнічний джем.
+        error: Клубнічний
+        answer: Полуничний джем.
         options:
-          - 'Полуничний джем.'
-          - 'Клубнічний джем.'
-          - 'Клубніка джем.'
-        explanation: 'Use полуниця / полуничний, not the Russian-root form.'
-      - sentence: 'Дайте чай без цукор.'
-        error: 'без цукор'
-        answer: 'Дайте чай без цукру.'
+          - Полуничний джем.
+          - Клубнічний джем.
+          - Клубніка джем.
+        explanation: Use полуниця / полуничний, not the Russian-root form.
+      - sentence: Дайте чай без цукор.
+        error: цукор
+        answer: Дайте чай без цукру.
         options:
-          - 'Дайте чай без цукру.'
-          - 'Дайте чай без цукор.'
-          - 'Дайте чай з цукру.'
-        explanation: 'Без цукру is memorized as a whole phrase.'
-      - sentence: 'Чай з цукор.'
-        error: 'з цукор'
-        answer: 'Чай з цукром.'
+          - Дайте чай без цукру.
+          - Дайте чай без цукор.
+          - Дайте чай з цукру.
+        explanation: Без цукру is memorized as a whole phrase.
+      - sentence: Чай з цукор.
+        error: цукор
+        answer: Чай з цукром.
         options:
-          - 'Чай з цукром.'
-          - 'Чай з цукор.'
-          - 'Чай без цукром.'
-        explanation: 'Чай з цукром is a whole drink phrase.'
-      - sentence: 'Борщ дуже смачно.'
-        error: 'дуже смачно'
-        answer: 'Борщ дуже смачний.'
+          - Чай з цукром.
+          - Чай з цукор.
+          - Чай без цукром.
+        explanation: Чай з цукром is a whole drink phrase.
+      - sentence: Борщ дуже смачно.
+        error: смачно
+        answer: Борщ дуже смачний.
         options:
-          - 'Борщ дуже смачний.'
-          - 'Борщ дуже смачно.'
-          - 'Борщ дуже смачна.'
-        explanation: 'With the noun борщ, use смачний.'
-      - sentence: 'Каша дуже смачний.'
-        error: 'смачний'
-        answer: 'Каша дуже смачна.'
+          - Борщ дуже смачний.
+          - Борщ дуже смачно.
+          - Борщ дуже смачна.
+        explanation: With the noun борщ, use смачний.
+      - sentence: Каша дуже смачний.
+        error: смачний
+        answer: Каша дуже смачна.
         options:
-          - 'Каша дуже смачна.'
-          - 'Каша дуже смачний.'
-          - 'Каша дуже смачно.'
-        explanation: 'With the noun каша, use смачна.'
-      - sentence: 'Приємного апетиту!'
-        error: 'Приємного апетиту!'
-        answer: 'Смачного!'
+          - Каша дуже смачна.
+          - Каша дуже смачний.
+          - Каша дуже смачно.
+        explanation: With the noun каша, use смачна.
+      - sentence: Смачьного!
+        error: Смачьного
+        answer: Смачного!
         options:
-          - 'Смачного!'
-          - 'Приємного апетиту!'
-          - 'Добрий апетит!'
-        explanation: 'Смачного! is the natural meal formula here.'
+          - Смачного!
+          - Смачьного!
+          - Смачьному!
+        explanation: Write Смачного! without ь after ч. This is a traditional wish before a meal.

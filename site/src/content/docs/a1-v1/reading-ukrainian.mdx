@@ -359,7 +359,7 @@ the whole word more calmly.
 
 ### Факти про читання
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Кожен український склад має голосни́й звук.", "isTrue": true, "explanation": "Голосни́й звук — центр складу."}, {"statement": "Ї іноді м'якшить попередній при́голосний.", "isTrue": false, "explanation": "Ї завжди читаємо як [йі]."}, {"statement": "У молоко́ звук о залишається чистим.", "isTrue": true, "explanation": "Не перетворюй о на нечіткий голосни́й."}, {"statement": "ДЖ і ДЗ читаємо як злиті одиниці.", "isTrue": true, "explanation": "ДЖ і ДЗ читаємо як злиті одиниці."}]`)} instruction={"Обери правда чи неправда."} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Кожен український склад має голосни́й звук.", "isTrue": true, "explanation": "Голосни́й звук — центр складу."}, {"statement": "Ї іноді м'якшить попередній при́голосний.", "isTrue": false, "explanation": "Ї завжди читаємо як [йі]."}, {"statement": "У молоко́ звук о залишається чистим.", "isTrue": true, "explanation": "Не перетворюй о на нечіткий голосни́й."}, {"statement": "У словах джерело і дзвін ДЖ і ДЗ читаємо як злиті звуки. — In джерело and дзвін, дж and дз are each one combined sound.", "isTrue": true, "explanation": "У цих словах ДЖ і ДЗ — злиті звуки. — In these words, дж and дз each form one sound. Other words can contain two separate sounds."}]`)} instruction={"Обери правда чи неправда."} isUkrainian={false} />
 
 ### Друк і зошит
 
@@ -369,7 +369,7 @@ the whole word more calmly.
 
 <WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "А", "word": "ма́ма", "sound": "[а]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "О", "word": "молоко́", "sound": "[о]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "У", "word": "ву́лиця", "sound": "[у]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "И", "word": "ми", "sound": "[и]"}, {"video": "https://www.youtube.com/watch?v=ksXIXj7CXwc", "letter": "І", "word": "пі́сня", "sound": "[і]"}]`)} title="Повтор голосних" instruction={"Подивися огляд абетки ще раз, потім повтори прості голосні."} />
 
-### Мініпереві́рка читання
+### Reading check
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "Склад — що це?", "options": [{"text": "лі́тера", "correct": false}, {"text": "syllable", "correct": true}, {"text": "greeting", "correct": false}], "explanation": "Склад — це частина слова з голосним звуком."}, {"question": "Молоко́ — скільки складів?", "options": [{"text": "2", "correct": false}, {"text": "3", "correct": true}, {"text": "1", "correct": false}], "explanation": "Молоко́ має три голосні звуки й три склади́."}, {"question": "Яка літера завжди [йі]?", "options": [{"text": "І", "correct": false}, {"text": "И", "correct": false}, {"text": "Ї", "correct": true}], "explanation": "Ї завжди читаємо як [йі]."}]`)} instruction={"Обери правильну відповідь."} isUkrainian={false} />
 

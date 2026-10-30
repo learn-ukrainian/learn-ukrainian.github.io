@@ -51,60 +51,60 @@ inline:
     title: Де or куди in context
     instruction: Choose the phrase that fits the sentence.
     items:
-      - prompt: 'Я зараз...'
+      - prompt: Я зараз...
         options:
-          - text: 'в парку'
+          - text: в парку
             correct: true
-          - text: 'в парк'
+          - text: в парк
             correct: false
-          - text: 'до парку'
+          - text: до парку
             correct: false
-        explanation: 'Зараз asks де?'
-      - prompt: "— Куди ти йдеш? — Я йду..."
+        explanation: Зараз asks де?
+      - prompt: — Куди ти йдеш? — Я йду...
         options:
-          - text: 'в магазин'
+          - text: в магазин
             correct: true
-          - text: 'в магазині'
+          - text: в магазині
             correct: false
-          - text: 'на магазині'
+          - text: на магазині
             correct: false
-        explanation: "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination."
-      - prompt: 'Магазин на...'
+        explanation: Куди requests a destination. В магазин answers it; both в магазині and на магазині are locative phrases and do not give that destination.
+      - prompt: Магазин на...
         options:
-          - text: 'вулиці'
+          - text: вулиці
             correct: true
-          - text: 'вулицю'
+          - text: вулицю
             correct: false
-          - text: 'вулиця'
+          - text: вулиця
             correct: false
-        explanation: 'На вулиці answers де?'
-      - prompt: "— Куди ти їдеш потім? — Потім їду на..."
+        explanation: На вулиці answers де?
+      - prompt: — Куди ти їдеш потім? — Потім їду на...
         options:
-          - text: 'роботу'
+          - text: роботу
             correct: true
-          - text: 'роботі'
+          - text: роботі
             correct: false
-          - text: 'робота'
+          - text: робота
             correct: false
-        explanation: "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination."
-      - prompt: 'Ми зараз у...'
+        explanation: Куди requests a destination. На роботу answers it. Роботі is a locative form here; робота is the dictionary form of the work noun.
+      - prompt: Ми зараз у...
         options:
-          - text: 'центрі'
+          - text: центрі
             correct: true
-          - text: 'центр'
+          - text: центр
             correct: false
-          - text: 'центру'
+          - text: центру
             correct: false
-        explanation: 'Зараз у центрі is static.'
-      - prompt: "— Куди вона йде? — Вона йде в..."
+        explanation: Зараз у центрі is static.
+      - prompt: — Куди вона йде? — Вона йде в...
         options:
-          - text: 'офіс'
+          - text: офіс
             correct: true
-          - text: 'офісі'
+          - text: офісі
             correct: false
-          - text: 'офісу'
+          - text: офісу
             correct: false
-        explanation: "Куди asks for the destination, so the keyed accusative phrase answers it. The locative alternatives describe a location; the nominative/genitive alternative cannot express this destination."
+        explanation: Куди requests a destination. В офіс answers it. Офісі and офісу cannot supply the requested accusative destination in this phrase.
   - id: act-3
     type: match-up
     title: City questions
@@ -123,18 +123,52 @@ inline:
       - left: 'Де ти живеш?'
         right: 'На вулиці Франка.'
   - id: act-4
-    type: order
+    type: fill-in
     title: Daily city route
-    instruction: Put the route in a natural order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Спочатку я йду на зупинку.'
-      - 'Потім їду автобусом до центру.'
-      - "Після цього йду пішки п'ять хвилин."
-      - 'Робота в офісі на площі.'
-      - 'Після роботи йду в магазин.'
-      - 'Потім повертаюся додому.'
-    correct_order: [0, 1, 2, 3, 4, 5]
+      - sentence: — Куди ти йдеш спочатку? — Спочатку я йду на ___.
+        answer: зупинку
+        options:
+          - зупинку
+          - зупинці
+          - зупинка
+        explanation: Куди requests the destination на зупинку.
+      - sentence: Потім їду ___ до центру.
+        answer: автобусом
+        options:
+          - автобусом
+          - автобуса
+          - автобусу
+        explanation: Автобусом expresses the means of transport.
+      - sentence: Після цього йду пішки п'ять ___.
+        answer: хвилин
+        options:
+          - хвилин
+          - хвилина
+          - хвилиною
+        explanation: П'ять takes хвилин.
+      - sentence: Робота в офісі на ___.
+        answer: площі
+        options:
+          - площі
+          - площа
+          - площею
+        explanation: Use the place phrase на площі.
+      - sentence: — Куди ти йдеш після роботи? — Після роботи йду в ___.
+        answer: магазин
+        options:
+          - магазин
+          - магазині
+          - магазином
+        explanation: Куди requests the destination в магазин.
+      - sentence: — Куди ти повертаєшся потім? — Потім повертаюся ___.
+        answer: додому
+        options:
+          - додому
+          - вдома
+          - з дому
+        explanation: Додому answers the destination question.
   - id: act-5
     type: fill-in
     title: Close, far, or on the corner
@@ -246,30 +280,30 @@ workbook:
     title: City route shelves
     instruction: Sort each phrase by its route function.
     groups:
-      - name: 'Where now'
+      - name: Where now
         items:
-          - 'у парку'
-          - 'на площі'
-          - 'у центрі'
-          - 'на вулиці'
-      - name: 'Where to'
+          - у парку
+          - на площі
+          - у центрі
+          - на вулиці
+      - name: Where to
         items:
-          - 'в парк'
-          - 'на роботу'
-          - 'до бібліотеки'
-          - 'у магазин'
-      - name: 'How'
+          - в парк
+          - на роботу
+          - до бібліотеки
+          - у магазин
+      - name: How or how long
         items:
-          - 'пішки'
-          - 'автобусом'
-          - 'на метро'
-          - "п'ять хвилин"
-      - name: 'Direction commands'
+          - пішки
+          - автобусом
+          - на метро
+          - п'ять хвилин
+      - name: Direction commands
         items:
-          - 'ідіть прямо'
-          - 'направо'
-          - 'наліво'
-          - 'їдьте'
+          - ідіть прямо
+          - направо
+          - наліво
+          - їдьте
   - type: odd-one-out
     title: Find the city mismatch
     instruction: Choose the phrase that does not fit the pattern.
@@ -328,62 +362,62 @@ workbook:
     title: Repair city-route interference
     instruction: Choose the natural Ukrainian city sentence.
     items:
-      - sentence: 'Я живу Київ.'
-        error: 'Київ'
-        correction: 'Я живу в Києві.'
+      - sentence: Я живу Київ.
+        error: Київ
+        correction: Я живу в Києві.
         options:
-          - 'Я живу в Києві.'
-          - 'Я живу Київ.'
-          - 'Я живу до Києва.'
-        explanation: 'After живу, в Києві names where the speaker lives. Київ needs the locative form here; до Києва names a destination.'
-      - sentence: 'Я йду в магазині.'
-        error: 'в магазині'
-        correction: 'Я йду в магазин.'
+          - Я живу в Києві.
+          - Я живу Київ.
+          - Я живу до Києва.
+        explanation: After живу, в Києві names where the speaker lives. Київ needs the locative form here; до Києва names a destination.
+      - sentence: — Куди ти йдеш? — Я йду в магазині.
+        error: магазині
+        correction: — Куди ти йдеш? — Я йду в магазин.
         options:
-          - 'Я йду в магазин.'
-          - 'Я йду в магазині.'
-          - 'Я йду на магазині.'
-        explanation: 'Йду asks куди?, so use the direction form.'
-      - sentence: 'Магазин на вулицю.'
-        error: 'на вулицю'
-        correction: 'Магазин на вулиці.'
+          - — Куди ти йдеш? — Я йду в магазин.
+          - — Куди ти йдеш? — Я йду в магазині.
+          - — Куди ти йдеш? — Я йду магазин.
+        explanation: The question куди? requests a destination. A locative phrase can describe where movement happens, but it does not answer this destination question.
+      - sentence: Магазин на вулицю.
+        error: вулицю
+        correction: Магазин на вулиці.
         options:
-          - 'Магазин на вулиці.'
-          - 'Магазин на вулицю.'
-          - 'Магазин до вулиці.'
-        explanation: 'Магазин is already there, so this answers де?'
-      - sentence: 'Я їду автобус до центру.'
-        error: 'автобус'
-        correction: 'Я їду автобусом до центру.'
+          - Магазин на вулиці.
+          - Магазин на вулицю.
+          - Магазин до вулиці.
+        explanation: Магазин is already there, so this answers де?
+      - sentence: Я їду автобус до центру.
+        error: автобус
+        correction: Я їду автобусом до центру.
         options:
-          - 'Я їду автобусом до центру.'
-          - 'Я їду автобус до центру.'
-          - 'Я їду на автобус до центрі.'
-        explanation: 'For means of travel, use автобусом.'
-      - sentence: 'Я живу у Одесі.'
-        error: 'у Одесі'
-        correction: 'Я живу в Одесі.'
+          - Я їду автобусом до центру.
+          - Я їду автобус до центру.
+          - Я їду на автобус до центрі.
+        explanation: For means of travel, use автобусом.
+      - sentence: Я живу у Одесі.
+        error: у
+        correction: Я живу в Одесі.
         options:
-          - 'Я живу в Одесі.'
-          - 'Я живу у Одесі.'
-          - 'Я живу до Одеси.'
-        explanation: 'Use в before a vowel for милозвучність.'
-      - sentence: 'Я йду до місті.'
-        error: 'до місті'
-        correction: 'Я йду до міста.'
+          - Я живу в Одесі.
+          - Я живу у Одесі.
+          - Я живу до Одеси.
+        explanation: Use в before a vowel for милозвучність.
+      - sentence: Я йду до місті.
+        error: місті
+        correction: Я йду до міста.
         options:
-          - 'Я йду до міста.'
-          - 'Я йду до місті.'
-          - 'Я йду в місті.'
+          - Я йду до міста.
+          - Я йду до місті.
+          - Я йду в місті.
         explanation: 'До takes genitive: міста.'
-      - sentence: 'Як дістатися до бібліотека?'
-        error: 'до бібліотека'
-        correction: 'Як дістатися до бібліотеки?'
+      - sentence: Як дістатися до бібліотека?
+        error: бібліотека
+        correction: Як дістатися до бібліотеки?
         options:
-          - 'Як дістатися до бібліотеки?'
-          - 'Як дістатися до бібліотека?'
-          - 'Як дістатися в бібліотеці?'
-        explanation: 'Use the whole A1 route phrase до бібліотеки.'
+          - Як дістатися до бібліотеки?
+          - Як дістатися до бібліотека?
+          - Як дістатися в бібліотеці?
+        explanation: Use the whole A1 route phrase до бібліотеки.
   - type: match-up
     title: Route question pairs
     instruction: Match each short city question with the answer type it needs.
@@ -400,15 +434,49 @@ workbook:
         right: 'Так, їдьте на метро.'
       - left: 'Де ти живеш?'
         right: 'На вулиці Франка.'
-  - type: order
+  - type: fill-in
     title: Lviv walk route
-    instruction: Put the short walking route in order.
-    is_ukrainian: true
+    instruction: Choose the word or phrase that completes each independent line.
     items:
-      - 'Ми на площі Ринок.'
-      - 'Ідемо прямо до театру.'
-      - 'Потім ідемо направо.'
-      - 'Парк близько.'
-      - 'Музей у центрі.'
-      - 'Повертаємося на площу.'
-    correct_order: [0, 1, 2, 3, 4, 5]
+      - sentence: Ми на ___ Ринок.
+        answer: площі
+        options:
+          - площі
+          - площа
+          - площею
+        explanation: Use the place phrase на площі Ринок.
+      - sentence: Ідемо прямо до ___.
+        answer: театру
+        options:
+          - театру
+          - театр
+          - театром
+        explanation: До takes the genitive form театру.
+      - sentence: Театр праворуч від нас. Потім ідемо ___, до театру.
+        answer: направо
+        options:
+          - направо
+          - наліво
+          - назад
+        explanation: Направо follows the stated direction toward the theater on the right.
+      - sentence: Парк ___. До нього лише дві хвилини пішки.
+        answer: близько
+        options:
+          - близько
+          - далеко
+          - їдьте
+        explanation: The stated short walk fits близько; їдьте is a command, not a location predicate.
+      - sentence: Музей у ___.
+        answer: центрі
+        options:
+          - центрі
+          - центр
+          - центром
+        explanation: Use the place phrase у центрі.
+      - sentence: — Куди ми повертаємося? — Повертаємося на ___.
+        answer: площу
+        options:
+          - площу
+          - площі
+          - площа
+        explanation: Куди requests the destination на площу.

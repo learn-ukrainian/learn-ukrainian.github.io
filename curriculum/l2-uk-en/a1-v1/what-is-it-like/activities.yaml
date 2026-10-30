@@ -289,16 +289,16 @@ workbook:
     title: Виправ узгодження прикметників
     instruction: Fix the adjective or sentence frame.
     items:
-      - sentence: Він є добрий студент.
-        error: Він є добрий студент.
+      - sentence: Він є добра студент.
+        error: добра
         answer: Він добрий студент.
         options:
           - Він добрий студент.
           - Він добра студент.
           - Він є добра студент.
-        explanation: In this present-tense frame, Ukrainian normally omits є.
+        explanation: Студент is masculine, so use добрий. Є may be present or omitted.
       - sentence: Це гарна хлопець.
-        error: Це гарна хлопець.
+        error: гарна
         answer: Це гарний хлопець.
         options:
           - Це гарний хлопець.
@@ -306,15 +306,15 @@ workbook:
           - Це гарна хлопець.
         explanation: Хлопець is masculine.
       - sentence: Який твоє ім'я?
-        error: Який твоє ім'я?
-        answer: "Яке твоє ім'я? (або: Як тебе звати?)"
+        error: Який
+        answer: Яке твоє ім'я?
         options:
-          - "Яке твоє ім'я? (або: Як тебе звати?)"
+          - Яке твоє ім'я?
           - Яка твоє ім'я?
           - Який твоє ім'я?
-        explanation: Ім'я is neuter; in real introductions, use Як тебе звати?
+        explanation: Ім'я is neuter, so use Яке. Як тебе звати? is another natural question for an introduction.
       - sentence: Це цікавий книга.
-        error: Це цікавий книга.
+        error: цікавий
         answer: Це цікава книга.
         options:
           - Це цікава книга.
@@ -322,7 +322,7 @@ workbook:
           - Це цікаве книга.
         explanation: Книга is feminine, so use цікава.
       - sentence: Моя кава смачний.
-        error: Моя кава смачний.
+        error: смачний
         answer: Моя кава смачна.
         options:
           - Моя кава смачна.
@@ -330,7 +330,7 @@ workbook:
           - Моя кава смачне.
         explanation: Кава is feminine, so use смачна.
       - sentence: Це мій новий ручка.
-        error: Це мій новий ручка.
+        error: мій новий
         answer: Це моя нова ручка.
         options:
           - Це моя нова ручка.
@@ -338,63 +338,63 @@ workbook:
           - Це моє нове ручка.
         explanation: Ручка is feminine, so use моя and нова.
   - type: fill-in
-    title: Виправ прикметникові пастки
-    instruction: Choose the standard Ukrainian adjective.
+    title: Прикметники в реченнях — Adjectives in sentences
+    instruction: Choose the adjective form that fits the sentence.
     items:
       - sentence: Цей суп дуже ___.
         answer: смачний
         options:
           - смачний
-          - вкусний
-        explanation: Use смачний for tasty.
+          - смачна
+        explanation: Суп is masculine, so use смачний. Смачна is feminine.
       - sentence: У мене є ___ олівець.
         answer: жовтий
         options:
           - жовтий
-          - жолтий
-        explanation: Use жовтий.
+          - жовта
+        explanation: Олівець is masculine, so use жовтий. Жовта is feminine.
       - sentence: У сусідки ___ кіт.
         answer: чорний
         options:
           - чорний
-          - черний
-        explanation: Use чорний.
+          - чорне
+        explanation: Кіт is masculine, so use чорний. Чорне is neuter.
       - sentence: Прапор ___, а не білий.
         answer: червоний
         options:
           - червоний
-          - красний
-        explanation: Use червоний for red in ordinary modern Ukrainian.
+          - червона
+        explanation: Прапор is masculine, so use червоний. Червона is feminine.
       - sentence: Це ___ фільм.
         answer: поганий
         options:
           - поганий
-          - плохий
-        explanation: Use поганий.
+          - погана
+        explanation: Фільм is masculine, so use поганий. Погана is feminine.
       - sentence: Це ___ відповідь на запитання.
         answer: правильна
         options:
           - правильна
-          - вірна
-        explanation: Use правильна відповідь for a correct answer.
-      - sentence: "Мені все одно, який олівець. Дай мені, будь ласка, ___ олівець."
+          - правильний
+        explanation: Відповідь is feminine, so use правильна. Правильний is masculine.
+      - sentence: Мені все одно, який олівець. Дай мені, будь ласка, ___ олівець.
         answer: будь-який
         options:
           - будь-який
-          - любий
-        explanation: "Будь-який means an unrestricted choice here. Любий means dear or beloved; it does not mean any pencil."
+          - будь-яка
+        explanation: The context asks for any pencil. Олівець is masculine, so use будь-який; будь-яка is feminine.
       - sentence: Сергій — ___ хлопчик.
         answer: розумний
         options:
           - розумний
-          - умний
-        explanation: Use розумний.
+          - розумна
+        explanation: Хлопчик is masculine, so use розумний. Розумна is feminine.
       - sentence: Тарас — ___ учень.
         answer: лінивий
         options:
           - лінивий
-          - ленивий
-        explanation: Use лінивий.
+          - лінива
+        explanation: Учень is masculine, so use лінивий. Лінива is feminine.
   - type: translate
     title: Обери український рядок
     instruction: Choose the Ukrainian sentence that matches the English cue.

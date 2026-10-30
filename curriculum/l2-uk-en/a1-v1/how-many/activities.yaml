@@ -261,37 +261,37 @@ workbook:
     title: Виправ числові пастки
     instruction: Choose the standard Ukrainian correction.
     items:
-      - sentence: "п'ять столи"
-        error: п'ять столи
-        answer: "п'ять столів"
+      - sentence: п'ять столи
+        error: столи
+        answer: п'ять столів
         options:
           - п'ять столів
           - п'ять столами
           - п'ять стола
-        explanation: "After п’ять use genitive plural столів. Столами is instrumental plural; стола is singular, so neither fits."
-      - sentence: сімдесят гривні / сімдесят гривень
-        error: сімдесят гривні
+        explanation: After п’ять use genitive plural столів. Столами is instrumental plural; стола is singular, so neither fits.
+      - sentence: сімдесят гривні
+        error: гривні
         answer: сімдесят гривень
         options:
           - сімдесят гривень
           - сімдесят гривні
           - сімдесят гривня
         explanation: The 5+ price phrase is гривень.
-      - sentence: Я маю 20 років / Я є 20 років
-        error: Я маю 20 років / Я є 20 років
+      - sentence: Я є 20 років
+        error: Я є
         answer: Мені 20 років
         options:
           - Мені 20 років
-          - Я маю 20 років
+          - Мені 20 роки
           - Я є 20 років
-        explanation: Age uses the phrase Мені ... років.
-      - sentence: дві гривень / дві гривні
-        error: дві гривень
+        explanation: Use Мені 20 років. Я маю 20 років is also a valid age expression; it is not an error.
+      - sentence: дві гривень
+        error: гривень
         answer: дві гривні
         options:
           - дві гривні
           - дві гривень
-          - два гривні
+          - дві гривня
         explanation: The 2-4 price phrase is гривні.
       - sentence: п'ятьдесять / шістьдесять
         error: п'ятьдесять / шістьдесять
@@ -301,13 +301,13 @@ workbook:
           - п'ятьдесять / шістьдесять
           - п'ятдесять / шістьдесят
         explanation: Use п'ятдесят and шістдесят.
-      - sentence: Скільки вам год? / Скільки вам років?
-        error: Скільки вам год?
+      - sentence: Скільки вам роки?
+        error: роки
         answer: Скільки вам років?
         options:
           - Скільки вам років?
-          - Скільки вам год?
-          - Скільки вам рік?
+          - Скільки вам роки?
+          - Скільки вам роками?
         explanation: Ask age with the fixed phrase Скільки вам років?
   - type: fill-in
     title: Перевір правопис числівників
@@ -402,20 +402,20 @@ workbook:
         options:
           - text: Мені двадцять п'ять років.
             correct: true
-          - text: Я маю двадцять п'ять років.
+          - text: Мені двадцять п'ять роки.
             correct: false
           - text: Я є двадцять п'ять років.
             correct: false
-        explanation: Use Мені ... років.
+        explanation: Мені двадцять п'ять років and Я маю двадцять п'ять років both express this age. After twenty-five, use років.
       - source: She is eighteen.
         options:
           - text: Їй вісімнадцять.
             correct: true
-          - text: Вона має вісімнадцять.
+          - text: Йому вісімнадцять.
             correct: false
           - text: Її вісімнадцять.
             correct: false
-        explanation: Use Їй for the age phrase.
+        explanation: Use feminine dative Їй for she in this age phrase. Йому is masculine; Її is not the required dative form.
       - source: My phone number is zero ninety-seven...
         options:
           - text: Мій номер телефону — нуль дев'яносто сім...
@@ -451,8 +451,8 @@ workbook:
         answer: true
         explanation: Numbers ending in 2-4 use роки, except 12-14.
       - statement: Я маю двадцять років.
-        answer: false
-        explanation: Use Мені двадцять років.
+        answer: true
+        explanation: Я маю двадцять років and Мені двадцять років both express age.
       - statement: Нуль дев'яносто сім.
         answer: true
         explanation: This is a natural phone-number group.

@@ -189,9 +189,9 @@ inline:
         options:
           - text: синьо-жовтий прапор
             correct: true
-          - text: "червоно-жовтий прапор"
+          - text: червоно-жовтий прапор
             correct: false
-          - text: "зелено-жовтий прапор"
+          - text: зелено-жовтий прапор
             correct: false
         explanation: The standard phrase is синьо-жовтий прапор.
       - prompt: A dark blue sweater
@@ -212,7 +212,7 @@ inline:
           - text: блакитне листівка
             correct: false
         explanation: Листівка is feminine.
-      - prompt: Deep water
+      - prompt: A deep-blue sea
         options:
           - text: синє море
             correct: true
@@ -243,49 +243,49 @@ workbook:
         right: grey hair
   - type: error-correction
     title: Виправ кольорові пастки
-    instruction: "Choose the standard Ukrainian correction. Capitals mark the stressed vowel."
+    instruction: Choose the standard Ukrainian correction. Capitals mark the stressed vowel.
     items:
-      - sentence: Сукня є червона.
-        error: Сукня є червона.
+      - sentence: Сукня є червоний.
+        error: червоний
         answer: Сукня червона.
         options:
           - Сукня червона.
           - Сукня червоний.
           - Сукня є червоний.
-        explanation: In this present-tense frame, Ukrainian normally omits є.
-      - sentence: Якого кольору є светр?
-        error: Якого кольору є светр?
+        explanation: Сукня is feminine, so use червона. Є may be present or omitted.
+      - sentence: Якого кольори є светр?
+        error: кольори
         answer: Якого кольору светр?
         options:
           - Якого кольору светр?
           - Яка кольору светр?
-          - Якого кольору є светр?
-        explanation: Keep Якого кольору...? as one phrase without є.
-      - sentence: Блакитно-жовтий прапор.
-        error: Блакитно-жовтий прапор.
+          - Якого кольори є светр?
+        explanation: Use the phrase Якого кольору. Кольори does not fit that phrase. Якого кольору є светр? is also grammatical.
+      - sentence: Синьо-жовта прапор.
+        error: Синьо-жовта
         answer: Синьо-жовтий прапор.
         options:
           - Синьо-жовтий прапор.
-          - Блакитно-жовтий прапор.
-          - Жовто-блакитний прапор.
-        explanation: The standard phrase for Ukraine's flag is синьо-жовтий прапор.
-      - sentence: У мене є синій настрій.
-        error: У мене є синій настрій.
-        answer: Мені сумно. / У мене поганий настрій.
+          - Синьо-жовта прапор.
+          - Синьо-жовте прапор.
+        explanation: Прапор is masculine, so use синьо-жовтий. Блакитно-жовтий can also describe a flag; the error here is agreement.
+      - sentence: У мене погана настрій.
+        error: погана
+        answer: У мене поганий настрій.
         options:
-          - Мені сумно. / У мене поганий настрій.
-          - У мене є синій настрій.
-          - Я синій сьогодні.
-        explanation: Do not copy the English color idiom. Use a Ukrainian mood phrase.
-      - sentence: У нього сіре волосся.
-        error: У нього сіре волосся.
+          - У мене поганий настрій.
+          - У мене погана настрій.
+          - У мене погане настрій.
+        explanation: Настрій is masculine, so use поганий. Погана and погане do not agree with настрій.
+      - sentence: У нього сірий волосся.
+        error: сірий
         answer: У нього сиве волосся.
         options:
           - У нього сиве волосся.
-          - У нього сіре волосся.
+          - У нього сірий волосся.
           - Він має сивий волосся.
-        explanation: For grey hair, use the fixed phrase сиве волосся.
-      - sentence: "ЧорнИй, білИй"
+        explanation: Волосся is neuter, so use сиве or сіре. Сіре волосся is also a valid description; the wrong options have masculine agreement.
+      - sentence: ЧорнИй, білИй
         error: ЧорнИй, білИй
         answer: ЧОрний, бІлий
         options:
@@ -361,11 +361,11 @@ workbook:
         options:
           - text: Сукня червона.
             correct: true
-          - text: Сукня є червона.
+          - text: Сукня є червоний.
             correct: false
           - text: Сукня червоний.
             correct: false
-        explanation: No є is needed, and сукня is feminine.
+        explanation: Сукня is feminine, so use червона. Є may be present or omitted.
       - source: I have a blue sweater.
         options:
           - text: У мене синій светр.
@@ -388,29 +388,29 @@ workbook:
         options:
           - text: У неї карі очі.
             correct: true
-          - text: Вона має коричневі очі.
+          - text: Вона має коричнева очі.
             correct: false
           - text: У неї коричневе очі.
             correct: false
-        explanation: Use the fixed phrase карі очі.
+        explanation: Очі is plural, so use карі here. Вона має коричневі очі is also a valid description; коричнева does not agree with очі.
       - source: He has grey hair.
         options:
           - text: У нього сиве волосся.
             correct: true
-          - text: У нього сіре волосся.
+          - text: У нього сива волосся.
             correct: false
           - text: Він має сивий волосся.
             correct: false
-        explanation: Use сиве волосся and the У нього... frame.
+        explanation: Волосся is neuter, so use сиве here. Сіре волосся is also valid; сива and сивий do not agree with волосся.
       - source: The flag is blue and yellow.
         options:
           - text: Прапор синьо-жовтий.
             correct: true
-          - text: Прапор блакитно-жовтий.
+          - text: Прапор червоно-жовтий.
             correct: false
           - text: Прапор синій і жовта.
             correct: false
-        explanation: Keep синьо-жовтий as the fixed flag color phrase.
+        explanation: Синьо-жовтий means blue and yellow. Червоно-жовтий means red and yellow; жовта does not agree with masculine прапор.
   - type: true-false
     title: Перевірка кольорів
     instruction: Decide if the statement is right.
@@ -419,8 +419,8 @@ workbook:
         answer: true
         explanation: This is the standard color question phrase.
       - statement: Якого кольору є светр?
-        answer: false
-        explanation: Do not insert є into this question.
+        answer: true
+        explanation: Якого кольору є светр? is grammatical. The question can also omit є.
       - statement: Ручка синя.
         answer: true
         explanation: Ручка is feminine, and синій becomes синя.
@@ -436,7 +436,7 @@ workbook:
       - statement: У неї карі очі.
         answer: true
         explanation: Карі очі is a natural fixed phrase.
-      - statement: 'The Ukrainian flag phrase is синьо-жовтий прапор.'
+      - statement: The Ukrainian flag phrase is синьо-жовтий прапор.
         answer: true
         explanation: Keep this exact phrase.
   - type: match-up

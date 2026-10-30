@@ -39,40 +39,40 @@ inline:
             correct: false
           - text: читаємо кожне о як а
             correct: false
-        explanation: Українські ненаголошені голосні залишаються чистими.
+        explanation: У слові молоко́ ненаголошені о вимовляємо чітко. — In молоко́, keep the unstressed о sounds clear.
   - id: act-2
     type: quiz
-    title: Вибір мелодики
-    instruction: Обери першу модель мелодики речення.
+    title: Вибір мелодики — Choose the intonation
+    instruction: Обери звичну мелодику спокійного завершеного повідомлення або запитання «так/ні». — Choose the usual contour for a calm complete statement or a yes/no question.
     items:
-      - prompt: Це ка́ва.
+      - prompt: Це ка́ва. — This is coffee.
         options:
-          - text: спадна ↘
+          - text: спадна ↘ — falling
             correct: true
-          - text: висхідна ↗
+          - text: висхідна ↗ — rising
             correct: false
-        explanation: Твердження має спадну мелодику.
-      - prompt: Це ка́ва?
+        explanation: Тон зазвичай знижується в кінці спокійного завершеного повідомлення. — The tone usually falls at the end of a calm complete statement.
+      - prompt: Це ка́ва? — Is this coffee?
         options:
-          - text: висхідна ↗
+          - text: висхідна ↗ — rising
             correct: true
-          - text: спадна ↘
+          - text: спадна ↘ — falling
             correct: false
-        explanation: Так/ні питання має висхідну мелодику.
-      - prompt: Де метро́?
+        explanation: У звичайному запитанні «так/ні» тон підвищується. — The tone rises in this usual yes/no-question model.
+      - prompt: Це метро́. — This is the metro.
         options:
-          - text: спадна ↘
+          - text: спадна ↘ — falling
             correct: true
-          - text: висхідна ↗
+          - text: висхідна ↗ — rising
             correct: false
-        explanation: Питання з де на A1 має спадну мелодику.
-      - prompt: Як га́рно!
+        explanation: Це спокійне завершене повідомлення. Тон зазвичай знижується. — This is a calm complete statement. The tone usually falls.
+      - prompt: Тут гарно? — Is it nice here?
         options:
-          - text: сильніша спадна ↘↘
+          - text: висхідна ↗ — rising
             correct: true
-          - text: висхідна ↗
+          - text: спадна ↘ — falling
             correct: false
-        explanation: Оклик має сильнішу спадну мелодику.
+        explanation: Це запитання «так/ні». У цій звичайній моделі тон підвищується. — This is a yes/no question. The tone rises in this usual model.
   - id: act-3
     type: quiz
     title: Швидкий контраст
@@ -270,11 +270,11 @@ workbook:
       - left: 'друк: ка́ва'
         right: 'зошит: на́голос на першому складі'
       - left: 'друк: вода́'
-        right: 'зошит: на́голос на останньому складі'
+        right: 'зошит: наголошений склад да — stressed syllable да'
       - left: 'друк: молоко́'
         right: 'зошит: три чисті звуки о'
       - left: 'друк: метро́'
-        right: 'зошит: останній наголошений голосни́й'
+        right: 'зошит: наголошений склад ро — stressed syllable ро'
   - type: true-false
     title: Факти про наголос і мелодику
     instruction: Обери правда чи неправда.
@@ -285,12 +285,12 @@ workbook:
       - statement: Звичайні українські тексти завжди мають позначки наголосу.
         correct: false
         explanation: Позначки наголосу є в навчальних матеріалах і словниках, а не в більшості звичайних текстів.
-      - statement: Так/ні питання Це вода́? має висхідну мелодику на A1.
+      - statement: У звичайному запитанні «Це вода́?» тон підвищується. — In the usual question «Це вода́?», the tone rises.
         correct: true
-        explanation: Так/ні питання має висхідну мелодику.
-      - statement: Питання з де завжди потребує висхідної мелодики на A1.
+        explanation: Це звичайна модель запитання «так/ні». — This is the usual yes/no-question model.
+      - statement: Спокійне завершене повідомлення «Це вода́.» зазвичай має висхідну мелодику. — The calm complete statement «Це вода́.» usually has rising intonation.
         correct: false
-        explanation: Питання з питальним словом як де має спадну мелодику.
+        explanation: Тон зазвичай знижується в кінці спокійного завершеного повідомлення. — The tone usually falls at the end of a calm complete statement.
   - type: translate
     title: Слова з наголосом
     instruction: Спочатку прочитай українське слово, потім обери англійську підказку.
