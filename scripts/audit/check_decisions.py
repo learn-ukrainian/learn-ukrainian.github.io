@@ -197,10 +197,10 @@ def _ensure_label_exists() -> None:
 
 
 def _parent_epic() -> int | None:
-    """Return the open epic of the decision stream from the stream registry, or None if unreadable."""
+    """Return the open epic of the decision stream from the stream registry, or None if the registry is unreadable or malformed."""
     try:
         return issue_stream_audit.load_registry(audit_only=True)[DECISION_STREAM][0]
-    except (KeyError, IndexError, ValueError, OSError, yaml.YAMLError) as exc:
+    except (KeyError, IndexError, TypeError, AttributeError, ValueError, OSError, yaml.YAMLError) as exc:
         print(f"no parent epic for stream {DECISION_STREAM!r}: {exc}", file=sys.stderr)
         return None
 
