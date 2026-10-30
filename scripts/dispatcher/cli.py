@@ -390,6 +390,11 @@ def _dispatch(args) -> int:
             plan.update(review_attempt=binding, review_access=args.review_access or "isolated")
         print(json.dumps(plan, indent=2))
         return 0
+    # A review round is spent at dispatch, so the budget is checked here and not only when a verdict is recorded.
+    if args.mode == "read-only" and (args.pr or args.branch) and not args.advisory_role and (
+        admission.review_typed(vars(args)) or args.risk or args.review_mode
+    ):
+        checks.check_review_budget(args, info, sha)
     with host_admission.reserve(
         task_id, args.mode, decision, agent=agent, force_reason=force_reason,
         disk_guard=lambda: not (args.worktree is not None and (worktree / ".git").exists()),

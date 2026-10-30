@@ -1929,12 +1929,15 @@ def budget_exempt_heads(
     login: str,
     *,
     prove: Callable[[str, str], list[str] | None],
+    unrecorded: Iterable[str] = (),
 ) -> dict[str, dict[str, Any]]:
     """The reviewed heads, and ``sha``, that consume no review round, each with its receipt.
 
     A head is exempt when it descends from the last fully approved head before
     its first verdict only through clean merges of the base branch (``prove``,
-    :func:`clean_base_merge_descent`). The exemption changes accounting only:
+    :func:`clean_base_merge_descent`). A head dispatched for review with no
+    recorded verdict (``unrecorded``) is weighed like ``sha``, against the last
+    fully approved head on record. The exemption changes accounting only:
     every head still needs its own exact-head verdict, no approval carries
     forward, a recorded rejection stands, and no verdict is dropped. Exemptions
     are re-proven from Git on every call, so a head whose proof is lost counts.
@@ -1944,8 +1947,7 @@ def budget_exempt_heads(
     for index, marker in markers:
         first.setdefault(marker["sha"], index)
     order = sorted(first.items(), key=lambda item: item[1])
-    if sha not in first:
-        order.append((sha, len(comments)))
+    order.extend((head, len(comments)) for head in dict.fromkeys([*sorted(unrecorded), sha]) if head not in first)
     exempt: dict[str, dict[str, Any]] = {}
     for head, start in order:
         prefix = comments[:start]
@@ -1980,18 +1982,19 @@ def require_review_round_within_budget(
     grant: Callable[[], dict[str, Any] | None] | None = None,
     repair: Callable[[], dict[str, Any] | None] | None = None,
     repair_heads: frozenset[str] = frozenset(),
-    superseded_heads: Callable[[], frozenset[str]] | None = None,
+    dispatched_heads: Callable[[], frozenset[str]] | None = None,
 ) -> dict[str, Any]:
     """Refuse a verdict that would open a review round beyond this PR's budget.
 
     A round is one reviewed head: trusted verdicts on this PR are counted
     across heads, and more verdicts at an already reviewed head (a quorum seat
-    or a retried publication) open no new round. The head of a finished run
-    whose unpublished verdict a later verdict of its seat superseded
-    (``review_lineage.superseded_runs``) was reviewed too and counts:
-    ``superseded_heads`` returns those heads, read only for a new head.
-    Earlier PRs are not read: no GitHub listing finds them reliably (search
-    index lag, the 250-commit PR listing cap). Budget end is never approval.
+    or a retried publication) open no new round. A round is spent when its
+    reviewer is dispatched, so the head of every review run on record counts
+    too, its verdict recorded or not (``review_lineage.dispatched_rounds``,
+    #12098): ``dispatched_heads`` returns those heads other than ``sha``, read
+    only for a new head. Earlier PRs are not read: no GitHub listing finds them
+    reliably (search index lag, the 250-commit PR listing cap). Budget end is
+    never approval.
 
     A head that only merges the base branch cleanly after the last fully
     approved head consumes no round (:func:`budget_exempt_heads`, proven with
@@ -2004,20 +2007,30 @@ def require_review_round_within_budget(
     names the heads it already admitted, which count as no budgeted round.
     Returns the result fields that record the exception used, else nothing.
     """
-    heads = _trusted_verdict_shas(comments, login)
-    if sha in heads:
+    recorded = _trusted_verdict_shas(comments, login)
+    if sha in recorded:
         return {}
-    if superseded_heads is not None:
-        heads |= superseded_heads()
+    heads = recorded | (dispatched_heads() if dispatched_heads is not None else frozenset())
     if len(heads) < budget:
         return {}
-    exempt = budget_exempt_heads(comments, sha, login, prove=prove_merge_only) if prove_merge_only else {}
+    exempt = (
+        budget_exempt_heads(comments, sha, login, prove=prove_merge_only, unrecorded=heads - recorded)
+        if prove_merge_only
+        else {}
+    )
     if sha in exempt:
         return {"budget_exemption": {"reason": CLEAN_BASE_MERGE, **exempt[sha]}}
     counted = heads - set(exempt) - repair_heads
     if len(counted) < budget:
         return {}
-    note = f" (and {len(exempt)} clean base merge head(s), which consume no round)" if exempt else ""
+    unrecorded = sorted(counted - recorded)
+    if unrecorded:
+        listed = ", ".join(head[:12] for head in unrecorded)
+        note = f" ({len(unrecorded)} dispatched with no recorded verdict: {listed})"
+    else:
+        note = ""
+    if exempt:
+        note += f" (and {len(exempt)} clean base merge head(s), which consume no round)"
     exhausted = (
         f"REVIEW_BUDGET_EXHAUSTED: PR #{pr} already has verdicts at {len(counted)} heads{note} and its budget "
         f"is {budget} rounds; budget end is never approval, escalate instead of recording round {len(counted) + 1}"
@@ -2055,7 +2068,7 @@ def _repair_round(**kwargs: Any) -> dict[str, Any] | None:
     return admit_repair_round(**kwargs)
 
 
-def _superseded_heads(
+def _dispatched_rounds(
     *,
     task_root: Path,
     repository: str,
@@ -2064,18 +2077,16 @@ def _superseded_heads(
     comments: Sequence[Mapping[str, Any]],
     login: str,
     sha: str,
-) -> frozenset[str]:
-    """Heads before ``sha`` whose finished run's unpublished verdict its seat's later verdict superseded.
+) -> dict[str, list[str]]:
+    """Heads other than ``sha`` that a review run on record was dispatched at, with its task ids (#12098).
 
     An unreadable task ledger or reply refuses: those heads cannot be counted.
     """
     # The lineage reader builds on this module, so it is imported only when a new head is counted.
-    from scripts.review.review_lineage import lineage_runs, superseded_runs
+    from scripts.review.review_lineage import dispatched_rounds, lineage_runs
 
     runs = lineage_runs(task_root, repository=repository, number=number, branch=branch)
-    return frozenset(
-        item["head"] for item in superseded_runs(runs=runs, comments=comments, login=login, exclude_head=sha)
-    )
+    return dispatched_rounds(runs=runs, comments=comments, login=login, exclude_head=sha)
 
 
 def _repair_receipts(task_root: Path) -> Path:
@@ -2097,13 +2108,23 @@ def budget_admission(
     task_root: Path,
     review_root: Path,
     fetch: bool = True,
-    superseded: Callable[[], frozenset[str]] | None = None,
+    dispatched: Callable[[], dict[str, list[str]]] | None = None,
 ) -> dict[str, Any]:
     """The round decision for a verdict at ``sha``, shared by the recorder and ``budget-check``.
 
     It writes nothing; ``fetch=False`` also leaves the default-branch ref as it is.
-    ``superseded`` is the caller's own :func:`_superseded_heads` read, when it reports them too.
+    ``dispatched`` is the caller's own :func:`_dispatched_rounds` read, when it reports them too.
     """
+    rounds = dispatched or partial(
+        _dispatched_rounds,
+        task_root=task_root,
+        repository=repository,
+        number=number,
+        branch=branch,
+        comments=comments,
+        login=login,
+        sha=sha,
+    )
     from scripts.review.repair_round import repair_heads
 
     budget = review_round_budget(facts)
@@ -2142,17 +2163,7 @@ def budget_admission(
             fetch=fetch,
         ),
         repair_heads=repair_heads(receipts, repository=repository, number=number, branch=branch),
-        superseded_heads=superseded
-        or partial(
-            _superseded_heads,
-            task_root=task_root,
-            repository=repository,
-            number=number,
-            branch=branch,
-            comments=comments,
-            login=login,
-            sha=sha,
-        ),
+        dispatched_heads=lambda: frozenset(rounds()),
     )
 
 
@@ -2629,8 +2640,15 @@ def record(
     return result
 
 
-def budget_check(repository: str, number: int, *, task_root: Path | None = None) -> dict[str, Any]:
-    """The recorder's round decision for a verdict at the PR's current head, before any review runs."""
+def budget_check(
+    repository: str, number: int, *, task_root: Path | None = None, head: str | None = None
+) -> dict[str, Any]:
+    """The recorder's round decision for a verdict at the PR's current head, before any review runs.
+
+    Every review run on record counts, its verdict recorded or not; ``unrecorded_rounds`` names
+    each head that has runs but no recorded verdict, so a skipped recording is visible. ``head``,
+    when given, must be the PR's current head.
+    """
     root = _repo_root()
     task_root = task_root or root / "batch_state" / "tasks"
     pr = _run_json(["gh", "pr", "view", str(number), "--repo", repository, "--json", "headRefOid,headRefName,state"])
@@ -2639,6 +2657,8 @@ def budget_check(repository: str, number: int, *, task_root: Path | None = None)
     sha, branch = pr.get("headRefOid"), pr.get("headRefName")
     if not isinstance(sha, str) or not SHA.fullmatch(sha) or not isinstance(branch, str) or not branch:
         raise RecordError("PR head unavailable")
+    if head is not None and head != sha:
+        raise RecordError(f"PR #{number} head is {sha[:12]}, not the review head {head[:12]}")
     review_root = _review_repository_root(repository, root)
     # Read-only: the default-branch ref is read as it is, never fetched; a stale or missing one refuses.
     facts = pr_review_facts(repository, number, head_sha=sha, task_root=task_root, repo_root=review_root, fetch=False)
@@ -2649,9 +2669,9 @@ def budget_check(repository: str, number: int, *, task_root: Path | None = None)
     except SweepError as exc:
         raise RecordError(f"comment lookup failed: {exc}") from exc
     heads = _trusted_verdict_shas(comments, login)
-    superseded = cache(
+    dispatched = cache(
         partial(
-            _superseded_heads,
+            _dispatched_rounds,
             task_root=task_root,
             repository=repository,
             number=number,
@@ -2672,18 +2692,65 @@ def budget_check(repository: str, number: int, *, task_root: Path | None = None)
         task_root=task_root,
         review_root=review_root,
         fetch=False,
-        superseded=superseded,
+        dispatched=dispatched,
     )
     already = sha in heads
+    unrecorded = {head: tasks for head, tasks in dispatched().items() if head not in heads}
     return {
         "pr": number,
         "head": sha,
         "admitted": True,
-        "reviewed_heads": len(heads if already else heads | superseded()),
+        "reviewed_heads": len(heads | set(unrecorded)),
+        "unrecorded_rounds": [{"head": head, "tasks": tasks} for head, tasks in sorted(unrecorded.items())],
         "budget": review_round_budget(facts),
         "head_already_reviewed": already,
         **receipt,
     }
+
+
+def _open_pr_number(repository: str, branch: str) -> int | None:
+    """The number of the one open PR whose head is ``branch``, None when it has none."""
+    matches = _run_json(
+        ["gh", "pr", "list", "--repo", repository, "--state", "open", "--head", branch, "--limit", "2", "--json", "number"]
+    )
+    if not isinstance(matches, list) or len(matches) > 1:
+        raise RecordError("branch must identify at most one open PR; pass --pr N")
+    return matches[0]["number"] if matches else None
+
+
+def dispatch_budget_check(
+    repository: str, *, number: int | None, branch: str | None, head: str, task_root: Path
+) -> dict[str, Any] | None:
+    """Refuse a review dispatch at ``head`` once its PR's review dispatches, recorded or not, reach the budget (#12098).
+
+    The dispatcher's own task records name each run's PR or review branch and its head
+    (``review_lineage.dispatched_rounds``). A dispatch that names only one of PR and branch has
+    the other read from GitHub first, so runs recorded under either count; with no review run of
+    the repository on record, no round has been spent and nothing more is read. A head that
+    already has a run opens no round, and while the other dispatched heads stay under the default
+    budget the round is admitted. From there the recorder's own decision at the PR's current head
+    applies (:func:`budget_check`), so the PR's tier, a clean base merge, a designated grant or the
+    lineage's repair round may still admit it. A branch with no open PR gets the default budget.
+    """
+    from scripts.review.review_lineage import dispatched_rounds, lineage_runs, review_records
+
+    records = review_records(task_root, repository=repository)
+    if not records:
+        return None
+    if number is None and branch is not None:
+        number = _open_pr_number(repository, branch)
+    elif number is not None and branch is None:
+        branch = _pr(repository, "", number)["headRefName"]
+    runs = lineage_runs(task_root, repository=repository, number=number, branch=branch, records=records)
+    heads = dispatched_rounds(runs=runs, comments=(), login="")
+    if head in heads or len(heads) < DEFAULT_REVIEW_ROUNDS:
+        return None
+    if number is None:
+        raise RecordError(
+            f"REVIEW_BUDGET_EXHAUSTED: branch {branch} has review dispatches at {len(heads)} heads and no open PR; "
+            f"its budget is {DEFAULT_REVIEW_ROUNDS} rounds; budget end is never approval, escalate instead"
+        )
+    return budget_check(repository, number, task_root=task_root, head=head)
 
 
 def budget_check_main(argv: list[str]) -> int:
@@ -2694,7 +2761,8 @@ def budget_check_main(argv: list[str]) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py budget-check "
         "--repository learn-ukrainian/learn-ukrainian.github.io --pr 42\n"
-        "Outputs: JSON on stdout: admitted, the budget, and any exemption, grant or repair-round receipt.\n"
+        "Outputs: JSON on stdout: admitted, the budget, unrecorded_rounds (heads reviewed with no recorded verdict)\n"
+        "  and any exemption, grant or repair-round receipt.\n"
         "Exit codes: 0: admitted; 1: refused (the reason names what to escalate).\n"
         "Related: agents_extensions/shared/skills/review-loop/references/policy.md",
     )
