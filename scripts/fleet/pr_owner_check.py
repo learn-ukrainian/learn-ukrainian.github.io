@@ -29,7 +29,8 @@ DEFAULT_REPO_KEYS = ("public", "infra-private")
 _ACTIVE = {"spawning", "running"}
 _GH_TIMEOUT_SECONDS = 60
 _PR_LIMIT = 200
-_PR_FIELDS = "number,title,headRefName,isCrossRepository,isDraft,url"
+# ``commits`` and ``headRefOid`` let the ownerless alert read the head commit's X-Agent trailer.
+_PR_FIELDS = "number,title,headRefName,headRefOid,isCrossRepository,isDraft,url,commits"
 
 
 @dataclass(frozen=True)
