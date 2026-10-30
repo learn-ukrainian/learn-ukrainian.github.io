@@ -160,11 +160,17 @@ def primary_root(cwd: Path = ROOT) -> Path:
 def catalog() -> dict:
     import yaml
 
+    class UniqueLoader(getattr(yaml, "CSafeLoader", yaml.SafeLoader)):
+        """A repeated key would silently keep its last value, so it makes the allowlist ambiguous (#12031)."""
+
+        def construct_mapping(self, node, deep=False):
+            keys = [self.construct_object(key, deep=deep) for key, _ in node.value]
+            if len(set(keys)) != len(keys):
+                raise yaml.constructor.ConstructorError(None, None, "duplicate key", node.start_mark)
+            return super().construct_mapping(node, deep=deep)
+
     try:
-        return yaml.load(
-            (ROOT / "scripts/config/fleet_repos.yaml").read_text(),
-            Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader),
-        )["repos"]
+        return yaml.load((ROOT / "scripts/config/fleet_repos.yaml").read_text(), Loader=UniqueLoader)["repos"]
     except Exception:
         raise PublishBlocked("OPSEC: repository allowlist unavailable; write refused.") from None
 
