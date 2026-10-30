@@ -16,6 +16,8 @@ from scripts.agent_runtime.watchdog import (
 DEFAULT_HARD_TIMEOUT_S = 7200
 DEFAULT_SILENCE_TIMEOUT_S = 3600
 DEFAULT_INITIAL_RESPONSE_TIMEOUT_S = 600
+# How long a provider may stay alive after its terminal result before the supervisor ends it.
+TERMINAL_EXIT_GRACE_S = 30
 
 
 class DeadlineExpired(subprocess.TimeoutExpired):
@@ -69,6 +71,8 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
     """Wait for a file-fed child while observing I/O, session files and tree work.
 
     ``checkpoint`` runs between waits; whatever it raises ends the wait with the child still running.
+    Returns True when the child was still alive ``TERMINAL_EXIT_GRACE_S`` after its terminal result, so
+    the caller ends it and settles on that result; None when the child exited by itself.
     """
     started = time.monotonic()
     state = WatchdogState(start_time=started, last_activity=started)
@@ -81,16 +85,18 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
         except OSError:
             mtimes[Path(path)] = 0
     next_activity_poll = started
-    terminal_seen = False
+    terminal_at = None
     while True:
         now = time.monotonic()
         waits = [0.1]
-        if hard_timeout > 0:
-            waits.append(hard_timeout - (now - started))
-        if initial_response_timeout > 0 and not state.observed_io:
-            waits.append(initial_response_timeout - (now - started))
-        if silence_timeout > 0:
-            waits.append(silence_timeout - (now - state.last_activity))
+        # After a terminal result only the exit grace bounds the wait; the run is already settled by it.
+        if terminal_at is None:
+            if hard_timeout > 0:
+                waits.append(hard_timeout - (now - started))
+            if initial_response_timeout > 0 and not state.observed_io:
+                waits.append(initial_response_timeout - (now - started))
+            if silence_timeout > 0:
+                waits.append(silence_timeout - (now - state.last_activity))
         try:
             child.wait(timeout=max(0, min(waits)))
             return
@@ -99,11 +105,13 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
         if checkpoint:
             checkpoint()
         now = time.monotonic()
-        if not terminal_seen and terminal_result and terminal_result():
-            terminal_seen = True
+        if terminal_at is None and terminal_result and terminal_result():
+            terminal_at = now
             state.last_activity, state.observed_io = now, True
+        elif terminal_at is not None and now - terminal_at >= TERMINAL_EXIT_GRACE_S:
+            return True
         for path in paths:
-            if terminal_seen:
+            if terminal_at is not None:
                 break
             try:
                 size = path.stat().st_size
@@ -114,7 +122,7 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
                 sizes[path] = size
         # A terminal envelope ends provider work. Housekeeping cannot extend its exit deadline;
         # normal exit and parsing still decide success, otherwise the configured timeout settles it.
-        if not terminal_seen and now >= next_activity_poll:
+        if terminal_at is None and now >= next_activity_poll:
             if _process_tree_has_activity(child, primed, cpu, io):
                 state.last_activity, state.observed_io = now, True
             for path in tuple(liveness())[:_MAX_LIVENESS_PATHS]:
@@ -128,10 +136,10 @@ def communicate(child, invocation, stdout_path, stderr_path, hard_timeout, silen
                     state.last_activity, state.observed_io = now, True
                     mtimes[path] = mtime
             next_activity_poll = now + _PROCESS_ACTIVITY_POLL_INTERVAL_S
-        if reason := should_kill(
+        if terminal_at is None and (reason := should_kill(
             state, stall_timeout=0, hard_timeout=hard_timeout or math.inf,
             stdout_silence_timeout=silence_timeout, initial_response_timeout=initial_response_timeout,
-        ):
+        )):
             seconds = {"hard_timeout": hard_timeout, "stdout_silence_timeout": silence_timeout,
                        "initial_response_timeout": initial_response_timeout}[reason]
             raise DeadlineExpired(invocation.argv, reason, seconds)

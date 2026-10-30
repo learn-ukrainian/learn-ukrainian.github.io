@@ -2947,8 +2947,8 @@ def test_run_worker_silence_timeout_kills_silent_subprocess(sandbox):
     assert worker._identity(grandchild) is None
 
 
-def test_provider_process_lingers_after_its_final_result_settles_within_silence_bound(sandbox, monkeypatch):
-    """Defect class: provider process lingers after its final result while auxiliary activity continues."""
+def test_provider_process_lingering_after_its_final_result_settles_with_that_result(sandbox, monkeypatch):
+    """Defect class: a finished run held open until timeout."""
     from scripts.dispatcher import watchdog
     from scripts.dispatcher.providers import agy
     from scripts.dispatcher.types import Invocation
@@ -2958,6 +2958,9 @@ def test_provider_process_lingers_after_its_final_result_settles_within_silence_
     monkeypatch.setattr(worker.headroom, "check_plan", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(worker.headroom, "check_runtime", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(watchdog, "_PROCESS_ACTIVITY_POLL_INTERVAL_S", 0.05)
+    monkeypatch.setattr(watchdog, "TERMINAL_EXIT_GRACE_S", 1)
+    monkeypatch.setattr(worker, "TERMINAL_EXIT_GRACE_S", 1)
+    monkeypatch.setattr(worker.agy_sandbox, "verify", lambda *_args: ({}, None, None))
     spec = TaskSpec("agy-final-hang", "agy", "gemini-3.8-flash-high", None, "read-only", sandbox.repo,
                     sandbox.repo / "agy-final-hang.prompt", sandbox.tasks / "agy-final-hang.result",
                     options={"hard_timeout": "5", "silence_timeout": "0.5"})
@@ -2986,15 +2989,12 @@ def test_provider_process_lingers_after_its_final_result_settles_within_silence_
     elapsed = time.monotonic() - started
 
     result = json.loads(path.read_text())
-    assert result["status"] == "timeout"
-    assert result["kill_reason"] == "stdout_silence_timeout"
-    assert result["silence_timeout"] == 0.5
-    assert elapsed < result["silence_timeout"] + 2
-    assert result["returncode"] == -signal.SIGKILL
+    assert result["status"] == "done"
+    assert result["error"] is None
+    assert elapsed < 3
     assert worker._identity(result["provider_pgid"]) is None
     assert log.stat().st_size > 0
-    stdout = (sandbox.tasks / "logs/agy-final-hang.stdout.log").read_text()
-    assert agy.parse(stdout, "", 0, None).text == "literal final response"
+    assert spec.final_file.read_text() == "literal final response"
 
 
 def test_run_worker_initial_response_timeout_still_reaps_silent_startup(sandbox):
