@@ -208,6 +208,12 @@ restic rclone path with that final directory name.
   consistent. Any other link at `data/sources.db` stops the backup.
 - `.agent/` must be a real directory. Broken, absolute, or escaping symlinks
   below it, and unsupported special files, stop the backup before restic runs.
+  The backup keeps refusing them. A pytest base temp is the usual source: it
+  holds absolute `*current` symlinks. The pytest scratch plugin therefore
+  refuses an explicit `--basetemp` under `.agent`, `.claude`, `batch_state` or
+  `data` of any checkout, so give `--basetemp` a path under `$TMPDIR`, or omit
+  it. A tree that already holds such links stops every backup until it is
+  removed.
 - Restore accepts only an absolute empty or nonexistent directory outside the
   project, cloud mounts, and the legacy backup.
 - The only snapshot deletion is `retention [--execute]`. It lists this backup
