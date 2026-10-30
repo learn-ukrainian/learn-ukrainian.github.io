@@ -14,6 +14,7 @@ malformed destinations remain `unknown`. Repository-bound operations refuse
 python -m scripts.publish issue-comment --repo unit/public --number 1 --body-file reply.md
 python -m scripts.publish pr-review --repo unit/public --number 1 --verdict approve
 python -m scripts.publish release-upload --repo unit/public --tag unit --assets unit.json.gz
+python -m scripts.publish workflow-run --repo unit/public --workflow ci.yml --ref main --inputs '{"secret_scan_mode": "full-history-audit"}'
 ```
 
 Run Python with the task's prescribed project interpreter. Every subcommand's
@@ -35,7 +36,7 @@ scanned. Transport paths are never published or scanned as public text.
 | `pr-update-branch`, `pr-ready`, `pr-close`, `issue-reopen` | No text; `--number` is a PR or issue number |
 | `run-rerun` | No text; `--number` is an Actions run ID; always selects failed jobs |
 | `run-cancel` | No text; `--number` is an Actions workflow run ID; requests ordinary cancellation |
-| `workflow-run` | Only `ci.yml` and `deploy-pages.yml`, explicit validated ref; both have no inputs |
+| `workflow-run` | An allowlisted workflow and an explicit validated ref. `--inputs` is one JSON object of that file's `workflow_dispatch` inputs; a choice must be one of the options the file declares. Example: `--inputs '{"secret_scan_mode": "full-history-audit"}'` |
 | `pr-disarm`, `pr-dequeue`, `issue-link` | No text; identifiers have closed validation. `issue-link --replace-parent` moves an issue from its current parent through GitHub's typed `replaceParent` variable |
 | `release-create`, `release-edit` | Tag, title, notes, target, artifact names and UTF-8 content |
 | `release-upload` | Tag, artifact names and UTF-8 content |

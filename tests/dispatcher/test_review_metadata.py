@@ -134,18 +134,16 @@ def test_unpublishable_language_subject_review_refused_before_launch(dispatch, c
     assert "protected subject scope needs a code-profile review" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("flags", [(), ("--review-profile", "code"), ("--subject-seat", "grok"),
+@pytest.mark.parametrize("flags", [("--review-profile", "code"), ("--subject-seat", "grok"),
                                   ("--subject-family", "xai")])
 def test_ambiguous_provider_refused_for_review_only(dispatch, capsys, flags):
-    dispatch("--owned-path", "scripts/dispatcher/providers/hermes.py",
-             *flags, expected=2 if flags else 0)
-    if flags:
-        assert "ambiguous review subject path" in capsys.readouterr().err
+    dispatch("--owned-path", "scripts/dispatcher/providers/hermes.py", *flags, expected=2)
+    assert "ambiguous review subject path" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("provider,seat", [("claude", "claude"), ("opencode", "deepseek")])
 def test_inferred_subject_seat_is_persisted_for_publication(dispatch, provider, seat):
-    record = dispatch("--owned-path", f"scripts/dispatcher/providers/{provider}.py")
+    record = dispatch("--review-profile", "code", "--owned-path", f"scripts/dispatcher/providers/{provider}.py")
     assert cf._task_flag_values(record, "review_subject_seats") == (seat,)
 
 
