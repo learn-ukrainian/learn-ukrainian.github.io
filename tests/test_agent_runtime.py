@@ -44,7 +44,7 @@ from tests.helpers.codex_exec_stream import (
     turn_started,
 )
 from tests.helpers.python import project_python
-from tests.opsec_fixtures import ROOT, TOKEN
+from tests.opsec_fixtures import ROOT, TOKEN, recorded_approval
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -3421,9 +3421,9 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
         f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({check_runs!r}))\n"
         f"elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/commits/{head}/status?per_page=100']:\n"
         "    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({'total_count': 0, 'statuses': []}))\n"
-        # pr-merge reads the recorded review seats (#12020): none recorded, fleet identity.
+        # pr-merge reads the recorded review seats (#12020): an exact-head approval (#12031), fleet identity.
         "elif args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/issues/1234/comments?per_page=100']:\n"
-        "    print('HTTP/1.1 200 OK\\n\\n[]')\n"
+        f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({[recorded_approval(head)]!r}))\n"
         "elif args[:5] == ['api', '--include', '--method', 'GET', 'user?per_page=100']:\n"
         "    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({'login': 'unit'}))\n"
         "elif args[:5] == ['api', '--include', '--method', 'POST', 'graphql']:\n"
@@ -3466,17 +3466,14 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
         assert proc.stdout.strip() == (
             f"real-gh pr merge 1234 --repo unit/public --squash --subject=clean (#1234) --match-head-commit={head}"
         )
-        # Squash text, then the recorded review seats (#12020); with none recorded, the
-        # head's own rollup for a review status left behind; then the merge.
-        assert [record["argv"][:5] for record in sent[5:11]] == [
+        # Squash text, then the recorded review seats (#12020), here an exact-head
+        # approval (#12031); then the merge.
+        assert [record["argv"][:5] for record in sent[5:8]] == [
             ["api", "--include", "--method", "POST", "graphql"],
             ["api", "--include", "--method", "GET", "repos/unit/public/issues/1234/comments?per_page=100"],
             ["api", "--include", "--method", "GET", "user?per_page=100"],
-            ["api", "--include", "--method", "GET", "repos/unit/public/pulls/1234"],
-            ["api", "--include", "--method", "GET", f"repos/unit/public/commits/{head}/check-runs?per_page=100"],
-            ["api", "--include", "--method", "GET", f"repos/unit/public/commits/{head}/status?per_page=100"],
         ]
-        assert [record["argv"][:2] for record in sent[11:]] == [["pr", "merge"]]
+        assert [record["argv"][:2] for record in sent[8:]] == [["pr", "merge"]]
         assert sent[-1]["--body-file"] == "* clean"
     elif readiness.startswith("squash-"):
         assert proc.returncode != 0

@@ -369,14 +369,24 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
     An earlier recorder posted ``fleet/cross-family-review`` success after one seat,
     so the check rollup alone cannot prove the seat set, and a moved head carries no
     status at all. Every reading but an exact-head approval refuses: an incomplete seat
-    set, a rejection, unverifiable evidence and reviews of other heads only. A PR with no
-    recorded review is outside the recorder's regime and is not refused here, unless the
-    head's own rollup carries the recorder's status: then its record was removed or
-    rewritten, and the status alone is unverifiable.
+    set, a rejection, unverifiable evidence and reviews of other heads only. In a
+    repository whose registry row sets ``verdict_recorder: true``, a head with no recorded
+    approval is refused too (#12031). Where it is false, a PR with no recorded review is
+    outside the recorder's regime and is not refused here, unless the head's own rollup
+    carries the recorder's status: then its record was removed or rewritten, and the
+    status alone is unverifiable.
     """
     from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
     from scripts.orchestration.integration_sweep import NEEDS_SEAT, lookup_verdict
 
+    # The setting is explicit per repository; an absent, ambiguous or non-boolean one is unverifiable.
+    rows = [
+        row for row in gate.catalog().values()
+        if gate.normalize_repository(str(row.get("github", ""))) == gate.normalize_repository(dest)
+    ]
+    recorder = rows[0].get("verdict_recorder") if len(rows) == 1 else None
+    if type(recorder) is not bool:
+        raise gate.PublishBlocked("OPSEC: merge refused: the repository's verdict_recorder setting is unverifiable.")
     try:
         documents = []
         for operation, selectors in (("comments", {"number": number}), ("identity", {})):
@@ -403,6 +413,10 @@ def _refuse_incomplete_seats(dest, number, head, runner, cwd, environment):
         raise gate.PublishBlocked("OPSEC: merge refused: a Ukrainian review seat has not approved this head.")
     if state not in {"APPROVED", "needs-CF"}:
         raise gate.PublishBlocked(f"OPSEC: merge refused: recorded review verdict is {state} at this head.")
+    if state == "needs-CF" and recorder:
+        raise gate.PublishBlocked(
+            f"OPSEC: merge refused: no cross-family APPROVE from scripts/review/record_cf_verdict.py is recorded at {head}."
+        )
     if state == "needs-CF":
         from scripts.publish.merge_guard import _rollup_name
 

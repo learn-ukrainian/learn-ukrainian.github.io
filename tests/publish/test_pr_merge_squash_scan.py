@@ -10,7 +10,7 @@ import pytest
 
 from scripts.opsec import prepublish as gate
 from scripts.publish import github as pub
-from tests.opsec_fixtures import CATALOG, TOKEN
+from tests.opsec_fixtures import CATALOG, TOKEN, recorded_approval
 
 HEAD = "a" * 40
 
@@ -38,7 +38,7 @@ def transport(calls, *, subject="clean (#1)", body="* clean", queue=False, head=
         if args[:3] == ["gh", "pr", "checks"]:
             return subprocess.CompletedProcess(args, 0, "[]", "")
         if args[:4] == ["gh", "api", "--method", "GET"]:
-            seats = [[]] if "/issues/1/comments" in args[4] else {"login": "unit"}
+            seats = [[recorded_approval(HEAD)]] if "/issues/1/comments" in args[4] else {"login": "unit"}
             return subprocess.CompletedProcess(args, 0, json.dumps(seats), "")
         if args[:5] == ["gh", "api", "--method", "POST", "graphql"]:
             if "mergeQueueEntry" in Path(args[6]).read_text():
@@ -116,6 +116,30 @@ def test_direct_merge_sends_explicit_text_instead_of_defaults(synthetic_opsec):
     assert len(calls) == 1 and "--subject=clean" in calls[0]["argv"] and calls[0]["body"] == "clean"
 
 
+@pytest.mark.parametrize("recorder", [True, False])
+def test_head_without_a_recorded_verdict_is_refused_only_where_the_recorder_is_used(
+    synthetic_opsec, monkeypatch, recorder
+):
+    # #12031: zero verdict comments; the registry's per-repository setting decides.
+    row = {**CATALOG["public"], "verdict_recorder": recorder}
+    monkeypatch.setattr(gate, "catalog", lambda: {**CATALOG, "public": row})
+    calls = []
+    base = transport(calls)
+
+    def send(args, **kwargs):
+        if args[:4] == ["gh", "api", "--method", "GET"] and "/issues/1/comments" in args[4]:
+            return subprocess.CompletedProcess(args, 0, "[[]]", "")
+        return base(args, **kwargs)
+
+    if recorder:
+        with pytest.raises(gate.PublishBlocked, match=f"no cross-family APPROVE from .* is recorded at {HEAD}"):
+            pub.publish("pr-merge", repo="unit/public", number=1, runner=send)
+        assert not calls
+    else:
+        pub.publish("pr-merge", repo="unit/public", number=1, runner=send)
+        assert len(calls) == 1
+
+
 @pytest.mark.parametrize(
     "overrides",
     [{"head": "b" * 40}, {"subject": None}, {"body": 7}, {"queue": "yes"}],
@@ -156,14 +180,7 @@ def test_override_is_logged_and_single_use(synthetic_opsec, tmp_path, monkeypatc
 def priority_transport(calls, *, labels, timeline):
     """A queue repository with one recorded approval of HEAD; records either enqueue write."""
     base = transport(calls, queue=True)
-    marker = (
-        f"### Cross-family review\nhead: {HEAD}\nReviewer family: openai\nVERDICT: APPROVED\n"
-        "Reviewer model: gpt-6.1-sol\nTask id: review-one\n\n"
-        f"<!-- cf-verdict v1 sha={HEAD} task=review-one started=2026-10-29T10:00:00.000001+00:00 "
-        "verdict=APPROVED model=gpt-6.1-sol family=openai -->"
-    )
-    approval = {"id": 1, "body": marker, "user": {"login": "fleet"}, "author_association": "OWNER",
-                "created_at": "2026-10-29T10:05:00Z", "updated_at": "2026-10-29T10:05:00Z"}
+    approval = recorded_approval(HEAD, "fleet")
     pages = {"/comments": [[approval]], "/timeline": [timeline]}
 
     def send(args, **kwargs):

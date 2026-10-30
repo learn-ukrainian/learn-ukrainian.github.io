@@ -17,7 +17,7 @@ from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import admit
 from scripts.publish import github as pub
 from tests.common.github_cache_isolation import isolate_github_client_cache
-from tests.opsec_fixtures import CATALOG, ROOT, TOKEN
+from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, recorded_approval
 
 READ_COMMANDS = [
     ['ruleset', 'list', '--repo', 'unit/public'],
@@ -68,8 +68,8 @@ def spy(calls, *, comment_edit=False, merge=False):
         if merge and args[:4] == ["gh", "api", "--method", "GET"] and args[4].split("?", 1)[0] in {
             "repos/unit/public/issues/1/comments", "user"
         }:
-            # pr-merge reads the recorded review seats (#12020): none recorded, fleet identity.
-            seats = [[]] if args[4].startswith("repos/") else {"login": "unit"}
+            # pr-merge reads the recorded review seats (#12020): an exact-head approval (#12031).
+            seats = [[recorded_approval("a" * 40)]] if args[4].startswith("repos/") else {"login": "unit"}
             return subprocess.CompletedProcess(args, 0, json.dumps(seats), "")
         if (
             args[:3] == ["gh", "pr", "view"]
@@ -79,9 +79,6 @@ def spy(calls, *, comment_edit=False, merge=False):
             return subprocess.CompletedProcess(
                 args, 0, json.dumps({"number": int(args[3]), "isDraft": False, "headRefOid": "a" * 40}), ""
             )
-        if merge and args[:3] == ["gh", "pr", "view"] and args[args.index("--json") + 1] == "headRefOid,statusCheckRollup":
-            # With no verdict recorded, the guard also reads the head's own rollup (#12020).
-            return subprocess.CompletedProcess(args, 0, json.dumps({"headRefOid": "a" * 40, "statusCheckRollup": []}), "")
         if (
             args[:3] == ["gh", "pr", "checks"]
             and "--json" in args

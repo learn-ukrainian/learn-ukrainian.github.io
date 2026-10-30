@@ -20,7 +20,7 @@ import pytest
 from scripts.opsec import prepublish as gate
 from scripts.publish import github as pub
 from tests.opsec.test_git_push_scan import REAL_GIT, _env, _git, _remote_has, push_sandbox  # noqa: F401
-from tests.opsec_fixtures import CATALOG, ROOT, TOKEN
+from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, recorded_approval
 
 REASON = "synthetic: false positive"
 
@@ -393,13 +393,12 @@ def test_merge_readiness_reads_and_the_merge_receive_no_override(synthetic_opsec
     def runner(args, **kwargs):
         calls.append((args, kwargs["env"]))
         if args[:3] == ["gh", "pr", "view"]:
-            # With no verdict recorded, the guard also reads the head's own rollup (#12020).
-            out = json.dumps({"number": 1, "isDraft": False, "headRefOid": head, "statusCheckRollup": []})
+            out = json.dumps({"number": 1, "isDraft": False, "headRefOid": head})
         elif args[:3] == ["gh", "pr", "checks"]:
             out = "[]"
         elif args[:4] == ["gh", "api", "--method", "GET"]:
             if args[4] == "repos/unit/public/issues/1/comments?per_page=100":
-                out = "[[]]"
+                out = json.dumps([[recorded_approval(head)]])
             else:
                 assert args[4] == "user?per_page=100"
                 out = json.dumps({"login": "unit"})

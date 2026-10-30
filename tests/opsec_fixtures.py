@@ -43,14 +43,28 @@ def synthetic_rules(rule="synthetic-rule", level=1, pattern=TOKEN):
 
 RULES = synthetic_rules()
 CATALOG = {
-    "public": {"github": "unit/public", "default": True, "local_name": "public-fixture", "role": "public-monorepo"},
+    "public": {"github": "unit/public", "default": True, "local_name": "public-fixture", "role": "public-monorepo",
+               "verdict_recorder": True},
     "infra-private": {
         "github": "unit/private",
         "default": False,
         "local_name": "private-fixture",
         "role": "private-infra",
+        "verdict_recorder": True,
     },
 }
+
+
+def recorded_approval(head, login="unit"):
+    """One trusted exact-head APPROVE comment as the verdict recorder posts it (#12031)."""
+    marker = (
+        f"### Cross-family review\nhead: {head}\nReviewer family: openai\nVERDICT: APPROVED\n"
+        "Reviewer model: gpt-6.1-sol\nTask id: review-one\n\n"
+        f"<!-- cf-verdict v1 sha={head} task=review-one started=2026-10-29T10:00:00.000001+00:00 "
+        "verdict=APPROVED model=gpt-6.1-sol family=openai -->"
+    )
+    return {"id": 1, "body": marker, "user": {"login": login}, "author_association": "OWNER",
+            "created_at": "2026-10-29T10:05:00Z", "updated_at": "2026-10-29T10:05:00Z"}
 
 
 def make_tooling(directory):
