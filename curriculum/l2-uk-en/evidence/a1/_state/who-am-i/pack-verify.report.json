@@ -6,7 +6,7 @@
     "exercises_count": 1,
     "notes_count": 0,
     "standard_count": 2,
-    "texts_count": 10,
+    "texts_count": 16,
     "unsupported_open_count": 0,
     "unsupported_resolved_count": 0,
     "videos_count": 9
@@ -17,11 +17,11 @@
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml",
-    "sha256": "4dffafca6188c0a2bfa09569bbff3978240d318f3c9419f756b3f93a98a898e6"
+    "sha256": "1aad3162fa3ce422bbd31c79d529f98940391f78139fabe0c444a01be15be4ec"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml.lock",
-    "sha256": "6de4d7d081da098733f2947f9efc511f86935b92147e0865cedc70ffc5caafc0"
+    "sha256": "220c5d833178fb79ebff0f97f21f3105b5b042ce9a14b644fed71370f8d69969"
   },
   "report_schema": 1,
   "reports": [],

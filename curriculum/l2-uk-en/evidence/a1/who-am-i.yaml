@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 3c3457d5c8d47560320e12bee2bf78ed8e3d5c44
+  mcp_commit: c6763cef03d32638041fc9b2c3ca472852757e42
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
-  sources_db: 326dde95c241dd99fcc9995c92353b1ed0d0503c009fef47bd3b6e070ef580aa
+  sources_db: 18a1476cebd609f3bb55538863d29954d58269b9d2d096ffa203e7f0813b058c
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
@@ -355,13 +355,220 @@ texts:
     row_sha256: 3356817301cfdfc2f19fe397d7b5eb4e240c241b6bb02f99031631288f032a55
     section_id: null
   supports: 'ULP Season 1 lesson 3: introduction and identity phrases.'
+- id: T-011
+  quote: "Як тебе́ зва́ти?                                 What is your name? (informal)\n              Як вас зва́ти?   \
+    \                                What is your name? (formal or plural)\n              Мене́ зва́ти Оле́на.           \
+    \                  My name is Olena.\n              А вас? А тебе́?"
+  sha256: 5a98b0663526583272ec3e6853f6680fa2c6311358645a69795d3c128e927316
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0003_w007
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 03af223694d0efb6e145c2ace51a466cd16995b649fc63caa0ea3f2403b0ab82
+    section_id: null
+  supports: 'ULP Season 1 lesson 3: self-introduction formulas (Як вас звати? Мене звати...).'
+- id: T-012
+  quote: "Ukrainian consonants are either voiced or voiceless, depending on vibration in the throat. Place your hand \non\
+    \ your throat and pronounce a sound — if you feel vibration, the sound is voiced; if not, it is voiceless."
+  sha256: 1707b3a30b12163c2c8e44e28115c2b3ca075ce3b9c06844b9360305c986b1a8
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0023_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: d9e0a49f99a35a704cff79a8eb12232cb04ac7546c8ee247034d64a80ed70840
+    section_id: 57167
+  supports: 'Oho! Workbook p. 23: Voiced and voiceless consonants (д-т, з-с, г-х).'
+- id: T-013
+  quote: 'Consonants: hard and soft
+
+    06
+
+    06.2
+
+    06.1
+
+    ліс
+
+    лис
+
+    [д]
+
+    /d/
+
+    дим
+
+    [д′ ]
+
+    /dʲ/
+
+    дім
+
+    [р]
+
+    /r/
+
+    рука́
+
+    [р′ ]
+
+    /rʲ/
+
+    рюкза́к
+
+    [л]
+
+    /l/
+
+    лис
+
+    [л′ ]
+
+    /lʲ/
+
+    ліс
+
+    [т′ ]
+
+    /tʲ/
+
+    стіл
+
+    [дз′ ]
+
+    /ʣʲ/
+
+    дзюдо́
+
+    [й]
+
+    /j/
+
+    мій
+
+    [з]
+
+    /z/
+
+    Азо́в
+
+    [з′ ]
+
+    /zʲ/
+
+    А́зія
+
+    [с]
+
+    /s/
+
+    рис
+
+    [с′ ]
+
+    /sʲ/
+
+    рись'
+  sha256: 7425659de27e51eb0ef4f8691e8fd097c4103c037b5f050144f0ccd0359c7a30
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0025_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 45a1b73b43d9837733ea9b8257b8300e22c2a73f2e37a1f85b2bd3b348120708
+    section_id: 57169
+  supports: 'Oho! Workbook p. 25: Hard and soft consonants ([д]-[д’], [л]-[л’], [з]-[з’], [с]-[с’]).'
+- id: T-014
+  quote: 'Культура мовлення
+
+    Орфоепічний тренажер
+
+    Вимовте чітко слова, дотримуючись поданих інструкцій.
+
+    1. Вимовляйте [л] перед [е] твердо, не допускаючи пом’якшення.
+
+    Електрика, балет, білет, телефон, телевізор, волейбол,
+
+    лейтенант, лебідь, лексика, легенда, легко, колесо, елегант-
+
+    ний, календар, проблема, палець.
+
+    ПРАВИЛЬНО НЕПРАВИЛЬНО
+
+    ба[л]ет
+
+    [л]екція
+
+    проб[л]ема
+
+    те[л]ефон
+
+    ба[л′]ет
+
+    [л′]екція
+
+    проб[л′]ема
+
+    те[л′]ефон
+
+    2. Вимовляйте [з], [с] перед [е] твердо, не допускаючи пом’як-
+
+    шення.
+
+    Газета, зефір, розетка, зерно, озеро, лазерний, зебра,
+
+    земля, сезон, семеро, село, сестра, секрет, секунда, селе-
+
+    зень, касета, десерт.'
+  sha256: a11f3a7261a0ab6e471ba5a7f972f031f3e217ce50d3693358a7910ed2e3be27
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0108
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 135
+    row_sha256: 6c0ade3165022ed7e28ce3684dab7c1df2d0a7eb630a7d36451e2aeb87c8a7a2
+    section_id: 39038
+  supports: 'Zabolotnyi 5th grade p. 132: pronouncing consonants [л], [з], [с] hard before [е].'
+- id: T-015
+  quote: "Хто ці лю́ди за фа́хом? Complete the sentences using the correct gender. All the professions you \nneed are given\
+    \ in the theory section. Check with       19.7."
+  sha256: c9da628be3ee7d20bacd910120080075bb5dd0a5fd9450ed2e7db048b4eca26e
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0056_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 336947c6b7defe905a168359607975957cefda8e6a3dfc644d0c55974e929e9c
+    section_id: 57200
+  supports: 'Oho! Workbook p. 56: Inquiring about professions (Хто за фахом?).'
+- id: T-016
+  quote: "Він американець, а вона українка.\nNationalities: masculine, feminine, and plural forms\n23\n23.2\nВін америка́нець,\
+    \ і вона́ америка́нка. \nВони́ америка́нці.\nНа олімпі́йському п’єдеста́лі ― \nдві украї́нки та дві австралі́йки."
+  sha256: 2d9f38ca8e196024466fdd6fdae1712367ecf8ffc2148092fa0979156fd17229
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0063_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: b7ba3edfd008c7a3165a302d38e4aff463531a369e20e24bf44145a014d122c5
+    section_id: 57207
+  supports: 'Oho! Workbook p. 63: Nationality and origin expressions (Він американець, а вона українка).'
 videos:
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
-    http_status: 200
+  checked: null
   id: V-001
   models:
     letters:
@@ -371,11 +578,7 @@ videos:
   url: https://www.youtube.com/watch?v=VB1O6PmtYRU
   use: Pronunciation model for letter У.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    http_status: 200
+  checked: null
   id: V-002
   models:
     letters:
@@ -385,11 +588,7 @@ videos:
   url: https://www.youtube.com/watch?v=v6-3Xg52Buk
   use: Pronunciation model for consonant Л.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
-    http_status: 200
+  checked: null
   id: V-003
   models:
     letters:
@@ -399,11 +598,7 @@ videos:
   url: https://www.youtube.com/watch?v=7UsFBgSL91E
   use: Pronunciation model for consonant С.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
-    http_status: 200
+  checked: null
   id: V-004
   models:
     letters:
@@ -413,11 +608,7 @@ videos:
   url: https://www.youtube.com/watch?v=J7sGEI4-xJo
   use: Pronunciation model for consonant К.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=g4Bh-lqzd48
-    http_status: 200
+  checked: null
   id: V-005
   models:
     letters:
@@ -427,11 +618,7 @@ videos:
   url: https://www.youtube.com/watch?v=g4Bh-lqzd48
   use: Pronunciation model for consonant Д.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=BhASNxitC1A
-    http_status: 200
+  checked: null
   id: V-006
   models:
     letters:
@@ -441,11 +628,7 @@ videos:
   url: https://www.youtube.com/watch?v=BhASNxitC1A
   use: Pronunciation model for consonant З.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=vpr58zJSJKc
-    http_status: 200
+  checked: null
   id: V-007
   models:
     letters:
@@ -455,11 +638,7 @@ videos:
   url: https://www.youtube.com/watch?v=vpr58zJSJKc
   use: Pronunciation model for consonant Х.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=gVnclpSI0DU
-    http_status: 200
+  checked: null
   id: V-008
   models:
     letters:
@@ -469,11 +648,7 @@ videos:
   url: https://www.youtube.com/watch?v=gVnclpSI0DU
   use: Pronunciation model for consonant Г.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=cJlal8XKBxo
-    http_status: 200
+  checked: null
   id: V-009
   models:
     letters:

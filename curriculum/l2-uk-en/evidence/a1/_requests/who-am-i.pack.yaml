@@ -41,6 +41,30 @@ texts:
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0003_w001}
   span: {first_words: 'Lesson 3: How', last_words: 'Ukrainians.'}
   supports: 'ULP Season 1 lesson 3: introduction and identity phrases.'
+- id: T-011
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0003_w007}
+  span: {first_words: 'Як тебе́ зва́ти?', last_words: 'А тебе́?'}
+  supports: 'ULP Season 1 lesson 3: self-introduction formulas (Як вас звати? Мене звати...).'
+- id: T-012
+  source: {table: textbooks, chunk_id: owned-oho-a1-workbook_f1_p0023_c0001}
+  span: {first_words: 'Ukrainian consonants are either voiced', last_words: 'is voiceless.'}
+  supports: 'Oho! Workbook p. 23: Voiced and voiceless consonants (д-т, з-с, г-х).'
+- id: T-013
+  source: {table: textbooks, chunk_id: owned-oho-a1-workbook_f1_p0025_c0001}
+  span: {first_words: 'Consonants: hard and soft', last_words: 'рись'}
+  supports: 'Oho! Workbook p. 25: Hard and soft consonants ([д]-[д’], [л]-[л’], [з]-[з’], [с]-[с’]).'
+- id: T-014
+  source: {table: textbooks, chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0108}
+  span: {first_words: 'Культура мовлення', last_words: 'касета, десерт.'}
+  supports: 'Zabolotnyi 5th grade p. 132: pronouncing consonants [л], [з], [с] hard before [е].'
+- id: T-015
+  source: {table: textbooks, chunk_id: owned-oho-a1-workbook_f1_p0056_c0001}
+  span: {first_words: 'Хто ці лю́ди за фа́хом?', last_words: 'Check with       19.7.'}
+  supports: 'Oho! Workbook p. 56: Inquiring about professions (Хто за фахом?).'
+- id: T-016
+  source: {table: textbooks, chunk_id: owned-oho-a1-workbook_f1_p0063_c0001}
+  span: {first_words: 'Він американець, а вона українка.', last_words: 'дві австралі́йки.'}
+  supports: 'Oho! Workbook p. 63: Nationality and origin expressions (Він американець, а вона українка).'
 exercises:
 - id: X-001
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012}

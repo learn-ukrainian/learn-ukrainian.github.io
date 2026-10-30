@@ -4,7 +4,7 @@ The fresh path has no word or activity target: judge size by job adequacy agains
 
 Kind: plan
 Module: a1/who-am-i (Position 3)
-Manifest SHA256: 9f9f105fc0f8d86ba82c85fe426dd00fe2c8a5ade65972abc1f03909d199f4a1
+Manifest SHA256: 20385d1175025c65abc8101d0b57027a976c1050a8aa841e2c77024360640f24
 
 You are the independent cross-family content reviewer for a fresh curriculum module plan (Contract 1, fresh-build review contracts #8430 r4).
 You evaluate whether the module plan serves the learning goals before any lesson writer runs.
@@ -204,8 +204,8 @@ taxonomy: 1
 kind: plan
 attempt:
   review_id: "rev-20261030-who-am-i"
-  attempt_id: "sol-att-1"
-  manifest_sha256: "9f9f105fc0f8d86ba82c85fe426dd00fe2c8a5ade65972abc1f03909d199f4a1"
+  attempt_id: "sol-att-2"
+  manifest_sha256: "20385d1175025c65abc8101d0b57027a976c1050a8aa841e2c77024360640f24"
   previous_attempt_id: null
 reviewer:
   resolved_model: "<model>"
@@ -252,7 +252,7 @@ slug: who-am-i
 version: '2'
 title: 'хто я'
 subtitle: 'Personal identity, pronouns, and consonants'
-focus: 'Introduce yourself and ask identity; read words with consonants Д, З, К, Л, С, У, Х, ь, Г and personal pronouns.'
+focus: 'Introduce yourself and ask identity; read words with consonants Д, З, К, Л, С, Х, Г, vowel У, soft sign ь, and personal pronouns.'
 objectives:
 - 'Read words and syllables with consonants Д, З, К, Л, С, Х, Г and vowel У and soft sign ь.'
 - 'Use personal pronouns я, ти, він, вона in basic identity statements.'
@@ -263,6 +263,7 @@ connects_to: []
 prerequisites: []
 register: 'English scaffolding at A1; Ukrainian models first, then English glosses.'
 changelog:
+- 'Position 3 plan revised for round 2: incorporated T-011 name exchange, T-012/T-013 voiced/voiceless and hard/soft contrast, T-014 hardness before vowel e, T-015/T-016 profession and nationality models, corrected phonetic labels, moved W-178 to incidental, and updated activity a2 to contextual fill-in.'
 - 'Position 3 plan revised with video model for soft sign and supported notebook writing practice.'
 arc_ref: {level: a1, position: 3}
 evidence_ref:
@@ -273,8 +274,8 @@ lessons:
   slug: vowels-and-sonorants-u-l-s
   title: 'літери у, л, с'
   kind: teach
-  job: 'Read vowel У and consonants Л, С in syllables and introduce subject pronouns.'
-  rationale: 'Builds syllables with open vowel У and sonorants and voiceless sibilant.'
+  job: 'Read vowel У and consonants Л, С in syllables and introduce subject pronouns and name exchange.'
+  rationale: 'Builds syllables with vowel У, sonorant Л, and voiceless consonant С, and introduces personal identity formulas.'
   word_target: 210
   inventory:
     phonetics:
@@ -299,20 +300,20 @@ lessons:
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Read and use personal pronouns я, ти, він, вона in simple identity phrases. Copy taught pronouns into your notebook as supported writing practice.'
+    teach: 'Read and use personal pronouns я, ти, він, вона in simple identity phrases, and practice the self-introduction exchange: question Як вас звати? and response Мене звати... Copy taught pronouns into your notebook as supported writing practice.'
     introduces: {letters: [], grammar: [], vocabulary: ['W-002', 'W-003', 'W-004']}
     uses: {grammar: [], vocabulary: ['W-001']}
-    evidence: ['T-010']
+    evidence: ['T-010', 'T-011']
     practice: ['a2']
   activities:
   - id: a1
     type: watch-and-repeat
     placement: inline
-    focus: 'Hear and repeat vowel У and sonorants Л, С in syllables aloud with native video recordings.'
+    focus: 'Hear and repeat vowel У, sonorant Л, and voiceless consonant С in syllables aloud with native video recordings.'
   - id: a2
     type: match-up
     placement: workbook
-    focus: 'Match Ukrainian subject pronouns я, ти, він, вона to their English equivalents.'
+    focus: 'Match Ukrainian subject pronouns я, ти, він, вона and self-introduction phrase Мене звати to their English equivalents.'
     targets: ['W-001', 'W-002', 'W-003', 'W-004']
   videos:
   - evidence: V-001
@@ -325,8 +326,8 @@ lessons:
   slug: consonants-k-d-z
   title: 'літери к, д, з'
   kind: teach
-  job: 'Read consonants К, Д, З and short decodable words.'
-  rationale: 'Introduces stops К, Д and voiced fricative З to expand vocabulary reading.'
+  job: 'Read consonants К, Д, З, contrast voiced/voiceless pairs, and read short decodable words.'
+  rationale: 'Introduces stops К, Д and voiced fricative З to expand vocabulary reading, and compares voiced/voiceless pairs д–т and з–с.'
   word_target: 210
   inventory:
     phonetics:
@@ -343,10 +344,10 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Observe consonants К, Д, and З. Read syllables ка, ко, ку, ки and да, до, ду, ди and за, зо, зу, зи. Copy taught consonant letters into your notebook.'
+    teach: 'Observe consonants К, Д, and З. Compare voiced and voiceless pairs д–т and з–с using throat vibration. Read syllables ка, ко, ку, ки and да, до, ду, ди and за, зо, зу, зи. Copy taught consonant letters into your notebook.'
     introduces: {letters: ['К', 'Д', 'З'], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-004', 'T-005', 'T-006', 'V-004', 'V-005', 'V-006']
+    evidence: ['T-004', 'T-005', 'T-006', 'T-012', 'V-004', 'V-005', 'V-006']
     practice: ['a1']
     needs: [video]
   - id: s2
@@ -360,7 +361,7 @@ lessons:
   - id: a1
     type: watch-and-repeat
     placement: inline
-    focus: 'Hear and pronounce consonants К, Д, З in open syllables with model videos.'
+    focus: 'Hear and pronounce consonants К, Д, З in open syllables and compare voiced/voiceless contrasts with model videos.'
   - id: a2
     type: fill-in
     placement: workbook
@@ -381,8 +382,8 @@ lessons:
   slug: consonants-kh-h-and-soft-sign
   title: 'літери х, г, ь'
   kind: teach
-  job: 'Read consonants Х, Г, soft sign ь, and question word хто.'
-  rationale: 'Covers velar fricatives Х, Г and the soft sign indicating softening of consonants.'
+  job: 'Read consonants Х, Г, soft sign ь, practice hard consonants before [е], and read question word хто.'
+  rationale: 'Covers consonants Х, Г, hard pronunciation before [е], and the soft sign indicating softening of consonants.'
   word_target: 210
   inventory:
     phonetics:
@@ -393,39 +394,40 @@ lessons:
       core:
       - {lemma: хто, evidence: W-162, forms: ['noun:anim:m:v_naz:pron:int:rel']}
       - {lemma: тінь, evidence: W-120, forms: ['noun:inanim:f:v_naz']}
-      - {lemma: рись, evidence: W-178, forms: ['noun:anim:f:v_naz']}
-      incidental: []
-      recycled: []
+      incidental:
+      - {lemma: рись, evidence: W-178}
+      recycled: ['W-002', 'W-003', 'W-004']
   steps:
   - id: s1
     kind: teach
-    teach: 'Pronounce consonants Х, Г with native video models, and observe the soft sign ь indicating softening of preceding consonants (as in decodable words тінь and рись). Copy taught letters Х, Г, ь and words into your notebook as supported writing practice.'
-    introduces: {letters: ['Х', 'Г', 'ь'], grammar: [], vocabulary: ['W-120', 'W-178']}
+    teach: 'Pronounce consonants Х, Г with native video models, compare voiced/voiceless pair г–х, practice pronouncing [л], [з], [с] hard before [е], and observe the soft sign ь indicating softening of preceding consonants (as in decodable word тінь and incidental example рись). Copy taught letters Х, Г, ь and words into your notebook as supported writing practice.'
+    introduces: {letters: ['Х', 'Г', 'ь'], grammar: [], vocabulary: ['W-120']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-007', 'T-008', 'T-009', 'V-007', 'V-008', 'V-009']
+    evidence: ['T-007', 'T-008', 'T-009', 'T-012', 'T-013', 'T-014', 'V-007', 'V-008', 'V-009']
     practice: ['a1']
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Read who-question word хто and decodable question sentences. Copy хто into your notebook.'
+    teach: 'Read who-question word хто and decodable question and identity dialogue lines (хто це? хто він? хто вона?). Copy хто into your notebook.'
     introduces: {letters: [], grammar: [], vocabulary: ['W-162']}
-    uses: {grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-002', 'W-003', 'W-004']}
     evidence: ['T-008']
     practice: ['a2']
   activities:
   - id: a1
     type: watch-and-repeat
     placement: inline
-    focus: 'Observe and pronounce consonants Х, Г, and softening with soft sign ь in decodable words.'
+    focus: 'Observe and pronounce consonants Х, Г, practice hard pronunciation before [е], and hear softening with soft sign ь in decodable words.'
   - id: a2
-    type: odd-one-out
+    type: fill-in
     placement: workbook
-    focus: 'Identify the question word хто among personal subject pronouns.'
+    focus: 'Complete who-question and identity dialogue lines (хто це? хто він? хто вона?) with pronouns and question word хто.'
     options:
     - 'хто'
     - 'він'
     - 'вона'
     - 'ти'
+    targets: ['W-162', 'W-002', 'W-003', 'W-004']
   videos:
   - evidence: V-007
     use: 'Pronunciation model for consonant Х.'
@@ -437,48 +439,50 @@ lessons:
   slug: identity-and-letters-recap
   title: 'повторення'
   kind: recap
-  job: 'Consolidate identity statements and all 9 position 3 letters.'
-  rationale: 'Recap lesson checks decodability of all taught letters and practical identity turns.'
+  job: 'Consolidate identity statements, name exchange, origin phrases, and all 9 position 3 letters.'
+  rationale: 'Recap lesson checks decodability of all taught letters, self-introduction exchange, and practical identity turns.'
   word_target: 210
   inventory:
     grammar: []
     vocabulary:
       core: []
       incidental: []
-      recycled: ['W-001', 'W-002', 'W-003', 'W-004', 'W-162', 'W-104', 'W-084', 'W-097', 'W-120', 'W-178']
+      recycled: ['W-001', 'W-002', 'W-003', 'W-004', 'W-162', 'W-104', 'W-084', 'W-097', 'W-120']
   steps:
   - id: s1
     kind: recap
-    teach: 'Review identity questions and personal pronouns я, ти, він, вона.'
+    teach: 'Review identity questions (хто це? хто ви за фахом?), personal pronouns я, ти, він, вона, self-introduction (Як вас звати? Мене звати...), and nationality/origin statements (він американець, вона українка).'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: ['W-001', 'W-002', 'W-003', 'W-004', 'W-162']}
-    evidence: ['T-010', 'S-001', 'S-002']
+    evidence: ['T-010', 'T-011', 'T-015', 'T-016', 'S-001', 'S-002']
     practice: ['a1']
   - id: s2
     kind: recap
-    teach: 'Practical closing task: state who you are and read decodable names and words.'
+    teach: 'Practical closing task: state who you are, ask and answer identity, and read decodable names and words.'
     task:
       id: 'who-am-i-recap-task'
       action: 'read_and_use'
       context_en: 'Introducing yourself and identifying others in a group.'
-      instruction_en: 'Read the question, state your name using personal pronoun я, and read aloud the names and words.'
+      instruction_en: 'Ask and state identity using name exchange formulas and personal pronouns, and read aloud the names and words.'
       response_mode: 'spoken_or_written'
       success_criteria_en:
       - 'State identity using я and taught Cyrillic letters'
+      - 'Use accepted name exchange question and response formulas'
       - 'Read decodable words and identify persons with він and вона'
       - 'Copy model identity sentences and words into a notebook with correct Cyrillic letter forms'
       learner_reads: []
     introduces: {letters: [], grammar: [], vocabulary: []}
-    uses: {grammar: [], vocabulary: ['W-104', 'W-084', 'W-097', 'W-120', 'W-178']}
-    evidence: ['T-010', 'S-001', 'S-002']
+    uses: {grammar: [], vocabulary: ['W-104', 'W-084', 'W-097', 'W-120']}
+    evidence: ['T-010', 'T-011', 'T-015', 'T-016', 'S-001', 'S-002']
     practice: ['a2']
   activities:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Review personal identity questions and pronouns.'
+    focus: 'Review personal identity questions, name formulas, and pronouns.'
     options:
     - 'Хто він?'
+    - 'Мене звати Анна'
     - 'Я Ніна'
     - 'Він Іван'
   - id: a2
@@ -928,7 +932,7 @@ grammar:
   count: 0
   ids: []
 vocabulary:
-  core_count: 9
+  core_count: 8
 ```
 
 ### Arc Specification (Position and Neighbours)
@@ -1428,13 +1432,13 @@ later get the next free id; ids are never reused.
           },
           "workbook": {
             "by_type": {
-              "odd-one-out": 1
+              "fill-in": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
-          "odd-one-out",
+          "fill-in",
           "watch-and-repeat"
         ],
         "has_workbook": true,
@@ -1472,23 +1476,21 @@ later get the next free id; ids are never reused.
         "fill-in",
         "group-sort",
         "match-up",
-        "odd-one-out",
         "quiz",
         "watch-and-repeat"
       ],
       "inline_activities": 4,
-      "largest_workbook_type": "match-up",
-      "largest_workbook_type_share": 0.25,
-      "longest_same_type_workbook_run": 1,
-      "longest_same_type_workbook_run_type": "match-up",
+      "largest_workbook_type": "fill-in",
+      "largest_workbook_type_share": 0.5,
+      "longest_same_type_workbook_run": 2,
+      "longest_same_type_workbook_run_type": "fill-in",
       "non_recap_lessons": 3,
       "non_recap_lessons_with_workbook": 3,
       "workbook_activities": 4,
       "workbook_distinct_types": [
         "fill-in",
         "group-sort",
-        "match-up",
-        "odd-one-out"
+        "match-up"
       ],
       "workbook_presence_complete": true
     },
@@ -1501,14 +1503,14 @@ later get the next free id; ids are never reused.
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f",
-    "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml": "4dffafca6188c0a2bfa09569bbff3978240d318f3c9419f756b3f93a98a898e6",
-    "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml.lock": "6de4d7d081da098733f2947f9efc511f86935b92147e0865cedc70ffc5caafc0",
+    "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml": "1aad3162fa3ce422bbd31c79d529f98940391f78139fabe0c444a01be15be4ec",
+    "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml.lock": "220c5d833178fb79ebff0f97f21f3105b5b042ce9a14b644fed71370f8d69969",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
-    "curriculum/l2-uk-en/lesson-plans/a1/_scope/who-am-i.yaml": "f48d55305764ac85b0ba673bba2d57136b81c08561c5197b54f7ee2a1ab7ca04",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/who-am-i.yaml": "4660fd2067e2226b200fbc745c24e640e232d40420849ccf55085e3948462c53",
     "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "b716c55def2f736ce0e741821a4fa5d120bd3e6a9293fbcb88f035516f8baa34",
     "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "113872e498e5ed69afd90b76172a042634fa46d75b7d24d134c6dd627f21edb9",
-    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "a484c86d926120e9675af9fb610ecac480c5ac00f29f2e61c893dc654c0ad9f8",
+    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "5c3148a57dff43c0118fe422b009bc69bb6ddbf5f3cbe3a232d057f16a17efe8",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -1542,7 +1544,7 @@ later get the next free id; ids are never reused.
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 4dffafca6188c0a2bfa09569bbff3978240d318f3c9419f756b3f93a98a898e6; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 1aad3162fa3ce422bbd31c79d529f98940391f78139fabe0c444a01be15be4ec; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     },
     {
@@ -1557,12 +1559,6 @@ later get the next free id; ids are never reused.
       "code": "core_cefr_above_module",
       "lesson": 3,
       "message": "core lemma 'тінь' (W-120) is B1 in the word store, 2 bands above the module's level A1 (gate M5)",
-      "step": null
-    },
-    {
-      "code": "core_cefr_above_module",
-      "lesson": 3,
-      "message": "core lemma 'рись' (W-178) is B2 in the word store, 3 bands above the module's level A1 (gate M5)",
       "step": null
     },
     {
@@ -1683,7 +1679,7 @@ v1_totals_schema: 1
     "exercises_count": 1,
     "notes_count": 0,
     "standard_count": 2,
-    "texts_count": 10,
+    "texts_count": 16,
     "unsupported_open_count": 0,
     "unsupported_resolved_count": 0,
     "videos_count": 9
@@ -1694,11 +1690,11 @@ v1_totals_schema: 1
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml",
-    "sha256": "4dffafca6188c0a2bfa09569bbff3978240d318f3c9419f756b3f93a98a898e6"
+    "sha256": "1aad3162fa3ce422bbd31c79d529f98940391f78139fabe0c444a01be15be4ec"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml.lock",
-    "sha256": "6de4d7d081da098733f2947f9efc511f86935b92147e0865cedc70ffc5caafc0"
+    "sha256": "220c5d833178fb79ebff0f97f21f3105b5b042ce9a14b644fed71370f8d69969"
   },
   "report_schema": 1,
   "reports": [],
@@ -2045,13 +2041,221 @@ T-010:
     row_sha256: 3356817301cfdfc2f19fe397d7b5eb4e240c241b6bb02f99031631288f032a55
     section_id: null
   supports: 'ULP Season 1 lesson 3: introduction and identity phrases.'
+T-011:
+  id: T-011
+  quote: "Як тебе́ зва́ти?                                 What is your name? (informal)\n              Як вас зва́ти?                                   What is your name? (formal or plural)\n              Мене́ зва́ти Оле́на.                             My name is Olena.\n              А вас? А тебе́?"
+  sha256: 5a98b0663526583272ec3e6853f6680fa2c6311358645a69795d3c128e927316
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0003_w007
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 03af223694d0efb6e145c2ace51a466cd16995b649fc63caa0ea3f2403b0ab82
+    section_id: null
+  supports: 'ULP Season 1 lesson 3: self-introduction formulas (Як вас звати? Мене звати...).'
+T-012:
+  id: T-012
+  quote: "Ukrainian consonants are either voiced or voiceless, depending on vibration in the throat. Place your hand \non your throat and pronounce a sound — if you feel vibration, the sound is voiced; if not, it is voiceless."
+  sha256: 1707b3a30b12163c2c8e44e28115c2b3ca075ce3b9c06844b9360305c986b1a8
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0023_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: d9e0a49f99a35a704cff79a8eb12232cb04ac7546c8ee247034d64a80ed70840
+    section_id: 57167
+  supports: 'Oho! Workbook p. 23: Voiced and voiceless consonants (д-т, з-с, г-х).'
+T-013:
+  id: T-013
+  quote: 'Consonants: hard and soft
+
+    06
+
+    06.2
+
+    06.1
+
+    ліс
+
+    лис
+
+    [д]
+
+    /d/
+
+    дим
+
+    [д′ ]
+
+    /dʲ/
+
+    дім
+
+    [р]
+
+    /r/
+
+    рука́
+
+    [р′ ]
+
+    /rʲ/
+
+    рюкза́к
+
+    [л]
+
+    /l/
+
+    лис
+
+    [л′ ]
+
+    /lʲ/
+
+    ліс
+
+    [т′ ]
+
+    /tʲ/
+
+    стіл
+
+    [дз′ ]
+
+    /ʣʲ/
+
+    дзюдо́
+
+    [й]
+
+    /j/
+
+    мій
+
+    [з]
+
+    /z/
+
+    Азо́в
+
+    [з′ ]
+
+    /zʲ/
+
+    А́зія
+
+    [с]
+
+    /s/
+
+    рис
+
+    [с′ ]
+
+    /sʲ/
+
+    рись'
+  sha256: 7425659de27e51eb0ef4f8691e8fd097c4103c037b5f050144f0ccd0359c7a30
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0025_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 45a1b73b43d9837733ea9b8257b8300e22c2a73f2e37a1f85b2bd3b348120708
+    section_id: 57169
+  supports: 'Oho! Workbook p. 25: Hard and soft consonants ([д]-[д’], [л]-[л’], [з]-[з’], [с]-[с’]).'
+T-014:
+  id: T-014
+  quote: 'Культура мовлення
+
+    Орфоепічний тренажер
+
+    Вимовте чітко слова, дотримуючись поданих інструкцій.
+
+    1. Вимовляйте [л] перед [е] твердо, не допускаючи пом’якшення.
+
+    Електрика, балет, білет, телефон, телевізор, волейбол,
+
+    лейтенант, лебідь, лексика, легенда, легко, колесо, елегант-
+
+    ний, календар, проблема, палець.
+
+    ПРАВИЛЬНО НЕПРАВИЛЬНО
+
+    ба[л]ет
+
+    [л]екція
+
+    проб[л]ема
+
+    те[л]ефон
+
+    ба[л′]ет
+
+    [л′]екція
+
+    проб[л′]ема
+
+    те[л′]ефон
+
+    2. Вимовляйте [з], [с] перед [е] твердо, не допускаючи пом’як-
+
+    шення.
+
+    Газета, зефір, розетка, зерно, озеро, лазерний, зебра,
+
+    земля, сезон, семеро, село, сестра, секрет, секунда, селе-
+
+    зень, касета, десерт.'
+  sha256: a11f3a7261a0ab6e471ba5a7f972f031f3e217ce50d3693358a7910ed2e3be27
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0108
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 135
+    row_sha256: 6c0ade3165022ed7e28ce3684dab7c1df2d0a7eb630a7d36451e2aeb87c8a7a2
+    section_id: 39038
+  supports: 'Zabolotnyi 5th grade p. 132: pronouncing consonants [л], [з], [с] hard before [е].'
+T-015:
+  id: T-015
+  quote: "Хто ці лю́ди за фа́хом? Complete the sentences using the correct gender. All the professions you \nneed are given in the theory section. Check with       19.7."
+  sha256: c9da628be3ee7d20bacd910120080075bb5dd0a5fd9450ed2e7db048b4eca26e
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0056_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 336947c6b7defe905a168359607975957cefda8e6a3dfc644d0c55974e929e9c
+    section_id: 57200
+  supports: 'Oho! Workbook p. 56: Inquiring about professions (Хто за фахом?).'
+T-016:
+  id: T-016
+  quote: "Він американець, а вона українка.\nNationalities: masculine, feminine, and plural forms\n23\n23.2\nВін америка́нець, і вона́ америка́нка. \nВони́ америка́нці.\nНа олімпі́йському п’єдеста́лі ― \nдві украї́нки та дві австралі́йки."
+  sha256: 2d9f38ca8e196024466fdd6fdae1712367ecf8ffc2148092fa0979156fd17229
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0063_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: b7ba3edfd008c7a3165a302d38e4aff463531a369e20e24bf44145a014d122c5
+    section_id: 57207
+  supports: 'Oho! Workbook p. 63: Nationality and origin expressions (Він американець, а вона українка).'
 V-001:
   channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
-    http_status: 200
+  checked: null
   id: V-001
   models:
     letters:
@@ -2062,11 +2266,7 @@ V-001:
   use: Pronunciation model for letter У.
 V-002:
   channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    http_status: 200
+  checked: null
   id: V-002
   models:
     letters:
@@ -2077,11 +2277,7 @@ V-002:
   use: Pronunciation model for consonant Л.
 V-003:
   channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
-    http_status: 200
+  checked: null
   id: V-003
   models:
     letters:
@@ -2092,11 +2288,7 @@ V-003:
   use: Pronunciation model for consonant С.
 V-004:
   channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
-    http_status: 200
+  checked: null
   id: V-004
   models:
     letters:
@@ -2107,11 +2299,7 @@ V-004:
   use: Pronunciation model for consonant К.
 V-005:
   channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=g4Bh-lqzd48
-    http_status: 200
+  checked: null
   id: V-005
   models:
     letters:
@@ -2122,11 +2310,7 @@ V-005:
   use: Pronunciation model for consonant Д.
 V-006:
   channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=BhASNxitC1A
-    http_status: 200
+  checked: null
   id: V-006
   models:
     letters:
@@ -2137,11 +2321,7 @@ V-006:
   use: Pronunciation model for consonant З.
 V-007:
   channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=vpr58zJSJKc
-    http_status: 200
+  checked: null
   id: V-007
   models:
     letters:
@@ -2152,11 +2332,7 @@ V-007:
   use: Pronunciation model for consonant Х.
 V-008:
   channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=gVnclpSI0DU
-    http_status: 200
+  checked: null
   id: V-008
   models:
     letters:
@@ -2167,11 +2343,7 @@ V-008:
   use: Pronunciation model for consonant Г.
 V-009:
   channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-30'
-    final_url: https://www.youtube.com/watch?v=cJlal8XKBxo
-    http_status: 200
+  checked: null
   id: V-009
   models:
     letters:

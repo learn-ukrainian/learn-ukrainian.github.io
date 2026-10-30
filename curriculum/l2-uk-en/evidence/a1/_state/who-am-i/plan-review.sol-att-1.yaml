@@ -1,0 +1,257 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-who-am-i"
+  attempt_id: "sol-att-1"
+  manifest_sha256: "9f9f105fc0f8d86ba82c85fe426dd00fe2c8a5ade65972abc1f03909d199f4a1"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "GPT-6"
+  harness: "Codex"
+  family: "OpenAI"
+  prompt_sha256: "9ecedc2eaead4411bffb54a0e53339c6d2b8cc2d1a0a172569982b3f442adbbc"
+checks:
+  # The closing task requires a personalized name response, not copying alone.
+  # search_text: owned-oho-a1-workbook_f1_p0039_c0001;
+  # rr-9359ae671f5bffa9ae44: "a less common but still appropriate way."
+  closing_shape: clean
+  # Titles describe the planned identity, pronoun and letter work.
+  # Ukrainian items in English sentences function as teaching metalanguage.
+  # Naming-pattern context: search_text, owned-oho-a1-workbook_f1_p0039_c0001,
+  # receipt rr-9359ae671f5bffa9ae44.
+  title_describes_job: clean
+  # Direct inspection: no title or subtitle states an inventory quantity.
+  title_quantities: clean
+  # inspect_words, receipt rr-6fa531a8165193005eda: all 14 inspected
+  # lexical forms have clean analyses, including the animate sense of рись
+  # at VESUM entry 335618 and the noun коса at entry 176043.
+  # Letter glyphs and syllable strings are not treated as dictionary words.
+  quoted_forms: clean
+  sequencing: [F-01]
+  # No overload is established. The practical recap has an application job
+  # beyond isolated letter drills. No word, activity, item or time minimum
+  # is imposed; actual durations and response totals remain unavailable.
+  # Naming-task context: search_text, owned-oho-a1-workbook_f1_p0039_c0001,
+  # receipt rr-9359ae671f5bffa9ae44.
+  sizing: clean
+  inventory: [F-02]
+  # Workbook rotation is real: matching, selecting a letter, identifying
+  # an outlier, and sorting. Repeated watch-and-repeat serves new sounds.
+  # The constrained orthography fill-in is not rejected by type.
+  # Supplied comparison: four fresh workbook activities versus six in v1;
+  # eight total versus ten. Fresh response opportunities are unavailable,
+  # so comparison with v1's 38 workbook / 56 total responses is an evidence
+  # gap, not an inferred reduction or a numeric failure.
+  activities: [F-03]
+  evidence_fit: [F-04, F-05, F-09]
+  standard_and_ulp: [F-06, F-07, F-08]
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 1
+        step: s2
+        quote: "Read and use personal pronouns я, ти, він, вона in simple identity phrases."
+      - lesson: 3
+        step: s2
+        quote: "Read who-question word хто and decodable question sentences."
+    dimension: plan_defect
+    severity: MAJOR
+    claim: >-
+      The sequence does not establish the accepted self-introduction exchange.
+      It leaves identity phrases unspecified and substitutes recognition of a
+      question word for learning the name-question and response chunks assigned
+      by arc r6. search_text confirms that the already-cited T-010 locator,
+      ulp-1-00-lesson-notes_l0003_w001, explicitly supplies the name-question
+      construction. Give these fixed chunks an explicit teaching and supported
+      practice step before closing application, without analysing their cases.
+      Pronoun-plus-name statements remain valid; this finding concerns the
+      missing accepted exchange and the fit of T-010 to its assigned teaching.
+    evidence:
+      receipt: "rr-0c17bba61d945e33a047"
+    expected: "Як вас зва́ти?"
+    could_be_a_gate: "no"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 3
+        step: s1
+        quote: "as in decodable words тінь and рись"
+    dimension: learner_fit
+    severity: MAJOR
+    claim: >-
+      W-178 is promoted to core vocabulary although its planned purpose is
+      illustrating softening, not accomplishing an identity function. The
+      record itself describes incidental decoding, and accepted r6 assigns
+      this demonstration vocabulary to position 5. query_cefr_level, PULS
+      headword рись, confirms B2 classification. That classification does not
+      prohibit a supported phonetic example, but the plan gives no reason to
+      make its meaning part of the required lexical learning at this point.
+      Reconcile its core status, illustrative purpose and accepted ownership.
+    evidence:
+      receipt: "rr-9f4e434dcab4a3eae430"
+    expected: "рись (B2, іменник)"
+    could_be_a_gate: "no"
+
+  - id: F-03
+    status: active
+    locations:
+      - lesson: 3
+        activity: a2
+        quote: "Identify the question word хто among personal subject pronouns."
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      This activity can be completed by classifying one token without reading
+      a question sentence or making any hard/soft pronunciation decision.
+      It therefore does not adequately practise the lesson's sentence-reading
+      job or consolidate its phonetic distinction. Across the workbook,
+      varied types mostly retain recognition and classification operations;
+      a contextual identity response is deferred to the closing task.
+      search_text, owned-oho-a1-workbook_f1_p0040_c0001, provides a relevant
+      model of completing contextual dialogues and personalizing introductions;
+      its later grammar need not be imported. The reduction from six v1
+      workbook activities to four fresh activities has no stated pedagogical
+      justification demonstrating equivalent job coverage. Revise the task
+      operations, without restoring a numeric quota; fresh response totals
+      are unavailable.
+    evidence:
+      receipt: "rr-d77670fb5b6cf514ab9c"
+    expected: "Complete the dialogues with pronouns."
+    could_be_a_gate: "no"
+
+  - id: F-04
+    status: active
+    locations:
+      - lesson: 1
+        activity: a1
+        quote: "sonorants Л, С"
+      - lesson: 3
+        field: rationale
+        quote: "velar fricatives Х, Г"
+    dimension: fact
+    severity: BLOCKER
+    claim: >-
+      Two phonetic classifications are false. С is not a sonorant, and Г
+      should not be grouped with Х as velar. search_text,
+      10-klas-ukrmova-karaman-2018_s0080, places [с] in the voiceless group,
+      lists the sonorants separately, and classifies [г] as pharyngeal while
+      placing [х] among the back-tongue consonants. Correct these labels
+      before they guide lesson generation.
+    evidence:
+      receipt: "rr-bb12aca64e1b737ab08e"
+    expected: "Глотковий (фарингальний) [г]"
+    could_be_a_gate: "no"
+
+  - id: F-05
+    status: active
+    locations:
+      - field: focus
+        quote: "consonants Д, З, К, Л, С, У, Х, ь, Г"
+    dimension: fact
+    severity: MAJOR
+    claim: >-
+      The module focus includes the soft sign in a list labelled consonants.
+      search_text, owned-oho-a1-workbook_f1_p0027_c0001, explicitly distinguishes
+      it as a letter that represents no sound and marks preceding consonant
+      softness. Use an accurate letter-inventory description, consistent with
+      the distinction already made in objective 1.
+    evidence:
+      receipt: "rr-cff19689e6e5f6009077"
+    expected: "Instead, it is used only to soften the consonant before it."
+    could_be_a_gate: "no"
+
+  - id: F-06
+    status: active
+    locations:
+      - field: objectives
+        quote: "Recognise hard and soft consonant sounds and voiced/voiceless pairs."
+    dimension: plan_defect
+    severity: MAJOR
+    claim: >-
+      Isolated letter repetition and observing two soft-sign words do not
+      establish the promised contrast-recognition skill. No step explicitly
+      compares the assigned voiced/voiceless families, and no activity requires
+      a learner to distinguish a hard sound from its soft counterpart.
+      search_text, owned-oho-a1-workbook_f1_p0023_c0001 and
+      owned-oho-a1-workbook_f1_p0025_c0001, supplies explicit paired models
+      and comparison instructions. The same receipt's p0031 record distinguishes
+      syllabification from merely reading supplied syllable strings; the
+      position's syllable and stress work likewise lacks an explicit teaching
+      and application step. Expand the pack where necessary, then plan these
+      small comparisons and rhythm tasks using the permitted letter sequence.
+      Do not import later letters or line-breaking instruction.
+    evidence:
+      receipt: "rr-b8d35441f14d101fbb8b"
+    expected: "Listen carefully to more examples in the table below and practice this difference."
+    could_be_a_gate: "no"
+
+  - id: F-07
+    status: active
+    locations: []
+    scope:
+      lesson: 3
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: >-
+      Position 3 explicitly owns hardness before [е], but this plan provides
+      neither a teaching step nor a corresponding source model for that duty.
+      search_text, 5-klas-ukrmova-zabolotnyi-2023_s0108, positively supplies
+      pronunciation instructions for [л], [з] and [с] before [е]. This is a
+      pack-builder task first: add suitable source-backed models with the
+      permitted vocabulary and letters, then let the plan owner assign their
+      teaching and practice before recap. The writer must not invent the
+      missing treatment from the objective alone.
+    evidence:
+      receipt: "rr-e43bb4a7c5ff681b3adb"
+    expected: "Вимовляйте [л] перед [е] твердо, не допускаючи пом’якшення."
+    could_be_a_gate: "no"
+
+  - id: F-08
+    status: active
+    locations: []
+    scope:
+      lesson: 4
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: >-
+      The closing lesson cannot demonstrate the accepted professions and
+      origin functions because none of the preceding lessons teaches them.
+      Citing S-001's professions requirement does not provide their learner
+      models. The provisional pack lacks the needed profession and origin
+      phrase records, so this is assigned to the pack builder before lesson
+      regeneration, not a demand for unsourced writer additions. search_text
+      locators owned-oho-a1-workbook_f1_p0056_c0001 and
+      owned-oho-a1-workbook_f1_p0063_c0001 provide corpus grounding for
+      profession and nationality material. Select and verify a proportionate
+      fixed-phrase subset, then assign its teaching and personal application;
+      do not advance the later gender or plural systems.
+    evidence:
+      receipt: "rr-1ed33ba954d6fd65eab1"
+    expected: "Nationalities: masculine, feminine, and plural forms"
+    could_be_a_gate: "no"
+
+  - id: F-09
+    status: active
+    locations:
+      - lesson: 1
+        field: rationale
+        quote: "open vowel У"
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      The intended articulatory meaning of "open vowel" remains unsupported.
+      T-001 establishes the letter-to-sound correspondence, not this English
+      classification. Searches in uni-ukrmova-phonetics-komarova-2015 and
+      owned-oho-a1-workbook_f1_p0019_c0001 did not verify the intended label.
+      Keep this terminology question visible for source settlement; it does
+      not authorize a learner-content correction based on reviewer memory.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-593366371271982b658d"
+          outcome: hits_but_no_support
+        - receipt: "rr-0c44b16fbeffcbb7f4cd"
+          outcome: hits_but_no_support
+    could_be_a_gate: "no"
