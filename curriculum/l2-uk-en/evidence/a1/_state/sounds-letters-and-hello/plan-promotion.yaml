@@ -1,0 +1,10 @@
+attempt_id: claude-full-att-7
+harness: claude
+manifest_sha256: 45286920a4e48b41bf7f24d95b96f123df5ca4bfa6fb791c39178d31b04a9123
+pack_sha256: 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46
+promoted_at: '2026-10-02T05:55:49+00:00'
+promoted_plan_sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+review_access: full
+reviewed_plan_sha256: 2edb695b8b8c5978f34d35b0ab71f1773cfaccf711a60a30e750a796a9fdf9c1
+reviewer_family: anthropic
+reviewer_model: claude-opus-5-5

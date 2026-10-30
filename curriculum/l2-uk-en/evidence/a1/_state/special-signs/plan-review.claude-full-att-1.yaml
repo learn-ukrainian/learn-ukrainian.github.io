@@ -1,0 +1,165 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-special-signs"
+  attempt_id: "claude-full-att-1"
+  manifest_sha256: "0e35c96d7287920ddaaafaaef7d7969a9d1bec9f46778f1b19b9d50e4499ea5c"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "anthropic"
+  prompt_sha256: "8388d3b6b562d054b94866f8cde61cf4df1e5141d4401a5ec6e40df783dc0c52"
+checks:
+  closing_shape: [F-06]
+  # Plan closes with shape (a): lesson 8 is kind: recap. Shape (b) is not used. F-06 covers the recap's D4 content shape.
+  title_describes_job: clean
+  # Module title 'літери' is Ukrainian only; subtitle, focus and objectives are English only. Lesson titles are letter glyphs or one Ukrainian word.
+  # English sentences quote Ukrainian only when talking about that item. The subtitle matches the lessons' jobs: eight letters, two digraphs, apostrophe, hard/soft, dictionary order.
+  title_quantities: clean
+  # 'eight remaining letters' equals scope sidecar letters.count 8 (ь Ї Я Ю Є Ц Щ Ф). 'two digraphs' equals lesson 5 дж/дз.
+  # This is a sidecar comparison; no sources tool applies.
+  quoted_forms: clean
+  # verify_words (VESUM), receipt rr-8c380b01344191987af1: 32/32 forms found, none archaic.
+  # Includes the prose quotes літери, повторення, пюре, п'ю and the lesson word models (тин, тінь, їжа, яма, маля, Марія, мільярд, юрта, люпин, синє, єноти, моє, мої, радію, цимбали, щука, дощ, ферма, джміль, джем, дзиґа, дзюрчить, пір'я, п'ють, п'є, сім'я, м'яч, пір'їна).
+  # The sense-matching analysis is marker-free in the cited word records.
+  sequencing: [F-02]
+  sizing: clean
+  # 8 lessons against an arc estimate of 4. Each teaching lesson maps to a distinct primer page group. Lesson 4 (three routine letters, 360 words) is the heaviest, but its steps are separable.
+  # No lesson's job folds into a neighbour: ь precedes the softening vowels by design, and alphabet order/names is a separate retrieval job.
+  inventory: [F-07, F-08]
+  activities: [F-01, F-04, F-05]
+  # v1 comparison: fresh plan has 53 activities (33 inline, 20 workbook) against v1's 12. Fresh response-opportunity totals are not_available_at_this_stage, so no volume reduction can be measured (evidence gap).
+  # Type loss: v1 error-correction (find-and-fix, 10 responses) is dropped. The plan's 'no invented misspellings' stance at first literacy is an acceptable reason.
+  # v1 group-sort (14 responses) is also dropped, with no applicable reason (see F-01).
+  evidence_fit: [F-03, F-09]
+  standard_and_ulp: [F-10]
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 2
+        activity: "a4"
+        quote: "Select the T-013 sound model for each of W-122, W-123, W-141 and W-142"
+      - lesson: 3
+        activity: "a2"
+        quote: "Choose the sourced Ю sound model for W-124, W-125 and the T-025 form of W-140"
+      - lesson: 3
+        activity: "a5"
+        quote: "Read aloud from print mixed sourced Ю/Є models and choose the word whose reading"
+      - lesson: 5
+        activity: "a4"
+        quote: "Choose the hard or soft T-010 sound model for W-134 versus the present source form of W-135"
+    dimension: activity
+    severity: MAJOR
+    claim: "Lessons 2, 3 and 5 keep 'choose the sound model' jobs but type them as orthography fill-ins whose own focus says spoken discrimination is not scored. A word-local blank keyed я/ю/є (or the дз word) records only the spelling. It cannot record whether the letter stands for two sounds or one, or whether дз is hard or soft. So G-a1-007's two values and the G-a1-009 дз contrast, which are the jobs of these lessons, are never scored. The pack's own source gives a print-only route. T-013 (search_text, chunk 5-klas-ukrmova-zabolotnyi-2023_s0063) prints the decision with transcriptions (яма [йама]; маля [мал′а]). The next page (s0064) has ex. 199, a print sort of words where я, ю, є stand for two sounds versus one. A quote-hosted quiz or group-sort on T-013 would score the step within the print-conversion authorization. The conversion also leaves lesson 3 as a run of four orthography fill-ins (a2, a4, a5, a6) over overlapping targets, which check 8 rules out. It also drops the v1 group-sort (14 responses) without an applicable reason: 'not a grammatical group-sort' (lesson 3 a5) does not cover sorting by reading value."
+    evidence: { receipt: "rr-45ce4bfbf37f47c82f70" }
+    could_be_a_gate: "no"
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 4
+        activity: "a7"
+        quote: "Divide W-128, W-129 and W-131 into sounded syllables using their written vowels"
+    dimension: learner_fit
+    severity: MAJOR
+    claim: "The arc places dividing words into syllables at position 4 (stress-and-melody: 'divide words into syllables for line breaks'; склад і перенос). No lesson in positions 1–3 teaches where a syllable boundary falls inside a consonant cluster. W-128 цимбали (мб) and W-131 ферма (рм) need the sonority rule in Karaman grade 10 §30 (search_text, chunk 10-klas-ukrmova-karaman-2018_s0146): the louder sound goes to the preceding syllable, as in книж-ка, сон-це, вер-ба. 'Using their written vowels' gives the syllable count, not the boundary, so the scored key is either untaught or ambiguous (цим-ба-ли against ци-мба-ли). Replace a7 with a count-syllables item, as lesson 3 a7 already does, or leave division to position 4."
+    evidence: { receipt: "rr-2ca919da9e6ecb60e69c" }
+    could_be_a_gate: "yes — a script can flag divide-words activities in a position whose arc entry does not own syllable division"
+  - id: F-03
+    status: active
+    locations:
+      - lesson: 1
+        step: "s1"
+        quote: "Hear V-001 and the T-001 hard/soft pair W-119 and W-120"
+    dimension: evidence_use
+    severity: MINOR
+    claim: "T-001/X-001 is cited for G-a1-005 ('ь marks the preceding consonant as soft'), but the chosen pair does not isolate that point. The primer's own schemes (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-1_s0100) mark тин [–• – ] → тінь [=• = ]: the vowel letter changes from и to і and both consonants become soft. By contrast, син → синь [–• =] and рис → рись [–• = ] change only the ь-marked final consonant. A learner comparing тин/тінь sees и→і as the largest visible difference and may credit the softness to і. A vowel-constant pair from the same row, or the page's камінь/камін couplet, models the sign better. Word records for those forms are a pack-builder task."
+    evidence: { receipt: "rr-8c1b107fa1891612eb0c" }
+    could_be_a_gate: "no"
+  - id: F-04
+    status: active
+    locations:
+      - lesson: 1
+        activity: "a5"
+        quote: "then select the printed W-076"
+      - lesson: 2
+        activity: "a5"
+        quote: "Complete the W-121 decoding puzzle using taught syllables; keep one puzzle per activity"
+    dimension: activity
+    severity: MINOR
+    claim: "Lesson 1's only scored work is two orthography fill-ins on the same two targets (inline a3 and workbook a5, both W-119/W-120). a5's retained job also selects W-076, W-081 and W-101, which its own target list excludes. So the workbook repeats the inline decision with about two items. Lesson 2 a5 and lesson 5 a7 are single two-syllable pick-syllables puzzles (W-121, W-134), one response each. The cited source page (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-1_s0100) offers six pair words and soft-syllable rows (ті, лі, сі, нь, ль) that could give the workbook distinct items."
+    evidence: { receipt: "rr-8c1b107fa1891612eb0c" }
+    could_be_a_gate: "no"
+  - id: F-05
+    status: active
+    locations:
+      - lesson: 6
+        activity: "a7"
+        quote: "identify presence versus absence of the apostrophe"
+    dimension: activity
+    severity: MINOR
+    claim: "a7 is an odd-one-out hosted only on T-036, a single two-word contrast. It can offer at most two candidates and one or two items, so 'Rotate the key position' cannot be met. The same Avramenko p. 131 line (search_text, chunk 5-klas-ukrmova-avramenko-2022_s0133) gives three contrasts: 'бюро — б’ю, пюре — п’ю, свято — зв’язок'. The lesson already has W-136, W-139 and W-144 to set against W-143. A quiz ('which word has the apostrophe?') or a larger sourced set fits this decision better than odd-one-out."
+    evidence: { receipt: "rr-b46896bb0e167048803c" }
+    could_be_a_gate: "yes — a script can require at least three candidate items for an odd-one-out quote host"
+  - id: F-06
+    status: active
+    locations:
+      - lesson: 8
+        step: "s1"
+        quote: "with a short writer-composed bilingual literacy story if needed"
+      - lesson: 8
+        activity: "a1"
+        quote: "Show one short first-person review story in Ukrainian-left/English-right alignment"
+    dimension: recap
+    severity: MINOR
+    claim: "Arc D4 (operator-accepted) and plan-schema §2b require one short first-person story side by side in Ukrainian and English, Ukrainian-only questions about that story, and one production task. That is the ULP review shape (search_text, ulp-1-00-lesson-notes_l0010_w001: 'Here is my story about я і моя сім’я'). Here s1 makes the story optional ('if needed') while a1 requires it ('Show one'), and the scored questions (a2) target a third-person primer passage instead of the story. The changelog cites a #8425 driver authorization of authentic-text recap hosts, but neither D4 nor §2b records an amendment. Settle should confirm operator authority for the host change and resolve the s1/a1 contradiction."
+    evidence: { receipt: "rr-cc6d19562e7733ca0db0" }
+    could_be_a_gate: "no"
+  - id: F-07
+    status: active
+    locations:
+      - lesson: 4
+        activity: "a8"
+        quote: "adding rain to the earlier food/father set"
+    dimension: learner_fit
+    severity: MINOR
+    claim: "Every lesson recycles the same set (W-074–W-081, W-101). Nine core words from positions 1–2 never return across the eight lessons: W-077 звук, W-082 малина, W-083 слива, W-084 рука, W-086 чути, W-104 зима, W-109 чай, W-110 хліб, W-118 зуб. Among them are A1 food words (хліб is A1 in PULS, query_cefr_level) that fit naturally with the new core word їжа. Meanwhile тато is matched again in lesson 4 a8 after lesson 1 a6. The lesson 2 or 4 match-ups and anagram should bring back the words the learner is about to forget."
+    evidence: { receipt: "rr-86998122e95806f4683b" }
+    could_be_a_gate: "yes — a script can list prior-position core ids that are absent from every recycled list in the module"
+  - id: F-08
+    status: active
+    locations:
+      - lesson: 8
+        step: "s2"
+        quote: "when the old snail liked to travel"
+    dimension: plan_defect
+    severity: MINOR
+    claim: "The recap asks a Ukrainian-only question about when the old snail liked to travel. That question needs коли (A1 in PULS, query_cefr_level). коли has no record in the level word store (curriculum/l2-uk-en/evidence/a1/_words.yaml) and is absent from lesson 8's inventory, although хто/де/що were admitted as W-162–W-164. The writer cannot phrase the planned question within the allowlist. Admit коли as incidental (a pack-builder task) or restate the question with an admitted question word."
+    evidence: { receipt: "rr-301a61a891b81c521f24" }
+    could_be_a_gate: "no"
+  - id: F-09
+    status: active
+    locations:
+      - lesson: 3
+        step: "s2"
+        quote: "Hear the Є segment of V-002"
+    dimension: evidence_use
+    severity: MINOR
+    claim: "Lesson 3 s2 and its video use line ('Step s2 Є pronunciation model') assert an Є segment of V-002. The pack's V-002 record lists structured letter targets Ю, Я and Ш only, with segment: null. Lessons 2 and 4 already downgrade the same video to 'unscored by-ear support … no timed segment'. Lesson 4's video use line ('Step s2 Щ sound model') and lesson 6 ('Я/Ю/Є/Ї') repeat the overclaim. The corpus search found no attested Є model for this video. The search_resources catalogue check was refused by the harness, so that check is an evidence gap. These lines should match the integration rule: unscored support with no claimed segment."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-cc13903b631e3f9d38d4", outcome: "hits_but_no_support" }
+    could_be_a_gate: "yes — a script can compare a letter claimed for a video in plan prose with the pack record's models.letters"
+  - id: F-10
+    status: active
+    locations:
+      - lesson: 7
+        activity: "a2"
+        quote: "Select the capital/small glyph corresponding to a printed T-012 letter name"
+    dimension: job
+    severity: MINOR
+    claim: "This position owns Standard line S-001 (4.1.1: 'Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець'). Its examples contrast proper names with common words. Pravopys 2019 §49 states that usage rule (query_pravopys): names of people take a capital letter, and §49.6 gives residents' names such as українка a small letter. Lesson 7 serves only glyph correspondence (a2, a5), and the own-name copy in s3 never states that names begin with a capital letter. Add one sourced statement and a print item, for example choosing the capitalised form of W-141."
+    evidence: { receipt: "rr-f39a219e62341304b07f" }
+    could_be_a_gate: "no"

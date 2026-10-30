@@ -1,0 +1,140 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-special-signs"
+  attempt_id: "claude-full-att-5"
+  manifest_sha256: "5bba4e128a0c687fbf1247ab4dc48ea8c3052127038f18a9b15775eb8d4781f6"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "d40eab9fb7e3d47b86b0dfd34ae4c7f16314b0e30d03bedcc4dc085ec6ae897e"
+checks:
+  # Lesson 8 is a separate recap after seven teach lessons. It has the D4 shape: a bilingual
+  # first-person story (s1, a1), Ukrainian-only questions (a2) and one production task (a4).
+  # The recap has too few questions; that is F-4, under activities.
+  closing_shape: clean
+  # The title 'літери' is one Ukrainian word (verify_words rr-d6e4a5ccc82e49086e2b: літера, noun, plural nominative).
+  # The subtitle, focus, objectives, jobs, rationales, teach texts, activity focuses, video uses and
+  # dialogue fields are each one language. English sentences quote Ukrainian only for the item being taught.
+  title_describes_job: clean
+  # 'eight remaining letters' matches scope sidecar letters.count 8. 'two digraphs' (дж, дз) is not a sidecar inventory count.
+  title_quantities: clean
+  # verify_words rr-d6e4a5ccc82e49086e2b: 26 of 26 quoted forms (літери, алфавіт, повторення, тин, день,
+  # мільярд, маля, кує, квітує, синє, моє, їжа, юрта, люпин, радію, дзиґа, дзюрчить, джміль, джем,
+  # пюре, п'ю, пір'я, м'яч, пір'їна, Марія, мої) have marker-free analyses in the lesson sense
+  # (кує and квітує: verb present 3rd person singular; радію: verb present 1st person singular;
+  # дзиґа: inanimate feminine noun). The wrong fill-in completions (пю, піря, мяч, пірїна, п'юре) are
+  # confirmed nonwords: verify_words rr-155506c01319fc24dabb.
+  quoted_forms: clean
+  sequencing:
+    - F-2
+    - F-5
+  # R-02 justifies eight lessons against the arc's estimate of four. L1 (ь), L5 (дж, дз) and L7 (order and names)
+  # each have a distinct job. L4 (three consonants, 360 words) runs one routine per letter. No lesson
+  # crams too much, and none only repeats a neighbour's job.
+  sizing: clean
+  # Core їжа is A1 (query_cefr_level rr-3e3c258f356ba647dfee) and core дощ is A1 (rr-91d4f53edd00f6c0b113).
+  # Primer decoding words stay incidental. P1 and P2 core words are recycled in L1 s3, L2 s3, L4 s4 and L4 a8.
+  inventory: clean
+  # Workbook types rotate across the 7 non-recap lessons: 8 types, and the longest same-type run is 2.
+  # count-syllables in L2–L5 follows a stated progression: each new two-sound letter or digraph
+  # adds no vowel nucleus. Mapped v1 module: 12 activities and 59 response opportunities
+  # (workbook: 7 activities, 39 opportunities). This plan has 56 activities (22 in the workbook), so the
+  # activity count does not drop. Response opportunities are not available at plan stage; that is
+  # a gap in the evidence, not a finding.
+  activities:
+    - F-1
+    - F-4
+  # Confirmed: Pravopys 2019 §49.1 (query_pravopys rr-b2fb9c55e2d8e7da9841), §50.1 and §50.6
+  # (rr-4b0e8d86d42bf9a1db5e), and the T-001 quote (search_text rr-7d26d298d2670b44943a).
+  evidence_fit:
+    - F-3
+    - F-6
+    - F-7
+  # S-001 (:571-572: alphabet, capital and small letters, Київ and Україна) is covered by L7 s1–s4 and a2–a7.
+  # Handwritten letters are deferred to position 4, as the arc places them. Question chunks use хто,
+  # which is already core from P2 L5, and що only as an unanalysed chunk (D3).
+  standard_and_ulp: clean
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 1, activity: "a3", quote: "identify the final consonant as hard [–] or soft [=]" }
+      - { lesson: 1, activity: "a5", quote: "known W-076 день from its exact transcription" }
+      - { lesson: 2, activity: "a4", quote: "Classify the exact word-start W-122 and post-consonant W-123 source transcriptions" }
+      - { lesson: 2, activity: "a6", quote: "Find and repair one mistaken Я reading in each exact displayed source transcription" }
+      - { lesson: 3, activity: "a2", quote: "Use the source transcriptions of W-124/W-125 to distinguish word-start Ю representing [й]+[у]" }
+      - { lesson: 3, activity: "a5", quote: "the corresponding complete exact source transcription, preserving its spaces, syllable bars and softness marks" }
+    dimension: activity
+    severity: MAJOR
+    claim: "The main scored print-analysis quizzes for G-a1-005 and G-a1-007 show their own answer in the quote host, so a learner can pass them by matching symbols without applying the taught rule. search_text rr-7d26d298d2670b44943a (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0100) shows that T-001 prints each word next to its scheme, e.g. 'синь [–• =]' and 'тин [–• – ]'. L1 a3 and a5 offer the options 'hard [–]' and 'soft [=]', so the last scheme symbol is the key. The same holds for L2 a4 and a6 and L3 a2, a4 and a5 (and L2 a2 with T-002/T-050): their hosts T-040, T-041, T-042, T-044 and T-045 already show [й] or ′ (e.g. [йама], [мал′а]). In the find-and-repair items (L2 a6, L3 a5) the correct option is the displayed host itself: T-045 '[ к у|й е ]' per search_text rr-492c2045418dab7dbbac. Fix: make the spelled source word the stimulus. Use the scheme or transcription as the options or as feedback after the answer, so the learner has to read ь, Я, Ю and Є from the spelling."
+    evidence: { receipt: "rr-7d26d298d2670b44943a" }
+    could_be_a_gate: "no"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 8, activity: "a2", quote: "Ask Ukrainian-only what-plus-reading questions about W-081 and W-101" }
+      - { lesson: 8, quote: "questions varied and the production task concrete" }
+    dimension: recap
+    severity: MINOR
+    claim: "D4 requires Ukrainian-only questions about the recap story. The ULP recap model T-021 asks seven varied questions (search_text rr-96b6110ffdafa40eb847, chunk ulp-1-00-lesson-notes_l0010_w002). L8 a2 scores only two items in one frame (what-plus-reading about мама and тато). This contradicts the lesson's own rationale ('questions varied') and the dialogue target_grammar, which keys mother and father to who-questions that a2 never asks. Add the planned who-items, so the comprehension check uses more than one question type."
+    evidence: { receipt: "rr-96b6110ffdafa40eb847" }
+    could_be_a_gate: "no"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 2, step: "s1", quote: "T-041" }
+      - { lesson: 3, step: "s1", quote: "the next practice step gives the single clean T-044/T-045 display" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Step evidence is binding (plan schema §7.1), yet two steps cite models for letters that are introduced later in the same lesson. L2 s1 (the Ї step) lists T-041 'яма [йама]' and T-042 'мільярд [м’іл′йард]' (search_text rr-ee62ff1d7889ce68cb89), but Я is introduced only in s3 and displayed in s4. L3 s1 (the Ю step) lists T-045, whose words кує, квітує and синє are Є models (search_text rr-492c2045418dab7dbbac, chunk 1-klas-bukvar-zaharijchuk-2025-2_s0047), but Є is introduced only in s3. Its teach text also says the next practice step displays T-045, while s2 displays only T-044 and T-045 appears in s4. A writer bound to step evidence would have to cite Я and Є models before those letters are taught. Keep T-041/T-042 in L2 s3/s4 and T-045 in L3 s3/s4 only."
+    evidence: { receipt: "rr-492c2045418dab7dbbac" }
+    could_be_a_gate: "yes — a script can compare the letter glyphs in each step's evidence quotes against the letters introduced at or before that step"
+  - id: F-5
+    status: active
+    locations:
+      - { lesson: 1, step: "s1", quote: "only as one intact greeting chunk after the soft sign is known" }
+      - { lesson: 1, activity: "a6", quote: "Match three independent form–gloss pairs W-076, W-081 and W-101" }
+      - { lesson: 2, activity: "a5", quote: "Count vowel nuclei in known W-076, W-081 and newly taught W-141" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "The opening step of every lesson says to read W-075+W-076 only as one intact greeting chunk and never to analyse or split it. But L1 a5 scores the final-consonant softness of W-076 день on its own, L1 a6 matches день on its own to its gloss, and L2 a5 counts its syllables on its own. The source analyses день as a separate word ('ь М’якість приголосного: день [ден′]', search_text rr-ee62ff1d7889ce68cb89, chunk 5-klas-ukrmova-zabolotnyi-2023_s0063), and W-076 is a P1 core word, so these activities are legitimate. The blanket ban is the defect: it gives the writer contradictory binding instructions. Limit it to not explaining the chunk's adjective or noun grammar, as the W-075 and W-076 record notes already do."
+    evidence: { receipt: "rr-ee62ff1d7889ce68cb89" }
+    could_be_a_gate: "no"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 7, quote: "м'якшення" }
+      - { lesson: 7, step: "s1", quote: "Use T-012 as the authority for all 33 letter names" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "L7 makes T-012 the authority for all 33 letter names. T-012 names Ь '(м’який знак)', and its chunk contains no 'м'якшення' (search_text rr-cae3f44652ed1df6f246, chunk 5-klas-ukrmova-avramenko-2022_s0081). Yet L7's incidental inventory carries W-175 м'якшення, whose record note says it is the 'Exact alphabet-table heading / soft-sign name, T-012'. That claim is not supported by the cited quote. Meanwhile м'який, which VESUM attests as an adjective (verify_words rr-155506c01319fc24dabb), has no word record, so the writer cannot use the sourced Ь name in prose. Pack-builder fix: replace W-175 with an м'який record, or cite a real source for 'знак м'якшення'."
+    evidence: { receipt: "rr-cae3f44652ed1df6f246" }
+    could_be_a_gate: "no"
+  - id: F-6
+    status: active
+    locations:
+      - { lesson: 2, step: "s3", quote: "Use V-002 as unscored by-ear support for Я; no timed segment is asserted." }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "The only by-ear support for Я in L2 s3 is V-002, a composite video with no segment. V-002 has no catalogue entry (search_resources rr-e1a022ea5070d88954fd: no hits for its URL id). The catalogue does hold a dedicated, publisher-evidenced 'ULP alphabet — Я я' video (search_resources letter mode rr-fd7b54f2854f23588363, youtube yhSAf41LX8I, locator 'h2:Я я -> iframe'). Ї, Є and Щ already use their dedicated ULP videos (V-008, V-010, V-011), so Я is the only new two-value letter without one. Pack-builder task: admit the dedicated Я video and bind it to L2 s3 and the lesson's videos."
+    evidence: { receipt: "rr-fd7b54f2854f23588363" }
+    could_be_a_gate: "no"
+  - id: F-7
+    status: active
+    locations:
+      - { lesson: 5, step: "s1", quote: "letter sound recall only; a teacher models the joined digraph/apostrophe words offline" }
+      - { lesson: 6, quote: "Listen to the familiar letter sounds and repeat them aloud." }
+      - { lesson: 7, step: "s1", quote: "Use V-002 only for pronunciation support" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "L5 (дж, дз), L6 (apostrophe) and L7 (alphabet order and names) each have V-002 as their only video, used 'for already-taught individual letter sound recall only'. The pack declares V-002's models as Ю, Я and Ш, none of which these lessons teach, and V-002 has no catalogue entry. Catalogue searches found no apostrophe video and no letter-indexed дж video. Under R-18, a lesson with no suitable video has none. Remove the filler video and its learner-facing purpose from these lessons; for L7, a catalogued whole-alphabet video could be admitted instead."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-e1a022ea5070d88954fd", outcome: "no_hits" }
+        - { receipt: "rr-3a9d4bdbbd096fb7620b", outcome: "no_hits" }
+        - { receipt: "rr-c5ce3f54f8a9f5697399", outcome: "no_hits" }
+    could_be_a_gate: "no"

@@ -1,0 +1,144 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-reading-ukrainian"
+  attempt_id: "claude-full-att-2"
+  manifest_sha256: "ea42b1a02a08eb379ad1528e7cc67f5e403cd884ace6f6f8d39255a39a3fccff"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "00f87530958941b292f46d467b55b3a8faad26ff1a64ef24b1436019ad923a2a"
+checks:
+  closing_shape: [F-1]
+  # title: читати is CLEAN in VESUM (inspect_words, entry 420694, receipt rr-8979aa60e9e1203ade3c); subtitle and lesson prose are single-language
+  title_describes_job: clean
+  # subtitle 'Twelve more letters' equals scope sidecar letters.count 12
+  title_quantities: clean
+  # inspect_words rr-8979aa60e9e1203ade3c: читати (420694) and повторення (288290) CLEAN; all cited lemmas found in verify_words rr-c0864d80ff017034b351
+  quoted_forms: clean
+  sequencing: [F-2, F-3]
+  # 2-3 letters per teach lesson at 260-320 words; 190-word recap; no lesson crams or drags
+  sizing: clean
+  # core тато/зима/зуб/кава/чай/хліб are PULS A1 per word records; кава A1 (query_cefr_level, PULS id 3931, rr-58a6305f25e9716706c4)
+  inventory: [F-4]
+  # v1 mapped module: 10 activities, 46 response opportunities; fresh plan: 49 activities (35 inline, 14 workbook), so no count reduction.
+  # Fresh response opportunities are not available at plan stage (evidence gap, not a reduction). Workbook operations rotate across lessons:
+  # select a syllable, match, orthography, find-and-fix, classify, assemble, reorder.
+  activities: [F-5, F-6]
+  evidence_fit: [F-7, F-8]
+  # arc standard_line_refs for position 2 is empty; nothing is taught earlier than the Standard; Ґ norm corroborated by Pravopys 2019 §6 (query_pravopys '6', rr-56376cdd43ca8cf68eb1)
+  standard_and_ulp: clean
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - lesson: 6
+        field: job
+        quote: "Read the connected primer passage and answer Ukrainian-only questions about it"
+      - lesson: 6
+        step: s1
+        quote: "Do not play the ULP 1-10 story or display premium notes"
+    dimension: recap
+    severity: MAJOR
+    claim: "A separate recap lesson (shape b) is justified after five teach lessons, but lesson 6 has no first-person bilingual story. Its only displayed, scored host is the third-person primer passage T-034 (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-2_s0110: 'Настала весна. Прилетіли птахи.'), and s1 explicitly drops the ULP 1-10 story. Accepted decision D4 and plan-schema §2b require one short first-person story side by side in Ukrainian and English, Ukrainian-only questions about that story, and one production task. No accepted decision in this manifest records the 'authorized authentic-text recap host' named in the changelog, and the same changelog restores the mandatory first-person story for position 3 only. Add a decodable first-person story built from the module's taught words, with the Ukrainian-only questions hosted on it."
+    evidence: { receipt: "rr-a313601027ffd2657b82" }
+    could_be_a_gate: "yes — a script can check that a recap lesson declares a first-person bilingual story block that hosts its comprehension activity"
+  - id: F-2
+    status: active
+    locations:
+      - lesson: 6
+        step: s2
+        quote: "Display T-034 verbatim with attribution and aligned English support before a2."
+      - lesson: 6
+        step: s3
+        quote: "Display only the attributed public-textbook quote hosts T-034 before their dependent print decisions."
+    dimension: recap
+    severity: MAJOR
+    claim: "Lesson 6's practice linkage contradicts its own step text and the D4 order. The s2 text says to display T-034 before a2, ask the Ukrainian-only questions, then read EX-001/EX-002 and do the notebook task. But s2 binds practice [a3, a4], and the questions (a2) are bound to s3. Steps and practice linkage are binding (plan-schema decision 7.1), so the built lesson will run read-aloud and notebook production (a3, a4) before the comprehension questions (a2) and display T-034 a second time. ULP's review shape puts the Запитання block directly after the story (search_text, ulp-1-00-lesson-notes_l0010_w002), and D4 puts the production task last. Bind a2 to s2 right after the T-034 display, or reorder the steps, so the order is story, then questions, then production."
+    evidence: { receipt: "rr-62c55863111d6774518a" }
+    could_be_a_gate: "yes — a script can check that in a recap lesson the comprehension activity is linked to a step before the production activity"
+  - id: F-3
+    status: active
+    locations:
+      - lesson: 3
+        step: s1
+        quote: "do not play an uncited formal greeting recording"
+      - lesson: 3
+        field: rationale
+        quote: "two word readings and the by-ear greeting opening"
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Lesson 3 s1 lists W-075/W-076 (the formal greeting chunk) in its uses, and the rationale budgets for a 'by-ear greeting opening'. Yet the s1 teach forbids playing the greeting recording, and lesson 3 cites no greeting video (V-014 is absent from its evidence and videos). Without a recording, the writer can only print the chunk, whose forms добрий and день (verify_words) contain Й, taught in lesson 4, and the soft sign, held for position 3. Either cite V-014 for a by-ear opening, or drop W-075/W-076 from s1 uses and the by-ear clause from the rationale."
+    evidence: { receipt: "rr-f8dbca273424696f2cfa" }
+    could_be_a_gate: "yes — a script can check that every step-used word is either decodable with the letters taught so far or hosted by a cited recording in that lesson"
+  - id: F-4
+    status: active
+    locations:
+      - lesson: 1
+        step: s3
+        quote: "Recycle the earlier W-077, W-078, W-086,"
+      - field: title
+        quote: "читати"
+    dimension: learner_fit
+    severity: MINOR
+    claim: "Lesson 1 s3 is a read-aloud-from-print step. It recycles W-077 звук, W-086 чути and W-088 читати through their 'already-decoded core word models', but these forms (verify_words) are not decodable in lesson 1: З arrives in lesson 2 and Ч in lesson 4. Conversely, no later lesson recycles W-077, W-078, W-086, W-088 or W-089 once they become readable. As a result, the learner never reads the module's own title word читати in print, in the module that teaches its letters. Keep lesson 1's use of these words by ear, and recycle звук as print reading in lesson 2 and чути/читати in lesson 4 or 5."
+    evidence: { receipt: "rr-f8dbca273424696f2cfa" }
+    could_be_a_gate: "yes — a script can flag recycled words in print-reading steps that contain letters not yet taught"
+  - id: F-5
+    status: active
+    locations:
+      - lesson: 3
+        activity: a6
+        quote: "Find the member of the displayed T-035 word rows whose initial glyph differs from its neighbours."
+      - lesson: 3
+        activity: a6
+        quote: "vary which row is queried and the answer position"
+    dimension: activity
+    severity: MAJOR
+    claim: "Lesson 3 a6 cannot be built as specified. The T-035 rows are 'грати кава грім' and 'ґрати ґава ґрунт' (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-2_s0007). Every word in the second row begins with Ґ, so no member differs from its neighbours. In the first row the only odd member is кава, and its difference is К versus Г, not the Г/Ґ contrast (G-a1-004) the lesson teaches. The requirement to vary the queried row and the answer position therefore cannot be met: at most one valid item exists, with a fixed key, and it does not test the lesson's point. Re-specify it, for example as a column comparison (грати/ґрати, кава/ґава, грім/ґрунт) where the learner picks the Г or the Ґ member."
+    evidence: { receipt: "rr-fc688e1287524c2b183f" }
+    could_be_a_gate: "yes — a script can check that each odd-one-out row drawn from a quote host has exactly one member differing in the stated feature"
+  - id: F-6
+    status: active
+    locations:
+      - lesson: 2
+        activity: a8
+        quote: "choose the corrected count by visible vowel nuclei"
+      - lesson: 2
+        activity: a8
+        quote: "host: {kind: quote, ref: T-040}"
+    dimension: activity
+    severity: MAJOR
+    claim: "Lesson 2 a8 scores a syllable count 'by visible vowel nuclei', but no step in lessons 1-2 teaches syllable counting. Position 1 teaches syllable rows and missing-syllable selection, not counting. The declared quote host, T-040, is the primer's vowel/consonant page (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-1_s0012) and says nothing about syllables, so the item stems cannot depend on the displayed host; this is also an evidence_fit failure. The sourced syllable-count prompt is T-018 on the Б page, already cited in s3. Teach the count in s3 or s4 with T-018 as the host, or replace the operation."
+    evidence: { receipt: "rr-40e81119a0dfd2e8ef5a" }
+    could_be_a_gate: "no"
+  - id: F-7
+    status: active
+    locations:
+      - lesson: 3
+        field: rationale
+        quote: "two different sounds like Latin h and g"
+    dimension: evidence_use
+    severity: MAJOR
+    claim: "The lesson 3 rationale says T-020 describes Г and Ґ as two different sounds 'like Latin h and g'. T-020 is only the primer line 'Бачу Ґ, ґ (ґе). Чую [ґ].' (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-2_s0007) and makes no Latin comparison. The module's other Latin-correspondence source, T-021 (Strokal §21, chunk uni-ukrmova-orthography-strokal-2021_s0431), says Latin G and h are both usually written г, which does not support a Г = h, Ґ = g mapping. The rationale is writer input (R-26), so this misattributed English-speaker description can reach learners. Record it as unsupported, as U-001 does for lessons 4-5, or cite a source that states it."
+    evidence: { receipt: "rr-fc688e1287524c2b183f" }
+    could_be_a_gate: "no"
+  - id: F-8
+    status: active
+    locations:
+      - field: objectives
+        quote: "check the Latin-shaped Т, Е and Х against sourced correspondences"
+      - lesson: 1
+        field: rationale
+        quote: "Т is the first Latin-shaped letter here that reads alike"
+      - lesson: 1
+        step: s1
+        quote: "does not establish a Latin t sound comparison"
+    dimension: evidence_use
+    severity: MINOR
+    claim: "Objective 3 promises to check the Latin-shaped Т against a sourced correspondence, and the lesson 1 rationale asserts that Т 'reads alike' its Latin shape. But lesson 1 s1 itself states that T-021 does not establish a Latin t comparison. T-021 (Strokal §21, search_text chunk uni-ukrmova-orthography-strokal-2021_s0431) covers only Th, which is rendered as ф or т, and no other pack record supports a Т-t correspondence. The Т part of objective 3 and the rationale claim are therefore unsourced. Narrow objective 3 to Е and Х, or cite a source."
+    evidence: { receipt: "rr-202f77e15ee20a8b9d7c" }
+    could_be_a_gate: "no"

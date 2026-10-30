@@ -1,0 +1,101 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-special-signs"
+  attempt_id: "claude-full-att-4"
+  manifest_sha256: "2fe92c9ad9f2fa1a0d5ea0647de5441e45e376f4b762a596228d6160cd2bb12f"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "ae579574e6be60ad464b126f20a57bba1aad1eccedcac64a56b67f4507fec59e"
+checks:
+  # Clean. Seven teach lessons precede a separate recap lesson (R-03, D4). It has a first-person bilingual story (s1), Ukrainian-only questions (a2) and one production task (a4). F-1 covers recap content.
+  closing_shape: clean
+  # Clean. Title 'літери' plus the subtitle matches lessons 1-8. Every prose field is in a single language, and Ukrainian appears only as quoted taught items.
+  title_describes_job: clean
+  # Clean. 'eight remaining letters' equals scope sidecar letters.count 8 (ь Ї Я Ю Є Ц Щ Ф). The digraphs дж/дз are two.
+  title_quantities: clean
+  # Clean. verify_words rr-fcfa03151a161a77b833 found 26/26 forms marker-free in the lesson sense: літери, алфавіт, повторення, тин, день, мільярд, маля, кує, квітує, синє, моє, дзиґа (inanim), дзюрчить, джміль, джем, пір'я, м'яч, пір'їна, пюре, п'ю, радію (verb pres s1), їжа, юрта, люпин, хто, що.
+  quoted_forms: clean
+  sequencing: clean
+  sizing:
+    - F-1
+  inventory:
+    - F-4
+    - F-5
+  # Mapped v1 has 12 activities and 59 items (workbook 7 activities, 39 items). The fresh plan has 34 inline and 22 workbook activities across 8 workbook types, with find-and-fix in lessons 2, 3 and 5, so activity counts are not reduced. Fresh response-opportunity counts are 'not_available_at_this_stage' (evidence gap; no totals invented).
+  activities:
+    - F-6
+  evidence_fit:
+    - F-2
+    - F-3
+  # Clean. S-001 (Standard 571-572, alphabet and capital/small letters) is served by lesson 7. Pravopys citations verified: §49.1 personal names (query_pravopys rr-f1a9e38dd4459e8b9a50); §50.1 and §50.6 (Україна) (rr-d1521988d23abb55e47f). V-001 is the ULP Ь video (search_resources rr-3df5aff4b9dabc5ae1a2).
+  standard_and_ulp: clean
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 6, step: "s4", quote: "model one first-person narrative from the known W-001/W-141 narrator" }
+      - { lesson: 8, step: "s1", quote: "Use the previously modeled W-001/W-141 narrator" }
+    dimension: recap
+    severity: MAJOR
+    claim: "Lesson 6 s4 already models the recap story: the same first-person narrator, family members, food-word labels and who/what reading questions that lesson 8 s1 and a2 then present and score. Lesson 6's job and its 340-word rationale cover only apostrophe words and the EX-001 sentence. The apostrophe lesson therefore carries a second, undeclared job, and the recap's comprehension check can be answered from lesson-6 memory instead of by reading the story. Its 'who read the quoted label' keys also repeat position 2's recap. In ULP the review story is presented in the review lesson itself and followed by questions about it (search_text, chunk ulp-1-00-lesson-notes_l0010_w002). Question chunks can still be modeled earlier, but lesson 8 should get a story that is new as a text, and any pre-modeling step should be stated in lesson 6's job and rationale."
+    evidence: { receipt: "rr-d7b07c95afb3627e04ca" }
+    expected: "Ким працює моя мама?"
+    could_be_a_gate: "no"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 7, step: "s2", quote: "Display the attributed T-012 complete alphabet table once before the print-choice activity." }
+    dimension: evidence_use
+    severity: MAJOR
+    claim: "The writer contract prints a quote block verbatim from the pack. The stored T-012 text (Zabolotnyi grade 5, p. 2, chunk 5-klas-ukrmova-zabolotnyi-2023_s0001) is a three-column alphabet table flattened row by row: after 'И и АЛФАВІТ Назва букви' it runs 'а І і і Т т те', 'бе Ї ї ї У у у'. Shown as lesson 7's 'complete alphabet table' and read in sequence, it gives І, Т, Ї, У… instead of dictionary order, and it separates the names а, бе, ве… from their letters. Activities a2, a4, a5 and a6 depend on this display. The pack needs a clean one-row-per-letter T-012 rendering, as it already has for T-030, T-033 and T-034, before lesson 7 shows it."
+    evidence: { receipt: "rr-fbb9e3461c8a5253f14f" }
+    expected: "а І і і Т т те"
+    could_be_a_gate: "no"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 4, step: "s2", quote: "Use V-002 as unscored by-ear support for Щ; no timed segment is asserted." }
+      - { lesson: 3, step: "s3", quote: "Use V-002 only as unscored general by-ear support with no Є model or timed segment claim" }
+      - { lesson: 2, step: "s1", quote: "V-002 is unscored by-ear support, with no asserted timed segment" }
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: "For Ї (lesson 2), Є (lesson 3) and Щ (lesson 4), the only recording cited is V-002. Its pack record models only Ю, Я and Ш, and its URL is not in the resource catalogue (search_resources rr-eff09415743baa058c50: no hits). Lesson 3 itself says it has no Є model. The catalogue holds free, live ULP alphabet videos for exactly these letters: Щ (QmBLieIuf6Q, rr-7502b4226ad839cfe83b), Є (O0bwRyyBQSc, rr-dcf68fc4b4baa550a7af) and Ї (UcjdjQXhAY8, rr-8321fac8ab3d599cf312). R-18 (name a suitable video where one exists) and the plan's own 'pronunciation before print' register are therefore unmet for three of the eight new letters. The Щ/Ш contrast in lesson 4 a4 also stays print-only, while Ц/Ч and Ф/Ц get listening items. This is a pack-builder task: add these videos as V records with letter models so the plan can bind them."
+    evidence: { receipt: "rr-7502b4226ad839cfe83b" }
+    expected: "ULP alphabet — Щ щ"
+    could_be_a_gate: "yes — a script can flag a new letter whose lesson binds no V record that models it while the catalogue's letter index has one"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 6, step: "s4", quote: "Model complete who-plus-reading questions with W-162 and named-person answers" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Lesson 6 s4 tells the writer to model who-questions with W-162 хто, and lesson 8 s1 relies on that modeling. Lesson 6's inventory, however, lists only W-164 що among the question words and omits W-162. хто (PULS A1) was only an incidental at position 2, and the planned prior learner state does not carry incidentals, so lesson 6's word packet lacks the record its own step names. Add W-162 to lesson 6's incidental list. This also affects the sequencing check."
+    evidence: { receipt: "rr-376f865397065e1ce746" }
+    expected: "хто (A1, займенник)"
+    could_be_a_gate: "yes — a script can require every W-id named in a step's teach prose to appear in that lesson's inventory or the planned prior learner state"
+  - id: F-5
+    status: active
+    locations:
+      - { lesson: 8, step: "s2", quote: "recall EX-001 whole and the previously taught T-001 W-119/W-120 comparison aloud" }
+      - { lesson: 1, step: "s1", quote: "W-119/W-120 are secondary comparison only" }
+    dimension: recap
+    severity: MINOR
+    claim: "The recap's only hard/soft recall (s2, a3) and its production copy (a4, W-120) use тин/тінь. Lesson 1 itself calls this pair secondary because more than the final consonant changes: the primer scheme marks тінь soft at the start as well as the end ('тінь [=• = ]' against 'тин [–• – ]'), and the vowel letter changes too. The constant-vowel pairs W-158/W-176 and W-177/W-178, which do isolate ь, are not recycled. The module's last hard/soft exposure therefore invites the learner to credit ь with the vowel change and the initial softness."
+    evidence: { receipt: "rr-1dfb7f0660f7ccd62377" }
+    expected: "тінь [=• = ]"
+    could_be_a_gate: "no"
+  - id: F-6
+    status: active
+    locations:
+      - { lesson: 4, activity: "a7", quote: "Count vowel nuclei in source W-128, W-129 and W-131, contrasting three with two syllables." }
+    dimension: activity
+    severity: MINOR
+    claim: "count-syllables runs in four consecutive workbooks (lessons 2–5). Lessons 2, 3 and 5 state what each repeat adds (Я, Ю and the digraphs add no vowel nucleus). Lesson 4 a7 only repeats lesson 2's three-versus-two contrast on цимбали, щука and ферма and ties nothing to Ц, Щ or Ф. The source method counts sounds, letters and syllables side by side (Vashulenko p. 19: '? звуків, ? букв, ? складів'), which for W-129 щука would show Щ's two consonant sounds adding no nucleus. As planned, the fourth repeat raises the count without a stated progression."
+    evidence: { receipt: "rr-4dfb5b5026b6546e7db9" }
+    expected: "? звуків, ? букв,"
+    could_be_a_gate: "no"

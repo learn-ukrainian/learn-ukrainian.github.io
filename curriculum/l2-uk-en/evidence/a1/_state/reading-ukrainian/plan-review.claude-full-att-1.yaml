@@ -1,0 +1,121 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-reading-ukrainian"
+  attempt_id: "claude-full-att-1"
+  manifest_sha256: "7d230f70e025fe602a66e803ac0420e946d4c7649642aa54d0209afcdcc164b8"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "12745090743ab61585aa61400773f9fb5a0b97f7874037d4d1ab40982339faeb"
+checks:
+  closing_shape: clean  # shape (a): lesson 6 is kind recap; rule 1(b) is not invoked, so there is nothing to justify
+  title_describes_job: clean  # title, subtitle, objectives and lesson fields are each in one language; the subtitle matches letters, then words, then sentences (L1-L5)
+  title_quantities: clean  # subtitle 'Twelve more letters' = scope sidecar letters.count 12; objectives '12 new' and '25 taught' (13 + 12) are consistent
+  quoted_forms: clean  # verify_words receipt rr-6dc8e38af105c3cfa2c7 (vesum): читати verb:imperf:inf, повторення noun:inanim:n:v_naz, both marker-free
+  sequencing: [F-1, F-2]
+  sizing: clean  # 2-3 letters per teach lesson, 1-2 core words each, 260-320 words; no lesson is overloaded or could be folded into a neighbour
+  inventory: [F-7, F-8, F-9]
+  activities: [F-3, F-4, F-10]  # v1 comparison: 48 activities against 10, workbook 13 against 6, so no volume reduction; response opportunities are not_available_at_this_stage (evidence gap)
+  evidence_fit: [F-5, F-6]
+  standard_and_ulp: clean  # arc standard_line_refs is [] for position 2; Li is served by V-001..V-013, W (copying, own name) by L6 a4; nothing is taught earlier than the arc places it
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 1, step: "s1", quote: "Open the lesson by hearing W-075 and W-076 as one intact greeting chunk" }
+      - { lesson: 3, step: "s1", quote: "Open by hearing W-075 and W-076 as one intact greeting chunk" }
+    dimension: plan_defect
+    severity: MAJOR
+    claim: "Lesson 1 s1 and lesson 3 s1 both open with the learner hearing the formal greeting W-075+W-076, but neither step cites V-014. V-014 is the pack's only recording of that chunk, and its pack use field names 'Lessons 1 s1 and 6 s1'. The two steps cite only the single-letter videos V-001 and V-009, and the pack itself says those do not establish the greeting. The steps' 'read aloud from print' clause is no fallback either. VESUM (verify_words, receipt rr-6dc8e38af105c3cfa2c7) confirms the forms добрий and день, which contain й (taught only in lesson 4) and ь (held for position 3), so the chunk cannot be decoded at either point. Under R-26 and R-28 the writer receives only the cited evidence, so the by-ear opening has nothing to play. Fix: add V-014 to the evidence and videos of both steps, or drop the by-ear opening from lesson 3."
+    evidence: { receipt: "rr-6dc8e38af105c3cfa2c7" }
+    could_be_a_gate: "yes — a script can require that a step whose teach text has W-ids heard cites a V record whose models.words lists those W-ids"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 6, step: "s1", quote: "then V-004 (ULP 1-10) as an unscored listening model" }
+      - { lesson: 6, field: job, quote: "Listen to ULP 1-10 as an unscored model" }
+    dimension: job
+    severity: MAJOR
+    claim: "The recap's job and first step play V-004 (ULP 1-10) as learner-facing listening. That lesson's story (search_text, ulp-1-00-lesson-notes_l0010_w001/_w002, receipt rr-1c24fff28ac376dabfa4) is Anna's story about her family, her job and her town: 'Я і моя сім’я', 'я вчителька української мови', 'Мої батьки живуть у місті Полонне'. Its vocabulary, case chunks and letters (я, ю, є, ї, ц, щ, ь and the apostrophe) are absent from this module and from the position-2 learner state. R-03 and Contract 2 point 8 require the recap to reflect what this module's lessons taught and to introduce nothing. D0 maps positions 1-40 to ULP Season 1, so position 2 is near its start and episode 10 is far ahead of the schedule. The module-specific part of the recap (T-034, EX-001/EX-002 and the copying task) works without it. Replace V-004 with a planned first-person story or dialogue built only from this module's decodable words, which the round-2 changelog authorizes as a recap host, or drop it."
+    evidence: { receipt: "rr-1c24fff28ac376dabfa4" }
+    could_be_a_gate: "no"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 3, field: job, quote: "Hear, read and copy Г and Ґ as different sounds" }
+      - { lesson: 3, activity: "a4", quote: "choose the requested printed member" }
+      - { lesson: 3, activity: "a6", quote: "choose the word whose initial glyph" }
+    dimension: activity
+    severity: MAJOR
+    claim: "Lesson 3's job and G-a1-004 say that Г and Ґ are different sounds, and the primer introduces Ґ by its sound: 'Ґ ґ / Бачу Ґ, ґ (ґе). Чую [ґ].' (1-klas-bukvar-zaharijchuk-2025-2_s0007, search_text receipt rr-1d76d09de858fbb15b3b). Yet no scored item makes the learner use the sound. a2 is a Г-only listening quiz placed before Ґ is introduced, and there is no Ґ listening quiz at all. a4 ('choose the requested printed member') and a6 ('the word whose initial glyph differs') can both be answered by spotting the hook on Ґ without knowing either sound. The provisional pack already holds V-002 and a Ґ heading record (T-028), which the plan does not cite. A Г-versus-Ґ listening quiz (V-009/T-027 and V-002/T-028, choices Г and Ґ) can therefore be built without new evidence. As planned, the lesson's central contrast is practised only offline; at least one of a4 and a6 should become the by-ear Г/Ґ choice."
+    evidence: { receipt: "rr-1d76d09de858fbb15b3b" }
+    could_be_a_gate: "no"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 1, activity: "a4", quote: "include the Latin-shape check against the English letter name" }
+      - { lesson: 4, activity: "a6", quote: "rejecting the Latin-shape guess, and classify it as a consonant" }
+    dimension: plan_defect
+    severity: MAJOR
+    claim: "Two listening-quiz foci contradict their own binding clause. Lesson 1 a4 asks to include the Latin-shape check against the English letter name. Lesson 4 a6 asks the learner to choose the Ukrainian sound for the displayed Х, reject the Latin-shape guess and classify the sound as a consonant. The same foci then require a heard video before each item and choices that are 'taught single glyphs, never words, sound-class labels, letter names', and they state that 'classification and Latin-shape discussion remain offline teaching'. The writer cannot satisfy both halves: the item either breaks the binding or silently drops the check. Either way, objective 3 (check Т, Е and Х against the sourced correspondences in Strokal § 21, search_text receipt rr-85295f5dc61fd22cfe76) gets no scored practice. Rewrite each focus as one consistent task, for example a glyph-choice item whose distractor carries the Latin-shape trap, or make the Latin-shape check an explicitly offline activity."
+    evidence: { receipt: "rr-85295f5dc61fd22cfe76" }
+    could_be_a_gate: "no"
+  - id: F-5
+    status: active
+    locations:
+      - { lesson: 1, step: "s1", quote: "T-021 shows Latin t (th) written with Т, so it is a read-alike letter" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "Lesson 1 s1 rests the claim that Т reads like Latin t on T-021, but the cited Strokal § 21 passage (uni-ukrmova-orthography-strokal-2021_s0431, search_text receipt rr-85295f5dc61fd22cfe76) says nothing about Latin t. It says only that Th is rendered 'то літерою ф' (арифметика, міф, орфографія) or 'то літерою т' (бібліотека, театр, теорія), depending on usage. A rule that sends th to ф or т does not show that Т reads like t. The claim needs a source that actually pairs the two letters, or it should rest on the primer sound model and V-001 alone. T-021 does support the Е (Lе → ле) and Х (English h → х) points it is cited for elsewhere."
+    evidence: { receipt: "rr-85295f5dc61fd22cfe76" }
+    could_be_a_gate: "no"
+  - id: F-6
+    status: active
+    locations:
+      - { lesson: 3, step: "s2", quote: "T-020 describes them as two different sounds like Latin h and g" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "G-a1-004 and lesson 3 s2 cite T-020 (Antonenko-Davydovych, Як ми говоримо) as the authority that Г and Ґ are different sounds. In this project that book is a source for Russianisms and style, not for phonetics or orthography. Its wording, 'Раніш вони позначались на письмі й друковано літерами г (h) і ґ (g)', presents ґ as a letter that was used in the past, and R-28 obliges the lesson to cite it. The current norm states the point directly. Pravopys 2019 § 6 (query_pravopys receipt rr-3c5260ffbcc92350af21) says 'Буква ґ передає на письмі задньоязиковий зімкнений приголосний' and lists ґава, ґрати (іменник) and ґрунт, the very words of EX-004. The pack builder should add a § 6 record, and the plan should cite it instead of T-020, or before it, so that the lesson does not present ґ as historical."
+    evidence: { receipt: "rr-3c5260ffbcc92350af21" }
+    could_be_a_gate: "no"
+  - id: F-7
+    status: active
+    locations:
+      - { field: title, quote: "читати" }
+    dimension: learner_fit
+    severity: MINOR
+    claim: "Recycling skips half of the learner's prior core vocabulary. Position 1 made 15 records core. This plan recycles W-074 to W-076, W-079 to W-082 and W-087, but across six lessons it never recycles W-077 звук, W-078 літера, W-083 слива, W-084 рука, W-086 чути, W-088 читати or W-089 писати. Among them is читати, the module's own title (PULS A1, query_cefr_level receipt rr-273a7d70a8770c5ff17e). Also among them are чути, звук and літера, which every primer letter page in the pack uses in its 'Бачу …, Чую […]' formula. Add them to the recycled lists of the steps that already run the see, hear, read and copy routine, so the practice deck brings them back before they fade."
+    evidence: { receipt: "rr-273a7d70a8770c5ff17e" }
+    could_be_a_gate: "yes — a script can list earlier-position core records that appear in no recycled list of the module"
+  - id: F-8
+    status: active
+    locations:
+      - { lesson: 3, quote: "кава" }
+    dimension: learner_fit
+    severity: MINOR
+    claim: "Lessons 3 and 5 have no core vocabulary, and the module's five core nouns arrive one per lesson. Lesson 3 keeps кава incidental, although by then it is decodable, it is in the cited EX-004 row, and PULS rates it A1 (query_cefr_level receipt rr-b08f3b9d15b669c06870: 'кава (A1, іменник): напій'). It also pairs with чай, which lesson 4 makes core and drills in its a8 match-up. The other lesson-3 words are rightly incidental decoding material (their word records rate ґава C1, ґрунт B2 and грім A2). Promote кава to core in lesson 3, or state why the lesson has no core word."
+    evidence: { receipt: "rr-b08f3b9d15b669c06870" }
+    could_be_a_gate: "no"
+  - id: F-9
+    status: active
+    locations:
+      - { lesson: 1, activity: "a7", quote: "Match three independent core form–gloss pairs W-081, W-082 and W-101" }
+    dimension: engine_or_gate
+    severity: MINOR
+    claim: "This plan rightly treats W-081 мама as core (lesson 1 a6 and a7; PULS A1, query_cefr_level receipt rr-0671dd8e9e788a219267), as position 1 does in its lesson 3 (sounds-letters-and-hello.yaml line 240). The prior planned learner state supplied to this review lists W-081 only under name_ids (position 1, lesson 6) and leaves it out of core_ids. As a result, cumulative_core_count is 14, although position 1 declares 15 core records. The position-1 recap names мама as a dialogue speaker with evidence W-081, which appears to overwrite its core status in the generator. Writers and later reviews that read this state would treat мама as a name. The plan needs no change; the state generator should be fixed."
+    evidence: { receipt: "rr-0671dd8e9e788a219267" }
+    could_be_a_gate: "yes — the learner-state generator can assert that a record declared core in an earlier plan stays in core_ids when it also appears as a dialogue speaker or name model"
+  - id: F-10
+    status: active
+    locations:
+      - { lesson: 2, step: "s1", quote: "classify Д as a consonant" }
+      - { lesson: 2, activity: "a8", quote: "Divide three previously taught core decodable words W-081, W-101 and W-104" }
+    dimension: activity
+    severity: MINOR
+    claim: "The scored activities recognise, choose, match, order and divide, but none sorts and none is a find-and-fix. Every teach step tells the learner to classify the new letter as a vowel or consonant. The primer models both missing operations (search_text receipt rr-fc26533ef15856bbbe52): p. 15 sorts sounds under 'Мовні звуки: голосні та приголосні', and p. 17 asks 'Хто неправильно поділив слово … на склади?', a find-and-fix on syllable division. The plan nevertheless keeps every classification offline and has no R-19 find-and-fix anywhere. The mapped v1 module had a group-sort (8 items) and an error-correction (4 items). The fresh plan has more activities (48 against 10; 13 workbook against 6) but drops both operations without a stated reason. Response opportunities cannot be compared at the plan stage (not_available_at_this_stage). Suggested fix: once the pack builder adds the p. 17 model (the pack has no E- or X-record for it), make lesson 2 a8 a find-and-fix on syllable division, and add one scored vowel/consonant sort to a workbook."
+    evidence: { receipt: "rr-fc26533ef15856bbbe52" }
+    could_be_a_gate: "no"

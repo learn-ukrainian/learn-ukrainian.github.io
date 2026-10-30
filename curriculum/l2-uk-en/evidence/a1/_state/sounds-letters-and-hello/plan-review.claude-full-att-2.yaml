@@ -1,0 +1,181 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-sounds-letters-and-hello"
+  attempt_id: "claude-full-att-2"
+  manifest_sha256: "cb29a001f4f073fcb7ff117391cab61ca09c4ae1a02878db7bdc4631fa9694e3"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "e5161df50169fbb74f100d610914333097520de85df96fa0f88f41a1f6eaf14c"
+checks:
+  closing_shape: clean  # shape (a): lesson 6 is kind recap; shape (b) is not used (five teach lessons would not permit it)
+  title_describes_job: clean
+  title_quantities: clean  # subtitle "the first 13 letters" and objective "the 13 letters" equal scope sidecar letters.count 13
+  quoted_forms: clean  # inspect_words (VESUM) on all 18 quoted forms (звук, літера, привіт, і, повторення, мама, малина, слива, Іван, Вова, коса, Павлик, Поліна, Панас, рука, ріка, Ніна, Нонна): every one CLEAN, 0 marked analyses — receipt rr-24b02f7ad239d7d8ee88
+  sequencing: [F-01]
+  sizing: clean
+  inventory: [F-05]
+  activities: [F-02, F-03, F-04, F-06, F-08]
+  # v1 comparison: v1 has 10 activities / 62 response opportunities, all inline; the fresh plan has 35 activities (26 inline + 9 workbook), so activity counts are not reduced.
+  # Response opportunities are "not_available_at_this_stage" in the plan-validate report, so item counts cannot be compared yet (evidence gap at plan stage).
+  # The two v1 activities dropped without a stated reason are covered by F-04 (vowel/consonant group-sort) and F-08 (error-correction).
+  evidence_fit: [F-07]
+  standard_and_ulp: clean  # arc position 1 standard_line_refs: []; S-003 served in L1, S-002 in L2/L4/L5/L6, S-001 in L5/L6; nothing is taught earlier than the Standard places it; chunk-first greetings follow ULP S1 L1-2 (search_text ulp-1-00-lesson-notes_l0001_w001, receipt rr-19edd72f7cae1bc8f513; _l0002_w002, receipt rr-be2f8a781c026915890c)
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - { lesson: 1, step: "s1", quote: "Present the planned dialogue once in s1, after the native greeting models and before a2" }
+      - { lesson: 1, field: "dialogue.target_grammar", quote: "Whole informal W-074 and formal W-075+W-076 chunks only" }
+      - { lesson: 1, step: "s2", quote: "Contrast the formal greeting by social situation, then play and repeat it aloud as a whole D3 chunk" }
+    dimension: plan_defect
+    severity: MAJOR
+    claim: >-
+      Lesson 1 step s1 presents the formal chunk, uses it in the dialogue and scores it, all before s2, the step meant to introduce it.
+      s1 introduces only W-074. Yet the s1 dialogue's target_grammar names the formal W-075+W-076 chunk, V-002 (the formal model) is
+      played in s1, and a2 (s1's practice) asks about "the intact informal or formal greeting". s2 is the step that introduces W-075/W-076
+      and contrasts the formal greeting by social situation. So the learner is quizzed on informal versus formal before the step that
+      teaches when the formal chunk applies, and s2 then repeats what s1 already did. This breaks R-27 (small theory, then practice)
+      and plan-schema rule 4: a word used in the lesson that introduces it must be introduced in an earlier step. The validator did not
+      catch it because dialogues are not counted in `uses`. The cited ULP order keeps the two apart. search_text on
+      ulp-1-00-lesson-notes_l0001_w001 (receipt rr-19edd72f7cae1bc8f513) shows the informal lesson ending with "You do not usually say
+      Привіт! to your boss or a cashier. We will learn that next time." Fix in the plan: keep s1 informal-only, and move the dialogue and
+      its first quiz after the s2 contrast, into s2 or into a closing practice step.
+    evidence: { receipt: "rr-19edd72f7cae1bc8f513" }
+    expected: "We will learn that next time."
+    could_be_a_gate: "yes — check that every word id named in a step's dialogue target_grammar, or scored by that step's practice activities, is introduced at or before that step"
+  - id: F-02
+    status: active
+    locations:
+      - { lesson: 1, activity: "a2", quote: "Answer about the intact informal or formal greeting in the planned classroom exchange" }
+      - { lesson: 1, activity: "a4", quote: "Answer about the intact informal or formal greeting in the planned classroom exchange" }
+      - { lesson: 1, activity: "a5", quote: "Answer about the intact informal or formal greeting in the planned classroom exchange" }
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      Lesson 1's three scored activities, a2 (inline), a4 (inline) and a5 (workbook), share one word-for-word identical focus about the
+      same short classroom exchange. The repetition raises the count without any learning progression, and the workbook item duplicates
+      the inline ones. a4 is s2's practice but does not test s2's point, the situation contrast. None of the three scores the lesson's job,
+      choosing the greeting that fits a social situation, which is the point the cited ULP source makes. search_text on
+      ulp-1-00-lesson-notes_l0001_w001 (receipt rr-19edd72f7cae1bc8f513) gives "You do not usually say Привіт! to your boss or a cashier."
+      The X-001 pattern (answer a heard greeting) is not used in any scored form either. The previous plan version had distinct informal,
+      formal and cross-situation foci across T-002/T-020/T-021 (focus comparison table in
+      evidence/a1/_requests/revise-a1-p1-p3.md); the round-2 rewrite collapsed them into one. Fix: give a2, a4 and a5 distinct operations
+      that progress. For example: recognise the greeting used in the dialogue; choose the greeting for a new sourced situation; and in the
+      workbook, a mixed choice across friend, boss/cashier, receptionist and teacher situations.
+    evidence: { receipt: "rr-19edd72f7cae1bc8f513" }
+    expected: "You do not usually say"
+    could_be_a_gate: "yes — flag two or more activities in one lesson whose focus text is identical"
+  - id: F-03
+    status: active
+    locations:
+      - { lesson: 3, activity: "a6", quote: "Choose the Ukrainian sound for Н from the primer model, rejecting the Latin-shape guess." }
+      - { lesson: 4, activity: "a2", quote: "Choose the Ukrainian reading for the displayed В, with primer sound as the host, and classify the sound as a consonant." }
+      - { lesson: 5, activity: "a4", quote: "Choose the Ukrainian sound for Р from the primer model, not the Latin-shape guess, and classify the sound as a consonant." }
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      Three single-letter listening quizzes promise what their own binding forbids, and each can only ever have one key. L3 a6, L4 a2 and
+      L5 a4 each open by asking for "the Ukrainian sound" for a displayed letter against "the Latin-shape guess". L4 a2 and L5 a4 also ask
+      the learner to "classify the sound as a consonant". But each focus binds exactly one video/glyph pair (V-010/T-028, V-011/T-029,
+      V-016/T-034), makes the choices taught glyphs, and states that the scored answer is never a sound-class label. A writer cannot
+      satisfy both halves. The only playable item is "hear the letter just introduced and pick that glyph". Every item then has the same
+      key (Н, В or Р), no Latin-shape distractor can appear, and the Latin-shape checks in L3 s4, L4 s1 and L5 s2 have no item that a
+      learner who reads В as [b] or Р as [p] would get wrong. The primer's own model runs from print to sound, the reverse of the bound
+      sound-to-glyph item: search_text on 1-klas-bukvar-zaharijchuk-2025-1_s0072 and _s0036 (receipt rr-2a73ec74b6feab5f8dc2) gives
+      "Бачу П, п (пе). Чую [п]." and "Бачу У, у. Чую [у].". L4 a2 is also a strict subset of L4 a5, which covers В among В/Л/С. Fix in the
+      plan: remove the Latin-shape and classification wording from these scored foci and keep it as the stated offline teaching. Merge or
+      replace the single-pair quizzes with multi-pair items whose keys vary, or bind a design that can actually score a print-to-sound
+      decision.
+    evidence: { receipt: "rr-2a73ec74b6feab5f8dc2" }
+    could_be_a_gate: "yes — flag a listening quiz that binds a single video/glyph pair, since all its items share one key"
+  - id: F-04
+    status: active
+    locations:
+      - { field: "objectives", quote: "distinguish vowels from consonants" }
+      - { lesson: 3, activity: "a1", quote: "Choose the consonant represented by the displayed T-026 heading among the known vowel glyphs" }
+      - { lesson: 3, activity: "a2", quote: "Read first М+vowel and vowel+М rows, then copy the grid and model word into a notebook" }
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      Module objective 2 and grammar point G-a1-002 (vowels versus consonants) get no real scored practice. L3 s1 introduces G-a1-002,
+      but its only practice, a2, is reading and copying М rows offline. L3 a1 asks for the consonant among "the known vowel glyphs"; at
+      that point М is the only known consonant and is also the glyph on display, so every item has the key М and can be solved by shape
+      matching. Every later listening quiz bars sound-class labels from the answer. The mapped v1 module scored this point with a 14-item
+      "Vowel or consonant sound?" group-sort (a1-v1/sounds-letters-and-hello/activities.yaml act-7), and the plan gives no reason for
+      dropping it. The pack already grounds a classification that needs only print: search_text on
+      1-klas-bukvar-zaharijchuk-2025-1_s0012 (the source of T-001/X-002; receipt rr-1033a408a71e40a084e3) gives "Голосний звук
+      позначаємо так: [•]" and "Приголосний звук позначаємо так: [–]". G-a1-002 itself names "sorting their letters". Fix: add a scored
+      activity in L3, or re-focus one, in which the learner classifies taught letters or sound symbols into the primer's [•] and [–]
+      classes with keys that vary, and recycle it in L4 and L5.
+    evidence: { receipt: "rr-1033a408a71e40a084e3" }
+    could_be_a_gate: "no"
+  - id: F-05
+    status: active
+    locations:
+      - { lesson: 6, field: "inventory.vocabulary.incidental.1", quote: "так" }
+      - { lesson: 6, activity: "a2", quote: "decodable selection questions about the mother, the plum and the source answer" }
+    dimension: learner_fit
+    severity: MINOR
+    claim: >-
+      Lesson 6 still admits так (W-096) as an incidental word. The changelog says it was added for yes/no recap questions, but the recap
+      now asks for "Ukrainian-only decodable selection questions … with different substantive keys" and for copying lines "written only
+      with the 13 taught letters". так contains Т, which is not among the 13 letters in the scope sidecar and which the arc places at
+      position 2. The primer introduces Т only after Р: search_text on 1-klas-bukvar-zaharijchuk-2025-1_s0087, printed page 89 (receipt
+      rr-c20b0c85389aff031479). If the writer uses the admitted так as an option in a Ukrainian-only item, the learner meets an option they
+      cannot decode, with no English support, and can answer only by elimination. Fix: drop W-096 from the lesson 6 incidental list,
+      since the questions no longer need yes/no answers, or limit it explicitly to unscored listening.
+    evidence: { receipt: "rr-c20b0c85389aff031479" }
+    could_be_a_gate: "yes — in literacy modules, flag incidental lemmas spelled with letters outside the cumulative taught-letter set"
+  - id: F-06
+    status: active
+    locations:
+      - { lesson: 3, activity: "a7", quote: "complete the decodable word мама and model names Ніна and Нонна" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      L3 a7 (pick-syllables) has two problems. First, its model is X-003, which is a read-and-copy CV/VC table, not a missing-syllable
+      exercise; X-004, used for the same activity type in L4 and L5, is the pick-syllables model. Second, it asks for syllables to rebuild
+      Нонна, whose doubled нн needs a syllable boundary that no pack record supplies. The primer prints the name only whole (search_text on
+      1-klas-bukvar-zaharijchuk-2025-1_s0058, receipt rr-12d6931a03377aea0f4c). The corpus also warns that syllable division and
+      hyphenation follow different rules: "Не потрібно плутати правила поділу слова на склади з правилами переносу" (search_text on
+      5-klas-ukrmova-zabolotnyi-2023_s0068, receipt rr-1dd5c790b4cf3ac56be3). Without a source, the writer has to guess between Но-нна and
+      Нон-на in the learner's first syllable task. Pack-builder task: add a sourced syllable split for Нонна or drop the name from a7, and
+      name a pick-syllables model for a7.
+    evidence: { receipt: "rr-1dd5c790b4cf3ac56be3" }
+    could_be_a_gate: "no"
+  - id: F-07
+    status: active
+    locations:
+      - { lesson: 1, step: "s1", quote: "the teacher situation in T-021 through explains only" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: >-
+      T-021 is cited in L1 s1, in s2 and in the dialogue evidence to ground the teacher as the situation for the formal greeting, but the
+      quote is about saying goodbye. search_text on ulp-1-00-lesson-notes_l0002_w002/_w003 (receipt rr-fa319c172da61e5281a6) reads: "Here
+      is the most common way to say goodbye in a formal situation (to your colleague, teacher, or in the store): До поба́чення!". It
+      supports "a teacher is a formal addressee", not the greeting choice this lesson teaches. The same ULP lesson presents До́брий день
+      as usable "at any time of the day" (T-003). The learner is not misled, because Добрий день to a teacher is correct, but the citation
+      is stretched beyond what it says. Fix: cite T-021 only for the point that a teacher is a formal addressee, or replace it with a
+      record about greetings.
+    evidence: { receipt: "rr-fa319c172da61e5281a6" }
+    expected: "Here is the most common way to say goodbye in"
+    could_be_a_gate: "no"
+  - id: F-08
+    status: active
+    locations:
+      - { lesson: 4, activity: "a6", quote: "Split taught short words and decodable names" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      No lesson has a find-and-fix item, the R-19 engaging model, although the material allows one. The mapped v1 module had a 5-item
+      error-correction ("Pronunciation traps"), and the primer the plan follows has a ready find-the-error task at this stage: search_text
+      on 1-klas-bukvar-zaharijchuk-2025-1_s0014, printed page 15 (receipt rr-f11453ee91d5159ebe43), asks "Хто неправильно поділив слово —
+      назву намальованого предмета на склади?". L4 a6 (dividing малина, слива, Іван and Вова into syllables) is the natural host. The pack
+      has no record for this model, so this is a pack-builder task, not a demand on the writer.
+    evidence: { receipt: "rr-f11453ee91d5159ebe43" }
+    could_be_a_gate: "no"

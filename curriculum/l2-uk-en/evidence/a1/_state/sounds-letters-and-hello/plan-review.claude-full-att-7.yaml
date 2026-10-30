@@ -1,0 +1,78 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-sounds-letters-and-hello"
+  attempt_id: "claude-full-att-7"
+  manifest_sha256: "45286920a4e48b41bf7f24d95b96f123df5ca4bfa6fb791c39178d31b04a9123"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "59a6007e90df318ca94bb0c9cf0fd9208f8decd7626e16ea39344703550578da"
+checks:
+  # Shape (a) is used: lesson 6 is kind recap. Rule 1(b) is not invoked, so nothing needs justifying.
+  closing_shape: clean
+  title_describes_job: clean
+  # The subtitle's "13 letters" matches scope letters.count 13. Lesson 5 job "final three letters" matches К, П, Р.
+  title_quantities: clean
+  # verify_words rr-ffee3bd31327bfd129ae: 24/24 quoted forms found in VESUM.
+  # inspect_words rr-36d98c05eab2322e50be: all CLEAN, no markers.
+  # Rationale "B1 noun ріка": query_cefr_level rr-50fbe0d3eb9082d10e23 (PULS B1).
+  quoted_forms: clean
+  sequencing: [F-1]
+  sizing: clean
+  # малина A2 (rr-ab60f3e6106351a1e0e7) and слива A2 (rr-288b47cb2a2280cf5457) are one band above A1.
+  # Accepted: they are decodable primer words bound to the X-004 exercise (search_text rr-d549e953e9cdd4f57d27) and recycled in lessons 5 and 6.
+  inventory: clean
+  # Mapped v1: 10 activities and 62 items, all inline. Fresh plan: 26 inline + 10 workbook = 36 activities, so the activity count does not drop.
+  # Response opportunities are not_available_at_this_stage: an evidence gap for the item comparison, not a reduction.
+  activities: [F-3]
+  # T-040 confirmed as a printed list of greeting words, not a speaker (search_text rr-3995837a98d4aff6ca0b).
+  # V-010 confirmed as the Н video (search_resources rr-c1039cabc340623f624c).
+  evidence_fit: [F-2]
+  standard_and_ulp: [F-4]
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 3, step: "s5", quote: "X-004" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Lesson 3 step s5 (letter Н) lists X-004 as evidence. X-004's rows and options (со- __, ма-, -ва, -ла, сли-) need Л, С and В, which this plan introduces only in lesson 4. The primer prints the exercise on p.79, after the П page (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-1_s0077). No lesson-3 activity uses X-004 (a5 models X-003), yet R-28 coverage forces the writer to use and cite it in lesson 3, before its letters are readable. Remove X-004 from lesson 3 step s5. It is already cited where its letters are taught: lesson 4 step s2 (a4) and lesson 5 step s1."
+    evidence: { receipt: "rr-d549e953e9cdd4f57d27" }
+    expected: "со- __ ма-, -ва, -ла"
+    could_be_a_gate: "yes — flag any step evidence record whose quote contains letters outside the cumulative taught-letter set at that step"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 3, step: "s4", quote: "compare taught-letter syllables from T-010/T-011" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "Lesson 3 step s4 tells the writer to compare taught-letter syllables from T-010/T-011, but neither record can supply them. T-010 is not in s4's evidence list. Both pack records quote only the 'Бачу … Чую …' line, which has no syllables. On primer letter pages the CV/VC rows are printed separately from that line (search_text receipt, П page: 'пі по па'). So the И/І syllable comparison, which is part of the lesson-3 job, has no sourced rows, and the writer would have to invent them. This is a pack-builder task: add the І-page syllable rows (chunk 1-klas-bukvar-zaharijchuk-2025-1_s0048, which search_text did not return in this attempt) as a record and cite it in s4, or reword s4 to drop the syllable claim."
+    evidence: { receipt: "rr-75656e8b2db5bbc0a564" }
+    expected: "пі по па"
+    could_be_a_gate: "yes — check that every evidence id named in a step's teach text is in that step's evidence list"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 2, activity: "a6", quote: "[А, а, О], [О, о, У], [У, у, И], [И, и, А]" }
+    dimension: activity
+    severity: MINOR
+    claim: "Lesson 2 a6 builds every odd-one-out row from a capital/small pair plus one other vowel, so each row has two defensible answers. In [А, а, О], О differs by letter identity and а is the only small letter. The plan sets the key by letter identity but does not require the stem or the English instruction to say that capital and small forms count as one letter. The primer treats the pair as one letter ('Бачу О, о. Чую [о].'), so the intended key is sound. The instruction must state the criterion, for example 'Which is a different letter? A capital and a small form are the same letter', so that each single-answer row has exactly one defensible key."
+    evidence: { receipt: "rr-75656e8b2db5bbc0a564" }
+    expected: "Бачу О, о. Чую [о]."
+    could_be_a_gate: "no"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 5, step: "s2", quote: "or one’s own name from" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "The arc gives position 1 the writing duty 'W (copying, own name)', and the plan cites S-001 (write one's own name). The only own-name path is lesson 5 s2's '(or one’s own name from a provided model)'. Neither the plan nor the pack names or sources a way to give a self-study learner their own name in Cyrillic, and most names need letters beyond the 13 taught. The catalogue and corpus searches found no such model resource. Either name and source the model (for example a sourced name table), or state in the rationale that own-name writing is carried by position 2, which the arc also gives this skill."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-6ce2ad91e44b2b675a0a", outcome: "hits_but_no_support" }
+        - { receipt: "rr-236d769e36a2503e1549", outcome: "hits_but_no_support" }
+    could_be_a_gate: "no"

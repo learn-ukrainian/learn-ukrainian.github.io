@@ -1,0 +1,116 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-sounds-letters-and-hello"
+  attempt_id: "claude-full-att-4"
+  manifest_sha256: "03bf9e3e73f6c9be72fde6530b1078eb7453dc294934c036485a220bcece4477"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "4cd25aedbf59c57c0167430294d6efdf6b65f6d6e2f788222b4573c99209316a"
+checks:
+  closing_shape: clean  # The plan uses shape (a): lesson 6 has kind recap. Shape (b) is not invoked, so there is nothing to justify.
+  title_describes_job: [F-07]
+  title_quantities: clean  # The subtitle 'first 13 letters' and objective 'Read the 13 letters' match scope sidecar letters.count 13. No lesson title states a quantity.
+  quoted_forms: clean  # verify_words rr-17e2ddedb239bde55ab1: all 24 quoted forms were found (звук, літера, привіт, і, ми, писали, писала, писав, добрий, день, малина, слива, Іван, Вова, коса, Павлик, Поліна, Панас, ріка, рука, мама, Ніна, Нонна, я), each with an unmarked analysis in the lesson sense.
+  sequencing: [F-01, F-02]
+  sizing: clean  # Lesson 3 is the densest lesson (М, І, Н plus G-a1-002 and G-a1-003), but each concept has its own teach step; no lesson's job could be folded into a neighbour.
+  inventory: [F-03, F-04]  # The A2 core words малина/слива (query_cefr_level rr-6f4ab9b6f8ac50ec4f8e, rr-9cbab85d4f7e10e1889f) are accepted: X-004 gives their exact primer segmentation. The A1 alternative син (rr-7e9ea19c73775b41095e) has no such sourced task.
+  activities: [F-08]  # v1 had 10 activities (all inline) and 62 response opportunities. This plan has 26 inline and 10 workbook activities. The plan-stage report gives response_opportunities as not_available_at_this_stage, which is an evidence gap: no totals are invented here and no reduction is shown.
+  evidence_fit: [F-05, F-06]
+  standard_and_ulp: clean  # S-001 (own and other names) is served by L5 a5/L6 a3, S-002 (copying from print) by the letter-grid copy tasks, and S-003 (greeting formulas) by L1. Early greetings follow ULP S1 L1-2 (search_text rr-4cec39d5608f7218f808, rr-70c49efef69a2c4a6747). The W-089 past forms are memorised chunks within the Standard's A1, so they need no ULP id.
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - { lesson: 6, step: "s1", quote: "Bind the narrator to the W-081 written word" }
+      - { lesson: 6, step: "s1", quote: "the thirteen taught letters" }
+      - { lesson: 6, activity: "a2", quote: "the narrator W-099 wrote W-081" }
+    dimension: recap
+    severity: MAJOR
+    claim: "Lesson 6 s1 ties the first-person narrator (W-099) to her own copied word W-081, and a2 scores that tie. The same step limits the story to the 13 taught letters, which excludes я. Ukrainian past-tense forms do not mark person: the cited grade-4 rule says they change by number and, in the singular, by gender. So the narrator's own action can only be written as a third-person self-reference ('Поліна писала …') or as a subjectless 'писала', which leaves the person unclear. Either breaks the first-person narration that D4 requires, and the narrator question then depends on the English column or the speaker label. The job cannot be reached from the learner state. Fix: keep 'ми писали' as the first-person frame and tie the three copied words to other actors instead of the narrator."
+    evidence: { receipt: "rr-890708b7cb14aa163e23" }
+    could_be_a_gate: "no"
+  - id: F-02
+    status: active
+    locations:
+      - { lesson: 1, step: "s3", quote: "Display only the attributed clean public T-040 formal greeting quote" }
+      - { lesson: 1, step: "s4", quote: "then the separate attributed T-040 formal greeting quote" }
+      - { lesson: 2, step: "s3", quote: "display the attributed T-006/T-007/T-008/T-009 primer models" }
+      - { lesson: 2, step: "s4", quote: "Display T-006/T-007/T-008/T-009 verbatim before a2" }
+      - { lesson: 3, step: "s2", quote: "Display the attributed T-039 source before the dependent inline and workbook decisions" }
+      - { lesson: 3, step: "s3", quote: "Display only the attributed public-textbook quote hosts T-039 before their dependent print decisions" }
+      - { lesson: 3, step: "s6", quote: "display these attributed public-textbook quote hosts: T-037" }
+      - { lesson: 3, step: "s7", quote: "Before consolidation display only the attributed public-textbook hosts T-037" }
+      - { lesson: 5, step: "s2", quote: "Display the attributed T-039 source" }
+      - { lesson: 5, step: "s3", quote: "Before consolidation display only the attributed public-textbook hosts T-039" }
+    dimension: plan_defect
+    severity: MAJOR
+    claim: "Every teach lesson tells the writer to display the same quote host in two adjacent binding steps. Lesson 1 shows T-040 in s3 and s4. Lesson 2 shows T-006–T-009 and T-022–T-025 in s3 and s4. Lesson 3 shows T-039 in s2 and s3 (s2 also says 'Display only … T-026'), then T-037 alone in both s6 and s7. Lessons 4 and 5 show T-039 in s2 and again in s3. T-039 is one primer passage (p.15 chunk s0012). Plan-schema decision 1 makes steps fixed structure, so the writer must print the same passage twice in a row. This uses up 210–290-word targets and breaks R-27's small-theory-then-practice rhythm with display-only practice steps. Fix: keep one display step per host (the needs: quote step) and remove the display instruction from the other step."
+    evidence: { receipt: "rr-cd4fb4bd2ffda9b287ac" }
+    could_be_a_gate: "yes — flag two steps of one lesson whose teach text or needs: quote evidence displays the same pack record"
+  - id: F-03
+    status: active
+    locations:
+      - { lesson: 6, step: "s1", quote: "Use only the modeled W-089 past forms, the named actors" }
+      - { lesson: 6, quote: "сливка" }
+      - { lesson: 6, quote: "коло" }
+      - { lesson: 1, quote: "Поліна" }
+    dimension: plan_defect
+    severity: MAJOR
+    claim: "Lesson 6 still lists коло (W-154), он (W-155), сливка (W-156), син (W-158), вона (W-004), ні (W-062) and Іван (W-093) as incidental words. They are the words of the superseded T-036 primer host (primer p.74: 'Ко-ло сли-ви ма-ма … он слив-ка! Во-на ки-сла? … Ні, си-ну!'). Step s1 now allows only the W-089 past forms, the named actors (Поліна, Павлик, мама) and three copied-word labels. Lesson 1 likewise lists Поліна (W-099), whom no step, activity or dialogue uses. The assembler builds Словник from every core and incidental record, so learners would get cards for words that do not appear in the lesson, and the writer gets an inventory that contradicts the step. Remove the stale records."
+    evidence: { receipt: "rr-f629e7f757d44536b1aa" }
+    could_be_a_gate: "yes — warn when an incidental record is named by no step, activity or dialogue field of its lesson"
+  - id: F-04
+    status: active
+    locations:
+      - { lesson: 6, quote: "Optional intact informal greeting recall after story comprehension" }
+    dimension: learner_fit
+    severity: MINOR
+    claim: "The three lesson-1 greeting chunks (W-074, W-075, W-076) are not recycled in lessons 2–5. The recycled lists are empty in lessons 2–3 and hold only decodable nouns in lessons 4–5, and lesson 6 makes greeting recall an optional video after comprehension. ULP, which the plan follows for these chunks, keeps using them: the lesson 2 notes open with 'Приві́т! Мене́ зва́ти А́нна' and the lesson 3 dialogue opens with 'До́брий день!'. Spoken chunks heard in one lesson are the ones a learner forgets across four letter lessons. Fix: add a short oral greeting opener (a V-001/V-002 replay) to lessons 2–5 and make the recap recall required."
+    evidence: { receipt: "rr-70c49efef69a2c4a6747" }
+    could_be_a_gate: "no"
+  - id: F-05
+    status: active
+    locations:
+      - { lesson: 1, activity: "a2", quote: "T-003 establishes the formal register" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "Lesson 1 a2, a4 and a5 say T-003 establishes the formal register. T-003's quote only says До́брий день is 'the most typical greeting that you can use at any time of the day', which is about time of day, not formality. The formality statement is in the unquoted opening of the same ULP lesson 2 notes (chunk ulp-1-00-lesson-notes_l0002_w001: 'This time formal ways to say Hello' and 'formal greetings depend on the time of the day'). The pack builder should add that line as the register record; as cited now, T-003 does not support the register claim."
+    evidence: { receipt: "rr-70c49efef69a2c4a6747" }
+    could_be_a_gate: "no"
+  - id: F-06
+    status: active
+    locations:
+      - { lesson: 1, activity: "a2", quote: "the separate formal teacher model" }
+      - { lesson: 1, step: "s4", quote: "the formal teacher example is outside it" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "T-040 is presented as the formal teacher model, but its source page (Жаркова, Я досліджую світ, grade 1, p.25, 'СПІЛКУЙСЯ ВВІЧЛИВО') lists 'Добрий день!' as one of the children's polite greeting words, next to 'Привіт!', 'Доброго ранку!' and 'Добрий вечір!'. It is neither a teacher speaking nor a formal/informal contrast. The attributed quote can model the chunk's spelling, but the plan should not frame it as a teacher's words; the teacher role comes only from T-021 (explains)."
+    evidence: { receipt: "rr-9304950d25ed4f3dba6e" }
+    could_be_a_gate: "no"
+  - id: F-07
+    status: active
+    locations:
+      - { lesson: 3, quote: "independent acoustic proof remains driver-owned" }
+      - { lesson: 4, quote: "no timed segment" }
+      - { lesson: 1, quote: "then s3 dialogue replay" }
+      - { lesson: 1, quote: "is recalled beside the peer dialogue in s3" }
+    dimension: english
+    severity: MINOR
+    claim: "Video 'use' lines become the learner-facing descriptions in Ресурси, because the assembler prints them as the video description. Lesson 3's V-007 line reads '(segment: null) … independent acoustic proof remains driver-owned' and lesson 4's V-010 line ends 'no timed segment', which is internal pipeline wording. Lesson 1's V-001 and V-002 lines put the replay in s3, which is the quote-only step with no video. The dialogue is in s4, and the dialogue situation repeats the wrong s3 reference. The catalogue already has a learner-facing title for V-007 ('ULP alphabet — И и'). Fix: rewrite these as plain where-and-why lines with correct step references. This is a prose-field defect in a field covered by this check, not a language-mixing issue."
+    evidence: { receipt: "rr-bf69d712cc4f880acd86" }
+    could_be_a_gate: "yes — lint video use lines for pipeline tokens (segment:, driver-owned) and step ids that lack needs: video"
+  - id: F-08
+    status: active
+    locations:
+      - { lesson: 5, activity: "a6", quote: "These two substantive keys differ from the initial-syllable task a2" }
+      - { lesson: 5, activity: "a2", quote: "Пав-лик gives Пав" }
+    dimension: activity
+    severity: MINOR
+    claim: "Lesson 5 workbook a6 repeats inline a2's pick-syllables type on the same two incidental names. a2 asks for Пав and По; a6 asks for лик and на. a2 has already shown the full segmentations Пав-лик and По-лі-на, so a6 can be answered from memory of a2 rather than by reading. Its only stated progression is initial versus final syllable. The same primer page segments other decodable words (Ко-ло, сли-ви, ма-ма, слив-ка, си-ну, си-пав, сан-ка), so a6 could move to new source-segmented words such as ма-ма or Ко-ло. As planned, the repetition raises the activity count without a learning progression."
+    evidence: { receipt: "rr-f629e7f757d44536b1aa" }
+    could_be_a_gate: "no"

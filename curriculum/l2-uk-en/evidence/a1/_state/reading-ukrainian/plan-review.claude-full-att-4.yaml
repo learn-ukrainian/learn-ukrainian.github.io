@@ -1,0 +1,101 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-reading-ukrainian"
+  attempt_id: "claude-full-att-4"
+  manifest_sha256: "564c179361e8742ddc6f16bc8c25570d740bcdddee41cac49365bab692ed1a90"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-agent-sdk"
+  family: "claude"
+  prompt_sha256: "44a6907fee3c2379f760dcf3c81202937fc0fc50e60a8cf67fe7c807a0b3afdc"
+checks:
+  # A separate recap lesson is justified: there are five teach lessons totalling 1,440 target words, so this is not a short module (R-03).
+  # Lesson 6 has the D4 shape: a first-person bilingual story, Ukrainian-only questions, then one copying and own-name production task.
+  closing_shape: clean
+  title_describes_job: [F-5]
+  # "Twelve more letters" matches scope letters.count 12. Core count 13 = 2+3+1+7+0, which matches scope core_count 13.
+  title_quantities: clean
+  # inspect_words rr-7c2fbac2ffb167c3ef2a: читати, повторення, ґава, ґрати, грім, ґрунт, читав, читала, читали and хто are CLEAN.
+  #   гарбоз and ґова are NOT_FOUND, as the plan claims. The verb грати is clean; only the noun грати carries the bad tag, and the plan uses the verb (W-149).
+  # inspect_words rr-ed340db0dfc147223582: чобіт, чоботи, голосний and приголосний are CLEAN.
+  # query_pravopys §6 rr-b75b994e9684e80c227c lists ґава, ґрати (іменник) and ґрунт, so the "Pravopys §6 corroborates ґ" claim holds.
+  quoted_forms: clean
+  sequencing: [F-4]
+  # Lesson 4 is the heaviest: 3 letters and 7 core items. Five of those are Ukrainian labels for meanings already practised in English, and the rationale states this.
+  # Lesson 5 has no new core vocabulary. Neither direction is a clear cram or drag.
+  sizing: clean
+  inventory: [F-6]
+  # Compared with v1: the fresh plan has 50 activities (14 workbook); v1 has 10 (6 workbook). There is no reduction.
+  # Response-opportunity totals are "not_available_at_this_stage" in the plan report. That is an evidence gap, so no totals are claimed here.
+  # Lesson 2's three workbook quizzes use three different operations (repair, listening retrieval, sorting), so repeating the type is acceptable.
+  activities: [F-1, F-2]
+  evidence_fit: [F-3]
+  # The arc lists no Standard lines for position 2. Both skills are served: listening through the listening quizzes, writing through lesson 6 a4 (copying and own name).
+  # Past-tense forms and хто appear only as unanalysed chunks (D3). ULP's recap-question shape is grounded in T-017 (search_text rr-e751697f107e3f592ef5).
+  standard_and_ulp: clean
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 5, step: s3, quote: "Model the complete Хто читав «чай»? question and answers naming people, with English support." }
+      - { lesson: 6, activity: a2, quote: "Actor keys W-093/W-081/W-101 vary and depend on this story" }
+      - { lesson: 6, quote: "already modeled in lesson 5" }
+    dimension: recap
+    severity: MAJOR
+    claim: "Lesson 5 s3 already models the three recap questions: the full 'Хто читав «чай»?' question and the same frame for кава and хліб. Its answers name the same three actors (W-093/W-081/W-101). Lesson 6's dialogue setting is that same lesson-5 scene. Lesson 6 a2 then asks exactly those three questions and says the keys 'depend on this story'. This fails either way. If the writer reuses the lesson-5 pairings, a2 can be answered from memory without reading the recap story. If the pairings differ, the story contradicts the scene it claims to retell. In the ULP model the recap imitates, the answers come only from the story just read (search_text, chunk ulp-1-00-lesson-notes_l0010_w002: 'Ким працює моя мама?' is answered 'Твоя мама — теж (також) вчителька' from that story). Fix the plan in one of two ways. Lesson 5 can model the frame with labels or actors that the recap does not query. Or the recap can use actor–label pairings that lesson 5 never shows; that adds no new inventory."
+    evidence: { receipt: "rr-e751697f107e3f592ef5" }
+    could_be_a_gate: "no"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 3, activity: a7, quote: "with among Г, Ґ and earlier consonants" }
+      - { lesson: 3, activity: a7, quote: "W-106 гарб___з has key у and W-107 ґ___ва has key а" }
+      - { lesson: 3, activity: a7, quote: "producing гарбоз and ґова, both VESUM-unattested" }
+    dimension: activity
+    severity: MINOR
+    claim: "Lesson 3 a7 says its retained job is choosing a word's first letter among Г, Ґ and earlier consonants. Its only required witnesses blank the medial vowels у and а instead, with the same distractor о for both. That tests position-1 vowel spelling, not this lesson's Г/Ґ point. An initial-letter witness is possible: inspect_words returns ґарбуз NOT_FOUND, so a г/ґ blank in W-106 has a clean key and a nonword distractor. Г/Ґ is still scored in a4 and a6, so the impact is limited."
+    evidence: { receipt: "rr-ed340db0dfc147223582" }
+    could_be_a_gate: "no"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 2, activity: a8, quote: "host: {kind: quote, ref: T-018}" }
+      - { lesson: 2, activity: a8, quote: "visible vowel nuclei in the displayed source W-118 form (1) and the previously modeled W-104/W-081 forms (2)" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "a8 binds its comprehension items to host T-018. The source page (search_text, chunk 1-klas-bukvar-zaharijchuk-2025-1_s0105) prints only зуб, бак, біб, лід, бук and над, all with one vowel. The key-2 items about W-104 and W-081 are therefore not supported by their bound host. The pack already contains source-printed two-syllable splits that can host those items: T-042 Зи-ма (the same primer, chunk s0096, confirmed by search_text rr-1ee7348c10841c131211) and T-041 Та-то."
+    evidence: { receipt: "rr-c3bb85f7f7082df786a8" }
+    could_be_a_gate: "yes — check that every comprehension item's target word occurs in the text of its bound host quote"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 1, step: s3, quote: "The earlier W-077, W-086, W-088 and W-089 action/sound labels" }
+      - { lesson: 1, step: s3, quote: "remain English scaffolding here: no claim that their spellings are decoded" }
+      - { lesson: 1, step: s3, quote: "and W-089 follows Т" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Т is introduced in lesson 1 s1, and писати (W-089) needs only position-1 letters plus Т. VESUM confirms the forms писати and писали. So W-089 is fully decodable at s3, and s3 lists it in its uses. Yet the step keeps W-089 as English-only scaffolding, while the same sentence says its print reading 'follows Т'. W-089 is core from position 1 lesson 5, but its first print reading slips to lesson 2 s4. Read W-089 from print in lesson 1 s3 alongside W-101 and W-078."
+    evidence: { receipt: "rr-bc5587736d0ee4545eac" }
+    could_be_a_gate: "no"
+  - id: F-5
+    status: active
+    locations:
+      - { lesson: 5, quote: "Read and copy Ж and Ш words, then read two whole sourced short sentences aloud." }
+    dimension: job
+    severity: MINOR
+    claim: "Lesson 5's job mentions only Ж/Ш words and two source sentences. Its step s3 also models new whole-form past-tense chunks (ми читали, читав, читала, писали) and the хто question frame with answers, which lesson 6 depends on. inspect_words analyses these forms as verb:imperf:past:m, past:f and past:p, and хто as pron:int. R-07 requires the job to say what the lesson does, so the job should name this recap-preparation step. This is linked to F-1 under activities."
+    evidence: { receipt: "rr-7c2fbac2ffb167c3ef2a" }
+    could_be_a_gate: "no"
+  - id: F-6
+    status: active
+    locations:
+      - { lesson: 5, step: s3, quote: "Model the W-162 хто question chunk" }
+      - { lesson: 6, activity: a2, quote: "with the previously modeled хто and читав chunk" }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Lessons 5 and 6 list W-162 хто as incidental. But lesson 5 s3 models it with an English gloss, and the learner must understand it to answer any of lesson 6 a2's three scored Ukrainian-only questions. PULS rates хто A1. It works as a core word, not an incidental one, and should enter the practice deck as core (R-33). Teaching it as vocabulary does not mean teaching the question system, which stays at position 19."
+    evidence: { receipt: "rr-3c3aec4c86374761544f" }
+    could_be_a_gate: "no"

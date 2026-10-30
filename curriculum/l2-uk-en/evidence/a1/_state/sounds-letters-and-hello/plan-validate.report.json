@@ -6,9 +6,10 @@
         "activities": {
           "inline": {
             "by_type": {
-              "watch-and-repeat": 1
+              "quiz": 2,
+              "watch-and-repeat": 2
             },
-            "total": 1
+            "total": 4
           },
           "workbook": {
             "by_type": {
@@ -30,20 +31,27 @@
         "activities": {
           "inline": {
             "by_type": {
-              "observe": 1
+              "letter-grid": 1,
+              "observe": 1,
+              "quiz": 1,
+              "watch-and-repeat": 1
             },
-            "total": 1
+            "total": 4
           },
           "workbook": {
             "by_type": {
+              "odd-one-out": 1,
               "quiz": 1
             },
-            "total": 1
+            "total": 2
           }
         },
         "distinct_types": [
+          "letter-grid",
           "observe",
-          "quiz"
+          "odd-one-out",
+          "quiz",
+          "watch-and-repeat"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -54,19 +62,25 @@
         "activities": {
           "inline": {
             "by_type": {
-              "quiz": 1
+              "letter-grid": 2,
+              "quiz": 3,
+              "watch-and-repeat": 1
             },
-            "total": 1
+            "total": 6
           },
           "workbook": {
             "by_type": {
+              "odd-one-out": 1,
               "quiz": 1
             },
-            "total": 1
+            "total": 2
           }
         },
         "distinct_types": [
-          "quiz"
+          "letter-grid",
+          "odd-one-out",
+          "quiz",
+          "watch-and-repeat"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -77,19 +91,25 @@
         "activities": {
           "inline": {
             "by_type": {
-              "quiz": 1
+              "letter-grid": 1,
+              "pick-syllables": 1,
+              "quiz": 1,
+              "watch-and-repeat": 1
             },
-            "total": 1
+            "total": 4
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "quiz": 2
             },
-            "total": 1
+            "total": 2
           }
         },
         "distinct_types": [
-          "quiz"
+          "letter-grid",
+          "pick-syllables",
+          "quiz",
+          "watch-and-repeat"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -100,41 +120,85 @@
         "activities": {
           "inline": {
             "by_type": {
-              "quiz": 1
+              "letter-grid": 2,
+              "pick-syllables": 1,
+              "quiz": 1,
+              "watch-and-repeat": 1
             },
-            "total": 1
+            "total": 5
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "group-sort": 1,
+              "match-up": 1,
+              "pick-syllables": 1
             },
-            "total": 1
+            "total": 3
           }
         },
         "distinct_types": [
-          "quiz"
+          "group-sort",
+          "letter-grid",
+          "match-up",
+          "pick-syllables",
+          "quiz",
+          "watch-and-repeat"
         ],
         "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 5
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 1,
+              "observe": 1,
+              "quiz": 1
+            },
+            "total": 3
+          },
+          "workbook": {
+            "by_type": {},
+            "total": 0
+          }
+        },
+        "distinct_types": [
+          "letter-grid",
+          "observe",
+          "quiz"
+        ],
+        "has_workbook": false,
         "is_recap": true,
         "kind": "recap",
-        "n": 5
+        "n": 6
       }
     ],
     "module": {
       "all_distinct_types": [
+        "group-sort",
+        "letter-grid",
+        "match-up",
         "observe",
+        "odd-one-out",
+        "pick-syllables",
         "quiz",
         "watch-and-repeat"
       ],
-      "inline_activities": 5,
+      "inline_activities": 26,
       "largest_workbook_type": "quiz",
-      "largest_workbook_type_share": 1.0,
-      "longest_same_type_workbook_run": 5,
+      "largest_workbook_type_share": 0.5,
+      "longest_same_type_workbook_run": 2,
       "longest_same_type_workbook_run_type": "quiz",
-      "non_recap_lessons": 4,
-      "non_recap_lessons_with_workbook": 4,
-      "workbook_activities": 5,
+      "non_recap_lessons": 5,
+      "non_recap_lessons_with_workbook": 5,
+      "workbook_activities": 10,
       "workbook_distinct_types": [
+        "group-sort",
+        "match-up",
+        "odd-one-out",
+        "pick-syllables",
         "quiz"
       ],
       "workbook_presence_complete": true
@@ -146,20 +210,19 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "9b754018b20e06f598343811eacf29a53cf1ef2cafcbaa7e3d1b31d8ee6d3498",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "de1ec6f9fb924f672105346505bed78f2e6b6fc09aa8c3cf308f5df987b26e44",
     "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46",
     "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "2619fa1332e060aca6f1fae85a290ca0bd287954698fdfd03b818f9f3f8424c4",
-    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
-    "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "1833ed5eb2bc0c29225955e846baf227ef7625a7778089bb2855af1faa4c6960",
-    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "ad4733673f8bc177abe46e8ce7737c2e645f0eef8390ac6b5a9e0edcf34b8bb0",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "07cfb2bdb01235b5594eb05005f94104259818fcbf8931cf83416be0f44581be",
-    "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "84e7dcdc47f03ceea16a51811d2c327b1b84a57e0df6d88f57a751e1efeb8455",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75",
+    "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
-    "schemas/arc.schema.json": "af1c1ee66c1e58fda00c975663fe409ad1e2b6033b699c916f36b23fdd5d75b2",
-    "schemas/module-plan-v2.schema.json": "112982f5ff3a7477596a52dce0003e3c7cf9579c98a41eca068a31f6087776e2",
+    "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
+    "schemas/module-plan-v2.schema.json": "689f15c19ef78d6ab010c38a785d2ebb8acfb3ab3df2acac40ff45fadabd18b8",
     "scripts/curriculum/validate/config.py": "18fb421107953159b11c01ebb4620ed3213e0a37491f85f1dce38b207cebd6b0",
     "scripts/curriculum/validate/data/a1-closed-class.yaml": "c64d951304b79000dda4222a9db9b5f358c748c4fe9ef82378a541e85c599582",
     "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
@@ -174,6 +237,18 @@
       "step": null
     },
     {
+      "code": "word_target_not_calibrated",
+      "lesson": null,
+      "message": "not_checked: word_target presence and type are checked; the per-level minimum is not calibrated (§2a)",
+      "step": null
+    },
+    {
+      "code": "lesson_activity_minimums_not_calibrated",
+      "lesson": null,
+      "message": "not_checked: per-lesson inline/workbook activity minimums are not calibrated (§2a)",
+      "step": null
+    },
+    {
       "code": "arc_has_no_structured_grammar_or_vocabulary",
       "lesson": null,
       "message": "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
@@ -182,40 +257,148 @@
     {
       "code": "title_quantities_not_parsed",
       "lesson": null,
-      "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
-      "step": null
-    },
-    {
-      "code": "pending_promotion",
-      "lesson": null,
-      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "subtitle digits: 1, 3; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
       "step": null
     },
     {
       "code": "mechanical_rule_not_checked",
       "lesson": null,
-      "message": "gate M5 was not checked: core word records carry no CEFR level: W-074, W-091, W-092, W-093, W-094",
+      "message": "gate M5 was not checked: core word records carry no CEFR level: W-074",
       "step": null
     }
   ],
   "notes": [
     {
-      "code": "letter_teacher_modeled_only",
+      "code": "options_missing",
+      "lesson": 1,
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 1,
+      "message": "activity a4 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 1,
+      "message": "activity a5 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
       "lesson": 2,
-      "message": "step s1 introduces Е, which no recording the lesson cites models (V-004, V-005, V-007, V-009); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 2,
+      "message": "activity a5 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 3,
+      "message": "activity a1 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 3,
+      "message": "activity a4 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 3,
+      "message": "activity a6 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 3,
+      "message": "activity a7 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 4,
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 4,
+      "message": "activity a5 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 4,
+      "message": "activity a6 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 5,
+      "message": "activity a4 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "options_missing",
+      "lesson": 6,
+      "message": "activity a2 requires options (PR1 advisory)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 4,
+      "message": "core lemma 'малина' (W-082) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 4,
+      "message": "core lemma 'слива' (W-083) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "step_word_lemma_not_decodable",
+      "lesson": 5,
+      "message": "step s1 introduces or uses W-089 'писати' (needs т; readable: писано, писала, писав, писало): the lemma needs letters not taught so far and no recording the lesson cites models it, while another form is readable; the plan does not bind the form, so the plan review confirms it (#9487 C10)",
       "step": "s1"
     },
     {
-      "code": "letter_teacher_modeled_only",
-      "lesson": 4,
-      "message": "step s1 introduces Т, which no recording the lesson cites models (V-015, V-016); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
+      "code": "step_word_lemma_not_decodable",
+      "lesson": 6,
+      "message": "step s1 introduces or uses W-089 'писати' (needs т; readable: писано, писала, писав, писало): the lemma needs letters not taught so far and no recording the lesson cites models it, while another form is readable; the plan does not bind the form, so the plan review confirms it (#9487 C10)",
       "step": "s1"
     },
     {
-      "code": "letter_teacher_modeled_only",
+      "code": "incidental_not_used",
+      "lesson": 3,
+      "message": "2 incidental records named by no step, activity or dialogue of the lesson, nor in a record it displays or a recording it cites: W-091 'Ніна', W-092 'Нонна'; Словник lists every incidental, so learners would get cards for words the lesson does not use (#9487 C16)",
+      "step": null
+    },
+    {
+      "code": "choice_binary_keys_shared",
+      "lesson": 1,
+      "message": "choice activities a2, a5 both declare the two keys добрий день / привіт; the plan review confirms their operations differ (#9487 C22)",
+      "step": null
+    },
+    {
+      "code": "construction_distractor_cued",
       "lesson": 4,
-      "message": "step s2 introduces Я, which no recording the lesson cites models (V-015, V-016); the teach text records the teacher modelling it, so the plan review confirms no recording is available (#9487 C27)",
-      "step": "s2"
+      "message": "pick-syllables activity a4: another completion of a row forms an attested word (ва-ва → вава; на-ва → нава); the focus says the stems carry a cue, so the plan review confirms it selects the key (#9487 C23)",
+      "step": null
+    },
+    {
+      "code": "construction_distractor_cued",
+      "lesson": 5,
+      "message": "pick-syllables activity a2: another completion of a row forms an attested word (по-лик → полик; лі-лі-на → ліліна); the focus says the stems carry a cue, so the plan review confirms it selects the key (#9487 C23)",
+      "step": null
     },
     {
       "code": "a1_reference_word_missing",
@@ -230,10 +413,28 @@
       "step": "s2"
     },
     {
-      "code": "closed_class_a1",
+      "code": "a1_reference_word_missing",
       "lesson": 4,
-      "message": "C29: W-001 я: closed_class_a1 source attestation",
+      "message": "C29: W-082 малина: absent from the A1 reference inventory; teaching replacements: ананас, ванна, вимова (#9582; enforcement=advisory)",
       "step": "s2"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 5,
+      "message": "C29: W-085 ріка: absent from the A1 reference inventory; teaching replacements unavailable: introducing-step letter state is unavailable (#9582; enforcement=advisory)",
+      "step": null
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 5,
+      "message": "C29: W-154 коло: absent from the A1 reference inventory; teaching replacements: no replacement found (#9582; enforcement=advisory)",
+      "step": "s1"
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 6,
+      "message": "C29: W-050 і: closed_class_a1 source attestation",
+      "step": "s1"
     }
   ],
   "slug": "sounds-letters-and-hello",

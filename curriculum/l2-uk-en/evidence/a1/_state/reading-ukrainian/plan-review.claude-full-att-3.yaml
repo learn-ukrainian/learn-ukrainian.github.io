@@ -1,0 +1,129 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-reading-ukrainian"
+  attempt_id: "claude-full-att-3"
+  manifest_sha256: "04c9d62ce9d531ad500655c298430dde61621a6aa6312ecf787055ec46822fe0"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-code"
+  family: "claude"
+  prompt_sha256: "2e600fcb31363e4a6cae60fbaf0434b8e28126b09de4fe1234898eb2e633170a"
+checks:
+  # Rule 1 shape (a) is used: lesson 6 is kind recap with core [] and no teach steps. Shape (b) is not invoked. The D4 question-block defect is recorded under activities (F-1).
+  closing_shape: clean
+  # Title "читати" plus English subtitle; every prose field is in one language, and Ukrainian items quoted in English sentences are about those items.
+  title_describes_job: clean
+  # Subtitle "Twelve more letters" = scope sidecar letters.count 12; objective "25 taught letters" = 13 (position 1) + 12.
+  title_quantities: clean
+  # inspect_words rr-fb4e9df04572243d916b: читати, повторення, ґрати, грім, ґрунт, чай, кава, хліб, Іван, гарбуз, ґава are CLEAN. грати is clean in the lesson's verb sense (W-149); only the noun analysis carries bad. гарбюз and ґява are NOT_FOUND, as the plan states.
+  quoted_forms: clean
+  sequencing: [F-2, F-4]
+  sizing: [F-3]
+  # Core count 13 = sidecar. кава and чай are A1. приголосний is A2 per PULS (rr-64d4d126cdea30abdbc2), but it is primer metalanguage grounded by T-040. Recycling of W-074/W-089 spans every lesson; W-083/W-084 return in L4.
+  inventory: clean
+  # v1 comparison: fresh has 35 inline and 14 workbook activities; v1 has 4 inline and 6 workbook (10 total). Activity counts are not reduced. Fresh response opportunities are not_available at plan stage, so that comparison is an open evidence gap, not invented. Workbook rotation (pick-syllables, match-up, fill-in, quiz, anagram, unjumble) varies operations. L2's three workbook quizzes differ in operation (find-and-repair, listening retrieval, sorting).
+  activities: [F-1, F-5, F-6]
+  # Pravopys 2019 §6 "Буква Ґ" confirmed (query_pravopys rr-d30683f062ad13f433ad), so L3 s2's citation stands.
+  evidence_fit: [F-7]
+  # Position 2 has no Standard line refs. The recap shape follows ULP S1 L10 story plus questions (search_text rr-a6b5d14febd6e28c810f, chunk ulp-1-00-lesson-notes_l0010_w002). Past forms are memorised forms of allowed lemmas (operator decision 1).
+  standard_and_ulp: clean
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - lesson: 6
+        activity: a2
+        quote: "use the previously modeled W-162/W-163 labels or decodable actor-label ellipses"
+      - lesson: 6
+        activity: a2
+        quote: "keys чай, кава, хліб vary and depend on this story"
+    dimension: recap
+    severity: MAJOR
+    claim: "Lesson 6 a2 keys three objects (чай, кава, хліб) but limits its question words to the modeled W-162 хто and W-163 де. The cited textbook rule says хто? asks about people and animals and що? about other things. A хто question about this story therefore keys Іван, мама or тато, never the stated keys. The story names no place, so де has nothing to ask about. що is not decodable here because it contains Щ, a position-3 letter. As written, the stated keys can only be reached through 'actor-label ellipsis' fragments such as «Мама — …?». Those are not the full Ukrainian-only questions that D4 and the ULP lesson-10 model (T-017) require. Fix in the plan: key the хто questions on the people in the story (for example Хто читав «чай»? → Іван, with keys varying across Іван, мама and тато; читав is verified in VESUM, rr-8e9bca6eb8d1ff8583e0). Alternatively, stop presenting W-162/W-163 as serving the object keys. This finding also bears on the D4 recap shape (closing_shape)."
+    evidence: { receipt: "rr-462e95403eda3f23766d" }
+    expected: "а назви неістот — на питання що?"
+    could_be_a_gate: "no"
+  - id: F-2
+    status: active
+    locations:
+      - lesson: 3
+        activity: a7
+        quote: "The alternate completions гарбюз/ґява are VESUM-unattested."
+    dimension: learner_fit
+    severity: MAJOR
+    claim: "Lesson 3 a7 names гарбюз and ґява (the у→ю and а→я substitutions) as the alternate completions for its two required witness items. In A1 orthography-mode fill-in, these become the displayed wrong options, so Ю and Я would appear on screen. The arc holds those letters for position 3; the primer introduces Ю only on part 2 printed p.44 as '[й у] або [у]', well after the Ш page that closes this module. A learner who has never met Ю or Я can answer only by rejecting the unknown glyph, so the item stops testing decoding. The у/ю and а/я contrast is also exactly the position-3 point (G-a1-007), and showing it here breaks objective 2's 'only the 25 taught letters'. Fix: build distractors from taught single glyphs only, verify each as a nonword, and delete the ю/я witness sentence."
+    evidence: { receipt: "rr-6d5e17333329f8ee6bf9" }
+    expected: "Бачу Ю, ю. Чую [й у] або [у]."
+    could_be_a_gate: "yes — reject any fill-in or quiz option in a position-2 lesson that contains a letter outside the cumulative taught-letter set"
+  - id: F-3
+    status: active
+    locations:
+      - lesson: 4
+        field: job
+        quote: "Read and copy Ч, Й and Х, then read new words"
+      - lesson: 4
+        step: s2
+        quote: "With its final required letter now taught, introduce the earlier English-scaffolded W-079 Ukrainian lexical model"
+    dimension: learner_fit
+    severity: MINOR
+    claim: "Lesson 4 introduces 7 of the module's 13 core items: чай, хліб, чути, бачити, читати, голосний and приголосний. Two of these are A2 metalanguage per PULS (приголосний in the receipt). That load comes on top of three new letters and nine recycled ids. Lesson 3 introduces one core word and lesson 5 none, and the lesson-4 job does not mention the vocabulary load at all. W-079 and W-080 become decodable once Й is taught in L4 s2, and L5 s1 already lists them in uses. Introducing them in lesson 5 (Ж, Ш; core []) would even out the hour without reordering the arc."
+    evidence: { receipt: "rr-64d4d126cdea30abdbc2" }
+    expected: "приголосний (A2, іменник): звук"
+    could_be_a_gate: "no"
+  - id: F-4
+    status: active
+    locations:
+      - lesson: 5
+        field: rationale
+        quote: "The last two part-2 letters unlock the two whole primer sentences in EX-001 and EX-002"
+    dimension: job
+    severity: MINOR
+    claim: "The lesson-5 rationale misstates which letters the two sentences depend on. EX-001 «Ми прилетіли додому!» uses only letters taught by the end of lesson 2 (Е and Т in L1, Д in L2). Neither sentence needs Ш; only EX-002 needs Ж, plus Ч from L4. The pack's own T-005, already cited in L2 s2, contains the whole decodable sentence on the З page that the receipt shows. The arc job for this position is 'Read words, then short sentences aloud'. Graduating sentence reading would give that job more than two sentences, each read twice, with no new source: T-005's sentence in L2, EX-001 from L2 or L3, and EX-002 in L5. At minimum, correct the rationale so the writer does not treat sentence reading as locked until L5."
+    evidence: { receipt: "rr-6ff68dea38e11196a5b2" }
+    expected: "Зи-ма в лі-сі."
+    could_be_a_gate: "yes — compute the first lesson in which each cited sentence is decodable and compare it with the lesson that hosts it"
+  - id: F-5
+    status: active
+    locations:
+      - lesson: 1
+        activity: a2
+        quote: "score the heard sound-to-glyph distinction only"
+    dimension: activity
+    severity: MINOR
+    claim: "All 14 scored listening quizzes in lessons 1–5 present 'each whole dedicated recording' of a ULP alphabet video before the item. The catalogue records these videos with letter titles: V-001 is 'ULP alphabet — Т т', embedded under the publisher's 'Т т' heading. If the player shows the title, or the frames show the letter, the item can be answered by sight. The plan's 'heard sound-to-glyph distinction only' is then not secured. The plan should require audio-only presentation with title and frames hidden, or record evidence that the frames do not show the glyph. The driver-owned acoustic proof does not cover this answer leak."
+    evidence: { receipt: "rr-008eccde9dd3557547a9" }
+    expected: "ULP alphabet — Т т"
+    could_be_a_gate: "yes — render check that listening-host players hide the video title and that the host is not labelled with the target glyph"
+  - id: F-6
+    status: active
+    locations:
+      - lesson: 1
+        activity: a5
+        quote: "then read W-074, W-101, W-117 and W-102 whole aloud from print"
+      - lesson: 1
+        step: s1
+        quote: "are read aloud from print with teacher modeling offline"
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "This is a self-study English-medium course with no teacher. Yet every syllable row, whole word and sentence the module asks the learner to read aloud is modeled only by 'teacher modeling offline'. That covers the watch-and-repeat and observe read-aloud steps in every lesson. The learner therefore never hears тато, зима, кава or EX-001/EX-002 spoken; the only audio is single-letter videos and one podcast greeting. Under the accepted Q9 default, videos carry pronunciation. The catalogue searches found no word- or syllable-level read-aloud video. This is a pack-builder gap: bind attributable timed video segments that model the module's decodable words and sentences. It is not a reason to change the arc."
+    unsupported_by_source:
+      searches:
+        - { receipt: "rr-7a2d8dfa2dd5a6f62dde", outcome: "no_hits" }
+        - { receipt: "rr-a4c13611e27fecd96f0a", outcome: "hits_but_no_support" }
+    could_be_a_gate: "no"
+  - id: F-7
+    status: active
+    locations:
+      - lesson: 1
+        quote: "Step s1 intact formal greeting model before any new letter decoding."
+      - lesson: 6
+        quote: "Replay the familiar formal greeting as one intact by-ear chunk"
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "V-014 is listed under videos, but the catalogue records it as a whole podcast episode (kind: podcast, ULP 1-02), and the pack supplies no passage timing. The L1 s1 opening and the L6 replay of the intact greeting chunk therefore send the learner to a full episode with no segment. The catalogue links the episode to a YouTube upload (discovery evidence ext-ulp_youtube-302). The pack should bind a timed segment of that recording to the greeting chunk."
+    evidence: { receipt: "rr-aadaecfb98dd7bab2043" }
+    expected: "ULP 1-02 Formal Greetings and Saying Goodbye in Ukrainian + Pronouns"
+    could_be_a_gate: "yes — require a segment on any video or podcast host whose models target words or phrases rather than a whole-resource letter"

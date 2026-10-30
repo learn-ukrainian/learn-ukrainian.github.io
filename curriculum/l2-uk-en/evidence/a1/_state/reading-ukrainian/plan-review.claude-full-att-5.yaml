@@ -1,0 +1,124 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-reading-ukrainian"
+  attempt_id: "claude-full-att-5"
+  manifest_sha256: "c298055284d815ba561a42cb9ba9f076ac2efe34f5d2a88fe385572ace1ac1ba"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-opus-5-5"
+  harness: "claude-agent-sdk"
+  family: "claude"
+  prompt_sha256: "7cbdfe24ce9c81cb551a2956003281adf1bb4e82c39eb120df39788fa0e82508"
+checks:
+  closing_shape: clean  # module closes with shape (a), a final kind-recap lesson; shape (b) is unused and not permitted with five teach lessons (plan-schema rule 1)
+  title_describes_job: clean  # verify_words rr-88746d9e058476fc1c3a: читати verb:imperf:inf and повторення noun found marker-free; subtitle is English-only, title Ukrainian-only
+  title_quantities: clean  # subtitle 'Twelve more letters' equals scope sidecar letters.count 12; lesson titles enumerate 2+3+2+3+2 = 12
+  quoted_forms: clean  # verify_words rr-88746d9e058476fc1c3a: гава and ґарбуз NOT FOUND, so the L3 a7 nonword claim holds; читав/читала/читали/хто/грати/ґрати/грім/ґрунт/кава/чай/хліб found; query_pravopys rr-b56674cc0c10a32b14d9 §6 lists ґава, ґрати (іменник), ґрунт
+  sequencing: [F-1, F-2, F-3]
+  sizing: clean  # L4 holds 3 letters + 7 core items, but 5 are primer labels (бачу/чую rows) already practiced with English support; the rationale covers it
+  inventory: clean  # query_cefr_level rr-9c60e35c4121ffd21ddb: кава A1; the A2 metalanguage (літера, звук, голосний, приголосний) is the primer's own label set, which the literacy job needs
+  activities: [F-6, F-7]
+  evidence_fit: [F-4, F-5, F-9]
+  standard_and_ulp: [F-8]
+findings:
+  - id: F-1
+    status: active
+    locations:
+      - { lesson: 1, step: "s2", quote: "demonstrates the exact print in T-002, T-003, X-001, X-004, T-021, T-023, T-022" }
+      - { lesson: 1, activity: "a3", quote: "the teacher models the exact cited T-002, T-003, X-001, X-004, T-021, T-023, T-022 forms" }
+    dimension: learner_fit
+    severity: MAJOR
+    claim: "L1 s2 and a3 tell the teacher to model, and the learner to repeat, the exact print of T-003. The source page (search_text rr-c6b58ee89a760d7a9148, chunk 1-klas-bukvar-zaharijchuk-2025-1_s0091) reads «Евеліна дивилася, як падають білі сніжинки.». Its я, ю and ь belong to position 3 in the arc, and its Д, Б and Ж are taught only in lessons 2 and 5. This breaks objective 2 (reading with only the taught letters) and the step's own decodable-only design. T-003 is cited only to supply the decodable name W-102, so the modeling clause must be limited to W-102, or T-003 dropped from it."
+    evidence: { receipt: "rr-c6b58ee89a760d7a9148" }
+    expected: "Евеліна дивилася, як падають білі сніжинки."
+    could_be_a_gate: "yes — a script can check that every T/X record named in a step or activity modeling clause contains only letters taught up to that lesson"
+  - id: F-2
+    status: active
+    locations:
+      - { lesson: 3, step: "s1", quote: "the teacher demonstrates the exact print in T-007, T-008, X-001, X-004, T-027, T-026" }
+      - { lesson: 4, step: "s3", quote: "print in T-012, T-019, T-004, T-021, X-001, X-004, T-031" }
+      - { lesson: 4, activity: "a5", quote: "the teacher models the exact cited T-012, T-019, T-004, T-021, X-001, X-004, T-031, T-030, T-029 forms" }
+    dimension: learner_fit
+    severity: MAJOR
+    claim: "The same generic exact-print modeling clause makes the learner repeat the whole of T-008 (L3 s1) and T-019 (L4 s3, a5). Both primer pages (search_text rr-89461739ba16b6c78071, chunks 1-klas-bukvar-zaharijchuk-2025-2_s0005 and _s0021) open with «Що тобі відомо про персонажів казки…». So T-008 brings Щ, Ж, ь and Х before Х is taught in L4, and T-019 brings Щ, Ж and Ц. T-008 is cited only for гарбуз, and T-019 only for its Х syllables and word list. The clause must be limited to those decodable items."
+    evidence: { receipt: "rr-89461739ba16b6c78071" }
+    expected: "Що тобі відомо про персонажів казки"
+    could_be_a_gate: "yes — the same taught-letter check over records named in modeling clauses would catch it"
+  - id: F-3
+    status: active
+    locations:
+      - { lesson: 2, step: "s4", quote: "T-024, T-025, T-026, T-039, X-006, T-040, X-007, EX-001, T-015" }
+      - { lesson: 2, activity: "a7", quote: "models the exact cited T-004, T-005, T-018, T-024, T-025, T-026, T-039, X-006, T-040, X-007, EX-001, T-015 forms" }
+      - { lesson: 5, step: "s3", quote: "the exact print in T-015, EX-001, EX-002, X-003," }
+    dimension: learner_fit
+    severity: MAJOR
+    claim: "L2 s4/a7 and L5 s3 put T-015 in the exact-print modeling clause. T-015 is the whole primer page (search_text rr-00814fd913a88e1129f2, chunk 1-klas-bukvar-zaharijchuk-2025-2_s0029). It includes «Скоро я зовсім розтану!», «Скоро в мене будуть котики.», «Кому вони можуть належати?» and the watermark Pidruchnyk.com.ua, so я, ь and Ж are untaught. In lesson 2 the page also carries EX-002, which the plan's own L5 rationale says becomes readable only after Ч (L4) and Ж (L5). Only EX-001 (L2) and EX-001/EX-002 (L5) should be modeled, not the T-015 page."
+    evidence: { receipt: "rr-00814fd913a88e1129f2" }
+    expected: "Скоро я зовсім розтану!"
+    could_be_a_gate: "yes — the same taught-letter check over records named in modeling clauses would catch it"
+  - id: F-4
+    status: active
+    locations:
+      - { lesson: 5, activity: "a5", quote: "models the exact cited T-015, EX-001, EX-002, X-003, T-016, T-017, T-042 forms" }
+      - { lesson: 5, activity: "a6", quote: "models the exact cited T-015, EX-001, EX-002, X-003, T-016, T-017, T-042 forms" }
+      - { lesson: 5, step: "s3", quote: "T-016/T-017 explain the bilingual review shape and questioning" }
+    dimension: evidence_use
+    severity: MAJOR
+    claim: "L5 a5 and a6, and the modeling clause of s3, tell the teacher to model the exact cited T-016 and T-017 forms before the learner repeats. These records are ULP 1-10 lesson notes, catalogued with notes_access premium (search_resources rr-8523184b83809b9e6993, resource 207 'ULP 1-10 About me in Ukrainian – Review 1-9'). The same s3 says they explain methodology only, L5 s4 says «never display their prose», and L6 s1 says «never copy premium notes». The modeling instruction contradicts all three. It would also put premium Season-1 text full of untaught letters in front of a position-2 learner. T-016/T-017 must be removed from every modeling clause and kept explains-only. Also touches sequencing."
+    evidence: { receipt: "rr-8523184b83809b9e6993" }
+    could_be_a_gate: "yes — a script can refuse premium-notes records in any modeling or display clause"
+  - id: F-5
+    status: active
+    locations:
+      - { lesson: 1, step: "s2", quote: "demonstrates the exact print in T-002, T-003, X-001, X-004, T-021, T-023, T-022" }
+      - { lesson: 4, step: "s3", quote: "print in T-012, T-019, T-004, T-021, X-001, X-004, T-031" }
+      - { lesson: 4, activity: "a5", quote: "the teacher models the exact cited T-012, T-019, T-004, T-021, X-001, X-004, T-031, T-030, T-029 forms" }
+    dimension: evidence_use
+    severity: MAJOR
+    claim: "T-021 is cited for one narrow point, the borrowed-word correspondences for the Latin-shaped Е and Х. But L1 s2 and L4 s3/a5 also list it in the exact-print modeling clause for learner repetition. The record is a university orthography-manual page on loanword spelling (search_text rr-211564a06082e56c0269, chunk uni-ukrmova-orthography-strokal-2021_s0431, § 21). It lists forms such as авангард, агітація, Гюго, Хемінгуей, логарифм and орфографія, with untaught ф, ц, я, ю and є. It supports the Latin-shape note, not a print model for a learner in lessons 1–4."
+    evidence: { receipt: "rr-211564a06082e56c0269" }
+    expected: "ПРАВОПИС СЛІВ ІНШОМОВНОГО ПОХОДЖЕННЯ"
+    could_be_a_gate: "yes — the taught-letter check over records named in modeling clauses would catch it"
+  - id: F-6
+    status: active
+    locations:
+      - { lesson: 1, activity: "a8", quote: "Keep all taught positional/sign/digraph contrasts across the listed targets" }
+      - { lesson: 1, activity: "a8", quote: "choose its printed form among the decodable W-074, W-081, W-082, W-101" }
+      - { lesson: 4, activity: "a10", quote: "choose its printed form among the decodable W-101, W-103, W-108, W-109" }
+    dimension: activity
+    severity: MINOR
+    claim: "The fill-in focuses in L1 a8 and L4 a10 give the writer two different operations. One is a word-local orthography blank with nonword distractors. The other, the retained 'original teaching job', is choosing a whole printed word from the five targets. Both focuses also require keeping 'sign/digraph contrasts' that the targets do not have: the VESUM-verified forms привіт, мама, малина, тато, клен, дах, чобіт, чай and хліб (verify_words rr-c664eedfe45014ad898a) contain no soft sign, apostrophe or digraph, all of which arrive at position 3. Each focus should name one operation and the letters each blank contrasts, so this R-19 'dull' type stays the improved, constrained form."
+    evidence: { receipt: "rr-c664eedfe45014ad898a" }
+    could_be_a_gate: "no"
+  - id: F-7
+    status: active
+    locations: []
+    scope: { lesson: 1 }
+    dimension: activity
+    severity: MINOR
+    claim: "The L1 workbook has no R-19 model (quiz or find-and-fix). It holds pick-syllables on the single word тато (two keys), a three-pair match-up and a fill-in. L4's workbook (match-up, anagram, fill-in) also lacks one, yet the changelog still says every teach workbook has a quiz. The material allows one: the primer's own find-the-wrong-syllable-division task (search_text rr-4e31814243248166f3a6, chunk 1-klas-bukvar-zaharijchuk-2025-1_s0014) fits the source-segmented Та-то (T-041) that L1 already uses. Fresh workbook volume (14) exceeds v1's (6), so this concerns engagement, not volume."
+    evidence: { receipt: "rr-4e31814243248166f3a6" }
+    expected: "Хто неправильно поділив слово"
+    could_be_a_gate: "no"
+  - id: F-8
+    status: active
+    locations:
+      - { lesson: 5, step: "s3", quote: "Model the W-162 хто question chunk" }
+    dimension: evidence_gap
+    severity: MINOR
+    claim: "L5 introduces хто (W-162) as a core item with a who-question frame at position 2, while the arc makes question words a system at position 19. The only ULP records cited (T-016/T-017, ULP 1-10) are declared methodology-only, so no ULP evidence id stands behind the early item. ULP's notes first list хто as key vocabulary in lesson 7 (search_text rr-b402db4f351d7f6e9368, chunk ulp-1-00-lesson-notes_l0007_w008), after position 2's matching point. The chunk is defensible under D3, since D4 requires Ukrainian-only recap questions, but the plan should state that justification and record the nearest ULP evidence explicitly."
+    evidence: { receipt: "rr-b402db4f351d7f6e9368" }
+    expected: "Key Vocabulary 1-07"
+    could_be_a_gate: "no"
+  - id: F-9
+    status: active
+    locations:
+      - { lesson: 3, step: "s2", quote: "Teach W-151 as the core coffee word from the complete EX-004 row" }
+    dimension: evidence_use
+    severity: MINOR
+    claim: "L3 s2 makes W-151 кава core with its gloss, and L4 a8 drills it in a match-up. The choice is sound: PULS lists кава as A1 (query_cefr_level rr-9c60e35c4121ffd21ddb). But the W-151 word record that the writer receives still says «incidental decoding only, not a grammar or meaning drill». That contradicts the plan's core use and gives the writer conflicting instructions. The word-store note needs updating; this is a pack-builder fix."
+    evidence: { receipt: "rr-9c60e35c4121ffd21ddb" }
+    expected: "кава (A1, іменник): напій"
+    could_be_a_gate: "yes — a script can flag core lemmas whose word-store note declares them incidental-only"
