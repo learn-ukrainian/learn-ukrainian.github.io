@@ -2743,12 +2743,17 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
 
     for segment in (segment for pipeline in pipelines for segment in pipeline):
         values = [_shell_word_value(word) for word in segment]
-        # Program names resolved through quoting and parameters (`"$P"` for tee).
-        programs = [(_command_names(word, facts) or [""])[0] for word in segment]
+        # Every program name each word can take, through quoting and parameters
+        # (`"$P"` for tee): a word that may be one of several names counts as each.
+        programs = [
+            (index, name)
+            for index, word in enumerate(segment)
+            for name in sorted(set(_command_names(word, facts) or ()))
+        ]
         for index, word in enumerate(segment[:-1]):
             if re.fullmatch(r"\d*(?:>|>>|>\||&>|&>>|<>)", word):
                 write(segment[index + 1])
-        for index, program in enumerate(programs):
+        for index, program in programs:
             # A word the reader cannot read counts as an operand, never as an option.
             operands = [word for word in segment[index + 1 :] if not (_shell_word_value(word) or "").startswith("-")]
             if program in {"tee", "touch"}:
@@ -2782,9 +2787,9 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
                     program == "wget" and "-O" not in values
                 ):
                     facts.unknown_write = True
-        if set(programs) & _CREDENTIAL_LAUNCHERS:
+        if {name for _, name in programs} & _CREDENTIAL_LAUNCHERS:
             facts.credential_change = True
-        for index, program in enumerate(programs):
+        for index, program in programs:
             if program in {"chmod", "install"}:
                 for word in segment[index + 1 :]:
                     names = _effect_names(word, facts)
@@ -2792,10 +2797,10 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
                     if names is None:
                         facts.executable.add("")
         # cd behind a wrapper or control word (`builtin cd`, `if cd ...`) still moves.
-        moves = [index for index, program in enumerate(programs) if program in {"cd", "pushd", "popd"}]
-        if moves and programs[moves[0]] == "popd":
+        moves = [index for index, program in programs if program in {"cd", "pushd", "popd"}]
+        if any(program == "popd" for _, program in programs):
             facts.unknown_directory = True
-        elif moves:
+        if moves:
             targets = [word for word in segment[moves[0] + 1 :] if not (_shell_word_value(word) or "x").startswith("-")]
             names = _word_candidates(targets[0], facts) if targets else [os.environ.get("HOME", "")]
             if targets and _under_proc(targets[0], facts):
