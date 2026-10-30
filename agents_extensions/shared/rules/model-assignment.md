@@ -227,7 +227,7 @@ role and are not a last resort for any of them.
   agent explicitly for its reserved seat; stream launchers select their driver agent.
 - **Reserved repository agents**: `curriculum-orchestrator`,
   `curriculum-track-orchestrator` and `curriculum-writer` pin
-  `model: claude-opus-5-5`, so Ukrainian writing/judgment seats never inherit
+  `model: claude-opus-5-5`, so Ukrainian writing seats never inherit
   the routine interactive model. `infra-orchestrator` pins
   `model: claude-sonnet-5-5`, matching its frontmatter. This infra-orchestrator
   subagent has an approved router-only exception (CTO decision, 2026-10-09):
