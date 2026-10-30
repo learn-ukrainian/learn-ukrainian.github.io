@@ -6,10 +6,10 @@
     "exercises_count": 6,
     "notes_count": 0,
     "standard_count": 3,
-    "texts_count": 41,
+    "texts_count": 44,
     "unsupported_open_count": 0,
     "unsupported_resolved_count": 1,
-    "videos_count": 15
+    "videos_count": 18
   },
   "errors": [],
   "kind": "pack-verify",
@@ -17,11 +17,11 @@
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml",
-    "sha256": "30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46"
+    "sha256": "0171997bfc45b735b5980727ebaddd1969e5cda4895703bd4c845c7c34c558c3"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock",
-    "sha256": "2619fa1332e060aca6f1fae85a290ca0bd287954698fdfd03b818f9f3f8424c4"
+    "sha256": "c438b659edab09dcd91b03bd43ab812fcfc6c99c2cd40b30ca31ff08941c110c"
   },
   "report_schema": 1,
   "reports": [],

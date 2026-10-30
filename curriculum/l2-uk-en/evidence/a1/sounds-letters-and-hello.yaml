@@ -1,11 +1,11 @@
 built_with:
-  mcp_commit: 269b57bbc9ba4061fd4d6197470fee33e20d4aa5
+  mcp_commit: 429e3f44def7028572d44c9b819bcb4fbb2389ad
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
-  russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 0ff01184650749c1553aa7cfd993a6ff8c1de2485a2968ef8a314953bdf59d0b
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: 69b7346c682277121945c88593bfb29bcbb8b620efd5197320dfab8258309345
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
-  trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
   ulif_forms: pending
   vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
 evidence_schema: 1
@@ -849,6 +849,45 @@ texts:
     row_sha256: 11ce1c1713a5d69c5a60504d3830c97b76c7b0ad1608bbc816e3d5c66a3a7702
     section_id: null
   supports: Explicit formal-register description of the greeting lesson; explains only, premium notes never quoted.
+- id: T-042
+  quote: Бачу Е, е. Чую [е].
+  sha256: 7098503321328a46882e936e8273e808b3a6fdc148820d6273ffa86ef581a75c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0088
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 92
+    row_sha256: 22cadc130ea0ef47ef85a8d9bad2352f2a92516b79138ee87f50982b818253c8
+    section_id: 13039
+  supports: 'Primer printed page: Е letter and its heard sound.'
+- id: T-043
+  quote: Бачу Т, т (те). Чую [т], [т'].
+  sha256: 4d41813274bc2a6aba7403528955a4a54bd3dc03abf9f899bebc2f16d990e9e9
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 88
+    row_sha256: 3d99901d08c101c5efaea24ceaebc0d231698cbc5b20df24af6e5265fed04da9
+    section_id: 13035
+  supports: 'Primer printed page: Т consonant and its heard sound.'
+- id: T-044
+  quote: Бачу Я, я. Чую [й а] або [а].
+  sha256: 0018c1695ba315861663a2313e6a6262893319b2ce0e900c5904ef17c34b8c80
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0039
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 42
+    row_sha256: 65fd94236424adf4ce840ff7d9854c17552d516523c13a79c7e8121fa7651680
+    section_id: 13101
+  supports: 'Primer printed page: Я vowel and its heard sound.'
 unsupported:
 - claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and
     lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos establish their named
@@ -888,7 +927,7 @@ videos:
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.ukrainianlessons.com/episode1/
     http_status: 200
   id: V-001
@@ -904,7 +943,7 @@ videos:
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.ukrainianlessons.com/episode2/
     http_status: 200
   id: V-002
@@ -921,7 +960,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
     http_status: 200
   id: V-004
@@ -936,7 +975,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=gJFxRIPRZbI
     http_status: 200
   id: V-005
@@ -951,7 +990,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
     http_status: 200
   id: V-006
@@ -966,7 +1005,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=W-1rCu0indE
     http_status: 200
   id: V-007
@@ -981,7 +1020,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=Ez95H4ibuJo
     http_status: 200
   id: V-008
@@ -996,7 +1035,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
     http_status: 200
   id: V-009
@@ -1011,7 +1050,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=vNUfiKHPYaU
     http_status: 200
   id: V-010
@@ -1026,7 +1065,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
     http_status: 200
   id: V-011
@@ -1041,7 +1080,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
     http_status: 200
   id: V-012
@@ -1056,7 +1095,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
     http_status: 200
   id: V-013
@@ -1071,7 +1110,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
     http_status: 200
   id: V-014
@@ -1086,7 +1125,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=JksSjjxyW5Y
     http_status: 200
   id: V-015
@@ -1101,7 +1140,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-10-02'
+    date: '2026-10-30'
     final_url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
     http_status: 200
   id: V-016
@@ -1113,3 +1152,45 @@ videos:
   url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
   use: Pronunciation model for Р. Pronunciation model for consonant Р. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=KFlsroBW0dk
+    http_status: 200
+  id: V-017
+  models:
+    letters:
+    - Е
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=KFlsroBW0dk
+  use: Pronunciation model for vowel letter Е.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    http_status: 200
+  id: V-018
+  models:
+    letters:
+    - Т
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=m-jcLR_gK0k
+  use: Pronunciation model for consonant letter Т.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=yhSAf41LX8I
+    http_status: 200
+  id: V-019
+  models:
+    letters:
+    - Я
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=yhSAf41LX8I
+  use: Pronunciation model for vowel letter Я.

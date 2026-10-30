@@ -264,6 +264,18 @@ texts:
     first_words: This time formal ways to say “Hello”.
     last_words: the day.
   supports: Explicit formal-register description of the greeting lesson; explains only, premium notes never quoted.
+- id: T-042
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0088}
+  span: {first_words: 'Бачу Е, е.', last_words: 'Чую [е].'}
+  supports: 'Primer printed page: Е letter and its heard sound.'
+- id: T-043
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084}
+  span: {first_words: 'Бачу Т, т (те).', last_words: "Чую [т], [т']."}
+  supports: 'Primer printed page: Т consonant and its heard sound.'
+- id: T-044
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0039}
+  span: {first_words: 'Бачу Я, я.', last_words: 'Чую [й а] або [а].'}
+  supports: 'Primer printed page: Я vowel and its heard sound.'
 exercises:
 - id: X-001
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}
@@ -443,6 +455,33 @@ videos:
   models:
     letters:
     - Р
+    words: []
+    segment:
+- id: V-017
+  url: https://www.youtube.com/watch?v=KFlsroBW0dk
+  channel: Ukrainian Lessons
+  use: Pronunciation model for vowel letter Е.
+  models:
+    letters:
+    - Е
+    words: []
+    segment:
+- id: V-018
+  url: https://www.youtube.com/watch?v=m-jcLR_gK0k
+  channel: Ukrainian Lessons
+  use: Pronunciation model for consonant letter Т.
+  models:
+    letters:
+    - Т
+    words: []
+    segment:
+- id: V-019
+  url: https://www.youtube.com/watch?v=yhSAf41LX8I
+  channel: Ukrainian Lessons
+  use: Pronunciation model for vowel letter Я.
+  models:
+    letters:
+    - Я
     words: []
     segment:
 standard:

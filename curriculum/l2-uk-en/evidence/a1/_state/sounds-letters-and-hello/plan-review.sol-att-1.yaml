@@ -1,0 +1,280 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-sounds-letters-and-hello"
+  attempt_id: "sol-att-1"
+  manifest_sha256: "232314b4cd4294c3c1050132e67a9379539323375109e29990320fd304bed9f1"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "GPT-6"
+  harness: "Codex"
+  family: "OpenAI"
+  prompt_sha256: "1c78b87004fdbd927c215c8c6f23d640a6b16c56eedfc0e70672b52dfb5b2822"
+# Review used the supplied manifest and ledgered Sources tools.
+# No command execution, other review returns, or previous receipts were used.
+# Local rule files and the full schema were unavailable through a permitted
+# file-reading tool; this return follows the supplied contract and template.
+checks:
+  # The practical task combines a contextual register choice with reading
+  # taught names. No story-question closure or new construction is required.
+  # search_text, ulp-1-00-lesson-notes_l0001_w001:
+  # "The basic informal “Hi!” in Ukrainian is:" — rr-33109bb93d4120286acb.
+  # search_text, 1-klas-bukvar-zaharijchuk-2025-1_s0058:
+  # "Іван Вова Ніна Нонна" — rr-a25f3d27ed4207d6807a.
+  closing_shape: clean
+  # Titles describe greetings, vowels, consonants and review.
+  # English sentences quote Ukrainian forms as objects of teaching.
+  # inspect_words, VESUM entry 188840: "літера" has a clean nominative
+  # analysis; entry 310865 likewise verifies "привіт".
+  # Receipt: rr-241e813fab53b15a1f9b.
+  title_describes_job: clean
+  # No inventory quantity is asserted in a title or subtitle.
+  title_quantities: clean
+  # inspect_words: all 19 inspected lexical forms have clean analyses.
+  # Receipt rr-241e813fab53b15a1f9b includes matching personal-name
+  # entries 239577, 241021, 151545 and 63779.
+  # verify_words independently confirms the lexical forms:
+  # rr-4a9938f88d424abba4b0; lowercase "добрий" confirmed by
+  # rr-971edcfd458cdb222e97. The capitalized lookup miss is not a defect.
+  # Reading syllables are sound combinations, not asserted dictionary words.
+  quoted_forms: clean
+  sequencing: [F-01]
+  sizing: [F-04]
+  # Missing CEFR classifications for personal names do not establish
+  # unsuitability. query_cefr_level confirms "мама (A1, іменник)",
+  # rr-c35836c94577d1e6046c. GRAC frequency evidence was unavailable:
+  # rr-a36499e58512c078c65a; no frequency ranking is inferred.
+  inventory: [F-02]
+  # Workbook rotation is purposeful in principle: contextual choice,
+  # case matching, completion, identification and semantic sorting.
+  # Repeated watch-and-repeat follows progression from chunks to sounds
+  # and syllables; its repetition alone is not a finding.
+  # The greeting quiz supplies an engaging R-19 model. A single constrained
+  # fill-in is not rejected by type; F-05 concerns its actual solvability.
+  # Supplied reports: fresh 10 activities, including 5 workbook activities;
+  # mapped v1 10 activities, all classified inline, with 62 response
+  # opportunities. Fresh response opportunities are unavailable at plan
+  # stage, so their comparison remains an evidence gap. No reduction,
+  # item target, or numeric adequacy threshold is inferred.
+  activities: [F-05, F-06]
+  evidence_fit: [F-07, F-08, F-09, F-10]
+  standard_and_ulp: [F-03]
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "Learn and observe the primary vowel letters А, О, Е, И, І."
+      - field: objectives
+        quote: "Copy taught letters and words into a notebook as supported offline writing practice."
+    dimension: plan_defect
+    severity: MAJOR
+    claim: >-
+      The literacy sequence implements staged letter acquisition but leaves two
+      accepted duties without teaching steps: r6(d)'s audio-grounded full-alphabet
+      overview with printed and cursive models and letter names, and the module's
+      promised supported notebook copying. The supplied prior state does not
+      establish these acquired skills. OHO's alphabet model is independently
+      recovered by search_text at owned-oho-a1-workbook_f1_p0015_c0001, including
+      "Alphabet: printed and handwritten letters" and "Letter names".
+      Plan the overview separately from mastery of the twelve acquired letters,
+      and make supported copying an actual learner action. This also affects
+      the writing duty assessed under standard_and_ulp.
+    evidence:
+      receipt: "rr-619c8c42392053fad03e"
+
+  - id: F-02
+    status: active
+    locations: []
+    scope:
+      lesson: 1
+    dimension: plan_defect
+    severity: MAJOR
+    claim: >-
+      The communicative inventory remains two hello formulas. Accepted r6(a,c)
+      assigns this position farewells, gratitude, politeness, apology and polar
+      response tokens as fixed oral chunks; no later lesson in this plan supplies
+      them. This leaves the agreed first-contact progression incomplete.
+      search_text at ulp-1-00-lesson-notes_l0002_w006 independently supplies
+      early-course goodbye, gratitude and please/you-are-welcome models, including
+      the English glosses "Goodbye!" and "Thank you!". The pack-builder should
+      admit the necessary evidence before the planner allocates the omitted
+      exchanges; the writer must not invent that allocation.
+    evidence:
+      receipt: "rr-590d96bcec758b8999f9"
+
+  - id: F-03
+    status: active
+    locations: []
+    scope:
+      lesson: 2
+    dimension: plan_defect
+    severity: MAJOR
+    claim: >-
+      No lesson plans the position's required stress and intonation work.
+      Accepted r6(d) additionally assigns an overview of six vowel sounds and
+      stressed versus unstressed vowels here. Teaching five vowel letters and
+      contrasting two sounds does not accomplish those auditory jobs; hearing
+      greeting recordings alone does not specify the intended prosodic learning.
+      search_text at owned-oho-a1-workbook_f1_p0019_c0001 explicitly states
+      "Ukrainian has six vowel sounds" and presents stressed and unstressed
+      vowels. Restore the accepted listening and speaking progression with
+      appropriate pack evidence. Hearing the sixth vowel need not move its
+      written-letter mastery from the approved later position. The Standard
+      ownership is taken from the supplied arc; its original lines were not
+      independently recovered.
+    evidence:
+      receipt: "rr-8715dc51bb82e0b47277"
+
+  - id: F-04
+    status: active
+    locations:
+      - lesson: 5
+        quote: "Consolidate greetings and the 12 taught letters through practical interaction and reading."
+    dimension: learner_fit
+    severity: MAJOR
+    claim: >-
+      The separate recap lesson has insufficient distinct work to justify its
+      separation: it repeats greeting selection, reads familiar names and sorts
+      already taught vocabulary. Its useful contextual closing task could close
+      the preceding instructional lesson. Accepted r6(e) specifically adopts
+      embedded recap and communicative integration for positions 2–3 to preserve
+      conversational teaching capacity. search_text at
+      1-klas-bukvar-zaharijchuk-2025-1_s0058 confirms the familiar name-reading
+      model, "Іван Вова Ніна Нонна"; the plan does not develop that model into
+      a broader standalone recap job. Integrate the practical closure and
+      allocate teaching capacity to the omitted accepted duties. This is a
+      judgement about distinct learner work, not a word, activity or time quota.
+    evidence:
+      receipt: "rr-a25f3d27ed4207d6807a"
+
+  - id: F-05
+    status: active
+    locations:
+      - lesson: 3
+        activity: a2
+        quote: "Complete names and family words by supplying the missing initial syllable with В, М, or Н."
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      The completion operation cannot fairly realize its named targets.
+      W-091 is Ніна and W-093 is Іван, but the supplied options are ма, на
+      and ва: none can supply either name's missing beginning as requested.
+      inspect_words confirms the clean nominative name forms at VESUM entries
+      239577 and 151545. Repair the blanks, targets and choices together around
+      the intended reading operation. This concerns answerability, not the
+      script-owned type allowlist or practice-linkage checks.
+    evidence:
+      receipt: "rr-241e813fab53b15a1f9b"
+
+  - id: F-06
+    status: active
+    locations:
+      - lesson: 2
+        activity: a2
+        quote: "Match uppercase to lowercase forms of taught vowel letters А, О, Е, И, І."
+      - lesson: 4
+        activity: a2
+        quote: "Identify the personal pronoun with vowel letter Я among single-syllable vowel letters."
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      These workbook operations are reasonable supplementary recognition tasks,
+      but they do not test their lessons' central phonetic and reading jobs.
+      Case matching does not demonstrate hearing vowel/consonant differences
+      or the planned vowel contrast. Identifying the pronoun does not demonstrate
+      reading syllables and words with the newly taught consonants.
+      search_text at owned-oho-a1-workbook_f1_p0019_c0001 provides an auditory
+      production model, "мі ― ми ― му", supporting the distinction between
+      sound work and visual classification. Keep useful recognition work,
+      while planning responses that actually exercise the stated listening,
+      pronunciation and decoding steps; rotating type names does not establish
+      that alignment.
+    evidence:
+      receipt: "rr-8715dc51bb82e0b47277"
+
+  - id: F-07
+    status: active
+    locations:
+      - lesson: 4
+        step: s2
+        quote: "The teacher models the pronunciation of vowel Я. Read the personal pronoun я."
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      This step cites only T-018, whose supplied quotation concerns Р.
+      That quotation does not substantiate the step's Я pronunciation or
+      pronoun teaching. Scoped search_text searches did not independently
+      recover adequate support for that citation mapping. Have the pack-builder
+      settle the mapping and provide the relevant phonetic and lexical evidence.
+      This unsupported citation concern does not justify changing the Ukrainian
+      form itself.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-7300862ab358e418491a"
+          outcome: hits_but_no_support
+        - receipt: "rr-9ef43635fa3ed726c3a9"
+          outcome: no_hits
+
+  - id: F-08
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "The teacher models the pronunciation of the vowel letter Е."
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: >-
+      The teacher-only fallback cannot be justified by recording unavailability.
+      search_resources in letter mode, restricted to free resources with a
+      successful recorded link check, returns catalogue entry 791,
+      "ULP alphabet — Е е". Its publisher evidence locator is
+      h2:Е е -> iframe in docs/resources/ulp-alphabet.yaml, /resources/6.
+      R-18 and the supplied validator note require this availability question
+      to be resolved. The pack-builder should verify and admit the suitable
+      model, then the plan should reference it; catalogue metadata alone is
+      not a claim that playback has been independently auditioned.
+    evidence:
+      receipt: "rr-1b0d03fb42d5a1115db5"
+
+  - id: F-09
+    status: active
+    locations:
+      - lesson: 4
+        step: s1
+        quote: "The teacher models the pronunciation of consonant Т."
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: >-
+      The teacher-only fallback is unresolved despite a directly relevant
+      catalogue model. search_resources in letter mode returns free catalogue
+      entry 992, "ULP alphabet — Т т", with recorded HTTP 200, publisher
+      locator h2:Т т -> iframe, and transcript pointer ext-ulp_youtube-161.
+      The catalogue source entry is docs/resources/ulp-alphabet.yaml,
+      /resources/22. Route this to the pack-builder for model verification
+      and admission, followed by a plan reference, rather than confirming
+      the validator note's unavailable-recording premise.
+    evidence:
+      receipt: "rr-43696bf1fe5cb143847a"
+
+  - id: F-10
+    status: active
+    locations:
+      - lesson: 4
+        step: s2
+        quote: "The teacher models the pronunciation of vowel Я."
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: >-
+      The teacher-only fallback is unresolved despite a directly relevant
+      catalogue model. search_resources in letter mode returns free catalogue
+      entry 1071, "ULP alphabet — Я я", with recorded HTTP 200 and publisher
+      locator h2:Я я -> iframe. Its catalogue source entry is
+      docs/resources/ulp-alphabet.yaml, /resources/32. The pack-builder should
+      verify and admit this model before the plan treats native recording
+      support as unavailable. This addresses model availability; F-07 separately
+      records the unsupported textual citation.
+    evidence:
+      receipt: "rr-309f5c769bcc06b11eef"
