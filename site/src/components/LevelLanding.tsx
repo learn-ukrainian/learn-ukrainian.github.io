@@ -173,7 +173,7 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
       {/* Progress */}
       <div className={styles.progressSection}>
         <div className={styles.progressHeader}>
-          <h3>{progressTitle ? progressTitle : <ChromeText k="progress.title" />}</h3>
+          <h2 className={styles.progressTitle}>{progressTitle ? progressTitle : <ChromeText k="progress.title" />}</h2>
           <span>
             {progressDescription ? progressDescription : (
               <ChromeDual
