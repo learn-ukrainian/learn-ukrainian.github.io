@@ -449,9 +449,16 @@ def _accepted_prs(task_id: str, repo: str) -> list[int]:
     from scripts.orchestration import pr_ownership
 
     data = pr_ownership.load(pr_ownership.state_path())
-    keys = [key for key, handoff in data["handoffs"].items() if handoff.get("successor") == task_id]
-    keys += [entry["pr"] for entry in data["history"]
-             if entry.get("event") == "accepted" and entry.get("successor") == task_id]
+    # Decision custody stores its decision owner in ``successor``. That is not a task acceptance.
+    keys = [
+        key for key, handoff in data["handoffs"].items()
+        if handoff.get("successor") == task_id and not pr_ownership.decision_custody(handoff)
+    ]
+    keys += [
+        entry["pr"] for entry in data["history"]
+        if entry.get("event") == "accepted" and entry.get("successor") == task_id
+        and not pr_ownership.decision_custody(entry)
+    ]
     return sorted({int(key.rpartition("#")[2]) for key in keys if key.rpartition("#")[0] == repo.casefold()})
 
 
