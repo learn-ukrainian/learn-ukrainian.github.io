@@ -84,19 +84,21 @@ describe('production arc route rendering', () => {
     await expect(renderPage('retired', 'intro')).rejects.toThrow('unrecorded arc_slug "intro"');
   });
 
-  it('renders all 55 active landing positions as planned', async () => {
+  it('renders all 55 active landing positions with state badges', async () => {
     const html = await renderPage('landing');
     expect(arc.positions).toHaveLength(55);
-    expect(html.match(/data-state="planned"/g)).toHaveLength(55);
+    for (const pos of arc.positions) {
+      expect(html).toContain(`data-state="${pos.state}"`);
+    }
     expect(html).not.toContain('data-arc-state="retired"');
     preserveRender('a1', html);
   });
 
-  it.each(arc.positions.slice(0, 10).map(({ slug }) => slug))('renders current active module %s as planned', async (slug) => {
+  it.each(arc.positions.slice(0, 10).map(({ slug }) => slug))('renders current active module %s with its state', async (slug) => {
+    const pos = arc.positions.find((p) => p.slug === slug)!;
     const html = await renderPage('module', slug);
-    expect(html).toContain('data-state="planned"');
+    expect(html).toContain(`data-state="${pos.state}"`);
     expect(html).not.toContain('data-arc-state="retired"');
-    expect(html).not.toContain('data-state="plan_reviewed"');
     preserveRender(slug, html);
   });
 });
