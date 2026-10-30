@@ -274,11 +274,11 @@ def _provider_alive(record: dict) -> bool | None:
         cgroup = record.get("launch_cgroup")
         unit = record.get("launch_unit")
         if not cgroup:
-            # A supervisor that ended before it read the provider's cgroup still named the scope's unit.
-            # The unit sits in the same slice as every worker's, and a scope that is no longer there held nothing.
+            # A supervisor that ended before it read the provider's cgroup still named the scope's unit,
+            # which is found wherever it was placed; a scope that is no longer there held nothing.
             if not isinstance(unit, str) or not re.fullmatch(r"lu-worker-[A-Za-z0-9._-]+", unit):
                 return None
-            found = sorted(Path("/sys/fs/cgroup").glob(f"user.slice/user-*.slice/user@*.service/lu.slice/*/{unit}.scope"))
+            found = sorted(Path("/sys/fs/cgroup").rglob(f"{unit}.scope"))
             if not found:
                 return False if Path("/sys/fs/cgroup/cgroup.controllers").exists() else None
             cgroup = "/" + found[0].relative_to("/sys/fs/cgroup").as_posix()
