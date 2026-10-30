@@ -1763,7 +1763,11 @@ def _shell_script(args: list[str]) -> list[str]:
         if not re.fullmatch(r"[A-Za-z0-9-]+", word):
             if operands or not _SCRIPT_START.match(word):
                 return ["__UNDECIDABLE_SECRET_COMMAND__"]
-            scripts.extend(_script_words(args, index))
+            # The tokenizer cannot tell quote fragments of one word (`'pk'"ill -f w"`)
+            # from separate words (`'env' _`), so the script is read both ways.
+            for script in _script_words(args, index) + _script_words(args[index : index + 1], 0):
+                if script not in scripts:
+                    scripts.append(script)
             break
         pending = max(operands - 1, 0)
         if word.startswith("-"):
