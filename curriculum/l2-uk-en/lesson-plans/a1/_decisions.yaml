@@ -10,7 +10,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-build-program.md
     line: '| Arcs A1, A2, B1, B2 | `docs/epics/fresh-build-{a1,a2,b1,b2}-arc.md` | all four accepted by the operator 2026-09-21; only A1 has its generated `_arc.yaml` |'
-  doc_sha256: f53d6b477f45a9450eaefcfc131c8549f50fea21cecb3bc226b95148078f6f3d
+  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
   section_sha256: 00fed5fff3c40c72a392710fe16d7641be380cbfb8c8179ffede60d07d12fd5d
   text: |+
     ## 2. Decisions
@@ -75,7 +75,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: '## 6. Decisions on the six open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)'
-  doc_sha256: f53d6b477f45a9450eaefcfc131c8549f50fea21cecb3bc226b95148078f6f3d
+  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
   section_sha256: dcb7c50f6fce61ff44312d31a5c8c38484c9618dc0bda1eaada15a23bd3c7d67
   text: |+
     ## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)
@@ -95,7 +95,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10108)'
-  doc_sha256: f53d6b477f45a9450eaefcfc131c8549f50fea21cecb3bc226b95148078f6f3d
+  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
   section_sha256: 68be6519acea2552fb29ffea396de48249dcd5ba59271189a5f018ce1d087976
   text: |+
     ## 8. Revision r4 (#10108)
@@ -152,7 +152,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10105)'
-  doc_sha256: f53d6b477f45a9450eaefcfc131c8549f50fea21cecb3bc226b95148078f6f3d
+  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
   section_sha256: aff360b85ef72a42ab69d7f71f6491b7cb47935d4d25c15d9d8b657117ce0d86
   text: |
     ## 9. Revision r3.1: A1 practical recap (#10105)
@@ -182,7 +182,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)'
-  doc_sha256: f53d6b477f45a9450eaefcfc131c8549f50fea21cecb3bc226b95148078f6f3d
+  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
   section_sha256: 5e3e01c2a07a36eaf3e9d187522e236ba94706a2dbe2a2310e774fd358f634eb
   text: |+
     ## 10. Revision r4.1: Staged phonetic facets (#10108)
@@ -222,6 +222,125 @@ sources:
     immersion remain intact.
 
 
+- doc: docs/epics/fresh-build-a1-arc.md
+  heading: '## 12. Revision r6 (OHO)'
+  accepted: '2026-10-30'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-a1-arc.md
+    line: Operator decision 2026-10-30
+  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
+  section_sha256: b1c5c492ff504f368f83e9efbb95647f6ee5233a1cc246e67948ffeb880e1053
+  text: |
+    ## 12. Revision r6 (OHO)
+
+    Operator decision 2026-10-30
+
+    Revision r6 grounds the A1 arc in Anna Ohoiko's *Oho! Ukrainian Grammar & Workbook A1* (`owned-oho-a1-workbook`), the primary adult/teen pedagogical grammar baseline for Ukrainian L2. It addresses issue #10108 AC-03 by reconciling the arc with OHO's authentic vocabulary, case sequence, first-ten conversational prerequisites, alphabet presentation, pacing rules, and grammar scope.
+
+    ### Core Invariants Preserved
+    1. Arc remains 55 positions (1 orientation + 46 instructional + 7 checkpoints + 1 finale).
+    2. Orientation (position 1), checkpoints (positions 7, 14, 21, 27, 35, 41, 47), and finale (position 55) introduce 0 new Ukrainian vocabulary items (preserving invariant D4).
+    3. The State Standard 2024 remains the binding floor; ULP provides schedule precedents.
+    4. Content is strictly A1; beyond-minimum items are acknowledged as A1+ departures or deferred to A2 / B1.
+
+    Each of the seven subsections (a)–(g) below reflects the OHO baseline and incorporates the adopted decision.
+
+    ### (a) Vocabulary ledger
+
+    - **OHO evidence:** `owned-oho-a1-workbook` chunks `p0200`–`p0216` (printed pages 200–216, *«Словничок / Vocabulary»*); companion audio transcripts `owned-oho-a1-transcripts` (chunks `p0001`–`p0011`).
+    - **Machine-readable ledger:** [`docs/epics/a1-oho-vocabulary-ledger.yaml`](a1-oho-vocabulary-ledger.yaml).
+    - **Exact glossary counts (replacing unverified counts in prior checks):**
+      - **1,664** dictionary lines printed across the 17 glossary pages.
+      - **1,755** total entries in the machine-readable ledger (`docs/epics/a1-oho-vocabulary-ledger.yaml`), consisting of **1,663** single words and **92** multiword expressions/phrases, expanding gender pairs and incorporating foundational conversational prerequisites.
+      - **1,750** members if the 6 orthographic/spelling variant pairs printed on the same line (`сільниця, сільничка`, `вчора, учора`, `вночі, уночі`, `ввечері, увечері`, `вранці, уранці`, `удень, вдень`) are expanded as distinct rows.
+      - **1,738** unique base lemmas in OHO's glossary.
+      - **299** verb pair members across **147** pair groups in OHO's verb appendix (pp. 217–223), which are excluded from A1 and assigned to A2+ per the operator's rule.
+      - *Correction of prior reports:* Sol's check left full coverage unverified (`NOT CHECKED`). Gemini's check cited the 1,744 figure without line verification and hallucinated «ринва» as a phonetic drill word (neither «ринва» nor any derivative appears in the glossary or workbook text).
+    - **Unplaceable entries: 0.** Every one of the 1,755 ledger entries is assigned to a specific owning position (2–54) with a verified Ukrainian contextual sense and downstream reuse schedule:
+      - Cultural realia and state symbols (`герб`, `тризуб` [stressed *тризу́б*], `прапор`, `писанка`, `вишиванка`, `калина`, `лелека`, `булава`, `Тарас Шевченко`) are owned by position 5 (`reading-ukrainian`) as reading demonstration words and cultural models, with downstream reuse in 46 (`holidays`) and 55 (`a1-finale`). Orientation position 1 introduces cultural concepts with English scaffolding and introduces 0 new Ukrainian vocabulary entries.
+      - Greetings and core politeness (`Добрий день!`, `До побачення!`, `бувай`, `Вітаю!`, `Па-па!`, `дякую`, `будь ласка`, `вибачте`, `добре`, `так`, `ні`, `день`, `ранок`, `вечір`, `ніч`) are owned by position 2 (`sounds-letters-and-hello`).
+      - Personal identity and self-introduction (`Мене звати...`, `Моє прізвище...`, `Як вас звати?`, `студент`, `студентка`, `викладач`, `викладачка`, `лікар`, `лікарка`, `юрист`, `юристка`, `айтівець`, `інженер`, `дизайнер`, `українець`, `українка`, `австралієць`, `австралійка`, `іспанець`, `іспанка`, `канадець`, `канадка`, `американець`, `американка`, `Україна`, `Аргентина`, `Канада`, `Польща`, `Іспанія`, `Франція`, `мова`, `національність`, `рідна мова`, `місце народження`) are owned by position 3 (`who-am-i`).
+      - Kinship and possession (`сім’я`, `родина`, `мама`, `тато`, `батько`, `мати`, `брат`, `сестра`, `син`, `донька`, `дитина`, `діти`, `бабуся`, `дідусь`, `чоловік`, `дружина`, `коханий`, `кохана`, `домашня тварина`, `домашній улюбленець`, `пес`, `кіт`, `мій`, `твій`, `наш`, `ваш`) are owned by position 4 (`my-family`).
+      - Phonetic demonstration words from Unit 1 (`ґудзик` [stressed *ґу́дзик*], `дзеркало`, `дзвінок` [stressed *дзвіно́к*], `юшка`, `їжа`, `бук`, `дуб`, `сон`, `дим`, `жук`, `рись`, `тин`, `булька`) are owned by position 5 (`reading-ukrainian`), exercising taught Cyrillic letters and sounds. (Earlier phantom words `ґанок`, `ґедзь`, `ґрунт`, `джміль`, `дзвін`, `дзвоник`, `хрущ`, `джем` are absent from OHO's glossary and workbook; while `ґава` appears in workbook exercises [chunk `p0023`], it is not included in the back-of-book glossary [pp. 200–216]).
+      - Conversational turn-taking formulas (`Що нового?`, `чудово` [stressed *чудо́во*], `так собі`, `на жаль`, `Дуже приємно!`, `дати п’ять`, `передати привіт`, `Гарного дня!`, `Солодких снів!`) are owned by position 6 (`first-conversations`).
+      - Classroom, desk, and household objects with grammatical gender (`стіл`, `стілець`, `шафа`, `вікно`, `двері`, `зошит`, `підручник`, `ручка`, `олівець`, `книга`, `книжка`, `словник`, `дошка`, `папір`, `комп’ютер`, `ноутбук`, `телефон`, `лампа`, `диван`, `ліжко`, `рюкзак`, `гаманець`) are owned by position 8 (`things-have-gender`).
+      - Present tense verbs and possession (`мати`, `читати`, `знати`, `розуміти`, `жити`, `працювати`) are owned by positions 15–16 (`what-i-like`, `verbs-group-one`).
+      - Systematic cardinal numerals (0–1000) and ordinals (`один`, `два`, `чотири`, `п’ять`, `вісім`, `дев’ять`, `десять`, `одинадцять`, `дванадцять`, `чотирнадцять`, `п’ятнадцять`, `дев’ятнадцять`, `двадцять`, `тридцять`, `тридцять чотири`, `п’ятдесят`, `сімдесят`, `вісімдесят`, `дев’яносто`, `двісті`, `п’ятсот`, `дев’ятсот`, `дві тисячі перший`, `дев’ятиповерховий`, `скільки`, `перший`, `другий`, `третій`, `п’ятий`, `сьомий`, `дев’ятий`, `десятий`) are owned by position 22 (`what-time`), with downstream reuse in 23 and 55.
+      - Food, drink, and café ordering (`кава`, `чай`, `вода`, `сік`, `борщ`, `суп`, `салат`, `хліб`, `сир`, `масло`, `м’ясо`, `риба`, `меню`, `офіціант`, `офіціантка`, `замовити`, `рахунок`, `рецепт`) are owned by positions 36–37 (`food-and-drink`, `i-eat-i-drink`).
+      - Clothing and commercial transactions (`одяг`, `блузка`, `сорочка`, `сукня`, `штани`, `взуття`, `кофта`, `куртка`, `спідниця`, `шарф`, `шкарпетка`, `шорти`, `кросівок`, `купити`, `продавати`, `продавець`, `продавчиня`, `коштувати`, `платити`, `заплатити`, `гроші`, `гривня`, `долар`, `євро`) are owned by position 39 (`shopping`), with downstream reuse in 41 and 55.
+      - Holidays and celebrations (`День святого Валентина`, `свято`, `день народження`, `вітати`, `подарунок`) are owned by position 46 (`holidays`), with downstream reuse in 55.
+      - Digital, civic, and professional identity terms (`інтернет`, `пароль`, `пін-код`, `вайфай`, `сайт`, `онлайн`, `канал`, `натиснути`, `пошта`, `електронна пошта`, `імейл`, `номер телефону`, `відеозвернення`, `знімати відео`, `бюджет`, `резюме`, `кар’єра`, `зарплата`, `декрет`, `зателефонувати`, `телефонувати`) are owned by position 52 (`my-story`), with downstream reuse in 55.
+      - Health, medical care, and bodily well-being (`здоров’я`, `голова`, `горло`, `живіт`, `рука`, `нога`, `спина`, `око`, `вухо`, `зуб`, `ніс`, `рот`, `лікарня`, `аптека`, `карантин`, `захворіти`, `боляче`) are owned by position 53 (`health`).
+      - Crisis, civil defense, emergency, and contemporary defense terms (`військо`, `укриття`, `каска`, `захисник`, `захисниця`, `ворог`, `міна`, `бій`, `пожежна машина`, `швидка допомога`, `поліція`, `поліціянт`, `поліціянтка`, `повномасштабна війна`, `атомна війна`, `донатити` [colloquial]) are owned by position 54 (`emergencies`), with downstream reuse in 55.
+      - Checkpoint modules (7, 14, 21, 27, 35, 41, 47) and finale (55) introduce 0 new entries, strictly preserving invariant D4.
+
+    ### (b) Case order
+
+    - **OHO evidence:** OHO Unit 5 Lesson 33 (chunk W0087: SVO sentence frame with direct object, *Я люблю борщ*, *Я люблю Україну*); Unit 6 Lessons 45–48 (chunks W0113–W0122: Accusative case for inanimate objects, direction with в/на, days of the week, animate objects, agreeing adjectives, personal pronouns); Unit 7 Lessons 49–55 (chunks W0123–W0138: Locative case with у/в/на, months, masculine -у/-ю, consonant alternations г->з, к->ц, х->с, vowel alternations о/е->і, locative adjectives).
+    - **Adopted sequence (following OHO, per the adopted decision):**
+      - An early inanimate direct-object model at positions 15 and 16 alongside present-tense verbs (*Я люблю каву*, *Я читаю книжку*).
+      - The accusative system at positions 29 to 31 (directional motion with *в/на* and transitive direct objects).
+      - The locative system at positions 38 to 40 (locative of place with *в/на* in dining, shopping, and everyday environments).
+      - The ULP alternative (retaining locative-first before accusative) is removed.
+
+    ### (c) First-ten conversational prerequisites
+
+    - **OHO evidence:** OHO Unit 2 Lessons 11–17 (chunks W0037–W0050): personal pronouns and formal/informal address (*Як справи?*, *Як ти?*, *Як ви?*, Lesson 11); accusative personal pronouns (*Мене звати...*, *Як вас звати?*, Lesson 12); prepositional genitive pronouns of possession (*У мене є...*, Lesson 13); animate/inanimate questions (*Хто це?*, *Що це?*, Lesson 14); negation and polar yes/no questions (*Це ти? Ні, це не я.*, Lesson 15); conjunctions *і*, *й*, *та*, *а*, *або*, *чи* and alternative questions (*Це кава чи чай?*, Lessons 16–17).
+    - **Arc adjustment:**
+      - Shift conversational prerequisites into positions 2–6 before the first-contact checkpoint at position 7:
+        - **Position 2 (`sounds-letters-and-hello`):** Greeting formulas (*Добрий день!*, *До побачення!*, *бувай*, *Вітаю!*, *Па-па!*), core gratitude and politeness (*дякую*, *будь ласка*, *вибачте*), polar tokens (*так*, *ні*). Early greetings are taught as fixed oral formulaic chunks before all constituent letters are decoded.
+        - **Position 3 (`who-am-i`):** Identity questions and self-introduction (*Як вас звати?*, *Мене звати...*, *Моє прізвище...*), national origin and professions, learned as formulaic self-introduction patterns prior to case analysis.
+        - **Position 4 (`my-family`):** Family relations and possession (*сім’я*, *мати*, *батько*, *мій*, *твій*, *наш*, *ваш*).
+        - **Position 6 (`first-conversations`):** Sustained 4–6 turn exchanges combining formal and informal registers, status inquiries (*Що нового?*, *чудово*, *так собі*, *на жаль*), courtesy expressions (*Дуже приємно!*, *Солодких снів!*, *Гарного дня!*, *дати п’ять*, *передати привіт*), completing the communicative prerequisite inventory prior to position 7 (`checkpoint-first-contact`).
+
+    ### (d) Alphabet
+
+    - **OHO evidence:** OHO Unit 1 Lesson 01 (chunk W0015): Presents the full 33-letter Ukrainian alphabet at once, showing both printed and handwritten/cursive forms with audio accompaniment. Lessons 02–10 then systematically treat phonetic topics (vowels, jotation, voicing, hard/soft, soft sign, apostrophe, syllables, stress).
+    - **Adopted approach (following OHO adult L2, per the adopted decision):**
+      - Position 2 presents the full 33-letter alphabet overview (printed and cursive letter models, letter names, audio-grounded).
+      - Eliminates artificial letter gating, enabling learners to decode adult survival cognates (*чай*, *кафе*, *банк*, *метро*, *аптека*) immediately.
+      - Positions 2–5 stage the phonetic topics:
+        - Position 2: Full alphabet overview + 6 vowel sounds, stressed vs unstressed vowels, statement/question intonation.
+        - Position 3: Hard vs soft consonants, hardness before [е], syllable division and stress rules, voiced/voiceless pairs д–т, з–с, г–х.
+        - Position 4: Jotated vowels (я, ю, є, ї), apostrophe, pair б–п.
+        - Position 5: Affricates (дж, дз), consonants ґ, ж, ч, ш, щ, ц, ф, letter names, cursive recognition and handwriting practice.
+
+    ### (e) Pacing rules made explicit
+
+    - **OHO and pilot rubric evidence:** `docs/epics/fresh-build-a1-v1-import.md` lines 150–175 (the pilot rubric):
+      - With the full alphabet presented at Position 2 per the adopted OHO approach (subsection d), the pilot rule capping new letters at 3 per lesson is dropped for positions 2–5 per the adopted decision.
+      - At most one new grammar slice per lesson.
+    - **Positions 2–3 allocation:**
+      - Communicative phrases in positions 2–3 (greetings, *Мене звати...*) are handled as fixed lexical chunks.
+      - *Recap lesson integration:* Embedding recap and communicative integration within instructional lessons frees full instructional capacity for conversational practice, avoiding standalone dead-end recaps.
+
+    ### (f) OHO's A1+ items and numerals placement
+
+    - **OHO evidence:** OHO chunk W0010 (author notes grammar scope is "A1+" with items exceeding the minimum standard); Unit 8 Lessons 56–60 (numerals); Unit 9 Lessons 63–65 (aspect pairs) and Lesson 67 (synthetic future); Unit 10 Lesson 72 (first-person plural imperative).
+    - **Analysis against State Standard 2024:**
+      1. **Verb Aspect Pairs** (OHO Lessons 63–65):
+         - *Standard reference:* Systematic aspect pair formation (*робити – зробити*) belongs to **A2** (`lines 1380–1381`). Lines 1367–1375 treat degrees of comparison of adjectives. Standard A1 includes only "first awareness" and "a few perfective futures" (`lines 718–719`).
+         - *Status:* **A1 retains first awareness only (selected perfectives at Pos 51); systematic aspect pairs begin at A2.**
+      2. **Synthetic Future** (*питиму*, *робитиму*; OHO Lesson 67):
+         - *Standard reference:* Standard A1 specifies only compound imperfective future with *бути* (`lines 715–717`). The synthetic future is classified at **B1** (`lines 2287–2289`), treated in ULP at Season 3 Lesson 98.
+         - *Status:* **A1 includes compound future only (Pos 50); synthetic future is excluded from A1 and deferred to B1.**
+      3. **First-Person Plural Imperative** (*ходімо!*, *перевірмо!*, *зробімо!*; OHO Lesson 72):
+         - *Standard reference:* Standard A1 imperative mood is restricted to **second person singular and plural only** (`lines 721–725`). First-person plural imperatives belong to **B1** (`lines 2293–2295`), inside the B1 section that begins at line 1434. Standard A2 (`lines 1361–1365`) covers second person (*роби/робіть*) and third person (*хай/нехай*) only.
+         - *Status:* **A1 includes second person singular and plural only (Pos 43); first-person plural imperative belongs to B1.**
+      4. **Numerals Placement** (OHO Unit 8 vs Arc Pos 11):
+         - *Standard reference:* In the formal A1 grammar specification (`lines 652–654`), the State Standard lists only **ordinal numerals** (*перший, перша, перше; другий, друга, друге*). Cardinal numerals (*один, два...*) are not treated as a systematic grammatical topic at A1 in the Standard (declension of cardinal numerals with nouns belongs to A2 `lines 1271–1272`). However, cardinal numbers are practically required at A1 by the Standard's communicative speech intentions: stating age (`lines 347, 371, 482`), telephone numbers (`line 484`), and telling time (`line 508`).
+         - *Status:* **Option 2 (OHO placement) adopted per the decision:** systematic cardinal numerals (0–1000) are introduced at Position 22 (`what-time`, before clock time); earlier modules keep only fixed chunks for age and prices. Numerals 15 (`п’ятнадцять`) and 19 (`дев’ятнадцять`) are owned by Position 22.
+
+    ### (g) Adult/teen framing for positions 1–10 tasks
+
+    - **OHO evidence:** OHO chunks W0012, W0015–W0016, W0031–W0032, W0042, W0053–W0056 (adult/teen contexts including personal-data forms, city inquiries, technology, devices, belongings, and practical occupations).
+    - **Framing requirements:**
+      - Tasks in positions 1–10 must reflect adult and teenage real-world language needs:
+        - Replace primary-school animal identification and syllable grids with adult survival vocabulary and cognates (*кафе, бар, таксі, метро, банк, офіс, парк, готель, вайфай, пароль, сайт*).
+        - Position 3 (identity): Adult professions (*айтівець, інженер, викладач, дизайнер, лікар, студент, журналіст*), origin, and language abilities.
+        - Position 4 (family): Adult personal circles (partner, spouse, children, friends, house, car), allowing personal variation beyond nuclear family drawings.
+        - Positions 8–10 (belongings, descriptions, colors): Everyday adult items (*телефон, ноутбук, рюкзак, паспорт, ключ, гаманець, лампа*), practical descriptions of belongings and personal appearance.
+        - Syllables and phonetics: Explicitly framed as pronunciation and rhythm aids (as in OHO Lesson 09), eliminating primary-school hyphenation/line-breaking drills in early levels.
 - doc: docs/epics/fresh-build-plan-schema.md
   heading: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
   accepted: '2026-09-21'

@@ -252,6 +252,11 @@ def test_historical_accepted_sections_and_non_a1_semantics_stay_identical():
             assert staged["accepted_evidence"]["line"] == "Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)"
             assert staged["text"].count(staged["accepted_evidence"]["line"]) == 1
             assert "4bb985d44c685d207dd05b94b074732d803e4051" in staged["text"]
-            sources = sources[:2] + sources[5:]
+            r6 = sources[5]
+            assert r6["heading"] == "## 12. Revision r6 (OHO)"
+            assert r6["accepted"] == "2026-10-30"
+            assert r6["accepted_evidence"]["line"] == "Operator decision 2026-10-30"
+            assert r6["text"].count(r6["accepted_evidence"]["line"]) == 1
+            sources = sources[:2] + sources[6:]
         actual = [hashlib.sha256(json.dumps({k: v for k, v in entry.items() if k != "doc_sha256"}, ensure_ascii=False, sort_keys=True).encode()).hexdigest() for entry in sources]
         assert actual == expected, level

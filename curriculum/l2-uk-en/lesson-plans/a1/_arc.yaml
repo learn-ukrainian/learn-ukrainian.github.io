@@ -2,7 +2,7 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: f53d6b477f45a9450eaefcfc131c8549f50fea21cecb3bc226b95148078f6f3d
+  sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
 est_lessons_total: 162
 positions:
 - position: 1
@@ -201,7 +201,7 @@ positions:
 - position: 11
   slug: how-many
   est_lessons: 4
-  job: Understand and say numbers for prices, age, phone numbers
+  job: Understand and say fixed number phrases for prices, age, phone numbers
   inventory_text: null
   phase: A1.2
   skills_text: Li (numbers by ear)
@@ -245,7 +245,7 @@ positions:
 - position: 15
   slug: what-i-like
   est_lessons: 3
-  job: 'Say what you like doing: infinitive, люблю + infinitive'
+  job: 'Say what you like doing: infinitive, люблю + infinitive and direct object (люблю каву)'
   inventory_text: null
   phase: A1.3
   skills_text: —
@@ -254,7 +254,7 @@ positions:
 - position: 16
   slug: verbs-group-one
   est_lessons: 3
-  job: Conjugate читати, працювати, іти, їхати in the present
+  job: Conjugate читати, працювати, іти, їхати in the present; transitive direct object with читати
   inventory_text: null
   phase: A1.3
   skills_text: — (`:704-708`)
@@ -319,7 +319,7 @@ positions:
 - position: 22
   slug: what-time
   est_lessons: 3
-  job: Ask and tell the time using ordinal forms in all three genders, including first, second and third; reuse date phrases at 23
+  job: Master systematic cardinal numerals (0–1000) and tell the time using ordinal forms in all three genders; reuse date phrases at 23
   inventory_text: null
   phase: A1.4
   skills_text: Li, R (timetable) (`:652-654`, `:664-665`)

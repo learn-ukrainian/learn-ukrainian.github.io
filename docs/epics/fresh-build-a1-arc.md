@@ -80,7 +80,7 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Item | Status at A1 | Where (position) | Standard |
 | --- | --- | --- | --- |
 | Gender of nouns; adjective agreement (hard and soft group), nominative | system | 8–10 | §4.2.1 `:603-650` |
-| Adjective agreement in the **locative** and **accusative** (hard and soft group) | system | locative 29–30; accusative 31, 37, 40 | `:633-650`, examples `:680`, `:691` |
+| Adjective agreement in the **accusative** and **locative** (hard and soft group) | system | early direct object 15–16; accusative 29–31; locative 38–40 | `:633-650`, examples `:680`, `:691` |
 | Personal pronouns 1st / 2nd person, accusative forms (мене, тебе, нас, вас) | system | 40 (first met in the chunk `мене звати` at 3) | `:656-657` |
 | Personal pronouns 1st / 2nd person, dative forms (мені, тобі, нам, вам) | **forms taught as pronoun forms inside their constructions** (`мені подобається`, `мені … років`, and the "I need" chunk); no noun dative | 11, 15, 43, 54 | `:656-657`; noun dative stays A2 (mapping `:97-102`) |
 | Possessive gender forms мій, моя, моє; твій, твоя, твоє; наш, наша, наше; ваш, ваша, ваше; їхній, їхня, їхнє; demonstratives | system | possessives 8 (chunks at 4); demonstratives 12; plurals 13 | `:659-667` |
@@ -88,9 +88,9 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Present tense: читати, працювати, іти, їхати at 16; сидіти, дивитися at 17; могти at 18; modal + infinitive and reflexive routines | system | 15–20; named paradigms 16–18 | `:704-709` |
 | Questions (question words, чи, intonation), negation | system | 19 | `:729-739` |
 | Ordinal gender forms перший, перша, перше; другий, друга, друге; третій, третя, третє (time, dates) | system; oblique date forms remain chunks | 22; dates recycled 23 | `:652-654`, `:664-665` |
-| Cardinal numerals | **lexical items only** (prices, age, phone numbers) — no numeral + noun agreement system | 11, 39 | cardinals with nouns are A2 `:1271-1272` |
-| Locative: place | system | 29–30 | `:690-695` |
-| Accusative: direction, inanimate object, animate object | system | 31, 37, 40 | `:678-688` |
+| Cardinal numerals | systematic cardinals at 22 (0–1000); earlier modules keep fixed chunks only (prices, age, phone numbers); no numeral + noun agreement system | 22 (chunks at 11, 39) | cardinals with nouns are A2 `:1271-1272` |
+| Locative: place | system | 38–40 | `:690-695` |
+| Accusative: direction, inanimate object, animate object | system | 15–16 (early direct object), 29–31 (system) | `:678-688` |
 | `про` + accusative with думати, мріяти | system (small) | 40, recycled 51 | `:687-688` |
 | Locative with months; accusative with days of the week | chunk at 23, recognised as system after 29 / 31 | 23 | `:678-695` |
 | Clock time `о / об` + locative ordinal | chunk at 22, recognised after 29 | 22 | inside the Standard's A1 (time with у / в `:693`, ordinals `:652-654`); ULP systematises it at S2 L67 |
@@ -125,8 +125,10 @@ pedagogy grounds the progression only and is never copied as learner text.
 | 4 | `my-family` | A1.1 | Introduce people in a chosen family photo or equivalent using supported possessive phrases | **5 letters**: Б Й Ї Ю Є; apostrophe; continue voiced/voiceless base-pair family б–п; recycle stress and intonation | Li, S, W (captions) | 4 |
 | 5 | `reading-ukrainian` | A1.1 | Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters | **7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; complete voiced/voiceless base-pair families ґ–к, ж–ш, дж–ч, дз–ц; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`) | Li, S, R, W (match printed/handwritten capitals and small letters; use capitals in Київ/київський and Україна/українець; complete writing own and other names/surnames; copy familiar labels; `:343-344`, `:362-365`) | 5 |
 
-All 33 letters are introduced exactly once at positions 2–5. Later positions recycle
-them. Printed words follow their constituent letter introductions inside each module;
+All 33 letters are presented in an alphabet overview at position 2 per the adopted OHO approach,
+with phonetics and sound-letter associations staged across positions 2 to 5. Later positions recycle
+them. Per the adopted decision, the pilot rule capping new letters at 3 per lesson no longer applies to
+positions 2 to 5; printed words follow their constituent letter introductions inside each module;
 audio-supported oral chunks may precede decoding. The module plan's evidence pack fixes
 lesson-level sequencing and pronunciation; this arc does not claim mastery or widget
 availability. Heavy handwriting is deferred; recognising handwritten letters belongs to 5.
@@ -148,18 +150,18 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 8 | `things-have-gender` | A1.2 | Identify familiar belongings using noun gender and the complete singular possessive set, including наш, ваш, їхній | Li, S, R (`:661-662`) | 3 |
 | 9 | `what-is-it-like` | A1.2 | Describe and identify familiar objects using nominative adjective agreement | Li, S, R, W (describe a familiar object with 1-2 features; `:358-360`) | 3 |
 | 10 | `colors` | A1.2 | Use colours and agreeing hard/soft-group nominative descriptions of objects and appearance | Li, S, R, W (short description of a friend or parent; `:355-357`) (`:484`) | 2 |
-| 11 | `how-many` | A1.2 | Understand and say numbers for prices, age, phone numbers | Li (numbers by ear) | 4 |
+| 11 | `how-many` | A1.2 | Understand and say fixed number phrases for prices, age, phone numbers | Li (numbers by ear) | 4 |
 | 12 | `this-and-that` | A1.2 | Point at things: цей / той in three genders | — | 2 |
 | 13 | `many-things` | A1.2 | Go from one to many: nominative nouns with vowel alternation, agreeing adjectives, possessives and demonstratives | — (`:606-609`, `:636-638`, `:666-667`) | 3 |
 | 14 | `checkpoint-my-world` | A1.2 | Self-check: describe, count, point | R | 2 |
-| 15 | `what-i-like` | A1.3 | Say what you like doing: infinitive, люблю + infinitive | — | 3 |
-| 16 | `verbs-group-one` | A1.3 | Conjugate читати, працювати, іти, їхати in the present | — (`:704-708`) | 3 |
+| 15 | `what-i-like` | A1.3 | Say what you like doing: infinitive, люблю + infinitive and direct object (люблю каву) | — | 3 |
+| 16 | `verbs-group-one` | A1.3 | Conjugate читати, працювати, іти, їхати in the present; transitive direct object with читати | — (`:704-708`) | 3 |
 | 17 | `verbs-group-two` | A1.3 | Conjugate сидіти and дивитися in the present, including the reflexive paradigm; distinguish the two conjugations | — (`:708-709`) | 3 |
 | 18 | `i-want-i-can` | A1.3 | Say what you want, can and must do using modal plus infinitive; conjugate могти in the present | — (`:706-707`) | 3 |
 | 19 | `questions` | A1.3 | Ask and answer simple questions; negate | Li | 3 |
 | 20 | `my-morning` | A1.3 | Describe a morning routine with reflexive verbs; divide written words at line breaks using syllables from position 3 | W (short note) (`:588`) | 3 |
 | 21 | `checkpoint-actions` | A1.3 | Self-check: say what you do, want, ask | R | 2 |
-| 22 | `what-time` | A1.4 | Ask and tell the time using ordinal forms in all three genders, including first, second and third; reuse date phrases at 23 | Li, R (timetable) (`:652-654`, `:664-665`) | 3 |
+| 22 | `what-time` | A1.4 | Master systematic cardinal numerals (0–1000) and tell the time using ordinal forms in all three genders; reuse date phrases at 23 | Li, R (timetable) (`:652-654`, `:664-665`) | 3 |
 | 23 | `days-and-months` | A1.4 | Use days, months, seasons and dates in set phrases | R (calendar) | 4 |
 | 24 | `weather` | A1.4 | Talk about weather, plants, pets and landscape | Li (forecast; `:549-551`), S, W (describe weather or an animal with 1-2 features; `:358-360`, `:401-404`) (`:547-551`) | 3 |
 | 25 | `my-day` | A1.4 | Tell your day in order, including a work day, a day off, lunch break, and the start and end of work | Li, S, R, W (work-day/day-off information and colleague exchanges; `:239-243`, `:277-288`, `:325-336`, `:379-388`, `:511-515`) | 3 |
@@ -541,7 +543,7 @@ Revision r6 grounds the A1 arc in Anna Ohoiko's *Oho! Ukrainian Grammar & Workbo
 3. The State Standard 2024 remains the binding floor; ULP provides schedule precedents.
 4. Content is strictly A1; beyond-minimum items are acknowledged as A1+ departures or deferred to A2 / B1.
 
-Each of the seven subsections (a)–(g) below reflects the OHO baseline and incorporates Operator decision 2026-10-30.
+Each of the seven subsections (a)–(g) below reflects the OHO baseline and incorporates the adopted decision.
 
 ### (a) Vocabulary ledger
 
@@ -564,35 +566,22 @@ Each of the seven subsections (a)–(g) below reflects the OHO baseline and inco
   - Classroom, desk, and household objects with grammatical gender (`стіл`, `стілець`, `шафа`, `вікно`, `двері`, `зошит`, `підручник`, `ручка`, `олівець`, `книга`, `книжка`, `словник`, `дошка`, `папір`, `комп’ютер`, `ноутбук`, `телефон`, `лампа`, `диван`, `ліжко`, `рюкзак`, `гаманець`) are owned by position 8 (`things-have-gender`).
   - Present tense verbs and possession (`мати`, `читати`, `знати`, `розуміти`, `жити`, `працювати`) are owned by positions 15–16 (`what-i-like`, `verbs-group-one`).
   - Systematic cardinal numerals (0–1000) and ordinals (`один`, `два`, `чотири`, `п’ять`, `вісім`, `дев’ять`, `десять`, `одинадцять`, `дванадцять`, `чотирнадцять`, `п’ятнадцять`, `дев’ятнадцять`, `двадцять`, `тридцять`, `тридцять чотири`, `п’ятдесят`, `сімдесят`, `вісімдесят`, `дев’яносто`, `двісті`, `п’ятсот`, `дев’ятсот`, `дві тисячі перший`, `дев’ятиповерховий`, `скільки`, `перший`, `другий`, `третій`, `п’ятий`, `сьомий`, `дев’ятий`, `десятий`) are owned by position 22 (`what-time`), with downstream reuse in 23 and 55.
-  - Food, drink, and café ordering (`кава`, `чай`, `вода`, `сік`, `борщ`, `суп`, `салат`, `хліб`, `сир`, `масло`, `м’ясо`, `риба`, `меню`, `офіціант`, `офіціантка`, `замовити`, `рахунок`) are owned by positions 36–37 (`cafe-and-ordering`, `i-eat-i-drink`).
+  - Food, drink, and café ordering (`кава`, `чай`, `вода`, `сік`, `борщ`, `суп`, `салат`, `хліб`, `сир`, `масло`, `м’ясо`, `риба`, `меню`, `офіціант`, `офіціантка`, `замовити`, `рахунок`, `рецепт`) are owned by positions 36–37 (`food-and-drink`, `i-eat-i-drink`).
   - Clothing and commercial transactions (`одяг`, `блузка`, `сорочка`, `сукня`, `штани`, `взуття`, `кофта`, `куртка`, `спідниця`, `шарф`, `шкарпетка`, `шорти`, `кросівок`, `купити`, `продавати`, `продавець`, `продавчиня`, `коштувати`, `платити`, `заплатити`, `гроші`, `гривня`, `долар`, `євро`) are owned by position 39 (`shopping`), with downstream reuse in 41 and 55.
   - Holidays and celebrations (`День святого Валентина`, `свято`, `день народження`, `вітати`, `подарунок`) are owned by position 46 (`holidays`), with downstream reuse in 55.
   - Digital, civic, and professional identity terms (`інтернет`, `пароль`, `пін-код`, `вайфай`, `сайт`, `онлайн`, `канал`, `натиснути`, `пошта`, `електронна пошта`, `імейл`, `номер телефону`, `відеозвернення`, `знімати відео`, `бюджет`, `резюме`, `кар’єра`, `зарплата`, `декрет`, `зателефонувати`, `телефонувати`) are owned by position 52 (`my-story`), with downstream reuse in 55.
-  - Health, medical care, and bodily well-being (`здоров’я`, `голова`, `горло`, `живіт`, `рука`, `нога`, `спина`, `око`, `вухо`, `зуб`, `ніс`, `рот`, `лікарня`, `аптека`, `рецепт`, `карантин`, `захворіти`, `боляче`) are owned by position 53 (`health`).
+  - Health, medical care, and bodily well-being (`здоров’я`, `голова`, `горло`, `живіт`, `рука`, `нога`, `спина`, `око`, `вухо`, `зуб`, `ніс`, `рот`, `лікарня`, `аптека`, `карантин`, `захворіти`, `боляче`) are owned by position 53 (`health`).
   - Crisis, civil defense, emergency, and contemporary defense terms (`військо`, `укриття`, `каска`, `захисник`, `захисниця`, `ворог`, `міна`, `бій`, `пожежна машина`, `швидка допомога`, `поліція`, `поліціянт`, `поліціянтка`, `повномасштабна війна`, `атомна війна`, `донатити` [colloquial]) are owned by position 54 (`emergencies`), with downstream reuse in 55.
   - Checkpoint modules (7, 14, 21, 27, 35, 41, 47) and finale (55) introduce 0 new entries, strictly preserving invariant D4.
 
 ### (b) Case order
 
 - **OHO evidence:** OHO Unit 5 Lesson 33 (chunk W0087: SVO sentence frame with direct object, *Я люблю борщ*, *Я люблю Україну*); Unit 6 Lessons 45–48 (chunks W0113–W0122: Accusative case for inanimate objects, direction with в/на, days of the week, animate objects, agreeing adjectives, personal pronouns); Unit 7 Lessons 49–55 (chunks W0123–W0138: Locative case with у/в/на, months, masculine -у/-ю, consonant alternations г->з, к->ц, х->с, vowel alternations о/е->і, locative adjectives).
-- **Adopted sequence (following OHO, per Operator decision 2026-10-30):**
-  - Introduce an early inanimate direct-object accusative model alongside present tense verbs at positions 15–16 (*Я люблю каву*, *Я читаю книжку*).
-  - Teach the full Accusative case before the Locative case:
-    - Positions 29–31: Accusative case system (direction with в/на, days of the week, inanimate objects, animate objects).
-    - Positions 32–33: Transport and city navigation.
-    - Positions 36–37: Food, drink, and café ordering.
-    - Positions 38–40: Locative case system (place with в/на, city institutions, housing and rooms).
-- **Sequence mapping:**
-
-| Position | Slug | Sequence |
-| :--- | :--- | :--- |
-| **15–16** | `what-i-like`, `verbs-group-one` | Early SVO inanimate direct object (*Я люблю каву*) |
-| **29** | `where-is-it` | Accusative of Direction (*куди? в/на*) |
-| **30** | `my-city` | Direction to City Places (*у місто, на пошту*) |
-| **31** | `where-to` | Directional Motion (*їхати в Одесу*) |
-| **32–33** | `transport`, `around-the-city` | Transport Modes & Navigation |
-| **36–37** | `food-and-drink`, `i-eat-i-drink` | Transitive Objects (*їсти борщ, пити каву*) |
-| **38–40** | `at-the-cafe`, `shopping`, `people-around-me` | Locative System (*у кафе, в магазині, на роботі*) |
+- **Adopted sequence (following OHO, per the adopted decision):**
+  - An early inanimate direct-object model at positions 15 and 16 alongside present-tense verbs (*Я люблю каву*, *Я читаю книжку*).
+  - The accusative system at positions 29 to 31 (directional motion with *в/на* and transitive direct objects).
+  - The locative system at positions 38 to 40 (locative of place with *в/на* in dining, shopping, and everyday environments).
+  - The ULP alternative (retaining locative-first before accusative) is removed.
 
 ### (c) First-ten conversational prerequisites
 
@@ -607,7 +596,7 @@ Each of the seven subsections (a)–(g) below reflects the OHO baseline and inco
 ### (d) Alphabet
 
 - **OHO evidence:** OHO Unit 1 Lesson 01 (chunk W0015): Presents the full 33-letter Ukrainian alphabet at once, showing both printed and handwritten/cursive forms with audio accompaniment. Lessons 02–10 then systematically treat phonetic topics (vowels, jotation, voicing, hard/soft, soft sign, apostrophe, syllables, stress).
-- **Adopted approach (following OHO adult L2, per Operator decision 2026-10-30):**
+- **Adopted approach (following OHO adult L2, per the adopted decision):**
   - Position 2 presents the full 33-letter alphabet overview (printed and cursive letter models, letter names, audio-grounded).
   - Eliminates artificial letter gating, enabling learners to decode adult survival cognates (*чай*, *кафе*, *банк*, *метро*, *аптека*) immediately.
   - Positions 2–5 stage the phonetic topics:
@@ -619,7 +608,7 @@ Each of the seven subsections (a)–(g) below reflects the OHO baseline and inco
 ### (e) Pacing rules made explicit
 
 - **OHO and pilot rubric evidence:** `docs/epics/fresh-build-a1-v1-import.md` lines 150–175 (the pilot rubric):
-  - With the full alphabet presented at Position 2 per the adopted OHO approach (subsection d), the pilot rule capping new letters at 3 per lesson is dropped for positions 2–5 per Operator decision 2026-10-30.
+  - With the full alphabet presented at Position 2 per the adopted OHO approach (subsection d), the pilot rule capping new letters at 3 per lesson is dropped for positions 2–5 per the adopted decision.
   - At most one new grammar slice per lesson.
 - **Positions 2–3 allocation:**
   - Communicative phrases in positions 2–3 (greetings, *Мене звати...*) are handled as fixed lexical chunks.
@@ -640,7 +629,7 @@ Each of the seven subsections (a)–(g) below reflects the OHO baseline and inco
      - *Status:* **A1 includes second person singular and plural only (Pos 43); first-person plural imperative belongs to B1.**
   4. **Numerals Placement** (OHO Unit 8 vs Arc Pos 11):
      - *Standard reference:* In the formal A1 grammar specification (`lines 652–654`), the State Standard lists only **ordinal numerals** (*перший, перша, перше; другий, друга, друге*). Cardinal numerals (*один, два...*) are not treated as a systematic grammatical topic at A1 in the Standard (declension of cardinal numerals with nouns belongs to A2 `lines 1271–1272`). However, cardinal numbers are practically required at A1 by the Standard's communicative speech intentions: stating age (`lines 347, 371, 482`), telephone numbers (`line 484`), and telling time (`line 508`).
-     - *Status:* **Option 2 (OHO placement) adopted per Operator decision 2026-10-30:** systematic cardinal numerals (0–1000) are introduced at Position 22 (`what-time`, before clock time); earlier modules keep only fixed chunks for age and prices. Numerals 15 (`п’ятнадцять`) and 19 (`дев’ятнадцять`) are owned by Position 22.
+     - *Status:* **Option 2 (OHO placement) adopted per the decision:** systematic cardinal numerals (0–1000) are introduced at Position 22 (`what-time`, before clock time); earlier modules keep only fixed chunks for age and prices. Numerals 15 (`п’ятнадцять`) and 19 (`дев’ятнадцять`) are owned by Position 22.
 
 ### (g) Adult/teen framing for positions 1–10 tasks
 
@@ -650,5 +639,5 @@ Each of the seven subsections (a)–(g) below reflects the OHO baseline and inco
     - Replace primary-school animal identification and syllable grids with adult survival vocabulary and cognates (*кафе, бар, таксі, метро, банк, офіс, парк, готель, вайфай, пароль, сайт*).
     - Position 3 (identity): Adult professions (*айтівець, інженер, викладач, дизайнер, лікар, студент, журналіст*), origin, and language abilities.
     - Position 4 (family): Adult personal circles (partner, spouse, children, friends, house, car), allowing personal variation beyond nuclear family drawings.
-    - Positions 8–10 (belongings, descriptions, colors): Everyday adult items (*телефон, ноутбук, рюкзак, паспорт, ключ, кава, одяг*), practical descriptions of belongings and personal appearance.
+    - Positions 8–10 (belongings, descriptions, colors): Everyday adult items (*телефон, ноутбук, рюкзак, паспорт, ключ, гаманець, лампа*), practical descriptions of belongings and personal appearance.
     - Syllables and phonetics: Explicitly framed as pronunciation and rhythm aids (as in OHO Lesson 09), eliminating primary-school hyphenation/line-breaking drills in early levels.
