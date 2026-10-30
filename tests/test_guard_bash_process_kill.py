@@ -114,6 +114,12 @@ I12118_REFUSED = [
     "L=:; L=sudo; \"$L\" -u nobody bash -c 'kill $(pgrep -U nobody -x bash); :'",
     'L=:; L=sudo; eval \'"$L" -u nobody bash -c "pkill -u nobody -x bash; :"\'',
     'L=:; L=sudo; find /dev/null -exec "$L" -u nobody bash -c "pkill -u nobody -x bash; :" \\;',
+    # Review F5: computed wrapper paths and predicted substitutions count too.
+    'P=/usr/bin; "$P"/env -S "pkill -f" worker',
+    'P=/usr/bin; "$P"/env -S "bash -c" "pkill -f worker"; pkill -x no-such-process-12118',
+    "$(echo cd) /dev; pkill -x no-such-process-12118",
+    "bash -c '`echo cd` /dev; pkill -x no-such-process-12118'",
+    'find /dev/null -exec "$(echo sudo)" -u nobody bash -c "pkill -u nobody -x bash" \\;',
 ]
 I12118_ALLOWED = [
     "pkill -x no-such-process-12118",

@@ -2540,7 +2540,8 @@ def _segment_process_facts(words: list[str], facts: _ProcessFacts, depth: int, *
         return
     # `env -S` splits a string into a command the reader never sees.
     for index, word in enumerate(words):
-        if _shell_word_value(word) not in {"env", "/usr/bin/env", "/bin/env"}:
+        # By the name the word runs, so a computed path (`"$P"/env`) counts too.
+        if "env" not in (_command_names(word, facts) or []):
             continue
         for option in words[index + 1 :]:
             if _is_assignment(option):
@@ -2562,7 +2563,9 @@ def _segment_process_facts(words: list[str], facts: _ProcessFacts, depth: int, *
     if cmd == "__UNDECIDABLE_SECRET_COMMAND__":
         facts.limit = True
         return
-    facts.computed = facts.computed or _computed(words[index])
+    # The wrapper words `_command_at` steps over count too (`"$P"/env`, `"$T"/timeout`).
+    stepped = _raw_without_redirects([word for word in words[: index + 1] if not _is_assignment(word)])
+    facts.computed = facts.computed or any(_computed(word) for word in stepped)
     names = _command_names(words[index], facts)
     if names is None:
         facts.unresolved = True
@@ -3046,7 +3049,10 @@ def _collect_process_facts(command: str, facts: _ProcessFacts, depth: int = 0) -
         prior_rebound = facts.prior is not None and facts.prior.echo_rebound
         if not (_may_rebind_echo(facts.command) or prior_rebound or facts.echo_rebound):
             # Only while the command cannot rebind `echo` to something else.
-            executable = _inline_echo_substitutions(executable, substitutions)
+            inlined = _inline_echo_substitutions(executable, substitutions)
+            # A substitution's output is computed, even when the reader can predict it.
+            facts.computed = facts.computed or inlined != executable
+            executable = inlined
         pipelines = _process_pipelines(_decode_ansi_c_quotes(executable))
     except ValueError:
         facts.limit = True
