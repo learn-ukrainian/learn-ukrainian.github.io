@@ -52,7 +52,7 @@ from scripts.common.git_context import sanitized_git_env
 from scripts.common.scratch import ensure_scratch_root
 from scripts.guardrails import worktree_containment as containment
 from scripts.lexicon import ulif_raw_cache
-from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store, store_data_dir
 
 ASSEMBLER_VERSION = "pilot-assembly-v8"
 # CTO proper-name scope (#8977 / #8981, OO-38). Add learner names explicitly;
@@ -325,7 +325,7 @@ def load_inputs(manifest_path, registry_path, register_path, sources_db, vesum_d
         need(observed == [record["raw_row"]] and foundation.digest(observed[0]) == record["content_sha256"],
              "Source row drift against the frozen literal row; re-admit the source version")
         drift += 1
-    sources = src.PilotSources(sources_conn, vesum_conn, raw_conn, ulif_raw_cache.store_data_dir(sources_db).parent)
+    sources = src.PilotSources(sources_conn, vesum_conn, raw_conn, store_data_dir(sources_db).parent)
     entry_ids = sorted(r["raw_row"]["id"] for r in manifest["selection"]["source_records"]
                        if r["table"] == "ulif_dictua_entries")
     extract = scratch / "pilot-wp3-extract.sqlite"

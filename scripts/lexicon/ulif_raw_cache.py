@@ -9,7 +9,7 @@ import sqlite3
 from pathlib import Path
 
 from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
-from scripts.storage.topology import store_kind
+from scripts.storage.topology import store_data_dir
 
 RAW_TABLE = "ulif_dictua_raw_responses"
 RAW_SCHEMA = """
@@ -31,20 +31,6 @@ def _primary_checkout() -> Path:
         if common.exists():
             return (git_dir / common.read_text(encoding="utf-8").strip()).resolve().parent
     return root
-
-
-def store_data_dir(source_db: str | Path) -> Path:
-    """The directory that holds the Sources store ``source_db`` names.
-
-    The live store is a selector link into ``sources-generations/``, and callers
-    often hold the already-followed generation path. Either way the store's
-    directory is the selector's, never the generation directory, so nothing derived
-    from it (this cache, a lock, a repository root) lands inside the generations.
-    """
-    ref = store_kind(source_db)
-    if ref.lock_dir is not None:
-        return ref.lock_dir.resolve()
-    return Path(source_db).resolve().parent
 
 
 def cache_path(source_db: str | Path | None = None) -> Path:
