@@ -137,9 +137,11 @@ def _backed_up_root_holding(basetemp: str) -> Path | None:
 
     Every ancestor with a ``.git`` directory counts as a checkout (a worktree's
     ``.git`` is a file), so a repository extraction kept inside ``.agent`` does
-    not hide the primary checkout above it. Symlinks in ``basetemp`` are followed.
+    not hide the primary checkout above it. The path is read as pytest reads it:
+    ``..`` collapses first, as ``os.path.abspath`` does, and only then do symlinks
+    resolve, so ``<link>/../bt`` names a sibling of the link, not of its target.
     """
-    path = Path(os.path.realpath(basetemp))
+    path = Path(os.path.realpath(os.path.abspath(basetemp)))
     for ancestor in path.parents:
         if not (ancestor / ".git").is_dir():
             continue

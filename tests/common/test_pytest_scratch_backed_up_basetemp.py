@@ -32,6 +32,21 @@ def test_basetemp_under_a_checkouts_agent_dir_is_refused_before_anything_is_crea
     assert not (checkout / ".agent").exists()
 
 
+def test_basetemp_reached_through_a_symlink_then_dotdot_is_refused(
+    pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Pytest collapses ``..`` before the link is followed, so ``link/../bt`` lands beside the link."""
+    checkout = pytester.mkdir("primary")
+    (checkout / ".git").mkdir()
+    (checkout / ".agent").mkdir()
+    (checkout / ".agent" / "link").symlink_to(pytester.mkdir("elsewhere"))
+
+    result = _run_nested(pytester, monkeypatch, checkout / ".agent" / "link" / ".." / "bt")
+
+    assert result.ret == pytest.ExitCode.USAGE_ERROR
+    assert not (checkout / ".agent" / "bt").exists()
+
+
 def test_basetemp_outside_every_kept_root_still_runs(
     pytester: pytest.Pytester, monkeypatch: pytest.MonkeyPatch
 ) -> None:
