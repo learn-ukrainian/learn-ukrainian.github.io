@@ -129,9 +129,41 @@ def model_id(model: str) -> str | None:
     return canonical_model_id(model)
 
 
-def advisor_enabled(spec: TaskSpec) -> bool:
-    """Whether this run gets the Opus advisor: a workspace-write Sonnet 5.5, or a Haiku 5.5 that asked for it."""
-    if spec.mode != "workspace-write":
+def _remaps_models(spec: TaskSpec, env: Mapping[str, str]) -> bool:
+    """Whether a settings file this run may load changes which model a model id runs.
+
+    Claude Code resolves ``--model`` through ``modelOverrides`` and the ``ANTHROPIC_*MODEL`` environment
+    names of its settings files (https://code.claude.com/docs/en/model-config), so the approved id could
+    run another model. Checked at launch over the worktree's project and local settings, the dispatcher
+    checkout's local settings (a worktree loads them) and the account's user settings. A file that is
+    present but unreadable counts as a remap.
+    """
+    config = env.get("CLAUDE_CONFIG_DIR") or (str(Path(env["HOME"]) / ".claude") if env.get("HOME") else None)
+    files = [spec.worktree / ".claude" / "settings.json", spec.worktree / ".claude" / "settings.local.json",
+             rules_core.source_path(".claude/settings.local.json")]
+    files += [Path(config) / "settings.json"] if config else []
+    for path in files:
+        try:
+            settings = json.loads(path.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            continue
+        except (OSError, ValueError):
+            return True
+        if not isinstance(settings, dict):
+            return True
+        names = settings.get("env")
+        if settings.get("modelOverrides") or (isinstance(names, dict) and any(
+                str(name).startswith(("ANTHROPIC_MODEL", "ANTHROPIC_DEFAULT_", "ANTHROPIC_SMALL_FAST")) for name in names)):
+            return True
+    return False
+
+
+def advisor_enabled(spec: TaskSpec, env: Mapping[str, str]) -> bool:
+    """Whether this run gets the Opus advisor: a workspace-write Sonnet 5.5, or a Haiku 5.5 that asked for it.
+
+    A run whose settings remap models is not advised, since the id that earned the advisor may not be the model that runs.
+    """
+    if spec.mode != "workspace-write" or _remaps_models(spec, env):
         return False
     model = model_id(spec.model)
     return model == _ADVISED_MODEL or (model == _ADVISED_ON_REQUEST_MODEL and spec.options.get("advisor") == _ADVISOR_MODEL)
@@ -171,7 +203,7 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     if spec.claude_account not in (None, "a"):
         argv += ["--settings", _LABELLED_SETTINGS, "--setting-sources", _LABELLED_SETTING_SOURCES]
     env = {**env, **_BACKGROUND_ENV}
-    if advisor_enabled(spec):
+    if advisor_enabled(spec, env):
         argv += ["--advisor", _ADVISOR_MODEL]
         argv[argv.index("--model") + 1] = _advised_model_arg(spec.model)
         env.pop("CLAUDE_CODE_DISABLE_ADVISOR_TOOL", None)

@@ -3334,22 +3334,27 @@ def test_claude_argv_caps_an_api_key_run_and_leaves_a_subscription_run_alone(tmp
 
 
 @pytest.mark.parametrize(
-    ("model", "mode", "options", "advised"),
+    ("model", "mode", "options", "advised", "project_settings"),
     [
-        ("claude-sonnet-5-5", "workspace-write", {}, True),
-        ("claude-sonnet-5-5", "read-only", {}, False),
-        ("claude-opus-5-5", "workspace-write", {}, False),
-        ("claude-haiku-5-5", "workspace-write", {}, False),
-        ("claude-haiku-5-5", "workspace-write", {"advisor": "opus"}, True),
-        ("sonnet[1m]", "workspace-write", {}, True),
-        ("haiku", "workspace-write", {}, False),
-        ("haiku", "workspace-write", {"advisor": "opus"}, True),
+        ("claude-sonnet-5-5", "workspace-write", {}, True, None),
+        ("claude-sonnet-5-5", "read-only", {}, False, None),
+        ("claude-opus-5-5", "workspace-write", {}, False, None),
+        ("claude-haiku-5-5", "workspace-write", {}, False, None),
+        ("claude-haiku-5-5", "workspace-write", {"advisor": "opus"}, True, None),
+        ("sonnet[1m]", "workspace-write", {}, True, None),
+        ("haiku", "workspace-write", {}, False, None),
+        ("haiku", "workspace-write", {"advisor": "opus"}, True, None),
+        ("claude-sonnet-5-5", "workspace-write", {}, False, {"modelOverrides": {"claude-sonnet-5-5": "claude-sonnet-4-6"}}),
+        ("sonnet", "workspace-write", {}, False, {"env": {"ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6"}}),
     ],
 )
-def test_claude_advisor_is_attached_only_to_the_approved_runs(tmp_path, model, mode, options, advised):
+def test_claude_advisor_is_attached_only_to_the_approved_runs(tmp_path, model, mode, options, advised, project_settings):
     """Advisor spend outside the approved scope is the defect: only the approved runs carry ``--advisor opus``."""
     spec = TaskSpec("adv", "claude", model, None, mode, tmp_path, tmp_path / "p", tmp_path / "f", options=options)
     spec.prompt_file.write_bytes(b"prompt")
+    if project_settings is not None:
+        (tmp_path / ".claude").mkdir()
+        (tmp_path / ".claude" / "settings.json").write_text(json.dumps(project_settings))
     for label in (None, "kk"):
         invocation = providers.load("claude").build(dataclasses.replace(spec, claude_account=label), {})
         assert ("--advisor" in invocation.argv) is advised
