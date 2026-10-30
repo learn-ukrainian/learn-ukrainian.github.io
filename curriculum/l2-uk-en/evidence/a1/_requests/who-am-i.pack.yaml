@@ -116,3 +116,11 @@ videos:
     words: []
     segment: null
   use: 'Pronunciation model for consonant Г.'
+- id: V-009
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=cJlal8XKBxo
+  models:
+    letters: [ь]
+    words: []
+    segment: null
+  use: 'Pronunciation model for soft sign ь.'

@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: 4c0fc7ee11f6e6a233f7106776d18deea633d317
+  mcp_commit: 3c3457d5c8d47560320e12bee2bf78ed8e3d5c44
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
   sources_db: 326dde95c241dd99fcc9995c92353b1ed0d0503c009fef47bd3b6e070ef580aa
@@ -468,3 +468,17 @@ videos:
     words: []
   url: https://www.youtube.com/watch?v=gVnclpSI0DU
   use: Pronunciation model for consonant Г.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=cJlal8XKBxo
+    http_status: 200
+  id: V-009
+  models:
+    letters:
+    - ь
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=cJlal8XKBxo
+  use: Pronunciation model for soft sign ь.

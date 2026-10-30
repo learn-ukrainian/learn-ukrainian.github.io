@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: 429e3f44def7028572d44c9b819bcb4fbb2389ad
+  mcp_commit: 3c3457d5c8d47560320e12bee2bf78ed8e3d5c44
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
-  sources_db: 69b7346c682277121945c88593bfb29bcbb8b620efd5197320dfab8258309345
+  sources_db: 3f67f024da76b08c7ad4032d3c6f4f5b7eda9830190b34cce87534871e7aff1d
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
@@ -888,6 +888,199 @@ texts:
     row_sha256: 65fd94236424adf4ce840ff7d9854c17552d516523c13a79c7e8121fa7651680
     section_id: 13101
   supports: 'Primer printed page: Я vowel and its heard sound.'
+- id: T-045
+  quote: "a formal situation (to your colleague, teacher, or in                                            Дя́кую!\nthe store):\
+    \                                                           This is a simple and nice way to say “thanks” in\n       \
+    \               До поба́чення!                                  Ukrainian.\n\nInformally, to your friends and close relatives,\
+    \ you                                         Будь ла́ска!\nsay:                                                     \
+    \             This is how we politely reply, it is like “You are\n                          Па-па́!                  \
+    \                   welcome”.\n                                                                      An additional thing\
+    \ about Будь ла́ска is that it\n                          Бува́й!                                     also means “please”.\
+    \ For example:\n                                                                         Дай мені́, будь ла́ска, твій\
+    \ но́мер.\nI mentioned one secret about it in the podcast.\n                                                         \
+    \                Give me, please, your number.\nПа-па́! is used much more in Western Ukraine,\nbut in the Center and East,\
+    \ young people are quite\nused to the Russian Пока́! So be prepared to hear                           Займенники — Pronouns\n\
+    it often.\n                                                                      In the podcast, we are singing a short\
+    \ song[[[[[[["
+  sha256: fac7907d3a553e2123ef98366c6e9b02e857feeec03471e95adea72b3832f5ce
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0002_w003
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: f7960328d13d1df53f4bd2287a064bc7b9239cde9a1363455d272fcc780dca49
+    section_id: null
+  supports: 'ULP 1-02 lesson notes: formal farewell До побачення, gratitude Дякую, politeness Будь ласка, and informal farewell
+    Бувай.'
+- id: T-046
+  quote: "15\nInspiring resources for learning Ukrainian — UkrainianLessons.com\nBack to Contents\nПриві́т і ласка́во про́симо!\
+    \ Hi and welcome to your very first Ukrainian grammar lesson! We begin with the \nbasics: letters and pronunciation. The\
+    \ Ukrainian alphabet (алфаві́т, алфа́віт or абе́тка) has 33 letters.\n  ї\nА, Бе, Ве, Ге, Ґе…\nAlphabet: printed and handwritten\
+    \ letters\n01\nUkrainian alphabet\nШ ш\nЮ ю\nЩ щ\nЦ ц\nь\nЧ ч\nA а\nУ у\nЇ ї\nЕ е\nО о\nГ г\nЛ л\nЗ з\nС с\nБ б\nФ ф\n\
+    Й й\nЄ є\nП п\nҐ ґ\nМ м\nИ и\nТ т\nВ в\nХ х\nК к\nЖ ж\nР р\nД д\nН н\nІ і\nДруко́вані лі́тери\nPrinted letters\nЯ я\n\
+    Пи́сані лі́тери\nHandwritten letters\nsha\nju\nshcha\nmjakýj znak\nНа́зви лі́тер\nLetter names\nja\nsh in short\nyou in\
+    \ you\nshch in fresh cherries\ntse\nche\na\nu\nji\ne\no\nhe\nel\nze\nes\nbe\nef\njot\nje\npe\nge\nem\ny (ɪ)\nte\nve\n\
+    kha\nka\nzhe\ner\nde\nen\ni\nts in lots\nch in chess\na in start\noo in pool\nyea in yeast\ne in test\no in port\nh in\
+    \ aha! (voiced h)\nl in love\nz in zoo\ns in stop\nb in best\nf in farm\ny in yogurt\nye in yet\np in park\ng in go\n\
+    m in mom\nі in bit\nt in ten\nv in van\nh in home\nk in sky \ng in garage\nr in rojo (Spanish)\nd in dog\nn in no\nee\
+    \ in tree\nВимовля́ти як\nPronounce like\nya in yard\n01.1\nУкраї́нський алфа́ві́т\nШ ш\nЮ ю\nЩ щ\nЦ ц\nь\nЧ ч\nА а\n\
+    У у\nЕ е\nО о\nГ г\nЛ л\nЗ з\nС с\nБ б\nФ ф\nЙ й\nЄ є\nП п\nҐ ґ\nМ м\nИ и\nТ т\nВ в\nХ х\nК к\nЖ ж\nР р\nД д\nН н\n  і\n\
+    Я я\nь ― м’яки́й знак (soft sign) ― is a letter without a sound of its own. Its role is to make the consonant before \n\
+    it sound soft: день ― [ден′]. You can learn more about soft consonants and the soft sign in    Units 06–07."
+  sha256: e3dfd44f0a7cf44bd1e33c72b35bb3bfdcf4713309c4753faf55d9fe6f8700c1
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0015_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 974a66d129584bfb4e4ffba6915128aa9b737904915cfacf95f2e145f7fbe885
+    section_id: 57159
+  supports: 'OHO adult workbook p. 15: full 33-letter Cyrillic alphabet overview with printed and cursive models and traditional
+    letter names.'
+- id: T-047
+  quote: 'НАВЧАЮСЯ ПРАВИЛЬНО ВІДТВОРЮВАТИ
+
+    ІНТОНАЦІЮ РЕЧЕНЬ
+
+    Часто розповідні речення вимовляються
+
+    з особливим почуттям: із
+
+    захопленням, радістю. У кінці таких
+
+    розповідних речень ставиться
+
+    \ знак оклику ( ! ).
+
+    \ /
+
+    інтоную
+
+    складаю
+
+    17| Прочитай і вивчи напам''ять вірш Лесі Лужецької.
+
+    Як гарно тут! Як любо жить!
+
+    В кінці знак оклику стоїть.
+
+    Окличні речення оці —
+
+    виразні, гарні і дзвінкі!
+
+    Чому такі речення
+
+    є розповідними
+
+    окличними?
+
+    • Випиши виділені речення. Вимов їх з особливим захопленням.
+
+    Учімося, діти, українське слово любити!
+
+    18| Прочитайте вірш Павла Тичини, передаючи голосом
+
+    захоплення красою мови. Поясніть, що означає виділене
+
+    сполучення слів.
+
+    Хай розквітне веселково,
+
+    у невиданій красі,
+
+    наша мова калинова,
+
+    наше сонце у росі! Суханова Аліна, 9 років
+
+    • Складіть розповідне окличне речення зі сполученням
+
+    слів наша мова калинова. Запишіть його. Поясніть
+
+    розділовий знак у кінці речення.
+
+    Питальні речення також можуть вимовлятися
+
+    з особливим почуттям. У кінці таких питальних
+
+    речень ставляться два розділові знаки: знак
+
+    питання і знак оклику ( ? ! ).
+
+    114'
+  sha256: 9e466213a4e70f7a025b7ef73b794859d4956479d3af7a3bd1a01d61731ee3e3
+  source:
+    author: vashulenko
+    chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0112
+    file: 2-klas-ukrmova-vashulenko-2019-1
+    grade: '2'
+    kind: textbook
+    page: 114
+    row_sha256: 70c5a65fadd7f4c09d8c773a8d63c7b18cab3703675a64fcebcf566cd1430ee9
+    section_id: 22112
+  supports: 'Vashulenko 2 klas p. 112-114: statement, question, and exclamation intonation contours.'
+- id: T-048
+  quote: '216
+
+    Inspiring resources for learning Ukrainian — UkrainianLessons.com
+
+    Back to Contents
+
+    Словничок
+
+    Vocabulary
+
+    сіда́ти, недок., to sit down
+
+    Соло́дких снів!, Sweet dreams!
+
+    тра́питися, док., to happen
+
+    хвилюва́тися, недок., to worry
+
+    ще раз, once again
+
+    Бува́й! Бува́йте!, Bye!
+
+    вибача́ти, недок., to forgive
+
+    Віта́ю!, Hello!
+
+    вода́ без га́зу, ж., still water
+
+    Га́рного дня!, Have a nice day!
+
+    дома́шка, ж., homework
+
+    коха́ний, ч., коха́на, ж., (my) love, beloved
+
+    незру́чність, ж., inconvenience
+
+    Па-па!, Bye-bye!
+
+    принести́, док., to bring
+
+    прихо́дити, недок., to come on foot
+
+    ре́шта, ж., change (money)
+
+    Що (в те́бе) ново́го?, What''s up? What''s new?
+
+    Урок 75'
+  sha256: 84ba8de1a22bdace827430eda37749fb96215b4abaf105e8aa5843916398e53d
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0216_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: b8ab07469541d67870b8c08599aaaeb1bf36a054a88fc59bb2001671bd64035b
+    section_id: 57361
+  supports: 'OHO adult workbook glossary: informal farewells Бувай, Па-па, and greeting Вітаю.'
 unsupported:
 - claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and
     lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos establish their named
@@ -1194,3 +1387,29 @@ videos:
     words: []
   url: https://www.youtube.com/watch?v=yhSAf41LX8I
   use: Pronunciation model for vowel letter Я.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.ukrainianlessons.com/episode2/
+    http_status: 200
+  id: V-020
+  models:
+    letters: []
+    segment: 05:40–06:15
+    words: []
+  url: https://www.ukrainianlessons.com/episode2/
+  use: Formal farewell До побачення and politeness chunks in ULP 1-02, publisher repeat-after-me excerpt 05:40–06:15.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.ukrainianlessons.com/episode1/
+    http_status: 200
+  id: V-021
+  models:
+    letters: []
+    segment: 06:10–06:35
+    words: []
+  url: https://www.ukrainianlessons.com/episode1/
+  use: Informal farewells and conversational turns in ULP 1-01, publisher repeat-after-me excerpt 06:10–06:35.

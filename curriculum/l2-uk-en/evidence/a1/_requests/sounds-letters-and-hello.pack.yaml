@@ -276,6 +276,22 @@ texts:
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0039}
   span: {first_words: 'Бачу Я, я.', last_words: 'Чую [й а] або [а].'}
   supports: 'Primer printed page: Я vowel and its heard sound.'
+- id: T-045
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w003}
+  span: {first_words: 'a formal situation', last_words: 'short song[[[[[[['}
+  supports: 'ULP 1-02 lesson notes: formal farewell До побачення, gratitude Дякую, politeness Будь ласка, and informal farewell Бувай.'
+- id: T-046
+  source: {table: textbooks, chunk_id: owned-oho-a1-workbook_f1_p0015_c0001}
+  span: {first_words: '15', last_words: 'Units 06–07.'}
+  supports: 'OHO adult workbook p. 15: full 33-letter Cyrillic alphabet overview with printed and cursive models and traditional letter names.'
+- id: T-047
+  source: {table: textbooks, chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0112}
+  span: {first_words: 'НАВЧАЮСЯ ПРАВИЛЬНО', last_words: '114'}
+  supports: 'Vashulenko 2 klas p. 112-114: statement, question, and exclamation intonation contours.'
+- id: T-048
+  source: {table: textbooks, chunk_id: owned-oho-a1-workbook_f1_p0216_c0001}
+  span: {first_words: '216', last_words: 'Урок 75'}
+  supports: 'OHO adult workbook glossary: informal farewells Бувай, Па-па, and greeting Вітаю.'
 exercises:
 - id: X-001
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}
@@ -484,6 +500,22 @@ videos:
     - Я
     words: []
     segment:
+- id: V-020
+  url: https://www.ukrainianlessons.com/episode2/
+  channel: Ukrainian Lessons Podcast
+  use: 'Formal farewell До побачення and politeness chunks in ULP 1-02, publisher repeat-after-me excerpt 05:40–06:15.'
+  models:
+    letters: []
+    words: []
+    segment: 05:40–06:15
+- id: V-021
+  url: https://www.ukrainianlessons.com/episode1/
+  channel: Ukrainian Lessons Podcast
+  use: 'Informal farewells and conversational turns in ULP 1-01, publisher repeat-after-me excerpt 06:10–06:35.'
+  models:
+    letters: []
+    words: []
+    segment: 06:10–06:35
 standard:
 - {id: S-001, lines: '342-344'}
 - {id: S-002, lines: '348-350'}

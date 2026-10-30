@@ -1,0 +1,215 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-sounds-letters-and-hello"
+  attempt_id: "sol-att-2"
+  manifest_sha256: "92ec4d4ae0299a592c30ff7ca114decded8de071db5f49422219ce0b20706d05"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gpt-6"
+  harness: "codex"
+  family: "openai"
+  prompt_sha256: "2590667986d4e565b6f9fea389701c2e6517286a41fe9822c8fd17e6489a6029"
+checks:
+  # A practical greeting choice followed by reading and supported writing
+  # suits this position. No story-question closure is needed.
+  closing_shape: clean
+  # The titles describe greeting, phonetic and reading jobs.
+  # Ukrainian items in English prose are objects of instruction.
+  title_describes_job: clean
+  # No title or subtitle states an inventory quantity.
+  title_quantities: clean
+  # verify_words, receipt rr-af80a959e670cbec5013:
+  # "Found: 31/31" after normalising sentence-initial capitalisation.
+  # inspect_words, receipt rr-c82a9feb7229f70f12aa:
+  # all 31 inspected forms have CLEAN analyses. The sound sense of звук
+  # is explicitly identified in VESUM entry 142144.
+  # Greeting senses/register are supported by search_text:
+  # ulp-1-00-lesson-notes_l0001_w001, rr-3023d9c8c1a573f05edf;
+  # ulp-1-00-lesson-notes_l0002_w002, rr-ac5d843bedb4d07d5d6b;
+  # ulp-1-00-lesson-notes_l0002_w003, rr-7f1f7b58f470515b7725.
+  # Syllables are pronunciation sequences, not claimed dictionary words.
+  quoted_forms: clean
+  sequencing: [F-01]
+  # The lesson jobs provide defensible divisions of oral formulas,
+  # vowels, consonant groups and application. No finding is based on
+  # word_target, activity counts or an assumed duration threshold.
+  # OHO p0019, search_text receipt rr-dae9db276873365c5a6d,
+  # supports treating vowel pronunciation as a substantive learning job.
+  sizing: clean
+  inventory: [F-07]
+  # Rotation is meaningful: recognise/register-choice, sound-letter matching,
+  # constrained syllable completion, identification and semantic sorting.
+  # Repeated modelling accompanies new sounds; the repeated quizzes have
+  # different intended contexts, but F-02 identifies their shared bypass.
+  # The supplied reports show 6 fresh workbook activities versus 0 mapped
+  # v1 workbook activities, and 11 fresh activities overall versus 10 v1.
+  # There is therefore no demonstrated activity-count reduction to justify.
+  # EVIDENCE GAP: fresh response opportunities are unavailable at plan stage;
+  # comparison with v1's 62 opportunities cannot yet be made.
+  # Practical recap usefulness is assessed in F-02 as well as the teaching
+  # quizzes. No extra activity or item quota is imposed.
+  activities: [F-02, F-03]
+  evidence_fit: [F-04, F-05]
+  # Oral chunks remain unanalysed. The ULP S1 L1/L2 sources support their
+  # early introduction; no new case or agreement system is proposed.
+  # The remaining arc-owned phonetic omission is recorded in F-06.
+  standard_and_ulp: [F-06]
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 1
+        step: s2
+        quote: "Copy the formal greeting into your notebook as supported writing practice."
+    dimension: learner_fit
+    severity: MAJOR
+    claim: >-
+      This writing instruction precedes every acquired letter in the supplied
+      learner state and the plan. It conflicts with accepted arc revision r6's
+      distinction between early oral chunks and printed words whose constituent
+      letters have been introduced. Even this module does not acquire every
+      letter in the formal greeting. search_text,
+      ulp-1-00-lesson-notes_l0002_w002, returns "До́брий день!" as the intact
+      greeting. Keep its early treatment oral and place supported copying on
+      print whose letters have already been introduced.
+    evidence:
+      receipt: "rr-ac5d843bedb4d07d5d6b"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 1
+        activity: a2
+        quote: "Polite time-of-day greeting: Good day"
+      - lesson: 5
+        activity: a3
+        quote: "Polite expression of gratitude: Thank you"
+      - lesson: 5
+        step: s2
+        quote: "Select the appropriate greeting for informal and formal situations"
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      Both quizzes permit success through English category labels and English
+      answers without recognising or retrieving a Ukrainian greeting or response.
+      Consequently the recap's register-selection criterion can also be satisfied
+      through this bypass. English instructions are appropriate here, but the
+      assessed response must process taught Ukrainian, through supported audio or
+      eligible print. The cited model provides that distinction: search_text,
+      ulp-1-00-lesson-notes_l0001_w005, returns "What do you say if I say to you:"
+      followed by a Ukrainian greeting prompt. Retain the contextual choices
+      while replacing the answer-revealing English response options.
+    evidence:
+      receipt: "rr-8385f952ed3eb5beb803"
+
+  - id: F-03
+    status: active
+    locations:
+      - lesson: 4
+        activity: a2
+        quote: "Identify the personal pronoun with vowel letter Я among single-syllable vowel letters."
+      - lesson: 4
+        step: s1
+        quote: "Read syllables and words with consonants П, Р, and Т, such as тато."
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      The workbook task identifies a pronoun but does not exercise the lesson's
+      principal decoding job with its new consonants. The other activity models
+      pronunciation, so successful completion need not demonstrate independent
+      reading of the consonant material. Revise the planned task operations to
+      elicit that reading using taught material; this does not require increasing
+      the activity count. The adult phonetics model in search_text,
+      owned-oho-a1-workbook_f1_p0020_c0001, explicitly moves from listening to
+      reading: "with and without the audio."
+    evidence:
+      receipt: "rr-99db0a2ea770cbd48d46"
+
+  - id: F-04
+    status: active
+    locations:
+      - lesson: 1
+        step: s1
+        quote: "friendly farewells Бувай! or Па-па!"
+      - lesson: 1
+        step: s2
+        quote: "Дякую! (Thank you!), Будь ласка! (Please / You are welcome!)"
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: >-
+      The expanded oral job is not supported by the attached excerpts and bounded
+      playback models: T-002, T-003 and T-041 establish the two greetings and their
+      register, while V-001/V-002 model only those greetings. The added farewells
+      and politeness formulas need their own usable evidence and oral modelling.
+      This is a pack-builder gap, not a claim that these formulas are wrong.
+      search_text locates positive support at
+      ulp-1-00-lesson-notes_l0002_w003, including "Informally, to your friends and
+      close relatives" and "also means “please”". Attach the relevant grounding
+      and suitable bounded oral models before binding the writer to this job.
+    evidence:
+      receipt: "rr-7f1f7b58f470515b7725"
+
+  - id: F-05
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "Survey the 33 letters of the Cyrillic alphabet with printed and cursive models and traditional letter names."
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: >-
+      The accepted full-alphabet overview is present in the teaching instruction
+      but absent from its cited evidence: the supplied excerpts and videos model
+      sound classes or individual vowels, rather than the complete printed/cursive
+      alphabet and its names. The writer cannot derive the promised presentation
+      from those records. search_text,
+      owned-oho-a1-workbook_f1_p0015_c0001, provides the appropriate adult source,
+      including "Alphabet: printed and handwritten letters" and "Letter names".
+      The pack builder should attach this grounding; the accepted overview itself
+      should remain.
+    evidence:
+      receipt: "rr-3066cbe7480ffce2aef9"
+
+  - id: F-06
+    status: active
+    locations:
+      - lesson: 1
+        step: s1
+        quote: "Notice statement and question intonation contours in first speech turns."
+      - lesson: 2
+        step: s2
+        quote: "Practice statement versus question intonation contours."
+    dimension: evidence_gap
+    severity: MAJOR
+    claim: >-
+      The pinned position-2 arc assigns statement, question and exclamation
+      contours, but the planned contour teaching and practice specify only the
+      first two. Exclamation punctuation on a greeting does not itself establish
+      an intentional listening-and-speaking contrast. Positive pedagogical
+      support exists: search_text, 2-klas-ukrmova-vashulenko-2019-1_s0112,
+      instructs "Вимов їх з особливим захопленням." Record this as a pack-builder
+      and planner gap: supply suitable contour evidence and bind a small
+      application using taught oral chunks, without importing the school text's
+      vocabulary or adding a quantity requirement.
+    evidence:
+      receipt: "rr-34aec6b245646d20c3c7"
+
+  - id: F-07
+    status: active
+    locations: []
+    scope:
+      lesson: 1
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      Accepted revision r6(c) assigns the greeting Вітаю! to this position, but
+      the greeting lesson and its supplied pack records provide no teaching slot
+      or greeting-sense support for it. The corpus does contain the relevant
+      sense: search_text, owned-oho-a1-workbook_f1_p0216_c0001, returns
+      "Віта́ю!, Hello!" This is a pack-builder inventory gap to settle with the
+      planner, rather than permission to invent material or substitute another
+      sense of the verb.
+    evidence:
+      receipt: "rr-f3429045df233c054b52"

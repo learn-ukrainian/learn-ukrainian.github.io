@@ -4,7 +4,7 @@ The fresh path has no word or activity target: judge size by job adequacy agains
 
 Kind: plan
 Module: a1/sounds-letters-and-hello (Position 2)
-Manifest SHA256: 92ec4d4ae0299a592c30ff7ca114decded8de071db5f49422219ce0b20706d05
+Manifest SHA256: dcbef549333a7113550f650eb7e8c042b73a9f6cc8847fe9e51daacfc68a8cea
 
 You are the independent cross-family content reviewer for a fresh curriculum module plan (Contract 1, fresh-build review contracts #8430 r4).
 You evaluate whether the module plan serves the learning goals before any lesson writer runs.
@@ -204,8 +204,8 @@ taxonomy: 1
 kind: plan
 attempt:
   review_id: "rev-20261030-sounds-letters-and-hello"
-  attempt_id: "sol-att-2"
-  manifest_sha256: "92ec4d4ae0299a592c30ff7ca114decded8de071db5f49422219ce0b20706d05"
+  attempt_id: "sol-att-3"
+  manifest_sha256: "dcbef549333a7113550f650eb7e8c042b73a9f6cc8847fe9e51daacfc68a8cea"
   previous_attempt_id: null
 reviewer:
   resolved_model: "<model>"
@@ -249,7 +249,7 @@ module: sounds-letters-and-hello
 level: a1
 sequence: 2
 slug: sounds-letters-and-hello
-version: '12'
+version: '13'
 title: 'звук, літера, привіт'
 subtitle: 'First greetings and early Cyrillic reading'
 focus: 'Hear and say greeting chunks, distinguish sounds from letters, and read and copy syllables and short words using the first letter group.'
@@ -262,7 +262,7 @@ connects_to: []
 prerequisites: []
 register: 'English scaffolding at A1; Ukrainian models first, then English glosses.'
 changelog:
-- 'Position 2 plan revised for arc revision r6 with substantive recap lesson and video-grounded phonetics.'
+- 'Position 2 plan revised for attempt 3 resolving all 7 Sol review findings with complete pack evidence grounding.'
 arc_ref: {level: a1, position: 2}
 evidence_ref:
   path: evidence/a1/sounds-letters-and-hello.yaml
@@ -287,18 +287,18 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Hear the informal greeting Привіт! and friendly farewells Бувай! or Па-па! used with friends, peers, and family. Notice statement and question intonation contours in first speech turns. Practice polar responses: так (yes) and ні (no).'
+    teach: 'Hear the informal greeting Привіт! and friendly farewells Бувай! or Па-па! used with friends, peers, and family. Notice statement, question, and exclamation intonation contours in first speech turns. Practice polar responses: так (yes) and ні (no).'
     introduces: {letters: [], grammar: [], vocabulary: ['W-074']}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-002', 'V-001']
+    evidence: ['T-002', 'T-048', 'V-001', 'V-021']
     practice: ['a1']
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Hear the formal greeting Добрий день! and formal farewell До побачення! used for polite and respectful public interactions. Learn core politeness chunks: Дякую! (Thank you!), Будь ласка! (Please / You are welcome!), and Вибачте! (Excuse me / Sorry!). Copy the formal greeting into your notebook as supported writing practice.'
+    teach: 'Hear the formal greeting Добрий день!, greeting Вітаю!, and formal farewell До побачення! used for polite and respectful public interactions. Learn core politeness chunks: Дякую! (Thank you!), Будь ласка! (Please / You are welcome!), and Вибачте! (Excuse me / Sorry!).'
     introduces: {letters: [], grammar: [], vocabulary: ['W-075', 'W-076']}
     uses: {grammar: [], vocabulary: ['W-074']}
-    evidence: ['T-003', 'T-041', 'V-002']
+    evidence: ['T-003', 'T-041', 'T-045', 'T-048', 'V-002', 'V-020']
     practice: ['a2']
     needs: [video]
   activities:
@@ -308,18 +308,19 @@ lessons:
     focus: 'Hear and say the informal greeting aloud.'
     model: X-001
   - id: a2
-    type: quiz
+    type: match-up
     placement: workbook
-    focus: 'Choose the appropriate polite greeting for formal situations.'
-    options:
-    - 'Polite time-of-day greeting: Good day'
-    - 'Informal friendly greeting: Hi'
-    - 'Casual late-evening parting: Good night'
+    focus: 'Match social situations to appropriate Ukrainian greetings heard in audio recordings.'
+    targets: ['W-074', 'W-075', 'W-076']
   videos:
   - evidence: V-001
     use: 'Informal greeting demonstration.'
   - evidence: V-002
     use: 'Formal greeting demonstration.'
+  - evidence: V-020
+    use: 'Formal farewell До побачення and politeness chunks in ULP 1-02, publisher repeat-after-me excerpt 05:40–06:15.'
+  - evidence: V-021
+    use: 'Informal farewells and conversational turns in ULP 1-01, publisher repeat-after-me excerpt 06:10–06:35.'
 - n: 2
   slug: first-vowels
   title: 'голосні звуки'
@@ -342,15 +343,15 @@ lessons:
     teach: 'Survey the 33 letters of the Cyrillic alphabet with printed and cursive models and traditional letter names. Ukrainian phonetics features six basic vowel sounds ([а], [о], [у], [е], [и], [і]). Observe stressed vowels which sound clear and prolonged, versus unstressed vowels. Learn and observe the primary vowel letters А, О, Е, И, І with native video models.'
     introduces: {letters: ['А', 'Е', 'И', 'І', 'О'], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-001', 'T-006', 'T-007', 'T-009', 'T-011', 'T-042', 'V-004', 'V-005', 'V-007', 'V-009', 'V-017']
+    evidence: ['T-001', 'T-006', 'T-007', 'T-009', 'T-011', 'T-042', 'T-046', 'V-004', 'V-005', 'V-007', 'V-009', 'V-017']
     practice: ['a1']
     needs: [video]
   - id: s2
     kind: practice
-    teach: 'Practice distinguishing vowel sounds: clear [і] versus deeper [и], and open [а], [о], [е]. Practice statement versus question intonation contours. Copy the taught vowel letters А, О, Е, И, І into your notebook as supported offline writing practice.'
+    teach: 'Practice distinguishing vowel sounds: clear [і] versus deeper [и], and open [а], [о], [е]. Practice statement, question, and exclamation intonation contours with emotional expressiveness. Copy the taught vowel letters А, О, Е, И, І into your notebook as supported offline writing practice.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-004']
+    evidence: ['T-004', 'T-047']
     practice: ['a2']
   activities:
   - id: a1
@@ -396,7 +397,7 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Consonants М and Н: read syllables ма, мо, ме, ми, мі and на, но, не, ни, ні; read мама, Ніна, Нонна. Copy the word мама into your notebook.'
+    teach: 'Consonants М and Н: read syllables ма, мо, ме, ми, мі and на, но, не, ни, ні; read мама, Ніна, Нонна. Copy the word мама into your notebook as supported writing practice.'
     introduces: {letters: ['М', 'Н'], grammar: [], vocabulary: ['W-081', 'W-091', 'W-092']}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-010', 'T-012', 'T-019', 'V-008', 'V-010']
@@ -404,7 +405,7 @@ lessons:
     needs: [video]
   - id: s2
     kind: teach
-    teach: 'Consonant В: read syllables ва, во, ве, ви, ві and decodable names Іван, Вова. Copy the name Вова into your notebook.'
+    teach: 'Consonant В: read syllables ва, во, ве, ви, ві and decodable names Іван, Вова. Copy the name Вова into your notebook as supported writing practice.'
     introduces: {letters: ['В'], grammar: [], vocabulary: ['W-093', 'W-094']}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-013', 'T-019', 'V-011']
@@ -452,11 +453,11 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Pronounce consonants П, Р, and Т with native video models. Read syllables and words with consonants П, Р, and Т, such as тато. Copy тато into your notebook.'
+    teach: 'Pronounce consonants П, Р, and Т with native video models. Read syllables with П, Р, Т (па, по, пе, пи, пі; та, то, те, ти, ті; ра, ро, ре, ри, рі) and decodable family noun тато. Copy тато into your notebook as supported writing practice.'
     introduces: {letters: ['П', 'Р', 'Т'], grammar: [], vocabulary: ['W-101']}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-017', 'T-018', 'T-043', 'V-015', 'V-016', 'V-018']
-    practice: ['a1']
+    practice: ['a1', 'a2']
     needs: [video]
   - id: s2
     kind: teach
@@ -464,7 +465,7 @@ lessons:
     introduces: {letters: ['Я'], grammar: [], vocabulary: ['W-001']}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-044', 'T-005', 'V-019']
-    practice: ['a2']
+    practice: ['a3']
     needs: [video]
   activities:
   - id: a1
@@ -472,14 +473,19 @@ lessons:
     placement: inline
     focus: 'Pronounce voiceless stops П, Т, vibrant Р, and vowel Я aloud.'
   - id: a2
-    type: odd-one-out
+    type: fill-in
     placement: workbook
-    focus: 'Identify the personal pronoun with vowel letter Я among single-syllable vowel letters.'
+    focus: 'Complete the decodable word тато by selecting the missing consonant syllable with Т, П, or Р.'
     options:
-    - 'я'
-    - 'а'
-    - 'е'
-    - 'о'
+    - 'та'
+    - 'па'
+    - 'ра'
+    targets: ['W-101']
+  - id: a3
+    type: match-up
+    placement: inline
+    focus: 'Match the personal pronoun with vowel letter Я to its sound model and meaning.'
+    targets: ['W-001']
   videos:
   - evidence: V-015
     use: 'Pronunciation model for consonant П.'
@@ -505,10 +511,10 @@ lessons:
   steps:
   - id: s1
     kind: recap
-    teach: 'Consolidate communicative greetings and polite formulas in daily social interaction: distinguish informal greetings (Привіт!) and farewells (Бувай!, Па-па!) from formal greetings (Добрий день!) and farewells (До побачення!). Practice polite expressions: Дякую! (Thank you!), Будь ласка! (Please / You are welcome!), and polar answers так and ні.'
+    teach: 'Consolidate communicative greetings and polite formulas in daily social interaction: distinguish informal greetings (Привіт!) and farewells (Бувай!, Па-па!) from formal greetings (Добрий день!, Вітаю!) and farewells (До побачення!). Practice polite expressions: Дякую! (Thank you!), Будь ласка! (Please / You are welcome!), and polar answers так and ні.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: ['W-074', 'W-075', 'W-076']}
-    evidence: ['T-002', 'T-003', 'T-041', 'V-001', 'V-002']
+    evidence: ['T-002', 'T-003', 'T-041', 'T-045', 'T-048', 'V-001', 'V-002', 'V-020']
     practice: ['a1']
     needs: [video]
   - id: s2
@@ -542,16 +548,18 @@ lessons:
   - id: a3
     type: quiz
     placement: workbook
-    focus: 'Identify the appropriate polite response in formal conversational exchanges.'
+    focus: 'Identify the decodable greeting word among taught vocabulary.'
     options:
-    - 'Polite expression of gratitude: Thank you'
-    - 'Casual peer greeting: Hi'
-    - 'Informal peer farewell: Bye'
+    - 'привіт'
+    - 'мама'
+    - 'тато'
   videos:
   - evidence: V-001
     use: 'Review informal greeting demonstration.'
   - evidence: V-002
     use: 'Review formal greeting demonstration.'
+  - evidence: V-020
+    use: 'Formal farewell До побачення and politeness chunks in ULP 1-02, publisher repeat-after-me excerpt 05:40–06:15.'
 ```
 
 ### Operator Accepted Decisions
@@ -1442,13 +1450,13 @@ later get the next free id; ids are never reused.
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "match-up": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
-          "quiz",
+          "match-up",
           "watch-and-repeat"
         ],
         "has_workbook": true,
@@ -1508,19 +1516,21 @@ later get the next free id; ids are never reused.
         "activities": {
           "inline": {
             "by_type": {
+              "match-up": 1,
               "watch-and-repeat": 1
             },
-            "total": 1
+            "total": 2
           },
           "workbook": {
             "by_type": {
-              "odd-one-out": 1
+              "fill-in": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
-          "odd-one-out",
+          "fill-in",
+          "match-up",
           "watch-and-repeat"
         ],
         "has_workbook": true,
@@ -1561,15 +1571,14 @@ later get the next free id; ids are never reused.
         "group-sort",
         "match-up",
         "observe",
-        "odd-one-out",
         "quiz",
         "watch-and-repeat"
       ],
-      "inline_activities": 5,
-      "largest_workbook_type": "quiz",
+      "inline_activities": 6,
+      "largest_workbook_type": "match-up",
       "largest_workbook_type_share": 0.3333333333333333,
-      "longest_same_type_workbook_run": 1,
-      "longest_same_type_workbook_run_type": "quiz",
+      "longest_same_type_workbook_run": 2,
+      "longest_same_type_workbook_run_type": "match-up",
       "non_recap_lessons": 4,
       "non_recap_lessons_with_workbook": 4,
       "workbook_activities": 6,
@@ -1577,7 +1586,6 @@ later get the next free id; ids are never reused.
         "fill-in",
         "group-sort",
         "match-up",
-        "odd-one-out",
         "quiz"
       ],
       "workbook_presence_complete": true
@@ -1591,13 +1599,13 @@ later get the next free id; ids are never reused.
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "0171997bfc45b735b5980727ebaddd1969e5cda4895703bd4c845c7c34c558c3",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "c438b659edab09dcd91b03bd43ab812fcfc6c99c2cd40b30ca31ff08941c110c",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "6aba37953b1ae0598a357720733381968802829bc3f48b5a23fe738407ad0f8d",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "64ea850926312c7c96c26b8d99ebd54deab3dc0a77caea8156ef476a7ef3d612",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "1833ed5eb2bc0c29225955e846baf227ef7625a7778089bb2855af1faa4c6960",
     "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "b716c55def2f736ce0e741821a4fa5d120bd3e6a9293fbcb88f035516f8baa34",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "f960caed212355c15a60a3f5af7cb8be80c13bb336f8471e9d27e9dac280db35",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "05fd88b68ccb9ebd1e41613bc9098373c03920cc7a7f357940065e05f36062e5",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -1631,7 +1639,7 @@ later get the next free id; ids are never reused.
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 0171997bfc45b735b5980727ebaddd1969e5cda4895703bd4c845c7c34c558c3; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 6aba37953b1ae0598a357720733381968802829bc3f48b5a23fe738407ad0f8d; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     },
     {
@@ -1750,10 +1758,10 @@ v1_totals_schema: 1
     "exercises_count": 6,
     "notes_count": 0,
     "standard_count": 3,
-    "texts_count": 44,
+    "texts_count": 48,
     "unsupported_open_count": 0,
     "unsupported_resolved_count": 1,
-    "videos_count": 18
+    "videos_count": 20
   },
   "errors": [],
   "kind": "pack-verify",
@@ -1761,11 +1769,11 @@ v1_totals_schema: 1
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml",
-    "sha256": "0171997bfc45b735b5980727ebaddd1969e5cda4895703bd4c845c7c34c558c3"
+    "sha256": "6aba37953b1ae0598a357720733381968802829bc3f48b5a23fe738407ad0f8d"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock",
-    "sha256": "c438b659edab09dcd91b03bd43ab812fcfc6c99c2cd40b30ca31ff08941c110c"
+    "sha256": "64ea850926312c7c96c26b8d99ebd54deab3dc0a77caea8156ef476a7ef3d612"
   },
   "report_schema": 1,
   "reports": [],
@@ -2052,6 +2060,176 @@ T-044:
     row_sha256: 65fd94236424adf4ce840ff7d9854c17552d516523c13a79c7e8121fa7651680
     section_id: 13101
   supports: 'Primer printed page: Я vowel and its heard sound.'
+T-045:
+  id: T-045
+  quote: "a formal situation (to your colleague, teacher, or in                                            Дя́кую!\nthe store):                                                           This is a simple and nice way to say “thanks” in\n                      До поба́чення!                                  Ukrainian.\n\nInformally, to your friends and close relatives, you                                         Будь ла́ска!\nsay:                                                                  This is how we politely reply, it is like “You are\n                          Па-па́!                                     welcome”.\n                                                                      An additional thing about Будь ла́ска is that it\n                          Бува́й!                                     also means “please”. For example:\n                                                                         Дай мені́, будь ла́ска, твій но́мер.\nI mentioned one secret about it in the podcast.\n                                                                         Give me, please, your number.\nПа-па́! is used much more in Western Ukraine,\nbut in the Center and East, young people are quite\nused to the Russian Пока́! So be prepared to hear                           Займенники — Pronouns\nit often.\n                                                                      In the podcast, we are singing a short song[[[[[[["
+  sha256: fac7907d3a553e2123ef98366c6e9b02e857feeec03471e95adea72b3832f5ce
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0002_w003
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: f7960328d13d1df53f4bd2287a064bc7b9239cde9a1363455d272fcc780dca49
+    section_id: null
+  supports: 'ULP 1-02 lesson notes: formal farewell До побачення, gratitude Дякую, politeness Будь ласка, and informal farewell Бувай.'
+T-046:
+  id: T-046
+  quote: "15\nInspiring resources for learning Ukrainian — UkrainianLessons.com\nBack to Contents\nПриві́т і ласка́во про́симо! Hi and welcome to your very first Ukrainian grammar lesson! We begin with the \nbasics: letters and pronunciation. The Ukrainian alphabet (алфаві́т, алфа́віт or абе́тка) has 33 letters.\n  ї\nА, Бе, Ве, Ге, Ґе…\nAlphabet: printed and handwritten letters\n01\nUkrainian alphabet\nШ ш\nЮ ю\nЩ щ\nЦ ц\nь\nЧ ч\nA а\nУ у\nЇ ї\nЕ е\nО о\nГ г\nЛ л\nЗ з\nС с\nБ б\nФ ф\nЙ й\nЄ є\nП п\nҐ ґ\nМ м\nИ и\nТ т\nВ в\nХ х\nК к\nЖ ж\nР р\nД д\nН н\nІ і\nДруко́вані лі́тери\nPrinted letters\nЯ я\nПи́сані лі́тери\nHandwritten letters\nsha\nju\nshcha\nmjakýj znak\nНа́зви лі́тер\nLetter names\nja\nsh in short\nyou in you\nshch in fresh cherries\ntse\nche\na\nu\nji\ne\no\nhe\nel\nze\nes\nbe\nef\njot\nje\npe\nge\nem\ny (ɪ)\nte\nve\nkha\nka\nzhe\ner\nde\nen\ni\nts in lots\nch in chess\na in start\noo in pool\nyea in yeast\ne in test\no in port\nh in aha! (voiced h)\nl in love\nz in zoo\ns in stop\nb in best\nf in farm\ny in yogurt\nye in yet\np in park\ng in go\nm in mom\nі in bit\nt in ten\nv in van\nh in home\nk in sky \ng in garage\nr in rojo (Spanish)\nd in dog\nn in no\nee in tree\nВимовля́ти як\nPronounce like\nya in yard\n01.1\nУкраї́нський алфа́ві́т\nШ ш\nЮ ю\nЩ щ\nЦ ц\nь\nЧ ч\nА а\nУ у\nЕ е\nО о\nГ г\nЛ л\nЗ з\nС с\nБ б\nФ ф\nЙ й\nЄ є\nП п\nҐ ґ\nМ м\nИ и\nТ т\nВ в\nХ х\nК к\nЖ ж\nР р\nД д\nН н\n  і\nЯ я\nь ― м’яки́й знак (soft sign) ― is a letter without a sound of its own. Its role is to make the consonant before \nit sound soft: день ― [ден′]. You can learn more about soft consonants and the soft sign in    Units 06–07."
+  sha256: e3dfd44f0a7cf44bd1e33c72b35bb3bfdcf4713309c4753faf55d9fe6f8700c1
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0015_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 974a66d129584bfb4e4ffba6915128aa9b737904915cfacf95f2e145f7fbe885
+    section_id: 57159
+  supports: 'OHO adult workbook p. 15: full 33-letter Cyrillic alphabet overview with printed and cursive models and traditional letter names.'
+T-047:
+  id: T-047
+  quote: 'НАВЧАЮСЯ ПРАВИЛЬНО ВІДТВОРЮВАТИ
+
+    ІНТОНАЦІЮ РЕЧЕНЬ
+
+    Часто розповідні речення вимовляються
+
+    з особливим почуттям: із
+
+    захопленням, радістю. У кінці таких
+
+    розповідних речень ставиться
+
+    \ знак оклику ( ! ).
+
+    \ /
+
+    інтоную
+
+    складаю
+
+    17| Прочитай і вивчи напам''ять вірш Лесі Лужецької.
+
+    Як гарно тут! Як любо жить!
+
+    В кінці знак оклику стоїть.
+
+    Окличні речення оці —
+
+    виразні, гарні і дзвінкі!
+
+    Чому такі речення
+
+    є розповідними
+
+    окличними?
+
+    • Випиши виділені речення. Вимов їх з особливим захопленням.
+
+    Учімося, діти, українське слово любити!
+
+    18| Прочитайте вірш Павла Тичини, передаючи голосом
+
+    захоплення красою мови. Поясніть, що означає виділене
+
+    сполучення слів.
+
+    Хай розквітне веселково,
+
+    у невиданій красі,
+
+    наша мова калинова,
+
+    наше сонце у росі! Суханова Аліна, 9 років
+
+    • Складіть розповідне окличне речення зі сполученням
+
+    слів наша мова калинова. Запишіть його. Поясніть
+
+    розділовий знак у кінці речення.
+
+    Питальні речення також можуть вимовлятися
+
+    з особливим почуттям. У кінці таких питальних
+
+    речень ставляться два розділові знаки: знак
+
+    питання і знак оклику ( ? ! ).
+
+    114'
+  sha256: 9e466213a4e70f7a025b7ef73b794859d4956479d3af7a3bd1a01d61731ee3e3
+  source:
+    author: vashulenko
+    chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0112
+    file: 2-klas-ukrmova-vashulenko-2019-1
+    grade: '2'
+    kind: textbook
+    page: 114
+    row_sha256: 70c5a65fadd7f4c09d8c773a8d63c7b18cab3703675a64fcebcf566cd1430ee9
+    section_id: 22112
+  supports: 'Vashulenko 2 klas p. 112-114: statement, question, and exclamation intonation contours.'
+T-048:
+  id: T-048
+  quote: '216
+
+    Inspiring resources for learning Ukrainian — UkrainianLessons.com
+
+    Back to Contents
+
+    Словничок
+
+    Vocabulary
+
+    сіда́ти, недок., to sit down
+
+    Соло́дких снів!, Sweet dreams!
+
+    тра́питися, док., to happen
+
+    хвилюва́тися, недок., to worry
+
+    ще раз, once again
+
+    Бува́й! Бува́йте!, Bye!
+
+    вибача́ти, недок., to forgive
+
+    Віта́ю!, Hello!
+
+    вода́ без га́зу, ж., still water
+
+    Га́рного дня!, Have a nice day!
+
+    дома́шка, ж., homework
+
+    коха́ний, ч., коха́на, ж., (my) love, beloved
+
+    незру́чність, ж., inconvenience
+
+    Па-па!, Bye-bye!
+
+    принести́, док., to bring
+
+    прихо́дити, недок., to come on foot
+
+    ре́шта, ж., change (money)
+
+    Що (в те́бе) ново́го?, What''s up? What''s new?
+
+    Урок 75'
+  sha256: 84ba8de1a22bdace827430eda37749fb96215b4abaf105e8aa5843916398e53d
+  source:
+    author: Anna Ohoiko
+    chunk_id: owned-oho-a1-workbook_f1_p0216_c0001
+    file: owned-oho-a1-workbook
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: b8ab07469541d67870b8c08599aaaeb1bf36a054a88fc59bb2001671bd64035b
+    section_id: 57361
+  supports: 'OHO adult workbook glossary: informal farewells Бувай, Па-па, and greeting Вітаю.'
 V-001:
   channel: Ukrainian Lessons Podcast
   checked:
@@ -2263,6 +2441,34 @@ V-019:
     words: []
   url: https://www.youtube.com/watch?v=yhSAf41LX8I
   use: Pronunciation model for vowel letter Я.
+V-020:
+  channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.ukrainianlessons.com/episode2/
+    http_status: 200
+  id: V-020
+  models:
+    letters: []
+    segment: 05:40–06:15
+    words: []
+  url: https://www.ukrainianlessons.com/episode2/
+  use: Formal farewell До побачення and politeness chunks in ULP 1-02, publisher repeat-after-me excerpt 05:40–06:15.
+V-021:
+  channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.ukrainianlessons.com/episode1/
+    http_status: 200
+  id: V-021
+  models:
+    letters: []
+    segment: 06:10–06:35
+    words: []
+  url: https://www.ukrainianlessons.com/episode1/
+  use: Informal farewells and conversational turns in ULP 1-01, publisher repeat-after-me excerpt 06:10–06:35.
 X-001:
   id: X-001
   items_sample:

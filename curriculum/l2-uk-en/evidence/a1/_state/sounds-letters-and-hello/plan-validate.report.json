@@ -12,13 +12,13 @@
           },
           "workbook": {
             "by_type": {
-              "quiz": 1
+              "match-up": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
-          "quiz",
+          "match-up",
           "watch-and-repeat"
         ],
         "has_workbook": true,
@@ -78,19 +78,21 @@
         "activities": {
           "inline": {
             "by_type": {
+              "match-up": 1,
               "watch-and-repeat": 1
             },
-            "total": 1
+            "total": 2
           },
           "workbook": {
             "by_type": {
-              "odd-one-out": 1
+              "fill-in": 1
             },
             "total": 1
           }
         },
         "distinct_types": [
-          "odd-one-out",
+          "fill-in",
+          "match-up",
           "watch-and-repeat"
         ],
         "has_workbook": true,
@@ -131,15 +133,14 @@
         "group-sort",
         "match-up",
         "observe",
-        "odd-one-out",
         "quiz",
         "watch-and-repeat"
       ],
-      "inline_activities": 5,
-      "largest_workbook_type": "quiz",
+      "inline_activities": 6,
+      "largest_workbook_type": "match-up",
       "largest_workbook_type_share": 0.3333333333333333,
-      "longest_same_type_workbook_run": 1,
-      "longest_same_type_workbook_run_type": "quiz",
+      "longest_same_type_workbook_run": 2,
+      "longest_same_type_workbook_run_type": "match-up",
       "non_recap_lessons": 4,
       "non_recap_lessons_with_workbook": 4,
       "workbook_activities": 6,
@@ -147,7 +148,6 @@
         "fill-in",
         "group-sort",
         "match-up",
-        "odd-one-out",
         "quiz"
       ],
       "workbook_presence_complete": true
@@ -161,13 +161,13 @@
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "0171997bfc45b735b5980727ebaddd1969e5cda4895703bd4c845c7c34c558c3",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "c438b659edab09dcd91b03bd43ab812fcfc6c99c2cd40b30ca31ff08941c110c",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "6aba37953b1ae0598a357720733381968802829bc3f48b5a23fe738407ad0f8d",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "64ea850926312c7c96c26b8d99ebd54deab3dc0a77caea8156ef476a7ef3d612",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "1833ed5eb2bc0c29225955e846baf227ef7625a7778089bb2855af1faa4c6960",
     "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "b716c55def2f736ce0e741821a4fa5d120bd3e6a9293fbcb88f035516f8baa34",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "f960caed212355c15a60a3f5af7cb8be80c13bb336f8471e9d27e9dac280db35",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "05fd88b68ccb9ebd1e41613bc9098373c03920cc7a7f357940065e05f36062e5",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -201,7 +201,7 @@
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 0171997bfc45b735b5980727ebaddd1969e5cda4895703bd4c845c7c34c558c3; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is 6aba37953b1ae0598a357720733381968802829bc3f48b5a23fe738407ad0f8d; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     },
     {
