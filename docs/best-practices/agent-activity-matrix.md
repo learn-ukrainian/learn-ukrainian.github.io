@@ -148,12 +148,12 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 
 **Promote-protocol round 1 result (2026-05-18, #2132):** DeepSeek-pro proposed splitting the reviewer prompt into Phase 1 (deterministic content-word verification: batch verify_words + query_cefr_level + check_russian_shadow + search_heritage) and Phase 2 (dim-by-dim judgment). Bakeoff queued: DeepSeek-pro vs Codex on `a1/my-morning` post-#2128/#2127 merge.
 
-**Review seat harness eligibility (#8517):** retained MCP and recorder helpers
-require attempt-bound Sources evidence for formal review. Dispatch v2 does not
-execute protected bound attempts; its binding options are dry-run-only. A plain
-read-only dispatch does not provide scoped homes or attempt-ledger wiring.
-See `docs/runbooks/formal-review-attempt-isolation.md` for the retained helper
-contracts and the current execution limitation.
+**Review seat harness eligibility (#8517):** formal review needs attempt-bound
+Sources evidence. Dispatch v2 runs a bound attempt (`--review-id`, `--attempt-id`,
+`--review-attempt` with a rendered `--prompt-file`) inside the attempt boundary;
+a plain read-only dispatch provides no scoped home or attempt ledger. Use the
+supported recipe in `docs/runbooks/formal-review-attempt-isolation.md` § Running a
+bound attempt.
 
 ---
 

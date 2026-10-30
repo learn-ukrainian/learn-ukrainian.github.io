@@ -923,6 +923,46 @@ def _declared_pack_path(root: Path, declared: str) -> Path:
     return resolved
 
 
+def _check_review_of_record(
+    report: Report, plan_path: Path, level: str, slug: str, *, review_state_declared_unavailable: bool
+) -> None:
+    """--strict on a promoted plan (#12114): its committed promotion chain, then its review's dispatch binding.
+
+    Only plan-promote writes the pack's sha256 into a plan, after an APPROVE recorded from a bound
+    dispatch, so a plan carrying it must show both. The committed chain (plan-review-status
+    reviewed_promoted) is in the repository and is always checked. The binding is plan-promote's
+    own check (``review_binding``) and reads host-local review state; where that is absent the
+    run fails, unless it declares the state unavailable, which makes it a printed not_checked line.
+    """
+    from scripts.build.fresh import plan_manifest as pm
+    from scripts.build.fresh.review_binding import ReviewStateUnavailable, check_review_binding
+
+    repo_root = evidence_root(plan_path).parents[1]
+    try:
+        status = pm.plan_review_status(level, slug, repo_root=repo_root)
+    except (pm.PlanReviewError, OSError, yaml.YAMLError) as error:
+        status = {"state": "unreadable", "reason": str(error)}
+    if status["state"] != "reviewed_promoted":
+        why = status.get("reason") or "; ".join(
+            f"{path} ({reason})" for path, reason in sorted(status["stale"].items())
+        )
+        _fail(
+            report,
+            codes.PLAN_REVIEW_NOT_PROMOTED,
+            f"the plan carries its pack's sha256, but plan-review-status is {status['state']}: {why}",
+        )
+    try:
+        check_review_binding(repo_root, level, slug)
+    except ReviewStateUnavailable as error:
+        message = error.message
+        if review_state_declared_unavailable:
+            message += " (declared by --not-checked-when-unavailable dispatch_records)"
+        outcome = Outcome(codes.REVIEW_STATE_UNAVAILABLE, message)
+        (report.not_checked if review_state_declared_unavailable else report.failures).append(outcome)
+    except pm.PlanReviewError as error:
+        _fail(report, codes.REVIEW_UNBOUND, error.message)
+
+
 def validate_plan(
     level: str,
     slug: str,
@@ -938,6 +978,7 @@ def validate_plan(
     provisional_pack: bool = False,
     plan_bytes: bytes | None = None,
     vesum_declared_unavailable: bool = False,
+    review_state_declared_unavailable: bool = False,
 ) -> Report:
     """Validate one module plan: the complete §6 gate of §2/§2a.
 
@@ -959,7 +1000,12 @@ def validate_plan(
     vesum_declared_unavailable declares an environment without VESUM (the CI
     runner): a gate whose VESUM lookup is undecided stays a not_checked
     vesum_unavailable line under strict too, instead of failing; every other
-    strict failure is unchanged. Never raises
+    strict failure is unchanged. strict on a promoted plan read from disk (no
+    plan_bytes: plan-promote checks the binding itself and then writes the chain)
+    also requires its committed promotion chain and its review's dispatch binding
+    (#12114); review_state_declared_unavailable declares an environment without
+    the host-local review state (CI), where the binding stays a not_checked
+    review_state_unavailable line instead of failing. Never raises
     for plan content problems — they come back as failures in the Report. The
     report's ``inputs`` records the hash of every file the run read.
     """
@@ -982,6 +1028,7 @@ def validate_plan(
             provisional_pack=provisional_pack,
             plan_bytes=plan_bytes,
             vesum_declared_unavailable=vesum_declared_unavailable,
+            review_state_declared_unavailable=review_state_declared_unavailable,
         )
     finally:
         # Keep exact inputs consumed by individual gates (C29's lexical reference/config).
@@ -1065,6 +1112,7 @@ def _validate_plan_run(
     provisional_pack: bool,
     plan_bytes: bytes | None,
     vesum_declared_unavailable: bool,
+    review_state_declared_unavailable: bool,
 ) -> Report:
     _always_not_checked(report)
     try:
@@ -1156,6 +1204,10 @@ def _validate_plan_run(
                 _fail(report, codes.WORDS_LOCK_MISMATCH, f"{words_path} bytes disagree with {words_path}.lock (rule 3)")
         except PlanError as error:
             _fail(report, error.code, error.message)
+        if strict and plan_bytes is None and not provisional_pack and pack_digest == plan["evidence_ref"]["sha256"]:
+            _check_review_of_record(
+                report, plan_path, level, slug, review_state_declared_unavailable=review_state_declared_unavailable
+            )
 
     _check_lesson_shape(report, plan)
     _check_inventory_and_order(report, plan)
@@ -1241,12 +1293,14 @@ def validate_level(
     strict: bool = False,
     write_scope: bool = False,
     vesum_declared_unavailable: bool = False,
+    review_state_declared_unavailable: bool = False,
 ) -> list[Report]:
     """Whole-level mode: every plan of the level, in position order (§6).
 
     level_dir overrides the level directory (tests only; production runs use
     the conventional curriculum/l2-uk-en/lesson-plans/<level>/).
-    vesum_declared_unavailable is validate_plan's, for every plan.
+    vesum_declared_unavailable and review_state_declared_unavailable are
+    validate_plan's, for every plan.
     """
     level_dir = level_dir or REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}"
     plans = load_level_plans(level_dir)
@@ -1259,6 +1313,7 @@ def validate_level(
             strict=strict,
             write_scope=write_scope,
             vesum_declared_unavailable=vesum_declared_unavailable,
+            review_state_declared_unavailable=review_state_declared_unavailable,
         )
         for _position, (plan_slug, _plan, path) in sorted(plans.by_position.items())
     ]
@@ -1331,6 +1386,16 @@ def main(argv: list[str] | None = None) -> int:
             "not fail the run. Every other --strict failure still fails. plan-promote never\n"
             "declares it, so a plan is promoted only with every VESUM lookup decided.\n"
             "\n"
+            "Review of record (#12114): --strict on a promoted plan (evidence_ref.sha256 equal to\n"
+            "the pack's) requires plan-review-status reviewed_promoted (plan_review_not_promoted)\n"
+            "and runs plan-promote's dispatch-binding check: the review is the recorder's\n"
+            "projection of a done full-access dispatch with its saved result, saved return and\n"
+            "ok Sources receipts (review_unbound). That check reads host-local review state\n"
+            "(findings database, dispatch records, Sources ledger); where it is absent the run\n"
+            "fails ('review_state_unavailable') unless --not-checked-when-unavailable\n"
+            "dispatch_records declares it (CI): then it is a printed not_checked line, and the\n"
+            "committed chain is still checked.\n"
+            "\n"
             "Plan review: --provisional-pack validates a plan whose evidence_ref.sha256 is not\n"
             "the pack's yet (the pack builder's provisional pack, before plan-promote). Every\n"
             "rule runs against the pack at evidence_ref.path; the single change is that the\n"
@@ -1374,7 +1439,8 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.curriculum.validate a1 sounds-letters-and-hello\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 sounds-letters-and-hello --json\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 --all --strict\n"
-            "  .venv/bin/python -m scripts.curriculum.validate a1 --all --strict --not-checked-when-unavailable vesum   (CI)\n"
+            "  .venv/bin/python -m scripts.curriculum.validate a1 --all --strict --not-checked-when-unavailable vesum \\\n"
+            "      --not-checked-when-unavailable dispatch_records   (CI)\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --allow-missing-prior\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --write-scope\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --provisional-pack --write-report\n"
@@ -1394,11 +1460,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--not-checked-when-unavailable",
         action="append",
-        choices=["vesum"],
+        choices=["vesum", "dispatch_records"],
         default=[],
         metavar="SOURCE",
-        help="declare an environment without SOURCE (only 'vesum'): a gate whose lookup is undecided because "
-        "the source cannot be read stays a printed not_checked line under --strict instead of failing (CI)",
+        help="declare an environment without SOURCE ('vesum' or 'dispatch_records'): a check left undecided "
+        "because the source cannot be read stays a printed not_checked line under --strict instead of failing (CI)",
     )
     parser.add_argument(
         "--allow-missing-prior",
@@ -1473,6 +1539,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("a slug is required unless --all is given")
 
     vesum_declared_unavailable = "vesum" in args.not_checked_when_unavailable
+    review_state_declared_unavailable = "dispatch_records" in args.not_checked_when_unavailable
     if args.all:
         level_dir = args.level_dir or REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{args.level}"
         try:
@@ -1487,6 +1554,7 @@ def main(argv: list[str] | None = None) -> int:
             strict=args.strict,
             write_scope=args.write_scope,
             vesum_declared_unavailable=vesum_declared_unavailable,
+            review_state_declared_unavailable=review_state_declared_unavailable,
         )
         if args.json:
             payload = {
@@ -1510,9 +1578,9 @@ def main(argv: list[str] | None = None) -> int:
                 if report.failures:
                     summary += f" ({len(report.failures)} failures)"
                 print(f"{report.level}/{report.slug}: {summary}")
-                if report.status == "pass":  # a passing plan's report is not printed; its undecided gates are
+                if report.status == "pass":  # a passing plan's report is not printed; its undecided checks are
                     for outcome in report.not_checked:
-                        if outcome.code == codes.VESUM_UNAVAILABLE:
+                        if outcome.code in (codes.VESUM_UNAVAILABLE, codes.REVIEW_STATE_UNAVAILABLE):
                             print(f"{report.level}/{report.slug}: NOT_CHECKED {outcome.render()}")
             for report in reports:
                 if report.status != "pass":
@@ -1536,6 +1604,7 @@ def main(argv: list[str] | None = None) -> int:
         write_scope=args.write_scope,
         provisional_pack=args.provisional_pack,
         vesum_declared_unavailable=vesum_declared_unavailable,
+        review_state_declared_unavailable=review_state_declared_unavailable,
     )
     if args.write_report:
         try:

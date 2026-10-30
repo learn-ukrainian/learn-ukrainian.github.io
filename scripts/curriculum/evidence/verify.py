@@ -21,6 +21,7 @@ if __package__ in (None, ""):  # run as a file: put the repository root on sys.p
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
     __package__ = "scripts.curriculum.evidence"
 
+from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.validate import codes as plan_codes
 from scripts.curriculum.validate.loader import PlanError, read_plan_text, retirement_record
 from scripts.verification import stress
@@ -759,12 +760,16 @@ def verify_pack(
     strict: bool = False,
     require_plan: bool = True,
     report: Callable[[str], None] | None = None,
+    sense_proof_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Verify integrity of a module evidence pack against sources, locks, and State Standard.
 
     The provisional lock is taken before the plan exists (fresh-build program §5 step 2a), so
     ``require_plan=False`` reports an absent plan's planned quote use as not_checked. Plan
     review keeps the default and fails closed on it; an existing unreadable plan always fails.
+    A cited gloss whose sense binding CI cannot check is checked against its host-local proof
+    when one is present (``sense_bindings.LocalProof``; ``sense_proof_dir``, else
+    LU_SENSE_PROOF_DIR, and the dispatch task store); with none it stays a CI notice warning.
     """
     plans_base = (
         Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
@@ -970,11 +975,28 @@ def verify_pack(
                     if not isinstance(store, dict):
                         raise ValueError("word store must be a mapping")
                     context = sense_bindings.Context.read(level, evidence_base)
+                    proof = sense_bindings.LocalProof(
+                        level,
+                        evidence_base,
+                        context.inventory,
+                        sense_bindings.LocalProof.directory_from(sense_proof_dir),
+                        tasks_dir(),
+                    )
+                    words_by_id = {word.get("id"): word for word in store.get("words", []) if isinstance(word, dict)}
                     for wid in sorted(cited_gloss_ids(plan_doc)):
-                        unchecked = sense_bindings.local_proof(context.entries.get(wid, {}))
-                        if unchecked:
+                        binding = context.entries.get(wid, {})
+                        unchecked = sense_bindings.local_proof(binding)
+                        if not unchecked:
+                            continue
+                        proven = proof.check(words_by_id.get(wid), binding, sources_instance)
+                        if proven is None:  # no local proof here (CI): the notice stays, never a pass
                             warnings.append(f"{level}/{slug} {wid}: {sense_bindings.CI_NOTICE}")
                             not_checked.append(f"{wid}:{unchecked}")
+                        elif not proven:
+                            errors.append(
+                                f"{codes.SENSE_PROOF_INVALID}: {level}/{slug} {wid}: the local {unchecked} proof "
+                                "is present but does not verify"
+                            )
                     errors.extend(
                         verify_plan_glosses(
                             plan_doc,
@@ -1176,7 +1198,14 @@ def main_pack(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet\n"
             "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet --strict\n"
             "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet --offline\n"
-            "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet --json\n\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet --json\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet --sense-proof-dir PRIVATE_DIR\n\n"
+            "Sense bindings:\n"
+            "  A cited gloss whose binding CI cannot check (private commitment, review provenance) is\n"
+            "  checked against its host-local proof when present: the level receipt, key and private\n"
+            f"  meanings in --sense-proof-dir (else ${sense_bindings.PROOF_DIR_ENV}), or the review dispatch\n"
+            "  in the task store. Absent: a CI notice warning, never a pass. Present but not verifying:\n"
+            f"  {codes.SENSE_PROOF_INVALID}. Messages never name the directory or print private bytes.\n\n"
             "Outputs:\n"
             "  None (read-only verification check)\n\n"
             "Exit codes:\n"
@@ -1199,6 +1228,13 @@ def main_pack(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--vesum-db", type=Path, default=None, help="Override VESUM database path")
     parser.add_argument("--standard-path", type=Path, default=None, help="Override State Standard file path")
+    parser.add_argument(
+        "--sense-proof-dir",
+        type=Path,
+        default=None,
+        help=f"Host-local sense-binding proof directory (default: ${sense_bindings.PROOF_DIR_ENV}); "
+        "absent keeps the CI notice",
+    )
 
     args = parser.parse_args(argv)
 
@@ -1224,6 +1260,7 @@ def main_pack(argv: list[str] | None = None) -> int:
             strict=args.strict,
             require_plan=False,
             report=report,
+            sense_proof_dir=args.sense_proof_dir,
         )
     except Exception as exc:
         if args.json:
