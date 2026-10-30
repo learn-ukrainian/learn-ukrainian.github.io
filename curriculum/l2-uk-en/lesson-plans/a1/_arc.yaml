@@ -2,7 +2,7 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: 6059900baab73cbf142b65c83e7ba828538b48528d4a05f978050b20d9c33b10
+  sha256: 03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d
 est_lessons_total: 162
 positions:
 - position: 1
@@ -201,7 +201,7 @@ positions:
 - position: 11
   slug: how-many
   est_lessons: 4
-  job: Understand and say numbers for prices, age, phone numbers
+  job: Understand and say fixed number phrases for prices, age, phone numbers
   inventory_text: null
   phase: A1.2
   skills_text: Li (numbers by ear)
@@ -245,7 +245,7 @@ positions:
 - position: 15
   slug: what-i-like
   est_lessons: 3
-  job: 'Say what you like doing: infinitive, люблю + infinitive'
+  job: 'Say what you like doing: infinitive, люблю + infinitive and direct object (люблю Україну)'
   inventory_text: null
   phase: A1.3
   skills_text: —
@@ -254,7 +254,7 @@ positions:
 - position: 16
   slug: verbs-group-one
   est_lessons: 3
-  job: Conjugate читати, працювати, іти, їхати in the present
+  job: Conjugate читати, працювати, жити, знати, іти, їхати in the present; transitive direct object with читати
   inventory_text: null
   phase: A1.3
   skills_text: — (`:704-708`)
@@ -319,7 +319,7 @@ positions:
 - position: 22
   slug: what-time
   est_lessons: 3
-  job: Ask and tell the time using ordinal forms in all three genders, including first, second and third; reuse date phrases at 23
+  job: Master systematic cardinal numerals (0–1000) and tell the time using ordinal forms in all three genders; reuse date phrases at 23
   inventory_text: null
   phase: A1.4
   skills_text: Li, R (timetable) (`:652-654`, `:664-665`)
@@ -423,22 +423,22 @@ positions:
 - position: 29
   slug: where-is-it
   est_lessons: 4
-  job: 'Say where something is: locative nouns and agreeing hard/soft-group adjectives in all three genders'
+  job: 'Express destination and direction: accusative case with в, у, на and agreeing hard/soft-group adjectives in all three genders'
   inventory_text: null
   phase: A1.5
-  skills_text: — (`:610-630`, `:639-650`, `:690-692`)
+  skills_text: — (`:610-630`, `:639-650`, `:683-684`)
   skills: []
   standard_line_refs:
   - - 610
     - 630
   - - 639
     - 650
-  - - 690
-    - 692
+  - - 683
+    - 684
 - position: 30
   slug: my-city
   est_lessons: 3
-  job: Name city institutions, worship buildings, public facilities and streets; say what is where
+  job: Name city institutions, worship buildings, public facilities and streets; directional motion and destinations in the city
   inventory_text: null
   phase: A1.5
   skills_text: Li, S, R, W (city signs/map, short city description and captions; `:372-376`, `:496-503`) (`:496-498`, `:499-500`, `:503`)
@@ -461,7 +461,7 @@ positions:
 - position: 31
   slug: where-to
   est_lessons: 3
-  job: 'Say where you are going: accusative direction with в, у, на and agreeing hard/soft-group adjectives in all three genders; де vs куди'
+  job: 'Say where you are going: motion verbs (іти, їхати) with в, у, на and accusative direction'
   inventory_text: null
   phase: A1.5
   skills_text: — (`:610-630`, `:639-650`, `:683-684`)
@@ -551,7 +551,7 @@ positions:
 - position: 37
   slug: i-eat-i-drink
   est_lessons: 3
-  job: 'Say what you eat and drink: accusative inanimate nouns and agreeing hard/soft-group adjectives in all three genders'
+  job: 'Say what you eat and drink: food and beverage choices, ordering language, and transitive direct objects'
   inventory_text: null
   phase: A1.6
   skills_text: — (`:610-630`, `:639-650`, `:680`)
@@ -566,10 +566,10 @@ positions:
 - position: 38
   slug: at-the-cafe
   est_lessons: 3
-  job: Order and pay in a café; request dishes, drinks, crockery and cutlery
+  job: Order and pay in a café; locative case of place with в, у, на in dining environments (у кафе, в ресторані)
   inventory_text: null
   phase: A1.6
-  skills_text: Li, S, R, W (guest/customer exchanges and short notes; extract menu/bill information; `:310-311`, `:379-388`) (`:536-539`, `:272-275`)
+  skills_text: Li, S, R, W (guest/customer exchanges and short notes; extract menu/bill information; `:310-311`, `:379-388`) (`:536-539`, `:272-275`, `:690-692`)
   skills:
   - Li
   - S
@@ -584,13 +584,15 @@ positions:
     - 539
   - - 272
     - 275
+  - - 690
+    - 692
 - position: 39
   slug: shopping
   est_lessons: 3
-  job: Ask prices and buy food, toiletries including шампунь, and stationery; use weight, volume and money
+  job: Ask prices and buy food, toiletries including шампунь, and stationery; locative of place in shops and markets (у магазині, на базарі)
   inventory_text: null
   phase: A1.6
-  skills_text: Li, S, R, W (customer roles; seller in speaking; price tags; `:531-533`; illustrated advertisements, promotions and product-choice instructions; `:261-266`, `:318-321`, `:379-388`, `:447-448`) (`:528-534`)
+  skills_text: Li, S, R, W (customer roles; seller in speaking; price tags; `:531-533`; illustrated advertisements, promotions and product-choice instructions; `:261-266`, `:318-321`, `:379-388`, `:447-448`) (`:528-534`, `:690-692`)
   skills:
   - Li
   - S
@@ -609,21 +611,25 @@ positions:
     - 448
   - - 528
     - 534
+  - - 690
+    - 692
 - position: 40
   slug: people-around-me
   est_lessons: 3
-  job: 'Talk about people you see, know and think about: accusative animate nouns and agreeing hard/soft-group adjectives in all three genders; мене, тебе, нас, вас; `про` + accusative'
+  job: 'Talk about people you see and know: accusative animate nouns and personal pronouns (мене, тебе, нас, вас); locative of place in personal settings (на роботі, у парку) and agreeing adjectives; `про` + accusative'
   inventory_text: null
   phase: A1.6
-  skills_text: — (`:610-650`, `:656-657`, `:687-688`)
+  skills_text: — (`:610-650`, `:656-657`, `:678-688`, `:690-692`)
   skills: []
   standard_line_refs:
   - - 610
     - 650
   - - 656
     - 657
-  - - 687
+  - - 678
     - 688
+  - - 690
+    - 692
 - position: 41
   slug: checkpoint-food-shopping
   est_lessons: 2
