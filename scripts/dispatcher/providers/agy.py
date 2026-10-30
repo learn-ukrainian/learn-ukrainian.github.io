@@ -29,7 +29,11 @@ def _stderr_capacity(stderr: str) -> bool:
     Prose on stderr is never read: only this structured diagnostic classifies.
     """
     payloads = []
-    for line in stderr.splitlines():
+    # Newline only. str.splitlines() also breaks on U+2028/U+2029/U+0085, which
+    # can sit inside the JSON this diagnostic parses (scripts JSONL guard).
+    for line in stderr.split("\n"):
+        if line.endswith("\r"):
+            line = line[:-1]
         if not line.startswith(_AGY_ERROR_PREFIX):
             continue
         try:
