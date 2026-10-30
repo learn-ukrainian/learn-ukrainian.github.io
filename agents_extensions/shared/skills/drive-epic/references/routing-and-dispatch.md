@@ -11,6 +11,15 @@ name. Respect the live caps (in-flight ceilings), the language-lane restriction
 per the served rules), folk carve-outs (cross-family only), and the judge-seat rules.
 On limit: note the substitution and reroute per the fallback table — never block on one lane.
 
+Every agent that commits to a branch adds its model family to the branch's author
+families; the cross-family reviewer must be outside all of them
+(`scripts/dispatcher/checks.py`, `check_branch_author_families`). The Ukrainian
+review profile (`agents_extensions/shared/skills/review-loop/references/ukrainian.md`)
+seats only Gemini and Sol, so adding author families can leave no eligible reviewer.
+A takeover successor or helper on a Ukrainian content branch must therefore stay
+with the family already authoring it, or restart the branch from main with one
+author family.
+
 ### Live capacity (binding every implement dispatch and CF settle — operator 2026-08-12 / #4707)
 
 Before picking a seat, read fresh tool output from all of these:
