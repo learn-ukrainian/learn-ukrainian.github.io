@@ -1730,14 +1730,19 @@ def _shell_script(args: list[str]) -> list[str]:
     args = _raw_without_redirects(args)
 
     def unreadable(index: int) -> bool:
-        """Whether Bash may split, drop or reinterpret a word before the script."""
+        """Whether Bash may split, drop or reinterpret a word before the script.
+
+        Only known-good forms are readable: a single-quoted word, a plain word,
+        or a double-quoted word, which stays one argument unless it expands `@`.
+        """
         word = args[index]
-        if re.fullmatch(r"'[^']*'", word):
+        expands = bool(re.search(r"[$`\\]|__GUARD_SUBSTITUTION_", word))
+        if re.fullmatch(r"'[^']*'", word) or (re.fullmatch(r"[\w./:=%,+~-]+", word) and not expands):
             return False
         if re.fullmatch(r'"[^"]*"', word):
-            # One argument whose value may be unknown: harmless only as the last word.
-            return index + 1 < len(args) and bool(re.search(r"[\\$`]|__GUARD_SUBSTITUTION_", word))
-        return bool(re.search(r"[\\'\"$`*?\[{]|__GUARD_SUBSTITUTION_", word))
+            # An unknown value is harmless only as the last word.
+            return expands and ("@" in word or index + 1 < len(args))
+        return True
 
     i = 0
     while i < len(args):
