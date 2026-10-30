@@ -1731,6 +1731,12 @@ def _shell_script(args: list[str]) -> list[str]:
     i = 0
     while i < len(args):
         option = _strip_quotes(args[i])
+        if re.search(r"[\\'\"$`*?\[{]|__GUARD_SUBSTITUTION_", option):
+            # An escaped, partly quoted or expanded word (`\+x`, `$FLAGS`) may still become
+            # an option; with more words after it, the script is unreadable.
+            if i + 1 < len(args):
+                return ["__UNDECIDABLE_SECRET_COMMAND__"]
+            break
         if option in {"-o", "-O", "+O", "--rcfile", "--init-file"}:
             i += 2
             continue
