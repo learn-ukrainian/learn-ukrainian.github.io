@@ -66,6 +66,9 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # or launching another program, and absent from the table. All else is Consider.
 # grep -c TOKEN .env and cp .env backup remain conservative denials even though
 # those operations do not print values.
+# Process-kill facts are collected per invocation without data flow, so a
+# full-match pgrep beside any nonliteral kill is refused. eval, scripts fed to
+# a shell on stdin and abbreviated long options are not modeled.
 
 from __future__ import annotations
 
@@ -595,6 +598,63 @@ def _pipelines(command: str) -> list[list[list[str]]]:
     return pipelines
 
 
+# Wrapper: (short options taking a value, long options taking a value,
+# short and long options that only look a command up and never run it).
+_WRAPPER_OPTIONS = {
+    "sudo": (
+        "CDghpRrtTUu",
+        {
+            "--chdir",
+            "--chroot",
+            "--close-from",
+            "--command-timeout",
+            "--group",
+            "--host",
+            "--other-user",
+            "--prompt",
+            "--role",
+            "--type",
+            "--user",
+        },
+        {"-e", "-K", "-l", "-V", "-v", "--edit", "--list", "--remove-timestamp", "--validate", "--version"},
+    ),
+    "exec": ("a", set(), set()),
+    "time": ("fo", {"--format", "--output"}, set()),
+    "nice": ("n", {"--adjustment"}, set()),
+    "stdbuf": ("ioe", {"--input", "--output", "--error"}, set()),
+    "command": ("", set(), {"-v", "-V"}),
+    "nohup": ("", set(), set()),
+    "builtin": ("", set(), set()),
+}
+
+
+def _after_wrapper_options(seg: list[str], i: int, wrapper: str) -> int:
+    """Return the index after a wrapper's own options, or -1 for a lookup."""
+    value_letters, value_longs, lookups = _WRAPPER_OPTIONS[wrapper]
+    while i < len(seg):
+        word = _strip_quotes(seg[i])
+        if word == "--":
+            return i + 1
+        if not word.startswith("-") or word == "-":
+            return i
+        i += 1
+        if word.startswith("--"):
+            name = word.split("=", 1)[0]
+            if name in lookups:
+                return -1
+            if name in value_longs and "=" not in word:
+                i += 1
+            continue
+        for index, letter in enumerate(word[1:], 1):
+            if f"-{letter}" in lookups:
+                return -1
+            if letter in value_letters:
+                if index == len(word) - 1:
+                    i += 1
+                break
+    return i
+
+
 def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
     """Return `(command, raw_args, index)` after simple wrappers/assignments."""
     i = 0
@@ -639,26 +699,16 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
             i += skip
             continue
         wrapper = _strip_quotes(seg[i]).rsplit("/", 1)[-1]
-        if wrapper in {"sudo", "time", "nohup", "exec", "builtin", "command"}:
-            i += 1
-            if wrapper == "command":
-                while i < len(seg) and _strip_quotes(seg[i]) in {"-p", "--"}:
-                    i += 1
+        if wrapper in _WRAPPER_OPTIONS:
+            i = _after_wrapper_options(seg, i + 1, wrapper)
+            if i < 0:
+                return None
             continue
-        if wrapper in {"nice", "timeout", "stdbuf"}:
+        if wrapper == "timeout":
             i += 1
-            if wrapper == "nice":
-                if i < len(seg) and _strip_quotes(seg[i]) == "-n":
-                    i += 2
-                elif i < len(seg) and re.fullmatch(r"-\d+", _strip_quotes(seg[i])):
-                    i += 1
-            elif wrapper == "timeout":
-                while i < len(seg) and _strip_quotes(seg[i]).startswith("-"):
-                    i += 2 if _strip_quotes(seg[i]) in {"-s", "--signal", "-k", "--kill-after"} else 1
-                i += 1  # duration
-            else:
-                while i < len(seg) and re.fullmatch(r"-[ioe](?:\d+)?", _strip_quotes(seg[i])):
-                    i += 1
+            while i < len(seg) and _strip_quotes(seg[i]).startswith("-"):
+                i += 2 if _strip_quotes(seg[i]) in {"-s", "--signal", "-k", "--kill-after"} else 1
+            i += 1  # duration
             continue
         if wrapper == "env":
             j = i + 1
@@ -1667,7 +1717,6 @@ def _hide_substitutions(command: str) -> tuple[str, dict[str, tuple[str, str]]]:
 # procps pgrep/pkill short options whose value follows the letter or the next word.
 _PROCESS_VALUE_OPTIONS = set("dgGPstuUFOrq")
 _PROCESS_SHELLS = {"bash", "sh", "dash", "zsh", "ksh"}
-_PROCESS_COMMANDS = {"pkill", "pgrep", "kill", "xargs", *_PROCESS_SHELLS}
 _XARGS_VALUE_OPTIONS = {
     "-a",
     "-d",
@@ -1751,20 +1800,10 @@ def _xargs_target(args: list[str]) -> list[str]:
     return []
 
 
-def _process_command_at(segment: list[str]) -> tuple[str, list[str], int] | None:
-    found = _command_at(segment)
-    if found is None or not found[0].startswith("-"):
-        return found
-    # A wrapper option (sudo -n, nice --adjustment=5, exec -a name) hid the
-    # command; resume at the first process-relevant word after it.
-    for index, word in enumerate(found[1]):
-        if _strip_quotes(word).rsplit("/", 1)[-1] in _PROCESS_COMMANDS:
-            return _command_at(found[1][index:])
-    return None
-
-
 def _segment_process_facts(segment: list[str], depth: int, *, fed: bool = False) -> set[str]:
-    found = _process_command_at(segment)
+    if depth >= 12:
+        return {"limit"}
+    found = _command_at(segment)
     if found is None:
         return set()
     cmd, args, _ = found
@@ -1789,12 +1828,15 @@ def _process_facts(command: str, *, depth: int = 0) -> set[str]:
 
     Facts are gathered from every statement, substitution and nested shell
     script, ignoring pipes, loops, groups and assignments between them, so a
-    selection reaches its kill however the command routes the PIDs.
+    selection reaches its kill however the command routes the PIDs. A part
+    that cannot be read adds the "limit" fact and keeps the facts already found.
     """
     if depth >= 12:
-        # Keep the existing parse-limit handling; the secret scan refuses it.
-        raise ShellPreprocessLimit("process-kill scan reached its depth limit")
-    executable, substitutions = _hide_substitutions(preprocess_shell_command(command))
+        return {"limit"}
+    try:
+        executable, substitutions = _hide_substitutions(preprocess_shell_command(command))
+    except ShellPreprocessLimit:
+        return {"limit"}
     facts: set[str] = set()
     for _, body in substitutions.values():
         facts |= _process_facts(body, depth=depth + 1)
@@ -1804,8 +1846,7 @@ def _process_facts(command: str, *, depth: int = 0) -> set[str]:
     return facts
 
 
-def _process_kill_refused(command: str) -> bool:
-    facts = _process_facts(command)
+def _process_kill_refused(facts: set[str]) -> bool:
     return "pkill" in facts or {"pgrep", "kill"} <= facts
 
 
@@ -1912,16 +1953,15 @@ def _main(argv: list[str] | None = None) -> int:
     if not command:
         return 0
 
-    try:
-        refused = _process_kill_refused(command)
-    except ShellPreprocessLimit:
-        # The secret scan below reports the same parse limit.
-        refused = False
-    if refused:
+    process_facts = _process_facts(command)
+    if _process_kill_refused(process_facts):
         sys.stderr.write(PROCESS_KILL_MESSAGE)
         return 2
     if override:
         return 0
+    if "limit" in process_facts:
+        sys.stderr.write(_block_msg("nested shell command could not be parsed safely"))
+        return 2
 
     try:
         reason = _scan_command(command, set())
