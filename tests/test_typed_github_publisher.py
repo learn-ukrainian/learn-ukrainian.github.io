@@ -892,6 +892,12 @@ def test_checker_exception_is_typed_and_never_sends(monkeypatch, verb, selector)
     assert TOKEN not in str(error.value)
 
 
+def test_issue_create_refuses_unreadable_acceptance_criterion_before_publishing(synthetic_opsec):
+    body = "## Acceptance\n\n- [ ] **AC-01**: the lifecycle reads a dash, not a colon\n"
+    with pytest.raises(gate.PublishBlocked, match="ACCEPTANCE_CRITERIA_REFUSED: line 3"):
+        pub.publish("issue-create", repo="unit/public", title="clean", body=body, runner=lambda *a, **k: pytest.fail("send"))
+
+
 def test_scanned_label_list_is_frozen(synthetic_opsec, monkeypatch):
     labels = ["unit"]
     original = gate.check_texts
