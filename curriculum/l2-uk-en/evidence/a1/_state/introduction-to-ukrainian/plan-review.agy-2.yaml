@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-8425d-introduction-to-ukrainian"
+  attempt_id: "agy-2"
+  manifest_sha256: "14aabc087344cade38d05886be72e1a55c01ff6d4ae481288b5a584195c34029"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gemini-3.8-flash-high"
+  harness: "agy"
+  family: "google"
+  prompt_sha256: "74021baa5d9f6ef56532a7eb38e520e1a6f9359c56bdf5e1e43fce49cb3c17f1"
+checks:
+  closing_shape: clean # Dedicated recap lesson 2 (kind: recap) implements shape (a); closing shape (b) is neither needed nor used
+  title_describes_job: clean # Title "Українська мова" and subtitle accurately describe language orientation and study routine planning; every prose sentence is strictly unilingual with zero language mixing
+  title_quantities: clean # No inventory noun quantities appear in titles or subtitles; fully aligned with zero inventory in scope sidecar
+  quoted_forms: clean # inspect_word/verify_stress/query_sum20: 'українська' (CLEAN, rr-08d55d380a1b3ebd08c3; stress ok: украї́нська, rr-41bf59713fe72c82b70f), 'мова' (CLEAN, rr-4a2e63c946f2171f38de; stress ok: мо́ва, rr-95d23629a53686f55b3e; СУМ-20 id 51912, rr-af45a67a706675971a60), 'мій' (CLEAN, rr-7709ce0b3fc42e1a314b), 'план' (CLEAN, rr-e12f7e4b7809109307c8; СУМ-20 sense 2, rr-53c1b19218454e6b3701), 'навчання' (CLEAN, rr-67cd45a9a6ad7f32fc08; stress ok: навча́ння, rr-f10df316290036384915; СУМ-20, rr-b318d3bf6ee152b8c297)
+  sequencing: clean # Fully reachable from prior state (cumulative 0); theory-then-practice progression across steps s1-s3; sound vs letter distinction established before alphabet video; acquired sound-letter decoding correctly deferred to position 2
+  sizing: clean # Adequately sized for ~45 min total learner engagement across 1 teach lesson (conceptual orientation with 5 activities) and 1 practical recap workshop lesson (personalizing a study plan)
+  inventory: clean # Zero core, incidental, or recycled vocabulary and 0 letters/grammar introduced; strictly preserves invariant D4 and revision r3.1 (#10105) for explicit a1-orientation
+  activities: clean # Workbook rotates between match-up (a4) and odd-one-out (a5) exercising distinct task operations (pairing vs discriminating); adheres to R-19; practical recap task personal-study-routine satisfies #10105 with clear English context/instruction and observable criteria; mapped v1 totals absent (no v1 counterpart)
+  evidence_fit: clean # search_text: T-001 (Haluzynska p. 5, rr-d1fa07b92233614cdade, uni-ukrmova-prof-haluzynska-2006_s0007), T-002 (Haluzynska p. 6, rr-c27d974b55e142996b75, uni-ukrmova-prof-haluzynska-2006_s0009), T-003 (Masenko p. 18, rr-0d1d1b0fd395695bfb35, uni-ukrmova-sociolinguistics-masenko-2010_s0030), T-004/T-005/X-001 (Zabolotnyi 5-klas p. 86, rr-3da35d9b838fccd9fe1f, 5-klas-ukrmova-zabolotnyi-2023_s0062)
+  standard_and_ulp: clean # Position 1 owes no Standard line refs (English orientation); acquired literacy and communicative inventory scheduled starting from position 2
+findings: []
