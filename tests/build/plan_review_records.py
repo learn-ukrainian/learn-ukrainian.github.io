@@ -35,10 +35,14 @@ def record_plan_review(
     attempt_id: str = "attempt-1",
     review_id: str | None = None,
     seat: tuple[str, str] = SEAT,
+    tasks: Path | None = None,
 ) -> record.Outcome:
-    """Record one bound full-access plan attempt of manifest ``digest``; returns the recorder's outcome."""
+    """Record one bound full-access plan attempt of manifest ``digest``; returns the recorder's outcome.
+
+    ``tasks`` is the dispatch task store the attempt is recorded from (default: the session's).
+    """
     root = Path(root)
-    tasks = tasks_dir()
+    tasks = Path(tasks) if tasks is not None else tasks_dir()
     review_id = review_id or f"plan-{verdict.lower()}-{digest[:16]}"
     ledger = tasks.parent / "review-receipts" / review_id / f"{attempt_id}.jsonl"
     ledger.parent.mkdir(parents=True, exist_ok=True)

@@ -56,7 +56,6 @@ except ModuleNotFoundError as exc:
         raise
     from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
 
-from scripts.agent_runtime import review_mcp
 from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh.cli import main as fresh_cli
@@ -93,7 +92,6 @@ from tests.review.test_record import LEVEL, PROSE, SLUG, World, finding, unsuppo
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PRIMARY = resolve_repo_root(Path(__file__), 2)  # batch_state lives here, never in a worktree copy
 # where a receipt-recording seat writes its ledger: prepare_review_attempt anchors it to the primary checkout
-RECEIPTS_ROOT = resolve_repo_root(Path(review_mcp.__file__), 2) / "batch_state" / "review-receipts"
 PYTHON = project_interpreter()
 STATE_NAME = "integration-state.json"
 BUDGET_TERMINAL = "budget_terminal"  # the named refusal of a review past a terminal budget (#8774), pinned by name
@@ -486,13 +484,16 @@ class ModuleWorld(World):
                 review_id="review-plan",
                 attempt_id="attempt-plan",
                 seat=("claude", "claude-sonnet-5-5"),
+                tasks=self.tasks_dir,
             )
         except AssertionError as error:
             raise RuntimeError(f"the crafted plan review was not recorded: {error}") from error
         return self.promote()
 
     def promote(self) -> dict[str, Any]:
-        promoted = run_main(fresh_cli, ["plan-promote", LEVEL, SLUG, "--repo-root", str(self.root)])
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setenv("LU_TASKS_DIR", str(self.tasks_dir))  # the world's own dispatch records
+            promoted = run_main(fresh_cli, ["plan-promote", LEVEL, SLUG, "--repo-root", str(self.root)])
         if promoted.code != 0:
             raise RuntimeError(f"plan-promote refused: {promoted.err.strip()[-500:]}")
         return promoted.json()
@@ -1082,7 +1083,8 @@ class Seat:
 
     @property
     def ledger(self) -> Path:
-        return RECEIPTS_ROOT / self.review_id / f"{self.attempt_id}.jsonl"
+        # Beside the dispatch task store, where dispatch claims an attempt's ledger and plan-promote reads it (#12114).
+        return tasks_dir().parent / "review-receipts" / self.review_id / f"{self.attempt_id}.jsonl"
 
 
 def make_card(
@@ -1198,6 +1200,7 @@ def prepare_plan_card(out: Path, token: str, agent: str) -> tuple[dict[str, Any]
             "review_id": seat.review_id,
             "attempt_id": seat.attempt_id,
             "manifest_sha256": card["manifest_sha256"],
+            "tasks_dir": str(tasks_dir()),
         }
         return card, state
 
@@ -1423,6 +1426,7 @@ def finish_plan(c: Case, info: dict[str, Any]) -> None:
                 f"the seat's verdict is {written['verdict']}: plan-promote refuses it (tooling worked; the driver decides whether to re-dispatch)",
             )
             return
+        mp.setenv("LU_TASKS_DIR", info["tasks_dir"])  # the dispatch records the card's seat was recorded from
         promoted = run_main(fresh_cli, ["plan-promote", LEVEL, SLUG, "--repo-root", str(root)])
         c.expect(promoted.code == 0, f"plan-promote refused the recorded review: {promoted.err.strip()[-400:]}")
         status = run_main(fresh_cli, ["plan-review-status", LEVEL, SLUG, "--repo-root", str(root)]).json()

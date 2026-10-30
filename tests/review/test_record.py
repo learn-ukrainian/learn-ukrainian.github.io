@@ -1213,11 +1213,12 @@ def test_a_plan_verdict_written_by_record_is_accepted_by_plan_promote(
     digest = make_manifest(env, capsys)
     tasks = tmp_path / "tasks"
     tasks.mkdir()
-    (tasks / "plan-review-task.json").write_text(
-        json.dumps({"agent": "claude", "model": "claude-sonnet-5"}), encoding="utf-8"
-    )
-    ledger = tmp_path / "ledgers" / "review-p" / "attempt-p.jsonl"
+    # plan-promote binds the review to this dispatch store and this findings database (#12114)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setattr(findings_db, "db_path", lambda _level, _root=None: tmp_path / "plan.sqlite")
+    ledger = tmp_path / "review-receipts" / "review-p" / "attempt-p.jsonl"
     create_empty_ledger(ledger)
+    _record(ledger, manifest=digest, result="attested result", attempt_id="attempt-p", review_id="review-p")
     review = tmp_path / "plan.return.yaml"
     _dump(
         review,
@@ -1229,6 +1230,17 @@ def test_a_plan_verdict_written_by_record_is_accepted_by_plan_promote(
             attempt_id="attempt-p",
             review_id="review-p",
         ),
+    )
+    (tasks / "plan-review-task.result").write_bytes(review.read_bytes())
+    (tasks / "plan-review-task.json").write_text(
+        json.dumps({
+            "task_id": "plan-review-task", "agent": "claude", "model": "claude-sonnet-5", "status": "done",
+            "review_access": "full",
+            "review_attempt": {"review_id": "review-p", "attempt_id": "attempt-p", "manifest_sha256": digest},
+            "result_file": str(tasks / "plan-review-task.result"),
+            "result_sha256": hashlib.sha256(review.read_bytes()).hexdigest(),
+        }),
+        encoding="utf-8",
     )
     assert pm.plan_review_status(PLAN_LEVEL, PLAN_SLUG, repo_root=env.root)["state"] == "unreviewed"
 
