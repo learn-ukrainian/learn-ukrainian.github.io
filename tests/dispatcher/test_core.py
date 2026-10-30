@@ -116,11 +116,17 @@ def sandbox(tmp_path, hermetic_monitor):
         return task_id, nonce
 
     def settle(task, expected=0):
-        return json.loads(
+        deadline = time.monotonic() + 15
+        record = json.loads(
             cli(
                 "wait", task[0], "--run-nonce", task[1], "--timeout", "15", "--poll-interval", "0.02", expected=expected
             ).stdout
         )
+        # A terminal record precedes supervisor exit; recovery must see its claim released (#12121).
+        while worker._identity(record["pid"]) == record["process_start"]:
+            assert time.monotonic() < deadline, "supervisor still alive after settlement"
+            time.sleep(0.02)
+        return record
 
     def review_models(*models):
         """File the stub reviewer ``models`` under OpenAI in the sandbox catalog copy only."""
