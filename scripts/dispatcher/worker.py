@@ -510,6 +510,11 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 interruptible = False
             status, error, text, sources_calls = outcome.status, outcome.error, outcome.text, outcome.sources_calls
             record.update(outcome.identity)
+            if outcome.trace:
+                # The runtime keeps the seat's stream to itself; its redacted tool-call trace takes the stream's
+                # place in the task's private stdout log.
+                with stdout_path.open("w", encoding="utf-8") as trace:
+                    trace.writelines(json.dumps(call, ensure_ascii=False) + "\n" for call in outcome.trace)
             if status == "done" and (refusal := _verdict_failure(record, text)):
                 status, error = "failed", refusal
             return
