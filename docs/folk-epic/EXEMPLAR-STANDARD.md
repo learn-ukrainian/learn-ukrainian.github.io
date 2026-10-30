@@ -146,9 +146,9 @@ Green means: `python_qg` all gates · `assemble_mdx` ok · `mdx_render` all isla
    Write `site/src/content/docs/folk/<slug>.mdx` from source and **commit it in the same PR** as the
    source edits (the MDX Source Parity gate requires both move together; #3643 tracks the missing
    forward-drift gate).
-3. **Independent content review** — **LANGUAGE-LANES only** (agy / codex / claude),
+3. **Independent content review** — the review-loop ukrainian seats (Gemini (AGY) and Sol for an Anthropic author or any author outside OpenAI and Google, Gemini (AGY) alone for an OpenAI author, Sol alone for a Google author, and no Claude seat),
    VESUM-backed via `sources` MCP, off-seat. Example:
-   `dispatch.py dispatch --model <catalog-model> --agent codex --mode read-only` (or claude), or
+   `dispatch.py dispatch --model <catalog-model> --agent codex --mode read-only`, or
    `ab ask-agy --to-model gemini-3.8-flash-high` for AGY (or `dispatch.py --agent agy --mode read-only`, which runs in the bubblewrap boundary).
    **Do not** use deepseek/cursor/kimi/pool/glm for folk or UA content review
    (LANGUAGE-LANES + no DeepSeek for folk). Apply valid deltas.
@@ -166,5 +166,5 @@ Green means: `python_qg` all gates · `assemble_mdx` ok · `mdx_render` all isla
 - [ ] Full Ukrainian immersion; no drift to explaining-in-English (#M-13)
 - [ ] `verify_shippable` green (python_qg + assemble + mdx_render); CI astro build green
 - [ ] Site MDX regenerated via `assemble_mdx` and committed in the same PR
-- [ ] Independent language-lane content review clean (agy/codex/claude; or deltas applied)
+- [ ] Independent language-lane content review clean (review-loop ukrainian seats, no Claude seat; or deltas applied)
 - [ ] Handoff refreshed in gitignored `.claude/folk-epic/` (NOT in the PR); PR opened, NOT merged to main
