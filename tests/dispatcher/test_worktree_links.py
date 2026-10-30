@@ -80,9 +80,16 @@ def run_git(repo, *args):
 
 
 @pytest.mark.parametrize("full_checkout", [False, True])
-def test_creation_and_recreation_provision_clean_reapable_links(layout, full_checkout):
+@pytest.mark.parametrize("selector", [False, True])
+def test_creation_and_recreation_provision_clean_reapable_links(layout, full_checkout, selector):
     """Database links and dependency isolation must survive creation and fix rounds."""
     primary, _unused = layout
+    if selector:
+        generations = primary / "data/sources-generations"
+        generations.mkdir()
+        generation = generations / "sources.20261030T210000Z-0123456789ab.db"
+        (primary / SOURCES_LINK).rename(generation)
+        (primary / SOURCES_LINK).symlink_to(generation.relative_to(primary / "data"))
     run_git(primary, "init", "-b", "main")
     run_git(primary, "config", "user.name", "Fixture")
     run_git(primary, "config", "user.email", "fixture@example.invalid")
@@ -109,6 +116,83 @@ def test_creation_and_recreation_provision_clean_reapable_links(layout, full_che
         assert (primary / "data/sources.db").read_text() == "database sentinel"
         assert (primary / "node_modules").is_dir()
         assert not (primary / "node_modules").is_symlink()
+
+
+@pytest.mark.parametrize("case", [
+    "selected", "legacy", "stale", "direct-generation", "foreign", "tracked",
+    "malformed", "invalid-name", "missing", "generation-link", "generation-directory",
+    "directory-link", "vesum-link",
+])
+def test_branch_content_cannot_choose_agy_host_database_mount(layout, case):
+    """#12174: only the primary's selected generation or legacy file may become a host mount."""
+    from scripts.dispatcher.agy_sandbox import Refused, _trusted_database
+
+    primary, worktree = layout
+    run_git(worktree, "init", "-b", "main")
+    selector = primary / SOURCES_LINK
+    generations = primary / "data/sources-generations"
+    generations.mkdir()
+    selected = generations / "sources.20261030T210000Z-0123456789ab.db"
+    stale = generations / "sources.20261030T200000Z-abcdef012345.db"
+    stale.write_text("old generation")
+    if case not in {"legacy", "vesum-link"}:
+        selector.rename(selected)
+        selector.symlink_to(selected.relative_to(selector.parent))
+    if case == "malformed":
+        selector.unlink()
+        selector.symlink_to(f"./sources-generations/{selected.name}")
+    elif case == "invalid-name":
+        selected.rename(generations / "sources.invalid.db")
+        selector.unlink()
+        selector.symlink_to("sources-generations/sources.invalid.db")
+    elif case == "missing":
+        selected.unlink()
+    elif case == "generation-link":
+        selected.unlink()
+        selected.symlink_to(stale)
+    elif case == "generation-directory":
+        selected.unlink()
+        selected.mkdir()
+    elif case == "directory-link":
+        saved = generations.with_name("saved-generations")
+        generations.rename(saved)
+        generations.symlink_to(saved, target_is_directory=True)
+    elif case == "vesum-link":
+        vesum = primary / "data/vesum.db"
+        saved = vesum.with_suffix(".saved")
+        vesum.rename(saved)
+        vesum.symlink_to(saved)
+
+    git.provision_links(primary, worktree)
+    relative = "data/vesum.db" if case == "vesum-link" else SOURCES_LINK
+    link = worktree / relative
+    invalid_primary = case in {
+        "malformed", "invalid-name", "missing", "generation-link", "generation-directory",
+        "directory-link", "vesum-link",
+    }
+    assert link.is_symlink() is not invalid_primary
+    if invalid_primary:
+        # The boundary must refuse independently of provisioning.
+        link.symlink_to(primary / relative)
+    elif case in {"stale", "direct-generation", "foreign"}:
+        link.unlink()
+        link.symlink_to({"stale": stale, "direct-generation": selected, "foreign": primary / "data/vesum.db"}[case])
+    elif case == "tracked":
+        run_git(worktree, "add", "-f", relative)
+
+    if case in {"selected", "legacy"}:
+        expected = selected if case == "selected" else selector
+        assert _trusted_database(worktree, primary, relative) == expected
+        assert link.read_text() == "database sentinel"
+        if case == "selected":
+            replacement = generations / "sources.20261030T220000Z-111111111111.db"
+            replacement.write_text("new generation")
+            selector.unlink()
+            selector.symlink_to(replacement.relative_to(selector.parent))
+            assert _trusted_database(worktree, primary, relative) == replacement
+    else:
+        with pytest.raises(Refused):
+            _trusted_database(worktree, primary, relative)
 
 
 @pytest.mark.parametrize("kind", ["file", "directory", "link", "dangling"])
