@@ -216,3 +216,15 @@ def test_self_matching_process_kill(command: str, refused: bool) -> None:
         assert_decision(harness, native.returncode, native.stdout, native.stderr, not refused)
         for phrase in ALTERNATIVES if refused else ():
             assert phrase in native.stderr
+
+
+@pytest.mark.parametrize("command", ["bash -c 'en'\"v\" _", "bash -c 'pr'\"intenv\" _"])
+def test_spliced_secret_script_refused(command: str) -> None:
+    """#12118: a shell script spliced from quote fragments is read whole by the secret scan."""
+    payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": command}})
+    hook = ROOT / "agents_extensions/shared/hooks/guard-secret-print.py"
+    result = subprocess.run(
+        [sys.executable, str(hook)], input=payload, text=True, capture_output=True, env=ENV, timeout=10
+    )
+    assert result.returncode == 2, result.stderr
+    assert "would print shell environment values" in result.stderr

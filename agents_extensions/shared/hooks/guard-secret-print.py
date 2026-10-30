@@ -72,11 +72,13 @@ message from becoming false positives. This is defense-in-depth, not a sandbox.
 # those operations do not print values.
 # Process kills (#12118): kill sites are paired per invocation without data
 # flow, so a selector reaching a protected process beside any non-literal kill
-# is refused. The process reader closes shell grammar only: code in other
-# languages (`python -c` with os.kill, awk system()), files the command does not
-# write, functions and aliases defined outside the command text, and kill
-# operands from sources other than pgrep and pidof (`ps | awk`, `lsof -t`, PID
-# files) are not read. Only an execution-time control could see those.
+# is refused. The process reader models shell grammar and the effects it found
+# carried through indirection (IFS, echo bindings, written or renamed files),
+# read to a fixpoint; an effect carried through a form it does not model is a
+# limit. Code in other languages (`python -c` with os.kill, awk system()), files
+# the command does not write, functions and aliases defined outside the command
+# text, and kill operands from sources other than pgrep and pidof (`ps | awk`,
+# `lsof -t`, PID files) are not read. Only an execution-time control sees all.
 
 from __future__ import annotations
 
@@ -2033,6 +2035,7 @@ class _ProcessFacts:
         self.echo_rebound = False
         self.launched: list[str] = []
         self.executable: set[str] = set()
+        self.startup_unknown = False
         # Copies of executables, and files whose content the command writes.
         self.executable_copies: set[str] = set()
         self.content_written: set[str] = set()
@@ -2583,10 +2586,24 @@ def _record_assigning(words: list[str], index: int, names: list[str], facts: _Pr
     if words and _shell_word_value(words[0]) in {"for", "select"} and len(words) > 1:
         targets.append(words[1])
     for name in names:
-        rest = words[index + 1 :]
+        rest = _raw_without_redirects(words[index + 1 :])
         if name == "printf":
-            glued = [word[2:] for word in rest[:1] if word.startswith("-v") and len(word) > 2]
-            targets += glued or (rest[1:2] if [_shell_word_value(word) for word in rest[:1]] == ["-v"] else [])
+            # printf assigns through -v NAME and through each %n conversion's argument.
+            position = 0
+            first = _word_candidates(rest[0], facts) if rest else [""]
+            if first is None:
+                # It could be -v with a name the reader cannot read.
+                facts.ifs_set = facts.startup_unknown = True
+                continue
+            glued = [value[2:] for value in first if value.startswith("-v") and len(value) > 2]
+            if glued or "-v" in first:
+                targets += glued or rest[1:2]
+                position = 1 if glued else 2
+            elif first == ["--"]:
+                position = 1
+            formats = _word_candidates(rest[position], facts) if position < len(rest) else [""]
+            if formats is None or any(re.search(r"%[^%a-zA-Z]*n", value) for value in formats):
+                targets += rest[position + 1 :]
         elif name in _ASSIGNING_BUILTINS:
             options = [
                 _shell_word_value(word) or "" for word in rest if (_shell_word_value(word) or "x").startswith("-")
@@ -2595,10 +2612,14 @@ def _record_assigning(words: list[str], index: int, names: list[str], facts: _Pr
                 # A nameref (`declare -n R=IFS`) assigns through another name.
                 facts.ifs_set = True
             targets += [word.split("=", 1)[0] for word in rest if not (_shell_word_value(word) or "x").startswith("-")]
+    builtin = bool(set(names) & (_ASSIGNING_BUILTINS | {"printf"}))
     for target in targets:
         value = _shell_word_value(target)
         if value is None or value == "IFS":
             facts.ifs_set = True
+        if builtin and value in {None, "BASH_ENV", "ENV"}:
+            # A startup file Bash reads, set by a form whose value the reader does not track.
+            facts.startup_unknown = True
 
 
 def _program_process_facts(
@@ -2702,6 +2723,9 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
     """Record the files a command writes, the directories it enters and its startup scripts."""
 
     def write(word: str, *, content: bool = True) -> None:
+        if (_shell_word_value(word) or "").startswith("/dev/"):
+            # A device such as /dev/null holds no script.
+            return
         if content:
             facts.content_written.update(os.path.basename(name) for name in _effect_names(word, facts) or [""])
         if _under_proc(word, facts):
@@ -2721,12 +2745,16 @@ def _record_effects(pipelines: list[list[list[str]]], facts: _ProcessFacts) -> N
             if re.fullmatch(r"\d*(?:>|>>|>\||&>|&>>|<>)", word):
                 write(segment[index + 1])
         for index, program in enumerate(programs):
-            operands = [word for word in segment[index + 1 :] if not (_shell_word_value(word) or "-").startswith("-")]
+            # A word the reader cannot read counts as an operand, never as an option.
+            operands = [word for word in segment[index + 1 :] if not (_shell_word_value(word) or "").startswith("-")]
             if program in {"tee", "touch"}:
                 for word in operands:
                     write(word)
             elif program in {"cp", "mv", "install", "ln"} and operands:
                 write(operands[-1], content=False)
+                if program == "ln" and any(_under_proc(source, facts) for source in operands[:-1]):
+                    # A link into /proc makes later writes through it renames.
+                    facts.renames = True
                 # A copy, move or link of an executable keeps its execute permission.
                 for source in operands[:-1]:
                     paths = _effect_names(source, facts)
@@ -2787,8 +2815,13 @@ def _under_proc(word: str, facts: _ProcessFacts) -> bool:
             continue
         values = _word_candidates('"' + text.lstrip('"') + '"', facts) if kind == "param" else None
         if values is None or len(values) != 1:
-            break
+            # An unknown part decides nothing once a fixed top directory is known;
+            # before that, it could lead under /proc.
+            fixed = prefix.startswith("/") and "/" in prefix[1:]
+            return not fixed or os.path.normpath(prefix).startswith("/proc")
         prefix += values[0]
+    if not prefix.startswith("/") and facts.unknown_directory:
+        return True
     normalized = os.path.normpath(os.path.join(facts.cwd, prefix)) if prefix else facts.cwd
     return normalized == "/proc" or normalized.startswith("/proc/") or (not prefix and facts.cwd.startswith("/proc"))
 
@@ -2797,10 +2830,12 @@ def _script_reason(facts: _ProcessFacts) -> str | None:
     """Check each script the command runs: refuse one it writes or creates, read one it does not."""
     if any(name in facts.written for name in facts.programs):
         return _WRITTEN_SCRIPT
-    if facts.renames:
-        return "the command renames a process through /proc, which the guard cannot follow"
+    if facts.renames and facts.calls:
+        return "the command may rename a process through /proc beside a kill, which the guard cannot follow"
+    if facts.startup_unknown and (facts.written or facts.unknown_write):
+        return _WRITTEN_SCRIPT
     copies = facts.executable_copies
-    rewritten_copy = facts.content_written & copies or (facts.content_written and "" in copies)
+    rewritten_copy = (facts.content_written & copies) - {""}
     if facts.written & facts.executable or (facts.written and "" in facts.executable) or rewritten_copy:
         # A file the command writes and makes executable can run by any route:
         # a launcher, PATH, or a program's hook such as .git/hooks.
@@ -2925,10 +2960,12 @@ def _echo_output(body: str) -> str | None:
     if len(pipelines) != 1 or len(pipelines[0]) != 1:
         return None
     values = [_shell_word_value(word) for word in pipelines[0][0]]
-    # echo reads only leading -n, -e and -E words as options.
+    # echo reads only leading -n, -e and -E words as options, and with xpg_echo
+    # interprets backslashes, so output holding one is not predicted.
     if values[:1] != ["echo"] or None in values or re.fullmatch(r"-[neE]+", values[1] if len(values) > 1 else ""):
         return None
-    return " ".join(value for value in values[1:] if value is not None)
+    output = " ".join(value for value in values[1:] if value is not None)
+    return None if "\\" in output else output
 
 
 def _inline_echo_substitutions(executable: str, substitutions: dict[str, tuple[str, str]]) -> str:
@@ -3372,7 +3409,10 @@ def _process_refusal(command: str, cwd: str | None = None) -> str | None:
     if facts.limit:
         return "nested shell command could not be parsed safely"
     if facts.opaque:
-        return "the command runs shell text the guard cannot read, which could stop the agent's own process"
+        return (
+            "the command runs shell text the guard cannot read, which could stop the agent's own process; "
+            "write that text out as literal commands instead of piping, evaluating or splitting it"
+        )
     if facts.unresolved:
         return (
             "a command name the guard cannot resolve could stop the agent's own process; "
