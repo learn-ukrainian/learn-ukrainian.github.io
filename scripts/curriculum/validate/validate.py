@@ -1204,7 +1204,7 @@ def _validate_plan_run(
                 _fail(report, codes.WORDS_LOCK_MISMATCH, f"{words_path} bytes disagree with {words_path}.lock (rule 3)")
         except PlanError as error:
             _fail(report, error.code, error.message)
-        if strict and plan_bytes is None and not provisional_pack and pack_digest == plan["evidence_ref"]["sha256"]:
+        if strict and plan_bytes is None and pack_digest == plan["evidence_ref"]["sha256"]:
             _check_review_of_record(
                 report, plan_path, level, slug, review_state_declared_unavailable=review_state_declared_unavailable
             )
