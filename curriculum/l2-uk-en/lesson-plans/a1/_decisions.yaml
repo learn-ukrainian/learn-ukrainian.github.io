@@ -10,7 +10,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-build-program.md
     line: '| Arcs A1, A2, B1, B2 | `docs/epics/fresh-build-{a1,a2,b1,b2}-arc.md` | all four accepted by the operator 2026-09-21; only A1 has its generated `_arc.yaml` |'
-  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
+  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
   section_sha256: 00fed5fff3c40c72a392710fe16d7641be380cbfb8c8179ffede60d07d12fd5d
   text: |+
     ## 2. Decisions
@@ -75,7 +75,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: '## 6. Decisions on the six open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)'
-  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
+  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
   section_sha256: dcb7c50f6fce61ff44312d31a5c8c38484c9618dc0bda1eaada15a23bd3c7d67
   text: |+
     ## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)
@@ -95,7 +95,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10108)'
-  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
+  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
   section_sha256: 68be6519acea2552fb29ffea396de48249dcd5ba59271189a5f018ce1d087976
   text: |+
     ## 8. Revision r4 (#10108)
@@ -152,7 +152,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10105)'
-  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
+  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
   section_sha256: aff360b85ef72a42ab69d7f71f6491b7cb47935d4d25c15d9d8b657117ce0d86
   text: |
     ## 9. Revision r3.1: A1 practical recap (#10105)
@@ -182,7 +182,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: 'Accepted: 2026-10-09 (designated approval: Sol 6.1 and Opus 5.5; #10108)'
-  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
+  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
   section_sha256: 5e3e01c2a07a36eaf3e9d187522e236ba94706a2dbe2a2310e774fd358f634eb
   text: |+
     ## 10. Revision r4.1: Staged phonetic facets (#10108)
@@ -228,8 +228,8 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: Operator decision 2026-10-30
-  doc_sha256: cb58ff457d828380dd6e5fdc2920a521b76f8055ff2015a3e61f4fd9e4677910
-  section_sha256: b1c5c492ff504f368f83e9efbb95647f6ee5233a1cc246e67948ffeb880e1053
+  doc_sha256: 2a0b973b328e9a2fa168f261df8dddb9ae823c2844f65951bc1b4155b0ca9fbd
+  section_sha256: 6e00981f62a6fd3011a1585469a63f9a2e54a7978d99278498b314f50e5dd3a5
   text: |
     ## 12. Revision r6 (OHO)
 
@@ -251,8 +251,8 @@ sources:
     - **Machine-readable ledger:** [`docs/epics/a1-oho-vocabulary-ledger.yaml`](a1-oho-vocabulary-ledger.yaml).
     - **Exact glossary counts (replacing unverified counts in prior checks):**
       - **1,664** dictionary lines printed across the 17 glossary pages.
-      - **1,755** total entries in the machine-readable ledger (`docs/epics/a1-oho-vocabulary-ledger.yaml`), consisting of **1,663** single words and **92** multiword expressions/phrases, expanding gender pairs and incorporating foundational conversational prerequisites.
-      - **1,750** members if the 6 orthographic/spelling variant pairs printed on the same line (`сільниця, сільничка`, `вчора, учора`, `вночі, уночі`, `ввечері, увечері`, `вранці, уранці`, `удень, вдень`) are expanded as distinct rows.
+      - **1,755** total entries in the machine-readable ledger (`docs/epics/a1-oho-vocabulary-ledger.yaml`), consisting of **1,663** single words and **92** multiword expressions/phrases, expanding gender pairs and incorporating foundational conversational prerequisites (1,663 + 92 = 1,755).
+      - **1,670** base single-word dictionary units if the 6 orthographic/spelling variant pairs printed on the same line (`сільниця, сільничка`, `вчора, учора`, `вночі, уночі`, `ввечері, увечері`, `вранці, уранці`, `удень, вдень`) are expanded as distinct rows (1,664 + 6 = 1,670).
       - **1,738** unique base lemmas in OHO's glossary.
       - **299** verb pair members across **147** pair groups in OHO's verb appendix (pp. 217–223), which are excluded from A1 and assigned to A2+ per the operator's rule.
       - *Correction of prior reports:* Sol's check left full coverage unverified (`NOT CHECKED`). Gemini's check cited the 1,744 figure without line verification and hallucinated «ринва» as a phonetic drill word (neither «ринва» nor any derivative appears in the glossary or workbook text).
@@ -265,12 +265,12 @@ sources:
       - Conversational turn-taking formulas (`Що нового?`, `чудово` [stressed *чудо́во*], `так собі`, `на жаль`, `Дуже приємно!`, `дати п’ять`, `передати привіт`, `Гарного дня!`, `Солодких снів!`) are owned by position 6 (`first-conversations`).
       - Classroom, desk, and household objects with grammatical gender (`стіл`, `стілець`, `шафа`, `вікно`, `двері`, `зошит`, `підручник`, `ручка`, `олівець`, `книга`, `книжка`, `словник`, `дошка`, `папір`, `комп’ютер`, `ноутбук`, `телефон`, `лампа`, `диван`, `ліжко`, `рюкзак`, `гаманець`) are owned by position 8 (`things-have-gender`).
       - Present tense verbs and possession (`мати`, `читати`, `знати`, `розуміти`, `жити`, `працювати`) are owned by positions 15–16 (`what-i-like`, `verbs-group-one`).
-      - Systematic cardinal numerals (0–1000) and ordinals (`один`, `два`, `чотири`, `п’ять`, `вісім`, `дев’ять`, `десять`, `одинадцять`, `дванадцять`, `чотирнадцять`, `п’ятнадцять`, `дев’ятнадцять`, `двадцять`, `тридцять`, `тридцять чотири`, `п’ятдесят`, `сімдесят`, `вісімдесят`, `дев’яносто`, `двісті`, `п’ятсот`, `дев’ятсот`, `дві тисячі перший`, `дев’ятиповерховий`, `скільки`, `перший`, `другий`, `третій`, `п’ятий`, `сьомий`, `дев’ятий`, `десятий`) are owned by position 22 (`what-time`), with downstream reuse in 23 and 55.
+      - Systematic cardinal numerals (0–1000) and ordinals (`один`, `два`, `чотири`, `п’ять`, `вісім`, `дев’ять`, `десять`, `одинадцять`, `дванадцять`, `чотирнадцять`, `п’ятнадцять`, `дев’ятнадцять`, `двадцять`, `тридцять`, `тридцять чотири`, `п’ятдесят`, `сімдесят`, `вісімдесят`, `дев’яносто`, `двісті`, `п’ятсот`, `дев’ятсот`, `дві тисячі перший` [ordinal 2001st], `дев’ятиповерховий` [compound adjective: nine-storey], `скільки`, `перший`, `другий`, `третій`, `п’ятий`, `сьомий`, `дев’ятий`, `десятий`) are owned by position 22 (`what-time`), with downstream reuse in 23 and 55.
       - Food, drink, and café ordering (`кава`, `чай`, `вода`, `сік`, `борщ`, `суп`, `салат`, `хліб`, `сир`, `масло`, `м’ясо`, `риба`, `меню`, `офіціант`, `офіціантка`, `замовити`, `рахунок`, `рецепт`) are owned by positions 36–37 (`food-and-drink`, `i-eat-i-drink`).
-      - Clothing and commercial transactions (`одяг`, `блузка`, `сорочка`, `сукня`, `штани`, `взуття`, `кофта`, `куртка`, `спідниця`, `шарф`, `шкарпетка`, `шорти`, `кросівок`, `купити`, `продавати`, `продавець`, `продавчиня`, `коштувати`, `платити`, `заплатити`, `гроші`, `гривня`, `долар`, `євро`) are owned by position 39 (`shopping`), with downstream reuse in 41 and 55.
+      - Clothing and commercial transactions (`одяг`, `блузка`, `сорочка`, `сукня`, `штани`, `взуття`, `кофта`, `куртка`, `спідниця`, `шарф`, `шкарпетка`, `шорти`, `кросівка`, `купити`, `продавати`, `продавець`, `продавчиня`, `коштувати`, `платити`, `заплатити`, `гроші`, `гривня`, `долар`, `євро`) are owned by position 39 (`shopping`), with downstream reuse in 41 and 55.
       - Holidays and celebrations (`День святого Валентина`, `свято`, `день народження`, `вітати`, `подарунок`) are owned by position 46 (`holidays`), with downstream reuse in 55.
-      - Digital, civic, and professional identity terms (`інтернет`, `пароль`, `пін-код`, `вайфай`, `сайт`, `онлайн`, `канал`, `натиснути`, `пошта`, `електронна пошта`, `імейл`, `номер телефону`, `відеозвернення`, `знімати відео`, `бюджет`, `резюме`, `кар’єра`, `зарплата`, `декрет`, `зателефонувати`, `телефонувати`) are owned by position 52 (`my-story`), with downstream reuse in 55.
-      - Health, medical care, and bodily well-being (`здоров’я`, `голова`, `горло`, `живіт`, `рука`, `нога`, `спина`, `око`, `вухо`, `зуб`, `ніс`, `рот`, `лікарня`, `аптека`, `карантин`, `захворіти`, `боляче`) are owned by position 53 (`health`).
+      - Digital, civic, and professional identity terms (`інтернет`, `пароль`, `пін-код`, `вайфай`, `сайт`, `онлайн`, `канал`, `натиснути`, `пошта`, `електронна пошта`, `імейл` [informal loanword; formal: `електронна пошта`], `номер телефону`, `відеозвернення`, `знімати відео`, `бюджет`, `резюме`, `кар’єра`, `зарплата`, `декрет`, `зателефонувати`, `телефонувати`) are owned by position 52 (`my-story`), with downstream reuse in 55.
+      - Health, medical care, and bodily well-being (`здоров’я`, `голова`, `горло`, `живіт`, `рука`, `нога`, `спина`, `око`, `вухо`, `зуб`, `ніс`, `рот`, `лікарня`, `аптека`, `карантин`, `захворіти`, `боляче`, `нудити` [ну́дити: feel nauseous, W0088]) are owned by position 53 (`health`), with downstream reuse in 54 and 55.
       - Crisis, civil defense, emergency, and contemporary defense terms (`військо`, `укриття`, `каска`, `захисник`, `захисниця`, `ворог`, `міна`, `бій`, `пожежна машина`, `швидка допомога`, `поліція`, `поліціянт`, `поліціянтка`, `повномасштабна війна`, `атомна війна`, `донатити` [colloquial]) are owned by position 54 (`emergencies`), with downstream reuse in 55.
       - Checkpoint modules (7, 14, 21, 27, 35, 41, 47) and finale (55) introduce 0 new entries, strictly preserving invariant D4.
 
@@ -278,7 +278,7 @@ sources:
 
     - **OHO evidence:** OHO Unit 5 Lesson 33 (chunk W0087: SVO sentence frame with direct object, *Я люблю борщ*, *Я люблю Україну*); Unit 6 Lessons 45–48 (chunks W0113–W0122: Accusative case for inanimate objects, direction with в/на, days of the week, animate objects, agreeing adjectives, personal pronouns); Unit 7 Lessons 49–55 (chunks W0123–W0138: Locative case with у/в/на, months, masculine -у/-ю, consonant alternations г->з, к->ц, х->с, vowel alternations о/е->і, locative adjectives).
     - **Adopted sequence (following OHO, per the adopted decision):**
-      - An early inanimate direct-object model at positions 15 and 16 alongside present-tense verbs (*Я люблю каву*, *Я читаю книжку*).
+      - An early inanimate direct-object model at positions 15 and 16 alongside present-tense verbs (*Я люблю Україну*, *Я читаю книжку*).
       - The accusative system at positions 29 to 31 (directional motion with *в/на* and transitive direct objects).
       - The locative system at positions 38 to 40 (locative of place with *в/на* in dining, shopping, and everyday environments).
       - The ULP alternative (retaining locative-first before accusative) is removed.
@@ -298,7 +298,8 @@ sources:
     - **OHO evidence:** OHO Unit 1 Lesson 01 (chunk W0015): Presents the full 33-letter Ukrainian alphabet at once, showing both printed and handwritten/cursive forms with audio accompaniment. Lessons 02–10 then systematically treat phonetic topics (vowels, jotation, voicing, hard/soft, soft sign, apostrophe, syllables, stress).
     - **Adopted approach (following OHO adult L2, per the adopted decision):**
       - Position 2 presents the full 33-letter alphabet overview (printed and cursive letter models, letter names, audio-grounded).
-      - Eliminates artificial letter gating, enabling learners to decode adult survival cognates (*чай*, *кафе*, *банк*, *метро*, *аптека*) immediately.
+      - Phonetic topics and the acquired letter inventory are staged across positions 2–5 (12 letters at pos 2, 9 at pos 3, 5 at pos 4, 7 at pos 5: 12 + 9 + 5 + 7 = 33), while high-frequency oral survival cognates (*кафе*, *бар*, *таксі*, *метро*, *банк*, *офіс*, *парк*, *готель*) are acquired with audio scaffolding before full letter mastery.
+      - The pilot rule capping new letters at 3 per lesson is dropped for positions 2–5 per the adopted decision.
       - Positions 2–5 stage the phonetic topics:
         - Position 2: Full alphabet overview + 6 vowel sounds, stressed vs unstressed vowels, statement/question intonation.
         - Position 3: Hard vs soft consonants, hardness before [е], syllable division and stress rules, voiced/voiceless pairs д–т, з–с, г–х.
@@ -340,7 +341,7 @@ sources:
         - Position 3 (identity): Adult professions (*айтівець, інженер, викладач, дизайнер, лікар, студент, журналіст*), origin, and language abilities.
         - Position 4 (family): Adult personal circles (partner, spouse, children, friends, house, car), allowing personal variation beyond nuclear family drawings.
         - Positions 8–10 (belongings, descriptions, colors): Everyday adult items (*телефон, ноутбук, рюкзак, паспорт, ключ, гаманець, лампа*), practical descriptions of belongings and personal appearance.
-        - Syllables and phonetics: Explicitly framed as pronunciation and rhythm aids (as in OHO Lesson 09), eliminating primary-school hyphenation/line-breaking drills in early levels.
+        - Syllables and phonetics: Explicitly framed as pronunciation and rhythm aids (as in OHO Lesson 09), eliminating primary-school hyphenation/line-breaking drills in early literacy positions 1–10 (while position 20 systematically covers line-breaking divisions per State Standard A1 `:588`).
 - doc: docs/epics/fresh-build-plan-schema.md
   heading: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
   accepted: '2026-09-21'
