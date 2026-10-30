@@ -279,7 +279,7 @@ def resolve_claude_budget_usd(label: str, requested: object = None) -> float | N
 
     An API-key label is billed per token, so its run always has a cap: the label's configured
     amount, or the lower ``requested`` one. A label with no configured amount, or a request that is
-    not a positive finite number or exceeds the configured amount, refuses.
+    not a positive finite number of whole cents or exceeds the configured amount, refuses.
     """
     if label not in CLAUDE_API_KEY_ACCOUNT_LABELS:
         return None
@@ -292,7 +292,8 @@ def resolve_claude_budget_usd(label: str, requested: object = None) -> float | N
         amount = float(requested)  # type: ignore[arg-type]  # a CLI string or a number
     except (TypeError, ValueError):
         raise ClaudeAccountRefused("claude_account_budget_cap_invalid") from None
-    if not 0 < amount <= cap:
+    # The flag is passed in whole cents, so a finer amount would round, possibly to a zero cap.
+    if not 0 < amount <= cap or round(amount, 2) != amount:
         raise ClaudeAccountRefused("claude_account_budget_cap_invalid")
     return amount
 

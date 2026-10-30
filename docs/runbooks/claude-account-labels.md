@@ -270,7 +270,7 @@ Claude Code `--max-budget-usd` (print mode stops the run at that spend). The
 default is `CLAUDE_API_KEY_BUDGET_USD` in `scripts/agent_runtime/attempt_boundary.py`,
 beside the label list: 20 USD per run for each label. A dispatch can lower it with
 `dispatch.py dispatch --max-budget-usd <amount>`; an amount above the configured
-one, a non-positive or non-numeric one, or a label with no configured amount
+one, a non-positive, non-numeric or finer-than-a-cent one, or a label with no configured amount
 refuses before any worktree exists, naming the account
 (`claude_account_budget_cap_invalid`, `claude_account_budget_cap_unresolved`). The
 flag on a subscription label (`a`, `b`) or another seat is refused; those runs are
