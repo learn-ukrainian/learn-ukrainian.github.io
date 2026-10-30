@@ -1723,49 +1723,96 @@ def _script_words(args: list[str], index: int) -> list[str]:
     return [words[0]] if words else []
 
 
-def _shell_script(args: list[str]) -> list[str]:
-    """Extract the script operand of a shell -c invocation."""
+# Bash 5 long options, accepted with one or two dashes before any short option.
+_BASH_LONG_OPTIONS = {
+    "debug",
+    "debugger",
+    "dump-po-strings",
+    "dump-strings",
+    "help",
+    "init-file",
+    "login",
+    "noediting",
+    "noprofile",
+    "norc",
+    "posix",
+    "pretty-print",
+    "protected",
+    "rcfile",
+    "restricted",
+    "verbose",
+    "version",
+    "wordexp",
+}
 
+
+def _shell_script(args: list[str]) -> list[str]:
+    """Extract the script operand of a shell -c invocation.
+
+    As in Bash, long options come first, then short-option clusters (each `o`
+    or `O` takes the next word), and with `c` the first non-option argument
+    is the script. A word the reader cannot place makes the script unreadable.
+    """
+    unreadable = ["__UNDECIDABLE_SECRET_COMMAND__"]
     # Redirections may precede or sit among the options (`sh 2>/dev/null -c ...`).
     args = _raw_without_redirects(args)
 
-    def unreadable(index: int) -> bool:
-        """Whether Bash may split, drop or reinterpret a word before the script.
+    def form(index: int) -> str:
+        """`literal`, `one` (one argument of unknown value) or `unknown`.
 
-        Only known-good forms are readable: a single-quoted word, a plain word,
+        Only known-good forms are placed: a single-quoted word, a plain word,
         or a double-quoted word, which stays one argument unless it expands `@`.
         """
         word = args[index]
         expands = bool(re.search(r"[$`\\]|__GUARD_SUBSTITUTION_", word))
         if re.fullmatch(r"'[^']*'", word) or (re.fullmatch(r"[\w./:=%,+~-]+", word) and not expands):
-            return False
+            return "literal"
         if re.fullmatch(r'"[^"]*"', word):
-            # An unknown value is harmless only as the last word.
-            return expands and ("@" in word or index + 1 < len(args))
-        return True
+            return "literal" if not expands else "unknown" if "@" in word else "one"
+        return "unknown"
 
+    command = False
+    long_options = True
     i = 0
     while i < len(args):
+        kind = form(i)
         option = _strip_quotes(args[i])
-        if option.startswith("+") and option != "+O":
-            # Set-style options (`+e`, `+o posix`) are not modelled: the script is unreadable.
-            return ["__UNDECIDABLE_SECRET_COMMAND__"]
-        if option in {"-o", "-O", "+O", "--rcfile", "--init-file"}:
-            end = i + 2
-        elif option.startswith("-"):
-            end = i + 1 + (0 if option.startswith("--") else sum(flag in "oO" for flag in option[1:]))
-        else:
-            # The script file ends the options.
-            end = i + 1
-        # Every word read or skipped here must keep its place and meaning.
-        if any(unreadable(index) for index in range(i, min(end, len(args)))):
-            return ["__UNDECIDABLE_SECRET_COMMAND__"]
-        if not option.startswith(("-", "+")):
+        if kind == "unknown":
+            return unreadable
+        if kind == "one":
+            # An unknown value may be an option unless it is last or starts with a literal.
+            if i + 1 < len(args) and re.match(r'"(?:[-+$`\\]|__GUARD_SUBSTITUTION_)', args[i]):
+                return unreadable
             break
-        if not option.startswith("--") and "c" in option[1:]:
-            return _script_words(args, end)
-        i = end
-    return []
+        if option in {"-", "--"}:
+            i += 1
+            break
+        operands = 0
+        if option.startswith("--"):
+            # Bash reads long options only before any short option.
+            if not long_options or option[2:] not in _BASH_LONG_OPTIONS:
+                return unreadable
+            operands = 1 if option[2:] in {"rcfile", "init-file"} else 0
+        elif option.startswith("-"):
+            if long_options and option[1:] in _BASH_LONG_OPTIONS:
+                # Single-dash long options (`-rcfile`) are not modelled.
+                return unreadable
+            long_options = False
+            command = command or "c" in option[1:]
+            operands = sum(letter in "oO" for letter in option[1:])
+        elif option == "+O":
+            long_options = False
+            operands = 1
+        elif option.startswith("+"):
+            # Set-style options (`+e`, `+o posix`) are not modelled.
+            return unreadable
+        else:
+            break
+        # Each option operand must be exactly one argument.
+        if any(form(index) == "unknown" for index in range(i + 1, min(i + 1 + operands, len(args)))):
+            return unreadable
+        i += 1 + operands
+    return _script_words(args, i) if command else []
 
 
 def _hide_substitutions(command: str) -> tuple[str, dict[str, tuple[str, str]]]:
