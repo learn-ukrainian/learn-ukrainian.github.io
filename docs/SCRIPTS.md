@@ -144,6 +144,30 @@ fresh or healthy.
   the owner's `routing_facts` for the record grant credit relief as verified
   capacity; the published `credit` leaf is not read.
 
+## GitHub REST budget: who spends it
+
+The shared GitHub client (`scripts/common/github_client.py`) counts every request it sends to
+the REST core pool in a `usage` table of its own cache (`batch_state/github-client/cache.sqlite3`,
+owner-only, rows kept six hours). A request's row is written in a short transaction of its own,
+after the call's budget observation and cache writes committed; opening it and taking the write
+lock together wait at most a quarter second, and counting never changes where the client keeps its
+budget. Each row names the caller (the dispatched task id with its command, else
+the calling command's module or script, never its arguments; for the `gh` shim, the command that
+ran `gh`) and an endpoint template such as
+`GET repos/:repo/actions/runs/:n`, in which the repository, numbers, commit SHAs and every named
+account, branch, tag or label (a ref with slashes included) are replaced. Print the top consumers
+of the last hour:
+
+```bash
+.venv/bin/python -m scripts.common.github_usage top            # --hours 3, --limit 50, --json
+```
+
+`charged` excludes `304` responses, which GitHub does not charge. A landing call (a PR merge,
+review, update-branch or rerun) is never counted, so counting never adds a wait to the landing
+path. A native `gh` command counts once, as charged, however many requests gh makes for it. A
+write SQLite refuses drops its row rather than fail the call; the row follows the budget
+observation, so it cannot cost it.
+
 ## Git hooks
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
