@@ -580,8 +580,8 @@ def _refuse_unreadable_criteria(body):
         task_lifecycle.parse_issue_acceptance_criteria(body)
     except task_lifecycle.MalformedAcceptanceCriterion as exc:
         raise gate.PublishBlocked(
-            f"ACCEPTANCE_CRITERIA_REFUSED: line {exc.line_number} is not a criterion the task lifecycle "
-            f"can read (use `- [ ] **AC-01** — text`): {exc.line[:80]}"
+            f"ACCEPTANCE_CRITERIA_REFUSED: line {exc.line_number}: the task lifecycle rejects it ({exc}; "
+            f"use `- [ ] **AC-01** — text`): {exc.line[:80]}"
         ) from None
     except task_lifecycle.LifecycleError as exc:
         if str(exc) != task_lifecycle.NO_ACCEPTANCE_CRITERIA:
@@ -619,20 +619,29 @@ def _link_created_issue(created, parent, parent_node, gh_repo, read_runner, runn
     """Link the issue ``created`` printed to the stream epic through the ``issue-link`` verb."""
     match = re.search(r"/issues/(\d+)\s*$", created)
     number = int(match.group(1)) if match else None
+    limited = link = None
     try:
         child_node = _issue_node(read_runner, gh_repo, number, cwd, environment) if number else None
-        link = (
-            publish(
+        if child_node:
+            link = publish(
                 "issue-link", repo=gh_repo, parent_id=parent_node, child_id=child_node, runner=runner,
                 cwd=cwd, env=environment, capture_output=True, text=True,
             )
-            if child_node
-            else None
-        )
+            limited = github_client.refusal_of(link, injected=runner is not None)
+    except github_client.GitHubRateLimited as exc:
+        limited = exc
     except Exception:
         link = None
+    which = f"Issue #{number}" if number else "The new issue"
+    if limited is not None:
+        # Keep the typed rate-limit exit and reset time, and still say which issue is unlinked.
+        print(
+            f"LINK_PENDING: {which} was created but not linked to parent #{parent}; "
+            "link it with the issue-link verb after the rate limit resets.",
+            file=sys.stderr,
+        )
+        raise limited
     if link is None or link.returncode:
-        which = f"Issue #{number}" if number else "The new issue"
         raise gate.PublishBlocked(
             f"LINK_FAILED: {which} was created but not linked to parent #{parent}; "
             "link it with the issue-link verb before doing anything else."

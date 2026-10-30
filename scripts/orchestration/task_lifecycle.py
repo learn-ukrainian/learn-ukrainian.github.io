@@ -127,7 +127,7 @@ class LifecycleError(ValueError):
 
 
 class MalformedAcceptanceCriterion(LifecycleError):
-    """An AC-like checkbox line the grammar rejects; carries the line for the caller."""
+    """A checkbox line the parser rejects (malformed, duplicate or oversized); carries the line."""
 
     def __init__(self, message: str, *, line_number: int, line: str):
         super().__init__(message)
@@ -532,28 +532,22 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
     seen: set[str] = set()
     for line_number, raw_line in enumerate(str(body or "").splitlines(), start=1):
         line = raw_line.strip()
-        match = _match_ac_checkbox_line(line)
-        if not match:
-            if _AC_LIKE_CHECKBOX_RE.match(line):
-                raise MalformedAcceptanceCriterion(
-                    "malformed AC-like acceptance criterion checkbox in issue body",
-                    line_number=line_number,
-                    line=line,
-                )
-            continue
-        ac_id = match.group("id")
-        if len(ac_id) > 32:
-            raise LifecycleError("acceptance criterion ID exceeds 32 characters")
-        if ac_id in seen:
-            raise LifecycleError(f"duplicate acceptance criterion ID in issue body: {ac_id}")
-        seen.add(ac_id)
-        criteria.append(
-            {
-                "id": ac_id,
-                "text": _clean_text(match.group("text"), f"acceptance criterion {ac_id}"),
-                "checked": match.group("checked").lower() == "x",
-            }
-        )
+        try:
+            match = _match_ac_checkbox_line(line)
+            if not match:
+                if _AC_LIKE_CHECKBOX_RE.match(line):
+                    raise LifecycleError("malformed AC-like acceptance criterion checkbox in issue body")
+                continue
+            ac_id = match.group("id")
+            if len(ac_id) > 32:
+                raise LifecycleError("acceptance criterion ID exceeds 32 characters")
+            if ac_id in seen:
+                raise LifecycleError(f"duplicate acceptance criterion ID in issue body: {ac_id}")
+            seen.add(ac_id)
+            text = _clean_text(match.group("text"), f"acceptance criterion {ac_id}")
+        except LifecycleError as exc:
+            raise MalformedAcceptanceCriterion(str(exc), line_number=line_number, line=line) from None
+        criteria.append({"id": ac_id, "text": text, "checked": match.group("checked").lower() == "x"})
     if not criteria:
         raise LifecycleError(NO_ACCEPTANCE_CRITERIA)
     return criteria
