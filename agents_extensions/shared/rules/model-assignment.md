@@ -236,11 +236,24 @@ role and are not a last resort for any of them.
   still binds: Opus-authored security code is reviewed by the resolver's
   `--risk critical` cross-family seat, never Sonnet. Security code
   (hooks, launchers, credentials, admission, sandbox) is never written or reviewed
-  on Sonnet. The advisor is strictly
-  for interactive Claude sessions; headless runs omit `advisorModel` and set
-  `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`. Subagents inherit the configured advisor
+  on Sonnet. Interactive sessions use the
+  configured `advisorModel`. Headless dispatcher runs follow the next bullet and
+  otherwise set `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`. Subagents inherit the configured advisor
   and apply the pairing check against their own model. Route reserved subagent
   work to an explicitly pinned qualified seat.
+- **Claude headless advisor (#12094, operator decision 2026-10-30)**: a dispatcher
+  workspace-write run on Sonnet 5.5 starts with `--advisor opus`, on subscription and API-key
+  accounts alike. A Haiku 5.5 workspace-write run gets the same advisor only when the dispatch
+  passes `--advisor opus` (a step up in intelligence); a one-shot Haiku job gets none. Read-only
+  reviews, Opus runs, every other model and every other headless path (the `agent_runtime`
+  adapters) keep `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`. Claude Code has no call cap, so the worker
+  brief limits an advised worker to two consultations per task, before committing to an approach
+  and before declaring done. Advisor iterations appear in the run's recorded `usage.iterations`,
+  apart from the executor's token counts. The advisor needs Claude Code's feature-flag fetch, so
+  the dispatcher never passes `DISABLE_TELEMETRY`. An advised run passes the approved model id,
+  never an alias, and reads no settings file; after the run, the terminal result's `modelUsage`
+  must report that id, or the task settles `failed` with both ids in its error and the reported
+  executor in `resolved_model`.
 - **Subagent default stays unset**: do not set `CLAUDE_CODE_SUBAGENT_MODEL` or
   `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`. Built-in general-purpose and Plan agents
   are not limited to read-only search; a global Haiku override would admit
