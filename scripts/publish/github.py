@@ -32,7 +32,7 @@ TEXT = {"title": "text", "body": "text", "body_file": "file"}
 EDIT = {**TEXT, "add_labels": "texts", "remove_labels": "texts", "milestone": "text"}
 ASSETS = {"assets": "assets"}
 SCHEMAS = {
-    "issue-create": ({"title", "body"}, {**COMMON, **TEXT, "labels": "texts", "milestone": "text"}),
+    "issue-create": ({"title", "body"}, {**COMMON, **TEXT, "labels": "texts", "milestone": "text", "parent": "number"}),
     "issue-edit": ({"number"}, {**COMMON, **EDIT, "number": "number", "remove_milestone": "bool"}),
     "issue-comment": ({"number", "body"}, {**COMMON, "number": "number", "body": "text", "body_file": "file"}),
     "issue-comment-json": ({"number", "body"}, {**COMMON, "number": "number", "body": "text", "body_file": "file"}),
@@ -568,6 +568,77 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner):
     return path, number, head, action, evidence
 
 
+def _refuse_unreadable_criteria(body):
+    """Refuse an issue body whose acceptance criteria the task lifecycle would reject.
+
+    The lifecycle's own parser decides, so a body that publishes here also initializes
+    there. A body with no criteria is not a task card and passes.
+    """
+    from scripts.orchestration import task_lifecycle
+
+    try:
+        task_lifecycle.parse_issue_acceptance_criteria(body)
+    except task_lifecycle.MalformedAcceptanceCriterion as exc:
+        raise gate.PublishBlocked(
+            f"ACCEPTANCE_CRITERIA_REFUSED: line {exc.line_number} is not a criterion the task lifecycle "
+            f"can read (use `- [ ] **AC-01** — text`): {exc.line[:80]}"
+        ) from None
+    except task_lifecycle.LifecycleError as exc:
+        if str(exc) != task_lifecycle.NO_ACCEPTANCE_CRITERIA:
+            raise gate.PublishBlocked(f"ACCEPTANCE_CRITERIA_REFUSED: {exc}") from None
+
+
+def _issue_node(read_runner, gh_repo, number, cwd, environment):
+    """Return the node id of an open issue, or None when it is missing, closed or a PR."""
+    result = read(
+        "issue", repo=gh_repo, number=number, runner=read_runner, cwd=cwd, env=environment,
+        capture_output=True, text=True, check=False, timeout=15,
+    )
+    if result.returncode:
+        return None
+    document = json.loads(result.stdout)
+    if document.get("state") != "open" or "pull_request" in document or not isinstance(document.get("node_id"), str):
+        return None
+    return document["node_id"]
+
+
+def _parent_epic_node(read_runner, gh_repo, parent, cwd, environment):
+    """Resolve --parent to a registered open stream epic's node id before anything is created."""
+    from scripts.orchestration import issue_stream_audit
+
+    epics = {number for numbers in issue_stream_audit.load_registry(audit_only=True).values() for number in numbers}
+    node = _issue_node(read_runner, gh_repo, parent, cwd, environment) if parent in epics else None
+    if node is None:
+        raise gate.PublishBlocked(
+            "PARENT_REFUSED: --parent must be the number of a registered, open stream epic; nothing was created."
+        )
+    return node
+
+
+def _link_created_issue(created, parent, parent_node, gh_repo, read_runner, runner, cwd, environment):
+    """Link the issue ``created`` printed to the stream epic through the ``issue-link`` verb."""
+    match = re.search(r"/issues/(\d+)\s*$", created)
+    number = int(match.group(1)) if match else None
+    try:
+        child_node = _issue_node(read_runner, gh_repo, number, cwd, environment) if number else None
+        link = (
+            publish(
+                "issue-link", repo=gh_repo, parent_id=parent_node, child_id=child_node, runner=runner,
+                cwd=cwd, env=environment, capture_output=True, text=True,
+            )
+            if child_node
+            else None
+        )
+    except Exception:
+        link = None
+    if link is None or link.returncode:
+        which = f"Issue #{number}" if number else "The new issue"
+        raise gate.PublishBlocked(
+            f"LINK_FAILED: {which} was created but not linked to parent #{parent}; "
+            "link it with the issue-link verb before doing anything else."
+        )
+
+
 @github_client.rate_limited_command
 def publish(
     verb: str,
@@ -619,9 +690,14 @@ def publish(
                     fields[field] = raw.decode("utf-8")
                 except UnicodeError:
                     raise gate.PublishBlocked("OPSEC: publisher text is not UTF-8.") from None
+        if verb in {"issue-create", "issue-edit"} and "body" in fields:
+            _refuse_unreadable_criteria(fields["body"])
         _refuse_verdict_markers(verb, fields)
 
         readiness_runner = merge_readiness_runner(runner)
+        parent_node = None
+        if verb == "issue-create" and "parent" in fields:
+            parent_node = _parent_epic_node(readiness_runner, gh_repo, fields["parent"], cwd, environment)
 
         def queue_probe():
             identity = readiness_runner(
@@ -925,18 +1001,26 @@ def publish(
             if reservation:
                 path, number, head, action, evidence = reservation
                 recovery.consume(path, dest, number, head, action, evidence)
+        linking = parent_node is not None
         result = subprocess.CompletedProcess(argv, 0, "" if text else b"", "" if text else b"") if already_queued else _send(
             argv,
             environment=environment,
             runner=runner,
             cwd=cwd,
-            capture_output=capture_output,
-            text=text,
+            capture_output=capture_output or linking,
+            text=text or linking,
             check=check,
             timeout=timeout,
             stdout=stdout,
             stderr=stderr,
         )
+        if linking and result.returncode == 0:
+            _link_created_issue(
+                str(result.stdout or "").strip(), fields["parent"], parent_node, gh_repo, readiness_runner, runner,
+                cwd, environment,
+            )
+            if not capture_output:
+                print(str(result.stdout or "").strip())
         if jump and result.returncode == 0:
             result.queue_jump = True
             print(f"queue-jump: enqueued at the front of the merge queue at {fields['match_head']}", file=sys.stderr)
@@ -1128,6 +1212,13 @@ def main(argv=None, *, runner=None):
     )
     args = vars(parser.parse_args(argv))
     verb = args.pop("verb")
+    if verb == "issue-create" and "parent" not in args:
+        print(
+            "issue-create requires --parent <stream epic issue number>; the new issue is linked to it. "
+            "Nothing was created.",
+            file=sys.stderr,
+        )
+        return 2
     try:
         if verb == "read":
             return read(args.pop("name"), runner=runner, **args).returncode

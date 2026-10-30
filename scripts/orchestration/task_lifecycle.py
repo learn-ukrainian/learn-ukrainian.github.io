@@ -126,6 +126,18 @@ class LifecycleError(ValueError):
     """The lifecycle ledger or requested transition violates the contract."""
 
 
+class MalformedAcceptanceCriterion(LifecycleError):
+    """An AC-like checkbox line the grammar rejects; carries the line for the caller."""
+
+    def __init__(self, message: str, *, line_number: int, line: str):
+        super().__init__(message)
+        self.line_number = line_number
+        self.line = line
+
+
+NO_ACCEPTANCE_CRITERIA = "issue body has no stable-ID acceptance criteria"
+
+
 def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
@@ -518,12 +530,16 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
     """Parse stable-ID issue checkboxes in their authoritative order."""
     criteria: list[dict[str, Any]] = []
     seen: set[str] = set()
-    for raw_line in str(body or "").splitlines():
+    for line_number, raw_line in enumerate(str(body or "").splitlines(), start=1):
         line = raw_line.strip()
         match = _match_ac_checkbox_line(line)
         if not match:
             if _AC_LIKE_CHECKBOX_RE.match(line):
-                raise LifecycleError("malformed AC-like acceptance criterion checkbox in issue body")
+                raise MalformedAcceptanceCriterion(
+                    "malformed AC-like acceptance criterion checkbox in issue body",
+                    line_number=line_number,
+                    line=line,
+                )
             continue
         ac_id = match.group("id")
         if len(ac_id) > 32:
@@ -539,7 +555,7 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
             }
         )
     if not criteria:
-        raise LifecycleError("issue body has no stable-ID acceptance criteria")
+        raise LifecycleError(NO_ACCEPTANCE_CRITERIA)
     return criteria
 
 

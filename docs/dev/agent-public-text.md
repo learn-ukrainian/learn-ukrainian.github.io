@@ -25,7 +25,7 @@ scanned. Transport paths are never published or scanned as public text.
 
 | Verbs | Public fields scanned |
 | --- | --- |
-| `issue-create`, `issue-edit` | Title, body, labels, milestone name |
+| `issue-create`, `issue-edit` | Title, body, labels, milestone name. A body is refused when its acceptance-criterion checkboxes are ones the task lifecycle's parser rejects (`**AC-01**:` instead of `**AC-01** —`); the refusal names the line. A body with no criteria passes. The `issue-create` command requires `--parent`, the number of a registered open stream epic, and links the new issue to it in the same command (after the epic is checked and the issue is created) |
 | `issue-comment`, `issue-comment-json` | Body (JSON variant returns the API response) |
 | `comment-edit` | Body; edits an existing issue or PR conversation comment by `--comment-id` |
 | `issue-close` | Optional comment; reason is a closed enum |
