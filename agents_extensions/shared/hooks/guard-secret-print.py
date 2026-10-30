@@ -1951,11 +1951,16 @@ def _process_facts(command: str, *, depth: int = 0) -> set[str]:
     facts: set[str] = set()
     for _, body in substitutions.values():
         facts |= _process_facts(body, depth=depth + 1)
-    # Read words as the shell does, so a quote in a shell's options is seen and
-    # a script spliced from quote fragments (`'pkill -'f`) is read whole.
-    for pipeline in _pipelines(executable, shell_words=True):
-        for segment in pipeline:
-            facts |= _segment_process_facts(segment, depth)
+    # Facts from both tokenizations count. Shell words show a quote in a shell's
+    # options and a script spliced from quote fragments (`'pkill -'f`); the
+    # fragments show a word the readers only know unquoted (`'-f'""`).
+    seen: set[tuple[str, ...]] = set()
+    for shell_words in (False, True):
+        for pipeline in _pipelines(executable, shell_words=shell_words):
+            for segment in pipeline:
+                if tuple(segment) not in seen:
+                    seen.add(tuple(segment))
+                    facts |= _segment_process_facts(segment, depth)
     return facts
 
 
