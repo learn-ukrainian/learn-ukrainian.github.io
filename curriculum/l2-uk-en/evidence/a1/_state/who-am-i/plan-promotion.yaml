@@ -1,0 +1,10 @@
+attempt_id: sol-full-att-1
+harness: codex
+manifest_sha256: 1ec106f8e9d4b0362d1e92f763fd981290b295e61da5b26f7892ddb48fccfc66
+pack_sha256: 1dc9cee014b77701303836739c28a31a7cdd6a112f1309f183bdc1241ad75a6b
+promoted_at: '2026-10-30T10:22:52+00:00'
+promoted_plan_sha256: 93f40e2dcd4bb3bfa61c18b859938b168559679bf8f7a9f399d61b860b42746a
+review_access: full
+reviewed_plan_sha256: 52e00ff57f1b08e7c86f8dea20aec87b08666666b325e674d4f53653dc0dc428
+reviewer_family: codex
+reviewer_model: gpt-6.1-sol

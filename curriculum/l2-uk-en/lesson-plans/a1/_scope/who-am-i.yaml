@@ -1,0 +1,20 @@
+scope_schema: 1
+level: a1
+module: who-am-i
+letters:
+  count: 9
+  list:
+  - У
+  - Л
+  - С
+  - К
+  - Д
+  - З
+  - Х
+  - Г
+  - ь
+grammar:
+  count: 0
+  ids: []
+vocabulary:
+  core_count: 9

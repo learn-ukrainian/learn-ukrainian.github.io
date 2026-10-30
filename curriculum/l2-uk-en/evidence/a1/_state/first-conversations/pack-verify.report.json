@@ -1,0 +1,52 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 1,
+    "notes_count": 0,
+    "standard_count": 5,
+    "texts_count": 4,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 2
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [
+    "W-006:private_commitment",
+    "W-065:private_commitment",
+    "W-076:private_commitment",
+    "W-081:private_commitment",
+    "W-096:private_commitment",
+    "W-101:private_commitment",
+    "W-104:private_commitment",
+    "W-138:private_commitment",
+    "W-163:private_commitment"
+  ],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/first-conversations.yaml",
+    "sha256": "72709b2f2f7e8f5ede685b48c4c20ed421ac3275b5393d30a71c1944269eca65"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/first-conversations.yaml.lock",
+    "sha256": "1af43290d8bf7768eceb5697ebf466887af51a35291b8bb47dd8ca963f1d8336"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "first-conversations",
+  "status": "warning",
+  "strict": true,
+  "warnings": [
+    "a1/first-conversations W-006: unverifiable in CI (local receipt required)",
+    "a1/first-conversations W-065: unverifiable in CI (local receipt required)",
+    "a1/first-conversations W-076: unverifiable in CI (local receipt required)",
+    "a1/first-conversations W-081: unverifiable in CI (local receipt required)",
+    "a1/first-conversations W-096: unverifiable in CI (local receipt required)",
+    "a1/first-conversations W-101: unverifiable in CI (local receipt required)",
+    "a1/first-conversations W-104: unverifiable in CI (local receipt required)",
+    "a1/first-conversations W-138: unverifiable in CI (local receipt required)",
+    "a1/first-conversations W-163: unverifiable in CI (local receipt required)"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 1,
+    "notes_count": 0,
+    "standard_count": 2,
+    "texts_count": 10,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 8
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [
+    "W-084:private_commitment",
+    "W-097:private_commitment",
+    "W-104:private_commitment",
+    "W-120:private_commitment",
+    "W-162:private_commitment",
+    "W-178:private_commitment"
+  ],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml",
+    "sha256": "1dc9cee014b77701303836739c28a31a7cdd6a112f1309f183bdc1241ad75a6b"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/who-am-i.yaml.lock",
+    "sha256": "39c64230be2c8c841fe386e67f9e49449e88bf4a7b3da1e6e1d39ba8ba25662d"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "who-am-i",
+  "status": "warning",
+  "strict": true,
+  "warnings": [
+    "a1/who-am-i W-084: unverifiable in CI (local receipt required)",
+    "a1/who-am-i W-097: unverifiable in CI (local receipt required)",
+    "a1/who-am-i W-104: unverifiable in CI (local receipt required)",
+    "a1/who-am-i W-120: unverifiable in CI (local receipt required)",
+    "a1/who-am-i W-162: unverifiable in CI (local receipt required)",
+    "a1/who-am-i W-178: unverifiable in CI (local receipt required)"
+  ]
+}

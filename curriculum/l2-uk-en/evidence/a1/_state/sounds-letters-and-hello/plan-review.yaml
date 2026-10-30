@@ -1,8 +1,8 @@
 access: full
-attempt_id: claude-full-att-7
-harness: claude
-manifest_sha256: 45286920a4e48b41bf7f24d95b96f123df5ca4bfa6fb791c39178d31b04a9123
-reviewer_family: anthropic
-reviewer_model: claude-opus-5-5
-validated_at: '2026-10-02T04:49:29+00:00'
+attempt_id: sol-full-att-1
+harness: codex
+manifest_sha256: af55448729d52ff8ab4e9c7ebce9051b1ffe563b8dcdf0030521c4298f339ea8
+reviewer_family: codex
+reviewer_model: gpt-6.1-sol
+validated_at: '2026-10-30T10:15:00+00:00'
 verdict: APPROVE

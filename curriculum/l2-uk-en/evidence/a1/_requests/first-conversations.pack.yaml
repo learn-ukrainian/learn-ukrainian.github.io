@@ -1,0 +1,52 @@
+request_schema: 1
+module: a1/first-conversations
+texts:
+- id: T-001
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w002}
+  span: {first_words: 'Інна: Приві́т!', last_words: 'Анна: До́бре.'}
+  supports: 'ULP lesson 1 page 2: informal greeting dialogue and responses.'
+- id: T-002
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w002}
+  span: {first_words: 'between a receptionist and a guest.', last_words: 'Добра́ніч! = На добра́ніч! — Good night!'}
+  supports: 'ULP lesson 2 page 2: formal greetings, parting formulas, and Добраніч.'
+- id: T-003
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0003_w003}
+  span: {first_words: 'Джон: Ні, я америка́нець.', last_words: 'Олена: Так, украї́нка.'}
+  supports: 'ULP lesson 3 page 3: asking and answering identity questions with так and ні.'
+- id: T-004
+  source: {table: textbooks, chunk_id: 5-klas-ukrmova-avramenko-2022_s0096}
+  span: {first_words: 'Вимова голосних [е] та [и]', last_words: 'сестра [сеистра], зима [зиема]'}
+  supports: 'Avramenko 5th grade page 95: pronunciation of unstressed [е] and [и].'
+exercises:
+- id: X-001
+  source: {table: textbooks, chunk_id: 5-klas-ukrmova-avramenko-2022_s0096}
+  span: {first_words: '2. Прочитайте слова, чітко їх артикулюючи.', last_words: 'потік.'}
+  pattern: 'Read words aloud with clear articulation of unstressed vowels.'
+standard:
+- id: S-001
+  lines: '459-459'
+- id: S-002
+  lines: '239-243'
+- id: S-003
+  lines: '268-270'
+- id: S-004
+  lines: '410-432'
+- id: S-005
+  lines: '578-579'
+videos:
+- id: V-001
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=FUF9Za-1bzY
+  models:
+    letters: []
+    words: []
+    segment: null
+  use: 'Pronunciation model for informal greetings and dialogue.'
+- id: V-002
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=GMcB5rsb3HM
+  models:
+    letters: []
+    words: []
+    segment: null
+  use: 'Pronunciation model for formal greetings and pronouns.'

@@ -1,0 +1,42 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 1,
+    "notes_count": 0,
+    "standard_count": 1,
+    "texts_count": 3,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 2
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [
+    "W-109:private_commitment",
+    "W-110:private_commitment",
+    "W-139:private_commitment",
+    "W-181:private_commitment"
+  ],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml",
+    "sha256": "c1d584ef85270f33843ccbaebf1ffe75b6c004fb0f33dbf60c3fd04955a4bf3a"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml.lock",
+    "sha256": "af20ba9f3d40175e543a0d072e1bf3b1bfc66de03a8ba1aea3921452232d3faf"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "things-have-gender",
+  "status": "warning",
+  "strict": true,
+  "warnings": [
+    "a1/things-have-gender W-109: unverifiable in CI (local receipt required)",
+    "a1/things-have-gender W-110: unverifiable in CI (local receipt required)",
+    "a1/things-have-gender W-139: unverifiable in CI (local receipt required)",
+    "a1/things-have-gender W-181: unverifiable in CI (local receipt required)"
+  ]
+}

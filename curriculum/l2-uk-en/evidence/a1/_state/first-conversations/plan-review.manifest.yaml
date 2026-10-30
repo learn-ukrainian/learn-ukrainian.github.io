@@ -1,0 +1,54 @@
+inputs:
+  arc:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml
+    sha256: 9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe
+  arc_source:
+    path: docs/epics/fresh-build-a1-arc.md
+    sha256: 03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d
+  decisions:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml
+    sha256: 9608ea4b8bc86bff2fd327196f28f9bc126b310ad08d5f2f0ce19f862d9b061d
+  grammar:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml
+    sha256: 20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f
+  learner_state:
+    path: curriculum/l2-uk-en/evidence/a1/_state/first-conversations/plan-review.learner-state.yaml
+    sha256: 12d6ea52b009788be02beb78e823edc5df159334e5bbb85bb70cb019531a660f
+  pack:
+    path: curriculum/l2-uk-en/evidence/a1/first-conversations.yaml
+    sha256: 72709b2f2f7e8f5ede685b48c4c20ed421ac3275b5393d30a71c1944269eca65
+  pack_lock:
+    path: curriculum/l2-uk-en/evidence/a1/first-conversations.yaml.lock
+    sha256: 1af43290d8bf7768eceb5697ebf466887af51a35291b8bb47dd8ca963f1d8336
+  pack_verify_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/first-conversations/pack-verify.report.json
+    sha256: cf03644a8d559e5de18ad11cea82859a82518ef776ac0d6b5918cd793fbdecaa
+  plan:
+    path: curriculum/l2-uk-en/lesson-plans/a1/first-conversations.yaml
+    sha256: 322d3182badc1c9de0cc3df0abffef2d3f63c93ff62d0b4e6305cb9e0e46174d
+  requirements:
+    path: docs/epics/fresh-build-requirements.md
+    sha256: d0d5008aefd21a34fa5cea307254bbd9b044ac9c3eef3db1d1e6e9a3d02d629f
+  scope:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_scope/first-conversations.yaml
+    sha256: e43fa2a3329f1748761c9f4de1e40e3bd975e391e4c8242ddd6f8825f5106603
+  v1_totals:
+    path: curriculum/l2-uk-en/evidence/a1/_state/first-conversations/plan-review.v1-totals.yaml
+    sha256: 5048fa241b903ea77074c512f23fed8b42f50f8c92ce64d96e414d905237c2ea
+  validate_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/first-conversations/plan-validate.report.json
+    sha256: 69b6a718717346c44d8e6494ff45d6984884cf54df64351d33e7f544e5d226ab
+  words:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml
+    sha256: 3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490
+  words_lock:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml.lock
+    sha256: c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f
+kind: plan
+learner_state:
+  sha256: 7bd779bb4fd2b93610bea0c07cfb2a6f9ee41b58773a935e8053b909a8eb3506
+  source: planned_state
+level: a1
+manifest_schema: 1
+position: 6
+slug: first-conversations

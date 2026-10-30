@@ -1,0 +1,470 @@
+built_with:
+  mcp_commit: 4c0fc7ee11f6e6a233f7106776d18deea633d317
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: 326dde95c241dd99fcc9995c92353b1ed0d0503c009fef47bd3b6e070ef580aa
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+exercises:
+- id: X-001
+  items_sample:
+  - 'Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].'
+  pattern: Say and identify the first sound before choosing its sound class.
+  quote: 'Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].'
+  sha256: 6d8f915d4bb16fe9fac4106e4eb9419010ef7f935dadef70cf47669285e2828c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 15
+    row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
+    section_id: 12963
+module: a1/who-am-i
+standard:
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-001
+  lines: 485-485
+  text: '     найпоширеніші професії і види занять;'
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-002
+  lines: 588-588
+  text: '     4.1.6. Склад. Перенос слів.'
+texts:
+- id: T-001
+  quote: Бачу У, у. Чую [у].
+  sha256: 11d40e2fb2c31ac2e70719c01ed65b760c569efadf2ba654cc3217fab1743ab1
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0036
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 40
+    row_sha256: 8ed71d88a83c82eaee8d33848c08c43f4d204d314d5b9b2a12c5de3142626a0a
+    section_id: 12987
+  supports: 'Primer printed page 38: letter У and heard sound [у].'
+- id: T-002
+  quote: Бачу Л, л (ел). Чую [л], [л' ].
+  sha256: c48b4b8f02f4fac170aa50aa2a8691486c585ea84a17f915fa96ad70ccad4e28
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0060
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 64
+    row_sha256: 8cacea6f9e89c0db972ca89747132a11b2ae2df7f352aeb48f72463a23889092
+    section_id: 13011
+  supports: 'Primer printed page 62: consonant Л and heard sounds [л], [л′].'
+- id: T-003
+  quote: Бачу С, с (ес). Чую [с], [с' ].
+  sha256: e79793d7f4bd7f35d45e2730647fda7847964a48a9474f19cd50d964890f3783
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0064
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 68
+    row_sha256: 6831aef94e5fee8504aacb3ffd49ffca2f52de980a1b16bef2f48fa357472ebc
+    section_id: 13015
+  supports: 'Primer printed page 66: consonant С and heard sounds [с], [с′].'
+- id: T-004
+  quote: Бачу К, к (ка). Чую [к].
+  sha256: e9758791906c56853d53adced0357aa43c49951f6775b89f5c198c0c2aab1e4c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0068
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 72
+    row_sha256: 3584721af83e7666dcd56df3e076fb357e66e1c11b07765c967c9908cfa83bf4
+    section_id: 13019
+  supports: 'Primer printed page 70: consonant К and heard sound [к].'
+- id: T-005
+  quote: 'Д д
+
+    Бачу Д, д (де). Чую [д], [д''].
+
+    д р і * д д * т е л
+
+    л е * і д *
+
+    [ – = • – – ] [ = • | – • – ] Д
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    да
+
+    до
+
+    ду
+
+    ди
+
+    ді
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    [ – • | = • = ]
+
+    Д
+
+    ад
+
+    од
+
+    уд
+
+    ид
+
+    ід
+
+    дах ди-мар
+
+    бу-ди-нок під-ві-кон-ня
+
+    две-рі до-ріж-ка схо-ди
+
+    ве-ран-да
+
+    дро-ва'
+  sha256: ed319b19bd2f39c5a49e71403b0bfc1c3fd2c2937db43e4b5be326d5484069b5
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0092
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 96
+    row_sha256: be5bda8b4d3dd7fe50240ee1a92b5ae7571b7350338e93b99a3199619bce6771
+    section_id: 13043
+  supports: 'Primer printed page 94: consonant Д and decodable words.'
+- id: T-006
+  quote: 'З з
+
+    Бачу З, з (зе). Чую [з], [з''].
+
+    к о * з а * у з о
+
+    к з і р к и
+
+    [ – • | – • – ]
+
+    З
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    за
+
+    зо
+
+    зу
+
+    зи
+
+    зі
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    [ = • – | – • ]
+
+    З
+
+    аз
+
+    оз
+
+    уз
+
+    из
+
+    із
+
+    за- зо- зе-
+
+    зу- -за
+
+    Зи-ма в лі-сі.'
+  sha256: f04d609eab292606aa57ee7b498f487251a11e3a8d3be905cdabb74a945f4a6e
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0096
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 100
+    row_sha256: 2b1b8286bc46f4e3a53deddd47968362297f38dca1026157888f2e54a76ab0a3
+    section_id: 13047
+  supports: 'Primer printed page 98: consonant З and word зима.'
+- id: T-007
+  quote: 'Г г
+
+    Бачу Г, г (ге). Чую [г].
+
+    г о д и н и
+
+    н к з і н
+
+    г а р б у п і н г в
+
+    Г
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    га
+
+    го
+
+    гу
+
+    ги
+
+    гі
+
+    [ – • – | – • – ]
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    Г
+
+    аг
+
+    ог
+
+    уг
+
+    иг
+
+    іг'
+  sha256: b5bff421ba98662e901604d562640fd97e5a48570f345e5138571483dc4b016b
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0003
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 6
+    row_sha256: 4ff096be956bfaee4f7dd1180664cf8b0e0cef36c644ff34c7f8b18b4984bb2c
+    section_id: 13065
+  supports: 'Primer part 2 printed page 4: consonant Г and heard sound [г].'
+- id: T-008
+  quote: 'Х х
+
+    Бачу Х, х (ха). Чую [х].
+
+    х л і б * а х и
+
+    х м і л ь'
+  sha256: d7c8b694919e8f18072f960ecc2130fdbac10780bf84b00753dfec15709e0d0e
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0019
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 22
+    row_sha256: a1a4cfc1542761089169d3f159c532bf558b6110a9363c74914a5141059817f2
+    section_id: 13081
+  supports: 'Primer part 2 printed page 20: consonant Х and heard sound [х].'
+- id: T-009
+  quote: 'М’який знак у транскрипції не вживають, оскільки він не позначає
+
+    звука, а вказує на м’якість попереднього приголосного:'
+  sha256: 3f40f1a0460c02d26946b4a144b5ddeeab53c3cfaaa483277ebc61aa2a1832ae
+  source:
+    author: avramenko
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0077
+    file: 5-klas-ukrmova-avramenko-2022
+    grade: '5'
+    kind: textbook
+    page: 76
+    row_sha256: e993a40a00063b777dbeb07bb6375848aa727bea19afbb9cef947d88a8a44fdd
+    section_id: 26254
+  supports: 'Avramenko printed p. 76: the soft sign indicates softness of the preceding consonant.'
+- id: T-010
+  quote: "Lesson 3: How to Introduce Yourself in Ukrainian\n\n                          До́брий день! Мене́ зва́ти А́нна —\
+    \ My name is Anna. The third episode is about\n                          getting acquainted with Ukrainians."
+  sha256: 9104f8077bed9511f0faf1e26bfe7fad26b8905abdd9bdab821dc9b1161b4717
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0003_w001
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 3356817301cfdfc2f19fe397d7b5eb4e240c241b6bb02f99031631288f032a55
+    section_id: null
+  supports: 'ULP Season 1 lesson 3: introduction and identity phrases.'
+videos:
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    http_status: 200
+  id: V-001
+  models:
+    letters:
+    - У
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  use: Pronunciation model for letter У.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    http_status: 200
+  id: V-002
+  models:
+    letters:
+    - Л
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+  use: Pronunciation model for consonant Л.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
+    http_status: 200
+  id: V-003
+  models:
+    letters:
+    - С
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=7UsFBgSL91E
+  use: Pronunciation model for consonant С.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    http_status: 200
+  id: V-004
+  models:
+    letters:
+    - К
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=J7sGEI4-xJo
+  use: Pronunciation model for consonant К.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    http_status: 200
+  id: V-005
+  models:
+    letters:
+    - Д
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=g4Bh-lqzd48
+  use: Pronunciation model for consonant Д.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=BhASNxitC1A
+    http_status: 200
+  id: V-006
+  models:
+    letters:
+    - З
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=BhASNxitC1A
+  use: Pronunciation model for consonant З.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=vpr58zJSJKc
+    http_status: 200
+  id: V-007
+  models:
+    letters:
+    - Х
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=vpr58zJSJKc
+  use: Pronunciation model for consonant Х.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=gVnclpSI0DU
+    http_status: 200
+  id: V-008
+  models:
+    letters:
+    - Г
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=gVnclpSI0DU
+  use: Pronunciation model for consonant Г.

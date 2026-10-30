@@ -1,0 +1,118 @@
+request_schema: 1
+module: a1/who-am-i
+texts:
+- id: T-001
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0036}
+  span: {first_words: 'Бачу У, у.', last_words: 'Чую [у].'}
+  supports: 'Primer printed page 38: letter У and heard sound [у].'
+- id: T-002
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0060}
+  span: {first_words: 'Бачу Л, л (ел).', last_words: "Чую [л], [л' ]."}
+  supports: 'Primer printed page 62: consonant Л and heard sounds [л], [л′].'
+- id: T-003
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0064}
+  span: {first_words: 'Бачу С, с (ес).', last_words: "Чую [с], [с' ]."}
+  supports: 'Primer printed page 66: consonant С and heard sounds [с], [с′].'
+- id: T-004
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0068}
+  span: {first_words: 'Бачу К, к (ка).', last_words: 'Чую [к].'}
+  supports: 'Primer printed page 70: consonant К and heard sound [к].'
+- id: T-005
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0092}
+  span: {first_words: 'Д д', last_words: 'дро-ва'}
+  supports: 'Primer printed page 94: consonant Д and decodable words.'
+- id: T-006
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0096}
+  span: {first_words: 'З з', last_words: 'Зи-ма в лі-сі.'}
+  supports: 'Primer printed page 98: consonant З and word зима.'
+- id: T-007
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0003}
+  span: {first_words: 'Г г', last_words: 'іг'}
+  supports: 'Primer part 2 printed page 4: consonant Г and heard sound [г].'
+- id: T-008
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0019}
+  span: {first_words: 'Х х', last_words: 'х м і л ь'}
+  supports: 'Primer part 2 printed page 20: consonant Х and heard sound [х].'
+- id: T-009
+  source: {table: textbooks, chunk_id: 5-klas-ukrmova-avramenko-2022_s0077}
+  span: {first_words: 'М’який знак', last_words: 'попереднього приголосного:'}
+  supports: 'Avramenko printed p. 76: the soft sign indicates softness of the preceding consonant.'
+- id: T-010
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0003_w001}
+  span: {first_words: 'Lesson 3: How', last_words: 'Ukrainians.'}
+  supports: 'ULP Season 1 lesson 3: introduction and identity phrases.'
+exercises:
+- id: X-001
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012}
+  span: {first_words: 'Вимов перший звук у словах — назвах предметів.', last_words: 'Який це звук? Голосний звук позначаємо так: [•].'}
+  pattern: 'Say and identify the first sound before choosing its sound class.'
+standard:
+- id: S-001
+  lines: '485-485'
+- id: S-002
+  lines: '588-588'
+videos:
+- id: V-001
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  models:
+    letters: [У]
+    words: []
+    segment: null
+  use: 'Pronunciation model for letter У.'
+- id: V-002
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+  models:
+    letters: [Л]
+    words: []
+    segment: null
+  use: 'Pronunciation model for consonant Л.'
+- id: V-003
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=7UsFBgSL91E
+  models:
+    letters: [С]
+    words: []
+    segment: null
+  use: 'Pronunciation model for consonant С.'
+- id: V-004
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=J7sGEI4-xJo
+  models:
+    letters: [К]
+    words: []
+    segment: null
+  use: 'Pronunciation model for consonant К.'
+- id: V-005
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=g4Bh-lqzd48
+  models:
+    letters: [Д]
+    words: []
+    segment: null
+  use: 'Pronunciation model for consonant Д.'
+- id: V-006
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=BhASNxitC1A
+  models:
+    letters: [З]
+    words: []
+    segment: null
+  use: 'Pronunciation model for consonant З.'
+- id: V-007
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=vpr58zJSJKc
+  models:
+    letters: [Х]
+    words: []
+    segment: null
+  use: 'Pronunciation model for consonant Х.'
+- id: V-008
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=gVnclpSI0DU
+  models:
+    letters: [Г]
+    words: []
+    segment: null
+  use: 'Pronunciation model for consonant Г.'

@@ -1,0 +1,123 @@
+built_with:
+  mcp_commit: 4c0fc7ee11f6e6a233f7106776d18deea633d317
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: e0b5309a21c47f37b1d1c75f625ec988d2657e3994116ec5f45cc060dc291c8e
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+exercises:
+- id: X-001
+  items_sample:
+  - "Б) Це (мій, моя, мої) тато Петро.\n                                                                5.    У тебе є чотири\
+    \ брати.\nВ) Це (наш, наше, наші) дідусь Олег.\n                                                                6.   \
+    \ У неї є одна племінниця.\nГ)   Це (їхня, їхнє, їхні) батьки."
+  pattern: Select the correct possessive pronoun agreeing with the noun.
+  quote: "Б) Це (мій, моя, мої) тато Петро.\n                                                                5.    У тебе\
+    \ є чотири брати.\nВ) Це (наш, наше, наші) дідусь Олег.\n                                                            \
+    \    6.    У неї є одна племінниця.\nГ)   Це (їхня, їхнє, їхні) батьки."
+  sha256: 3a138a514fcd6865508d10bc61bf131b052e0795a6d9306930d215707281fa10
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0007_w008
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 193e31ac6bc8b132220e0dc53bf6ff30b08404fa5debf9dfdfff7185504af6c7
+    section_id: null
+module: a1/things-have-gender
+standard:
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-001
+  lines: 661-662
+  text: '      утворення родових форм присвійних займенників: мій, моя, моє; твій,
+
+    твоя, твоє; наш, наша, наше; ваш, ваша, ваше, їхній, їхня, їхнє;'
+texts:
+- id: T-001
+  quote: "So, here are the typical endings of three noun\ngenders:                                                       \
+    \               Чо́рну ка́ву, будь ла́ска.\n masculine\n                   -consonant      чай, телефо́н\n gender\n  \
+    \                                                                           Вам тут чи з собою?\n feminine\n         \
+    \          -а, -я          ка́ва, вода́                   If they ask you the question above in Ukraine, it\n gender\n\
+    \                                                                  means if you want your drink or dish to have at the\n\
+    \ neuter                                                           place (тут) or to go (з собою). Try it:\n         \
+    \          -о, -е          пи́во, со́нце (sun)"
+  sha256: 512c82d0ba72d9a58744127e36a434072b984d4772d1de6ef0886fa6c7b7c22d
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0011_w004
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: b3d4cccd99300de2ac42812e63422c5ec2d5111a356d45a010a9c426dd2fec05
+    section_id: null
+  supports: 'ULP lesson 11 page 4: typical noun gender endings for masculine, feminine, and neuter.'
+- id: T-002
+  quote: "In the table below, you will find all Ukrainian possessive pronouns and their forms.\n\n                       \
+    \                    Присвійні займенники\n                                           Possessive pronouns in Ukrainian\n\
+    \n                                     Masculine               Feminine                 Neuter             Plural\n\n\
+    \             my                          мій                    моя́                   моє́              мої́\n\n   \
+    \          your (sing.)               твій                    твоя́                  твоє́             твої́\n\n     \
+    \        his                                                           його́\n\n             her                     \
+    \                                        її́\n\n             its                                                     \
+    \      його́\n\n             our                        наш                     на́ша                 на́ше          \
+    \    на́ші\n\n             your (pl.)                 ваш                     ва́ша                 ва́ше            \
+    \  ва́ші\n\n             their                      ї́хній"
+  sha256: 60041cb3c25568af765d3f6b5a8f24f71b90d2dd42707d8c9e8f14e23017a6e2
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0007_w004
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: e3fc69fcaf7c4621b655b6a2bdbedc04a6f23d844e06bb0d31f398c733ccbe67
+    section_id: null
+  supports: 'ULP lesson 7 page 4: full table of Ukrainian possessive pronouns and forms.'
+- id: T-003
+  quote: "наш, на́ша, на́ше, на́ші                             our\n                                                     \
+    \              (masculine, feminine, neuter, plural)\n              ваш, ва́ша, ва́ше, ва́ші                         \
+    \    your (formal or plural)\n              ї́хній, ї́хня, ї́хнє, ї́хні"
+  sha256: fdd81a631897793b942e1abd6542bdbe432fedd27f28d618d6f3d55be1fd53e5
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0007_w009
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 208208fdb315f99acbbda397297e603057baa85b183233f7b404eb923cc5a30c
+    section_id: null
+  supports: 'ULP lesson 7 page 9: vocabulary entries for наш, ваш, and їхній.'
+videos:
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=Cyk8EGKfflE
+    http_status: 200
+  id: V-001
+  models:
+    letters: []
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=Cyk8EGKfflE
+  use: Model for noun gender endings in Ukrainian.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=Dz-gAlVcyDk
+    http_status: 200
+  id: V-002
+  models:
+    letters: []
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=Dz-gAlVcyDk
+  use: Model for Ukrainian possessive pronouns and agreement.

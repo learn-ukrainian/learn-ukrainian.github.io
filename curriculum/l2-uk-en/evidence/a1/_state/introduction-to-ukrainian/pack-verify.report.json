@@ -1,0 +1,32 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 0,
+    "notes_count": 0,
+    "standard_count": 0,
+    "texts_count": 3,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 0
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml",
+    "sha256": "a578764bbbf7e780eb03bbc53cb87515c1cde9dabfd45374de4fc80b96e14645"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml.lock",
+    "sha256": "8522af0e7db34b4d88a0b021bc7f1c8c2495e462dcf2d54d12c23b59bf713c4f"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "introduction-to-ukrainian",
+  "status": "ok",
+  "strict": true,
+  "warnings": []
+}

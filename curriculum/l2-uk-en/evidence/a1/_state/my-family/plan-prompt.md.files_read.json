@@ -1,0 +1,43 @@
+{
+  "files_read": [
+    "curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml",
+    "docs/epics/fresh-build-requirements.md",
+    "docs/epics/fresh-build-a1-arc.md",
+    "curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/my-family.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml",
+    "curriculum/l2-uk-en/evidence/a1/_state/my-family/plan-validate.report.json",
+    "curriculum/l2-uk-en/evidence/a1/_state/my-family/pack-verify.report.json",
+    "curriculum/l2-uk-en/evidence/a1/_state/my-family/plan-review.v1-totals.yaml",
+    "curriculum/l2-uk-en/evidence/a1/my-family.yaml.lock",
+    "curriculum/l2-uk-en/evidence/a1/my-family.yaml",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml",
+    "curriculum/l2-uk-en/evidence/a1/_state/my-family/plan-review.learner-state.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml",
+    "scripts/review/prompts/plan-review.md.j2"
+  ],
+  "template_sha256": {
+    "scripts/review/prompts/plan-review.md.j2": "65c8e3e42bb0a23f7aea0dc7943db0bfea302ba7a6b5aa46217618a3c900d829"
+  },
+  "verifier_reads": [],
+  "render_contract": {
+    "version": 4,
+    "render_checkout": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-f6ef-i8425-agy",
+    "input_root": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-f6ef-i8425-agy",
+    "prompts_dir": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-f6ef-i8425-agy/scripts/review/prompts",
+    "templates": {
+      "plan-review.md.j2": "65c8e3e42bb0a23f7aea0dc7943db0bfea302ba7a6b5aa46217618a3c900d829"
+    },
+    "template_digest": "sha256:d5663e2ce79a57f424d2081e6ff3ae3ad8987afdf43da68c4e7491bbc8671669",
+    "server_digest": "sha256:62016e99b183c9e9b56f76bd9310d1cca40062e2c9f60f84b8e1f6947ee72db1",
+    "server_components": {
+      "repository": "sha256:0d37d7bba4b057b9119714941f24fc6d1efcde9b879048416e923af551d2cff1",
+      "requirements-lock.txt": "sha256:3e5c02571a48293fe2bde91910f0fed96e4fa8e89c55f0f030c22d3d94c75d96"
+    },
+    "prompt_sha256": "75da2d6fdd7dab4d5eea69c4550a0eeb342c56eac0da10043154e3fc8d2b8dcd",
+    "review_id": "rev-a1-my-family",
+    "attempt_id": "sol-full-att-1"
+  }
+}

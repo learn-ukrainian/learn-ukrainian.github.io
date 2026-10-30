@@ -1,0 +1,16 @@
+scope_schema: 1
+level: a1
+module: my-family
+letters:
+  count: 5
+  list:
+  - Б
+  - Й
+  - Ї
+  - Ю
+  - Є
+grammar:
+  count: 0
+  ids: []
+vocabulary:
+  core_count: 7

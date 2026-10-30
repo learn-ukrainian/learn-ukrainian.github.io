@@ -1,0 +1,290 @@
+learner_state:
+  base_ids:
+  - W-001
+  - W-002
+  - W-003
+  - W-004
+  - W-005
+  - W-006
+  - W-007
+  - W-008
+  - W-009
+  - W-010
+  - W-011
+  - W-012
+  - W-013
+  - W-014
+  - W-015
+  - W-016
+  - W-017
+  - W-018
+  - W-019
+  - W-020
+  - W-021
+  - W-022
+  - W-023
+  - W-024
+  - W-025
+  - W-026
+  - W-027
+  - W-028
+  - W-029
+  - W-030
+  - W-031
+  - W-032
+  - W-033
+  - W-034
+  - W-035
+  - W-036
+  - W-037
+  - W-038
+  - W-039
+  - W-040
+  - W-041
+  - W-042
+  - W-043
+  - W-044
+  - W-045
+  - W-046
+  - W-047
+  - W-048
+  - W-049
+  - W-050
+  - W-051
+  - W-052
+  - W-053
+  - W-054
+  - W-055
+  - W-056
+  - W-057
+  - W-058
+  - W-059
+  - W-060
+  - W-061
+  - W-062
+  - W-063
+  - W-064
+  - W-065
+  - W-066
+  - W-067
+  - W-068
+  - W-069
+  - W-070
+  - W-071
+  - W-072
+  - W-073
+  core_ids:
+    W-074:
+      lesson: 1
+      position: 2
+    W-075:
+      lesson: 1
+      position: 2
+    W-076:
+      lesson: 1
+      position: 2
+    W-081:
+      lesson: 3
+      position: 2
+    W-084:
+      lesson: 2
+      position: 3
+    W-091:
+      lesson: 3
+      position: 2
+    W-092:
+      lesson: 3
+      position: 2
+    W-093:
+      lesson: 3
+      position: 2
+    W-094:
+      lesson: 3
+      position: 2
+    W-097:
+      lesson: 2
+      position: 3
+    W-101:
+      lesson: 4
+      position: 2
+    W-104:
+      lesson: 2
+      position: 3
+    W-107:
+      lesson: 1
+      position: 5
+    W-108:
+      lesson: 2
+      position: 5
+    W-109:
+      lesson: 2
+      position: 5
+    W-110:
+      lesson: 1
+      position: 4
+    W-111:
+      lesson: 1
+      position: 5
+    W-112:
+      lesson: 2
+      position: 5
+    W-115:
+      lesson: 1
+      position: 5
+    W-120:
+      lesson: 3
+      position: 3
+    W-127:
+      lesson: 3
+      position: 4
+    W-128:
+      lesson: 3
+      position: 5
+    W-129:
+      lesson: 3
+      position: 5
+    W-130:
+      lesson: 3
+      position: 5
+    W-131:
+      lesson: 3
+      position: 5
+    W-132:
+      lesson: 4
+      position: 5
+    W-133:
+      lesson: 4
+      position: 5
+    W-134:
+      lesson: 4
+      position: 5
+    W-150:
+      lesson: 1
+      position: 5
+    W-153:
+      lesson: 1
+      position: 5
+    W-162:
+      lesson: 3
+      position: 3
+    W-171:
+      lesson: 3
+      position: 4
+    W-173:
+      lesson: 4
+      position: 5
+    W-178:
+      lesson: 3
+      position: 3
+    W-183:
+      lesson: 2
+      position: 4
+    W-184:
+      lesson: 2
+      position: 4
+  cumulative_core_count: 36
+  grammar_ids: {}
+  lesson_n: 1
+  letters:
+    А:
+      lesson: 2
+      position: 2
+    Е:
+      lesson: 2
+      position: 2
+    И:
+      lesson: 2
+      position: 2
+    І:
+      lesson: 2
+      position: 2
+    О:
+      lesson: 2
+      position: 2
+    М:
+      lesson: 3
+      position: 2
+    Н:
+      lesson: 3
+      position: 2
+    В:
+      lesson: 3
+      position: 2
+    П:
+      lesson: 4
+      position: 2
+    Р:
+      lesson: 4
+      position: 2
+    Т:
+      lesson: 4
+      position: 2
+    Я:
+      lesson: 4
+      position: 2
+    У:
+      lesson: 1
+      position: 3
+    Л:
+      lesson: 1
+      position: 3
+    С:
+      lesson: 1
+      position: 3
+    К:
+      lesson: 2
+      position: 3
+    Д:
+      lesson: 2
+      position: 3
+    З:
+      lesson: 2
+      position: 3
+    Х:
+      lesson: 3
+      position: 3
+    Г:
+      lesson: 3
+      position: 3
+    ь:
+      lesson: 3
+      position: 3
+    Б:
+      lesson: 1
+      position: 4
+    Й:
+      lesson: 1
+      position: 4
+    Ї:
+      lesson: 2
+      position: 4
+    Ю:
+      lesson: 3
+      position: 4
+    Є:
+      lesson: 3
+      position: 4
+    Ґ:
+      lesson: 1
+      position: 5
+    Ж:
+      lesson: 1
+      position: 5
+    Ч:
+      lesson: 2
+      position: 5
+    Ш:
+      lesson: 2
+      position: 5
+    Щ:
+      lesson: 3
+      position: 5
+    Ц:
+      lesson: 3
+      position: 5
+    Ф:
+      lesson: 3
+      position: 5
+  level: a1
+  name_ids: {}
+  position: 6

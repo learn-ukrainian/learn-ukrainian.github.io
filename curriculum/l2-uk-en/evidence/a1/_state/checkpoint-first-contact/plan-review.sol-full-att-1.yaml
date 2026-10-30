@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-a1-checkpoint-first-contact"
+  attempt_id: "sol-full-att-1"
+  manifest_sha256: "d033b39c0ffebbdb26fa1c0edd693df0e9ecc1af4cd47aafd3f0999cfce9ab8b"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gpt-6.1-sol"
+  harness: "codex"
+  family: "codex"
+  prompt_sha256: "ac3c409800239d8e668815dbd705cbfcef5186d24647d00582eff50f05c92c7f"
+checks:
+  closing_shape: clean
+  title_describes_job: clean
+  title_quantities: clean
+  quoted_forms: clean
+  sequencing: clean
+  sizing: clean
+  inventory: clean
+  activities: clean
+  evidence_fit: clean
+  standard_and_ulp: clean
+findings: []

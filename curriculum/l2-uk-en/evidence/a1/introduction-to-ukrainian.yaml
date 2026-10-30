@@ -1,0 +1,82 @@
+built_with:
+  mcp_commit: 4c0fc7ee11f6e6a233f7106776d18deea633d317
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: ae2e7a1d90f8dc19aa63db55c9cacfb1211c705dd26e5e9f4d88e5d0b88ca7cb
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+module: a1/introduction-to-ukrainian
+texts:
+- id: T-001
+  quote: 'ДЕРЖАВНІ СИМВОЛИ УКРАЇНИ
+
+    ДЕРЖАВНИЙ
+
+    ПРАПОР УКРАЇНИ
+
+    ДЕРЖАВНИЙ
+
+    ГЕРБ УКРАЇНИ
+
+    ДЕРЖАВНИЙ ГІМН УКРАЇНИ'
+  sha256: f26b0495799d14c94ea04f1dc6691c96a31076ee6c376292c7b9489bc1df1f95
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0001
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 3
+    row_sha256: 98239b8c3e6bb7ec957e0277c28220a0089341188543f4a7f64ba7ed24cb421d
+    section_id: 12952
+  supports: 'Ukrainian state symbols: flag, coat of arms, anthem; primer printed page 3.'
+- id: T-002
+  quote: 'Дорогий першокласнику!
+
+    Дорога першокласнице!
+
+    Перед тобою перший підручник з української
+
+    мови. Перегорни сторінки, розглянь, що на них зобра-
+
+    жено. Ти побачиш багато малюнків, букв, текстів. Учи-
+
+    телька / учитель тобі допоможе в цьому розібратися.
+
+    Працюючи з книжкою, ти розкажеш про себе, свою
+
+    родину'
+  sha256: 95852b27160b9c819d6910f7c4720f8d4ae5b02847e7b6530cde7b2ad6a71668
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0003
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 5
+    row_sha256: 98d3861876bb7c3427085d946f69eca20c53b4ad6a3ebdcacdf18bde8e3388b9
+    section_id: 12954
+  supports: Primer introduction to learning Ukrainian and working with the textbook; printed page 5.
+- id: T-003
+  quote: 'Звуки. Немовні звуки. Жести
+
+    Відтвори звуки потяга, який наближається до
+
+    хлопчика й навпаки.
+
+    Мова без слів (жести)'
+  sha256: 6742bc020216f35134887e75b6e70164b0af01f330e4f00ec738153295ba8951
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0010
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 13
+    row_sha256: 2eb89a7c1bcf30a54afe73aa9600e1d98eed8b700e56e55f29e758bd07751c37
+    section_id: 12961
+  supports: Speech sounds versus non-speech sounds and gestures; primer printed page 13.

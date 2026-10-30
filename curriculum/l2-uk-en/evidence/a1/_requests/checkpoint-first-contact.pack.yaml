@@ -1,0 +1,37 @@
+request_schema: 1
+module: a1/checkpoint-first-contact
+texts:
+- id: T-001
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w002}
+  span: {first_words: 'Інна: Приві́т!', last_words: 'Анна: До́бре.'}
+  supports: 'ULP lesson 1 page 2: informal greeting dialogue and responses.'
+- id: T-002
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w002}
+  span: {first_words: 'between a receptionist and a guest.', last_words: 'Добра́ніч! = На добра́ніч! — Good night!'}
+  supports: 'ULP lesson 2 page 2: formal greetings, parting formulas, and Добраніч.'
+- id: T-003
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0003_w003}
+  span: {first_words: 'Джон: Ні, я америка́нець.', last_words: 'Олена: Так, украї́нка.'}
+  supports: 'ULP lesson 3 page 3: asking and answering identity questions with так and ні.'
+- id: T-004
+  source: {table: textbooks, chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063}
+  span: {first_words: 'Букви та звуки', last_words: 'день [ден′]'}
+  supports: 'Zabolotnyi printed page 84: sound values and alphabet review.'
+standard: []
+videos:
+- id: V-001
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=FUF9Za-1bzY
+  models:
+    letters: []
+    words: []
+    segment: null
+  use: 'Pronunciation model for informal greetings and dialogue.'
+- id: V-002
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=GMcB5rsb3HM
+  models:
+    letters: []
+    words: []
+    segment: null
+  use: 'Pronunciation model for formal greetings and pronouns.'

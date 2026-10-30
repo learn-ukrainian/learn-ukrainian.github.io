@@ -1,0 +1,124 @@
+plan_schema: 2
+module: introduction-to-ukrainian
+level: a1
+sequence: 1
+slug: introduction-to-ukrainian
+version: '1'
+title: 'вступ до української'
+subtitle: 'Language identity, history, and alphabet overview'
+focus: 'Orient yourself in English: language identity, brief history, where spoken, alphabet overview, study method and outcomes'
+objectives:
+- 'Understand Ukrainian language identity, origins, and where it is spoken in Ukraine and worldwide.'
+- 'Survey the 33 letters of the Cyrillic alphabet, distinguishing vowels, consonants, and special signs.'
+- 'Establish effective study habits focusing on speech sounds before letters and active oral practice.'
+connects_to: []
+prerequisites: []
+register: 'English orientation at A1.'
+changelog:
+- 'Position 1 orientation module plan authored under arc revision r6.'
+arc_ref: {level: a1, position: 1}
+evidence_ref:
+  path: evidence/a1/introduction-to-ukrainian.yaml
+  sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+lessons:
+- n: 1
+  slug: language-identity-and-roots
+  title: 'Language identity and roots'
+  kind: teach
+  job: 'Understand Ukrainian language identity, history, where it is spoken, and key goals of the course.'
+  rationale: 'Orientation module introduces learners to the Ukrainian language context and culture before teaching phonetic mechanics.'
+  word_target: 200
+  inventory:
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Welcome to Ukrainian. Ukrainian is an East Slavic language spoken by over 40 million people in Ukraine and across the global diaspora. We begin with its cultural and national identity.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-001']
+    practice: ['a1']
+  - id: s2
+    kind: teach
+    teach: 'Orientation on language history, state symbols, and modern standard Ukrainian.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-002']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Identify where Ukrainian is primarily spoken and its language family.'
+    options:
+    - 'East Slavic language spoken primarily in Ukraine'
+    - 'South Slavic language spoken in the Balkans'
+    - 'West Germanic language spoken in Western Europe'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Reflect on core cultural and linguistic features of modern Ukrainian.'
+    options:
+    - 'Official state language of Ukraine with over 40 million speakers'
+    - 'A minority dialect without official status'
+    - 'An extinct language preserved only in liturgical texts'
+- n: 2
+  slug: alphabet-overview-and-study-method
+  title: 'Alphabet overview and study method'
+  kind: teach
+  closes_with_recap: true
+  job: 'Survey the 33 Cyrillic letters and establish effective study habits for pronunciation and writing.'
+  rationale: 'Gives an overview of the Cyrillic alphabet and sets learner expectations before letter acquisition starts in position 2.'
+  word_target: 200
+  inventory:
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'The Ukrainian alphabet has 33 letters: 21 consonants, 10 vowels, 1 semivowel (й), and the soft sign (ь). We distinguish what is heard (speech sounds) from what is written (letters).'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-003']
+    practice: ['a1']
+  - id: s2
+    kind: recap
+    teach: 'Practical closing task: establish your personal study goals and understand sound-before-letter progression.'
+    task:
+      id: 'orientation-recap-task'
+      action: 'read_and_use'
+      context_en: 'Beginning your journey into the Ukrainian language.'
+      instruction_en: 'Review the alphabet structure and note down your daily practice routine.'
+      response_mode: 'written'
+      success_criteria_en:
+      - 'Identify that Ukrainian has 33 letters including vowels, consonants, and the soft sign'
+      - 'Commit to oral repetition before reading print'
+      learner_reads: []
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-002']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Survey the 33 letters of the Ukrainian alphabet and letter classes.'
+    options:
+    - '33 letters: 21 consonants, 10 vowels, 1 semivowel, 1 soft sign'
+    - '26 letters like the English alphabet'
+    - '30 letters with no special signs'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Reinforce the sound-before-letter principle for effective study.'
+    options:
+    - 'Hear and repeat spoken models aloud before analyzing spelling'
+    - 'Memorize spelling rules before listening to native speakers'
+    - 'Rely solely on silent reading without spoken practice'

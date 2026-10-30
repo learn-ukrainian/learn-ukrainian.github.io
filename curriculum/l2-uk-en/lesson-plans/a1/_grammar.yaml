@@ -49,3 +49,18 @@
   introduced_at:
     position: 3
     lesson: alphabet-order-and-names
+- id: G-a1-012
+  point: 'Ukrainian nouns have one of three grammatical genders (masculine, feminine, or neuter), typically marked by the noun ending in the nominative singular.'
+  introduced_at:
+    position: 8
+    lesson: grammatical-gender-of-nouns
+- id: G-a1-013
+  point: 'First- and second-person possessives agree in gender with the possessed noun across singular and plural speaker and addressee forms.'
+  introduced_at:
+    position: 8
+    lesson: possessives-speaker-and-addressee
+- id: G-a1-014
+  point: 'Third-person possessives include invariable singular forms and the variable third-person plural possessive adjective which agrees in gender with the noun.'
+  introduced_at:
+    position: 8
+    lesson: third-person-possessives

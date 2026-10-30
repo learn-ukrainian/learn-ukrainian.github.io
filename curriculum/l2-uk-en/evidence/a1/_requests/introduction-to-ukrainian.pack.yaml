@@ -1,0 +1,15 @@
+request_schema: 1
+module: a1/introduction-to-ukrainian
+texts:
+- id: T-001
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0001}
+  span: {first_words: 'ДЕРЖАВНІ СИМВОЛИ УКРАЇНИ', last_words: 'ДЕРЖАВНИЙ ГІМН УКРАЇНИ'}
+  supports: 'Ukrainian state symbols: flag, coat of arms, anthem; primer printed page 3.'
+- id: T-002
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0003}
+  span: {first_words: 'Дорогий першокласнику!', last_words: 'свою родину'}
+  supports: 'Primer introduction to learning Ukrainian and working with the textbook; printed page 5.'
+- id: T-003
+  source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0010}
+  span: {first_words: 'Звуки. Немовні звуки. Жести', last_words: 'Мова без слів (жести)'}
+  supports: 'Speech sounds versus non-speech sounds and gestures; primer printed page 13.'

@@ -1,0 +1,199 @@
+plan_schema: 2
+module: first-conversations
+level: a1
+sequence: 6
+slug: first-conversations
+version: '1'
+title: 'перші розмови'
+subtitle: 'Scaffolded conversations and unstressed vowels'
+focus: 'Sustain a scaffolded 4-6-turn conversation with greetings, Добраніч, personal data, family and belongings; practise stressed/unstressed [е], [и].'
+objectives:
+- 'Participate in a 4-6-turn conversation using formal and informal greetings and partings including Добраніч.'
+- 'Ask and answer basic personal identity and family questions using так, ні, де, and ось.'
+- 'Pronounce unstressed [е] and [и] with appropriate qualitative reduction in authentic words.'
+connects_to: []
+prerequisites: []
+register: 'English scaffolding at A1; Ukrainian models first, then English glosses.'
+changelog:
+- 'Position 6 plan authored for arc revision r6 with 3 lessons and 4-6-turn conversational recap task.'
+arc_ref: {level: a1, position: 6}
+evidence_ref:
+  path: evidence/a1/first-conversations.yaml
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+lessons:
+- n: 1
+  slug: greetings-and-partings
+  title: 'привітання та прощання'
+  kind: teach
+  job: 'Use formal and informal greetings and partings and answer simple questions with так and ні.'
+  rationale: 'Establish basic conversational turn-taking with standard greeting and parting formulas.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: так, evidence: W-096, forms: ['part']}
+      - {lemma: не, evidence: W-061, forms: ['part']}
+      - {lemma: ви, evidence: W-007, forms: ['noun:anim:p:v_naz:pron:pers:2']}
+      incidental: []
+      recycled: ['W-074', 'W-075', 'W-076', 'W-001', 'W-002']
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'The teacher models formal greetings, informal greetings, and saying goodbye: Добрий день, Привіт, До побачення, Добраніч.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-007']}
+    uses: {grammar: [], vocabulary: ['W-074', 'W-075', 'W-076']}
+    evidence: ['T-001', 'T-002', 'S-001', 'V-001', 'V-002']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'Practice asking and answering simple identity questions with так and ні using pronouns я, ти, and ви.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-096', 'W-061']}
+    uses: {grammar: [], vocabulary: ['W-001', 'W-002']}
+    evidence: ['T-003', 'S-002']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Recognise greetings and partings.'
+    options:
+    - 'Добрий день'
+    - 'Привіт'
+    - 'Добраніч'
+    - 'До побачення'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Respond to simple questions with так and ні.'
+    options:
+    - 'Так'
+    - 'Ні'
+    - 'Так, я тут'
+    - 'Ні, не я'
+  videos:
+  - evidence: V-001
+    use: 'Pronunciation model for informal greetings and dialogue.'
+  - evidence: V-002
+    use: 'Pronunciation model for formal greetings and pronouns.'
+- n: 2
+  slug: family-belongings-and-vowels
+  title: 'сім’я, речі та вимова'
+  kind: teach
+  job: 'Ask where family members and belongings are located and practice unstressed vowels [е] and [и].'
+  rationale: 'Introduce question word де and particle ось with pronouns ми and вони, while refining vowel pronunciation.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: де, evidence: W-163, forms: ['adv:pron:int:rel']}
+      - {lemma: ось, evidence: W-065, forms: ['part']}
+      - {lemma: сім'я, evidence: W-138, forms: ['noun:inanim:f:v_naz:xp1']}
+      - {lemma: ми, evidence: W-006, forms: ['noun:anim:p:v_naz:pron:pers:1']}
+      - {lemma: вони, evidence: W-008, forms: ['noun:unanim:p:v_naz:pron:pers:3']}
+      incidental: []
+      recycled: ['W-010', 'W-011', 'W-081', 'W-101', 'W-104']
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Practice pronunciation of unstressed [е] and [и] in words like сестра and зима, observing acoustic reduction.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-104']}
+    evidence: ['T-004', 'X-001', 'S-005']
+    practice: ['a1']
+  - id: s2
+    kind: teach
+    teach: 'Ask and answer about location of family members and belongings using де, ось, and pronouns ми and вони.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-163', 'W-065', 'W-138', 'W-006', 'W-008']}
+    uses: {grammar: [], vocabulary: ['W-010', 'W-011', 'W-081', 'W-101']}
+    evidence: ['T-003', 'S-003']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Identify words with unstressed [е] and [и].'
+    options:
+    - 'зима'
+    - 'весна'
+    - 'сестра'
+    - 'жито'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Ask and point to family and belongings.'
+    options:
+    - 'Де тато?'
+    - 'Ось тато'
+    - 'Де мама?'
+    - 'Ось моя сім’я'
+  videos: []
+- n: 3
+  slug: first-conversations-recap
+  title: 'підсумок: перші розмови'
+  kind: recap
+  job: 'Sustain a scaffolded 4-6-turn conversation covering greeting, personal data, family, belongings, and parting.'
+  rationale: 'Synthesize conversational turns and phonetics into an integrated spoken interaction.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: ['W-074', 'W-075', 'W-076', 'W-096', 'W-061', 'W-163', 'W-065', 'W-010', 'W-011', 'W-081', 'W-101', 'W-138']
+  steps:
+  - id: s1
+    kind: recap
+    teach: 'The teacher models a complete 4-6 turn dialogue combining greeting, asking who someone is, introducing family, and saying goodbye.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-074', 'W-075', 'W-076', 'W-096', 'W-061']}
+    evidence: ['T-001', 'T-002', 'S-004']
+    practice: ['a1']
+  - id: s2
+    kind: recap
+    teach: 'Practical closing task: participate in a scaffolded 4-6-turn dialogue with a conversation partner.'
+    task:
+      id: 'first-conversations-recap-task'
+      action: 'respond'
+      context_en: 'Meeting a Ukrainian acquaintance at a café and having a short exchange about self and family.'
+      instruction_en: 'Greet the partner, answer simple questions about yourself and family, and say goodbye appropriately.'
+      response_mode: 'spoken_or_written'
+      success_criteria_en:
+      - 'Greet and say goodbye using appropriate formulas including Добраніч or До побачення'
+      - 'Sustain a 4-6-turn exchange about personal identity and family'
+      learner_reads: []
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-163', 'W-065', 'W-010', 'W-011', 'W-081', 'W-101', 'W-138']}
+    evidence: ['T-003', 'S-004']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Select appropriate dialogue turns.'
+    options:
+    - 'Привіт! Як справи?'
+    - 'Добре, дякую.'
+    - 'Ось мій тато.'
+    - 'До побачення!'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Complete conversational exchanges.'
+    options:
+    - 'Добрий день!'
+    - 'Так, це я.'
+    - 'Ось моя сім’я.'
+    - 'Добраніч!'
+  videos: []

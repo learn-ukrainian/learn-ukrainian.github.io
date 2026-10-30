@@ -1,0 +1,65 @@
+level: a1
+slug: things-have-gender
+totals:
+  all:
+    activities:
+      by_type:
+        error-correction: 1
+        fill-in: 2
+        group-sort: 2
+        match-up: 1
+        quiz: 5
+      total: 11
+    response_opportunities:
+      by_type:
+        error-correction: 9
+        fill-in: 15
+        group-sort: 27
+        match-up: 8
+        quiz: 29
+      total: 88
+    uncounted_activities:
+      by_type: {}
+      total: 0
+  inline:
+    activities:
+      by_type:
+        fill-in: 1
+        group-sort: 1
+        quiz: 4
+      total: 6
+    response_opportunities:
+      by_type:
+        fill-in: 8
+        group-sort: 12
+        quiz: 24
+      total: 44
+    uncounted_activities:
+      by_type: {}
+      total: 0
+  workbook:
+    activities:
+      by_type:
+        error-correction: 1
+        fill-in: 1
+        group-sort: 1
+        match-up: 1
+        quiz: 1
+      total: 5
+    response_opportunities:
+      by_type:
+        error-correction: 9
+        fill-in: 7
+        group-sort: 15
+        match-up: 8
+        quiz: 5
+      total: 44
+    uncounted_activities:
+      by_type: {}
+      total: 0
+v1_module:
+  path: curriculum/l2-uk-en/a1-v1/things-have-gender/activities.yaml
+  sha256: 153d4e5f00b2ac5d808076e43d4e4ed3fa519f5da87dcaa8a0f4ea28f0fba2b1
+  shape: inline/workbook keys
+  status: present
+v1_totals_schema: 1

@@ -1,0 +1,262 @@
+plan_schema: 2
+module: who-am-i
+level: a1
+sequence: 3
+slug: who-am-i
+version: '1'
+title: 'хто я'
+subtitle: 'Personal identity, pronouns, and consonants'
+focus: 'Introduce yourself and ask identity; read words with consonants Д, З, К, Л, С, У, Х, ь, Г and personal pronouns.'
+objectives:
+- 'Read words and syllables with consonants Д, З, К, Л, С, Х, Г and vowel У and soft sign ь.'
+- 'Use personal pronouns я, ти, він, вона in basic identity statements.'
+- 'Recognise hard and soft consonant sounds and voiced/voiceless pairs.'
+- 'State one’s own name and ask identity using learned Cyrillic letters.'
+connects_to: []
+prerequisites: []
+register: 'English scaffolding at A1; Ukrainian models first, then English glosses.'
+changelog:
+- 'Position 3 plan authored for arc revision r6 with 9 letters and practical recap task.'
+arc_ref: {level: a1, position: 3}
+evidence_ref:
+  path: evidence/a1/who-am-i.yaml
+  sha256: '1dc9cee014b77701303836739c28a31a7cdd6a112f1309f183bdc1241ad75a6b'
+lessons:
+- n: 1
+  slug: vowels-and-sonorants-u-l-s
+  title: 'літери у, л, с'
+  kind: teach
+  job: 'Read vowel У and consonants Л, С in syllables and introduce subject pronouns.'
+  rationale: 'Builds syllables with open vowel У and sonorants and voiceless sibilant.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: ['У', 'Л', 'С']
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: він, evidence: W-003, forms: ['noun:unanim:m:v_naz:pron:pers:3']}
+      - {lemma: вона, evidence: W-004, forms: ['noun:unanim:f:v_naz:pron:pers:3']}
+      - {lemma: ти, evidence: W-002, forms: ['noun:anim:s:v_naz:pron:pers:2']}
+      incidental: []
+      recycled: ['W-001']
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Learn vowel У and consonants Л and С. Read syllables лу, ла, ло, ли, лі and су, са, со, си, сі.'
+    introduces: {letters: ['У', 'Л', 'С'], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-001', 'T-002', 'T-003', 'V-001', 'V-002', 'V-003']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'Read and use personal pronouns я, ти, він, вона in simple identity phrases.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-002', 'W-003', 'W-004']}
+    uses: {grammar: [], vocabulary: ['W-001']}
+    evidence: ['T-010']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Read syllables with letters У, Л, С.'
+    options:
+    - 'лу'
+    - 'су'
+    - 'ла'
+    - 'са'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Recognise personal pronouns.'
+    options:
+    - 'я'
+    - 'ти'
+    - 'він'
+    - 'вона'
+  videos:
+  - evidence: V-001
+    use: 'Pronunciation model for letter У.'
+  - evidence: V-002
+    use: 'Pronunciation model for consonant Л.'
+  - evidence: V-003
+    use: 'Pronunciation model for consonant С.'
+- n: 2
+  slug: consonants-k-d-z
+  title: 'літери к, д, з'
+  kind: teach
+  job: 'Read consonants К, Д, З and short decodable words.'
+  rationale: 'Introduces stops К, Д and voiced fricative З to expand vocabulary reading.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: ['К', 'Д', 'З']
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: зима, evidence: W-104, forms: ['noun:inanim:f:v_naz']}
+      - {lemma: рука, evidence: W-084, forms: ['noun:inanim:f:v_naz']}
+      - {lemma: коса, evidence: W-097, forms: ['noun:inanim:f:v_naz']}
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Observe consonants К, Д, and З. Read syllables ка, ко, ку, ки and да, до, ду, ди and за, зо, зу, зи.'
+    introduces: {letters: ['К', 'Д', 'З'], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-004', 'T-005', 'T-006', 'V-004', 'V-005', 'V-006']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'Read decodable words зима, рука, and коса.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-104', 'W-084', 'W-097']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-006']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Read syllables with consonants К, Д, З.'
+    options:
+    - 'ка'
+    - 'да'
+    - 'за'
+    - 'ку'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Read taught words зима, рука, коса.'
+    options:
+    - 'зима'
+    - 'рука'
+    - 'коса'
+    - 'мама'
+  videos:
+  - evidence: V-004
+    use: 'Pronunciation model for consonant К.'
+  - evidence: V-005
+    use: 'Pronunciation model for consonant Д.'
+  - evidence: V-006
+    use: 'Pronunciation model for consonant З.'
+- n: 3
+  slug: consonants-kh-h-and-soft-sign
+  title: 'літери х, г, ь'
+  kind: teach
+  job: 'Read consonants Х, Г, soft sign ь, and question word хто.'
+  rationale: 'Covers velar fricatives Х, Г and the soft sign indicating softening of consonants.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: ['Х', 'Г', 'ь']
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: хто, evidence: W-162, forms: ['noun:anim:m:v_naz:pron:int:rel']}
+      - {lemma: тінь, evidence: W-120, forms: ['noun:inanim:f:v_naz']}
+      - {lemma: рись, evidence: W-178, forms: ['noun:anim:f:v_naz']}
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'The teacher models the pronunciation of the soft sign letter ь. Read consonants Х, Г, and soft sign ь in decodable words тінь and рись.'
+    introduces: {letters: ['Х', 'Г', 'ь'], grammar: [], vocabulary: ['W-120', 'W-178']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-007', 'T-008', 'T-009', 'V-007', 'V-008']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'Read who-question word хто and decodable question sentences.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-162']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-008']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Read words with consonants Х, Г and soft sign ь.'
+    options:
+    - 'тінь'
+    - 'рись'
+    - 'день'
+    - 'клен'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Identify who-question word хто and pronouns.'
+    options:
+    - 'хто'
+    - 'він'
+    - 'вона'
+    - 'ти'
+  videos:
+  - evidence: V-007
+    use: 'Pronunciation model for consonant Х.'
+  - evidence: V-008
+    use: 'Pronunciation model for consonant Г.'
+- n: 4
+  slug: identity-and-letters-recap
+  title: 'повторення'
+  kind: recap
+  job: 'Consolidate identity statements and all 9 position 3 letters.'
+  rationale: 'Recap lesson checks decodability of all taught letters and practical identity turns.'
+  word_target: 210
+  inventory:
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: ['W-001', 'W-002', 'W-003', 'W-004', 'W-162', 'W-104', 'W-084', 'W-097', 'W-120', 'W-178']
+  steps:
+  - id: s1
+    kind: recap
+    teach: 'Review identity questions and personal pronouns я, ти, він, вона.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-001', 'W-002', 'W-003', 'W-004', 'W-162']}
+    evidence: ['T-010', 'S-001', 'S-002']
+    practice: ['a1']
+  - id: s2
+    kind: recap
+    teach: 'Practical closing task: state who you are and read decodable names and words.'
+    task:
+      id: 'who-am-i-recap-task'
+      action: 'read_and_use'
+      context_en: 'Introducing yourself and identifying others in a group.'
+      instruction_en: 'Read the question, state your name using personal pronoun я, and read aloud the names and words.'
+      response_mode: 'spoken_or_written'
+      success_criteria_en:
+      - 'State identity using я and taught Cyrillic letters'
+      - 'Read decodable words and identify persons with він and вона'
+      learner_reads: []
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-104', 'W-084', 'W-097', 'W-120', 'W-178']}
+    evidence: ['T-010', 'S-001', 'S-002']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Review identity questions and pronouns.'
+    options:
+    - 'Хто він?'
+    - 'Я тут'
+    - 'Він тут'
+    - 'Вона тут'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Read decodable words with taught letters.'
+    options:
+    - 'зима'
+    - 'рука'
+    - 'тінь'
+    - 'рись'

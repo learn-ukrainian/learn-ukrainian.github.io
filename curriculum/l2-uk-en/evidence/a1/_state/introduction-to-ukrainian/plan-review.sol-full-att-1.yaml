@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-introduction-to-ukrainian"
+  attempt_id: "sol-full-att-1"
+  manifest_sha256: "1112c9b4fa33350182e51d6c11080e04d30a6363e1b11651406d39fbc8293e8c"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gpt-6.1-sol"
+  harness: "codex"
+  family: "codex"
+  prompt_sha256: "79db288c8e9e2ddd94cd7c2fca28b460b4c121ee0a8cd9c5bd7a487673dfdfdc"
+checks:
+  closing_shape: clean
+  title_describes_job: clean
+  title_quantities: clean
+  quoted_forms: clean
+  sequencing: clean
+  sizing: clean
+  inventory: clean
+  activities: clean
+  evidence_fit: clean
+  standard_and_ulp: clean
+findings: []

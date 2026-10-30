@@ -1,0 +1,279 @@
+built_with:
+  mcp_commit: 4c0fc7ee11f6e6a233f7106776d18deea633d317
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: 651c87383450ebf35eb3ebd41865b969e1490274f56153aee1023226590ce6c4
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+exercises:
+- id: X-001
+  items_sample:
+  - 'Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].'
+  pattern: Say and identify the first sound before choosing its sound class.
+  quote: 'Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].'
+  sha256: 6d8f915d4bb16fe9fac4106e4eb9419010ef7f935dadef70cf47669285e2828c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 15
+    row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
+    section_id: 12963
+module: a1/my-family
+texts:
+- id: T-001
+  quote: 'Б б
+
+    Бачу Б, б (бе). Чую [б].
+
+    б і л к а к у л ь б б
+
+    а а
+
+    б у з о к'
+  sha256: dd1933d8378ab54fbc6e6ce829e713c7abb20fbbcc44185911662da3b5cd2af5
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0104
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 108
+    row_sha256: f7bb5df24c374f55691328d9de1058b9fffa880942576ce94554d9eab6f48c1b
+    section_id: 13055
+  supports: 'Primer part 1 printed page 106: consonant Б and sound [б].'
+- id: T-002
+  quote: 'Й й
+
+    Бачу Й, й (йот). Чую [й].
+
+    а й с т р и * а й в о р о
+
+    н о к
+
+    а й в а
+
+    [ • = | – • ]
+
+    ай
+
+    ой
+
+    ий
+
+    ій
+
+    а
+
+    о
+
+    и
+
+    і
+
+    Й
+
+    га
+
+    ми
+
+    рі Й
+
+    лій- ліній-
+
+    май-
+
+    Pidruchnyk.com.ua
+
+    чай- гай- чай-'
+  sha256: bfbb42d2e9e9b7cf4dfd3dafd7849dbadf0734bd056e34c6f04d1460d93e3dd2
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0015
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 18
+    row_sha256: ec6d44c52725ef51f3bf8b96a1a654b7c33483090da5473fcb0d9cf711e8d4f1
+    section_id: 13077
+  supports: 'Primer part 2 printed page 16: consonant Й and final-sound reading.'
+- id: T-003
+  quote: 'Ї ї
+
+    Бачу Ї, ї. Чую [й], [і].'
+  sha256: 26b0387f53f4d379f8ec995783e5cea008441ae13db56f6c48ddf60d0148a5ed
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0035
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 38
+    row_sha256: 4323f2510c107fef3e3824d9b9af679016966fbd8d6d197de412123914d3cd86
+    section_id: 13097
+  supports: 'Primer part 2 printed page 36: letter Ї and two sounds [й], [і].'
+- id: T-004
+  quote: Ю ю
+  sha256: 275d0d96605b8dfa6745241bc3b64aa5e01ec1285d3fecf3371d4709e68ae033
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 46
+    row_sha256: 58a9310d34eb6ff7dc21574268f0d665f27cd0d3fd1ebb09cea478c83f01484b
+    section_id: 13105
+  supports: 'Primer part 2 printed page 44: letter Ю.'
+- id: T-005
+  quote: 'Є є
+
+    Бачу Є, є. Чую [йе] або [е].
+
+    к є а є *
+
+    о л ь
+
+    з ь г
+
+    є д и н о р і
+
+    [ –•|= = • ] [ –•|=•= ]
+
+    кує квітує
+
+    синє
+
+    [–•|=•] [– =•|–•|=•]
+
+    [–•|=•]
+
+    [ к у|й е ]
+
+    [ с и|н′ е ]
+
+    [ к в′ і|т у| й е ]
+
+    [–•]
+
+    [•–]
+
+    [=•]
+
+    [=•–]
+
+    — не те се
+
+    — ен ет ес
+
+    — нє тє сє
+
+    — єн єт єс'
+  sha256: 19f61db88ec5e1040484b8eff71ca005ed3d0d004544ce607f4109abd55774a8
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0047
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 50
+    row_sha256: 2752514386dfd25119d07b7099f614373475f848aaa326e6142ecc0567467a3a
+    section_id: 13109
+  supports: 'Primer part 2 printed page 48: letter Є.'
+- id: T-006
+  quote: "Here is my story about я і моя́ сім’я́ from the lesson.\n\n                                          Я і моя сім’я\n\
+    Приві́т! Як спра́ви? У ме́не — чудо́во. Мене́ зва́ти Hi! How are you? I am great. My name is Anna\nА́нна Ого́йко, я вчи́телька\
+    \ украї́нської мо́ви.      Ohoiko. I am a Ukrainian teacher.\n\nМоя́ ма́ма — теж вчи́телька. Вчи́телька літерату́ри. \
+    \               My mom is also a teacher. A literature teacher."
+  sha256: 993fedc5e36ba2d36a2c36ff46a178ac7a0772eb293b006bbd4062775998a9f8
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0010_w001
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 8e20831c40bd3220377f8938974d54137be1eead194837919a1a3a35c79d982e
+    section_id: null
+  supports: 'ULP Season 1 lesson 10: talking about family.'
+videos:
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    http_status: 200
+  id: V-001
+  models:
+    letters:
+    - Б
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=V1hxBE_JbGg
+  use: Pronunciation model for consonant Б.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=aq0cjB90s3w
+    http_status: 200
+  id: V-002
+  models:
+    letters:
+    - Й
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=aq0cjB90s3w
+  use: Pronunciation model for consonant Й.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=UcjdjQXhAY8
+    http_status: 200
+  id: V-003
+  models:
+    letters:
+    - Ї
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=UcjdjQXhAY8
+  use: Pronunciation model for vowel Ї.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    http_status: 200
+  id: V-004
+  models:
+    letters:
+    - Ю
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=9JdIBYCTWGw
+  use: Pronunciation model for vowel Ю.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    http_status: 200
+  id: V-005
+  models:
+    letters:
+    - Є
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=O0bwRyyBQSc
+  use: Pronunciation model for vowel Є.

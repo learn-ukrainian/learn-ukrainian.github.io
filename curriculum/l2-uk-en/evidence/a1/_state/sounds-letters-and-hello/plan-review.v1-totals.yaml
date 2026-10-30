@@ -65,7 +65,7 @@ totals:
       total: 0
 v1_module:
   path: curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/activities.yaml
-  sha256: f29906d7e668234e5bea0a82a0106d982036bc5c2e71e12c9c679433cfd0d52b
+  sha256: a3ae17675c80da41c09611c12f83d2197562438660097d4713e660928eafe887
   shape: flat list (no placement marker; counted as inline)
   status: present
 v1_totals_schema: 1

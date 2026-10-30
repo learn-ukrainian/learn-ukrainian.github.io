@@ -1,0 +1,144 @@
+plan_schema: 2
+module: checkpoint-first-contact
+level: a1
+sequence: 7
+slug: checkpoint-first-contact
+version: '1'
+title: 'контрольна точка: перший контакт'
+subtitle: 'Integrated checkpoint for first contact'
+focus: 'Complete an integrated first-contact task with previously introduced language.'
+objectives:
+- 'Demonstrate conversational competence across greetings, introductions, family, and belongings.'
+- 'Integrate reading, listening, and speaking skills without introducing new language inventory.'
+connects_to: []
+prerequisites: []
+register: 'English scaffolding at A1; Ukrainian models first, then English glosses.'
+changelog:
+- 'Position 7 checkpoint plan authored for arc revision r6 with 2 checkpoint lessons.'
+arc_ref: {level: a1, position: 7}
+evidence_ref:
+  path: evidence/a1/checkpoint-first-contact.yaml
+  sha256: 'd9206a1eb95c0d015b5a94f50667cd9ce2590a4816abe8605fa6e9797731f717'
+lessons:
+- n: 1
+  slug: first-contact-receptive-review
+  title: 'рецептивна перевірка'
+  kind: checkpoint
+  job: 'Review and verify listening and reading comprehension of first-contact exchanges.'
+  rationale: 'Confirm receptive recognition of taught vocabulary, letters, and dialogue turns before expressive checkpoint.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: ['W-074', 'W-075', 'W-076', 'W-096', 'W-061', 'W-007', 'W-001', 'W-002']
+  steps:
+  - id: s1
+    kind: practice
+    teach: 'Listen to and identify greetings and personal questions in short audio dialogues.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-074', 'W-075', 'W-076']}
+    evidence: ['T-001', 'T-002', 'V-001']
+    practice: ['a1']
+  - id: s2
+    kind: practice
+    teach: 'Practical checkpoint task: match spoken statements with written dialogue turns.'
+    task:
+      id: 'checkpoint-receptive-task'
+      action: 'select_for_context'
+      context_en: 'Reviewing audio recordings of Ukrainian greetings and introductions.'
+      instruction_en: 'Listen to each audio prompt and select the matching dialogue response.'
+      response_mode: 'spoken_or_written'
+      success_criteria_en:
+      - 'Match spoken greetings with appropriate conversational responses'
+      - 'Identify personal pronouns and yes/no confirmations accurately'
+      learner_reads: []
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-096', 'W-061', 'W-007', 'W-001', 'W-002']}
+    evidence: ['T-003', 'V-002']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Select appropriate greeting responses.'
+    options:
+    - 'Привіт!'
+    - 'Добрий день!'
+    - 'До побачення!'
+    - 'Добраніч!'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Verify identity statements.'
+    options:
+    - 'Так, це я.'
+    - 'Ні, не я.'
+    - 'Так, ви тут.'
+    - 'Ні, ви там.'
+  videos: []
+- n: 2
+  slug: first-contact-expressive-production
+  title: 'продуктивна перевірка'
+  kind: checkpoint
+  job: 'Complete an integrated first-contact task demonstrating conversational mastery.'
+  rationale: 'Demonstrate holistic mastery of positions 1-6 through an authentic first-contact encounter.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: ['W-163', 'W-065', 'W-138', 'W-010', 'W-011', 'W-081', 'W-101', 'W-006', 'W-008']
+  steps:
+  - id: s1
+    kind: practice
+    teach: 'Practice conversational exchanges inquiring about family and belongings using де and ось.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-163', 'W-065', 'W-010', 'W-011']}
+    evidence: ['T-003', 'T-004']
+    practice: ['a1']
+  - id: s2
+    kind: practice
+    teach: 'Practical closing checkpoint task: complete a full first-contact roleplay encounter.'
+    task:
+      id: 'checkpoint-first-contact-task'
+      action: 'respond'
+      context_en: 'Meeting a Ukrainian speaker at a community gathering and exchanging personal details.'
+      instruction_en: 'Engage in a complete first-contact conversation: greet the partner, introduce yourself, ask and answer about family and belongings, and take leave.'
+      response_mode: 'spoken_or_written'
+      success_criteria_en:
+      - 'Initiate and close the conversation with appropriate formal or informal greetings'
+      - 'State own identity and ask/answer questions about family members and belongings'
+      learner_reads: []
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-138', 'W-081', 'W-101', 'W-006', 'W-008']}
+    evidence: ['T-001', 'T-002', 'T-003']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Select location questions and answers.'
+    options:
+    - 'Де мій тато?'
+    - 'Ось твій тато.'
+    - 'Де моя сім’я?'
+    - 'Ось твоя сім’я.'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Complete conversational roleplay responses.'
+    options:
+    - 'Добрий день! Мене звати Іван.'
+    - 'Ось моя сім’я: мама і тато.'
+    - 'Ми тут разом.'
+    - 'До побачення, гарного дня!'
+  videos: []

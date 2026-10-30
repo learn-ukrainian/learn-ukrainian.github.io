@@ -1,0 +1,8 @@
+access: full
+attempt_id: sol-full-att-1
+harness: codex
+manifest_sha256: 1112c9b4fa33350182e51d6c11080e04d30a6363e1b11651406d39fbc8293e8c
+reviewer_family: codex
+reviewer_model: gpt-6.1-sol
+validated_at: '2026-10-30T10:05:00+00:00'
+verdict: APPROVE

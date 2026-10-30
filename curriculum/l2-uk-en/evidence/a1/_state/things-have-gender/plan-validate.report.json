@@ -1,0 +1,216 @@
+{
+  "activity_report": {
+    "explanation_coverage": "not_available_at_this_stage",
+    "lessons": [
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "quiz"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 1
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "quiz"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 2
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "quiz"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 3
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          },
+          "workbook": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "quiz"
+        ],
+        "has_workbook": true,
+        "is_recap": true,
+        "kind": "recap",
+        "n": 4
+      }
+    ],
+    "module": {
+      "all_distinct_types": [
+        "quiz"
+      ],
+      "inline_activities": 4,
+      "largest_workbook_type": "quiz",
+      "largest_workbook_type_share": 1.0,
+      "longest_same_type_workbook_run": 4,
+      "longest_same_type_workbook_run_type": "quiz",
+      "non_recap_lessons": 3,
+      "non_recap_lessons_with_workbook": 3,
+      "workbook_activities": 4,
+      "workbook_distinct_types": [
+        "quiz"
+      ],
+      "workbook_presence_complete": true
+    },
+    "module_slug": "things-have-gender",
+    "rendered": "not_available_at_this_stage",
+    "response_opportunities": "not_available_at_this_stage",
+    "stage": "plan"
+  },
+  "failures": [],
+  "inputs": {
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f",
+    "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml": "c1d584ef85270f33843ccbaebf1ffe75b6c004fb0f33dbf60c3fd04955a4bf3a",
+    "curriculum/l2-uk-en/evidence/a1/things-have-gender.yaml.lock": "af20ba9f3d40175e543a0d072e1bf3b1bfc66de03a8ba1aea3921452232d3faf",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/things-have-gender.yaml": "e87a200aec59918b8558c11f8f5df9c53e63823778d3a7e61094778d20d3d04f",
+    "curriculum/l2-uk-en/lesson-plans/a1/checkpoint-first-contact.yaml": "154a95d8a7728292530e4a414b881c0e70cf8a01f3200195c36f9057de87529c",
+    "curriculum/l2-uk-en/lesson-plans/a1/first-conversations.yaml": "29b7e6d9c136a4877c51bf0d1b45112b36579f5a3aac429aab70c96092edcdf2",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "ad4733673f8bc177abe46e8ce7737c2e645f0eef8390ac6b5a9e0edcf34b8bb0",
+    "curriculum/l2-uk-en/lesson-plans/a1/my-family.yaml": "0be0b28a220180213f109dc6dea7b30aa991f5d540f2190612f27946fcb45ee8",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "37f75d0eb870e7315ecf80e17b095f3da6cd4d6050f062098ba9b46aa4b4669a",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "8c0a16cce7609885e2cc723203218c035e2a2b02dd1b877b24dd676d5f61e78a",
+    "curriculum/l2-uk-en/lesson-plans/a1/things-have-gender.yaml": "4fdde9383214fcf39dcdf80601725dbf1cd4a4d5244ba2dcebc65bc31b1db3b5",
+    "curriculum/l2-uk-en/lesson-plans/a1/who-am-i.yaml": "93f40e2dcd4bb3bfa61c18b859938b168559679bf8f7a9f399d61b860b42746a",
+    "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
+    "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
+    "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
+    "schemas/arc.schema.json": "af1c1ee66c1e58fda00c975663fe409ad1e2b6033b699c916f36b23fdd5d75b2",
+    "schemas/module-plan-v2.schema.json": "112982f5ff3a7477596a52dce0003e3c7cf9579c98a41eca068a31f6087776e2",
+    "scripts/curriculum/validate/config.py": "18fb421107953159b11c01ebb4620ed3213e0a37491f85f1dce38b207cebd6b0",
+    "scripts/curriculum/validate/data/a1-closed-class.yaml": "c64d951304b79000dda4222a9db9b5f358c748c4fe9ef82378a541e85c599582",
+    "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
+  },
+  "level": "a1",
+  "mode": "provisional",
+  "not_checked": [
+    {
+      "code": "minutes_constants_undefined",
+      "lesson": null,
+      "message": "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
+      "step": null
+    },
+    {
+      "code": "arc_has_no_structured_grammar_or_vocabulary",
+      "lesson": null,
+      "message": "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
+      "step": null
+    },
+    {
+      "code": "title_quantities_not_parsed",
+      "lesson": null,
+      "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
+      "step": null
+    },
+    {
+      "code": "pending_promotion",
+      "lesson": null,
+      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is c1d584ef85270f33843ccbaebf1ffe75b6c004fb0f33dbf60c3fd04955a4bf3a; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "step": null
+    },
+    {
+      "code": "mechanical_rule_not_checked",
+      "lesson": null,
+      "message": "gate M5 was not checked: core word records carry no CEFR level: W-139",
+      "step": null
+    }
+  ],
+  "notes": [
+    {
+      "code": "earlier_core_not_recycled",
+      "lesson": null,
+      "message": "43 of 50 core records of earlier positions appear in no recycled list of this module: W-001 'я' (position 2), W-002 'ти' (position 3), W-006 'ми' (position 6), W-007 'ви' (position 6), W-008 'вони' (position 6), W-061 'не' (position 6), W-065 'ось' (position 6), W-074 'привіт' (position 2), W-075 'добрий' (position 2), W-076 'день' (position 2), W-081 'мама' (position 2), W-084 'рука' (position 3), W-091 'Ніна' (position 2), W-092 'Нонна' (position 2), W-093 'Іван' (position 2), W-094 'Вова' (position 2), W-096 'так' (position 6), W-097 'коса' (position 3), W-101 'тато' (position 2), W-104 'зима' (position 3), W-107 'ґава' (position 5), W-108 'чобіт' (position 5), W-112 'комиш' (position 5), W-115 'жабка' (position 5), W-120 'тінь' (position 3), W-127 'єнот' (position 4), W-128 'цимбали' (position 5), W-129 'щука' (position 5), W-130 'дощ' (position 5), W-131 'ферма' (position 5), W-132 'джміль' (position 5), W-133 'джем' (position 5), W-134 'дзиґа' (position 5), W-138 \"сім'я\" (position 6), W-150 'ґрати' (position 5), W-153 'ґрунт' (position 5), W-162 'хто' (position 3), W-163 'де' (position 6), W-171 'буква' (position 4), W-173 'алфавіт' (position 5), W-178 'рись' (position 3), W-183 'Україна' (position 4), W-184 'Київ' (position 4) (#9487 C6)",
+      "step": null
+    },
+    {
+      "code": "recap_task_quoted_ukrainian",
+      "lesson": 4,
+      "message": "Quoted Ukrainian ['ваш', 'наш', 'їхній']: teacher metalanguage, not learner print or inventory evidence; review must confirm each form and construction is taught before this step",
+      "step": "s2"
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 1,
+      "message": "C29: W-005 воно: closed_class_a1 source attestation",
+      "step": "s1"
+    },
+    {
+      "code": "a1_reference_word_missing",
+      "lesson": 1,
+      "message": "C29: W-151 кава: absent from the A1 reference inventory; teaching replacements unavailable: introducing-step letter state is unavailable (#9582; enforcement=advisory)",
+      "step": "s2"
+    },
+    {
+      "code": "closed_class_a1",
+      "lesson": 3,
+      "message": "C29: W-015 їхній: closed_class_a1 source attestation",
+      "step": "s2"
+    }
+  ],
+  "slug": "things-have-gender",
+  "status": "pass",
+  "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",
+  "waivers": []
+}

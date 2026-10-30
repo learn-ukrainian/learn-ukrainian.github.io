@@ -1,0 +1,40 @@
+request_schema: 1
+module: a1/things-have-gender
+texts:
+- id: T-001
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0011_w004}
+  span: {first_words: 'So, here are the typical endings of three noun', last_words: 'пи́во, со́нце (sun)'}
+  supports: 'ULP lesson 11 page 4: typical noun gender endings for masculine, feminine, and neuter.'
+- id: T-002
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0007_w004}
+  span: {first_words: 'In the table below, you will find all Ukrainian possessive pronouns', last_words: 'ї́хній'}
+  supports: 'ULP lesson 7 page 4: full table of Ukrainian possessive pronouns and forms.'
+- id: T-003
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0007_w009}
+  span: {first_words: 'наш, на́ша, на́ше, на́ші', last_words: 'ї́хній, ї́хня, ї́хнє, ї́хні'}
+  supports: 'ULP lesson 7 page 9: vocabulary entries for наш, ваш, and їхній.'
+exercises:
+- id: X-001
+  source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0007_w008}
+  span: {first_words: 'Б) Це (мій, моя, мої) тато Петро.', last_words: 'Г)   Це (їхня, їхнє, їхні) батьки.'}
+  pattern: 'Select the correct possessive pronoun agreeing with the noun.'
+standard:
+- id: S-001
+  lines: '661-662'
+videos:
+- id: V-001
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=Cyk8EGKfflE
+  models:
+    letters: []
+    words: []
+    segment: null
+  use: 'Model for noun gender endings in Ukrainian.'
+- id: V-002
+  channel: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=Dz-gAlVcyDk
+  models:
+    letters: []
+    words: []
+    segment: null
+  use: 'Model for Ukrainian possessive pronouns and agreement.'

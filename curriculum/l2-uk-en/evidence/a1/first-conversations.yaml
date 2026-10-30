@@ -1,0 +1,176 @@
+built_with:
+  mcp_commit: 4c0fc7ee11f6e6a233f7106776d18deea633d317
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
+  russian_patterns: cea20f621ff446aa37345c57d23b1a5123c0496abe60530c1a9978f63c0f0803
+  sources_db: 4520ff0c5f94460d313228a266379e591b11bb58a8503eb9ecb70886c407f831
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: cf809c8520d4e8cf6233101649e89e001a7e3faf26aea8d8aeb72d234ce613f2
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+exercises:
+- id: X-001
+  items_sample:
+  - '2. Прочитайте слова, чітко їх артикулюючи.
+
+    Одеса, котик, Ужгород, собаченя, місто, школа, лебідь, лебедя, череш-
+
+    ня, хвиля, хвилювати, голуб, голубка, ребро, ребра, пиляю, пилка, потоки,
+
+    потік.'
+  pattern: Read words aloud with clear articulation of unstressed vowels.
+  quote: '2. Прочитайте слова, чітко їх артикулюючи.
+
+    Одеса, котик, Ужгород, собаченя, місто, школа, лебідь, лебедя, череш-
+
+    ня, хвиля, хвилювати, голуб, голубка, ребро, ребра, пиляю, пилка, потоки,
+
+    потік.'
+  sha256: aeb35e3d34c35f4c39403aedbe82f108b1e8e3b97782cf24a438ddbdd8b613ec
+  source:
+    author: avramenko
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0096
+    file: 5-klas-ukrmova-avramenko-2022
+    grade: '5'
+    kind: textbook
+    page: 95
+    row_sha256: 0cbb045e3f93b0707a4b70d8b543748bedab9f9ea3879f26e1ab1b1de7169e55
+    section_id: 26273
+module: a1/first-conversations
+standard:
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-001
+  lines: 459-459
+  text: '      попрощатися: До побачення. Добраніч. Бувай;'
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-002
+  lines: 239-243
+  text: "      1.1.1.2. Особа розуміє:\n      короткі репліки стислого діалогу, що стосуються основних потреб\nповсякденного\
+    \ життя;\n      короткі монологічні висловлювання визначеної тематики (див. Каталог А\nта Каталог Б), сформульовані літературною\
+    \ мовою."
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-003
+  lines: 268-270
+  text: "      1.1.2.2. Діалогічне мовлення:\n      прості запитання й відповіді щодо особистих даних (інформація про себе,\n\
+    адреса, робота, сім’я);"
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-004
+  lines: 410-432
+  text: "     1.4.1.2.1. Особа розуміє прості висловлювання співрозмовника в межах\nмінімального переліку мовленнєвих ситуацій\
+    \ (див. Каталог А та Каталог Б),\nякщо співрозмовник висловлюється повільно, досить чітко, повторює і\nперефразовує свої\
+    \ висловлювання.\n\n      1.4.1.2.2. Особа вміє:\n      адекватно, відповідно до норм мовленнєвого етикету реагувати на\n\
+    репліки співрозмовника;\n      брати участь у простому діалозі, виражаючи комунікативні наміри в\nмежах мінімального набору\
+    \ мовленнєвих ситуацій (див. Каталог Б);\n      вживати стандартні мовні формули привітання, прощання, подяки,\nвибачення\
+    \ і побажання;\n      відрекомендувати себе, розповісти про себе, свою сім’ю, хобі, навчання\nчи роботу (хто я, хто він\
+    \ / вона?; яке моє, його / її ім’я?; яка моя, його / її\nнаціональність, рідна країна і мова?), а також про свій дім,\
+    \ своє місто й рідну\nкраїну;\n      відповідати на прості запитання про особу, об’єкт, місце чи ознаку і\nставити елементарні\
+    \ запитання;\n      висловити елементарні прохання: Дайте, будь ласка. Скажіть, будь\nласка.\n\n      1.4.2. Типи текстів:\n\
+    \      простий діалог (4 – 6 реплік) у межах мінімального переліку мовленнєвих"
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-005
+  lines: 578-579
+  text: '     вимова голосних у наголошеній і ненаголошеній позиціях. Вимова
+
+    ненаголошених [е], [и]: с[еи]стра, в[еи]черя, в[ие]делка, з[ие]ма;'
+texts:
+- id: T-001
+  quote: "Інна: Приві́т!\n   Анна: Як спра́ви?                                          It is easy to pronounce /pryvít/ —\
+    \ just smile when\n   Інна: Чудо́во! Ра́да тебе́ ба́чити.                        you say it! :)\n   Анна: Я теж.\n   Інна:\
+    \ А у те́бе як спра́ви?                                   How are you? — Як справи?\n   Анна: До́бре."
+  sha256: 12054c26e86928449f6ccd3c42aa3354f673eb8a2f8e1e5daf71a29df85e5def
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0001_w002
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 7d5742442a3b5aebde2022c6b9e9c91c3f1e6630e60cedbc84f3786ad985bd3b
+    section_id: null
+  supports: 'ULP lesson 1 page 2: informal greeting dialogue and responses.'
+- id: T-002
+  quote: "between a receptionist and a guest.\n                                                                 The most typical\
+    \ greeting that you can use at any\n                                                                 time of the day is:\n\
+    \n                                                                                      До́брий день!\n  – До́брого ра́нку!\n\
+    \  – До́брого ра́нку!                                             Here are some other options for the morning (before\n\
+    \  – У вас все до́бре?                                            noon), evening (when it’s almost or completely\n  –\
+    \ Так, все чудо́во.                                            dark), and time when people go to sleep:\n  – Га́рного\
+    \ дня!                                                   До́брого ра́нку! — Good morning!\n  – Дя́кую, і вам.        \
+    \                                          До́брий день! = Добри́день — Hi!\n  – До поба́чення!                      \
+    \                            (Good day!)\n  – До поба́чення!                                                  До́брий\
+    \ ве́чір! — Good evening!\n                                                                    Добра́ніч! = На добра́ніч!\
+    \ — Good night!"
+  sha256: 7c005f4197d5696afdc40dbc2f34ce8c384932a6104d00bf49dfbb8373bcf54c
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0002_w002
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 512edd684d21769cbe302f5cf25cdac7bf1aae69f2c5dd60c05b45332d0a7b34
+    section_id: null
+  supports: 'ULP lesson 2 page 2: formal greetings, parting formulas, and Добраніч.'
+- id: T-003
+  quote: "Джон: Ні, я америка́нець. John: No, I am American.              The formal and informal responses to “how to call\n\
+    \  А ви украї́нка?            And are you Ukrainian?              you?” are:\n Олена: Так, украї́нка."
+  sha256: 3d9fbff90e4b39eea80246d7074b0624a0a00eff381606c81416cac80ba4dcda
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0003_w003
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 0408ec4bcfa8f5301a9e555d8375c5fe68b6d5bad85294e201dc75d529fe0888
+    section_id: null
+  supports: 'ULP lesson 3 page 3: asking and answering identity questions with так and ні.'
+- id: T-004
+  quote: 'Вимова голосних [е] та [и]
+
+    Звуки [е] та [и] у наголошеній позиції завжди вимовляють чітко: спека
+
+    [спека], Маргарита [маргарита].
+
+    У ненаголошеній позиції [е] наближається до [и], а [и] наближається
+
+    до [е]: весна [веисна], сестра [сеистра], зима [зиема]'
+  sha256: 1d9b45e3d1e8161e5539f6e66aad472a0cf98fd8b5b56f6620a520e54faeacbe
+  source:
+    author: avramenko
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0096
+    file: 5-klas-ukrmova-avramenko-2022
+    grade: '5'
+    kind: textbook
+    page: 95
+    row_sha256: 0cbb045e3f93b0707a4b70d8b543748bedab9f9ea3879f26e1ab1b1de7169e55
+    section_id: 26273
+  supports: 'Avramenko 5th grade page 95: pronunciation of unstressed [е] and [и].'
+videos:
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=FUF9Za-1bzY
+    http_status: 200
+  id: V-001
+  models:
+    letters: []
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=FUF9Za-1bzY
+  use: Pronunciation model for informal greetings and dialogue.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-10-30'
+    final_url: https://www.youtube.com/watch?v=GMcB5rsb3HM
+    http_status: 200
+  id: V-002
+  models:
+    letters: []
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=GMcB5rsb3HM
+  use: Pronunciation model for formal greetings and pronouns.

@@ -1,0 +1,50 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 1,
+    "notes_count": 0,
+    "standard_count": 0,
+    "texts_count": 6,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 5
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [
+    "W-081:private_commitment",
+    "W-101:private_commitment",
+    "W-110:private_commitment",
+    "W-127:private_commitment",
+    "W-162:private_commitment",
+    "W-171:private_commitment",
+    "W-183:private_commitment",
+    "W-184:private_commitment"
+  ],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/my-family.yaml",
+    "sha256": "7e721fda7d229e8fb48ecd8391c160fcb0e99723520c73c32784619e0e07b051"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/my-family.yaml.lock",
+    "sha256": "13af10eda5c993053d7e91afaa3cf89947afecd04a6b93322c7acd1a306d351d"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "my-family",
+  "status": "warning",
+  "strict": true,
+  "warnings": [
+    "a1/my-family W-081: unverifiable in CI (local receipt required)",
+    "a1/my-family W-101: unverifiable in CI (local receipt required)",
+    "a1/my-family W-110: unverifiable in CI (local receipt required)",
+    "a1/my-family W-127: unverifiable in CI (local receipt required)",
+    "a1/my-family W-162: unverifiable in CI (local receipt required)",
+    "a1/my-family W-171: unverifiable in CI (local receipt required)",
+    "a1/my-family W-183: unverifiable in CI (local receipt required)",
+    "a1/my-family W-184: unverifiable in CI (local receipt required)"
+  ]
+}

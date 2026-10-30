@@ -1,0 +1,314 @@
+plan_schema: 2
+module: sounds-letters-and-hello
+level: a1
+sequence: 2
+slug: sounds-letters-and-hello
+version: '10'
+title: 'звук, літера, привіт'
+subtitle: 'First greetings and early Cyrillic reading'
+focus: 'Hear and say greeting chunks, distinguish sounds from letters, and read and copy syllables and short words using the first letter group.'
+objectives:
+- 'Respond aloud to familiar and formal greeting chunks heard before their spelling is taught.'
+- 'Distinguish what is heard from what is seen and distinguish vowels from consonants.'
+- 'Read the 12 letters in syllables and short decodable words.'
+- 'Copy taught letters and words into a notebook as supported offline writing practice.'
+connects_to: []
+prerequisites: []
+register: 'English scaffolding at A1; Ukrainian models first, then English glosses.'
+changelog:
+- 'Position 2 plan revised for arc revision r6 with 12 letters and practical recap task.'
+arc_ref: {level: a1, position: 2}
+evidence_ref:
+  path: evidence/a1/sounds-letters-and-hello.yaml
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+lessons:
+- n: 1
+  slug: greetings-by-ear
+  title: 'привіт'
+  kind: teach
+  job: 'Hear an informal or formal first greeting and say the appropriate memorised response aloud.'
+  rationale: 'Chunks come first by ear as in ULP S1 lessons 1–2; do not decode their unseen letters or analyse adjective, noun, or case forms.'
+  word_target: 210
+  inventory:
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: привіт, evidence: W-074, forms: ['noun:inanim:m:v_naz']}
+      - {lemma: добрий, evidence: W-075, forms: ['adj:m:v_naz:compb']}
+      - {lemma: день, evidence: W-076, forms: ['noun:inanim:m:v_naz']}
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Hear the informal greeting Привіт! used with friends, peers, and family.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-074']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-002', 'V-001']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'Hear the formal greeting Добрий день! used for polite and respectful public interactions.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-075', 'W-076']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-003', 'T-041', 'V-002']
+    practice: ['a2']
+    needs: [video]
+  activities:
+  - id: a1
+    type: watch-and-repeat
+    placement: inline
+    focus: 'Hear and say the informal greeting aloud.'
+    model: X-001
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Choose the appropriate polite greeting for formal situations.'
+    options:
+    - 'Polite time-of-day greeting: Good day'
+    - 'Informal friendly greeting: Hi'
+  videos:
+  - evidence: V-001
+    use: 'Informal greeting demonstration.'
+  - evidence: V-002
+    use: 'Formal greeting demonstration.'
+- n: 2
+  slug: first-vowels
+  title: 'голосні звуки'
+  kind: teach
+  job: 'Distinguish vowel sounds from consonants and read the first five vowels: А, Е, И, І, О.'
+  rationale: 'Primer part 1 introduces vowel sounds and distinct letters before consonant clusters.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: ['А', 'Е', 'И', 'І', 'О']
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'The teacher models the pronunciation of the vowel letter Е. Learn and observe the primary vowel letters А, О, Е, И, І.'
+    introduces: {letters: ['А', 'Е', 'И', 'І', 'О'], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-001', 'T-006', 'T-007', 'T-009', 'T-011', 'V-004', 'V-005', 'V-007', 'V-009']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: practice
+    teach: 'Practice distinguishing vowel sounds: clear [і] versus deeper [и], and open [а], [о], [е].'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-004']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: observe
+    placement: inline
+    focus: 'Notice the vowel shapes А, О, Е, И, І.'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Distinguish vowel letters by shape and sound.'
+    options:
+    - 'А'
+    - 'О'
+    - 'Е'
+    - 'И'
+    - 'І'
+  videos:
+  - evidence: V-004
+    use: 'Pronunciation model for letter А.'
+  - evidence: V-005
+    use: 'Pronunciation model for letter О.'
+  - evidence: V-007
+    use: 'Pronunciation model for letter И.'
+  - evidence: V-009
+    use: 'Pronunciation model for vowel І.'
+- n: 3
+  slug: first-consonants-and-syllables
+  title: 'перші приголосні'
+  kind: teach
+  job: 'Introduce consonants М, Н, В and read first CV syllables and familiar names.'
+  rationale: 'Combines taught vowels with first sonorants and voiced fricative to build readable syllables and personal names.'
+  word_target: 220
+  inventory:
+    phonetics:
+      letters: ['М', 'Н', 'В']
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: мама, evidence: W-081, forms: ['noun:anim:f:v_naz']}
+      - {lemma: Ніна, evidence: W-091, forms: ['noun:anim:f:v_naz:prop:fname']}
+      - {lemma: Нонна, evidence: W-092, forms: ['noun:anim:f:v_naz:prop:fname']}
+      - {lemma: Іван, evidence: W-093, forms: ['noun:anim:m:v_naz:prop:fname']}
+      - {lemma: Вова, evidence: W-094, forms: ['noun:anim:m:v_naz:prop:fname']}
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Consonants М and Н: read syllables ма, мо, ме, ми, мі and на, но, не, ни, ні; read мама, Ніна, Нонна.'
+    introduces: {letters: ['М', 'Н'], grammar: [], vocabulary: ['W-081', 'W-091', 'W-092']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-010', 'T-012', 'T-019', 'V-008', 'V-010']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'Consonant В: read syllables ва, во, ве, ви, ві and decodable names Іван, Вова.'
+    introduces: {letters: ['В'], grammar: [], vocabulary: ['W-093', 'W-094']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-013', 'T-019', 'V-011']
+    practice: ['a2']
+    needs: [video]
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Read syllables with М and Н.'
+    options:
+    - 'ма'
+    - 'на'
+    - 'мі'
+    - 'ні'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Read taught names using vowels and М, Н, В.'
+    options:
+    - 'мама'
+    - 'Ніна'
+    - 'Іван'
+    - 'Вова'
+  videos:
+  - evidence: V-008
+    use: 'Pronunciation model for consonant М.'
+  - evidence: V-010
+    use: 'Pronunciation model for consonant Н.'
+  - evidence: V-011
+    use: 'Pronunciation model for consonant В.'
+- n: 4
+  slug: consonants-and-iotated-vowel
+  title: 'звуки і букви'
+  kind: teach
+  job: 'Introduce consonants П, Р, Т and vowel Я, reading first short decodable words.'
+  rationale: 'Completes position 2 alphabet allocation with voiceless stops П, Т, vibrant Р, and iotated vowel Я.'
+  word_target: 220
+  inventory:
+    phonetics:
+      letters: ['П', 'Р', 'Т', 'Я']
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: тато, evidence: W-101, forms: ['noun:anim:m:v_naz']}
+      - {lemma: я, evidence: W-001, forms: ['noun:anim:s:v_naz:pron:pers:1']}
+      incidental: []
+      recycled: []
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'The teacher models the pronunciation of consonant Т. Read syllables and words with consonants П, Р, and Т, such as тато.'
+    introduces: {letters: ['П', 'Р', 'Т'], grammar: [], vocabulary: ['W-101']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-017', 'T-018', 'V-015', 'V-016']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'The teacher models the pronunciation of vowel Я. Read the personal pronoun я.'
+    introduces: {letters: ['Я'], grammar: [], vocabulary: ['W-001']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-018']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Read decodable words with П, Р, Т.'
+    options:
+    - 'тато'
+    - 'па'
+    - 'ра'
+    - 'та'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Recognise the vowel letter Я.'
+    options:
+    - 'Я'
+    - 'А'
+    - 'Е'
+    - 'О'
+  videos:
+  - evidence: V-015
+    use: 'Pronunciation model for consonant П.'
+  - evidence: V-016
+    use: 'Pronunciation model for consonant Р.'
+- n: 5
+  slug: first-letters-recap
+  title: 'повторення'
+  kind: recap
+  job: 'Consolidate greetings and the 12 taught letters through practical interaction and reading.'
+  rationale: 'Recap lesson reviews greetings and confirms decodability of all 12 position 2 letters.'
+  word_target: 210
+  inventory:
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: ['W-074', 'W-075', 'W-076', 'W-081', 'W-091', 'W-092', 'W-093', 'W-094', 'W-101', 'W-001']
+  steps:
+  - id: s1
+    kind: recap
+    teach: 'Review greeting turns and decodable names.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-074', 'W-075', 'W-076']}
+    evidence: ['T-002', 'T-003', 'V-001', 'V-002']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: recap
+    teach: 'Practical closing task: greet someone appropriately and read familiar names.'
+    task:
+      id: 'sounds-letters-recap-task'
+      action: 'read_and_use'
+      context_en: 'Meeting people in a Ukrainian community.'
+      instruction_en: 'Select the appropriate greeting and read aloud the names of people you meet.'
+      response_mode: 'spoken_or_written'
+      success_criteria_en:
+      - 'Greet appropriately in formal and informal situations'
+      - 'Read familiar names using taught letters'
+      learner_reads: []
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-081', 'W-091', 'W-092', 'W-093', 'W-094', 'W-101', 'W-001']}
+    evidence: ['T-019']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Review formal and informal greetings.'
+    options:
+    - 'Good day greeting'
+    - 'Informal Hi greeting'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Read taught names and words.'
+    options:
+    - 'мама'
+    - 'Іван'
+    - 'Ніна'
+    - 'тато'
+  videos:
+  - evidence: V-001
+    use: 'Review informal greeting demonstration.'
+  - evidence: V-002
+    use: 'Review formal greeting demonstration.'

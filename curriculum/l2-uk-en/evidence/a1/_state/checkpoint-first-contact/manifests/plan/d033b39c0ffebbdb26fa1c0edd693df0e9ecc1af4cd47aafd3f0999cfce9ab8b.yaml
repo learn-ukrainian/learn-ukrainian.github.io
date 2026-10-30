@@ -1,0 +1,54 @@
+inputs:
+  arc:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml
+    sha256: 9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe
+  arc_source:
+    path: docs/epics/fresh-build-a1-arc.md
+    sha256: 03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d
+  decisions:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml
+    sha256: 9608ea4b8bc86bff2fd327196f28f9bc126b310ad08d5f2f0ce19f862d9b061d
+  grammar:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml
+    sha256: 20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f
+  learner_state:
+    path: curriculum/l2-uk-en/evidence/a1/_state/checkpoint-first-contact/plan-review.learner-state.yaml
+    sha256: c334f292c174652da391c0d6c96d1cd24476e69c5866124a3ab5bfed832c7aac
+  pack:
+    path: curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml
+    sha256: d9206a1eb95c0d015b5a94f50667cd9ce2590a4816abe8605fa6e9797731f717
+  pack_lock:
+    path: curriculum/l2-uk-en/evidence/a1/checkpoint-first-contact.yaml.lock
+    sha256: fcdc4764886610018e3e3c8568a8bffcc8802d81c6c120b6fc019adeb169a69a
+  pack_verify_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/checkpoint-first-contact/pack-verify.report.json
+    sha256: 782a7b74af171ec4f8e284cfbabfffb474f8343cb4ad72e876b096964a11ebcb
+  plan:
+    path: curriculum/l2-uk-en/lesson-plans/a1/checkpoint-first-contact.yaml
+    sha256: 5ac63df2462a731af8533b6e143e1534b4b63c884611ddfb250b9fcfa7ead323
+  requirements:
+    path: docs/epics/fresh-build-requirements.md
+    sha256: d0d5008aefd21a34fa5cea307254bbd9b044ac9c3eef3db1d1e6e9a3d02d629f
+  scope:
+    path: curriculum/l2-uk-en/lesson-plans/a1/_scope/checkpoint-first-contact.yaml
+    sha256: e695ef74a9ee5af4c8c5af38d3afa6e1071177a9cfaf0e82988d85160abc272c
+  v1_totals:
+    path: curriculum/l2-uk-en/evidence/a1/_state/checkpoint-first-contact/plan-review.v1-totals.yaml
+    sha256: a19a602af4a7638ec5f6a870a087b9d364e7efce2080ae44bf57a1e0446d8b17
+  validate_report:
+    path: curriculum/l2-uk-en/evidence/a1/_state/checkpoint-first-contact/plan-validate.report.json
+    sha256: 110fb965aa4b639c1defb12f1ecf2826e08442ff8fab4624da828e6d3814c8e6
+  words:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml
+    sha256: 3950ccabd48eef08a22c61065cfcd1285730fd3881c3b4569e48baeb8d40d490
+  words_lock:
+    path: curriculum/l2-uk-en/evidence/a1/_words.yaml.lock
+    sha256: c138ea68bb7729b1e58365030923f4702eb86e6f107e0723b68eb19d4a22de0f
+kind: plan
+learner_state:
+  sha256: 3582ac1df68bf7c6106b25bc752cc8740ef89f7756b76dff6ee958c18da83adb
+  source: planned_state
+level: a1
+manifest_schema: 1
+position: 7
+slug: checkpoint-first-contact

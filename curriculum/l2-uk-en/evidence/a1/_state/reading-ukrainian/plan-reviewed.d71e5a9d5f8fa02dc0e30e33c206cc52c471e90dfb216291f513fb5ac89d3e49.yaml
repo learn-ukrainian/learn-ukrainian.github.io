@@ -1,0 +1,325 @@
+plan_schema: 2
+module: reading-ukrainian
+level: a1
+sequence: 5
+slug: reading-ukrainian
+version: '1'
+title: 'читати'
+subtitle: 'Seven remaining letters, digraphs, and completing the alphabet'
+focus: 'Complete the Ukrainian alphabet with letters Ґ, Ж, Ч, Ш, Щ, Ц, Ф, digraphs дж and дз, voiced/voiceless pairs, and alphabetical order.'
+objectives:
+- 'Read words and syllables with letters Ґ, Ж, Ч, Ш, Щ, Ц, Ф.'
+- 'Pronounce digraphs дж and дз as single fused sounds [дж] and [дз].'
+- 'Identify voiced and voiceless consonant pairs across the complete alphabet.'
+- 'Recite letter names and sequence words in alphabetical order.'
+connects_to: []
+prerequisites: []
+register: 'English scaffolding at A1; Ukrainian models first, then English glosses.'
+changelog:
+- 'Position 5 plan authored for arc revision r6 with 7 letters, digraphs, and practical recap task.'
+arc_ref: {level: a1, position: 5}
+evidence_ref:
+  path: evidence/a1/reading-ukrainian.yaml
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+lessons:
+- n: 1
+  slug: letters-ge-and-zhe
+  title: 'літери ґ і ж'
+  kind: teach
+  job: 'Read consonants Ґ and Ж and contrast ґ with г and ж with ш.'
+  rationale: 'Letter Ґ provides the voiced velar plosive distinct from fricative Г, while Ж provides the voiced postalveolar fricative.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: ['Ґ', 'Ж']
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: ґава, evidence: W-107, forms: ['noun:anim:f:v_naz']}
+      - {lemma: жито, evidence: W-111, forms: ['noun:inanim:n:v_naz']}
+      - {lemma: жабка, evidence: W-115, forms: ['noun:anim:f:v_naz']}
+      - {lemma: ґрати, evidence: W-150, forms: ['noun:inanim:p:v_naz:ns']}
+      - {lemma: ґрунт, evidence: W-153, forms: ['noun:inanim:m:v_naz']}
+      incidental: []
+      recycled: ['W-074', 'W-075', 'W-076']
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Observe letter Ґ and sound [ґ]. Contrast ґ with г in words ґава, ґрати, and ґрунт.'
+    introduces: {letters: ['Ґ'], grammar: [], vocabulary: ['W-107', 'W-150', 'W-153']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-001', 'V-001']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'Observe letter Ж and voiced sound [ж]. Read words жито and жабка and practice greetings добрий день and привіт.'
+    introduces: {letters: ['Ж'], grammar: [], vocabulary: ['W-111', 'W-115']}
+    uses: {grammar: [], vocabulary: ['W-074', 'W-075', 'W-076']}
+    evidence: ['T-002', 'V-002']
+    practice: ['a2']
+    needs: [video]
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Read words with letter Ґ.'
+    options:
+    - 'ґава'
+    - 'ґрати'
+    - 'ґрунт'
+    - 'гора'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Read words with letter Ж and greetings.'
+    options:
+    - 'жито'
+    - 'жабка'
+    - 'добрий день'
+    - 'привіт'
+  videos:
+  - evidence: V-001
+    use: 'Pronunciation model for letter Ґ.'
+  - evidence: V-002
+    use: 'Pronunciation model for consonant Ж.'
+- n: 2
+  slug: letters-che-and-sha
+  title: 'літери ч і ш'
+  kind: teach
+  job: 'Read consonants Ч and Ш and pair voiced ж with voiceless ш.'
+  rationale: 'Letter Ч introduces the voiceless postalveolar affricate, while Ш introduces the voiceless postalveolar fricative.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: ['Ч', 'Ш']
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: чобіт, evidence: W-108, forms: ['noun:inanim:m:v_naz']}
+      - {lemma: чай, evidence: W-109, forms: ['noun:inanim:m:v_naz']}
+      - {lemma: комиш, evidence: W-112, forms: ['noun:inanim:m:v_naz']}
+      incidental: []
+      recycled: ['W-074', 'W-107']
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Observe letter Ч and affricate sound [ч]. Read words чобіт and чай.'
+    introduces: {letters: ['Ч'], grammar: [], vocabulary: ['W-108', 'W-109']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-003', 'V-003']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'Observe letter Ш and voiceless fricative [ш]. Pair voiced ж with voiceless ш and read комиш, recycling ґава and привіт.'
+    introduces: {letters: ['Ш'], grammar: [], vocabulary: ['W-112']}
+    uses: {grammar: [], vocabulary: ['W-074', 'W-107']}
+    evidence: ['T-004', 'V-004']
+    practice: ['a2']
+    needs: [video]
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Read syllables and words with letter Ч.'
+    options:
+    - 'чобіт'
+    - 'чай'
+    - 'ча'
+    - 'чо'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Read syllables and words with letter Ш.'
+    options:
+    - 'комиш'
+    - 'ша'
+    - 'шо'
+    - 'ґава'
+  videos:
+  - evidence: V-003
+    use: 'Pronunciation model for consonant Ч.'
+  - evidence: V-004
+    use: 'Pronunciation model for consonant Ш.'
+- n: 3
+  slug: letters-shcha-tse-ef
+  title: 'літери щ, ц, ф'
+  kind: teach
+  job: 'Read consonants Щ, Ц, Ф and recognize two sounds [шч] for letter Щ.'
+  rationale: 'Letter Щ represents two fused consonant sounds [шч], Ц represents affricate [ц], and Ф provides the voiceless labiodental fricative.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: ['Щ', 'Ц', 'Ф']
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: щука, evidence: W-129, forms: ['noun:anim:f:v_naz']}
+      - {lemma: цимбали, evidence: W-128, forms: ['noun:inanim:p:v_naz:ns']}
+      - {lemma: ферма, evidence: W-131, forms: ['noun:inanim:f:v_naz']}
+      - {lemma: дощ, evidence: W-130, forms: ['noun:inanim:m:v_naz']}
+      incidental: []
+      recycled: ['W-108', 'W-109']
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'Observe letter Щ representing sound cluster [шч] and read щука and дощ.'
+    introduces: {letters: ['Щ'], grammar: [], vocabulary: ['W-129', 'W-130']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-006', 'V-005']
+    practice: ['a1']
+    needs: [video]
+  - id: s2
+    kind: teach
+    teach: 'Observe letters Ц and Ф. Read words цимбали and ферма, recycling чобіт and чай.'
+    introduces: {letters: ['Ц', 'Ф'], grammar: [], vocabulary: ['W-128', 'W-131']}
+    uses: {grammar: [], vocabulary: ['W-108', 'W-109']}
+    evidence: ['T-005', 'T-007', 'V-006', 'V-007']
+    practice: ['a2']
+    needs: [video]
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Read words with letter Щ.'
+    options:
+    - 'щука'
+    - 'дощ'
+    - 'ща'
+    - 'щу'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Read words with letters Ц and Ф.'
+    options:
+    - 'цимбали'
+    - 'ферма'
+    - 'чобіт'
+    - 'чай'
+  videos:
+  - evidence: V-005
+    use: 'Pronunciation model for consonant Щ.'
+  - evidence: V-006
+    use: 'Pronunciation model for consonant Ц.'
+  - evidence: V-007
+    use: 'Pronunciation model for consonant Ф.'
+- n: 4
+  slug: digraphs-and-alphabet
+  title: 'диграфи та алфавіт'
+  kind: teach
+  job: 'Pronounce digraphs дж and дз as single fused sounds and practice alphabetical order.'
+  rationale: 'Digraphs дж and дз complete the inventory of phonological units, and full alphabet order organises all 33 letters.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core:
+      - {lemma: джміль, evidence: W-132, forms: ['noun:anim:m:v_naz']}
+      - {lemma: джем, evidence: W-133, forms: ['noun:inanim:m:v_naz']}
+      - {lemma: дзиґа, evidence: W-134, forms: ['noun:inanim:f:v_naz']}
+      - {lemma: алфавіт, evidence: W-173, forms: ['noun:inanim:m:v_naz']}
+      incidental: []
+      recycled: ['W-107', 'W-128', 'W-131']
+  steps:
+  - id: s1
+    kind: teach
+    teach: 'The teacher models the pronunciation of digraphs дж and дз as single fused sounds [дж] and [дз]. Read джміль, джем, and дзиґа.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-132', 'W-133', 'W-134']}
+    uses: {grammar: [], vocabulary: []}
+    evidence: ['T-008', 'T-009']
+    practice: ['a1']
+  - id: s2
+    kind: teach
+    teach: 'The teacher models the pronunciation of the full alphabet in order. Read word алфавіт and recycle ґава, цимбали, and ферма.'
+    introduces: {letters: [], grammar: [], vocabulary: ['W-173']}
+    uses: {grammar: [], vocabulary: ['W-107', 'W-128', 'W-131']}
+    evidence: ['T-006']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Read words with digraphs дж and дз.'
+    options:
+    - 'джміль'
+    - 'джем'
+    - 'дзиґа'
+    - 'дзвін'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Read words across the completed alphabet.'
+    options:
+    - 'алфавіт'
+    - 'ґава'
+    - 'цимбали'
+    - 'ферма'
+  videos: []
+- n: 5
+  slug: reading-ukrainian-recap
+  title: 'підсумок: читання'
+  kind: recap
+  job: 'Consolidate reading skills across all 33 letters and digraphs through practical decoding tasks.'
+  rationale: 'Review and confirm decoding mastery of the complete Ukrainian alphabet before moving to extended conversations.'
+  word_target: 210
+  inventory:
+    phonetics:
+      letters: []
+      sounds: []
+    grammar: []
+    vocabulary:
+      core: []
+      incidental: []
+      recycled: ['W-074', 'W-075', 'W-076', 'W-107', 'W-108', 'W-109', 'W-111', 'W-128', 'W-129', 'W-131', 'W-132', 'W-134']
+  steps:
+  - id: s1
+    kind: recap
+    teach: 'The teacher models reading a complete set of everyday signs and labels using the full 33-letter Ukrainian alphabet.'
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-074', 'W-075', 'W-076', 'W-107', 'W-108', 'W-109']}
+    evidence: ['T-006', 'X-001', 'S-001', 'S-002']
+    practice: ['a1']
+  - id: s2
+    kind: recap
+    teach: 'Practical closing task: read labels, signs, and short words across the full alphabet.'
+    task:
+      id: 'reading-ukrainian-recap-task'
+      action: 'read_and_use'
+      context_en: 'Reading signs, shop labels, and short words on a city street.'
+      instruction_en: 'Read the signs aloud and identify words using all thirty-three letters of the alphabet.'
+      response_mode: 'spoken_or_written'
+      success_criteria_en:
+      - 'Read street signs and shop labels with taught letters'
+      - 'Recognise words with digraphs and the complete alphabet'
+      learner_reads: []
+    introduces: {letters: [], grammar: [], vocabulary: []}
+    uses: {grammar: [], vocabulary: ['W-111', 'W-128', 'W-129', 'W-131', 'W-132', 'W-134']}
+    evidence: ['T-006', 'S-003']
+    practice: ['a2']
+  activities:
+  - id: a1
+    type: quiz
+    placement: inline
+    focus: 'Decode words and greetings from familiar signs.'
+    options:
+    - 'добрий день'
+    - 'привіт'
+    - 'ґава'
+    - 'чай'
+  - id: a2
+    type: quiz
+    placement: workbook
+    focus: 'Identify vocabulary words across the completed alphabet.'
+    options:
+    - 'жито'
+    - 'цимбали'
+    - 'щука'
+    - 'ферма'
+  videos: []

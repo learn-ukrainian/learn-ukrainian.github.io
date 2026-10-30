@@ -1,0 +1,11 @@
+scope_schema: 1
+level: a1
+module: first-conversations
+letters:
+  count: 0
+  list: []
+grammar:
+  count: 0
+  ids: []
+vocabulary:
+  core_count: 8
