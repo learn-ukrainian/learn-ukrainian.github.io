@@ -318,6 +318,13 @@ def invalid_findings_block(response: str, *, stated: str | None = None) -> str |
     return None
 
 
+def declares_missing_capabilities(response: str) -> bool:
+    """Whether any top-level JSON object in the reply carries ``MISSING_CAPABILITIES_FIELD``, in any form."""
+    return any(
+        isinstance(value, dict) and MISSING_CAPABILITIES_FIELD in value for value in _top_level_json_values(response)
+    )
+
+
 def checked_findings_payload(payload: dict[str, Any], *, stated: str | None = None) -> tuple[str, Any]:
     """The verdict and evidence of a findings payload the closeout verifier's schema accepts.
 

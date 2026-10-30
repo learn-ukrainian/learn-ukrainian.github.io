@@ -91,10 +91,12 @@ from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
 from scripts.review.verdict_parser import (
     _REVIEW_VERDICT_LINE_RE,
+    MISSING_CAPABILITIES_FIELD,
     _commonmark_lines,
     _findings_json_verdicts,
     _without_code_fences,
     checked_findings_payload,
+    declares_missing_capabilities,
     invalid_findings_block,
     recognized_verdicts,
     review_score,
@@ -170,7 +172,11 @@ def _normalize_verdict(reply: str) -> str:
             raise RecordError("reply carries a findings payload contradicting a verdict line")
     if len(tokens) != 1:
         raise RecordError("review reply has missing or ambiguous VERDICT token")
-    return tokens.pop()
+    verdict = tokens.pop()
+    # A reviewer that reports missing capabilities cannot approve, wherever the reply declares them.
+    if verdict != "BLOCKED" and declares_missing_capabilities(reply):
+        raise RecordError(f"reply carries {MISSING_CAPABILITIES_FIELD} with verdict {verdict}; only a BLOCKED reply may")
+    return verdict
 
 
 def _review_verdict_and_count(reply: str) -> tuple[str, int | Literal["unknown"]]:
