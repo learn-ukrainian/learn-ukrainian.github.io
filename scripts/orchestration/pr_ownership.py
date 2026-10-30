@@ -415,6 +415,49 @@ def _head_task_ids(pr: Mapping[str, Any]) -> list[str]:
     return [match.group("task") for match in _HEAD_TASK.finditer(message)]
 
 
+def _with_head_commits(
+    open_prs: Mapping[str, list[dict[str, Any]]],
+    records: list[dict[str, Any]],
+    repos: Mapping[str, Any],
+    live: Callable[[Mapping[str, Any] | None], bool | None] = liveness,
+) -> dict[str, list[dict[str, Any]]]:
+    """``open_prs`` with the head commit attached, but only where the branch has no live owner.
+
+    The head trailer can only matter for a PR the branch check would report, so every other
+    PR costs no extra read. A failed read raises ``OwnershipError``: never a false alert.
+    """
+    from scripts.fleet import pr_owner_check as check
+
+    pending = {
+        (row.repo.casefold(), row.number)
+        for row in check.evaluate(open_prs, records, repos, lambda record: live(record) is not False)
+    }
+    result: dict[str, list[dict[str, Any]]] = {}
+    for slug, prs in open_prs.items():
+        result[slug] = [
+            _with_head_commit(slug, pr) if (slug.casefold(), int(pr["number"])) in pending else pr for pr in prs
+        ]
+    return result
+
+
+def _with_head_commit(slug: str, pr: dict[str, Any]) -> dict[str, Any]:
+    oid = pr.get("headRefOid")
+    if pr.get("isCrossRepository") or not isinstance(oid, str) or not oid:
+        return pr
+    proc = github_client.run(
+        ["gh", "api", f"repos/{slug}/git/commits/{oid}"],
+        capture_output=True, text=True, check=False, timeout=60,
+    )
+    try:
+        message = json.loads(proc.stdout).get("message") if proc.returncode == 0 else None
+    except (ValueError, AttributeError):
+        message = None
+    if not isinstance(message, str):
+        raise OwnershipError(f"cannot read the head commit of {slug}#{pr['number']}")
+    headline, _, body = message.partition("\n")
+    return {**pr, "commits": [{"oid": oid, "messageHeadline": headline, "messageBody": body}]}
+
+
 def findings(
     open_prs: Mapping[str, list[dict[str, Any]]],
     records: list[dict[str, Any]],
@@ -479,6 +522,7 @@ def _observe(handoffs: Mapping[tuple[str, int], str]) -> tuple[set[str], dict[st
     repos = load_fleet_repos()
     records = store.list_tasks(strict=True)
     open_prs = {repos[k].github: check.fetch_open_prs(repos[k].github) for k in check.DEFAULT_REPO_KEYS}
+    open_prs = _with_head_commits(open_prs, records, repos)
     rows = findings(open_prs, records, repos, handoffs)
     keys = {pr_key(slug, int(pr["number"])) for slug, prs in open_prs.items() for pr in prs}
     return keys, {pr_key(f.repo, f.number): f for f in rows}

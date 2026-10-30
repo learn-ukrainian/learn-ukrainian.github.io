@@ -29,8 +29,9 @@ DEFAULT_REPO_KEYS = ("public", "infra-private")
 _ACTIVE = {"spawning", "running"}
 _GH_TIMEOUT_SECONDS = 60
 _PR_LIMIT = 200
-# ``commits`` and ``headRefOid`` let the ownerless alert read the head commit's X-Agent trailer.
-_PR_FIELDS = "number,title,headRefName,headRefOid,isCrossRepository,isDraft,url,commits"
+# ``headRefOid`` lets the ownerless alert fetch the head commit's X-Agent trailer. Never list
+# ``commits`` here: with 200 PRs it exceeds GitHub's GraphQL node limit.
+_PR_FIELDS = "number,title,headRefName,headRefOid,isCrossRepository,isDraft,url"
 
 
 @dataclass(frozen=True)
