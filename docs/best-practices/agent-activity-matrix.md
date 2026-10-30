@@ -26,7 +26,7 @@ Each cell carries:
 
 | Agent | Sub-models in use | Auth lane | Cost lane | Status |
 | --- | --- | --- | --- | --- |
-| **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Sonnet 5.5 (strong practical), Haiku 5.5 (routine mechanical, classification and read-only recon). Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor, never as a review route (D-129, #10464) | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Opus handles advice, designated approval jointly with Sol, and Ukrainian judgment; Haiku 5.5 handles routine lockfile/pointer/smoke work first (Sonnet fallback), mechanical classification/triage and read-only recon/search. It never handles Ukrainian content, review, design/approval, security, bounded code or driver work; resolve the catalog task roles. |
+| **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Sonnet 5.5 (strong practical), Haiku 5.5 (routine mechanical, classification and read-only recon). Fable 5.1 is parked: not routed by default, explicit pin only; reintroduction or a successor model is an operator decision. | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor, never as a review route (D-129, #10464) | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Opus handles advice and designated approval jointly with Sol; Haiku 5.5 handles routine lockfile/pointer/smoke work first (Sonnet fallback), mechanical classification/triage and read-only recon/search. It never handles Ukrainian content, review, design/approval, security, bounded code or driver work; resolve the catalog task roles. |
 | **Codex** ⭐ | GPT-6.1 Terra @ high for routine non-security code; Sol 6.1 @ high for hard tasks, advice, drivers and review; explicit Luna scouting | Native Codex CLI and `multi_agent_v2` children | Metered | Terra gets bounded owned paths, a complete brief and verification command. No security tools or security-sensitive code, destructive cleanup, driver seat, orchestration, formal review, critique, designated approval or Ukrainian-content judgment. Reserved Codex roles pin Sol explicitly; existing Ukrainian authoring seats remain. See the Terra coder boundary in `model-assignment.md`. |
 | **agy** | Gemini 3.8 Flash High | `scripts/dispatch.py dispatch --model <catalog-model> --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | Metered | Route Ukrainian review and well-defined implementation tasks to Flash with a complete one-unit brief and acceptance criteria. A Flash dispatch not classified Ukrainian authoring or review is the bounded fallback and needs a Sol advisory envelope (#9275). Code review follows `model-assignment.md` Code review row. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
 | **DeepSeek** | Latest `deepseek-v4.1-flash` only | opencode coding on the direct DeepSeek API or OpenRouter with a named US provider allow-list | Never private-repository content or secrets | Review-of-record and Ukrainian work need measured evidence first; Pro and older retired. `scripts/ai_agent_bridge/routing_guard.py` still refuses `openrouter/deepseek` until a named US provider allow-list exists. |
@@ -125,7 +125,7 @@ use the active roster above and `model-assignment.md` for routing.
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
 | **Primary** | Codex (codex-tools) | reviewer-as-fixer ADR-007 contract honored; baseline shipping | 2026-04-26 | `docs/decisions/2026-04-26-reboot-agent-responsibilities.md` §2 | "Cross-agent, no self-review" — `SELF_REVIEW_DETECTED` audit gate enforces. Used for per-dim LLM QG. |
-| Runner-up 1 | Claude | reserved for cultural/creative nuance dims | 2026-04-26 | same | "When those reviewers need a different voice." |
+| Runner-up 1 | Claude | historical cultural/creative note; no current review seat | 2026-04-26 | same | Historical. Claude has no current Ukrainian review seat. |
 | Runner-up 2 | Grok (4.3) | judge-calibration in progress | 2026-05-15 → 2026-05-17 | `audit/2026-05-15-grok-4.3-judge-calibration/`, `audit/2026-05-17-judge-calibration-*` | 4-axis calibration matrix (with-mcp / effort-high / effort-xhigh). Outcome: see audit dirs (full read pending in evidence sweep). |
 | Historical only | DeepSeek | deepseek-v4-pro history (PR #2107/#2112) — **not a live route** | 2026-05-17 | bakeoff archive | Historical evidence only; DeepSeek V4.1 Flash coding through opencode is allowed; review-of-record and Ukrainian work need measured evidence first, Pro is retired, and Flash remains active in the catalog. `ask-deepseek` is consult-only for non-language work. |
 
@@ -139,12 +139,12 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 
 | Slot | Agent | F1 / accuracy | Last verified | Evidence |
 | --- | --- | --- | --- | --- |
-| **Primary** | Claude Opus 4.7 | **F1=86%, 100% case accuracy** on 12-case Russianism set | 2026-05-15 | `audit/2026-05-15-russianism-judge-calibration/REPORT.md` |
+| Historical | Claude Opus 4.7 | **F1=86%, 100% case accuracy** on 12-case Russianism set | 2026-05-15 | `audit/2026-05-15-russianism-judge-calibration/REPORT.md` |
 | Runner-up 1 | AGY Gemini 3.1 Pro (High) | F1=84% (greeting-FP issue) | 2026-05-15 | same; H2 won at 2026-05-17 — `audit/2026-05-17-judge-calibration-h2/COMPARISON.md` |
 | Runner-up 2 | GPT-5.5 (Codex) | high precision, lower recall (conservative) | 2026-05-15 | same |
 | Runner-up 3 | Grok-4.3 | F1=77% (middle of pack) | 2026-05-15 | `audit/2026-05-15-grok-4.3-judge-calibration/REPORT.md` |
 
-**Note:** Russianism reviewer ≠ V7 module reviewer. Codex stays primary for full per-dim review per 4.2 above; Claude Opus is primary for the Russianism / linguistic dimension specifically when needed as a standalone judge. This sub-row replaces the previous "Runner-up 1 Claude — reserved for cultural/creative nuance dims" with empirical evidence.
+**Note:** Russianism reviewer ≠ V7 module reviewer. Codex stays primary for full per-dim review per 4.2 above. The scores above are historical measurements. Review and judging seats for the Russianism and linguistic dimension are GPT or Gemini; Claude has no standalone judge seat.
 
 **Promote-protocol round 1 result (2026-05-18, #2132):** DeepSeek-pro proposed splitting the reviewer prompt into Phase 1 (deterministic content-word verification: batch verify_words + query_cefr_level + check_russian_shadow + search_heritage) and Phase 2 (dim-by-dim judgment). Bakeoff queued: DeepSeek-pro vs Codex on `a1/my-morning` post-#2128/#2127 merge.
 
@@ -339,7 +339,7 @@ retired. Use the current catalog and `model-assignment.md` for routing.
 | --- | --- | --- | --- |
 | 1 ✅ | Codex GPT-5.5 (codex-tools) | $$ | Default per ADR. `<fixes>` contract honored. Bug surfaced #2127. |
 | 2 ⚠️ | DeepSeek-v4-pro hermes | $ | New (2026-05-17). Promote-protocol round 1 proposed split-by-phase prompt. Bakeoff queued. |
-| 3 ✅ | Claude Opus 4.7 | $$$ | Reserved for cultural/creative nuance. Best on Russianism (§4.2.a). |
+| 3 ✅ | Claude Opus 4.7 | $$$ | Historical rank. No current Ukrainian review or linguistic judge seat. |
 | 4 ⚠️ | Grok-4.3 | $ | Judge-calibration in progress; not yet aggregated. |
 | ❓ | Qwen-3.6-plus | $ | Untested as reviewer. |
 
@@ -347,7 +347,7 @@ retired. Use the current catalog and `model-assignment.md` for routing.
 
 | Rank | Model | F1 | Precision | Recall | Case acc | Cost | Notes |
 | --- | --- | ---: | ---: | ---: | ---: | --- | --- |
-| 1 ✅ | Claude Opus 4.7 | **86%** | 79% | 94% | 100% | $$$ | Primary. Highest recall in the field. |
+| 1 ✅ | Claude Opus 4.7 | **86%** | 79% | 94% | 100% | $$$ | Highest recall in the 2026-05-15 set. Not a current judge seat. |
 | 2 ✅ | AGY Gemini 3.1 Pro (High) | **84%** | 81% | 87% | 92% | 0$ | Greeting-FP issue. |
 | 3 ✅ | GPT-5.5 (Codex) | **78%** | 90% | 69% | 83% | $$ | Conservative, high precision. |
 | 4 ✅ | Grok-4.3 | **77%** | — | — | — | $ | Middle of pack (2026-05-15 calibration). |

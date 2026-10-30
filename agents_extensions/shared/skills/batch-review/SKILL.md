@@ -54,8 +54,7 @@ non-language work and never a batch-review route.
 > project (~2–3M tokens) for its verdict, so it is ~50–150× the cost of an inline review. For a **single
 > module or a small batch (≤3), review INLINE** in this session (or defer to next session if context is heavy) —
 > do NOT spawn subagents. Subagents here are justified ONLY for a **genuinely large batch** where wall-clock +
-> context-overflow outweigh the per-subagent reload. When in doubt, prefer non-Claude dispatched reviewers
-> (Codex or another qualified outside-family language lane) for the bulk and prefer the Claude seat in-session for cost — dispatching Claude is
+> context-overflow outweigh the per-subagent reload. When in doubt, dispatch the review-loop ukrainian seats for content review; Claude has no Ukrainian review seat. Dispatching Claude for non-language review is
 > permitted when needed (user 2026-06-22), but it costs the multiple above, so route by need, not by ban.
 
 Split the reviewable modules into chunks of 2-3 modules each.
