@@ -594,7 +594,6 @@ models:
       - agentic_coding
       - critical_review
       - security_review
-      - ukrainian_review
       - review_budget_elevation
     transports: [native_claude, agy]
     strengths: [agentic_coding_at_medium_effort, code_review_precision, grounded_analysis, visual_input_reading]
@@ -835,9 +834,9 @@ models:
     lifecycle: active
     # Dispatch v2 uses Cursor at grok-4.7-high; native Grok dispatch is retired.
     # grok-4.7-build-fast is not an alias. grok-4.6 is not admitted.
-    # The retained ukrainian_review role confers no language route: core.md M31
-    # admits only Claude, GPT or Gemini. Review routes list only code and infra
-    # profiles; the resolver, language-lane and sense-binding filters refuse xAI.
+    # The retained ukrainian_review role confers no language route.
+    # Ukrainian seats are Gemini and Sol (scripts/review/ukrainian_seats.py).
+    # Review routes list only code and infra profiles; the resolver refuses xAI.
     roles: [coding, strong_review, adversarial_review, critical_review, debugging, ukrainian_review]
     runtime_model_ids: [grok-4.7-build]
     transports: [native_grok, cursor]

@@ -53,7 +53,6 @@ from scripts.orchestration.integration_sweep import (
     REJECTED,
     SHA,
     TRUSTED_ASSOCIATIONS,
-    UKRAINIAN_SEAT_FAMILIES,
     GitHubAdapter,
     SweepError,
     lookup_verdict,
@@ -89,6 +88,11 @@ from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError, resolve_review_repository
+from scripts.review.ukrainian_seats import (
+    UKRAINIAN_SEAT_ROUTES,
+    attested_author_families,
+    required_ukrainian_seats,
+)
 from scripts.review.verdict_parser import (
     _REVIEW_VERDICT_LINE_RE,
     MISSING_CAPABILITIES_FIELD,
@@ -1436,8 +1440,8 @@ def _require_qualified_reviewer(
     # Seat aliases (``grok-build``) name the canonical route the catalog lists.
     agent = normalize_seat(str(task.get("agent") or "")) or ""
     if profile == "ukrainian":
-        if agent not in {"claude", "codex", "agy"} or family not in UKRAINIAN_SEAT_FAMILIES:
-            raise RecordError("reviewer not qualified: Ukrainian review needs a Claude, GPT or Gemini seat")
+        if (agent, family) not in UKRAINIAN_SEAT_ROUTES:
+            raise RecordError("reviewer not qualified: Ukrainian review needs a Gemini or Sol seat")
         if facts.subject_seats or facts.subject_families or is_security_sensitive_change(facts.changed_paths):
             raise RecordError("reviewer not qualified: protected scope needs a code-profile review")
         return
@@ -2586,7 +2590,20 @@ def record(
             current = lookup_verdict(comments, sha, login)
             state = "success" if current.state == "APPROVED" else "pending"
             if current.state == NEEDS_SEAT:
-                open_seats = sorted(UKRAINIAN_SEAT_FAMILIES - set(current.ukrainian_seats) - facts.excluded_families)
+                profiled = [
+                    marker
+                    for item in comments
+                    if isinstance(item.get("body"), str)
+                    and (marker := parse_marker(item["body"])) is not None
+                    and marker.get("sha") == sha
+                    and marker.get("verdict") not in REJECTED
+                    and is_ukrainian_review(marker)
+                ]
+                open_seats = sorted(
+                    required_ukrainian_seats(attested_author_families(profiled))
+                    - set(current.ukrainian_seats)
+                    - set(facts.excluded_families)
+                )
                 pending_reason = f"; awaiting Ukrainian seat: {'/'.join(open_seats) or 'none eligible'}"
             elif state == "pending":
                 pending_reason = f"; head reads {current.state}"

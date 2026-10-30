@@ -45,11 +45,13 @@ from scripts.review import record_cf_verdict as recorder
 from scripts.review.capability_failure import run_started as _started
 from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.reviewer_resolver import resolve_family
+from scripts.review.ukrainian_seats import (
+    UKRAINIAN_SEAT_FAMILIES,
+    attested_author_families,
+    required_ukrainian_seats,
+)
 from scripts.review.verdict_parser import recognized_verdicts
 
-# A learner-facing Ukrainian change seats two reviewers from two families
-# (review-loop references/ukrainian.md § Seats); every other profile seats one.
-UKRAINIAN_SEATS = 2
 UNATTESTED_FAMILIES = frozenset({"unknown", "unattested", "ambiguous", "conflicting"})
 
 
@@ -384,7 +386,23 @@ def check_lineage(
     ukrainian = any(marker["sha"] == approved and is_ukrainian_review(marker) for _, marker in markers) or any(
         run.record.get("worktree_base_sha") == approved and is_ukrainian_review(run.record) for run in runs
     )
-    required = UKRAINIAN_SEATS if ukrainian else 1
-    if len(seats) < required:
-        raise LineageRefused(f"{len(seats)} seat(s) approved {approved}; this profile requires {required}")
+    if ukrainian:
+        approving = {
+            family
+            for family, marker in latest.items()
+            if marker["sha"] == approved
+            and marker["verdict"] not in REJECTED
+            and family in UKRAINIAN_SEAT_FAMILIES
+            and is_ukrainian_review(marker)
+        }
+        head_markers = [
+            marker for _, marker in markers if marker["sha"] == approved and is_ukrainian_review(marker)
+        ]
+        missing = sorted(required_ukrainian_seats(attested_author_families(head_markers)) - approving)
+        if missing:
+            raise LineageRefused(
+                f"{len(approving)} Ukrainian seat(s) approved {approved}; missing {','.join(missing)}"
+            )
+    elif not seats:
+        raise LineageRefused(f"0 seat(s) approved {approved}; this profile requires 1")
     return seats

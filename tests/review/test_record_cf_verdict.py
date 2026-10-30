@@ -396,9 +396,8 @@ def test_gemini_verdict_records_and_gate_accepts_exact_head(monkeypatch, tmp_pat
     marker = recorder.parse_marker(comments[0]["body"])
     assert marker["family"] == "google"
     assert marker["sha"] == SHA
-    # A Ukrainian head needs its second seat before the gate accepts it (#12020).
-    gate = "APPROVED" if profile == "code" else sweep.NEEDS_SEAT
-    assert sweep.lookup_verdict(comments, SHA, "fleet").state == gate
+    # An OpenAI author needs only this Gemini seat, on either profile.
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
     assert keeper._recorded_approval_for_head(comments, SHA, "fleet")
     assert not keeper._recorded_approval_for_head(comments, "b" * 40, "fleet")
     assert calls == {"posts": 1, "statuses": 1}
@@ -477,10 +476,9 @@ def test_ukrainian_review_with_sources_calls_accepted(monkeypatch, tmp_path, cou
     assert marker["sources_calls"] == count
     assert marker["review_profile"] == "ukrainian"
     assert f"sources={count}" in statuses[0]["description"]
-    # #12020: one of the profile's two seats is not approval, but it is a recorded approval
-    # the keeper can revoke when the head is queued.
-    assert statuses[0]["state"] == "pending"
-    assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_SEAT
+    # A Google author needs only this Sol seat, and the keeper can still revoke that approval.
+    assert statuses[0]["state"] == "success"
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
     assert keeper._recorded_approval_for_head(comments, SHA, "fleet")
     recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert calls == {"posts": 1, "statuses": 2}
@@ -523,52 +521,86 @@ def merge(monkeypatch, comments):
 
 
 def test_one_ukrainian_seat_leaves_the_status_pending_and_the_merge_refused(monkeypatch, tmp_path):
-    # #12020 (AC-04a): one of the profile's two seats is not approval.
+    # An author outside OpenAI and Google still needs both Gemini and Sol.
     from scripts.opsec import prepublish as gate
 
-    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
     statuses = []
     monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
-    record_seat(tasks, tmp_path, "review-one")
+    record_seat(tasks, tmp_path, "review-one", agent="agy", model="gemini-3.8-flash-high")
     assert statuses[-1]["state"] == "pending"
-    assert statuses[-1]["description"].endswith("; awaiting Ukrainian seat: anthropic")
+    assert statuses[-1]["description"].endswith("; awaiting Ukrainian seat: openai")
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_SEAT
     with pytest.raises(gate.PublishBlocked, match="Ukrainian review seat has not approved"):
         merge(monkeypatch, comments)
 
 
 def test_two_eligible_ukrainian_seats_at_the_same_head_pass(monkeypatch, tmp_path):
-    # #12020 (AC-04b): GPT and Claude seats, both independent of the author family.
-    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    # An author outside OpenAI and Google is approved once Gemini and Sol have both approved.
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
     statuses = []
     monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
-    record_seat(tasks, tmp_path, "review-one")
-    record_seat(tasks, tmp_path, "review-two", agent="claude", model="claude-opus-5-5",
-                started_at="2026-09-23T12:00:01.000001+00:00")
+    record_seat(tasks, tmp_path, "review-one", agent="agy", model="gemini-3.8-flash-high")
+    record_seat(tasks, tmp_path, "review-two", started_at="2026-09-23T12:00:01.000001+00:00")
     assert [status["state"] for status in statuses] == ["pending", "success"]
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
     assert len(merge(monkeypatch, comments)) == 1
 
 
 def test_a_ukrainian_seat_approving_an_older_head_does_not_count(monkeypatch, tmp_path):
-    # #12020 (AC-04c): seats count only when they approved the head that would land.
+    # Seats count only when they approved the head that would land.
     from scripts.opsec import prepublish as gate
     from tests.test_record_cf_verdict import OTHER
 
-    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"anthropic"})
     statuses = []
     monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
     older = recorder.build_comment(
         sha=OTHER, task_id="review-old", started="2026-09-23T11:00:00.000001+00:00", verdict="APPROVED",
-        model="claude-opus-5-5", family="anthropic", reply="VERDICT: APPROVE",
+        model="gpt-6.1-sol", family="openai", reply="VERDICT: APPROVE",
         review_profile="ukrainian", sources_mcp_call_count=3,
+        author_models=("gemini-3.8-flash-high",),
     )
     stamp = "2026-09-23T12:30:00Z"
     comments.append({"id": 0, "body": older, "user": {"login": "fleet"}, "author_association": "MEMBER",
                      "created_at": stamp, "updated_at": stamp})
-    record_seat(tasks, tmp_path, "review-one")
+    record_seat(tasks, tmp_path, "review-one", agent="agy", model="gemini-3.8-flash-high")
     assert statuses[-1]["state"] == "pending"
+    assert statuses[-1]["description"].endswith("; awaiting Ukrainian seat: openai")
     assert sweep.lookup_verdict(comments, SHA, "fleet").state == sweep.NEEDS_SEAT
+    with pytest.raises(gate.PublishBlocked, match="Ukrainian review seat has not approved"):
+        merge(monkeypatch, comments)
+
+
+def test_sol_authored_gemini_approval_passes_and_gemini_author_needs_sol(monkeypatch, tmp_path):
+    """A Sol-authored Ukrainian head with one Gemini APPROVE passes; a Gemini-authored one needs Sol."""
+    from scripts.opsec import prepublish as gate
+
+    sol_root = tmp_path / "sol"
+    tasks, comments, _ = setup_record(monkeypatch, sol_root, families={"openai"})
+    statuses = []
+    monkeypatch.setattr(recorder, "post_commit_status", lambda **kwargs: statuses.append(kwargs))
+    record_seat(tasks, sol_root, "review-gemini", agent="agy", model="gemini-3.8-flash-high")
+    assert statuses[-1]["state"] == "success"
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+    assert len(merge(monkeypatch, comments)) == 1
+
+    gemini_root = tmp_path / "gemini"
+    _tasks, comments, _calls = setup_record(monkeypatch, gemini_root, families={"google"})
+    body = recorder.build_comment(
+        sha=SHA, task_id="review-gemini", started="2026-09-23T12:00:00.000001+00:00",
+        verdict="APPROVED", model="gemini-3.8-flash-high", family="google", reply="VERDICT: APPROVE",
+        review_profile="ukrainian", sources_mcp_call_count=3,
+        author_models=("gemini-3.8-flash-high",),
+    )
+    stamp = "2026-09-23T13:00:00Z"
+    comments.append({
+        "id": 1, "body": body, "user": {"login": "fleet"}, "author_association": "MEMBER",
+        "created_at": stamp, "updated_at": stamp,
+    })
+    verdict = sweep.lookup_verdict(comments, SHA, "fleet")
+    assert verdict.state == sweep.NEEDS_SEAT
+    assert verdict.ukrainian_seats == ("google",)
     with pytest.raises(gate.PublishBlocked, match="Ukrainian review seat has not approved"):
         merge(monkeypatch, comments)
 
