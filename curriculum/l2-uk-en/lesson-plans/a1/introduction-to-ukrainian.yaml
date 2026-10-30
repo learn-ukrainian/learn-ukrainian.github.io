@@ -86,16 +86,16 @@ lessons:
     practice: ['a1']
   - id: s2
     kind: recap
-    teach: 'Practical closing task: apply the taught sound-before-letter study method to select and establish your daily personal practice routine.'
+    teach: 'Practical closing task: distinguish between hearing/speaking speech sounds and seeing/writing letters, and establish your daily oral-first study routine.'
     task:
       id: 'orientation-recap-task'
       action: 'read_and_use'
-      context_en: 'Beginning your journey into the Ukrainian language.'
-      instruction_en: 'Apply the taught study method and alphabet overview to select your daily oral and written practice routine.'
+      context_en: 'Distinguishing speech sounds, letters, and gestures as you begin learning Ukrainian.'
+      instruction_en: 'Distinguish situations where learners hear and pronounce speech sounds from situations where they see and write letters, and schedule your oral practice before print.'
       response_mode: 'written'
       success_criteria_en:
-      - 'Distinguish speech sounds from non-speech sounds, focusing on oral sounds before print'
-      - 'Schedule regular practice working with illustrations, letters, and texts'
+      - 'Distinguish hearing and speaking speech sounds from seeing and writing letters'
+      - 'Apply the sound-before-letter progression by scheduling oral repetition before print'
       learner_reads: []
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
@@ -105,17 +105,17 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Survey the 33 letters of the Ukrainian alphabet and letter classes.'
+    focus: 'Distinguish when communication uses hearing and speaking speech sounds versus seeing and writing letters.'
     options:
-    - '33 letters representing speech sounds: consonants, vowels, and special signs'
-    - '26 letters like the English alphabet'
-    - '30 letters with no special signs'
+    - 'Hearing and pronouncing words aloud uses speech sounds; seeing and writing words uses letters'
+    - 'Hearing and pronouncing words uses written letters; reading silently uses speech sounds'
+    - 'Seeing and writing words on paper uses non-speech sounds; hand gestures use letters'
   - id: a2
     type: odd-one-out
     placement: workbook
-    focus: 'Identify the study habit that contradicts the taught sound-before-letter progression.'
+    focus: 'Identify the activity that involves seeing and writing letters rather than hearing and pronouncing speech sounds.'
     options:
-    - 'Translating written texts with a dictionary before hearing speech sounds'
-    - 'Listening to speech sounds and practicing oral repetition before print'
-    - 'Working through illustrations and letters step by step'
+    - 'Writing letters on a worksheet'
+    - 'Listening to spoken words in native audio'
+    - 'Repeating speech sounds aloud after a model speaker'
     - 'Focusing on high-frequency conversational phrases'

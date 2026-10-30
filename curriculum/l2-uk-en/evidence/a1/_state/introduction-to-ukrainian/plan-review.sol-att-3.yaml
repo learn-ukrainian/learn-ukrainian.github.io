@@ -1,0 +1,167 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-introduction-to-ukrainian"
+  attempt_id: "sol-att-3"
+  manifest_sha256: "904fb2d37d4c770def2e26cca3ff427d6fad1c535006e273110e89b261c69e7d"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "GPT-6 (exact resolved model not exposed)"
+  harness: "codex"
+  family: "openai"
+  prompt_sha256: "e279e3e112f9d8026ccf747a9e1f58a514a12e8bc1fffd4446aaa1b2c741682e"
+checks:
+  # Embedded closure is proportionate for orientation. Choosing a personal
+  # routine provides useful English personalization without Ukrainian production.
+  # search_text, owned-oho-a1-workbook_f1_p0012_c0001,
+  # receipt rr-10fb48f8589370cce0a6: "Open-ended, conversation-style exercises".
+  # The assessment limitation is recorded under activities.
+  closing_shape: clean
+
+  # Titles describe the planned orientation jobs. English prose supplies English
+  # names alongside glossed Ukrainian terms; these do not replace English nouns.
+  # search_text, 1-klas-bukvar-zaharijchuk-2025-1_s0001,
+  # receipt rr-be96e7a9407a79017458: "ДЕРЖАВНИЙ ГІМН УКРАЇНИ".
+  title_describes_job: clean
+
+  # Neither module title nor subtitle states an inventory quantity.
+  title_quantities: clean
+
+  # verify_words, receipt rr-e8a6f579a9c73b9c70cb, supplies marker-free
+  # context-matching analyses for every quoted form, including:
+  # прапор: "noun:inanim:m:v_naz"; the separate slang reading is irrelevant.
+  # Meaning checks: search_slovnyk_me, vts/герб,
+  # rr-2099ec0ba1eabf55ff58: "Відмітний символічний знак держави";
+  # vts/гімн, rr-57f67814992dc44e9b89:
+  # "Урочиста пісня, прийнята як символ державної або класової єдності."
+  # search_text, 1-klas-bukvar-zaharijchuk-2025-1_s0012,
+  # rr-d39b5c0213b3269cc060: "Мовні звуки: голосні та приголосні".
+  # query_sum20, wordid=51912, rr-b30e40164bf331cfeac1, supports
+  # figurative мова: "що може бути засобом спілкування".
+  quoted_forms: clean
+
+  sequencing:
+    - F-03
+
+  # No acquired inventory is crammed into orientation. The two bounded jobs
+  # provide a defensible division between cultural/course orientation and
+  # sound/print/study orientation. Neither requires padding to reach 45 minutes.
+  # search_text, owned-oho-a1-workbook_f1_p0010_c0001,
+  # rr-5209fdd0e149d198e22c: "build on one another step by step".
+  sizing: clean
+
+  # Ukrainian labels remain overview exemplars, consistent with the accepted
+  # orientation band; no recall or production of them is requested.
+  # verify_words, rr-e8a6f579a9c73b9c70cb: "Found: 11/11".
+  inventory: clean
+
+  # Workbook operations rotate from matching to identifying a contradiction.
+  # Repeated inline quizzes address different orientation topics; repetition
+  # does not appear to inflate the activity count.
+  # Evidence gap: the supplied mapping has no v1 counterpart, and plan-stage
+  # response opportunities are unavailable. No comparative totals are inferred.
+  activities:
+    - F-01
+
+  evidence_fit:
+    - F-02
+
+  # The pinned arc assigns no Standard lines to position 1. This plan explains
+  # no later grammatical system and requires no acquired letter inventory.
+  # An alphabet preview is consistent with the accepted orientation duty.
+  # search_text, owned-oho-a1-workbook_f1_p0015_c0001,
+  # rr-338e5b1dfd2c2fe56114: "The Ukrainian alphabet".
+  standard_and_ulp: clean
+
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 2
+        activity: a1
+        quote: "Survey the 33 letters of the Ukrainian alphabet and letter classes."
+      - lesson: 2
+        step: s2
+        quote: "Apply the taught study method and alphabet overview to select your daily oral and written practice routine."
+    dimension: activity
+    severity: MAJOR
+    claim: >-
+      The module promises that learners will distinguish speech sounds,
+      non-speech sounds, gestures, and letters, but its planned response
+      operations do not elicit that distinction. The alphabet quiz tests
+      factual recall, the workbook tests study-habit advice, and the recap
+      instruction requests a routine. Merely listing sound discrimination
+      among the recap criteria does not supply an observable discrimination
+      task. The source model in search_text,
+      2-klas-ukrmova-bolshakova-2019-1_s0027, explicitly asks learners to
+      distinguish hearing/speaking from seeing/writing. Revise a planned
+      activity or the recap action to elicit the promised distinction using
+      supported examples, without requiring acquired letters or adding
+      activities to meet a quota.
+    expected: |-
+      Розглянь малюнки. Коли діти чують і вимовляють звуки мови,
+      а коли вони бачать і пишуть букви? Розіграй діалоги.
+    evidence:
+      receipt: "rr-2df916d30929d26408d1"
+    could_be_a_gate: "no"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 2
+        step: s1
+        quote: "In studying Ukrainian, speech sounds come first: we listen to sounds and spoken words before learning the letters that represent them. The alphabet brings together 33 letters: consonants, vowels, and special signs."
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      T-003's supplied quotation concerns sounds, a train, and gestures;
+      it does not substantiate this composite alphabet-and-study-method
+      explanation. Fresh search_text searches for its distinctive train
+      and gesture wording returned "No results found.", so its relevant
+      context could not be confirmed through a receipt. Search_text,
+      owned-oho-a1-workbook_f1_p0015_c0001, independently supports the
+      33-letter fact; p0012_c0001 supports recognizing forms by ear before
+      producing them, which is narrower than the stated rule about learning
+      letters. This is a pack-builder evidence-fit gap, not evidence that
+      the alphabet fact is false or authority to replace the teaching
+      from reviewer preference.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-12cb16233356bcf36acb"
+          outcome: "no_hits"
+        - receipt: "rr-adf092da5e306950e1ba"
+          outcome: "no_hits"
+        - receipt: "rr-338e5b1dfd2c2fe56114"
+          outcome: "hits_but_no_support"
+        - receipt: "rr-10fb48f8589370cce0a6"
+          outcome: "hits_but_no_support"
+    could_be_a_gate: "no"
+
+  - id: F-03
+    status: active
+    locations: []
+    scope:
+      lesson: 1
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      The pinned position-1 job includes language identity, brief history,
+      where Ukrainian is spoken, and course outcomes. Neither lesson
+      provides those teaching points: state symbols and textbook browsing
+      do not establish them. The supplied pack also provides no supporting
+      records for those missing duties. Logged search_resources results
+      surfaced broader history materials, including resource 391,
+      "ULP 2-74 Ukrainian History Course Part 4 – Ukraine as a part of two empires";
+      the scoped search_text search surfaced a bibliography and a stress
+      exercise rather than supporting orientation material. Record this
+      as a pack-builder gap for the existing arc duties, followed by
+      planner reconciliation. It does not authorize invented facts,
+      unsourced additions, or a change to the accepted arc.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-90876f6e8ccf1fbad5ea"
+          outcome: "hits_but_no_support"
+        - receipt: "rr-34043a0afe74a536a0d2"
+          outcome: "hits_but_no_support"
+    could_be_a_gate: "no"

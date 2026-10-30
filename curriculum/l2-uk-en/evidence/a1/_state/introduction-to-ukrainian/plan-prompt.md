@@ -4,7 +4,7 @@ The fresh path has no word or activity target: judge size by job adequacy agains
 
 Kind: plan
 Module: a1/introduction-to-ukrainian (Position 1)
-Manifest SHA256: 069da89828bae539503a9e3cf507dce52debc1e0c71b2c90e1f9f17581c0813f
+Manifest SHA256: 904fb2d37d4c770def2e26cca3ff427d6fad1c535006e273110e89b261c69e7d
 
 You are the independent cross-family content reviewer for a fresh curriculum module plan (Contract 1, fresh-build review contracts #8430 r4).
 You evaluate whether the module plan serves the learning goals before any lesson writer runs.
@@ -204,8 +204,8 @@ taxonomy: 1
 kind: plan
 attempt:
   review_id: "rev-20261030-introduction-to-ukrainian"
-  attempt_id: "sol-att-2"
-  manifest_sha256: "069da89828bae539503a9e3cf507dce52debc1e0c71b2c90e1f9f17581c0813f"
+  attempt_id: "sol-att-3"
+  manifest_sha256: "904fb2d37d4c770def2e26cca3ff427d6fad1c535006e273110e89b261c69e7d"
   previous_attempt_id: null
 reviewer:
   resolved_model: "<model>"
@@ -251,12 +251,12 @@ sequence: 1
 slug: introduction-to-ukrainian
 version: '1'
 title: 'вступ до української'
-subtitle: 'Language identity, history, and alphabet overview'
-focus: 'Orient yourself in English: language identity, brief history, where spoken, alphabet overview, study method and outcomes'
+subtitle: 'Orientation, state symbols, and alphabet overview'
+focus: 'Orient yourself in English: national symbols, textbook orientation, speech sounds vs letters, alphabet overview, and study habits'
 objectives:
-- 'Understand Ukrainian language identity, origins, and where it is spoken in Ukraine and worldwide.'
-- 'Survey the 33 letters of the Cyrillic alphabet, distinguishing vowels, consonants, and special signs.'
-- 'Establish effective study habits focusing on speech sounds before letters and active oral practice.'
+- 'Recognize Ukraine’s national symbols: flag, coat of arms, and anthem.'
+- 'Distinguish speech sounds, non-speech sounds, gestures, and the 33 letters of the Cyrillic alphabet.'
+- 'Establish effective study habits focusing on speech sounds before letters and active practice with course materials.'
 connects_to: []
 prerequisites: []
 register: 'English orientation at A1.'
@@ -269,10 +269,10 @@ evidence_ref:
 lessons:
 - n: 1
   slug: language-identity-and-roots
-  title: 'Language identity and roots'
+  title: 'State symbols and course orientation'
   kind: teach
-  job: 'Understand Ukrainian language identity, history, where it is spoken, and key goals of the course.'
-  rationale: 'Orientation module introduces learners to the Ukrainian language context and culture before teaching phonetic mechanics.'
+  job: 'Introduce Ukraine’s state symbols and orient the learner on working with course materials.'
+  rationale: 'Orientation introduces learners to Ukraine’s national symbols and textbook learning structure before phonetic mechanics.'
   word_target: 200
   inventory:
     grammar: []
@@ -283,14 +283,14 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'Welcome to Ukrainian. Ukrainian is an East Slavic language spoken by over 40 million people in Ukraine and across the global diaspora. We begin with its cultural and national identity.'
+    teach: 'Welcome to Ukrainian. We begin with Ukraine’s national symbols: the state flag (державний прапор), the state coat of arms (державний герб), and the state anthem (державний гімн).'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-001']
     practice: ['a1']
   - id: s2
     kind: teach
-    teach: 'Orientation on language history, state symbols, and modern standard Ukrainian.'
+    teach: 'Orientation on working with the textbook and course materials: exploring pictures, letters, and texts, guided step by step to build your understanding of the language.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-002']
@@ -299,15 +299,15 @@ lessons:
   - id: a1
     type: quiz
     placement: inline
-    focus: 'Identify where Ukrainian is primarily spoken and its language family.'
+    focus: 'Identify the state symbols of Ukraine introduced in the lesson.'
     options:
-    - 'East Slavic language spoken primarily in Ukraine'
-    - 'South Slavic language spoken in the Balkans'
-    - 'West Germanic language spoken in Western Europe'
+    - 'State flag, state coat of arms, and state anthem'
+    - 'National currency, passport, and constitution'
+    - 'Capital city, postal system, and geographical map'
   - id: a2
     type: match-up
     placement: workbook
-    focus: 'Match core sociolinguistic facts of modern Ukrainian with their descriptions.'
+    focus: 'Match the components of learning with the course materials.'
 - n: 2
   slug: alphabet-overview-and-study-method
   title: 'Alphabet overview and study method'
@@ -325,7 +325,7 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'The Ukrainian alphabet has 33 letters: 21 consonants, 10 vowels, 1 semivowel (й), and the soft sign (ь). We distinguish what is heard (speech sounds) from what is written (letters). When studying Ukrainian, follow a sound-before-letter progression: listen to native audio and repeat aloud before analyzing written print, practicing varied exercises with regular oral repetition.'
+    teach: 'We distinguish speech sounds (звуки) from non-speech sounds and gestures (мова без слів). In studying Ukrainian, speech sounds come first: we listen to sounds and spoken words before learning the letters that represent them. The alphabet brings together 33 letters: consonants, vowels, and special signs.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-003']
@@ -340,12 +340,12 @@ lessons:
       instruction_en: 'Apply the taught study method and alphabet overview to select your daily oral and written practice routine.'
       response_mode: 'written'
       success_criteria_en:
-      - 'Identify that Ukrainian has 33 letters including vowels, consonants, and the soft sign'
-      - 'Apply the sound-before-letter progression by scheduling oral repetition before print'
+      - 'Distinguish speech sounds from non-speech sounds, focusing on oral sounds before print'
+      - 'Schedule regular practice working with illustrations, letters, and texts'
       learner_reads: []
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
-    evidence: ['T-002']
+    evidence: ['T-002', 'T-003']
     practice: ['a2']
   activities:
   - id: a1
@@ -353,7 +353,7 @@ lessons:
     placement: inline
     focus: 'Survey the 33 letters of the Ukrainian alphabet and letter classes.'
     options:
-    - '33 letters: 21 consonants, 10 vowels, 1 semivowel, 1 soft sign'
+    - '33 letters representing speech sounds: consonants, vowels, and special signs'
     - '26 letters like the English alphabet'
     - '30 letters with no special signs'
   - id: a2
@@ -361,9 +361,9 @@ lessons:
     placement: workbook
     focus: 'Identify the study habit that contradicts the taught sound-before-letter progression.'
     options:
-    - 'Translating full written texts with a dictionary on day one'
-    - 'Listening to native audio before reading print'
-    - 'Repeating speech sounds aloud with model recordings'
+    - 'Translating written texts with a dictionary before hearing speech sounds'
+    - 'Listening to speech sounds and practicing oral repetition before print'
+    - 'Working through illustrations and letters step by step'
     - 'Focusing on high-frequency conversational phrases'
 ```
 
@@ -1290,7 +1290,7 @@ later get the next free id; ids are never reused.
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "fc85f42bf87103e0114977070f915d0ea5d70881e8e321937069c6424299a798",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml": "a191226dd4df0b4b43834f3c196c8ab9803b382d70c2112e2e3837ed5c0504f2",
-    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "f1cd9b10c3d5771da34a7a71b7442fd3b43cb182a941a85c39ab7b404569d3a9",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "197fcc0fe2bb41fd0b141208f521102b292f9e9f6f9bef66e2944ee276f36ddb",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
