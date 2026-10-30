@@ -28,18 +28,22 @@ streams:
     epics: [4706]
   infra-harness:
     title: "Infra & fleet reliability (hooks, dispatch, routing)"
-    epics: [6943, 9737, 11254]  # #6943 successor to closed #4707; #9737 nested program; #11254 overflow epic for the existing stream (#6943, #9737 and #10535 are at GitHub's 100 native sub-issue limit)
+    epics: [6943, 9737, 11254]  # closed historical roots; stay registered so launcher selectors still resolve
+    closed_epics: [6943, 9737, 11254]
   docs-knowledge:
     title: "Repository knowledge system — docs authority, Astro truth, OpenWiki"
-    epics: [5535]  # nested program; was provisionally under #4707/#6943 until this registry bootstrap (#5537)
+    epics: [5535]  # closed; stays registered for launcher and session consumers
+    closed_epics: [5535]
   devops:
     title: "DevOps automation, CI, release & launcher reliability"
-    epics: [5703, 10844]  # #10844 overflow epic for the existing stream (#5703 is at GitHub's 100 native sub-issue limit)
+    epics: [5703, 10844]  # closed; stay registered for launcher and session consumers
+    closed_epics: [5703, 10844]
   monitor:
     # Product name: Ops API + UI. Stream key stays `monitor` for launcher/handoff
     # stability; selectors `ops-api` / `ops.api` alias here via handoff_identity.sh.
     title: "Ops API + UI — operator API (scripts/api) & dashboards"
-    epics: [7919]  # successor to closed #7177
+    epics: [7919]  # closed successor to #7177; stays registered for launcher selectors
+    closed_epics: [7919]
   open-model-data:
     title: "Ukrainian open-model data infrastructure"
     epics: [6321, 7423]  # #6321 program epic + #7423 Cyrillic-Slavic dataset-delivery epic; completed Foundry epics #6164 and #6056 are historical
@@ -55,7 +59,8 @@ streams:
     epics: [2836]
   seminars-bio:
     title: "BIO track readiness + builds"
-    epics: [4431, 4215]
+    epics: [4431, 4215]  # #4215 closed; #4431 remains the audit root
+    closed_epics: [4215]
   seminars-cross:
     title: "Cross-seminar gates (reading links, self-convergence)"
     epics: [3120, 3079]
