@@ -162,9 +162,11 @@ def test_fetch_open_prs_fails_closed_on_gh_error_and_truncation(monkeypatch):
     monkeypatch.setattr(check.github_client, "run", fake("", 1))
     with pytest.raises(RuntimeError):
         check.fetch_open_prs(PUBLIC)
-    monkeypatch.setattr(check.github_client, "run", fake(json.dumps([pr(1, "a")] * check._PR_LIMIT)))
+    monkeypatch.setattr(check.github_client, "run", fake(json.dumps([pr(1, "a")] * (check._PR_LIMIT + 1))))
     with pytest.raises(RuntimeError, match="truncated"):
         check.fetch_open_prs(PUBLIC)
+    monkeypatch.setattr(check.github_client, "run", fake(json.dumps([pr(1, "a")] * check._PR_LIMIT)))
+    assert len(check.fetch_open_prs(PUBLIC)) == check._PR_LIMIT
     monkeypatch.setattr(check.github_client, "run", fake(json.dumps([pr(1, "a")])))
     assert check.fetch_open_prs(PUBLIC) == [pr(1, "a")]
 
