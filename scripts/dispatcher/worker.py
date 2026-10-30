@@ -120,17 +120,18 @@ def _spawn_expired(record: dict) -> bool:
     return age > dispatch_admission.PIDLESS_SPAWNING_GRACE_S
 
 
-def _cursor_model(model: str | None) -> dict:
-    """A Cursor record's model attestation: only the run's own stream-json init events attest one."""
+def _stream_attestation(source: str, model: str | None) -> dict:
+    """A record's model attestation from that provider's own stream-json, pending until the stream names one."""
     return dict(resolved_model=model if model is not None else "unknown", resolved_model_known=model is not None,
-                resolved_model_source="cursor-stream-json" if model is not None else "pending")
+                resolved_model_source=source if model is not None else "pending")
 
 
 def start(spec: TaskSpec, record: dict, prompt: bytes, hard_timeout: float) -> None:
     from scripts.orchestration.dispatch_admission import new_admission_hold
 
-    if spec.agent == "cursor":
-        record.update(_cursor_model(None))
+    source = getattr(providers.load(spec.agent), "MODEL_SOURCE", None)
+    if source:
+        record.update(_stream_attestation(source, None))
     if not record.get("admission_hold"):
         record["admission_hold"] = new_admission_hold(record["run_nonce"])
     path = store.record_path(spec.task_id)
@@ -458,7 +459,7 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
     })
     child, status, returncode, error, usage, text = None, "crashed", None, None, None, None
     slots = None
-    resolved_model = sources_calls = None
+    resolved_model = sources_calls = source = None
     started = time.monotonic()
     cancel_requested = interruptible = False
 
@@ -562,16 +563,17 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             record.update(status="running", provider_pgid=child.pid)
             store.replace(record, path)
             terminal_observer = getattr(provider, "terminal_result_observer", None)
-            observe_model = provider.model_observer(stdout_path) if spec.agent == "cursor" else None
+            source = getattr(provider, "MODEL_SOURCE", None)
+            observe_model = provider.model_observer(stdout_path) if source else None
 
             def watch():
                 # A running author's commits are reviewable only once its record attests the model (#12014).
                 nonlocal resolved_model
                 checkpoint()
-                if observe_model is None:
+                if observe_model is None or source is None:
                     return
                 resolved_model = observe_model()
-                fields = _cursor_model(resolved_model)
+                fields = _stream_attestation(source, resolved_model)
                 if any(record.get(key) != value for key, value in fields.items()):
                     record.update(fields)
                     store.replace(record, path)
@@ -620,6 +622,11 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             error = parsed.error or (
                 "provider exited unsuccessfully" if exit_code else "provider returned no successful final response"
             )
+        if status == "done" and source == "agy-stream-json":
+            from scripts.dispatcher.providers.agy import identity_failure
+
+            if refusal := identity_failure(spec.model, resolved_model):
+                status, error = "failed", refusal
         if status == "done" and record.get("schema_version") == 2 and record.get("require_review_verdict") is True:
             try:
                 from scripts.review.verdict_parser import recognized_verdicts
@@ -674,8 +681,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
                 record["sources_mcp_call_count"] = sources_calls
             record.update(git.snapshot_delivery(spec, record))
             _enforce_delivery(record)
-            if spec.agent == "cursor":
-                record.update(_cursor_model(resolved_model))
+            if source:
+                record.update(_stream_attestation(source, resolved_model))
             record["provider_pgid"] = child.pid if child else None
             # Settling a task first retries the trees earlier settlements kept for a cause that may have
             # cleared, under the same proofs. It runs before this task's record turns terminal, holding no

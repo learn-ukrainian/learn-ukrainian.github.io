@@ -270,6 +270,11 @@ def _dispatch(args) -> int:
     except rules_core.RulesCoreMissing as exc:
         raise ValueError(f"dispatch refused: {exc}; the rules core is required.") from None
     agent = ALIASES.get(args.agent, args.agent)
+    if agent == "agy":
+        # The requested Claude id is the catalog's AGY wire id, not the bare catalog id.
+        from scripts.dispatcher.providers.agy import transport_model
+
+        args.model = transport_model(args.model)
     # An unknown Claude account label reaches admission, which refuses it typed (claude_account_unknown).
     if agent not in providers.PROVIDERS:
         aliases = ", ".join(f"{name}={target}" for name, target in ALIASES.items())
