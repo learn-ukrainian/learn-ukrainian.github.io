@@ -103,7 +103,7 @@ def test_grok_post_compact_reminder_pins_c2903_author_reviewer_pairs(tmp_path: P
     assert result.returncode == 0, result.stderr
     context = json.loads(result.stdout)["additionalContext"]
     assert "default code author = Claude (Sonnet 5.5; Opus 5.5 for hard or security work), reviewed by Sol 6.1" in context
-    assert "Ukrainian content authored by Sol 6.1, reviewed by Claude (Opus 5.5)" in context
+    assert "Ukrainian content authored by Sol 6.1; review seats are Gemini (AGY) and Sol, Gemini (AGY) alone for an OpenAI author, Sol alone for a Google author, and no Claude seat" in context
     assert "explicit Luna/Flash bounded routes require a Sol advisory envelope" in context
     assert "default bounded work = Sol advisory envelope" not in context
 

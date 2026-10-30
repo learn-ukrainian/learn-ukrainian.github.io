@@ -5,7 +5,7 @@
 > pagan-as-belief) and its NEVER list are a **hard, fail-the-artifact gate** here — see Gate 0.
 
 The review scorecard for every folk dossier and the grounded wiki compiled from it. A dossier/wiki
-ships only when it passes **all** gates. **Reviewer = cross-family to the writer** (GPT↔Claude).
+ships only when it passes **all** gates. **Reviewer = the review-loop ukrainian seats, outside the writer's family, with no Claude seat.**
 **NO DeepSeek for folk culture** (user 2026-06-06: lacks the intrinsic Ukrainian-culture knowledge to
 catch subtle framing errors — its corpus-tool use was fine, but framing is the risk for culture).
 The reviewer MUST hammer the corpus — judging on metrics/structure alone is how a bad artifact ships
