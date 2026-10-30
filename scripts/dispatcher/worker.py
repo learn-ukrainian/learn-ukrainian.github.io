@@ -513,11 +513,8 @@ def supervise(path: Path, options: dict | None = None, hard_timeout: float | Non
             if outcome.trace:
                 # The runtime keeps the seat's stream to itself; its redacted tool-call trace takes the stream's
                 # place in the task's private stdout log.
-                from scripts.secret_redactor import redact_text
-
                 with stdout_path.open("w", encoding="utf-8") as trace:
-                    trace.writelines(redact_text(json.dumps(call, ensure_ascii=False, default=str)) + "\n"
-                                     for call in outcome.trace)
+                    trace.writelines(json.dumps(call, ensure_ascii=False) + "\n" for call in outcome.trace)
             if status == "done" and (refusal := _verdict_failure(record, text)):
                 status, error = "failed", refusal
             return

@@ -19,6 +19,7 @@ Sources socket; there is no fallback to an ordinary launch. The recorder
 from __future__ import annotations
 
 import hashlib
+import json
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -162,7 +163,9 @@ def run(spec: Any, record: dict, prompt: str, deadlines: tuple[float, int, int])
     error = None if ok else (result.failure_code or result.stderr_excerpt or "provider returned no successful response")
     # Which tools the seat called with which arguments (no outputs): the evidence of its context reads.
     calls = getattr(result, "tool_calls", None) or ()
-    trace = [{key: call.get(key) for key in ("name", "arguments", "timestamp")} for call in calls]
+    trace = [_redacted(json.loads(json.dumps({key: call.get(key) for key in ("name", "arguments", "timestamp")},
+                                             default=str)))
+             for call in calls]
     return Outcome("done" if ok else "failed", error, result.response if ok else None,
                    _ledger_count(ledger, plan.ledger_path), identity, trace)
 
@@ -180,6 +183,18 @@ def _route(spec: Any, record: dict) -> dict:
         if budget is not None:
             route["max_budget_usd"] = budget
     return route
+
+
+def _redacted(value: Any) -> Any:
+    """A JSON value with every string redacted, mapping keys included, so that it stays valid JSON."""
+    from scripts.secret_redactor import redact_text, redact_value
+
+    if isinstance(value, dict):
+        value = redact_value(value)  # also blanks the values of secret-named keys
+        return {redact_text(key): _redacted(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_redacted(item) for item in value]
+    return redact_text(value) if isinstance(value, str) else value
 
 
 def _ledger_count(ledger: Any, path: Path) -> int | None:
