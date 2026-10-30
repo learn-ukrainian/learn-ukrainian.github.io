@@ -84,6 +84,9 @@ typesafe-sdk>=0.7.0
 # zeroconf comes via mcp-memory-service; CVE-2026-48045 / GHSA-9663-mqmp-p9mm
 # (unbounded TC-deferred queue → LAN-local memory exhaustion) is fixed in 0.149.12.
 zeroconf>=0.151.3
+# joserfc comes via Authlib (Authlib 1.9.1 requires joserfc>=1.6.8).
+# CVE-2026-119283 is fixed in 1.7.5; CVE-2026-119284 is fixed in 1.7.6.
+joserfc>=1.7.6
 
 # ----------------------------------------------------------------------
 # Known-harmless `pip check` warnings (DO NOT CHASE)
