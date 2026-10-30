@@ -273,11 +273,36 @@ def _supervisor_gone(record: dict) -> bool:
     return bool(record.get("process_start")) and _identity(record["pid"]) != record["process_start"]
 
 
+def _real_uid(pid: str) -> int | None:
+    with contextlib.suppress(OSError, ValueError, IndexError):
+        return int(next(line for line in Path(f"/proc/{pid}/status").read_text().splitlines()
+                        if line.startswith("Uid:")).split()[1])
+    return None
+
+
+def _started_at(pid: str) -> float | None:
+    """When the process began, as a POSIX time; None when /proc cannot say."""
+    with contextlib.suppress(OSError, ValueError, IndexError, StopIteration):
+        ticks = int(Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[19])
+        boot = int(next(line for line in Path("/proc/stat").read_text().splitlines()
+                        if line.startswith("btime ")).split()[1])
+        return boot + ticks / os.sysconf("SC_CLK_TCK")
+    return None
+
+
 def _tree_in_use(record: dict) -> bool | None:
-    """Whether any process of this host works inside the task's checkout; None when /proc cannot say."""
+    """Whether any process of this host works inside the task's checkout; None when /proc cannot say.
+
+    A process whose working directory is hidden from us (it dropped its dumpable flag) counts as
+    unknown unless another user owns it or it began before the task did, so it cannot be the task's own.
+    """
     tree = os.path.realpath(record.get("worktree_path") or "")
     if not tree or tree == os.sep:
         return None
+    try:
+        task_began = datetime.fromisoformat(record["started_at"]).timestamp()
+    except (KeyError, TypeError, ValueError):
+        task_began = None
     try:
         entries = [entry for entry in os.listdir("/proc") if entry.isdigit()]
     except OSError:
@@ -285,8 +310,13 @@ def _tree_in_use(record: dict) -> bool | None:
     for entry in entries:
         try:
             cwd = os.path.realpath(os.readlink(f"/proc/{entry}/cwd").removesuffix(" (deleted)"))
-        except (FileNotFoundError, PermissionError):
-            continue  # the process ended, or belongs to another user, which dispatched no provider
+        except FileNotFoundError:
+            continue  # the process ended
+        except PermissionError:
+            owner, began = _real_uid(entry), _started_at(entry)
+            if owner is None or (owner == os.getuid() and (began is None or task_began is None or began >= task_began)):
+                return None
+            continue
         except OSError:
             return None  # a process whose cwd cannot be read could be working in the tree
         if cwd == tree or cwd.startswith(tree + os.sep):
