@@ -18,6 +18,7 @@ from scripts.curriculum.evidence import lock
 from scripts.review.receipts.ledger import create_empty_ledger
 from scripts.review.validate import codes
 from scripts.review.validate.validate import main, validate_review
+from tests.build.plan_review_records import record_plan_review
 from tests.build.test_fresh_plan_review import append_comment, fake_verify, make_manifest, run
 from tests.curriculum.test_plan_validate import LEVEL, SLUG
 from tests.helpers.plan_review_world import Env, build_env
@@ -287,10 +288,7 @@ def test_a_malformed_plan_manifest_is_rejected(case: Case, tmp_path: Path) -> No
 def test_after_promotion_the_review_is_checked_against_the_reviewed_plan(case: Case, capsys) -> None:
     case.write_review([case.finding()])
     assert case.validate()[0] == 0
-    (case.env.state_dir / "plan-review.yaml").write_text(
-        yaml.safe_dump({"verdict": "APPROVE", "manifest_sha256": case.digest, "attempt_id": "attempt-1"}),
-        encoding="utf-8",
-    )
+    record_plan_review(case.env.root, LEVEL, SLUG, case.digest)  # a bound review, as plan-promote requires (#12114)
     assert run(case.env, capsys, "plan-promote", LEVEL, SLUG)[0] == 0
     # the live plan now differs from the manifest by the promoted evidence_ref.sha256 only:
     # the receipt-proven transition, so the review still validates against the reviewed copy ...

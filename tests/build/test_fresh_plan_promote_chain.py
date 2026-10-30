@@ -24,6 +24,7 @@ from scripts.build.fresh.cli import main as cli_main
 from scripts.build.fresh.plan_promote import _publish
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.validate.scope import compute_scope, write_scope_sidecar
+from tests.build.plan_review_records import record_plan_review
 from tests.curriculum.test_plan_validate import LEVEL, PRIOR_SLUG, SLUG
 from tests.helpers.plan_review_world import STALE_SHA, Env, build_env, git, sha, validate_provisional
 
@@ -163,9 +164,7 @@ def reviewed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> Env:
     code, out, err = run(env, capsys, "plan-manifest", LEVEL, SLUG)
     assert code == 0, err
     digest = json.loads(out)["manifest_sha256"]
-    (env.state_dir / plan_manifest.REVIEW_NAME).write_text(
-        yaml.safe_dump({"verdict": "APPROVE", "manifest_sha256": digest, "attempt_id": "attempt-1"}), encoding="utf-8"
-    )
+    record_plan_review(env.root, LEVEL, SLUG, digest)  # the position plan-promote promotes: a bound review (#12114)
     own_manifest = plan_manifest.load_manifest_of_record(env.root, LEVEL, SLUG, digest)
     for slug in (PRIOR_SLUG, MIDDLE_SLUG):
         record_earlier_review(env, slug, own_manifest)

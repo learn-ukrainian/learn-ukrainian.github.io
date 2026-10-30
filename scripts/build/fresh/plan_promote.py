@@ -1,7 +1,8 @@
 """plan-promote: after an APPROVE plan review, set the plan's ``evidence_ref.sha256`` to the reviewed provisional pack's.
 
 Transactional (docs/epics/fresh-build-review-contracts.md, Contract 1 "Timing"):
-the review must be an APPROVE of the current manifest; every manifest input is
+the review must be an APPROVE of the current manifest, recorded from a bound
+full-access dispatch with Sources receipts (``review_binding``); every manifest input is
 re-hashed and the planned learner state recomputed (any difference means the
 APPROVE is stale); the promoted bytes — the plan with only ``evidence_ref.sha256``
 changed — pass the full ``--strict`` plan validation in memory; only then are the
@@ -19,6 +20,7 @@ import yaml
 
 from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.path_guard import checked_path
+from scripts.build.fresh.review_binding import check_review_binding
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.validate.loader import load_plan
 from scripts.curriculum.validate.validate import validate_plan
@@ -63,6 +65,9 @@ def promote_plan(level: str, slug: str, *, repo_root: Path, now: datetime | None
             "a new review is needed",
         )
 
+    # A review file alone proves nothing: it must be the recorder's projection of a real bound
+    # dispatch with Sources receipts (#12114), already promoted or not.
+    check_review_binding(root, level, slug)
     freshness = pm.plan_review_freshness(root, manifest, digest)
     directory = pm.state_dir(root, level, slug)
     if freshness.state == "promoted":

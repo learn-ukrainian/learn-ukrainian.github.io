@@ -25,7 +25,7 @@ from scripts.review import findings_db, fixloop, record, second_seat, settle
 from scripts.review import integration_check as ic
 from scripts.review.receipts import ledger
 from tests.build.test_fresh_plan_review import fake_verify
-from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _dump, _review
+from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _dump, _record, _review
 from tests.review.test_record import LEVEL, SLUG, finding
 
 pytestmark = pytest.mark.reads_content
@@ -163,11 +163,10 @@ def test_the_help_states_use_and_exit_codes(capsys: pytest.CaptureFixture[str]) 
 
 def prepare(root: Path) -> tuple[Path, Path, Path]:
     """prepare-real with the ledgers and dispatch records redirected to a temporary tree."""
-    receipts, tasks = root / "receipts", root / "tasks"
+    receipts, tasks = root / "review-receipts", root / "tasks"  # the ledgers live beside the task store
     receipts.mkdir()
     tasks.mkdir()
     patch = pytest.MonkeyPatch()
-    patch.setattr(ic, "RECEIPTS_ROOT", receipts)
     patch.setenv("LU_TASKS_DIR", str(tasks))
     try:
         assert ic.main(["prepare-real", "--out", str(root / "out")]) == 0
@@ -260,6 +259,18 @@ def seat_record(tasks: Path, task_id: str, model: str = "claude-sonnet-5") -> No
     (tasks / f"{task_id}.json").write_text(json.dumps({"agent": "claude", "model": model}), encoding="utf-8")
 
 
+def bound_seat_record(tasks: Path, info: dict, returned: Path, model: str = "claude-sonnet-5") -> None:
+    """The record of a done, bound, full-access dispatch whose saved result is ``returned`` (#12114)."""
+    result = tasks / f"{info['task_id']}.result"
+    result.write_bytes(returned.read_bytes())
+    binding = {key: info[key] for key in ("review_id", "attempt_id", "manifest_sha256")}
+    (tasks / f"{info['task_id']}.json").write_text(json.dumps({
+        "task_id": info["task_id"], "agent": "claude", "model": model, "status": "done", "review_access": "full",
+        "review_attempt": binding, "result_file": str(result),
+        "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
+    }), encoding="utf-8")
+
+
 def simulate_seats(out: Path, tasks: Path, *, settle_outcome: str = "refuted", settle_dispatched: bool = True) -> None:
     """What the driver does after the seats answered: the returns saved where the cards say, then the record commands."""
     mp = pytest.MonkeyPatch()
@@ -267,6 +278,8 @@ def simulate_seats(out: Path, tasks: Path, *, settle_outcome: str = "refuted", s
         # (i) the plan
         plan = card(out, "i")
         ledger.create_empty_ledger(Path(plan["ledger"]))
+        _record(Path(plan["ledger"]), manifest=plan["manifest_sha256"], result="attested result",
+                attempt_id=plan["attempt_id"], review_id=plan["review_id"])  # the seat's Sources receipt
         Path(plan["return_path"]).parent.mkdir(exist_ok=True)
         _dump(
             Path(plan["return_path"]),
@@ -279,7 +292,7 @@ def simulate_seats(out: Path, tasks: Path, *, settle_outcome: str = "refuted", s
                 review_id=plan["review_id"],
             ),
         )
-        seat_record(tasks, plan["task_id"])
+        bound_seat_record(tasks, plan, Path(plan["return_path"]))
         mp.setattr(pm, "verify_pack_strict", fake_verify())
         assert record.main(plan["record"][3:]) == 0
         # (ii) lesson 2

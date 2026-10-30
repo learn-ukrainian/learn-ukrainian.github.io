@@ -22,6 +22,7 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh import plan_manifest
 from scripts.build.fresh.cli import main as cli_main
 from scripts.curriculum.evidence import codes, lock, sources
+from tests.build.plan_review_records import record_plan_review
 from tests.curriculum.test_plan_validate import LEVEL, SLUG
 from tests.helpers.plan_review_world import STALE_SHA, Env, build_env, git, sha, validate_provisional
 
@@ -86,8 +87,18 @@ def make_manifest(env: Env, capsys) -> str:
 
 
 def approve(env: Env, digest: str, *, verdict: str = "APPROVE") -> None:
+    """Record a bound full-access review of manifest ``digest`` through the recorder (#12114).
+
+    An attempt id names its saved return, so an earlier REVISE takes its own id.
+    """
+    attempt_id = "attempt-1" if verdict == "APPROVE" else f"attempt-{verdict.lower()}"
+    record_plan_review(env.root, LEVEL, SLUG, digest, verdict=verdict, attempt_id=attempt_id)
+
+
+def forge_review(env: Env, digest: str) -> None:
+    """A hand-written plan-review.yaml, as no recorder writes it: a review of a manifest that does not exist."""
     (env.state_dir / "plan-review.yaml").write_text(
-        yaml.safe_dump({"verdict": verdict, "manifest_sha256": digest, "attempt_id": "attempt-1"}), encoding="utf-8"
+        yaml.safe_dump({"verdict": "APPROVE", "manifest_sha256": digest, "attempt_id": "attempt-1"}), encoding="utf-8"
     )
 
 
@@ -480,6 +491,11 @@ def test_promote_changes_only_evidence_ref_and_writes_the_copy_and_receipt(appro
         "pack_sha256",
         "attempt_id",
         "promoted_at",
+        # the review of record is a full-access attempt, whose reviewer identity the receipt carries
+        "review_access",
+        "reviewer_model",
+        "reviewer_family",
+        "harness",
     }
     assert stored["manifest_sha256"] == digest
     assert stored["reviewed_plan_sha256"] == plan_manifest.sha256_bytes(before)
@@ -517,6 +533,20 @@ def test_promote_refuses_without_a_review_or_without_approve(env: Env, capsys) -
     _nothing_published(env, before)
 
 
+def test_promote_refuses_a_hand_written_review_without_a_dispatch_record(env: Env, capsys) -> None:
+    """A plan-review.yaml no bound dispatch recorded is refused, naming what is missing (#12114)."""
+    from scripts.review import findings_db
+
+    forge_review(env, make_manifest(env, capsys))
+    findings_db.connect(findings_db.db_path(LEVEL, env.root)).close()  # this host's database, without the attempt
+    before = env.plan_path.read_bytes()
+    code, _out, err = run(env, capsys, "plan-promote", LEVEL, SLUG)
+    refusal = error(err)
+    assert code == 1 and refusal["code"] == "review_unbound"
+    assert "plan-review.yaml exists but the database holds no accepted attempt" in refusal["reason"]
+    _nothing_published(env, before)
+
+
 def test_promote_refuses_a_review_of_another_manifest(env: Env, capsys) -> None:
     digest = make_manifest(env, capsys)
     approve(env, digest)
@@ -526,7 +556,7 @@ def test_promote_refuses_a_review_of_another_manifest(env: Env, capsys) -> None:
     code, _out, err = run(env, capsys, "plan-promote", LEVEL, SLUG)
     assert code == 1 and error(err)["code"] == plan_manifest.MANIFEST_HASH_MISMATCH
     _nothing_published(env, before)
-    approve(env, "0" * 64)
+    forge_review(env, "0" * 64)
     code, _out, err = run(env, capsys, "plan-promote", LEVEL, SLUG)
     assert code == 1 and error(err)["code"] == plan_manifest.MANIFEST_HASH_MISMATCH
 
@@ -620,7 +650,13 @@ def test_status_walks_from_unreviewed_to_promoted(env: Env, capsys) -> None:
     assert run(env, capsys, "plan-promote", LEVEL, SLUG)[0] == 0
     code, document = status(env, capsys, "--require-promoted")
     assert code == 0
-    assert document == {"attempt_id": "attempt-1", "manifest_sha256": digest, "stale": {}, "state": "reviewed_promoted"}
+    assert document == {
+        "attempt_id": "attempt-1",
+        "manifest_sha256": digest,
+        "review_access": "full",
+        "stale": {},
+        "state": "reviewed_promoted",
+    }
 
 
 def test_status_before_promotion_is_stale_after_any_input_change(approved, capsys) -> None:
@@ -832,6 +868,7 @@ def test_a_manifest_written_before_v1_totals_existed_stays_fresh_and_promotable(
     assert status(env, capsys)[1] == {
         "attempt_id": "attempt-1",
         "manifest_sha256": digest,
+        "review_access": "full",
         "stale": {},
         "state": "reviewed_pending_promotion",
     }
