@@ -131,4 +131,47 @@ standard:
   lines: 596-596
 - id: S-103
   lines: 571-572
-unsupported: []
+unsupported:
+- claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard
+    in lesson 3 s1 and lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2.
+    The letter videos establish their named sounds, not those complete primer combinations or word pairs.
+  id: U-001
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision;
+    explicitly permitted print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [3, 4, 5]
+
+    records: [''T-010'', ''T-012'', ''T-014'', ''T-015'', ''T-016'', ''T-017'', ''T-018'', ''T-037'',
+    ''X-003'', ''X-005'']
+
+    words: [''W-081'', ''W-084'', ''W-085'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same
+    teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to
+    learner production offline; no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent
+    playback proof inferred from resolved status.
+
+
+    Current r6 disposition under #8425: retained historical missing-audio obligation. The retired primer
+    CV/VC/CVC and before-I contrast tasks are not carried into the r6 position-2 plan. T-101 grounds sound
+    versus letter, T-103 audible stress, and T-106/X-101 courtesy situations. V-102, V-103 and V-104 bind
+    only the explicitly listed recorded greeting/courtesy chunks; V-101 is an unscored whole-video preview.
+    No current scored activity requires an unattested primer combination or contrast recording. The historical
+    recording search remains negative, not proof of audio availability. Source locators and the earlier
+    resolution above remain preserved for audit.'
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md
+      for exact requirements and rejected partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript
+      corpus scan
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md
+      for queries, returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)

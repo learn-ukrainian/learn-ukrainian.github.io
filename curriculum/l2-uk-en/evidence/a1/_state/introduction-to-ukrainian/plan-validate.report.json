@@ -76,14 +76,14 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "f2a27c370bd40222f46975880636091c5316de7f9cbfef3fdec0b11d4ff9e591",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "75649f9a739529e4c12f2ef6c13b9c193d35f41ac569d4c6addb026a634fd4d4",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "9971075b49a2637b915a04355cff93c6d5244578e1e182845d0bea211681fc88",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "949a95642203313c4b25d312e2c2fc594f06b0c8c04125e5d92c522192dd948e",
     "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml": "a960f2b776f249d13de286f88aaa67f084fbb5ccf96f37c1f71c70506b4aa5a9",
     "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml.lock": "dc0e7bdb21add509e4fbe4a41f8d6603e98dcf7ed646cf95bf3ee534023334a7",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "9e5045eae540ea7e3d702a6ecd9f4b28ebddfc27795e1211f8d7fe9b39a28dbe",
-    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "cd2e56038a00c1d274f603dfba42b47c0e20745db11ae60b48da368ec5e6f334",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml": "a191226dd4df0b4b43834f3c196c8ab9803b382d70c2112e2e3837ed5c0504f2",
-    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "64ff89075438bee091611a5d0347670cf7fa9fe2b914a9c93b22ab03c094aee1",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml": "6e4677d46398bb934d189ab2f7b5c2a1afba3afc8daa16563acbf93ceace0d03",
     "docs/epics/fresh-build-a1-arc.md": "03231e48867ce384f73ccfa02c56885b640279dc350d2c61cddf6afaf0366e3d",
     "registry/lexicon/source-inventory/ohoiko-oho-a1-reference.yaml": "a8b0a37101d49013a0b958817b43dd49e655d86be8a71ab700761f5041cc5f84",
     "schemas/activities-a1.schema.json": "76b37333253ba1519ff19a6384b1ae4c065292bf64066b463cbe0ace45d06222",
@@ -112,12 +112,6 @@
       "code": "title_quantities_not_parsed",
       "lesson": null,
       "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
-      "step": null
-    },
-    {
-      "code": "pending_promotion",
-      "lesson": null,
-      "message": "evidence_ref.sha256 is 0000000000000000000000000000000000000000000000000000000000000000 and the provisional pack's sha256 is a960f2b776f249d13de286f88aaa67f084fbb5ccf96f37c1f71c70506b4aa5a9; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],
