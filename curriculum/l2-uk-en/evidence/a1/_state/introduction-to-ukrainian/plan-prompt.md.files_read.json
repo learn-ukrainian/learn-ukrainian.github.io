@@ -1,0 +1,43 @@
+{
+  "files_read": [
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/introduction-to-ukrainian.yaml",
+    "docs/epics/fresh-build-requirements.md",
+    "docs/epics/fresh-build-a1-arc.md",
+    "curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/introduction-to-ukrainian.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml",
+    "curriculum/l2-uk-en/evidence/a1/_state/introduction-to-ukrainian/plan-validate.report.json",
+    "curriculum/l2-uk-en/evidence/a1/_state/introduction-to-ukrainian/pack-verify.report.json",
+    "curriculum/l2-uk-en/evidence/a1/_state/introduction-to-ukrainian/plan-review.v1-totals.yaml",
+    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml.lock",
+    "curriculum/l2-uk-en/evidence/a1/introduction-to-ukrainian.yaml",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml",
+    "curriculum/l2-uk-en/evidence/a1/_state/introduction-to-ukrainian/plan-review.learner-state.yaml",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml",
+    "scripts/review/prompts/plan-review.md.j2"
+  ],
+  "template_sha256": {
+    "scripts/review/prompts/plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
+  },
+  "verifier_reads": [],
+  "render_contract": {
+    "version": 4,
+    "render_checkout": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy",
+    "input_root": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy",
+    "prompts_dir": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cto-7a97-i8425-agy/scripts/review/prompts",
+    "templates": {
+      "plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
+    },
+    "template_digest": "sha256:84daaf1143e631518f15fc43368d50646af3b531d7f845a4da57085a12124f50",
+    "server_digest": "sha256:bed6f2bdf808e877fe1326ecc48c4bb19bc412843e850f7cc2a17b02ad2de242",
+    "server_components": {
+      "repository": "sha256:8a7d9bb5d3a5165179222bd0129c172ee90d33087a2088a8e6605355a366e5f5",
+      "requirements-lock.txt": "sha256:3e5c02571a48293fe2bde91910f0fed96e4fa8e89c55f0f030c22d3d94c75d96"
+    },
+    "prompt_sha256": "4f121a8d82b209b006eaca02e8dd352982a8f39086501d28d17687a013cbc829",
+    "review_id": "rev-20261030-introduction-to-ukrainian",
+    "attempt_id": "sol-att-1"
+  }
+}

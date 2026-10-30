@@ -1,0 +1,143 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "rev-20261030-introduction-to-ukrainian"
+  attempt_id: "sol-att-1"
+  manifest_sha256: "13fbd356899fd71742e066b5b66e15352fdbeeea81620c0d59c04879f4d2aea7"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "GPT-6 (exact variant unavailable)"
+  harness: "Codex"
+  family: "OpenAI"
+  prompt_sha256: "4f121a8d82b209b006eaca02e8dd352982a8f39086501d28d17687a013cbc829"
+checks:
+  # An embedded English practical recap suits this short orientation.
+  # Its application defect is recorded under activities, F-02.
+  closing_shape: clean
+  # Titles describe orientation and alphabet overview; prose fields do not
+  # mix languages. Letter symbols are quoted as the items being discussed.
+  title_describes_job: clean
+  # No title or subtitle states an inventory quantity.
+  title_quantities: clean
+  # inspect_words, receipt rr-abb083836965ff69cf41:
+  # "вступ — CLEAN", "до — CLEAN", "української — CLEAN".
+  # Relevant VESUM entries: 68800; 98118 (preposition);
+  # 397345/397346 (genitive noun/adjective).
+  # search_text, receipt rr-44e9f754220d48c032e2,
+  # owned-oho-a1-workbook_f1_p0015_c0001, displays Й й and ь
+  # as alphabet items; they are not vocabulary requiring lexical admission.
+  quoted_forms: clean
+  # English orientation requires no previously acquired Ukrainian inventory.
+  # Overview does not amount to letter acquisition or later grammar analysis.
+  # The study-method prerequisite defect is assigned to activities, F-02.
+  sequencing: clean
+  # Context and study preparation have distinct jobs. Neither inventory load
+  # nor descriptive counts justify demanding expansion or compression.
+  sizing: clean
+  # Zero new core words accords with the accepted orientation exception.
+  inventory: clean
+  # Report reviewed: workbook matching followed by odd-one-out changes the
+  # operation from associating facts to rejecting an unsuitable habit.
+  # Repeated inline quizzes recognise different orientation content;
+  # the written routine adds personalization. No arbitrary type quota applied.
+  # Comparison evidence gap: no mapped v1 module exists in the supplied report;
+  # response opportunities are unavailable at plan stage. No reduction inferred.
+  activities:
+    - F-02
+  evidence_fit:
+    - F-01
+  # Position 1 owns no Standard lines and teaches no early grammatical system.
+  # The accepted arc explicitly permits this English overview.
+  standard_and_ulp: clean
+findings:
+  - id: F-01
+    status: active
+    locations:
+      - lesson: 1
+        step: s1
+        quote: "Ukrainian is an East Slavic language spoken by over 40 million people in Ukraine and across the global diaspora."
+      - lesson: 1
+        step: s2
+        quote: "Orientation on language history, state symbols, and modern standard Ukrainian."
+      - lesson: 2
+        step: s1
+        quote: "The Ukrainian alphabet has 33 letters: 21 consonants, 10 vowels, 1 semivowel (й), and the soft sign (ь)."
+      - lesson: 2
+        step: s2
+        quote: "Commit to oral repetition before reading print"
+    dimension: evidence_gap
+    severity: MINOR
+    claim: >-
+      The provisional citations do not substantiate these teaching points.
+      search_text receipt rr-9a654d37668120c653d1 retrieves T-001's
+      1-klas-bukvar-zaharijchuk-2025-1_s0001, headed
+      "ДЕРЖАВНІ СИМВОЛИ УКРАЇНИ": it supports state symbols, not language
+      family, speaker numbers or geographical distribution.
+      search_text receipt rr-89ccae0e2487bffcd2cc retrieves T-002's
+      1-klas-bukvar-zaharijchuk-2025-1_s0003, beginning
+      "Дорогий першокласнику!"; its textbook welcome does not establish
+      language history, modern standard Ukrainian or the stated study sequence.
+      Searches for T-003's distinctive content returned no hits.
+      search_text receipt rr-235b03c8f03d8da9d5b7 independently finds
+      "В українській абетці 33 букви." in
+      2-klas-ukrmova-bolshakova-2019-1_s0027, but this is not the cited
+      T-003 and does not establish the complete proposed classification.
+      OHO study guidance in receipt rr-623bea3c088587d44340 recommends
+      repetition and audio use, but does not substantiate an obligatory
+      oral-before-print sequence. The pack builder should supply evidence
+      matched to the existing teaching claims. These are unresolved support
+      gaps, not findings that the underlying claims are false, and do not
+      independently authorize changing learner content.
+    unsupported_by_source:
+      searches:
+        - receipt: "rr-9a654d37668120c653d1"
+          outcome: hits_but_no_support
+        - receipt: "rr-89ccae0e2487bffcd2cc"
+          outcome: hits_but_no_support
+        - receipt: "rr-785feaf327569423cb6f"
+          outcome: no_hits
+        - receipt: "rr-71e751aeea6fa072c9ba"
+          outcome: no_hits
+        - receipt: "rr-235b03c8f03d8da9d5b7"
+          outcome: hits_but_no_support
+        - receipt: "rr-623bea3c088587d44340"
+          outcome: hits_but_no_support
+        - receipt: "rr-c1ca5ddc326d12d7e4a7"
+          outcome: unavailable
+    could_be_a_gate: "no"
+
+  - id: F-02
+    status: active
+    locations:
+      - lesson: 2
+        step: s2
+        quote: "Practical closing task: establish your personal study goals and understand sound-before-letter progression."
+      - lesson: 2
+        step: s2
+        quote: "Review the alphabet structure and note down your daily practice routine."
+      - lesson: 2
+        activity: a2
+        quote: "Identify the study habit that contradicts the sound-before-letter progression."
+    dimension: plan_defect
+    severity: MAJOR
+    claim: >-
+      The closing task has useful personalization, but its study-method
+      prerequisite has not been taught. Earlier steps cover language context
+      and alphabet structure; distinguishing sounds from written letters
+      does not explain a practice routine or sound-before-letter progression.
+      Consequently s2 asks the learner to understand that progression for
+      the first time inside the recap, while a2 tests it. This also affects
+      sequencing and breaks the accepted requirement that the recap apply
+      previously taught material. Teach the study method explicitly before
+      the recap, then have the learner select and explain a personal routine
+      using that guidance. This serves the existing lesson job without
+      adding vocabulary or an activity quota. Supporting pedagogy:
+      search_text, owned-oho-a1-workbook_f1_p0012_c0001, receipt
+      rr-623bea3c088587d44340, states "The exercises are varied and progressive"
+      and "When working with the \naudio, repeat after the speaker as much as possible."
+      These provide concrete practice guidance that can inform the missing
+      teaching stage.
+    evidence:
+      receipt: "rr-623bea3c088587d44340"
+    could_be_a_gate: "no"

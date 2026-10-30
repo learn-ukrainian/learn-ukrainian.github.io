@@ -79,23 +79,23 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: 'The Ukrainian alphabet has 33 letters: 21 consonants, 10 vowels, 1 semivowel (й), and the soft sign (ь). We distinguish what is heard (speech sounds) from what is written (letters).'
+    teach: 'The Ukrainian alphabet has 33 letters: 21 consonants, 10 vowels, 1 semivowel (й), and the soft sign (ь). We distinguish what is heard (speech sounds) from what is written (letters). When studying Ukrainian, follow a sound-before-letter progression: listen to native audio and repeat aloud before analyzing written print, practicing varied exercises with regular oral repetition.'
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
     evidence: ['T-003']
     practice: ['a1']
   - id: s2
     kind: recap
-    teach: 'Practical closing task: establish your personal study goals and understand sound-before-letter progression.'
+    teach: 'Practical closing task: apply the taught sound-before-letter study method to select and establish your daily personal practice routine.'
     task:
       id: 'orientation-recap-task'
       action: 'read_and_use'
       context_en: 'Beginning your journey into the Ukrainian language.'
-      instruction_en: 'Review the alphabet structure and note down your daily practice routine.'
+      instruction_en: 'Apply the taught study method and alphabet overview to select your daily oral and written practice routine.'
       response_mode: 'written'
       success_criteria_en:
       - 'Identify that Ukrainian has 33 letters including vowels, consonants, and the soft sign'
-      - 'Commit to oral repetition before reading print'
+      - 'Apply the sound-before-letter progression by scheduling oral repetition before print'
       learner_reads: []
     introduces: {letters: [], grammar: [], vocabulary: []}
     uses: {grammar: [], vocabulary: []}
@@ -113,7 +113,7 @@ lessons:
   - id: a2
     type: odd-one-out
     placement: workbook
-    focus: 'Identify the study habit that contradicts the sound-before-letter progression.'
+    focus: 'Identify the study habit that contradicts the taught sound-before-letter progression.'
     options:
     - 'Translating full written texts with a dictionary on day one'
     - 'Listening to native audio before reading print'
