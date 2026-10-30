@@ -67,6 +67,9 @@ CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS = ("a", "b")
 # only an ``apiKeyHelper``, the run's one credential, billed to that key.
 CLAUDE_API_KEY_ACCOUNT_LABELS = ("kk", "szb")
 CLAUDE_ACCOUNT_LABELS = (*CLAUDE_SUBSCRIPTION_ACCOUNT_LABELS, *CLAUDE_API_KEY_ACCOUNT_LABELS)
+# Per-dispatch spend cap in USD for each API-key label, passed as ``--max-budget-usd``. A
+# dispatch may lower it, never raise it; a label with no entry here refuses (``resolve_claude_budget_usd``).
+CLAUDE_API_KEY_BUDGET_USD = {"kk": 20.0, "szb": 20.0}
 ENV_CLAUDE_ACCOUNTS_FILE = "LU_CLAUDE_ACCOUNTS_FILE"
 CLAUDE_ACCOUNTS_FILE_NAME = "claude_accounts.json"
 CLAUDE_ACCOUNTS_SCHEMA_VERSION = 1
@@ -220,6 +223,8 @@ CLAUDE_ACCOUNT_REFUSAL_CODES = frozenset(
         "claude_account_record_conflict",
         "claude_account_forward_unsupported",
         "claude_account_api_key_route_unsupported",
+        "claude_account_budget_cap_unresolved",
+        "claude_account_budget_cap_invalid",
         *(f"claude_account_credentials_{failure}" for failure in _PRIVATE_FILE_FAILURES),
         *(
             f"claude_account_{kind}_{failure}"
@@ -267,6 +272,29 @@ def resolve_claude_account_label(raw: object) -> str:
     if isinstance(raw, str) and raw in CLAUDE_ACCOUNT_LABELS:
         return raw
     raise ClaudeAccountRefused("claude_account_unknown")
+
+
+def resolve_claude_budget_usd(label: str, requested: object = None) -> float | None:
+    """The ``--max-budget-usd`` amount for a run on ``label``; ``None`` for a subscription label.
+
+    An API-key label is billed per token, so its run always has a cap: the label's configured
+    amount, or the lower ``requested`` one. A label with no configured amount, or a request that is
+    not a positive finite number or exceeds the configured amount, refuses.
+    """
+    if label not in CLAUDE_API_KEY_ACCOUNT_LABELS:
+        return None
+    cap = CLAUDE_API_KEY_BUDGET_USD.get(label)
+    if not isinstance(cap, (int, float)) or isinstance(cap, bool) or not 0 < cap < float("inf"):
+        raise ClaudeAccountRefused("claude_account_budget_cap_unresolved")
+    if requested is None:
+        return float(cap)
+    try:
+        amount = float(requested)  # type: ignore[arg-type]  # a CLI string or a number
+    except (TypeError, ValueError):
+        raise ClaudeAccountRefused("claude_account_budget_cap_invalid") from None
+    if not 0 < amount <= cap:
+        raise ClaudeAccountRefused("claude_account_budget_cap_invalid")
+    return amount
 
 
 def _user_config_file(environ: Mapping[str, str] | None, override: str, name: str) -> Path | None:

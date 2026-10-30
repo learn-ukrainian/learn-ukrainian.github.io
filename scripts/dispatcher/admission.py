@@ -88,6 +88,20 @@ def claude_account(agent: str, explicit: str | None) -> dict:
     return fields
 
 
+def claude_budget(label: str | None, requested: str | None) -> float | None:
+    """The spend cap in USD of a dispatch on ``label``, or ``None`` for a subscription label.
+
+    An API-key label always has one (configured amount, or the lower ``--max-budget-usd``); a dispatch
+    without a resolvable cap raises ``ValueError`` naming the account, before any worktree exists.
+    """
+    from scripts.agent_runtime.attempt_boundary import ClaudeAccountRefused, resolve_claude_budget_usd
+
+    try:
+        return resolve_claude_budget_usd(label, requested)
+    except ClaudeAccountRefused as exc:
+        raise ValueError(f"CLAUDE_ACCOUNT_REFUSED: {exc.code} (account {label})") from None
+
+
 def claude_launch(spec, invocation):
     """Bind a labelled Claude run to its verified login, at the launch boundary (#10619).
 

@@ -112,6 +112,8 @@ def _sources_mcp_config() -> str:
 
 
 def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
+    from scripts.agent_runtime.attempt_boundary import resolve_claude_budget_usd
+
     argv = ["claude", "-p", "--model", spec.model]
     if spec.effort is not None:
         argv += ["--effort", spec.effort]
@@ -133,7 +135,15 @@ def build(spec: TaskSpec, env: dict[str, str]) -> Invocation:
     argv += ["--disallowedTools", denies]
     if spec.claude_account not in (None, "a"):
         argv += ["--settings", _LABELLED_SETTINGS, "--setting-sources", _LABELLED_SETTING_SOURCES]
-    return Invocation(argv, spec.prompt_file.read_bytes(), {**env, **_BACKGROUND_ENV}, None)
+    env = {**env, **_BACKGROUND_ENV}
+    if (budget := resolve_claude_budget_usd(spec.claude_account, spec.options.get("max_budget_usd"))) is not None:
+        # An API-key run is billed per token: cap it, and keep its cache for an hour, since a test run
+        # between two requests can outlast the 5 minute default that print mode gives an API key
+        # (https://code.claude.com/docs/en/prompt-caching). A read-only run is short, so it keeps the default.
+        argv += ["--max-budget-usd", f"{budget:.2f}"]
+        if spec.mode == "workspace-write":
+            env["CLAUDE_CODE_PROMPT_CACHE_TTL"] = "1h"
+    return Invocation(argv, spec.prompt_file.read_bytes(), env, None)
 
 
 def parse(stdout: str, stderr: str, returncode: int, final_text: str | None) -> ParsedResult:
