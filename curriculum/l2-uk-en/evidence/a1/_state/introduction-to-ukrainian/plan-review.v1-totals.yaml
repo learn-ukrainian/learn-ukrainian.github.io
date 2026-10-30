@@ -1,8 +1,0 @@
-level: a1
-slug: introduction-to-ukrainian
-totals: no_mapped_v1_module
-v1_module:
-  path: curriculum/l2-uk-en/a1-v1/introduction-to-ukrainian/activities.yaml
-  reason: no v1 activities file for this slug
-  status: absent
-v1_totals_schema: 1

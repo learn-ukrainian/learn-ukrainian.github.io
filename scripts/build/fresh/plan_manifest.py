@@ -277,8 +277,8 @@ def pack_verify_problems(root: Path, level: str, slug: str, report_path: Path) -
     problems: dict[str, str] = {}
     if report.get("kind") != "pack-verify" or (report.get("level"), report.get("slug")) != (level, slug):
         problems[report_rel] = "not a pack-verify report of this module"
-    if report.get("strict") is not True or report.get("status") not in ("ok", "warning") or report.get("errors"):
-        problems[report_rel] = "not a strict pass (status ok or warning, no errors)"
+    if report.get("strict") is not True or report.get("status") != "ok" or report.get("errors"):
+        problems[report_rel] = "not a strict pass (status ok, no errors)"
     for key, rel in (("pack", pack_rel), ("pack_lock", f"{pack_rel}.lock")):
         recorded = report.get(key) if isinstance(report.get(key), dict) else {}
         actual = current_sha(root, rel)

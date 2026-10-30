@@ -20,7 +20,7 @@ changelog:
 arc_ref: {level: a1, position: 4}
 evidence_ref:
   path: evidence/a1/my-family.yaml
-  sha256: '7e721fda7d229e8fb48ecd8391c160fcb0e99723520c73c32784619e0e07b051'
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
 lessons:
 - n: 1
   slug: consonants-b-and-y

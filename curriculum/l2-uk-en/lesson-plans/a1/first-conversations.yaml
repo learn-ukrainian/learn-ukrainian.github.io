@@ -19,7 +19,7 @@ changelog:
 arc_ref: {level: a1, position: 6}
 evidence_ref:
   path: evidence/a1/first-conversations.yaml
-  sha256: '72709b2f2f7e8f5ede685b48c4c20ed421ac3275b5393d30a71c1944269eca65'
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
 lessons:
 - n: 1
   slug: greetings-and-partings

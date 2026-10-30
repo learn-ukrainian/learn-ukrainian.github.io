@@ -27,7 +27,7 @@ arc_ref:
   position: 3
 evidence_ref:
   path: evidence/a1/special-signs.yaml
-  sha256: bd896925b2a8f4f09fb0d9f6206be87f2b326ce321dde08bd9638ffea83e7f54
+  sha256: ef2258a8c9766420367bc4ac19358a0057bf7e44da2c296a4f3ab4009961dea1
 lessons:
 - n: 1
   slug: soft-sign-and-sound-pairs

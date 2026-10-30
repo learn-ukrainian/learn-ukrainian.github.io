@@ -20,7 +20,7 @@ changelog:
 arc_ref: {level: a1, position: 2}
 evidence_ref:
   path: evidence/a1/sounds-letters-and-hello.yaml
-  sha256: '30cec03eb07df59b7dfca13cc53e8fd115d9e27b6a872acd250b367cccc1cd46'
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
 lessons:
 - n: 1
   slug: greetings-by-ear

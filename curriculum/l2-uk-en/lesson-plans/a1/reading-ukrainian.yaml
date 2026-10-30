@@ -20,7 +20,7 @@ changelog:
 arc_ref: {level: a1, position: 5}
 evidence_ref:
   path: evidence/a1/reading-ukrainian.yaml
-  sha256: '06b79e8f4cde3e6331f0d010a695b171f36340565c8e9c477981aa45461483d6'
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
 lessons:
 - n: 1
   slug: letters-ge-and-zhe

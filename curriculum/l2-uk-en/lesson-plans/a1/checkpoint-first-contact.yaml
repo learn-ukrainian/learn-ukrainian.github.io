@@ -18,7 +18,7 @@ changelog:
 arc_ref: {level: a1, position: 7}
 evidence_ref:
   path: evidence/a1/checkpoint-first-contact.yaml
-  sha256: 'd9206a1eb95c0d015b5a94f50667cd9ce2590a4816abe8605fa6e9797731f717'
+  sha256: '0000000000000000000000000000000000000000000000000000000000000000'
 lessons:
 - n: 1
   slug: first-contact-receptive-review
