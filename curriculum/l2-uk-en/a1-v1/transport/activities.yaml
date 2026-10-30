@@ -348,7 +348,7 @@ workbook:
             correct: false
           - text: Я сиджу в цьому автобусі і їду за цим автобусом.
             correct: false
-        explanation: The speaker is inside this same bus, so їду цим автобусом expresses transport by it. Цим автобусу fails agreement; біля цього автобуса places the traveler outside the bus.
+        explanation: The speaker is inside this same bus, so їду цим автобусом expresses transport by it. Цим автобусу fails agreement. За цим автобусом means traveling behind this same bus, which conflicts with being inside it.
       - prompt: 'Choose the correct Ukrainian version: Я їду в таксію, а потім на метро.'
         options:
           - text: Я їду в таксі, а потім на метро.
