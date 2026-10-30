@@ -12,9 +12,11 @@ or clears an alert.
 An accepted handoff makes the successor the PR's one owner while its task is live, from
 any branch. Coordinator custody is that same handoff with a reason and a decision owner,
 recorded with no dispatch task; the PR is not alerted again until that custody is
-released or the PR is no longer open. A queue-custody handoff also names the predecessor
-whose only remaining step is waiting in the merge queue; ``queue-exit`` then lets that
-predecessor end cleanly, but only while the keeper's ownership check is running.
+released or the PR is no longer open. Recording custody ends the current ownerless
+episode immediately, and releasing it starts the grace period over. A queue-custody
+handoff also names the predecessor whose only remaining step is waiting in the merge
+queue; ``queue-exit`` then lets that predecessor end cleanly, but only while the
+keeper's ownership check is running.
 
 State is one JSON file next to the shared dispatch task store, written under a lock.
 """
@@ -166,6 +168,22 @@ def _handoff_map(data: Mapping[str, Any]) -> dict[tuple[str, int], str]:
         repo, _, number = key.rpartition("#")
         result[(repo, int(number))] = handoff["successor"]
     return result
+
+
+def _end_ownerless_episode(data: dict[str, Any], key: str, *, how: str, successor: str, now: datetime) -> None:
+    """Drop this PR's ownerless episode so a later tick cannot inherit its clock.
+
+    An episode that already alerted leaves one cleared notice for the next keeper
+    tick. An episode still inside the grace period ends with no notice, as it does
+    when an owner returns inside that period.
+    """
+    episode = data["episodes"].pop(key, None)
+    if not episode or not episode.get("alerted_at"):
+        return
+    data.setdefault("outbox", []).extend(outbox_entries({
+        "cleared": [{"pr": key, "how": how, "since": episode["since"]}],
+    }))
+    data["history"].append({"pr": key, "event": "cleared", "at": now.isoformat(), "successor": successor})
 
 
 def accepted_handoffs(path: Path | None = None) -> dict[tuple[str, int], str]:
@@ -613,7 +631,11 @@ def accept(
         raise OwnershipError(f"successor {successor} is {'unknown' if state is None else 'not live'}")
     key = pr_key(repo, number)
     previous = data["handoffs"].get(key)
-    seated = {(repo.casefold(), number): previous["successor"]} if previous else {}
+    # A decision owner is a person. The same string on a live task is not ownership.
+    seated = (
+        {(repo.casefold(), number): previous["successor"]}
+        if previous and not decision_custody(previous) else {}
+    )
 
     def owns(record: Mapping[str, Any]) -> bool:
         target = {repo: [{**pr, "number": number}]}
@@ -724,6 +746,9 @@ def record_decision_custody(
     key = pr_key(repo, number)
     data["handoffs"][key] = handoff
     data["history"].append({"pr": key, "event": "accepted", "at": handoff["accepted_at"], **handoff})
+    _end_ownerless_episode(
+        data, key, how=f"custody recorded for {decision_owner}", successor=decision_owner, now=now,
+    )
     return handoff
 
 
@@ -743,6 +768,11 @@ def release_decision_custody(
             raise OwnershipError("this handoff is a task acceptance, not recorded custody")
         return {"released": False, "pr": key, "reason": "no recorded custody"}
     how = "released" if pr.get("state") == "OPEN" else "PR state changed"
+    # Record already ends the episode. This catches one that no tick has seen since.
+    _end_ownerless_episode(
+        data, key, how=f"custody recorded for {handoff['decision_owner']}",
+        successor=handoff["decision_owner"], now=now,
+    )
     data["handoffs"].pop(key)
     data["history"].append({"pr": key, "event": "custody_released", "at": now.isoformat(), "how": how})
     return {"released": True, "pr": key, "how": how}
