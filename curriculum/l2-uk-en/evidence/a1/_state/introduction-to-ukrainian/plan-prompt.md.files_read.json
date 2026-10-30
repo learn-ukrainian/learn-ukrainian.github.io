@@ -16,25 +16,25 @@
     "curriculum/l2-uk-en/evidence/a1/_words.yaml",
     "curriculum/l2-uk-en/evidence/a1/_state/introduction-to-ukrainian/plan-review.learner-state.yaml",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml",
-    "scripts/review/prompts/plan-review.md.j2"
+    "/home/ops/learn-ukrainian/scripts/review/prompts/plan-review.md.j2"
   ],
   "template_sha256": {
-    "scripts/review/prompts/plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
+    "/home/ops/learn-ukrainian/scripts/review/prompts/plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
   },
   "verifier_reads": [],
   "render_contract": {
     "version": 4,
-    "render_checkout": "/home/ops/learn-ukrainian/.worktrees/dispatch/codex/cto-7a97-i8425c-sol",
+    "render_checkout": "/home/ops/learn-ukrainian",
     "input_root": "/home/ops/learn-ukrainian/.worktrees/dispatch/codex/cto-7a97-i8425c-sol",
-    "prompts_dir": "/home/ops/learn-ukrainian/.worktrees/dispatch/codex/cto-7a97-i8425c-sol/scripts/review/prompts",
+    "prompts_dir": "/home/ops/learn-ukrainian/scripts/review/prompts",
     "templates": {
       "plan-review.md.j2": "cd135ca1ee4958efae51106c766cb5f83a6356edfdb98ed9ef7063e690103576"
     },
     "template_digest": "sha256:84daaf1143e631518f15fc43368d50646af3b531d7f845a4da57085a12124f50",
-    "server_digest": "sha256:bd7a72de7d1c12a18f422ed9c7b57d5886986efc7dcfc2505c325741ec77d7d8",
+    "server_digest": "sha256:8ef8c413726e8623cc2896794e0657e38b4eb671c42f756f9d05c475fcd78fb1",
     "server_components": {
       "repository": "sha256:8f4e3f294b6feb676d698b379a615dd5a39c783b867852140d5c3527f2fe146a",
-      "requirements-lock.txt": "sha256:2f3d1377434c09431d9ee3c680dca4569d3330124160810589efa670cc2b0601"
+      "requirements-lock.txt": "sha256:3e5c02571a48293fe2bde91910f0fed96e4fa8e89c55f0f030c22d3d94c75d96"
     },
     "prompt_sha256": "16ee1c935708eb7bfe886fa6cef53ced871579fcf0e9116ea16fd63c611a6e5e",
     "review_id": "rev-20261030-introduction-to-ukrainian",
