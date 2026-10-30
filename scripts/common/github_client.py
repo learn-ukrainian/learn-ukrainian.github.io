@@ -1277,11 +1277,6 @@ def _open_cache(path):
     return sqlite3.connect(path, timeout=5)
 
 
-def _open_count(path):
-    """The same file for the usage count, which waits a quarter second at most: counting is optional."""
-    return sqlite3.connect(path, timeout=0.25)
-
-
 class GitHubClient:
     def __init__(
         self,
@@ -1344,7 +1339,7 @@ class GitHubClient:
         self.scope = hashlib.sha256((self.host + "\0" + credential).encode()).hexdigest()
 
     @contextmanager
-    def _db(self, opener=None):
+    def _db(self, *, quick=False):
         for attempt in range(2):
             path = ":memory:"
             if self.cache_dir is not None:
@@ -1361,7 +1356,10 @@ class GitHubClient:
             # before connecting, so a replacement that appears afterwards is never taken for it.
             generation = github_usage.file_identity(path) if self.cache_dir is not None else None
             try:
-                db = self._memory_db if self._memory_db is not None else (opener or _open_cache)(path)
+                db = self._memory_db if self._memory_db is not None else _open_cache(path)
+                if quick:
+                    # Optional work (the usage count) waits a quarter second at most, from the first statement on.
+                    db.execute("PRAGMA busy_timeout=250")
                 if self.cache_dir is None:
                     self._memory_db = db
                 else:
@@ -1425,7 +1423,7 @@ class GitHubClient:
         """
         kept = self.cache_dir, self._memory_db
         try:
-            with suppress(sqlite3.Error, OSError), self._db(_open_count) as db:
+            with suppress(sqlite3.Error, OSError), self._db(quick=True) as db:
                 github_usage.record(db, endpoint=endpoint, status=status)
         finally:
             self.cache_dir, self._memory_db = kept
