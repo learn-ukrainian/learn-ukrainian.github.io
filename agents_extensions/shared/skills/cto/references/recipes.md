@@ -104,6 +104,11 @@ Each brief also sets the worker's follow-up cap: how many follow-up tasks it may
 which owned paths (rules core P1).
 Briefs state expected eligible PR lines and files; require a one-line size justification
 above the `workflow.md` small-batch threshold, including data files.
+A brief or acceptance criterion never orders a worker to regenerate or deploy gitignored copies
+(for example `npm run agents:deploy`) inside its worktree. Before writing an acceptance criterion
+about generated files, check `.gitignore` and whether those files belong in the PR: a worker that
+deployed agent copies in its worktree hit the pre-push refusal of untracked inputs, deleted the
+copies, broke its own hooks and could not finish.
 Limit worker-local checks to Ruff and explicitly named test files for the changed module,
 under a 10-minute timeout. Never expand to all importers. PR CI Gate runs admission checks
 and the affected tests; the merge-group CI Gate runs the full suite.
