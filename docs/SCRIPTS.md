@@ -1036,8 +1036,9 @@ The environment contract is `scripts/dispatcher/environment.py`; do not assume
 the retired launcher's extra exports or nested-pytest plugin injection.
 
 For review, pass the exact branch/head, author model, profile and risk selected
-by the reviewer resolver. Protected bound-review execution remains unavailable;
-`--review-id`, `--attempt-id` and `--review-attempt` are dry-run-only. A plain
+by the reviewer resolver. A formal review runs as a bound attempt (`--review-id`,
+`--attempt-id`, `--review-attempt`, a rendered `--prompt-file`): follow
+`docs/runbooks/formal-review-attempt-isolation.md` § Running a bound attempt. A plain
 read-only dispatch does not supply protected isolation or Sources receipts.
 
 Shared fixture and caller tests cover the surviving dispatch interface. PR CI

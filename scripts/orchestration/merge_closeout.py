@@ -17,6 +17,7 @@ Default is dry-run. See docs/runbooks/worktree-cleanup.md
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import subprocess
@@ -234,22 +235,29 @@ def _head_is_ancestor_of_pr(repo_root: Path, head: str, pr_sha: str) -> tuple[bo
     return False, f"cannot verify local ancestry: {(on_pr.stderr or '').strip() or 'git merge-base failed'}"
 
 
-def _head_belongs_only_to_pr(repo_root: Path, head: str, pr_sha: str) -> bool:
+def _head_belongs_only_to_pr(repo_root: Path, head: str, pr_sha: str, *, strict: bool = False) -> bool:
     """True when ``head`` is on the PR and not already on ``origin/main``.
 
     A detached review of an earlier PR commit is not the merged tip and is
     not the PR branch, so branch-name and exact-SHA matching both miss it.
     Commits already on main are excluded: every older main checkout is an
-    ancestor of a PR that branched from main.
+    ancestor of a PR that branched from main. ``strict`` raises when either
+    ancestry cannot be read, instead of treating it as "not on the PR".
     """
     on_pr, error = _head_is_ancestor_of_pr(repo_root, head, pr_sha)
-    if error is not None or not on_pr:
+    if error is not None:
+        if strict:
+            raise MergeCloseoutError(error)
+        return False
+    if not on_pr:
         return False
     on_main = rw._run(
         ["git", "merge-base", "--is-ancestor", head, "origin/main"],
         cwd=repo_root,
     )
     # 1 means "not an ancestor". Any other nonzero exit is an unreadable ref.
+    if strict and on_main.returncode not in (0, 1):
+        raise MergeCloseoutError("cannot verify origin/main ancestry of a worktree head")
     return on_main.returncode == 1
 
 
@@ -284,11 +292,14 @@ def _fetch_live_pr_head(repo_root: Path, pr_number: int) -> tuple[str | None, st
     return sha, None
 
 
-def find_matching_worktrees(repo_root: Path, pr: PullRequestInfo) -> list[rw.WorktreeInfo]:
+def find_matching_worktrees(
+    repo_root: Path, pr: PullRequestInfo, *, strict: bool = False,
+) -> list[rw.WorktreeInfo]:
     """Worktrees under ``.worktrees/`` that belong to this merged PR.
 
     A match is the PR branch, the exact merged head, or a detached checkout
-    of an earlier commit that exists only on that PR.
+    of an earlier commit that exists only on that PR. ``strict`` raises
+    :class:`MergeCloseoutError` when a worktree's ancestry cannot be read.
     """
     if pr.repository is not None and pr.repository != rw._pr_repository(repo_root):
         raise MergeCloseoutError("PR repository does not match cleanup repository")
@@ -306,7 +317,7 @@ def find_matching_worktrees(repo_root: Path, pr: PullRequestInfo) -> list[rw.Wor
             pr.head_sha is not None
             and info.head is not None
             and not sha_match
-            and _head_belongs_only_to_pr(repo_root, info.head, pr.head_sha)
+            and _head_belongs_only_to_pr(repo_root, info.head, pr.head_sha, strict=strict)
         )
         if branch_match or sha_match or earlier_pr_commit:
             matches.append(info)
@@ -430,6 +441,30 @@ def verify_branch_gone(
         remote_error=remote_error,
         local_error=local_error,
     )
+
+
+def observe_cleanup(repo_root: Path, pr: PullRequestInfo) -> dict[str, bool]:
+    """Live cleanup facts for a merged PR, from the checks this command runs.
+
+    Read-only: it runs ``find_matching_worktrees`` (strict) and the dry-run
+    ``verify_branch_gone``. A fact that cannot be read is reported as present,
+    so an unreadable cleanup never reads as a clean one.
+    """
+    primary = rw.primary_checkout_root(repo_root)
+    present = {"worktree_present": True, "local_branch_present": True, "remote_branch_present": True}
+    failures = (MergeCloseoutError, RuntimeError, OSError, subprocess.SubprocessError)
+    if not pr.head_ref_name:
+        return present
+    with contextlib.suppress(*failures):
+        present["worktree_present"] = bool(find_matching_worktrees(primary, pr, strict=True))
+    try:
+        status = verify_branch_gone(primary, pr, apply=False)
+    except failures:
+        status = None
+    if status is not None:
+        present["local_branch_present"] = not (status.local_gone and status.local_error is None)
+        present["remote_branch_present"] = not (status.remote_gone and status.remote_error is None)
+    return present
 
 
 def _closeout_api(repo_root: Path, request: Request) -> Any:

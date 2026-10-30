@@ -1152,6 +1152,9 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     from tests.curriculum.test_plan_retirement import produced_retirement_codes
 
     produced |= produced_retirement_codes(tmp_path / "retirement")
+    from tests.curriculum.test_plan_validate_review_of_record import produced_review_of_record_codes
+
+    produced |= produced_review_of_record_codes(tmp_path / "review-of-record")
     assert produced == set(codes.DESCRIPTIONS)
 
 

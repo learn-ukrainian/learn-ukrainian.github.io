@@ -234,3 +234,9 @@ def synthetic_standard(tmp_path):
     ]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
+
+
+@pytest.fixture(autouse=True)
+def no_host_sense_proof(monkeypatch):
+    """Never read the host's private sense-binding proof directory (#12114)."""
+    monkeypatch.delenv("LU_SENSE_PROOF_DIR", raising=False)
